@@ -1,0 +1,2 @@
+json_key_file "sagebio.jks" # Path to the json secret file - Follow https://github.com/fastlane/supply#setup to get one
+package_name "org.sagebionetworks.research.crf" # e.g. com.krausefx.app
