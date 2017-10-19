@@ -1,11 +1,63 @@
 <resources>
 
-    <!-- Base application theme. -->
-    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
-        <!-- Customize your theme here. -->
-        <item name="colorPrimary">@color/colorPrimary</item>
-        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
-        <item name="colorAccent">@color/colorAccent</item>
+    <style name="Widget.Crf.IconTabLayout" parent="@style/Widget.Backbone.IconTabLayout">
+        <item name="tabIconColor">@android:color/white</item>
+        <item name="tabIconIndicatorColor">@color/rsb_error</item>
+        <item name="tabTextColor">@color/tab_text_color</item>
+    </style>
+
+    <style name="Widget.Crf.SubmitBar" parent="@style/Widget.Backbone.SubmitBar" />
+
+    <style name="Base.Widget.Crf.Toolbar" parent="@style/Widget.AppCompat.Toolbar">
+        <item name="android:background">?attr/colorPrimary</item>
+        <item name="android:minHeight">56dp</item>
+        <item name="titleTextAppearance">@style/TextAppearance.Widget.Crf.Toolbar.Title</item>
+    </style>
+
+    <style name="Widget.Crf.Toolbar" parent="@style/Base.Widget.Crf.Toolbar">
+        <item name="android:foreground">?android:windowContentOverlay</item>
+    </style>
+
+    <style name="Widget.Crf.Toolbar.Transparent" parent="@style/Base.Widget.Crf.Toolbar">
+        <item name="titleTextAppearance">
+            @style/TextAppearance.Widget.Crf.Toolbar.Title.Transparent
+        </item>
+    </style>
+
+    <style name="Widget.Crf.ActionButton.Overflow" parent="@style/Widget.AppCompat.ActionButton.Overflow">
+        <item name="colorControlNormal">@android:color/white</item>
+    </style>
+
+    <style name="Widget.Crf.Onboarding.Button" parent="Widget.AppCompat.Button">
+        <item name="android:layout_width">160dp</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:background">@android:color/white</item>
+        <item name="android:textColor">@color/colorAccent</item>
+        <item name="android:textSize">20sp</item>
+    </style>
+
+    <style name="Widget.Crf.Onboarding.Button.SignIn" parent="Widget.AppCompat.Button.Borderless">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">52dp</item>
+        <item name="android:textColor">@color/white</item>
+        <item name="android:textSize">14sp</item>
+    </style>
+
+    <style name="Widget.Crf.EmptyView" parent="@style/Widget.Backbone.EmptyView">
+        <item name="android:background">@android:color/white</item>
+    </style>
+
+    <style name="TextAppearance.Widget.Crf.Toolbar.Title" parent="@style/TextAppearance.Widget.AppCompat.Toolbar.Title">
+        <item name="android:textColor">@android:color/white</item>
+        <item name="android:textSize">20sp</item>
+    </style>
+
+    <style name="TextAppearance.Widget.Crf.Toolbar.Title.Transparent">
+        <item name="android:textColor">@color/rsb_warm_gray</item>
+    </style>
+
+    <style name="PreferenceFragment.Sample" parent="@style/PreferenceFragment.Material">
+        <item name="android:divider">@null</item>
     </style>
 
 </resources>

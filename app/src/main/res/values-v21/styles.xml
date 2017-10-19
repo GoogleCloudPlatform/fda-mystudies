@@ -1,0 +1,16 @@
+<resources>
+
+    <style name="Widget.Crf.Toolbar" parent="@style/Base.Widget.Crf.Toolbar">
+        <item name="android:elevation">4dp</item>
+        <item name="android:outlineProvider">bounds</item>
+    </style>
+
+    <style name="Widget.Crf.Toolbar.Transparent" parent="@style/Base.Widget.Crf.Toolbar">
+        <item name="android:elevation">0dp</item>
+        <item name="android:outlineProvider">none</item>
+        <item name="titleTextAppearance">
+            @style/TextAppearance.Widget.Crf.Toolbar.Title.Transparent
+        </item>
+    </style>
+
+</resources>

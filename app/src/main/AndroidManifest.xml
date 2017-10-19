@@ -1,27 +1,65 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
           package="org.sagebionetworks.research.crf">
+
     <!-- To auto-complete the email text field in the login form with the user's emails -->
     <uses-permission android:name="android.permission.GET_ACCOUNTS"/>
     <uses-permission android:name="android.permission.READ_PROFILE"/>
     <uses-permission android:name="android.permission.READ_CONTACTS"/>
+    <!-- ActiveSteps may vibrate the phone on start and on finish -->
+    <uses-permission android:name="android.permission.VIBRATE"/>
+    <!-- ActiveSteps may access location to track distance walked -->
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <!-- Communicate with Bridge -->
+    <uses-permission android:name="android.permission.INTERNET" />
+    <!-- ActiveSteps may use the camera to calculate heart rate -->
+    <uses-permission android:name="android.permission.CAMERA" />
+    <!-- ActiveSteps may use this to capture heart rate -->
+    <uses-permission android:name="android.permission.BODY_SENSORS" />
 
     <application
+        android:name="org.sagebase.crf.MainApplication"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme">
+        android:theme="@style/Theme.Crf">
+
         <activity
-            android:name=".LoginActivity"
+            android:name="org.sagebase.crf.OverviewActivity"
             android:label="@string/app_name">
             <intent-filter>
-                <action android:name="android.intent.action.MAIN"/>
-
-                <category android:name="android.intent.category.LAUNCHER"/>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <activity
+            android:name="org.researchstack.skin.ui.MainActivity"
+            android:label="@string/app_name"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.Crf.Main" />
+
+        <activity
+            android:name="org.researchstack.backbone.ui.OnboardingTaskActivity"
+            android:label="@string/app_name"
+            android:windowSoftInputMode="adjustResize"
+            android:theme="@style/Theme.Crf.Onboarding"/>
+
+        <activity
+            android:name="org.researchstack.backbone.ui.ViewTaskActivity"
+            android:label="@string/app_name"
+            android:theme="@style/Theme.Crf.Survey"
+            android:windowSoftInputMode="adjustResize" />
+
+        <activity
+            android:name="org.researchstack.backbone.ui.ActiveTaskActivity"
+            android:label="@string/app_name"
+            android:theme="@style/Theme.Crf.Survey"
+            android:windowSoftInputMode="adjustResize" />
+
     </application>
 
 </manifest>

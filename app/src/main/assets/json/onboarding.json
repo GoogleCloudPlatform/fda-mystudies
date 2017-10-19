@@ -1,0 +1,14 @@
+{
+  "sections" : [
+
+    {
+      "onboardingType" : "login",
+      "steps" : [
+        {
+          "identifier"   : "login",
+          "type"         : "login"
+        }
+      ]
+    }
+  ]
+}
