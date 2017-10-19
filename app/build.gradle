@@ -17,6 +17,9 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+    packagingOptions {
+        exclude 'META-INF/LICENSE'
+    }
 }
 
 dependencies {
@@ -27,4 +30,12 @@ dependencies {
     androidTestImplementation('com.android.support.test.espresso:espresso-core:3.0.1', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
+
+    // compile in the skin project from ResearchStack source
+    compile project(':skin'), { exclude group: 'joda-time', module: 'joda-time' }
+    compile project(':researchstack-sdk'), {
+        // exclude the skin project since we are compiling from source
+        exclude group: 'org.researchstack:skin', module: 'org.researchstack:skin'
+    }
+    compile project(':android-sdk')
 }
