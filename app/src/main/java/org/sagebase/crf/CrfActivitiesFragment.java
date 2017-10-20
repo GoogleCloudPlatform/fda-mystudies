@@ -23,9 +23,14 @@ import com.google.common.collect.Lists;
 
 import org.researchstack.backbone.DataProvider;
 import org.researchstack.backbone.model.SchedulesAndTasksModel;
+import org.researchstack.backbone.step.InstructionStep;
+import org.researchstack.backbone.step.Step;
+import org.researchstack.backbone.task.OrderedTask;
 import org.researchstack.backbone.task.Task;
+import org.researchstack.backbone.ui.ActiveTaskActivity;
 import org.researchstack.backbone.ui.ViewTaskActivity;
 import org.researchstack.skin.ui.fragment.ActivitiesFragment;
+import org.sagebase.crf.step.active.HeartRateCameraStep;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -45,9 +50,11 @@ public class CrfActivitiesFragment extends ActivitiesFragment {
         if (newTask == null) {
 
             if (task.taskID.equals(TASK_ID_HEART_RATE_MEASUREMENT)) {
-                Toast.makeText(getActivity(),
-                        "TODO: implement heart rate measurement task",
-                        Toast.LENGTH_SHORT).show();
+                List<Step> stepList = new ArrayList<>();
+                stepList.add(new InstructionStep("Instruction", "Heartrate camera test", "Place your finger over your camera without contacting the lens. Your data will be recorded for 60 seconds and then uploaded."));
+                stepList.add(new HeartRateCameraStep("camera"));
+                OrderedTask heartrateTask = new OrderedTask("HeartRate Measurement", stepList);
+                startActivityForResult(ActiveTaskActivity.newIntent(getActivity(), heartrateTask), REQUEST_TASK);
             } else if (task.taskID.equals(TASK_ID_CARDIO_12MT)) {
                 Toast.makeText(getActivity(),
                         "TODO: implement 12 minute cardio task",

@@ -38,4 +38,7 @@ dependencies {
         exclude group: 'org.researchstack:skin', module: 'org.researchstack:skin'
     }
     compile project(':android-sdk')
+
+    // Important - the CameraSource implementation in this project requires version 8.1 or higher.
+    compile 'com.google.android.gms:play-services-vision:10.0.1+'
 }
