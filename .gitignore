@@ -74,3 +74,8 @@ fastlane/test_output
 vendor/
 .bundle/
 
+# git-crypt
+git-crypt*.key
+
+# misc
+.DS_Store
