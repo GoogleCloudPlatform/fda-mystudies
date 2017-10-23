@@ -1,12 +1,15 @@
 language: android
+jdk: oraclejdk8
+dist: trusty
+sudo: true
 android:
   components:
-  - platform-tools
-  - tools
-  - build-tools-26.0.2
-  - android-26
+    - platform-tools
+    - tools
+    - build-tools-25.0.2
+    - android-25
 cache:
-- bundler
+  - bundler
 branches:
   only:
   - master

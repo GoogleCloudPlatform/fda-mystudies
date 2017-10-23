@@ -1,6 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#3F51B5</color>
-    <color name="colorPrimaryDark">#303F9F</color>
-    <color name="colorAccent">#FF4081</color>
+    <color name="colorPrimary">@color/deepGreen</color>
+    <color name="colorPrimaryDark">#000000</color>
+    <color name="colorAccent">@color/deepGreen</color>
+
+
+    <color name="rsb_colorPrimary">@color/colorPrimary</color>
+    <color name="rsb_colorPrimaryDark">@color/colorPrimaryDark</color>
+    <color name="rsb_colorAccent">@color/colorAccent</color>
+
+    <color name="white">#FFFFFF</color>
+    <color name="gray">#AAAAAA</color>
+    <color name="purple">#5B3EAD</color>
+    <color name="dark_gray">#333333</color>
+    <color name="yellow">#FFFF00</color>
+    <color name="blue">#0000FF</color>
+    <color name="green">#00FF00</color>
+    <color name="deepGreen">#60B159</color>
+    <color name="red">#FF0000</color>
+
+    <color name="text_color_settings_title">@color/dark_gray</color>
+    <color name="text_color_settings_summary">@color/dark_gray</color>
+    <color name="tab_text_color">@color/dark_gray</color>
+
+    <color name="bullet_color">#000000</color>
+
 </resources>

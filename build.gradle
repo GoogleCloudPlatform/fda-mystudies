@@ -7,8 +7,16 @@ buildscript {
         jcenter()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:3.0.0-rc1'
-        //classpath 'com.android.tools.build:gradle:2.3.3'
+        // wasn't working with travis
+//        classpath 'com.android.tools.build:gradle:3.0.0-beta7'
+        classpath 'com.android.tools.build:gradle:2.3.3'
+        classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.7'
+        classpath 'com.github.dcendents:android-maven-gradle-plugin:1.4.1'
+
+        classpath "com.neenbedankt.gradle.plugins:android-apt:1.4"
+        classpath 'me.tatarka:gradle-retrolambda:3.2.3'
+        // workaround lint bug concerning lombok
+        classpath 'me.tatarka.retrolambda.projectlombok:lombok.ast:0.2.3.a2'
 
         // NOTE: Do not place your application dependencies here; they belong
         // in the individual module build.gradle files
@@ -17,8 +25,14 @@ buildscript {
 
 allprojects {
     repositories {
-        google()
+        mavenLocal()
         jcenter()
+        maven {
+            url "https://dl.bintray.com/touchlab/Squeaky"
+        }
+        maven { url "https://jitpack.io" }
+        maven { url 'http://repo-maven.sagebridge.org/' }
+        google()
     }
 }
 

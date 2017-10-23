@@ -1,16 +1,46 @@
 <resources>
-    <string name="app_name">Cardiorespiratory Fitness</string>
+    <string name="osb_study_id">crf-module</string>
+    <string name="osb_study_name">CRF Module</string>
 
-    <!-- Strings related to login -->
-    <string name="prompt_email">Email</string>
-    <string name="prompt_password">Password (optional)</string>
-    <string name="action_sign_in">Sign in or register</string>
-    <string name="action_sign_in_short">Sign in</string>
-    <string name="error_invalid_email">This email address is invalid</string>
-    <string name="error_invalid_password">This password is too short</string>
-    <string name="error_incorrect_password">This password is incorrect</string>
-    <string name="error_field_required">This field is required</string>
-    <string name="permission_rationale">"Contacts permissions are needed for providing email
-        completions."
-    </string>
+    <string name="app_name">Cardiorespiratory Fitness</string>
+    <string name="action_settings">Settings</string>
+
+    <!-- Overview Screen -->
+    <string name="crf_overview_title">Welcome to the CRF Module</string>
+    <string name="crf_overview_text">Let’s start the study</string>
+    <string name="crf_overview_detail_text">Help us learn and test a new digital tool for Cardiorespiratory fitness by completing 2 clinic visits and doing several runs and stairs steps.</string>
+    <string name="crf_lets_go">Let\’s go!</string>
+
+    <string name="task_initial_toolbar_title">task_initial_toolbar_title</string>
+
+    <string name="onboarding_sign_in">Sign In</string>
+    <string name="join_study">Join Study</string>
+
+    <string name="rsb_share_the_app_message">
+        Please take a look at Parkinson Crf, a research study app about Parkinson Disease.
+        Download it for Android at https://play.google.com/store/apps/details?id=org.sagebase.Crf</string>
+    <string name="rsb_share_app_url">https://play.google.com/store/apps/details?id=org.sagebase.Crf</string>
+
+    <!-- Custom Mood Survey -->
+    <string name="custom_mood_survey_title">Custom Survey</string>
+    <string name="custom_mood_survey_text">You now have the ability to create your own survey question. Tap Next to enter your question.</string>
+    <string name="custom_mood_survey_placeholder_text">Tap to write</string>
+
+    <string name="custom_mood_survey_question_text">Customize your question.</string>
+
+    <string name="custom_mood_survey_dialog_label">Learn More</string>
+    <string name="custom_mood_survey_dialog_text">Creating a custom question will help you track something personal to you over time. Think about something you care deeply about and would like to see how your performance in that area changes with your post-treatment evolution.
+Some examples may include:
+- How was your morning run today?
+- My work day today was...
+
+We will track your question in the dashboard (shown as "Custom Question") over time. Remember that you can always go to your profile and change this question.</string>
+
+    <string name="custom_mood_survey_completion_title">Thank You</string>
+    <string name="custom_mood_survey_completion_text">Your results will be displayed on the dashboard when ready.</string>
+
+    <string name="settings_custom_question_title">Daily Scale</string>
+    <string name="settings_custom_question_hint">Enter a question.</string>
+    <string name="settings_custom_question_summary">Enter a custom question that you would like to track.</string>
+
 </resources>
