@@ -37,6 +37,9 @@ public class CameraSourcePreview extends ViewGroup {
     private boolean mStartRequested;
     private boolean mSurfaceAvailable;
     private CameraSource mCameraSource;
+    public boolean isCameraSetup() {
+        return mCameraSource != null;
+    }
 
     public CameraSourcePreview(Context context, AttributeSet attrs) {
         super(context, attrs);

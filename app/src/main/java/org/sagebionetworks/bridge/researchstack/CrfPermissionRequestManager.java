@@ -11,6 +11,8 @@ import android.support.v4.content.ContextCompat;
 import org.researchstack.skin.AppPrefs;
 import org.researchstack.backbone.PermissionRequestManager;
 
+import org.sagebionetworks.research.crf.R;
+
 /**
  * Created by TheMDP on 12/12/16.
  */
@@ -26,39 +28,39 @@ public class CrfPermissionRequestManager extends PermissionRequestManager {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             {
                 PermissionRequestManager.PermissionRequest permission = new PermissionRequestManager.PermissionRequest(
-                        Manifest.permission.ACCESS_FINE_LOCATION,
-                        R.drawable.rsb_ic_location_24dp,
-                        R.string.rsb_permission_location_title,
-                        R.string.rsb_permission_location_desc);
+                        Manifest.permission.CAMERA,
+                        R.drawable.ic_camera_alt_black_24dp,
+                        R.string.permission_camera_title,
+                        R.string.permission_camera_desc);
                 permission.setIsBlockingPermission(true);
                 permission.setIsSystemPermission(true);
 
                 addPermission(permission);
             }
-
-            {
-                PermissionRequestManager.PermissionRequest permission = new PermissionRequestManager.PermissionRequest(
-                        Manifest.permission.RECORD_AUDIO,
-                        R.drawable.rsb_ic_microphone_24dp,
-                        R.string.rsb_permission_microphone_title,
-                        R.string.rsb_permission_microphone_desc);
-                permission.setIsBlockingPermission(true);
-                permission.setIsSystemPermission(true);
-
-                addPermission(permission);
-            }
+//
+//            {
+//                PermissionRequestManager.PermissionRequest permission = new PermissionRequestManager.PermissionRequest(
+//                        Manifest.permission.ACCESS_FINE_LOCATION,
+//                        R.drawable.rsb_ic_location_24dp,
+//                        R.string.rsb_permission_location_title,
+//                        R.string.rsb_permission_location_desc);
+//                permission.setIsBlockingPermission(true);
+//                permission.setIsSystemPermission(true);
+//
+//                addPermission(permission);
+//            }
         }
-
-        // We have some unique permissions that tie into Settings. You will need
-        // to handle the UI for this permission along w/ storing the result.
-        PermissionRequestManager.PermissionRequest notifications =
-                new PermissionRequestManager.PermissionRequest(
-                        PERMISSION_NOTIFICATIONS,
-                        R.drawable.rss_ic_notification_24dp,
-                        R.string.rsb_permission_notification_title,
-                        R.string.rsb_permission_notification_desc
-                );
-        addPermission(notifications);
+//
+//        // We have some unique permissions that tie into Settings. You will need
+//        // to handle the UI for this permission along w/ storing the result.
+//        PermissionRequestManager.PermissionRequest notifications =
+//                new PermissionRequestManager.PermissionRequest(
+//                        PERMISSION_NOTIFICATIONS,
+//                        R.drawable.rss_ic_notification_24dp,
+//                        R.string.rsb_permission_notification_title,
+//                        R.string.rsb_permission_notification_desc
+//                );
+//        addPermission(notifications);
     }
 
     @Override
