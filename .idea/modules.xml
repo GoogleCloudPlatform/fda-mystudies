@@ -2,7 +2,6 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/CRF.iml" filepath="$PROJECT_DIR$/CRF.iml" />
       <module fileurl="file://$PROJECT_DIR$/CardiorespiratoryFitness-Android.iml" filepath="$PROJECT_DIR$/CardiorespiratoryFitness-Android.iml" />
       <module fileurl="file://$PROJECT_DIR$/BridgeAndroidSdk/android-sdk/android-sdk.iml" filepath="$PROJECT_DIR$/BridgeAndroidSdk/android-sdk/android-sdk.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />

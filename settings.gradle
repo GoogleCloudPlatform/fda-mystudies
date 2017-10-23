@@ -1,9 +1,5 @@
-include ':app'
-include ':backbone'
-project(':backbone').projectDir = file('BridgeAndroidSdk/ResearchStack/backbone')
-include ':skin'
-project(':skin').projectDir = file('BridgeAndroidSdk/ResearchStack/skin')
-include ':researchstack-sdk'
-project(':researchstack-sdk').projectDir = file('BridgeAndroidSdk/researchstack-sdk')
-include ':android-sdk'
-project(':android-sdk').projectDir = file('BridgeAndroidSdk/android-sdk')
+include ':app', ':researchstack-sdk', ':android-sdk', ':skin', ':backbone'
+project(':researchstack-sdk').projectDir = new File('BridgeAndroidSdk/researchstack-sdk')
+project(':android-sdk').projectDir = new File('BridgeAndroidSdk/android-sdk')
+project(':skin').projectDir = new File('BridgeAndroidSdk/ResearchStack/skin')
+project(':backbone').projectDir = new File('BridgeAndroidSdk/ResearchStack/backbone')
