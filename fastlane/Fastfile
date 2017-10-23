@@ -1,0 +1,98 @@
+# Customise this file, documentation can be found here:
+# https://github.com/fastlane/fastlane/tree/master/fastlane/docs
+# All available actions: https://docs.fastlane.tools/actions
+# can also be listed using the `fastlane actions` command
+
+# Change the syntax highlighting to Ruby
+# All lines starting with a # are ignored when running `fastlane`
+
+# If you want to automatically update fastlane if a new version is available:
+# update_fastlane
+
+# This is the minimum version number required.
+# Update this, if you use features of a newer version
+fastlane_version "2.30.2"
+
+default_platform :android
+
+platform :android do
+  before_all do
+    # ENV["SLACK_URL"] = "https://hooks.slack.com/services/..."
+  end
+
+  desc "Runs all the tests"
+  lane :test do
+    gradle(task: "test")
+    gradle(task: "deviceCheck")
+  end
+
+  desc "Build apk"
+  lane :assemble do
+    gradle(task: "assemble")
+  end
+
+  desc "Submit a new Beta Build to Crashlytics Beta"
+  lane :beta do
+    gradle(task: "assembleRelease")
+#    crashlytics
+
+    # sh "your_script.sh"
+    # You can also use other beta testing services here
+  end
+
+  desc "Deploy a new version to the Google Play"
+  lane :alpha do |options|
+    ensure_git_status_clean
+    version_name = get_version_name(gradle_file_path:"app/build.gradle")
+    next_version_code = increment_version_code(gradle_file_path: "app/build.gradle")
+    gradle(task: "assembleRelease")
+    sign_apk(
+      alias: options[:alias],
+      storepass: options[:storepass],
+      keystore_path: "../android-certificates/SageBionetworks.keystore",
+      tsa: "http://timestamp.comodoca.com/rfc316",
+      signed_apk_path: options[:signed_apk_path],
+      keypass: options[:keypass]
+    )
+    zipalign(apk_path: "#{lane_context[SharedValues::SIGNED_APK_PATH]}")
+    supply(
+      track: "alpha",
+      apk: "#{lane_context[SharedValues::SIGNED_APK_PATH]}",
+      json_key: "../android-certificates/play_service_account_79bda59f.json",
+    )
+    git_commit(path: "app/build.gradle", message: "[skip ci] Version Bump")
+    add_git_tag(tag: "#{version_name}_#{next_version_code}")
+    push_to_git_remote(remote_branch: ENV["TRAVIS_BRANCH"])
+  end
+
+  # You can define as many lanes as you want
+
+  after_all do |lane|
+    # This block is called, only if the executed lane was successful
+
+    # slack(
+    #   message: "Successfully deployed new App Update."
+    # )
+  end
+
+  error do |lane, exception|
+    # slack(
+    #   message: exception.message,
+    #   success: false
+    # )
+  end
+
+  desc "Run a local test"
+  lane :local do |options|
+    gradle(task: "test")
+#    gradle(task: "connectedCheck")
+#    gradle(task: "deviceCheck")
+  end
+end
+
+
+# More information about multiple platforms in fastlane: https://github.com/fastlane/fastlane/blob/master/fastlane/docs/Platforms.md
+# All available actions: https://docs.fastlane.tools/actions
+
+# fastlane reports which actions are used. No personal data is recorded. 
+# Learn more at https://github.com/fastlane/fastlane#metrics

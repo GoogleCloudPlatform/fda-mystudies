@@ -1,13 +1,26 @@
 language: android
-
 android:
   components:
-    - platform-tools
-    - tools
-    - build-tools-26.0.2
-    - android-26
-
+  - platform-tools
+  - tools
+  - build-tools-26.0.2
+  - android-26
+cache:
+- bundler
+branches:
+  only:
+  - master
+  - "/^stable-.*$/"
 before_install:
- - chmod +x ./gradlew
+- echo -e "machine github.com\n  login $CI_USER_TOKEN" >> ~/.netrc
+- git config --global user.name "Travis CI"
+- git config --global user.email "tcisagebio@sagebase.org"
+install:
+- gem install bundler
+- bundle install
+before_script:
+- mkdir "$ANDROID_HOME/licenses" || true
+- echo -e "\n8933bad161af4178b1185d1a37fbf41ea5269c55" > "$ANDROID_HOME/licenses/android-sdk-license"
+- echo -e "\n84831b9409646a918e30573bab4c9c91346d8abd" > "$ANDROID_HOME/licenses/android-sdk-preview-license"
 script:
-    - ./gradlew clean build
+- ./travis/build.sh
