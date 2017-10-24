@@ -3,6 +3,11 @@
     <dimen name="activity_horizontal_margin">16dp</dimen>
     <dimen name="activity_vertical_margin">16dp</dimen>
     <dimen name="fab_margin">16dp</dimen>
-
     <dimen name="bullet_padding">5dp</dimen>
+
+
+    <!-- Button Sizes -->
+    <dimen name="crf_rounded_button_height">100dp</dimen>
+    <dimen name="crf_rounded_button_radius">50dp</dimen>
+
 </resources>

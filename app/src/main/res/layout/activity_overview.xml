@@ -69,15 +69,6 @@
         android:text="@string/crf_overview_detail_text"
         android:textColor="@color/white"/>
 
-    <Button
-        android:id="@id/button_go_forward"
-        android:layout_width="match_parent"
-        android:layout_height="80dp"
-        android:layout_margin="@dimen/rsb_padding_large"
-        android:text="@string/crf_lets_go"
-        android:background="@color/white"
-        android:layout_alignParentBottom="true"
-        android:textColor="@color/deepGreen"
-        android:onClick="goForwardClicked"/>
+
 
 </RelativeLayout>
