@@ -7,7 +7,7 @@ android {
         applicationId "org.sagebionetworks.research.crf"
         minSdkVersion 17
         targetSdkVersion 26
-        versionCode 3
+        versionCode 4
         versionName "0.0.1"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         multiDexEnabled true
