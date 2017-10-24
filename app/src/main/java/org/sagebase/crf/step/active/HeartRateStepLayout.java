@@ -18,6 +18,8 @@
 package org.sagebase.crf.step.active;
 
 import android.content.Context;
+import android.content.DialogInterface;
+import android.support.v7.app.AlertDialog;
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.LinearLayout;
@@ -26,9 +28,11 @@ import org.researchstack.backbone.result.StepResult;
 import org.researchstack.backbone.step.Step;
 import org.researchstack.backbone.step.active.recorder.Recorder;
 import org.researchstack.backbone.step.active.recorder.RecorderConfig;
+import org.researchstack.backbone.ui.callbacks.StepCallbacks;
 import org.researchstack.backbone.ui.step.layout.ActiveStepLayout;
 
 import org.sagebase.crf.camera.CameraSourcePreview;
+import org.sagebionetworks.research.crf.R;
 
 /**
  * Created by TheMDP on 10/19/17.
@@ -67,7 +71,18 @@ public class HeartRateStepLayout extends ActiveStepLayout implements HeartRateCa
         }
         titleTextview.setText("BPM --");
         titleTextview.setVisibility(View.VISIBLE);
+
         super.start();
+
+        // If the camera was not set up properly,
+        if (!cameraSourcePreview.isCameraSetup()) {
+            showOkAlertDialog("Error opening camera interface", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i) {
+                    callbacks.onSaveStep(StepCallbacks.ACTION_PREV, activeStep, null);
+                }
+            });
+        }
     }
 
     @Override

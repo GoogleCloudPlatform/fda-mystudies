@@ -23,11 +23,9 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 
 import org.researchstack.backbone.DataProvider;
-import org.researchstack.backbone.StorageAccess;
 import org.researchstack.backbone.onboarding.OnboardingTaskType;
 import org.researchstack.backbone.utils.ObservableUtils;
 import org.researchstack.skin.ResearchStack;
-import org.researchstack.skin.ui.MainActivity;
 import org.sagebionetworks.research.crf.R;
 
 import rx.functions.Action1;
@@ -37,10 +35,7 @@ import rx.functions.Action1;
  * Zeplin 0.0 CRF - Intro
  */
 
-public class OverviewActivity extends AppCompatActivity {
-
-    // We don't use a pin code for CRF, so just plug in a useless one the app remembers
-    private static final String PIN_CODE = "1234";
+public class CrfOverviewActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,14 +46,14 @@ public class OverviewActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        mockAuthenticate();
+        MainApplication.mockAuthenticate(this);
         DataProvider.getInstance()
                 .initialize(this)
                 .compose(ObservableUtils.applyDefault())
                 .subscribe(new Action1<Object>() {
                     @Override
                     public void call(Object response) {
-                        if (DataProvider.getInstance().isSignedIn(OverviewActivity.this)) {
+                        if (DataProvider.getInstance().isSignedIn(CrfOverviewActivity.this)) {
                             launchMainActivity();
                             finish();
                         }
@@ -66,23 +61,14 @@ public class OverviewActivity extends AppCompatActivity {
                 });
     }
 
-    // We don't use a pin code for CRF, so just plug in a useless one the app remembers
-    protected void mockAuthenticate() {
-        if (StorageAccess.getInstance().hasPinCode(this)) {
-            StorageAccess.getInstance().authenticate(this, PIN_CODE);
-        } else {
-            StorageAccess.getInstance().createPinCode(this, PIN_CODE);
-        }
-    }
-
     protected void launchOnboardingActivity() {
-        mockAuthenticate();
+        MainApplication.mockAuthenticate(this);
         ResearchStack.getInstance().getOnboardingManager().launchOnboarding(
                 OnboardingTaskType.LOGIN, this);
     }
 
     protected void launchMainActivity() {
-        startActivity(new Intent(this, MainActivity.class));
+        startActivity(new Intent(this, CrfMainActivity.class));
         finish();
     }
 

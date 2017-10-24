@@ -43,4 +43,8 @@ We will track your question in the dashboard (shown as "Custom Question") over t
     <string name="settings_custom_question_hint">Enter a question.</string>
     <string name="settings_custom_question_summary">Enter a custom question that you would like to track.</string>
 
+    <!-- Permissions -->
+    <string name="permission_camera_title">Camera</string>
+    <string name="permission_camera_desc">The app needs camera permissions to calculate heart rate.</string>
+
 </resources>

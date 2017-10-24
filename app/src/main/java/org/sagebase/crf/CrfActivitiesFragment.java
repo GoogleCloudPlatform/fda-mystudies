@@ -24,6 +24,7 @@ import com.google.common.collect.Lists;
 import org.researchstack.backbone.DataProvider;
 import org.researchstack.backbone.model.SchedulesAndTasksModel;
 import org.researchstack.backbone.step.InstructionStep;
+import org.researchstack.backbone.step.PermissionsStep;
 import org.researchstack.backbone.step.Step;
 import org.researchstack.backbone.task.OrderedTask;
 import org.researchstack.backbone.task.Task;
@@ -51,6 +52,7 @@ public class CrfActivitiesFragment extends ActivitiesFragment {
 
             if (task.taskID.equals(TASK_ID_HEART_RATE_MEASUREMENT)) {
                 List<Step> stepList = new ArrayList<>();
+                stepList.add(new PermissionsStep("permission", "Heart rate camera permission", ""));
                 stepList.add(new InstructionStep("Instruction", "Heartrate camera test", "Place your finger over your camera without contacting the lens. Your data will be recorded for 60 seconds and then uploaded."));
                 stepList.add(new HeartRateCameraStep("camera"));
                 OrderedTask heartrateTask = new OrderedTask("HeartRate Measurement", stepList);
