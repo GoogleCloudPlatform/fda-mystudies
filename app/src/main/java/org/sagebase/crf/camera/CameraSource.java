@@ -119,6 +119,9 @@ public class CameraSource {
 
     // Guarded by mCameraLock
     private Camera mCamera;
+    public Camera getCamera() {
+        return mCamera;
+    }
 
     private int mFacing = CAMERA_FACING_BACK;
 
@@ -374,6 +377,11 @@ public class CameraSource {
             }
 
             mCamera = createCamera();
+
+            if (mCamera == null) {
+                return null;
+            }
+
             mCamera.setPreviewDisplay(surfaceHolder);
             mCamera.startPreview();
 
@@ -744,7 +752,14 @@ public class CameraSource {
         if (requestedCameraId == -1) {
             throw new RuntimeException("Could not find requested camera.");
         }
-        Camera camera = Camera.open(requestedCameraId);
+
+        Camera camera = null;
+        try {
+            camera = Camera.open(requestedCameraId);
+        } catch (RuntimeException e) {
+            e.printStackTrace();
+            return null;
+        }
 
         SizePair sizePair = selectSizePair(camera, mRequestedPreviewWidth, mRequestedPreviewHeight);
         if (sizePair == null) {
