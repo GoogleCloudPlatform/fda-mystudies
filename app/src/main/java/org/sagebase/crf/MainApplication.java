@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.support.multidex.MultiDex;
 import android.view.WindowManager;
 
+import org.researchstack.backbone.StorageAccess;
 import org.researchstack.skin.ResearchStack;
 import org.sagebionetworks.bridge.android.BridgeApplication;
 import org.sagebionetworks.bridge.researchstack.CrfResearchStack;
@@ -16,6 +17,9 @@ import org.sagebionetworks.bridge.researchstack.CrfResearchStack;
  */
 
 public class MainApplication extends BridgeApplication {
+
+    // We don't use a pin code for CRF, so just plug in a useless one the app remembers
+    public static final String PIN_CODE = "1234";
 
     CrfResearchStack researchStack;
 
@@ -78,4 +82,12 @@ public class MainApplication extends BridgeApplication {
 
         }
     };
+
+    public static void mockAuthenticate(Context context) {
+        if (StorageAccess.getInstance().hasPinCode(context)) {
+            StorageAccess.getInstance().authenticate(context, PIN_CODE);
+        } else {
+            StorageAccess.getInstance().createPinCode(context, PIN_CODE);
+        }
+    }
 }
