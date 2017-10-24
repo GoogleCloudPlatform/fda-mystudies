@@ -19,13 +19,23 @@ package org.sagebionetworks.bridge.researchstack;
 
 import android.content.Context;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+
+import org.researchstack.backbone.ResourceManager;
+import org.researchstack.backbone.ResourcePathManager;
 import org.researchstack.backbone.model.survey.InstructionSurveyItem;
 import org.researchstack.backbone.model.survey.SurveyItem;
+import org.researchstack.backbone.model.survey.SurveyItemAdapter;
 import org.researchstack.backbone.model.survey.factory.SurveyFactory;
 import org.researchstack.backbone.step.CompletionStep;
 import org.researchstack.backbone.step.InstructionStep;
 import org.researchstack.backbone.step.Step;
+import org.researchstack.backbone.task.Task;
 import org.sagebase.crf.step.CrfInstructionStep;
+import org.sagebase.crf.step.CrfInstructionSurveyItem;
+
+import java.util.List;
 
 /**
  * Created by TheMDP on 10/24/17.
@@ -35,38 +45,53 @@ public class CrfSurveyFactory extends SurveyFactory {
 
     public CrfSurveyFactory() {
         super();
+        gson = createGson();
         setupCustomStepCreator();
+    }
+
+    public Task createTask(Context context, String resourceName) {
+        ResourcePathManager.Resource resource = ResourceManager.getInstance().getResource(resourceName);
+        String json = ResourceManager.getResourceAsString(context,
+                ResourceManager.getInstance().generatePath(resource.getType(), resource.getName()));
+        Gson gson = createGson(); // Do not store this gson as a member variable, it has a link to Context
+        List<SurveyItem> surveyItems;
+        return null;
+    }
+
+    private Gson createGson() {
+        GsonBuilder builder = new GsonBuilder();
+        builder.registerTypeAdapter(SurveyItem.class, new CrfSurveyItemAdapter());
+        return builder.create();
     }
 
     private void setupCustomStepCreator() {
         setCustomStepCreator(new CustomStepCreator() {
             @Override
             public Step createCustomStep(Context context, SurveyItem item, boolean isSubtaskStep, SurveyFactory factory) {
+                if (item.getCustomTypeValue() != null) {
+                    switch (item.getCustomTypeValue()) {
+                        case CrfSurveyItemAdapter.CRF_INSTRUCTION_SURVEY_ITEM_TYPE:
+                            if (!(item instanceof CrfInstructionSurveyItem)) {
+                                throw new IllegalStateException("Error in json parsing, crf_instruction types must be CrfInstructionSurveyItem");
+                            }
+                            return createCrfInstructionStep((CrfInstructionSurveyItemitem));
+                    }
+                }
                 return null;
             }
         });
     }
 
-    @Override
-    public InstructionStep createInstructionStep(InstructionSurveyItem item) {
-        InstructionStep step = new CrfInstructionStep(item.identifier, item.title, item.text);
-
-
-
+    private CrfInstructionStep createCrfInstructionStep(CrfInstructionSurveyItem item) {
+        CrfInstructionStep step = new CrfInstructionStep(
+                item.identifier, item.title, item.text);
         fillInstructionStep(step, item);
+        if (item.buttonType == null) {
+            step.buttonType = item.buttonType;
+        }
+        if (item.buttonText != null) {
+            step.buttonText = item.buttonText;
+        }
         return step;
-    }
-
-    /**
-     * @param item InstructionSurveyItem from JSON
-     * @return valid CompletionStep matching the InstructionSurveyItem
-     */
-    @Override
-    public CompletionStep createInstructionCompletionStep(InstructionSurveyItem item) {
-        // TODO: replace with our custom steps
-        return super.createInstructionCompletionStep(item);
-//        CompletionStep step = new CompletionStep(item.identifier, item.title, item.text);
-//        fillInstructionStep(step, item);
-//        return step;
     }
 }
