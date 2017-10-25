@@ -1,0 +1,38 @@
+<!--
+  ~    Copyright 2017 Sage Bionetworks
+  ~
+  ~    Licensed under the Apache License, Version 2.0 (the "License");
+  ~    you may not use this file except in compliance with the License.
+  ~    You may obtain a copy of the License at
+  ~
+  ~        http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~    Unless required by applicable law or agreed to in writing, software
+  ~    distributed under the License is distributed on an "AS IS" BASIS,
+  ~    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~    See the License for the specific language governing permissions and
+  ~    limitations under the License.
+  ~
+  -->
+
+<vector android:height="24dp" android:viewportHeight="56.0"
+    android:viewportWidth="56.0" android:width="24dp" xmlns:android="http://schemas.android.com/apk/res/android">
+    <path android:fillColor="#F58876"
+        android:pathData="M27.89,27.89m-27.89,0a27.89,27.89 0,1 1,55.79 0a27.89,27.89 0,1 1,-55.79 0"
+        android:strokeColor="#00000000" android:strokeWidth="1"/>
+    <path android:fillColor="#F1806F"
+        android:pathData="M33.76,11.96L11.69,33.92L32.79,55.33C43.24,53.71 53.1,45.03 55.26,33.21L33.76,11.96Z"
+        android:strokeColor="#00000000" android:strokeWidth="1"/>
+    <path android:fillColor="#FFFFFF"
+        android:pathData="M21.78,11.67h11.84v32.48h-11.84z"
+        android:strokeColor="#00000000" android:strokeWidth="1"/>
+    <path android:fillColor="#FFFFFF"
+        android:pathData="M11.67,21.78h32.11v11.98h-32.11z"
+        android:strokeColor="#00000000" android:strokeWidth="1"/>
+    <path android:fillColor="#5EAE57"
+        android:pathData="M20.78,10.64C20.78,16.31 16.13,20.91 10.39,20.91C4.65,20.91 -0,16.31 -0,10.64C-0,4.96 4.65,0.36 10.39,0.36C16.13,0.36 20.78,4.96 20.78,10.64"
+        android:strokeColor="#00000000" android:strokeWidth="1"/>
+    <path android:fillColor="#FFFFFF"
+        android:pathData="M5.65,11.6C6.74,12.73 7.83,13.85 8.91,14.98C9.08,15.15 9.34,15.08 9.46,14.91C11.37,12.18 13.28,9.45 15.19,6.72C15.44,6.35 14.84,6 14.58,6.37C12.67,9.1 10.77,11.83 8.86,14.56C9.04,14.53 9.23,14.51 9.41,14.49C8.32,13.36 7.23,12.24 6.14,11.12C5.83,10.79 5.34,11.28 5.65,11.6"
+        android:strokeColor="#00000000" android:strokeWidth="1"/>
+</vector>

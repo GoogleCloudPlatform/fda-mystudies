@@ -1,0 +1,56 @@
+<!--
+  ~    Copyright 2017 Sage Bionetworks
+  ~
+  ~    Licensed under the Apache License, Version 2.0 (the "License");
+  ~    you may not use this file except in compliance with the License.
+  ~    You may obtain a copy of the License at
+  ~
+  ~        http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~    Unless required by applicable law or agreed to in writing, software
+  ~    distributed under the License is distributed on an "AS IS" BASIS,
+  ~    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~    See the License for the specific language governing permissions and
+  ~    limitations under the License.
+  ~
+  -->
+
+<vector android:height="24dp" android:viewportHeight="51.0"
+    android:viewportWidth="52.0" android:width="24dp" xmlns:android="http://schemas.android.com/apk/res/android">
+    <path android:fillColor="#FF8875"
+        android:pathData="M25.94,0.14C40.26,0.14 51.87,11.45 51.87,25.4C51.87,39.35 40.26,50.65 25.94,50.65C11.61,50.65 -0,39.35 -0,25.4C-0,11.45 11.61,0.14 25.94,0.14"
+        android:strokeColor="#00000000" android:strokeWidth="1"/>
+    <path android:fillColor="#F0806F"
+        android:pathData="M26.43,50.65C39.59,50.41 50.35,40.63 51.73,28.11L43.06,19.67L42.85,19.99L36.91,14.21L34.73,13.72L27.84,6.89L27.36,10.11L18.63,12.05L11.73,18.77L11.29,20.38L9.32,23.16L12.28,26.04L5.21,29.98L26.43,50.65Z"
+        android:strokeColor="#00000000" android:strokeWidth="1"/>
+    <path android:fillColor="#EDECEC"
+        android:pathData="M41.83,25.4C41.83,16.9 34.76,9.98 26.05,9.92L26.05,10.94C34.19,11.01 40.78,17.46 40.78,25.4C40.78,33.33 34.19,39.79 26.05,39.85L26.05,40.87C34.76,40.81 41.83,33.89 41.83,25.4"
+        android:strokeColor="#00000000" android:strokeWidth="1"/>
+    <path android:fillColor="#EDECEC"
+        android:pathData="M25.94,39.85C17.75,39.85 11.09,33.37 11.09,25.4C11.09,17.43 17.75,10.94 25.94,10.94C25.98,10.94 26.01,10.94 26.05,10.94L26.05,9.92C26.01,9.92 25.98,9.92 25.94,9.92C17.17,9.92 10.04,16.86 10.04,25.4C10.04,33.93 17.17,40.87 25.94,40.87C25.98,40.87 26.01,40.87 26.05,40.87L26.05,39.85C26.01,39.85 25.98,39.85 25.94,39.85"
+        android:strokeColor="#00000000" android:strokeWidth="1"/>
+    <path android:fillColor="#FEFEFE"
+        android:pathData="M20.27,17.38C20.27,14.33 22.81,11.86 25.94,11.86C29.07,11.86 31.61,14.33 31.61,17.38L20.27,17.38Z"
+        android:strokeColor="#00000000" android:strokeWidth="1"/>
+    <path android:fillColor="#FEFEFE"
+        android:pathData="M26.03,6.16C27.44,6.16 28.58,7.28 28.58,8.65C28.58,10.02 27.44,11.14 26.03,11.14C24.62,11.14 23.47,10.02 23.47,8.65C23.47,7.28 24.62,6.16 26.03,6.16"
+        android:strokeColor="#00000000" android:strokeWidth="1"/>
+    <path android:fillColor="#FEFEFE"
+        android:pathData="M20.27,42.59C20.27,39.54 22.81,37.07 25.94,37.07C29.07,37.07 31.61,39.54 31.61,42.59L20.27,42.59Z"
+        android:strokeColor="#00000000" android:strokeWidth="1"/>
+    <path android:fillColor="#FEFEFE"
+        android:pathData="M26.03,31.37C27.44,31.37 28.58,32.49 28.58,33.86C28.58,35.23 27.44,36.35 26.03,36.35C24.62,36.35 23.47,35.23 23.47,33.86C23.47,32.49 24.62,31.37 26.03,31.37"
+        android:strokeColor="#00000000" android:strokeWidth="1"/>
+    <path android:fillColor="#FEFEFE"
+        android:pathData="M5.21,29.98C5.21,26.94 7.75,24.46 10.88,24.46C14.01,24.46 16.55,26.94 16.55,29.98L5.21,29.98Z"
+        android:strokeColor="#00000000" android:strokeWidth="1"/>
+    <path android:fillColor="#FEFEFE"
+        android:pathData="M10.97,18.77C12.38,18.77 13.52,19.88 13.52,21.26C13.52,22.63 12.38,23.74 10.97,23.74C9.56,23.74 8.42,22.63 8.42,21.26C8.42,19.88 9.56,18.77 10.97,18.77"
+        android:strokeColor="#00000000" android:strokeWidth="1"/>
+    <path android:fillColor="#FEFEFE"
+        android:pathData="M35.33,29.98C35.33,26.94 37.87,24.46 41,24.46C44.13,24.46 46.67,26.94 46.67,29.98L35.33,29.98Z"
+        android:strokeColor="#00000000" android:strokeWidth="1"/>
+    <path android:fillColor="#FEFEFE"
+        android:pathData="M41.09,18.77C42.5,18.77 43.64,19.88 43.64,21.26C43.64,22.63 42.5,23.74 41.09,23.74C39.68,23.74 38.54,22.63 38.54,21.26C38.54,19.88 39.68,18.77 41.09,18.77"
+        android:strokeColor="#00000000" android:strokeWidth="1"/>
+</vector>
