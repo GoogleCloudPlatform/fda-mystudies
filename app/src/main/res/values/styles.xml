@@ -1,5 +1,15 @@
 <resources>
 
+    <!-- START used by Fitbit -->
+    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar"/>
+    <style name="AppTheme.NoActionBar">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+    </style>
+    <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar"/>
+    <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light"/>
+    <!-- END used by fitbit -->
+
     <style name="Widget.Crf.IconTabLayout" parent="@style/Widget.Backbone.IconTabLayout">
         <item name="tabIconColor">@android:color/white</item>
         <item name="tabIconIndicatorColor">@color/rsb_error</item>

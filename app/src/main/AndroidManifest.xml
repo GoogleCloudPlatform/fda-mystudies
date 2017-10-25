@@ -60,6 +60,22 @@
             android:theme="@style/Theme.Crf.Survey"
             android:windowSoftInputMode="adjustResize" />
 
+        <activity
+            android:name="org.sagebase.crf.fitbit.MainActivity"
+            android:label="@string/app_name"
+            android:theme="@style/AppTheme.NoActionBar">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
+
+                <category android:name="android.intent.category.LAUNCHER"/>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data android:scheme="houston" android:pathPattern=".*" />
+            </intent-filter>
+
+        </activity>
     </application>
 
 </manifest>
