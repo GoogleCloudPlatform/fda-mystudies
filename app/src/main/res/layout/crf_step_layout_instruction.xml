@@ -28,7 +28,7 @@
         android:layout_height="match_parent"
         android:layout_alignParentTop="true"
         android:layout_above="@+id/crf_text_container"
-        android:scaleType="centerCrop"
+        android:scaleType="centerInside"
         android:background="@android:color/darker_gray"/>
 
     <TextView
@@ -38,6 +38,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
+        android:paddingTop="?attr/actionBarSize"
         android:paddingRight="@dimen/rsb_margin_left"
         android:gravity="center_horizontal"
         android:layout_margin="@dimen/rsb_padding_large"
@@ -78,7 +79,7 @@
     </LinearLayout>
 
     <Button
-        style="@style/Crf.RoundedCornerMaterialButton"
+        style="@style/Crf.Salmon.RoundedCornerMaterialButton"
         android:id="@id/button_go_forward"
         android:layout_width="match_parent"
         android:layout_height="@dimen/crf_rounded_button_height"

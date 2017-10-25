@@ -16,11 +16,7 @@
     <color name="yellow">#FFFF00</color>
     <color name="blue">#0000FF</color>
     <color name="green">#00FF00</color>
-    <color name="deepGreen">#60B159</color>
-    <color name="deepGreen80">#CC60B159</color>
     <color name="red">#FF0000</color>
-    <color name="salmon">#FF8875</color>
-    <color name="salmon80">#CCFF8875</color>
     <color name="white80">#CCFFFFFF</color>
 
     <color name="text_color_settings_title">@color/dark_gray</color>
@@ -28,5 +24,14 @@
     <color name="tab_text_color">@color/dark_gray</color>
 
     <color name="bullet_color">#000000</color>
+
+    <!-- Zeplin Colors -->
+    <color name="salmon">#FF8875</color>
+    <color name="salmon80">#CCFF8875</color>
+    <color name="deepGreen">#60B159</color>
+    <color name="deepGreen80">#CC60B159</color>
+    <color name="azure">#2196F3</color>
+    <color name="softGreen">#68BF60</color>
+    <color name="whiteTwo">#EDEDED</color>
 
 </resources>

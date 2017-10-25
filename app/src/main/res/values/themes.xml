@@ -36,8 +36,9 @@
     </style>
 
     <style name="Theme.Crf.Toolbar.Transparent">
-        <item name="colorControlNormal">@color/rsb_warm_gray</item>
-        <item name="colorPrimary">@android:color/white</item>
+        <item name="colorControlNormal">@color/azure</item>
+        <item name="colorPrimary">@color/azure</item>
+        <item name="colorAccent">@color/azure</item>
         <item name="toolbarStyle">@style/Widget.Crf.Toolbar.Transparent</item>
     </style>
 
@@ -79,8 +80,14 @@
         <item name="colorPrimaryDark">@android:color/black</item>
     </style>
 
-    <style name="Crf.RoundedCornerMaterialButton" parent="Widget.AppCompat.Button.Colored">
+    <style name="Crf.Salmon.RoundedCornerMaterialButton" parent="Widget.AppCompat.Button.Colored">
         <item name="android:background">@drawable/crf_rounded_shape_salmon</item>
+        <item name="android:textColor">@color/white</item>
+    </style>
+
+    <style name="Crf.WhiteDeepGreen.RoundedCornerMaterialButton" parent="Widget.AppCompat.Button.Colored">
+        <item name="android:background">@drawable/crf_rounded_shape_white</item>
+        <item name="android:textColor">@color/deepGreen</item>
     </style>
 
 </resources>
