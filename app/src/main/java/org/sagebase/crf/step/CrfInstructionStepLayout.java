@@ -18,12 +18,16 @@
 package org.sagebase.crf.step;
 
 import android.content.Context;
+import android.support.v4.content.res.ResourcesCompat;
 import android.util.AttributeSet;
 import android.view.View;
+import android.widget.Button;
 
 import org.researchstack.backbone.result.StepResult;
 import org.researchstack.backbone.step.Step;
+import org.researchstack.backbone.ui.callbacks.StepCallbacks;
 import org.researchstack.backbone.ui.step.layout.InstructionStepLayout;
+
 import org.sagebionetworks.research.crf.R;
 
 /**
@@ -33,6 +37,8 @@ import org.sagebionetworks.research.crf.R;
 public class CrfInstructionStepLayout extends InstructionStepLayout {
 
     private CrfInstructionStep crfStep;
+
+    private Button nextButton;
 
     public CrfInstructionStepLayout(Context context) {
         super(context);
@@ -57,21 +63,76 @@ public class CrfInstructionStepLayout extends InstructionStepLayout {
 
     @Override
     public void initialize(Step step, StepResult result) {
+        validateAndSetCrfStep(step);
         super.initialize(step, result);
-        validateAndSetStep(step);
-
-        // Hide submit bar for this view, we use a custom next button
-        getSubmitBar().setVisibility(View.GONE);
     }
 
-    protected void validateAndSetStep(Step step) {
+    protected void validateAndSetCrfStep(Step step) {
         if (!(step instanceof CrfInstructionStep)) {
             throw new IllegalStateException("CrfInstructionStepLayout only works with CrfInstructionStep");
         }
         this.crfStep = (CrfInstructionStep)step;
     }
 
+    @Override
+    public int getContentContainerLayoutId() {
+        return R.id.crf_step_layout_container;
+    }
+
+    @Override
+    public int getFixedSubmitBarLayoutId() {
+        return R.layout.crf_step_layout_container;
+    }
+
+    @Override
+    public void connectStepUi(int titleRId, int textRId, int imageRId, int detailRId) {
+        super.connectStepUi(
+                R.id.crf_intruction_title,
+                R.id.crf_intruction_text,
+                R.id.crf_image_view,
+                R.id.crf_instruction_more_detail_text);
+
+        nextButton = findViewById(R.id.button_go_forward);
+    }
+
+    @Override
+    public void refreshStep() {
+        super.refreshStep();
+
+        if (crfStep.buttonText != null) {
+            nextButton.setText(crfStep.buttonText);
+        }
+        if (crfStep.buttonType != null) {
+            switch (crfStep.buttonType) {
+                case DEFAULT:
+                    nextButton.setBackgroundResource(R.drawable.crf_rounded_button_salmon);
+                    nextButton.setTextColor(ResourcesCompat.getColor(getResources(), R.color.rsb_white, null));
+                    break;
+                case DEFAULT_WHITE_SALMON:
+                    nextButton.setBackgroundResource(R.drawable.crf_rounded_button_white);
+                    nextButton.setTextColor(ResourcesCompat.getColor(getResources(), R.color.salmon, null));
+                    break;
+                case DEFAULT_WHITE_DEEP_GREEN:
+                    nextButton.setBackgroundResource(R.drawable.crf_rounded_button_white);
+                    nextButton.setTextColor(ResourcesCompat.getColor(getResources(), R.color.deepGreen, null));
+                    break;
+                case HEART:
+                    // TODO: setup image button
+                    break;
+                case TREADMILL:
+                    // TODO: setup image button
+                    break;
+            }
+        }
+        nextButton.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                goForwardClicked(view);
+            }
+        });
+    }
+
     public void goForwardClicked(View v) {
-        super.onComplete();
+        callbacks.onSaveStep(StepCallbacks.ACTION_NEXT, step, null);
     }
 }

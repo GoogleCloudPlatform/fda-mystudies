@@ -24,26 +24,25 @@ import com.google.gson.GsonBuilder;
 
 import org.researchstack.backbone.ResourceManager;
 import org.researchstack.backbone.ResourcePathManager;
-import org.researchstack.backbone.model.survey.InstructionSurveyItem;
 import org.researchstack.backbone.model.survey.SurveyItem;
-import org.researchstack.backbone.model.survey.SurveyItemAdapter;
 import org.researchstack.backbone.model.survey.factory.SurveyFactory;
-import org.researchstack.backbone.step.CompletionStep;
-import org.researchstack.backbone.step.InstructionStep;
+import org.researchstack.backbone.model.taskitem.TaskItem;
+import org.researchstack.backbone.model.taskitem.TaskItemAdapter;
+import org.researchstack.backbone.model.taskitem.factory.TaskItemFactory;
 import org.researchstack.backbone.step.Step;
 import org.researchstack.backbone.task.Task;
 import org.sagebase.crf.step.CrfInstructionStep;
 import org.sagebase.crf.step.CrfInstructionSurveyItem;
 
-import java.util.List;
-
 /**
  * Created by TheMDP on 10/24/17.
  */
 
-public class CrfSurveyFactory extends SurveyFactory {
+public class CrfTaskFactory extends TaskItemFactory {
 
-    public CrfSurveyFactory() {
+    private Gson gson;
+
+    public CrfTaskFactory() {
         super();
         gson = createGson();
         setupCustomStepCreator();
@@ -54,13 +53,14 @@ public class CrfSurveyFactory extends SurveyFactory {
         String json = ResourceManager.getResourceAsString(context,
                 ResourceManager.getInstance().generatePath(resource.getType(), resource.getName()));
         Gson gson = createGson(); // Do not store this gson as a member variable, it has a link to Context
-        List<SurveyItem> surveyItems;
-        return null;
+        TaskItem taskItem = gson.fromJson(json, TaskItem.class);
+        return super.createTask(context, taskItem);
     }
 
     private Gson createGson() {
         GsonBuilder builder = new GsonBuilder();
         builder.registerTypeAdapter(SurveyItem.class, new CrfSurveyItemAdapter());
+        builder.registerTypeAdapter(TaskItem.class, new TaskItemAdapter());
         return builder.create();
     }
 
@@ -74,7 +74,7 @@ public class CrfSurveyFactory extends SurveyFactory {
                             if (!(item instanceof CrfInstructionSurveyItem)) {
                                 throw new IllegalStateException("Error in json parsing, crf_instruction types must be CrfInstructionSurveyItem");
                             }
-                            return createCrfInstructionStep((CrfInstructionSurveyItemitem));
+                            return createCrfInstructionStep((CrfInstructionSurveyItem)item);
                     }
                 }
                 return null;
@@ -86,7 +86,7 @@ public class CrfSurveyFactory extends SurveyFactory {
         CrfInstructionStep step = new CrfInstructionStep(
                 item.identifier, item.title, item.text);
         fillInstructionStep(step, item);
-        if (item.buttonType == null) {
+        if (item.buttonType != null) {
             step.buttonType = item.buttonType;
         }
         if (item.buttonText != null) {

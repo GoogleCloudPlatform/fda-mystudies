@@ -15,19 +15,14 @@
   ~    limitations under the License.
   ~
   -->
+<shape
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="rectangle">
+    <solid
+        android:color="@color/salmon">
+    </solid>
 
-<selector xmlns:android="http://schemas.android.com/apk/res/android">
-    <shape
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        android:shape="rectangle">
-
-        <solid
-            android:color="@color/white" >
-        </solid>
-
-        <corners
-            android:radius="@dimen/crf_rounded_button_radius">
-        </corners>
-
-    </shape>
-</selector>
+    <corners
+        android:radius="@dimen/crf_rounded_button_radius">
+    </corners>
+</shape>

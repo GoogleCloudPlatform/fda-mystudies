@@ -79,8 +79,8 @@
         <item name="colorPrimaryDark">@android:color/black</item>
     </style>
 
-    <style name="AppTheme.RoundedCornerMaterialButton" parent="Widget.AppCompat.Button.Colored">
-        <item name="android:background">@drawable/crf_rounded_button</item>
+    <style name="Crf.RoundedCornerMaterialButton" parent="Widget.AppCompat.Button.Colored">
+        <item name="android:background">@drawable/crf_rounded_shape_salmon</item>
     </style>
 
 </resources>

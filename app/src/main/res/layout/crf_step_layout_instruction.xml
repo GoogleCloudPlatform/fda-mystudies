@@ -23,59 +23,71 @@
     android:layout_height="match_parent">
 
     <ImageView
-        android:id="@+id/rsb_image_view"
+        android:id="@+id/crf_image_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_alignParentTop="true"
-        android:layout_above="@+id/text_container"
-        android:scaleType="centerInside" />
+        android:layout_above="@+id/crf_text_container"
+        android:scaleType="centerCrop"
+        android:background="@android:color/darker_gray"/>
+
+    <TextView
+        android:id="@+id/crf_intruction_title"
+        style="@style/Backbone.Survey.Title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:paddingRight="@dimen/rsb_margin_left"
+        android:gravity="center_horizontal"
+        android:layout_margin="@dimen/rsb_padding_large"
+        android:visibility="gone"
+        tools:text="@string/lorem_name"
+        tools:visibility="visible" />
 
     <LinearLayout
-        android:id="@id/text_container"
+        android:id="@id/crf_text_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:layout_above="@+id/button_go_forward">
 
         <TextView
-            android:id="@+id/rsb_intruction_title"
-            style="@style/Backbone.Survey.Title"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:visibility="gone"
-            tools:text="@string/lorem_name"
-            tools:visibility="visible" />
-
-        <TextView
-            android:id="@+id/rsb_intruction_text"
-            style="@style/Backbone.Survey.Summary"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textColorLink="?attr/colorAccent"
-            android:visibility="gone"
-            tools:text="@string/lorem_long"
-            tools:visibility="visible" />
-
-        <TextView
-            android:id="@+id/rsb_instruction_more_detail_text"
+            android:id="@+id/crf_intruction_text"
             style="@style/Backbone.Survey.Summary"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:paddingRight="@dimen/rsb_margin_left"
             android:textColorLink="?attr/colorAccent"
+            android:gravity="center_horizontal"
+            android:visibility="gone"
+            tools:visibility="visible" />
+
+        <TextView
+            android:id="@+id/crf_instruction_more_detail_text"
+            style="@style/Backbone.Survey.Summary"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:paddingRight="@dimen/rsb_margin_left"
+            android:textColorLink="?attr/colorAccent"
+            android:gravity="center_horizontal"
             android:visibility="gone" />
 
     </LinearLayout>
 
     <Button
-        style="@style/AppTheme.RoundedCornerMaterialButton"
+        style="@style/Crf.RoundedCornerMaterialButton"
         android:id="@id/button_go_forward"
         android:layout_width="match_parent"
         android:layout_height="@dimen/crf_rounded_button_height"
         android:layout_margin="@dimen/rsb_padding_large"
+        android:focusable="true"
         android:text="@string/crf_lets_go"
-        android:background="@color/white"
         android:layout_alignParentBottom="true"
-        android:textColor="@color/rsb_colorAccent"
+        android:textColor="@color/white"
+        android:textAllCaps="false"
         android:onClick="goForwardClicked"/>
 
 </RelativeLayout>

@@ -17,12 +17,21 @@
 
 package org.sagebase.crf.step;
 
+import com.google.gson.annotations.SerializedName;
+
 /**
  * Created by TheMDP on 10/24/17.
  */
 
 public enum  CrfInstructionButtonType {
+    @SerializedName("default")
     DEFAULT,
+    @SerializedName("defaultWhiteSalmon")
+    DEFAULT_WHITE_SALMON,
+    @SerializedName("defaultWhiteDeepGreen")
+    DEFAULT_WHITE_DEEP_GREEN,
+    @SerializedName("heart")
     HEART,
+    @SerializedName("treadmill")
     TREADMILL
 }

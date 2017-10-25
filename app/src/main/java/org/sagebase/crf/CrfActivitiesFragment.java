@@ -32,6 +32,7 @@ import org.researchstack.backbone.ui.ActiveTaskActivity;
 import org.researchstack.backbone.ui.ViewTaskActivity;
 import org.researchstack.skin.ui.fragment.ActivitiesFragment;
 import org.sagebase.crf.step.active.HeartRateCameraStep;
+import org.sagebionetworks.bridge.researchstack.CrfTaskFactory;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -52,15 +53,19 @@ public class CrfActivitiesFragment extends ActivitiesFragment {
 
             if (task.taskID.equals(TASK_ID_HEART_RATE_MEASUREMENT)) {
                 List<Step> stepList = new ArrayList<>();
+
                 stepList.add(new PermissionsStep("permission", "Heart rate camera permission", ""));
                 stepList.add(new InstructionStep("Instruction", "Heartrate camera test", "Place your finger over your camera without contacting the lens. Your data will be recorded for 60 seconds and then uploaded."));
                 stepList.add(new HeartRateCameraStep("camera"));
                 OrderedTask heartrateTask = new OrderedTask("HeartRate Measurement", stepList);
                 startActivityForResult(ActiveTaskActivity.newIntent(getActivity(), heartrateTask), REQUEST_TASK);
             } else if (task.taskID.equals(TASK_ID_CARDIO_12MT)) {
-                Toast.makeText(getActivity(),
-                        "TODO: implement 12 minute cardio task",
-                        Toast.LENGTH_SHORT).show();
+                CrfTaskFactory taskFactory = new CrfTaskFactory();
+                Task testTask = taskFactory.createTask(getActivity(), "instruction_test");
+                startActivity(ViewTaskActivity.newIntent(getActivity(), testTask));
+//                Toast.makeText(getActivity(),
+//                        "TODO: implement 12 minute cardio task",
+//                        Toast.LENGTH_SHORT).show();
             } else {
                 Toast.makeText(getActivity(),
                         org.researchstack.skin.R.string.rss_local_error_load_task,

@@ -18,7 +18,6 @@
 package org.sagebase.crf.step;
 
 import org.researchstack.backbone.step.InstructionStep;
-import org.researchstack.backbone.ui.step.layout.InstructionStepLayout;
 
 /**
  * Created by TheMDP on 10/24/17.
