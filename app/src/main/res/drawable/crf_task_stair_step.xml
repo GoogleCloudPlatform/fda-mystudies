@@ -1,0 +1,35 @@
+<!--
+  ~    Copyright 2017 Sage Bionetworks
+  ~
+  ~    Licensed under the Apache License, Version 2.0 (the "License");
+  ~    you may not use this file except in compliance with the License.
+  ~    You may obtain a copy of the License at
+  ~
+  ~        http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~    Unless required by applicable law or agreed to in writing, software
+  ~    distributed under the License is distributed on an "AS IS" BASIS,
+  ~    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~    See the License for the specific language governing permissions and
+  ~    limitations under the License.
+  ~
+  -->
+
+<vector android:height="24dp" android:viewportHeight="52.0"
+    android:viewportWidth="52.0" android:width="24dp" xmlns:android="http://schemas.android.com/apk/res/android">
+    <path android:fillColor="#F58876"
+        android:pathData="M0,25.9a25.97,25.9 0,1 0,51.95 0a25.97,25.9 0,1 0,-51.95 0z"
+        android:strokeColor="#00000000" android:strokeWidth="1"/>
+    <path android:fillColor="#F1806F"
+        android:pathData="M28.74,51.77C39.98,50.57 49.16,42.28 51.45,31.24L40.43,20.25L35.91,28.02L36.75,28.85L32.41,30.54L22.05,20.09L12.26,20.91L12.4,20.58L11.78,20.89L24.36,33.67L14.46,37.52L28.74,51.77Z"
+        android:strokeColor="#00000000" android:strokeWidth="1"/>
+    <path android:fillColor="#FFFFFF"
+        android:pathData="M21.89,19.85L18.83,16.8C18.55,16.55 18.13,16.56 17.87,16.82C17.6,17.09 17.59,17.51 17.84,17.78L19.71,19.64L12.21,19.64C11.96,19.63 11.71,19.76 11.58,19.98C11.45,20.2 11.45,20.48 11.58,20.7C11.71,20.92 11.96,21.05 12.21,21.04L19.71,21.04L17.84,22.9C17.65,23.07 17.57,23.34 17.63,23.59C17.69,23.84 17.89,24.04 18.14,24.1C18.39,24.16 18.66,24.08 18.83,23.89L21.89,20.83C22.02,20.7 22.1,20.53 22.1,20.34C22.1,20.16 22.02,19.98 21.89,19.85L21.89,19.85Z"
+        android:strokeColor="#00000000" android:strokeWidth="1"/>
+    <path android:fillColor="#FFFFFF"
+        android:pathData="M40.43,20.25l-8.66,0l0,5.76l-8.66,0l0,5.76l-8.66,0l0,5.76l25.97,0z"
+        android:strokeColor="#00000000" android:strokeWidth="1"/>
+    <path android:fillColor="#EEEDEE"
+        android:pathData="M40.43,20.25l-8.66,0l0,5.76l-3.62,0l0,11.51l12.27,0z"
+        android:strokeColor="#00000000" android:strokeWidth="1"/>
+</vector>

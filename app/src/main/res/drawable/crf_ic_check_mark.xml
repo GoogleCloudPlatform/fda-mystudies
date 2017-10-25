@@ -1,0 +1,26 @@
+<!--
+  ~    Copyright 2017 Sage Bionetworks
+  ~
+  ~    Licensed under the Apache License, Version 2.0 (the "License");
+  ~    you may not use this file except in compliance with the License.
+  ~    You may obtain a copy of the License at
+  ~
+  ~        http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~    Unless required by applicable law or agreed to in writing, software
+  ~    distributed under the License is distributed on an "AS IS" BASIS,
+  ~    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~    See the License for the specific language governing permissions and
+  ~    limitations under the License.
+  ~
+  -->
+
+<vector android:height="24dp" android:viewportHeight="21.0"
+    android:viewportWidth="21.0" android:width="24dp" xmlns:android="http://schemas.android.com/apk/res/android">
+    <path android:fillColor="#5EAE57"
+        android:pathData="M20.778,10.637C20.778,16.311 16.127,20.912 10.389,20.912C4.651,20.912 -0,16.311 -0,10.637C-0,4.962 4.651,0.362 10.389,0.362C16.127,0.362 20.778,4.962 20.778,10.637"
+        android:strokeColor="#00000000" android:strokeWidth="1"/>
+    <path android:fillColor="#FFFFFF"
+        android:pathData="M5.648,11.605C6.737,12.729 7.826,13.852 8.915,14.976C9.081,15.147 9.34,15.084 9.464,14.906C11.371,12.176 13.279,9.446 15.186,6.716C15.442,6.349 14.836,6.003 14.581,6.367C12.674,9.097 10.767,11.827 8.86,14.557C9.043,14.533 9.226,14.51 9.41,14.487C8.321,13.363 7.231,12.239 6.142,11.115C5.83,10.793 5.336,11.283 5.648,11.605"
+        android:strokeColor="#00000000" android:strokeWidth="1"/>
+</vector>
