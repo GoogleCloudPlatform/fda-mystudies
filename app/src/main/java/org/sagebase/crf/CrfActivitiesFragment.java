@@ -58,7 +58,7 @@ public class CrfActivitiesFragment extends ActivitiesFragment {
                 stepList.add(new InstructionStep("Instruction", "Heartrate camera test", "Place your finger over your camera without contacting the lens. Your data will be recorded for 60 seconds and then uploaded."));
                 stepList.add(new HeartRateCameraStep("camera"));
                 OrderedTask heartrateTask = new OrderedTask("HeartRate Measurement", stepList);
-                startActivityForResult(CrfActiveTaskActivity.newIntent(getActivity(), heartrateTask), REQUEST_TASK);
+                startActivityForResult(ActiveTaskActivity.newIntent(getActivity(), heartrateTask), REQUEST_TASK);
             } else if (task.taskID.equals(TASK_ID_CARDIO_12MT)) {
                 CrfTaskFactory taskFactory = new CrfTaskFactory();
                 Task testTask = taskFactory.createTask(getActivity(), "instruction_test");
