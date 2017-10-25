@@ -70,14 +70,13 @@
         android:textColor="@color/white"/>
 
     <Button
+        style="@style/Crf.WhiteDeepGreen.RoundedCornerMaterialButton"
         android:id="@id/button_go_forward"
         android:layout_width="match_parent"
-        android:layout_height="80dp"
+        android:layout_height="@dimen/crf_rounded_button_height"
         android:layout_margin="@dimen/rsb_padding_large"
         android:text="@string/crf_lets_go"
-        android:background="@color/white"
         android:layout_alignParentBottom="true"
-        android:textColor="@color/deepGreen"
         android:onClick="goForwardClicked"/>
 
 </RelativeLayout>
