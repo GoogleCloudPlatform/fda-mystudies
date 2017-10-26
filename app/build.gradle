@@ -47,6 +47,7 @@ dependencies {
 
     implementation 'com.android.volley:volley:1.0.0'
     implementation 'com.google.code.gson:gson:2.4'
+    implementation 'com.google.guava:guava:23.2-android'
 
     implementation project(':researchstack-sdk')
 
@@ -56,5 +57,6 @@ dependencies {
     testImplementation 'junit:junit:4.12'
     androidTestImplementation('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
+        exclude group: 'com.google.code.findbugs', module: 'jsr305'
     })
 }
