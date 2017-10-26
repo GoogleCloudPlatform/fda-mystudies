@@ -47,4 +47,7 @@ We will track your question in the dashboard (shown as "Custom Question") over t
     <string name="permission_camera_title">Camera</string>
     <string name="permission_camera_desc">The app needs camera permissions to calculate heart rate.</string>
 
+    <!-- Start Task Step -->
+    <string name="crf_remind_me_later"><u>Remind me later</u></string>
+
 </resources>

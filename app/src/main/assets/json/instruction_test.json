@@ -4,6 +4,17 @@
   "optional" : false,
   "taskSteps" : [
     {
+      "identifier"       : "instructionStart",
+      "type"             : "crf_start_task",
+      "title"            : "Cardiovascular stress test",
+      "text"             : "15 minutes",
+      "image"            : "ic_test",
+      "buttonType"       : "default",
+      "buttonText"       : "Start",
+      "infoHtmlFilename" : "test",
+      "remindMeLater"    : true
+    },
+    {
       "identifier"       : "defaultInstruction",
       "type"             : "crf_instruction",
       "title"            : "Instruction Test",

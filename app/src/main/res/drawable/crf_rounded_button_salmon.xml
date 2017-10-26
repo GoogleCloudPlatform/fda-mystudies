@@ -17,6 +17,6 @@
   -->
 <selector
     xmlns:android="http://schemas.android.com/apk/res/android">
-    <item android:state_pressed="true" android:drawable="@drawable/crf_rounded_shape_salmon"/>
-    <item android:drawable="@drawable/crf_rounded_shape_pressed_salmon"/>
+    <item android:state_pressed="true" android:drawable="@drawable/crf_rounded_shape_pressed_salmon"/>
+    <item android:drawable="@drawable/crf_rounded_shape_salmon"/>
 </selector>

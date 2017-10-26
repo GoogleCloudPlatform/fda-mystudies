@@ -19,16 +19,22 @@ package org.sagebase.crf;
 
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.PorterDuff;
-import android.graphics.drawable.Drawable;
 import android.support.annotation.ColorRes;
-import android.support.v4.content.ContextCompat;
+import android.support.annotation.DrawableRes;
+import android.support.annotation.IdRes;
+import android.support.v7.app.ActionBar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import org.researchstack.backbone.step.Step;
+import org.researchstack.backbone.task.OrderedTask;
 import org.researchstack.backbone.task.Task;
 import org.researchstack.backbone.ui.ActiveTaskActivity;
 
+import org.researchstack.backbone.ui.step.layout.StepLayout;
+import org.sagebase.crf.step.CrfTaskToolbarManipulator;
+import org.sagebase.crf.view.CrfTransparentToolbar;
 import org.sagebionetworks.research.crf.R;
 
 /**
@@ -37,17 +43,23 @@ import org.sagebionetworks.research.crf.R;
 
 public class CrfActiveTaskActivity extends ActiveTaskActivity {
 
-    public static Intent newIntent(Context context, Task task)
-    {
+    public static Intent newIntent(Context context, Task task) {
         Intent intent = new Intent(context, CrfActiveTaskActivity.class);
         intent.putExtra(EXTRA_TASK, task);
         return intent;
     }
 
+    protected CrfTransparentToolbar getToolbar() {
+        if (toolbar != null && toolbar instanceof CrfTransparentToolbar) {
+            return (CrfTransparentToolbar)toolbar;
+        }
+        return null;
+    }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         boolean status = super.onCreateOptionsMenu(menu);
-        setupToolbar(R.color.azure);
+        refreshToolbar();
         return status;
     }
 
@@ -60,17 +72,59 @@ public class CrfActiveTaskActivity extends ActiveTaskActivity {
         return R.id.crf_active_container;
     }
 
-    private void setupToolbar(@ColorRes int tintColor) {
-        int colorRes = ContextCompat.getColor(this, tintColor);
-        Drawable drawable = toolbar.getNavigationIcon();
-        if (drawable != null) {
-            drawable.setColorFilter(colorRes, PorterDuff.Mode.SRC_ATOP);
+    @Override
+    public @IdRes int getToolbarResourceId() {
+        return R.id.crf_task_toolbar;
+    }
+
+    @Override
+    public void showStep(Step step, boolean alwaysReplaceView) {
+        super.showStep(step, alwaysReplaceView);
+        refreshToolbar();
+    }
+
+    public void refreshToolbar() {
+        if (getCurrentStepLayout() == null) {
+            return;
         }
-        for (int i = 0; i < toolbar.getMenu().size(); i++) {
-            MenuItem menuItem = toolbar.getMenu().getItem(i);
-            if (menuItem != null && menuItem.getIcon() != null) {
-                menuItem.getIcon().setColorFilter(colorRes, PorterDuff.Mode.SRC_ATOP);
+
+        CrfTransparentToolbar crfToolbar = getToolbar();
+        StepLayout current = getCurrentStepLayout();
+        ActionBar actionBar = getSupportActionBar();
+
+        // Allow for customization of the toolbar
+        boolean showProgress = true;
+        if (current instanceof CrfTaskToolbarManipulator) {
+            CrfTaskToolbarManipulator toolbarManipulator = (CrfTaskToolbarManipulator)current;
+            showProgress = toolbarManipulator.showProgress();
+            crfToolbar.refreshToolbar(actionBar, toolbarManipulator);
+        } else {
+            // Default toolbar style
+            crfToolbar.tintToolbar(actionBar, R.color.azure, R.drawable.crf_ic_back, R.drawable.crf_ic_close);
+            crfToolbar.showProgressInToolbar(showProgress);
+        }
+
+        if (showProgress && task instanceof OrderedTask) {
+            OrderedTask orderedTask = (OrderedTask)task;
+            int progress = orderedTask.getSteps().indexOf(currentStep);
+            int max = orderedTask.getSteps().size();
+            crfToolbar.setProgress(progress, max);
+        } else {
+            Log.e("CrfActiveTaskActivity", "Progress Bars only work with OrderedTask");
+        }
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        StepLayout current = getCurrentStepLayout();
+        // Allow for customization of the toolbar
+        if (current instanceof CrfTaskToolbarManipulator) {
+            CrfTaskToolbarManipulator toolbarManipulator = (CrfTaskToolbarManipulator) current;
+            if(item.getItemId() == org.researchstack.backbone.R.id.rsb_clear_menu_item) {
+                return toolbarManipulator.rightIconClicked();
             }
         }
+
+        return super.onOptionsItemSelected(item);
     }
 }

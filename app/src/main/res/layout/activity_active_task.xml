@@ -25,25 +25,12 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"/>
 
-    <android.support.v7.widget.Toolbar
+    <org.sagebase.crf.view.CrfTransparentToolbar
         style="@style/Widget.Crf.Toolbar.Transparent"
-        android:id="@+id/toolbar"
+        android:id="@+id/crf_task_toolbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/crf_toolbar_top_padding"
-        android:background="@drawable/crf_toolbar_background">
-
-        <ProgressBar
-            style="?android:attr/progressBarStyleHorizontal"
-            android:id="@+id/toolbar_progress_bar"
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/crf_progress_bar_height"
-            android:layout_gravity="center"
-            android:progressDrawable="@drawable/crf_progress_bar"
-            android:indeterminate="false"
-            android:max="10"
-            android:progress="5"/>
-
-    </android.support.v7.widget.Toolbar>
+        android:background="@drawable/crf_toolbar_background"/>
 
 </RelativeLayout>
