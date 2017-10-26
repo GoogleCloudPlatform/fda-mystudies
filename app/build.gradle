@@ -22,7 +22,10 @@ android {
     packagingOptions {
         exclude 'META-INF/LICENSE'
     }
-
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
     lintOptions {
         warning "MissingTranslation"
         abortOnError false
@@ -30,6 +33,7 @@ android {
     dexOptions {
         javaMaxHeapSize "4g"
     }
+
 }
 
 dependencies {
@@ -38,6 +42,7 @@ dependencies {
     implementation 'com.android.support:multidex:1.0.1'
 
     // These are all support libraries that should be updated when Google releases new ones
+    implementation "com.android.support:support-compat:26.1.0"
     implementation 'com.android.support:appcompat-v7:26.1.0'
     implementation 'com.android.support:preference-v7:26.1.0'
     implementation 'com.android.support:cardview-v7:26.1.0'
