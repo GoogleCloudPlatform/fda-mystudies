@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<lint>
+    <issue id="InvalidPackage">
+        <ignore regexp="okio-*.jar"/>
+        <ignore regexp="retrofit-*.jar"/>
+        <ignore regexp="pkix-1.54.0.0.jar"/>
+        <ignore regexp="bcpkix-jdk15on-1.58.0.0.jar"/>
+        <ignore regexp="logback-android-core-1.1.1-6.jar"/>
+        <ignore regexp="junit-4.12.jar"/>
+    </issue>
+</lint>
