@@ -113,7 +113,7 @@ public class CrfStartTaskStepLayout extends CrfInstructionStepLayout implements 
 
     @Override
     public int rightIcon() {
-        return R.drawable.crf_ic_info;
+        return crfStartTaskStep.infoHtmlFilename != null ? R.drawable.crf_ic_info : NO_ICON;
     }
 
     @Override

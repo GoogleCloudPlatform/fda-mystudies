@@ -96,9 +96,15 @@ public class CrfTransparentToolbar extends Toolbar {
         if (actionBar != null) {
             actionBar.setHomeAsUpIndicator(leftIcon);
         }
+
         MenuItem rightItem = getMenu().findItem(R.id.rsb_clear_menu_item);
         if (rightItem != null) {
-            rightItem.setIcon(ContextCompat.getDrawable(getContext(), rightIcon));
+            if (rightIcon == CrfTaskToolbarManipulator.NO_ICON) {
+                rightItem.setVisible(false);
+            } else {
+                rightItem.setVisible(true);
+                rightItem.setIcon(ContextCompat.getDrawable(getContext(), rightIcon));
+            }
         }
 
         int colorRes = ContextCompat.getColor(getContext(), tintColor);

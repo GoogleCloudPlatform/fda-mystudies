@@ -25,6 +25,9 @@ import android.support.annotation.DrawableRes;
  */
 
 public interface CrfTaskToolbarManipulator {
+
+    int NO_ICON = -1;
+
     /**
      * @return true if progress bar should be shown for step count, false to hide
      */
