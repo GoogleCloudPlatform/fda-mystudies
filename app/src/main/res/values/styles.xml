@@ -70,4 +70,29 @@
         <item name="android:divider">@null</item>
     </style>
 
+    <style name="TextAppearance"/>
+    <style name="TextAppearance.Crf"/>
+    <style name="TextAppearance.Crf.Body">
+        <item name="android:textSize">17sp</item>
+        <item name="android:fontFamily">@font/opensans</item>
+    </style>
+    <style name="TextAppearance.Crf.Header">
+        <item name="android:textSize">25sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:fontFamily">@font/opensans</item>
+    </style>
+    <style name="TextAppearance.Crf.SubHeader">
+        <item name="android:textSize">22sp</item>
+        <item name="android:fontFamily">@font/opensans_semibold</item>
+    </style>
+    <style name="TextAppearance.Crf.Body.Italic">
+        <item name="android:textStyle">italic</item>
+    </style>
+    <style name="TextAppearance.Crf.Body.Bold">
+        <item name="android:textStyle">bold</item>
+    </style>
+    <style name="TextAppearance.Crf.Small">
+        <item name="android:textSize">14sp</item>
+        <item name="android:fontFamily">@font/opensans</item>
+    </style>
 </resources>

@@ -64,6 +64,13 @@ public class CrfActiveTaskActivity extends ActiveTaskActivity {
     }
 
     @Override
+    public void onDataAuth() {
+        storageAccessUnregister();
+        MainApplication.mockAuthenticate(this);
+        super.onDataReady();
+    }
+
+    @Override
     public int getContentViewId() {
         return R.layout.activity_active_task;
     }
