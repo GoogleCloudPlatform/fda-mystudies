@@ -60,6 +60,13 @@
             android:theme="@style/Theme.Crf.Survey"
             android:windowSoftInputMode="adjustResize" />
 
+        <!-- TODO: remove this once heart rate task is switched to CrfActiveTaskActivity-->
+        <activity
+            android:name="org.researchstack.backbone.ui.ActiveTaskActivity"
+            android:label="@string/app_name"
+            android:theme="@style/Theme.Crf.Survey"
+            android:windowSoftInputMode="adjustResize"/>
+
         <activity
             android:name="org.sagebase.crf.fitbit.MainActivity"
             android:label="@string/app_name"
