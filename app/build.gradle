@@ -8,7 +8,7 @@ android {
         minSdkVersion 19
         targetSdkVersion 26
 	// version code is bumped by CI
-        versionCode 4
+        versionCode 5
 	// update this to match branch name: stable-%versionName%
         versionName "0.2.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
