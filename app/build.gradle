@@ -7,9 +7,9 @@ android {
         applicationId "org.sagebionetworks.research.crf"
         minSdkVersion 19
         targetSdkVersion 26
-	// version code is bumped by CI
+	// version code is bumped by fastlane 
         versionCode 5
-	// update this to match branch name: stable-%versionName%
+	// this should match the branch name and will be used by fastlane to create the tag
         versionName "0.2.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         multiDexEnabled true
