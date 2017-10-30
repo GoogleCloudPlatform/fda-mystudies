@@ -26,6 +26,8 @@ import android.view.SurfaceView;
 
 /**
  * Created by TheMDP on 10/30/17.
+ *
+ * The main purpose of this class is to make the SurfaceView display as a Circle
  */
 
 public class MaskableSurfaceView extends SurfaceView {
