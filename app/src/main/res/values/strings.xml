@@ -50,4 +50,8 @@ We will track your question in the dashboard (shown as "Custom Question") over t
     <!-- Start Task Step -->
     <string name="crf_remind_me_later"><u>Remind me later</u></string>
 
+    <!-- Heartrate Task -->
+    <string name="crf_bpm">BPM</string>
+    <string name="crf_cover_camera">Gently cover both the camera and flash with your finger</string>
+
 </resources>

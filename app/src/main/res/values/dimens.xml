@@ -15,4 +15,7 @@
     <dimen name="crf_rounded_button_height">50dp</dimen>
     <dimen name="crf_rounded_button_radius">25dp</dimen>
 
+    <!-- Task Sizes -->
+    <dimen name="crf_video_preview">250dp</dimen>
+
 </resources>

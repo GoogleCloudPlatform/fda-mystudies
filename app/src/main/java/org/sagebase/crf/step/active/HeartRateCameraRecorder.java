@@ -58,9 +58,27 @@ public class HeartRateCameraRecorder extends JsonArrayDataRecorder {
 
     private CameraSourcePreview mCameraSourcePreview;
 
+    /**
+     * Intelligent start is a feature that delays recording until
+     * an algorithm determines the user's finger is in front of the camera
+     * Disabled by default
+     */
+    private boolean mEnableIntelligentStart = false;
+    public void setEnableIntelligentStart(boolean enable) {
+        mEnableIntelligentStart = enable;
+    }
+    private boolean mIntelligentStartPassed = false;
+    private int mIntelligentStartCounter = 0;
+    private static final int INTELLIGENT_START_FRAMES_TO_PASS = 10;
+
     private BpmUpdateListener mBpmUpdateListener;
     public void setBpmUpdateListener(BpmUpdateListener listener) {
         mBpmUpdateListener = listener;
+    }
+
+    private IntelligentStartUpdateListener mIntelligentStartListener;
+    public void setIntelligentStartListener(IntelligentStartUpdateListener listener) {
+        mIntelligentStartListener = listener;
     }
 
     public HeartRateCameraRecorder(String identifier, Step step, File outputDirectory) {
@@ -82,9 +100,13 @@ public class HeartRateCameraRecorder extends JsonArrayDataRecorder {
 
         startJsonDataLogging();
 
+        mIntelligentStartPassed = false;
+        mIntelligentStartCounter = 0;
+
         if (mCameraSourcePreview == null) {
             recordingFailed(new IllegalStateException("HeartRateCameraRecorder requires external setup " +
                     "with a CameraSourcePreview already added to a ViewGroup to function properly"));
+            return;
         }
 
         HeartBeatDetector heartBeatDetector = new HeartBeatDetector();
@@ -109,7 +131,11 @@ public class HeartRateCameraRecorder extends JsonArrayDataRecorder {
                     mJsonObject.remove(HEART_RATE_KEY);
                 }
 
-                writeJsonObjectToFile(mJsonObject);
+                if (!mEnableIntelligentStart || mIntelligentStartPassed) {
+                    writeJsonObjectToFile(mJsonObject);
+                } else {
+                    updateIntelligentStart(sample);
+                }
             }
         });
         heartBeatDetector.setProcessor(new MultiProcessor.Builder<>(heartbeatFactory).build());
@@ -142,6 +168,34 @@ public class HeartRateCameraRecorder extends JsonArrayDataRecorder {
         }
     }
 
+    private void updateIntelligentStart(HeartBeatSample sample) {
+        if (mIntelligentStartPassed) {
+            return; // we already computed that we could start
+        }
+
+        // When a finger is placed in front of the camera with the flash on,
+        // the camera image will be almost entirely red, so use a simple lenient algorithm for this
+        int redIntensityFactorThreshold = 20;
+        long greenBlueSum = ((sample.g == 0) ? 1 : sample.g) + ((sample.b == 0) ? 1 : sample.b);
+        long redFactor = sample.r / greenBlueSum;
+
+        // If the red factor is large enough, we update the trigger
+        Log.d("TODO_REMOVE", "red factor = " + redFactor);
+        if (redFactor >= redIntensityFactorThreshold) {
+            mIntelligentStartCounter++;
+            if (mIntelligentStartCounter >= INTELLIGENT_START_FRAMES_TO_PASS) {
+                mIntelligentStartPassed = true;
+            }
+            if (mIntelligentStartListener != null) {
+                float progress = (float)mIntelligentStartCounter / (float)INTELLIGENT_START_FRAMES_TO_PASS;
+                mIntelligentStartListener.intelligentStartUpdate(progress, mIntelligentStartPassed);
+            }
+
+        } else {  // We need thresholds to be passed sequentially otherwise it is restarted
+            mIntelligentStartCounter = 0;
+        }
+    }
+
     private void recordingFailed(Throwable throwable) {
         cancel();
         if (getRecorderListener() != null) {
@@ -171,5 +225,13 @@ public class HeartRateCameraRecorder extends JsonArrayDataRecorder {
 
     public interface BpmUpdateListener {
         void bpmUpdate(int bpm);
+    }
+
+    public interface IntelligentStartUpdateListener {
+        /**
+         * @param progress value from 0.0 to 1.0 communicating the progress to being ready
+         * @param ready true if the camera is now collecting data, false otherwise
+         */
+        void intelligentStartUpdate(float progress, boolean ready);
     }
 }
