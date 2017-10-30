@@ -180,7 +180,6 @@ public class HeartRateCameraRecorder extends JsonArrayDataRecorder {
         long redFactor = sample.r / greenBlueSum;
 
         // If the red factor is large enough, we update the trigger
-        Log.d("TODO_REMOVE", "red factor = " + redFactor);
         if (redFactor >= redIntensityFactorThreshold) {
             mIntelligentStartCounter++;
             if (mIntelligentStartCounter >= INTELLIGENT_START_FRAMES_TO_PASS) {
