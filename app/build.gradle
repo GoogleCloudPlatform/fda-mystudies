@@ -7,8 +7,10 @@ android {
         applicationId "org.sagebionetworks.research.crf"
         minSdkVersion 19
         targetSdkVersion 26
+	// versionCode is bumped by CI
         versionCode 4
-        versionName "0.0.1"
+	// update this to match branch name: stable-%versionName%
+        versionName "0.2.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         multiDexEnabled true
         resConfigs "en"
