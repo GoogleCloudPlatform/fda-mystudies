@@ -20,7 +20,7 @@
     android:shape="rectangle"   >
 
     <solid
-        android:color="@color/white80" >
+        android:color="@color/whiteTwo" >
     </solid>
 
     <corners

@@ -23,6 +23,7 @@ import org.researchstack.backbone.model.survey.BaseSurveyItem;
 import org.researchstack.backbone.model.survey.SurveyItem;
 import org.researchstack.backbone.model.survey.SurveyItemAdapter;
 import org.sagebase.crf.step.CrfInstructionSurveyItem;
+import org.sagebase.crf.step.CrfStartTaskSurveyItem;
 
 /**
  * Created by TheMDP on 10/24/17.
@@ -31,6 +32,7 @@ import org.sagebase.crf.step.CrfInstructionSurveyItem;
 public class CrfSurveyItemAdapter extends SurveyItemAdapter {
 
     public static final String CRF_INSTRUCTION_SURVEY_ITEM_TYPE = "crf_instruction";
+    public static final String CRF_START_TASK_SURVEY_ITEM_TYPE = "crf_start_task";
 
     @Override
     public Class<? extends SurveyItem> getCustomClass(String customType, JsonElement json) {
@@ -39,6 +41,8 @@ public class CrfSurveyItemAdapter extends SurveyItemAdapter {
         }
         if (customType.equals(CRF_INSTRUCTION_SURVEY_ITEM_TYPE)) {
             return CrfInstructionSurveyItem.class;
+        } else if (customType.equals(CRF_START_TASK_SURVEY_ITEM_TYPE)) {
+            return CrfStartTaskSurveyItem.class;
         }
         return BaseSurveyItem.class;
     }

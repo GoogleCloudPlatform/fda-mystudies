@@ -33,6 +33,8 @@ import org.researchstack.backbone.step.Step;
 import org.researchstack.backbone.task.Task;
 import org.sagebase.crf.step.CrfInstructionStep;
 import org.sagebase.crf.step.CrfInstructionSurveyItem;
+import org.sagebase.crf.step.CrfStartTaskStep;
+import org.sagebase.crf.step.CrfStartTaskSurveyItem;
 
 /**
  * Created by TheMDP on 10/24/17.
@@ -75,6 +77,11 @@ public class CrfTaskFactory extends TaskItemFactory {
                                 throw new IllegalStateException("Error in json parsing, crf_instruction types must be CrfInstructionSurveyItem");
                             }
                             return createCrfInstructionStep((CrfInstructionSurveyItem)item);
+                        case CrfSurveyItemAdapter.CRF_START_TASK_SURVEY_ITEM_TYPE:
+                            if (!(item instanceof CrfStartTaskSurveyItem)) {
+                                throw new IllegalStateException("Error in json parsing, crf_start_task types must be CrfStartTaskSurveyItem");
+                            }
+                            return createCrfStartTaskStep((CrfStartTaskSurveyItem)item);
                     }
                 }
                 return null;
@@ -85,6 +92,11 @@ public class CrfTaskFactory extends TaskItemFactory {
     private CrfInstructionStep createCrfInstructionStep(CrfInstructionSurveyItem item) {
         CrfInstructionStep step = new CrfInstructionStep(
                 item.identifier, item.title, item.text);
+        fillCrfInstructionStep(step, item);
+        return step;
+    }
+
+    private void fillCrfInstructionStep(CrfInstructionStep step, CrfInstructionSurveyItem item) {
         fillInstructionStep(step, item);
         if (item.buttonType != null) {
             step.buttonType = item.buttonType;
@@ -92,6 +104,20 @@ public class CrfTaskFactory extends TaskItemFactory {
         if (item.buttonText != null) {
             step.buttonText = item.buttonText;
         }
+    }
+
+    private CrfStartTaskStep createCrfStartTaskStep(CrfStartTaskSurveyItem item) {
+        CrfStartTaskStep step = new CrfStartTaskStep(
+                item.identifier, item.title, item.text);
+        fillCrfStartTaskStep(step, item);
         return step;
+    }
+
+    private void fillCrfStartTaskStep(CrfStartTaskStep step, CrfStartTaskSurveyItem item) {
+        fillCrfInstructionStep(step, item);
+        step.remindMeLater = item.remindMeLater;
+        if (item.infoHtmlFilename != null) {
+            step.infoHtmlFilename = item.infoHtmlFilename;
+        }
     }
 }

@@ -36,9 +36,8 @@ import org.sagebionetworks.research.crf.R;
 
 public class CrfInstructionStepLayout extends InstructionStepLayout {
 
-    private CrfInstructionStep crfStep;
-
-    private Button nextButton;
+    protected CrfInstructionStep crfInstructionStep;
+    protected Button nextButton;
 
     public CrfInstructionStepLayout(Context context) {
         super(context);
@@ -71,7 +70,7 @@ public class CrfInstructionStepLayout extends InstructionStepLayout {
         if (!(step instanceof CrfInstructionStep)) {
             throw new IllegalStateException("CrfInstructionStepLayout only works with CrfInstructionStep");
         }
-        this.crfStep = (CrfInstructionStep)step;
+        this.crfInstructionStep = (CrfInstructionStep)step;
     }
 
     @Override
@@ -99,11 +98,11 @@ public class CrfInstructionStepLayout extends InstructionStepLayout {
     public void refreshStep() {
         super.refreshStep();
 
-        if (crfStep.buttonText != null) {
-            nextButton.setText(crfStep.buttonText);
+        if (crfInstructionStep.buttonText != null) {
+            nextButton.setText(crfInstructionStep.buttonText);
         }
-        if (crfStep.buttonType != null) {
-            switch (crfStep.buttonType) {
+        if (crfInstructionStep.buttonType != null) {
+            switch (crfInstructionStep.buttonType) {
                 case DEFAULT:
                     nextButton.setBackgroundResource(R.drawable.crf_rounded_button_salmon);
                     nextButton.setTextColor(ResourcesCompat.getColor(getResources(), R.color.rsb_white, null));
