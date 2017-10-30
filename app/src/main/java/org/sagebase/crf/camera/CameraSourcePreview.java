@@ -22,7 +22,6 @@ import android.support.annotation.RequiresPermission;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.SurfaceHolder;
-import android.view.SurfaceView;
 import android.view.ViewGroup;
 
 import com.google.android.gms.common.images.Size;
@@ -33,7 +32,12 @@ public class CameraSourcePreview extends ViewGroup {
     private static final String TAG = "CameraSourcePreview";
 
     private Context mContext;
-    private SurfaceView mSurfaceView;
+
+    private MaskableSurfaceView mSurfaceView;
+    public void setSurfaceMask(boolean enabled) {
+        mSurfaceView.setEnabledMask(enabled);
+    }
+
     private boolean mStartRequested;
     private boolean mSurfaceAvailable;
     private CameraSource mCameraSource;
@@ -47,7 +51,7 @@ public class CameraSourcePreview extends ViewGroup {
         mStartRequested = false;
         mSurfaceAvailable = false;
 
-        mSurfaceView = new SurfaceView(context);
+        mSurfaceView = new MaskableSurfaceView(context);
         mSurfaceView.getHolder().addCallback(new SurfaceCallback());
         addView(mSurfaceView);
     }
@@ -143,8 +147,10 @@ public class CameraSourcePreview extends ViewGroup {
             childWidth = (int)(((float) layoutHeight / (float) height) * width);
         }
 
+        int centeringX = (layoutWidth - childWidth) / 2;
+        int centeringY = (layoutHeight - childHeight) / 2;
         for (int i = 0; i < getChildCount(); ++i) {
-            getChildAt(i).layout(0, 0, childWidth, childHeight);
+            getChildAt(i).layout(centeringX, centeringY, childWidth + centeringX, childHeight + centeringY);
         }
 
         try {
