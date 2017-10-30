@@ -7,7 +7,7 @@ android {
         applicationId "org.sagebionetworks.research.crf"
         minSdkVersion 19
         targetSdkVersion 26
-	// versionCode is bumped by CI
+	// version code is bumped by CI
         versionCode 4
 	// update this to match branch name: stable-%versionName%
         versionName "0.2.0"
