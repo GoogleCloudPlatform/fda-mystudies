@@ -1,0 +1,10 @@
+{
+    "Cardio 12MT":{
+        "id":"Cardio 12MT",
+        "revision":2
+    },
+    "HeartRate Measurement":{
+        "id":"HeartRate Measurement",
+        "revision":6
+    }
+}
