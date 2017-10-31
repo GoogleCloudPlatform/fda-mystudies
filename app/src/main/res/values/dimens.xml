@@ -17,5 +17,7 @@
 
     <!-- Task Sizes -->
     <dimen name="crf_video_preview">250dp</dimen>
+    <dimen name="crf_ard_drawable_width">10dp</dimen>
+
 
 </resources>
