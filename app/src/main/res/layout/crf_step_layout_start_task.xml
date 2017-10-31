@@ -19,6 +19,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/crf_root_instruction_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -27,33 +28,29 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_alignParentTop="true"
-        android:layout_above="@+id/crf_start_task_button_container"
-        android:scaleType="centerInside"
-        android:background="@android:color/darker_gray"/>
+        android:layout_above="@+id/crf_start_task_button_container"/>
 
     <TextView
+        style="@style/TextAppearance.Crf.Header"
         android:id="@+id/crf_intruction_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textSize="25sp"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
+        android:textColor="@color/white"
         android:paddingTop="?attr/actionBarSize"
-        android:gravity="center_horizontal"
-        android:layout_marginTop="@dimen/rsb_padding_large"
-        android:visibility="gone"/>
+        android:gravity="center_horizontal" />
 
     <TextView
+        style="TextAppearance.Crf.StartTaskSubHeader"
         android:id="@+id/crf_intruction_text"
-        style="@style/Backbone.Survey.Summary"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/crf_intruction_title"
         android:layout_centerHorizontal="true"
-        android:paddingRight="@dimen/rsb_margin_left"
+        android:textColor="@color/white"
         android:textColorLink="?attr/colorAccent"
-        android:gravity="center_horizontal"
-        android:visibility="gone"/>
+        android:gravity="center_horizontal" />
 
     <LinearLayout
         android:id="@id/crf_start_task_button_container"

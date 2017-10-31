@@ -19,6 +19,7 @@ package org.sagebionetworks.bridge.researchstack;
 
 import com.google.gson.JsonElement;
 
+import org.researchstack.backbone.model.survey.ActiveStepSurveyItem;
 import org.researchstack.backbone.model.survey.BaseSurveyItem;
 import org.researchstack.backbone.model.survey.SurveyItem;
 import org.researchstack.backbone.model.survey.SurveyItemAdapter;
@@ -33,6 +34,7 @@ public class CrfSurveyItemAdapter extends SurveyItemAdapter {
 
     public static final String CRF_INSTRUCTION_SURVEY_ITEM_TYPE = "crf_instruction";
     public static final String CRF_START_TASK_SURVEY_ITEM_TYPE = "crf_start_task";
+    public static final String CRF_HEART_RATE_CAMERA_SURVEY_ITEM_TYPE = "crf_heart_rate_camera_step";
 
     @Override
     public Class<? extends SurveyItem> getCustomClass(String customType, JsonElement json) {
@@ -43,6 +45,8 @@ public class CrfSurveyItemAdapter extends SurveyItemAdapter {
             return CrfInstructionSurveyItem.class;
         } else if (customType.equals(CRF_START_TASK_SURVEY_ITEM_TYPE)) {
             return CrfStartTaskSurveyItem.class;
+        } else if (customType.equals(CRF_HEART_RATE_CAMERA_SURVEY_ITEM_TYPE)) {
+            return ActiveStepSurveyItem.class;
         }
         return BaseSurveyItem.class;
     }

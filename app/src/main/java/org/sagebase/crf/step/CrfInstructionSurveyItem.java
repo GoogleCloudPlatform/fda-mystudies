@@ -38,4 +38,16 @@ public class CrfInstructionSurveyItem extends InstructionSurveyItem {
      */
     @SerializedName("buttonText")
     public String buttonText;
+
+    /**
+     * A string representation of a color resource
+     */
+    @SerializedName("backgroundColor")
+    public String backgroundColorRes;
+
+    /**
+     * A string representation of a color resource
+     */
+    @SerializedName("imageColor")
+    public String imageColorRes;
 }

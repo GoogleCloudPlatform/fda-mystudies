@@ -26,8 +26,8 @@
     android:background="@color/deepGreen">
 
     <TextView
+        style="@style/TextAppearance.Crf.IntroHeader"
         android:id="@+id/crf_overview_title"
-        style="@style/Backbone.Survey.Title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
@@ -47,8 +47,8 @@
         android:src="@drawable/crf_intro_icon"/>
 
     <TextView
+        style="@style/TextAppearance.Crf.IntroSubHeader"
         android:id="@+id/crf_overview_text"
-        style="@style/Backbone.Survey.Summary"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
@@ -58,8 +58,8 @@
         android:textColor="@color/white"/>
 
     <TextView
+        style="@style/TextAppearance.Crf.IntroBody"
         android:id="@+id/crf_overview_detail_text"
-        style="@style/Backbone.Survey.Summary"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"

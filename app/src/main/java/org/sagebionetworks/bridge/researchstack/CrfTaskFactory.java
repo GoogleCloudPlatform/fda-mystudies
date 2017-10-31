@@ -24,6 +24,7 @@ import com.google.gson.GsonBuilder;
 
 import org.researchstack.backbone.ResourceManager;
 import org.researchstack.backbone.ResourcePathManager;
+import org.researchstack.backbone.model.survey.ActiveStepSurveyItem;
 import org.researchstack.backbone.model.survey.SurveyItem;
 import org.researchstack.backbone.model.survey.factory.SurveyFactory;
 import org.researchstack.backbone.model.taskitem.TaskItem;
@@ -31,6 +32,7 @@ import org.researchstack.backbone.model.taskitem.TaskItemAdapter;
 import org.researchstack.backbone.model.taskitem.factory.TaskItemFactory;
 import org.researchstack.backbone.step.Step;
 import org.researchstack.backbone.task.Task;
+import org.sagebase.crf.step.CrfHeartRateCameraStep;
 import org.sagebase.crf.step.CrfInstructionStep;
 import org.sagebase.crf.step.CrfInstructionSurveyItem;
 import org.sagebase.crf.step.CrfStartTaskStep;
@@ -82,6 +84,11 @@ public class CrfTaskFactory extends TaskItemFactory {
                                 throw new IllegalStateException("Error in json parsing, crf_start_task types must be CrfStartTaskSurveyItem");
                             }
                             return createCrfStartTaskStep((CrfStartTaskSurveyItem)item);
+                        case CrfSurveyItemAdapter.CRF_HEART_RATE_CAMERA_SURVEY_ITEM_TYPE:
+                            if (!(item instanceof ActiveStepSurveyItem)) {
+                                throw new IllegalStateException("Error in json parsing, crf_heart_rate_camera_step types must be ActiveStepSurveyItem");
+                            }
+                            return createHeartRateCameraStep((ActiveStepSurveyItem)item);
                     }
                 }
                 return null;
@@ -104,6 +111,12 @@ public class CrfTaskFactory extends TaskItemFactory {
         if (item.buttonText != null) {
             step.buttonText = item.buttonText;
         }
+        if (item.backgroundColorRes != null) {
+            step.backgroundColorRes = item.backgroundColorRes;
+        }
+        if (item.imageColorRes != null) {
+            step.imageBackgroundColorRes = item.imageColorRes;
+        }
     }
 
     private CrfStartTaskStep createCrfStartTaskStep(CrfStartTaskSurveyItem item) {
@@ -119,5 +132,10 @@ public class CrfTaskFactory extends TaskItemFactory {
         if (item.infoHtmlFilename != null) {
             step.infoHtmlFilename = item.infoHtmlFilename;
         }
+    }
+
+    private CrfHeartRateCameraStep createHeartRateCameraStep(ActiveStepSurveyItem item) {
+        CrfHeartRateCameraStep step = new CrfHeartRateCameraStep(item.identifier, item.title, item.text);
+        return step;
     }
 }
