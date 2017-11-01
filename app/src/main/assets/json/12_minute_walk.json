@@ -126,7 +126,7 @@
     },
     {
       "identifier"       : "completion",
-      "type"             : "completion",
+      "type"             : "crf_completion",
       "title"            : "Great Job!"
     }
   ]
