@@ -1,0 +1,133 @@
+{
+  "taskIdentifier" : "Cardio 12MT",
+  "schemaIdentifier" : "Cardio 12MT",
+  "optional" : false,
+  "taskSteps" : [
+    {
+      "identifier"       : "instructionStart",
+      "type"             : "crf_start_task",
+      "title"            : "12 minute test",
+      "text"             : "15 minutes",
+      "image"            : "crf_12_min_animation",
+      "scaleType"        : "FIT_END",
+      "isImageAnimated"  : true,
+      "animationRepeatDuration" : 2000,
+      "imageColor"       : "robinsEggBlue",
+      "buttonType"       : "default",
+      "buttonText"       : "Start",
+      "infoHtmlFilename" : "crf_12_min_info",
+      "remindMeLater"    : true
+    },
+    {
+      "identifier"       : "instructionHeartRisk",
+      "type"             : "crf_instruction",
+      "title"            : " ",
+      "text"             : "Potential heart risk",
+      "detailText"       : "Do not attempt this test if you have experienced unstable angina, a myocardial infarction (heart attack) during the previous month, need supplemental oxygen to walk, or if you feel that running or walking for 12 minutes will be a challenge for you.",
+      "image"            : "crf_health_risk_icon",
+      "buttonType"       : "defaultWhiteSalmon",
+      "buttonText"       : "Got it",
+      "backgroundColor"  : "salmon"
+    },
+    {
+      "identifier"       : "instructionFitbit",
+      "type"             : "crf_instruction",
+      "title"            : " ",
+      "text"             : "Wearing your fitbit?",
+      "detailText"       : "Before continuing on with the 12 minute test, please make sure you have your fitbit on your wrist.",
+      "image"            : "crf_fitbit_check_icon",
+      "imageColor"       : "perrywinkle",
+      "scaleType"        : "CENTER_CROP",
+      "buttonType"       : "default",
+      "buttonText"       : "It’s on"
+    },
+    {
+      "identifier"       : "instructionVolume",
+      "type"             : "crf_instruction",
+      "title"            : " ",
+      "text"             : "Volume turned up?",
+      "detailText"       : "Bring your phone with you and turn up your phone volume so you can hear the instructions while you are moving.",
+      "image"            : "crf_volume_check_icon",
+      "imageColor"       : "perrywinkle",
+      "scaleType"        : "CENTER_CROP",
+      "buttonType"       : "default",
+      "buttonText"       : "It’s turned on"
+    },
+    {
+      "identifier"       : "instructionGoOutside",
+      "type"             : "crf_instruction",
+      "title"            : " ",
+      "text"             : "Go outside",
+      "detailText"       : "Start by going oustide and standing still to measure your resting heart rate before you start moving.",
+      "image"            : "crf_go_outside_icon",
+      "imageColor"       : "robinsEggBlue",
+      "scaleType"        : "CENTER_CROP",
+      "buttonType"       : "default",
+      "buttonText"       : "I am outside"
+    },
+    {
+      "identifier"       : "instructionCamera",
+      "type"             : "crf_instruction",
+      "title"            : " ",
+      "text"             : "Capture heart rate",
+      "detailText"       : "Use your finger to cover the camera and flash on the back of your phone.",
+      "image"            : "crf_heart_rate_animation",
+      "imageColor"       : "macaroniAndCheese",
+      "scaleType"        : "CENTER_CROP",
+      "isImageAnimated"  : true,
+      "animationRepeatDuration" : 2000,
+      "buttonType"       : "default",
+      "buttonText"       : "Press to start"
+    },
+    {
+      "identifier"       : "camera",
+      "type"             : "crf_heart_rate_camera_step"
+    },
+    {
+      "identifier"       : "instructionRun",
+      "type"             : "crf_instruction",
+      "title"            : " ",
+      "text"             : "Take your phone with you",
+      "detailText"       : "Cover as much distance on a flat course in 12 minutes by running or walking.",
+      "image"            : "crf_12_min_animation",
+      "scaleType"        : "FIT_END",
+      "isImageAnimated"  : true,
+      "animationRepeatDuration" : 2000,
+      "imageColor"       : "robinsEggBlue",
+      "buttonType"       : "default",
+      "buttonText"       : "Press to start"
+    },
+    {
+      "identifier"       : "countdownRun",
+      "type"             : "crf_countdown",
+      "title"            : "Start in"
+    },
+    {
+      "identifier"       : "walk",
+      "type"             : "crf_12_min_walk"
+    },
+    {
+      "identifier"       : "instructionCamera2",
+      "type"             : "crf_instruction",
+      "title"            : " ",
+      "text"             : "Stand still for 1 minute",
+      "detailText"       : "Almost done! Stand still for a minute to measure your heart rate recovery.",
+      "image"            : "crf_heart_rate_animation",
+      "imageColor"       : "macaroniAndCheese",
+      "scaleType"        : "CENTER_CROP",
+      "isImageAnimated"  : true,
+      "animationRepeatDuration" : 2000,
+      "buttonType"       : "default",
+      "buttonText"       : "Press to start"
+    },
+    {
+      "identifier"       : "camera2",
+      "type"             : "crf_heart_rate_camera_step"
+    },
+    {
+      "identifier"       : "completion",
+      "type"             : "crf_completion",
+      "title"            : "Great Job!"
+    }
+  ]
+}

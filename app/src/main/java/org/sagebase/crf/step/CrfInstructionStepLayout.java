@@ -28,6 +28,7 @@ import org.researchstack.backbone.step.Step;
 import org.researchstack.backbone.ui.callbacks.StepCallbacks;
 import org.researchstack.backbone.ui.step.layout.InstructionStepLayout;
 
+import org.researchstack.backbone.utils.ResUtils;
 import org.sagebionetworks.research.crf.R;
 
 /**
@@ -38,6 +39,7 @@ public class CrfInstructionStepLayout extends InstructionStepLayout {
 
     protected CrfInstructionStep crfInstructionStep;
     protected Button nextButton;
+    protected View rootInstructionLayout;
 
     public CrfInstructionStepLayout(Context context) {
         super(context);
@@ -92,6 +94,7 @@ public class CrfInstructionStepLayout extends InstructionStepLayout {
                 R.id.crf_instruction_more_detail_text);
 
         nextButton = findViewById(R.id.button_go_forward);
+        rootInstructionLayout = findViewById(R.id.crf_root_instruction_layout);
     }
 
     @Override
@@ -129,6 +132,14 @@ public class CrfInstructionStepLayout extends InstructionStepLayout {
                 goForwardClicked(view);
             }
         });
+        if (crfInstructionStep.backgroundColorRes != null) {
+            int colorId = ResUtils.getColorResourceId(getContext(), crfInstructionStep.backgroundColorRes);
+            rootInstructionLayout.setBackgroundResource(colorId);
+        }
+        if (crfInstructionStep.imageBackgroundColorRes != null) {
+            int colorId = ResUtils.getColorResourceId(getContext(), crfInstructionStep.imageBackgroundColorRes);
+            imageView.setBackgroundResource(colorId);
+        }
     }
 
     public void goForwardClicked(View v) {

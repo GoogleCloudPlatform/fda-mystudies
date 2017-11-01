@@ -30,11 +30,11 @@ import java.io.File;
 
 public class HeartRateCameraRecorderConfig extends RecorderConfig {
 
-    HeartRateCameraRecorderConfig() {
+    public HeartRateCameraRecorderConfig() {
         super();
     }
 
-    HeartRateCameraRecorderConfig(String identifier) {
+    public HeartRateCameraRecorderConfig(String identifier) {
         super(identifier);
     }
 

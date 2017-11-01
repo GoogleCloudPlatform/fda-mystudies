@@ -19,6 +19,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/crf_root_instruction_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -28,53 +29,45 @@
         android:layout_height="match_parent"
         android:layout_alignParentTop="true"
         android:layout_above="@+id/crf_text_container"
-        android:scaleType="centerInside"
-        android:background="@android:color/darker_gray"/>
+        android:scaleType="centerInside"/>
 
     <TextView
+        style="@style/TextAppearance.Crf.Header"
         android:id="@+id/crf_intruction_title"
-        style="@style/Backbone.Survey.Title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
+        android:textColor="@color/black54"
         android:paddingTop="?attr/actionBarSize"
-        android:paddingRight="@dimen/rsb_margin_left"
-        android:gravity="center_horizontal"
-        android:layout_margin="@dimen/rsb_padding_large"
-        android:visibility="gone"
-        tools:text="@string/lorem_name"
-        tools:visibility="visible" />
+        android:gravity="center_horizontal" />
 
     <LinearLayout
         android:id="@id/crf_text_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:layout_above="@+id/button_go_forward">
+        android:layout_above="@+id/button_go_forward"
+        android:layout_margin="@dimen/rsb_padding_large">
 
         <TextView
+            style="@style/TextAppearance.Crf.SubHeader"
             android:id="@+id/crf_intruction_text"
-            style="@style/Backbone.Survey.Summary"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
-            android:paddingRight="@dimen/rsb_margin_left"
+            android:textColor="@color/black54"
             android:textColorLink="?attr/colorAccent"
-            android:gravity="center_horizontal"
-            android:visibility="gone"
-            tools:visibility="visible" />
+            android:gravity="center_horizontal"/>
 
         <TextView
+            style="@style/TextAppearance.Crf.Body"
             android:id="@+id/crf_instruction_more_detail_text"
-            style="@style/Backbone.Survey.Summary"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:paddingRight="@dimen/rsb_margin_left"
+            android:textColor="@color/black54"
             android:textColorLink="?attr/colorAccent"
-            android:gravity="center_horizontal"
-            android:visibility="gone" />
+            android:layout_marginTop="@dimen/rsb_padding_large"/>
 
     </LinearLayout>
 

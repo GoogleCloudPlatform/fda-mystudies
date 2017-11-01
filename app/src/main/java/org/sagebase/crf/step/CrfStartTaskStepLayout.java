@@ -34,7 +34,8 @@ import org.sagebionetworks.research.crf.R;
  * Created by TheMDP on 10/25/17.
  */
 
-public class CrfStartTaskStepLayout extends CrfInstructionStepLayout implements CrfTaskToolbarManipulator {
+public class CrfStartTaskStepLayout extends CrfInstructionStepLayout
+        implements CrfTaskToolbarIconManipulator, CrfTaskToolbarProgressManipulator, CrfTaskToolbarActionManipulator {
 
     private CrfStartTaskStep crfStartTaskStep;
     protected Button remindMeLaterButton;
@@ -102,31 +103,26 @@ public class CrfStartTaskStepLayout extends CrfInstructionStepLayout implements 
     }
 
     @Override
-    public boolean showProgress() {
+    public boolean crfToolbarShowProgress() {
         return false;
     }
 
     @Override
-    public int leftIcon() {
-        return R.drawable.crf_ic_back;
-    }
-
-    @Override
-    public int rightIcon() {
-        return crfStartTaskStep.infoHtmlFilename != null ? R.drawable.crf_ic_info : NO_ICON;
-    }
-
-    @Override
-    public int tintColor() {
-        return R.color.rsb_white;
-    }
-
-    @Override
-    public boolean rightIconClicked() {
+    public boolean crfToolbarRightIconClicked() {
         String path = ResourceManager.getInstance().
                 generateAbsolutePath(ResourceManager.Resource.TYPE_HTML, crfStartTaskStep.infoHtmlFilename);
         Intent intent = ViewWebDocumentActivity.newIntentForPath(getContext(), "", path);
         getContext().startActivity(intent);
         return true; // consumed the click
+    }
+
+    @Override
+    public int crfToolbarLeftIcon() {
+        return R.drawable.crf_ic_back;
+    }
+
+    @Override
+    public int crfToolbarRightIcon() {
+        return crfStartTaskStep.infoHtmlFilename != null ? R.drawable.crf_ic_info : NO_ICON;
     }
 }

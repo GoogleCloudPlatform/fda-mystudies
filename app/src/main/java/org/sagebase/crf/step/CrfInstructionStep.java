@@ -36,6 +36,16 @@ public class CrfInstructionStep extends InstructionStep {
      */
     public String buttonText;
 
+    /**
+     * A string representation of a color resource
+     */
+    public String backgroundColorRes;
+
+    /**
+     * A string representation of a color resource
+     */
+    public String imageBackgroundColorRes;
+
     /* Default constructor needed for serialization/deserialization of object */
     public CrfInstructionStep() {
         super();

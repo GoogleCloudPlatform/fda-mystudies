@@ -33,7 +33,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
 
-import org.sagebase.crf.step.CrfTaskToolbarManipulator;
+import org.sagebase.crf.step.CrfTaskToolbarIconManipulator;
+import org.sagebase.crf.step.CrfTaskToolbarProgressManipulator;
+import org.sagebase.crf.step.CrfTaskToolbarTintManipulator;
 import org.sagebionetworks.research.crf.R;
 
 /**
@@ -75,39 +77,69 @@ public class CrfTransparentToolbar extends Toolbar {
         LayoutParams params = new LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT,
                 getContext().getResources().getDimensionPixelOffset(R.dimen.crf_progress_bar_height));
+        params.rightMargin = getContext().getResources().getDimensionPixelOffset(R.dimen.rsb_padding_small);
         params.gravity = Gravity.CENTER;
         addView(progressBar, params);
     }
 
-    public void refreshToolbar(ActionBar actionBar, CrfTaskToolbarManipulator toolbarManipulator) {
-        showProgressInToolbar(toolbarManipulator.showProgress());
+    /**
+     * Helper method for passing in any object that could possibly implement a Manipulator interface
+     * @param manipulator for anything to happen, Object must be an instanceof
+     *                    CrfTaskToolbarActionManipulator,
+     *                    CrfTaskToolbarIconManipulator,
+     *                    CrfTaskToolbarTintManipulator, or
+     *                    CrfTaskToolbarProgressManipulator
+     */
+    public void refreshToolbar(ActionBar actionBar,
+                               Object manipulator,
+                               boolean defaultShowProgress,
+                               @ColorRes int defaultTint,
+                               @DrawableRes int defaultLeftIcon,
+                               @DrawableRes int defaultRightIcon) {
 
-        @ColorRes int tint = toolbarManipulator.tintColor();
-        @DrawableRes int leftIcon = toolbarManipulator.leftIcon();
-        @DrawableRes int rightIcon = toolbarManipulator.rightIcon();
-        tintToolbar(actionBar, tint, leftIcon, rightIcon);
+        // Progress manipulator
+        if (manipulator instanceof CrfTaskToolbarProgressManipulator) {
+            CrfTaskToolbarProgressManipulator progressManipulator = (CrfTaskToolbarProgressManipulator)manipulator;
+            showProgressInToolbar(progressManipulator.crfToolbarShowProgress());
+        } else {
+            showProgressInToolbar(defaultShowProgress);
+        }
+
+        // Icon manipulator
+        if (manipulator instanceof CrfTaskToolbarIconManipulator) {
+            CrfTaskToolbarIconManipulator iconManipulator = (CrfTaskToolbarIconManipulator)manipulator;
+            setIcons(actionBar, iconManipulator.crfToolbarLeftIcon(), iconManipulator.crfToolbarRightIcon());
+        } else {
+            setIcons(actionBar, defaultLeftIcon, defaultRightIcon);
+        }
+
+        // Tint manipulator
+        if (manipulator instanceof CrfTaskToolbarTintManipulator) {
+            CrfTaskToolbarTintManipulator tintManipulator = (CrfTaskToolbarTintManipulator) manipulator;
+            setTint(tintManipulator.crfToolbarTintColor());
+        } else {
+            setTint(defaultTint);
+        }
     }
 
-    public void tintToolbar(ActionBar actionBar,
-                            @ColorRes int tintColor,
-                            @DrawableRes int leftIcon,
-                            @DrawableRes int rightIcon) {
-
-        if (actionBar != null) {
+    public void setIcons(ActionBar actionBar, @DrawableRes int leftIcon, @DrawableRes int rightIcon) {
+        if (actionBar != null && leftIcon != CrfTaskToolbarIconManipulator.NO_ICON) {
             actionBar.setHomeAsUpIndicator(leftIcon);
         }
 
         MenuItem rightItem = getMenu().findItem(R.id.rsb_clear_menu_item);
         if (rightItem != null) {
-            if (rightIcon == CrfTaskToolbarManipulator.NO_ICON) {
+            if (rightIcon == CrfTaskToolbarIconManipulator.NO_ICON) {
                 rightItem.setVisible(false);
             } else {
                 rightItem.setVisible(true);
                 rightItem.setIcon(ContextCompat.getDrawable(getContext(), rightIcon));
             }
         }
+    }
 
-        int colorRes = ContextCompat.getColor(getContext(), tintColor);
+    public void setTint(@ColorRes int color) {
+        int colorRes = ContextCompat.getColor(getContext(), color);
         Drawable drawable = getNavigationIcon();
         if (drawable != null) {
             drawable.setColorFilter(colorRes, PorterDuff.Mode.SRC_ATOP);

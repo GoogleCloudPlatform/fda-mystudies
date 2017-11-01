@@ -15,41 +15,42 @@
  *
  */
 
-package org.sagebase.crf.step.active;
+package org.sagebase.crf.step;
 
 import org.researchstack.backbone.step.active.ActiveStep;
 import org.researchstack.backbone.step.active.recorder.RecorderConfig;
+import org.sagebase.crf.step.active.HeartRateCameraRecorderConfig;
 
 import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by TheMDP on 10/19/17.
+ * Created by TheMDP on 10/31/17.
  */
 
-public class HeartRateCameraStep extends ActiveStep {
-    public HeartRateCameraStep(String identifier) {
+public class CrfHeartRateCameraStep extends ActiveStep {
+    public CrfHeartRateCameraStep(String identifier) {
         super(identifier);
         commonInit();
     }
 
-    public HeartRateCameraStep(String identifier, String title, String detailText) {
+    public CrfHeartRateCameraStep(String identifier, String title, String detailText) {
         super(identifier, title, detailText);
         commonInit();
     }
 
-    private void commonInit() {
+    public void commonInit() {
         List<RecorderConfig> recorderConfigList = new ArrayList<>();
         recorderConfigList.add(new HeartRateCameraRecorderConfig("HeartRateCamera"));
         setRecorderConfigurationList(recorderConfigList);
         setShouldStartTimerAutomatically(true);
-        setShouldContinueOnFinish(true);
+        setShouldContinueOnFinish(false);
         setStepDuration(60);
-        setShouldShowDefaultTimer(true);
+        setShouldShowDefaultTimer(false);
     }
 
     @Override
     public Class getStepLayoutClass() {
-        return HeartRateStepLayout.class;
+        return CrfHeartRateStepLayout.class;
     }
 }

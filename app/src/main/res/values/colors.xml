@@ -32,6 +32,11 @@
     <color name="deepGreen80">#CC60B159</color>
     <color name="azure">#2196F3</color>
     <color name="softGreen">#68BF60</color>
+    <color name="greenyBlue">#3DBFA3</color>
     <color name="whiteTwo">#EDEDED</color>
+    <color name="robinsEggBlue">#00FFFF</color>
+    <color name="perrywinkle">#88A1E0</color>
+    <color name="macaroniAndCheese">#F5B33C</color>
+    <color name="black54">#89000000</color>
 
 </resources>

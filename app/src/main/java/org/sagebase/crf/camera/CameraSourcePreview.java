@@ -38,6 +38,11 @@ public class CameraSourcePreview extends ViewGroup {
         mSurfaceView.setEnabledMask(enabled);
     }
 
+    private CameraSizeListener mCameraSizeListener;
+    public void setCameraSizeListener(CameraSizeListener listener) {
+        mCameraSizeListener = listener;
+    }
+
     private boolean mStartRequested;
     private boolean mSurfaceAvailable;
     private CameraSource mCameraSource;
@@ -152,6 +157,9 @@ public class CameraSourcePreview extends ViewGroup {
         for (int i = 0; i < getChildCount(); ++i) {
             getChildAt(i).layout(centeringX, centeringY, childWidth + centeringX, childHeight + centeringY);
         }
+        if (mCameraSizeListener != null) {
+            mCameraSizeListener.sizeMeasured(childWidth, childHeight);
+        }
 
         try {
             startIfReady();
@@ -173,5 +181,9 @@ public class CameraSourcePreview extends ViewGroup {
 
         Log.d(TAG, "isPortraitMode returning false by default");
         return false;
+    }
+
+    public interface CameraSizeListener {
+        void sizeMeasured(int width, int height);
     }
 }

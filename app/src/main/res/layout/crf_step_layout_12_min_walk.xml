@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~    Copyright 2017 Sage Bionetworks
+  ~
+  ~    Licensed under the Apache License, Version 2.0 (the "License");
+  ~    you may not use this file except in compliance with the License.
+  ~    You may obtain a copy of the License at
+  ~
+  ~        http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~    Unless required by applicable law or agreed to in writing, software
+  ~    distributed under the License is distributed on an "AS IS" BASIS,
+  ~    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~    See the License for the specific language governing permissions and
+  ~    limitations under the License.
+  ~
+  -->
+
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/crf_root_instruction_layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:src="@drawable/crf_12_min_blurry_bg"
+        android:scaleType="centerCrop"/>
+
+    <TextView
+        style="@style/TextAppearance.Crf.SubHeader"
+        android:id="@+id/crf_12_min_walk_countdown_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:textColor="@color/white"
+        android:paddingTop="?attr/actionBarSize"
+        android:gravity="center_horizontal"
+        android:text=" "
+        android:layout_margin="@dimen/rsb_padding_large"/>
+
+    <FrameLayout
+        android:layout_width="@dimen/crf_video_preview"
+        android:layout_height="@dimen/crf_video_preview"
+        android:layout_below="@id/crf_12_min_walk_countdown_text"
+        android:layout_centerHorizontal="true">
+
+        <!-- This View's width and height must be set dynamically based on the camera preview size -->
+        <FrameLayout
+            android:id="@+id/crf_arc_drawable_container"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"/>
+
+        <LinearLayout
+            android:id="@+id/crf_distance_text_container"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_gravity="center">
+
+            <TextView
+                style="@style/TextAppearance.Crf.ActiveStatusNumber"
+                android:id="@+id/crf_distance_number"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:textColor="@color/white"/>
+
+            <TextView
+                style="@style/TextAppearance.Crf.ActiveStatusText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/crf_feet"
+                android:layout_gravity="center"
+                android:textColor="@color/white"/>
+
+        </LinearLayout>
+
+    </FrameLayout>
+
+</RelativeLayout>
