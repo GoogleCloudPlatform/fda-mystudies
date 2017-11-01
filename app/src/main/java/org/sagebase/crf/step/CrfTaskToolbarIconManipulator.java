@@ -17,40 +17,24 @@
 
 package org.sagebase.crf.step;
 
-import android.support.annotation.ColorRes;
 import android.support.annotation.DrawableRes;
 
 /**
- * Created by TheMDP on 10/25/17.
+ * Created by TheMDP on 10/31/17.
  */
 
-public interface CrfTaskToolbarManipulator {
+public interface CrfTaskToolbarIconManipulator {
 
     int NO_ICON = -1;
 
     /**
-     * @return true if progress bar should be shown for step count, false to hide
-     */
-    boolean showProgress();
-
-    /**
      * @return the icon that will appear on the left, defaults to back button
      */
-    @DrawableRes int leftIcon();
+    @DrawableRes
+    int crfToolbarLeftIcon();
 
     /**
      * @return the icon that will appear on the right, defaults to clear ("X") button
      */
-    @DrawableRes int rightIcon();
-
-    /**
-     * @return the tint color for the icons
-     */
-    @ColorRes int tintColor();
-
-    /**
-     * Called when the right icon is clicked
-     * @return true if click event was consumed, false if default behavior should occur
-     */
-    boolean rightIconClicked();
+    @DrawableRes int crfToolbarRightIcon();
 }
