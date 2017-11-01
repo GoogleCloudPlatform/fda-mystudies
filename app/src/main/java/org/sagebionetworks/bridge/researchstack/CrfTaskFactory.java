@@ -32,6 +32,8 @@ import org.researchstack.backbone.model.taskitem.TaskItemAdapter;
 import org.researchstack.backbone.model.taskitem.factory.TaskItemFactory;
 import org.researchstack.backbone.step.Step;
 import org.researchstack.backbone.task.Task;
+import org.sagebase.crf.step.Crf12MinWalkingStep;
+import org.sagebase.crf.step.CrfCountdownStep;
 import org.sagebase.crf.step.CrfHeartRateCameraStep;
 import org.sagebase.crf.step.CrfInstructionStep;
 import org.sagebase.crf.step.CrfInstructionSurveyItem;
@@ -89,6 +91,16 @@ public class CrfTaskFactory extends TaskItemFactory {
                                 throw new IllegalStateException("Error in json parsing, crf_heart_rate_camera_step types must be ActiveStepSurveyItem");
                             }
                             return createHeartRateCameraStep((ActiveStepSurveyItem)item);
+                        case CrfSurveyItemAdapter.CRF_COUNTDOWN_SURVEY_ITEM_TYPE:
+                            if (!(item instanceof ActiveStepSurveyItem)) {
+                                throw new IllegalStateException("Error in json parsing, crf_countdown types must be ActiveStepSurveyItem");
+                            }
+                            return createCrfCountdownStep((ActiveStepSurveyItem)item);
+                        case CrfSurveyItemAdapter.CRF_12_MIN_WALK_SURVEY_ITEM_TYPE:
+                            if (!(item instanceof ActiveStepSurveyItem)) {
+                                throw new IllegalStateException("Error in json parsing, crf_12_min_walk types must be ActiveStepSurveyItem");
+                            }
+                            return createCrf12MinWalkStep((ActiveStepSurveyItem)item);
                     }
                 }
                 return null;
@@ -136,6 +148,19 @@ public class CrfTaskFactory extends TaskItemFactory {
 
     private CrfHeartRateCameraStep createHeartRateCameraStep(ActiveStepSurveyItem item) {
         CrfHeartRateCameraStep step = new CrfHeartRateCameraStep(item.identifier, item.title, item.text);
+        fillActiveStep(step, item);
+        return step;
+    }
+
+    private CrfCountdownStep createCrfCountdownStep(ActiveStepSurveyItem item) {
+        CrfCountdownStep step = new CrfCountdownStep(item.identifier);
+        fillActiveStep(step, item);
+        return step;
+    }
+
+    private Crf12MinWalkingStep createCrf12MinWalkStep(ActiveStepSurveyItem item) {
+        Crf12MinWalkingStep step = new Crf12MinWalkingStep(item.identifier);
+        fillActiveStep(step, item);
         return step;
     }
 }

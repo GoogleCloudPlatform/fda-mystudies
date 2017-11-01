@@ -22,96 +22,62 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:src="@drawable/crf_12_min_blurry_bg"
+        android:scaleType="centerCrop"/>
+
     <TextView
         style="@style/TextAppearance.Crf.SubHeader"
-        android:id="@+id/crf_heart_rate_title"
+        android:id="@+id/crf_12_min_walk_countdown_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
+        android:textColor="@color/white"
         android:paddingTop="?attr/actionBarSize"
         android:gravity="center_horizontal"
+        android:text=" "
         android:layout_margin="@dimen/rsb_padding_large"/>
 
     <FrameLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/crf_heart_rate_title"
+        android:layout_width="@dimen/crf_video_preview"
+        android:layout_height="@dimen/crf_video_preview"
+        android:layout_below="@id/crf_12_min_walk_countdown_text"
         android:layout_centerHorizontal="true">
-
-        <org.sagebase.crf.camera.CameraSourcePreview
-            android:id="@+id/crf_camera_source"
-            android:layout_width="@dimen/crf_video_preview"
-            android:layout_height="@dimen/crf_video_preview" />
 
         <!-- This View's width and height must be set dynamically based on the camera preview size -->
         <FrameLayout
             android:id="@+id/crf_arc_drawable_container"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:layout_gravity="center"
-            android:visibility="gone"
-            android:background="@color/white">
-
-            <View
-                android:id="@+id/crf_arc_drawable"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent" />
-
-        </FrameLayout>
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"/>
 
         <LinearLayout
-            android:id="@+id/crf_bpm_text_container"
+            android:id="@+id/crf_distance_text_container"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:layout_gravity="center"
-            android:visibility="gone">
+            android:layout_gravity="center">
 
             <TextView
                 style="@style/TextAppearance.Crf.ActiveStatusNumber"
-                android:id="@+id/crf_heart_rate_number"
+                android:id="@+id/crf_distance_number"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:textColor="@color/salmon"/>
+                android:textColor="@color/white"/>
 
             <TextView
                 style="@style/TextAppearance.Crf.ActiveStatusText"
-                android:id="@+id/crf_heart_rate_bpm"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/crf_bpm"
+                android:text="@string/crf_feet"
                 android:layout_gravity="center"
-                android:textColor="@color/salmon"/>
+                android:textColor="@color/white"/>
 
         </LinearLayout>
-
-    </FrameLayout>
-
-    <FrameLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:padding="@dimen/rsb_padding_large">
-
-        <Button
-            style="@style/Crf.Salmon.RoundedCornerMaterialButton"
-            android:id="@+id/crf_next_button"
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/crf_rounded_button_height"
-            android:layout_gravity="center"
-            android:text="@string/rsb_BUTTON_NEXT"
-            android:textAllCaps="false"
-            android:visibility="gone"/>
-
-        <ImageView
-            android:id="@+id/crf_heart_icon"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:src="@drawable/crf_heart_icon"
-            android:visibility="gone"/>
 
     </FrameLayout>
 

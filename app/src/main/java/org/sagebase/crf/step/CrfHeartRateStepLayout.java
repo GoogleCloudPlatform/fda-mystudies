@@ -61,7 +61,6 @@ public class CrfHeartRateStepLayout extends ActiveStepLayout implements
 
     protected View heartRateTextContainer;
     protected TextView heartRateNumber;
-    protected TextView heartRateBpm;
 
     protected View arcDrawableContainer;
     protected View arcDrawableView;
@@ -126,7 +125,6 @@ public class CrfHeartRateStepLayout extends ActiveStepLayout implements
         heartRateTextContainer = findViewById(R.id.crf_bpm_text_container);
         heartRateTextContainer.setVisibility(View.GONE);
         heartRateNumber = findViewById(R.id.crf_heart_rate_number);
-        heartRateBpm = findViewById(R.id.crf_heart_rate_bpm);
 
         arcDrawableContainer = findViewById(R.id.crf_arc_drawable_container);
         arcDrawableView = findViewById(R.id.crf_arc_drawable);

@@ -59,4 +59,11 @@ We will track your question in the dashboard (shown as "Custom Question") over t
     <string name="crf_camera_7_sec">Almost there, 7 seconds left</string>
     <string name="crf_camera_done">You\’re all done!\n\nYour pre run heart rate is</string>
 
+    <!-- Countdown Task -->
+    <string name="crf_underlined_pause"><u>Pause</u></string>
+    <string name="crf_underlined_resume"><u>Resume</u></string>
+
+    <!-- 12 Min Walk Task -->
+    <string name="crf_feet">FEET</string>
+
 </resources>

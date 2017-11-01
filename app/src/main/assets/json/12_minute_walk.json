@@ -82,6 +82,52 @@
     {
       "identifier"       : "camera",
       "type"             : "crf_heart_rate_camera_step"
+    },
+    {
+      "identifier"       : "instructionRun",
+      "type"             : "crf_instruction",
+      "title"            : " ",
+      "text"             : "Take your phone with you",
+      "detailText"       : "Cover as much distance on a flat course in 12 minutes by running or walking.",
+      "image"            : "crf_12_min_animation",
+      "scaleType"        : "FIT_END",
+      "isImageAnimated"  : true,
+      "animationRepeatDuration" : 2000,
+      "imageColor"       : "robinsEggBlue",
+      "buttonType"       : "default",
+      "buttonText"       : "Press to start"
+    },
+    {
+      "identifier"       : "countdownRun",
+      "type"             : "crf_countdown",
+      "title"            : "Start in"
+    },
+    {
+      "identifier"       : "walk",
+      "type"             : "crf_12_min_walk"
+    },
+    {
+      "identifier"       : "instructionCamera2",
+      "type"             : "crf_instruction",
+      "title"            : " ",
+      "text"             : "Stand still for 1 minute",
+      "detailText"       : "Almost done! Stand still for a minute to measure your heart rate recovery.",
+      "image"            : "crf_heart_rate_animation",
+      "imageColor"       : "macaroniAndCheese",
+      "scaleType"        : "CENTER_CROP",
+      "isImageAnimated"  : true,
+      "animationRepeatDuration" : 2000,
+      "buttonType"       : "default",
+      "buttonText"       : "Press to start"
+    },
+    {
+      "identifier"       : "camera2",
+      "type"             : "crf_heart_rate_camera_step"
+    },
+    {
+      "identifier"       : "completion",
+      "type"             : "completion",
+      "title"            : "Great Job!"
     }
   ]
 }
