@@ -162,7 +162,7 @@ public class CrfActiveTaskActivity extends ActiveTaskActivity {
         if (current instanceof CrfTaskToolbarActionManipulator) {
             CrfTaskToolbarActionManipulator manipulator = (CrfTaskToolbarActionManipulator) current;
             if(item.getItemId() == org.researchstack.backbone.R.id.rsb_clear_menu_item) {
-                return manipulator.crfToolbarRightIconClicked(this);
+                return manipulator.crfToolbarRightIconClicked();
             }
         } else if(item.getItemId() == android.R.id.home) {
             showConfirmExitDialog();
