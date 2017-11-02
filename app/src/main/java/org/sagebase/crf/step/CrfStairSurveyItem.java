@@ -17,14 +17,23 @@
 
 package org.sagebase.crf.step;
 
+import com.google.gson.annotations.SerializedName;
+
+import org.researchstack.backbone.model.survey.ActiveStepSurveyItem;
+
 /**
- * Created by TheMDP on 10/31/17.
+ * Created by TheMDP on 11/1/17.
  */
 
-public interface CrfTaskToolbarActionManipulator {
+public class CrfStairSurveyItem extends ActiveStepSurveyItem {
+
     /**
-     * Called when the right icon is clicked
-     * @return true if click event was consumed, false if default behavior should occur
+     * The interval in sec between step movement instructions
      */
-    boolean crfToolbarRightIconClicked();
+    @SerializedName("stairInterval")
+    public int stairInterval;
+
+    public CrfStairSurveyItem() {
+        super();
+    }
 }

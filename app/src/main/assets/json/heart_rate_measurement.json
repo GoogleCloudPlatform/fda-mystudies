@@ -1,0 +1,90 @@
+{
+  "taskIdentifier" : "Cardio 12MT",
+  "schemaIdentifier" : "Cardio 12MT",
+  "optional" : false,
+  "taskSteps" : [
+    {
+      "identifier"       : "instructionStart",
+      "type"             : "crf_start_task",
+      "title"            : "Cardiovascular stress test",
+      "text"             : "20 minutes",
+      "image"            : "crf_treadmill_start",
+      "imageColor"       : "whiteButtonShadow65",
+      "buttonType"       : "default",
+      "buttonText"       : "Start",
+      "tintColor"        : "azure",
+      "textColor"        : "black54",
+      "infoHtmlFilename" : "crf_heart_rate_info",
+      "remindMeLater"    : false
+    },
+    {
+      "identifier"       : "instructionCamera",
+      "type"             : "crf_instruction",
+      "title"            : " ",
+      "text"             : "Capture heart rate",
+      "detailText"       : "Use your finger to cover the camera and flash on the back of your phone.",
+      "image"            : "crf_heart_rate_animation",
+      "imageColor"       : "macaroniAndCheese",
+      "scaleType"        : "CENTER_CROP",
+      "behindToolbar"    : "true",
+      "isImageAnimated"  : true,
+      "animationRepeatDuration" : 2000,
+      "buttonType"       : "default",
+      "buttonText"       : "Press to start"
+    },
+    {
+      "identifier"       : "camera",
+      "type"             : "crf_heart_rate_camera_step"
+    },
+    {
+      "identifier"       : "instructionRun",
+      "type"             : "crf_instruction",
+      "title"            : " ",
+      "text"             : "Ready to run on the treadmill?",
+      "detailText"       : "You’ll start off slowly and speed and will be increased through the test duration.",
+      "image"            : "crf_treadmill_start",
+      "imageColor"       : "whiteButtonShadow65",
+      "behindToolbar"    : "true",
+      "tintColor"        : "azure",
+      "buttonType"       : "default",
+      "buttonText"       : "Press to start"
+    },
+    {
+      "identifier"       : "instructionRun2",
+      "type"             : "crf_instruction",
+      "title"            : " ",
+      "text"             : "Did you complete the test on the treadmill?",
+      "image"            : "crf_treadmill_start",
+      "behindToolbar"    : "true",
+      "imageColor"       : "whiteButtonShadow65",
+      "backgroundColor"  : "whiteButtonShadow65",
+      "tintColor"        : "azure",
+      "buttonType"       : "default",
+      "buttonText"       : "Yes"
+    },
+    {
+      "identifier"       : "instructionCamera2",
+      "type"             : "crf_instruction",
+      "title"            : " ",
+      "text"             : "Stand still for 1 minute",
+      "detailText"       : "Almost done! Stand still for a minute to measure your heart rate recovery.",
+      "image"            : "crf_heart_rate_animation",
+      "imageColor"       : "macaroniAndCheese",
+      "scaleType"        : "CENTER_CROP",
+      "behindToolbar"    : "true",
+      "isImageAnimated"  : true,
+      "animationRepeatDuration" : 2000,
+      "buttonType"       : "default",
+      "buttonText"       : "Press to start"
+    },
+    {
+      "identifier"       : "camera2",
+      "type"             : "crf_heart_rate_camera_step"
+    },
+    {
+      "identifier"       : "completion",
+      "type"             : "crf_completion",
+      "title"            : "Great Job!"
+    }
+  ]
+}

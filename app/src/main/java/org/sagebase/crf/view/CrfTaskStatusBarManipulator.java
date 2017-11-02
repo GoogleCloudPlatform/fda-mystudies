@@ -15,18 +15,17 @@
  *
  */
 
-package org.sagebase.crf.step;
+package org.sagebase.crf.view;
 
 import android.support.annotation.ColorRes;
 
 /**
- * Created by TheMDP on 10/31/17.
+ * Created by TheMDP on 11/1/17.
  */
 
-public interface CrfTaskToolbarTintManipulator {
-    /**
-     * @return the tint color for the icons
-     */
-    @ColorRes
-    int crfToolbarTintColor();
+public interface CrfTaskStatusBarManipulator {
+
+    int DEFAULT_COLOR = -1;
+
+    @ColorRes int crfStatusBarColor();
 }

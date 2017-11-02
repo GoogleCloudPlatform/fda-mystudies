@@ -28,6 +28,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_alignParentTop="true"
+        android:paddingTop="?attr/actionBarSize"
         android:layout_above="@+id/crf_text_container"
         android:scaleType="centerInside"/>
 
@@ -47,8 +48,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:layout_above="@+id/button_go_forward"
-        android:layout_margin="@dimen/rsb_padding_large">
+        android:layout_above="@+id/button_go_forward">
 
         <TextView
             style="@style/TextAppearance.Crf.SubHeader"
@@ -58,7 +58,8 @@
             android:layout_gravity="center_horizontal"
             android:textColor="@color/black54"
             android:textColorLink="?attr/colorAccent"
-            android:gravity="center_horizontal"/>
+            android:gravity="center_horizontal"
+            android:layout_margin="@dimen/rsb_padding_large"/>
 
         <TextView
             style="@style/TextAppearance.Crf.Body"
@@ -67,7 +68,8 @@
             android:layout_height="wrap_content"
             android:textColor="@color/black54"
             android:textColorLink="?attr/colorAccent"
-            android:layout_marginTop="@dimen/rsb_padding_large"/>
+            android:layout_marginLeft="@dimen/rsb_padding_large"
+            android:layout_marginRight="@dimen/rsb_padding_large"/>
 
     </LinearLayout>
 

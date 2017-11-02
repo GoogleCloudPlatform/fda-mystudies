@@ -17,7 +17,10 @@
 
 package org.sagebase.crf.step;
 
+import com.google.gson.annotations.SerializedName;
+
 import org.researchstack.backbone.step.InstructionStep;
+import org.sagebase.crf.view.CrfTaskStatusBarManipulator;
 
 /**
  * Created by TheMDP on 10/24/17.
@@ -37,14 +40,39 @@ public class CrfInstructionStep extends InstructionStep {
     public String buttonText;
 
     /**
-     * A string representation of a color resource
+     * A string representation of a color resource for the view background
      */
     public String backgroundColorRes;
 
     /**
-     * A string representation of a color resource
+     * A string representation of a color resource for the image background
      */
     public String imageBackgroundColorRes;
+
+    /**
+     * A string representation of a color resource for the toolbar tint
+     */
+    public String tintColorRes;
+
+    /**
+     * A string representation of a color resource for the status bar
+     */
+    public String statusBarColorRes;
+
+    /**
+     * Hides the progress bar when this step is within a toolbar with progress
+     */
+    public boolean hideProgress;
+
+    /**
+     * Puts the image behind the toolbar
+     */
+    public boolean behindToolbar;
+
+    /**
+     * If true, volume buttons will control media, false it will go to default
+     */
+    public boolean mediaVolume;
 
     /* Default constructor needed for serialization/deserialization of object */
     public CrfInstructionStep() {

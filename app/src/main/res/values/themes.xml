@@ -13,7 +13,7 @@
 
         <item name="colorControlNormal">@color/rsb_warm_gray</item>
         <item name="colorPrimary">@color/colorPrimary</item>
-        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorPrimaryDark">@color/salmon</item>
         <item name="colorAccent">@color/colorAccent</item>
         <item name="android:listDivider">@color/rsb_list_divider</item>
 
@@ -44,6 +44,7 @@
 
     <style name="Theme.Crf.Main">
         <item name="toolbarTheme">@style/Theme.Crf.Toolbar.Main</item>
+        <item name="colorPrimaryDark">@color/deepGreen</item>
     </style>
 
     <style name="Theme.Crf.Toolbar.Main">
@@ -72,7 +73,7 @@
     <style name="Theme.Crf.Onboarding">
         <item name="android:windowBackground">@color/white</item>
         <item name="colorButtonNormal">@color/colorAccent</item>
-        <item name="colorPrimaryDark">@color/dark_gray</item>
+        <item name="colorPrimaryDark">@color/colorPrimary</item>
     </style>
 
     <style name="Theme.Crf.Video">

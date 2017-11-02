@@ -36,4 +36,10 @@ public class CrfStartTaskSurveyItem extends CrfInstructionSurveyItem {
      */
     @SerializedName("infoHtmlFilename")
     public String infoHtmlFilename;
+
+    /**
+     * A String representing a color resource
+     */
+    @SerializedName("textColor")
+    public String textColorRes;
 }

@@ -37,18 +37,18 @@ public class CrfPermissionRequestManager extends PermissionRequestManager {
 
                 addPermission(permission);
             }
-//
-//            {
-//                PermissionRequestManager.PermissionRequest permission = new PermissionRequestManager.PermissionRequest(
-//                        Manifest.permission.ACCESS_FINE_LOCATION,
-//                        R.drawable.rsb_ic_location_24dp,
-//                        R.string.rsb_permission_location_title,
-//                        R.string.rsb_permission_location_desc);
-//                permission.setIsBlockingPermission(true);
-//                permission.setIsSystemPermission(true);
-//
-//                addPermission(permission);
-//            }
+
+            {
+                PermissionRequestManager.PermissionRequest permission = new PermissionRequestManager.PermissionRequest(
+                        Manifest.permission.ACCESS_FINE_LOCATION,
+                        R.drawable.rsb_ic_location_24dp,
+                        R.string.rsb_permission_location_title,
+                        R.string.rsb_permission_location_desc);
+                permission.setIsBlockingPermission(true);
+                permission.setIsSystemPermission(true);
+
+                addPermission(permission);
+            }
         }
 //
 //        // We have some unique permissions that tie into Settings. You will need

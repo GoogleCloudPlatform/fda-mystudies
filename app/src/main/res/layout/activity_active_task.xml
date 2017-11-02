@@ -31,7 +31,6 @@
         android:id="@+id/crf_task_toolbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/crf_toolbar_top_padding"
         android:background="@drawable/crf_toolbar_background"/>
 
 </RelativeLayout>

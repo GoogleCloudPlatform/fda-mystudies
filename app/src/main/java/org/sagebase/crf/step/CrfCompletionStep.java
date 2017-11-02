@@ -41,5 +41,6 @@ public class CrfCompletionStep extends CrfInstructionStep {
         setIsImageAnimated(true);
         buttonText = "Done";
         backgroundColorRes = "deepGreen";
+        hideProgress = true;
     }
 }

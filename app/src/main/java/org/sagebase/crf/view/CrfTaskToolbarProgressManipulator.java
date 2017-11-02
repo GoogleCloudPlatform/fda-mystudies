@@ -15,7 +15,7 @@
  *
  */
 
-package org.sagebase.crf.step;
+package org.sagebase.crf.view;
 
 /**
  * Created by TheMDP on 10/31/17.

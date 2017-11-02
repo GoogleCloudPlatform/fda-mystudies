@@ -51,7 +51,8 @@
       "imageColor"       : "perrywinkle",
       "scaleType"        : "CENTER_CROP",
       "buttonType"       : "default",
-      "buttonText"       : "It’s turned on"
+      "buttonText"       : "It’s turned on",
+      "mediaVolume"      : true
     },
     {
       "identifier"       : "instructionGoOutside",
@@ -90,7 +91,7 @@
       "text"             : "Take your phone with you",
       "detailText"       : "Cover as much distance on a flat course in 12 minutes by running or walking.",
       "image"            : "crf_12_min_animation",
-      "scaleType"        : "FIT_END",
+      "scaleType"        : "FIT_XY",
       "isImageAnimated"  : true,
       "animationRepeatDuration" : 2000,
       "imageColor"       : "robinsEggBlue",

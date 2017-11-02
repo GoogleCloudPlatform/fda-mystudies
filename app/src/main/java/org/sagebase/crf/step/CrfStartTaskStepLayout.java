@@ -17,8 +17,10 @@
 
 package org.sagebase.crf.step;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.support.v4.content.res.ResourcesCompat;
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.Button;
@@ -28,6 +30,10 @@ import org.researchstack.backbone.result.StepResult;
 import org.researchstack.backbone.step.Step;
 
 import org.researchstack.backbone.ui.ViewWebDocumentActivity;
+import org.researchstack.backbone.utils.ResUtils;
+import org.sagebase.crf.view.CrfTaskToolbarActionManipulator;
+import org.sagebase.crf.view.CrfTaskToolbarIconManipulator;
+import org.sagebase.crf.view.CrfTaskToolbarProgressManipulator;
 import org.sagebionetworks.research.crf.R;
 
 /**
@@ -95,6 +101,13 @@ public class CrfStartTaskStepLayout extends CrfInstructionStepLayout
         } else {
             remindMeLaterButton.setVisibility(View.GONE);
         }
+
+        if (crfStartTaskStep.textColorRes != null) {
+            int colorId = ResUtils.getColorResourceId(getContext(), crfStartTaskStep.textColorRes);
+            int color = ResourcesCompat.getColor(getResources(), colorId, null);
+            titleTextView.setTextColor(color);
+            textTextView.setTextColor(color);
+        }
     }
 
     public void remindMeLater() {
@@ -108,10 +121,12 @@ public class CrfStartTaskStepLayout extends CrfInstructionStepLayout
     }
 
     @Override
-    public boolean crfToolbarRightIconClicked() {
+    public boolean crfToolbarRightIconClicked(Context context) {
         String path = ResourceManager.getInstance().
                 generateAbsolutePath(ResourceManager.Resource.TYPE_HTML, crfStartTaskStep.infoHtmlFilename);
-        Intent intent = ViewWebDocumentActivity.newIntentForPath(getContext(), "", path);
+        Intent intent = new Intent(context, ViewWebDocumentActivity.class);
+        intent.putExtra(ViewWebDocumentActivity.KEY_DOC_PATH, path);
+        intent.putExtra(ViewWebDocumentActivity.KEY_TITLE, "");
         getContext().startActivity(intent);
         return true; // consumed the click
     }

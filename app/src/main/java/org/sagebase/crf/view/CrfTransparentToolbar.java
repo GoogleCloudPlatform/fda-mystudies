@@ -33,9 +33,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
 
-import org.sagebase.crf.step.CrfTaskToolbarIconManipulator;
-import org.sagebase.crf.step.CrfTaskToolbarProgressManipulator;
-import org.sagebase.crf.step.CrfTaskToolbarTintManipulator;
 import org.sagebionetworks.research.crf.R;
 
 /**
@@ -92,7 +89,6 @@ public class CrfTransparentToolbar extends Toolbar {
      */
     public void refreshToolbar(ActionBar actionBar,
                                Object manipulator,
-                               boolean defaultShowProgress,
                                @ColorRes int defaultTint,
                                @DrawableRes int defaultLeftIcon,
                                @DrawableRes int defaultRightIcon) {
@@ -101,8 +97,6 @@ public class CrfTransparentToolbar extends Toolbar {
         if (manipulator instanceof CrfTaskToolbarProgressManipulator) {
             CrfTaskToolbarProgressManipulator progressManipulator = (CrfTaskToolbarProgressManipulator)manipulator;
             showProgressInToolbar(progressManipulator.crfToolbarShowProgress());
-        } else {
-            showProgressInToolbar(defaultShowProgress);
         }
 
         // Icon manipulator
