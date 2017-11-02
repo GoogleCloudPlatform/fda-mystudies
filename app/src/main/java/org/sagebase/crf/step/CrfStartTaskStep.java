@@ -17,6 +17,8 @@
 
 package org.sagebase.crf.step;
 
+import com.google.gson.annotations.SerializedName;
+
 import org.sagebionetworks.research.crf.R;
 
 /**
@@ -33,6 +35,11 @@ public class CrfStartTaskStep extends CrfInstructionStep {
      * The filename of the html that will show with more info on the task
      */
     public String infoHtmlFilename;
+
+    /**
+     * A String representing a color resource
+     */
+    public String textColorRes;
 
     /* Default constructor needed for serialization/deserialization of object */
     public CrfStartTaskStep() {

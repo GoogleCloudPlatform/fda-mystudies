@@ -9,6 +9,15 @@
           "type"         : "login"
         }
       ]
+    },
+    {
+      "onboardingType" : "permissions",
+      "steps" : [
+        {
+          "identifier"   : "permissions",
+          "type"         : "permissions"
+        }
+      ]
     }
   ]
 }

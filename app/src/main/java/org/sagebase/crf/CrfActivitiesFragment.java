@@ -45,19 +45,24 @@ public class CrfActivitiesFragment extends ActivitiesFragment {
 
     public static final String TASK_ID_HEART_RATE_MEASUREMENT = "HeartRate Measurement";
     public static final String TASK_ID_CARDIO_12MT = "Cardio 12MT";
+    public static final String TASK_ID_STAIR_STEP = "Cardio Stair Step";
 
     @Override
     public void taskSelected(SchedulesAndTasksModel.TaskScheduleModel task) {
         Task newTask = DataProvider.getInstance().loadTask(getContext(), task);
         if (newTask == null) {
 
-            if (task.taskID.equals(TASK_ID_HEART_RATE_MEASUREMENT)) {
+            if (task.taskID.equals(TASK_ID_CARDIO_12MT)) {
                 CrfTaskFactory taskFactory = new CrfTaskFactory();
                 Task testTask = taskFactory.createTask(getActivity(), "12_minute_walk");
                 startActivity(CrfActiveTaskActivity.newIntent(getActivity(), testTask));
-            } else if (task.taskID.equals(TASK_ID_CARDIO_12MT)) {
+            } else if (task.taskID.equals(TASK_ID_STAIR_STEP)) {
                 CrfTaskFactory taskFactory = new CrfTaskFactory();
-                Task testTask = taskFactory.createTask(getActivity(), "instruction_test");
+                Task testTask = taskFactory.createTask(getActivity(), "stair_step");
+                startActivity(CrfActiveTaskActivity.newIntent(getActivity(), testTask));
+            } else if (task.taskID.equals(TASK_ID_HEART_RATE_MEASUREMENT)) {
+                CrfTaskFactory taskFactory = new CrfTaskFactory();
+                Task testTask = taskFactory.createTask(getActivity(), "heart_rate_measurement");
                 startActivity(CrfActiveTaskActivity.newIntent(getActivity(), testTask));
             } else {
                 Toast.makeText(getActivity(),

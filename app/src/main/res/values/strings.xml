@@ -66,4 +66,9 @@ We will track your question in the dashboard (shown as "Custom Question") over t
     <!-- 12 Min Walk Task -->
     <string name="crf_feet">FEET</string>
 
+    <!-- Stair Step Task -->
+    <string name="crf_stand_still">Stand still</string>
+    <string name="crf_up">Up</string>
+    <string name="crf_down">Down</string>
+
 </resources>

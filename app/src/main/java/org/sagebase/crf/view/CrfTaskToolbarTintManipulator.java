@@ -15,26 +15,18 @@
  *
  */
 
-package org.sagebase.crf.step;
+package org.sagebase.crf.view;
 
-import android.support.annotation.DrawableRes;
+import android.support.annotation.ColorRes;
 
 /**
  * Created by TheMDP on 10/31/17.
  */
 
-public interface CrfTaskToolbarIconManipulator {
-
-    int NO_ICON = -1;
-
+public interface CrfTaskToolbarTintManipulator {
     /**
-     * @return the icon that will appear on the left, defaults to back button
+     * @return the tint color for the icons
      */
-    @DrawableRes
-    int crfToolbarLeftIcon();
-
-    /**
-     * @return the icon that will appear on the right, defaults to clear ("X") button
-     */
-    @DrawableRes int crfToolbarRightIcon();
+    @ColorRes
+    int crfToolbarTintColor();
 }

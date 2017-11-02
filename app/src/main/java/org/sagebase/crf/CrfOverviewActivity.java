@@ -19,6 +19,7 @@ package org.sagebase.crf;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.content.res.ResourcesCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 
@@ -46,6 +47,8 @@ public class CrfOverviewActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
+        int color = ResourcesCompat.getColor(getResources(), R.color.deepGreen, null);
+        MainApplication.setStatusBarColor(this, color);
         MainApplication.mockAuthenticate(this);
         DataProvider.getInstance()
                 .initialize(this)

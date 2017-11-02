@@ -28,7 +28,8 @@
 
         <activity
             android:name="org.sagebase.crf.CrfOverviewActivity"
-            android:label="@string/app_name">
+            android:label="@string/app_name"
+            android:theme="@style/Theme.Crf.Onboarding">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
@@ -86,7 +87,7 @@
         <activity
             android:name="org.researchstack.backbone.ui.ViewWebDocumentActivity"
             android:label="@string/app_name"
-            android:theme="@style/Theme.Crf.Survey"
+            android:theme="@style/Theme.Crf.Onboarding"
             android:windowSoftInputMode="adjustResize" />
 
     </application>

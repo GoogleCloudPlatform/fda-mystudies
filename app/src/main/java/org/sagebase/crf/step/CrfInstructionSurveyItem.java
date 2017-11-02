@@ -20,6 +20,7 @@ package org.sagebase.crf.step;
 import com.google.gson.annotations.SerializedName;
 
 import org.researchstack.backbone.model.survey.InstructionSurveyItem;
+import org.sagebase.crf.view.CrfTaskStatusBarManipulator;
 
 /**
  * Created by TheMDP on 10/24/17.
@@ -40,14 +41,44 @@ public class CrfInstructionSurveyItem extends InstructionSurveyItem {
     public String buttonText;
 
     /**
-     * A string representation of a color resource
+     * A string representation of a color resource for the background
      */
     @SerializedName("backgroundColor")
     public String backgroundColorRes;
 
     /**
-     * A string representation of a color resource
+     * A string representation of a color resource for the image background
      */
     @SerializedName("imageColor")
     public String imageColorRes;
+
+    /**
+     * A string representation of a color resource for the toolbar tint
+     */
+    @SerializedName("tintColor")
+    public String tintColorRes;
+
+    /**
+     * A string representation of a color resource for the status bar
+     */
+    @SerializedName("statusBarColor")
+    public String statusBarColorRes;
+
+    /**
+     * Hides the progress bar when this step is within a toolbar with progress
+     */
+    @SerializedName("hideProgress")
+    public boolean hideProgress;
+
+    /**
+     * Puts the image behind the toolbar
+     */
+    @SerializedName("behindToolbar")
+    public boolean behindToolbar;
+
+    /**
+     * If true, volume buttons will control media, false it will go to default
+     */
+    @SerializedName("mediaVolume")
+    public boolean mediaVolume;
 }

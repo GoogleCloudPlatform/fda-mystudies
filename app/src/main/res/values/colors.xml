@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="colorPrimary">@color/deepGreen</color>
-    <color name="colorPrimaryDark">#000000</color>
+    <color name="colorPrimaryDark">@color/salmon</color>
     <color name="colorAccent">@color/deepGreen</color>
 
 
@@ -34,9 +34,12 @@
     <color name="softGreen">#68BF60</color>
     <color name="greenyBlue">#3DBFA3</color>
     <color name="whiteTwo">#EDEDED</color>
-    <color name="robinsEggBlue">#00FFFF</color>
+    <color name="sky">#00FFFF</color>
+    <color name="robinsEggBlue">#80E8F6</color>
     <color name="perrywinkle">#88A1E0</color>
+    <color name="perrywinkleStatus">#9EBAEF</color>
     <color name="macaroniAndCheese">#F5B33C</color>
     <color name="black54">#89000000</color>
+    <color name="whiteButtonShadow65">#A6F5F5F5</color>
 
 </resources>

@@ -32,14 +32,17 @@
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
+        android:gravity="center"
         android:text="@string/crf_overview_title"
-        android:textColor="@color/white"/>
+        android:textColor="@color/white"
+        android:layout_margin="@dimen/rsb_padding_large"/>
 
     <ImageView
         android:id="@+id/crf_overview_image_view"
         android:layout_width="wrap_content"
-        android:layout_height="@dimen/rsb_step_layout_image_height"
+        android:layout_height="match_parent"
         android:layout_below="@id/crf_overview_title"
+        android:layout_above="@+id/crf_overview_text"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="@dimen/rsb_padding_medium"
         android:layout_gravity="center"
@@ -48,23 +51,26 @@
 
     <TextView
         style="@style/TextAppearance.Crf.IntroSubHeader"
-        android:id="@+id/crf_overview_text"
+        android:id="@id/crf_overview_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
-        android:layout_below="@id/crf_overview_image_view"
+        android:layout_above="@+id/crf_overview_detail_text"
+        android:gravity="center"
+        android:layout_margin="@dimen/rsb_padding_large"
         android:textColorLink="?attr/colorAccent"
         android:text="@string/crf_overview_text"
         android:textColor="@color/white"/>
 
     <TextView
         style="@style/TextAppearance.Crf.IntroBody"
-        android:id="@+id/crf_overview_detail_text"
+        android:id="@id/crf_overview_detail_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
-        android:layout_below="@id/crf_overview_text"
         android:layout_above="@+id/button_go_forward"
+        android:gravity="center"
+        android:layout_margin="@dimen/rsb_padding_large"
         android:textColorLink="?attr/colorAccent"
         android:text="@string/crf_overview_detail_text"
         android:textColor="@color/white"/>

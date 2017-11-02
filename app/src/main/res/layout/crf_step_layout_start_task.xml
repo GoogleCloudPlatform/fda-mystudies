@@ -39,6 +39,7 @@
         android:layout_centerHorizontal="true"
         android:textColor="@color/white"
         android:paddingTop="?attr/actionBarSize"
+        android:layout_marginTop="@dimen/rsb_padding_small"
         android:gravity="center_horizontal" />
 
     <TextView

@@ -31,9 +31,13 @@ public class CrfResourceManager extends ResourceManager {
         super();
 
         // Add all custom resources that we will need access to
-        addResource("crf_12_min_info", new Resource(Resource.TYPE_HTML, "json", "test"));
-        addResource("instruction_test", new Resource(Resource.TYPE_JSON, "json", "instruction_test"));
+        addResource("stair_step", new Resource(Resource.TYPE_JSON, "json", "stair_step"));
+        addResource("crf_stair_step_info", new Resource(Resource.TYPE_HTML, "html", "crf_stair_step_info"));
         addResource("12_minute_walk", new Resource(Resource.TYPE_JSON, "json", "12_minute_walk"));
+        addResource("crf_12_min_info", new Resource(Resource.TYPE_HTML, "html", "crf_12_min_info"));
+        addResource("heart_rate_measurement", new Resource(Resource.TYPE_JSON, "json", "heart_rate_measurement"));
+        addResource("crf_heart_rate_info", new Resource(Resource.TYPE_HTML, "html", "crf_heart_rate_info"));
+        addResource("instruction_test", new Resource(Resource.TYPE_JSON, "json", "instruction_test"));
         addResource("consent", new Resource(Resource.TYPE_JSON, "json", "consent"));
         addResource("eligibility_requirements", new Resource(Resource.TYPE_JSON, "json", "eligibility_requirements"));
     }

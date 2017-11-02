@@ -42,6 +42,7 @@ import org.sagebase.crf.camera.CameraSourcePreview;
 import org.sagebase.crf.step.active.HeartRateCameraRecorder;
 import org.sagebase.crf.step.active.HeartRateCameraRecorderConfig;
 
+import org.sagebase.crf.view.CrfTaskToolbarTintManipulator;
 import org.sagebionetworks.research.crf.R;
 
 import java.util.Locale;

@@ -24,6 +24,7 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import org.researchstack.backbone.ui.step.layout.ActiveStepLayout;
+import org.sagebase.crf.view.CrfTaskToolbarTintManipulator;
 import org.sagebionetworks.research.crf.R;
 
 import java.util.Locale;

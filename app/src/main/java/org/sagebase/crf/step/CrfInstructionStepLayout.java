@@ -29,13 +29,19 @@ import org.researchstack.backbone.ui.callbacks.StepCallbacks;
 import org.researchstack.backbone.ui.step.layout.InstructionStepLayout;
 
 import org.researchstack.backbone.utils.ResUtils;
+import org.sagebase.crf.CrfActiveTaskActivity;
+import org.sagebase.crf.view.CrfTaskStatusBarManipulator;
+import org.sagebase.crf.view.CrfTaskToolbarProgressManipulator;
+import org.sagebase.crf.view.CrfTaskToolbarTintManipulator;
 import org.sagebionetworks.research.crf.R;
 
 /**
  * Created by TheMDP on 10/24/17.
  */
 
-public class CrfInstructionStepLayout extends InstructionStepLayout {
+public class CrfInstructionStepLayout extends InstructionStepLayout implements
+        CrfTaskToolbarTintManipulator, CrfTaskStatusBarManipulator, CrfTaskToolbarProgressManipulator,
+        CrfActiveTaskActivity.CrfTaskMediaVolumeController {
 
     protected CrfInstructionStep crfInstructionStep;
     protected Button nextButton;
@@ -140,9 +146,43 @@ public class CrfInstructionStepLayout extends InstructionStepLayout {
             int colorId = ResUtils.getColorResourceId(getContext(), crfInstructionStep.imageBackgroundColorRes);
             imageView.setBackgroundResource(colorId);
         }
+        if (crfInstructionStep.behindToolbar) {
+            imageView.setPadding(imageView.getPaddingLeft(), 0,
+                    imageView.getPaddingRight(), imageView.getPaddingBottom());
+        }
     }
 
     public void goForwardClicked(View v) {
         callbacks.onSaveStep(StepCallbacks.ACTION_NEXT, step, null);
+    }
+
+    @Override
+    public int crfToolbarTintColor() {
+        if (crfInstructionStep.tintColorRes == null) {
+            return R.color.white;
+        }
+        return ResUtils.getColorResourceId(getContext(), crfInstructionStep.tintColorRes);
+    }
+
+    @Override
+    public int crfStatusBarColor() {
+        if (crfInstructionStep.statusBarColorRes != null) {
+            return ResUtils.getColorResourceId(getContext(), crfInstructionStep.backgroundColorRes);
+        } else if (crfInstructionStep.backgroundColorRes != null) {
+            return ResUtils.getColorResourceId(getContext(), crfInstructionStep.backgroundColorRes);
+        } else if (crfInstructionStep.imageBackgroundColorRes != null) {
+            return ResUtils.getColorResourceId(getContext(), crfInstructionStep.imageBackgroundColorRes);
+        }
+        return CrfTaskStatusBarManipulator.DEFAULT_COLOR;
+    }
+
+    @Override
+    public boolean crfToolbarShowProgress() {
+        return !crfInstructionStep.hideProgress;
+    }
+
+    @Override
+    public boolean controlMediaVolume() {
+        return crfInstructionStep.mediaVolume;
     }
 }

@@ -2,21 +2,29 @@ package org.sagebase.crf;
 
 import android.app.Activity;
 import android.content.Context;
+import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.ColorRes;
 import android.support.multidex.MultiDex;
+import android.support.v4.content.res.ResourcesCompat;
+import android.util.Log;
+import android.view.View;
 import android.view.WindowManager;
 
 import org.researchstack.backbone.StorageAccess;
 import org.researchstack.skin.ResearchStack;
 import org.sagebionetworks.bridge.android.BridgeApplication;
 import org.sagebionetworks.bridge.researchstack.CrfResearchStack;
+import org.sagebionetworks.research.crf.R;
 
 /**
  * Created by TheMDP on 12/9/16.
  */
 
 public class MainApplication extends BridgeApplication {
+
+    private static final String LOG_TAG = MainApplication.class.getCanonicalName();
 
     // We don't use a pin code for CRF, so just plug in a useless one the app remembers
     public static final String PIN_CODE = "1234";
@@ -29,8 +37,6 @@ public class MainApplication extends BridgeApplication {
 
         researchStack = new CrfResearchStack(this);
         ResearchStack.init(this, researchStack);
-
-        registerActivityLifecycleCallbacks(transparentStatusBar);
     }
 
     @Override
@@ -40,48 +46,44 @@ public class MainApplication extends BridgeApplication {
         MultiDex.install(this);
     }
 
-    // This code below is for transparent status bar only
-    private ActivityLifecycleCallbacks transparentStatusBar = new ActivityLifecycleCallbacks() {
-        @Override
-        public void onActivityCreated(Activity activity, Bundle bundle) {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-                // Sets status bar to transparent
-                activity.getWindow().setFlags(
-                        WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS,
-                        WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
+    public static void setStatusBarColor(Activity activity, int statusBarColor) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            // On Android M and above, we can change status bar background and text color
+            activity.getWindow().setStatusBarColor(statusBarColor);
+            // Do a rough calculation to see if this is a "light" or "dark" color
+            // And change the status bar text color to be either white or black
+            View decorView = activity.getWindow().getDecorView();
+            final int currentFlags = decorView.getSystemUiVisibility();
+            if (isColorDark(statusBarColor)) {
+                decorView.setSystemUiVisibility(currentFlags & ~View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
+            } else {
+                decorView.setSystemUiVisibility(currentFlags | View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
             }
+        } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            // On Android Lollipop and above, we can only change status bar color
+            if (!isColorDark(statusBarColor)) {
+                Log.d(LOG_TAG, "The requested color is too light and you won't be able to see " +
+                        "the white text anyways so setting to default colorPrimaryDark");
+                int defaultColor = ResourcesCompat.getColor(activity.getResources(), R.color.colorPrimaryDark, null);
+                activity.getWindow().setStatusBarColor(defaultColor);
+            } else {
+                activity.getWindow().setStatusBarColor(statusBarColor);
+            }
+        } else {
+            // We have no control over status bar color
         }
+    }
 
-        @Override
-        public void onActivityStarted(Activity activity) {
-
+    private static boolean isColorDark(int color) {
+        double darkness = 1 - (0.299 * Color.red(color) +
+                               0.587 *Color.green(color) +
+                               0.114 * Color.blue(color)) / 255;
+        if (darkness < 0.2f) {
+            return false; // It's a light color
+        }else{
+            return true; // It's a dark color
         }
-
-        @Override
-        public void onActivityResumed(Activity activity) {
-
-        }
-
-        @Override
-        public void onActivityPaused(Activity activity) {
-
-        }
-
-        @Override
-        public void onActivityStopped(Activity activity) {
-
-        }
-
-        @Override
-        public void onActivitySaveInstanceState(Activity activity, Bundle bundle) {
-
-        }
-
-        @Override
-        public void onActivityDestroyed(Activity activity) {
-
-        }
-    };
+    }
 
     public static void mockAuthenticate(Context context) {
         if (StorageAccess.getInstance().hasPinCode(context)) {

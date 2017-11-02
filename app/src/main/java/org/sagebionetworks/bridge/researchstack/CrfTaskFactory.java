@@ -38,6 +38,8 @@ import org.sagebase.crf.step.CrfCountdownStep;
 import org.sagebase.crf.step.CrfHeartRateCameraStep;
 import org.sagebase.crf.step.CrfInstructionStep;
 import org.sagebase.crf.step.CrfInstructionSurveyItem;
+import org.sagebase.crf.step.CrfStairStep;
+import org.sagebase.crf.step.CrfStairSurveyItem;
 import org.sagebase.crf.step.CrfStartTaskStep;
 import org.sagebase.crf.step.CrfStartTaskSurveyItem;
 
@@ -102,6 +104,11 @@ public class CrfTaskFactory extends TaskItemFactory {
                                 throw new IllegalStateException("Error in json parsing, crf_12_min_walk types must be ActiveStepSurveyItem");
                             }
                             return createCrf12MinWalkStep((ActiveStepSurveyItem)item);
+                        case CrfSurveyItemAdapter.CRF_STAIR_STEP_SURVEY_ITEM_TYPE:
+                            if (!(item instanceof CrfStairSurveyItem)) {
+                                throw new IllegalStateException("Error in json parsing, crf_step_layout_stair types must be CrfStairSurveyItem");
+                            }
+                            return createCrfStairStep((CrfStairSurveyItem)item);
                         case CrfSurveyItemAdapter.CRF_COMPLETION_SURVEY_ITEM_TYPE:
                             if (!(item instanceof CrfInstructionSurveyItem)) {
                                 throw new IllegalStateException("Error in json parsing, crf_completion types must be CrfInstructionSurveyItem");
@@ -135,6 +142,21 @@ public class CrfTaskFactory extends TaskItemFactory {
         if (item.imageColorRes != null) {
             step.imageBackgroundColorRes = item.imageColorRes;
         }
+        if (item.tintColorRes != null) {
+            step.tintColorRes = item.tintColorRes;
+        }
+        if (item.statusBarColorRes != null) {
+            step.statusBarColorRes = item.statusBarColorRes;
+        }
+        if (item.hideProgress) {
+            step.hideProgress = true;
+        }
+        if (item.behindToolbar) {
+            step.behindToolbar = true;
+        }
+        if (item.mediaVolume) {
+            step.mediaVolume = true;
+        }
     }
 
     private CrfStartTaskStep createCrfStartTaskStep(CrfStartTaskSurveyItem item) {
@@ -149,6 +171,9 @@ public class CrfTaskFactory extends TaskItemFactory {
         step.remindMeLater = item.remindMeLater;
         if (item.infoHtmlFilename != null) {
             step.infoHtmlFilename = item.infoHtmlFilename;
+        }
+        if (item.textColorRes != null) {
+            step.textColorRes = item.textColorRes;
         }
     }
 
@@ -167,6 +192,15 @@ public class CrfTaskFactory extends TaskItemFactory {
     private Crf12MinWalkingStep createCrf12MinWalkStep(ActiveStepSurveyItem item) {
         Crf12MinWalkingStep step = new Crf12MinWalkingStep(item.identifier);
         fillActiveStep(step, item);
+        return step;
+    }
+
+    private CrfStairStep createCrfStairStep(CrfStairSurveyItem item) {
+        CrfStairStep step = new CrfStairStep(item.identifier);
+        fillActiveStep(step, item);
+        if (item.stairInterval > 0) {
+            step.stairInterval = item.stairInterval;
+        }
         return step;
     }
 

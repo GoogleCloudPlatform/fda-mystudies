@@ -17,8 +17,11 @@
 
 package org.sagebase.crf;
 
+import android.support.v4.content.res.ResourcesCompat;
+
 import org.researchstack.backbone.StorageAccess;
 import org.researchstack.skin.ui.MainActivity;
+import org.sagebionetworks.research.crf.R;
 
 /**
  * Created by TheMDP on 10/23/17.
