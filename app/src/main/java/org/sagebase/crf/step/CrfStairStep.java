@@ -53,7 +53,7 @@ public class CrfStairStep extends ActiveStep {
     }
 
     private void commonInit() {
-        setStepDuration(3 * 60); // 12 min
+        setStepDuration(3 * 60); // 3 min
         List<RecorderConfig> configList = new ArrayList<>();
         configList.add(new AccelerometerRecorderConfig(ACCEL_RECORDER_ID, SENSOR_FREQ));
         configList.add(new DeviceMotionRecorderConfig(MOTION_RECORDER_ID, SENSOR_FREQ));
@@ -63,6 +63,7 @@ public class CrfStairStep extends ActiveStep {
         stairInterval = defaultStairInterval;
     }
 
+    // Stair step has verbal instructions
     @Override
     public boolean hasVoice() {
         return true;
