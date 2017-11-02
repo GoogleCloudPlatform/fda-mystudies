@@ -167,7 +167,7 @@ public class CrfInstructionStepLayout extends InstructionStepLayout implements
     @Override
     public int crfStatusBarColor() {
         if (crfInstructionStep.statusBarColorRes != null) {
-            return ResUtils.getColorResourceId(getContext(), crfInstructionStep.backgroundColorRes);
+            return ResUtils.getColorResourceId(getContext(), crfInstructionStep.statusBarColorRes);
         } else if (crfInstructionStep.backgroundColorRes != null) {
             return ResUtils.getColorResourceId(getContext(), crfInstructionStep.backgroundColorRes);
         } else if (crfInstructionStep.imageBackgroundColorRes != null) {

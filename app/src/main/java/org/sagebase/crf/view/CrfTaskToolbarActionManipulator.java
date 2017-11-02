@@ -30,5 +30,5 @@ public interface CrfTaskToolbarActionManipulator {
      * Called when the right icon is clicked
      * @return true if click event was consumed, false if default behavior should occur
      */
-    boolean crfToolbarRightIconClicked(Context context);
+    boolean crfToolbarRightIconClicked();
 }

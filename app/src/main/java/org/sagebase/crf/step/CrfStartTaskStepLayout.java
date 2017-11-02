@@ -121,10 +121,10 @@ public class CrfStartTaskStepLayout extends CrfInstructionStepLayout
     }
 
     @Override
-    public boolean crfToolbarRightIconClicked(Context context) {
+    public boolean crfToolbarRightIconClicked() {
         String path = ResourceManager.getInstance().
                 generateAbsolutePath(ResourceManager.Resource.TYPE_HTML, crfStartTaskStep.infoHtmlFilename);
-        Intent intent = new Intent(context, ViewWebDocumentActivity.class);
+        Intent intent = new Intent(getContext(), ViewWebDocumentActivity.class);
         intent.putExtra(ViewWebDocumentActivity.KEY_DOC_PATH, path);
         intent.putExtra(ViewWebDocumentActivity.KEY_TITLE, "");
         getContext().startActivity(intent);
