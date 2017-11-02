@@ -8,6 +8,9 @@
 # Java class files
 *.class
 
+#Exclude .pem files to make sure they aren't checked in
+*.pem
+
 # Generated files
 bin/
 gen/
@@ -34,6 +37,7 @@ captures/
 
 # Intellij
 *.iml
+.idea/inspectionProfiles
 .idea/workspace.xml
 .idea/tasks.xml
 .idea/gradle.xml
