@@ -17,6 +17,8 @@
 
 package org.sagebase.crf;
 
+import android.app.AlertDialog;
+import android.util.Log;
 import android.widget.Toast;
 
 import com.google.common.collect.Lists;
@@ -30,12 +32,21 @@ import org.researchstack.backbone.task.OrderedTask;
 import org.researchstack.backbone.task.Task;
 import org.researchstack.backbone.ui.ActiveTaskActivity;
 import org.researchstack.backbone.ui.ViewTaskActivity;
+import org.researchstack.backbone.utils.LogExt;
+import org.researchstack.backbone.utils.ObservableUtils;
+import org.researchstack.backbone.utils.StepLayoutHelper;
 import org.researchstack.skin.ui.fragment.ActivitiesFragment;
 import org.sagebase.crf.step.CrfHeartRateCameraStep;
+import org.sagebionetworks.bridge.researchstack.CrfDataProvider;
 import org.sagebionetworks.bridge.researchstack.CrfTaskFactory;
+import org.sagebionetworks.bridge.rest.model.ScheduledActivity;
+import org.sagebionetworks.bridge.rest.model.ScheduledActivityListV4;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+
+import rx.Observable;
 
 /**
  * Created by TheMDP on 10/19/17
@@ -43,24 +54,68 @@ import java.util.List;
 
 public class CrfActivitiesFragment extends ActivitiesFragment {
 
-    public static final String TASK_ID_HEART_RATE_MEASUREMENT = "HeartRate Measurement";
-    public static final String TASK_ID_CARDIO_12MT = "Cardio 12MT";
-    public static final String TASK_ID_STAIR_STEP = "Cardio Stair Step";
+    private static final String LOG_TAG = CrfActivitiesFragment.class.getCanonicalName();
+    private static final boolean USE_LEGACY_GET_ACTIVITIES = false;
+
+    @Override
+    public void fetchData() {
+        getSwipeFreshLayout().setRefreshing(true);
+
+        if (USE_LEGACY_GET_ACTIVITIES) {
+            super.fetchData();
+            return;
+        }
+
+        if (!(DataProvider.getInstance() instanceof  CrfDataProvider)) {
+            throw new IllegalStateException("Special activities algorithm only available with CrfDataProvider");
+        }
+
+        CrfDataProvider crfDataProvider = (CrfDataProvider)DataProvider.getInstance();
+        crfDataProvider.getCrfActivities(new CrfDataProvider.CrfActivitiesListener() {
+            @Override
+            public void success(ScheduledActivityListV4 activityList) {
+                getSwipeFreshLayout().setRefreshing(false);
+                if (getAdapter() == null) {
+                    unsubscribe();
+                    setAdapter(createTaskAdapter());
+                    getRecyclerView().setAdapter(getAdapter());
+
+                    setRxSubscription(getAdapter().getPublishSubject().subscribe(task -> {
+                        taskSelected(task);
+                    }));
+                } else {
+                    getAdapter().clear();
+                }
+
+                List<ScheduledActivity> scheduledActivities = processResults(activityList);
+                Log.d(LOG_TAG, scheduledActivities.toString());
+
+                // TODO: feed into new activity adapter that can display this
+                // getAdapter().addAll(processResults(model));
+            }
+
+            @Override
+            public void error(String localizedError) {
+                getSwipeFreshLayout().setRefreshing(false);
+                new AlertDialog.Builder(getContext()).setMessage(localizedError).create().show();
+            }
+        });
+    }
 
     @Override
     public void taskSelected(SchedulesAndTasksModel.TaskScheduleModel task) {
         Task newTask = DataProvider.getInstance().loadTask(getContext(), task);
         if (newTask == null) {
 
-            if (task.taskID.equals(TASK_ID_CARDIO_12MT)) {
+            if (task.taskID.equals(CrfTaskFactory.TASK_ID_CARDIO_12MT)) {
                 CrfTaskFactory taskFactory = new CrfTaskFactory();
                 Task testTask = taskFactory.createTask(getActivity(), "12_minute_walk");
                 startActivity(CrfActiveTaskActivity.newIntent(getActivity(), testTask));
-            } else if (task.taskID.equals(TASK_ID_STAIR_STEP)) {
+            } else if (task.taskID.equals(CrfTaskFactory.TASK_ID_STAIR_STEP)) {
                 CrfTaskFactory taskFactory = new CrfTaskFactory();
                 Task testTask = taskFactory.createTask(getActivity(), "stair_step");
                 startActivity(CrfActiveTaskActivity.newIntent(getActivity(), testTask));
-            } else if (task.taskID.equals(TASK_ID_HEART_RATE_MEASUREMENT)) {
+            } else if (task.taskID.equals(CrfTaskFactory.TASK_ID_HEART_RATE_MEASUREMENT)) {
                 CrfTaskFactory taskFactory = new CrfTaskFactory();
                 Task testTask = taskFactory.createTask(getActivity(), "heart_rate_measurement");
                 startActivity(CrfActiveTaskActivity.newIntent(getActivity(), testTask));
@@ -76,6 +131,11 @@ public class CrfActivitiesFragment extends ActivitiesFragment {
         startActivityForResult(ViewTaskActivity.newIntent(getContext(), newTask), REQUEST_TASK);
     }
 
+    /**
+     * Legacy way of processing results, it will just show whatever is handed to it
+     * @param model SchedulesAndTasksModel object
+     * @return a list of TaskScheduleModel
+     */
     @Override
     public List<Object> processResults(SchedulesAndTasksModel model) {
         if (model == null || model.schedules == null) {
@@ -84,9 +144,46 @@ public class CrfActivitiesFragment extends ActivitiesFragment {
         List<Object> tasks = new ArrayList<>();
 
         for (SchedulesAndTasksModel.ScheduleModel scheduleModel : model.schedules) {
-            tasks.addAll(scheduleModel.tasks);
+            for (SchedulesAndTasksModel.TaskScheduleModel task : scheduleModel.tasks) {
+                if (task.taskID != null && !hiddenActivityIdentifiers().contains(task.taskID)) {
+                    tasks.add(task);
+                }
+            }
         }
 
         return tasks;
+    }
+
+    /**
+     * TODO: Rian this is where you can access the data model
+     */
+    public List<ScheduledActivity> processResults(ScheduledActivityListV4 activityList) {
+        if (activityList == null || activityList.getItems() == null) {
+            return Lists.newArrayList();
+        }
+        List<ScheduledActivity> activities = new ArrayList<>();
+
+        // For now, the filter is only on whatever identifiers are in hiddenActivityIdentifiers()
+        for (ScheduledActivity activity : activities) {
+            if (activity.getActivity() != null &&
+                    activity.getActivity().getTask() != null &&
+                    activity.getActivity().getTask().getIdentifier() != null) {
+                if (!hiddenActivityIdentifiers().contains(activity.getActivity().getTask().getIdentifier())) {
+                    activities.add(activity);
+                }
+            } else {
+                activities.add(activity);
+            }
+        }
+
+        return activities;
+    }
+
+    public List<String> hiddenActivityIdentifiers() {
+        String [] hideTheseActivities = new String [] {
+                CrfDataProvider.CLINIC1,
+                CrfDataProvider.CLINIC2};
+
+        return new ArrayList<>(Arrays.asList(hideTheseActivities));
     }
 }

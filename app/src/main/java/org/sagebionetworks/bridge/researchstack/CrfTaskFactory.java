@@ -50,6 +50,10 @@ import org.sagebase.crf.step.CrfStartTaskSurveyItem;
 
 public class CrfTaskFactory extends TaskItemFactory {
 
+    public static final String TASK_ID_HEART_RATE_MEASUREMENT = "HeartRate Measurement";
+    public static final String TASK_ID_CARDIO_12MT = "Cardio 12MT";
+    public static final String TASK_ID_STAIR_STEP = "Cardio Stair Step";
+
     private Gson gson;
 
     public CrfTaskFactory() {
