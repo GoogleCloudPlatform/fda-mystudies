@@ -1,6 +1,6 @@
 {
-  "taskIdentifier" : "Cardio 12MT",
-  "schemaIdentifier" : "Cardio 12MT",
+  "taskIdentifier" : "HeartRate Measurement",
+  "schemaIdentifier" : "HeartRate Measurement",
   "optional" : false,
   "taskSteps" : [
     {
