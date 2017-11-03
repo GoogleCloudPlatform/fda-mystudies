@@ -1,6 +1,6 @@
 {
-  "taskIdentifier" : "Cardio 12MT",
-  "schemaIdentifier" : "Cardio 12MT",
+  "taskIdentifier" : "Cardio Stair Step",
+  "schemaIdentifier" : "Cardio Stair Step",
   "optional" : false,
   "taskSteps" : [
     {
