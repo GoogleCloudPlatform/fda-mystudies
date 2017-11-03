@@ -28,6 +28,7 @@ import org.researchstack.backbone.step.active.recorder.LocationRecorder;
 import org.researchstack.backbone.step.active.recorder.Recorder;
 import org.researchstack.backbone.ui.step.layout.ActiveStepLayout;
 import org.researchstack.backbone.ui.views.ArcDrawable;
+import org.sagebase.crf.view.CrfTaskStatusBarManipulator;
 import org.sagebionetworks.research.crf.R;
 
 import java.text.DecimalFormat;
@@ -37,7 +38,7 @@ import java.util.Locale;
  * Created by TheMDP on 10/31/17.
  */
 
-public class Crf12MinWalkingStepLayout extends ActiveStepLayout {
+public class Crf12MinWalkingStepLayout extends ActiveStepLayout implements CrfTaskStatusBarManipulator {
 
     private TextView crfCountdownText;
 
@@ -122,5 +123,10 @@ public class Crf12MinWalkingStepLayout extends ActiveStepLayout {
         arcDrawable.setArchWidth(getResources().getDimensionPixelOffset(R.dimen.crf_ard_drawable_width));
         arcDrawable.setDirection(Path.Direction.CW);
         arcDrawableContainer.setBackground(arcDrawable);
+    }
+
+    @Override
+    public int crfStatusBarColor() {
+        return R.color.sky_blur;
     }
 }

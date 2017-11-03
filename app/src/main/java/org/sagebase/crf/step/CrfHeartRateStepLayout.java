@@ -42,6 +42,7 @@ import org.sagebase.crf.camera.CameraSourcePreview;
 import org.sagebase.crf.step.active.HeartRateCameraRecorder;
 import org.sagebase.crf.step.active.HeartRateCameraRecorderConfig;
 
+import org.sagebase.crf.view.CrfTaskStatusBarManipulator;
 import org.sagebase.crf.view.CrfTaskToolbarTintManipulator;
 import org.sagebionetworks.research.crf.R;
 
@@ -54,7 +55,8 @@ import java.util.Locale;
 public class CrfHeartRateStepLayout extends ActiveStepLayout implements
         HeartRateCameraRecorder.BpmUpdateListener,
         HeartRateCameraRecorder.IntelligentStartUpdateListener,
-        CrfTaskToolbarTintManipulator {
+        CrfTaskToolbarTintManipulator,
+        CrfTaskStatusBarManipulator {
 
     private CameraSourcePreview cameraSourcePreview;
 
@@ -250,6 +252,11 @@ public class CrfHeartRateStepLayout extends ActiveStepLayout implements
     @Override
     public int crfToolbarTintColor() {
         return R.color.azure;
+    }
+
+    @Override
+    public int crfStatusBarColor() {
+        return R.color.white;
     }
 
     private class HeartBeatAnimation extends AlphaAnimation {

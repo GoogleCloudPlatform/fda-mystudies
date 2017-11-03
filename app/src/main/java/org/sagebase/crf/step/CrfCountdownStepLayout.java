@@ -24,6 +24,7 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import org.researchstack.backbone.ui.step.layout.ActiveStepLayout;
+import org.sagebase.crf.view.CrfTaskStatusBarManipulator;
 import org.sagebase.crf.view.CrfTaskToolbarTintManipulator;
 import org.sagebionetworks.research.crf.R;
 
@@ -33,7 +34,7 @@ import java.util.Locale;
  * Created by TheMDP on 10/31/17.
  */
 
-public class CrfCountdownStepLayout extends ActiveStepLayout implements CrfTaskToolbarTintManipulator {
+public class CrfCountdownStepLayout extends ActiveStepLayout implements CrfTaskToolbarTintManipulator, CrfTaskStatusBarManipulator {
 
     protected TextView crfTitleTextView;
     protected TextView crfCountdownTextView;
@@ -115,5 +116,10 @@ public class CrfCountdownStepLayout extends ActiveStepLayout implements CrfTaskT
     @Override
     public int crfToolbarTintColor() {
         return R.color.azure;
+    }
+
+    @Override
+    public int crfStatusBarColor() {
+        return R.color.white;
     }
 }

@@ -32,9 +32,11 @@ import org.researchstack.backbone.ui.ActiveTaskActivity;
 import org.researchstack.backbone.ui.ViewTaskActivity;
 import org.researchstack.skin.ui.fragment.ActivitiesFragment;
 import org.sagebase.crf.step.CrfHeartRateCameraStep;
+import org.sagebionetworks.bridge.researchstack.CrfDataProvider;
 import org.sagebionetworks.bridge.researchstack.CrfTaskFactory;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -55,15 +57,15 @@ public class CrfActivitiesFragment extends ActivitiesFragment {
             if (task.taskID.equals(TASK_ID_CARDIO_12MT)) {
                 CrfTaskFactory taskFactory = new CrfTaskFactory();
                 Task testTask = taskFactory.createTask(getActivity(), "12_minute_walk");
-                startActivity(CrfActiveTaskActivity.newIntent(getActivity(), testTask));
+                startActivityForResult(CrfActiveTaskActivity.newIntent(getActivity(), testTask), REQUEST_TASK);
             } else if (task.taskID.equals(TASK_ID_STAIR_STEP)) {
                 CrfTaskFactory taskFactory = new CrfTaskFactory();
                 Task testTask = taskFactory.createTask(getActivity(), "stair_step");
-                startActivity(CrfActiveTaskActivity.newIntent(getActivity(), testTask));
+                startActivityForResult(CrfActiveTaskActivity.newIntent(getActivity(), testTask), REQUEST_TASK);
             } else if (task.taskID.equals(TASK_ID_HEART_RATE_MEASUREMENT)) {
                 CrfTaskFactory taskFactory = new CrfTaskFactory();
                 Task testTask = taskFactory.createTask(getActivity(), "heart_rate_measurement");
-                startActivity(CrfActiveTaskActivity.newIntent(getActivity(), testTask));
+                startActivityForResult(CrfActiveTaskActivity.newIntent(getActivity(), testTask), REQUEST_TASK);
             } else {
                 Toast.makeText(getActivity(),
                         org.researchstack.skin.R.string.rss_local_error_load_task,
@@ -84,9 +86,21 @@ public class CrfActivitiesFragment extends ActivitiesFragment {
         List<Object> tasks = new ArrayList<>();
 
         for (SchedulesAndTasksModel.ScheduleModel scheduleModel : model.schedules) {
-            tasks.addAll(scheduleModel.tasks);
+            for (SchedulesAndTasksModel.TaskScheduleModel task : scheduleModel.tasks) {
+                if (task.taskID != null && !hiddenActivityIdentifiers().contains(task.taskID)) {
+                    tasks.add(task);
+                }
+            }
         }
 
         return tasks;
+    }
+
+    public List<String> hiddenActivityIdentifiers() {
+        String [] hideTheseActivities = new String [] {
+                CrfDataProvider.CLINIC1,
+                CrfDataProvider.CLINIC2};
+
+        return new ArrayList<>(Arrays.asList(hideTheseActivities));
     }
 }
