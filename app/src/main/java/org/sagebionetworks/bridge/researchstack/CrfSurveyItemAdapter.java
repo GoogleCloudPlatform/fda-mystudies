@@ -25,7 +25,6 @@ import org.researchstack.backbone.model.survey.SurveyItem;
 import org.researchstack.backbone.model.survey.SurveyItemAdapter;
 import org.sagebase.crf.step.CrfInstructionSurveyItem;
 import org.sagebase.crf.step.CrfStairSurveyItem;
-import org.sagebase.crf.step.CrfPhotoCaptureSurveyItem;
 import org.sagebase.crf.step.CrfStartTaskSurveyItem;
 
 /**
@@ -63,7 +62,7 @@ public class CrfSurveyItemAdapter extends SurveyItemAdapter {
         } else if (customType.equals(CRF_COMPLETION_SURVEY_ITEM_TYPE)) {
             return CrfInstructionSurveyItem.class;
         } else if (customType.equals(CRF_PHOTO_CAPTURE_SURVEY_ITEM_TYPE)) {
-            return CrfPhotoCaptureSurveyItem.class;
+            return CrfInstructionSurveyItem.class;
         }
         return BaseSurveyItem.class;
     }

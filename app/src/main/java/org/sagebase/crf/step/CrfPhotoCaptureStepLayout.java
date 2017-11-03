@@ -71,11 +71,6 @@ public class CrfPhotoCaptureStepLayout extends CrfInstructionStepLayout implemen
     }
 
     @Override
-    public int getContentResourceId() {
-        return R.layout.crf_step_layout_photo_capture;
-    }
-
-    @Override
     public void initialize(Step step, StepResult result) {
         validateAndSetCrfPhotoCaptureStep(step);
         super.initialize(step, result);
@@ -109,7 +104,7 @@ public class CrfPhotoCaptureStepLayout extends CrfInstructionStepLayout implemen
     public void onActivityFinished() {
         Log.d(LOG_TAG, "onActivityFinished()");
         StepResult result = new StepResult(step);
-        FileResult fileResult = new FileResult("", mCapturedPhoto, "photo");
+        FileResult fileResult = new FileResult(step.getIdentifier(), mCapturedPhoto, "photo");
         result.setResult(fileResult);
         callbacks.onSaveStep(StepCallbacks.ACTION_NEXT, step, result);
     }
