@@ -166,13 +166,9 @@ public class MainActivity extends AppCompatActivity implements FitbitManager.Cal
 
       bar.setData(data);
 
-      //IAxisValueFormatter xAxisFormatter = new CustomDayFormatter(values);
-
-
       YAxis leftAxis = bar.getAxisLeft();
       //leftAxis.setTypeface(mTfLight);
       leftAxis.setLabelCount(5, false);
-      //leftAxis.setValueFormatter(xAxisFormatter);
       leftAxis.setPosition(YAxis.YAxisLabelPosition.OUTSIDE_CHART);
       leftAxis.setSpaceTop(15f);
       leftAxis.setDrawGridLines(false);
@@ -182,9 +178,6 @@ public class MainActivity extends AppCompatActivity implements FitbitManager.Cal
       xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
       //xAxis.setTypeface(mTfLight);
       xAxis.setDrawGridLines(false);
-      //xAxis.setGranularity(1f); // only intervals of 1 day
-      //xAxis.setLabelCount(7);
-      //xAxis.setValueFormatter(xAxisFormatter);
 
       bar.getAxisRight().setEnabled(false);
 
@@ -194,41 +187,38 @@ public class MainActivity extends AppCompatActivity implements FitbitManager.Cal
     }
   }
 
-  @Override
-  public void onHeartActivityResult(HeartActivityResponse response) {
-    Log.d(LOG_TAG, "onHeartActivityResult()");
-    if(response != null) {
-      Log.d(LOG_TAG, "Found Heart results: " + response.activitiesHeart.size());
-      findViewById(R.id.fab).setVisibility(View.GONE);
-      findViewById(R.id.instruction).setVisibility(View.GONE);
+    @Override
+    public void onHeartActivityResult(HeartActivityResponse response) {
+        Log.d(LOG_TAG, "onHeartActivityResult()");
+        if(response != null) {
+            Log.d(LOG_TAG, "Found Heart results: " + response.activitiesHeart.size());
+            findViewById(R.id.fab).setVisibility(View.GONE);
+            findViewById(R.id.instruction).setVisibility(View.GONE);
 
-      BarChart bar = new BarChart(this);
-      bar.setDescription("Heart Rate");
+            BarChart bar = new BarChart(this);
+            bar.setDescription("Heart Rate");
 
-      ArrayList<String> xVals = new ArrayList<String>();
-      ArrayList<BarEntry> yVals1 = new ArrayList<BarEntry>();
-      int i = 0;
-      for(HeartActivity d: response.intraday.dataset) {
-        yVals1.add(new BarEntry(Float.valueOf(d.value), i));
-        xVals.add(String.valueOf(i));
-        i++;
-      }
-      BarDataSet set1 = new BarDataSet(yVals1, "Heart Rate (bmp)");
-      set1.setColor(Color.RED);
-      ArrayList<IBarDataSet> dataSets = new ArrayList<IBarDataSet>();
-      dataSets.add(set1);
-      BarData data = new BarData(xVals, dataSets);
-      //data.setValueTextSize(10f);
-      //data.setBarWidth(0.9f);
+            ArrayList<String> xVals = new ArrayList<String>();
+            ArrayList<BarEntry> yVals1 = new ArrayList<BarEntry>();
+            int i = 0;
+            for(HeartActivity d: response.intraday.dataset) {
+                yVals1.add(new BarEntry(Float.valueOf(d.value), i));
+                xVals.add(String.valueOf(i));
+                i++;
+            }
+            BarDataSet set1 = new BarDataSet(yVals1, "Heart Rate (bmp)");
+            set1.setColor(Color.RED);
+            ArrayList<IBarDataSet> dataSets = new ArrayList<IBarDataSet>();
+            dataSets.add(set1);
+            BarData data = new BarData(xVals, dataSets);
+            bar.setData(data);
 
-      bar.setData(data);
-
-      //bar.getAxisRight().setEnabled(false);
+            //bar.getAxisRight().setEnabled(false);
 
       LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 600);
       mChartContainer.addView(bar, params);
 
+        }
     }
-  }
 
 }

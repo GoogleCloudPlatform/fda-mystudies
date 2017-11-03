@@ -25,6 +25,7 @@ import org.researchstack.backbone.model.survey.SurveyItem;
 import org.researchstack.backbone.model.survey.SurveyItemAdapter;
 import org.sagebase.crf.step.CrfInstructionSurveyItem;
 import org.sagebase.crf.step.CrfStairSurveyItem;
+import org.sagebase.crf.step.CrfPhotoCaptureSurveyItem;
 import org.sagebase.crf.step.CrfStartTaskSurveyItem;
 
 /**
@@ -40,6 +41,7 @@ public class CrfSurveyItemAdapter extends SurveyItemAdapter {
     public static final String CRF_12_MIN_WALK_SURVEY_ITEM_TYPE = "crf_12_min_walk";
     public static final String CRF_STAIR_STEP_SURVEY_ITEM_TYPE = "crf_stair_step";
     public static final String CRF_COMPLETION_SURVEY_ITEM_TYPE = "crf_completion";
+    public static final String CRF_PHOTO_CAPTURE_SURVEY_ITEM_TYPE = "crf_photo_capture";
 
     @Override
     public Class<? extends SurveyItem> getCustomClass(String customType, JsonElement json) {
@@ -60,6 +62,8 @@ public class CrfSurveyItemAdapter extends SurveyItemAdapter {
             return CrfStairSurveyItem.class;
         } else if (customType.equals(CRF_COMPLETION_SURVEY_ITEM_TYPE)) {
             return CrfInstructionSurveyItem.class;
+        } else if (customType.equals(CRF_PHOTO_CAPTURE_SURVEY_ITEM_TYPE)) {
+            return CrfPhotoCaptureSurveyItem.class;
         }
         return BaseSurveyItem.class;
     }

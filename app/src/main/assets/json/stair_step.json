@@ -30,7 +30,7 @@
     },
     {
       "identifier"       : "instructionPhoto",
-      "type"             : "crf_instruction",
+      "type"             : "crf_photo_capture",
       "title"            : " ",
       "text"             : "Take a picture of your step",
       "detailText"       : "Start by taking a picture with your phone of the step with your fitibit inext to the step that you will be using.",
