@@ -40,6 +40,7 @@ public class CrfSurveyItemAdapter extends SurveyItemAdapter {
     public static final String CRF_12_MIN_WALK_SURVEY_ITEM_TYPE = "crf_12_min_walk";
     public static final String CRF_STAIR_STEP_SURVEY_ITEM_TYPE = "crf_stair_step";
     public static final String CRF_COMPLETION_SURVEY_ITEM_TYPE = "crf_completion";
+    public static final String CRF_PHOTO_CAPTURE_SURVEY_ITEM_TYPE = "crf_photo_capture";
 
     @Override
     public Class<? extends SurveyItem> getCustomClass(String customType, JsonElement json) {
@@ -59,6 +60,8 @@ public class CrfSurveyItemAdapter extends SurveyItemAdapter {
         } else if (customType.equals(CRF_STAIR_STEP_SURVEY_ITEM_TYPE)) {
             return CrfStairSurveyItem.class;
         } else if (customType.equals(CRF_COMPLETION_SURVEY_ITEM_TYPE)) {
+            return CrfInstructionSurveyItem.class;
+        } else if (customType.equals(CRF_PHOTO_CAPTURE_SURVEY_ITEM_TYPE)) {
             return CrfInstructionSurveyItem.class;
         }
         return BaseSurveyItem.class;

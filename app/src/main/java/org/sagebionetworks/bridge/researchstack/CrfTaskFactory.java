@@ -40,6 +40,7 @@ import org.sagebase.crf.step.CrfInstructionStep;
 import org.sagebase.crf.step.CrfInstructionSurveyItem;
 import org.sagebase.crf.step.CrfStairStep;
 import org.sagebase.crf.step.CrfStairSurveyItem;
+import org.sagebase.crf.step.CrfPhotoCaptureStep;
 import org.sagebase.crf.step.CrfStartTaskStep;
 import org.sagebase.crf.step.CrfStartTaskSurveyItem;
 
@@ -114,6 +115,11 @@ public class CrfTaskFactory extends TaskItemFactory {
                                 throw new IllegalStateException("Error in json parsing, crf_completion types must be CrfInstructionSurveyItem");
                             }
                             return createCompletionStep((CrfInstructionSurveyItem)item);
+                        case CrfSurveyItemAdapter.CRF_PHOTO_CAPTURE_SURVEY_ITEM_TYPE:
+                            if (!(item instanceof CrfInstructionSurveyItem)) {
+                                throw new IllegalStateException("Error in json parsing, crf_photo_capture types must be CrfPhotoCaptureSurveyItem");
+                            }
+                            return createCrfPhotoCaptureStep((CrfInstructionSurveyItem)item);
                     }
                 }
                 return null;
@@ -206,6 +212,13 @@ public class CrfTaskFactory extends TaskItemFactory {
 
     private CrfCompletionStep createCompletionStep(CrfInstructionSurveyItem item) {
         CrfCompletionStep step = new CrfCompletionStep(item.identifier, item.title, item.text);
+        fillCrfInstructionStep(step, item);
+        return step;
+    }
+
+    private CrfPhotoCaptureStep createCrfPhotoCaptureStep(CrfInstructionSurveyItem item) {
+        CrfPhotoCaptureStep step = new CrfPhotoCaptureStep(
+                item.identifier, item.title, item.text);
         fillCrfInstructionStep(step, item);
         return step;
     }
