@@ -18,6 +18,7 @@
 package org.sagebase.crf;
 
 import android.app.AlertDialog;
+import android.support.annotation.NonNull;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -40,11 +41,14 @@ import org.sagebase.crf.step.CrfHeartRateCameraStep;
 import org.sagebionetworks.bridge.researchstack.CrfDataProvider;
 import org.sagebionetworks.bridge.researchstack.CrfTaskFactory;
 import org.sagebionetworks.bridge.rest.model.ScheduledActivity;
+import org.sagebionetworks.bridge.rest.model.ScheduledActivityList;
 import org.sagebionetworks.bridge.rest.model.ScheduledActivityListV4;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import rx.Observable;
 
@@ -55,7 +59,10 @@ import rx.Observable;
 public class CrfActivitiesFragment extends ActivitiesFragment {
 
     private static final String LOG_TAG = CrfActivitiesFragment.class.getCanonicalName();
+
     private static final boolean USE_LEGACY_GET_ACTIVITIES = false;
+    //private static final int DEBUG_BUILD_ACTIVITY_SUBARRAY_INDEX = -1;
+    private static final int DEBUG_BUILD_ACTIVITY_SUBARRAY_INDEX = 6;
 
     @Override
     public void fetchData() {
@@ -90,8 +97,7 @@ public class CrfActivitiesFragment extends ActivitiesFragment {
                 List<ScheduledActivity> scheduledActivities = processResults(activityList);
                 Log.d(LOG_TAG, scheduledActivities.toString());
 
-                // TODO: feed into new activity adapter that can display this
-                // getAdapter().addAll(processResults(model));
+                SchedulesAndTasksModel model = translateActivities(scheduledActivities);
             }
 
             @Override
@@ -161,7 +167,13 @@ public class CrfActivitiesFragment extends ActivitiesFragment {
         if (activityList == null || activityList.getItems() == null) {
             return Lists.newArrayList();
         }
-        List<ScheduledActivity> activities = new ArrayList<>();
+        List<ScheduledActivity> activities = new ArrayList<>(activityList.getItems());
+
+        if (DEBUG_BUILD_ACTIVITY_SUBARRAY_INDEX > 0) {
+            activities = activities.subList(DEBUG_BUILD_ACTIVITY_SUBARRAY_INDEX, activities.size());
+            // Also, the 4th to last activity was a mistake, remove it
+            activities.remove(activities.size() - 4);
+        }
 
         // For now, the filter is only on whatever identifiers are in hiddenActivityIdentifiers()
         for (ScheduledActivity activity : activities) {
@@ -177,6 +189,50 @@ public class CrfActivitiesFragment extends ActivitiesFragment {
         }
 
         return activities;
+    }
+
+    private SchedulesAndTasksModel translateActivities(@NonNull List<ScheduledActivity> activityList) {
+        // first, group activities by day
+        Map<Integer, List<ScheduledActivity>> activityMap = new HashMap<>();
+        for (ScheduledActivity sa : activityList) {
+            int day = sa.getScheduledOn().dayOfYear().get();
+            List<ScheduledActivity> actList = activityMap.get(day);
+            if (actList == null) {
+                actList = new ArrayList<>();
+                actList.add(sa);
+                activityMap.put(day, actList);
+            } else {
+                actList.add(sa);
+            }
+        }
+
+        SchedulesAndTasksModel model = new SchedulesAndTasksModel();
+        model.schedules = new ArrayList<>();
+        for (int day : activityMap.keySet()) {
+            List<ScheduledActivity> aList = activityMap.get(day);
+            ScheduledActivity temp = aList.get(0);
+
+            SchedulesAndTasksModel.ScheduleModel sm = new SchedulesAndTasksModel.ScheduleModel();
+            sm.scheduleType = "once";
+            sm.scheduledOn = temp.getScheduledOn().toDate();
+            model.schedules.add(sm);
+            sm.tasks = new ArrayList<>();
+
+            for (ScheduledActivity sa : aList) {
+                SchedulesAndTasksModel.TaskScheduleModel tsm = new SchedulesAndTasksModel
+                        .TaskScheduleModel();
+                tsm.taskTitle = sa.getActivity().getLabel();
+                tsm.taskCompletionTime = sa.getActivity().getLabelDetail();
+                if (sa.getActivity().getTask() != null) {
+                    tsm.taskID = sa.getActivity().getTask().getIdentifier();
+                }
+                tsm.taskIsOptional = sa.getPersistent();
+                tsm.taskType = sa.getActivity().getType();
+                sm.tasks.add(tsm);
+            }
+        }
+
+        return model;
     }
 
     public List<String> hiddenActivityIdentifiers() {

@@ -42,7 +42,7 @@ public class CrfDataProvider extends BridgeDataProvider {
     public static final String CLINIC1 = "clinic1";
     public static final String CLINIC2 = "clinic2";
 
-    public static final int STUDY_DURATION_IN_DAYS = 14;
+    public static final int STUDY_DURATION_IN_DAYS = 15;
 
     public CrfDataProvider() {
         // TODO give path to permission file for uploads
@@ -76,6 +76,8 @@ public class CrfDataProvider extends BridgeDataProvider {
      */
     public void getCrfActivities(final CrfActivitiesListener listener) {
 
+
+
         if (!CrfPrefs.getInstance().hasFirstSignInDate()) {
             Log.v(LOG_TAG, "No sign in date detected");
             // getCrfActivities method will be called again when sign in date is found, so return here
@@ -87,9 +89,25 @@ public class CrfDataProvider extends BridgeDataProvider {
         Log.v(LOG_TAG, String.format(Locale.getDefault(),
                 "Previous sign in date detected %s", firstSignInDate.toString()));
         // We have already done the clinic setup process, and can safely grab the schedules
-        getActivities(firstSignInDate, firstSignInDate.plusDays(STUDY_DURATION_IN_DAYS))
+        getActivities(firstSignInDate, addTime(firstSignInDate, STUDY_DURATION_IN_DAYS, -1))
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(activityList -> {
+
+                    StringBuilder debugActivityList = new StringBuilder();
+                    for (ScheduledActivity activity : activityList.getItems()) {
+                        if (activity.getPersistent() == false) {
+                            if (activity.getActivity().getTask() == null) {
+                                debugActivityList.append(activity.getActivity().getSurvey().getIdentifier());
+                            } else {
+                                debugActivityList.append(activity.getActivity().getTask().getIdentifier());
+                            }
+                            debugActivityList.append(" on ");
+                            debugActivityList.append(activity.getScheduledOn().toString());
+                            debugActivityList.append("\n");
+                        }
+                    }
+                    Log.d(LOG_TAG, debugActivityList.toString());
+
                     listener.success(activityList);
                 }, throwable -> listener.error(throwable.getLocalizedMessage()));
     }
@@ -103,7 +121,7 @@ public class CrfDataProvider extends BridgeDataProvider {
      */
     private void createOrFindFirstSignInDate(final CrfActivitiesListener listener) {
         Log.v(LOG_TAG, "createOrFindFirstSignInDate");
-        getActivities(DateTime.now(), DateTime.now().plusDays(1))
+        getActivities(DateTime.now(), addTime(DateTime.now(), 1, 0))
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(activityList -> {
 
@@ -251,6 +269,40 @@ public class CrfDataProvider extends BridgeDataProvider {
             }
         }
         return null;
+    }
+
+    /**
+     * addDays method will safely calculate days in the future that will always have the same timezone
+     * this fixes a bug where daylight savings time and DateTime will create different timezones
+     * and the bridge server will reject the call
+     * @param dateTime
+     * @param days
+     * @return
+     */
+    private DateTime addTime(DateTime dateTime, int days, int hours) {
+        DateTime newDateTime = dateTime.plusDays(days).plusHours(hours);
+
+        // TODO: do this without string manipulation somehow and also add hours/mins based on what was lost
+        String oldDateTimeStr = CrfPrefs.FORMATTER.print(dateTime);
+        int oldOffsetStartIdx = oldDateTimeStr.lastIndexOf("-");
+        String oldOffsetStr = oldDateTimeStr.substring(oldOffsetStartIdx, oldDateTimeStr.length());
+
+        String newDateTimeStr = CrfPrefs.FORMATTER.print(newDateTime);
+        int newOffsetStartIdx = newDateTimeStr.lastIndexOf("-");
+        String newOffsetStr = newDateTimeStr.substring(newOffsetStartIdx, newDateTimeStr.length());
+
+        // Bridge server does not like when we request date ranges with different time zones
+        // Unfortunately, during daylight savings, DateTime automatically switches time zones
+        // when we use the method "plusDays", so we must correct that if we determine it happened
+        if (!oldOffsetStr.equals(newOffsetStr)) {
+            // We had a time zone change!
+            Log.d(LOG_TAG, "Time zone change detected, correcting error");
+            String offsetCorrectDateTimeStr =
+                    newDateTimeStr.substring(0, newOffsetStartIdx) + oldOffsetStr;
+            newDateTime = CrfPrefs.FORMATTER.parseDateTime(offsetCorrectDateTimeStr);
+        }
+
+        return newDateTime;
     }
 
     public interface CrfActivitiesListener {

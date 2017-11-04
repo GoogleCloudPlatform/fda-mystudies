@@ -26,7 +26,7 @@ public class CrfPrefs {
     //-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
     private final SharedPreferences prefs;
 
-    private static final DateTimeFormatter FORMATTER = ISODateTimeFormat.dateTime().withOffsetParsed();
+    public static final DateTimeFormatter FORMATTER = ISODateTimeFormat.dateTime().withOffsetParsed();
 
     CrfPrefs(Context context)
     {
