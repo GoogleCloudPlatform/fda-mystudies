@@ -37,6 +37,7 @@ captures/
 
 # Intellij
 *.iml
+.idea/codeStyleSettings.xml
 .idea/inspectionProfiles
 .idea/workspace.xml
 .idea/tasks.xml

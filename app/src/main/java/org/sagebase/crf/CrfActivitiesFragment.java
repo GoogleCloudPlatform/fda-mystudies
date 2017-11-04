@@ -17,63 +17,54 @@
 
 package org.sagebase.crf;
 
+import android.support.annotation.VisibleForTesting;
 import android.widget.Toast;
 
+import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Lists;
 
-import org.researchstack.backbone.DataProvider;
 import org.researchstack.backbone.model.SchedulesAndTasksModel;
-import org.researchstack.backbone.step.InstructionStep;
-import org.researchstack.backbone.step.PermissionsStep;
-import org.researchstack.backbone.step.Step;
-import org.researchstack.backbone.task.OrderedTask;
 import org.researchstack.backbone.task.Task;
-import org.researchstack.backbone.ui.ActiveTaskActivity;
-import org.researchstack.backbone.ui.ViewTaskActivity;
 import org.researchstack.skin.ui.fragment.ActivitiesFragment;
-import org.sagebase.crf.step.CrfHeartRateCameraStep;
 import org.sagebionetworks.bridge.researchstack.CrfTaskFactory;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by TheMDP on 10/19/17
  */
-
 public class CrfActivitiesFragment extends ActivitiesFragment {
+    // Mapping from task ID to resource name. Visible to enable unit tests.
+    @VisibleForTesting
+    static final Map<String, String> TASK_ID_TO_RESOURCE_NAME =
+            ImmutableMap.<String, String>builder()
+                    .put("HeartRate Measurement", "heart_rate_measurement")
+                    .put("Cardio 12MT", "12_minute_walk")
+                    .put("Cardio Stair Step", "stair_step")
+                    .build();
 
-    public static final String TASK_ID_HEART_RATE_MEASUREMENT = "HeartRate Measurement";
-    public static final String TASK_ID_CARDIO_12MT = "Cardio 12MT";
-    public static final String TASK_ID_STAIR_STEP = "Cardio Stair Step";
+    private CrfTaskFactory taskFactory = new CrfTaskFactory();
+
+    // To allow unit tests to mock.
+    @VisibleForTesting
+    void setTaskFactory(CrfTaskFactory taskFactory) {
+        this.taskFactory = taskFactory;
+    }
 
     @Override
-    public void taskSelected(SchedulesAndTasksModel.TaskScheduleModel task) {
-        Task newTask = DataProvider.getInstance().loadTask(getContext(), task);
-        if (newTask == null) {
-
-            if (task.taskID.equals(TASK_ID_CARDIO_12MT)) {
-                CrfTaskFactory taskFactory = new CrfTaskFactory();
-                Task testTask = taskFactory.createTask(getActivity(), "12_minute_walk");
-                startActivity(CrfActiveTaskActivity.newIntent(getActivity(), testTask));
-            } else if (task.taskID.equals(TASK_ID_STAIR_STEP)) {
-                CrfTaskFactory taskFactory = new CrfTaskFactory();
-                Task testTask = taskFactory.createTask(getActivity(), "stair_step");
-                startActivity(CrfActiveTaskActivity.newIntent(getActivity(), testTask));
-            } else if (task.taskID.equals(TASK_ID_HEART_RATE_MEASUREMENT)) {
-                CrfTaskFactory taskFactory = new CrfTaskFactory();
-                Task testTask = taskFactory.createTask(getActivity(), "heart_rate_measurement");
-                startActivity(CrfActiveTaskActivity.newIntent(getActivity(), testTask));
-            } else {
-                Toast.makeText(getActivity(),
-                        org.researchstack.skin.R.string.rss_local_error_load_task,
-                        Toast.LENGTH_SHORT).show();
-            }
-
-            return;
+    protected void startCustomTask(SchedulesAndTasksModel.TaskScheduleModel task) {
+        if (TASK_ID_TO_RESOURCE_NAME.containsKey(task.taskID)) {
+            Task testTask = taskFactory.createTask(getActivity(), TASK_ID_TO_RESOURCE_NAME.get(task
+                    .taskID));
+            startActivityForResult(getIntentFactory().newTaskIntent(getActivity(),
+                    CrfActiveTaskActivity.class, testTask), REQUEST_TASK);
+        } else {
+            Toast.makeText(getActivity(),
+                    org.researchstack.skin.R.string.rss_local_error_load_task,
+                    Toast.LENGTH_SHORT).show();
         }
-
-        startActivityForResult(ViewTaskActivity.newIntent(getContext(), newTask), REQUEST_TASK);
     }
 
     @Override
