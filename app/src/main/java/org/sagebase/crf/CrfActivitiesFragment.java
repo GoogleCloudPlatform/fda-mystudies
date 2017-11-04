@@ -21,23 +21,26 @@ import android.support.annotation.VisibleForTesting;
 import android.widget.Toast;
 
 import com.google.common.collect.ImmutableMap;
-import com.google.common.collect.Lists;
+import com.google.common.collect.ImmutableSet;
 
 import org.researchstack.backbone.model.SchedulesAndTasksModel;
 import org.researchstack.backbone.task.Task;
 import org.researchstack.skin.ui.fragment.ActivitiesFragment;
-import org.sagebionetworks.bridge.researchstack.CrfDataProvider;
 import org.sagebionetworks.bridge.researchstack.CrfTaskFactory;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * Created by TheMDP on 10/19/17
  */
 public class CrfActivitiesFragment extends ActivitiesFragment {
+    // Task IDs that should be hidden from the activities page. Visible to enable unit tests.
+    @VisibleForTesting
+    static final Set<String> HIDDEN_TASK_IDS = ImmutableSet.of("clinic1", "clinic2");
+
     // Mapping from task ID to resource name. Visible to enable unit tests.
     @VisibleForTesting
     static final Map<String, String> TASK_ID_TO_RESOURCE_NAME =
@@ -72,26 +75,18 @@ public class CrfActivitiesFragment extends ActivitiesFragment {
     @Override
     public List<Object> processResults(SchedulesAndTasksModel model) {
         if (model == null || model.schedules == null) {
-            return Lists.newArrayList();
+            return new ArrayList<>();
         }
         List<Object> tasks = new ArrayList<>();
 
         for (SchedulesAndTasksModel.ScheduleModel scheduleModel : model.schedules) {
             for (SchedulesAndTasksModel.TaskScheduleModel task : scheduleModel.tasks) {
-                if (task.taskID != null && !hiddenActivityIdentifiers().contains(task.taskID)) {
+                if (!HIDDEN_TASK_IDS.contains(task.taskID)) {
                     tasks.add(task);
                 }
             }
         }
 
         return tasks;
-    }
-
-    public List<String> hiddenActivityIdentifiers() {
-        String [] hideTheseActivities = new String [] {
-                CrfDataProvider.CLINIC1,
-                CrfDataProvider.CLINIC2};
-
-        return new ArrayList<>(Arrays.asList(hideTheseActivities));
     }
 }
