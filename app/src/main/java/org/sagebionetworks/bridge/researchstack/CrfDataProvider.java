@@ -42,7 +42,7 @@ public class CrfDataProvider extends BridgeDataProvider {
     public static final String CLINIC1 = "clinic1";
     public static final String CLINIC2 = "clinic2";
 
-    public static final int STUDY_DURATION_IN_DAYS = 15;
+    public static final int STUDY_DURATION_IN_DAYS = 14;
 
     public CrfDataProvider() {
         // TODO give path to permission file for uploads
@@ -75,6 +75,7 @@ public class CrfDataProvider extends BridgeDataProvider {
      * @param listener the callback listener for the events
      */
     public void getCrfActivities(final CrfActivitiesListener listener) {
+
         if (!CrfPrefs.getInstance().hasFirstSignInDate()) {
             Log.v(LOG_TAG, "No sign in date detected");
             // getCrfActivities method will be called again when sign in date is found, so return here
