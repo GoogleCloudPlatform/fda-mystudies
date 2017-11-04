@@ -62,7 +62,7 @@ public class CrfActivitiesFragment extends ActivitiesFragment {
 
     private static final boolean USE_LEGACY_GET_ACTIVITIES = false;
     //private static final int DEBUG_BUILD_ACTIVITY_SUBARRAY_INDEX = -1;
-    private static final int DEBUG_BUILD_ACTIVITY_SUBARRAY_INDEX = 6;
+    private static final int DEBUG_BUILD_ACTIVITY_SUBARRAY_INDEX = 9;
 
     @Override
     public void fetchData() {
@@ -93,6 +93,7 @@ public class CrfActivitiesFragment extends ActivitiesFragment {
                 } else {
                     getAdapter().clear();
                 }
+
 
                 List<ScheduledActivity> scheduledActivities = processResults(activityList);
                 Log.d(LOG_TAG, scheduledActivities.toString());
@@ -175,16 +176,17 @@ public class CrfActivitiesFragment extends ActivitiesFragment {
             activities.remove(activities.size() - 4);
         }
 
+        List<ScheduledActivity> finalActivities = new ArrayList<>();
         // For now, the filter is only on whatever identifiers are in hiddenActivityIdentifiers()
         for (ScheduledActivity activity : activities) {
             if (activity.getActivity() != null &&
                     activity.getActivity().getTask() != null &&
                     activity.getActivity().getTask().getIdentifier() != null) {
                 if (!hiddenActivityIdentifiers().contains(activity.getActivity().getTask().getIdentifier())) {
-                    activities.add(activity);
+                    finalActivities.add(activity);
                 }
             } else {
-                activities.add(activity);
+                finalActivities.add(activity);
             }
         }
 
@@ -214,7 +216,7 @@ public class CrfActivitiesFragment extends ActivitiesFragment {
 
             SchedulesAndTasksModel.ScheduleModel sm = new SchedulesAndTasksModel.ScheduleModel();
             sm.scheduleType = "once";
-            sm.scheduledOn = temp.getScheduledOn().toDate();
+            sm.scheduledOn = temp.getScheduledOn().toLocalDate().toDate();
             model.schedules.add(sm);
             sm.tasks = new ArrayList<>();
 
