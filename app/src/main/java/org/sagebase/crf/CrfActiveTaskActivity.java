@@ -39,6 +39,7 @@ import org.researchstack.backbone.ui.ActiveTaskActivity;
 
 import org.researchstack.backbone.ui.step.layout.StepLayout;
 import org.researchstack.backbone.utils.ResUtils;
+import org.sagebase.crf.step.CrfResultListener;
 import org.sagebase.crf.step.CrfStartTaskStep;
 import org.sagebase.crf.view.CrfTaskStatusBarManipulator;
 import org.sagebase.crf.view.CrfTaskToolbarActionManipulator;
@@ -98,6 +99,11 @@ public class CrfActiveTaskActivity extends ActiveTaskActivity {
     public void showStep(Step step, boolean alwaysReplaceView) {
         super.showStep(step, alwaysReplaceView);
         refreshToolbar();
+
+        // Let steps know about the task result if it needs to
+        if (getCurrentStepLayout() instanceof CrfResultListener) {
+            ((CrfResultListener)getCurrentStepLayout()).crfTaskResult(taskResult);
+        }
     }
 
     public void refreshToolbar() {

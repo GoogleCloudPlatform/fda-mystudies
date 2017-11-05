@@ -141,4 +141,22 @@
         <item name="android:fontFamily">@font/opensans</item>
     </style>
 
+    <!-- Completion Step Screen -->
+    <style name="TextAppearance.Crf.CompletionHeader">
+        <item name="android:textSize">22sp</item>
+        <item name="android:fontFamily">@font/opensans_bold</item>
+    </style>
+    <style name="TextAppearance.Crf.CompletionText">
+        <item name="android:textSize">36sp</item>
+        <item name="android:fontFamily">@font/opensans</item>
+    </style>
+    <style name="TextAppearance.Crf.CompletionTextValue">
+        <item name="android:textSize">82sp</item>
+        <item name="android:fontFamily">@font/opensans_semibold</item>
+    </style>
+    <style name="TextAppearance.Crf.CompletionTextSubValue">
+        <item name="android:textSize">24sp</item>
+        <item name="android:fontFamily">@font/opensans_semibold</item>
+    </style>
+
 </resources>

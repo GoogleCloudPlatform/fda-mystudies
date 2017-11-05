@@ -128,7 +128,11 @@
     {
       "identifier"       : "completion",
       "type"             : "crf_completion",
-      "title"            : "Great Job!"
+      "title"            : "Great Job!",
+      "topText"          : "You just went",
+      "valueLabelText"   : "FEET",
+      "bottomText"       : "in 12 minutes",
+      "valueResultId"   : "completion_distance_result"
     }
   ]
 }
