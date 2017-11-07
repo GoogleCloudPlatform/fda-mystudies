@@ -26,6 +26,7 @@ import com.google.common.collect.ImmutableSet;
 import org.researchstack.backbone.model.SchedulesAndTasksModel;
 import org.researchstack.backbone.task.Task;
 import org.researchstack.skin.ui.fragment.ActivitiesFragment;
+import org.sagebionetworks.bridge.researchstack.CrfDataProvider;
 import org.sagebionetworks.bridge.researchstack.CrfTaskFactory;
 
 import java.util.ArrayList;
@@ -39,15 +40,20 @@ import java.util.Set;
 public class CrfActivitiesFragment extends ActivitiesFragment {
     // Task IDs that should be hidden from the activities page. Visible to enable unit tests.
     @VisibleForTesting
-    static final Set<String> HIDDEN_TASK_IDS = ImmutableSet.of("clinic1", "clinic2");
+    static final Set<String> HIDDEN_TASK_IDS = ImmutableSet.of(CrfDataProvider.CLINIC1,
+            CrfDataProvider.CLINIC2);
+
+    public static final String TASK_ID_HEART_RATE_MEASUREMENT = "HeartRate Measurement";
+    public static final String TASK_ID_CARDIO_12MT = "Cardio 12MT";
+    public static final String TASK_ID_STAIR_STEP = "Cardio Stair Step";
 
     // Mapping from task ID to resource name. Visible to enable unit tests.
     @VisibleForTesting
     static final Map<String, String> TASK_ID_TO_RESOURCE_NAME =
             ImmutableMap.<String, String>builder()
-                    .put("HeartRate Measurement", "heart_rate_measurement")
-                    .put("Cardio 12MT", "12_minute_walk")
-                    .put("Cardio Stair Step", "stair_step")
+                    .put(TASK_ID_HEART_RATE_MEASUREMENT, "heart_rate_measurement")
+                    .put(TASK_ID_CARDIO_12MT, "12_minute_walk")
+                    .put(TASK_ID_STAIR_STEP, "stair_step")
                     .build();
 
     private CrfTaskFactory taskFactory = new CrfTaskFactory();

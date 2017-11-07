@@ -1,17 +1,16 @@
 package org.sagebionetworks.bridge.researchstack;
 
 import android.text.TextUtils;
-
+import org.researchstack.backbone.ResourceManager;
 import org.researchstack.backbone.ResourcePathManager;
 import org.researchstack.backbone.model.ConsentDocument;
-import org.researchstack.backbone.ResourceManager;
+import org.researchstack.backbone.model.SchedulesAndTasksModel;
+import org.researchstack.backbone.model.TaskModel;
+import org.researchstack.backbone.onboarding.OnboardingManager;
 import org.researchstack.skin.model.ConsentSectionModel;
 import org.researchstack.skin.model.InclusionCriteriaModel;
-import org.researchstack.backbone.model.SchedulesAndTasksModel;
 import org.researchstack.skin.model.SectionModel;
 import org.researchstack.skin.model.StudyOverviewModel;
-import org.researchstack.skin.model.TaskModel;
-import org.researchstack.backbone.onboarding.OnboardingManager;
 
 /**
  * Created by TheMDP on 12/12/16.
