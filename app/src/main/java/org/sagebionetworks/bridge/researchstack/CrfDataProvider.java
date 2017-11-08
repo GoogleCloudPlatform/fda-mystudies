@@ -18,7 +18,6 @@ import rx.functions.Action0;
  */
 
 public class CrfDataProvider extends BridgeDataProvider {
-
     public static final String CLINIC1 = "clinic1";
     public static final String CLINIC2 = "clinic2";
 
