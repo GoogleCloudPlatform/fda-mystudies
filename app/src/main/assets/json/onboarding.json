@@ -6,7 +6,7 @@
       "steps" : [
         {
           "identifier"   : "login",
-          "type"         : "login"
+          "type"         : "externalID"
         }
       ]
     },
