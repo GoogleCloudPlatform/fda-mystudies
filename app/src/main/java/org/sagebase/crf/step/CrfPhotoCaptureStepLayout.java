@@ -103,9 +103,15 @@ public class CrfPhotoCaptureStepLayout extends CrfInstructionStepLayout implemen
     @Override
     public void onActivityFinished() {
         Log.d(LOG_TAG, "onActivityFinished()");
+
         StepResult result = new StepResult(step);
+
         FileResult fileResult = new FileResult(step.getIdentifier(), mCapturedPhoto, "photo");
+        fileResult.setEndDate(result.getEndDate());
+        fileResult.setStartDate(result.getStartDate());
+
         result.setResult(fileResult);
+
         callbacks.onSaveStep(StepCallbacks.ACTION_NEXT, step, result);
     }
 
