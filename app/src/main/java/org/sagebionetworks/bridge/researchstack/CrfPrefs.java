@@ -19,6 +19,8 @@ public class CrfPrefs {
 
     private static final String KEY_FIRST_SIGN_IN_DATE_TIME = "first_sign_in_date_time";
 
+    private static final String KEY_COMPLETED_FIRST_CLINIC = "completed_first_clinic";
+
     private static CrfPrefs instance;
 
     //-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
@@ -87,6 +89,14 @@ public class CrfPrefs {
 
     public void clear() {
         prefs.edit().clear().commit();
+    }
+
+    public boolean hasCompletedFirstClinic() {
+        return prefs.getBoolean(KEY_COMPLETED_FIRST_CLINIC, false);
+    }
+
+    public void setCompletedFirstClinic(boolean completed) {
+        prefs.edit().putBoolean(KEY_COMPLETED_FIRST_CLINIC, completed).commit();
     }
 
 }

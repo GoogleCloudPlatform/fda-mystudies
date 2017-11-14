@@ -47,6 +47,14 @@ We will track your question in the dashboard (shown as "Custom Question") over t
     <string name="permission_camera_title">Camera</string>
     <string name="permission_camera_desc">The app needs camera permissions to calculate heart rate.</string>
 
+    <!-- Activity Screen -->
+    <string name="crf_today">Today</string>
+    <string name="crf_clinic_fitness_test">clinic fitness test</string>
+    <string name="crf_clinic_message">Clinic tests will provide data that scientists use to assess the accuracy of digital versions.  This may help future generations in receiving better tools.</string>
+    <string name="crf_start_message">Complete the surveys and the clinic cardiovascular test.</string>
+    <string name="crf_start_footer_title">Start by</string>
+    <string name="crf_start_footer_message">completing a short demographic and health survey, and then your first clinic test.</string>
+
     <!-- Start Task Step -->
     <string name="crf_remind_me_later"><u>Remind me later</u></string>
 

@@ -17,11 +17,17 @@
 
 package org.sagebase.crf;
 
+import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.support.v4.content.res.ResourcesCompat;
+import android.view.MenuItem;
 
 import org.researchstack.backbone.StorageAccess;
 import org.researchstack.skin.ui.MainActivity;
+import org.sagebase.crf.view.CrfFilterableActivityDisplay;
 import org.sagebionetworks.research.crf.R;
+
+import java.util.List;
 
 /**
  * Created by TheMDP on 10/23/17.
@@ -30,9 +36,50 @@ import org.sagebionetworks.research.crf.R;
 public class CrfMainActivity extends MainActivity {
 
     @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        //getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        //getSupportActionBar().setDisplayShowHomeEnabled(true);
+    }
+
+    @Override
     public void onDataAuth() {
         storageAccessUnregister();
         MainApplication.mockAuthenticate(this);
         super.onDataReady();
     }
+
+    @Override
+    public void onBackPressed() {
+        if(!clearFilter()) {
+            super.onBackPressed();
+        }
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if(item.getItemId() == android.R.id.home) {
+            if(!clearFilter()) {
+                super.onOptionsItemSelected(item);
+            } else {
+                return true;
+            }
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    private boolean clearFilter() {
+        Fragment fragment = pagerAdapter.getRegisteredFragment(0);
+        if(fragment instanceof  CrfFilterableActivityDisplay) {
+            CrfFilterableActivityDisplay filterable = ((CrfFilterableActivityDisplay)fragment);
+            if(filterable.isFiltered()) {
+                filterable.clearFilter();
+                return true;
+            }
+        }
+
+        return false;
+    }
+
 }

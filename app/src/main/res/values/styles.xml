@@ -73,7 +73,7 @@
     <style name="TextAppearance"/>
     <style name="TextAppearance.Crf"/>
     <style name="TextAppearance.Crf.Body">
-        <item name="android:textSize">18sp</item>
+        <item name="android:textSize">17sp</item>
         <item name="android:fontFamily">@font/opensans</item>
     </style>
     <style name="TextAppearance.Crf.Header">
