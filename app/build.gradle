@@ -8,9 +8,9 @@ android {
         minSdkVersion 19
         targetSdkVersion 26
 	// version code is bumped by fastlane automatically
-        versionCode 5
+        versionCode 8
 	// this should match the stable- branch name and will be used by fastlane to create the tag
-        versionName "0.3.0"
+        versionName "0.5.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         multiDexEnabled true
         resConfigs "en"
@@ -61,7 +61,12 @@ dependencies {
     // Important - the CameraSource implementation in this project requires version 8.1 or higher.
     implementation 'com.google.android.gms:play-services-vision:10.0.1+'
 
-    testImplementation 'junit:junit:4.12'
+    testImplementation  'junit:junit:4.12'
+    testImplementation  'org.robolectric:robolectric:3.5'
+    testImplementation  'org.mockito:mockito-core:1.10.19'
+    testImplementation  'org.powermock:powermock-api-mockito:1.6.6'
+    testImplementation  'org.powermock:powermock-module-junit4:1.6.6'
+
     androidTestImplementation('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
         exclude group: 'com.google.code.findbugs', module: 'jsr305'

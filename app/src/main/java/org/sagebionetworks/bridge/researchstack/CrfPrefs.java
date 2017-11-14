@@ -2,6 +2,7 @@ package org.sagebionetworks.bridge.researchstack;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
+import android.support.annotation.VisibleForTesting;
 
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormatter;
@@ -32,7 +33,12 @@ public class CrfPrefs {
 
     CrfPrefs(Context context)
     {
-        prefs = PreferenceManager.getDefaultSharedPreferences(context);
+        prefs = createPrefs(context);
+    }
+
+    @VisibleForTesting
+    SharedPreferences createPrefs(Context context) {
+        return PreferenceManager.getDefaultSharedPreferences(context);
     }
 
     public static void init(Context context) {

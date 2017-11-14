@@ -23,40 +23,27 @@ import android.support.annotation.NonNull;
 import android.util.Log;
 import android.support.v7.widget.LinearLayoutManager;
 import android.view.ViewGroup;
+import android.support.annotation.VisibleForTesting;
 import android.widget.Toast;
 
-import com.google.common.collect.Lists;
-import com.google.gson.annotations.SerializedName;
+import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.ImmutableSet;
 
 import org.researchstack.backbone.DataProvider;
 import org.researchstack.backbone.model.SchedulesAndTasksModel;
-import org.researchstack.backbone.step.InstructionStep;
-import org.researchstack.backbone.step.PermissionsStep;
-import org.researchstack.backbone.step.Step;
-import org.researchstack.backbone.task.OrderedTask;
 import org.researchstack.backbone.task.Task;
-import org.researchstack.backbone.ui.ActiveTaskActivity;
-import org.researchstack.backbone.ui.ViewTaskActivity;
-import org.researchstack.backbone.utils.LogExt;
-import org.researchstack.backbone.utils.ObservableUtils;
-import org.researchstack.backbone.utils.StepLayoutHelper;
 import org.researchstack.skin.ui.adapter.TaskAdapter;
 import org.researchstack.skin.ui.fragment.ActivitiesFragment;
-import org.researchstack.skin.ui.views.DividerItemDecoration;
 import org.sagebase.crf.reminder.AlarmReceiver;
 import org.sagebase.crf.reminder.CrfReminderManager;
-import org.sagebase.crf.step.CrfHeartRateCameraStep;
 import org.sagebase.crf.view.CrfFilterableActivityDisplay;
 import org.sagebionetworks.bridge.researchstack.CrfDataProvider;
-import org.sagebionetworks.bridge.researchstack.CrfPrefs;
 import org.sagebionetworks.bridge.researchstack.CrfTaskFactory;
 import org.sagebionetworks.bridge.rest.model.ScheduledActivity;
-import org.sagebionetworks.bridge.rest.model.ScheduledActivityList;
 import org.sagebionetworks.bridge.rest.model.ScheduledActivityListV4;
 import org.sagebionetworks.research.crf.R;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -64,7 +51,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
-import rx.Observable;
+import java.util.Set;
 
 /**
  * Created by TheMDP on 10/19/17
@@ -72,14 +59,28 @@ import rx.Observable;
 
 public class CrfActivitiesFragment extends ActivitiesFragment implements CrfFilterableActivityDisplay {
 
-    private static final String LOG_TAG = CrfActivitiesFragment.class.getCanonicalName();
-
-    private static final boolean USE_LEGACY_GET_ACTIVITIES = false;
-    //private static final int DEBUG_BUILD_ACTIVITY_SUBARRAY_INDEX = -1;
-    private static final int DEBUG_BUILD_ACTIVITY_SUBARRAY_INDEX = 5;
-
     private SchedulesAndTasksModel mScheduleModel;
     private Date mFilteredDate;
+
+    // Task IDs that should be hidden from the activities page. Visible to enable unit tests.
+    @VisibleForTesting
+    static final Set<String> HIDDEN_TASK_IDS = ImmutableSet.of(CrfDataProvider.CLINIC1,
+            CrfDataProvider.CLINIC2);
+
+    private static final String LOG_TAG = CrfActivitiesFragment.class.getCanonicalName();
+
+    /**
+     * When true, we will use the base class' fetch activities
+     * When false, we will use the new clinic assignment groupings of activities
+     */
+    private static final boolean USE_LEGACY_GET_ACTIVITIES = true;
+
+    private CrfTaskFactory taskFactory = new CrfTaskFactory();
+    // To allow unit tests to mock.
+    @VisibleForTesting
+    void setTaskFactory(CrfTaskFactory taskFactory) {
+        this.taskFactory = taskFactory;
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -155,7 +156,6 @@ public class CrfActivitiesFragment extends ActivitiesFragment implements CrfFilt
     }
 
     protected void setUpAdapter() {
-
         recyclerView.setLayoutManager(new LinearLayoutManager(recyclerView.getContext()));
 //        recyclerView.addItemDecoration(new DividerItemDecoration(recyclerView.getContext(),
 //                DividerItemDecoration.VERTICAL_LIST,
@@ -163,39 +163,29 @@ public class CrfActivitiesFragment extends ActivitiesFragment implements CrfFilt
 //                false));
 
         fetchData();
-
     }
 
+    // Mapping from task ID to resource name. Visible to enable unit tests.
+    @VisibleForTesting
+    static final Map<String, String> TASK_ID_TO_RESOURCE_NAME =
+            ImmutableMap.<String, String>builder()
+                    .put(CrfTaskFactory.TASK_ID_HEART_RATE_MEASUREMENT, "heart_rate_measurement")
+                    .put(CrfTaskFactory.TASK_ID_CARDIO_12MT, "12_minute_walk")
+                    .put(CrfTaskFactory.TASK_ID_STAIR_STEP, "stair_step")
+                    .build();
+
     @Override
-    public void taskSelected(SchedulesAndTasksModel.TaskScheduleModel task) {
-        Task newTask = DataProvider.getInstance().loadTask(getContext(), task);
-        if (newTask == null) {
-
-            if (task.taskID.equals(CrfTaskFactory.TASK_ID_CARDIO_12MT)) {
-                CrfTaskFactory taskFactory = new CrfTaskFactory();
-                Task testTask = taskFactory.createTask(getActivity(), "12_minute_walk");
-                startActivity(CrfActiveTaskActivity.newIntent(getActivity(), testTask));
-            } else if (task.taskID.equals(CrfTaskFactory.TASK_ID_STAIR_STEP)) {
-                CrfTaskFactory taskFactory = new CrfTaskFactory();
-                Task testTask = taskFactory.createTask(getActivity(), "stair_step");
-                startActivity(CrfActiveTaskActivity.newIntent(getActivity(), testTask));
-            } else if (task.taskID.equals(CrfTaskFactory.TASK_ID_HEART_RATE_MEASUREMENT)) {
-                CrfTaskFactory taskFactory = new CrfTaskFactory();
-                Task testTask = taskFactory.createTask(getActivity(), "heart_rate_measurement");
-                startActivityForResult(CrfActiveTaskActivity.newIntent(getActivity(), testTask), REQUEST_TASK);
-            } else if (task.taskID.equals(CrfTaskFactory.TASK_ID_CLINIC)) {
-                mFilteredDate = ((CrfTask)task).scheduledOn;
-                filterActivities();
-            } else {
-                Toast.makeText(getActivity(),
-                        org.researchstack.skin.R.string.rss_local_error_load_task,
-                        Toast.LENGTH_SHORT).show();
-            }
-
-            return;
+    protected void startCustomTask(SchedulesAndTasksModel.TaskScheduleModel task) {
+        if (TASK_ID_TO_RESOURCE_NAME.containsKey(task.taskID)) {
+            Task testTask = taskFactory.createTask(getActivity(), TASK_ID_TO_RESOURCE_NAME.get(task
+                    .taskID));
+            startActivityForResult(getIntentFactory().newTaskIntent(getActivity(),
+                    CrfActiveTaskActivity.class, testTask), REQUEST_TASK);
+        } else {
+            Toast.makeText(getActivity(),
+                    org.researchstack.skin.R.string.rss_local_error_load_task,
+                    Toast.LENGTH_SHORT).show();
         }
-
-        startActivityForResult(ViewTaskActivity.newIntent(getContext(), newTask), REQUEST_TASK);
     }
 
     public void showAllActivities() {
@@ -285,7 +275,7 @@ public class CrfActivitiesFragment extends ActivitiesFragment implements CrfFilt
     @Override
     public List<Object> processResults(SchedulesAndTasksModel model) {
         if (model == null || model.schedules == null) {
-            return Lists.newArrayList();
+            return new ArrayList<>();
         }
         List<Object> tasks = new ArrayList<>();
 
@@ -305,7 +295,6 @@ public class CrfActivitiesFragment extends ActivitiesFragment implements CrfFilt
                 ct.taskID = CrfTaskFactory.TASK_ID_CLINIC;
                 ct.taskTitle = getString(R.string.crf_clinic_fitness_test);
                 ct.taskCompletionTime = "40 minutes";  // TODO: where to get this?  sum up tasks?
-
             }
             ct.scheduledOn = scheduleModel.scheduledOn;
             tasks.add(ct);
@@ -319,23 +308,17 @@ public class CrfActivitiesFragment extends ActivitiesFragment implements CrfFilt
      */
     public List<ScheduledActivity> processResults(ScheduledActivityListV4 activityList) {
         if (activityList == null || activityList.getItems() == null) {
-            return Lists.newArrayList();
+            return new ArrayList<>();
         }
         List<ScheduledActivity> activities = new ArrayList<>(activityList.getItems());
 
-        if (DEBUG_BUILD_ACTIVITY_SUBARRAY_INDEX > 0) {
-            activities = activities.subList(DEBUG_BUILD_ACTIVITY_SUBARRAY_INDEX, activities.size());
-            // Also, the 4th to last activity was a mistake, remove it
-            activities.remove(activities.size() - 4);
-        }
-
         List<ScheduledActivity> finalActivities = new ArrayList<>();
-        // For now, the filter is only on whatever identifiers are in hiddenActivityIdentifiers()
+        // For now, the filter is only on whatever identifiers are in HIDDEN_TASK_IDS
         for (ScheduledActivity activity : activities) {
             if (activity.getActivity() != null &&
                     activity.getActivity().getTask() != null &&
                     activity.getActivity().getTask().getIdentifier() != null) {
-                if (!hiddenActivityIdentifiers().contains(activity.getActivity().getTask().getIdentifier())) {
+                if (!HIDDEN_TASK_IDS.contains(activity.getActivity().getTask().getIdentifier())) {
                     finalActivities.add(activity);
                 }
             } else {
@@ -343,7 +326,7 @@ public class CrfActivitiesFragment extends ActivitiesFragment implements CrfFilt
             }
         }
 
-        return activities;
+        return finalActivities;
     }
 
     private SchedulesAndTasksModel translateActivities(@NonNull List<ScheduledActivity> activityList) {
@@ -388,14 +371,6 @@ public class CrfActivitiesFragment extends ActivitiesFragment implements CrfFilt
         }
 
         return model;
-    }
-
-    public List<String> hiddenActivityIdentifiers() {
-        String [] hideTheseActivities = new String [] {
-                CrfDataProvider.CLINIC1,
-                CrfDataProvider.CLINIC2};
-
-        return new ArrayList<>(Arrays.asList(hideTheseActivities));
     }
 
     public class CrfTask extends SchedulesAndTasksModel.TaskScheduleModel {
