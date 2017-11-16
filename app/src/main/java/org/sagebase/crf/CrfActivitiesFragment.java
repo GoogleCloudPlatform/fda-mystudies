@@ -123,9 +123,13 @@ public class CrfActivitiesFragment extends ActivitiesFragment implements CrfFilt
                             !allTasksCompleteOn(schedule.scheduledOn) &&
                             DateUtils.isToday(schedule.scheduledOn.getTime());
 
+                    boolean isTodaySameDayOrAfterClinic =
+                            DateUtils.isToday(schedule.scheduledOn.getTime()) ||
+                            new Date().after(schedule.scheduledOn);
+
                     boolean clinicGroupSelectable = schedule.tasks.size() > 1 &&
                             !allTasksCompleteOn(schedule.scheduledOn) &&
-                            new Date().after(schedule.scheduledOn);
+                            isTodaySameDayOrAfterClinic;
 
                     if (singleTaskSelectable || clinicGroupSelectable) {
                         scheduleSelected(schedule);

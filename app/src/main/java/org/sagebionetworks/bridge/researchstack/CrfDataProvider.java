@@ -392,7 +392,8 @@ public class CrfDataProvider extends BridgeDataProvider {
         for (ScheduledActivity activity : activities) {
 
             boolean isNotPersistent = !activity.getPersistent();
-            boolean isNotAHiddenTask = activity.getActivity() == null ||
+            boolean isASurvey = activity.getActivity() != null && activity.getActivity().getSurvey() != null;
+            boolean isNotAHiddenTask = isASurvey ||
                     (activity.getActivity().getTask() != null &&
                     activity.getActivity().getTask().getIdentifier() != null &&
                     !HIDDEN_TASK_IDS.contains(activity.getActivity().getTask().getIdentifier()));
