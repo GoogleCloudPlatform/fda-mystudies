@@ -84,7 +84,10 @@
     {
       "identifier"       : "completion",
       "type"             : "crf_completion",
-      "title"            : "Great Job!"
+      "title"            : "Great Job!",
+      "topText"          : "Your heart rate increased",
+      "valueLabelText"   : "BPM",
+      "valueResultId"   : "completion_bpm_result"
     }
   ]
 }

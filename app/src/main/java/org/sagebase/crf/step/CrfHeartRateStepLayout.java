@@ -33,11 +33,15 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import org.researchstack.backbone.result.Result;
+import org.researchstack.backbone.result.StepResult;
+import org.researchstack.backbone.result.TaskResult;
+import org.researchstack.backbone.step.Step;
 import org.researchstack.backbone.step.active.recorder.Recorder;
 import org.researchstack.backbone.step.active.recorder.RecorderConfig;
 import org.researchstack.backbone.ui.callbacks.StepCallbacks;
 import org.researchstack.backbone.ui.step.layout.ActiveStepLayout;
 import org.researchstack.backbone.ui.views.ArcDrawable;
+import org.researchstack.backbone.utils.StepResultHelper;
 import org.sagebase.crf.camera.CameraSourcePreview;
 import org.sagebase.crf.step.active.HeartRateCameraRecorder;
 import org.sagebase.crf.step.active.HeartRateCameraRecorderConfig;
@@ -56,7 +60,10 @@ public class CrfHeartRateStepLayout extends ActiveStepLayout implements
         HeartRateCameraRecorder.BpmUpdateListener,
         HeartRateCameraRecorder.IntelligentStartUpdateListener,
         CrfTaskToolbarTintManipulator,
-        CrfTaskStatusBarManipulator {
+        CrfTaskStatusBarManipulator,
+        CrfResultListener {
+
+    private static final String AVERAGE_BPM_IDENTIFIER = "AVERAGE_BPM_IDENTIFIER";
 
     private CameraSourcePreview cameraSourcePreview;
 
@@ -72,6 +79,9 @@ public class CrfHeartRateStepLayout extends ActiveStepLayout implements
     protected Button nextButton;
     protected ImageView heartImageView;
     protected HeartBeatAnimation heartBeatAnimation;
+
+    // The previousBpm comes from the TaskResult of an unrelated CrfHeartRateStepLayout
+    private int previousBpm = -1;
 
     private boolean hasDetectedStart = false;
     private int averageBpmSum;
@@ -237,8 +247,31 @@ public class CrfHeartRateStepLayout extends ActiveStepLayout implements
         if (averageBpmCount > 0) {
             int averageBpm = averageBpmSum / averageBpmCount;
             heartRateNumber.setText(String.format(Locale.getDefault(), "%d", averageBpm));
+            setBpmResult(averageBpm);
         } else {
             heartRateNumber.setText(String.format(Locale.getDefault(), "%d", 0));
+            setBpmResult(0);
+        }
+    }
+
+    /**
+     * The BPM result will be stored in the TaskResult and if there are multiple
+     * CrfHeartRateSteps, the difference between the BPMs will be stored in the result as well
+     * @param bpm the average BPM
+     */
+    private void setBpmResult(int bpm) {
+        // See if we have a previous BPM, in which case we should calculate the difference
+        if (previousBpm >= 0) {
+            String bpmStepId = CrfCompletionStepLayout.COMPLETION_BPM_VALUE_RESULT;
+            StepResult<String> bpmResult = new StepResult<>(new Step(bpmStepId));
+            int bpmDifference = Math.abs(bpm - previousBpm);
+            bpmResult.setResult(String.valueOf(bpmDifference));
+            stepResult.setResultForIdentifier(bpmStepId, bpmResult);
+        } else {
+            String bpmStepId = CrfHeartRateStepLayout.AVERAGE_BPM_IDENTIFIER;
+            StepResult<String> bpmResult = new StepResult<>(new Step(bpmStepId));
+            bpmResult.setResult(String.valueOf(bpm));
+            stepResult.setResultForIdentifier(bpmStepId, bpmResult);
         }
     }
 
@@ -257,6 +290,14 @@ public class CrfHeartRateStepLayout extends ActiveStepLayout implements
     @Override
     public int crfStatusBarColor() {
         return R.color.white;
+    }
+
+    @Override
+    public void crfTaskResult(TaskResult taskResult) {
+        String bpmString = StepResultHelper.findStringResult(taskResult, AVERAGE_BPM_IDENTIFIER);
+        if (bpmString != null) {
+            previousBpm = Integer.parseInt(bpmString);
+        }
     }
 
     private class HeartBeatAnimation extends AlphaAnimation {

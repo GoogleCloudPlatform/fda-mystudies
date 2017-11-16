@@ -6,5 +6,9 @@
     "HeartRate Measurement":{
         "id":"HeartRate Measurement",
         "revision":6
+    },
+    "test_json_survey":{
+        "id":"test_json_survey",
+        "revision":1
     }
 }

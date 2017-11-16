@@ -21,7 +21,6 @@ import android.os.Bundle;
 import android.text.format.DateUtils;
 import android.util.Log;
 import android.support.v7.widget.LinearLayoutManager;
-import android.view.ViewGroup;
 import android.support.annotation.VisibleForTesting;
 import android.widget.Toast;
 
@@ -40,7 +39,6 @@ import org.sagebionetworks.bridge.researchstack.CrfTaskFactory;
 import org.sagebionetworks.research.crf.R;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -62,6 +60,15 @@ public class CrfActivitiesFragment extends ActivitiesFragment implements CrfFilt
     void setTaskFactory(CrfTaskFactory taskFactory) {
         this.taskFactory = taskFactory;
     }
+
+    // Mapping from task ID to resource name. Visible to enable unit tests.
+    @VisibleForTesting
+    static final Map<String, String> TASK_ID_TO_RESOURCE_NAME =
+            ImmutableMap.<String, String>builder()
+                    .put(CrfTaskFactory.TASK_ID_HEART_RATE_MEASUREMENT, "heart_rate_measurement")
+                    .put(CrfTaskFactory.TASK_ID_CARDIO_12MT, "12_minute_walk")
+                    .put(CrfTaskFactory.TASK_ID_STAIR_STEP, "stair_step")
+                    .build();
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -161,15 +168,6 @@ public class CrfActivitiesFragment extends ActivitiesFragment implements CrfFilt
 
         fetchData();
     }
-
-    // Mapping from task ID to resource name. Visible to enable unit tests.
-    @VisibleForTesting
-    static final Map<String, String> TASK_ID_TO_RESOURCE_NAME =
-            ImmutableMap.<String, String>builder()
-                    .put(CrfTaskFactory.TASK_ID_HEART_RATE_MEASUREMENT, "heart_rate_measurement")
-                    .put(CrfTaskFactory.TASK_ID_CARDIO_12MT, "12_minute_walk")
-                    .put(CrfTaskFactory.TASK_ID_STAIR_STEP, "stair_step")
-                    .build();
 
     @Override
     protected void startCustomTask(SchedulesAndTasksModel.TaskScheduleModel task) {

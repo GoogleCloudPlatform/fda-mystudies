@@ -1,0 +1,17 @@
+{
+  "identifier": "test_json_survey",
+  "type": "Survey",
+  "name": "Test JSON Survey",
+  "elements": [
+    {
+      "identifier": "did_it_work",
+      "prompt": "Did the client-side survey work?",
+      "uiHint": "checkbox",
+      "type": "SurveyQuestion",
+      "constraints": {
+        "dataType": "boolean",
+        "type": "BooleanConstraints"
+      }
+    }
+  ]
+}

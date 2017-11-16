@@ -18,6 +18,7 @@
     <!-- Task Sizes -->
     <dimen name="crf_video_preview">250dp</dimen>
     <dimen name="crf_ard_drawable_width">10dp</dimen>
+    <dimen name="crf_completion_image_height">200dp</dimen>
 
     <!-- Activity icon size -->
     <dimen name="crf_activity_icon_size">42dp</dimen>
@@ -27,6 +28,5 @@
     <dimen name="crf_activity_title_size">15sp</dimen>
     <dimen name="crf_activity_title_size_today">17sp</dimen>
     <dimen name="crf_activity_icon_margin">8dp</dimen>
-
 
 </resources>

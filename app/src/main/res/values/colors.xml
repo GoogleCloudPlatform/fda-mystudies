@@ -42,6 +42,7 @@
     <color name="perrywinkleStatus">#9EBAEF</color>
     <color name="macaroniAndCheese">#F5B33C</color>
     <color name="black54">#89000000</color>
+    <color name="whiteButtonShadow">#F5F5F5</color>
     <color name="whiteButtonShadow65">#A6F5F5F5</color>
 
 </resources>
