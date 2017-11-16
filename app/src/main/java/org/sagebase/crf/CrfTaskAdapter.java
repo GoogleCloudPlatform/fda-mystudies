@@ -18,31 +18,24 @@
 package org.sagebase.crf;
 
 import android.content.Context;
-import android.content.res.Resources;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.util.TypedValue;
-import android.view.Gravity;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import org.joda.time.DateTime;
 import org.researchstack.backbone.model.SchedulesAndTasksModel;
-import org.researchstack.backbone.task.Task;
 import org.researchstack.backbone.utils.LogExt;
 import org.researchstack.skin.ui.adapter.TaskAdapter;
 import org.sagebionetworks.bridge.researchstack.CrfTaskFactory;
 import org.sagebionetworks.research.crf.R;
 
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 
@@ -65,6 +58,9 @@ public class CrfTaskAdapter extends TaskAdapter {
     private static SimpleDateFormat sFormatter = new SimpleDateFormat("MMM d");
     private boolean mFiltered = false;
     private int mPositionForToday;
+
+    protected PublishSubject<SchedulesAndTasksModel.ScheduleModel>
+            publishScheduleSubject = PublishSubject.create();
 
     public CrfTaskAdapter(Context context) {
         super(context);
@@ -96,11 +92,25 @@ public class CrfTaskAdapter extends TaskAdapter {
     public void onBindViewHolder(RecyclerView.ViewHolder hldr, int position) {
         int viewType = getItemViewType(position);
         Log.d(LOG_TAG, "onBindViewHolder(): " + position + ", " + viewType);
-         Object obj = tasks.get(position);
+        Object obj = tasks.get(position);
+
+        SchedulesAndTasksModel.ScheduleModel schedule = null;
+        SchedulesAndTasksModel.TaskScheduleModel firstTask = null;
+        if (obj instanceof SchedulesAndTasksModel.ScheduleModel) {
+            schedule = (SchedulesAndTasksModel.ScheduleModel) obj;
+        } else if (obj instanceof StartItem) {
+            schedule = ((StartItem)obj).schedule;
+        }
+         if (schedule != null && schedule.tasks != null && !schedule.tasks.isEmpty()) {
+             firstTask = schedule.tasks.get(0);
+         }
+         if (obj instanceof SchedulesAndTasksModel.TaskScheduleModel) {
+            firstTask = (SchedulesAndTasksModel.TaskScheduleModel)obj;
+         }
+
          if(hldr instanceof ViewHolder) {
              ViewHolder holder = (ViewHolder) hldr;
-             CrfActivitiesFragment.CrfTask task = (CrfActivitiesFragment.CrfTask) obj;
-             boolean isToday = isToday(task.scheduledOn);
+             boolean isToday = isToday(schedule.scheduledOn);
 
              int iconSize = 0;
              float titleSize = 0f;
@@ -111,7 +121,6 @@ public class CrfTaskAdapter extends TaskAdapter {
                  titleSize = mContext.getResources().getDimension(R.dimen.crf_activity_title_size_today);
                  holder.today.setVisibility(View.VISIBLE);
                  holder.subtitle.setVisibility(View.VISIBLE);
-                 holder.iconCompleted.setVisibility(View.VISIBLE);
                  holder.overlay.setVisibility(View.GONE);
              } else {
                  iconSize = (int) mContext.getResources().getDimension(R.dimen.crf_activity_icon_size);
@@ -119,73 +128,81 @@ public class CrfTaskAdapter extends TaskAdapter {
                  titleSize = mContext.getResources().getDimension(R.dimen.crf_activity_title_size);
                  holder.today.setVisibility(View.GONE);
                  holder.subtitle.setVisibility(View.GONE);
-                 holder.iconCompleted.setVisibility(View.GONE);
                  holder.overlay.setVisibility(View.VISIBLE);
              }
+
+             boolean allTasksComplete = true;
+             for (SchedulesAndTasksModel.TaskScheduleModel task : schedule.tasks) {
+                 if (task.taskFinishedOn == null) {
+                     allTasksComplete = false;
+                 }
+             }
+             if (allTasksComplete) {
+                 holder.iconCompleted.setVisibility(View.VISIBLE);
+             } else {
+                 holder.iconCompleted.setVisibility(View.GONE);
+             }
+
              FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(iconSize, iconSize);
              holder.icon.setLayoutParams(params);
              holder.date.setTextSize(TypedValue.COMPLEX_UNIT_PX, dateSize);
              holder.title.setTextSize(TypedValue.COMPLEX_UNIT_PX, titleSize);
 
-//             if(schedule.tasks != null && schedule.tasks.size() == 1) {
-             //SchedulesAndTasksModel.TaskScheduleModel task = schedule.tasks.get(0);
+             if (schedule.tasks.size() == 1) {
+                 holder.icon.setImageResource(getIcon(firstTask));
+                 holder.title.setText(firstTask.taskTitle);
+                 holder.subtitle.setText(firstTask.taskCompletionTime);
+                 holder.date.setText(formatDate(schedule.scheduledOn));
+             } else {
+                 holder.icon.setImageResource(R.drawable.crf_task_clinic);
+                 holder.date.setText(formatDate(schedule.scheduledOn));
+                 holder.title.setText(mContext.getString(R.string.crf_clinic_fitness_test));
+             }
 
-             holder.icon.setImageResource(getIcon(task));
-             holder.title.setText(task.taskTitle);
-             holder.subtitle.setText(task.taskCompletionTime);
-             holder.date.setText(formatDate(task.scheduledOn));
-
-//                 holder.itemView.setOnClickListener(v -> {
-//                     LogExt.d(LOG_TAG, "Item clicked: " + task.taskID + ", " + task.taskType);
-//                     publishSubject.onNext(task);
-//                 });
-//             } else {
-//                 holder.icon.setImageResource(R.drawable.crf_task_clinic);
-//                 holder.date.setText(formatDate(task.scheduledOn));
-//                 holder.title.setText(mContext.getString(R.string.crf_clinic_fitness_test));
-//                 holder.itemView.setOnClickListener(v -> {
-//                     //CrfTaskFactory taskFactory = new CrfTaskFactory();
-//                     //Task task = taskFactory.createTask(mContext, "clinic");
-//                     mContext.startActivity(CrfActiveTaskActivity.newIntent(mContext, task));
-//                 });
-//             }
-
+             final SchedulesAndTasksModel.ScheduleModel finalSchedule = schedule;
              holder.itemView.setOnClickListener(v -> {
-                 LogExt.d(LOG_TAG, "Item clicked: " + task.taskID + ", " + task.taskType);
-                 publishSubject.onNext(task);
+                 LogExt.d(LOG_TAG, "Item clicked: " + finalSchedule.scheduleString);
+                 publishScheduleSubject.onNext(finalSchedule);
              });
 
          } else if(hldr instanceof FilteredViewHolder) {
              FilteredViewHolder holder = (FilteredViewHolder) hldr;
-             CrfActivitiesFragment.CrfTask task = (CrfActivitiesFragment.CrfTask) obj;
 
-             holder.icon.setImageResource(getIcon(task));
-             holder.title.setText(task.taskTitle);
+             holder.icon.setImageResource(getIcon(firstTask));
+             holder.title.setText(firstTask.taskTitle);
              holder.iconCompleted.setVisibility(View.GONE);
-
+             if (firstTask.taskFinishedOn != null) {
+                 holder.icon.setAlpha(0.5f);
+                 holder.title.setAlpha(0.5f);
+                 holder.itemView.setOnClickListener(null);
+             } else {
+                 holder.icon.setAlpha(1.0f);
+                 holder.title.setAlpha(1.0f);
+             }
+             final SchedulesAndTasksModel.TaskScheduleModel finalTask = firstTask;
              holder.itemView.setOnClickListener(v -> {
-                 LogExt.d(LOG_TAG, "Item clicked: " + task.taskID + ", " + task.taskType);
-                 publishSubject.onNext(task);
+                 LogExt.d(LOG_TAG, "Item clicked: " + finalTask.taskID);
+                 publishSubject.onNext(finalTask);
              });
          } else if(hldr instanceof StartItemViewHolder) {
              StartItemViewHolder holder = (StartItemViewHolder) hldr;
              StartItem item = (StartItem) obj;
 
-             holder.date.setText(formatDate(item.task.scheduledOn));
-             holder.title.setText(item.task.taskTitle);
-             //holder.message.setText(item.task.taskFileName);
-             holder.subtitle.setText(item.task.taskCompletionTime);
+             holder.date.setText(formatDate(schedule.scheduledOn));
+             holder.title.setText(mContext.getString(R.string.crf_clinic_fitness_test));
+             holder.subtitle.setText(firstTask.taskCompletionTime);
 
+             final SchedulesAndTasksModel.ScheduleModel finalSchedule = schedule;
              holder.itemView.setOnClickListener(v -> {
-                 LogExt.d(LOG_TAG, "Item clicked: " + item.task.taskID + ", " + item.task.taskType);
-                 publishSubject.onNext(item.task);
+                 LogExt.d(LOG_TAG, "Item clicked: " + finalSchedule.scheduleString);
+                 publishScheduleSubject.onNext(finalSchedule);
              });
-         } else if(hldr instanceof HeaderViewHolder){
+         } else if(hldr instanceof HeaderViewHolder) {
              HeaderViewHolder holder = (HeaderViewHolder) hldr;
              Header header = (Header)obj;
              holder.title.setText(header.title);
              holder.message.setText(header.message);
-        } else if(hldr instanceof FooterViewHolder){
+        } else if(hldr instanceof FooterViewHolder) {
              FooterViewHolder holder = (FooterViewHolder) hldr;
              Footer footer = (Footer)obj;
              holder.title.setText(footer.title);
@@ -227,12 +244,16 @@ public class CrfTaskAdapter extends TaskAdapter {
         tasks.addAll(list);
         mFiltered = filtered;
         notifyDataSetChanged();
+        setPositionForToday(list);
+    }
 
+    private void setPositionForToday(List<Object> list) {
+        // Find position for today
         int pos = 0;
         for(Object obj: list) {
-            if(obj instanceof CrfActivitiesFragment.CrfTask) {
-                CrfActivitiesFragment.CrfTask task = (CrfActivitiesFragment.CrfTask)obj;
-                if(isToday(task.scheduledOn)) {
+            if (obj instanceof SchedulesAndTasksModel.ScheduleModel) {
+                SchedulesAndTasksModel.ScheduleModel schedule = (SchedulesAndTasksModel.ScheduleModel)obj;
+                if(isToday(schedule.scheduledOn)) {
                     mPositionForToday = pos;
                     break;
                 }
@@ -273,14 +294,7 @@ public class CrfTaskAdapter extends TaskAdapter {
 
     public static boolean isToday(Date date) {
         if(date == null) return false;
-        //return isSameDay(date, Calendar.getInstance().getTime());
-
-        // TODO: temp for testing
-        if(sFormatter.format(date).equals("Nov 4")) {
-            return true;
-        } else {
-            return false;
-        }
+        return isSameDay(date, Calendar.getInstance().getTime());
     }
 
     private String formatDate(Date d) {
@@ -292,7 +306,7 @@ public class CrfTaskAdapter extends TaskAdapter {
     }
 
     private int getIcon(SchedulesAndTasksModel.TaskScheduleModel task) {
-        int icon =R.drawable.crf_task_clinic;
+        int icon = R.drawable.crf_task_clinic;
 
         if(task.taskID != null) {
             switch (task.taskID) {
@@ -387,10 +401,10 @@ public class CrfTaskAdapter extends TaskAdapter {
     }
 
     public static class StartItem {
-        CrfActivitiesFragment.CrfTask task;
+        SchedulesAndTasksModel.ScheduleModel schedule;
 
-        public StartItem(CrfActivitiesFragment.CrfTask t) {
-            task = t;
+        public StartItem(SchedulesAndTasksModel.ScheduleModel s) {
+            schedule = s;
         }
     }
 

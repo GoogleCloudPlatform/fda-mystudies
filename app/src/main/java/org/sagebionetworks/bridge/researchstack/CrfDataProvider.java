@@ -1,28 +1,38 @@
 package org.sagebionetworks.bridge.researchstack;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.annotation.VisibleForTesting;
 import android.util.Log;
+
+import com.google.common.collect.ImmutableSet;
 
 import org.joda.time.DateTime;
 import org.researchstack.backbone.DataResponse;
 import org.researchstack.backbone.ResourceManager;
+import org.researchstack.backbone.model.SchedulesAndTasksModel;
 import org.researchstack.backbone.result.TaskResult;
 import org.researchstack.backbone.storage.NotificationHelper;
-import org.researchstack.skin.AppPrefs;
+import org.researchstack.skin.*;
+import org.sagebase.crf.reminder.AlarmReceiver;
+import org.sagebase.crf.reminder.CrfReminderManager;
 import org.sagebionetworks.bridge.android.manager.BridgeManagerProvider;
 import org.sagebionetworks.bridge.researchstack.wrapper.StorageAccessWrapper;
 import org.sagebionetworks.bridge.rest.model.Message;
 import org.sagebionetworks.bridge.rest.model.ScheduledActivity;
+import org.sagebionetworks.bridge.rest.model.ScheduledActivityList;
 import org.sagebionetworks.bridge.rest.model.ScheduledActivityListV4;
 import org.sagebionetworks.bridge.rest.model.StudyParticipant;
 import org.sagebionetworks.bridge.rest.model.UserSessionInfo;
 
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 import java.util.Random;
+import java.util.Set;
 
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
@@ -40,7 +50,20 @@ public class CrfDataProvider extends BridgeDataProvider {
     public static final String CLINIC1 = "clinic1";
     public static final String CLINIC2 = "clinic2";
 
+    // Task IDs that should be hidden from the activities page. Visible to enable unit tests.
+    @VisibleForTesting
+    static final Set<String> HIDDEN_TASK_IDS = ImmutableSet.of(
+            CrfDataProvider.CLINIC1, CrfDataProvider.CLINIC2);
+
     public static final int STUDY_DURATION_IN_DAYS = 15;
+
+    // For now, add test_user scheduling, this needs removed once scheduling is complete
+    private static final boolean DEBUG_ADD_TEST_USER = true;
+
+    /**
+     * Hold onto weak context for reminders instead of passing it around the getCrfActivities algorithm
+     */
+    private WeakReference<Context> weakContext;
 
     public CrfDataProvider() {
         // TODO give path to permission file for uploads
@@ -76,9 +99,15 @@ public class CrfDataProvider extends BridgeDataProvider {
     /**
      * This method hides the complex logic of the CRF scheduling system
      * and simply returns the activities, or an error if something went wrong
+     * @param context, must be non-null on first call, used to set reminders for the activities
      * @param listener the callback listener for the events
      */
-    public void getCrfActivities(final CrfActivitiesListener listener) {
+    public void getCrfActivities(@Nullable Context context, final CrfActivitiesListener listener) {
+
+        // Keep a reference to context for setting reminders once this method completes
+        if (context != null) {
+            weakContext = new WeakReference<>(context);
+        }
 
         if (!getCrfPrefs().hasFirstSignInDate()) {
             logV("No sign in date detected");
@@ -92,8 +121,25 @@ public class CrfDataProvider extends BridgeDataProvider {
                 "Previous sign in date detected %s", firstSignInDate.toString()));
         // We have already done the clinic setup process, and can safely grab the schedules
         getActivitiesSubscribe(firstSignInDate, endTimeForAllActivities(firstSignInDate), activityList -> {
-            debugPrintActivities(activityList);
-            listener.success(activityList);
+
+            logV("Raw Activities:");
+            debugPrintActivities(activityList.getItems());
+
+            List<ScheduledActivity> fitleredActivities = filterResults(activityList);
+
+            logV("Filtered Activities:");
+            debugPrintActivities(fitleredActivities);
+
+            SchedulesAndTasksModel model = translateActivities(fitleredActivities);
+
+            // Set reminders for CRF app
+            if (weakContext != null && weakContext.get() != null) {
+                setReminders(weakContext.get(), model);
+                weakContext = null;
+            }
+
+            listener.success(model);
+
         }, throwable -> listener.error(throwable.getLocalizedMessage()));
     }
 
@@ -126,12 +172,12 @@ public class CrfDataProvider extends BridgeDataProvider {
                 logV(String.format(Locale.getDefault(),
                         "Setting firstSignInDate on clinic1 = %s", clinic1.getFinishedOn().toString()));
                 getCrfPrefs().setFirstSignInDate(clinic1.getFinishedOn());
-                getCrfActivities(listener);
+                getCrfActivities(null, listener);
             } else if (clinic2.getFinishedOn() != null) { // Found date, go back to loading activities
                 getCrfPrefs().setFirstSignInDate(clinic2.getFinishedOn());
                 logV(String.format(Locale.getDefault(),
                         "Setting firstSignInDate on clinic1 = %s", clinic2.getFinishedOn().toString()));
-                getCrfActivities(listener);
+                getCrfActivities(null, listener);
             } else {
                 // Otherwise, this is the user's first sign in, let's find or assign their clinic group
                 findOrCreateClinicGroup(listener, clinic1, clinic2);
@@ -186,13 +232,13 @@ public class CrfDataProvider extends BridgeDataProvider {
     }
 
     /**
-     * @param dataGroups the data groups from the study participant
+     * @param existingDataGroups the data groups from the study participant
      * @param listener the listener for success/fail response
      * @param clinic1 the scheduled activity that will trigger clinic1 group
      * @param clinic2 the scheduled activity that will trigger clinic2 group
      */
     private void assignRandomizedClinic(
-            List<String> dataGroups, final CrfActivitiesListener listener,
+            List<String> existingDataGroups, final CrfActivitiesListener listener,
             ScheduledActivity clinic1, ScheduledActivity clinic2) {
 
         logV("assignRandomizedClinic");
@@ -210,9 +256,12 @@ public class CrfDataProvider extends BridgeDataProvider {
 
         StudyParticipant participant = new StudyParticipant();
         List<String> newDataGroups = Collections.singletonList(chosenClinicDataGroup);
-        if (dataGroups != null) {
-            newDataGroups = new ArrayList<>(dataGroups);
+        if (existingDataGroups != null) {
+            newDataGroups = new ArrayList<>(existingDataGroups);
             newDataGroups.add(chosenClinicDataGroup);
+        }
+        if (DEBUG_ADD_TEST_USER) {
+            newDataGroups.add("test_user");
         }
         participant.setDataGroups(newDataGroups);
 
@@ -251,7 +300,7 @@ public class CrfDataProvider extends BridgeDataProvider {
             // We have completed the clinic activity which will automatically
             // trigger the app's clinic schedules and we can simply pull activities now
             getCrfPrefs().setFirstSignInDate(completed);
-            getCrfActivities(listener);
+            getCrfActivities(null, listener);
         }, throwable -> listener.error(throwable.getLocalizedMessage()));
     }
 
@@ -324,28 +373,60 @@ public class CrfDataProvider extends BridgeDataProvider {
         return null;
     }
 
-    /**
-     * addDays method will safely calculate days in the future that will always have the same timezone
-     * this fixes a bug where daylight savings time and DateTime will create different timezones
-     * and the bridge server will reject the call
-     * @param dateTime
-     * @param days
-     * @return
-     */
     DateTime addTime(DateTime dateTime, int days, int hours) {
-        // TODO: Bridge server does not like when we request date ranges with different time zones
-        // TODO: Unfortunately, during daylight savings, DateTime automatically switches time zones
-        // TODO: when we use the method "plusDays",
-        // TODO: iOS solves this by doing multiple calls to get activities,
-        // TODO: but I think correct the two times to have the same timezone would be a better solution for CRF
-        DateTime newDateTime = dateTime.plusDays(days).plusHours(hours);
-        return newDateTime;
+        return dateTime.plusDays(days).plusHours(hours);
+    }
+
+    /**
+     * @param activityList the raw activityList returned from the server
+     * @return a filtered list of activities for the purpose of CRF
+     */
+    public List<ScheduledActivity> filterResults(ScheduledActivityListV4 activityList) {
+        if (activityList == null || activityList.getItems() == null) {
+            return new ArrayList<>();
+        }
+        List<ScheduledActivity> activities = new ArrayList<>(activityList.getItems());
+        List<ScheduledActivity> finalActivities = new ArrayList<>();
+
+        // In CRF, we filter all persistent activities and the Clinic1 and Clinic2 activities
+        for (ScheduledActivity activity : activities) {
+
+            boolean isNotPersistent = !activity.getPersistent();
+            boolean isNotAHiddenTask = activity.getActivity() == null ||
+                    (activity.getActivity().getTask() != null &&
+                    activity.getActivity().getTask().getIdentifier() != null &&
+                    !HIDDEN_TASK_IDS.contains(activity.getActivity().getTask().getIdentifier()));
+
+            if (isNotPersistent && isNotAHiddenTask) {
+                finalActivities.add(activity);
+            }
+        }
+
+        return finalActivities;
+    }
+
+    private void setReminders(Context context, SchedulesAndTasksModel model) {
+        // Set reminders
+        for(SchedulesAndTasksModel.ScheduleModel schedule : model.schedules) {
+            CrfReminderManager.setReminder(context, AlarmReceiver.class, schedule.scheduledOn);
+        }
+    }
+
+    @NonNull
+    @Override
+    protected SchedulesAndTasksModel translateActivities(@NonNull List<ScheduledActivity> activityList) {
+        SchedulesAndTasksModel model = super.translateActivities(activityList);
+
+        // Sort in reverse time order per CRF journey screen requirements
+        Collections.sort(model.schedules, (o1, o2) -> o2.scheduledOn.compareTo(o1.scheduledOn));
+
+        return model;
     }
 
     @VisibleForTesting
-    void debugPrintActivities(ScheduledActivityListV4 activityList) {
+    void debugPrintActivities(List<ScheduledActivity> activityList) {
         StringBuilder debugActivityList = new StringBuilder();
-        for (ScheduledActivity activity : activityList.getItems()) {
+        for (ScheduledActivity activity : activityList) {
             if (!activity.getPersistent()) {
                 if (activity.getActivity().getTask() == null) {
                     debugActivityList.append(activity.getActivity().getSurvey().getIdentifier());
@@ -361,7 +442,7 @@ public class CrfDataProvider extends BridgeDataProvider {
     }
 
     public interface CrfActivitiesListener {
-        void success(ScheduledActivityListV4 activityList);
+        void success(SchedulesAndTasksModel model);
         void error(String localizedError);
     }
 }

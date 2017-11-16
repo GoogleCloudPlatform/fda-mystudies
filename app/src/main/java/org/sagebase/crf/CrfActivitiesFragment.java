@@ -17,9 +17,8 @@
 
 package org.sagebase.crf;
 
-import android.app.AlertDialog;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
+import android.text.format.DateUtils;
 import android.util.Log;
 import android.support.v7.widget.LinearLayoutManager;
 import android.view.ViewGroup;
@@ -27,31 +26,24 @@ import android.support.annotation.VisibleForTesting;
 import android.widget.Toast;
 
 import com.google.common.collect.ImmutableMap;
-import com.google.common.collect.ImmutableSet;
 
 import org.researchstack.backbone.DataProvider;
 import org.researchstack.backbone.model.SchedulesAndTasksModel;
 import org.researchstack.backbone.task.Task;
+import org.researchstack.backbone.utils.LogExt;
 import org.researchstack.skin.ui.adapter.TaskAdapter;
 import org.researchstack.skin.ui.fragment.ActivitiesFragment;
-import org.sagebase.crf.reminder.AlarmReceiver;
-import org.sagebase.crf.reminder.CrfReminderManager;
 import org.sagebase.crf.view.CrfFilterableActivityDisplay;
 import org.sagebionetworks.bridge.researchstack.CrfDataProvider;
+import org.sagebionetworks.bridge.researchstack.CrfPrefs;
 import org.sagebionetworks.bridge.researchstack.CrfTaskFactory;
-import org.sagebionetworks.bridge.rest.model.ScheduledActivity;
-import org.sagebionetworks.bridge.rest.model.ScheduledActivityListV4;
 import org.sagebionetworks.research.crf.R;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Comparator;
-import java.util.HashMap;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
-
-import java.util.Set;
 
 /**
  * Created by TheMDP on 10/19/17
@@ -60,20 +52,9 @@ import java.util.Set;
 public class CrfActivitiesFragment extends ActivitiesFragment implements CrfFilterableActivityDisplay {
 
     private SchedulesAndTasksModel mScheduleModel;
-    private Date mFilteredDate;
-
-    // Task IDs that should be hidden from the activities page. Visible to enable unit tests.
-    @VisibleForTesting
-    static final Set<String> HIDDEN_TASK_IDS = ImmutableSet.of(CrfDataProvider.CLINIC1,
-            CrfDataProvider.CLINIC2);
+    private Date mClinicDate;
 
     private static final String LOG_TAG = CrfActivitiesFragment.class.getCanonicalName();
-
-    /**
-     * When true, we will use the base class' fetch activities
-     * When false, we will use the new clinic assignment groupings of activities
-     */
-    private static final boolean USE_LEGACY_GET_ACTIVITIES = true;
 
     private CrfTaskFactory taskFactory = new CrfTaskFactory();
     // To allow unit tests to mock.
@@ -85,70 +66,83 @@ public class CrfActivitiesFragment extends ActivitiesFragment implements CrfFilt
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Log.d(LOG_TAG, "onCreate - mFilteredDate: " + (mFilteredDate == null));
+        Log.d(LOG_TAG, "onCreate - mClinicDate: " + (mClinicDate == null));
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        Log.d(LOG_TAG, "onResume - mFilteredDate: " + (mFilteredDate == null));
+        Log.d(LOG_TAG, "onResume - mClinicDate: " + (mClinicDate == null));
     }
 
     @Override
     public void onPause() {
         super.onPause();
-        Log.d(LOG_TAG, "onPause - mFilteredDate: " + (mFilteredDate == null));
+        Log.d(LOG_TAG, "onPause - mClinicDate: " + (mClinicDate == null));
     }
 
     @Override
     public void fetchData() {
         getSwipeFreshLayout().setRefreshing(true);
 
-        if (USE_LEGACY_GET_ACTIVITIES) {
-            super.fetchData();
-            return;
-        }
-
         if (!(DataProvider.getInstance() instanceof  CrfDataProvider)) {
             throw new IllegalStateException("Special activities algorithm only available with CrfDataProvider");
         }
 
         CrfDataProvider crfDataProvider = (CrfDataProvider)DataProvider.getInstance();
-        crfDataProvider.getCrfActivities(new CrfDataProvider.CrfActivitiesListener() {
+        crfDataProvider.getCrfActivities(getContext(), new CrfDataProvider.CrfActivitiesListener() {
             @Override
-            public void success(ScheduledActivityListV4 activityList) {
-                getSwipeFreshLayout().setRefreshing(false);
-                if (getAdapter() == null) {
-                    unsubscribe();
-                    setAdapter(createTaskAdapter());
-                    getRecyclerView().setAdapter(getAdapter());
+            public void success(SchedulesAndTasksModel model) {
+                mScheduleModel = model;
+                refreshAdapterSuccess(mScheduleModel);
 
-                    setRxSubscription(getAdapter().getPublishSubject().subscribe(task -> {
-                        taskSelected(task);
-                    }));
-                } else {
-                    getAdapter().clear();
-                }
-
-
-                List<ScheduledActivity> scheduledActivities = processResults(activityList);
-                //Log.d(LOG_TAG, scheduledActivities.toString());
-
-                mScheduleModel = translateActivities(scheduledActivities);
-                if(mFilteredDate == null) {
+                if(mClinicDate == null) {
                     showAllActivities();
-                } else {
-                    filterActivities();
+                } else { // If there is a filter date, only show the clinic filtered activities
+                    showClinicActivities();
                 }
-
+                setupCrfScheduleSelection();
             }
 
             @Override
             public void error(String localizedError) {
-                getSwipeFreshLayout().setRefreshing(false);
-                new AlertDialog.Builder(getContext()).setMessage(localizedError).create().show();
+                refreshAdapterFailure(localizedError);
             }
         });
+    }
+
+    private void setupCrfScheduleSelection() {
+        if (getAdapter() != null && getAdapter() instanceof CrfTaskAdapter) {
+            CrfTaskAdapter crfTaskAdapter = (CrfTaskAdapter)getAdapter();
+
+            unsubscribe();
+            if (mClinicDate == null) {
+                setRxSubscription(crfTaskAdapter.publishScheduleSubject.subscribe(schedule -> {
+
+                    // Business logic for if a task is clickable
+                    boolean singleTaskSelectable = schedule.tasks.size() == 1 &&
+                            !allTasksCompleteOn(schedule.scheduledOn) &&
+                            DateUtils.isToday(schedule.scheduledOn.getTime());
+
+                    boolean clinicGroupSelectable = schedule.tasks.size() > 1 &&
+                            !allTasksCompleteOn(schedule.scheduledOn) &&
+                            new Date().after(schedule.scheduledOn);
+
+                    if (singleTaskSelectable || clinicGroupSelectable) {
+                        scheduleSelected(schedule);
+                    }
+                }));
+            } else {
+                setRxSubscription(crfTaskAdapter.getPublishSubject().subscribe(task -> {
+                    LogExt.d(LOG_TAG, "Publish subject subscribe clicked.");
+                    if (task.taskFinishedOn == null) {
+                        taskSelected(task);
+                    }
+                }));
+            }
+        } else {
+            Log.e(LOG_TAG, "Adapter must be CrfTaskAdapter");
+        }
     }
 
     protected TaskAdapter createTaskAdapter() {
@@ -189,36 +183,36 @@ public class CrfActivitiesFragment extends ActivitiesFragment implements CrfFilt
     }
 
     public void showAllActivities() {
+        recyclerView.setPadding(0, 0, 0, 0);
+
         CrfTaskAdapter adapter = (CrfTaskAdapter) getAdapter();
         adapter.clear();
 
-        //boolean completed = CrfPrefs.getInstance().hasCompletedFirstClinic();
-        boolean completed = true;
-
-        if(completed) {
-            adapter.addAll(processResults(mScheduleModel), false);
-
-            // set reminders
-            for(Object obj: processResults(mScheduleModel)) {
-                if(obj instanceof CrfTask) {
-                    CrfTask task = (CrfTask)obj;
-                    CrfReminderManager.setReminder(getContext(), AlarmReceiver.class, task.scheduledOn);
-                }
+        // Per Zeplin design, if first clinic is not complete, that is all the user will see
+        // Otherwise the whole journey is visible
+        if(isFirstClinicComplete()) {
+            List<Object> objList = new ArrayList<>();
+            for (SchedulesAndTasksModel.ScheduleModel schedule: mScheduleModel.schedules) {
+                objList.add(schedule);
             }
-
+            adapter.addAll(objList, false);
             int todayPosition = adapter.getPositionForToday();
             Log.d(LOG_TAG, "Adapter today position: " + todayPosition);
             getRecyclerView().scrollToPosition(adapter.getPositionForToday());
         } else {
             List<Object> tasks = new ArrayList<>();
-            for(Object obj: processResults(mScheduleModel)) {
-                CrfTask task = (CrfTask)obj;
-                if (CrfTaskAdapter.isToday(task.scheduledOn)) {
-                    tasks.add(new CrfTaskAdapter.StartItem(task));
-                    break;
-                }
+            if (!CrfPrefs.getInstance().hasFirstSignInDate()) {
+                Log.e(LOG_TAG, "We shouldnt even have gotten here, aborting UI setup");
+                return;
             }
-
+            Date firstClinicDate = CrfPrefs.getInstance().getFirstSignInDate().toDate();
+            SchedulesAndTasksModel.ScheduleModel firstClinicSchedule = scheduleFor(firstClinicDate);
+            if (firstClinicSchedule != null) {
+                tasks.add(new CrfTaskAdapter.StartItem(firstClinicSchedule));
+            } else {
+                Log.e(LOG_TAG, "We need the clinic schedule, aborting UI setup");
+                return;
+            }
             CrfTaskAdapter.Footer footer = new CrfTaskAdapter.Footer(getString(R.string.crf_start_footer_title),
                     getString(R.string.crf_start_footer_message));
             tasks.add(footer);
@@ -227,167 +221,96 @@ public class CrfActivitiesFragment extends ActivitiesFragment implements CrfFilt
     }
 
     /**
-     * Filter the activities to display based on the supplied date.
-     *
+     * CrfActivitiesFragment adapter uses schedules as the model to display,
+     * so we must have custom selection handling
+     * @param schedule the schedule that was selected
      */
-    private void filterActivities() {
-        getSwipeFreshLayout().setEnabled(false);
-        ViewGroup.LayoutParams params = getRecyclerView().getLayoutParams();
+    public void scheduleSelected(SchedulesAndTasksModel.ScheduleModel schedule) {
+        if (schedule.tasks.size() == 1) {  // Single task, use default handling
+            super.taskSelected(schedule.tasks.get(0));
+        } else {
+            // transition to clinic detail screen
+            mClinicDate = schedule.scheduledOn;
+            showClinicActivities();
+        }
+    }
 
-        for(SchedulesAndTasksModel.ScheduleModel sched: mScheduleModel.schedules) {
-            if(CrfTaskAdapter.isSameDay(mFilteredDate, sched.scheduledOn)) {
-                getAdapter().clear();
-                List<Object> tasks = new ArrayList<>();
+    /**
+     * @return true if every task in the first clinic has been complete, false in all other scenarios
+     */
+    private boolean isFirstClinicComplete() {
+        if (!CrfPrefs.getInstance().hasFirstSignInDate()) {
+            return false;
+        }
+        Date firstClinicDate = CrfPrefs.getInstance().getFirstSignInDate().toDate();
+        return allTasksCompleteOn(firstClinicDate);
+    }
 
-                CrfTaskAdapter.Header header = new CrfTaskAdapter.Header(getString(R.string.crf_clinic_fitness_test),
-                        getString(R.string.crf_clinic_message));
-                tasks.add(header);
-                for(SchedulesAndTasksModel.TaskScheduleModel t: sched.tasks) {
-                    CrfTask ct = new CrfTask(t);
-                    ct.scheduledOn = sched.scheduledOn;
-                    tasks.add(ct);
+    /**
+     * @return true if every task in the schedule on this date is complete, false in all other scenarios
+     */
+    private boolean allTasksCompleteOn(Date date) {
+        boolean allTasksComplete = true;
+        SchedulesAndTasksModel.ScheduleModel firstClinicSchedule = scheduleFor(date);
+        if (firstClinicSchedule != null) {
+            for (SchedulesAndTasksModel.TaskScheduleModel task : firstClinicSchedule.tasks) {
+                if (task.taskFinishedOn == null) {
+                    allTasksComplete = false;
                 }
-                ((CrfTaskAdapter)getAdapter()).addAll(tasks, true);
-                break;
             }
         }
+        return allTasksComplete;
+    }
 
+    /**
+     * Filter the activities to display based on the supplied date.
+     */
+    private void showClinicActivities() {
+        getSwipeFreshLayout().setEnabled(false);
+
+        int padding = getResources().getDimensionPixelOffset(R.dimen.rsb_padding_large);
+        recyclerView.setPadding(padding, padding, padding, padding);
+
+        SchedulesAndTasksModel.ScheduleModel clinicSchedule = scheduleFor(mClinicDate);
+        if (clinicSchedule != null) {
+            getAdapter().clear();
+            List<Object> tasks = new ArrayList<>();
+
+            CrfTaskAdapter.Header header = new CrfTaskAdapter.Header(getString(R.string.crf_clinic_fitness_test),
+                    getString(R.string.crf_clinic_message));
+            tasks.add(header);
+
+            // Show all the tasks in the clinic
+            for (SchedulesAndTasksModel.TaskScheduleModel task : clinicSchedule.tasks) {
+                tasks.add(task);
+            }
+
+            ((CrfTaskAdapter)getAdapter()).addAll(tasks, true);
+        }
+    }
+
+    /**
+     * @return the schedule for the date, or null if nothing is scheduled for the date
+     */
+    private SchedulesAndTasksModel.ScheduleModel scheduleFor(Date date) {
+        for(SchedulesAndTasksModel.ScheduleModel sched: mScheduleModel.schedules) {
+            if (CrfTaskAdapter.isSameDay(date, sched.scheduledOn)) {
+                return sched;
+            }
+        }
+        return null;  // no schedule today
     }
 
     @Override
     public void clearFilter() {
-        Log.d(LOG_TAG, "clearFilter - mFilteredDate: " + (mFilteredDate == null));
-        mFilteredDate = null;
+        Log.d(LOG_TAG, "clearFilter - mClinicDate: " + (mClinicDate == null));
+        mClinicDate = null;
         getSwipeFreshLayout().setEnabled(true);
         showAllActivities();
     }
 
     @Override
     public boolean isFiltered() {
-        return (mFilteredDate != null);
-    }
-
-    /**
-     * Legacy way of processing results, it will just show whatever is handed to it
-     * @param model SchedulesAndTasksModel object
-     * @return a list of TaskScheduleModel
-     */
-    @Override
-    public List<Object> processResults(SchedulesAndTasksModel model) {
-        if (model == null || model.schedules == null) {
-            return new ArrayList<>();
-        }
-        List<Object> tasks = new ArrayList<>();
-
-        Collections.sort(model.schedules, new Comparator<SchedulesAndTasksModel.ScheduleModel>() {
-            public int compare(SchedulesAndTasksModel.ScheduleModel o1, SchedulesAndTasksModel.ScheduleModel o2) {
-                return o2.scheduledOn.compareTo(o1.scheduledOn);
-            }
-        });
-
-        for (SchedulesAndTasksModel.ScheduleModel scheduleModel : model.schedules) {
-            CrfTask ct = null;
-            if(scheduleModel.tasks != null && scheduleModel.tasks.size() == 1) {
-                ct = new CrfTask(scheduleModel.tasks.get(0));
-            } else {
-                // create a fake task for clinics
-                ct = new CrfTask();
-                ct.taskID = CrfTaskFactory.TASK_ID_CLINIC;
-                ct.taskTitle = getString(R.string.crf_clinic_fitness_test);
-                ct.taskCompletionTime = "40 minutes";  // TODO: where to get this?  sum up tasks?
-            }
-            ct.scheduledOn = scheduleModel.scheduledOn;
-            tasks.add(ct);
-        }
-
-        return tasks;
-    }
-
-    /**
-     * TODO: Rian this is where you can access the data model
-     */
-    public List<ScheduledActivity> processResults(ScheduledActivityListV4 activityList) {
-        if (activityList == null || activityList.getItems() == null) {
-            return new ArrayList<>();
-        }
-        List<ScheduledActivity> activities = new ArrayList<>(activityList.getItems());
-
-        List<ScheduledActivity> finalActivities = new ArrayList<>();
-        // For now, the filter is only on whatever identifiers are in HIDDEN_TASK_IDS
-        for (ScheduledActivity activity : activities) {
-            if (activity.getActivity() != null &&
-                    activity.getActivity().getTask() != null &&
-                    activity.getActivity().getTask().getIdentifier() != null) {
-                if (!HIDDEN_TASK_IDS.contains(activity.getActivity().getTask().getIdentifier())) {
-                    finalActivities.add(activity);
-                }
-            } else {
-                finalActivities.add(activity);
-            }
-        }
-
-        return finalActivities;
-    }
-
-    private SchedulesAndTasksModel translateActivities(@NonNull List<ScheduledActivity> activityList) {
-        // first, group activities by day
-        Map<Integer, List<ScheduledActivity>> activityMap = new HashMap<>();
-        for (ScheduledActivity sa : activityList) {
-            int day = sa.getScheduledOn().dayOfYear().get();
-            List<ScheduledActivity> actList = activityMap.get(day);
-            if (actList == null) {
-                actList = new ArrayList<>();
-                actList.add(sa);
-                activityMap.put(day, actList);
-            } else {
-                actList.add(sa);
-            }
-        }
-
-        SchedulesAndTasksModel model = new SchedulesAndTasksModel();
-        model.schedules = new ArrayList<>();
-        for (int day : activityMap.keySet()) {
-            List<ScheduledActivity> aList = activityMap.get(day);
-            ScheduledActivity temp = aList.get(0);
-
-            SchedulesAndTasksModel.ScheduleModel sm = new SchedulesAndTasksModel.ScheduleModel();
-            sm.scheduleType = "once";
-            sm.scheduledOn = temp.getScheduledOn().toLocalDate().toDate();
-            model.schedules.add(sm);
-            sm.tasks = new ArrayList<>();
-
-            for (ScheduledActivity sa : aList) {
-                SchedulesAndTasksModel.TaskScheduleModel tsm = new SchedulesAndTasksModel
-                        .TaskScheduleModel();
-                tsm.taskTitle = sa.getActivity().getLabel();
-                tsm.taskCompletionTime = sa.getActivity().getLabelDetail();
-                if (sa.getActivity().getTask() != null) {
-                    tsm.taskID = sa.getActivity().getTask().getIdentifier();
-                }
-                tsm.taskIsOptional = sa.getPersistent();
-                tsm.taskType = sa.getActivity().getType();
-                sm.tasks.add(tsm);
-            }
-        }
-
-        return model;
-    }
-
-    public class CrfTask extends SchedulesAndTasksModel.TaskScheduleModel {
-        public Date scheduledOn;
-
-        public CrfTask() {
-
-        }
-
-        public CrfTask(SchedulesAndTasksModel.TaskScheduleModel tsm) {
-            taskTitle = tsm.taskTitle;
-            taskID = tsm.taskID;
-            taskFileName = tsm.taskFileName;
-            taskClassName = tsm.taskClassName;
-            taskIsOptional = tsm.taskIsOptional;
-            taskType = tsm.taskType;
-            taskCompletionTime = tsm.taskCompletionTime;
-        }
+        return (mClinicDate != null);
     }
 }
