@@ -101,7 +101,6 @@ public class CrfActivitiesFragment extends ActivitiesFragment implements CrfFilt
                 } else { // If there is a filter date, only show the clinic filtered activities
                     showClinicActivities();
                 }
-                setupCrfScheduleSelection();
             }
 
             @Override
@@ -218,6 +217,8 @@ public class CrfActivitiesFragment extends ActivitiesFragment implements CrfFilt
             tasks.add(footer);
             adapter.addAll(tasks, false);
         }
+
+        setupCrfScheduleSelection();
     }
 
     /**
@@ -287,6 +288,7 @@ public class CrfActivitiesFragment extends ActivitiesFragment implements CrfFilt
 
             ((CrfTaskAdapter)getAdapter()).addAll(tasks, true);
         }
+        setupCrfScheduleSelection();
     }
 
     /**
