@@ -21,7 +21,6 @@ import org.sagebionetworks.bridge.android.manager.BridgeManagerProvider;
 import org.sagebionetworks.bridge.researchstack.wrapper.StorageAccessWrapper;
 import org.sagebionetworks.bridge.rest.model.Message;
 import org.sagebionetworks.bridge.rest.model.ScheduledActivity;
-import org.sagebionetworks.bridge.rest.model.ScheduledActivityList;
 import org.sagebionetworks.bridge.rest.model.ScheduledActivityListV4;
 import org.sagebionetworks.bridge.rest.model.StudyParticipant;
 import org.sagebionetworks.bridge.rest.model.UserSessionInfo;
@@ -50,9 +49,7 @@ public class CrfDataProvider extends BridgeDataProvider {
     public static final String CLINIC1 = "clinic1";
     public static final String CLINIC2 = "clinic2";
 
-    // Task IDs that should be hidden from the activities page. Visible to enable unit tests.
-    @VisibleForTesting
-    static final Set<String> HIDDEN_TASK_IDS = ImmutableSet.of(
+    public static final Set<String> HIDDEN_TASK_IDS = ImmutableSet.of(
             CrfDataProvider.CLINIC1, CrfDataProvider.CLINIC2);
 
     public static final int STUDY_DURATION_IN_DAYS = 15;
@@ -103,7 +100,11 @@ public class CrfDataProvider extends BridgeDataProvider {
      * @param listener the callback listener for the events
      */
     public void getCrfActivities(@Nullable Context context, final CrfActivitiesListener listener) {
+        getCrfActivities(true, context, listener);
+    }
 
+    @VisibleForTesting
+    void getCrfActivities(boolean performFiltering, @Nullable Context context, final CrfActivitiesListener listener) {
         // Keep a reference to context for setting reminders once this method completes
         if (context != null) {
             weakContext = new WeakReference<>(context);
@@ -125,10 +126,12 @@ public class CrfDataProvider extends BridgeDataProvider {
             logV("Raw Activities:");
             debugPrintActivities(activityList.getItems());
 
-            List<ScheduledActivity> fitleredActivities = filterResults(activityList);
-
-            logV("Filtered Activities:");
-            debugPrintActivities(fitleredActivities);
+            List<ScheduledActivity> fitleredActivities = activityList.getItems();
+            if (performFiltering) {
+                fitleredActivities = filterResults(activityList);
+                logV("Filtered Activities:");
+                debugPrintActivities(fitleredActivities);
+            }
 
             SchedulesAndTasksModel model = translateActivities(fitleredActivities);
 
@@ -391,7 +394,7 @@ public class CrfDataProvider extends BridgeDataProvider {
         // In CRF, we filter all persistent activities and the Clinic1 and Clinic2 activities
         for (ScheduledActivity activity : activities) {
 
-            boolean isNotPersistent = !activity.getPersistent();
+            boolean isNotPersistent = activity.getPersistent() == null || !activity.getPersistent();
             boolean isASurvey = activity.getActivity() != null && activity.getActivity().getSurvey() != null;
             boolean isNotAHiddenTask = isASurvey ||
                     (activity.getActivity().getTask() != null &&
@@ -406,7 +409,8 @@ public class CrfDataProvider extends BridgeDataProvider {
         return finalActivities;
     }
 
-    private void setReminders(Context context, SchedulesAndTasksModel model) {
+    @VisibleForTesting
+    void setReminders(Context context, SchedulesAndTasksModel model) {
         // Set reminders
         for(SchedulesAndTasksModel.ScheduleModel schedule : model.schedules) {
             CrfReminderManager.setReminder(context, AlarmReceiver.class, schedule.scheduledOn);
@@ -428,14 +432,16 @@ public class CrfDataProvider extends BridgeDataProvider {
     void debugPrintActivities(List<ScheduledActivity> activityList) {
         StringBuilder debugActivityList = new StringBuilder();
         for (ScheduledActivity activity : activityList) {
-            if (!activity.getPersistent()) {
+            if (activity.getPersistent() == null || !activity.getPersistent()) {
                 if (activity.getActivity().getTask() == null) {
                     debugActivityList.append(activity.getActivity().getSurvey().getIdentifier());
                 } else {
                     debugActivityList.append(activity.getActivity().getTask().getIdentifier());
                 }
                 debugActivityList.append(" on ");
-                debugActivityList.append(activity.getScheduledOn().toString());
+                if (activity.getScheduledOn() != null) {
+                    debugActivityList.append(activity.getScheduledOn().toString());
+                }
                 debugActivityList.append("\n");
             }
         }

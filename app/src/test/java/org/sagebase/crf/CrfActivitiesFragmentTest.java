@@ -25,6 +25,7 @@ import org.researchstack.backbone.factory.IntentFactory;
 import org.researchstack.backbone.model.SchedulesAndTasksModel;
 import org.researchstack.backbone.task.Task;
 import org.researchstack.skin.ui.fragment.ActivitiesFragment;
+import org.sagebionetworks.bridge.researchstack.CrfDataProvider;
 import org.sagebionetworks.bridge.researchstack.CrfTaskFactory;
 import org.sagebionetworks.bridge.researchstack.survey.SurveyTaskScheduleModel;
 import org.sagebionetworks.bridge.rest.model.ActivityType;
@@ -113,52 +114,5 @@ public class CrfActivitiesFragmentTest {
     public void processResults_NullSchedules() {
         List<Object> resultList = fragment.processResults(new SchedulesAndTasksModel());
         assertTrue(resultList.isEmpty());
-    }
-
-    @Test
-    public void processResults_Filtering() {
-        // Test cases:
-        // 1. Surveys (have no task ID)
-        // 2. Activities (have a task ID)
-        // 3. Hidden Tasks
-
-        // Make schedules and tasks model
-        SchedulesAndTasksModel.ScheduleModel scheduleModel =
-                new SchedulesAndTasksModel.ScheduleModel();
-        scheduleModel.tasks = new ArrayList<>();
-
-        // Survey, with expected attributes
-        SurveyTaskScheduleModel surveyScheduleModel = new SurveyTaskScheduleModel();
-        surveyScheduleModel.surveyGuid = SURVEY_GUID;
-        surveyScheduleModel.surveyCreatedOn = SURVEY_CREATED_ON;
-        surveyScheduleModel.taskType = ActivityType.SURVEY.toString();
-        scheduleModel.tasks.add(surveyScheduleModel);
-
-        // Non-survey, with expected attributes
-        SchedulesAndTasksModel.TaskScheduleModel taskScheduleModel =
-                new SchedulesAndTasksModel.TaskScheduleModel();
-        taskScheduleModel.taskID = TASK_ID;
-        taskScheduleModel.taskType = ActivityType.TASK.toString();
-        scheduleModel.tasks.add(taskScheduleModel);
-
-        // Hidden tasks
-        for (String oneHiddenTaskId : CrfActivitiesFragment.HIDDEN_TASK_IDS) {
-            SchedulesAndTasksModel.TaskScheduleModel hiddenTask =
-                    new SchedulesAndTasksModel.TaskScheduleModel();
-            hiddenTask.taskID = oneHiddenTaskId;
-            hiddenTask.taskType = ActivityType.TASK.toString();
-            scheduleModel.tasks.add(hiddenTask);
-        }
-
-        // Make schedules and tasks model
-        SchedulesAndTasksModel schedulesAndTasksModel = new SchedulesAndTasksModel();
-        schedulesAndTasksModel.schedules = new ArrayList<>();
-        schedulesAndTasksModel.schedules.add(scheduleModel);
-
-        // Execute and validate
-        List<Object> resultList = fragment.processResults(schedulesAndTasksModel);
-        assertEquals(2, resultList.size());
-        assertSame(surveyScheduleModel, resultList.get(0));
-        assertSame(taskScheduleModel, resultList.get(1));
     }
 }

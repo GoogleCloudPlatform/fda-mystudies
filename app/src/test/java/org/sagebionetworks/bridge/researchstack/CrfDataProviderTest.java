@@ -21,8 +21,8 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Looper;
 import android.preference.PreferenceManager;
+import android.support.annotation.NonNull;
 import android.support.annotation.VisibleForTesting;
-import android.util.Log;
 
 import org.joda.time.DateTime;
 import org.junit.Before;
@@ -33,6 +33,7 @@ import org.mockito.MockitoAnnotations;
 import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
+import org.researchstack.backbone.model.SchedulesAndTasksModel;
 import org.researchstack.backbone.result.TaskResult;
 import org.researchstack.backbone.storage.file.FileAccess;
 import org.researchstack.backbone.storage.file.PinCodeConfig;
@@ -59,18 +60,16 @@ import org.sagebionetworks.bridge.rest.model.TaskReference;
 import org.sagebionetworks.bridge.rest.model.UserSessionInfo;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 
-import edu.emory.mathcs.backport.java.util.Collections;
-import rx.Observable;
-import rx.Single;
-import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
 
-import static junit.framework.Assert.assertFalse;
 import static junit.framework.Assert.assertNotNull;
 import static junit.framework.Assert.assertNull;
 import static junit.framework.Assert.assertTrue;
+import static junit.framework.Assert.fail;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.same;
@@ -194,20 +193,10 @@ public class CrfDataProviderTest {
         resetTest(null, true, null);
         final ScheduledActivityListV4 successList = successList(true);
         dataProvider.mockGetAllActiities(successList);
-
         dataProvider.mockGetClinicActiities(clinicActivities(null, null));
-        dataProvider.getCrfActivities(new CrfDataProvider.CrfActivitiesListener() {
-            @Override
-            public void success(ScheduledActivityListV4 activityList) {
-                assertEquals(activityList, successList);
-                assertEquals(dataProvider.getCrfPrefs().getFirstSignInDate(), dataProvider.COMPLETION_TIME_CLINIC1);
-            }
-
-            @Override
-            public void error(String localizedError) {
-                assertFalse(true);  // fail
-            }
-        });
+        SchedulesAndTasksModel model = successModel(true);
+        CrfTestListener listener = new CrfTestListener(model, dataProvider.COMPLETION_TIME_CLINIC1);
+        dataProvider.getCrfActivities(false, context, listener);
     }
 
     @Test
@@ -215,20 +204,10 @@ public class CrfDataProviderTest {
         resetTest(null, false, null);
         final ScheduledActivityListV4 successList = successList(false);
         dataProvider.mockGetAllActiities(successList);
-
         dataProvider.mockGetClinicActiities(clinicActivities(null, null));
-        dataProvider.getCrfActivities(new CrfDataProvider.CrfActivitiesListener() {
-            @Override
-            public void success(ScheduledActivityListV4 activityList) {
-                assertEquals(activityList, successList);
-                assertEquals(dataProvider.getCrfPrefs().getFirstSignInDate(), dataProvider.COMPLETION_TIME_CLINIC2);
-            }
-
-            @Override
-            public void error(String localizedError) {
-                assertFalse(true);  // fail
-            }
-        });
+        SchedulesAndTasksModel model = successModel(false);
+        CrfTestListener listener = new CrfTestListener(model, dataProvider.COMPLETION_TIME_CLINIC2);
+        dataProvider.getCrfActivities(false, context, listener);
     }
 
     @Test
@@ -236,20 +215,10 @@ public class CrfDataProviderTest {
         resetTest(null, true, "clinic1");
         final ScheduledActivityListV4 successList = successList(true);
         dataProvider.mockGetAllActiities(successList);
-
         dataProvider.mockGetClinicActiities(clinicActivities(null, null));
-        dataProvider.getCrfActivities(new CrfDataProvider.CrfActivitiesListener() {
-            @Override
-            public void success(ScheduledActivityListV4 activityList) {
-                assertEquals(activityList, successList);
-                assertEquals(dataProvider.getCrfPrefs().getFirstSignInDate(), dataProvider.COMPLETION_TIME_CLINIC1);
-            }
-
-            @Override
-            public void error(String localizedError) {
-                assertFalse(true);  // fail
-            }
-        });
+        SchedulesAndTasksModel model = successModel(true);
+        CrfTestListener listener = new CrfTestListener(model, dataProvider.COMPLETION_TIME_CLINIC1);
+        dataProvider.getCrfActivities(false, context, listener);
     }
 
     @Test
@@ -257,21 +226,10 @@ public class CrfDataProviderTest {
         resetTest(null, false, "clinic2");
         final ScheduledActivityListV4 successList = successList(false);
         dataProvider.mockGetAllActiities(successList);
-
         dataProvider.mockGetClinicActiities(clinicActivities(null, null));
-        dataProvider.getCrfActivities(new CrfDataProvider.CrfActivitiesListener() {
-            @Override
-            public void success(ScheduledActivityListV4 activityList) {
-                assertEquals(activityList, successList);
-
-                assertEquals(dataProvider.getCrfPrefs().getFirstSignInDate(), dataProvider.COMPLETION_TIME_CLINIC2);
-            }
-
-            @Override
-            public void error(String localizedError) {
-                assertFalse(true);  // fail
-            }
-        });
+        SchedulesAndTasksModel model = successModel(false);
+        CrfTestListener listener = new CrfTestListener(model, dataProvider.COMPLETION_TIME_CLINIC2);
+        dataProvider.getCrfActivities(false, context, listener);
     }
 
     @Test
@@ -280,19 +238,9 @@ public class CrfDataProviderTest {
         final ScheduledActivityListV4 successList = successList(true);
         dataProvider.mockGetAllActiities(successList);
         dataProvider.mockGetClinicActiities(successList);
-
-        dataProvider.getCrfActivities(new CrfDataProvider.CrfActivitiesListener() {
-            @Override
-            public void success(ScheduledActivityListV4 activityList) {
-                assertEquals(activityList, successList);
-                assertEquals(dataProvider.getCrfPrefs().getFirstSignInDate(), dataProvider.COMPLETION_TIME_CLINIC1);
-            }
-
-            @Override
-            public void error(String localizedError) {
-                assertFalse(true);  // fail
-            }
-        });
+        SchedulesAndTasksModel model = successModel(true);
+        CrfTestListener listener = new CrfTestListener(model, dataProvider.COMPLETION_TIME_CLINIC1);
+        dataProvider.getCrfActivities(false, context, listener);
     }
 
     @Test
@@ -301,19 +249,9 @@ public class CrfDataProviderTest {
         final ScheduledActivityListV4 successList = successList(false);
         dataProvider.mockGetAllActiities(successList);
         dataProvider.mockGetClinicActiities(successList);
-
-        dataProvider.getCrfActivities(new CrfDataProvider.CrfActivitiesListener() {
-            @Override
-            public void success(ScheduledActivityListV4 activityList) {
-                assertEquals(activityList, successList);
-                assertEquals(dataProvider.getCrfPrefs().getFirstSignInDate(), dataProvider.COMPLETION_TIME_CLINIC2);
-            }
-
-            @Override
-            public void error(String localizedError) {
-                assertFalse(true);  // fail
-            }
-        });
+        SchedulesAndTasksModel model = successModel(false);
+        CrfTestListener listener = new CrfTestListener(model, dataProvider.COMPLETION_TIME_CLINIC2);
+        dataProvider.getCrfActivities(false, context, listener);
     }
 
     @Test
@@ -322,17 +260,26 @@ public class CrfDataProviderTest {
         final ScheduledActivityListV4 successList = successList(false);
         dataProvider.mockGetAllActiities(successList);
         dataProvider.mockGetClinicActiities(successList);
+        SchedulesAndTasksModel model = successModel(false);
+        CrfTestListener listener = new CrfTestListener(model, dataProvider.COMPLETION_TIME_CLINIC1);
+        dataProvider.getCrfActivities(false, context, listener);
+    }
 
-        dataProvider.getCrfActivities(new CrfDataProvider.CrfActivitiesListener() {
+    @Test
+    public void testNoClinicActivitesFail() {
+        resetTest(null, true, null);
+        final ScheduledActivityListV4 failureList = failureList();
+        dataProvider.mockGetAllActiities(failureList);
+        dataProvider.mockGetClinicActiities(failureList);
+        dataProvider.getCrfActivities(false, context, new CrfDataProvider.CrfActivitiesListener() {
             @Override
-            public void success(ScheduledActivityListV4 activityList) {
-                assertEquals(activityList, successList);
-                assertEquals(dataProvider.getCrfPrefs().getFirstSignInDate(), dataProvider.COMPLETION_TIME_CLINIC1);
+            public void success(SchedulesAndTasksModel model) {
+                fail();
             }
 
             @Override
             public void error(String localizedError) {
-                assertFalse(true);  // fail
+                // success!
             }
         });
     }
@@ -346,12 +293,30 @@ public class CrfDataProviderTest {
         return activitiesModel;
     }
 
+    private SchedulesAndTasksModel successModel(boolean clinic1Complete) {
+        SchedulesAndTasksModel model = new SchedulesAndTasksModel();
+        List<SchedulesAndTasksModel.ScheduleModel> schedules = new ArrayList<>();
+        schedules.add(scheduleWith("success", null));
+        schedules.add(scheduleWith("clinic1",  clinic1Complete ? dataProvider.COMPLETION_TIME_CLINIC1 : null));
+        schedules.add(scheduleWith("clinic2", !clinic1Complete ? dataProvider.COMPLETION_TIME_CLINIC2 : null));
+        model.schedules = schedules;
+        return model;
+    }
+
     private ScheduledActivityListV4 successList(boolean clinic1Complete) {
         ScheduledActivityListV4 activitiesModel = new ScheduledActivityListV4();
         List<ScheduledActivity> activitiesList = new ArrayList<>();
         activitiesList.add(activityWith("success", null));
         activitiesList.add(activityWith("clinic1",  clinic1Complete ? dataProvider.COMPLETION_TIME_CLINIC1 : null));
         activitiesList.add(activityWith("clinic2", !clinic1Complete ? dataProvider.COMPLETION_TIME_CLINIC2 : null));
+        activitiesModel.setItems(activitiesList);
+        return activitiesModel;
+    }
+
+    private ScheduledActivityListV4 failureList() {
+        ScheduledActivityListV4 activitiesModel = new ScheduledActivityListV4();
+        List<ScheduledActivity> activitiesList = new ArrayList<>();
+        activitiesList.add(activityWith("success", null));
         activitiesModel.setItems(activitiesList);
         return activitiesModel;
     }
@@ -365,6 +330,20 @@ public class CrfDataProviderTest {
         activity.setTask(task);
         activityModel.setActivity(activity);
         return activityModel;
+    }
+
+    private SchedulesAndTasksModel.ScheduleModel scheduleWith(String id, DateTime finishedOn) {
+        SchedulesAndTasksModel.ScheduleModel schedule = new SchedulesAndTasksModel.ScheduleModel();
+        schedule.scheduledOn = new Date();
+        List<SchedulesAndTasksModel.TaskScheduleModel> tasks = new ArrayList<>();
+        SchedulesAndTasksModel.TaskScheduleModel task = new SchedulesAndTasksModel.TaskScheduleModel();
+        task.taskID = id;
+        if (finishedOn != null) {
+            task.taskFinishedOn = finishedOn.toDate();
+        }
+        tasks.add(task);
+        schedule.tasks = tasks;
+        return schedule;
     }
 
     private static TaskResult makeActivityTask(String taskId) {
@@ -431,6 +410,9 @@ public class CrfDataProviderTest {
         }
 
         @VisibleForTesting
+        void setReminders(Context context, SchedulesAndTasksModel model) { /** No-op */ }
+
+        @VisibleForTesting
         boolean generateRandomClient() {
             return isRandomClient1;
         }
@@ -489,6 +471,19 @@ public class CrfDataProviderTest {
             }
             onNext.call(new Message());
         }
+
+        @NonNull
+        @Override
+        protected SchedulesAndTasksModel translateActivities(@NonNull List<ScheduledActivity>
+                                                                     activityList) {
+            // Do a super simple translate activities
+            SchedulesAndTasksModel model = new SchedulesAndTasksModel();
+            model.schedules = new ArrayList<>();
+            for (ScheduledActivity activity : activityList) {
+                model.schedules.add(scheduleWith(activity.getActivity().getTask().getIdentifier(), activity.getFinishedOn()));
+            }
+            return model;
+        }
     }
 
     private class MockCrfPrefs extends CrfPrefs {
@@ -509,6 +504,45 @@ public class CrfDataProviderTest {
 
         public void setFirstSignInDate(DateTime dateTime) {
             this.firstSignInDate = dateTime;
+        }
+    }
+
+    private class CrfTestListener implements CrfDataProvider.CrfActivitiesListener {
+
+        private SchedulesAndTasksModel successModel;
+        private DateTime completionTime;
+
+        CrfTestListener(SchedulesAndTasksModel successModel, DateTime completionTime) {
+            this.successModel = successModel;
+            this.completionTime = completionTime;
+        }
+
+        @Override
+        public void success(SchedulesAndTasksModel model) {
+            // Check that the returned model has the same task IDs and finishedOn dates as the successModel
+            for (SchedulesAndTasksModel.ScheduleModel schedule: model.schedules) {
+                boolean taskIsTheSame = false;
+                for (SchedulesAndTasksModel.TaskScheduleModel task: schedule.tasks) {
+                    for (SchedulesAndTasksModel.ScheduleModel expectedSchedule: model.schedules) {
+                        for (SchedulesAndTasksModel.TaskScheduleModel expectedTask: schedule.tasks) {
+                            if (expectedTask.taskID.equals(task.taskID)) {
+                                if ((expectedTask.taskFinishedOn == null && task.taskFinishedOn == null) ||
+                                     expectedTask.taskFinishedOn.equals(task.taskFinishedOn)) {
+                                    taskIsTheSame = true;
+                                }
+                            }
+                        }
+                    }
+                }
+                assertTrue(taskIsTheSame);
+            }
+
+            assertEquals(dataProvider.getCrfPrefs().getFirstSignInDate(), completionTime);
+        }
+
+        @Override
+        public void error(String localizedError) {
+            fail();
         }
     }
 }
