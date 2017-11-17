@@ -34,6 +34,7 @@ import org.researchstack.backbone.step.Step;
 import org.researchstack.backbone.task.Task;
 import org.sagebase.crf.step.Crf12MinWalkingStep;
 import org.sagebase.crf.step.CrfCompletionStep;
+import org.sagebase.crf.step.CrfCompletionSurveyItem;
 import org.sagebase.crf.step.CrfCountdownStep;
 import org.sagebase.crf.step.CrfHeartRateCameraStep;
 import org.sagebase.crf.step.CrfInstructionStep;
@@ -111,10 +112,10 @@ public class CrfTaskFactory extends TaskItemFactory {
                             }
                             return createCrfStairStep((CrfStairSurveyItem)item);
                         case CrfSurveyItemAdapter.CRF_COMPLETION_SURVEY_ITEM_TYPE:
-                            if (!(item instanceof CrfInstructionSurveyItem)) {
-                                throw new IllegalStateException("Error in json parsing, crf_completion types must be CrfInstructionSurveyItem");
+                            if (!(item instanceof CrfCompletionSurveyItem)) {
+                                throw new IllegalStateException("Error in json parsing, crf_completion types must be CrfCompletionSurveyItem");
                             }
-                            return createCompletionStep((CrfInstructionSurveyItem)item);
+                            return createCompletionStep((CrfCompletionSurveyItem)item);
                         case CrfSurveyItemAdapter.CRF_PHOTO_CAPTURE_SURVEY_ITEM_TYPE:
                             if (!(item instanceof CrfInstructionSurveyItem)) {
                                 throw new IllegalStateException("Error in json parsing, crf_photo_capture types must be CrfPhotoCaptureSurveyItem");
@@ -210,9 +211,21 @@ public class CrfTaskFactory extends TaskItemFactory {
         return step;
     }
 
-    private CrfCompletionStep createCompletionStep(CrfInstructionSurveyItem item) {
+    private CrfCompletionStep createCompletionStep(CrfCompletionSurveyItem item) {
         CrfCompletionStep step = new CrfCompletionStep(item.identifier, item.title, item.text);
         fillCrfInstructionStep(step, item);
+        if (item.topText != null) {
+            step.topText = item.topText;
+        }
+        if (item.bottomText != null) {
+            step.bottomText = item.bottomText;
+        }
+        if (item.valueLabelText != null) {
+            step.valueLabelText = item.valueLabelText;
+        }
+        if (item.valueResultId != null) {
+            step.valueResultId = item.valueResultId;
+        }
         return step;
     }
 

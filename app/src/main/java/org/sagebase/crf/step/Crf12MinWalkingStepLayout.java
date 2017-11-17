@@ -24,10 +24,14 @@ import android.util.AttributeSet;
 import android.view.View;
 import android.widget.TextView;
 
+import org.researchstack.backbone.result.Result;
+import org.researchstack.backbone.result.StepResult;
+import org.researchstack.backbone.step.Step;
 import org.researchstack.backbone.step.active.recorder.LocationRecorder;
 import org.researchstack.backbone.step.active.recorder.Recorder;
 import org.researchstack.backbone.ui.step.layout.ActiveStepLayout;
 import org.researchstack.backbone.ui.views.ArcDrawable;
+import org.researchstack.backbone.utils.StepResultHelper;
 import org.sagebase.crf.view.CrfTaskStatusBarManipulator;
 import org.sagebionetworks.research.crf.R;
 
@@ -92,7 +96,8 @@ public class Crf12MinWalkingStepLayout extends ActiveStepLayout implements CrfTa
     public void start() {
         super.start();
 
-        distanceNumber.setText("--");
+        distanceNumber.setText("0");
+        setDistanceResult("0");
 
         for (Recorder recorder : recorderList) {
             if (recorder instanceof LocationRecorder) {
@@ -102,11 +107,20 @@ public class Crf12MinWalkingStepLayout extends ActiveStepLayout implements CrfTa
                     public void onLocationUpdated(double longitude, double latitude, double distance) {
                         int distanceInFeet = (int)(3.28084 * distance);
                         DecimalFormat formatter = new DecimalFormat("#,###,###");
-                        distanceNumber.setText(formatter.format((int)distanceInFeet));
+                        String distanceString = formatter.format(distanceInFeet);
+                        distanceNumber.setText(distanceString);
+                        setDistanceResult(distanceString);
                     }
                 });
             }
         }
+    }
+
+    private void setDistanceResult(String resultStr) {
+        String distanceStepId = CrfCompletionStepLayout.COMPLETION_DISTANCE_VALUE_RESULT;
+        StepResult<String> distanceResult = new StepResult<>(new Step(distanceStepId));
+        distanceResult.setResult(resultStr);
+        stepResult.setResultForIdentifier(distanceStepId, distanceResult);
     }
 
     @Override

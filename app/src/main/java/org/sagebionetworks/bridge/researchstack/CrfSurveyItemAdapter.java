@@ -23,6 +23,7 @@ import com.google.gson.JsonElement;
 
 import org.researchstack.backbone.model.survey.ActiveStepSurveyItem;
 import org.researchstack.backbone.model.survey.SurveyItem;
+import org.sagebase.crf.step.CrfCompletionSurveyItem;
 import org.sagebase.crf.step.CrfInstructionSurveyItem;
 import org.sagebase.crf.step.CrfStairSurveyItem;
 import org.sagebase.crf.step.CrfStartTaskSurveyItem;
@@ -50,7 +51,7 @@ public class CrfSurveyItemAdapter extends BridgeSurveyItemAdapter {
                     .put(CRF_COUNTDOWN_SURVEY_ITEM_TYPE, ActiveStepSurveyItem.class)
                     .put(CRF_12_MIN_WALK_SURVEY_ITEM_TYPE, ActiveStepSurveyItem.class)
                     .put(CRF_STAIR_STEP_SURVEY_ITEM_TYPE, CrfStairSurveyItem.class)
-                    .put(CRF_COMPLETION_SURVEY_ITEM_TYPE, CrfInstructionSurveyItem.class)
+                    .put(CRF_COMPLETION_SURVEY_ITEM_TYPE, CrfCompletionSurveyItem.class)
                     .put(CRF_PHOTO_CAPTURE_SURVEY_ITEM_TYPE, CrfInstructionSurveyItem.class)
                     .build();
 
