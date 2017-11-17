@@ -69,7 +69,7 @@ public class CrfActivitiesFragmentTest {
     }
 
     @Test
-    public void startCustomTask() {
+    public void startCustomTaskTest() {
         for (Map.Entry<String, String> oneTaskIdAndResourceName : CrfActivitiesFragment
                 .TASK_ID_TO_RESOURCE_NAME.entrySet()) {
             String taskId = oneTaskIdAndResourceName.getKey();
