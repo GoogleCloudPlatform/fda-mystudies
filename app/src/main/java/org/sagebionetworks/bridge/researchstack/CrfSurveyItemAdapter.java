@@ -17,23 +17,22 @@
 
 package org.sagebionetworks.bridge.researchstack;
 
+import android.support.annotation.VisibleForTesting;
+import com.google.common.collect.ImmutableMap;
 import com.google.gson.JsonElement;
 
 import org.researchstack.backbone.model.survey.ActiveStepSurveyItem;
-import org.researchstack.backbone.model.survey.BaseSurveyItem;
 import org.researchstack.backbone.model.survey.SurveyItem;
-import org.researchstack.backbone.model.survey.SurveyItemAdapter;
 import org.sagebase.crf.step.CrfCompletionSurveyItem;
 import org.sagebase.crf.step.CrfInstructionSurveyItem;
 import org.sagebase.crf.step.CrfStairSurveyItem;
 import org.sagebase.crf.step.CrfStartTaskSurveyItem;
+import org.sagebionetworks.bridge.researchstack.task.creation.BridgeSurveyItemAdapter;
 
-/**
- * Created by TheMDP on 10/24/17.
- */
+import java.util.Map;
 
-public class CrfSurveyItemAdapter extends SurveyItemAdapter {
-
+/** Subclasses BridgeSurveyItemAdapter to enable CRF-specific task step types. */
+public class CrfSurveyItemAdapter extends BridgeSurveyItemAdapter {
     public static final String CRF_INSTRUCTION_SURVEY_ITEM_TYPE = "crf_instruction";
     public static final String CRF_START_TASK_SURVEY_ITEM_TYPE = "crf_start_task";
     public static final String CRF_HEART_RATE_CAMERA_SURVEY_ITEM_TYPE = "crf_heart_rate_camera_step";
@@ -43,28 +42,25 @@ public class CrfSurveyItemAdapter extends SurveyItemAdapter {
     public static final String CRF_COMPLETION_SURVEY_ITEM_TYPE = "crf_completion";
     public static final String CRF_PHOTO_CAPTURE_SURVEY_ITEM_TYPE = "crf_photo_capture";
 
+    @VisibleForTesting
+    static final Map<String, Class<? extends SurveyItem>> TYPE_TO_CLASS =
+            ImmutableMap.<String, Class<? extends SurveyItem>>builder()
+                    .put(CRF_INSTRUCTION_SURVEY_ITEM_TYPE, CrfInstructionSurveyItem.class)
+                    .put(CRF_START_TASK_SURVEY_ITEM_TYPE, CrfStartTaskSurveyItem.class)
+                    .put(CRF_HEART_RATE_CAMERA_SURVEY_ITEM_TYPE, ActiveStepSurveyItem.class)
+                    .put(CRF_COUNTDOWN_SURVEY_ITEM_TYPE, ActiveStepSurveyItem.class)
+                    .put(CRF_12_MIN_WALK_SURVEY_ITEM_TYPE, ActiveStepSurveyItem.class)
+                    .put(CRF_STAIR_STEP_SURVEY_ITEM_TYPE, CrfStairSurveyItem.class)
+                    .put(CRF_COMPLETION_SURVEY_ITEM_TYPE, CrfCompletionSurveyItem.class)
+                    .put(CRF_PHOTO_CAPTURE_SURVEY_ITEM_TYPE, CrfInstructionSurveyItem.class)
+                    .build();
+
     @Override
     public Class<? extends SurveyItem> getCustomClass(String customType, JsonElement json) {
-        if (customType == null) {
-            return BaseSurveyItem.class;
+        if (customType != null && TYPE_TO_CLASS.containsKey(customType)) {
+            return TYPE_TO_CLASS.get(customType);
+        } else {
+            return super.getCustomClass(customType, json);
         }
-        if (customType.equals(CRF_INSTRUCTION_SURVEY_ITEM_TYPE)) {
-            return CrfInstructionSurveyItem.class;
-        } else if (customType.equals(CRF_START_TASK_SURVEY_ITEM_TYPE)) {
-            return CrfStartTaskSurveyItem.class;
-        } else if (customType.equals(CRF_HEART_RATE_CAMERA_SURVEY_ITEM_TYPE)) {
-            return ActiveStepSurveyItem.class;
-        } else if (customType.equals(CRF_COUNTDOWN_SURVEY_ITEM_TYPE)) {
-            return ActiveStepSurveyItem.class;
-        } else if (customType.equals(CRF_12_MIN_WALK_SURVEY_ITEM_TYPE)) {
-            return ActiveStepSurveyItem.class;
-        } else if (customType.equals(CRF_STAIR_STEP_SURVEY_ITEM_TYPE)) {
-            return CrfStairSurveyItem.class;
-        } else if (customType.equals(CRF_COMPLETION_SURVEY_ITEM_TYPE)) {
-            return CrfCompletionSurveyItem.class;
-        } else if (customType.equals(CRF_PHOTO_CAPTURE_SURVEY_ITEM_TYPE)) {
-            return CrfInstructionSurveyItem.class;
-        }
-        return BaseSurveyItem.class;
     }
 }
