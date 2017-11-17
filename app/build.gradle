@@ -63,6 +63,7 @@ dependencies {
 
     testImplementation  'junit:junit:4.12'
     testImplementation  'org.robolectric:robolectric:3.5'
+    // Keep these older versions, since the CrfDataProvider tests relies on them
     testImplementation  'org.mockito:mockito-core:1.10.19'
     testImplementation  'org.powermock:powermock-api-mockito:1.6.6'
     testImplementation  'org.powermock:powermock-module-junit4:1.6.6'
