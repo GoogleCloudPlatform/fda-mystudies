@@ -11,6 +11,10 @@
 #Exclude .pem files to make sure they aren't checked in
 *.pem
 
+# Exclude External ID settings, since write now it's based on an individual developer's email.
+# We should un-exclude this if/when CRF emails are moved to use a different email address.
+external_id_settings.json
+
 # Generated files
 bin/
 gen/
