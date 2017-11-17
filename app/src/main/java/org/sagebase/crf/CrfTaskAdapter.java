@@ -129,6 +129,7 @@ public class CrfTaskAdapter extends TaskAdapter {
             }
         }
 
+        hldr.itemView.setEnabled(true);
         if (!isHldrClickable) {
             hldr.itemView.setOnClickListener(null);
             hldr.itemView.setEnabled(false);
