@@ -27,15 +27,15 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import org.joda.time.DateTime;
 import org.researchstack.backbone.model.SchedulesAndTasksModel;
 import org.researchstack.backbone.utils.LogExt;
 import org.researchstack.skin.ui.adapter.TaskAdapter;
+import org.sagebase.crf.helper.CrfDateHelper;
+import org.sagebase.crf.helper.CrfScheduleHelper;
 import org.sagebionetworks.bridge.researchstack.CrfTaskFactory;
 import org.sagebionetworks.research.crf.R;
 
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -108,9 +108,34 @@ public class CrfTaskAdapter extends TaskAdapter {
             firstTask = (SchedulesAndTasksModel.TaskScheduleModel)obj;
          }
 
+         boolean isHldrClickable = false;
+        if (schedule != null) {
+            isHldrClickable = CrfScheduleHelper.isScheduleEnabled(schedule);
+            if (isHldrClickable) {
+                final SchedulesAndTasksModel.ScheduleModel finalSchedule = schedule;
+                hldr.itemView.setOnClickListener(v -> {
+                    LogExt.d(LOG_TAG, "Item clicked: " + finalSchedule.scheduleString);
+                    publishScheduleSubject.onNext(finalSchedule);
+                });
+            }
+        } else if (firstTask != null) {
+            isHldrClickable = CrfScheduleHelper.isTaskEnabled(firstTask);
+            if (isHldrClickable) {
+                final SchedulesAndTasksModel.TaskScheduleModel finalTask = firstTask;
+                hldr.itemView.setOnClickListener(v -> {
+                    LogExt.d(LOG_TAG, "Item clicked: " + finalTask.taskID);
+                    publishSubject.onNext(finalTask);
+                });
+            }
+        }
+
+        if (!isHldrClickable) {
+            hldr.itemView.setOnClickListener(null);
+        }
+
          if(hldr instanceof ViewHolder) {
              ViewHolder holder = (ViewHolder) hldr;
-             boolean isToday = isToday(schedule.scheduledOn);
+             boolean isToday = CrfDateHelper.isToday(schedule.scheduledOn);
 
              int iconSize = 0;
              float titleSize = 0f;
@@ -158,13 +183,6 @@ public class CrfTaskAdapter extends TaskAdapter {
                  holder.date.setText(formatDate(schedule.scheduledOn));
                  holder.title.setText(mContext.getString(R.string.crf_clinic_fitness_test));
              }
-
-             final SchedulesAndTasksModel.ScheduleModel finalSchedule = schedule;
-             holder.itemView.setOnClickListener(v -> {
-                 LogExt.d(LOG_TAG, "Item clicked: " + finalSchedule.scheduleString);
-                 publishScheduleSubject.onNext(finalSchedule);
-             });
-
          } else if(hldr instanceof FilteredViewHolder) {
              FilteredViewHolder holder = (FilteredViewHolder) hldr;
 
@@ -179,11 +197,6 @@ public class CrfTaskAdapter extends TaskAdapter {
                  holder.icon.setAlpha(1.0f);
                  holder.title.setAlpha(1.0f);
              }
-             final SchedulesAndTasksModel.TaskScheduleModel finalTask = firstTask;
-             holder.itemView.setOnClickListener(v -> {
-                 LogExt.d(LOG_TAG, "Item clicked: " + finalTask.taskID);
-                 publishSubject.onNext(finalTask);
-             });
          } else if(hldr instanceof StartItemViewHolder) {
              StartItemViewHolder holder = (StartItemViewHolder) hldr;
              StartItem item = (StartItem) obj;
@@ -191,12 +204,6 @@ public class CrfTaskAdapter extends TaskAdapter {
              holder.date.setText(formatDate(schedule.scheduledOn));
              holder.title.setText(mContext.getString(R.string.crf_clinic_fitness_test));
              holder.subtitle.setText(firstTask.taskCompletionTime);
-
-             final SchedulesAndTasksModel.ScheduleModel finalSchedule = schedule;
-             holder.itemView.setOnClickListener(v -> {
-                 LogExt.d(LOG_TAG, "Item clicked: " + finalSchedule.scheduleString);
-                 publishScheduleSubject.onNext(finalSchedule);
-             });
          } else if(hldr instanceof HeaderViewHolder) {
              HeaderViewHolder holder = (HeaderViewHolder) hldr;
              Header header = (Header)obj;
@@ -253,7 +260,7 @@ public class CrfTaskAdapter extends TaskAdapter {
         for(Object obj: list) {
             if (obj instanceof SchedulesAndTasksModel.ScheduleModel) {
                 SchedulesAndTasksModel.ScheduleModel schedule = (SchedulesAndTasksModel.ScheduleModel)obj;
-                if(isToday(schedule.scheduledOn)) {
+                if(CrfDateHelper.isToday(schedule.scheduledOn)) {
                     mPositionForToday = pos;
                     break;
                 }
@@ -266,39 +273,8 @@ public class CrfTaskAdapter extends TaskAdapter {
         return mPositionForToday;
     }
 
-    /**
-     * TODO: move these to a util?
-     * @param date1
-     * @param date2
-     * @return
-     */
-    public static boolean isSameDay(Date date1, Date date2) {
-        if (date1 == null || date2 == null) {
-            throw new IllegalArgumentException("The dates must not be null");
-        }
-        Calendar cal1 = Calendar.getInstance();
-        cal1.setTime(date1);
-        Calendar cal2 = Calendar.getInstance();
-        cal2.setTime(date2);
-        return isSameDay(cal1, cal2);
-    }
-
-    public static boolean isSameDay(Calendar cal1, Calendar cal2) {
-        if (cal1 == null || cal2 == null) {
-            throw new IllegalArgumentException("The dates must not be null");
-        }
-        return (cal1.get(Calendar.ERA) == cal2.get(Calendar.ERA) &&
-                cal1.get(Calendar.YEAR) == cal2.get(Calendar.YEAR) &&
-                cal1.get(Calendar.DAY_OF_YEAR) == cal2.get(Calendar.DAY_OF_YEAR));
-    }
-
-    public static boolean isToday(Date date) {
-        if(date == null) return false;
-        return isSameDay(date, Calendar.getInstance().getTime());
-    }
-
     private String formatDate(Date d) {
-        if(isToday(d)) {
+        if(CrfDateHelper.isToday(d)) {
             return mContext.getString(R.string.crf_today);
         } else {
             return sFormatter.format(d);

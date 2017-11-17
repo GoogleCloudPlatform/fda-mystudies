@@ -21,7 +21,6 @@ import android.app.AlertDialog;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.content.res.ResourcesCompat;
-import android.text.format.DateUtils;
 import android.util.Log;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.annotation.VisibleForTesting;
@@ -37,6 +36,8 @@ import org.researchstack.backbone.task.Task;
 import org.researchstack.backbone.utils.LogExt;
 import org.researchstack.skin.ui.adapter.TaskAdapter;
 import org.researchstack.skin.ui.fragment.ActivitiesFragment;
+import org.sagebase.crf.helper.CrfDateHelper;
+import org.sagebase.crf.helper.CrfScheduleHelper;
 import org.sagebase.crf.view.CrfFilterableActivityDisplay;
 import org.sagebionetworks.bridge.researchstack.CrfDataProvider;
 import org.sagebionetworks.bridge.researchstack.CrfPrefs;
@@ -139,30 +140,13 @@ public class CrfActivitiesFragment extends ActivitiesFragment implements CrfFilt
             unsubscribe();
             if (mClinicDate == null) {
                 setRxSubscription(crfTaskAdapter.publishScheduleSubject.subscribe(schedule -> {
-
-                    // Business logic for if a task is clickable
-                    boolean singleTaskSelectable = schedule.tasks.size() == 1 &&
-                            !allTasksCompleteOn(schedule.scheduledOn) &&
-                            DateUtils.isToday(schedule.scheduledOn.getTime());
-
-                    boolean isTodaySameDayOrAfterClinic =
-                            DateUtils.isToday(schedule.scheduledOn.getTime()) ||
-                            new Date().after(schedule.scheduledOn);
-
-                    boolean clinicGroupSelectable = schedule.tasks.size() > 1 &&
-                            !allTasksCompleteOn(schedule.scheduledOn) &&
-                            isTodaySameDayOrAfterClinic;
-
-                    if (singleTaskSelectable || clinicGroupSelectable) {
-                        scheduleSelected(schedule);
-                    }
+                    LogExt.d(LOG_TAG, "Schedule clicked.");
+                    scheduleSelected(schedule);
                 }));
             } else {
                 setRxSubscription(crfTaskAdapter.getPublishSubject().subscribe(task -> {
-                    LogExt.d(LOG_TAG, "Publish subject subscribe clicked.");
-                    if (task.taskFinishedOn == null) {
-                        taskSelected(task);
-                    }
+                    LogExt.d(LOG_TAG, "Task clicked.");
+                    taskSelected(task);
                 }));
             }
         } else {
@@ -263,23 +247,8 @@ public class CrfActivitiesFragment extends ActivitiesFragment implements CrfFilt
             return false;
         }
         Date firstClinicDate = CrfPrefs.getInstance().getFirstSignInDate().toDate();
-        return allTasksCompleteOn(firstClinicDate);
-    }
-
-    /**
-     * @return true if every task in the schedule on this date is complete, false in all other scenarios
-     */
-    private boolean allTasksCompleteOn(Date date) {
-        boolean allTasksComplete = true;
-        SchedulesAndTasksModel.ScheduleModel firstClinicSchedule = scheduleFor(date);
-        if (firstClinicSchedule != null) {
-            for (SchedulesAndTasksModel.TaskScheduleModel task : firstClinicSchedule.tasks) {
-                if (task.taskFinishedOn == null) {
-                    allTasksComplete = false;
-                }
-            }
-        }
-        return allTasksComplete;
+        SchedulesAndTasksModel.ScheduleModel firstClinicSchedule = scheduleFor(firstClinicDate);
+        return CrfScheduleHelper.allTasksCompleteOn(firstClinicSchedule);
     }
 
     /**
@@ -315,7 +284,7 @@ public class CrfActivitiesFragment extends ActivitiesFragment implements CrfFilt
      */
     private SchedulesAndTasksModel.ScheduleModel scheduleFor(Date date) {
         for(SchedulesAndTasksModel.ScheduleModel sched: mScheduleModel.schedules) {
-            if (CrfTaskAdapter.isSameDay(date, sched.scheduledOn)) {
+            if (CrfDateHelper.isSameDay(date, sched.scheduledOn)) {
                 return sched;
             }
         }
