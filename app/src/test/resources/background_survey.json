@@ -1,0 +1,91 @@
+[{
+  "identifier": "birthdate",
+  "type": "compound",
+  "title": "What is your birthdate?",
+  "items": [{
+      "identifier": "birthdate_year",
+      "type": "textfield",
+      "title": "Year",
+      "placeholderText": "",
+      "inputType": 2
+    },
+    {
+      "identifier": "birthdate_month",
+      "type": "textfield",
+      "title": "Month",
+      "placeholderText": "",
+      "inputType": 2
+    }
+  ]
+},
+  {
+    "identifier": "sex",
+    "type": "singleChoiceText",
+    "title": "What is your sex?",
+    "items": [{"text": "Male", "value": "Male"}, {"text": "Female", "value": "Female"}]
+  },
+  {
+    "identifier": "hispanicOrLatino",
+    "type": "boolean",
+    "title": "Are you of Hispanic or Latino origin?"
+  },
+  {
+    "identifier": "ethnicity",
+    "type": "multipleChoiceText",
+    "title": "Which race best describes you?",
+    "text": "(select all that apply)",
+    "items": [
+      {
+        "text": "White or Caucasian",
+        "value": "White or Caucasian"
+      },
+      {
+        "text": "Black or African American",
+        "value": "Black or African American"
+      },
+      {
+        "text": "Native Hawaiian or other Pacific Islander",
+        "value": "Native Hawaiian or other Pacific Islander"
+      },
+      {
+        "text": "Asian",
+        "value": "Asian"
+      },
+      {
+        "text": "Other",
+        "value": "Other"
+      }
+    ]
+  },
+  {
+    "identifier": "education",
+    "type": "singleChoiceText",
+    "title": "What is the highest grade in school you have finished?",
+    "detail": "(select one)",
+    "items": [{
+      "text": "Did not finish elementary school",
+      "value": "elementary school"
+    }, {
+      "text": "Finished middle school (8th grade)",
+      "value": "middle school"
+    }, {
+      "text": "Finished some high school",
+      "value": "some high school"
+    }, {
+      "text": "High school graduate or G.E.D",
+      "value": "high school graduate"
+    }, {
+      "text": "Vocational or training school after high school",
+      "value": "vocational school"
+    }, {
+      "text": "Some College or Associate degree",
+      "value": "some college or associate"
+    }, {
+      "text": "College graduate or Baccalaureate Degree",
+      "value": "college graduate"
+    }, {
+      "text": "Masters or Doctoral Degree (PhD, MD, JD, etc)",
+      "value": "masters or doctoral"
+    }]
+  }
+]

@@ -30,11 +30,11 @@ public class CrfUiManager extends UiManager {
                 .setClass(CrfActivitiesFragment.class)
                 .build());
 
-        navItems.add(new ActionItem.ActionItemBuilder().setId(org.sagebionetworks.research.crf.R.id.nav_dashboard)
-                .setTitle(R.string.rss_dashboard)
-                .setIcon(R.drawable.rss_ic_tab_dashboard)
-                .setClass(CrfDashboardFragment.class)
-                .build());
+//        navItems.add(new ActionItem.ActionItemBuilder().setId(org.sagebionetworks.research.crf.R.id.nav_dashboard)
+//                .setTitle(R.string.rss_dashboard)
+//                .setIcon(R.drawable.rss_ic_tab_dashboard)
+//                .setClass(CrfDashboardFragment.class)
+//                .build());
 
         return navItems;
     }

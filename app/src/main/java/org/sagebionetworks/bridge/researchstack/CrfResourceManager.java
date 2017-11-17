@@ -26,19 +26,29 @@ public class CrfResourceManager extends ResourceManager {
     private static final String BASE_PATH_PDF           = "pdf";
     private static final String BASE_PATH_VIDEO         = "mp4";
 
+    public static final String HEART_RATE_MEASUREMENT_RESOURCE = "heart_rate_measurement";
+    public static final String CARDIO_12MT_WALK_RESOURCE = "12_minute_walk";
+    public static final String STAIR_STEP_RESOURCE = "stair_step";
+    public static final String BACKGROUND_SURVEY_RESOURCE = "background_survey";
+
+    public static final String INFO_HEART_RATE_MEASUREMENT_RESOURCE = "crf_heart_rate_info";
+    public static final String INFO_CARDIO_12MT_WALK_RESOURCE = "crf_12_min_info";
+    public static final String INFO_STAIR_STEP_RESOURCE = "crf_stair_step_info";
+
     public CrfResourceManager() {
         super();
 
         // Add all custom resources that we will need access to
-        addResource("stair_step", new Resource(Resource.TYPE_JSON, "json", "stair_step"));
-        addResource("crf_stair_step_info", new Resource(Resource.TYPE_HTML, "html", "crf_stair_step_info"));
-        addResource("12_minute_walk", new Resource(Resource.TYPE_JSON, "json", "12_minute_walk"));
-        addResource("crf_12_min_info", new Resource(Resource.TYPE_HTML, "html", "crf_12_min_info"));
-        addResource("heart_rate_measurement", new Resource(Resource.TYPE_JSON, "json", "heart_rate_measurement"));
-        addResource("crf_heart_rate_info", new Resource(Resource.TYPE_HTML, "html", "crf_heart_rate_info"));
-        addResource("instruction_test", new Resource(Resource.TYPE_JSON, "json", "instruction_test"));
-        addResource("consent", new Resource(Resource.TYPE_JSON, "json", "consent"));
-        addResource("eligibility_requirements", new Resource(Resource.TYPE_JSON, "json", "eligibility_requirements"));
+        addResource(BACKGROUND_SURVEY_RESOURCE, new Resource(SURVEY, BASE_PATH_JSON_SURVEY, BACKGROUND_SURVEY_RESOURCE));
+
+        addResource(CARDIO_12MT_WALK_RESOURCE, new Resource(Resource.TYPE_JSON, BASE_PATH_JSON, CARDIO_12MT_WALK_RESOURCE));
+        addResource(INFO_CARDIO_12MT_WALK_RESOURCE, new Resource(Resource.TYPE_HTML, BASE_PATH_HTML, INFO_CARDIO_12MT_WALK_RESOURCE));
+
+        addResource(HEART_RATE_MEASUREMENT_RESOURCE, new Resource(Resource.TYPE_JSON, BASE_PATH_JSON, HEART_RATE_MEASUREMENT_RESOURCE));
+        addResource(INFO_HEART_RATE_MEASUREMENT_RESOURCE, new Resource(Resource.TYPE_HTML, BASE_PATH_HTML, INFO_HEART_RATE_MEASUREMENT_RESOURCE));
+
+        addResource(STAIR_STEP_RESOURCE, new Resource(Resource.TYPE_JSON, BASE_PATH_JSON, STAIR_STEP_RESOURCE));
+        addResource(INFO_STAIR_STEP_RESOURCE, new Resource(Resource.TYPE_HTML, BASE_PATH_HTML, INFO_STAIR_STEP_RESOURCE));
     }
 
     @Override
