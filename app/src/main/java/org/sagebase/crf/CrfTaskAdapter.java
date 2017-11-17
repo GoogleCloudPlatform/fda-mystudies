@@ -192,7 +192,6 @@ public class CrfTaskAdapter extends TaskAdapter {
              if (firstTask.taskFinishedOn != null) {
                  holder.icon.setAlpha(0.5f);
                  holder.title.setAlpha(0.5f);
-                 holder.itemView.setOnClickListener(null);
              } else {
                  holder.icon.setAlpha(1.0f);
                  holder.title.setAlpha(1.0f);

@@ -10,5 +10,9 @@
     "test_json_survey":{
         "id":"test_json_survey",
         "revision":1
+    },
+    "Background Survey":{
+        "id":"background_survey",
+        "revision":4
     }
 }

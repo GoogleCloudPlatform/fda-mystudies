@@ -33,6 +33,7 @@ import com.google.common.collect.ImmutableMap;
 import org.researchstack.backbone.DataProvider;
 import org.researchstack.backbone.model.SchedulesAndTasksModel;
 import org.researchstack.backbone.task.Task;
+import org.researchstack.backbone.ui.ViewTaskActivity;
 import org.researchstack.backbone.utils.LogExt;
 import org.researchstack.skin.ui.adapter.TaskAdapter;
 import org.researchstack.skin.ui.fragment.ActivitiesFragment;
@@ -41,6 +42,7 @@ import org.sagebase.crf.helper.CrfScheduleHelper;
 import org.sagebase.crf.view.CrfFilterableActivityDisplay;
 import org.sagebionetworks.bridge.researchstack.CrfDataProvider;
 import org.sagebionetworks.bridge.researchstack.CrfPrefs;
+import org.sagebionetworks.bridge.researchstack.CrfResourceManager;
 import org.sagebionetworks.bridge.researchstack.CrfTaskFactory;
 import org.sagebionetworks.research.crf.R;
 
@@ -74,9 +76,10 @@ public class CrfActivitiesFragment extends ActivitiesFragment implements CrfFilt
     @VisibleForTesting
     static final Map<String, String> TASK_ID_TO_RESOURCE_NAME =
             ImmutableMap.<String, String>builder()
-                    .put(CrfTaskFactory.TASK_ID_HEART_RATE_MEASUREMENT, "heart_rate_measurement")
-                    .put(CrfTaskFactory.TASK_ID_CARDIO_12MT, "12_minute_walk")
-                    .put(CrfTaskFactory.TASK_ID_STAIR_STEP, "stair_step")
+                    .put(CrfTaskFactory.TASK_ID_HEART_RATE_MEASUREMENT, CrfResourceManager.HEART_RATE_MEASUREMENT_RESOURCE)
+                    .put(CrfTaskFactory.TASK_ID_CARDIO_12MT, CrfResourceManager.CARDIO_12MT_WALK_RESOURCE)
+                    .put(CrfTaskFactory.TASK_ID_STAIR_STEP, CrfResourceManager.STAIR_STEP_RESOURCE)
+                    .put(CrfTaskFactory.TASK_ID_BACKGROUND_SURVEY, CrfResourceManager.BACKGROUND_SURVEY_RESOURCE)
                     .build();
 
     @Override
@@ -171,10 +174,17 @@ public class CrfActivitiesFragment extends ActivitiesFragment implements CrfFilt
     @Override
     protected void startCustomTask(SchedulesAndTasksModel.TaskScheduleModel task) {
         if (TASK_ID_TO_RESOURCE_NAME.containsKey(task.taskID)) {
-            Task testTask = taskFactory.createTask(getActivity(), TASK_ID_TO_RESOURCE_NAME.get(task
-                    .taskID));
-            startActivityForResult(getIntentFactory().newTaskIntent(getActivity(),
-                    CrfActiveTaskActivity.class, testTask), REQUEST_TASK);
+            if (task.taskID.equals(CrfTaskFactory.TASK_ID_BACKGROUND_SURVEY)) {
+                Task activeTask = taskFactory.createTask(getActivity(), TASK_ID_TO_RESOURCE_NAME.get(task
+                        .taskID));
+                startActivityForResult(getIntentFactory().newTaskIntent(getActivity(),
+                        ViewTaskActivity.class, activeTask), REQUEST_TASK);
+            } else {
+                Task activeTask = taskFactory.createTask(getActivity(), TASK_ID_TO_RESOURCE_NAME.get(task
+                        .taskID));
+                startActivityForResult(getIntentFactory().newTaskIntent(getActivity(),
+                        CrfActiveTaskActivity.class, activeTask), REQUEST_TASK);
+            }
         } else {
             Toast.makeText(getActivity(),
                     org.researchstack.skin.R.string.rss_local_error_load_task,
