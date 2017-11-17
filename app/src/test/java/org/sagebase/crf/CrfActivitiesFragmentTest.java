@@ -69,42 +69,6 @@ public class CrfActivitiesFragmentTest {
     }
 
     @Test
-    public void startCustomTaskTest() {
-        for (Map.Entry<String, String> oneTaskIdAndResourceName : CrfActivitiesFragment
-                .TASK_ID_TO_RESOURCE_NAME.entrySet()) {
-            String taskId = oneTaskIdAndResourceName.getKey();
-            String resourceName = oneTaskIdAndResourceName.getValue();
-
-            // Reset mocks and spies, so we don't carry over state from the previous test.
-            reset(mockIntentFactory, mockTaskFactory, fragment);
-
-            // Mock dependencies
-            Task task = mock(Task.class);
-            when(mockTaskFactory.createTask(any(), anyString())).thenReturn(task);
-
-            Intent intent = new Intent();
-            when(mockIntentFactory.newTaskIntent(any(), any(), any())).thenReturn(intent);
-
-            doNothing().when(fragment).startActivityForResult(any(), anyInt());
-
-            // Make our task schedule model with our task ID
-            SchedulesAndTasksModel.TaskScheduleModel taskScheduleModel =
-                    new SchedulesAndTasksModel.TaskScheduleModel();
-            taskScheduleModel.taskID = taskId;
-
-            // Execute
-            fragment.startCustomTask(taskScheduleModel);
-
-            // Verify dependent calls
-            verify(mockTaskFactory).createTask(any(), eq(resourceName));
-            verify(mockIntentFactory).newTaskIntent(any(), eq(CrfActiveTaskActivity.class),
-                    same(task));
-            verify(fragment).startActivityForResult(same(intent), eq(ActivitiesFragment
-                    .REQUEST_TASK));
-        }
-    }
-
-    @Test
     public void processResults_NullModel() {
         List<Object> resultList = fragment.processResults(null);
         assertTrue(resultList.isEmpty());

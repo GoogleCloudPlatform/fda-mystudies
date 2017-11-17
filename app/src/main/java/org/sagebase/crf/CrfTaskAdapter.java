@@ -131,6 +131,7 @@ public class CrfTaskAdapter extends TaskAdapter {
 
         if (!isHldrClickable) {
             hldr.itemView.setOnClickListener(null);
+            hldr.itemView.setEnabled(false);
         }
 
          if(hldr instanceof ViewHolder) {
