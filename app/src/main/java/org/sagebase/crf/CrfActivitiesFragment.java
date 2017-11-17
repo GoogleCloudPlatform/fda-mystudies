@@ -17,11 +17,16 @@
 
 package org.sagebase.crf;
 
+import android.app.AlertDialog;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
+import android.support.v4.content.res.ResourcesCompat;
 import android.text.format.DateUtils;
 import android.util.Log;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.annotation.VisibleForTesting;
+import android.view.View;
+import android.widget.ImageButton;
 import android.widget.Toast;
 
 import com.google.common.collect.ImmutableMap;
@@ -49,6 +54,9 @@ import java.util.Map;
 
 public class CrfActivitiesFragment extends ActivitiesFragment implements CrfFilterableActivityDisplay {
 
+    private ImageButton mBackButton;
+    private ImageButton mSettingsButton;
+
     private SchedulesAndTasksModel mScheduleModel;
     private Date mClinicDate;
 
@@ -71,9 +79,16 @@ public class CrfActivitiesFragment extends ActivitiesFragment implements CrfFilt
                     .build();
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        Log.d(LOG_TAG, "onCreate - mClinicDate: " + (mClinicDate == null));
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
+        mBackButton = view.findViewById(R.id.crf_back_button);
+        mBackButton.setOnClickListener(v -> clearFilter());
+        mSettingsButton = view.findViewById(R.id.crf_settings_button);
+        mSettingsButton.setOnClickListener(this::onSettingsClicked);
+
+        int color = ResourcesCompat.getColor(getResources(), R.color.white, null);
+        MainApplication.setStatusBarColor(getActivity(), color);
     }
 
     @Override
@@ -184,10 +199,12 @@ public class CrfActivitiesFragment extends ActivitiesFragment implements CrfFilt
     }
 
     public void showAllActivities() {
-        recyclerView.setPadding(0, 0, 0, 0);
 
         CrfTaskAdapter adapter = (CrfTaskAdapter) getAdapter();
         adapter.clear();
+
+        mBackButton.setVisibility(View.GONE);
+        mSettingsButton.setVisibility(View.VISIBLE);
 
         // Per Zeplin design, if first clinic is not complete, that is all the user will see
         // Otherwise the whole journey is visible
@@ -271,8 +288,8 @@ public class CrfActivitiesFragment extends ActivitiesFragment implements CrfFilt
     private void showClinicActivities() {
         getSwipeFreshLayout().setEnabled(false);
 
-        int padding = getResources().getDimensionPixelOffset(R.dimen.rsb_padding_large);
-        recyclerView.setPadding(padding, padding, padding, padding);
+        mBackButton.setVisibility(View.VISIBLE);
+        mSettingsButton.setVisibility(View.GONE);
 
         SchedulesAndTasksModel.ScheduleModel clinicSchedule = scheduleFor(mClinicDate);
         if (clinicSchedule != null) {
@@ -316,5 +333,11 @@ public class CrfActivitiesFragment extends ActivitiesFragment implements CrfFilt
     @Override
     public boolean isFiltered() {
         return (mClinicDate != null);
+    }
+
+    public void onSettingsClicked(View v) {
+        new AlertDialog.Builder(getActivity())
+                .setMessage("Remind me later will be implemented in a future release")
+                .create().show();
     }
 }

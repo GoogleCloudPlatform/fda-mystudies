@@ -21,6 +21,7 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.res.ResourcesCompat;
 import android.view.MenuItem;
+import android.view.View;
 
 import org.researchstack.backbone.StorageAccess;
 import org.researchstack.skin.ui.MainActivity;
@@ -39,8 +40,7 @@ public class CrfMainActivity extends MainActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        //getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        //getSupportActionBar().setDisplayShowHomeEnabled(true);
+        findViewById(R.id.toolbar).setVisibility(View.GONE);
     }
 
     @Override
