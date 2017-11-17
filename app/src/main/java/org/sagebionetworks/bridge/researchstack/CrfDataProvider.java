@@ -54,9 +54,6 @@ public class CrfDataProvider extends BridgeDataProvider {
 
     public static final int STUDY_DURATION_IN_DAYS = 15;
 
-    // For now, add test_user scheduling, this needs removed once scheduling is complete
-    private static final boolean DEBUG_ADD_TEST_USER = true;
-
     /**
      * Hold onto weak context for reminders instead of passing it around the getCrfActivities algorithm
      */
@@ -262,9 +259,6 @@ public class CrfDataProvider extends BridgeDataProvider {
         if (existingDataGroups != null) {
             newDataGroups = new ArrayList<>(existingDataGroups);
             newDataGroups.add(chosenClinicDataGroup);
-        }
-        if (DEBUG_ADD_TEST_USER) {
-            newDataGroups.add("test_user");
         }
         participant.setDataGroups(newDataGroups);
 
