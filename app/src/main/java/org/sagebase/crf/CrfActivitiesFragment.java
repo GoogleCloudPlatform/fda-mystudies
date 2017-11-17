@@ -316,7 +316,7 @@ public class CrfActivitiesFragment extends ActivitiesFragment implements CrfFilt
 
     public void onSettingsClicked(View v) {
         new AlertDialog.Builder(getActivity())
-                .setMessage("Remind me later will be implemented in a future release")
+                .setMessage("Settings later will be implemented in a future release")
                 .create().show();
     }
 }
