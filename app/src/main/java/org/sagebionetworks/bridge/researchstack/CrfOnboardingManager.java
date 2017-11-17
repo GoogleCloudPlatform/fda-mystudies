@@ -4,15 +4,13 @@ import android.content.Context;
 import android.content.Intent;
 
 import com.google.gson.GsonBuilder;
-import com.google.gson.JsonElement;
 
 import org.researchstack.backbone.model.survey.SurveyItem;
-import org.researchstack.backbone.model.survey.SurveyItemAdapter;
 import org.researchstack.backbone.model.survey.factory.SurveyFactory;
-import org.researchstack.backbone.onboarding.OnboardingManager;
 import org.researchstack.backbone.onboarding.OnboardingManagerTask;
 import org.researchstack.backbone.step.Step;
 import org.researchstack.backbone.task.NavigableOrderedTask;
+import org.sagebionetworks.bridge.researchstack.onboarding.BridgeOnboardingManager;
 
 import java.util.List;
 
@@ -24,7 +22,7 @@ import java.util.List;
  * in the onboarding process
  */
 
-public class CrfOnboardingManager extends OnboardingManager {
+public class CrfOnboardingManager extends BridgeOnboardingManager {
 
     public CrfOnboardingManager(Context context) {
         super(context);
@@ -37,7 +35,7 @@ public class CrfOnboardingManager extends OnboardingManager {
      */
     @Override
     public void registerSurveyItemAdapter(GsonBuilder builder) {
-        builder.registerTypeAdapter(SurveyItem.class, new CustomSurveyItemAdapter());
+        builder.registerTypeAdapter(SurveyItem.class, new CrfSurveyItemAdapter());
     }
 
     /**
@@ -52,7 +50,7 @@ public class CrfOnboardingManager extends OnboardingManager {
                                  SurveyFactory factory) {
         // Since we dont have any in Crf, just go with default implementation of this instance
         // of SurveyFactory
-        return factory.createCustomStep(context, item, isSubtaskStep);
+        return super.createCustomStep(context, item, isSubtaskStep, factory);
     }
 
     @Override
@@ -66,20 +64,5 @@ public class CrfOnboardingManager extends OnboardingManager {
         // here we can show our own custom activity, but it should be a subclass of
         // OnboardingTaskActivity
         return super.createOnboardingTaskActivityIntent(context, task);
-    }
-
-    class CustomSurveyItemAdapter extends SurveyItemAdapter {
-        /**
-         * This can be overridden to provide custom survey item deserialization
-         * the default deserialization is a CustomSurveyItem, or a
-         * CustomInstructionSurveyItem if customType ends with ".instruction"
-         *
-         * @param customType used to map to different types of survey items
-         * @return type of survey item to create from the custom class
-         */
-        @Override
-        public Class<? extends SurveyItem> getCustomClass(String customType, JsonElement json) {
-            return super.getCustomClass(customType, json);
-        }
     }
 }
