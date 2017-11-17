@@ -214,7 +214,7 @@ public class CrfDataProvider extends BridgeDataProvider {
 
             if (dataGroups == null ||
                 dataGroups.isEmpty() ||
-                (!dataGroups.contains(CLINIC1) || !dataGroups.contains(CLINIC1))) {
+                (!dataGroups.contains(CLINIC1) && !dataGroups.contains(CLINIC2))) {
                 assignRandomizedClinic(dataGroups, listener, clinic1, clinic2);
             } else {
                 // We already have the clinic data group assigned, so simply read it and
