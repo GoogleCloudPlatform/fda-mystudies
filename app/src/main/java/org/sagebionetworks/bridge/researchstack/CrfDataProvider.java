@@ -12,6 +12,7 @@ import org.joda.time.DateTime;
 import org.researchstack.backbone.DataResponse;
 import org.researchstack.backbone.ResourceManager;
 import org.researchstack.backbone.model.SchedulesAndTasksModel;
+import org.researchstack.backbone.onboarding.OnboardingManager;
 import org.researchstack.backbone.result.TaskResult;
 import org.researchstack.backbone.storage.NotificationHelper;
 import org.researchstack.skin.*;
@@ -55,12 +56,27 @@ public class CrfDataProvider extends BridgeDataProvider {
     public static final int STUDY_DURATION_IN_DAYS = 15;
 
     /**
+     * Originally, the business logic was to assign a random clinic to the user behind the scenes,
+     * but now we want the user to select their clinic during onboarding
+     * If true, this will make sure the clinic was assigned during onboarding,
+     * If false, the legacy clinic assignment will be used
+     */
+    private boolean shouldThrowErrorWithoutClinicDataGroup = true;
+    public boolean isShouldThrowErrorWithoutClinicDataGroup() {
+        return shouldThrowErrorWithoutClinicDataGroup;
+    }
+    public void setShouldThrowErrorWithoutClinicDataGroup(boolean shouldThrowErrorWithoutClinicDataGroup) {
+        this.shouldThrowErrorWithoutClinicDataGroup = shouldThrowErrorWithoutClinicDataGroup;
+    }
+
+    public static final String NO_CLINIC_ERROR_MESSAGE = "NO_CLINIC_ID";
+
+    /**
      * Hold onto weak context for reminders instead of passing it around the getCrfActivities algorithm
      */
     private WeakReference<Context> weakContext;
 
     public CrfDataProvider() {
-        // TODO give path to permission file for uploads
         super(BridgeManagerProvider.getInstance());
     }
 
@@ -76,18 +92,13 @@ public class CrfDataProvider extends BridgeDataProvider {
     }
 
     @Override
-    public void processInitialTaskResult(Context context, TaskResult taskResult) {
-        // TODO: what do we do with this method?
+    public Observable<DataResponse> signOut(Context context) {
+        return super.signOut(context).doOnCompleted(() -> CrfPrefs.getInstance().clear());
     }
 
-    public Observable<DataResponse> signOut(Context context) {
-        return super.signOut(context)
-                .doOnCompleted(new Action0() {
-                    @Override
-                    public void call() {
-                        CrfPrefs.getInstance().clear();
-                    }
-                });
+    @Override
+    public void processInitialTaskResult(Context context, TaskResult taskResult) {
+        // no-op
     }
 
     /**
@@ -243,6 +254,17 @@ public class CrfDataProvider extends BridgeDataProvider {
 
         logV("assignRandomizedClinic");
 
+        if (shouldThrowErrorWithoutClinicDataGroup) {
+            if (weakContext != null && weakContext.get() != null) {
+                signOutSubscribe(weakContext.get(), dataResponse -> {
+                    listener.error(NO_CLINIC_ERROR_MESSAGE);
+                }, throwable -> {
+                    listener.error(throwable.getLocalizedMessage());
+                });
+            }
+            return;
+        }
+
         final boolean assignToClinic1 = generateRandomClient();
         ScheduledActivity chosenClinic;
         String chosenClinicDataGroup;
@@ -277,6 +299,13 @@ public class CrfDataProvider extends BridgeDataProvider {
                                          final Action1<UserSessionInfo> onNext,
                                          final Action1<Throwable> onError) {
         updateStudyParticipant(studyParticipant).observeOn(AndroidSchedulers.mainThread()).subscribe(onNext, onError);
+    }
+
+    @VisibleForTesting
+    void signOutSubscribe(Context context,
+                          final Action1<DataResponse> onNext,
+                          final Action1<Throwable> onError) {
+        signOut(context).observeOn(AndroidSchedulers.mainThread()).subscribe(onNext, onError);
     }
 
     /**
