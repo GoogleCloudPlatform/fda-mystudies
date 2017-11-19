@@ -15,22 +15,17 @@
   ~    limitations under the License.
   ~
   -->
-<RelativeLayout
+
+<FrameLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/white">
+    android:layout_height="match_parent">
 
-    <org.researchstack.backbone.ui.views.StepSwitcher
-        android:id="@+id/crf_active_container"
+    <LinearLayout
+        android:id="@+id/rsb_content_container"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_height="match_parent"
+        android:orientation="vertical"/>
 
-    <org.sagebase.crf.view.CrfTransparentToolbar
-        style="@style/Widget.Crf.Toolbar.Transparent"
-        android:id="@+id/crf_task_toolbar"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@drawable/crf_toolbar_background"/>
-
-</RelativeLayout>
+</FrameLayout>

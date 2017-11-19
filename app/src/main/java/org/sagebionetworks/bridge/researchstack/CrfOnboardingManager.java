@@ -5,12 +5,16 @@ import android.content.Intent;
 
 import com.google.gson.GsonBuilder;
 
+import org.researchstack.backbone.factory.IntentFactory;
 import org.researchstack.backbone.model.survey.SurveyItem;
 import org.researchstack.backbone.model.survey.factory.SurveyFactory;
 import org.researchstack.backbone.onboarding.OnboardingManagerTask;
 import org.researchstack.backbone.step.Step;
 import org.researchstack.backbone.task.NavigableOrderedTask;
+import org.sagebase.crf.CrfOnboardingTaskActivity;
+import org.sagebase.crf.step.CrfExternalIdStep;
 import org.sagebionetworks.bridge.researchstack.onboarding.BridgeOnboardingManager;
+import org.sagebionetworks.bridge.researchstack.survey.DataGroupQuestionSurveyItem;
 
 import java.util.List;
 
@@ -23,6 +27,8 @@ import java.util.List;
  */
 
 public class CrfOnboardingManager extends BridgeOnboardingManager {
+
+    public static final String CRF_EXTERNAL_ID_TYPE = "crfExternalID";
 
     public CrfOnboardingManager(Context context) {
         super(context);
@@ -48,8 +54,9 @@ public class CrfOnboardingManager extends BridgeOnboardingManager {
     @Override
     public Step createCustomStep(Context context, SurveyItem item, boolean isSubtaskStep,
                                  SurveyFactory factory) {
-        // Since we dont have any in Crf, just go with default implementation of this instance
-        // of SurveyFactory
+        if (CRF_EXTERNAL_ID_TYPE.equals(item.getCustomTypeValue())) {
+            return new CrfExternalIdStep(item.identifier);
+        }
         return super.createCustomStep(context, item, isSubtaskStep, factory);
     }
 
@@ -61,8 +68,6 @@ public class CrfOnboardingManager extends BridgeOnboardingManager {
 
     @Override
     public Intent createOnboardingTaskActivityIntent(Context context, NavigableOrderedTask task) {
-        // here we can show our own custom activity, but it should be a subclass of
-        // OnboardingTaskActivity
-        return super.createOnboardingTaskActivityIntent(context, task);
+        return IntentFactory.INSTANCE.newTaskIntent(context, CrfOnboardingTaskActivity.class, task);
     }
 }
