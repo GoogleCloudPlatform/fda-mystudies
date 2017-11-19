@@ -22,12 +22,15 @@ import android.util.AttributeSet;
 import android.view.View;
 
 import org.researchstack.backbone.DataProvider;
+import org.researchstack.backbone.answerformat.AnswerFormat;
 import org.researchstack.backbone.result.StepResult;
 import org.researchstack.backbone.step.Step;
 import org.researchstack.backbone.ui.callbacks.StepCallbacks;
 import org.sagebionetworks.bridge.researchstack.BridgeDataProvider;
 import org.sagebionetworks.bridge.researchstack.CrfDataProvider;
+import org.sagebionetworks.bridge.researchstack.step.DataGroupQuestionStep;
 import org.sagebionetworks.bridge.researchstack.step.layout.DataGroupQuestionStepLayout;
+import org.sagebionetworks.bridge.researchstack.survey.DataGroupQuestionSurveyItem;
 import org.sagebionetworks.research.crf.R;
 
 import java.lang.ref.WeakReference;
@@ -86,5 +89,16 @@ public class CrfClinicDataGroupsStepLayout extends DataGroupQuestionStepLayout {
             // Silent fail, allow user to try and set data groups
             hideLoadingDialog();
         });
+    }
+
+    public static class CrfDataGroupQuestionStep extends DataGroupQuestionStep {
+        public static final String CUSTOM_STEP_IDENTIFIER = "clinicChoices";
+        public CrfDataGroupQuestionStep(String identifier, String title, AnswerFormat format) {
+            super(identifier, title, format);
+        }
+        @Override
+        public Class getStepLayoutClass() {
+            return CrfClinicDataGroupsStepLayout.class;
+        }
     }
 }

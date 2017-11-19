@@ -17,12 +17,14 @@
 
 package org.sagebase.crf;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.res.ResourcesCompat;
 import android.view.MenuItem;
 import android.view.View;
 
+import org.researchstack.backbone.DataProvider;
 import org.researchstack.backbone.StorageAccess;
 import org.researchstack.skin.ui.MainActivity;
 import org.sagebase.crf.view.CrfFilterableActivityDisplay;
@@ -41,6 +43,15 @@ public class CrfMainActivity extends MainActivity {
         super.onCreate(savedInstanceState);
 
         findViewById(R.id.toolbar).setVisibility(View.GONE);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (!DataProvider.getInstance().isSignedIn(this)) {
+            startActivity(new Intent(this, CrfOverviewActivity.class));
+            finish();
+        }
     }
 
     @Override

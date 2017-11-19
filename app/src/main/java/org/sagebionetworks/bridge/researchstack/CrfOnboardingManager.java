@@ -5,12 +5,15 @@ import android.content.Intent;
 
 import com.google.gson.GsonBuilder;
 
+import org.researchstack.backbone.answerformat.AnswerFormat;
 import org.researchstack.backbone.model.survey.SurveyItem;
 import org.researchstack.backbone.model.survey.factory.SurveyFactory;
 import org.researchstack.backbone.onboarding.OnboardingManagerTask;
 import org.researchstack.backbone.step.Step;
 import org.researchstack.backbone.task.NavigableOrderedTask;
+import org.sagebase.crf.step.CrfClinicDataGroupsStepLayout;
 import org.sagebionetworks.bridge.researchstack.onboarding.BridgeOnboardingManager;
+import org.sagebionetworks.bridge.researchstack.step.DataGroupQuestionStep;
 
 import java.util.List;
 
@@ -48,9 +51,15 @@ public class CrfOnboardingManager extends BridgeOnboardingManager {
     @Override
     public Step createCustomStep(Context context, SurveyItem item, boolean isSubtaskStep,
                                  SurveyFactory factory) {
-        // Since we dont have any in Crf, just go with default implementation of this instance
-        // of SurveyFactory
         return super.createCustomStep(context, item, isSubtaskStep, factory);
+    }
+
+    @Override
+    protected DataGroupQuestionStep dataGroupsQuestionStep(String identifier, String title, AnswerFormat format) {
+        if (CrfClinicDataGroupsStepLayout.CrfDataGroupQuestionStep.CUSTOM_STEP_IDENTIFIER.equals(identifier)) {
+            return new CrfClinicDataGroupsStepLayout.CrfDataGroupQuestionStep(identifier, title, format);
+        }
+        return super.dataGroupsQuestionStep(identifier, title, format);
     }
 
     @Override
