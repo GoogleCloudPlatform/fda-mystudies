@@ -100,6 +100,7 @@ public class CrfInstructionStepLayout extends InstructionStepLayout implements
                 R.id.crf_instruction_more_detail_text);
 
         nextButton = findViewById(R.id.button_go_forward);
+        nextButton.setEnabled(true);
         rootInstructionLayout = findViewById(R.id.crf_root_instruction_layout);
     }
 
@@ -153,6 +154,7 @@ public class CrfInstructionStepLayout extends InstructionStepLayout implements
     }
 
     public void goForwardClicked(View v) {
+        nextButton.setEnabled(false);
         callbacks.onSaveStep(StepCallbacks.ACTION_NEXT, step, null);
     }
 
