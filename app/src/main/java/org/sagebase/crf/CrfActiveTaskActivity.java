@@ -191,13 +191,13 @@ public class CrfActiveTaskActivity extends ActiveTaskActivity {
          */
         boolean controlMediaVolume();
     }
+
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if(resultCode == RESULT_OK) {
             StepLayout layout = getCurrentStepLayout();
             if(layout instanceof CrfActivityResultListener) {
-                ((CrfActivityResultListener)layout).onActivityFinished();
+                ((CrfActivityResultListener)layout).onActivityFinished(requestCode, resultCode, data);
             }
-
         } else {
             super.onActivityResult(requestCode, resultCode, data);
         }
