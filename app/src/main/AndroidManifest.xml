@@ -91,8 +91,11 @@
         </provider>
 
         <receiver android:name="org.sagebase.crf.reminder.CrfAlarmReceiver" />
-        <receiver android:name="org.sagebase.crf.reminder.CrfTimeChangedReceiver">
+        <receiver android:name="org.sagebase.crf.reminder.CrfRescheduleRemindersReciever">
             <intent-filter>
+                <action android:name="android.intent.action.QUICKBOOT_POWERON" />
+                <action android:name="com.htc.intent.action.QUICKBOOT_POWERON"/>
+                <action android:name="android.intent.action.REBOOT"/>
                 <action android:name="android.intent.action.BOOT_COMPLETED"/>
                 <action android:name="android.intent.action.TIME_SET"/>
                 <action android:name="android.intent.action.TIMEZONE_CHANGED"/>

@@ -20,6 +20,7 @@ package org.sagebase.crf.reminder;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.util.Log;
 
 import org.sagebionetworks.bridge.researchstack.CrfPrefs;
 
@@ -33,10 +34,11 @@ import java.util.List;
  * If we do not listen for these and re-schedule our reminders, they will never fire
  */
 
-public class CrfTimeChangedReceiver extends BroadcastReceiver {
+public class CrfRescheduleRemindersReciever extends BroadcastReceiver {
 
     @Override
     public void onReceive(Context context, Intent intent) {
+        Log.v(CrfReminderManager.LOG_TAG, "Received reschedule intent with action: " + intent.getAction());
         List<Date> reminderDates = CrfPrefs.getInstance().getReminderDates();
         if (reminderDates == null) {
             return; // we never scheduled any reminders
