@@ -33,6 +33,7 @@ import org.mockito.MockitoAnnotations;
 import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
+import org.researchstack.backbone.DataResponse;
 import org.researchstack.backbone.model.SchedulesAndTasksModel;
 import org.researchstack.backbone.result.TaskResult;
 import org.researchstack.backbone.storage.file.FileAccess;
@@ -158,6 +159,7 @@ public class CrfDataProviderTest {
                 firstSignInDate, assignClinic1, initialDataGroup,
                 researchStackDAO, storageAccess, taskHelper);
         dataProvider.mockGetAllActiities(successList(assignClinic1));
+        dataProvider.setShouldThrowErrorWithoutClinicDataGroup(true);
     }
 
     @Test
@@ -191,6 +193,7 @@ public class CrfDataProviderTest {
     @Test
     public void testAssignClinic1() {
         resetTest(null, true, null);
+        dataProvider.setShouldThrowErrorWithoutClinicDataGroup(false);  // will cause assign clinic id to work
         final ScheduledActivityListV4 successList = successList(true);
         dataProvider.mockGetAllActiities(successList);
         dataProvider.mockGetClinicActiities(clinicActivities(null, null));
@@ -202,11 +205,33 @@ public class CrfDataProviderTest {
     @Test
     public void testAssignClinic2() {
         resetTest(null, false, null);
+        dataProvider.setShouldThrowErrorWithoutClinicDataGroup(false);  // will cause assign clinic id to work
         final ScheduledActivityListV4 successList = successList(false);
         dataProvider.mockGetAllActiities(successList);
         dataProvider.mockGetClinicActiities(clinicActivities(null, null));
         SchedulesAndTasksModel model = successModel(false);
         CrfTestListener listener = new CrfTestListener(model, dataProvider.COMPLETION_TIME_CLINIC2);
+        dataProvider.getCrfActivities(false, context, listener);
+    }
+
+    @Test
+    public void testNoClinicDataGroupFail() {
+        resetTest(null, false, null);
+        final ScheduledActivityListV4 successList = successList(false);
+        dataProvider.mockGetAllActiities(successList);
+        dataProvider.mockGetClinicActiities(clinicActivities(null, null));
+        SchedulesAndTasksModel model = successModel(false);
+        CrfTestListener listener = new CrfTestListener(model, dataProvider.COMPLETION_TIME_CLINIC2) {
+            @Override
+            public void success(SchedulesAndTasksModel model) {
+                fail();
+            }
+
+            @Override
+            public void error(String localizedError) {
+                assertEquals(CrfDataProvider.NO_CLINIC_ERROR_MESSAGE, localizedError);
+            }
+        };
         dataProvider.getCrfActivities(false, context, listener);
     }
 
@@ -437,7 +462,7 @@ public class CrfDataProviderTest {
             }
         }
 
-        @VisibleForTesting
+        @VisibleForTesting @Override
         void getStudyParticipantSubscribe(final Action1<StudyParticipant> onNext,
                                           final Action1<Throwable> onError) {
             StudyParticipant studyParticipant = new StudyParticipant();
@@ -445,7 +470,7 @@ public class CrfDataProviderTest {
             onNext.call(studyParticipant);
         }
 
-        @VisibleForTesting
+        @VisibleForTesting @Override
         void updateStudyParticipantSubscribe(StudyParticipant studyParticipant,
                                              final Action1<UserSessionInfo> onNext,
                                              final Action1<Throwable> onError) {
@@ -458,7 +483,7 @@ public class CrfDataProviderTest {
             onNext.call(new UserSessionInfo());
         }
 
-        @VisibleForTesting
+        @VisibleForTesting @Override
         void updateActivitySubscribe(ScheduledActivity activity,
                                      final Action1<Message> onNext,
                                      final Action1<Throwable> onError) {
@@ -472,8 +497,15 @@ public class CrfDataProviderTest {
             onNext.call(new Message());
         }
 
-        @NonNull
-        @Override
+        @VisibleForTesting @Override
+        void signOutSubscribe(Context context,
+                              final Action1<DataResponse> onNext,
+                              final Action1<Throwable> onError) {
+            onNext.call(new DataResponse());
+        }
+
+
+        @NonNull @Override
         protected SchedulesAndTasksModel translateActivities(@NonNull List<ScheduledActivity>
                                                                      activityList) {
             // Do a super simple translate activities

@@ -18,6 +18,7 @@
 package org.sagebase.crf;
 
 import android.app.AlertDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.content.res.ResourcesCompat;
@@ -119,19 +120,29 @@ public class CrfActivitiesFragment extends ActivitiesFragment implements CrfFilt
         crfDataProvider.getCrfActivities(getContext(), new CrfDataProvider.CrfActivitiesListener() {
             @Override
             public void success(SchedulesAndTasksModel model) {
-                mScheduleModel = model;
-                refreshAdapterSuccess(mScheduleModel);
+                if (getActivity() != null && isAdded()) {
+                    mScheduleModel = model;
+                    refreshAdapterSuccess(mScheduleModel);
 
-                if(mClinicDate == null) {
-                    showAllActivities();
-                } else { // If there is a filter date, only show the clinic filtered activities
-                    showClinicActivities();
+                    if(mClinicDate == null) {
+                        showAllActivities();
+                    } else { // If there is a filter date, only show the clinic filtered activities
+                        showClinicActivities();
+                    }
                 }
             }
 
             @Override
             public void error(String localizedError) {
-                refreshAdapterFailure(localizedError);
+                if (getActivity() != null && isAdded()) {
+                    if (CrfDataProvider.NO_CLINIC_ERROR_MESSAGE.equals(localizedError)) {
+                        Log.d(LOG_TAG, "No clinic data group means user is in a bad state, send them back to overview");
+                        startActivity(new Intent(getActivity(), CrfOverviewActivity.class));
+                        getActivity().finish();
+                    } else {
+                        refreshAdapterFailure(localizedError);
+                    }
+                }
             }
         });
     }
