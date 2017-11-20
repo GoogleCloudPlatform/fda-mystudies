@@ -2,10 +2,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
           package="org.sagebionetworks.research.crf">
 
-    <!-- To auto-complete the email text field in the login form with the user's emails -->
-    <uses-permission android:name="android.permission.GET_ACCOUNTS"/>
-    <uses-permission android:name="android.permission.READ_PROFILE"/>
-    <uses-permission android:name="android.permission.READ_CONTACTS"/>
     <!-- ActiveSteps may vibrate the phone on start and on finish -->
     <uses-permission android:name="android.permission.VIBRATE"/>
     <!-- ActiveSteps may access location to track distance walked -->
@@ -16,6 +12,8 @@
     <uses-permission android:name="android.permission.CAMERA" />
     <!-- ActiveSteps may use this to capture heart rate -->
     <uses-permission android:name="android.permission.BODY_SENSORS" />
+    <!-- Used to schedule alarms -->
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
 
     <application
         android:name="org.sagebase.crf.MainApplication"
@@ -92,7 +90,18 @@
                 android:resource="@xml/provider_paths"/>
         </provider>
 
-        <receiver android:name="org.sagebase.crf.reminder.AlarmReceiver" />
+        <receiver android:name="org.sagebase.crf.reminder.CrfAlarmReceiver" />
+        <receiver android:name="org.sagebase.crf.reminder.CrfRescheduleRemindersReciever">
+            <intent-filter>
+                <action android:name="android.intent.action.QUICKBOOT_POWERON" />
+                <action android:name="com.htc.intent.action.QUICKBOOT_POWERON"/>
+                <action android:name="android.intent.action.REBOOT"/>
+                <action android:name="android.intent.action.BOOT_COMPLETED"/>
+                <action android:name="android.intent.action.TIME_SET"/>
+                <action android:name="android.intent.action.TIMEZONE_CHANGED"/>
+            </intent-filter>
+        </receiver>
+
     </application>
 
 </manifest>

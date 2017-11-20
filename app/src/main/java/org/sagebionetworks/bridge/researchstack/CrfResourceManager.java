@@ -30,6 +30,7 @@ public class CrfResourceManager extends ResourceManager {
     public static final String CARDIO_12MT_WALK_RESOURCE = "12_minute_walk";
     public static final String STAIR_STEP_RESOURCE = "stair_step";
     public static final String BACKGROUND_SURVEY_RESOURCE = "background_survey";
+    public static final String REMIND_ME_LATER_RESOURCE = "reminder_time";
 
     public static final String INFO_HEART_RATE_MEASUREMENT_RESOURCE = "crf_heart_rate_info";
     public static final String INFO_CARDIO_12MT_WALK_RESOURCE = "crf_12_min_info";
@@ -40,6 +41,8 @@ public class CrfResourceManager extends ResourceManager {
 
         // Add all custom resources that we will need access to
         addResource(BACKGROUND_SURVEY_RESOURCE, new Resource(SURVEY, BASE_PATH_JSON_SURVEY, BACKGROUND_SURVEY_RESOURCE));
+
+        addResource(REMIND_ME_LATER_RESOURCE, new Resource(Resource.TYPE_JSON, BASE_PATH_JSON, REMIND_ME_LATER_RESOURCE));
 
         addResource(CARDIO_12MT_WALK_RESOURCE, new Resource(Resource.TYPE_JSON, BASE_PATH_JSON, CARDIO_12MT_WALK_RESOURCE));
         addResource(INFO_CARDIO_12MT_WALK_RESOURCE, new Resource(Resource.TYPE_HTML, BASE_PATH_HTML, INFO_CARDIO_12MT_WALK_RESOURCE));

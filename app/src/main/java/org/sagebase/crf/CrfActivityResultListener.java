@@ -17,10 +17,12 @@
 
 package org.sagebase.crf;
 
+import android.content.Intent;
+
 /**
  * Created by rianhouston on 11/2/17.
  */
 
 public interface CrfActivityResultListener {
-    public void onActivityFinished();
+    void onActivityFinished(int requestCode, int resultCode, Intent data);
 }

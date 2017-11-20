@@ -101,7 +101,7 @@ public class CrfPhotoCaptureStepLayout extends CrfInstructionStepLayout implemen
     }
 
     @Override
-    public void onActivityFinished() {
+    public void onActivityFinished(int requestCode, int resultCode, Intent data) {
         Log.d(LOG_TAG, "onActivityFinished()");
 
         StepResult result = new StepResult(step);
