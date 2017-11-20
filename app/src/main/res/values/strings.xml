@@ -78,8 +78,13 @@ We will track your question in the dashboard (shown as "Custom Question") over t
     <string name="crf_stand_still">Stand still</string>
     <string name="crf_up">Up</string>
     <string name="crf_down">Down</string>
-
+    
     <!-- Data Groups Screen -->
     <string name="crf_data_groups_loading_title">Checking for existing groups</string>
+
+    <!-- External ID Screen -->
+    <string name="crf_external_id_title">Enter your 7-digit code</string>
+    <string name="crf_external_id_hint">7-Digit code</string>
+    <string name="crf_external_empty"> </string>
 
 </resources>

@@ -71,7 +71,7 @@
     </style>
 
     <style name="Theme.Crf.Onboarding">
-        <item name="android:windowBackground">@color/white</item>
+        <item name="android:windowBackground">@color/deepGreen</item>
         <item name="colorButtonNormal">@color/colorAccent</item>
         <item name="colorPrimaryDark">@color/colorPrimary</item>
     </style>
