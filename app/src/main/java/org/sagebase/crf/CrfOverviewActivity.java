@@ -22,6 +22,7 @@ import android.os.Bundle;
 import android.support.v4.content.res.ResourcesCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
+import android.widget.Button;
 
 import org.researchstack.backbone.DataProvider;
 import org.researchstack.backbone.onboarding.OnboardingTaskType;
@@ -38,15 +39,19 @@ import rx.functions.Action1;
 
 public class CrfOverviewActivity extends AppCompatActivity {
 
+    protected Button nextButton;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_overview);
+        nextButton = findViewById(R.id.button_go_forward);
     }
 
     @Override
     protected void onResume() {
         super.onResume();
+        nextButton.setEnabled(true);
         int color = ResourcesCompat.getColor(getResources(), R.color.deepGreen, null);
         MainApplication.setStatusBarColor(this, color);
         MainApplication.mockAuthenticate(this);
@@ -76,6 +81,7 @@ public class CrfOverviewActivity extends AppCompatActivity {
     }
 
     public void goForwardClicked(View v) {
+        nextButton.setEnabled(false);
         launchOnboardingActivity();
     }
 }

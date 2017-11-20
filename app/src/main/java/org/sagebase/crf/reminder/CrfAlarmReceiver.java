@@ -27,18 +27,25 @@ import android.content.Intent;
 import android.media.RingtoneManager;
 import android.net.Uri;
 import android.support.v4.app.NotificationCompat;
+import android.util.Log;
 
 import org.sagebase.crf.CrfMainActivity;
 import org.sagebionetworks.research.crf.R;
+
+import java.util.Date;
 
 /**
  * Created by rianhouston on 11/13/17.
  */
 
-public class AlarmReceiver extends BroadcastReceiver {
+public class CrfAlarmReceiver extends BroadcastReceiver {
 
     @Override
     public void onReceive(Context context, Intent intent) {
+        if (intent.getData() != null) {
+            Date date = new Date(Long.valueOf(intent.getDataString()));
+            Log.v(CrfReminderManager.LOG_TAG, "Reminder received from " + date);
+        }
         // Trigger the notification
         showNotification(context, CrfMainActivity.class, "CRF Reminder", "You have an activity to complete.");
     }

@@ -16,7 +16,7 @@ import org.researchstack.backbone.onboarding.OnboardingManager;
 import org.researchstack.backbone.result.TaskResult;
 import org.researchstack.backbone.storage.NotificationHelper;
 import org.researchstack.skin.*;
-import org.sagebase.crf.reminder.AlarmReceiver;
+import org.sagebase.crf.reminder.CrfAlarmReceiver;
 import org.sagebase.crf.reminder.CrfReminderManager;
 import org.sagebionetworks.bridge.android.manager.BridgeManagerProvider;
 import org.sagebionetworks.bridge.researchstack.wrapper.StorageAccessWrapper;
@@ -29,6 +29,7 @@ import org.sagebionetworks.bridge.rest.model.UserSessionInfo;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 import java.util.Random;
@@ -93,7 +94,9 @@ public class CrfDataProvider extends BridgeDataProvider {
 
     @Override
     public Observable<DataResponse> signOut(Context context) {
-        return super.signOut(context).doOnCompleted(() -> CrfPrefs.getInstance().clear());
+        CrfReminderManager.cancelAllReminders(context, CrfPrefs.getInstance().getReminderDates());
+        CrfPrefs.getInstance().clear();
+        return super.signOut(context);
     }
 
     @Override
@@ -435,9 +438,13 @@ public class CrfDataProvider extends BridgeDataProvider {
     @VisibleForTesting
     void setReminders(Context context, SchedulesAndTasksModel model) {
         // Set reminders
+        List<Date> reminderDates = new ArrayList<>();
         for(SchedulesAndTasksModel.ScheduleModel schedule : model.schedules) {
-            CrfReminderManager.setReminder(context, AlarmReceiver.class, schedule.scheduledOn);
+            if (schedule.scheduledOn != null) {
+                reminderDates.add(schedule.scheduledOn);
+            }
         }
+        CrfReminderManager.setReminderDates(context, reminderDates);
     }
 
     @NonNull
