@@ -79,4 +79,9 @@ We will track your question in the dashboard (shown as "Custom Question") over t
     <string name="crf_up">Up</string>
     <string name="crf_down">Down</string>
 
+    <!-- External ID Screen -->
+    <string name="crf_external_id_title">Enter your 7-digit code</string>
+    <string name="crf_external_id_hint">7-Digit code</string>
+    <string name="crf_external_empty"> </string>
+
 </resources>

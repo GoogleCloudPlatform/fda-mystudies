@@ -92,7 +92,7 @@
         <item name="android:textStyle">bold</item>
     </style>
     <style name="TextAppearance.Crf.Small">
-        <item name="android:textSize">14sp</item>
+        <item name="android:textSize">15sp</item>
         <item name="android:fontFamily">@font/opensans</item>
     </style>
 
@@ -157,6 +157,13 @@
     <style name="TextAppearance.Crf.CompletionTextSubValue">
         <item name="android:textSize">24sp</item>
         <item name="android:fontFamily">@font/opensans_semibold</item>
+    </style>
+
+    <!-- External ID Screen -->
+    <style name="EditText.Crf.ExternalId" parent="Widget.AppCompat.EditText">
+        <item name="android:textCursorDrawable">@null</item>
+        <item name="android:height">40sp</item>
+        <item name="android:textColor">@color/white</item>
     </style>
 
 </resources>

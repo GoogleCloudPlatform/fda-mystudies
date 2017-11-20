@@ -15,22 +15,36 @@
   ~    limitations under the License.
   ~
   -->
-<RelativeLayout
+
+<LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/white">
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
 
-    <org.researchstack.backbone.ui.views.StepSwitcher
-        android:id="@+id/crf_active_container"
+    <TextView
+        android:id="@+id/label"
+        style="@style/TextAppearance.Crf.Small"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/whiteFour"
+        android:text="@string/crf_external_id_hint" />
+    
+    <android.support.v4.widget.Space
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_height="40dp" />
 
-    <org.sagebase.crf.view.CrfTransparentToolbar
-        style="@style/Widget.Crf.Toolbar.Transparent"
-        android:id="@+id/crf_task_toolbar"
+    <android.support.v7.widget.AppCompatEditText
+        android:id="@+id/value"
+        style="@style/EditText.Crf.ExternalId"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/crf_toolbar_background"/>
+        android:imeOptions="actionNext"
+        android:inputType="number"
+        android:minHeight="@dimen/rsb_item_size_default"
+        android:maxLines="1"
+        android:layout_margin="0dp"
+        app:backgroundTint="@color/white"/>
 
-</RelativeLayout>
+</LinearLayout>
