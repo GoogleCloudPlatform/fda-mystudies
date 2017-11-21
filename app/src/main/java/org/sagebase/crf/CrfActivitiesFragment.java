@@ -61,6 +61,7 @@ public class CrfActivitiesFragment extends ActivitiesFragment implements CrfFilt
 
     private ImageButton mBackButton;
     private ImageButton mSettingsButton;
+    private View mClinicHeader;
 
     private SchedulesAndTasksModel mScheduleModel;
     private Date mClinicDate;
@@ -92,6 +93,7 @@ public class CrfActivitiesFragment extends ActivitiesFragment implements CrfFilt
         mBackButton.setOnClickListener(v -> clearFilter());
         mSettingsButton = view.findViewById(R.id.crf_settings_button);
         mSettingsButton.setOnClickListener(this::onSettingsClicked);
+        mClinicHeader = view.findViewById(R.id.crf_clinic_header);
 
         int color = ResourcesCompat.getColor(getResources(), R.color.white, null);
         MainApplication.setStatusBarColor(getActivity(), color);
@@ -216,6 +218,7 @@ public class CrfActivitiesFragment extends ActivitiesFragment implements CrfFilt
 
         mBackButton.setVisibility(View.GONE);
         mSettingsButton.setVisibility(View.VISIBLE);
+        mClinicHeader.setVisibility(View.GONE);
 
         // Per Zeplin design, if first clinic is not complete, that is all the user will see
         // Otherwise the whole journey is visible
@@ -286,15 +289,16 @@ public class CrfActivitiesFragment extends ActivitiesFragment implements CrfFilt
 
         mBackButton.setVisibility(View.VISIBLE);
         mSettingsButton.setVisibility(View.GONE);
+        mClinicHeader.setVisibility(View.VISIBLE);
 
         SchedulesAndTasksModel.ScheduleModel clinicSchedule = scheduleFor(mClinicDate);
         if (clinicSchedule != null) {
             getAdapter().clear();
             List<Object> tasks = new ArrayList<>();
 
-            CrfTaskAdapter.Header header = new CrfTaskAdapter.Header(getString(R.string.crf_clinic_fitness_test),
-                    getString(R.string.crf_clinic_message));
-            tasks.add(header);
+            //CrfTaskAdapter.Header header = new CrfTaskAdapter.Header(getString(R.string.crf_clinic_fitness_test),
+            //        getString(R.string.crf_clinic_message));
+            //tasks.add(header);
 
             // Show all the tasks in the clinic
             for (SchedulesAndTasksModel.TaskScheduleModel task : clinicSchedule.tasks) {
