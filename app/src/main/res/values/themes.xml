@@ -31,7 +31,8 @@
 
     <style name="Theme.Crf.Survey">
         <item name="toolbarTheme">@style/Theme.Crf.Toolbar.Main</item>
-        <item name="colorPrimaryDark">@color/dark_gray</item>
+        <item name="colorButtonNormal">@color/colorAccent</item>
+        <item name="colorPrimaryDark">@color/colorPrimary</item>
         <item name="android:windowContentOverlay">@null</item>
     </style>
 

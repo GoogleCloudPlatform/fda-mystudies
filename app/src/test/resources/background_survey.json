@@ -1,8 +1,9 @@
 [
   {
     "identifier": "birthdate",
-    "type": "compound",
+    "type": "form",
     "title": "What is your birthdate?",
+    "optional": false,
     "items": [
       {
         "identifier": "birthdate_year",
@@ -112,7 +113,7 @@
     "type": "form",
     "text": "During the last 7 days, on how many days did you do VIGOROUS physical activities?",
     "inputFields": [{
-      "identifier": "days_per_week",
+      "identifier": "vigorous_days_per_week",
       "dataType": "integer",
       "min": 0,
       "max": 7,
@@ -160,7 +161,7 @@
     "title": "During the last 7 days, on how many days did you do MODERATE physical activities?",
     "text": "Do not include walking.",
     "inputFields": [{
-      "identifier": "days_per_week",
+      "identifier": "moderate_days_per_week",
       "dataType": "integer",
       "min": 0,
       "max": 7,
@@ -174,14 +175,15 @@
     "identifier": "moderate_q2",
     "type": "form",
     "text": "How much time did you usually spend doing MODERATE physical activities on one of those days?",
-    "inputFields": [{
-      "identifier": "hours_per_day",
-      "dataType": "integer",
-      "prompt": "hours per day",
-      "min": 0,
-      "max": 24,
-      "optional": true
-    },
+    "inputFields": [
+      {
+        "identifier": "moderate_hours_per_day",
+        "dataType": "integer",
+        "prompt": "hours per day",
+        "min": 0,
+        "max": 24,
+        "optional": true
+      },
       {
         "identifier": "moderate_minutes_per_day",
         "dataType": "integer",
@@ -206,7 +208,7 @@
     "type": "form",
     "text": "During the last 7 days, on how many days did you WALK for at least 10 minutes at a time?",
     "inputFields": [{
-      "identifier": "days_per_week",
+      "identifier": "walking_days_per_week",
       "dataType": "integer",
       "min": 0,
       "max": 7,
@@ -221,7 +223,7 @@
     "type": "form",
     "text": "How much time did you usually spend WALKING on one of those days?",
     "inputFields": [{
-      "identifier": "hours_per_day",
+      "identifier": "walking_hours_per_day",
       "dataType": "integer",
       "prompt": "hours per day",
       "min": 0,
@@ -247,14 +249,15 @@
     "identifier": "sitting_q1",
     "type": "form",
     "text": "During the last 7 days, how much time did you spend SITTING on a week day?",
-    "inputFields": [{
-      "identifier": "hours_per_day",
-      "dataType": "integer",
-      "prompt": "hours per day",
-      "min": 0,
-      "max": 24,
-      "optional": true
-    },
+    "inputFields": [
+      {
+        "identifier": "sitting_hours_per_day",
+        "dataType": "integer",
+        "prompt": "hours per day",
+        "min": 0,
+        "max": 24,
+        "optional": true
+      },
       {
         "identifier": "sitting_minutes_per_day",
         "dataType": "integer",
