@@ -38,6 +38,7 @@ import org.researchstack.backbone.ui.ViewTaskActivity;
 import org.researchstack.backbone.utils.LogExt;
 import org.researchstack.skin.ui.adapter.TaskAdapter;
 import org.researchstack.skin.ui.fragment.ActivitiesFragment;
+import org.researchstack.skin.ui.views.DividerItemDecoration;
 import org.sagebase.crf.helper.CrfDateHelper;
 import org.sagebase.crf.helper.CrfScheduleHelper;
 import org.sagebase.crf.view.CrfFilterableActivityDisplay;
@@ -172,13 +173,13 @@ public class CrfActivitiesFragment extends ActivitiesFragment implements CrfFilt
         return new CrfTaskAdapter(getActivity());
     }
 
+    @Override
     protected void setUpAdapter() {
-        recyclerView.setLayoutManager(new LinearLayoutManager(recyclerView.getContext()));
-//        recyclerView.addItemDecoration(new DividerItemDecoration(recyclerView.getContext(),
-//                DividerItemDecoration.VERTICAL_LIST,
-//                0,
-//                false));
-
+        LinearLayoutManager lm = new LinearLayoutManager(recyclerView.getContext());
+        lm.setStackFromEnd(true);
+        recyclerView.setLayoutManager(lm);
+        recyclerView.addItemDecoration(new DividerItemDecoration(recyclerView.getContext(),
+                DividerItemDecoration.VERTICAL_LIST, 0, false));
         fetchData();
     }
 
@@ -189,7 +190,7 @@ public class CrfActivitiesFragment extends ActivitiesFragment implements CrfFilt
                 Task activeTask = taskFactory.createTask(getActivity(), TASK_ID_TO_RESOURCE_NAME.get(task
                         .taskID));
                 startActivityForResult(getIntentFactory().newTaskIntent(getActivity(),
-                        ViewTaskActivity.class, activeTask), REQUEST_TASK);
+                        CrfSurveyTaskActivity.class, activeTask), REQUEST_TASK);
             } else {
                 Task activeTask = taskFactory.createTask(getActivity(), TASK_ID_TO_RESOURCE_NAME.get(task
                         .taskID));
@@ -201,6 +202,11 @@ public class CrfActivitiesFragment extends ActivitiesFragment implements CrfFilt
                     org.researchstack.skin.R.string.rss_local_error_load_task,
                     Toast.LENGTH_SHORT).show();
         }
+    }
+
+    @Override
+    public Class<? extends ViewTaskActivity> getDefaultViewTaskActivityClass() {
+        return CrfSurveyTaskActivity.class;
     }
 
     public void showAllActivities() {

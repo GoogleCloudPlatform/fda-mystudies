@@ -38,6 +38,7 @@ import org.researchstack.backbone.ui.ViewWebDocumentActivity;
 import org.researchstack.backbone.utils.ResUtils;
 import org.researchstack.backbone.utils.StepResultHelper;
 import org.sagebase.crf.CrfActivityResultListener;
+import org.sagebase.crf.CrfSurveyTaskActivity;
 import org.sagebase.crf.reminder.CrfReminderManager;
 import org.sagebase.crf.view.CrfTaskToolbarActionManipulator;
 import org.sagebase.crf.view.CrfTaskToolbarIconManipulator;
@@ -129,7 +130,7 @@ public class CrfStartTaskStepLayout extends CrfInstructionStepLayout implements
 
     public void remindMeLater() {
         Task task = (new CrfTaskFactory()).createTask(getContext(), CrfResourceManager.REMIND_ME_LATER_RESOURCE);
-        Intent intent = IntentFactory.INSTANCE.newTaskIntent(getContext(), ViewTaskActivity.class, task);
+        Intent intent = IntentFactory.INSTANCE.newTaskIntent(getContext(), CrfSurveyTaskActivity.class, task);
         if (!(callbacks instanceof Activity)) {
             throw new IllegalStateException("Callbacks class must be an activity " +
                     "so we can start another activity from this step layout");

@@ -47,7 +47,7 @@
             android:theme="@style/Theme.Crf.Onboarding"/>
 
         <activity
-            android:name="org.researchstack.backbone.ui.ViewTaskActivity"
+            android:name="org.sagebase.crf.CrfSurveyTaskActivity"
             android:label="@string/app_name"
             android:theme="@style/Theme.Crf.Survey"
             android:windowSoftInputMode="adjustResize" />
