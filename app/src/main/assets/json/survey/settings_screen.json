@@ -6,7 +6,6 @@
       {
         "identifier": "Settings Form (Read Only)",
         "type": "form",
-        "title": "CRF Settings",
         "stepTitle": "Crf Settings",
         "items": [
           {
@@ -25,6 +24,12 @@
             "identifier": "Contact Info",
             "type": "textfield",
             "title": "Contact Info",
+            "disabled": true
+          },
+          {
+            "identifier": "Data Groups",
+            "type": "textfield",
+            "title": "Data Groups",
             "disabled": true
           }
         ]

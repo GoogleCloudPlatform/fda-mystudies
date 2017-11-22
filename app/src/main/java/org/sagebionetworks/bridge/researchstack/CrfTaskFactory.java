@@ -71,6 +71,8 @@ public class CrfTaskFactory extends TaskItemFactory {
     public static final String RESULT_ID_SETTINGS_SCREEN_EXTERNAL_ID    = "External ID";
     public static final String RESULT_ID_SETTINGS_SCREEN_VERSION        = "Version";
     public static final String RESULT_ID_SETTINGS_SCREEN_CONTACT_INFO   = "Contact Info";
+    public static final String RESULT_ID_SETTINGS_SCREEN_DATA_GROUPS    = "Data Groups";
+
 
     private Gson gson;
 
@@ -263,7 +265,7 @@ public class CrfTaskFactory extends TaskItemFactory {
      * @param contactInfo the contact info (email) for the study
      * @return the task for the settings screen
      */
-    public void startSettingsScreen(Context context, String externalID, String version, String contactInfo) {
+    public void startSettingsScreen(Context context, String externalID, String version, String contactInfo, String dataGroups) {
 
         TaskResult taskResult = new TaskResult(TASK_ID_SETTINGS_SCREEN);
         StepResult<StepResult> formResult = new StepResult<>(new Step(RESULT_ID_SETTINGS_SCREEN_FORM));
@@ -283,6 +285,12 @@ public class CrfTaskFactory extends TaskItemFactory {
         {   // Contact Info
             StepResult<String> result = new StepResult<>(new Step(RESULT_ID_SETTINGS_SCREEN_CONTACT_INFO));
             result.setResult(contactInfo);
+            formResult.setResultForIdentifier(result.getIdentifier(), result);
+        }
+
+        {   // Data Groups
+            StepResult<String> result = new StepResult<>(new Step(RESULT_ID_SETTINGS_SCREEN_DATA_GROUPS));
+            result.setResult(dataGroups);
             formResult.setResultForIdentifier(result.getIdentifier(), result);
         }
 

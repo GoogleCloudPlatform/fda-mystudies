@@ -31,21 +31,16 @@ import android.widget.Toast;
 import com.google.common.collect.ImmutableMap;
 
 import org.researchstack.backbone.DataProvider;
-import org.researchstack.backbone.factory.IntentFactory;
 import org.researchstack.backbone.model.SchedulesAndTasksModel;
-import org.researchstack.backbone.model.User;
-import org.researchstack.backbone.result.TaskResult;
 import org.researchstack.backbone.task.Task;
 import org.researchstack.backbone.ui.ViewTaskActivity;
 import org.researchstack.backbone.utils.LogExt;
 import org.researchstack.skin.ui.adapter.TaskAdapter;
 import org.researchstack.skin.ui.fragment.ActivitiesFragment;
 import org.researchstack.skin.ui.views.DividerItemDecoration;
-import org.sagebase.crf.fitbit.model.Data;
 import org.sagebase.crf.helper.CrfDateHelper;
 import org.sagebase.crf.helper.CrfScheduleHelper;
 import org.sagebase.crf.view.CrfFilterableActivityDisplay;
-import org.sagebionetworks.bridge.researchstack.BridgeDataProvider;
 import org.sagebionetworks.bridge.researchstack.CrfDataProvider;
 import org.sagebionetworks.bridge.researchstack.CrfPrefs;
 import org.sagebionetworks.bridge.researchstack.CrfResourceManager;
@@ -57,6 +52,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+
+import rx.android.schedulers.AndroidSchedulers;
 
 /**
  * Created by TheMDP on 10/19/17
@@ -70,6 +67,8 @@ public class CrfActivitiesFragment extends ActivitiesFragment implements CrfFilt
 
     private SchedulesAndTasksModel mScheduleModel;
     private Date mClinicDate;
+
+    private String mDataGroups;
 
     private static final String LOG_TAG = CrfActivitiesFragment.class.getCanonicalName();
 
@@ -125,6 +124,16 @@ public class CrfActivitiesFragment extends ActivitiesFragment implements CrfFilt
         }
 
         CrfDataProvider crfDataProvider = (CrfDataProvider)DataProvider.getInstance();
+
+        // Needed for settings
+        if (mDataGroups == null) {
+            crfDataProvider.getStudyParticipant().observeOn(AndroidSchedulers.mainThread()).subscribe(studyParticipant -> {
+                if (studyParticipant != null && studyParticipant.getDataGroups() != null) {
+                    mDataGroups = studyParticipant.getDataGroups().toString();
+                }
+            }, throwable -> { /* no-op */ });
+        }
+
         crfDataProvider.getCrfActivities(getContext(), new CrfDataProvider.CrfActivitiesListener() {
             @Override
             public void success(SchedulesAndTasksModel model) {
@@ -347,6 +356,6 @@ public class CrfActivitiesFragment extends ActivitiesFragment implements CrfFilt
         CrfDataProvider crfDataProvider = (CrfDataProvider)DataProvider.getInstance();
         String externalId = crfDataProvider.getExternalId(getActivity());
         taskFactory.startSettingsScreen(getActivity(),
-                externalId, BuildConfig.VERSION_NAME, "shannon.young@sagebase.org");
+                externalId, BuildConfig.VERSION_NAME, "shannon.young@sagebase.org", mDataGroups);
     }
 }
