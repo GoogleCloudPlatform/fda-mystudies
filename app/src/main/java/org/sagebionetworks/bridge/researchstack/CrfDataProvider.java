@@ -9,15 +9,18 @@ import android.util.Log;
 import com.google.common.collect.ImmutableSet;
 
 import org.joda.time.DateTime;
+import org.researchstack.backbone.DataProvider;
 import org.researchstack.backbone.DataResponse;
 import org.researchstack.backbone.ResourceManager;
 import org.researchstack.backbone.model.SchedulesAndTasksModel;
+import org.researchstack.backbone.model.User;
 import org.researchstack.backbone.onboarding.OnboardingManager;
 import org.researchstack.backbone.result.TaskResult;
 import org.researchstack.backbone.storage.NotificationHelper;
 import org.researchstack.skin.*;
 import org.sagebase.crf.reminder.CrfAlarmReceiver;
 import org.sagebase.crf.reminder.CrfReminderManager;
+import org.sagebionetworks.bridge.android.BridgeConfig;
 import org.sagebionetworks.bridge.android.manager.BridgeManagerProvider;
 import org.sagebionetworks.bridge.researchstack.wrapper.StorageAccessWrapper;
 import org.sagebionetworks.bridge.rest.model.Message;
@@ -55,6 +58,14 @@ public class CrfDataProvider extends BridgeDataProvider {
             CrfDataProvider.CLINIC1, CrfDataProvider.CLINIC2);
 
     public static final int STUDY_DURATION_IN_DAYS = 15;
+
+    public String getExternalId(Context context) {
+        String email =  DataProvider.getInstance().getUserEmail(context);
+        String externalIdFormat = bridgeConfig.getExternalIdEmailFormat();
+        int indexOfExternalId = externalIdFormat.indexOf("%s");
+        int lengthOfExternalId = (email.length() - externalIdFormat.length()) + "%s".length();
+        return email.substring(indexOfExternalId, indexOfExternalId + lengthOfExternalId);
+    }
 
     /**
      * Originally, the business logic was to assign a random clinic to the user behind the scenes,

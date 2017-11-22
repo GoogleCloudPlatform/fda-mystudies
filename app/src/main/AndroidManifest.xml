@@ -50,13 +50,19 @@
             android:name="org.sagebase.crf.CrfSurveyTaskActivity"
             android:label="@string/app_name"
             android:theme="@style/Theme.Crf.Survey"
-            android:windowSoftInputMode="adjustResize" />
+            android:windowSoftInputMode="adjustPan"/>
 
         <activity
             android:name="org.sagebase.crf.CrfActiveTaskActivity"
             android:label="@string/app_name"
             android:theme="@style/Theme.Crf.Survey"
             android:windowSoftInputMode="adjustResize" />
+
+        <activity
+            android:name="org.sagebase.crf.CrfSettingsActivity"
+            android:label="@string/app_name"
+            android:windowSoftInputMode="adjustResize"
+            android:theme="@style/Theme.Crf.Onboarding"/>
 
         <activity
             android:name="org.sagebase.crf.fitbit.MainActivity"

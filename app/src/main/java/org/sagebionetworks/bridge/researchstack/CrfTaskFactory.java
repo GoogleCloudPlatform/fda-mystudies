@@ -24,14 +24,20 @@ import com.google.gson.GsonBuilder;
 
 import org.researchstack.backbone.ResourceManager;
 import org.researchstack.backbone.ResourcePathManager;
+import org.researchstack.backbone.factory.IntentFactory;
 import org.researchstack.backbone.model.survey.ActiveStepSurveyItem;
 import org.researchstack.backbone.model.survey.SurveyItem;
 import org.researchstack.backbone.model.survey.factory.SurveyFactory;
 import org.researchstack.backbone.model.taskitem.TaskItem;
 import org.researchstack.backbone.model.taskitem.TaskItemAdapter;
 import org.researchstack.backbone.model.taskitem.factory.TaskItemFactory;
+import org.researchstack.backbone.result.StepResult;
+import org.researchstack.backbone.result.TaskResult;
 import org.researchstack.backbone.step.Step;
 import org.researchstack.backbone.task.Task;
+import org.sagebase.crf.CrfOnboardingTaskActivity;
+import org.sagebase.crf.CrfSettingsActivity;
+import org.sagebase.crf.CrfSurveyTaskActivity;
 import org.sagebase.crf.step.Crf12MinWalkingStep;
 import org.sagebase.crf.step.CrfCompletionStep;
 import org.sagebase.crf.step.CrfCompletionSurveyItem;
@@ -45,6 +51,10 @@ import org.sagebase.crf.step.CrfPhotoCaptureStep;
 import org.sagebase.crf.step.CrfStartTaskStep;
 import org.sagebase.crf.step.CrfStartTaskSurveyItem;
 
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.Map;
+
 /**
  * Created by TheMDP on 10/24/17.
  */
@@ -55,6 +65,14 @@ public class CrfTaskFactory extends TaskItemFactory {
     public static final String TASK_ID_CARDIO_12MT = "Cardio 12MT";
     public static final String TASK_ID_STAIR_STEP = "Cardio Stair Step";
     public static final String TASK_ID_BACKGROUND_SURVEY = "Background Survey";
+    public static final String TASK_ID_SETTINGS_SCREEN = "Settings Screen";
+
+    public static final String RESULT_ID_SETTINGS_SCREEN_FORM           = "Settings Form (Read Only)";
+    public static final String RESULT_ID_SETTINGS_SCREEN_EXTERNAL_ID    = "External ID";
+    public static final String RESULT_ID_SETTINGS_SCREEN_VERSION        = "Version";
+    public static final String RESULT_ID_SETTINGS_SCREEN_CONTACT_INFO   = "Contact Info";
+    public static final String RESULT_ID_SETTINGS_SCREEN_DATA_GROUPS    = "Data Groups";
+
 
     private Gson gson;
 
@@ -239,5 +257,49 @@ public class CrfTaskFactory extends TaskItemFactory {
                 item.identifier, item.title, item.text);
         fillCrfInstructionStep(step, item);
         return step;
+    }
+
+    /**
+     * @param externalID the external ID for the user
+     * @param version the app version string
+     * @param contactInfo the contact info (email) for the study
+     * @return the task for the settings screen
+     */
+    public void startSettingsScreen(Context context, String externalID, String version, String contactInfo, String dataGroups) {
+
+        TaskResult taskResult = new TaskResult(TASK_ID_SETTINGS_SCREEN);
+        StepResult<StepResult> formResult = new StepResult<>(new Step(RESULT_ID_SETTINGS_SCREEN_FORM));
+
+        {   // External ID
+            StepResult<String> result = new StepResult<>(new Step(RESULT_ID_SETTINGS_SCREEN_EXTERNAL_ID));
+            result.setResult(externalID);
+            formResult.setResultForIdentifier(result.getIdentifier(), result);
+        }
+
+        {   // Version
+            StepResult<String> result = new StepResult<>(new Step(RESULT_ID_SETTINGS_SCREEN_VERSION));
+            result.setResult(version);
+            formResult.setResultForIdentifier(result.getIdentifier(), result);
+        }
+
+        {   // Contact Info
+            StepResult<String> result = new StepResult<>(new Step(RESULT_ID_SETTINGS_SCREEN_CONTACT_INFO));
+            result.setResult(contactInfo);
+            formResult.setResultForIdentifier(result.getIdentifier(), result);
+        }
+
+        {   // Data Groups
+            StepResult<String> result = new StepResult<>(new Step(RESULT_ID_SETTINGS_SCREEN_DATA_GROUPS));
+            result.setResult(dataGroups);
+            formResult.setResultForIdentifier(result.getIdentifier(), result);
+        }
+
+        Map<String, StepResult> taskResultMap = new LinkedHashMap<>();
+        taskResultMap.put(formResult.getIdentifier(), formResult);
+        taskResult.setResults(taskResultMap);
+
+        Task task = createTask(context, CrfResourceManager.SETTINGS_SCREEN_RESOURCE);
+        context.startActivity(IntentFactory.INSTANCE.newTaskIntent(
+                context, CrfSettingsActivity.class, task, taskResult));
     }
 }

@@ -17,7 +17,6 @@
 
 package org.sagebase.crf;
 
-import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -46,12 +45,15 @@ import org.sagebionetworks.bridge.researchstack.CrfDataProvider;
 import org.sagebionetworks.bridge.researchstack.CrfPrefs;
 import org.sagebionetworks.bridge.researchstack.CrfResourceManager;
 import org.sagebionetworks.bridge.researchstack.CrfTaskFactory;
+import org.sagebionetworks.research.crf.BuildConfig;
 import org.sagebionetworks.research.crf.R;
 
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+
+import rx.android.schedulers.AndroidSchedulers;
 
 /**
  * Created by TheMDP on 10/19/17
@@ -65,6 +67,8 @@ public class CrfActivitiesFragment extends ActivitiesFragment implements CrfFilt
 
     private SchedulesAndTasksModel mScheduleModel;
     private Date mClinicDate;
+
+    private String mDataGroups;
 
     private static final String LOG_TAG = CrfActivitiesFragment.class.getCanonicalName();
 
@@ -120,6 +124,16 @@ public class CrfActivitiesFragment extends ActivitiesFragment implements CrfFilt
         }
 
         CrfDataProvider crfDataProvider = (CrfDataProvider)DataProvider.getInstance();
+
+        // Needed for settings
+        if (mDataGroups == null) {
+            crfDataProvider.getStudyParticipant().observeOn(AndroidSchedulers.mainThread()).subscribe(studyParticipant -> {
+                if (studyParticipant != null && studyParticipant.getDataGroups() != null) {
+                    mDataGroups = studyParticipant.getDataGroups().toString();
+                }
+            }, throwable -> { /* no-op */ });
+        }
+
         crfDataProvider.getCrfActivities(getContext(), new CrfDataProvider.CrfActivitiesListener() {
             @Override
             public void success(SchedulesAndTasksModel model) {
@@ -336,8 +350,12 @@ public class CrfActivitiesFragment extends ActivitiesFragment implements CrfFilt
     }
 
     public void onSettingsClicked(View v) {
-        new AlertDialog.Builder(getActivity())
-                .setMessage("Settings later will be implemented in a future release")
-                .create().show();
+        if (!(DataProvider.getInstance() instanceof CrfDataProvider)) {
+            throw new IllegalStateException("CRF Settings Screen only works with a CrfDataProvider");
+        }
+        CrfDataProvider crfDataProvider = (CrfDataProvider)DataProvider.getInstance();
+        String externalId = crfDataProvider.getExternalId(getActivity());
+        taskFactory.startSettingsScreen(getActivity(),
+                externalId, BuildConfig.VERSION_NAME, "shannon.young@sagebase.org", mDataGroups);
     }
 }
