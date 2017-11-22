@@ -1,0 +1,33 @@
+{
+    "taskIdentifier": "Settings Screen",
+    "schemaIdentifier" : "Settings Screen",
+    "optional" : false,
+    "steps": [
+      {
+        "identifier": "Settings Form (Read Only)",
+        "type": "form",
+        "title": "CRF Settings",
+        "stepTitle": "Crf Settings",
+        "items": [
+          {
+            "identifier": "External ID",
+            "type": "textfield",
+            "title": "External ID",
+            "disabled": true
+          },
+          {
+            "identifier": "Version",
+            "type": "textfield",
+            "title": "Version",
+            "disabled": true
+          },
+          {
+            "identifier": "Contact Info",
+            "type": "textfield",
+            "title": "Contact Info",
+            "disabled": true
+          }
+        ]
+      }
+    ]
+}

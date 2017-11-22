@@ -17,7 +17,6 @@
 
 package org.sagebase.crf;
 
-import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -32,20 +31,26 @@ import android.widget.Toast;
 import com.google.common.collect.ImmutableMap;
 
 import org.researchstack.backbone.DataProvider;
+import org.researchstack.backbone.factory.IntentFactory;
 import org.researchstack.backbone.model.SchedulesAndTasksModel;
+import org.researchstack.backbone.model.User;
+import org.researchstack.backbone.result.TaskResult;
 import org.researchstack.backbone.task.Task;
 import org.researchstack.backbone.ui.ViewTaskActivity;
 import org.researchstack.backbone.utils.LogExt;
 import org.researchstack.skin.ui.adapter.TaskAdapter;
 import org.researchstack.skin.ui.fragment.ActivitiesFragment;
 import org.researchstack.skin.ui.views.DividerItemDecoration;
+import org.sagebase.crf.fitbit.model.Data;
 import org.sagebase.crf.helper.CrfDateHelper;
 import org.sagebase.crf.helper.CrfScheduleHelper;
 import org.sagebase.crf.view.CrfFilterableActivityDisplay;
+import org.sagebionetworks.bridge.researchstack.BridgeDataProvider;
 import org.sagebionetworks.bridge.researchstack.CrfDataProvider;
 import org.sagebionetworks.bridge.researchstack.CrfPrefs;
 import org.sagebionetworks.bridge.researchstack.CrfResourceManager;
 import org.sagebionetworks.bridge.researchstack.CrfTaskFactory;
+import org.sagebionetworks.research.crf.BuildConfig;
 import org.sagebionetworks.research.crf.R;
 
 import java.util.ArrayList;
@@ -336,8 +341,12 @@ public class CrfActivitiesFragment extends ActivitiesFragment implements CrfFilt
     }
 
     public void onSettingsClicked(View v) {
-        new AlertDialog.Builder(getActivity())
-                .setMessage("Settings later will be implemented in a future release")
-                .create().show();
+        if (!(DataProvider.getInstance() instanceof CrfDataProvider)) {
+            throw new IllegalStateException("CRF Settings Screen only works with a CrfDataProvider");
+        }
+        CrfDataProvider crfDataProvider = (CrfDataProvider)DataProvider.getInstance();
+        String externalId = crfDataProvider.getExternalId(getActivity());
+        taskFactory.startSettingsScreen(getActivity(),
+                externalId, BuildConfig.VERSION_NAME, "shannon.young@sagebase.org");
     }
 }
