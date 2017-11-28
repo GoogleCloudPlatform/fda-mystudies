@@ -37,6 +37,7 @@ import org.researchstack.backbone.task.OrderedTask;
 import org.researchstack.backbone.task.Task;
 import org.researchstack.backbone.ui.ActiveTaskActivity;
 
+import org.researchstack.backbone.ui.step.layout.ActiveStepLayout;
 import org.researchstack.backbone.ui.step.layout.StepLayout;
 import org.researchstack.backbone.utils.ResUtils;
 import org.sagebase.crf.step.CrfResultListener;
