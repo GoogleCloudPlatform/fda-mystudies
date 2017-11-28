@@ -48,7 +48,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:layout_above="@+id/button_go_forward">
+        android:layout_above="@+id/crf_next_button_container">
 
         <TextView
             style="@style/TextAppearance.Crf.SubHeader"
@@ -73,17 +73,53 @@
 
     </LinearLayout>
 
-    <Button
-        style="@style/Crf.Salmon.RoundedCornerMaterialButton"
-        android:id="@id/button_go_forward"
+    <FrameLayout
+        android:id="@id/crf_next_button_container"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/crf_rounded_button_height"
-        android:layout_margin="@dimen/rsb_padding_large"
-        android:focusable="true"
-        android:text="@string/crf_lets_go"
-        android:layout_alignParentBottom="true"
-        android:textColor="@color/white"
-        android:textAllCaps="false"
-        android:onClick="goForwardClicked"/>
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_gravity="center">
+
+            <ImageButton
+                style="@style/Widget.AppCompat.Button.Borderless"
+                android:id="@+id/cr_instruction_custom_button"
+                android:layout_width="120dp"
+                android:layout_height="120dp"
+                android:layout_gravity="center_horizontal"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:scaleType="centerInside"
+                android:visibility="gone"
+                android:layout_marginTop="@dimen/rsb_padding_small"/>
+
+            <TextView
+                style="@style/TextAppearance.Crf.InstructionCustomButtonText"
+                android:id="@+id/crf_instruction_custom_button_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:textColor="@color/black37"
+                android:visibility="gone"
+                android:layout_marginBottom="@dimen/rsb_padding_small"/>
+
+        </LinearLayout>
+
+        <Button
+            style="@style/Crf.Salmon.RoundedCornerMaterialButton"
+            android:id="@id/button_go_forward"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/crf_rounded_button_height"
+            android:layout_margin="@dimen/rsb_padding_large"
+            android:focusable="true"
+            android:text="@string/crf_lets_go"
+            android:textColor="@color/white"
+            android:textAllCaps="false"
+            android:onClick="goForwardClicked"/>
+
+    </FrameLayout>
 
 </RelativeLayout>

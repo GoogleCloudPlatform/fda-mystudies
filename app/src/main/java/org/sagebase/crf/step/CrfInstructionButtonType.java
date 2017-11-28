@@ -33,5 +33,9 @@ public enum  CrfInstructionButtonType {
     @SerializedName("heart")
     HEART,
     @SerializedName("treadmill")
-    TREADMILL
+    TREADMILL,
+    @SerializedName("stairStep")
+    STAIR_STEP,
+    @SerializedName("run")
+    RUN
 }

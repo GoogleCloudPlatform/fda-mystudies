@@ -77,7 +77,7 @@
       "scaleType"        : "CENTER_CROP",
       "isImageAnimated"  : true,
       "animationRepeatDuration" : 2000,
-      "buttonType"       : "default",
+      "buttonType"       : "heart",
       "buttonText"       : "Press to start"
     },
     {
@@ -95,7 +95,7 @@
       "isImageAnimated"  : true,
       "animationRepeatDuration" : 2000,
       "imageColor"       : "robinsEggBlue",
-      "buttonType"       : "default",
+      "buttonType"       : "run",
       "buttonText"       : "Press to start"
     },
     {
@@ -118,7 +118,7 @@
       "scaleType"        : "CENTER_CROP",
       "isImageAnimated"  : true,
       "animationRepeatDuration" : 2000,
-      "buttonType"       : "default",
+      "buttonType"       : "heart",
       "buttonText"       : "Press to start"
     },
     {
