@@ -42,6 +42,7 @@ import org.sagebase.crf.step.Crf12MinWalkingStep;
 import org.sagebase.crf.step.CrfCompletionStep;
 import org.sagebase.crf.step.CrfCompletionSurveyItem;
 import org.sagebase.crf.step.CrfCountdownStep;
+import org.sagebase.crf.step.CrfFitBitStepLayout;
 import org.sagebase.crf.step.CrfHeartRateCameraStep;
 import org.sagebase.crf.step.CrfInstructionStep;
 import org.sagebase.crf.step.CrfInstructionSurveyItem;
@@ -144,6 +145,11 @@ public class CrfTaskFactory extends TaskItemFactory {
                                 throw new IllegalStateException("Error in json parsing, crf_photo_capture types must be CrfPhotoCaptureSurveyItem");
                             }
                             return createCrfPhotoCaptureStep((CrfInstructionSurveyItem)item);
+                        case CrfSurveyItemAdapter.CRF_FITBIT_SURVEY_ITEM_TYPE:
+                            if (!(item instanceof CrfInstructionSurveyItem)) {
+                                throw new IllegalStateException("crf_fitbit types must be parsed as CrfInstructionSurveyItem");
+                            }
+                            return createFitBitStep((CrfInstructionSurveyItem)item);
                     }
                 }
                 return null;
@@ -158,7 +164,7 @@ public class CrfTaskFactory extends TaskItemFactory {
         return step;
     }
 
-    private void fillCrfInstructionStep(CrfInstructionStep step, CrfInstructionSurveyItem item) {
+    void fillCrfInstructionStep(CrfInstructionStep step, CrfInstructionSurveyItem item) {
         fillInstructionStep(step, item);
         if (item.buttonType != null) {
             step.buttonType = item.buttonType;
@@ -254,6 +260,13 @@ public class CrfTaskFactory extends TaskItemFactory {
 
     private CrfPhotoCaptureStep createCrfPhotoCaptureStep(CrfInstructionSurveyItem item) {
         CrfPhotoCaptureStep step = new CrfPhotoCaptureStep(
+                item.identifier, item.title, item.text);
+        fillCrfInstructionStep(step, item);
+        return step;
+    }
+
+    CrfFitBitStepLayout.CrfFitBitStep createFitBitStep(CrfInstructionSurveyItem item) {
+        CrfFitBitStepLayout.CrfFitBitStep step = new CrfFitBitStepLayout.CrfFitBitStep(
                 item.identifier, item.title, item.text);
         fillCrfInstructionStep(step, item);
         return step;

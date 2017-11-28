@@ -7,12 +7,15 @@ import com.google.gson.GsonBuilder;
 
 import org.researchstack.backbone.answerformat.AnswerFormat;
 import org.researchstack.backbone.factory.IntentFactory;
+import org.researchstack.backbone.model.survey.InstructionSurveyItem;
 import org.researchstack.backbone.model.survey.SurveyItem;
 import org.researchstack.backbone.model.survey.factory.SurveyFactory;
 import org.researchstack.backbone.onboarding.OnboardingManagerTask;
 import org.researchstack.backbone.step.Step;
 import org.researchstack.backbone.task.NavigableOrderedTask;
 import org.sagebase.crf.step.CrfClinicDataGroupsStepLayout;
+import org.sagebase.crf.step.CrfFitBitStepLayout;
+import org.sagebase.crf.step.CrfInstructionSurveyItem;
 import org.sagebionetworks.bridge.researchstack.onboarding.BridgeOnboardingManager;
 import org.sagebionetworks.bridge.researchstack.step.DataGroupQuestionStep;
 import org.sagebase.crf.CrfOnboardingTaskActivity;
@@ -32,8 +35,11 @@ public class CrfOnboardingManager extends BridgeOnboardingManager {
 
     public static final String CRF_EXTERNAL_ID_TYPE = "crfExternalID";
 
+    private CrfTaskFactory crfTaskFactory;
+
     public CrfOnboardingManager(Context context) {
         super(context);
+        crfTaskFactory = new CrfTaskFactory();
     }
 
     /**
@@ -58,6 +64,11 @@ public class CrfOnboardingManager extends BridgeOnboardingManager {
                                  SurveyFactory factory) {
         if (CRF_EXTERNAL_ID_TYPE.equals(item.getCustomTypeValue())) {
             return new CrfExternalIdStep(item.identifier);
+        } else if (CrfSurveyItemAdapter.CRF_FITBIT_SURVEY_ITEM_TYPE.equals(item.getCustomTypeValue())) {
+            if (!(item instanceof CrfInstructionSurveyItem)) {
+                throw new IllegalStateException("crf_fitbit types must be parsed as CrfInstructionSurveyItem");
+            }
+            return crfTaskFactory.createFitBitStep((CrfInstructionSurveyItem)item);
         }
         return super.createCustomStep(context, item, isSubtaskStep, factory);
     }

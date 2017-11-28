@@ -181,7 +181,7 @@ public class CrfInstructionStepLayout extends InstructionStepLayout implements
 
     public void goForwardClicked(View v) {
         nextButton.setEnabled(false);
-        callbacks.onSaveStep(StepCallbacks.ACTION_NEXT, step, null);
+        onComplete();
     }
 
     @Override

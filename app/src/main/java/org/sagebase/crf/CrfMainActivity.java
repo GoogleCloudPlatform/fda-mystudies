@@ -19,6 +19,7 @@ package org.sagebase.crf;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.res.ResourcesCompat;
 import android.view.MenuItem;
@@ -27,6 +28,7 @@ import android.view.View;
 import org.researchstack.backbone.DataProvider;
 import org.researchstack.backbone.StorageAccess;
 import org.researchstack.skin.ui.MainActivity;
+import org.sagebase.crf.fitbit.FitbitManager;
 import org.sagebase.crf.view.CrfFilterableActivityDisplay;
 import org.sagebionetworks.research.crf.R;
 
@@ -38,11 +40,17 @@ import java.util.List;
 
 public class CrfMainActivity extends MainActivity {
 
+    private FitbitManager crfFitbitManager;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         findViewById(R.id.toolbar).setVisibility(View.GONE);
+
+        // Handle fitbut auth token
+        crfFitbitManager = new FitbitManager(this, null);
+        crfFitbitManager.handleAuthResponse(getIntent());
     }
 
     @Override
@@ -64,7 +72,10 @@ public class CrfMainActivity extends MainActivity {
     @Override
     public void onBackPressed() {
         if(!clearFilter()) {
-            super.onBackPressed();
+            // Finishes the app no matter what (fixes bug where fitbit chrome tab is open in the stack)
+            Intent intent = new Intent(getApplicationContext(), CrfExitActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+            startActivity(intent);
         }
     }
 
@@ -92,5 +103,4 @@ public class CrfMainActivity extends MainActivity {
 
         return false;
     }
-
 }
