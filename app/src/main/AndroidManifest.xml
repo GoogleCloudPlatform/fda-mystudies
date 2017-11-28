@@ -113,6 +113,8 @@
             android:theme="@style/Theme.Crf.Onboarding"
             android:windowSoftInputMode="adjustResize" />
 
+        <activity android:name="org.sagebase.crf.CrfExitActivity"/>
+
         <provider
             android:name="android.support.v4.content.FileProvider"
             android:authorities="${applicationId}.provider"

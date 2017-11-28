@@ -19,6 +19,7 @@ package org.sagebase.crf;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.res.ResourcesCompat;
 import android.view.MenuItem;
@@ -71,7 +72,10 @@ public class CrfMainActivity extends MainActivity {
     @Override
     public void onBackPressed() {
         if(!clearFilter()) {
-            super.onBackPressed();
+            // Finishes the app no matter what (fixes bug where fitbit chrome tab is open in the stack)
+            Intent intent = new Intent(getApplicationContext(), CrfExitActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+            startActivity(intent);
         }
     }
 
@@ -99,5 +103,4 @@ public class CrfMainActivity extends MainActivity {
 
         return false;
     }
-
 }
