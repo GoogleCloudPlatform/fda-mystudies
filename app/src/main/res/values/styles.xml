@@ -171,4 +171,10 @@
         <item name="android:textColor">@color/white</item>
     </style>
 
+    <!-- Active Task Screen -->
+    <style name="TextAppearance.Crf.ActiveTaskStepProgress">
+        <item name="android:textSize">14sp</item>
+        <item name="android:fontFamily">@font/opensans</item>
+    </style>
+
 </resources>

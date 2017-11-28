@@ -46,5 +46,6 @@
     <color name="black37">#5E000000</color>
     <color name="whiteButtonShadow">#F5F5F5</color>
     <color name="whiteButtonShadow65">#A6F5F5F5</color>
+    <color name="darkGrayText">#414859</color>
 
 </resources>
