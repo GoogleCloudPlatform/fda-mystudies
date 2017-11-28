@@ -33,4 +33,12 @@
         android:layout_height="wrap_content"
         android:background="@drawable/crf_toolbar_background"/>
 
+    <TextView
+        android:id="@+id/crf_step_progress_textview"
+        style="@style/TextAppearance.Crf.ActiveTaskStepProgress"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@id/crf_task_toolbar"/>
+
 </RelativeLayout>
