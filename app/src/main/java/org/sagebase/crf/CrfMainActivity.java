@@ -27,6 +27,7 @@ import android.view.View;
 import org.researchstack.backbone.DataProvider;
 import org.researchstack.backbone.StorageAccess;
 import org.researchstack.skin.ui.MainActivity;
+import org.sagebase.crf.fitbit.FitbitManager;
 import org.sagebase.crf.view.CrfFilterableActivityDisplay;
 import org.sagebionetworks.research.crf.R;
 
@@ -38,11 +39,17 @@ import java.util.List;
 
 public class CrfMainActivity extends MainActivity {
 
+    private FitbitManager crfFitbitManager;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         findViewById(R.id.toolbar).setVisibility(View.GONE);
+
+        // Handle fitbut auth token
+        crfFitbitManager = new FitbitManager(this, null);
+        crfFitbitManager.handleAuthResponse(getIntent());
     }
 
     @Override

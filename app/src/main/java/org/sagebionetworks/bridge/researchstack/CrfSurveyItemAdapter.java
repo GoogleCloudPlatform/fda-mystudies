@@ -42,10 +42,12 @@ public class CrfSurveyItemAdapter extends BridgeSurveyItemAdapter {
     public static final String CRF_STAIR_STEP_SURVEY_ITEM_TYPE = "crf_stair_step";
     public static final String CRF_COMPLETION_SURVEY_ITEM_TYPE = "crf_completion";
     public static final String CRF_PHOTO_CAPTURE_SURVEY_ITEM_TYPE = "crf_photo_capture";
+    public static final String CRF_FITBIT_SURVEY_ITEM_TYPE = "crf_fitbit";
 
     @VisibleForTesting
     static final Map<String, Class<? extends SurveyItem>> TYPE_TO_CLASS =
             ImmutableMap.<String, Class<? extends SurveyItem>>builder()
+                    .put(CRF_FITBIT_SURVEY_ITEM_TYPE, CrfInstructionSurveyItem.class)
                     .put(CRF_INSTRUCTION_SURVEY_ITEM_TYPE, CrfInstructionSurveyItem.class)
                     .put(CRF_START_TASK_SURVEY_ITEM_TYPE, CrfStartTaskSurveyItem.class)
                     .put(CRF_HEART_RATE_CAMERA_SURVEY_ITEM_TYPE, ActiveStepSurveyItem.class)

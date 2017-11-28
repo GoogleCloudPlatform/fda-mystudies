@@ -71,8 +71,8 @@ public class FitbitManager {
     private Callback mCallback;
 
     public interface Callback {
-      public void onActivityResult(ActivityDistanceResponse response);
-      public void onHeartActivityResult(HeartActivityResponse response);
+      void onActivityResult(ActivityDistanceResponse response);
+      void onHeartActivityResult(HeartActivityResponse response);
     }
 
     public FitbitManager(Context context, Callback callback) {
@@ -106,7 +106,9 @@ public class FitbitManager {
      * TODO: parameterize the url, pass in the client_id?
      */
     public void authenticate() {
-        String url = "https://www.fitbit.com/oauth2/authorize?response_type=token&client_id=228MZV&scope=activity%20heartrate&expires_in=86400&prompt=login%20consent&state=JUJU";
+        // TODO: THis is the sage fitbit url, switch to this after sage integration is complete
+        //String url = "https://www.fitbit.com/oauth2/authorize?response_type=code&client_id=22CK8G&redirect_uri=https%3A%2F%2Fdocs.sagebridge.org%2Fcrf-module%2F&scope=heartrate&expires_in=604800";
+        String url = "https://www.fitbit.com/oauth2/authorize?response_type=token&client_id=228MZV&scope=activity&expires_in=86400&prompt=login%20consent&state=JUJU";
         CustomTabsIntent intent = new CustomTabsIntent.Builder(mCustomTabsSession)
             .setToolbarColor(ContextCompat.getColor(mContext, R.color.colorPrimary))
             .setShowTitle(true)

@@ -56,6 +56,17 @@
           ],
           "optional": false,
           "shouldPersist": true
+        },
+        {
+          "identifier"  : "fitbit",
+          "type"        : "crf_fitbit",
+          "title"       : " ",
+          "text"        : "Connect your Fitbit",
+          "detailText"  : "Connecting to your Fitbit data allows the CRF module to understand the various aspects of your health such as your heart rate and daily movement.",
+          "image"       : "crf_fitbit_logo",
+          "imageColor"  : "whiteButtonShadow65",
+          "buttonType"  : "default",
+          "buttonText"  : "Connect"
         }
       ]
     }
