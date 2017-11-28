@@ -128,6 +128,11 @@
         <item name="android:fontFamily">@font/opensans_semibold</item>
     </style>
 
+    <style name="TextAppearance.Crf.InstructionCustomButtonText">
+        <item name="android:textSize">12sp</item>
+        <item name="android:fontFamily">@font/opensans_light</item>
+    </style>
+
     <!-- Countdown Screen -->
     <style name="TextAppearance.Crf.Countdown">
         <item name="android:textSize">130sp</item>

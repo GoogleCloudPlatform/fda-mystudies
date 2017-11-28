@@ -29,7 +29,7 @@
       "behindToolbar"    : "true",
       "isImageAnimated"  : true,
       "animationRepeatDuration" : 2000,
-      "buttonType"       : "default",
+      "buttonType"       : "heart",
       "buttonText"       : "Press to start"
     },
     {
@@ -46,7 +46,7 @@
       "imageColor"       : "whiteButtonShadow65",
       "behindToolbar"    : "true",
       "tintColor"        : "azure",
-      "buttonType"       : "default",
+      "buttonType"       : "treadmill",
       "buttonText"       : "Press to start"
     },
     {
@@ -74,7 +74,7 @@
       "behindToolbar"    : "true",
       "isImageAnimated"  : true,
       "animationRepeatDuration" : 2000,
-      "buttonType"       : "default",
+      "buttonType"       : "heart",
       "buttonText"       : "Press to start"
     },
     {

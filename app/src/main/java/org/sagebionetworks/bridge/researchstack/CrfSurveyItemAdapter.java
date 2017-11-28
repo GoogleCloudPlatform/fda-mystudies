@@ -22,6 +22,7 @@ import com.google.common.collect.ImmutableMap;
 import com.google.gson.JsonElement;
 
 import org.researchstack.backbone.model.survey.ActiveStepSurveyItem;
+import org.researchstack.backbone.model.survey.IntegerRangeSurveyItem;
 import org.researchstack.backbone.model.survey.SurveyItem;
 import org.sagebase.crf.step.CrfCompletionSurveyItem;
 import org.sagebase.crf.step.CrfInstructionSurveyItem;

@@ -18,10 +18,13 @@
 package org.sagebase.crf.step;
 
 import android.content.Context;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.content.res.ResourcesCompat;
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageButton;
+import android.widget.TextView;
 
 import org.researchstack.backbone.result.StepResult;
 import org.researchstack.backbone.step.Step;
@@ -46,6 +49,8 @@ public class CrfInstructionStepLayout extends InstructionStepLayout implements
     protected CrfInstructionStep crfInstructionStep;
     protected Button nextButton;
     protected View rootInstructionLayout;
+    protected ImageButton customButton;
+    protected TextView customButtonText;
 
     public CrfInstructionStepLayout(Context context) {
         super(context);
@@ -102,6 +107,8 @@ public class CrfInstructionStepLayout extends InstructionStepLayout implements
         nextButton = findViewById(R.id.button_go_forward);
         nextButton.setEnabled(true);
         rootInstructionLayout = findViewById(R.id.crf_root_instruction_layout);
+        customButton = findViewById(R.id.cr_instruction_custom_button);
+        customButtonText = findViewById(R.id.crf_instruction_custom_button_text);
     }
 
     @Override
@@ -110,6 +117,9 @@ public class CrfInstructionStepLayout extends InstructionStepLayout implements
 
         if (crfInstructionStep.buttonText != null) {
             nextButton.setText(crfInstructionStep.buttonText);
+            if (customButtonText != null) {
+                customButtonText.setText(crfInstructionStep.buttonText);
+            }
         }
         if (crfInstructionStep.buttonType != null) {
             switch (crfInstructionStep.buttonType) {
@@ -126,19 +136,35 @@ public class CrfInstructionStepLayout extends InstructionStepLayout implements
                     nextButton.setTextColor(ResourcesCompat.getColor(getResources(), R.color.deepGreen, null));
                     break;
                 case HEART:
-                    // TODO: setup image button
+                    nextButton.setVisibility(View.GONE);
+                    customButton.setImageResource(R.drawable.crf_heart_capture_button);
+                    customButton.setVisibility(View.VISIBLE);
+                    customButtonText.setVisibility(View.VISIBLE);
                     break;
                 case TREADMILL:
-                    // TODO: setup image button
+                    nextButton.setVisibility(View.GONE);
+                    customButton.setImageResource(R.drawable.crf_treadmill_button);
+                    customButton.setVisibility(View.VISIBLE);
+                    customButtonText.setVisibility(View.VISIBLE);
+                    break;
+                case STAIR_STEP:
+                    nextButton.setVisibility(View.GONE);
+                    customButton.setImageResource(R.drawable.crf_stair_step_button);
+                    customButton.setVisibility(View.VISIBLE);
+                    customButtonText.setVisibility(View.VISIBLE);
+                    break;
+                case RUN:
+                    nextButton.setVisibility(View.GONE);
+                    customButton.setImageResource(R.drawable.crf_12_min_walking_button);
+                    customButton.setVisibility(View.VISIBLE);
+                    customButtonText.setVisibility(View.VISIBLE);
                     break;
             }
         }
-        nextButton.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                goForwardClicked(view);
-            }
-        });
+        nextButton.setOnClickListener(this::goForwardClicked);
+        if (customButton != null) {
+            customButton.setOnClickListener(this::goForwardClicked);
+        }
         if (crfInstructionStep.backgroundColorRes != null) {
             int colorId = ResUtils.getColorResourceId(getContext(), crfInstructionStep.backgroundColorRes);
             rootInstructionLayout.setBackgroundResource(colorId);
