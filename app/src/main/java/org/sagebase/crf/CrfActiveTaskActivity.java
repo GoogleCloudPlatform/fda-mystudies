@@ -157,6 +157,9 @@ public class CrfActiveTaskActivity extends ActiveTaskActivity {
             if (((CrfTaskMediaVolumeController)current).controlMediaVolume()) {
                 streamType = AudioManager.STREAM_MUSIC;
             }
+        } else if (current instanceof ActiveStepLayout) {
+            // ActiveStepLayouts have verbal spoken instructions
+            streamType = AudioManager.STREAM_MUSIC;
         }
         setVolumeControlStream(streamType);
     }
