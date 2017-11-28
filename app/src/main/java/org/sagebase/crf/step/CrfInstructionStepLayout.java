@@ -146,11 +146,13 @@ public class CrfInstructionStepLayout extends InstructionStepLayout implements
                     customButton.setImageResource(R.drawable.crf_treadmill_button);
                     customButton.setVisibility(View.VISIBLE);
                     customButtonText.setVisibility(View.VISIBLE);
+                    break;
                 case STAIR_STEP:
                     nextButton.setVisibility(View.GONE);
                     customButton.setImageResource(R.drawable.crf_stair_step_button);
                     customButton.setVisibility(View.VISIBLE);
                     customButtonText.setVisibility(View.VISIBLE);
+                    break;
                 case RUN:
                     nextButton.setVisibility(View.GONE);
                     customButton.setImageResource(R.drawable.crf_12_min_walking_button);
