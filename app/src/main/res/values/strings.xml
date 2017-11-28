@@ -21,27 +21,8 @@
         Download it for Android at https://play.google.com/store/apps/details?id=org.sagebase.Crf</string>
     <string name="rsb_share_app_url">https://play.google.com/store/apps/details?id=org.sagebase.Crf</string>
 
-    <!-- Custom Mood Survey -->
-    <string name="custom_mood_survey_title">Custom Survey</string>
-    <string name="custom_mood_survey_text">You now have the ability to create your own survey question. Tap Next to enter your question.</string>
-    <string name="custom_mood_survey_placeholder_text">Tap to write</string>
-
-    <string name="custom_mood_survey_question_text">Customize your question.</string>
-
-    <string name="custom_mood_survey_dialog_label">Learn More</string>
-    <string name="custom_mood_survey_dialog_text">Creating a custom question will help you track something personal to you over time. Think about something you care deeply about and would like to see how your performance in that area changes with your post-treatment evolution.
-Some examples may include:
-- How was your morning run today?
-- My work day today was...
-
-We will track your question in the dashboard (shown as "Custom Question") over time. Remember that you can always go to your profile and change this question.</string>
-
-    <string name="custom_mood_survey_completion_title">Thank You</string>
-    <string name="custom_mood_survey_completion_text">Your results will be displayed on the dashboard when ready.</string>
-
-    <string name="settings_custom_question_title">Daily Scale</string>
-    <string name="settings_custom_question_hint">Enter a question.</string>
-    <string name="settings_custom_question_summary">Enter a custom question that you would like to track.</string>
+    <!-- Active Task Screen -->
+    <string name="crf_step_progress">Step %1$s of %2$s</string>
 
     <!-- Permissions -->
     <string name="permission_camera_title">Camera</string>
