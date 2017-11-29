@@ -96,7 +96,7 @@ public class CrfFormStepLayout extends FormStepLayout {
         if (!formStep.isOptional()) {
             // If form isnt optional, check and see if the question steps are
             for (FormStepData stepData : subQuestionStepData) {
-                if (!stepData.step.isOptional()) {
+                if (!stepData.getStep().isOptional()) {
                     //submitBar.getNegativeActionView().setVisibility(View.GONE);
                 }
             }
