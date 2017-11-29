@@ -57,10 +57,11 @@ public class CrfScheduleHelper {
      * @return true if the task can be run by the user, false otherwise
      */
     public static boolean isTaskEnabled(SchedulesAndTasksModel.TaskScheduleModel task) {
-        if (task == null) {
-            return false;
-        }
-        return task.taskFinishedOn == null;
+        return true;
+//        if (task == null) {
+//            return false;
+//        }
+//        return task.taskFinishedOn == null;
     }
 
     /**

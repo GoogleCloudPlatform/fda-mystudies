@@ -22,6 +22,8 @@ import com.google.common.collect.ImmutableMap;
 import com.google.gson.JsonElement;
 
 import org.researchstack.backbone.model.survey.ActiveStepSurveyItem;
+import org.researchstack.backbone.model.survey.ChoiceQuestionSurveyItem;
+import org.researchstack.backbone.model.survey.CompoundQuestionSurveyItem;
 import org.researchstack.backbone.model.survey.IntegerRangeSurveyItem;
 import org.researchstack.backbone.model.survey.SurveyItem;
 import org.sagebase.crf.step.CrfCompletionSurveyItem;
@@ -43,6 +45,9 @@ public class CrfSurveyItemAdapter extends BridgeSurveyItemAdapter {
     public static final String CRF_COMPLETION_SURVEY_ITEM_TYPE = "crf_completion";
     public static final String CRF_PHOTO_CAPTURE_SURVEY_ITEM_TYPE = "crf_photo_capture";
     public static final String CRF_FITBIT_SURVEY_ITEM_TYPE = "crf_fitbit";
+    public static final String CRF_FORM_SURVEY_ITEM_TYPE = "crf_form";
+    public static final String CRF_INTEGER_SURVEY_ITEM_TYPE = "crfInteger";
+    public static final String CRF_SINGLE_CHOICE_SURVEY_ITEM_TYPE = "crfSingleChoice";
 
     @VisibleForTesting
     static final Map<String, Class<? extends SurveyItem>> TYPE_TO_CLASS =
@@ -56,6 +61,9 @@ public class CrfSurveyItemAdapter extends BridgeSurveyItemAdapter {
                     .put(CRF_STAIR_STEP_SURVEY_ITEM_TYPE, CrfStairSurveyItem.class)
                     .put(CRF_COMPLETION_SURVEY_ITEM_TYPE, CrfCompletionSurveyItem.class)
                     .put(CRF_PHOTO_CAPTURE_SURVEY_ITEM_TYPE, CrfInstructionSurveyItem.class)
+                    .put(CRF_FORM_SURVEY_ITEM_TYPE, CompoundQuestionSurveyItem.class)
+                    .put(CRF_INTEGER_SURVEY_ITEM_TYPE, IntegerRangeSurveyItem.class)
+                    .put(CRF_SINGLE_CHOICE_SURVEY_ITEM_TYPE, ChoiceQuestionSurveyItem.class)
                     .build();
 
     @Override

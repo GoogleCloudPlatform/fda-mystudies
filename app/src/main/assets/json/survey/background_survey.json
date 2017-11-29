@@ -5,7 +5,7 @@
     "steps": [
       {
         "identifier": "birthdate",
-        "type": "form",
+        "type": "crf_form",
         "title": "What is your birthdate?",
         "items": [
           {
@@ -113,14 +113,15 @@
       },
       {
         "identifier": "vigorous_q1",
-        "type": "form",
+        "type": "crf_form",
         "text": "During the last 7 days, on how many days did you do VIGOROUS physical activities?",
         "inputFields": [{
           "identifier": "vigorous_days_per_week",
-          "dataType": "integer",
+          "dataType": "crfInteger",
           "min": 0,
           "max": 7,
-          "prompt": "days per week"
+          "placeholderText": "",
+          "prompt": ""
         }],
         "expectedAnswer": "whenSkipButtonClicked",
         "skipTitle": "No vigorous physical activities",
@@ -151,10 +152,14 @@
       },
       {
         "identifier": "moderate_any_activity",
-        "type": "singleChoiceText",
+        "type": "crf_form",
         "text": "Think about all the MODERATE activities that you did in the last 7 days. Moderate activities refer to activities that take moderate physical effort and make you breathe somewhat harder than normal. Think only about those physical activities that you did for at least 10 minutes at a time.\n\nDuring the last 7 days, have you done any MODERATE physical activities like carrying light loads, bicycling at a regular pace, or doubles tennis?  Do not include walking.",
-        "choices": [{"text": "Yes, I have done moderate activities", "value": true }, {"text": "No moderate physical activities", "value": false }],
-        "matchingAnswer": false,
+        "inputFields": [{
+          "identifier": "moderate_any_single",
+          "dataType": "crfSingleChoice",
+          "choices": [{"text": "Yes, I have done moderate activities", "value": true }, {"text": "No moderate physical activities", "value": false }],
+          "matchingAnswer": false
+        }],
         "skipIfPassed": true,
         "skipIdentifier": "walking_any_activity"
       },
