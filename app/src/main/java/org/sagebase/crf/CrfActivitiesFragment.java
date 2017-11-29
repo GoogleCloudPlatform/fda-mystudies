@@ -236,8 +236,7 @@ public class CrfActivitiesFragment extends ActivitiesFragment implements CrfFilt
 
         // Per Zeplin design, if first clinic is not complete, that is all the user will see
         // Otherwise the whole journey is visible
-        //if(isFirstClinicComplete()) {
-        if(false) {
+        if(isFirstClinicComplete()) {
             List<Object> objList = new ArrayList<>();
             for (SchedulesAndTasksModel.ScheduleModel schedule: mScheduleModel.schedules) {
                 objList.add(schedule);
