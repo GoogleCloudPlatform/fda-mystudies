@@ -18,7 +18,7 @@
 
     <style name="Widget.Crf.SubmitBar" parent="@style/Widget.Backbone.SubmitBar">
         <item name="positiveActionColor">@color/white</item>
-        <item name="negativeActionColor">@color/white</item>
+        <item name="negativeActionColor">@color/azure</item>
     </style>
 
     <style name="Base.Widget.Crf.Toolbar" parent="@style/Widget.AppCompat.Toolbar">

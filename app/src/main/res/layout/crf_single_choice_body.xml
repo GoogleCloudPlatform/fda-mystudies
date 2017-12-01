@@ -25,12 +25,12 @@
               android:minHeight="73dp"
               android:orientation="horizontal">
     <TextView
+        style="@style/TextAppearance.Crf.Body.Bold"
         android:id="@+id/single_choice_text"
         android:layout_width="match_parent"
         android:layout_height="80dp"
         android:gravity="center_vertical"
         android:minHeight="@dimen/rsb_item_size_default"
-        style="@style/TextAppearance.Crf.Body.Bold"
         android:padding="8dp"
         android:layout_marginLeft="8dp"
         tools:text="@string/lorem_name" />

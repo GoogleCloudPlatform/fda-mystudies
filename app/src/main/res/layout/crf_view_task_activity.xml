@@ -17,31 +17,28 @@
   -->
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@id/crf_submit_bar"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:layout_alignParentBottom="true"
-    android:gravity="center_vertical"
+    android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="@color/whiteThree"
-    android:minHeight="@dimen/rsb_item_size_submit_bar">
+    android:background="@color/white">
 
-    <Button
-        android:id="@+id/bar_submit_postitive"
-        style="@style/Crf.Salmon.RoundedCornerMaterialButton"
+    <org.sagebase.crf.view.CrfTransparentToolbar
+        style="@style/Widget.Crf.Toolbar.Transparent"
+        android:id="@+id/crf_task_toolbar"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/crf_rounded_button_height"
-        android:layout_margin="16dp"
-        android:text="@string/rsb_BUTTON_NEXT"/>
+        android:layout_height="wrap_content"
+        android:background="@drawable/crf_toolbar_background"/>
 
-    <Button
-        android:id="@+id/bar_submit_negative"
-        style="@style/Widget.AppCompat.Button.Borderless"
+    <TextView
+        android:id="@+id/crf_step_progress_textview"
+        style="@style/TextAppearance.Crf.ActiveTaskStepProgress"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="@dimen/rsb_padding_medium"
-        android:textAllCaps="false"
-        android:textColor="@color/azure"
         android:layout_gravity="center_horizontal"/>
+
+    <org.researchstack.backbone.ui.views.StepSwitcher
+        android:id="@+id/crf_active_container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
 
 </LinearLayout>

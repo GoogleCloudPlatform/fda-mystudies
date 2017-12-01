@@ -28,11 +28,15 @@ import org.researchstack.backbone.model.Choice;
 
 public class CrfChoiceAnswerFormat extends ChoiceAnswerFormat {
 
+    public CrfChoiceAnswerFormat() {
+        super();
+    }
+
     public CrfChoiceAnswerFormat(AnswerFormat.ChoiceAnswerStyle answerStyle, Choice... choices) {
         super(answerStyle, choices);
     }
 
     public QuestionType getQuestionType() {
-        return () -> CrfSingleChoiceQuestionBody.class;
+        return () -> CrfChoiceQuestionBody.class;
     }
 }

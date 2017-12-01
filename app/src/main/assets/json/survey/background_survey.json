@@ -10,16 +10,16 @@
         "items": [
           {
             "identifier": "birthdate_year",
-            "type": "integer",
-            "title": "Year",
+            "type": "crfInteger",
+            "text": "Year",
             "placeholderText": "",
             "min": 1900,
             "max": 2100
           },
           {
             "identifier": "birthdate_month",
-            "type": "integer",
-            "title": "Month",
+            "type": "crfInteger",
+            "text": "Month",
             "placeholderText": "",
             "min": 1,
             "max": 12
@@ -28,18 +28,18 @@
       },
       {
         "identifier": "sex",
-        "type": "singleChoiceText",
+        "type": "crfSingleChoice",
         "title": "What is your sex?",
         "items": [{"text": "Male", "value": "Male"}, {"text": "Female", "value": "Female"}]
       },
       {
         "identifier": "hispanicOrLatino",
-        "type": "boolean",
+        "type": "crfBoolean",
         "title": "Are you of Hispanic or Latino origin?"
       },
       {
         "identifier": "ethnicity",
-        "type": "multipleChoiceText",
+        "type": "crfMultipleChoice",
         "title": "Which race best describes you?",
         "text": "(select all that apply)",
         "items": [
@@ -67,7 +67,7 @@
       },
       {
         "identifier": "education",
-        "type": "singleChoiceText",
+        "type": "crfSingleChoice",
         "title": "What is the highest grade in school you have finished?",
         "detail": "(select one)",
         "items": [{
@@ -104,7 +104,7 @@
       },
       {
         "identifier": "vigorous_any_activity",
-        "type": "singleChoiceText",
+        "type": "crfSingleChoice",
         "text": "Think about all the VIGOROUS activities that you did in the last 7 days. Vigorous physical activities refer to activities that take hard physical effort and make you breathe much harder than normal. Think only about those physical activities that you did for at least 10 minutes at a time.\n\nDuring the last 7 days, have you done any VIGOROUS physical activities like heavy lifting, digging, aerobics, or fast bicycling?",
         "choices": [{"text": "Yes, I have done vigorous activities", "value": true }, {"text": "No vigorous physical activities", "value": false }],
         "matchingAnswer": false,
@@ -129,12 +129,12 @@
       },
       {
         "identifier": "vigorous_q2",
-        "type": "form",
+        "type": "crf_form",
         "text": "How much time did you usually spend doing VIGOROUS physical activities on one of those days?",
         "inputFields": [
           {
             "identifier": "vigorous_hours_per_day",
-            "dataType": "integer",
+            "dataType": "crfInteger",
             "prompt": "hours per day",
             "min": 0,
             "max": 24,
@@ -142,7 +142,7 @@
           },
           {
             "identifier": "vigorous_minutes_per_day",
-            "dataType": "integer",
+            "dataType": "crfInteger",
             "prompt": "minutes per day",
             "min": 0,
             "max": 60,
@@ -158,6 +158,7 @@
           "identifier": "moderate_any_single",
           "dataType": "crfSingleChoice",
           "choices": [{"text": "Yes, I have done moderate activities", "value": true }, {"text": "No moderate physical activities", "value": false }],
+          "optional": false,
           "matchingAnswer": false
         }],
         "skipIfPassed": true,
@@ -165,12 +166,12 @@
       },
       {
         "identifier": "moderate_q1",
-        "type": "form",
+        "type": "crf_form",
         "title": "During the last 7 days, on how many days did you do MODERATE physical activities?",
         "text": "Do not include walking.",
         "inputFields": [{
           "identifier": "moderate_days_per_week",
-          "dataType": "integer",
+          "dataType": "crfInteger",
           "min": 0,
           "max": 7,
           "prompt": "days per week"
@@ -181,12 +182,12 @@
       },
       {
         "identifier": "moderate_q2",
-        "type": "form",
+        "type": "crf_form",
         "text": "How much time did you usually spend doing MODERATE physical activities on one of those days?",
         "inputFields": [
           {
             "identifier": "moderate_hours_per_day",
-            "dataType": "integer",
+            "dataType": "crfInteger",
             "prompt": "hours per day",
             "min": 0,
             "max": 24,
@@ -194,7 +195,7 @@
           },
           {
             "identifier": "moderate_minutes_per_day",
-            "dataType": "integer",
+            "dataType": "crfInteger",
             "prompt": "minutes per day",
             "min": 0,
             "max": 60,
@@ -204,7 +205,7 @@
       },
       {
         "identifier": "walking_any_activity",
-        "type": "singleChoiceText",
+        "type": "crfSingleChoice",
         "text": "Think about the time you spent WALKING in the last 7 days.  This includes at work and at home, walking to travel from place to place, and any other walking that you have done solely for recreation, sport, exercise, or leisure.\n\nDuring the last 7 days, have you WALKED for at least 10 minutes at a time?",
         "choices": [{"text": "Yes, I have walked", "value": true }, {"text": "No walking", "value": false }],
         "matchingAnswer": false,
@@ -213,11 +214,11 @@
       },
       {
         "identifier": "walking_q1",
-        "type": "form",
+        "type": "crf_form",
         "text": "During the last 7 days, on how many days did you WALK for at least 10 minutes at a time?",
         "inputFields": [{
           "identifier": "walking_days_per_week",
-          "dataType": "integer",
+          "dataType": "crfInteger",
           "min": 0,
           "max": 7,
           "prompt": "days per week"
@@ -228,11 +229,11 @@
       },
       {
         "identifier": "walking_q2",
-        "type": "form",
+        "type": "crf_form",
         "text": "How much time did you usually spend WALKING on one of those days?",
         "inputFields": [{
           "identifier": "walking_hours_per_day",
-          "dataType": "integer",
+          "dataType": "crfInteger",
           "prompt": "hours per day",
           "min": 0,
           "max": 24,
@@ -240,7 +241,7 @@
         },
           {
             "identifier": "walking_minutes_per_day",
-            "dataType": "integer",
+            "dataType": "crfInteger",
             "prompt": "minutes per day",
             "min": 0,
             "max": 60,
@@ -255,12 +256,12 @@
       },
       {
         "identifier": "sitting_q1",
-        "type": "form",
+        "type": "crf_form",
         "text": "During the last 7 days, how much time did you spend SITTING on a week day?",
         "inputFields": [
           {
             "identifier": "sitting_hours_per_day",
-            "dataType": "integer",
+            "dataType": "crfInteger",
             "prompt": "hours per day",
             "min": 0,
             "max": 24,
@@ -268,7 +269,7 @@
           },
           {
             "identifier": "sitting_minutes_per_day",
-            "dataType": "integer",
+            "dataType": "crfInteger",
             "prompt": "minutes per day",
             "min": 0,
             "max": 60,

@@ -22,6 +22,7 @@ import com.google.common.collect.ImmutableMap;
 import com.google.gson.JsonElement;
 
 import org.researchstack.backbone.model.survey.ActiveStepSurveyItem;
+import org.researchstack.backbone.model.survey.BooleanQuestionSurveyItem;
 import org.researchstack.backbone.model.survey.ChoiceQuestionSurveyItem;
 import org.researchstack.backbone.model.survey.CompoundQuestionSurveyItem;
 import org.researchstack.backbone.model.survey.IntegerRangeSurveyItem;
@@ -48,6 +49,8 @@ public class CrfSurveyItemAdapter extends BridgeSurveyItemAdapter {
     public static final String CRF_FORM_SURVEY_ITEM_TYPE = "crf_form";
     public static final String CRF_INTEGER_SURVEY_ITEM_TYPE = "crfInteger";
     public static final String CRF_SINGLE_CHOICE_SURVEY_ITEM_TYPE = "crfSingleChoice";
+    public static final String CRF_MULTIPLE_CHOICE_SURVEY_ITEM_TYPE = "crfMultipleChoice";
+    public static final String CRF_BOOLEAN_SURVEY_ITEM_TYPE = "crfBoolean";
 
     @VisibleForTesting
     static final Map<String, Class<? extends SurveyItem>> TYPE_TO_CLASS =
@@ -64,6 +67,8 @@ public class CrfSurveyItemAdapter extends BridgeSurveyItemAdapter {
                     .put(CRF_FORM_SURVEY_ITEM_TYPE, CompoundQuestionSurveyItem.class)
                     .put(CRF_INTEGER_SURVEY_ITEM_TYPE, IntegerRangeSurveyItem.class)
                     .put(CRF_SINGLE_CHOICE_SURVEY_ITEM_TYPE, ChoiceQuestionSurveyItem.class)
+                    .put(CRF_MULTIPLE_CHOICE_SURVEY_ITEM_TYPE, ChoiceQuestionSurveyItem.class)
+                    .put(CRF_BOOLEAN_SURVEY_ITEM_TYPE, BooleanQuestionSurveyItem.class)
                     .build();
 
     @Override

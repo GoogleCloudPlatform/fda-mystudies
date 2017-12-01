@@ -33,7 +33,6 @@ import org.sagebionetworks.research.crf.R;
 
 public class CrfIntegerQuestionBody extends IntegerQuestionBody implements StepBody {
 
-
     public CrfIntegerQuestionBody(Step step, StepResult result) {
         super(step, result);
     }
@@ -42,7 +41,10 @@ public class CrfIntegerQuestionBody extends IntegerQuestionBody implements StepB
     public View getBodyView(int viewType, LayoutInflater inflater, ViewGroup parent) {
         View view = inflater.inflate(R.layout.crf_integer_question_body, parent, false);
 
-        editText = (EditText) view.findViewById(R.id.value);
+        editText = view.findViewById(R.id.value);
+        if (result != null && result.getResult() != null) {
+            editText.setText(String.valueOf(result.getResult()));
+        }
         setFilters(parent.getContext());
         editText.setHint(step.getPlaceholder());
 

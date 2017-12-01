@@ -15,26 +15,28 @@
  *
  */
 
-package org.sagebase.crf.step.body;
+package org.sagebase.crf.step;
 
-import org.researchstack.backbone.answerformat.IntegerAnswerFormat;
-
+import org.researchstack.backbone.answerformat.BooleanAnswerFormat;
+import org.sagebase.crf.step.body.CrfChoiceQuestionBody;
 
 /**
- * Created by rianhouston on 11/27/17.
+ * Created by TheMDP on 11/30/17.
  */
 
-public class CrfIntegerAnswerFormat extends IntegerAnswerFormat {
-
-    public CrfIntegerAnswerFormat() {
+public class CrfBooleanAnswerFormat extends BooleanAnswerFormat {
+    /* Default constructor needed for serilization/deserialization of object */
+    public CrfBooleanAnswerFormat()
+    {
         super();
     }
 
-    public CrfIntegerAnswerFormat(int minValue, int maxValue) {
-        super(minValue, maxValue);
+    public CrfBooleanAnswerFormat(String trueString, String falseString) {
+        super(trueString, falseString);
     }
 
+    @Override
     public QuestionType getQuestionType() {
-        return () -> CrfIntegerQuestionBody.class;
+        return () -> CrfChoiceQuestionBody.class;
     }
 }

@@ -30,6 +30,7 @@ import org.researchstack.backbone.answerformat.IntegerAnswerFormat;
 import org.researchstack.backbone.factory.IntentFactory;
 import org.researchstack.backbone.model.Choice;
 import org.researchstack.backbone.model.survey.ActiveStepSurveyItem;
+import org.researchstack.backbone.model.survey.BooleanQuestionSurveyItem;
 import org.researchstack.backbone.model.survey.ChoiceQuestionSurveyItem;
 import org.researchstack.backbone.model.survey.CompoundQuestionSurveyItem;
 import org.researchstack.backbone.model.survey.IntegerRangeSurveyItem;
@@ -50,6 +51,7 @@ import org.sagebase.crf.CrfOnboardingTaskActivity;
 import org.sagebase.crf.CrfSettingsActivity;
 import org.sagebase.crf.CrfSurveyTaskActivity;
 import org.sagebase.crf.step.Crf12MinWalkingStep;
+import org.sagebase.crf.step.CrfBooleanAnswerFormat;
 import org.sagebase.crf.step.CrfCompletionStep;
 import org.sagebase.crf.step.CrfCompletionSurveyItem;
 import org.sagebase.crf.step.CrfCountdownStep;
@@ -66,11 +68,14 @@ import org.sagebase.crf.step.CrfStartTaskSurveyItem;
 import org.sagebase.crf.step.body.CrfChoiceAnswerFormat;
 import org.sagebase.crf.step.body.CrfIntegerAnswerFormat;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.ArrayList;
 import java.util.List;
+
+import retrofit2.http.OPTIONS;
 
 import static org.sagebionetworks.bridge.researchstack.CrfSurveyItemAdapter.CRF_INTEGER_SURVEY_ITEM_TYPE;
 
@@ -173,12 +178,55 @@ public class CrfTaskFactory extends TaskItemFactory {
                                 throw new IllegalStateException("Error in json parsing, crf_form types must be CrfFormSurveyItem");
                             }
                             return createCrfFormStep(context, (CompoundQuestionSurveyItem)item);
-
+                        case CrfSurveyItemAdapter.CRF_BOOLEAN_SURVEY_ITEM_TYPE:
+                        case CrfSurveyItemAdapter.CRF_INTEGER_SURVEY_ITEM_TYPE:
+                        case CrfSurveyItemAdapter.CRF_MULTIPLE_CHOICE_SURVEY_ITEM_TYPE:
+                        case CrfSurveyItemAdapter.CRF_SINGLE_CHOICE_SURVEY_ITEM_TYPE:
+                            if (!(item instanceof QuestionSurveyItem)) {
+                                throw new IllegalStateException("Error in json parsing " + item.getCustomTypeValue() + ", types must be QuestionSurveyItem");
+                            }
+                            // Even though these weren't wrapped in a form step, we are going to wrap
+                            // them in a CrfFormStep so that the UI looks appropriate
+                            QuestionSurveyItem questionItem = (QuestionSurveyItem)item;
+                            CompoundQuestionSurveyItem compoundQuestionSurveyItem = new CrfFormSurveyItemWrapper();
+                            compoundQuestionSurveyItem.identifier = item.identifier + "Form";
+                            compoundQuestionSurveyItem.items = Collections.singletonList(item);
+                            compoundQuestionSurveyItem.skipIdentifier = questionItem.skipIdentifier;
+                            compoundQuestionSurveyItem.skipIfPassed = questionItem.skipIfPassed;
+                            compoundQuestionSurveyItem.expectedAnswer = questionItem.expectedAnswer;
+                            return createCrfFormStep(context, compoundQuestionSurveyItem);
                     }
                 }
                 return null;
             }
         });
+    }
+
+    public static class CrfFormSurveyItemWrapper extends CompoundQuestionSurveyItem {
+
+        /* Default constructor needed for serilization/deserialization of object */
+        public CrfFormSurveyItemWrapper() {
+            super();
+        }
+
+        @Override
+        public String getCustomTypeValue() {
+            return CrfSurveyItemAdapter.CRF_FORM_SURVEY_ITEM_TYPE;
+        }
+    }
+
+    @Override
+    public AnswerFormat createCustomAnswerFormat(Context context, QuestionSurveyItem item) {
+        switch (item.getCustomTypeValue()) {
+            case CrfSurveyItemAdapter.CRF_BOOLEAN_SURVEY_ITEM_TYPE:
+                return createCrfBooleanAnswerFormat(context, item);
+            case CrfSurveyItemAdapter.CRF_INTEGER_SURVEY_ITEM_TYPE:
+                return createCrfIntegerAnswerFormat(context, item);
+            case CrfSurveyItemAdapter.CRF_MULTIPLE_CHOICE_SURVEY_ITEM_TYPE:
+            case CrfSurveyItemAdapter.CRF_SINGLE_CHOICE_SURVEY_ITEM_TYPE:
+                return createCrfChoiceAnswerFormat(context, item);
+        }
+        return super.createCustomAnswerFormat(context, item);
     }
 
     private CrfInstructionStep createCrfInstructionStep(CrfInstructionSurveyItem item) {
@@ -345,70 +393,40 @@ public class CrfTaskFactory extends TaskItemFactory {
             throw new IllegalStateException("compound surveys must have step items to proceed");
         }
 
-        List<QuestionStep> questionSteps = new ArrayList<>();
-        for (SurveyItem subItem : item.items) {
-            if (subItem.getCustomTypeValue() != null &&
-                    subItem.getCustomTypeValue().equals(CrfSurveyItemAdapter.CRF_INTEGER_SURVEY_ITEM_TYPE)) {
-                QuestionStep step = createCustomIntegerBody(context, (QuestionSurveyItem) subItem);
-                questionSteps.add(step);
-            } else if (subItem.getCustomTypeValue() != null &&
-                    subItem.getCustomTypeValue().equals(CrfSurveyItemAdapter.CRF_SINGLE_CHOICE_SURVEY_ITEM_TYPE)) {
-                QuestionStep step = createCustomSingleChoiceBody(context, (QuestionSurveyItem) subItem);
-                questionSteps.add(step);
-            } else if (subItem instanceof QuestionSurveyItem) {
-                QuestionStep step = createQuestionStep(context, (QuestionSurveyItem)subItem);
-                questionSteps.add(step);
-            }
-        }
-
+        List<QuestionStep> questionSteps = super.formStepCreateQuestionSteps(context, item);
         CrfFormStep step = new CrfFormStep(item.identifier, item.title, item.text, questionSteps);
-        step.setAutoFocusFirstEditText(true);
-
-        step.setSkipIfPassed(item.skipIfPassed);
-        step.setSkipToStepIdentifier(item.skipIdentifier);
-
-
-        fillQuestionStep(item, step);
-        if (item.expectedAnswer != null) {
-            step.setExpectedAnswer(item.expectedAnswer);
-        }
-        if (item.skipTitle != null) {
-            step.setSkipTitle(item.skipTitle);
-            // we can assume that if we set the skip title, we want to show the skip button
-            step.setOptional(true);
-        }
-
+        fillNavigationFormStep(step, item);
         return step;
     }
 
-    public QuestionStep createCustomIntegerBody(Context context, QuestionSurveyItem item) {
-        AnswerFormat format = null;
+    public CrfBooleanAnswerFormat createCrfBooleanAnswerFormat(Context context, QuestionSurveyItem item) {
+        if (!(item instanceof BooleanQuestionSurveyItem)) {
+            throw new IllegalStateException("Error in json parsing, QUESTION_BOOLEAN types must be BooleanQuestionSurveyItem");
+        }
+        CrfBooleanAnswerFormat format = new CrfBooleanAnswerFormat();
+        fillBooleanAnswerFormat(context, format, (BooleanQuestionSurveyItem)item);
+        return format;
+    }
+
+    public CrfIntegerAnswerFormat createCrfIntegerAnswerFormat(Context context, QuestionSurveyItem item) {
         if (!(item instanceof IntegerRangeSurveyItem)) {
             throw new IllegalStateException("Error in json parsing, QUESTION_INTEGER types must be IntegerRangeSurveyItem");
         }
-        IntegerRangeSurveyItem intItem = (IntegerRangeSurveyItem)item;
-        int min = (intItem.min == null) ? 0 : intItem.min;
-        int max = (intItem.max == null) ? 0 : intItem.max;
-        format = new CrfIntegerAnswerFormat(min, max);
-
-        QuestionStep step = new QuestionStep(item.identifier, item.title, format);
-        return step;
+        CrfIntegerAnswerFormat format = new CrfIntegerAnswerFormat();
+        fillIntegerAnswerFormat(format, (IntegerRangeSurveyItem)item);
+        return format;
     }
 
-    public QuestionStep createCustomSingleChoiceBody(Context context, QuestionSurveyItem item) {
-        AnswerFormat format = null;
+    public CrfChoiceAnswerFormat createCrfChoiceAnswerFormat(Context context, QuestionSurveyItem item) {
         if (!(item instanceof ChoiceQuestionSurveyItem)) {
             throw new IllegalStateException("Error in json parsing, this type must be ChoiceQuestionSurveyItem");
         }
-        ChoiceQuestionSurveyItem singleItem = (ChoiceQuestionSurveyItem)item;
-        if (singleItem.items == null || singleItem.items.isEmpty()) {
-            throw new IllegalStateException("ChoiceQuestionSurveyItem must have choices");
+        CrfChoiceAnswerFormat format = new CrfChoiceAnswerFormat();
+        fillChoiceAnswerFormat(format, (ChoiceQuestionSurveyItem)item);
+        // Override setting multiple choice answer format, since it is a custom survey type
+        if (item.getCustomTypeValue().equals(CrfSurveyItemAdapter.CRF_MULTIPLE_CHOICE_SURVEY_ITEM_TYPE)) {
+            format.setAnswerStyle(AnswerFormat.ChoiceAnswerStyle.MultipleChoice);
         }
-        AnswerFormat.ChoiceAnswerStyle answerStyle = AnswerFormat.ChoiceAnswerStyle.SingleChoice;
-        Choice[] choices = singleItem.items.toArray(new Choice[singleItem.items.size()]);
-        format = new CrfChoiceAnswerFormat(answerStyle, choices);
-
-        QuestionStep step = new QuestionStep(item.identifier, item.title, format);
-        return step;
+        return format;
     }
 }
