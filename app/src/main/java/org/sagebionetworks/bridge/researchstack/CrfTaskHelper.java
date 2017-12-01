@@ -60,6 +60,12 @@ public class CrfTaskHelper extends TaskHelper {
         return super.bridgifyIdentifier(trueIdentifier);
     }
 
+    /**
+     * There is currently an architecture issue in Bridge SDK,
+     * Where the survey answer type is coupled to a non-extendable enum,
+     * So we need to specifically specify how the these custom answer will become SurveyAnswers
+     * We can get rid of this after we fix this https://sagebionetworks.jira.com/browse/AA-91
+     */
     public static class CrfArchiveFileFactory extends ArchiveFileFactory {
         protected CrfArchiveFileFactory() {
             super();

@@ -35,6 +35,7 @@ public class CrfIntegerAnswerFormat extends IntegerAnswerFormat {
     }
 
     public QuestionType getQuestionType() {
+        // For this to work, we must also provide custom code in CrfTaskHelper for this format
         return () -> CrfIntegerQuestionBody.class;
     }
 }
