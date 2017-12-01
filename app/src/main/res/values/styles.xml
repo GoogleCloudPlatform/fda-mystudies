@@ -16,7 +16,10 @@
         <item name="tabTextColor">@color/tab_text_color</item>
     </style>
 
-    <style name="Widget.Crf.SubmitBar" parent="@style/Widget.Backbone.SubmitBar" />
+    <style name="Widget.Crf.SubmitBar" parent="@style/Widget.Backbone.SubmitBar">
+        <item name="positiveActionColor">@color/white</item>
+        <item name="negativeActionColor">@color/azure</item>
+    </style>
 
     <style name="Base.Widget.Crf.Toolbar" parent="@style/Widget.AppCompat.Toolbar">
         <item name="android:background">?attr/colorPrimary</item>

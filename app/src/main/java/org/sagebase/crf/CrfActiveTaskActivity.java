@@ -138,13 +138,13 @@ public class CrfActiveTaskActivity extends ActiveTaskActivity {
         crfToolbar.refreshToolbar(
                 actionBar,      // used to set icons
                 current,        // the object that may inherit from a manipulator
-                R.color.white,
+                defaultToolbarTintColor(),
                 R.drawable.crf_ic_close,
                 CrfTaskToolbarIconManipulator.NO_ICON);
 
         // The text color of the step progress defaults to white,
         // but is set to a darker theme for all tint colors other than white
-        @ColorRes int stepProgressTextColorRes = R.color.white;
+        @ColorRes int stepProgressTextColorRes = defaultStepProgressColor();
         if (current instanceof CrfTaskToolbarTintManipulator) {
             if (((CrfTaskToolbarTintManipulator)current).crfToolbarTintColor() != R.color.white) {
                 stepProgressTextColorRes = R.color.darkGrayText;
@@ -182,7 +182,7 @@ public class CrfActiveTaskActivity extends ActiveTaskActivity {
             crfToolbar.setProgress(progress, max);
 
             // Set up the text and styling of the step 1 of 5, 2 of 5, etc.
-            String progressStr = String.valueOf(progress);
+            String progressStr = String.valueOf(progress + 1); // array index 0 should be 1
             String maxString = String.valueOf(max);
             String stepProgressStr = String.format(getString(R.string.crf_step_progress), progressStr, maxString);
 
@@ -208,6 +208,14 @@ public class CrfActiveTaskActivity extends ActiveTaskActivity {
             streamType = AudioManager.STREAM_MUSIC;
         }
         setVolumeControlStream(streamType);
+    }
+
+    protected @ColorRes int defaultToolbarTintColor() {
+        return R.color.white;
+    }
+
+    protected @ColorRes int defaultStepProgressColor() {
+        return R.color.white;
     }
 
     @Override
