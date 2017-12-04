@@ -8,9 +8,9 @@ android {
         minSdkVersion 19
         targetSdkVersion 26
 	// version code is bumped by fastlane automatically
-        versionCode 10
+        versionCode 15
 	// this should match the stable- branch name and will be used by fastlane to create the tag
-        versionName "0.8.0"
+        versionName "0.12.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         multiDexEnabled true
         resConfigs "en"
