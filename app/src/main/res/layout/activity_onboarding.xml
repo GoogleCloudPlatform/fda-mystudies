@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:gravity="center_horizontal"
     android:orientation="vertical"
-    tools:context="org.researchstack.skin.ui.OverviewActivity"
+    tools:context="org.researchstack.backbone.ui.OverviewActivity"
 >
 
 

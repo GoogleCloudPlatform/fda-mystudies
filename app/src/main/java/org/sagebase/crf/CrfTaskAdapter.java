@@ -29,7 +29,7 @@ import android.widget.TextView;
 
 import org.researchstack.backbone.model.SchedulesAndTasksModel;
 import org.researchstack.backbone.utils.LogExt;
-import org.researchstack.skin.ui.adapter.TaskAdapter;
+import org.researchstack.backbone.ui.adapter.TaskAdapter;
 import org.sagebase.crf.helper.CrfDateHelper;
 import org.sagebase.crf.helper.CrfScheduleHelper;
 import org.sagebionetworks.bridge.researchstack.CrfTaskFactory;

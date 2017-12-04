@@ -19,7 +19,7 @@ package org.sagebionetworks.bridge.researchstack;
 
 import org.researchstack.backbone.ResourceManager;
 import org.researchstack.backbone.storage.NotificationHelper;
-import org.researchstack.skin.AppPrefs;
+import org.researchstack.backbone.AppPrefs;
 import org.sagebionetworks.bridge.android.manager.BridgeManagerProvider;
 import org.sagebionetworks.bridge.researchstack.wrapper.StorageAccessWrapper;
 

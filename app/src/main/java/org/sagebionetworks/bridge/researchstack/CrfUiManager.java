@@ -4,10 +4,9 @@ import android.content.Context;
 
 import org.researchstack.backbone.result.StepResult;
 import org.researchstack.backbone.step.Step;
-import org.researchstack.skin.ActionItem;
-import org.researchstack.skin.UiManager;
+import org.researchstack.backbone.ActionItem;
+import org.researchstack.backbone.UiManager;
 import org.sagebase.crf.CrfActivitiesFragment;
-import org.sagebase.crf.CrfDashboardFragment;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,14 +24,14 @@ public class CrfUiManager extends UiManager {
         List<ActionItem> navItems = new ArrayList<>();
 
         navItems.add(new ActionItem.ActionItemBuilder().setId(org.sagebionetworks.research.crf.R.id.nav_activities)
-                .setTitle(R.string.rss_activities)
-                .setIcon(R.drawable.rss_ic_tab_activities)
+                .setTitle(R.string.rsb_activities)
+                .setIcon(R.drawable.rsb_ic_tab_activities)
                 .setClass(CrfActivitiesFragment.class)
                 .build());
 
 //        navItems.add(new ActionItem.ActionItemBuilder().setId(org.sagebionetworks.research.crf.R.id.nav_dashboard)
-//                .setTitle(R.string.rss_dashboard)
-//                .setIcon(R.drawable.rss_ic_tab_dashboard)
+//                .setTitle(R.string.rsb_dashboard)
+//                .setIcon(R.drawable.rsb_ic_tab_dashboard)
 //                .setClass(CrfDashboardFragment.class)
 //                .build());
 
@@ -41,7 +40,7 @@ public class CrfUiManager extends UiManager {
 
     /**
      * @return List of ActionItems w/ Activity class items. The class items are then used to
-     * construct an intent for a MenuItem when {@link org.researchstack.skin.ui.MainActivity#onCreateOptionsMenu}
+     * construct an intent for a MenuItem when {@link org.researchstack.backbone.ui.MainActivity#onCreateOptionsMenu}
      * is called
      */
     @Override

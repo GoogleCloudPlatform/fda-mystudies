@@ -9,18 +9,14 @@ import android.util.Log;
 import com.google.common.collect.ImmutableSet;
 
 import org.joda.time.DateTime;
+import org.researchstack.backbone.AppPrefs;
 import org.researchstack.backbone.DataProvider;
 import org.researchstack.backbone.DataResponse;
 import org.researchstack.backbone.ResourceManager;
 import org.researchstack.backbone.model.SchedulesAndTasksModel;
-import org.researchstack.backbone.model.User;
-import org.researchstack.backbone.onboarding.OnboardingManager;
 import org.researchstack.backbone.result.TaskResult;
 import org.researchstack.backbone.storage.NotificationHelper;
-import org.researchstack.skin.*;
-import org.sagebase.crf.reminder.CrfAlarmReceiver;
 import org.sagebase.crf.reminder.CrfReminderManager;
-import org.sagebionetworks.bridge.android.BridgeConfig;
 import org.sagebionetworks.bridge.android.manager.BridgeManagerProvider;
 import org.sagebionetworks.bridge.researchstack.wrapper.StorageAccessWrapper;
 import org.sagebionetworks.bridge.rest.model.Message;
@@ -40,7 +36,6 @@ import java.util.Set;
 
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
-import rx.functions.Action0;
 import rx.functions.Action1;
 
 /**
