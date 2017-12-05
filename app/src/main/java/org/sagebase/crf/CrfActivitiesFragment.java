@@ -206,7 +206,7 @@ public class CrfActivitiesFragment extends ActivitiesFragment implements CrfFilt
                 Task activeTask = taskFactory.createTask(getActivity(), TASK_ID_TO_RESOURCE_NAME.get(task
                         .taskID));
                 startActivityForResult(getIntentFactory().newTaskIntent(getActivity(),
-                        CrfSurveyTaskActivity.class, activeTask), REQUEST_TASK);
+                        CrfViewTaskActivity.class, activeTask), REQUEST_TASK);
             } else {
                 Task activeTask = taskFactory.createTask(getActivity(), TASK_ID_TO_RESOURCE_NAME.get(task
                         .taskID));
