@@ -84,6 +84,7 @@ public class CrfActivitiesFragment extends ActivitiesFragment implements CrfFilt
     static final Map<String, String> TASK_ID_TO_RESOURCE_NAME =
             ImmutableMap.<String, String>builder()
                     .put(CrfTaskFactory.TASK_ID_HEART_RATE_MEASUREMENT, CrfResourceManager.HEART_RATE_MEASUREMENT_RESOURCE)
+                    .put(CrfTaskFactory.TASK_ID_CARDIO_STRESS_TEST, CrfResourceManager.CARDIO_STRESS_TEST_RESOURCE)
                     .put(CrfTaskFactory.TASK_ID_CARDIO_12MT, CrfResourceManager.CARDIO_12MT_WALK_RESOURCE)
                     .put(CrfTaskFactory.TASK_ID_STAIR_STEP, CrfResourceManager.STAIR_STEP_RESOURCE)
                     .put(CrfTaskFactory.TASK_ID_BACKGROUND_SURVEY, CrfResourceManager.BACKGROUND_SURVEY_RESOURCE)
@@ -131,8 +132,11 @@ public class CrfActivitiesFragment extends ActivitiesFragment implements CrfFilt
                 if (studyParticipant != null && studyParticipant.getDataGroups() != null) {
                     mDataGroups = studyParticipant.getDataGroups().toString();
                 }
-            }, throwable -> { /* no-op */ });
+            }, throwable -> {
+                Log.w(LOG_TAG, "failed to load data groups", throwable );
+            });
         }
+
 
         crfDataProvider.getCrfActivities(getContext(), new CrfDataProvider.CrfActivitiesListener() {
             @Override
@@ -237,6 +241,7 @@ public class CrfActivitiesFragment extends ActivitiesFragment implements CrfFilt
         // Per Zeplin design, if first clinic is not complete, that is all the user will see
         // Otherwise the whole journey is visible
         if(isFirstClinicComplete()) {
+
             List<Object> objList = new ArrayList<>();
             for (SchedulesAndTasksModel.ScheduleModel schedule: mScheduleModel.schedules) {
                 objList.add(schedule);
