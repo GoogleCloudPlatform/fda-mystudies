@@ -7,26 +7,24 @@ import android.support.annotation.VisibleForTesting;
 import android.util.Log;
 
 import com.google.common.collect.ImmutableSet;
+import com.google.common.collect.Lists;
 
 import org.joda.time.DateTime;
 import org.researchstack.backbone.DataProvider;
 import org.researchstack.backbone.DataResponse;
 import org.researchstack.backbone.ResourceManager;
 import org.researchstack.backbone.model.SchedulesAndTasksModel;
-import org.researchstack.backbone.model.User;
-import org.researchstack.backbone.onboarding.OnboardingManager;
 import org.researchstack.backbone.result.TaskResult;
 import org.researchstack.backbone.storage.NotificationHelper;
-import org.researchstack.skin.*;
-import org.sagebase.crf.reminder.CrfAlarmReceiver;
+import org.researchstack.skin.AppPrefs;
 import org.sagebase.crf.reminder.CrfReminderManager;
-import org.sagebionetworks.bridge.android.BridgeConfig;
 import org.sagebionetworks.bridge.android.manager.BridgeManagerProvider;
 import org.sagebionetworks.bridge.researchstack.wrapper.StorageAccessWrapper;
 import org.sagebionetworks.bridge.rest.model.Message;
 import org.sagebionetworks.bridge.rest.model.ScheduledActivity;
 import org.sagebionetworks.bridge.rest.model.ScheduledActivityListV4;
 import org.sagebionetworks.bridge.rest.model.StudyParticipant;
+import org.sagebionetworks.bridge.rest.model.TaskReference;
 import org.sagebionetworks.bridge.rest.model.UserSessionInfo;
 
 import java.lang.ref.WeakReference;
@@ -40,7 +38,6 @@ import java.util.Set;
 
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
-import rx.functions.Action0;
 import rx.functions.Action1;
 
 /**
@@ -60,7 +57,7 @@ public class CrfDataProvider extends BridgeDataProvider {
     public static final int STUDY_DURATION_IN_DAYS = 15;
 
     public String getExternalId(Context context) {
-        String email =  DataProvider.getInstance().getUserEmail(context);
+        String email = DataProvider.getInstance().getUserEmail(context);
         String externalIdFormat = bridgeConfig.getExternalIdEmailFormat();
         int indexOfExternalId = externalIdFormat.indexOf("%s");
         int lengthOfExternalId = (email.length() - externalIdFormat.length()) + "%s".length();
@@ -74,9 +71,11 @@ public class CrfDataProvider extends BridgeDataProvider {
      * If false, the legacy clinic assignment will be used
      */
     private boolean shouldThrowErrorWithoutClinicDataGroup = true;
+
     public boolean isShouldThrowErrorWithoutClinicDataGroup() {
         return shouldThrowErrorWithoutClinicDataGroup;
     }
+
     public void setShouldThrowErrorWithoutClinicDataGroup(boolean shouldThrowErrorWithoutClinicDataGroup) {
         this.shouldThrowErrorWithoutClinicDataGroup = shouldThrowErrorWithoutClinicDataGroup;
     }
@@ -84,7 +83,8 @@ public class CrfDataProvider extends BridgeDataProvider {
     public static final String NO_CLINIC_ERROR_MESSAGE = "NO_CLINIC_ID";
 
     /**
-     * Hold onto weak context for reminders instead of passing it around the getCrfActivities algorithm
+     * Hold onto weak context for reminders instead of passing it around the getCrfActivities
+     * algorithm
      */
     private WeakReference<Context> weakContext;
 
@@ -94,13 +94,15 @@ public class CrfDataProvider extends BridgeDataProvider {
 
     @VisibleForTesting
     CrfDataProvider(ResearchStackDAO researchStackDAO, StorageAccessWrapper storageAccessWrapper,
-                       TaskHelper taskHelper) {
+                    TaskHelper taskHelper) {
         super(researchStackDAO, storageAccessWrapper, taskHelper);
     }
 
     @Override
-    public TaskHelper createTaskHelper(NotificationHelper notif, StorageAccessWrapper wrapper, BridgeManagerProvider provider) {
-        return new CrfTaskHelper(wrapper, ResourceManager.getInstance(), AppPrefs.getInstance(), notif, provider);
+    public TaskHelper createTaskHelper(NotificationHelper notif, StorageAccessWrapper wrapper,
+                                       BridgeManagerProvider provider) {
+        return new CrfTaskHelper(wrapper, ResourceManager.getInstance(), AppPrefs.getInstance(),
+                notif, provider);
     }
 
     @Override
@@ -118,6 +120,7 @@ public class CrfDataProvider extends BridgeDataProvider {
     /**
      * This method hides the complex logic of the CRF scheduling system
      * and simply returns the activities, or an error if something went wrong
+     *
      * @param context, must be non-null on first call, used to set reminders for the activities
      * @param listener the callback listener for the events
      */
@@ -126,7 +129,8 @@ public class CrfDataProvider extends BridgeDataProvider {
     }
 
     @VisibleForTesting
-    void getCrfActivities(boolean performFiltering, @Nullable Context context, final CrfActivitiesListener listener) {
+    void getCrfActivities(boolean performFiltering, @Nullable Context context, final
+    CrfActivitiesListener listener) {
         // Keep a reference to context for setting reminders once this method completes
         if (context != null) {
             weakContext = new WeakReference<>(context);
@@ -134,7 +138,8 @@ public class CrfDataProvider extends BridgeDataProvider {
 
         if (!getCrfPrefs().hasFirstSignInDate()) {
             logV("No sign in date detected");
-            // getCrfActivities method will be called again when sign in date is found, so return here
+            // getCrfActivities method will be called again when sign in date is found, so return
+            // here
             createOrFindFirstSignInDate(listener);
             return;
         }
@@ -143,7 +148,8 @@ public class CrfDataProvider extends BridgeDataProvider {
         logV(String.format(Locale.getDefault(),
                 "Previous sign in date detected %s", firstSignInDate.toString()));
         // We have already done the clinic setup process, and can safely grab the schedules
-        getActivitiesSubscribe(firstSignInDate, endTimeForAllActivities(firstSignInDate), activityList -> {
+        getActivitiesSubscribe(firstSignInDate, endTimeForAllActivities(firstSignInDate),
+                activityList -> {
 
             logV("Raw Activities:");
             debugPrintActivities(activityList.getItems());
@@ -170,9 +176,11 @@ public class CrfDataProvider extends BridgeDataProvider {
 
     /**
      * A first sign in date is needed to get the study's activities
-     * The first sign in date represents the finished on date of either CLINIC1 or CLINIC2 activities
+     * The first sign in date represents the finished on date of either CLINIC1 or CLINIC2
+     * activities
      * This method will try and find the clinic activities to see if one of them is already finished
      * Or it may continue trying to find the sign in date, or trigger the process to create one
+     *
      * @param listener the listener for success/fail response
      */
     private void createOrFindFirstSignInDate(final CrfActivitiesListener listener) {
@@ -184,27 +192,33 @@ public class CrfDataProvider extends BridgeDataProvider {
             ScheduledActivity clinic2 = findActivity(activityList, CLINIC2);
 
             if (clinic1 == null || clinic2 == null) {
-                logE("We must have clinic1 or clinic 2 activities to continue, are you in the correct data groups?");
-                listener.error("Error: could not find both clinic1 and clinic2, are you in the correct data groups?");
+                logE("We must have clinic1 or clinic 2 activities to continue, are you in the " +
+                        "correct data groups?");
+                listener.error("Error: could not find both clinic1 and clinic2, are you in the " +
+                        "correct data groups?");
                 return;
             }
 
-            logV(String.format(Locale.getDefault(),"Clinic1 = %s", clinic1.toString()));
-            logV(String.format(Locale.getDefault(),"Clinic2 = %s", clinic2.toString()));
+            logV(String.format(Locale.getDefault(), "Clinic1 = %s", clinic1.toString()));
+            logV(String.format(Locale.getDefault(), "Clinic2 = %s", clinic2.toString()));
 
             // Whichever clinic activity is finished is the one this user is a part of
             if (clinic1.getFinishedOn() != null) {  // Found date, go back to loading activities
                 logV(String.format(Locale.getDefault(),
-                        "Setting firstSignInDate on clinic1 = %s", clinic1.getFinishedOn().toString()));
+                        "Setting firstSignInDate on clinic1 = %s", clinic1.getFinishedOn()
+                                .toString()));
                 getCrfPrefs().setFirstSignInDate(clinic1.getFinishedOn());
                 getCrfActivities(null, listener);
-            } else if (clinic2.getFinishedOn() != null) { // Found date, go back to loading activities
+            } else if (clinic2.getFinishedOn() != null) { // Found date, go back to loading
+                // activities
                 getCrfPrefs().setFirstSignInDate(clinic2.getFinishedOn());
                 logV(String.format(Locale.getDefault(),
-                        "Setting firstSignInDate on clinic1 = %s", clinic2.getFinishedOn().toString()));
+                        "Setting firstSignInDate on clinic1 = %s", clinic2.getFinishedOn()
+                                .toString()));
                 getCrfActivities(null, listener);
             } else {
-                // Otherwise, this is the user's first sign in, let's find or assign their clinic group
+                // Otherwise, this is the user's first sign in, let's find or assign their clinic
+                // group
                 findOrCreateClinicGroup(listener, clinic1, clinic2);
             }
         }, throwable -> listener.error(throwable.getLocalizedMessage()));
@@ -214,13 +228,14 @@ public class CrfDataProvider extends BridgeDataProvider {
     void getActivitiesSubscribe(DateTime start, DateTime end,
                                 final Action1<ScheduledActivityListV4> onNext,
                                 final Action1<Throwable> onError) {
-        getActivities(start, end).observeOn(AndroidSchedulers.mainThread()).subscribe(onNext, onError);
+        getActivities(start, end).observeOn(AndroidSchedulers.mainThread()).subscribe(onNext,
+                onError);
     }
 
     /**
      * @param listener the listener for success/fail response
-     * @param clinic1 the scheduled activity that will trigger clinic1 group
-     * @param clinic2 the scheduled activity that will trigger clinic2 group
+     * @param clinic1  the scheduled activity that will trigger clinic1 group
+     * @param clinic2  the scheduled activity that will trigger clinic2 group
      */
     private void findOrCreateClinicGroup(
             final CrfActivitiesListener listener,
@@ -238,8 +253,8 @@ public class CrfDataProvider extends BridgeDataProvider {
             }
 
             if (dataGroups == null ||
-                dataGroups.isEmpty() ||
-                (!dataGroups.contains(CLINIC1) && !dataGroups.contains(CLINIC2))) {
+                    dataGroups.isEmpty() ||
+                    (!dataGroups.contains(CLINIC1) && !dataGroups.contains(CLINIC2))) {
                 assignRandomizedClinic(dataGroups, listener, clinic1, clinic2);
             } else {
                 // We already have the clinic data group assigned, so simply read it and
@@ -258,9 +273,9 @@ public class CrfDataProvider extends BridgeDataProvider {
 
     /**
      * @param existingDataGroups the data groups from the study participant
-     * @param listener the listener for success/fail response
-     * @param clinic1 the scheduled activity that will trigger clinic1 group
-     * @param clinic2 the scheduled activity that will trigger clinic2 group
+     * @param listener           the listener for success/fail response
+     * @param clinic1            the scheduled activity that will trigger clinic1 group
+     * @param clinic2            the scheduled activity that will trigger clinic2 group
      */
     private void assignRandomizedClinic(
             List<String> existingDataGroups, final CrfActivitiesListener listener,
@@ -312,7 +327,8 @@ public class CrfDataProvider extends BridgeDataProvider {
     void updateStudyParticipantSubscribe(StudyParticipant studyParticipant,
                                          final Action1<UserSessionInfo> onNext,
                                          final Action1<Throwable> onError) {
-        updateStudyParticipant(studyParticipant).observeOn(AndroidSchedulers.mainThread()).subscribe(onNext, onError);
+        updateStudyParticipant(studyParticipant).observeOn(AndroidSchedulers.mainThread())
+                .subscribe(onNext, onError);
     }
 
     @VisibleForTesting
@@ -323,7 +339,7 @@ public class CrfDataProvider extends BridgeDataProvider {
     }
 
     /**
-     * @param clinic this will be the activity representing the clinic this user will be a part of
+     * @param clinic   this will be the activity representing the clinic this user will be a part of
      * @param listener the listener for success/fail response
      */
     private void completeClinicSchedule(final ScheduledActivity clinic,
@@ -348,7 +364,8 @@ public class CrfDataProvider extends BridgeDataProvider {
     void updateActivitySubscribe(ScheduledActivity activity,
                                  final Action1<Message> onNext,
                                  final Action1<Throwable> onError) {
-        updateActivity(activity).observeOn(AndroidSchedulers.mainThread()).subscribe(onNext, onError);
+        updateActivity(activity).observeOn(AndroidSchedulers.mainThread()).subscribe(onNext,
+                onError);
     }
 
     @VisibleForTesting
@@ -393,12 +410,13 @@ public class CrfDataProvider extends BridgeDataProvider {
 
     /**
      * @param activityList to search through
-     * @param identifier of the activity to return
+     * @param identifier   of the activity to return
      * @return activity with identifier, or null if none was found
      */
     @VisibleForTesting
     ScheduledActivity findActivity(ScheduledActivityListV4 activityList, String identifier) {
-        if (activityList == null || activityList.getItems() == null || activityList.getItems().isEmpty()) {
+        if (activityList == null || activityList.getItems() == null || activityList.getItems()
+                .isEmpty()) {
             return null;
         }
         for (ScheduledActivity activity : activityList.getItems()) {
@@ -423,34 +441,45 @@ public class CrfDataProvider extends BridgeDataProvider {
      */
     public List<ScheduledActivity> filterResults(ScheduledActivityListV4 activityList) {
         if (activityList == null || activityList.getItems() == null) {
-            return new ArrayList<>();
+            return Collections.emptyList();
         }
         List<ScheduledActivity> activities = new ArrayList<>(activityList.getItems());
-        List<ScheduledActivity> finalActivities = new ArrayList<>();
+        List<ScheduledActivity> filteredActivities = Lists.newArrayListWithCapacity(activities.size());
 
-        // In CRF, we filter all persistent activities and the Clinic1 and Clinic2 activities
         for (ScheduledActivity activity : activities) {
-
-            boolean isNotPersistent = activity.getPersistent() == null || !activity.getPersistent();
-            boolean isASurvey = activity.getActivity() != null && activity.getActivity().getSurvey() != null;
-            boolean isNotAHiddenTask = isASurvey ||
-                    (activity.getActivity().getTask() != null &&
-                    activity.getActivity().getTask().getIdentifier() != null &&
-                    !HIDDEN_TASK_IDS.contains(activity.getActivity().getTask().getIdentifier()));
-
-            if (isNotPersistent && isNotAHiddenTask) {
-                finalActivities.add(activity);
+            if (shouldDisplay(activity)) {
+                filteredActivities.add(activity);
             }
         }
 
-        return finalActivities;
+        return filteredActivities;
+    }
+
+    @VisibleForTesting
+    boolean shouldDisplay(ScheduledActivity scheduledActivity) {
+        if (scheduledActivity.getActivity() == null) {
+            return false;
+        }
+
+        boolean isPersistent = scheduledActivity.getPersistent() != null && scheduledActivity
+                .getPersistent();
+        boolean isSurvey = scheduledActivity.getActivity().getSurvey() != null;
+
+        // don't show hidden tasks, e.g. clinic1 and clinic2 activities programatically used as
+        // event/trigger
+        TaskReference task = scheduledActivity.getActivity().getTask();
+        boolean isDisplayableTask = task != null
+                && task.getIdentifier() != null
+                && !HIDDEN_TASK_IDS.contains(task.getIdentifier());
+
+        return isPersistent || isSurvey || isDisplayableTask;
     }
 
     @VisibleForTesting
     void setReminders(Context context, SchedulesAndTasksModel model) {
         // Set reminders
         List<Date> reminderDates = new ArrayList<>();
-        for(SchedulesAndTasksModel.ScheduleModel schedule : model.schedules) {
+        for (SchedulesAndTasksModel.ScheduleModel schedule : model.schedules) {
             if (schedule.scheduledOn != null) {
                 reminderDates.add(schedule.scheduledOn);
             }
@@ -460,7 +489,8 @@ public class CrfDataProvider extends BridgeDataProvider {
 
     @NonNull
     @Override
-    protected SchedulesAndTasksModel translateActivities(@NonNull List<ScheduledActivity> activityList) {
+    protected SchedulesAndTasksModel translateActivities(@NonNull List<ScheduledActivity>
+                                                                     activityList) {
         SchedulesAndTasksModel model = super.translateActivities(activityList);
 
         // Sort in reverse time order per CRF journey screen requirements
@@ -491,6 +521,7 @@ public class CrfDataProvider extends BridgeDataProvider {
 
     public interface CrfActivitiesListener {
         void success(SchedulesAndTasksModel model);
+
         void error(String localizedError);
     }
 }

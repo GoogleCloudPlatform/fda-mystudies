@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="JavaProjectCodeInsightSettings">
+    <excluded-names>
+      <name>android.support.v4.util.Preconditions</name>
+      <name>com.google.gson.internal</name>
+      <name>junit.framework</name>
+    </excluded-names>
+  </component>
+</project>
