@@ -1,6 +1,6 @@
 {
-  "taskIdentifier" : "HeartRate Measurement",
-  "schemaIdentifier" : "HeartRate Measurement",
+  "taskIdentifier" : "Cardio Stress Test",
+  "schemaIdentifier" : "Cardio Stress Test",
   "optional" : false,
   "taskSteps" : [
     {

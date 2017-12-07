@@ -1,18 +1,22 @@
 {
-    "Cardio 12MT":{
-        "id":"Cardio 12MT",
-        "revision":2
-    },
-    "HeartRate Measurement":{
-        "id":"HeartRate Measurement",
-        "revision":6
-    },
-    "test_json_survey":{
-        "id":"test_json_survey",
-        "revision":1
-    },
-    "Background Survey":{
-        "id":"background_survey",
-        "revision":4
-    }
+  "Cardio 12MT": {
+    "id": "Cardio 12MT",
+    "revision": 2
+  },
+  "Cardio Stress Test": {
+    "id": "Cardio Stress Test",
+    "revision": 1
+  },
+  "HeartRate Measurement": {
+    "id": "HeartRate Measurement",
+    "revision": 6
+  },
+  "test_json_survey": {
+    "id": "test_json_survey",
+    "revision": 1
+  },
+  "Background Survey": {
+    "id": "Background Survey",
+    "revision": 4
+  }
 }
