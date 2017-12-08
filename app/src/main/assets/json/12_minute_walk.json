@@ -81,7 +81,7 @@
       "buttonText"       : "Press to start"
     },
     {
-      "identifier"       : "camera",
+      "identifier"       : "answers.heartRate.before",
       "type"             : "crf_heart_rate_camera_step"
     },
     {
@@ -104,7 +104,7 @@
       "title"            : "Start in"
     },
     {
-      "identifier"       : "walk",
+      "identifier"       : "answers.run",
       "type"             : "crf_12_min_walk"
     },
     {
@@ -122,8 +122,23 @@
       "buttonText"       : "Press to start"
     },
     {
-      "identifier"       : "camera2",
+      "identifier"       : "answers.heartRate.after",
       "type"             : "crf_heart_rate_camera_step"
+    },
+    {
+      "identifier"     : "surveyAfter",
+      "type"           : "crf_form",
+      "title"          : "What, if anything, kept you from going further?",
+      "optional"       : false,
+      "items"          : [{
+          "identifier"     : "answers.surveyAfter",
+          "type": "crfSingleChoice",
+          "optional"       : false,
+          "items": [{"text": "Nothing, was my best effort", "value": "Nothing, was my best effort"},
+            {"text": "Feeling tired", "value": "Feeling tired"},
+            {"text": "Pain or physical discomfort", "value": "Pain or physical discomfort"},
+            {"text": "Interrupted", "value": "Interrupted"}]
+      }]
     },
     {
       "identifier"       : "completion",

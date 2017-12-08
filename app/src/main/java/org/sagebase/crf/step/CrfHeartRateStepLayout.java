@@ -50,6 +50,9 @@ import org.sagebase.crf.view.CrfTaskStatusBarManipulator;
 import org.sagebase.crf.view.CrfTaskToolbarTintManipulator;
 import org.sagebionetworks.research.crf.R;
 
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
 import java.util.Locale;
 
 /**
@@ -64,6 +67,8 @@ public class CrfHeartRateStepLayout extends ActiveStepLayout implements
         CrfResultListener {
 
     private static final String AVERAGE_BPM_IDENTIFIER = "AVERAGE_BPM_IDENTIFIER";
+    private static final String BPM_START_IDENTIFIER_SUFFIX = ".heartRate_start";
+    private static final String BPM_END_IDENTIFIER_SUFFIX = ".heartRate_end";
 
     private CameraSourcePreview cameraSourcePreview;
 
@@ -84,8 +89,7 @@ public class CrfHeartRateStepLayout extends ActiveStepLayout implements
     private int previousBpm = -1;
 
     private boolean hasDetectedStart = false;
-    private int averageBpmSum;
-    private int averageBpmCount;
+    private List<Integer> bpmList;
 
     public CrfHeartRateStepLayout(Context context) {
         super(context);
@@ -163,8 +167,7 @@ public class CrfHeartRateStepLayout extends ActiveStepLayout implements
     @Override
     public void start() {
         hasDetectedStart = false;
-        averageBpmCount = 0;
-        averageBpmSum = 0;
+        bpmList = Collections.emptyList();
 
         super.start();
 
@@ -229,9 +232,7 @@ public class CrfHeartRateStepLayout extends ActiveStepLayout implements
             heartImageView.startAnimation(heartBeatAnimation);
         }
         heartBeatAnimation.setBpm(bpm);
-
-        averageBpmSum += bpm;
-        averageBpmCount++;
+        bpmList.add(bpm);
     }
 
     @Override
@@ -244,14 +245,35 @@ public class CrfHeartRateStepLayout extends ActiveStepLayout implements
         cameraSourcePreview.setVisibility(View.INVISIBLE);
         arcDrawableContainer.setVisibility(View.GONE);
 
-        if (averageBpmCount > 0) {
-            int averageBpm = averageBpmSum / averageBpmCount;
+        if (!bpmList.isEmpty()) {
+            int bpmSum = 0;
+            for (Integer bpm : bpmList) {
+                bpmSum += bpm;
+            }
+            int averageBpm = bpmSum / bpmList.size();
             heartRateNumber.setText(String.format(Locale.getDefault(), "%d", averageBpm));
-            setBpmResult(averageBpm);
+            setBpmDifferenceResult(averageBpm);
+            setBpmStartAndEnd(bpmList.get(0), bpmList.get(bpmList.size()-1));
         } else {
             heartRateNumber.setText(String.format(Locale.getDefault(), "%d", 0));
-            setBpmResult(0);
+            setBpmDifferenceResult(0);
         }
+    }
+
+    /**
+     * Saves the first and last BPM readings of the step
+     * @param bpmStart first BPM reading recorded
+     * @param bpmEnd last BPM reading recorded
+     */
+    private void setBpmStartAndEnd(int bpmStart, int bpmEnd) {
+        String startIdentifier = activeStep.getIdentifier() + BPM_START_IDENTIFIER_SUFFIX;
+        StepResult<Integer> bpmStartResult = new StepResult<>(new Step(startIdentifier));
+        bpmStartResult.setResult(bpmStart);
+        stepResult.setResultForIdentifier(startIdentifier, bpmStartResult);
+        String endIdentifier = activeStep.getIdentifier() + BPM_END_IDENTIFIER_SUFFIX;
+        StepResult<Integer> bpmEndResult = new StepResult<>(new Step(endIdentifier));
+        bpmEndResult.setResult(bpmEnd);
+        stepResult.setResultForIdentifier(endIdentifier, bpmEndResult);
     }
 
     /**
@@ -259,7 +281,7 @@ public class CrfHeartRateStepLayout extends ActiveStepLayout implements
      * CrfHeartRateSteps, the difference between the BPMs will be stored in the result as well
      * @param bpm the average BPM
      */
-    private void setBpmResult(int bpm) {
+    private void setBpmDifferenceResult(int bpm) {
         // See if we have a previous BPM, in which case we should calculate the difference
         if (previousBpm >= 0) {
             String bpmStepId = CrfCompletionStepLayout.COMPLETION_BPM_VALUE_RESULT;

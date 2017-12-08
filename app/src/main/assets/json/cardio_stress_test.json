@@ -33,7 +33,7 @@
       "buttonText"       : "Press to start"
     },
     {
-      "identifier"       : "camera",
+      "identifier"       : "answers.heartRate.before",
       "type"             : "crf_heart_rate_camera_step"
     },
     {
@@ -78,7 +78,7 @@
       "buttonText"       : "Press to start"
     },
     {
-      "identifier"       : "camera2",
+      "identifier"       : "answers.heartRate.after",
       "type"             : "crf_heart_rate_camera_step"
     },
     {
