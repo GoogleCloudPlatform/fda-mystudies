@@ -101,7 +101,6 @@ public class CrfFitBitStepLayout extends CrfInstructionStepLayout {
         }
     }
 
-
     public static class CrfFitBitStep extends CrfInstructionStep {
 
         /* Default constructor needed for serialization/deserialization of object */

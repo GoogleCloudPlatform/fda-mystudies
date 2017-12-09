@@ -25,12 +25,10 @@ import org.researchstack.backbone.DataProvider;
 import org.researchstack.backbone.answerformat.AnswerFormat;
 import org.researchstack.backbone.result.StepResult;
 import org.researchstack.backbone.step.Step;
-import org.researchstack.backbone.ui.callbacks.StepCallbacks;
 import org.sagebionetworks.bridge.researchstack.BridgeDataProvider;
 import org.sagebionetworks.bridge.researchstack.CrfDataProvider;
 import org.sagebionetworks.bridge.researchstack.step.DataGroupQuestionStep;
 import org.sagebionetworks.bridge.researchstack.step.layout.DataGroupQuestionStepLayout;
-import org.sagebionetworks.bridge.researchstack.survey.DataGroupQuestionSurveyItem;
 import org.sagebionetworks.research.crf.R;
 
 import java.lang.ref.WeakReference;
@@ -69,21 +67,38 @@ public class CrfClinicDataGroupsStepLayout extends DataGroupQuestionStepLayout {
         if (!(DataProvider.getInstance() instanceof BridgeDataProvider)) {
             throw new IllegalStateException("CrfClinicDataGroupsStepLayout only works with BridgeDataProvider");
         }
+
         String loadingTitle = getString(R.string.crf_data_groups_loading_title);
         showLoadingDialog(loadingTitle);
+
         BridgeDataProvider bridgeDataProvider = (BridgeDataProvider)DataProvider.getInstance();
         final WeakReference<View> weakView = new WeakReference<>(this);
-        bridgeDataProvider.getStudyParticipant().observeOn(AndroidSchedulers.mainThread()).subscribe(participant -> {
+        List<String> localDataGroups = bridgeDataProvider.getDataGroups();
+
+        bridgeDataProvider.getStudyParticipant().observeOn(AndroidSchedulers.mainThread())
+                .subscribe(participant -> {
             hideLoadingDialog();
             // Controls canceling an observable perform through weak reference to the view
             if (weakView.get() == null || weakView.get().getContext() == null) {
                 return; // no callback
             }
-            List<String> dataGroups = participant.getDataGroups();
-            if (dataGroups.contains(CrfDataProvider.CLINIC1) ||
-                    dataGroups.contains(CrfDataProvider.CLINIC2)) {
+            List<String> serverDataGroups = participant.getDataGroups();
+
+            boolean shouldSkip = true;
+            if (!localDataGroups.contains(CrfDataProvider.TEST_USER)) {
+                if (serverDataGroups.contains(CrfDataProvider.CLINIC1)) {
+                    bridgeDataProvider.addLocalDataGroup(CrfDataProvider.CLINIC1);
+                } else if (serverDataGroups.contains(CrfDataProvider.CLINIC2)) {
+                    bridgeDataProvider.addLocalDataGroup(CrfDataProvider.CLINIC1);
+                } else {
+                    // no clinic, do not skip
+                    shouldSkip = false;
+                }
+            }
+
+            if (shouldSkip) {
                 // Skip this step, we already have the clinic assigned
-                callbacks.onSaveStep(StepCallbacks.ACTION_NEXT, getStep(), null);
+                onComplete();
             }
         }, throwable -> {
             // Silent fail, allow user to try and set data groups

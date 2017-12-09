@@ -28,16 +28,18 @@
           "type": "dataGroups.singleChoiceText",
           "items": [
             {
+              "text": "Participant",
+              "value": ""
+            },
+            {
               "text": "Tester",
               "value": "test_user"
             },
             {
-              "text": "Participant",
-              "value": ""
+              "text": "UX Tester",
+              "value": "ux_tester"
             }
           ],
-          "expectedAnswer": "test_user",
-          "skipIdentifier": "clinicChoices",
           "optional": false
         },
         {
@@ -66,8 +68,7 @@
           "image"       : "crf_fitbit_logo",
           "imageColor"  : "whiteButtonShadow65",
           "buttonType"  : "default",
-          "buttonText"  : "Connect",
-          "optional": true // temporary for test TODO: remove
+          "buttonText"  : "Connect"
         }
       ]
     }
