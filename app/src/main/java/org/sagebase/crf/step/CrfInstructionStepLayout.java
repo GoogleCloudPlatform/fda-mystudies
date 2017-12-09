@@ -18,7 +18,6 @@
 package org.sagebase.crf.step;
 
 import android.content.Context;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v4.content.res.ResourcesCompat;
 import android.util.AttributeSet;
 import android.view.View;
@@ -28,9 +27,7 @@ import android.widget.TextView;
 
 import org.researchstack.backbone.result.StepResult;
 import org.researchstack.backbone.step.Step;
-import org.researchstack.backbone.ui.callbacks.StepCallbacks;
 import org.researchstack.backbone.ui.step.layout.InstructionStepLayout;
-
 import org.researchstack.backbone.utils.ResUtils;
 import org.sagebase.crf.CrfActiveTaskActivity;
 import org.sagebase.crf.view.CrfTaskStatusBarManipulator;
@@ -75,6 +72,10 @@ public class CrfInstructionStepLayout extends InstructionStepLayout implements
 
     @Override
     public void initialize(Step step, StepResult result) {
+        // we provide our own next button
+        if (submitBar != null) {
+            submitBar.getPositiveActionView().setVisibility(View.INVISIBLE);
+        }
         validateAndSetCrfStep(step);
         super.initialize(step, result);
     }

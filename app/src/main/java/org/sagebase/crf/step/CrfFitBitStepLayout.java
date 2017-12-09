@@ -18,12 +18,19 @@
 package org.sagebase.crf.step;
 
 import android.content.Context;
+import android.support.annotation.VisibleForTesting;
 import android.util.AttributeSet;
 import android.view.View;
+
+import com.google.common.collect.Sets;
 
 import org.researchstack.backbone.result.StepResult;
 import org.researchstack.backbone.step.Step;
 import org.sagebase.crf.fitbit.FitbitManager;
+import org.sagebionetworks.bridge.android.manager.BridgeManagerProvider;
+import org.sagebionetworks.bridge.researchstack.CrfDataProvider;
+
+import java.util.Set;
 
 /**
  * Created by TheMDP on 11/28/17.
@@ -45,13 +52,26 @@ public class CrfFitBitStepLayout extends CrfInstructionStepLayout {
         super(context, attrs, defStyleAttr);
     }
 
-    public CrfFitBitStepLayout(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
+    public CrfFitBitStepLayout(Context context, AttributeSet attrs, int defStyleAttr, int
+            defStyleRes) {
         super(context, attrs, defStyleAttr, defStyleRes);
     }
 
     @Override
     public void initialize(Step step, StepResult result) {
+        Set<String> dataGroups = Sets.newHashSet(
+                BridgeManagerProvider.getInstance()
+                        .getAuthenticationManager()
+                        .getUserSessionInfo()
+                        .getDataGroups()
+        );
+
+        if(shouldAllowSkip(dataGroups)) {
+            step.setOptional(true);
+        }
+
         super.initialize(step, result);
+
         if (fitbitManager == null) {
             fitbitManager = new FitbitManager(getContext(), null);
         }
@@ -60,6 +80,11 @@ public class CrfFitBitStepLayout extends CrfInstructionStepLayout {
         if (fitbitManager.isAuthenticated()) {
             super.onComplete();
         }
+    }
+
+    @VisibleForTesting
+    static boolean shouldAllowSkip(Set<String> dataGroups) {
+        return !Sets.intersection(CrfDataProvider.TEST_DATA_GROUPS, dataGroups).isEmpty();
     }
 
     @Override
@@ -75,6 +100,7 @@ public class CrfFitBitStepLayout extends CrfInstructionStepLayout {
             fitbitManager.authenticate();
         }
     }
+
 
     public static class CrfFitBitStep extends CrfInstructionStep {
 

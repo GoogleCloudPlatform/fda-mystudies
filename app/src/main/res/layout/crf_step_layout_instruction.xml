@@ -120,6 +120,12 @@
             android:textAllCaps="false"
             android:onClick="goForwardClicked"/>
 
+        <org.researchstack.backbone.ui.views.SubmitBar
+            android:id="@+id/rsb_submit_bar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom" />
+
     </FrameLayout>
 
 </RelativeLayout>
