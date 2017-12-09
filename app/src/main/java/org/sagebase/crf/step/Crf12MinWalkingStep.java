@@ -33,7 +33,6 @@ import java.util.List;
 public class Crf12MinWalkingStep extends ActiveStep {
 
     public static final String LOCATION_RECORDER_ID = "location";
-    public static final String MOTION_RECORDER_ID = "motion";
 
     public static final int SENSOR_FREQ = 100;
 
@@ -51,7 +50,6 @@ public class Crf12MinWalkingStep extends ActiveStep {
         setStepDuration(12 * 60); // 12 min
         List<RecorderConfig> configList = new ArrayList<>();
         configList.add(new LocationRecorderConfig(LOCATION_RECORDER_ID));
-        configList.add(new DeviceMotionRecorderConfig(MOTION_RECORDER_ID, SENSOR_FREQ));
         setRecorderConfigurationList(configList);
         setShouldContinueOnFinish(true);
         setShouldStartTimerAutomatically(true);

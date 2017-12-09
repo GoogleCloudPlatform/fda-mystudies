@@ -50,6 +50,7 @@ import org.sagebase.crf.view.CrfTaskStatusBarManipulator;
 import org.sagebase.crf.view.CrfTaskToolbarTintManipulator;
 import org.sagebionetworks.research.crf.R;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
@@ -167,7 +168,7 @@ public class CrfHeartRateStepLayout extends ActiveStepLayout implements
     @Override
     public void start() {
         hasDetectedStart = false;
-        bpmList = Collections.emptyList();
+        bpmList = new ArrayList<>();
 
         super.start();
 

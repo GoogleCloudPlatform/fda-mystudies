@@ -17,8 +17,13 @@
 
 package org.sagebionetworks.bridge.researchstack;
 
+import android.util.Log;
+
+import org.joda.time.DateTime;
 import org.researchstack.backbone.ResourceManager;
 import org.researchstack.backbone.answerformat.AnswerFormat;
+import org.researchstack.backbone.result.FileResult;
+import org.researchstack.backbone.result.Result;
 import org.researchstack.backbone.result.StepResult;
 import org.researchstack.backbone.storage.NotificationHelper;
 import org.researchstack.skin.AppPrefs;
@@ -26,11 +31,16 @@ import org.sagebase.crf.step.CrfBooleanAnswerFormat;
 import org.sagebase.crf.step.body.CrfChoiceAnswerFormat;
 import org.sagebase.crf.step.body.CrfIntegerAnswerFormat;
 import org.sagebionetworks.bridge.android.manager.BridgeManagerProvider;
+import org.sagebionetworks.bridge.data.Archive;
+import org.sagebionetworks.bridge.data.ArchiveFile;
+import org.sagebionetworks.bridge.data.JsonArchiveFile;
 import org.sagebionetworks.bridge.researchstack.factory.ArchiveFileFactory;
 import org.sagebionetworks.bridge.researchstack.survey.SurveyAnswer;
 import org.sagebionetworks.bridge.researchstack.wrapper.StorageAccessWrapper;
 
 import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Created by TheMDP on 10/20/17.
@@ -38,8 +48,13 @@ import java.util.HashMap;
 
 public class CrfTaskHelper extends TaskHelper {
 
-    private HashMap<String, String> mCrfResultMap = new HashMap<String, String>() {{
-        put("HeartRateCamera_camera","camera_cameraHeartRate_heartRate");
+    protected static final String ANSWERS_FILENAME = "answers";
+
+    protected static HashMap<String, String> CRF_RESULT_CONVERSION_MAP = new HashMap<String, String>() {{
+        put("HeartRateCamera_heartRate.before", "heartRate_before_recorder");
+        put("HeartRateCamera_heartRate.after",  "heartRate_after_recorder");
+        put("motion_stairStep",                 "stairStep_motion");
+        put("location_run",                     "location");
     }};
 
     public CrfTaskHelper(StorageAccessWrapper storageAccess, ResourceManager resourceManager, AppPrefs appPrefs, NotificationHelper notificationHelper, BridgeManagerProvider bridgeManagerProvider) {
@@ -48,16 +63,56 @@ public class CrfTaskHelper extends TaskHelper {
     }
 
     /**
-     * @param identifier identifier for the result
-     * @return the filename to use for the bridge result
+     * Can be overridden by sub-class for custom data archiving
+     * @param archiveBuilder fill this builder up with files from the flattenedResultList
+     * @param flattenedResultList read these and add them to the archiveBuilder
      */
-    @Override
-    public String bridgifyIdentifier(String identifier) {
-        String trueIdentifier = identifier;
-        if (mCrfResultMap.containsKey(identifier)) {
-            trueIdentifier = mCrfResultMap.get(trueIdentifier);
+    protected void addFiles(Archive.Builder archiveBuilder, List<Result> flattenedResultList, String taskResultId) {
+
+        // Per Bridge server schema, the background survey uses the default packaging
+        if (CrfTaskFactory.TASK_ID_BACKGROUND_SURVEY.equals(taskResultId)) {
+            super.addFiles(archiveBuilder, flattenedResultList, taskResultId);
+            return;
         }
-        return super.bridgifyIdentifier(trueIdentifier);
+
+        // The other tasks group all the question step results in a single "answers" file
+        Map<String, Object> answersMap = new HashMap<>();
+        for (Result result : flattenedResultList) {
+            boolean addedToAnswerMap = false;
+            if (result instanceof StepResult) {
+                StepResult stepResult = (StepResult)result;
+                addedToAnswerMap = true;
+                // This is a question step result, and will be added to the answers group
+                Map mapResults = stepResult.getResults();
+                for (Object key : mapResults.keySet()) {
+                    Object value = mapResults.get(key);
+                    if (key instanceof String && !(value instanceof FileResult)) {
+                        // We can only work with String keys
+                        if (StepResult.DEFAULT_KEY.equals(key)) {
+                            answersMap.put(stepResult.getIdentifier(), value);
+                        } else {
+                            answersMap.put((String)key, value);
+                        }
+                    }
+                }
+            }
+
+            // This is the default implementation
+            if (!addedToAnswerMap) {
+                ArchiveFile archiveFile = archiveFileFactory.fromResult(result);
+                if (archiveFile != null) {
+                    archiveBuilder.addDataFile(archiveFile);
+                } else {
+                    logger.error("Failed to convert Result to BridgeDataInput " + result.toString());
+                }
+            }
+        }
+
+        if (!answersMap.isEmpty()) {
+            // The answer group will not have a valid end date, if one is needed,
+            // consider adding key_endDate as a key/value in answer map above
+            archiveBuilder.addDataFile(new JsonArchiveFile(ANSWERS_FILENAME, DateTime.now(), answersMap));
+        }
     }
 
     /**
@@ -69,6 +124,14 @@ public class CrfTaskHelper extends TaskHelper {
     public static class CrfArchiveFileFactory extends ArchiveFileFactory {
         protected CrfArchiveFileFactory() {
             super();
+        }
+
+        @Override
+        protected String getFilename(String identifier) {
+            if (CrfTaskHelper.CRF_RESULT_CONVERSION_MAP.containsKey(identifier)) {
+                return CrfTaskHelper.CRF_RESULT_CONVERSION_MAP.get(identifier);
+            }
+            return identifier;
         }
 
         @Override
