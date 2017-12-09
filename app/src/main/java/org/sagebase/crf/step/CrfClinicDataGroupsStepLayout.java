@@ -73,7 +73,7 @@ public class CrfClinicDataGroupsStepLayout extends DataGroupQuestionStepLayout {
 
         BridgeDataProvider bridgeDataProvider = (BridgeDataProvider)DataProvider.getInstance();
         final WeakReference<View> weakView = new WeakReference<>(this);
-        List<String> localDataGroups = bridgeDataProvider.getDataGroups();
+        List<String> localDataGroups = bridgeDataProvider.getLocalDataGroups();
 
         bridgeDataProvider.getStudyParticipant().observeOn(AndroidSchedulers.mainThread())
                 .subscribe(participant -> {

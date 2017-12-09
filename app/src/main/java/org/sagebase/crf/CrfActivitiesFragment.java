@@ -19,11 +19,12 @@ package org.sagebase.crf;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.content.res.ResourcesCompat;
-import android.util.Log;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.annotation.VisibleForTesting;
+import android.support.v4.content.res.ResourcesCompat;
+import android.support.v7.widget.LinearLayoutManager;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.Toast;
@@ -54,6 +55,8 @@ import java.util.List;
 import java.util.Map;
 
 import rx.android.schedulers.AndroidSchedulers;
+
+import static org.junit.Assert.assertNotNull;
 
 /**
  * Created by TheMDP on 10/19/17
@@ -140,14 +143,26 @@ public class CrfActivitiesFragment extends ActivitiesFragment implements CrfFilt
         crfDataProvider.getCrfActivities(getContext(), new CrfDataProvider.CrfActivitiesListener() {
             @Override
             public void success(SchedulesAndTasksModel model) {
+
                 if (getActivity() != null && isAdded()) {
                     mScheduleModel = model;
                     refreshAdapterSuccess(mScheduleModel);
 
-                    if(mClinicDate == null) {
+                    if (crfDataProvider.getLocalDataGroups().contains(CrfDataProvider.TEST_USER)) {
+                        int numSchedules = model.schedules.size();
+                        if (!(numSchedules == 1)) {
+                            Log.w(LOG_TAG, "expected one schedule for test user, got " +
+                                    numSchedules);
+                        } else {
+                            mBackButton.setVisibility(View.VISIBLE);
+                            mSettingsButton.setVisibility(View.GONE);
+                            mClinicHeader.setVisibility(View.GONE);
+                            showActivitiesForSchedule(model.schedules.get(0));
+                        }
+                    } else if (mClinicDate == null) {
                         showAllActivities();
                     } else { // If there is a filter date, only show the clinic filtered activities
-                        showClinicActivities();
+                        showActivitiesForSchedule();
                     }
                 }
             }
@@ -167,12 +182,12 @@ public class CrfActivitiesFragment extends ActivitiesFragment implements CrfFilt
         });
     }
 
-    private void setupCrfScheduleSelection() {
+    private void setupSelectionHandler(boolean isSchedule) {
         if (getAdapter() != null && getAdapter() instanceof CrfTaskAdapter) {
             CrfTaskAdapter crfTaskAdapter = (CrfTaskAdapter)getAdapter();
 
             unsubscribe();
-            if (mClinicDate == null) {
+            if (isSchedule) {
                 setRxSubscription(crfTaskAdapter.publishScheduleSubject.subscribe(schedule -> {
                     LogExt.d(LOG_TAG, "Schedule clicked.");
                     scheduleSelected(schedule);
@@ -237,20 +252,19 @@ public class CrfActivitiesFragment extends ActivitiesFragment implements CrfFilt
         mSettingsButton.setVisibility(View.VISIBLE);
         mClinicHeader.setVisibility(View.GONE);
 
+        List tasks = new ArrayList();
+
         // Per Zeplin design, if first clinic is not complete, that is all the user will see
         // Otherwise the whole journey is visible
         if(isFirstClinicComplete()) {
-
-            List<Object> objList = new ArrayList<>();
             for (SchedulesAndTasksModel.ScheduleModel schedule: mScheduleModel.schedules) {
-                objList.add(schedule);
+                tasks.add(schedule);
             }
-            adapter.addAll(objList, false);
+            adapter.addAll(tasks, false);
             int todayPosition = adapter.getPositionForToday();
             Log.d(LOG_TAG, "Adapter today position: " + todayPosition);
             getRecyclerView().scrollToPosition(adapter.getPositionForToday());
         } else {
-            List<Object> tasks = new ArrayList<>();
             if (!CrfPrefs.getInstance().hasFirstSignInDate()) {
                 Log.e(LOG_TAG, "We shouldnt even have gotten here, aborting UI setup");
                 return;
@@ -269,7 +283,7 @@ public class CrfActivitiesFragment extends ActivitiesFragment implements CrfFilt
             adapter.addAll(tasks, false);
         }
 
-        setupCrfScheduleSelection();
+        setupSelectionHandler(true);
     }
 
     /**
@@ -283,7 +297,7 @@ public class CrfActivitiesFragment extends ActivitiesFragment implements CrfFilt
         } else {
             // transition to clinic detail screen
             mClinicDate = schedule.scheduledOn;
-            showClinicActivities();
+            showActivitiesForSchedule();
         }
     }
 
@@ -302,7 +316,7 @@ public class CrfActivitiesFragment extends ActivitiesFragment implements CrfFilt
     /**
      * Filter the activities to display based on the supplied date.
      */
-    private void showClinicActivities() {
+    private void showActivitiesForSchedule() {
         getSwipeFreshLayout().setEnabled(false);
 
         mBackButton.setVisibility(View.VISIBLE);
@@ -311,21 +325,23 @@ public class CrfActivitiesFragment extends ActivitiesFragment implements CrfFilt
 
         SchedulesAndTasksModel.ScheduleModel clinicSchedule = scheduleFor(mClinicDate);
         if (clinicSchedule != null) {
-            getAdapter().clear();
-            List<Object> tasks = new ArrayList<>();
-
-            //CrfTaskAdapter.Header header = new CrfTaskAdapter.Header(getString(R.string.crf_clinic_fitness_test),
-            //        getString(R.string.crf_clinic_message));
-            //tasks.add(header);
-
-            // Show all the tasks in the clinic
-            for (SchedulesAndTasksModel.TaskScheduleModel task : clinicSchedule.tasks) {
-                tasks.add(task);
-            }
-
-            ((CrfTaskAdapter)getAdapter()).addAll(tasks, true);
+            showActivitiesForSchedule(clinicSchedule);
         }
-        setupCrfScheduleSelection();
+    }
+
+    private void showActivitiesForSchedule(@NonNull SchedulesAndTasksModel.ScheduleModel clinicSchedule) {
+        assertNotNull(clinicSchedule);
+
+        List tasks = new ArrayList();
+        // Show all the tasks in the clinic
+        for (SchedulesAndTasksModel.TaskScheduleModel task : clinicSchedule.tasks) {
+            tasks.add(task);
+        }
+
+        getAdapter().clear();
+
+        ((CrfTaskAdapter)getAdapter()).addAll(tasks, true);
+        setupSelectionHandler(false);
     }
 
     /**
