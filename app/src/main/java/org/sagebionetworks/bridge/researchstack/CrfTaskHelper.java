@@ -17,8 +17,6 @@
 
 package org.sagebionetworks.bridge.researchstack;
 
-import android.util.Log;
-
 import org.joda.time.DateTime;
 import org.researchstack.backbone.ResourceManager;
 import org.researchstack.backbone.answerformat.AnswerFormat;
@@ -48,9 +46,9 @@ import java.util.Map;
 
 public class CrfTaskHelper extends TaskHelper {
 
-    protected static final String ANSWERS_FILENAME = "answers";
+    public static final String ANSWERS_FILENAME = "answers";
 
-    protected static HashMap<String, String> CRF_RESULT_CONVERSION_MAP = new HashMap<String, String>() {{
+    static HashMap<String, String> CRF_RESULT_CONVERSION_MAP = new HashMap<String, String>() {{
         put("HeartRateCamera_heartRate.before", "heartRate_before_recorder");
         put("HeartRateCamera_heartRate.after",  "heartRate_after_recorder");
         put("motion_stairStep",                 "stairStep_motion");
@@ -69,13 +67,15 @@ public class CrfTaskHelper extends TaskHelper {
      */
     protected void addFiles(Archive.Builder archiveBuilder, List<Result> flattenedResultList, String taskResultId) {
 
-        // Per Bridge server schema, the background survey uses the default packaging
+        // Per Bridge server schema, the background survey uses the default survey packaging
         if (CrfTaskFactory.TASK_ID_BACKGROUND_SURVEY.equals(taskResultId)) {
             super.addFiles(archiveBuilder, flattenedResultList, taskResultId);
             return;
         }
 
-        // The other tasks group all the question step results in a single "answers" file
+        // The other tasks group the question step results in a single "answers" file
+        // This is behavior that the bridge server team has wanted for a long time
+        // Once this is proven capable, its functionality should be moved into TaskHelper base class
         Map<String, Object> answersMap = new HashMap<>();
         for (Result result : flattenedResultList) {
             boolean addedToAnswerMap = false;
