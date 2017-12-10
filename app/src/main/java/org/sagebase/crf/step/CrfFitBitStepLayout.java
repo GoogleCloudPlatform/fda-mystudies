@@ -88,6 +88,11 @@ public class CrfFitBitStepLayout extends CrfInstructionStepLayout {
         }
     }
 
+    @Override
+    public int getContentResourceId() {
+        return R.layout.crf_step_layout_fitbit;
+    }
+
     @VisibleForTesting
     static boolean shouldAllowSkip(Set<String> dataGroups) {
         return !Sets.intersection(CrfDataProvider.TEST_DATA_GROUPS, dataGroups).isEmpty();
