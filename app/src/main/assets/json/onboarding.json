@@ -34,12 +34,28 @@
             {
               "text": "Tester",
               "value": "test_user"
+            }
+          ],
+          "expectedAnswer": "test_user",
+          "skipIdentifier": "clinicChoices",
+          "optional": false
+        },
+        {
+          "identifier": "testerChoices",
+          "title": "How do I want to experience the app while testing?",
+          "type": "dataGroups.singleChoiceText",
+          "items": [
+            {
+              "text": "Activities always available",
+              "value": "activity_tester"
             },
             {
-              "text": "UX Tester",
+              "text": "As a participant would see it",
               "value": "ux_tester"
             }
           ],
+          "expectedAnswer": "ux_tester",
+          "skipIdentifier": "fitbit",
           "optional": false
         },
         {

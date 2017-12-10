@@ -108,7 +108,7 @@ public class CrfTaskAdapter extends TaskAdapter {
             firstTask = (SchedulesAndTasksModel.TaskScheduleModel)obj;
          }
 
-         boolean isHldrClickable = false;
+        boolean isHldrClickable = false;
         if (schedule != null) {
             isHldrClickable = CrfScheduleHelper.isScheduleEnabled(schedule);
             if (isHldrClickable) {

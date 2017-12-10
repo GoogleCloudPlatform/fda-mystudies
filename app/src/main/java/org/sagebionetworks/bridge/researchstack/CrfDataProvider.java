@@ -52,9 +52,10 @@ public class CrfDataProvider extends BridgeDataProvider {
     public static final String CLINIC2 = "clinic2";
     public static final String TEST_USER = "test_user";
     public static final String UX_TESTER = "ux_tester";
+    public static final String ACTIVITY_TESTER = "activity_tester";
 
     public static final Set<String> HIDDEN_TASK_IDS = ImmutableSet.of(CLINIC1, CLINIC2);
-    public static final Set<String> TEST_DATA_GROUPS = ImmutableSet.of(TEST_USER, UX_TESTER);
+    public static final Set<String> TEST_DATA_GROUPS = ImmutableSet.of(TEST_USER, UX_TESTER, ACTIVITY_TESTER);
 
 
     public static final int STUDY_DURATION_IN_DAYS = 15;
@@ -157,14 +158,14 @@ public class CrfDataProvider extends BridgeDataProvider {
             logV("Raw Activities:");
             debugPrintActivities(activityList.getItems());
 
-            List<ScheduledActivity> fitleredActivities = activityList.getItems();
+            List<ScheduledActivity> filteredActivities = activityList.getItems();
             if (performFiltering) {
-                fitleredActivities = filterResults(activityList);
+                filteredActivities = filterResults(activityList);
                 logV("Filtered Activities:");
-                debugPrintActivities(fitleredActivities);
+                debugPrintActivities(filteredActivities);
             }
 
-            SchedulesAndTasksModel model = translateActivities(fitleredActivities);
+            SchedulesAndTasksModel model = translateActivities(filteredActivities);
 
             // Set reminders for CRF app
             if (weakContext != null && weakContext.get() != null) {
