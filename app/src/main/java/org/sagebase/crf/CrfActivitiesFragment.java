@@ -94,13 +94,6 @@ public class CrfActivitiesFragment extends ActivitiesFragment implements CrfFilt
                     .put(CrfTaskFactory.TASK_ID_BACKGROUND_SURVEY, CrfResourceManager.BACKGROUND_SURVEY_RESOURCE)
                     .build();
 
-    @Nullable
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.crf_fragment_activities, container,
-                false);
-    }
-
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
