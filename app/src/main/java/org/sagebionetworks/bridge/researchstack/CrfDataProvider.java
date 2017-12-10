@@ -144,8 +144,14 @@ public class CrfDataProvider extends BridgeDataProvider {
             logV("No sign in date detected");
             // getCrfActivities method will be called again when sign in date is found, so return
             // here
-            createOrFindFirstSignInDate(listener);
-            return;
+            if (getLocalDataGroups().contains(ACTIVITY_TESTER)) {
+                // sign in date is used to retrieve clinic schedules, which are based on sign-in
+                // ACTIVITY_TESTER receives persistent tasks, and has no clinic sign in date
+                getCrfPrefs().setFirstSignInDate(DateTime.now());
+            } else {
+                createOrFindFirstSignInDate(listener);
+                return;
+            }
         }
 
         DateTime firstSignInDate = getCrfPrefs().getFirstSignInDate();
