@@ -25,7 +25,9 @@ import android.support.annotation.VisibleForTesting;
 import android.support.v4.content.res.ResourcesCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.Toast;
 
@@ -92,6 +94,13 @@ public class CrfActivitiesFragment extends ActivitiesFragment implements CrfFilt
                     .put(CrfTaskFactory.TASK_ID_BACKGROUND_SURVEY, CrfResourceManager.BACKGROUND_SURVEY_RESOURCE)
                     .build();
 
+    @Nullable
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        return inflater.inflate(R.layout.crf_fragment_activities, container,
+                false);
+    }
+
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
@@ -154,8 +163,8 @@ public class CrfActivitiesFragment extends ActivitiesFragment implements CrfFilt
                             Log.w(LOG_TAG, "expected one schedule for test user, got " +
                                     numSchedules);
                         } else {
-                            mBackButton.setVisibility(View.VISIBLE);
-                            mSettingsButton.setVisibility(View.GONE);
+                            mBackButton.setVisibility(View.GONE);
+                            mSettingsButton.setVisibility(View.VISIBLE);
                             mClinicHeader.setVisibility(View.GONE);
                             showActivitiesForSchedule(model.schedules.get(0));
                         }
