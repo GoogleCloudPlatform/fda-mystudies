@@ -25,9 +25,7 @@ import android.support.annotation.VisibleForTesting;
 import android.support.v4.content.res.ResourcesCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.Toast;
 
@@ -155,27 +153,16 @@ public class CrfActivitiesFragment extends ActivitiesFragment implements CrfFilt
                     // test users come in two types. ux_testers should see normal ux, non
                     // UX_TESTER (often marked with ACTIVITY_TESTER) receive persistent tasks
                     if (localDataGroups.contains(CrfDataProvider.TEST_USER)
-                            && ! localDataGroups.contains(CrfDataProvider.UX_TESTER)
+                            && !localDataGroups.contains(CrfDataProvider.UX_TESTER)
                             ) {
-
-                        int numSchedules = model.schedules.size();
-                        if (!(numSchedules == 1)) {
-                            Log.w(LOG_TAG, "expected one schedule for test user, got " +
-                                    numSchedules);
-                        } else {
-                            mBackButton.setVisibility(View.GONE);
-                            mSettingsButton.setVisibility(View.VISIBLE);
-                            mClinicHeader.setVisibility(View.GONE);
-                            showActivitiesForSchedule(model.schedules.get(0));
+                        showActivitiesForTestUser();
+                    } else {
+                        // UX logic for participants and UX_TESTER
+                        if (mClinicDate == null) {
+                            showAllActivities();
+                        } else { // If there is a filter date, only show the clinic filtered activities
+                            showActivitiesForSchedule();
                         }
-
-                        return;
-                    }
-
-                    if (mClinicDate == null) {
-                        showAllActivities();
-                    } else { // If there is a filter date, only show the clinic filtered activities
-                        showActivitiesForSchedule();
                     }
                 }
             }
@@ -193,6 +180,19 @@ public class CrfActivitiesFragment extends ActivitiesFragment implements CrfFilt
                 }
             }
         });
+    }
+
+    private void showActivitiesForTestUser() {
+        int numSchedules = mScheduleModel.schedules.size();
+        if (!(numSchedules == 1)) {
+            Log.w(LOG_TAG, "expected one schedule for test user, got " +
+                    numSchedules);
+        } else {
+            mBackButton.setVisibility(View.GONE);
+            mSettingsButton.setVisibility(View.VISIBLE);
+            mClinicHeader.setVisibility(View.GONE);
+            showActivitiesForSchedule(mScheduleModel.schedules.get(0));
+        }
     }
 
     private void setupSelectionHandler(boolean isSchedule) {
