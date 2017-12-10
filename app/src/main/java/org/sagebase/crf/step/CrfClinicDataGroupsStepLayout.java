@@ -68,6 +68,17 @@ public class CrfClinicDataGroupsStepLayout extends DataGroupQuestionStepLayout {
             throw new IllegalStateException("CrfClinicDataGroupsStepLayout only works with BridgeDataProvider");
         }
 
+
+        /**
+         *
+         *
+         * TODO: skip group selection if already set
+         *
+         *
+         *
+         */
+
+
         String loadingTitle = getString(R.string.crf_data_groups_loading_title);
         showLoadingDialog(loadingTitle);
 

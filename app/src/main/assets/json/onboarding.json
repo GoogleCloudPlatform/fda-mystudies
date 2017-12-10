@@ -36,6 +36,7 @@
               "value": "test_user"
             }
           ],
+          "shouldSkipIfSessionContainsDataGroups": true,
           "expectedAnswer": "test_user",
           "skipIdentifier": "clinicChoices",
           "optional": false
@@ -54,6 +55,7 @@
               "value": "ux_tester"
             }
           ],
+          "shouldSkipIfSessionContainsDataGroups": true,
           "expectedAnswer": "ux_tester",
           "skipIdentifier": "fitbit",
           "optional": false
