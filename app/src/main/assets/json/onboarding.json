@@ -58,7 +58,8 @@
           "shouldSkipIfSessionContainsDataGroups": true,
           "expectedAnswer": "ux_tester",
           "skipIdentifier": "fitbit",
-          "optional": false
+          "optional": false,
+          "shouldPersist": true // clinicChoices also persists, but is skipped for activity_tester
         },
         {
           "identifier": "clinicChoices",
@@ -74,6 +75,7 @@
               "value": "clinic1"
             }
           ],
+          "shouldSkipIfSessionContainsDataGroups": true,
           "optional": false,
           "shouldPersist": true
         },
