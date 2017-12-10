@@ -24,11 +24,14 @@ import android.view.View;
 
 import com.google.common.collect.Sets;
 
+import org.researchstack.backbone.DataProvider;
 import org.researchstack.backbone.result.StepResult;
 import org.researchstack.backbone.step.Step;
 import org.sagebase.crf.fitbit.FitbitManager;
 import org.sagebionetworks.bridge.android.manager.BridgeManagerProvider;
+import org.sagebionetworks.bridge.researchstack.BridgeDataProvider;
 import org.sagebionetworks.bridge.researchstack.CrfDataProvider;
+import org.sagebionetworks.research.crf.R;
 
 import java.util.Set;
 
@@ -59,11 +62,14 @@ public class CrfFitBitStepLayout extends CrfInstructionStepLayout {
 
     @Override
     public void initialize(Step step, StepResult result) {
+        if (!(DataProvider.getInstance() instanceof BridgeDataProvider)) {
+            throw new IllegalStateException("CrfClinicDataGroupsStepLayout only works with BridgeDataProvider");
+        }
+
+        BridgeDataProvider bridgeDataProvider = (BridgeDataProvider)DataProvider.getInstance();
+
         Set<String> dataGroups = Sets.newHashSet(
-                BridgeManagerProvider.getInstance()
-                        .getAuthenticationManager()
-                        .getUserSessionInfo()
-                        .getDataGroups()
+                bridgeDataProvider.getLocalDataGroups()
         );
 
         if(shouldAllowSkip(dataGroups)) {
