@@ -68,11 +68,11 @@
           "items": [
             {
               "text": "Cardiorespiratory stress test first visit, step and 12 minute run last visit",
-              "value": "clinic2"
+              "value": "clinic1"
             },
             {
               "text": "Step and 12 minute run first visit, cardiorespiratory stress test last visit",
-              "value": "clinic1"
+              "value": "clinic2"
             }
           ],
           "shouldSkipIfSessionContainsDataGroups": true,
