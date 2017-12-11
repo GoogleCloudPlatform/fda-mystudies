@@ -75,6 +75,7 @@
               "value": "clinic2"
             }
           ],
+          // this relies on session not being updated (since the last step will persist dataGroup)
           "shouldSkipIfSessionContainsDataGroups": true,
           "optional": false,
           "shouldPersist": true
