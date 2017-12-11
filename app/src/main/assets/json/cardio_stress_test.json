@@ -1,6 +1,6 @@
 {
-  "taskIdentifier" : "HeartRate Measurement",
-  "schemaIdentifier" : "HeartRate Measurement",
+  "taskIdentifier" : "Cardio Stress Test",
+  "schemaIdentifier" : "Cardio Stress Test",
   "optional" : false,
   "taskSteps" : [
     {
@@ -33,7 +33,7 @@
       "buttonText"       : "Press to start"
     },
     {
-      "identifier"       : "camera",
+      "identifier"       : "heartRate.before",
       "type"             : "crf_heart_rate_camera_step"
     },
     {
@@ -78,7 +78,7 @@
       "buttonText"       : "Press to start"
     },
     {
-      "identifier"       : "camera2",
+      "identifier"       : "heartRate.after",
       "type"             : "crf_heart_rate_camera_step"
     },
     {

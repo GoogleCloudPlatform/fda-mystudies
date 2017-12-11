@@ -44,9 +44,12 @@ import java.util.Locale;
 
 public class Crf12MinWalkingStepLayout extends ActiveStepLayout implements CrfTaskStatusBarManipulator {
 
+    private static final String CRF_12_RUN_IDENTIFIER_SUFFIX = ".runDistance";
+
     private TextView crfCountdownText;
 
     protected TextView distanceNumber;
+    protected int lastDistanceMeasurement;
 
     protected View arcDrawableContainer;
     protected ArcDrawable arcDrawable;
@@ -97,7 +100,8 @@ public class Crf12MinWalkingStepLayout extends ActiveStepLayout implements CrfTa
         super.start();
 
         distanceNumber.setText("0");
-        setDistanceResult("0");
+        setDistanceResultForCompletionStep("0");
+        lastDistanceMeasurement = 0;
 
         for (Recorder recorder : recorderList) {
             if (recorder instanceof LocationRecorder) {
@@ -109,14 +113,28 @@ public class Crf12MinWalkingStepLayout extends ActiveStepLayout implements CrfTa
                         DecimalFormat formatter = new DecimalFormat("#,###,###");
                         String distanceString = formatter.format(distanceInFeet);
                         distanceNumber.setText(distanceString);
-                        setDistanceResult(distanceString);
+                        setDistanceResultForCompletionStep(distanceString);
+                        lastDistanceMeasurement = distanceInFeet;
                     }
                 });
             }
         }
     }
 
-    private void setDistanceResult(String resultStr) {
+    @Override
+    public void onComplete(Recorder recorder, Result result) {
+        super.onComplete(recorder, result);
+        setFinalDistanceResult();
+    }
+
+    private void setFinalDistanceResult() {
+        String stepId = activeStep.getIdentifier() + CRF_12_RUN_IDENTIFIER_SUFFIX;
+        StepResult<Double> result = new StepResult<>(new Step(stepId));
+        result.setResult((double) lastDistanceMeasurement);
+        stepResult.setResultForIdentifier(stepId, result);
+    }
+
+    private void setDistanceResultForCompletionStep(String resultStr) {
         String distanceStepId = CrfCompletionStepLayout.COMPLETION_DISTANCE_VALUE_RESULT;
         StepResult<String> distanceResult = new StepResult<>(new Step(distanceStepId));
         distanceResult.setResult(resultStr);

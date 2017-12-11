@@ -28,17 +28,38 @@
           "type": "dataGroups.singleChoiceText",
           "items": [
             {
-              "text": "Tester",
-              "value": "test_user"
-            },
-            {
               "text": "Participant",
               "value": ""
+            },
+            {
+              "text": "Tester",
+              "value": "test_user"
             }
           ],
+          "shouldSkipIfSessionContainsDataGroups": true,
           "expectedAnswer": "test_user",
           "skipIdentifier": "clinicChoices",
           "optional": false
+        },
+        {
+          "identifier": "testerChoices",
+          "title": "How do I want to experience the app while testing?",
+          "type": "dataGroups.singleChoiceText",
+          "items": [
+            {
+              "text": "Activities always available",
+              "value": "activity_tester"
+            },
+            {
+              "text": "As a participant would see it",
+              "value": "ux_tester"
+            }
+          ],
+          "shouldSkipIfSessionContainsDataGroups": true,
+          "expectedAnswer": "ux_tester",
+          "skipIdentifier": "fitbit",
+          "optional": false,
+          "shouldPersist": true // clinicChoices also persists, but is skipped for activity_tester
         },
         {
           "identifier": "clinicChoices",
@@ -47,13 +68,15 @@
           "items": [
             {
               "text": "Cardiorespiratory stress test first visit, step and 12 minute run last visit",
-              "value": "clinic2"
+              "value": "clinic1"
             },
             {
               "text": "Step and 12 minute run first visit, cardiorespiratory stress test last visit",
-              "value": "clinic1"
+              "value": "clinic2"
             }
           ],
+          // this relies on session not being updated (since the last step will persist dataGroup)
+          "shouldSkipIfSessionContainsDataGroups": true,
           "optional": false,
           "shouldPersist": true
         },

@@ -5,21 +5,16 @@ import android.content.Intent;
 
 import com.google.gson.GsonBuilder;
 
-import org.researchstack.backbone.answerformat.AnswerFormat;
 import org.researchstack.backbone.factory.IntentFactory;
-import org.researchstack.backbone.model.survey.InstructionSurveyItem;
 import org.researchstack.backbone.model.survey.SurveyItem;
 import org.researchstack.backbone.model.survey.factory.SurveyFactory;
 import org.researchstack.backbone.onboarding.OnboardingManagerTask;
 import org.researchstack.backbone.step.Step;
 import org.researchstack.backbone.task.NavigableOrderedTask;
-import org.sagebase.crf.step.CrfClinicDataGroupsStepLayout;
-import org.sagebase.crf.step.CrfFitBitStepLayout;
-import org.sagebase.crf.step.CrfInstructionSurveyItem;
-import org.sagebionetworks.bridge.researchstack.onboarding.BridgeOnboardingManager;
-import org.sagebionetworks.bridge.researchstack.step.DataGroupQuestionStep;
 import org.sagebase.crf.CrfOnboardingTaskActivity;
 import org.sagebase.crf.step.CrfExternalIdStep;
+import org.sagebase.crf.step.CrfInstructionSurveyItem;
+import org.sagebionetworks.bridge.researchstack.onboarding.BridgeOnboardingManager;
 
 import java.util.List;
 
@@ -72,15 +67,7 @@ public class CrfOnboardingManager extends BridgeOnboardingManager {
         }
         return super.createCustomStep(context, item, isSubtaskStep, factory);
     }
-
-    @Override
-    protected DataGroupQuestionStep dataGroupsQuestionStep(String identifier, String title, AnswerFormat format) {
-        if (CrfClinicDataGroupsStepLayout.CrfDataGroupQuestionStep.CUSTOM_STEP_IDENTIFIER.equals(identifier)) {
-            return new CrfClinicDataGroupsStepLayout.CrfDataGroupQuestionStep(identifier, title, format);
-        }
-        return super.dataGroupsQuestionStep(identifier, title, format);
-    }
-
+    
     @Override
     public OnboardingManagerTask createOnboardingTask(String identifier, List<Step> stepList) {
         // here we can implement our own Task, but it needs to be a NavigableOrderedTask

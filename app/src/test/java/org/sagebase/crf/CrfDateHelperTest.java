@@ -21,7 +21,7 @@ import org.joda.time.DateTime;
 import org.junit.Test;
 import org.sagebase.crf.helper.CrfDateHelper;
 
-import static junit.framework.Assert.assertFalse;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 public class CrfDateHelperTest {

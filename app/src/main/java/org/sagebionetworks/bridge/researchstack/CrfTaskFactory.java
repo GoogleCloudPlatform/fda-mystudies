@@ -24,25 +24,39 @@ import com.google.gson.GsonBuilder;
 
 import org.researchstack.backbone.ResourceManager;
 import org.researchstack.backbone.ResourcePathManager;
+import org.researchstack.backbone.answerformat.AnswerFormat;
+import org.researchstack.backbone.answerformat.ChoiceAnswerFormat;
+import org.researchstack.backbone.answerformat.IntegerAnswerFormat;
 import org.researchstack.backbone.factory.IntentFactory;
+import org.researchstack.backbone.model.Choice;
 import org.researchstack.backbone.model.survey.ActiveStepSurveyItem;
+import org.researchstack.backbone.model.survey.BooleanQuestionSurveyItem;
+import org.researchstack.backbone.model.survey.ChoiceQuestionSurveyItem;
+import org.researchstack.backbone.model.survey.CompoundQuestionSurveyItem;
+import org.researchstack.backbone.model.survey.IntegerRangeSurveyItem;
+import org.researchstack.backbone.model.survey.QuestionSurveyItem;
 import org.researchstack.backbone.model.survey.SurveyItem;
+import org.researchstack.backbone.model.survey.SurveyItemType;
 import org.researchstack.backbone.model.survey.factory.SurveyFactory;
 import org.researchstack.backbone.model.taskitem.TaskItem;
 import org.researchstack.backbone.model.taskitem.TaskItemAdapter;
 import org.researchstack.backbone.model.taskitem.factory.TaskItemFactory;
 import org.researchstack.backbone.result.StepResult;
 import org.researchstack.backbone.result.TaskResult;
+import org.researchstack.backbone.step.NavigationFormStep;
+import org.researchstack.backbone.step.QuestionStep;
 import org.researchstack.backbone.step.Step;
 import org.researchstack.backbone.task.Task;
 import org.sagebase.crf.CrfOnboardingTaskActivity;
 import org.sagebase.crf.CrfSettingsActivity;
 import org.sagebase.crf.CrfSurveyTaskActivity;
 import org.sagebase.crf.step.Crf12MinWalkingStep;
+import org.sagebase.crf.step.CrfBooleanAnswerFormat;
 import org.sagebase.crf.step.CrfCompletionStep;
 import org.sagebase.crf.step.CrfCompletionSurveyItem;
 import org.sagebase.crf.step.CrfCountdownStep;
 import org.sagebase.crf.step.CrfFitBitStepLayout;
+import org.sagebase.crf.step.CrfFormStep;
 import org.sagebase.crf.step.CrfHeartRateCameraStep;
 import org.sagebase.crf.step.CrfInstructionStep;
 import org.sagebase.crf.step.CrfInstructionSurveyItem;
@@ -51,10 +65,19 @@ import org.sagebase.crf.step.CrfStairSurveyItem;
 import org.sagebase.crf.step.CrfPhotoCaptureStep;
 import org.sagebase.crf.step.CrfStartTaskStep;
 import org.sagebase.crf.step.CrfStartTaskSurveyItem;
+import org.sagebase.crf.step.body.CrfChoiceAnswerFormat;
+import org.sagebase.crf.step.body.CrfIntegerAnswerFormat;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.ArrayList;
+import java.util.List;
+
+import retrofit2.http.OPTIONS;
+
+import static org.sagebionetworks.bridge.researchstack.CrfSurveyItemAdapter.CRF_INTEGER_SURVEY_ITEM_TYPE;
 
 /**
  * Created by TheMDP on 10/24/17.
@@ -63,6 +86,8 @@ import java.util.Map;
 public class CrfTaskFactory extends TaskItemFactory {
 
     public static final String TASK_ID_HEART_RATE_MEASUREMENT = "HeartRate Measurement";
+    public static final String TASK_ID_CARDIO_STRESS_TEST = "Cardio Stress Test";
+
     public static final String TASK_ID_CARDIO_12MT = "Cardio 12MT";
     public static final String TASK_ID_STAIR_STEP = "Cardio Stair Step";
     public static final String TASK_ID_BACKGROUND_SURVEY = "Background Survey";
@@ -150,11 +175,60 @@ public class CrfTaskFactory extends TaskItemFactory {
                                 throw new IllegalStateException("crf_fitbit types must be parsed as CrfInstructionSurveyItem");
                             }
                             return createFitBitStep((CrfInstructionSurveyItem)item);
+                        case CrfSurveyItemAdapter.CRF_FORM_SURVEY_ITEM_TYPE:
+                            if (!(item instanceof CompoundQuestionSurveyItem)) {
+                                throw new IllegalStateException("Error in json parsing, crf_form types must be CrfFormSurveyItem");
+                            }
+                            return createCrfFormStep(context, (CompoundQuestionSurveyItem)item);
+                        case CrfSurveyItemAdapter.CRF_BOOLEAN_SURVEY_ITEM_TYPE:
+                        case CrfSurveyItemAdapter.CRF_INTEGER_SURVEY_ITEM_TYPE:
+                        case CrfSurveyItemAdapter.CRF_MULTIPLE_CHOICE_SURVEY_ITEM_TYPE:
+                        case CrfSurveyItemAdapter.CRF_SINGLE_CHOICE_SURVEY_ITEM_TYPE:
+                            if (!(item instanceof QuestionSurveyItem)) {
+                                throw new IllegalStateException("Error in json parsing " + item.getCustomTypeValue() + ", types must be QuestionSurveyItem");
+                            }
+                            // Even though these weren't wrapped in a form step, we are going to wrap
+                            // them in a CrfFormStep so that the UI looks appropriate
+                            QuestionSurveyItem questionItem = (QuestionSurveyItem)item;
+                            CompoundQuestionSurveyItem compoundQuestionSurveyItem = new CrfFormSurveyItemWrapper();
+                            compoundQuestionSurveyItem.identifier = item.identifier + "Form";
+                            compoundQuestionSurveyItem.items = Collections.singletonList(item);
+                            compoundQuestionSurveyItem.skipIdentifier = questionItem.skipIdentifier;
+                            compoundQuestionSurveyItem.skipIfPassed = questionItem.skipIfPassed;
+                            compoundQuestionSurveyItem.expectedAnswer = questionItem.expectedAnswer;
+                            return createCrfFormStep(context, compoundQuestionSurveyItem);
                     }
                 }
                 return null;
             }
         });
+    }
+
+    public static class CrfFormSurveyItemWrapper extends CompoundQuestionSurveyItem {
+
+        /* Default constructor needed for serilization/deserialization of object */
+        public CrfFormSurveyItemWrapper() {
+            super();
+        }
+
+        @Override
+        public String getCustomTypeValue() {
+            return CrfSurveyItemAdapter.CRF_FORM_SURVEY_ITEM_TYPE;
+        }
+    }
+
+    @Override
+    public AnswerFormat createCustomAnswerFormat(Context context, QuestionSurveyItem item) {
+        switch (item.getCustomTypeValue()) {
+            case CrfSurveyItemAdapter.CRF_BOOLEAN_SURVEY_ITEM_TYPE:
+                return createCrfBooleanAnswerFormat(context, item);
+            case CrfSurveyItemAdapter.CRF_INTEGER_SURVEY_ITEM_TYPE:
+                return createCrfIntegerAnswerFormat(context, item);
+            case CrfSurveyItemAdapter.CRF_MULTIPLE_CHOICE_SURVEY_ITEM_TYPE:
+            case CrfSurveyItemAdapter.CRF_SINGLE_CHOICE_SURVEY_ITEM_TYPE:
+                return createCrfChoiceAnswerFormat(context, item);
+        }
+        return super.createCustomAnswerFormat(context, item);
     }
 
     private CrfInstructionStep createCrfInstructionStep(CrfInstructionSurveyItem item) {
@@ -314,5 +388,47 @@ public class CrfTaskFactory extends TaskItemFactory {
         Task task = createTask(context, CrfResourceManager.SETTINGS_SCREEN_RESOURCE);
         context.startActivity(IntentFactory.INSTANCE.newTaskIntent(
                 context, CrfSettingsActivity.class, task, taskResult));
+    }
+
+    private CrfFormStep createCrfFormStep(Context context, CompoundQuestionSurveyItem item) {
+        if (item.items == null || item.items.isEmpty()) {
+            throw new IllegalStateException("compound surveys must have step items to proceed");
+        }
+
+        List<QuestionStep> questionSteps = super.formStepCreateQuestionSteps(context, item);
+        CrfFormStep step = new CrfFormStep(item.identifier, item.title, item.text, questionSteps);
+        fillNavigationFormStep(step, item);
+        return step;
+    }
+
+    public CrfBooleanAnswerFormat createCrfBooleanAnswerFormat(Context context, QuestionSurveyItem item) {
+        if (!(item instanceof BooleanQuestionSurveyItem)) {
+            throw new IllegalStateException("Error in json parsing, QUESTION_BOOLEAN types must be BooleanQuestionSurveyItem");
+        }
+        CrfBooleanAnswerFormat format = new CrfBooleanAnswerFormat();
+        fillBooleanAnswerFormat(context, format, (BooleanQuestionSurveyItem)item);
+        return format;
+    }
+
+    public CrfIntegerAnswerFormat createCrfIntegerAnswerFormat(Context context, QuestionSurveyItem item) {
+        if (!(item instanceof IntegerRangeSurveyItem)) {
+            throw new IllegalStateException("Error in json parsing, QUESTION_INTEGER types must be IntegerRangeSurveyItem");
+        }
+        CrfIntegerAnswerFormat format = new CrfIntegerAnswerFormat();
+        fillIntegerAnswerFormat(format, (IntegerRangeSurveyItem)item);
+        return format;
+    }
+
+    public CrfChoiceAnswerFormat createCrfChoiceAnswerFormat(Context context, QuestionSurveyItem item) {
+        if (!(item instanceof ChoiceQuestionSurveyItem)) {
+            throw new IllegalStateException("Error in json parsing, this type must be ChoiceQuestionSurveyItem");
+        }
+        CrfChoiceAnswerFormat format = new CrfChoiceAnswerFormat();
+        fillChoiceAnswerFormat(format, (ChoiceQuestionSurveyItem)item);
+        // Override setting multiple choice answer format, since it is a custom survey type
+        if (item.getCustomTypeValue().equals(CrfSurveyItemAdapter.CRF_MULTIPLE_CHOICE_SURVEY_ITEM_TYPE)) {
+            format.setAnswerStyle(AnswerFormat.ChoiceAnswerStyle.MultipleChoice);
+        }
+        return format;
     }
 }

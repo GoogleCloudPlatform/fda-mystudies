@@ -59,7 +59,7 @@ dependencies {
     implementation project(':researchstack-sdk')
 
     // Important - the CameraSource implementation in this project requires version 8.1 or higher.
-    implementation 'com.google.android.gms:play-services-vision:10.0.1+'
+    implementation 'com.google.android.gms:play-services-vision:10.0.1'
 
     testImplementation  'junit:junit:4.12'
     testImplementation  'org.robolectric:robolectric:3.5'
