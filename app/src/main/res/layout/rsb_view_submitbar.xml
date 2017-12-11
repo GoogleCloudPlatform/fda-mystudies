@@ -32,7 +32,8 @@
         android:layout_width="match_parent"
         android:layout_height="@dimen/crf_rounded_button_height"
         android:layout_margin="16dp"
-        android:text="@string/rsb_BUTTON_NEXT"/>
+        android:text="@string/rsb_BUTTON_NEXT"
+        android:textAllCaps="false"/>
 
     <Button
         android:id="@+id/bar_submit_negative"
