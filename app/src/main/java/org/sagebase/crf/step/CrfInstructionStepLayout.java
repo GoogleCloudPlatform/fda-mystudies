@@ -72,10 +72,6 @@ public class CrfInstructionStepLayout extends InstructionStepLayout implements
 
     @Override
     public void initialize(Step step, StepResult result) {
-        // we provide our own next button
-        if (submitBar != null) {
-            submitBar.getPositiveActionView().setVisibility(View.INVISIBLE);
-        }
         validateAndSetCrfStep(step);
         super.initialize(step, result);
     }

@@ -139,7 +139,6 @@ public class CrfActivitiesFragment extends ActivitiesFragment implements CrfFilt
             });
         }
 
-
         crfDataProvider.getCrfActivities(getContext(), new CrfDataProvider.CrfActivitiesListener() {
             @Override
             public void success(SchedulesAndTasksModel model) {
@@ -148,13 +147,7 @@ public class CrfActivitiesFragment extends ActivitiesFragment implements CrfFilt
                     mScheduleModel = model;
                     refreshAdapterSuccess(mScheduleModel);
 
-                    List<String> localDataGroups = crfDataProvider.getLocalDataGroups();
-
-                    // test users come in two types. ux_testers should see normal ux, non
-                    // UX_TESTER (often marked with ACTIVITY_TESTER) receive persistent tasks
-                    if (localDataGroups.contains(CrfDataProvider.TEST_USER)
-                            && !localDataGroups.contains(CrfDataProvider.UX_TESTER)
-                            ) {
+                    if (crfDataProvider.isTestUser()) {
                         showActivitiesForTestUser();
                     } else {
                         // UX logic for participants and UX_TESTER
@@ -185,14 +178,12 @@ public class CrfActivitiesFragment extends ActivitiesFragment implements CrfFilt
     private void showActivitiesForTestUser() {
         int numSchedules = mScheduleModel.schedules.size();
         if (!(numSchedules == 1)) {
-            Log.w(LOG_TAG, "expected one schedule for test user, got " +
-                    numSchedules);
-        } else {
-            mBackButton.setVisibility(View.GONE);
-            mSettingsButton.setVisibility(View.VISIBLE);
-            mClinicHeader.setVisibility(View.GONE);
-            showActivitiesForSchedule(mScheduleModel.schedules.get(0));
+            Log.w(LOG_TAG, "expected one schedule for test user, got " + numSchedules);
         }
+        mBackButton.setVisibility(View.GONE);
+        mSettingsButton.setVisibility(View.VISIBLE);
+        mClinicHeader.setVisibility(View.GONE);
+        showActivitiesForSchedule(mScheduleModel.schedules.get(0));
     }
 
     private void setupSelectionHandler(boolean isSchedule) {

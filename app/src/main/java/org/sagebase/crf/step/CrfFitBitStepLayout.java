@@ -20,13 +20,18 @@ package org.sagebase.crf.step;
 import android.content.Context;
 import android.support.annotation.VisibleForTesting;
 import android.util.AttributeSet;
+import android.view.Gravity;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.FrameLayout;
+import android.widget.FrameLayout.LayoutParams;
 
 import com.google.common.collect.Sets;
 
 import org.researchstack.backbone.DataProvider;
 import org.researchstack.backbone.result.StepResult;
 import org.researchstack.backbone.step.Step;
+import org.researchstack.backbone.ui.views.SubmitBar;
 import org.sagebase.crf.fitbit.FitbitManager;
 import org.sagebionetworks.bridge.android.manager.BridgeManagerProvider;
 import org.sagebionetworks.bridge.researchstack.BridgeDataProvider;
@@ -62,6 +67,7 @@ public class CrfFitBitStepLayout extends CrfInstructionStepLayout {
 
     @Override
     public void initialize(Step step, StepResult result) {
+
         if (!(DataProvider.getInstance() instanceof BridgeDataProvider)) {
             throw new IllegalStateException("CrfClinicDataGroupsStepLayout only works with BridgeDataProvider");
         }
@@ -77,6 +83,7 @@ public class CrfFitBitStepLayout extends CrfInstructionStepLayout {
         }
 
         super.initialize(step, result);
+        addSubmitBarForSkipFunctionality();
 
         if (fitbitManager == null) {
             fitbitManager = new FitbitManager(getContext(), null);
@@ -88,9 +95,15 @@ public class CrfFitBitStepLayout extends CrfInstructionStepLayout {
         }
     }
 
-    @Override
-    public int getContentResourceId() {
-        return R.layout.crf_step_layout_fitbit;
+    protected void addSubmitBarForSkipFunctionality() {
+        FrameLayout nextButtonContainer = findViewById(R.id.crf_next_button_container);
+        LayoutParams layoutParams = new LayoutParams(
+                LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
+        layoutParams.gravity = Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL;
+        submitBar = new SubmitBar(getContext());
+        nextButtonContainer.addView(submitBar, layoutParams);
+        refreshStep();  // needs to reset submit bar content
+        nextButton.setVisibility(View.GONE);
     }
 
     @VisibleForTesting

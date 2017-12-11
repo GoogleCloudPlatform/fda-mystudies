@@ -143,8 +143,7 @@ public class CrfDataProvider extends BridgeDataProvider {
             logV("No sign in date detected");
             // getCrfActivities method will be called again when sign in date is found, so return
             // here
-            if (getLocalDataGroups().contains(TEST_USER) &&
-                    !getLocalDataGroups().contains(UX_TESTER)) {
+            if (isTestUser()) {
                 // sign in date is used to retrieve clinic schedules, which are based on sign-in
                 // ACTIVITY_TESTER receives persistent tasks, and has no clinic sign in date
                 getCrfPrefs().setFirstSignInDate(DateTime.now());
@@ -182,6 +181,17 @@ public class CrfDataProvider extends BridgeDataProvider {
             listener.success(model);
 
         }, throwable -> listener.error(throwable.getLocalizedMessage()));
+    }
+
+    /**
+     * @return true if user is a TEST_USER and not a UX_TESTER and should see only test tasks,
+     *         false otherwise, and normal app behavior should be followed
+     */
+    public boolean isTestUser() {
+        // test users come in two types. ux_testers should see normal ux, non
+        // UX_TESTER (often marked with ACTIVITY_TESTER) receive persistent tasks
+        return getLocalDataGroups().contains(TEST_USER) &&
+                !getLocalDataGroups().contains(UX_TESTER);
     }
 
     /**
