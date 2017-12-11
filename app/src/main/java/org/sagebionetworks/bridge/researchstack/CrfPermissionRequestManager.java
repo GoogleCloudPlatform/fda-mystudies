@@ -8,7 +8,7 @@ import android.content.pm.PackageManager;
 import android.os.Build;
 import android.support.v4.content.ContextCompat;
 
-import org.researchstack.skin.AppPrefs;
+import org.researchstack.backbone.AppPrefs;
 import org.researchstack.backbone.PermissionRequestManager;
 
 import org.sagebionetworks.research.crf.R;
@@ -56,7 +56,7 @@ public class CrfPermissionRequestManager extends PermissionRequestManager {
 //        PermissionRequestManager.PermissionRequest notifications =
 //                new PermissionRequestManager.PermissionRequest(
 //                        PERMISSION_NOTIFICATIONS,
-//                        R.drawable.rss_ic_notification_24dp,
+//                        R.drawable.rsb_ic_notification_24dp,
 //                        R.string.rsb_permission_notification_title,
 //                        R.string.rsb_permission_notification_desc
 //                );

@@ -27,7 +27,7 @@ import android.widget.Button;
 import org.researchstack.backbone.DataProvider;
 import org.researchstack.backbone.onboarding.OnboardingTaskType;
 import org.researchstack.backbone.utils.ObservableUtils;
-import org.researchstack.skin.ResearchStack;
+import org.researchstack.backbone.ResearchStack;
 import org.sagebionetworks.research.crf.R;
 
 import rx.functions.Action1;

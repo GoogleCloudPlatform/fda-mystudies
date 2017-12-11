@@ -7,7 +7,6 @@
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
       <module fileurl="file://$PROJECT_DIR$/BridgeAndroidSdk/ResearchStack/backbone/backbone.iml" filepath="$PROJECT_DIR$/BridgeAndroidSdk/ResearchStack/backbone/backbone.iml" />
       <module fileurl="file://$PROJECT_DIR$/BridgeAndroidSdk/researchstack-sdk/researchstack-sdk.iml" filepath="$PROJECT_DIR$/BridgeAndroidSdk/researchstack-sdk/researchstack-sdk.iml" />
-      <module fileurl="file://$PROJECT_DIR$/BridgeAndroidSdk/ResearchStack/skin/skin.iml" filepath="$PROJECT_DIR$/BridgeAndroidSdk/ResearchStack/skin/skin.iml" />
     </modules>
   </component>
 </project>
