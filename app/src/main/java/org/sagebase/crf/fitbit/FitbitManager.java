@@ -37,6 +37,10 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.Volley;
 
+import net.openid.appauth.AuthorizationRequest;
+import net.openid.appauth.AuthorizationServiceConfiguration;
+import net.openid.appauth.ResponseTypeValues;
+
 import org.sagebase.crf.fitbit.model.ActivityDistanceResponse;
 import org.sagebase.crf.fitbit.model.HeartActivityResponse;
 import org.sagebionetworks.research.crf.R;
@@ -106,6 +110,7 @@ public class FitbitManager {
      * TODO: parameterize the url, pass in the client_id?
      */
     public void authenticate() {
+
         // TODO: THis is the sage fitbit url, switch to this after sage integration is complete
         //String url = "https://www.fitbit.com/oauth2/authorize?response_type=code&client_id=22CK8G&redirect_uri=https%3A%2F%2Fdocs.sagebridge.org%2Fcrf-module%2F&scope=heartrate&expires_in=604800";
         String url = "https://www.fitbit.com/oauth2/authorize?response_type=token&client_id=228MZV&scope=activity&expires_in=86400&prompt=login%20consent&state=JUJU";

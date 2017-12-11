@@ -17,8 +17,11 @@
 
 package org.sagebase.crf.step;
 
+import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.support.annotation.VisibleForTesting;
+import android.net.Uri;
 import android.util.AttributeSet;
 import android.view.Gravity;
 import android.view.View;
@@ -29,6 +32,11 @@ import android.widget.FrameLayout.LayoutParams;
 import com.google.common.collect.Sets;
 
 import org.researchstack.backbone.DataProvider;
+import net.openid.appauth.AuthorizationRequest;
+import net.openid.appauth.AuthorizationService;
+import net.openid.appauth.AuthorizationServiceConfiguration;
+import net.openid.appauth.ResponseTypeValues;
+
 import org.researchstack.backbone.result.StepResult;
 import org.researchstack.backbone.step.Step;
 import org.researchstack.backbone.ui.views.SubmitBar;
@@ -47,9 +55,11 @@ import java.util.Set;
 public class CrfFitBitStepLayout extends CrfInstructionStepLayout {
 
     private FitbitManager fitbitManager;
+    private Context context;
 
     public CrfFitBitStepLayout(Context context) {
         super(context);
+        this.context = context;
     }
 
     public CrfFitBitStepLayout(Context context, AttributeSet attrs) {
@@ -121,7 +131,31 @@ public class CrfFitBitStepLayout extends CrfInstructionStepLayout {
         if (fitbitManager.isAuthenticated()) {
             super.onComplete();
         } else {
-            fitbitManager.authenticate();
+//            fitbitManager.authenticate();
+            AuthorizationServiceConfiguration serviceConfig =
+                    new AuthorizationServiceConfiguration(
+                            Uri.parse("https://api.fitbit.com/oauth2/authorize"),
+                            Uri.parse("https://api.fitbit.com/oauth2/token"));
+
+            // "https://www.fitbit.com/oauth2/authorize?response_type=token&client_id=228MZV
+            // &scope=activity&expires_in=86400&prompt=login%20consent&state=JUJU";
+
+            AuthorizationService svc = new AuthorizationService(context);
+//            svc.performAuthorizationRequest();
+
+            Intent authIntent = svc.getAuthorizationRequestIntent(
+                    new AuthorizationRequest.Builder(
+                            serviceConfig,
+                            "22CK8G",
+                            ResponseTypeValues.CODE,
+                            Uri.parse("https://webservices.sagebridge.org/crf-module/")
+                    )
+                            .setScope("heartrate")
+//                            .setState("JUJU")
+                            .build()
+            );
+            ((Activity)context).startActivityForResult(authIntent,12345);
+
         }
     }
 

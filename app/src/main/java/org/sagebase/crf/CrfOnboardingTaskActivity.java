@@ -17,11 +17,15 @@
 
 package org.sagebase.crf;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.IdRes;
 import android.support.v7.app.ActionBar;
 import android.view.Menu;
 import android.view.ViewGroup;
+
+import net.openid.appauth.AuthorizationException;
+import net.openid.appauth.AuthorizationResponse;
 
 import org.researchstack.backbone.step.PermissionsStep;
 import org.researchstack.backbone.step.Step;
@@ -87,6 +91,20 @@ public class CrfOnboardingTaskActivity extends OnboardingTaskActivity {
         }
 
         return super.getLayoutForStep(step);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == 12345) {
+            AuthorizationResponse resp = AuthorizationResponse.fromIntent(data);
+
+
+            AuthorizationException ex = AuthorizationException.fromIntent(data);
+            System.out.println(ex);
+            // ... process the response or exception ...
+        } else {
+            // ...
+        }
     }
 
     public void refreshToolbar() {

@@ -14,6 +14,10 @@ android {
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         multiDexEnabled true
         resConfigs "en"
+
+        manifestPlaceholders = [
+                'appAuthRedirectScheme': 'org.sagebionetworks.research.crf"'
+        ]
     }
     buildTypes {
         release {
@@ -51,6 +55,8 @@ dependencies {
     implementation 'com.android.support:design:26.1.0'
     implementation 'com.android.support:support-annotations:26.1.0'
     implementation 'com.android.support:customtabs:26.1.0'
+
+    implementation 'net.openid:appauth:0.7.0'
 
     implementation 'com.android.volley:volley:1.0.0'
     implementation 'com.google.code.gson:gson:2.8.0'
