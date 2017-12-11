@@ -26,14 +26,10 @@ import org.sagebionetworks.bridge.researchstack.CrfTaskFactory;
 
 import java.util.List;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
-import static org.mockito.Matchers.any;
-import static org.mockito.Mockito.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.spy;
-import static org.mockito.Mockito.verify;
+
 
 public class CrfActivitiesFragmentTest {
     private static final String SURVEY_GUID = "my-survey-guid";
