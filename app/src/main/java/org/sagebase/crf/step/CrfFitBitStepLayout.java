@@ -19,41 +19,37 @@ package org.sagebase.crf.step;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.ContextWrapper;
 import android.content.Intent;
 import android.support.annotation.VisibleForTesting;
-import android.net.Uri;
 import android.util.AttributeSet;
 import android.view.Gravity;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.FrameLayout;
-import android.widget.FrameLayout.LayoutParams;
 
 import com.google.common.collect.Sets;
 
 import org.researchstack.backbone.DataProvider;
-import net.openid.appauth.AuthorizationRequest;
-import net.openid.appauth.AuthorizationService;
-import net.openid.appauth.AuthorizationServiceConfiguration;
-import net.openid.appauth.ResponseTypeValues;
-
 import org.researchstack.backbone.result.StepResult;
 import org.researchstack.backbone.step.Step;
 import org.researchstack.backbone.ui.views.SubmitBar;
 import org.sagebase.crf.fitbit.FitbitManager;
-import org.sagebionetworks.bridge.android.manager.BridgeManagerProvider;
 import org.sagebionetworks.bridge.researchstack.BridgeDataProvider;
 import org.sagebionetworks.bridge.researchstack.CrfDataProvider;
 import org.sagebionetworks.research.crf.R;
 
 import java.util.Set;
 
+import rx.Completable;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.schedulers.Schedulers;
+
 /**
  * Created by TheMDP on 11/28/17.
  */
 
-public class CrfFitBitStepLayout extends CrfInstructionStepLayout {
-
+public class CrfFitBitStepLayout extends CrfInstructionStepLayout implements FitbitManager.ErrorHandler {
+    public static final int REQUEST_CODE = 9258;
     private FitbitManager fitbitManager;
     private Context context;
 
@@ -96,12 +92,16 @@ public class CrfFitBitStepLayout extends CrfInstructionStepLayout {
         addSubmitBarForSkipFunctionality();
 
         if (fitbitManager == null) {
-            fitbitManager = new FitbitManager(getContext(), null);
+            fitbitManager = new FitbitManager(getContext());
         }
-        // We come back into this step from an activity intent, so it will be
-        // re-created after the user authenticates, so we must check here too
-        if (fitbitManager.isAuthenticated()) {
-            super.onComplete();
+
+        if (fitbitManager.isAuthorized()) {
+            // calls onComplete on next run of UI thread -- after initialize() is complete and
+            // listeners are set
+            Completable.complete()
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(this::onComplete);
         }
     }
 
@@ -128,35 +128,28 @@ public class CrfFitBitStepLayout extends CrfInstructionStepLayout {
 
     @Override
     protected void onComplete() {
-        if (fitbitManager.isAuthenticated()) {
+        if (fitbitManager.isAuthorized()) {
             super.onComplete();
         } else {
-//            fitbitManager.authenticate();
-            AuthorizationServiceConfiguration serviceConfig =
-                    new AuthorizationServiceConfiguration(
-                            Uri.parse("https://api.fitbit.com/oauth2/authorize"),
-                            Uri.parse("https://api.fitbit.com/oauth2/token"));
-
-            // "https://www.fitbit.com/oauth2/authorize?response_type=token&client_id=228MZV
-            // &scope=activity&expires_in=86400&prompt=login%20consent&state=JUJU";
-
-            AuthorizationService svc = new AuthorizationService(context);
-//            svc.performAuthorizationRequest();
-
-            Intent authIntent = svc.getAuthorizationRequestIntent(
-                    new AuthorizationRequest.Builder(
-                            serviceConfig,
-                            "22CK8G",
-                            ResponseTypeValues.CODE,
-                            Uri.parse("https://webservices.sagebridge.org/crf-module/")
-                    )
-                            .setScope("heartrate")
-//                            .setState("JUJU")
-                            .build()
-            );
-            ((Activity)context).startActivityForResult(authIntent,12345);
-
+            Intent authIntent = fitbitManager.getAuthorizationIntent();
+            getActivity().startActivityForResult(authIntent, REQUEST_CODE);
         }
+    }
+
+    private Activity getActivity() {
+        Context context = getContext();
+        while (context instanceof ContextWrapper) {
+            if (context instanceof Activity) {
+                return (Activity)context;
+            }
+            context = ((ContextWrapper)context).getBaseContext();
+        }
+        return null;
+    }
+
+    @Override
+    public void showAuthorizationErrorMessage(String errorMessage) {
+        showOkAlertDialog(errorMessage);
     }
 
     public static class CrfFitBitStep extends CrfInstructionStep {

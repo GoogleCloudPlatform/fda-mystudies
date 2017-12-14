@@ -14,10 +14,6 @@ android {
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         multiDexEnabled true
         resConfigs "en"
-
-        manifestPlaceholders = [
-                'appAuthRedirectScheme': 'org.sagebionetworks.research.crf"'
-        ]
     }
     buildTypes {
         release {
@@ -45,7 +41,7 @@ android {
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
 
-    implementation 'com.android.support:multidex:1.0.1'
+    implementation 'com.android.support:multidex:1.0.2'
 
     // These are all support libraries that should be updated when Google releases new ones
     implementation "com.android.support:support-compat:26.1.0"
@@ -65,7 +61,7 @@ dependencies {
     implementation project(':researchstack-sdk')
 
     // Important - the CameraSource implementation in this project requires version 8.1 or higher.
-    implementation 'com.google.android.gms:play-services-vision:10.0.1'
+    implementation 'com.google.android.gms:play-services-vision:11.6.2'
 
     testImplementation 'junit:junit:4.12'
     testImplementation 'org.robolectric:robolectric:3.5'

@@ -24,17 +24,16 @@ import android.support.v7.app.ActionBar;
 import android.view.Menu;
 import android.view.ViewGroup;
 
-import net.openid.appauth.AuthorizationException;
-import net.openid.appauth.AuthorizationResponse;
-
-import org.researchstack.backbone.step.PermissionsStep;
 import org.researchstack.backbone.step.Step;
 import org.researchstack.backbone.ui.OnboardingTaskActivity;
 import org.researchstack.backbone.ui.step.layout.StepLayout;
+import org.sagebase.crf.fitbit.FitbitManager;
 import org.sagebase.crf.step.CrfExternalIdStep;
+import org.sagebase.crf.step.CrfFitBitStepLayout;
 import org.sagebase.crf.view.CrfTaskToolbarIconManipulator;
 import org.sagebase.crf.view.CrfTransparentToolbar;
 import org.sagebionetworks.research.crf.R;
+
 
 /**
  * Created by TheMDP on 11/18/17.
@@ -95,15 +94,11 @@ public class CrfOnboardingTaskActivity extends OnboardingTaskActivity {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == 12345) {
-            AuthorizationResponse resp = AuthorizationResponse.fromIntent(data);
-
-
-            AuthorizationException ex = AuthorizationException.fromIntent(data);
-            System.out.println(ex);
-            // ... process the response or exception ...
-        } else {
-            // ...
+        if (requestCode == CrfFitBitStepLayout.REQUEST_CODE) {
+            if (resultCode == RESULT_OK) {
+                new FitbitManager(this).handleResponse(data, (FitbitManager.ErrorHandler)
+                        getCurrentStepLayout());
+            }
         }
     }
 

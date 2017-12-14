@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+          xmlns:tools="http://schemas.android.com/tools"
           package="org.sagebionetworks.research.crf">
 
     <!-- ActiveSteps may vibrate the phone on start and on finish -->
@@ -40,32 +41,25 @@
             android:launchMode="singleTask"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.Crf.Main">
-
-            <!-- Intent filter to receive the Fitbit auth token -->
-            <!-- Remove the houston fitbit schema after sage has completed their integration -->
-            <intent-filter>
-                <!--<action android:name="android.intent.action.MAIN"/>-->
-                <!--<category android:name="android.intent.category.LAUNCHER"/>-->
-                <action android:name="android.intent.action.VIEW" />
-                <category android:name="android.intent.category.DEFAULT" />
-                <category android:name="android.intent.category.BROWSABLE" />
-
-                <data android:scheme="houston" android:pathPattern=".*" />
-            </intent-filter>
-            <!--<intent-filter>-->
-                <!--&lt;!&ndash;<action android:name="android.intent.action.MAIN"/>&ndash;&gt;-->
-                <!--&lt;!&ndash;<category android:name="android.intent.category.LAUNCHER"/>&ndash;&gt;-->
-                <!--<action android:name="android.intent.action.VIEW" />-->
-                <!--<category android:name="android.intent.category.DEFAULT" />-->
-                <!--<category android:name="android.intent.category.BROWSABLE" />-->
-
-                <!--<data android:scheme="https"-->
-                    <!--android:host="docs.sagebridge.org"-->
-                    <!--android:pathPrefix="/crf-module/" />-->
-            <!--</intent-filter>-->
-
         </activity>
 
+        <activity android:name="net.openid.appauth.RedirectUriReceiverActivity"
+                  tools:node="replace">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW"/>
+                <category android:name="android.intent.category.DEFAULT"/>
+                <category android:name="android.intent.category.BROWSABLE"/>
+                <data android:scheme="org.sagebase.crf-module"
+                      android:host="oauth2"/>
+            </intent-filter>
+            <intent-filter android:autoVerify="true">
+                <action android:name="android.intent.action.VIEW"/>
+                <category android:name="android.intent.category.DEFAULT"/>
+                <category android:name="android.intent.category.BROWSABLE"/>
+                <data android:scheme="https"
+                      android:host="webservices.sagebridge.org"/>
+            </intent-filter>
+        </activity>
         <activity
             android:name="org.sagebase.crf.CrfOnboardingTaskActivity"
             android:label="@string/app_name"
@@ -95,23 +89,6 @@
             android:label="@string/app_name"
             android:windowSoftInputMode="adjustResize"
             android:theme="@style/Theme.Crf.Onboarding"/>
-
-        <!-- Comment out to test the Fitbit MainActivity -->
-        <!--<activity-->
-            <!--android:name="org.sagebase.crf.fitbit.MainActivity"-->
-            <!--android:label="@string/app_name"-->
-            <!--android:theme="@style/AppTheme.NoActionBar">-->
-            <!--<intent-filter>-->
-                <!--&lt;!&ndash;<action android:name="android.intent.action.MAIN"/>&ndash;&gt;-->
-                <!--&lt;!&ndash;<category android:name="android.intent.category.LAUNCHER"/>&ndash;&gt;-->
-                <!--<action android:name="android.intent.action.VIEW" />-->
-                <!--<category android:name="android.intent.category.DEFAULT" />-->
-                <!--<category android:name="android.intent.category.BROWSABLE" />-->
-
-                <!--<data android:scheme="houston" android:pathPattern=".*" />-->
-            <!--</intent-filter>-->
-
-        <!--</activity>-->
 
         <activity
             android:name="org.researchstack.backbone.ui.ViewWebDocumentActivity"
