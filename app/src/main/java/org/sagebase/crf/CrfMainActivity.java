@@ -35,17 +35,10 @@ import org.sagebionetworks.research.crf.R;
 
 public class CrfMainActivity extends MainActivity {
 
-    private FitbitManager crfFitbitManager;
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         findViewById(R.id.toolbar).setVisibility(View.GONE);
-
-        // Handle fitbut auth token
-        crfFitbitManager = new FitbitManager(this, null);
-        crfFitbitManager.handleAuthResponse(getIntent());
     }
 
     @Override

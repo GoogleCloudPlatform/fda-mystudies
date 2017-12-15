@@ -17,14 +17,15 @@
 
 package org.sagebase.crf.step;
 
+import android.app.Activity;
 import android.content.Context;
+import android.content.ContextWrapper;
+import android.content.Intent;
 import android.support.annotation.VisibleForTesting;
 import android.util.AttributeSet;
 import android.view.Gravity;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.FrameLayout;
-import android.widget.FrameLayout.LayoutParams;
 
 import com.google.common.collect.Sets;
 
@@ -33,23 +34,28 @@ import org.researchstack.backbone.result.StepResult;
 import org.researchstack.backbone.step.Step;
 import org.researchstack.backbone.ui.views.SubmitBar;
 import org.sagebase.crf.fitbit.FitbitManager;
-import org.sagebionetworks.bridge.android.manager.BridgeManagerProvider;
 import org.sagebionetworks.bridge.researchstack.BridgeDataProvider;
 import org.sagebionetworks.bridge.researchstack.CrfDataProvider;
 import org.sagebionetworks.research.crf.R;
 
 import java.util.Set;
 
+import rx.Completable;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.schedulers.Schedulers;
+
 /**
  * Created by TheMDP on 11/28/17.
  */
 
-public class CrfFitBitStepLayout extends CrfInstructionStepLayout {
-
+public class CrfFitBitStepLayout extends CrfInstructionStepLayout implements FitbitManager.ErrorHandler {
+    public static final int REQUEST_CODE = 9258;
     private FitbitManager fitbitManager;
+    private Context context;
 
     public CrfFitBitStepLayout(Context context) {
         super(context);
+        this.context = context;
     }
 
     public CrfFitBitStepLayout(Context context, AttributeSet attrs) {
@@ -86,12 +92,16 @@ public class CrfFitBitStepLayout extends CrfInstructionStepLayout {
         addSubmitBarForSkipFunctionality();
 
         if (fitbitManager == null) {
-            fitbitManager = new FitbitManager(getContext(), null);
+            fitbitManager = new FitbitManager(getContext());
         }
-        // We come back into this step from an activity intent, so it will be
-        // re-created after the user authenticates, so we must check here too
-        if (fitbitManager.isAuthenticated()) {
-            super.onComplete();
+
+        if (fitbitManager.isAuthorized()) {
+            // calls onComplete on next run of UI thread -- after initialize() is complete and
+            // listeners are set
+            Completable.complete()
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(this::onComplete);
         }
     }
 
@@ -118,11 +128,17 @@ public class CrfFitBitStepLayout extends CrfInstructionStepLayout {
 
     @Override
     protected void onComplete() {
-        if (fitbitManager.isAuthenticated()) {
+        if (fitbitManager.isAuthorized()) {
             super.onComplete();
         } else {
-            fitbitManager.authenticate();
+            Intent authIntent = fitbitManager.getAuthorizationIntent();
+            ((Activity) callbacks).startActivityForResult(authIntent, REQUEST_CODE);
         }
+    }
+    
+    @Override
+    public void showAuthorizationErrorMessage(String errorMessage) {
+        showOkAlertDialog(errorMessage);
     }
 
     public static class CrfFitBitStep extends CrfInstructionStep {
