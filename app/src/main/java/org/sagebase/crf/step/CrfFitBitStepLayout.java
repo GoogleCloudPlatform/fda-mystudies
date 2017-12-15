@@ -132,21 +132,10 @@ public class CrfFitBitStepLayout extends CrfInstructionStepLayout implements Fit
             super.onComplete();
         } else {
             Intent authIntent = fitbitManager.getAuthorizationIntent();
-            getActivity().startActivityForResult(authIntent, REQUEST_CODE);
+            ((Activity) callbacks).startActivityForResult(authIntent, REQUEST_CODE);
         }
     }
-
-    private Activity getActivity() {
-        Context context = getContext();
-        while (context instanceof ContextWrapper) {
-            if (context instanceof Activity) {
-                return (Activity)context;
-            }
-            context = ((ContextWrapper)context).getBaseContext();
-        }
-        return null;
-    }
-
+    
     @Override
     public void showAuthorizationErrorMessage(String errorMessage) {
         showOkAlertDialog(errorMessage);
