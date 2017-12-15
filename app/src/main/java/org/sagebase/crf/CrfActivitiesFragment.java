@@ -35,10 +35,10 @@ import org.researchstack.backbone.DataProvider;
 import org.researchstack.backbone.model.SchedulesAndTasksModel;
 import org.researchstack.backbone.task.Task;
 import org.researchstack.backbone.ui.ViewTaskActivity;
+import org.researchstack.backbone.ui.adapter.TaskAdapter;
+import org.researchstack.backbone.ui.fragment.ActivitiesFragment;
+import org.researchstack.backbone.ui.views.DividerItemDecoration;
 import org.researchstack.backbone.utils.LogExt;
-import org.researchstack.skin.ui.adapter.TaskAdapter;
-import org.researchstack.skin.ui.fragment.ActivitiesFragment;
-import org.researchstack.skin.ui.views.DividerItemDecoration;
 import org.sagebase.crf.helper.CrfDateHelper;
 import org.sagebase.crf.helper.CrfScheduleHelper;
 import org.sagebase.crf.view.CrfFilterableActivityDisplay;
@@ -237,7 +237,7 @@ public class CrfActivitiesFragment extends ActivitiesFragment implements CrfFilt
             }
         } else {
             Toast.makeText(getActivity(),
-                    org.researchstack.skin.R.string.rss_local_error_load_task,
+                    org.researchstack.backbone.R.string.rsb_local_error_load_task,
                     Toast.LENGTH_SHORT).show();
         }
     }

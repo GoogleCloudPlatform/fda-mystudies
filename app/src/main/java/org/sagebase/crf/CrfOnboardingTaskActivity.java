@@ -17,20 +17,23 @@
 
 package org.sagebase.crf;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.IdRes;
 import android.support.v7.app.ActionBar;
 import android.view.Menu;
 import android.view.ViewGroup;
 
-import org.researchstack.backbone.step.PermissionsStep;
 import org.researchstack.backbone.step.Step;
 import org.researchstack.backbone.ui.OnboardingTaskActivity;
 import org.researchstack.backbone.ui.step.layout.StepLayout;
+import org.sagebase.crf.fitbit.FitbitManager;
 import org.sagebase.crf.step.CrfExternalIdStep;
+import org.sagebase.crf.step.CrfFitBitStepLayout;
 import org.sagebase.crf.view.CrfTaskToolbarIconManipulator;
 import org.sagebase.crf.view.CrfTransparentToolbar;
 import org.sagebionetworks.research.crf.R;
+
 
 /**
  * Created by TheMDP on 11/18/17.
@@ -87,6 +90,16 @@ public class CrfOnboardingTaskActivity extends OnboardingTaskActivity {
         }
 
         return super.getLayoutForStep(step);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == CrfFitBitStepLayout.REQUEST_CODE) {
+            if (resultCode == RESULT_OK) {
+                new FitbitManager(this).handleResponse(data, (FitbitManager.ErrorHandler)
+                        getCurrentStepLayout());
+            }
+        }
     }
 
     public void refreshToolbar() {

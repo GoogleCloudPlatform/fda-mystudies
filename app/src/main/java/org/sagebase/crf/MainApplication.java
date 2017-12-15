@@ -13,7 +13,7 @@ import android.view.View;
 import android.view.WindowManager;
 
 import org.researchstack.backbone.StorageAccess;
-import org.researchstack.skin.ResearchStack;
+import org.researchstack.backbone.ResearchStack;
 import org.sagebionetworks.bridge.android.BridgeApplication;
 import org.sagebionetworks.bridge.researchstack.CrfResearchStack;
 import org.sagebionetworks.research.crf.R;

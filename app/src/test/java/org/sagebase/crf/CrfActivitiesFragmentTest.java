@@ -17,37 +17,19 @@
 
 package org.sagebase.crf;
 
-import android.content.Intent;
 import org.joda.time.DateTime;
 import org.junit.Before;
 import org.junit.Test;
 import org.researchstack.backbone.factory.IntentFactory;
 import org.researchstack.backbone.model.SchedulesAndTasksModel;
-import org.researchstack.backbone.task.Task;
-import org.researchstack.skin.ui.fragment.ActivitiesFragment;
-import org.sagebionetworks.bridge.researchstack.CrfDataProvider;
 import org.sagebionetworks.bridge.researchstack.CrfTaskFactory;
-import org.sagebionetworks.bridge.researchstack.survey.SurveyTaskScheduleModel;
-import org.sagebionetworks.bridge.rest.model.ActivityType;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.anyString;
-import static org.mockito.Mockito.anyInt;
-import static org.mockito.Mockito.doNothing;
-import static org.mockito.Mockito.eq;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.reset;
-import static org.mockito.Mockito.same;
 import static org.mockito.Mockito.spy;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+
 
 public class CrfActivitiesFragmentTest {
     private static final String SURVEY_GUID = "my-survey-guid";
