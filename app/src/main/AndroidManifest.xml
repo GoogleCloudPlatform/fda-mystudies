@@ -43,6 +43,7 @@
             android:theme="@style/Theme.Crf.Main">
         </activity>
 
+        <!-- Processes OAuth2 response, destroys browser tab, and returns result to our activity -->
         <activity android:name="net.openid.appauth.RedirectUriReceiverActivity"
                   tools:node="replace">
             <intent-filter>

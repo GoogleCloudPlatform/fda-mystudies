@@ -54,7 +54,6 @@ dependencies {
 
     implementation 'net.openid:appauth:0.7.0'
 
-    implementation 'com.android.volley:volley:1.0.0'
     implementation 'com.google.code.gson:gson:2.8.0'
     implementation 'com.google.guava:guava:23.2-android'
 
