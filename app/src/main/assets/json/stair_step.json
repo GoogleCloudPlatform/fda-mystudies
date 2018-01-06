@@ -99,13 +99,14 @@
     {
       "identifier"       : "countdownStep",
       "type"             : "crf_countdown",
-      "title"            : "Start step ups"
+      "title"            : "Start step ups",
+      "stepDuration"     : 10
     },
     {
       "identifier"       : "stairStep",
       "type"             : "crf_stair_step",
       "stairInterval"    : 2
-    },
+    }
     {
       "identifier"       : "instructionCamera2",
       "type"             : "crf_instruction",

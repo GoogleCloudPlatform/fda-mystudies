@@ -22,8 +22,7 @@
       "identifier"       : "instructionHeartRisk",
       "type"             : "crf_instruction",
       "title"            : " ",
-      "text"             : "Potential heart risk",
-      "detailText"       : "Do not attempt this test if you have experienced unstable angina, a myocardial infarction (heart attack) during the previous month, need supplemental oxygen to walk, or if you feel that running or walking for 12 minutes will be a challenge for you.",
+      "detailText"       : "Do not attempt to complete this test if you have been told by your doctor that you should not participate in physical activity or exercise. Stop the test and talk to your doctor if any of the following symptoms occur: chest pain, dizziness, blurred vision, disorientation, excessive shortness of breath, severe nausea, severe fatigue, or severe headache",
       "image"            : "crf_health_risk_icon",
       "buttonType"       : "defaultWhiteSalmon",
       "buttonText"       : "Got it",
@@ -101,7 +100,8 @@
     {
       "identifier"       : "countdownRun",
       "type"             : "crf_countdown",
-      "title"            : "Start in"
+      "title"            : "Start in",
+      "stepDuration"     : 10
     },
     {
       "identifier"       : "run",
