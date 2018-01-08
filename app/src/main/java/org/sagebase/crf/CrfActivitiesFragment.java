@@ -30,6 +30,7 @@ import android.widget.ImageButton;
 import android.widget.Toast;
 
 import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.Lists;
 
 import org.researchstack.backbone.DataProvider;
 import org.researchstack.backbone.model.SchedulesAndTasksModel;
@@ -183,7 +184,19 @@ public class CrfActivitiesFragment extends ActivitiesFragment implements CrfFilt
         mBackButton.setVisibility(View.GONE);
         mSettingsButton.setVisibility(View.VISIBLE);
         mClinicHeader.setVisibility(View.GONE);
-        showActivitiesForSchedule(mScheduleModel.schedules.get(0));
+
+        // This is a hack to show persistent tasks for test users.
+        // CRF only shows activities scheduled for a day, and currently the way ScheduleModels
+        // are filtered/build only will include tasks scheduledOn today, whereas persistent tasks
+        // can be scheduled in the past and never expire
+        SchedulesAndTasksModel.ScheduleModel model = new SchedulesAndTasksModel.ScheduleModel();
+        model.scheduledOn = mScheduleModel.schedules.get(0).scheduledOn;
+        model.tasks= Lists.newArrayList();
+
+        for(SchedulesAndTasksModel.ScheduleModel sm : mScheduleModel.schedules) {
+            model.tasks.addAll(sm.tasks);
+        }
+        showActivitiesForSchedule(model);
     }
 
     private void setupSelectionHandler(boolean isSchedule) {
