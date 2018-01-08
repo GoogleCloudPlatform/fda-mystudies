@@ -155,7 +155,7 @@
         "type": "crf_form",
         "text": "Think about all the MODERATE activities that you did in the last 7 days. Moderate activities refer to activities that take moderate physical effort and make you breathe somewhat harder than normal. Think only about those physical activities that you did for at least 10 minutes at a time.\n\nDuring the last 7 days, have you done any MODERATE physical activities like carrying light loads, bicycling at a regular pace, or doubles tennis?  Do not include walking.",
         "inputFields": [{
-          "identifier": "moderate_any_single",
+          "identifier": "moderate_any_activity",
           "dataType": "crfSingleChoice",
           "choices": [{"text": "Yes, I have done moderate activities", "value": true }, {"text": "No moderate physical activities", "value": false }],
           "optional": false,
