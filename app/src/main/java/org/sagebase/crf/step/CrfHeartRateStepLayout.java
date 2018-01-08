@@ -32,9 +32,12 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import org.researchstack.backbone.answerformat.AnswerFormat;
+import org.researchstack.backbone.answerformat.DecimalAnswerFormat;
 import org.researchstack.backbone.result.Result;
 import org.researchstack.backbone.result.StepResult;
 import org.researchstack.backbone.result.TaskResult;
+import org.researchstack.backbone.step.QuestionStep;
 import org.researchstack.backbone.step.Step;
 import org.researchstack.backbone.step.active.recorder.Recorder;
 import org.researchstack.backbone.step.active.recorder.RecorderConfig;
@@ -53,6 +56,7 @@ import org.sagebionetworks.research.crf.R;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
@@ -90,7 +94,7 @@ public class CrfHeartRateStepLayout extends ActiveStepLayout implements
     private int previousBpm = -1;
 
     private boolean hasDetectedStart = false;
-    private List<Integer> bpmList;
+    private List<BpmHolder> bpmList;
 
     public CrfHeartRateStepLayout(Context context) {
         super(context);
@@ -226,14 +230,14 @@ public class CrfHeartRateStepLayout extends ActiveStepLayout implements
         }
     }
 
-    public void bpmUpdate(int bpm) {
-        heartRateNumber.setText(String.format(Locale.getDefault(), "%d", bpm));
+    public void bpmUpdate(BpmHolder bpmHolder) {
+        heartRateNumber.setText(String.format(Locale.getDefault(), "%d", bpmHolder.bpm));
         if (heartBeatAnimation == null) {
-            heartBeatAnimation = new HeartBeatAnimation(bpm);
+            heartBeatAnimation = new HeartBeatAnimation(bpmHolder.bpm);
             heartImageView.startAnimation(heartBeatAnimation);
         }
-        heartBeatAnimation.setBpm(bpm);
-        bpmList.add(bpm);
+        heartBeatAnimation.setBpm(bpmHolder.bpm);
+        bpmList.add(bpmHolder);
     }
 
     @Override
@@ -248,8 +252,8 @@ public class CrfHeartRateStepLayout extends ActiveStepLayout implements
 
         if (!bpmList.isEmpty()) {
             int bpmSum = 0;
-            for (Integer bpm : bpmList) {
-                bpmSum += bpm;
+            for (BpmHolder bpmHolder : bpmList) {
+                bpmSum += bpmHolder.bpm;
             }
             int averageBpm = bpmSum / bpmList.size();
             heartRateNumber.setText(String.format(Locale.getDefault(), "%d", averageBpm));
@@ -266,15 +270,25 @@ public class CrfHeartRateStepLayout extends ActiveStepLayout implements
      * @param bpmStart first BPM reading recorded
      * @param bpmEnd last BPM reading recorded
      */
-    private void setBpmStartAndEnd(int bpmStart, int bpmEnd) {
+    private void setBpmStartAndEnd(BpmHolder bpmStart, BpmHolder bpmEnd) {
         String startIdentifier = activeStep.getIdentifier() + BPM_START_IDENTIFIER_SUFFIX;
-        StepResult<Integer> bpmStartResult = new StepResult<>(new Step(startIdentifier));
-        bpmStartResult.setResult(bpmStart);
-        stepResult.setResultForIdentifier(startIdentifier, bpmStartResult);
+        stepResult.setResultForIdentifier(startIdentifier,
+                getBpmStepResult(startIdentifier, bpmStart));
+
         String endIdentifier = activeStep.getIdentifier() + BPM_END_IDENTIFIER_SUFFIX;
-        StepResult<Integer> bpmEndResult = new StepResult<>(new Step(endIdentifier));
-        bpmEndResult.setResult(bpmEnd);
-        stepResult.setResultForIdentifier(endIdentifier, bpmEndResult);
+        stepResult.setResultForIdentifier(endIdentifier,
+                getBpmStepResult(endIdentifier, bpmEnd));
+    }
+
+    private StepResult<Integer> getBpmStepResult(String identifier, BpmHolder bpmHolder) {
+        QuestionStep bpmQuestion =
+                new QuestionStep(identifier, identifier, new DecimalAnswerFormat(0,300));
+        StepResult<Integer> bpmResult = new StepResult<>(bpmQuestion);
+        bpmResult.setResult(bpmHolder.bpm);
+        bpmResult.setStartDate(new Date(bpmHolder.timestamp));
+        bpmResult.setEndDate(new Date(bpmHolder.timestamp));
+
+        return bpmResult;
     }
 
     /**
