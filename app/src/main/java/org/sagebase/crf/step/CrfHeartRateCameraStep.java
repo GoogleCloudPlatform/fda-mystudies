@@ -18,6 +18,8 @@
 package org.sagebase.crf.step;
 
 import org.researchstack.backbone.step.active.ActiveStep;
+import org.researchstack.backbone.step.active.recorder.AccelerometerRecorderConfig;
+import org.researchstack.backbone.step.active.recorder.DeviceMotionRecorderConfig;
 import org.researchstack.backbone.step.active.recorder.RecorderConfig;
 import org.sagebase.crf.step.active.HeartRateCameraRecorderConfig;
 
@@ -29,6 +31,8 @@ import java.util.List;
  */
 
 public class CrfHeartRateCameraStep extends ActiveStep {
+    public static final String MOTION_RECORDER_ID = "motion";
+    public static final int SENSOR_FREQ = 100;
     public CrfHeartRateCameraStep(String identifier) {
         super(identifier);
         commonInit();
@@ -42,6 +46,7 @@ public class CrfHeartRateCameraStep extends ActiveStep {
     public void commonInit() {
         List<RecorderConfig> recorderConfigList = new ArrayList<>();
         recorderConfigList.add(new HeartRateCameraRecorderConfig("HeartRateCamera"));
+        recorderConfigList.add(new DeviceMotionRecorderConfig(MOTION_RECORDER_ID, SENSOR_FREQ));
         setRecorderConfigurationList(recorderConfigList);
         setShouldStartTimerAutomatically(true);
         setShouldContinueOnFinish(false);
