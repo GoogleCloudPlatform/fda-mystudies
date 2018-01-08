@@ -177,10 +177,6 @@ public class CrfActivitiesFragment extends ActivitiesFragment implements CrfFilt
     }
 
     private void showActivitiesForTestUser() {
-        int numSchedules = mScheduleModel.schedules.size();
-        if (!(numSchedules == 1)) {
-            Log.w(LOG_TAG, "expected one schedule for test user, got " + numSchedules);
-        }
         mBackButton.setVisibility(View.GONE);
         mSettingsButton.setVisibility(View.VISIBLE);
         mClinicHeader.setVisibility(View.GONE);
