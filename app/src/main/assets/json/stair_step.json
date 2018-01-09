@@ -106,7 +106,7 @@
       "identifier"       : "stairStep",
       "type"             : "crf_stair_step",
       "stairInterval"    : 2
-    }
+    },
     {
       "identifier"       : "instructionCamera2",
       "type"             : "crf_instruction",

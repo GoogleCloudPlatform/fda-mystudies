@@ -41,7 +41,7 @@ import java.io.IOException;
 
 public class HeartRateCameraRecorder extends JsonArrayDataRecorder {
 
-    private static final String TIMESTAMP_KEY    = "timestamp";
+    private static final String TIMESTAMP_IN_SECONDS_KEY = "timestamp";
     private static final String HEART_RATE_KEY   = "bpm_camera";
     private static final String HUE_KEY          = "hue";
     private static final String SATURATION_KEY   = "saturation";
@@ -114,7 +114,7 @@ public class HeartRateCameraRecorder extends JsonArrayDataRecorder {
                 new HeartbeatSampleTracker.HeartRateUpdateListener() {
             @Override
             public void onHeartRateSampleDetected(HeartBeatSample sample) {
-                mJsonObject.addProperty(TIMESTAMP_KEY,  sample.t);
+                mJsonObject.addProperty(TIMESTAMP_IN_SECONDS_KEY,  sample.t/1000F);
                 mJsonObject.addProperty(HUE_KEY,        sample.h);
                 mJsonObject.addProperty(SATURATION_KEY, sample.s);
                 mJsonObject.addProperty(BRIGHTNESS_KEY, sample.v);
@@ -125,7 +125,8 @@ public class HeartRateCameraRecorder extends JsonArrayDataRecorder {
                 if (sample.bpm > 0) {
                     mJsonObject.addProperty(HEART_RATE_KEY, sample.bpm);
                     if (mBpmUpdateListener != null) {
-                        mBpmUpdateListener.bpmUpdate(sample.bpm);
+                        mBpmUpdateListener.bpmUpdate(
+                                new BpmUpdateListener.BpmHolder(sample.bpm, sample.t));
                     }
                 } else {
                     mJsonObject.remove(HEART_RATE_KEY);
@@ -223,7 +224,16 @@ public class HeartRateCameraRecorder extends JsonArrayDataRecorder {
     }
 
     public interface BpmUpdateListener {
-        void bpmUpdate(int bpm);
+        class BpmHolder {
+            public final int bpm;
+            public final long timestamp;
+
+            public BpmHolder(int bpm, long timestamp) {
+                this.bpm = bpm;
+                this.timestamp = timestamp;
+            }
+        }
+        void bpmUpdate(BpmHolder bpm);
     }
 
     public interface IntelligentStartUpdateListener {
