@@ -66,22 +66,15 @@ public class CrfTaskHelper extends TaskHelper {
      * @param flattenedResultList read these and add them to the archiveBuilder
      */
     protected void addFiles(Archive.Builder archiveBuilder, List<Result> flattenedResultList, String taskResultId) {
-
-        // Per Bridge server schema, the background survey uses the default survey packaging
-//        if (CrfTaskFactory.TASK_ID_BACKGROUND_SURVEY.equals(taskResultId)) {
-            super.addFiles(archiveBuilder, flattenedResultList, taskResultId);
-//            return;
-//        }
+         super.addFiles(archiveBuilder, flattenedResultList, taskResultId);
 
         // Group the question step results in a single "answers" file
         // This is behavior that the bridge server team has wanted for a long time
         // Once this is proven capable, its functionality should be moved into TaskHelper base class
         Map<String, Object> answersMap = new HashMap<>();
         for (Result result : flattenedResultList) {
-            boolean addedToAnswerMap = false;
             if (result instanceof StepResult) {
                 StepResult stepResult = (StepResult)result;
-                addedToAnswerMap = true;
                 // This is a question step result, and will be added to the answers group
                 Map mapResults = stepResult.getResults();
                 for (Object key : mapResults.keySet()) {
@@ -96,16 +89,6 @@ public class CrfTaskHelper extends TaskHelper {
                     }
                 }
             }
-
-            // This is the default implementation
-//            if (!addedToAnswerMap) {
-//                ArchiveFile archiveFile = archiveFileFactory.fromResult(result);
-//                if (archiveFile != null) {
-//                    archiveBuilder.addDataFile(archiveFile);
-//                } else {
-//                    logger.error("Failed to convert Result to BridgeDataInput " + result.toString());
-//                }
-//            }
         }
 
         if (!answersMap.isEmpty()) {
