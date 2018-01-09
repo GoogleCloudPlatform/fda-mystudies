@@ -82,7 +82,7 @@ public class HeartBeatDetector extends Detector<HeartBeatSample> {
         HeartBeatSample sample = new HeartBeatSample();
         sample.t = now;
 
-        long startTime = System.currentTimeMillis();
+        //long startTime = System.currentTimeMillis();
         int w = cameraSource.getPreviewSize().getWidth();
         int h = cameraSource.getPreviewSize().getHeight();
 
@@ -107,7 +107,7 @@ public class HeartBeatDetector extends Detector<HeartBeatSample> {
 
         // Takes about 10 ms on Samsung Galaxy S6
         //Log.d("Timing", "rgb " + (System.currentTimeMillis() - startTime));
-        startTime = System.currentTimeMillis();
+        //startTime = System.currentTimeMillis();
 
         // Get all the pixels of the bitmap as an array
         long r = 0, g = 0, b = 0;
@@ -119,9 +119,14 @@ public class HeartBeatDetector extends Detector<HeartBeatSample> {
             b += (intArray[i] & 0xFF); // Color.blue
         }
 
-        sample.r = r / intArray.length;
-        sample.g = g / intArray.length;
-        sample.b = b / intArray.length;
+        long rawSampleR = r / intArray.length;
+        // Per the need to match iOS data (which gives RGB data as 0.0 - 1.0, normalize these values
+        sample.r = ((float)r / (float)intArray.length) / 255.0f;
+        sample.g = ((float)g / (float)intArray.length) / 255.0f;
+        sample.b = ((float)b / (float)intArray.length) / 255.0f;
+
+        // Calculate HSV from the rgb values
+        fillHsv(sample);
 
         //Log.d("RGB", "" + sample.r + ", " + sample.g + ", " + sample.b);
         SparseArray<HeartBeatSample> samples = new SparseArray<>();
@@ -129,17 +134,18 @@ public class HeartBeatDetector extends Detector<HeartBeatSample> {
 
         // Takes about 4 ms on Samsung Galaxy S6
         //Log.d("Timing", "avg rgb " + (System.currentTimeMillis() - startTime));
-        startTime = System.currentTimeMillis();
-
-
+        //startTime = System.currentTimeMillis();
 
         //Log.d("Timing", "Hue " + (System.currentTimeMillis() - startTime));
         //Log.d("Hue", "" + sample.h);
 
-        int bpm = calculateBpm((int)sample.r);
+        Log.d("TODO_REMOVE", "r=" + sample.r + " g=" + sample.g + " b=" + sample.b +
+        " h=" + sample.h + " s=" + sample.s + " v=" + sample.v);
+
+        float bpm = calculateBpm((int)rawSampleR);
         if (bpm > 0) {
             //Log.d("BPM", "" + bpm);
-            sample.bpm = bpm;
+            sample.bpm = Math.round(bpm);
         }
 
         return samples;
@@ -150,17 +156,20 @@ public class HeartBeatDetector extends Detector<HeartBeatSample> {
         float max = Math.max(sample.r, Math.max(sample.g, sample.b));
         float delta = max - min;
 
-        if (Math.round(delta * 1000.0f) == 0) {
+        if (((int)Math.round(delta * 1000.0) == 0) || ((int)Math.round(delta * 1000.0) == 0)) {
+            sample.h = -1;
+            sample.s = 0;
+            sample.v = 0;
             return;
         }
 
         float hue;
         if (sample.r == max) {
-            hue = (float)(sample.g - sample.b) / delta;
+            hue = (sample.g - sample.b) / delta;
         } else if (sample.g == max) {
-            hue = 2f + (float)(sample.b - sample.r) / delta;
+            hue = 2f + (sample.b - sample.r) / delta;
         } else {
-            hue = 4f + (float)(sample.r - sample.g) / delta;
+            hue = 4f + (sample.r - sample.g) / delta;
         }
         hue *= 60f;
         if (hue < 0) {
