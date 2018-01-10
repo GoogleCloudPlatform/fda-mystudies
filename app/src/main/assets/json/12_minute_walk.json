@@ -105,7 +105,18 @@
     },
     {
       "identifier"       : "run",
-      "type"             : "crf_12_min_walk"
+      "type"             : "crf_12_min_walk",
+      "duration"         : 20,
+      "spokenInstructions" :
+      {         "0": "Start running or walking.",
+              "180": "You are doing well; 9 minutes left.",
+              "360": "Good job, halfway done; 6 minutes left.",
+              "540": "You are doing well; 3 minutes left.",
+              "660": "Good job; 1 minute left.",
+              "700": "Almost done.",
+        "countdown": "15",
+              "end": "Stop running or walking."
+      }
     },
     {
       "identifier"       : "instructionCamera2",

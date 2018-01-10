@@ -47,7 +47,6 @@ public class Crf12MinWalkingStep extends ActiveStep {
     }
 
     private void commonInit() {
-        setStepDuration(12 * 60); // 12 min
         List<RecorderConfig> configList = new ArrayList<>();
         configList.add(new LocationRecorderConfig(LOCATION_RECORDER_ID));
         setRecorderConfigurationList(configList);
