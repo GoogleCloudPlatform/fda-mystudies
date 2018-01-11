@@ -17,6 +17,8 @@
 
 package org.sagebionetworks.bridge.researchstack;
 
+import com.google.common.collect.ImmutableMap;
+
 import org.joda.time.DateTime;
 import org.researchstack.backbone.AppPrefs;
 import org.researchstack.backbone.ResourceManager;
@@ -30,7 +32,6 @@ import org.sagebase.crf.step.body.CrfChoiceAnswerFormat;
 import org.sagebase.crf.step.body.CrfIntegerAnswerFormat;
 import org.sagebionetworks.bridge.android.manager.BridgeManagerProvider;
 import org.sagebionetworks.bridge.data.Archive;
-import org.sagebionetworks.bridge.data.ArchiveFile;
 import org.sagebionetworks.bridge.data.JsonArchiveFile;
 import org.sagebionetworks.bridge.researchstack.factory.ArchiveFileFactory;
 import org.sagebionetworks.bridge.researchstack.survey.SurveyAnswer;
@@ -48,12 +49,20 @@ public class CrfTaskHelper extends TaskHelper {
 
     public static final String ANSWERS_FILENAME = "answers";
 
-    static HashMap<String, String> CRF_RESULT_CONVERSION_MAP = new HashMap<String, String>() {{
-        put("HeartRateCamera_heartRate.before", "heartRate_before_recorder");
-        put("HeartRateCamera_heartRate.after",  "heartRate_after_recorder");
-        put("motion_stairStep",                 "stairStep_motion");
-        put("location_run",                     "location");
-    }};
+    static final Map<String, String> CRF_FILENAME_CONVERSION_MAP =
+            ImmutableMap.<String, String>builder()
+                    .put("HeartRateCamera_heartRate.before",    "heartRate_before_recorder")
+                    .put("HeartRateCamera_heartRate.after",     "heartRate_after_recorder")
+                    .put("motion_stairStep",                    "stairStep_motion")
+                    .put("location_run",                        "location")
+                    .put("motion_heartRate.after",              "heartRate_after_motion")
+                    .put("motion_heartRate.before",             "heartRate_before_motion")
+                    .put("heartRate.before.heartRate_start",    "heartRate_before_heartRate_start")
+                    .put("heartRate.before.heartRate_end",      "heartRate_before_heartRate_end")
+                    .put("heartRate.after.heartRate_start",     "heartRate_after_heartRate_start")
+                    .put("heartRate.after.heartRate_end",       "heartRate_after_heartRate_end")
+            .build();
+
 
     public CrfTaskHelper(StorageAccessWrapper storageAccess, ResourceManager resourceManager, AppPrefs appPrefs, NotificationHelper notificationHelper, BridgeManagerProvider bridgeManagerProvider) {
         super(storageAccess, resourceManager, appPrefs, notificationHelper, bridgeManagerProvider);
@@ -111,8 +120,8 @@ public class CrfTaskHelper extends TaskHelper {
 
         @Override
         protected String getFilename(String identifier) {
-            if (CrfTaskHelper.CRF_RESULT_CONVERSION_MAP.containsKey(identifier)) {
-                return CrfTaskHelper.CRF_RESULT_CONVERSION_MAP.get(identifier);
+            if (CrfTaskHelper.CRF_FILENAME_CONVERSION_MAP.containsKey(identifier)) {
+                return CrfTaskHelper.CRF_FILENAME_CONVERSION_MAP.get(identifier);
             }
             return identifier;
         }
