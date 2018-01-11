@@ -139,9 +139,6 @@ public class HeartBeatDetector extends Detector<HeartBeatSample> {
         //Log.d("Timing", "Hue " + (System.currentTimeMillis() - startTime));
         //Log.d("Hue", "" + sample.h);
 
-        Log.d("TODO_REMOVE", "r=" + sample.r + " g=" + sample.g + " b=" + sample.b +
-        " h=" + sample.h + " s=" + sample.s + " v=" + sample.v);
-
         float bpm = calculateBpm((int)rawSampleR);
         if (bpm > 0) {
             //Log.d("BPM", "" + bpm);
