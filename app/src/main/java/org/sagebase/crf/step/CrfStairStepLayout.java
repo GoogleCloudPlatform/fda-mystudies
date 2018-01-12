@@ -17,6 +17,7 @@
 
 package org.sagebase.crf.step;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.media.AudioManager;
 import android.media.ToneGenerator;
@@ -120,6 +121,7 @@ public class CrfStairStepLayout extends ActiveStepLayout implements CrfTaskStatu
         crfCountdownText.setText(String.format(Locale.getDefault(), "%02d:%02d", min, sec));
     }
 
+    @SuppressLint("MissingSuperCall")
     @Override
     public void start() {
         // Do not start here, wait for TTS to start
