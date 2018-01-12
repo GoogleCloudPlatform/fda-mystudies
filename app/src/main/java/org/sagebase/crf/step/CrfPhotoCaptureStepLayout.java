@@ -143,7 +143,7 @@ public class CrfPhotoCaptureStepLayout extends CrfInstructionStepLayout implemen
         File storageDir = getContext().getExternalFilesDir(Environment.DIRECTORY_PICTURES);
         File image = File.createTempFile(
                 imageFileName,  /* prefix */
-                ".jpg",         /* suffix */
+                ".jpeg",         /* suffix */
                 storageDir      /* directory */
         );
 
