@@ -64,7 +64,7 @@ public class FitbitManager {
         // registered with Fitbit, and specified in intent filter in the manifest
         private static final Uri URI_CALLBACK = Uri.parse("org.sagebase.crf-module://oauth2");
         private static final String CLIENT_ID = "22CK8G";
-        private static final Set<String> REQUIRED_SCOPES = ImmutableSet.of("heartrate");
+        private static final Set<String> REQUIRED_SCOPES = ImmutableSet.of("activity heartrate");
     }
 
     private static final AuthorizationServiceConfiguration AUTHORIZATION_SERVICE_CONFIGURATION =

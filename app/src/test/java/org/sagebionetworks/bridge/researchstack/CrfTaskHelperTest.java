@@ -95,7 +95,7 @@ public class CrfTaskHelperTest {
 
         String answerMapJson = jsonForFilename(builder, CrfTaskHelper.ANSWERS_FILENAME);
         String expectedJson = "{\"beat2\":52,\"beat3\":53,\"beat4\":54,\"choice\":\"value\",\"beat1\":51}";
-        assertEquals(expectedJson, answerMapJson);
+        assertEquals(expectedJson, answerMapJson.replaceAll("\\s",""));
     }
 
     @Test
@@ -137,7 +137,7 @@ public class CrfTaskHelperTest {
 
         String answerMapJson = jsonForFilename(builder, CrfTaskHelper.ANSWERS_FILENAME);
         String expectedJson = "{\"beat2\":52,\"beat3\":53,\"beat4\":54,\"choice\":\"value\",\"beat1\":51}";
-        assertEquals(expectedJson, answerMapJson);
+        assertEquals(expectedJson, answerMapJson.replaceAll("\\s",""));
     }
 
     @Test

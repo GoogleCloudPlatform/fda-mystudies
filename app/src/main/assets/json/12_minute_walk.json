@@ -106,7 +106,7 @@
     {
       "identifier"       : "run",
       "type"             : "crf_12_min_walk",
-      "duration"         : 20,
+      "duration"         : 720,
       "spokenInstructions" :
       {         "0": "Start running or walking.",
               "180": "You are doing well; 9 minutes left.",
