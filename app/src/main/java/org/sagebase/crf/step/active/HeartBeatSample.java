@@ -23,9 +23,9 @@ package org.sagebase.crf.step.active;
 
 public class HeartBeatSample {
     public long t;
-    public long r;
-    public long g;
-    public long b;
+    public float r;
+    public float g;
+    public float b;
     public float h;
     public float s;
     public float v;

@@ -85,17 +85,17 @@ public class CrfTaskHelperTest {
         String[] archiveFiles = filenameList(builder);
 
         // 3 recorders, and 1 answers file
-        assertEquals(4, archiveFiles.length);
+        assertEquals(12, archiveFiles.length);
 
         // CRF_RESULT_CONVERSION_MAP should change the json filenames to these below
         assertEquals("heartRate_before_recorder.json", archiveFiles[0]);
         assertEquals("heartRate_after_recorder.json", archiveFiles[1]);
         assertEquals("location.json",    archiveFiles[2]);
-        assertEquals(CrfTaskHelper.ANSWERS_FILENAME, archiveFiles[3]);
+        assertEquals(CrfTaskHelper.ANSWERS_FILENAME, archiveFiles[11]);
 
         String answerMapJson = jsonForFilename(builder, CrfTaskHelper.ANSWERS_FILENAME);
         String expectedJson = "{\"beat2\":52,\"beat3\":53,\"beat4\":54,\"choice\":\"value\",\"beat1\":51}";
-        assertEquals(expectedJson, answerMapJson);
+        assertEquals(expectedJson, answerMapJson.replaceAll("\\s",""));
     }
 
     @Test
@@ -127,17 +127,17 @@ public class CrfTaskHelperTest {
         String[] archiveFiles = filenameList(builder);
 
         // 3 recorders, and 1 answers file
-        assertEquals(5, archiveFiles.length);
+        assertEquals(14, archiveFiles.length);
 
         assertEquals("heartRate_before_recorder.json", archiveFiles[0]);
         assertEquals("heartRate_after_recorder.json", archiveFiles[1]);
         assertEquals("stairStep_motion.json", archiveFiles[2]);
         assertEquals("stairPhoto.jpeg",     archiveFiles[3]);
-        assertEquals(CrfTaskHelper.ANSWERS_FILENAME, archiveFiles[4]);
+        assertEquals(CrfTaskHelper.ANSWERS_FILENAME, archiveFiles[13]);
 
         String answerMapJson = jsonForFilename(builder, CrfTaskHelper.ANSWERS_FILENAME);
         String expectedJson = "{\"beat2\":52,\"beat3\":53,\"beat4\":54,\"choice\":\"value\",\"beat1\":51}";
-        assertEquals(expectedJson, answerMapJson);
+        assertEquals(expectedJson, answerMapJson.replaceAll("\\s",""));
     }
 
     @Test
@@ -160,7 +160,7 @@ public class CrfTaskHelperTest {
         taskHelper.addFiles(builder, flattenedResults, taskId);
         String[] archiveFiles = filenameList(builder);
 
-        assertEquals(2, archiveFiles.length);
+        assertEquals(3, archiveFiles.length);
         assertEquals("year.json", archiveFiles[0]);
         assertEquals("choice.json", archiveFiles[1]);
     }

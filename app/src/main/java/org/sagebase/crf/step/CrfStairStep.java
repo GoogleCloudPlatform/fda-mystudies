@@ -18,9 +18,7 @@
 package org.sagebase.crf.step;
 
 import org.researchstack.backbone.step.active.ActiveStep;
-import org.researchstack.backbone.step.active.recorder.AccelerometerRecorderConfig;
 import org.researchstack.backbone.step.active.recorder.DeviceMotionRecorderConfig;
-import org.researchstack.backbone.step.active.recorder.LocationRecorderConfig;
 import org.researchstack.backbone.step.active.recorder.RecorderConfig;
 
 import java.util.ArrayList;
@@ -33,6 +31,7 @@ import java.util.List;
 public class CrfStairStep extends ActiveStep {
     public static final String ACCEL_RECORDER_ID = "accel";
     public static final String MOTION_RECORDER_ID = "motion";
+    public static final int DEFAULT_STAIR_INTERVAL = 2; // 2 seconds
 
     public static final int SENSOR_FREQ = 100;
 
@@ -40,7 +39,6 @@ public class CrfStairStep extends ActiveStep {
      * The interval in sec between step movement instructions
      */
     public int stairInterval;
-    public static final int defaultStairInterval = 2; // 2 seconds
 
     public CrfStairStep(String identifier) {
         super(identifier);
@@ -59,7 +57,7 @@ public class CrfStairStep extends ActiveStep {
         setRecorderConfigurationList(configList);
         setShouldContinueOnFinish(true);
         setShouldStartTimerAutomatically(true);
-        stairInterval = defaultStairInterval;
+        stairInterval = DEFAULT_STAIR_INTERVAL;
     }
 
     // Stair step has verbal instructions

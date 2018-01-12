@@ -41,7 +41,7 @@ import java.io.IOException;
 
 public class HeartRateCameraRecorder extends JsonArrayDataRecorder {
 
-    private static final String TIMESTAMP_KEY    = "timestamp";
+    private static final String TIMESTAMP_IN_SECONDS_KEY = "timestamp";
     private static final String HEART_RATE_KEY   = "bpm_camera";
     private static final String HUE_KEY          = "hue";
     private static final String SATURATION_KEY   = "saturation";
@@ -111,33 +111,31 @@ public class HeartRateCameraRecorder extends JsonArrayDataRecorder {
 
         HeartBeatDetector heartBeatDetector = new HeartBeatDetector();
         HeartbeatTrackerFactory heartbeatFactory = new HeartbeatTrackerFactory(
-                new HeartbeatSampleTracker.HeartRateUpdateListener() {
-            @Override
-            public void onHeartRateSampleDetected(HeartBeatSample sample) {
-                mJsonObject.addProperty(TIMESTAMP_KEY,  sample.t);
-                mJsonObject.addProperty(HUE_KEY,        sample.h);
-                mJsonObject.addProperty(SATURATION_KEY, sample.s);
-                mJsonObject.addProperty(BRIGHTNESS_KEY, sample.v);
-                mJsonObject.addProperty(RED_KEY,        sample.r);
-                mJsonObject.addProperty(GREEN_KEY,      sample.g);
-                mJsonObject.addProperty(BLUE_KEY,       sample.b);
+                sample -> {
+                    mJsonObject.addProperty(TIMESTAMP_IN_SECONDS_KEY,  sample.t/1000F);
+                    mJsonObject.addProperty(HUE_KEY,        sample.h);
+                    mJsonObject.addProperty(SATURATION_KEY, sample.s);
+                    mJsonObject.addProperty(BRIGHTNESS_KEY, sample.v);
+                    mJsonObject.addProperty(RED_KEY,        sample.r);
+                    mJsonObject.addProperty(GREEN_KEY,      sample.g);
+                    mJsonObject.addProperty(BLUE_KEY,       sample.b);
 
-                if (sample.bpm > 0) {
-                    mJsonObject.addProperty(HEART_RATE_KEY, sample.bpm);
-                    if (mBpmUpdateListener != null) {
-                        mBpmUpdateListener.bpmUpdate(sample.bpm);
+                    if (sample.bpm > 0) {
+                        mJsonObject.addProperty(HEART_RATE_KEY, sample.bpm);
+                        if (mBpmUpdateListener != null) {
+                            mBpmUpdateListener.bpmUpdate(
+                                    new BpmUpdateListener.BpmHolder(sample.bpm, sample.t));
+                        }
+                    } else {
+                        mJsonObject.remove(HEART_RATE_KEY);
                     }
-                } else {
-                    mJsonObject.remove(HEART_RATE_KEY);
-                }
 
-                if (!mEnableIntelligentStart || mIntelligentStartPassed) {
-                    writeJsonObjectToFile(mJsonObject);
-                } else {
-                    updateIntelligentStart(sample);
-                }
-            }
-        });
+                    if (!mEnableIntelligentStart || mIntelligentStartPassed) {
+                        writeJsonObjectToFile(mJsonObject);
+                    } else {
+                        updateIntelligentStart(sample);
+                    }
+                });
         heartBeatDetector.setProcessor(new MultiProcessor.Builder<>(heartbeatFactory).build());
 
         CameraSource.Builder builder = new CameraSource.Builder(getContext(), heartBeatDetector)
@@ -176,8 +174,11 @@ public class HeartRateCameraRecorder extends JsonArrayDataRecorder {
         // When a finger is placed in front of the camera with the flash on,
         // the camera image will be almost entirely red, so use a simple lenient algorithm for this
         int redIntensityFactorThreshold = 20;
-        long greenBlueSum = ((sample.g == 0) ? 1 : sample.g) + ((sample.b == 0) ? 1 : sample.b);
-        long redFactor = sample.r / greenBlueSum;
+        float greenBlueSum = sample.g + sample.b;
+        if (greenBlueSum == 0.0f) {
+            greenBlueSum = 0.0000000001f;
+        }
+        float redFactor = sample.r / greenBlueSum;
 
         // If the red factor is large enough, we update the trigger
         if (redFactor >= redIntensityFactorThreshold) {
@@ -223,7 +224,16 @@ public class HeartRateCameraRecorder extends JsonArrayDataRecorder {
     }
 
     public interface BpmUpdateListener {
-        void bpmUpdate(int bpm);
+        class BpmHolder {
+            public final int bpm;
+            public final long timestamp;
+
+            public BpmHolder(int bpm, long timestamp) {
+                this.bpm = bpm;
+                this.timestamp = timestamp;
+            }
+        }
+        void bpmUpdate(BpmHolder bpm);
     }
 
     public interface IntelligentStartUpdateListener {

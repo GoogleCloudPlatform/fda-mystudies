@@ -99,7 +99,8 @@
     {
       "identifier"       : "countdownStep",
       "type"             : "crf_countdown",
-      "title"            : "Start step ups"
+      "title"            : "Start step ups",
+      "stepDuration"     : 10
     },
     {
       "identifier"       : "stairStep",

@@ -59,6 +59,10 @@
     <string name="crf_stand_still">Stand still</string>
     <string name="crf_up">Up</string>
     <string name="crf_down">Down</string>
+    <string name="crf_spoken_doing_well">You are doing well; 2 minutes left.</string>
+    <string name="crf_spoken_good_job">Good job; 1 minute left.</string>
+    <string name="crf_spoken_almost_done">10 seconds; Almost done!</string>
+    <string name="crf_spoken_done">Done! Now measure your heart rate again.</string>
     
     <!-- Data Groups Screen -->
     <string name="crf_data_groups_loading_title">Checking for existing groups</string>

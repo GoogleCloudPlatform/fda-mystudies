@@ -1,15 +1,19 @@
 {
   "Cardio 12MT": {
     "id": "Cardio 12MT",
-    "revision": 2
+    "revision": 5
   },
   "Cardio Stress Test": {
     "id": "Cardio Stress Test",
     "revision": 1
   },
+  "Cardio Stair Step": {
+    "id": "Cardio Stair Step",
+    "revision": 1
+  },
   "HeartRate Measurement": {
     "id": "HeartRate Measurement",
-    "revision": 6
+    "revision": 7
   },
   "test_json_survey": {
     "id": "test_json_survey",
