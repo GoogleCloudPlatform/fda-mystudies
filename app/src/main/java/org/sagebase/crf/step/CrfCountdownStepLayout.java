@@ -19,10 +19,11 @@ package org.sagebase.crf.step;
 
 import android.content.Context;
 import android.util.AttributeSet;
-import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
+import org.researchstack.backbone.result.StepResult;
+import org.researchstack.backbone.step.Step;
 import org.researchstack.backbone.ui.step.layout.ActiveStepLayout;
 import org.sagebase.crf.view.CrfTaskStatusBarManipulator;
 import org.sagebase.crf.view.CrfTaskToolbarTintManipulator;
@@ -40,6 +41,7 @@ public class CrfCountdownStepLayout extends ActiveStepLayout implements CrfTaskT
     protected TextView crfCountdownTextView;
     protected Button pauseResumeButton;
     private boolean isPaused = false;
+    protected boolean haveReachedEndOfStep;
 
     public CrfCountdownStepLayout(Context context) {
         super(context);
@@ -58,6 +60,35 @@ public class CrfCountdownStepLayout extends ActiveStepLayout implements CrfTaskT
     }
 
     @Override
+    public void initialize(Step step, StepResult result) {
+        super.initialize(step, result);
+        haveReachedEndOfStep = false;
+    }
+
+    @Override
+    public void stop() {
+        haveReachedEndOfStep = true;
+        super.stop();
+    }
+
+    @Override
+    public void pauseActiveStepLayout() {
+        // Ignore pause activity (most likely user shutting off the screen)
+        // That is okay, we will proceed to the next step even if screen is off
+        // If we haven't reached the end of the activity yet
+        if (haveReachedEndOfStep) {
+            super.pauseActiveStepLayout();
+        }
+    }
+
+    @Override
+    public void forceStop() {
+        // Ok, it wasn't a screen turning off, we really must stop
+        super.pauseActiveStepLayout();
+        super.forceStop();
+    }
+
+    @Override
     public void setupActiveViews() {
         super.setupActiveViews();
 
@@ -69,18 +100,15 @@ public class CrfCountdownStepLayout extends ActiveStepLayout implements CrfTaskT
         crfCountdownTextView = findViewById(R.id.crf_countdown_text);
 
         pauseResumeButton = findViewById(R.id.crf_pause_resume_button);
-        pauseResumeButton.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (isPaused) {
-                    pauseResumeButton.setText(R.string.crf_underlined_pause);
-                    resumeCountdown();
-                } else {
-                    pauseResumeButton.setText(R.string.crf_underlined_resume);
-                    pauseCountdown();
-                }
-                isPaused = !isPaused;
+        pauseResumeButton.setOnClickListener(view -> {
+            if (isPaused) {
+                pauseResumeButton.setText(R.string.crf_underlined_pause);
+                resumeCountdown();
+            } else {
+                pauseResumeButton.setText(R.string.crf_underlined_resume);
+                pauseCountdown();
             }
+            isPaused = !isPaused;
         });
     }
 

@@ -45,7 +45,6 @@ public class CrfHeartRateCameraStep extends ActiveStep {
 
     public void commonInit() {
         List<RecorderConfig> recorderConfigList = new ArrayList<>();
-        recorderConfigList.add(new HeartRateCameraRecorderConfig("HeartRateCamera"));
         recorderConfigList.add(new DeviceMotionRecorderConfig(MOTION_RECORDER_ID, SENSOR_FREQ));
         setRecorderConfigurationList(recorderConfigList);
         setShouldStartTimerAutomatically(true);

@@ -17,21 +17,24 @@
 
 package org.sagebase.crf.step;
 
+import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.graphics.Path;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.content.res.ResourcesCompat;
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.TextView;
 
-import org.researchstack.backbone.result.Result;
 import org.researchstack.backbone.result.StepResult;
 import org.researchstack.backbone.step.Step;
+import org.researchstack.backbone.step.active.RecorderService;
+import org.researchstack.backbone.step.active.recorder.AudioRecorder;
 import org.researchstack.backbone.step.active.recorder.LocationRecorder;
-import org.researchstack.backbone.step.active.recorder.Recorder;
 import org.researchstack.backbone.ui.step.layout.ActiveStepLayout;
 import org.researchstack.backbone.ui.views.ArcDrawable;
-import org.researchstack.backbone.utils.StepResultHelper;
 import org.sagebase.crf.view.CrfTaskStatusBarManipulator;
 import org.sagebionetworks.research.crf.R;
 
@@ -50,6 +53,7 @@ public class Crf12MinWalkingStepLayout extends ActiveStepLayout implements CrfTa
 
     protected TextView distanceNumber;
     protected int lastDistanceMeasurement;
+    protected BroadcastReceiver locationReceiver;
 
     protected View arcDrawableContainer;
     protected ArcDrawable arcDrawable;
@@ -102,35 +106,68 @@ public class Crf12MinWalkingStepLayout extends ActiveStepLayout implements CrfTa
         distanceNumber.setText("0");
         setDistanceResultForCompletionStep("0");
         lastDistanceMeasurement = 0;
-
-        for (Recorder recorder : recorderList) {
-            if (recorder instanceof LocationRecorder) {
-                LocationRecorder locationRecorder = (LocationRecorder)recorder;
-                locationRecorder.setLocationUpdateListener(new LocationRecorder.LocationUpdateListener() {
-                    @Override
-                    public void onLocationUpdated(double longitude, double latitude, double distance) {
-                        int distanceInFeet = (int)(3.28084 * distance);
-                        DecimalFormat formatter = new DecimalFormat("#,###,###");
-                        String distanceString = formatter.format(distanceInFeet);
-                        distanceNumber.setText(distanceString);
-                        setDistanceResultForCompletionStep(distanceString);
-                        lastDistanceMeasurement = distanceInFeet;
-                    }
-                });
-            }
-        }
     }
 
     @Override
-    public void onComplete(Recorder recorder, Result result) {
-        super.onComplete(recorder, result);
+    public void stop() {
+        super.stop();
         setFinalDistanceResult();
+    }
+
+    protected void stepLayoutWasResumedInFinishedState(RecorderService.ResultHolder resultHolder) {
+        updateLastRecordedDistance(LocationRecorder.getLastRecordedTotalDistance(getContext()));
+        super.stepLayoutWasResumedInFinishedState(resultHolder);
+    }
+
+    protected void stepLayoutWasResumedInRecordingState(long recordingStartTime) {
+        updateLastRecordedDistance(LocationRecorder.getLastRecordedTotalDistance(getContext()));
+        super.stepLayoutWasResumedInRecordingState(recordingStartTime);
+    }
+
+    @Override
+    protected void registerRecorderBroadcastReceivers(Context appContext) {
+        super.registerRecorderBroadcastReceivers(appContext);
+        locationReceiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                if (intent == null || intent.getAction() == null) {
+                    return;
+                }
+                if (LocationRecorder.BROADCAST_LOCATION_UPDATE_ACTION.equals(intent.getAction())) {
+                    LocationRecorder.LocationUpdateHolder dataHolder =
+                            LocationRecorder.getLocationUpdateHolder(intent);
+                    if (dataHolder != null) {
+                        updateLastRecordedDistance(dataHolder.getTotalDistance());
+                    }
+                }
+            }
+        };
+        IntentFilter intentFilter = new IntentFilter(AudioRecorder.BROADCAST_SAMPLE_ACTION);
+        LocalBroadcastManager.getInstance(appContext)
+                .registerReceiver(locationReceiver, intentFilter);
+    }
+
+    protected void updateLastRecordedDistance(double totalDistance) {
+        int distanceInFeet = (int)(3.28084 * totalDistance);
+        DecimalFormat formatter = new DecimalFormat("#,###,###");
+        String distanceString = formatter.format(distanceInFeet);
+        distanceNumber.setText(distanceString);
+        setDistanceResultForCompletionStep(distanceString);
+        lastDistanceMeasurement = distanceInFeet;
+    }
+
+    @Override
+    protected void unregisterRecorderBroadcastReceivers() {
+        super.unregisterRecorderBroadcastReceivers();
+        Context appContext = getContext().getApplicationContext();
+        LocalBroadcastManager.getInstance(appContext).unregisterReceiver(locationReceiver);
     }
 
     private void setFinalDistanceResult() {
         String stepId = activeStep.getIdentifier() + CRF_12_RUN_IDENTIFIER_SUFFIX;
         StepResult<Double> result = new StepResult<>(new Step(stepId));
-        result.setResult((double) lastDistanceMeasurement);
+        double lastRecordedDistance = LocationRecorder.getLastRecordedTotalDistance(getContext());
+        result.setResult(lastRecordedDistance);
         stepResult.setResultForIdentifier(stepId, result);
     }
 

@@ -105,7 +105,23 @@
     {
       "identifier"       : "stairStep",
       "type"             : "crf_stair_step",
-      "stairInterval"    : 2
+      "duration"         : "20",
+      "spokenInstructions" :
+      {
+                 "0": "Up",
+              "1.25": "Down",
+              "2.50": "Up",
+              "3.75": "Down",
+                 "5": "Up",
+              "6.25": "Down",
+              "7.50": "Up",
+              "8.75": "Down",
+                "60": "You are doing well, 2 minutes left.",
+               "120": "Good job, 1 minute left.",
+               "170": "10 seconds, almost done!",
+         "metronome": "0.625",
+               "end": "Done! Now measure your heart rate again."
+      }
     },
     {
       "identifier"       : "instructionCamera2",
