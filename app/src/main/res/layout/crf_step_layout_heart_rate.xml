@@ -101,7 +101,8 @@
                     android:layout_height="wrap_content"
                     android:text="@string/crf_bpm"
                     android:layout_gravity="center"
-                    android:textColor="@color/black86"/>
+                    android:textColor="@color/black86"
+                    android:padding="@dimen/rsb_padding_large"/>
 
             </LinearLayout>
 
