@@ -18,11 +18,9 @@
 package org.sagebase.crf.step;
 
 import android.content.BroadcastReceiver;
+import android.annotation.SuppressLint;
 import android.content.Context;
-import android.content.Intent;
-import android.content.IntentFilter;
 import android.support.annotation.DrawableRes;
-import android.support.v4.content.LocalBroadcastManager;
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.ImageView;
@@ -30,7 +28,6 @@ import android.widget.TextView;
 
 import org.researchstack.backbone.result.StepResult;
 import org.researchstack.backbone.step.Step;
-import org.researchstack.backbone.step.active.RecorderService;
 import org.researchstack.backbone.ui.step.layout.ActiveStepLayout;
 import org.sagebase.crf.view.CrfTaskStatusBarManipulator;
 import org.sagebionetworks.research.crf.R;
@@ -102,6 +99,7 @@ public class CrfStairStepLayout extends ActiveStepLayout implements CrfTaskStatu
         crfCountdownText.setText(String.format(Locale.getDefault(), "%02d:%02d", min, sec));
     }
 
+    @SuppressLint("MissingSuperCall")
     @Override
     public void setupActiveViews() {
         super.setupActiveViews();
