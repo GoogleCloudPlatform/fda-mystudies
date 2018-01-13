@@ -84,10 +84,11 @@
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_gravity="center"
                 android:orientation="horizontal">
 
                 <TextView
-                    style="@style/TextAppearance.Crf.ActiveStatusNumber"
+                    style="@style/TextAppearance.Crf.BpmNumber"
                     android:id="@+id/crf_heart_rate_number"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
