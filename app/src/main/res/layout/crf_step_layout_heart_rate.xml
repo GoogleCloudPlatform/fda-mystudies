@@ -31,7 +31,11 @@
         android:layout_centerHorizontal="true"
         android:paddingTop="?attr/actionBarSize"
         android:gravity="center_horizontal"
-        android:layout_margin="@dimen/rsb_padding_large"/>
+        android:textColor="@color/black54"
+        android:layout_marginTop="48dp"
+        android:layout_marginLeft="@dimen/rsb_padding_large"
+        android:layout_marginRight="@dimen/rsb_padding_large"
+        android:layout_marginBottom="@dimen/rsb_padding_large" />
 
     <FrameLayout
         android:layout_width="wrap_content"
@@ -69,23 +73,47 @@
             android:visibility="gone">
 
             <TextView
-                style="@style/TextAppearance.Crf.ActiveStatusNumber"
-                android:id="@+id/crf_heart_rate_number"
+                style="@style/TextAppearance.Crf.IntroBody"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:textColor="@color/salmon"/>
+                android:text="@string/crf_your_heart_rate_is"
+                android:textColor="@color/black86"
+                android:padding="@dimen/rsb_padding_medium"/>
 
-            <TextView
-                style="@style/TextAppearance.Crf.ActiveStatusText"
-                android:id="@+id/crf_heart_rate_bpm"
+            <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/crf_bpm"
-                android:layout_gravity="center"
-                android:textColor="@color/salmon"/>
+                android:orientation="horizontal">
+
+                <TextView
+                    style="@style/TextAppearance.Crf.ActiveStatusNumber"
+                    android:id="@+id/crf_heart_rate_number"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:textColor="@color/salmon"/>
+
+                <TextView
+                    style="@style/TextAppearance.Crf.ActiveStatusText"
+                    android:id="@+id/crf_heart_rate_bpm"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/crf_bpm"
+                    android:layout_gravity="center"
+                    android:textColor="@color/black86"/>
+
+            </LinearLayout>
 
         </LinearLayout>
+
+        <ImageView
+            android:id="@+id/crf_heart_icon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:src="@drawable/crf_heart_icon"
+            android:visibility="gone"/>
 
     </FrameLayout>
 
@@ -93,7 +121,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:padding="@dimen/rsb_padding_large">
+        android:padding="@dimen/rsb_padding_large"
+        android:clipChildren="false">
 
         <Button
             style="@style/Crf.Salmon.RoundedCornerMaterialButton"
@@ -103,14 +132,6 @@
             android:layout_gravity="center"
             android:text="@string/rsb_BUTTON_NEXT"
             android:textAllCaps="false"
-            android:visibility="gone"/>
-
-        <ImageView
-            android:id="@+id/crf_heart_icon"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:src="@drawable/crf_heart_icon"
             android:visibility="gone"/>
 
     </FrameLayout>

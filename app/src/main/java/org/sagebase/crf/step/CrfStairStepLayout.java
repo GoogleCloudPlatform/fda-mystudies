@@ -112,32 +112,9 @@ public class CrfStairStepLayout extends ActiveStepLayout implements CrfTaskStatu
     }
 
     @Override
-    protected void registerRecorderBroadcastReceivers(Context appContext) {
-        super.registerRecorderBroadcastReceivers(appContext);
-        metronomeReceiver = new BroadcastReceiver() {
-            @Override
-            public void onReceive(Context context, Intent intent) {
-                if (intent == null || intent.getAction() == null) {
-                    return;
-                }
-                if (RecorderService.BROADCAST_RECORDER_METRONOME.equals(intent.getAction())) {
-                    if (intent.hasExtra(RecorderService.BROADCAST_RECORDER_METRONOME_CTR)) {
-                        stairStepTransition(intent.getIntExtra(
-                                RecorderService.BROADCAST_RECORDER_METRONOME_CTR, 0));
-                    }
-                }
-            }
-        };
-        IntentFilter intentFilter = new IntentFilter(RecorderService.BROADCAST_RECORDER_METRONOME);
-        LocalBroadcastManager.getInstance(appContext)
-                .registerReceiver(metronomeReceiver, intentFilter);
-    }
-
-    @Override
-    protected void unregisterRecorderBroadcastReceivers() {
-        super.unregisterRecorderBroadcastReceivers();
-        Context appContext = getContext().getApplicationContext();
-        LocalBroadcastManager.getInstance(appContext).unregisterReceiver(metronomeReceiver);
+    protected void recorderServiceMetronomeAction(int metronomeCtr) {
+        super.recorderServiceMetronomeAction(metronomeCtr);
+        stairStepTransition(metronomeCtr);
     }
 
     protected void stairStepTransition(int stairCounter) {
