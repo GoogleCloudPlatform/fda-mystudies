@@ -379,7 +379,7 @@ public class CrfHeartRateStepLayout extends ActiveStepLayout implements
 
     @Nullable
     @Override
-    public Context onBroadcastContextRequested() {
+    public Context getBroadcastContext() {
         return getContext().getApplicationContext();
     }
 

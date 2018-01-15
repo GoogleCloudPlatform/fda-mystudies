@@ -105,7 +105,7 @@
     {
       "identifier"       : "stairStep",
       "type"             : "crf_stair_step",
-      "duration"         : "20",
+      "duration"         : "180",
       "spokenInstructions" :
       {
                  "0": "Up",
