@@ -52,6 +52,7 @@ public class Crf12MinWalkingStep extends ActiveStep {
         setRecorderConfigurationList(configList);
         setShouldContinueOnFinish(true);
         setShouldStartTimerAutomatically(true);
+        setEstimateTimeInMsToSpeakEndInstruction(2000); // give it 2 seconds to do the last command
     }
 
     @Override

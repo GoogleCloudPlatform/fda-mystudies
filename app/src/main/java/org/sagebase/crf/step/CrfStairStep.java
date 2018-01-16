@@ -31,7 +31,6 @@ import java.util.List;
 public class CrfStairStep extends ActiveStep {
     public static final String ACCEL_RECORDER_ID = "accel";
     public static final String MOTION_RECORDER_ID = "motion";
-    public static final int DEFAULT_STAIR_INTERVAL = 2; // 2 seconds
 
     public static final int SENSOR_FREQ = 100;
 
@@ -51,13 +50,12 @@ public class CrfStairStep extends ActiveStep {
     }
 
     private void commonInit() {
-        setStepDuration(3 * 60); // 3 min
         List<RecorderConfig> configList = new ArrayList<>();
         configList.add(new DeviceMotionRecorderConfig(MOTION_RECORDER_ID, SENSOR_FREQ));
         setRecorderConfigurationList(configList);
         setShouldContinueOnFinish(true);
         setShouldStartTimerAutomatically(true);
-        stairInterval = DEFAULT_STAIR_INTERVAL;
+        setEstimateTimeInMsToSpeakEndInstruction(2500);  // will allow for the long ending instruction
     }
 
     // Stair step has verbal instructions

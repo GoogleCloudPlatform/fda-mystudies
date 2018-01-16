@@ -17,11 +17,9 @@
 
 package org.sagebase.crf.step;
 
+import android.content.BroadcastReceiver;
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.media.AudioManager;
-import android.media.ToneGenerator;
-import android.speech.tts.TextToSpeech;
 import android.support.annotation.DrawableRes;
 import android.util.AttributeSet;
 import android.view.View;
@@ -42,31 +40,11 @@ import java.util.Locale;
 
 public class CrfStairStepLayout extends ActiveStepLayout implements CrfTaskStatusBarManipulator {
 
-    enum StairState {
-        START,
-        UP1,
-        UP2,
-        DOWN1,
-        DOWN2
-    }
-    protected StairState stairState = StairState.START;
-    protected int stairCounter = 0;
-
-    public static long STAIR_UPDATE_DOING_WELL_IN_MS = 60 * 1000; // 60 seconds
-    public static long STAIR_UPDATE_GOOD_JOB_IN_MS = 120 * 1000; // 120 seconds
-    public static long STAIR_UPDATE_ALMOST_DONE_IN_MS = 170 * 1000; // 170 seconds
-    public static long TIME_IN_MS_TO_SPEAK_DONE_TEXT = 2000; // 2 seconds
-
-    protected Runnable stairStepRunnable;
-    public static long STAIR_UPDATE_IN_MS = 625;
-
-    protected int metronomeCounter;
-    protected Runnable metronomeRunnable;
-    public static long METRONOME_UPDATE_IN_MS = 625;
-
     protected TextView crfCountdownText;
     protected ImageView crfImageView;
     protected TextView crfInstructionText;
+
+    protected BroadcastReceiver metronomeReceiver;
 
     protected CrfStairStep crfStairStep;
 
@@ -123,11 +101,6 @@ public class CrfStairStepLayout extends ActiveStepLayout implements CrfTaskStatu
 
     @SuppressLint("MissingSuperCall")
     @Override
-    public void start() {
-        // Do not start here, wait for TTS to start
-    }
-
-    @Override
     public void setupActiveViews() {
         super.setupActiveViews();
 
@@ -137,131 +110,38 @@ public class CrfStairStepLayout extends ActiveStepLayout implements CrfTaskStatu
     }
 
     @Override
-    public void onInit(int i) {
-        super.onInit(i);
-        if (i == TextToSpeech.SUCCESS) {
-            super.start();
+    protected void recorderServiceMetronomeAction(int metronomeCtr) {
+        super.recorderServiceMetronomeAction(metronomeCtr);
+        stairStepTransition(metronomeCtr);
+    }
 
-            startSpokenTextTimers();
+    protected void stairStepTransition(int stairCounter) {
+        int stairState = stairCounter % 4;  // up1, up2, down1, down2
+        String instructionText = null;
+        @DrawableRes int instructionImage = R.drawable.crf_stair_step_start_1;
+        switch (stairState) {
+            case 0:  // up 1
+                instructionText = getContext().getString(R.string.crf_up);
+                instructionImage = R.drawable.crf_stair_step_start_3;
+                break;
+            case 1:  // up 2
+                instructionText = getContext().getString(R.string.crf_down);
+                instructionImage = R.drawable.crf_stair_step_start_4;
+                break;
+            case 2:  // down 1
+                instructionText = getContext().getString(R.string.crf_down);
+                instructionImage = R.drawable.crf_stair_step_start_1;
+                break;
+            case 3:  // down 2
+                instructionText = getContext().getString(R.string.crf_up);
+                instructionImage = R.drawable.crf_stair_step_start_2;
+                break;
         }
-    }
-
-    protected void startSpokenTextTimers() {
-        startStairStepTimer();
-        startMetronomeTimer();
-
-        mainHandler.postDelayed(() ->
-                speakText(getContext().getString(R.string.crf_spoken_doing_well)),
-                calculateTimeUntilDoingWellStairStepIteration());
-
-        mainHandler.postDelayed(() ->
-                speakText(getContext().getString(R.string.crf_spoken_good_job)),
-                calculateTimeUntilGoodJobStairStepIteration());
-
-        mainHandler.postDelayed(() ->
-                speakText(getContext().getString(R.string.crf_spoken_almost_done)),
-                calculateTimeUntilAlmostDoneStairStepIteration());
-
-        mainHandler.postDelayed(() ->
-                speakText(getContext().getString(R.string.crf_spoken_done)),
-                calculateTimeUntilDoneStairStepIteration());
-    }
-
-    protected void startStairStepTimer() {
-        stairCounter = 0;
-        stairStepRunnable = () -> {
-
-            String instructionText = null;
-            @DrawableRes int instructionImage = R.drawable.crf_stair_step_start_1;
-            switch (stairState) {
-                case START:
-                    instructionText = getContext().getString(R.string.crf_up);
-                    instructionImage = R.drawable.crf_stair_step_start_2;
-                    stairState = StairState.UP1;
-                    break;
-                case UP1:
-                    instructionText = getContext().getString(R.string.crf_up);
-                    instructionImage = R.drawable.crf_stair_step_start_3;
-                    stairState = StairState.UP2;
-                    break;
-                case UP2:
-                    instructionText = getContext().getString(R.string.crf_down);
-                    instructionImage = R.drawable.crf_stair_step_start_4;
-                    stairState = StairState.DOWN1;
-                    break;
-                case DOWN1:
-                    instructionText = getContext().getString(R.string.crf_down);
-                    instructionImage = R.drawable.crf_stair_step_start_1;
-                    stairState = StairState.DOWN2;
-                    break;
-                case DOWN2:
-                    instructionText = getContext().getString(R.string.crf_up);
-                    instructionImage = R.drawable.crf_stair_step_start_2;
-                    stairState = StairState.UP1;
-                    break;
-            }
-
-            if ((stairCounter % StairState.DOWN2.ordinal() == 0 ||
-                 stairCounter % StairState.UP2.ordinal() == 0) &&
-                    stairCounter < 16) {
-                speakText(instructionText);
-            }
-            if (stairCounter >= 16) {
-                crfInstructionText.setVisibility(View.INVISIBLE);
-            }
-            crfImageView.setImageResource(instructionImage);
-            crfInstructionText.setText(instructionText);
-
-            stairCounter++;
-
-            if (secondsLeft > 0) {
-                mainHandler.postDelayed(stairStepRunnable, calculateTimeUntilNextStairStepIteration());
-            }
-        };
-        mainHandler.removeCallbacks(stairStepRunnable);
-        mainHandler.post(stairStepRunnable);
-    }
-
-    protected void startMetronomeTimer() {
-        final ToneGenerator tockSound = new ToneGenerator(AudioManager.STREAM_MUSIC, 60);
-        metronomeCounter = 0;
-        metronomeRunnable = () -> {
-
-            tockSound.startTone(ToneGenerator.TONE_CDMA_PIP, 100);
-            metronomeCounter++;
-
-            if (secondsLeft > 0) {
-                mainHandler.postDelayed(metronomeRunnable, calculateTimeUntilNextMetronomeIteration());
-            }
-        };
-        mainHandler.removeCallbacks(metronomeRunnable);
-        mainHandler.post(metronomeRunnable);
-    }
-
-    protected long calculateTimeUntilNextStairStepIteration() {
-        return (startTime + (stairCounter * STAIR_UPDATE_IN_MS)) - System.currentTimeMillis();
-    }
-
-    protected long calculateTimeUntilNextMetronomeIteration() {
-        return (startTime + (metronomeCounter * METRONOME_UPDATE_IN_MS)) - System.currentTimeMillis();
-    }
-
-    protected long calculateTimeUntilAlmostDoneStairStepIteration() {
-        return (startTime + STAIR_UPDATE_ALMOST_DONE_IN_MS) - System.currentTimeMillis();
-    }
-
-    protected long calculateTimeUntilDoingWellStairStepIteration() {
-        return (startTime + STAIR_UPDATE_DOING_WELL_IN_MS) - System.currentTimeMillis();
-    }
-
-    protected long calculateTimeUntilGoodJobStairStepIteration() {
-        return (startTime + STAIR_UPDATE_GOOD_JOB_IN_MS) - System.currentTimeMillis();
-    }
-
-    protected long calculateTimeUntilDoneStairStepIteration() {
-        return (startTime +
-                ((1000 * activeStep.getStepDuration()) - TIME_IN_MS_TO_SPEAK_DONE_TEXT)) -
-                System.currentTimeMillis();
+        if (stairCounter >= 16) {  // Hide Up/Down after 16 * 0.625 seconds
+            crfInstructionText.setVisibility(View.INVISIBLE);
+        }
+        crfImageView.setImageResource(instructionImage);
+        crfInstructionText.setText(instructionText);
     }
 
     @Override

@@ -17,22 +17,35 @@
 
 package org.sagebase.crf.step;
 
+import com.google.common.collect.ImmutableMap;
+
 import org.researchstack.backbone.step.active.ActiveStep;
-import org.researchstack.backbone.step.active.recorder.AccelerometerRecorderConfig;
 import org.researchstack.backbone.step.active.recorder.DeviceMotionRecorderConfig;
 import org.researchstack.backbone.step.active.recorder.RecorderConfig;
-import org.sagebase.crf.step.active.HeartRateCameraRecorderConfig;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by TheMDP on 10/31/17.
  */
 
 public class CrfHeartRateCameraStep extends ActiveStep {
+
     public static final String MOTION_RECORDER_ID = "motion";
     public static final int SENSOR_FREQ = 100;
+
+    public static final int STEP_DURATION = 60; // 1 minute
+
+    static final Map<String, String> SPOKEN_TEXT_MAP =
+            ImmutableMap.<String, String>builder()
+                    .put(  "0", "Please keep still")
+                    .put( "30", "You are half way there!")
+                    .put( "45", "Just 15 seconds left")
+                    .put("end", "You are all done!")
+                    .build();
+
     public CrfHeartRateCameraStep(String identifier) {
         super(identifier);
         commonInit();
@@ -45,13 +58,13 @@ public class CrfHeartRateCameraStep extends ActiveStep {
 
     public void commonInit() {
         List<RecorderConfig> recorderConfigList = new ArrayList<>();
-        recorderConfigList.add(new HeartRateCameraRecorderConfig("HeartRateCamera"));
+        setStepDuration(STEP_DURATION);
         recorderConfigList.add(new DeviceMotionRecorderConfig(MOTION_RECORDER_ID, SENSOR_FREQ));
         setRecorderConfigurationList(recorderConfigList);
         setShouldStartTimerAutomatically(true);
         setShouldContinueOnFinish(false);
-        setStepDuration(60);
         setShouldShowDefaultTimer(false);
+        setSpokenInstructionMap(SPOKEN_TEXT_MAP);
     }
 
     @Override
