@@ -17,9 +17,10 @@
 
 package org.sagebase.crf.step;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.graphics.Path;
+import android.support.annotation.Nullable;
 import android.support.v4.content.res.ResourcesCompat;
 import android.util.AttributeSet;
 import android.view.View;
@@ -32,7 +33,6 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import org.researchstack.backbone.answerformat.AnswerFormat;
 import org.researchstack.backbone.answerformat.DecimalAnswerFormat;
 import org.researchstack.backbone.result.Result;
 import org.researchstack.backbone.result.StepResult;
@@ -40,7 +40,7 @@ import org.researchstack.backbone.result.TaskResult;
 import org.researchstack.backbone.step.QuestionStep;
 import org.researchstack.backbone.step.Step;
 import org.researchstack.backbone.step.active.recorder.Recorder;
-import org.researchstack.backbone.step.active.recorder.RecorderConfig;
+import org.researchstack.backbone.step.active.recorder.RecorderListener;
 import org.researchstack.backbone.ui.callbacks.StepCallbacks;
 import org.researchstack.backbone.ui.step.layout.ActiveStepLayout;
 import org.researchstack.backbone.ui.views.ArcDrawable;
@@ -54,8 +54,6 @@ import org.sagebase.crf.view.CrfTaskToolbarTintManipulator;
 import org.sagebionetworks.research.crf.R;
 
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
@@ -67,6 +65,7 @@ import java.util.Locale;
 public class CrfHeartRateStepLayout extends ActiveStepLayout implements
         HeartRateCameraRecorder.BpmUpdateListener,
         HeartRateCameraRecorder.IntelligentStartUpdateListener,
+        RecorderListener,
         CrfTaskToolbarTintManipulator,
         CrfTaskStatusBarManipulator,
         CrfResultListener {
@@ -95,6 +94,10 @@ public class CrfHeartRateStepLayout extends ActiveStepLayout implements
 
     private boolean hasDetectedStart = false;
     private List<BpmHolder> bpmList;
+
+    protected HeartRateCameraRecorder cameraRecorder;
+    protected boolean shouldContinueOnStop = false;
+    protected boolean isFinished = false;
 
     public CrfHeartRateStepLayout(Context context) {
         super(context);
@@ -128,9 +131,16 @@ public class CrfHeartRateStepLayout extends ActiveStepLayout implements
     }
 
     @Override
+    public void initialize(Step step, StepResult result) {
+        super.initialize(step, result);
+    }
+
+    @Override
     public void setupActiveViews() {
         super.setupActiveViews();
+
         crfMessageTextView = findViewById(R.id.crf_heart_rate_title);
+        speakText(getContext().getString(R.string.crf_camera_cover));
         crfMessageTextView.setText(R.string.crf_camera_cover);
 
         cameraSourcePreview = findViewById(R.id.crf_camera_source);
@@ -154,62 +164,70 @@ public class CrfHeartRateStepLayout extends ActiveStepLayout implements
         arcDrawable.setColor(ResourcesCompat.getColor(getResources(), R.color.greenyBlue, null));
         arcDrawable.setArchWidth(getResources().getDimensionPixelOffset(R.dimen.crf_ard_drawable_width));
         arcDrawable.setDirection(Path.Direction.CW);
+        arcDrawable.setIncludeFullCirclePreview(true);
+        arcDrawable.setFullCirclePreviewColor(ResourcesCompat.getColor(getResources(), R.color.silver, null));
         arcDrawableView.setBackground(arcDrawable);
 
         nextButton = findViewById(R.id.crf_next_button);
         nextButton.setVisibility(View.GONE);
-        nextButton.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                callbacks.onSaveStep(StepCallbacks.ACTION_NEXT, activeStep, stepResult);
-            }
-        });
+        nextButton.setOnClickListener(view -> onNextButtonClicked());
 
         heartImageView = findViewById(R.id.crf_heart_icon);
         heartImageView.setVisibility(View.GONE);
     }
 
+    // Wait for intelligent start to call super.start()
+    // super.start();
+    @SuppressLint("MissingSuperCall")
     @Override
     public void start() {
+        // Wait for intelligent start to
         hasDetectedStart = false;
         bpmList = new ArrayList<>();
 
-        super.start();
+        HeartRateCameraRecorderConfig config =
+                new HeartRateCameraRecorderConfig("HeartRateCamera");
+        cameraRecorder = (HeartRateCameraRecorder)config.recorderForStep(
+                cameraSourcePreview, activeStep, getOutputDirectory(getContext()));
+        cameraRecorder.setEnableIntelligentStart(true);
+        cameraRecorder.setIntelligentStartListener(this);
+        cameraRecorder.setBpmUpdateListener(this);
+        cameraRecorder.setRecorderListener(this);
+        cameraRecorder.start(getContext().getApplicationContext());
 
         // If the camera was not set up properly,
         if (!cameraSourcePreview.isCameraSetup()) {
-            showOkAlertDialog("Error opening camera interface", new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialogInterface, int i) {
-                    callbacks.onSaveStep(StepCallbacks.ACTION_PREV, activeStep, null);
-                }
-            });
+            showOkAlertDialog("Error opening camera interface", (dialogInterface, i) ->
+                    callbacks.onSaveStep(StepCallbacks.ACTION_PREV, activeStep, null));
         }
     }
 
     @Override
-    public Recorder createCustomRecorder(RecorderConfig config) {
-        if (config instanceof HeartRateCameraRecorderConfig) {
-            HeartRateCameraRecorderConfig heartRateConfig = (HeartRateCameraRecorderConfig)config;
-            HeartRateCameraRecorder recorder = (HeartRateCameraRecorder)heartRateConfig.recorderForStep(
-                    cameraSourcePreview, activeStep, getOutputDirectory(getContext()));
-            recorder.setEnableIntelligentStart(true);
-            recorder.setIntelligentStartListener(this);
-            recorder.setBpmUpdateListener(this);
-            return recorder;
+    public void pauseActiveStepLayout() {
+        super.pauseActiveStepLayout();
+        forceStop();  // we do not allow this step to run in the background
+        callbacks.onSaveStep(StepCallbacks.ACTION_PREV, activeStep, null);
+    }
+
+    public void forceStop() {
+        super.forceStop();
+        if (cameraRecorder != null && cameraRecorder.isRecording()) {
+            cameraRecorder.cancel();
         }
-        return null;
     }
 
     // BPM and heart rate is ready to go, switch the UI
     private void intelligentStartDetected() {
         hasDetectedStart = true;
         heartImageView.setVisibility(View.VISIBLE);
-        heartRateTextContainer.setVisibility(View.VISIBLE);
         arcDrawableContainer.setVisibility(View.VISIBLE);
         arcDrawable.setSweepAngle(0.0f);
-        heartRateNumber.setText("--");
-        startAnimation();  // this will trigger a restart of the timer
+
+        super.start();  // start the recording process
+
+        // We need to stop the camera recorder ourselves
+        mainHandler.postDelayed(() -> cameraRecorder.stop(),
+                activeStep.getStepDuration() * 1000L);
     }
 
     @Override
@@ -217,21 +235,16 @@ public class CrfHeartRateStepLayout extends ActiveStepLayout implements
         if (hasDetectedStart) {
             float progress = 1.0f - ((float)secondsLeft / (float)activeStep.getStepDuration());
             arcDrawable.setSweepAngle(ArcDrawable.FULL_SWEEPING_ANGLE * progress);
-
-            if (secondsLeft <= 7) {
-                crfMessageTextView.setText(R.string.crf_camera_7_sec);
-            } else if (secondsLeft <= 15) {
-                crfMessageTextView.setText(R.string.crf_camera_15_sec);
-            } else if (secondsLeft <= 30) {
-                crfMessageTextView.setText(R.string.crf_camera_half_way);
-            } else {
-                crfMessageTextView.setText(R.string.crf_camera_keep_still);
-            }
         }
     }
 
+    @Override
+    protected void recorderServiceSpokeText(String spokenText) {
+        super.recorderServiceSpokeText(spokenText);
+        crfMessageTextView.setText(spokenText);
+    }
+
     public void bpmUpdate(BpmHolder bpmHolder) {
-        heartRateNumber.setText(String.format(Locale.getDefault(), "%d", bpmHolder.bpm));
         if (heartBeatAnimation == null) {
             heartBeatAnimation = new HeartBeatAnimation(bpmHolder.bpm);
             heartImageView.startAnimation(heartBeatAnimation);
@@ -241,14 +254,29 @@ public class CrfHeartRateStepLayout extends ActiveStepLayout implements
     }
 
     @Override
-    public void onComplete(Recorder recorder, Result result) {
-        super.onComplete(recorder, result);
+    public void stop() {
+        super.stop();
 
+        isFinished = true;
+        if (shouldContinueOnStop) {
+            onNextButtonClicked();
+        }
+    }
+
+    protected void onNextButtonClicked() {
+        shouldContinueOnStop = true;
+        if (isFinished) {
+            callbacks.onSaveStep(StepCallbacks.ACTION_NEXT, activeStep, stepResult);
+        }
+    }
+
+    protected void showCompleteUi() {
         nextButton.setVisibility(View.VISIBLE);
+        heartImageView.clearAnimation();
         heartImageView.setVisibility(View.GONE);
-        crfMessageTextView.setText(R.string.crf_camera_done);
         cameraSourcePreview.setVisibility(View.INVISIBLE);
         arcDrawableContainer.setVisibility(View.GONE);
+        heartRateTextContainer.setVisibility(View.VISIBLE);
 
         if (!bpmList.isEmpty()) {
             int bpmSum = 0;
@@ -256,12 +284,12 @@ public class CrfHeartRateStepLayout extends ActiveStepLayout implements
                 bpmSum += bpmHolder.bpm;
             }
             int averageBpm = bpmSum / bpmList.size();
-            heartRateNumber.setText(String.format(Locale.getDefault(), "%d", averageBpm));
             setBpmDifferenceResult(averageBpm);
             setBpmStartAndEnd(bpmList.get(0), bpmList.get(bpmList.size()-1));
+            heartRateNumber.setText(String.format(Locale.getDefault(), "%d", averageBpm));
         } else {
-            heartRateNumber.setText(String.format(Locale.getDefault(), "%d", 0));
             setBpmDifferenceResult(0);
+            heartRateNumber.setText(String.format(Locale.getDefault(), "%d", 0));
         }
     }
 
@@ -335,6 +363,24 @@ public class CrfHeartRateStepLayout extends ActiveStepLayout implements
         if (bpmString != null) {
             previousBpm = Integer.parseInt(bpmString);
         }
+    }
+
+    @Override
+    public void onComplete(Recorder recorder, Result result) {
+        stepResult.setResultForIdentifier(recorder.getIdentifier(), result);
+        showCompleteUi();
+    }
+
+    @Override
+    public void onFail(Recorder recorder, Throwable error) {
+        super.showOkAlertDialog(error.getMessage(), (dialogInterface, i) ->
+                callbacks.onSaveStep(StepCallbacks.ACTION_END, activeStep, null));
+    }
+
+    @Nullable
+    @Override
+    public Context getBroadcastContext() {
+        return getContext().getApplicationContext();
     }
 
     private class HeartBeatAnimation extends AlphaAnimation {

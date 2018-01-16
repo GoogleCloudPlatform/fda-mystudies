@@ -25,10 +25,7 @@ import com.google.gson.GsonBuilder;
 import org.researchstack.backbone.ResourceManager;
 import org.researchstack.backbone.ResourcePathManager;
 import org.researchstack.backbone.answerformat.AnswerFormat;
-import org.researchstack.backbone.answerformat.ChoiceAnswerFormat;
-import org.researchstack.backbone.answerformat.IntegerAnswerFormat;
 import org.researchstack.backbone.factory.IntentFactory;
-import org.researchstack.backbone.model.Choice;
 import org.researchstack.backbone.model.survey.ActiveStepSurveyItem;
 import org.researchstack.backbone.model.survey.BooleanQuestionSurveyItem;
 import org.researchstack.backbone.model.survey.ChoiceQuestionSurveyItem;
@@ -36,20 +33,18 @@ import org.researchstack.backbone.model.survey.CompoundQuestionSurveyItem;
 import org.researchstack.backbone.model.survey.IntegerRangeSurveyItem;
 import org.researchstack.backbone.model.survey.QuestionSurveyItem;
 import org.researchstack.backbone.model.survey.SurveyItem;
-import org.researchstack.backbone.model.survey.SurveyItemType;
 import org.researchstack.backbone.model.survey.factory.SurveyFactory;
 import org.researchstack.backbone.model.taskitem.TaskItem;
 import org.researchstack.backbone.model.taskitem.TaskItemAdapter;
 import org.researchstack.backbone.model.taskitem.factory.TaskItemFactory;
 import org.researchstack.backbone.result.StepResult;
 import org.researchstack.backbone.result.TaskResult;
-import org.researchstack.backbone.step.NavigationFormStep;
 import org.researchstack.backbone.step.QuestionStep;
 import org.researchstack.backbone.step.Step;
+import org.researchstack.backbone.step.active.ActiveStep;
 import org.researchstack.backbone.task.Task;
-import org.sagebase.crf.CrfOnboardingTaskActivity;
+import org.sagebase.crf.CrfActiveTaskActivity;
 import org.sagebase.crf.CrfSettingsActivity;
-import org.sagebase.crf.CrfSurveyTaskActivity;
 import org.sagebase.crf.step.Crf12MinWalkingStep;
 import org.sagebase.crf.step.CrfBooleanAnswerFormat;
 import org.sagebase.crf.step.CrfCompletionStep;
@@ -61,7 +56,6 @@ import org.sagebase.crf.step.CrfHeartRateCameraStep;
 import org.sagebase.crf.step.CrfInstructionStep;
 import org.sagebase.crf.step.CrfInstructionSurveyItem;
 import org.sagebase.crf.step.CrfStairStep;
-import org.sagebase.crf.step.CrfStairSurveyItem;
 import org.sagebase.crf.step.CrfPhotoCaptureStep;
 import org.sagebase.crf.step.CrfStartTaskStep;
 import org.sagebase.crf.step.CrfStartTaskSurveyItem;
@@ -69,15 +63,9 @@ import org.sagebase.crf.step.body.CrfChoiceAnswerFormat;
 import org.sagebase.crf.step.body.CrfIntegerAnswerFormat;
 
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
-import java.util.ArrayList;
 import java.util.List;
-
-import retrofit2.http.OPTIONS;
-
-import static org.sagebionetworks.bridge.researchstack.CrfSurveyItemAdapter.CRF_INTEGER_SURVEY_ITEM_TYPE;
 
 /**
  * Created by TheMDP on 10/24/17.
@@ -156,10 +144,10 @@ public class CrfTaskFactory extends TaskItemFactory {
                             }
                             return createCrf12MinWalkStep((ActiveStepSurveyItem)item);
                         case CrfSurveyItemAdapter.CRF_STAIR_STEP_SURVEY_ITEM_TYPE:
-                            if (!(item instanceof CrfStairSurveyItem)) {
-                                throw new IllegalStateException("Error in json parsing, crf_step_layout_stair types must be CrfStairSurveyItem");
+                            if (!(item instanceof ActiveStepSurveyItem)) {
+                                throw new IllegalStateException("Error in json parsing, crf_step_layout_stair types must be ActiveStepSurveyItem");
                             }
-                            return createCrfStairStep((CrfStairSurveyItem)item);
+                            return createCrfStairStep((ActiveStepSurveyItem)item);
                         case CrfSurveyItemAdapter.CRF_COMPLETION_SURVEY_ITEM_TYPE:
                             if (!(item instanceof CrfCompletionSurveyItem)) {
                                 throw new IllegalStateException("Error in json parsing, crf_completion types must be CrfCompletionSurveyItem");
@@ -289,29 +277,31 @@ public class CrfTaskFactory extends TaskItemFactory {
 
     private CrfHeartRateCameraStep createHeartRateCameraStep(ActiveStepSurveyItem item) {
         CrfHeartRateCameraStep step = new CrfHeartRateCameraStep(item.identifier, item.title, item.text);
-        fillActiveStep(step, item);
+        fillCrfActiveStep(step, item);
         return step;
     }
 
     private CrfCountdownStep createCrfCountdownStep(ActiveStepSurveyItem item) {
         CrfCountdownStep step = new CrfCountdownStep(item.identifier);
-        fillActiveStep(step, item);
+        fillCrfActiveStep(step, item);
         return step;
     }
 
     private Crf12MinWalkingStep createCrf12MinWalkStep(ActiveStepSurveyItem item) {
         Crf12MinWalkingStep step = new Crf12MinWalkingStep(item.identifier);
-        fillActiveStep(step, item);
+        fillCrfActiveStep(step, item);
         return step;
     }
 
-    private CrfStairStep createCrfStairStep(CrfStairSurveyItem item) {
+    private CrfStairStep createCrfStairStep(ActiveStepSurveyItem item) {
         CrfStairStep step = new CrfStairStep(item.identifier);
-        fillActiveStep(step, item);
-        if (item.stairInterval > 0) {
-            step.stairInterval = item.stairInterval;
-        }
+        fillCrfActiveStep(step, item);
         return step;
+    }
+
+    protected void fillCrfActiveStep(ActiveStep step, ActiveStepSurveyItem item) {
+        fillActiveStep(step, item);
+        step.setActivityClazz(CrfActiveTaskActivity.class);
     }
 
     private CrfCompletionStep createCompletionStep(CrfCompletionSurveyItem item) {

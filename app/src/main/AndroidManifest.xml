@@ -77,7 +77,8 @@
             android:name="org.sagebase.crf.CrfActiveTaskActivity"
             android:label="@string/app_name"
             android:theme="@style/Theme.Crf.Survey"
-            android:windowSoftInputMode="adjustResize" />
+            android:windowSoftInputMode="adjustResize"
+            android:launchMode="singleTask"/>
 
         <activity
             android:name="org.sagebase.crf.CrfViewTaskActivity"
@@ -98,6 +99,10 @@
             android:windowSoftInputMode="adjustResize" />
 
         <activity android:name="org.sagebase.crf.CrfExitActivity"/>
+
+        <service
+            android:name="org.researchstack.backbone.step.active.RecorderService"
+            android:exported="false"/>
 
         <provider
             android:name="android.support.v4.content.FileProvider"
