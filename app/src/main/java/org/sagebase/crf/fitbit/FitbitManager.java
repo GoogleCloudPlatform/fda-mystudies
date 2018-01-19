@@ -59,7 +59,7 @@ public class FitbitManager {
 
     private static class OAuthParams {
         private static final Uri URI_AUTHORIZE =
-                Uri.parse("https://api.fitbit.com/oauth2/authorize");
+                Uri.parse("https://www.fitbit.com/oauth2/authorize");
         private static final Uri URI_TOKEN = Uri.parse("https://api.fitbit.com/oauth2/token");
         // registered with Fitbit, and specified in intent filter in the manifest
         private static final Uri URI_CALLBACK = Uri.parse("org.sagebase.crf-module://oauth2");
