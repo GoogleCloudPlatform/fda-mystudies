@@ -87,6 +87,7 @@ public class CrfActivitiesFragment extends ActivitiesFragment implements CrfFilt
     @VisibleForTesting
     static final Map<String, String> TASK_ID_TO_RESOURCE_NAME =
             ImmutableMap.<String, String>builder()
+                    .put(CrfTaskFactory.TASK_ID_HEART_RATE_MEASUREMENT, CrfResourceManager.HEART_RATE_MEASUREMENT_TEST_RESOURCE)
                     .put(CrfTaskFactory.TASK_ID_CARDIO_STRESS_TEST, CrfResourceManager.CARDIO_STRESS_TEST_RESOURCE)
                     .put(CrfTaskFactory.TASK_ID_CARDIO_12MT, CrfResourceManager.CARDIO_12MT_WALK_RESOURCE)
                     .put(CrfTaskFactory.TASK_ID_STAIR_STEP, CrfResourceManager.STAIR_STEP_RESOURCE)

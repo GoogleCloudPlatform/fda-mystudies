@@ -36,9 +36,8 @@
               "value": "test_user"
             }
           ],
-          "shouldSkipIfSessionContainsDataGroups": true,
+          "skipOnSessionContainsAny": ["test_user", "clinic1", "clinic2", "activity_tester", "ux_tester"],
           "expectedAnswer": "test_user",
-          "skipIdentifier": "clinicChoices",
           "optional": false
         },
         {
@@ -55,11 +54,10 @@
               "value": "ux_tester"
             }
           ],
-          "shouldSkipIfSessionContainsDataGroups": true,
+          "skipOnSessionContainsAny": ["clinic1", "clinic2", "ux_tester", "activity_tester"],
           "expectedAnswer": "ux_tester",
-          "skipIdentifier": "fitbit",
           "optional": false,
-          "shouldPersist": true // clinicChoices also persists, but is skipped for activity_tester
+          "shouldPersist": true
         },
         {
           "identifier": "clinicChoices",
@@ -75,8 +73,7 @@
               "value": "clinic2"
             }
           ],
-          // this relies on session not being updated (since the last step will persist dataGroup)
-          "shouldSkipIfSessionContainsDataGroups": true,
+          "skipOnSessionContainsAny": ["clinic1", "clinic2", "activity_tester"],
           "optional": false,
           "shouldPersist": true
         },
