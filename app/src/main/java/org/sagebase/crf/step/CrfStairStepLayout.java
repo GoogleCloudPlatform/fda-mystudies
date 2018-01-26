@@ -17,12 +17,12 @@
 
 package org.sagebase.crf.step;
 
-import android.content.BroadcastReceiver;
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.support.annotation.DrawableRes;
+import android.graphics.drawable.AnimationDrawable;
+import android.graphics.drawable.Drawable;
+import android.support.v4.content.res.ResourcesCompat;
 import android.util.AttributeSet;
-import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -43,8 +43,6 @@ public class CrfStairStepLayout extends ActiveStepLayout implements CrfTaskStatu
     protected TextView crfCountdownText;
     protected ImageView crfImageView;
     protected TextView crfInstructionText;
-
-    protected BroadcastReceiver metronomeReceiver;
 
     protected CrfStairStep crfStairStep;
 
@@ -109,39 +107,14 @@ public class CrfStairStepLayout extends ActiveStepLayout implements CrfTaskStatu
         crfInstructionText = findViewById(R.id.crf_stair_instruction_text);
     }
 
-    @Override
-    protected void recorderServiceMetronomeAction(int metronomeCtr) {
-        super.recorderServiceMetronomeAction(metronomeCtr);
-        stairStepTransition(metronomeCtr);
-    }
-
-    protected void stairStepTransition(int stairCounter) {
-        int stairState = stairCounter % 4;  // up1, up2, down1, down2
-        String instructionText = null;
-        @DrawableRes int instructionImage = R.drawable.crf_stair_step_start_1;
-        switch (stairState) {
-            case 0:  // up 1
-                instructionText = getContext().getString(R.string.crf_up);
-                instructionImage = R.drawable.crf_stair_step_start_3;
-                break;
-            case 1:  // up 2
-                instructionText = getContext().getString(R.string.crf_down);
-                instructionImage = R.drawable.crf_stair_step_start_4;
-                break;
-            case 2:  // down 1
-                instructionText = getContext().getString(R.string.crf_down);
-                instructionImage = R.drawable.crf_stair_step_start_1;
-                break;
-            case 3:  // down 2
-                instructionText = getContext().getString(R.string.crf_up);
-                instructionImage = R.drawable.crf_stair_step_start_2;
-                break;
+    protected void startAnimation() {
+        super.startAnimation();
+        Drawable drawable = ResourcesCompat.getDrawable(getResources(), R.drawable.crf_stair_step_animation, null);
+        if (drawable != null && drawable instanceof AnimationDrawable) {
+            AnimationDrawable animationDrawable = (AnimationDrawable)drawable;
+            crfImageView.setImageDrawable(animationDrawable);
+            animationDrawable.start();
         }
-        if (stairCounter >= 16) {  // Hide Up/Down after 16 * 0.625 seconds
-            crfInstructionText.setVisibility(View.INVISIBLE);
-        }
-        crfImageView.setImageResource(instructionImage);
-        crfInstructionText.setText(instructionText);
     }
 
     @Override
