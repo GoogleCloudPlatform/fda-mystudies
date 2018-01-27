@@ -41,7 +41,7 @@
       "type"             : "crf_instruction",
       "title"            : " ",
       "text"             : "Ready to run on the treadmill?",
-      "detailText"       : "You’ll start off slowly and speed and will be increased through the test duration.",
+      "detailText"       : "You’ll start off slowly and speed will be increased through the test duration.",
       "image"            : "crf_treadmill_start",
       "imageColor"       : "whiteButtonShadow65",
       "behindToolbar"    : "true",
