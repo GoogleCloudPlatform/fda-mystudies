@@ -18,8 +18,6 @@
 package org.sagebase.crf.step;
 
 import org.researchstack.backbone.step.active.ActiveStep;
-import org.researchstack.backbone.step.active.recorder.AccelerometerRecorderConfig;
-import org.researchstack.backbone.step.active.recorder.DeviceMotionRecorderConfig;
 import org.researchstack.backbone.step.active.recorder.LocationRecorderConfig;
 import org.researchstack.backbone.step.active.recorder.RecorderConfig;
 
@@ -48,7 +46,8 @@ public class Crf12MinWalkingStep extends ActiveStep {
 
     private void commonInit() {
         List<RecorderConfig> configList = new ArrayList<>();
-        configList.add(new LocationRecorderConfig(LOCATION_RECORDER_ID));
+        configList.add(new LocationRecorderConfig.Builder().withIdentifier(LOCATION_RECORDER_ID)
+                .withUsesRelativeCoordinates(true).build());
         setRecorderConfigurationList(configList);
         setShouldContinueOnFinish(true);
         setShouldStartTimerAutomatically(true);
