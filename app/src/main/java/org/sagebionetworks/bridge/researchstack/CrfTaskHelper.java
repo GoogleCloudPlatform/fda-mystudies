@@ -134,7 +134,7 @@ public class CrfTaskHelper extends TaskHelper {
                 surveyAnswer.questionTypeName = AnswerFormat.Type.Boolean.name();
                 return surveyAnswer;
             } else if (format instanceof CrfChoiceAnswerFormat) {
-                SurveyAnswer surveyAnswer = new SurveyAnswer.ChoiceSurveyAnswer<>(stepResult);
+                SurveyAnswer surveyAnswer = new SurveyAnswer.ChoiceSurveyAnswer(stepResult);
                 if (((CrfChoiceAnswerFormat)format).getAnswerStyle() == AnswerFormat.ChoiceAnswerStyle.SingleChoice) {
                     surveyAnswer.questionType = AnswerFormat.Type.SingleChoice.ordinal();
                     surveyAnswer.questionTypeName = AnswerFormat.Type.SingleChoice.name();

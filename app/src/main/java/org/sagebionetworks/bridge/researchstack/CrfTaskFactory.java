@@ -29,7 +29,7 @@ import org.researchstack.backbone.factory.IntentFactory;
 import org.researchstack.backbone.model.survey.ActiveStepSurveyItem;
 import org.researchstack.backbone.model.survey.BooleanQuestionSurveyItem;
 import org.researchstack.backbone.model.survey.ChoiceQuestionSurveyItem;
-import org.researchstack.backbone.model.survey.CompoundQuestionSurveyItem;
+import org.researchstack.backbone.model.survey.FormSurveyItem;
 import org.researchstack.backbone.model.survey.IntegerRangeSurveyItem;
 import org.researchstack.backbone.model.survey.QuestionSurveyItem;
 import org.researchstack.backbone.model.survey.SurveyItem;
@@ -164,10 +164,10 @@ public class CrfTaskFactory extends TaskItemFactory {
                             }
                             return createFitBitStep((CrfInstructionSurveyItem)item);
                         case CrfSurveyItemAdapter.CRF_FORM_SURVEY_ITEM_TYPE:
-                            if (!(item instanceof CompoundQuestionSurveyItem)) {
+                            if (!(item instanceof FormSurveyItem)) {
                                 throw new IllegalStateException("Error in json parsing, crf_form types must be CrfFormSurveyItem");
                             }
-                            return createCrfFormStep(context, (CompoundQuestionSurveyItem)item);
+                            return createCrfFormStep(context, (FormSurveyItem)item);
                         case CrfSurveyItemAdapter.CRF_BOOLEAN_SURVEY_ITEM_TYPE:
                         case CrfSurveyItemAdapter.CRF_INTEGER_SURVEY_ITEM_TYPE:
                         case CrfSurveyItemAdapter.CRF_MULTIPLE_CHOICE_SURVEY_ITEM_TYPE:
@@ -178,13 +178,13 @@ public class CrfTaskFactory extends TaskItemFactory {
                             // Even though these weren't wrapped in a form step, we are going to wrap
                             // them in a CrfFormStep so that the UI looks appropriate
                             QuestionSurveyItem questionItem = (QuestionSurveyItem)item;
-                            CompoundQuestionSurveyItem compoundQuestionSurveyItem = new CrfFormSurveyItemWrapper();
-                            compoundQuestionSurveyItem.identifier = item.identifier + "Form";
-                            compoundQuestionSurveyItem.items = Collections.singletonList(item);
-                            compoundQuestionSurveyItem.skipIdentifier = questionItem.skipIdentifier;
-                            compoundQuestionSurveyItem.skipIfPassed = questionItem.skipIfPassed;
-                            compoundQuestionSurveyItem.expectedAnswer = questionItem.expectedAnswer;
-                            return createCrfFormStep(context, compoundQuestionSurveyItem);
+                            FormSurveyItem FormSurveyItem = new CrfFormSurveyItemWrapper();
+                            FormSurveyItem.identifier = item.identifier + "Form";
+                            FormSurveyItem.items = Collections.singletonList(item);
+                            FormSurveyItem.skipIdentifier = questionItem.skipIdentifier;
+                            FormSurveyItem.skipIfPassed = questionItem.skipIfPassed;
+                            FormSurveyItem.expectedAnswer = questionItem.expectedAnswer;
+                            return createCrfFormStep(context, FormSurveyItem);
                     }
                 }
                 return null;
@@ -192,7 +192,7 @@ public class CrfTaskFactory extends TaskItemFactory {
         });
     }
 
-    public static class CrfFormSurveyItemWrapper extends CompoundQuestionSurveyItem {
+    public static class CrfFormSurveyItemWrapper extends FormSurveyItem {
 
         /* Default constructor needed for serilization/deserialization of object */
         public CrfFormSurveyItemWrapper() {
@@ -380,7 +380,7 @@ public class CrfTaskFactory extends TaskItemFactory {
                 context, CrfSettingsActivity.class, task, taskResult));
     }
 
-    private CrfFormStep createCrfFormStep(Context context, CompoundQuestionSurveyItem item) {
+    private CrfFormStep createCrfFormStep(Context context, FormSurveyItem item) {
         if (item.items == null || item.items.isEmpty()) {
             throw new IllegalStateException("compound surveys must have step items to proceed");
         }

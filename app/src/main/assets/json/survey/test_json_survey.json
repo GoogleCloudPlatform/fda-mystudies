@@ -12,6 +12,40 @@
         "dataType": "boolean",
         "type": "BooleanConstraints"
       }
+    },
+    {
+      "identifier":"single-choice-question",
+      "prompt":"What (single-choice)?",
+      "uiHint":"radiobutton",
+      "type":"SurveyQuestion",
+      "constraints":{
+        "dataType":"string",
+        "allowMultiple":false,
+        "allowOther":true,
+        "type":"MultiValueConstraints",
+        "enumeration":[
+          { "label":"A", "value":"A" },
+          { "label":"B", "value":"B" },
+          { "label":"C", "value":"C" }
+        ]
+      }
+    },
+    {
+      "identifier":"multi-choice-question",
+      "prompt":"What (multi-choice)?",
+      "uiHint":"checkbox",
+      "type":"SurveyQuestion",
+      "constraints":{
+        "dataType":"string",
+        "allowMultiple":true,
+        "allowOther":true,
+        "type":"MultiValueConstraints",
+        "enumeration":[
+          { "label":"A", "value":"A" },
+          { "label":"B", "value":"B" },
+          { "label":"C", "value":"C" }
+        ]
+      }
     }
   ]
 }
