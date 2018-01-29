@@ -24,7 +24,7 @@ import com.google.gson.JsonElement;
 import org.researchstack.backbone.model.survey.ActiveStepSurveyItem;
 import org.researchstack.backbone.model.survey.BooleanQuestionSurveyItem;
 import org.researchstack.backbone.model.survey.ChoiceQuestionSurveyItem;
-import org.researchstack.backbone.model.survey.CompoundQuestionSurveyItem;
+import org.researchstack.backbone.model.survey.FormSurveyItem;
 import org.researchstack.backbone.model.survey.IntegerRangeSurveyItem;
 import org.researchstack.backbone.model.survey.SurveyItem;
 import org.sagebase.crf.step.CrfCompletionSurveyItem;
@@ -63,7 +63,7 @@ public class CrfSurveyItemAdapter extends BridgeSurveyItemAdapter {
                     .put(CRF_STAIR_STEP_SURVEY_ITEM_TYPE, ActiveStepSurveyItem.class)
                     .put(CRF_COMPLETION_SURVEY_ITEM_TYPE, CrfCompletionSurveyItem.class)
                     .put(CRF_PHOTO_CAPTURE_SURVEY_ITEM_TYPE, CrfInstructionSurveyItem.class)
-                    .put(CRF_FORM_SURVEY_ITEM_TYPE, CompoundQuestionSurveyItem.class)
+                    .put(CRF_FORM_SURVEY_ITEM_TYPE, FormSurveyItem.class)
                     .put(CRF_INTEGER_SURVEY_ITEM_TYPE, IntegerRangeSurveyItem.class)
                     .put(CRF_SINGLE_CHOICE_SURVEY_ITEM_TYPE, ChoiceQuestionSurveyItem.class)
                     .put(CRF_MULTIPLE_CHOICE_SURVEY_ITEM_TYPE, ChoiceQuestionSurveyItem.class)
