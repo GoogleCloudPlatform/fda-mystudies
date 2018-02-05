@@ -499,6 +499,8 @@ public class CrfDataProvider extends BridgeDataProvider {
     @VisibleForTesting
     void setReminders(Context context, SchedulesAndTasksModel model) {
         // Set reminders
+
+        // JOLIU CHECK
         List<Date> reminderDates = new ArrayList<>();
         for (SchedulesAndTasksModel.ScheduleModel schedule : model.schedules) {
             if (schedule.scheduledOn != null) {
