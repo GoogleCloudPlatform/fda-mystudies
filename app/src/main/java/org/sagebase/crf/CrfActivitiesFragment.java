@@ -57,6 +57,7 @@ import java.util.Map;
 
 import rx.android.schedulers.AndroidSchedulers;
 
+import static com.google.common.base.Preconditions.checkState;
 import static org.junit.Assert.assertNotNull;
 
 /**
@@ -70,13 +71,54 @@ public class CrfActivitiesFragment extends ActivitiesFragment implements CrfFilt
     private View mClinicHeader;
 
     private SchedulesAndTasksModel mScheduleModel;
-    private Date mClinicDate;
+    private Date mScheduledOnFilter;
 
     private String mDataGroups;
 
     private static final String LOG_TAG = CrfActivitiesFragment.class.getCanonicalName();
 
     private CrfTaskFactory taskFactory = new CrfTaskFactory();
+
+    @VisibleForTesting
+    final CrfDataProvider.CrfActivitiesListener mCrfActivitiesListener = new
+            CrfDataProvider.CrfActivitiesListener() {
+        @Override
+        public void success(SchedulesAndTasksModel model) {
+
+            if (getActivity() != null && isAdded()) {
+                mScheduleModel = model;
+                refreshAdapterSuccess(mScheduleModel);
+
+                if (((CrfDataProvider) DataProvider.getInstance()).isNoScheduleTester()) {
+                    showActivitiesForTestUser();
+                } else {
+                    // JOLIU check
+                    // UX logic for participants and UX_TESTER
+                    if (mScheduledOnFilter == null) {
+                        showAllActivities();
+                    } else { // If there is a filter date, only show the clinic filtered activities
+                        showActivitiesForSchedule(mScheduledOnFilter);
+                    }
+                }
+            }
+        }
+
+        @Override
+        public void error(String localizedError) {
+            Log.e(LOG_TAG, localizedError);
+            if (getActivity() != null && isAdded()) {
+                if (CrfDataProvider.NO_CLINIC_ERROR_MESSAGE.equals(localizedError)) {
+                    Log.e(LOG_TAG, "No clinic data group means user is in a bad state, send them" +
+                            " back to overview");
+                    startActivity(new Intent(getActivity(), CrfOverviewActivity.class));
+                    getActivity().finish();
+                } else {
+                    refreshAdapterFailure(localizedError);
+                }
+            }
+        }
+    };
+
     // To allow unit tests to mock.
     @VisibleForTesting
     void setTaskFactory(CrfTaskFactory taskFactory) {
@@ -111,89 +153,37 @@ public class CrfActivitiesFragment extends ActivitiesFragment implements CrfFilt
     @Override
     public void onResume() {
         super.onResume();
-        Log.d(LOG_TAG, "onResume - mClinicDate: " + (mClinicDate == null));
+        Log.d(LOG_TAG, "onResume - mScheduledOnFilter: " + (mScheduledOnFilter == null));
     }
 
     @Override
     public void onPause() {
         super.onPause();
-        Log.d(LOG_TAG, "onPause - mClinicDate: " + (mClinicDate == null));
+        Log.d(LOG_TAG, "onPause - mScheduledOnFilter: " + (mScheduledOnFilter == null));
     }
 
     @Override
     public void fetchData() {
-        getSwipeFreshLayout().setRefreshing(true);
+        checkState(DataProvider.getInstance() instanceof CrfDataProvider,
+                "Special activities algorithm only available with CrfDataProvider");
 
-        if (!(DataProvider.getInstance() instanceof  CrfDataProvider)) {
-            throw new IllegalStateException("Special activities algorithm only available with CrfDataProvider");
-        }
+        getSwipeFreshLayout().setRefreshing(true);
 
         CrfDataProvider crfDataProvider = (CrfDataProvider)DataProvider.getInstance();
 
         // Needed for settings
         if (mDataGroups == null) {
-            crfDataProvider.getStudyParticipant().observeOn(AndroidSchedulers.mainThread()).subscribe(studyParticipant -> {
-                if (studyParticipant != null && studyParticipant.getDataGroups() != null) {
-                    mDataGroups = studyParticipant.getDataGroups().toString();
-                }
-            }, throwable -> {
-                Log.w(LOG_TAG, "failed to load data groups", throwable );
-            });
-        }
-
-        crfDataProvider.getCrfActivities(getContext(), new CrfDataProvider.CrfActivitiesListener() {
-            @Override
-            public void success(SchedulesAndTasksModel model) {
-
-                if (getActivity() != null && isAdded()) {
-                    mScheduleModel = model;
-                    refreshAdapterSuccess(mScheduleModel);
-
-                    if (crfDataProvider.isTestUser()) {
-                        showActivitiesForTestUser();
-                    } else {
-                        // UX logic for participants and UX_TESTER
-                        if (mClinicDate == null) {
-                            showAllActivities();
-                        } else { // If there is a filter date, only show the clinic filtered activities
-                            showActivitiesForSchedule();
+            crfDataProvider.getStudyParticipant().observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(studyParticipant -> {
+                        if (studyParticipant != null && studyParticipant.getDataGroups() != null) {
+                            mDataGroups = studyParticipant.getDataGroups().toString();
                         }
-                    }
-                }
-            }
-
-            @Override
-            public void error(String localizedError) {
-                if (getActivity() != null && isAdded()) {
-                    if (CrfDataProvider.NO_CLINIC_ERROR_MESSAGE.equals(localizedError)) {
-                        Log.d(LOG_TAG, "No clinic data group means user is in a bad state, send them back to overview");
-                        startActivity(new Intent(getActivity(), CrfOverviewActivity.class));
-                        getActivity().finish();
-                    } else {
-                        refreshAdapterFailure(localizedError);
-                    }
-                }
-            }
-        });
-    }
-
-    private void showActivitiesForTestUser() {
-        mBackButton.setVisibility(View.GONE);
-        mSettingsButton.setVisibility(View.VISIBLE);
-        mClinicHeader.setVisibility(View.GONE);
-
-        // This is a hack to show persistent tasks for test users.
-        // CRF only shows activities scheduled for a day, and currently the way ScheduleModels
-        // are filtered/build only will include tasks scheduledOn today, whereas persistent tasks
-        // can be scheduled in the past and never expire
-        SchedulesAndTasksModel.ScheduleModel model = new SchedulesAndTasksModel.ScheduleModel();
-        model.scheduledOn = mScheduleModel.schedules.get(0).scheduledOn;
-        model.tasks= Lists.newArrayList();
-
-        for(SchedulesAndTasksModel.ScheduleModel sm : mScheduleModel.schedules) {
-            model.tasks.addAll(sm.tasks);
+                    }, throwable -> {
+                        Log.w(LOG_TAG, "failed to load data groups", throwable);
+                    });
         }
-        showActivitiesForSchedule(model);
+
+        crfDataProvider.getCrfActivities(getContext(), mCrfActivitiesListener);
     }
 
     private void setupSelectionHandler(boolean isSchedule) {
@@ -279,11 +269,11 @@ public class CrfActivitiesFragment extends ActivitiesFragment implements CrfFilt
             Log.d(LOG_TAG, "Adapter today position: " + todayPosition);
             getRecyclerView().scrollToPosition(adapter.getPositionForToday());
         } else {
-            if (!CrfPrefs.getInstance().hasFirstSignInDate()) {
+            if (!CrfPrefs.getInstance().hasClinicDate()) {
                 Log.e(LOG_TAG, "We shouldnt even have gotten here, aborting UI setup");
                 return;
             }
-            Date firstClinicDate = CrfPrefs.getInstance().getFirstSignInDate().toDate();
+            Date firstClinicDate = CrfPrefs.getInstance().getClinicDate().toDate();
             SchedulesAndTasksModel.ScheduleModel firstClinicSchedule = scheduleFor(firstClinicDate);
             if (firstClinicSchedule != null) {
                 tasks.add(new CrfTaskAdapter.StartItem(firstClinicSchedule));
@@ -306,12 +296,13 @@ public class CrfActivitiesFragment extends ActivitiesFragment implements CrfFilt
      * @param schedule the schedule that was selected
      */
     public void scheduleSelected(SchedulesAndTasksModel.ScheduleModel schedule) {
-        if (schedule.tasks.size() == 1) {  // Single task, use default handling
+        if (schedule.tasks.size() == 1) {
+            // Single task, use default handling
             super.taskSelected(schedule.tasks.get(0));
         } else {
             // transition to clinic detail screen
-            mClinicDate = schedule.scheduledOn;
-            showActivitiesForSchedule();
+            mScheduledOnFilter = schedule.scheduledOn;
+            showActivitiesForSchedule(schedule.scheduledOn);
         }
     }
 
@@ -319,25 +310,45 @@ public class CrfActivitiesFragment extends ActivitiesFragment implements CrfFilt
      * @return true if every task in the first clinic has been complete, false in all other scenarios
      */
     private boolean isFirstClinicComplete() {
-        if (!CrfPrefs.getInstance().hasFirstSignInDate()) {
+        // JOLIU fix
+        if (!CrfPrefs.getInstance().hasClinicDate()) {
             return false;
         }
-        Date firstClinicDate = CrfPrefs.getInstance().getFirstSignInDate().toDate();
+        Date firstClinicDate = CrfPrefs.getInstance().getClinicDate().toDate();
         SchedulesAndTasksModel.ScheduleModel firstClinicSchedule = scheduleFor(firstClinicDate);
         return CrfScheduleHelper.allTasksCompleteOn(firstClinicSchedule);
+    }
+
+    private void showActivitiesForTestUser() {
+        mBackButton.setVisibility(View.GONE);
+        mSettingsButton.setVisibility(View.VISIBLE);
+        mClinicHeader.setVisibility(View.GONE);
+
+        // This is a hack to show persistent tasks for test users.
+        // CRF only shows activities scheduled for a day, and currently the way ScheduleModels
+        // are filtered/build only will include tasks scheduledOn today, whereas persistent tasks
+        // can be scheduled in the past and never expire
+        SchedulesAndTasksModel.ScheduleModel model = new SchedulesAndTasksModel.ScheduleModel();
+        model.scheduledOn = mScheduleModel.schedules.get(0).scheduledOn;
+        model.tasks= Lists.newArrayList();
+
+        for(SchedulesAndTasksModel.ScheduleModel sm : mScheduleModel.schedules) {
+            model.tasks.addAll(sm.tasks);
+        }
+        showActivitiesForSchedule(model);
     }
 
     /**
      * Filter the activities to display based on the supplied date.
      */
-    private void showActivitiesForSchedule() {
+    private void showActivitiesForSchedule(Date scheduleDate) {
         getSwipeFreshLayout().setEnabled(false);
 
         mBackButton.setVisibility(View.VISIBLE);
         mSettingsButton.setVisibility(View.GONE);
         mClinicHeader.setVisibility(View.VISIBLE);
 
-        SchedulesAndTasksModel.ScheduleModel clinicSchedule = scheduleFor(mClinicDate);
+        SchedulesAndTasksModel.ScheduleModel clinicSchedule = scheduleFor(scheduleDate);
         if (clinicSchedule != null) {
             showActivitiesForSchedule(clinicSchedule);
         }
@@ -372,15 +383,15 @@ public class CrfActivitiesFragment extends ActivitiesFragment implements CrfFilt
 
     @Override
     public void clearFilter() {
-        Log.d(LOG_TAG, "clearFilter - mClinicDate: " + (mClinicDate == null));
-        mClinicDate = null;
+        Log.d(LOG_TAG, "clearFilter - mScheduledOnFilter: " + (mScheduledOnFilter == null));
+        mScheduledOnFilter = null;
         getSwipeFreshLayout().setEnabled(true);
         showAllActivities();
     }
 
     @Override
     public boolean isFiltered() {
-        return (mClinicDate != null);
+        return (mScheduledOnFilter != null);
     }
 
     public void onSettingsClicked(View v) {

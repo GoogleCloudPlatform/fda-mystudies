@@ -25,7 +25,10 @@ import android.support.annotation.NonNull;
 import android.support.annotation.VisibleForTesting;
 
 import org.joda.time.DateTime;
+import org.joda.time.Duration;
+import org.joda.time.Interval;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
@@ -33,13 +36,13 @@ import org.mockito.MockitoAnnotations;
 import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
+import org.researchstack.backbone.AppPrefs;
 import org.researchstack.backbone.DataResponse;
 import org.researchstack.backbone.model.SchedulesAndTasksModel;
 import org.researchstack.backbone.result.TaskResult;
 import org.researchstack.backbone.storage.file.FileAccess;
 import org.researchstack.backbone.storage.file.PinCodeConfig;
 import org.researchstack.backbone.ui.ActiveTaskActivity;
-import org.researchstack.backbone.AppPrefs;
 import org.sagebionetworks.bridge.android.BridgeConfig;
 import org.sagebionetworks.bridge.android.manager.ActivityManager;
 import org.sagebionetworks.bridge.android.manager.AuthenticationManager;
@@ -55,7 +58,6 @@ import org.sagebionetworks.bridge.rest.model.Activity;
 import org.sagebionetworks.bridge.rest.model.Message;
 import org.sagebionetworks.bridge.rest.model.ScheduledActivity;
 import org.sagebionetworks.bridge.rest.model.ScheduledActivityListV4;
-import org.sagebionetworks.bridge.rest.model.SignIn;
 import org.sagebionetworks.bridge.rest.model.StudyParticipant;
 import org.sagebionetworks.bridge.rest.model.SurveyReference;
 import org.sagebionetworks.bridge.rest.model.TaskReference;
@@ -73,7 +75,6 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
-import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.same;
 import static org.mockito.Mockito.atLeastOnce;
 import static org.mockito.Mockito.mock;
@@ -173,7 +174,7 @@ public class CrfDataProviderTest {
     }
 
     @Test
-    public void testFindClinc1() {
+    public void testFindActivity_clinic1Success() {
         final ScheduledActivityListV4 successList = successList(true);
         final ScheduledActivity clinic = dataProvider.findActivity(successList, "clinic1");
         assertNotNull(clinic);
@@ -181,7 +182,7 @@ public class CrfDataProviderTest {
     }
 
     @Test
-    public void testFindClinc2() {
+    public void testFindActivity_clinic2Success() {
         final ScheduledActivityListV4 successList = successList(true);
         final ScheduledActivity clinic = dataProvider.findActivity(successList, "clinic2");
         assertNotNull(clinic);
@@ -189,7 +190,7 @@ public class CrfDataProviderTest {
     }
 
     @Test
-    public void testFindFail() {
+    public void testFindActivity_clinic3Null() {
         final ScheduledActivityListV4 successList = successList(true);
         final ScheduledActivity clinic = dataProvider.findActivity(successList, "clinic3");
         assertNull(clinic);
@@ -197,7 +198,7 @@ public class CrfDataProviderTest {
 
     @Test
     public void testAssignClinic1() {
-        resetTest(null, true, null);
+        resetTest(null, true, "clinic1");
         dataProvider.setShouldThrowErrorWithoutClinicDataGroup(false);  // will cause assign
         // clinic id to work
         final ScheduledActivityListV4 successList = successList(true);
@@ -210,7 +211,7 @@ public class CrfDataProviderTest {
 
     @Test
     public void testAssignClinic2() {
-        resetTest(null, false, null);
+        resetTest(null, false, "clinic2");
         dataProvider.setShouldThrowErrorWithoutClinicDataGroup(false);  // will cause assign
         // clinic id to work
         final ScheduledActivityListV4 successList = successList(false);
@@ -228,8 +229,7 @@ public class CrfDataProviderTest {
         dataProvider.mockGetAllActiities(successList);
         dataProvider.mockGetClinicActiities(clinicActivities(null, null));
         SchedulesAndTasksModel model = successModel(false);
-        CrfTestListener listener = new CrfTestListener(model, dataProvider
-                .COMPLETION_TIME_CLINIC2) {
+        CrfTestListener listener = new CrfTestListener(model, dataProvider.COMPLETION_TIME_CLINIC2) {
             @Override
             public void success(SchedulesAndTasksModel model) {
                 fail();
@@ -330,6 +330,15 @@ public class CrfDataProviderTest {
         assertTrue(dataProvider.shouldDisplay(sa));
 
         verify(sa, atLeastOnce()).getPersistent();
+    }
+
+    @Test
+    @Ignore
+    public void createOrFindFirstSignInDate() {
+        CrfDataProvider.CrfActivitiesListener listener =
+                mock(CrfDataProvider.CrfActivitiesListener.class);
+
+        dataProvider.findOrCreateClinicDate(listener);
     }
 
     @Test
@@ -447,9 +456,9 @@ public class CrfDataProviderTest {
         ScheduledActivityListV4 clinicActivities;
         ScheduledActivityListV4 allActivities;
 
-        private DateTime START_TIME = DateTime.parse("2017-11-01T07:00-0700");
-        private DateTime END_TIME_FOR_CLINICS = DateTime.parse("2017-11-02T07:00-0700");
-        private DateTime END_TIME_FOR_ALL = DateTime.parse("2017-11-15T06:00-0700");
+//        private DateTime START_TIME = DateTime.parse("2017-11-01T07:00-0700");
+//        private DateTime END_TIME_FOR_CLINICS = DateTime.parse("2017-11-02T07:00-0700");
+//        private DateTime END_TIME_FOR_ALL = DateTime.parse("2017-11-15T06:00-0700");
 
         private DateTime COMPLETION_TIME_CLINIC1 = DateTime.parse("2017-11-01T07:01-0700");
         private DateTime COMPLETION_TIME_CLINIC2 = DateTime.parse("2017-11-01T07:02-0700");
@@ -472,21 +481,6 @@ public class CrfDataProviderTest {
 
         void mockGetAllActiities(ScheduledActivityListV4 activityList) {
             allActivities = activityList;
-        }
-
-        @VisibleForTesting
-        DateTime startTime() {
-            return START_TIME;
-        }
-
-        @VisibleForTesting
-        DateTime endTimeForClinicActivities() {
-            return END_TIME_FOR_CLINICS;
-        }
-
-        @VisibleForTesting
-        DateTime endTimeForAllActivities(DateTime firstSignInDate) {
-            return END_TIME_FOR_ALL;
         }
 
         @VisibleForTesting
@@ -525,10 +519,11 @@ public class CrfDataProviderTest {
         }
 
         @VisibleForTesting
+        @Override
         void getActivitiesSubscribe(DateTime start, DateTime end,
                                     final Action1<ScheduledActivityListV4> onNext,
                                     final Action1<Throwable> onError) {
-            if (start.equals(START_TIME) && end.equals(END_TIME_FOR_CLINICS)) {
+            if (new Interval(start, end).toDuration().isShorterThan(Duration.standardDays(2))){
                 onNext.call(clinicActivities);
             } else {
                 onNext.call(allActivities);
@@ -540,7 +535,8 @@ public class CrfDataProviderTest {
         void getStudyParticipantSubscribe(final Action1<StudyParticipant> onNext,
                                           final Action1<Throwable> onError) {
             StudyParticipant studyParticipant = new StudyParticipant();
-            studyParticipant.setDataGroups(Collections.singletonList(initialDataGroup));
+            studyParticipant.setDataGroups(initialDataGroup != null
+                    ? Collections.singletonList(initialDataGroup): Collections.emptyList());
             onNext.call(studyParticipant);
         }
 
@@ -610,11 +606,11 @@ public class CrfDataProviderTest {
             return null;
         }
 
-        public DateTime getFirstSignInDate() {
+        public DateTime getClinicDate() {
             return firstSignInDate;
         }
 
-        public void setFirstSignInDate(DateTime dateTime) {
+        public void setClinicDate(DateTime dateTime) {
             this.firstSignInDate = dateTime;
         }
     }
@@ -652,7 +648,7 @@ public class CrfDataProviderTest {
                 assertTrue(taskIsTheSame);
             }
 
-            assertEquals(dataProvider.getCrfPrefs().getFirstSignInDate(), completionTime);
+            assertEquals(dataProvider.getCrfPrefs().getClinicDate(), completionTime);
         }
 
         @Override
