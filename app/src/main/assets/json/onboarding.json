@@ -38,7 +38,8 @@
           ],
           "skipOnSessionContainsAny": ["test_user", "clinic1", "clinic2", "activity_tester", "ux_tester"],
           "expectedAnswer": "test_user",
-          "optional": false
+          "optional": false,
+          "shouldPersist": true
         },
         {
           "identifier": "testerChoices",
