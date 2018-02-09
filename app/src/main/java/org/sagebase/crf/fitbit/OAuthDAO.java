@@ -21,8 +21,11 @@ import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
+import com.google.common.base.Strings;
+
 import net.openid.appauth.AuthState;
 
+import org.json.JSONException;
 import org.sagebionetworks.bridge.android.manager.AuthenticationManager;
 import org.sagebionetworks.bridge.android.manager.dao.SharedPreferencesJsonDAO;
 import org.slf4j.Logger;
@@ -52,10 +55,17 @@ public class OAuthDAO extends
     @Nullable
     public AuthState getOAuthState(@NonNull String oAuthProviderKey) {
         checkNotNull(oAuthProviderKey);
+        AuthState authState = null;
 
-        AuthState authState = getValue(
-                getOAuthStateKey(oAuthProviderKey),
-                AuthState.class);
+        try {
+            String json = getValue(getOAuthStateKey(oAuthProviderKey), String.class);
+            if (!Strings.isNullOrEmpty(json)) {
+                authState = AuthState.jsonDeserialize(
+                        getValue(getOAuthStateKey(oAuthProviderKey), String.class));
+            }
+        } catch (JSONException e) {
+            logger.warn("Error parsing AuthState", e);
+        }
 
         logger.debug("getAuthState called for oAuthProviderKey: " + oAuthProviderKey
                 + ", found: " + authState);
@@ -71,7 +81,7 @@ public class OAuthDAO extends
         logger.debug("putOAuthState called for oAuthProviderKey " + oAuthProviderKey
                 + ", with: " + authState);
 
-        setValue(getOAuthStateKey(oAuthProviderKey), authState, AuthState.class);
+        setValue(getOAuthStateKey(oAuthProviderKey), authState.jsonSerializeString(), String.class);
     }
 
     private String getOAuthStateKey(String subpopulationGuid) {
