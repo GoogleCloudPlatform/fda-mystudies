@@ -68,7 +68,7 @@ public class OAuthDAO extends
         }
 
         logger.debug("getAuthState called for oAuthProviderKey: " + oAuthProviderKey
-                + ", found: " + authState);
+                + ", found: " + (authState != null));
 
         return authState;
     }
@@ -78,8 +78,7 @@ public class OAuthDAO extends
         checkNotNull(oAuthProviderKey);
         checkNotNull(authState);
 
-        logger.debug("putOAuthState called for oAuthProviderKey " + oAuthProviderKey
-                + ", with: " + authState);
+        logger.debug("putOAuthState called for oAuthProviderKey " + oAuthProviderKey);
 
         setValue(getOAuthStateKey(oAuthProviderKey), authState.jsonSerializeString(), String.class);
     }
