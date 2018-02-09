@@ -26,6 +26,7 @@ import org.sagebase.crf.reminder.CrfReminderManager;
 import org.sagebionetworks.bridge.android.manager.BridgeManagerProvider;
 import org.sagebionetworks.bridge.researchstack.wrapper.StorageAccessWrapper;
 import org.sagebionetworks.bridge.rest.model.Message;
+import org.sagebionetworks.bridge.rest.model.ScheduleStatus;
 import org.sagebionetworks.bridge.rest.model.ScheduledActivity;
 import org.sagebionetworks.bridge.rest.model.ScheduledActivityListV4;
 import org.sagebionetworks.bridge.rest.model.StudyParticipant;
@@ -169,21 +170,23 @@ public class CrfDataProvider extends BridgeDataProvider {
             weakContext = new WeakReference<>(context);
         }
 
-        if (!getCrfPrefs().hasClinicDate()) {
+        DateTime clinicDate = null;
+        if (getCrfPrefs().hasClinicDate()) {
+            clinicDate = getCrfPrefs().getClinicDate();
+        } else if (isNoScheduleTester()){
             logV("No sign in date detected");
-            // getCrfActivities method will be called again when sign in date is found, so return
-            // here
-            if (isNoScheduleTester()) {
-                // sign in date is used to retrieve clinic schedules, which are based on sign-in
-                // ACTIVITY_TESTER receives persistent tasks, and has no clinic sign in date
-                getCrfPrefs().setClinicDate(DateTime.now());
-            } else {
-                findOrCreateClinicDate(listener);
-                return;
-            }
+            // sign in date is used to retrieve clinic schedules, which are based on sign-in
+            // ACTIVITY_TESTER receives persistent tasks, and has no clinic date
+            clinicDate = DateTime.now();
+            getCrfPrefs().setClinicDate(clinicDate);
         }
 
-        DateTime clinicDate = getCrfPrefs().getClinicDate();
+        if (clinicDate == null) {
+            findOrCreateClinicDate(listener);
+            // getCrfActivities method will be called again when sign in date is found, so return
+            // here
+            return;
+        }
 
         DateTime endTimeForAllActivities = clinicDate.plusDays(STUDY_DURATION_IN_DAYS)
         .minusHours(1);
@@ -193,59 +196,34 @@ public class CrfDataProvider extends BridgeDataProvider {
         // We have already done the clinic setup process, and can safely grab the schedules
         getActivitiesSubscribe(clinicDate, endTimeForAllActivities,
                 activityList -> {
-            logV("Raw Activities:");
-            debugPrintActivities(activityList.getItems());
-
-            List<ScheduledActivity> filteredActivities = activityList.getItems();
-            if (filterByShouldDisplay) {
-                filteredActivities = Lists.newArrayList(
-                        Iterables.filter(activityList.getItems(), this::shouldDisplay));
-                logV("Filtered Activities:");
-                debugPrintActivities(filteredActivities);
-            }
-
-            SchedulesAndTasksModel model = translateActivities(filteredActivities);
-
-            // Set reminders for CRF app
-            if (weakContext != null && weakContext.get() != null) {
-                setReminders(weakContext.get(), model);
-                weakContext = null;
-            }
-
-            listener.success(model);
+            displayActivities(filterByShouldDisplay, activityList.getItems(), listener);
         }, throwable -> listener.error(throwable.getLocalizedMessage()));
     }
 
-    /**
-     * Returns multimap containing ScheduledActivities grouped by scheduledOn. The key
-     * (scheduledOn) iteration order is sorted while the value (activities) retain their original
-     * order.
-     *
-     * @param allActivities full set of available activities
-     *
-     * @return activities grouped and sorted by scheduledOn
-     */
-//    @NonNull
-//    Multimap<DateTime, ScheduledActivity> getClinicActivities(
-//            @NonNull List<ScheduledActivity> allActivities) {
-//
-//        Multimap<String, ScheduledActivity> clinicSchedulePlanToActivities =
-//                Multimaps.filterKeys(
-//                        groupBySchedulePlan(allActivities),
-//                        CLINIC_SCHEDULE_PLAN_GUIDS::contains);
-//
-//        logV(clinicSchedulePlanToActivities.toString());
-//
-//        verify(clinicSchedulePlanToActivities.keySet().size() <= 2,
-//                ERROR_FOUND_MORE_THAN_TWO_CLINIC_SCHEDULES);
-//
-//        // sort scheduledOn by natural order, keep order of activities
-//        LinkedListMultimap<DateTime, ScheduledActivity> activitiesByScheduledOn =
-//                 LinkedListMultimap.create(clinicSchedulePlanToActivities.size());
-//
-//
-//        return clinicSchedulePlanToActivities;
-//    }
+    void displayActivities(boolean filterByShouldDisplay,
+                           @NonNull List<ScheduledActivity> activityList,
+                           @NonNull final CrfActivitiesListener listener) {
+        logV("Raw Activities:");
+        debugPrintActivities(activityList);
+
+        List<ScheduledActivity> filteredActivities = activityList;
+        if (filterByShouldDisplay) {
+            filteredActivities = Lists.newArrayList(
+                    Iterables.filter(activityList, this::shouldDisplay));
+            logV("Filtered Activities:");
+            debugPrintActivities(filteredActivities);
+        }
+
+        SchedulesAndTasksModel model = translateActivities(filteredActivities);
+
+        // Set reminders for CRF app
+        if (weakContext != null && weakContext.get() != null) {
+            setReminders(weakContext.get(), model);
+            weakContext = null;
+        }
+
+        listener.success(model);
+    }
 
     /**
      * @return true if user is a TEST_USER and not a UX_TESTER and should see only test tasks,
@@ -273,7 +251,6 @@ public class CrfDataProvider extends BridgeDataProvider {
         logV("findOrCreateClinicDate");
 
         DateTime endTimeForClinicActivities = addTime(DateTime.now(), 1, 0);
-
         getActivitiesSubscribe(DateTime.now(), endTimeForClinicActivities, activityList -> {
             // We are only interested in the clinic1 and clinic2 activities
 
@@ -307,7 +284,20 @@ public class CrfDataProvider extends BridgeDataProvider {
                 getCrfPrefs().setClinicDate(myTriggeredClinicSchedule.getFinishedOn());
                 getCrfActivities(null, listener);
             } else {
-                // Otherwise, this is the user's first sign in, let's find or assign their clinic
+                List<ScheduledActivity> clinicDay1Activities =
+                        getClinicDay1Activities(activityList.getItems());
+
+                boolean clinicDay1ActivitiesFinished = Iterables.all(clinicDay1Activities,
+                        Predicates.compose(
+                                Predicates.equalTo(ScheduleStatus.FINISHED),
+                                ScheduledActivity::getStatus));
+
+                if (!clinicDay1ActivitiesFinished) {
+                    // display unfinished activities
+                    displayActivities(false, clinicDay1Activities, listener);
+                    return;
+                }
+                // They've completed their first clinic visit, so assign their clinic
                 // group
                 findClinicScheduleTrigger(listener, clinicScheduleTriggers);
             }
@@ -334,42 +324,33 @@ public class CrfDataProvider extends BridgeDataProvider {
 
         // First let's check if the user has a clinic data group already
         // This check also allows the server to pre-populate clinic groups
-        getStudyParticipantSubscribe(studyParticipant -> {
-            Set<String> dataGroups = Sets.newHashSet(studyParticipant.getDataGroups());
+        Set<String> dataGroups = Sets.newHashSet(
+                BridgeManagerProvider.getInstance()
+                        .getAuthenticationManager()
+                        .getUserSessionInfo()
+                        .getDataGroups());
 
-            if (Sets.intersection(dataGroups, CLINIC_SCHEDULE_TRIGGER_TASKS_IDS).size() != 1) {
-                listener.error("NO_CLINIC_ID");
-                return;
-            }
+        if (Sets.intersection(dataGroups, CLINIC_SCHEDULE_TRIGGER_TASKS_IDS).size() != 1) {
+            listener.error("NO_CLINIC_ID");
+            return;
+        }
 
-            ScheduledActivity myClinic = Iterables.find(
-                    clinicActivities,
-                    Predicates.compose(
-                            Predicates.in(dataGroups),
-                            TO_TASK_IDENTIFIER));
+        ScheduledActivity myClinic = Iterables.find(
+                clinicActivities,
+                Predicates.compose(
+                        Predicates.in(dataGroups),
+                        TO_TASK_IDENTIFIER));
 
-            // We already have the clinic data group assigned, so simply read it and
-            // trigger the corresponding clinic activity schedule flow
-            performClinicScheduleTrigger(myClinic, listener);
-        }, throwable -> listener.error(throwable.getLocalizedMessage()));
-    }
-
-    /**
-     * Triggers Bridge scheduling for clinic.
-     *
-     * @param clinic   this will be the activity representing the clinic this user will be a part of
-     * @param listener the listener for success/fail response
-     */
-    private void performClinicScheduleTrigger(final ScheduledActivity clinic,
-                                              final CrfActivitiesListener listener) {
-        logV("Completing " + clinic.toString());
+        // We already have the clinic data group assigned, so simply read it and
+        // trigger the corresponding clinic activity schedule flow
+        logV("Completing " + myClinic.toString());
 
         // These fields are what is needed to trigger the completion of an activity
         final DateTime completed = createClinicCompletionDate();
-        clinic.setStartedOn(completed);
-        clinic.setFinishedOn(completed);
+        myClinic.setStartedOn(completed);
+        myClinic.setFinishedOn(completed);
 
-        updateActivitySubscribe(clinic, message -> {
+        updateActivitySubscribe(myClinic, message -> {
             logV("Completed clinic successful");
             // We have completed the clinic activity which will automatically
             // trigger the app's clinic schedules and we can simply pull activities now
@@ -385,58 +366,6 @@ public class CrfDataProvider extends BridgeDataProvider {
                                       final Action1<Throwable> onError) {
         getStudyParticipant().observeOn(AndroidSchedulers.mainThread()).subscribe(onNext, onError);
     }
-
-//    /**
-//     * @param existingDataGroups the data groups from the study participant
-//     * @param listener           the listener for success/fail response
-//     * @param clinic1            the scheduled activity that will trigger clinic1 group
-//     * @param clinic2            the scheduled activity that will trigger clinic2 group
-//     */
-//    private void assignRandomizedClinic(
-//            List<String> existingDataGroups, final CrfActivitiesListener listener,
-//            ScheduledActivity clinic1, ScheduledActivity clinic2) {
-//
-//        logV("assignRandomizedClinic");
-//
-//        if (shouldThrowErrorWithoutClinicDataGroup) {
-//            if (weakContext != null && weakContext.get() != null) {
-//                signOutSubscribe(weakContext.get(), dataResponse -> {
-//                    listener.error(NO_CLINIC_ERROR_MESSAGE);
-//                }, throwable -> {
-//                    listener.error(throwable.getLocalizedMessage());
-//                });
-//            }
-//            return;
-//        }
-//
-//        final boolean assignToClinic1 = generateRandomClient();
-//        ScheduledActivity chosenClinic;
-//        String chosenClinicDataGroup;
-//        if (assignToClinic1) {
-//            chosenClinic = clinic1;
-//            chosenClinicDataGroup = CLINIC1;
-//        } else {  // clinic 2
-//            chosenClinic = clinic2;
-//            chosenClinicDataGroup = CLINIC2;
-//        }
-//
-//        StudyParticipant participant = new StudyParticipant();
-//        List<String> newDataGroups = Collections.singletonList(chosenClinicDataGroup);
-//        if (existingDataGroups != null) {
-//            newDataGroups = new ArrayList<>(existingDataGroups);
-//            newDataGroups.add(chosenClinicDataGroup);
-//        }
-//        participant.setDataGroups(newDataGroups);
-//
-//        logV("Random data group assigned " + chosenClinicDataGroup);
-//
-//        updateStudyParticipantSubscribe(participant, userSessionInfo -> {
-//            logV("Data group successfully assigned");
-//            // We already have the clinic data group assigned, so
-//            // trigger the corresponding clinic activity schedule flow
-//            performClinicScheduleTrigger(chosenClinic, listener);
-//        }, throwable -> listener.error(throwable.getLocalizedMessage()));
-//    }
 
     @VisibleForTesting
     void updateStudyParticipantSubscribe(StudyParticipant studyParticipant,
@@ -554,11 +483,8 @@ public class CrfDataProvider extends BridgeDataProvider {
     }
 
     @NonNull
-    @Override
-    protected SchedulesAndTasksModel translateActivities(@NonNull List<ScheduledActivity>
-                                                                     activityList) {
-        SchedulesAndTasksModel model = super.translateActivities(activityList);
-
+    List<ScheduledActivity> getClinicDay1Activities(@NonNull List<ScheduledActivity>
+                                                            activityList) {
         Multimap<String, ScheduledActivity> clinicDay1SchedulesToActivities =
                 Multimaps.filterKeys(
                         groupBySchedulePlan(activityList),
@@ -569,19 +495,32 @@ public class CrfDataProvider extends BridgeDataProvider {
         verify(clinicDay1SchedulesToActivities.keySet().size() <= 1,
                 ERROR_FOUND_MORE_THAN_TWO_CLINIC_SCHEDULES);
 
-        Date clinicDate = getCrfPrefs().getClinicDate().toDate();
+        return Lists.newArrayList(clinicDay1SchedulesToActivities.values());
+    }
 
-        // rewrite clinic day 1 schedule to match clinic date
-        Set<String> day1TaskGuids = Sets.newHashSet(
-                Iterables.transform(
-                        clinicDay1SchedulesToActivities.values(),
-                        ScheduledActivity::getGuid));
+    @NonNull
+    @Override
+    protected SchedulesAndTasksModel translateActivities(@NonNull List<ScheduledActivity>
+                                                                     activityList) {
+        SchedulesAndTasksModel model = super.translateActivities(activityList);
 
-        for (SchedulesAndTasksModel.ScheduleModel schedule : model.schedules) {
-            Set<String> scheduleTaskGuids = Sets.newHashSet(
-                    Iterables.transform(schedule.tasks, tm -> tm.taskGUID));
-            if (scheduleTaskGuids.containsAll(day1TaskGuids)) {
-                schedule.scheduledOn = clinicDate;
+        DateTime clinicDateTime = getCrfPrefs().getClinicDate();
+
+        if (clinicDateTime != null) {
+            Date clinicDate = clinicDateTime.toDate();
+
+            Set<String> day1TaskGuids = Sets.newHashSet(
+                    Iterables.transform(
+                            getClinicDay1Activities(activityList),
+                            ScheduledActivity::getGuid));
+
+            // rewrite clinic day 1 to display clinic date instead of account creation date
+            for (SchedulesAndTasksModel.ScheduleModel schedule : model.schedules) {
+                Set<String> scheduleTaskGuids = Sets.newHashSet(
+                        Iterables.transform(schedule.tasks, tm -> tm.taskGUID));
+                if (scheduleTaskGuids.containsAll(day1TaskGuids)) {
+                    schedule.scheduledOn = clinicDate;
+                }
             }
         }
 
@@ -590,8 +529,6 @@ public class CrfDataProvider extends BridgeDataProvider {
 
         return model;
     }
-
-
 
     @VisibleForTesting
     void debugPrintActivities(List<ScheduledActivity> activityList) {

@@ -67,6 +67,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
+import java.util.UUID;
 
 import rx.functions.Action1;
 
@@ -417,14 +418,20 @@ public class CrfDataProviderTest {
     }
 
     private ScheduledActivity activityWith(String id, DateTime finishedOn) {
-        ScheduledActivity activityModel = new ScheduledActivity();
-        activityModel.setFinishedOn(finishedOn);
+
         Activity activity = new Activity();
         TaskReference task = new TaskReference();
         task.setIdentifier(id);
         activity.setTask(task);
-        activityModel.setActivity(activity);
-        return activityModel;
+
+        ScheduledActivity sa = mock(ScheduledActivity.class);
+        when(sa.getGuid()).thenReturn(UUID.randomUUID().toString());
+        when(sa.getSchedulePlanGuid()).thenReturn(UUID.randomUUID().toString());
+        when(sa.getScheduledOn()).thenReturn(DateTime.now());
+        when(sa.getFinishedOn()).thenReturn(finishedOn);
+        when(sa.getActivity()).thenReturn(activity);
+
+        return sa;
     }
 
     private SchedulesAndTasksModel.ScheduleModel scheduleWith(String id, DateTime finishedOn) {

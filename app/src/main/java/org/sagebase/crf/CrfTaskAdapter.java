@@ -137,6 +137,8 @@ public class CrfTaskAdapter extends TaskAdapter {
 
          if(hldr instanceof ViewHolder) {
              ViewHolder holder = (ViewHolder) hldr;
+
+             // JOLIU TODO
              boolean isToday = CrfDateHelper.isToday(schedule.scheduledOn);
 
              int iconSize = 0;

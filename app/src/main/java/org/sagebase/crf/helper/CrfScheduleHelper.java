@@ -36,19 +36,29 @@ public class CrfScheduleHelper {
             return false;
         }
 
-        boolean singleTaskSelectable = schedule.tasks.size() == 1 &&
-                !allTasksCompleteOn(schedule) &&
-                CrfDateHelper.isToday(schedule.scheduledOn);
-
-        boolean isTodaySameDayOrAfterClinic =
-                CrfDateHelper.isToday(schedule.scheduledOn) ||
+        boolean isScheduledOnTodayOrBefore= CrfDateHelper.isToday(schedule.scheduledOn) ||
                 new Date().after(schedule.scheduledOn);
 
-        boolean clinicGroupSelectable = schedule.tasks.size() > 1 &&
-                !allTasksCompleteOn(schedule) &&
-                isTodaySameDayOrAfterClinic;
+        boolean isExpiresOnTodayOrAfter = schedule.expiresOn == null || CrfDateHelper.isToday
+                (schedule.expiresOn) &&
+                new Date().before(schedule.scheduledOn);
 
-        return singleTaskSelectable || clinicGroupSelectable;
+        return isScheduledOnTodayOrBefore && !allTasksCompleteOn(schedule) &&
+                isExpiresOnTodayOrAfter;
+//
+//        boolean singleTaskSelectable = schedule.tasks.size() == 1 &&
+//                !allTasksCompleteOn(schedule) &&
+//                (CrfDateHelper.isToday(schedule.scheduledOn);
+//
+//        boolean isTodaySameDayOrAfterClinic =
+//                CrfDateHelper.isToday(schedule.scheduledOn) ||
+//                new Date().after(schedule.scheduledOn);
+//
+//        boolean clinicGroupSelectable = schedule.tasks.size() > 1 &&
+//                !allTasksCompleteOn(schedule) &&
+//                isTodaySameDayOrAfterClinic;
+//
+//        return singleTaskSelectable || clinicGroupSelectable;
     }
 
     /**
