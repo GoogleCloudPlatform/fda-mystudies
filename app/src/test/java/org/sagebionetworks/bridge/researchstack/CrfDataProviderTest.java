@@ -147,7 +147,7 @@ public class CrfDataProviderTest {
 
         when(apiClientProvider.getClient(AuthenticationApi.class)).thenReturn(authenticationApi);
         when(apiClientProvider
-                .getClient(same(ForConsentedUsersApi.class), any(SignIn.class)))
+                .getClient(same(ForConsentedUsersApi.class)))
                 .thenReturn(forConsentedUsersApi);
 
         resetTest(null, true, null);

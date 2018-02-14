@@ -34,6 +34,8 @@ import org.researchstack.backbone.result.StepResult;
 import org.researchstack.backbone.step.Step;
 import org.researchstack.backbone.ui.views.SubmitBar;
 import org.sagebase.crf.fitbit.FitbitManager;
+import org.sagebase.crf.fitbit.OAuthDAO;
+import org.sagebionetworks.bridge.android.manager.BridgeManagerProvider;
 import org.sagebionetworks.bridge.researchstack.BridgeDataProvider;
 import org.sagebionetworks.bridge.researchstack.CrfDataProvider;
 import org.sagebionetworks.research.crf.R;
@@ -92,7 +94,8 @@ public class CrfFitBitStepLayout extends CrfInstructionStepLayout implements Fit
         addSubmitBarForSkipFunctionality();
 
         if (fitbitManager == null) {
-            fitbitManager = new FitbitManager(getContext());
+            fitbitManager =  new FitbitManager(context, new OAuthDAO(context,
+                            BridgeManagerProvider.getInstance().getAuthenticationManager()));
         }
 
         if (fitbitManager.isAuthorized()) {
