@@ -19,6 +19,7 @@ package org.sagebase.crf.helper;
 
 import org.researchstack.backbone.model.SchedulesAndTasksModel;
 
+import java.util.Calendar;
 import java.util.Date;
 
 /**
@@ -32,33 +33,24 @@ public class CrfScheduleHelper {
      * @return true if view should be clickable, false otherwise
      */
     public static boolean isScheduleEnabled(SchedulesAndTasksModel.ScheduleModel schedule) {
+        return isScheduleEnabled(Calendar.getInstance().getTime(), schedule);
+    }
+
+    public static boolean isScheduleEnabled(Date date,SchedulesAndTasksModel.ScheduleModel
+            schedule) {
         if (schedule == null) {
             return false;
         }
 
         boolean isScheduledOnTodayOrBefore= CrfDateHelper.isToday(schedule.scheduledOn) ||
-                new Date().after(schedule.scheduledOn);
+                date.after(schedule.scheduledOn);
 
         boolean isExpiresOnTodayOrAfter = schedule.expiresOn == null || CrfDateHelper.isToday
-                (schedule.expiresOn) &&
-                new Date().before(schedule.scheduledOn);
+                (schedule.expiresOn) ||
+                date.before(schedule.expiresOn);
 
         return isScheduledOnTodayOrBefore && !allTasksCompleteOn(schedule) &&
                 isExpiresOnTodayOrAfter;
-//
-//        boolean singleTaskSelectable = schedule.tasks.size() == 1 &&
-//                !allTasksCompleteOn(schedule) &&
-//                (CrfDateHelper.isToday(schedule.scheduledOn);
-//
-//        boolean isTodaySameDayOrAfterClinic =
-//                CrfDateHelper.isToday(schedule.scheduledOn) ||
-//                new Date().after(schedule.scheduledOn);
-//
-//        boolean clinicGroupSelectable = schedule.tasks.size() > 1 &&
-//                !allTasksCompleteOn(schedule) &&
-//                isTodaySameDayOrAfterClinic;
-//
-//        return singleTaskSelectable || clinicGroupSelectable;
     }
 
     /**
@@ -86,5 +78,10 @@ public class CrfScheduleHelper {
             }
         }
         return allTasksComplete;
+    }
+
+    public static boolean isScheduledFor(Date now, SchedulesAndTasksModel.ScheduleModel schedule) {
+        return((now.equals(schedule.scheduledOn) ||now.after(schedule.scheduledOn)
+                && (schedule.expiresOn == null || schedule.expiresOn.after(now))));
     }
 }

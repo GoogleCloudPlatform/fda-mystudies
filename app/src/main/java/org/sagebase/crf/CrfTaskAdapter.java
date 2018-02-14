@@ -36,6 +36,7 @@ import org.sagebionetworks.bridge.researchstack.CrfTaskFactory;
 import org.sagebionetworks.research.crf.R;
 
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -114,7 +115,7 @@ public class CrfTaskAdapter extends TaskAdapter {
             if (isHldrClickable) {
                 final SchedulesAndTasksModel.ScheduleModel finalSchedule = schedule;
                 hldr.itemView.setOnClickListener(v -> {
-                    LogExt.d(LOG_TAG, "Item clicked: " + finalSchedule.scheduleString);
+                    LogExt.d(LOG_TAG, "Item (schedule) clicked: " + finalSchedule.scheduleString);
                     publishScheduleSubject.onNext(finalSchedule);
                 });
             }
@@ -123,7 +124,7 @@ public class CrfTaskAdapter extends TaskAdapter {
             if (isHldrClickable) {
                 final SchedulesAndTasksModel.TaskScheduleModel finalTask = firstTask;
                 hldr.itemView.setOnClickListener(v -> {
-                    LogExt.d(LOG_TAG, "Item clicked: " + finalTask.taskID);
+                    LogExt.d(LOG_TAG, "Item (task) clicked: " + finalTask.taskID);
                     publishSubject.onNext(finalTask);
                 });
             }
@@ -139,7 +140,7 @@ public class CrfTaskAdapter extends TaskAdapter {
              ViewHolder holder = (ViewHolder) hldr;
 
              // JOLIU TODO
-             boolean isToday = CrfDateHelper.isToday(schedule.scheduledOn);
+             boolean isToday = CrfScheduleHelper.isScheduleEnabled(Calendar.getInstance().getTime(), schedule);
 
              int iconSize = 0;
              float titleSize = 0f;
@@ -260,10 +261,11 @@ public class CrfTaskAdapter extends TaskAdapter {
     private void setPositionForToday(List<Object> list) {
         // Find position for today
         int pos = 0;
+        Date now = Calendar.getInstance().getTime();
         for(Object obj: list) {
             if (obj instanceof SchedulesAndTasksModel.ScheduleModel) {
                 SchedulesAndTasksModel.ScheduleModel schedule = (SchedulesAndTasksModel.ScheduleModel)obj;
-                if(CrfDateHelper.isToday(schedule.scheduledOn)) {
+                if(CrfScheduleHelper.isScheduledFor(now, schedule)) {
                     mPositionForToday = pos;
                     break;
                 }

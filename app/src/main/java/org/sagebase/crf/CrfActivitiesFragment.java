@@ -51,6 +51,7 @@ import org.sagebionetworks.research.crf.BuildConfig;
 import org.sagebionetworks.research.crf.R;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -265,6 +266,7 @@ public class CrfActivitiesFragment extends ActivitiesFragment implements CrfFilt
                 tasks.add(schedule);
             }
             adapter.addAll(tasks, false);
+
             int todayPosition = adapter.getPositionForToday();
             Log.d(LOG_TAG, "Adapter today position: " + todayPosition);
             getRecyclerView().scrollToPosition(adapter.getPositionForToday());
@@ -296,6 +298,9 @@ public class CrfActivitiesFragment extends ActivitiesFragment implements CrfFilt
      * @param schedule the schedule that was selected
      */
     public void scheduleSelected(SchedulesAndTasksModel.ScheduleModel schedule) {
+        if (!CrfScheduleHelper.isScheduleEnabled(Calendar.getInstance().getTime(), schedule)){
+            return;
+        }
         if (schedule.tasks.size() == 1) {
             // Single task, use default handling
             super.taskSelected(schedule.tasks.get(0));

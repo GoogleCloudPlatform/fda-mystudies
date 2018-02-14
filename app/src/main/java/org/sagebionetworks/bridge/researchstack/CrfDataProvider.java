@@ -514,12 +514,16 @@ public class CrfDataProvider extends BridgeDataProvider {
                             getClinicDay1Activities(activityList),
                             ScheduledActivity::getGuid));
 
-            // rewrite clinic day 1 to display clinic date instead of account creation date
             for (SchedulesAndTasksModel.ScheduleModel schedule : model.schedules) {
+                // rewrite clinic day 1 to display clinic date instead of account creation date
                 Set<String> scheduleTaskGuids = Sets.newHashSet(
                         Iterables.transform(schedule.tasks, tm -> tm.taskGUID));
                 if (scheduleTaskGuids.containsAll(day1TaskGuids)) {
                     schedule.scheduledOn = clinicDate;
+                }
+                // set non-persistent tasks to expire after 2 days
+                if ("once".equals(schedule.scheduleType)){
+                    schedule.expiresOn = new DateTime(schedule.scheduledOn).plusDays(2).toDate();
                 }
             }
         }
