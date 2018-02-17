@@ -84,6 +84,7 @@ public class CrfPrefs {
         return getClinicDate() != null;
     }
 
+    @Nullable
     public DateTime getClinicDate() {
         String jsonString = prefs.getString(KEY_FIRST_SIGN_IN_DATE_TIME, null);
         if (jsonString == null) {

@@ -27,9 +27,13 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.google.common.collect.Iterables;
+
+import org.joda.time.LocalDate;
 import org.researchstack.backbone.model.SchedulesAndTasksModel;
-import org.researchstack.backbone.utils.LogExt;
+import org.researchstack.backbone.model.SchedulesAndTasksModel.ScheduleModel;
 import org.researchstack.backbone.ui.adapter.TaskAdapter;
+import org.researchstack.backbone.utils.LogExt;
 import org.sagebase.crf.helper.CrfDateHelper;
 import org.sagebase.crf.helper.CrfScheduleHelper;
 import org.sagebionetworks.bridge.researchstack.CrfTaskFactory;
@@ -58,13 +62,20 @@ public class CrfTaskAdapter extends TaskAdapter {
     private Context mContext;
     private static SimpleDateFormat sFormatter = new SimpleDateFormat("MMM d");
     private boolean mFiltered = false;
-    private int mPositionForToday;
+    private LocalDate localDateToScheduleFor;
 
-    protected PublishSubject<SchedulesAndTasksModel.ScheduleModel>
+    private final Iterable<ScheduleModel> scheduleModels =
+            Iterables.transform(
+                    Iterables.filter(tasks, o -> (o instanceof ScheduleModel)),
+                    o -> (ScheduleModel) o
+            );
+
+    protected PublishSubject<ScheduleModel>
             publishScheduleSubject = PublishSubject.create();
 
     public CrfTaskAdapter(Context context) {
         super(context);
+        localDateToScheduleFor = new LocalDate();
         mContext = context;
     }
 
@@ -94,11 +105,14 @@ public class CrfTaskAdapter extends TaskAdapter {
         int viewType = getItemViewType(position);
         Log.d(LOG_TAG, "onBindViewHolder(): " + position + ", " + viewType);
         Object obj = tasks.get(position);
+        onBindViewHolder(hldr, obj);
+    }
 
-        SchedulesAndTasksModel.ScheduleModel schedule = null;
+    void onBindViewHolder(RecyclerView.ViewHolder hldr, Object obj) {
+        ScheduleModel schedule = null;
         SchedulesAndTasksModel.TaskScheduleModel firstTask = null;
-        if (obj instanceof SchedulesAndTasksModel.ScheduleModel) {
-            schedule = (SchedulesAndTasksModel.ScheduleModel) obj;
+        if (obj instanceof ScheduleModel) {
+            schedule = (ScheduleModel) obj;
         } else if (obj instanceof StartItem) {
             schedule = ((StartItem)obj).schedule;
         }
@@ -111,9 +125,10 @@ public class CrfTaskAdapter extends TaskAdapter {
 
         boolean isHldrClickable = false;
         if (schedule != null) {
-            isHldrClickable = CrfScheduleHelper.isScheduleEnabled(schedule);
+            isHldrClickable = !CrfScheduleHelper.allTasksComplete(schedule)
+                    && CrfScheduleHelper.isScheduledFor(localDateToScheduleFor, schedule);
             if (isHldrClickable) {
-                final SchedulesAndTasksModel.ScheduleModel finalSchedule = schedule;
+                final ScheduleModel finalSchedule = schedule;
                 hldr.itemView.setOnClickListener(v -> {
                     LogExt.d(LOG_TAG, "Item (schedule) clicked: " + finalSchedule.scheduleString);
                     publishScheduleSubject.onNext(finalSchedule);
@@ -139,13 +154,23 @@ public class CrfTaskAdapter extends TaskAdapter {
          if(hldr instanceof ViewHolder) {
              ViewHolder holder = (ViewHolder) hldr;
 
-             // JOLIU TODO
-             boolean isToday = CrfScheduleHelper.isScheduleEnabled(Calendar.getInstance().getTime(), schedule);
+             boolean allTasksComplete = CrfScheduleHelper.allTasksComplete(schedule);
+
+             if (allTasksComplete) {
+                 holder.iconCompleted.setVisibility(View.VISIBLE);
+             } else {
+                 holder.iconCompleted.setVisibility(View.GONE);
+             }
+
+             // JOLIU nullcheck
+             // hero shot incomplete tasks scheduled for today
+             boolean isTodayPriority = CrfScheduleHelper.isScheduledFor(localDateToScheduleFor, schedule)
+                     && !allTasksComplete;
 
              int iconSize = 0;
              float titleSize = 0f;
              float dateSize = 0f;
-             if (isToday) {
+             if (isTodayPriority) {
                  iconSize = (int) mContext.getResources().getDimension(R.dimen.crf_activity_icon_size_today);
                  dateSize = mContext.getResources().getDimension(R.dimen.crf_activity_date_size_today);
                  titleSize = mContext.getResources().getDimension(R.dimen.crf_activity_title_size_today);
@@ -159,18 +184,6 @@ public class CrfTaskAdapter extends TaskAdapter {
                  holder.today.setVisibility(View.GONE);
                  holder.subtitle.setVisibility(View.GONE);
                  holder.overlay.setVisibility(View.VISIBLE);
-             }
-
-             boolean allTasksComplete = true;
-             for (SchedulesAndTasksModel.TaskScheduleModel task : schedule.tasks) {
-                 if (task.taskFinishedOn == null) {
-                     allTasksComplete = false;
-                 }
-             }
-             if (allTasksComplete) {
-                 holder.iconCompleted.setVisibility(View.VISIBLE);
-             } else {
-                 holder.iconCompleted.setVisibility(View.GONE);
              }
 
              FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(iconSize, iconSize);
@@ -252,34 +265,24 @@ public class CrfTaskAdapter extends TaskAdapter {
 
     // Add a list of items
     public void addAll(List<Object> list, boolean filtered) {
-        tasks.addAll(list);
         mFiltered = filtered;
-        notifyDataSetChanged();
-        setPositionForToday(list);
-    }
-
-    private void setPositionForToday(List<Object> list) {
-        // Find position for today
-        int pos = 0;
-        Date now = Calendar.getInstance().getTime();
-        for(Object obj: list) {
-            if (obj instanceof SchedulesAndTasksModel.ScheduleModel) {
-                SchedulesAndTasksModel.ScheduleModel schedule = (SchedulesAndTasksModel.ScheduleModel)obj;
-                if(CrfScheduleHelper.isScheduledFor(now, schedule)) {
-                    mPositionForToday = pos;
-                    break;
-                }
-            }
-            pos++;
-        }
+        super.addAll(list);
     }
 
     public int getPositionForToday() {
-        return mPositionForToday;
+        ScheduleModel scheduleForToday = Iterables.getFirst(
+                Iterables.filter(scheduleModels,
+                        i -> CrfScheduleHelper.isScheduledFor(localDateToScheduleFor, i)),
+                null);
+
+        if (scheduleForToday == null) {
+            return 0;
+        }
+        return tasks.indexOf(scheduleForToday);
     }
 
     private String formatDate(Date d) {
-        if(CrfDateHelper.isToday(d)) {
+        if(new LocalDate(d).equals(localDateToScheduleFor)) {
             return mContext.getString(R.string.crf_today);
         } else {
             return sFormatter.format(d);
@@ -382,9 +385,9 @@ public class CrfTaskAdapter extends TaskAdapter {
     }
 
     public static class StartItem {
-        SchedulesAndTasksModel.ScheduleModel schedule;
+        ScheduleModel schedule;
 
-        public StartItem(SchedulesAndTasksModel.ScheduleModel s) {
+        public StartItem(ScheduleModel s) {
             schedule = s;
         }
     }

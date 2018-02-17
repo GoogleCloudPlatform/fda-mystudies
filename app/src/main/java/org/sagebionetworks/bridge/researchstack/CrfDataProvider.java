@@ -15,6 +15,7 @@ import com.google.common.collect.Multimaps;
 import com.google.common.collect.Sets;
 
 import org.joda.time.DateTime;
+import org.joda.time.DateTimeZone;
 import org.researchstack.backbone.AppPrefs;
 import org.researchstack.backbone.DataProvider;
 import org.researchstack.backbone.DataResponse;
@@ -64,8 +65,8 @@ public class CrfDataProvider extends BridgeDataProvider {
 
     public static final String ERROR_MISSING_CLINIC_DATA_GROUP = "Error: could not find both " +
             "clinic1 and clinic2, are you in the correct data groups?";
-    public static final String ERROR_FOUND_MORE_THAN_TWO_CLINIC_SCHEDULES = "Found more than two " +
-            "schedulePlans with multiple activities";
+    public static final String ERROR_FOUND_MULTIPLE_CLINIC_DAY_SCHEDULES = "Found activities " +
+            "for multiple clinics";
 
     public static final Set<String> CLINIC_SCHEDULE_TRIGGER_TASKS_IDS =
             ImmutableSet.of(CLINIC1, CLINIC2);
@@ -278,11 +279,14 @@ public class CrfDataProvider extends BridgeDataProvider {
 
             // Whichever clinic activity is finished is the one this user is a part of
             if (myTriggeredClinicSchedule != null) {  // Found date, go back to loading activities
+                DateTime finishedOnUTC = myTriggeredClinicSchedule.getFinishedOn();
+                DateTime finishedOn = finishedOnUTC.toDateTime(DateTimeZone.getDefault());
+
                 logV(String.format(Locale.getDefault(),
-                        "Setting firstSignInDate on clinic1 = %s",
-                        myTriggeredClinicSchedule.getFinishedOn().toString()));
-                getCrfPrefs().setClinicDate(myTriggeredClinicSchedule.getFinishedOn());
+                        "Setting clinicDate on clinic = %s", finishedOn));
+                getCrfPrefs().setClinicDate(finishedOn);
                 getCrfActivities(null, listener);
+
             } else {
                 List<ScheduledActivity> clinicDay1Activities =
                         getClinicDay1Activities(activityList.getItems());
@@ -331,7 +335,7 @@ public class CrfDataProvider extends BridgeDataProvider {
                         .getDataGroups());
 
         if (Sets.intersection(dataGroups, CLINIC_SCHEDULE_TRIGGER_TASKS_IDS).size() != 1) {
-            listener.error("NO_CLINIC_ID");
+            listener.error(NO_CLINIC_ERROR_MESSAGE);
             return;
         }
 
@@ -485,17 +489,28 @@ public class CrfDataProvider extends BridgeDataProvider {
     @NonNull
     List<ScheduledActivity> getClinicDay1Activities(@NonNull List<ScheduledActivity>
                                                             activityList) {
-        Multimap<String, ScheduledActivity> clinicDay1SchedulesToActivities =
+        return getClinicDayActivity(activityList, CLINIC_DAY_1_SCHEDULE_PLAN_GUIDS);
+    }
+
+    @NonNull
+    List<ScheduledActivity> getClinicDay14Activities(@NonNull List<ScheduledActivity>
+                                                            activityList) {
+        return getClinicDayActivity(activityList, CLINIC_DAY_14_SCHEDULE_PLAN_GUIDS);
+    }
+
+    private List<ScheduledActivity> getClinicDayActivity(List<ScheduledActivity> activityList,
+                                                         Set<String> scheduledPlanGuids) {
+        Multimap<String, ScheduledActivity> clinicDaySchedules =
                 Multimaps.filterKeys(
                         groupBySchedulePlan(activityList),
-                        CLINIC_DAY_1_SCHEDULE_PLAN_GUIDS::contains);
+                        scheduledPlanGuids::contains);
 
-        logV(clinicDay1SchedulesToActivities.toString());
+        logV(clinicDaySchedules.toString());
 
-        verify(clinicDay1SchedulesToActivities.keySet().size() <= 1,
-                ERROR_FOUND_MORE_THAN_TWO_CLINIC_SCHEDULES);
+        verify(clinicDaySchedules.keySet().size() <= 1,
+                ERROR_FOUND_MULTIPLE_CLINIC_DAY_SCHEDULES);
 
-        return Lists.newArrayList(clinicDay1SchedulesToActivities.values());
+        return Lists.newArrayList(clinicDaySchedules.values());
     }
 
     @NonNull
@@ -513,16 +528,24 @@ public class CrfDataProvider extends BridgeDataProvider {
                     Iterables.transform(
                             getClinicDay1Activities(activityList),
                             ScheduledActivity::getGuid));
+            Set<String> day14TaskGuids = Sets.newHashSet(
+                    Iterables.transform(
+                            getClinicDay14Activities(activityList),
+                            ScheduledActivity::getGuid
+                    )
+            );
 
             for (SchedulesAndTasksModel.ScheduleModel schedule : model.schedules) {
                 // rewrite clinic day 1 to display clinic date instead of account creation date
                 Set<String> scheduleTaskGuids = Sets.newHashSet(
                         Iterables.transform(schedule.tasks, tm -> tm.taskGUID));
+
                 if (scheduleTaskGuids.containsAll(day1TaskGuids)) {
                     schedule.scheduledOn = clinicDate;
                 }
-                // set non-persistent tasks to expire after 2 days
-                if ("once".equals(schedule.scheduleType)){
+                // set non-persistent tasks to expire after 2 days, except clinic day 14 tasks
+                if ("once".equals(schedule.scheduleType)
+                        && !scheduleTaskGuids.containsAll(day14TaskGuids)){
                     schedule.expiresOn = new DateTime(schedule.scheduledOn).plusDays(2).toDate();
                 }
             }

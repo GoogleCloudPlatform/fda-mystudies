@@ -17,40 +17,64 @@
 
 package org.sagebase.crf.helper;
 
-import org.researchstack.backbone.model.SchedulesAndTasksModel;
+import android.support.annotation.NonNull;
 
-import java.util.Calendar;
+import org.joda.time.DateTime;
+import org.joda.time.Interval;
+import org.joda.time.LocalDate;
+import org.researchstack.backbone.model.SchedulesAndTasksModel;
+import org.researchstack.backbone.model.SchedulesAndTasksModel.ScheduleModel;
+
 import java.util.Date;
+
+import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
  * Created by TheMDP on 11/17/17.
  */
 
 public class CrfScheduleHelper {
-    /**
-     * This method contains the business logic for if a schedule is clickable
-     * @param schedule the schedule containing the task group or single task
-     * @return true if view should be clickable, false otherwise
-     */
-    public static boolean isScheduleEnabled(SchedulesAndTasksModel.ScheduleModel schedule) {
-        return isScheduleEnabled(Calendar.getInstance().getTime(), schedule);
+
+    public static final DateTime EXPIRES_ON_NEVER = new DateTime(Long.MAX_VALUE);
+
+    public static boolean isScheduledFor(DateTime dateTime, ScheduleModel schedule) {
+        return getInterval(schedule).contains(dateTime);
     }
 
-    public static boolean isScheduleEnabled(Date date,SchedulesAndTasksModel.ScheduleModel
-            schedule) {
-        if (schedule == null) {
+    public static boolean isScheduledFor(@NonNull Interval interval,
+                                         @NonNull ScheduleModel schedule) {
+        return interval.overlaps(getInterval(schedule));
+    }
+
+    private static Interval getInterval(@NonNull ScheduleModel schedule) {
+        DateTime scheduledOn = new DateTime(schedule.scheduledOn);
+        DateTime expiresOn = EXPIRES_ON_NEVER;
+        if (schedule.expiresOn != null) {
+            expiresOn = new DateTime(schedule.expiresOn);
+        }
+        return new Interval(scheduledOn, expiresOn);
+    }
+
+    public static boolean isExpiringOnSameDay(@NonNull Date date,
+                                         @NonNull ScheduleModel schedule) {
+        checkNotNull(date);
+        checkNotNull(schedule);
+
+        if (schedule.expiresOn == null) {
             return false;
         }
 
-        boolean isScheduledOnTodayOrBefore= CrfDateHelper.isToday(schedule.scheduledOn) ||
-                date.after(schedule.scheduledOn);
+        LocalDate localDate = new LocalDate(date);
+        DateTime expiresOn = new DateTime(schedule.expiresOn);
+        return localDate.toInterval().contains(expiresOn)
+                && localDate.toDateTimeAtStartOfDay().isBefore(expiresOn);
+    }
 
-        boolean isExpiresOnTodayOrAfter = schedule.expiresOn == null || CrfDateHelper.isToday
-                (schedule.expiresOn) ||
-                date.before(schedule.expiresOn);
-
-        return isScheduledOnTodayOrBefore && !allTasksCompleteOn(schedule) &&
-                isExpiresOnTodayOrAfter;
+    public static boolean isScheduledFor(@NonNull LocalDate localDate,
+                                                  @NonNull ScheduleModel schedule) {
+        checkNotNull(localDate);
+        checkNotNull(schedule);
+        return isScheduledFor(localDate.toInterval(), schedule);
     }
 
     /**
@@ -68,7 +92,7 @@ public class CrfScheduleHelper {
     /**
      * @return true if every task in the schedule on this date is complete, false in all other scenarios
      */
-    public static boolean allTasksCompleteOn(SchedulesAndTasksModel.ScheduleModel schedule) {
+    public static boolean allTasksComplete(ScheduleModel schedule) {
         boolean allTasksComplete = true;
         if (schedule != null) {
             for (SchedulesAndTasksModel.TaskScheduleModel task : schedule.tasks) {
@@ -80,8 +104,5 @@ public class CrfScheduleHelper {
         return allTasksComplete;
     }
 
-    public static boolean isScheduledFor(Date now, SchedulesAndTasksModel.ScheduleModel schedule) {
-        return((now.equals(schedule.scheduledOn) ||now.after(schedule.scheduledOn)
-                && (schedule.expiresOn == null || schedule.expiresOn.after(now))));
-    }
+
 }

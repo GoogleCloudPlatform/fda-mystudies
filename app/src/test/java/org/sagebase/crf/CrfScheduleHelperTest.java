@@ -39,7 +39,7 @@ public class CrfScheduleHelperTest {
         SchedulesAndTasksModel.ScheduleModel schedule = scheduleWith(
                 new String[] {"schedule1"},
                 new DateTime[] {null});
-        boolean isScheduleEnabled = CrfScheduleHelper.isScheduleEnabled(schedule);
+        boolean isScheduleEnabled = CrfScheduleHelper.isScheduleEnabled(new Date(), schedule);
         assertTrue(isScheduleEnabled);
     }
 
@@ -48,7 +48,7 @@ public class CrfScheduleHelperTest {
         SchedulesAndTasksModel.ScheduleModel schedule = scheduleWith(
                 new String[] {"schedule1", "schedule2"},
                 new DateTime[] {TASK_FINSHED_ON, null});
-        boolean isScheduleEnabled = CrfScheduleHelper.isScheduleEnabled(schedule);
+        boolean isScheduleEnabled = CrfScheduleHelper.isScheduleEnabled(new Date(), schedule);
         assertTrue(isScheduleEnabled);
     }
 
@@ -58,7 +58,7 @@ public class CrfScheduleHelperTest {
                 new String[] {"schedule1", "schedule2"},
                 new DateTime[] {TASK_FINSHED_ON, null});
         schedule.scheduledOn = TASK_FINSHED_ON.toDate(); // incomplete clinics in the past should be enabled
-        boolean isScheduleEnabled = CrfScheduleHelper.isScheduleEnabled(schedule);
+        boolean isScheduleEnabled = CrfScheduleHelper.isScheduleEnabled(new Date(), schedule);
         assertTrue(isScheduleEnabled);
     }
 
@@ -67,7 +67,7 @@ public class CrfScheduleHelperTest {
         SchedulesAndTasksModel.ScheduleModel schedule = scheduleWith(
                 new String[] {"schedule1"},
                 new DateTime[] {TASK_FINSHED_ON});
-        boolean isScheduleEnabled = CrfScheduleHelper.isScheduleEnabled(schedule);
+        boolean isScheduleEnabled = CrfScheduleHelper.isScheduleEnabled(new Date(), schedule);
         assertFalse(isScheduleEnabled);
     }
 
@@ -76,7 +76,7 @@ public class CrfScheduleHelperTest {
         SchedulesAndTasksModel.ScheduleModel schedule = scheduleWith(
                 new String[] {"schedule1", "schedule2"},
                 new DateTime[] {TASK_FINSHED_ON, TASK_FINSHED_ON});
-        boolean isScheduleEnabled = CrfScheduleHelper.isScheduleEnabled(schedule);
+        boolean isScheduleEnabled = CrfScheduleHelper.isScheduleEnabled(new Date(), schedule);
         assertFalse(isScheduleEnabled);
     }
 
@@ -87,7 +87,7 @@ public class CrfScheduleHelperTest {
                 new String[] {"schedule1"},
                 new DateTime[] {null});
         schedule.scheduledOn = TASK_FINSHED_ON.toDate(); // must be today to be clickable for a single task
-        boolean isScheduleEnabled = CrfScheduleHelper.isScheduleEnabled(schedule);
+        boolean isScheduleEnabled = CrfScheduleHelper.isScheduleEnabled(new Date(), schedule);
         assertFalse(isScheduleEnabled);
     }
 
@@ -98,7 +98,7 @@ public class CrfScheduleHelperTest {
                 new String[] {"schedule1"},
                 new DateTime[] {null});
         schedule.scheduledOn = DateTime.now().plusDays(2).toDate();
-        boolean isScheduleEnabled = CrfScheduleHelper.isScheduleEnabled(schedule);
+        boolean isScheduleEnabled = CrfScheduleHelper.isScheduleEnabled(new Date(), schedule);
         assertFalse(isScheduleEnabled);
     }
 
@@ -109,7 +109,7 @@ public class CrfScheduleHelperTest {
                 new String[] {"schedule1", "schedule2"},
                 new DateTime[] {null, null});
         schedule.scheduledOn = DateTime.now().plusDays(2).toDate();
-        boolean isScheduleEnabled = CrfScheduleHelper.isScheduleEnabled(schedule);
+        boolean isScheduleEnabled = CrfScheduleHelper.isScheduleEnabled(new Date(), schedule);
         assertFalse(isScheduleEnabled);
     }
 
