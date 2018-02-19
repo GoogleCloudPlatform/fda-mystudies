@@ -18,6 +18,7 @@
 package org.sagebase.crf.helper;
 
 import android.support.annotation.NonNull;
+import android.support.annotation.VisibleForTesting;
 
 import org.joda.time.DateTime;
 import org.joda.time.Interval;
@@ -25,60 +26,71 @@ import org.joda.time.LocalDate;
 import org.researchstack.backbone.model.SchedulesAndTasksModel;
 import org.researchstack.backbone.model.SchedulesAndTasksModel.ScheduleModel;
 
-import java.util.Date;
-
 import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
  * Created by TheMDP on 11/17/17.
  */
-
 public class CrfScheduleHelper {
+    @VisibleForTesting
+    static final DateTime NEVER = new DateTime(Long.MAX_VALUE);
 
-    public static final DateTime EXPIRES_ON_NEVER = new DateTime(Long.MAX_VALUE);
+    /**
+     * Check if schedule applies at any point during an interval.
+     *
+     * @param interval interval
+     * @param schedule schedule
+     * @return true if schedule overlaps with an interval.
+     */
+    public static boolean isScheduledFor(@NonNull Interval interval,
+                                         @NonNull ScheduleModel schedule) {
+        checkNotNull(interval);
+        checkNotNull(schedule);
 
-    public static boolean isScheduledFor(DateTime dateTime, ScheduleModel schedule) {
+        return interval.overlaps(getInterval(schedule));
+    }
+
+    /**
+     * Checks if schedule applies to a time.
+     *
+     * @param dateTime time
+     * @param schedule schedule
+     * @return true if schedule applies to a time
+     */
+    public static boolean isScheduledFor(@NonNull DateTime dateTime,
+                                         @NonNull ScheduleModel schedule) {
+        checkNotNull(dateTime);
+        checkNotNull(schedule);
+
         return getInterval(schedule).contains(dateTime);
     }
 
-    public static boolean isScheduledFor(@NonNull Interval interval,
+    /**
+     * Checks if a schedule applies at any time during a day.
+     *
+     * @param localDate day
+     * @param schedule  schedule
+     * @return true if schedule overlaps with day
+     */
+    public static boolean isScheduledFor(@NonNull LocalDate localDate,
                                          @NonNull ScheduleModel schedule) {
-        return interval.overlaps(getInterval(schedule));
+        checkNotNull(localDate);
+        checkNotNull(schedule);
+        return isScheduledFor(localDate.toInterval(), schedule);
     }
 
     private static Interval getInterval(@NonNull ScheduleModel schedule) {
         DateTime scheduledOn = new DateTime(schedule.scheduledOn);
-        DateTime expiresOn = EXPIRES_ON_NEVER;
+        DateTime expiresOn = NEVER;
         if (schedule.expiresOn != null) {
             expiresOn = new DateTime(schedule.expiresOn);
         }
         return new Interval(scheduledOn, expiresOn);
     }
 
-    public static boolean isExpiringOnSameDay(@NonNull Date date,
-                                         @NonNull ScheduleModel schedule) {
-        checkNotNull(date);
-        checkNotNull(schedule);
-
-        if (schedule.expiresOn == null) {
-            return false;
-        }
-
-        LocalDate localDate = new LocalDate(date);
-        DateTime expiresOn = new DateTime(schedule.expiresOn);
-        return localDate.toInterval().contains(expiresOn)
-                && localDate.toDateTimeAtStartOfDay().isBefore(expiresOn);
-    }
-
-    public static boolean isScheduledFor(@NonNull LocalDate localDate,
-                                                  @NonNull ScheduleModel schedule) {
-        checkNotNull(localDate);
-        checkNotNull(schedule);
-        return isScheduledFor(localDate.toInterval(), schedule);
-    }
-
     /**
      * This method contains the business logic for if a task is clickable
+     *
      * @param task the task containing a single executable task
      * @return true if the task can be run by the user, false otherwise
      */
@@ -90,7 +102,8 @@ public class CrfScheduleHelper {
     }
 
     /**
-     * @return true if every task in the schedule on this date is complete, false in all other scenarios
+     * @return true if every task in the schedule on this date is complete, false in all other
+     * scenarios
      */
     public static boolean allTasksComplete(ScheduleModel schedule) {
         boolean allTasksComplete = true;
@@ -103,6 +116,4 @@ public class CrfScheduleHelper {
         }
         return allTasksComplete;
     }
-
-
 }

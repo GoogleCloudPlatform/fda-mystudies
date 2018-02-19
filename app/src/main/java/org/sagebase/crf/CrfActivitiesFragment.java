@@ -221,16 +221,6 @@ public class CrfActivitiesFragment extends ActivitiesFragment implements CrfFilt
     }
 
     @Override
-    protected void setUpAdapter() {
-        LinearLayoutManager lm = new LinearLayoutManager(recyclerView.getContext());
-        lm.setStackFromEnd(true);
-        recyclerView.setLayoutManager(lm);
-        recyclerView.addItemDecoration(new DividerItemDecoration(recyclerView.getContext(),
-                DividerItemDecoration.VERTICAL_LIST, 0, false));
-        fetchData();
-    }
-
-    @Override
     protected void startCustomTask(SchedulesAndTasksModel.TaskScheduleModel task) {
         if (TASK_ID_TO_RESOURCE_NAME.containsKey(task.taskID)) {
             if (task.taskID.equals(CrfTaskFactory.TASK_ID_BACKGROUND_SURVEY)) {

@@ -62,6 +62,7 @@ dependencies {
     // Important - the CameraSource implementation in this project requires version 8.1 or higher.
     implementation 'com.google.android.gms:play-services-vision:11.6.2'
 
+    testImplementation project(':test-utils')
     testImplementation 'junit:junit:4.12'
     testImplementation 'org.robolectric:robolectric:3.5'
     // Keep these older versions, since the CrfDataProvider tests relies on them

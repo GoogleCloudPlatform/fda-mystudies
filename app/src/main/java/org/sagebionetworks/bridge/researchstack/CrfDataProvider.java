@@ -256,11 +256,7 @@ public class CrfDataProvider extends BridgeDataProvider {
             // We are only interested in the clinic1 and clinic2 activities
 
             List<ScheduledActivity> clinicScheduleTriggers =
-                    Lists.newArrayList(
-                            Iterables.filter(activityList.getItems(),
-                            Predicates.compose(
-                                    Predicates.in(CLINIC_SCHEDULE_TRIGGER_TASKS_IDS),
-                                    TO_TASK_IDENTIFIER)));
+                    getClinicScheduleTriggers(activityList);
 
             if (clinicScheduleTriggers.size() != 2) {
                 listener.error(ERROR_MISSING_CLINIC_DATA_GROUP);
@@ -306,6 +302,15 @@ public class CrfDataProvider extends BridgeDataProvider {
                 findClinicScheduleTrigger(listener, clinicScheduleTriggers);
             }
         }, throwable -> listener.error(throwable.getLocalizedMessage()));
+    }
+
+    @VisibleForTesting
+    List<ScheduledActivity> getClinicScheduleTriggers(ScheduledActivityListV4 scheduledActivities) {
+        return Lists.newArrayList(
+                        Iterables.filter(scheduledActivities.getItems(),
+                                Predicates.compose(
+                                        Predicates.in(CLINIC_SCHEDULE_TRIGGER_TASKS_IDS),
+                                        TO_TASK_IDENTIFIER)));
     }
 
     @VisibleForTesting
