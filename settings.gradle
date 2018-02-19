@@ -1,4 +1,5 @@
-include ':app', ':researchstack-sdk', ':android-sdk', ':backbone'
+include ':app', ':researchstack-sdk', ':android-sdk', ':backbone', ':test-utils'
 project(':researchstack-sdk').projectDir = new File('BridgeAndroidSdk/researchstack-sdk')
 project(':android-sdk').projectDir = new File('BridgeAndroidSdk/android-sdk')
+project(':test-utils').projectDir = new File('BridgeAndroidSdk/test-utils')
 project(':backbone').projectDir = new File('BridgeAndroidSdk/ResearchStack/backbone')
