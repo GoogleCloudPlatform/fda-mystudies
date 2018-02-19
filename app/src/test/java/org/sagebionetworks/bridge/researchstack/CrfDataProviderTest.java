@@ -25,10 +25,13 @@ import android.support.annotation.NonNull;
 import android.support.annotation.VisibleForTesting;
 
 import org.joda.time.DateTime;
+import org.junit.AfterClass;
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.ClassRule;
 import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.TestRule;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
@@ -49,7 +52,6 @@ import org.sagebionetworks.bridge.android.manager.BridgeManagerProvider;
 import org.sagebionetworks.bridge.android.manager.dao.AccountDAO;
 import org.sagebionetworks.bridge.android.manager.dao.ConsentDAO;
 import org.sagebionetworks.bridge.android.manager.upload.SchemaKey;
-import org.sagebionetworks.bridge.android.util.RxSchedulersOverrideRule;
 import org.sagebionetworks.bridge.researchstack.wrapper.StorageAccessWrapper;
 import org.sagebionetworks.bridge.rest.ApiClientProvider;
 import org.sagebionetworks.bridge.rest.api.AuthenticationApi;
@@ -62,6 +64,7 @@ import org.sagebionetworks.bridge.rest.model.StudyParticipant;
 import org.sagebionetworks.bridge.rest.model.SurveyReference;
 import org.sagebionetworks.bridge.rest.model.TaskReference;
 import org.sagebionetworks.bridge.rest.model.UserSessionInfo;
+import org.sagebionetworks.research.test.utils.RxSchedulersOverrideRule;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -71,7 +74,11 @@ import java.util.List;
 import java.util.UUID;
 
 import rx.Observable;
+import rx.Scheduler;
+import rx.android.plugins.RxAndroidPlugins;
+import rx.android.plugins.RxAndroidSchedulersHook;
 import rx.functions.Action1;
+import rx.schedulers.Schedulers;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -101,9 +108,6 @@ public class CrfDataProviderTest {
     private static final int SCHEMA_REV = 3;
     private static final SchemaKey SCHEMA_KEY = new SchemaKey(SCHEMA_ID, SCHEMA_REV);
     private static final String TASK_ID = "my-task-id";
-
-    @ClassRule
-    RxSchedulersOverrideRule rxSchedulersOverrideRule = new RxSchedulersOverrideRule();
 
     private MockCrfDataProvider dataProvider;
     @Mock
@@ -135,6 +139,20 @@ public class CrfDataProviderTest {
     protected AuthenticationManager authenticationManager;
     @Mock
     private ActivityManager activityManager;
+
+    @BeforeClass
+    public static void setupClass() {
+        RxAndroidPlugins.getInstance().registerSchedulersHook(new RxAndroidSchedulersHook() {
+            public Scheduler getMainThreadScheduler() {
+                return Schedulers.immediate();
+            }
+        });
+    }
+
+    @AfterClass
+    public static void cleanupClass() {
+        RxAndroidPlugins.getInstance().reset();
+    }
 
     @Before
     public void setupTest() {
