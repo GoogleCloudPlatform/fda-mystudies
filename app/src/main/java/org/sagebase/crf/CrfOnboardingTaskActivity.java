@@ -17,6 +17,7 @@
 
 package org.sagebase.crf;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.IdRes;
@@ -28,10 +29,12 @@ import org.researchstack.backbone.step.Step;
 import org.researchstack.backbone.ui.OnboardingTaskActivity;
 import org.researchstack.backbone.ui.step.layout.StepLayout;
 import org.sagebase.crf.fitbit.FitbitManager;
+import org.sagebase.crf.fitbit.OAuthDAO;
 import org.sagebase.crf.step.CrfExternalIdStep;
 import org.sagebase.crf.step.CrfFitBitStepLayout;
 import org.sagebase.crf.view.CrfTaskToolbarIconManipulator;
 import org.sagebase.crf.view.CrfTransparentToolbar;
+import org.sagebionetworks.bridge.android.manager.BridgeManagerProvider;
 import org.sagebionetworks.research.crf.R;
 
 
@@ -96,7 +99,10 @@ public class CrfOnboardingTaskActivity extends OnboardingTaskActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == CrfFitBitStepLayout.REQUEST_CODE) {
             if (resultCode == RESULT_OK) {
-                new FitbitManager(this).handleResponse(data, (FitbitManager.ErrorHandler)
+                Context applicationContext = this.getApplicationContext();
+                new FitbitManager(applicationContext, new OAuthDAO(applicationContext,
+                        BridgeManagerProvider.getInstance().getAuthenticationManager()))
+                        .handleResponse(data, (FitbitManager.ErrorHandler)
                         getCurrentStepLayout());
             }
         }

@@ -20,6 +20,8 @@ package org.sagebase.crf.helper;
 import java.util.Calendar;
 import java.util.Date;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+
 /**
  * Created by TheMDP on 11/17/17.
  */
@@ -37,9 +39,9 @@ public class CrfDateHelper {
     }
 
     public static boolean isSameDay(Calendar cal1, Calendar cal2) {
-        if (cal1 == null || cal2 == null) {
-            throw new IllegalArgumentException("The dates must not be null");
-        }
+        checkNotNull(cal1);
+        checkNotNull(cal2);
+
         return (cal1.get(Calendar.ERA) == cal2.get(Calendar.ERA) &&
                 cal1.get(Calendar.YEAR) == cal2.get(Calendar.YEAR) &&
                 cal1.get(Calendar.DAY_OF_YEAR) == cal2.get(Calendar.DAY_OF_YEAR));
@@ -49,4 +51,5 @@ public class CrfDateHelper {
         if(date == null) return false;
         return isSameDay(date, Calendar.getInstance().getTime());
     }
+
 }

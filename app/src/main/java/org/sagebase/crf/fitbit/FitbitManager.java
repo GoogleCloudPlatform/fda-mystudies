@@ -20,9 +20,7 @@ package org.sagebase.crf.fitbit;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.net.Uri;
-import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 
 import com.google.common.base.Joiner;
@@ -39,6 +37,7 @@ import net.openid.appauth.ResponseTypeValues;
 
 import org.json.JSONException;
 import org.researchstack.backbone.ui.MainActivity;
+import org.sagebionetworks.bridge.android.manager.AuthenticationManager;
 import org.sagebionetworks.bridge.android.manager.BridgeManagerProvider;
 import org.sagebionetworks.bridge.android.util.retrofit.RxUtils;
 import org.sagebionetworks.bridge.rest.model.OAuthAuthorizationToken;
@@ -84,7 +83,7 @@ public class FitbitManager {
 
     private final Context mContext;
 
-    private final SharedPreferences mPreferences;
+    private final OAuthDAO mOAuthDAO;
 
     private final AuthorizationService authorizationService;
 
@@ -92,10 +91,10 @@ public class FitbitManager {
         void showAuthorizationErrorMessage(String errorMessage);
     }
 
-    public FitbitManager(Context applicationContext) {
+    public FitbitManager(Context applicationContext, OAuthDAO oAuthDAO) {
         mContext = applicationContext.getApplicationContext();
         authorizationService = new AuthorizationService(mContext);
-        mPreferences = PreferenceManager.getDefaultSharedPreferences(mContext);
+        mOAuthDAO = oAuthDAO;
     }
 
     /**
@@ -142,9 +141,8 @@ public class FitbitManager {
             errorHandler.showAuthorizationErrorMessage(ex.errorDescription);
         }
         AuthState state = new AuthState(resp, ex);
-        mPreferences.edit().putString(
-                PREFS_AUTH_STATE,
-                state.jsonSerializeString()).commit();
+        mOAuthDAO.putOAuthState(STUDY_OAUTH_PROVIDER_KEY, state);
+
         getAccessToken(state);
     }
 
@@ -162,26 +160,23 @@ public class FitbitManager {
                 .authToken(state.getLastAuthorizationResponse().authorizationCode);
 
         RxUtils.toBodySingle(BridgeManagerProvider.getInstance()
-                .getAuthenticationManager().getApiReference().get().requestOAuthAccessToken
-                        (STUDY_OAUTH_PROVIDER_KEY, token)).subscribe(accessToken -> {
-            LOG.debug("Successfully retrieved accessToken");
-            accessToken.getProviderUserId();
-        }, t -> {
-            LOG.warn("Failed to request access token", t);
-            // TODO: retry later using saved AuthState
-        });
+                .getAuthenticationManager().getAuthStateReference().get()
+                .forConsentedUsersApi
+                .requestOAuthAccessToken(STUDY_OAUTH_PROVIDER_KEY, token))
+                .subscribe(accessToken -> {
+                    LOG.debug("Successfully retrieved accessToken");
+                    accessToken.getProviderUserId();
+                }, t -> {
+                    LOG.warn("Failed to request access token", t);
+                    // TODO: retry later using saved AuthState
+                });
     }
 
     public AuthState getAuthState() {
-        String json = mPreferences.getString(PREFS_AUTH_STATE, null);
-        if (!Strings.isNullOrEmpty(json)) {
-            try {
-                return AuthState.jsonDeserialize(json);
-            } catch (JSONException e) {
-                LOG.error("Error deserializing saved AuthState", e);
-            }
+        AuthState authState = mOAuthDAO.getOAuthState(STUDY_OAUTH_PROVIDER_KEY);
+        if (authState != null) {
+            return authState;
         }
         return new AuthState(AUTHORIZATION_SERVICE_CONFIGURATION);
     }
-
 }

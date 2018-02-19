@@ -17,42 +17,80 @@
 
 package org.sagebase.crf.helper;
 
-import org.researchstack.backbone.model.SchedulesAndTasksModel;
+import android.support.annotation.NonNull;
+import android.support.annotation.VisibleForTesting;
 
-import java.util.Date;
+import org.joda.time.DateTime;
+import org.joda.time.Interval;
+import org.joda.time.LocalDate;
+import org.researchstack.backbone.model.SchedulesAndTasksModel;
+import org.researchstack.backbone.model.SchedulesAndTasksModel.ScheduleModel;
+
+import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
  * Created by TheMDP on 11/17/17.
  */
-
 public class CrfScheduleHelper {
+    @VisibleForTesting
+    static final DateTime NEVER = new DateTime(Long.MAX_VALUE);
+
     /**
-     * This method contains the business logic for if a schedule is clickable
-     * @param schedule the schedule containing the task group or single task
-     * @return true if view should be clickable, false otherwise
+     * Check if schedule applies at any point during an interval.
+     *
+     * @param interval interval
+     * @param schedule schedule
+     * @return true if schedule overlaps with an interval.
      */
-    public static boolean isScheduleEnabled(SchedulesAndTasksModel.ScheduleModel schedule) {
-        if (schedule == null) {
-            return false;
+    public static boolean isScheduledFor(@NonNull Interval interval,
+                                         @NonNull ScheduleModel schedule) {
+        checkNotNull(interval);
+        checkNotNull(schedule);
+
+        return interval.overlaps(getInterval(schedule));
+    }
+
+    /**
+     * Checks if schedule applies to a time.
+     *
+     * @param dateTime time
+     * @param schedule schedule
+     * @return true if schedule applies to a time
+     */
+    public static boolean isScheduledFor(@NonNull DateTime dateTime,
+                                         @NonNull ScheduleModel schedule) {
+        checkNotNull(dateTime);
+        checkNotNull(schedule);
+
+        return getInterval(schedule).contains(dateTime);
+    }
+
+    /**
+     * Checks if a schedule applies at any time during a day.
+     *
+     * @param localDate day
+     * @param schedule  schedule
+     * @return true if schedule overlaps with day
+     */
+    public static boolean isScheduledFor(@NonNull LocalDate localDate,
+                                         @NonNull ScheduleModel schedule) {
+        checkNotNull(localDate);
+        checkNotNull(schedule);
+        return isScheduledFor(localDate.toInterval(), schedule);
+    }
+
+    private static Interval getInterval(@NonNull ScheduleModel schedule) {
+        DateTime scheduledOn = new DateTime(schedule.scheduledOn);
+        DateTime expiresOn = NEVER;
+        if (schedule.expiresOn != null) {
+            expiresOn = new DateTime(schedule.expiresOn);
         }
-
-        boolean singleTaskSelectable = schedule.tasks.size() == 1 &&
-                !allTasksCompleteOn(schedule) &&
-                CrfDateHelper.isToday(schedule.scheduledOn);
-
-        boolean isTodaySameDayOrAfterClinic =
-                CrfDateHelper.isToday(schedule.scheduledOn) ||
-                new Date().after(schedule.scheduledOn);
-
-        boolean clinicGroupSelectable = schedule.tasks.size() > 1 &&
-                !allTasksCompleteOn(schedule) &&
-                isTodaySameDayOrAfterClinic;
-
-        return singleTaskSelectable || clinicGroupSelectable;
+        return new Interval(scheduledOn, expiresOn);
     }
 
     /**
      * This method contains the business logic for if a task is clickable
+     *
      * @param task the task containing a single executable task
      * @return true if the task can be run by the user, false otherwise
      */
@@ -64,9 +102,10 @@ public class CrfScheduleHelper {
     }
 
     /**
-     * @return true if every task in the schedule on this date is complete, false in all other scenarios
+     * @return true if every task in the schedule on this date is complete, false in all other
+     * scenarios
      */
-    public static boolean allTasksCompleteOn(SchedulesAndTasksModel.ScheduleModel schedule) {
+    public static boolean allTasksComplete(ScheduleModel schedule) {
         boolean allTasksComplete = true;
         if (schedule != null) {
             for (SchedulesAndTasksModel.TaskScheduleModel task : schedule.tasks) {

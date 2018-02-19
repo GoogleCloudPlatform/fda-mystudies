@@ -80,11 +80,12 @@ public class CrfPrefs {
         prefs.edit().putInt(KEY_CUSTOM_SURVEY_COUNTER, counter).apply();
     }
 
-    public boolean hasFirstSignInDate() {
-        return getFirstSignInDate() != null;
+    public boolean hasClinicDate() {
+        return getClinicDate() != null;
     }
 
-    public DateTime getFirstSignInDate() {
+    @Nullable
+    public DateTime getClinicDate() {
         String jsonString = prefs.getString(KEY_FIRST_SIGN_IN_DATE_TIME, null);
         if (jsonString == null) {
             return null;
@@ -92,7 +93,7 @@ public class CrfPrefs {
         return FORMATTER.parseDateTime(jsonString);
     }
 
-    public void setFirstSignInDate(DateTime dateTime) {
+    public void setClinicDate(DateTime dateTime) {
         // We need commit() instead of apply() to have this happen immediately
         if (dateTime == null) {
             prefs.edit().remove(KEY_FIRST_SIGN_IN_DATE_TIME).commit();

@@ -64,8 +64,8 @@
     <string name="crf_data_groups_loading_title">Checking for existing groups</string>
 
     <!-- External ID Screen -->
-    <string name="crf_external_id_title">Enter your 7-digit code</string>
-    <string name="crf_external_id_hint">7-Digit code</string>
+    <string name="crf_external_id_title">Enter your participant code</string>
+    <string name="crf_external_id_hint">Participant code</string>
     <string name="crf_external_empty"> </string>
 
 </resources>

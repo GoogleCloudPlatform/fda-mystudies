@@ -17,6 +17,7 @@
 
 package org.sagebase.crf;
 
+import android.app.Activity;
 import android.view.View;
 
 import org.researchstack.backbone.step.Step;
@@ -36,8 +37,14 @@ public class CrfSettingsActivity extends CrfOnboardingTaskActivity {
         StepLayout stepLayout = super.getLayoutForStep(step);
         setActionBarTitle("Crf Settings");
         if (stepLayout instanceof FixedSubmitBarLayout) {
-            ((FixedSubmitBarLayout)stepLayout).getSubmitBar().setVisibility(View.GONE);
+            ((FixedSubmitBarLayout) stepLayout).getSubmitBar().setVisibility(View.GONE);
         }
         return stepLayout;
+    }
+
+    @Override
+    protected void showPreviousStep() {
+        // just finish. OnboardTaskActivity also signs us out
+        finish();
     }
 }
