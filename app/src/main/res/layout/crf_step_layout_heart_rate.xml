@@ -47,6 +47,10 @@
             android:id="@+id/crf_camera_source"
             android:layout_width="@dimen/crf_video_preview"
             android:layout_height="@dimen/crf_video_preview" />
+        <TextureView
+            android:id="@+id/crf_camera_texture_view"
+            android:layout_width="300dp"
+            android:layout_height="300dp"/>
 
         <!-- This View's width and height must be set dynamically based on the camera preview size -->
         <FrameLayout

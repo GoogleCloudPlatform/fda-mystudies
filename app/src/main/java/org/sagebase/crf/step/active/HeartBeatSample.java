@@ -17,6 +17,8 @@
 
 package org.sagebase.crf.step.active;
 
+import com.google.common.base.MoreObjects;
+
 /**
  * Created by TheMDP on 10/17/17.
  */
@@ -30,4 +32,18 @@ public class HeartBeatSample {
     public float s;
     public float v;
     public int bpm;
+
+    @Override
+    public String toString() {
+        return MoreObjects.toStringHelper(this)
+                .add("t", t)
+                .add("r", r)
+                .add("g", g)
+                .add("b", b)
+                .add("h", h)
+                .add("s", s)
+                .add("v", v)
+                .add("bpm", bpm)
+                .toString();
+    }
 }

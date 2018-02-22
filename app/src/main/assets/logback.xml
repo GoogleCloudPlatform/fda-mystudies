@@ -18,8 +18,16 @@
 <configuration debug="true">
 
     <!-- Create a logcat appender -->
-    <appender name="logcat" class="ch.qos.logback.classic.android.LogcatAppender">
+    <appender name="logcatTrace" class="ch.qos.logback.classic.android.LogcatAppender">
         <encoder>
+            <!--<pattern>%msg</pattern>-->
+            <pattern>%-4relative [%thread] V %logger{35} - %msg %n</pattern>
+        </encoder>
+    </appender>
+
+    <appender name="logcatTrace" class="ch.qos.logback.classic.android.LogcatAppender">
+        <encoder>
+            <!--<pattern>%msg</pattern>-->
             <pattern>%msg</pattern>
         </encoder>
     </appender>
@@ -32,9 +40,11 @@
         </encoder>
     </appender>
 
-    <logger name="org.sagebionetworks" level="DEBUG" />
-    <logger name="org.sagebase.crf" level="DEBUG" />
-
+    <logger name="org.sagebionetworks" level="TRACE" />
+    <logger name="org.sagebase.crf" level="TRACE" />
+    <root level="TRACE">
+        <appender-ref ref="logcatTrace" />
+    </root>
     <root level="INFO">
         <appender-ref ref="logcat" />
     </root>

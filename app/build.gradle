@@ -14,6 +14,9 @@ android {
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         multiDexEnabled true
         resConfigs "en"
+
+        renderscriptTargetApi 18
+        renderscriptSupportModeEnabled true
     }
     buildTypes {
         release {
@@ -35,7 +38,6 @@ android {
     dexOptions {
         javaMaxHeapSize "4g"
     }
-
 }
 
 dependencies {

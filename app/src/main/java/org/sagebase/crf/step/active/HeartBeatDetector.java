@@ -19,26 +19,29 @@ package org.sagebase.crf.step.active;
 
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.renderscript.Allocation;
-import android.renderscript.Element;
-import android.renderscript.RenderScript;
-import android.renderscript.ScriptIntrinsicYuvToRGB;
-import android.renderscript.Type;
-import android.util.Log;
+import android.support.v8.renderscript.RenderScript;
 import android.util.SparseArray;
 
 import com.google.android.gms.vision.Detector;
 import com.google.android.gms.vision.Frame;
 
 import org.sagebase.crf.camera.CameraSource;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import static org.sagebase.crf.step.active.HeartBeatUtil.getHeartBeatSample;
+import static org.sagebase.crf.step.active.ImageUtils.toBitmap;
 
 /**
  * Created by TheMDP on 10/17/17.
  */
 
 public class HeartBeatDetector extends Detector<HeartBeatSample> {
+    private static final Logger LOG = LoggerFactory.getLogger(HeartBeatDetector.class);
+    
+    public final Context context;
+    private final RenderScript rs;
 
-    public Context context;
     public CameraSource cameraSource;
 
     private int frameCounter = 0;
@@ -57,6 +60,10 @@ public class HeartBeatDetector extends Detector<HeartBeatSample> {
     private static final int averageArraySize = 4;
     private static final int[] averageArray = new int[averageArraySize];
 
+    public HeartBeatDetector(Context applicationContext) {
+        this.context = applicationContext;
+        rs = RenderScript.create(context);
+    }
     @Override
     public SparseArray<HeartBeatSample> detect(Frame frame) {
 
@@ -69,64 +76,27 @@ public class HeartBeatDetector extends Detector<HeartBeatSample> {
         }
         frameCounter++;
         if (frameCounter % 100 == 0) {
-            Log.d("FPS", String.format("%f", 1000f / ((System.currentTimeMillis() - fpsStartTime) / frameCounter)));
+            LOG.debug("FPS: {}", 1000f / ((System.currentTimeMillis() - fpsStartTime) / frameCounter));
             frameCounter = 0;
             fpsStartTime = -1;
         }
 
         if (cameraSource == null || cameraSource.getPreviewSize() == null) {
-            Log.e("HeartBeatDetector", "Camera source or preview size is null");
+            LOG.error("Camera source or preview size is null");
             return new SparseArray<>();
         }
-
-        HeartBeatSample sample = new HeartBeatSample();
-        sample.t = now;
 
         //long startTime = System.currentTimeMillis();
         int w = cameraSource.getPreviewSize().getWidth();
         int h = cameraSource.getPreviewSize().getHeight();
 
-        RenderScript rs = RenderScript.create(context);
-        ScriptIntrinsicYuvToRGB yuvToRgbIntrinsic = ScriptIntrinsicYuvToRGB.create(rs, Element.U8_4(rs));
-
-        Type.Builder yuvType = new Type.Builder(rs, Element.U8(rs)).setX(frame.getGrayscaleImageData().array().length);
-        Allocation in = Allocation.createTyped(rs, yuvType.create(), Allocation.USAGE_SCRIPT);
-
-        Type.Builder rgbaType = new Type.Builder(rs, Element.RGBA_8888(rs)).setX(w).setY(h);
-        Allocation out = Allocation.createTyped(rs, rgbaType.create(), Allocation.USAGE_SCRIPT);
-
-        in.copyFrom(frame.getGrayscaleImageData().array());
-
-        yuvToRgbIntrinsic.setInput(in);
-        yuvToRgbIntrinsic.forEach(out);
-        Bitmap bitmap = Bitmap.createBitmap(w, h, Bitmap.Config.ARGB_8888);
-        out.copyTo(bitmap);
-
-        yuvToRgbIntrinsic.destroy();
-        rs.destroy();
+        Bitmap bitmap = toBitmap(rs, frame, w, h);
 
         // Takes about 10 ms on Samsung Galaxy S6
         //Log.d("Timing", "rgb " + (System.currentTimeMillis() - startTime));
         //startTime = System.currentTimeMillis();
 
-        // Get all the pixels of the bitmap as an array
-        long r = 0, g = 0, b = 0;
-        int intArray[] = new int[bitmap.getWidth() * bitmap.getHeight()];
-        bitmap.getPixels(intArray, 0, bitmap.getWidth(), 0, 0, bitmap.getWidth(), bitmap.getHeight());
-        for (int i = 0; i < intArray.length; i++) {
-            r += (intArray[i] >> 16) & 0xFF; // Color.red
-            g += (intArray[i] >> 8) & 0xFF; // Color.green
-            b += (intArray[i] & 0xFF); // Color.blue
-        }
-
-        long rawSampleR = r / intArray.length;
-        // Per the need to match iOS data (which gives RGB data as 0.0 - 1.0, normalize these values
-        sample.r = ((float)r / (float)intArray.length) / 255.0f;
-        sample.g = ((float)g / (float)intArray.length) / 255.0f;
-        sample.b = ((float)b / (float)intArray.length) / 255.0f;
-
-        // Calculate HSV from the rgb values
-        fillHsv(sample);
+        HeartBeatSample sample = getHeartBeatSample(now, bitmap);
 
         //Log.d("RGB", "" + sample.r + ", " + sample.g + ", " + sample.b);
         SparseArray<HeartBeatSample> samples = new SparseArray<>();
@@ -139,43 +109,13 @@ public class HeartBeatDetector extends Detector<HeartBeatSample> {
         //Log.d("Timing", "Hue " + (System.currentTimeMillis() - startTime));
         //Log.d("Hue", "" + sample.h);
 
-        float bpm = calculateBpm((int)rawSampleR);
+        float bpm = calculateBpm((int)(sample.r * 255));
         if (bpm > 0) {
             //Log.d("BPM", "" + bpm);
             sample.bpm = Math.round(bpm);
         }
 
         return samples;
-    }
-
-    void fillHsv(HeartBeatSample sample) {
-        float min = Math.min(sample.r, Math.min(sample.g, sample.b));
-        float max = Math.max(sample.r, Math.max(sample.g, sample.b));
-        float delta = max - min;
-
-        if (((int)Math.round(delta * 1000.0) == 0) || ((int)Math.round(delta * 1000.0) == 0)) {
-            sample.h = -1;
-            sample.s = 0;
-            sample.v = 0;
-            return;
-        }
-
-        float hue;
-        if (sample.r == max) {
-            hue = (sample.g - sample.b) / delta;
-        } else if (sample.g == max) {
-            hue = 2f + (sample.b - sample.r) / delta;
-        } else {
-            hue = 4f + (sample.r - sample.g) / delta;
-        }
-        hue *= 60f;
-        if (hue < 0) {
-            hue += 360f;
-        }
-
-        sample.h = hue;
-        sample.s = (delta / max);
-        sample.v = max;
     }
 
     /**

@@ -18,11 +18,15 @@
 package org.sagebase.crf.step;
 
 import android.annotation.SuppressLint;
+import android.annotation.TargetApi;
 import android.content.Context;
 import android.graphics.Path;
+import android.graphics.SurfaceTexture;
+import android.os.Build;
 import android.support.annotation.Nullable;
 import android.support.v4.content.res.ResourcesCompat;
 import android.util.AttributeSet;
+import android.view.TextureView;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AccelerateInterpolator;
@@ -46,12 +50,16 @@ import org.researchstack.backbone.ui.step.layout.ActiveStepLayout;
 import org.researchstack.backbone.ui.views.ArcDrawable;
 import org.researchstack.backbone.utils.StepResultHelper;
 import org.sagebase.crf.camera.CameraSourcePreview;
+import org.sagebase.crf.step.active.BpmRecorder;
+import org.sagebase.crf.step.active.HeartRateCamera2Recorder;
 import org.sagebase.crf.step.active.HeartRateCameraRecorder;
 import org.sagebase.crf.step.active.HeartRateCameraRecorderConfig;
 
 import org.sagebase.crf.view.CrfTaskStatusBarManipulator;
 import org.sagebase.crf.view.CrfTaskToolbarTintManipulator;
 import org.sagebionetworks.research.crf.R;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -63,19 +71,23 @@ import java.util.Locale;
  */
 
 public class CrfHeartRateStepLayout extends ActiveStepLayout implements
-        HeartRateCameraRecorder.BpmUpdateListener,
-        HeartRateCameraRecorder.IntelligentStartUpdateListener,
+        BpmRecorder.BpmUpdateListener,
+        BpmRecorder.IntelligentStartUpdateListener,
         RecorderListener,
         CrfTaskToolbarTintManipulator,
         CrfTaskStatusBarManipulator,
         CrfResultListener {
+    private static final Logger LOG = LoggerFactory.getLogger(CrfHeartRateStepLayout.class);
 
     private static final String AVERAGE_BPM_IDENTIFIER = "AVERAGE_BPM_IDENTIFIER";
     private static final String BPM_START_IDENTIFIER_SUFFIX = ".heartRate_start";
     private static final String BPM_END_IDENTIFIER_SUFFIX = ".heartRate_end";
 
     private CameraSourcePreview cameraSourcePreview;
-
+    private TextureView cameraPreview;
+    public TextureView getCameraPreview() {
+        return cameraPreview;
+    }
     protected TextView crfMessageTextView;
 
     protected View heartRateTextContainer;
@@ -95,7 +107,7 @@ public class CrfHeartRateStepLayout extends ActiveStepLayout implements
     private boolean hasDetectedStart = false;
     private List<BpmHolder> bpmList;
 
-    protected HeartRateCameraRecorder cameraRecorder;
+    protected  Recorder cameraRecorder;
     protected boolean shouldContinueOnStop = false;
     protected boolean isFinished = false;
 
@@ -138,6 +150,8 @@ public class CrfHeartRateStepLayout extends ActiveStepLayout implements
     @Override
     public void setupActiveViews() {
         super.setupActiveViews();
+
+        cameraPreview = findViewById(R.id.crf_camera_texture_view);
 
         crfMessageTextView = findViewById(R.id.crf_heart_rate_title);
         speakText(getContext().getString(R.string.crf_camera_cover));
@@ -187,19 +201,52 @@ public class CrfHeartRateStepLayout extends ActiveStepLayout implements
 
         HeartRateCameraRecorderConfig config =
                 new HeartRateCameraRecorderConfig("HeartRateCamera");
-        cameraRecorder = (HeartRateCameraRecorder)config.recorderForStep(
-                cameraSourcePreview, activeStep, getOutputDirectory(getContext()));
-        cameraRecorder.setEnableIntelligentStart(true);
-        cameraRecorder.setIntelligentStartListener(this);
-        cameraRecorder.setBpmUpdateListener(this);
+        cameraRecorder = config.recorderForStep(
+                cameraSourcePreview, activeStep, this, getOutputDirectory(getContext()));
         cameraRecorder.setRecorderListener(this);
-        cameraRecorder.start(getContext().getApplicationContext());
-
+        
+        // camera1
         // If the camera was not set up properly,
-        if (!cameraSourcePreview.isCameraSetup()) {
-            showOkAlertDialog("Error opening camera interface", (dialogInterface, i) ->
-                    callbacks.onSaveStep(StepCallbacks.ACTION_PREV, activeStep, null));
+        if (cameraRecorder instanceof HeartRateCameraRecorder) {
+            cameraRecorder.start(getContext().getApplicationContext());
+            if(!cameraSourcePreview.isCameraSetup()) {
+                showOkAlertDialog("Error opening camera interface", (dialogInterface, i) ->
+                        callbacks.onSaveStep(StepCallbacks.ACTION_PREV, activeStep, null));
+            }
         }
+        
+        // camera2
+        if((cameraRecorder instanceof HeartRateCamera2Recorder)) {
+            startRecorderForTextureView();
+        }
+    }
+    
+    private void startRecorderForTextureView() {
+        if (cameraPreview.isAvailable()) {
+            cameraRecorder.start(getContext().getApplicationContext());
+            return;
+        }
+        cameraPreview.setSurfaceTextureListener(new TextureView.SurfaceTextureListener() {
+            @Override
+            public void onSurfaceTextureAvailable(SurfaceTexture surface, int width, int height) {
+                cameraRecorder.start(getContext().getApplicationContext());
+            }
+
+            @Override
+            public void onSurfaceTextureSizeChanged(SurfaceTexture surface, int width, int height) {
+
+            }
+
+            @Override
+            public boolean onSurfaceTextureDestroyed(SurfaceTexture surface) {
+                return false;
+            }
+
+            @Override
+            public void onSurfaceTextureUpdated(SurfaceTexture surface) {
+
+            }
+        });
     }
 
     @Override
@@ -217,17 +264,27 @@ public class CrfHeartRateStepLayout extends ActiveStepLayout implements
     }
 
     // BPM and heart rate is ready to go, switch the UI
+    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     private void intelligentStartDetected() {
         hasDetectedStart = true;
         heartImageView.setVisibility(View.VISIBLE);
         arcDrawableContainer.setVisibility(View.VISIBLE);
         arcDrawable.setSweepAngle(0.0f);
 
+        if(cameraRecorder instanceof  HeartRateCamera2Recorder) {
+            startVideoRecording();
+        }
         super.start();  // start the recording process
 
         // We need to stop the camera recorder ourselves
         mainHandler.postDelayed(() -> cameraRecorder.stop(),
                 activeStep.getStepDuration() * 1000L);
+    }
+    
+    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
+    void startVideoRecording() {
+        ((HeartRateCamera2Recorder) cameraRecorder).startVideoRecording();
+    
     }
 
     @Override

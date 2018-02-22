@@ -17,10 +17,13 @@
 
 package org.sagebase.crf.step.active;
 
+import android.os.Build;
+
 import org.researchstack.backbone.step.Step;
 import org.researchstack.backbone.step.active.recorder.Recorder;
 import org.researchstack.backbone.step.active.recorder.RecorderConfig;
 import org.sagebase.crf.camera.CameraSourcePreview;
+import org.sagebase.crf.step.CrfHeartRateStepLayout;
 
 import java.io.File;
 
@@ -48,8 +51,14 @@ public class HeartRateCameraRecorderConfig extends RecorderConfig {
      * @param cameraSourcePreview a valid view that has been added to a ViewGroup already
 
      */
-    public Recorder recorderForStep(CameraSourcePreview cameraSourcePreview, Step step, File outputDirectory) {
-        // Return null because this recorder config requires special setup that is different than the rest
-        return new HeartRateCameraRecorder(cameraSourcePreview, getIdentifier(), step, outputDirectory);
+    public Recorder recorderForStep(CameraSourcePreview cameraSourcePreview, Step step,
+                                    CrfHeartRateStepLayout heartRateStepLayout,
+                                    File            outputDirectory) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            return new HeartRateCamera2Recorder(getIdentifier(), step, outputDirectory,
+                    heartRateStepLayout);
+        }
+        return new HeartRateCameraRecorder(getIdentifier(), step, outputDirectory,
+                heartRateStepLayout, cameraSourcePreview);
     }
 }
