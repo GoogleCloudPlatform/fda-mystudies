@@ -18,6 +18,7 @@
 
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/crf_root_instruction_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
@@ -43,15 +44,16 @@
         android:layout_below="@id/crf_heart_rate_title"
         android:layout_centerHorizontal="true">
 
-        <org.sagebase.crf.camera.CameraSourcePreview
-            android:id="@+id/crf_camera_source"
-            android:layout_width="@dimen/crf_video_preview"
-            android:layout_height="@dimen/crf_video_preview" />
+
         <TextureView
             android:id="@+id/crf_camera_texture_view"
             android:layout_width="300dp"
             android:layout_height="300dp"/>
 
+        <org.sagebase.crf.camera.CameraSourcePreview
+            android:id="@+id/crf_camera_source"
+            android:layout_width="@dimen/crf_video_preview"
+            android:layout_height="@dimen/crf_video_preview" />
         <!-- This View's width and height must be set dynamically based on the camera preview size -->
         <FrameLayout
             android:id="@+id/crf_arc_drawable_container"

@@ -25,6 +25,7 @@ import android.support.annotation.Nullable;
 import android.support.annotation.VisibleForTesting;
 import android.support.v4.content.res.ResourcesCompat;
 import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageButton;
@@ -40,7 +41,6 @@ import org.researchstack.backbone.task.Task;
 import org.researchstack.backbone.ui.ViewTaskActivity;
 import org.researchstack.backbone.ui.adapter.TaskAdapter;
 import org.researchstack.backbone.ui.fragment.ActivitiesFragment;
-import org.researchstack.backbone.ui.views.DividerItemDecoration;
 import org.researchstack.backbone.utils.LogExt;
 import org.sagebase.crf.helper.CrfScheduleHelper;
 import org.sagebase.crf.view.CrfFilterableActivityDisplay;
@@ -52,8 +52,6 @@ import org.sagebionetworks.research.crf.BuildConfig;
 import org.sagebionetworks.research.crf.R;
 
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -149,6 +147,12 @@ public class CrfActivitiesFragment extends ActivitiesFragment implements CrfFilt
         mSettingsButton.setOnClickListener(this::onSettingsClicked);
         mClinicHeader = view.findViewById(R.id.crf_clinic_header);
 
+        RecyclerView.LayoutManager layoutManager = recyclerView.getLayoutManager();
+        if (layoutManager instanceof  LinearLayoutManager) {
+            ((LinearLayoutManager) recyclerView.getLayoutManager()).setStackFromEnd(true);
+        } else {
+            Log.e(LOG_TAG, "RecyclerView did not have a LinearLayoutManager");
+        }
         int color = ResourcesCompat.getColor(getResources(), R.color.white, null);
         MainApplication.setStatusBarColor(getActivity(), color);
     }
@@ -188,6 +192,7 @@ public class CrfActivitiesFragment extends ActivitiesFragment implements CrfFilt
 
         crfDataProvider.getCrfActivities(getContext(), mCrfActivitiesListener);
     }
+    
 
     @SuppressLint("RxSubscribeOnError")
     private void setupSelectionHandler(boolean isSchedule) {
