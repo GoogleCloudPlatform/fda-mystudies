@@ -264,13 +264,15 @@ public class CrfHeartRateStepLayout extends ActiveStepLayout implements
     }
 
     // BPM and heart rate is ready to go, switch the UI
-    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     private void intelligentStartDetected() {
+        mainHandler.post(() -> {
+            heartImageView.setVisibility(View.VISIBLE);
+            arcDrawableContainer.setVisibility(View.VISIBLE);
+            arcDrawable.setSweepAngle(0.0f);
+        });
+        
         hasDetectedStart = true;
-        heartImageView.setVisibility(View.VISIBLE);
-        arcDrawableContainer.setVisibility(View.VISIBLE);
-        arcDrawable.setSweepAngle(0.0f);
-
+        
         if(cameraRecorder instanceof  HeartRateCamera2Recorder) {
             startVideoRecording();
         }

@@ -38,6 +38,7 @@ import android.os.HandlerThread;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.RequiresApi;
+import android.support.annotation.WorkerThread;
 import android.support.v8.renderscript.RenderScript;
 import android.util.Range;
 import android.util.Size;
@@ -61,11 +62,13 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import rx.Observable;
 import rx.Single;
 import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
+import rx.schedulers.Schedulers;
 import rx.subscriptions.CompositeSubscription;
 
 import static android.graphics.ImageFormat.YUV_420_888;
@@ -80,6 +83,15 @@ public class HeartRateCamera2Recorder extends Recorder {
     private static final Logger LOG = LoggerFactory.getLogger(HeartRateCamera2Recorder.class);
     
     public static final String MP4_CONTENT_TYPE = "video/mp4";
+    public static final long CAMERA_FRAME_DURATION_NANOS = 16_666_666L;
+    public static final long CAMERA_EXPOSURE_DURATION_NANOS = 1_000_000L;
+    public static final int CAMERA_SENSITIVITY = 400;
+    public static final int VIDEO_ENCODING_BIT_RATE = 500_000;
+    public static final int VIDEO_FRAME_RATE = 60;
+    public static final int VIDEO_ENCODER = MediaRecorder.VideoEncoder.H264;
+    public static final int VIDEO_WIDTH = 192;
+    public static final int VIDEO_SIZE = 144;
+    
     private final CompositeSubscription subscriptions;
     private final List<Surface> allSurfaces = new ArrayList(3);
     private final List<Surface> surfacesNoMediaRecorder = new ArrayList<>(2);
@@ -169,19 +181,14 @@ public class HeartRateCamera2Recorder extends Recorder {
                                     .doOnNext(session -> mediaRecorder.start())
                                     .doOnNext(session ->
                                             subscriptions.add(createImageReaderObservable(imageReader)
+                                                    .observeOn(Schedulers.computation())
+                                                    .map(this::toHeartBeatSample)
+                                                    .subscribeOn(Schedulers.io())
                                                     .doOnUnsubscribe(() -> LOG.debug("ImageReader unsubscribed"))
-                                                    .map(imageReader1 -> {
-                                                        Image image = imageReader1.acquireNextImage();
-                                                        Bitmap bitmap =
-                                                                toBitmap(renderScript, image, mVideoSize.getWidth(),
-                                                                        mVideoSize.getHeight());
-                                                        HeartBeatSample sample =
-                                                                getHeartBeatSample(image.getTimestamp(), bitmap);
-                                                        LOG.trace("Got heart beat sample: {}", sample);
-                                                        image.close();
-                                                        return sample;
-                                                    }).observeOn(AndroidSchedulers.mainThread())
-                                                    .subscribe(heartBeatJsonWriter::onHeartRateSampleDetected)))
+                                                    .subscribe(
+                                                            heartBeatJsonWriter::onHeartRateSampleDetected,
+                                                            this::recordingFailed,
+                                                            imageReader::close)))
                                     .doOnUnsubscribe(() -> LOG.debug("Capture session 0 unsubscribed"))
                                     .doOnUnsubscribe(() -> {
                                         try {
@@ -214,6 +221,22 @@ public class HeartRateCamera2Recorder extends Recorder {
         doRepeatingRequest(cameraCaptureSession, allSurfaces);
     }
     
+    @WorkerThread
+    public HeartBeatSample toHeartBeatSample(ImageReader imageReader) {
+        Image image = imageReader.acquireNextImage();
+        Bitmap bitmap =
+                toBitmap(renderScript, image, mVideoSize.getWidth(),
+                        mVideoSize.getHeight());
+
+        HeartBeatSample sample =
+                getHeartBeatSample(
+                        TimeUnit.MILLISECONDS.convert(
+                                image.getTimestamp(),
+                                TimeUnit.NANOSECONDS),
+                        bitmap);
+        image.close();
+        return sample;
+    }
     @Override
     public void setRecorderListener(RecorderListener listener) {
         super.setRecorderListener(listener);
@@ -276,8 +299,8 @@ public class HeartRateCamera2Recorder extends Recorder {
                         .get(CameraCharacteristics.SCALER_STREAM_CONFIGURATION_MAP);
 
                 // resolution
-                mVideoSize = chooseOptimalSize(streamConfigurationMap.getOutputSizes(MediaRecorder.class), 192,
-                        144);
+                mVideoSize = chooseOptimalSize(streamConfigurationMap.getOutputSizes(MediaRecorder.class), VIDEO_WIDTH,
+                        VIDEO_SIZE);
 
                 // calculate frame rate
                 long durationRecorderNs = streamConfigurationMap.getOutputMinFrameDuration(MediaRecorder.class,
@@ -426,13 +449,13 @@ public class HeartRateCamera2Recorder extends Recorder {
                 requestBuilder.addTarget(s);
             }
             requestBuilder.set(CaptureRequest.CONTROL_MODE, CaptureRequest.CONTROL_MODE_OFF);
-            requestBuilder.set(CaptureRequest.SENSOR_FRAME_DURATION, 16666666L);
+            requestBuilder.set(CaptureRequest.SENSOR_FRAME_DURATION, CAMERA_FRAME_DURATION_NANOS);
 
             // no auto-exposure
             requestBuilder.set(CaptureRequest.CONTROL_AE_MODE, CameraMetadata
                     .CONTROL_AE_MODE_OFF);
-            requestBuilder.set(CaptureRequest.SENSOR_EXPOSURE_TIME, 1000000L);
-            requestBuilder.set(CaptureRequest.SENSOR_SENSITIVITY, 400);
+            requestBuilder.set(CaptureRequest.SENSOR_EXPOSURE_TIME, CAMERA_EXPOSURE_DURATION_NANOS);
+            requestBuilder.set(CaptureRequest.SENSOR_SENSITIVITY, CAMERA_SENSITIVITY);
 
             // infinite focus distance
             requestBuilder.set(CaptureRequest.CONTROL_AF_MODE, CameraMetadata
@@ -444,8 +467,9 @@ public class HeartRateCamera2Recorder extends Recorder {
             CaptureRequest captureRequest = requestBuilder.build();
             for (CaptureRequest.Key<?> k : captureRequest.getKeys()) {
                 Object value = captureRequest.get(k);
-                LOG.trace("Capture request Key: {}, value: {}", k, value);
+                LOG.debug("Capture request Key: {}, value: {}", k, value);
             }
+            
             session.setRepeatingRequest(captureRequest, null, null);
         } catch (CameraAccessException e) {
             LOG.warn("Failed to set capture request", e);
@@ -513,10 +537,10 @@ public class HeartRateCamera2Recorder extends Recorder {
 
             mediaRecorder.setOutputFormat(MediaRecorder.OutputFormat.MPEG_4);
             mediaRecorder.setOutputFile(file.getAbsolutePath());
-            mediaRecorder.setVideoEncodingBitRate(1000000);
-            mediaRecorder.setVideoFrameRate(30);
+            mediaRecorder.setVideoEncodingBitRate(VIDEO_ENCODING_BIT_RATE);
+            mediaRecorder.setVideoFrameRate(VIDEO_FRAME_RATE);
             mediaRecorder.setVideoSize(videoSize.getWidth(), videoSize.getHeight());
-            mediaRecorder.setVideoEncoder(MediaRecorder.VideoEncoder.H264);
+            mediaRecorder.setVideoEncoder(VIDEO_ENCODER);
 
             return mediaRecorder;
         } catch (Exception e) {

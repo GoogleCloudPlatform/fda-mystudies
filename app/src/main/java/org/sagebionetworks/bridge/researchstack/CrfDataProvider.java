@@ -122,14 +122,14 @@ public class CrfDataProvider extends BridgeDataProvider {
      */
     private WeakReference<Context> weakContext;
 
-    public CrfDataProvider() {
-        super(BridgeManagerProvider.getInstance());
+    public CrfDataProvider(BridgeManagerProvider bridgeManagerProvider) {
+        super(bridgeManagerProvider);
     }
-
+    
     @VisibleForTesting
-    CrfDataProvider(ResearchStackDAO researchStackDAO, StorageAccessWrapper storageAccessWrapper,
-                    TaskHelper taskHelper) {
-        super(researchStackDAO, storageAccessWrapper, taskHelper);
+    CrfDataProvider(BridgeManagerProvider bridgeManagerProvider, ResearchStackDAO researchStackDAO,
+                    StorageAccessWrapper storageAccessWrapper, TaskHelper taskHelper) {
+        super(bridgeManagerProvider, researchStackDAO, storageAccessWrapper, taskHelper);
     }
 
     @Override
@@ -334,7 +334,7 @@ public class CrfDataProvider extends BridgeDataProvider {
         // First let's check if the user has a clinic data group already
         // This check also allows the server to pre-populate clinic groups
         Set<String> dataGroups = Sets.newHashSet(
-                BridgeManagerProvider.getInstance()
+                bridgeManagerProvider
                         .getAuthenticationManager()
                         .getUserSessionInfo()
                         .getDataGroups());

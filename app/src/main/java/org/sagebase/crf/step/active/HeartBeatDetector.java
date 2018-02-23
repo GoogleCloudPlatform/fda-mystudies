@@ -47,19 +47,10 @@ public class HeartBeatDetector extends Detector<HeartBeatSample> {
     private int frameCounter = 0;
     private long fpsStartTime = -1;
 
-    public enum TYPE {
-        GREEN, RED
-    };
-    private static TYPE currentType = TYPE.GREEN;
-    private static int beatsIndex = 0;
-    private static final int beatsArraySize = 3;
-    private static final int[] beatsArray = new int[beatsArraySize];
-    private static double beats = 0;
+    
     private static long startTime = -1;
-    private static int averageIndex = 0;
-    private static final int averageArraySize = 4;
-    private static final int[] averageArray = new int[averageArraySize];
-
+    
+    
     public HeartBeatDetector(Context applicationContext) {
         this.context = applicationContext;
         rs = RenderScript.create(context);
@@ -108,83 +99,9 @@ public class HeartBeatDetector extends Detector<HeartBeatSample> {
 
         //Log.d("Timing", "Hue " + (System.currentTimeMillis() - startTime));
         //Log.d("Hue", "" + sample.h);
-
-        float bpm = calculateBpm((int)(sample.r * 255));
-        if (bpm > 0) {
-            //Log.d("BPM", "" + bpm);
-            sample.bpm = Math.round(bpm);
-        }
-
+        
         return samples;
     }
 
-    /**
-     * Calculates a simple running average bpm to display to the user for their heart rate
-     * @param imgAvg the average red color in the algorithm, can also be average hue
-     * @return
-     */
-    int calculateBpm(int imgAvg) {
-        int averageArrayAvg = 0;
-        int averageArrayCnt = 0;
-        for (int i = 0; i < averageArray.length; i++) {
-            if (averageArray[i] > 0) {
-                averageArrayAvg += averageArray[i];
-                averageArrayCnt++;
-            }
-        }
-
-        int rollingAverage = (averageArrayCnt > 0) ? (averageArrayAvg / averageArrayCnt) : 0;
-        TYPE newType = currentType;
-        if (imgAvg < rollingAverage) {
-            newType = TYPE.RED;
-            if (newType != currentType) {
-                beats++;
-                // Log.d(TAG, "BEAT!! beats="+beats);
-            }
-        } else if (imgAvg > rollingAverage) {
-            newType = TYPE.GREEN;
-        }
-
-        if (averageIndex == averageArraySize) averageIndex = 0;
-        averageArray[averageIndex] = imgAvg;
-        averageIndex++;
-
-        // Transitioned from one state to another to the same
-        if (newType != currentType) {
-            currentType = newType;
-        }
-
-        long endTime = System.currentTimeMillis();
-        double totalTimeInSecs = (endTime - startTime) / 1000d;
-        if (totalTimeInSecs >= 10) {
-            double bps = (beats / totalTimeInSecs);
-            int dpm = (int) (bps * 60d);
-            if (dpm < 30 || dpm > 180) {
-                startTime = System.currentTimeMillis();
-                beats = 0;
-                return -1;
-            }
-
-            // Log.d(TAG,
-            // "totalTimeInSecs="+totalTimeInSecs+" beats="+beats);
-
-            if (beatsIndex == beatsArraySize) beatsIndex = 0;
-            beatsArray[beatsIndex] = dpm;
-            beatsIndex++;
-
-            int beatsArrayAvg = 0;
-            int beatsArrayCnt = 0;
-            for (int i = 0; i < beatsArray.length; i++) {
-                if (beatsArray[i] > 0) {
-                    beatsArrayAvg += beatsArray[i];
-                    beatsArrayCnt++;
-                }
-            }
-            int beatsAvg = (beatsArrayAvg / beatsArrayCnt);
-            startTime = System.currentTimeMillis();
-            beats = 0;
-            return beatsAvg;
-        }
-        return -1;
-    }
+    
 }

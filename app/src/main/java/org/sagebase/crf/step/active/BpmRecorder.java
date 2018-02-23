@@ -18,6 +18,9 @@
 package org.sagebase.crf.step.active;
 
 import android.content.Context;
+import android.os.Handler;
+import android.os.Looper;
+import android.util.Log;
 
 import com.google.gson.JsonObject;
 
@@ -61,6 +64,106 @@ public interface BpmRecorder {
          */
         void intelligentStartUpdate(float progress, boolean ready);
     }
+    
+    class BpmCalculator {
+    
+        public enum TYPE {
+            GREEN, RED
+        };
+
+        private static final int BEATS_ARRAY_SIZE = 3;
+        private static final int AVERAGE_ARRAY_SIZE = 4;
+        private static int beatsIndex = 0;
+    
+        private TYPE currentType = TYPE.GREEN;
+        private int beats = 0;
+        private int averageIndex = 0;
+    
+        private final int[] beatsArray = new int[BEATS_ARRAY_SIZE];
+        private final int[] averageArray = new int[AVERAGE_ARRAY_SIZE];
+    
+        private long startTime = -1;
+    
+    
+        /**
+         * Calculates a simple running average bpm to display to the user for their heart rate. Updates the sample
+         * with the calculated bpm, if there is one.
+         *
+         * @param heartBeatSample heartBeatSample
+         */
+        public void calculateBpm(HeartBeatSample heartBeatSample) {
+            int imgAvg = (int) (heartBeatSample.r * 255);
+            if (startTime < 0) {
+                startTime = heartBeatSample.t;
+            }
+            
+            int averageArrayAvg = 0;
+            int averageArrayCnt = 0;
+            for (int i = 0; i < averageArray.length; i++) {
+                if (averageArray[i] > 0) {
+                    averageArrayAvg += averageArray[i];
+                    averageArrayCnt++;
+                }
+            }
+        
+            int rollingAverage = (averageArrayCnt > 0) ? (averageArrayAvg / averageArrayCnt) : 0;
+            TYPE newType = currentType;
+            if (imgAvg < rollingAverage) {
+                newType = TYPE.RED;
+                if (newType != currentType) {
+                    beats++;
+                    // Log.d(TAG, "BEAT!! beats="+beats);
+                }
+            } else if (imgAvg > rollingAverage) {
+                newType = TYPE.GREEN;
+            }
+        
+            if (averageIndex == AVERAGE_ARRAY_SIZE) averageIndex = 0;
+            averageArray[averageIndex] = imgAvg;
+            averageIndex++;
+        
+            // Transitioned from one state to another to the same
+            if (newType != currentType) {
+                currentType = newType;
+            }
+        
+            long endTime =  heartBeatSample.t;
+            double totalTimeInSecs = (endTime - startTime) / 1000d;
+            Log.v("calculateBPM", "total time: " + totalTimeInSecs);
+            if (totalTimeInSecs >= 10) {
+                double beatsPerSecond = (beats / totalTimeInSecs);
+                int beatsPerMinute = (int) (beatsPerSecond * 60d);
+                if (beatsPerMinute < 30 || beatsPerMinute > 180) {
+                    // reset
+                    startTime = heartBeatSample.t;
+                    beats = 0;
+                    return;
+                }
+            
+                // Log.d(TAG,
+                // "totalTimeInSecs="+totalTimeInSecs+" beats="+beats);
+            
+                if (beatsIndex == BEATS_ARRAY_SIZE) beatsIndex = 0;
+                beatsArray[beatsIndex] = beatsPerMinute;
+                beatsIndex++;
+            
+                int beatsArrayAvg = 0;
+                int beatsArrayCnt = 0;
+                for (int aBeatsArray : beatsArray) {
+                    if (aBeatsArray > 0) {
+                        beatsArrayAvg += aBeatsArray;
+                        beatsArrayCnt++;
+                    }
+                }
+                int beatsAvg = (beatsArrayAvg / beatsArrayCnt);
+                // reset
+                startTime = heartBeatSample.t;
+                beats = 0;
+                
+                heartBeatSample.bpm = beatsAvg;
+            }
+        }
+    }
 
     class HeartBeatJsonWriter extends JsonArrayDataRecorder
             implements HeartbeatSampleTracker
@@ -88,10 +191,12 @@ public interface BpmRecorder {
         private boolean mEnableIntelligentStart = true;
         private boolean mIntelligentStartPassed = false;
         private int mIntelligentStartCounter = 0;
+        private boolean isRecordingStarted = false;
 
         private final BpmRecorder.BpmUpdateListener mBpmUpdateListener;
         private final BpmRecorder.IntelligentStartUpdateListener mIntelligentStartListener;
 
+        private final BpmCalculator bpmCalculator;
         public HeartBeatJsonWriter(BpmUpdateListener
                                            mBpmUpdateListener, IntelligentStartUpdateListener
                 mIntelligentStartListener,
@@ -100,10 +205,13 @@ public interface BpmRecorder {
 
             this.mBpmUpdateListener = mBpmUpdateListener;
             this.mIntelligentStartListener = mIntelligentStartListener;
+            this.bpmCalculator = new BpmCalculator();
         }
 
         @Override
         public void onHeartRateSampleDetected(HeartBeatSample sample) {
+            bpmCalculator.calculateBpm(sample);
+    
             mJsonObject.addProperty(TIMESTAMP_IN_SECONDS_KEY, sample.t / 1000F);
             mJsonObject.addProperty(HUE_KEY, sample.h);
             mJsonObject.addProperty(SATURATION_KEY, sample.s);
@@ -122,7 +230,9 @@ public interface BpmRecorder {
                 mJsonObject.remove(HEART_RATE_KEY);
             }
             
-            LOG.trace("HeartBeatSample: {}", sample);
+            if (LOG.isTraceEnabled()){
+                LOG.trace("HeartBeatSample: {}", sample);
+            }
 
             if (!mEnableIntelligentStart || mIntelligentStartPassed) {
                 writeJsonObjectToFile(mJsonObject);
@@ -145,7 +255,6 @@ public interface BpmRecorder {
                 greenBlueSum = 0.0000000001f;
             }
             float redFactor = sample.r / greenBlueSum;
-            LOG.debug("RedFactor: {}", redFactor);
             
             // If the red factor is large enough, we update the trigger
             if (redFactor >= redIntensityFactorThreshold) {
@@ -156,6 +265,7 @@ public interface BpmRecorder {
                 if (mIntelligentStartListener != null) {
                     float progress = (float) mIntelligentStartCounter / (float)
                             INTELLIGENT_START_FRAMES_TO_PASS;
+    
                     mIntelligentStartListener.intelligentStartUpdate(progress,
                             mIntelligentStartPassed);
                 }
@@ -168,13 +278,17 @@ public interface BpmRecorder {
         @Override
         public void start(Context context) {
             startJsonDataLogging();
+            isRecordingStarted = true;
             mIntelligentStartPassed = false;
             mIntelligentStartCounter = 0;
         }
 
         @Override
         public void stop() {
-            stopJsonDataLogging();
+            if (isRecordingStarted) {
+                stopJsonDataLogging();
+            }
         }
+        
     }
 }

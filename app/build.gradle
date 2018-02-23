@@ -59,6 +59,11 @@ dependencies {
     implementation 'com.google.code.gson:gson:2.8.2'
     implementation 'com.google.guava:guava:23.2-android'
 
+    implementation 'com.google.dagger:dagger-android:2.14.1'
+    implementation 'com.google.dagger:dagger-android-support:2.14.1'
+    annotationProcessor 'com.google.dagger:dagger-android-processor:2.14.1'
+    annotationProcessor "com.google.dagger:dagger-compiler:2.14.1"
+
     implementation project(':researchstack-sdk')
 
     // Important - the CameraSource implementation in this project requires version 8.1 or higher.

@@ -90,8 +90,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import static org.sagebionetworks.bridge.researchstack.CrfDataProvider
-        .ERROR_MISSING_CLINIC_DATA_GROUP;
+import static org.sagebionetworks.bridge.researchstack.CrfDataProvider.ERROR_MISSING_CLINIC_DATA_GROUP;
 
 /**
  * Created by mdephillips on 11/5/17
@@ -153,9 +152,7 @@ public class CrfDataProviderTest {
     @Before
     public void setupTest() {
         MockitoAnnotations.initMocks(this);
-
-        BridgeManagerProvider.init(bridgeManagerProvider);
-
+        
         when(bridgeManagerProvider.getApplicationContext()).thenReturn(context);
         when(bridgeManagerProvider.getBridgeConfig()).thenReturn(bridgeConfig);
         when(bridgeManagerProvider.getAccountDao()).thenReturn(accountDAO);
@@ -189,7 +186,7 @@ public class CrfDataProviderTest {
             initialDataGroup) {
         dataProvider = new MockCrfDataProvider(
                 firstSignInDate, assignClinic1, initialDataGroup,
-                researchStackDAO, storageAccess, taskHelper);
+                researchStackDAO, storageAccess, taskHelper, bridgeManagerProvider);
         dataProvider.mockGetAllActiities(successList(assignClinic1));
         dataProvider.setShouldThrowErrorWithoutClinicDataGroup(true);
     }
@@ -546,12 +543,11 @@ public class CrfDataProviderTest {
         private DateTime COMPLETION_TIME_CLINIC2 = DateTime.parse("2017-11-01T07:02-0700");
 
         @VisibleForTesting
-        MockCrfDataProvider(DateTime firstSignInDate, boolean assignClinic1, String
-                initialDataGroup,
-                            ResearchStackDAO researchStackDAO, StorageAccessWrapper
-                                    storageAccessWrapper, TaskHelper taskHelper) {
+        MockCrfDataProvider(DateTime firstSignInDate, boolean assignClinic1, String initialDataGroup,
+                            ResearchStackDAO researchStackDAO, StorageAccessWrapper storageAccessWrapper,
+                            TaskHelper taskHelper, BridgeManagerProvider bridgeManagerProvider) {
 
-            super(researchStackDAO, storageAccessWrapper, taskHelper);
+            super(bridgeManagerProvider, researchStackDAO, storageAccessWrapper, taskHelper);
             prefs = new MockCrfPrefs(firstSignInDate);
             isRandomClient1 = assignClinic1;
             this.initialDataGroup = initialDataGroup;

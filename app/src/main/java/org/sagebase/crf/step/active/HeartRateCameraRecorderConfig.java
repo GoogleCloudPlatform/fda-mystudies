@@ -53,7 +53,7 @@ public class HeartRateCameraRecorderConfig extends RecorderConfig {
      */
     public Recorder recorderForStep(CameraSourcePreview cameraSourcePreview, Step step,
                                     CrfHeartRateStepLayout heartRateStepLayout,
-                                    File            outputDirectory) {
+                                    File outputDirectory) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             return new HeartRateCamera2Recorder(getIdentifier(), step, outputDirectory,
                     heartRateStepLayout);

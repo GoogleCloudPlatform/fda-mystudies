@@ -15,6 +15,10 @@ import android.view.WindowManager;
 import org.researchstack.backbone.StorageAccess;
 import org.researchstack.backbone.ResearchStack;
 import org.sagebionetworks.bridge.android.BridgeApplication;
+import org.sagebionetworks.bridge.android.di.ApplicationModule;
+import org.sagebionetworks.bridge.android.di.BridgeServiceModule;
+import org.sagebionetworks.bridge.android.manager.BridgeManagerProvider;
+import org.sagebionetworks.bridge.android.manager.DaggerBridgeManagerProvider;
 import org.sagebionetworks.bridge.researchstack.CrfResearchStack;
 import org.sagebionetworks.research.crf.R;
 
@@ -37,6 +41,14 @@ public class MainApplication extends BridgeApplication {
 
         researchStack = new CrfResearchStack(this);
         ResearchStack.init(this, researchStack);
+    }
+    
+    @Override
+    protected BridgeManagerProvider initBridgeManagerProvider() {
+    return DaggerBridgeManagerProvider.builder()
+            .applicationModule(new ApplicationModule(this))
+            .s3Module(new CrfS3Module())
+            .build();
     }
 
     @Override

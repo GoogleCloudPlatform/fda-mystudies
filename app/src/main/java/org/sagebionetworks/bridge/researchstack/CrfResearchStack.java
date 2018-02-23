@@ -18,6 +18,7 @@ import org.researchstack.backbone.UiManager;
 import org.researchstack.backbone.notification.NotificationConfig;
 import org.researchstack.backbone.notification.SimpleNotificationConfig;
 import org.researchstack.backbone.onboarding.OnboardingManager;
+import org.sagebionetworks.bridge.android.manager.BridgeManagerProvider;
 
 /**
  * Created by TheMDP on 12/12/16.
@@ -102,7 +103,7 @@ public class CrfResearchStack extends ResearchStack {
     @Override
     protected DataProvider createDataProviderImplementation(Context context) {
         if (mDataProvider == null) {
-            mDataProvider = new CrfDataProvider();
+            mDataProvider = new CrfDataProvider(BridgeManagerProvider.getInstance());
         }
         return mDataProvider;
     }
