@@ -159,14 +159,16 @@ public class CrfHeartRateStepLayout extends ActiveStepLayout implements
 
         cameraSourcePreview = findViewById(R.id.crf_camera_source);
         cameraSourcePreview.setSurfaceMask(true);
-        cameraSourcePreview.setCameraSizeListener((width, height) -> {
-            ViewGroup.LayoutParams params = arcDrawableContainer.getLayoutParams();
-            int size = Math.min(width, height);
-            params.width = size;
-            params.height = size;
-            arcDrawableContainer.setLayoutParams(params);
-            arcDrawableContainer.requestLayout();
-        });
+        if (cameraRecorder instanceof HeartRateCameraRecorder) {
+            cameraSourcePreview.setCameraSizeListener((width, height) -> {
+                ViewGroup.LayoutParams params = arcDrawableContainer.getLayoutParams();
+                int size = Math.min(width, height);
+                params.width = size;
+                params.height = size;
+                arcDrawableContainer.setLayoutParams(params);
+                arcDrawableContainer.requestLayout();
+            });
+        }
 
         heartRateTextContainer = findViewById(R.id.crf_bpm_text_container);
         heartRateTextContainer.setVisibility(View.GONE);
@@ -217,6 +219,7 @@ public class CrfHeartRateStepLayout extends ActiveStepLayout implements
         
         // camera2
         if((cameraRecorder instanceof HeartRateCamera2Recorder)) {
+            cameraSourcePreview.setVisibility(GONE);
             startRecorderForTextureView();
         }
     }
@@ -269,6 +272,8 @@ public class CrfHeartRateStepLayout extends ActiveStepLayout implements
             heartImageView.setVisibility(View.VISIBLE);
             arcDrawableContainer.setVisibility(View.VISIBLE);
             arcDrawable.setSweepAngle(0.0f);
+            cameraPreview.setVisibility(View.INVISIBLE);
+            cameraSourcePreview.setVisibility(View.INVISIBLE);
         });
         
         hasDetectedStart = true;
