@@ -219,7 +219,7 @@ public class CrfHeartRateStepLayout extends ActiveStepLayout implements
         
         // camera2
         if((cameraRecorder instanceof HeartRateCamera2Recorder)) {
-            cameraSourcePreview.setVisibility(INVISIBLE);
+            cameraSourcePreview.setVisibility(GONE);
             startRecorderForTextureView();
         }
     }
