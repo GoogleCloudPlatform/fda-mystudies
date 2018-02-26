@@ -44,21 +44,30 @@
         android:layout_below="@id/crf_heart_rate_title"
         android:layout_centerHorizontal="true">
 
+        <FrameLayout
+            android:layout_width="@dimen/crf_video_preview"
+            android:layout_height="@dimen/crf_video_preview">
+            <TextureView
+                android:id="@+id/crf_camera_texture_view"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"/>
 
-        <TextureView
-            android:id="@+id/crf_camera_texture_view"
-            android:layout_width="300dp"
-            android:layout_height="300dp"/>
+            <org.sagebase.crf.step.OverlayWithHole
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"/>
+
+        </FrameLayout>
 
         <org.sagebase.crf.camera.CameraSourcePreview
             android:id="@+id/crf_camera_source"
             android:layout_width="@dimen/crf_video_preview"
             android:layout_height="@dimen/crf_video_preview" />
+
         <!-- This View's width and height must be set dynamically based on the camera preview size -->
         <FrameLayout
             android:id="@+id/crf_arc_drawable_container"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
+            android:layout_width="@dimen/crf_video_preview"
+            android:layout_height="@dimen/crf_video_preview"
             android:layout_gravity="center"
             android:visibility="gone"
             android:background="@color/white">

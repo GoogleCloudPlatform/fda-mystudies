@@ -36,6 +36,7 @@ import java.io.File;
  */
 
 public interface BpmRecorder {
+    
     public abstract void setEnableIntelligentStart(boolean enableIntelligenetStart);
 
     public abstract void setIntelligentStartListener(IntelligentStartUpdateListener
@@ -168,8 +169,10 @@ public interface BpmRecorder {
     class HeartBeatJsonWriter extends JsonArrayDataRecorder
             implements HeartbeatSampleTracker
             .HeartRateUpdateListener {
+   
         private static final Logger LOG = LoggerFactory.getLogger(HeartBeatJsonWriter.class);
-        
+    
+        private static final int RED_INTENSITY_FACTOR_THRESHOLD = 3;
         private static final String TIMESTAMP_IN_SECONDS_KEY = "timestamp";
         private static final String HEART_RATE_KEY = "bpm_camera";
         private static final String HUE_KEY = "hue";
@@ -249,7 +252,6 @@ public interface BpmRecorder {
             // When a finger is placed in front of the camera with the flash on,
             // the camera image will be almost entirely red, so use a simple lenient algorithm
             // for this
-            int redIntensityFactorThreshold = 4;
             float greenBlueSum = sample.g + sample.b;
             if (greenBlueSum == 0.0f) {
                 greenBlueSum = 0.0000000001f;
@@ -257,7 +259,7 @@ public interface BpmRecorder {
             float redFactor = sample.r / greenBlueSum;
             
             // If the red factor is large enough, we update the trigger
-            if (redFactor >= redIntensityFactorThreshold) {
+            if (redFactor >= RED_INTENSITY_FACTOR_THRESHOLD) {
                 mIntelligentStartCounter++;
                 if (mIntelligentStartCounter >= INTELLIGENT_START_FRAMES_TO_PASS) {
                     mIntelligentStartPassed = true;
@@ -286,6 +288,7 @@ public interface BpmRecorder {
         @Override
         public void stop() {
             if (isRecordingStarted) {
+                isRecordingStarted = false;
                 stopJsonDataLogging();
             }
         }
