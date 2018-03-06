@@ -23,7 +23,9 @@ import android.content.Context;
 import android.graphics.Path;
 import android.graphics.SurfaceTexture;
 import android.os.Build;
+import android.support.annotation.MainThread;
 import android.support.annotation.Nullable;
+import android.support.annotation.UiThread;
 import android.support.v4.content.res.ResourcesCompat;
 import android.util.AttributeSet;
 import android.view.TextureView;
@@ -308,6 +310,7 @@ public class CrfHeartRateStepLayout extends ActiveStepLayout implements
         crfMessageTextView.setText(spokenText);
     }
 
+    @UiThread
     public void bpmUpdate(BpmHolder bpmHolder) {
         if (heartBeatAnimation == null) {
             heartBeatAnimation = new HeartBeatAnimation(bpmHolder.bpm);
