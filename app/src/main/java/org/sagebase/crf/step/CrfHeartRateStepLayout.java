@@ -23,7 +23,6 @@ import android.content.Context;
 import android.graphics.Path;
 import android.graphics.SurfaceTexture;
 import android.os.Build;
-import android.support.annotation.MainThread;
 import android.support.annotation.Nullable;
 import android.support.annotation.UiThread;
 import android.support.v4.content.res.ResourcesCompat;
@@ -56,7 +55,6 @@ import org.sagebase.crf.step.active.BpmRecorder;
 import org.sagebase.crf.step.active.HeartRateCamera2Recorder;
 import org.sagebase.crf.step.active.HeartRateCameraRecorder;
 import org.sagebase.crf.step.active.HeartRateCameraRecorderConfig;
-
 import org.sagebase.crf.view.CrfTaskStatusBarManipulator;
 import org.sagebase.crf.view.CrfTaskToolbarTintManipulator;
 import org.sagebionetworks.research.crf.R;
@@ -270,13 +268,11 @@ public class CrfHeartRateStepLayout extends ActiveStepLayout implements
 
     // BPM and heart rate is ready to go, switch the UI
     private void intelligentStartDetected() {
-        mainHandler.post(() -> {
-            heartImageView.setVisibility(View.VISIBLE);
-            arcDrawableContainer.setVisibility(View.VISIBLE);
-            arcDrawable.setSweepAngle(0.0f);
-            cameraPreview.setVisibility(View.INVISIBLE);
-            cameraSourcePreview.setVisibility(View.INVISIBLE);
-        });
+        heartImageView.setVisibility(View.VISIBLE);
+        arcDrawableContainer.setVisibility(View.VISIBLE);
+        arcDrawable.setSweepAngle(0.0f);
+        cameraPreview.setVisibility(View.INVISIBLE);
+        cameraSourcePreview.setVisibility(View.INVISIBLE);
         
         hasDetectedStart = true;
         

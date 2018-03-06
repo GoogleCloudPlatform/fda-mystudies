@@ -22,7 +22,6 @@ import android.os.Handler;
 import android.os.Looper;
 import android.support.annotation.AnyThread;
 import android.support.annotation.UiThread;
-import android.support.annotation.WorkerThread;
 import android.util.Log;
 
 import com.google.gson.JsonObject;
@@ -39,13 +38,6 @@ import java.io.File;
  */
 
 public interface BpmRecorder {
-    
-    public abstract void setEnableIntelligentStart(boolean enableIntelligenetStart);
-    
-    public abstract void setIntelligentStartListener(IntelligentStartUpdateListener
-                                                             intelligentStartListener);
-    
-    public abstract void setBpmUpdateListener(BpmUpdateListener bpmUpdateListener);
     
     interface BpmUpdateListener {
         class BpmHolder {
@@ -283,9 +275,11 @@ public interface BpmRecorder {
                 if (mIntelligentStartListener != null) {
                     float progress = (float) mIntelligentStartCounter / (float)
                             INTELLIGENT_START_FRAMES_TO_PASS;
-                    
-                    mIntelligentStartListener.intelligentStartUpdate(progress,
-                            mIntelligentStartPassed);
+    
+                    mainHandler.post(() ->
+                            mIntelligentStartListener.intelligentStartUpdate(progress,
+                                    mIntelligentStartPassed)
+                    );
                 }
                 
             } else {  // We need thresholds to be passed sequentially otherwise it is restarted
