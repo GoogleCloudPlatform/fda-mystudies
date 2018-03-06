@@ -18,8 +18,10 @@
 package org.sagebase.crf.step.active;
 
 import android.os.Handler;
+import android.support.annotation.AnyThread;
 import android.support.annotation.MainThread;
 import android.support.annotation.UiThread;
+import android.support.annotation.WorkerThread;
 
 import com.google.android.gms.vision.Detector;
 import com.google.android.gms.vision.Tracker;
@@ -43,7 +45,7 @@ public class HeartbeatSampleTracker extends Tracker<HeartBeatSample> {
      * HeartRateUpdateListener interface method onHeartRateDetected.
      */
     public interface HeartRateUpdateListener {
-        @UiThread
+        @AnyThread
         void onHeartRateSampleDetected(HeartBeatSample sample);
     }
 
@@ -64,7 +66,7 @@ public class HeartbeatSampleTracker extends Tracker<HeartBeatSample> {
             }
         });
     }
-
+    
     /**
      * Update the position/characteristics of the item within the overlay.
      */
