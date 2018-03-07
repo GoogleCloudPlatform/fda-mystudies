@@ -143,9 +143,6 @@ public class HeartRateCamera2Recorder extends Recorder {
         Observable<CameraCaptureSession> cameraCaptureSessionObservable =
                 openCameraObservable(manager, cameraId)
                         .doOnUnsubscribe(() -> LOG.debug("Camera Capture unsubscribed"))
-                        .doOnNext(cameraDevice -> {
-                            setRecording(true);
-                        })
                         .flatMap(cameraDevice -> {
                             // video recording surface
                             mediaRecorder =
@@ -260,8 +257,8 @@ public class HeartRateCamera2Recorder extends Recorder {
             FileResult fileResult = new FileResult(fileResultIdentifier(), mediaRecorderFile, MP4_CONTENT_TYPE);
             fileResult.setStartDate(startTime.toDate());
             fileResult.setEndDate(new Date());
-            // joliu test
-            //getRecorderListener().onComplete(this, fileResult);
+    
+            getRecorderListener().onComplete(this, fileResult);
         }
     }
 

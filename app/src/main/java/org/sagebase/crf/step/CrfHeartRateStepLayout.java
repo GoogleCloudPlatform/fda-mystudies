@@ -44,6 +44,7 @@ import org.researchstack.backbone.result.StepResult;
 import org.researchstack.backbone.result.TaskResult;
 import org.researchstack.backbone.step.QuestionStep;
 import org.researchstack.backbone.step.Step;
+import org.researchstack.backbone.step.active.recorder.JsonArrayDataRecorder;
 import org.researchstack.backbone.step.active.recorder.Recorder;
 import org.researchstack.backbone.step.active.recorder.RecorderListener;
 import org.researchstack.backbone.ui.callbacks.StepCallbacks;
@@ -255,10 +256,13 @@ public class CrfHeartRateStepLayout extends ActiveStepLayout implements
     @Override
     public void pauseActiveStepLayout() {
         super.pauseActiveStepLayout();
-        forceStop();  // we do not allow this step to run in the background
-        callbacks.onSaveStep(StepCallbacks.ACTION_PREV, activeStep, null);
+        if (!isFinished) { // pause happens when we've finished too. forceStop deletes the .mp4
+            forceStop();  // we do not allow this step to run in the background
+            callbacks.onSaveStep(StepCallbacks.ACTION_PREV, activeStep, null);
+        }
     }
 
+    @Override
     public void forceStop() {
         super.forceStop();
         if (cameraRecorder != null && cameraRecorder.isRecording()) {
@@ -431,7 +435,11 @@ public class CrfHeartRateStepLayout extends ActiveStepLayout implements
     @Override
     public void onComplete(Recorder recorder, Result result) {
         stepResult.setResultForIdentifier(recorder.getIdentifier(), result);
-        showCompleteUi();
+        
+        // don't do this for video recorder, wait for heart rate JSON
+        if (recorder instanceof JsonArrayDataRecorder) {
+            showCompleteUi();
+        }
     }
 
     @Override
