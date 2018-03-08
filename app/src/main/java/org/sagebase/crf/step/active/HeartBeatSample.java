@@ -24,7 +24,7 @@ import com.google.common.base.MoreObjects;
  */
 
 public class HeartBeatSample {
-    public long t;
+    public double t;
     public float r;
     public float g;
     public float b;

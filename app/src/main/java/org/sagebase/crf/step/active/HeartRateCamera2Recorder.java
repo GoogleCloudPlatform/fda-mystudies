@@ -18,6 +18,7 @@
 package org.sagebase.crf.step.active;
 
 import android.annotation.SuppressLint;
+import android.annotation.TargetApi;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.SurfaceTexture;
@@ -234,11 +235,7 @@ public class HeartRateCamera2Recorder extends Recorder {
                         mVideoSize.getHeight());
 
         HeartBeatSample sample =
-                getHeartBeatSample(
-                        TimeUnit.MILLISECONDS.convert(
-                                image.getTimestamp(),
-                                TimeUnit.NANOSECONDS),
-                        bitmap);
+                getHeartBeatSample(image.getTimestamp() / 1_000_000D, bitmap);
         image.close();
         return sample;
     }

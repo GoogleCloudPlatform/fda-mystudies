@@ -82,7 +82,7 @@ public interface BpmRecorder {
         private final int[] beatsArray = new int[BEATS_ARRAY_SIZE];
         private final int[] averageArray = new int[AVERAGE_ARRAY_SIZE];
         
-        private long startTime = -1;
+        private double startTime = -1;
         
         
         /**
@@ -129,7 +129,7 @@ public interface BpmRecorder {
                 currentType = newType;
             }
             
-            long endTime = heartBeatSample.t;
+            double endTime = heartBeatSample.t;
             double totalTimeInSecs = (endTime - startTime) / 1000d;
             Log.v("calculateBPM", "total time: " + totalTimeInSecs);
             if (totalTimeInSecs >= 10) {
@@ -222,7 +222,7 @@ public interface BpmRecorder {
         public void onHeartRateSampleDetected(HeartBeatSample sample) {
             bpmCalculator.calculateBpm(sample);
             
-            mJsonObject.addProperty(TIMESTAMP_IN_SECONDS_KEY, sample.t / 1000F);
+            mJsonObject.addProperty(TIMESTAMP_IN_SECONDS_KEY,  sample.t / 1_000);
             mJsonObject.addProperty(HUE_KEY, sample.h);
             mJsonObject.addProperty(SATURATION_KEY, sample.s);
             mJsonObject.addProperty(BRIGHTNESS_KEY, sample.v);
@@ -235,7 +235,7 @@ public interface BpmRecorder {
                 if (mBpmUpdateListener != null) {
                     mainHandler.post(() ->
                             mBpmUpdateListener.bpmUpdate(
-                                    new BpmRecorder.BpmUpdateListener.BpmHolder(sample.bpm, sample.t)));
+                                    new BpmRecorder.BpmUpdateListener.BpmHolder(sample.bpm, (long)sample.t)));
                 }
             } else {
                 mJsonObject.remove(HEART_RATE_KEY);
