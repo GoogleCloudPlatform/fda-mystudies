@@ -550,7 +550,8 @@ public class CrfDataProvider extends BridgeDataProvider {
                 }
                 // set non-persistent tasks to expire after 2 days, except clinic day 14 tasks
                 if ("once".equals(schedule.scheduleType)
-                        && !scheduleTaskGuids.containsAll(day14TaskGuids)){
+                        && !scheduleTaskGuids.containsAll(day14TaskGuids)
+                        && !scheduleTaskGuids.containsAll(day1TaskGuids)){
                     schedule.expiresOn = new DateTime(schedule.scheduledOn).plusDays(2).toDate();
                 }
             }

@@ -162,7 +162,6 @@ public class CrfTaskAdapter extends TaskAdapter {
                  holder.iconCompleted.setVisibility(View.GONE);
              }
 
-             // JOLIU nullcheck
              // hero shot incomplete tasks scheduled for today
              boolean isTodayPriority = CrfScheduleHelper.isScheduledFor(localDateToScheduleFor, schedule)
                      && !allTasksComplete;
