@@ -20,6 +20,8 @@ package org.sagebase.crf.step.active;
 import android.content.Context;
 import android.os.Handler;
 import android.os.Looper;
+import android.support.annotation.AnyThread;
+import android.support.annotation.UiThread;
 import android.util.Log;
 
 import com.google.gson.JsonObject;
@@ -37,27 +39,21 @@ import java.io.File;
 
 public interface BpmRecorder {
     
-    public abstract void setEnableIntelligentStart(boolean enableIntelligenetStart);
-
-    public abstract void setIntelligentStartListener(IntelligentStartUpdateListener
-                                                             intelligentStartListener);
-
-    public abstract void setBpmUpdateListener(BpmUpdateListener bpmUpdateListener);
-
     interface BpmUpdateListener {
         class BpmHolder {
             public final int bpm;
             public final long timestamp;
-
+            
             public BpmHolder(int bpm, long timestamp) {
                 this.bpm = bpm;
                 this.timestamp = timestamp;
             }
         }
-
+        
+        @UiThread
         void bpmUpdate(BpmHolder bpm);
     }
-
+    
     interface IntelligentStartUpdateListener {
         /**
          * @param progress value from 0.0 to 1.0 communicating the progress to being ready
@@ -67,25 +63,28 @@ public interface BpmRecorder {
     }
     
     class BpmCalculator {
-    
+        
         public enum TYPE {
-            GREEN, RED
-        };
-
+            GREEN,
+            RED
+        }
+        
+        ;
+        
         private static final int BEATS_ARRAY_SIZE = 3;
         private static final int AVERAGE_ARRAY_SIZE = 4;
         private static int beatsIndex = 0;
-    
+        
         private TYPE currentType = TYPE.GREEN;
         private int beats = 0;
         private int averageIndex = 0;
-    
+        
         private final int[] beatsArray = new int[BEATS_ARRAY_SIZE];
         private final int[] averageArray = new int[AVERAGE_ARRAY_SIZE];
-    
-        private long startTime = -1;
-    
-    
+        
+        private double startTime = -1;
+        
+        
         /**
          * Calculates a simple running average bpm to display to the user for their heart rate. Updates the sample
          * with the calculated bpm, if there is one.
@@ -106,7 +105,7 @@ public interface BpmRecorder {
                     averageArrayCnt++;
                 }
             }
-        
+            
             int rollingAverage = (averageArrayCnt > 0) ? (averageArrayAvg / averageArrayCnt) : 0;
             TYPE newType = currentType;
             if (imgAvg < rollingAverage) {
@@ -118,17 +117,19 @@ public interface BpmRecorder {
             } else if (imgAvg > rollingAverage) {
                 newType = TYPE.GREEN;
             }
-        
-            if (averageIndex == AVERAGE_ARRAY_SIZE) averageIndex = 0;
+    
+            if (averageIndex == AVERAGE_ARRAY_SIZE) {
+                averageIndex = 0;
+            }
             averageArray[averageIndex] = imgAvg;
             averageIndex++;
-        
+            
             // Transitioned from one state to another to the same
             if (newType != currentType) {
                 currentType = newType;
             }
-        
-            long endTime =  heartBeatSample.t;
+            
+            double endTime = heartBeatSample.t;
             double totalTimeInSecs = (endTime - startTime) / 1000d;
             Log.v("calculateBPM", "total time: " + totalTimeInSecs);
             if (totalTimeInSecs >= 10) {
@@ -140,14 +141,16 @@ public interface BpmRecorder {
                     beats = 0;
                     return;
                 }
-            
+                
                 // Log.d(TAG,
                 // "totalTimeInSecs="+totalTimeInSecs+" beats="+beats);
-            
-                if (beatsIndex == BEATS_ARRAY_SIZE) beatsIndex = 0;
+    
+                if (beatsIndex == BEATS_ARRAY_SIZE) {
+                    beatsIndex = 0;
+                }
                 beatsArray[beatsIndex] = beatsPerMinute;
                 beatsIndex++;
-            
+                
                 int beatsArrayAvg = 0;
                 int beatsArrayCnt = 0;
                 for (int aBeatsArray : beatsArray) {
@@ -165,13 +168,13 @@ public interface BpmRecorder {
             }
         }
     }
-
+    
     class HeartBeatJsonWriter extends JsonArrayDataRecorder
             implements HeartbeatSampleTracker
             .HeartRateUpdateListener {
-   
+        
         private static final Logger LOG = LoggerFactory.getLogger(HeartBeatJsonWriter.class);
-    
+        
         private static final int RED_INTENSITY_FACTOR_THRESHOLD = 3;
         private static final String TIMESTAMP_IN_SECONDS_KEY = "timestamp";
         private static final String HEART_RATE_KEY = "bpm_camera";
@@ -181,11 +184,11 @@ public interface BpmRecorder {
         private static final String RED_KEY = "red";
         private static final String GREEN_KEY = "green";
         private static final String BLUE_KEY = "blue";
-
+        
         private static final int INTELLIGENT_START_FRAMES_TO_PASS = 10;
-
+        
         private final JsonObject mJsonObject = new JsonObject();
-
+        
         /**
          * Intelligent start is a feature that delays recording until
          * an algorithm determines the user's finger is in front of the camera
@@ -195,60 +198,65 @@ public interface BpmRecorder {
         private boolean mIntelligentStartPassed = false;
         private int mIntelligentStartCounter = 0;
         private boolean isRecordingStarted = false;
-
+        
         private final BpmRecorder.BpmUpdateListener mBpmUpdateListener;
         private final BpmRecorder.IntelligentStartUpdateListener mIntelligentStartListener;
-
+        
+        private final Handler mainHandler = new Handler(Looper.getMainLooper());
+        
         private final BpmCalculator bpmCalculator;
+        
         public HeartBeatJsonWriter(BpmUpdateListener
                                            mBpmUpdateListener, IntelligentStartUpdateListener
-                mIntelligentStartListener,
+                                           mIntelligentStartListener,
                                    String identifier, Step step, File outputDirectory) {
             super(identifier, step, outputDirectory);
-
+            
             this.mBpmUpdateListener = mBpmUpdateListener;
             this.mIntelligentStartListener = mIntelligentStartListener;
             this.bpmCalculator = new BpmCalculator();
         }
-
+        
+        @AnyThread
         @Override
         public void onHeartRateSampleDetected(HeartBeatSample sample) {
             bpmCalculator.calculateBpm(sample);
-    
-            mJsonObject.addProperty(TIMESTAMP_IN_SECONDS_KEY, sample.t / 1000F);
+            
+            mJsonObject.addProperty(TIMESTAMP_IN_SECONDS_KEY,  sample.t / 1_000);
             mJsonObject.addProperty(HUE_KEY, sample.h);
             mJsonObject.addProperty(SATURATION_KEY, sample.s);
             mJsonObject.addProperty(BRIGHTNESS_KEY, sample.v);
             mJsonObject.addProperty(RED_KEY, sample.r);
             mJsonObject.addProperty(GREEN_KEY, sample.g);
             mJsonObject.addProperty(BLUE_KEY, sample.b);
-
+            
             if (sample.bpm > 0) {
                 mJsonObject.addProperty(HEART_RATE_KEY, sample.bpm);
                 if (mBpmUpdateListener != null) {
-                    mBpmUpdateListener.bpmUpdate(
-                            new BpmRecorder.BpmUpdateListener.BpmHolder(sample.bpm, sample.t));
+                    mainHandler.post(() ->
+                            mBpmUpdateListener.bpmUpdate(
+                                    new BpmRecorder.BpmUpdateListener.BpmHolder(sample.bpm, (long)sample.t)));
                 }
             } else {
                 mJsonObject.remove(HEART_RATE_KEY);
             }
             
-            if (LOG.isTraceEnabled()){
+            if (LOG.isTraceEnabled()) {
                 LOG.trace("HeartBeatSample: {}", sample);
             }
-
+            
             if (!mEnableIntelligentStart || mIntelligentStartPassed) {
                 writeJsonObjectToFile(mJsonObject);
             } else {
                 updateIntelligentStart(sample);
             }
         }
-
+        
         private void updateIntelligentStart(HeartBeatSample sample) {
             if (mIntelligentStartPassed) {
                 return; // we already computed that we could start
             }
-
+            
             // When a finger is placed in front of the camera with the flash on,
             // the camera image will be almost entirely red, so use a simple lenient algorithm
             // for this
@@ -268,15 +276,17 @@ public interface BpmRecorder {
                     float progress = (float) mIntelligentStartCounter / (float)
                             INTELLIGENT_START_FRAMES_TO_PASS;
     
-                    mIntelligentStartListener.intelligentStartUpdate(progress,
-                            mIntelligentStartPassed);
+                    mainHandler.post(() ->
+                            mIntelligentStartListener.intelligentStartUpdate(progress,
+                                    mIntelligentStartPassed)
+                    );
                 }
-
+                
             } else {  // We need thresholds to be passed sequentially otherwise it is restarted
                 mIntelligentStartCounter = 0;
             }
         }
-
+        
         @Override
         public void start(Context context) {
             startJsonDataLogging();
@@ -284,7 +294,7 @@ public interface BpmRecorder {
             mIntelligentStartPassed = false;
             mIntelligentStartCounter = 0;
         }
-
+        
         @Override
         public void stop() {
             if (isRecordingStarted) {

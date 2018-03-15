@@ -321,13 +321,14 @@ public class CrfActivitiesFragment extends ActivitiesFragment implements CrfFilt
      * @return true if every task in the first clinic has been complete, false in all other scenarios
      */
     private boolean isFirstClinicComplete() {
-        // JOLIU fix
         if (!CrfPrefs.getInstance().hasClinicDate()) {
             return false;
         }
-        SchedulesAndTasksModel.ScheduleModel firstClinicSchedule =
-                scheduleFor(CrfPrefs.getInstance().getClinicDate());
-        return CrfScheduleHelper.allTasksComplete(firstClinicSchedule);
+        // work around for people who have been doing daily tasks without completed schedule.
+//        SchedulesAndTasksModel.ScheduleModel firstClinicSchedule =
+//                scheduleFor(CrfPrefs.getInstance().getClinicDate());
+//        return CrfScheduleHelper.allTasksComplete(firstClinicSchedule);
+        return true;
     }
 
     private void showTimelineTheme() {
@@ -353,7 +354,6 @@ public class CrfActivitiesFragment extends ActivitiesFragment implements CrfFilt
         model.scheduledOn = mScheduleModel.schedules.get(0).scheduledOn;
         model.tasks = Lists.newArrayList();
 
-        // JOLIU TODO
         for(SchedulesAndTasksModel.ScheduleModel sm : mScheduleModel.schedules) {
             model.tasks.addAll(sm.tasks);
         }

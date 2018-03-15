@@ -18,6 +18,7 @@
 package org.sagebase.crf.step.active;
 
 import android.annotation.SuppressLint;
+import android.annotation.TargetApi;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.SurfaceTexture;
@@ -94,6 +95,7 @@ public class HeartRateCamera2Recorder extends Recorder {
     private final CompositeSubscription subscriptions;
     private final List<Surface> allSurfaces = new ArrayList(3);
     private final List<Surface> surfacesNoMediaRecorder = new ArrayList<>(2);
+    private final List<Surface> surfacesNoPreview = new ArrayList<>(2);
     private final BpmRecorder.HeartBeatJsonWriter heartBeatJsonWriter;
     private final RenderScript renderScript;
     
@@ -142,9 +144,6 @@ public class HeartRateCamera2Recorder extends Recorder {
         Observable<CameraCaptureSession> cameraCaptureSessionObservable =
                 openCameraObservable(manager, cameraId)
                         .doOnUnsubscribe(() -> LOG.debug("Camera Capture unsubscribed"))
-                        .doOnNext(cameraDevice -> {
-                            setRecording(true);
-                        })
                         .flatMap(cameraDevice -> {
                             // video recording surface
                             mediaRecorder =
@@ -157,6 +156,7 @@ public class HeartRateCamera2Recorder extends Recorder {
                         
                             Surface recordingSurface = mediaRecorder.getSurface();
                             allSurfaces.add(recordingSurface);
+                            surfacesNoPreview.add(recordingSurface);
                         
                             // preview surface
 //                            textureView.setLayoutParams(new FrameLayout.LayoutParams(
@@ -179,9 +179,13 @@ public class HeartRateCamera2Recorder extends Recorder {
                             Surface processingSurface = imageReader.getSurface();
                             allSurfaces.add(processingSurface);
                             surfacesNoMediaRecorder.add(processingSurface);
+                            surfacesNoPreview.add(processingSurface);
                         
                             return createCaptureSessionObservable(cameraDevice, allSurfaces)
-                                    .doOnNext(session -> mediaRecorder.start())
+                                    .doOnNext(session -> {
+                                        LOG.debug("Starting media recorder");
+                                        mediaRecorder.start();
+                                    })
                                     .doOnNext(session ->
                                             subscriptions.add(createImageReaderObservable(imageReader)
                                                     .observeOn(Schedulers.computation())
@@ -195,12 +199,11 @@ public class HeartRateCamera2Recorder extends Recorder {
                                     .doOnUnsubscribe(() -> LOG.debug("Capture session 0 unsubscribed"))
                                     .doOnUnsubscribe(() -> {
                                         try {
-                                            mediaRecorder.stop();
-                                        } catch (Exception e) {
-                                            // this usually seems to happen due to order of unsubscribes
-                                            LOG.debug("Couldn't stop MediaRecorder", e);
-                                        }})
-                                    .doOnUnsubscribe(mediaRecorder::release);
+                                            mediaRecorder.release();
+                                        } catch (Throwable t) {
+                                            LOG.error("Couldn't release mediaRecorder", t);
+                                        }
+                                    });
                         });
     
         subscriptions.add(cameraCaptureSessionObservable
@@ -221,7 +224,7 @@ public class HeartRateCamera2Recorder extends Recorder {
             return;
         }
         LOG.warn("Started video recording");
-        doRepeatingRequest(cameraCaptureSession, allSurfaces);
+        doRepeatingRequest(cameraCaptureSession, surfacesNoPreview);
     }
     
     @WorkerThread
@@ -232,11 +235,7 @@ public class HeartRateCamera2Recorder extends Recorder {
                         mVideoSize.getHeight());
 
         HeartBeatSample sample =
-                getHeartBeatSample(
-                        TimeUnit.MILLISECONDS.convert(
-                                image.getTimestamp(),
-                                TimeUnit.NANOSECONDS),
-                        bitmap);
+                getHeartBeatSample(image.getTimestamp() / 1_000_000D, bitmap);
         image.close();
         return sample;
     }
@@ -250,18 +249,23 @@ public class HeartRateCamera2Recorder extends Recorder {
     public void stop() {
         subscriptions.unsubscribe();
         heartBeatJsonWriter.stop();
+
         if (mediaRecorderFile.exists()) {
             FileResult fileResult = new FileResult(fileResultIdentifier(), mediaRecorderFile, MP4_CONTENT_TYPE);
             fileResult.setStartDate(startTime.toDate());
             fileResult.setEndDate(new Date());
+    
             getRecorderListener().onComplete(this, fileResult);
         }
     }
 
     @Override
     public void cancel() {
-        stop();
-        mediaRecorderFile.delete();
+        subscriptions.unsubscribe();
+        heartBeatJsonWriter.cancel();
+        if (mediaRecorderFile.exists()) {
+            mediaRecorderFile.delete();
+        }
     }
 
     @SuppressLint("MissingPermission")

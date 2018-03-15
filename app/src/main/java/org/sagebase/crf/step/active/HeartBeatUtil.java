@@ -25,7 +25,7 @@ import android.graphics.Bitmap;
 
 public class HeartBeatUtil {
 
-    public static HeartBeatSample getHeartBeatSample(long timestamp, Bitmap bitmap) {
+    public static HeartBeatSample getHeartBeatSample(double timestamp, Bitmap bitmap) {
         HeartBeatSample sample = new HeartBeatSample();
         sample.t = timestamp;
 
