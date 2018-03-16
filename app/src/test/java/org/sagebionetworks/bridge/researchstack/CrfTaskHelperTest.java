@@ -55,7 +55,7 @@ public class CrfTaskHelperTest {
 
     private CrfTaskHelper taskHelper;
 
-    private List<File> files;
+    private List<File> files = new ArrayList<>();
     @Before
     public void setUp() throws Exception {
         taskHelper = mock(CrfTaskHelper.class);
@@ -69,6 +69,7 @@ public class CrfTaskHelperTest {
         for(File f : files) {
             f.delete();
         }
+        files.clear();
     }
 
     @Test
