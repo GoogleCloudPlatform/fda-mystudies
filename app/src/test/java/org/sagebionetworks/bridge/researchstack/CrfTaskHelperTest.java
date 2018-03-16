@@ -19,6 +19,7 @@ package org.sagebionetworks.bridge.researchstack;
 
 import com.google.gson.Gson;
 
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
@@ -54,12 +55,20 @@ public class CrfTaskHelperTest {
 
     private CrfTaskHelper taskHelper;
 
+    private List<File> files;
     @Before
     public void setUp() throws Exception {
         taskHelper = mock(CrfTaskHelper.class);
         Mockito.doCallRealMethod().when(taskHelper).setArchiveFileFactory(any());
         taskHelper.setArchiveFileFactory(new CrfTaskHelper.CrfArchiveFileFactory());
         Mockito.doCallRealMethod().when(taskHelper).addFiles(any(), any(), anyString());
+    }
+    
+    @After
+    public void cleanUp() {
+        for(File f : files) {
+            f.delete();
+        }
     }
 
     @Test
@@ -182,6 +191,7 @@ public class CrfTaskHelperTest {
         } catch (IOException e) {
             fail();
         }
+        files.add(f);
     
         FileResult fileResult = new FileResult(id, f, contentType);
         fileResult.setEndDate(new Date());
