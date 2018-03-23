@@ -18,7 +18,6 @@
 package org.sagebase.crf.step.active;
 
 import android.annotation.SuppressLint;
-import android.annotation.TargetApi;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.SurfaceTexture;
@@ -29,6 +28,8 @@ import android.hardware.camera2.CameraDevice;
 import android.hardware.camera2.CameraManager;
 import android.hardware.camera2.CameraMetadata;
 import android.hardware.camera2.CaptureRequest;
+import android.hardware.camera2.CaptureResult;
+import android.hardware.camera2.TotalCaptureResult;
 import android.hardware.camera2.params.StreamConfigurationMap;
 import android.media.Image;
 import android.media.ImageReader;
@@ -46,6 +47,8 @@ import android.util.Size;
 import android.view.Surface;
 import android.view.TextureView;
 
+import com.google.common.collect.Sets;
+
 import org.joda.time.DateTime;
 import org.researchstack.backbone.result.FileResult;
 import org.researchstack.backbone.step.Step;
@@ -58,11 +61,13 @@ import org.slf4j.LoggerFactory;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
+import java.util.Set;
 
 import rx.Observable;
 import rx.Single;
@@ -72,6 +77,12 @@ import rx.schedulers.Schedulers;
 import rx.subscriptions.CompositeSubscription;
 
 import static android.graphics.ImageFormat.YUV_420_888;
+import static android.hardware.camera2.CameraMetadata.INFO_SUPPORTED_HARDWARE_LEVEL_3;
+import static android.hardware.camera2.CameraMetadata.INFO_SUPPORTED_HARDWARE_LEVEL_FULL;
+import static android.hardware.camera2.CameraMetadata.INFO_SUPPORTED_HARDWARE_LEVEL_LEGACY;
+import static android.hardware.camera2.CameraMetadata.INFO_SUPPORTED_HARDWARE_LEVEL_LIMITED;
+import static android.hardware.camera2.CameraMetadata.REQUEST_AVAILABLE_CAPABILITIES_MANUAL_SENSOR;
+import static android.hardware.camera2.CaptureResult.*;
 import static org.sagebase.crf.step.active.HeartBeatUtil.getHeartBeatSample;
 import static org.sagebase.crf.step.active.ImageUtils.toBitmap;
 
@@ -111,6 +122,7 @@ public class HeartRateCamera2Recorder extends Recorder {
     private MediaRecorder mediaRecorder;
     private final File mediaRecorderFile;
     private CameraCaptureSession cameraCaptureSession;
+    private CameraManager manager;
     
     
     public HeartRateCamera2Recorder(String identifier, Step step, File outputDirectory,
@@ -133,7 +145,7 @@ public class HeartRateCamera2Recorder extends Recorder {
     public void start(Context context) {
         startTime = DateTime.now();
         heartBeatJsonWriter.start(context);
-        CameraManager manager = (CameraManager) context.getSystemService(Context.CAMERA_SERVICE);
+        manager = (CameraManager) context.getSystemService(Context.CAMERA_SERVICE);
         if (manager == null) {
             LOG.warn("This device doesn't support Camera2 API");
             recordingFailed(new IllegalStateException("This device doesn't support Camera2 API"));
@@ -183,7 +195,6 @@ public class HeartRateCamera2Recorder extends Recorder {
                         
                             return createCaptureSessionObservable(cameraDevice, allSurfaces)
                                     .doOnNext(session -> {
-                                        LOG.debug("Starting media recorder");
                                         mediaRecorder.start();
                                     })
                                     .doOnNext(session ->
@@ -211,6 +222,7 @@ public class HeartRateCamera2Recorder extends Recorder {
                         s -> {
                             cameraCaptureSession = s;
                             doRepeatingRequest(s, surfacesNoMediaRecorder);
+                            setRecording(true);
                         }, t -> {
                             cameraCaptureSession = null;
                             recordingFailed(t);
@@ -247,8 +259,8 @@ public class HeartRateCamera2Recorder extends Recorder {
     
     @Override
     public void stop() {
-        subscriptions.unsubscribe();
         heartBeatJsonWriter.stop();
+        subscriptions.unsubscribe();
 
         if (mediaRecorderFile.exists()) {
             FileResult fileResult = new FileResult(fileResultIdentifier(), mediaRecorderFile, MP4_CONTENT_TYPE);
@@ -261,8 +273,9 @@ public class HeartRateCamera2Recorder extends Recorder {
 
     @Override
     public void cancel() {
-        subscriptions.unsubscribe();
         heartBeatJsonWriter.cancel();
+        subscriptions.unsubscribe();
+        
         if (mediaRecorderFile.exists()) {
             mediaRecorderFile.delete();
         }
@@ -293,15 +306,7 @@ public class HeartRateCamera2Recorder extends Recorder {
                         cameraCharacteristics.get(CameraCharacteristics.LENS_FACING)) {
                     continue;
                 }
-
-                Range<Long> exposureTimeRange = cameraCharacteristics
-                        .get(CameraCharacteristics.SENSOR_INFO_EXPOSURE_TIME_RANGE);
-                LOG.debug("Exposure time range: {}", exposureTimeRange);
-
-                Range<Integer> sensitivityTimeRange = cameraCharacteristics
-                        .get(CameraCharacteristics.SENSOR_INFO_SENSITIVITY_RANGE);
-                LOG.debug("Sensitivity time range: {}", sensitivityTimeRange);
-
+                
                 StreamConfigurationMap streamConfigurationMap = cameraCharacteristics
                         .get(CameraCharacteristics.SCALER_STREAM_CONFIGURATION_MAP);
 
@@ -310,23 +315,12 @@ public class HeartRateCamera2Recorder extends Recorder {
                         VIDEO_SIZE);
                 LOG.debug("Video Size: {}", mVideoSize);
                 
-                // calculate frame rate
-                long durationRecorderNs = streamConfigurationMap.getOutputMinFrameDuration(MediaRecorder.class,
-                        mVideoSize);
-                LOG.debug("Min output frame duration for MediaRecorder: {}", durationRecorderNs);
 
-                long durationPreviewNs = streamConfigurationMap.getOutputMinFrameDuration(SurfaceTexture.class,
-                        mVideoSize);
-                LOG.debug("Min output frame duration for SurfaceTexture: {}", durationPreviewNs);
-                int[] outputFormats = streamConfigurationMap.getOutputFormats();
-                LOG.debug("Output formats: {}", outputFormats);
-
-                int[] inputFormats = new int[0];
-                if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
-                    inputFormats = streamConfigurationMap.getInputFormats();
-                }
-                LOG.debug("Input formats: {}", inputFormats);
-
+                // wasn't working for OnePlus
+//                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+//                    manager.setTorchMode(cameraId, true);
+//                }
+    
                 return cameraId;
             }
         } catch (CameraAccessException e) {
@@ -442,52 +436,136 @@ public class HeartRateCamera2Recorder extends Recorder {
                 }).cache()
                 .doOnUnsubscribe(() -> {
                     if (captureSession[0] != null) {
-                        LOG.debug("Closing CameraCaptureSession");
-                        captureSession[0].close();
+                        try {
+                            LOG.debug("Closing CameraCaptureSession");
+                            captureSession[0].close();
+                        } catch (IllegalStateException e) {
+                            LOG.debug("Couldn't close camera", e);
+                        }
                     }
                 });
     }
     
     void doRepeatingRequest(@NonNull CameraCaptureSession session, @NonNull List<Surface> surfaces) {
         try {
+            CameraCharacteristics cameraCharacteristics = manager.getCameraCharacteristics(session.getDevice().getId());
+    
+            StreamConfigurationMap streamConfigurationMap = cameraCharacteristics
+                    .get(CameraCharacteristics.SCALER_STREAM_CONFIGURATION_MAP);
+            
+            // calculate frame rate
+            long durationRecorderNs = streamConfigurationMap.getOutputMinFrameDuration(MediaRecorder.class,
+                    mVideoSize);
+            LOG.debug("Min output frame duration for MediaRecorder: {}", durationRecorderNs);
+    
+            long durationPreviewNs = streamConfigurationMap.getOutputMinFrameDuration(SurfaceTexture.class,
+                    mVideoSize);
+            LOG.debug("Min output frame duration for SurfaceTexture: {}", durationPreviewNs);
+            int[] outputFormats = streamConfigurationMap.getOutputFormats();
+            LOG.debug("Output formats: {}", outputFormats);
+            
+    
+            Range<Long> exposureTimeRange = cameraCharacteristics
+                    .get(CameraCharacteristics.SENSOR_INFO_EXPOSURE_TIME_RANGE);
+            LOG.debug("Exposure time range: {}", exposureTimeRange);
+    
+            Range<Integer> sensitivityTimeRange = cameraCharacteristics
+                    .get(CameraCharacteristics.SENSOR_INFO_SENSITIVITY_RANGE);
+            LOG.debug("Sensitivity time range: {}", sensitivityTimeRange);
+    
+            int[] inputFormats = new int[0];
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                inputFormats = streamConfigurationMap.getInputFormats();
+            }
+            LOG.debug("Input formats: {}", inputFormats);
+            
             LOG.debug("Attempting to create capture request");
             CaptureRequest.Builder requestBuilder = session.getDevice()
                     .createCaptureRequest(CameraDevice.TEMPLATE_RECORD);
             for (Surface s : surfaces) {
                 requestBuilder.addTarget(s);
             }
+    
             // turns off AF, AE, AWB
-            requestBuilder.set(CaptureRequest.CONTROL_MODE, CaptureRequest.CONTROL_AWB_MODE_OFF);
+            requestBuilder.set(CaptureRequest.CONTROL_MODE, CaptureRequest.CONTROL_MODE_OFF);
     
             // let's not do any AWB for now. seems complex and interacts with AE
+            requestBuilder.set(CaptureRequest.CONTROL_AWB_MODE, CaptureRequest.CONTROL_AWB_MODE_OFF);
             // requestBuilder.set(CaptureRequest.CONTROL_AWB_MODE, CONTROL_AWB_MODE_DAYLIGHT);
             
-            requestBuilder.set(CaptureRequest.FLASH_MODE, CaptureRequest.FLASH_MODE_TORCH);
+            int supportLevel = cameraCharacteristics.get(CameraCharacteristics.INFO_SUPPORTED_HARDWARE_LEVEL);
+    
+            int[] availableCapabilities = cameraCharacteristics.get(CameraCharacteristics.REQUEST_AVAILABLE_CAPABILITIES);
             
-            // no auto-exposure
-            requestBuilder.set(CaptureRequest.CONTROL_AE_MODE,
-                    CameraMetadata.CONTROL_AE_MODE_OFF);
+            if (INFO_SUPPORTED_HARDWARE_LEVEL_LEGACY == supportLevel) {
+                requestBuilder.set(CaptureRequest.CONTROL_AE_MODE,
+                        CameraMetadata.CONTROL_AE_MODE_ON);
+                requestBuilder.set(CaptureRequest.FLASH_MODE, CaptureRequest.FLASH_MODE_TORCH);
+            } else if (INFO_SUPPORTED_HARDWARE_LEVEL_LIMITED == supportLevel
+                    && Arrays.asList(availableCapabilities).contains(REQUEST_AVAILABLE_CAPABILITIES_MANUAL_SENSOR)) {
+                // no auto-exposure
+                requestBuilder.set(CaptureRequest.CONTROL_AE_MODE,
+                        CameraMetadata.CONTROL_AE_MODE_OFF);
+                requestBuilder.set(CaptureRequest.FLASH_MODE, CaptureRequest.FLASH_MODE_TORCH);
+            } else if (INFO_SUPPORTED_HARDWARE_LEVEL_FULL == supportLevel
+                    || INFO_SUPPORTED_HARDWARE_LEVEL_3 == supportLevel) {
+                // no auto-exposure
+                requestBuilder.set(CaptureRequest.CONTROL_AE_MODE,
+                        CameraMetadata.CONTROL_AE_MODE_OFF);
+                requestBuilder.set(CaptureRequest.FLASH_MODE, CaptureRequest.FLASH_MODE_TORCH);
+            }
+
             requestBuilder.set(CaptureRequest.SENSOR_FRAME_DURATION, CAMERA_FRAME_DURATION_NANOS);
             requestBuilder.set(CaptureRequest.SENSOR_EXPOSURE_TIME, CAMERA_EXPOSURE_DURATION_NANOS);
             requestBuilder.set(CaptureRequest.SENSOR_SENSITIVITY, CAMERA_SENSITIVITY);
     
+            // should work on legacy devices
             // no auto-focus infinite, focus distance
             requestBuilder.set(CaptureRequest.CONTROL_AF_MODE, CameraMetadata.CONTROL_AF_MODE_OFF);
             requestBuilder.set(CaptureRequest.LENS_FOCUS_DISTANCE, 0.0f);
     
     
             CaptureRequest captureRequest = requestBuilder.build();
-            for (CaptureRequest.Key<?> k : captureRequest.getKeys()) {
-                Object value = captureRequest.get(k);
-                LOG.debug("Capture request Key: {}, value: {}", k, value);
-            }
+//            for (CaptureRequest.Key<?> k : captureRequest.getKeys()) {
+//                Object value = captureRequest.get(k);
+//                LOG.debug("Capture request Key: {}, value: {}", k, value);
+//            }
     
-            session.setRepeatingRequest(captureRequest, null, null);
+            session.setRepeatingRequest(captureRequest, mPreCaptureCallback, null);
         } catch (CameraAccessException e) {
             LOG.warn("Failed to set capture request", e);
             recordingFailed(e);
         }
     }
+    
+    private CameraCaptureSession.CaptureCallback mPreCaptureCallback
+            = new CameraCaptureSession.CaptureCallback() {
+        Set<CaptureResult.Key> keys = Sets.newHashSet(CONTROL_AE_MODE,CONTROL_AWB_MODE,CONTROL_AF_MODE,
+                LENS_FOCAL_LENGTH,SENSOR_SENSITIVITY,
+                LENS_FOCUS_DISTANCE,
+                SENSOR_EXPOSURE_TIME,SENSOR_FRAME_DURATION
+                );
+                
+                @Override
+        public void onCaptureProgressed(@NonNull CameraCaptureSession session,
+                                        @NonNull CaptureRequest request, @NonNull CaptureResult partialResult) {
+            for (CaptureResult.Key key : keys) {
+                LOG.debug("Capture progress result with setting key: {}, value: {}", key.getName(), partialResult.get
+                        (key));
+            }
+        }
+        @Override
+        public void onCaptureCompleted(@NonNull CameraCaptureSession session,
+                                       @NonNull CaptureRequest request, @NonNull TotalCaptureResult result) {
+            for (CaptureResult.Key key : keys) {
+                LOG.debug("Capture complete result with setting key: {}, value: {}", key.getName(), result.get(key));
+            }
+        }
+        public void onCaptureBufferLost(@NonNull CameraCaptureSession session,
+                                        @NonNull CaptureRequest request, @NonNull Surface target, long frameNumber) {
+            LOG.warn("Capture Buffer lost");
+        }
+    };
     
     private void recordingFailed(Throwable throwable) {
         LOG.warn("Recording failed: ", throwable);
