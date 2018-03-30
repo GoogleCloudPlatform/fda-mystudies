@@ -19,6 +19,7 @@ package org.sagebionetworks.bridge.researchstack;
 
 import com.google.gson.Gson;
 
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
@@ -34,13 +35,17 @@ import org.researchstack.backbone.step.Step;
 import org.sagebionetworks.bridge.data.Archive;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyString;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 /**
  * Created by TheMDP on 12/9/17.
@@ -50,12 +55,21 @@ public class CrfTaskHelperTest {
 
     private CrfTaskHelper taskHelper;
 
+    private List<File> files = new ArrayList<>();
     @Before
     public void setUp() throws Exception {
-        taskHelper = Mockito.mock(CrfTaskHelper.class);
+        taskHelper = mock(CrfTaskHelper.class);
         Mockito.doCallRealMethod().when(taskHelper).setArchiveFileFactory(any());
         taskHelper.setArchiveFileFactory(new CrfTaskHelper.CrfArchiveFileFactory());
         Mockito.doCallRealMethod().when(taskHelper).addFiles(any(), any(), anyString());
+    }
+    
+    @After
+    public void cleanUp() {
+        for(File f : files) {
+            f.delete();
+        }
+        files.clear();
     }
 
     @Test
@@ -172,7 +186,15 @@ public class CrfTaskHelperTest {
     }
 
     private FileResult createFileResult(String id, String filename, String contentType) {
-        FileResult fileResult = new FileResult(id, new File(filename), contentType);
+        File f = new File(filename);
+        try {
+            f.createNewFile();
+        } catch (IOException e) {
+            fail();
+        }
+        files.add(f);
+    
+        FileResult fileResult = new FileResult(id, f, contentType);
         fileResult.setEndDate(new Date());
         return fileResult;
     }
