@@ -1,16 +1,16 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion 26
+    compileSdkVersion 27
     buildToolsVersion "26.0.2"
     defaultConfig {
         applicationId "org.sagebionetworks.research.crf"
         minSdkVersion 19
-        targetSdkVersion 26
+        targetSdkVersion 27
 	// version code is bumped by fastlane automatically
-        versionCode 37
+        versionCode 38
 	// this should match the stable- branch name and will be used by fastlane to create the tag
-        versionName "1.5.5"
+        versionName "1.6.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         multiDexEnabled true
         resConfigs "en"
@@ -46,13 +46,13 @@ dependencies {
     implementation 'com.android.support:multidex:1.0.2'
 
     // These are all support libraries that should be updated when Google releases new ones
-    implementation "com.android.support:support-compat:26.1.0"
-    implementation 'com.android.support:appcompat-v7:26.1.0'
-    implementation 'com.android.support:preference-v7:26.1.0'
-    implementation 'com.android.support:cardview-v7:26.1.0'
-    implementation 'com.android.support:design:26.1.0'
-    implementation 'com.android.support:support-annotations:26.1.0'
-    implementation 'com.android.support:customtabs:26.1.0'
+    implementation "com.android.support:support-compat:27.1.1"
+    implementation 'com.android.support:appcompat-v7:27.1.1'
+    implementation 'com.android.support:preference-v7:27.1.1'
+    implementation 'com.android.support:cardview-v7:27.1.1'
+    implementation 'com.android.support:design:27.1.1'
+    implementation 'com.android.support:support-annotations:27.1.1'
+    implementation 'com.android.support:customtabs:27.1.1'
 
     implementation 'net.openid:appauth:0.7.0'
 
@@ -67,11 +67,11 @@ dependencies {
     implementation project(':researchstack-sdk')
 
     // Important - the CameraSource implementation in this project requires version 8.1 or higher.
-    implementation 'com.google.android.gms:play-services-vision:11.6.2'
+    implementation 'com.google.android.gms:play-services-vision:12.0.1'
 
     testImplementation project(':test-utils')
     testImplementation 'junit:junit:4.12'
-    testImplementation 'org.robolectric:robolectric:3.5'
+    testImplementation 'org.robolectric:robolectric:3.8'
     // Keep these older versions, since the CrfDataProvider tests relies on them
     testImplementation 'org.mockito:mockito-core:2.8.9'
     testImplementation 'org.powermock:powermock-api-mockito2:1.7.1'
