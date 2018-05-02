@@ -90,6 +90,13 @@ public class CrfDataProvider extends BridgeDataProvider {
 
     public static final int STUDY_DURATION_IN_DAYS = 15;
 
+    public static CrfDataProvider getInstance() {
+        if (!(DataProvider.getInstance() instanceof CrfDataProvider)) {
+            throw new IllegalStateException("This app only works with BpDataProvider");
+        }
+        return (CrfDataProvider) DataProvider.getInstance();
+    }
+
     public String getExternalId(Context context) {
         String email = DataProvider.getInstance().getUserEmail(context);
         String externalIdFormat = bridgeConfig.getExternalIdEmailFormat();
