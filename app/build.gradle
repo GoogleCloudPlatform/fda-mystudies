@@ -10,7 +10,7 @@ android {
 	// version code is bumped by fastlane automatically
         versionCode 39
 	// this should match the stable- branch name and will be used by fastlane to create the tag
-        versionName "1.6.0"
+        versionName "1.6.1"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         multiDexEnabled true
         resConfigs "en"
