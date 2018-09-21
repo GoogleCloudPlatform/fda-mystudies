@@ -33,11 +33,9 @@ import android.view.Surface;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.WindowManager;
-
 import com.google.android.gms.common.images.Size;
 import com.google.android.gms.vision.Detector;
 import com.google.android.gms.vision.Frame;
-
 import java.io.IOException;
 import java.lang.Thread.State;
 import java.lang.annotation.Retention;
@@ -50,6 +48,7 @@ import java.util.Map;
 
 // Note: This requires Google Play Services 8.1 or higher, due to using indirect byte buffers for
 // storing images.
+// See: https://github.com/googlesamples/android-vision/blob/8b983c98016bfb23e082f9e37005fa267093ba50/visionSamples/barcode-reader/app/src/main/java/com/google/android/gms/samples/vision/barcodereader/ui/camera/CameraSource.java
 
 /**
  * Manages the camera in conjunction with an underlying
@@ -72,8 +71,10 @@ import java.util.Map;
  */
 @SuppressWarnings("deprecation")
 public class CameraSource {
+
     @SuppressLint("InlinedApi")
     public static final int CAMERA_FACING_BACK = CameraInfo.CAMERA_FACING_BACK;
+
     @SuppressLint("InlinedApi")
     public static final int CAMERA_FACING_FRONT = CameraInfo.CAMERA_FACING_FRONT;
 
@@ -92,26 +93,30 @@ public class CameraSource {
     private static final float ASPECT_RATIO_TOLERANCE = 0.01f;
 
     @StringDef({
-        Camera.Parameters.FOCUS_MODE_CONTINUOUS_PICTURE,
-        Camera.Parameters.FOCUS_MODE_CONTINUOUS_VIDEO,
-        Camera.Parameters.FOCUS_MODE_AUTO,
-        Camera.Parameters.FOCUS_MODE_EDOF,
-        Camera.Parameters.FOCUS_MODE_FIXED,
-        Camera.Parameters.FOCUS_MODE_INFINITY,
-        Camera.Parameters.FOCUS_MODE_MACRO
+            Camera.Parameters.FOCUS_MODE_CONTINUOUS_PICTURE,
+            Camera.Parameters.FOCUS_MODE_CONTINUOUS_VIDEO,
+            Camera.Parameters.FOCUS_MODE_AUTO,
+            Camera.Parameters.FOCUS_MODE_EDOF,
+            Camera.Parameters.FOCUS_MODE_FIXED,
+            Camera.Parameters.FOCUS_MODE_INFINITY,
+            Camera.Parameters.FOCUS_MODE_MACRO
     })
     @Retention(RetentionPolicy.SOURCE)
-    private @interface FocusMode {}
+    private @interface FocusMode {
+
+    }
 
     @StringDef({
-        Camera.Parameters.FLASH_MODE_ON,
-        Camera.Parameters.FLASH_MODE_OFF,
-        Camera.Parameters.FLASH_MODE_AUTO,
-        Camera.Parameters.FLASH_MODE_RED_EYE,
-        Camera.Parameters.FLASH_MODE_TORCH
+            Camera.Parameters.FLASH_MODE_ON,
+            Camera.Parameters.FLASH_MODE_OFF,
+            Camera.Parameters.FLASH_MODE_AUTO,
+            Camera.Parameters.FLASH_MODE_RED_EYE,
+            Camera.Parameters.FLASH_MODE_TORCH
     })
     @Retention(RetentionPolicy.SOURCE)
-    private @interface FlashMode {}
+    private @interface FlashMode {
+
+    }
 
     private Context mContext;
 
@@ -119,6 +124,7 @@ public class CameraSource {
 
     // Guarded by mCameraLock
     private Camera mCamera;
+
     public Camera getCamera() {
         return mCamera;
     }
@@ -136,17 +142,21 @@ public class CameraSource {
     // These values may be requested by the caller.  Due to hardware limitations, we may need to
     // select close, but not exactly the same values for these.
     private float mRequestedFps = 30.0f;
+
     private int mRequestedPreviewWidth = 1024;
+
     private int mRequestedPreviewHeight = 768;
 
 
     private String mFocusMode = null;
+
     private String mFlashMode = null;
 
     // These instances need to be held onto to avoid GC of their underlying resources.  Even though
     // these aren't used outside of the method that creates them, they still must have hard
     // references maintained to them.
     private SurfaceView mDummySurfaceView;
+
     private SurfaceTexture mDummySurfaceTexture;
 
     /**
@@ -154,6 +164,7 @@ public class CameraSource {
      * frames become available from the camera.
      */
     private Thread mProcessingThread;
+
     private FrameProcessingRunnable mFrameProcessor;
 
     /**
@@ -171,7 +182,9 @@ public class CameraSource {
      * Builder for configuring and creating an associated camera source.
      */
     public static class Builder {
+
         private final Detector<?> mDetector;
+
         private CameraSource mCameraSource = new CameraSource();
 
         /**
@@ -260,6 +273,7 @@ public class CameraSource {
      * Callback interface used to signal the moment of actual image capture.
      */
     public interface ShutterCallback {
+
         /**
          * Called as near as possible to the moment when a photo is captured from the sensor. This
          * is a good opportunity to play a shutter sound or give other feedback of camera operation.
@@ -273,6 +287,7 @@ public class CameraSource {
      * Callback interface used to supply image data from a photo capture.
      */
     public interface PictureCallback {
+
         /**
          * Called when image data is available after a picture is taken.  The format of the data
          * is a jpeg binary.
@@ -284,6 +299,7 @@ public class CameraSource {
      * Callback interface used to notify on completion of camera auto focus.
      */
     public interface AutoFocusCallback {
+
         /**
          * Called when the camera auto focus completes.  If the camera
          * does not support auto-focus and autoFocus is called,
@@ -307,6 +323,7 @@ public class CameraSource {
      * autofocus animation based on this.</p>
      */
     public interface AutoFocusMoveCallback {
+
         /**
          * Called when the camera auto focus starts or stops.
          *
@@ -682,6 +699,7 @@ public class CameraSource {
      * Wraps the camera1 shutter callback so that the deprecated API isn't exposed.
      */
     private class PictureStartCallback implements Camera.ShutterCallback {
+
         private ShutterCallback mDelegate;
 
         @Override
@@ -697,6 +715,7 @@ public class CameraSource {
      * preview back on after the picture has been taken.
      */
     private class PictureDoneCallback implements Camera.PictureCallback {
+
         private PictureCallback mDelegate;
 
         @Override
@@ -716,6 +735,7 @@ public class CameraSource {
      * Wraps the camera1 auto focus callback so that the deprecated API isn't exposed.
      */
     private class CameraAutoFocusCallback implements Camera.AutoFocusCallback {
+
         private AutoFocusCallback mDelegate;
 
         @Override
@@ -731,6 +751,7 @@ public class CameraSource {
      */
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
     private class CameraAutoFocusMoveCallback implements Camera.AutoFocusMoveCallback {
+
         private AutoFocusMoveCallback mDelegate;
 
         @Override
@@ -888,11 +909,13 @@ public class CameraSource {
      * size is null, then there is no picture size with the same aspect ratio as the preview size.
      */
     private static class SizePair {
+
         private Size mPreview;
+
         private Size mPicture;
 
         public SizePair(android.hardware.Camera.Size previewSize,
-                        android.hardware.Camera.Size pictureSize) {
+                android.hardware.Camera.Size pictureSize) {
             mPreview = new Size(previewSize.width, previewSize.height);
             if (pictureSize != null) {
                 mPicture = new Size(pictureSize.width, pictureSize.height);
@@ -1073,6 +1096,7 @@ public class CameraSource {
      * Called when the camera has a new preview frame.
      */
     private class CameraPreviewCallback implements Camera.PreviewCallback {
+
         @Override
         public void onPreviewFrame(byte[] data, Camera camera) {
             mFrameProcessor.setNextFrame(data, camera);
@@ -1090,16 +1114,21 @@ public class CameraSource {
      * received frame will immediately start on the same thread.
      */
     private class FrameProcessingRunnable implements Runnable {
+
         private Detector<?> mDetector;
+
         private long mStartTimeMillis = SystemClock.elapsedRealtime();
 
         // This lock guards all of the member variables below.
         private final Object mLock = new Object();
+
         private boolean mActive = true;
 
         // These pending variables hold the state associated with the new frame awaiting processing.
         private long mPendingTimeMillis;
+
         private int mPendingFrameId = 0;
+
         private ByteBuffer mPendingFrameData;
 
         FrameProcessingRunnable(Detector<?> detector) {
@@ -1141,8 +1170,8 @@ public class CameraSource {
 
                 if (!mBytesToByteBuffer.containsKey(data)) {
                     Log.d(TAG,
-                        "Skipping frame.  Could not find ByteBuffer associated with the image " +
-                        "data from the camera.");
+                            "Skipping frame.  Could not find ByteBuffer associated with the image " +
+                                    "data from the camera.");
                     return;
                 }
 

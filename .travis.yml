@@ -6,7 +6,9 @@ android:
   components:
     - platform-tools
     - tools
+    - build-tools-27.0.3
     - build-tools-26.0.2
+    - android-27
     - android-26
 cache:
   - bundler

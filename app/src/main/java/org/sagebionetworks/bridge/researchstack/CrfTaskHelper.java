@@ -111,6 +111,11 @@ public class CrfTaskHelper extends TaskHelper {
         }
     }
 
+    @Override
+    protected void onUploadSuccess(String taskId) {
+        CrfDataProvider.getInstance().completePreviouslyFailedUploads();
+    }
+
     /**
      * There is currently an architecture issue in Bridge SDK,
      * Where the survey answer type is coupled to a non-extendable enum,
