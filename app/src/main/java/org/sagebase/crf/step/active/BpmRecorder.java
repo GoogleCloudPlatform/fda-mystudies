@@ -22,16 +22,19 @@ import android.os.Handler;
 import android.os.Looper;
 import android.support.annotation.AnyThread;
 import android.support.annotation.UiThread;
-import android.util.Log;
 
 import com.google.gson.JsonObject;
 
 import org.researchstack.backbone.step.Step;
 import org.researchstack.backbone.step.active.recorder.JsonArrayDataRecorder;
+import org.researchstack.backbone.utils.FormatHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.File;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
 
 /**
  * Created by liujoshua on 2/19/2018.
@@ -179,6 +182,7 @@ public interface BpmRecorder {
         private static final Logger LOG = LoggerFactory.getLogger(HeartBeatJsonWriter.class);
         
         private static final float RED_INTENSITY_FACTOR_THRESHOLD = 2;
+        private static final String TIMESTAMP_DATE_KEY = "timestampDate";
         private static final String TIMESTAMP_IN_SECONDS_KEY = "timestamp";
         private static final String HEART_RATE_KEY = "bpm_camera";
         private static final String HUE_KEY = "hue";
@@ -191,7 +195,8 @@ public interface BpmRecorder {
         private static final int INTELLIGENT_START_FRAMES_TO_PASS = 30;
         
         private final JsonObject mJsonObject = new JsonObject();
-        
+
+        private double timestampZeroReference = 0;
         /**
          * Intelligent start is a feature that delays recording until
          * an algorithm determines the user's finger is in front of the camera
@@ -224,6 +229,18 @@ public interface BpmRecorder {
         @Override
         public void onHeartRateSampleDetected(HeartBeatSample sample) {
             bpmCalculator.calculateBpm(sample);
+
+            if (timestampZeroReference <= 0) {
+                // set timestamp reference, which timestamps are measured relative to
+                timestampZeroReference = sample.t;
+
+                Date timestampReferenceDate = new Date(System.currentTimeMillis());
+                mJsonObject.addProperty(TIMESTAMP_DATE_KEY,
+                        new SimpleDateFormat(FormatHelper.DATE_FORMAT_ISO_8601, Locale.getDefault())
+                                .format(timestampReferenceDate));
+                LOG.debug("TIMESTAMP Date key: " + mJsonObject.get(TIMESTAMP_DATE_KEY).getAsString());
+            }
+
             
             mJsonObject.addProperty(TIMESTAMP_IN_SECONDS_KEY,  sample.t / 1_000);
             mJsonObject.addProperty(HUE_KEY, sample.h);
