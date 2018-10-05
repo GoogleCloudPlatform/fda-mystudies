@@ -239,7 +239,6 @@ public interface BpmRecorder {
                 uptimeZeroReference = System.nanoTime() * 1e-9;
 
                 Date timestampReferenceDate = new Date(System.currentTimeMillis());
-                // TODO: syoung 10/04/2018 Figure out how to set timestamp dates to "en_US_POSIX"
                 mJsonObject.addProperty(TIMESTAMP_DATE_KEY,
                         new SimpleDateFormat(FormatHelper.DATE_FORMAT_ISO_8601, new Locale("en", "us", "POSIX"))
                                 .format(timestampReferenceDate));
