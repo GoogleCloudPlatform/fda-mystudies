@@ -31,6 +31,7 @@ public class HeartBeatSample {
     public float h;
     public float s;
     public float v;
+    public double redLevel;
     public int bpm;
 
     @Override
@@ -43,6 +44,7 @@ public class HeartBeatSample {
                 .add("h", h)
                 .add("s", s)
                 .add("v", v)
+                .add("redLevel", redLevel)
                 .add("bpm", bpm)
                 .toString();
     }

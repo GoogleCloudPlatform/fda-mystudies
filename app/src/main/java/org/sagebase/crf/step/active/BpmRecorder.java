@@ -187,7 +187,8 @@ public interface BpmRecorder {
         private static final String RED_KEY = "red";
         private static final String GREEN_KEY = "green";
         private static final String BLUE_KEY = "blue";
-        
+        private static final String RED_LEVEL_KEY = "redLevel";
+
         private static final int INTELLIGENT_START_FRAMES_TO_PASS = 30;
         
         private final JsonObject mJsonObject = new JsonObject();
@@ -232,6 +233,7 @@ public interface BpmRecorder {
             mJsonObject.addProperty(RED_KEY, sample.r);
             mJsonObject.addProperty(GREEN_KEY, sample.g);
             mJsonObject.addProperty(BLUE_KEY, sample.b);
+            mJsonObject.addProperty(RED_LEVEL_KEY, sample.redLevel);
             
             if (sample.bpm > 0) {
                 mJsonObject.addProperty(HEART_RATE_KEY, sample.bpm);
