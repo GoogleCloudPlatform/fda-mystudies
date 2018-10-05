@@ -33,8 +33,8 @@ public class HeartBeatUtil {
         long r = 0, g = 0, b = 0;
         int height = bitmap.getHeight();
         int width = bitmap.getWidth();
-        int intArray[] = new int[bitmap.getWidth() * bitmap.getHeight()];
-        bitmap.getPixels(intArray, 0, bitmap.getWidth(), 0, 0, bitmap.getWidth(), bitmap.getHeight());
+        int intArray[] = new int[width * height];
+        bitmap.getPixels(intArray, 0, width, 0, 0, width, height);
         for (int i = 0; i < intArray.length; i++) {
             double red = (intArray[i] >> 16) & 0xFF; // Color.red
             double green = (intArray[i] >> 8) & 0xFF; // Color.green
