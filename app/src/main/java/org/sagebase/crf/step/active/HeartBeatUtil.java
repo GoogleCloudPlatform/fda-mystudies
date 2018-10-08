@@ -29,13 +29,25 @@ public class HeartBeatUtil {
         HeartBeatSample sample = new HeartBeatSample();
         sample.t = timestamp;
 
+        long redCount = 0;
         long r = 0, g = 0, b = 0;
-        int intArray[] = new int[bitmap.getWidth() * bitmap.getHeight()];
-        bitmap.getPixels(intArray, 0, bitmap.getWidth(), 0, 0, bitmap.getWidth(), bitmap.getHeight());
+        int height = bitmap.getHeight();
+        int width = bitmap.getWidth();
+        int intArray[] = new int[width * height];
+        bitmap.getPixels(intArray, 0, width, 0, 0, width, height);
         for (int i = 0; i < intArray.length; i++) {
-            r += (intArray[i] >> 16) & 0xFF; // Color.red
-            g += (intArray[i] >> 8) & 0xFF; // Color.green
-            b += (intArray[i] & 0xFF); // Color.blue
+            double red = (intArray[i] >> 16) & 0xFF; // Color.red
+            double green = (intArray[i] >> 8) & 0xFF; // Color.green
+            double blue = (intArray[i] & 0xFF); // Color.blue
+
+            double h = getRedHueFromRed(red, green, blue);
+            if (h >= 0) {
+                redCount++;
+            }
+
+            r += red;
+            g += green;
+            b += blue;
         }
 
         long rawSampleR = r / intArray.length;
@@ -43,10 +55,29 @@ public class HeartBeatUtil {
         sample.r = ((float)r / (float)intArray.length) / 255.0f;
         sample.g = ((float)g / (float)intArray.length) / 255.0f;
         sample.b = ((float)b / (float)intArray.length) / 255.0f;
+        sample.redLevel = (double)redCount / (double)(width * height);
 
         fillHsv(sample);
 
         return sample;
+    }
+
+    private static final double RED_THRESHOLD = 40;
+
+    private static double getRedHueFromRed(double r, double g, double b) {
+        if ((r < g) || (r < b)) {
+            return -1;
+        }
+        double min = Math.min(g, b);
+        double delta = r - min;
+        if (delta < RED_THRESHOLD) {
+            return -1;
+        }
+        double hue = 60*((g - b) / delta);
+        if (hue < 0) {
+            hue += 360;
+        }
+        return hue;
     }
 
     private static void fillHsv(HeartBeatSample sample) {
