@@ -58,7 +58,7 @@ public class HeartBeatDetector extends Detector<HeartBeatSample> {
     @Override
     public SparseArray<HeartBeatSample> detect(Frame frame) {
 
-        long now = System.currentTimeMillis();
+        long now = frame.getMetadata().getTimestampMillis();
         if (startTime < 0) {
             startTime = now;
         }

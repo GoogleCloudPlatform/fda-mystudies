@@ -22,16 +22,19 @@ import android.os.Handler;
 import android.os.Looper;
 import android.support.annotation.AnyThread;
 import android.support.annotation.UiThread;
-import android.util.Log;
 
 import com.google.gson.JsonObject;
 
 import org.researchstack.backbone.step.Step;
 import org.researchstack.backbone.step.active.recorder.JsonArrayDataRecorder;
+import org.researchstack.backbone.utils.FormatHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.File;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
 
 /**
  * Created by liujoshua on 2/19/2018.
@@ -179,7 +182,9 @@ public interface BpmRecorder {
         private static final Logger LOG = LoggerFactory.getLogger(HeartBeatJsonWriter.class);
         
         private static final float RED_INTENSITY_FACTOR_THRESHOLD = 2;
+        private static final String TIMESTAMP_DATE_KEY = "timestampDate";
         private static final String TIMESTAMP_IN_SECONDS_KEY = "timestamp";
+        private static final String UPTIME_IN_SECONDS_KEY = "uptime";
         private static final String HEART_RATE_KEY = "bpm_camera";
         private static final String HUE_KEY = "hue";
         private static final String SATURATION_KEY = "saturation";
@@ -192,7 +197,10 @@ public interface BpmRecorder {
         private static final int INTELLIGENT_START_FRAMES_TO_PASS = 30;
         
         private final JsonObject mJsonObject = new JsonObject();
-        
+
+        private double timestampZeroReference = -1;
+        private double uptimeZeroReference = -1;
+
         /**
          * Intelligent start is a feature that delays recording until
          * an algorithm determines the user's finger is in front of the camera
@@ -225,8 +233,26 @@ public interface BpmRecorder {
         @Override
         public void onHeartRateSampleDetected(HeartBeatSample sample) {
             bpmCalculator.calculateBpm(sample);
-            
-            mJsonObject.addProperty(TIMESTAMP_IN_SECONDS_KEY,  sample.t / 1_000);
+
+            if (timestampZeroReference < 0) {
+                // set timestamp reference, which timestamps are measured relative to
+                timestampZeroReference = sample.t;
+                uptimeZeroReference = System.nanoTime() * 1e-9;
+
+                Date timestampReferenceDate = new Date(System.currentTimeMillis());
+                mJsonObject.addProperty(TIMESTAMP_DATE_KEY,
+                        new SimpleDateFormat(FormatHelper.DATE_FORMAT_ISO_8601, new Locale("en", "us", "POSIX"))
+                                .format(timestampReferenceDate));
+                LOG.debug("TIMESTAMP Date key: " + mJsonObject.get(TIMESTAMP_DATE_KEY).getAsString());
+            } else {
+                mJsonObject.remove(TIMESTAMP_DATE_KEY);
+            }
+
+            double relativeTimestamp = ((sample.t - timestampZeroReference) / 1_000);
+            double uptime = uptimeZeroReference + relativeTimestamp;
+
+            mJsonObject.addProperty(TIMESTAMP_IN_SECONDS_KEY, relativeTimestamp);
+            mJsonObject.addProperty(UPTIME_IN_SECONDS_KEY, uptime);
             mJsonObject.addProperty(HUE_KEY, sample.h);
             mJsonObject.addProperty(SATURATION_KEY, sample.s);
             mJsonObject.addProperty(BRIGHTNESS_KEY, sample.v);
