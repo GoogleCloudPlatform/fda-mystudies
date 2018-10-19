@@ -1,19 +1,20 @@
 package org.sagebase.crf;
 
+import android.app.Activity;
 import android.content.Intent;
-import android.support.annotation.NonNull;
-import android.support.v4.app.Fragment;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.view.MenuItem;
 import android.view.View;
 
 import org.researchstack.backbone.DataProvider;
-import org.researchstack.backbone.ResourceManager;
+import org.researchstack.backbone.StorageAccess;
 import org.researchstack.backbone.factory.IntentFactory;
-import org.researchstack.backbone.model.TaskModel;
+import org.researchstack.backbone.result.TaskResult;
 import org.researchstack.backbone.task.Task;
 import org.researchstack.backbone.ui.MainActivity;
+import org.researchstack.backbone.ui.ViewTaskActivity;
+import org.researchstack.backbone.utils.LogExt;
 import org.sagebase.crf.view.CrfFilterableActivityDisplay;
 import org.sagebionetworks.bridge.researchstack.CrfResourceManager;
 import org.sagebionetworks.bridge.researchstack.CrfTaskFactory;
@@ -22,6 +23,8 @@ import org.sagebionetworks.research.crf.R;
 import static org.researchstack.backbone.ui.fragment.ActivitiesFragment.REQUEST_TASK;
 
 public class HrMainActivity extends MainActivity {
+
+    private static final String LOG_TAG = HrMainActivity.class.getCanonicalName();
 
     private CrfTaskFactory taskFactory = new CrfTaskFactory();
     private IntentFactory intentFactory = IntentFactory.INSTANCE;
@@ -48,6 +51,20 @@ public class HrMainActivity extends MainActivity {
             startActivityForResult(getIntentFactory().newTaskIntent(this,
                     CrfActiveTaskActivity.class, activeTask), REQUEST_TASK);
 
+        }
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (resultCode == Activity.RESULT_OK && requestCode == REQUEST_TASK) {
+            LogExt.d(LOG_TAG, "Received task result from task activity");
+
+            TaskResult taskResult = (TaskResult) data.getSerializableExtra(ViewTaskActivity.EXTRA_TASK_RESULT);
+            StorageAccess.getInstance().getAppDatabase().saveTaskResult(taskResult);
+            DataProvider.getInstance().uploadTaskResult(this, taskResult);
+
+        } else {
+            super.onActivityResult(requestCode, resultCode, data);
         }
     }
 
