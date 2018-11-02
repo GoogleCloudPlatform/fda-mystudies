@@ -68,4 +68,9 @@
     <string name="crf_external_id_hint">Participant code</string>
     <string name="crf_external_empty"> </string>
 
+    <!-- Participant ID Screen -->
+    <string name="hr_participant_id_title">Enter participant ID</string>
+    <string name="hr_participant">Participant Id</string>
+    <string name="hr_participant_empty"> </string>
+
 </resources>

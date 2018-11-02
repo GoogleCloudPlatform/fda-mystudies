@@ -1,0 +1,34 @@
+{
+  "taskIdentifier" : "HeartRate Validation",
+  "schemaIdentifier" : "HeartRate Validation",
+  "optional" : false,
+  "taskSteps" : [
+    {
+      "identifier": "hr_participant_id",
+      "type": "hrParticipantId",
+      "title": "",
+      "text": "Enter participant ID",
+      "prompt": "participant ID",
+      "optional": "false"
+    },
+    {
+      "identifier"       : "instructionCamera",
+      "type"             : "crf_instruction",
+      "title"            : " ",
+      "text"             : "Capture heart rate",
+      "detailText"       : "Use your finger to cover the camera and flash on the back of your phone.",
+      "image"            : "crf_heart_rate_animation",
+      "imageColor"       : "macaroniAndCheese",
+      "scaleType"        : "CENTER_CROP",
+      "behindToolbar"    : "true",
+      "isImageAnimated"  : true,
+      "animationRepeatDuration" : 2000,
+      "buttonType"       : "heart",
+      "buttonText"       : "Press to start"
+    },
+    {
+      "identifier"       : "camera",
+      "type"             : "crf_heart_rate_camera_step"
+    }
+  ]
+}

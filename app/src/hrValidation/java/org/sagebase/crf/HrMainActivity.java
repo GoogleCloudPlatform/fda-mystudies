@@ -47,9 +47,11 @@ public class HrMainActivity extends MainActivity {
             startActivity(new Intent(this, HrOverviewActivity.class));
             finish();
         } else {
-            Task activeTask = taskFactory.createTask(this, CrfResourceManager.HEART_RATE_MEASUREMENT_TEST_RESOURCE);
-            startActivityForResult(getIntentFactory().newTaskIntent(this,
-                    CrfActiveTaskActivity.class, activeTask), REQUEST_TASK);
+            LogExt.d(LOG_TAG, "HrMainActivity onResume");
+            Task activeTask = taskFactory.createTask(this, CrfResourceManager.HEART_RATE_VALIDATION_TEST_RESOURCE);
+            Intent intent = getIntentFactory().newTaskIntent(this, CrfActiveTaskActivity.class, activeTask);
+            intent.putExtra(CrfActiveTaskActivity.EXTRA_HIDE_TOOLBAR, true  );
+            startActivityForResult(intent, REQUEST_TASK);
 
         }
     }
@@ -59,6 +61,7 @@ public class HrMainActivity extends MainActivity {
         if (resultCode == Activity.RESULT_OK && requestCode == REQUEST_TASK) {
             LogExt.d(LOG_TAG, "Received task result from task activity");
 
+            //TODO: Figure out why this isn't being called when heart_rate_validation task is finished.  -Nathaniel 11/2/2018
             TaskResult taskResult = (TaskResult) data.getSerializableExtra(ViewTaskActivity.EXTRA_TASK_RESULT);
             StorageAccess.getInstance().getAppDatabase().saveTaskResult(taskResult);
             DataProvider.getInstance().uploadTaskResult(this, taskResult);

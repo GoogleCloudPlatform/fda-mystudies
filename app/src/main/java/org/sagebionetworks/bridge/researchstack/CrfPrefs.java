@@ -31,6 +31,8 @@ public class CrfPrefs {
     private static final String KEY_REMINDER_TIME_HOUR = "reminder_time_hour";
     private static final String KEY_REMINDER_TIME_MINUTE = "reminder_time_minute";
 
+    private static final String KEY_HR_VALIDATION_PARTICIPANT_IDS = "hr_validation_participant_id";
+
     private static CrfPrefs instance;
 
     //-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
@@ -137,6 +139,16 @@ public class CrfPrefs {
 
     public int getReminderTimeMinute(int defaultValue) {
         return prefs.getInt(KEY_REMINDER_TIME_MINUTE, defaultValue);
+    }
+
+    public void addHrValidationParticipantId(String id) {
+        Set<String> idSet = prefs.getStringSet(KEY_HR_VALIDATION_PARTICIPANT_IDS, new HashSet<>());
+        idSet.add(id);
+        prefs.edit().putStringSet(KEY_HR_VALIDATION_PARTICIPANT_IDS, idSet).commit();
+    }
+
+    public Set<String> getHrValidationParticipantIds() {
+        return prefs.getStringSet(KEY_HR_VALIDATION_PARTICIPANT_IDS, new HashSet<>());
     }
 
     public void clear() {
