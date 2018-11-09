@@ -21,7 +21,11 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name="org.sagebase.crf.HrMainActivity"></activity>
+        <activity android:name="org.sagebase.crf.HrMainActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.Crf.Main">
+        </activity>
     </application>
 
 </manifest>

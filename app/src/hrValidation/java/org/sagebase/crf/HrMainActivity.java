@@ -4,6 +4,8 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 
@@ -42,31 +44,32 @@ public class HrMainActivity extends MainActivity {
 
     @Override
     public void onResume() {
+        Log.d(LOG_TAG, "HrMainActivity onResume");
         super.onResume();
         if (!DataProvider.getInstance().isSignedIn(this)) {
             startActivity(new Intent(this, HrOverviewActivity.class));
             finish();
         } else {
-            LogExt.d(LOG_TAG, "HrMainActivity onResume");
-            Task activeTask = taskFactory.createTask(this, CrfResourceManager.HEART_RATE_VALIDATION_TEST_RESOURCE);
-            Intent intent = getIntentFactory().newTaskIntent(this, CrfActiveTaskActivity.class, activeTask);
-            intent.putExtra(CrfActiveTaskActivity.EXTRA_HIDE_TOOLBAR, true  );
-            startActivityForResult(intent, REQUEST_TASK);
-
+            startHrValidation();
         }
     }
 
+    private void startHrValidation() {
+        Task activeTask = taskFactory.createTask(this, CrfResourceManager.HEART_RATE_VALIDATION_TEST_RESOURCE);
+        Intent intent = getIntentFactory().newTaskIntent(this, CrfActiveTaskActivity.class, activeTask);
+        intent.putExtra(CrfActiveTaskActivity.EXTRA_HIDE_TOOLBAR, true  );
+        startActivityForResult(intent, REQUEST_TASK);
+    }
+
     @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (resultCode == Activity.RESULT_OK && requestCode == REQUEST_TASK) {
             LogExt.d(LOG_TAG, "Received task result from task activity");
-
-            //TODO: Figure out why this isn't being called when heart_rate_validation task is finished.  -Nathaniel 11/2/2018
             TaskResult taskResult = (TaskResult) data.getSerializableExtra(ViewTaskActivity.EXTRA_TASK_RESULT);
             StorageAccess.getInstance().getAppDatabase().saveTaskResult(taskResult);
             DataProvider.getInstance().uploadTaskResult(this, taskResult);
-
         } else {
+            LogExt.d(LOG_TAG, "Received task result cancelled");
             super.onActivityResult(requestCode, resultCode, data);
         }
     }
