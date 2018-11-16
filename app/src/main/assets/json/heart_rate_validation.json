@@ -1,6 +1,6 @@
 {
-  "taskIdentifier" : "HeartRate Validation",
-  "schemaIdentifier" : "HeartRate Validation",
+  "taskIdentifier" : "HeartRate Measurement",
+  "schemaIdentifier" : "HeartRate Measurement",
   "optional" : false,
   "taskSteps" : [
     {
