@@ -42,7 +42,8 @@ android {
     productFlavors {
         hrValidation {
             dimension "version"
-            versionNameSuffix "hrv"
+            versionNameSuffix "-hrv"
+            applicationIdSuffix ".hrv"
         }
         crf {
             dimension "version"
