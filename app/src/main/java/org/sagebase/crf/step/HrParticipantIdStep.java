@@ -29,6 +29,7 @@ import org.researchstack.backbone.step.QuestionStep;
 import org.researchstack.backbone.step.Step;
 import org.researchstack.backbone.ui.step.body.TextQuestionBody;
 import org.sagebionetworks.bridge.researchstack.CrfPrefs;
+import org.sagebionetworks.bridge.rest.utils.StringUtil;
 import org.sagebionetworks.research.crf.R;
 
 import java.util.Collections;
@@ -36,7 +37,7 @@ import java.util.Collections;
 
 public class HrParticipantIdStep extends FormStep {
 
-    static final String PARTICIPANT_ID_RESULT_IDENTIFIER = "hr_participant_id_question";
+    static final String PARTICIPANT_ID_RESULT_IDENTIFIER = "participantID";
 
     /* Default constructor needed for serialization/deserialization of object */
     protected HrParticipantIdStep() {
@@ -92,7 +93,7 @@ public class HrParticipantIdStep extends FormStep {
         public boolean isAnswerValid(String text) {
             boolean isValid = super.isAnswerValid(text);
             if (isValid) {
-                if (TEST_PARTICIPANT_ID.equals(text) || !CrfPrefs.getInstance().getHrValidationParticipantIds().contains(text)) {
+                if (text.length() > 0 && (TEST_PARTICIPANT_ID.equals(text) || !CrfPrefs.getInstance().getHrValidationParticipantIds().contains(text))) {
                     isValid = true;
                 } else {
                     isValid = false;
