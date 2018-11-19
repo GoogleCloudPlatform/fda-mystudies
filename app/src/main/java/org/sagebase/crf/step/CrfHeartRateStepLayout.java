@@ -52,7 +52,7 @@ import org.researchstack.backbone.ui.step.layout.ActiveStepLayout;
 import org.researchstack.backbone.ui.views.ArcDrawable;
 import org.researchstack.backbone.utils.StepResultHelper;
 import org.sagebase.crf.camera.CameraSourcePreview;
-import org.sagebase.crf.step.active.BpmRecorder;
+import org.sagebase.crf.step.heartrate.BpmRecorder;
 import org.sagebase.crf.step.active.HeartRateCamera2Recorder;
 import org.sagebase.crf.step.active.HeartRateCameraRecorder;
 import org.sagebase.crf.step.active.HeartRateCameraRecorderConfig;
