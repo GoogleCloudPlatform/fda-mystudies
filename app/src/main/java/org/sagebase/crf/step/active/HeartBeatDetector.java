@@ -29,7 +29,6 @@ import org.sagebase.crf.camera.CameraSource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import static org.sagebase.crf.step.active.HeartBeatUtil.getHeartBeatSample;
 import static org.sagebase.crf.step.active.ImageUtils.toBitmap;
 
 /**
@@ -49,8 +48,9 @@ public class HeartBeatDetector extends Detector<HeartBeatSample> {
 
     
     private static long startTime = -1;
-    
-    
+    private HeartBeatUtil heartBeatUtil = new HeartBeatUtil();
+
+
     public HeartBeatDetector(Context applicationContext) {
         this.context = applicationContext;
         rs = RenderScript.create(context);
@@ -87,7 +87,7 @@ public class HeartBeatDetector extends Detector<HeartBeatSample> {
         //Log.d("Timing", "rgb " + (System.currentTimeMillis() - startTime));
         //startTime = System.currentTimeMillis();
 
-        HeartBeatSample sample = getHeartBeatSample(now, bitmap);
+        HeartBeatSample sample = heartBeatUtil.getHeartBeatSample(now, bitmap);
 
         //Log.d("RGB", "" + sample.r + ", " + sample.g + ", " + sample.b);
         SparseArray<HeartBeatSample> samples = new SparseArray<>();
