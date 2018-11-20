@@ -19,67 +19,42 @@ package org.sagebase.crf.step.active;
 
 import com.google.common.base.MoreObjects;
 
+import java.util.Date;
+
 /**
  * Created by TheMDP on 10/17/17.
  */
 
 public class HeartBeatSample {
-    public double t;
-    public float r;
-    public float g;
-    public float b;
-    public float h;
-    public float s;
-    public float v;
+    public double timestamp;
+    public double uptime;
+    public double red;
+    public double green;
+    public double blue;
     public double redLevel;
     public int bpm;
+    public double confidence;
+    public Date timestampDate;
 
     @Override
     public String toString() {
         return MoreObjects.toStringHelper(this)
-                .add("t", t)
-                .add("r", r)
-                .add("g", g)
-                .add("b", b)
-                .add("h", h)
-                .add("s", s)
-                .add("v", v)
+                .add("timestamp", timestamp)
+                .add("uptime", uptime)
+                .add("red", red)
+                .add("green", green)
+                .add("blue", blue)
                 .add("redLevel", redLevel)
                 .add("bpm", bpm)
+                .add("confidence", confidence)
                 .toString();
     }
 
-    // The minimum "red level" (number of pixels that are "red" dominant) to qualify as having the lens covered.
-    private static final double MIN_RED_LEVEL = 0.9;
-
-    // Look for the hue to be in the red zone and the saturation to be fairly high.
-    private static final float LOW_HUE = (float)30.0;
-    private static final float HIGH_HUE = (float)350.0;
-    private static final float MIN_SATURATION = (float)0.7;
+    // The minimum "red level"
+    private static final double MIN_RED_LEVEL = 40.0;
 
     /// Is the user's finger covering the lens?
     public boolean isCoveringLens() {
-
-        float red = r;
-        float green = g;
-        float blue = b;
-
-        // If the red level isn't high enough then exit with false.
-        if ((redLevel >= MIN_RED_LEVEL) && (red > green) && (red > blue)) { }
-        else {
-            return false;
-        }
-
-        // Calculate hue and saturation.
-        float minValue = Math.min(green, blue);
-        float maxValue = red;
-        float delta = maxValue - minValue;
-        float hue = 60 * ((green - blue) / delta);
-        if (hue < 0) {
-            hue += 360;
-        }
-        float saturation = delta / maxValue;
-
-        return (hue <= LOW_HUE || hue >= HIGH_HUE) && (saturation >= MIN_SATURATION);
+        return (redLevel <= MIN_RED_LEVEL) || (confidence >= 0.5);
     }
 }
