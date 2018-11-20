@@ -509,7 +509,7 @@ public class HeartRateCamera2Recorder extends Recorder {
             else {
                 // TODO: syoung 10/30/2018 FIXME!! Not supported camera (I think). Without the ability to turn off the auto-exposure, we cannot control the frame rate.
                 requestBuilder.set(CaptureRequest.CONTROL_AE_MODE, CameraMetadata.CONTROL_AE_MODE_ON);
-                LOG.debug("WARNING! Camera Settings: Auto-Exposure to ON");
+                LOG.warn("WARNING! Camera Settings: Auto-Exposure to ON");
             }
 
             // CONTROL_AE_ANTIBANDING_MODE
@@ -520,7 +520,7 @@ public class HeartRateCamera2Recorder extends Recorder {
             }
             else {
                 // TODO: syoung 10/30/2018 FIXME!! Not supported camera (I think).
-                LOG.debug("WARNING! Camera Settings: Available Control AE Antibanding Modes {}", availableAntibandingModes);
+                LOG.warn("WARNING! Camera Settings: Available Control AE Antibanding Modes {}", availableAntibandingModes);
             }
     
             // let's not do any AWB for now. seems complex and interacts with AE
@@ -541,7 +541,7 @@ public class HeartRateCamera2Recorder extends Recorder {
             }
             else {
                 // TODO: syoung 10/30/2018 FIXME!! Not supported camera (I think).
-                LOG.debug("WARNING! Camera Settings: Available Color Correction Abberation Modes {}", availableColorModes);
+                LOG.warn("WARNING! Camera Settings: Available Color Correction Abberation Modes {}", availableColorModes);
             }
 
             // Turn everything else OFF. ¯\_(ツ)_/¯ syoung 11/02/2018
