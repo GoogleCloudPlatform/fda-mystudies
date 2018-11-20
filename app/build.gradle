@@ -38,6 +38,17 @@ android {
     dexOptions {
         javaMaxHeapSize "4g"
     }
+    flavorDimensions "version"
+    productFlavors {
+        hrValidation {
+            dimension "version"
+            versionNameSuffix "-hrv"
+            applicationIdSuffix ".hrv"
+        }
+        crf {
+            dimension "version"
+        }
+    }
 }
 
 dependencies {

@@ -26,7 +26,9 @@ import org.researchstack.backbone.model.survey.BooleanQuestionSurveyItem;
 import org.researchstack.backbone.model.survey.ChoiceQuestionSurveyItem;
 import org.researchstack.backbone.model.survey.FormSurveyItem;
 import org.researchstack.backbone.model.survey.IntegerRangeSurveyItem;
+import org.researchstack.backbone.model.survey.QuestionSurveyItem;
 import org.researchstack.backbone.model.survey.SurveyItem;
+import org.researchstack.backbone.model.survey.TextfieldSurveyItem;
 import org.sagebase.crf.step.CrfCompletionSurveyItem;
 import org.sagebase.crf.step.CrfInstructionSurveyItem;
 import org.sagebase.crf.step.CrfStartTaskSurveyItem;
@@ -50,6 +52,7 @@ public class CrfSurveyItemAdapter extends BridgeSurveyItemAdapter {
     public static final String CRF_SINGLE_CHOICE_SURVEY_ITEM_TYPE = "crfSingleChoice";
     public static final String CRF_MULTIPLE_CHOICE_SURVEY_ITEM_TYPE = "crfMultipleChoice";
     public static final String CRF_BOOLEAN_SURVEY_ITEM_TYPE = "crfBoolean";
+    public static final String HR_PARTICIPANT_ID_SURVEY_ITEM_TYPE = "hrParticipantId";
 
     @VisibleForTesting
     static final Map<String, Class<? extends SurveyItem>> TYPE_TO_CLASS =
@@ -68,6 +71,7 @@ public class CrfSurveyItemAdapter extends BridgeSurveyItemAdapter {
                     .put(CRF_SINGLE_CHOICE_SURVEY_ITEM_TYPE, ChoiceQuestionSurveyItem.class)
                     .put(CRF_MULTIPLE_CHOICE_SURVEY_ITEM_TYPE, ChoiceQuestionSurveyItem.class)
                     .put(CRF_BOOLEAN_SURVEY_ITEM_TYPE, BooleanQuestionSurveyItem.class)
+                    .put(HR_PARTICIPANT_ID_SURVEY_ITEM_TYPE, TextfieldSurveyItem.class)
                     .build();
 
     @Override

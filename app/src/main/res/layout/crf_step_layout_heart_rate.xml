@@ -38,10 +38,23 @@
         android:layout_marginRight="@dimen/rsb_padding_large"
         android:layout_marginBottom="@dimen/rsb_padding_large" />
 
-    <FrameLayout
+    <Button
+        style="@style/Widget.AppCompat.Button.Borderless"
+        android:id="@+id/crf_redo_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/crf_heart_rate_title"
+        android:layout_centerHorizontal="true"
+        android:gravity="center"
+        android:textAllCaps="false"
+        android:text="@string/crf_redo_measurement"
+        android:visibility="gone"
+        />
+
+    <FrameLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/crf_redo_button"
         android:layout_centerHorizontal="true">
 
         <FrameLayout

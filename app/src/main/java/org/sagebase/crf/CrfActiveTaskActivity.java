@@ -48,6 +48,7 @@ import org.researchstack.backbone.ui.step.layout.StepLayout;
 import org.researchstack.backbone.utils.ResUtils;
 import org.sagebase.crf.step.CrfResultListener;
 import org.sagebase.crf.step.CrfStartTaskStep;
+import org.sagebase.crf.step.HrParticipantIdStep;
 import org.sagebase.crf.view.CrfTaskStatusBarManipulator;
 import org.sagebase.crf.view.CrfTaskToolbarActionManipulator;
 import org.sagebase.crf.view.CrfTaskToolbarIconManipulator;
@@ -62,11 +63,15 @@ import org.sagebionetworks.research.crf.R;
 
 public class CrfActiveTaskActivity extends ActiveTaskActivity {
 
+    public static final String EXTRA_HIDE_TOOLBAR = "CrfActiveTaskActivity.ExtraHideToolbar";
+
     public static Intent newIntent(Context context, Task task) {
         Intent intent = new Intent(context, CrfActiveTaskActivity.class);
         intent.putExtra(EXTRA_TASK, task);
         return intent;
     }
+
+    private boolean hideToolbar = false;
 
     protected CrfTransparentToolbar getToolbar() {
         if (toolbar != null && toolbar instanceof CrfTransparentToolbar) {
@@ -95,6 +100,7 @@ public class CrfActiveTaskActivity extends ActiveTaskActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         crfStepProgressTextview = findViewById(R.id.crf_step_progress_textview);
+        hideToolbar = getIntent().getBooleanExtra(EXTRA_HIDE_TOOLBAR, false);
     }
 
     @Override
@@ -195,6 +201,10 @@ public class CrfActiveTaskActivity extends ActiveTaskActivity {
             crfStepProgressTextview.setText(str);
         } else {
             Log.e("CrfActiveTaskActivity", "Progress Bars only work with OrderedTask");
+        }
+        if (hideToolbar) {
+            toolbar.setVisibility(View.GONE);
+            crfStepProgressTextview.setVisibility(View.GONE);
         }
 
         // Media Volume controls
