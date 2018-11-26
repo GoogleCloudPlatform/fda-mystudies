@@ -17,6 +17,7 @@
 
 package org.sagebase.crf.step.heartrate.camera_error;
 
+import org.sagebase.crf.step.active.HeartBeatSample;
 import org.sagebase.crf.step.heartrate.ErrorAlgorithm;
 
 public class CameraAlgorithm implements ErrorAlgorithm {
@@ -25,7 +26,11 @@ public class CameraAlgorithm implements ErrorAlgorithm {
 
     }
 
-    public double algorithm() {
+    public static double algorithm() {
+        boolean cameraResult = HeartBeatSample.isCoveringLens();
+        if (cameraResult) {
+            return 1.0;
+        }
         return 0.0;
     }
 }

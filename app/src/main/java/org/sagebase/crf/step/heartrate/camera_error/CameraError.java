@@ -27,6 +27,9 @@ public class CameraError implements ErrorDetection {
 
     // Need to develop the algorithm
     public boolean hasError() {
-        return true;
+        if (CameraAlgorithm.algorithm() > 0.5) {
+            return true;
+        }
+        return false;
     }
 }
