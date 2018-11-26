@@ -24,6 +24,6 @@ public interface ErrorAlgorithm {
     /* Return a double reporting how likely it is that an error is present. The closer to 0, the
     less likely there is an error, the closer to 1, the more likely
      */
-    double algorithm();
+    static double algorithm();
 
 }

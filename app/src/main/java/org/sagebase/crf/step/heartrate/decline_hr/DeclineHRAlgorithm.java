@@ -20,14 +20,14 @@ package org.sagebase.crf.step.heartrate.decline_hr;
 import org.sagebase.crf.step.heartrate.ErrorAlgorithm;
 
 public class DeclineHRAlgorithm implements ErrorAlgorithm {
-    int[] previousState;
-    double decline_threshold = 0.1;
+    public static int[] previousState;
+    private static double decline_threshold = 0.1;
 
     public void getPreviousState() {
 
     }
 
-    public double algorithm() {
+    public static double algorithm() {
         // Look at the difference between the first and last elements
         int first = previousState[0];
         int last = previousState[previousState.length - 1];

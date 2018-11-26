@@ -32,6 +32,10 @@ public class DeclineHRError implements ErrorDetection {
 
     // Need to develop the algorithm
     public boolean hasError() {
+        double computation = DeclineHRAlgorithm.algorithm();
+        if (computation < 0.5) {
+            return false;
+        }
         return true;
     }
 }
