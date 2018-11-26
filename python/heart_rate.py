@@ -64,7 +64,7 @@ def get_hr_from_time_series(x, sampling_rate, min_hr=40, max_hr=200):
 	for i in range(len(x)):
 		if x[i] is None:
 			x[i] = 0
-
+			
 
 	return 0
 

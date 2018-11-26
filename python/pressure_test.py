@@ -18,139 +18,46 @@ def butter_bandpass_filter(data, lowcut, highcut, fs=60, order=5):
     y = lfilter(b, a, data)
     return y
 
-threshold = .10
-lowcut_global = 2
-highcut_global = 25
+def parse_json():
+	json_file_camera = user + "-rgb.json"
 
-# Parse the json
-json_file = "Michael.json"
-x_axis = []
-y_axis = []
-z_axis = []
+	parsed_json_camera = {}
+	with open(json_file_camera) as data_file:
+		parsed_json_camera = json.load(data_file)
 
-json_file_camera = "Michael-rgb.json"
-red = []
-parsed_json_camera = {}
-with open(json_file_camera) as data_file:
-	parsed_json_camera = json.load(data_file)
+	for x in parsed_json_camera:
+		if "red" not in list(x):
+			continue
+		red.append(x["red"])
 
-for x in parsed_json_camera:
-	if "red" not in list(x):
-		continue
-	red.append(x["red"])
+	parsed_json = {}
+	with open(json_file) as data_file:
+	    parsed_json = json.load(data_file)
 
-print(str(red[:10]))
+	for x in parsed_json:
+	    # Don't consider the first json blob
+	    if "x" not in list(x):
+	        continue
+	    if x['sensorType'] == "gyro":
+	    	x_axis.append(x['x'])
+	    	y_axis.append(x['y'])
+	    	z_axis.append(x['z'])
+	    if x['sensorType'] == "accelerometer":
+	    	x_accel.append(x['x'])
+	    	y_accel.append(x['y'])
+	    	z_accel.append(x['z'])
 
-parsed_json = {}
-with open(json_file) as data_file:
-    parsed_json = json.load(data_file)
+def calculate_total_energy(filtered, step):
+	te = []
+	for i in range(0, len(filtered), step):
+		te.append(np.sum(np.square(filtered[i:i + 1001])))
+	return te
 
-for x in parsed_json:
-    # Don't consider the first json blob
-    if "x" not in list(x):
-        continue
-    if x['sensorType'] == "gyro":
-    	x_axis.append(x['x'])
-    	y_axis.append(x['y'])
-    	z_axis.append(x['z'])
-
-num_samples = len(x_axis)
-
-# Apply butterworth bandpass filter and plot each axis on the same graph
-# The blue is unfiltered, the green is filtered, red is fft, magenta is te
-x_filtered = butter_bandpass_filter(x_axis, lowcut_global, highcut_global, 100, 5)
-
-#x_fft = np.fft.fft(x_filtered)
-x_te = []
-for i in range(0, len(x_filtered), 500):
-    x_te.append(np.sum(np.square(x_filtered[i:i + 1001])))
-
-#plt.figure(1)
-#plt.plot(x_axis, 'b')
-#plt.plot(x_filtered, 'g')
-#plt.plot(x_te, 'm')
-#plt.show()
-#plt.close(1)
-
-y_filtered = butter_bandpass_filter(y_axis, lowcut_global, highcut_global, 100, 5)
-#y_fft = np.fft.fft(y_filtered)
-y_te = []
-for i in range(0, len(x_filtered), 500):
-    y_te.append(np.sum(np.square(y_filtered[i:i + 1001])))
-#plt.figure(2)
-#plt.plot(y_axis, 'b')
-#plt.plot(y_filtered, 'g')
-#plt.plot(y_te, 'm')
-#plt.show()
-#plt.close(2)
-
-z_filtered = butter_bandpass_filter(z_axis, lowcut_global, highcut_global, 100, 5)
-#z_fft = np.fft.fft(z_filtered)
-z_te = []
-for i in range(0, len(x_filtered), 500):
-    z_te.append(np.sum(np.square(z_filtered[i:i + 1001])))
-#plt.figure(3)
-#plt.plot(z_axis, 'b')
-#plt.plot(z_filtered, 'g')
-#plt.plot(z_te, 'm')
-#plt.show()
-#plt.close(3)
-
-
-
-#plt.figure(4)
-#plt.plot(te, 'b')
-#plt.show()
-#plt.close(4)
-
-#Plot the energy
-#plt.figure(2)
-#plt.plot(x_te, 'b')
-#plt.plot(y_te, 'g')
-#plt.plot(z_te, 'r')
-#plt.show()
-#plt.close(2)
-
-# Find the standard deviation of sf(t) over time in each window with 10 seconds
-x_std = []
-for i in range(0, len(x_filtered), 500):
-    x_std.append(np.std(x_filtered[i:i + 1001]))
-
-y_std = []
-for i in range(0, len(y_filtered), 500):
-    y_std.append(np.std(y_filtered[i:i+1001]))
-
-z_std = []
-for i in range(0, len(z_filtered), 500):
-    z_std.append(np.std(z_filtered[i:i+1001]))
-
-
-#plt.figure(3)
-#plt.plot(x_std, 'b')
-#plt.plot(y_std, 'g')
-#plt.plot(z_std, 'r')
-#plt.show()
-#plt.close(3)
-
-
-te = np.add(x_te, np.add(y_te, z_te))
-tstd = np.add(x_std, np.add(y_std, z_std))
-threshold_line = [threshold] * num_samples
-
-#plt.figure(1)
-#plt.plot(te, 'b')
-##plt.plot(threshold_line, 'b')
-#plt.show()
-#plt.close(1)
-
-#plt.figure(2)
-#plt.plot(tstd[300:], 'g')
-#plt.show()
-#plt.close(2)
-
-
-
-# Look at red, returns a filtered heart rate signal
+def calculate_std(filtered, step):
+	std = []
+	for i in range(0, len(filtered), step):
+		std.append(np.std(filtered[i:i + 1001]))
+	return std
 
 def filter_heart_rate(hr, order):
 	global_mean = np.mean(hr)
@@ -183,33 +90,63 @@ def filter_heart_rate(hr, order):
 
 	return y
 
-norm = 0
-for x in red:
-	norm += x*x
+def normalize(original):
+	ss = 0
+	for x in original:
+		ss += x*x
 
-norm = math.sqrt(norm)
+	ss = math.sqrt(ss)
 
-red = [float(x)/norm for x in red]
+	norm = [float(x)/ss for x in original]
+	return norm
 
-#plt.figure(1)
-#plt.plot(red[2000:3000], 'r')
-#plt.show()
-#plt.close(1)
 
-#plt.figure(2)
-#plt.plot(filter_heart_rate(red, 67)[2000:3000], 'b')
-#plt.show()
-#plt.close(2)
+# Global variables
+user = "Nick-2"
+threshold = .10
+lowcut_global = 2
+highcut_global = 25
+step = 500
 
-#plt.figure(3)
-#plt.plot(te, 'r')
-#plt.show()
-#plt.close(3)
+# Parse the json
+json_file = user + ".json"
+x_axis = []
+y_axis = []
+z_axis = []
 
-#plt.figure(4)
-#plt.plot(tstd, 'r')
-#plt.show()
-#plt.close(4)
+x_accel = []
+y_accel = []
+z_accel = []
+
+red = []
+parse_json()
+
+num_samples = len(x_axis)
+
+# Apply butterworth bandpass filter and plot each axis on the same graph
+# The blue is unfiltered, the green is filtered, red is fft, magenta is te
+x_filtered = butter_bandpass_filter(x_axis, lowcut_global, highcut_global, 100, 5)
+x_te = calculate_total_energy(x_filtered, step)
+x_std = calculate_std(x_filtered, step)
+
+
+y_filtered = butter_bandpass_filter(y_axis, lowcut_global, highcut_global, 100, 5)
+y_te = calculate_total_energy(y_filtered, step)
+y_std = calculate_std(y_filtered, step)
+
+
+z_filtered = butter_bandpass_filter(z_axis, lowcut_global, highcut_global, 100, 5)
+z_te = calculate_total_energy(z_filtered, step)
+z_std = calculate_std(z_filtered, step)
+
+
+te = np.add(x_te, np.add(y_te, z_te))
+tstd = np.add(x_std, np.add(y_std, z_std))
+threshold_line = [threshold] * num_samples
+
+# Look at red, returns a filtered heart rate signal
+red = normalize(red)
+
 
 a = []
 for i in range(len(x_axis)):
@@ -224,12 +161,6 @@ for i in range(len(x_axis)):
 
 	dp = curr_x * prev_x + curr_y * prev_y + curr_z * prev_z
 	a.append(dp)
-
-plt.figure(5)
-plt.plot(a, 'r')
-plt.show()
-plt.close(5)
-
 
 c = []
 for i in range(len(x_axis)):
@@ -252,26 +183,39 @@ for i in range(len(x_axis)):
 	c.append(num / denom)
 
 # Normalize c
-norm = 0
-for x in c:
-	norm += x * x
+c = normalize(c)
 
-norm = math.sqrt(norm)
-c = [x/norm for x in c]
+plt.figure(5)
+plt.title("Dot Product Equation")
+plt.plot(a, 'r')
+plt.show()
+plt.close(5)
 
 plt.figure(6)
+plt.title("Angle Equation")
 plt.plot(c, 'r')
 plt.show()
 plt.close(6)
 
-new_std = []
-for i in range(0, len(c), 500):
-    new_std.append(np.std(c[i:i + 1001]))
+new_std = calculate_std(c, step)
 
 plt.figure(7)
+plt.title("Standard Deviation of Angle Equation")
 plt.plot(new_std, 'r')
 plt.show()
 plt.close(7)
+
+plt.figure(8)
+plt.title("Accelerometer Readings")
+plt.plot(x_accel, 'r')
+plt.plot(y_accel, 'b')
+plt.plot(z_accel, 'g')
+plt.show()
+plt.close(8)
+
+
+
+
 
 
 
