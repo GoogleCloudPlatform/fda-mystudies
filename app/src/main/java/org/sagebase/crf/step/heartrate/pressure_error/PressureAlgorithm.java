@@ -25,7 +25,7 @@ public class PressureAlgorithm implements ErrorAlgorithm {
 
     }
 
-    // Get all the rgb stuff, then look at the 
+    // Get all the rgb stuff, then look at the gyroscope stuff
     public double algorithm() {
         return 0.0;
     }

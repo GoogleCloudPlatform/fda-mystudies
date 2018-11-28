@@ -22,15 +22,12 @@ import org.sagebase.crf.step.heartrate.abnormal_hr.AbnormalHRError;
 import org.sagebase.crf.step.heartrate.decline_hr.DeclineHRError;
 import org.sagebase.crf.step.heartrate.pressure_error.PressureError;
 import org.sagebase.crf.step.heartrate.confidence_error.ConfidenceError;
+import java.util.*;
 
 public class ErrorDetectionStream {
-    // Possible errors to cycle through
-    public ErrorType[] possible_errors = new ErrorType[]{ErrorType.CAMERA_COVERAGE,
-            ErrorType.PRESSURE, ErrorType.ABNORMAL_HR, ErrorType.LOW_CONFIDENCE,
-            ErrorType.DECLINE_HR};
 
     // Error to act on
-    public ErrorType most_prominent_error;
+    public ArrayList<ErrorType> most_prominent_errors = new ArrayList<>();
 
     CameraError camera = new CameraError();
     DeclineHRError decline = new DeclineHRError();
@@ -40,11 +37,24 @@ public class ErrorDetectionStream {
 
     // An array of the last 10 heart rate samples
 
+    ErrorDetection[] possible_errors =
+            new ErrorDetection[]{camera, decline, pressure, abnormal, confidence};
 
     // A method to go through all of the error types
-    public void detectError() {
-        for (ErrorType e: possible_errors) {
-
+    public void detectErrors() {
+        for(ErrorDetection e: possible_errors) {
+            if(e.hasError()) {
+                most_prominent_errors.add(e.getErrorType());
+            }
         }
     }
+
+    // Act on the errors that we detected
+    public void resolveErrors() {
+        detectErrors();
+
+        ErrorResolutionStream.resolveErrors(most_prominent_errors);
+
+    }
+
 }
