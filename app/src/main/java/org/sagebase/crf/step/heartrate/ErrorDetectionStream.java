@@ -53,7 +53,12 @@ public class ErrorDetectionStream {
     public void resolveErrors() {
         detectErrors();
 
-        ErrorResolutionStream.resolveErrors(most_prominent_errors);
+        if(most_prominent_errors.isEmpty()) {
+            System.out.println("No errors detected");
+        }
+        else {
+            ErrorResolutionStream.resolveErrors(most_prominent_errors);
+        }
 
     }
 
