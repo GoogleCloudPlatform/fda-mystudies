@@ -82,4 +82,14 @@ public class HeartBeatSample {
 
         return (hue <= LOW_HUE || hue >= HIGH_HUE) && (saturation >= MIN_SATURATION);
     }
+
+    public static boolean isPressureExcessive() {
+        int hr = bpm;
+
+        if(hr > 250 || hr <= 40) {
+            return true;
+        }
+
+        return false;
+    }
 }
