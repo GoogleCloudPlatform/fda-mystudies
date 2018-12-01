@@ -15,7 +15,7 @@
  *
  */
 
-package org.sagebase.crf.step.active;
+package org.sagebase.crf.step.heartrate;
 
 import android.content.Context;
 import android.os.Handler;
@@ -28,6 +28,8 @@ import com.google.gson.JsonObject;
 import org.researchstack.backbone.step.Step;
 import org.researchstack.backbone.step.active.recorder.JsonArrayDataRecorder;
 import org.researchstack.backbone.utils.FormatHelper;
+import org.sagebase.crf.step.active.HeartBeatSample;
+import org.sagebase.crf.step.active.HeartbeatSampleTracker;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -176,8 +178,7 @@ public interface BpmRecorder {
     }
     
     class HeartBeatJsonWriter extends JsonArrayDataRecorder
-            implements HeartbeatSampleTracker
-            .HeartRateUpdateListener {
+            implements HeartbeatSampleTracker.HeartRateUpdateListener {
         
         private static final Logger LOG = LoggerFactory.getLogger(HeartBeatJsonWriter.class);
         

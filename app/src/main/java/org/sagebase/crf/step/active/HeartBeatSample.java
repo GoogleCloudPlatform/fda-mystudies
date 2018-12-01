@@ -25,14 +25,14 @@ import com.google.common.base.MoreObjects;
 
 public class HeartBeatSample {
     public double t;
-    public float r;
-    public float g;
-    public float b;
-    public float h;
-    public float s;
-    public float v;
-    public double redLevel;
-    public int bpm;
+    public static float r;
+    public static float g;
+    public static float b;
+    public static float h;
+    public static float s;
+    public static float v;
+    public static double redLevel;
+    public static int bpm;
 
     @Override
     public String toString() {
@@ -58,7 +58,7 @@ public class HeartBeatSample {
     private static final float MIN_SATURATION = (float)0.7;
 
     /// Is the user's finger covering the lens?
-    public boolean isCoveringLens() {
+    public static boolean isCoveringLens() {
 
         float red = r;
         float green = g;
@@ -81,5 +81,15 @@ public class HeartBeatSample {
         float saturation = delta / maxValue;
 
         return (hue <= LOW_HUE || hue >= HIGH_HUE) && (saturation >= MIN_SATURATION);
+    }
+
+    public static boolean isPressureExcessive() {
+        int hr = bpm;
+
+        if(hr > 250 || hr <= 40) {
+            return true;
+        }
+
+        return false;
     }
 }

@@ -31,6 +31,7 @@ import org.researchstack.backbone.step.active.recorder.RecorderListener;
 import org.sagebase.crf.camera.CameraSource;
 import org.sagebase.crf.camera.CameraSourcePreview;
 import org.sagebase.crf.step.CrfHeartRateStepLayout;
+import org.sagebase.crf.step.heartrate.BpmRecorder;
 
 import java.io.File;
 import java.io.IOException;
