@@ -33,6 +33,7 @@ public class PressureError implements ErrorDetection {
 
     // Need to develop the algorithm
     public boolean hasError() {
-        return true;
+
+        return PressureAlgorithm.algorithm() > 0.5;
     }
 }

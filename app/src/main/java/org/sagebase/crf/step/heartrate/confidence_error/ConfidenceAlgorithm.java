@@ -25,7 +25,7 @@ public class ConfidenceAlgorithm implements ErrorAlgorithm {
 
     }
 
-    public double algorithm() {
+    public static double algorithm() {
         return 0.0;
     }
 }

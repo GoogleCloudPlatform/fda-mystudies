@@ -30,8 +30,7 @@ public class AbnormalHRError implements ErrorDetection {
         return this.errorType;
     }
 
-    // Need to develop the algorithm
     public boolean hasError() {
-        return true;
+        return AbnormalHRAlgorithm.algorithm() > 0.5;
     }
 }

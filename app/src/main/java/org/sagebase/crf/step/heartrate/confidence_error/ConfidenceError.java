@@ -32,6 +32,7 @@ public class ConfidenceError implements ErrorDetection {
 
     // Need to develop the algorithm
     public boolean hasError() {
-        return true;
+
+        return ConfidenceAlgorithm.algorithm() > 0.5;
     }
 }
