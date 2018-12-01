@@ -17,6 +17,7 @@
 
 package org.sagebase.crf.step.heartrate.pressure_error;
 
+import org.sagebase.crf.step.active.HeartBeatSample;
 import org.sagebase.crf.step.heartrate.ErrorAlgorithm;
 
 public class PressureAlgorithm implements ErrorAlgorithm {
@@ -27,6 +28,11 @@ public class PressureAlgorithm implements ErrorAlgorithm {
 
     // Get all the rgb stuff, then look at the gyroscope stuff
     public static double algorithm() {
-        return 0.0;
+        if(HeartBeatSample.isPressureExcessive()) {
+            return 1.0;
+        }
+        else{
+            return 0.0;
+        }
     }
 }
