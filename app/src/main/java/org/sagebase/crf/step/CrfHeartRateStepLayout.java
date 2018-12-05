@@ -27,7 +27,6 @@ import android.support.annotation.Nullable;
 import android.support.annotation.UiThread;
 import android.support.v4.content.res.ResourcesCompat;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.TextureView;
 import android.view.View;
 import android.view.ViewGroup;
@@ -36,9 +35,7 @@ import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.view.animation.Transformation;
 import android.widget.Button;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import org.researchstack.backbone.answerformat.DecimalAnswerFormat;
@@ -53,7 +50,6 @@ import org.researchstack.backbone.step.active.recorder.RecorderListener;
 import org.researchstack.backbone.ui.callbacks.StepCallbacks;
 import org.researchstack.backbone.ui.step.layout.ActiveStepLayout;
 import org.researchstack.backbone.ui.views.ArcDrawable;
-import org.researchstack.backbone.utils.LogExt;
 import org.researchstack.backbone.utils.StepResultHelper;
 import org.sagebase.crf.camera.CameraSourcePreview;
 import org.sagebase.crf.step.heartrate.BpmRecorder;
@@ -61,7 +57,6 @@ import org.sagebase.crf.step.active.HeartRateCamera2Recorder;
 import org.sagebase.crf.step.active.HeartRateCameraRecorder;
 import org.sagebase.crf.step.active.HeartRateCameraRecorderConfig;
 import org.sagebase.crf.view.CrfTaskStatusBarManipulator;
-import org.sagebase.crf.view.CrfTaskToolbarProgressManipulator;
 import org.sagebase.crf.view.CrfTaskToolbarTintManipulator;
 import org.sagebionetworks.research.crf.R;
 import org.slf4j.Logger;
@@ -81,12 +76,9 @@ public class CrfHeartRateStepLayout extends ActiveStepLayout implements
         BpmRecorder.IntelligentStartUpdateListener,
         BpmRecorder.CameraCoveredListener,
         BpmRecorder.PressureListener,
-        BpmRecorder.DeclineHRListener,
-        BpmRecorder.AbnormalHRListener,
         RecorderListener,
         CrfTaskToolbarTintManipulator,
         CrfTaskStatusBarManipulator,
-        CrfTaskToolbarProgressManipulator,
         CrfResultListener {
     private static final Logger LOG = LoggerFactory.getLogger(CrfHeartRateStepLayout.class);
 
@@ -100,19 +92,15 @@ public class CrfHeartRateStepLayout extends ActiveStepLayout implements
         return cameraPreview;
     }
     protected TextView crfMessageTextView;
-    protected CrfHeartRateCameraStep crfHeartRateCameraStep;
 
     protected View heartRateTextContainer;
     protected TextView heartRateNumber;
-
-    protected TextView currentHeartRate;
 
     protected View arcDrawableContainer;
     protected View arcDrawableView;
     protected ArcDrawable arcDrawable;
 
     protected Button nextButton;
-    protected Button redoButton;
     protected ImageView heartImageView;
     protected HeartBeatAnimation heartBeatAnimation;
 
@@ -124,8 +112,8 @@ public class CrfHeartRateStepLayout extends ActiveStepLayout implements
 
     protected  Recorder cameraRecorder;
     protected boolean shouldContinueOnStop = false;
+    protected boolean displaySurvey = false;
     protected boolean isFinished = false;
-    private boolean shouldShowFinishUi = false;
 
     public CrfHeartRateStepLayout(Context context) {
         super(context);
@@ -161,23 +149,17 @@ public class CrfHeartRateStepLayout extends ActiveStepLayout implements
     @Override
     public void initialize(Step step, StepResult result) {
         super.initialize(step, result);
-        this.crfHeartRateCameraStep = (CrfHeartRateCameraStep) step;
     }
 
     @Override
     public void setupActiveViews() {
         super.setupActiveViews();
-        shouldShowFinishUi = getResources().getBoolean(R.bool.heart_rate_show_finish_ui);
 
         cameraPreview = findViewById(R.id.crf_camera_texture_view);
 
         crfMessageTextView = findViewById(R.id.crf_heart_rate_title);
         speakText(getContext().getString(R.string.crf_camera_cover));
         crfMessageTextView.setText(R.string.crf_camera_cover);
-        if (shouldShowFinishUi) {
-            //Remove the padding at the top for the progress bar, that is not shown in this case
-            crfMessageTextView.setPadding(crfMessageTextView.getPaddingLeft(), 0, crfMessageTextView.getPaddingRight(), crfMessageTextView.getPaddingBottom());
-        }
 
         cameraSourcePreview = findViewById(R.id.crf_camera_source);
         cameraSourcePreview.setSurfaceMask(true);
@@ -195,7 +177,6 @@ public class CrfHeartRateStepLayout extends ActiveStepLayout implements
         heartRateTextContainer = findViewById(R.id.crf_bpm_text_container);
         heartRateTextContainer.setVisibility(View.GONE);
         heartRateNumber = findViewById(R.id.crf_heart_rate_number);
-        currentHeartRate = findViewById(R.id.crf_current_bpm);
 
         arcDrawableContainer = findViewById(R.id.crf_arc_drawable_container);
         arcDrawableView = findViewById(R.id.crf_arc_drawable);
@@ -211,13 +192,8 @@ public class CrfHeartRateStepLayout extends ActiveStepLayout implements
         nextButton.setVisibility(View.GONE);
         nextButton.setOnClickListener(view -> onNextButtonClicked());
 
-        redoButton = findViewById(R.id.crf_redo_button);
-        redoButton.setVisibility(View.GONE);
-        redoButton.setOnClickListener(view -> onRedoButtonClicked());
-
         heartImageView = findViewById(R.id.crf_heart_icon);
         heartImageView.setVisibility(View.GONE);
-
     }
 
     // Wait for intelligent start to call super.start()
@@ -319,16 +295,8 @@ public class CrfHeartRateStepLayout extends ActiveStepLayout implements
     
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     void startVideoRecording() {
-        //HACK for Samsung Galaxy J7 Neo that records 0 bpm when recording video
-        String device = Build.MANUFACTURER + Build.MODEL;
-        if ("samsungSM-J701M".equalsIgnoreCase(device)) {
-            //TODO: Figure out a better solution if there are other devices that can't record video and heart rate at same time
-            // -Nathaniel 12/18/18
-            return;
-        }
-
         ((HeartRateCamera2Recorder) cameraRecorder).startVideoRecording();
-
+    
     }
 
     @Override
@@ -350,15 +318,9 @@ public class CrfHeartRateStepLayout extends ActiveStepLayout implements
         if (heartBeatAnimation == null) {
             heartBeatAnimation = new HeartBeatAnimation(bpmHolder.bpm);
             heartImageView.startAnimation(heartBeatAnimation);
-            heartImageView.setVisibility(VISIBLE);
         }
-        currentHeartRate.setText(bpmHolder.bpm + " " + getContext().getString(R.string.crf_bpm));
-        arcDrawableContainer.setVisibility(VISIBLE);
-        currentHeartRate.setVisibility(VISIBLE);
         heartBeatAnimation.setBpm(bpmHolder.bpm);
         bpmList.add(bpmHolder);
-        crfMessageTextView.setVisibility(INVISIBLE);
-        //resetView();
     }
 
     @Override
@@ -369,25 +331,21 @@ public class CrfHeartRateStepLayout extends ActiveStepLayout implements
         if (shouldContinueOnStop) {
             onNextButtonClicked();
         }
-    }
-
-    protected void onNextButtonClicked() {
-        if (shouldShowFinishUi) {
-            showFinishUi();
-        } else {
-            shouldContinueOnStop = true;
-            if (isFinished) {
-                callbacks.onSaveStep(StepCallbacks.ACTION_NEXT, activeStep, stepResult);
-            }
+        if (displaySurvey) {
+            displaySurvey();
         }
     }
 
-    public void onRedoButtonClicked() {
-        pauseActiveStepLayout();
-        forceStop();
-        callbacks.onSaveStep(StepCallbacks.ACTION_PREV, activeStep, null);
+    protected void onNextButtonClicked() {
+        shouldContinueOnStop = true;
+        if (isFinished) {
+            callbacks.onSaveStep(StepCallbacks.ACTION_NEXT, activeStep, stepResult);
+        }
     }
 
+    protected void displaySurvey() {
+
+    }
 
     protected void showCompleteUi() {
         nextButton.setVisibility(View.VISIBLE);
@@ -396,7 +354,6 @@ public class CrfHeartRateStepLayout extends ActiveStepLayout implements
         cameraSourcePreview.setVisibility(View.INVISIBLE);
         arcDrawableContainer.setVisibility(View.GONE);
         heartRateTextContainer.setVisibility(View.VISIBLE);
-        currentHeartRate.setVisibility(View.GONE);
 
         if (!bpmList.isEmpty()) {
             int bpmSum = 0;
@@ -411,13 +368,6 @@ public class CrfHeartRateStepLayout extends ActiveStepLayout implements
             setBpmDifferenceResult(0);
             heartRateNumber.setText(String.format(Locale.getDefault(), "%d", 0));
         }
-    }
-
-    private void showFinishUi() {
-        shouldShowFinishUi = false;
-        crfMessageTextView.setText(R.string.crf_hand_to_researcher);
-        nextButton.setText(R.string.crf_finish_measurement);
-        redoButton.setVisibility(View.VISIBLE);
     }
 
     /**
@@ -516,125 +466,12 @@ public class CrfHeartRateStepLayout extends ActiveStepLayout implements
 
     @Override
     public void pressureUpdate(PressureHolder pressure) {
-        if(pressure.isPressureExcessive) {
-            LOG.error("Too much pressure on the camera");
-            //showPressureStatus();
-        }
-        else {
-            LOG.error("Pressure is alright");
-            //resetView();
-        }
+
     }
 
     @Override
     public void cameraUpdate(CameraCoveredHolder camera) {
-        if(camera.isCameraCovered) {
-            //resetView();
-            LOG.error("Camera is covered");
 
-        }
-        else {
-            LOG.error("Camera is not covered");
-            //showHRStatus();
-        }
-    }
-
-    /**
-     * Method to reset the view after displaying instruction messages
-     */
-    private void resetView() {
-        //TextView e = findViewById(R.id.crf_heart_rate_error);
-        //e.setVisibility(INVISIBLE);
-
-        //TextView p = findViewById(R.id.crf_pressure_error);
-        //p.setVisibility(INVISIBLE);
-
-    }
-
-    /**
-     * Display a notification that the camera isn't covered
-     */
-    private void showHRStatus() {
-        LinearLayout t = findViewById(R.id.crf_bpm_text_container);
-        t.setVisibility(GONE);
-
-        ImageView i = findViewById(R.id.crf_heart_icon);
-        i.setVisibility(GONE);
-
-        FrameLayout c = findViewById(R.id.crf_arc_drawable_container);
-        c.setVisibility(GONE);
-
-        cameraSourcePreview.setVisibility(INVISIBLE);
-
-        //TextView e = findViewById(R.id.crf_heart_rate_error);
-        //e.setVisibility(VISIBLE);
-    }
-
-    /**
-     * Display a notification that there is too much pressure on the camera
-     */
-    private void showPressureStatus()  {
-        LinearLayout t = findViewById(R.id.crf_bpm_text_container);
-        t.setVisibility(GONE);
-
-        ImageView i = findViewById(R.id.crf_heart_icon);
-        i.setVisibility(GONE);
-
-        FrameLayout c = findViewById(R.id.crf_arc_drawable_container);
-        c.setVisibility(GONE);
-
-        cameraSourcePreview.setVisibility(INVISIBLE);
-
-        //TextView p = findViewById(R.id.crf_pressure_error);
-        //p.setVisibility(VISIBLE);
-
-    }
-
-    /**
-     * Add the result of the abnormal hr algorithm to the step result to determine if we need to
-     * skip the abnormal HR step
-     * @param abnormal
-     */
-    @Override
-    public void abnormalHRUpdate(AbnormalHRHolder abnormal) {
-        if(abnormal.isAbnormal) {
-            StepResult<Boolean> abnormalHRResult = new StepResult<>(new Step("displaySurvey"));
-            abnormalHRResult.setResult(false);
-            stepResult.setResultForIdentifier("skipAbnormalStep",
-                    abnormalHRResult);
-        }
-        else {
-            StepResult<Boolean> abnormalHRResult = new StepResult<>(new Step("displaySurvey"));
-            abnormalHRResult.setResult(true);
-            stepResult.setResultForIdentifier("skipAbnormalStep",
-                    abnormalHRResult);
-        }
-    }
-
-    /**
-     * Add the result of the decline hr algorithm to the step result to determine if we need to
-     * skip the decline HR step
-     * @param decline
-     */
-    @Override
-    public void declineHRUpdate(DeclineHRHolder decline) {
-        if(decline.isDeclining) {
-            StepResult<Boolean> decliningHRResult = new StepResult<>(new Step("displayDecliningHR"));
-            decliningHRResult.setResult(false);
-            stepResult.setResultForIdentifier("skipDeclineStep",
-                    decliningHRResult);
-        }
-        else {
-            StepResult<Boolean> decliningHRResult = new StepResult<>(new Step("displayDecliningHR"));
-            decliningHRResult.setResult(true);
-            stepResult.setResultForIdentifier("skipDeclineStep",
-                    decliningHRResult);
-        }
-    }
-
-    @Override
-    public boolean crfToolbarShowProgress() {
-        return !crfHeartRateCameraStep.getIdentifier().contains("test");
     }
 
     private class HeartBeatAnimation extends AlphaAnimation {

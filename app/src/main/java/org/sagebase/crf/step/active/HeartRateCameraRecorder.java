@@ -55,7 +55,7 @@ public class HeartRateCameraRecorder extends Recorder  {
         mCameraSourcePreview = cameraSourcePreview;
 
         heartBeatJsonWriter = new BpmRecorder.HeartBeatJsonWriter(stepLayout, stepLayout,
-                stepLayout, stepLayout,stepLayout, stepLayout,
+                stepLayout, stepLayout,
                 identifier, step,
                 outputDirectory );
     }

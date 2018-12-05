@@ -22,15 +22,18 @@ import org.sagebase.crf.step.heartrate.abnormal_hr.AbnormalHRError;
 import org.sagebase.crf.step.heartrate.decline_hr.DeclineHRError;
 import org.sagebase.crf.step.heartrate.pressure_error.PressureError;
 import org.sagebase.crf.step.heartrate.confidence_error.ConfidenceError;
+import java.util.*;
 
 public class ErrorDetectionStream {
-    // Possible errors to cycle through
-    public ErrorType[] possible_errors = new ErrorType[]{ErrorType.CAMERA_COVERAGE,
-            ErrorType.PRESSURE, ErrorType.ABNORMAL_HR, ErrorType.LOW_CONFIDENCE,
-            ErrorType.DECLINE_HR};
+
+    public ErrorDetectionStream(ErrorType[] possible_errors) {
+        this.possible_errors = possible_errors;
+    }
+
+    public ErrorType[] possible_errors;
 
     // Error to act on
-    public ErrorType most_prominent_error;
+    public ArrayList<ErrorType> most_prominent_errors = new ArrayList<>();
 
     CameraError camera = new CameraError();
     DeclineHRError decline = new DeclineHRError();
@@ -38,13 +41,41 @@ public class ErrorDetectionStream {
     AbnormalHRError abnormal = new AbnormalHRError();
     ConfidenceError confidence = new ConfidenceError();
 
+    HashMap<ErrorType, ErrorDetection> error_to_detector = new HashMap<ErrorType, ErrorDetection>();
+
     // An array of the last 10 heart rate samples
+
+    ArrayList<ErrorDetection> errors;
 
 
     // A method to go through all of the error types
-    public void detectError() {
-        for (ErrorType e: possible_errors) {
-
+    public void detectErrors() {
+        error_to_detector.put(ErrorType.CAMERA_COVERAGE, camera);
+        error_to_detector.put(ErrorType.PRESSURE, pressure);
+        error_to_detector.put(ErrorType.LOW_CONFIDENCE, confidence);
+        error_to_detector.put(ErrorType.DECLINE_HR, decline);
+        error_to_detector.put(ErrorType.ABNORMAL_HR, abnormal);
+        for(ErrorType e: possible_errors) {
+            errors.add(error_to_detector.get(e));
+        }
+        for(ErrorDetection e: errors) {
+            if(e.hasError()) {
+                most_prominent_errors.add(e.getErrorType());
+            }
         }
     }
+
+    // Act on the errors that we detected
+    public void resolveErrors() {
+        detectErrors();
+
+        if(most_prominent_errors.isEmpty()) {
+            System.out.println("No errors detected");
+        }
+        else {
+            ErrorResolutionStream.resolveErrors(most_prominent_errors);
+        }
+
+    }
+
 }
