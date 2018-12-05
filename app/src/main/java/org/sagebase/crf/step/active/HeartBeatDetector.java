@@ -26,6 +26,8 @@ import com.google.android.gms.vision.Detector;
 import com.google.android.gms.vision.Frame;
 
 import org.sagebase.crf.camera.CameraSource;
+import org.sagebase.crf.step.heartrate.ErrorDetectionStream;
+import org.sagebase.crf.step.heartrate.ErrorType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -43,6 +45,7 @@ public class HeartBeatDetector extends Detector<HeartBeatSample> {
     private final RenderScript rs;
 
     public CameraSource cameraSource;
+
 
     private int frameCounter = 0;
     private long fpsStartTime = -1;
@@ -89,9 +92,12 @@ public class HeartBeatDetector extends Detector<HeartBeatSample> {
 
         HeartBeatSample sample = getHeartBeatSample(now, bitmap);
 
+
         //Log.d("RGB", "" + sample.r + ", " + sample.g + ", " + sample.b);
         SparseArray<HeartBeatSample> samples = new SparseArray<>();
         samples.append(0, sample);
+
+
 
         // Takes about 4 ms on Samsung Galaxy S6
         //Log.d("Timing", "avg rgb " + (System.currentTimeMillis() - startTime));

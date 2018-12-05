@@ -26,6 +26,12 @@ import java.util.*;
 
 public class ErrorDetectionStream {
 
+    public ErrorDetectionStream(ErrorType[] possible_errors) {
+        this.possible_errors = possible_errors;
+    }
+
+    public ErrorType[] possible_errors;
+
     // Error to act on
     public ArrayList<ErrorType> most_prominent_errors = new ArrayList<>();
 
@@ -35,14 +41,24 @@ public class ErrorDetectionStream {
     AbnormalHRError abnormal = new AbnormalHRError();
     ConfidenceError confidence = new ConfidenceError();
 
+    HashMap<ErrorType, ErrorDetection> error_to_detector = new HashMap<ErrorType, ErrorDetection>();
+
     // An array of the last 10 heart rate samples
 
-    ErrorDetection[] possible_errors =
-            new ErrorDetection[]{camera, decline, pressure, abnormal, confidence};
+    ArrayList<ErrorDetection> errors;
+
 
     // A method to go through all of the error types
     public void detectErrors() {
-        for(ErrorDetection e: possible_errors) {
+        error_to_detector.put(ErrorType.CAMERA_COVERAGE, camera);
+        error_to_detector.put(ErrorType.PRESSURE, pressure);
+        error_to_detector.put(ErrorType.LOW_CONFIDENCE, confidence);
+        error_to_detector.put(ErrorType.DECLINE_HR, decline);
+        error_to_detector.put(ErrorType.ABNORMAL_HR, abnormal);
+        for(ErrorType e: possible_errors) {
+            errors.add(error_to_detector.get(e));
+        }
+        for(ErrorDetection e: errors) {
             if(e.hasError()) {
                 most_prominent_errors.add(e.getErrorType());
             }

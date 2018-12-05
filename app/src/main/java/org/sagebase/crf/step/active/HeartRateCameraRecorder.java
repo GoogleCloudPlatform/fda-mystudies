@@ -48,11 +48,14 @@ public class HeartRateCameraRecorder extends Recorder  {
 
     private final BpmRecorder.HeartBeatJsonWriter heartBeatJsonWriter;
 
-    public HeartRateCameraRecorder(String identifier, Step step, File outputDirectory, CrfHeartRateStepLayout stepLayout, CameraSourcePreview cameraSourcePreview) {
+    public HeartRateCameraRecorder(String identifier, Step step,
+                                   File outputDirectory, CrfHeartRateStepLayout stepLayout,
+                                   CameraSourcePreview cameraSourcePreview) {
         super(identifier, step, outputDirectory);
         mCameraSourcePreview = cameraSourcePreview;
 
         heartBeatJsonWriter = new BpmRecorder.HeartBeatJsonWriter(stepLayout, stepLayout,
+                stepLayout, stepLayout,
                 identifier, step,
                 outputDirectory );
     }

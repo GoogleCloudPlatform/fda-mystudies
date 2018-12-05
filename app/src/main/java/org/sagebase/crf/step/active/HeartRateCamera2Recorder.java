@@ -135,6 +135,7 @@ public class HeartRateCamera2Recorder extends Recorder {
         mediaRecorderFile = new File(getOutputDirectory(), uniqueFilename + ".mp4");
         subscriptions = new CompositeSubscription();
         heartBeatJsonWriter = new BpmRecorder.HeartBeatJsonWriter(stepLayout, stepLayout,
+                stepLayout, stepLayout,
                 identifier + "Json", step,
                 outputDirectory );
         heartBeatJsonWriter.setRecorderListener(stepLayout);
@@ -246,6 +247,8 @@ public class HeartRateCamera2Recorder extends Recorder {
                 toBitmap(renderScript, image, mVideoSize.getWidth(),
                         mVideoSize.getHeight());
 
+        // Call algorithms with this timestamp and bitmap
+        // Intercept before to get the image/frame
         HeartBeatSample sample =
                 getHeartBeatSample(image.getTimestamp() / 1_000_000D, bitmap);
         image.close();
