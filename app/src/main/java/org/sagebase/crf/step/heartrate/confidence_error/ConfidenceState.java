@@ -19,14 +19,14 @@ package org.sagebase.crf.step.heartrate.confidence_error;
 
 import android.graphics.Bitmap;
 
-import org.sagebase.crf.step.heartrate.ErrorDetection;
+import org.sagebase.crf.step.heartrate.StateDetection;
 import org.sagebase.crf.step.heartrate.OutputState;
 
-public class ConfidenceError implements ErrorDetection {
+public class ConfidenceState implements StateDetection {
 
     OutputState OutputState;
 
-    public ConfidenceError() {
+    public ConfidenceState() {
         this.OutputState = OutputState.LOW_CONFIDENCE;
     }
     public OutputState getOutputState() {
@@ -34,7 +34,7 @@ public class ConfidenceError implements ErrorDetection {
     }
 
     // Need to develop the algorithm
-    public static boolean hasError(Long timestamp, Bitmap bitmap) {
+    public static boolean containsIssue(Long timestamp, Bitmap bitmap) {
 
         return ConfidenceAlgorithm.algorithm(timestamp, bitmap) > 0.5;
     }

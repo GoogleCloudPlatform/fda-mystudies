@@ -17,14 +17,18 @@
 
 package org.sagebase.crf.step.heartrate;
 
+import android.graphics.Bitmap;
+
+import java.util.ArrayList;
+
 public interface OutputStateAlgorithm {
 
-    void getPreviousState();
+    static ArrayList<Bitmap> getPreviousState(){return null;};
 
     /* Return a double reporting how likely it is that an error is present. The closer to 0, the
     less likely there is an error, the closer to 1, the more likely
      */
-    static double algorithm(){
+    static double algorithm(Long timestamp, Bitmap bitmap){
         return 0.0;
     }
 

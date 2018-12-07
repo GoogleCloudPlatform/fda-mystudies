@@ -17,9 +17,9 @@
 
 package org.sagebase.crf.step.heartrate.abnormal_hr;
 
-import org.sagebase.crf.step.heartrate.ErrorSolution;
+import org.sagebase.crf.step.heartrate.OutputSolution;
 
-public class AbnormalHRSolution implements ErrorSolution {
+public class AbnormalHRSolution implements OutputSolution {
 
     public void displayUI() {
         System.out.println("We noticed that your heart rate is different from normal. " +

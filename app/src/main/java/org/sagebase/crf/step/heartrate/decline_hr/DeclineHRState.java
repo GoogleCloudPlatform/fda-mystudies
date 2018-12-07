@@ -19,13 +19,13 @@ package org.sagebase.crf.step.heartrate.decline_hr;
 
 import android.graphics.Bitmap;
 
-import org.sagebase.crf.step.heartrate.ErrorDetection;
+import org.sagebase.crf.step.heartrate.StateDetection;
 import org.sagebase.crf.step.heartrate.OutputState;
 
-public class DeclineHRError implements ErrorDetection {
+public class DeclineHRState implements StateDetection {
     OutputState outputState;
 
-    public DeclineHRError() {
+    public DeclineHRState() {
         this.outputState = OutputState.DECLINE_HR;
     }
     public OutputState getOutputState() {
@@ -33,7 +33,7 @@ public class DeclineHRError implements ErrorDetection {
     }
 
     // Need to develop the algorithm
-    public boolean hasError(Long timestamp, Bitmap bitmap) {
+    public boolean containsIssue(Long timestamp, Bitmap bitmap) {
         return DeclineHRAlgorithm.algorithm(timestamp, bitmap) > 0.5;
     }
 }

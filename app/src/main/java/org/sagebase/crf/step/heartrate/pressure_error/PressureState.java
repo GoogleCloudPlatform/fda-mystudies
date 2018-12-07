@@ -19,14 +19,14 @@ package org.sagebase.crf.step.heartrate.pressure_error;
 
 import android.graphics.Bitmap;
 
-import org.sagebase.crf.step.heartrate.ErrorDetection;
+import org.sagebase.crf.step.heartrate.StateDetection;
 import org.sagebase.crf.step.heartrate.OutputState;
 
-public class PressureError implements ErrorDetection {
+public class PressureState implements StateDetection {
 
     OutputState outputState;
 
-    public PressureError() {
+    public PressureState() {
         this.outputState = OutputState.PRESSURE;
     }
     public OutputState getOutputState() {
@@ -34,7 +34,7 @@ public class PressureError implements ErrorDetection {
     }
 
     // Need to develop the algorithm
-    public static boolean hasError(Long timestamp, Bitmap bitmap) {
+    public static boolean containsIssue(Long timestamp, Bitmap bitmap) {
 
         return PressureAlgorithm.algorithm(timestamp, bitmap) > 0.5;
     }

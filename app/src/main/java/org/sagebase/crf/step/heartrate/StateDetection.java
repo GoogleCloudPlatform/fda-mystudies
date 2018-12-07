@@ -19,7 +19,7 @@ package org.sagebase.crf.step.heartrate;
 
 import android.graphics.Bitmap;
 
-public interface ErrorDetection {
+public interface StateDetection {
 
     /*
     This method returns an error type that allows us to figure out which error we had an issue with.
@@ -30,6 +30,8 @@ public interface ErrorDetection {
     This method returns a boolean representing whether the HR sample has an error related to this
     error type.
      */
-    static boolean hasError(Long timestamp, Bitmap bitmap);
+    static boolean containsIssue(Long timestamp, Bitmap bitmap) {
+        return false;
+    };
 
 }

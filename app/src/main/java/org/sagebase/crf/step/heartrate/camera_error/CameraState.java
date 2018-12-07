@@ -19,17 +19,17 @@ package org.sagebase.crf.step.heartrate.camera_error;
 
 import android.graphics.Bitmap;
 
-import org.sagebase.crf.step.heartrate.ErrorDetection;
+import org.sagebase.crf.step.heartrate.StateDetection;
 import org.sagebase.crf.step.heartrate.OutputState;
 
 
-public class CameraError implements ErrorDetection {
+public class CameraState implements StateDetection {
     public OutputState getOutputState() {
         return OutputState.CAMERA_COVERAGE;
     }
 
     // Need to develop the algorithm
-    public static boolean hasError(Long timestamp, Bitmap bitmap) {
+    public static boolean containsIssue(Long timestamp, Bitmap bitmap) {
         return CameraAlgorithm.algorithm(timestamp, bitmap) > 0.5;
     }
 }

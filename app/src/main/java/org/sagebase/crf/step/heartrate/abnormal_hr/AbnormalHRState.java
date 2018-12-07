@@ -19,20 +19,20 @@ package org.sagebase.crf.step.heartrate.abnormal_hr;
 
 import android.graphics.Bitmap;
 
-import org.sagebase.crf.step.heartrate.ErrorDetection;
+import org.sagebase.crf.step.heartrate.StateDetection;
 import org.sagebase.crf.step.heartrate.OutputState;
 
-public class AbnormalHRError implements ErrorDetection {
+public class AbnormalHRState implements StateDetection {
     OutputState outputState;
 
-    public AbnormalHRError() {
+    public AbnormalHRState() {
         this.outputState = OutputState.ABNORMAL_HR;
     }
     public OutputState getOutputState() {
         return this.outputState;
     }
 
-    public boolean hasError(Long timestamp, Bitmap bitmap) {
+    public boolean containsIssue(Long timestamp, Bitmap bitmap) {
         return AbnormalHRAlgorithm.algorithm(timestamp, bitmap) > 0.5;
     }
 }
