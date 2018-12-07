@@ -17,9 +17,9 @@
 
 package org.sagebase.crf.step.heartrate.decline_hr;
 
-import org.sagebase.crf.step.heartrate.ErrorSolution;
+import org.sagebase.crf.step.heartrate.OutputSolution;
 
-public class DeclineSolution implements ErrorSolution {
+public class DeclineSolution implements OutputSolution {
 
     public void displayUI() {
         System.out.println("We've noticed that your heart rate is not stable. Please " +

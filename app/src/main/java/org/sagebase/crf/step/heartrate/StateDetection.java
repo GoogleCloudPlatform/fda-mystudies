@@ -15,22 +15,21 @@
  *
  */
 
-package org.sagebase.crf.step.heartrate.abnormal_hr;
+package org.sagebase.crf.step.heartrate;
 
-import org.sagebase.crf.step.heartrate.ErrorDetection;
-import org.sagebase.crf.step.heartrate.ErrorType;
+import android.graphics.Bitmap;
 
-public class AbnormalHRError implements ErrorDetection {
-    ErrorType errorType;
+public interface ErrorDetection {
 
-    public AbnormalHRError() {
-        this.errorType = ErrorType.ABNORMAL_HR;
-    }
-    public ErrorType getErrorType() {
-        return this.errorType;
-    }
+    /*
+    This method returns an error type that allows us to figure out which error we had an issue with.
+    */
+    OutputState getOutputState();
 
-    public boolean hasError() {
-        return AbnormalHRAlgorithm.algorithm() > 0.5;
-    }
+    /*
+    This method returns a boolean representing whether the HR sample has an error related to this
+    error type.
+     */
+    static boolean hasError(Long timestamp, Bitmap bitmap);
+
 }

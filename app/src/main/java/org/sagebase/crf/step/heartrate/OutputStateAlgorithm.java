@@ -17,16 +17,15 @@
 
 package org.sagebase.crf.step.heartrate;
 
-public interface ErrorDetection {
+public interface OutputStateAlgorithm {
 
-    /*
-    This method returns an error type that allows us to figure out which error we had an issue with.
-    */
-    ErrorType getErrorType();
+    void getPreviousState();
 
-    /*
-    This method returns a boolean representing whether the HR sample has an error related to this
-    error type.
+    /* Return a double reporting how likely it is that an error is present. The closer to 0, the
+    less likely there is an error, the closer to 1, the more likely
      */
-    boolean hasError();
+    static double algorithm(){
+        return 0.0;
+    }
+
 }

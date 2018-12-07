@@ -17,9 +17,9 @@
 
 package org.sagebase.crf.step.heartrate.confidence_error;
 
-import org.sagebase.crf.step.heartrate.ErrorSolution;
+import org.sagebase.crf.step.heartrate.OutputSolution;
 
-public class ConfidenceSolution implements ErrorSolution {
+public class ConfidenceSolution implements OutputSolution {
 
     public void displayUI() {
         System.out.println("We couldn't get a good read on your heartrate." +

@@ -15,8 +15,24 @@
  *
  */
 
-package org.sagebase.crf.step.heartrate;
+package org.sagebase.crf.step.heartrate.abnormal_hr;
 
-public enum ErrorType {
-    PRESSURE, CAMERA_COVERAGE, ABNORMAL_HR, LOW_CONFIDENCE, DECLINE_HR;
+import android.graphics.Bitmap;
+
+import org.sagebase.crf.step.heartrate.ErrorDetection;
+import org.sagebase.crf.step.heartrate.OutputState;
+
+public class AbnormalHRError implements ErrorDetection {
+    OutputState outputState;
+
+    public AbnormalHRError() {
+        this.outputState = OutputState.ABNORMAL_HR;
+    }
+    public OutputState getOutputState() {
+        return this.outputState;
+    }
+
+    public boolean hasError(Long timestamp, Bitmap bitmap) {
+        return AbnormalHRAlgorithm.algorithm(timestamp, bitmap) > 0.5;
+    }
 }

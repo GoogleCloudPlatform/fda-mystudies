@@ -15,23 +15,8 @@
  *
  */
 
-package org.sagebase.crf.step.heartrate.decline_hr;
+package org.sagebase.crf.step.heartrate;
 
-import org.sagebase.crf.step.heartrate.ErrorDetection;
-import org.sagebase.crf.step.heartrate.ErrorType;
-
-public class DeclineHRError implements ErrorDetection {
-    ErrorType errorType;
-
-    public DeclineHRError() {
-        this.errorType = ErrorType.DECLINE_HR;
-    }
-    public ErrorType getErrorType() {
-        return this.errorType;
-    }
-
-    // Need to develop the algorithm
-    public boolean hasError() {
-        return DeclineHRAlgorithm.algorithm() > 0.5;
-    }
+public enum OutputState {
+    PRESSURE, CAMERA_COVERAGE, ABNORMAL_HR, LOW_CONFIDENCE, DECLINE_HR;
 }

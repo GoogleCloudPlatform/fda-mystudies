@@ -17,9 +17,9 @@
 
 package org.sagebase.crf.step.heartrate.pressure_error;
 
-import org.sagebase.crf.step.heartrate.ErrorSolution;
+import org.sagebase.crf.step.heartrate.OutputSolution;
 
-public class PressureSolution implements ErrorSolution {
+public class PressureSolution implements OutputSolution {
 
     public void displayUI() {
         System.out.println("Please gently cover the flash and camera.");

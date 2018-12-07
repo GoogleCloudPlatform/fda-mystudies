@@ -15,25 +15,25 @@
  *
  */
 
-package org.sagebase.crf.step.heartrate.pressure_error;
+package org.sagebase.crf.step.heartrate.decline_hr;
+
+import android.graphics.Bitmap;
 
 import org.sagebase.crf.step.heartrate.ErrorDetection;
-import org.sagebase.crf.step.heartrate.ErrorType;
+import org.sagebase.crf.step.heartrate.OutputState;
 
-public class PressureError implements ErrorDetection {
+public class DeclineHRError implements ErrorDetection {
+    OutputState outputState;
 
-    ErrorType errorType;
-
-    public PressureError() {
-        this.errorType = ErrorType.PRESSURE;
+    public DeclineHRError() {
+        this.outputState = OutputState.DECLINE_HR;
     }
-    public ErrorType getErrorType() {
-        return this.errorType;
+    public OutputState getOutputState() {
+        return this.outputState;
     }
 
     // Need to develop the algorithm
-    public boolean hasError() {
-
-        return PressureAlgorithm.algorithm() > 0.5;
+    public boolean hasError(Long timestamp, Bitmap bitmap) {
+        return DeclineHRAlgorithm.algorithm(timestamp, bitmap) > 0.5;
     }
 }

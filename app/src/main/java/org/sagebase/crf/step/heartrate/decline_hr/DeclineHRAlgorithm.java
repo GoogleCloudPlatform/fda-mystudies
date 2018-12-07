@@ -17,19 +17,34 @@
 
 package org.sagebase.crf.step.heartrate.decline_hr;
 
-import org.sagebase.crf.step.heartrate.ErrorAlgorithm;
+import android.graphics.Bitmap;
 
-public class DeclineHRAlgorithm implements ErrorAlgorithm {
-    public static int[] previousState;
+import org.sagebase.crf.step.heartrate.OutputStateAlgorithm;
+
+import java.util.ArrayList;
+
+public class DeclineHRAlgorithm implements OutputStateAlgorithm {
+    public static ArrayList<Bitmap> previousState;
+
     private static double decline_threshold = 0.1;
+    private static int min_length = 10;
 
-    public void getPreviousState() {
-
+    public static ArrayList<Bitmap> getPreviousState() {
+        if (previousState.size() == 0 || previousState == null) {
+            previousState = new ArrayList<>();
+        }
+        return previousState;
     }
 
-    public static double algorithm() {
+    public static double algorithm(Long timestamp, Bitmap bitmap) {
+        ArrayList<Bitmap> state = getPreviousState();
+
+        if (state == null || state.size() < min_length) {
+            previousState.add(bitmap);
+            return 0.0;
+        }
         // Look at the difference between the first and last elements
-        int first = previousState[0];
+        /*int first = previousState[0];
         int last = previousState[previousState.length - 1];
         if (last - first == (first * decline_threshold)) {
             return 0.8;
@@ -53,7 +68,7 @@ public class DeclineHRAlgorithm implements ErrorAlgorithm {
 
         if (decreasing) {
             return 1.0;
-        }
+        }*/
 
         return 0.0;
     }

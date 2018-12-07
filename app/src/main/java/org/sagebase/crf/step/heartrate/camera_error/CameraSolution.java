@@ -17,9 +17,9 @@
 
 package org.sagebase.crf.step.heartrate.camera_error;
 
-import org.sagebase.crf.step.heartrate.ErrorSolution;
+import org.sagebase.crf.step.heartrate.OutputSolution;
 
-public class CameraSolution implements ErrorSolution {
+public class CameraSolution implements OutputSolution {
 
     public void displayUI() {
         System.out.println("Please gently cover the camera and flashlight with your index finger.");

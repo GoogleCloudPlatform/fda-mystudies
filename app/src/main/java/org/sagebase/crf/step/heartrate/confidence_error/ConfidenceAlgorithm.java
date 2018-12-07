@@ -17,15 +17,20 @@
 
 package org.sagebase.crf.step.heartrate.confidence_error;
 
-import org.sagebase.crf.step.heartrate.ErrorAlgorithm;
+import android.graphics.Bitmap;
 
-public class ConfidenceAlgorithm implements ErrorAlgorithm {
+import org.sagebase.crf.step.heartrate.OutputStateAlgorithm;
 
-    public void getPreviousState() {
+import java.util.ArrayList;
 
+public class ConfidenceAlgorithm implements OutputStateAlgorithm {
+
+    public ArrayList<Bitmap> getPreviousState() {
+        return null;
     }
 
-    public static double algorithm() {
+    public static double algorithm(Long timestamp, Bitmap bitmap) {
+
         return 0.0;
     }
 }

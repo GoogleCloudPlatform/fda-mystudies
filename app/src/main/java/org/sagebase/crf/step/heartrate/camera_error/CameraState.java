@@ -15,10 +15,21 @@
  *
  */
 
-package org.sagebase.crf.step.heartrate;
+package org.sagebase.crf.step.heartrate.camera_error;
 
-public interface ErrorSolution {
+import android.graphics.Bitmap;
 
-    void displayUI();
+import org.sagebase.crf.step.heartrate.ErrorDetection;
+import org.sagebase.crf.step.heartrate.OutputState;
 
+
+public class CameraError implements ErrorDetection {
+    public OutputState getOutputState() {
+        return OutputState.CAMERA_COVERAGE;
+    }
+
+    // Need to develop the algorithm
+    public static boolean hasError(Long timestamp, Bitmap bitmap) {
+        return CameraAlgorithm.algorithm(timestamp, bitmap) > 0.5;
+    }
 }

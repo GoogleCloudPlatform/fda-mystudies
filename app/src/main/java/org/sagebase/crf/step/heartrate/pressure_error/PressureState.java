@@ -15,17 +15,27 @@
  *
  */
 
-package org.sagebase.crf.step.heartrate;
+package org.sagebase.crf.step.heartrate.pressure_error;
 
-public interface ErrorAlgorithm {
+import android.graphics.Bitmap;
 
-    void getPreviousState();
+import org.sagebase.crf.step.heartrate.ErrorDetection;
+import org.sagebase.crf.step.heartrate.OutputState;
 
-    /* Return a double reporting how likely it is that an error is present. The closer to 0, the
-    less likely there is an error, the closer to 1, the more likely
-     */
-    static double algorithm(){
-        return 0.0;
+public class PressureError implements ErrorDetection {
+
+    OutputState outputState;
+
+    public PressureError() {
+        this.outputState = OutputState.PRESSURE;
+    }
+    public OutputState getOutputState() {
+        return this.outputState;
     }
 
+    // Need to develop the algorithm
+    public static boolean hasError(Long timestamp, Bitmap bitmap) {
+
+        return PressureAlgorithm.algorithm(timestamp, bitmap) > 0.5;
+    }
 }

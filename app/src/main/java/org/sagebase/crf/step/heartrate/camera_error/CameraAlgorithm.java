@@ -17,16 +17,29 @@
 
 package org.sagebase.crf.step.heartrate.camera_error;
 
+import android.graphics.Bitmap;
+
 import org.sagebase.crf.step.active.HeartBeatSample;
-import org.sagebase.crf.step.heartrate.ErrorAlgorithm;
+import org.sagebase.crf.step.heartrate.OutputStateAlgorithm;
 
-public class CameraAlgorithm implements ErrorAlgorithm {
+import java.util.ArrayList;
 
-    public void getPreviousState() {
+public class CameraAlgorithm implements OutputStateAlgorithm {
 
+    private static int min_length = 10;
+
+    public static ArrayList<Bitmap> getPreviousState() {
+
+        return null;
     }
 
-    public static double algorithm() {
+    public static double algorithm(Long timestamp, Bitmap bitmap) {
+        ArrayList<Bitmap> state = getPreviousState();
+
+        if (state == null || state.size() < min_length) {
+            return 0.0;
+        }
+
         boolean cameraResult = HeartBeatSample.isCoveringLens();
         if (cameraResult) {
             return 1.0;

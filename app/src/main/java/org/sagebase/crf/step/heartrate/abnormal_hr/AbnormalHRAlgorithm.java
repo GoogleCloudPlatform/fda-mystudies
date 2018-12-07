@@ -17,15 +17,19 @@
 
 package org.sagebase.crf.step.heartrate.abnormal_hr;
 
-import org.sagebase.crf.step.heartrate.ErrorAlgorithm;
+import android.graphics.Bitmap;
 
-public class AbnormalHRAlgorithm implements ErrorAlgorithm {
+import org.sagebase.crf.step.heartrate.OutputStateAlgorithm;
 
-    public void getPreviousState() {
+import java.util.ArrayList;
 
+public class AbnormalHRAlgorithm implements OutputStateAlgorithm {
+
+    public ArrayList<Bitmap> getPreviousState() {
+        return null;
     }
 
-    public static double algorithm() {
+    public static double algorithm(Long timestamp, Bitmap bitmap) {
         return 0.0;
     }
 }
