@@ -31,6 +31,7 @@ import android.hardware.camera2.CaptureRequest;
 import android.hardware.camera2.CaptureResult;
 import android.hardware.camera2.TotalCaptureResult;
 import android.hardware.camera2.params.StreamConfigurationMap;
+import android.hardware.camera2.params.ColorSpaceTransform;
 import android.media.Image;
 import android.media.ImageReader;
 import android.media.ImageReader.OnImageAvailableListener;
@@ -47,6 +48,7 @@ import android.util.Size;
 import android.view.Surface;
 import android.view.TextureView;
 
+import com.google.android.gms.common.util.ArrayUtils;
 import com.google.common.collect.Sets;
 
 import org.joda.time.DateTime;
@@ -86,7 +88,6 @@ import static android.hardware.camera2.CameraMetadata.INFO_SUPPORTED_HARDWARE_LE
 import static android.hardware.camera2.CameraMetadata.INFO_SUPPORTED_HARDWARE_LEVEL_LIMITED;
 import static android.hardware.camera2.CameraMetadata.REQUEST_AVAILABLE_CAPABILITIES_MANUAL_SENSOR;
 import static android.hardware.camera2.CaptureResult.*;
-import static org.sagebase.crf.step.active.HeartBeatUtil.getHeartBeatSample;
 import static org.sagebase.crf.step.active.ImageUtils.toBitmap;
 
 /**
@@ -243,7 +244,9 @@ public class HeartRateCamera2Recorder extends Recorder {
         LOG.warn("Started video recording");
         doRepeatingRequest(cameraCaptureSession, surfacesNoPreview);
     }
-    
+
+    private HeartBeatUtil heartBeatUtil = new HeartBeatUtil();
+
     @WorkerThread
     public HeartBeatSample toHeartBeatSample(ImageReader imageReader) {
         Image image = imageReader.acquireNextImage();
@@ -251,9 +254,9 @@ public class HeartRateCamera2Recorder extends Recorder {
                 toBitmap(renderScript, image, mVideoSize.getWidth(),
                         mVideoSize.getHeight());
 
+        double timestamp = image.getTimestamp() * 1e-09;
+        HeartBeatSample sample = heartBeatUtil.getHeartBeatSample(timestamp, bitmap);
 
-        HeartBeatSample sample =
-                getHeartBeatSample(image.getTimestamp() / 1_000_000D, bitmap);
 
         if (CameraState.containsIssue(image.getTimestamp(), bitmap)) {
             System.out.println("Handle the camera error");
@@ -466,7 +469,12 @@ public class HeartRateCamera2Recorder extends Recorder {
     void doRepeatingRequest(@NonNull CameraCaptureSession session, @NonNull List<Surface> surfaces) {
         try {
             CameraCharacteristics cameraCharacteristics = manager.getCameraCharacteristics(session.getDevice().getId());
-    
+
+            for (CameraCharacteristics.Key key : cameraCharacteristics.getKeys()) {
+                LOG.debug("Camera characteristics: {}, value: {}", key.getName(), cameraCharacteristics.get
+                        (key));
+            }
+
             StreamConfigurationMap streamConfigurationMap = cameraCharacteristics
                     .get(CameraCharacteristics.SCALER_STREAM_CONFIGURATION_MAP);
             
@@ -502,46 +510,81 @@ public class HeartRateCamera2Recorder extends Recorder {
             for (Surface s : surfaces) {
                 requestBuilder.addTarget(s);
             }
-    
+
+
             // turns off AF, AE, AWB
             requestBuilder.set(CaptureRequest.CONTROL_MODE, CaptureRequest.CONTROL_MODE_OFF);
-    
-            // let's not do any AWB for now. seems complex and interacts with AE
-            requestBuilder.set(CaptureRequest.CONTROL_AWB_MODE, CaptureRequest.CONTROL_AWB_MODE_OFF);
-            // requestBuilder.set(CaptureRequest.CONTROL_AWB_MODE, CONTROL_AWB_MODE_DAYLIGHT);
-            
-            int supportLevel = cameraCharacteristics.get(CameraCharacteristics.INFO_SUPPORTED_HARDWARE_LEVEL);
-    
-            int[] availableCapabilities = cameraCharacteristics.get(CameraCharacteristics.REQUEST_AVAILABLE_CAPABILITIES);
-            
-            if (INFO_SUPPORTED_HARDWARE_LEVEL_LEGACY == supportLevel) {
-                requestBuilder.set(CaptureRequest.CONTROL_AE_MODE,
-                        CameraMetadata.CONTROL_AE_MODE_ON);
-                requestBuilder.set(CaptureRequest.FLASH_MODE, CaptureRequest.FLASH_MODE_TORCH);
-            } else if (INFO_SUPPORTED_HARDWARE_LEVEL_LIMITED == supportLevel
-                    && Arrays.asList(availableCapabilities).contains(REQUEST_AVAILABLE_CAPABILITIES_MANUAL_SENSOR)) {
-                // no auto-exposure
-                requestBuilder.set(CaptureRequest.CONTROL_AE_MODE,
-                        CameraMetadata.CONTROL_AE_MODE_OFF);
-                requestBuilder.set(CaptureRequest.FLASH_MODE, CaptureRequest.FLASH_MODE_TORCH);
-            } else if (INFO_SUPPORTED_HARDWARE_LEVEL_FULL == supportLevel
-                    || INFO_SUPPORTED_HARDWARE_LEVEL_3 == supportLevel) {
-                // no auto-exposure
-                requestBuilder.set(CaptureRequest.CONTROL_AE_MODE,
-                        CameraMetadata.CONTROL_AE_MODE_OFF);
-                requestBuilder.set(CaptureRequest.FLASH_MODE, CaptureRequest.FLASH_MODE_TORCH);
+            requestBuilder.set( CaptureRequest.CONTROL_SCENE_MODE, CameraMetadata.CONTROL_SCENE_MODE_DISABLED );
+
+            // Look at the available camera characteristics to check that CONTROL_AE_MODE_OFF is available.
+            int[] availableModes = cameraCharacteristics.get(CameraCharacteristics.CONTROL_AE_AVAILABLE_MODES);
+            if (ArrayUtils.contains(availableModes, CaptureRequest.CONTROL_AE_MODE_OFF)) {
+                requestBuilder.set(CaptureRequest.CONTROL_AE_MODE, CameraMetadata.CONTROL_AE_MODE_OFF);
+                LOG.debug("Setting Camera Auto-Exposure to OFF");
+            }
+            else {
+                // TODO: syoung 10/30/2018 FIXME!! Not supported camera (I think). Without the ability to turn off the auto-exposure, we cannot control the frame rate.
+                requestBuilder.set(CaptureRequest.CONTROL_AE_MODE, CameraMetadata.CONTROL_AE_MODE_ON);
+                LOG.warn("WARNING! Camera Settings: Auto-Exposure to ON");
             }
 
-            requestBuilder.set(CaptureRequest.SENSOR_FRAME_DURATION, CAMERA_FRAME_DURATION_NANOS);
-            requestBuilder.set(CaptureRequest.SENSOR_EXPOSURE_TIME, CAMERA_EXPOSURE_DURATION_NANOS);
-            requestBuilder.set(CaptureRequest.SENSOR_SENSITIVITY, CAMERA_SENSITIVITY);
-    
+            // CONTROL_AE_ANTIBANDING_MODE
+            int[] availableAntibandingModes = cameraCharacteristics.get(CameraCharacteristics.CONTROL_AE_AVAILABLE_ANTIBANDING_MODES);
+            if (ArrayUtils.contains(availableAntibandingModes, CaptureRequest.CONTROL_AE_ANTIBANDING_MODE_OFF)) {
+                requestBuilder.set(CaptureRequest.CONTROL_AE_ANTIBANDING_MODE, CaptureRequest.CONTROL_AE_ANTIBANDING_MODE_OFF);
+                LOG.debug("Camera Settings: Control AE Antibanding Mode to OFF");
+            }
+            else {
+                // TODO: syoung 10/30/2018 FIXME!! Not supported camera (I think).
+                LOG.warn("WARNING! Camera Settings: Available Control AE Antibanding Modes {}", availableAntibandingModes);
+            }
+
+            // let's not do any AWB for now. seems complex and interacts with AE
+            requestBuilder.set(CaptureRequest.CONTROL_AWB_MODE, CaptureRequest.CONTROL_AWB_MODE_OFF);
+
+            requestBuilder.set( CaptureRequest.COLOR_CORRECTION_MODE, CameraMetadata.COLOR_CORRECTION_MODE_TRANSFORM_MATRIX );
+            int[] cstMatrix = new int[]{ 258, 128, -119, 128, -10, 128, -40, 128, 209, 128, -41, 128, -1, 128, -74, 128, 203, 128 };
+            ColorSpaceTransform cst = new ColorSpaceTransform( cstMatrix );
+            requestBuilder.set( CaptureRequest.COLOR_CORRECTION_TRANSFORM, cst );
+            requestBuilder.set( CaptureRequest.SHADING_MODE, CameraMetadata.SHADING_MODE_OFF );
+            requestBuilder.set( CaptureRequest.NOISE_REDUCTION_MODE, CameraMetadata.NOISE_REDUCTION_MODE_OFF );
+
+            // COLOR_CORRECTION_ABERRATION_MODE
+            int[] availableColorModes = cameraCharacteristics.get(CameraCharacteristics.COLOR_CORRECTION_AVAILABLE_ABERRATION_MODES);
+            if (ArrayUtils.contains(availableColorModes, CaptureRequest.COLOR_CORRECTION_ABERRATION_MODE_OFF)) {
+                requestBuilder.set(CaptureRequest.COLOR_CORRECTION_ABERRATION_MODE, CaptureRequest.COLOR_CORRECTION_ABERRATION_MODE_OFF);
+                LOG.debug("Camera Settings: Color Correction Abberation Mode to OFF");
+            }
+            else {
+                // TODO: syoung 10/30/2018 FIXME!! Not supported camera (I think).
+                LOG.warn("WARNING! Camera Settings: Available Color Correction Abberation Modes {}", availableColorModes);
+            }
+
+            // Turn everything else OFF. ¯\_(ツ)_/¯ syoung 11/02/2018
+            requestBuilder.set( CaptureRequest.EDGE_MODE, CameraMetadata.EDGE_MODE_OFF );
+            requestBuilder.set( CaptureRequest.HOT_PIXEL_MODE, CameraMetadata.HOT_PIXEL_MODE_OFF );
+            requestBuilder.set( CaptureRequest.STATISTICS_FACE_DETECT_MODE, CameraMetadata.STATISTICS_FACE_DETECT_MODE_OFF );
+            requestBuilder.set( CaptureRequest.STATISTICS_LENS_SHADING_MAP_MODE, CameraMetadata.STATISTICS_LENS_SHADING_MAP_MODE_OFF );
+            requestBuilder.set( CaptureRequest.SENSOR_TEST_PATTERN_MODE, CameraMetadata.SENSOR_TEST_PATTERN_MODE_OFF );
+            requestBuilder.set( CaptureRequest.CONTROL_VIDEO_STABILIZATION_MODE, CameraMetadata.CONTROL_VIDEO_STABILIZATION_MODE_OFF );
+
             // should work on legacy devices
             // no auto-focus infinite, focus distance
             requestBuilder.set(CaptureRequest.CONTROL_AF_MODE, CameraMetadata.CONTROL_AF_MODE_OFF);
             requestBuilder.set(CaptureRequest.LENS_FOCUS_DISTANCE, 0.0f);
-    
-    
+
+            // Always set the flash to TORCH to turn it on.
+            requestBuilder.set(CaptureRequest.FLASH_MODE, CaptureRequest.FLASH_MODE_TORCH);
+
+            Range<Integer>[] availableRanges = cameraCharacteristics.get(CameraCharacteristics.CONTROL_AE_AVAILABLE_TARGET_FPS_RANGES);
+            Range<Integer> desiredRange = new Range<Integer>(60,60);
+            boolean isAvailableRange = ArrayUtils.contains(availableRanges, desiredRange);
+            LOG.debug("Available Camera ranges:{}, isAvailableFPS:{}", availableRanges, isAvailableRange);
+
+            requestBuilder.set(CaptureRequest.SENSOR_FRAME_DURATION, CAMERA_FRAME_DURATION_NANOS);
+            requestBuilder.set(CaptureRequest.SENSOR_EXPOSURE_TIME, CAMERA_EXPOSURE_DURATION_NANOS);
+            requestBuilder.set(CaptureRequest.SENSOR_SENSITIVITY, CAMERA_SENSITIVITY);
+
             CaptureRequest captureRequest = requestBuilder.build();
 //            for (CaptureRequest.Key<?> k : captureRequest.getKeys()) {
 //                Object value = captureRequest.get(k);
@@ -566,17 +609,17 @@ public class HeartRateCamera2Recorder extends Recorder {
                 @Override
         public void onCaptureProgressed(@NonNull CameraCaptureSession session,
                                         @NonNull CaptureRequest request, @NonNull CaptureResult partialResult) {
-            for (CaptureResult.Key key : keys) {
-                LOG.debug("Capture progress result with setting key: {}, value: {}", key.getName(), partialResult.get
-                        (key));
-            }
+//            for (CaptureResult.Key key : keys) {
+//                LOG.debug("Capture progress result with setting key: {}, value: {}", key.getName(), partialResult.get
+//                        (key));
+//            }
         }
         @Override
         public void onCaptureCompleted(@NonNull CameraCaptureSession session,
                                        @NonNull CaptureRequest request, @NonNull TotalCaptureResult result) {
-            for (CaptureResult.Key key : keys) {
-                LOG.debug("Capture complete result with setting key: {}, value: {}", key.getName(), result.get(key));
-            }
+//            for (CaptureResult.Key key : keys) {
+//                LOG.debug("Capture complete result with setting key: {}, value: {}", key.getName(), result.get(key));
+//            }
         }
         public void onCaptureBufferLost(@NonNull CameraCaptureSession session,
                                         @NonNull CaptureRequest request, @NonNull Surface target, long frameNumber) {
@@ -646,6 +689,12 @@ public class HeartRateCamera2Recorder extends Recorder {
             mediaRecorder.setVideoFrameRate(VIDEO_FRAME_RATE);
             mediaRecorder.setVideoSize(videoSize.getWidth(), videoSize.getHeight());
             mediaRecorder.setVideoEncoder(VIDEO_ENCODER);
+
+//            Camera.Parameters p = camera.getParameters();
+//            p.setPreviewFpsRange( 30000, 30000 ); // 30 fps
+//            if ( p.isAutoExposureLockSupported() )
+//                p.setAutoExposureLock( true );
+//            camera.setParameters( p );
 
             return mediaRecorder;
         } catch (Exception e) {

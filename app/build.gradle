@@ -1,4 +1,5 @@
 apply plugin: 'com.android.application'
+apply plugin: 'kotlin-android'
 
 android {
     compileSdkVersion 27
@@ -37,6 +38,17 @@ android {
     }
     dexOptions {
         javaMaxHeapSize "4g"
+    }
+    flavorDimensions "version"
+    productFlavors {
+        hrValidation {
+            dimension "version"
+            versionNameSuffix "-hrv"
+            applicationIdSuffix ".hrv"
+        }
+        crf {
+            dimension "version"
+        }
     }
 }
 
@@ -83,4 +95,8 @@ dependencies {
         exclude group: 'com.android.support', module: 'support-annotations'
         exclude group: 'com.google.code.findbugs', module: 'jsr305'
     })
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+}
+repositories {
+    mavenCentral()
 }

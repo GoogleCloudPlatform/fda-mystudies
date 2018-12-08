@@ -96,32 +96,13 @@ public interface BpmRecorder {
         void cameraUpdate(CameraCoveredHolder camera);
 
     }
-    
+
     class BpmCalculator {
         
         private static final Logger LOG = LoggerFactory.getLogger(BpmCalculator.class);
-        
-        public enum TYPE {
-            GREEN,
-            RED
-        }
-        
-        ;
-        
-        private static final int BEATS_ARRAY_SIZE = 3;
-        private static final int AVERAGE_ARRAY_SIZE = 4;
-        private static int beatsIndex = 0;
-        
-        private TYPE currentType = TYPE.GREEN;
-        private int beats = 0;
-        private int averageIndex = 0;
-        
-        private final int[] beatsArray = new int[BEATS_ARRAY_SIZE];
-        private final int[] averageArray = new int[AVERAGE_ARRAY_SIZE];
-        
-        private double startTime = -1;
-        
-        
+
+        private final HeartRateSampleProcessor sampleProcessor = new HeartRateSampleProcessor();
+
         /**
          * Calculates a simple running average bpm to display to the user for their heart rate. Updates the sample
          * with the calculated bpm, if there is one.
@@ -129,86 +110,22 @@ public interface BpmRecorder {
          * @param heartBeatSample heartBeatSample
          */
         public void calculateBpm(HeartBeatSample heartBeatSample) {
-            int imgAvg = (int) (heartBeatSample.r * 255);
-            if (startTime < 0) {
-                startTime = heartBeatSample.t;
+            sampleProcessor.addSample(heartBeatSample);
+            if (!sampleProcessor.isReadyToProcess()) {
+                return;
             }
-            
-            int averageArrayAvg = 0;
-            int averageArrayCnt = 0;
-            for (int i = 0; i < averageArray.length; i++) {
-                if (averageArray[i] > 0) {
-                    averageArrayAvg += averageArray[i];
-                    averageArrayCnt++;
-                }
-            }
-            
-            int rollingAverage = (averageArrayCnt > 0) ? (averageArrayAvg / averageArrayCnt) : 0;
-            TYPE newType = currentType;
-            if (imgAvg < rollingAverage) {
-                newType = TYPE.RED;
-                if (newType != currentType) {
-                    beats++;
-                }
-            } else if (imgAvg > rollingAverage) {
-                newType = TYPE.GREEN;
-            }
-    
-            if (averageIndex == AVERAGE_ARRAY_SIZE) {
-                averageIndex = 0;
-            }
-            averageArray[averageIndex] = imgAvg;
-            averageIndex++;
-            
-            // Transitioned from one state to another to the same
-            if (newType != currentType) {
-                currentType = newType;
-            }
-            
-            double endTime = heartBeatSample.t;
-            double totalTimeInSecs = (endTime - startTime) / 1000d;
-            
-            if (LOG.isTraceEnabled()) {
-                LOG.trace("calculateBPM total time: {}", totalTimeInSecs);
-    
-            }
-            
-            if (totalTimeInSecs >= 10) {
-                double beatsPerSecond = (beats / totalTimeInSecs);
-                int beatsPerMinute = (int) (beatsPerSecond * 60d);
-                if (beatsPerMinute < 30 || beatsPerMinute > 180) {
-                    // reset
-                    startTime = heartBeatSample.t;
-                    beats = 0;
-                    return;
-                }
-                
-                if (beatsIndex == BEATS_ARRAY_SIZE) {
-                    beatsIndex = 0;
-                }
-                beatsArray[beatsIndex] = beatsPerMinute;
-                beatsIndex++;
-                
-                int beatsArrayAvg = 0;
-                int beatsArrayCnt = 0;
-                for (int aBeatsArray : beatsArray) {
-                    if (aBeatsArray > 0) {
-                        beatsArrayAvg += aBeatsArray;
-                        beatsArrayCnt++;
-                    }
-                }
-                int beatsAvg = (beatsArrayAvg / beatsArrayCnt);
-                // reset
-                startTime = heartBeatSample.t;
-                beats = 0;
-                
-                heartBeatSample.bpm = beatsAvg;
-            }
+
+            HeartRateBPM ret = sampleProcessor.processSamples();
+
+            LOG.debug("HeartRateBPM {}", ret);
+            heartBeatSample.bpm = ret.getBpm();
+            heartBeatSample.confidence = ret.getConfidence();
         }
     }
     
     class HeartBeatJsonWriter extends JsonArrayDataRecorder
-            implements HeartbeatSampleTracker.HeartRateUpdateListener {
+            implements HeartbeatSampleTracker
+            .HeartRateUpdateListener {
         
         private static final Logger LOG = LoggerFactory.getLogger(HeartBeatJsonWriter.class);
         
@@ -217,9 +134,6 @@ public interface BpmRecorder {
         private static final String TIMESTAMP_IN_SECONDS_KEY = "timestamp";
         private static final String UPTIME_IN_SECONDS_KEY = "uptime";
         private static final String HEART_RATE_KEY = "bpm_camera";
-        private static final String HUE_KEY = "hue";
-        private static final String SATURATION_KEY = "saturation";
-        private static final String BRIGHTNESS_KEY = "brightness";
         private static final String RED_KEY = "red";
         private static final String GREEN_KEY = "green";
         private static final String BLUE_KEY = "blue";
@@ -246,7 +160,7 @@ public interface BpmRecorder {
         private final BpmRecorder.IntelligentStartUpdateListener mIntelligentStartListener;
         private final BpmRecorder.PressureListener mPressureListener;
         private final BpmRecorder.CameraCoveredListener mCameraListener;
-        
+
         private final Handler mainHandler = new Handler(Looper.getMainLooper());
         
         private final BpmCalculator bpmCalculator;
@@ -265,45 +179,50 @@ public interface BpmRecorder {
             this.mCameraListener = mCameraListener;
             this.bpmCalculator = new BpmCalculator();
         }
-        
+
+        private int sampleCount = 0;
+        private double timestampReference = -1;
+
         @AnyThread
         @Override
         public void onHeartRateSampleDetected(HeartBeatSample sample) {
             bpmCalculator.calculateBpm(sample);
 
-            if (timestampZeroReference < 0) {
-                // set timestamp reference, which timestamps are measured relative to
-                timestampZeroReference = sample.t;
-                uptimeZeroReference = System.nanoTime() * 1e-9;
+            // syoung 11/19/2018 Debug code added to get the sampling rate.
+            if (timestampReference == -1) {
+                timestampReference = sample.timestamp;
+            }
+            else if (sample.timestamp - timestampReference >= 1.0) {
+                LOG.debug("preprocessed sample count:{}", sampleCount);
+                timestampReference = sample.timestamp;
+                sampleCount = 0;
+            }
+            else {
+                sampleCount++;
+            }
 
-                Date timestampReferenceDate = new Date(System.currentTimeMillis());
+            if (sample.timestampDate != null) {
                 mJsonObject.addProperty(TIMESTAMP_DATE_KEY,
                         new SimpleDateFormat(FormatHelper.DATE_FORMAT_ISO_8601, new Locale("en", "us", "POSIX"))
-                                .format(timestampReferenceDate));
+                                .format(sample.timestampDate));
                 LOG.debug("TIMESTAMP Date key: " + mJsonObject.get(TIMESTAMP_DATE_KEY).getAsString());
             } else {
                 mJsonObject.remove(TIMESTAMP_DATE_KEY);
             }
 
-            double relativeTimestamp = ((sample.t - timestampZeroReference) / 1_000);
-            double uptime = uptimeZeroReference + relativeTimestamp;
-
-            mJsonObject.addProperty(TIMESTAMP_IN_SECONDS_KEY, relativeTimestamp);
-            mJsonObject.addProperty(UPTIME_IN_SECONDS_KEY, uptime);
-            mJsonObject.addProperty(HUE_KEY, sample.h);
-            mJsonObject.addProperty(SATURATION_KEY, sample.s);
-            mJsonObject.addProperty(BRIGHTNESS_KEY, sample.v);
-            mJsonObject.addProperty(RED_KEY, sample.r);
-            mJsonObject.addProperty(GREEN_KEY, sample.g);
-            mJsonObject.addProperty(BLUE_KEY, sample.b);
+            mJsonObject.addProperty(TIMESTAMP_IN_SECONDS_KEY, sample.timestamp);
+            mJsonObject.addProperty(UPTIME_IN_SECONDS_KEY, sample.uptime);
+            mJsonObject.addProperty(RED_KEY, sample.red);
+            mJsonObject.addProperty(GREEN_KEY, sample.green);
+            mJsonObject.addProperty(BLUE_KEY, sample.blue);
             mJsonObject.addProperty(RED_LEVEL_KEY, sample.redLevel);
-            
+
             if (sample.bpm > 0) {
                 mJsonObject.addProperty(HEART_RATE_KEY, sample.bpm);
                 if (mBpmUpdateListener != null) {
                     mainHandler.post(() ->
                             mBpmUpdateListener.bpmUpdate(
-                                    new BpmRecorder.BpmUpdateListener.BpmHolder(sample.bpm, (long)sample.t)));
+                                    new BpmRecorder.BpmUpdateListener.BpmHolder(sample.bpm, (long)sample.timestamp)));
                 }
             } else {
                 if (mCameraListener != null) {
@@ -314,14 +233,14 @@ public interface BpmRecorder {
                 }
                 mJsonObject.remove(HEART_RATE_KEY);
             }
-
             
             if (LOG.isTraceEnabled()) {
-                LOG.trace("HeartBeatSample: {}", sample);
+                LOG.trace("HeartBeatSample : {}", sample);
             }
-            
+
+            writeJsonObjectToFile(mJsonObject);
+
             if (!mEnableIntelligentStart || mIntelligentStartPassed) {
-                writeJsonObjectToFile(mJsonObject);
             } else {
                 updateIntelligentStart(sample);
             }
@@ -331,19 +250,9 @@ public interface BpmRecorder {
             if (mIntelligentStartPassed) {
                 return; // we already computed that we could start
             }
-            
-            // When a finger is placed in front of the camera with the flash on,
-            // the camera image will be almost entirely red, so use a simple lenient algorithm
-            // for this
-            float greenBlueSum = sample.g + sample.b;
-            if (greenBlueSum == 0.0f) {
-                greenBlueSum = 0.0000000001f;
-            }
-            float redFactor = sample.r / greenBlueSum;
-            
+
             // If the red factor is large enough, we update the trigger
-            // isCoveringLens method
-            if (redFactor >= RED_INTENSITY_FACTOR_THRESHOLD) {
+            if (sample.isCoveringLens()) {
                 mIntelligentStartCounter++;
                 if (mIntelligentStartCounter >= INTELLIGENT_START_FRAMES_TO_PASS) {
                     mIntelligentStartPassed = true;

@@ -43,6 +43,9 @@
     <string name="crf_bpm">BPM</string>
     <string name="crf_camera_cover">Gently cover both the camera and flash with your finger.</string>
     <string name="crf_your_heart_rate_is">Your heart rate is</string>
+    <string name="crf_redo_measurement"><u>Redo Measurement</u></string>
+    <string name="crf_finish_measurement">Finish Measurement</string>
+    <string name="crf_hand_to_researcher">Please hand the phone to the researcher</string>
 
     <!-- Countdown Task -->
     <string name="crf_underlined_pause"><u>Pause</u></string>
@@ -67,5 +70,10 @@
     <string name="crf_external_id_title">Enter your participant code</string>
     <string name="crf_external_id_hint">Participant code</string>
     <string name="crf_external_empty"> </string>
+
+    <!-- Participant ID Screen -->
+    <string name="hr_participant_id_title">Enter participant ID</string>
+    <string name="hr_participant">Participant Id</string>
+    <string name="hr_participant_empty"> </string>
 
 </resources>

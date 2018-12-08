@@ -33,6 +33,7 @@ import org.researchstack.backbone.model.survey.FormSurveyItem;
 import org.researchstack.backbone.model.survey.IntegerRangeSurveyItem;
 import org.researchstack.backbone.model.survey.QuestionSurveyItem;
 import org.researchstack.backbone.model.survey.SurveyItem;
+import org.researchstack.backbone.model.survey.TextfieldSurveyItem;
 import org.researchstack.backbone.model.survey.factory.SurveyFactory;
 import org.researchstack.backbone.model.taskitem.TaskItem;
 import org.researchstack.backbone.model.taskitem.TaskItemAdapter;
@@ -59,6 +60,7 @@ import org.sagebase.crf.step.CrfStairStep;
 import org.sagebase.crf.step.CrfPhotoCaptureStep;
 import org.sagebase.crf.step.CrfStartTaskStep;
 import org.sagebase.crf.step.CrfStartTaskSurveyItem;
+import org.sagebase.crf.step.HrParticipantIdStep;
 import org.sagebase.crf.step.body.CrfChoiceAnswerFormat;
 import org.sagebase.crf.step.body.CrfIntegerAnswerFormat;
 
@@ -185,6 +187,11 @@ public class CrfTaskFactory extends TaskItemFactory {
                             FormSurveyItem.skipIfPassed = questionItem.skipIfPassed;
                             FormSurveyItem.expectedAnswer = questionItem.expectedAnswer;
                             return createCrfFormStep(context, FormSurveyItem);
+                        case CrfSurveyItemAdapter.HR_PARTICIPANT_ID_SURVEY_ITEM_TYPE:
+                            if (!(item instanceof TextfieldSurveyItem)) {
+                                throw new IllegalStateException("Error in json parsing " + item.getCustomTypeValue() + ", types must be TextfieldSurveyItem");
+                            }
+                            return createHrParticipantIdStep(context, (TextfieldSurveyItem) item);
                     }
                 }
                 return null;
@@ -378,6 +385,11 @@ public class CrfTaskFactory extends TaskItemFactory {
         Task task = createTask(context, CrfResourceManager.SETTINGS_SCREEN_RESOURCE);
         context.startActivity(IntentFactory.INSTANCE.newTaskIntent(
                 context, CrfSettingsActivity.class, task, taskResult));
+    }
+
+    private HrParticipantIdStep createHrParticipantIdStep(Context context, TextfieldSurveyItem item) {
+        HrParticipantIdStep step = new HrParticipantIdStep(item.identifier);
+        return step;
     }
 
     private CrfFormStep createCrfFormStep(Context context, FormSurveyItem item) {

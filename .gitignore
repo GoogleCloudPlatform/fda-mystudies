@@ -85,3 +85,5 @@ git-crypt*.key
 
 # misc
 .DS_Store
+/.idea/caches
+/.idea/runConfigurations.xml

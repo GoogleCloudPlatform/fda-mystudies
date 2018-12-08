@@ -50,6 +50,7 @@ import org.researchstack.backbone.step.active.recorder.RecorderListener;
 import org.researchstack.backbone.ui.callbacks.StepCallbacks;
 import org.researchstack.backbone.ui.step.layout.ActiveStepLayout;
 import org.researchstack.backbone.ui.views.ArcDrawable;
+import org.researchstack.backbone.utils.LogExt;
 import org.researchstack.backbone.utils.StepResultHelper;
 import org.sagebase.crf.camera.CameraSourcePreview;
 import org.sagebase.crf.step.heartrate.BpmRecorder;
@@ -102,6 +103,7 @@ public class CrfHeartRateStepLayout extends ActiveStepLayout implements
     protected ArcDrawable arcDrawable;
 
     protected Button nextButton;
+    protected Button redoButton;
     protected ImageView heartImageView;
     protected HeartBeatAnimation heartBeatAnimation;
 
@@ -115,6 +117,7 @@ public class CrfHeartRateStepLayout extends ActiveStepLayout implements
     protected boolean shouldContinueOnStop = false;
     protected boolean displaySurvey = false;
     protected boolean isFinished = false;
+    private boolean shouldShowFinishUi = false;
 
     public CrfHeartRateStepLayout(Context context) {
         super(context);
@@ -155,12 +158,17 @@ public class CrfHeartRateStepLayout extends ActiveStepLayout implements
     @Override
     public void setupActiveViews() {
         super.setupActiveViews();
+        shouldShowFinishUi = getResources().getBoolean(R.bool.heart_rate_show_finish_ui);
 
         cameraPreview = findViewById(R.id.crf_camera_texture_view);
 
         crfMessageTextView = findViewById(R.id.crf_heart_rate_title);
         speakText(getContext().getString(R.string.crf_camera_cover));
         crfMessageTextView.setText(R.string.crf_camera_cover);
+        if (shouldShowFinishUi) {
+            //Remove the padding at the top for the progress bar, that is not shown in this case
+            crfMessageTextView.setPadding(crfMessageTextView.getPaddingLeft(), 0, crfMessageTextView.getPaddingRight(), crfMessageTextView.getPaddingBottom());
+        }
 
         cameraSourcePreview = findViewById(R.id.crf_camera_source);
         cameraSourcePreview.setSurfaceMask(true);
@@ -193,8 +201,13 @@ public class CrfHeartRateStepLayout extends ActiveStepLayout implements
         nextButton.setVisibility(View.GONE);
         nextButton.setOnClickListener(view -> onNextButtonClicked());
 
+        redoButton = findViewById(R.id.crf_redo_button);
+        redoButton.setVisibility(View.GONE);
+        redoButton.setOnClickListener(view -> onRedoButtonClicked());
+
         heartImageView = findViewById(R.id.crf_heart_icon);
         heartImageView.setVisibility(View.GONE);
+
     }
 
     // Wait for intelligent start to call super.start()
@@ -338,10 +351,20 @@ public class CrfHeartRateStepLayout extends ActiveStepLayout implements
     }
 
     protected void onNextButtonClicked() {
-        shouldContinueOnStop = true;
-        if (isFinished) {
-            callbacks.onSaveStep(StepCallbacks.ACTION_NEXT, activeStep, stepResult);
+        if (shouldShowFinishUi) {
+            showFinishUi();
+        } else {
+            shouldContinueOnStop = true;
+            if (isFinished) {
+                callbacks.onSaveStep(StepCallbacks.ACTION_NEXT, activeStep, stepResult);
+            }
         }
+    }
+
+    public void onRedoButtonClicked() {
+        pauseActiveStepLayout();
+        forceStop();
+        callbacks.onSaveStep(StepCallbacks.ACTION_PREV, activeStep, null);
     }
 
     protected void displaySurvey() {
@@ -369,6 +392,13 @@ public class CrfHeartRateStepLayout extends ActiveStepLayout implements
             setBpmDifferenceResult(0);
             heartRateNumber.setText(String.format(Locale.getDefault(), "%d", 0));
         }
+    }
+
+    private void showFinishUi() {
+        shouldShowFinishUi = false;
+        crfMessageTextView.setText(R.string.crf_hand_to_researcher);
+        nextButton.setText(R.string.crf_finish_measurement);
+        redoButton.setVisibility(View.VISIBLE);
     }
 
     /**

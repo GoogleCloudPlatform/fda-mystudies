@@ -27,6 +27,7 @@ public class CrfResourceManager extends ResourceManager {
     private static final String BASE_PATH_VIDEO         = "mp4";
 
     public static final String HEART_RATE_MEASUREMENT_TEST_RESOURCE = "heart_rate_measurement";
+    public static final String HEART_RATE_VALIDATION_TEST_RESOURCE = "heart_rate_validation";
     public static final String CARDIO_STRESS_TEST_RESOURCE = "cardio_stress_test";
     public static final String CARDIO_12MT_WALK_RESOURCE = "12_minute_walk";
     public static final String STAIR_STEP_RESOURCE = "stair_step";
@@ -52,6 +53,7 @@ public class CrfResourceManager extends ResourceManager {
         addResource(INFO_CARDIO_12MT_WALK_RESOURCE, new Resource(Resource.TYPE_HTML, BASE_PATH_HTML, INFO_CARDIO_12MT_WALK_RESOURCE));
 
         addResource(HEART_RATE_MEASUREMENT_TEST_RESOURCE, new Resource(Resource.TYPE_JSON, BASE_PATH_JSON, HEART_RATE_MEASUREMENT_TEST_RESOURCE));
+        addResource(HEART_RATE_VALIDATION_TEST_RESOURCE, new Resource(Resource.TYPE_JSON, BASE_PATH_JSON, HEART_RATE_VALIDATION_TEST_RESOURCE));
         addResource(CARDIO_STRESS_TEST_RESOURCE, new Resource(Resource.TYPE_JSON, BASE_PATH_JSON, CARDIO_STRESS_TEST_RESOURCE));
 
         addResource(INFO_HEART_RATE_MEASUREMENT_RESOURCE, new Resource(Resource.TYPE_HTML, BASE_PATH_HTML, INFO_HEART_RATE_MEASUREMENT_RESOURCE));
