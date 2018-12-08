@@ -26,8 +26,6 @@ import com.google.android.gms.vision.Detector;
 import com.google.android.gms.vision.Frame;
 
 import org.sagebase.crf.camera.CameraSource;
-import org.sagebase.crf.step.heartrate.ErrorDetectionStream;
-import org.sagebase.crf.step.heartrate.ErrorType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

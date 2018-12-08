@@ -56,6 +56,9 @@ import org.researchstack.backbone.step.active.recorder.Recorder;
 import org.researchstack.backbone.step.active.recorder.RecorderListener;
 import org.sagebase.crf.step.CrfHeartRateStepLayout;
 import org.sagebase.crf.step.heartrate.BpmRecorder;
+import org.sagebase.crf.step.heartrate.camera_error.CameraState;
+import org.sagebase.crf.step.heartrate.confidence_error.ConfidenceState;
+import org.sagebase.crf.step.heartrate.pressure_error.PressureState;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -134,6 +137,7 @@ public class HeartRateCamera2Recorder extends Recorder {
     
         mediaRecorderFile = new File(getOutputDirectory(), uniqueFilename + ".mp4");
         subscriptions = new CompositeSubscription();
+
         heartBeatJsonWriter = new BpmRecorder.HeartBeatJsonWriter(stepLayout, stepLayout,
                 stepLayout, stepLayout,
                 identifier + "Json", step,
@@ -247,10 +251,20 @@ public class HeartRateCamera2Recorder extends Recorder {
                 toBitmap(renderScript, image, mVideoSize.getWidth(),
                         mVideoSize.getHeight());
 
-        // Call algorithms with this timestamp and bitmap
-        // Intercept before to get the image/frame
+
         HeartBeatSample sample =
                 getHeartBeatSample(image.getTimestamp() / 1_000_000D, bitmap);
+
+        if (CameraState.containsIssue(image.getTimestamp(), bitmap)) {
+            System.out.println("Handle the camera error");
+        }
+        if (ConfidenceState.containsIssue(image.getTimestamp(), bitmap)) {
+            System.out.println("Low confidence");
+            if (PressureState.containsIssue(image.getTimestamp(), bitmap)) {
+                System.out.println("Pressure issue");
+            }
+        }
+
         image.close();
         return sample;
     }

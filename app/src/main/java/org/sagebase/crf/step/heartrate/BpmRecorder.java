@@ -70,9 +70,11 @@ public interface BpmRecorder {
     interface PressureListener {
         class PressureHolder {
             public final boolean pressureExcessive;
+            public final String outputText;
 
-            public PressureHolder(boolean pressureExcessive) {
+            public PressureHolder(boolean pressureExcessive, String outputText) {
                 this.pressureExcessive = pressureExcessive;
+                this.outputText = outputText;
             }
 
         }
@@ -83,9 +85,11 @@ public interface BpmRecorder {
     interface CameraCoveredListener {
         class CameraCoveredHolder {
             public final boolean cameraCovered;
+            public final String outputText;
 
-            public CameraCoveredHolder(boolean cameraCovered) {
+            public CameraCoveredHolder(boolean cameraCovered, String outputText) {
                 this.cameraCovered = cameraCovered;
+                this.outputText = outputText;
             }
         }
         @UiThread
@@ -302,8 +306,15 @@ public interface BpmRecorder {
                                     new BpmRecorder.BpmUpdateListener.BpmHolder(sample.bpm, (long)sample.t)));
                 }
             } else {
+                if (mCameraListener != null) {
+                    mainHandler.post(() ->
+                            mCameraListener.cameraUpdate(new
+                                    BpmRecorder.CameraCoveredListener.CameraCoveredHolder(false,
+                                    "Cover the camera properly.")));
+                }
                 mJsonObject.remove(HEART_RATE_KEY);
             }
+
             
             if (LOG.isTraceEnabled()) {
                 LOG.trace("HeartBeatSample: {}", sample);
@@ -345,10 +356,20 @@ public interface BpmRecorder {
                             mIntelligentStartListener.intelligentStartUpdate(progress,
                                     mIntelligentStartPassed)
                     );
+
+                    mainHandler.post(() ->
+                            mCameraListener.cameraUpdate(new
+                                    BpmRecorder.CameraCoveredListener.CameraCoveredHolder(true,
+                                    "You're covering the camera correctly.")));
                 }
                 
             } else {  // We need thresholds to be passed sequentially otherwise it is restarted
                 mIntelligentStartCounter = 0;
+                mainHandler.post(() ->
+                        mCameraListener.cameraUpdate(new
+                                BpmRecorder.CameraCoveredListener.CameraCoveredHolder(false,
+                                "Cover the camera properly.")));
+
             }
         }
         

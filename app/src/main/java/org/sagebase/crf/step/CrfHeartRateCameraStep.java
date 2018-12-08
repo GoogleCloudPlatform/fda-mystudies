@@ -22,8 +22,6 @@ import com.google.common.collect.ImmutableMap;
 import org.researchstack.backbone.step.active.ActiveStep;
 import org.researchstack.backbone.step.active.recorder.DeviceMotionRecorderConfig;
 import org.researchstack.backbone.step.active.recorder.RecorderConfig;
-import org.sagebase.crf.step.heartrate.ErrorDetectionStream;
-import org.sagebase.crf.step.heartrate.ErrorType;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -48,20 +46,11 @@ public class CrfHeartRateCameraStep extends ActiveStep {
                     .put("end", "You are all done!")
                     .build();
 
-    public CrfHeartRateCameraStep(String identifier) {
-        super(identifier);
-        commonInit();
-    }
 
     public CrfHeartRateCameraStep(String identifier, String title, String detailText) {
         super(identifier, title, detailText);
         commonInit();
-        ErrorType[] possible_errors = new ErrorType[]{ErrorType.LOW_CONFIDENCE, ErrorType.DECLINE_HR,
-                ErrorType.CAMERA_COVERAGE, ErrorType.ABNORMAL_HR};
 
-        ErrorDetectionStream error_detection = new ErrorDetectionStream(possible_errors);
-        error_detection.detectErrors();
-        error_detection.resolveErrors();
     }
 
     public void commonInit() {
