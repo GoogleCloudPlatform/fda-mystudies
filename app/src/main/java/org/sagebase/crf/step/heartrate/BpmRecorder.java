@@ -29,6 +29,8 @@ import org.researchstack.backbone.step.Step;
 import org.researchstack.backbone.step.active.recorder.JsonArrayDataRecorder;
 import org.researchstack.backbone.utils.FormatHelper;
 import org.sagebase.crf.step.active.HeartBeatSample;
+import org.sagebase.crf.step.active.HeartRateBPM;
+import org.sagebase.crf.step.active.HeartRateSampleProcessor;
 import org.sagebase.crf.step.active.HeartbeatSampleTracker;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

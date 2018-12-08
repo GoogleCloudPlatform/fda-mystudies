@@ -47,9 +47,9 @@ public class PressureAlgorithm implements OutputStateAlgorithm {
         }
 
         // This algorithm should be in this file
-        if(HeartBeatSample.isPressureExcessive()) {
+        /*if(HeartBeatSample.isPressureExcessive()) {
             return 1.0;
-        }
+        }*/
 
         else{
             return 0.0;

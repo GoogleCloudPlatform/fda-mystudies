@@ -30,6 +30,6 @@ public class CameraState implements StateDetection {
 
     // Need to develop the algorithm
     public static boolean containsIssue(Long timestamp, Bitmap bitmap) {
-        return CameraAlgorithm.algorithm(timestamp, bitmap) > 0.5;
+        return true;//CameraAlgorithm.algorithm(timestamp, bitmap) > 0.5;
     }
 }

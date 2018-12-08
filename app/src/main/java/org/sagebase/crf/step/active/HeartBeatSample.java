@@ -58,7 +58,7 @@ public class HeartBeatSample {
         return (redLevel <= MIN_RED_LEVEL) || (confidence >= 0.5);
     }
 
-    public static boolean isPressureExcessive() {
+    public boolean isPressureExcessive() {
         int hr = bpm;
 
         if(hr > 250 || hr <= 40) {

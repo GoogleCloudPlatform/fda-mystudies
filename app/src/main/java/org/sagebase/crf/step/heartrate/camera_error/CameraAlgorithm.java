@@ -33,14 +33,14 @@ public class CameraAlgorithm implements OutputStateAlgorithm {
         return null;
     }
 
-    public static double algorithm(Long timestamp, Bitmap bitmap) {
+    public double algorithm(Long timestamp, Bitmap bitmap) {
         ArrayList<Bitmap> state = getPreviousState();
 
         if (state == null || state.size() < min_length) {
             return 0.0;
         }
 
-        boolean cameraResult = HeartBeatSample.isCoveringLens();
+        boolean cameraResult = false;
         if (cameraResult) {
             return 1.0;
         }
