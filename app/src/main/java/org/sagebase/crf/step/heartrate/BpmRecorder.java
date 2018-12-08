@@ -37,7 +37,6 @@ import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.Locale;
 
 /**
@@ -308,12 +307,6 @@ public interface BpmRecorder {
                                     new BpmRecorder.BpmUpdateListener.BpmHolder(sample.bpm, (long)sample.t)));
                 }
             } else {
-                if (mCameraListener != null) {
-                    mainHandler.post(() ->
-                            mCameraListener.cameraUpdate(new
-                                    BpmRecorder.CameraCoveredListener.CameraCoveredHolder(false,
-                                    "Cover the camera properly.")));
-                }
                 mJsonObject.remove(HEART_RATE_KEY);
             }
 
@@ -359,10 +352,6 @@ public interface BpmRecorder {
                                     mIntelligentStartPassed)
                     );
 
-                    mainHandler.post(() ->
-                            mCameraListener.cameraUpdate(new
-                                    BpmRecorder.CameraCoveredListener.CameraCoveredHolder(true,
-                                    "You're covering the camera correctly.")));
                 }
                 
             } else {  // We need thresholds to be passed sequentially otherwise it is restarted
