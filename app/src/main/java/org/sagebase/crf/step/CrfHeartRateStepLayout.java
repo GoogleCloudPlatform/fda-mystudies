@@ -36,6 +36,7 @@ import android.view.animation.Animation;
 import android.view.animation.Transformation;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import org.researchstack.backbone.answerformat.DecimalAnswerFormat;
@@ -505,20 +506,25 @@ public class CrfHeartRateStepLayout extends ActiveStepLayout implements
         if(!camera.cameraCovered) {
             showHRError();
         }
+        else {
+            showHR(0);
+        }
     }
 
     private void showHR(int HR) {
-
+        TextView e = findViewById(R.id.crf_heart_rate_error);
+        e.setVisibility(GONE);
     }
 
     private void showHRError() {
-        TextView t = (TextView) findViewById(R.id.crf_heart_rate_bpm);
+        LinearLayout t = findViewById(R.id.crf_bpm_text_container);
         t.setVisibility(GONE);
 
-        TextView v = (TextView) findViewById(R.id.crf_heart_rate_number);
-        v.setVisibility(GONE);
+        ImageView i = findViewById(R.id.crf_heart_icon);
+        i.setVisibility(GONE);
 
-        TextView e = (TextView) findViewById(R.id.crf_heart_rate_error);
+
+        TextView e = findViewById(R.id.crf_heart_rate_error);
         e.setVisibility(VISIBLE);
     }
     private class HeartBeatAnimation extends AlphaAnimation {

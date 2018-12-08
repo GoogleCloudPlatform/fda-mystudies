@@ -226,12 +226,6 @@ public interface BpmRecorder {
                                     new BpmRecorder.BpmUpdateListener.BpmHolder(sample.bpm, (long)sample.timestamp)));
                 }
             } else {
-                if (mCameraListener != null) {
-                    mainHandler.post(() ->
-                            mCameraListener.cameraUpdate(new
-                                    BpmRecorder.CameraCoveredListener.CameraCoveredHolder(false,
-                                    "Gently cover the camera and flashlight.")));
-                }
                 mJsonObject.remove(HEART_RATE_KEY);
             }
             
@@ -267,11 +261,6 @@ public interface BpmRecorder {
                                     mIntelligentStartPassed)
                     );
 
-                    // For testing purposes
-                    mainHandler.post(() ->
-                            mCameraListener.cameraUpdate(new
-                                    BpmRecorder.CameraCoveredListener.CameraCoveredHolder(true,
-                                    "You're covering the camera correctly.")));
                 }
                 
             } else {  // We need thresholds to be passed sequentially otherwise it is restarted
