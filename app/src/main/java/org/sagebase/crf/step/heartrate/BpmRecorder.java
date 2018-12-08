@@ -37,7 +37,6 @@ import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.Locale;
 
 /**
@@ -231,7 +230,7 @@ public interface BpmRecorder {
                     mainHandler.post(() ->
                             mCameraListener.cameraUpdate(new
                                     BpmRecorder.CameraCoveredListener.CameraCoveredHolder(false,
-                                    "Cover the camera properly.")));
+                                    "Gently cover the camera and flashlight.")));
                 }
                 mJsonObject.remove(HEART_RATE_KEY);
             }
@@ -268,6 +267,7 @@ public interface BpmRecorder {
                                     mIntelligentStartPassed)
                     );
 
+                    // For testing purposes
                     mainHandler.post(() ->
                             mCameraListener.cameraUpdate(new
                                     BpmRecorder.CameraCoveredListener.CameraCoveredHolder(true,

@@ -502,13 +502,25 @@ public class CrfHeartRateStepLayout extends ActiveStepLayout implements
 
     @Override
     public void cameraUpdate(CameraCoveredHolder camera) {
-        String cameraStepId = CrfHeartRateStepLayout.CAMERA_NOT_COVERED;
-        StepResult<String> cameraResult = new StepResult<>(new Step(cameraStepId));
-        cameraResult.setResult(camera.outputText);
-        stepResult.setResultForIdentifier(cameraStepId, cameraResult);
+        if(!camera.cameraCovered) {
+            showHRError();
+        }
+    }
+
+    private void showHR(int HR) {
 
     }
 
+    private void showHRError() {
+        TextView t = (TextView) findViewById(R.id.crf_heart_rate_bpm);
+        t.setVisibility(GONE);
+
+        TextView v = (TextView) findViewById(R.id.crf_heart_rate_number);
+        v.setVisibility(GONE);
+
+        TextView e = (TextView) findViewById(R.id.crf_heart_rate_error);
+        e.setVisibility(VISIBLE);
+    }
     private class HeartBeatAnimation extends AlphaAnimation {
 
         void setBpm(int bpm) {
