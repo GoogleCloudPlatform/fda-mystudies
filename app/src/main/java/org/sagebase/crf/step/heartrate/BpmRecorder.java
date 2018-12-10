@@ -71,11 +71,9 @@ public interface BpmRecorder {
     interface PressureListener {
         class PressureHolder {
             public final boolean pressureExcessive;
-            public final String outputText;
 
-            public PressureHolder(boolean pressureExcessive, String outputText) {
+            public PressureHolder(boolean pressureExcessive) {
                 this.pressureExcessive = pressureExcessive;
-                this.outputText = outputText;
             }
 
         }
@@ -86,16 +84,40 @@ public interface BpmRecorder {
     interface CameraCoveredListener {
         class CameraCoveredHolder {
             public final boolean cameraCovered;
-            public final String outputText;
 
-            public CameraCoveredHolder(boolean cameraCovered, String outputText) {
+            public CameraCoveredHolder(boolean cameraCovered) {
                 this.cameraCovered = cameraCovered;
-                this.outputText = outputText;
             }
         }
         @UiThread
         void cameraUpdate(CameraCoveredHolder camera);
 
+    }
+
+    interface AbnormalHRListener {
+        class AbnormalHRHolder {
+            public final boolean abnormal;
+
+            public AbnormalHRHolder(boolean abnormal) {
+                this.abnormal = abnormal;
+            }
+        }
+
+        @UiThread
+        void abnormalHRUpdate(AbnormalHRHolder abnormal);
+    }
+
+    interface DeclineHRListener {
+        class DeclineHRHolder {
+            public final boolean declining;
+
+            public DeclineHRHolder(boolean declining) {
+                this.declining = declining;
+            }
+        }
+
+        @UiThread
+        void declineHRUpdate(DeclineHRHolder decline);
     }
 
     class BpmCalculator {
@@ -161,6 +183,8 @@ public interface BpmRecorder {
         private final BpmRecorder.IntelligentStartUpdateListener mIntelligentStartListener;
         private final BpmRecorder.PressureListener mPressureListener;
         private final BpmRecorder.CameraCoveredListener mCameraListener;
+        private final BpmRecorder.AbnormalHRListener mAbnormalListener;
+        private final BpmRecorder.DeclineHRListener mDeclineListener;
 
         private final Handler mainHandler = new Handler(Looper.getMainLooper());
         
@@ -170,7 +194,8 @@ public interface BpmRecorder {
                                            mBpmUpdateListener, IntelligentStartUpdateListener
                                            mIntelligentStartListener,
                                    CameraCoveredListener mCameraListener,
-                                   PressureListener mPressureListener, String identifier,
+                                   PressureListener mPressureListener, AbnormalHRListener mAbnormalListener,
+                                   DeclineHRListener mDeclineListener, String identifier,
                                    Step step, File outputDirectory) {
             super(identifier, step, outputDirectory);
             
@@ -179,6 +204,8 @@ public interface BpmRecorder {
             this.mPressureListener = mPressureListener;
             this.mCameraListener = mCameraListener;
             this.bpmCalculator = new BpmCalculator();
+            this.mAbnormalListener = mAbnormalListener;
+            this.mDeclineListener = mDeclineListener;
         }
 
         private int sampleCount = 0;
@@ -262,14 +289,30 @@ public interface BpmRecorder {
                     );
 
                 }
+                if(sample.abnormalHR()) {
+                    mainHandler.post(() ->
+                            mAbnormalListener.abnormalHRUpdate(new
+                                    BpmRecorder.AbnormalHRListener.AbnormalHRHolder(true)));
+                }
+                if(sample.declineHR()) {
+                    mainHandler.post(() ->
+                            mDeclineListener.declineHRUpdate(new
+                                    DeclineHRListener.DeclineHRHolder(true)));
+                }
                 
             } else {  // We need thresholds to be passed sequentially otherwise it is restarted
                 mIntelligentStartCounter = 0;
-                mainHandler.post(() ->
-                        mCameraListener.cameraUpdate(new
-                                BpmRecorder.CameraCoveredListener.CameraCoveredHolder(false,
-                                "Cover the camera properly.")));
 
+                if(sample.isPressureExcessive()) {
+                    mainHandler.post(() ->
+                            mPressureListener.pressureUpdate(new
+                                    BpmRecorder.PressureListener.PressureHolder(true)));
+                }
+                else {
+                    mainHandler.post(() ->
+                            mCameraListener.cameraUpdate(new
+                                    BpmRecorder.CameraCoveredListener.CameraCoveredHolder(false)));
+                }
             }
         }
         

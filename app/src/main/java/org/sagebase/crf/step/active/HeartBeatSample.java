@@ -65,6 +65,18 @@ public class HeartBeatSample {
             return true;
         }
 
-        return false;
+        // for testing purposes
+        return true;
+        //return false;
+    }
+
+    // Algorithm to be implemented
+    public boolean abnormalHR() {
+        return true;
+    }
+
+    // Algorithm to be implemented
+    public boolean declineHR() {
+        return true;
     }
 }

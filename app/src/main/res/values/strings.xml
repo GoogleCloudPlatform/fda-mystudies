@@ -75,5 +75,6 @@
     <string name="hr_participant_id_title">Enter participant ID</string>
     <string name="hr_participant">Participant Id</string>
     <string name="hr_participant_empty"> </string>
+    <string name="crf_pressure">Gently place your finger on the camera and flashlight.</string>
 
 </resources>
