@@ -140,7 +140,7 @@ public class HeartRateCamera2Recorder extends Recorder {
         subscriptions = new CompositeSubscription();
 
         heartBeatJsonWriter = new BpmRecorder.HeartBeatJsonWriter(stepLayout, stepLayout,
-                stepLayout, stepLayout,
+                stepLayout, stepLayout, stepLayout, stepLayout,
                 identifier + "Json", step,
                 outputDirectory );
         heartBeatJsonWriter.setRecorderListener(stepLayout);
