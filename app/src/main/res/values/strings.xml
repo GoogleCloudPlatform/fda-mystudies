@@ -76,18 +76,5 @@
     <string name="hr_participant">Participant Id</string>
     <string name="hr_participant_empty"> </string>
     <string name="crf_pressure">Gently place your finger on the camera and flashlight.</string>
-    <string name="crf_abnormal_hr">We noticed 2 or more measurements are out of your normal range. Is there anything below that might be influencing this?</string>
-    <string name="crf_abnormal_why">Why are we asking this?</string>
-    <string name="dont_know">I don\'t know</string>
-    <string name="feeling_sick">Feeling sick</string>
-    <string name="sleep_deprived">Sleep deprived</string>
-    <string name="medication">Medication</string>
-    <string name="menstrual_cycle">Menstrual cycle</string>
-    <string name="change_activity">Change in activity levels</string>
-    <string name="other">Other</string>
-    <string name="crf_not_rest_hr">Seems that your heart rate isn\'t at rest.</string>
-    <string name="crf_relax_rest">You can try to sit and relax for a bit longer or we can remind you to take this measurement later.</string>
-    <string name="crf_decline_continue">Continue measurement</string>
-    <string name="crf_cant_read">We can\'t get a good reading. Please sit still.</string>
 
 </resources>

@@ -151,6 +151,17 @@
             android:padding="@dimen/rsb_padding_large"
             android:visibility="gone"/>
 
+        <TextView
+            style="@style/TextAppearance.Crf.ActiveStatusText"
+            android:id="@+id/crf_pressure_error"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/crf_pressure"
+            android:layout_gravity="center"
+            android:textColor="@color/black86"
+            android:padding="@dimen/rsb_padding_large"
+            android:visibility="gone"/>
+
         <ImageView
             android:id="@+id/crf_heart_icon"
             android:layout_width="wrap_content"

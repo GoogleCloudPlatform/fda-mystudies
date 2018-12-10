@@ -91,7 +91,8 @@ public class HeartBeatSample {
         }
 
         // for testing purposes
-        return false;
+        return true;
+        //return false;
     }
 
     // Algorithm to be implemented
