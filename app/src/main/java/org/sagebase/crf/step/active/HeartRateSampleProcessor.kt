@@ -33,7 +33,7 @@ import org.sagebase.crf.matlab.*
 //
 
 /// Frame rates supported by this processor, with the preferred framerate listed first.
-val SUPPORTED_FRAME_RATES = arrayOf(60)
+val SUPPORTED_FRAME_RATES = arrayOf(30)
 
 /// The number of seconds for the window used to calculate the heart rate.
 const val HEART_RATE_WINDOW_IN_SECONDS: Double = 10.0

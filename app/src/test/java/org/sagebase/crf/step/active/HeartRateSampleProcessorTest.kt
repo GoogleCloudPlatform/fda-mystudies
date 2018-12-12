@@ -62,7 +62,7 @@ class HeartRateSampleProcessorTest {
         val red = getRedInput().subList(0, 600)
         val expectedOutput = getBandpassOutput()
 
-        val sampleProcessor = HeartRateSampleProcessor()
+        val sampleProcessor = HeartRateSampleProcessor(60)
         val output = sampleProcessor.bandpassFiltered(red.toTypedArray())
 
         if (output.size == expectedOutput.size) {
@@ -78,7 +78,7 @@ class HeartRateSampleProcessorTest {
     fun testXCorrOnRedFiltered() {
         val red = getRedInput().subList(0, 600)
         val expectedOutput = getXcorrValues()
-        val sampleProcessor = HeartRateSampleProcessor()
+        val sampleProcessor = HeartRateSampleProcessor(60)
         val filtered = sampleProcessor.bandpassFiltered(red.toTypedArray())
         val output = Matlab.xcorr(filtered)
 
@@ -95,7 +95,7 @@ class HeartRateSampleProcessorTest {
     fun testMaxSpliced() {
         val red = getRedInput().subList(0, 600)
         val expectedOutput = getMaxSpliced()
-        val sampleProcessor = HeartRateSampleProcessor()
+        val sampleProcessor = HeartRateSampleProcessor(60)
         val filtered = sampleProcessor.bandpassFiltered(red.toTypedArray())
         val xcorr = Matlab.xcorr(filtered)
         val ret = xcorr.maxSplice()
@@ -116,7 +116,7 @@ class HeartRateSampleProcessorTest {
     fun testZeroReplaceSeek() {
         val red = getRedInput().subList(0, 600)
         val expectedOutput = getZeroReplaceSeek()
-        val sampleProcessor = HeartRateSampleProcessor()
+        val sampleProcessor = HeartRateSampleProcessor(60)
         val filtered = sampleProcessor.bandpassFiltered(red.toTypedArray())
         val xcorr = Matlab.xcorr(filtered)
         val x = xcorr.maxSplice().v2.toTypedArray()
@@ -141,7 +141,7 @@ class HeartRateSampleProcessorTest {
     @Test
     fun testCalculateHR() {
         val red = getRedInput()
-        val sampleProcessor = HeartRateSampleProcessor()
+        val sampleProcessor = HeartRateSampleProcessor(60)
 
         val hrValues = sampleProcessor.findHeartRateValues(red)
 
