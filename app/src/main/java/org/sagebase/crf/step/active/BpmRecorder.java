@@ -144,6 +144,7 @@ public interface BpmRecorder {
 
         private int sampleCount = 0;
         private double timestampReference = -1;
+        private Date zeroReferenceDate = null;
         
         @AnyThread
         @Override
@@ -168,6 +169,9 @@ public interface BpmRecorder {
                         new SimpleDateFormat(FormatHelper.DATE_FORMAT_ISO_8601, new Locale("en", "us", "POSIX"))
                                 .format(sample.timestampDate));
                 LOG.debug("TIMESTAMP Date key: " + mJsonObject.get(TIMESTAMP_DATE_KEY).getAsString());
+                if (zeroReferenceDate == null) {
+                    zeroReferenceDate = sample.timestampDate;
+                }
             } else {
                 mJsonObject.remove(TIMESTAMP_DATE_KEY);
             }
@@ -182,9 +186,13 @@ public interface BpmRecorder {
             if (sample.bpm > 0) {
                 mJsonObject.addProperty(HEART_RATE_KEY, sample.bpm);
                 if (mBpmUpdateListener != null) {
+                    //Sample timestamp is in seconds from start of recording
+                    // BpmHolder is expecting a date timestamp in ms
+                    long sampleTimestamp = zeroReferenceDate.getTime() + (long)(sample.timestamp * 1000);
+
                     mainHandler.post(() ->
                             mBpmUpdateListener.bpmUpdate(
-                                    new BpmRecorder.BpmUpdateListener.BpmHolder(sample.bpm, (long)sample.timestamp)));
+                                    new BpmRecorder.BpmUpdateListener.BpmHolder(sample.bpm, sampleTimestamp)));
                 }
             } else {
                 mJsonObject.remove(HEART_RATE_KEY);
