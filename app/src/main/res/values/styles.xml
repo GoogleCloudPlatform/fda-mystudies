@@ -185,6 +185,4 @@
         <item name="android:fontFamily">@font/opensans</item>
     </style>
 
-    <style name="Crf.Gray.RoundedCornerMaterialButton">0x7f1200b6</style>
-
 </resources>
