@@ -1,5 +1,154 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent" android:layout_height="match_parent">
+<!--
+TODO: Add button functionality, exit button, done button, what comes before and after?
+  ~    Copyright 2018 Sage Bionetworks
+  ~
+  ~    Licensed under the Apache License, Version 2.0 (the "License");
+  ~    you may not use this file except in compliance with the License.
+  ~    You may obtain a copy of the License at
+  ~
+  ~        http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~    Unless required by applicable law or agreed to in writing, software
+  ~    distributed under the License is distributed on an "AS IS" BASIS,
+  ~    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~    See the License for the specific language governing permissions and
+  ~    limitations under the License.
+  ~
+  -->
+
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/crf_root_instruction_layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:id="@+id/crf_abnormal_text_container"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_gravity="center"
+        android:visibility="visible"
+        android:background="#C94281">
+
+    <TextView
+        style="@style/TextAppearance.Crf.IntroBody"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="28dp"
+        android:text="@string/crf_abnormal_hr"
+        android:textSize="24sp"
+        android:textColor="@color/white80"
+        android:gravity="center_horizontal"/>
+    <TextView
+        style="@style/TextAppearance.Crf.IntroBody"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:text="@string/crf_abnormal_why"
+        android:textColor="@color/white80"
+        android:padding="@dimen/rsb_padding_medium"
+        android:gravity="center_horizontal"/>
+
+    </LinearLayout>
+
+    <RelativeLayout
+        android:id="@+id/crf_abnormal_options_container"
+        android:layout_width="@dimen/browser_actions_context_menu_max_width"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:orientation="vertical"
+        android:visibility="visible">
+
+        <View
+            android:id="@+id/line"
+            android:layout_width="375dp"
+            android:layout_height="0dp"
+            android:layout_alignParentTop="true"
+            android:layout_marginTop="290dp"
+            android:background="#EDEDED"
+            />
+
+        <Button
+            android:id="@+id/dont_know"
+            android:layout_width="match_parent"
+            android:layout_height="35dp"
+            android:layout_marginLeft="28dp"
+            android:layout_marginRight="28dp"
+            android:layout_below="@+id/line"
+            android:text="@string/dont_know" />
+
+        <Button
+            android:id="@+id/sick"
+            android:layout_width="match_parent"
+            android:layout_height="35dp"
+            android:layout_marginLeft="28dp"
+            android:layout_marginRight="28dp"
+            android:layout_below="@+id/dont_know"
+            android:text="@string/feeling_sick" />
+
+        <Button
+            android:id="@+id/sleep_deprived"
+            android:layout_width="match_parent"
+            android:layout_height="35dp"
+            android:layout_marginLeft="28dp"
+            android:layout_marginRight="28dp"
+            android:layout_below="@+id/sick"
+            android:text="@string/sleep_deprived" />
+
+
+        <Button
+            android:id="@+id/medication"
+            android:layout_width="match_parent"
+            android:layout_height="35dp"
+            android:layout_marginLeft="28dp"
+            android:layout_marginRight="28dp"
+            android:layout_below="@+id/sleep_deprived"
+            android:text="@string/medication" />
+
+        <Button
+            android:id="@+id/menstrual_cycle"
+            android:layout_width="match_parent"
+            android:layout_height="35dp"
+            android:layout_marginLeft="28dp"
+            android:layout_marginRight="28dp"
+            android:layout_below="@+id/medication"
+            android:text="@string/menstrual_cycle" />
+
+        <Button
+            android:id="@+id/change_activity"
+            android:layout_width="match_parent"
+            android:layout_height="35dp"
+            android:layout_marginLeft="28dp"
+            android:layout_marginRight="28dp"
+            android:layout_below="@+id/menstrual_cycle"
+            android:text="@string/change_activity" />
+
+        <Button
+            android:id="@+id/other"
+            android:layout_width="match_parent"
+            android:layout_height="35dp"
+            android:layout_marginLeft="28dp"
+            android:layout_marginRight="28dp"
+            android:layout_below="@+id/change_activity"
+            android:text="@string/other" />
+
+        <Button
+            style="@style/Crf.Gray.RoundedCornerMaterialButton"
+            android:id="@+id/button_go_forward"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/crf_rounded_button_height"
+            android:layout_margin="@dimen/rsb_padding_large"
+            android:focusable="true"
+            android:text="@string/rsb_done"
+            android:textColor="@color/white"
+            android:textAllCaps="false"
+            android:onClick="goForwardClicked"
+            android:layout_below="@+id/other"/>
+
+    </RelativeLayout>
+
+
 
 </RelativeLayout>
