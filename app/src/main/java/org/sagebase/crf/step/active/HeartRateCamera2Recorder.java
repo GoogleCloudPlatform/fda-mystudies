@@ -501,7 +501,10 @@ public class HeartRateCamera2Recorder extends Recorder {
 
 
             // turns off AF, AE, AWB
-            requestBuilder.set(CaptureRequest.CONTROL_MODE, CaptureRequest.CONTROL_MODE_OFF);
+            // This prevents the flash from working on Samsung Galaxy J7
+            // Turning off each setting individually seems to work fine -Nathaniel 12/18/18
+            //requestBuilder.set(CaptureRequest.CONTROL_MODE, CaptureRequest.CONTROL_MODE_OFF);
+
             requestBuilder.set( CaptureRequest.CONTROL_SCENE_MODE, CameraMetadata.CONTROL_SCENE_MODE_DISABLED );
 
             // Look at the available camera characteristics to check that CONTROL_AE_MODE_OFF is available.
