@@ -64,7 +64,7 @@ public class CrfHeartRateCameraStep extends ActiveStep {
         setShouldStartTimerAutomatically(true);
         setShouldContinueOnFinish(false);
         setShouldShowDefaultTimer(false);
-        setSpokenInstructionMap(SPOKEN_TEXT_MAP);
+        //setSpokenInstructionMap(SPOKEN_TEXT_MAP); turn off spoken text
     }
 
     @Override
