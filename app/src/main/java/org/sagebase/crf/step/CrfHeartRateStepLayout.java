@@ -341,7 +341,7 @@ public class CrfHeartRateStepLayout extends ActiveStepLayout implements
             heartBeatAnimation = new HeartBeatAnimation(bpmHolder.bpm);
             heartImageView.startAnimation(heartBeatAnimation);
         }
-        currentHeartRate.setText(bpmHolder.bpm + " BPM");
+        currentHeartRate.setText(bpmHolder.bpm + " " + getContext().getString(R.string.crf_bpm));
         heartBeatAnimation.setBpm(bpmHolder.bpm);
         bpmList.add(bpmHolder);
     }
