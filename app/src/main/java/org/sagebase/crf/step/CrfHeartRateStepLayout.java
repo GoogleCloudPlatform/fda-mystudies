@@ -27,6 +27,7 @@ import android.support.annotation.Nullable;
 import android.support.annotation.UiThread;
 import android.support.v4.content.res.ResourcesCompat;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.TextureView;
 import android.view.View;
 import android.view.ViewGroup;
@@ -308,8 +309,16 @@ public class CrfHeartRateStepLayout extends ActiveStepLayout implements
     
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     void startVideoRecording() {
+        //HACK for Samsung Galaxy J7 Neo that records 0 bpm when recording video
+        String device = Build.MANUFACTURER + Build.MODEL;
+        if ("samsungSM-J701M".equalsIgnoreCase(device)) {
+            //TODO: Figure out a better solution if there are other devices that can't record video and heart rate at same time
+            // -Nathaniel 12/18/18
+            return;
+        }
+
         ((HeartRateCamera2Recorder) cameraRecorder).startVideoRecording();
-    
+
     }
 
     @Override
