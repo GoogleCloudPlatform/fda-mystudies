@@ -95,6 +95,8 @@ public class CrfHeartRateStepLayout extends ActiveStepLayout implements
     protected View heartRateTextContainer;
     protected TextView heartRateNumber;
 
+    protected TextView currentHeartRate;
+
     protected View arcDrawableContainer;
     protected View arcDrawableView;
     protected ArcDrawable arcDrawable;
@@ -182,6 +184,7 @@ public class CrfHeartRateStepLayout extends ActiveStepLayout implements
         heartRateTextContainer = findViewById(R.id.crf_bpm_text_container);
         heartRateTextContainer.setVisibility(View.GONE);
         heartRateNumber = findViewById(R.id.crf_heart_rate_number);
+        currentHeartRate = findViewById(R.id.crf_current_bpm);
 
         arcDrawableContainer = findViewById(R.id.crf_arc_drawable_container);
         arcDrawableView = findViewById(R.id.crf_arc_drawable);
@@ -329,6 +332,7 @@ public class CrfHeartRateStepLayout extends ActiveStepLayout implements
             heartBeatAnimation = new HeartBeatAnimation(bpmHolder.bpm);
             heartImageView.startAnimation(heartBeatAnimation);
         }
+        currentHeartRate.setText(bpmHolder.bpm + " BPM");
         heartBeatAnimation.setBpm(bpmHolder.bpm);
         bpmList.add(bpmHolder);
     }
@@ -367,6 +371,7 @@ public class CrfHeartRateStepLayout extends ActiveStepLayout implements
         cameraSourcePreview.setVisibility(View.INVISIBLE);
         arcDrawableContainer.setVisibility(View.GONE);
         heartRateTextContainer.setVisibility(View.VISIBLE);
+        currentHeartRate.setVisibility(View.GONE);
 
         if (!bpmList.isEmpty()) {
             int bpmSum = 0;
