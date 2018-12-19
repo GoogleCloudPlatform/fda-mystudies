@@ -35,6 +35,7 @@ import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.view.animation.Transformation;
 import android.widget.Button;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -117,8 +118,6 @@ public class CrfHeartRateStepLayout extends ActiveStepLayout implements
 
     protected  Recorder cameraRecorder;
     protected boolean shouldContinueOnStop = false;
-    protected boolean displaySurvey = false;
-    protected boolean displayDecliningStatement = false;
     protected boolean isFinished = false;
     private boolean shouldShowFinishUi = false;
 
@@ -338,6 +337,7 @@ public class CrfHeartRateStepLayout extends ActiveStepLayout implements
         }
         heartBeatAnimation.setBpm(bpmHolder.bpm);
         bpmList.add(bpmHolder);
+        resetView();
     }
 
     @Override
@@ -367,13 +367,6 @@ public class CrfHeartRateStepLayout extends ActiveStepLayout implements
         callbacks.onSaveStep(StepCallbacks.ACTION_PREV, activeStep, null);
     }
 
-    protected void displaySurvey() {
-
-    }
-
-    protected void displayDeclining() {
-
-    }
 
     protected void showCompleteUi() {
         nextButton.setVisibility(View.VISIBLE);
@@ -501,45 +494,71 @@ public class CrfHeartRateStepLayout extends ActiveStepLayout implements
 
     @Override
     public void pressureUpdate(PressureHolder pressure) {
-        if(pressure.pressureExcessive) {
-            showPressureError();
+        if(pressure.isPressureExcessive) {
+            LOG.error("Too much pressure on the camera");
+            showPressureStatus();
+        }
+        else {
+            LOG.error("Pressure is alright");
+            resetView();
         }
     }
 
     @Override
     public void cameraUpdate(CameraCoveredHolder camera) {
-        if(!camera.cameraCovered) {
-            showHRError();
+        if(camera.isCameraCovered) {
+            resetView();
+            LOG.error("Camera is covered");
+
         }
         else {
-            showHR(0);
+            LOG.error("Camera is not covered");
+            showHRStatus();
         }
     }
 
 
-    private void showHR(int HR) {
+    private void resetView() {
         TextView e = findViewById(R.id.crf_heart_rate_error);
         e.setVisibility(GONE);
+
+        TextView p = findViewById(R.id.crf_pressure_error);
+        p.setVisibility(GONE);
+
+
+        ImageView i = findViewById(R.id.crf_heart_icon);
+        i.setVisibility(VISIBLE);
+
+        FrameLayout c = findViewById(R.id.crf_arc_drawable_container);
+        c.setVisibility(VISIBLE);
+
     }
 
-    private void showHRError() {
+    private void showHRStatus() {
+        LOG.error("Displaying camera error");
         LinearLayout t = findViewById(R.id.crf_bpm_text_container);
         t.setVisibility(GONE);
 
         ImageView i = findViewById(R.id.crf_heart_icon);
         i.setVisibility(GONE);
 
+        FrameLayout c = findViewById(R.id.crf_arc_drawable_container);
+        c.setVisibility(GONE);
 
         TextView e = findViewById(R.id.crf_heart_rate_error);
         e.setVisibility(VISIBLE);
     }
 
-    private void showPressureError()  {
+    private void showPressureStatus()  {
+        LOG.error("Displaying pressure error");
         LinearLayout t = findViewById(R.id.crf_bpm_text_container);
         t.setVisibility(GONE);
 
         ImageView i = findViewById(R.id.crf_heart_icon);
         i.setVisibility(GONE);
+
+        FrameLayout c = findViewById(R.id.crf_arc_drawable_container);
+        c.setVisibility(GONE);
 
         TextView p = findViewById(R.id.crf_pressure_error);
         p.setVisibility(VISIBLE);
@@ -548,24 +567,21 @@ public class CrfHeartRateStepLayout extends ActiveStepLayout implements
 
     @Override
     public void abnormalHRUpdate(AbnormalHRHolder abnormal) {
-        if(abnormal.abnormal) {
+        if(abnormal.isAbnormal) {
             StepResult<Boolean> abnormalHRResult = new StepResult<>(new Step("displaySurvey"));
             abnormalHRResult.setResult(true);
             stepResult.setResultForIdentifier("displaySurvey",
                     abnormalHRResult);
-
-            this.displaySurvey = true;
         }
     }
 
     @Override
     public void declineHRUpdate(DeclineHRHolder decline) {
-        if(decline.declining) {
+        if(decline.isDeclining) {
             StepResult<Boolean> decliningHRResult = new StepResult<>(new Step("displayDecliningHR"));
             decliningHRResult.setResult(true);
             stepResult.setResultForIdentifier("displayDecliningHR",
                     decliningHRResult);
-            this.displayDecliningStatement = true;
         }
     }
 
