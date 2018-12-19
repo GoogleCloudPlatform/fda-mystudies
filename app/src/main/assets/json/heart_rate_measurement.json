@@ -26,13 +26,7 @@
       "identifier": "declining_hr",
       "type": "crf_instruction",
       "title": "Seems that your heart rate isn't at rest.",
-      "detailText": "You can try to sit and relax for a little bit longer or we can remind you to take this measurement later",
-      "image" : "crf_heart_rate_animation",
-      "imageColor"       : "macaroniAndCheese",
-      "scaleType"        : "CENTER_CROP",
-      "behindToolbar"    : "true",
-      "isImageAnimated"  : true,
-      "animationRepeatDuration" : 2000
+      "detailText": "You can try to sit and relax for a little bit longer or we can remind you to take this measurement later"
     },
     {
       "identifier": "abnormal_hr",
