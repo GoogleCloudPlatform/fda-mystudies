@@ -52,6 +52,7 @@
         />
 
     <FrameLayout
+        android:id="@+id/crf_heart_container"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/crf_redo_button"
@@ -146,6 +147,17 @@
             android:visibility="gone"/>
 
     </FrameLayout>
+    <TextView
+        android:id="@+id/crf_current_bpm"
+        style="@style/TextAppearance.Crf.IntroBody"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_below="@id/crf_heart_container"
+        android:layout_centerHorizontal="true"
+        android:text="--"
+        android:textColor="@color/black86"
+        android:padding="@dimen/rsb_padding_medium"/>
 
     <FrameLayout
         android:layout_width="match_parent"
