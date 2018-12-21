@@ -100,7 +100,8 @@ public class HeartRateCamera2Recorder extends Recorder {
     public static final String MP4_CONTENT_TYPE = "video/mp4";
     public static final long CAMERA_FRAME_DURATION_NANOS = 16_666_666L;
     public static final long CAMERA_EXPOSURE_DURATION_NANOS = 8_333_333L;
-    public static final int CAMERA_SENSITIVITY = 60;
+    //400 seems to sensitive enough to fix Huaweii Mate SE and Galaxy J7, without breaking Galaxy S9
+    public static final int CAMERA_SENSITIVITY = 400;  //Increased from 60 to 400 -Nathaniel 12/18/18
     public static final int VIDEO_ENCODING_BIT_RATE = 500_000;
     public static final int VIDEO_FRAME_RATE = 60;
     public static final int VIDEO_ENCODER = MediaRecorder.VideoEncoder.H264;
@@ -475,6 +476,9 @@ public class HeartRateCamera2Recorder extends Recorder {
                         (key));
             }
 
+            int[] capabilities = cameraCharacteristics.get(CameraCharacteristics.REQUEST_AVAILABLE_CAPABILITIES);
+            LOG.debug("Camera capabilities: {}", capabilities);
+
             StreamConfigurationMap streamConfigurationMap = cameraCharacteristics
                     .get(CameraCharacteristics.SCALER_STREAM_CONFIGURATION_MAP);
             
@@ -513,7 +517,10 @@ public class HeartRateCamera2Recorder extends Recorder {
 
 
             // turns off AF, AE, AWB
-            requestBuilder.set(CaptureRequest.CONTROL_MODE, CaptureRequest.CONTROL_MODE_OFF);
+            // This prevents the flash from working on Samsung Galaxy J7
+            // Turning off each setting individually seems to work fine -Nathaniel 12/18/18
+            //requestBuilder.set(CaptureRequest.CONTROL_MODE, CaptureRequest.CONTROL_MODE_OFF);
+
             requestBuilder.set( CaptureRequest.CONTROL_SCENE_MODE, CameraMetadata.CONTROL_SCENE_MODE_DISABLED );
 
             // Look at the available camera characteristics to check that CONTROL_AE_MODE_OFF is available.
@@ -540,6 +547,7 @@ public class HeartRateCamera2Recorder extends Recorder {
             }
 
             // let's not do any AWB for now. seems complex and interacts with AE
+            // Has to be off or the COLOR_CORRECTION_TRANSFORM will be ignored
             requestBuilder.set(CaptureRequest.CONTROL_AWB_MODE, CaptureRequest.CONTROL_AWB_MODE_OFF);
 
             requestBuilder.set( CaptureRequest.COLOR_CORRECTION_MODE, CameraMetadata.COLOR_CORRECTION_MODE_TRANSFORM_MATRIX );

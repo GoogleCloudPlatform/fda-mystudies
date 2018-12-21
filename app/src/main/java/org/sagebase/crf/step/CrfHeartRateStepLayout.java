@@ -27,6 +27,7 @@ import android.support.annotation.Nullable;
 import android.support.annotation.UiThread;
 import android.support.v4.content.res.ResourcesCompat;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.TextureView;
 import android.view.View;
 import android.view.ViewGroup;
@@ -100,6 +101,8 @@ public class CrfHeartRateStepLayout extends ActiveStepLayout implements
 
     protected View heartRateTextContainer;
     protected TextView heartRateNumber;
+
+    protected TextView currentHeartRate;
 
     protected View arcDrawableContainer;
     protected View arcDrawableView;
@@ -188,6 +191,7 @@ public class CrfHeartRateStepLayout extends ActiveStepLayout implements
         heartRateTextContainer = findViewById(R.id.crf_bpm_text_container);
         heartRateTextContainer.setVisibility(View.GONE);
         heartRateNumber = findViewById(R.id.crf_heart_rate_number);
+        currentHeartRate = findViewById(R.id.crf_current_bpm);
 
         arcDrawableContainer = findViewById(R.id.crf_arc_drawable_container);
         arcDrawableView = findViewById(R.id.crf_arc_drawable);
@@ -311,8 +315,16 @@ public class CrfHeartRateStepLayout extends ActiveStepLayout implements
     
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     void startVideoRecording() {
+        //HACK for Samsung Galaxy J7 Neo that records 0 bpm when recording video
+        String device = Build.MANUFACTURER + Build.MODEL;
+        if ("samsungSM-J701M".equalsIgnoreCase(device)) {
+            //TODO: Figure out a better solution if there are other devices that can't record video and heart rate at same time
+            // -Nathaniel 12/18/18
+            return;
+        }
+
         ((HeartRateCamera2Recorder) cameraRecorder).startVideoRecording();
-    
+
     }
 
     @Override
@@ -335,6 +347,7 @@ public class CrfHeartRateStepLayout extends ActiveStepLayout implements
             heartBeatAnimation = new HeartBeatAnimation(bpmHolder.bpm);
             heartImageView.startAnimation(heartBeatAnimation);
         }
+        currentHeartRate.setText(bpmHolder.bpm + " " + getContext().getString(R.string.crf_bpm));
         heartBeatAnimation.setBpm(bpmHolder.bpm);
         bpmList.add(bpmHolder);
         resetView();
@@ -375,6 +388,7 @@ public class CrfHeartRateStepLayout extends ActiveStepLayout implements
         cameraSourcePreview.setVisibility(View.INVISIBLE);
         arcDrawableContainer.setVisibility(View.GONE);
         heartRateTextContainer.setVisibility(View.VISIBLE);
+        currentHeartRate.setVisibility(View.GONE);
 
         if (!bpmList.isEmpty()) {
             int bpmSum = 0;
