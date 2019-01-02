@@ -70,10 +70,10 @@ public interface BpmRecorder {
 
     interface PressureListener {
         class PressureHolder {
-            public final boolean pressureExcessive;
+            public final boolean isPressureExcessive;
 
-            public PressureHolder(boolean pressureExcessive) {
-                this.pressureExcessive = pressureExcessive;
+            public PressureHolder(boolean isPressureExcessive) {
+                this.isPressureExcessive = isPressureExcessive;
             }
 
         }
@@ -83,10 +83,10 @@ public interface BpmRecorder {
 
     interface CameraCoveredListener {
         class CameraCoveredHolder {
-            public final boolean cameraCovered;
+            public final boolean isCameraCovered;
 
-            public CameraCoveredHolder(boolean cameraCovered) {
-                this.cameraCovered = cameraCovered;
+            public CameraCoveredHolder(boolean isCameraCovered) {
+                this.isCameraCovered = isCameraCovered;
             }
         }
         @UiThread
@@ -96,10 +96,10 @@ public interface BpmRecorder {
 
     interface AbnormalHRListener {
         class AbnormalHRHolder {
-            public final boolean abnormal;
+            public final boolean isAbnormal;
 
-            public AbnormalHRHolder(boolean abnormal) {
-                this.abnormal = abnormal;
+            public AbnormalHRHolder(boolean isAbnormal) {
+                this.isAbnormal = isAbnormal;
             }
         }
 
@@ -109,10 +109,10 @@ public interface BpmRecorder {
 
     interface DeclineHRListener {
         class DeclineHRHolder {
-            public final boolean declining;
+            public final boolean isDeclining;
 
-            public DeclineHRHolder(boolean declining) {
-                this.declining = declining;
+            public DeclineHRHolder(boolean isDeclining) {
+                this.isDeclining = isDeclining;
             }
         }
 
@@ -162,7 +162,7 @@ public interface BpmRecorder {
         private static final String BLUE_KEY = "blue";
         private static final String RED_LEVEL_KEY = "redLevel";
 
-        private static final int INTELLIGENT_START_FRAMES_TO_PASS = 30;
+        private static final int INTELLIGENT_START_FRAMES_TO_PASS = 60;
         
         private final JsonObject mJsonObject = new JsonObject();
 
@@ -269,10 +269,10 @@ public interface BpmRecorder {
         }
         
         private void updateIntelligentStart(HeartBeatSample sample) {
-            if (mIntelligentStartPassed) {
-                return; // we already computed that we could start
-            }
-
+            //if (mIntelligentStartPassed) {
+            //    return; // we already computed that we could start
+            //}
+            LOG.error("Update intelligent start called");
             // If the red factor is large enough, we update the trigger
             if (sample.isCoveringLens()) {
                 mIntelligentStartCounter++;
@@ -289,26 +289,44 @@ public interface BpmRecorder {
                     );
 
                 }
-                if(sample.abnormalHR()) {
+                if (mCameraListener != null) {
                     mainHandler.post(() ->
-                            mAbnormalListener.abnormalHRUpdate(new
-                                    BpmRecorder.AbnormalHRListener.AbnormalHRHolder(true)));
+                            mCameraListener.cameraUpdate(new
+                                    BpmRecorder.CameraCoveredListener.CameraCoveredHolder(true)));
                 }
-                if(sample.declineHR()) {
-                    mainHandler.post(() ->
-                            mDeclineListener.declineHRUpdate(new
-                                    DeclineHRListener.DeclineHRHolder(true)));
+                if (mAbnormalListener != null) {
+                    if(sample.abnormalHR()) {
+                        mainHandler.post(() ->
+                                mAbnormalListener.abnormalHRUpdate(new
+                                        BpmRecorder.AbnormalHRListener.AbnormalHRHolder(true)));
+                    }
                 }
+                if (mDeclineListener != null) {
+                    if(sample.declineHR()) {
+                        mainHandler.post(() ->
+                                mDeclineListener.declineHRUpdate(new
+                                        DeclineHRListener.DeclineHRHolder(true)));
+                    }
+                }
+
+                if (mPressureListener != null) {
+                    if(sample.isPressureExcessive() && !sample.declineHR()) {
+                        mainHandler.post(() ->
+                                mPressureListener.pressureUpdate(new
+                                        BpmRecorder.PressureListener.PressureHolder(true)));
+                    }
+                    else {
+                        mainHandler.post(() ->
+                                mPressureListener.pressureUpdate(new
+                                        BpmRecorder.PressureListener.PressureHolder(false)));
+                    }
+                }
+
                 
             } else {  // We need thresholds to be passed sequentially otherwise it is restarted
                 mIntelligentStartCounter = 0;
 
-                if(sample.isPressureExcessive()) {
-                    mainHandler.post(() ->
-                            mPressureListener.pressureUpdate(new
-                                    BpmRecorder.PressureListener.PressureHolder(true)));
-                }
-                else {
+                if (mCameraListener != null) {
                     mainHandler.post(() ->
                             mCameraListener.cameraUpdate(new
                                     BpmRecorder.CameraCoveredListener.CameraCoveredHolder(false)));

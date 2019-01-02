@@ -546,6 +546,9 @@ public class CrfHeartRateStepLayout extends ActiveStepLayout implements
         FrameLayout c = findViewById(R.id.crf_arc_drawable_container);
         c.setVisibility(VISIBLE);
 
+        LinearLayout t = findViewById(R.id.crf_bpm_text_container);
+        t.setVisibility(VISIBLE);
+
     }
 
     private void showHRStatus() {

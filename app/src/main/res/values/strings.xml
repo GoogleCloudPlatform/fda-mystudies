@@ -88,5 +88,6 @@
     <string name="crf_not_rest_hr">Seems that your heart rate isn\'t at rest.</string>
     <string name="crf_relax_rest">You can try to sit and relax for a bit longer or we can remind you to take this measurement later.</string>
     <string name="crf_decline_continue">Continue measurement</string>
+    <string name="crf_cant_read">We can\'t get a good reading. Please sit still.</string>
 
 </resources>

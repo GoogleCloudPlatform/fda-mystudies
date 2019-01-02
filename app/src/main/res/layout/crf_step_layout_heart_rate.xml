@@ -146,7 +146,7 @@
             android:layout_height="wrap_content"
             android:text="@string/crf_camera_cover"
             android:layout_gravity="center"
-            android:textColor="@color/black86"
+            android:textColor="@color/salmon80"
             android:padding="@dimen/rsb_padding_large"
             android:visibility="gone"/>
 
@@ -155,9 +155,9 @@
             android:id="@+id/crf_pressure_error"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/crf_pressure"
+            android:text="@string/crf_cant_read"
             android:layout_gravity="center"
-            android:textColor="@color/black86"
+            android:textColor="@color/salmon80"
             android:padding="@dimen/rsb_padding_large"
             android:visibility="gone"/>
 
