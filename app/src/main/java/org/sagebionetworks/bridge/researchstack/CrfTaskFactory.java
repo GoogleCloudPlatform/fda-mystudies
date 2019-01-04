@@ -139,7 +139,7 @@ public class CrfTaskFactory extends TaskItemFactory {
                             return createHeartRateCameraStep((ActiveStepSurveyItem)item);
                         case CrfSurveyItemAdapter.CRF_SKIP_TYPE:
                             if(!(item instanceof CrfSkipStepSurveyItem)) {
-                                throw new IllegalStateException("Error in json parsing, crf_heart_rate_camera_step types must be ActiveStepSurveyItem");
+                                throw new IllegalStateException("Error in json parsing, crf_skip_step types must be CrfSkipStepSurveyItem");
                             }
                             return createCrfSkipStep((CrfSkipStepSurveyItem) item);
                         case CrfSurveyItemAdapter.CRF_COUNTDOWN_SURVEY_ITEM_TYPE:
@@ -285,7 +285,7 @@ public class CrfTaskFactory extends TaskItemFactory {
     }
 
     private void fillCrfSkipStep(CrfSkipStep step, CrfSkipStepSurveyItem item) {
-        fillCrfInstructionStep(step, item);
+        fillInstructionStep(step, item);
         step.stepIdentifier = item.stepIdentifier;
         step.skipIdentifier = item.skipIdentifier;
         step.shouldSkip = item.shouldSkip;

@@ -547,7 +547,7 @@ public class CrfHeartRateStepLayout extends ActiveStepLayout implements
         c.setVisibility(VISIBLE);
 
         LinearLayout t = findViewById(R.id.crf_bpm_text_container);
-        t.setVisibility(VISIBLE);
+        t.setVisibility(GONE);
 
     }
 

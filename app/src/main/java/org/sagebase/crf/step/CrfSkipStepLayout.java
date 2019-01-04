@@ -1,5 +1,5 @@
 /*
- *    Copyright 2018 Sage Bionetworks
+ *    Copyright 2019 Sage Bionetworks
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -17,38 +17,26 @@
 
 package org.sagebase.crf.step;
 
-import android.support.annotation.Nullable;
-
+import android.content.Context;
 
 import org.researchstack.backbone.result.StepResult;
 import org.researchstack.backbone.result.TaskResult;
-import org.researchstack.backbone.task.NavigableOrderedTask;
+import org.researchstack.backbone.ui.step.layout.ActiveStepLayout;
+import org.sagebase.crf.step.CrfResultListener;
 
-import java.util.List;
-
-public class CrfSkipStep extends CrfInstructionStep
-        implements NavigableOrderedTask.NavigationSkipRule {
-
-    public String skipIdentifier;
-    public String stepIdentifier;
+public class CrfSkipStepLayout extends ActiveStepLayout implements CrfResultListener {
     public boolean shouldSkip;
 
-    public CrfSkipStep(String identifier, String title) {
-        super(identifier, title, null);
+    public CrfSkipStepLayout(Context context) {
+        super(context);
     }
 
     @Override
-    public boolean shouldSkipStep(@Nullable TaskResult result,
-                                  @Nullable List<TaskResult> additionalTaskResults) {
+    public void crfTaskResult(TaskResult taskResult) {
         StepResult<Boolean> res = (StepResult<Boolean>)
-                result.getStepResult(this.stepIdentifier).getResultForIdentifier(skipIdentifier);
-
-        return res.getResult();
+                taskResult.getStepResult("decline_hr").getResultForIdentifier("displayDecliningHR");
+        if(res != null) {
+            shouldSkip = res.getResult();
+        }
     }
-
-    @Override
-    public Class getStepLayoutClass() {
-        return CrfSkipStepLayout.class;
-    }
-
 }

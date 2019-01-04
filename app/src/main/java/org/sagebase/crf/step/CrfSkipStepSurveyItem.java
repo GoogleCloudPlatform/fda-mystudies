@@ -35,4 +35,5 @@ public class CrfSkipStepSurveyItem extends CrfInstructionSurveyItem {
     public String stepIdentifier;
 
     public boolean shouldSkip;
+
 }
