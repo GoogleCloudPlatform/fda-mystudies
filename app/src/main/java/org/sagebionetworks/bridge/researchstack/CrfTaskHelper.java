@@ -64,7 +64,8 @@ public class CrfTaskHelper extends TaskHelper {
                     .put("heartRate.before.heartRate_start",    "heartRate_before_heartRate_start")
                     .put("heartRate.before.heartRate_end",      "heartRate_before_heartRate_end")
                     .put("heartRate.after.heartRate_start",     "heartRate_after_heartRate_start")
-                    .put("heartRate.after.heartRate_end",       "heartRate_after_heartRate_end")
+                    .put("HeartRateCameraJson_camera",       "cameraHeartRate_recorder")
+                    .put("HeartRateCameraVideo_camera",       "cameraHeartRate_recorder_video")
             .build();
 
 
