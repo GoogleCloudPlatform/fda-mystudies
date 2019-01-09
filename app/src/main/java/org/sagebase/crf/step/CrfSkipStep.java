@@ -31,7 +31,6 @@ public class CrfSkipStep extends CrfInstructionStep
 
     public String skipIdentifier;
     public String stepIdentifier;
-    public boolean shouldSkip;
 
     public CrfSkipStep(String identifier, String title) {
         super(identifier, title, null);

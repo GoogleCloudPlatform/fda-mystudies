@@ -18,25 +18,32 @@
 package org.sagebase.crf.step;
 
 import android.content.Context;
+import android.widget.Button;
 
 import org.researchstack.backbone.result.StepResult;
 import org.researchstack.backbone.result.TaskResult;
 import org.researchstack.backbone.ui.step.layout.ActiveStepLayout;
+import org.researchstack.backbone.ui.step.layout.InstructionStepLayout;
 import org.sagebase.crf.step.CrfResultListener;
+import org.sagebionetworks.research.crf.R;
 
-public class CrfSkipStepLayout extends ActiveStepLayout implements CrfResultListener {
-    public boolean shouldSkip;
+public class CrfSkipStepLayout extends InstructionStepLayout {
+
+    protected Button nextButton;
 
     public CrfSkipStepLayout(Context context) {
         super(context);
     }
 
     @Override
-    public void crfTaskResult(TaskResult taskResult) {
-        StepResult<Boolean> res = (StepResult<Boolean>)
-                taskResult.getStepResult("decline_hr").getResultForIdentifier("displayDecliningHR");
-        if(res != null) {
-            shouldSkip = res.getResult();
-        }
+    public void connectStepUi(int titleRId, int textRId, int imageRId, int detailRId) {
+        super.connectStepUi(
+                R.id.crf_intruction_title,
+                R.id.crf_intruction_text,
+                R.id.crf_image_view,
+                R.id.crf_instruction_more_detail_text);
+
+        nextButton = findViewById(R.id.button_go_forward);
+        nextButton.setEnabled(true);
     }
 }

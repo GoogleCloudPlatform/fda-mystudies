@@ -286,10 +286,12 @@ public class CrfTaskFactory extends TaskItemFactory {
 
     private void fillCrfSkipStep(CrfSkipStep step, CrfSkipStepSurveyItem item) {
         fillInstructionStep(step, item);
-        step.stepIdentifier = item.stepIdentifier;
-        step.skipIdentifier = item.skipIdentifier;
-        step.shouldSkip = item.shouldSkip;
-
+        if(item.identifier != null) {
+            step.stepIdentifier = item.identifier;
+        }
+        if(item.skipIdentifier != null) {
+            step.skipIdentifier = item.skipIdentifier;
+        }
     }
 
     private void fillCrfStartTaskStep(CrfStartTaskStep step, CrfStartTaskSurveyItem item) {
