@@ -24,15 +24,20 @@
     },
     {
       "identifier": "declining_hr",
-      "skipIdentifier": "decline_hr",
+      "skipIdentifier": "displayDecliningHR",
       "type": "crf_skip",
-      "text: " : "Declining step"
+      "text: " : "Declining step",
+      "backgroundColor" : "#000000",
+      "buttonType" : "heart",
+      "buttonText"       : "next"
     },
     {
       "identifier": "abnormal_hr",
-      "skipIdentifer" : "abnormal_hr",
+      "skipIdentifier" : "displaySurvey",
       "type": "crf_skip",
-      "text": "Abnormal hr step"
+      "text": "Abnormal hr step",
+      "buttonType" : "heart",
+      "buttonText"       : "next"
     }
   ]
 }

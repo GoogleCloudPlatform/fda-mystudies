@@ -32,6 +32,18 @@ public class CrfSkipStep extends CrfInstructionStep
     public String skipIdentifier;
     public String stepIdentifier;
 
+    /**
+     * The type of button to show
+     */
+    public CrfInstructionButtonType buttonType;
+
+    /**
+     * When buttonType is DEFAULT, this will be used as the title on the button
+     * This can also be used in conjunction with other button types
+     */
+    public String buttonText;
+
+
     public CrfSkipStep(String identifier, String title) {
         super(identifier, title, null);
     }
@@ -39,15 +51,11 @@ public class CrfSkipStep extends CrfInstructionStep
     @Override
     public boolean shouldSkipStep(@Nullable TaskResult result,
                                   @Nullable List<TaskResult> additionalTaskResults) {
+        System.out.println("Got to the shouldSkipStep method");
         StepResult<Boolean> res = (StepResult<Boolean>)
-                result.getStepResult(this.stepIdentifier).getResultForIdentifier(skipIdentifier);
+                result.getStepResult("camera").getResultForIdentifier(skipIdentifier);
 
-        return res.getResult();
-    }
-
-    @Override
-    public Class getStepLayoutClass() {
-        return CrfSkipStepLayout.class;
+        return !res.getResult();
     }
 
 }
