@@ -26,13 +26,11 @@ import org.researchstack.backbone.model.survey.BooleanQuestionSurveyItem;
 import org.researchstack.backbone.model.survey.ChoiceQuestionSurveyItem;
 import org.researchstack.backbone.model.survey.FormSurveyItem;
 import org.researchstack.backbone.model.survey.IntegerRangeSurveyItem;
-import org.researchstack.backbone.model.survey.QuestionSurveyItem;
 import org.researchstack.backbone.model.survey.SurveyItem;
 import org.researchstack.backbone.model.survey.TextfieldSurveyItem;
 import org.sagebase.crf.step.CrfCompletionSurveyItem;
 import org.sagebase.crf.step.CrfInstructionSurveyItem;
-import org.sagebase.crf.step.CrfSkipStep;
-import org.sagebase.crf.step.CrfSkipStepSurveyItem;
+import org.sagebase.crf.step.CrfSkipInstructionStepSurveyItem;
 import org.sagebase.crf.step.CrfStartTaskSurveyItem;
 import org.sagebionetworks.bridge.researchstack.task.creation.BridgeSurveyItemAdapter;
 
@@ -55,7 +53,8 @@ public class CrfSurveyItemAdapter extends BridgeSurveyItemAdapter {
     public static final String CRF_MULTIPLE_CHOICE_SURVEY_ITEM_TYPE = "crfMultipleChoice";
     public static final String CRF_BOOLEAN_SURVEY_ITEM_TYPE = "crfBoolean";
     public static final String HR_PARTICIPANT_ID_SURVEY_ITEM_TYPE = "hrParticipantId";
-    public static final String CRF_SKIP_TYPE = "crf_skip";
+    public static final String CRF_SKIP_INSTRUCTION_TYPE = "crf_skip_instruction";
+    public static final String CRF_SKIP_MC_TYPE = "crf_skip_mc";
 
     @VisibleForTesting
     static final Map<String, Class<? extends SurveyItem>> TYPE_TO_CLASS =
@@ -75,7 +74,8 @@ public class CrfSurveyItemAdapter extends BridgeSurveyItemAdapter {
                     .put(CRF_MULTIPLE_CHOICE_SURVEY_ITEM_TYPE, ChoiceQuestionSurveyItem.class)
                     .put(CRF_BOOLEAN_SURVEY_ITEM_TYPE, BooleanQuestionSurveyItem.class)
                     .put(HR_PARTICIPANT_ID_SURVEY_ITEM_TYPE, TextfieldSurveyItem.class)
-                    .put(CRF_SKIP_TYPE, CrfSkipStepSurveyItem.class)
+                    .put(CRF_SKIP_INSTRUCTION_TYPE, CrfSkipInstructionStepSurveyItem.class)
+                    .put(CRF_SKIP_MC_TYPE, ChoiceQuestionSurveyItem.class)
                     .build();
 
     @Override

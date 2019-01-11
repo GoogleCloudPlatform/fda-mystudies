@@ -1,5 +1,5 @@
 /*
- *    Copyright 2018 Sage Bionetworks
+ *    Copyright 2019 Sage Bionetworks
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -17,45 +17,38 @@
 
 package org.sagebase.crf.step;
 
-import android.support.annotation.Nullable;
-
-
 import org.researchstack.backbone.result.StepResult;
 import org.researchstack.backbone.result.TaskResult;
+import org.researchstack.backbone.step.QuestionStep;
 import org.researchstack.backbone.task.NavigableOrderedTask;
 
 import java.util.List;
 
-public class CrfSkipStep extends CrfInstructionStep
-        implements NavigableOrderedTask.NavigationSkipRule {
+public class CrfSkipMCStep extends CrfFormStep implements NavigableOrderedTask.NavigationSkipRule{
 
     public String skipIdentifier;
-    public String stepIdentifier;
 
-    /**
-     * The type of button to show
-     */
-    public CrfInstructionButtonType buttonType;
-
-    /**
-     * When buttonType is DEFAULT, this will be used as the title on the button
-     * This can also be used in conjunction with other button types
-     */
-    public String buttonText;
-
-
-    public CrfSkipStep(String identifier, String title) {
-        super(identifier, title, null);
+    /* Default constructor needed for serialization/deserialization of object */
+    public CrfSkipMCStep() {
+        super();
     }
 
+    public CrfSkipMCStep(String identifier, String title, String detailText) {
+        super(identifier, title, detailText);
+    }
+
+    public CrfSkipMCStep(String identifier, String title, String text, List<QuestionStep> steps) {
+        this(identifier, title, text);
+        setFormSteps(steps);
+    }
+
+
     @Override
-    public boolean shouldSkipStep(@Nullable TaskResult result,
-                                  @Nullable List<TaskResult> additionalTaskResults) {
-        System.out.println("Got to the shouldSkipStep method");
+    public boolean shouldSkipStep(TaskResult result, List<TaskResult> additionalTaskResults) {
         StepResult<Boolean> res = (StepResult<Boolean>)
                 result.getStepResult("camera").getResultForIdentifier(skipIdentifier);
 
-        return !res.getResult();
+        return res.getResult();
     }
 
 }

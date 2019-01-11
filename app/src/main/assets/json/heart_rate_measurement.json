@@ -24,8 +24,8 @@
     },
     {
       "identifier": "declining_hr",
-      "skipIdentifier": "displayDecliningHR",
-      "type": "crf_skip",
+      "skipIdentifier": "skipDeclineStep",
+      "type": "crf_skip_instruction",
       "text: " : "Declining step",
       "backgroundColor" : "#000000",
       "buttonType" : "heart",
@@ -33,11 +33,41 @@
     },
     {
       "identifier": "abnormal_hr",
-      "skipIdentifier" : "displaySurvey",
-      "type": "crf_skip",
-      "text": "Abnormal hr step",
-      "buttonType" : "heart",
-      "buttonText"       : "next"
+      "skipIdentifier" : "skipAbnormalStep",
+      "type": "crf_skip_mc",
+      "title": "We noticed that 2 or more measurements are out of your normal range. Is there anything below that might be influencing this?",
+      "detailText": "Why are we asking this?",
+      "text": "(select all that apply)",
+      "items": [
+        {
+          "text": "I don't know",
+          "value": "I don't know"
+        },
+        {
+          "text": "Feeling sick",
+          "value": "Feeling sick"
+        },
+        {
+          "text": "Sleep deprived",
+          "value": "Sleep deprived"
+        },
+        {
+          "text": "Medication",
+          "value": "Medication"
+        },
+        {
+          "text": "Menstrual cycle",
+          "value": "Menstrual cycle"
+        },
+        {
+          "text": "Change in activity levels",
+          "value": "Change in activity levels"
+        },
+        {
+          "text": "Other",
+          "value": "Other"
+        }
+      ]
     }
   ]
 }

@@ -20,7 +20,7 @@ package org.sagebase.crf.step;
 import com.google.gson.annotations.SerializedName;
 
 
-public class CrfSkipStepSurveyItem extends CrfInstructionSurveyItem {
+public class CrfSkipInstructionStepSurveyItem extends CrfInstructionSurveyItem {
 
     /**
      * The skip key to look for when determining whether to skip this step or not
