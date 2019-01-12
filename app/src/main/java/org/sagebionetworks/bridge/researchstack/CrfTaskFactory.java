@@ -58,6 +58,7 @@ import org.sagebase.crf.step.CrfInstructionStep;
 import org.sagebase.crf.step.CrfInstructionSurveyItem;
 import org.sagebase.crf.step.CrfSkipInstructionStep;
 import org.sagebase.crf.step.CrfSkipInstructionStepSurveyItem;
+import org.sagebase.crf.step.CrfSkipMCStep;
 import org.sagebase.crf.step.CrfStairStep;
 import org.sagebase.crf.step.CrfPhotoCaptureStep;
 import org.sagebase.crf.step.CrfStartTaskStep;
@@ -177,7 +178,6 @@ public class CrfTaskFactory extends TaskItemFactory {
                                 throw new IllegalStateException("Error in json parsing, crf_form types must be CrfFormSurveyItem");
                             }
                             return createCrfFormStep(context, (FormSurveyItem)item);
-                        case CrfSurveyItemAdapter.CRF_SKIP_MC_TYPE:
                         case CrfSurveyItemAdapter.CRF_BOOLEAN_SURVEY_ITEM_TYPE:
                         case CrfSurveyItemAdapter.CRF_INTEGER_SURVEY_ITEM_TYPE:
                         case CrfSurveyItemAdapter.CRF_MULTIPLE_CHOICE_SURVEY_ITEM_TYPE:
@@ -195,6 +195,20 @@ public class CrfTaskFactory extends TaskItemFactory {
                             FormSurveyItem.skipIfPassed = questionItem.skipIfPassed;
                             FormSurveyItem.expectedAnswer = questionItem.expectedAnswer;
                             return createCrfFormStep(context, FormSurveyItem);
+                        case CrfSurveyItemAdapter.CRF_SKIP_MC_TYPE:
+                            if (!(item instanceof QuestionSurveyItem)) {
+                                throw new IllegalStateException("Error in json parsing " + item.getCustomTypeValue() + ", types must be QuestionSurveyItem");
+                            }
+                            // Even though these weren't wrapped in a form step, we are going to wrap
+                            // them in a CrfFormStep so that the UI looks appropriate
+                            QuestionSurveyItem questionSurveyItem = (QuestionSurveyItem)item;
+                            FormSurveyItem formItem = new CrfFormSurveyItemWrapper();
+                            formItem.identifier = item.identifier + "Form";
+                            formItem.items = Collections.singletonList(item);
+                            formItem.skipIdentifier = questionSurveyItem.skipIdentifier;
+                            formItem.skipIfPassed = questionSurveyItem.skipIfPassed;
+                            formItem.expectedAnswer = questionSurveyItem.expectedAnswer;
+                            return createCrfSkipMCStep(context, formItem);
                         case CrfSurveyItemAdapter.HR_PARTICIPANT_ID_SURVEY_ITEM_TYPE:
                             if (!(item instanceof TextfieldSurveyItem)) {
                                 throw new IllegalStateException("Error in json parsing " + item.getCustomTypeValue() + ", types must be TextfieldSurveyItem");
@@ -439,6 +453,17 @@ public class CrfTaskFactory extends TaskItemFactory {
         List<QuestionStep> questionSteps = super.formStepCreateQuestionSteps(context, item);
         CrfFormStep step = new CrfFormStep(item.identifier, item.title, item.text, questionSteps);
         fillNavigationFormStep(step, item);
+        return step;
+    }
+
+    private CrfSkipMCStep createCrfSkipMCStep(Context context, FormSurveyItem item) {
+        if (item.items == null || item.items.isEmpty()) {
+            throw new IllegalStateException("compound surveys must have step items to proceed");
+        }
+        List<QuestionStep> questionSteps = super.formStepCreateQuestionSteps(context, item);
+        CrfSkipMCStep step = new CrfSkipMCStep(item.identifier, item.title, item.text, questionSteps);
+        fillNavigationFormStep(step, item);
+        step.skipIdentifier = item.skipIdentifier;
         return step;
     }
 

@@ -300,12 +300,22 @@ public interface BpmRecorder {
                                 mAbnormalListener.abnormalHRUpdate(new
                                         BpmRecorder.AbnormalHRListener.AbnormalHRHolder(true)));
                     }
+                    else {
+                        mainHandler.post(() ->
+                                mAbnormalListener.abnormalHRUpdate(new
+                                        BpmRecorder.AbnormalHRListener.AbnormalHRHolder(false)));
+                    }
                 }
                 if (mDeclineListener != null) {
                     if(sample.declineHR()) {
                         mainHandler.post(() ->
                                 mDeclineListener.declineHRUpdate(new
                                         DeclineHRListener.DeclineHRHolder(true)));
+                    }
+                    else {
+                        mainHandler.post(() ->
+                                mDeclineListener.declineHRUpdate(new
+                                        DeclineHRListener.DeclineHRHolder(false)));
                     }
                 }
 
