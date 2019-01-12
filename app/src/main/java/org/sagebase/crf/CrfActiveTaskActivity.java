@@ -47,6 +47,8 @@ import org.researchstack.backbone.ui.step.layout.ActiveStepLayout;
 import org.researchstack.backbone.ui.step.layout.StepLayout;
 import org.researchstack.backbone.utils.ResUtils;
 import org.sagebase.crf.step.CrfResultListener;
+import org.sagebase.crf.step.CrfSkipInstructionStep;
+import org.sagebase.crf.step.CrfSkipMCStep;
 import org.sagebase.crf.step.CrfStartTaskStep;
 import org.sagebase.crf.step.HrParticipantIdStep;
 import org.sagebase.crf.view.CrfTaskStatusBarManipulator;
@@ -56,6 +58,8 @@ import org.sagebase.crf.view.CrfTaskToolbarProgressManipulator;
 import org.sagebase.crf.view.CrfTaskToolbarTintManipulator;
 import org.sagebase.crf.view.CrfTransparentToolbar;
 import org.sagebionetworks.research.crf.R;
+
+import java.util.List;
 
 /**
  * Created by TheMDP on 10/24/17.
@@ -184,7 +188,16 @@ public class CrfActiveTaskActivity extends ActiveTaskActivity {
         if (task instanceof OrderedTask) {
             OrderedTask orderedTask = (OrderedTask)task;
             int progress = orderedTask.getSteps().indexOf(currentStep);
-            int max = orderedTask.getSteps().size();
+            List<Step> steps = orderedTask.getSteps();
+            int max = 0;
+            for(Step s: steps) {
+                if(s.getClass().equals(CrfSkipMCStep.class) || s.getClass().equals(CrfSkipInstructionStep.class)) {
+                    max += 0;
+                }
+                else {
+                    max += 1;
+                }
+            }
             crfToolbar.setProgress(progress, max);
 
             // Set up the text and styling of the step 1 of 5, 2 of 5, etc.
