@@ -202,12 +202,13 @@ public class CrfTaskFactory extends TaskItemFactory {
                             // Even though these weren't wrapped in a form step, we are going to wrap
                             // them in a CrfFormStep so that the UI looks appropriate
                             QuestionSurveyItem questionSurveyItem = (QuestionSurveyItem)item;
-                            FormSurveyItem formItem = new CrfFormSurveyItemWrapper();
+                            CrfFormSurveyItemWrapper formItem = new CrfFormSurveyItemWrapper();
                             formItem.identifier = item.identifier + "Form";
                             formItem.items = Collections.singletonList(item);
                             formItem.skipIdentifier = questionSurveyItem.skipIdentifier;
                             formItem.skipIfPassed = questionSurveyItem.skipIfPassed;
                             formItem.expectedAnswer = questionSurveyItem.expectedAnswer;
+
                             return createCrfSkipMCStep(context, formItem);
                         case CrfSurveyItemAdapter.HR_PARTICIPANT_ID_SURVEY_ITEM_TYPE:
                             if (!(item instanceof TextfieldSurveyItem)) {
@@ -285,6 +286,12 @@ public class CrfTaskFactory extends TaskItemFactory {
         if (item.mediaVolume) {
             step.mediaVolume = true;
         }
+        if (item.remindMeLater) {
+            step.remindMeLater = true;
+        }
+        else {
+            step.remindMeLater = false;
+        }
     }
 
     private CrfStartTaskStep createCrfStartTaskStep(CrfStartTaskSurveyItem item) {
@@ -296,33 +303,24 @@ public class CrfTaskFactory extends TaskItemFactory {
 
     private CrfSkipInstructionStep createCrfSkipInstructionStep(CrfSkipInstructionStepSurveyItem item) {
         CrfSkipInstructionStep step = new CrfSkipInstructionStep(item.identifier, item.title);
+        fillCrfInstructionStep(step, item);
         fillCrfSkipStep(step, item);
+        if(item.instruction != null) {
+            step.instruction = item.instruction;
+        }
         return step;
     }
 
     private void fillCrfSkipStep(CrfSkipInstructionStep step, CrfSkipInstructionStepSurveyItem item) {
-        fillInstructionStep(step, item);
+        fillCrfInstructionStep(step, item);
         if(item.identifier != null) {
             step.stepIdentifier = item.identifier;
         }
         if(item.skipIdentifier != null) {
             step.skipIdentifier = item.skipIdentifier;
         }
+
     }
-
-    /*private CrfSkipMCStep createCrfMCSkipStep(CrfSkipMCStepSurveyItem item, Context context) {
-        if (item.items == null || item.items.isEmpty()) {
-            throw new IllegalStateException("compound surveys must have step items to proceed");
-        }
-
-        List<QuestionStep> questionSteps = super.formStepCreateQuestionSteps(context, item);
-        CrfSkipMCStep step = new CrfSkipMCStep(item.identifier, item.title, item.text, questionSteps);
-        fillNavigationFormStep(step, item);
-        if(item.skipIdentifier != null) {
-            step.skipIdentifier = item.skipIdentifier;
-        }
-        return step;
-    }*/
 
     private void fillCrfStartTaskStep(CrfStartTaskStep step, CrfStartTaskSurveyItem item) {
         fillCrfInstructionStep(step, item);
@@ -456,7 +454,7 @@ public class CrfTaskFactory extends TaskItemFactory {
         return step;
     }
 
-    private CrfSkipMCStep createCrfSkipMCStep(Context context, FormSurveyItem item) {
+    private CrfSkipMCStep createCrfSkipMCStep(Context context, CrfFormSurveyItemWrapper item) {
         if (item.items == null || item.items.isEmpty()) {
             throw new IllegalStateException("compound surveys must have step items to proceed");
         }
@@ -464,6 +462,8 @@ public class CrfTaskFactory extends TaskItemFactory {
         CrfSkipMCStep step = new CrfSkipMCStep(item.identifier, item.title, item.text, questionSteps);
         fillNavigationFormStep(step, item);
         step.skipIdentifier = item.skipIdentifier;
+        step.hideProgress = true;
+
         return step;
     }
 
