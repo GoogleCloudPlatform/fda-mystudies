@@ -17,5 +17,41 @@
 
 package org.sagebase.crf.step;
 
-public class CrfSkipMCStepLayout {
+import android.content.Context;
+import android.widget.TextView;
+
+import org.researchstack.backbone.result.StepResult;
+import org.researchstack.backbone.step.Step;
+import org.sagebionetworks.research.crf.R;
+
+public class CrfSkipMCStepLayout extends CrfFormStepLayout {
+
+    protected CrfSkipMCStep step;
+    protected TextView crf_instruction;
+
+    public CrfSkipMCStepLayout(Context context) {
+        super(context);
+    }
+
+    @Override
+    public void initialize(Step step, StepResult result) {
+        validateAndSetCrfFormStep(step);
+        super.initialize(step, result);
+        setupViews();
+        refreshCrfSubmitBar();
+        //this.crf_instruction = findViewById(R.id.rsb_form_step_title);
+        this.step = (CrfSkipMCStep) step;
+    }
+
+    @Override
+    public int getContentResourceId() {
+        return R.layout.crf_step_layout_skip_mc;
+    }
+
+    @Override
+    public void setupViews() {
+        super.setupViews();
+        //crf_instruction.setText("Hello World"); // not sure if this is the right title to display
+
+    }
 }

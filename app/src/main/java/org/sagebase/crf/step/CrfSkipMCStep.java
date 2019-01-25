@@ -51,4 +51,9 @@ public class CrfSkipMCStep extends CrfFormStep implements NavigableOrderedTask.N
         return res.getResult();
     }
 
+    @Override
+    public Class getStepLayoutClass() {
+        return CrfSkipMCStepLayout.class;
+    }
+
 }

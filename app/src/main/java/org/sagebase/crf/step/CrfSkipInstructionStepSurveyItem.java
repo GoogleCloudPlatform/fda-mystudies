@@ -27,4 +27,8 @@ public class CrfSkipInstructionStepSurveyItem extends CrfInstructionSurveyItem {
      */
     @SerializedName("skipIdentifier")
     public String skipIdentifier;
+
+    @SerializedName("instruction")
+    public String instruction;
+
 }
