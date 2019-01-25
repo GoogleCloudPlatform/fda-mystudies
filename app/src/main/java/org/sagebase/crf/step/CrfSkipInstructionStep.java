@@ -27,7 +27,7 @@ import org.researchstack.backbone.task.NavigableOrderedTask;
 import java.util.List;
 
 public class CrfSkipInstructionStep extends CrfInstructionStep
-        implements NavigableOrderedTask.NavigationSkipRule {
+        implements NavigableOrderedTask.NavigationSkipRule, NavigableOrderedTask.NavigationRule {
 
     public String skipIdentifier;
     public String stepIdentifier;
@@ -42,7 +42,13 @@ public class CrfSkipInstructionStep extends CrfInstructionStep
      * This can also be used in conjunction with other button types
      */
     public String buttonText;
+    public String instruction;
+    public boolean continueMeasurement = false;
 
+    /* Default constructor needed for serialization/deserialization of object */
+    public CrfSkipInstructionStep() {
+        super();
+    }
 
     public CrfSkipInstructionStep(String identifier, String title) {
         super(identifier, title, null);
@@ -52,10 +58,31 @@ public class CrfSkipInstructionStep extends CrfInstructionStep
     public boolean shouldSkipStep(@Nullable TaskResult result,
                                   @Nullable List<TaskResult> additionalTaskResults) {
         System.out.println("Got to the shouldSkipStep method");
+        if ((StepResult<Boolean>) result.getStepResult("camera").getResultForIdentifier(skipIdentifier) == null) {
+            return true;
+        }
+
         StepResult<Boolean> res = (StepResult<Boolean>)
                 result.getStepResult("camera").getResultForIdentifier(skipIdentifier);
 
+        // If you are not skipping this step, the next step needs to continue measurement
+        if (!res.getResult()) {
+            continueMeasurement = true;
+        }
         return res.getResult();
+    }
+
+    @Override
+    public String nextStepIdentifier(TaskResult result, List<TaskResult> additionalTaskResults) {
+        if(continueMeasurement) {
+            return "instructionCamera";
+        }
+        return "abnormal_hrForm";
+    }
+
+    @Override
+    public Class getStepLayoutClass() {
+        return CrfSkipInstructionStepLayout.class;
     }
 
 }

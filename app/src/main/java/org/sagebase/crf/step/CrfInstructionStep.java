@@ -74,6 +74,11 @@ public class CrfInstructionStep extends InstructionStep {
      */
     public boolean mediaVolume;
 
+    /**
+     * If true, the remind me later button will show, if false it will hide, defaults to true
+     */
+    public boolean remindMeLater;
+
     /* Default constructor needed for serialization/deserialization of object */
     public CrfInstructionStep() {
         super();

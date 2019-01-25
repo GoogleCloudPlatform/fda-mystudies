@@ -81,4 +81,8 @@ public class CrfInstructionSurveyItem extends InstructionSurveyItem {
      */
     @SerializedName("mediaVolume")
     public boolean mediaVolume;
+
+
+    @SerializedName("remindMeLater")
+    public boolean remindMeLater;
 }

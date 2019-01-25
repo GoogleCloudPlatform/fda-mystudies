@@ -16,7 +16,8 @@
       "isImageAnimated"  : true,
       "animationRepeatDuration" : 2000,
       "buttonType"       : "heart",
-      "buttonText"       : "Press to start"
+      "buttonText"       : "Press to start",
+      "remindMeLater"    : "false"
     },
     {
       "identifier"       : "camera",
@@ -26,10 +27,13 @@
       "identifier": "declining_hr",
       "skipIdentifier": "skipDeclineStep",
       "type": "crf_skip_instruction",
-      "text: " : "Declining step",
-      "backgroundColor" : "#000000",
-      "buttonType" : "heart",
-      "buttonText"       : "next"
+      "title": "",
+      "instruction" : "Gently cover both the camera and flash with your finger",
+      "detailText" : "You can try to sit and relax for a little bit longer or we can remind you to take this measurement later",
+      "buttonType" : "defaultWhiteSalmon",
+      "buttonText"       : "Continue Measurement",
+      "remindMeLater"   : "true",
+      "hideProgress"    : "true"
     },
     {
       "identifier": "abnormal_hr",
@@ -38,6 +42,7 @@
       "title": "We noticed that 2 or more measurements are out of your normal range. Is there anything below that might be influencing this?",
       "detailText": "Why are we asking this?",
       "text": "(select all that apply)",
+      "hideProgress" : "true",
       "items": [
         {
           "text": "I don't know",

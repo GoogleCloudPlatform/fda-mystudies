@@ -29,6 +29,8 @@ import java.util.List;
 
 public class CrfFormStep extends NavigationFormStep {
 
+    public boolean hideProgress;
+
     /* Default constructor needed for serialization/deserialization of object */
     public CrfFormStep() {
         super();
