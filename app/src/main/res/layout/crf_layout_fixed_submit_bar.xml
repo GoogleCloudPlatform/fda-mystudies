@@ -65,9 +65,9 @@
                 style="@style/Crf.Salmon.RoundedCornerMaterialButton"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
                 android:layout_margin="16dp"
-                android:text="@string/rsb_BUTTON_NEXT"/>
+                android:layout_weight="1"
+                android:text="@string/rsb_BUTTON_NEXT" />
 
         </LinearLayout>
 

@@ -86,11 +86,12 @@ public class CrfSkipMCStepLayout extends CrfFormStepLayout {
         super.refreshCrfSubmitBar();
 
         crfNextButton.setText("Done");
+        //crfNextButton.setBackgroundColor(Color.parseColor("#3C4A63"));
         crfBackButton.setVisibility(GONE);
 
         crf_title.setTextColor(Color.rgb(255, 255, 255));
         crf_title.setVisibility(VISIBLE);
-        crf_text.setTextColor(Color.parseColor("#FFFFFF"));
+        crf_text.setTextColor(Color.rgb(255, 255, 255));
         crf_text.setVisibility(VISIBLE);
 
         remindMeLaterButton.setText("Remind me later");
