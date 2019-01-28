@@ -25,30 +25,31 @@
     android:focusableInTouchMode="true"
     android:orientation="vertical">
 
-    <TextView
-        android:id="@+id/rsb_form_step_title"
-        style="@style/Backbone.Survey.Title"
+    <android.support.v7.widget.AppCompatTextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:visibility="gone"
-        tools:text="@string/lorem_name"
-        tools:visibility="visible"
+        android:textColor="@color/white"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toTopOf="@id/rsb_form_step_summary"
-        android:background="#C94281"/>
+        android:text="TEST"/>
 
-    <TextView
-        android:id="@+id/rsb_form_step_summary"
-        style="@style/Backbone.Survey.Summary"
+    <android.support.v7.widget.AppCompatTextView
+        android:id="@+id/rsb_survey_title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textColorLink="?attr/colorAccent"
-        android:visibility="gone"
+        android:textColor="@color/white"
+        tools:text="@string/lorem_name"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/rsb_form_step_summary" />
+
+    <android.support.v7.widget.AppCompatTextView
+        android:id="@+id/rsb_survey_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textColor="@color/white"
         app:layout_constraintTop_toBottomOf="@id/rsb_form_step_title"
         app:layout_constraintBottom_toTopOf="@id/rsb_form_step_body_layout"
         tools:text="@string/lorem_long"
-        tools:visibility="visible"
-        android:background="#C94281"/>
+        />
 
     <LinearLayout
         android:id="@+id/rsb_form_step_body_layout"
@@ -59,5 +60,18 @@
         app:layout_constraintBottom_toBottomOf="parent">
 
     </LinearLayout>
+
+    <android.support.v7.widget.AppCompatButton
+        android:id="@+id/remind_me_later"
+        style="@style/Widget.AppCompat.Button.Borderless"
+        app:layout_constraintTop_toBottomOf="@+id/rsb_form_step_body_layout"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/crf_remind_me_later"
+        android:layout_marginBottom="15dp"
+        android:textAllCaps="false"
+        android:textColor="@color/azure"
+        />
 
 </android.support.constraint.ConstraintLayout>
