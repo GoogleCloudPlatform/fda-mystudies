@@ -61,17 +61,4 @@
 
     </LinearLayout>
 
-    <android.support.v7.widget.AppCompatButton
-        android:id="@+id/remind_me_later"
-        style="@style/Widget.AppCompat.Button.Borderless"
-        app:layout_constraintTop_toBottomOf="@+id/rsb_form_step_body_layout"
-        app:layout_constraintBottom_toBottomOf="parent"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/crf_remind_me_later"
-        android:layout_marginBottom="15dp"
-        android:textAllCaps="false"
-        android:textColor="@color/azure"
-        />
-
 </android.support.constraint.ConstraintLayout>

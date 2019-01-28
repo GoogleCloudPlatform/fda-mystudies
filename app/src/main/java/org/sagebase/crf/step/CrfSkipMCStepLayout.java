@@ -69,7 +69,7 @@ public class CrfSkipMCStepLayout extends CrfFormStepLayout {
 
         this.crf_title = findViewById(R.id.rsb_survey_title);
         this.crf_text = findViewById(R.id.rsb_survey_text);
-        this.remindMeLaterButton = findViewById(R.id.remind_me_later);
+        this.remindMeLaterButton = findViewById(R.id.crf_submit_bar_skip);
 
     }
 
@@ -93,20 +93,14 @@ public class CrfSkipMCStepLayout extends CrfFormStepLayout {
         crf_text.setTextColor(Color.parseColor("#FFFFFF"));
         crf_text.setVisibility(VISIBLE);
 
-
-        /*if (remindMeLaterButton != null) {
-            if (step.remindMeLater) {
-                remindMeLaterButton.setVisibility(View.VISIBLE);
-                remindMeLaterButton.setOnClickListener(new OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        remindMeLater();
-                    }
-                });
-            } else {
-                remindMeLaterButton.setVisibility(View.GONE);
+        remindMeLaterButton.setText("Remind me later");
+        remindMeLaterButton.setVisibility(View.VISIBLE);
+        remindMeLaterButton.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                remindMeLater();
             }
-        }*/
+        });
     }
 
     public void remindMeLater() {
