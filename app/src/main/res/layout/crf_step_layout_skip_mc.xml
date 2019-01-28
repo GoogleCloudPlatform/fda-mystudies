@@ -25,22 +25,11 @@
     android:focusableInTouchMode="true"
     android:orientation="vertical">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:layout_constraintTop_toTopOf="parent"
-
-        android:text="crf_step_layout_skip_mc"/>
-
     <android.support.v7.widget.AppCompatTextView
         android:id="@+id/rsb_survey_title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textColor="@color/white"
-        android:textColorHint="@color/white"
-        tools:textColor="@color/white"
         tools:text="@string/lorem_name"
-        android:text="mc_title"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toTopOf="@id/rsb_form_step_summary" />
 
@@ -48,9 +37,6 @@
         android:id="@+id/rsb_survey_text"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textColor="@color/white"
-        android:textColorHint="@color/white"
-        tools:textColor="@color/white"
         app:layout_constraintTop_toBottomOf="@id/rsb_form_step_title"
         app:layout_constraintBottom_toTopOf="@id/rsb_form_step_body_layout"
         tools:text="@string/lorem_long"
