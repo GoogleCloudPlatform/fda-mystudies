@@ -24,6 +24,7 @@
       "type"             : "crf_heart_rate_camera_step"
     },
     {
+<<<<<<< Updated upstream
       "identifier": "declining_hr",
       "skipIdentifier": "skipDeclineStep",
       "type": "crf_skip_instruction",
@@ -43,6 +44,29 @@
       "detailText": "Why are we asking this?",
       "text": "(select all that apply)",
       "hideProgress" : "true",
+=======
+      "identifier": "skip_declining",
+      "type" : "crf_skip",
+      "title" : "Should we skip the declining step?"
+    },
+    {
+      "identifier": "skip_abnormal",
+      "type": "crf_skip",
+      "title" : "Should we skip the abnormal step?"
+    },
+    {
+      "identifier": "declining_hr",
+      "type": "crf_instruction",
+      "title": "Seems that your heart rate isn't at rest.",
+      "detailText": "You can try to sit and relax for a little bit longer or we can remind you to take this measurement later"
+    },
+    {
+      "identifier": "abnormal_hr",
+      "type": "crfMultipleChoice",
+      "title": "We noticed that 2 or more measurements are out of your normal range. Is there anything below that might be influencing this?",
+      "detailText": "Why are we asking this?",
+      "text": "(select all that apply)",
+>>>>>>> Stashed changes
       "items": [
         {
           "text": "I don't know",

@@ -295,40 +295,38 @@ public interface BpmRecorder {
                                     BpmRecorder.CameraCoveredListener.CameraCoveredHolder(true)));
                 }
                 if (mAbnormalListener != null) {
-                    if(sample.abnormalHR()) {
+                    if (sample.abnormalHR()) {
                         mainHandler.post(() ->
                                 mAbnormalListener.abnormalHRUpdate(new
                                         BpmRecorder.AbnormalHRListener.AbnormalHRHolder(true)));
-                    }
-                    else {
+                    } else {
                         mainHandler.post(() ->
                                 mAbnormalListener.abnormalHRUpdate(new
                                         BpmRecorder.AbnormalHRListener.AbnormalHRHolder(false)));
-                    }
-                }
-                if (mDeclineListener != null) {
-                    if(sample.declineHR()) {
-                        mainHandler.post(() ->
-                                mDeclineListener.declineHRUpdate(new
-                                        DeclineHRListener.DeclineHRHolder(true)));
-                    }
-                    else {
-                        mainHandler.post(() ->
-                                mDeclineListener.declineHRUpdate(new
-                                        DeclineHRListener.DeclineHRHolder(false)));
-                    }
-                }
 
-                if (mPressureListener != null) {
-                    if(sample.isPressureExcessive() && !sample.declineHR()) {
-                        mainHandler.post(() ->
-                                mPressureListener.pressureUpdate(new
-                                        BpmRecorder.PressureListener.PressureHolder(true)));
                     }
-                    else {
-                        mainHandler.post(() ->
-                                mPressureListener.pressureUpdate(new
-                                        BpmRecorder.PressureListener.PressureHolder(false)));
+                    if (mDeclineListener != null) {
+                        if (sample.declineHR()) {
+                            mainHandler.post(() ->
+                                    mDeclineListener.declineHRUpdate(new
+                                            DeclineHRListener.DeclineHRHolder(true)));
+                        } else {
+                            mainHandler.post(() ->
+                                    mDeclineListener.declineHRUpdate(new
+                                            DeclineHRListener.DeclineHRHolder(false)));
+                        }
+                    }
+
+                    if (mPressureListener != null) {
+                        if (sample.isPressureExcessive() && !sample.declineHR()) {
+                            mainHandler.post(() ->
+                                    mPressureListener.pressureUpdate(new
+                                            BpmRecorder.PressureListener.PressureHolder(true)));
+                        } else {
+                            mainHandler.post(() ->
+                                    mPressureListener.pressureUpdate(new
+                                            BpmRecorder.PressureListener.PressureHolder(false)));
+                        }
                     }
                 }
 

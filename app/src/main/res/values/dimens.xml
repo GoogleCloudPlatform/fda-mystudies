@@ -30,5 +30,6 @@
     <dimen name="crf_activity_icon_margin">8dp</dimen>
 
     <dimen name="crf_single_choice_question_margin">4dp</dimen>
+    <dimen name="crf_next_button">145dp</dimen>
 
 </resources>

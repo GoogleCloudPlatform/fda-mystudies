@@ -66,8 +66,7 @@ public class HeartBeatSample {
         }
 
         // for testing purposes
-        return true;
-        //return false;
+        return false;
     }
 
     // Algorithm to be implemented
@@ -77,6 +76,6 @@ public class HeartBeatSample {
 
     // Algorithm to be implemented
     public boolean declineHR() {
-        return true;
+        return false;
     }
 }
