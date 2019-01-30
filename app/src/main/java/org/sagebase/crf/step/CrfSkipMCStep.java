@@ -45,6 +45,10 @@ public class CrfSkipMCStep extends CrfFormStep implements NavigableOrderedTask.N
 
     @Override
     public boolean shouldSkipStep(TaskResult result, List<TaskResult> additionalTaskResults) {
+        if ((StepResult<Boolean>) result.getStepResult("camera").getResultForIdentifier(skipIdentifier) == null) {
+            return true;
+        }
+
         StepResult<Boolean> res = (StepResult<Boolean>)
                 result.getStepResult("camera").getResultForIdentifier(skipIdentifier);
 

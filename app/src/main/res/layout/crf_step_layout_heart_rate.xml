@@ -139,14 +139,21 @@
 
         </LinearLayout>
 
+        <ImageView
+            android:id="@+id/crf_heart_icon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:src="@drawable/crf_heart_icon"
+            android:visibility="gone"/>
+
         <TextView
             style="@style/TextAppearance.Crf.ActiveStatusText"
             android:id="@+id/crf_heart_rate_error"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/crf_camera_cover"
-            android:layout_gravity="center"
-            android:textColor="@color/salmon80"
+            android:textColor="@color/black37"
             android:padding="@dimen/rsb_padding_large"
             android:visibility="gone"/>
 
@@ -156,17 +163,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/crf_cant_read"
-            android:layout_gravity="center"
-            android:textColor="@color/salmon80"
+            android:textColor="@color/black37"
             android:padding="@dimen/rsb_padding_large"
-            android:visibility="gone"/>
-
-        <ImageView
-            android:id="@+id/crf_heart_icon"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:src="@drawable/crf_heart_icon"
             android:visibility="gone"/>
 
     </FrameLayout>
