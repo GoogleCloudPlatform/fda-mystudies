@@ -346,8 +346,11 @@ public class CrfHeartRateStepLayout extends ActiveStepLayout implements
         if (heartBeatAnimation == null) {
             heartBeatAnimation = new HeartBeatAnimation(bpmHolder.bpm);
             heartImageView.startAnimation(heartBeatAnimation);
+            heartImageView.setVisibility(VISIBLE);
         }
         currentHeartRate.setText(bpmHolder.bpm + " " + getContext().getString(R.string.crf_bpm));
+        arcDrawableContainer.setVisibility(VISIBLE);
+        currentHeartRate.setVisibility(VISIBLE);
         heartBeatAnimation.setBpm(bpmHolder.bpm);
         bpmList.add(bpmHolder);
         resetView();
@@ -539,16 +542,6 @@ public class CrfHeartRateStepLayout extends ActiveStepLayout implements
         TextView p = findViewById(R.id.crf_pressure_error);
         p.setVisibility(GONE);
 
-
-        ImageView i = findViewById(R.id.crf_heart_icon);
-        i.setVisibility(VISIBLE);
-
-        FrameLayout c = findViewById(R.id.crf_arc_drawable_container);
-        c.setVisibility(VISIBLE);
-
-        LinearLayout t = findViewById(R.id.crf_bpm_text_container);
-        t.setVisibility(GONE);
-
     }
 
     private void showHRStatus() {
@@ -561,6 +554,8 @@ public class CrfHeartRateStepLayout extends ActiveStepLayout implements
 
         FrameLayout c = findViewById(R.id.crf_arc_drawable_container);
         c.setVisibility(GONE);
+
+        cameraSourcePreview.setVisibility(GONE);
 
         TextView e = findViewById(R.id.crf_heart_rate_error);
         e.setVisibility(VISIBLE);
@@ -576,6 +571,8 @@ public class CrfHeartRateStepLayout extends ActiveStepLayout implements
 
         FrameLayout c = findViewById(R.id.crf_arc_drawable_container);
         c.setVisibility(GONE);
+
+        cameraSourcePreview.setVisibility(GONE);
 
         TextView p = findViewById(R.id.crf_pressure_error);
         p.setVisibility(VISIBLE);
