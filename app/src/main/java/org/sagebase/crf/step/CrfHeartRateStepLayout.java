@@ -27,6 +27,7 @@ import android.support.annotation.Nullable;
 import android.support.annotation.UiThread;
 import android.support.v4.content.res.ResourcesCompat;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.TextureView;
 import android.view.View;
 import android.view.ViewGroup;
@@ -100,6 +101,8 @@ public class CrfHeartRateStepLayout extends ActiveStepLayout implements
 
     protected View heartRateTextContainer;
     protected TextView heartRateNumber;
+
+    protected TextView currentHeartRate;
 
     protected View arcDrawableContainer;
     protected View arcDrawableView;
@@ -188,6 +191,7 @@ public class CrfHeartRateStepLayout extends ActiveStepLayout implements
         heartRateTextContainer = findViewById(R.id.crf_bpm_text_container);
         heartRateTextContainer.setVisibility(View.GONE);
         heartRateNumber = findViewById(R.id.crf_heart_rate_number);
+        currentHeartRate = findViewById(R.id.crf_current_bpm);
 
         arcDrawableContainer = findViewById(R.id.crf_arc_drawable_container);
         arcDrawableView = findViewById(R.id.crf_arc_drawable);
@@ -311,8 +315,16 @@ public class CrfHeartRateStepLayout extends ActiveStepLayout implements
     
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     void startVideoRecording() {
+        //HACK for Samsung Galaxy J7 Neo that records 0 bpm when recording video
+        String device = Build.MANUFACTURER + Build.MODEL;
+        if ("samsungSM-J701M".equalsIgnoreCase(device)) {
+            //TODO: Figure out a better solution if there are other devices that can't record video and heart rate at same time
+            // -Nathaniel 12/18/18
+            return;
+        }
+
         ((HeartRateCamera2Recorder) cameraRecorder).startVideoRecording();
-    
+
     }
 
     @Override
@@ -334,7 +346,11 @@ public class CrfHeartRateStepLayout extends ActiveStepLayout implements
         if (heartBeatAnimation == null) {
             heartBeatAnimation = new HeartBeatAnimation(bpmHolder.bpm);
             heartImageView.startAnimation(heartBeatAnimation);
+            heartImageView.setVisibility(VISIBLE);
         }
+        currentHeartRate.setText(bpmHolder.bpm + " " + getContext().getString(R.string.crf_bpm));
+        arcDrawableContainer.setVisibility(VISIBLE);
+        currentHeartRate.setVisibility(VISIBLE);
         heartBeatAnimation.setBpm(bpmHolder.bpm);
         bpmList.add(bpmHolder);
         resetView();
@@ -375,6 +391,7 @@ public class CrfHeartRateStepLayout extends ActiveStepLayout implements
         cameraSourcePreview.setVisibility(View.INVISIBLE);
         arcDrawableContainer.setVisibility(View.GONE);
         heartRateTextContainer.setVisibility(View.VISIBLE);
+        currentHeartRate.setVisibility(View.GONE);
 
         if (!bpmList.isEmpty()) {
             int bpmSum = 0;
@@ -525,13 +542,6 @@ public class CrfHeartRateStepLayout extends ActiveStepLayout implements
         TextView p = findViewById(R.id.crf_pressure_error);
         p.setVisibility(GONE);
 
-
-        ImageView i = findViewById(R.id.crf_heart_icon);
-        i.setVisibility(VISIBLE);
-
-        FrameLayout c = findViewById(R.id.crf_arc_drawable_container);
-        c.setVisibility(VISIBLE);
-
     }
 
     private void showHRStatus() {
@@ -544,6 +554,8 @@ public class CrfHeartRateStepLayout extends ActiveStepLayout implements
 
         FrameLayout c = findViewById(R.id.crf_arc_drawable_container);
         c.setVisibility(GONE);
+
+        cameraSourcePreview.setVisibility(GONE);
 
         TextView e = findViewById(R.id.crf_heart_rate_error);
         e.setVisibility(VISIBLE);
@@ -560,6 +572,8 @@ public class CrfHeartRateStepLayout extends ActiveStepLayout implements
         FrameLayout c = findViewById(R.id.crf_arc_drawable_container);
         c.setVisibility(GONE);
 
+        cameraSourcePreview.setVisibility(GONE);
+
         TextView p = findViewById(R.id.crf_pressure_error);
         p.setVisibility(VISIBLE);
 
@@ -569,8 +583,14 @@ public class CrfHeartRateStepLayout extends ActiveStepLayout implements
     public void abnormalHRUpdate(AbnormalHRHolder abnormal) {
         if(abnormal.isAbnormal) {
             StepResult<Boolean> abnormalHRResult = new StepResult<>(new Step("displaySurvey"));
+            abnormalHRResult.setResult(false);
+            stepResult.setResultForIdentifier("skipAbnormalStep",
+                    abnormalHRResult);
+        }
+        else {
+            StepResult<Boolean> abnormalHRResult = new StepResult<>(new Step("displaySurvey"));
             abnormalHRResult.setResult(true);
-            stepResult.setResultForIdentifier("displaySurvey",
+            stepResult.setResultForIdentifier("skipAbnormalStep",
                     abnormalHRResult);
         }
     }
@@ -579,8 +599,14 @@ public class CrfHeartRateStepLayout extends ActiveStepLayout implements
     public void declineHRUpdate(DeclineHRHolder decline) {
         if(decline.isDeclining) {
             StepResult<Boolean> decliningHRResult = new StepResult<>(new Step("displayDecliningHR"));
+            decliningHRResult.setResult(false);
+            stepResult.setResultForIdentifier("skipDeclineStep",
+                    decliningHRResult);
+        }
+        else {
+            StepResult<Boolean> decliningHRResult = new StepResult<>(new Step("displayDecliningHR"));
             decliningHRResult.setResult(true);
-            stepResult.setResultForIdentifier("displayDecliningHR",
+            stepResult.setResultForIdentifier("skipDeclineStep",
                     decliningHRResult);
         }
     }
