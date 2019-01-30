@@ -44,7 +44,7 @@ import java.util.Locale;
  */
 
 public interface BpmRecorder {
-    boolean feedbackFeature = false;
+    boolean feedbackFeature = true;
 
     interface BpmUpdateListener {
         class BpmHolder {

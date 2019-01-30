@@ -18,6 +18,7 @@
 
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/crf_root_instruction_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -39,6 +40,8 @@
         style="@style/TextAppearance.Crf.SkipInstruction"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_margin="5dp"
+        android:textAlignment="center"
         android:textColor="@color/white"
         app:layout_constraintBottom_toTopOf="@+id/crf_instruction_text_bottom"
         app:layout_constraintTop_toBottomOf="@+id/crf_instruction_title" />
@@ -63,42 +66,40 @@
         android:contentDescription="@string/crf_decline_continue"
     />
 
-    <LinearLayout
+    <android.support.constraint.ConstraintLayout
         android:id="@+id/crf_next_button_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
+        app:layout_constraintBottom_toBottomOf="parent"
         android:background="@color/white"
-        app:layout_constraintTop_toBottomOf="@+id/crf_image_view"
-        app:layout_constraintBottom_toBottomOf="parent">
+        android:orientation="vertical"
+        tools:layout_editor_absoluteY="530dp">
 
 
-        <android.support.v7.widget.AppCompatButton
+        <Button
             android:id="@id/button_go_forward"
-            app:layout_constraintTop_toBottomOf="@+id/crf_image_view"
-            app:layout_constraintBottom_toTopOf="@+id/remind_me_later"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/crf_activity_icon_margin"
+            android:background="#3C4A63"
             android:focusable="true"
             android:textAllCaps="false"
-            android:backgroundTint="#3C4A63"
             android:textColorHint="@color/white"
-        />
+            app:layout_constraintBottom_toTopOf="@+id/remind_me_later"
+            app:layout_constraintTop_toTopOf="parent" />
 
         <android.support.v7.widget.AppCompatButton
             android:id="@+id/remind_me_later"
             style="@style/Widget.AppCompat.Button.Borderless"
-            app:layout_constraintTop_toBottomOf="@+id/button_go_forward"
-            app:layout_constraintBottom_toBottomOf="parent"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/crf_remind_me_later"
             android:layout_marginBottom="15dp"
+            android:text="@string/crf_remind_me_later"
             android:textAllCaps="false"
             android:textColor="@color/azure"
-        />
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/button_go_forward" />
 
-    </LinearLayout>
+    </android.support.constraint.ConstraintLayout>
 
 </android.support.constraint.ConstraintLayout>

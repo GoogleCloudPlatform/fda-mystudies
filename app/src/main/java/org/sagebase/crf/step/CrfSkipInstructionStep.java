@@ -66,7 +66,7 @@ public class CrfSkipInstructionStep extends CrfInstructionStep
                 result.getStepResult("camera").getResultForIdentifier(skipIdentifier);
 
         // If you are not skipping this step, the next step needs to continue measurement
-        if (!res.getResult()) {
+        if(!res.getResult()) {
             continueMeasurement = true;
         }
         return res.getResult();

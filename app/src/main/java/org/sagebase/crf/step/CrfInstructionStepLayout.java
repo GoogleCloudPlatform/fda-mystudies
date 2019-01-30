@@ -53,7 +53,7 @@ import java.util.List;
 
 public class CrfInstructionStepLayout extends InstructionStepLayout implements
         CrfTaskToolbarTintManipulator, CrfTaskStatusBarManipulator, CrfTaskToolbarProgressManipulator,
-        CrfActiveTaskActivity.CrfTaskMediaVolumeController {
+        CrfActiveTaskActivity.CrfTaskMediaVolumeController{
 
     protected CrfInstructionStep crfInstructionStep;
     protected Button nextButton;
@@ -247,6 +247,12 @@ public class CrfInstructionStepLayout extends InstructionStepLayout implements
         }
         Activity activity = (Activity)callbacks;
         activity.startActivityForResult(intent, CrfReminderManager.DAILY_REMINDER_REQUEST_CODE);
+        if(((CrfSkipInstructionStep)step).continueMeasurement) {
+            ((CrfSkipInstructionStep) step).continueMeasurement = false;
+        }
+        ((CrfSkipInstructionStep)step).continueMeasurement = false;
+
+        onComplete();
     }
 
 }

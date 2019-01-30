@@ -113,5 +113,7 @@ public class CrfSkipMCStepLayout extends CrfFormStepLayout {
         }
         Activity activity = (Activity)callbacks;
         activity.startActivityForResult(intent, CrfReminderManager.DAILY_REMINDER_REQUEST_CODE);
+
+        onComplete();
     }
 }

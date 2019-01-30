@@ -18,22 +18,11 @@
 package org.sagebase.crf.step;
 
 import android.content.Context;
-import android.content.Intent;
-import android.util.Log;
 import android.widget.TextView;
 
 import org.researchstack.backbone.result.StepResult;
-import org.researchstack.backbone.result.TaskResult;
 import org.researchstack.backbone.step.Step;
-import org.researchstack.backbone.ui.ViewTaskActivity;
-import org.sagebase.crf.CrfActivityResultListener;
-import org.sagebase.crf.reminder.CrfReminderManager;
-import org.sagebionetworks.bridge.researchstack.CrfResourceManager;
 import org.sagebionetworks.research.crf.R;
-
-import java.util.Date;
-
-import static android.app.Activity.RESULT_OK;
 
 public class CrfSkipInstructionStepLayout extends CrfInstructionStepLayout {
 
@@ -82,6 +71,10 @@ public class CrfSkipInstructionStepLayout extends CrfInstructionStepLayout {
             instructionViewBottom.setText(crfSkipInstructionStep.getMoreDetailText());
             instructionViewBottom.setVisibility(VISIBLE);
         }
+        // Need to set the background color but not change the shape
+        //if(this.nextButton != null) {
+        //  nextButton.setBackgroundColor(Color.parseColor("#3C4A63"));
+        //}
     }
 
 
