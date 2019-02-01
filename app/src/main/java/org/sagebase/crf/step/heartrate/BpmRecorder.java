@@ -69,6 +69,9 @@ public interface BpmRecorder {
         void intelligentStartUpdate(float progress, boolean ready);
     }
 
+    /**
+     * Encompasses the pressure algorithm and communicates results to UI
+     */
     interface PressureListener {
         class PressureHolder {
             public final boolean isPressureExcessive;
@@ -82,6 +85,9 @@ public interface BpmRecorder {
         void pressureUpdate(PressureHolder pressure);
     }
 
+    /**
+     * Encompasses the camera covered algorithm and communicates results to UI
+     */
     interface CameraCoveredListener {
         class CameraCoveredHolder {
             public final boolean isCameraCovered;
@@ -95,6 +101,9 @@ public interface BpmRecorder {
 
     }
 
+    /**
+     * Encompasses the abnormal heart rate algorithm and communicates results to UI
+     */
     interface AbnormalHRListener {
         class AbnormalHRHolder {
             public final boolean isAbnormal;
@@ -108,6 +117,9 @@ public interface BpmRecorder {
         void abnormalHRUpdate(AbnormalHRHolder abnormal);
     }
 
+    /**
+     * Encompasses the declining heart rate algorithm and communicates results to UI
+     */
     interface DeclineHRListener {
         class DeclineHRHolder {
             public final boolean isDeclining;
@@ -290,6 +302,9 @@ public interface BpmRecorder {
                     );
 
                 }
+                /**
+                 * If the feedback feature is turned on, run all the algorithms
+                 */
                 if(feedbackFeature) {
                     if (mCameraListener != null) {
                         mainHandler.post(() ->
@@ -336,6 +351,9 @@ public interface BpmRecorder {
             } else {  // We need thresholds to be passed sequentially otherwise it is restarted
                 mIntelligentStartCounter = 0;
 
+                /**
+                 * The camera is covered
+                 */
                 if(feedbackFeature) {
                     if (mCameraListener != null) {
                         mainHandler.post(() ->

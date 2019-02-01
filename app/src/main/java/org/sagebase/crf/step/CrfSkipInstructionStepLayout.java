@@ -71,10 +71,7 @@ public class CrfSkipInstructionStepLayout extends CrfInstructionStepLayout {
             instructionViewBottom.setText(crfSkipInstructionStep.getMoreDetailText());
             instructionViewBottom.setVisibility(VISIBLE);
         }
-        // Need to set the background color but not change the shape
-        //if(this.nextButton != null) {
-        //  nextButton.setBackgroundColor(Color.parseColor("#3C4A63"));
-        //}
+
     }
 
 

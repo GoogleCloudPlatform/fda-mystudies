@@ -29,6 +29,9 @@ import java.util.List;
 
 public class CrfFormStep extends NavigationFormStep {
 
+    /**
+     * When true, this hides the progress bar
+     */
     public boolean hideProgress;
 
     /* Default constructor needed for serialization/deserialization of object */

@@ -20,7 +20,6 @@ package org.sagebase.crf.step.heartrate.decline_hr;
 import android.graphics.Bitmap;
 
 import org.sagebase.crf.step.heartrate.StateDetection;
-import org.sagebase.crf.step.heartrate.OutputState;
 
 /**
  * Encompasses state detection for if the heart rate is declining.

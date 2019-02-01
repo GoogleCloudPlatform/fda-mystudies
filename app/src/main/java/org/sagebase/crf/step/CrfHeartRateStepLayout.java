@@ -534,7 +534,9 @@ public class CrfHeartRateStepLayout extends ActiveStepLayout implements
         }
     }
 
-
+    /**
+     * Method to reset the view after displaying instruction messages
+     */
     private void resetView() {
         TextView e = findViewById(R.id.crf_heart_rate_error);
         e.setVisibility(GONE);
@@ -544,8 +546,10 @@ public class CrfHeartRateStepLayout extends ActiveStepLayout implements
 
     }
 
+    /**
+     * Display a notification that the camera isn't covered
+     */
     private void showHRStatus() {
-        LOG.error("Displaying camera error");
         LinearLayout t = findViewById(R.id.crf_bpm_text_container);
         t.setVisibility(GONE);
 
@@ -561,8 +565,10 @@ public class CrfHeartRateStepLayout extends ActiveStepLayout implements
         e.setVisibility(VISIBLE);
     }
 
+    /**
+     * Display a notification that there is too much pressure on the camera
+     */
     private void showPressureStatus()  {
-        LOG.error("Displaying pressure error");
         LinearLayout t = findViewById(R.id.crf_bpm_text_container);
         t.setVisibility(GONE);
 
@@ -579,6 +585,11 @@ public class CrfHeartRateStepLayout extends ActiveStepLayout implements
 
     }
 
+    /**
+     * Add the result of the abnormal hr algorithm to the step result to determine if we need to
+     * skip the abnormal HR step
+     * @param abnormal
+     */
     @Override
     public void abnormalHRUpdate(AbnormalHRHolder abnormal) {
         if(abnormal.isAbnormal) {
@@ -595,6 +606,11 @@ public class CrfHeartRateStepLayout extends ActiveStepLayout implements
         }
     }
 
+    /**
+     * Add the result of the decline hr algorithm to the step result to determine if we need to
+     * skip the decline HR step
+     * @param decline
+     */
     @Override
     public void declineHRUpdate(DeclineHRHolder decline) {
         if(decline.isDeclining) {

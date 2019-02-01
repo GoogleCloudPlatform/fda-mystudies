@@ -26,7 +26,15 @@ import java.util.List;
 
 public class CrfSkipMCStep extends CrfFormStep implements NavigableOrderedTask.NavigationSkipRule{
 
+    /**
+     * Search for this identifier to determine if we should skip this step
+     */
     public String skipIdentifier;
+
+    /**
+     * When true, displays the remindMeLater button
+     */
+    public boolean remindMeLater = true;
 
     /* Default constructor needed for serialization/deserialization of object */
     public CrfSkipMCStep() {

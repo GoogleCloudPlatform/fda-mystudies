@@ -95,7 +95,12 @@ public class CrfSkipMCStepLayout extends CrfFormStepLayout {
         crf_text.setVisibility(VISIBLE);
 
         remindMeLaterButton.setText("Remind me later");
-        remindMeLaterButton.setVisibility(View.VISIBLE);
+        if(step.remindMeLater) {
+            remindMeLaterButton.setVisibility(View.VISIBLE);
+        }
+        else {
+            remindMeLaterButton.setVisibility(INVISIBLE);
+        }
         remindMeLaterButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
