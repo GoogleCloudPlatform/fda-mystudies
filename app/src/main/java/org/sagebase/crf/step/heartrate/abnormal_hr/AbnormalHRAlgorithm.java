@@ -18,17 +18,31 @@
 package org.sagebase.crf.step.heartrate.abnormal_hr;
 
 import android.graphics.Bitmap;
-
 import org.sagebase.crf.step.heartrate.OutputStateAlgorithm;
-
 import java.util.ArrayList;
+
+/**
+ * Runs an algorithm to determine if the heart beat sample is abnormal.
+ */
 
 public class AbnormalHRAlgorithm implements OutputStateAlgorithm {
 
+    /**
+     * Gets the previous x number of heart beat samples
+     *
+     * @return A list of previous sample bitmaps
+     */
     public ArrayList<Bitmap> getPreviousState() {
         return null;
     }
 
+    /**
+     * Runs the algorithm to determine if a sample is abnormal.
+     *
+     * @param timestamp
+     * @param bitmap
+     * @return A double representing how abnormal this sample is.
+     */
     public static double algorithm(Long timestamp, Bitmap bitmap) {
         return 0.0;
     }

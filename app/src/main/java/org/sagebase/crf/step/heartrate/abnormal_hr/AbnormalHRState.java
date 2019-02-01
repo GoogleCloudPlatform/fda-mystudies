@@ -18,19 +18,23 @@
 package org.sagebase.crf.step.heartrate.abnormal_hr;
 
 import android.graphics.Bitmap;
-
 import org.sagebase.crf.step.heartrate.StateDetection;
-import org.sagebase.crf.step.heartrate.OutputState;
 
+/**
+ * Encompasses state detection for if this sample is abnormal.
+ */
 public class AbnormalHRState implements StateDetection {
-    OutputState outputState;
 
     public AbnormalHRState() {
-        this.outputState = OutputState.ABNORMAL_HR;
+
     }
-    public OutputState getOutputState() {
-        return this.outputState;
-    }
+
+    /**
+     * Runs the abnormal HR algorithm
+     * @param timestamp
+     * @param bitmap
+     * @return boolean representing whether this is an issue
+     */
 
     public boolean containsIssue(Long timestamp, Bitmap bitmap) {
         return AbnormalHRAlgorithm.algorithm(timestamp, bitmap) > 0.5;

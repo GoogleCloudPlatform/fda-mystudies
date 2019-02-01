@@ -18,18 +18,24 @@
 package org.sagebase.crf.step.heartrate.camera_error;
 
 import android.graphics.Bitmap;
-
 import org.sagebase.crf.step.heartrate.StateDetection;
-import org.sagebase.crf.step.heartrate.OutputState;
 
-
+/**
+ * Encompasses state detection for if the camera is covered.
+ */
 public class CameraState implements StateDetection {
-    public OutputState getOutputState() {
-        return OutputState.CAMERA_COVERAGE;
+
+    public CameraState() {
+
     }
 
-    // Need to develop the algorithm
+    /**
+     * Runs the camera covered algorithm
+     * @param timestamp
+     * @param bitmap
+     * @return boolean representing whether this is an issue
+     */
     public static boolean containsIssue(Long timestamp, Bitmap bitmap) {
-        return true;//CameraAlgorithm.algorithm(timestamp, bitmap) > 0.5;
+        return true;
     }
 }

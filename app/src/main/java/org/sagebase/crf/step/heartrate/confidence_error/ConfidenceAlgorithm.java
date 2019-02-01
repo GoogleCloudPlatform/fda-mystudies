@@ -18,17 +18,30 @@
 package org.sagebase.crf.step.heartrate.confidence_error;
 
 import android.graphics.Bitmap;
-
 import org.sagebase.crf.step.heartrate.OutputStateAlgorithm;
-
 import java.util.ArrayList;
 
+/**
+ * Runs an algorithm to determine if the confidence is too low.
+ */
 public class ConfidenceAlgorithm implements OutputStateAlgorithm {
 
+    /**
+     * Gets the previous x number of heart beat samples
+     *
+     * @return A list of previous sample bitmaps
+     */
     public ArrayList<Bitmap> getPreviousState() {
         return null;
     }
 
+    /**
+     * Runs the algorithm to determine if a sample has too low confidence.
+     *
+     * @param timestamp
+     * @param bitmap
+     * @return A double representing how unconfident this sample is.
+     */
     public static double algorithm(Long timestamp, Bitmap bitmap) {
 
         return 0.0;

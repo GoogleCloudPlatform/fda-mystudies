@@ -28,22 +28,20 @@ import java.util.List;
 
 public class CrfSkipInstructionStep extends CrfInstructionStep
         implements NavigableOrderedTask.NavigationSkipRule, NavigableOrderedTask.NavigationRule {
-
+    /**
+     * Search for this identifier to determine if we should skip this step
+     */
     public String skipIdentifier;
-    public String stepIdentifier;
 
     /**
      * The type of button to show
      */
     public CrfInstructionButtonType buttonType;
 
-    /**
-     * When buttonType is DEFAULT, this will be used as the title on the button
-     * This can also be used in conjunction with other button types
-     */
+
     public String buttonText;
     public String instruction;
-    public boolean continueMeasurement = false;
+    boolean continueMeasurement = false;
 
     /* Default constructor needed for serialization/deserialization of object */
     public CrfSkipInstructionStep() {

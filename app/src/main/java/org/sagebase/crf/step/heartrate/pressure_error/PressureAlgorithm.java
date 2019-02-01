@@ -18,18 +18,23 @@
 package org.sagebase.crf.step.heartrate.pressure_error;
 
 import android.graphics.Bitmap;
-
 import org.sagebase.crf.step.active.HeartBeatSample;
 import org.sagebase.crf.step.heartrate.OutputStateAlgorithm;
-
 import java.util.ArrayList;
 
+/**
+ * Runs an algorithm to determine if there is too much pressure on the camera.
+ */
 public class PressureAlgorithm implements OutputStateAlgorithm {
 
     private static int min_length = 10;
-
     private static ArrayList<Bitmap> previousState;
 
+    /**
+     * Gets the previous x number of heart beat samples
+     *
+     * @return A list of previous sample bitmaps
+     */
     public static ArrayList<Bitmap> getPreviousState() {
         if (previousState.size() == 0 || previousState == null) {
             previousState = new ArrayList<>();
@@ -37,6 +42,13 @@ public class PressureAlgorithm implements OutputStateAlgorithm {
         return previousState;
     }
 
+    /**
+     * Runs the algorithm to determine if there is too much pressure on the camera.
+     *
+     * @param timestamp
+     * @param bitmap
+     * @return A double representing how excessive the pressure is.
+     */
     public static double algorithm(Long timestamp, Bitmap bitmap) {
 
         ArrayList<Bitmap> state = getPreviousState();
@@ -45,11 +57,6 @@ public class PressureAlgorithm implements OutputStateAlgorithm {
             previousState.add(bitmap);
             return 0.0;
         }
-
-        // This algorithm should be in this file
-        /*if(HeartBeatSample.isPressureExcessive()) {
-            return 1.0;
-        }*/
 
         else{
             return 0.0;

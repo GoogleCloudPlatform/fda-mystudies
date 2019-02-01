@@ -18,10 +18,12 @@
 package org.sagebase.crf.step.heartrate.decline_hr;
 
 import android.graphics.Bitmap;
-
 import org.sagebase.crf.step.heartrate.OutputStateAlgorithm;
-
 import java.util.ArrayList;
+
+/**
+ * Runs an algorithm to determine if the heart rate is declining.
+ */
 
 public class DeclineHRAlgorithm implements OutputStateAlgorithm {
     public static ArrayList<Bitmap> previousState;
@@ -29,6 +31,11 @@ public class DeclineHRAlgorithm implements OutputStateAlgorithm {
     private static double decline_threshold = 0.1;
     private static int min_length = 10;
 
+    /**
+     * Gets the previous x number of heart beat samples
+     *
+     * @return A list of previous sample bitmaps
+     */
     public static ArrayList<Bitmap> getPreviousState() {
         if (previousState.size() == 0 || previousState == null) {
             previousState = new ArrayList<>();
@@ -36,6 +43,13 @@ public class DeclineHRAlgorithm implements OutputStateAlgorithm {
         return previousState;
     }
 
+    /**
+     * Runs the algorithm to determine if the heart rate is declining.
+     *
+     * @param timestamp
+     * @param bitmap
+     * @return A double representing how much the heart rate is declining.
+     */
     public static double algorithm(Long timestamp, Bitmap bitmap) {
         ArrayList<Bitmap> state = getPreviousState();
 

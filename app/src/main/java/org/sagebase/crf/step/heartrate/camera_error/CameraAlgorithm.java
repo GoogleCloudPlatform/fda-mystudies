@@ -18,21 +18,34 @@
 package org.sagebase.crf.step.heartrate.camera_error;
 
 import android.graphics.Bitmap;
-
-import org.sagebase.crf.step.active.HeartBeatSample;
 import org.sagebase.crf.step.heartrate.OutputStateAlgorithm;
-
 import java.util.ArrayList;
+
+/**
+ * Runs an algorithm to determine if the camera is covered.
+ */
 
 public class CameraAlgorithm implements OutputStateAlgorithm {
 
     private static int min_length = 10;
 
+    /**
+     * Gets the previous x number of heart beat samples
+     *
+     * @return A list of previous sample bitmaps
+     */
     public static ArrayList<Bitmap> getPreviousState() {
 
         return null;
     }
 
+    /**
+     * Runs the algorithm to determine if the camera is covered.
+     *
+     * @param timestamp
+     * @param bitmap
+     * @return A double representing how badly the camera is uncovered.
+     */
     public double algorithm(Long timestamp, Bitmap bitmap) {
         ArrayList<Bitmap> state = getPreviousState();
 
