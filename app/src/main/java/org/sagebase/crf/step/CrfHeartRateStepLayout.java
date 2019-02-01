@@ -353,7 +353,8 @@ public class CrfHeartRateStepLayout extends ActiveStepLayout implements
         currentHeartRate.setVisibility(VISIBLE);
         heartBeatAnimation.setBpm(bpmHolder.bpm);
         bpmList.add(bpmHolder);
-        resetView();
+        crfMessageTextView.setVisibility(INVISIBLE);
+        //resetView();
     }
 
     @Override
@@ -513,24 +514,24 @@ public class CrfHeartRateStepLayout extends ActiveStepLayout implements
     public void pressureUpdate(PressureHolder pressure) {
         if(pressure.isPressureExcessive) {
             LOG.error("Too much pressure on the camera");
-            showPressureStatus();
+            //showPressureStatus();
         }
         else {
             LOG.error("Pressure is alright");
-            resetView();
+            //resetView();
         }
     }
 
     @Override
     public void cameraUpdate(CameraCoveredHolder camera) {
         if(camera.isCameraCovered) {
-            resetView();
+            //resetView();
             LOG.error("Camera is covered");
 
         }
         else {
             LOG.error("Camera is not covered");
-            showHRStatus();
+            //showHRStatus();
         }
     }
 
@@ -539,10 +540,10 @@ public class CrfHeartRateStepLayout extends ActiveStepLayout implements
      */
     private void resetView() {
         TextView e = findViewById(R.id.crf_heart_rate_error);
-        e.setVisibility(GONE);
+        e.setVisibility(INVISIBLE);
 
         TextView p = findViewById(R.id.crf_pressure_error);
-        p.setVisibility(GONE);
+        p.setVisibility(INVISIBLE);
 
     }
 
@@ -559,7 +560,7 @@ public class CrfHeartRateStepLayout extends ActiveStepLayout implements
         FrameLayout c = findViewById(R.id.crf_arc_drawable_container);
         c.setVisibility(GONE);
 
-        cameraSourcePreview.setVisibility(GONE);
+        cameraSourcePreview.setVisibility(INVISIBLE);
 
         TextView e = findViewById(R.id.crf_heart_rate_error);
         e.setVisibility(VISIBLE);
@@ -578,7 +579,7 @@ public class CrfHeartRateStepLayout extends ActiveStepLayout implements
         FrameLayout c = findViewById(R.id.crf_arc_drawable_container);
         c.setVisibility(GONE);
 
-        cameraSourcePreview.setVisibility(GONE);
+        cameraSourcePreview.setVisibility(INVISIBLE);
 
         TextView p = findViewById(R.id.crf_pressure_error);
         p.setVisibility(VISIBLE);

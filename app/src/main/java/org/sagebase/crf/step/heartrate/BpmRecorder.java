@@ -45,6 +45,7 @@ import java.util.Locale;
 
 public interface BpmRecorder {
     boolean feedbackFeature = true;
+    public boolean shouldDecline = false;
 
     interface BpmUpdateListener {
         class BpmHolder {
@@ -322,7 +323,9 @@ public interface BpmRecorder {
                                             BpmRecorder.AbnormalHRListener.AbnormalHRHolder(false)));
 
                         }
-                        if (mDeclineListener != null) {
+                    }
+                    if (mDeclineListener != null) {
+                        if(!shouldDecline) {
                             if (sample.declineHR()) {
                                 mainHandler.post(() ->
                                         mDeclineListener.declineHRUpdate(new
@@ -333,17 +336,17 @@ public interface BpmRecorder {
                                                 DeclineHRListener.DeclineHRHolder(false)));
                             }
                         }
+                    }
 
-                        if (mPressureListener != null) {
-                            if (sample.isPressureExcessive() && !sample.declineHR()) {
+                    if (mPressureListener != null) {
+                        if (sample.isPressureExcessive() && !sample.declineHR()) {
                                 mainHandler.post(() ->
                                         mPressureListener.pressureUpdate(new
                                                 BpmRecorder.PressureListener.PressureHolder(true)));
-                            } else {
+                        } else {
                                 mainHandler.post(() ->
                                         mPressureListener.pressureUpdate(new
                                                 BpmRecorder.PressureListener.PressureHolder(false)));
-                            }
                         }
                     }
                 }

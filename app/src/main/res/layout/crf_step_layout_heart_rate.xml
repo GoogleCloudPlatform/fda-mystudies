@@ -154,8 +154,8 @@
             android:layout_height="wrap_content"
             android:text="@string/crf_camera_cover"
             android:textColor="@color/black37"
-            android:padding="@dimen/rsb_padding_large"
-            android:visibility="gone"/>
+            android:padding="@dimen/rsb_padding_medium"
+            android:visibility="invisible"/>
 
         <TextView
             style="@style/TextAppearance.Crf.ActiveStatusText"
