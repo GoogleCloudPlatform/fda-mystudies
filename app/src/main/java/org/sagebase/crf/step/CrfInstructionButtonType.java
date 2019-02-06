@@ -30,6 +30,10 @@ public enum  CrfInstructionButtonType {
     DEFAULT_WHITE_SALMON,
     @SerializedName("defaultWhiteDeepGreen")
     DEFAULT_WHITE_DEEP_GREEN,
+    @SerializedName("gray_sticky")
+    GRAY_STICKY,
+    @SerializedName("gray")
+    GRAY,
     @SerializedName("heart")
     HEART,
     @SerializedName("treadmill")
