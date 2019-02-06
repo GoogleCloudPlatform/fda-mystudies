@@ -16,6 +16,14 @@
   ~
   -->
 
-<selector xmlns:android="http://schemas.android.com/apk/res/android">
+<selector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="rectangle">
+    <solid
+        android:color="@color/gray">
+    </solid>
+
+    <corners
+        android:radius="@dimen/crf_rounded_button_radius">
+    </corners>
 
 </selector>
