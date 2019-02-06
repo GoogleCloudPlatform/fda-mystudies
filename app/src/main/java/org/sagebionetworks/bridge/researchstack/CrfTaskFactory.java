@@ -274,6 +274,9 @@ public class CrfTaskFactory extends TaskItemFactory {
         if (item.tintColorRes != null) {
             step.tintColorRes = item.tintColorRes;
         }
+        if (item.textColor != null) {
+            step.textColor = item.textColor;
+        }
         if (item.statusBarColorRes != null) {
             step.statusBarColorRes = item.statusBarColorRes;
         }
@@ -292,6 +295,7 @@ public class CrfTaskFactory extends TaskItemFactory {
         else {
             step.remindMeLater = false;
         }
+
     }
 
     private CrfStartTaskStep createCrfStartTaskStep(CrfStartTaskSurveyItem item) {
