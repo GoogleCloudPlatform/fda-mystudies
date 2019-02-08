@@ -10,8 +10,8 @@
       "detailText" : "Use your finger to cover the camera and flash on the back of your phone. Your finger nail should turn a little red once you cover the flash.",
       "image"      : "flash_on_hand_holding",
       "imageColor" : "magenta",
-      "buttonType" : "gray_sticky",
-      "buttonText" : "Measure heart rate",
+      "buttonType" : "gray",
+      "buttonText" : "",
       "hideProgress"  : "true",
       "textColor"  : "#000000"
     },

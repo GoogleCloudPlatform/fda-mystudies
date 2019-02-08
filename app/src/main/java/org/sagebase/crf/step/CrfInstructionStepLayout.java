@@ -161,11 +161,13 @@ public class CrfInstructionStepLayout extends InstructionStepLayout implements
                     nextButton.setTextColor(ResourcesCompat.getColor(getResources(), R.color.deepGreen, null));
                     break;
                 case GRAY_STICKY:
-                    nextButton.setBackgroundResource(R.drawable.crf_rounded_button_gray_sticky);
-                    nextButton.setTextColor(ResourcesCompat.getColor(getResources(), R.color.rsb_white, null));
+                    nextButton.setBackgroundResource(R.drawable.ic_crf_rounded_button_gray_sticky);
+                    //nextButton.setTextColor(ResourcesCompat.getColor(getResources(), R.color.rsb_white, null));
+                    break;
                 case GRAY:
-                    nextButton.setBackgroundResource(R.drawable.crf_rounded_button_gray);
-                    nextButton.setTextColor(ResourcesCompat.getColor(getResources(), R.color.rsb_white, null));
+                    nextButton.setBackgroundResource(R.drawable.ic_crf_rounded_button_gray);
+                    //nextButton.setTextColor(ResourcesCompat.getColor(getResources(), R.color.rsb_white, null));
+                    break;
                 case HEART:
                     nextButton.setVisibility(View.GONE);
                     customButton.setImageResource(R.drawable.crf_heart_capture_button);
