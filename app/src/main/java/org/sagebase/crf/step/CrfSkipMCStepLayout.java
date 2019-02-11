@@ -21,6 +21,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
+import android.support.v4.content.res.ResourcesCompat;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -85,6 +86,8 @@ public class CrfSkipMCStepLayout extends CrfFormStepLayout {
     protected void refreshCrfSubmitBar() {
         super.refreshCrfSubmitBar();
 
+        crfNextButton.setBackgroundResource(R.drawable.crf_rounded_button_gray);
+        crfNextButton.setTextColor(ResourcesCompat.getColor(getResources(), R.color.rsb_white, null));
         crfNextButton.setText("Done");
         //crfNextButton.setBackgroundColor(Color.parseColor("#3C4A63"));
         crfBackButton.setVisibility(GONE);

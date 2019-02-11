@@ -11,9 +11,14 @@
       "image"      : "flash_on_hand_holding",
       "imageColor" : "magenta",
       "buttonType" : "gray",
-      "buttonText" : "",
+      "buttonText" : "Take Measurement",
       "hideProgress"  : "true",
       "textColor"  : "#000000"
+    },
+    {
+      "identifier"       : "camera_test",
+      "type"             : "crf_heart_rate_camera_step",
+      "backgroundColor"  : "magenta"
     },
     {
       "identifier"       : "instructionCamera",
@@ -33,7 +38,8 @@
     },
     {
       "identifier"       : "camera",
-      "type"             : "crf_heart_rate_camera_step"
+      "type"             : "crf_heart_rate_camera_step",
+      "backgroundColor"  : "magenta"
     },
     {
       "identifier": "declining_hr",
@@ -42,7 +48,7 @@
       "title": "",
       "instruction" : "Gently cover both the camera and flash with your finger",
       "detailText" : "You can try to sit and relax for a little bit longer or we can remind you to take this measurement later",
-      "buttonType" : "defaultWhiteSalmon",
+      "buttonType" : "gray",
       "buttonText"       : "Continue Measurement",
       "remindMeLater"   : "true",
       "hideProgress"    : "true"

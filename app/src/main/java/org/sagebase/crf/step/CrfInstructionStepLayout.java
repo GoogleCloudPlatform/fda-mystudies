@@ -166,7 +166,7 @@ public class CrfInstructionStepLayout extends InstructionStepLayout implements
                     break;
                 case GRAY:
                     nextButton.setBackgroundResource(R.drawable.crf_rounded_button_gray);
-                    //nextButton.setTextColor(ResourcesCompat.getColor(getResources(), R.color.rsb_white, null));
+                    nextButton.setTextColor(ResourcesCompat.getColor(getResources(), R.color.rsb_white, null));
                     break;
                 case HEART:
                     nextButton.setVisibility(View.GONE);

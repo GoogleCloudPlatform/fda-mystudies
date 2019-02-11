@@ -36,6 +36,8 @@ public class CrfSkipMCStep extends CrfFormStep implements NavigableOrderedTask.N
      */
     public boolean remindMeLater = true;
 
+    public String buttonType = "GRAY";
+
     /* Default constructor needed for serialization/deserialization of object */
     public CrfSkipMCStep() {
         super();
