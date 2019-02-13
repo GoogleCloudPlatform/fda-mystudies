@@ -76,6 +76,6 @@ public class HeartBeatSample {
 
     // Algorithm to be implemented
     public boolean declineHR() {
-        return false;
+        return true;
     }
 }
