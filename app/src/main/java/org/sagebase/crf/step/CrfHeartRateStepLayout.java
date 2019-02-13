@@ -539,11 +539,11 @@ public class CrfHeartRateStepLayout extends ActiveStepLayout implements
      * Method to reset the view after displaying instruction messages
      */
     private void resetView() {
-        TextView e = findViewById(R.id.crf_heart_rate_error);
-        e.setVisibility(INVISIBLE);
+        //TextView e = findViewById(R.id.crf_heart_rate_error);
+        //e.setVisibility(INVISIBLE);
 
-        TextView p = findViewById(R.id.crf_pressure_error);
-        p.setVisibility(INVISIBLE);
+        //TextView p = findViewById(R.id.crf_pressure_error);
+        //p.setVisibility(INVISIBLE);
 
     }
 
@@ -562,8 +562,8 @@ public class CrfHeartRateStepLayout extends ActiveStepLayout implements
 
         cameraSourcePreview.setVisibility(INVISIBLE);
 
-        TextView e = findViewById(R.id.crf_heart_rate_error);
-        e.setVisibility(VISIBLE);
+        //TextView e = findViewById(R.id.crf_heart_rate_error);
+        //e.setVisibility(VISIBLE);
     }
 
     /**
@@ -581,8 +581,8 @@ public class CrfHeartRateStepLayout extends ActiveStepLayout implements
 
         cameraSourcePreview.setVisibility(INVISIBLE);
 
-        TextView p = findViewById(R.id.crf_pressure_error);
-        p.setVisibility(VISIBLE);
+        //TextView p = findViewById(R.id.crf_pressure_error);
+        //p.setVisibility(VISIBLE);
 
     }
 
