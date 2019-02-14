@@ -53,6 +53,7 @@ import org.researchstack.backbone.ui.step.layout.ActiveStepLayout;
 import org.researchstack.backbone.ui.views.ArcDrawable;
 import org.researchstack.backbone.utils.LogExt;
 import org.researchstack.backbone.utils.StepResultHelper;
+import org.sagebase.crf.R;
 import org.sagebase.crf.camera.CameraSourcePreview;
 import org.sagebase.crf.step.active.BpmRecorder;
 import org.sagebase.crf.step.active.HeartRateCamera2Recorder;
@@ -60,7 +61,6 @@ import org.sagebase.crf.step.active.HeartRateCameraRecorder;
 import org.sagebase.crf.step.active.HeartRateCameraRecorderConfig;
 import org.sagebase.crf.view.CrfTaskStatusBarManipulator;
 import org.sagebase.crf.view.CrfTaskToolbarTintManipulator;
-import org.sagebionetworks.research.crf.R;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -85,6 +85,8 @@ public class CrfHeartRateStepLayout extends ActiveStepLayout implements
     private static final String AVERAGE_BPM_IDENTIFIER = "AVERAGE_BPM_IDENTIFIER";
     private static final String BPM_START_IDENTIFIER_SUFFIX = ".heartRate_start";
     private static final String BPM_END_IDENTIFIER_SUFFIX = ".heartRate_end";
+
+    public static final String COMPLETION_BPM_VALUE_RESULT = "completion_bpm_result";
 
     private CameraSourcePreview cameraSourcePreview;
     private TextureView cameraPreview;
@@ -438,7 +440,7 @@ public class CrfHeartRateStepLayout extends ActiveStepLayout implements
     private void setBpmDifferenceResult(int bpm) {
         // See if we have a previous BPM, in which case we should calculate the difference
         if (previousBpm >= 0) {
-            String bpmStepId = CrfCompletionStepLayout.COMPLETION_BPM_VALUE_RESULT;
+            String bpmStepId = COMPLETION_BPM_VALUE_RESULT;
             StepResult<String> bpmResult = new StepResult<>(new Step(bpmStepId));
             int bpmDifference = Math.abs(bpm - previousBpm);
             bpmResult.setResult(String.valueOf(bpmDifference));

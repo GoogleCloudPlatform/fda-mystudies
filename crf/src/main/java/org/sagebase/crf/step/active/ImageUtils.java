@@ -20,6 +20,7 @@ package org.sagebase.crf.step.active;
 import android.graphics.Bitmap;
 import android.media.Image;
 import android.support.v8.renderscript.Allocation;
+import android.support.v8.renderscript.Element;
 import android.support.v8.renderscript.RenderScript;
 import android.support.v8.renderscript.Script;
 import android.support.v8.renderscript.ScriptIntrinsicYuvToRGB;
@@ -42,13 +43,13 @@ import static android.support.v8.renderscript.Element.U8_4;
 public class ImageUtils {
 
     public static Bitmap toBitmap(RenderScript rs, Frame frame, int width, int heigth) {
-        ScriptIntrinsicYuvToRGB yuvToRgbIntrinsic = ScriptIntrinsicYuvToRGB.create(rs, U8_4(rs));
-        Type.Builder yuvType = new Type.Builder(rs,                U8(rs))
+        ScriptIntrinsicYuvToRGB yuvToRgbIntrinsic = ScriptIntrinsicYuvToRGB.create(rs, Element.U8_4(rs));
+        Type.Builder yuvType = new Type.Builder(rs,                Element.U8(rs))
                 .setX(frame.getGrayscaleImageData().array().length);
         Allocation in = Allocation.createTyped(rs, yuvType.create(),
                 android.renderscript.Allocation.USAGE_SCRIPT);
 
-        Type.Builder rgbaType = new Type.Builder(rs, RGBA_8888(rs)).setX(width).setY(heigth);
+        Type.Builder rgbaType = new Type.Builder(rs, Element.RGBA_8888(rs)).setX(width).setY(heigth);
         Allocation out = Allocation.createTyped(rs, rgbaType.create(), Allocation.USAGE_SCRIPT);
 
         in.copyFrom(frame.getGrayscaleImageData().array());
@@ -91,13 +92,13 @@ public class ImageUtils {
 
         // Y,U,V are defined as global allocations, the out-Allocation is the Bitmap.
         // Note also that uAlloc and vAlloc are 1-dimensional while yAlloc is 2-dimensional.
-        Type.Builder typeUcharY = new Type.Builder(rs, U8(rs));
+        Type.Builder typeUcharY = new Type.Builder(rs, Element.U8(rs));
         typeUcharY.setX(yRowStride).setY(height);
         Allocation yAlloc = Allocation.createTyped(rs, typeUcharY.create());
         yAlloc.copyFrom(y);
         mYuv420.set_ypsIn(yAlloc);
 
-        Type.Builder typeUcharUV = new Type.Builder(rs, U8(rs));
+        Type.Builder typeUcharUV = new Type.Builder(rs, Element.U8(rs));
         // note that the size of the u's and v's are as follows:
         //      (  (width/2)*PixelStride + padding  ) * (height/2)
         // =    (RowStride                          ) * (height/2)

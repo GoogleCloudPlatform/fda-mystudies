@@ -1,6 +1,5 @@
 package org.sagebase.crf.step.active
 
-import android.support.annotation.WorkerThread
 import org.sagebase.crf.matlab.*
 
 //  Copyright © 2018 Sage Bionetworks. All rights reserved.

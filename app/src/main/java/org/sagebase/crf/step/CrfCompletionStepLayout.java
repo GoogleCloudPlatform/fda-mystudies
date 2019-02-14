@@ -34,7 +34,6 @@ import org.sagebionetworks.research.crf.R;
 
 public class CrfCompletionStepLayout extends CrfInstructionStepLayout implements CrfResultListener {
 
-    public static final String COMPLETION_BPM_VALUE_RESULT = "completion_bpm_result";
     public static final String COMPLETION_DISTANCE_VALUE_RESULT = "completion_distance_result";
 
     private View mCompletionTextContainer;

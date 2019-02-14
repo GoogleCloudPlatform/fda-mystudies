@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="Crf.Salmon.RoundedCornerMaterialButton" parent="Widget.AppCompat.Button.Colored">
+        <item name="android:background">@drawable/crf_rounded_button_salmon</item>
+        <item name="android:textColor">@color/white</item>
+    </style>
+</resources>

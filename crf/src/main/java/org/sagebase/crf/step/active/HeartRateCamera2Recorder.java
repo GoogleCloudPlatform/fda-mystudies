@@ -247,7 +247,7 @@ public class HeartRateCamera2Recorder extends Recorder {
     public HeartBeatSample toHeartBeatSample(ImageReader imageReader) {
         Image image = imageReader.acquireNextImage();
         Bitmap bitmap =
-                toBitmap(renderScript, image, mVideoSize.getWidth(),
+                ImageUtils.toBitmap(renderScript, image, mVideoSize.getWidth(),
                         mVideoSize.getHeight());
 
         double timestamp = image.getTimestamp() * 1e-09;

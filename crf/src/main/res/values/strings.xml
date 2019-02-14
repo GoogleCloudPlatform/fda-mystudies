@@ -1,0 +1,12 @@
+<resources>
+    <string name="app_name">Cardio Respiratory Fitness</string>
+
+    <!-- Heartrate Task -->
+    <string name="crf_bpm">BPM</string>
+    <string name="crf_camera_cover">Gently cover both the camera and flash with your finger.</string>
+    <string name="crf_your_heart_rate_is">Your heart rate is</string>
+    <string name="crf_redo_measurement"><u>Redo Measurement</u></string>
+    <string name="crf_finish_measurement">Finish Measurement</string>
+    <string name="crf_hand_to_researcher">Please hand the phone to the researcher</string>
+
+</resources>

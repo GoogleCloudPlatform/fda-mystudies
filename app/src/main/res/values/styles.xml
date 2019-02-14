@@ -85,10 +85,6 @@
         <item name="android:textStyle">bold</item>
         <item name="android:fontFamily">@font/opensans</item>
     </style>
-    <style name="TextAppearance.Crf.SubHeader">
-        <item name="android:textSize">22sp</item>
-        <item name="android:fontFamily">@font/opensans_semibold</item>
-    </style>
     <style name="TextAppearance.Crf.Body.Italic">
         <item name="android:textStyle">italic</item>
     </style>
@@ -117,20 +113,9 @@
         <item name="android:textStyle">bold</item>
         <item name="android:fontFamily">@font/opensans</item>
     </style>
-    <style name="TextAppearance.Crf.IntroBody">
-        <item name="android:textSize">17sp</item>
-        <item name="android:fontFamily">@font/opensans</item>
-    </style>
 
     <!-- Heart Rate Screen -->
-    <style name="TextAppearance.Crf.BpmNumber">
-        <item name="android:textSize">130sp</item>
-        <item name="android:fontFamily">@font/opensans</item>
-    </style>
-    <style name="TextAppearance.Crf.ActiveStatusNumber">
-        <item name="android:textSize">82sp</item>
-        <item name="android:fontFamily">@font/opensans</item>
-    </style>
+
     <style name="TextAppearance.Crf.ActiveStatusText">
         <item name="android:textSize">24sp</item>
         <item name="android:fontFamily">@font/opensans_semibold</item>

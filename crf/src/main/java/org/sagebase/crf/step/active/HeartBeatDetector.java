@@ -81,7 +81,7 @@ public class HeartBeatDetector extends Detector<HeartBeatSample> {
         int w = cameraSource.getPreviewSize().getWidth();
         int h = cameraSource.getPreviewSize().getHeight();
 
-        Bitmap bitmap = toBitmap(rs, frame, w, h);
+        Bitmap bitmap = ImageUtils.toBitmap(rs, frame, w, h);
 
         // Takes about 10 ms on Samsung Galaxy S6
         //Log.d("Timing", "rgb " + (System.currentTimeMillis() - startTime));

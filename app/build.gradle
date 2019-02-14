@@ -77,6 +77,7 @@ dependencies {
     annotationProcessor "com.google.dagger:dagger-compiler:2.15"
 
     implementation project(':researchstack-sdk')
+    implementation project(':crf')
 
     // Important - the CameraSource implementation in this project requires version 8.1 or higher.
     implementation 'com.google.android.gms:play-services-vision:15.0.0'
