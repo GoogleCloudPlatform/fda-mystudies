@@ -54,7 +54,7 @@ import java.util.List;
 
 public class CrfInstructionStepLayout extends InstructionStepLayout implements
         CrfTaskToolbarTintManipulator, CrfTaskStatusBarManipulator, CrfTaskToolbarProgressManipulator,
-        CrfActiveTaskActivity.CrfTaskMediaVolumeController{
+        CrfActiveTaskActivity.CrfTaskMediaVolumeController {
 
     protected CrfInstructionStep crfInstructionStep;
     protected Button nextButton;

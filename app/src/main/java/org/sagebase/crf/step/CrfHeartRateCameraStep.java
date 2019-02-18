@@ -19,9 +19,11 @@ package org.sagebase.crf.step;
 
 import com.google.common.collect.ImmutableMap;
 
+import org.researchstack.backbone.result.TaskResult;
 import org.researchstack.backbone.step.active.ActiveStep;
 import org.researchstack.backbone.step.active.recorder.DeviceMotionRecorderConfig;
 import org.researchstack.backbone.step.active.recorder.RecorderConfig;
+import org.researchstack.backbone.task.NavigableOrderedTask;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,12 +33,16 @@ import java.util.Map;
  * Created by TheMDP on 10/31/17.
  */
 
-public class CrfHeartRateCameraStep extends ActiveStep {
+public class CrfHeartRateCameraStep extends ActiveStep implements NavigableOrderedTask.NavigationSkipRule{
 
     public static final String MOTION_RECORDER_ID = "motion";
     public static final int SENSOR_FREQ = 100;
 
     public static final int STEP_DURATION = 60; // 1 minute
+
+    public boolean firstTime;
+    public String stepIdentifier;
+
 
     static final Map<String, String> SPOKEN_TEXT_MAP =
             ImmutableMap.<String, String>builder()
@@ -68,4 +74,13 @@ public class CrfHeartRateCameraStep extends ActiveStep {
     public Class getStepLayoutClass() {
         return CrfHeartRateStepLayout.class;
     }
+
+    @Override
+    public boolean shouldSkipStep(TaskResult result, List<TaskResult> additionalTaskResults) {
+        if(this.stepIdentifier.equals("camera_test")) {
+            return !firstTime;
+        }
+        return false;
+    }
+
 }

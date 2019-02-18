@@ -92,6 +92,7 @@ public class CrfTaskFactory extends TaskItemFactory {
     public static final String RESULT_ID_SETTINGS_SCREEN_CONTACT_INFO   = "Contact Info";
     public static final String RESULT_ID_SETTINGS_SCREEN_DATA_GROUPS    = "Data Groups";
 
+    public boolean firstTime = false;
 
     private Gson gson;
 
@@ -312,6 +313,10 @@ public class CrfTaskFactory extends TaskItemFactory {
         if(item.instruction != null) {
             step.instruction = item.instruction;
         }
+        if(item.identifier != null) {
+            step.stepIdentifier = item.identifier;
+        }
+        step.firstTime = firstTime;
         return step;
     }
 
@@ -338,6 +343,10 @@ public class CrfTaskFactory extends TaskItemFactory {
     private CrfHeartRateCameraStep createHeartRateCameraStep(ActiveStepSurveyItem item) {
         CrfHeartRateCameraStep step = new CrfHeartRateCameraStep(item.identifier, item.title, item.text);
         fillCrfActiveStep(step, item);
+        step.firstTime = firstTime;
+        if(item.identifier != null) {
+            step.stepIdentifier = item.identifier;
+        }
         return step;
     }
 

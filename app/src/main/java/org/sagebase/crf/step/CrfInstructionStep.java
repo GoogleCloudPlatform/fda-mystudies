@@ -19,14 +19,18 @@ package org.sagebase.crf.step;
 
 import com.google.gson.annotations.SerializedName;
 
+import org.researchstack.backbone.result.TaskResult;
 import org.researchstack.backbone.step.InstructionStep;
+import org.researchstack.backbone.task.NavigableOrderedTask;
 import org.sagebase.crf.view.CrfTaskStatusBarManipulator;
+
+import java.util.List;
 
 /**
  * Created by TheMDP on 10/24/17.
  */
 
-public class CrfInstructionStep extends InstructionStep {
+public class CrfInstructionStep extends InstructionStep{
 
     /**
      * The type of button to show
@@ -79,6 +83,7 @@ public class CrfInstructionStep extends InstructionStep {
      */
     public boolean remindMeLater;
 
+
     /* Default constructor needed for serialization/deserialization of object */
     public CrfInstructionStep() {
         super();
@@ -92,4 +97,5 @@ public class CrfInstructionStep extends InstructionStep {
     public Class getStepLayoutClass() {
         return CrfInstructionStepLayout.class;
     }
+
 }

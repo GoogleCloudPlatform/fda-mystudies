@@ -33,6 +33,10 @@ public class CrfSkipInstructionStep extends CrfInstructionStep
      */
     public String skipIdentifier;
 
+    public String stepIdentifier;
+
+    public boolean firstTime;
+
     /**
      * The type of button to show
      */
@@ -55,27 +59,36 @@ public class CrfSkipInstructionStep extends CrfInstructionStep
     @Override
     public boolean shouldSkipStep(@Nullable TaskResult result,
                                   @Nullable List<TaskResult> additionalTaskResults) {
-        System.out.println("Got to the shouldSkipStep method");
-        if ((StepResult<Boolean>) result.getStepResult("camera").getResultForIdentifier(skipIdentifier) == null) {
-            return true;
-        }
 
-        StepResult<Boolean> res = (StepResult<Boolean>)
-                result.getStepResult("camera").getResultForIdentifier(skipIdentifier);
+        if(stepIdentifier.equals("declining_hr") || stepIdentifier.equals("abnormal_hr")) {
+            if ((StepResult<Boolean>) result.getStepResult("camera").getResultForIdentifier(skipIdentifier) == null) {
+                return true;
+            }
 
-        // If you are not skipping this step, the next step needs to continue measurement
-        if(!res.getResult()) {
-            continueMeasurement = true;
+            StepResult<Boolean> res = (StepResult<Boolean>)
+                    result.getStepResult("camera").getResultForIdentifier(skipIdentifier);
+
+            // If you are not skipping this step, the next step needs to continue measurement
+            if (!res.getResult()) {
+                continueMeasurement = true;
+            }
+            return res.getResult();
         }
-        return res.getResult();
+        return !firstTime;
     }
 
     @Override
     public String nextStepIdentifier(TaskResult result, List<TaskResult> additionalTaskResults) {
-        if(continueMeasurement) {
-            return "instructionCamera";
+        if(stepIdentifier.equals("declining_hr")) {
+            if (continueMeasurement) {
+                return "instructionCamera";
+            }
+            return "abnormal_hrForm";
         }
-        return "abnormal_hrForm";
+        else if(stepIdentifier.equals("instruction_test")){
+            return "camera_test";
+        }
+        return "abnormal_hr";
     }
 
     @Override
