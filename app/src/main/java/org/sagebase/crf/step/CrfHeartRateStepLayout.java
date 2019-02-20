@@ -61,6 +61,7 @@ import org.sagebase.crf.step.active.HeartRateCamera2Recorder;
 import org.sagebase.crf.step.active.HeartRateCameraRecorder;
 import org.sagebase.crf.step.active.HeartRateCameraRecorderConfig;
 import org.sagebase.crf.view.CrfTaskStatusBarManipulator;
+import org.sagebase.crf.view.CrfTaskToolbarProgressManipulator;
 import org.sagebase.crf.view.CrfTaskToolbarTintManipulator;
 import org.sagebionetworks.research.crf.R;
 import org.slf4j.Logger;
@@ -85,6 +86,7 @@ public class CrfHeartRateStepLayout extends ActiveStepLayout implements
         RecorderListener,
         CrfTaskToolbarTintManipulator,
         CrfTaskStatusBarManipulator,
+        CrfTaskToolbarProgressManipulator,
         CrfResultListener {
     private static final Logger LOG = LoggerFactory.getLogger(CrfHeartRateStepLayout.class);
 
@@ -98,6 +100,7 @@ public class CrfHeartRateStepLayout extends ActiveStepLayout implements
         return cameraPreview;
     }
     protected TextView crfMessageTextView;
+    protected CrfHeartRateCameraStep crfHeartRateCameraStep;
 
     protected View heartRateTextContainer;
     protected TextView heartRateNumber;
@@ -158,6 +161,7 @@ public class CrfHeartRateStepLayout extends ActiveStepLayout implements
     @Override
     public void initialize(Step step, StepResult result) {
         super.initialize(step, result);
+        this.crfHeartRateCameraStep = (CrfHeartRateCameraStep) step;
     }
 
     @Override
@@ -626,6 +630,11 @@ public class CrfHeartRateStepLayout extends ActiveStepLayout implements
             stepResult.setResultForIdentifier("skipDeclineStep",
                     decliningHRResult);
         }
+    }
+
+    @Override
+    public boolean crfToolbarShowProgress() {
+        return !crfHeartRateCameraStep.getIdentifier().contains("test");
     }
 
     private class HeartBeatAnimation extends AlphaAnimation {

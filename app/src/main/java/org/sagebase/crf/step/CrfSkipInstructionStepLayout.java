@@ -74,5 +74,10 @@ public class CrfSkipInstructionStepLayout extends CrfInstructionStepLayout {
 
     }
 
+    @Override
+    public boolean crfToolbarShowProgress() {
+        return false;
+    }
+
 
 }

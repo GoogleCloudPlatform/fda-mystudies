@@ -187,11 +187,16 @@ public class CrfActiveTaskActivity extends ActiveTaskActivity {
         // Set the step progress
         if (task instanceof OrderedTask) {
             OrderedTask orderedTask = (OrderedTask)task;
-            int progress = orderedTask.getSteps().indexOf(currentStep);
+
+            
+            int progress = orderedTask.getSteps().indexOf(currentStep) - 2;
+
             List<Step> steps = orderedTask.getSteps();
             int max = 0;
             for(Step s: steps) {
-                if(s.getClass().equals(CrfSkipMCStep.class) || s.getClass().equals(CrfSkipInstructionStep.class)) {
+                //if(s.getClass().equals(CrfSkipMCStep.class) || s.getClass().equals(CrfSkipInstructionStep.class))
+                if(s.getIdentifier().contains("feedback") || s.getIdentifier().contains("test"))
+                {
                     max += 0;
                 }
                 else {
