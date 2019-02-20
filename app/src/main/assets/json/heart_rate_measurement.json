@@ -42,7 +42,7 @@
       "backgroundColor"  : "magenta"
     },
     {
-      "identifier": "declining_hr",
+      "identifier": "declining_feedback",
       "skipIdentifier": "skipDeclineStep",
       "type": "crf_skip_instruction",
       "title": "",
@@ -54,7 +54,7 @@
       "hideProgress"    : "true"
     },
     {
-      "identifier": "abnormal_hr",
+      "identifier": "abnormal_feedback",
       "skipIdentifier" : "skipAbnormalStep",
       "type": "crf_skip_mc",
       "title": "We noticed that 2 or more measurements are out of your normal range. Is there anything below that might be influencing this?",

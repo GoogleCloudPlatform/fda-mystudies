@@ -60,7 +60,7 @@ public class CrfSkipInstructionStep extends CrfInstructionStep
     public boolean shouldSkipStep(@Nullable TaskResult result,
                                   @Nullable List<TaskResult> additionalTaskResults) {
 
-        if(stepIdentifier.equals("declining_hr") || stepIdentifier.equals("abnormal_hr")) {
+        if(stepIdentifier.equals("declining_feedback") || stepIdentifier.equals("abnormal_feedbackForm")) {
             if ((StepResult<Boolean>) result.getStepResult("camera").getResultForIdentifier(skipIdentifier) == null) {
                 return true;
             }
@@ -79,16 +79,16 @@ public class CrfSkipInstructionStep extends CrfInstructionStep
 
     @Override
     public String nextStepIdentifier(TaskResult result, List<TaskResult> additionalTaskResults) {
-        if(stepIdentifier.equals("declining_hr")) {
+        if(stepIdentifier.equals("declining_feedback")) {
             if (continueMeasurement) {
                 return "instructionCamera";
             }
-            return "abnormal_hrForm";
+            return "abnormal_feedbackForm";
         }
         else if(stepIdentifier.equals("instruction_test")){
             return "camera_test";
         }
-        return "abnormal_hr";
+        return "abnormal_feedbackForm";
     }
 
     @Override
