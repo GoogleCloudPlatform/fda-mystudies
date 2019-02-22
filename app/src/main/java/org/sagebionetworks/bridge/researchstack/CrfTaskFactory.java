@@ -66,6 +66,7 @@ import org.sagebase.crf.step.CrfStartTaskSurveyItem;
 import org.sagebase.crf.step.HrParticipantIdStep;
 import org.sagebase.crf.step.body.CrfChoiceAnswerFormat;
 import org.sagebase.crf.step.body.CrfIntegerAnswerFormat;
+import org.sagebase.crf.step.heartrate.BpmRecorder;
 
 import java.util.Collections;
 import java.util.LinkedHashMap;
@@ -92,7 +93,14 @@ public class CrfTaskFactory extends TaskItemFactory {
     public static final String RESULT_ID_SETTINGS_SCREEN_CONTACT_INFO   = "Contact Info";
     public static final String RESULT_ID_SETTINGS_SCREEN_DATA_GROUPS    = "Data Groups";
 
-    public boolean firstTime = false;
+    public static boolean feedbackFeature = false;
+    public static boolean firstTime = true;
+
+
+    public boolean isFeedbackFeature() {
+        return feedbackFeature;
+    }
+
 
     private Gson gson;
 
@@ -316,6 +324,9 @@ public class CrfTaskFactory extends TaskItemFactory {
         if(item.identifier != null) {
             step.stepIdentifier = item.identifier;
         }
+        if(!isFeedbackFeature()) {
+            firstTime = false;
+        }
         step.firstTime = firstTime;
         return step;
     }
@@ -343,6 +354,9 @@ public class CrfTaskFactory extends TaskItemFactory {
     private CrfHeartRateCameraStep createHeartRateCameraStep(ActiveStepSurveyItem item) {
         CrfHeartRateCameraStep step = new CrfHeartRateCameraStep(item.identifier, item.title, item.text);
         fillCrfActiveStep(step, item);
+        if(!isFeedbackFeature()) {
+            firstTime = false;
+        }
         step.firstTime = firstTime;
         if(item.identifier != null) {
             step.stepIdentifier = item.identifier;

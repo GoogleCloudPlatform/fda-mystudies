@@ -32,6 +32,7 @@ import org.sagebase.crf.step.active.HeartBeatSample;
 import org.sagebase.crf.step.active.HeartRateBPM;
 import org.sagebase.crf.step.active.HeartRateSampleProcessor;
 import org.sagebase.crf.step.active.HeartbeatSampleTracker;
+import org.sagebionetworks.bridge.researchstack.CrfTaskFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -44,8 +45,10 @@ import java.util.Locale;
  */
 
 public interface BpmRecorder {
-    boolean feedbackFeature = true;
-    public boolean shouldDecline = false;
+
+
+    boolean shouldDecline = false;
+
 
     interface BpmUpdateListener {
         class BpmHolder {
@@ -306,7 +309,7 @@ public interface BpmRecorder {
                 /**
                  * If the feedback feature is turned on, run all the algorithms
                  */
-                if(feedbackFeature) {
+                if(CrfTaskFactory.feedbackFeature) {
                     if (mCameraListener != null) {
                         mainHandler.post(() ->
                                 mCameraListener.cameraUpdate(new
@@ -357,7 +360,7 @@ public interface BpmRecorder {
                 /**
                  * The camera is covered
                  */
-                if(feedbackFeature) {
+                if(CrfTaskFactory.feedbackFeature) {
                     if (mCameraListener != null) {
                         mainHandler.post(() ->
                                 mCameraListener.cameraUpdate(new
