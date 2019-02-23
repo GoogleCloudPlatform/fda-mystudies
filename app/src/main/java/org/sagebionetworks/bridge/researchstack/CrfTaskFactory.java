@@ -94,7 +94,6 @@ public class CrfTaskFactory extends TaskItemFactory {
     public static final String RESULT_ID_SETTINGS_SCREEN_DATA_GROUPS    = "Data Groups";
 
     public static boolean feedbackFeature = false;
-    public static boolean firstTime = true;
 
 
     public boolean isFeedbackFeature() {
@@ -324,18 +323,21 @@ public class CrfTaskFactory extends TaskItemFactory {
         if(item.identifier != null) {
             step.stepIdentifier = item.identifier;
         }
-        if(!isFeedbackFeature()) {
-            firstTime = false;
-        }
-        step.firstTime = firstTime;
+
         return step;
     }
 
     private void fillCrfSkipStep(CrfSkipInstructionStep step, CrfSkipInstructionStepSurveyItem item) {
         fillCrfInstructionStep(step, item);
 
-        if(item.skipIdentifier != null) {
+        if (item.skipIdentifier != null) {
             step.skipIdentifier = item.skipIdentifier;
+        }
+        if (item.previousStepIdentifier != null) {
+            step.previousStepIdentifier = item.previousStepIdentifier;
+        }
+        if (item.nextStepIdentifier != null) {
+            step.nextStepIdentifier = item.nextStepIdentifier;
         }
 
     }
@@ -354,10 +356,6 @@ public class CrfTaskFactory extends TaskItemFactory {
     private CrfHeartRateCameraStep createHeartRateCameraStep(ActiveStepSurveyItem item) {
         CrfHeartRateCameraStep step = new CrfHeartRateCameraStep(item.identifier, item.title, item.text);
         fillCrfActiveStep(step, item);
-        if(!isFeedbackFeature()) {
-            firstTime = false;
-        }
-        step.firstTime = firstTime;
         if(item.identifier != null) {
             step.stepIdentifier = item.identifier;
         }
@@ -484,9 +482,16 @@ public class CrfTaskFactory extends TaskItemFactory {
             throw new IllegalStateException("compound surveys must have step items to proceed");
         }
         List<QuestionStep> questionSteps = super.formStepCreateQuestionSteps(context, item);
+
         CrfSkipMCStep step = new CrfSkipMCStep(item.identifier, item.title, item.text, questionSteps);
         fillNavigationFormStep(step, item);
-        step.skipIdentifier = item.skipIdentifier;
+
+        if(item.skipIdentifier != null) {
+            step.skipIdentifier = item.skipIdentifier;
+        }
+        if(item.previousStepIdentifier != null) {
+            step.previousStepIdentifier = item.previousStepIdentifier;
+        }
         step.hideProgress = true;
 
         return step;

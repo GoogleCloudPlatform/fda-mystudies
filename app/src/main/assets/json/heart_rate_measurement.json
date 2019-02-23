@@ -4,23 +4,6 @@
   "optional" : false,
   "taskSteps" : [
     {
-      "identifier" : "instruction_test",
-      "type"       : "crf_skip_instruction",
-      "text"       : "Find your camera and flash.",
-      "detailText" : "Use your finger to cover the camera and flash on the back of your phone. Your finger nail should turn a little red once you cover the flash.",
-      "image"      : "flash_on_hand_holding",
-      "imageColor" : "magenta",
-      "buttonType" : "gray",
-      "buttonText" : "Take Measurement",
-      "hideProgress"  : "true",
-      "textColor"  : "#000000"
-    },
-    {
-      "identifier"       : "camera_test",
-      "type"             : "crf_heart_rate_camera_step",
-      "backgroundColor"  : "magenta"
-    },
-    {
       "identifier"       : "instructionCamera",
       "type"             : "crf_instruction",
       "title"            : " ",
@@ -44,6 +27,8 @@
     {
       "identifier": "declining_feedback",
       "skipIdentifier": "skipDeclineStep",
+      "previousStepIdentifier": "camera",
+      "nextStepIdentifier": "abnormal_feedback",
       "type": "crf_skip_instruction",
       "title": "",
       "instruction" : "Gently cover both the camera and flash with your finger",
@@ -56,11 +41,11 @@
     {
       "identifier": "abnormal_feedback",
       "skipIdentifier" : "skipAbnormalStep",
+      "previousStepIdentifier": "camera",
       "type": "crf_skip_mc",
       "title": "We noticed that 2 or more measurements are out of your normal range. Is there anything below that might be influencing this?",
       "detailText": "Why are we asking this?",
       "text": "(select all that apply)",
-      "hideProgress" : "true",
       "items": [
         {
           "text": "I don't know",

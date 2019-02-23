@@ -89,7 +89,6 @@ public class CrfSkipMCStepLayout extends CrfFormStepLayout {
         crfNextButton.setBackgroundResource(R.drawable.crf_rounded_button_gray);
         crfNextButton.setTextColor(ResourcesCompat.getColor(getResources(), R.color.rsb_white, null));
         crfNextButton.setText("Done");
-        //crfNextButton.setBackgroundColor(Color.parseColor("#3C4A63"));
         crfBackButton.setVisibility(GONE);
 
         crf_title.setTextColor(Color.rgb(255, 255, 255));

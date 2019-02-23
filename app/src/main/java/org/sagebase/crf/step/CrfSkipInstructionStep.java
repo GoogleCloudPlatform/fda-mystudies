@@ -33,24 +33,41 @@ public class CrfSkipInstructionStep extends CrfInstructionStep
      */
     public String skipIdentifier;
 
+    /**
+     * Current step identifier
+     */
     public String stepIdentifier;
 
-    public boolean firstTime;
+    /**
+     * Previous step identifier
+     */
+    public String previousStepIdentifier;
+
+    /**
+     * Next step identifier
+     */
+    public String nextStepIdentifier;
 
     /**
      * The type of button to show
      */
     public CrfInstructionButtonType buttonType;
 
-
+    /**
+     * The text displayed on the button
+     */
     public String buttonText;
+
+    /**
+     * Instruction displayed to user
+     */
     public String instruction;
+
+    /**
+     * Boolean value indicating what the next step should be
+     */
     boolean continueMeasurement = false;
 
-    /* Default constructor needed for serialization/deserialization of object */
-    public CrfSkipInstructionStep() {
-        super();
-    }
 
     public CrfSkipInstructionStep(String identifier, String title) {
         super(identifier, title, null);
@@ -60,35 +77,24 @@ public class CrfSkipInstructionStep extends CrfInstructionStep
     public boolean shouldSkipStep(@Nullable TaskResult result,
                                   @Nullable List<TaskResult> additionalTaskResults) {
 
-        if(stepIdentifier.equals("declining_feedback") || stepIdentifier.equals("abnormal_feedbackForm")) {
-            if ((StepResult<Boolean>) result.getStepResult("camera").getResultForIdentifier(skipIdentifier) == null) {
-                return true;
-            }
 
-            StepResult<Boolean> res = (StepResult<Boolean>)
-                    result.getStepResult("camera").getResultForIdentifier(skipIdentifier);
+        StepResult<Boolean> res = (StepResult<Boolean>)
+                result.getStepResult(previousStepIdentifier).getResultForIdentifier(skipIdentifier);
 
-            // If you are not skipping this step, the next step needs to continue measurement
-            if (!res.getResult()) {
-                continueMeasurement = true;
-            }
-            return res.getResult();
+        // If you are not skipping this step, the next step needs to continue measurement
+        if (!res.getResult()) {
+            continueMeasurement = true;
         }
-        return !firstTime;
+        return res.getResult();
+
     }
 
     @Override
     public String nextStepIdentifier(TaskResult result, List<TaskResult> additionalTaskResults) {
-        if(stepIdentifier.equals("declining_feedback")) {
-            if (continueMeasurement) {
-                return "instructionCamera";
-            }
-            return "abnormal_feedbackForm";
+        if (continueMeasurement) {
+            return previousStepIdentifier;
         }
-        else if(stepIdentifier.equals("instruction_test")){
-            return "camera_test";
-        }
-        return "abnormal_feedbackForm";
+        return nextStepIdentifier;
     }
 
     @Override

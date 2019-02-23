@@ -36,12 +36,13 @@ public class CrfSkipMCStep extends CrfFormStep implements NavigableOrderedTask.N
      */
     public boolean remindMeLater = true;
 
-    public String buttonType = "GRAY";
 
-    /* Default constructor needed for serialization/deserialization of object */
-    public CrfSkipMCStep() {
-        super();
-    }
+    /**
+     * Identifier of the previous step
+     */
+    public String previousStepIdentifier;
+
+
 
     public CrfSkipMCStep(String identifier, String title, String detailText) {
         super(identifier, title, detailText);
@@ -55,12 +56,9 @@ public class CrfSkipMCStep extends CrfFormStep implements NavigableOrderedTask.N
 
     @Override
     public boolean shouldSkipStep(TaskResult result, List<TaskResult> additionalTaskResults) {
-        if ((StepResult<Boolean>) result.getStepResult("camera").getResultForIdentifier(skipIdentifier) == null) {
-            return true;
-        }
 
         StepResult<Boolean> res = (StepResult<Boolean>)
-                result.getStepResult("camera").getResultForIdentifier(skipIdentifier);
+                result.getStepResult(previousStepIdentifier).getResultForIdentifier(skipIdentifier);
 
         return res.getResult();
     }
