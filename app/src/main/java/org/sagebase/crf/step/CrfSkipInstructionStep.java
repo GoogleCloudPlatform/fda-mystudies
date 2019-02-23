@@ -77,7 +77,9 @@ public class CrfSkipInstructionStep extends CrfInstructionStep
     public boolean shouldSkipStep(@Nullable TaskResult result,
                                   @Nullable List<TaskResult> additionalTaskResults) {
 
-
+        if((StepResult<Boolean>) result.getStepResult(previousStepIdentifier).getResultForIdentifier(skipIdentifier) == null) {
+            return true;
+        }
         StepResult<Boolean> res = (StepResult<Boolean>)
                 result.getStepResult(previousStepIdentifier).getResultForIdentifier(skipIdentifier);
 
