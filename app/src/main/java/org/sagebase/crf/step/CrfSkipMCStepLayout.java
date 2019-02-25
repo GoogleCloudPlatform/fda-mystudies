@@ -22,28 +22,37 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.support.v4.content.res.ResourcesCompat;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
 import org.researchstack.backbone.factory.IntentFactory;
 import org.researchstack.backbone.result.StepResult;
+import org.researchstack.backbone.result.TaskResult;
 import org.researchstack.backbone.step.FormStep;
 import org.researchstack.backbone.step.Step;
 import org.researchstack.backbone.task.Task;
+import org.researchstack.backbone.ui.ViewTaskActivity;
 import org.researchstack.backbone.ui.step.layout.SurveyStepLayout;
+import org.sagebase.crf.CrfActivityResultListener;
 import org.sagebase.crf.CrfSurveyTaskActivity;
 import org.sagebase.crf.reminder.CrfReminderManager;
 import org.sagebionetworks.bridge.researchstack.CrfResourceManager;
 import org.sagebionetworks.bridge.researchstack.CrfTaskFactory;
 import org.sagebionetworks.research.crf.R;
 
-public class CrfSkipMCStepLayout extends CrfFormStepLayout {
+import java.util.Date;
+
+import static android.app.Activity.RESULT_OK;
+
+public class CrfSkipMCStepLayout extends CrfFormStepLayout implements CrfActivityResultListener {
 
     protected CrfSkipMCStep step;
     protected TextView crf_title;
     protected TextView crf_text;
     protected Button remindMeLaterButton;
+    private static final String LOG_TAG = CrfSkipMCStepLayout.class.getCanonicalName();
 
     public CrfSkipMCStepLayout(Context context) {
         super(context);
@@ -117,5 +126,24 @@ public class CrfSkipMCStepLayout extends CrfFormStepLayout {
         activity.startActivityForResult(intent, CrfReminderManager.DAILY_REMINDER_REQUEST_CODE);
 
         onComplete();
+    }
+
+    @Override
+    public void onActivityFinished(int requestCode, int resultCode, Intent data) {
+        // From CrfStartTaskStepLayout
+        if (requestCode == CrfReminderManager.DAILY_REMINDER_REQUEST_CODE && resultCode == RESULT_OK) {
+            TaskResult taskResult = (TaskResult) data.getSerializableExtra(ViewTaskActivity.EXTRA_TASK_RESULT);
+            if (taskResult == null || taskResult.getResults().values().isEmpty()) {
+                Log.e(LOG_TAG, "Reminder time result empty");
+                return;
+            }
+            StepResult reminderTimeResult = taskResult.getStepResult(CrfResourceManager.REMIND_ME_LATER_RESOURCE);
+            if (!(reminderTimeResult.getResult() instanceof Long)) {
+                Log.e(LOG_TAG, "Reminder time result must be a Long time");
+                return;
+            }
+            Date reminderTime = new Date((Long)reminderTimeResult.getResult());
+            CrfReminderManager.setReminderTimeHourAndMinute(getContext(), reminderTime);
+        }
     }
 }

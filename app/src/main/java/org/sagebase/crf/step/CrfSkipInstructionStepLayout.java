@@ -18,17 +18,29 @@
 package org.sagebase.crf.step;
 
 import android.content.Context;
+import android.content.Intent;
+import android.util.Log;
 import android.widget.TextView;
 
 import org.researchstack.backbone.result.StepResult;
+import org.researchstack.backbone.result.TaskResult;
 import org.researchstack.backbone.step.Step;
+import org.researchstack.backbone.ui.ViewTaskActivity;
+import org.sagebase.crf.CrfActivityResultListener;
+import org.sagebase.crf.reminder.CrfReminderManager;
+import org.sagebionetworks.bridge.researchstack.CrfResourceManager;
 import org.sagebionetworks.research.crf.R;
 
-public class CrfSkipInstructionStepLayout extends CrfInstructionStepLayout {
+import java.util.Date;
+
+import static android.app.Activity.RESULT_OK;
+
+public class CrfSkipInstructionStepLayout extends CrfInstructionStepLayout implements CrfActivityResultListener {
 
     protected CrfSkipInstructionStep crfSkipInstructionStep;
     protected TextView instructionViewTop;
     protected TextView instructionViewBottom;
+    private static final String LOG_TAG = CrfSkipInstructionStepLayout.class.getCanonicalName();
 
 
     public CrfSkipInstructionStepLayout(Context context) {
@@ -80,4 +92,22 @@ public class CrfSkipInstructionStepLayout extends CrfInstructionStepLayout {
     }
 
 
+    @Override
+    public void onActivityFinished(int requestCode, int resultCode, Intent data) {
+        // From CrfStartTaskStepLayout
+        if (requestCode == CrfReminderManager.DAILY_REMINDER_REQUEST_CODE && resultCode == RESULT_OK) {
+            TaskResult taskResult = (TaskResult) data.getSerializableExtra(ViewTaskActivity.EXTRA_TASK_RESULT);
+            if (taskResult == null || taskResult.getResults().values().isEmpty()) {
+                Log.e(LOG_TAG, "Reminder time result empty");
+                return;
+            }
+            StepResult reminderTimeResult = taskResult.getStepResult(CrfResourceManager.REMIND_ME_LATER_RESOURCE);
+            if (!(reminderTimeResult.getResult() instanceof Long)) {
+                Log.e(LOG_TAG, "Reminder time result must be a Long time");
+                return;
+            }
+            Date reminderTime = new Date((Long)reminderTimeResult.getResult());
+            CrfReminderManager.setReminderTimeHourAndMinute(getContext(), reminderTime);
+        }
+    }
 }
