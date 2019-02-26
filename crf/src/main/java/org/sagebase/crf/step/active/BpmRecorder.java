@@ -33,7 +33,6 @@ import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.Locale;
 
 /**
@@ -41,22 +40,28 @@ import java.util.Locale;
  */
 
 public interface BpmRecorder {
-    
+
+    public static boolean feedbackFeature = false;
+
+
+    boolean shouldDecline = false;
+
+
     interface BpmUpdateListener {
         class BpmHolder {
             public final int bpm;
             public final long timestamp;
-            
+
             public BpmHolder(int bpm, long timestamp) {
                 this.bpm = bpm;
                 this.timestamp = timestamp;
             }
         }
-        
+
         @UiThread
         void bpmUpdate(BpmHolder bpm);
     }
-    
+
     interface IntelligentStartUpdateListener {
         /**
          * @param progress value from 0.0 to 1.0 communicating the progress to being ready
@@ -64,13 +69,77 @@ public interface BpmRecorder {
          */
         void intelligentStartUpdate(float progress, boolean ready);
     }
-    
+
+    /**
+     * Encompasses the pressure algorithm and communicates results to UI
+     */
+    interface PressureListener {
+        class PressureHolder {
+            public final boolean isPressureExcessive;
+
+            public PressureHolder(boolean isPressureExcessive) {
+                this.isPressureExcessive = isPressureExcessive;
+            }
+
+        }
+        @UiThread
+        void pressureUpdate(PressureHolder pressure);
+    }
+
+    /**
+     * Encompasses the camera covered algorithm and communicates results to UI
+     */
+    interface CameraCoveredListener {
+        class CameraCoveredHolder {
+            public final boolean isCameraCovered;
+
+            public CameraCoveredHolder(boolean isCameraCovered) {
+                this.isCameraCovered = isCameraCovered;
+            }
+        }
+        @UiThread
+        void cameraUpdate(CameraCoveredHolder camera);
+
+    }
+
+    /**
+     * Encompasses the abnormal heart rate algorithm and communicates results to UI
+     */
+    interface AbnormalHRListener {
+        class AbnormalHRHolder {
+            public final boolean isAbnormal;
+
+            public AbnormalHRHolder(boolean isAbnormal) {
+                this.isAbnormal = isAbnormal;
+            }
+        }
+
+        @UiThread
+        void abnormalHRUpdate(AbnormalHRHolder abnormal);
+    }
+
+    /**
+     * Encompasses the declining heart rate algorithm and communicates results to UI
+     */
+    interface DeclineHRListener {
+        class DeclineHRHolder {
+            public final boolean isDeclining;
+
+            public DeclineHRHolder(boolean isDeclining) {
+                this.isDeclining = isDeclining;
+            }
+        }
+
+        @UiThread
+        void declineHRUpdate(DeclineHRHolder decline);
+    }
+
     class BpmCalculator {
-        
+
         private static final Logger LOG = LoggerFactory.getLogger(BpmCalculator.class);
 
         private final HeartRateSampleProcessor sampleProcessor = new HeartRateSampleProcessor();
-        
+
         /**
          * Calculates a simple running average bpm to display to the user for their heart rate. Updates the sample
          * with the calculated bpm, if there is one.
@@ -90,13 +159,13 @@ public interface BpmRecorder {
             heartBeatSample.confidence = ret.getConfidence();
         }
     }
-    
+
     class HeartBeatJsonWriter extends JsonArrayDataRecorder
             implements HeartbeatSampleTracker
             .HeartRateUpdateListener {
-        
+
         private static final Logger LOG = LoggerFactory.getLogger(HeartBeatJsonWriter.class);
-        
+
         private static final float RED_INTENSITY_FACTOR_THRESHOLD = 2;
         private static final String TIMESTAMP_DATE_KEY = "timestampDate";
         private static final String TIMESTAMP_IN_SECONDS_KEY = "timestamp";
@@ -107,8 +176,8 @@ public interface BpmRecorder {
         private static final String BLUE_KEY = "blue";
         private static final String RED_LEVEL_KEY = "redLevel";
 
-        private static final int INTELLIGENT_START_FRAMES_TO_PASS = 30;
-        
+        private static final int INTELLIGENT_START_FRAMES_TO_PASS = 60;
+
         private final JsonObject mJsonObject = new JsonObject();
 
         private double timestampZeroReference = -1;
@@ -123,28 +192,39 @@ public interface BpmRecorder {
         private boolean mIntelligentStartPassed = false;
         private int mIntelligentStartCounter = 0;
         private boolean isRecordingStarted = false;
-        
+
         private final BpmRecorder.BpmUpdateListener mBpmUpdateListener;
         private final BpmRecorder.IntelligentStartUpdateListener mIntelligentStartListener;
-        
+        private final BpmRecorder.PressureListener mPressureListener;
+        private final BpmRecorder.CameraCoveredListener mCameraListener;
+        private final BpmRecorder.AbnormalHRListener mAbnormalListener;
+        private final BpmRecorder.DeclineHRListener mDeclineListener;
+
         private final Handler mainHandler = new Handler(Looper.getMainLooper());
-        
+
         private final BpmCalculator bpmCalculator;
-        
+
         public HeartBeatJsonWriter(BpmUpdateListener
                                            mBpmUpdateListener, IntelligentStartUpdateListener
                                            mIntelligentStartListener,
-                                   String identifier, Step step, File outputDirectory) {
+                                   CameraCoveredListener mCameraListener,
+                                   PressureListener mPressureListener, AbnormalHRListener mAbnormalListener,
+                                   DeclineHRListener mDeclineListener, String identifier,
+                                   Step step, File outputDirectory) {
             super(identifier, step, outputDirectory);
-            
+
             this.mBpmUpdateListener = mBpmUpdateListener;
             this.mIntelligentStartListener = mIntelligentStartListener;
+            this.mPressureListener = mPressureListener;
+            this.mCameraListener = mCameraListener;
             this.bpmCalculator = new BpmCalculator();
+            this.mAbnormalListener = mAbnormalListener;
+            this.mDeclineListener = mDeclineListener;
         }
 
         private int sampleCount = 0;
         private double timestampReference = -1;
-        
+
         @AnyThread
         @Override
         public void onHeartRateSampleDetected(HeartBeatSample sample) {
@@ -201,12 +281,12 @@ public interface BpmRecorder {
                 updateIntelligentStart(sample);
             }
         }
-        
+
         private void updateIntelligentStart(HeartBeatSample sample) {
             if (mIntelligentStartPassed) {
                 return; // we already computed that we could start
             }
-            
+            LOG.error("Update intelligent start called");
             // If the red factor is large enough, we update the trigger
             if (sample.isCoveringLens()) {
                 mIntelligentStartCounter++;
@@ -216,18 +296,77 @@ public interface BpmRecorder {
                 if (mIntelligentStartListener != null) {
                     float progress = (float) mIntelligentStartCounter / (float)
                             INTELLIGENT_START_FRAMES_TO_PASS;
-    
+
                     mainHandler.post(() ->
                             mIntelligentStartListener.intelligentStartUpdate(progress,
                                     mIntelligentStartPassed)
                     );
+
                 }
-                
+                /**
+                 * If the feedback feature is turned on, run all the algorithms
+                 */
+                if(feedbackFeature) {
+                    if (mCameraListener != null) {
+                        mainHandler.post(() ->
+                                mCameraListener.cameraUpdate(new
+                                        BpmRecorder.CameraCoveredListener.CameraCoveredHolder(true)));
+                    }
+                    if (mAbnormalListener != null) {
+                        if (sample.abnormalHR()) {
+                            mainHandler.post(() ->
+                                    mAbnormalListener.abnormalHRUpdate(new
+                                            BpmRecorder.AbnormalHRListener.AbnormalHRHolder(true)));
+                        } else {
+                            mainHandler.post(() ->
+                                    mAbnormalListener.abnormalHRUpdate(new
+                                            BpmRecorder.AbnormalHRListener.AbnormalHRHolder(false)));
+
+                        }
+                    }
+                    if (mDeclineListener != null) {
+                        if(!shouldDecline) {
+                            if (sample.declineHR()) {
+                                mainHandler.post(() ->
+                                        mDeclineListener.declineHRUpdate(new
+                                                DeclineHRListener.DeclineHRHolder(true)));
+                            } else {
+                                mainHandler.post(() ->
+                                        mDeclineListener.declineHRUpdate(new
+                                                DeclineHRListener.DeclineHRHolder(false)));
+                            }
+                        }
+                    }
+
+                    if (mPressureListener != null) {
+                        if (sample.isPressureExcessive() && !sample.declineHR()) {
+                            mainHandler.post(() ->
+                                    mPressureListener.pressureUpdate(new
+                                            BpmRecorder.PressureListener.PressureHolder(true)));
+                        } else {
+                            mainHandler.post(() ->
+                                    mPressureListener.pressureUpdate(new
+                                            BpmRecorder.PressureListener.PressureHolder(false)));
+                        }
+                    }
+                }
+
             } else {  // We need thresholds to be passed sequentially otherwise it is restarted
                 mIntelligentStartCounter = 0;
+
+                /**
+                 * The camera is covered
+                 */
+                if(feedbackFeature) {
+                    if (mCameraListener != null) {
+                        mainHandler.post(() ->
+                                mCameraListener.cameraUpdate(new
+                                        BpmRecorder.CameraCoveredListener.CameraCoveredHolder(false)));
+                    }
+                }
             }
         }
-        
+
         @Override
         public void start(Context context) {
             startJsonDataLogging();
@@ -235,7 +374,7 @@ public interface BpmRecorder {
             mIntelligentStartPassed = false;
             mIntelligentStartCounter = 0;
         }
-        
+
         @Override
         public void stop() {
             if (isRecordingStarted) {
@@ -243,6 +382,6 @@ public interface BpmRecorder {
                 stopJsonDataLogging();
             }
         }
-        
+
     }
 }

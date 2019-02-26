@@ -75,7 +75,8 @@
         <org.sagebase.crf.camera.CameraSourcePreview
             android:id="@+id/crf_camera_source"
             android:layout_width="300dp"
-            android:layout_height="300dp" />
+            android:layout_height="300dp"
+            android:layout_gravity="center"/>
 
         <!-- This View's width and height must be set dynamically based on the camera preview size -->
         <FrameLayout
@@ -136,6 +137,7 @@
 
             </LinearLayout>
 
+
         </LinearLayout>
 
         <ImageView
@@ -167,7 +169,7 @@
         android:clipChildren="false">
 
         <Button
-            style="@style/Crf.Salmon.RoundedCornerMaterialButton"
+            style="@style/Widget.Crf.SubmitBar"
             android:id="@+id/crf_next_button"
             android:layout_width="match_parent"
             android:layout_height="@dimen/crf_rounded_button_height"

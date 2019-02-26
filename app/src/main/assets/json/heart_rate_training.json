@@ -1,0 +1,24 @@
+{
+  "taskIdentifier" : "HeartRate Training",
+  "schemaIdentifier" : "HeartRate Training",
+  "optional" : false,
+  "taskSteps" : [
+    {
+      "identifier" : "instruction_test",
+      "type"       : "crf_skip_instruction",
+      "text"       : "Find your camera and flash.",
+      "detailText" : "Use your finger to cover the camera and flash on the back of your phone. Your finger nail should turn a little red once you cover the flash.",
+      "image"      : "flash_on_hand_holding",
+      "imageColor" : "magenta",
+      "buttonType" : "gray",
+      "buttonText" : "Take Measurement",
+      "hideProgress"  : "true",
+      "textColor"  : "#000000"
+    },
+    {
+      "identifier"       : "camera_test",
+      "type"             : "crf_heart_rate_camera_step",
+      "backgroundColor"  : "magenta"
+    }
+  ]
+}

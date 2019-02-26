@@ -17,7 +17,10 @@
 
 package org.sagebase.crf.step;
 
+import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
+import android.graphics.Color;
 import android.support.v4.content.res.ResourcesCompat;
 import android.util.AttributeSet;
 import android.view.View;
@@ -25,15 +28,25 @@ import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
+import org.researchstack.backbone.factory.IntentFactory;
 import org.researchstack.backbone.result.StepResult;
+import org.researchstack.backbone.result.TaskResult;
 import org.researchstack.backbone.step.Step;
+import org.researchstack.backbone.task.NavigableOrderedTask;
+import org.researchstack.backbone.task.Task;
 import org.researchstack.backbone.ui.step.layout.InstructionStepLayout;
 import org.researchstack.backbone.utils.ResUtils;
 import org.sagebase.crf.CrfActiveTaskActivity;
+import org.sagebase.crf.CrfSurveyTaskActivity;
+import org.sagebase.crf.reminder.CrfReminderManager;
 import org.sagebase.crf.view.CrfTaskStatusBarManipulator;
 import org.sagebase.crf.view.CrfTaskToolbarProgressManipulator;
 import org.sagebase.crf.view.CrfTaskToolbarTintManipulator;
+import org.sagebionetworks.bridge.researchstack.CrfResourceManager;
+import org.sagebionetworks.bridge.researchstack.CrfTaskFactory;
 import org.sagebionetworks.research.crf.R;
+
+import java.util.List;
 
 /**
  * Created by TheMDP on 10/24/17.
@@ -48,6 +61,7 @@ public class CrfInstructionStepLayout extends InstructionStepLayout implements
     protected View rootInstructionLayout;
     protected ImageButton customButton;
     protected TextView customButtonText;
+    protected Button remindMeLaterButton;
 
     public CrfInstructionStepLayout(Context context) {
         super(context);
@@ -106,6 +120,7 @@ public class CrfInstructionStepLayout extends InstructionStepLayout implements
         rootInstructionLayout = findViewById(R.id.crf_root_instruction_layout);
         customButton = findViewById(R.id.cr_instruction_custom_button);
         customButtonText = findViewById(R.id.crf_instruction_custom_button_text);
+        remindMeLaterButton = findViewById(R.id.remind_me_later);
     }
 
     @Override
@@ -116,6 +131,19 @@ public class CrfInstructionStepLayout extends InstructionStepLayout implements
             nextButton.setText(crfInstructionStep.buttonText);
             if (customButtonText != null) {
                 customButtonText.setText(crfInstructionStep.buttonText);
+            }
+        }
+        if (remindMeLaterButton != null) {
+            if (crfInstructionStep.remindMeLater) {
+                remindMeLaterButton.setVisibility(View.VISIBLE);
+                remindMeLaterButton.setOnClickListener(new OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        remindMeLater();
+                    }
+                });
+            } else {
+                remindMeLaterButton.setVisibility(View.GONE);
             }
         }
         if (crfInstructionStep.buttonType != null) {
@@ -131,6 +159,14 @@ public class CrfInstructionStepLayout extends InstructionStepLayout implements
                 case DEFAULT_WHITE_DEEP_GREEN:
                     nextButton.setBackgroundResource(R.drawable.crf_rounded_button_white);
                     nextButton.setTextColor(ResourcesCompat.getColor(getResources(), R.color.deepGreen, null));
+                    break;
+                case GRAY_STICKY:
+                    nextButton.setBackgroundResource(R.drawable.crf_rounded_button_gray_sticky);
+                    //nextButton.setTextColor(ResourcesCompat.getColor(getResources(), R.color.rsb_white, null));
+                    break;
+                case GRAY:
+                    nextButton.setBackgroundResource(R.drawable.crf_rounded_button_gray);
+                    nextButton.setTextColor(ResourcesCompat.getColor(getResources(), R.color.rsb_white, null));
                     break;
                 case HEART:
                     nextButton.setVisibility(View.GONE);
@@ -210,4 +246,22 @@ public class CrfInstructionStepLayout extends InstructionStepLayout implements
     public boolean controlMediaVolume() {
         return crfInstructionStep.mediaVolume;
     }
+
+    public void remindMeLater() {
+        Task task = (new CrfTaskFactory()).createTask(getContext(), CrfResourceManager.REMIND_ME_LATER_RESOURCE);
+        Intent intent = IntentFactory.INSTANCE.newTaskIntent(getContext(), CrfSurveyTaskActivity.class, task);
+        if (!(callbacks instanceof Activity)) {
+            throw new IllegalStateException("Callbacks class must be an activity " +
+                    "so we can start another activity from this step layout");
+        }
+        Activity activity = (Activity)callbacks;
+        activity.startActivityForResult(intent, CrfReminderManager.DAILY_REMINDER_REQUEST_CODE);
+        if(((CrfSkipInstructionStep)step).continueMeasurement) {
+            ((CrfSkipInstructionStep) step).continueMeasurement = false;
+        }
+        ((CrfSkipInstructionStep)step).continueMeasurement = false;
+
+        onComplete();
+    }
+
 }

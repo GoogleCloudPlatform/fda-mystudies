@@ -31,6 +31,7 @@ import org.researchstack.backbone.step.active.recorder.RecorderListener;
 import org.sagebase.crf.camera.CameraSource;
 import org.sagebase.crf.camera.CameraSourcePreview;
 import org.sagebase.crf.step.CrfHeartRateStepLayout;
+import org.sagebase.crf.step.active.BpmRecorder;
 
 import java.io.File;
 import java.io.IOException;
@@ -47,11 +48,14 @@ public class HeartRateCameraRecorder extends Recorder  {
 
     private final BpmRecorder.HeartBeatJsonWriter heartBeatJsonWriter;
 
-    public HeartRateCameraRecorder(String identifier, Step step, File outputDirectory, CrfHeartRateStepLayout stepLayout, CameraSourcePreview cameraSourcePreview) {
+    public HeartRateCameraRecorder(String identifier, Step step,
+                                   File outputDirectory, CrfHeartRateStepLayout stepLayout,
+                                   CameraSourcePreview cameraSourcePreview) {
         super(identifier, step, outputDirectory);
         mCameraSourcePreview = cameraSourcePreview;
 
         heartBeatJsonWriter = new BpmRecorder.HeartBeatJsonWriter(stepLayout, stepLayout,
+                stepLayout, stepLayout,stepLayout, stepLayout,
                 identifier, step,
                 outputDirectory );
     }

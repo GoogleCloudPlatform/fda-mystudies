@@ -57,6 +57,10 @@ import org.researchstack.backbone.step.Step;
 import org.researchstack.backbone.step.active.recorder.Recorder;
 import org.researchstack.backbone.step.active.recorder.RecorderListener;
 import org.sagebase.crf.step.CrfHeartRateStepLayout;
+import org.sagebase.crf.step.active.BpmRecorder;
+import org.sagebase.crf.step.heartrate.camera_error.CameraState;
+import org.sagebase.crf.step.heartrate.confidence_error.ConfidenceState;
+import org.sagebase.crf.step.heartrate.pressure_error.PressureState;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -67,7 +71,6 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -136,7 +139,9 @@ public class HeartRateCamera2Recorder extends Recorder {
     
         mediaRecorderFile = new File(getOutputDirectory(), uniqueFilename + ".mp4");
         subscriptions = new CompositeSubscription();
+
         heartBeatJsonWriter = new BpmRecorder.HeartBeatJsonWriter(stepLayout, stepLayout,
+                stepLayout, stepLayout, stepLayout, stepLayout,
                 identifier + "Json", step,
                 outputDirectory );
         heartBeatJsonWriter.setRecorderListener(stepLayout);
@@ -252,6 +257,18 @@ public class HeartRateCamera2Recorder extends Recorder {
 
         double timestamp = image.getTimestamp() * 1e-09;
         HeartBeatSample sample = heartBeatUtil.getHeartBeatSample(timestamp, bitmap);
+
+
+        if (CameraState.containsIssue(image.getTimestamp(), bitmap)) {
+            System.out.println("Handle the camera error");
+        }
+        if (ConfidenceState.containsIssue(image.getTimestamp(), bitmap)) {
+            System.out.println("Low confidence");
+            if (PressureState.containsIssue(image.getTimestamp(), bitmap)) {
+                System.out.println("Pressure issue");
+            }
+        }
+
         image.close();
         return sample;
     }
@@ -452,7 +469,6 @@ public class HeartRateCamera2Recorder extends Recorder {
     
     void doRepeatingRequest(@NonNull CameraCaptureSession session, @NonNull List<Surface> surfaces) {
         try {
-
             CameraCharacteristics cameraCharacteristics = manager.getCameraCharacteristics(session.getDevice().getId());
 
             for (CameraCharacteristics.Key key : cameraCharacteristics.getKeys()) {
@@ -529,7 +545,7 @@ public class HeartRateCamera2Recorder extends Recorder {
                 // TODO: syoung 10/30/2018 FIXME!! Not supported camera (I think).
                 LOG.warn("WARNING! Camera Settings: Available Control AE Antibanding Modes {}", availableAntibandingModes);
             }
-    
+
             // let's not do any AWB for now. seems complex and interacts with AE
             // Has to be off or the COLOR_CORRECTION_TRANSFORM will be ignored
             requestBuilder.set(CaptureRequest.CONTROL_AWB_MODE, CaptureRequest.CONTROL_AWB_MODE_OFF);
@@ -674,6 +690,7 @@ public class HeartRateCamera2Recorder extends Recorder {
             MediaRecorder mediaRecorder = new MediaRecorder();
 
             mediaRecorder.setVideoSource(MediaRecorder.VideoSource.SURFACE);
+
             mediaRecorder.setOutputFormat(MediaRecorder.OutputFormat.MPEG_4);
             mediaRecorder.setOutputFile(file.getAbsolutePath());
             mediaRecorder.setVideoEncodingBitRate(VIDEO_ENCODING_BIT_RATE);

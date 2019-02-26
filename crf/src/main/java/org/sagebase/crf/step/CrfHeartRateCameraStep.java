@@ -19,9 +19,11 @@ package org.sagebase.crf.step;
 
 import com.google.common.collect.ImmutableMap;
 
+import org.researchstack.backbone.result.TaskResult;
 import org.researchstack.backbone.step.active.ActiveStep;
 import org.researchstack.backbone.step.active.recorder.DeviceMotionRecorderConfig;
 import org.researchstack.backbone.step.active.recorder.RecorderConfig;
+import org.researchstack.backbone.task.NavigableOrderedTask;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -38,6 +40,9 @@ public class CrfHeartRateCameraStep extends ActiveStep {
 
     public static final int STEP_DURATION = 60; // 1 minute
 
+    public String stepIdentifier;
+
+
     static final Map<String, String> SPOKEN_TEXT_MAP =
             ImmutableMap.<String, String>builder()
                     .put(  "0", "Please keep still")
@@ -46,14 +51,11 @@ public class CrfHeartRateCameraStep extends ActiveStep {
                     .put("end", "You are all done!")
                     .build();
 
-    public CrfHeartRateCameraStep(String identifier) {
-        super(identifier);
-        commonInit();
-    }
 
     public CrfHeartRateCameraStep(String identifier, String title, String detailText) {
         super(identifier, title, detailText);
         commonInit();
+
     }
 
     public void commonInit() {
@@ -71,4 +73,5 @@ public class CrfHeartRateCameraStep extends ActiveStep {
     public Class getStepLayoutClass() {
         return CrfHeartRateStepLayout.class;
     }
+
 }
