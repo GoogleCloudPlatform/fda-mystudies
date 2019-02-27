@@ -21,7 +21,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/crf_root_instruction_layout"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@color/magenta">
 
     <TextView
         style="@style/TextAppearance.Crf.SubHeader"

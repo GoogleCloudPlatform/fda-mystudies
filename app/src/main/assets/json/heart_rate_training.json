@@ -48,8 +48,7 @@
     },
     {
       "identifier"       : "camera",
-      "type"             : "crf_heart_rate_camera_step",
-      "backgroundColor"  : "magenta"
+      "type"             : "crf_heart_rate_camera_step"
     }
   ]
 }
