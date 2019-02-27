@@ -21,6 +21,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.content.res.ResourcesCompat;
 import android.util.Log;
 import android.view.View;
@@ -87,7 +88,7 @@ public class CrfSkipMCStepLayout extends CrfFormStepLayout implements CrfActivit
     protected void initStepLayout(FormStep step)
     {
         super.initStepLayout(step);
-        container.setBackgroundColor(Color.parseColor("#C94281"));
+        container.setBackgroundColor(getResources().getColor(R.color.magenta));
 
     }
 
@@ -144,6 +145,7 @@ public class CrfSkipMCStepLayout extends CrfFormStepLayout implements CrfActivit
             }
             Date reminderTime = new Date((Long)reminderTimeResult.getResult());
             CrfReminderManager.setReminderTimeHourAndMinute(getContext(), reminderTime);
+
         }
     }
 }

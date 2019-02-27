@@ -17,18 +17,24 @@
 
 package org.sagebase.crf.step;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
+import android.view.View;
 import android.widget.TextView;
 
+import org.researchstack.backbone.factory.IntentFactory;
 import org.researchstack.backbone.result.StepResult;
 import org.researchstack.backbone.result.TaskResult;
 import org.researchstack.backbone.step.Step;
+import org.researchstack.backbone.task.Task;
 import org.researchstack.backbone.ui.ViewTaskActivity;
 import org.sagebase.crf.CrfActivityResultListener;
+import org.sagebase.crf.CrfSurveyTaskActivity;
 import org.sagebase.crf.reminder.CrfReminderManager;
 import org.sagebionetworks.bridge.researchstack.CrfResourceManager;
+import org.sagebionetworks.bridge.researchstack.CrfTaskFactory;
 import org.sagebionetworks.research.crf.R;
 
 import java.util.Date;
@@ -84,6 +90,20 @@ public class CrfSkipInstructionStepLayout extends CrfInstructionStepLayout imple
             instructionViewBottom.setVisibility(VISIBLE);
         }
 
+        if (remindMeLaterButton != null) {
+            if (crfInstructionStep.remindMeLater) {
+                remindMeLaterButton.setVisibility(View.VISIBLE);
+                remindMeLaterButton.setOnClickListener(new OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        remindMeLater();
+                    }
+                });
+            } else {
+                remindMeLaterButton.setVisibility(View.GONE);
+            }
+        }
+
     }
 
     @Override
@@ -108,6 +128,24 @@ public class CrfSkipInstructionStepLayout extends CrfInstructionStepLayout imple
             }
             Date reminderTime = new Date((Long)reminderTimeResult.getResult());
             CrfReminderManager.setReminderTimeHourAndMinute(getContext(), reminderTime);
+
+            onComplete();
         }
+    }
+
+    public void remindMeLater() {
+        Task task = (new CrfTaskFactory()).createTask(getContext(), CrfResourceManager.REMIND_ME_LATER_RESOURCE);
+        Intent intent = IntentFactory.INSTANCE.newTaskIntent(getContext(), CrfSurveyTaskActivity.class, task);
+        if (!(callbacks instanceof Activity)) {
+            throw new IllegalStateException("Callbacks class must be an activity " +
+                    "so we can start another activity from this step layout");
+        }
+        Activity activity = (Activity)callbacks;
+        activity.startActivityForResult(intent, CrfReminderManager.DAILY_REMINDER_REQUEST_CODE);
+        if(((CrfSkipInstructionStep)step).continueMeasurement) {
+            ((CrfSkipInstructionStep) step).continueMeasurement = false;
+        }
+        ((CrfSkipInstructionStep)step).continueMeasurement = false;
+
     }
 }

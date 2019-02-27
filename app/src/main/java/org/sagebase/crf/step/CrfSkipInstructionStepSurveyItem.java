@@ -46,4 +46,9 @@ public class CrfSkipInstructionStepSurveyItem extends CrfInstructionSurveyItem {
     @SerializedName("nextStepIdentifier")
     public String nextStepIdentifier;
 
+    /**
+     * Identifier for the camera step
+     */
+    @SerializedName("cameraStepIdentifier")
+    public String cameraStepIdentifier;
 }

@@ -27,8 +27,9 @@
     {
       "identifier": "declining_feedback",
       "skipIdentifier": "skipDeclineStep",
-      "previousStepIdentifier": "camera",
-      "nextStepIdentifier": "abnormal_feedback",
+      "previousStepIdentifier": "instructionCamera",
+      "cameraStepIdentifier": "camera",
+      "nextStepIdentifier": "abnormal_feedbackForm",
       "type": "crf_skip_instruction",
       "title": "",
       "instruction" : "Gently cover both the camera and flash with your finger",
@@ -41,7 +42,8 @@
     {
       "identifier": "abnormal_feedback",
       "skipIdentifier" : "skipAbnormalStep",
-      "previousStepIdentifier": "camera",
+      "previousStepIdentifier": "instructionCamera",
+      "cameraStepIdentifier": "camera",
       "type": "crf_skip_mc",
       "title": "We noticed that 2 or more measurements are out of your normal range. Is there anything below that might be influencing this?",
       "detailText": "Why are we asking this?",

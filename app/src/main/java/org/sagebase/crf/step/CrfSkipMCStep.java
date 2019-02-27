@@ -32,6 +32,11 @@ public class CrfSkipMCStep extends CrfFormStep implements NavigableOrderedTask.N
     public String skipIdentifier;
 
     /**
+     * Camera measurement step identifier
+     */
+    public String cameraStepIdentifier;
+
+    /**
      * When true, displays the remindMeLater button
      */
     public boolean remindMeLater = true;
@@ -56,13 +61,15 @@ public class CrfSkipMCStep extends CrfFormStep implements NavigableOrderedTask.N
 
     @Override
     public boolean shouldSkipStep(TaskResult result, List<TaskResult> additionalTaskResults) {
-
-        if((StepResult<Boolean>) result.getStepResult(previousStepIdentifier).getResultForIdentifier(skipIdentifier) == null) {
+        if((StepResult<Boolean>) result.getStepResult(cameraStepIdentifier) == null) {
+            return true;
+        }
+        if((StepResult<Boolean>) result.getStepResult(cameraStepIdentifier).getResultForIdentifier(skipIdentifier) == null) {
             return true;
         }
 
         StepResult<Boolean> res = (StepResult<Boolean>)
-                result.getStepResult(previousStepIdentifier).getResultForIdentifier(skipIdentifier);
+                result.getStepResult(cameraStepIdentifier).getResultForIdentifier(skipIdentifier);
 
         return res.getResult();
     }
