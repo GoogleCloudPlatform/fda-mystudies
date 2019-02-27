@@ -38,6 +38,8 @@ public class CrfHeartRateCameraStep extends ActiveStep {
 
     public static final int STEP_DURATION = 60; // 1 minute
 
+    public String stepIdentifier;
+
     static final Map<String, String> SPOKEN_TEXT_MAP =
             ImmutableMap.<String, String>builder()
                     .put(  "0", "Please keep still")

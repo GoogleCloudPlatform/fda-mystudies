@@ -511,27 +511,12 @@ public class CrfHeartRateStepLayout extends ActiveStepLayout implements
 
     @Override
     public void pressureUpdate(PressureHolder pressure) {
-        if(pressure.isPressureExcessive) {
-            LOG.error("Too much pressure on the camera");
-            showPressureStatus();
-        }
-        else {
-            LOG.error("Pressure is alright");
-            resetView();
-        }
+
     }
 
     @Override
     public void cameraUpdate(CameraCoveredHolder camera) {
-        if(camera.isCameraCovered) {
-            resetView();
-            LOG.error("Camera is covered");
 
-        }
-        else {
-            LOG.error("Camera is not covered");
-            showHRStatus();
-        }
     }
 
 
@@ -581,7 +566,7 @@ public class CrfHeartRateStepLayout extends ActiveStepLayout implements
 
     @Override
     public void abnormalHRUpdate(AbnormalHRHolder abnormal) {
-        if(abnormal.isAbnormal) {
+        if(abnormal.abnormal) {
             StepResult<Boolean> abnormalHRResult = new StepResult<>(new Step("displaySurvey"));
             abnormalHRResult.setResult(false);
             stepResult.setResultForIdentifier("skipAbnormalStep",
@@ -597,7 +582,7 @@ public class CrfHeartRateStepLayout extends ActiveStepLayout implements
 
     @Override
     public void declineHRUpdate(DeclineHRHolder decline) {
-        if(decline.isDeclining) {
+        if(decline.declining) {
             StepResult<Boolean> decliningHRResult = new StepResult<>(new Step("displayDecliningHR"));
             decliningHRResult.setResult(false);
             stepResult.setResultForIdentifier("skipDeclineStep",

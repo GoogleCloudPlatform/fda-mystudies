@@ -63,7 +63,6 @@
         app:layout_constraintBottom_toTopOf="@+id/crf_next_button_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:contentDescription="@string/crf_decline_continue"
     />
 
     <android.support.constraint.ConstraintLayout

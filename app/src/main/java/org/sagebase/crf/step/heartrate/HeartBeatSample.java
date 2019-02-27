@@ -1,5 +1,5 @@
 /*
- *    Copyright 2017 Sage Bionetworks
+ *    Copyright 2019 Sage Bionetworks
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -15,15 +15,11 @@
  *
  */
 
-package org.sagebase.crf.step.active;
+package org.sagebase.crf.step.heartrate;
 
 import com.google.common.base.MoreObjects;
 
 import java.util.Date;
-
-/**
- * Created by TheMDP on 10/17/17.
- */
 
 public class HeartBeatSample {
     public double timestamp;
@@ -56,27 +52,5 @@ public class HeartBeatSample {
     /// Is the user's finger covering the lens?
     public boolean isCoveringLens() {
         return (redLevel <= MIN_RED_LEVEL) || (confidence >= 0.5);
-    }
-
-    public boolean isPressureExcessive() {
-        int hr = bpm;
-
-        if(hr > 250 || hr <= 40) {
-            return true;
-        }
-
-        // for testing purposes
-        return true;
-        //return false;
-    }
-
-    // Algorithm to be implemented
-    public boolean abnormalHR() {
-        return true;
-    }
-
-    // Algorithm to be implemented
-    public boolean declineHR() {
-        return true;
     }
 }
