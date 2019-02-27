@@ -26,12 +26,6 @@ import com.google.gson.annotations.SerializedName;
 public class CrfStartTaskSurveyItem extends CrfInstructionSurveyItem {
 
     /**
-     * If true, the remind me later button will show, if false it will hide, defaults to true
-     */
-    @SerializedName("remindMeLater")
-    public boolean remindMeLater = true;
-
-    /**
      * The filename of the html that will show with more info on the task
      */
     @SerializedName("infoHtmlFilename")

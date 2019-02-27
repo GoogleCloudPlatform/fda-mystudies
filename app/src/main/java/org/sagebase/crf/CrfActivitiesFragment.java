@@ -132,6 +132,7 @@ public class CrfActivitiesFragment extends ActivitiesFragment implements CrfFilt
             ImmutableMap.<String, String>builder()
                     .put(CrfTaskFactory.TASK_ID_HEART_RATE_MEASUREMENT, CrfResourceManager.HEART_RATE_MEASUREMENT_TEST_RESOURCE)
                     .put(CrfTaskFactory.TASK_ID_CARDIO_STRESS_TEST, CrfResourceManager.CARDIO_STRESS_TEST_RESOURCE)
+                    .put(CrfTaskFactory.TASK_ID_HEART_RATE_TRAINING, CrfResourceManager.HEART_RATE_TRAINING_TEST_RESOURCE)
                     .put(CrfTaskFactory.TASK_ID_CARDIO_12MT, CrfResourceManager.CARDIO_12MT_WALK_RESOURCE)
                     .put(CrfTaskFactory.TASK_ID_STAIR_STEP, CrfResourceManager.STAIR_STEP_RESOURCE)
                     .put(CrfTaskFactory.TASK_ID_BACKGROUND_SURVEY, CrfResourceManager.BACKGROUND_SURVEY_RESOURCE)
