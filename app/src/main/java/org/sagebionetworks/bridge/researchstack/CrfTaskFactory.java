@@ -485,12 +485,13 @@ public class CrfTaskFactory extends TaskItemFactory {
         if (item.skipIdentifier != null) {
             step.skipIdentifier = item.skipIdentifier;
         }
+        /*
         if (item.previousStepIdentifier != null) {
             step.previousStepIdentifier = item.previousStepIdentifier;
         }
         if (item.cameraStepIdentifier != null) {
             step.cameraStepIdentifier = item.cameraStepIdentifier;
-        }
+        }*/
         step.hideProgress = true;
 
         return step;
