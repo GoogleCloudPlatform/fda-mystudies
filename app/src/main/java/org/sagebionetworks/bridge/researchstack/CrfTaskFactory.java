@@ -81,6 +81,7 @@ public class CrfTaskFactory extends TaskItemFactory {
 
     public static final String TASK_ID_HEART_RATE_MEASUREMENT = "HeartRate Measurement";
     public static final String TASK_ID_CARDIO_STRESS_TEST = "Cardio Stress Test";
+    public static final String TASK_ID_HEART_RATE_TRAINING = "HeartRate Training";
 
     public static final String TASK_ID_CARDIO_12MT = "Cardio 12MT";
     public static final String TASK_ID_STAIR_STEP = "Cardio Stair Step";
@@ -92,13 +93,6 @@ public class CrfTaskFactory extends TaskItemFactory {
     public static final String RESULT_ID_SETTINGS_SCREEN_VERSION        = "Version";
     public static final String RESULT_ID_SETTINGS_SCREEN_CONTACT_INFO   = "Contact Info";
     public static final String RESULT_ID_SETTINGS_SCREEN_DATA_GROUPS    = "Data Groups";
-
-//    public static boolean feedbackFeature = false;
-//
-//
-//    public boolean isFeedbackFeature() {
-//        return feedbackFeature;
-//    }
 
 
     private Gson gson;
@@ -282,9 +276,6 @@ public class CrfTaskFactory extends TaskItemFactory {
         if (item.tintColorRes != null) {
             step.tintColorRes = item.tintColorRes;
         }
-        if (item.textColor != null) {
-            step.textColor = item.textColor;
-        }
         if (item.statusBarColorRes != null) {
             step.statusBarColorRes = item.statusBarColorRes;
         }
@@ -333,12 +324,15 @@ public class CrfTaskFactory extends TaskItemFactory {
         if (item.skipIdentifier != null) {
             step.skipIdentifier = item.skipIdentifier;
         }
-        if (item.previousStepIdentifier != null) {
+        /*if (item.previousStepIdentifier != null) {
             step.previousStepIdentifier = item.previousStepIdentifier;
         }
         if (item.nextStepIdentifier != null) {
             step.nextStepIdentifier = item.nextStepIdentifier;
         }
+        if (item.cameraStepIdentifier != null) {
+            step.cameraStepIdentifier = item.cameraStepIdentifier;
+        }*/
 
     }
 
@@ -486,12 +480,16 @@ public class CrfTaskFactory extends TaskItemFactory {
         CrfSkipMCStep step = new CrfSkipMCStep(item.identifier, item.title, item.text, questionSteps);
         fillNavigationFormStep(step, item);
 
-        if(item.skipIdentifier != null) {
+        if (item.skipIdentifier != null) {
             step.skipIdentifier = item.skipIdentifier;
         }
-        if(item.previousStepIdentifier != null) {
+        /*
+        if (item.previousStepIdentifier != null) {
             step.previousStepIdentifier = item.previousStepIdentifier;
         }
+        if (item.cameraStepIdentifier != null) {
+            step.cameraStepIdentifier = item.cameraStepIdentifier;
+        }*/
         step.hideProgress = true;
 
         return step;

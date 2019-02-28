@@ -15,19 +15,8 @@
  *
  */
 
-package org.sagebase.crf.step.heartrate.camera_error;
+package org.sagebase.crf.step.heartrate;
 
-import android.graphics.Bitmap;
-
-import org.sagebase.crf.step.heartrate.StateDetection;
-
-
-
-public class CameraState implements StateDetection {
-
-
-    // Need to develop the algorithm
-    public static boolean containsIssue(Long timestamp, Bitmap bitmap) {
-        return true;//CameraAlgorithm.algorithm(timestamp, bitmap) > 0.5;
-    }
+public enum ErrorType {
+    PRESSURE, CAMERA_COVERAGE, ABNORMAL_HR, LOW_CONFIDENCE, DECLINE_HR;
 }

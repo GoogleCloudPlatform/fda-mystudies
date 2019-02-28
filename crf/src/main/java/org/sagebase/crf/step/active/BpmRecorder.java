@@ -28,6 +28,10 @@ import com.google.gson.JsonObject;
 import org.researchstack.backbone.step.Step;
 import org.researchstack.backbone.step.active.recorder.JsonArrayDataRecorder;
 import org.researchstack.backbone.utils.FormatHelper;
+import org.sagebase.crf.step.active.HeartBeatSample;
+import org.sagebase.crf.step.active.HeartRateBPM;
+import org.sagebase.crf.step.active.HeartRateSampleProcessor;
+import org.sagebase.crf.step.active.HeartbeatSampleTracker;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -40,12 +44,6 @@ import java.util.Locale;
  */
 
 public interface BpmRecorder {
-
-    public static boolean feedbackFeature = false;
-
-
-    boolean shouldDecline = false;
-
 
     interface BpmUpdateListener {
         class BpmHolder {
@@ -70,15 +68,12 @@ public interface BpmRecorder {
         void intelligentStartUpdate(float progress, boolean ready);
     }
 
-    /**
-     * Encompasses the pressure algorithm and communicates results to UI
-     */
     interface PressureListener {
         class PressureHolder {
-            public final boolean isPressureExcessive;
+            public final boolean pressureExcessive;
 
-            public PressureHolder(boolean isPressureExcessive) {
-                this.isPressureExcessive = isPressureExcessive;
+            public PressureHolder(boolean pressureExcessive) {
+                this.pressureExcessive = pressureExcessive;
             }
 
         }
@@ -86,15 +81,12 @@ public interface BpmRecorder {
         void pressureUpdate(PressureHolder pressure);
     }
 
-    /**
-     * Encompasses the camera covered algorithm and communicates results to UI
-     */
     interface CameraCoveredListener {
         class CameraCoveredHolder {
-            public final boolean isCameraCovered;
+            public final boolean cameraCovered;
 
-            public CameraCoveredHolder(boolean isCameraCovered) {
-                this.isCameraCovered = isCameraCovered;
+            public CameraCoveredHolder(boolean cameraCovered) {
+                this.cameraCovered = cameraCovered;
             }
         }
         @UiThread
@@ -102,15 +94,12 @@ public interface BpmRecorder {
 
     }
 
-    /**
-     * Encompasses the abnormal heart rate algorithm and communicates results to UI
-     */
     interface AbnormalHRListener {
         class AbnormalHRHolder {
-            public final boolean isAbnormal;
+            public final boolean abnormal;
 
-            public AbnormalHRHolder(boolean isAbnormal) {
-                this.isAbnormal = isAbnormal;
+            public AbnormalHRHolder(boolean abnormal) {
+                this.abnormal = abnormal;
             }
         }
 
@@ -118,15 +107,12 @@ public interface BpmRecorder {
         void abnormalHRUpdate(AbnormalHRHolder abnormal);
     }
 
-    /**
-     * Encompasses the declining heart rate algorithm and communicates results to UI
-     */
     interface DeclineHRListener {
         class DeclineHRHolder {
-            public final boolean isDeclining;
+            public final boolean declining;
 
-            public DeclineHRHolder(boolean isDeclining) {
-                this.isDeclining = isDeclining;
+            public DeclineHRHolder(boolean declining) {
+                this.declining = declining;
             }
         }
 
@@ -176,7 +162,7 @@ public interface BpmRecorder {
         private static final String BLUE_KEY = "blue";
         private static final String RED_LEVEL_KEY = "redLevel";
 
-        private static final int INTELLIGENT_START_FRAMES_TO_PASS = 60;
+        private static final int INTELLIGENT_START_FRAMES_TO_PASS = 30;
 
         private final JsonObject mJsonObject = new JsonObject();
 
@@ -286,7 +272,7 @@ public interface BpmRecorder {
             if (mIntelligentStartPassed) {
                 return; // we already computed that we could start
             }
-            LOG.error("Update intelligent start called");
+
             // If the red factor is large enough, we update the trigger
             if (sample.isCoveringLens()) {
                 mIntelligentStartCounter++;
@@ -303,66 +289,29 @@ public interface BpmRecorder {
                     );
 
                 }
-                /**
-                 * If the feedback feature is turned on, run all the algorithms
-                 */
-                if(feedbackFeature) {
-                    if (mCameraListener != null) {
-                        mainHandler.post(() ->
-                                mCameraListener.cameraUpdate(new
-                                        BpmRecorder.CameraCoveredListener.CameraCoveredHolder(true)));
-                    }
-                    if (mAbnormalListener != null) {
-                        if (sample.abnormalHR()) {
-                            mainHandler.post(() ->
-                                    mAbnormalListener.abnormalHRUpdate(new
-                                            BpmRecorder.AbnormalHRListener.AbnormalHRHolder(true)));
-                        } else {
-                            mainHandler.post(() ->
-                                    mAbnormalListener.abnormalHRUpdate(new
-                                            BpmRecorder.AbnormalHRListener.AbnormalHRHolder(false)));
-
-                        }
-                    }
-                    if (mDeclineListener != null) {
-                        if(!shouldDecline) {
-                            if (sample.declineHR()) {
-                                mainHandler.post(() ->
-                                        mDeclineListener.declineHRUpdate(new
-                                                DeclineHRListener.DeclineHRHolder(true)));
-                            } else {
-                                mainHandler.post(() ->
-                                        mDeclineListener.declineHRUpdate(new
-                                                DeclineHRListener.DeclineHRHolder(false)));
-                            }
-                        }
-                    }
-
-                    if (mPressureListener != null) {
-                        if (sample.isPressureExcessive() && !sample.declineHR()) {
-                            mainHandler.post(() ->
-                                    mPressureListener.pressureUpdate(new
-                                            BpmRecorder.PressureListener.PressureHolder(true)));
-                        } else {
-                            mainHandler.post(() ->
-                                    mPressureListener.pressureUpdate(new
-                                            BpmRecorder.PressureListener.PressureHolder(false)));
-                        }
-                    }
+                if(sample.abnormalHR()) {
+                    mainHandler.post(() ->
+                            mAbnormalListener.abnormalHRUpdate(new
+                                    BpmRecorder.AbnormalHRListener.AbnormalHRHolder(true)));
+                }
+                if(sample.declineHR()) {
+                    mainHandler.post(() ->
+                            mDeclineListener.declineHRUpdate(new
+                                    DeclineHRListener.DeclineHRHolder(true)));
                 }
 
             } else {  // We need thresholds to be passed sequentially otherwise it is restarted
                 mIntelligentStartCounter = 0;
 
-                /**
-                 * The camera is covered
-                 */
-                if(feedbackFeature) {
-                    if (mCameraListener != null) {
-                        mainHandler.post(() ->
-                                mCameraListener.cameraUpdate(new
-                                        BpmRecorder.CameraCoveredListener.CameraCoveredHolder(false)));
-                    }
+                if(sample.isPressureExcessive()) {
+                    mainHandler.post(() ->
+                            mPressureListener.pressureUpdate(new
+                                    BpmRecorder.PressureListener.PressureHolder(true)));
+                }
+                else {
+                    mainHandler.post(() ->
+                            mCameraListener.cameraUpdate(new
+                                    BpmRecorder.CameraCoveredListener.CameraCoveredHolder(false)));
                 }
             }
         }

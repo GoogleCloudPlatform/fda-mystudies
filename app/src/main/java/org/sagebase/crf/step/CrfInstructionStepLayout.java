@@ -133,19 +133,7 @@ public class CrfInstructionStepLayout extends InstructionStepLayout implements
                 customButtonText.setText(crfInstructionStep.buttonText);
             }
         }
-        if (remindMeLaterButton != null) {
-            if (crfInstructionStep.remindMeLater) {
-                remindMeLaterButton.setVisibility(View.VISIBLE);
-                remindMeLaterButton.setOnClickListener(new OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        remindMeLater();
-                    }
-                });
-            } else {
-                remindMeLaterButton.setVisibility(View.GONE);
-            }
-        }
+
         if (crfInstructionStep.buttonType != null) {
             switch (crfInstructionStep.buttonType) {
                 case DEFAULT:
@@ -247,21 +235,5 @@ public class CrfInstructionStepLayout extends InstructionStepLayout implements
         return crfInstructionStep.mediaVolume;
     }
 
-    public void remindMeLater() {
-        Task task = (new CrfTaskFactory()).createTask(getContext(), CrfResourceManager.REMIND_ME_LATER_RESOURCE);
-        Intent intent = IntentFactory.INSTANCE.newTaskIntent(getContext(), CrfSurveyTaskActivity.class, task);
-        if (!(callbacks instanceof Activity)) {
-            throw new IllegalStateException("Callbacks class must be an activity " +
-                    "so we can start another activity from this step layout");
-        }
-        Activity activity = (Activity)callbacks;
-        activity.startActivityForResult(intent, CrfReminderManager.DAILY_REMINDER_REQUEST_CODE);
-        if(((CrfSkipInstructionStep)step).continueMeasurement) {
-            ((CrfSkipInstructionStep) step).continueMeasurement = false;
-        }
-        ((CrfSkipInstructionStep)step).continueMeasurement = false;
-
-        onComplete();
-    }
 
 }

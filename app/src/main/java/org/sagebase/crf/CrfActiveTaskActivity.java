@@ -194,13 +194,7 @@ public class CrfActiveTaskActivity extends ActiveTaskActivity {
             List<Step> steps = orderedTask.getSteps();
             int max = 0;
             for(Step s: steps) {
-                if(s.getClass().equals(CrfSkipMCStep.class) || s.getClass().equals(CrfSkipInstructionStep.class))
-                {
-                    max += 0;
-                }
-                else {
                     max += 1;
-                }
             }
             crfToolbar.setProgress(progress, max);
 

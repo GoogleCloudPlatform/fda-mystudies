@@ -44,6 +44,11 @@ public class CrfSkipInstructionStep extends CrfInstructionStep
     public String previousStepIdentifier;
 
     /**
+     * Measurement camera step identifier
+     */
+    public String cameraStepIdentifier;
+
+    /**
      * Next step identifier
      */
     public String nextStepIdentifier;
@@ -77,11 +82,11 @@ public class CrfSkipInstructionStep extends CrfInstructionStep
     public boolean shouldSkipStep(@Nullable TaskResult result,
                                   @Nullable List<TaskResult> additionalTaskResults) {
 
-        if((StepResult<Boolean>) result.getStepResult(previousStepIdentifier).getResultForIdentifier(skipIdentifier) == null) {
+        if((StepResult<Boolean>) result.getStepResult(cameraStepIdentifier).getResultForIdentifier(skipIdentifier) == null) {
             return true;
         }
         StepResult<Boolean> res = (StepResult<Boolean>)
-                result.getStepResult(previousStepIdentifier).getResultForIdentifier(skipIdentifier);
+                result.getStepResult(cameraStepIdentifier).getResultForIdentifier(skipIdentifier);
 
         // If you are not skipping this step, the next step needs to continue measurement
         if (!res.getResult()) {

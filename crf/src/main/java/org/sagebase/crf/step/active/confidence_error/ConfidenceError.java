@@ -15,19 +15,23 @@
  *
  */
 
-package org.sagebase.crf.step.heartrate.camera_error;
+package org.sagebase.crf.step.heartrate.confidence_error;
 
-import android.graphics.Bitmap;
+import org.sagebase.crf.step.heartrate.ErrorDetection;
+import org.sagebase.crf.step.heartrate.ErrorType;
+public class ConfidenceError implements ErrorDetection {
 
-import org.sagebase.crf.step.heartrate.StateDetection;
+    ErrorType errorType;
 
-
-
-public class CameraState implements StateDetection {
-
+    public ConfidenceError() {
+        this.errorType = ErrorType.LOW_CONFIDENCE;
+    }
+    public ErrorType getErrorType() {
+        return this.errorType;
+    }
 
     // Need to develop the algorithm
-    public static boolean containsIssue(Long timestamp, Bitmap bitmap) {
-        return true;//CameraAlgorithm.algorithm(timestamp, bitmap) > 0.5;
+    public boolean hasError() {
+        return true;
     }
 }

@@ -62,7 +62,6 @@ import org.sagebase.crf.step.active.HeartRateCamera2Recorder;
 import org.sagebase.crf.step.active.HeartRateCameraRecorder;
 import org.sagebase.crf.step.active.HeartRateCameraRecorderConfig;
 import org.sagebase.crf.view.CrfTaskStatusBarManipulator;
-import org.sagebase.crf.view.CrfTaskToolbarProgressManipulator;
 import org.sagebase.crf.view.CrfTaskToolbarTintManipulator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -86,7 +85,6 @@ public class CrfHeartRateStepLayout extends ActiveStepLayout implements
         RecorderListener,
         CrfTaskToolbarTintManipulator,
         CrfTaskStatusBarManipulator,
-        CrfTaskToolbarProgressManipulator,
         CrfResultListener {
     private static final Logger LOG = LoggerFactory.getLogger(CrfHeartRateStepLayout.class);
 
@@ -102,7 +100,6 @@ public class CrfHeartRateStepLayout extends ActiveStepLayout implements
         return cameraPreview;
     }
     protected TextView crfMessageTextView;
-    protected CrfHeartRateCameraStep crfHeartRateCameraStep;
 
     protected View heartRateTextContainer;
     protected TextView heartRateNumber;
@@ -163,7 +160,6 @@ public class CrfHeartRateStepLayout extends ActiveStepLayout implements
     @Override
     public void initialize(Step step, StepResult result) {
         super.initialize(step, result);
-        this.crfHeartRateCameraStep = (CrfHeartRateCameraStep) step;
     }
 
     @Override
@@ -359,8 +355,7 @@ public class CrfHeartRateStepLayout extends ActiveStepLayout implements
         currentHeartRate.setVisibility(VISIBLE);
         heartBeatAnimation.setBpm(bpmHolder.bpm);
         bpmList.add(bpmHolder);
-        crfMessageTextView.setVisibility(INVISIBLE);
-        //resetView();
+        resetView();
     }
 
     @Override
@@ -518,45 +513,26 @@ public class CrfHeartRateStepLayout extends ActiveStepLayout implements
 
     @Override
     public void pressureUpdate(PressureHolder pressure) {
-        if(pressure.isPressureExcessive) {
-            LOG.error("Too much pressure on the camera");
-            //showPressureStatus();
-        }
-        else {
-            LOG.error("Pressure is alright");
-            //resetView();
-        }
+
     }
 
     @Override
     public void cameraUpdate(CameraCoveredHolder camera) {
-        if(camera.isCameraCovered) {
-            //resetView();
-            LOG.error("Camera is covered");
 
-        }
-        else {
-            LOG.error("Camera is not covered");
-            //showHRStatus();
-        }
     }
 
-    /**
-     * Method to reset the view after displaying instruction messages
-     */
+
     private void resetView() {
-        //TextView e = findViewById(R.id.crf_heart_rate_error);
-        //e.setVisibility(INVISIBLE);
+        TextView e = findViewById(R.id.crf_heart_rate_error);
+        e.setVisibility(GONE);
 
-        //TextView p = findViewById(R.id.crf_pressure_error);
-        //p.setVisibility(INVISIBLE);
+        TextView p = findViewById(R.id.crf_pressure_error);
+        p.setVisibility(GONE);
 
     }
 
-    /**
-     * Display a notification that the camera isn't covered
-     */
     private void showHRStatus() {
+        LOG.error("Displaying camera error");
         LinearLayout t = findViewById(R.id.crf_bpm_text_container);
         t.setVisibility(GONE);
 
@@ -566,16 +542,14 @@ public class CrfHeartRateStepLayout extends ActiveStepLayout implements
         FrameLayout c = findViewById(R.id.crf_arc_drawable_container);
         c.setVisibility(GONE);
 
-        cameraSourcePreview.setVisibility(INVISIBLE);
+        cameraSourcePreview.setVisibility(GONE);
 
-        //TextView e = findViewById(R.id.crf_heart_rate_error);
-        //e.setVisibility(VISIBLE);
+        TextView e = findViewById(R.id.crf_heart_rate_error);
+        e.setVisibility(VISIBLE);
     }
 
-    /**
-     * Display a notification that there is too much pressure on the camera
-     */
     private void showPressureStatus()  {
+        LOG.error("Displaying pressure error");
         LinearLayout t = findViewById(R.id.crf_bpm_text_container);
         t.setVisibility(GONE);
 
@@ -585,21 +559,16 @@ public class CrfHeartRateStepLayout extends ActiveStepLayout implements
         FrameLayout c = findViewById(R.id.crf_arc_drawable_container);
         c.setVisibility(GONE);
 
-        cameraSourcePreview.setVisibility(INVISIBLE);
+        cameraSourcePreview.setVisibility(GONE);
 
-        //TextView p = findViewById(R.id.crf_pressure_error);
-        //p.setVisibility(VISIBLE);
+        TextView p = findViewById(R.id.crf_pressure_error);
+        p.setVisibility(VISIBLE);
 
     }
 
-    /**
-     * Add the result of the abnormal hr algorithm to the step result to determine if we need to
-     * skip the abnormal HR step
-     * @param abnormal
-     */
     @Override
     public void abnormalHRUpdate(AbnormalHRHolder abnormal) {
-        if(abnormal.isAbnormal) {
+        if(abnormal.abnormal) {
             StepResult<Boolean> abnormalHRResult = new StepResult<>(new Step("displaySurvey"));
             abnormalHRResult.setResult(false);
             stepResult.setResultForIdentifier("skipAbnormalStep",
@@ -613,14 +582,9 @@ public class CrfHeartRateStepLayout extends ActiveStepLayout implements
         }
     }
 
-    /**
-     * Add the result of the decline hr algorithm to the step result to determine if we need to
-     * skip the decline HR step
-     * @param decline
-     */
     @Override
     public void declineHRUpdate(DeclineHRHolder decline) {
-        if(decline.isDeclining) {
+        if(decline.declining) {
             StepResult<Boolean> decliningHRResult = new StepResult<>(new Step("displayDecliningHR"));
             decliningHRResult.setResult(false);
             stepResult.setResultForIdentifier("skipDeclineStep",
@@ -632,11 +596,6 @@ public class CrfHeartRateStepLayout extends ActiveStepLayout implements
             stepResult.setResultForIdentifier("skipDeclineStep",
                     decliningHRResult);
         }
-    }
-
-    @Override
-    public boolean crfToolbarShowProgress() {
-        return !crfHeartRateCameraStep.getIdentifier().contains("test");
     }
 
     private class HeartBeatAnimation extends AlphaAnimation {

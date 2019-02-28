@@ -15,19 +15,18 @@
  *
  */
 
-package org.sagebase.crf.step.heartrate.camera_error;
+package org.sagebase.crf.step.heartrate;
 
-import android.graphics.Bitmap;
+public interface ErrorDetection {
 
-import org.sagebase.crf.step.heartrate.StateDetection;
+    /*
+    This method returns an error type that allows us to figure out which error we had an issue with.
+    */
+    ErrorType getErrorType();
 
-
-
-public class CameraState implements StateDetection {
-
-
-    // Need to develop the algorithm
-    public static boolean containsIssue(Long timestamp, Bitmap bitmap) {
-        return true;//CameraAlgorithm.algorithm(timestamp, bitmap) > 0.5;
-    }
+    /*
+    This method returns a boolean representing whether the HR sample has an error related to this
+    error type.
+     */
+    boolean hasError();
 }
