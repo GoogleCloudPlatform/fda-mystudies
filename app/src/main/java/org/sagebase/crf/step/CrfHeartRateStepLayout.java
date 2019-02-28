@@ -353,7 +353,6 @@ public class CrfHeartRateStepLayout extends ActiveStepLayout implements
         currentHeartRate.setVisibility(VISIBLE);
         heartBeatAnimation.setBpm(bpmHolder.bpm);
         bpmList.add(bpmHolder);
-        resetView();
     }
 
     @Override
@@ -520,15 +519,6 @@ public class CrfHeartRateStepLayout extends ActiveStepLayout implements
     }
 
 
-    private void resetView() {
-        TextView e = findViewById(R.id.crf_heart_rate_error);
-        e.setVisibility(GONE);
-
-        TextView p = findViewById(R.id.crf_pressure_error);
-        p.setVisibility(GONE);
-
-    }
-
     private void showHRStatus() {
         LOG.error("Displaying camera error");
         LinearLayout t = findViewById(R.id.crf_bpm_text_container);
@@ -542,8 +532,6 @@ public class CrfHeartRateStepLayout extends ActiveStepLayout implements
 
         cameraSourcePreview.setVisibility(GONE);
 
-        TextView e = findViewById(R.id.crf_heart_rate_error);
-        e.setVisibility(VISIBLE);
     }
 
     private void showPressureStatus()  {
@@ -559,8 +547,6 @@ public class CrfHeartRateStepLayout extends ActiveStepLayout implements
 
         cameraSourcePreview.setVisibility(GONE);
 
-        TextView p = findViewById(R.id.crf_pressure_error);
-        p.setVisibility(VISIBLE);
 
     }
 

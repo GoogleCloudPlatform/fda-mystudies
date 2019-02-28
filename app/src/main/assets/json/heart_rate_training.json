@@ -4,14 +4,15 @@
   "taskSteps" : [
     {
       "identifier" : "heart_snapshot",
-      "type"       : "crf_instruction",
+      "type"       : "crf_snapshot",
       "text"       : "Heart Snapshot",
       "detailText" : "Your phone's camera can measure your heartbeat.",
       "image"      : "flash_on_hand_holding",
       "imageColor" : "magenta",
       "buttonType" : "gray",
       "buttonText" : "Measure",
-      "hideProgress"  : "true"
+      "hideProgress"  : "true",
+      "learnMore"  : "learn_how_and_why"
     },
     {
       "identifier" : "turn_on_camera",

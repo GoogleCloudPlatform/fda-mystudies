@@ -33,7 +33,7 @@
         android:layout_centerHorizontal="true"
         android:paddingTop="?attr/actionBarSize"
         android:gravity="center_horizontal"
-        android:textColor="@color/black54"
+        android:textColor="@color/white80"
         android:layout_marginTop="48dp"
         android:layout_marginLeft="@dimen/rsb_padding_large"
         android:layout_marginRight="@dimen/rsb_padding_large"
@@ -109,7 +109,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:text="@string/crf_your_heart_rate_is"
-                android:textColor="@color/black86"
+                android:textColor="@color/white"
                 android:padding="@dimen/rsb_padding_medium"/>
 
             <LinearLayout
@@ -133,7 +133,7 @@
                     android:layout_height="wrap_content"
                     android:text="@string/crf_bpm"
                     android:layout_gravity="center"
-                    android:textColor="@color/black86"
+                    android:textColor="@color/white"
                     android:padding="@dimen/rsb_padding_large"/>
 
             </LinearLayout>
@@ -141,27 +141,6 @@
 
         </LinearLayout>
 
-        <TextView
-            style="@style/TextAppearance.Crf.ActiveStatusText"
-            android:id="@+id/crf_heart_rate_error"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/crf_camera_cover"
-            android:layout_gravity="center"
-            android:textColor="@color/black86"
-            android:padding="@dimen/rsb_padding_large"
-            android:visibility="gone"/>
-
-        <TextView
-            style="@style/TextAppearance.Crf.ActiveStatusText"
-            android:id="@+id/crf_pressure_error"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/crf_pressure"
-            android:layout_gravity="center"
-            android:textColor="@color/black86"
-            android:padding="@dimen/rsb_padding_large"
-            android:visibility="gone"/>
 
         <ImageView
             android:id="@+id/crf_heart_icon"
@@ -181,7 +160,7 @@
         android:layout_below="@id/crf_heart_container"
         android:layout_centerHorizontal="true"
         android:text="--"
-        android:textColor="@color/black86"
+        android:textColor="@color/white"
         android:padding="@dimen/rsb_padding_medium"/>
 
     <FrameLayout

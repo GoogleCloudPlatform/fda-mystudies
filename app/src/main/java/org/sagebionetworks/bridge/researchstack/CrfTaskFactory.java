@@ -59,6 +59,7 @@ import org.sagebase.crf.step.CrfInstructionSurveyItem;
 import org.sagebase.crf.step.CrfSkipInstructionStep;
 import org.sagebase.crf.step.CrfSkipInstructionStepSurveyItem;
 import org.sagebase.crf.step.CrfSkipMCStep;
+import org.sagebase.crf.step.CrfSnapshotInstructionStep;
 import org.sagebase.crf.step.CrfStairStep;
 import org.sagebase.crf.step.CrfPhotoCaptureStep;
 import org.sagebase.crf.step.CrfStartTaskStep;
@@ -177,6 +178,11 @@ public class CrfTaskFactory extends TaskItemFactory {
                                 throw new IllegalStateException("crf_fitbit types must be parsed as CrfInstructionSurveyItem");
                             }
                             return createFitBitStep((CrfInstructionSurveyItem)item);
+                        case CrfSurveyItemAdapter.CRF_SNAPSHOT_TYPE:
+                            if(!(item instanceof CrfInstructionSurveyItem)) {
+                                throw new IllegalStateException("crf snapshot types must be parsed as CrfInstructionSurveyItem");
+                            }
+                            return createCrfSnapshotStep((CrfInstructionSurveyItem) item);
                         case CrfSurveyItemAdapter.CRF_FORM_SURVEY_ITEM_TYPE:
                             if (!(item instanceof FormSurveyItem)) {
                                 throw new IllegalStateException("Error in json parsing, crf_form types must be CrfFormSurveyItem");
@@ -224,6 +230,18 @@ public class CrfTaskFactory extends TaskItemFactory {
                 return null;
             }
         });
+    }
+
+    private CrfSnapshotInstructionStep createCrfSnapshotStep(CrfInstructionSurveyItem item) {
+        CrfSnapshotInstructionStep step = new CrfSnapshotInstructionStep();
+        fillCrfInstructionStep(step, item);
+        if(item.text != null) {
+            step.instruction = item.text;
+        }
+        if(item.identifier != null) {
+            step.stepIdentifier = item.identifier;
+        }
+        return step;
     }
 
     public static class CrfFormSurveyItemWrapper extends FormSurveyItem {
