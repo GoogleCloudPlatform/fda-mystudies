@@ -233,7 +233,7 @@ public class CrfTaskFactory extends TaskItemFactory {
     }
 
     private CrfSnapshotInstructionStep createCrfSnapshotStep(CrfInstructionSurveyItem item) {
-        CrfSnapshotInstructionStep step = new CrfSnapshotInstructionStep();
+        CrfSnapshotInstructionStep step = new CrfSnapshotInstructionStep(item.identifier, item.title);
         fillCrfInstructionStep(step, item);
         if(item.text != null) {
             step.instruction = item.text;

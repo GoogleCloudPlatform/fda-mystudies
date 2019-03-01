@@ -27,8 +27,8 @@ public class CrfSnapshotInstructionStep extends CrfInstructionStep {
         super();
     }
 
-    public CrfSnapshotInstructionStep(String identifier, String title, String detailText) {
-        super(identifier, title, detailText);
+    public CrfSnapshotInstructionStep(String identifier, String title) {
+        super(identifier, title, null);
     }
 
     @Override
