@@ -21,6 +21,8 @@ public class CrfSnapshotInstructionStep extends CrfInstructionStep {
 
     public String instruction;
     public String stepIdentifier;
+    public boolean learnMore;
+
 
     /* Default constructor needed for serialization/deserialization of object */
     public CrfSnapshotInstructionStep() {

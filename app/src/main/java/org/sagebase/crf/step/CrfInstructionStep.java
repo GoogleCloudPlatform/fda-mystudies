@@ -77,6 +77,8 @@ public class CrfInstructionStep extends InstructionStep {
      */
     public boolean remindMeLater;
 
+    public boolean learnMore;
+
 
     /* Default constructor needed for serialization/deserialization of object */
     public CrfInstructionStep() {

@@ -16,7 +16,7 @@
   -->
 
 <!-- Change to RelativeLayout for preview to work -->
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/crf_root_instruction_layout"
@@ -26,91 +26,80 @@
     <ImageView
         android:id="@+id/crf_image_view"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_alignParentTop="true"
-        android:paddingTop="?attr/actionBarSize"
-        android:layout_above="@+id/crf_text_container"
-        android:scaleType="centerInside"/>
+        android:layout_height="@dimen/crf_step_image_height"
+        android:layout_marginBottom="0dp"
+        android:scaleType="centerInside"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         style="@style/TextAppearance.Crf.Header"
-        android:id="@+id/crf_intruction_title"
-        android:layout_width="wrap_content"
+        android:id="@+id/crf_instruction_title"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
         android:textColor="@color/black54"
         android:paddingTop="?attr/actionBarSize"
-        android:gravity="center_horizontal" />
+        android:gravity="center_horizontal"
+        android:visibility="gone"
+        app:layout_constraintTop_toBottomOf="@+id/crf_image_view"
+        app:layout_constraintBottom_toTopOf="@+id/crf_text_container"/>
 
     <LinearLayout
         android:id="@id/crf_text_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:layout_above="@+id/crf_next_button_container">
+        app:layout_constraintTop_toBottomOf="@+id/crf_instruction_title">
 
         <TextView
+            android:id="@+id/crf_instruction_text"
             style="@style/TextAppearance.Crf.SubHeader"
-            android:id="@+id/crf_intruction_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
-            android:textColor="@color/black54"
-            android:textColorLink="?attr/colorAccent"
+            android:layout_margin="@dimen/rsb_padding_large"
             android:gravity="center_horizontal"
-            android:layout_margin="@dimen/rsb_padding_large"/>
+            android:textColor="@color/black54"
+            android:textColorLink="?attr/colorAccent" />
 
         <TextView
-            style="@style/TextAppearance.Crf.Body"
             android:id="@+id/crf_instruction_more_detail_text"
+            style="@style/TextAppearance.Crf.Body"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="@color/black54"
-            android:textColorLink="?attr/colorAccent"
             android:layout_marginLeft="@dimen/rsb_padding_large"
-            android:layout_marginRight="@dimen/rsb_padding_large"/>
+            android:layout_marginRight="@dimen/rsb_padding_large"
+            android:textColor="@color/black54"
+            android:textColorLink="?attr/colorAccent" />
 
     </LinearLayout>
 
-    <FrameLayout
+    <LinearLayout
         android:id="@id/crf_next_button_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true">
+        android:orientation="vertical"
+        app:layout_constraintTop_toBottomOf="@+id/crf_text_container"
+        app:layout_constraintBottom_toBottomOf="parent">
 
-        <LinearLayout
-            android:layout_width="wrap_content"
+        <android.support.v7.widget.AppCompatButton
+            android:id="@+id/learn_more"
+            style="@style/Widget.AppCompat.Button.Borderless"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:layout_gravity="center">
+            android:layout_marginTop="15dp"
+            android:text="@string/learn_how"
+            android:textAllCaps="false"
+            android:textColor="@color/gray"
+            app:layout_constraintBottom_toTopOf="@+id/button_go_forward"
+            app:layout_constraintTop_toTopOf="parent"
+            />
 
-            <ImageButton
-                style="@style/Widget.AppCompat.Button.Borderless"
-                android:id="@+id/cr_instruction_custom_button"
-                android:layout_width="120dp"
-                android:layout_height="120dp"
-                android:layout_gravity="center_horizontal"
-                android:background="?attr/selectableItemBackgroundBorderless"
-                android:scaleType="centerInside"
-                android:visibility="gone"
-                android:layout_marginTop="@dimen/rsb_padding_small"/>
-
-            <TextView
-                style="@style/TextAppearance.Crf.InstructionCustomButtonText"
-                android:id="@+id/crf_instruction_custom_button_text"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:textColor="@color/black37"
-                android:visibility="gone"
-                android:layout_marginBottom="@dimen/rsb_padding_small"/>
-
-        </LinearLayout>
 
         <Button
             style="@style/Crf.Salmon.RoundedCornerMaterialButton"
-            android:id="@id/button_go_forward"
+            android:id="@+id/button_go_forward"
             android:layout_width="match_parent"
             android:layout_height="@dimen/crf_rounded_button_height"
             android:layout_margin="@dimen/rsb_padding_large"
@@ -118,8 +107,10 @@
             android:text="@string/crf_lets_go"
             android:textColor="@color/white"
             android:textAllCaps="false"
-            android:onClick="goForwardClicked"/>
+            android:onClick="goForwardClicked"
+            app:layout_constraintBottom_toTopOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/learn_more"/>
 
-    </FrameLayout>
+    </LinearLayout>
 
-</RelativeLayout>
+</android.support.constraint.ConstraintLayout>

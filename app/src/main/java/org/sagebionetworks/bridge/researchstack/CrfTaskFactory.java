@@ -18,6 +18,7 @@
 package org.sagebionetworks.bridge.researchstack;
 
 import android.content.Context;
+import android.support.v4.content.res.ResourcesCompat;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -54,6 +55,7 @@ import org.sagebase.crf.step.CrfCountdownStep;
 import org.sagebase.crf.step.CrfFitBitStepLayout;
 import org.sagebase.crf.step.CrfFormStep;
 import org.sagebase.crf.step.CrfHeartRateCameraStep;
+import org.sagebase.crf.step.CrfInstructionButtonType;
 import org.sagebase.crf.step.CrfInstructionStep;
 import org.sagebase.crf.step.CrfInstructionSurveyItem;
 import org.sagebase.crf.step.CrfSkipInstructionStep;
@@ -68,6 +70,7 @@ import org.sagebase.crf.step.HrParticipantIdStep;
 import org.sagebase.crf.step.body.CrfChoiceAnswerFormat;
 import org.sagebase.crf.step.body.CrfIntegerAnswerFormat;
 import org.sagebase.crf.step.heartrate.BpmRecorder;
+import org.sagebionetworks.research.crf.R;
 
 import java.util.Collections;
 import java.util.LinkedHashMap;
@@ -241,12 +244,15 @@ public class CrfTaskFactory extends TaskItemFactory {
         if(item.identifier != null) {
             step.stepIdentifier = item.identifier;
         }
+        if(item.learnMore) {
+            step.learnMore = item.learnMore;
+        }
         return step;
     }
 
     public static class CrfFormSurveyItemWrapper extends FormSurveyItem {
 
-        /* Default constructor needed for serilization/deserialization of object */
+        /* Default constructor needed for serialization/deserialization of object */
         public CrfFormSurveyItemWrapper() {
             super();
         }
@@ -310,6 +316,9 @@ public class CrfTaskFactory extends TaskItemFactory {
         }
         if (item.mediaVolume) {
             step.mediaVolume = true;
+        }
+        if(item.learnMore) {
+            step.learnMore = item.learnMore;
         }
         if (item.remindMeLater) {
             step.remindMeLater = true;
@@ -375,6 +384,17 @@ public class CrfTaskFactory extends TaskItemFactory {
         fillCrfActiveStep(step, item);
         if(item.identifier != null) {
             step.stepIdentifier = item.identifier;
+        }
+        if(item.buttonType != null) {
+            switch (item.buttonType) {
+                case "default":
+                    step.buttonType = CrfInstructionButtonType.DEFAULT;
+                    break;
+
+                case "gray":
+                    step.buttonType = CrfInstructionButtonType.GRAY;
+                    break;
+            }
         }
         return step;
     }

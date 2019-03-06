@@ -18,6 +18,8 @@
 package org.sagebase.crf.step;
 
 import android.content.Context;
+import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 
 import org.researchstack.backbone.result.StepResult;
@@ -29,6 +31,7 @@ public class CrfSnapshotInstructionStepLayout extends CrfInstructionStepLayout {
     protected CrfSnapshotInstructionStep crfSnapshotInstructionStep;
     protected TextView instructionViewTop;
     protected TextView instructionViewBottom;
+    protected Button learnMore;
 
     public CrfSnapshotInstructionStepLayout(Context context) {
         super(context);
@@ -53,6 +56,7 @@ public class CrfSnapshotInstructionStepLayout extends CrfInstructionStepLayout {
         this.crfSnapshotInstructionStep = (CrfSnapshotInstructionStep)step;
         this.instructionViewTop = findViewById(R.id.crf_instruction_text_top);
         this.instructionViewBottom = findViewById(R.id.crf_instruction_text_bottom);
+        this.learnMore = findViewById(R.id.learn_more);
     }
 
     @Override
@@ -70,5 +74,19 @@ public class CrfSnapshotInstructionStepLayout extends CrfInstructionStepLayout {
             instructionViewBottom.setText(crfSnapshotInstructionStep.getMoreDetailText());
             instructionViewBottom.setVisibility(VISIBLE);
         }
+
+        if(crfSnapshotInstructionStep.learnMore) {
+            learnMore.setVisibility(View.VISIBLE);
+            learnMore.setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    setLearnMore();
+                }
+            });
+        }
+    }
+
+    public void setLearnMore() {
+        // display the learn more page
     }
 }

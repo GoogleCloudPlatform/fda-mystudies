@@ -19,11 +19,27 @@ package org.sagebase.crf.step
 
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
+import android.support.v4.content.res.ResourcesCompat
+import android.webkit.WebView
+import android.widget.Button
+import org.sagebionetworks.research.crf.R
 
 class CrfTrainingInfo : AppCompatActivity() {
+
+    val trainingInfoUrl = "file:///android_asset/html/crf_heart_rate_training.html"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_crf_training_info)
+        val webview = findViewById<WebView>(R.id.crf_webview)
+        webview.loadUrl(trainingInfoUrl)
+
+        val doneButton = findViewById<Button>(R.id.button_go_forward)
+        doneButton.setBackgroundResource(R.drawable.crf_rounded_button_gray)
+        doneButton.setTextColor(ResourcesCompat.getColor(resources, R.color.rsb_white, null))
+        doneButton.setOnClickListener {
+            finish()
+        }
+
     }
 }

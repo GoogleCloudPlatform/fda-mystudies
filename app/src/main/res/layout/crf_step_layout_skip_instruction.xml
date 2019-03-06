@@ -68,11 +68,10 @@
     <android.support.constraint.ConstraintLayout
         android:id="@+id/crf_next_button_container"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_height="136dp"
         android:background="@color/white"
         android:orientation="vertical"
-        tools:layout_editor_absoluteY="530dp">
+        app:layout_constraintBottom_toBottomOf="parent">
 
 
         <Button
@@ -84,18 +83,19 @@
             android:focusable="true"
             android:textAllCaps="false"
             android:textColorHint="@color/white"
-            app:layout_constraintBottom_toTopOf="@+id/remind_me_later"
+            app:layout_constraintBottom_toTopOf="@+id/learn_more"
             app:layout_constraintTop_toTopOf="parent" />
 
         <android.support.v7.widget.AppCompatButton
-            android:id="@+id/remind_me_later"
+            android:id="@+id/learn_more"
             style="@style/Widget.AppCompat.Button.Borderless"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="15dp"
-            android:text="@string/crf_remind_me_later"
+            android:text="@string/learn_how"
             android:textAllCaps="false"
             android:textColor="@color/azure"
+            android:visibility="invisible"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/button_go_forward" />
 
