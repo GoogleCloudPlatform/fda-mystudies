@@ -10,6 +10,7 @@
     <string name="crf_overview_text">Let’s start the study</string>
     <string name="crf_overview_detail_text">Help us learn and test a new digital tool for Cardiorespiratory fitness by completing 2 clinic visits and doing several runs and stairs steps.</string>
     <string name="crf_lets_go">Let\’s go!</string>
+    <string name="learn_how"><u>Learn how and why</u></string>
 
     <string name="task_initial_toolbar_title">task_initial_toolbar_title</string>
 
@@ -62,7 +63,7 @@
     <string name="crf_spoken_good_job">Good job; 1 minute left.</string>
     <string name="crf_spoken_almost_done">10 seconds; Almost done!</string>
     <string name="crf_spoken_done">Done! Now measure your heart rate again.</string>
-    
+
     <!-- Data Groups Screen -->
     <string name="crf_data_groups_loading_title">Checking for existing groups</string>
 
@@ -76,5 +77,7 @@
     <string name="hr_participant">Participant Id</string>
     <string name="hr_participant_empty"> </string>
     <string name="crf_pressure">Gently place your finger on the camera and flashlight.</string>
+    <string name="crf_done_underline"><u>Done</u></string>
+    <string name="crf_done">Done</string>
 
 </resources>

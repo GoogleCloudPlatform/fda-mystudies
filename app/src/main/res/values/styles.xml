@@ -196,8 +196,4 @@
         <item name="android:fontFamily">@font/opensans</item>
     </style>
 
-    <style name="Crf"></style>
-
-    <style name="Crf.Gray"></style>
-
 </resources>
