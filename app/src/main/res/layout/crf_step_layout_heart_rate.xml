@@ -39,24 +39,22 @@
         android:layout_marginRight="@dimen/rsb_padding_large"
         android:layout_marginBottom="@dimen/rsb_padding_large" />
 
-    <Button
-        style="@style/Widget.AppCompat.Button.Borderless"
-        android:id="@+id/crf_redo_button"
+    <TextView
+        style="@style/TextAppearance.AppCompat.Caption"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/crf_heart_rate_title"
+        android:id="@+id/crf_calculate"
+        android:textColor="@color/white"
         android:layout_centerHorizontal="true"
-        android:gravity="center"
-        android:textAllCaps="false"
-        android:text="@string/crf_redo_measurement"
-        android:visibility="gone"
-        />
+        android:layout_below="@+id/crf_heart_rate_title"
+        android:visibility="gone"/>
+
 
     <FrameLayout
         android:id="@+id/crf_heart_container"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/crf_redo_button"
+        android:layout_below="@id/crf_heart_rate_title"
         android:layout_centerHorizontal="true">
 
         <FrameLayout
@@ -103,15 +101,6 @@
             android:layout_gravity="center"
             android:visibility="gone">
 
-            <TextView
-                style="@style/TextAppearance.Crf.IntroBody"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:text="@string/crf_your_heart_rate_is"
-                android:textColor="@color/white"
-                android:padding="@dimen/rsb_padding_medium"/>
-
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -124,7 +113,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:textColor="@color/salmon"/>
+                    android:textColor="@color/white"/>
 
                 <TextView
                     style="@style/TextAppearance.Crf.ActiveStatusText"
@@ -163,7 +152,7 @@
         android:textColor="@color/white"
         android:padding="@dimen/rsb_padding_medium"/>
 
-    <FrameLayout
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
@@ -171,15 +160,32 @@
         android:clipChildren="false">
 
         <Button
-            style="@style/Widget.Crf.SubmitBar"
-            android:id="@+id/crf_next_button"
+            android:id="@+id/button_go_forward"
             android:layout_width="match_parent"
             android:layout_height="@dimen/crf_rounded_button_height"
+            android:layout_margin="@dimen/crf_activity_icon_margin"
+            android:background="#3C4A63"
+            android:focusable="true"
+            android:textColorHint="@color/white"
             android:layout_gravity="center"
             android:text="@string/rsb_BUTTON_NEXT"
             android:textAllCaps="false"
             android:visibility="gone"/>
 
-    </FrameLayout>
+        <Button
+            android:id="@+id/crf_redo_button"
+            android:layout_width="wrap_content"
+            android:textColor="@color/gray"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_below="@+id/button_go_forward"
+            android:gravity="center"
+            android:textAllCaps="false"
+            android:text="@string/crf_redo_measurement"
+            android:visibility="gone"
+            android:background="@android:color/transparent"
+            />
+
+    </RelativeLayout>
 
 </RelativeLayout>
