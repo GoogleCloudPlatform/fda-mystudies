@@ -35,6 +35,7 @@ import org.researchstack.backbone.result.TaskResult;
 import org.researchstack.backbone.step.Step;
 import org.researchstack.backbone.task.NavigableOrderedTask;
 import org.researchstack.backbone.task.Task;
+import org.researchstack.backbone.ui.callbacks.StepCallbacks;
 import org.researchstack.backbone.ui.step.layout.InstructionStepLayout;
 import org.researchstack.backbone.utils.ResUtils;
 import org.sagebase.crf.CrfActiveTaskActivity;
@@ -68,6 +69,7 @@ public class CrfInstructionStepLayout extends InstructionStepLayout implements
     protected Button learnMore;
     protected TextView instructionViewTop;
     protected TextView instructionViewBottom;
+    protected ImageButton exitButton;
 
     public CrfInstructionStepLayout(Context context) {
         super(context);
@@ -129,6 +131,8 @@ public class CrfInstructionStepLayout extends InstructionStepLayout implements
         learnMore = findViewById(R.id.learn_more);
         this.instructionViewTop = findViewById(R.id.crf_instruction_text);
         this.instructionViewBottom = findViewById(R.id.crf_instruction_more_detail_text);
+
+        this.exitButton = findViewById(R.id.x_button);
     }
 
     @Override
@@ -225,19 +229,26 @@ public class CrfInstructionStepLayout extends InstructionStepLayout implements
             instructionViewBottom.setVisibility(VISIBLE);
         }
 
+        if(this.exitButton != null) {
+            exitButton.setImageResource(R.drawable.x_light);
+            exitButton.setVisibility(View.VISIBLE);
+            exitButton.setOnClickListener(this::goBackClicked);
+        }
+
     }
 
     private void setLearnMore() {
         Intent i = new Intent(getContext(), CrfTrainingInfo.class);
         getContext().startActivity(new Intent(getContext(), CrfTrainingInfo.class));
-        /*WebView w = (WebView) findViewById(R.id.crf_webview);
-        w.setVisibility(View.VISIBLE);
-        w.loadUrl("file:///android_asset/html/crf_heart_rate_training.html");*/
     }
 
     public void goForwardClicked(View v) {
         nextButton.setEnabled(false);
         onComplete();
+    }
+
+    public void goBackClicked(View v) {
+        callbacks.onSaveStep(StepCallbacks.ACTION_PREV, step, null);
     }
 
     @Override
