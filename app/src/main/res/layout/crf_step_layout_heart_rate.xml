@@ -25,6 +25,22 @@
     android:background="@color/magenta">
 
     <TextView
+        style="@style/TextAppearance.Crf.Header"
+        android:id="@+id/crf_oops"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:paddingTop="?attr/actionBarSize"
+        android:gravity="center_horizontal"
+        android:textColor="@color/white80"
+        android:layout_marginTop="10dp"
+        android:layout_marginLeft="@dimen/rsb_padding_large"
+        android:layout_marginRight="@dimen/rsb_padding_large"
+        android:layout_marginBottom="@dimen/rsb_padding_large">
+    </TextView>
+
+    <TextView
         style="@style/TextAppearance.Crf.SubHeader"
         android:id="@+id/crf_heart_rate_title"
         android:layout_width="wrap_content"
@@ -142,15 +158,16 @@
     </FrameLayout>
     <TextView
         android:id="@+id/crf_current_bpm"
-        style="@style/TextAppearance.Crf.IntroBody"
+        style="@style/TextAppearance.Crf.Capturing"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:layout_below="@id/crf_heart_container"
         android:layout_centerHorizontal="true"
-        android:text="--"
+        android:text="Capturing..."
         android:textColor="@color/white"
-        android:padding="@dimen/rsb_padding_medium"/>
+        android:padding="@dimen/rsb_padding_medium"
+        android:layout_marginTop="60dp"/>
 
     <RelativeLayout
         android:layout_width="match_parent"

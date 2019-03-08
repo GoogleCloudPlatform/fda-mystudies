@@ -41,7 +41,7 @@
     <string name="crf_remind_me_later"><u>Remind me later</u></string>
 
     <!-- Heartrate Task -->
-    <string name="crf_bpm">BPM</string>
+    <string name="crf_bpm">bpm</string>
     <string name="crf_camera_cover">Gently cover both the camera and flash with your finger.</string>
     <string name="crf_your_heart_rate_is">Your heart rate is</string>
     <string name="crf_redo_measurement"><u>Redo Measurement</u></string>

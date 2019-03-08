@@ -34,7 +34,7 @@
         <ImageButton
             android:id="@+id/x_button"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="45dp"
             android:background="@null"
             android:clickable="true"
             android:focusable="true"
