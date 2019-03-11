@@ -582,45 +582,25 @@ public class CrfHeartRateStepLayout extends ActiveStepLayout implements
             crfMessageTextView.setText(R.string.crf_move_finger_back);
             crfOops.setVisibility(View.VISIBLE);
             currentHeartRate.setText("--");
+
+            heartImageView.setVisibility(View.INVISIBLE);
+            arcDrawableContainer.setVisibility(View.INVISIBLE);
             arcDrawable.setSweepAngle(0.0f);
+            cameraPreview.setVisibility(View.VISIBLE);
         }
         else {
             crfOops.setVisibility(View.INVISIBLE);
             crfMessageTextView.setText(R.string.crf_camera_cover);
+            currentHeartRate.setText("Capturing...");
+
+            heartImageView.setVisibility(View.VISIBLE);
+            arcDrawableContainer.setVisibility(View.VISIBLE);
+            cameraPreview.setVisibility(View.INVISIBLE);
+
         }
     }
 
 
-    private void showHRStatus() {
-        LOG.error("Displaying camera error");
-        LinearLayout t = findViewById(R.id.crf_bpm_text_container);
-        t.setVisibility(GONE);
-
-        ImageView i = findViewById(R.id.crf_heart_icon);
-        i.setVisibility(GONE);
-
-        FrameLayout c = findViewById(R.id.crf_arc_drawable_container);
-        c.setVisibility(GONE);
-
-        cameraSourcePreview.setVisibility(GONE);
-
-    }
-
-    private void showPressureStatus()  {
-        LOG.error("Displaying pressure error");
-        LinearLayout t = findViewById(R.id.crf_bpm_text_container);
-        t.setVisibility(GONE);
-
-        ImageView i = findViewById(R.id.crf_heart_icon);
-        i.setVisibility(GONE);
-
-        FrameLayout c = findViewById(R.id.crf_arc_drawable_container);
-        c.setVisibility(GONE);
-
-        cameraSourcePreview.setVisibility(GONE);
-
-
-    }
 
     @Override
     public void abnormalHRUpdate(AbnormalHRHolder abnormal) {

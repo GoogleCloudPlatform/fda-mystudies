@@ -294,6 +294,9 @@ public interface BpmRecorder {
                             mIntelligentStartListener.intelligentStartUpdate(progress,
                                     mIntelligentStartPassed)
                     );
+                    mainHandler.post(() ->
+                            mCameraListener.cameraUpdate(new
+                                    BpmRecorder.CameraCoveredListener.CameraCoveredHolder(true)));
 
                 }
                 if(sample.abnormalHR()) {
