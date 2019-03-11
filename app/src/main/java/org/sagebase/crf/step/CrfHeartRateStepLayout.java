@@ -98,12 +98,14 @@ public class CrfHeartRateStepLayout extends ActiveStepLayout implements
         return cameraPreview;
     }
     protected TextView crfMessageTextView;
+    protected TextView crfOops;
 
     protected View heartRateTextContainer;
     protected TextView heartRateNumber;
 
     protected TextView currentHeartRate;
-    protected TextView nicelyDone;
+    protected TextView calculateSuccess;
+    protected TextView bpmText;
 
     protected View heartContainer;
 
@@ -170,6 +172,12 @@ public class CrfHeartRateStepLayout extends ActiveStepLayout implements
 
         cameraPreview = findViewById(R.id.crf_camera_texture_view);
 
+        crfOops = findViewById(R.id.crf_oops);
+        crfOops.setText("Oops!");
+        crfOops.setVisibility(View.INVISIBLE);
+
+        bpmText = findViewById(R.id.crf_heart_rate_bpm);
+
         crfMessageTextView = findViewById(R.id.crf_heart_rate_title);
         speakText(getContext().getString(R.string.crf_camera_cover));
         crfMessageTextView.setText(R.string.crf_camera_cover);
@@ -199,7 +207,7 @@ public class CrfHeartRateStepLayout extends ActiveStepLayout implements
         arcDrawableContainer = findViewById(R.id.crf_arc_drawable_container);
         arcDrawableView = findViewById(R.id.crf_arc_drawable);
         arcDrawable = new ArcDrawable();
-        arcDrawable.setColor(ResourcesCompat.getColor(getResources(), R.color.magenta, null));
+        arcDrawable.setColor(ResourcesCompat.getColor(getResources(), R.color.light_magenta, null));
         arcDrawable.setArchWidth(getResources().getDimensionPixelOffset(R.dimen.crf_ard_drawable_width));
         arcDrawable.setDirection(Path.Direction.CW);
         arcDrawable.setIncludeFullCirclePreview(true);
@@ -207,12 +215,14 @@ public class CrfHeartRateStepLayout extends ActiveStepLayout implements
         arcDrawableView.setBackground(arcDrawable);
 
         heartContainer = findViewById(R.id.crf_heart_container);
+        heartContainer.setBackgroundColor(getResources().getColor(R.color.white));
 
         nextButton = findViewById(R.id.button_go_forward);
         nextButton.setVisibility(View.GONE);
         nextButton.setOnClickListener(view -> onNextButtonClicked());
-        nicelyDone = findViewById(R.id.crf_calculate);
-        nicelyDone.setText("Your heart rate has been calculated.");
+
+        calculateSuccess = findViewById(R.id.crf_calculate);
+        calculateSuccess.setVisibility(View.INVISIBLE);
 
         redoButton = findViewById(R.id.crf_redo_button);
         redoButton.setVisibility(View.GONE);
@@ -326,13 +336,13 @@ public class CrfHeartRateStepLayout extends ActiveStepLayout implements
 
     // BPM and heart rate is ready to go, switch the UI
     private void intelligentStartDetected() {
+        // Testing
         heartImageView.setVisibility(View.VISIBLE);
         arcDrawableContainer.setVisibility(View.VISIBLE);
         arcDrawable.setSweepAngle(0.0f);
         cameraPreview.setVisibility(View.GONE);
         cameraSourcePreview.setVisibility(View.GONE);
-        heartContainer.setBackgroundColor(0x00000000);
-        
+
         hasDetectedStart = true;
         
         if(cameraRecorder instanceof  HeartRateCamera2Recorder) {
@@ -416,8 +426,10 @@ public class CrfHeartRateStepLayout extends ActiveStepLayout implements
 
 
     protected void showCompleteUi() {
+        crfOops.setVisibility(View.GONE);
         nextButton.setVisibility(View.VISIBLE);
         heartRateTextContainer.setVisibility(View.VISIBLE);
+        bpmText.setTextColor(getResources().getColor(R.color.black86));
 
 
 
@@ -426,7 +438,7 @@ public class CrfHeartRateStepLayout extends ActiveStepLayout implements
         cameraSourcePreview.setVisibility(View.GONE);
         cameraPreview.setVisibility(View.GONE);
         currentHeartRate.setVisibility(View.GONE);
-        arcDrawableContainer.setVisibility(View.INVISIBLE);
+        arcDrawableContainer.setVisibility(View.VISIBLE);
         crfMessageTextView.setVisibility(View.INVISIBLE);
 
 
@@ -449,6 +461,9 @@ public class CrfHeartRateStepLayout extends ActiveStepLayout implements
         shouldShowFinishUi = false;
         crfMessageTextView.setText("Nicely done!");
         crfMessageTextView.setVisibility(View.VISIBLE);
+        crfOops.setVisibility(View.INVISIBLE);
+
+        calculateSuccess.setVisibility(View.VISIBLE);
 
         nextButton.setText("Try Again");
         nextButton.setOnClickListener(view -> onRedoButtonClicked());
@@ -459,7 +474,6 @@ public class CrfHeartRateStepLayout extends ActiveStepLayout implements
 
         arcDrawableContainer.setVisibility(View.VISIBLE);
 
-        nicelyDone.setVisibility(View.VISIBLE);
     }
 
     /**
@@ -563,7 +577,17 @@ public class CrfHeartRateStepLayout extends ActiveStepLayout implements
 
     @Override
     public void cameraUpdate(CameraCoveredHolder camera) {
-
+        if(!camera.cameraCovered) {
+            LOG.warn("Camera isn't covered");
+            crfMessageTextView.setText(R.string.crf_move_finger_back);
+            crfOops.setVisibility(View.VISIBLE);
+            currentHeartRate.setText("--");
+            arcDrawable.setSweepAngle(0.0f);
+        }
+        else {
+            crfOops.setVisibility(View.INVISIBLE);
+            crfMessageTextView.setText(R.string.crf_camera_cover);
+        }
     }
 
 
