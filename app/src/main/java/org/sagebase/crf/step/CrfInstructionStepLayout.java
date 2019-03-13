@@ -248,7 +248,7 @@ public class CrfInstructionStepLayout extends InstructionStepLayout implements
     }
 
     public void goBackClicked(View v) {
-        callbacks.onSaveStep(StepCallbacks.ACTION_PREV, step, null);
+        callbacks.onSaveStep(StepCallbacks.ACTION_END, step, null);
     }
 
     @Override
