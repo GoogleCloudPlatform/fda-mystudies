@@ -1,101 +1,90 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-          xmlns:tools="http://schemas.android.com/tools"
-          package="org.sagebionetworks.research.crf">
-
+    xmlns:tools="http://schemas.android.com/tools"
+    package="org.sagebionetworks.research.crf">
     <!-- ActiveSteps may vibrate the phone on start and on finish -->
-    <uses-permission android:name="android.permission.VIBRATE"/>
-    <!-- ActiveSteps may access location to track distance walked -->
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
-    <!-- Communicate with Bridge -->
-    <uses-permission android:name="android.permission.INTERNET" />
-    <!-- ActiveSteps may use the camera to calculate heart rate -->
-    <uses-permission android:name="android.permission.CAMERA" />
-    <!-- ActiveSteps may use this to capture heart rate -->
-    <uses-permission android:name="android.permission.BODY_SENSORS" />
-    <!-- Used to schedule alarms -->
+    <uses-permission android:name="android.permission.VIBRATE" /> <!-- ActiveSteps may access location to track distance walked -->
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" /> <!-- Communicate with Bridge -->
+    <uses-permission android:name="android.permission.INTERNET" /> <!-- ActiveSteps may use the camera to calculate heart rate -->
+    <uses-permission android:name="android.permission.CAMERA" /> <!-- ActiveSteps may use this to capture heart rate -->
+    <uses-permission android:name="android.permission.BODY_SENSORS" /> <!-- Used to schedule alarms -->
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
 
     <application
         android:name="org.sagebase.crf.MainApplication"
         android:allowBackup="false"
         android:icon="@mipmap/ic_launcher"
-        android:roundIcon="@mipmap/ic_launcher_round"
         android:label="@string/app_name"
+        android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.Crf">
-
+        <activity android:name="org.sagebase.crf.step.CrfTrainingInfo"></activity>
         <activity
             android:name="org.sagebase.crf.CrfOverviewActivity"
             android:label="@string/app_name"
             android:theme="@style/Theme.Crf.Onboarding">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
         <activity
             android:name="org.sagebase.crf.CrfMainActivity"
             android:label="@string/app_name"
             android:launchMode="singleTask"
             android:screenOrientation="portrait"
-            android:theme="@style/Theme.Crf.Main">
-        </activity>
-
-        <!-- Processes OAuth2 response, destroys browser tab, and returns result to our activity -->
-        <activity android:name="net.openid.appauth.RedirectUriReceiverActivity"
-                  tools:node="replace">
+            android:theme="@style/Theme.Crf.Main"></activity> <!-- Processes OAuth2 response, destroys browser tab, and returns result to our activity -->
+        <activity
+            android:name="net.openid.appauth.RedirectUriReceiverActivity"
+            tools:node="replace">
             <intent-filter>
-                <action android:name="android.intent.action.VIEW"/>
-                <category android:name="android.intent.category.DEFAULT"/>
-                <category android:name="android.intent.category.BROWSABLE"/>
-                <data android:scheme="org.sagebase.crf-module"
-                      android:host="oauth2"/>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data
+                    android:host="oauth2"
+                    android:scheme="org.sagebase.crf-module" />
             </intent-filter>
         </activity>
         <activity
             android:name="org.sagebase.crf.CrfOnboardingTaskActivity"
             android:label="@string/app_name"
-            android:windowSoftInputMode="adjustPan|stateAlwaysHidden"
-            android:theme="@style/Theme.Crf.Onboarding"/>
-
+            android:theme="@style/Theme.Crf.Onboarding"
+            android:windowSoftInputMode="adjustPan|stateAlwaysHidden" />
         <activity
             android:name="org.sagebase.crf.CrfSurveyTaskActivity"
             android:label="@string/app_name"
             android:theme="@style/Theme.Crf.Survey"
-            android:windowSoftInputMode="adjustPan"/>
-
+            android:windowSoftInputMode="adjustPan" />
         <activity
             android:name="org.sagebase.crf.CrfActiveTaskActivity"
             android:label="@string/app_name"
+            android:launchMode="singleTop"
             android:theme="@style/Theme.Crf.Survey"
-            android:windowSoftInputMode="adjustResize"
-            android:launchMode="singleTop"/>
-
+            android:windowSoftInputMode="adjustResize" />
         <activity
             android:name="org.sagebase.crf.CrfViewTaskActivity"
             android:label="@string/app_name"
             android:theme="@style/Theme.Crf.Survey"
             android:windowSoftInputMode="adjustResize" />
-
         <activity
             android:name="org.sagebase.crf.CrfSettingsActivity"
             android:label="@string/app_name"
-            android:windowSoftInputMode="adjustResize"
-            android:theme="@style/Theme.Crf.Onboarding"/>
-
+            android:theme="@style/Theme.Crf.Onboarding"
+            android:windowSoftInputMode="adjustResize" />
         <activity
             android:name="org.researchstack.backbone.ui.ViewWebDocumentActivity"
             android:label="@string/app_name"
             android:theme="@style/Theme.Crf.Onboarding"
             android:windowSoftInputMode="adjustResize" />
-
-        <activity android:name="org.sagebase.crf.CrfExitActivity"/>
+        <activity android:name="org.sagebase.crf.CrfExitActivity" />
 
         <service
             android:name="org.researchstack.backbone.step.active.RecorderService"
-            android:exported="false"/>
+            android:exported="false" />
 
         <provider
             android:name="android.support.v4.content.FileProvider"
@@ -104,21 +93,20 @@
             android:grantUriPermissions="true">
             <meta-data
                 android:name="android.support.FILE_PROVIDER_PATHS"
-                android:resource="@xml/provider_paths"/>
+                android:resource="@xml/provider_paths" />
         </provider>
 
         <receiver android:name="org.sagebase.crf.reminder.CrfAlarmReceiver" />
         <receiver android:name="org.sagebase.crf.reminder.CrfRescheduleRemindersReciever">
             <intent-filter>
                 <action android:name="android.intent.action.QUICKBOOT_POWERON" />
-                <action android:name="com.htc.intent.action.QUICKBOOT_POWERON"/>
-                <action android:name="android.intent.action.REBOOT"/>
-                <action android:name="android.intent.action.BOOT_COMPLETED"/>
-                <action android:name="android.intent.action.TIME_SET"/>
-                <action android:name="android.intent.action.TIMEZONE_CHANGED"/>
+                <action android:name="com.htc.intent.action.QUICKBOOT_POWERON" />
+                <action android:name="android.intent.action.REBOOT" />
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+                <action android:name="android.intent.action.TIME_SET" />
+                <action android:name="android.intent.action.TIMEZONE_CHANGED" />
             </intent-filter>
         </receiver>
-
     </application>
 
 </manifest>

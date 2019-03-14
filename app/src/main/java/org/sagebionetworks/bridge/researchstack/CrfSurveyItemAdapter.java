@@ -55,6 +55,7 @@ public class CrfSurveyItemAdapter extends BridgeSurveyItemAdapter {
     public static final String HR_PARTICIPANT_ID_SURVEY_ITEM_TYPE = "hrParticipantId";
     public static final String CRF_SKIP_INSTRUCTION_TYPE = "crf_skip_instruction";
     public static final String CRF_SKIP_MC_TYPE = "crf_skip_mc";
+    public static final String CRF_SNAPSHOT_TYPE = "crf_snapshot";
 
     @VisibleForTesting
     static final Map<String, Class<? extends SurveyItem>> TYPE_TO_CLASS =
@@ -76,6 +77,7 @@ public class CrfSurveyItemAdapter extends BridgeSurveyItemAdapter {
                     .put(HR_PARTICIPANT_ID_SURVEY_ITEM_TYPE, TextfieldSurveyItem.class)
                     .put(CRF_SKIP_INSTRUCTION_TYPE, CrfSkipInstructionStepSurveyItem.class)
                     .put(CRF_SKIP_MC_TYPE, ChoiceQuestionSurveyItem.class)
+                    .put(CRF_SNAPSHOT_TYPE, CrfInstructionSurveyItem.class)
                     .build();
 
     @Override

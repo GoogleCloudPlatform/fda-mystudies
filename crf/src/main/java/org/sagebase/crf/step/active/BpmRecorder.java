@@ -214,64 +214,70 @@ public interface BpmRecorder {
         @AnyThread
         @Override
         public void onHeartRateSampleDetected(HeartBeatSample sample) {
-            bpmCalculator.calculateBpm(sample);
+            if(!sample.isCoveringLens()) {
+                mainHandler.post(() ->
+                        mCameraListener.cameraUpdate(new
+                                BpmRecorder.CameraCoveredListener.CameraCoveredHolder(false)));
 
-            // syoung 11/19/2018 Debug code added to get the sampling rate.
-            if (timestampReference == -1) {
-                timestampReference = sample.timestamp;
-            }
-            else if (sample.timestamp - timestampReference >= 1.0) {
-                LOG.debug("preprocessed sample count:{}", sampleCount);
-                timestampReference = sample.timestamp;
-                sampleCount = 0;
+                mIntelligentStartCounter = 0;
             }
             else {
-                sampleCount++;
-            }
+                bpmCalculator.calculateBpm(sample);
 
-            if (sample.timestampDate != null) {
-                mJsonObject.addProperty(TIMESTAMP_DATE_KEY,
-                        new SimpleDateFormat(FormatHelper.DATE_FORMAT_ISO_8601, new Locale("en", "us", "POSIX"))
-                                .format(sample.timestampDate));
-                LOG.debug("TIMESTAMP Date key: " + mJsonObject.get(TIMESTAMP_DATE_KEY).getAsString());
-            } else {
-                mJsonObject.remove(TIMESTAMP_DATE_KEY);
-            }
-
-            mJsonObject.addProperty(TIMESTAMP_IN_SECONDS_KEY, sample.timestamp);
-            mJsonObject.addProperty(UPTIME_IN_SECONDS_KEY, sample.uptime);
-            mJsonObject.addProperty(RED_KEY, sample.red);
-            mJsonObject.addProperty(GREEN_KEY, sample.green);
-            mJsonObject.addProperty(BLUE_KEY, sample.blue);
-            mJsonObject.addProperty(RED_LEVEL_KEY, sample.redLevel);
-
-            if (sample.bpm > 0) {
-                mJsonObject.addProperty(HEART_RATE_KEY, sample.bpm);
-                if (mBpmUpdateListener != null) {
-                    mainHandler.post(() ->
-                            mBpmUpdateListener.bpmUpdate(
-                                    new BpmRecorder.BpmUpdateListener.BpmHolder(sample.bpm, (long)sample.timestamp)));
+                // syoung 11/19/2018 Debug code added to get the sampling rate.
+                if (timestampReference == -1) {
+                    timestampReference = sample.timestamp;
+                } else if (sample.timestamp - timestampReference >= 1.0) {
+                    LOG.debug("preprocessed sample count:{}", sampleCount);
+                    timestampReference = sample.timestamp;
+                    sampleCount = 0;
+                } else {
+                    sampleCount++;
                 }
-            } else {
-                mJsonObject.remove(HEART_RATE_KEY);
-            }
 
-            if (LOG.isTraceEnabled()) {
-                LOG.trace("HeartBeatSample : {}", sample);
-            }
+                if (sample.timestampDate != null) {
+                    mJsonObject.addProperty(TIMESTAMP_DATE_KEY,
+                            new SimpleDateFormat(FormatHelper.DATE_FORMAT_ISO_8601, new Locale("en", "us", "POSIX"))
+                                    .format(sample.timestampDate));
+                    LOG.debug("TIMESTAMP Date key: " + mJsonObject.get(TIMESTAMP_DATE_KEY).getAsString());
+                } else {
+                    mJsonObject.remove(TIMESTAMP_DATE_KEY);
+                }
 
-            writeJsonObjectToFile(mJsonObject);
+                mJsonObject.addProperty(TIMESTAMP_IN_SECONDS_KEY, sample.timestamp);
+                mJsonObject.addProperty(UPTIME_IN_SECONDS_KEY, sample.uptime);
+                mJsonObject.addProperty(RED_KEY, sample.red);
+                mJsonObject.addProperty(GREEN_KEY, sample.green);
+                mJsonObject.addProperty(BLUE_KEY, sample.blue);
+                mJsonObject.addProperty(RED_LEVEL_KEY, sample.redLevel);
 
-            if (!mEnableIntelligentStart || mIntelligentStartPassed) {
-            } else {
-                updateIntelligentStart(sample);
+                if (sample.bpm > 0) {
+                    mJsonObject.addProperty(HEART_RATE_KEY, sample.bpm);
+                    if (mBpmUpdateListener != null) {
+                        mainHandler.post(() ->
+                                mBpmUpdateListener.bpmUpdate(
+                                        new BpmRecorder.BpmUpdateListener.BpmHolder(sample.bpm, (long) sample.timestamp)));
+                    }
+                } else {
+                    mJsonObject.remove(HEART_RATE_KEY);
+                }
+
+                if (LOG.isTraceEnabled()) {
+                    LOG.trace("HeartBeatSample : {}", sample);
+                }
+                writeJsonObjectToFile(mJsonObject);
+
+                if (!mEnableIntelligentStart || mIntelligentStartPassed) {
+                } else {
+                    updateIntelligentStart(sample);
+                }
             }
         }
 
         private void updateIntelligentStart(HeartBeatSample sample) {
-            if (mIntelligentStartPassed) {
+            /*if (mIntelligentStartPassed) {
                 return; // we already computed that we could start
-            }
+            }*/
 
             // If the red factor is large enough, we update the trigger
             if (sample.isCoveringLens()) {
@@ -287,6 +293,9 @@ public interface BpmRecorder {
                             mIntelligentStartListener.intelligentStartUpdate(progress,
                                     mIntelligentStartPassed)
                     );
+                    mainHandler.post(() ->
+                            mCameraListener.cameraUpdate(new
+                                    BpmRecorder.CameraCoveredListener.CameraCoveredHolder(true)));
 
                 }
                 if(sample.abnormalHR()) {
@@ -301,18 +310,13 @@ public interface BpmRecorder {
                 }
 
             } else {  // We need thresholds to be passed sequentially otherwise it is restarted
+                LOG.warn("Lens isn't covered");
+                mainHandler.post(() ->
+                        mCameraListener.cameraUpdate(new
+                                BpmRecorder.CameraCoveredListener.CameraCoveredHolder(false)));
+
                 mIntelligentStartCounter = 0;
 
-                if(sample.isPressureExcessive()) {
-                    mainHandler.post(() ->
-                            mPressureListener.pressureUpdate(new
-                                    BpmRecorder.PressureListener.PressureHolder(true)));
-                }
-                else {
-                    mainHandler.post(() ->
-                            mCameraListener.cameraUpdate(new
-                                    BpmRecorder.CameraCoveredListener.CameraCoveredHolder(false)));
-                }
             }
         }
 

@@ -1,5 +1,5 @@
 /*
- *    Copyright 2017 Sage Bionetworks
+ *    Copyright 2019 Sage Bionetworks
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -17,23 +17,24 @@
 
 package org.sagebase.crf.step;
 
-import com.google.gson.annotations.SerializedName;
+public class CrfSnapshotInstructionStep extends CrfInstructionStep {
 
-/**
- * Created by TheMDP on 10/25/17.
- */
+    public String instruction;
+    public String stepIdentifier;
+    public boolean learnMore;
 
-public class CrfStartTaskSurveyItem extends CrfInstructionSurveyItem {
 
-    /**
-     * The filename of the html that will show with more info on the task
-     */
-    @SerializedName("infoHtmlFilename")
-    public String infoHtmlFilename;
+    /* Default constructor needed for serialization/deserialization of object */
+    public CrfSnapshotInstructionStep() {
+        super();
+    }
 
-    /**
-     * A String representing a color resource
-     */
-    @SerializedName("textColor")
-    public String textColorRes;
+    public CrfSnapshotInstructionStep(String identifier, String title) {
+        super(identifier, title, null);
+    }
+
+    @Override
+    public Class getStepLayoutClass() {
+        return CrfSnapshotInstructionStepLayout.class;
+    }
 }

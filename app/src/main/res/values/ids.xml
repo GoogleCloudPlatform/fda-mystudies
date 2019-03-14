@@ -9,5 +9,6 @@
     <item name="crf_detail_container" type="id" />
     <item name="crf_image_container" type="id" />
     <item name="crf_submit_bar" type="id" />
+    <item name="mint" type="id">#63D49E</item>
 
 </resources>

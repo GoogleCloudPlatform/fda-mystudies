@@ -299,6 +299,9 @@ public class CrfTaskAdapter extends TaskAdapter {
                 case CrfTaskFactory.TASK_ID_HEART_RATE_MEASUREMENT:
                     icon = R.drawable.crf_task_demographics;
                     break;
+                case CrfTaskFactory.TASK_ID_HEART_RATE_TRAINING:
+                    icon = R.drawable.crf_heart_icon;
+                    break;
                 case CrfTaskFactory.TASK_ID_STAIR_STEP:
                     icon = R.drawable.crf_task_stair_step;
                     break;

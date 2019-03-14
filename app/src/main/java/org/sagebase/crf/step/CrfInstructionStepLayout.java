@@ -24,6 +24,7 @@ import android.graphics.Color;
 import android.support.v4.content.res.ResourcesCompat;
 import android.util.AttributeSet;
 import android.view.View;
+import android.webkit.WebView;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
@@ -34,6 +35,7 @@ import org.researchstack.backbone.result.TaskResult;
 import org.researchstack.backbone.step.Step;
 import org.researchstack.backbone.task.NavigableOrderedTask;
 import org.researchstack.backbone.task.Task;
+import org.researchstack.backbone.ui.callbacks.StepCallbacks;
 import org.researchstack.backbone.ui.step.layout.InstructionStepLayout;
 import org.researchstack.backbone.utils.ResUtils;
 import org.sagebase.crf.CrfActiveTaskActivity;
@@ -46,6 +48,8 @@ import org.sagebionetworks.bridge.researchstack.CrfResourceManager;
 import org.sagebionetworks.bridge.researchstack.CrfTaskFactory;
 import org.sagebionetworks.research.crf.R;
 
+import java.net.URISyntaxException;
+import java.net.URL;
 import java.util.List;
 
 /**
@@ -62,6 +66,10 @@ public class CrfInstructionStepLayout extends InstructionStepLayout implements
     protected ImageButton customButton;
     protected TextView customButtonText;
     protected Button remindMeLaterButton;
+    protected Button learnMore;
+    protected TextView instructionViewTop;
+    protected TextView instructionViewBottom;
+    protected ImageButton exitButton;
 
     public CrfInstructionStepLayout(Context context) {
         super(context);
@@ -110,17 +118,21 @@ public class CrfInstructionStepLayout extends InstructionStepLayout implements
     @Override
     public void connectStepUi(int titleRId, int textRId, int imageRId, int detailRId) {
         super.connectStepUi(
-                R.id.crf_intruction_title,
-                R.id.crf_intruction_text,
+                R.id.crf_instruction_title,
+                R.id.crf_instruction_text,
                 R.id.crf_image_view,
                 R.id.crf_instruction_more_detail_text);
 
         nextButton = findViewById(R.id.button_go_forward);
         nextButton.setEnabled(true);
         rootInstructionLayout = findViewById(R.id.crf_root_instruction_layout);
-        customButton = findViewById(R.id.cr_instruction_custom_button);
-        customButtonText = findViewById(R.id.crf_instruction_custom_button_text);
+
         remindMeLaterButton = findViewById(R.id.remind_me_later);
+        learnMore = findViewById(R.id.learn_more);
+        this.instructionViewTop = findViewById(R.id.crf_instruction_text);
+        this.instructionViewBottom = findViewById(R.id.crf_instruction_more_detail_text);
+
+        this.exitButton = findViewById(R.id.x_button);
     }
 
     @Override
@@ -198,11 +210,45 @@ public class CrfInstructionStepLayout extends InstructionStepLayout implements
             imageView.setPadding(imageView.getPaddingLeft(), 0,
                     imageView.getPaddingRight(), imageView.getPaddingBottom());
         }
+        if (crfInstructionStep.learnMore) {
+            learnMore.setVisibility(View.VISIBLE);
+            learnMore.setOnClickListener(view -> setLearnMore());
+        }
+        else {
+            learnMore.setVisibility(View.GONE);
+        }
+        // Display the instruction
+        if(this.instructionViewTop != null) {
+            instructionViewTop.setText(crfInstructionStep.getText());
+            instructionViewTop.setVisibility(VISIBLE);
+        }
+
+        // Display the detail text
+        if(this.instructionViewBottom != null) {
+            instructionViewBottom.setText(crfInstructionStep.getMoreDetailText());
+            instructionViewBottom.setVisibility(VISIBLE);
+        }
+
+        if(this.exitButton != null) {
+            exitButton.setImageResource(R.drawable.x_light);
+            exitButton.setVisibility(View.VISIBLE);
+            exitButton.setOnClickListener(this::goBackClicked);
+        }
+
+    }
+
+    private void setLearnMore() {
+        Intent i = new Intent(getContext(), CrfTrainingInfo.class);
+        getContext().startActivity(new Intent(getContext(), CrfTrainingInfo.class));
     }
 
     public void goForwardClicked(View v) {
         nextButton.setEnabled(false);
         onComplete();
+    }
+
+    public void goBackClicked(View v) {
+        callbacks.onSaveStep(StepCallbacks.ACTION_END, step, null);
     }
 
     @Override

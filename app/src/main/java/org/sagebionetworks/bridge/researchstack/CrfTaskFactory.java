@@ -18,6 +18,7 @@
 package org.sagebionetworks.bridge.researchstack;
 
 import android.content.Context;
+import android.support.v4.content.res.ResourcesCompat;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -54,11 +55,13 @@ import org.sagebase.crf.step.CrfCountdownStep;
 import org.sagebase.crf.step.CrfFitBitStepLayout;
 import org.sagebase.crf.step.CrfFormStep;
 import org.sagebase.crf.step.CrfHeartRateCameraStep;
+import org.sagebase.crf.step.CrfInstructionButtonType;
 import org.sagebase.crf.step.CrfInstructionStep;
 import org.sagebase.crf.step.CrfInstructionSurveyItem;
 import org.sagebase.crf.step.CrfSkipInstructionStep;
 import org.sagebase.crf.step.CrfSkipInstructionStepSurveyItem;
 import org.sagebase.crf.step.CrfSkipMCStep;
+import org.sagebase.crf.step.CrfSnapshotInstructionStep;
 import org.sagebase.crf.step.CrfStairStep;
 import org.sagebase.crf.step.CrfPhotoCaptureStep;
 import org.sagebase.crf.step.CrfStartTaskStep;
@@ -66,7 +69,9 @@ import org.sagebase.crf.step.CrfStartTaskSurveyItem;
 import org.sagebase.crf.step.HrParticipantIdStep;
 import org.sagebase.crf.step.body.CrfChoiceAnswerFormat;
 import org.sagebase.crf.step.body.CrfIntegerAnswerFormat;
+
 import org.sagebase.crf.step.active.BpmRecorder;
+
 
 import java.util.Collections;
 import java.util.LinkedHashMap;
@@ -175,6 +180,11 @@ public class CrfTaskFactory extends TaskItemFactory {
                                 throw new IllegalStateException("crf_fitbit types must be parsed as CrfInstructionSurveyItem");
                             }
                             return createFitBitStep((CrfInstructionSurveyItem)item);
+                        case CrfSurveyItemAdapter.CRF_SNAPSHOT_TYPE:
+                            if(!(item instanceof CrfInstructionSurveyItem)) {
+                                throw new IllegalStateException("crf snapshot types must be parsed as CrfInstructionSurveyItem");
+                            }
+                            return createCrfSnapshotStep((CrfInstructionSurveyItem) item);
                         case CrfSurveyItemAdapter.CRF_FORM_SURVEY_ITEM_TYPE:
                             if (!(item instanceof FormSurveyItem)) {
                                 throw new IllegalStateException("Error in json parsing, crf_form types must be CrfFormSurveyItem");
@@ -224,9 +234,24 @@ public class CrfTaskFactory extends TaskItemFactory {
         });
     }
 
+    private CrfSnapshotInstructionStep createCrfSnapshotStep(CrfInstructionSurveyItem item) {
+        CrfSnapshotInstructionStep step = new CrfSnapshotInstructionStep(item.identifier, item.title);
+        fillCrfInstructionStep(step, item);
+        if(item.text != null) {
+            step.instruction = item.text;
+        }
+        if(item.identifier != null) {
+            step.stepIdentifier = item.identifier;
+        }
+        if(item.learnMore) {
+            step.learnMore = item.learnMore;
+        }
+        return step;
+    }
+
     public static class CrfFormSurveyItemWrapper extends FormSurveyItem {
 
-        /* Default constructor needed for serilization/deserialization of object */
+        /* Default constructor needed for serialization/deserialization of object */
         public CrfFormSurveyItemWrapper() {
             super();
         }
@@ -287,6 +312,9 @@ public class CrfTaskFactory extends TaskItemFactory {
         }
         if (item.mediaVolume) {
             step.mediaVolume = true;
+        }
+        if(item.learnMore) {
+            step.learnMore = item.learnMore;
         }
         if (item.remindMeLater) {
             step.remindMeLater = true;
@@ -352,6 +380,17 @@ public class CrfTaskFactory extends TaskItemFactory {
         fillCrfActiveStep(step, item);
         if(item.identifier != null) {
             step.stepIdentifier = item.identifier;
+        }
+        if(item.buttonType != null) {
+            switch (item.buttonType) {
+                case "default":
+                    step.buttonType = CrfInstructionButtonType.DEFAULT;
+                    break;
+
+                case "gray":
+                    step.buttonType = CrfInstructionButtonType.GRAY;
+                    break;
+            }
         }
         return step;
     }

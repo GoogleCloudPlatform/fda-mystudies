@@ -115,10 +115,21 @@
     </style>
 
     <!-- Heart Rate Screen -->
-
+    <style name="TextAppearance.Crf.BpmNumber">
+        <item name="android:textSize">80sp</item>
+        <item name="android:fontFamily">@font/opensans_light</item>
+    </style>
+    <style name="TextAppearance.Crf.Capturing">
+        <item name="android:textSize">40sp</item>
+        <item name="android:fontFamily">@font/opensans_light</item>
+    </style>
+    <style name="TextAppearance.Crf.ActiveStatusNumber">
+        <item name="android:textSize">82sp</item>
+        <item name="android:fontFamily">@font/opensans</item>
+    </style>
     <style name="TextAppearance.Crf.ActiveStatusText">
         <item name="android:textSize">24sp</item>
-        <item name="android:fontFamily">@font/opensans_semibold</item>
+        <item name="android:fontFamily">@font/opensans_light</item>
     </style>
 
     <style name="TextAppearance.Crf.InstructionCustomButtonText">
@@ -180,9 +191,5 @@
         <item name="android:textSize">14sp</item>
         <item name="android:fontFamily">@font/opensans</item>
     </style>
-
-    <style name="Crf"></style>
-
-    <style name="Crf.Gray"></style>
 
 </resources>

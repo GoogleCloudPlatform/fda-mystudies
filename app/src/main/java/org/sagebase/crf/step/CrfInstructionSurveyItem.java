@@ -85,4 +85,7 @@ public class CrfInstructionSurveyItem extends InstructionSurveyItem {
 
     @SerializedName("remindMeLater")
     public boolean remindMeLater;
+
+    @SerializedName("learnMore")
+    public boolean learnMore;
 }
