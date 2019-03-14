@@ -30,7 +30,7 @@
     <!-- Zeplin Colors -->
     <!--<color name="salmon">#FF8875</color>-->
     <color name="salmon80">#CCFF8875</color>
-    <color name="deepGreen">#60B159</color>
+    <!--<color name="deepGreen">#60B159</color>-->
     <color name="deepGreen80">#CC60B159</color>
     <!--<color name="azure">#2196F3</color>-->
     <color name="softGreen">#68BF60</color>

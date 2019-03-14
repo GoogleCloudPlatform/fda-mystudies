@@ -76,14 +76,6 @@
     <string name="hr_participant_id_title">Enter participant ID</string>
     <string name="hr_participant">Participant Id</string>
     <string name="hr_participant_empty"> </string>
-    <string name="crf_pressure">Gently place your finger on the camera and flashlight.</string>
-    <string name="crf_done_underline"><u>Done</u></string>
-    <string name="crf_done">Done</string>
-    <string name="crf_move_finger_back">Please move your finger back over the flash and camera</string>
-    <string name="crf_heart_rate_calculated">Your heart rate has been calculated.</string>
-    <string name="crf_oops">Oops!</string>
-    <string name="redo"><u>Redo</u></string>
-    <string name="crf_practice_makes_perfect">Practice makes perfect</string>
-    <string name="crf_cover_for_later_tests">This is to make sure you can cover your flash and camera quickly for later tests.</string>
+
 
 </resources>
