@@ -8,7 +8,7 @@
     <!-- Toolbar Sizes -->
     <dimen name="crf_toolbar_top_padding">24dp</dimen>
     <dimen name="crf_toolbar_height_and_top_padding">64dp</dimen>
-    <dimen name="crf_progress_bar_height">12dp</dimen>
+    <!--<dimen name="crf_progress_bar_height">12dp</dimen>-->
     <dimen name="crf_progress_bar_radius">6dp</dimen>
 
     <!-- Button Sizes -->

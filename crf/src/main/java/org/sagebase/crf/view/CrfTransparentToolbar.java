@@ -33,7 +33,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
 
-import org.sagebionetworks.research.crf.R;
+import org.sagebase.crf.R;
 
 /**
  * Created by TheMDP on 10/26/17.

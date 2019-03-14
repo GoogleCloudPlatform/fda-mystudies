@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="colorPrimary">@color/deepGreen</color>
-    <color name="colorPrimaryDark">@color/salmon</color>
+    <!--<color name="colorPrimaryDark">@color/salmon</color>-->
     <color name="colorAccent">@color/deepGreen</color>
 
 
@@ -47,7 +47,7 @@
     <color name="black37">#5E000000</color>
     <color name="whiteButtonShadow">#F5F5F5</color>
     <color name="whiteButtonShadow65">#A6F5F5F5</color>
-    <color name="darkGrayText">#414859</color>
+    <!--<color name="darkGrayText">#414859</color>-->
     <!--<color name="silver">#e1e5e6</color>-->
 
 </resources>

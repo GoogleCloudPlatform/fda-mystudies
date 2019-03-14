@@ -17,10 +17,6 @@
 
 package org.sagebase.crf.view;
 
-import android.content.Context;
-
-import org.sagebase.crf.fitbit.model.Activity;
-
 /**
  * Created by TheMDP on 10/31/17.
  */
