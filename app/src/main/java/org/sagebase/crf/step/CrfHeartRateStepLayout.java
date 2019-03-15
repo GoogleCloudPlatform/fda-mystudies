@@ -460,7 +460,7 @@ public class CrfHeartRateStepLayout extends ActiveStepLayout implements
     }
 
     protected void onBackButtonClicked() {
-        callbacks.onSaveStep(StepCallbacks.ACTION_END, activeStep, stepResult);
+        callbacks.onSaveStep(StepCallbacks.ACTION_END, activeStep, null);
     }
 
 
