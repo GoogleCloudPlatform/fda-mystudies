@@ -251,6 +251,7 @@ public class CrfHeartRateStepLayout extends ActiveStepLayout implements
         heartImageView.setVisibility(View.GONE);
 
         exitButton = findViewById(R.id.x_button);
+        exitButton.setOnClickListener(view -> onBackButtonClicked());
         exitButtonContainer = findViewById(R.id.exit_button_container);
         buttonContainer = findViewById(R.id.crf_next_button_container);
 
@@ -457,6 +458,11 @@ public class CrfHeartRateStepLayout extends ActiveStepLayout implements
             }
         }
     }
+
+    protected void onBackButtonClicked() {
+        callbacks.onSaveStep(StepCallbacks.ACTION_END, activeStep, stepResult);
+    }
+
 
     public void onRedoButtonClicked() {
         pauseActiveStepLayout();
