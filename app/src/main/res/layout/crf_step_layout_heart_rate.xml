@@ -25,11 +25,42 @@
     android:layout_height="match_parent"
     android:background="@color/magenta">
 
+    <RelativeLayout
+        android:id="@+id/exit_button_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/magenta"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        >
+        <ImageButton
+            android:id="@+id/x_button"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:background="@null"
+            android:clickable="true"
+            android:focusable="true"
+            android:onClick="goBackClicked"
+            android:layout_margin="@dimen/activity_horizontal_margin"
+            />
+    </RelativeLayout>
+
+    <ImageView
+        android:id="@+id/crf_completion_icon"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:layout_gravity="center"
+        android:src="@drawable/crf_completed_icon"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="20dp"
+        android:visibility="gone"/>
+
     <android.support.constraint.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/crf_text_container"
-        android:layout_marginTop="20dp">
+        android:layout_below="@+id/exit_button_container"
+        >
 
         <TextView
             android:id="@+id/crf_oops"
@@ -80,6 +111,52 @@
             app:layout_constraintTop_toBottomOf="@id/crf_heart_rate_title"
             tools:layout_editor_absoluteX="24dp" />
     </android.support.constraint.ConstraintLayout>
+
+    <TextView
+        android:id="@+id/crf_your_hr_is"
+        style="@style/TextAppearance.Crf.SubHeader"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="10dp"
+        android:paddingTop="10dp"
+        android:layout_marginLeft="@dimen/rsb_padding_large"
+        android:layout_marginRight="@dimen/rsb_padding_large"
+        android:layout_marginBottom="@dimen/rsb_padding_large"
+        android:layout_below="@+id/crf_completion_icon"
+        android:text="@string/crf_your_heart_rate_is"
+        android:textAlignment="center"
+        android:textColor="@color/black86"
+        android:visibility="gone"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:orientation="vertical"
+        android:layout_below="@+id/crf_your_hr_is">
+
+        <TextView
+            android:id="@+id/crf_final_bpm"
+            style="@style/TextAppearance.Crf.BpmNumber"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textAlignment="center"
+            android:textColor="@color/black86"
+            android:visibility="gone" />
+
+        <TextView
+            style="@style/TextAppearance.Crf.SubHeader"
+            android:id="@+id/crf_bpm_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/crf_bpm_caps"
+            android:layout_gravity="center"
+            android:textColor="@color/black86"
+            android:visibility="gone"/>
+
+    </LinearLayout>
+
 
     <FrameLayout
         android:id="@+id/crf_heart_container"
@@ -187,12 +264,41 @@
         android:padding="@dimen/rsb_padding_medium"
         android:layout_marginTop="60dp"/>
 
-    <RelativeLayout
+    <android.support.constraint.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:padding="@dimen/rsb_padding_large"
-        android:clipChildren="false">
+        android:id="@+id/crf_next_button_container">
+
+        <TextView
+            style="@style/TextAppearance.Crf.SubHeader"
+            android:id="@+id/crf_practice"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/crf_practice_makes_perfect"
+            android:layout_gravity="center"
+            android:textColor="@color/rsb_black"
+            android:layout_marginLeft="@dimen/rsb_padding_large"
+            android:layout_marginRight="@dimen/rsb_padding_large"
+            android:paddingBottom="40dp"
+            android:visibility="gone"
+            app:layout_constraintTop_toTopOf="parent"
+            />
+
+        <TextView
+            style="style/TextAppearance.Crf.Small"
+            android:id="@+id/crf_later_tests"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/crf_cover_for_later_tests"
+            android:layout_gravity="center"
+            android:textColor="@color/rsb_black"
+            android:layout_marginLeft="@dimen/rsb_padding_large"
+            android:layout_marginRight="@dimen/rsb_padding_large"
+            android:paddingBottom="20dp"
+            android:visibility="gone"
+            app:layout_constraintTop_toBottomOf="@+id/crf_practice"/>
 
         <Button
             android:id="@+id/button_go_forward"
@@ -205,12 +311,13 @@
             android:layout_gravity="center"
             android:text="@string/rsb_BUTTON_NEXT"
             android:textAllCaps="false"
-            android:visibility="gone"/>
+            android:visibility="gone"
+            app:layout_constraintTop_toBottomOf="@+id/crf_later_tests"/>
 
         <Button
             android:id="@+id/crf_redo_button"
-            android:layout_width="wrap_content"
-            android:textColor="@color/gray"
+            android:layout_width="match_parent"
+            android:textColor="@color/dark_gray"
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
             android:layout_below="@+id/button_go_forward"
@@ -219,8 +326,9 @@
             android:text="@string/crf_redo_measurement"
             android:visibility="gone"
             android:background="@android:color/transparent"
+            app:layout_constraintTop_toBottomOf="@+id/button_go_forward"
             />
 
-    </RelativeLayout>
+    </android.support.constraint.ConstraintLayout>
 
 </RelativeLayout>

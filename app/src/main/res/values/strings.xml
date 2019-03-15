@@ -42,6 +42,7 @@
 
     <!-- Heartrate Task -->
     <string name="crf_bpm">bpm</string>
+    <string name="crf_bpm_caps">BPM</string>
     <string name="crf_camera_cover">Gently cover both the camera and flash with your finger.</string>
     <string name="crf_your_heart_rate_is">Your heart rate is</string>
     <string name="crf_redo_measurement"><u>Redo Measurement</u></string>
@@ -82,5 +83,8 @@
     <string name="crf_move_finger_back">Please move your finger back over the flash and camera</string>
     <string name="crf_heart_rate_calculated">Your heart rate has been calculated.</string>
     <string name="crf_oops">Oops!</string>
+    <string name="redo"><u>Redo</u></string>
+    <string name="crf_practice_makes_perfect">Practice makes perfect</string>
+    <string name="crf_cover_for_later_tests">This is to make sure you can cover your flash and camera quickly for later tests.</string>
 
 </resources>
