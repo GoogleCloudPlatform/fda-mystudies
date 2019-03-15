@@ -26,10 +26,8 @@ import android.os.Build;
 import android.support.annotation.Nullable;
 import android.support.annotation.UiThread;
 import android.support.constraint.ConstraintLayout;
-import android.support.constraint.solver.widgets.ConstraintAnchor;
 import android.support.v4.content.res.ResourcesCompat;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.TextureView;
 import android.view.View;
 import android.view.ViewGroup;
@@ -38,10 +36,8 @@ import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.view.animation.Transformation;
 import android.widget.Button;
-import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -57,7 +53,6 @@ import org.researchstack.backbone.step.active.recorder.RecorderListener;
 import org.researchstack.backbone.ui.callbacks.StepCallbacks;
 import org.researchstack.backbone.ui.step.layout.ActiveStepLayout;
 import org.researchstack.backbone.ui.views.ArcDrawable;
-import org.researchstack.backbone.utils.LogExt;
 import org.researchstack.backbone.utils.StepResultHelper;
 import org.sagebase.crf.camera.CameraSourcePreview;
 import org.sagebase.crf.step.heartrate.BpmRecorder;
@@ -118,15 +113,16 @@ public class CrfHeartRateStepLayout extends ActiveStepLayout implements
     protected View arcDrawableView;
     protected ArcDrawable arcDrawable;
     protected RelativeLayout layout;
+
     protected RelativeLayout exitButtonContainer;
     protected ConstraintLayout buttonContainer;
-
     protected Button nextButton;
     protected Button redoButton;
+    protected ImageButton exitButton;
+
     protected ImageView heartImageView;
     protected HeartBeatAnimation heartBeatAnimation;
 
-    protected ImageButton exitButton;
     protected ImageView crfCompletionIcon;
     protected TextView crfPractice;
     protected TextView coverFlash;
@@ -250,6 +246,9 @@ public class CrfHeartRateStepLayout extends ActiveStepLayout implements
         heartImageView = findViewById(R.id.crf_heart_icon);
         heartImageView.setVisibility(View.GONE);
 
+        /**
+         * TODO: This exit button is really small- it needs to be larger.
+         */
         exitButton = findViewById(R.id.x_button);
         exitButton.setOnClickListener(view -> onBackButtonClicked());
         exitButtonContainer = findViewById(R.id.exit_button_container);
@@ -282,7 +281,7 @@ public class CrfHeartRateStepLayout extends ActiveStepLayout implements
         if(this.exitButton != null) {
             exitButton.setImageResource(R.drawable.x_light);
             exitButton.setVisibility(View.VISIBLE);
-            exitButton.setOnClickListener(this::goBackClicked);
+            exitButton.setOnClickListener(view -> onBackButtonClicked());
         }
 
         crfCompletionIcon = findViewById(R.id.crf_completion_icon);
@@ -292,10 +291,6 @@ public class CrfHeartRateStepLayout extends ActiveStepLayout implements
         finalBpm = findViewById(R.id.crf_final_bpm);
         finalBpmText = findViewById(R.id.crf_bpm_text);
 
-    }
-
-    private void goBackClicked(View view) {
-        callbacks.onSaveStep(StepCallbacks.ACTION_END, step, null);
     }
 
     // Wait for intelligent start to call super.start()
@@ -459,6 +454,7 @@ public class CrfHeartRateStepLayout extends ActiveStepLayout implements
         }
     }
 
+    /** TODO: This should exit to the main menu in the encompassing app **/
     protected void onBackButtonClicked() {
         callbacks.onSaveStep(StepCallbacks.ACTION_END, activeStep, null);
     }
