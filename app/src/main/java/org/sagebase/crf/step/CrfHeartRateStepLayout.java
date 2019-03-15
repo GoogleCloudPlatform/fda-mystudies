@@ -181,6 +181,9 @@ public class CrfHeartRateStepLayout extends ActiveStepLayout implements
     @Override
     public void setupActiveViews() {
         super.setupActiveViews();
+
+        /**TODO: If this is the 2nd step (turn_on_camera), we need to check for permissions and ask for permissions before proceeding. **/
+
         shouldShowFinishUi = getResources().getBoolean(R.bool.heart_rate_show_finish_ui);
 
         cameraPreview = findViewById(R.id.crf_camera_texture_view);
@@ -250,7 +253,6 @@ public class CrfHeartRateStepLayout extends ActiveStepLayout implements
          * TODO: This exit button is really small- it needs to be larger.
          */
         exitButton = findViewById(R.id.x_button);
-        exitButton.setOnClickListener(view -> onBackButtonClicked());
         exitButtonContainer = findViewById(R.id.exit_button_container);
         buttonContainer = findViewById(R.id.crf_next_button_container);
 
@@ -281,7 +283,7 @@ public class CrfHeartRateStepLayout extends ActiveStepLayout implements
         if(this.exitButton != null) {
             exitButton.setImageResource(R.drawable.x_light);
             exitButton.setVisibility(View.VISIBLE);
-            exitButton.setOnClickListener(view -> onBackButtonClicked());
+            exitButton.setOnClickListener(this::goBackClicked);
         }
 
         crfCompletionIcon = findViewById(R.id.crf_completion_icon);
@@ -455,8 +457,8 @@ public class CrfHeartRateStepLayout extends ActiveStepLayout implements
     }
 
     /** TODO: This should exit to the main menu in the encompassing app **/
-    protected void onBackButtonClicked() {
-        callbacks.onSaveStep(StepCallbacks.ACTION_END, activeStep, null);
+    private void goBackClicked(View view) {
+        callbacks.onSaveStep(StepCallbacks.ACTION_END, step, null);
     }
 
 
@@ -468,7 +470,6 @@ public class CrfHeartRateStepLayout extends ActiveStepLayout implements
 
 
     protected void showCompleteUi() {
-        //crfOops.setVisibility(View.INVISIBLE);
         crfOops.setText("Nicely done!");
         crfOops.setVisibility(View.VISIBLE);
         nextButton.setVisibility(View.VISIBLE);
