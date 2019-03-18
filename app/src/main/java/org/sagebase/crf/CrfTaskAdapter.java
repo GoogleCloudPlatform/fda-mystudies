@@ -34,13 +34,11 @@ import org.researchstack.backbone.model.SchedulesAndTasksModel;
 import org.researchstack.backbone.model.SchedulesAndTasksModel.ScheduleModel;
 import org.researchstack.backbone.ui.adapter.TaskAdapter;
 import org.researchstack.backbone.utils.LogExt;
-import org.sagebase.crf.helper.CrfDateHelper;
 import org.sagebase.crf.helper.CrfScheduleHelper;
-import org.sagebionetworks.bridge.researchstack.CrfTaskFactory;
+import org.sagebase.crf.researchstack.CrfTaskFactory;
 import org.sagebionetworks.research.crf.R;
 
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 

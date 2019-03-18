@@ -5,12 +5,8 @@
     <string name="app_name">Cardiorespiratory Fitness</string>
     <string name="action_settings">Settings</string>
 
-    <!-- Overview Screen -->
-    <string name="crf_overview_title">Welcome to the CRF Module</string>
-    <string name="crf_overview_text">Let’s start the study</string>
-    <string name="crf_overview_detail_text">Help us learn and test a new digital tool for Cardiorespiratory fitness by completing 2 clinic visits and doing several runs and stairs steps.</string>
-    <string name="crf_lets_go">Let\’s go!</string>
-    <string name="learn_how"><u>Learn how and why</u></string>
+
+
 
     <string name="task_initial_toolbar_title">task_initial_toolbar_title</string>
 
@@ -21,9 +17,6 @@
         Please take a look at Parkinson Crf, a research study app about Parkinson Disease.
         Download it for Android at https://play.google.com/store/apps/details?id=org.sagebase.Crf</string>
     <string name="rsb_share_app_url">https://play.google.com/store/apps/details?id=org.sagebase.Crf</string>
-
-    <!-- Active Task Screen -->
-    <string name="crf_step_progress">Step %1$s of %2$s</string>
 
     <!-- Permissions -->
     <string name="permission_camera_title">Camera</string>
@@ -40,14 +33,7 @@
     <!-- Start Task Step -->
     <string name="crf_remind_me_later"><u>Remind me later</u></string>
 
-    <!-- Heartrate Task -->
-    <string name="crf_bpm">bpm</string>
-    <string name="crf_bpm_caps">BPM</string>
-    <string name="crf_camera_cover">Gently cover both the camera and flash with your finger.</string>
-    <string name="crf_your_heart_rate_is">Your heart rate is</string>
-    <string name="crf_redo_measurement"><u>Redo Measurement</u></string>
-    <string name="crf_finish_measurement">Finish Measurement</string>
-    <string name="crf_hand_to_researcher">Please hand the phone to the researcher</string>
+
 
     <!-- Countdown Task -->
     <string name="crf_underlined_pause"><u>Pause</u></string>

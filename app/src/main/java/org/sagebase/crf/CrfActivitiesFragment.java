@@ -46,8 +46,8 @@ import org.sagebase.crf.helper.CrfScheduleHelper;
 import org.sagebase.crf.view.CrfFilterableActivityDisplay;
 import org.sagebionetworks.bridge.researchstack.CrfDataProvider;
 import org.sagebionetworks.bridge.researchstack.CrfPrefs;
-import org.sagebionetworks.bridge.researchstack.CrfResourceManager;
-import org.sagebionetworks.bridge.researchstack.CrfTaskFactory;
+import org.sagebase.crf.researchstack.CrfResourceManager;
+import org.sagebase.crf.researchstack.CrfTaskFactory;
 import org.sagebionetworks.research.crf.BuildConfig;
 import org.sagebionetworks.research.crf.R;
 

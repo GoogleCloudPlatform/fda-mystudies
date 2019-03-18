@@ -33,8 +33,8 @@ import org.researchstack.backbone.ui.ViewTaskActivity;
 import org.sagebase.crf.CrfActivityResultListener;
 import org.sagebase.crf.CrfSurveyTaskActivity;
 import org.sagebase.crf.reminder.CrfReminderManager;
-import org.sagebionetworks.bridge.researchstack.CrfResourceManager;
-import org.sagebionetworks.bridge.researchstack.CrfTaskFactory;
+import org.sagebase.crf.researchstack.CrfResourceManager;
+import org.sagebase.crf.researchstack.CrfTaskFactory;
 import org.sagebionetworks.research.crf.R;
 
 import java.util.Date;

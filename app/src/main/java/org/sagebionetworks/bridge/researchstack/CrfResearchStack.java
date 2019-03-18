@@ -18,6 +18,7 @@ import org.researchstack.backbone.UiManager;
 import org.researchstack.backbone.notification.NotificationConfig;
 import org.researchstack.backbone.notification.SimpleNotificationConfig;
 import org.researchstack.backbone.onboarding.OnboardingManager;
+import org.sagebase.crf.researchstack.CrfResourceManager;
 import org.sagebionetworks.bridge.android.manager.BridgeManagerProvider;
 
 /**

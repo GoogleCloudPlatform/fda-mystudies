@@ -1,8 +1,19 @@
 <resources>
     <string name="app_name">Cardio Respiratory Fitness</string>
 
+    <!-- Overview Screen -->
+    <string name="crf_overview_title">Welcome to the CRF Module</string>
+    <string name="crf_overview_text">Let’s start the study</string>
+    <string name="crf_overview_detail_text">Help us learn and test a new digital tool for Cardiorespiratory fitness by completing 2 clinic visits and doing several runs and stairs steps.</string>
+    <string name="crf_lets_go">Let\’s go!</string>
+    <string name="learn_how"><u>Learn how and why</u></string>
+
+    <!-- Active Task Screen -->
+    <string name="crf_step_progress">Step %1$s of %2$s</string>
+
     <!-- Heartrate Task -->
-    <string name="crf_bpm">BPM</string>
+    <string name="crf_bpm">bpm</string>
+    <string name="crf_bpm_caps">BPM</string>
     <string name="crf_camera_cover">Gently cover both the camera and flash with your finger.</string>
     <string name="crf_your_heart_rate_is">Your heart rate is</string>
     <string name="crf_redo_measurement"><u>Redo Measurement</u></string>

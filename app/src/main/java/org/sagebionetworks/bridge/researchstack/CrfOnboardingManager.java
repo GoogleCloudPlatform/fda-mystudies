@@ -12,6 +12,8 @@ import org.researchstack.backbone.onboarding.OnboardingManagerTask;
 import org.researchstack.backbone.step.Step;
 import org.researchstack.backbone.task.NavigableOrderedTask;
 import org.sagebase.crf.CrfOnboardingTaskActivity;
+import org.sagebase.crf.researchstack.CrfSurveyItemAdapter;
+import org.sagebase.crf.researchstack.CrfTaskFactory;
 import org.sagebase.crf.step.CrfExternalIdStep;
 import org.sagebase.crf.step.CrfInstructionSurveyItem;
 import org.sagebionetworks.bridge.researchstack.onboarding.BridgeOnboardingManager;

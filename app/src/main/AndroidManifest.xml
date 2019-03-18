@@ -3,11 +3,16 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="org.sagebionetworks.research.crf">
     <!-- ActiveSteps may vibrate the phone on start and on finish -->
-    <uses-permission android:name="android.permission.VIBRATE" /> <!-- ActiveSteps may access location to track distance walked -->
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" /> <!-- Communicate with Bridge -->
-    <uses-permission android:name="android.permission.INTERNET" /> <!-- ActiveSteps may use the camera to calculate heart rate -->
-    <uses-permission android:name="android.permission.CAMERA" /> <!-- ActiveSteps may use this to capture heart rate -->
-    <uses-permission android:name="android.permission.BODY_SENSORS" /> <!-- Used to schedule alarms -->
+    <uses-permission android:name="android.permission.VIBRATE" />
+    <!-- ActiveSteps may access location to track distance walked -->
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <!-- Communicate with Bridge -->
+    <uses-permission android:name="android.permission.INTERNET" />
+    <!-- ActiveSteps may use the camera to calculate heart rate -->
+    <uses-permission android:name="android.permission.CAMERA" />
+    <!-- ActiveSteps may use this to capture heart rate -->
+    <uses-permission android:name="android.permission.BODY_SENSORS" />
+    <!-- Used to schedule alarms -->
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
 
     <application

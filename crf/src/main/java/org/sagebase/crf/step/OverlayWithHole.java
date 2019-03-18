@@ -1,5 +1,5 @@
 /*
- *    Copyright 2018 Sage Bionetworks
+ *    Copyright 2019 Sage Bionetworks
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -26,7 +26,8 @@ import android.graphics.RectF;
 import android.util.AttributeSet;
 import android.view.View;
 
-import org.sagebionetworks.research.crf.R;
+import org.sagebase.crf.R;
+
 
 /**
  * Created by liujoshua on 2/26/2018.

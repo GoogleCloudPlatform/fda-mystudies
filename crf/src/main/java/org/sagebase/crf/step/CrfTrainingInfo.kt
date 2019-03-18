@@ -22,7 +22,7 @@ import android.os.Bundle
 import android.support.v4.content.res.ResourcesCompat
 import android.webkit.WebView
 import android.widget.Button
-import org.sagebionetworks.research.crf.R
+import org.sagebase.crf.R
 
 class CrfTrainingInfo : AppCompatActivity() {
 

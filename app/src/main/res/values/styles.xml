@@ -10,37 +10,7 @@
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light"/>
     <!-- END used by fitbit -->
 
-    <style name="Widget.Crf.IconTabLayout" parent="@style/Widget.Backbone.IconTabLayout">
-        <item name="tabIconColor">@android:color/white</item>
-        <item name="tabIconIndicatorColor">@color/rsb_error</item>
-        <item name="tabTextColor">@color/tab_text_color</item>
-    </style>
 
-    <style name="Widget.Crf.SubmitBar" parent="@style/Widget.Backbone.SubmitBar">
-        <item name="positiveActionTitle">@string/rsb_BUTTON_NEXT</item>
-        <item name="positiveActionColor">@color/white</item>
-        <item name="negativeActionColor">@color/azure</item>
-    </style>
-
-    <style name="Base.Widget.Crf.Toolbar" parent="@style/Widget.AppCompat.Toolbar">
-        <item name="android:background">?attr/colorPrimary</item>
-        <item name="android:minHeight">56dp</item>
-        <item name="titleTextAppearance">@style/TextAppearance.Widget.Crf.Toolbar.Title</item>
-    </style>
-
-    <style name="Widget.Crf.Toolbar" parent="@style/Base.Widget.Crf.Toolbar">
-        <item name="android:foreground">?android:windowContentOverlay</item>
-    </style>
-
-    <style name="Widget.Crf.Toolbar.Transparent" parent="@style/Base.Widget.Crf.Toolbar">
-        <item name="titleTextAppearance">
-            @style/TextAppearance.Widget.Crf.Toolbar.Title.Transparent
-        </item>
-    </style>
-
-    <style name="Widget.Crf.ActionButton.Overflow" parent="@style/Widget.AppCompat.ActionButton.Overflow">
-        <item name="colorControlNormal">@android:color/white</item>
-    </style>
 
     <style name="Widget.Crf.Onboarding.Button" parent="Widget.AppCompat.Button">
         <item name="android:layout_width">160dp</item>
@@ -57,18 +27,7 @@
         <item name="android:textSize">14sp</item>
     </style>
 
-    <style name="Widget.Crf.EmptyView" parent="@style/Widget.Backbone.EmptyView">
-        <item name="android:background">@android:color/white</item>
-    </style>
 
-    <style name="TextAppearance.Widget.Crf.Toolbar.Title" parent="@style/TextAppearance.Widget.AppCompat.Toolbar.Title">
-        <item name="android:textColor">@android:color/white</item>
-        <item name="android:textSize">20sp</item>
-    </style>
-
-    <style name="TextAppearance.Widget.Crf.Toolbar.Title.Transparent">
-        <item name="android:textColor">@color/rsb_warm_gray</item>
-    </style>
 
     <style name="PreferenceFragment.Sample" parent="@style/PreferenceFragment.Material">
         <item name="android:divider">@null</item>
@@ -76,31 +35,7 @@
 
     <style name="TextAppearance"/>
     <style name="TextAppearance.Crf"/>
-    <style name="TextAppearance.Crf.Body">
-        <item name="android:textSize">17sp</item>
-        <item name="android:fontFamily">@font/opensans</item>
-    </style>
-    <style name="TextAppearance.Crf.Header">
-        <item name="android:textSize">25sp</item>
-        <item name="android:textStyle">bold</item>
-        <item name="android:fontFamily">@font/opensans</item>
-    </style>
-    <style name="TextAppearance.Crf.Body.Italic">
-        <item name="android:textStyle">italic</item>
-    </style>
-    <style name="TextAppearance.Crf.Body.Bold">
-        <item name="android:textStyle">bold</item>
-    </style>
-    <style name="TextAppearance.Crf.Small">
-        <item name="android:textSize">15sp</item>
-        <item name="android:fontFamily">@font/opensans</item>
-    </style>
 
-    <style name="TextAppearance.Crf.StartTaskSubHeader">
-        <item name="android:textSize">17sp</item>
-        <item name="android:textStyle">italic</item>
-        <item name="android:fontFamily">@font/opensans</item>
-    </style>
 
     <!-- Intro Screen -->
     <style name="TextAppearance.Crf.IntroHeader">
@@ -114,28 +49,7 @@
         <item name="android:fontFamily">@font/opensans</item>
     </style>
 
-    <!-- Heart Rate Screen -->
-    <style name="TextAppearance.Crf.BpmNumber">
-        <item name="android:textSize">80sp</item>
-        <item name="android:fontFamily">@font/opensans_light</item>
-    </style>
-    <style name="TextAppearance.Crf.Capturing">
-        <item name="android:textSize">40sp</item>
-        <item name="android:fontFamily">@font/opensans_light</item>
-    </style>
-    <style name="TextAppearance.Crf.ActiveStatusNumber">
-        <item name="android:textSize">82sp</item>
-        <item name="android:fontFamily">@font/opensans</item>
-    </style>
-    <style name="TextAppearance.Crf.ActiveStatusText">
-        <item name="android:textSize">24sp</item>
-        <item name="android:fontFamily">@font/opensans_light</item>
-    </style>
 
-    <style name="TextAppearance.Crf.InstructionCustomButtonText">
-        <item name="android:textSize">12sp</item>
-        <item name="android:fontFamily">@font/opensans_light</item>
-    </style>
 
     <!-- Countdown Screen -->
     <style name="TextAppearance.Crf.Countdown">
@@ -143,12 +57,6 @@
         <item name="android:fontFamily">@font/opensans_light</item>
     </style>
 
-    <!-- Stair Step Screen -->
-    <style name="TextAppearance.Crf.StairStep">
-        <item name="android:textSize">60sp</item>
-        <item name="android:textStyle">bold</item>
-        <item name="android:fontFamily">@font/opensans</item>
-    </style>
     <!-- Skip Step Screen -->
     <style name="TextAppearance.Crf.SkipInstruction">
         <item name="android:textSize">24sp</item>
@@ -186,10 +94,6 @@
         <item name="android:textColor">@color/white</item>
     </style>
 
-    <!-- Active Task Screen -->
-    <style name="TextAppearance.Crf.ActiveTaskStepProgress">
-        <item name="android:textSize">14sp</item>
-        <item name="android:fontFamily">@font/opensans</item>
-    </style>
+
 
 </resources>

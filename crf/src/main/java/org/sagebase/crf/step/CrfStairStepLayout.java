@@ -1,5 +1,5 @@
 /*
- *    Copyright 2017 Sage Bionetworks
+ *    Copyright 2019 Sage Bionetworks
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -29,8 +29,8 @@ import android.widget.TextView;
 import org.researchstack.backbone.result.StepResult;
 import org.researchstack.backbone.step.Step;
 import org.researchstack.backbone.ui.step.layout.ActiveStepLayout;
+import org.sagebase.crf.R;
 import org.sagebase.crf.view.CrfTaskStatusBarManipulator;
-import org.sagebionetworks.research.crf.R;
 
 import java.util.Locale;
 

@@ -36,15 +36,14 @@ import org.researchstack.backbone.task.Task;
 import org.researchstack.backbone.ui.ViewTaskActivity;
 import org.researchstack.backbone.ui.ViewWebDocumentActivity;
 import org.researchstack.backbone.utils.ResUtils;
-import org.researchstack.backbone.utils.StepResultHelper;
 import org.sagebase.crf.CrfActivityResultListener;
 import org.sagebase.crf.CrfSurveyTaskActivity;
 import org.sagebase.crf.reminder.CrfReminderManager;
 import org.sagebase.crf.view.CrfTaskToolbarActionManipulator;
 import org.sagebase.crf.view.CrfTaskToolbarIconManipulator;
 import org.sagebase.crf.view.CrfTaskToolbarProgressManipulator;
-import org.sagebionetworks.bridge.researchstack.CrfResourceManager;
-import org.sagebionetworks.bridge.researchstack.CrfTaskFactory;
+import org.sagebase.crf.researchstack.CrfResourceManager;
+import org.sagebase.crf.researchstack.CrfTaskFactory;
 import org.sagebionetworks.research.crf.R;
 
 import java.util.Date;

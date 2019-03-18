@@ -1,5 +1,5 @@
 /*
- *    Copyright 2017 Sage Bionetworks
+ *    Copyright 2019 Sage Bionetworks
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -41,14 +41,12 @@ import org.researchstack.backbone.ui.ActiveTaskActivity;
 import org.researchstack.backbone.ui.step.layout.ActiveStepLayout;
 import org.researchstack.backbone.ui.step.layout.StepLayout;
 import org.sagebase.crf.step.CrfResultListener;
-import org.sagebase.crf.step.CrfStartTaskStep;
 import org.sagebase.crf.view.CrfTaskStatusBarManipulator;
 import org.sagebase.crf.view.CrfTaskToolbarActionManipulator;
 import org.sagebase.crf.view.CrfTaskToolbarIconManipulator;
 import org.sagebase.crf.view.CrfTaskToolbarProgressManipulator;
 import org.sagebase.crf.view.CrfTaskToolbarTintManipulator;
 import org.sagebase.crf.view.CrfTransparentToolbar;
-import org.sagebionetworks.research.crf.R;
 
 import java.util.List;
 
@@ -87,7 +85,7 @@ public class CrfActiveTaskActivity extends ActiveTaskActivity {
     @Override
     public void onDataAuth() {
         storageAccessUnregister();
-        MainApplication.mockAuthenticate(this);
+        //MainApplication.mockAuthenticate(this);
         super.onDataReady();
     }
 
@@ -173,7 +171,7 @@ public class CrfActiveTaskActivity extends ActiveTaskActivity {
             }
         }
         int color = ResourcesCompat.getColor(getResources(), statusBarColor, null);
-        MainApplication.setStatusBarColor(this, color);
+        //MainApplication.setStatusBarColor(this, color); //TODO: move into utility class -nathaniel 4/18/19
 
         // Set the step progress
         if (task instanceof OrderedTask) {
@@ -249,9 +247,9 @@ public class CrfActiveTaskActivity extends ActiveTaskActivity {
 
     @Override
     public void notifyStepOfBackPress() {
-        if (getCurrentStep() instanceof CrfStartTaskStep) {
-            super.notifyStepOfBackPress();
-        }
+//        if (getCurrentStep() instanceof CrfStartTaskStep) {
+//            super.notifyStepOfBackPress();
+//        }
     }
 
     public interface CrfTaskMediaVolumeController {
@@ -271,4 +269,16 @@ public class CrfActiveTaskActivity extends ActiveTaskActivity {
             super.onActivityResult(requestCode, resultCode, data);
         }
     }
+
+
+    protected void requestStorageAccess() {
+        onDataReady();
+    }
+
+    protected void storageAccessRegister() {
+    }
+
+    protected void storageAccessUnregister() {
+    }
+
 }

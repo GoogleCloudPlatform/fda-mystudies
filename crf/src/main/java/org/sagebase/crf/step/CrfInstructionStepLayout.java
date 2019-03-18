@@ -1,5 +1,5 @@
 /*
- *    Copyright 2017 Sage Bionetworks
+ *    Copyright 2019 Sage Bionetworks
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -17,40 +17,25 @@
 
 package org.sagebase.crf.step;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Color;
 import android.support.v4.content.res.ResourcesCompat;
 import android.util.AttributeSet;
 import android.view.View;
-import android.webkit.WebView;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
-import org.researchstack.backbone.factory.IntentFactory;
 import org.researchstack.backbone.result.StepResult;
-import org.researchstack.backbone.result.TaskResult;
 import org.researchstack.backbone.step.Step;
-import org.researchstack.backbone.task.NavigableOrderedTask;
-import org.researchstack.backbone.task.Task;
 import org.researchstack.backbone.ui.callbacks.StepCallbacks;
 import org.researchstack.backbone.ui.step.layout.InstructionStepLayout;
 import org.researchstack.backbone.utils.ResUtils;
 import org.sagebase.crf.CrfActiveTaskActivity;
-import org.sagebase.crf.CrfSurveyTaskActivity;
-import org.sagebase.crf.reminder.CrfReminderManager;
+import org.sagebase.crf.R;
 import org.sagebase.crf.view.CrfTaskStatusBarManipulator;
 import org.sagebase.crf.view.CrfTaskToolbarProgressManipulator;
 import org.sagebase.crf.view.CrfTaskToolbarTintManipulator;
-import org.sagebionetworks.bridge.researchstack.CrfResourceManager;
-import org.sagebionetworks.bridge.researchstack.CrfTaskFactory;
-import org.sagebionetworks.research.crf.R;
-
-import java.net.URISyntaxException;
-import java.net.URL;
-import java.util.List;
 
 /**
  * Created by TheMDP on 10/24/17.
@@ -65,7 +50,7 @@ public class CrfInstructionStepLayout extends InstructionStepLayout implements
     protected View rootInstructionLayout;
     protected ImageButton customButton;
     protected TextView customButtonText;
-    protected Button remindMeLaterButton;
+    //protected Button remindMeLaterButton;
     protected Button learnMore;
     protected TextView instructionViewTop;
     protected TextView instructionViewBottom;
@@ -127,7 +112,7 @@ public class CrfInstructionStepLayout extends InstructionStepLayout implements
         nextButton.setEnabled(true);
         rootInstructionLayout = findViewById(R.id.crf_root_instruction_layout);
 
-        remindMeLaterButton = findViewById(R.id.remind_me_later);
+        //remindMeLaterButton = findViewById(R.id.remind_me_later);
         learnMore = findViewById(R.id.learn_more);
         this.instructionViewTop = findViewById(R.id.crf_instruction_text);
         this.instructionViewBottom = findViewById(R.id.crf_instruction_more_detail_text);
@@ -174,24 +159,24 @@ public class CrfInstructionStepLayout extends InstructionStepLayout implements
                     customButton.setVisibility(View.VISIBLE);
                     customButtonText.setVisibility(View.VISIBLE);
                     break;
-                case TREADMILL:
-                    nextButton.setVisibility(View.GONE);
-                    customButton.setImageResource(R.drawable.crf_treadmill_button);
-                    customButton.setVisibility(View.VISIBLE);
-                    customButtonText.setVisibility(View.VISIBLE);
-                    break;
+//                case TREADMILL:
+//                    nextButton.setVisibility(View.GONE);
+//                    customButton.setImageResource(R.drawable.crf_treadmill_button);
+//                    customButton.setVisibility(View.VISIBLE);
+//                    customButtonText.setVisibility(View.VISIBLE);
+//                    break;
                 case STAIR_STEP:
                     nextButton.setVisibility(View.GONE);
                     customButton.setImageResource(R.drawable.crf_stair_step_button);
                     customButton.setVisibility(View.VISIBLE);
                     customButtonText.setVisibility(View.VISIBLE);
                     break;
-                case RUN:
-                    nextButton.setVisibility(View.GONE);
-                    customButton.setImageResource(R.drawable.crf_12_min_walking_button);
-                    customButton.setVisibility(View.VISIBLE);
-                    customButtonText.setVisibility(View.VISIBLE);
-                    break;
+//                case RUN:
+//                    nextButton.setVisibility(View.GONE);
+//                    customButton.setImageResource(R.drawable.crf_12_min_walking_button);
+//                    customButton.setVisibility(View.VISIBLE);
+//                    customButtonText.setVisibility(View.VISIBLE);
+//                    break;
             }
         }
         nextButton.setOnClickListener(this::goForwardClicked);

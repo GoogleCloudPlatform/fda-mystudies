@@ -1,5 +1,5 @@
 /*
- *    Copyright 2017 Sage Bionetworks
+ *    Copyright 2019 Sage Bionetworks
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -15,9 +15,10 @@
  *
  */
 
-package org.sagebionetworks.bridge.researchstack;
+package org.sagebase.crf.researchstack;
 
 import android.support.annotation.VisibleForTesting;
+
 import com.google.common.collect.ImmutableMap;
 import com.google.gson.JsonElement;
 
@@ -27,17 +28,14 @@ import org.researchstack.backbone.model.survey.ChoiceQuestionSurveyItem;
 import org.researchstack.backbone.model.survey.FormSurveyItem;
 import org.researchstack.backbone.model.survey.IntegerRangeSurveyItem;
 import org.researchstack.backbone.model.survey.SurveyItem;
+import org.researchstack.backbone.model.survey.SurveyItemAdapter;
 import org.researchstack.backbone.model.survey.TextfieldSurveyItem;
-import org.sagebase.crf.step.CrfCompletionSurveyItem;
 import org.sagebase.crf.step.CrfInstructionSurveyItem;
-import org.sagebase.crf.step.CrfSkipInstructionStepSurveyItem;
-import org.sagebase.crf.step.CrfStartTaskSurveyItem;
-import org.sagebionetworks.bridge.researchstack.task.creation.BridgeSurveyItemAdapter;
 
 import java.util.Map;
 
 /** Subclasses BridgeSurveyItemAdapter to enable CRF-specific task step types. */
-public class CrfSurveyItemAdapter extends BridgeSurveyItemAdapter {
+public class CrfSurveyItemAdapter extends SurveyItemAdapter {
     public static final String CRF_INSTRUCTION_SURVEY_ITEM_TYPE = "crf_instruction";
     public static final String CRF_START_TASK_SURVEY_ITEM_TYPE = "crf_start_task";
     public static final String CRF_HEART_RATE_CAMERA_SURVEY_ITEM_TYPE = "crf_heart_rate_camera_step";
@@ -62,12 +60,12 @@ public class CrfSurveyItemAdapter extends BridgeSurveyItemAdapter {
             ImmutableMap.<String, Class<? extends SurveyItem>>builder()
                     .put(CRF_FITBIT_SURVEY_ITEM_TYPE, CrfInstructionSurveyItem.class)
                     .put(CRF_INSTRUCTION_SURVEY_ITEM_TYPE, CrfInstructionSurveyItem.class)
-                    .put(CRF_START_TASK_SURVEY_ITEM_TYPE, CrfStartTaskSurveyItem.class)
+                    //.put(CRF_START_TASK_SURVEY_ITEM_TYPE, CrfStartTaskSurveyItem.class)
                     .put(CRF_HEART_RATE_CAMERA_SURVEY_ITEM_TYPE, ActiveStepSurveyItem.class)
                     .put(CRF_COUNTDOWN_SURVEY_ITEM_TYPE, ActiveStepSurveyItem.class)
                     .put(CRF_12_MIN_WALK_SURVEY_ITEM_TYPE, ActiveStepSurveyItem.class)
                     .put(CRF_STAIR_STEP_SURVEY_ITEM_TYPE, ActiveStepSurveyItem.class)
-                    .put(CRF_COMPLETION_SURVEY_ITEM_TYPE, CrfCompletionSurveyItem.class)
+                    //.put(CRF_COMPLETION_SURVEY_ITEM_TYPE, CrfCompletionSurveyItem.class)
                     .put(CRF_PHOTO_CAPTURE_SURVEY_ITEM_TYPE, CrfInstructionSurveyItem.class)
                     .put(CRF_FORM_SURVEY_ITEM_TYPE, FormSurveyItem.class)
                     .put(CRF_INTEGER_SURVEY_ITEM_TYPE, IntegerRangeSurveyItem.class)
@@ -75,7 +73,7 @@ public class CrfSurveyItemAdapter extends BridgeSurveyItemAdapter {
                     .put(CRF_MULTIPLE_CHOICE_SURVEY_ITEM_TYPE, ChoiceQuestionSurveyItem.class)
                     .put(CRF_BOOLEAN_SURVEY_ITEM_TYPE, BooleanQuestionSurveyItem.class)
                     .put(HR_PARTICIPANT_ID_SURVEY_ITEM_TYPE, TextfieldSurveyItem.class)
-                    .put(CRF_SKIP_INSTRUCTION_TYPE, CrfSkipInstructionStepSurveyItem.class)
+                   // .put(CRF_SKIP_INSTRUCTION_TYPE, CrfSkipInstructionStepSurveyItem.class)
                     .put(CRF_SKIP_MC_TYPE, ChoiceQuestionSurveyItem.class)
                     .put(CRF_SNAPSHOT_TYPE, CrfInstructionSurveyItem.class)
                     .build();

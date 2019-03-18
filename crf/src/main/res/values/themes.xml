@@ -1,5 +1,68 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!-- Base application theme. -->
+    <style name="Theme.Crf" parent="Theme.Backbone">
+        <!-- Text Color for ActionBar and Text -->
+        <item name="alertDialogTheme">@style/Theme.Crf.Dialog</item>
+        <item name="android:alertDialogTheme">@style/Theme.Crf.Dialog</item>
+
+        <item name="android:textColor">@color/rsb_warm_gray</item>
+        <item name="android:textColorPrimary">@color/rsb_warm_gray</item>
+        <item name="android:textColorSecondary">@color/rsb_warm_gray</item>
+
+        <item name="colorControlNormal">@color/rsb_warm_gray</item>
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/salmon</item>
+        <item name="colorAccent">@color/colorAccent</item>
+        <item name="android:listDivider">@color/rsb_list_divider</item>
+
+        <item name="toolbarTheme">@style/Theme.Crf.Toolbar</item>
+        <item name="passcodeTheme">@style/Theme.AppCompat.Light.NoActionBar</item>
+        <item name="icontablayoutStyle">@style/Widget.Crf.IconTabLayout</item>
+        <item name="submitbarStyle">@style/Widget.Crf.SubmitBar</item>
+        <item name="emptyviewStyle">@style/Widget.Crf.EmptyView</item>
+    </style>
+
+    <style name="Theme.Crf.Toolbar">
+        <item name="colorControlNormal">@android:color/white</item>
+        <item name="toolbarStyle">@style/Widget.Crf.Toolbar</item>
+    </style>
+
+    <style name="Theme.Crf.Survey">
+        <item name="toolbarTheme">@style/Theme.Crf.Toolbar.Main</item>
+        <item name="colorButtonNormal">@color/colorAccent</item>
+        <item name="colorPrimaryDark">@color/colorPrimary</item>
+        <item name="android:windowContentOverlay">@null</item>
+    </style>
+
+    <style name="Theme.Crf.Toolbar.Transparent">
+        <item name="colorControlNormal">@color/azure</item>
+        <item name="colorPrimary">@color/azure</item>
+        <item name="colorAccent">@color/azure</item>
+        <item name="toolbarStyle">@style/Widget.Crf.Toolbar.Transparent</item>
+    </style>
+
+    <style name="Theme.Crf.Main">
+        <item name="toolbarTheme">@style/Theme.Crf.Toolbar.Main</item>
+        <item name="colorPrimaryDark">@color/deepGreen</item>
+    </style>
+
+    <style name="Theme.Crf.Toolbar.Main">
+        <item name="toolbarStyle">@style/Base.Widget.Crf.Toolbar</item>
+    </style>
+
+    <style name="Theme.Crf.Dialog" parent="Theme.AppCompat.Light.Dialog.Alert">
+        <item name="colorAccent">@color/colorAccent</item>
+        <item name="android:textColorPrimary">@color/rsb_warm_gray</item>
+        <item name="android:background">@android:color/white</item>
+    </style>
+
+
+    <style name="Crf.WhiteDeepGreen.RoundedCornerMaterialButton" parent="Widget.AppCompat.Button.Colored">
+        <item name="android:background">@drawable/crf_rounded_button_white</item>
+        <item name="android:textColor">@color/deepGreen</item>
+    </style>
+
     <style name="Crf.Salmon.RoundedCornerMaterialButton" parent="Widget.AppCompat.Button.Colored">
         <item name="android:background">@drawable/crf_rounded_button_salmon</item>
         <item name="android:textColor">@color/white</item>

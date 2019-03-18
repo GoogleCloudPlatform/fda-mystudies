@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
@@ -18,8 +17,8 @@ import org.researchstack.backbone.ui.MainActivity;
 import org.researchstack.backbone.ui.ViewTaskActivity;
 import org.researchstack.backbone.utils.LogExt;
 import org.sagebase.crf.view.CrfFilterableActivityDisplay;
-import org.sagebionetworks.bridge.researchstack.CrfResourceManager;
-import org.sagebionetworks.bridge.researchstack.CrfTaskFactory;
+import org.sagebase.crf.researchstack.CrfResourceManager;
+import org.sagebase.crf.researchstack.CrfTaskFactory;
 import org.sagebionetworks.research.crf.R;
 
 import static org.researchstack.backbone.ui.fragment.ActivitiesFragment.REQUEST_TASK;

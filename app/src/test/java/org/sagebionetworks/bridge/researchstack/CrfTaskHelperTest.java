@@ -32,6 +32,7 @@ import org.researchstack.backbone.result.Result;
 import org.researchstack.backbone.result.StepResult;
 import org.researchstack.backbone.step.QuestionStep;
 import org.researchstack.backbone.step.Step;
+import org.sagebase.crf.researchstack.CrfTaskFactory;
 import org.sagebionetworks.bridge.data.Archive;
 
 import java.io.File;
@@ -45,7 +46,6 @@ import static org.junit.Assert.fail;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
 
 /**
  * Created by TheMDP on 12/9/17.
