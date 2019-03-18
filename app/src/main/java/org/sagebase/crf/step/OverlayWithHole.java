@@ -26,6 +26,8 @@ import android.graphics.RectF;
 import android.util.AttributeSet;
 import android.view.View;
 
+import org.sagebionetworks.research.crf.R;
+
 /**
  * Created by liujoshua on 2/26/2018.
  */
@@ -55,7 +57,7 @@ public class OverlayWithHole extends android.support.v7.widget.AppCompatImageVie
 
 setCircle(        new RectF(0,0,getWidth(), getHeight()), getWidth()/2);
         Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG);
-        paint.setColor(getResources().getColor(android.R.color.white));
+        paint.setColor(getResources().getColor(R.color.magenta));
         paint.setStyle(Paint.Style.FILL);
         canvas.drawPaint(paint);
         

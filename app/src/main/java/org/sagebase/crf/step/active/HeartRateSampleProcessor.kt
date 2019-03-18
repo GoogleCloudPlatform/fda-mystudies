@@ -154,4 +154,3 @@ class HeartRateSampleProcessor @JvmOverloads constructor(val videoProcessorFrame
         return output
     }
 }
-

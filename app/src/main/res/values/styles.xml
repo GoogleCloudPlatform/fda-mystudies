@@ -124,8 +124,12 @@
 
     <!-- Heart Rate Screen -->
     <style name="TextAppearance.Crf.BpmNumber">
-        <item name="android:textSize">130sp</item>
-        <item name="android:fontFamily">@font/opensans</item>
+        <item name="android:textSize">80sp</item>
+        <item name="android:fontFamily">@font/opensans_light</item>
+    </style>
+    <style name="TextAppearance.Crf.Capturing">
+        <item name="android:textSize">40sp</item>
+        <item name="android:fontFamily">@font/opensans_light</item>
     </style>
     <style name="TextAppearance.Crf.ActiveStatusNumber">
         <item name="android:textSize">82sp</item>
@@ -133,7 +137,7 @@
     </style>
     <style name="TextAppearance.Crf.ActiveStatusText">
         <item name="android:textSize">24sp</item>
-        <item name="android:fontFamily">@font/opensans_semibold</item>
+        <item name="android:fontFamily">@font/opensans_light</item>
     </style>
 
     <style name="TextAppearance.Crf.InstructionCustomButtonText">
@@ -152,6 +156,17 @@
         <item name="android:textSize">60sp</item>
         <item name="android:textStyle">bold</item>
         <item name="android:fontFamily">@font/opensans</item>
+    </style>
+    <!-- Skip Step Screen -->
+    <style name="TextAppearance.Crf.SkipInstruction">
+        <item name="android:textSize">24sp</item>
+        <item name="android:fontFamily">@font/opensans_bold</item>
+    </style>
+    <style name="TextAppearance.Crf.SkipDetailText">
+        <item name="android:textSize">18sp</item>
+        <item name="android:fontFamily">@font/opensans_regular</item>
+        <item name="android:layout_marginRight">48sp</item>
+        <item name="android:layout_marginLeft">48sp</item>
     </style>
 
     <!-- Completion Step Screen -->

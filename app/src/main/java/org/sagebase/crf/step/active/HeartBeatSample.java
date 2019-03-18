@@ -57,4 +57,25 @@ public class HeartBeatSample {
     public boolean isCoveringLens() {
         return (redLevel <= MIN_RED_LEVEL) || (confidence >= 0.5);
     }
+
+    public boolean isPressureExcessive() {
+        int hr = bpm;
+
+        if(hr > 250 || hr <= 40) {
+            return true;
+        }
+
+        // for testing purposes
+        return false;
+    }
+
+    // Algorithm to be implemented
+    public boolean abnormalHR() {
+        return true;
+    }
+
+    // Algorithm to be implemented
+    public boolean declineHR() {
+        return true;
+    }
 }

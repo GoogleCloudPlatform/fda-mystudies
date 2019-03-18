@@ -1,5 +1,6 @@
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-android-extensions'
 
 android {
     compileSdkVersion 27
@@ -8,9 +9,9 @@ android {
         applicationId "org.sagebionetworks.research.crf"
         minSdkVersion 19
         targetSdkVersion 27
-	// version code is bumped by fastlane automatically
+        // version code is bumped by fastlane automatically
         versionCode 40
-	// this should match the stable- branch name and will be used by fastlane to create the tag
+        // this should match the stable- branch name and will be used by fastlane to create the tag
         versionName "1.6.1"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         multiDexEnabled true
@@ -96,7 +97,9 @@ dependencies {
         exclude group: 'com.google.code.findbugs', module: 'jsr305'
     })
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+    implementation 'com.android.support.constraint:constraint-layout:1.1.3'
 }
 repositories {
     mavenCentral()
+    google()
 }

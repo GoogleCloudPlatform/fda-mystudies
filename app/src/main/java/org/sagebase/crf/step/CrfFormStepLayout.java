@@ -22,23 +22,28 @@ import android.support.annotation.LayoutRes;
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
+import android.widget.Toolbar;
 
 import org.researchstack.backbone.result.StepResult;
 import org.researchstack.backbone.step.Step;
 import org.researchstack.backbone.ui.step.layout.FormStepLayout;
+import org.sagebase.crf.view.CrfTaskToolbarProgressManipulator;
 import org.sagebionetworks.research.crf.R;
 
 /**
  * Created by rianhouston on 11/22/17.
  */
 
-public class CrfFormStepLayout extends FormStepLayout {
+public class CrfFormStepLayout extends FormStepLayout implements CrfTaskToolbarProgressManipulator {
 
     protected CrfFormStep crfFormStep;
 
     protected Button crfBackButton;
     protected Button crfNextButton;
     protected Button crfSkipButton;
+    protected Toolbar toolbar;
+    private TextView crfStepProgressTextview;
 
     public CrfFormStepLayout(Context context) {
     super(context);
@@ -73,6 +78,8 @@ public class CrfFormStepLayout extends FormStepLayout {
 
         crfSkipButton = findViewById(R.id.crf_submit_bar_skip);
         crfSkipButton.setOnClickListener(this::onSkipButtonClicked);
+
+
     }
 
     protected void validateAndSetCrfFormStep(Step step) {
@@ -109,5 +116,11 @@ public class CrfFormStepLayout extends FormStepLayout {
         String skipButtonTitle = super.skipButtonTitle();
         crfSkipButton.setText(skipButtonTitle);
         crfSkipButton.setVisibility(skipButtonTitle == null ? View.GONE : View.VISIBLE);
+    }
+
+
+    @Override
+    public boolean crfToolbarShowProgress() {
+        return !crfFormStep.hideProgress;
     }
 }

@@ -16,11 +16,13 @@
       "isImageAnimated"  : true,
       "animationRepeatDuration" : 2000,
       "buttonType"       : "heart",
-      "buttonText"       : "Press to start"
+      "buttonText"       : "Press to start",
+      "remindMeLater"    : "false"
     },
     {
       "identifier"       : "camera",
-      "type"             : "crf_heart_rate_camera_step"
+      "type"             : "crf_heart_rate_camera_step",
+      "backgroundColor"  : "magenta"
     }
   ]
 }

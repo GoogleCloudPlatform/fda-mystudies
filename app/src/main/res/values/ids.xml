@@ -5,5 +5,9 @@
     <item name="nav_dashboard" type="id" />
     <item name="nav_learn" type="id" />
     <item name="nav_settings" type="id" />
+    <item name="crf_instruction_container" type="id" />
+    <item name="crf_detail_container" type="id" />
+    <item name="crf_image_container" type="id" />
+    <item name="crf_submit_bar" type="id" />
 
 </resources>

@@ -17,10 +17,8 @@
 
 package org.sagebase.crf.step;
 
-import com.google.gson.annotations.SerializedName;
 
 import org.researchstack.backbone.step.InstructionStep;
-import org.sagebase.crf.view.CrfTaskStatusBarManipulator;
 
 /**
  * Created by TheMDP on 10/24/17.
@@ -74,6 +72,14 @@ public class CrfInstructionStep extends InstructionStep {
      */
     public boolean mediaVolume;
 
+    /**
+     * If true, the remind me later button will show, if false it will hide, defaults to true
+     */
+    public boolean remindMeLater;
+
+    public boolean learnMore;
+
+
     /* Default constructor needed for serialization/deserialization of object */
     public CrfInstructionStep() {
         super();
@@ -87,4 +93,5 @@ public class CrfInstructionStep extends InstructionStep {
     public Class getStepLayoutClass() {
         return CrfInstructionStepLayout.class;
     }
+
 }
