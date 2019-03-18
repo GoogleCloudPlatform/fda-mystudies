@@ -34,7 +34,5 @@
     <dimen name="crf_image_height">48dp</dimen>
     <dimen name="crf_step_image_height">340dp</dimen>
     <dimen name="crf_arc_drawable_width">14dp</dimen>
-    <dimen name="crf_step_image_height_small">300dp</dimen>
-    <dimen name="crf_step_image_height_medium">350dp</dimen>
 
 </resources>

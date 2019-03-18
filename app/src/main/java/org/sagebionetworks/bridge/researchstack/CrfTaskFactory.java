@@ -381,17 +381,8 @@ public class CrfTaskFactory extends TaskItemFactory {
         if(item.identifier != null) {
             step.stepIdentifier = item.identifier;
         }
-        if(item.buttonType != null) {
-            switch (item.buttonType) {
-                case "default":
-                    step.buttonType = CrfInstructionButtonType.DEFAULT;
-                    break;
 
-                case "gray":
-                    step.buttonType = CrfInstructionButtonType.GRAY;
-                    break;
-            }
-        }
+        step.buttonType = CrfInstructionButtonType.GRAY;
         return step;
     }
 
@@ -522,13 +513,6 @@ public class CrfTaskFactory extends TaskItemFactory {
         if (item.skipIdentifier != null) {
             step.skipIdentifier = item.skipIdentifier;
         }
-        /*
-        if (item.previousStepIdentifier != null) {
-            step.previousStepIdentifier = item.previousStepIdentifier;
-        }
-        if (item.cameraStepIdentifier != null) {
-            step.cameraStepIdentifier = item.cameraStepIdentifier;
-        }*/
         step.hideProgress = true;
 
         return step;

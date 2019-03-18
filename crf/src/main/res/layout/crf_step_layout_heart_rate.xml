@@ -112,6 +112,52 @@
             tools:layout_editor_absoluteX="24dp" />
     </android.support.constraint.ConstraintLayout>
 
+    <TextView
+        android:id="@+id/crf_your_hr_is"
+        style="@style/TextAppearance.Crf.SubHeader"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="10dp"
+        android:paddingTop="10dp"
+        android:layout_marginLeft="@dimen/rsb_padding_large"
+        android:layout_marginRight="@dimen/rsb_padding_large"
+        android:layout_marginBottom="@dimen/rsb_padding_large"
+        android:layout_below="@+id/crf_completion_icon"
+        android:text="@string/crf_your_heart_rate_is"
+        android:textAlignment="center"
+        android:textColor="@color/black86"
+        android:visibility="gone"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:orientation="vertical"
+        android:layout_below="@+id/crf_your_hr_is">
+
+        <TextView
+            android:id="@+id/crf_final_bpm"
+            style="@style/TextAppearance.Crf.BpmNumber"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textAlignment="center"
+            android:textColor="@color/black86"
+            android:visibility="gone" />
+
+        <TextView
+            style="@style/TextAppearance.Crf.SubHeader"
+            android:id="@+id/crf_bpm_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/crf_bpm_caps"
+            android:layout_gravity="center"
+            android:textColor="@color/black86"
+            android:visibility="gone"/>
+
+    </LinearLayout>
+
+
     <FrameLayout
         android:id="@+id/crf_heart_container"
         android:layout_width="wrap_content"
