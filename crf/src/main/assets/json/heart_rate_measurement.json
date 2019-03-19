@@ -15,14 +15,14 @@
       "behindToolbar"    : "true",
       "isImageAnimated"  : true,
       "animationRepeatDuration" : 2000,
-      "buttonType"       : "heart",
+      "buttonType"       : "gray",
       "buttonText"       : "Press to start",
       "remindMeLater"    : "false"
     },
     {
       "identifier"       : "camera",
       "type"             : "crf_heart_rate_camera_step",
-      "backgroundColor"  : "magenta"
+      "buttonType"       : "gray"
     }
   ]
 }
