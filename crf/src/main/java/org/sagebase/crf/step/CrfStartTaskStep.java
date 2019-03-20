@@ -1,5 +1,5 @@
 /*
- *    Copyright 2017 Sage Bionetworks
+ *    Copyright 2019 Sage Bionetworks
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -19,7 +19,6 @@ package org.sagebase.crf.step;
 
 import com.google.gson.annotations.SerializedName;
 
-import org.sagebionetworks.research.crf.R;
 
 /**
  * Created by TheMDP on 10/25/17.

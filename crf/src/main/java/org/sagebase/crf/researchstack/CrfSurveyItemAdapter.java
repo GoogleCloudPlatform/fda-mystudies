@@ -30,7 +30,9 @@ import org.researchstack.backbone.model.survey.IntegerRangeSurveyItem;
 import org.researchstack.backbone.model.survey.SurveyItem;
 import org.researchstack.backbone.model.survey.SurveyItemAdapter;
 import org.researchstack.backbone.model.survey.TextfieldSurveyItem;
+import org.sagebase.crf.step.CrfCompletionSurveyItem;
 import org.sagebase.crf.step.CrfInstructionSurveyItem;
+import org.sagebase.crf.step.CrfStartTaskSurveyItem;
 
 import java.util.Map;
 
@@ -60,12 +62,12 @@ public class CrfSurveyItemAdapter extends SurveyItemAdapter {
             ImmutableMap.<String, Class<? extends SurveyItem>>builder()
                     .put(CRF_FITBIT_SURVEY_ITEM_TYPE, CrfInstructionSurveyItem.class)
                     .put(CRF_INSTRUCTION_SURVEY_ITEM_TYPE, CrfInstructionSurveyItem.class)
-                    //.put(CRF_START_TASK_SURVEY_ITEM_TYPE, CrfStartTaskSurveyItem.class)
+                    .put(CRF_START_TASK_SURVEY_ITEM_TYPE, CrfStartTaskSurveyItem.class)
                     .put(CRF_HEART_RATE_CAMERA_SURVEY_ITEM_TYPE, ActiveStepSurveyItem.class)
                     .put(CRF_COUNTDOWN_SURVEY_ITEM_TYPE, ActiveStepSurveyItem.class)
                     .put(CRF_12_MIN_WALK_SURVEY_ITEM_TYPE, ActiveStepSurveyItem.class)
                     .put(CRF_STAIR_STEP_SURVEY_ITEM_TYPE, ActiveStepSurveyItem.class)
-                    //.put(CRF_COMPLETION_SURVEY_ITEM_TYPE, CrfCompletionSurveyItem.class)
+                    .put(CRF_COMPLETION_SURVEY_ITEM_TYPE, CrfCompletionSurveyItem.class)
                     .put(CRF_PHOTO_CAPTURE_SURVEY_ITEM_TYPE, CrfInstructionSurveyItem.class)
                     .put(CRF_FORM_SURVEY_ITEM_TYPE, FormSurveyItem.class)
                     .put(CRF_INTEGER_SURVEY_ITEM_TYPE, IntegerRangeSurveyItem.class)

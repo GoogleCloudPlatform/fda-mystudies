@@ -37,11 +37,15 @@ import org.researchstack.backbone.step.Step;
 import org.researchstack.backbone.step.active.ActiveStep;
 import org.researchstack.backbone.task.Task;
 import org.sagebase.crf.CrfActiveTaskActivity;
+import org.sagebase.crf.step.CrfCompletionStep;
+import org.sagebase.crf.step.CrfCompletionSurveyItem;
 import org.sagebase.crf.step.CrfHeartRateCameraStep;
 import org.sagebase.crf.step.CrfInstructionButtonType;
 import org.sagebase.crf.step.CrfInstructionStep;
 import org.sagebase.crf.step.CrfInstructionSurveyItem;
 import org.sagebase.crf.step.CrfStairStep;
+import org.sagebase.crf.step.CrfStartTaskStep;
+import org.sagebase.crf.step.CrfStartTaskSurveyItem;
 
 /**
  * Created by TheMDP on 10/24/17.
@@ -103,11 +107,11 @@ public class CrfTaskFactory extends TaskItemFactory {
                                 throw new IllegalStateException("Error in json parsing, crf_instruction types must be CrfInstructionSurveyItem");
                             }
                             return createCrfInstructionStep((CrfInstructionSurveyItem)item);
-//                        case CrfSurveyItemAdapter.CRF_START_TASK_SURVEY_ITEM_TYPE:
-//                            if (!(item instanceof CrfStartTaskSurveyItem)) {
-//                                throw new IllegalStateException("Error in json parsing, crf_start_task types must be CrfStartTaskSurveyItem");
-//                            }
-//                            return createCrfStartTaskStep((CrfStartTaskSurveyItem)item);
+                        case CrfSurveyItemAdapter.CRF_START_TASK_SURVEY_ITEM_TYPE:
+                            if (!(item instanceof CrfStartTaskSurveyItem)) {
+                                throw new IllegalStateException("Error in json parsing, crf_start_task types must be CrfStartTaskSurveyItem");
+                            }
+                            return createCrfStartTaskStep((CrfStartTaskSurveyItem)item);
                         case CrfSurveyItemAdapter.CRF_HEART_RATE_CAMERA_SURVEY_ITEM_TYPE:
                             if (!(item instanceof ActiveStepSurveyItem)) {
                                 throw new IllegalStateException("Error in json parsing, crf_heart_rate_camera_step types must be ActiveStepSurveyItem");
@@ -133,11 +137,11 @@ public class CrfTaskFactory extends TaskItemFactory {
                                 throw new IllegalStateException("Error in json parsing, crf_step_layout_stair types must be ActiveStepSurveyItem");
                             }
                             return createCrfStairStep((ActiveStepSurveyItem)item);
-//                        case CrfSurveyItemAdapter.CRF_COMPLETION_SURVEY_ITEM_TYPE:
-//                            if (!(item instanceof CrfCompletionSurveyItem)) {
-//                                throw new IllegalStateException("Error in json parsing, crf_completion types must be CrfCompletionSurveyItem");
-//                            }
-//                            return createCompletionStep((CrfCompletionSurveyItem)item);
+                        case CrfSurveyItemAdapter.CRF_COMPLETION_SURVEY_ITEM_TYPE:
+                            if (!(item instanceof CrfCompletionSurveyItem)) {
+                                throw new IllegalStateException("Error in json parsing, crf_completion types must be CrfCompletionSurveyItem");
+                            }
+                            return createCompletionStep((CrfCompletionSurveyItem)item);
 //                        case CrfSurveyItemAdapter.CRF_PHOTO_CAPTURE_SURVEY_ITEM_TYPE:
 //                            if (!(item instanceof CrfInstructionSurveyItem)) {
 //                                throw new IllegalStateException("Error in json parsing, crf_photo_capture types must be CrfPhotoCaptureSurveyItem");
@@ -293,12 +297,12 @@ public class CrfTaskFactory extends TaskItemFactory {
 
     }
 
-//    private CrfStartTaskStep createCrfStartTaskStep(CrfStartTaskSurveyItem item) {
-//        CrfStartTaskStep step = new CrfStartTaskStep(
-//                item.identifier, item.title, item.text);
-//        fillCrfStartTaskStep(step, item);
-//        return step;
-//    }
+    private CrfStartTaskStep createCrfStartTaskStep(CrfStartTaskSurveyItem item) {
+        CrfStartTaskStep step = new CrfStartTaskStep(
+                item.identifier, item.title, item.text);
+        fillCrfStartTaskStep(step, item);
+        return step;
+    }
 //
 //    private CrfSkipInstructionStep createCrfSkipInstructionStep(CrfSkipInstructionStepSurveyItem item) {
 //        CrfSkipInstructionStep step = new CrfSkipInstructionStep(item.identifier, item.title);
@@ -332,16 +336,16 @@ public class CrfTaskFactory extends TaskItemFactory {
 //
 //    }
 //
-//    private void fillCrfStartTaskStep(CrfStartTaskStep step, CrfStartTaskSurveyItem item) {
-//        fillCrfInstructionStep(step, item);
-//        step.remindMeLater = item.remindMeLater;
-//        if (item.infoHtmlFilename != null) {
-//            step.infoHtmlFilename = item.infoHtmlFilename;
-//        }
-//        if (item.textColorRes != null) {
-//            step.textColorRes = item.textColorRes;
-//        }
-//    }
+    private void fillCrfStartTaskStep(CrfStartTaskStep step, CrfStartTaskSurveyItem item) {
+        fillCrfInstructionStep(step, item);
+        step.remindMeLater = item.remindMeLater;
+        if (item.infoHtmlFilename != null) {
+            step.infoHtmlFilename = item.infoHtmlFilename;
+        }
+        if (item.textColorRes != null) {
+            step.textColorRes = item.textColorRes;
+        }
+    }
 
     private CrfHeartRateCameraStep createHeartRateCameraStep(ActiveStepSurveyItem item) {
         CrfHeartRateCameraStep step = new CrfHeartRateCameraStep(item.identifier, item.title, item.text);
@@ -377,23 +381,23 @@ public class CrfTaskFactory extends TaskItemFactory {
         step.setActivityClazz(CrfActiveTaskActivity.class);
     }
 
-//    private CrfCompletionStep createCompletionStep(CrfCompletionSurveyItem item) {
-//        CrfCompletionStep step = new CrfCompletionStep(item.identifier, item.title, item.text);
-//        fillCrfInstructionStep(step, item);
-//        if (item.topText != null) {
-//            step.topText = item.topText;
-//        }
-//        if (item.bottomText != null) {
-//            step.bottomText = item.bottomText;
-//        }
-//        if (item.valueLabelText != null) {
-//            step.valueLabelText = item.valueLabelText;
-//        }
-//        if (item.valueResultId != null) {
-//            step.valueResultId = item.valueResultId;
-//        }
-//        return step;
-//    }
+    private CrfCompletionStep createCompletionStep(CrfCompletionSurveyItem item) {
+        CrfCompletionStep step = new CrfCompletionStep(item.identifier, item.title, item.text);
+        fillCrfInstructionStep(step, item);
+        if (item.topText != null) {
+            step.topText = item.topText;
+        }
+        if (item.bottomText != null) {
+            step.bottomText = item.bottomText;
+        }
+        if (item.valueLabelText != null) {
+            step.valueLabelText = item.valueLabelText;
+        }
+        if (item.valueResultId != null) {
+            step.valueResultId = item.valueResultId;
+        }
+        return step;
+    }
 //
 //    private CrfPhotoCaptureStep createCrfPhotoCaptureStep(CrfInstructionSurveyItem item) {
 //        CrfPhotoCaptureStep step = new CrfPhotoCaptureStep(

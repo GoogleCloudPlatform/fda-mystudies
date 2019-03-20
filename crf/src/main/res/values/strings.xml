@@ -8,6 +8,9 @@
     <string name="crf_lets_go">Let\’s go!</string>
     <string name="learn_how"><u>Learn how and why</u></string>
 
+    <!-- Start Task Step -->
+    <string name="crf_remind_me_later"><u>Remind me later</u></string>
+
     <!-- Active Task Screen -->
     <string name="crf_step_progress">Step %1$s of %2$s</string>
 

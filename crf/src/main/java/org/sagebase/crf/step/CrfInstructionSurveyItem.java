@@ -89,6 +89,4 @@ public class CrfInstructionSurveyItem extends InstructionSurveyItem {
     @SerializedName("learnMore")
     public boolean learnMore;
 
-    @SerializedName("textColor")
-    public String textColor;
 }

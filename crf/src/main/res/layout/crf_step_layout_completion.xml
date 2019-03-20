@@ -25,7 +25,7 @@
 
     <TextView
         style="@style/TextAppearance.Crf.CompletionHeader"
-        android:id="@+id/crf_intruction_title"
+        android:id="@+id/crf_instruction_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
@@ -37,7 +37,7 @@
         android:id="@+id/crf_image_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@id/crf_intruction_title"
+        android:layout_below="@id/crf_instruction_title"
         android:layout_above="@+id/crf_text_container"
         android:layout_centerHorizontal="true"
         android:scaleType="centerInside"/>

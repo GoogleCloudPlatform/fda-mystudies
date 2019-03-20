@@ -195,12 +195,13 @@ public class CrfInstructionStepLayout extends InstructionStepLayout implements
             imageView.setPadding(imageView.getPaddingLeft(), 0,
                     imageView.getPaddingRight(), imageView.getPaddingBottom());
         }
-        if (crfInstructionStep.learnMore) {
-            learnMore.setVisibility(View.VISIBLE);
-            learnMore.setOnClickListener(view -> setLearnMore());
-        }
-        else {
-            learnMore.setVisibility(View.GONE);
+        if (learnMore != null) {
+            if (crfInstructionStep.learnMore) {
+                learnMore.setVisibility(View.VISIBLE);
+                learnMore.setOnClickListener(view -> setLearnMore());
+            } else {
+                learnMore.setVisibility(View.GONE);
+            }
         }
         // Display the instruction
         if(this.instructionViewTop != null) {

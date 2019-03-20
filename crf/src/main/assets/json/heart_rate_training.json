@@ -1,5 +1,6 @@
 {
   "taskIdentifier" : "HeartRate Training",
+  "schemaIdentifier" : "HeartRate Training",
   "optional" : false,
   "taskSteps" : [
     {
@@ -51,6 +52,14 @@
       "identifier"       : "camera",
       "type"             : "crf_heart_rate_camera_step",
       "buttonType"       : "gray"
+    },
+    {
+      "identifier"       : "completion",
+      "type"             : "crf_completion",
+      "topText"          : "Your heart rate is",
+      "bottomText"       : "Practice makes perfect",
+      "valueLabelText"   : "BPM",
+      "valueResultId"   : "AVERAGE_BPM_IDENTIFIER"
     }
   ]
 }

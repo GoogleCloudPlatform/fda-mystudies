@@ -42,6 +42,7 @@
             android:launchMode="singleTop"
             android:theme="@style/Theme.Crf.Survey"
             android:windowSoftInputMode="adjustResize" />
+        <activity android:name="org.sagebase.crf.step.CrfTrainingInfo"></activity>
     </application>
 
 </manifest>
