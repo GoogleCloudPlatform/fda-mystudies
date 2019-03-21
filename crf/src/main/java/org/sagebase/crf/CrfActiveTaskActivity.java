@@ -138,7 +138,7 @@ public class CrfActiveTaskActivity extends ActiveTaskActivity {
                 actionBar,      // used to set icons
                 current,        // the object that may inherit from a manipulator
                 defaultToolbarTintColor(),
-                R.drawable.crf_ic_close,
+                R.drawable.ic_close_white_24dp,
                 CrfTaskToolbarIconManipulator.NO_ICON);
 
         // The text color of the step progress defaults to white,

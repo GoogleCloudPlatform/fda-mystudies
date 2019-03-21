@@ -283,7 +283,7 @@ public class CrfHeartRateStepLayout extends ActiveStepLayout implements
         }
 
         if(this.exitButton != null) {
-            exitButton.setImageResource(R.drawable.x_light);
+            exitButton.setImageResource(R.drawable.ic_close_white_24dp);
             exitButton.setVisibility(View.VISIBLE);
             exitButton.setOnClickListener(this::goBackClicked);
         }
