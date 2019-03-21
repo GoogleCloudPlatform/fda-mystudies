@@ -43,6 +43,11 @@
             android:theme="@style/Theme.Crf.Survey"
             android:windowSoftInputMode="adjustResize" />
         <activity android:name="org.sagebase.crf.step.CrfTrainingInfo"></activity>
+
+        <service
+            android:name="org.researchstack.backbone.step.active.RecorderService"
+            android:exported="false" />
+
     </application>
 
 </manifest>
