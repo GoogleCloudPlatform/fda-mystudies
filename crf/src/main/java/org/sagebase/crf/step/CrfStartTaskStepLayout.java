@@ -1,5 +1,5 @@
 /*
- *    Copyright 2017 Sage Bionetworks
+ *    Copyright 2019 Sage Bionetworks
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -31,20 +31,18 @@ import org.researchstack.backbone.factory.IntentFactory;
 import org.researchstack.backbone.result.StepResult;
 import org.researchstack.backbone.result.TaskResult;
 import org.researchstack.backbone.step.Step;
-
 import org.researchstack.backbone.task.Task;
 import org.researchstack.backbone.ui.ViewTaskActivity;
 import org.researchstack.backbone.ui.ViewWebDocumentActivity;
 import org.researchstack.backbone.utils.ResUtils;
 import org.sagebase.crf.CrfActivityResultListener;
-import org.sagebase.crf.CrfSurveyTaskActivity;
-import org.sagebase.crf.reminder.CrfReminderManager;
+import org.sagebase.crf.CrfViewTaskActivity;
+import org.sagebase.crf.R;
+import org.sagebase.crf.researchstack.CrfResourceManager;
+import org.sagebase.crf.researchstack.CrfTaskFactory;
 import org.sagebase.crf.view.CrfTaskToolbarActionManipulator;
 import org.sagebase.crf.view.CrfTaskToolbarIconManipulator;
 import org.sagebase.crf.view.CrfTaskToolbarProgressManipulator;
-import org.sagebase.crf.researchstack.CrfResourceManager;
-import org.sagebase.crf.researchstack.CrfTaskFactory;
-import org.sagebionetworks.research.crf.R;
 
 import java.util.Date;
 
@@ -59,6 +57,7 @@ public class CrfStartTaskStepLayout extends CrfInstructionStepLayout implements
         CrfTaskToolbarActionManipulator, CrfActivityResultListener {
 
     private static final String LOG_TAG = CrfStartTaskStepLayout.class.getCanonicalName();
+    public static final int DAILY_REMINDER_REQUEST_CODE = 2398;
 
     private CrfStartTaskStep crfStartTaskStep;
     protected Button remindMeLaterButton;
@@ -129,13 +128,13 @@ public class CrfStartTaskStepLayout extends CrfInstructionStepLayout implements
 
     public void remindMeLater() {
         Task task = (new CrfTaskFactory()).createTask(getContext(), CrfResourceManager.REMIND_ME_LATER_RESOURCE);
-        Intent intent = IntentFactory.INSTANCE.newTaskIntent(getContext(), CrfSurveyTaskActivity.class, task);
+        Intent intent = IntentFactory.INSTANCE.newTaskIntent(getContext(), CrfViewTaskActivity.class, task);
         if (!(callbacks instanceof Activity)) {
             throw new IllegalStateException("Callbacks class must be an activity " +
                     "so we can start another activity from this step layout");
         }
         Activity activity = (Activity)callbacks;
-        activity.startActivityForResult(intent, CrfReminderManager.DAILY_REMINDER_REQUEST_CODE);
+        activity.startActivityForResult(intent, DAILY_REMINDER_REQUEST_CODE);
     }
 
     @Override
@@ -166,7 +165,7 @@ public class CrfStartTaskStepLayout extends CrfInstructionStepLayout implements
 
     @Override
     public void onActivityFinished(int requestCode, int resultCode, Intent data) {
-        if (requestCode == CrfReminderManager.DAILY_REMINDER_REQUEST_CODE && resultCode == RESULT_OK) {
+        if (requestCode == DAILY_REMINDER_REQUEST_CODE && resultCode == RESULT_OK) {
             TaskResult taskResult = (TaskResult) data.getSerializableExtra(ViewTaskActivity.EXTRA_TASK_RESULT);
             if (taskResult == null || taskResult.getResults().values().isEmpty()) {
                 Log.e(LOG_TAG, "Reminder time result empty");
@@ -178,7 +177,8 @@ public class CrfStartTaskStepLayout extends CrfInstructionStepLayout implements
                 return;
             }
             Date reminderTime = new Date((Long)reminderTimeResult.getResult());
-            CrfReminderManager.setReminderTimeHourAndMinute(getContext(), reminderTime);
+            //TODO: Return reminder time to calling container to handle -nathaniel 03/21/19
+
         }
     }
 }
