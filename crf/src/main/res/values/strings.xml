@@ -11,6 +11,10 @@
     <!-- Start Task Step -->
     <string name="crf_remind_me_later"><u>Remind me later</u></string>
 
+    <!-- Countdown Task -->
+    <string name="crf_underlined_pause"><u>Pause</u></string>
+    <string name="crf_underlined_resume"><u>Resume</u></string>
+
     <!-- Active Task Screen -->
     <string name="crf_step_progress">Step %1$s of %2$s</string>
 

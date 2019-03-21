@@ -34,9 +34,7 @@
 
 
 
-    <!-- Countdown Task -->
-    <string name="crf_underlined_pause"><u>Pause</u></string>
-    <string name="crf_underlined_resume"><u>Resume</u></string>
+
 
     <!-- 12 Min Walk Task -->
     <string name="crf_feet">FEET</string>

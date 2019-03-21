@@ -105,6 +105,12 @@
         <item name="android:fontFamily">@font/opensans_light</item>
     </style>
 
+    <!-- Countdown Screen -->
+    <style name="TextAppearance.Crf.Countdown">
+        <item name="android:textSize">130sp</item>
+        <item name="android:fontFamily">@font/opensans_light</item>
+    </style>
+
     <!-- Stair Step Screen -->
     <style name="TextAppearance.Crf.StairStep">
         <item name="android:textSize">60sp</item>

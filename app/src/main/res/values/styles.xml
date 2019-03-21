@@ -51,11 +51,7 @@
 
 
 
-    <!-- Countdown Screen -->
-    <style name="TextAppearance.Crf.Countdown">
-        <item name="android:textSize">130sp</item>
-        <item name="android:fontFamily">@font/opensans_light</item>
-    </style>
+
 
     <!-- Skip Step Screen -->
     <style name="TextAppearance.Crf.SkipInstruction">
