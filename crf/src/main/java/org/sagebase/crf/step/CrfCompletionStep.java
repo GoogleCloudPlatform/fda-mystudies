@@ -60,11 +60,11 @@ public class CrfCompletionStep extends CrfInstructionStep {
     }
 
     private void commonInit() {
-        buttonType = CrfInstructionButtonType.DEFAULT_WHITE_DEEP_GREEN;
+        buttonType = CrfInstructionButtonType.GRAY;
         setImage("crf_completed_icon");
         setIsImageAnimated(false);
         buttonText = "Done";
-        backgroundColorRes = "deepGreen";
+        backgroundColorRes = "white";
         hideProgress = true;
     }
 

@@ -36,5 +36,6 @@
     <string name="crf_practice_makes_perfect">Practice makes perfect</string>
     <string name="crf_cover_for_later_tests">This is to make sure you can cover your flash and camera quickly for later tests.</string>
     <string name="crf_move_finger_back">Please move your finger back over the flash and camera</string>
+    <string name="crf_what_is_normal"><u><i>What is a \'normal\' resting HR?</i></u></string>
 
 </resources>

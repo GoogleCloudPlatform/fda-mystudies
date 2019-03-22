@@ -79,9 +79,7 @@
             style="@style/TextAppearance.Crf.SubHeader"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
             android:layout_margin="@dimen/rsb_padding_large"
-            android:gravity="center_horizontal"
             android:textColor="@color/black54"
             android:textColorLink="?attr/colorAccent" />
 
