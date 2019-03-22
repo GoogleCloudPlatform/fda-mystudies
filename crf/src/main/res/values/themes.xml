@@ -6,13 +6,13 @@
         <item name="alertDialogTheme">@style/Theme.Crf.Dialog</item>
         <item name="android:alertDialogTheme">@style/Theme.Crf.Dialog</item>
 
-        <item name="android:textColor">@color/rsb_warm_gray</item>
-        <item name="android:textColorPrimary">@color/rsb_warm_gray</item>
-        <item name="android:textColorSecondary">@color/rsb_warm_gray</item>
+        <item name="android:textColor">@color/textColor</item>
+        <item name="android:textColorPrimary">@color/textColorPrimary</item>
+        <item name="android:textColorSecondary">@color/textColorSecondary</item>
 
         <item name="colorControlNormal">@color/rsb_warm_gray</item>
         <item name="colorPrimary">@color/colorPrimary</item>
-        <item name="colorPrimaryDark">@color/salmon</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
         <item name="android:listDivider">@color/rsb_list_divider</item>
 

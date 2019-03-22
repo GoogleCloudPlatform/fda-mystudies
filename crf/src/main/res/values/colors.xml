@@ -1,9 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <color name="colorPrimary">@color/deepGreen</color>
-    <color name="colorPrimaryDark">@color/salmon</color>
-    <color name="colorAccent">@color/deepGreen</color>
+    <color name="colorPrimary">#C94281</color>
+    <color name="colorPrimaryDark">#990E4F</color>
+    <color name="colorAccent">#F89C55</color>
+
+    <color name="textColor">#1A1C29</color>
+    <color name="textColorPrimary">#FFFFFF</color>
+    <color name="textColorSecondary">#FFFFFF</color>
 
     <color name="rsb_colorPrimary">@color/colorPrimary</color>
     <color name="rsb_colorPrimaryDark">@color/colorPrimaryDark</color>
