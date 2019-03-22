@@ -57,7 +57,9 @@
       "identifier"       : "completion",
       "type"             : "crf_completion",
       "topText"          : "Your heart rate is",
-      "bottomText"       : "Practice makes perfect",
+      "text"             : "Practice makes perfect",
+      "detailText"       : "This is to make sure you can cover your flash and camera quickly for later tests.",
+      "buttonType"       : "gray",
       "valueLabelText"   : "BPM",
       "valueResultId"   : "AVERAGE_BPM_IDENTIFIER"
     }

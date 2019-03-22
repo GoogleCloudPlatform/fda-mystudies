@@ -20,13 +20,13 @@
     {
       "identifier"       : "instructionHeartRisk",
       "type"             : "crf_instruction",
-      "title"            : " ",
-      "text"             : "Potential heart risk",
-      "detailText"       : "Do not attempt to complete this test if you have been told by your doctor that you should not participate in physical activity or exercise. Stop the test and talk to your doctor if any of the following symptoms occur: chest pain, dizziness, blurred vision, disorientation, excessive shortness of breath, severe nausea, severe fatigue, or severe headache.",
+      "text"             : "Potential risks",
+      "detailText"       : "If a doctor has told you not to exercise, or if you feel that stepping up and down a  step for 3 minutes will be painful or too difficult, please do not do this activity.",
       "image"            : "crf_health_risk_icon",
-      "buttonType"       : "defaultWhiteSalmon",
-      "buttonText"       : "Got it",
-      "backgroundColor"  : "salmon"
+      "imageColor"       : "magenta",
+      "buttonType"       : "gray",
+      "buttonText"       : "Next",
+      "hideProgress"     : "true"
     },
     {
       "identifier"       : "instructionVolume",
@@ -42,24 +42,6 @@
       "mediaVolume"      : true
     },
     {
-      "identifier"       : "instructionCamera",
-      "type"             : "crf_instruction",
-      "title"            : " ",
-      "text"             : "Capture heart rate",
-      "detailText"       : "Use your finger to cover the camera and flash on the back of your phone.",
-      "image"            : "crf_heart_rate_animation",
-      "imageColor"       : "macaroniAndCheese",
-      "scaleType"        : "CENTER_CROP",
-      "isImageAnimated"  : true,
-      "animationRepeatDuration" : 2000,
-      "buttonType"       : "heart",
-      "buttonText"       : "Press to start"
-    },
-    {
-      "identifier"       : "heartRate.before",
-      "type"             : "crf_heart_rate_camera_step"
-    },
-    {
       "identifier"       : "instructionStair",
       "type"             : "crf_instruction",
       "title"            : " ",
@@ -69,7 +51,7 @@
       "isImageAnimated"  : true,
       "animationRepeatDuration" : 2000,
       "imageColor"       : "perrywinkle",
-      "buttonType"       : "stairStep",
+      "buttonType"       : "gray",
       "buttonText"       : "Press to start"
     },
     {
@@ -95,7 +77,7 @@
       "scaleType"        : "CENTER_CROP",
       "isImageAnimated"  : true,
       "animationRepeatDuration" : 2000,
-      "buttonType"       : "heart",
+      "buttonType"       : "gray",
       "buttonText"       : "Press to start"
     },
     {
