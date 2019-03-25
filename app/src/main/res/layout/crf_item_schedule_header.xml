@@ -20,7 +20,7 @@
         android:layout_margin="8dp"
         android:gravity="center_horizontal"
         android:text="@string/crf_clinic_fitness_test"
-        style="@style/TextAppearance.Crf.Header"/>
+        style="@style/TextAppearance.Crf.Heading2"/>
     <TextView
         android:id="@+id/activity_header_subtitle"
         android:layout_width="match_parent"

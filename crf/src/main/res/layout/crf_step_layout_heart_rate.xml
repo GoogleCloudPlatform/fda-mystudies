@@ -23,13 +23,13 @@
     android:id="@+id/crf_root_instruction_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/magenta">
+    android:background="@color/colorPrimary">
 
     <RelativeLayout
         android:id="@+id/exit_button_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/magenta"
+        android:background="@color/colorPrimary"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         >
@@ -64,7 +64,7 @@
 
         <TextView
             android:id="@+id/crf_oops"
-            style="@style/TextAppearance.Crf.Header"
+            style="@style/TextAppearance.Crf.Heading1.Primary"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
@@ -73,20 +73,18 @@
             android:layout_marginBottom="@dimen/rsb_padding_large"
             android:gravity="center_horizontal"
             android:text="@string/crf_oops"
-            android:textColor="@color/white80"
             android:textAlignment="center"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toTopOf="@+id/crf_heart_rate_title"
             />
 
         <TextView
-            style="@style/TextAppearance.Crf.SubHeader"
+            style="@style/TextAppearance.Crf.Heading2.Primary"
             android:id="@+id/crf_heart_rate_title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignTop="@+id/crf_oops"
             android:layout_centerHorizontal="true"
-            android:textColor="@color/white80"
             android:textAlignment="center"
             android:layout_marginLeft="@dimen/rsb_padding_medium"
             android:layout_marginRight="@dimen/rsb_padding_medium"
@@ -95,7 +93,7 @@
 
         <TextView
             android:id="@+id/crf_calculate"
-            style="@style/TextAppearance.Crf.Small"
+            style="@style/TextAppearance.Crf.Body.Primary"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignTop="@+id/crf_heart_rate_title"
@@ -106,7 +104,6 @@
             android:layout_marginBottom="@dimen/rsb_padding_large"
             android:text="@string/crf_heart_rate_calculated"
             android:textAlignment="center"
-            android:textColor="@color/white80"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintTop_toBottomOf="@id/crf_heart_rate_title"
             tools:layout_editor_absoluteX="24dp" />
@@ -142,17 +139,15 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textAlignment="center"
-            android:textColor="@color/black86"
             android:visibility="gone" />
 
         <TextView
-            style="@style/TextAppearance.Crf.SubHeader"
+            style="@style/TextAppearance.Crf.Heading2"
             android:id="@+id/crf_bpm_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/crf_bpm_caps"
             android:layout_gravity="center"
-            android:textColor="@color/black86"
             android:visibility="gone"/>
 
     </LinearLayout>
@@ -223,7 +218,6 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:textColor="@color/black86"
                     android:paddingTop="4dp"/>
 
                 <TextView
@@ -233,7 +227,6 @@
                     android:layout_height="wrap_content"
                     android:text="@string/crf_bpm"
                     android:layout_gravity="center"
-                    android:textColor="@color/white"
                     android:padding="@dimen/rsb_padding_small"/>
 
             </LinearLayout>
@@ -259,8 +252,7 @@
         android:layout_gravity="center"
         android:layout_below="@id/crf_heart_container"
         android:layout_centerHorizontal="true"
-        android:text="Capturing..."
-        android:textColor="@color/white"
+        android:text="@string/crf_capturing"
         android:padding="@dimen/rsb_padding_medium"
         android:layout_marginTop="60dp"/>
 

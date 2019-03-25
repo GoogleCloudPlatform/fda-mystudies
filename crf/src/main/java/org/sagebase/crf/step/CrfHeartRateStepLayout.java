@@ -476,7 +476,6 @@ public class CrfHeartRateStepLayout extends ActiveStepLayout implements
         crfOops.setVisibility(View.VISIBLE);
         nextButton.setVisibility(View.VISIBLE);
         heartRateTextContainer.setVisibility(View.VISIBLE);
-        bpmText.setTextColor(getResources().getColor(R.color.black86));
         calculateSuccess.setVisibility(View.VISIBLE);
         arcDrawableContainer.setVisibility(View.VISIBLE);
 

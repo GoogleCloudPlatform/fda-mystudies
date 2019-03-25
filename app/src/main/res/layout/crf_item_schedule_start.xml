@@ -38,7 +38,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center_horizontal"
-        style="@style/TextAppearance.Crf.Header"
+        style="@style/TextAppearance.Crf.Heading2"
         android:textColor="@color/rsb_black"
         android:layout_margin="16dp"
         tools:text="@string/crf_today" />

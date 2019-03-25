@@ -58,7 +58,7 @@ public class OverlayWithHole extends android.support.v7.widget.AppCompatImageVie
 
 setCircle(        new RectF(0,0,getWidth(), getHeight()), getWidth()/2);
         Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG);
-        paint.setColor(getResources().getColor(R.color.magenta));
+        paint.setColor(getResources().getColor(R.color.colorPrimary));
         paint.setStyle(Paint.Style.FILL);
         canvas.drawPaint(paint);
         

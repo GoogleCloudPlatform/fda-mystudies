@@ -9,7 +9,6 @@
       "text"       : "Heart Snapshot",
       "detailText" : "Your phone's camera can measure your heartbeat.",
       "image"      : "crf_heart_snapshot",
-      "imageColor" : "magenta",
       "buttonType" : "gray",
       "buttonText" : "Measure",
       "hideProgress"  : "true",
@@ -21,7 +20,6 @@
       "text"       : "Can we turn on your camera and flash?",
       "detailText" : "Heart Snapshot uses the camera and flash on the back of your phone to measure your heartrate.",
       "image"      : "flash_on_hand_holding",
-      "imageColor" : "magenta",
       "buttonType" : "gray",
       "buttonText" : "Next",
       "hideProgress"  : "true"
@@ -32,7 +30,6 @@
       "text"       : "Find your camera and flash",
       "detailText" : "Your flash is usually next to your camera on the back of the phone. You will need to cover both.",
       "image"      : "crf_hand_holding_phone",
-      "imageColor" : "magenta",
       "buttonType" : "gray",
       "buttonText" : "Measure heart rate",
       "hideProgress"  : "true"
@@ -43,7 +40,6 @@
       "text"       : "Cover the flash and camera",
       "detailText" : "Use your finger to cover the camera and flash on the back of your phone. Your finger nail should turn a little red once you cover the flash.",
       "image"      : "crf_cover_flash",
-      "imageColor" : "magenta",
       "buttonType" : "gray",
       "buttonText" : "Measure heart rate",
       "hideProgress"  : "true"

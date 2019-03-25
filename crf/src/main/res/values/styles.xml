@@ -48,21 +48,46 @@
     <style name="TextAppearance"/>
     <style name="TextAppearance.Crf"/>
     <style name="TextAppearance.Crf.Body">
-        <item name="android:textSize">17sp</item>
+        <item name="android:textSize">18sp</item>
+        <item name="android:textColor">@color/textColor</item>
         <item name="android:fontFamily">@font/opensans</item>
+    </style>
+    <style name="TextAppearance.Crf.Body.Primary" parent="TextAppearance.Crf.Body">
+        <item name="android:textColor">@color/textColorPrimary</item>
     </style>
 
     <style name="TextAppearance.Crf.SubHeader">
         <item name="android:textSize">22sp</item>
+        <item name="android:textColor">@color/textColor</item>
         <item name="android:fontFamily">@font/opensans_semibold</item>
     </style>
     <style name="TextAppearance.Crf.IntroBody">
-        <item name="android:textSize">17sp</item>
+        <item name="android:textSize">18sp</item>
         <item name="android:fontFamily">@font/opensans</item>
     </style>
-    <style name="TextAppearance.Crf.Header">
-        <item name="android:textSize">25sp</item>
+    <!--Heading 1-->
+    <style name="TextAppearance.Crf.Heading1">
+        <item name="android:textSize">30sp</item>
         <item name="android:textStyle">bold</item>
+        <item name="android:textColor">@color/textColor</item>
+        <item name="android:fontFamily">@font/opensans</item>
+    </style>
+    <!--Heading 1 - textColorPrimary -->
+    <style name="TextAppearance.Crf.Heading1.Primary" parent="TextAppearance.Crf.Heading1">
+        <item name="android:textColor">@color/textColorPrimary</item>
+    </style>
+    <!--Heading 2-->
+    <style name="TextAppearance.Crf.Heading2">
+        <item name="android:textSize">24sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">@color/textColor</item>
+        <item name="android:fontFamily">@font/opensans</item>
+    </style>
+    <!--Heading 2 - textColorPrimary-->
+    <style name="TextAppearance.Crf.Heading2.Primary" parent="TextAppearance.Crf.Heading2">
+        <item name="android:textSize">24sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">@color/textColorPrimary</item>
         <item name="android:fontFamily">@font/opensans</item>
     </style>
     <style name="TextAppearance.Crf.Body.Italic">
@@ -85,10 +110,12 @@
     <!-- Heart Rate Screen -->
     <style name="TextAppearance.Crf.BpmNumber">
         <item name="android:textSize">80sp</item>
+        <item name="android:textColor">@color/textColor</item>
         <item name="android:fontFamily">@font/opensans_light</item>
     </style>
     <style name="TextAppearance.Crf.Capturing">
         <item name="android:textSize">40sp</item>
+        <item name="android:textColor">@color/textColorPrimary</item>
         <item name="android:fontFamily">@font/opensans_light</item>
     </style>
     <style name="TextAppearance.Crf.ActiveStatusNumber">
@@ -97,6 +124,7 @@
     </style>
     <style name="TextAppearance.Crf.ActiveStatusText">
         <item name="android:textSize">24sp</item>
+        <item name="android:textColor">@color/textColor</item>
         <item name="android:fontFamily">@font/opensans_light</item>
     </style>
 
@@ -130,16 +158,16 @@
         <item name="android:fontFamily">@font/opensans_bold</item>
     </style>
     <style name="TextAppearance.Crf.CompletionText">
-        <item name="android:textSize">36sp</item>
-        <item name="android:fontFamily">@font/opensans</item>
+        <item name="android:textSize">24sp</item>
+        <item name="android:fontFamily">@font/opensans_bold</item>
     </style>
     <style name="TextAppearance.Crf.CompletionTextValue">
-        <item name="android:textSize">82sp</item>
-        <item name="android:fontFamily">@font/opensans_semibold</item>
+        <item name="android:textSize">80sp</item>
+        <item name="android:fontFamily">@font/opensans</item>
     </style>
     <style name="TextAppearance.Crf.CompletionTextSubValue">
-        <item name="android:textSize">24sp</item>
-        <item name="android:fontFamily">@font/opensans_semibold</item>
+        <item name="android:textSize">28sp</item>
+        <item name="android:fontFamily">@font/opensans</item>
     </style>
 
 

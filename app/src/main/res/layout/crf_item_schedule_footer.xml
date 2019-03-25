@@ -15,7 +15,7 @@
         android:layout_height="wrap_content"
         android:layout_margin="8dp"
         android:gravity="center_horizontal"
-        style="@style/TextAppearance.Crf.Header"
+        style="@style/TextAppearance.Crf.Heading2"
         android:textColor="@color/white"/>
 
     <TextView
