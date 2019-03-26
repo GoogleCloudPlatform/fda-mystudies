@@ -110,8 +110,7 @@
             android:textAllCaps="false"
             android:textColor="@color/textColor"
             app:layout_constraintBottom_toTopOf="@+id/button_go_forward"
-            app:layout_constraintTop_toTopOf="parent"
-            />
+            app:layout_constraintTop_toTopOf="parent"/>
 
 
         <Button

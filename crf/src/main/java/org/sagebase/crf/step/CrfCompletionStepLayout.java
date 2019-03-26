@@ -20,11 +20,13 @@ package org.sagebase.crf.step;
 import android.content.Context;
 import android.util.AttributeSet;
 import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 
 import org.researchstack.backbone.result.StepResult;
 import org.researchstack.backbone.result.TaskResult;
 import org.researchstack.backbone.step.Step;
+import org.researchstack.backbone.ui.callbacks.StepCallbacks;
 import org.researchstack.backbone.utils.StepResultHelper;
 import org.sagebase.crf.R;
 
@@ -41,6 +43,8 @@ public class CrfCompletionStepLayout extends CrfInstructionStepLayout implements
     private TextView mCompletionValueText;
     private TextView mCompletionLabelText;
     private TextView mCompletionTextBottom;
+
+    private Button mRedoButton;
 
     // This is passed in from the TaskResult
     private String mCompletionValueResult;
@@ -95,12 +99,20 @@ public class CrfCompletionStepLayout extends CrfInstructionStepLayout implements
         mCompletionLabelText.setText(crfCompletionStep.valueLabelText);
         mCompletionLabelText.setVisibility((crfCompletionStep.valueLabelText == null) ? View.GONE : View.VISIBLE);
 
-        mCompletionTextBottom = findViewById(R.id.crf_completion_text_bottom);
-        mCompletionTextBottom.setText(crfCompletionStep.bottomText);
-        mCompletionTextBottom.setVisibility((crfCompletionStep.bottomText == null) ? View.GONE : View.VISIBLE);
+//        mCompletionTextBottom = findViewById(R.id.crf_completion_text_bottom);
+//        mCompletionTextBottom.setText(crfCompletionStep.bottomText);
+//        mCompletionTextBottom.setVisibility((crfCompletionStep.bottomText == null) ? View.GONE : View.VISIBLE);
 
         mCompletionValueText = findViewById(R.id.crf_completion_text_value);
         refreshCompletionValueLabel();
+
+        mRedoButton = findViewById(R.id.crf_redo_button);
+        if (crfCompletionStep.showRedoButton) {
+            mRedoButton.setVisibility(View.VISIBLE);
+            mRedoButton.setOnClickListener(view -> onRedoButtonClicked());
+        } else {
+            mRedoButton.setVisibility(View.GONE);
+        }
     }
 
     @Override
@@ -116,5 +128,9 @@ public class CrfCompletionStepLayout extends CrfInstructionStepLayout implements
         }
         mCompletionTextContainer.setVisibility(View.VISIBLE);
         mCompletionValueText.setText(mCompletionValueResult);
+    }
+
+    public void onRedoButtonClicked() {
+        callbacks.onSaveStep(StepCallbacks.ACTION_PREV, step, null);
     }
 }

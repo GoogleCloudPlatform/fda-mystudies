@@ -59,7 +59,8 @@
       "detailText"       : "This is to make sure you can cover your flash and camera quickly for later tests.",
       "buttonType"       : "gray",
       "valueLabelText"   : "BPM",
-      "valueResultId"   : "AVERAGE_BPM_IDENTIFIER"
+      "valueResultId"    : "AVERAGE_BPM_IDENTIFIER",
+      "showRedoButton"   : "true"
     }
   ]
 }

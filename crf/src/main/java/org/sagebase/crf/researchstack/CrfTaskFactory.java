@@ -290,8 +290,14 @@ public class CrfTaskFactory extends TaskItemFactory {
         if (item.mediaVolume) {
             step.mediaVolume = true;
         }
-        if(item.learnMore) {
-            step.learnMore = item.learnMore;
+        if(item.learnMoreText != null) {
+            step.learnMoreText = item.learnMoreText;
+        }
+        if(item.learnMoreFile != null) {
+            step.learnMoreFile = item.learnMoreFile;
+        }
+        if(item.learnMoreTitle != null) {
+            step.learnMoreTitle = item.learnMoreTitle;
         }
         if (item.remindMeLater) {
             step.remindMeLater = true;
@@ -400,6 +406,9 @@ public class CrfTaskFactory extends TaskItemFactory {
         }
         if (item.valueResultId != null) {
             step.valueResultId = item.valueResultId;
+        }
+        if (item.showRedoButton) {
+            step.showRedoButton = item.showRedoButton;
         }
         return step;
     }

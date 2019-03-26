@@ -48,4 +48,7 @@ public class CrfCompletionSurveyItem extends CrfInstructionSurveyItem {
      */
     @SerializedName("valueResultId")
     public String valueResultId;
+
+    @SerializedName("showRedoButton")
+    public boolean showRedoButton;
 }

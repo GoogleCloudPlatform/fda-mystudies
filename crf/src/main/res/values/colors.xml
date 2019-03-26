@@ -9,6 +9,11 @@
     <color name="textColorPrimary">#FFFFFF</color>
     <color name="textColorSecondary">#FFFFFF</color>
 
+    <color name="completion_background_start">#91EDC1</color>
+    <color name="completion_background_end">#63D49E</color>
+
+
+
     <color name="rsb_colorPrimary">@color/colorPrimary</color>
     <color name="rsb_colorPrimaryDark">@color/colorPrimaryDark</color>
     <color name="rsb_colorAccent">@color/colorAccent</color>

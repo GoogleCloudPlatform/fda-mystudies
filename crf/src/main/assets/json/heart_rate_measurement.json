@@ -3,26 +3,57 @@
   "schemaIdentifier" : "HeartRate Measurement",
   "optional" : false,
   "taskSteps" : [
+
     {
-      "identifier"       : "instructionCamera",
-      "type"             : "crf_instruction",
-      "title"            : " ",
-      "text"             : "Capture heart rate",
-      "detailText"       : "Use your finger to cover the camera and flash on the back of your phone.",
-      "image"            : "crf_heart_rate_animation",
-      "imageColor"       : "macaroniAndCheese",
-      "scaleType"        : "CENTER_CROP",
-      "behindToolbar"    : "true",
-      "isImageAnimated"  : true,
-      "animationRepeatDuration" : 2000,
-      "buttonType"       : "gray",
-      "buttonText"       : "Press to start",
-      "remindMeLater"    : "false"
+      "identifier" : "sit_relax",
+      "type"       : "crf_instruction",
+      "text"       : "Sit down and relax",
+      "detailText" : "If you don’t feel relaxed, take a moment and breathe slowly before starting the measurement. ",
+      "image"      : "crf_hand_holding_phone",
+      "buttonType" : "gray",
+      "buttonText" : "Measure",
+      "hideProgress"  : "true",
+      "learnMoreText"  : "Tips for measuring",
+      "learnMoreFile"  : "crf_tips_resting_hr.html",
+      "learnMoreTitle" : "Tips for measuring resting heart rate"
+    },
+    {
+      "identifier" : "find_camera",
+      "type"       : "crf_instruction",
+      "text"       : "Find your camera and flash",
+      "detailText" : "Your flash is usually next to your camera on the back of the phone. You will need to cover both.",
+      "image"      : "crf_hand_holding_phone",
+      "buttonType" : "gray",
+      "buttonText" : "Found it",
+      "hideProgress"  : "true"
+    },
+    {
+      "identifier" : "cover_camera",
+      "type"       : "crf_instruction",
+      "text"       : "Cover the flash and camera",
+      "detailText" : "Use your finger to cover the camera and flash on the back of your phone. Your finger nail should turn a little red once you cover the flash.",
+      "image"      : "crf_cover_flash",
+      "buttonType" : "gray",
+      "buttonText" : "Measure heart rate",
+      "hideProgress"  : "true"
     },
     {
       "identifier"       : "camera",
       "type"             : "crf_heart_rate_camera_step",
       "buttonType"       : "gray"
+    },
+    {
+      "identifier"       : "completion",
+      "type"             : "crf_completion",
+      "topText"          : "Your resting heart rate is",
+      "text"             : "Resting HR Captured!",
+      "detailText"       : "Great job measuring your heart at rest. We’ve finished the first half of  your heart snapshot, so let’s continue on to the next step.",
+      "learnMoreText"    : "What is a 'normal' resting HR?",
+      "learnMoreFile"    : "crf_normal_resting_hr.html",
+      "learnMoreTitle"   : "What is a 'normal' resting HR?",
+      "buttonType"       : "gray",
+      "valueLabelText"   : "BPM",
+      "valueResultId"   : "AVERAGE_BPM_IDENTIFIER"
     }
   ]
 }

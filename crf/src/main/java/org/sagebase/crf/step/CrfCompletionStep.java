@@ -48,6 +48,11 @@ public class CrfCompletionStep extends CrfInstructionStep {
      */
     public String valueResultId;
 
+    /**
+     * Hide or show the redo measurement button
+     */
+    public boolean showRedoButton;
+
     /* Default constructor needed for serialization/deserialization of object */
     public CrfCompletionStep() {
         super();
