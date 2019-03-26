@@ -86,7 +86,22 @@ public class CrfInstructionSurveyItem extends InstructionSurveyItem {
     @SerializedName("remindMeLater")
     public boolean remindMeLater;
 
-    @SerializedName("learnMore")
-    public boolean learnMore;
+    /**
+     * Text to display as the learn more link
+     */
+    @SerializedName("learnMoreText")
+    public String learnMoreText;
+
+    /**
+     * Html file to show when user taps learn more link
+     */
+    @SerializedName("learnMoreFile")
+    public String learnMoreFile;
+
+    /**
+     * Title to show on learn more screen
+     */
+    @SerializedName("learnMoreTitle")
+    public String learnMoreTitle;
 
 }

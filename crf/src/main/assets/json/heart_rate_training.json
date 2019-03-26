@@ -12,7 +12,9 @@
       "buttonType" : "gray",
       "buttonText" : "Measure",
       "hideProgress"  : "true",
-      "learnMore"  : "true"
+      "learnMoreText"  : "Learn how and why",
+      "learnMoreFile"  : "crf_heart_rate_training.html",
+      "learnMoreTitle" : "About the Heart Snapshot"
     },
     {
       "identifier" : "turn_on_camera",
@@ -31,7 +33,7 @@
       "detailText" : "Your flash is usually next to your camera on the back of the phone. You will need to cover both.",
       "image"      : "crf_hand_holding_phone",
       "buttonType" : "gray",
-      "buttonText" : "Measure heart rate",
+      "buttonText" : "Found it",
       "hideProgress"  : "true"
     },
     {

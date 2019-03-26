@@ -107,7 +107,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="15dp"
-            android:text="@string/learn_how"
             android:textAllCaps="false"
             android:textColor="@color/textColor"
             app:layout_constraintBottom_toTopOf="@+id/button_go_forward"

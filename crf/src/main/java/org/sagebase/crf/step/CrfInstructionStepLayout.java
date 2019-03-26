@@ -19,6 +19,7 @@ package org.sagebase.crf.step;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Paint;
 import android.support.v4.content.res.ResourcesCompat;
 import android.util.AttributeSet;
 import android.view.View;
@@ -196,8 +197,10 @@ public class CrfInstructionStepLayout extends InstructionStepLayout implements
                     imageView.getPaddingRight(), imageView.getPaddingBottom());
         }
         if (learnMore != null) {
-            if (crfInstructionStep.learnMore) {
+            if (crfInstructionStep.learnMoreText != null && crfInstructionStep.learnMoreFile != null) {
                 learnMore.setVisibility(View.VISIBLE);
+                learnMore.setPaintFlags(learnMore.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
+                learnMore.setText(crfInstructionStep.learnMoreText);
                 learnMore.setOnClickListener(view -> setLearnMore());
             } else {
                 learnMore.setVisibility(View.GONE);
@@ -223,9 +226,14 @@ public class CrfInstructionStepLayout extends InstructionStepLayout implements
 
     }
 
+
+    public static final String EXTRA_HTML_FILENAME = "EXTRA_FILENAME";
+
     private void setLearnMore() {
         Intent i = new Intent(getContext(), CrfTrainingInfo.class);
-        getContext().startActivity(new Intent(getContext(), CrfTrainingInfo.class));
+        i.putExtra(CrfTrainingInfoKt.EXTRA_HTML_FILENAME, crfInstructionStep.learnMoreFile);
+        i.putExtra(CrfTrainingInfoKt.EXTRA_TITLE, crfInstructionStep.learnMoreTitle);
+        getContext().startActivity(i);
     }
 
     public void goForwardClicked(View v) {

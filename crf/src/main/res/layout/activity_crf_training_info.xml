@@ -16,31 +16,55 @@
   ~
   -->
 
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
     tools:context="org.sagebase.crf.step.CrfTrainingInfo">
 
-    <WebView
-        android:id="@+id/crf_webview"
+    <android.support.design.widget.AppBarLayout
+        android:id="@+id/app_bar"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:visibility="visible"
-        android:scrollbarAlwaysDrawVerticalTrack="true"
-        />
+        android:layout_height="@dimen/app_bar_height"
+        android:fitsSystemWindows="false"
+        android:theme="@style/AppTheme.AppBarOverlay">
 
-    <Button
-        style="@style/Crf.Salmon.RoundedCornerMaterialButton"
-        android:id="@+id/button_go_forward"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/crf_rounded_button_height"
-        android:layout_margin="@dimen/rsb_padding_large"
-        android:focusable="true"
-        android:text="@string/crf_done"
-        android:textColor="@color/white"
-        android:textAllCaps="false"
-        app:layout_constraintBottom_toBottomOf="parent"/>
+            <android.support.v7.widget.Toolbar
+                android:id="@+id/toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="?attr/actionBarSize"
+                style="@style/ThemeOverlay.AppCompat.Dark.ActionBar" />
+            <View
+                android:layout_width="wrap_content"
+                android:layout_height="0dp"
+                android:layout_weight="1" />
+            <TextView
+                android:id="@+id/title"
+                style="@style/TextAppearance.Crf.Heading1.Primary"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom"
+                android:gravity="center_horizontal|bottom"
+                android:layout_margin="@dimen/rsb_padding_large"
+                android:maxLines="2" />
 
-</android.support.constraint.ConstraintLayout>
+    </android.support.design.widget.AppBarLayout>
+
+
+        <WebView
+            android:id="@+id/crf_webview"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior"
+            android:visibility="visible"
+            android:scrollbarAlwaysDrawVerticalTrack="true"
+            />
+
+
+
+
+</android.support.design.widget.CoordinatorLayout>
+
+

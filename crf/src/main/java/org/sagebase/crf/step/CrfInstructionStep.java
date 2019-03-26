@@ -77,7 +77,20 @@ public class CrfInstructionStep extends InstructionStep {
      */
     public boolean remindMeLater;
 
-    public boolean learnMore;
+    /**
+     * Text to display as the learn more link
+     */
+    public String learnMoreText;
+
+    /**
+     * Html file to show when user taps learn more link
+     */
+    public String learnMoreFile;
+
+    /**
+     * Title to show on learn more screen
+     */
+    public String learnMoreTitle;
 
 
     /* Default constructor needed for serialization/deserialization of object */
