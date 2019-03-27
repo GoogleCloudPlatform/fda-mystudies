@@ -38,6 +38,7 @@ import org.researchstack.backbone.step.Step;
 import org.researchstack.backbone.step.active.ActiveStep;
 import org.researchstack.backbone.task.Task;
 import org.sagebase.crf.CrfActiveTaskActivity;
+import org.sagebase.crf.step.CrfCameraPermissionStep;
 import org.sagebase.crf.step.CrfCompletionStep;
 import org.sagebase.crf.step.CrfCompletionSurveyItem;
 import org.sagebase.crf.step.CrfCountdownStep;
@@ -112,6 +113,11 @@ public class CrfTaskFactory extends TaskItemFactory {
                                 throw new IllegalStateException("Error in json parsing, crf_instruction types must be CrfInstructionSurveyItem");
                             }
                             return createCrfInstructionStep((CrfInstructionSurveyItem)item);
+                        case CrfSurveyItemAdapter.CRF_CAMERA_PERMISSION_SURVEY_ITEM_TYPE:
+                            if (!(item instanceof CrfInstructionSurveyItem)) {
+                                throw new IllegalStateException("Error in json parsing, crf_instruction types must be CrfInstructionSurveyItem");
+                            }
+                            return createCrfCameraPermissionStep((CrfInstructionSurveyItem)item);
                         case CrfSurveyItemAdapter.CRF_START_TASK_SURVEY_ITEM_TYPE:
                             if (!(item instanceof CrfStartTaskSurveyItem)) {
                                 throw new IllegalStateException("Error in json parsing, crf_start_task types must be CrfStartTaskSurveyItem");
@@ -256,6 +262,13 @@ public class CrfTaskFactory extends TaskItemFactory {
 
     private CrfInstructionStep createCrfInstructionStep(CrfInstructionSurveyItem item) {
         CrfInstructionStep step = new CrfInstructionStep(
+                item.identifier, item.title, item.text);
+        fillCrfInstructionStep(step, item);
+        return step;
+    }
+
+    private CrfInstructionStep createCrfCameraPermissionStep(CrfInstructionSurveyItem item) {
+        CrfCameraPermissionStep step = new CrfCameraPermissionStep(
                 item.identifier, item.title, item.text);
         fillCrfInstructionStep(step, item);
         return step;

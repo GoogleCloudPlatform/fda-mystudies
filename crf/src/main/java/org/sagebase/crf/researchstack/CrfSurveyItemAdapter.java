@@ -39,6 +39,7 @@ import java.util.Map;
 /** Subclasses BridgeSurveyItemAdapter to enable CRF-specific task step types. */
 public class CrfSurveyItemAdapter extends SurveyItemAdapter {
     public static final String CRF_INSTRUCTION_SURVEY_ITEM_TYPE = "crf_instruction";
+    public static final String CRF_CAMERA_PERMISSION_SURVEY_ITEM_TYPE = "crf_camera_permission";
     public static final String CRF_START_TASK_SURVEY_ITEM_TYPE = "crf_start_task";
     public static final String CRF_HEART_RATE_CAMERA_SURVEY_ITEM_TYPE = "crf_heart_rate_camera_step";
     public static final String CRF_COUNTDOWN_SURVEY_ITEM_TYPE = "crf_countdown";
@@ -62,6 +63,7 @@ public class CrfSurveyItemAdapter extends SurveyItemAdapter {
             ImmutableMap.<String, Class<? extends SurveyItem>>builder()
                     .put(CRF_FITBIT_SURVEY_ITEM_TYPE, CrfInstructionSurveyItem.class)
                     .put(CRF_INSTRUCTION_SURVEY_ITEM_TYPE, CrfInstructionSurveyItem.class)
+                    .put(CRF_CAMERA_PERMISSION_SURVEY_ITEM_TYPE, CrfInstructionSurveyItem.class)
                     .put(CRF_START_TASK_SURVEY_ITEM_TYPE, CrfStartTaskSurveyItem.class)
                     .put(CRF_HEART_RATE_CAMERA_SURVEY_ITEM_TYPE, ActiveStepSurveyItem.class)
                     .put(CRF_COUNTDOWN_SURVEY_ITEM_TYPE, ActiveStepSurveyItem.class)

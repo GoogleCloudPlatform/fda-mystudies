@@ -18,7 +18,7 @@
     },
     {
       "identifier" : "turn_on_camera",
-      "type"       : "crf_instruction",
+      "type"       : "crf_camera_permission",
       "text"       : "Can we turn on your camera and flash?",
       "detailText" : "Heart Snapshot uses the camera and flash on the back of your phone to measure your heartrate.",
       "image"      : "flash_on_hand_holding",

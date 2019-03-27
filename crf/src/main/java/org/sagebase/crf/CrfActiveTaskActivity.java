@@ -17,9 +17,11 @@
 
 package org.sagebase.crf;
 
+import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.Intent;
 import android.media.AudioManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.ColorRes;
 import android.support.annotation.IdRes;
@@ -34,6 +36,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
+import org.researchstack.backbone.PermissionRequestManager;
 import org.researchstack.backbone.step.Step;
 import org.researchstack.backbone.task.OrderedTask;
 import org.researchstack.backbone.task.Task;
@@ -268,6 +271,13 @@ public class CrfActiveTaskActivity extends ActiveTaskActivity {
         } else {
             super.onActivityResult(requestCode, resultCode, data);
         }
+    }
+
+
+    @TargetApi(Build.VERSION_CODES.M)
+    @Override //Override so we don't need to initialize the PermissionRequestManager
+    public void onRequestPermission(String id) {
+        requestPermissions(new String[] {id}, PermissionRequestManager.PERMISSION_REQUEST_CODE);
     }
 
 
