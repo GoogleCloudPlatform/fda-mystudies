@@ -1,5 +1,5 @@
 /*
- *    Copyright 2018 Sage Bionetworks
+ *    Copyright 2019 Sage Bionetworks
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -15,29 +15,19 @@
  *
  */
 
-package org.sagebase.crf.step.heartrate.decline_hr;
+package org.sagebase.crf.step.active.camera_error;
 
 import android.graphics.Bitmap;
 
-import org.sagebase.crf.step.heartrate.StateDetection;
-
-/**
- * Encompasses state detection for if the heart rate is declining.
- */
-public class DeclineHRState implements StateDetection {
+import org.sagebase.crf.step.active.StateDetection;
 
 
-    public DeclineHRState() {
 
-    }
+public class CameraState implements StateDetection {
 
-    /**
-     * Runs the declining heart rate algorithm
-     * @param timestamp
-     * @param bitmap
-     * @return boolean representing whether this is an issue
-     */
-    public boolean containsIssue(Long timestamp, Bitmap bitmap) {
-        return DeclineHRAlgorithm.algorithm(timestamp, bitmap) > 0.5;
+
+    // Need to develop the algorithm
+    public static boolean containsIssue(Long timestamp, Bitmap bitmap) {
+        return false;//CameraAlgorithm.algorithm(timestamp, bitmap) > 0.5;
     }
 }

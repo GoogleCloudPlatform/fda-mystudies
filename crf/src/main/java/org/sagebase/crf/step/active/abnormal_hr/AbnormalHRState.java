@@ -1,5 +1,5 @@
 /*
- *    Copyright 2018 Sage Bionetworks
+ *    Copyright 2019 Sage Bionetworks
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -15,10 +15,10 @@
  *
  */
 
-package org.sagebase.crf.step.heartrate.abnormal_hr;
+package org.sagebase.crf.step.active.abnormal_hr;
 
 import android.graphics.Bitmap;
-import org.sagebase.crf.step.heartrate.StateDetection;
+import org.sagebase.crf.step.active.StateDetection;
 
 /**
  * Encompasses state detection for if this sample is abnormal.

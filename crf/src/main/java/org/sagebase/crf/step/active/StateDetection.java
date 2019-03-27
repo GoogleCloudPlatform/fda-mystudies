@@ -1,5 +1,5 @@
 /*
- *    Copyright 2018 Sage Bionetworks
+ *    Copyright 2019 Sage Bionetworks
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -15,29 +15,18 @@
  *
  */
 
-package org.sagebase.crf.step.heartrate.pressure_error;
+package org.sagebase.crf.step.active;
 
 import android.graphics.Bitmap;
 
-import org.sagebase.crf.step.heartrate.StateDetection;
+public interface StateDetection {
 
-/**
- * Encompasses state detection for if there is too much pressure on the camera.
- */
-public class PressureState implements StateDetection {
-
-    public PressureState() {
-
-    }
-
-    /**
-     * Runs the pressure algorithm
-     * @param timestamp
-     * @param bitmap
-     * @return boolean representing whether this is an issue
+    /*
+    This method returns a boolean representing whether the HR sample has an error related to this
+    error type.
      */
-    public static boolean containsIssue(Long timestamp, Bitmap bitmap) {
+    static boolean containsIssue(Long timestamp, Bitmap bitmap) {
+        return false;
+    };
 
-        return PressureAlgorithm.algorithm(timestamp, bitmap) > 0.5;
-    }
 }

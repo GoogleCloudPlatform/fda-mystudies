@@ -57,17 +57,15 @@ import org.researchstack.backbone.step.Step;
 import org.researchstack.backbone.step.active.recorder.Recorder;
 import org.researchstack.backbone.step.active.recorder.RecorderListener;
 import org.sagebase.crf.step.CrfHeartRateStepLayout;
-import org.sagebase.crf.step.active.BpmRecorder;
-import org.sagebase.crf.step.heartrate.camera_error.CameraState;
-import org.sagebase.crf.step.heartrate.confidence_error.ConfidenceState;
-import org.sagebase.crf.step.heartrate.pressure_error.PressureState;
+import org.sagebase.crf.step.active.camera_error.CameraState;
+import org.sagebase.crf.step.active.confidence_error.ConfidenceState;
+import org.sagebase.crf.step.active.pressure_error.PressureState;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
@@ -82,11 +80,6 @@ import rx.schedulers.Schedulers;
 import rx.subscriptions.CompositeSubscription;
 
 import static android.graphics.ImageFormat.YUV_420_888;
-import static android.hardware.camera2.CameraMetadata.INFO_SUPPORTED_HARDWARE_LEVEL_3;
-import static android.hardware.camera2.CameraMetadata.INFO_SUPPORTED_HARDWARE_LEVEL_FULL;
-import static android.hardware.camera2.CameraMetadata.INFO_SUPPORTED_HARDWARE_LEVEL_LEGACY;
-import static android.hardware.camera2.CameraMetadata.INFO_SUPPORTED_HARDWARE_LEVEL_LIMITED;
-import static android.hardware.camera2.CameraMetadata.REQUEST_AVAILABLE_CAPABILITIES_MANUAL_SENSOR;
 import static android.hardware.camera2.CaptureResult.*;
 import static org.sagebase.crf.step.active.ImageUtils.toBitmap;
 

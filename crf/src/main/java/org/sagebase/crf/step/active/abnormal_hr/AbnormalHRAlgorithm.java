@@ -1,5 +1,5 @@
 /*
- *    Copyright 2018 Sage Bionetworks
+ *    Copyright 2019 Sage Bionetworks
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -15,28 +15,35 @@
  *
  */
 
-package org.sagebase.crf.step.heartrate;
+package org.sagebase.crf.step.active.abnormal_hr;
 
 import android.graphics.Bitmap;
+import org.sagebase.crf.step.active.OutputStateAlgorithm;
 import java.util.ArrayList;
 
 /**
- * An interface that implements an error state algorithm with supplemental functions
+ * Runs an algorithm to determine if the heart beat sample is abnormal.
  */
-public interface OutputStateAlgorithm {
+
+public class AbnormalHRAlgorithm implements OutputStateAlgorithm {
 
     /**
-     * Get the previous x states to be used in the algorithm
-     * @return  a list of previous states's bitmaps
+     * Gets the previous x number of heart beat samples
+     *
+     * @return A list of previous sample bitmaps
      */
-    static ArrayList<Bitmap> getPreviousState(){return null;};
-
-    /**
-     *  Return a double reporting how likely it is that an error is present. The closer to 0, the
-     *  sless likely there is an error, the closer to 1, the more likely
-     */
-    static double algorithm(Long timestamp, Bitmap bitmap){
-        return 0.0;
+    public ArrayList<Bitmap> getPreviousState() {
+        return null;
     }
 
+    /**
+     * Runs the algorithm to determine if a sample is abnormal.
+     *
+     * @param timestamp
+     * @param bitmap
+     * @return A double representing how abnormal this sample is.
+     */
+    public static double algorithm(Long timestamp, Bitmap bitmap) {
+        return 0.0;
+    }
 }

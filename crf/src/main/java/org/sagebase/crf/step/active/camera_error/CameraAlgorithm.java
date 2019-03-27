@@ -1,5 +1,5 @@
 /*
- *    Copyright 2018 Sage Bionetworks
+ *    Copyright 2019 Sage Bionetworks
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -15,44 +15,34 @@
  *
  */
 
-package org.sagebase.crf.step.heartrate.pressure_error;
+package org.sagebase.crf.step.active.camera_error;
 
 import android.graphics.Bitmap;
 
-import org.sagebase.crf.step.active.HeartBeatSample;
-import org.sagebase.crf.step.heartrate.OutputStateAlgorithm;
+import org.sagebase.crf.step.active.OutputStateAlgorithm;
 
 import java.util.ArrayList;
 
-public class PressureAlgorithm implements OutputStateAlgorithm {
+public class CameraAlgorithm implements OutputStateAlgorithm {
 
     private static int min_length = 10;
 
-    private static ArrayList<Bitmap> previousState;
-
     public static ArrayList<Bitmap> getPreviousState() {
-        if (previousState.size() == 0 || previousState == null) {
-            previousState = new ArrayList<>();
-        }
-        return previousState;
+
+        return null;
     }
 
-    public static double algorithm(Long timestamp, Bitmap bitmap) {
-
+    public double algorithm(Long timestamp, Bitmap bitmap) {
         ArrayList<Bitmap> state = getPreviousState();
 
         if (state == null || state.size() < min_length) {
-            previousState.add(bitmap);
             return 0.0;
         }
 
-        // This algorithm should be in this file
-        /*if(HeartBeatSample.isPressureExcessive()) {
+        boolean cameraResult = false;
+        if (cameraResult) {
             return 1.0;
-        }*/
-
-        else{
-            return 0.0;
         }
+        return 0.0;
     }
 }
