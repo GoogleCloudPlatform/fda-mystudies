@@ -52,7 +52,7 @@
         <item name="android:textColor">@color/textColor</item>
         <item name="android:fontFamily">@font/opensans</item>
     </style>
-    <style name="TextAppearance.Crf.Body.Primary" parent="TextAppearance.Crf.Body">
+    <style name="TextAppearance.Crf.Body.Primary">
         <item name="android:textColor">@color/textColorPrimary</item>
     </style>
 
@@ -73,7 +73,7 @@
         <item name="android:fontFamily">@font/opensans</item>
     </style>
     <!--Heading 1 - textColorPrimary -->
-    <style name="TextAppearance.Crf.Heading1.Primary" parent="TextAppearance.Crf.Heading1">
+    <style name="TextAppearance.Crf.Heading1.Primary">
         <item name="android:textColor">@color/textColorPrimary</item>
     </style>
     <!--Heading 2-->
@@ -84,7 +84,7 @@
         <item name="android:fontFamily">@font/opensans</item>
     </style>
     <!--Heading 2 - textColorPrimary-->
-    <style name="TextAppearance.Crf.Heading2.Primary" parent="TextAppearance.Crf.Heading2">
+    <style name="TextAppearance.Crf.Heading2.Primary">
         <item name="android:textSize">24sp</item>
         <item name="android:textStyle">bold</item>
         <item name="android:textColor">@color/textColorPrimary</item>

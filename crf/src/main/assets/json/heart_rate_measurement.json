@@ -21,20 +21,10 @@
       "identifier" : "find_camera",
       "type"       : "crf_instruction",
       "text"       : "Find your camera and flash",
-      "detailText" : "Your flash is usually next to your camera on the back of the phone. You will need to cover both.",
-      "image"      : "crf_hand_holding_phone",
+      "detailText" : "Use your finger to cover the camera and flash on the back of your phone. Your finger nail should turn a little red once you cover the flash.",
+      "image"      : "flash_on_hand_holding",
       "buttonType" : "gray",
       "buttonText" : "Found it",
-      "hideProgress"  : "true"
-    },
-    {
-      "identifier" : "cover_camera",
-      "type"       : "crf_instruction",
-      "text"       : "Cover the flash and camera",
-      "detailText" : "Use your finger to cover the camera and flash on the back of your phone. Your finger nail should turn a little red once you cover the flash.",
-      "image"      : "crf_cover_flash",
-      "buttonType" : "gray",
-      "buttonText" : "Measure heart rate",
       "hideProgress"  : "true"
     },
     {
