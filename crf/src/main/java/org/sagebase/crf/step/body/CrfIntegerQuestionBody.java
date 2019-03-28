@@ -1,5 +1,5 @@
 /*
- *    Copyright 2017 Sage Bionetworks
+ *    Copyright 2019 Sage Bionetworks
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -25,11 +25,12 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import org.sagebase.crf.R;
+
 import org.researchstack.backbone.result.StepResult;
 import org.researchstack.backbone.step.Step;
 import org.researchstack.backbone.ui.step.body.IntegerQuestionBody;
 import org.researchstack.backbone.ui.step.body.StepBody;
-import org.sagebionetworks.research.crf.R;
 
 public class CrfIntegerQuestionBody extends IntegerQuestionBody implements StepBody {
 

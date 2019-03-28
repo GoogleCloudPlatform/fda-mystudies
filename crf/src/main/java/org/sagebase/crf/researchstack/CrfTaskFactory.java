@@ -26,7 +26,9 @@ import com.google.gson.GsonBuilder;
 import org.researchstack.backbone.ResourcePathManager;
 import org.researchstack.backbone.answerformat.AnswerFormat;
 import org.researchstack.backbone.model.survey.ActiveStepSurveyItem;
+import org.researchstack.backbone.model.survey.ChoiceQuestionSurveyItem;
 import org.researchstack.backbone.model.survey.FormSurveyItem;
+import org.researchstack.backbone.model.survey.IntegerRangeSurveyItem;
 import org.researchstack.backbone.model.survey.QuestionSurveyItem;
 import org.researchstack.backbone.model.survey.SurveyItem;
 import org.researchstack.backbone.model.survey.factory.SurveyFactory;
@@ -50,7 +52,10 @@ import org.sagebase.crf.step.CrfInstructionSurveyItem;
 import org.sagebase.crf.step.CrfStairStep;
 import org.sagebase.crf.step.CrfStartTaskStep;
 import org.sagebase.crf.step.CrfStartTaskSurveyItem;
+import org.sagebase.crf.step.body.CrfChoiceAnswerFormat;
+import org.sagebase.crf.step.body.CrfIntegerAnswerFormat;
 
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -174,22 +179,22 @@ public class CrfTaskFactory extends TaskItemFactory {
                             }
                             return createCrfFormStep(context, (FormSurveyItem)item);
 //                        case CrfSurveyItemAdapter.CRF_BOOLEAN_SURVEY_ITEM_TYPE:
-//                        case CrfSurveyItemAdapter.CRF_INTEGER_SURVEY_ITEM_TYPE:
+                        case CrfSurveyItemAdapter.CRF_INTEGER_SURVEY_ITEM_TYPE:
 //                        case CrfSurveyItemAdapter.CRF_MULTIPLE_CHOICE_SURVEY_ITEM_TYPE:
-//                        case CrfSurveyItemAdapter.CRF_SINGLE_CHOICE_SURVEY_ITEM_TYPE:
-//                            if (!(item instanceof QuestionSurveyItem)) {
-//                                throw new IllegalStateException("Error in json parsing " + item.getCustomTypeValue() + ", types must be QuestionSurveyItem");
-//                            }
-//                            // Even though these weren't wrapped in a form step, we are going to wrap
-//                            // them in a CrfFormStep so that the UI looks appropriate
-//                            QuestionSurveyItem questionItem = (QuestionSurveyItem)item;
-//                            FormSurveyItem FormSurveyItem = new CrfFormSurveyItemWrapper();
-//                            FormSurveyItem.identifier = item.identifier + "Form";
-//                            FormSurveyItem.items = Collections.singletonList(item);
-//                            FormSurveyItem.skipIdentifier = questionItem.skipIdentifier;
-//                            FormSurveyItem.skipIfPassed = questionItem.skipIfPassed;
-//                            FormSurveyItem.expectedAnswer = questionItem.expectedAnswer;
-//                            return createCrfFormStep(context, FormSurveyItem);
+                        case CrfSurveyItemAdapter.CRF_SINGLE_CHOICE_SURVEY_ITEM_TYPE:
+                            if (!(item instanceof QuestionSurveyItem)) {
+                                throw new IllegalStateException("Error in json parsing " + item.getCustomTypeValue() + ", types must be QuestionSurveyItem");
+                            }
+                            // Even though these weren't wrapped in a form step, we are going to wrap
+                            // them in a CrfFormStep so that the UI looks appropriate
+                            QuestionSurveyItem questionItem = (QuestionSurveyItem)item;
+                            FormSurveyItem FormSurveyItem = new CrfFormSurveyItemWrapper();
+                            FormSurveyItem.identifier = item.identifier + "Form";
+                            FormSurveyItem.items = Collections.singletonList(item);
+                            FormSurveyItem.skipIdentifier = questionItem.skipIdentifier;
+                            FormSurveyItem.skipIfPassed = questionItem.skipIfPassed;
+                            FormSurveyItem.expectedAnswer = questionItem.expectedAnswer;
+                            return createCrfFormStep(context, FormSurveyItem);
 //                        case CrfSurveyItemAdapter.CRF_SKIP_MC_TYPE:
 //                            if (!(item instanceof QuestionSurveyItem)) {
 //                                throw new IllegalStateException("Error in json parsing " + item.getCustomTypeValue() + ", types must be QuestionSurveyItem");
@@ -247,16 +252,16 @@ public class CrfTaskFactory extends TaskItemFactory {
 
     @Override
     public AnswerFormat createCustomAnswerFormat(Context context, QuestionSurveyItem item) {
-//        switch (item.getCustomTypeValue()) {
+        switch (item.getCustomTypeValue()) {
 //            case CrfSurveyItemAdapter.CRF_BOOLEAN_SURVEY_ITEM_TYPE:
 //                return createCrfBooleanAnswerFormat(context, item);
-//            case CrfSurveyItemAdapter.CRF_INTEGER_SURVEY_ITEM_TYPE:
-//                return createCrfIntegerAnswerFormat(context, item);
-//            case CrfSurveyItemAdapter.CRF_MULTIPLE_CHOICE_SURVEY_ITEM_TYPE:
-//            case CrfSurveyItemAdapter.CRF_SINGLE_CHOICE_SURVEY_ITEM_TYPE:
-//            case CrfSurveyItemAdapter.CRF_SKIP_MC_TYPE:
-//                return createCrfChoiceAnswerFormat(context, item);
-//        }
+            case CrfSurveyItemAdapter.CRF_INTEGER_SURVEY_ITEM_TYPE:
+                return createCrfIntegerAnswerFormat(context, item);
+            case CrfSurveyItemAdapter.CRF_MULTIPLE_CHOICE_SURVEY_ITEM_TYPE:
+            case CrfSurveyItemAdapter.CRF_SINGLE_CHOICE_SURVEY_ITEM_TYPE:
+            case CrfSurveyItemAdapter.CRF_SKIP_MC_TYPE:
+                return createCrfChoiceAnswerFormat(context, item);
+        }
         return super.createCustomAnswerFormat(context, item);
     }
 
@@ -526,26 +531,26 @@ public class CrfTaskFactory extends TaskItemFactory {
 //        return format;
 //    }
 //
-//    public CrfIntegerAnswerFormat createCrfIntegerAnswerFormat(Context context, QuestionSurveyItem item) {
-//        if (!(item instanceof IntegerRangeSurveyItem)) {
-//            throw new IllegalStateException("Error in json parsing, QUESTION_INTEGER types must be IntegerRangeSurveyItem");
-//        }
-//        CrfIntegerAnswerFormat format = new CrfIntegerAnswerFormat();
-//        fillIntegerAnswerFormat(format, (IntegerRangeSurveyItem)item);
-//        return format;
-//    }
-//
-//    public CrfChoiceAnswerFormat createCrfChoiceAnswerFormat(Context context, QuestionSurveyItem item) {
-//        if (!(item instanceof ChoiceQuestionSurveyItem)) {
-//            throw new IllegalStateException("Error in json parsing, this type must be ChoiceQuestionSurveyItem");
-//        }
-//        CrfChoiceAnswerFormat format = new CrfChoiceAnswerFormat();
-//        fillChoiceAnswerFormat(format, (ChoiceQuestionSurveyItem)item);
-//        // Override setting multiple choice answer format, since it is a custom survey type
-//        if (item.getCustomTypeValue().equals(CrfSurveyItemAdapter.CRF_MULTIPLE_CHOICE_SURVEY_ITEM_TYPE)
-//                || item.getCustomTypeValue().equals(CrfSurveyItemAdapter.CRF_SKIP_MC_TYPE)) {
-//            format.setAnswerStyle(AnswerFormat.ChoiceAnswerStyle.MultipleChoice);
-//        }
-//        return format;
-//    }
+    public CrfIntegerAnswerFormat createCrfIntegerAnswerFormat(Context context, QuestionSurveyItem item) {
+        if (!(item instanceof IntegerRangeSurveyItem)) {
+            throw new IllegalStateException("Error in json parsing, QUESTION_INTEGER types must be IntegerRangeSurveyItem");
+        }
+        CrfIntegerAnswerFormat format = new CrfIntegerAnswerFormat();
+        fillIntegerAnswerFormat(format, (IntegerRangeSurveyItem)item);
+        return format;
+    }
+
+    public CrfChoiceAnswerFormat createCrfChoiceAnswerFormat(Context context, QuestionSurveyItem item) {
+        if (!(item instanceof ChoiceQuestionSurveyItem)) {
+            throw new IllegalStateException("Error in json parsing, this type must be ChoiceQuestionSurveyItem");
+        }
+        CrfChoiceAnswerFormat format = new CrfChoiceAnswerFormat();
+        fillChoiceAnswerFormat(format, (ChoiceQuestionSurveyItem)item);
+        // Override setting multiple choice answer format, since it is a custom survey type
+        if (item.getCustomTypeValue().equals(CrfSurveyItemAdapter.CRF_MULTIPLE_CHOICE_SURVEY_ITEM_TYPE)
+                || item.getCustomTypeValue().equals(CrfSurveyItemAdapter.CRF_SKIP_MC_TYPE)) {
+            format.setAnswerStyle(AnswerFormat.ChoiceAnswerStyle.MultipleChoice);
+        }
+        return format;
+    }
 }

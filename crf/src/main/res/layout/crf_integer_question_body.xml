@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <!--
-  ~    Copyright 2017 Sage Bionetworks
+  ~    Copyright 2019 Sage Bionetworks
   ~
   ~    Licensed under the Apache License, Version 2.0 (the "License");
   ~    you may not use this file except in compliance with the License.
@@ -22,6 +22,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
+    android:paddingTop="@dimen/rsb_padding_large"
     android:layout_marginLeft="@dimen/rsb_margin_right"
     android:layout_marginRight="@dimen/rsb_margin_right">
 
@@ -33,7 +34,7 @@
         android:inputType="text"
         android:minHeight="@dimen/rsb_item_size_default"
         android:maxLines="1"
-        android:textColor="?android:attr/textColorPrimary"
+        android:textColor="@color/textColor"
         android:textSize="24sp"
         android:layout_gravity="center_horizontal"
         android:gravity="center"

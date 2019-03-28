@@ -1,5 +1,5 @@
 /*
- *    Copyright 2017 Sage Bionetworks
+ *    Copyright 2019 Sage Bionetworks
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -25,6 +25,8 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import org.sagebase.crf.R;
+
 import org.researchstack.backbone.answerformat.AnswerFormat;
 import org.researchstack.backbone.answerformat.ChoiceAnswerFormat;
 import org.researchstack.backbone.model.Choice;
@@ -33,7 +35,6 @@ import org.researchstack.backbone.step.QuestionStep;
 import org.researchstack.backbone.step.Step;
 import org.researchstack.backbone.ui.step.body.BodyAnswer;
 import org.researchstack.backbone.ui.step.body.SingleChoiceQuestionBody;
-import org.sagebionetworks.research.crf.R;
 
 import java.io.Serializable;
 import java.lang.ref.WeakReference;
