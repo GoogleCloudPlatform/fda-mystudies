@@ -33,7 +33,8 @@
     <dimen name="crf_single_choice_question_margin">4dp</dimen>
     <dimen name="crf_next_button">145dp</dimen>
     <dimen name="crf_image_height">48dp</dimen>
-    <dimen name="crf_step_image_height">340dp</dimen>
+    <dimen name="crf_step_image_height">300dp</dimen>
+    <dimen name="crf_start_step_image_height">160dp</dimen>
     <dimen name="crf_arc_drawable_width">14dp</dimen>
 
 </resources>

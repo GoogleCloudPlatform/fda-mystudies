@@ -25,6 +25,7 @@ import android.util.AttributeSet;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 
 import org.researchstack.backbone.ResourceManager;
 import org.researchstack.backbone.factory.IntentFactory;
@@ -53,14 +54,14 @@ import static android.app.Activity.RESULT_OK;
  */
 
 public class CrfStartTaskStepLayout extends CrfInstructionStepLayout implements
-        CrfTaskToolbarIconManipulator, CrfTaskToolbarProgressManipulator,
-        CrfTaskToolbarActionManipulator, CrfActivityResultListener {
+        CrfTaskToolbarProgressManipulator, CrfActivityResultListener {
 
     private static final String LOG_TAG = CrfStartTaskStepLayout.class.getCanonicalName();
     public static final int DAILY_REMINDER_REQUEST_CODE = 2398;
 
     private CrfStartTaskStep crfStartTaskStep;
     protected Button remindMeLaterButton;
+    protected ImageView imageIcon;
 
     public CrfStartTaskStepLayout(Context context) {
         super(context);
@@ -100,6 +101,7 @@ public class CrfStartTaskStepLayout extends CrfInstructionStepLayout implements
     public void connectStepUi(int titleRId, int textRId, int imageRId, int detailRId) {
         super.connectStepUi(titleRId, textRId, imageRId, detailRId);
         remindMeLaterButton = findViewById(R.id.remind_me_later);
+        imageIcon = findViewById(R.id.crf_needs_icon);
     }
 
     @Override
@@ -124,6 +126,14 @@ public class CrfStartTaskStepLayout extends CrfInstructionStepLayout implements
             titleTextView.setTextColor(color);
             textTextView.setTextColor(color);
         }
+
+        if (crfStartTaskStep.getIconImage() != null) {
+            int drawableInt = ResUtils.getDrawableResourceId(getContext(), crfStartTaskStep.getIconImage());
+            if (drawableInt != 0) {
+                imageIcon.setImageResource(drawableInt);
+
+            }
+        }
     }
 
     public void remindMeLater() {
@@ -142,26 +152,26 @@ public class CrfStartTaskStepLayout extends CrfInstructionStepLayout implements
         return false;
     }
 
-    @Override
-    public boolean crfToolbarRightIconClicked() {
-        String path = ResourceManager.getInstance().
-                generateAbsolutePath(ResourceManager.Resource.TYPE_HTML, crfStartTaskStep.infoHtmlFilename);
-        Intent intent = new Intent(getContext(), ViewWebDocumentActivity.class);
-        intent.putExtra(ViewWebDocumentActivity.KEY_DOC_PATH, path);
-        intent.putExtra(ViewWebDocumentActivity.KEY_TITLE, "");
-        getContext().startActivity(intent);
-        return true; // consumed the click
-    }
-
-    @Override
-    public int crfToolbarLeftIcon() {
-        return R.drawable.crf_ic_back;
-    }
-
-    @Override
-    public int crfToolbarRightIcon() {
-        return crfStartTaskStep.infoHtmlFilename != null ? R.drawable.crf_ic_info : NO_ICON;
-    }
+//    @Override
+//    public boolean crfToolbarRightIconClicked() {
+//        String path = ResourceManager.getInstance().
+//                generateAbsolutePath(ResourceManager.Resource.TYPE_HTML, crfStartTaskStep.infoHtmlFilename);
+//        Intent intent = new Intent(getContext(), ViewWebDocumentActivity.class);
+//        intent.putExtra(ViewWebDocumentActivity.KEY_DOC_PATH, path);
+//        intent.putExtra(ViewWebDocumentActivity.KEY_TITLE, "");
+//        getContext().startActivity(intent);
+//        return true; // consumed the click
+//    }
+//
+//    @Override
+//    public int crfToolbarLeftIcon() {
+//        return R.drawable.crf_ic_back;
+//    }
+//
+//    @Override
+//    public int crfToolbarRightIcon() {
+//        return crfStartTaskStep.infoHtmlFilename != null ? R.drawable.crf_ic_info : NO_ICON;
+//    }
 
     @Override
     public void onActivityFinished(int requestCode, int resultCode, Intent data) {

@@ -3,13 +3,25 @@
   "schemaIdentifier" : "HeartRate Measurement",
   "optional" : false,
   "taskSteps" : [
-
+    {
+      "identifier"       : "instructionStart",
+      "type"             : "crf_start_task",
+      "title"            : "Resting heart rate",
+      "detailText"       : "Your heart rate while you are at rest is a marker of your health. The more relaxed you are, the better. Let’s measure your resting heart rate.",
+      "image"            : "crf_seated",
+      "iconImage"        : "icon_comfortable_place_to_sit",
+      "scaleType"        : "CENTER_CROP",
+      "buttonType"       : "gray",
+      "buttonText"       : "Measure",
+      "infoHtmlFilename" : "crf_stair_step_info",
+      "remindMeLater"    : true
+    },
     {
       "identifier" : "sit_relax",
       "type"       : "crf_instruction",
       "text"       : "Sit down and relax",
-      "detailText" : "If you don’t feel relaxed, take a moment and breathe slowly before starting the measurement. ",
-      "image"      : "crf_hand_holding_phone",
+      "detailText" : "If you don’t feel relaxed, take a moment and breathe slowly before starting the measurement.",
+      "image"      : "crf_seated",
       "buttonType" : "gray",
       "buttonText" : "Measure",
       "hideProgress"  : "true",
