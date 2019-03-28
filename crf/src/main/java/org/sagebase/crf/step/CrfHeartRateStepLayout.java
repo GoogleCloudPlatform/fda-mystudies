@@ -225,7 +225,7 @@ public class CrfHeartRateStepLayout extends ActiveStepLayout implements
         arcDrawableContainer = findViewById(R.id.crf_arc_drawable_container);
         arcDrawableView = findViewById(R.id.crf_arc_drawable);
         arcDrawable = new ArcDrawable();
-        arcDrawable.setColor(ResourcesCompat.getColor(getResources(), R.color.light_magenta, null));
+        arcDrawable.setColor(ResourcesCompat.getColor(getResources(), R.color.colorAccent, null));
         arcDrawable.setArchWidth(getResources().getDimensionPixelOffset(R.dimen.crf_ard_drawable_width));
         arcDrawable.setDirection(Path.Direction.CW);
         arcDrawable.setIncludeFullCirclePreview(true);
