@@ -6,15 +6,13 @@
     {
       "identifier"       : "instructionStart",
       "type"             : "crf_start_task",
-      "title"            : "3 Minute Stair Test",
-      "text"             : "5 minutes",
-      "image"            : "crf_stair_step_start_animation",
-      "isImageAnimated"  : true,
-      "animationRepeatDuration" : 2000,
-      "imageColor"       : "perrywinkleStatus",
-      "buttonType"       : "default",
-      "buttonText"       : "Start",
-      "infoHtmlFilename" : "crf_stair_step_info",
+      "title"            : "Heart Rate Recovery",
+      "detailText"       : "You will be stepping up and down a step for 3 minutes to raise your heart rate. Right after you finish stepping, measure your heart rate for 1 minute to see how your heart rate recovers.",
+      "image"            : "crf_stair_step",
+      "iconImage"        : "crf_step_icon",
+      "scaleType"        : "CENTER_CROP",
+      "buttonType"       : "gray",
+      "buttonText"       : "Measure",
       "remindMeLater"    : true
     },
     {
@@ -23,7 +21,6 @@
       "text"             : "Potential risks",
       "detailText"       : "If a doctor has told you not to exercise, or if you feel that stepping up and down a  step for 3 minutes will be painful or too difficult, please do not do this activity.",
       "image"            : "crf_health_risk_icon",
-      "imageColor"       : "magenta",
       "buttonType"       : "gray",
       "buttonText"       : "Next",
       "hideProgress"     : "true"
@@ -31,13 +28,13 @@
     {
       "identifier"       : "instructionVolume",
       "type"             : "crf_instruction",
-      "title"            : " ",
       "text"             : "Volume turned up?",
       "detailText"       : "Bring your phone with you and turn up your phone volume so you can hear the instructions while you are stair stepping.",
       "image"            : "crf_volume_check_icon",
       "scaleType"        : "CENTER_CROP",
       "buttonType"       : "gray",
       "buttonText"       : "Turned it up",
+      "hideProgress"     : "true",
       "mediaVolume"      : true
     },
     {
@@ -53,15 +50,13 @@
     {
       "identifier"       : "instructionStair",
       "type"             : "crf_instruction",
-      "title"            : " ",
       "text"             : "Please step with your phone",
       "detailText"       : "You will step up and down for 3 minutes. Try to step with the pace.",
-      "image"            : "crf_stair_step_start_animation",
+      "image"            : "crf_stair_step",
       "scaleType"        : "CENTER_CROP",
-      "isImageAnimated"  : true,
-      "animationRepeatDuration" : 2000,
       "buttonType"       : "gray",
-      "buttonText"       : "Press to start"
+      "buttonText"       : "Press to start",
+      "hideProgress"     : "true"
     },
     {
       "identifier"       : "countdownStep",
@@ -73,31 +68,87 @@
       "identifier"       : "stairStep",
       "type"             : "crf_stair_step",
       "duration"         : "180",
-      "soundRes"         : "stair_step_3_min_cue"
+      "soundRes"         : "stair_step_3_min_cue",
+      "hideProgress"     : "true"
     },
     {
       "identifier"       : "instructionCamera2",
       "type"             : "crf_instruction",
-      "title"            : " ",
       "text"             : "Cover the flash and camera",
       "detailText"       : "Use your finger to cover the camera and flash on the back of your phone. Your finger nail should turn a little red once you cover the flash.",
       "image"            : "crf_heart_rate_animation",
       "isImageAnimated"  : true,
       "animationRepeatDuration" : 2000,
       "buttonType"       : "gray",
-      "buttonText"       : "Press to start"
+      "buttonText"       : "Press to start",
+      "hideProgress"     : "true"
     },
     {
       "identifier"       : "heartRate.after",
-      "type"             : "crf_heart_rate_camera_step"
+      "type"             : "crf_heart_rate_camera_step",
+      "hideProgress"     : "true"
     },
+
     {
       "identifier"       : "completion",
       "type"             : "crf_completion",
-      "title"            : "Great Job!",
-      "topText"          : "Your heart rate increased",
+      "topText"          : "Your recovery heart rate is",
+      "text"             : "Recovery HR Captured!",
+      "detailText"       : "Changing your Recovery HR can take time. You can change it over weeks or months by losing weight or exercising.",
+      "learnMoreText"    : "What is a Recovery HR Score?",
+      "learnMoreFile"    : "crf_normal_resting_hr.html",
+      "learnMoreTitle"   : "What is a Recovery HR Score?",
+      "buttonType"       : "gray",
       "valueLabelText"   : "BPM",
-      "valueResultId"   : "completion_bpm_result"
+      "valueResultId"   : "completion_bpm_result",
+      "hideProgress"     : "true"
+    },
+    {
+      "identifier"       : "instructionRecovery",
+      "type"             : "crf_instruction",
+      "text"             : "Recovery HR Questions",
+      "detailText"       : "To calculate your Recovery HR score, we first need to know a few things about you like your sex, and age.",
+      "image"            : "crf_quiz",
+      "buttonType"       : "gray",
+      "buttonText"       : "Next",
+      "hideProgress"     : "true"
+    },
+    {
+      "identifier": "birthdateForm",
+      "type": "crf_form",
+      "title": "What year were you born?",
+      "items": [
+        {
+          "identifier": "birthYear",
+          "type": "crfInteger",
+          "placeholderText": "YYYY",
+          "min": 1900,
+          "max": 2100
+        }
+      ]
+    },
+    {
+      "identifier": "sexForm",
+      "type": "crf_form",
+      "title": "What was your sex at birth?",
+      "items": [
+        {
+          "identifier": "sex",
+          "type": "crfSingleChoice",
+          "items": [
+            {
+              "text": "Male",
+              "value": "Male"
+            },
+            {
+              "text": "Female",
+              "value": "Female"
+            }
+          ]
+        }
+      ]
     }
+
+
   ]
 }
