@@ -258,29 +258,29 @@ public class CrfHeartRateStepLayout extends ActiveStepLayout implements
         exitButtonContainer = findViewById(R.id.exit_button_container);
         buttonContainer = findViewById(R.id.crf_next_button_container);
 
-        if (((CrfHeartRateCameraStep)activeStep).buttonType != null) {
-            switch (((CrfHeartRateCameraStep)activeStep).buttonType) {
-                case DEFAULT:
-                    nextButton.setBackgroundResource(R.drawable.crf_rounded_button_salmon);
-                    nextButton.setTextColor(ResourcesCompat.getColor(getResources(), R.color.rsb_white, null));
-                    break;
-                case DEFAULT_WHITE_SALMON:
-                    nextButton.setBackgroundResource(R.drawable.crf_rounded_button_white);
-                    nextButton.setTextColor(ResourcesCompat.getColor(getResources(), R.color.salmon, null));
-                    break;
-                case DEFAULT_WHITE_DEEP_GREEN:
-                    nextButton.setBackgroundResource(R.drawable.crf_rounded_button_white);
-                    nextButton.setTextColor(ResourcesCompat.getColor(getResources(), R.color.deepGreen, null));
-                    break;
-                case GRAY_STICKY:
-                    nextButton.setBackgroundResource(R.drawable.crf_rounded_button_gray_sticky);
-                    break;
-                case GRAY:
-                    nextButton.setBackgroundResource(R.drawable.crf_rounded_button_gray);
-                    nextButton.setTextColor(ResourcesCompat.getColor(getResources(), R.color.rsb_white, null));
-                    break;
-            }
-        }
+//        if (((CrfHeartRateCameraStep)activeStep).buttonType != null) {
+//            switch (((CrfHeartRateCameraStep)activeStep).buttonType) {
+//                case DEFAULT:
+//                    nextButton.setBackgroundResource(R.drawable.crf_rounded_button_secondary_color);
+//                    nextButton.setTextColor(ResourcesCompat.getColor(getResources(), R.color.rsb_white, null));
+//                    break;
+//                case DEFAULT_WHITE_SALMON:
+//                    nextButton.setBackgroundResource(R.drawable.crf_rounded_button_white);
+//                    nextButton.setTextColor(ResourcesCompat.getColor(getResources(), R.color.salmon, null));
+//                    break;
+//                case DEFAULT_WHITE_DEEP_GREEN:
+//                    nextButton.setBackgroundResource(R.drawable.crf_rounded_button_white);
+//                    nextButton.setTextColor(ResourcesCompat.getColor(getResources(), R.color.deepGreen, null));
+//                    break;
+//                case GRAY_STICKY:
+//                    nextButton.setBackgroundResource(R.drawable.crf_rounded_button_gray_sticky);
+//                    break;
+//                case GRAY:
+//                    nextButton.setBackgroundResource(R.drawable.crf_rounded_button_gray);
+//                    nextButton.setTextColor(ResourcesCompat.getColor(getResources(), R.color.rsb_white, null));
+//                    break;
+//            }
+//        }
 
         if(this.exitButton != null) {
             exitButton.setImageResource(R.drawable.ic_close_white_24dp);

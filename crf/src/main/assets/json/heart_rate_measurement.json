@@ -11,7 +11,6 @@
       "image"            : "crf_seated",
       "iconImage"        : "icon_comfortable_place_to_sit",
       "scaleType"        : "CENTER_CROP",
-      "buttonType"       : "gray",
       "buttonText"       : "Measure",
       "infoHtmlFilename" : "crf_stair_step_info",
       "remindMeLater"    : true
@@ -22,7 +21,6 @@
       "text"       : "Sit down and relax",
       "detailText" : "If you don’t feel relaxed, take a moment and breathe slowly before starting the measurement.",
       "image"      : "crf_seated",
-      "buttonType" : "gray",
       "buttonText" : "Measure",
       "hideProgress"  : "true",
       "learnMoreText"  : "Tips for measuring",
@@ -35,14 +33,12 @@
       "text"       : "Find your camera and flash",
       "detailText" : "Use your finger to cover the camera and flash on the back of your phone. Your finger nail should turn a little red once you cover the flash.",
       "image"      : "flash_on_hand_holding",
-      "buttonType" : "gray",
       "buttonText" : "Found it",
       "hideProgress"  : "true"
     },
     {
       "identifier"       : "camera",
-      "type"             : "crf_heart_rate_camera_step",
-      "buttonType"       : "gray"
+      "type"             : "crf_heart_rate_camera_step"
     },
     {
       "identifier"       : "completion",
@@ -53,7 +49,6 @@
       "learnMoreText"    : "What is a 'normal' resting HR?",
       "learnMoreFile"    : "crf_normal_resting_hr.html",
       "learnMoreTitle"   : "What is a 'normal' resting HR?",
-      "buttonType"       : "gray",
       "valueLabelText"   : "BPM",
       "valueResultId"   : "AVERAGE_BPM_IDENTIFIER"
     }

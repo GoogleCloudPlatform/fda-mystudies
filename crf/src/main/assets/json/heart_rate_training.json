@@ -9,7 +9,6 @@
       "text"       : "Heart Snapshot",
       "detailText" : "Your phone's camera can measure your heartbeat.",
       "image"      : "crf_heart_snapshot",
-      "buttonType" : "gray",
       "buttonText" : "Measure",
       "hideProgress"  : "true",
       "learnMoreText"  : "Learn how and why",
@@ -22,7 +21,6 @@
       "text"       : "Can we turn on your camera and flash?",
       "detailText" : "Heart Snapshot uses the camera and flash on the back of your phone to measure your heartrate.",
       "image"      : "flash_on_hand_holding",
-      "buttonType" : "gray",
       "buttonText" : "Next",
       "hideProgress"  : "true"
     },
@@ -32,7 +30,6 @@
       "text"       : "Find your camera and flash",
       "detailText" : "Your flash is usually next to your camera on the back of the phone. You will need to cover both.",
       "image"      : "crf_hand_holding_phone",
-      "buttonType" : "gray",
       "buttonText" : "Found it",
       "hideProgress"  : "true"
     },
@@ -42,14 +39,12 @@
       "text"       : "Cover the flash and camera",
       "detailText" : "Use your finger to cover the camera and flash on the back of your phone. Your finger nail should turn a little red once you cover the flash.",
       "image"      : "crf_cover_flash",
-      "buttonType" : "gray",
       "buttonText" : "Measure heart rate",
       "hideProgress"  : "true"
     },
     {
       "identifier"       : "camera",
-      "type"             : "crf_heart_rate_camera_step",
-      "buttonType"       : "gray"
+      "type"             : "crf_heart_rate_camera_step"
     },
     {
       "identifier"       : "completion",
@@ -57,7 +52,6 @@
       "topText"          : "Your heart rate is",
       "text"             : "Practice makes perfect",
       "detailText"       : "This is to make sure you can cover your flash and camera quickly for later tests.",
-      "buttonType"       : "gray",
       "valueLabelText"   : "BPM",
       "valueResultId"    : "AVERAGE_BPM_IDENTIFIER",
       "showRedoButton"   : "true"

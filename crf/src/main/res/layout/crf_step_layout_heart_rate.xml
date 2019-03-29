@@ -293,13 +293,12 @@
             app:layout_constraintTop_toBottomOf="@+id/crf_practice"/>
 
         <Button
+            style="@style/Crf.RoundedCornerMaterialButton.Secondary"
             android:id="@+id/button_go_forward"
             android:layout_width="match_parent"
             android:layout_height="@dimen/crf_rounded_button_height"
             android:layout_margin="@dimen/crf_activity_icon_margin"
-            android:background="#3C4A63"
             android:focusable="true"
-            android:textColorHint="@color/white"
             android:layout_gravity="center"
             android:text="@string/rsb_BUTTON_NEXT"
             android:textAllCaps="false"

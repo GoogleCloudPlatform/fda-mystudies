@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-  ~    Copyright 2019 Sage Bionetworks
+  ~    Copyright 2017 Sage Bionetworks
   ~
   ~    Licensed under the Apache License, Version 2.0 (the "License");
   ~    you may not use this file except in compliance with the License.
@@ -15,15 +15,8 @@
   ~    limitations under the License.
   ~
   -->
-
-<selector xmlns:android="http://schemas.android.com/apk/res/android"
-    android:shape="rectangle">
-    <solid
-        android:color="@color/gray">
-    </solid>
-
-    <corners
-        android:radius="@dimen/crf_rounded_button_radius">
-    </corners>
-
+<selector
+    xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:state_pressed="true" android:drawable="@drawable/crf_rounded_shape_pressed_secondary_color"/>
+    <item android:drawable="@drawable/crf_rounded_shape_secondary_color"/>
 </selector>

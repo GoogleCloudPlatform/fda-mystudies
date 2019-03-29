@@ -15,8 +15,14 @@
   ~    limitations under the License.
   ~
   -->
-<ripple
+<shape
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:color="?android:colorControlHighlight">
-    <item android:drawable="@drawable/crf_rounded_shape_salmon"/>
-</ripple>
+    android:shape="rectangle">
+    <solid
+        android:color="@color/colorSecondary">
+    </solid>
+
+    <corners
+        android:radius="@dimen/crf_rounded_button_radius">
+    </corners>
+</shape>

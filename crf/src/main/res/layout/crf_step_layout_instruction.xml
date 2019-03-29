@@ -114,7 +114,7 @@
 
 
         <Button
-            style="@style/Crf.Salmon.RoundedCornerMaterialButton"
+            style="@style/Crf.RoundedCornerMaterialButton.Secondary"
             android:id="@+id/button_go_forward"
             android:layout_width="match_parent"
             android:layout_height="@dimen/crf_rounded_button_height"

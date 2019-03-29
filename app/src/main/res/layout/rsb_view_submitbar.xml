@@ -28,7 +28,7 @@
 
     <Button
         android:id="@+id/bar_submit_postitive"
-        style="@style/Crf.Salmon.RoundedCornerMaterialButton"
+        style="@style/Crf.RoundedCornerMaterialButton.Secondary"
         android:layout_width="match_parent"
         android:layout_height="@dimen/crf_rounded_button_height"
         android:layout_margin="16dp"

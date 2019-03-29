@@ -52,7 +52,7 @@
 
             <Button
                 android:id="@+id/crf_submit_bar_back"
-                style="@style/Crf.Salmon.RoundedCornerMaterialButton"
+                style="@style/Crf.RoundedCornerMaterialButton.Secondary"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
@@ -62,7 +62,7 @@
 
             <Button
                 android:id="@+id/crf_submit_bar_next"
-                style="@style/Crf.Salmon.RoundedCornerMaterialButton"
+                style="@style/Crf.RoundedCornerMaterialButton.Secondary"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_margin="16dp"
