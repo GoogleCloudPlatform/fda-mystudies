@@ -221,7 +221,7 @@ public class CrfInstructionStepLayout extends InstructionStepLayout implements
         if(this.exitButton != null) {
             exitButton.setImageResource(R.drawable.ic_close_white_24dp);
             exitButton.setVisibility(View.VISIBLE);
-            exitButton.setOnClickListener(this::goBackClicked);
+            exitButton.setOnClickListener(this::onExitClicked);
         }
 
     }
@@ -243,6 +243,10 @@ public class CrfInstructionStepLayout extends InstructionStepLayout implements
 
     public void goBackClicked(View v) {
         callbacks.onSaveStep(StepCallbacks.ACTION_PREV, step, null);
+    }
+
+    private void onExitClicked(View v) {
+        callbacks.onSaveStep(StepCallbacks.ACTION_END, step, null);
     }
 
     @Override
