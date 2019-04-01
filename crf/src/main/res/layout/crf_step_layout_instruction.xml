@@ -48,7 +48,7 @@
         android:layout_width="match_parent"
         android:layout_height="@dimen/crf_step_image_height"
         android:layout_marginBottom="0dp"
-        android:scaleType="centerInside"
+        android:scaleType="fitEnd"
         android:gravity="start"
         android:background="@color/colorPrimary"
         app:layout_constraintTop_toBottomOf="@id/exit_button_container"

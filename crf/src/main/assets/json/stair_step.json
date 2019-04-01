@@ -20,6 +20,7 @@
       "text"             : "Potential risks",
       "detailText"       : "If a doctor has told you not to exercise, or if you feel that stepping up and down a  step for 3 minutes will be painful or too difficult, please do not do this activity.",
       "image"            : "crf_health_risk_icon",
+      "scaleType"        : "CENTER_INSIDE",
       "buttonText"       : "Next",
       "hideProgress"     : "true"
     },
