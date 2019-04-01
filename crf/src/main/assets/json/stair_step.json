@@ -72,7 +72,7 @@
       "type"             : "crf_instruction",
       "text"             : "Cover the flash and camera",
       "detailText"       : "Use your finger to cover the camera and flash on the back of your phone. Your finger nail should turn a little red once you cover the flash.",
-      "image"            : "crf_heart_rate_animation",
+      "image"            : "crf_cover_flash",
       "isImageAnimated"  : true,
       "animationRepeatDuration" : 2000,
       "buttonText"       : "Press to start",

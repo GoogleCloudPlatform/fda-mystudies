@@ -38,7 +38,7 @@ import java.util.Locale;
  * Created by TheMDP on 11/1/17.
  */
 
-public class CrfStairStepLayout extends ActiveStepLayout implements CrfTaskStatusBarManipulator {
+public class CrfStairStepLayout extends ActiveStepLayout  {
 
     protected TextView crfCountdownText;
     protected ImageView crfImageView;
@@ -117,8 +117,4 @@ public class CrfStairStepLayout extends ActiveStepLayout implements CrfTaskStatu
         }
     }
 
-    @Override
-    public int crfStatusBarColor() {
-        return R.color.perrywinkleStatus;
-    }
 }

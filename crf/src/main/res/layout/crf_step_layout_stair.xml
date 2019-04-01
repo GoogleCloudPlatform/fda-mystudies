@@ -21,7 +21,7 @@
     android:id="@+id/crf_root_instruction_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/perrywinkle">
+    android:background="@color/colorPrimary">
 
     <ImageView
         android:id="@+id/crf_stair_image"
@@ -38,7 +38,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
-        android:textColor="@color/white"
+        android:textColor="@color/textColorPrimary"
         android:paddingTop="?attr/actionBarSize"
         android:gravity="center_horizontal"
         android:text=" "
@@ -51,7 +51,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
-        android:textColor="@color/white"
+        android:textColor="@color/textColorPrimary"
         android:gravity="center_horizontal"
         android:layout_margin="@dimen/rsb_padding_large"/>
 
