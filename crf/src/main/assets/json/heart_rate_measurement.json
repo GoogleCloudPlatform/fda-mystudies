@@ -8,7 +8,7 @@
       "type"             : "crf_start_task",
       "title"            : "Resting heart rate",
       "detailText"       : "Your heart rate while you are at rest is a marker of your health. The more relaxed you are, the better. Let’s measure your resting heart rate.",
-      "image"            : "crf_seated",
+      "image"            : "crf_seated_cropped",
       "iconImage"        : "icon_comfortable_place_to_sit",
       "scaleType"        : "CENTER_CROP",
       "buttonText"       : "Measure",
