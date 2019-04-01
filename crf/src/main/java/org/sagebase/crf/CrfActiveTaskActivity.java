@@ -149,7 +149,7 @@ public class CrfActiveTaskActivity extends ActiveTaskActivity {
         @ColorRes int stepProgressTextColorRes = defaultStepProgressColor();
         if (current instanceof CrfTaskToolbarTintManipulator) {
             if (((CrfTaskToolbarTintManipulator)current).crfToolbarTintColor() != R.color.white) {
-                stepProgressTextColorRes = R.color.darkGrayText;
+                stepProgressTextColorRes = R.color.textColor;
             }
         }
         int stepProgressTextColor = ResourcesCompat.getColor(getResources(), stepProgressTextColorRes, null);

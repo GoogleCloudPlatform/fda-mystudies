@@ -128,7 +128,7 @@
         android:id="@+id/crf_redo_button"
         style="@style/Widget.AppCompat.Button.Borderless"
         android:layout_width="match_parent"
-        android:textColor="@color/dark_gray"
+        android:textColor="@color/textColor"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
         android:layout_alignParentBottom="true"

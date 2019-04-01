@@ -131,55 +131,7 @@ public class CrfInstructionStepLayout extends InstructionStepLayout implements
                 customButtonText.setText(crfInstructionStep.buttonText);
             }
         }
-//
-//        if (crfInstructionStep.buttonType != null) {
-//            switch (crfInstructionStep.buttonType) {
-//                case DEFAULT:
-//                    nextButton.setBackgroundResource(R.drawable.crf_rounded_button_secondary_color);
-//                    nextButton.setTextColor(ResourcesCompat.getColor(getResources(), R.color.rsb_white, null));
-//                    break;
-//                case DEFAULT_WHITE_SALMON:
-//                    nextButton.setBackgroundResource(R.drawable.crf_rounded_button_white);
-//                    nextButton.setTextColor(ResourcesCompat.getColor(getResources(), R.color.salmon, null));
-//                    break;
-//                case DEFAULT_WHITE_DEEP_GREEN:
-//                    nextButton.setBackgroundResource(R.drawable.crf_rounded_button_white);
-//                    nextButton.setTextColor(ResourcesCompat.getColor(getResources(), R.color.deepGreen, null));
-//                    break;
-//                case GRAY_STICKY:
-//                    nextButton.setBackgroundResource(R.drawable.crf_rounded_button_gray_sticky);
-//                    //nextButton.setTextColor(ResourcesCompat.getColor(getResources(), R.color.rsb_white, null));
-//                    break;
-//                case GRAY:
-//                    nextButton.setBackgroundResource(R.drawable.crf_rounded_button_gray);
-//                    nextButton.setTextColor(ResourcesCompat.getColor(getResources(), R.color.rsb_white, null));
-//                    break;
-//                case HEART:
-//                    nextButton.setVisibility(View.GONE);
-//                    customButton.setImageResource(R.drawable.crf_heart_capture_button);
-//                    customButton.setVisibility(View.VISIBLE);
-//                    customButtonText.setVisibility(View.VISIBLE);
-//                    break;
-////                case TREADMILL:
-////                    nextButton.setVisibility(View.GONE);
-////                    customButton.setImageResource(R.drawable.crf_treadmill_button);
-////                    customButton.setVisibility(View.VISIBLE);
-////                    customButtonText.setVisibility(View.VISIBLE);
-////                    break;
-//                case STAIR_STEP:
-//                    nextButton.setVisibility(View.GONE);
-//                    customButton.setImageResource(R.drawable.crf_stair_step_button);
-//                    customButton.setVisibility(View.VISIBLE);
-//                    customButtonText.setVisibility(View.VISIBLE);
-//                    break;
-////                case RUN:
-////                    nextButton.setVisibility(View.GONE);
-////                    customButton.setImageResource(R.drawable.crf_12_min_walking_button);
-////                    customButton.setVisibility(View.VISIBLE);
-////                    customButtonText.setVisibility(View.VISIBLE);
-////                    break;
-//            }
-//        }
+
         nextButton.setOnClickListener(this::goForwardClicked);
         if (customButton != null) {
             customButton.setOnClickListener(this::goForwardClicked);

@@ -65,7 +65,6 @@ public class CrfCompletionStep extends CrfInstructionStep {
     }
 
     private void commonInit() {
-        buttonType = CrfInstructionButtonType.GRAY;
         setImage("crf_completed_icon");
         setIsImageAnimated(false);
         buttonText = "Done";

@@ -86,7 +86,7 @@ public class CrfSkipMCStepLayout extends CrfFormStepLayout implements CrfActivit
     protected void initStepLayout(FormStep step)
     {
         super.initStepLayout(step);
-        container.setBackgroundColor(getResources().getColor(R.color.magenta));
+        container.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
 
     }
 

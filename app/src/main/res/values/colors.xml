@@ -30,25 +30,25 @@
     <!-- Zeplin Colors -->
     <!--<color name="salmon">#FF8875</color>-->
     <!--<color name="salmon80">#CCFF8875</color>-->
-    <!--<color name="deepGreen">#60B159</color>-->
-    <!--<color name="deepGreen80">#CC60B159</color>-->
+    <color name="deepGreen">#60B159</color>
+    <color name="deepGreen80">#CC60B159</color>
     <!--<color name="azure">#2196F3</color>-->
     <!--<color name="softGreen">#68BF60</color>-->
-    <!--<color name="greenyBlue">#3DBFA3</color>-->
+    <color name="greenyBlue">#3DBFA3</color>
     <!--<color name="whiteTwo">#EDEDED</color>-->
     <!--<color name="whiteThree">#FAFAFA</color>-->
     <!--<color name="whiteFour">#EBEBEB</color>-->
-    <!--<color name="sky">#00FFFF</color>-->
-    <!--<color name="sky_blur">#43868E</color>-->
-    <!--<color name="robinsEggBlue">#80E8F6</color>-->
+    <color name="sky">#00FFFF</color>
+    <color name="sky_blur">#43868E</color>
+    <color name="robinsEggBlue">#80E8F6</color>
     <!--<color name="perrywinkle">#88A1E0</color>-->
     <!--<color name="perrywinkleStatus">#9EBAEF</color>-->
-    <!--<color name="macaroniAndCheese">#F5B33C</color>-->
+    <color name="macaroniAndCheese">#F5B33C</color>
     <!--<color name="black86">#DB000000</color>-->
-    <!--<color name="black54">#89000000</color>-->
+    <color name="black54">#89000000</color>
     <!--<color name="black37">#5E000000</color>-->
-    <!--<color name="whiteButtonShadow">#F5F5F5</color>-->
-    <!--<color name="whiteButtonShadow65">#A6F5F5F5</color>-->
+    <color name="whiteButtonShadow">#F5F5F5</color>
+    <color name="whiteButtonShadow65">#A6F5F5F5</color>
     <!--<color name="darkGrayText">#414859</color>-->
     <!--<color name="silver">#e1e5e6</color>-->
 

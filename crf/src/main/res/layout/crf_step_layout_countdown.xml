@@ -29,7 +29,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
-        android:textColor="@color/black54"
+        android:textColor="@color/textColor"
         android:paddingTop="?attr/actionBarSize"
         android:gravity="center_horizontal"
         android:layout_margin="@dimen/rsb_padding_large"/>
@@ -41,7 +41,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/crf_countdown_title"
         android:layout_centerHorizontal="true"
-        android:textColor="@color/deepGreen"
+        android:textColor="@color/colorAccent"
         android:gravity="center_horizontal"
         android:layout_marginTop="60dp"/>
 
@@ -54,7 +54,7 @@
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="@dimen/rsb_padding_medium"
         android:text="@string/crf_underlined_pause"
-        android:textColor="@color/azure"
+        android:textColor="@color/textColor"
         android:textAllCaps="false"/>
 
 </RelativeLayout>

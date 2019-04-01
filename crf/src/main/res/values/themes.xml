@@ -42,10 +42,6 @@
         <item name="toolbarStyle">@style/Widget.Crf.Toolbar.Transparent</item>
     </style>
 
-    <style name="Theme.Crf.Main">
-        <item name="toolbarTheme">@style/Theme.Crf.Toolbar.Main</item>
-        <item name="colorPrimaryDark">@color/deepGreen</item>
-    </style>
 
     <style name="Theme.Crf.Toolbar.Main">
         <item name="toolbarStyle">@style/Base.Widget.Crf.Toolbar</item>

@@ -33,13 +33,4 @@ public class CrfViewTaskActivity extends CrfActiveTaskActivity {
         return R.layout.crf_view_task_activity;
     }
 
-    @Override
-    protected @ColorRes int defaultToolbarTintColor() {
-        return R.color.salmon;
-    }
-
-    @Override
-    protected @ColorRes int defaultStepProgressColor() {
-        return R.color.darkGrayText;
-    }
 }
