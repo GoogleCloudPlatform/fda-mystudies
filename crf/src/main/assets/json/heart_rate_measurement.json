@@ -23,9 +23,9 @@
       "image"      : "crf_seated",
       "buttonText" : "Measure",
       "hideProgress"  : "true",
-      "learnMoreText"  : "Tips for measuring",
-      "learnMoreFile"  : "crf_tips_resting_hr.html",
-      "learnMoreTitle" : "Tips for measuring resting heart rate"
+      "learnMoreText"  : "When to measure",
+      "learnMoreFile"  : "crf_when_measure_resting_hr.html",
+      "learnMoreTitle" : "When to measure your resting heart rate"
     },
     {
       "identifier" : "find_camera",

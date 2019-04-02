@@ -20,13 +20,19 @@ package org.sagebase.crf.step;
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Path;
 import android.graphics.SurfaceTexture;
 import android.os.Build;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.UiThread;
 import android.support.constraint.ConstraintLayout;
 import android.support.v4.content.res.ResourcesCompat;
+import android.text.SpannableString;
+import android.text.Spanned;
+import android.text.method.LinkMovementMethod;
+import android.text.style.ClickableSpan;
 import android.util.AttributeSet;
 import android.view.TextureView;
 import android.view.View;
@@ -448,9 +454,48 @@ public class CrfHeartRateStepLayout extends ActiveStepLayout implements
         callbacks.onSaveStep(StepCallbacks.ACTION_PREV, activeStep, null);
     }
 
+    protected void showFailureUi() {
+        crfOops.setText(R.string.crf_sorry);
+        crfOops.setVisibility(View.VISIBLE);
+        nextButton.setVisibility(View.VISIBLE);
+        //heartRateTextContainer.setVisibility(View.VISIBLE);
+        calculateSuccess.setVisibility(View.VISIBLE);
+        arcDrawableContainer.setVisibility(View.VISIBLE);
+        arcDrawable.setSweepAngle(0.0f);
+
+        String troubleString = getResources().getString(R.string.crf_having_trouble);
+        int startIndex = troubleString.indexOf("Tips");
+        int endIndex = troubleString.length();
+        SpannableString troubleSpannable = new SpannableString(troubleString);
+        troubleSpannable.setSpan(new ClickableSpan() {
+            @Override
+            public void onClick(@NonNull View widget) {
+                Intent i = new Intent(getContext(), CrfTrainingInfo.class);
+                i.putExtra(CrfTrainingInfoKt.EXTRA_HTML_FILENAME, "crf_tips_resting_hr.html");
+                i.putExtra(CrfTrainingInfoKt.EXTRA_TITLE, getResources().getString(R.string.crf_tips_for_measuring));
+                getContext().startActivity(i);
+            }
+        }, startIndex, endIndex, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        calculateSuccess.setText(troubleSpannable);
+        calculateSuccess.setMovementMethod(LinkMovementMethod.getInstance());
+
+        nextButton.setOnClickListener(view -> onRedoButtonClicked());
+        nextButton.setText(R.string.crf_redo);
+
+        findViewById(R.id.crf_error_icon_view).setVisibility(View.VISIBLE);
+
+
+        heartImageView.clearAnimation();
+        heartImageView.setVisibility(View.GONE);
+        cameraSourcePreview.setVisibility(View.GONE);
+        cameraPreview.setVisibility(View.GONE);
+        currentHeartRate.setVisibility(View.GONE);
+        crfMessageTextView.setVisibility(View.INVISIBLE);
+
+    }
 
     protected void showCompleteUi() {
-        crfOops.setText("Nicely done!");
+        crfOops.setText(R.string.crf_nicely_done);
         crfOops.setVisibility(View.VISIBLE);
         nextButton.setVisibility(View.VISIBLE);
         heartRateTextContainer.setVisibility(View.VISIBLE);
@@ -463,7 +508,6 @@ public class CrfHeartRateStepLayout extends ActiveStepLayout implements
         cameraSourcePreview.setVisibility(View.GONE);
         cameraPreview.setVisibility(View.GONE);
         currentHeartRate.setVisibility(View.GONE);
-        arcDrawableContainer.setVisibility(View.VISIBLE);
         crfMessageTextView.setVisibility(View.INVISIBLE);
 
 
@@ -507,7 +551,6 @@ public class CrfHeartRateStepLayout extends ActiveStepLayout implements
         nextButton.setOnClickListener(view -> onNextButtonClicked());
 
         redoButton.setVisibility(View.VISIBLE);
-        redoButton.setText(R.string.redo);
         redoButton.setOnClickListener(view -> onRedoButtonClicked());
 
         arcDrawableContainer.setVisibility(View.GONE);

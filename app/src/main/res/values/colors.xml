@@ -41,8 +41,8 @@
     <color name="sky">#00FFFF</color>
     <color name="sky_blur">#43868E</color>
     <color name="robinsEggBlue">#80E8F6</color>
-    <!--<color name="perrywinkle">#88A1E0</color>-->
-    <!--<color name="perrywinkleStatus">#9EBAEF</color>-->
+    <color name="perrywinkle">#88A1E0</color>
+    <color name="perrywinkleStatus">#9EBAEF</color>
     <color name="macaroniAndCheese">#F5B33C</color>
     <!--<color name="black86">#DB000000</color>-->
     <color name="black54">#89000000</color>

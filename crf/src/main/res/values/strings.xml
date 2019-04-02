@@ -33,10 +33,15 @@
     <string name="crf_done">Done</string>
     <string name="crf_heart_rate_calculated">Your heart rate has been calculated.</string>
     <string name="crf_oops">Oops!</string>
-    <string name="redo"><u>Redo</u></string>
+    <string name="crf_redo_underline"><u>Redo</u></string>
+    <string name="crf_redo">Redo</string>
     <string name="crf_practice_makes_perfect">Practice makes perfect</string>
     <string name="crf_cover_for_later_tests">This is to make sure you can cover your flash and camera quickly for later tests.</string>
     <string name="crf_move_finger_back">Please move your finger back over the flash and camera</string>
     <string name="crf_what_is_normal"><u><i>What is a \'normal\' resting HR?</i></u></string>
+    <string name="crf_having_trouble">We’re having trouble seeing your heart rate. Tips for measuring</string>
+    <string name="crf_tips_for_measuring">Tips for measuring your heart rate</string>
+    <string name="crf_sorry">Sorry!</string>
+    <string name="crf_nicely_done">Nicely done!</string>
 
 </resources>

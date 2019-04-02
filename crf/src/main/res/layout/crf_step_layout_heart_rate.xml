@@ -104,6 +104,8 @@
             android:layout_marginBottom="@dimen/rsb_padding_large"
             android:text="@string/crf_heart_rate_calculated"
             android:textAlignment="center"
+            android:clickable="true"
+            android:focusable="true"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintTop_toBottomOf="@id/crf_heart_rate_title"
             tools:layout_editor_absoluteX="24dp" />
@@ -197,6 +199,14 @@
                 android:background="@color/white"/>
 
         </FrameLayout>
+
+        <ImageView
+            android:id="@+id/crf_error_icon_view"
+            android:layout_width="100dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:src="@drawable/crf_health_risk_icon"
+            android:visibility="gone"/>
 
         <LinearLayout
             android:id="@+id/crf_bpm_text_container"
@@ -314,7 +324,7 @@
             android:layout_below="@+id/button_go_forward"
             android:gravity="center"
             android:textAllCaps="false"
-            android:text="@string/crf_redo_measurement"
+            android:text="@string/crf_redo_underline"
             android:visibility="gone"
             android:background="@android:color/transparent"
             app:layout_constraintTop_toBottomOf="@+id/button_go_forward"
