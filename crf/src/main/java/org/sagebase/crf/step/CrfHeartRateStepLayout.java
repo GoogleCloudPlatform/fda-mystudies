@@ -362,7 +362,9 @@ public class CrfHeartRateStepLayout extends ActiveStepLayout implements
         hasDetectedStart = true;
 
         if(cameraRecorder instanceof  HeartRateCamera2Recorder) {
-            startVideoRecording();
+            //Due to privacy concerns, and not currently having a scientific use for the raw video
+            //disable video recording
+//            startVideoRecording();
         }
         super.start();  // start the recording process
 
