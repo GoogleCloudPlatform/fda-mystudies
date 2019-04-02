@@ -50,9 +50,9 @@ public class CrfStairStep extends ActiveStep {
     }
 
     private void commonInit() {
-        List<RecorderConfig> configList = new ArrayList<>();
-        configList.add(new DeviceMotionRecorderConfig(MOTION_RECORDER_ID, SENSOR_FREQ));
-        setRecorderConfigurationList(configList);
+//        List<RecorderConfig> configList = new ArrayList<>();
+//        configList.add(new DeviceMotionRecorderConfig(MOTION_RECORDER_ID, SENSOR_FREQ));
+//        setRecorderConfigurationList(configList);
         setShouldContinueOnFinish(true);
         setShouldStartTimerAutomatically(true);
         setEstimateTimeInMsToSpeakEndInstruction(2500);  // will allow for the long ending instruction
