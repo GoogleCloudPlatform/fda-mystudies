@@ -50,7 +50,7 @@
       "learnMoreFile"    : "crf_normal_resting_hr.html",
       "learnMoreTitle"   : "What is a 'normal' resting HR?",
       "valueLabelText"   : "BPM",
-      "valueResultId"   : "AVERAGE_BPM_IDENTIFIER"
+      "valueResultId"    : "resting"
     }
   ]
 }

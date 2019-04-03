@@ -71,12 +71,12 @@ public class HeartBeatSample {
 
     // Algorithm to be implemented
     public boolean abnormalHR() {
-        return true;
+        return false;
     }
 
     // Algorithm to be implemented
     public boolean declineHR() {
-        return true;
+        return false;
     }
 }
 

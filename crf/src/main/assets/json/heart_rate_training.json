@@ -53,7 +53,7 @@
       "text"             : "Practice makes perfect",
       "detailText"       : "This is to make sure you can cover your flash and camera quickly for later tests.",
       "valueLabelText"   : "BPM",
-      "valueResultId"    : "AVERAGE_BPM_IDENTIFIER",
+      "valueResultId"    : "resting",
       "showRedoButton"   : "true"
     }
   ]

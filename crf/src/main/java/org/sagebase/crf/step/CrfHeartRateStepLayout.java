@@ -94,11 +94,12 @@ public class CrfHeartRateStepLayout extends ActiveStepLayout implements
     private static final Logger LOG = LoggerFactory.getLogger(CrfHeartRateStepLayout.class);
 
     protected CrfHeartRateCameraStep step;
-    private static final String AVERAGE_BPM_IDENTIFIER = "AVERAGE_BPM_IDENTIFIER";
+//    private static final String AVERAGE_BPM_IDENTIFIER = "AVERAGE_BPM_IDENTIFIER";
     private static final String BPM_START_IDENTIFIER_SUFFIX = ".heartRate_start";
     private static final String BPM_END_IDENTIFIER_SUFFIX = ".heartRate_end";
 
-    public static final String COMPLETION_BPM_VALUE_RESULT = "completion_bpm_result";
+    public static final String RESTING_BPM_VALUE_RESULT = "resting";
+    public static final String PEAK_BPM_VALUE_RESULT = "peak";
 
     private CameraSourcePreview cameraSourcePreview;
     private TextureView cameraPreview;
@@ -189,8 +190,6 @@ public class CrfHeartRateStepLayout extends ActiveStepLayout implements
     @Override
     public void setupActiveViews() {
         super.setupActiveViews();
-
-        /**TODO: If this is the 2nd step (turn_on_camera), we need to check for permissions and ask for permissions before proceeding. **/
 
         shouldShowFinishUi = getResources().getBoolean(R.bool.heart_rate_show_finish_ui);
 
@@ -517,15 +516,45 @@ public class CrfHeartRateStepLayout extends ActiveStepLayout implements
                 bpmSum += bpmHolder.bpm;
             }
             int averageBpm = bpmSum / bpmList.size();
-            setBpmDifferenceResult(averageBpm);
+
+            BpmHolder bestHolder = findBestHr();
+            int bestHr = bestHolder.bpm;
+
+            setBpmResult(bestHr);
             setBpmStartAndEnd(bpmList.get(0), bpmList.get(bpmList.size()-1));
-            heartRateNumber.setText(String.format(Locale.getDefault(), "%d", averageBpm));
-            finalBpm.setText(String.format(Locale.getDefault(), "%d", averageBpm));
+            heartRateNumber.setText(String.format(Locale.getDefault(), "%d", bestHr));
+            finalBpm.setText(String.format(Locale.getDefault(), "%d", bestHr));
         } else {
-            setBpmDifferenceResult(0);
+            setBpmResult(0);
             heartRateNumber.setText(String.format(Locale.getDefault(), "%d", 0));
             finalBpm.setText(String.format(Locale.getDefault(), "%d", 0));
         }
+    }
+
+    private boolean haveValidHr() {
+        if (!bpmList.isEmpty()) {
+            for (BpmHolder bpmHolder : bpmList) {
+                if (bpmHolder.confidence > 0.5) {
+                    return true;
+                }
+            }
+        }
+        return false;
+
+    }
+
+    private BpmHolder findBestHr() {
+        BpmHolder bestHr = null;
+
+        if (!bpmList.isEmpty()) {
+            bestHr = bpmList.get(0);
+            for (BpmHolder bpmHolder : bpmList) {
+                if (bpmHolder.confidence > bestHr.confidence) {
+                    bestHr = bpmHolder;
+                }
+            }
+        }
+        return bestHr;
     }
 
     private void showFinishUi() {
@@ -583,25 +612,12 @@ public class CrfHeartRateStepLayout extends ActiveStepLayout implements
         return bpmResult;
     }
 
-    /**
-     * The BPM result will be stored in the TaskResult and if there are multiple
-     * CrfHeartRateSteps, the difference between the BPMs will be stored in the result as well
-     * @param bpm the average BPM
-     */
-    private void setBpmDifferenceResult(int bpm) {
-        // See if we have a previous BPM, in which case we should calculate the difference
-        if (previousBpm >= 0) {
-            String bpmStepId = COMPLETION_BPM_VALUE_RESULT;
-            StepResult<String> bpmResult = new StepResult<>(new Step(bpmStepId));
-            int bpmDifference = Math.abs(bpm - previousBpm);
-            bpmResult.setResult(String.valueOf(bpmDifference));
-            stepResult.setResultForIdentifier(bpmStepId, bpmResult);
-        } else {
-            String bpmStepId = CrfHeartRateStepLayout.AVERAGE_BPM_IDENTIFIER;
-            StepResult<String> bpmResult = new StepResult<>(new Step(bpmStepId));
-            bpmResult.setResult(String.valueOf(bpm));
-            stepResult.setResultForIdentifier(bpmStepId, bpmResult);
-        }
+
+    private void setBpmResult(int bpm) {
+        String bpmStepId = CrfHeartRateStepLayout.RESTING_BPM_VALUE_RESULT;
+        StepResult<String> bpmResult = new StepResult<>(new Step(bpmStepId));
+        bpmResult.setResult(String.valueOf(bpm));
+        stepResult.setResultForIdentifier(bpmStepId, bpmResult);
     }
 
     @Override
@@ -635,7 +651,11 @@ public class CrfHeartRateStepLayout extends ActiveStepLayout implements
 
         // don't do this for video recorder, wait for heart rate JSON
         if (recorder instanceof JsonArrayDataRecorder) {
-            showCompleteUi();
+            if (haveValidHr()) {
+                showCompleteUi();
+            } else {
+                showFailureUi();
+            }
         }
     }
 
@@ -668,8 +688,7 @@ public class CrfHeartRateStepLayout extends ActiveStepLayout implements
             arcDrawableContainer.setVisibility(View.INVISIBLE);
             arcDrawable.setSweepAngle(0.0f);
             cameraPreview.setVisibility(View.VISIBLE);
-        }
-        else {
+        } else {
             crfOops.setVisibility(View.INVISIBLE);
             crfMessageTextView.setText(R.string.crf_camera_cover);
             currentHeartRate.setText("Capturing...");

@@ -49,10 +49,12 @@ public interface BpmRecorder {
         class BpmHolder {
             public final int bpm;
             public final long timestamp;
+            public final double confidence;
 
-            public BpmHolder(int bpm, long timestamp) {
+            public BpmHolder(int bpm, long timestamp, double confidence) {
                 this.bpm = bpm;
                 this.timestamp = timestamp;
+                this.confidence = confidence;
             }
         }
 
@@ -256,7 +258,7 @@ public interface BpmRecorder {
                     if (mBpmUpdateListener != null) {
                         mainHandler.post(() ->
                                 mBpmUpdateListener.bpmUpdate(
-                                        new BpmRecorder.BpmUpdateListener.BpmHolder(sample.bpm, (long) sample.timestamp)));
+                                        new BpmRecorder.BpmUpdateListener.BpmHolder(sample.bpm, (long) sample.timestamp, sample.confidence)));
                     }
                 } else {
                     mJsonObject.remove(HEART_RATE_KEY);
