@@ -37,8 +37,9 @@
       "hideProgress"  : "true"
     },
     {
-      "identifier"       : "camera",
-      "type"             : "crf_heart_rate_camera_step"
+      "identifier"       : "hr",
+      "type"             : "crf_heart_rate_camera_step",
+      "duration"         : "20"
     },
     {
       "identifier"       : "completion",

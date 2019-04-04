@@ -25,6 +25,51 @@
       "hideProgress"     : "true"
     },
     {
+      "identifier"       : "instructionRecovery",
+      "type"             : "crf_instruction",
+      "text"             : "Recovery HR Questions",
+      "detailText"       : "To calculate your Recovery HR score, we first need to know a few things about you like your sex, and age.",
+      "image"            : "crf_quiz",
+      "scaleType"        : "CENTER_INSIDE",
+      "buttonText"       : "Next",
+      "hideProgress"     : "true"
+    },
+    {
+      "identifier": "sexForm",
+      "type": "crf_form",
+      "title": "What was your sex at birth?",
+      "items": [
+        {
+          "identifier": "sex",
+          "type": "crfSingleChoice",
+          "items": [
+            {
+              "text": "Male",
+              "value": "Male"
+            },
+            {
+              "text": "Female",
+              "value": "Female"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "identifier": "birthdateForm",
+      "type": "crf_form",
+      "title": "What year were you born?",
+      "items": [
+        {
+          "identifier": "birthYear",
+          "type": "crfInteger",
+          "placeholderText": "YYYY",
+          "min": 1900,
+          "max": 2100
+        }
+      ]
+    },
+    {
       "identifier"       : "instructionVolume",
       "type"             : "crf_instruction",
       "text"             : "Volume turned up?",
@@ -79,69 +124,23 @@
       "hideProgress"     : "true"
     },
     {
-      "identifier"       : "heartRate.after",
+      "identifier"       : "hr",
       "type"             : "crf_heart_rate_camera_step",
-      "hideProgress"     : "true"
+      "hideProgress"     : "true",
+      "duration"         : "60"
     },
-
     {
       "identifier"       : "completion",
       "type"             : "crf_completion",
-      "topText"          : "Your peak heart rate is",
-      "text"             : "Recovery HR Captured!",
+      "topText"          : "Your heart rate recovery is",
+      "text"             : "Recovery HR Score",
       "detailText"       : "Changing your Recovery HR can take time. You can change it over weeks or months by losing weight or exercising.",
       "learnMoreText"    : "What is a Recovery HR Score?",
       "learnMoreFile"    : "crf_normal_resting_hr.html",
       "learnMoreTitle"   : "What is a Recovery HR Score?",
-      "valueLabelText"   : "BPM",
-      "valueResultId"   : "completion_bpm_result",
-      "buttonText"       : "Calculate",
+      "valueResultId"    : "completion_bpm_result",
+      "buttonText"       : "Done",
       "hideProgress"     : "true"
-    },
-    {
-      "identifier"       : "instructionRecovery",
-      "type"             : "crf_instruction",
-      "text"             : "Recovery HR Questions",
-      "detailText"       : "To calculate your Recovery HR score, we first need to know a few things about you like your sex, and age.",
-      "image"            : "crf_quiz",
-      "scaleType"        : "CENTER_INSIDE",
-      "buttonText"       : "Next",
-      "hideProgress"     : "true"
-    },
-    {
-      "identifier": "sexForm",
-      "type": "crf_form",
-      "title": "What was your sex at birth?",
-      "items": [
-        {
-          "identifier": "sex",
-          "type": "crfSingleChoice",
-          "items": [
-            {
-              "text": "Male",
-              "value": "Male"
-            },
-            {
-              "text": "Female",
-              "value": "Female"
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "identifier": "birthdateForm",
-      "type": "crf_form",
-      "title": "What year were you born?",
-      "items": [
-        {
-          "identifier": "birthYear",
-          "type": "crfInteger",
-          "placeholderText": "YYYY",
-          "min": 1900,
-          "max": 2100
-        }
-      ]
     }
 
 
