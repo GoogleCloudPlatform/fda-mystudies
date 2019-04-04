@@ -51,7 +51,6 @@ public class CrfInstructionStepLayout extends InstructionStepLayout implements
     protected View rootInstructionLayout;
     protected ImageButton customButton;
     protected TextView customButtonText;
-    //protected Button remindMeLaterButton;
     protected Button learnMore;
     protected TextView instructionViewTop;
     protected TextView instructionViewBottom;
@@ -112,7 +111,6 @@ public class CrfInstructionStepLayout extends InstructionStepLayout implements
         nextButton.setEnabled(true);
         rootInstructionLayout = findViewById(R.id.crf_root_instruction_layout);
 
-        //remindMeLaterButton = findViewById(R.id.remind_me_later);
         learnMore = findViewById(R.id.learn_more);
         this.instructionViewTop = findViewById(R.id.crf_instruction_text);
         this.instructionViewBottom = findViewById(R.id.crf_instruction_more_detail_text);
@@ -179,14 +177,6 @@ public class CrfInstructionStepLayout extends InstructionStepLayout implements
     public void goForwardClicked(View v) {
         nextButton.setEnabled(false);
         onComplete();
-    }
-
-    public void goBackClicked(View v) {
-        callbacks.onSaveStep(StepCallbacks.ACTION_PREV, step, null);
-    }
-
-    private void onExitClicked(View v) {
-        callbacks.onSaveStep(StepCallbacks.ACTION_END, step, null);
     }
 
     @Override

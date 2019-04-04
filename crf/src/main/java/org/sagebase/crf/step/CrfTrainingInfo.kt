@@ -33,7 +33,7 @@ const val EXTRA_TITLE = "EXTRA_TITLE"
 
 class CrfTrainingInfo : AppCompatActivity() {
 
-    val baseFilePath = "file:///android_asset/html/" //crf_heart_rate_training.html"
+    val baseFilePath = "file:///android_asset/html/"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

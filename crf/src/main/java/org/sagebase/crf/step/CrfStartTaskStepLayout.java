@@ -152,26 +152,6 @@ public class CrfStartTaskStepLayout extends CrfInstructionStepLayout implements
         return false;
     }
 
-//    @Override
-//    public boolean crfToolbarRightIconClicked() {
-//        String path = ResourceManager.getInstance().
-//                generateAbsolutePath(ResourceManager.Resource.TYPE_HTML, crfStartTaskStep.infoHtmlFilename);
-//        Intent intent = new Intent(getContext(), ViewWebDocumentActivity.class);
-//        intent.putExtra(ViewWebDocumentActivity.KEY_DOC_PATH, path);
-//        intent.putExtra(ViewWebDocumentActivity.KEY_TITLE, "");
-//        getContext().startActivity(intent);
-//        return true; // consumed the click
-//    }
-//
-//    @Override
-//    public int crfToolbarLeftIcon() {
-//        return R.drawable.crf_ic_back;
-//    }
-//
-//    @Override
-//    public int crfToolbarRightIcon() {
-//        return crfStartTaskStep.infoHtmlFilename != null ? R.drawable.crf_ic_info : NO_ICON;
-//    }
 
     @Override
     public void onActivityFinished(int requestCode, int resultCode, Intent data) {

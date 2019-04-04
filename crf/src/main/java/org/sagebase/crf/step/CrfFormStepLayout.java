@@ -109,15 +109,6 @@ public class CrfFormStepLayout extends FormStepLayout implements CrfTaskToolbarP
         return R.layout.crf_step_layout_form;
     }
 
-//    @Override
-//    public int getContentContainerLayoutId() {
-//        return R.id.crf_step_layout_container;
-//    }
-
-//    @Override
-//    public int getFixedSubmitBarLayoutId() {
-//        return R.layout.crf_step_layout_container;
-//    }
 
     @Override
     public @LayoutRes int getFixedSubmitBarLayoutId() {

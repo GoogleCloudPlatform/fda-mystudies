@@ -86,7 +86,6 @@ public class CrfActiveTaskActivity extends ActiveTaskActivity {
     @Override
     public void onDataAuth() {
         storageAccessUnregister();
-        //MainApplication.mockAuthenticate(this);
         super.onDataReady();
     }
 
@@ -288,13 +287,16 @@ public class CrfActiveTaskActivity extends ActiveTaskActivity {
     }
 
 
+    @Override
     protected void requestStorageAccess() {
         onDataReady();
     }
 
+    @Override
     protected void storageAccessRegister() {
     }
 
+    @Override
     protected void storageAccessUnregister() {
     }
 
