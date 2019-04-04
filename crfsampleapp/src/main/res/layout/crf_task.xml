@@ -41,8 +41,6 @@
         android:layout_margin="@dimen/rsb_padding_large"
         android:layout_alignParentRight="true"
         android:focusable="true"
-        android:text="@string/begin"
-        android:textColor="@color/white"
-        android:textAllCaps="false"/>
+        android:text="@string/begin"/>
 
 </RelativeLayout>

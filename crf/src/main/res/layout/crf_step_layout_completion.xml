@@ -120,9 +120,7 @@
         android:layout_above="@id/crf_redo_button"
         android:focusable="true"
         android:text="@string/rsb_BUTTON_DONE"
-        android:layout_alignWithParentIfMissing="true"
-        android:textColor="@color/white"
-        android:textAllCaps="false"/>
+        android:layout_alignWithParentIfMissing="true"/>
 
     <Button
         android:id="@+id/crf_redo_button"
