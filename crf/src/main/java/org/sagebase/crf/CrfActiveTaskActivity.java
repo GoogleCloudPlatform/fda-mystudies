@@ -50,6 +50,7 @@ import org.sagebase.crf.view.CrfTaskToolbarActionManipulator;
 import org.sagebase.crf.view.CrfTaskToolbarIconManipulator;
 import org.sagebase.crf.view.CrfTaskToolbarProgressManipulator;
 import org.sagebase.crf.view.CrfTaskToolbarTintManipulator;
+import org.sagebase.crf.view.CrfTaskToolbarVisibilityManipulator;
 import org.sagebase.crf.view.CrfTransparentToolbar;
 
 import java.util.List;
@@ -207,6 +208,13 @@ public class CrfActiveTaskActivity extends ActiveTaskActivity {
             crfStepProgressTextview.setText(str);
         } else {
             Log.e("CrfActiveTaskActivity", "Progress Bars only work with OrderedTask");
+        }
+
+        if (current instanceof CrfTaskToolbarVisibilityManipulator) {
+            CrfTaskToolbarVisibilityManipulator manipulator = (CrfTaskToolbarVisibilityManipulator) current;
+            crfToolbar.setVisibility(manipulator.crfToolbarHide() ? View.GONE : View.VISIBLE);
+        } else {
+            crfToolbar.setVisibility(View.VISIBLE);
         }
 
         // Media Volume controls
