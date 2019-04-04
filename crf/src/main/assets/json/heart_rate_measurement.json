@@ -37,6 +37,23 @@
       "hideProgress"  : "true"
     },
     {
+      "identifier"       : "hr1",
+      "type"             : "crf_heart_rate_camera_step",
+      "duration"         : "20"
+    },
+    {
+      "identifier"       : "completion1",
+      "type"             : "crf_completion",
+      "topText"          : "Your resting heart rate is",
+      "text"             : "Measure twice",
+      "detailText"       : "Many things can influence your measurement. To improve the accuracy, let’s measure it one more time.",
+      "learnMoreText"    : "What is a 'normal' resting HR?",
+      "learnMoreFile"    : "crf_normal_resting_hr.html",
+      "learnMoreTitle"   : "What is a 'normal' resting HR?",
+      "valueLabelText"   : "BPM",
+      "valueResultId"    : "resting"
+    },
+    {
       "identifier"       : "hr",
       "type"             : "crf_heart_rate_camera_step",
       "duration"         : "20"
