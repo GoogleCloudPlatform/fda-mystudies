@@ -9,7 +9,7 @@
     <!--<color name="rsb_colorPrimaryDark">@color/colorPrimaryDark</color>-->
     <!--<color name="rsb_colorAccent">@color/colorAccent</color>-->
 
-    <!--<color name="gray">#AAAAAA</color>-->
+    <color name="gray">#AAAAAA</color>
     <!--<color name="purple">#5B3EAD</color>-->
     <!--<color name="magenta">#C94281</color>-->
     <!--<color name="light_magenta">#F26AA9</color>-->

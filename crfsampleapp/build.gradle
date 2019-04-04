@@ -19,9 +19,6 @@ apply plugin: 'com.android.application'
 
 android {
     compileSdkVersion 28
-
-
-
     defaultConfig {
         applicationId "org.sagebase.crf.sampleapp"
         minSdkVersion 19
@@ -37,7 +34,6 @@ android {
         renderscriptSupportModeEnabled true
 
     }
-
     buildTypes {
         release {
             minifyEnabled false
@@ -51,19 +47,16 @@ android {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
-
+    buildToolsVersion '28.0.3'
 }
 
 dependencies {
-    implementation fileTree(dir: 'libs', include: ['*.jar'])
-
+    implementation fileTree(include: ['*.jar'], dir: 'libs')
     implementation 'com.android.support:multidex:1.0.3'
-
     implementation project(':researchstack-sdk')
     implementation project(':crf')
-
-    implementation 'com.android.support:appcompat-v7:28.0.0'
-    implementation 'com.android.support:design:28.0.0'
+    implementation "com.android.support:appcompat-v7:${support_library_version}"
+    implementation "com.android.support:design:${support_library_version}"
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'com.android.support.test:runner:1.0.2'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'

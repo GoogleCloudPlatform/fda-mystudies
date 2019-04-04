@@ -3,12 +3,12 @@ apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 
 android {
-    compileSdkVersion 27
+    compileSdkVersion 28
     buildToolsVersion '28.0.3'
     defaultConfig {
         applicationId "org.sagebionetworks.research.crf"
         minSdkVersion 19
-        targetSdkVersion 27
+        targetSdkVersion 28
         // version code is bumped by fastlane automatically
         versionCode 40
         // this should match the stable- branch name and will be used by fastlane to create the tag
@@ -59,13 +59,13 @@ dependencies {
     implementation 'com.android.support:multidex:1.0.3'
 
     // These are all support libraries that should be updated when Google releases new ones
-    implementation "com.android.support:support-compat:27.1.1"
-    implementation 'com.android.support:appcompat-v7:27.1.1'
-    implementation 'com.android.support:preference-v14:27.1.1'
-    implementation 'com.android.support:cardview-v7:27.1.1'
-    implementation 'com.android.support:design:27.1.1'
-    implementation 'com.android.support:support-annotations:27.1.1'
-    implementation 'com.android.support:customtabs:27.1.1'
+    implementation "com.android.support:support-compat:${support_library_version}"
+    implementation "com.android.support:appcompat-v7:${support_library_version}"
+    implementation "com.android.support:preference-v14:${support_library_version}"
+    implementation "com.android.support:cardview-v7:${support_library_version}"
+    implementation "com.android.support:design:${support_library_version}"
+    implementation "com.android.support:support-annotations:${support_library_version}"
+    implementation "com.android.support:customtabs:${support_library_version}"
 
     implementation 'net.openid:appauth:0.7.0'
 

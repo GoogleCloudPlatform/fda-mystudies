@@ -2,10 +2,7 @@ apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
 
 android {
-    compileSdkVersion 27
-
-
-
+    compileSdkVersion 28
     defaultConfig {
         minSdkVersion 19
         targetSdkVersion 27
@@ -16,18 +13,17 @@ android {
         renderscriptTargetApi 18
         renderscriptSupportModeEnabled true
     }
-
     buildTypes {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
-
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
+    buildToolsVersion '28.0.3'
 }
 
 dependencies {
@@ -35,14 +31,12 @@ dependencies {
     api project(':backbone'), {
         exclude group: 'joda-time', module: 'joda-time'
     }
-
     api 'net.danlew:android.joda:2.9.9.2'
-
     implementation 'com.google.code.gson:gson:2.8.2'
     implementation 'com.google.guava:guava:23.2-android'
     implementation 'com.google.android.gms:play-services-vision:15.0.0'
-    implementation 'com.android.support:appcompat-v7:27.1.1'
-    implementation 'com.android.support:support-annotations:27.1.1'
+    implementation "com.android.support:appcompat-v7:${support_library_version}"
+    implementation "com.android.support:support-annotations:${support_library_version}"
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'com.android.support.test:runner:1.0.2'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
