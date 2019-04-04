@@ -109,8 +109,7 @@
       "identifier"       : "stairStep",
       "type"             : "crf_stair_step",
       "duration"         : "180",
-      "soundRes"         : "stair_step_3_min_cue",
-      "hideProgress"     : "true"
+      "soundRes"         : "stair_step_3_min_cue"
     },
     {
       "identifier"       : "instructionCamera2",

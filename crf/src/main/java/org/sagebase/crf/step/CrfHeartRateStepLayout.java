@@ -59,7 +59,6 @@ import org.researchstack.backbone.step.active.recorder.RecorderListener;
 import org.researchstack.backbone.ui.callbacks.StepCallbacks;
 import org.researchstack.backbone.ui.step.layout.ActiveStepLayout;
 import org.researchstack.backbone.ui.views.ArcDrawable;
-import org.researchstack.backbone.utils.StepResultHelper;
 import org.sagebase.crf.R;
 import org.sagebase.crf.camera.CameraSourcePreview;
 import org.sagebase.crf.step.active.BpmRecorder;
@@ -67,6 +66,7 @@ import org.sagebase.crf.step.active.HeartRateCamera2Recorder;
 import org.sagebase.crf.step.active.HeartRateCameraRecorder;
 import org.sagebase.crf.step.active.HeartRateCameraRecorderConfig;
 import org.sagebase.crf.view.CrfTaskStatusBarManipulator;
+import org.sagebase.crf.view.CrfTaskToolbarProgressManipulator;
 import org.sagebase.crf.view.CrfTaskToolbarTintManipulator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -88,8 +88,8 @@ public class CrfHeartRateStepLayout extends ActiveStepLayout implements
         BpmRecorder.DeclineHRListener,
         BpmRecorder.AbnormalHRListener,
         RecorderListener,
-        CrfTaskToolbarTintManipulator,
         CrfTaskStatusBarManipulator,
+        CrfTaskToolbarProgressManipulator,
         CrfResultListener {
     private static final Logger LOG = LoggerFactory.getLogger(CrfHeartRateStepLayout.class);
 
@@ -123,11 +123,9 @@ public class CrfHeartRateStepLayout extends ActiveStepLayout implements
     protected ArcDrawable arcDrawable;
     protected RelativeLayout layout;
 
-    protected RelativeLayout exitButtonContainer;
     protected ConstraintLayout buttonContainer;
     protected Button nextButton;
     protected Button redoButton;
-    protected ImageButton exitButton;
 
     protected ImageView heartImageView;
     protected HeartBeatAnimation heartBeatAnimation;
@@ -138,9 +136,6 @@ public class CrfHeartRateStepLayout extends ActiveStepLayout implements
     protected TextView yourHRis;
     protected TextView finalBpm;
     protected TextView finalBpmText;
-
-    // The previousBpm comes from the TaskResult of an unrelated CrfHeartRateStepLayout
-    private int previousBpm = -1;
 
     private boolean hasDetectedStart = false;
     private List<BpmHolder> bpmList;
@@ -256,18 +251,7 @@ public class CrfHeartRateStepLayout extends ActiveStepLayout implements
         heartImageView = findViewById(R.id.crf_heart_icon);
         heartImageView.setVisibility(View.GONE);
 
-        /**
-         * TODO: This exit button is really small- it needs to be larger.
-         */
-        exitButton = findViewById(R.id.x_button);
-        exitButtonContainer = findViewById(R.id.exit_button_container);
         buttonContainer = findViewById(R.id.crf_next_button_container);
-
-        if(this.exitButton != null) {
-            exitButton.setImageResource(R.drawable.ic_close_white_24dp);
-            exitButton.setVisibility(View.VISIBLE);
-            exitButton.setOnClickListener(this::goBackClicked);
-        }
 
         crfCompletionIcon = findViewById(R.id.crf_completion_icon);
         crfPractice = findViewById(R.id.crf_practice);
@@ -441,12 +425,6 @@ public class CrfHeartRateStepLayout extends ActiveStepLayout implements
         }
     }
 
-    /** TODO: This should exit to the main menu in the encompassing app **/
-    private void goBackClicked(View view) {
-        callbacks.onSaveStep(StepCallbacks.ACTION_END, step, null);
-    }
-
-
     public void onRedoButtonClicked() {
         pauseActiveStepLayout();
         forceStop();
@@ -560,7 +538,6 @@ public class CrfHeartRateStepLayout extends ActiveStepLayout implements
     private void showFinishUi() {
         shouldShowFinishUi = false;
         layout.setBackgroundColor(getResources().getColor(R.color.mint));
-        exitButtonContainer.setBackgroundColor(getResources().getColor(R.color.mint));
         buttonContainer.setBackgroundColor(getResources().getColor(R.color.white));
         yourHRis.setVisibility(View.VISIBLE);
         finalBpm.setVisibility(View.VISIBLE);
@@ -628,21 +605,13 @@ public class CrfHeartRateStepLayout extends ActiveStepLayout implements
     }
 
     @Override
-    public int crfToolbarTintColor() {
-        return R.color.azure;
-    }
-
-    @Override
     public int crfStatusBarColor() {
         return R.color.white;
     }
 
     @Override
     public void crfTaskResult(TaskResult taskResult) {
-        String bpmString = StepResultHelper.findStringResult(taskResult, AVERAGE_BPM_IDENTIFIER);
-        if (bpmString != null) {
-            previousBpm = Integer.parseInt(bpmString);
-        }
+
     }
 
     @Override
@@ -695,7 +664,7 @@ public class CrfHeartRateStepLayout extends ActiveStepLayout implements
 
             heartImageView.setVisibility(View.VISIBLE);
             arcDrawableContainer.setVisibility(View.VISIBLE);
-            cameraPreview.setVisibility(View.INVISIBLE);
+            cameraPreview.setVisibility(View.GONE);
 
         }
     }
@@ -732,6 +701,11 @@ public class CrfHeartRateStepLayout extends ActiveStepLayout implements
             stepResult.setResultForIdentifier("skipDeclineStep",
                     decliningHRResult);
         }
+    }
+
+    @Override
+    public boolean crfToolbarShowProgress() {
+        return false;
     }
 
     private class HeartBeatAnimation extends AlphaAnimation {

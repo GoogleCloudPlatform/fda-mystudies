@@ -55,7 +55,6 @@ public class CrfInstructionStepLayout extends InstructionStepLayout implements
     protected Button learnMore;
     protected TextView instructionViewTop;
     protected TextView instructionViewBottom;
-    protected ImageButton exitButton;
 
     public CrfInstructionStepLayout(Context context) {
         super(context);
@@ -117,8 +116,6 @@ public class CrfInstructionStepLayout extends InstructionStepLayout implements
         learnMore = findViewById(R.id.learn_more);
         this.instructionViewTop = findViewById(R.id.crf_instruction_text);
         this.instructionViewBottom = findViewById(R.id.crf_instruction_more_detail_text);
-
-        this.exitButton = findViewById(R.id.x_button);
     }
 
     @Override
@@ -170,16 +167,7 @@ public class CrfInstructionStepLayout extends InstructionStepLayout implements
             instructionViewBottom.setVisibility(VISIBLE);
         }
 
-        if(this.exitButton != null) {
-            exitButton.setImageResource(R.drawable.ic_close_white_24dp);
-            exitButton.setVisibility(View.VISIBLE);
-            exitButton.setOnClickListener(this::onExitClicked);
-        }
-
     }
-
-
-    public static final String EXTRA_HTML_FILENAME = "EXTRA_FILENAME";
 
     private void setLearnMore() {
         Intent i = new Intent(getContext(), CrfTrainingInfo.class);

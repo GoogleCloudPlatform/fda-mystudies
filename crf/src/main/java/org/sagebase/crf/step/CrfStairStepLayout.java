@@ -31,6 +31,7 @@ import org.researchstack.backbone.step.Step;
 import org.researchstack.backbone.ui.step.layout.ActiveStepLayout;
 import org.sagebase.crf.R;
 import org.sagebase.crf.view.CrfTaskStatusBarManipulator;
+import org.sagebase.crf.view.CrfTaskToolbarProgressManipulator;
 
 import java.util.Locale;
 
@@ -38,7 +39,7 @@ import java.util.Locale;
  * Created by TheMDP on 11/1/17.
  */
 
-public class CrfStairStepLayout extends ActiveStepLayout  {
+public class CrfStairStepLayout extends ActiveStepLayout implements CrfTaskToolbarProgressManipulator {
 
     protected TextView crfCountdownText;
     protected ImageView crfImageView;
@@ -117,4 +118,8 @@ public class CrfStairStepLayout extends ActiveStepLayout  {
         }
     }
 
+    @Override
+    public boolean crfToolbarShowProgress() {
+        return false;
+    }
 }

@@ -32,7 +32,7 @@
         <clip>
             <shape>
                 <solid
-                    android:color="@color/softGreen"/>
+                    android:color="@color/colorAccent"/>
                 <corners
                     android:radius="@dimen/crf_progress_bar_radius"/>
             </shape>

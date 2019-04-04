@@ -55,7 +55,8 @@
       "detailText"       : "This is to make sure you can cover your flash and camera quickly for later tests.",
       "valueLabelText"   : "BPM",
       "valueResultId"    : "resting",
-      "showRedoButton"   : "true"
+      "showRedoButton"   : "true",
+      "hideProgress"     : "true"
     }
   ]
 }

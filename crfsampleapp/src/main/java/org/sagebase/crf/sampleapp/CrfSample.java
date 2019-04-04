@@ -132,7 +132,6 @@ public class CrfSample extends AppCompatActivity {
     private void startTask(Task activeTask) {
         if (activeTask != null) {
             Intent intent = getIntentFactory().newTaskIntent(this, CrfActiveTaskActivity.class, activeTask);
-            intent.putExtra(CrfActiveTaskActivity.EXTRA_HIDE_TOOLBAR, true);
             startActivityForResult(intent, REQUEST_TASK);
         }
     }

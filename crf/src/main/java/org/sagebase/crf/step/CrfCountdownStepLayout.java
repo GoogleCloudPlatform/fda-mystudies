@@ -27,6 +27,7 @@ import org.researchstack.backbone.step.Step;
 import org.researchstack.backbone.ui.step.layout.ActiveStepLayout;
 import org.sagebase.crf.R;
 import org.sagebase.crf.view.CrfTaskStatusBarManipulator;
+import org.sagebase.crf.view.CrfTaskToolbarProgressManipulator;
 import org.sagebase.crf.view.CrfTaskToolbarTintManipulator;
 
 import java.util.Locale;
@@ -35,7 +36,7 @@ import java.util.Locale;
  * Created by TheMDP on 10/31/17.
  */
 
-public class CrfCountdownStepLayout extends ActiveStepLayout implements CrfTaskToolbarTintManipulator, CrfTaskStatusBarManipulator {
+public class CrfCountdownStepLayout extends ActiveStepLayout implements CrfTaskStatusBarManipulator, CrfTaskToolbarProgressManipulator {
 
     protected TextView crfTitleTextView;
     protected TextView crfCountdownTextView;
@@ -142,12 +143,12 @@ public class CrfCountdownStepLayout extends ActiveStepLayout implements CrfTaskT
     }
 
     @Override
-    public int crfToolbarTintColor() {
-        return R.color.azure;
+    public int crfStatusBarColor() {
+        return R.color.white;
     }
 
     @Override
-    public int crfStatusBarColor() {
-        return R.color.white;
+    public boolean crfToolbarShowProgress() {
+        return false;
     }
 }

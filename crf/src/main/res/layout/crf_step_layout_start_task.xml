@@ -35,25 +35,6 @@
         app:layout_constraintTop_toTopOf="parent"
         />
 
-    <RelativeLayout
-        android:id="@+id/exit_button_container"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@null"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        >
-        <ImageButton
-            android:id="@+id/x_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="@null"
-            android:clickable="true"
-            android:focusable="true"
-            android:layout_margin="@dimen/activity_horizontal_margin"
-            />
-    </RelativeLayout>
-
     <TextView
         style="@style/TextAppearance.Crf.Heading2"
         android:id="@+id/crf_instruction_title"

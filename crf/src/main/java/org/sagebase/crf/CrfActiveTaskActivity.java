@@ -43,6 +43,7 @@ import org.researchstack.backbone.task.Task;
 import org.researchstack.backbone.ui.ActiveTaskActivity;
 import org.researchstack.backbone.ui.step.layout.ActiveStepLayout;
 import org.researchstack.backbone.ui.step.layout.StepLayout;
+import org.sagebase.crf.step.CrfFormStep;
 import org.sagebase.crf.step.CrfResultListener;
 import org.sagebase.crf.view.CrfTaskStatusBarManipulator;
 import org.sagebase.crf.view.CrfTaskToolbarActionManipulator;
@@ -59,15 +60,11 @@ import java.util.List;
 
 public class CrfActiveTaskActivity extends ActiveTaskActivity {
 
-    public static final String EXTRA_HIDE_TOOLBAR = "CrfActiveTaskActivity.ExtraHideToolbar";
-
     public static Intent newIntent(Context context, Task task) {
         Intent intent = new Intent(context, CrfActiveTaskActivity.class);
         intent.putExtra(EXTRA_TASK, task);
         return intent;
     }
-
-    private boolean hideToolbar = false;
 
     protected CrfTransparentToolbar getToolbar() {
         if (toolbar != null && toolbar instanceof CrfTransparentToolbar) {
@@ -96,7 +93,6 @@ public class CrfActiveTaskActivity extends ActiveTaskActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         crfStepProgressTextview = findViewById(R.id.crf_step_progress_textview);
-        hideToolbar = getIntent().getBooleanExtra(EXTRA_HIDE_TOOLBAR, false);
     }
 
     @Override
@@ -158,9 +154,9 @@ public class CrfActiveTaskActivity extends ActiveTaskActivity {
         // Set the visibility of the step progress text to mimic the progress bar visibility
         if (!(current instanceof CrfTaskToolbarProgressManipulator)) {
             crfToolbar.showProgressInToolbar(true);
-            crfStepProgressTextview.setVisibility(View.VISIBLE);
+            crfStepProgressTextview.setVisibility(View.GONE);
         } else if (((CrfTaskToolbarProgressManipulator)current).crfToolbarShowProgress()) {
-            crfStepProgressTextview.setVisibility(View.VISIBLE);
+            crfStepProgressTextview.setVisibility(View.GONE);
         } else {
             crfStepProgressTextview.setVisibility(View.GONE);
         }
@@ -184,9 +180,16 @@ public class CrfActiveTaskActivity extends ActiveTaskActivity {
             int progress = orderedTask.getSteps().indexOf(currentStep);
 
             List<Step> steps = orderedTask.getSteps();
-            int max = 0;
+            int max = 1;
             for(Step s: steps) {
+                if (s instanceof CrfFormStep) {
+                    //Currently the only steps that show progress are the stair step survey questions
+                    //This is the quick solution to only show progress relative to those steps
+                    if (s == currentStep) {
+                        progress = max;
+                    }
                     max += 1;
+                }
             }
             crfToolbar.setProgress(progress, max);
 
@@ -204,10 +207,6 @@ public class CrfActiveTaskActivity extends ActiveTaskActivity {
             crfStepProgressTextview.setText(str);
         } else {
             Log.e("CrfActiveTaskActivity", "Progress Bars only work with OrderedTask");
-        }
-        if (hideToolbar) {
-            toolbar.setVisibility(View.GONE);
-            crfStepProgressTextview.setVisibility(View.GONE);
         }
 
         // Media Volume controls

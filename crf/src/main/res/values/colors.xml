@@ -32,8 +32,6 @@
 
     <!-- Zeplin Colors -->
     <color name="azure">#2196F3</color>
-    <!-- Used in progress bar -->
-    <color name="softGreen">#68BF60</color>
 
     <color name="whiteTwo">#EDEDED</color>
     <color name="whiteThree">#FAFAFA</color>

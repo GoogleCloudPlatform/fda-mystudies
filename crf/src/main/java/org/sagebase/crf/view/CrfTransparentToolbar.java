@@ -154,7 +154,7 @@ public class CrfTransparentToolbar extends Toolbar {
         // if the max changed we can't safely animate the change
         boolean animate = (progressBar.getMax() == scaledMax);
 
-        if (animate) {
+        if (animate && progressBar.getVisibility() == View.VISIBLE) {
             ProgressBarAnimation anim = new ProgressBarAnimation(progressBar, scaledFrom, scaledTo);
             anim.setDuration(PROGRESS_BAR_ANIM_DURATION);
             progressBar.startAnimation(anim);

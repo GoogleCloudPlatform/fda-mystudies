@@ -23,26 +23,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <RelativeLayout
-        android:id="@+id/exit_button_container"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/colorPrimary"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        >
-        <ImageButton
-            android:id="@+id/x_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="@null"
-            android:clickable="true"
-            android:focusable="true"
-            android:layout_margin="@dimen/activity_horizontal_margin"
-            />
-    </RelativeLayout>
-
-
     <ImageView
         android:id="@+id/crf_image_view"
         android:layout_width="match_parent"
@@ -51,7 +31,7 @@
         android:scaleType="fitEnd"
         android:gravity="start"
         android:background="@color/colorPrimary"
-        app:layout_constraintTop_toBottomOf="@id/exit_button_container"
+        app:layout_constraintTop_toTopOf="parent"
         />
 
     <TextView
@@ -98,7 +78,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        app:layout_constraintTop_toBottomOf="@+id/crf_text_container"
         app:layout_constraintBottom_toBottomOf="parent">
 
         <android.support.v7.widget.AppCompatButton
