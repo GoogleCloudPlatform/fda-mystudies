@@ -28,12 +28,13 @@
       "learnMoreTitle" : "When to measure your resting heart rate"
     },
     {
-      "identifier" : "find_camera",
+      "identifier" : "cover_camera",
       "type"       : "crf_instruction",
-      "text"       : "Find your camera and flash",
+      "text"       : "Cover the flash and camera",
       "detailText" : "Use your finger to cover the camera and flash on the back of your phone. Your finger nail should turn a little red once you cover the flash.",
-      "image"      : "flash_on_hand_holding",
-      "buttonText" : "Found it",
+      "image"      : "crf_cover_flash_animation",
+      "isImageAnimated"  : true,
+      "buttonText" : "Measure heart rate",
       "hideProgress"  : "true"
     },
     {

@@ -94,7 +94,8 @@
       "type"             : "crf_instruction",
       "text"             : "Please step with your phone",
       "detailText"       : "You will step up and down for 3 minutes. Try to step with the pace.",
-      "image"            : "crf_stair_step",
+      "image"            : "crf_stair_step_animation",
+      "isImageAnimated"  : true,
       "scaleType"        : "CENTER_CROP",
       "buttonText"       : "Press to start",
       "hideProgress"     : "true"
@@ -112,15 +113,14 @@
       "soundRes"         : "stair_step_3_min_cue"
     },
     {
-      "identifier"       : "instructionCamera2",
-      "type"             : "crf_instruction",
-      "text"             : "Cover the flash and camera",
-      "detailText"       : "Use your finger to cover the camera and flash on the back of your phone. Your finger nail should turn a little red once you cover the flash.",
-      "image"            : "crf_cover_flash",
+      "identifier" : "cover_camera",
+      "type"       : "crf_instruction",
+      "text"       : "Cover the flash and camera",
+      "detailText" : "Use your finger to cover the camera and flash on the back of your phone. Your finger nail should turn a little red once you cover the flash.",
+      "image"      : "crf_cover_flash_animation",
       "isImageAnimated"  : true,
-      "animationRepeatDuration" : 2000,
-      "buttonText"       : "Press to start",
-      "hideProgress"     : "true"
+      "buttonText" : "Measure heart rate",
+      "hideProgress"  : "true"
     },
     {
       "identifier"       : "hr",
