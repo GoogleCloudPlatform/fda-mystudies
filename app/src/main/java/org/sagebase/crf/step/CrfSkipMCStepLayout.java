@@ -94,8 +94,6 @@ public class CrfSkipMCStepLayout extends CrfFormStepLayout implements CrfActivit
     protected void refreshCrfSubmitBar() {
         super.refreshCrfSubmitBar();
 
-        crfNextButton.setBackgroundResource(R.drawable.crf_rounded_button_gray);
-        crfNextButton.setTextColor(ResourcesCompat.getColor(getResources(), R.color.rsb_white, null));
         crfNextButton.setText("Done");
         crfBackButton.setVisibility(GONE);
 

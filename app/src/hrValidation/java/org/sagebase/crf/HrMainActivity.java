@@ -58,7 +58,6 @@ public class HrMainActivity extends MainActivity {
         //Task activeTask = taskFactory.createTask(this, CrfResourceManager.HEART_RATE_VALIDATION_TEST_RESOURCE);
         Task activeTask = taskFactory.createTask(this, CrfResourceManager.HEART_RATE_TRAINING_TEST_RESOURCE);
         Intent intent = getIntentFactory().newTaskIntent(this, CrfActiveTaskActivity.class, activeTask);
-        intent.putExtra(CrfActiveTaskActivity.EXTRA_HIDE_TOOLBAR, true  );
         startActivityForResult(intent, REQUEST_TASK);
     }
 

@@ -90,20 +90,6 @@ public class CrfSkipInstructionStepLayout extends CrfInstructionStepLayout imple
             instructionViewBottom.setVisibility(VISIBLE);
         }
 
-        if (remindMeLaterButton != null) {
-            if (crfInstructionStep.remindMeLater) {
-                remindMeLaterButton.setVisibility(View.VISIBLE);
-                remindMeLaterButton.setOnClickListener(new OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        remindMeLater();
-                    }
-                });
-            } else {
-                remindMeLaterButton.setVisibility(View.GONE);
-            }
-        }
-
     }
 
     @Override
