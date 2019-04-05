@@ -18,6 +18,7 @@
 package org.sagebase.crf.sampleapp;
 
 import android.Manifest;
+import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
@@ -38,7 +39,9 @@ import android.widget.TextView;
 
 import org.researchstack.backbone.ResearchStack;
 import org.researchstack.backbone.factory.IntentFactory;
+import org.researchstack.backbone.result.TaskResult;
 import org.researchstack.backbone.task.Task;
+import org.researchstack.backbone.ui.ViewTaskActivity;
 import org.sagebase.crf.CrfActiveTaskActivity;
 import org.sagebase.crf.researchstack.CrfResourceManager;
 import org.sagebase.crf.researchstack.CrfTaskFactory;
@@ -134,6 +137,17 @@ public class CrfSample extends AppCompatActivity {
             Intent intent = getIntentFactory().newTaskIntent(this, CrfActiveTaskActivity.class, activeTask);
             startActivityForResult(intent, REQUEST_TASK);
         }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (resultCode == Activity.RESULT_OK && requestCode == REQUEST_TASK) {
+            TaskResult taskResult = (TaskResult) data.getSerializableExtra(ViewTaskActivity.EXTRA_TASK_RESULT);
+            taskResult.getResults();
+        } else {
+            super.onActivityResult(requestCode, resultCode, data);
+        }
+
     }
 
 
