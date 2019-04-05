@@ -18,8 +18,8 @@
 
 <animation-list
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:oneshot="true">
-    <item android:drawable="@drawable/crf_cover_flash_1" android:duration="1000" />
-    <item android:drawable="@drawable/crf_cover_flash_2" android:duration="1000" />
-    <item android:drawable="@drawable/crf_cover_flash_3" android:duration="1000" />
+    android:oneshot="false">
+    <item android:drawable="@drawable/crf_volume_turned_up_1" android:duration="500" />
+    <item android:drawable="@drawable/crf_volume_turned_up_2" android:duration="500" />
+    <item android:drawable="@drawable/crf_volume_turned_up_3" android:duration="500" />
 </animation-list>
