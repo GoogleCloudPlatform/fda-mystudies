@@ -50,6 +50,10 @@
             {
               "text": "Female",
               "value": "Female"
+            },
+            {
+              "text": "Other",
+              "value": "Other"
             }
           ]
         }
@@ -74,7 +78,8 @@
       "type"             : "crf_instruction",
       "text"             : "Volume turned up?",
       "detailText"       : "Bring your phone with you and turn up your phone volume so you can hear the instructions while you are stair stepping.",
-      "image"            : "crf_volume_check_icon",
+      "image"            : "crf_volume_turned_up_animation",
+      "isImageAnimated"  : true,
       "scaleType"        : "CENTER_CROP",
       "buttonText"       : "Turned it up",
       "hideProgress"     : "true",

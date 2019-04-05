@@ -45,6 +45,19 @@
         <item name="android:textColor">@color/rsb_warm_gray</item>
     </style>
 
+    <style name="Crf.RoundedCornerMaterialButton.Secondary" parent="Widget.AppCompat.Button.Colored">
+        <item name="android:background">@drawable/crf_rounded_button_secondary_color</item>
+        <item name="android:textColor">@color/textColorSecondary</item>
+        <item name="android:textAllCaps">false</item>
+    </style>
+
+    <style name="Crf.RoundedCornerMaterialButton.White" parent="Widget.AppCompat.Button.Colored">
+        <item name="android:background">@drawable/crf_rounded_button_white</item>
+        <item name="android:textColor">@color/textColor</item>
+        <item name="android:textAllCaps">false</item>
+    </style>
+
+
     <style name="TextAppearance"/>
     <style name="TextAppearance.Crf"/>
     <style name="TextAppearance.Crf.Body">

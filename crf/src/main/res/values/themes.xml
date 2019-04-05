@@ -45,10 +45,4 @@
         <item name="android:background">@android:color/white</item>
     </style>
 
-
-    <style name="Crf.RoundedCornerMaterialButton.Secondary" parent="Widget.AppCompat.Button.Colored">
-        <item name="android:background">@drawable/crf_rounded_button_secondary_color</item>
-        <item name="android:textColor">@color/textColorSecondary</item>
-        <item name="android:textAllCaps">false</item>
-    </style>
 </resources>
