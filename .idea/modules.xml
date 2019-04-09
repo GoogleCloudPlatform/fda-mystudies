@@ -5,9 +5,9 @@
       <module fileurl="file://$PROJECT_DIR$/CardiorespiratoryFitness-Android.iml" filepath="$PROJECT_DIR$/CardiorespiratoryFitness-Android.iml" />
       <module fileurl="file://$PROJECT_DIR$/BridgeAndroidSdk/android-sdk/android-sdk.iml" filepath="$PROJECT_DIR$/BridgeAndroidSdk/android-sdk/android-sdk.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/app-old/app-old.iml" filepath="$PROJECT_DIR$/app-old/app-old.iml" />
       <module fileurl="file://$PROJECT_DIR$/BridgeAndroidSdk/ResearchStack/backbone/backbone.iml" filepath="$PROJECT_DIR$/BridgeAndroidSdk/ResearchStack/backbone/backbone.iml" />
       <module fileurl="file://$PROJECT_DIR$/crf/crf.iml" filepath="$PROJECT_DIR$/crf/crf.iml" />
-      <module fileurl="file://$PROJECT_DIR$/crfsampleapp/crfsampleapp.iml" filepath="$PROJECT_DIR$/crfsampleapp/crfsampleapp.iml" />
       <module fileurl="file://$PROJECT_DIR$/BridgeAndroidSdk/researchstack-sdk/researchstack-sdk.iml" filepath="$PROJECT_DIR$/BridgeAndroidSdk/researchstack-sdk/researchstack-sdk.iml" />
       <module fileurl="file://$PROJECT_DIR$/BridgeAndroidSdk/test-utils/test-utils.iml" filepath="$PROJECT_DIR$/BridgeAndroidSdk/test-utils/test-utils.iml" />
     </modules>

@@ -1,55 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~    Copyright 2019 Sage Bionetworks
+  ~
+  ~    Licensed under the Apache License, Version 2.0 (the "License");
+  ~    you may not use this file except in compliance with the License.
+  ~    You may obtain a copy of the License at
+  ~
+  ~        http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~    Unless required by applicable law or agreed to in writing, software
+  ~    distributed under the License is distributed on an "AS IS" BASIS,
+  ~    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~    See the License for the specific language governing permissions and
+  ~    limitations under the License.
+  ~
+  -->
+
 <resources>
-    <!--<color name="colorPrimary">@color/deepGreen</color>-->
-    <!--<color name="colorPrimaryDark">@color/salmon</color>-->
-    <!--<color name="colorAccent">@color/deepGreen</color>-->
+    <!--<color name="colorPrimary">#008577</color>-->
+    <!--<color name="colorPrimaryDark">#00574B</color>-->
+    <!--<color name="colorAccent">#D81B60</color>-->
 
+    <!--<color name="colorSecondary">#88A1E0</color>-->
+    <!--<color name="colorSecondaryDark">#66A1E0</color>-->
 
-    <!--<color name="rsb_colorPrimary">@color/colorPrimary</color>-->
-    <!--<color name="rsb_colorPrimaryDark">@color/colorPrimaryDark</color>-->
-    <!--<color name="rsb_colorAccent">@color/colorAccent</color>-->
-
-    <color name="gray">#AAAAAA</color>
-    <!--<color name="purple">#5B3EAD</color>-->
-    <!--<color name="magenta">#C94281</color>-->
-    <!--<color name="light_magenta">#F26AA9</color>-->
-    <!--<color name="dark_gray">#333333</color>-->
-    <!--<color name="yellow">#FFFF00</color>-->
-    <!--<color name="blue">#0000FF</color>-->
-    <!--<color name="green">#00FF00</color>-->
-    <!--<color name="red">#FF0000</color>-->
-    <!--<color name="white80">#CCFFFFFF</color>-->
-    <!--<color name="mint">#63D49E</color>-->
-
-    <!--<color name="text_color_settings_title">@color/dark_gray</color>-->
-    <!--<color name="text_color_settings_summary">@color/dark_gray</color>-->
-    <!--<color name="tab_text_color">@color/dark_gray</color>-->
-
-    <color name="bullet_color">#000000</color>
-
-    <!-- Zeplin Colors -->
-    <!--<color name="salmon">#FF8875</color>-->
-    <!--<color name="salmon80">#CCFF8875</color>-->
-    <color name="deepGreen">#60B159</color>
-    <color name="deepGreen80">#CC60B159</color>
-    <!--<color name="azure">#2196F3</color>-->
-    <!--<color name="softGreen">#68BF60</color>-->
-    <color name="greenyBlue">#3DBFA3</color>
-    <!--<color name="whiteTwo">#EDEDED</color>-->
-    <!--<color name="whiteThree">#FAFAFA</color>-->
-    <!--<color name="whiteFour">#EBEBEB</color>-->
-    <color name="sky">#00FFFF</color>
-    <color name="sky_blur">#43868E</color>
-    <color name="robinsEggBlue">#80E8F6</color>
-    <color name="perrywinkle">#88A1E0</color>
-    <color name="perrywinkleStatus">#9EBAEF</color>
-    <color name="macaroniAndCheese">#F5B33C</color>
-    <!--<color name="black86">#DB000000</color>-->
-    <color name="black54">#89000000</color>
-    <!--<color name="black37">#5E000000</color>-->
-    <color name="whiteButtonShadow">#F5F5F5</color>
-    <color name="whiteButtonShadow65">#A6F5F5F5</color>
-    <!--<color name="darkGrayText">#414859</color>-->
-    <!--<color name="silver">#e1e5e6</color>-->
-
+    <!--<color name="textColor">#FF0000</color>-->
+    <!--<color name="textColorPrimary">#FFFF00</color>-->
+    <!--<color name="textColorSecondary">#00FFFF</color>-->
 </resources>

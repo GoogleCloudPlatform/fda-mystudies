@@ -1,0 +1,79 @@
+<resources>
+
+    <!-- START used by Fitbit -->
+    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar"/>
+    <style name="AppTheme.NoActionBar">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+    </style>
+    <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar"/>
+    <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light"/>
+    <!-- END used by fitbit -->
+
+
+
+    <style name="Widget.Crf.Onboarding.Button" parent="Widget.AppCompat.Button">
+        <item name="android:layout_width">160dp</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:background">@android:color/white</item>
+        <item name="android:textColor">@color/colorAccent</item>
+        <item name="android:textSize">20sp</item>
+    </style>
+
+    <style name="Widget.Crf.Onboarding.Button.SignIn" parent="Widget.AppCompat.Button.Borderless">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">52dp</item>
+        <item name="android:textColor">@color/white</item>
+        <item name="android:textSize">14sp</item>
+    </style>
+
+
+
+    <style name="PreferenceFragment.Sample" parent="@style/PreferenceFragment.Material">
+        <item name="android:divider">@null</item>
+    </style>
+
+    <style name="TextAppearance"/>
+    <style name="TextAppearance.Crf"/>
+
+
+    <!-- Intro Screen -->
+    <style name="TextAppearance.Crf.IntroHeader">
+        <item name="android:textSize">35sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:fontFamily">@font/opensans</item>
+    </style>
+    <style name="TextAppearance.Crf.IntroSubHeader">
+        <item name="android:textSize">22sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:fontFamily">@font/opensans</item>
+    </style>
+
+
+
+
+
+    <!-- Skip Step Screen -->
+    <style name="TextAppearance.Crf.SkipInstruction">
+        <item name="android:textSize">24sp</item>
+        <item name="android:fontFamily">@font/opensans_bold</item>
+    </style>
+    <style name="TextAppearance.Crf.SkipDetailText">
+        <item name="android:textSize">18sp</item>
+        <item name="android:fontFamily">@font/opensans_regular</item>
+        <item name="android:layout_marginRight">48sp</item>
+        <item name="android:layout_marginLeft">48sp</item>
+    </style>
+
+
+
+    <!-- External ID Screen -->
+    <style name="EditText.Crf.ExternalId" parent="Widget.AppCompat.EditText">
+        <item name="android:textCursorDrawable">@null</item>
+        <item name="android:height">40sp</item>
+        <item name="android:textColor">@color/white</item>
+    </style>
+
+
+
+</resources>
