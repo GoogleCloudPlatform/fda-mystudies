@@ -15,29 +15,24 @@
  *
  */
 
-package org.sagebase.crf.sampleapp;
+package org.sagebase.research.crf;
 
 import android.Manifest;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import org.researchstack.backbone.ResearchStack;
 import org.researchstack.backbone.factory.IntentFactory;
 import org.researchstack.backbone.result.TaskResult;
 import org.researchstack.backbone.task.Task;
@@ -46,6 +41,7 @@ import org.sagebase.crf.CrfActiveTaskActivity;
 import org.sagebase.crf.researchstack.CrfResourceManager;
 import org.sagebase.crf.researchstack.CrfTaskFactory;
 import org.sagebase.crf.step.active.CsvUtils;
+import org.sagebase.research.crf.R;
 
 import static org.researchstack.backbone.ui.fragment.ActivitiesFragment.REQUEST_TASK;
 
