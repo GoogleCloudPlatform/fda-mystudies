@@ -135,7 +135,7 @@ public class HeartRateCamera2Recorder extends Recorder {
 
         heartBeatJsonWriter = new BpmRecorder.HeartBeatJsonWriter(stepLayout, stepLayout,
                 stepLayout, stepLayout, stepLayout, stepLayout,
-                identifier + "Json", step,
+                identifier + "_rgb.json", step,
                 outputDirectory );
         heartBeatJsonWriter.setRecorderListener(stepLayout);
         renderScript = RenderScript.create(context);
