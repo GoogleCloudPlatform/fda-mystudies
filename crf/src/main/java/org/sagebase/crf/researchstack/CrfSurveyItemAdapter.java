@@ -31,6 +31,7 @@ import org.researchstack.backbone.model.survey.SurveyItem;
 import org.researchstack.backbone.model.survey.SurveyItemAdapter;
 import org.researchstack.backbone.model.survey.TextfieldSurveyItem;
 import org.sagebase.crf.step.CrfCompletionSurveyItem;
+import org.sagebase.crf.step.CrfFormSurveyItem;
 import org.sagebase.crf.step.CrfInstructionSurveyItem;
 import org.sagebase.crf.step.CrfStartTaskSurveyItem;
 
@@ -71,7 +72,7 @@ public class CrfSurveyItemAdapter extends SurveyItemAdapter {
                     .put(CRF_STAIR_STEP_SURVEY_ITEM_TYPE, ActiveStepSurveyItem.class)
                     .put(CRF_COMPLETION_SURVEY_ITEM_TYPE, CrfCompletionSurveyItem.class)
                     .put(CRF_PHOTO_CAPTURE_SURVEY_ITEM_TYPE, CrfInstructionSurveyItem.class)
-                    .put(CRF_FORM_SURVEY_ITEM_TYPE, FormSurveyItem.class)
+                    .put(CRF_FORM_SURVEY_ITEM_TYPE, CrfFormSurveyItem.class)
                     .put(CRF_INTEGER_SURVEY_ITEM_TYPE, IntegerRangeSurveyItem.class)
                     .put(CRF_SINGLE_CHOICE_SURVEY_ITEM_TYPE, ChoiceQuestionSurveyItem.class)
                     .put(CRF_MULTIPLE_CHOICE_SURVEY_ITEM_TYPE, ChoiceQuestionSurveyItem.class)

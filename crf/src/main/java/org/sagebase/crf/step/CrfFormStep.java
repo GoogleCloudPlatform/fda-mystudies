@@ -30,6 +30,21 @@ import java.util.List;
 public class CrfFormStep extends NavigationFormStep {
 
     /**
+     * Text to display as the learn more link
+     */
+    public String learnMoreText;
+
+    /**
+     * Html file to show when user taps learn more link
+     */
+    public String learnMoreFile;
+
+    /**
+     * Title to show on learn more screen
+     */
+    public String learnMoreTitle;
+
+    /**
      * When true, this hides the progress bar
      */
     public boolean hideProgress;

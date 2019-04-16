@@ -45,6 +45,7 @@ import org.sagebase.crf.step.CrfCompletionStep;
 import org.sagebase.crf.step.CrfCompletionSurveyItem;
 import org.sagebase.crf.step.CrfCountdownStep;
 import org.sagebase.crf.step.CrfFormStep;
+import org.sagebase.crf.step.CrfFormSurveyItem;
 import org.sagebase.crf.step.CrfHeartRateCameraStep;
 import org.sagebase.crf.step.CrfInstructionButtonType;
 import org.sagebase.crf.step.CrfInstructionStep;
@@ -133,21 +134,11 @@ public class CrfTaskFactory extends TaskItemFactory {
                                 throw new IllegalStateException("Error in json parsing, crf_heart_rate_camera_step types must be ActiveStepSurveyItem");
                             }
                             return createHeartRateCameraStep((ActiveStepSurveyItem)item);
-//                        case CrfSurveyItemAdapter.CRF_SKIP_INSTRUCTION_TYPE:
-//                            if(!(item instanceof CrfSkipInstructionStepSurveyItem)) {
-//                                throw new IllegalStateException("Error in json parsing, crf_skip_instruction_step types must be CrfSkipInstructionStepSurveyItem");
-//                            }
-//                            return createCrfSkipInstructionStep((CrfSkipInstructionStepSurveyItem) item);
                         case CrfSurveyItemAdapter.CRF_COUNTDOWN_SURVEY_ITEM_TYPE:
                             if (!(item instanceof ActiveStepSurveyItem)) {
                                 throw new IllegalStateException("Error in json parsing, crf_countdown types must be ActiveStepSurveyItem");
                             }
                             return createCrfCountdownStep((ActiveStepSurveyItem)item);
-//                        case CrfSurveyItemAdapter.CRF_12_MIN_WALK_SURVEY_ITEM_TYPE:
-//                            if (!(item instanceof ActiveStepSurveyItem)) {
-//                                throw new IllegalStateException("Error in json parsing, crf_12_min_walk types must be ActiveStepSurveyItem");
-//                            }
-//                            return createCrf12MinWalkStep((ActiveStepSurveyItem)item);
                         case CrfSurveyItemAdapter.CRF_STAIR_STEP_SURVEY_ITEM_TYPE:
                             if (!(item instanceof ActiveStepSurveyItem)) {
                                 throw new IllegalStateException("Error in json parsing, crf_step_layout_stair types must be ActiveStepSurveyItem");
@@ -158,27 +149,11 @@ public class CrfTaskFactory extends TaskItemFactory {
                                 throw new IllegalStateException("Error in json parsing, crf_completion types must be CrfCompletionSurveyItem");
                             }
                             return createCompletionStep((CrfCompletionSurveyItem)item);
-//                        case CrfSurveyItemAdapter.CRF_PHOTO_CAPTURE_SURVEY_ITEM_TYPE:
-//                            if (!(item instanceof CrfInstructionSurveyItem)) {
-//                                throw new IllegalStateException("Error in json parsing, crf_photo_capture types must be CrfPhotoCaptureSurveyItem");
-//                            }
-//                            return createCrfPhotoCaptureStep((CrfInstructionSurveyItem)item);
-//                        case CrfSurveyItemAdapter.CRF_FITBIT_SURVEY_ITEM_TYPE:
-//                            if (!(item instanceof CrfInstructionSurveyItem)) {
-//                                throw new IllegalStateException("crf_fitbit types must be parsed as CrfInstructionSurveyItem");
-//                            }
-//                            return createFitBitStep((CrfInstructionSurveyItem)item);
-//                        case CrfSurveyItemAdapter.CRF_SNAPSHOT_TYPE:
-//                            if(!(item instanceof CrfInstructionSurveyItem)) {
-//                                throw new IllegalStateException("crf snapshot types must be parsed as CrfInstructionSurveyItem");
-//                            }
-//                            return createCrfSnapshotStep((CrfInstructionSurveyItem) item);
                         case CrfSurveyItemAdapter.CRF_FORM_SURVEY_ITEM_TYPE:
-                            if (!(item instanceof FormSurveyItem)) {
+                            if (!(item instanceof CrfFormSurveyItem)) {
                                 throw new IllegalStateException("Error in json parsing, crf_form types must be CrfFormSurveyItem");
                             }
-                            return createCrfFormStep(context, (FormSurveyItem)item);
-//                        case CrfSurveyItemAdapter.CRF_BOOLEAN_SURVEY_ITEM_TYPE:
+                            return createCrfFormStep(context, (CrfFormSurveyItem)item);
                         case CrfSurveyItemAdapter.CRF_INTEGER_SURVEY_ITEM_TYPE:
 //                        case CrfSurveyItemAdapter.CRF_MULTIPLE_CHOICE_SURVEY_ITEM_TYPE:
                         case CrfSurveyItemAdapter.CRF_SINGLE_CHOICE_SURVEY_ITEM_TYPE:
@@ -188,54 +163,19 @@ public class CrfTaskFactory extends TaskItemFactory {
                             // Even though these weren't wrapped in a form step, we are going to wrap
                             // them in a CrfFormStep so that the UI looks appropriate
                             QuestionSurveyItem questionItem = (QuestionSurveyItem)item;
-                            FormSurveyItem FormSurveyItem = new CrfFormSurveyItemWrapper();
+                            CrfFormSurveyItem FormSurveyItem = new CrfFormSurveyItem();
                             FormSurveyItem.identifier = item.identifier + "Form";
                             FormSurveyItem.items = Collections.singletonList(item);
                             FormSurveyItem.skipIdentifier = questionItem.skipIdentifier;
                             FormSurveyItem.skipIfPassed = questionItem.skipIfPassed;
                             FormSurveyItem.expectedAnswer = questionItem.expectedAnswer;
                             return createCrfFormStep(context, FormSurveyItem);
-//                        case CrfSurveyItemAdapter.CRF_SKIP_MC_TYPE:
-//                            if (!(item instanceof QuestionSurveyItem)) {
-//                                throw new IllegalStateException("Error in json parsing " + item.getCustomTypeValue() + ", types must be QuestionSurveyItem");
-//                            }
-//                            // Even though these weren't wrapped in a form step, we are going to wrap
-//                            // them in a CrfFormStep so that the UI looks appropriate
-//                            QuestionSurveyItem questionSurveyItem = (QuestionSurveyItem)item;
-//                            CrfFormSurveyItemWrapper formItem = new CrfFormSurveyItemWrapper();
-//                            formItem.identifier = item.identifier + "Form";
-//                            formItem.items = Collections.singletonList(item);
-//                            formItem.skipIdentifier = questionSurveyItem.skipIdentifier;
-//                            formItem.skipIfPassed = questionSurveyItem.skipIfPassed;
-//                            formItem.expectedAnswer = questionSurveyItem.expectedAnswer;
-//
-//                            return createCrfSkipMCStep(context, formItem);
-//                        case CrfSurveyItemAdapter.HR_PARTICIPANT_ID_SURVEY_ITEM_TYPE:
-//                            if (!(item instanceof TextfieldSurveyItem)) {
-//                                throw new IllegalStateException("Error in json parsing " + item.getCustomTypeValue() + ", types must be TextfieldSurveyItem");
-//                            }
-//                            return createHrParticipantIdStep(context, (TextfieldSurveyItem) item);
                     }
                 }
                 return null;
             }
         });
     }
-
-//    private CrfSnapshotInstructionStep createCrfSnapshotStep(CrfInstructionSurveyItem item) {
-//        CrfSnapshotInstructionStep step = new CrfSnapshotInstructionStep(item.identifier, item.title);
-//        fillCrfInstructionStep(step, item);
-//        if(item.text != null) {
-//            step.instruction = item.text;
-//        }
-//        if(item.identifier != null) {
-//            step.stepIdentifier = item.identifier;
-//        }
-//        if(item.learnMore) {
-//            step.learnMore = item.learnMore;
-//        }
-//        return step;
-//    }
 
     public static class CrfFormSurveyItemWrapper extends FormSurveyItem {
 
@@ -253,13 +193,10 @@ public class CrfTaskFactory extends TaskItemFactory {
     @Override
     public AnswerFormat createCustomAnswerFormat(Context context, QuestionSurveyItem item) {
         switch (item.getCustomTypeValue()) {
-//            case CrfSurveyItemAdapter.CRF_BOOLEAN_SURVEY_ITEM_TYPE:
-//                return createCrfBooleanAnswerFormat(context, item);
             case CrfSurveyItemAdapter.CRF_INTEGER_SURVEY_ITEM_TYPE:
                 return createCrfIntegerAnswerFormat(context, item);
             case CrfSurveyItemAdapter.CRF_MULTIPLE_CHOICE_SURVEY_ITEM_TYPE:
             case CrfSurveyItemAdapter.CRF_SINGLE_CHOICE_SURVEY_ITEM_TYPE:
-            case CrfSurveyItemAdapter.CRF_SKIP_MC_TYPE:
                 return createCrfChoiceAnswerFormat(context, item);
         }
         return super.createCustomAnswerFormat(context, item);
@@ -332,39 +269,7 @@ public class CrfTaskFactory extends TaskItemFactory {
         fillCrfStartTaskStep(step, item);
         return step;
     }
-//
-//    private CrfSkipInstructionStep createCrfSkipInstructionStep(CrfSkipInstructionStepSurveyItem item) {
-//        CrfSkipInstructionStep step = new CrfSkipInstructionStep(item.identifier, item.title);
-//        fillCrfInstructionStep(step, item);
-//        fillCrfSkipStep(step, item);
-//        if(item.instruction != null) {
-//            step.instruction = item.instruction;
-//        }
-//        if(item.identifier != null) {
-//            step.stepIdentifier = item.identifier;
-//        }
-//
-//        return step;
-//    }
-//
-//    private void fillCrfSkipStep(CrfSkipInstructionStep step, CrfSkipInstructionStepSurveyItem item) {
-//        fillCrfInstructionStep(step, item);
-//
-//        if (item.skipIdentifier != null) {
-//            step.skipIdentifier = item.skipIdentifier;
-//        }
-//        /*if (item.previousStepIdentifier != null) {
-//            step.previousStepIdentifier = item.previousStepIdentifier;
-//        }
-//        if (item.nextStepIdentifier != null) {
-//            step.nextStepIdentifier = item.nextStepIdentifier;
-//        }
-//        if (item.cameraStepIdentifier != null) {
-//            step.cameraStepIdentifier = item.cameraStepIdentifier;
-//        }*/
-//
-//    }
-//
+
     private void fillCrfStartTaskStep(CrfStartTaskStep step, CrfStartTaskSurveyItem item) {
         fillCrfInstructionStep(step, item);
         step.remindMeLater = item.remindMeLater;
@@ -392,12 +297,6 @@ public class CrfTaskFactory extends TaskItemFactory {
         fillCrfActiveStep(step, item);
         return step;
     }
-//
-//    private Crf12MinWalkingStep createCrf12MinWalkStep(ActiveStepSurveyItem item) {
-//        Crf12MinWalkingStep step = new Crf12MinWalkingStep(item.identifier);
-//        fillCrfActiveStep(step, item);
-//        return step;
-//    }
 
     private CrfStairStep createCrfStairStep(ActiveStepSurveyItem item) {
         CrfStairStep step = new CrfStairStep(item.identifier);
@@ -430,71 +329,8 @@ public class CrfTaskFactory extends TaskItemFactory {
         }
         return step;
     }
-//
-//    private CrfPhotoCaptureStep createCrfPhotoCaptureStep(CrfInstructionSurveyItem item) {
-//        CrfPhotoCaptureStep step = new CrfPhotoCaptureStep(
-//                item.identifier, item.title, item.text);
-//        fillCrfInstructionStep(step, item);
-//        return step;
-//    }
-//
-//    CrfFitBitStepLayout.CrfFitBitStep createFitBitStep(CrfInstructionSurveyItem item) {
-//        CrfFitBitStepLayout.CrfFitBitStep step = new CrfFitBitStepLayout.CrfFitBitStep(
-//                item.identifier, item.title, item.text);
-//        fillCrfInstructionStep(step, item);
-//        return step;
-//    }
 
-    /**
-     * @param externalID the external ID for the user
-     * @param version the app version string
-     * @param contactInfo the contact info (email) for the study
-     * @return the task for the settings screen
-     */
-//    public void startSettingsScreen(Context context, String externalID, String version, String contactInfo, String dataGroups) {
-//
-//        TaskResult taskResult = new TaskResult(TASK_ID_SETTINGS_SCREEN);
-//        StepResult<StepResult> formResult = new StepResult<>(new Step(RESULT_ID_SETTINGS_SCREEN_FORM));
-//
-//        {   // External ID
-//            StepResult<String> result = new StepResult<>(new Step(RESULT_ID_SETTINGS_SCREEN_EXTERNAL_ID));
-//            result.setResult(externalID);
-//            formResult.setResultForIdentifier(result.getIdentifier(), result);
-//        }
-//
-//        {   // Version
-//            StepResult<String> result = new StepResult<>(new Step(RESULT_ID_SETTINGS_SCREEN_VERSION));
-//            result.setResult(version);
-//            formResult.setResultForIdentifier(result.getIdentifier(), result);
-//        }
-//
-//        {   // Contact Info
-//            StepResult<String> result = new StepResult<>(new Step(RESULT_ID_SETTINGS_SCREEN_CONTACT_INFO));
-//            result.setResult(contactInfo);
-//            formResult.setResultForIdentifier(result.getIdentifier(), result);
-//        }
-//
-//        {   // Data Groups
-//            StepResult<String> result = new StepResult<>(new Step(RESULT_ID_SETTINGS_SCREEN_DATA_GROUPS));
-//            result.setResult(dataGroups);
-//            formResult.setResultForIdentifier(result.getIdentifier(), result);
-//        }
-//
-//        Map<String, StepResult> taskResultMap = new LinkedHashMap<>();
-//        taskResultMap.put(formResult.getIdentifier(), formResult);
-//        taskResult.setResults(taskResultMap);
-//
-//        Task task = createTask(context, CrfResourceManager.SETTINGS_SCREEN_RESOURCE);
-//        context.startActivity(IntentFactory.INSTANCE.newTaskIntent(
-//                context, CrfSettingsActivity.class, task, taskResult));
-//    }
-
-//    private HrParticipantIdStep createHrParticipantIdStep(Context context, TextfieldSurveyItem item) {
-//        HrParticipantIdStep step = new HrParticipantIdStep(item.identifier);
-//        return step;
-//    }
-//
-    private CrfFormStep createCrfFormStep(Context context, FormSurveyItem item) {
+    private CrfFormStep createCrfFormStep(Context context, CrfFormSurveyItem item) {
         if (item.items == null || item.items.isEmpty()) {
             throw new IllegalStateException("compound surveys must have step items to proceed");
         }
@@ -502,35 +338,19 @@ public class CrfTaskFactory extends TaskItemFactory {
         List<QuestionStep> questionSteps = super.formStepCreateQuestionSteps(context, item);
         CrfFormStep step = new CrfFormStep(item.identifier, item.title, item.text, questionSteps);
         fillNavigationFormStep(step, item);
+        if(item.learnMoreText != null) {
+            step.learnMoreText = item.learnMoreText;
+        }
+        if(item.learnMoreFile != null) {
+            step.learnMoreFile = item.learnMoreFile;
+        }
+        if(item.learnMoreTitle != null) {
+            step.learnMoreTitle = item.learnMoreTitle;
+        }
         return step;
     }
-//
-//    private CrfSkipMCStep createCrfSkipMCStep(Context context, CrfFormSurveyItemWrapper item) {
-//        if (item.items == null || item.items.isEmpty()) {
-//            throw new IllegalStateException("compound surveys must have step items to proceed");
-//        }
-//        List<QuestionStep> questionSteps = super.formStepCreateQuestionSteps(context, item);
-//
-//        CrfSkipMCStep step = new CrfSkipMCStep(item.identifier, item.title, item.text, questionSteps);
-//        fillNavigationFormStep(step, item);
-//
-//        if (item.skipIdentifier != null) {
-//            step.skipIdentifier = item.skipIdentifier;
-//        }
-//        step.hideProgress = true;
-//
-//        return step;
-//    }
-//
-//    public CrfBooleanAnswerFormat createCrfBooleanAnswerFormat(Context context, QuestionSurveyItem item) {
-//        if (!(item instanceof BooleanQuestionSurveyItem)) {
-//            throw new IllegalStateException("Error in json parsing, QUESTION_BOOLEAN types must be BooleanQuestionSurveyItem");
-//        }
-//        CrfBooleanAnswerFormat format = new CrfBooleanAnswerFormat();
-//        fillBooleanAnswerFormat(context, format, (BooleanQuestionSurveyItem)item);
-//        return format;
-//    }
-//
+
+
     public CrfIntegerAnswerFormat createCrfIntegerAnswerFormat(Context context, QuestionSurveyItem item) {
         if (!(item instanceof IntegerRangeSurveyItem)) {
             throw new IllegalStateException("Error in json parsing, QUESTION_INTEGER types must be IntegerRangeSurveyItem");

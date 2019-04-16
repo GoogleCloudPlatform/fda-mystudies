@@ -18,6 +18,8 @@
 package org.sagebase.crf.step;
 
 import android.content.Context;
+import android.content.Intent;
+import android.graphics.Paint;
 import android.support.annotation.LayoutRes;
 import android.util.AttributeSet;
 import android.view.View;
@@ -42,6 +44,7 @@ public class CrfFormStepLayout extends FormStepLayout implements CrfTaskToolbarP
     protected Button crfBackButton;
     protected Button crfNextButton;
     protected Button crfSkipButton;
+    protected Button learnMore;
     protected Toolbar toolbar;
     private TextView crfStepProgressTextview;
 
@@ -79,7 +82,17 @@ public class CrfFormStepLayout extends FormStepLayout implements CrfTaskToolbarP
         crfSkipButton = findViewById(R.id.crf_submit_bar_skip);
         crfSkipButton.setOnClickListener(this::onSkipButtonClicked);
 
-
+        learnMore = findViewById(R.id.learn_more);
+        if (learnMore != null) {
+            if (crfFormStep.learnMoreText != null && crfFormStep.learnMoreFile != null) {
+                learnMore.setVisibility(View.VISIBLE);
+                learnMore.setPaintFlags(learnMore.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
+                learnMore.setText(crfFormStep.learnMoreText);
+                learnMore.setOnClickListener(view -> onLearnMoreButtonClicked());
+            } else {
+                learnMore.setVisibility(View.GONE);
+            }
+        }
     }
 
     protected void validateAndSetCrfFormStep(Step step) {
@@ -87,6 +100,13 @@ public class CrfFormStepLayout extends FormStepLayout implements CrfTaskToolbarP
             throw new IllegalStateException("CrfFormStepLayout only works with CrfFormStep");
         }
         this.crfFormStep = (CrfFormStep) step;
+    }
+
+    private void onLearnMoreButtonClicked() {
+        Intent i = new Intent(getContext(), CrfTrainingInfo.class);
+        i.putExtra(CrfTrainingInfoKt.EXTRA_HTML_FILENAME, crfFormStep.learnMoreFile);
+        i.putExtra(CrfTrainingInfoKt.EXTRA_TITLE, crfFormStep.learnMoreTitle);
+        getContext().startActivity(i);
     }
 
     protected void onBackButtonClicked(View v) {
