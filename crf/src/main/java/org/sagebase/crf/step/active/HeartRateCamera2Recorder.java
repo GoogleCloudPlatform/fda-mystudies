@@ -276,7 +276,9 @@ public class HeartRateCamera2Recorder extends Recorder {
         heartBeatJsonWriter.stop();
         subscriptions.unsubscribe();
 
-        if (mediaRecorderFile.exists()) {
+        //Check that the video file exists and has data before adding to results.
+        if (mediaRecorderFile.exists() && mediaRecorderFile.length() > 128) {
+            long length = mediaRecorderFile.length();
             FileResult fileResult = new FileResult(fileResultIdentifier(), mediaRecorderFile, MP4_CONTENT_TYPE);
             fileResult.setStartDate(startTime.toDate());
             fileResult.setEndDate(new Date());
