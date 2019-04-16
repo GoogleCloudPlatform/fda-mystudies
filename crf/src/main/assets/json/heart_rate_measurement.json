@@ -1,6 +1,6 @@
 {
-  "taskIdentifier" : "HeartRate Measurement",
-  "schemaIdentifier" : "HeartRate Measurement",
+  "taskIdentifier" : "Heart Rate Measurement",
+  "schemaIdentifier" : "Heart Rate Measurement",
   "optional" : false,
   "taskSteps" : [
     {

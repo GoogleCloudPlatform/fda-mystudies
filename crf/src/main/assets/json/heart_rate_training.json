@@ -1,6 +1,6 @@
 {
-  "taskIdentifier" : "HeartRate Training",
-  "schemaIdentifier" : "HeartRate Training",
+  "taskIdentifier" : "Heart Rate Training",
+  "schemaIdentifier" : "Heart Rate Training",
   "optional" : false,
   "taskSteps" : [
     {
@@ -13,7 +13,7 @@
       "hideProgress"  : "true",
       "learnMoreText"  : "Learn how and why",
       "learnMoreFile"  : "crf_heart_rate_training.html",
-      "learnMoreTitle" : "About the Heart Snapshot"
+      "learnMoreTitle" : "About Heart Snapshot"
     },
     {
       "identifier" : "turn_on_camera",
