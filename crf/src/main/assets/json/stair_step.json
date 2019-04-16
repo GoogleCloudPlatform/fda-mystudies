@@ -12,7 +12,7 @@
       "iconImage"        : "crf_step_icon",
       "scaleType"        : "CENTER_CROP",
       "buttonText"       : "Measure",
-      "remindMeLater"    : true
+      "remindMeLater"    : false
     },
     {
       "identifier"       : "instructionHeartRisk",

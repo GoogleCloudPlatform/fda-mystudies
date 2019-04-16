@@ -13,7 +13,7 @@
       "scaleType"        : "CENTER_CROP",
       "buttonText"       : "Measure",
       "infoHtmlFilename" : "crf_stair_step_info",
-      "remindMeLater"    : true
+      "remindMeLater"    : false
     },
     {
       "identifier" : "sit_relax",
