@@ -144,7 +144,7 @@
       "text"             : "Recovery HR Score",
       "detailText"       : "Changing your Recovery HR can take time. You can change it over weeks or months by losing weight or exercising.",
       "learnMoreText"    : "What is a Recovery HR Score?",
-      "learnMoreFile"    : "crf_normal_resting_hr.html",
+      "learnMoreFile"    : "crf_recovery_hr.html",
       "learnMoreTitle"   : "What is a Recovery HR Score?",
       "valueResultId"    : "completion_bpm_result",
       "buttonText"       : "Done",
