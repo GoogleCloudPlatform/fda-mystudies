@@ -10,6 +10,7 @@
       "detailText"       : "You will be stepping up and down a step for 3 minutes to raise your heart rate. Right after you finish stepping, measure your heart rate for 1 minute to see how your heart rate recovers.",
       "image"            : "crf_stair_step",
       "iconImage"        : "crf_step_icon",
+      "iconText"         : "STEP",
       "scaleType"        : "CENTER_CROP",
       "buttonText"       : "Measure",
       "remindMeLater"    : false
@@ -55,7 +56,7 @@
               "value": "Female"
             },
             {
-              "text": "Other",
+              "text": "Other, or prefer not to answer",
               "value": "Other"
             }
           ]

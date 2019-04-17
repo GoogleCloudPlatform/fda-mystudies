@@ -90,6 +90,14 @@
             android:scaleType="centerInside"
             android:gravity="center"
             />
+        <TextView
+            android:id="@+id/crf_needs_icon_text"
+            style="@style/TextAppearance.Crf.Body"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_margin="16dp"
+            android:gravity="center_horizontal"/>
 
     </LinearLayout>
 

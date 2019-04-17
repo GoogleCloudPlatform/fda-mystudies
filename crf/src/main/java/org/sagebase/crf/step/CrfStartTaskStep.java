@@ -40,6 +40,11 @@ public class CrfStartTaskStep extends CrfInstructionStep {
      */
     public String textColorRes;
 
+    /**
+     * Text to display under the icon
+     */
+    public String iconText;
+
     /* Default constructor needed for serialization/deserialization of object */
     public CrfStartTaskStep() {
         super();

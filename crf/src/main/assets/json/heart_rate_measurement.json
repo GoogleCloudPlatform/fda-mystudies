@@ -10,6 +10,7 @@
       "detailText"       : "Your heart rate while you are at rest is a marker of your health. The more relaxed you are, the better. Let’s measure your resting heart rate.",
       "image"            : "crf_seated_cropped",
       "iconImage"        : "icon_comfortable_place_to_sit",
+      "iconText"         : "COMFORTABLE PLACE TO SIT",
       "scaleType"        : "CENTER_CROP",
       "buttonText"       : "Measure",
       "infoHtmlFilename" : "crf_stair_step_info",
@@ -25,7 +26,7 @@
       "hideProgress"  : "true",
       "learnMoreText"  : "When to measure",
       "learnMoreFile"  : "crf_when_measure_resting_hr.html",
-      "learnMoreTitle" : "When to measure your resting heart rate"
+      "learnMoreTitle" : "When to measure"
     },
     {
       "identifier" : "cover_camera",

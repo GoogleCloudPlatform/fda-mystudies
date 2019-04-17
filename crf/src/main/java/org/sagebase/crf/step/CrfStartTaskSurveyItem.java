@@ -36,4 +36,10 @@ public class CrfStartTaskSurveyItem extends CrfInstructionSurveyItem {
      */
     @SerializedName("textColor")
     public String textColorRes;
+
+    /**
+     * Text to display under the icon
+     */
+    @SerializedName("iconText")
+    public String iconText;
 }

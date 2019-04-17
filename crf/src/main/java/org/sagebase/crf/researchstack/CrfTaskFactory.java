@@ -279,6 +279,9 @@ public class CrfTaskFactory extends TaskItemFactory {
         if (item.textColorRes != null) {
             step.textColorRes = item.textColorRes;
         }
+        if (item.iconText != null) {
+            step.iconText = item.iconText;
+        }
     }
 
     private CrfHeartRateCameraStep createHeartRateCameraStep(ActiveStepSurveyItem item) {

@@ -26,6 +26,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import org.researchstack.backbone.ResourceManager;
 import org.researchstack.backbone.factory.IntentFactory;
@@ -62,6 +63,7 @@ public class CrfStartTaskStepLayout extends CrfInstructionStepLayout implements
     private CrfStartTaskStep crfStartTaskStep;
     protected Button remindMeLaterButton;
     protected ImageView imageIcon;
+    private TextView iconTextView;
 
     public CrfStartTaskStepLayout(Context context) {
         super(context);
@@ -102,6 +104,7 @@ public class CrfStartTaskStepLayout extends CrfInstructionStepLayout implements
         super.connectStepUi(titleRId, textRId, imageRId, detailRId);
         remindMeLaterButton = findViewById(R.id.remind_me_later);
         imageIcon = findViewById(R.id.crf_needs_icon);
+        iconTextView = findViewById(R.id.crf_needs_icon_text);
     }
 
     @Override
@@ -133,6 +136,12 @@ public class CrfStartTaskStepLayout extends CrfInstructionStepLayout implements
                 imageIcon.setImageResource(drawableInt);
 
             }
+        }
+        if (crfStartTaskStep.iconText != null) {
+            iconTextView.setVisibility(View.VISIBLE);
+            iconTextView.setText(crfStartTaskStep.iconText);
+        } else {
+            iconTextView.setVisibility(View.GONE);
         }
     }
 
