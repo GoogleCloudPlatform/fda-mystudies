@@ -1,90 +1,27 @@
+<!--
+  ~    Copyright 2019 Sage Bionetworks
+  ~
+  ~    Licensed under the Apache License, Version 2.0 (the "License");
+  ~    you may not use this file except in compliance with the License.
+  ~    You may obtain a copy of the License at
+  ~
+  ~        http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~    Unless required by applicable law or agreed to in writing, software
+  ~    distributed under the License is distributed on an "AS IS" BASIS,
+  ~    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~    See the License for the specific language governing permissions and
+  ~    limitations under the License.
+  ~
+  -->
+
 <resources>
-    <string name="osb_study_id">crf-module</string>
-    <string name="osb_study_name">CRF Module</string>
+    <string name="app_name">CRF Sample App</string>
+    <string name="large_text">
+        "Material is the metaphor.\n\n"
 
-    <string name="app_name">Cardiorespiratory Fitness</string>
+
+    </string>
     <string name="action_settings">Settings</string>
-
-    <!-- Overview Screen -->
-    <string name="crf_overview_title">Welcome to the CRF Module</string>
-    <string name="crf_overview_text">Let’s start the study</string>
-    <string name="crf_overview_detail_text">Help us learn and test a new digital tool for Cardiorespiratory fitness by completing 2 clinic visits and doing several runs and stairs steps.</string>
-    <string name="crf_lets_go">Let\’s go!</string>
-    <string name="learn_how"><u>Learn how and why</u></string>
-
-    <string name="task_initial_toolbar_title">task_initial_toolbar_title</string>
-
-    <string name="onboarding_sign_in">Sign In</string>
-    <string name="join_study">Join Study</string>
-
-    <string name="rsb_share_the_app_message">
-        Please take a look at Parkinson Crf, a research study app about Parkinson Disease.
-        Download it for Android at https://play.google.com/store/apps/details?id=org.sagebase.Crf</string>
-    <string name="rsb_share_app_url">https://play.google.com/store/apps/details?id=org.sagebase.Crf</string>
-
-    <!-- Active Task Screen -->
-    <string name="crf_step_progress">Step %1$s of %2$s</string>
-
-    <!-- Permissions -->
-    <string name="permission_camera_title">Camera</string>
-    <string name="permission_camera_desc">The app needs camera permissions to calculate heart rate.</string>
-
-    <!-- Activity Screen -->
-    <string name="crf_today">Today</string>
-    <string name="crf_clinic_fitness_test">clinic fitness test</string>
-    <string name="crf_clinic_message">Clinic tests will provide data that scientists use to assess the accuracy of digital versions.  This may help future generations in receiving better tools.</string>
-    <string name="crf_start_message">Complete the surveys and the clinic cardiovascular test.</string>
-    <string name="crf_start_footer_title">Start by</string>
-    <string name="crf_start_footer_message">completing a short demographic and health survey, and then your first clinic test.</string>
-
-    <!-- Start Task Step -->
-    <string name="crf_remind_me_later"><u>Remind me later</u></string>
-
-    <!-- Heartrate Task -->
-    <string name="crf_bpm">bpm</string>
-    <string name="crf_bpm_caps">BPM</string>
-    <string name="crf_camera_cover">Gently cover both the camera and flash with your finger.</string>
-    <string name="crf_your_heart_rate_is">Your heart rate is</string>
-    <string name="crf_redo_measurement"><u>Redo Measurement</u></string>
-    <string name="crf_finish_measurement">Finish Measurement</string>
-    <string name="crf_hand_to_researcher">Please hand the phone to the researcher</string>
-
-    <!-- Countdown Task -->
-    <string name="crf_underlined_pause"><u>Pause</u></string>
-    <string name="crf_underlined_resume"><u>Resume</u></string>
-
-    <!-- 12 Min Walk Task -->
-    <string name="crf_feet">FEET</string>
-
-    <!-- Stair Step Task -->
-    <string name="crf_stand_still">Stand still</string>
-    <string name="crf_up">Up</string>
-    <string name="crf_down">Down</string>
-    <string name="crf_spoken_doing_well">You are doing well; 2 minutes left.</string>
-    <string name="crf_spoken_good_job">Good job; 1 minute left.</string>
-    <string name="crf_spoken_almost_done">10 seconds; Almost done!</string>
-    <string name="crf_spoken_done">Done! Now measure your heart rate again.</string>
-
-    <!-- Data Groups Screen -->
-    <string name="crf_data_groups_loading_title">Checking for existing groups</string>
-
-    <!-- External ID Screen -->
-    <string name="crf_external_id_title">Enter your participant code</string>
-    <string name="crf_external_id_hint">Participant code</string>
-    <string name="crf_external_empty"> </string>
-
-    <!-- Participant ID Screen -->
-    <string name="hr_participant_id_title">Enter participant ID</string>
-    <string name="hr_participant">Participant Id</string>
-    <string name="hr_participant_empty"> </string>
-    <string name="crf_pressure">Gently place your finger on the camera and flashlight.</string>
-    <string name="crf_done_underline"><u>Done</u></string>
-    <string name="crf_done">Done</string>
-    <string name="crf_move_finger_back">Please move your finger back over the flash and camera</string>
-    <string name="crf_heart_rate_calculated">Your heart rate has been calculated.</string>
-    <string name="crf_oops">Oops!</string>
-    <string name="redo"><u>Redo</u></string>
-    <string name="crf_practice_makes_perfect">Practice makes perfect</string>
-    <string name="crf_cover_for_later_tests">This is to make sure you can cover your flash and camera quickly for later tests.</string>
-
+    <string name="begin">Begin</string>
 </resources>

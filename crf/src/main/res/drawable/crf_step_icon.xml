@@ -1,0 +1,32 @@
+<!--
+  ~    Copyright 2019 Sage Bionetworks
+  ~
+  ~    Licensed under the Apache License, Version 2.0 (the "License");
+  ~    you may not use this file except in compliance with the License.
+  ~    You may obtain a copy of the License at
+  ~
+  ~        http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~    Unless required by applicable law or agreed to in writing, software
+  ~    distributed under the License is distributed on an "AS IS" BASIS,
+  ~    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~    See the License for the specific language governing permissions and
+  ~    limitations under the License.
+  ~
+  -->
+
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="67dp"
+    android:height="67dp"
+    android:viewportWidth="67"
+    android:viewportHeight="67">
+  <path
+      android:pathData="M33.5,67C52.0015,67 67,52.0015 67,33.5C67,14.9985 52.0015,0 33.5,0C14.9985,0 0,14.9985 0,33.5C0,52.0015 14.9985,67 33.5,67Z"
+      android:fillColor="#FCCB6F"/>
+  <path
+      android:pathData="M28.1026,22.6836L23.6612,18.2589C23.2595,17.8996 22.6462,17.9162 22.2647,18.2967C21.8831,18.6772 21.8665,19.2888 22.2268,19.6893L24.9342,22.3891H14.0622C13.6886,22.372 13.3359,22.561 13.1439,22.8811C12.952,23.2012 12.952,23.6006 13.1439,23.9207C13.3359,24.2408 13.6886,24.4299 14.0622,24.4128H24.9342L22.2268,27.1126C21.9469,27.363 21.8286,27.7471 21.9193,28.111C22.0101,28.4749 22.295,28.7591 22.66,28.8496C23.0249,28.9401 23.4101,28.8221 23.6612,28.543L28.1026,24.114C28.293,23.9244 28.4,23.6671 28.4,23.3988C28.4,23.1305 28.293,22.8732 28.1026,22.6836Z"
+      android:fillColor="#5171C0"/>
+  <path
+      android:pathData="M54.9982,23.2715H42.4389V31.6229H29.8776V39.9722H17.3184V48.3215H54.9982V23.2715Z"
+      android:fillColor="#6D7078"/>
+</vector>

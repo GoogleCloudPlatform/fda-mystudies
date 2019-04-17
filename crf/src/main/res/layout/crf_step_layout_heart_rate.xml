@@ -1,0 +1,335 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~    Copyright 2017 Sage Bionetworks
+  ~
+  ~    Licensed under the Apache License, Version 2.0 (the "License");
+  ~    you may not use this file except in compliance with the License.
+  ~    You may obtain a copy of the License at
+  ~
+  ~        http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~    Unless required by applicable law or agreed to in writing, software
+  ~    distributed under the License is distributed on an "AS IS" BASIS,
+  ~    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~    See the License for the specific language governing permissions and
+  ~    limitations under the License.
+  ~
+  -->
+
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/crf_root_instruction_layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/colorPrimary">
+
+    <RelativeLayout
+        android:id="@+id/exit_button_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/colorPrimary"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        >
+        <ImageButton
+            android:id="@+id/x_button"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:background="@null"
+            android:clickable="true"
+            android:focusable="true"
+            android:onClick="goBackClicked"
+            android:layout_margin="@dimen/activity_horizontal_margin"
+            />
+    </RelativeLayout>
+
+    <ImageView
+        android:id="@+id/crf_completion_icon"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:layout_gravity="center"
+        android:src="@drawable/crf_completed_icon"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="20dp"
+        android:visibility="gone"/>
+
+    <android.support.constraint.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/crf_text_container"
+        android:layout_below="@+id/exit_button_container"
+        >
+
+        <TextView
+            android:id="@+id/crf_oops"
+            style="@style/TextAppearance.Crf.Heading1.Primary"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_marginLeft="@dimen/rsb_padding_large"
+            android:layout_marginRight="@dimen/rsb_padding_large"
+            android:layout_marginBottom="@dimen/rsb_padding_large"
+            android:gravity="center_horizontal"
+            android:text="@string/crf_oops"
+            android:textAlignment="center"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toTopOf="@+id/crf_heart_rate_title"
+            />
+
+        <TextView
+            style="@style/TextAppearance.Crf.Heading2.Primary"
+            android:id="@+id/crf_heart_rate_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignTop="@+id/crf_oops"
+            android:layout_centerHorizontal="true"
+            android:textAlignment="center"
+            android:layout_marginLeft="@dimen/rsb_padding_medium"
+            android:layout_marginRight="@dimen/rsb_padding_medium"
+            app:layout_constraintTop_toBottomOf="@id/crf_oops"
+            app:layout_constraintBottom_toTopOf="@id/crf_calculate"/>
+
+        <TextView
+            android:id="@+id/crf_calculate"
+            style="@style/TextAppearance.Crf.Body.Primary"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignTop="@+id/crf_heart_rate_title"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="10dp"
+            android:layout_marginLeft="@dimen/rsb_padding_large"
+            android:layout_marginRight="@dimen/rsb_padding_large"
+            android:layout_marginBottom="@dimen/rsb_padding_large"
+            android:text="@string/crf_heart_rate_calculated"
+            android:textAlignment="center"
+            android:clickable="true"
+            android:focusable="true"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/crf_heart_rate_title"
+            tools:layout_editor_absoluteX="24dp" />
+    </android.support.constraint.ConstraintLayout>
+
+    <TextView
+        android:id="@+id/crf_your_hr_is"
+        style="@style/TextAppearance.Crf.SubHeader"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="10dp"
+        android:paddingTop="10dp"
+        android:layout_marginLeft="@dimen/rsb_padding_large"
+        android:layout_marginRight="@dimen/rsb_padding_large"
+        android:layout_marginBottom="@dimen/rsb_padding_large"
+        android:layout_below="@+id/crf_completion_icon"
+        android:text="@string/crf_your_heart_rate_is"
+        android:textAlignment="center"
+        android:textColor="@color/textColor"
+        android:visibility="gone"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:orientation="vertical"
+        android:layout_below="@+id/crf_your_hr_is">
+
+        <TextView
+            android:id="@+id/crf_final_bpm"
+            style="@style/TextAppearance.Crf.BpmNumber"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textAlignment="center"
+            android:visibility="gone" />
+
+        <TextView
+            style="@style/TextAppearance.Crf.Heading2"
+            android:id="@+id/crf_bpm_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/crf_bpm_caps"
+            android:layout_gravity="center"
+            android:visibility="gone"/>
+
+    </LinearLayout>
+
+
+    <FrameLayout
+        android:id="@+id/crf_heart_container"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/crf_text_container"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true">
+
+        <FrameLayout
+            android:layout_width="@dimen/crf_video_preview"
+            android:layout_height="@dimen/crf_video_preview">
+            <TextureView
+                android:id="@+id/crf_camera_texture_view"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"/>
+
+            <org.sagebase.crf.step.OverlayWithHole
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"/>
+
+        </FrameLayout>
+
+        <org.sagebase.crf.camera.CameraSourcePreview
+            android:id="@+id/crf_camera_source"
+            android:layout_width="300dp"
+            android:layout_height="300dp"
+            android:layout_gravity="center" />
+
+        <!-- This View's width and height must be set dynamically based on the camera preview size -->
+        <FrameLayout
+            android:id="@+id/crf_arc_drawable_container"
+            android:layout_width="@dimen/crf_video_preview"
+            android:layout_height="@dimen/crf_video_preview"
+            android:layout_gravity="center"
+            android:visibility="gone"
+            android:background="@null">
+
+            <View
+                android:id="@+id/crf_arc_drawable"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/white"/>
+
+        </FrameLayout>
+
+        <ImageView
+            android:id="@+id/crf_error_icon_view"
+            android:layout_width="100dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:src="@drawable/crf_health_risk_icon"
+            android:visibility="gone"/>
+
+        <LinearLayout
+            android:id="@+id/crf_bpm_text_container"
+            android:layout_width="200dp"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_gravity="center"
+            android:visibility="gone">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:orientation="vertical">
+
+                <TextView
+                    style="@style/TextAppearance.Crf.BpmNumber"
+                    android:id="@+id/crf_heart_rate_number"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:paddingTop="4dp"/>
+
+                <TextView
+                    style="@style/TextAppearance.Crf.ActiveStatusText"
+                    android:id="@+id/crf_heart_rate_bpm"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/crf_bpm"
+                    android:layout_gravity="center"
+                    android:padding="@dimen/rsb_padding_small"/>
+
+            </LinearLayout>
+
+
+        </LinearLayout>
+
+
+        <ImageView
+            android:id="@+id/crf_heart_icon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:src="@drawable/crf_heart_icon"
+            android:visibility="gone"/>
+
+    </FrameLayout>
+    <TextView
+        android:id="@+id/crf_current_bpm"
+        style="@style/TextAppearance.Crf.Capturing"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_below="@id/crf_heart_container"
+        android:layout_centerHorizontal="true"
+        android:text="@string/crf_capturing"
+        android:padding="@dimen/rsb_padding_medium"
+        android:layout_marginTop="60dp"/>
+
+    <android.support.constraint.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:padding="@dimen/rsb_padding_large"
+        android:id="@+id/crf_next_button_container">
+
+        <TextView
+            style="@style/TextAppearance.Crf.SubHeader"
+            android:id="@+id/crf_practice"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/crf_practice_makes_perfect"
+            android:layout_gravity="center"
+            android:textColor="@color/rsb_black"
+            android:layout_marginLeft="@dimen/rsb_padding_large"
+            android:layout_marginRight="@dimen/rsb_padding_large"
+            android:paddingBottom="40dp"
+            android:visibility="gone"
+            app:layout_constraintTop_toTopOf="parent"
+            />
+
+        <TextView
+            style="style/TextAppearance.Crf.Small"
+            android:id="@+id/crf_later_tests"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/crf_cover_for_later_tests"
+            android:layout_gravity="center"
+            android:textColor="@color/rsb_black"
+            android:layout_marginLeft="@dimen/rsb_padding_large"
+            android:layout_marginRight="@dimen/rsb_padding_large"
+            android:paddingBottom="20dp"
+            android:visibility="gone"
+            app:layout_constraintTop_toBottomOf="@+id/crf_practice"/>
+
+        <Button
+            style="@style/Crf.RoundedCornerMaterialButton.White"
+            android:id="@+id/button_go_forward"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/crf_rounded_button_height"
+            android:layout_margin="@dimen/crf_activity_icon_margin"
+            android:focusable="true"
+            android:layout_gravity="center"
+            android:text="@string/rsb_BUTTON_NEXT"
+            android:textAllCaps="false"
+            android:visibility="gone"
+            app:layout_constraintTop_toBottomOf="@+id/crf_later_tests"/>
+
+        <Button
+            android:id="@+id/crf_redo_button"
+            android:layout_width="match_parent"
+            android:textColor="@color/textColor"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_below="@+id/button_go_forward"
+            android:gravity="center"
+            android:textAllCaps="false"
+            android:text="@string/crf_redo_underline"
+            android:visibility="gone"
+            android:background="@android:color/transparent"
+            app:layout_constraintTop_toBottomOf="@+id/button_go_forward"
+            />
+
+    </android.support.constraint.ConstraintLayout>
+
+</RelativeLayout>

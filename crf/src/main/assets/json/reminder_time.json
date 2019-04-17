@@ -1,0 +1,19 @@
+{
+  "taskIdentifier" : "reminder_time",
+  "schemaIdentifier" : "reminder_time",
+  "optional" : false,
+  "steps" : [
+    {
+      "identifier": "reminder_time_form",
+      "type": "crf_form",
+      "hideBackbutton": "true",
+      "items": [
+        {
+          "identifier": "reminder_time",
+          "type": "timePicker",
+          "title": "What time of day would you like your reminders?"
+        }
+      ]
+    }
+  ]
+}

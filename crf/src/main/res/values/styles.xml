@@ -1,0 +1,187 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="Widget.Crf.IconTabLayout" parent="@style/Widget.Backbone.IconTabLayout">
+        <item name="tabIconColor">@android:color/white</item>
+        <item name="tabIconIndicatorColor">@color/rsb_error</item>
+        <item name="tabTextColor">@color/tab_text_color</item>
+    </style>
+
+    <style name="Widget.Crf.SubmitBar" parent="@style/Widget.Backbone.SubmitBar">
+        <item name="positiveActionTitle">@string/rsb_BUTTON_NEXT</item>
+        <item name="positiveActionColor">@color/white</item>
+        <item name="negativeActionColor">@color/azure</item>
+    </style>
+
+    <style name="Base.Widget.Crf.Toolbar" parent="@style/Widget.AppCompat.Toolbar">
+        <item name="android:background">?attr/colorPrimary</item>
+        <item name="android:minHeight">56dp</item>
+        <item name="titleTextAppearance">@style/TextAppearance.Widget.Crf.Toolbar.Title</item>
+    </style>
+
+    <style name="Widget.Crf.Toolbar" parent="@style/Base.Widget.Crf.Toolbar">
+        <item name="android:foreground">?android:windowContentOverlay</item>
+    </style>
+
+    <style name="Widget.Crf.Toolbar.Transparent" parent="@style/Base.Widget.Crf.Toolbar">
+        <item name="titleTextAppearance">
+            @style/TextAppearance.Widget.Crf.Toolbar.Title.Transparent
+        </item>
+    </style>
+
+    <style name="Widget.Crf.ActionButton.Overflow" parent="@style/Widget.AppCompat.ActionButton.Overflow">
+        <item name="colorControlNormal">@android:color/white</item>
+    </style>
+    <style name="Widget.Crf.EmptyView" parent="@style/Widget.Backbone.EmptyView">
+        <item name="android:background">@android:color/white</item>
+    </style>
+
+    <style name="TextAppearance.Widget.Crf.Toolbar.Title" parent="@style/TextAppearance.Widget.AppCompat.Toolbar.Title">
+        <item name="android:textColor">@android:color/white</item>
+        <item name="android:textSize">20sp</item>
+    </style>
+
+    <style name="TextAppearance.Widget.Crf.Toolbar.Title.Transparent">
+        <item name="android:textColor">@color/rsb_warm_gray</item>
+    </style>
+
+    <style name="Crf.RoundedCornerMaterialButton.Secondary" parent="Widget.AppCompat.Button.Colored">
+        <item name="android:background">@drawable/crf_rounded_button_secondary_color</item>
+        <item name="android:textColor">@color/textColorSecondary</item>
+        <item name="android:textAllCaps">false</item>
+    </style>
+
+    <style name="Crf.RoundedCornerMaterialButton.White" parent="Widget.AppCompat.Button.Colored">
+        <item name="android:background">@drawable/crf_rounded_button_white</item>
+        <item name="android:textColor">@color/textColor</item>
+        <item name="android:textAllCaps">false</item>
+    </style>
+
+
+    <style name="TextAppearance"/>
+    <style name="TextAppearance.Crf"/>
+    <style name="TextAppearance.Crf.Body">
+        <item name="android:textSize">18sp</item>
+        <item name="android:textColor">@color/textColor</item>
+        <item name="android:fontFamily">@font/opensans</item>
+    </style>
+    <style name="TextAppearance.Crf.Body.Primary">
+        <item name="android:textColor">@color/textColorPrimary</item>
+    </style>
+
+    <style name="TextAppearance.Crf.SubHeader">
+        <item name="android:textSize">22sp</item>
+        <item name="android:textColor">@color/textColor</item>
+        <item name="android:fontFamily">@font/opensans_semibold</item>
+    </style>
+    <style name="TextAppearance.Crf.IntroBody">
+        <item name="android:textSize">18sp</item>
+        <item name="android:fontFamily">@font/opensans</item>
+    </style>
+    <!--Heading 1-->
+    <style name="TextAppearance.Crf.Heading1">
+        <item name="android:textSize">30sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">@color/textColor</item>
+        <item name="android:fontFamily">@font/opensans</item>
+    </style>
+    <!--Heading 1 - textColorPrimary -->
+    <style name="TextAppearance.Crf.Heading1.Primary">
+        <item name="android:textColor">@color/textColorPrimary</item>
+    </style>
+    <!--Heading 2-->
+    <style name="TextAppearance.Crf.Heading2">
+        <item name="android:textSize">24sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">@color/textColor</item>
+        <item name="android:fontFamily">@font/opensans</item>
+    </style>
+    <!--Heading 2 - textColorPrimary-->
+    <style name="TextAppearance.Crf.Heading2.Primary">
+        <item name="android:textSize">24sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">@color/textColorPrimary</item>
+        <item name="android:fontFamily">@font/opensans</item>
+    </style>
+    <style name="TextAppearance.Crf.Body.Italic">
+        <item name="android:textStyle">italic</item>
+    </style>
+    <style name="TextAppearance.Crf.Body.Bold">
+        <item name="android:textStyle">bold</item>
+    </style>
+    <style name="TextAppearance.Crf.Small">
+        <item name="android:textSize">15sp</item>
+        <item name="android:fontFamily">@font/opensans</item>
+    </style>
+
+    <style name="TextAppearance.Crf.StartTaskSubHeader">
+        <item name="android:textSize">17sp</item>
+        <item name="android:textStyle">italic</item>
+        <item name="android:fontFamily">@font/opensans</item>
+    </style>
+
+    <!-- Heart Rate Screen -->
+    <style name="TextAppearance.Crf.BpmNumber">
+        <item name="android:textSize">80sp</item>
+        <item name="android:textColor">@color/textColor</item>
+        <item name="android:fontFamily">@font/opensans_light</item>
+    </style>
+    <style name="TextAppearance.Crf.Capturing">
+        <item name="android:textSize">40sp</item>
+        <item name="android:textColor">@color/textColorPrimary</item>
+        <item name="android:fontFamily">@font/opensans_light</item>
+    </style>
+    <style name="TextAppearance.Crf.ActiveStatusNumber">
+        <item name="android:textSize">82sp</item>
+        <item name="android:fontFamily">@font/opensans</item>
+    </style>
+    <style name="TextAppearance.Crf.ActiveStatusText">
+        <item name="android:textSize">24sp</item>
+        <item name="android:textColor">@color/textColor</item>
+        <item name="android:fontFamily">@font/opensans_light</item>
+    </style>
+
+    <style name="TextAppearance.Crf.InstructionCustomButtonText">
+        <item name="android:textSize">12sp</item>
+        <item name="android:fontFamily">@font/opensans_light</item>
+    </style>
+
+    <!-- Countdown Screen -->
+    <style name="TextAppearance.Crf.Countdown">
+        <item name="android:textSize">130sp</item>
+        <item name="android:fontFamily">@font/opensans_light</item>
+    </style>
+
+    <!-- Stair Step Screen -->
+    <style name="TextAppearance.Crf.StairStep">
+        <item name="android:textSize">60sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:fontFamily">@font/opensans</item>
+    </style>
+
+    <!-- Active Task Screen -->
+    <style name="TextAppearance.Crf.ActiveTaskStepProgress">
+        <item name="android:textSize">14sp</item>
+        <item name="android:fontFamily">@font/opensans</item>
+    </style>
+
+    <!-- Completion Step Screen -->
+    <style name="TextAppearance.Crf.CompletionHeader">
+        <item name="android:textSize">22sp</item>
+        <item name="android:fontFamily">@font/opensans_bold</item>
+    </style>
+    <style name="TextAppearance.Crf.CompletionText">
+        <item name="android:textSize">24sp</item>
+        <item name="android:fontFamily">@font/opensans_bold</item>
+    </style>
+    <style name="TextAppearance.Crf.CompletionTextValue">
+        <item name="android:textSize">80sp</item>
+        <item name="android:fontFamily">@font/opensans</item>
+    </style>
+    <style name="TextAppearance.Crf.CompletionTextSubValue">
+        <item name="android:textSize">28sp</item>
+        <item name="android:fontFamily">@font/opensans</item>
+    </style>
+
+
+</resources>

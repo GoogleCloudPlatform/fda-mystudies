@@ -1,0 +1,65 @@
+<resources>
+    <string name="osb_study_id">crf-module</string>
+    <string name="osb_study_name">CRF Module</string>
+
+    <string name="app_name">Cardiorespiratory Fitness</string>
+    <string name="action_settings">Settings</string>
+
+
+
+
+    <string name="task_initial_toolbar_title">task_initial_toolbar_title</string>
+
+    <string name="onboarding_sign_in">Sign In</string>
+    <string name="join_study">Join Study</string>
+
+    <string name="rsb_share_the_app_message">
+        Please take a look at Parkinson Crf, a research study app about Parkinson Disease.
+        Download it for Android at https://play.google.com/store/apps/details?id=org.sagebase.Crf</string>
+    <string name="rsb_share_app_url">https://play.google.com/store/apps/details?id=org.sagebase.Crf</string>
+
+    <!-- Permissions -->
+    <string name="permission_camera_title">Camera</string>
+    <string name="permission_camera_desc">The app needs camera permissions to calculate heart rate.</string>
+
+    <!-- Activity Screen -->
+    <string name="crf_today">Today</string>
+    <string name="crf_clinic_fitness_test">clinic fitness test</string>
+    <string name="crf_clinic_message">Clinic tests will provide data that scientists use to assess the accuracy of digital versions.  This may help future generations in receiving better tools.</string>
+    <string name="crf_start_message">Complete the surveys and the clinic cardiovascular test.</string>
+    <string name="crf_start_footer_title">Start by</string>
+    <string name="crf_start_footer_message">completing a short demographic and health survey, and then your first clinic test.</string>
+
+
+
+
+
+
+
+    <!-- 12 Min Walk Task -->
+    <string name="crf_feet">FEET</string>
+
+    <!-- Stair Step Task -->
+    <string name="crf_stand_still">Stand still</string>
+    <string name="crf_up">Up</string>
+    <string name="crf_down">Down</string>
+    <string name="crf_spoken_doing_well">You are doing well; 2 minutes left.</string>
+    <string name="crf_spoken_good_job">Good job; 1 minute left.</string>
+    <string name="crf_spoken_almost_done">10 seconds; Almost done!</string>
+    <string name="crf_spoken_done">Done! Now measure your heart rate again.</string>
+
+    <!-- Data Groups Screen -->
+    <string name="crf_data_groups_loading_title">Checking for existing groups</string>
+
+    <!-- External ID Screen -->
+    <string name="crf_external_id_title">Enter your participant code</string>
+    <string name="crf_external_id_hint">Participant code</string>
+    <string name="crf_external_empty"> </string>
+
+    <!-- Participant ID Screen -->
+    <string name="hr_participant_id_title">Enter participant ID</string>
+    <string name="hr_participant">Participant Id</string>
+    <string name="hr_participant_empty"> </string>
+
+
+</resources>

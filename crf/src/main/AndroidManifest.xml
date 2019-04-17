@@ -1,0 +1,12 @@
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="org.sagebase.crf" >
+
+    <uses-permission android:name="android.permission.VIBRATE" />
+    <!-- Communicate with Bridge -->
+    <uses-permission android:name="android.permission.INTERNET" />
+    <!-- ActiveSteps may use the camera to calculate heart rate -->
+    <uses-permission android:name="android.permission.CAMERA" />
+    <!-- ActiveSteps may use this to capture heart rate -->
+    <uses-permission android:name="android.permission.BODY_SENSORS" />
+
+</manifest>
