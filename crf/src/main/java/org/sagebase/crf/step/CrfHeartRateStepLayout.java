@@ -545,7 +545,7 @@ public class CrfHeartRateStepLayout extends ActiveStepLayout implements
 
     private void showFinishUi() {
         shouldShowFinishUi = false;
-        layout.setBackgroundColor(getResources().getColor(R.color.mint));
+        layout.setBackgroundColor(getResources().getColor(R.color.completion_background_end));
         buttonContainer.setBackgroundColor(getResources().getColor(R.color.white));
         yourHRis.setVisibility(View.VISIBLE);
         finalBpm.setVisibility(View.VISIBLE);
