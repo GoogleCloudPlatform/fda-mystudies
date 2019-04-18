@@ -140,10 +140,11 @@ public interface BpmRecorder {
                 return;
             }
 
+            // TODO: syoung 04/18/2019 This can take a while to process. Should it be moved to a different thread than the one used to write to the file?
             HeartRateBPM ret = sampleProcessor.processSamples();
 
             LOG.debug("HeartRateBPM {}", ret);
-            heartBeatSample.bpm = ret.getBpm();
+            heartBeatSample.bpm = (int)ret.getBpm();
             heartBeatSample.confidence = ret.getConfidence();
         }
     }

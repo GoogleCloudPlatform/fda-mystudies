@@ -103,15 +103,15 @@ class HeartRateTestDataLoader {
 }
 
     data class ProcessorTestData(
-        val input : Array<Double>,
-        val lowpass : Array<Double>,
-        val highpass : Array<Double>,
-        val mcfilter : Array<Double>,
-        val acf : Array<Double>,
-        val b_lowpass : Array<Double>,
-        val a_lowpass : Array<Double>,
-        val b_highpass : Array<Double>,
-        val a_highpass : Array<Double>,
+        val input : DoubleArray,
+        val lowpass : DoubleArray,
+        val highpass : DoubleArray,
+        val mcfilter : DoubleArray,
+        val acf : DoubleArray,
+        val b_lowpass : DoubleArray,
+        val a_lowpass : DoubleArray,
+        val b_highpass : DoubleArray,
+        val a_highpass : DoubleArray,
         val mean_filter_order : Array<Int>,
         val sampling_rate_round : Array<Int>,
         val sampling_rate: Array<Double>,
@@ -150,34 +150,20 @@ class HeartRateTestDataLoader {
         var hr_estimates : HrEstimates
     ) {
 
-//        // The matrix for this is defined very oddly. It's actually a mapping of the index of each element.
-//        func hrInputChunk(for key: ChannelKeys) -> [[Double]] {
-//            let vector = hr_data_filtered_chunked[key.stringValue]!
-//            return flip(vector)
-//        }
-//
-//        // The matrix for this is defined very oddly. It's actually a mapping of the index of each element.
-//        func hrChunkACF(for key: ChannelKeys) -> [[Double]] {
-//            let vector = hr_data_filtered_chunked_acf[key.stringValue]!
-//            return flip(vector)
-//        }
-//
-//        func flip(_ vector: [[Double]]) -> [[Double]] {
-//            let first = vector[0]
-//            let ret = Array(0..<first.count).map { (nn) -> [Double] in
-//                    return Array(0..<vector.count).map { (mm) -> Double in
-//                            return vector[mm][nn]
-//                    }
-//            }
-//            return ret
-//        }
+        fun flip(vector: Array<Array<Double>>) : Array<DoubleArray> {
+            val first = vector.first()
+            val ret = Array<DoubleArray>(first.size) { nn  ->
+                DoubleArray(vector.size) { vector[it][nn] }
+            }
+            return ret
+        }
     }
 
 
     data class TestHRPeaks(
-        var x: Array<Double>,
+        var x: DoubleArray,
         var y: Array<Array<Array<Double>>>,
-        var xacf: Array<Double>,
+        var xacf: DoubleArray,
         var hr_initial_guess: Array<Double>,
         var est_hr: Array<Double>,
         var est_conf: Array<Double>,
@@ -192,9 +178,9 @@ class HeartRateTestDataLoader {
     ) {
 
         data class AliasedPeak(
-            var nPeaks : Int,
-            var earlierPeaks : Array<Int>,
-            var laterPeaks : Array<Int>
+            var Npeaks : Array<Int>,
+            var earlier_peak : Array<Int>,
+            var later_peak : Array<Int>
         )
 
         fun generatedSamplingRate() : Double {
@@ -213,9 +199,9 @@ class HeartRateTestDataLoader {
             return est_conf.first()
         }
 
-//        fun y_output(): Array<Double> {
-//            return y.map { $0.first().first() }
-//        }
+        fun y_output(): DoubleArray {
+            return y.map { it.first().first() }.toDoubleArray()
+        }
 
         fun yMin() : Double {
             return y_min.first()
@@ -243,13 +229,16 @@ class HeartRateTestDataLoader {
     }
 
     data class TestPixelSample (
-            @SerializedName("t") val presentationTimestamp: Double,
-            val red: Double,
-            val green: Double,
-            val blue: Double
-            ) {
+            @SerializedName("t") override val timestamp: Double,
+            override val red: Double,
+            override val green: Double,
+            override val blue: Double
+            ) : PixelSample {
 
+        override
+        val uptime = timestamp
 
+        override
         fun isCoveringLens(): Boolean {
             return red > 0 && green > 0 && blue > 0
         }

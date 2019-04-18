@@ -1,6 +1,7 @@
 package org.sagebase.crf.step.active
 
 import org.sagebase.crf.linearAlgebra.*
+import kotlin.math.roundToInt
 
 //  Copyright © 2018 Sage Bionetworks. All rights reserved.
 //
@@ -37,136 +38,217 @@ val SUPPORTED_FRAME_RATES = arrayOf(30)
 
 /// The number of seconds for the window used to calculate the heart rate.
 const val HEART_RATE_WINDOW_IN_SECONDS: Double = 10.0
+const val HEART_RATE_MIN_FRAME_RATE: Double = 12.0
 
-data class HeartRateBPM(val uptime: Double, val bpm: Int, val confidence: Double, val channel: String)
+const val HEART_RATE_MAX: Double = 210.0
+const val HEART_RATE_MIN: Double = 45.0
+
+data class HeartRateBPM(val timestamp: Double, val bpm: Double, val confidence: Double, val channel: String)
+
+interface PixelSample {
+    val timestamp: Double
+    val uptime: Double
+    val red: Double
+    val green: Double
+    val blue: Double
+    fun isCoveringLens(): Boolean
+}
 
 class HeartRateSampleProcessor @JvmOverloads constructor(val videoProcessorFrameRate: Int = SUPPORTED_FRAME_RATES.first()) {
 
     var bpmRecords = mutableListOf<HeartRateBPM>()
-    var pixelSamples = mutableListOf<HeartBeatSample>()
+    var pixelSamples = mutableListOf<PixelSample>()
 
-    fun addSample(sample: HeartBeatSample) {
+    fun addSample(sample: PixelSample) {
         // Add the pixel sample
         this.pixelSamples.add(sample)
     }
 
     fun isReadyToProcess(): Boolean {
+        val estimated = estimatedSamplingRate(pixelSamples) ?: return false
+        val roundedRate = estimated.roundToInt()
+        if (!isValidSamplingRate(roundedRate)) return false
+
         // look to see if we have enough to process a bpm
-        return (pixelSamples.size >= calculateWindowLength())
+        // Need to keep 2 extra seconds due to filtering lopping off the first 2 seconds of data.
+        val meanOrder = meanFilterOrder(roundedRate)
+        val windowLength = (HEART_RATE_WINDOW_IN_SECONDS + 2).roundToInt() * roundedRate + meanOrder
+
+        return (pixelSamples.size >= windowLength)
     }
 
-    private fun calculateWindowLength(): Int = HEART_RATE_WINDOW_IN_SECONDS.toInt() * this.videoProcessorFrameRate
-
     fun processSamples(): HeartRateBPM {
-        val windowLen = calculateWindowLength()
-        val halfLength = windowLen / 2
-        val uptime = this.pixelSamples[halfLength].uptime
-        val redChannel = this.pixelSamples.map { s -> s.red }
-        val greenChannel = this.pixelSamples.map { s -> s.green }
-        this.pixelSamples = this.pixelSamples.subList(halfLength, this.pixelSamples.size)
-        val redCalc = calculateHeartRate(redChannel)
-        val greenCalc = calculateHeartRate(greenChannel)
-        val bpm =
+        val samplingRate = calculateSamplingRate(pixelSamples)
+        val roundedRate = samplingRate.roundToInt()
+        val timestamp = this.pixelSamples.last().timestamp
+        val samples = this.pixelSamples
+        val redChannel = samples.map { it.red }
+        val greenChannel = samples.map { it.green }
+        this.pixelSamples = this.pixelSamples.drop(roundedRate).toMutableList()
+        val redCalc = calculateHeartRate(redChannel, samplingRate)
+        val greenCalc = calculateHeartRate(greenChannel, samplingRate)
+
+        val bpm=
                 if (redCalc.confidence > greenCalc.confidence)
-                    HeartRateBPM(uptime, redCalc.heartRate.toInt(), redCalc.confidence, "red")
+                    HeartRateBPM(timestamp, redCalc.heartRate, redCalc.confidence, "red")
                 else
-                    HeartRateBPM(uptime, greenCalc.heartRate.toInt(), greenCalc.confidence, "green")
+                    HeartRateBPM(timestamp, greenCalc.heartRate, greenCalc.confidence, "green")
 
         bpmRecords.add(bpm)
         return bpm
     }
 
-    // --- Code ported from Matlab
-    private val fs = videoProcessorFrameRate.toDouble()         // frames / second
-    private val window = HEART_RATE_WINDOW_IN_SECONDS           // seconds
-    private val windowLength = Math.round(fs * window).toInt()
-
-
-    /**
-     * number of frames in the window
-     * channel, 60fps, 10sec window
-     */
-    internal fun findHeartRateValues(channel: List<Double>): List<CalculatedHeartRate> {
-        val nframes = Math.floor(channel.size.toDouble() / (windowLength.toDouble() / 2.0)).toInt() - 1
-        if (nframes < 1) {
-            return listOf()
-        }
-        val output = mutableListOf<CalculatedHeartRate>()
-        for (frame_no in 1..nframes) {
-            val lower = (1 + ((frame_no - 1) * windowLength / 2)) - 1
-            val upper = ((frame_no + 1) * windowLength / 2) - 1
-            val currframe = channel.subList(lower, upper + 1)
-            output.add(calculateHeartRate(currframe))
-        }
-        return output
-    }
-
-    internal data class CalculatedHeartRate(val heartRate: Long, val confidence: Double)
+    internal data class CalculatedHeartRate(val heartRate: Double, val confidence: Double)
 
     /**
      * For a given window return the calculated heart rate and confidence.
-     * @note The calculated heart rate is rounded.
      */
-    private fun calculateHeartRate(input: List<Double>): CalculatedHeartRate {
-        //% Preprocess and find the autocorrelation function
-        val filteredValues = bandpassFiltered(input.toTypedArray())
-        val xCorrValues = LinearAlgebra.xcorr(filteredValues)
-        //% To just remove the repeated part of the autocorr function (since it is even)
-        val maxRet = xCorrValues.maxSplice()
-        val x = maxRet.v2.toTypedArray()
-
-        //% HR ranges from 40-200 BPM, so consider only that part of the autocorr
-        //% function
-        val lower = Math.round(60.0 * fs / 200.0).toInt()
-        val upper = Math.round(60.0 * fs / 40.0).toInt()
-        val retVal = x.zeroReplace(lower-1, upper-1).seekMax()
-        val value = retVal.value
-        val pos = retVal.index
-        val heartRate = Math.round(60.0 * fs / (pos.toDouble() + 1.0))
-        return CalculatedHeartRate(heartRate, value / maxRet.maxValue)
-    }
-
-    internal fun bandpassFiltered(input: Array<Double>): Array<Double> {
-        // % Setting no. of samples as per a max HR of 220 BPM
-        val nsamples = Math.round(60 * fs / 220).toInt()
-        // % b1 = fir1(128,[1/30, 25/30], 'bandpass');
-        val b1: Array<Double> = arrayOf(-0.000506610984132016, 0.000281340196104213, -0.000453477478785663, 0.000175433848479960, 5.78571000126717e-19, -0.000200178238070410, 0.000588479261901569, -0.000412615808534457, 0.000832401037231464, -4.84818239396100e-19, 0.000465554741153073, 0.00102165166976478, -0.000118534274769341, 0.00192609062899124, -2.40024436102973e-18, 0.00182952606970045, 0.00135480554590726, 0.000748599044261129, 0.00319643179850945, -2.30788276369201e-19, 0.00382994518525259, 0.00107470141262219, 0.00233017559097417, 0.00376919225339987, -8.21109764793137e-18, 0.00568709829032464, -0.000418547259970266, 0.00430878547299781, 0.00234096774958672, -1.06597329751523e-17, 0.00589948032626289, -0.00345001874823703, 0.00577085280898743, -0.00228532700432350, -3.81044085438483e-18, 0.00263801974428747, -0.00769131382422690, 0.00531148463293734, -0.0104990208677403, 1.62815935886881e-17, -0.00558417076326117, -0.0119241848598587, 0.00134611898423683, -0.0212997771796790, -2.07091826506435e-17, -0.0192845505914200, -0.0139952617851127, -0.00760318790070690, -0.0320397640632609, -3.05719612807051e-18, -0.0378997870775431, -0.0106518977344771, -0.0232807805994706, -0.0382418951609459, 1.64113172833343e-17, -0.0611787321852445, 0.00471988055056295, -0.0517540592057603, -0.0305770938728010, 3.42293636763843e-17, -0.100426633129967, 0.0729786483544900, -0.170609488045242, 0.125861208906484, 0.800308136102957, 0.125861208906484, -0.170609488045242, 0.0729786483544900, -0.100426633129967, 3.42293636763843e-17, -0.0305770938728010, -0.0517540592057603, 0.00471988055056295, -0.0611787321852445, 1.64113172833343e-17, -0.0382418951609459, -0.0232807805994706, -0.0106518977344771, -0.0378997870775431, -3.05719612807051e-18, -0.0320397640632609, -0.00760318790070690, -0.0139952617851127, -0.0192845505914200, -2.07091826506435e-17, -0.0212997771796790, 0.00134611898423683, -0.0119241848598587, -0.00558417076326117, 1.62815935886881e-17, -0.0104990208677403, 0.00531148463293734, -0.00769131382422690, 0.00263801974428747, -3.81044085438483e-18, -0.00228532700432350, 0.00577085280898743, -0.00345001874823703, 0.00589948032626289, -1.06597329751523e-17, 0.00234096774958672, 0.00430878547299781, -0.000418547259970266, 0.00568709829032464, -8.21109764793137e-18, 0.00376919225339987, 0.00233017559097417, 0.00107470141262219, 0.00382994518525259, -2.30788276369201e-19, 0.00319643179850945, 0.000748599044261129, 0.00135480554590726, 0.00182952606970045, -2.40024436102973e-18, 0.00192609062899124, -0.000118534274769341, 0.00102165166976478, 0.000465554741153073, -4.84818239396100e-19, 0.000832401037231464, -0.000412615808534457, 0.000588479261901569, -0.000200178238070410, 5.78571000126717e-19, 0.000175433848479960, -0.000453477478785663, 0.000281340196104213, -0.000506610984132016)
-        // Normalize the input
-        val meanValue = input.average()
-        val normalizedValues = input.map { (it - meanValue) }
-        //% Preprocess and find the autocorrelation function
-        return meanfilter(normalizedValues.toTypedArray(), 2 * nsamples + 1, b1)
-    }
-
-    /**
-     * Mean filter which emphasizes the maxima in a specified window length (n), but de-emphasizes
-     * everything else in that window.
-     */
-    private fun meanfilter(input: Array<Double>, n: Int, b1: Array<Double>): Array<Double> {
-        val x = LinearAlgebra.conv(input, b1, LinearAlgebra.ConvolutionType.SAME).centerSplice(65)
-        val output = x.copyOf()
-        for (nn in ((n + 1) / 2)..(x.size - (n - 1) / 2)) {
-            val lower = (nn - (n - 1) / 2) - 1
-            val upper = (nn + (n - 1) / 2) - 1
-            val currwin = x.copyOfRange(lower, upper + 1).sortedArray()
-            output[nn - 1] = x[nn - 1] - ((currwin.sum() - currwin.max()!!) / (n - 1).toDouble())
-        }
-        return output
+    private fun calculateHeartRate(input: List<Double>, samplingRate: Double): CalculatedHeartRate {
+        val filtered = getFilteredSignal(input, samplingRate.roundToInt())
+        return calculateHRFromFilteredSamples(filtered, samplingRate)
     }
 
     // --- Code ported from Swift implementation (CRF - SageResearch), originally validated in R. syoung 04/17/2019
 
-    fun chunkSamples(input: List<Double>, samplingRate: Double, window: Double = HEART_RATE_WINDOW_IN_SECONDS) : List<List<Double>> {
+    /// Estimated sampling rate will return nil if there are not enough samples to return a rate.
+    fun estimatedSamplingRate(samples: List<PixelSample>) : Double? {
+        // Look to see if the sampling rate can be estimated.
+        if (samples.size < HEART_RATE_WINDOW_IN_SECONDS * HEART_RATE_MIN_FRAME_RATE) {
+            return null
+        }
+        return calculateSamplingRate(samples)
+    }
+
+    //    #' Given a processed time series find its period using autocorrelation
+    //    #' and then convert it to heart rate (bpm)
+    internal fun calculateHRFromFilteredSamples(filteredInput: DoubleArray, samplingRate: Double) : CalculatedHeartRate {
+        val (x, y, minLag, maxLag ) = preprocessSamples(filteredInput, samplingRate)
+                ?: return CalculatedHeartRate(0.0, 0.0)
+        val (y_max, y_max_pos, y_min, hr_initial_guess) = getBounds(y, samplingRate)
+        val aliasedPeak= getAliasingPeakLocation(hr_initial_guess, y_max_pos, minLag, maxLag)
+                ?: return CalculatedHeartRate(0.0, 0.0)
+
+        if (aliasedPeak.earlier.isNotEmpty()) {
+            // peak_pos_thresholding_result <- (y[aliasedPeak$earlier_peak]-y_min) > 0.7*(y_max-y_min)
+            // # Check which of the earlier peak(s) satisfy the threshold
+            val peak_pos = aliasedPeak.earlier.filter { (y[it] - y_min) > 0.7 * (y_max - y_min) }
+            // # Subset to those earlier peak(s) that satisfy the thresholding criterion above
+            if (peak_pos.isNotEmpty()) {
+                // # Estimate heartrates for each of the peaks that satisfy the thresholding criterion
+                val hr_vec = peak_pos.map { (60 * samplingRate) / (it - 1).toDouble() }
+                val hr = hr_vec.average()
+                // confidence <- mean(y[peak_pos]-y_min)/(max(x)-min(x))
+                // # Estimate the confidence based on the peaks that satisfy the threshold
+                val confidence = peak_pos.map({ y[it] - y_min }).average() / (x.max()!! - x.min()!!)
+                return CalculatedHeartRate(hr, confidence)
+            } else {
+                return CalculatedHeartRate(hr_initial_guess, y_max / x.max()!!)
+            }
+        } else if ((aliasedPeak.later.isNotEmpty()) &&
+                    (aliasedPeak.later.fold(true) { ret, value -> ret && (y[value] > 0.7 * y_max) })) {
+            // # Get into this loop if no earlier peak was picked up during getAliasingPeakLocation
+            return CalculatedHeartRate(hr_initial_guess, y_max / x.max()!!)
+        } else {
+            // Could not calculate a heart rate
+            return CalculatedHeartRate(0.0, 0.0)
+        }
+    }
+
+    internal data class AliasingPeakLocation(val nPeaks: Int, val earlier: List<Int>, val later: List<Int>)
+
+    internal fun getAliasingPeakLocation(hr: Double, actualLag: Int, minLag: Int, maxLag: Int) : AliasingPeakLocation? {
+        //    # The following ranges are only valid if the minimum hr is 45bpm and
+        //    # maximum hr is less than 210bpm, since for the acf of the ideal hr signal
+        //    # Npeaks = floor(BPM/minHR) - floor(BPM/maxHR)
+        //    # in the search ranges 60*fs/maxHR to 60*fs/minHR samples
+        val nPeaks: Int =
+                when {
+                    hr < 90 -> 1
+                    hr < 135 -> 2
+                    hr < 180 -> 3
+                    hr < 225 -> 4
+                    hr <= 240 -> 5
+                    else -> 0
+                }
+
+        if (nPeaks == 0) return null
+
+        // # Added this step because in R, the indexing of an array starts at 1
+        // # and so our period of the signal is really actual_lag-1, hence
+        // # the correction
+        val actualLag = actualLag - 1
+
+        var earlier_peak: List<Int>
+        if ((actualLag % 2 == 0)) {
+            earlier_peak = listOf(actualLag / 2)
+        } else {
+            earlier_peak = listOf(Math.floor(actualLag.toDouble() / 2.0).toInt(), Math.ceil(actualLag.toDouble() / 2.0).toInt())
+        }
+        earlier_peak = earlier_peak.filter { it >= minLag }
+
+        val later_peak: List<Int>
+        if (nPeaks > 1) {
+            // later_peak <- actual_lag*seq(2,Npeaks)
+            // later_peak[later_peak>max_lag] <- NA
+            later_peak = IntArray(nPeaks - 1){ (it + 2) * actualLag }.filter { it <= maxLag }
+        } else {
+            later_peak = listOf()
+        }
+
+        // # Correction for R index
+        // earlier_peak <- earlier_peak + 1
+        // later_peak <- later_peak + 1
+        return AliasingPeakLocation(nPeaks, earlier_peak.map { it + 1 }, later_peak.map { it + 1 })
+    }
+
+    internal data class PreprocessorBounds(val y_max: Double, val y_max_pos: Int, val y_min: Double, val hr_initial_guess: Double)
+
+    internal fun getBounds(y: DoubleArray, samplingRate: Double) : PreprocessorBounds {
+        //    y_max_pos <- which.max(y)
+        //    y_max <- max(y)
+        //    y_min <- min(y)
+        val (y_max, y_max_pos) = y.seekMax()
+        val y_min = y.min()!!
+        //    hr_initial_guess <- 60 * sampling_rate / (y_max_pos - 1)
+        val hr_initial_guess = (60.0 * samplingRate) / (y_max_pos - 1).toDouble()
+        return PreprocessorBounds(y_max, y_max_pos, y_min, hr_initial_guess)
+    }
+
+    internal data class PreprocessTuple(val x: DoubleArray, val y: DoubleArray, val minLag: Int, val maxLag: Int)
+
+    internal fun preprocessSamples(input: DoubleArray, samplingRate: Double) : PreprocessTuple? {
+        //    max_lag = round(60 * sampling_rate / min_hr) # 4/3 fs is 45BPM
+        val maxLag = calculateMaxLag(samplingRate)
+        //    min_lag = round(60 * sampling_rate / max_hr) # 1/3.5 fs is 210BPM
+        val minLag = calculateMinLag(samplingRate)
+        //    x <- stats::acf(x, lag.max = max_lag, plot = F)$acf
+        val x = autocorrelation(input, maxLag).offsetR()
+
+        // Check that the sampling rate is valid and the max/min are within range.
+        val roundedSamplingRate = Math.round(samplingRate).toInt()
+        if (!isValidSamplingRate(roundedSamplingRate) ||
+                (maxLag >= x.size) ||
+                (minLag > maxLag) ||
+                (minLag < 0)) return null
+
+        val y = DoubleArray(x.size) {
+            if ((it < minLag) || (it > maxLag))  0.0 else x[it]
+        }
+
+        return PreprocessTuple(x, y, minLag, maxLag)
+    }
+
+    fun chunkSamples(input: List<Double>, samplingRate: Double, window: Double = HEART_RATE_WINDOW_IN_SECONDS) : List<DoubleArray> {
         //    hr.data.filtered.chunks <- hr.data.filtered %>%
         //    dplyr::select(red, green, blue) %>%
         //    na.omit() %>%
         //    lapply(mhealthtools:::window_signal, window_length, window_overlap, 'rectangle')
-        var output: MutableList<List<Double>> = mutableListOf()
+        val output: MutableList<DoubleArray> = mutableListOf()
         val windowLength = Math.round(window * samplingRate).toInt()
         var start: Int = 0
         var end: Int = windowLength
         while (end < input.size) {
-            output.add(input.subList(start, end))
+            output.add(input.subList(start, end).toDoubleArray())
             start += Math.round(samplingRate).toInt()
             end = start + windowLength
         }
@@ -207,7 +289,7 @@ class HeartRateSampleProcessor @JvmOverloads constructor(val videoProcessorFrame
         //        x_acf[i+1] <- sum( (x[1:(xl-i)]-mx) * (x[(i+1):xl]-mx))/varx // # (Unscaled Co-variance)/(Unscaled variance)
         val xl = input.size
         val mx = input.average()
-        val varx: Double = input.reduce() { sum, element -> sum + (element - mx) * (element - mx) }
+        val varx: Double = input.fold(0.0) { sum, element -> sum + (element - mx) * (element - mx) }
         val x = input.offsetR()
         val x_acf = DoubleArray(lagMax + 1) {
             val x_left = x.copyOfRange(1, (xl - it) + 1)
@@ -241,6 +323,31 @@ class HeartRateSampleProcessor @JvmOverloads constructor(val videoProcessorFrame
             ((x[i] - temp_minus) / (temp_max - temp_min + 0.00001))
         }
         return y.toDoubleArray()
+    }
+
+    fun calculateMinLag(samplingRate: Double) : Int =
+            Math.round(60 * samplingRate / HEART_RATE_MAX).toInt()
+
+    fun calculateMaxLag(samplingRate: Double) : Int =
+            Math.round(60 * samplingRate / HEART_RATE_MIN).toInt()
+
+    /// Calculate the sampling rate.
+    fun calculateSamplingRate(samples: List<PixelSample>) : Double {
+        val startIndex = samples.indexOfFirst { it.isCoveringLens() }
+        if (startIndex == -1) return 0.0
+        val startTime = samples[startIndex].timestamp
+        val endTime = samples.last().timestamp
+        val diff = endTime - startTime
+        if (diff <= 0) return 0.0
+        val count = (samples.size - startIndex).toDouble()
+        return count / diff
+    }
+
+    /// A valid sampling rate has filter coefficients defined for high and low pass.
+    fun isValidSamplingRate(samplingRate: Int) : Boolean {
+        val low = lowPassParameters[samplingRate]
+        val high = highPassParameters[samplingRate]
+        return (low != null) && (high != null)
     }
 
     val lowPassParameters: Map<Int, CsvUtils.PassFilterParams> = CsvUtils.getLowPassFilterParams()
@@ -279,14 +386,11 @@ class HeartRateSampleProcessor @JvmOverloads constructor(val videoProcessorFrame
     }
 
     fun meanFilterOrder(samplingRate: Int) : Int {
-        if ((samplingRate <= 32)) {
-            return 33
-        } else if ((samplingRate <= 18)) {
-            return 19
-        } else if ((samplingRate <= 15)) {
-            return 15
-        } else {
-            return 65
+        return when {
+            samplingRate <= 15 -> 15
+            samplingRate <= 18 -> 19
+            samplingRate <= 32 -> 33
+            else -> 65
         }
     }
 }
@@ -303,5 +407,14 @@ internal fun DoubleArray.offsetR() : DoubleArray {
     var list = this.toMutableList()
     list.add(0, 0.0)
     return list.toDoubleArray()
+}
+
+/**
+ * Returns the max value and index of that value.
+ */
+internal fun DoubleArray.seekMax(): ValueAndIndex {
+    val value = this.max()!!
+    val index = this.indexOf(value)
+    return ValueAndIndex(value, index)
 }
 
