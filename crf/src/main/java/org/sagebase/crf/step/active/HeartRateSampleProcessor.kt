@@ -1,6 +1,6 @@
 package org.sagebase.crf.step.active
 
-import org.sagebase.crf.matlab.*
+import org.sagebase.crf.linearAlgebra.*
 
 //  Copyright © 2018 Sage Bionetworks. All rights reserved.
 //
@@ -109,7 +109,7 @@ class HeartRateSampleProcessor @JvmOverloads constructor(val videoProcessorFrame
     private fun calculateHeartRate(input: List<Double>): CalculatedHeartRate {
         //% Preprocess and find the autocorrelation function
         val filteredValues = bandpassFiltered(input.toTypedArray())
-        val xCorrValues = Matlab.xcorr(filteredValues)
+        val xCorrValues = LinearAlgebra.xcorr(filteredValues)
         //% To just remove the repeated part of the autocorr function (since it is even)
         val maxRet = xCorrValues.maxSplice()
         val x = maxRet.v2.toTypedArray()
@@ -142,7 +142,7 @@ class HeartRateSampleProcessor @JvmOverloads constructor(val videoProcessorFrame
      * everything else in that window.
      */
     private fun meanfilter(input: Array<Double>, n: Int, b1: Array<Double>): Array<Double> {
-        val x = Matlab.conv(input, b1, Matlab.ConvolutionType.SAME).centerSplice(65)
+        val x = LinearAlgebra.conv(input, b1, LinearAlgebra.ConvolutionType.SAME).centerSplice(65)
         val output = x.copyOf()
         for (nn in ((n + 1) / 2)..(x.size - (n - 1) / 2)) {
             val lower = (nn - (n - 1) / 2) - 1

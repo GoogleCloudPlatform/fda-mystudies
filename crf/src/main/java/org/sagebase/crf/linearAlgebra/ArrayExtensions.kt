@@ -1,4 +1,4 @@
-package org.sagebase.crf.matlab
+package org.sagebase.crf.linearAlgebra
 
 
 internal data class ValueAndIndex(val value: Double, val index: Int)

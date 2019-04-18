@@ -73,34 +73,34 @@ class HeartRateTestDataLoader {
         return testData
     }
 
-    fun testEarlierPeaksExample(): TestHRPeaks  {
+    fun testEarlierPeaksExample(): TestHRPeaks {
         val json = this.javaClass.classLoader.getResource("io_example_earlier_peak.json").readText()
         val gson = Gson()
         val testData = gson.fromJson(json, TestHRPeaks::class.java)
         return testData
     }
 
-    fun testLaterPeaksExample(): TestHRPeaks  {
+    fun testLaterPeaksExample(): TestHRPeaks {
         val json = this.javaClass.classLoader.getResource("io_example_later_peak.json").readText()
         val gson = Gson()
         val testData = gson.fromJson(json, TestHRPeaks::class.java)
         return testData
     }
 
-    fun testHRData(): HRProcessorTestData  {
+    fun testHRData(): HRProcessorTestData {
         val json = this.javaClass.classLoader.getResource("io_examples_whole.json").readText()
         val gson = Gson()
         val testData = gson.fromJson(json, HRProcessorTestData::class.java)
         return testData
     }
 
-    fun testHRData12hz(): HRProcessorTestData  {
+    fun testHRData12hz(): HRProcessorTestData {
         val json = this.javaClass.classLoader.getResource("io_examples_whole_12hz.json").readText()
         val gson = Gson()
         val testData = gson.fromJson(json, HRProcessorTestData::class.java)
         return testData
     }
-
+}
 
     data class ProcessorTestData(
         val input : Array<Double>,
@@ -256,6 +256,3 @@ class HeartRateTestDataLoader {
     }
 
     data class HRTuple(var hr: Double, var confidence: Double)
-
-
-}
