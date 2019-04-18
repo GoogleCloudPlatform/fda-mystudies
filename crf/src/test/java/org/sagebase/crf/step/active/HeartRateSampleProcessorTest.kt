@@ -59,9 +59,33 @@ class HeartRateSampleProcessorTest {
         assertArrayEquals(expectedAnswer, output)
     }
 
+    @Test
+    fun testParams() {
+        val processor = HeartRateSampleProcessor()
+        assertEquals(56, processor.highPassParameters.size)
+        assertEquals(56, processor.lowPassParameters.size)
+    }
+
+
 
 
     // Helper functions
+
+    fun compare(array1: DoubleArray, array2: DoubleArray, accuracy: Double) : Boolean {
+        assertEquals(array1.size, array2.size)
+        if (array1.size != array2.size) {
+            return false
+        }
+        for (idx in 0 until array1.size) {
+            val lhv = array1[idx]
+            val rhv = array2[idx]
+            assertEquals(lhv, rhv, accuracy)
+            if (Math.abs(lhv - rhv) > accuracy) {
+                return false
+            }
+        }
+        return true
+    }
 
     fun testData(): ProcessorTestData {
 

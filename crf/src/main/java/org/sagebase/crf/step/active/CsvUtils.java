@@ -19,6 +19,7 @@ package org.sagebase.crf.step.active;
 
 import android.content.Context;
 import android.content.res.AssetManager;
+import java.lang.ClassLoader;
 
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVParser;
@@ -37,23 +38,21 @@ import org.apache.commons.csv.CSVRecord;
 public class CsvUtils {
 
     static final String[] highAndLowPassHeaders = new String[] {"","b1","b2","b3","b4","b5","b6","b7","b8","a1","a2","a3","a4","a5","a6","a7","a8","filter_type","sampling_rate"};
-    String[] meanCenterHeaders = new String[] {"mean_filter_order","sampling_rate"};
 
     static final String HIGH_PASS_PARAMS_FILE = "csv/highpass_filter_params.csv";
     static final String LOW_PASS_PARAMS_FILE = "csv/lowpass_filter_params.csv";
-    static final String MEAN_CENTERING_PARAMS_FILE = "csv/mean_centering_filter_params.csv";
 
-    public static Map<Integer, PassFilterParams> getHighPassFilterParams(Context context) {
-        return loadPassFilter(context, HIGH_PASS_PARAMS_FILE);
+    public static Map<Integer, PassFilterParams> getHighPassFilterParams() {
+        return loadPassFilter(HIGH_PASS_PARAMS_FILE);
     }
 
-    public static Map<Integer, PassFilterParams> getLowPassFilterParams(Context context) {
-        return loadPassFilter(context, LOW_PASS_PARAMS_FILE);
+    public static Map<Integer, PassFilterParams> getLowPassFilterParams() {
+        return loadPassFilter(LOW_PASS_PARAMS_FILE);
     }
 
-    private static Map<Integer, PassFilterParams> loadPassFilter(Context context, String filename) {
+    private static Map<Integer, PassFilterParams> loadPassFilter(String filename) {
         Map<Integer, PassFilterParams> filterParamsMap = new HashMap<>();
-        List<CSVRecord> rows = loadFile(context, filename, highAndLowPassHeaders);
+        List<CSVRecord> rows = loadFile(filename, highAndLowPassHeaders);
         for (CSVRecord row: rows) {
             PassFilterParams params = new PassFilterParams(row);
             filterParamsMap.put(params.samplingRate, params);
@@ -61,12 +60,14 @@ public class CsvUtils {
         return filterParamsMap;
     }
 
-    private static List<CSVRecord> loadFile(Context context, String filename, String[] headers) {
+    private static List<CSVRecord> loadFile(String filename, String[] headers) {
 
         try {
-            AssetManager assetManager = context.getAssets();
-            InputStream inputStream = assetManager.open(filename);
+
+            ClassLoader loader = CsvUtils.class.getClassLoader();
+            InputStream inputStream = loader.getResourceAsStream(filename);
             BufferedReader br = new BufferedReader(new InputStreamReader(inputStream));
+
             CSVParser csvParser = new CSVParser(br, CSVFormat.DEFAULT
                     .withHeader(headers)
                     .withIgnoreHeaderCase()
@@ -81,13 +82,6 @@ public class CsvUtils {
         }
         return null;
     }
-
-    public static class MeanCenteringFilterParams {
-
-
-
-    }
-
 
     public static class PassFilterParams {
 

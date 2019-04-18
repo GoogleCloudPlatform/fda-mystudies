@@ -243,9 +243,8 @@ class HeartRateSampleProcessor @JvmOverloads constructor(val videoProcessorFrame
         return y.toDoubleArray()
     }
 
-    // TODO: syoung 04/17/2019 Need to figure out how to call the CsvUtils method. What's a context?
-    val lowPassParameters: Map<Int, CsvUtils.PassFilterParams> = HashMap<Int, CsvUtils.PassFilterParams>()
-    val highPassParameters: Map<Int, CsvUtils.PassFilterParams> = HashMap<Int, CsvUtils.PassFilterParams>()
+    val lowPassParameters: Map<Int, CsvUtils.PassFilterParams> = CsvUtils.getLowPassFilterParams()
+    val highPassParameters: Map<Int, CsvUtils.PassFilterParams> = CsvUtils.getHighPassFilterParams()
 
     fun passFilter(input: DoubleArray, samplingRate: Int, type: FilterType) : DoubleArray{
         val paramArray = if ((type == FilterType.low)) lowPassParameters else highPassParameters
