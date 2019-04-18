@@ -20,6 +20,7 @@ package org.sagebase.crf;
 import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.media.AudioManager;
 import android.os.Build;
 import android.os.Bundle;
@@ -93,6 +94,7 @@ public class CrfActiveTaskActivity extends ActiveTaskActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         crfStepProgressTextview = findViewById(R.id.crf_step_progress_textview);
     }
 
