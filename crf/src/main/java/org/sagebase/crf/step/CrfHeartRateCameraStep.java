@@ -48,8 +48,8 @@ public class CrfHeartRateCameraStep extends ActiveStep {
                     .put("end", "You are all done!")
                     .build();
 
-    // Type of button to display
-    public CrfInstructionButtonType buttonType;
+
+    public boolean isHrRecoveryStep;
 
 
     public CrfHeartRateCameraStep(String identifier, String title, String detailText) {

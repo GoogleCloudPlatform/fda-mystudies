@@ -47,13 +47,13 @@ import org.sagebase.crf.step.CrfCountdownStep;
 import org.sagebase.crf.step.CrfFormStep;
 import org.sagebase.crf.step.CrfFormSurveyItem;
 import org.sagebase.crf.step.CrfHeartRateCameraStep;
-import org.sagebase.crf.step.CrfInstructionButtonType;
 import org.sagebase.crf.step.CrfInstructionStep;
 import org.sagebase.crf.step.CrfInstructionSurveyItem;
 import org.sagebase.crf.step.CrfStairStep;
 import org.sagebase.crf.step.CrfStartTaskStep;
 import org.sagebase.crf.step.CrfStartTaskSurveyItem;
 import org.sagebase.crf.step.body.CrfChoiceAnswerFormat;
+import org.sagebase.crf.step.CrfHeartRateSurveyItem;
 import org.sagebase.crf.step.body.CrfIntegerAnswerFormat;
 
 import java.util.Collections;
@@ -130,10 +130,10 @@ public class CrfTaskFactory extends TaskItemFactory {
                             }
                             return createCrfStartTaskStep((CrfStartTaskSurveyItem)item);
                         case CrfSurveyItemAdapter.CRF_HEART_RATE_CAMERA_SURVEY_ITEM_TYPE:
-                            if (!(item instanceof ActiveStepSurveyItem)) {
-                                throw new IllegalStateException("Error in json parsing, crf_heart_rate_camera_step types must be ActiveStepSurveyItem");
+                            if (!(item instanceof CrfHeartRateSurveyItem)) {
+                                throw new IllegalStateException("Error in json parsing, crf_heart_rate_camera_step types must be CrfHeartRateSurveyItem");
                             }
-                            return createHeartRateCameraStep((ActiveStepSurveyItem)item);
+                            return createHeartRateCameraStep((CrfHeartRateSurveyItem)item);
                         case CrfSurveyItemAdapter.CRF_COUNTDOWN_SURVEY_ITEM_TYPE:
                             if (!(item instanceof ActiveStepSurveyItem)) {
                                 throw new IllegalStateException("Error in json parsing, crf_countdown types must be ActiveStepSurveyItem");
@@ -284,14 +284,14 @@ public class CrfTaskFactory extends TaskItemFactory {
         }
     }
 
-    private CrfHeartRateCameraStep createHeartRateCameraStep(ActiveStepSurveyItem item) {
+    private CrfHeartRateCameraStep createHeartRateCameraStep(CrfHeartRateSurveyItem item) {
         CrfHeartRateCameraStep step = new CrfHeartRateCameraStep(item.identifier, item.title, item.text);
         fillCrfActiveStep(step, item);
         if(item.identifier != null) {
             step.stepIdentifier = item.identifier;
         }
 
-        step.buttonType = CrfInstructionButtonType.GRAY;
+        step.isHrRecoveryStep = item.isHrRecoveryStep;
         return step;
     }
 
