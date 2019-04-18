@@ -29,13 +29,16 @@ import org.researchstack.backbone.step.Step;
 import org.researchstack.backbone.ui.callbacks.StepCallbacks;
 import org.researchstack.backbone.utils.StepResultHelper;
 import org.sagebase.crf.R;
+import org.sagebase.crf.view.CrfTaskStatusBarManipulator;
 import org.sagebase.crf.view.CrfTaskToolbarVisibilityManipulator;
 
 /**
  * Created by TheMDP on 11/5/17.
  */
 
-public class CrfCompletionStepLayout extends CrfInstructionStepLayout implements CrfResultListener, CrfTaskToolbarVisibilityManipulator {
+public class CrfCompletionStepLayout extends CrfInstructionStepLayout implements CrfResultListener,
+        CrfTaskStatusBarManipulator,
+        CrfTaskToolbarVisibilityManipulator {
 
     public static final String COMPLETION_DISTANCE_VALUE_RESULT = "completion_distance_result";
 
@@ -138,5 +141,10 @@ public class CrfCompletionStepLayout extends CrfInstructionStepLayout implements
     @Override
     public boolean crfToolbarHide() {
         return true;
+    }
+
+    @Override
+    public int crfStatusBarColor() {
+        return R.color.completion_background_end;
     }
 }

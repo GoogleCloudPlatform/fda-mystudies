@@ -88,7 +88,6 @@ public class CrfHeartRateStepLayout extends ActiveStepLayout implements
         BpmRecorder.DeclineHRListener,
         BpmRecorder.AbnormalHRListener,
         RecorderListener,
-        CrfTaskStatusBarManipulator,
         CrfTaskToolbarProgressManipulator,
         CrfResultListener {
     private static final Logger LOG = LoggerFactory.getLogger(CrfHeartRateStepLayout.class);
@@ -602,11 +601,6 @@ public class CrfHeartRateStepLayout extends ActiveStepLayout implements
         if (ready) {
             intelligentStartDetected();
         }
-    }
-
-    @Override
-    public int crfStatusBarColor() {
-        return R.color.white;
     }
 
     @Override
