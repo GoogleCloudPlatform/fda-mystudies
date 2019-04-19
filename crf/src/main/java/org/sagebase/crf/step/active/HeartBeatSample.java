@@ -25,7 +25,7 @@ import java.util.Date;
  * Created by TheMDP on 10/17/17.
  */
 
-public class HeartBeatSample {
+public class HeartBeatSample implements PixelSample {
     public double timestamp;
     public double uptime;
     public double red;
@@ -77,6 +77,31 @@ public class HeartBeatSample {
     // Algorithm to be implemented
     public boolean declineHR() {
         return false;
+    }
+
+    @Override
+    public double getTimestamp() {
+        return timestamp;
+    }
+
+    @Override
+    public double getUptime() {
+        return uptime;
+    }
+
+    @Override
+    public double getRed() {
+        return red;
+    }
+
+    @Override
+    public double getGreen() {
+        return green;
+    }
+
+    @Override
+    public double getBlue() {
+        return blue;
     }
 }
 
