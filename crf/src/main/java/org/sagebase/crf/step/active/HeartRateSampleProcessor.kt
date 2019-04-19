@@ -43,6 +43,9 @@ const val HEART_RATE_MIN_FRAME_RATE: Double = 12.0
 const val HEART_RATE_MAX: Double = 210.0
 const val HEART_RATE_MIN: Double = 45.0
 
+const val HEART_RATE_MIN_RESTING_CONFIDENCE = 0.5
+const val HEART_RATE_MIN_VO2MAX_CONFIDENCE = 0.5
+
 data class HeartRateBPM(val timestamp: Double, val bpm: Double, val confidence: Double, val channel: String)
 
 interface PixelSample {
@@ -52,6 +55,10 @@ interface PixelSample {
     val green: Double
     val blue: Double
     fun isCoveringLens(): Boolean
+}
+
+enum class Sex {
+    male, female, other
 }
 
 class HeartRateSampleProcessor @JvmOverloads constructor(val videoProcessorFrameRate: Int = SUPPORTED_FRAME_RATES.first()) {
@@ -106,6 +113,33 @@ class HeartRateSampleProcessor @JvmOverloads constructor(val videoProcessorFrame
     private fun calculateHeartRate(input: List<Double>, samplingRate: Double): CalculatedHeartRate {
         val filtered = getFilteredSignal(input, samplingRate.roundToInt())
         return calculateHRFromFilteredSamples(filtered, samplingRate)
+    }
+
+    fun reset() {
+        this.pixelSamples.removeAll { true }
+        this.bpmRecords.removeAll { true }
+    }
+
+    fun restingHeartRate() : HeartRateBPM? {
+        val sample = this.bpmRecords.maxWith(compareBy { it.confidence } ) ?: return null
+        return if (sample.confidence < HEART_RATE_MIN_RESTING_CONFIDENCE) null else sample
+    }
+
+    fun vo2Max(sex: Sex, age: Double, startTime: Double) : Double? {
+        val highConfidenceSamples = this.bpmRecords.filter {
+            it.confidence >= HEART_RATE_MIN_VO2MAX_CONFIDENCE && it.timestamp >= startTime
+        }
+        if (highConfidenceSamples.size <= 1) {
+            return null
+        }
+        val meanHR = highConfidenceSamples.map { it.bpm }.average()
+        val beats30to60 = meanHR / 2
+        val vo2Center: Double = when (sex) {
+            Sex.female -> 83.477 - (0.586 * beats30to60) - (0.404 * age) - 7.030
+            Sex.male -> 83.477 - (0.586 * beats30to60) - (0.404 * age)
+            else -> 84.687 - (0.722 * beats30to60) - (0.383 * age)
+        }
+        return vo2Center
     }
 
     // --- Code ported from Swift implementation (CRF - SageResearch), originally validated in R. syoung 04/17/2019
