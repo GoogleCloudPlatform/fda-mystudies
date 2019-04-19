@@ -79,8 +79,6 @@ public class CrfSample extends AppCompatActivity {
         final Task stepHrTask = taskFactory.createTask(this, CrfResourceManager.STAIR_STEP_RESOURCE);
         addTask(taskContainer, stepHrTask);
 
-        CsvUtils.getHighPassFilterParams(this);
-
     }
 
     private void addTask(ViewGroup taskContainer, final Task activeTask) {
