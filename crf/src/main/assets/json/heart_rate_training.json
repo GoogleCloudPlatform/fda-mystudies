@@ -1,5 +1,6 @@
 {
   "taskIdentifier" : "Heart Rate Training",
+  "schemaIdentifier" : "Heart Rate Training",
   "optional" : false,
   "taskSteps" : [
     {

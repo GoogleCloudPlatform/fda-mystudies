@@ -1,5 +1,6 @@
 {
   "taskIdentifier" : "Heart Rate Recovery",
+  "schemaIdentifier" : "Heart Rate Recovery",
   "optional" : false,
   "taskSteps" : [
     {

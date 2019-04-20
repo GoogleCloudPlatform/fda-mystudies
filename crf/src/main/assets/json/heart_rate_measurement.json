@@ -1,5 +1,6 @@
 {
   "taskIdentifier" : "Resting Heart Rate",
+  "schemaIdentifier" : "Resting Heart Rate",
   "optional" : false,
   "taskSteps" : [
     {
