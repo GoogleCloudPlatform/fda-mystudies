@@ -141,6 +141,10 @@ public class HeartRateCamera2Recorder extends Recorder {
         renderScript = RenderScript.create(context);
     }
 
+    public double calculateVo2Max(Sex sex, double age) {
+        return heartBeatJsonWriter.calculateVo2Max(sex, age);
+    }
+
     @Override
     public void start(Context context) {
         startTime = DateTime.now();

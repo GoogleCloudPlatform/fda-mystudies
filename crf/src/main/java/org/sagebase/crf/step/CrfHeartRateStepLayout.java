@@ -59,12 +59,14 @@ import org.researchstack.backbone.step.active.recorder.RecorderListener;
 import org.researchstack.backbone.ui.callbacks.StepCallbacks;
 import org.researchstack.backbone.ui.step.layout.ActiveStepLayout;
 import org.researchstack.backbone.ui.views.ArcDrawable;
+import org.researchstack.backbone.utils.StepResultHelper;
 import org.sagebase.crf.R;
 import org.sagebase.crf.camera.CameraSourcePreview;
 import org.sagebase.crf.step.active.BpmRecorder;
 import org.sagebase.crf.step.active.HeartRateCamera2Recorder;
 import org.sagebase.crf.step.active.HeartRateCameraRecorder;
 import org.sagebase.crf.step.active.HeartRateCameraRecorderConfig;
+import org.sagebase.crf.step.active.Sex;
 import org.sagebase.crf.view.CrfTaskStatusBarManipulator;
 import org.sagebase.crf.view.CrfTaskToolbarProgressManipulator;
 import org.sagebase.crf.view.CrfTaskToolbarTintManipulator;
@@ -72,6 +74,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
@@ -99,6 +102,7 @@ public class CrfHeartRateStepLayout extends ActiveStepLayout implements
 
     public static final String RESTING_BPM_VALUE_RESULT = "resting";
     public static final String PEAK_BPM_VALUE_RESULT = "peak";
+    public static final String VO2_MAX_VALUE_RESULT = "vo2_max";
 
     private CameraSourcePreview cameraSourcePreview;
     private TextureView cameraPreview;
@@ -143,6 +147,9 @@ public class CrfHeartRateStepLayout extends ActiveStepLayout implements
     protected boolean shouldContinueOnStop = false;
     protected boolean isFinished = false;
     private boolean shouldShowFinishUi = false;
+
+    private String sex;
+    private int birthYear;
 
     public CrfHeartRateStepLayout(Context context) {
         super(context);
@@ -496,6 +503,17 @@ public class CrfHeartRateStepLayout extends ActiveStepLayout implements
         crfMessageTextView.setVisibility(View.INVISIBLE);
 
 
+        if (step.isHrRecoveryStep) {
+            if((cameraRecorder instanceof HeartRateCamera2Recorder)) {
+                int calendarYear = Calendar.getInstance().get(Calendar.YEAR);
+                int age = calendarYear - birthYear;
+                Sex sexEnum = Sex.valueOf(sex);
+
+                double vo2max = ((HeartRateCamera2Recorder) cameraRecorder).calculateVo2Max(sexEnum, age);
+                setVo2MaxResult(vo2max);
+            }
+        }
+
         if (!bpmList.isEmpty()) {
             int bpmSum = 0;
             for (BpmHolder bpmHolder : bpmList) {
@@ -507,7 +525,6 @@ public class CrfHeartRateStepLayout extends ActiveStepLayout implements
             int bestHr = bestHolder.bpm;
 
             setBpmResult(bestHr);
-            setBpmStartAndEnd(bpmList.get(0), bpmList.get(bpmList.size()-1));
             heartRateNumber.setText(String.format(Locale.getDefault(), "%d", bestHr));
             finalBpm.setText(String.format(Locale.getDefault(), "%d", bestHr));
         } else {
@@ -605,6 +622,13 @@ public class CrfHeartRateStepLayout extends ActiveStepLayout implements
         stepResult.setResultForIdentifier(bpmStepId, bpmResult);
     }
 
+    private void setVo2MaxResult(double vo2Max) {
+        String bpmStepId = CrfHeartRateStepLayout.VO2_MAX_VALUE_RESULT;
+        StepResult<String> result = new StepResult<>(new Step(bpmStepId));
+        result.setResult(String.valueOf(Math.round(vo2Max)));
+        stepResult.setResultForIdentifier(bpmStepId, result);
+    }
+
     @Override
     public void intelligentStartUpdate(float progress, boolean ready) {
         if (ready) {
@@ -614,7 +638,8 @@ public class CrfHeartRateStepLayout extends ActiveStepLayout implements
 
     @Override
     public void crfTaskResult(TaskResult taskResult) {
-
+        sex = StepResultHelper.findStringResult(taskResult, "sex");
+        birthYear = StepResultHelper.findIntegerResult("birthYear", taskResult);
     }
 
     @Override
