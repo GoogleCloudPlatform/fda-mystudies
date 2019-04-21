@@ -96,13 +96,14 @@ public class CrfHeartRateStepLayout extends ActiveStepLayout implements
     private static final Logger LOG = LoggerFactory.getLogger(CrfHeartRateStepLayout.class);
 
     protected CrfHeartRateCameraStep step;
-//    private static final String AVERAGE_BPM_IDENTIFIER = "AVERAGE_BPM_IDENTIFIER";
-    private static final String BPM_START_IDENTIFIER_SUFFIX = ".heartRate_start";
-    private static final String BPM_END_IDENTIFIER_SUFFIX = ".heartRate_end";
 
     public static final String RESTING_BPM_VALUE_RESULT = "resting";
+    public static final String RESTING_CONFIDENCE_VALUE_RESULT = "resting_confidence";
     public static final String PEAK_BPM_VALUE_RESULT = "peak";
+    public static final String PEAK_BPM_CONFIDENCE_RESULT = "peak_confidence";
     public static final String VO2_MAX_VALUE_RESULT = "vo2_max";
+
+    private static double MINIMUM_CONFIDENCE = 0.5;
 
     private CameraSourcePreview cameraSourcePreview;
     private TextureView cameraPreview;
@@ -403,7 +404,11 @@ public class CrfHeartRateStepLayout extends ActiveStepLayout implements
             heartImageView.startAnimation(heartBeatAnimation);
             heartImageView.setVisibility(VISIBLE);
         }
-        currentHeartRate.setText(bpmHolder.bpm + " " + getContext().getString(R.string.crf_bpm));
+        String bpmText = "--";
+        if (bpmHolder.confidence >= MINIMUM_CONFIDENCE) {
+            bpmText = String.valueOf(bpmHolder.bpm);
+        }
+        currentHeartRate.setText(bpmText + " " + getContext().getString(R.string.crf_bpm));
         arcDrawableContainer.setVisibility(VISIBLE);
         currentHeartRate.setVisibility(VISIBLE);
         heartBeatAnimation.setBpm(bpmHolder.bpm);
@@ -503,41 +508,34 @@ public class CrfHeartRateStepLayout extends ActiveStepLayout implements
         crfMessageTextView.setVisibility(View.INVISIBLE);
 
 
-        if (step.isHrRecoveryStep) {
-            if((cameraRecorder instanceof HeartRateCamera2Recorder)) {
-                int calendarYear = Calendar.getInstance().get(Calendar.YEAR);
-                int age = calendarYear - birthYear;
-                Sex sexEnum = Sex.valueOf(sex);
-
-                double vo2max = ((HeartRateCamera2Recorder) cameraRecorder).calculateVo2Max(sexEnum, age);
-                setVo2MaxResult(vo2max);
-            }
-        }
-
+        int hrToDisplay = 0;
         if (!bpmList.isEmpty()) {
-            int bpmSum = 0;
-            for (BpmHolder bpmHolder : bpmList) {
-                bpmSum += bpmHolder.bpm;
+            if (step.isHrRecoveryStep) {
+                if((cameraRecorder instanceof HeartRateCamera2Recorder)) {
+                    int calendarYear = Calendar.getInstance().get(Calendar.YEAR);
+                    int age = calendarYear - birthYear;
+                    Sex sexEnum = Sex.valueOf(sex);
+
+                    double vo2max = ((HeartRateCamera2Recorder) cameraRecorder).calculateVo2Max(sexEnum, age);
+                    setVo2MaxResult(vo2max);
+                }
+                BpmHolder peakHolder = findPeakHr();
+                hrToDisplay = peakHolder.bpm;
+                setBpmResult(peakHolder, PEAK_BPM_VALUE_RESULT, PEAK_BPM_CONFIDENCE_RESULT);
+            } else {
+                BpmHolder bestHolder = findBestHr();
+                hrToDisplay = bestHolder.bpm;
+                setBpmResult(bestHolder, RESTING_BPM_VALUE_RESULT, RESTING_CONFIDENCE_VALUE_RESULT);
             }
-            int averageBpm = bpmSum / bpmList.size();
-
-            BpmHolder bestHolder = findBestHr();
-            int bestHr = bestHolder.bpm;
-
-            setBpmResult(bestHr);
-            heartRateNumber.setText(String.format(Locale.getDefault(), "%d", bestHr));
-            finalBpm.setText(String.format(Locale.getDefault(), "%d", bestHr));
-        } else {
-            setBpmResult(0);
-            heartRateNumber.setText(String.format(Locale.getDefault(), "%d", 0));
-            finalBpm.setText(String.format(Locale.getDefault(), "%d", 0));
         }
+        heartRateNumber.setText(String.format(Locale.getDefault(), "%d", hrToDisplay));
+        finalBpm.setText(String.format(Locale.getDefault(), "%d", hrToDisplay));
     }
 
     private boolean haveValidHr() {
         if (!bpmList.isEmpty()) {
             for (BpmHolder bpmHolder : bpmList) {
-                if (bpmHolder.confidence > 0.5) {
+                if (bpmHolder.confidence >= MINIMUM_CONFIDENCE) {
                     return true;
                 }
             }
@@ -548,16 +546,28 @@ public class CrfHeartRateStepLayout extends ActiveStepLayout implements
 
     private BpmHolder findBestHr() {
         BpmHolder bestHr = null;
-
         if (!bpmList.isEmpty()) {
-            bestHr = bpmList.get(0);
+            int bestConfidence = 0;
             for (BpmHolder bpmHolder : bpmList) {
-                if (bpmHolder.confidence > bestHr.confidence) {
+                if (bpmHolder.confidence >= MINIMUM_CONFIDENCE && bpmHolder.confidence > bestConfidence) {
                     bestHr = bpmHolder;
                 }
             }
         }
         return bestHr;
+    }
+
+    private BpmHolder findPeakHr() {
+        BpmHolder peakHr = null;
+        if (!bpmList.isEmpty()) {
+            int peak = 0;
+            for (BpmHolder bpmHolder : bpmList) {
+                if (bpmHolder.confidence >= MINIMUM_CONFIDENCE && bpmHolder.bpm > peak) {
+                    peakHr = bpmHolder;
+                }
+            }
+        }
+        return peakHr;
     }
 
     private void showFinishUi() {
@@ -578,7 +588,7 @@ public class CrfHeartRateStepLayout extends ActiveStepLayout implements
 
 
 
-        nextButton.setText("Done");
+        nextButton.setText(R.string.crf_done);
         nextButton.setOnClickListener(view -> onNextButtonClicked());
 
         redoButton.setVisibility(View.VISIBLE);
@@ -588,20 +598,6 @@ public class CrfHeartRateStepLayout extends ActiveStepLayout implements
 
     }
 
-    /**
-     * Saves the first and last BPM readings of the step
-     * @param bpmStart first BPM reading recorded
-     * @param bpmEnd last BPM reading recorded
-     */
-    private void setBpmStartAndEnd(BpmHolder bpmStart, BpmHolder bpmEnd) {
-        String startIdentifier = activeStep.getIdentifier() + BPM_START_IDENTIFIER_SUFFIX;
-        stepResult.setResultForIdentifier(startIdentifier,
-                getBpmStepResult(startIdentifier, bpmStart));
-
-        String endIdentifier = activeStep.getIdentifier() + BPM_END_IDENTIFIER_SUFFIX;
-        stepResult.setResultForIdentifier(endIdentifier,
-                getBpmStepResult(endIdentifier, bpmEnd));
-    }
 
     private StepResult<Integer> getBpmStepResult(String identifier, BpmHolder bpmHolder) {
         QuestionStep bpmQuestion =
@@ -615,11 +611,16 @@ public class CrfHeartRateStepLayout extends ActiveStepLayout implements
     }
 
 
-    private void setBpmResult(int bpm) {
-        String bpmStepId = CrfHeartRateStepLayout.RESTING_BPM_VALUE_RESULT;
-        StepResult<String> bpmResult = new StepResult<>(new Step(bpmStepId));
-        bpmResult.setResult(String.valueOf(bpm));
-        stepResult.setResultForIdentifier(bpmStepId, bpmResult);
+    private void setBpmResult(BpmHolder bpm, String bpmIdentifier, String confidenceIdentifier) {
+        stepResult.setResultForIdentifier(bpmIdentifier, getBpmStepResult(bpmIdentifier, bpm));
+
+        QuestionStep confQuestion =
+                new QuestionStep(confidenceIdentifier, confidenceIdentifier, new DecimalAnswerFormat(0,1));
+        StepResult<Double> confResult = new StepResult<>(confQuestion);
+        confResult.setResult(bpm.confidence);
+        confResult.setStartDate(new Date(bpm.timestamp));
+        confResult.setEndDate(new Date(bpm.timestamp));
+        stepResult.setResultForIdentifier(confidenceIdentifier, confResult);
     }
 
     private void setVo2MaxResult(double vo2Max) {
@@ -638,8 +639,10 @@ public class CrfHeartRateStepLayout extends ActiveStepLayout implements
 
     @Override
     public void crfTaskResult(TaskResult taskResult) {
-        sex = StepResultHelper.findStringResult(taskResult, "sex");
-        birthYear = StepResultHelper.findIntegerResult("birthYear", taskResult);
+        if (step.isHrRecoveryStep) {
+            sex = StepResultHelper.findStringResult(taskResult, "sex");
+            birthYear = StepResultHelper.findIntegerResult("birthYear", taskResult);
+        }
     }
 
     @Override

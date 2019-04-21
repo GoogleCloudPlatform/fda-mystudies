@@ -121,7 +121,8 @@ public class CrfCompletionStepLayout extends CrfInstructionStepLayout implements
 
     @Override
     public void crfTaskResult(TaskResult taskResult) {
-        mCompletionValueResult = StepResultHelper.findStringResult(taskResult, crfCompletionStep.valueResultId);
+        StepResult stepResult = StepResultHelper.findStepResult(taskResult, crfCompletionStep.valueResultId);
+        mCompletionValueResult = String.valueOf(stepResult.getResult());
         refreshCompletionValueLabel();
     }
 
