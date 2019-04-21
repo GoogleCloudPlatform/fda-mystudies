@@ -38,7 +38,7 @@
         <ImageView
             android:id="@+id/crf_image_view"
             android:layout_width="match_parent"
-            android:layout_height="150dp"
+            android:layout_height="120dp"
             android:scaleType="centerInside"
             android:src="@drawable/crf_completed_icon"
             tools:src="@drawable/crf_completed_icon" />

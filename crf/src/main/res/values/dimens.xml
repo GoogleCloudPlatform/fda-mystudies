@@ -35,7 +35,7 @@
     <dimen name="crf_next_button">145dp</dimen>
     <dimen name="crf_image_height">48dp</dimen>
     <dimen name="crf_step_image_height">320dp</dimen>
-    <dimen name="crf_start_step_image_height">250dp</dimen>
+    <dimen name="crf_start_step_image_height">220dp</dimen>
     <dimen name="crf_arc_drawable_width">14dp</dimen>
 
 </resources>
