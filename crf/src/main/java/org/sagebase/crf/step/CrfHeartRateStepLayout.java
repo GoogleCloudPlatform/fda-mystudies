@@ -511,14 +511,6 @@ public class CrfHeartRateStepLayout extends ActiveStepLayout implements
         int hrToDisplay = 0;
         if (!bpmList.isEmpty()) {
             if (step.isHrRecoveryStep) {
-                if((cameraRecorder instanceof HeartRateCamera2Recorder)) {
-                    int calendarYear = Calendar.getInstance().get(Calendar.YEAR);
-                    int age = calendarYear - birthYear;
-                    Sex sexEnum = Sex.valueOf(sex);
-
-                    double vo2max = ((HeartRateCamera2Recorder) cameraRecorder).calculateVo2Max(sexEnum, age);
-                    setVo2MaxResult(vo2max);
-                }
                 BpmHolder peakHolder = findPeakHr();
                 hrToDisplay = peakHolder.bpm;
                 setBpmResult(peakHolder, PEAK_BPM_VALUE_RESULT, PEAK_BPM_CONFIDENCE_RESULT);
@@ -652,10 +644,24 @@ public class CrfHeartRateStepLayout extends ActiveStepLayout implements
         // don't do this for video recorder, wait for heart rate JSON
         if (recorder instanceof JsonArrayDataRecorder) {
             if (haveValidHr()) {
-                showCompleteUi();
-            } else {
-                showFailureUi();
+                //Api target is now 21 so we should always have a HeartRateCamera2Recorder -Nathaniel 4/21/19
+                if (step.isHrRecoveryStep && cameraRecorder instanceof HeartRateCamera2Recorder) {
+                    int calendarYear = Calendar.getInstance().get(Calendar.YEAR);
+                    int age = calendarYear - birthYear;
+                    Sex sexEnum = Sex.valueOf(sex);
+
+                    double vo2max = ((HeartRateCamera2Recorder) cameraRecorder).calculateVo2Max(sexEnum, age);
+                    if (vo2max > 0) {
+                        setVo2MaxResult(vo2max);
+                        showCompleteUi();
+                        return;
+                    }
+                } else {
+                    showCompleteUi();
+                    return;
+                }
             }
+            showFailureUi();
         }
     }
 
