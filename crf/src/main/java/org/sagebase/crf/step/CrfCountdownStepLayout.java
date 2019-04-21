@@ -36,7 +36,7 @@ import java.util.Locale;
  * Created by TheMDP on 10/31/17.
  */
 
-public class CrfCountdownStepLayout extends ActiveStepLayout implements CrfTaskStatusBarManipulator, CrfTaskToolbarProgressManipulator {
+public class CrfCountdownStepLayout extends ActiveStepLayout implements CrfTaskToolbarProgressManipulator {
 
     protected TextView crfTitleTextView;
     protected TextView crfCountdownTextView;
@@ -140,11 +140,6 @@ public class CrfCountdownStepLayout extends ActiveStepLayout implements CrfTaskS
     @Override
     public int getFixedSubmitBarLayoutId() {
         return R.layout.crf_step_layout_container;
-    }
-
-    @Override
-    public int crfStatusBarColor() {
-        return R.color.white;
     }
 
     @Override
