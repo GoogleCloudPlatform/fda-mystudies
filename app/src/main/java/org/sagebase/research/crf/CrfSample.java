@@ -89,8 +89,7 @@ public class CrfSample extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (resultCode == Activity.RESULT_OK && requestCode == REQUEST_TASK) {
-            TaskResult taskResult = (TaskResult) data.getSerializableExtra(ViewTaskActivity.EXTRA_TASK_RESULT);
-            CrfTaskResult crfTaskResult = CrfTaskResultFactory.create(taskResult);
+            CrfTaskResult crfTaskResult = CrfTaskResultFactory.create(data);
             Log.d("CrfSample", String.valueOf(crfTaskResult));
         } else {
             super.onActivityResult(requestCode, resultCode, data);
