@@ -120,6 +120,7 @@
             app:layout_constraintTop_toTopOf="parent"/>
 
 
+        <!--suppress AndroidMissingOnClickHandler -->
         <Button
             style="@style/Crf.RoundedCornerMaterialButton.Secondary"
             android:id="@+id/button_go_forward"
@@ -129,6 +130,7 @@
             android:focusable="true"
             android:text="@string/crf_lets_go"
             android:onClick="goForwardClicked"
+            tools:ignore="OnClick"
             app:layout_constraintBottom_toTopOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/learn_more"/>
 

@@ -33,6 +33,7 @@
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         >
+
         <ImageButton
             android:id="@+id/x_button"
             android:layout_width="40dp"
@@ -41,6 +42,7 @@
             android:clickable="true"
             android:focusable="true"
             android:onClick="goBackClicked"
+            tools:ignore="OnClick"
             android:layout_margin="@dimen/activity_horizontal_margin"
             />
     </RelativeLayout>

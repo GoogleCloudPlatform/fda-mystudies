@@ -17,5 +17,45 @@
 
 package org.sagebase.crf.result;
 
-public class CrfTaskResult {
+import android.support.annotation.NonNull;
+
+import com.google.common.collect.ImmutableList;
+
+import org.threeten.bp.ZonedDateTime;
+
+/**
+ * Result from a run of a task.
+ */
+public class CrfTaskResult extends CrfResult {
+    private static final String TYPE = "task";
+
+    @NonNull
+    private final ImmutableList<CrfResult> stepHistory;
+    @NonNull
+    private final ImmutableList<CrfResult> asyncResults;
+
+    public CrfTaskResult(@NonNull String identifier, @NonNull ZonedDateTime startTime,
+                         @NonNull ZonedDateTime endTime,
+                         @NonNull ImmutableList<CrfResult> stepHistory,
+                         @NonNull ImmutableList<CrfResult> asyncResults) {
+        super(identifier, TYPE, startTime, endTime);
+        this.stepHistory = stepHistory;
+        this.asyncResults = asyncResults;
+    }
+
+    /**
+     * @return list of step results in this run of the task
+     */
+    @NonNull
+    public ImmutableList<CrfResult> getStepHistory() {
+        return stepHistory;
+    }
+
+    /**
+     * @return list of async results for this run of the task
+     */
+    @NonNull
+    public ImmutableList<CrfResult> getAsyncResults() {
+        return asyncResults;
+    }
 }

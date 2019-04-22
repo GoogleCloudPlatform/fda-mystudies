@@ -26,6 +26,7 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -33,15 +34,12 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import org.researchstack.backbone.factory.IntentFactory;
 import org.researchstack.backbone.result.TaskResult;
-import org.researchstack.backbone.task.Task;
 import org.researchstack.backbone.ui.ViewTaskActivity;
-import org.sagebase.crf.CrfActiveTaskActivity;
-import org.sagebase.crf.researchstack.CrfResourceManager;
-import org.sagebase.crf.researchstack.CrfTaskFactory;
+import org.sagebase.crf.CrfTaskIntentFactory;
+import org.sagebase.crf.CrfTaskResultFactory;
+import org.sagebase.crf.result.CrfTaskResult;
 import org.sagebase.crf.step.active.CsvUtils;
-import org.sagebase.research.crf.R;
 
 import static org.researchstack.backbone.ui.fragment.ActivitiesFragment.REQUEST_TASK;
 
@@ -49,20 +47,11 @@ public class CrfSample extends AppCompatActivity {
 
     private static final int MY_PERMISSIONS_REQUEST_CAMERA = 100;
 
-    private Task taskToStart = null;
-    private CrfTaskFactory taskFactory = new CrfTaskFactory();
-    private IntentFactory intentFactory = IntentFactory.INSTANCE;
-
-    public final IntentFactory getIntentFactory() {
-        return intentFactory;
-    }
+    private Intent taskToStartIntent = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-//
-//        ResearchStack researchStack = new CrfResearchStack(this);
-//        ResearchStack.init(this.getApplicationContext(), researchStack);
 
         setContentView(R.layout.activity_crf_sample);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -70,38 +59,42 @@ public class CrfSample extends AppCompatActivity {
 
         LinearLayout taskContainer = findViewById(R.id.crf_task_container);
 
-        final Task trainingTask = taskFactory.createTask(this, CrfResourceManager.HEART_RATE_TRAINING_TEST_RESOURCE);
-        addTask(taskContainer, trainingTask);
+        final Intent trainingTaskIntent = CrfTaskIntentFactory.getHeartRateTrainingTaskIntent(this);
+        final String trainingTaskTitle = "Heart Rate Training";
+        addTask(taskContainer, trainingTaskIntent, trainingTaskTitle);
 
-        final Task restingHrTask = taskFactory.createTask(this, CrfResourceManager.HEART_RATE_MEASUREMENT_TEST_RESOURCE);
-        addTask(taskContainer, restingHrTask);
+        final Intent restingHrTaskIntent = CrfTaskIntentFactory.getHeartRateMeasurementTaskIntent(this);
+        final String restingHrTaskTitle = "Heart Rate Measurement";
+        addTask(taskContainer, restingHrTaskIntent, restingHrTaskTitle);
 
-        final Task stepHrTask = taskFactory.createTask(this, CrfResourceManager.STAIR_STEP_RESOURCE);
-        addTask(taskContainer, stepHrTask);
+        final Intent stepHrTaskIntent = CrfTaskIntentFactory.getStairStepTaskIntent(this);
+        final String stepHrTaskTitle = "Cardio Stair Step";
+        addTask(taskContainer, stepHrTaskIntent, stepHrTaskTitle);
 
+        // is this needed?
         CsvUtils.getHighPassFilterParams(this);
-
     }
 
-    private void addTask(ViewGroup taskContainer, final Task activeTask) {
+    private void addTask(final ViewGroup taskContainer, final Intent taskIntent,
+                         final String taskTitle) {
         View taskView = LayoutInflater.from(this).inflate(R.layout.crf_task, taskContainer, false);
         taskContainer.addView(taskView);
         Button taskButton = taskView.findViewById(R.id.button_start_task);
         TextView taskTitleTextView = taskView.findViewById(R.id.task_name);
-        taskTitleTextView.setText(activeTask.getIdentifier());
+        taskTitleTextView.setText(taskTitle);
         taskButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 //if (hasCameraPermission(activeTask)) {
-                    startTask(activeTask);
+                startTask(taskIntent);
                 //}
             }
         });
     }
 
-    private boolean hasCameraPermission(Task activeTask) {
+    private boolean hasCameraPermission(Intent activeTaskIntent) {
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
-            taskToStart = activeTask;
+            taskToStartIntent = activeTaskIntent;
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.CAMERA}, MY_PERMISSIONS_REQUEST_CAMERA);
             return false;
         }
@@ -118,7 +111,7 @@ public class CrfSample extends AppCompatActivity {
                         && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     // permission was granted, yay! Do the
                     // contacts-related task you need to do.
-                    startTask(taskToStart);
+                    startTask(taskToStartIntent);
                 } else {
                     // permission denied, boo! Disable the
                     // functionality that depends on this permission.
@@ -131,10 +124,9 @@ public class CrfSample extends AppCompatActivity {
         }
     }
 
-    private void startTask(Task activeTask) {
-        if (activeTask != null) {
-            Intent intent = getIntentFactory().newTaskIntent(this, CrfActiveTaskActivity.class, activeTask);
-            startActivityForResult(intent, REQUEST_TASK);
+    private void startTask(final Intent taskIntent) {
+        if (taskIntent != null) {
+            startActivityForResult(taskIntent, REQUEST_TASK);
         }
     }
 
@@ -142,11 +134,11 @@ public class CrfSample extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (resultCode == Activity.RESULT_OK && requestCode == REQUEST_TASK) {
             TaskResult taskResult = (TaskResult) data.getSerializableExtra(ViewTaskActivity.EXTRA_TASK_RESULT);
-            taskResult.getResults();
+            CrfTaskResult crfTaskResult = CrfTaskResultFactory.create(taskResult);
+            Log.d("CrfSample", String.valueOf(crfTaskResult));
         } else {
             super.onActivityResult(requestCode, resultCode, data);
         }
-
     }
 
 
