@@ -23,9 +23,6 @@
 
     <color name="white">#FFFFFF</color>
 
-    <!--Used by CrfHeartRateStepLayout completion-->
-    <color name="mint">#63D49E</color>
-
     <color name="text_color_settings_title">@color/textColor</color>
     <color name="text_color_settings_summary">@color/textColor</color>
     <color name="tab_text_color">@color/textColor</color>

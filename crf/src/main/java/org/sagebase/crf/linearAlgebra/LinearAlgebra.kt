@@ -1,6 +1,6 @@
-package org.sagebase.crf.matlab
+package org.sagebase.crf.linearAlgebra
 
-internal class Matlab {
+internal class LinearAlgebra {
     
     enum class ConvolutionType {
         FULL,

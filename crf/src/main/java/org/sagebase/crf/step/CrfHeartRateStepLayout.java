@@ -88,7 +88,6 @@ public class CrfHeartRateStepLayout extends ActiveStepLayout implements
         BpmRecorder.DeclineHRListener,
         BpmRecorder.AbnormalHRListener,
         RecorderListener,
-        CrfTaskStatusBarManipulator,
         CrfTaskToolbarProgressManipulator,
         CrfResultListener {
     private static final Logger LOG = LoggerFactory.getLogger(CrfHeartRateStepLayout.class);
@@ -425,6 +424,10 @@ public class CrfHeartRateStepLayout extends ActiveStepLayout implements
         }
     }
 
+    protected void onDoneButtonClicked() {
+        callbacks.onSaveStep(StepCallbacks.ACTION_END, activeStep, stepResult);
+    }
+
     public void onRedoButtonClicked() {
         pauseActiveStepLayout();
         forceStop();
@@ -456,8 +459,13 @@ public class CrfHeartRateStepLayout extends ActiveStepLayout implements
         calculateSuccess.setText(troubleSpannable);
         calculateSuccess.setMovementMethod(LinkMovementMethod.getInstance());
 
-        nextButton.setOnClickListener(view -> onRedoButtonClicked());
-        nextButton.setText(R.string.crf_redo);
+        if (step.isHrRecoveryStep) {
+            nextButton.setOnClickListener(view -> onDoneButtonClicked());
+            nextButton.setText(R.string.crf_done);
+        } else {
+            nextButton.setOnClickListener(view -> onRedoButtonClicked());
+            nextButton.setText(R.string.crf_redo);
+        }
 
         findViewById(R.id.crf_error_icon_view).setVisibility(View.VISIBLE);
 
@@ -537,7 +545,7 @@ public class CrfHeartRateStepLayout extends ActiveStepLayout implements
 
     private void showFinishUi() {
         shouldShowFinishUi = false;
-        layout.setBackgroundColor(getResources().getColor(R.color.mint));
+        layout.setBackgroundColor(getResources().getColor(R.color.completion_background_end));
         buttonContainer.setBackgroundColor(getResources().getColor(R.color.white));
         yourHRis.setVisibility(View.VISIBLE);
         finalBpm.setVisibility(View.VISIBLE);
@@ -602,11 +610,6 @@ public class CrfHeartRateStepLayout extends ActiveStepLayout implements
         if (ready) {
             intelligentStartDetected();
         }
-    }
-
-    @Override
-    public int crfStatusBarColor() {
-        return R.color.white;
     }
 
     @Override

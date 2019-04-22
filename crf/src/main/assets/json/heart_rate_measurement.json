@@ -1,6 +1,6 @@
 {
-  "taskIdentifier" : "Heart Rate Measurement",
-  "schemaIdentifier" : "Heart Rate Measurement",
+  "taskIdentifier" : "Resting Heart Rate",
+  "schemaIdentifier" : "Resting Heart Rate",
   "optional" : false,
   "taskSteps" : [
     {
@@ -64,7 +64,7 @@
       "identifier"       : "completion",
       "type"             : "crf_completion",
       "topText"          : "Your resting heart rate is",
-      "text"             : "Resting HR Captured!",
+      "text"             : "Great job",
       "detailText"       : "Great job measuring your heart at rest. We’ve finished the first half of  your heart snapshot, so let’s continue on to the next step.",
       "learnMoreText"    : "What is a 'normal' resting HR?",
       "learnMoreFile"    : "crf_normal_resting_hr.html",

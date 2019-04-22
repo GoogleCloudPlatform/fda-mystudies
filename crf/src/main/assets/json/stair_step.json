@@ -1,6 +1,6 @@
 {
-  "taskIdentifier" : "Cardio Stair Step",
-  "schemaIdentifier" : "Cardio Stair Step",
+  "taskIdentifier" : "Heart Rate Recovery",
+  "schemaIdentifier" : "Heart Rate Recovery",
   "optional" : false,
   "taskSteps" : [
     {
@@ -41,7 +41,7 @@
       "title": "What was your sex at birth?",
       "learnMoreText"    : "Why are we asking about this?",
       "learnMoreFile"    : "crf_sex_at_birth.html",
-      "learnMoreTitle"   : "Why are we asking about you sex at birth?",
+      "learnMoreTitle"   : "Why are we asking?",
       "items": [
         {
           "identifier": "sex",
@@ -122,28 +122,18 @@
       "soundRes"         : "stair_step_3_min_cue"
     },
     {
-      "identifier" : "cover_camera",
-      "type"       : "crf_instruction",
-      "text"       : "Cover the flash and camera",
-      "detailText" : "Use your finger to cover the camera and flash on the back of your phone. Your finger nail should turn a little red once you cover the flash.",
-      "image"      : "crf_cover_flash_animation",
-      "isImageAnimated"  : true,
-      "buttonText" : "Measure heart rate",
-      "hideProgress"  : "true"
-    },
-    {
       "identifier"       : "hr",
       "type"             : "crf_heart_rate_camera_step",
-      "hideProgress"     : "true",
+      "isHrRecoveryStep" : "true",
       "duration"         : "60"
     },
     {
       "identifier"       : "completion",
       "type"             : "crf_completion",
-      "topText"          : "Your heart rate recovery is",
+      "topText"          : "Your estimated Recovery HR score is",
       "text"             : "Recovery HR Score",
-      "detailText"       : "Changing your Recovery HR can take time. You can change it over weeks or months by losing weight or exercising.",
-      "learnMoreText"    : "What is a Recovery HR Score?",
+      "detailText"       : "The score above estimates a vital sign called VO2max that is normally measured in a lab or clinic.",
+      "learnMoreText"    : "What does this score mean?",
       "learnMoreFile"    : "crf_recovery_hr.html",
       "learnMoreTitle"   : "What is a Recovery HR Score?",
       "valueResultId"    : "completion_bpm_result",

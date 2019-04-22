@@ -20,6 +20,7 @@ package org.sagebase.crf;
 import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.media.AudioManager;
 import android.os.Build;
 import android.os.Bundle;
@@ -52,6 +53,7 @@ import org.sagebase.crf.view.CrfTaskToolbarProgressManipulator;
 import org.sagebase.crf.view.CrfTaskToolbarTintManipulator;
 import org.sagebase.crf.view.CrfTaskToolbarVisibilityManipulator;
 import org.sagebase.crf.view.CrfTransparentToolbar;
+import org.sagebase.crf.view.ViewUtils;
 
 import java.util.List;
 
@@ -92,6 +94,7 @@ public class CrfActiveTaskActivity extends ActiveTaskActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         crfStepProgressTextview = findViewById(R.id.crf_step_progress_textview);
     }
 
@@ -170,7 +173,7 @@ public class CrfActiveTaskActivity extends ActiveTaskActivity {
             }
         }
         int color = ResourcesCompat.getColor(getResources(), statusBarColor, null);
-        //MainApplication.setStatusBarColor(this, color); //TODO: move into utility class -nathaniel 4/18/19
+        ViewUtils.setStatusBarColor(this, color);
 
         // Set the step progress
         if (task instanceof OrderedTask) {

@@ -25,7 +25,6 @@ import com.google.gson.JsonElement;
 import org.researchstack.backbone.model.survey.ActiveStepSurveyItem;
 import org.researchstack.backbone.model.survey.BooleanQuestionSurveyItem;
 import org.researchstack.backbone.model.survey.ChoiceQuestionSurveyItem;
-import org.researchstack.backbone.model.survey.FormSurveyItem;
 import org.researchstack.backbone.model.survey.IntegerRangeSurveyItem;
 import org.researchstack.backbone.model.survey.SurveyItem;
 import org.researchstack.backbone.model.survey.SurveyItemAdapter;
@@ -34,6 +33,7 @@ import org.sagebase.crf.step.CrfCompletionSurveyItem;
 import org.sagebase.crf.step.CrfFormSurveyItem;
 import org.sagebase.crf.step.CrfInstructionSurveyItem;
 import org.sagebase.crf.step.CrfStartTaskSurveyItem;
+import org.sagebase.crf.step.CrfHeartRateSurveyItem;
 
 import java.util.Map;
 
@@ -66,7 +66,7 @@ public class CrfSurveyItemAdapter extends SurveyItemAdapter {
                     .put(CRF_INSTRUCTION_SURVEY_ITEM_TYPE, CrfInstructionSurveyItem.class)
                     .put(CRF_CAMERA_PERMISSION_SURVEY_ITEM_TYPE, CrfInstructionSurveyItem.class)
                     .put(CRF_START_TASK_SURVEY_ITEM_TYPE, CrfStartTaskSurveyItem.class)
-                    .put(CRF_HEART_RATE_CAMERA_SURVEY_ITEM_TYPE, ActiveStepSurveyItem.class)
+                    .put(CRF_HEART_RATE_CAMERA_SURVEY_ITEM_TYPE, CrfHeartRateSurveyItem.class)
                     .put(CRF_COUNTDOWN_SURVEY_ITEM_TYPE, ActiveStepSurveyItem.class)
                     .put(CRF_12_MIN_WALK_SURVEY_ITEM_TYPE, ActiveStepSurveyItem.class)
                     .put(CRF_STAIR_STEP_SURVEY_ITEM_TYPE, ActiveStepSurveyItem.class)
