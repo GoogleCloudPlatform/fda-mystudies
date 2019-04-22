@@ -32,7 +32,8 @@ android {
 
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
-    api project(':backbone'), {
+    
+    implementation project(':backbone'), {
         exclude group: 'joda-time', module: 'joda-time'
         exclude group: 'net.zetetic', module: 'android-database-sqlcipher'
         exclude group: 'co.touchlab.squeaky'
@@ -44,7 +45,7 @@ dependencies {
     }
 
     api 'com.jakewharton.threetenabp:threetenabp:1.2.0'
-    implementation 'net.danlew:android.joda:2.9.9.2'
+    api 'net.danlew:android.joda:2.9.9.2'
 
     implementation 'com.google.code.gson:gson:2.8.2'
     implementation 'com.google.guava:guava:27.1-android'

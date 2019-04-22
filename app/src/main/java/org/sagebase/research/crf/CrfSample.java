@@ -30,15 +30,13 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import org.researchstack.backbone.result.TaskResult;
-import org.researchstack.backbone.ui.ViewTaskActivity;
 import org.sagebase.crf.CrfTaskIntentFactory;
 import org.sagebase.crf.CrfTaskResultFactory;
 import org.sagebase.crf.result.CrfTaskResult;
 
-import static org.researchstack.backbone.ui.fragment.ActivitiesFragment.REQUEST_TASK;
 
 public class CrfSample extends AppCompatActivity {
+    private static final int CRF_TASK_REQUEST_CODE = 1492;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -82,13 +80,13 @@ public class CrfSample extends AppCompatActivity {
 
     private void startTask(final Intent taskIntent) {
         if (taskIntent != null) {
-            startActivityForResult(taskIntent, REQUEST_TASK);
+            startActivityForResult(taskIntent, CRF_TASK_REQUEST_CODE);
         }
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (resultCode == Activity.RESULT_OK && requestCode == REQUEST_TASK) {
+        if (resultCode == Activity.RESULT_OK && requestCode == CRF_TASK_REQUEST_CODE) {
             CrfTaskResult crfTaskResult = CrfTaskResultFactory.create(data);
             Log.d("CrfSample", String.valueOf(crfTaskResult));
         } else {

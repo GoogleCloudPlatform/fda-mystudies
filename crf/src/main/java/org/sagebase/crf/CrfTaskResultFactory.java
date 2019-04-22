@@ -40,8 +40,9 @@ public class CrfTaskResultFactory {
      * @return task result in Cardiorespiratory Fitness module format
      */
     public static CrfTaskResult create(Intent data) {
-        TaskResult taskResult = (TaskResult) data.getSerializableExtra(ViewTaskActivity.EXTRA_TASK_RESULT);
-        return create(taskResult);
+//            return new CrfTaskResult("id", ZonedDateTime.now(), ZonedDateTime.now(),
+//                    ImmutableList.of(), ImmutableList.of());
+        return createFromTaskResult((TaskResult)data.getSerializableExtra(ViewTaskActivity.EXTRA_TASK_RESULT));
     }
 
     /**
@@ -49,7 +50,7 @@ public class CrfTaskResultFactory {
      * @return task result in Cardiorespiratory Fitness module format
      */
     @VisibleForTesting
-    static CrfTaskResult create(TaskResult taskResult) {
+    private static CrfTaskResult createFromTaskResult(TaskResult taskResult) {
         String identifier = taskResult.getIdentifier();
 
         ZonedDateTime startTime = ZonedDateTime.ofInstant(

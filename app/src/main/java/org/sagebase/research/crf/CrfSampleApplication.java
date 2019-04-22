@@ -21,11 +21,15 @@ import android.app.Application;
 
 import com.jakewharton.threetenabp.AndroidThreeTen;
 
+import net.danlew.android.joda.JodaTimeAndroid;
+
 public class CrfSampleApplication extends Application {
     @Override public void onCreate() {
         super.onCreate();
 
         // Initialize the timezone information for the JSR-310 backport for Android
         AndroidThreeTen.init(this);
+        // Initialize the timezone information for Joda for Android
+        JodaTimeAndroid.init(this);
     }
 }
