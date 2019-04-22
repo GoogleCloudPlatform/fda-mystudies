@@ -38,6 +38,11 @@ dependencies {
         exclude group: 'co.touchlab.squeaky'
     }
 
+    implementation 'com.github.tony19:logback-android-core:1.1.1-6'
+    implementation 'com.github.tony19:logback-android-classic:1.1.1-6', {
+        exclude group: 'com.google.android', module: 'android'
+    }
+
     api 'com.jakewharton.threetenabp:threetenabp:1.2.0'
     implementation 'net.danlew:android.joda:2.9.9.2'
 
