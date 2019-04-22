@@ -46,7 +46,7 @@
     {
       "identifier"       : "hr",
       "type"             : "crf_heart_rate_camera_step",
-      "duration"         : "60"
+      "duration"         : "20"
     },
     {
       "identifier"       : "completion",

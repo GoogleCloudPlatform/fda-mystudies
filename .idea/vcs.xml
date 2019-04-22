@@ -2,7 +2,7 @@
 <project version="4">
   <component name="VcsDirectoryMappings">
     <mapping directory="" vcs="Git" />
-    <mapping directory="$PROJECT_DIR$/BridgeAndroidSDK" vcs="Git" />
-    <mapping directory="$PROJECT_DIR$/BridgeAndroidSDK/ResearchStack" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/BridgeAndroidSdk" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/BridgeAndroidSdk/ResearchStack" vcs="Git" />
   </component>
 </project>

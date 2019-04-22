@@ -17,10 +17,12 @@
 
 package org.sagebase.crf.step.active
 
+import com.google.gson.Gson
 import org.junit.Test
 
 import org.junit.Assert.*
-import org.sagebase.crf.matlab.*
+import org.sagebase.crf.linearAlgebra.*
+import kotlin.math.roundToInt
 
 class HeartRateSampleProcessorTest {
 
@@ -31,11 +33,11 @@ class HeartRateSampleProcessorTest {
         val u = Array(10) { ii -> ii.toDouble() + 1.0 }
         val v = Array(15) { ii -> ii.toDouble() + 1.0 }
 
-        val output1 = Matlab.conv(u, v, Matlab.ConvolutionType.SAME)
+        val output1 = LinearAlgebra.conv(u, v, LinearAlgebra.ConvolutionType.SAME)
         val expectedAnswer1 = arrayOf(120.0, 165.0, 220.0, 275.0, 330.0, 385.0, 440.0, 495.0, 534.0, 556.0)
         assertArrayEquals(expectedAnswer1, output1)
 
-        val output2 = Matlab.conv(v, u, Matlab.ConvolutionType.SAME)
+        val output2 = LinearAlgebra.conv(v, u, LinearAlgebra.ConvolutionType.SAME)
         val expectedAnswer2 = arrayOf(56.0, 84.0, 120.0, 165.0, 220.0, 275.0, 330.0, 385.0, 440.0, 495.0, 534.0, 556.0, 560.0, 545.0, 510.0)
         assertArrayEquals(expectedAnswer2, output2)
 
@@ -43,8 +45,8 @@ class HeartRateSampleProcessorTest {
         val input2 = u.zeroPadAfter(9)
 
         val expectedAnswer3 = arrayOf(1.0, 4.0, 10.0, 20.0, 35.0, 56.0, 84.0, 120.0, 165.0, 220.0, 264.0, 296.0, 315.0, 320.0, 310.0, 284.0, 241.0, 180.0, 100.0)
-        val convNoPad = Matlab.conv(u, u)
-        val convPad = Matlab.conv(input1, input2, Matlab.ConvolutionType.SAME)
+        val convNoPad = LinearAlgebra.conv(u, u)
+        val convPad = LinearAlgebra.conv(input1, input2, LinearAlgebra.ConvolutionType.SAME)
         assertArrayEquals(expectedAnswer3, convNoPad)
         assertArrayEquals(expectedAnswer3, convPad)
     }
@@ -53,145 +55,449 @@ class HeartRateSampleProcessorTest {
     fun testXCorr() {
         val input = Array(10) { ii -> ii.toDouble() + 1.0 }
 
-        val output = Matlab.xcorr(input)
+        val output = LinearAlgebra.xcorr(input)
         val expectedAnswer = arrayOf(10.0, 29.0, 56.0, 90.0, 130.0, 175.0, 224.0, 276.0, 330.0, 385.0, 330.0, 276.0, 224.0, 175.0, 130.0, 90.0, 56.0, 29.0, 10.0)
         assertArrayEquals(expectedAnswer, output)
     }
 
     @Test
-    fun testNormalizedValues() {
-        val red = getRedInput().subList(0, 600)
-        val meanValue = red.average()
-        val output = red.map { dd -> (dd - meanValue) }
-        val expectedOutput = getNormalizedValues()
+    fun testParams() {
+        val processor = HeartRateSampleProcessor()
+        assertEquals(56, processor.highPassParameters.size)
+        assertEquals(56, processor.lowPassParameters.size)
+    }
 
-        if (output.size == expectedOutput.size) {
-            output.forEachIndexed { index, element ->
-                assertEquals(expectedOutput[index], element, 0.0001)
-            }
-        } else {
-            assertEquals(expectedOutput.size, output.size)
+    @Test
+    fun testInvalidSamplingRate() {
+        val processor = HeartRateSampleProcessor()
+        assertFalse(processor.isValidSamplingRate(2))
+    }
+
+    @Test
+    fun testLowPassFilterParams() {
+        val processor = HeartRateSampleProcessor()
+        val testData = testData()
+        assertEquals(56, processor.lowPassParameters.size)
+        val filter = processor.lowPassParameters[testData.roundedSamplingRate()]
+        assertNotNull(filter)
+        if (filter == null) return
+        compare(testData.a_lowpass, filter.aParams, accuracy = 0.00000001)
+        compare(testData.b_lowpass, filter.bParams, accuracy = 0.00000001)
+    }
+
+    @Test
+    fun testHighPassFilterParams() {
+        val processor = HeartRateSampleProcessor()
+        val testData = testData()
+        assertEquals(56, processor.highPassParameters.size)
+        val filter = processor.highPassParameters[testData.roundedSamplingRate()]
+        assertNotNull(filter)
+        if (filter == null) return
+        compare(testData.a_highpass, filter.aParams, accuracy = 0.00000001)
+        compare(testData.b_highpass, filter.bParams, accuracy = 0.00000001)
+    }
+
+    @Test
+    fun testLowPassFilter() {
+        val processor = HeartRateSampleProcessor()
+        val testData = testData()
+        val isValid = processor.isValidSamplingRate(testData.roundedSamplingRate())
+        assertTrue(isValid)
+        if (!isValid) {
+            return
+        }
+        val result = processor.passFilter(testData.input, samplingRate = testData.roundedSamplingRate(), type = FilterType.low)
+        compare(testData.lowpass, result, accuracy = 0.0001)
+    }
+
+    @Test
+    fun testHighPassFilter() {
+        val processor = HeartRateSampleProcessor()
+        val testData = testData()
+        val isValid = processor.isValidSamplingRate(testData.roundedSamplingRate())
+        assertTrue(isValid)
+        if (!isValid) {
+            return
+        }
+        val result = processor.passFilter(testData.input, samplingRate = testData.roundedSamplingRate(), type = FilterType.high)
+        compare(testData.highpass, result, accuracy = 0.0001)
+    }
+
+    @Test
+    fun testMeanCenteringFilter() {
+        val processor = HeartRateSampleProcessor()
+        val testData = testData()
+        val mcf = processor.meanCenteringFilter(testData.input, samplingRate = testData.roundedSamplingRate())
+        compare(testData.mcfilter, mcf, accuracy = 0.000001)
+    }
+
+    @Test
+    fun testAutocorrelation() {
+        val processor = HeartRateSampleProcessor()
+        val testData = testData()
+        val acf = processor.autocorrelation(testData.input)
+        compare(testData.acf, acf, accuracy = 0.0001)
+    }
+
+    @Test
+    fun testCalculateSamplingRate() {
+        val processor = HeartRateSampleProcessor()
+        val testHRData = testHRData()
+        val samplingRate = processor.calculateSamplingRate(testHRData.hr_data.toList())
+        assertEquals(59.980, samplingRate, 0.001)
+    }
+
+    @Test
+    fun testCalculateSamplingRate_12hz() {
+        val processor = HeartRateSampleProcessor()
+        val testHRData = testHRData12hz()
+        val samplingRate = processor.calculateSamplingRate(testHRData.hr_data.toList())
+        assertEquals(12.728, samplingRate, 0.001)
+    }
+
+    @Test
+    fun testMeanOrderValue() {
+        val processor = HeartRateSampleProcessor()
+        assertEquals(15, processor.meanFilterOrder(12))
+        assertEquals(15, processor.meanFilterOrder(15))
+        assertEquals(19, processor.meanFilterOrder(16))
+        assertEquals(19, processor.meanFilterOrder(18))
+        assertEquals(33, processor.meanFilterOrder(19))
+        assertEquals(33, processor.meanFilterOrder(32))
+        assertEquals(65, processor.meanFilterOrder(33))
+        assertEquals(65, processor.meanFilterOrder(60))
+    }
+
+    @Test
+    fun testGetFilteredSignal_Red() {
+        val processor = HeartRateSampleProcessor()
+        val testHRData = testHRData()
+
+        val input = testHRData.hr_data.map { it.red }
+        val samplingRate = 60
+        val expectedOutput = testHRData.hr_data_filtered.map { it.red }.toDoubleArray()
+        val output = processor.getFilteredSignal(input, samplingRate, 3)
+        compare(expectedOutput, output, 0.0001)
+    }
+
+    @Test
+    fun testGetFilteredSignal_Green() {
+        val processor = HeartRateSampleProcessor()
+        val testHRData = testHRData()
+
+        val input = testHRData.hr_data.map { it.green }
+        val samplingRate = 60
+        val expectedOutput = testHRData.hr_data_filtered.map { it.green }.toDoubleArray()
+        val output = processor.getFilteredSignal(input, samplingRate, 3)
+        compare(expectedOutput, output, 0.0001)
+    }
+
+
+    @Test
+    fun testCalculatedLag() {
+        val processor = HeartRateSampleProcessor()
+        val testData = testData()
+
+        val minLag = processor.calculateMinLag(testData.samplingRate())
+        assertEquals(testData.minLag(), minLag)
+        val maxLag = processor.calculateMaxLag(testData.samplingRate())
+        assertEquals(testData.maxLag(), maxLag)
+    }
+
+    @Test
+    fun testChunkedSamples() {
+        val processor = HeartRateSampleProcessor()
+        val testHRData = testHRData()
+
+        val samplingRate = processor.calculateSamplingRate(testHRData.hr_data.toList())
+        val input = testHRData.hr_data_filtered.map { it.red }
+        val expectedOutput = testHRData.flip(testHRData.hr_data_filtered_chunked.red)
+        val output = processor.chunkSamples(input, samplingRate)
+        assertEquals(output.size, expectedOutput.size)
+        for (ii in 0 until output.size) {
+            compare(output[ii], expectedOutput[ii], 0.00000001)
         }
     }
 
     @Test
-    fun testBandpassFilter() {
-        val red = getRedInput().subList(0, 600)
-        val expectedOutput = getBandpassOutput()
+    fun testEarlierPeaks() {
+        val processor = HeartRateSampleProcessor()
+        val data = testEarlierPeaksExample()
+        val samplingRate = data.generatedSamplingRate()
 
-        val sampleProcessor = HeartRateSampleProcessor(60)
-        val output = sampleProcessor.bandpassFiltered(red.toTypedArray())
+        val output = processor.preprocessSamples(data.x, samplingRate)
+        assertNotNull(output)
+        compare(data.xacf, output!!.x.drop(1).toDoubleArray(), accuracy = 0.00000001)
+        assertEquals(data.minLag(), output.minLag)
+        assertEquals(data.maxLag(), output.maxLag)
+        assertEquals(data.xMin(), output.x.min()!!, 0.00000001)
+        assertEquals(data.xMax(), output.x.max()!!,0.00000001)
+        assertEquals(data.xMax(), data.xacf.max()!!,0.00000001)
+        compare(data.y_output(), output.y.drop(1).toDoubleArray(), accuracy = 0.00000001)
 
-        if (output.size == expectedOutput.size) {
-            output.forEachIndexed { index, element ->
-                assertEquals(expectedOutput[index], element, 0.0001)
-            }
-        } else {
-            assertEquals(expectedOutput.size, output.size)
+        val bounds = processor.getBounds(output.y, samplingRate)
+        assertEquals(data.initialGuess(), bounds.hr_initial_guess,0.00000001)
+        assertEquals(data.yMin(), bounds.y_min,0.00000001)
+        assertEquals(data.yMax(), bounds.y_max,0.00000001)
+
+        val peaks = processor.getAliasingPeakLocation(bounds.hr_initial_guess, bounds.y_max_pos, output.minLag, output.maxLag)
+        assertNotNull(peaks)
+
+        assertEquals(data.aliased_peak.Npeaks.first(), peaks!!.nPeaks)
+        assertEquals(data.aliased_peak.earlier_peak.toList(), peaks!!.earlier)
+        assertEquals(data.aliased_peak.later_peak.toList(), peaks!!.later)
+
+        val (hr, confidence) = processor.calculateHRFromFilteredSamples(data.x, samplingRate)
+        assertEquals(data.estimatedHR(), hr, 0.00000001)
+        assertEquals(data.estimatedConfidence(), confidence,0.00000001)
+    }
+
+    @Test
+    fun testLaterPeaks() {
+        val processor = HeartRateSampleProcessor()
+        val data = testLaterPeaksExample()
+        val samplingRate = data.generatedSamplingRate()
+
+        val output = processor.preprocessSamples(data.x, samplingRate)
+        assertNotNull(output)
+        compare(data.xacf, output!!.x.drop(1).toDoubleArray(), accuracy = 0.00000001)
+        assertEquals(data.minLag(), output.minLag)
+        assertEquals(data.maxLag(), output.maxLag)
+        assertEquals(data.xMin(), output.x.min()!!, 0.00000001)
+        assertEquals(data.xMax(), output.x.max()!!,0.00000001)
+        assertEquals(data.xMax(), data.xacf.max()!!,0.00000001)
+        compare(data.y_output(), output.y.drop(1).toDoubleArray(), accuracy = 0.00000001)
+
+        val bounds = processor.getBounds(output.y, samplingRate)
+        assertEquals(data.initialGuess(), bounds.hr_initial_guess,0.00000001)
+        assertEquals(data.yMin(), bounds.y_min,0.00000001)
+        assertEquals(data.yMax(), bounds.y_max,0.00000001)
+
+        val peaks = processor.getAliasingPeakLocation(bounds.hr_initial_guess, bounds.y_max_pos, output.minLag, output.maxLag)
+        assertNotNull(peaks)
+
+        assertEquals(data.aliased_peak.Npeaks.first(), peaks!!.nPeaks)
+        assertEquals(data.aliased_peak.earlier_peak.toList(), peaks!!.earlier)
+        assertEquals(data.aliased_peak.later_peak.toList(), peaks!!.later)
+
+        val (hr, confidence) = processor.calculateHRFromFilteredSamples(data.x, samplingRate)
+        assertEquals(data.estimatedHR(), hr, 0.00000001)
+        assertEquals(data.estimatedConfidence(), confidence,0.00000001)
+    }
+
+    @Test
+    fun testEstimatedHR_Red() {
+        val processor = HeartRateSampleProcessor()
+        val testHRData = testHRData()
+
+        val samplingRate = processor.calculateSamplingRate(testHRData.hr_data.toList())
+
+        val inputChunks: Array<DoubleArray> = testHRData.flip(testHRData.hr_data_filtered_chunked.red)
+        val expectedOutputs: Array<HRTuple> = testHRData.hr_estimates.red
+
+        // check assumption
+        assertEquals(inputChunks.size, expectedOutputs.size)
+
+        // Only check some of the results b/c the calculations are for a resting heart rate and all use
+        // initial estimate or else they are invalid (Initial windows).
+        for (ii in 0 until Math.min(10, expectedOutputs.size)) {
+            val (hr, confidence) = processor.calculateHRFromFilteredSamples(inputChunks[ii], samplingRate)
+            val expectedHR = expectedOutputs[ii].hr
+            val expectedConfidence = expectedOutputs[ii].confidence
+            assertEquals(expectedHR, hr,0.000001)
+            assertEquals(expectedConfidence, confidence, 0.000001)
         }
     }
 
     @Test
-    fun testXCorrOnRedFiltered() {
-        val red = getRedInput().subList(0, 600)
-        val expectedOutput = getXcorrValues()
-        val sampleProcessor = HeartRateSampleProcessor(60)
-        val filtered = sampleProcessor.bandpassFiltered(red.toTypedArray())
-        val output = Matlab.xcorr(filtered)
+    fun testEstimatedHR_Green() {
+        val processor = HeartRateSampleProcessor()
+        val testHRData = testHRData()
 
-        if (output.size == expectedOutput.size) {
-            output.forEachIndexed { index, element ->
-                assertEquals(expectedOutput[index], element, 0.0001)
-            }
-        } else {
-            assertEquals(expectedOutput.size, output.size)
+        val samplingRate = processor.calculateSamplingRate(testHRData.hr_data.toList())
+
+        val inputChunks: Array<DoubleArray> = testHRData.flip(testHRData.hr_data_filtered_chunked.green)
+        val expectedOutputs: Array<HRTuple> = testHRData.hr_estimates.green
+
+        // check assumption
+        assertEquals(inputChunks.size, expectedOutputs.size)
+
+        // Only check some of the results b/c the calculations are for a resting heart rate and all use
+        // initial estimate or else they are invalid (Initial windows).
+        for (ii in 0 until Math.min(10, expectedOutputs.size)) {
+            val (hr, confidence) = processor.calculateHRFromFilteredSamples(inputChunks[ii], samplingRate)
+            val expectedHR = expectedOutputs[ii].hr
+            val expectedConfidence = expectedOutputs[ii].confidence
+            assertEquals(expectedHR, hr,0.000001)
+            assertEquals(expectedConfidence, confidence, 0.000001)
         }
     }
 
     @Test
-    fun testMaxSpliced() {
-        val red = getRedInput().subList(0, 600)
-        val expectedOutput = getMaxSpliced()
-        val sampleProcessor = HeartRateSampleProcessor(60)
-        val filtered = sampleProcessor.bandpassFiltered(red.toTypedArray())
-        val xcorr = Matlab.xcorr(filtered)
-        val ret = xcorr.maxSplice()
-        val output = ret.v2
+    fun testEstimatedHR_12hz() {
+        val processor = HeartRateSampleProcessor()
+        val testHRData = testHRData12hz()
 
-        assertEquals(2.6419e-04, ret.maxValue, 0.0001e-04)
+        val samplingRate = processor.calculateSamplingRate(testHRData.hr_data.toList())
 
-        if (output.size == expectedOutput.size) {
-            output.forEachIndexed { index, element ->
-                assertEquals(expectedOutput[index], element, 0.0001)
-            }
-        } else {
-            assertEquals(expectedOutput.size, output.size)
+        val inputChunks: Array<DoubleArray> = testHRData.flip(testHRData.hr_data_filtered_chunked.red)
+        val expectedOutputs: Array<HRTuple> = testHRData.hr_estimates.red
+
+        // check assumption
+        assertEquals(inputChunks.size, expectedOutputs.size)
+
+        // Only check some of the results b/c the calculations are for a resting heart rate and all use
+        // initial estimate or else they are invalid (Initial windows).
+        for (ii in 0 until Math.min(10, expectedOutputs.size)) {
+            val (hr, confidence) = processor.calculateHRFromFilteredSamples(inputChunks[ii], samplingRate)
+            val expectedHR = expectedOutputs[ii].hr
+            val expectedConfidence = expectedOutputs[ii].confidence
+            assertEquals(expectedHR, hr,0.000001)
+            assertEquals(expectedConfidence, confidence, 0.000001)
         }
     }
 
     @Test
-    fun testZeroReplaceSeek() {
-        val red = getRedInput().subList(0, 600)
-        val expectedOutput = getZeroReplaceSeek()
-        val sampleProcessor = HeartRateSampleProcessor(60)
-        val filtered = sampleProcessor.bandpassFiltered(red.toTypedArray())
-        val xcorr = Matlab.xcorr(filtered)
-        val x = xcorr.maxSplice().v2.toTypedArray()
+    fun testIsReadyToProcess() {
 
-        val lower = Math.round((60.0 * 60.0) / 200.0).toInt()
-        val upper = Math.round((60.0 * 60.0) / 40.0).toInt()
-        val output = x.zeroReplace(lower-1, upper-1)
+        val processor = HeartRateSampleProcessor()
+        val testHRData = testHRData()
+        val estimatedSamplingRate = 60.0
+        val drop = (3.0 * estimatedSamplingRate).roundToInt() - 1
+        val samples = testHRData.hr_data.drop(drop)
+        val roundedRate = estimatedSamplingRate.roundToInt()
 
-        val ret = output.seekMax()
-        assertEquals(2.0038e-04, ret.value, 0.0001e-04)
-        assertEquals(42, ret.index)
+        // Add samples less than 12 seconds + mean order (65)
+        val eleven = roundedRate * 11
+        processor.pixelSamples.addAll(samples.subList(0, eleven))
+        assertFalse(processor.isReadyToProcess())
 
-        if (output.size == expectedOutput.size) {
-            output.forEachIndexed { index, element ->
-                assertEquals(expectedOutput[index], element, 0.0001)
-            }
-        } else {
-            assertEquals(expectedOutput.size, output.size)
-        }
+        // Add samples for 12 seconds + mean order
+        val nextChunk = eleven + roundedRate + 65
+        processor.pixelSamples.addAll(samples.subList(eleven, nextChunk))
+        assertTrue(processor.isReadyToProcess())
     }
 
     @Test
-    fun testCalculateHR() {
-        val red = getRedInput()
-        val sampleProcessor = HeartRateSampleProcessor(60)
+    fun testIsReadyToProcess_12hz() {
 
-        val hrValues = sampleProcessor.findHeartRateValues(red)
+        val processor = HeartRateSampleProcessor()
+        val testHRData = testHRData12hz()
+        val estimatedSamplingRate = 12.728
+        val drop = (3.0 * estimatedSamplingRate).roundToInt() - 1
+        val samples = testHRData.hr_data.drop(drop)
+        val roundedRate = estimatedSamplingRate.roundToInt()
 
-        val expectedHR = arrayOf<Long>(84, 82, 82, 77, 77, 78, 78, 80, 80, 84, 138)
-        val expectedConfidence = arrayOf(0.7585, 0.8245, 0.7937, 0.8694, 0.8405, 0.8411, 0.8679, 0.8236, 0.8278, 0.8311, 0.1004)
+        // Add samples less than 12 seconds
+        val eleven = roundedRate * 11
+        processor.pixelSamples.addAll(samples.subList(0, eleven))
+        assertFalse(processor.isReadyToProcess())
 
-        if (hrValues.size == expectedHR.size) {
-            hrValues.forEachIndexed { index, element ->
-                assertEquals(expectedConfidence[index], element.confidence, 0.0001)
-                assertEquals(expectedHR[index], element.heartRate)
+        // Add samples for 12 seconds + mean order
+        val nextChunk = eleven + roundedRate + 15 + 1
+        processor.pixelSamples.addAll(samples.subList(eleven, nextChunk))
+        assertTrue(processor.isReadyToProcess())
+    }
+
+    @Test
+    fun testProcessSamples() {
+
+        val processor = HeartRateSampleProcessor()
+        val testHRData = testHRData()
+        val estimatedSamplingRate = 60.0
+
+        // Because this test takes a while to run, and it's using data from a resting heart rate,
+        // only process a subset of the data. syoung 04/16/2019
+        val start = 30
+        val expectedHRValues = arrayOf<HeartRateBPM>(
+                HeartRateBPM(47.3040004163,69.27709332103974,0.8683590800933014,"green"),
+                HeartRateBPM(48.3046064583,67.96997857106084,0.8644802170884017,"green"),
+                HeartRateBPM(49.3052123743,69.27709376612277,0.8936955072357293,"green"),
+                HeartRateBPM(50.3058184583,67.96997813437561,0.9014633198345332,"green"),
+                HeartRateBPM(51.3064244993,67.9699768399158,0.9108713480292215,"green"),
+                HeartRateBPM(52.3070303743,67.96997748974505,0.9071506266991106,"green"),
+                HeartRateBPM(53.3076363743,67.96997792123159,0.9000145584327659,"green"),
+                HeartRateBPM(54.3082423743,67.96997792123162,0.8998513053646106,"green"),
+                HeartRateBPM(55.3088484993,67.96997727140241,0.9128580892467326,"green"),
+                HeartRateBPM(56.3094543333,67.96997792123159,0.9029084106060474,"green"),
+                HeartRateBPM(57.3100602913,67.96997792123162,0.89087079839508,"green"),
+                HeartRateBPM(58.3106662913,67.96997770288898,0.8793877599812155,"green"),
+                HeartRateBPM(59.3112722493,67.96997835791682,0.8893933827220402,"green"),
+                HeartRateBPM(60.3118782083,67.9699783527182,0.8879583462485395,"green"),
+                HeartRateBPM(61.3124843743,67.96997705825844,0.8743429841892499,"green")
+        )
+
+        val drop = (3.0 * estimatedSamplingRate).roundToInt() - 1 + (start * estimatedSamplingRate).roundToInt()
+        val samples = testHRData.hr_data.drop(drop)
+        var expectedIdx = 0
+
+        // Test expectations to see that they match the Swift implementation
+        assertEquals(1979, drop)
+        assertEquals(1681, samples.size)
+        assertEquals(34.2294156243, samples.first().timestamp, 0.0000001)
+
+        samples.forEach {
+            processor.addSample(it)
+            if (processor.isReadyToProcess()) {
+
+                val hr= processor.processSamples()
+
+                assertEquals(expectedHRValues[expectedIdx].bpm, hr.bpm, 0.000001)
+                assertEquals(expectedHRValues[expectedIdx].confidence, hr.confidence, 0.000001)
+                assertEquals(expectedHRValues[expectedIdx].timestamp, hr.timestamp, 0.000001)
+                assertEquals(expectedHRValues[expectedIdx].channel, hr.channel)
+
+                expectedIdx++
             }
-        } else {
-            assertEquals(expectedHR.size, hrValues.size)
         }
     }
 
-    private fun getRedInput(): List<Double> {
-        val redString = this.javaClass.classLoader.getResource("red_input_1d.txt").readText()
-        return redString.split("\t").map { str -> str.toDouble() }
+    // Helper functions
+
+    fun compare(array1: DoubleArray, array2: DoubleArray, accuracy: Double) {
+        assertEquals(array1.size, array2.size)
+        for (idx in 0 until array1.size) {
+            val lhv = array1[idx]
+            val rhv = array2[idx]
+            if (Math.abs(lhv - rhv) > accuracy) {
+                fail("Expected ${lhv} not equal to ${rhv} at index ${idx}")
+            }
+        }
     }
 
-    private fun getNormalizedValues(): List<Double> =
-            listOf(-0.31679831, -0.21804003, -0.13910255, -0.15089802, -0.08039895, 0.04746165, 0.12719020, 0.11255523, 0.09702375, 0.08151963, 0.06598344, 0.05040654, 0.03411081, 0.01824518, 0.00641748, 0.00614514, 0.00540903, 0.00546160, 0.00522693, 0.00463870, 0.00494995, 0.00509735, 0.00534596, 0.00552913, 0.00569102, 0.00579121, 0.00605144, 0.00625362, 0.00655510, 0.00655487, 0.00567558, 0.00434741, 0.00349727, 0.00301459, 0.00293561, 0.00303628, 0.00317218, 0.00335571, 0.00361928, 0.00382944, 0.00416949, 0.00443306, 0.00475534, 0.00516190, 0.00531557, 0.00531825, 0.00545933, 0.00529923, 0.00522795, 0.00518336, 0.00502946, 0.00496581, 0.00497069, 0.00510868, 0.00536188, 0.00562468, 0.00581803, 0.00592389, 0.00595006, 0.00606003, 0.00615170, 0.00630840, 0.00653639, 0.00669595, 0.00689199, 0.00710162, 0.00729063, 0.00735291, 0.00754436, 0.00771674, 0.00813850, 0.00814542, 0.00791290, 0.00680473, 0.00596406, 0.00541236, 0.00516918, 0.00514498, 0.00541642, 0.00566640, 0.00602701, 0.00632944, 0.00652322, 0.00693002, 0.00714120, 0.00742134, 0.00766077, 0.00773319, 0.00767823, 0.00765350, 0.00757476, 0.00742921, 0.00742646, 0.00744792, 0.00762221, 0.00776871, 0.00789519, 0.00806531, 0.00834342, 0.00860497, 0.00883999, 0.00907906, 0.00929114, 0.00952204, 0.00976911, 0.00987383, 0.01003858, 0.01024225, 0.01028528, 0.01030513, 0.01051106, 0.01047977, 0.01051208, 0.01039984, 0.01007035, 0.00910344, 0.00824686, 0.00772294, 0.00740685, 0.00730809, 0.00740238, 0.00741025, 0.00755831, 0.00782498, 0.00804963, 0.00829920, 0.00858887, 0.00884517, 0.00909980, 0.00925686, 0.00931408, 0.00935301, 0.00923827, 0.00924733, 0.00924417, 0.00923326, 0.00934716, 0.00938579, 0.00965526, 0.00971940, 0.00989797, 0.01000013, 0.00998356, 0.01021274, 0.01031371, 0.01037320, 0.01053556, 0.01059493, 0.01068284, 0.01075562, 0.01083150, 0.01089337, 0.01094874, 0.01085206, 0.01105710, 0.01075264, 0.01013693, 0.00908925, 0.00820270, 0.00772967, 0.00749680, 0.00735625, 0.00734999, 0.00746503, 0.00756570, 0.00759360, 0.00769844, 0.00781509, 0.00815221, 0.00834205, 0.00850567, 0.00855263, 0.00842580, 0.00829407, 0.00820317, 0.00802466, 0.00804284, 0.00807800, 0.00819149, 0.00821521, 0.00822713, 0.00814565, 0.00823911, 0.00843998, 0.00850853, 0.00855275, 0.00870075, 0.00872853, 0.00884404, 0.00898173, 0.00912454, 0.00918540, 0.00925049, 0.00932553, 0.00932064, 0.00910106, 0.00837114, 0.00731971, 0.00671854, 0.00626203, 0.00630625, 0.00627812, 0.00642052, 0.00659927, 0.00692376, 0.00718352, 0.00730582, 0.00757112, 0.00769504, 0.00774273, 0.00792118, 0.00804862, 0.00792631, 0.00790271, 0.00799497, 0.00800052, 0.00830158, 0.00827839, 0.00862076, 0.00870528, 0.00862982, 0.00867315, 0.00861498, 0.00874033, 0.00894984, 0.00909140, 0.00892248, 0.00899907, 0.00908145, 0.00907143, 0.00911232, 0.00915178, 0.00933673, 0.00953146, 0.00959333, 0.00919946, 0.00827309, 0.00743147, 0.00685253, 0.00659051, 0.00646629, 0.00662919, 0.00656512, 0.00668093, 0.00687655, 0.00686094, 0.00705680, 0.00714823, 0.00734206, 0.00723901, 0.00726339, 0.00714447, 0.00699189, 0.00690075, 0.00688019, 0.00679001, 0.00671794, 0.00677332, 0.00668480, 0.00675949, 0.00675424, 0.00671478, 0.00663933, 0.00661232, 0.00676789, 0.00683083, 0.00705394, 0.00703194, 0.00702026, 0.00701173, 0.00707945, 0.00702616, 0.00693479, 0.00690701, 0.00693663, 0.00659224, 0.00592669, 0.00494584, 0.00431564, 0.00404503, 0.00391998, 0.00381150, 0.00371244, 0.00380411, 0.00379982, 0.00380006, 0.00381442, 0.00377294, 0.00374737, 0.00366648, 0.00364354, 0.00344398, 0.00335976, 0.00311794, 0.00311615, 0.00281521, 0.00278869, 0.00271931, 0.00264885, 0.00265183, 0.00263228, 0.00269344, 0.00281897, 0.00280830, 0.00272282, 0.00254651, 0.00261416, 0.00253721, 0.00255015, 0.00264760, 0.00262424, 0.00264969, 0.00274768, 0.00264069, 0.00269344, 0.00241431, 0.00184389, 0.00090280, 0.00029501, -0.00004224, -0.00039396, -0.00044314, -0.00030330, -0.00038037, -0.00023637, -0.00026271, -0.00007556, 0.00011208, 0.00025454, 0.00025543, 0.00025430, 0.00014671, 0.00001171, -0.00013653, -0.00024895, -0.00031910, -0.00033430, -0.00038014, -0.00034324, -0.00032953, -0.00037924, -0.00037209, -0.00033114, -0.00024293, -0.00014744, -0.00002102, -0.00008795, -0.00008736, -0.00003973, -0.00002477, 0.00012037, 0.00019922, 0.00017985, 0.00019118, 0.00009170, 0.00001415, -0.00001190, -0.00012264, -0.00079522, -0.00154958, -0.00220463, -0.00256888, -0.00275896, -0.00285730, -0.00270913, -0.00260238, -0.00261924, -0.00255582, -0.00250081, -0.00244216, -0.00231991, -0.00223402, -0.00242398, -0.00246892, -0.00253902, -0.00277767, -0.00286332, -0.00287048, -0.00294856, -0.00297502, -0.00289229, -0.00296185, -0.00290284, -0.00285373, -0.00278709, -0.00261883, -0.00275431, -0.00264005, -0.00269357, -0.00254474, -0.00242738, -0.00225834, -0.00212601, -0.00215939, -0.00211535, -0.00209353, -0.00205884, -0.00200651, -0.00210640, -0.00201569, -0.00209264, -0.00219933, -0.00271843, -0.00355587, -0.00421635, -0.00464658, -0.00473712, -0.00473312, -0.00478534, -0.00473598, -0.00456963, -0.00453047, -0.00443027, -0.00438604, -0.00439451, -0.00435672, -0.00433383, -0.00445000, -0.00446860, -0.00467900, -0.00478838, -0.00477067, -0.00491444, -0.00486711, -0.00480804, -0.00487665, -0.00490979, -0.00496439, -0.00499353, -0.00499890, -0.00505153, -0.00494758, -0.00508378, -0.00509802, -0.00518159, -0.00526021, -0.00530139, -0.00529937, -0.00543008, -0.00557021, -0.00540308, -0.00540886, -0.00539229, -0.00548974, -0.00546489, -0.00591598, -0.00671969, -0.00759206, -0.00821070, -0.00874231, -0.00881050, -0.00905482, -0.00901429, -0.00891194, -0.00897298, -0.00898389, -0.00897387, -0.00888155, -0.00888518, -0.00887642, -0.00896958, -0.00905261, -0.00930909, -0.00953434, -0.00963090, -0.00961117, -0.00972191, -0.00971011, -0.00973061, -0.00959150, -0.00962046, -0.00953249, -0.00959674, -0.00949982, -0.00949577, -0.00950608, -0.00933543, -0.00926945, -0.00914226, -0.00895844, -0.00893245, -0.00882409, -0.00875083, -0.00882897, -0.00878850, -0.00876579, -0.00874499, -0.00854883, -0.00846032, -0.00869951, -0.00933824, -0.01005969, -0.01061378, -0.01094434, -0.01106516, -0.01102457, -0.01097313, -0.01102248, -0.01086900, -0.01075605, -0.01054058, -0.01048861, -0.01017330, -0.01006219, -0.00993577, -0.01001099, -0.01022241, -0.01042042, -0.01048217, -0.01046536, -0.01036642, -0.01025102, -0.01010076, -0.01002756, -0.00989041, -0.00973437, -0.00952969, -0.00942472, -0.00921015, -0.00918303, -0.00915352, -0.00913987, -0.00902168, -0.00889198, -0.00868229, -0.00859795, -0.00851706, -0.00841234, -0.00834117, -0.00832096, -0.00834308, -0.00825594, -0.00822840, -0.00817201, -0.00836173, -0.00895617, -0.00985513, -0.01049564, -0.01086966, -0.01099876, -0.01090417, -0.01091991, -0.01079420, -0.01073144, -0.01065562, -0.01052687, -0.01040558, -0.01028810, -0.01020393, -0.01014051, -0.01003907, -0.01008407, -0.01022378, -0.01030932, -0.01035640, -0.01042358, -0.01035950, -0.01043747, -0.01037899, -0.01036618, -0.01026771, -0.01032171, -0.01017509, -0.01006446, -0.00997845, -0.00990049, -0.00984660, -0.00989548, -0.00983671, -0.00970588, -0.00963167, -0.00963292, -0.00956414, -0.00957904, -0.00955895, -0.00945059, -0.00941447, -0.00933096, -0.00936762, -0.00986019, -0.01075403, -0.01155499, -0.01194874, -0.01227442, -0.01226578, -0.01220748, -0.01217482, -0.01221768, -0.01195172, -0.01185796, -0.01179782, -0.01151506, -0.01141319, -0.01138935, -0.01130233, -0.01140175, -0.01162264, -0.01181451, -0.01202593, -0.01221327)
+    fun testData(): ProcessorTestData {
 
-    private fun getBandpassOutput(): Array<Double> =
-            arrayOf(0.00101334, 0.00109670, 0.00110546, 0.00111130, 0.00111954, 0.00127316, 0.00148717, 0.00155878, 0.00115815, 0.00011905, -0.00087370, -0.00138503, -0.00174393, -0.00177746, -0.00158015, -0.00139290, -0.00089630, -0.00065173, -0.00044620, -0.00012112, 0.00008682, 0.00028041, 0.00049151, 0.00049623, 0.00037321, 0.00027867, 0.00007857, -0.00018821, -0.00037611, -0.00050326, -0.00052540, -0.00052689, -0.00057910, -0.00054079, -0.00039826, -0.00021849, -0.00003270, 0.00018218, 0.00039616, 0.00063171, 0.00089365, 0.00100955, 0.00117384, 0.00139321, 0.00139544, 0.00143798, 0.00156762, 0.00156828, 0.00150947, 0.00142820, 0.00101780, 0.00007817, -0.00082084, -0.00132065, -0.00164643, -0.00172289, -0.00162147, -0.00158607, -0.00143471, -0.00114234, -0.00091593, -0.00064835, -0.00035302, -0.00009618, 0.00017095, 0.00030085, 0.00035880, 0.00034504, 0.00019196, 0.00010722, -0.00001301, -0.00011553, -0.00016932, -0.00020022, -0.00010680, -0.00010612, -0.00004952, 0.00002929, 0.00000443, 0.00023583, 0.00040074, 0.00047696, 0.00072436, 0.00082582, 0.00096574, 0.00112207, 0.00119946, 0.00138492, 0.00139848, 0.00143239, 0.00159217, 0.00140780, 0.00078946, -0.00015596, -0.00099356, -0.00138255, -0.00153393, -0.00159206, -0.00151786, -0.00131050, -0.00113860, -0.00099952, -0.00083307, -0.00060477, -0.00021552, 0.00008181, 0.00029145, 0.00043093, 0.00032398, 0.00025428, 0.00014356, -0.00004073, -0.00009568, -0.00009177, -0.00006883, -0.00007931, -0.00012176, -0.00017954, -0.00008111, 0.00017862, 0.00027358, 0.00039136, 0.00057991, 0.00068229, 0.00083441, 0.00102091, 0.00119029, 0.00127351, 0.00135171, 0.00143950, 0.00143485, 0.00124121, 0.00048862, -0.00049874, -0.00116192, -0.00152791, -0.00156650, -0.00150203, -0.00143643, -0.00120652, -0.00090936, -0.00064945, -0.00049501, -0.00026971, -0.00009270, -0.00010003, 0.00011644, 0.00022547, 0.00006252, 0.00005559, 0.00000229, 0.00001861, 0.00011169, 0.00008146, 0.00022870, 0.00026880, 0.00010701, 0.00011386, 0.00009497, 0.00017525, 0.00048090, 0.00058223, 0.00050202, 0.00057658, 0.00071011, 0.00073927, 0.00078559, 0.00088715, 0.00106377, 0.00132263, 0.00141281, 0.00106218, 0.00022815, -0.00060166, -0.00105321, -0.00131878, -0.00130716, -0.00112102, -0.00107169, -0.00088877, -0.00063992, -0.00053020, -0.00032637, -0.00007066, 0.00010502, 0.00016760, 0.00018833, 0.00019229, 0.00005923, 0.00001352, 0.00001628, -0.00012138, -0.00016361, -0.00018325, -0.00023649, -0.00021203, -0.00018014, -0.00017073, -0.00019316, -0.00009854, 0.00010224, 0.00032407, 0.00059688, 0.00072925, 0.00077697, 0.00089994, 0.00103807, 0.00110457, 0.00108900, 0.00118491, 0.00128609, 0.00108436, 0.00049119, -0.00033133, -0.00087431, -0.00099861, -0.00100100, -0.00098946, -0.00092249, -0.00072565, -0.00054593, -0.00043940, -0.00027167, -0.00017223, -0.00009136, 0.00002242, 0.00005596, 0.00008010, 0.00000337, -0.00003452, -0.00005182, -0.00022835, -0.00026672, -0.00026329, -0.00032255, -0.00027063, -0.00024188, -0.00008698, 0.00013353, 0.00025305, 0.00027563, 0.00024882, 0.00041252, 0.00048703, 0.00058343, 0.00082626, 0.00086740, 0.00102588, 0.00116501, 0.00118083, 0.00127214, 0.00111304, 0.00059218, -0.00022740, -0.00076985, -0.00097826, -0.00125914, -0.00117647, -0.00098428, -0.00092398, -0.00074059, -0.00062353, -0.00040024, -0.00007751, 0.00010441, 0.00021787, 0.00027128, 0.00025078, 0.00015936, 0.00006581, -0.00003267, -0.00010073, -0.00014364, -0.00020807, -0.00021026, -0.00021386, -0.00028480, -0.00030258, -0.00023872, -0.00013840, 0.00004581, 0.00022798, 0.00026663, 0.00034864, 0.00048268, 0.00058317, 0.00079501, 0.00095630, 0.00100405, 0.00107895, 0.00106445, 0.00102155, 0.00111042, 0.00102697, 0.00047843, -0.00023004, -0.00076354, -0.00104708, -0.00113515, -0.00112071, -0.00089569, -0.00066692, -0.00060331, -0.00043409, -0.00027284, -0.00014577, 0.00010559, 0.00023523, 0.00017005, 0.00016521, 0.00016329, -0.00003262, -0.00012506, -0.00010319, -0.00025314, -0.00025958, -0.00025207, -0.00033237, -0.00029865, -0.00031074, -0.00021505, -0.00014504, -0.00020128, -0.00014337, -0.00007676, 0.00007882, 0.00028661, 0.00050585, 0.00068778, 0.00071880, 0.00080054, 0.00086933, 0.00095999, 0.00103038, 0.00101533, 0.00110618, 0.00112404, 0.00103276, 0.00060208, -0.00018409, -0.00077584, -0.00112286, -0.00115794, -0.00104815, -0.00104370, -0.00088271, -0.00064924, -0.00050291, -0.00032955, -0.00017834, -0.00011322, 0.00002831, 0.00012181, 0.00010790, 0.00014578, 0.00001259, -0.00005623, -0.00000875, -0.00013897, -0.00007931, -0.00000024, -0.00006141, -0.00007324, -0.00012230, -0.00010590, -0.00010695, -0.00005211, 0.00009530, 0.00012784, 0.00019646, 0.00029111, 0.00032559, 0.00043529, 0.00057569, 0.00055868, 0.00059208, 0.00084722, 0.00103686, 0.00113071, 0.00123346, 0.00133518, 0.00109155, 0.00037128, -0.00027432, -0.00080227, -0.00110438, -0.00107889, -0.00110933, -0.00095720, -0.00068368, -0.00060224, -0.00048960, -0.00031582, -0.00012843, 0.00004269, 0.00014147, 0.00020360, 0.00020112, 0.00004343, -0.00013302, -0.00016852, -0.00016840, -0.00024178, -0.00029789, -0.00027346, -0.00022576, -0.00020313, -0.00019878, -0.00024057, -0.00020024, -0.00017843, -0.00016759, 0.00003708, 0.00016829, 0.00033332, 0.00057577, 0.00063213, 0.00078189, 0.00089324, 0.00084115, 0.00091366, 0.00095608, 0.00100344, 0.00121279, 0.00132607, 0.00109775, 0.00050021, -0.00019781, -0.00070059, -0.00099652, -0.00107431, -0.00098004, -0.00091279, -0.00087857, -0.00074612, -0.00052723, -0.00036699, -0.00021446, 0.00003836, 0.00022455, 0.00031499, 0.00028131, 0.00003344, -0.00018047, -0.00029127, -0.00034932, -0.00033845, -0.00031062, -0.00027256, -0.00027415, -0.00026878, -0.00017101, -0.00009951, -0.00004124, 0.00005203, 0.00039266, 0.00036288, 0.00038774, 0.00045912, 0.00060051, 0.00077730, 0.00087258, 0.00093896, 0.00104877, 0.00112984, 0.00114445, 0.00115834, 0.00123076, 0.00131345, 0.00135565, 0.00122501)
+        val json = this.javaClass.classLoader.getResource("io_examples.json").readText()
+        val gson = Gson()
+        val testData = gson.fromJson(json, ProcessorTestData::class.java)
+        return testData
+    }
 
-    private fun getXcorrValues(): Array<Double> =
-            arrayOf(0.00000124, 0.00000272, 0.00000417, 0.00000555, 0.00000685, 0.00000833, 0.00001007, 0.00001183, 0.00001297, 0.00001268, 0.00001092, 0.00000829, 0.00000513, 0.00000194, -0.00000093, -0.00000343, -0.00000552, -0.00000723, -0.00000856, -0.00000932, -0.00000956, -0.00000925, -0.00000848, -0.00000768, -0.00000703, -0.00000631, -0.00000556, -0.00000492, -0.00000417, -0.00000324, -0.00000233, -0.00000157, -0.00000119, -0.00000109, -0.00000098, -0.00000093, -0.00000118, -0.00000186, -0.00000302, -0.00000447, -0.00000581, -0.00000672, -0.00000658, -0.00000490, -0.00000166, 0.00000303, 0.00000870, 0.00001464, 0.00002060, 0.00002656, 0.00003180, 0.00003500, 0.00003545, 0.00003283, 0.00002728, 0.00001975, 0.00001118, 0.00000246, -0.00000563, -0.00001263, -0.00001818, -0.00002224, -0.00002481, -0.00002574, -0.00002514, -0.00002328, -0.00002042, -0.00001683, -0.00001281, -0.00000882, -0.00000542, -0.00000270, -0.00000074, 0.00000053, 0.00000134, 0.00000155, 0.00000128, 0.00000050, -0.00000098, -0.00000279, -0.00000490, -0.00000732, -0.00000974, -0.00001172, -0.00001255, -0.00001197, -0.00000960, -0.00000499, 0.00000170, 0.00001024, 0.00002002, 0.00003012, 0.00003949, 0.00004685, 0.00005141, 0.00005250, 0.00004971, 0.00004305, 0.00003291, 0.00002059, 0.00000755, -0.00000526, -0.00001682, -0.00002619, -0.00003284, -0.00003662, -0.00003788, -0.00003687, -0.00003379, -0.00002904, -0.00002314, -0.00001702, -0.00001124, -0.00000593, -0.00000162, 0.00000148, 0.00000342, 0.00000409, 0.00000390, 0.00000307, 0.00000118, -0.00000154, -0.00000488, -0.00000862, -0.00001208, -0.00001492, -0.00001652, -0.00001639, -0.00001442, -0.00001029, -0.00000408, 0.00000415, 0.00001380, 0.00002380, 0.00003371, 0.00004279, 0.00005025, 0.00005526, 0.00005670, 0.00005421, 0.00004767, 0.00003735, 0.00002445, 0.00001038, -0.00000373, -0.00001692, -0.00002806, -0.00003653, -0.00004206, -0.00004425, -0.00004355, -0.00004037, -0.00003503, -0.00002827, -0.00002061, -0.00001287, -0.00000594, -0.00000017, 0.00000396, 0.00000641, 0.00000743, 0.00000672, 0.00000439, 0.00000126, -0.00000225, -0.00000597, -0.00000942, -0.00001213, -0.00001345, -0.00001290, -0.00001069, -0.00000725, -0.00000316, 0.00000163, 0.00000759, 0.00001467, 0.00002262, 0.00003070, 0.00003781, 0.00004387, 0.00004864, 0.00005115, 0.00005080, 0.00004718, 0.00003995, 0.00002944, 0.00001658, 0.00000282, -0.00001040, -0.00002211, -0.00003183, -0.00003913, -0.00004357, -0.00004522, -0.00004420, -0.00004056, -0.00003485, -0.00002778, -0.00002018, -0.00001294, -0.00000682, -0.00000221, 0.00000104, 0.00000303, 0.00000375, 0.00000350, 0.00000260, 0.00000109, -0.00000094, -0.00000277, -0.00000404, -0.00000465, -0.00000456, -0.00000434, -0.00000354, -0.00000136, 0.00000194, 0.00000647, 0.00001254, 0.00001987, 0.00002767, 0.00003514, 0.00004214, 0.00004795, 0.00005159, 0.00005225, 0.00004891, 0.00004142, 0.00003051, 0.00001750, 0.00000387, -0.00000935, -0.00002133, -0.00003155, -0.00003962, -0.00004495, -0.00004718, -0.00004621, -0.00004244, -0.00003669, -0.00003008, -0.00002356, -0.00001745, -0.00001193, -0.00000708, -0.00000309, -0.00000027, 0.00000170, 0.00000283, 0.00000310, 0.00000294, 0.00000226, 0.00000091, -0.00000108, -0.00000315, -0.00000466, -0.00000527, -0.00000403, -0.00000052, 0.00000500, 0.00001209, 0.00001999, 0.00002848, 0.00003745, 0.00004624, 0.00005376, 0.00005866, 0.00005979, 0.00005609, 0.00004724, 0.00003449, 0.00001955, 0.00000411, -0.00001038, -0.00002339, -0.00003457, -0.00004324, -0.00004892, -0.00005118, -0.00004997, -0.00004598, -0.00004027, -0.00003381, -0.00002700, -0.00002029, -0.00001432, -0.00000923, -0.00000530, -0.00000267, -0.00000088, 0.00000024, 0.00000068, 0.00000085, 0.00000074, -0.00000032, -0.00000230, -0.00000439, -0.00000570, -0.00000503, -0.00000163, 0.00000447, 0.00001274, 0.00002244, 0.00003313, 0.00004410, 0.00005448, 0.00006357, 0.00006957, 0.00007038, 0.00006544, 0.00005492, 0.00003992, 0.00002281, 0.00000547, -0.00001087, -0.00002482, -0.00003594, -0.00004407, -0.00004896, -0.00005084, -0.00004974, -0.00004616, -0.00004103, -0.00003495, -0.00002922, -0.00002458, -0.00002071, -0.00001781, -0.00001599, -0.00001504, -0.00001498, -0.00001563, -0.00001670, -0.00001784, -0.00001846, -0.00001792, -0.00001558, -0.00001096, -0.00000429, 0.00000348, 0.00001181, 0.00002104, 0.00003170, 0.00004400, 0.00005728, 0.00007021, 0.00008122, 0.00008821, 0.00008951, 0.00008430, 0.00007235, 0.00005488, 0.00003411, 0.00001242, -0.00000783, -0.00002530, -0.00003921, -0.00004896, -0.00005441, -0.00005571, -0.00005351, -0.00004848, -0.00004126, -0.00003293, -0.00002463, -0.00001780, -0.00001363, -0.00001262, -0.00001464, -0.00001884, -0.00002455, -0.00003131, -0.00003843, -0.00004532, -0.00005135, -0.00005519, -0.00005488, -0.00004911, -0.00003737, -0.00001994, 0.00000165, 0.00002566, 0.00005015, 0.00007298, 0.00009297, 0.00010960, 0.00012204, 0.00012890, 0.00012885, 0.00012084, 0.00010424, 0.00007987, 0.00005045, 0.00001976, -0.00000880, -0.00003313, -0.00005208, -0.00006511, -0.00007218, -0.00007362, -0.00007027, -0.00006308, -0.00005301, -0.00004118, -0.00002861, -0.00001683, -0.00000762, -0.00000218, -0.00000102, -0.00000402, -0.00001109, -0.00002172, -0.00003495, -0.00004973, -0.00006441, -0.00007774, -0.00008796, -0.00009238, -0.00008924, -0.00007762, -0.00005742, -0.00002966, 0.00000445, 0.00004352, 0.00008543, 0.00012628, 0.00016161, 0.00018757, 0.00020038, 0.00019794, 0.00018036, 0.00014955, 0.00010969, 0.00006593, 0.00002268, -0.00001682, -0.00005055, -0.00007679, -0.00009436, -0.00010311, -0.00010358, -0.00009706, -0.00008515, -0.00006932, -0.00005142, -0.00003337, -0.00001713, -0.00000440, 0.00000392, 0.00000773, 0.00000712, 0.00000196, -0.00000758, -0.00002132, -0.00003913, -0.00005972, -0.00008097, -0.00009982, -0.00011313, -0.00011793, -0.00011260, -0.00009668, -0.00007034, -0.00003475, 0.00000893, 0.00005862, 0.00011199, 0.00016603, 0.00021427, 0.00024979, 0.00026419, 0.00024979, 0.00021427, 0.00016603, 0.00011199, 0.00005862, 0.00000893, -0.00003475, -0.00007034, -0.00009668, -0.00011260, -0.00011793, -0.00011313, -0.00009982, -0.00008097, -0.00005972, -0.00003913, -0.00002132, -0.00000758, 0.00000196, 0.00000712, 0.00000773, 0.00000392, -0.00000440, -0.00001713, -0.00003337, -0.00005142, -0.00006932, -0.00008515, -0.00009706, -0.00010358, -0.00010311, -0.00009436, -0.00007679, -0.00005055, -0.00001682, 0.00002268, 0.00006593, 0.00010969, 0.00014955, 0.00018036, 0.00019794, 0.00020038, 0.00018757, 0.00016161, 0.00012628, 0.00008543, 0.00004352, 0.00000445, -0.00002966, -0.00005742, -0.00007762, -0.00008924, -0.00009238, -0.00008796, -0.00007774, -0.00006441, -0.00004973, -0.00003495, -0.00002172, -0.00001109, -0.00000402, -0.00000102, -0.00000218, -0.00000762, -0.00001683, -0.00002861, -0.00004118, -0.00005301, -0.00006308, -0.00007027, -0.00007362, -0.00007218, -0.00006511, -0.00005208, -0.00003313, -0.00000880, 0.00001976, 0.00005045, 0.00007987, 0.00010424, 0.00012084, 0.00012885, 0.00012890, 0.00012204, 0.00010960, 0.00009297, 0.00007298, 0.00005015, 0.00002566, 0.00000165, -0.00001994, -0.00003737, -0.00004911, -0.00005488, -0.00005519, -0.00005135, -0.00004532, -0.00003843, -0.00003131, -0.00002455, -0.00001884, -0.00001464, -0.00001262, -0.00001363, -0.00001780, -0.00002463, -0.00003293, -0.00004126, -0.00004848, -0.00005351, -0.00005571, -0.00005441, -0.00004896, -0.00003921, -0.00002530, -0.00000783, 0.00001242, 0.00003411, 0.00005488, 0.00007235, 0.00008430, 0.00008951, 0.00008821, 0.00008122, 0.00007021, 0.00005728, 0.00004400, 0.00003170, 0.00002104, 0.00001181, 0.00000348, -0.00000429, -0.00001096, -0.00001558, -0.00001792, -0.00001846, -0.00001784, -0.00001670, -0.00001563, -0.00001498, -0.00001504, -0.00001599, -0.00001781, -0.00002071, -0.00002458, -0.00002922, -0.00003495, -0.00004103, -0.00004616, -0.00004974, -0.00005084, -0.00004896, -0.00004407, -0.00003594, -0.00002482, -0.00001087, 0.00000547, 0.00002281, 0.00003992, 0.00005492, 0.00006544, 0.00007038, 0.00006957, 0.00006357, 0.00005448, 0.00004410, 0.00003313, 0.00002244, 0.00001274, 0.00000447, -0.00000163, -0.00000503, -0.00000570, -0.00000439, -0.00000230, -0.00000032, 0.00000074, 0.00000085, 0.00000068, 0.00000024, -0.00000088, -0.00000267, -0.00000530, -0.00000923, -0.00001432, -0.00002029, -0.00002700, -0.00003381, -0.00004027, -0.00004598, -0.00004997, -0.00005118, -0.00004892, -0.00004324, -0.00003457, -0.00002339, -0.00001038, 0.00000411, 0.00001955, 0.00003449, 0.00004724, 0.00005609, 0.00005979, 0.00005866, 0.00005376, 0.00004624, 0.00003745, 0.00002848, 0.00001999, 0.00001209, 0.00000500, -0.00000052, -0.00000403, -0.00000527, -0.00000466, -0.00000315, -0.00000108, 0.00000091, 0.00000226, 0.00000294, 0.00000310, 0.00000283, 0.00000170, -0.00000027, -0.00000309, -0.00000708, -0.00001193, -0.00001745, -0.00002356, -0.00003008, -0.00003669, -0.00004244, -0.00004621, -0.00004718, -0.00004495, -0.00003962, -0.00003155, -0.00002133, -0.00000935, 0.00000387, 0.00001750, 0.00003051, 0.00004142, 0.00004891, 0.00005225, 0.00005159, 0.00004795, 0.00004214, 0.00003514, 0.00002767, 0.00001987, 0.00001254, 0.00000647, 0.00000194, -0.00000136, -0.00000354, -0.00000434, -0.00000456, -0.00000465, -0.00000404, -0.00000277, -0.00000094, 0.00000109, 0.00000260, 0.00000350, 0.00000375, 0.00000303, 0.00000104, -0.00000221, -0.00000682, -0.00001294, -0.00002018, -0.00002778, -0.00003485, -0.00004056, -0.00004420, -0.00004522, -0.00004357, -0.00003913, -0.00003183, -0.00002211, -0.00001040, 0.00000282, 0.00001658, 0.00002944, 0.00003995, 0.00004718, 0.00005080, 0.00005115, 0.00004864, 0.00004387, 0.00003781, 0.00003070, 0.00002262, 0.00001467, 0.00000759, 0.00000163, -0.00000316, -0.00000725, -0.00001069, -0.00001290, -0.00001345, -0.00001213, -0.00000942, -0.00000597, -0.00000225, 0.00000126, 0.00000439, 0.00000672, 0.00000743, 0.00000641, 0.00000396, -0.00000017, -0.00000594, -0.00001287, -0.00002061, -0.00002827, -0.00003503, -0.00004037, -0.00004355, -0.00004425, -0.00004206, -0.00003653, -0.00002806, -0.00001692, -0.00000373, 0.00001038, 0.00002445, 0.00003735, 0.00004767, 0.00005421, 0.00005670, 0.00005526, 0.00005025, 0.00004279, 0.00003371, 0.00002380, 0.00001380, 0.00000415, -0.00000408, -0.00001029, -0.00001442, -0.00001639, -0.00001652, -0.00001492, -0.00001208, -0.00000862, -0.00000488, -0.00000154, 0.00000118, 0.00000307, 0.00000390, 0.00000409, 0.00000342, 0.00000148, -0.00000162, -0.00000593, -0.00001124, -0.00001702, -0.00002314, -0.00002904, -0.00003379, -0.00003687, -0.00003788, -0.00003662, -0.00003284, -0.00002619, -0.00001682, -0.00000526, 0.00000755, 0.00002059, 0.00003291, 0.00004305, 0.00004971, 0.00005250, 0.00005141, 0.00004685, 0.00003949, 0.00003012, 0.00002002, 0.00001024, 0.00000170, -0.00000499, -0.00000960, -0.00001197, -0.00001255, -0.00001172, -0.00000974, -0.00000732, -0.00000490, -0.00000279, -0.00000098, 0.00000050, 0.00000128, 0.00000155, 0.00000134, 0.00000053, -0.00000074, -0.00000270, -0.00000542, -0.00000882, -0.00001281, -0.00001683, -0.00002042, -0.00002328, -0.00002514, -0.00002574, -0.00002481, -0.00002224, -0.00001818, -0.00001263, -0.00000563, 0.00000246, 0.00001118, 0.00001975, 0.00002728, 0.00003283, 0.00003545, 0.00003500, 0.00003180, 0.00002656, 0.00002060, 0.00001464, 0.00000870, 0.00000303, -0.00000166, -0.00000490, -0.00000658, -0.00000672, -0.00000581, -0.00000447, -0.00000302, -0.00000186, -0.00000118, -0.00000093, -0.00000098, -0.00000109, -0.00000119, -0.00000157, -0.00000233, -0.00000324, -0.00000417, -0.00000492, -0.00000556, -0.00000631, -0.00000703, -0.00000768, -0.00000848, -0.00000925, -0.00000956, -0.00000932, -0.00000856, -0.00000723, -0.00000552, -0.00000343, -0.00000093, 0.00000194, 0.00000513, 0.00000829, 0.00001092, 0.00001268, 0.00001297, 0.00001183, 0.00001007, 0.00000833, 0.00000685, 0.00000555, 0.00000417, 0.00000272, 0.00000124)
+    fun testEarlierPeaksExample(): TestHRPeaks {
+        val json = this.javaClass.classLoader.getResource("io_example_earlier_peak.json").readText()
+        val gson = Gson()
+        val testData = gson.fromJson(json, TestHRPeaks::class.java)
+        return testData
+    }
 
-    private fun getMaxSpliced(): Array<Double> =
-            arrayOf(0.000264194020, 0.000249791144, 0.000214274120, 0.000166033887, 0.000111992803, 0.000058620720, 0.000008928614, -0.000034751309, -0.000070342822, -0.000096684635, -0.000112600533, -0.000117931078, -0.000113132694, -0.000099823298, -0.000080969794, -0.000059722440, -0.000039131532, -0.000021318875, -0.000007578384, 0.000001961349, 0.000007123009, 0.000007729462, 0.000003923226, -0.000004397247, -0.000017134897, -0.000033367358, -0.000051415812, -0.000069321632, -0.000085145006, -0.000097056377, -0.000103577381, -0.000103113100, -0.000094359696, -0.000076793811, -0.000050553239, -0.000016823716, 0.000022682615, 0.000065928601, 0.000109693196, 0.000149545042, 0.000180359545, 0.000197942462, 0.000200383461, 0.000187571996, 0.000161614183, 0.000126279468, 0.000085434116, 0.000043518218, 0.000004446817, -0.000029655671, -0.000057424363, -0.000077621046, -0.000089242460, -0.000092378983, -0.000087962438, -0.000077735123, -0.000064414094, -0.000049728904, -0.000034950939, -0.000021720723, -0.000011090810, -0.000004021795, -0.000001024969, -0.000002184646, -0.000007622092, -0.000016831681, -0.000028606039, -0.000041177794, -0.000053010880, -0.000063076545, -0.000070273421, -0.000073615910, -0.000072181898, -0.000065106733, -0.000052076566, -0.000033133134, -0.000008799218, 0.000019755746, 0.000050447813, 0.000079871525, 0.000104235782, 0.000120844970, 0.000128853619, 0.000128902248, 0.000122044346, 0.000109598905, 0.000092968236, 0.000072983332, 0.000050150219, 0.000025663814, 0.000001653065, -0.000019943974, -0.000037374138, -0.000049111552, -0.000054881925, -0.000055192041, -0.000051349144, -0.000045321229, -0.000038430860, -0.000031307959, -0.000024546426, -0.000018842309, -0.000014642556, -0.000012617367, -0.000013633151, -0.000017799502, -0.000024628693, -0.000032929283, -0.000041255409, -0.000048478766, -0.000053513707, -0.000055705504, -0.000054408835, -0.000048958818, -0.000039213844, -0.000025295083, -0.000007828650, 0.000012420233, 0.000034113984, 0.000054879214, 0.000072345415, 0.000084298585, 0.000089506474, 0.000088212867, 0.000081217541, 0.000070209513, 0.000057281840, 0.000044003080, 0.000031698809, 0.000021036550, 0.000011807672, 0.000003478710, -0.000004286186, -0.000010962814, -0.000015583979, -0.000017922139, -0.000018464542, -0.000017835314, -0.000016697544, -0.000015631405, -0.000014980451, -0.000015041391, -0.000015989075, -0.000017813791, -0.000020711912, -0.000024578890, -0.000029219065, -0.000034947642, -0.000041027980, -0.000046162713, -0.000049744187, -0.000050841082, -0.000048957243, -0.000044074390, -0.000035935180, -0.000024817616, -0.000010872426, 0.000005470778, 0.000022812420, 0.000039917660, 0.000054924056, 0.000065437168, 0.000070379437, 0.000069567507, 0.000063574289, 0.000054481486, 0.000044102743, 0.000033128786, 0.000022436909, 0.000012741287, 0.000004467849, -0.000001632930, -0.000005034153, -0.000005702257, -0.000004393806, -0.000002300768, -0.000000316865, 0.000000744200, 0.000000846150, 0.000000680957, 0.000000242335, -0.000000882528, -0.000002674887, -0.000005301467, -0.000009228819, -0.000014315143, -0.000020285873, -0.000026996824, -0.000033811855, -0.000040273031, -0.000045977968, -0.000049966647, -0.000051180585, -0.000048924395, -0.000043242289, -0.000034568202, -0.000023392335, -0.000010380761, 0.000004110203, 0.000019550776, 0.000034487734, 0.000047242912, 0.000056093074, 0.000059786911, 0.000058656199, 0.000053763692, 0.000046237531, 0.000037451760, 0.000028477899, 0.000019991031, 0.000012090427, 0.000004996932, -0.000000523201, -0.000004033363, -0.000005265203, -0.000004664961, -0.000003148361, -0.000001078844, 0.000000905503, 0.000002260853, 0.000002940760, 0.000003101280, 0.000002828379, 0.000001701544, -0.000000270762, -0.000003087999, -0.000007076782, -0.000011932831, -0.000017454638, -0.000023559983, -0.000030075372, -0.000036694085, -0.000042435796, -0.000046211642, -0.000047182165, -0.000044948878, -0.000039624237, -0.000031552967, -0.000021328748, -0.000009354788, 0.000003865564, 0.000017498303, 0.000030514534, 0.000041417347, 0.000048911568, 0.000052248499, 0.000051585775, 0.000047952563, 0.000042138567, 0.000035143641, 0.000027666595, 0.000019866247, 0.000012539039, 0.000006469353, 0.000001936371, -0.000001356573, -0.000003537430, -0.000004335070, -0.000004562831, -0.000004647360, -0.000004036712, -0.000002773270, -0.000000940375, 0.000001086485, 0.000002601673, 0.000003497177, 0.000003753368, 0.000003034908, 0.000001039540, -0.000002209016, -0.000006817033, -0.000012943690, -0.000020179014, -0.000027776823, -0.000034848663, -0.000040557525, -0.000044199285, -0.000045223790, -0.000043568413, -0.000039130222, -0.000031833095, -0.000022114508, -0.000010402749, 0.000002822094, 0.000016582669, 0.000029439424, 0.000039952573, 0.000047178979, 0.000050799690, 0.000051145864, 0.000048644561, 0.000043868271, 0.000037810263, 0.000030698223, 0.000022620060, 0.000014668161, 0.000007589847, 0.000001629072, -0.000003155163, -0.000007250257, -0.000010685346, -0.000012903637, -0.000013447875, -0.000012129465, -0.000009421123, -0.000005971703, -0.000002246814, 0.000001263224, 0.000004386875, 0.000006724696, 0.000007431554, 0.000006412983, 0.000003961339, -0.000000174580, -0.000005942408, -0.000012871760, -0.000020608641, -0.000028271649, -0.000035029600, -0.000040374676, -0.000043552646, -0.000044246692, -0.000042055726, -0.000036534744, -0.000028060225, -0.000016924507, -0.000003725721, 0.000010384512, 0.000024447161, 0.000037350836, 0.000047671397, 0.000054208551, 0.000056702058, 0.000055257475, 0.000050249425, 0.000042793347, 0.000033709994, 0.000023802936, 0.000013799701, 0.000004149074, -0.000004075306, -0.000010291340, -0.000014419204, -0.000016388335, -0.000016522024, -0.000014924654, -0.000012083089, -0.000008623403, -0.000004880557, -0.000001539112, 0.000001175496, 0.000003066301, 0.000003898097, 0.000004086635, 0.000003423986, 0.000001480807, -0.000001615605, -0.000005932394, -0.000011236155, -0.000017018156, -0.000023143108, -0.000029039314, -0.000033791144, -0.000036866097, -0.000037884515, -0.000036618533, -0.000032836459, -0.000026193451, -0.000016817823, -0.000005262304, 0.000007550592, 0.000020587634, 0.000032910048, 0.000043049155, 0.000049710784, 0.000052504259, 0.000051406418, 0.000046853459, 0.000039487501, 0.000030119699, 0.000020018179, 0.000010241078, 0.000001697356, -0.000004991722, -0.000009603212, -0.000011970770, -0.000012546452, -0.000011719853, -0.000009742123, -0.000007324393, -0.000004903822, -0.000002788706, -0.000000977332, 0.000000499871, 0.000001275614, 0.000001553200, 0.000001339553, 0.000000527675, -0.000000739370, -0.000002702210, -0.000005419113, -0.000008824589, -0.000012806029, -0.000016826902, -0.000020422219, -0.000023277011, -0.000025142903, -0.000025742626, -0.000024805628, -0.000022237433, -0.000018175293, -0.000012632101, -0.000005625876, 0.000002463459, 0.000011177495, 0.000019752892, 0.000027279544, 0.000032830806, 0.000035447466, 0.000034999473, 0.000031803319, 0.000026557309, 0.000020595731, 0.000014639842, 0.000008701224, 0.000003033387, -0.000001663316, -0.000004899705, -0.000006582048, -0.000006717041, -0.000005811768, -0.000004471953, -0.000003021839, -0.000001861069, -0.000001182705, -0.000000932473, -0.000000984162, -0.000001088535, -0.000001188678, -0.000001567010, -0.000002334521, -0.000003239622, -0.000004165010, -0.000004915372, -0.000005559565, -0.000006311756, -0.000007025987, -0.000007684003, -0.000008484137, -0.000009249423, -0.000009563233, -0.000009322594, -0.000008558850, -0.000007225339, -0.000005519235, -0.000003426567, -0.000000927615, 0.000001944565, 0.000005129974, 0.000008289879, 0.000010923446, 0.000012678539, 0.000012971467, 0.000011829962, 0.000010066475, 0.000008327581, 0.000006853501, 0.000005547604, 0.000004171915, 0.000002717203, 0.000001241352)
+    fun testLaterPeaksExample(): TestHRPeaks {
+        val json = this.javaClass.classLoader.getResource("io_example_later_peak.json").readText()
+        val gson = Gson()
+        val testData = gson.fromJson(json, TestHRPeaks::class.java)
+        return testData
+    }
 
-    private fun getZeroReplaceSeek(): Array<Double> =
-            arrayOf(0.000000000000, 0.000000000000, 0.000000000000, 0.000000000000, 0.000000000000, 0.000000000000, 0.000000000000, -0.000000000000, -0.000000000000, -0.000000000000, -0.000000000000, -0.000000000000, -0.000000000000, -0.000000000000, -0.000000000000, -0.000000000000, -0.000000000000, -0.000021318875, -0.000007578384, 0.000001961349, 0.000007123009, 0.000007729462, 0.000003923226, -0.000004397247, -0.000017134897, -0.000033367358, -0.000051415812, -0.000069321632, -0.000085145006, -0.000097056377, -0.000103577381, -0.000103113100, -0.000094359696, -0.000076793811, -0.000050553239, -0.000016823716, 0.000022682615, 0.000065928601, 0.000109693196, 0.000149545042, 0.000180359545, 0.000197942462, 0.000200383461, 0.000187571996, 0.000161614183, 0.000126279468, 0.000085434116, 0.000043518218, 0.000004446817, -0.000029655671, -0.000057424363, -0.000077621046, -0.000089242460, -0.000092378983, -0.000087962438, -0.000077735123, -0.000064414094, -0.000049728904, -0.000034950939, -0.000021720723, -0.000011090810, -0.000004021795, -0.000001024969, -0.000002184646, -0.000007622092, -0.000016831681, -0.000028606039, -0.000041177794, -0.000053010880, -0.000063076545, -0.000070273421, -0.000073615910, -0.000072181898, -0.000065106733, -0.000052076566, -0.000033133134, -0.000008799218, 0.000019755746, 0.000050447813, 0.000079871525, 0.000104235782, 0.000120844970, 0.000128853619, 0.000128902248, 0.000122044346, 0.000109598905, 0.000092968236, 0.000072983332, 0.000050150219, 0.000025663814)
+    fun testHRData(): HRProcessorTestData {
+        val json = this.javaClass.classLoader.getResource("io_examples_whole.json").readText()
+        val gson = Gson()
+        val testData = gson.fromJson(json, HRProcessorTestData::class.java)
+        return testData
+    }
+
+    fun testHRData12hz(): HRProcessorTestData {
+        val json = this.javaClass.classLoader.getResource("io_examples_whole_12hz.json").readText()
+        val gson = Gson()
+        val testData = gson.fromJson(json, HRProcessorTestData::class.java)
+        return testData
+    }
 }

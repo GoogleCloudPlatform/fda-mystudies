@@ -31,29 +31,15 @@
         <activity
             android:name=".CrfSample"
             android:label="@string/app_name"
-            android:theme="@style/AppTheme.NoActionBar">
+            android:theme="@style/AppTheme.NoActionBar"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity
-            android:name="org.sagebase.crf.CrfActiveTaskActivity"
-            android:label="@string/app_name"
-            android:launchMode="singleTop"
-            android:theme="@style/Theme.Crf.Survey"
-            android:windowSoftInputMode="adjustResize" />
-        <activity
-            android:name="org.sagebase.crf.CrfViewTaskActivity"
-            android:label="@string/app_name"
-            android:theme="@style/Theme.Crf.Survey"
-            android:windowSoftInputMode="adjustResize" />
-        <activity android:name="org.sagebase.crf.step.CrfTrainingInfo"></activity>
 
-        <service
-            android:name="org.researchstack.backbone.step.active.RecorderService"
-            android:exported="false" />
 
     </application>
 
