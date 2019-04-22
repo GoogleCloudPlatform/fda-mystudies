@@ -23,12 +23,19 @@ import android.content.Intent;
 import org.researchstack.backbone.factory.IntentFactory;
 import org.sagebase.crf.researchstack.CrfResourceManager;
 
+/**
+ * Creates Intents for launching Cardiorespiratory Fitness Module tasks.
+ */
 public class CrfTaskIntentFactory {
     private static final org.sagebase.crf.researchstack.CrfTaskFactory taskFactory =
             new org.sagebase.crf.researchstack.CrfTaskFactory();
 
     private static final IntentFactory intentFactory = IntentFactory.INSTANCE;
 
+    /**
+     * @param context application context
+     * @return Intent for launching Heart Rate Training activity
+     */
     public static Intent getHeartRateTrainingTaskIntent(Context context) {
         return intentFactory.newTaskIntent(
                 context,
@@ -38,6 +45,10 @@ public class CrfTaskIntentFactory {
                         CrfResourceManager.HEART_RATE_TRAINING_TEST_RESOURCE));
     }
 
+    /**
+     * @param context application context
+     * @return Intent for launching Heart Rate Measurement activity
+     */
     public static Intent getHeartRateMeasurementTaskIntent(Context context) {
         return intentFactory.newTaskIntent(
                 context,
@@ -47,6 +58,10 @@ public class CrfTaskIntentFactory {
                         CrfResourceManager.HEART_RATE_MEASUREMENT_TEST_RESOURCE));
     }
 
+    /**
+     * @param context application context
+     * @return Intent for launching Stair Step activity
+     */
     public static Intent getStairStepTaskIntent(Context context) {
         return intentFactory.newTaskIntent(
                 context,

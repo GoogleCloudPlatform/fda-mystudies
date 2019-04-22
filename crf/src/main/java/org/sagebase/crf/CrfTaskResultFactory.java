@@ -20,12 +20,18 @@ package org.sagebase.crf;
 import org.researchstack.backbone.result.TaskResult;
 import org.sagebase.crf.result.CrfTaskResult;
 
+/**
+ * Factory for creating Cardiorespiratory Fitness task results.
+ */
 public class CrfTaskResultFactory {
+    /**
+     * @param taskResult raw task result
+     * @return task result in Cardiorespiratory Fitness module format
+     */
     public static CrfTaskResult create(TaskResult taskResult) {
         return new CrfTaskResult();
     }
 
     private CrfTaskResultFactory() {
-
     }
 }
