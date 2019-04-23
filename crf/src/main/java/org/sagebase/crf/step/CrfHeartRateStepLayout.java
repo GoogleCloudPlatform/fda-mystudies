@@ -198,7 +198,7 @@ public class CrfHeartRateStepLayout extends ActiveStepLayout implements
         cameraPreview = findViewById(R.id.crf_camera_texture_view);
 
         crfOops = findViewById(R.id.crf_oops);
-        crfOops.setText("Oops!");
+        crfOops.setText(R.string.crf_oops);
         crfOops.setVisibility(View.INVISIBLE);
 
         bpmText = findViewById(R.id.crf_heart_rate_bpm);
@@ -511,8 +511,8 @@ public class CrfHeartRateStepLayout extends ActiveStepLayout implements
         int hrToDisplay = 0;
         if (!bpmList.isEmpty()) {
             if (step.isHrRecoveryStep) {
+                hrToDisplay = findLastHr().bpm;
                 BpmHolder peakHolder = findPeakHr();
-                hrToDisplay = peakHolder.bpm;
                 setBpmResult(peakHolder, PEAK_BPM_VALUE_RESULT, PEAK_BPM_CONFIDENCE_RESULT);
             } else {
                 BpmHolder bestHolder = findBestHr();
@@ -547,6 +547,18 @@ public class CrfHeartRateStepLayout extends ActiveStepLayout implements
             }
         }
         return bestHr;
+    }
+
+    private BpmHolder findLastHr() {
+        BpmHolder lastHr = null;
+        if (!bpmList.isEmpty()) {
+            for (BpmHolder bpmHolder : bpmList) {
+                if (bpmHolder.confidence >= MINIMUM_CONFIDENCE) {
+                    lastHr = bpmHolder;
+                }
+            }
+        }
+        return lastHr;
     }
 
     private BpmHolder findPeakHr() {
