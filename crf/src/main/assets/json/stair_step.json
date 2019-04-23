@@ -38,7 +38,7 @@
     {
       "identifier": "sexForm",
       "type": "crf_form",
-      "title": "What was your sex at birth?",
+      "title": "What is your sex?",
       "learnMoreText"    : "Why are we asking about this?",
       "learnMoreFile"    : "crf_sex_at_birth.html",
       "learnMoreTitle"   : "Why are we asking?",
