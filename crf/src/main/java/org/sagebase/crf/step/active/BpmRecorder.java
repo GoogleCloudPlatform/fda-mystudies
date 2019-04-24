@@ -147,6 +147,10 @@ public interface BpmRecorder {
             heartBeatSample.bpm = (int)ret.getBpm();
             heartBeatSample.confidence = ret.getConfidence();
         }
+
+        public double calculateVo2Max(Sex sex, double age, double startTime) {
+            return sampleProcessor.vo2Max(sex, age, startTime);
+        }
     }
 
     class HeartBeatJsonWriter extends JsonArrayDataRecorder
@@ -213,10 +217,15 @@ public interface BpmRecorder {
 
         private int sampleCount = 0;
         private double timestampReference = -1;
+        private double firstTimeStamp = -1;
 
         @AnyThread
         @Override
         public void onHeartRateSampleDetected(HeartBeatSample sample) {
+            if (firstTimeStamp == -1) {
+                firstTimeStamp = sample.timestamp;
+            }
+
             if(!sample.isCoveringLens()) {
                 mainHandler.post(() ->
                         mCameraListener.cameraUpdate(new
@@ -321,6 +330,11 @@ public interface BpmRecorder {
                 mIntelligentStartCounter = 0;
 
             }
+        }
+
+        public double calculateVo2Max(Sex sex, double age) {
+            double startTime = firstTimeStamp + 30;
+            return bpmCalculator.calculateVo2Max(sex, age, startTime);
         }
 
         @Override

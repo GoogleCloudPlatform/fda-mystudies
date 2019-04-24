@@ -125,12 +125,12 @@ class HeartRateSampleProcessor @JvmOverloads constructor(val videoProcessorFrame
         return if (sample.confidence < HEART_RATE_MIN_RESTING_CONFIDENCE) null else sample
     }
 
-    fun vo2Max(sex: Sex, age: Double, startTime: Double) : Double? {
+    fun vo2Max(sex: Sex, age: Double, startTime: Double) : Double {
         val highConfidenceSamples = this.bpmRecords.filter {
             it.confidence >= HEART_RATE_MIN_VO2MAX_CONFIDENCE && it.timestamp >= startTime
         }
         if (highConfidenceSamples.size <= 1) {
-            return null
+            return -1.0;
         }
         val meanHR = highConfidenceSamples.map { it.bpm }.average()
         val beats30to60 = meanHR / 2

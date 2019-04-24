@@ -49,15 +49,15 @@
           "items": [
             {
               "text": "Male",
-              "value": "Male"
+              "value": "male"
             },
             {
               "text": "Female",
-              "value": "Female"
+              "value": "female"
             },
             {
               "text": "Other, or prefer not to answer",
-              "value": "Other"
+              "value": "other"
             }
           ]
         }
@@ -136,7 +136,7 @@
       "learnMoreText"    : "What does this score mean?",
       "learnMoreFile"    : "crf_recovery_hr.html",
       "learnMoreTitle"   : "What is a Recovery HR Score?",
-      "valueResultId"    : "completion_bpm_result",
+      "valueResultId"    : "vo2_max",
       "buttonText"       : "Done",
       "hideProgress"     : "true"
     }
