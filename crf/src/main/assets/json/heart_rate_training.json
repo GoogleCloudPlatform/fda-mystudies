@@ -1,0 +1,63 @@
+{
+  "taskIdentifier" : "Heart Rate Training",
+  "schemaIdentifier" : "Heart Rate Training",
+  "optional" : false,
+  "taskSteps" : [
+    {
+      "identifier" : "heart_snapshot",
+      "type"       : "crf_instruction",
+      "text"       : "Heart Snapshot",
+      "detailText" : "Your phone's camera can measure your heartbeat.",
+      "image"      : "crf_heart_snapshot",
+      "buttonText" : "Measure",
+      "hideProgress"  : "true",
+      "learnMoreText"  : "Learn how and why",
+      "learnMoreFile"  : "crf_heart_rate_training.html",
+      "learnMoreTitle" : "About Heart Snapshot"
+    },
+    {
+      "identifier" : "turn_on_camera",
+      "type"       : "crf_camera_permission",
+      "text"       : "Can we turn on your camera and flash?",
+      "detailText" : "Heart Snapshot uses the camera and flash on the back of your phone to measure your heartrate.",
+      "image"      : "flash_on_hand_holding",
+      "buttonText" : "Next",
+      "hideProgress"  : "true"
+    },
+    {
+      "identifier" : "find_camera",
+      "type"       : "crf_instruction",
+      "text"       : "Find your camera and flash",
+      "detailText" : "Your flash is usually next to your camera on the back of the phone. You will need to cover both.",
+      "image"      : "crf_hand_holding_phone",
+      "buttonText" : "Found it",
+      "hideProgress"  : "true"
+    },
+    {
+      "identifier" : "cover_camera",
+      "type"       : "crf_instruction",
+      "text"       : "Cover the flash and camera",
+      "detailText" : "Use your finger to cover the camera and flash on the back of your phone. Your finger nail should turn a little red once you cover the flash.",
+      "image"      : "crf_cover_flash_animation",
+      "isImageAnimated"  : true,
+      "buttonText" : "Measure heart rate",
+      "hideProgress"  : "true"
+    },
+    {
+      "identifier"       : "hr",
+      "type"             : "crf_heart_rate_camera_step",
+      "duration"         : "20"
+    },
+    {
+      "identifier"       : "completion",
+      "type"             : "crf_completion",
+      "topText"          : "Your heart rate is",
+      "text"             : "Practice makes perfect",
+      "detailText"       : "This is to make sure you can cover your flash and camera quickly for later tests.",
+      "valueLabelText"   : "BPM",
+      "valueResultId"    : "resting",
+      "showRedoButton"   : "true",
+      "hideProgress"     : "true"
+    }
+  ]
+}

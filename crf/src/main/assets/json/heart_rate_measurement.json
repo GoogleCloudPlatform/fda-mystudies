@@ -1,0 +1,76 @@
+{
+  "taskIdentifier" : "Resting Heart Rate",
+  "schemaIdentifier" : "Resting Heart Rate",
+  "optional" : false,
+  "taskSteps" : [
+    {
+      "identifier"       : "instructionStart",
+      "type"             : "crf_start_task",
+      "title"            : "Resting heart rate",
+      "detailText"       : "Your heart rate while you are at rest is a marker of your health. The more relaxed you are, the better. Let’s measure your resting heart rate.",
+      "image"            : "crf_seated_cropped",
+      "iconImage"        : "icon_comfortable_place_to_sit",
+      "iconText"         : "COMFORTABLE PLACE TO SIT",
+      "scaleType"        : "CENTER_CROP",
+      "buttonText"       : "Measure",
+      "infoHtmlFilename" : "crf_stair_step_info",
+      "remindMeLater"    : false
+    },
+    {
+      "identifier" : "sit_relax",
+      "type"       : "crf_instruction",
+      "text"       : "Sit down and relax",
+      "detailText" : "If you don’t feel relaxed, take a moment and breathe slowly before starting the measurement.",
+      "image"      : "crf_seated",
+      "buttonText" : "Measure",
+      "hideProgress"  : "true",
+      "learnMoreText"  : "When to measure",
+      "learnMoreFile"  : "crf_when_measure_resting_hr.html",
+      "learnMoreTitle" : "When to measure"
+    },
+    {
+      "identifier" : "cover_camera",
+      "type"       : "crf_instruction",
+      "text"       : "Cover the flash and camera",
+      "detailText" : "Use your finger to cover the camera and flash on the back of your phone. Your finger nail should turn a little red once you cover the flash.",
+      "image"      : "crf_cover_flash_animation",
+      "isImageAnimated"  : true,
+      "buttonText" : "Measure heart rate",
+      "hideProgress"  : "true"
+    },
+    {
+      "identifier"       : "hr1",
+      "type"             : "crf_heart_rate_camera_step",
+      "duration"         : "20"
+    },
+    {
+      "identifier"       : "completion1",
+      "type"             : "crf_completion",
+      "topText"          : "Your resting heart rate is",
+      "text"             : "Measure twice",
+      "detailText"       : "Many things can influence your measurement. To improve the accuracy, let’s measure it one more time.",
+      "learnMoreText"    : "What is a 'normal' resting HR?",
+      "learnMoreFile"    : "crf_normal_resting_hr.html",
+      "learnMoreTitle"   : "What is a 'normal' resting HR?",
+      "valueLabelText"   : "BPM",
+      "valueResultId"    : "resting"
+    },
+    {
+      "identifier"       : "hr",
+      "type"             : "crf_heart_rate_camera_step",
+      "duration"         : "20"
+    },
+    {
+      "identifier"       : "completion",
+      "type"             : "crf_completion",
+      "topText"          : "Your resting heart rate is",
+      "text"             : "Great job",
+      "detailText"       : "Great job measuring your heart at rest. We’ve finished the first half of  your heart snapshot, so let’s continue on to the next step.",
+      "learnMoreText"    : "What is a 'normal' resting HR?",
+      "learnMoreFile"    : "crf_normal_resting_hr.html",
+      "learnMoreTitle"   : "What is a 'normal' resting HR?",
+      "valueLabelText"   : "BPM",
+      "valueResultId"    : "resting"
+    }
+  ]
+}

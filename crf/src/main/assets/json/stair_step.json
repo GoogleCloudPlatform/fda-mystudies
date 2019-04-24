@@ -1,0 +1,146 @@
+{
+  "taskIdentifier" : "Heart Rate Recovery",
+  "schemaIdentifier" : "Heart Rate Recovery",
+  "optional" : false,
+  "taskSteps" : [
+    {
+      "identifier"       : "instructionStart",
+      "type"             : "crf_start_task",
+      "title"            : "Heart Rate Recovery",
+      "detailText"       : "You will be stepping up and down a step for 3 minutes to raise your heart rate. Right after you finish stepping, measure your heart rate for 1 minute to see how your heart rate recovers.",
+      "image"            : "crf_stair_step",
+      "iconImage"        : "crf_step_icon",
+      "iconText"         : "STEP",
+      "scaleType"        : "CENTER_CROP",
+      "buttonText"       : "Measure",
+      "remindMeLater"    : false
+    },
+    {
+      "identifier"       : "instructionHeartRisk",
+      "type"             : "crf_instruction",
+      "text"             : "Potential risks",
+      "detailText"       : "If a doctor has told you not to exercise, or if you feel that stepping up and down a  step for 3 minutes will be painful or too difficult, please do not do this activity.",
+      "image"            : "crf_health_risk_icon",
+      "scaleType"        : "CENTER_INSIDE",
+      "buttonText"       : "Next",
+      "hideProgress"     : "true"
+    },
+    {
+      "identifier"       : "instructionRecovery",
+      "type"             : "crf_instruction",
+      "text"             : "Recovery HR Questions",
+      "detailText"       : "To calculate your Recovery HR score, we first need to know a few things about you like your sex, and age.",
+      "image"            : "crf_quiz",
+      "scaleType"        : "CENTER_INSIDE",
+      "buttonText"       : "Next",
+      "hideProgress"     : "true"
+    },
+    {
+      "identifier": "sexForm",
+      "type": "crf_form",
+      "title": "What was your sex at birth?",
+      "learnMoreText"    : "Why are we asking about this?",
+      "learnMoreFile"    : "crf_sex_at_birth.html",
+      "learnMoreTitle"   : "Why are we asking?",
+      "items": [
+        {
+          "identifier": "sex",
+          "type": "crfSingleChoice",
+          "items": [
+            {
+              "text": "Male",
+              "value": "male"
+            },
+            {
+              "text": "Female",
+              "value": "female"
+            },
+            {
+              "text": "Other, or prefer not to answer",
+              "value": "other"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "identifier": "birthdateForm",
+      "type": "crf_form",
+      "title": "What year were you born?",
+      "items": [
+        {
+          "identifier": "birthYear",
+          "type": "crfInteger",
+          "placeholderText": "YYYY",
+          "min": 1900,
+          "max": 2100
+        }
+      ]
+    },
+    {
+      "identifier"       : "instructionVolume",
+      "type"             : "crf_instruction",
+      "text"             : "Volume turned up?",
+      "detailText"       : "Bring your phone with you and turn up your phone volume so you can hear the instructions while you are stair stepping.",
+      "image"            : "crf_volume_turned_up_animation",
+      "isImageAnimated"  : true,
+      "scaleType"        : "CENTER_CROP",
+      "buttonText"       : "Turned it up",
+      "hideProgress"     : "true",
+      "mediaVolume"      : true
+    },
+    {
+      "identifier" : "find_camera",
+      "type"       : "crf_instruction",
+      "text"       : "Find your camera and flash",
+      "detailText" : "Use your finger to cover the camera and flash on the back of your phone. Your finger nail should turn a little red once you cover the flash.",
+      "image"      : "flash_on_hand_holding",
+      "buttonText" : "Found it",
+      "hideProgress"  : "true"
+    },
+    {
+      "identifier"       : "instructionStair",
+      "type"             : "crf_instruction",
+      "text"             : "Please step with your phone",
+      "detailText"       : "You will step up and down for 3 minutes. Try to step with the pace.",
+      "image"            : "crf_stair_step_animation",
+      "isImageAnimated"  : true,
+      "scaleType"        : "CENTER_CROP",
+      "buttonText"       : "Press to start",
+      "hideProgress"     : "true"
+    },
+    {
+      "identifier"       : "countdownStep",
+      "type"             : "crf_countdown",
+      "title"            : "Start in",
+      "stepDuration"     : 10
+    },
+    {
+      "identifier"       : "stairStep",
+      "type"             : "crf_stair_step",
+      "duration"         : "180",
+      "soundRes"         : "stair_step_3_min_cue"
+    },
+    {
+      "identifier"       : "hr",
+      "type"             : "crf_heart_rate_camera_step",
+      "isHrRecoveryStep" : "true",
+      "duration"         : "60"
+    },
+    {
+      "identifier"       : "completion",
+      "type"             : "crf_completion",
+      "topText"          : "Your estimated Recovery HR score is",
+      "text"             : "Recovery HR Score",
+      "detailText"       : "The score above estimates a vital sign called VO2max that is normally measured in a lab or clinic.",
+      "learnMoreText"    : "What does this score mean?",
+      "learnMoreFile"    : "crf_recovery_hr.html",
+      "learnMoreTitle"   : "What is a Recovery HR Score?",
+      "valueResultId"    : "vo2_max",
+      "buttonText"       : "Done",
+      "hideProgress"     : "true"
+    }
+
+
+  ]
+}

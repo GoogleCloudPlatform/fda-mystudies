@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <color name="colorPrimary">#C94281</color>
+    <color name="colorPrimaryDark">#990E4F</color>
+    <color name="colorAccent">#F89C55</color>
+
+    <color name="colorSecondary">#313F56</color>
+    <color name="colorSecondaryDark">#181F2B</color>
+
+    <color name="textColor">#1A1C29</color>
+    <color name="textColorPrimary">#FFFFFF</color>
+    <color name="textColorSecondary">#FFFFFF</color>
+
+    <color name="completion_background_start">#91EDC1</color>
+    <color name="completion_background_end">#63D49E</color>
+
+
+
+    <color name="rsb_colorPrimary">@color/colorPrimary</color>
+    <color name="rsb_colorPrimaryDark">@color/colorPrimaryDark</color>
+    <color name="rsb_colorAccent">@color/colorAccent</color>
+
+    <color name="white">#FFFFFF</color>
+
+    <color name="text_color_settings_title">@color/textColor</color>
+    <color name="text_color_settings_summary">@color/textColor</color>
+    <color name="tab_text_color">@color/textColor</color>
+
+    <!-- Zeplin Colors -->
+    <color name="azure">#2196F3</color>
+
+    <color name="whiteTwo">#EDEDED</color>
+    <color name="whiteThree">#FAFAFA</color>
+    <color name="whiteFour">#EBEBEB</color>
+
+    <color name="silver">#e1e5e6</color>
+
+</resources>

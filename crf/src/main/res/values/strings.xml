@@ -1,0 +1,48 @@
+<resources xmlns:tools="http://schemas.android.com/tools" tools:ignore="MissingTranslation">
+    <string name="app_name">Cardio Respiratory Fitness</string>
+
+    <!-- Overview Screen -->
+    <string name="crf_overview_title">Welcome to the CRF Module</string>
+    <string name="crf_overview_text">Let’s start the study</string>
+    <string name="crf_overview_detail_text">Help us learn and test a new digital tool for Cardiorespiratory fitness by completing 2 clinic visits and doing several runs and stairs steps.</string>
+    <string name="crf_lets_go">Let\’s go!</string>
+    <string name="learn_how"><u>Learn how and why</u></string>
+
+    <!-- Start Task Step -->
+    <string name="crf_remind_me_later"><u>Remind me later</u></string>
+
+    <!-- Countdown Task -->
+    <string name="crf_underlined_pause"><u>Pause</u></string>
+    <string name="crf_underlined_resume"><u>Resume</u></string>
+
+    <!-- Active Task Screen -->
+    <string name="crf_step_progress">Step %1$s of %2$s</string>
+
+    <!-- Heartrate Task -->
+    <string name="crf_bpm">bpm</string>
+    <string name="crf_bpm_caps">BPM</string>
+    <string name="crf_capturing">Capturing...</string>
+    <string name="crf_camera_cover">Gently cover both the camera and flash with your finger.</string>
+    <string name="crf_your_heart_rate_is">Your heart rate is</string>
+    <string name="crf_redo_measurement"><u>Redo Measurement</u></string>
+    <string name="crf_finish_measurement">Finish Measurement</string>
+    <string name="crf_hand_to_researcher">Please hand the phone to the researcher</string>
+
+    <string name="crf_pressure">Gently place your finger on the camera and flashlight.</string>
+    <string name="crf_done_underline"><u>Done</u></string>
+    <string name="crf_done">Done</string>
+    <string name="crf_heart_rate_calculated">Your heart rate has been calculated.</string>
+    <string name="crf_oops">Oops!</string>
+    <string name="crf_redo_underline"><u>Redo</u></string>
+    <string name="crf_redo">Redo</string>
+    <string name="crf_practice_makes_perfect">Practice makes perfect</string>
+    <string name="crf_cover_for_later_tests">This is to make sure you can cover your flash and camera quickly for later tests.</string>
+    <string name="crf_move_finger_back">Please move your finger back over the flash and camera</string>
+    <string name="crf_what_is_normal"><u><i>What is a \'normal\' resting HR?</i></u></string>
+    <string name="crf_having_trouble">We’re having trouble seeing your heart rate. Tips for measuring</string>
+    <string name="crf_tips_for_measuring">Tips for measuring your heart rate</string>
+    <string name="crf_sorry">Sorry!</string>
+    <string name="crf_nicely_done">Nicely done!</string>
+    <string name="crf_you_need">This is what you\'ll need</string>
+
+</resources>
