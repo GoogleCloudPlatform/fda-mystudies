@@ -103,6 +103,8 @@ public class CrfHeartRateStepLayout extends ActiveStepLayout implements
     public static final String PEAK_BPM_CONFIDENCE_RESULT = "peak_confidence";
     public static final String VO2_MAX_VALUE_RESULT = "vo2_max";
     public static final String VO2_MAX_RANGE_RESULT = "vo2_max_range";
+    public static final String RESULT_STATUS = "result_status";
+    public static final String STATUS_FAILED = "failed";
 
     private static double MINIMUM_CONFIDENCE = 0.5;
 
@@ -438,7 +440,12 @@ public class CrfHeartRateStepLayout extends ActiveStepLayout implements
     }
 
     protected void onDoneButtonClicked() {
-        callbacks.onSaveStep(StepCallbacks.ACTION_END, activeStep, stepResult);
+        String statusId = RESULT_STATUS;
+        StepResult<String> result = new StepResult<>(new Step(statusId));
+        result.setResult(STATUS_FAILED);
+        stepResult.setResultForIdentifier(statusId, result);
+
+        callbacks.onSaveStep(StepCallbacks.ACTION_NEXT, activeStep, stepResult);
     }
 
     public void onRedoButtonClicked() {

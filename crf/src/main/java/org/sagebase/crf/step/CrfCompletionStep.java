@@ -17,15 +17,22 @@
 
 package org.sagebase.crf.step;
 
+import android.os.Build;
+
 import com.google.gson.annotations.SerializedName;
 
+import org.researchstack.backbone.result.TaskResult;
+import org.researchstack.backbone.task.NavigableOrderedTask;
 import org.researchstack.backbone.utils.ResUtils;
+import org.researchstack.backbone.utils.StepResultHelper;
+
+import java.util.List;
 
 /**
  * Created by TheMDP on 10/31/17.
  */
 
-public class CrfCompletionStep extends CrfInstructionStep {
+public class CrfCompletionStep extends CrfInstructionStep implements NavigableOrderedTask.NavigationSkipRule {
 
     /**
      * Text that shows up above value label
@@ -79,5 +86,14 @@ public class CrfCompletionStep extends CrfInstructionStep {
     @Override
     public Class getStepLayoutClass() {
         return CrfCompletionStepLayout.class;
+    }
+
+    @Override
+    public boolean shouldSkipStep(TaskResult result, List<TaskResult> additionalTaskResults) {
+        String status = StepResultHelper.findStringResult(result, CrfHeartRateStepLayout.RESULT_STATUS);
+        if (CrfHeartRateStepLayout.STATUS_FAILED.equals(status)) {
+            return true;
+        }
+        return false;
     }
 }
