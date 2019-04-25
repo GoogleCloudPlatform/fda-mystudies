@@ -37,11 +37,14 @@ class HeartBeatUtil {
     HeartBeatSample getHeartBeatSample(double timestamp, Bitmap bitmap) {
 
         Date timestampDate = null;
+        double zeroBasedTimeStamp = 0;
         if (timestampZeroReference < 0) {
             // set timestamp reference, which timestamps are measured relative to
             timestampZeroReference = timestamp;
             uptimeZeroReference = System.nanoTime() * 1e-9;
             timestampDate = new Date(System.currentTimeMillis());
+        } else {
+            zeroBasedTimeStamp = timestamp - timestampZeroReference;
         }
 
         double relativeTimestamp = timestamp - timestampZeroReference;
@@ -75,7 +78,7 @@ class HeartBeatUtil {
         double redSD = Math.sqrt(rDiffSum / (double)(intArray.length - 1));
 
         HeartBeatSample sample = new HeartBeatSample();
-        sample.timestamp = timestamp;
+        sample.timestamp = zeroBasedTimeStamp;
         sample.uptime = uptime;
         sample.timestampDate = timestampDate;
 
