@@ -43,10 +43,14 @@ public class CrfCompletionStep extends CrfInstructionStep {
     public String valueLabelText;
 
     /**
-     * The step identifier that will contain the value for value
-     * currently can be completion_bpm_result or completion_distance_result
+     * The step identifier that will contain the value
      */
     public String valueResultId;
+
+    /**
+     * The step identifier that will contain the secondary value to display
+     */
+    public String secondaryValueResultId;
 
     /**
      * Hide or show the redo measurement button

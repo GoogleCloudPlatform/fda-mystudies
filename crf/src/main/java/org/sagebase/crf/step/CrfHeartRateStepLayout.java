@@ -102,6 +102,7 @@ public class CrfHeartRateStepLayout extends ActiveStepLayout implements
     public static final String PEAK_BPM_VALUE_RESULT = "peak";
     public static final String PEAK_BPM_CONFIDENCE_RESULT = "peak_confidence";
     public static final String VO2_MAX_VALUE_RESULT = "vo2_max";
+    public static final String VO2_MAX_RANGE_RESULT = "vo2_max_range";
 
     private static double MINIMUM_CONFIDENCE = 0.5;
 
@@ -628,10 +629,20 @@ public class CrfHeartRateStepLayout extends ActiveStepLayout implements
     }
 
     private void setVo2MaxResult(double vo2Max) {
+        long roundedVo2Max = Math.round(vo2Max);
         String bpmStepId = CrfHeartRateStepLayout.VO2_MAX_VALUE_RESULT;
         StepResult<String> result = new StepResult<>(new Step(bpmStepId));
-        result.setResult(String.valueOf(Math.round(vo2Max)));
+        result.setResult(String.valueOf(roundedVo2Max));
         stepResult.setResultForIdentifier(bpmStepId, result);
+
+        long low = roundedVo2Max - 3;
+        long high = roundedVo2Max + 3;
+        String range = low + " - " + high;
+        String bpmRangeStepId = CrfHeartRateStepLayout.VO2_MAX_RANGE_RESULT;
+        StepResult<String> rangeResult = new StepResult<>(new Step(bpmRangeStepId));
+        rangeResult.setResult(range);
+        stepResult.setResultForIdentifier(bpmRangeStepId, rangeResult);
+
     }
 
     @Override

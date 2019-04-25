@@ -132,11 +132,12 @@
       "type"             : "crf_completion",
       "topText"          : "Your estimated Recovery HR score is",
       "text"             : "Recovery HR Score",
-      "detailText"       : "The score above estimates a vital sign called VO2max that is normally measured in a lab or clinic.",
+      "detailText"       : "The score above estimates a vital sign called VO2max that is normally measured in a lab or clinic. If you took that lab-based test, it may be between:",
       "learnMoreText"    : "What does this score mean?",
       "learnMoreFile"    : "crf_recovery_hr.html",
       "learnMoreTitle"   : "What is a Recovery HR Score?",
       "valueResultId"    : "vo2_max",
+      "secondaryValueResultId"    : "vo2_max_range",
       "buttonText"       : "Done",
       "hideProgress"     : "true"
     }
