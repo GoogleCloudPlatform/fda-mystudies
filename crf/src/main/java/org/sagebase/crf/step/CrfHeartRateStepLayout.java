@@ -152,6 +152,8 @@ public class CrfHeartRateStepLayout extends ActiveStepLayout implements
     protected boolean isFinished = false;
     private boolean shouldShowFinishUi = false;
 
+    private boolean cameraCoverd = false;
+
     private String sex;
     private int birthYear;
 
@@ -724,16 +726,17 @@ public class CrfHeartRateStepLayout extends ActiveStepLayout implements
             arcDrawableContainer.setVisibility(View.INVISIBLE);
             arcDrawable.setSweepAngle(0.0f);
             cameraPreview.setVisibility(View.VISIBLE);
-        } else {
+        } else if (!this.cameraCoverd) {
+            //Only update covered state if we haven't already been notified
             crfOops.setVisibility(View.INVISIBLE);
             crfMessageTextView.setText(R.string.crf_camera_cover);
-            currentHeartRate.setText("Capturing...");
+            currentHeartRate.setText(R.string.crf_capturing);
 
             heartImageView.setVisibility(View.VISIBLE);
             arcDrawableContainer.setVisibility(View.VISIBLE);
             cameraPreview.setVisibility(View.GONE);
-
         }
+        cameraCoverd = camera.cameraCovered;
     }
 
 
