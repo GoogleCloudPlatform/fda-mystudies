@@ -102,6 +102,9 @@ public class CrfHeartRateStepLayout extends ActiveStepLayout implements
     public static final String PEAK_BPM_VALUE_RESULT = "peak";
     public static final String PEAK_BPM_CONFIDENCE_RESULT = "peak_confidence";
     public static final String VO2_MAX_VALUE_RESULT = "vo2_max";
+    public static final String VO2_MAX_RANGE_RESULT = "vo2_max_range";
+    public static final String RESULT_STATUS = "result_status";
+    public static final String STATUS_FAILED = "failed";
 
     private static double MINIMUM_CONFIDENCE = 0.5;
 
@@ -148,6 +151,8 @@ public class CrfHeartRateStepLayout extends ActiveStepLayout implements
     protected boolean shouldContinueOnStop = false;
     protected boolean isFinished = false;
     private boolean shouldShowFinishUi = false;
+
+    private boolean cameraCoverd = false;
 
     private String sex;
     private int birthYear;
@@ -437,7 +442,12 @@ public class CrfHeartRateStepLayout extends ActiveStepLayout implements
     }
 
     protected void onDoneButtonClicked() {
-        callbacks.onSaveStep(StepCallbacks.ACTION_END, activeStep, stepResult);
+        String statusId = RESULT_STATUS;
+        StepResult<String> result = new StepResult<>(new Step(statusId));
+        result.setResult(STATUS_FAILED);
+        stepResult.setResultForIdentifier(statusId, result);
+
+        callbacks.onSaveStep(StepCallbacks.ACTION_NEXT, activeStep, stepResult);
     }
 
     public void onRedoButtonClicked() {
@@ -628,10 +638,20 @@ public class CrfHeartRateStepLayout extends ActiveStepLayout implements
     }
 
     private void setVo2MaxResult(double vo2Max) {
+        long roundedVo2Max = Math.round(vo2Max);
         String bpmStepId = CrfHeartRateStepLayout.VO2_MAX_VALUE_RESULT;
         StepResult<String> result = new StepResult<>(new Step(bpmStepId));
-        result.setResult(String.valueOf(Math.round(vo2Max)));
+        result.setResult(String.valueOf(roundedVo2Max));
         stepResult.setResultForIdentifier(bpmStepId, result);
+
+        long low = roundedVo2Max - 3;
+        long high = roundedVo2Max + 3;
+        String range = low + " - " + high;
+        String bpmRangeStepId = CrfHeartRateStepLayout.VO2_MAX_RANGE_RESULT;
+        StepResult<String> rangeResult = new StepResult<>(new Step(bpmRangeStepId));
+        rangeResult.setResult(range);
+        stepResult.setResultForIdentifier(bpmRangeStepId, rangeResult);
+
     }
 
     @Override
@@ -706,16 +726,17 @@ public class CrfHeartRateStepLayout extends ActiveStepLayout implements
             arcDrawableContainer.setVisibility(View.INVISIBLE);
             arcDrawable.setSweepAngle(0.0f);
             cameraPreview.setVisibility(View.VISIBLE);
-        } else {
+        } else if (!this.cameraCoverd) {
+            //Only update covered state if we haven't already been notified
             crfOops.setVisibility(View.INVISIBLE);
             crfMessageTextView.setText(R.string.crf_camera_cover);
-            currentHeartRate.setText("Capturing...");
+            currentHeartRate.setText(R.string.crf_capturing);
 
             heartImageView.setVisibility(View.VISIBLE);
             arcDrawableContainer.setVisibility(View.VISIBLE);
             cameraPreview.setVisibility(View.GONE);
-
         }
+        cameraCoverd = camera.cameraCovered;
     }
 
 

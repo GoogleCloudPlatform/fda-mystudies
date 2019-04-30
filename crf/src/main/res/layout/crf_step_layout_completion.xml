@@ -108,6 +108,14 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:layout_margin="@dimen/rsb_padding_large" />
+        <TextView
+            style="@style/TextAppearance.Crf.IntroBody"
+            android:id="@+id/crf_secondary_completion_text_value"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_margin="@dimen/rsb_padding_large"
+            android:gravity="center_horizontal"/>
 
     </LinearLayout>
 

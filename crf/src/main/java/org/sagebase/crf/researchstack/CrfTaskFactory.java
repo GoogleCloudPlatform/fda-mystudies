@@ -327,6 +327,9 @@ public class CrfTaskFactory extends TaskItemFactory {
         if (item.valueResultId != null) {
             step.valueResultId = item.valueResultId;
         }
+        if (item.secondaryValueResultId != null) {
+            step.secondaryValueResultId = item.secondaryValueResultId;
+        }
         if (item.showRedoButton) {
             step.showRedoButton = item.showRedoButton;
         }

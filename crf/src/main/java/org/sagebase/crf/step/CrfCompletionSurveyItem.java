@@ -49,6 +49,12 @@ public class CrfCompletionSurveyItem extends CrfInstructionSurveyItem {
     @SerializedName("valueResultId")
     public String valueResultId;
 
+    /**
+     * The step identifier that will contain the secondary value to display
+     */
+    @SerializedName("secondaryValueResultId")
+    public String secondaryValueResultId;
+
     @SerializedName("showRedoButton")
     public boolean showRedoButton;
 }
