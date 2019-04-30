@@ -45,6 +45,7 @@ public class CrfCompletionStepLayout extends CrfInstructionStepLayout implements
     private View mCompletionTextContainer;
     private TextView mCompletionTextTop;
     private TextView mCompletionValueText;
+    private TextView mSecondaryCompletionValueText;
     private TextView mCompletionLabelText;
     private TextView mCompletionTextBottom;
 
@@ -52,6 +53,7 @@ public class CrfCompletionStepLayout extends CrfInstructionStepLayout implements
 
     // This is passed in from the TaskResult
     private String mCompletionValueResult;
+    private String mSecondaryCompletionValueResult;
 
     private CrfCompletionStep crfCompletionStep;
 
@@ -108,6 +110,7 @@ public class CrfCompletionStepLayout extends CrfInstructionStepLayout implements
 //        mCompletionTextBottom.setVisibility((crfCompletionStep.bottomText == null) ? View.GONE : View.VISIBLE);
 
         mCompletionValueText = findViewById(R.id.crf_completion_text_value);
+        mSecondaryCompletionValueText = findViewById(R.id.crf_secondary_completion_text_value);
         refreshCompletionValueLabel();
 
         mRedoButton = findViewById(R.id.crf_redo_button);
@@ -121,7 +124,14 @@ public class CrfCompletionStepLayout extends CrfInstructionStepLayout implements
 
     @Override
     public void crfTaskResult(TaskResult taskResult) {
-        mCompletionValueResult = StepResultHelper.findStringResult(taskResult, crfCompletionStep.valueResultId);
+        StepResult stepResult = StepResultHelper.findStepResult(taskResult, crfCompletionStep.valueResultId);
+        mCompletionValueResult = String.valueOf(stepResult.getResult());
+        StepResult stepResultSecondary = StepResultHelper.findStepResult(taskResult, crfCompletionStep.secondaryValueResultId);
+        if (stepResultSecondary != null) {
+            mSecondaryCompletionValueResult = String.valueOf(stepResultSecondary.getResult());
+        }
+
+
         refreshCompletionValueLabel();
     }
 
@@ -132,6 +142,12 @@ public class CrfCompletionStepLayout extends CrfInstructionStepLayout implements
         }
         mCompletionTextContainer.setVisibility(View.VISIBLE);
         mCompletionValueText.setText(mCompletionValueResult);
+        if (mSecondaryCompletionValueResult == null) {
+            mSecondaryCompletionValueText.setVisibility(View.GONE);
+        } else {
+            mSecondaryCompletionValueText.setVisibility(View.VISIBLE);
+            mSecondaryCompletionValueText.setText(mSecondaryCompletionValueResult);
+        }
     }
 
     public void onRedoButtonClicked() {
