@@ -38,7 +38,7 @@
     {
       "identifier": "sexForm",
       "type": "crf_form",
-      "title": "What was your sex at birth?",
+      "title": "What is your sex?",
       "learnMoreText"    : "Why are we asking about this?",
       "learnMoreFile"    : "crf_sex_at_birth.html",
       "learnMoreTitle"   : "Why are we asking?",
@@ -49,15 +49,15 @@
           "items": [
             {
               "text": "Male",
-              "value": "Male"
+              "value": "male"
             },
             {
               "text": "Female",
-              "value": "Female"
+              "value": "female"
             },
             {
               "text": "Other, or prefer not to answer",
-              "value": "Other"
+              "value": "other"
             }
           ]
         }
@@ -132,11 +132,12 @@
       "type"             : "crf_completion",
       "topText"          : "Your estimated Recovery HR score is",
       "text"             : "Recovery HR Score",
-      "detailText"       : "The score above estimates a vital sign called VO2max that is normally measured in a lab or clinic.",
+      "detailText"       : "The score above estimates a vital sign called VO2max that is normally measured in a lab or clinic. If you took that lab-based test, it may be between:",
       "learnMoreText"    : "What does this score mean?",
       "learnMoreFile"    : "crf_recovery_hr.html",
       "learnMoreTitle"   : "What is a Recovery HR Score?",
-      "valueResultId"    : "completion_bpm_result",
+      "valueResultId"    : "vo2_max",
+      "secondaryValueResultId"    : "vo2_max_range",
       "buttonText"       : "Done",
       "hideProgress"     : "true"
     }

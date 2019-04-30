@@ -66,11 +66,8 @@ public class CrfCameraPermissionStepLayout extends CrfInstructionStepLayout impl
 
     @Override
     public void onUpdateForPermissionResult() {
-        if (hasCameraPermission()) {
-            goForwardClicked(null);
-        } else {
-            nextButton.setEnabled(true);
-        }
-
+        //Re-enable the button so user can tap to go to the next step.
+        //Automatically taking user to next step causes weird layout problems
+        nextButton.setEnabled(true);
     }
 }

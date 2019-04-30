@@ -21,7 +21,7 @@ android {
     compileSdkVersion 28
     defaultConfig {
         applicationId "org.sagebase.research.crf"
-        minSdkVersion 19
+        minSdkVersion 21
         targetSdkVersion 28
         versionCode 1
         versionName "1.0"
@@ -54,10 +54,6 @@ dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
 
     implementation project(':crf')
-    implementation 'com.github.tony19:logback-android-core:1.1.1-6'
-    implementation 'com.github.tony19:logback-android-classic:1.1.1-6', {
-        exclude group: 'com.google.android', module: 'android'
-    }
 
 
     implementation 'com.android.support:multidex:1.0.3'

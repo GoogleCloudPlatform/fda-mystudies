@@ -9,6 +9,8 @@
     <!-- ActiveSteps may use this to capture heart rate -->
     <uses-permission android:name="android.permission.BODY_SENSORS" />
 
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+
     <application>
         <activity
             android:name="org.sagebase.crf.CrfActiveTaskActivity"

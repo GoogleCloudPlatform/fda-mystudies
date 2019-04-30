@@ -17,9 +17,13 @@
 
 package org.sagebase.crf;
 
+import android.content.Intent;
+import android.support.annotation.VisibleForTesting;
+
 import com.google.common.collect.ImmutableList;
 
 import org.researchstack.backbone.result.TaskResult;
+import org.researchstack.backbone.ui.ViewTaskActivity;
 import org.sagebase.crf.result.CrfResult;
 import org.sagebase.crf.result.CrfTaskResult;
 import org.threeten.bp.Instant;
@@ -30,11 +34,23 @@ import org.threeten.bp.ZonedDateTime;
  * Factory for creating Cardiorespiratory Fitness task results.
  */
 public class CrfTaskResultFactory {
+
+    /**
+     * @param data data received in onActivityResult for a Cardiorespiratory Fitness task
+     * @return task result in Cardiorespiratory Fitness module format
+     */
+    public static CrfTaskResult create(Intent data) {
+//            return new CrfTaskResult("id", ZonedDateTime.now(), ZonedDateTime.now(),
+//                    ImmutableList.of(), ImmutableList.of());
+        return createFromTaskResult((TaskResult)data.getSerializableExtra(ViewTaskActivity.EXTRA_TASK_RESULT));
+    }
+
     /**
      * @param taskResult raw task result
      * @return task result in Cardiorespiratory Fitness module format
      */
-    public static CrfTaskResult create(TaskResult taskResult) {
+    @VisibleForTesting
+    private static CrfTaskResult createFromTaskResult(TaskResult taskResult) {
         String identifier = taskResult.getIdentifier();
 
         ZonedDateTime startTime = ZonedDateTime.ofInstant(

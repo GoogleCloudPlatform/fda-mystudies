@@ -38,7 +38,7 @@
         <ImageView
             android:id="@+id/crf_image_view"
             android:layout_width="match_parent"
-            android:layout_height="150dp"
+            android:layout_height="120dp"
             android:scaleType="centerInside"
             android:src="@drawable/crf_completed_icon"
             tools:src="@drawable/crf_completed_icon" />
@@ -108,6 +108,14 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:layout_margin="@dimen/rsb_padding_large" />
+        <TextView
+            style="@style/TextAppearance.Crf.IntroBody"
+            android:id="@+id/crf_secondary_completion_text_value"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_margin="@dimen/rsb_padding_large"
+            android:gravity="center_horizontal"/>
 
     </LinearLayout>
 
