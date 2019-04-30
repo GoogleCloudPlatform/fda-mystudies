@@ -144,9 +144,7 @@ class HeartRateTestDataLoader {
 
     data class HRProcessorTestData(
         var hr_data : Array<TestPixelSample>,
-        var hr_data_filtered : Array<ColorData>,
-        var hr_data_filtered_chunked : ColorDataChunked,
-        var hr_data_filtered_chunked_acf : ColorDataChunked,
+        var hr_data_chunks : ColorDataChunked,
         var hr_estimates : HrEstimates
     ) {
 

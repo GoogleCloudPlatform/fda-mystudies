@@ -39,6 +39,7 @@ val SUPPORTED_FRAME_RATES = arrayOf(30)
 /// The number of seconds for the window used to calculate the heart rate.
 const val HEART_RATE_WINDOW_IN_SECONDS: Double = 10.0
 const val HEART_RATE_MIN_FRAME_RATE: Double = 12.0
+const val HEART_RATE_FILTER_DROP_IN_SECONDS: Double = 2.0
 
 const val HEART_RATE_MAX: Double = 210.0
 const val HEART_RATE_MIN: Double = 45.0
@@ -79,7 +80,7 @@ class HeartRateSampleProcessor @JvmOverloads constructor(val videoProcessorFrame
         // look to see if we have enough to process a bpm
         // Need to keep 2 extra seconds due to filtering lopping off the first 2 seconds of data.
         val meanOrder = meanFilterOrder(roundedRate)
-        val windowLength = (HEART_RATE_WINDOW_IN_SECONDS + 2).roundToInt() * roundedRate + meanOrder
+        val windowLength = (HEART_RATE_WINDOW_IN_SECONDS + 2.0 * HEART_RATE_FILTER_DROP_IN_SECONDS).roundToInt() * roundedRate + meanOrder
 
         return (pixelSamples.size >= windowLength)
     }
@@ -302,13 +303,19 @@ class HeartRateSampleProcessor @JvmOverloads constructor(val videoProcessorFrame
         // (because the 3 seconds is removed by checking for the isLensCovered flag), but to match his output
         // it is reproduced here for testing purposes.
         val drop = if (dropSeconds > 0) dropSeconds * samplingRate - 1 else 0
-        val x = input.drop(drop).map { if (it.isFinite()) it else 0.0 }
+
+        // get minimum value in the input window and offset each signale frame by the minimum value observed in the window
+        //        let minValue = x.min()
+        //        let minnedOutX = x.map({$0 - minValue!})
+        val xInput = input.drop(drop)
+        val minValue = xInput.min()!!
+        val x = xInput.map { if (it.isFinite()) (it - minValue) else 0.0 }
         //    x <- signal::filter(bf_low, x) # lowpass
         //    x <- x[round(sampling_rate):length(x)] # 1s
-        val lowpass = passFilter(x.toDoubleArray(), samplingRate = samplingRate, type = FilterType.low).drop(samplingRate)
+        val lowpass = passFilter(x.toDoubleArray(), samplingRate = samplingRate, type = FilterType.low).drop(HEART_RATE_FILTER_DROP_IN_SECONDS.toInt() * samplingRate)
         //    x <- signal::filter(bf_high, x) # highpass
         //    x <- x[round(sampling_rate):length(x)] # 1s @ 60Hz
-        val highpass = passFilter(lowpass.toDoubleArray(), samplingRate = samplingRate, type = FilterType.high).drop(samplingRate)
+        val highpass = passFilter(lowpass.toDoubleArray(), samplingRate = samplingRate, type = FilterType.high).drop(HEART_RATE_FILTER_DROP_IN_SECONDS.toInt() * samplingRate)
         // filter using mean centering
         val filtered = meanCenteringFilter(highpass.toDoubleArray(), samplingRate = samplingRate)
         return filtered
