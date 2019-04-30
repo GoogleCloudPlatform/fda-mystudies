@@ -308,7 +308,7 @@ class HeartRateSampleProcessor @JvmOverloads constructor(val videoProcessorFrame
         //        let minValue = x.min()
         //        let minnedOutX = x.map({$0 - minValue!})
         val xInput = input.drop(drop)
-        val minValue = xInput.min()!!
+        val minValue = xInput.min() ?: 0.0
         val x = xInput.map { if (it.isFinite()) (it - minValue) else 0.0 }
         //    x <- signal::filter(bf_low, x) # lowpass
         //    x <- x[round(sampling_rate):length(x)] # 1s
