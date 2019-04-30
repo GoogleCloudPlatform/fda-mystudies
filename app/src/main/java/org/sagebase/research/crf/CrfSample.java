@@ -17,15 +17,12 @@
 
 package org.sagebase.research.crf;
 
-import android.Manifest;
 import android.app.Activity;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.os.Bundle;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -33,26 +30,14 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import org.researchstack.backbone.factory.IntentFactory;
-import org.researchstack.backbone.result.TaskResult;
-import org.researchstack.backbone.task.Task;
-import org.researchstack.backbone.ui.ViewTaskActivity;
-import org.sagebase.crf.CrfActiveTaskActivity;
-import org.sagebase.crf.researchstack.CrfResourceManager;
-import org.sagebase.crf.researchstack.CrfTaskFactory;
-import org.sagebase.crf.step.active.CsvUtils;
-import org.sagebase.research.crf.R;
+import org.sagebase.crf.CrfTaskIntentFactory;
+import org.sagebase.crf.CrfTaskResultFactory;
+import org.sagebase.crf.result.CrfTaskResult;
 
-import static org.researchstack.backbone.ui.fragment.ActivitiesFragment.REQUEST_TASK;
 
 public class CrfSample extends AppCompatActivity {
 
-    private CrfTaskFactory taskFactory = new CrfTaskFactory();
-    private IntentFactory intentFactory = IntentFactory.INSTANCE;
-
-    public final IntentFactory getIntentFactory() {
-        return intentFactory;
-    }
+    private static final int CRF_TASK_REQUEST_CODE = 1492;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,48 +49,49 @@ public class CrfSample extends AppCompatActivity {
 
         LinearLayout taskContainer = findViewById(R.id.crf_task_container);
 
-        final Task trainingTask = taskFactory.createTask(this, CrfResourceManager.HEART_RATE_TRAINING_TEST_RESOURCE);
-        addTask(taskContainer, trainingTask);
+        final Intent trainingTaskIntent = CrfTaskIntentFactory.getHeartRateTrainingTaskIntent(this);
+        final String trainingTaskTitle = "Heart Rate Training";
+        addTask(taskContainer, trainingTaskIntent, trainingTaskTitle);
 
-        final Task restingHrTask = taskFactory.createTask(this, CrfResourceManager.HEART_RATE_MEASUREMENT_TEST_RESOURCE);
-        addTask(taskContainer, restingHrTask);
+        final Intent restingHrTaskIntent = CrfTaskIntentFactory.getHeartRateMeasurementTaskIntent(this);
+        final String restingHrTaskTitle = "Resting Heart Rate";
+        addTask(taskContainer, restingHrTaskIntent, restingHrTaskTitle);
 
-        final Task stepHrTask = taskFactory.createTask(this, CrfResourceManager.STAIR_STEP_RESOURCE);
-        addTask(taskContainer, stepHrTask);
+        final Intent stepHrTaskIntent = CrfTaskIntentFactory.getStairStepTaskIntent(this);
+        final String stepHrTaskTitle = "Heart Rate Recovery";
+        addTask(taskContainer, stepHrTaskIntent, stepHrTaskTitle);
 
+        // is this needed?
     }
 
-    private void addTask(ViewGroup taskContainer, final Task activeTask) {
+    private void addTask(final ViewGroup taskContainer, final Intent taskIntent,
+                         final String taskTitle) {
         View taskView = LayoutInflater.from(this).inflate(R.layout.crf_task, taskContainer, false);
         taskContainer.addView(taskView);
         Button taskButton = taskView.findViewById(R.id.button_start_task);
         TextView taskTitleTextView = taskView.findViewById(R.id.task_name);
-        taskTitleTextView.setText(activeTask.getIdentifier());
+        taskTitleTextView.setText(taskTitle);
         taskButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startTask(activeTask);
+                startTask(taskIntent);
             }
         });
     }
 
-
-    private void startTask(Task activeTask) {
-        if (activeTask != null) {
-            Intent intent = getIntentFactory().newTaskIntent(this, CrfActiveTaskActivity.class, activeTask);
-            startActivityForResult(intent, REQUEST_TASK);
+    private void startTask(final Intent taskIntent) {
+        if (taskIntent != null) {
+            startActivityForResult(taskIntent, CRF_TASK_REQUEST_CODE);
         }
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (resultCode == Activity.RESULT_OK && requestCode == REQUEST_TASK) {
-            TaskResult taskResult = (TaskResult) data.getSerializableExtra(ViewTaskActivity.EXTRA_TASK_RESULT);
-            taskResult.getResults();
+        if (resultCode == Activity.RESULT_OK && requestCode == CRF_TASK_REQUEST_CODE) {
+            CrfTaskResult crfTaskResult = CrfTaskResultFactory.create(data);
+            Log.d("CrfSample", String.valueOf(crfTaskResult));
         } else {
             super.onActivityResult(requestCode, resultCode, data);
         }
-
     }
-
 }
