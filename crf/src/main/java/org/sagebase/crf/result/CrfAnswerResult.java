@@ -22,7 +22,7 @@ import android.support.annotation.Nullable;
 
 import com.google.common.base.Strings;
 
-import org.threeten.bp.ZonedDateTime;
+import java.util.Date;
 
 import static com.google.common.base.Preconditions.checkArgument;
 
@@ -34,8 +34,8 @@ public class CrfAnswerResult<T> extends CrfResult {
     @Nullable
     private final String answerType;
 
-    public CrfAnswerResult(@NonNull String identifier, @NonNull ZonedDateTime startTime,
-                           @NonNull ZonedDateTime endTime, @Nullable T answer,
+    public CrfAnswerResult(@NonNull String identifier, @NonNull Date startTime,
+                           @NonNull Date endTime, @Nullable T answer,
                            @NonNull String answerType) {
         super(identifier, TYPE, startTime, endTime);
         this.answer = answer;

@@ -23,7 +23,8 @@ import android.support.annotation.Nullable;
 import com.google.common.base.MoreObjects;
 import com.google.common.base.Objects;
 
-import org.threeten.bp.ZonedDateTime;
+import java.util.Date;
+
 
 public class CrfFileResult extends CrfResult {
 private static final String TYPE = "file";
@@ -32,8 +33,8 @@ private static final String TYPE = "file";
     @Nullable
     private final String relativePath;
 
-    public CrfFileResult(@NonNull String identifier, @NonNull ZonedDateTime startTime,
-                         @NonNull ZonedDateTime endTime, @Nullable String fileType,
+    public CrfFileResult(@NonNull String identifier, @NonNull Date startTime,
+                         @NonNull Date endTime, @Nullable String fileType,
                          @Nullable String relativePath) {
         super(identifier, TYPE, startTime, endTime);
         this.fileType = fileType;

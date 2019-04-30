@@ -26,9 +26,6 @@ import org.researchstack.backbone.result.TaskResult;
 import org.researchstack.backbone.ui.ViewTaskActivity;
 import org.sagebase.crf.result.CrfResult;
 import org.sagebase.crf.result.CrfTaskResult;
-import org.threeten.bp.Instant;
-import org.threeten.bp.ZoneId;
-import org.threeten.bp.ZonedDateTime;
 
 /**
  * Factory for creating Cardiorespiratory Fitness task results.
@@ -53,17 +50,10 @@ public class CrfTaskResultFactory {
     private static CrfTaskResult createFromTaskResult(TaskResult taskResult) {
         String identifier = taskResult.getIdentifier();
 
-        ZonedDateTime startTime = ZonedDateTime.ofInstant(
-                Instant.ofEpochMilli(taskResult.getStartDate().getTime()),
-                ZoneId.systemDefault());
-        ZonedDateTime endTime = ZonedDateTime.ofInstant(
-                Instant.ofEpochMilli(taskResult.getEndDate().getTime()),
-                ZoneId.systemDefault());
-
         ImmutableList<CrfResult> stepHistory = ImmutableList.of();
         ImmutableList<CrfResult> asyncResults = ImmutableList.of();
 
-        return new CrfTaskResult(identifier, startTime, endTime, stepHistory, asyncResults);
+        return new CrfTaskResult(identifier, taskResult.getStartDate(), taskResult.getEndDate(), stepHistory, asyncResults);
     }
 
     private CrfTaskResultFactory() {

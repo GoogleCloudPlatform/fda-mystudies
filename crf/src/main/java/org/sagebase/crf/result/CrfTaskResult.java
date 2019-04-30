@@ -21,7 +21,7 @@ import android.support.annotation.NonNull;
 
 import com.google.common.collect.ImmutableList;
 
-import org.threeten.bp.ZonedDateTime;
+import java.util.Date;
 
 /**
  * Result from a run of a task.
@@ -34,8 +34,8 @@ public class CrfTaskResult extends CrfResult {
     @NonNull
     private final ImmutableList<CrfResult> asyncResults;
 
-    public CrfTaskResult(@NonNull String identifier, @NonNull ZonedDateTime startTime,
-                         @NonNull ZonedDateTime endTime,
+    public CrfTaskResult(@NonNull String identifier, @NonNull Date startTime,
+                         @NonNull Date endTime,
                          @NonNull ImmutableList<CrfResult> stepHistory,
                          @NonNull ImmutableList<CrfResult> asyncResults) {
         super(identifier, TYPE, startTime, endTime);

@@ -23,7 +23,7 @@ import com.google.common.base.MoreObjects;
 import com.google.common.base.Objects;
 import com.google.common.base.Strings;
 
-import org.threeten.bp.ZonedDateTime;
+import java.util.Date;
 
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -37,12 +37,12 @@ public abstract class CrfResult {
     @NonNull
     private final String type;
     @NonNull
-    private final ZonedDateTime startTime;
+    private final Date startTime;
     @NonNull
-    private final ZonedDateTime endTime;
+    private final Date endTime;
 
     public CrfResult(@NonNull String identifier, @NonNull String type,
-                     @NonNull ZonedDateTime startTime, @NonNull ZonedDateTime endTime) {
+                     @NonNull Date startTime, @NonNull Date endTime) {
         checkArgument(!Strings.isNullOrEmpty(identifier));
         this.identifier = identifier;
         checkArgument(!Strings.isNullOrEmpty(type));
@@ -72,7 +72,7 @@ public abstract class CrfResult {
      * @return time this result started
      */
     @NonNull
-    public ZonedDateTime getStartTime() {
+    public Date getStartTime() {
         return startTime;
     }
 
@@ -80,7 +80,7 @@ public abstract class CrfResult {
      * @return time this result ended
      */
     @NonNull
-    public ZonedDateTime getEndTime() {
+    public Date getEndTime() {
         return endTime;
     }
 

@@ -21,7 +21,7 @@ import android.support.annotation.NonNull;
 
 import com.google.common.collect.ImmutableList;
 
-import org.threeten.bp.ZonedDateTime;
+import java.util.Date;
 
 public class CrfCollectionResult extends CrfResult {
     private static final String TYPE = "collection";
@@ -29,8 +29,8 @@ public class CrfCollectionResult extends CrfResult {
     @NonNull
     private final ImmutableList<CrfResult> results;
 
-    public CrfCollectionResult(@NonNull String identifier, @NonNull ZonedDateTime startTime,
-                               @NonNull ZonedDateTime endTime,
+    public CrfCollectionResult(@NonNull String identifier, @NonNull Date startTime,
+                               @NonNull Date endTime,
                                @NonNull ImmutableList<CrfResult> results) {
         super(identifier, TYPE, startTime, endTime);
         this.results = results;
