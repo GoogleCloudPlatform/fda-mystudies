@@ -54,11 +54,11 @@ public class CrfSample extends AppCompatActivity {
         addTask(taskContainer, trainingTaskIntent, trainingTaskTitle);
 
         final Intent restingHrTaskIntent = CrfTaskIntentFactory.getHeartRateMeasurementTaskIntent(this);
-        final String restingHrTaskTitle = "Heart Rate Measurement";
+        final String restingHrTaskTitle = "Resting Heart Rate";
         addTask(taskContainer, restingHrTaskIntent, restingHrTaskTitle);
 
         final Intent stepHrTaskIntent = CrfTaskIntentFactory.getStairStepTaskIntent(this);
-        final String stepHrTaskTitle = "Cardio Stair Step";
+        final String stepHrTaskTitle = "Heart Rate Recovery";
         addTask(taskContainer, stepHrTaskIntent, stepHrTaskTitle);
 
         // is this needed?
