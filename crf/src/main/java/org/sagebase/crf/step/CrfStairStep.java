@@ -18,7 +18,7 @@
 package org.sagebase.crf.step;
 
 import org.researchstack.backbone.step.active.ActiveStep;
-import org.researchstack.backbone.step.active.recorder.DeviceMotionRecorderConfig;
+import org.researchstack.backbone.step.active.recorder.AccelerometerRecorderConfig;
 import org.researchstack.backbone.step.active.recorder.RecorderConfig;
 
 import java.util.ArrayList;
@@ -51,7 +51,7 @@ public class CrfStairStep extends ActiveStep {
 
     private void commonInit() {
         List<RecorderConfig> configList = new ArrayList<>();
-        configList.add(new DeviceMotionRecorderConfig(MOTION_RECORDER_ID, SENSOR_FREQ));
+        configList.add(new AccelerometerRecorderConfig(ACCEL_RECORDER_ID, SENSOR_FREQ));
         setRecorderConfigurationList(configList);
         setShouldContinueOnFinish(true);
         setShouldStartTimerAutomatically(true);
