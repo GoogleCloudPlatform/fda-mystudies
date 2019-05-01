@@ -304,7 +304,7 @@ class HeartRateSampleProcessor @JvmOverloads constructor(val videoProcessorFrame
         // it is reproduced here for testing purposes.
         val drop = if (dropSeconds > 0) dropSeconds * samplingRate - 1 else 0
 
-        // get minimum value in the input window and offset each signale frame by the minimum value observed in the window
+        // get minimum value in the input window and offset each signal frame by the minimum value observed in the window
         //        let minValue = x.min()
         //        let minnedOutX = x.map({$0 - minValue!})
         val xInput = input.drop(drop)
