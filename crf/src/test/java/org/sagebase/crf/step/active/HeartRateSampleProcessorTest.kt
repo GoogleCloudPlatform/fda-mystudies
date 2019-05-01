@@ -169,31 +169,6 @@ class HeartRateSampleProcessorTest {
     }
 
     @Test
-    fun testGetFilteredSignal_Red() {
-        val processor = HeartRateSampleProcessor()
-        val testHRData = testHRData()
-
-        val input = testHRData.hr_data.map { it.red }
-        val samplingRate = 60
-        val expectedOutput = testHRData.hr_data_filtered.map { it.red }.toDoubleArray()
-        val output = processor.getFilteredSignal(input, samplingRate, 3)
-        compare(expectedOutput, output, 0.0001)
-    }
-
-    @Test
-    fun testGetFilteredSignal_Green() {
-        val processor = HeartRateSampleProcessor()
-        val testHRData = testHRData()
-
-        val input = testHRData.hr_data.map { it.green }
-        val samplingRate = 60
-        val expectedOutput = testHRData.hr_data_filtered.map { it.green }.toDoubleArray()
-        val output = processor.getFilteredSignal(input, samplingRate, 3)
-        compare(expectedOutput, output, 0.0001)
-    }
-
-
-    @Test
     fun testCalculatedLag() {
         val processor = HeartRateSampleProcessor()
         val testData = testData()
@@ -202,21 +177,6 @@ class HeartRateSampleProcessorTest {
         assertEquals(testData.minLag(), minLag)
         val maxLag = processor.calculateMaxLag(testData.samplingRate())
         assertEquals(testData.maxLag(), maxLag)
-    }
-
-    @Test
-    fun testChunkedSamples() {
-        val processor = HeartRateSampleProcessor()
-        val testHRData = testHRData()
-
-        val samplingRate = processor.calculateSamplingRate(testHRData.hr_data.toList())
-        val input = testHRData.hr_data_filtered.map { it.red }
-        val expectedOutput = testHRData.flip(testHRData.hr_data_filtered_chunked.red)
-        val output = processor.chunkSamples(input, samplingRate)
-        assertEquals(output.size, expectedOutput.size)
-        for (ii in 0 until output.size) {
-            compare(output[ii], expectedOutput[ii], 0.00000001)
-        }
     }
 
     @Test
@@ -291,8 +251,9 @@ class HeartRateSampleProcessorTest {
         val testHRData = testHRData()
 
         val samplingRate = processor.calculateSamplingRate(testHRData.hr_data.toList())
+        val roundedRate = samplingRate.roundToInt()
 
-        val inputChunks: Array<DoubleArray> = testHRData.flip(testHRData.hr_data_filtered_chunked.red)
+        val inputChunks: Array<DoubleArray> = testHRData.flip(testHRData.hr_data_chunks.red)
         val expectedOutputs: Array<HRTuple> = testHRData.hr_estimates.red
 
         // check assumption
@@ -301,11 +262,13 @@ class HeartRateSampleProcessorTest {
         // Only check some of the results b/c the calculations are for a resting heart rate and all use
         // initial estimate or else they are invalid (Initial windows).
         for (ii in 0 until Math.min(10, expectedOutputs.size)) {
-            val (hr, confidence) = processor.calculateHRFromFilteredSamples(inputChunks[ii], samplingRate)
+            //let filteredData = processor.getFilteredSignal(inputChunks[ii], samplingRate: roundedSamplingRate)
+            val filteredData = processor.getFilteredSignal(inputChunks[ii].toList(), roundedRate)
+            val (hr, confidence) = processor.calculateHRFromFilteredSamples(filteredData, samplingRate)
             val expectedHR = expectedOutputs[ii].hr
             val expectedConfidence = expectedOutputs[ii].confidence
-            assertEquals(expectedHR, hr,0.000001)
-            assertEquals(expectedConfidence, confidence, 0.000001)
+            assertEquals(expectedHR, hr,0.0001)
+            assertEquals(expectedConfidence, confidence, 0.0001)
         }
     }
 
@@ -315,8 +278,9 @@ class HeartRateSampleProcessorTest {
         val testHRData = testHRData()
 
         val samplingRate = processor.calculateSamplingRate(testHRData.hr_data.toList())
+        val roundedRate = samplingRate.roundToInt()
 
-        val inputChunks: Array<DoubleArray> = testHRData.flip(testHRData.hr_data_filtered_chunked.green)
+        val inputChunks: Array<DoubleArray> = testHRData.flip(testHRData.hr_data_chunks.green)
         val expectedOutputs: Array<HRTuple> = testHRData.hr_estimates.green
 
         // check assumption
@@ -325,11 +289,12 @@ class HeartRateSampleProcessorTest {
         // Only check some of the results b/c the calculations are for a resting heart rate and all use
         // initial estimate or else they are invalid (Initial windows).
         for (ii in 0 until Math.min(10, expectedOutputs.size)) {
-            val (hr, confidence) = processor.calculateHRFromFilteredSamples(inputChunks[ii], samplingRate)
+            val filteredData = processor.getFilteredSignal(inputChunks[ii].toList(), roundedRate)
+            val (hr, confidence) = processor.calculateHRFromFilteredSamples(filteredData, samplingRate)
             val expectedHR = expectedOutputs[ii].hr
             val expectedConfidence = expectedOutputs[ii].confidence
-            assertEquals(expectedHR, hr,0.000001)
-            assertEquals(expectedConfidence, confidence, 0.000001)
+            assertEquals(expectedHR, hr,0.0001)
+            assertEquals(expectedConfidence, confidence, 0.0001)
         }
     }
 
@@ -339,8 +304,9 @@ class HeartRateSampleProcessorTest {
         val testHRData = testHRData12hz()
 
         val samplingRate = processor.calculateSamplingRate(testHRData.hr_data.toList())
+        val roundedRate = samplingRate.roundToInt()
 
-        val inputChunks: Array<DoubleArray> = testHRData.flip(testHRData.hr_data_filtered_chunked.red)
+        val inputChunks: Array<DoubleArray> = testHRData.flip(testHRData.hr_data_chunks.red)
         val expectedOutputs: Array<HRTuple> = testHRData.hr_estimates.red
 
         // check assumption
@@ -349,54 +315,13 @@ class HeartRateSampleProcessorTest {
         // Only check some of the results b/c the calculations are for a resting heart rate and all use
         // initial estimate or else they are invalid (Initial windows).
         for (ii in 0 until Math.min(10, expectedOutputs.size)) {
-            val (hr, confidence) = processor.calculateHRFromFilteredSamples(inputChunks[ii], samplingRate)
+            val filteredData = processor.getFilteredSignal(inputChunks[ii].toList(), roundedRate)
+            val (hr, confidence) = processor.calculateHRFromFilteredSamples(filteredData, samplingRate)
             val expectedHR = expectedOutputs[ii].hr
             val expectedConfidence = expectedOutputs[ii].confidence
             assertEquals(expectedHR, hr,0.000001)
             assertEquals(expectedConfidence, confidence, 0.000001)
         }
-    }
-
-    @Test
-    fun testIsReadyToProcess() {
-
-        val processor = HeartRateSampleProcessor()
-        val testHRData = testHRData()
-        val estimatedSamplingRate = 60.0
-        val drop = (3.0 * estimatedSamplingRate).roundToInt() - 1
-        val samples = testHRData.hr_data.drop(drop)
-        val roundedRate = estimatedSamplingRate.roundToInt()
-
-        // Add samples less than 12 seconds + mean order (65)
-        val eleven = roundedRate * 11
-        processor.pixelSamples.addAll(samples.subList(0, eleven))
-        assertFalse(processor.isReadyToProcess())
-
-        // Add samples for 12 seconds + mean order
-        val nextChunk = eleven + roundedRate + 65
-        processor.pixelSamples.addAll(samples.subList(eleven, nextChunk))
-        assertTrue(processor.isReadyToProcess())
-    }
-
-    @Test
-    fun testIsReadyToProcess_12hz() {
-
-        val processor = HeartRateSampleProcessor()
-        val testHRData = testHRData12hz()
-        val estimatedSamplingRate = 12.728
-        val drop = (3.0 * estimatedSamplingRate).roundToInt() - 1
-        val samples = testHRData.hr_data.drop(drop)
-        val roundedRate = estimatedSamplingRate.roundToInt()
-
-        // Add samples less than 12 seconds
-        val eleven = roundedRate * 11
-        processor.pixelSamples.addAll(samples.subList(0, eleven))
-        assertFalse(processor.isReadyToProcess())
-
-        // Add samples for 12 seconds + mean order
-        val nextChunk = eleven + roundedRate + 15 + 1
-        processor.pixelSamples.addAll(samples.subList(eleven, nextChunk))
-        assertTrue(processor.isReadyToProcess())
     }
 
     @Test
@@ -410,31 +335,32 @@ class HeartRateSampleProcessorTest {
         // only process a subset of the data. syoung 04/16/2019
         val start = 30
         val expectedHRValues = arrayOf<HeartRateBPM>(
-                HeartRateBPM(47.3040004163,69.27709332103974,0.8683590800933014,"green"),
-                HeartRateBPM(48.3046064583,67.96997857106084,0.8644802170884017,"green"),
-                HeartRateBPM(49.3052123743,69.27709376612277,0.8936955072357293,"green"),
-                HeartRateBPM(50.3058184583,67.96997813437561,0.9014633198345332,"green"),
-                HeartRateBPM(51.3064244993,67.9699768399158,0.9108713480292215,"green"),
-                HeartRateBPM(52.3070303743,67.96997748974505,0.9071506266991106,"green"),
-                HeartRateBPM(53.3076363743,67.96997792123159,0.9000145584327659,"green"),
-                HeartRateBPM(54.3082423743,67.96997792123162,0.8998513053646106,"green"),
-                HeartRateBPM(55.3088484993,67.96997727140241,0.9128580892467326,"green"),
-                HeartRateBPM(56.3094543333,67.96997792123159,0.9029084106060474,"green"),
-                HeartRateBPM(57.3100602913,67.96997792123162,0.89087079839508,"green"),
-                HeartRateBPM(58.3106662913,67.96997770288898,0.8793877599812155,"green"),
-                HeartRateBPM(59.3112722493,67.96997835791682,0.8893933827220402,"green"),
-                HeartRateBPM(60.3118782083,67.9699783527182,0.8879583462485395,"green"),
-                HeartRateBPM(61.3124843743,67.96997705825844,0.8743429841892499,"green")
+                HeartRateBPM(46.3200712493,69.26537857647685,0.8665728400250351,"green"),
+                HeartRateBPM(47.3206772493,69.26537781379395,0.864004456488016,"green"),
+                HeartRateBPM(48.3212832913,67.9584831399785,0.8768333193716425,"green"),
+                HeartRateBPM(49.3218892083,69.26537780919945,0.8797011803396284,"red"),
+                HeartRateBPM(50.3224952083,67.95848369894412,0.8994492066282034,"green"),
+                HeartRateBPM(51.3231009993,67.9584846410716,0.9115548708180149,"green"),
+                HeartRateBPM(52.3237071663,67.95848426692528,0.9090951134939645,"green"),
+                HeartRateBPM(53.3243131243,67.95848426692528,0.9016664647138142,"green"),
+                HeartRateBPM(54.3249191243,67.95848426692525,0.8985739988740599,"red"),
+                HeartRateBPM(55.3255251663,67.95848370345189,0.9095022749620564,"green"),
+                HeartRateBPM(56.3261310413,67.95848483039869,0.8958170645972368,"green"),
+                HeartRateBPM(57.3267370413,67.95848445174457,0.8956174838084865,"green"),
+                HeartRateBPM(58.3273430413,67.95848464107164,0.8986418987043391,"green"),
+                HeartRateBPM(59.3279491243,67.95848407759824,0.8896016693876465,"green"),
+                HeartRateBPM(60.3285551243,67.9584840775982,0.8895332581586164,"green"),
+                HeartRateBPM(61.3291610833,67.9584836989441,0.8901171128383659,"red")
         )
 
-        val drop = (3.0 * estimatedSamplingRate).roundToInt() - 1 + (start * estimatedSamplingRate).roundToInt()
+        val drop = (start * estimatedSamplingRate).roundToInt()
         val samples = testHRData.hr_data.drop(drop)
         var expectedIdx = 0
 
         // Test expectations to see that they match the Swift implementation
-        assertEquals(1979, drop)
-        assertEquals(1681, samples.size)
-        assertEquals(34.2294156243, samples.first().timestamp, 0.0000001)
+        assertEquals(1800, drop)
+        assertEquals(1860, samples.size)
+        assertEquals(31.2442744993, samples.first().timestamp, 0.0000001)
 
         samples.forEach {
             processor.addSample(it)
