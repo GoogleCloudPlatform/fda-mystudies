@@ -179,11 +179,15 @@ public class HeartRateCamera2Recorder extends Recorder {
 //                                    mVideoSize.getHeight()
 //                            ));
 //
-                            Surface previewSurface = new Surface(textureView.getSurfaceTexture());
-                        
-                            allSurfaces.add(previewSurface);
-                            surfacesNoMediaRecorder.add(previewSurface);
-                        
+                            if (Build.VERSION.SDK_INT > Build.VERSION_CODES.LOLLIPOP) {
+                                //Galaxy Note 3 running android 5.0 fails to create capture session due to invalid preview surface size
+                                // easiest solution for now is to not show the preview on android 5.0  - nathaniel 05/02/19
+                                Surface previewSurface = new Surface(textureView.getSurfaceTexture());
+
+                                allSurfaces.add(previewSurface);
+                                surfacesNoMediaRecorder.add(previewSurface);
+                            }
+
                             // heart rate processing surface
                             imageReader = ImageReader.newInstance(
                                     mVideoSize.getWidth(),
