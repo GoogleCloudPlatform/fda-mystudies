@@ -51,7 +51,6 @@ import android.view.TextureView;
 import com.google.android.gms.common.util.ArrayUtils;
 import com.google.common.collect.Sets;
 
-import org.joda.time.DateTime;
 import org.researchstack.backbone.result.FileResult;
 import org.researchstack.backbone.step.Step;
 import org.researchstack.backbone.step.active.recorder.Recorder;
@@ -114,7 +113,7 @@ public class HeartRateCamera2Recorder extends Recorder {
     // image processing
     private ImageReader imageReader;
     
-    DateTime startTime;
+    Date startTime;
     
     private Size mVideoSize;
     private MediaRecorder mediaRecorder;
@@ -147,7 +146,7 @@ public class HeartRateCamera2Recorder extends Recorder {
 
     @Override
     public void start(Context context) {
-        startTime = DateTime.now();
+        startTime = new Date();
         heartBeatJsonWriter.start(context);
         manager = (CameraManager) context.getSystemService(Context.CAMERA_SERVICE);
         if (manager == null) {
@@ -284,7 +283,7 @@ public class HeartRateCamera2Recorder extends Recorder {
         if (mediaRecorderFile.exists() && mediaRecorderFile.length() > 128) {
             long length = mediaRecorderFile.length();
             FileResult fileResult = new FileResult(fileResultIdentifier(), mediaRecorderFile, MP4_CONTENT_TYPE);
-            fileResult.setStartDate(startTime.toDate());
+            fileResult.setStartDate(startTime);
             fileResult.setEndDate(new Date());
     
             getRecorderListener().onComplete(this, fileResult);
