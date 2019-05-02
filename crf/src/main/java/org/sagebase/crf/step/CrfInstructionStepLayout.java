@@ -154,7 +154,7 @@ public class CrfInstructionStepLayout extends InstructionStepLayout implements
             }
         }
         // Display the instruction
-        if(this.instructionViewTop != null) {
+        if(this.instructionViewTop != null && crfInstructionStep.getText() != null) {
             instructionViewTop.setText(crfInstructionStep.getText());
             instructionViewTop.setVisibility(VISIBLE);
         }

@@ -244,7 +244,7 @@
         android:layout_centerHorizontal="true"
         android:text="@string/crf_capturing"
         android:padding="@dimen/rsb_padding_medium"
-        android:layout_marginTop="60dp"/>
+        android:layout_marginTop="40dp"/>
 
     <android.support.constraint.ConstraintLayout
         android:layout_width="match_parent"
