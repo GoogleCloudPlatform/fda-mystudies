@@ -44,6 +44,8 @@ dependencies {
         exclude group: 'com.google.android', module: 'android'
     }
 
+    api 'net.danlew:android.joda:2.9.9.2'
+
     implementation 'com.google.code.gson:gson:2.8.2'
     implementation 'com.google.guava:guava:27.1-android'
     implementation 'com.google.android.gms:play-services-vision:17.0.2'
