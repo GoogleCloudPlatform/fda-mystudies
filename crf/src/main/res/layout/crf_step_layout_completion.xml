@@ -38,7 +38,7 @@
         <ImageView
             android:id="@+id/crf_image_view"
             android:layout_width="match_parent"
-            android:layout_height="120dp"
+            android:layout_height="100dp"
             android:scaleType="centerInside"
             android:src="@drawable/crf_completed_icon"
             tools:src="@drawable/crf_completed_icon" />
@@ -98,7 +98,7 @@
             android:id="@+id/crf_instruction_text"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="@dimen/rsb_padding_large"
+            android:layout_margin="@dimen/crf_completion_step_margin"
             android:visibility="gone"/>
 
         <TextView
@@ -107,14 +107,14 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
-            android:layout_margin="@dimen/rsb_padding_large" />
+            android:layout_margin="@dimen/crf_completion_step_margin"/>
         <TextView
             style="@style/TextAppearance.Crf.IntroBody"
             android:id="@+id/crf_secondary_completion_text_value"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
-            android:layout_margin="@dimen/rsb_padding_large"
+            android:layout_marginBottom="@dimen/crf_completion_step_margin"
             android:gravity="center_horizontal"/>
 
     </LinearLayout>
@@ -124,7 +124,7 @@
         android:id="@id/button_go_forward"
         android:layout_width="match_parent"
         android:layout_height="@dimen/crf_rounded_button_height"
-        android:layout_margin="@dimen/rsb_padding_large"
+        android:layout_margin="@dimen/crf_completion_step_margin"
         android:layout_above="@id/crf_redo_button"
         android:focusable="true"
         android:text="@string/rsb_BUTTON_DONE"
@@ -138,7 +138,7 @@
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
         android:layout_alignParentBottom="true"
-        android:layout_marginBottom="@dimen/rsb_padding_large"
+        android:layout_marginBottom="@dimen/crf_completion_step_margin"
         android:gravity="center"
         android:textAllCaps="false"
         android:text="@string/crf_redo_measurement"
