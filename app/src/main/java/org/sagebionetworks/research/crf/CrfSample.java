@@ -15,7 +15,7 @@
  *
  */
 
-package org.sagebase.research.crf;
+package org.sagebionetworks.research.crf;
 
 import android.app.Activity;
 import android.content.Intent;
