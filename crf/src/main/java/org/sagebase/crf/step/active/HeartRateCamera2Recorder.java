@@ -548,10 +548,11 @@ public class HeartRateCamera2Recorder extends Recorder {
             // Has to be off or the COLOR_CORRECTION_TRANSFORM will be ignored
             requestBuilder.set(CaptureRequest.CONTROL_AWB_MODE, CaptureRequest.CONTROL_AWB_MODE_OFF);
 
-            requestBuilder.set( CaptureRequest.COLOR_CORRECTION_MODE, CameraMetadata.COLOR_CORRECTION_MODE_TRANSFORM_MATRIX );
-            int[] cstMatrix = new int[]{ 258, 128, -119, 128, -10, 128, -40, 128, 209, 128, -41, 128, -1, 128, -74, 128, 203, 128 };
-            ColorSpaceTransform cst = new ColorSpaceTransform( cstMatrix );
-            requestBuilder.set( CaptureRequest.COLOR_CORRECTION_TRANSFORM, cst );
+            //Disabling coloring correction transform so we don't get black image on Megha's Galaxy S8 -Nathaniel 05/01/19
+//            requestBuilder.set( CaptureRequest.COLOR_CORRECTION_MODE, CameraMetadata.COLOR_CORRECTION_MODE_TRANSFORM_MATRIX );
+//            int[] cstMatrix = new int[]{ 258, 128, -119, 128, -10, 128, -40, 128, 209, 128, -41, 128, -1, 128, -74, 128, 203, 128 };
+//            ColorSpaceTransform cst = new ColorSpaceTransform( cstMatrix );
+//            requestBuilder.set( CaptureRequest.COLOR_CORRECTION_TRANSFORM, cst );
             requestBuilder.set( CaptureRequest.SHADING_MODE, CameraMetadata.SHADING_MODE_OFF );
             requestBuilder.set( CaptureRequest.NOISE_REDUCTION_MODE, CameraMetadata.NOISE_REDUCTION_MODE_OFF );
 
