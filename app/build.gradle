@@ -23,7 +23,7 @@ android {
         applicationId "org.sagebionetworks.research.crf"
         minSdkVersion 21
         targetSdkVersion 28
-        versionCode 2
+        versionCode 3
         versionName "1.8.0"
 
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
