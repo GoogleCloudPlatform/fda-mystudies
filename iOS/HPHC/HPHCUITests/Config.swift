@@ -10,18 +10,22 @@ import Embassy
 import EnvoyAmbassador
 
 class DefaultRouter: Router {
-    //https://testapi.io/api/invinciible/login?token={token_here}
-    static let loginPath = "login.api"
+  //https://testapi.io/api/invinciible/login?token={token_here}
+  static let loginPath = "login.api"
 
-    override init() {
-        super.init()
-        self[DefaultRouter.loginPath] = DelayResponse(JSONResponse(handler: ({ environ -> Any in
+  override init() {
+    super.init()
+    self[DefaultRouter.loginPath] = DelayResponse(
+      JSONResponse(
+        handler: (
+          { environ -> Any in
             return [
-                "userId": "12",
-                "accessToken": "alkdsjaldjll",
-                "refreshToken": "Adaddaddad",
-                "tempPassword": true
+              "userId": "12",
+              "accessToken": "alkdsjaldjll",
+              "refreshToken": "Adaddaddad",
+              "tempPassword": true,
             ]
-        })))
-    }
+          }
+        )))
+  }
 }

@@ -2,12 +2,12 @@ PODS:
   - ActionSheetPicker-3.0 (2.3.0)
   - Crashlytics (3.14.0):
     - Fabric (~> 1.10.2)
-  - CryptoSwift (1.0.0)
+  - CryptoSwift (1.2.0)
   - Embassy (4.1.0)
   - EnvoyAmbassador (4.0.5):
     - Embassy (~> 4.0)
   - Fabric (1.10.2)
-  - IQKeyboardManagerSwift (6.5.1)
+  - IQKeyboardManagerSwift (6.5.4)
   - Mockingjay (3.0.0-alpha.1):
     - Mockingjay/Core (= 3.0.0-alpha.1)
     - Mockingjay/XCTest (= 3.0.0-alpha.1)
@@ -15,14 +15,14 @@ PODS:
     - URITemplate (~> 3.0)
   - Mockingjay/XCTest (3.0.0-alpha.1):
     - Mockingjay/Core
-  - Realm (3.19.0):
-    - Realm/Headers (= 3.19.0)
-  - Realm/Headers (3.19.0)
-  - RealmSwift (3.19.0):
-    - Realm (= 3.19.0)
-  - SDWebImage (5.2.2):
-    - SDWebImage/Core (= 5.2.2)
-  - SDWebImage/Core (5.2.2)
+  - Realm (4.1.1):
+    - Realm/Headers (= 4.1.1)
+  - Realm/Headers (4.1.1)
+  - RealmSwift (4.1.1):
+    - Realm (= 4.1.1)
+  - SDWebImage (5.3.2):
+    - SDWebImage/Core (= 5.3.2)
+  - SDWebImage/Core (5.3.2)
   - SlideMenuControllerSwift (5.0.0)
   - URITemplate (3.0.0)
 
@@ -67,18 +67,18 @@ CHECKOUT OPTIONS:
 SPEC CHECKSUMS:
   ActionSheetPicker-3.0: eef157d75e151f255c5333d26656c7fbfe905a51
   Crashlytics: 540b7e5f5da5a042647227a5e3ac51d85eed06df
-  CryptoSwift: d81eeaa59dc5a8d03720fe919a6fd07b51f7439f
+  CryptoSwift: 40e374e45291d8dceedcb0d6184da94533eaabdf
   Embassy: 296c51c4b16b8377b413f48f413a99aa736adc22
   EnvoyAmbassador: 21cef10e70d003801c68ba5281948684a4e25486
   Fabric: 706c8b8098fff96c33c0db69cbf81f9c551d0d74
-  IQKeyboardManagerSwift: 9ac7524fad9f9fe9a3b98c927e7772471ca546d2
+  IQKeyboardManagerSwift: 2dde0fc70110e8eac7ccce2a46fdbec6a850b414
   Mockingjay: 0f7c5aa49c7f1b95621cee3c79b557141f5a225c
-  Realm: 995d585bcf699aaff226715886c849a29dd3d07f
-  RealmSwift: 35f284a537989f2187b413e5917091948cb87a3f
-  SDWebImage: 5fcdb02cc35e05fc35791ec514b191d27189f872
+  Realm: 25f0a8244cbb1c2271c922963ea8666fc2d8104d
+  RealmSwift: 9e2657b33764f80e4a4dffd6d440e24715782052
+  SDWebImage: 6ac2eb96571bff96ecde31a987172c5934a0eb7d
   SlideMenuControllerSwift: d740ea24105a658fe6a8c256f2bf5832fee7c047
   URITemplate: 58e0d47f967006c5d59888af5356c4a8ed3b197d
 
-PODFILE CHECKSUM: dc0eb85ce5b1c027ee12d03eab98c8c7acaa35c5
+PODFILE CHECKSUM: eb98436fddffe7ccf6d518b1dcbecbe453d71291
 
-COCOAPODS: 1.8.3
+COCOAPODS: 1.8.4

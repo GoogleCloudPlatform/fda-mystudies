@@ -288,7 +288,8 @@ struct SyncProgress {
     /// The last server version that the client has heard about.
     SaltedVersion latest_server_version = {0, 0};
 
-    /// The last server version integrated by the client.
+    /// The last server version integrated, or about to be integrated by the
+    /// client.
     DownloadCursor download = {0, 0};
 
     /// The last client version integrated by the server.
