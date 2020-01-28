@@ -1,5 +1,5 @@
 /*
- * Copyright © 2017-2018 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors.
+ * Copyright Â© 2017-2018 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors.
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction, including
  * without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies
@@ -24,47 +24,45 @@ package com.hphc.mystudies.bean;
 
 /**
  * Provides configuration details for resource.
- * 
- * @author BTC
  *
+ * @author BTC
  */
 public class ResourceConfigurationBean {
 
-	private String availableDate = "";
-	private String expiryDate = "";
-	private Integer startDays = 0;
-	private Integer endDays = 0;
+  private String availableDate = "";
+  private String expiryDate = "";
+  private Integer startDays = 0;
+  private Integer endDays = 0;
 
-	public String getAvailableDate() {
-		return availableDate;
-	}
+  public String getAvailableDate() {
+    return availableDate;
+  }
 
-	public void setAvailableDate(String availableDate) {
-		this.availableDate = availableDate;
-	}
+  public void setAvailableDate(String availableDate) {
+    this.availableDate = availableDate;
+  }
 
-	public String getExpiryDate() {
-		return expiryDate;
-	}
+  public String getExpiryDate() {
+    return expiryDate;
+  }
 
-	public void setExpiryDate(String expiryDate) {
-		this.expiryDate = expiryDate;
-	}
+  public void setExpiryDate(String expiryDate) {
+    this.expiryDate = expiryDate;
+  }
 
-	public Integer getStartDays() {
-		return startDays;
-	}
+  public Integer getStartDays() {
+    return startDays;
+  }
 
-	public void setStartDays(Integer startDays) {
-		this.startDays = startDays;
-	}
+  public void setStartDays(Integer startDays) {
+    this.startDays = startDays;
+  }
 
-	public Integer getEndDays() {
-		return endDays;
-	}
+  public Integer getEndDays() {
+    return endDays;
+  }
 
-	public void setEndDays(Integer endDays) {
-		this.endDays = endDays;
-	}
-
+  public void setEndDays(Integer endDays) {
+    this.endDays = endDays;
+  }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright © 2017-2018 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors.
+ * Copyright Â© 2017-2018 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors.
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction, including
  * without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies
@@ -27,50 +27,47 @@ import java.util.HashMap;
 import java.util.List;
 
 /**
- * Provides eligibility metadata details i.e. type of eligibility, title,
- * eligibility questions {@link QuestionnaireActivityStepsBean}, correct
- * answers.
- * 
- * @author BTC
+ * Provides eligibility metadata details i.e. type of eligibility, title, eligibility questions
+ * {@link QuestionnaireActivityStepsBean}, correct answers.
  *
+ * @author BTC
  */
 public class EligibilityBean {
 
-	private String type = "";
-	private String tokenTitle = "";
-	private List<QuestionnaireActivityStepsBean> test = new ArrayList<>();
-	private List<HashMap<String, Object>> correctAnswers = new ArrayList<>();
+  private String type = "";
+  private String tokenTitle = "";
+  private List<QuestionnaireActivityStepsBean> test = new ArrayList<>();
+  private List<HashMap<String, Object>> correctAnswers = new ArrayList<>();
 
-	public String getType() {
-		return type;
-	}
+  public String getType() {
+    return type;
+  }
 
-	public void setType(String type) {
-		this.type = type;
-	}
+  public void setType(String type) {
+    this.type = type;
+  }
 
-	public String getTokenTitle() {
-		return tokenTitle;
-	}
+  public String getTokenTitle() {
+    return tokenTitle;
+  }
 
-	public void setTokenTitle(String tokenTitle) {
-		this.tokenTitle = tokenTitle;
-	}
+  public void setTokenTitle(String tokenTitle) {
+    this.tokenTitle = tokenTitle;
+  }
 
-	public List<QuestionnaireActivityStepsBean> getTest() {
-		return test;
-	}
+  public List<QuestionnaireActivityStepsBean> getTest() {
+    return test;
+  }
 
-	public void setTest(List<QuestionnaireActivityStepsBean> test) {
-		this.test = test;
-	}
+  public void setTest(List<QuestionnaireActivityStepsBean> test) {
+    this.test = test;
+  }
 
-	public List<HashMap<String, Object>> getCorrectAnswers() {
-		return correctAnswers;
-	}
+  public List<HashMap<String, Object>> getCorrectAnswers() {
+    return correctAnswers;
+  }
 
-	public void setCorrectAnswers(List<HashMap<String, Object>> correctAnswers) {
-		this.correctAnswers = correctAnswers;
-	}
-
+  public void setCorrectAnswers(List<HashMap<String, Object>> correctAnswers) {
+    this.correctAnswers = correctAnswers;
+  }
 }

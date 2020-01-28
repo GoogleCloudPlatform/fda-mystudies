@@ -1,5 +1,5 @@
 /*
- * Copyright © 2017-2018 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors.
+ * Copyright Â© 2017-2018 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors.
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction, including
  * without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies
@@ -25,31 +25,28 @@ package com.hphc.mystudies.bean;
 import com.hphc.mystudies.util.StudyMetaDataConstants;
 
 /**
- * Provides consent status and consent document details
- * {@link ConsentDocumentBean}
- * 
- * @author BTC
+ * Provides consent status and consent document details {@link ConsentDocumentBean}
  *
+ * @author BTC
  */
 public class ConsentDocumentResponse {
 
-	private String message = StudyMetaDataConstants.FAILURE;
-	private ConsentDocumentBean consent = new ConsentDocumentBean();
+  private String message = StudyMetaDataConstants.FAILURE;
+  private ConsentDocumentBean consent = new ConsentDocumentBean();
 
-	public String getMessage() {
-		return message;
-	}
+  public String getMessage() {
+    return message;
+  }
 
-	public void setMessage(String message) {
-		this.message = message;
-	}
+  public void setMessage(String message) {
+    this.message = message;
+  }
 
-	public ConsentDocumentBean getConsent() {
-		return consent;
-	}
+  public ConsentDocumentBean getConsent() {
+    return consent;
+  }
 
-	public void setConsent(ConsentDocumentBean consent) {
-		this.consent = consent;
-	}
-
+  public void setConsent(ConsentDocumentBean consent) {
+    this.consent = consent;
+  }
 }

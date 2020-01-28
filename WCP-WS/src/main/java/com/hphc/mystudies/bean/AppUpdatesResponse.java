@@ -1,5 +1,5 @@
 /*
- * Copyright © 2017-2018 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors.
+ * Copyright Â© 2017-2018 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors.
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction, including
  * without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies
@@ -24,38 +24,36 @@ package com.hphc.mystudies.bean;
 
 /**
  * Provides app updates details in response.
- * 
- * @author BTC
  *
+ * @author BTC
  */
 public class AppUpdatesResponse {
 
-	private String message = "";
-	private Boolean forceUpdate = false;
-	private String currentVersion = "";
+  private String message = "";
+  private Boolean forceUpdate = false;
+  private String currentVersion = "";
 
-	public String getMessage() {
-		return message;
-	}
+  public String getMessage() {
+    return message;
+  }
 
-	public void setMessage(String message) {
-		this.message = message;
-	}
+  public void setMessage(String message) {
+    this.message = message;
+  }
 
-	public Boolean getForceUpdate() {
-		return forceUpdate;
-	}
+  public Boolean getForceUpdate() {
+    return forceUpdate;
+  }
 
-	public void setForceUpdate(Boolean forceUpdate) {
-		this.forceUpdate = forceUpdate;
-	}
+  public void setForceUpdate(Boolean forceUpdate) {
+    this.forceUpdate = forceUpdate;
+  }
 
-	public String getCurrentVersion() {
-		return currentVersion;
-	}
+  public String getCurrentVersion() {
+    return currentVersion;
+  }
 
-	public void setCurrentVersion(String currentVersion) {
-		this.currentVersion = currentVersion;
-	}
-
+  public void setCurrentVersion(String currentVersion) {
+    this.currentVersion = currentVersion;
+  }
 }

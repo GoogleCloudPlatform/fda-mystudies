@@ -1,5 +1,5 @@
 /*
- * Copyright © 2017-2018 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors.
+ * Copyright Â© 2017-2018 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors.
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction, including
  * without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies
@@ -24,47 +24,45 @@ package com.hphc.mystudies.bean;
 
 /**
  * Provides gateway resource information.
- * 
- * @author BTC
  *
+ * @author BTC
  */
 public class GatewayInfoResourceBean {
 
-	private String resourcesId = "";
-	private String title = "";
-	private String type = "";
-	private String content = "";
+  private String resourcesId = "";
+  private String title = "";
+  private String type = "";
+  private String content = "";
 
-	public String getTitle() {
-		return title;
-	}
+  public String getResourcesId() {
+    return resourcesId;
+  }
 
-	public void setTitle(String title) {
-		this.title = title;
-	}
+  public void setResourcesId(String resourcesId) {
+    this.resourcesId = resourcesId;
+  }
 
-	public String getType() {
-		return type;
-	}
+  public String getTitle() {
+    return title;
+  }
 
-	public void setType(String type) {
-		this.type = type;
-	}
+  public void setTitle(String title) {
+    this.title = title;
+  }
 
-	public String getContent() {
-		return content;
-	}
+  public String getType() {
+    return type;
+  }
 
-	public void setContent(String content) {
-		this.content = content;
-	}
+  public void setType(String type) {
+    this.type = type;
+  }
 
-	public String getResourcesId() {
-		return resourcesId;
-	}
+  public String getContent() {
+    return content;
+  }
 
-	public void setResourcesId(String resourcesId) {
-		this.resourcesId = resourcesId;
-	}
-
+  public void setContent(String content) {
+    this.content = content;
+  }
 }

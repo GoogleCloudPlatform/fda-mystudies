@@ -1,5 +1,5 @@
 /*
- * Copyright © 2017-2018 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors.
+ * Copyright Â© 2017-2018 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors.
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction, including
  * without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies
@@ -26,28 +26,27 @@ import com.hphc.mystudies.util.StudyMetaDataConstants;
 
 /**
  * Provides study dashboard metadata details {@link DashboardBean} in response.
- * 
- * @author BTC
  *
+ * @author BTC
  */
 public class StudyDashboardResponse {
 
-	private String message = StudyMetaDataConstants.FAILURE;
-	private DashboardBean dashboard = new DashboardBean();
+  private String message = StudyMetaDataConstants.FAILURE;
+  private DashboardBean dashboard = new DashboardBean();
 
-	public String getMessage() {
-		return message;
-	}
+  public String getMessage() {
+    return message;
+  }
 
-	public void setMessage(String message) {
-		this.message = message;
-	}
+  public void setMessage(String message) {
+    this.message = message;
+  }
 
-	public DashboardBean getDashboard() {
-		return dashboard;
-	}
+  public DashboardBean getDashboard() {
+    return dashboard;
+  }
 
-	public void setDashboard(DashboardBean dashboard) {
-		this.dashboard = dashboard;
-	}
+  public void setDashboard(DashboardBean dashboard) {
+    this.dashboard = dashboard;
+  }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright © 2017-2018 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors.
+ * Copyright Â© 2017-2018 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors.
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction, including
  * without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies
@@ -24,38 +24,36 @@ package com.hphc.mystudies.bean;
 
 /**
  * Provides consent document details.
- * 
- * @author BTC
  *
+ * @author BTC
  */
 public class ConsentDocumentBean {
 
-	private String version = "";
-	private String type = "";
-	private String content = "";
+  private String version = "";
+  private String type = "";
+  private String content = "";
 
-	public String getVersion() {
-		return version;
-	}
+  public String getVersion() {
+    return version;
+  }
 
-	public void setVersion(String version) {
-		this.version = version;
-	}
+  public void setVersion(String version) {
+    this.version = version;
+  }
 
-	public String getType() {
-		return type;
-	}
+  public String getType() {
+    return type;
+  }
 
-	public void setType(String type) {
-		this.type = type;
-	}
+  public void setType(String type) {
+    this.type = type;
+  }
 
-	public String getContent() {
-		return content;
-	}
+  public String getContent() {
+    return content;
+  }
 
-	public void setContent(String content) {
-		this.content = content;
-	}
-
+  public void setContent(String content) {
+    this.content = content;
+  }
 }

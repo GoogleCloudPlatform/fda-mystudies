@@ -1,5 +1,5 @@
 /*
- * Copyright © 2017-2018 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors.
+ * Copyright Â© 2017-2018 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors.
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction, including
  * without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies
@@ -24,92 +24,90 @@ package com.hphc.mystudies.bean;
 
 /**
  * Provides spatial span memory active task metadata details.
- * 
- * @author BTC
  *
+ * @author BTC
  */
 public class SpatialSpanMemoryFormatBean {
 
-	private Integer initialSpan = 0;
-	private Integer minimumSpan = 0;
-	private Integer maximumSpan = 0;
-	private Float playSpeed = 0F;
-	private Integer maximumTests = 0;
-	private Integer maximumConsecutiveFailures = 0;
-	private String customTargetImage = "";
-	private String customTargetPluralName = "";
-	private boolean requireReversal = false;
+  private Integer initialSpan = 0;
+  private Integer minimumSpan = 0;
+  private Integer maximumSpan = 0;
+  private Float playSpeed = 0F;
+  private Integer maximumTests = 0;
+  private Integer maximumConsecutiveFailures = 0;
+  private String customTargetImage = "";
+  private String customTargetPluralName = "";
+  private boolean requireReversal = false;
 
-	public Integer getInitialSpan() {
-		return initialSpan;
-	}
+  public Integer getInitialSpan() {
+    return initialSpan;
+  }
 
-	public void setInitialSpan(Integer initialSpan) {
-		this.initialSpan = initialSpan;
-	}
+  public void setInitialSpan(Integer initialSpan) {
+    this.initialSpan = initialSpan;
+  }
 
-	public Integer getMinimumSpan() {
-		return minimumSpan;
-	}
+  public Integer getMinimumSpan() {
+    return minimumSpan;
+  }
 
-	public void setMinimumSpan(Integer minimumSpan) {
-		this.minimumSpan = minimumSpan;
-	}
+  public void setMinimumSpan(Integer minimumSpan) {
+    this.minimumSpan = minimumSpan;
+  }
 
-	public Integer getMaximumSpan() {
-		return maximumSpan;
-	}
+  public Integer getMaximumSpan() {
+    return maximumSpan;
+  }
 
-	public void setMaximumSpan(Integer maximumSpan) {
-		this.maximumSpan = maximumSpan;
-	}
+  public void setMaximumSpan(Integer maximumSpan) {
+    this.maximumSpan = maximumSpan;
+  }
 
-	public Float getPlaySpeed() {
-		return playSpeed;
-	}
+  public Float getPlaySpeed() {
+    return playSpeed;
+  }
 
-	public void setPlaySpeed(Float playSpeed) {
-		this.playSpeed = playSpeed;
-	}
+  public void setPlaySpeed(Float playSpeed) {
+    this.playSpeed = playSpeed;
+  }
 
-	public Integer getMaximumTests() {
-		return maximumTests;
-	}
+  public Integer getMaximumTests() {
+    return maximumTests;
+  }
 
-	public void setMaximumTests(Integer maximumTests) {
-		this.maximumTests = maximumTests;
-	}
+  public void setMaximumTests(Integer maximumTests) {
+    this.maximumTests = maximumTests;
+  }
 
-	public Integer getMaximumConsecutiveFailures() {
-		return maximumConsecutiveFailures;
-	}
+  public Integer getMaximumConsecutiveFailures() {
+    return maximumConsecutiveFailures;
+  }
 
-	public void setMaximumConsecutiveFailures(Integer maximumConsecutiveFailures) {
-		this.maximumConsecutiveFailures = maximumConsecutiveFailures;
-	}
+  public void setMaximumConsecutiveFailures(Integer maximumConsecutiveFailures) {
+    this.maximumConsecutiveFailures = maximumConsecutiveFailures;
+  }
 
-	public String getCustomTargetImage() {
-		return customTargetImage;
-	}
+  public String getCustomTargetImage() {
+    return customTargetImage;
+  }
 
-	public void setCustomTargetImage(String customTargetImage) {
-		this.customTargetImage = customTargetImage;
-	}
+  public void setCustomTargetImage(String customTargetImage) {
+    this.customTargetImage = customTargetImage;
+  }
 
-	public String getCustomTargetPluralName() {
-		return customTargetPluralName;
-	}
+  public String getCustomTargetPluralName() {
+    return customTargetPluralName;
+  }
 
-	public void setCustomTargetPluralName(String customTargetPluralName) {
-		this.customTargetPluralName = customTargetPluralName;
-	}
+  public void setCustomTargetPluralName(String customTargetPluralName) {
+    this.customTargetPluralName = customTargetPluralName;
+  }
 
-	public boolean isRequireReversal() {
-		return requireReversal;
-	}
+  public boolean isRequireReversal() {
+    return requireReversal;
+  }
 
-	public void setRequireReversal(boolean requireReversal) {
-		this.requireReversal = requireReversal;
-	}
-
+  public void setRequireReversal(boolean requireReversal) {
+    this.requireReversal = requireReversal;
+  }
 }

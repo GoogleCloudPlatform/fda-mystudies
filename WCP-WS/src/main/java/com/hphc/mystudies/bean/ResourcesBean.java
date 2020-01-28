@@ -1,5 +1,5 @@
 /*
- * Copyright © 2017-2018 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors.
+ * Copyright Â© 2017-2018 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors.
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction, including
  * without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies
@@ -27,74 +27,72 @@ import java.util.Map;
 
 /**
  * Provides brief details about resource.
- * 
- * @author BTC
  *
+ * @author BTC
  */
 public class ResourcesBean {
 
-	private String title = "";
-	private String type = "";
-	private String resourcesId = "";
-	private String content = "";
-	private String audience = "";
-	private String notificationText = "";
-	private Map<String, Object> availability = new LinkedHashMap<>();
+  private String title = "";
+  private String type = "";
+  private String resourcesId = "";
+  private String content = "";
+  private String audience = "";
+  private String notificationText = "";
+  private Map<String, Object> availability = new LinkedHashMap<>();
 
-	public String getTitle() {
-		return title;
-	}
+  public String getTitle() {
+    return title;
+  }
 
-	public void setTitle(String title) {
-		this.title = title;
-	}
+  public void setTitle(String title) {
+    this.title = title;
+  }
 
-	public String getType() {
-		return type;
-	}
+  public String getType() {
+    return type;
+  }
 
-	public void setType(String type) {
-		this.type = type;
-	}
+  public void setType(String type) {
+    this.type = type;
+  }
 
-	public String getResourcesId() {
-		return resourcesId;
-	}
+  public String getResourcesId() {
+    return resourcesId;
+  }
 
-	public void setResourcesId(String resourcesId) {
-		this.resourcesId = resourcesId;
-	}
+  public void setResourcesId(String resourcesId) {
+    this.resourcesId = resourcesId;
+  }
 
-	public String getContent() {
-		return content;
-	}
+  public String getContent() {
+    return content;
+  }
 
-	public void setContent(String content) {
-		this.content = content;
-	}
+  public void setContent(String content) {
+    this.content = content;
+  }
 
-	public String getAudience() {
-		return audience;
-	}
+  public String getAudience() {
+    return audience;
+  }
 
-	public void setAudience(String audience) {
-		this.audience = audience;
-	}
+  public void setAudience(String audience) {
+    this.audience = audience;
+  }
 
-	public Map<String, Object> getAvailability() {
-		return availability;
-	}
+  public Map<String, Object> getAvailability() {
+    return availability;
+  }
 
-	public void setAvailability(Map<String, Object> availability) {
-		this.availability = availability;
-	}
+  public void setAvailability(Map<String, Object> availability) {
+    this.availability = availability;
+  }
 
-	public String getNotificationText() {
-		return notificationText;
-	}
+  public String getNotificationText() {
+    return notificationText;
+  }
 
-	public void setNotificationText(String notificationText) {
-		this.notificationText = notificationText;
-	}
-
+  public void setNotificationText(String notificationText) {
+    this.notificationText = notificationText;
+  }
 }

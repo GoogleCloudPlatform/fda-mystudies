@@ -1,5 +1,5 @@
 /*
- * Copyright © 2017-2018 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors.
+ * Copyright Â© 2017-2018 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors.
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction, including
  * without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies
@@ -23,94 +23,91 @@
 package com.hphc.mystudies.bean;
 
 /**
- * Extends {@link SuccessResponse} class to provide details about user in
- * response.
- * 
- * @author BTC
+ * Extends {@link SuccessResponse} class to provide details about user in response.
  *
+ * @author BTC
  */
 public class AccessResponse extends SuccessResponse {
 
-	private int userId = 0;
-	private String firstName = "";
-	private String middleName = "";
-	private String lastName = "";
-	private String userName = "";
-	private String accessCode = "";
-	private String email = "";
-	private String phone = "";
-	private String authKey = "0";
+  private int userId = 0;
+  private String firstName = "";
+  private String middleName = "";
+  private String lastName = "";
+  private String userName = "";
+  private String accessCode = "";
+  private String email = "";
+  private String phone = "";
+  private String authKey = "0";
 
-	public String getAuthKey() {
-		return authKey;
-	}
+  public int getUserId() {
+    return userId;
+  }
 
-	public void setAuthKey(String authKey) {
-		this.authKey = authKey;
-	}
+  public void setUserId(int userId) {
+    this.userId = userId;
+  }
 
-	public int getUserId() {
-		return userId;
-	}
+  public String getFirstName() {
+    return firstName;
+  }
 
-	public void setUserId(int userId) {
-		this.userId = userId;
-	}
+  public void setFirstName(String firstName) {
+    this.firstName = firstName;
+  }
 
-	public String getFirstName() {
-		return firstName;
-	}
+  public String getMiddleName() {
+    return middleName;
+  }
 
-	public void setFirstName(String firstName) {
-		this.firstName = firstName;
-	}
+  public void setMiddleName(String middleName) {
+    this.middleName = middleName;
+  }
 
-	public String getMiddleName() {
-		return middleName;
-	}
+  public String getLastName() {
+    return lastName;
+  }
 
-	public void setMiddleName(String middleName) {
-		this.middleName = middleName;
-	}
+  public void setLastName(String lastName) {
+    this.lastName = lastName;
+  }
 
-	public String getLastName() {
-		return lastName;
-	}
+  public String getUserName() {
+    return userName;
+  }
 
-	public void setLastName(String lastName) {
-		this.lastName = lastName;
-	}
+  public void setUserName(String userName) {
+    this.userName = userName;
+  }
 
-	public String getEmail() {
-		return email;
-	}
+  public String getAccessCode() {
+    return accessCode;
+  }
 
-	public void setEmail(String email) {
-		this.email = email;
-	}
+  public void setAccessCode(String accessCode) {
+    this.accessCode = accessCode;
+  }
 
-	public String getPhone() {
-		return phone;
-	}
+  public String getEmail() {
+    return email;
+  }
 
-	public void setPhone(String phone) {
-		this.phone = phone;
-	}
+  public void setEmail(String email) {
+    this.email = email;
+  }
 
-	public String getUserName() {
-		return userName;
-	}
+  public String getPhone() {
+    return phone;
+  }
 
-	public void setUserName(String userName) {
-		this.userName = userName;
-	}
+  public void setPhone(String phone) {
+    this.phone = phone;
+  }
 
-	public String getAccessCode() {
-		return accessCode;
-	}
+  public String getAuthKey() {
+    return authKey;
+  }
 
-	public void setAccessCode(String accessCode) {
-		this.accessCode = accessCode;
-	}
-
+  public void setAuthKey(String authKey) {
+    this.authKey = authKey;
+  }
 }

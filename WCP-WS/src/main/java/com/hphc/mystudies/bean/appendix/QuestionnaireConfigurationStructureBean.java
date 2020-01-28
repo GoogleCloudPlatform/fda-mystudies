@@ -1,5 +1,5 @@
 /*
- * Copyright © 2017-2018 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors.
+ * Copyright Â© 2017-2018 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors.
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction, including
  * without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies
@@ -26,40 +26,37 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Provides questionnaire configuration information and frequency details
- * {@link FrequencyBean}.
- * 
- * @author BTC
+ * Provides questionnaire configuration information and frequency details {@link FrequencyBean}.
  *
+ * @author BTC
  */
 public class QuestionnaireConfigurationStructureBean {
 
-	private boolean branching = false;
-	private boolean randomization = false;
-	private List<FrequencyBean> frequency = new ArrayList<>();
+  private boolean branching = false;
+  private boolean randomization = false;
+  private List<FrequencyBean> frequency = new ArrayList<>();
 
-	public boolean isBranching() {
-		return branching;
-	}
+  public boolean isBranching() {
+    return branching;
+  }
 
-	public void setBranching(boolean branching) {
-		this.branching = branching;
-	}
+  public void setBranching(boolean branching) {
+    this.branching = branching;
+  }
 
-	public boolean isRandomization() {
-		return randomization;
-	}
+  public boolean isRandomization() {
+    return randomization;
+  }
 
-	public void setRandomization(boolean randomization) {
-		this.randomization = randomization;
-	}
+  public void setRandomization(boolean randomization) {
+    this.randomization = randomization;
+  }
 
-	public List<FrequencyBean> getFrequency() {
-		return frequency;
-	}
+  public List<FrequencyBean> getFrequency() {
+    return frequency;
+  }
 
-	public void setFrequency(List<FrequencyBean> frequency) {
-		this.frequency = frequency;
-	}
-
+  public void setFrequency(List<FrequencyBean> frequency) {
+    this.frequency = frequency;
+  }
 }
