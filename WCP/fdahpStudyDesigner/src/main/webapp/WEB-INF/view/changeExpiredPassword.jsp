@@ -3,7 +3,7 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 <%@page import="com.fdahpstudydesigner.util.SessionObject"%>
 <!DOCTYPE html>
-<html class="overflow-hidden">
+<html class="overflow-hidden" lang="">
 	<head>
         
     <!-- Basic -->
@@ -32,8 +32,6 @@
      <!-- Your custom styles (optional) -->
     <link href="/fdahpStudyDesigner/css/loader.css" rel="stylesheet">
     
-    <!-- <link rel="stylesheet" href="/fdahpStudyDesigner/vendor/animation/animate.css">     -->
-        
     <!-- Theme Responsive CSS -->
     <link rel="stylesheet" href="/fdahpStudyDesigner/css/sprites.css">   
     <link rel="stylesheet" href="/fdahpStudyDesigner/css/layout.css">   
@@ -52,7 +50,6 @@
     <script src="/fdahpStudyDesigner/vendor/boostrap/bootstrap.min.js"></script>
     <script src="/fdahpStudyDesigner/js/validator.min.js"></script>
     <script src="/fdahpStudyDesigner/vendor/animation/wow.min.js"></script>
-	<!-- <script src="/fdahpStudyDesigner/vendor/slimscroll/jquery.slimscroll.min.js"></script> -->
     <script src="/fdahpStudyDesigner/vendor/select2/bootstrap-select.min.js"></script>
     
     <script src="/fdahpStudyDesigner/js/jquery.password-validator.js"></script>
@@ -78,17 +75,6 @@
 <div id="lg-container" class="lg-container">
         
         <!-- Login Left Section-->
-        <!-- <div class="lg-space-left">
-            <div class="lg-space-img">
-                <img src="/fdahpStudyDesigner/images/logo/fda-logo-w.png"/>
-            </div>
-            <div class="lg-space-txt">
-               FDA My Studies <br>Management Portal
-            </div>
-             <div class="lg-space-cover">
-                <img src="/fdahpStudyDesigner/images/icons/web.png"/>
-            </div>
-        </div> -->
 		<!-- <div class="lg-space-right">
 			<div>
 			    <input type="hidden" id="csrfDet" csrfParamName="${_csrf.parameterName}" csrfToken="${_csrf.token}" />
@@ -126,11 +112,11 @@
 	  	</div> -->
 	<div class="logout">
 	        <div class="dis-line pull-right ml-md line34">
-	          <a href="/fdahpStudyDesigner/sessionOut.do" class="blue-link text-weight-normal text-uppercase"><span class="white__text">sign Out</span> <!-- <span class="ml-xs"><img src="/fdahpStudyDesigner/images/icons/logout.png"/></span> --></a>  
+	          <a href="/fdahpStudyDesigner/sessionOut.do" class="blue-link text-weight-normal text-uppercase"><span class="white__text">sign Out</span> </a>  
 	        </div>
     </div>
 	<div class="logo__ll">
-        <img src="../images/logo/fda-logo-w.png"/>
+        <img src="../images/logo/fda-logo-w.png" alt=""/>
     </div>
     <div class="pwdexp__container">
       	<!--container-->

@@ -52,11 +52,11 @@
                     <table id="activedatatable_list" class="display bor-none dragtbl" cellspacing="0" width="100%">
                          <thead>
                             <tr>
-                                <th style="display: none;"></th>
-                                <th>TITLE<span class="sort"></span></th>
-                                <th>TYPE<span class="sort"></span></th>
-                                <th>FREQUENCY<span class="sort"></span></th>                                
-                                <th>
+                                <th style="display: none;" id=""></th>
+                                <th id="">TITLE<span class="sort"></span></th>
+                                <th id="">TYPE<span class="sort"></span></th>
+                                <th id="">FREQUENCY<span class="sort"></span></th>                                
+                                <th id="">
                                     <div class="dis-line form-group mb-none">
                                          <c:if test="${empty permission}">
                                          <button type="button" class="btn btn-primary blue-btn" onclick="addActiveTaskPage();">Add Active Task</button>

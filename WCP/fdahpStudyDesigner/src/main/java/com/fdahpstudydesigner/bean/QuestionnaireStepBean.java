@@ -4,133 +4,130 @@ import java.util.Map;
 
 public class QuestionnaireStepBean {
 
-	private Integer destinationStep;
-	private String destinationText;
-	Map<Integer, QuestionnaireStepBean> fromMap;
-	private String lineChart;
-	private Integer questionInstructionId;
-	private Integer responseType;
-	private String responseTypeText;
-	private Integer sequenceNo;
-	private String statData;
-	private Boolean status;
-	private Integer stepId;
-	private String stepType;
+  private Integer destinationStep;
+  private String destinationText;
+  Map<Integer, QuestionnaireStepBean> fromMap;
+  private String lineChart;
+  private Integer questionInstructionId;
+  private Integer responseType;
+  private String responseTypeText;
+  private Integer sequenceNo;
+  private String statData;
+  private Boolean status;
+  private Integer stepId;
+  private String stepType;
+  private String title;
+  private Boolean useAnchorDate;
 
-	private String title;
+  public Integer getDestinationStep() {
+    return destinationStep;
+  }
 
-	private Boolean useAnchorDate;
+  public void setDestinationStep(Integer destinationStep) {
+    this.destinationStep = destinationStep;
+  }
 
-	public Integer getDestinationStep() {
-		return destinationStep;
-	}
+  public String getDestinationText() {
+    return destinationText;
+  }
 
-	public String getDestinationText() {
-		return destinationText;
-	}
+  public void setDestinationText(String destinationText) {
+    this.destinationText = destinationText;
+  }
 
-	public Map<Integer, QuestionnaireStepBean> getFromMap() {
-		return fromMap;
-	}
+  public Map<Integer, QuestionnaireStepBean> getFromMap() {
+    return fromMap;
+  }
 
-	public String getLineChart() {
-		return lineChart;
-	}
+  public void setFromMap(Map<Integer, QuestionnaireStepBean> fromMap) {
+    this.fromMap = fromMap;
+  }
 
-	public Integer getQuestionInstructionId() {
-		return questionInstructionId;
-	}
+  public String getLineChart() {
+    return lineChart;
+  }
 
-	public Integer getResponseType() {
-		return responseType;
-	}
+  public void setLineChart(String lineChart) {
+    this.lineChart = lineChart;
+  }
 
-	public String getResponseTypeText() {
-		return responseTypeText;
-	}
+  public Integer getQuestionInstructionId() {
+    return questionInstructionId;
+  }
 
-	public Integer getSequenceNo() {
-		return sequenceNo;
-	}
+  public void setQuestionInstructionId(Integer questionInstructionId) {
+    this.questionInstructionId = questionInstructionId;
+  }
 
-	public String getStatData() {
-		return statData;
-	}
+  public Integer getResponseType() {
+    return responseType;
+  }
 
-	public Boolean getStatus() {
-		return status;
-	}
+  public void setResponseType(Integer responseType) {
+    this.responseType = responseType;
+  }
 
-	public Integer getStepId() {
-		return stepId;
-	}
+  public String getResponseTypeText() {
+    return responseTypeText;
+  }
 
-	public String getStepType() {
-		return stepType;
-	}
+  public void setResponseTypeText(String responseTypeText) {
+    this.responseTypeText = responseTypeText;
+  }
 
-	public String getTitle() {
-		return title;
-	}
+  public Integer getSequenceNo() {
+    return sequenceNo;
+  }
 
-	public Boolean getUseAnchorDate() {
-		return useAnchorDate;
-	}
+  public void setSequenceNo(Integer sequenceNo) {
+    this.sequenceNo = sequenceNo;
+  }
 
-	public void setDestinationStep(Integer destinationStep) {
-		this.destinationStep = destinationStep;
-	}
+  public String getStatData() {
+    return statData;
+  }
 
-	public void setDestinationText(String destinationText) {
-		this.destinationText = destinationText;
-	}
+  public void setStatData(String statData) {
+    this.statData = statData;
+  }
 
-	public void setFromMap(Map<Integer, QuestionnaireStepBean> fromMap) {
-		this.fromMap = fromMap;
-	}
+  public Boolean getStatus() {
+    return status;
+  }
 
-	public void setLineChart(String lineChart) {
-		this.lineChart = lineChart;
-	}
+  public void setStatus(Boolean status) {
+    this.status = status;
+  }
 
-	public void setQuestionInstructionId(Integer questionInstructionId) {
-		this.questionInstructionId = questionInstructionId;
-	}
+  public Integer getStepId() {
+    return stepId;
+  }
 
-	public void setResponseType(Integer responseType) {
-		this.responseType = responseType;
-	}
+  public void setStepId(Integer stepId) {
+    this.stepId = stepId;
+  }
 
-	public void setResponseTypeText(String responseTypeText) {
-		this.responseTypeText = responseTypeText;
-	}
+  public String getStepType() {
+    return stepType;
+  }
 
-	public void setSequenceNo(Integer sequenceNo) {
-		this.sequenceNo = sequenceNo;
-	}
+  public void setStepType(String stepType) {
+    this.stepType = stepType;
+  }
 
-	public void setStatData(String statData) {
-		this.statData = statData;
-	}
+  public String getTitle() {
+    return title;
+  }
 
-	public void setStatus(Boolean status) {
-		this.status = status;
-	}
+  public void setTitle(String title) {
+    this.title = title;
+  }
 
-	public void setStepId(Integer stepId) {
-		this.stepId = stepId;
-	}
+  public Boolean getUseAnchorDate() {
+    return useAnchorDate;
+  }
 
-	public void setStepType(String stepType) {
-		this.stepType = stepType;
-	}
-
-	public void setTitle(String title) {
-		this.title = title;
-	}
-
-	public void setUseAnchorDate(Boolean useAnchorDate) {
-		this.useAnchorDate = useAnchorDate;
-	}
-
+  public void setUseAnchorDate(Boolean useAnchorDate) {
+    this.useAnchorDate = useAnchorDate;
+  }
 }

@@ -26,9 +26,6 @@
                          <button type="button" class="btn btn-default gray-btn cancelBut">Cancel</button>
                      </div>
                     
-                     <!-- <div class="dis-line form-group mb-none mr-sm">
-                         <button type="button" class="btn btn-default gray-btn">Save</button>
-                     </div> -->
 					<c:if test="${empty permission}">
                      <div class="dis-line form-group mb-none ml-sm">
                       <span class="tool-tip" id="markAsTooltipId"data-toggle="tooltip" data-placement="bottom" <c:if test="${!markAsComplete}"> title="${activityMsg}" </c:if> >
@@ -48,10 +45,10 @@
                     <table id="questionnaire_list" class="display bor-none dragtbl" cellspacing="0" width="100%">
                          <thead>
                             <tr>
-                            	<th style="display: none;"></th>
-                                <th>TITLE<span class="sort"></span></th>
-                                <th>FREQUENCY<span class="sort"></span></th>                                
-                                <th>
+                            	<th style="display: none;" id=""></th>
+                                <th id="">TITLE<span class="sort" ></span></th>
+                                <th id="">FREQUENCY<span class="sort" ></span></th>                                
+                                <th id="">
                                 <c:if test="${empty permission}">
                                     <div class="dis-line form-group mb-none">
                                          <button type="button" class="btn btn-primary blue-btn" onclick="addQuestionnaires();">Add Questionnaire</button>

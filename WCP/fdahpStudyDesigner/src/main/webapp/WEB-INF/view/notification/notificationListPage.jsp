@@ -36,9 +36,9 @@
             <table id="app_Wide_Notification_list" class="table table-right tbl">
             <thead>
               <tr>
-                <th>TITLE</th>
-                <th class="linkDis">Status</th>
-                <th class="linkDis">ACTIONS</th>  
+                <th id="">TITLE</th>
+                <th id="" class="linkDis">Status</th>
+                <th id="" class="linkDis">ACTIONS</th>  
               </tr>
             </thead>
             <tbody>

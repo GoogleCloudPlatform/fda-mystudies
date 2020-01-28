@@ -10,7 +10,6 @@
        <form:form action="/fdahpStudyDesigner/adminStudies/saveOrUpdateStudyNotification.do?${_csrf.parameterName}=${_csrf.token}&_S=${param._S}" 
        data-toggle="validator" role="form" id="studyNotificationFormId"  method="post" autocomplete="off">       
        <input type="hidden" name="buttonType" id="buttonType">
-       <!-- <input type="hidden" name="currentDateTime" id="currentDateTime"> -->
        <input type="hidden" name="notificationId" value="${notificationBO.notificationId}">
        <input type="hidden" name="actionPage" value="${notificationBO.actionPage}">
        <input type="hidden" name="appId" value="${appId}">
@@ -18,7 +17,7 @@
            <div class="text-right">
                <div class="black-md-f dis-line pull-left line34">
 	               <span class="pr-sm">
-	               		<a href="javascript:void(0)" class="goToNotificationListForm" id="goToNotificationListForm"><img src="/fdahpStudyDesigner/images/icons/back-b.png"/></a>
+	               		<a href="javascript:void(0)" class="goToNotificationListForm" id="goToNotificationListForm"><img src="/fdahpStudyDesigner/images/icons/back-b.png" alt=""/></a>
 	               </span>
 	               <c:if test="${notificationBO.actionPage eq 'edit'}">Edit Notification</c:if>
 	               <c:if test="${notificationBO.actionPage eq 'addOrCopy'}">Add Notification</c:if>

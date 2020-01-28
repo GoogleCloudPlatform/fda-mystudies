@@ -81,17 +81,6 @@
 <body class="loading background__img" onload="noBack();" onpageshow="if (event.persisted) noBack();" onunload="">
     <div id="loader"><span></span></div>
     <div id="lg-container" class="lg-container">
-       <!--  <div class="lg-space-left">
-            <div class="lg-space-img">
-                <img src="images/logo/fda-logo-w.png"/>
-            </div>
-            <div class="lg-space-txt">
-               MyStudies <br>Management Portal
-            </div>
-             <div class="lg-space-cover">
-                <img src="images/icons/web.png"/>
-            </div>
-        </div> -->
         <!-- <div class="lg-space-right">
         
 	        <div class="cs-model-box hide askSignInCls">        
@@ -176,7 +165,7 @@
         <!-- new login -->
         <!-- Logo-->
         <div class="logo__ll">
-            <img src="images/logo/fda-logo-w.png"/>
+            <img src="images/logo/fda-logo-w.png" alt=""/>
         </div>
         <div class="clearfix"></div>
         <div class="login__container">
@@ -273,7 +262,7 @@
       </div>
       <div class="modal-body pt-xs pb-lg pl-xlg pr-xlg">
       		 <div>
-      			<div class="mt-md mb-md"><u><b>Terms</b></u></div>
+      			<div class="mt-md mb-md"><u><strong>Terms</strong></u></div>
 		               <span>${masterDataBO.termsText}</span>
             </div>
       </div>
@@ -292,7 +281,7 @@
       
       <div class="modal-body pt-xs pb-lg pl-xlg pr-xlg">
       		 <div>
-      			<div class="mt-md mb-md"><u><b>Privacy Policy</b></u></div>
+      			<div class="mt-md mb-md"><u><strong>Privacy Policy</strong></u></div>
 		               <span>${masterDataBO.privacyPolicyText}</span>
             </div>
       </div>

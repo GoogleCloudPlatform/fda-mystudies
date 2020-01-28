@@ -1,76 +1,43 @@
-/**
- *
- */
+/** */
 package com.fdahpstudydesigner.bean;
 
-/**
- * @author BTC
- *
- */
+/** @author BTC */
 public class StudySessionBean {
-	private String isLive;
-	private String permission;
-	private Integer sessionStudyCount;
-	private String studyId;
 
-	/**
-	 * @return the isLive
-	 */
-	public String getIsLive() {
-		return isLive;
-	}
+  private String isLive;
+  private String permission;
+  private Integer sessionStudyCount;
+  private String studyId;
 
-	/**
-	 * @return the permission
-	 */
-	public String getPermission() {
-		return permission;
-	}
+  public String getIsLive() {
+    return isLive;
+  }
 
-	/**
-	 * @return the sessionStudyCount
-	 */
-	public Integer getSessionStudyCount() {
-		return sessionStudyCount;
-	}
+  public void setIsLive(String isLive) {
+    this.isLive = isLive;
+  }
 
-	/**
-	 * @return the studyId
-	 */
-	public String getStudyId() {
-		return studyId;
-	}
+  public String getPermission() {
+    return permission;
+  }
 
-	/**
-	 * @param isLive
-	 *            the isLive to set
-	 */
-	public void setIsLive(String isLive) {
-		this.isLive = isLive;
-	}
+  public void setPermission(String permission) {
+    this.permission = permission;
+  }
 
-	/**
-	 * @param permission
-	 *            the permission to set
-	 */
-	public void setPermission(String permission) {
-		this.permission = permission;
-	}
+  public Integer getSessionStudyCount() {
+    return sessionStudyCount;
+  }
 
-	/**
-	 * @param sessionStudyCount
-	 *            the sessionStudyCount to set
-	 */
-	public void setSessionStudyCount(Integer sessionStudyCount) {
-		this.sessionStudyCount = sessionStudyCount;
-	}
+  public void setSessionStudyCount(Integer sessionStudyCount) {
+    this.sessionStudyCount = sessionStudyCount;
+  }
 
-	/**
-	 * @param studyId
-	 *            the studyId to set
-	 */
-	public void setStudyId(String studyId) {
-		this.studyId = studyId;
-	}
+  public String getStudyId() {
+    return studyId;
+  }
 
+  public void setStudyId(String studyId) {
+    this.studyId = studyId;
+  }
 }

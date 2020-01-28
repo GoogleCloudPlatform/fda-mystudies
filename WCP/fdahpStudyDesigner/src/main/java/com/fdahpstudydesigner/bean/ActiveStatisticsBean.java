@@ -2,49 +2,49 @@ package com.fdahpstudydesigner.bean;
 
 public class ActiveStatisticsBean {
 
-	String dbVal = "";
-	String id = "";
-	String idname = "";
-	String idVal = "";
-	boolean type = false;
+  String dbVal = "";
+  String id = "";
+  String idName = "";
+  String idVal = "";
+  boolean type = false;
 
-	public String getDbVal() {
-		return dbVal;
-	}
+  public String getDbVal() {
+    return dbVal;
+  }
 
-	public String getId() {
-		return id;
-	}
+  public String getId() {
+    return id;
+  }
 
-	public String getIdname() {
-		return idname;
-	}
+  public String getIdName() {
+    return idName;
+  }
 
-	public String getIdVal() {
-		return idVal;
-	}
+  public void setIdName(String idName) {
+    this.idName = idName;
+  }
 
-	public boolean isType() {
-		return type;
-	}
+  public String getIdVal() {
+    return idVal;
+  }
 
-	public void setDbVal(String dbVal) {
-		this.dbVal = dbVal;
-	}
+  public boolean isType() {
+    return type;
+  }
 
-	public void setId(String id) {
-		this.id = id;
-	}
+  public void setDbVal(String dbVal) {
+    this.dbVal = dbVal;
+  }
 
-	public void setIdname(String idname) {
-		this.idname = idname;
-	}
+  public void setId(String id) {
+    this.id = id;
+  }
 
-	public void setIdVal(String idVal) {
-		this.idVal = idVal;
-	}
+  public void setIdVal(String idVal) {
+    this.idVal = idVal;
+  }
 
-	public void setType(boolean type) {
-		this.type = type;
-	}
+  public void setType(boolean type) {
+    this.type = type;
+  }
 }

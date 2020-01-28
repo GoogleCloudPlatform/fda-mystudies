@@ -86,9 +86,9 @@
 	    		<table id="consent_list" class="display bor-none" cellspacing="0" width="100%">
 			         <thead>
 			            <tr>
-			               <th><span class="marL10">#</span></th>
-			               <th>QA</th>
-			               <th>Actions</th>
+			               <th id=""><span class="marL10">#</span></th>
+			               <th id="">QA</th>
+			               <th id="">Actions</th>
 			            </tr>
 			         </thead>
 			         <tbody>

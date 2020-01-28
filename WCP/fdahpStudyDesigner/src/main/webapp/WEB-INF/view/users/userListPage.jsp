@@ -54,10 +54,10 @@
             <table id="user_list" class="table tbl_rightalign tbl">
             <thead>
               <tr>
-                <th>Name <span class="sort"></span></th>
-                <th>Email  address <span class="sort"></span></th>
-                <th>ROLE <span class="sort"></span></th>
-                <th>Actions</th>
+                <th id="">Name <span class="sort"></span></th>
+                <th id="">Email  address <span class="sort"></span></th>
+                <th id="">ROLE <span class="sort"></span></th>
+                <th id="">Actions</th>
               </tr>
             </thead>
             <tbody>

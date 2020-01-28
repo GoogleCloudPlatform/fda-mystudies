@@ -1,7 +1,6 @@
 package com.fdahpstudydesigner.bo;
 
 import java.io.Serializable;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -16,105 +15,108 @@ import javax.persistence.Transient;
  * The persistent class for the study_version database table.
  *
  * @author BTC
- *
  */
 @Entity
 @Table(name = "study_version")
 @NamedQueries({
-		@NamedQuery(name = "StudyVersionBo.findAll", query = "SELECT s FROM StudyVersionBo s"),
-		@NamedQuery(name = "getStudyByCustomStudyId", query = " From StudyVersionBo SVBO WHERE SVBO.customStudyId =:customStudyId order by versionId DESC LIMIT 1"),
-		@NamedQuery(name = "getStudyVersionsByCustomStudyId", query = " From StudyVersionBo SVBO WHERE SVBO.customStudyId =:customStudyId order by versionId") })
+  @NamedQuery(name = "StudyVersionBo.findAll", query = "SELECT s FROM StudyVersionBo s"),
+  @NamedQuery(
+      name = "getStudyByCustomStudyId",
+      query =
+          " From StudyVersionBo SVBO WHERE SVBO.customStudyId =:customStudyId order by versionId DESC LIMIT 1"),
+  @NamedQuery(
+      name = "getStudyVersionsByCustomStudyId",
+      query =
+          " From StudyVersionBo SVBO WHERE SVBO.customStudyId =:customStudyId order by versionId")
+})
 public class StudyVersionBo implements Serializable {
-	private static final long serialVersionUID = 1L;
 
-	@Transient
-	private String activityLVersion = "";
+  private static final long serialVersionUID = 1L;
 
-	@Column(name = "activity_version")
-	private Float activityVersion = 0f;
+  @Transient private String activityLVersion = "";
 
-	@Transient
-	private String consentLVersion = "";
+  @Column(name = "activity_version")
+  private Float activityVersion = 0f;
 
-	@Column(name = "consent_version")
-	private Float consentVersion = 0f;
+  @Transient private String consentLVersion = "";
 
-	@Column(name = "custom_study_id")
-	private String customStudyId;
+  @Column(name = "consent_version")
+  private Float consentVersion = 0f;
 
-	@Transient
-	private String studyLVersion = "";
+  @Column(name = "custom_study_id")
+  private String customStudyId;
 
-	@Column(name = "study_version")
-	private Float studyVersion = 0f;
+  @Transient private String studyLVersion = "";
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "version_id")
-	private Integer versionId;
+  @Column(name = "study_version")
+  private Float studyVersion = 0f;
 
-	public String getActivityLVersion() {
-		return activityLVersion;
-	}
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  @Column(name = "version_id")
+  private Integer versionId;
 
-	public Float getActivityVersion() {
-		return activityVersion;
-	}
+  public String getActivityLVersion() {
+    return activityLVersion;
+  }
 
-	public String getConsentLVersion() {
-		return consentLVersion;
-	}
+  public Float getActivityVersion() {
+    return activityVersion;
+  }
 
-	public Float getConsentVersion() {
-		return consentVersion;
-	}
+  public String getConsentLVersion() {
+    return consentLVersion;
+  }
 
-	public String getCustomStudyId() {
-		return customStudyId;
-	}
+  public Float getConsentVersion() {
+    return consentVersion;
+  }
 
-	public String getStudyLVersion() {
-		return studyLVersion;
-	}
+  public String getCustomStudyId() {
+    return customStudyId;
+  }
 
-	public Float getStudyVersion() {
-		return studyVersion;
-	}
+  public String getStudyLVersion() {
+    return studyLVersion;
+  }
 
-	public Integer getVersionId() {
-		return versionId;
-	}
+  public Float getStudyVersion() {
+    return studyVersion;
+  }
 
-	public void setActivityLVersion(String activityLVersion) {
-		this.activityLVersion = activityLVersion;
-	}
+  public Integer getVersionId() {
+    return versionId;
+  }
 
-	public void setActivityVersion(Float activityVersion) {
-		this.activityVersion = activityVersion;
-	}
+  public void setActivityLVersion(String activityLVersion) {
+    this.activityLVersion = activityLVersion;
+  }
 
-	public void setConsentLVersion(String consentLVersion) {
-		this.consentLVersion = consentLVersion;
-	}
+  public void setActivityVersion(Float activityVersion) {
+    this.activityVersion = activityVersion;
+  }
 
-	public void setConsentVersion(Float consentVersion) {
-		this.consentVersion = consentVersion;
-	}
+  public void setConsentLVersion(String consentLVersion) {
+    this.consentLVersion = consentLVersion;
+  }
 
-	public void setCustomStudyId(String customStudyId) {
-		this.customStudyId = customStudyId;
-	}
+  public void setConsentVersion(Float consentVersion) {
+    this.consentVersion = consentVersion;
+  }
 
-	public void setStudyLVersion(String studyLVersion) {
-		this.studyLVersion = studyLVersion;
-	}
+  public void setCustomStudyId(String customStudyId) {
+    this.customStudyId = customStudyId;
+  }
 
-	public void setStudyVersion(Float studyVersion) {
-		this.studyVersion = studyVersion;
-	}
+  public void setStudyLVersion(String studyLVersion) {
+    this.studyLVersion = studyLVersion;
+  }
 
-	public void setVersionId(Integer versionId) {
-		this.versionId = versionId;
-	}
+  public void setStudyVersion(Float studyVersion) {
+    this.studyVersion = studyVersion;
+  }
 
+  public void setVersionId(Integer versionId) {
+    this.versionId = versionId;
+  }
 }

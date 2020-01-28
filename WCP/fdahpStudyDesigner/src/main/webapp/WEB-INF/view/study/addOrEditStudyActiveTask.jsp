@@ -11,7 +11,7 @@
             <div class="right-content-head">        
                 <div class="text-right">
                     <div class="black-md-f text-uppercase dis-line pull-left line34"><span class="pr-sm cur-pointer" onclick="goToBackPage(this);">
-                    <img src="../images/icons/back-b.png" class="pr-md"/></span> 
+                    <img src="../images/icons/back-b.png" class="pr-md" alt=""/></span> 
                     <c:if test="${actionPage eq 'add'}"> Add Active Task</c:if>
 					<c:if test="${actionPage eq 'addEdit'}">Edit Active Task</c:if>
 					<c:if test="${actionPage eq 'view'}">View Active Task <c:set var="isLive">${_S}isLive</c:set>${not empty  sessionScope[isLive]?'<span class="eye-inc ml-sm vertical-align-text-top"></span> ':''} ${not empty  sessionScope[isLive]?activeTaskBo.activeTaskVersion:''}</c:if>
