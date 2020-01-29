@@ -1,69 +1,65 @@
-package com.harvard.studyAppModule.consent.model;
+package com.harvard.studyappmodule.consent.model;
 
 import io.realm.RealmObject;
 
-/**
- * Created by Naveen Raj on 03/28/2017.
- */
+public class Sharing extends RealmObject {
+  private String text;
 
-public class Sharing extends RealmObject{
-    private String text;
+  private String title;
 
-    private String title;
+  private String learnMore;
 
-    private String learnMore;
+  private String allowWithoutSharing;
 
-    private String allowWithoutSharing;
+  private String longDesc;
 
-    private String longDesc;
+  private String shortDesc;
 
-    private String shortDesc;
+  public String getText() {
+    return text;
+  }
 
-    public String getText() {
-        return text;
-    }
+  public void setText(String text) {
+    this.text = text;
+  }
 
-    public void setText(String text) {
-        this.text = text;
-    }
+  public String getTitle() {
+    return title;
+  }
 
-    public String getTitle() {
-        return title;
-    }
+  public void setTitle(String title) {
+    this.title = title;
+  }
 
-    public void setTitle(String title) {
-        this.title = title;
-    }
+  public String getLearnMore() {
+    return learnMore;
+  }
 
-    public String getLearnMore() {
-        return learnMore;
-    }
+  public void setLearnMore(String learnMore) {
+    this.learnMore = learnMore;
+  }
 
-    public void setLearnMore(String learnMore) {
-        this.learnMore = learnMore;
-    }
+  public String getAllowWithoutSharing() {
+    return allowWithoutSharing;
+  }
 
-    public String getAllowWithoutSharing() {
-        return allowWithoutSharing;
-    }
+  public void setAllowWithoutSharing(String allowWithoutSharing) {
+    this.allowWithoutSharing = allowWithoutSharing;
+  }
 
-    public void setAllowWithoutSharing(String allowWithoutSharing) {
-        this.allowWithoutSharing = allowWithoutSharing;
-    }
+  public String getLongDesc() {
+    return longDesc;
+  }
 
-    public String getLongDesc() {
-        return longDesc;
-    }
+  public void setLongDesc(String longDesc) {
+    this.longDesc = longDesc;
+  }
 
-    public void setLongDesc(String longDesc) {
-        this.longDesc = longDesc;
-    }
+  public String getShortDesc() {
+    return shortDesc;
+  }
 
-    public String getShortDesc() {
-        return shortDesc;
-    }
-
-    public void setShortDesc(String shortDesc) {
-        this.shortDesc = shortDesc;
-    }
+  public void setShortDesc(String shortDesc) {
+    this.shortDesc = shortDesc;
+  }
 }

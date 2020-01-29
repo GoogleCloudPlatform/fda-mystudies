@@ -1,19 +1,15 @@
-package com.harvard.studyAppModule.studyModel;
+package com.harvard.studyappmodule.studymodel;
 
 import java.util.ArrayList;
 
-/**
- * Created by Rohit on 3/28/2017.
- */
-
 public class DeleteAccountData {
-    private ArrayList<String> deleteData = new ArrayList<>();
+  private ArrayList<String> deleteData = new ArrayList<>();
 
-    public ArrayList<String> getDeleteData() {
-        return deleteData;
-    }
+  public ArrayList<String> getDeleteData() {
+    return deleteData;
+  }
 
-    public void setDeleteData(ArrayList<String> deleteData) {
-        this.deleteData = deleteData;
-    }
+  public void setDeleteData(ArrayList<String> deleteData) {
+    this.deleteData = deleteData;
+  }
 }

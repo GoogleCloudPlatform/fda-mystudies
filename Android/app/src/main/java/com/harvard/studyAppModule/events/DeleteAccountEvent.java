@@ -1,19 +1,16 @@
-package com.harvard.studyAppModule.events;
+package com.harvard.studyappmodule.events;
 
-import com.harvard.webserviceModule.events.RegistrationServerConfigEvent;
-
-/**
- * Created by Rohit on 3/28/2017.
- */
+import com.harvard.webservicemodule.events.RegistrationServerConfigEvent;
 
 public class DeleteAccountEvent {
-    private RegistrationServerConfigEvent mRegistrationServerConfigEvent;
+  private RegistrationServerConfigEvent mRegistrationServerConfigEvent;
 
-    public RegistrationServerConfigEvent getmRegistrationServerConfigEvent() {
-        return mRegistrationServerConfigEvent;
-    }
+  public RegistrationServerConfigEvent getmRegistrationServerConfigEvent() {
+    return mRegistrationServerConfigEvent;
+  }
 
-    public void setmRegistrationServerConfigEvent(RegistrationServerConfigEvent mRegistrationServerConfigEvent) {
-        this.mRegistrationServerConfigEvent = mRegistrationServerConfigEvent;
-    }
+  public void setmRegistrationServerConfigEvent(
+      RegistrationServerConfigEvent mRegistrationServerConfigEvent) {
+    this.mRegistrationServerConfigEvent = mRegistrationServerConfigEvent;
+  }
 }

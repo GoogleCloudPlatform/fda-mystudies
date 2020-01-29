@@ -1,29 +1,25 @@
-package com.harvard.studyAppModule.acvitityListModel;
+package com.harvard.studyappmodule.acvititylistmodel;
 
 import io.realm.RealmObject;
 
-/**
- * Created by Naveen Raj on 04/06/2017.
- */
-
 public class FrequencyRuns extends RealmObject {
-    private String startTime;
+  private String startTime;
 
-    private String endTime;
+  private String endTime;
 
-    public String getStartTime() {
-        return startTime;
-    }
+  public String getStartTime() {
+    return startTime;
+  }
 
-    public void setStartTime(String startTime) {
-        this.startTime = startTime;
-    }
+  public void setStartTime(String startTime) {
+    this.startTime = startTime;
+  }
 
-    public String getEndTime() {
-        return endTime;
-    }
+  public String getEndTime() {
+    return endTime;
+  }
 
-    public void setEndTime(String endTime) {
-        this.endTime = endTime;
-    }
+  public void setEndTime(String endTime) {
+    this.endTime = endTime;
+  }
 }

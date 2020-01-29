@@ -1,17 +1,13 @@
-package com.harvard.studyAppModule.ResponseServerModel;
-
-/**
- * Created by Naveen Raj on 05/02/2017.
- */
+package com.harvard.studyappmodule.responseservermodel;
 
 public class Data {
-    private String appToken;
+  private String appToken;
 
-    public String getAppToken() {
-        return appToken;
-    }
+  public String getAppToken() {
+    return appToken;
+  }
 
-    public void setAppToken(String appToken) {
-        this.appToken = appToken;
-    }
+  public void setAppToken(String appToken) {
+    this.appToken = appToken;
+  }
 }

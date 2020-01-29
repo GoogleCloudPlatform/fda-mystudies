@@ -6,7 +6,7 @@
               android:layout_height="match_parent"
               android:background="@color/white"
               android:orientation="vertical"
-              tools:context="com.harvard.passcodeModule.PasscodeSetupActivity">
+              tools:context="com.harvard.passcodemodule.PasscodeSetupActivity">
 
     <include layout="@layout/top_bar_layout"/>
 
@@ -58,7 +58,7 @@
                     android:textSize="12sp"/>
             </LinearLayout>
 
-            <com.harvard.passcodeModule.PasscodeView
+            <com.harvard.passcodemodule.PasscodeView
                 android:id="@+id/passcode_view"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

@@ -1,17 +1,13 @@
-package com.harvard.userModule.event;
-
-/**
- * Created by Rohit on 2/15/2017.
- */
+package com.harvard.usermodule.event;
 
 public class GetUserEvent {
-    private String userId;
+  private String userId;
 
-    public String getUserId() {
-        return userId;
-    }
+  public String getUserId() {
+    return userId;
+  }
 
-    public void setUserId(String userId) {
-        this.userId = userId;
-    }
+  public void setUserId(String userId) {
+    this.userId = userId;
+  }
 }

@@ -1,17 +1,13 @@
-package com.harvard.userModule.webserviceModel;
-
-/**
- * Created by Rohit on 3/2/2017.
- */
+package com.harvard.usermodule.webservicemodel;
 
 public class ForgotPasswordData {
-    private String message;
+  private String message;
 
-    public String getMessage() {
-        return message;
-    }
+  public String getMessage() {
+    return message;
+  }
 
-    public void setMessage(String message) {
-        this.message = message;
-    }
+  public void setMessage(String message) {
+    this.message = message;
+  }
 }

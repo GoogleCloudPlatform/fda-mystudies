@@ -1,45 +1,45 @@
-package com.harvard.studyAppModule.acvitityListModel;
+package com.harvard.studyappmodule.acvititylistmodel;
 
 import io.realm.RealmObject;
 
 public class SchedulingAnchorDateStart extends RealmObject {
-    private int anchorDays;
+  private int anchorDays;
 
-    private int dayOfWeek;
+  private int dayOfWeek;
 
-    private String dateOfMonth;
+  private String dateOfMonth;
 
-    private String time;
+  private String time;
 
-    public int getAnchorDays() {
-        return anchorDays;
-    }
+  public int getAnchorDays() {
+    return anchorDays;
+  }
 
-    public void setAnchorDays(int anchorDays) {
-        this.anchorDays = anchorDays;
-    }
+  public void setAnchorDays(int anchorDays) {
+    this.anchorDays = anchorDays;
+  }
 
-    public int getDayOfWeek() {
-        return dayOfWeek;
-    }
+  public int getDayOfWeek() {
+    return dayOfWeek;
+  }
 
-    public void setDayOfWeek(int dayOfWeek) {
-        this.dayOfWeek = dayOfWeek;
-    }
+  public void setDayOfWeek(int dayOfWeek) {
+    this.dayOfWeek = dayOfWeek;
+  }
 
-    public String getDateOfMonth() {
-        return dateOfMonth;
-    }
+  public String getDateOfMonth() {
+    return dateOfMonth;
+  }
 
-    public void setDateOfMonth(String dateOfMonth) {
-        this.dateOfMonth = dateOfMonth;
-    }
+  public void setDateOfMonth(String dateOfMonth) {
+    this.dateOfMonth = dateOfMonth;
+  }
 
-    public String getTime() {
-        return time;
-    }
+  public String getTime() {
+    return time;
+  }
 
-    public void setTime(String time) {
-        this.time = time;
-    }
+  public void setTime(String time) {
+    this.time = time;
+  }
 }

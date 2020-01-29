@@ -1,20 +1,17 @@
-package com.harvard.studyAppModule.events;
+package com.harvard.studyappmodule.events;
 
-import com.harvard.webserviceModule.events.RegistrationServerConfigEvent;
-
-/**
- * Created by Naveen Raj on 04/18/2017.
- */
+import com.harvard.webservicemodule.events.RegistrationServerConfigEvent;
 
 public class UpdateEligibilityConsentStatusEvent {
 
-    private RegistrationServerConfigEvent mRegistrationServerConfigEvent;
+  private RegistrationServerConfigEvent mRegistrationServerConfigEvent;
 
-    public RegistrationServerConfigEvent getRegistrationServerConfigEvent() {
-        return mRegistrationServerConfigEvent;
-    }
+  public RegistrationServerConfigEvent getRegistrationServerConfigEvent() {
+    return mRegistrationServerConfigEvent;
+  }
 
-    public void setRegistrationServerConfigEvent(RegistrationServerConfigEvent registrationServerConfigEvent) {
-        mRegistrationServerConfigEvent = registrationServerConfigEvent;
-    }
+  public void setRegistrationServerConfigEvent(
+      RegistrationServerConfigEvent registrationServerConfigEvent) {
+    mRegistrationServerConfigEvent = registrationServerConfigEvent;
+  }
 }

@@ -1,19 +1,15 @@
-package com.harvard.userModule.event;
+package com.harvard.usermodule.event;
 
-import com.harvard.webserviceModule.events.WCPConfigEvent;
-
-/**
- * Created by Rohit on 3/27/2017.
- */
+import com.harvard.webservicemodule.events.WCPConfigEvent;
 
 public class GetTermsAndConditionEvent {
-    private WCPConfigEvent wcpConfigEvent;
+  private WCPConfigEvent wcpConfigEvent;
 
-    public WCPConfigEvent getWcpConfigEvent() {
-        return wcpConfigEvent;
-    }
+  public WCPConfigEvent getWcpConfigEvent() {
+    return wcpConfigEvent;
+  }
 
-    public void setWcpConfigEvent(WCPConfigEvent wcpConfigEvent) {
-        this.wcpConfigEvent = wcpConfigEvent;
-    }
+  public void setWcpConfigEvent(WCPConfigEvent wcpConfigEvent) {
+    this.wcpConfigEvent = wcpConfigEvent;
+  }
 }

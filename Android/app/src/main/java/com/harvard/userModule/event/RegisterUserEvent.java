@@ -1,20 +1,16 @@
-package com.harvard.userModule.event;
+package com.harvard.usermodule.event;
 
-import com.harvard.webserviceModule.events.RegistrationServerConfigEvent;
-
-/**
- * Created by Rohit on 2/17/2017.
- */
+import com.harvard.webservicemodule.events.RegistrationServerConfigEvent;
 
 public class RegisterUserEvent {
-    private RegistrationServerConfigEvent mRegistrationServerConfigEvent;
+  private RegistrationServerConfigEvent mRegistrationServerConfigEvent;
 
-    public RegistrationServerConfigEvent getmRegistrationServerConfigEvent() {
-        return mRegistrationServerConfigEvent;
-    }
+  public RegistrationServerConfigEvent getmRegistrationServerConfigEvent() {
+    return mRegistrationServerConfigEvent;
+  }
 
-    public void setmRegistrationServerConfigEvent(RegistrationServerConfigEvent mRegistrationServerConfigEvent) {
-        this.mRegistrationServerConfigEvent = mRegistrationServerConfigEvent;
-    }
-
+  public void setmRegistrationServerConfigEvent(
+      RegistrationServerConfigEvent mRegistrationServerConfigEvent) {
+    this.mRegistrationServerConfigEvent = mRegistrationServerConfigEvent;
+  }
 }

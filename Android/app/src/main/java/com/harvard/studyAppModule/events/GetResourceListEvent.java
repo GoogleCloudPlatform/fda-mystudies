@@ -1,21 +1,16 @@
-package com.harvard.studyAppModule.events;
+package com.harvard.studyappmodule.events;
 
-import com.harvard.webserviceModule.events.WCPConfigEvent;
-
-/**
- * Created by Shakeel on 12-04-2017.
- */
+import com.harvard.webservicemodule.events.WCPConfigEvent;
 
 public class GetResourceListEvent {
 
-    private WCPConfigEvent wcpConfigEvent;
+  private WCPConfigEvent wcpConfigEvent;
 
-    public WCPConfigEvent getWcpConfigEvent() {
-        return wcpConfigEvent;
-    }
+  public WCPConfigEvent getWcpConfigEvent() {
+    return wcpConfigEvent;
+  }
 
-    public void setWcpConfigEvent(WCPConfigEvent wcpConfigEvent) {
-        this.wcpConfigEvent = wcpConfigEvent;
-    }
-
+  public void setWcpConfigEvent(WCPConfigEvent wcpConfigEvent) {
+    this.wcpConfigEvent = wcpConfigEvent;
+  }
 }
