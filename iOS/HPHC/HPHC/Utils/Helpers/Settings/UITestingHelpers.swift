@@ -8,15 +8,9 @@
 
 import Foundation
 
-
 var isUITesting: Bool {
-    get {
-        return ProcessInfo.processInfo.arguments.contains("UI-TESTING")
-    }
+  return ProcessInfo.processInfo.arguments.contains("UI-TESTING")
 }
-var isTestingLoginLogoutFlow:Bool {
-    get {
-        return ProcessInfo.processInfo.arguments.contains("LOGIN_LOGOUT_FLOW")
-    }
+var isTestingLoginLogoutFlow: Bool {
+  return ProcessInfo.processInfo.arguments.contains("LOGIN_LOGOUT_FLOW")
 }
-

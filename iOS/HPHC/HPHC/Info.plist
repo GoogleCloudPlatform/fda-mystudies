@@ -43,9 +43,9 @@
 	<key>NSAppTransportSecurity</key>
 	<dict>
 		<key>NSAllowsArbitraryLoads</key>
-		<false/>
+		<true/>
 		<key>NSAllowsArbitraryLoadsInWebContent</key>
-		<false/>
+		<true/>
 	</dict>
 	<key>NSCameraUsageDescription</key>
 	<string>$(PRODUCT_NAME) would like to access your camera</string>
@@ -68,7 +68,7 @@
 	<key>ProductTitleName</key>
 	<string>FDA MyStudies</string>
 	<key>StandaloneStudyId</key>
-	<string>appstudy2</string>
+	<string>Standalone01</string>
 	<key>UIAppFonts</key>
 	<array>
 		<string>Verdana Italic.ttf</string>
