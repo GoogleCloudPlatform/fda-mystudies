@@ -115,7 +115,7 @@ extension GatewayResourcesListViewController:  UITableViewDelegate {
         
         let resource = Gateway.instance.resources?[indexPath.row]
         let storyboard = UIStoryboard(name: kStudyStoryboard, bundle: nil)
-        let resourceDetail =   storyboard.instantiateViewController(withIdentifier: "ResourceDetailViewControllerIdentifier") as! ResourcesDetailViewController
+        let resourceDetail =   storyboard.instantiateViewController(withIdentifier: "ResourceDetailViewControllerIdentifier") as! GatewayResourceDetailViewController
         resourceDetail.resource = resource
         self.navigationController?.pushViewController(resourceDetail, animated: true)
         

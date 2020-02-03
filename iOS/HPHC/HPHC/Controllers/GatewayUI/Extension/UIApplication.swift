@@ -1,3 +1,4 @@
+import SlideMenuControllerSwift
 //
 //  UIApplication.swift
 //  SlideMenuControllerSwift
@@ -6,26 +7,29 @@
 //  Copyright © 2015 Yuji Hato. All rights reserved.
 //
 import UIKit
-import SlideMenuControllerSwift
 
 extension UIApplication {
-    
-    class func topViewController(_ viewController: UIViewController? = UIApplication.shared.keyWindow?.rootViewController) -> UIViewController? {
-        if let nav = viewController as? UINavigationController {
-            return topViewController(nav.visibleViewController)
-        }
-        if let tab = viewController as? UITabBarController {
-            if let selected = tab.selectedViewController {
-                return topViewController(selected)
-            }
-        }
-        if let presented = viewController?.presentedViewController {
-            return topViewController(presented)
-        }
-        
-        if let slide = viewController as? SlideMenuController {
-            return topViewController(slide.mainViewController)
-        }
-        return viewController
+
+  /// This method will return the top most UiViewController presented on the window.
+  /// - Parameter viewController: Instance of current view controller root view controller.
+  class func topViewController(
+    _ viewController: UIViewController? = UIApplication.shared.keyWindow?.rootViewController
+  ) -> UIViewController? {
+    if let nav = viewController as? UINavigationController {
+      return topViewController(nav.visibleViewController)
     }
+    if let tab = viewController as? UITabBarController {
+      if let selected = tab.selectedViewController {
+        return topViewController(selected)
+      }
+    }
+    if let presented = viewController?.presentedViewController {
+      return topViewController(presented)
+    }
+
+    if let slide = viewController as? SlideMenuController {
+      return topViewController(slide.mainViewController)
+    }
+    return viewController
+  }
 }

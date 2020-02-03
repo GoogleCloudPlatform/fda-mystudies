@@ -169,7 +169,7 @@ class ResourcesViewController: UIViewController{
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == "ResourceDetailViewControllerIdentifier"{
             
-            let resourceDetail = (segue.destination as? ResourcesDetailViewController)!
+            let resourceDetail = (segue.destination as? GatewayResourceDetailViewController)!
             resourceDetail.resource = (sender as? Resource)!
             if self.resourceLink != nil{
                 resourceDetail.requestLink = self.resourceLink!
@@ -181,7 +181,7 @@ class ResourcesViewController: UIViewController{
             
         } else if segue.identifier == "ResourceDetailViewSegueIdentifier" {
             
-            let resourceDetail = (segue.destination as? ResourcesDetailViewControllerCopy)!
+            let resourceDetail = (segue.destination as? ResourceDetailViewController)!
             resourceDetail.resource = (sender as? Resource)!
             if self.resourceLink != nil{
                 resourceDetail.requestLink = self.resourceLink!

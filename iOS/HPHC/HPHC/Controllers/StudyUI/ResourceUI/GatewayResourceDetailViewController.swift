@@ -24,7 +24,7 @@ import MessageUI
 
 let resourcesDownloadPath = AKUtility.baseFilePath + "/Resources"
 
-class ResourcesDetailViewController: UIViewController {
+class GatewayResourceDetailViewController: UIViewController {
     
     
     @IBOutlet var webView: UIWebView?
@@ -166,7 +166,7 @@ class ResourcesDetailViewController: UIViewController {
     }
 }
 
-extension ResourcesDetailViewController: UIWebViewDelegate{
+extension GatewayResourceDetailViewController: UIWebViewDelegate{
     
     func webViewDidFinishLoad(_ webView: UIWebView) {
         self.activityIndicator.stopAnimating()
@@ -192,7 +192,7 @@ extension ResourcesDetailViewController: UIWebViewDelegate{
     }
 }
 
-extension ResourcesDetailViewController: MFMailComposeViewControllerDelegate{
+extension GatewayResourceDetailViewController: MFMailComposeViewControllerDelegate{
     
     func sendEmail() {
         let composeVC = MFMailComposeViewController()
@@ -261,7 +261,7 @@ extension ResourcesDetailViewController: MFMailComposeViewControllerDelegate{
 }
 
 
-extension ResourcesDetailViewController: FileDownloadManagerDelegates{
+extension GatewayResourceDetailViewController: FileDownloadManagerDelegates{
     
     func download(manager: FileDownloadManager, didUpdateProgress progress: Float) {
         

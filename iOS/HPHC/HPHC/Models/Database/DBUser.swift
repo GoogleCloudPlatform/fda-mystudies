@@ -18,8 +18,30 @@ OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE
 OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import Foundation
+import RealmSwift
 
-class Encoder{
+/**
+ DB instance of User model 
+ */
+
+class DBUser: Object {
+    
+    @objc dynamic var firstName: String = ""
+    @objc dynamic var lastName: String = ""
+    @objc dynamic var emailId: String = ""
+   
+    @objc dynamic var userId: String = ""
+    @objc dynamic var verified: Bool = false
+    @objc dynamic var authToken: String = ""
+    @objc dynamic var userType: Int = UserType.AnonymousUser.rawValue
+   
+    @objc dynamic var passcodeEnabled: Bool = true
+    @objc dynamic var remoteNotificationEnabled: Bool = false
+    @objc dynamic var localNotificationEnabled: Bool = false
+    @objc dynamic var refreshToken: String = ""
+  
+    override static func primaryKey() -> String? {
+        return "userId"
+    }
     
 }
