@@ -71,7 +71,7 @@ class ActivitiesViewController: UIViewController {
   }
 
   deinit {
-    Log("\(self) I'm gone ")
+    Logger.sharedInstance.info("\(self): deinit")
   }
 
   // MARK:- Viewcontroller Lifecycle
@@ -106,7 +106,7 @@ class ActivitiesViewController: UIViewController {
 
   override func viewWillAppear(_ animated: Bool) {
     super.viewWillAppear(animated)
-    print("ActivitiesViewController - viewWillAppear")
+    Logger.sharedInstance.info("ActivitiesViewController - viewWillAppear")
     self.navigationController?.interactivePopGestureRecognizer?.isEnabled = false
 
     if Utilities.isStandaloneApp() {
@@ -513,14 +513,14 @@ class ActivitiesViewController: UIViewController {
     }
 
     if (User.currentUser.settings?.localNotifications)! {
-      print("localNotifications enabled")
+      Logger.sharedInstance.info("localNotifications enabled")
       if !(Study.currentStudy?.activitiesLocalNotificationUpdated)! {
-        print("Registerig Notification")
+        Logger.sharedInstance.info("Registering Notification")
         //Register LocalNotifications
         LocalNotification.registerAllLocalNotificationFor(
           activities: (Study.currentStudy?.activities)!
         ) { (finished, notificationlist) in
-          print("Notification set sucessfully")
+          Logger.sharedInstance.info("Notification set sucessfully")
           Study.currentStudy?.activitiesLocalNotificationUpdated = true
           DBHandler.saveRegisteredLocaNotifications(notificationList: notificationlist)
           DBHandler.updateLocalNotificationScheduleStatus(
@@ -910,12 +910,12 @@ extension ActivitiesViewController: UITableViewDelegate {
             self.selectedIndexPath = indexPath
 
           } else {
-            debugPrint("run is completed")
+            Logger.sharedInstance.info("run is completed")
           }
         }
 
       } else if activity.userParticipationStatus?.status == .abandoned {
-        debugPrint("run not available")
+        Logger.sharedInstance.info("run not available")
         UIUtilities.showAlertWithMessage(
           alertMessage: NSLocalizedString(kActivityAbondonedAlertMessage, comment: ""))
       }
@@ -1068,7 +1068,7 @@ extension ActivitiesViewController: NMWebServiceDelegate {
   }
 
   func failedRequest(_ manager: NetworkManager, requestName: NSString, error: NSError) {
-    Logger.sharedInstance.info("requestname : \(requestName)")
+    Logger.sharedInstance.error("requestname : \(requestName)")
     self.removeProgressIndicator()
     
     if self.refreshControl != nil && (self.refreshControl?.isRefreshing)! {
@@ -1156,13 +1156,13 @@ extension ActivitiesViewController: ORKTaskViewControllerDelegate {
     switch reason {
 
     case ORKTaskViewControllerFinishReason.completed:
-      print("completed")
+      Logger.sharedInstance.info("completed")
 
     case ORKTaskViewControllerFinishReason.failed:
-      print("failed")
+      Logger.sharedInstance.info("failed")
 
     case ORKTaskViewControllerFinishReason.discarded:
-      print("discarded")
+      Logger.sharedInstance.info("discarded")
 
       let study = Study.currentStudy
       let activity = Study.currentActivity
@@ -1182,7 +1182,7 @@ extension ActivitiesViewController: ORKTaskViewControllerDelegate {
       self.checkForActivitiesUpdates()
 
     case ORKTaskViewControllerFinishReason.saved:
-      print("saved")
+      Logger.sharedInstance.info("saved")
 
       if taskViewController.task?.identifier == "ConsentTask" {
         // Do Nothing

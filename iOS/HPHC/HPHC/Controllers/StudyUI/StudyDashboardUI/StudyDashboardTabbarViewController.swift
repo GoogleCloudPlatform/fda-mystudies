@@ -22,7 +22,7 @@ import UIKit
 class StudyDashboardTabbarViewController: UITabBarController {
 
   deinit {
-    Log("\(self) I'm gone ")
+    Logger.sharedInstance.info("\(self): deinit")
   }
 
   override func viewDidLoad() {

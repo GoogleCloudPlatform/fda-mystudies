@@ -309,7 +309,7 @@ class StudyListViewController: UIViewController {
       Gateway.instance.studies = listOfStudies
 
     } catch {
-      print("json error: \(error.localizedDescription)")
+      Logger.sharedInstance.info("json error: \(error.localizedDescription)")
     }
   }
 
@@ -549,7 +549,6 @@ class StudyListViewController: UIViewController {
     DBHandler.loadStudyOverview(studyId: (study.studyId)!) { overview in
       if overview != nil {
         study.overview = overview
-        // self.navigateBasedOnUserStatus()
         self.navigateToStudyHome()
       } else {
         // Call API to get StudyInfo.
@@ -656,7 +655,6 @@ class StudyListViewController: UIViewController {
           if study?.version != study?.newVersion {
             WCPServices().getStudyUpdates(study: study!, delegate: self)
           } else {
-            // let appDelegate = (UIApplication.shared.delegate as? AppDelegate)!
             addProgressIndicator()
             perform(#selector(loadStudyDetails), with: self, afterDelay: 1)
           }
@@ -743,7 +741,7 @@ extension StudyListViewController: StudyFilterDelegates {
       categoryFilteredStudies = allStudyList.filter { categories.contains($0.category!) }
     }
 
-    /// 2.  Filter by study status.
+    /// 2. Filter by study status.
     var statusFilteredStudies: [Study] = []
     if studyStatus.count > 0 {
       statusFilteredStudies = allStudyList.filter { studyStatus.contains($0.status.rawValue) }
@@ -1016,7 +1014,6 @@ extension StudyListViewController: NMWebServiceDelegate {
     let appdelegate = (UIApplication.shared.delegate as? AppDelegate)!
 
     if requestName as String == WCPMethods.studyList.rawValue {
-      // let responseDict = (response as? NSDictionary)!
       tableView.refreshControl?.endRefreshing()
       handleStudyListResponse()
       appdelegate.window?.removeProgressIndicatorFromWindow()
@@ -1109,19 +1106,19 @@ extension StudyListViewController: ORKTaskViewControllerDelegate {
   ) {
     switch reason {
     case ORKTaskViewControllerFinishReason.completed:
-      print("completed")
+      Logger.sharedInstance.info("completed")
       let ud = UserDefaults.standard
       ud.set(false, forKey: kPasscodeIsPending)
       ud.synchronize()
 
     case ORKTaskViewControllerFinishReason.failed:
-      print("failed")
+      Logger.sharedInstance.info("failed")
 
     case ORKTaskViewControllerFinishReason.discarded:
-      print("discarded")
+      Logger.sharedInstance.info("discarded")
 
     case ORKTaskViewControllerFinishReason.saved:
-      print("saved")
+      Logger.sharedInstance.info("saved")
     @unknown default: break
     }
 

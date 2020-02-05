@@ -126,7 +126,7 @@ class ConfirmationViewController: UIViewController {
         joinedStudies.removeFirst()
 
         let studiesIds = studiesToDisplay.map({ $0.studyId! })
-        print("studies to display \(studiesIds)")
+        Logger.sharedInstance.info("Studies to display: \(studiesIds)")
 
         self.checkWithdrawlConfigurationForNextSuty()
       }

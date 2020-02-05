@@ -20,7 +20,7 @@ import UIKit
 
 class StudyDashboardActivityTableViewCell: UITableViewCell {
 
-  //Fourth cell Outlets
+  // Fourth cell Outlets
   @IBOutlet var activityCollectionView: UICollectionView?
 
   var activityArrayData = NSMutableArray()

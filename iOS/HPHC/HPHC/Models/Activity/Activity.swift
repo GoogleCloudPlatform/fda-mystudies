@@ -329,16 +329,7 @@ class Activity {
       if Utilities.isValidValue(someObject: infoDict[kActivityVersion] as AnyObject) {
         self.version = infoDict[kActivityVersion] as? String
       }
-      if Utilities.isValidValue(someObject: infoDict[kActivityStartTime] as AnyObject) {
-        //self.startDate =  Utilities.getDateFromString(dateString: (infoDict[kActivityStartTime] as! String?)!)
-      }
-      if Utilities.isValidValue(someObject: infoDict[kActivityEndTime] as AnyObject) {
-        //self.endDate =   Utilities.getDateFromString(dateString: (infoDict[kActivityEndTime] as! String?)!)
-      }
-      if Utilities.isValidValue(someObject: infoDict[kActivityLastModified] as AnyObject) {
-        //self.lastModified =   Utilities.getDateFromString(dateString: (infoDict[kActivityLastModified] as! String?)!)
-      }
-
+      
     } else {
       Logger.sharedInstance.debug("infoDict is null:\(infoDict)")
     }

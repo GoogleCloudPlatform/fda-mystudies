@@ -118,7 +118,7 @@ class WCPServices: NSObject {
   /// Creates a request to receive collection of `Study`
   /// - Parameter delegate: Class object to receive response
   func getStudyList(_ delegate: NMWebServiceDelegate) {
-    print("StudyList Start \(Date())")
+    Logger.sharedInstance.info("StudyList Start \(Date())")
     self.delegate = delegate
     let method = WCPMethods.studyList.method
     let params = [String: Any]()
@@ -618,7 +618,7 @@ extension WCPServices: NMWebServiceDelegate {
 
   func finishedRequest(_ manager: NetworkManager, requestName: NSString, response: AnyObject?) {
 
-    print("StudyList Finished \(Date())")
+    Logger.sharedInstance.info("StudyList Finished \(Date())")
     Logger.sharedInstance.info("WCP Received Data: \(requestName)")
     let methodName = WCPMethods(rawValue: requestName as String)!
 

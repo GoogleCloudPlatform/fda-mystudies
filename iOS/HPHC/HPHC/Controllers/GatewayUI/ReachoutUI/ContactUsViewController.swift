@@ -54,13 +54,10 @@ class ContactUsViewController: UIViewController {
 
     self.navigationItem.title = NSLocalizedString("CONTACT US", comment: "")
 
-    //Used to set border color for bottom view
+    //  Used to set border color for bottom view
     buttonSubmit?.layer.borderColor = kUicolorForButtonBackground
-
-    //Automatically takes care  of text field become first responder and scroll of tableview
-    // IQKeyboardManager.sharedManager().enable = true
-
-    //load plist info
+    
+    //  load plist info
     let plistPath = Bundle.main.path(
       forResource: "ContactUs", ofType: ".plist", inDirectory: nil)
     tableViewRowDetails = NSMutableArray.init(contentsOfFile: plistPath!)
@@ -70,7 +67,7 @@ class ContactUsViewController: UIViewController {
     self.tableView?.estimatedRowHeight = 62
     self.tableView?.rowHeight = UITableView.automaticDimension
 
-    //Used for background tap dismiss keyboard
+    //  Used for background tap dismiss keyboard
     let tapGestureRecognizer: UITapGestureRecognizer = UITapGestureRecognizer.init(
       target: self, action: #selector(ContactUsViewController.handleTapGesture))
     self.tableView?.addGestureRecognizer(tapGestureRecognizer)
@@ -94,7 +91,7 @@ class ContactUsViewController: UIViewController {
   /// Validations after clicking on submit button
   /// If all the validations satisfy send contact-us request
   @IBAction func buttonSubmitAciton(_ sender: UIButton) {
-    print("\(ContactUsFeilds.firstName)")
+    Logger.sharedInstance.info("\(ContactUsFeilds.firstName)")
 
     if ContactUsFeilds.firstName.isEmpty && ContactUsFeilds.email.isEmpty && ContactUsFeilds
       .subject
@@ -151,7 +148,7 @@ extension ContactUsViewController: UITableViewDataSource {
       var keyBoardType: UIKeyboardType? = UIKeyboardType.default
       let textFieldTag = ContactTextFieldTags(rawValue: indexPath.row)!
 
-      //Cell ContactTextField data setup
+      // Cell ContactTextField data setup
       switch textFieldTag {
       case .FirstName, .Subject:
         keyBoardType = .default
@@ -161,13 +158,12 @@ extension ContactUsViewController: UITableViewDataSource {
         keyBoardType = .emailAddress
       }
 
-      //Cell Data Setup
+      // Cell Data Setup
       cell.populateCellData(data: tableViewData, keyboardType: keyBoardType)
 
       cell.backgroundColor = UIColor.clear
       return cell
     }
-    //return cell
   }
 }
 
@@ -192,7 +188,7 @@ extension ContactUsViewController: UITextViewDelegate {
   }
 
   func textViewDidEndEditing(_ textView: UITextView) {
-    print("textViewDidEndEditing")
+    Logger.sharedInstance.info("textViewDidEndEditing")
     if textView.tag == 101 && textView.text.count == 0 {
       textView.text = kMessageTextViewPlaceHolder
       textView.textColor = UIColor.lightGray
@@ -203,7 +199,7 @@ extension ContactUsViewController: UITextViewDelegate {
   }
 
   func textViewDidBeginEditing(_ textView: UITextView) {
-    print("textViewDidBeginEditing")
+    Logger.sharedInstance.info("textViewDidBeginEditing")
 
     if textView.tag == 100 {
       textView.text = ""
@@ -239,7 +235,7 @@ extension ContactUsViewController: UITextFieldDelegate {
   }
 
   func textFieldDidEndEditing(_ textField: UITextField) {
-    print(textField.text!)
+    Logger.sharedInstance.info("Editing ended: ", textField.text!)
 
     textField.text = textField.text?.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines)
 
@@ -258,10 +254,6 @@ extension ContactUsViewController: UITextFieldDelegate {
     case .Subject:
       ContactUsFeilds.subject = textField.text!
       break
-
-    //        default:
-    //            print("No Matching data Found")
-    //            break
     }
   }
 }
@@ -298,7 +290,7 @@ extension ContactUsViewController: NMWebServiceDelegate {
   func failedRequest(_ manager: NetworkManager, requestName: NSString, error: NSError) {
 
     self.removeProgressIndicator()
-    Logger.sharedInstance.info("requestname : \(requestName)")
+    Logger.sharedInstance.error("requestname : \(requestName)")
     UIUtilities.showAlertWithTitleAndMessage(
       title: NSLocalizedString("Error", comment: "") as NSString,
       message: error.localizedDescription as NSString)

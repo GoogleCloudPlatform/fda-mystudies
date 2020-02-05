@@ -82,7 +82,7 @@ class FetalKickCounterTask {
   ///   - Returns: Instance of ordered task,
   func getTask() -> ORKOrderedTask {
 
-    /// Create a Intro step.
+    /// Create an Intro step.
     let introStep = FetalKickIntroStep(identifier: kFetalKickIntroductionStepIdentifier)
     introStep.introTitle = NSLocalizedString(kFetalKickInstructionStepTitle, comment: "")
 

@@ -88,21 +88,21 @@ open class FDASlideMenuViewController: SlideMenuController {
   override open func track(_ trackAction: TrackAction) {
     switch trackAction {
     case .leftTapOpen:
-      debugPrint("TrackAction: left tap open.")
+      Logger.sharedInstance.info("TrackAction: left tap open.")
     case .leftTapClose:
-      debugPrint("TrackAction: left tap close.")
+      Logger.sharedInstance.info("TrackAction: left tap close.")
     case .leftFlickOpen:
-      debugPrint("TrackAction: left flick open.")
+      Logger.sharedInstance.info("TrackAction: left flick open.")
     case .leftFlickClose:
-      debugPrint("TrackAction: left flick close.")
+      Logger.sharedInstance.info("TrackAction: left flick close.")
     case .rightTapOpen:
-      debugPrint("TrackAction: right tap open.")
+      Logger.sharedInstance.info("TrackAction: right tap open.")
     case .rightTapClose:
-      debugPrint("TrackAction: right tap close.")
+      Logger.sharedInstance.info("TrackAction: right tap close.")
     case .rightFlickOpen:
-      debugPrint("TrackAction: right flick open.")
+      Logger.sharedInstance.info("TrackAction: right flick open.")
     case .rightFlickClose:
-      debugPrint("TrackAction: right flick close.")
+      Logger.sharedInstance.info("TrackAction: right flick close.")
     }
   }
 

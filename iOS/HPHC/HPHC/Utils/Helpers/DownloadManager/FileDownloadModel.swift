@@ -1,3 +1,6 @@
+// Copyright (c) 2016, Arpad Goretity https://github.com/H2CO3/HCDownload.git
+// Copyright (c) 2016, Muhammad Zeeshan https://github.com/mzeeshanid/MZDownloadManager.git
+// All rights reserved.
 // License Agreement for FDA My Studies
 // Copyright © 2017-2019 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors. Permission is
 // hereby granted, free of charge, to any person obtaining a copy of this software and associated

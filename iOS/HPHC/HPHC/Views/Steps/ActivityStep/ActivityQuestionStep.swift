@@ -19,11 +19,11 @@
 import Foundation
 import ResearchKit
 
-//Step Constants
+// Step Constants
 let kStepTitle = "title"
 let kStepQuestionTypeValue = "QuestionType"
 
-//Question Api Constants
+// Question Api Constants
 
 let kStepQuestionPhi = "phi"
 let kStepQuestionFormat = "format"
@@ -40,7 +40,7 @@ let kStepQuestionScaleMinDesc = "minDesc"
 let kStepQuestionScaleMaxImage = "maxImage"
 let kStepQuestionScaleMinImage = "minImage"
 
-//ContinuosScaleQuestion Type Api Constants
+// ContinuosScaleQuestion Type Api Constants
 
 let kStepQuestionContinuosScaleMaxValue = "maxValue"
 let kStepQuestionContinuosScaleMinValue = "minValue"
@@ -52,12 +52,12 @@ let kStepQuestionContinuosScaleMinDesc = "minDesc"
 let kStepQuestionContinuosScaleMaxImage = "maxImage"
 let kStepQuestionContinuosScaleMinImage = "minImage"
 
-//TextScaleQuestion Type Api Constants
+// TextScaleQuestion Type Api Constants
 let kStepQuestionTextScaleTextChoices = "textChoices"
 let kStepQuestionTextScaleDefault = "default"
 let kStepQuestionTextScaleVertical = "vertical"
 
-//ORKTextChoice Type Api Constants
+// ORKTextChoice Type Api Constants
 
 let kORKTextChoiceText = "text"
 let kORKTextChoiceValue = "value"
@@ -65,7 +65,7 @@ let kORKTextChoiceDetailText = "detail"
 let kORKTextChoiceExclusive = "exclusive"
 let kORKOTherChoice = "other"
 
-//StepQuestionImageChoice Type Api Constants
+// StepQuestionImageChoice Type Api Constants
 
 let kStepQuestionImageChoices = "imageChoices"
 
@@ -74,7 +74,7 @@ let kStepQuestionImageChoiceSelectedImage = "selectedImage"
 let kStepQuestionImageChoiceText = "text"
 let kStepQuestionImageChoiceValue = "value"
 
-//TextChoiceQuestion Type Api Constants
+// TextChoiceQuestion Type Api Constants
 
 let kStepQuestionTextChoiceTextChoices = "textChoices"
 let kStepQuestionTextChoiceSelectionStyle = "selectionStyle"
@@ -82,7 +82,7 @@ let kStepQuestionTextChoiceSelectionStyle = "selectionStyle"
 let kStepQuestionTextChoiceSelectionStyleSingle = "Single"
 let kStepQuestionTextChoiceSelectionStyleMultiple = "Multiple"
 
-//NumericQuestion Type Api Constants
+// NumericQuestion Type Api Constants
 
 let kStepQuestionNumericStyle = "style"
 let kStepQuestionNumericUnit = "unit"
@@ -90,7 +90,7 @@ let kStepQuestionNumericMinValue = "minValue"
 let kStepQuestionNumericMaxValue = "maxValue"
 let kStepQuestionNumericPlaceholder = "placeholder"
 
-//DateQuestion Type Api Constants
+// DateQuestion Type Api Constants
 
 let kStepQuestionDateStyle = "style"
 let kStepQuestionDateMinDate = "minDate"
@@ -100,7 +100,7 @@ let kStepQuestionDateRange = "dateRange"
 let kStepQuestionDateStyleDate = "Date"
 let kStepQuestionDateStyleDateTime = "Date-Time"
 
-//TextQuestion Type Api Constants
+// TextQuestion Type Api Constants
 
 let kStepQuestionTextMaxLength = "maxLength"
 let kStepQuestionTextValidationRegex = "validationRegex"
@@ -108,18 +108,18 @@ let kStepQuestionTextInvalidMessage = "invalidMessage"
 let kStepQuestionTextMultipleLines = "multipleLines"
 let kStepQuestionTextPlaceholder = "placeholder"
 
-///EmailQuestion Type Api Constants
+/// EmailQuestion Type Api Constants
 let kStepQuestionEmailPlaceholder = "placeholder"
 
-///TimeIntervalQuestion Type Api Constants
+/// TimeIntervalQuestion Type Api Constants
 let kStepQuestionTimeIntervalDefault = "default"
 let kStepQuestionTimeIntervalStep = "step"
 
-///height Type Api Constants
+/// height Type Api Constants
 let kStepQuestionHeightMeasurementSystem = "measurementSystem"
 let kStepQuestionHeightPlaceholder = "placeholder"
 
-///LocationQuestion Type Api Constants
+/// LocationQuestion Type Api Constants
 let kStepQuestionLocationUseCurrentLocation = "useCurrentLocation"
 
 typealias JSONDictionary = [String: Any]
@@ -282,9 +282,9 @@ class ActivityQuestionStep: ActivityStep {
 
     if Utilities.isValidValue(someObject: resultType as AnyObject?) {
 
-      var questionStepAnswerFormat: ORKAnswerFormat?  //contains the answerFormat for specific question Type
+      var questionStepAnswerFormat: ORKAnswerFormat?  // Contains the answerFormat for specific question Type
 
-      var questionStep: ORKQuestionStep?  //contains the QuestionStep instance
+      var questionStep: ORKQuestionStep?  // Contains the QuestionStep instance
       var placeholderText: String? = ""
 
       // Assigning the answerFormat for the questionStep based on questionStep
@@ -619,7 +619,7 @@ class ActivityQuestionStep: ActivityStep {
           if (skippable == false) {
             questionStep?.isOptional = false
           }
-          //setting the placeholder Value if exist any
+          // setting the placeholder Value if exist any
           if Utilities.isValidValue(someObject: placeholderText as AnyObject?) {
             questionStep?.placeholder = placeholderText
           }
@@ -953,7 +953,7 @@ class ActivityQuestionStep: ActivityStep {
       if (skippable == false) {
         questionStep?.isOptional = false
       }
-      //setting the placeholder Value if exist any
+      // setting the placeholder Value if exist any
       if Utilities.isValidValue(someObject: placeholderText as AnyObject?) {
         questionStep?.placeholder = placeholderText
       }
@@ -1115,7 +1115,7 @@ class ActivityQuestionStep: ActivityStep {
         Any]
 
     } catch let error as NSError {
-      print("\(error)")
+      Logger.sharedInstance.info("\(error)")
     }
 
     let categoryDict = (resultDict!["Category"] as? [String: String])!

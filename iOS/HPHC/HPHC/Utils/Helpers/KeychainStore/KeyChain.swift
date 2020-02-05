@@ -84,7 +84,7 @@ open class FDAKeychain {
 
   private func logPrint(_ items: Any...) {
     if loggingEnabled {
-      print(items)
+      Logger.sharedInstance.info(items)
     }
   }
 }

@@ -43,7 +43,7 @@ class FirstGatewayOverviewViewController: UIViewController {
   }
 
   deinit {
-    Log("\(self) I'm gone ")
+    Logger.sharedInstance.info("\(self): deinit")
   }
 
   // MARK:- View Controller Lifecycle

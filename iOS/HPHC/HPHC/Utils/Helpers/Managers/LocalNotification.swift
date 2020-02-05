@@ -223,7 +223,7 @@ class LocalNotification: NSObject {
   ) {
 
     if date > Date() {
-      print("NotificationMessage\(message) ** date \(date.description(with: Locale.current))")
+      Logger.sharedInstance.info("NotificationMessage\(message) ** date \(date.description(with: Locale.current))")
       let content = UNMutableNotificationContent()
       content.body = message
       content.userInfo = userInfo
@@ -231,7 +231,7 @@ class LocalNotification: NSObject {
       content.badge = 1
 
       let timeInterval = date.timeIntervalSinceNow
-      print("Time \(timeInterval)")
+      Logger.sharedInstance.info("Time \(timeInterval)")
       let trigger = UNTimeIntervalNotificationTrigger(
         timeInterval: timeInterval, repeats: false)
       let id = id ?? Utilities.randomString(length: 10)
@@ -348,7 +348,7 @@ class LocalNotification: NSObject {
     let center = UNUserNotificationCenter.current()
     center.getPendingNotificationRequests(
       completionHandler: { requests in
-        print(requests)
+        Logger.sharedInstance.info(requests)
 
       })
   }

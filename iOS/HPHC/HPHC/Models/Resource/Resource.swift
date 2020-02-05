@@ -326,13 +326,13 @@ class Resource {
 
       let lifeTime = self.updateLifeTime(enrollmentDate!)
 
-      //update start date
+      // update start date
       var startDateString = Utilities.formatterShort?.string(from: lifeTime.0!)
       let startTime = (self.startTime == nil) ? "00:00:00" : (self.startTime)!
       startDateString = (startDateString ?? "") + " " + startTime
       let startdate = Utilities.findDateFromString(dateString: startDateString ?? "")
 
-      //update end date
+      // update end date
       var endDateString = Utilities.formatterShort?.string(from: lifeTime.1!)
       let endTime = (self.endTime == nil) ? "23:59:59" : (self.endTime)!
       endDateString = (endDateString ?? "") + " " + endTime

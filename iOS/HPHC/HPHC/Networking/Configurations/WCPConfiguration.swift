@@ -85,7 +85,7 @@ class WCPConfiguration: NetworkConfiguration {
     let orgId = infoDict!["OrganizationID"] as! String
 
     let token = "AvxfEsgX9u" + ":" + "ee91a4f6-d9c4-4ee9-a0e2-5682c5b1c916"
-    //com.hphci.fda.mobilestudies
+  
     let base64token = "Basic " + token.toBase64()
 
     let headers = [

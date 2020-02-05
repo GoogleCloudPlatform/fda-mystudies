@@ -993,7 +993,7 @@ extension UserServices: NMWebServiceDelegate {
       self.failedRequestServices.requestParams = self.requestParams
       self.failedRequestServices.method = self.method
 
-      print("Failed: Refresh token Expired")
+      Logger.sharedInstance.error("Failed: Refresh token Expired", error)
 
       if User.currentUser.refreshToken == "" && requestName as String != RegistrationMethods
         .login
@@ -1028,7 +1028,7 @@ extension UserServices: NMWebServiceDelegate {
 
         if (error.code == NoNetworkErrorCode) {
           // save in database
-          print("save in database")
+          Logger.sharedInstance.info("save in database")
           DBHandler.saveRequestInformation(
             params: self.requestParams, headers: self.headerParams,
             method: requestName as String,

@@ -34,7 +34,7 @@ class HomeViewController: UIViewController {
   var websiteName: String!
 
   deinit {
-    Log("\(self) I'm gone ")
+    Logger.sharedInstance.info("\(self): deinit")
   }
 
   // MARK:- ViewController Lifecycle

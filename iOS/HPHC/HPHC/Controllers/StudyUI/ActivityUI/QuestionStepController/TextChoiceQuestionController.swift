@@ -264,7 +264,7 @@ class TextChoiceQuestionController: ORKQuestionStepViewController {
       self.answers = nil
     }
 
-    print(self.result as Any, "Result")
+    Logger.sharedInstance.info(self.result as Any, "Result")
 
     // Get the ref of the super class table view
     if let tableView = self.view.allSubViewsOf(type: UITableView.self).first {
@@ -498,9 +498,8 @@ class TextChoiceQuestionController: ORKQuestionStepViewController {
 
   override func goBackward() {
     //super.delegate?.stepViewControllerResultDidChange(self)
-    print("User did pressed on back button")
+    Logger.sharedInstance.info("\(self) User did pressed on back button")
     super.goBackward()
-
   }
 
   override func goForward() {
@@ -537,7 +536,7 @@ class TextChoiceQuestionController: ORKQuestionStepViewController {
   }
 
   @objc func didTapOnDoneOrNextBtn(_ sender: UIButton) {
-    print("next or done button pressed")
+    Logger.sharedInstance.info("\(self): Next or done button pressed.")
   }
 
   private func didTapOnOtherCell(didSelect: Bool) {

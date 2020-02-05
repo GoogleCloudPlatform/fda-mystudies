@@ -70,7 +70,7 @@ class SearchBarView: UIView {
 extension SearchBarView: UITextFieldDelegate {
 
   func textFieldDidBeginEditing(_ textField: UITextField) {
-    print(textField.tag)
+    Logger.sharedInstance.info("Editing started: ", textField.tag)
 
   }
 
@@ -95,7 +95,7 @@ extension SearchBarView: UITextFieldDelegate {
   }
 
   func textFieldDidEndEditing(_ textField: UITextField) {
-    print(textField.text!)
+    Logger.sharedInstance.info("Editing ended: ", textField.text!)
     textField.text = textField.text?.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines)
 
     textField.resignFirstResponder()

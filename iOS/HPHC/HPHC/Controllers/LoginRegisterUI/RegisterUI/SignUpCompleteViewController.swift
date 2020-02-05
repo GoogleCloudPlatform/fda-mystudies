@@ -31,7 +31,7 @@ class SignUpCompleteViewController: UIViewController {
   lazy var viewLoadFrom: CompletionLoadFrom = .signup
 
   deinit {
-    Log("\(self) I'm gone ")
+    Logger.sharedInstance.info("\(self): deinit")
   }
 
   // MARK:- ViewController Lifecycle

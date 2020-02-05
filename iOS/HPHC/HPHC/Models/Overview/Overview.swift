@@ -33,12 +33,23 @@ class Overview {
 
 class OverviewSection {
 
-  var title: String?  //title of overview
-  var type: String?  //type of overview video/image
-  var imageURL: String?  //download url of image
-  var text: String?  //short description
-  var link: String?  //used for media link
-  var websiteLink: String?  //used for Website link
+  /// Overview title
+  var title: String?
+  
+  /// Type of overview video/image
+  var type: String?
+  
+  /// Download url of image
+  var imageURL: String?
+  
+  /// Short description
+  var text: String?
+  
+  /// Media link
+  var link: String?
+  
+  /// Used for Website link
+  var websiteLink: String?
 
   init() {
   }

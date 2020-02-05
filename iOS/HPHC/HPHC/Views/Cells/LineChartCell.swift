@@ -141,8 +141,8 @@ class LineChartCell: GraphChartTableViewCell {
       self.handleDaysOfMonthForDate(date: Date())
 
     case .days_of_week:
-      print("start of Week \(String(describing: Date().startOfWeek))")
-      print("end of Week \(String(describing: Date().endOfWeek))")
+      Logger.sharedInstance.info("Start of Week: \(String(describing: Date().startOfWeek))")
+      Logger.sharedInstance.info("End of Week: \(String(describing: Date().endOfWeek))")
 
       startDateOfWeek = Date().startOfWeek
       endDateOfWeek = Date().endOfWeek
@@ -455,7 +455,7 @@ class LineChartCell: GraphChartTableViewCell {
       }
 
     }
-    print("frequency \(frequencyRunsSet)")
+    Logger.sharedInstance.info("Frequency: \(frequencyRunsSet)")
     return frequencyRunsSet
   }
 
@@ -473,7 +473,7 @@ class LineChartCell: GraphChartTableViewCell {
     let calendar = Calendar.current
     let range = calendar.range(of: .day, in: .month, for: date)!
     let numDays = range.count
-    print("days \(numDays)")  // 31
+    Logger.sharedInstance.info("Days: \(numDays)")  // 31
 
     for i in 1...numDays {
 
@@ -493,7 +493,7 @@ class LineChartCell: GraphChartTableViewCell {
         let responseDate = data.startDate
         let fk = data.fkDuration
         let day = LineChartCell.shortDateFormatter.string(from: responseDate!)
-        print("day \(day)")
+        Logger.sharedInstance.info("Day: \(day)")
         let value = data.data
 
         points[Int(day)! - 1] = ORKValueRange(value: Double(value))

@@ -26,7 +26,7 @@ class AppUpdateBlocker: UIView {
 
   required init?(coder aDecoder: NSCoder) {
     super.init(coder: aDecoder)
-    //Used to set border color for bottom view
+    // Used to set border color for bottom view
     buttonUpgrade?.layer.borderColor = UIColor.white.cgColor
   }
 

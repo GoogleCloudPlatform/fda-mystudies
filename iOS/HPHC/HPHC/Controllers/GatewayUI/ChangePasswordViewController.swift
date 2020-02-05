@@ -99,7 +99,7 @@ class ChangePasswordViewController: UIViewController {
       errorAlertActionTitle: NSLocalizedString("OK", comment: ""), viewControllerUsed: self)
   }
 
-  ///  Dismiss key board when clicked on Background.
+  /// Dismiss key board when clicked on Background.
   @objc func dismissKeyboard() {
     self.view.endEditing(true)
   }
@@ -196,7 +196,7 @@ extension ChangePasswordViewController: UITableViewDelegate {
 extension ChangePasswordViewController: UITextFieldDelegate {
 
   func textFieldDidBeginEditing(_ textField: UITextField) {
-    print(textField.tag)
+    Logger.sharedInstance.info("Editing started: ",textField.tag)
 
   }
 
@@ -231,7 +231,7 @@ extension ChangePasswordViewController: UITextFieldDelegate {
   }
 
   func textFieldDidEndEditing(_ textField: UITextField) {
-    print(textField.text!)
+    Logger.sharedInstance.info("End Editing: ",textField.text!)
     textField.text = textField.text?.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines)
 
     let tag = CPTextFeildTags(rawValue: textField.tag)!
@@ -244,7 +244,6 @@ extension ChangePasswordViewController: UITextFieldDelegate {
     case .confirmPassword:
       self.confirmPassword = textField.text!
       break
-    //default: break
     }
   }
 }
@@ -293,7 +292,7 @@ extension ChangePasswordViewController: NMWebServiceDelegate {
       leftController.changeViewController(.studyList)
 
     } else if viewLoadFrom == .login {
-      //create menu
+      //  create menu
 
       self.createMenuView()
     } else if viewLoadFrom == .joinStudy {
@@ -311,7 +310,7 @@ extension ChangePasswordViewController: NMWebServiceDelegate {
 
     self.removeProgressIndicator()
 
-    if error.code == 403 {  //unauthorized
+    if error.code == 403 {  //  unauthorized
       UIUtilities.showAlertMessageWithActionHandler(
         kErrorTitle, message: error.localizedDescription, buttonTitle: kTitleOk,
         viewControllerUsed: self,

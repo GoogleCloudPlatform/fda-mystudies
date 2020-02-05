@@ -59,19 +59,22 @@ enum RegistrationMethods: String {
 
     case .activityState, .consentPDF, .deleteAccount, .confirmRegistration, .userProfile,
       .userPreferences, .studyState, .versionInfo:
-      //GET Methods
+      // GET Methods
       return Method(
-        methodName: (self.rawValue+".api"), methodType: .httpMethodGet,
+        methodName: (self.rawValue+".api"),
+        methodType: .httpMethodGet,
         requestType: .requestTypeHTTP)
     case .withdraw, .logout, .deactivate:
-      //DELETE Methods
+      // DELETE Methods
       return Method(
-        methodName: (self.rawValue+".api"), methodType: .httpMethodDELETE,
+        methodName: (self.rawValue+".api"),
+        methodType: .httpMethodDELETE,
         requestType: .requestTypeJSON)
     default:
-      //POST Methods
+      // POST Methods
       return Method(
-        methodName: (self.rawValue+".api"), methodType: .httpMethodPOST,
+        methodName: (self.rawValue+".api"),
+        methodType: .httpMethodPOST,
         requestType: .requestTypeJSON)
 
     }
@@ -81,7 +84,7 @@ enum RegistrationMethods: String {
 // MARK:- Set the server end points
 enum RegistrationServerURLConstants {
 
-  //Staging server
+  // Staging server
   static let ProductionURL = "https://hpreg-stage.lkcompliant.net/fdahpUserRegWS/"
   static let DevelopmentURL = "https://hpreg-stage.lkcompliant.net/fdahpUserRegWS/"
 
@@ -107,7 +110,6 @@ class RegistrationServerConfiguration: NetworkConfiguration {
     let appId = infoDict!["ApplicationID"] as! String
     let orgId = infoDict!["OrganizationID"] as! String
 
-    //let ud = UserDefaults.standard
     if User.currentUser.authToken != nil {
       return [
         kUserAuthToken: User.currentUser.authToken,

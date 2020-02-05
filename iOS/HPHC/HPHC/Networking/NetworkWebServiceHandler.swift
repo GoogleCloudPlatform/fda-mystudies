@@ -279,7 +279,7 @@ class NetworkWebServiceHandler: NSObject, URLSessionDelegate {
     }
 
     let requestUrl = URL(string: requestString as String)!
-    print("Request URL:  \(requestUrl)")
+    Logger.sharedInstance.info("Request URL:  \(requestUrl)")
     var request = URLRequest.init(
       url: requestUrl, cachePolicy: URLRequest.CachePolicy.reloadIgnoringLocalCacheData,
       timeoutInterval: self.connectionTimeoutInterval)
@@ -329,7 +329,7 @@ class NetworkWebServiceHandler: NSObject, URLSessionDelegate {
       self.fireRequest(request, requestName: requestName)
       
     } catch let error {
-      debugPrint("Serialization error: ", error.localizedDescription)
+      Logger.sharedInstance.error("Serialization error: ", error.localizedDescription)
     }
   }
 
@@ -411,7 +411,7 @@ class NetworkWebServiceHandler: NSObject, URLSessionDelegate {
             as? NSDictionary
 
         } catch let error {
-             debugPrint("Serialization error: ", error.localizedDescription)
+             Logger.sharedInstance.error("Serialization error: ", error.localizedDescription)
         }
 
         if ((delegate?.finishedRequest) != nil) {
@@ -447,7 +447,7 @@ class NetworkWebServiceHandler: NSObject, URLSessionDelegate {
               as? [String: Any]
 
           } catch let error {
-               debugPrint("Serialization error: ", error.localizedDescription)
+               Logger.sharedInstance.error("Serialization error: ", error.localizedDescription)
           }
           error1 = self.configuration.parseError(errorResponse: responseDict!)
         } else {

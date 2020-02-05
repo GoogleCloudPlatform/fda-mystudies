@@ -20,7 +20,7 @@ import UIKit
 
 class StudyDashboardWelcomeTableViewCell: UITableViewCell {
 
-  //First cell Outlets
+  // First cell Outlets
   @IBOutlet var labelName: UILabel?
 
   @IBOutlet var labelStatus: UILabel?

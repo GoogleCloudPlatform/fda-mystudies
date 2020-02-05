@@ -55,7 +55,7 @@ class VerificationViewController: UIViewController {
   lazy var viewLoadFrom: VerificationLoadFrom = .signup
 
   deinit {
-    Log("\(self) I'm gone ")
+    Logger.sharedInstance.info("\(self): deinit")
   }
 
   // MARK:- View Controllere Lifecycle

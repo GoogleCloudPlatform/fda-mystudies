@@ -122,7 +122,7 @@ class ProfileViewController: UIViewController, SlideMenuControllerDelegate {
   }
 
   func leftDidClose() {
-    print("Left menu is closed")
+    Logger.sharedInstance.info("Left menu is closed")
   }
 
   // MARK:- Button Actions
@@ -315,7 +315,7 @@ class ProfileViewController: UIViewController, SlideMenuControllerDelegate {
 
   /// SignOut Response handler for slider menu setup.
   func handleSignoutResponse() {
-    debugPrint("singout")
+    Logger.sharedInstance.info("SignOut")
 
     if ORKPasscodeViewController.isPasscodeStoredInKeychain() {
       ORKPasscodeViewController.removePasscodeFromKeychain()
@@ -456,13 +456,13 @@ class ProfileViewController: UIViewController, SlideMenuControllerDelegate {
 
         if (user.settings?.localNotifications)! {
          
-          print("on")
+          Logger.sharedInstance.info("On")
           self.addProgressIndicator()
 
           self.perform(
             #selector(self.registerLocalNotification), with: self, afterDelay: 1.0)
         } else {
-          print("false")
+          Logger.sharedInstance.info("False")
           self.addProgressIndicator()
           self.perform(
             #selector(self.cancelAllLocalNotifications), with: self, afterDelay: 1.0)
@@ -493,8 +493,6 @@ class ProfileViewController: UIViewController, SlideMenuControllerDelegate {
   /// Validation to check entered email is valid or not.
   ///  - Returns: A Boolean value indicating wheather All the fields are valid.
   func validateAllFields() -> Bool {
-
-    //(user.firstName?.isEmpty)! && (user.lastName?.isEmpty)! &&
 
     if (user.emailId?.isEmpty)! {
       self.showAlertMessages(textMessage: kMessageAllFieldsAreEmpty)
@@ -606,7 +604,7 @@ extension ProfileViewController: UITableViewDataSource {
         keyBoardType = .emailAddress
         isSecuredEntry = false
 
-      case .ConfirmPassword:  //ChangePasscode
+      case .ConfirmPassword:  //  ChangePasscode
 
         cell.textFieldValue?.isHidden = true
         cell.buttonChangePassword?.isHidden = false
@@ -674,7 +672,7 @@ extension ProfileViewController: UITableViewDelegate {
 
   func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
     tableView.deselectRow(at: indexPath, animated: true)
-    //print(indexPath.row)
+   
   }
 }
 
@@ -682,7 +680,7 @@ extension ProfileViewController: UITableViewDelegate {
 extension ProfileViewController: UITextFieldDelegate {
 
   func textFieldDidBeginEditing(_ textField: UITextField) {
-    print(textField.tag)
+    Logger.sharedInstance.info("Editing started: ", textField.tag)
 
   }
 
@@ -709,7 +707,7 @@ extension ProfileViewController: UITextFieldDelegate {
   }
 
   func textFieldDidEndEditing(_ textField: UITextField) {
-    debugPrint(textField.text!)
+    Logger.sharedInstance.info("Editing ended: ", textField.text!)
 
     // trimming white spaces
     textField.text = textField.text?.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines)
@@ -723,7 +721,7 @@ extension ProfileViewController: UITextFieldDelegate {
       user.password! = textField.text!
 
     default:
-      print("No Matching data Found")
+      Logger.sharedInstance.info("No Matching data Found")
       break
     }
 
@@ -773,7 +771,7 @@ extension ProfileViewController: NMWebServiceDelegate {
     Logger.sharedInstance.info("requestname : \(requestName)")
     self.removeProgressIndicator()
 
-    if error.code == 403 {  //unauthorized
+    if error.code == 403 {  //  unauthorized
 
       UIUtilities.showAlertMessageWithActionHandler(
         kErrorTitle, message: error.localizedDescription, buttonTitle: kTitleOk,
@@ -852,14 +850,14 @@ extension ProfileViewController: ORKTaskViewControllerDelegate {
       ud.synchronize()
 
     case .failed:
-      print("failed")
+      Logger.sharedInstance.info("failed")
 
     case .discarded:
       if taskViewController.task?.identifier != "ChangePassCodeTask" {
         user.settings?.passcode = user.settings?.passcode == true ? false : true
       }
     case .saved:
-      print("saved")
+      Logger.sharedInstance.info("saved")
 
     @unknown default:
       break

@@ -19,7 +19,7 @@
 import Foundation
 import UIKit
 
-//Used to do filter based on Apply and Cancel actions
+// Used to do filter based on Apply and Cancel actions
 protocol StudyFilterDelegates: class {
 
   func appliedFilter(
@@ -62,7 +62,7 @@ class StudyFilterViewController: UIViewController {
   lazy var previousCollectionData: [[String]] = []
 
   deinit {
-    Log("\(self) I'm gone ")
+    Logger.sharedInstance.info("\(self): deinit")
   }
 
   // MARK:- Viewcontroller lifecycle
@@ -153,7 +153,7 @@ class StudyFilterViewController: UIViewController {
   }
 }
 
-//// MARK:- Collection Data source & Delegate
+/// MARK:- Collection Data source & Delegate
 extension StudyFilterViewController: UICollectionViewDataSource {  //,UICollectionViewDelegate {
 
   func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int)

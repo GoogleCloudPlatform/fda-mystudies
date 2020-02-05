@@ -42,7 +42,7 @@ class PageViewController: UIPageViewController {
 
   // MARK:- ViewController Lifecycle
   deinit {
-    Log("\(self) I'm gone ")
+    Logger.sharedInstance.info("\(self): deinit")
   }
 
   override func viewDidLoad() {
@@ -260,13 +260,13 @@ extension PageViewController: UIPageViewControllerDelegate {
 extension PageViewController: UIScrollViewDelegate {
 
   func scrollViewDidEndDragging(_ scrollView: UIScrollView, willDecelerate decelerate: Bool) {
-    print(currentIndex)
+    Logger.sharedInstance.info(currentIndex)
 
     pageViewDelegate?.pageViewController(
       pageViewController: self, didUpdatePageIndex: currentIndex)
   }
 
   func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
-    debugPrint(currentIndex)
+    Logger.sharedInstance.info(currentIndex)
   }
 }

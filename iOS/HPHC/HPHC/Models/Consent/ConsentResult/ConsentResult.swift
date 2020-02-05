@@ -78,7 +78,7 @@ class ConsentResult {
 
             self.consentDocument?.makePDF(
               completionHandler: { data, error in
-                print(
+                Logger.sharedInstance.error(
                   "data: \(String(describing: data))    \n  error: \(String(describing: error))"
                 )
 
@@ -124,7 +124,7 @@ class ConsentResult {
                     name: notificationName, object: nil)
 
                 } catch let error as NSError {
-                  print(error.localizedDescription)
+                  Logger.sharedInstance.error(error.localizedDescription)
                 }
               })
           } else {
@@ -160,7 +160,7 @@ class ConsentResult {
               FileDownloadManager.encyptFile(pathURL: URL(string: fullPath!)!)
 
             } catch let error as NSError {
-              print(error.localizedDescription)
+              Logger.sharedInstance.error(error.localizedDescription)
             }
           }
         } else if let tokenStepResult: EligibilityTokenTaskResult? = (

@@ -119,7 +119,7 @@ class GatewayResourceDetailViewController: UIViewController {
       try! FileManager.default.createDirectory(
         atPath: resourcesDownloadPath, withIntermediateDirectories: true, attributes: nil)
     }
-    debugPrint("custom download path: \(resourcesDownloadPath)")
+    Logger.sharedInstance.error("custom download path: \(resourcesDownloadPath)")
 
     let fileURL = (self.resource?.file?.link)!
 
@@ -209,7 +209,7 @@ extension GatewayResourceDetailViewController: MFMailComposeViewControllerDelega
           composeVC.addAttachmentData(
             data, mimeType: "application/pdf", fileName: (resource?.file?.name)!)
         } catch {
-          debugPrint("Resource file content error: ", error.localizedDescription)
+          Logger.sharedInstance.error("Resource file content error: ", error.localizedDescription)
         }
       } else {
 

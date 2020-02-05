@@ -32,7 +32,7 @@ class SyncUpdate {
   @objc func updateData() {
 
     if (NetworkManager.sharedInstance().reachability?.isReachable)! {
-      print("*******************update Data***************")
+      Logger.sharedInstance.info("*******************update Data***************")
       DispatchQueue.main.asyncAfter(deadline: .now() + 5.0) {
         self.syncDataToServer()
       }

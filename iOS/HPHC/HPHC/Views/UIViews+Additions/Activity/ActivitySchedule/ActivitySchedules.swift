@@ -157,12 +157,12 @@ class ResponseDataFetch: NMWebServiceDelegate {
 
     DBHandler.getDataSourceKeyForActivity(studyId: (Study.currentStudy?.studyId)!) {
       (activityKeys) in
-      print(activityKeys)
+      Logger.sharedInstance.info(activityKeys)
       if activityKeys.count > 0 {
         self.dataSourceKeysForLabkey = activityKeys
-        print("dashboardResponse Called: ")
+        Logger.sharedInstance.info("dashboardResponse Called: ")
 
-        //GetDashboardResponse from server
+        // GetDashboardResponse from server
         self.sendRequestToGetDashboardResponse()
       }
     }

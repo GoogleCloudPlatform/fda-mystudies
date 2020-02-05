@@ -35,7 +35,7 @@ class ForgotPasswordViewController: UIViewController {
   }
 
   deinit {
-    Log("\(self) I'm gone ")
+    Logger.sharedInstance.info("\(self): deinit")
   }
 
   // MARK:- ViewController Delegates

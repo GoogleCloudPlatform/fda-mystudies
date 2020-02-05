@@ -19,8 +19,6 @@
 import Foundation
 import UIKit
 
-// let alert = UIAlertView()
-
 public typealias AlertAction = () -> Void
 
 class UIUtilities: NSObject {
@@ -182,7 +180,7 @@ class UIUtilities: NSObject {
       jsonString = NSString(data: jsonData as Data, encoding: String.Encoding.utf8.rawValue)!
         as String
     } catch let error {
-      debugPrint("Error parsing data: ", error.localizedDescription)
+      Logger.sharedInstance.info("Error parsing data: ", error.localizedDescription)
     }
     return jsonString
   }
@@ -198,7 +196,7 @@ class UIUtilities: NSObject {
       socialMediaNamesString = NSString(
         data: jsonData as Data, encoding: String.Encoding.utf8.rawValue)! as String
     }  catch let error {
-      debugPrint("Error parsing data: ", error.localizedDescription)
+      Logger.sharedInstance.info("Error parsing data: ", error.localizedDescription)
     }
     return socialMediaNamesString
   }

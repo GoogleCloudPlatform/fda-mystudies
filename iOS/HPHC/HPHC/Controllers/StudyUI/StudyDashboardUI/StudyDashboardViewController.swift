@@ -59,7 +59,7 @@ class StudyDashboardViewController: UIViewController {
   }()
 
   deinit {
-    Log("\(self) I'm gone ")
+    Logger.sharedInstance.info("\(self): deinit")
   }
 
   // MARK:- ViewController Lifecycle
@@ -145,7 +145,7 @@ class StudyDashboardViewController: UIViewController {
 
     DBHandler.getDataSourceKeyForActivity(studyId: (Study.currentStudy?.studyId)!) {
       (activityKeys) in
-      print(activityKeys)
+      Logger.sharedInstance.info(activityKeys)
       if activityKeys.count > 0 {
         self.dataSourceKeysForLabkey = activityKeys
         self.sendRequestToGetDashboardResponse()
@@ -420,7 +420,7 @@ extension StudyDashboardViewController: NMWebServiceDelegate {
   }
 
   func failedRequest(_ manager: NetworkManager, requestName: NSString, error: NSError) {
-    Logger.sharedInstance.info("requestname : \(requestName)")
+    Logger.sharedInstance.error("requestname : \(requestName)")
 
     if requestName as String == WCPMethods.consentDocument.method.methodName {
       self.removeProgressIndicator()
@@ -449,7 +449,7 @@ extension StudyDashboardViewController: ORKTaskViewControllerDelegate {
     switch reason {
 
     case ORKTaskViewControllerFinishReason.completed:
-      print("completed")
+      Logger.sharedInstance.info("completed")
 
       ConsentBuilder.currentConsent?.consentResult?.consentDocument = ConsentBuilder
         .currentConsent?
@@ -458,13 +458,13 @@ extension StudyDashboardViewController: ORKTaskViewControllerDelegate {
         taskResult: taskViewController.result)
 
     case ORKTaskViewControllerFinishReason.failed:
-      print("failed")
+      Logger.sharedInstance.error("failed")
 
     case ORKTaskViewControllerFinishReason.discarded:
-      print("discarded")
+      Logger.sharedInstance.info("discarded")
 
     case ORKTaskViewControllerFinishReason.saved:
-      print("saved")
+      Logger.sharedInstance.info("saved")
 
     @unknown default: break
     }

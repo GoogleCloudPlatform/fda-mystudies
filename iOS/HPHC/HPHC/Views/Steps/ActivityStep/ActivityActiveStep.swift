@@ -578,7 +578,7 @@ class ActivityActiveStep: ActivityStep {
             )!
 
           } else {
-            //Default Fetal Kicks
+            // Default Fetal Kicks
             fetalKickTask?.maxKickCounts = 200
           }
           return fetalKickTask?.getTask()

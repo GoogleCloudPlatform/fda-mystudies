@@ -21,8 +21,6 @@ import SafariServices
 import UIKit
 import WebKit
 
-//let resourcesDownloadPath = AKUtility.baseFilePath + "/Resources"
-
 class ResourceDetailViewController: UIViewController {
 
   // MARK:- Outles
@@ -260,11 +258,11 @@ extension ResourceDetailViewController: UIWebViewDelegate {
 extension ResourceDetailViewController: WKUIDelegate, WKNavigationDelegate {
 
   func webView(_ webView: WKWebView, didStartProvisionalNavigation navigation: WKNavigation) {
-    print("webView:\(webView) didStartProvisionalNavigation:\(navigation)")
+    Logger.sharedInstance.info("webView:\(webView) didStartProvisionalNavigation:\(navigation)")
   }
 
   func webView(_ webView: WKWebView, didCommit navigation: WKNavigation) {
-    print("webView:\(webView) didCommitNavigation:\(navigation)")
+    Logger.sharedInstance.info("webView:\(webView) didCommitNavigation:\(navigation)")
   }
 
   func webView(
@@ -342,18 +340,18 @@ extension ResourceDetailViewController: WKUIDelegate, WKNavigationDelegate {
     _ webView: WKWebView,
     didReceiveServerRedirectForProvisionalNavigation navigation: WKNavigation
   ) {
-    print("webView:\(webView) didReceiveServerRedirectForProvisionalNavigation:\(navigation)")
+    Logger.sharedInstance.info("webView:\(webView) didReceiveServerRedirectForProvisionalNavigation:\(navigation)")
   }
 
   func webView(_ webView: WKWebView, didFinish navigation: WKNavigation) {
-    print("webView:\(webView) didFinishNavigation:\(navigation)")
+    Logger.sharedInstance.info("webView:\(webView) didFinishNavigation:\(navigation)")
 
     self.activityIndicator.stopAnimating()
 
   }
 
   func webView(_ webView: WKWebView, didFail navigation: WKNavigation, withError error: Error) {
-    print("webView:\(webView) didFailNavigation:\(navigation) withError:\(error)")
+    Logger.sharedInstance.error("webView:\(webView) didFailNavigation:\(navigation) withError:\(error)")
 
     let alert = UIAlertController(
       title: "Error", message: error.localizedDescription, preferredStyle: .alert)
@@ -365,7 +363,7 @@ extension ResourceDetailViewController: WKUIDelegate, WKNavigationDelegate {
     _ webView: WKWebView, didFailProvisionalNavigation navigation: WKNavigation,
     withError error: Error
   ) {
-    print("webView:\(webView) didFailProvisionalNavigation:\(navigation) withError:\(error)")
+    Logger.sharedInstance.error("webView:\(webView) didFailProvisionalNavigation:\(navigation) withError:\(error)")
   }
 
   // MARK: WKUIDelegate methods
@@ -523,7 +521,7 @@ extension ResourceDetailViewController: FileDownloadManagerDelegates {
   }
 
   func download(manager: FileDownloadManager, didFailedWithError error: Error) {
-    print(error)
+    Logger.sharedInstance.error(error)
   }
 
 }

@@ -90,7 +90,7 @@ class WebViewController: UIViewController {
     self.sendConsentByMail()
   }
 
-  /// Sends Consent  Document  by Email in pdf format
+  /// Sends Consent Document by Email in pdf format
   func sendConsentByMail() {
     let mailComposerVC = MFMailComposeViewController()
     mailComposerVC.mailComposeDelegate = self

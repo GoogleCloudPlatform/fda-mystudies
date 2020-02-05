@@ -418,7 +418,7 @@ class StudyHomeViewController: UIViewController {
           }
 
           if choicePredicate.count > 0, (destination?.count)! > 0 {
-            print("choices in eligibility \(choicePredicate) ")
+            Logger.sharedInstance.info("choices in eligibility \(choicePredicate) ")
             predicateRule = ORKPredicateStepNavigationRule(
               resultPredicates: choicePredicate,
               destinationStepIdentifiers: destination!,
@@ -910,7 +910,7 @@ extension StudyHomeViewController: NMWebServiceDelegate {
   }
 
   func failedRequest(_: NetworkManager, requestName: NSString, error: NSError) {
-    Logger.sharedInstance.info("requestname : \(requestName)")
+    Logger.sharedInstance.error("requestname : \(requestName)")
     removeProgressIndicator()
     
     if error.code == 403 {  // unauthorized Access
@@ -984,15 +984,15 @@ extension StudyHomeViewController: ORKTaskViewControllerDelegate {
 
     switch reason {
     case ORKTaskViewControllerFinishReason.completed:
-      print("completed")
+      Logger.sharedInstance.info("completed")
     case ORKTaskViewControllerFinishReason.failed:
-      print("failed")
+      Logger.sharedInstance.info("failed")
 
     case ORKTaskViewControllerFinishReason.discarded:
-      print("discarded")
+      Logger.sharedInstance.info("discarded")
 
     case ORKTaskViewControllerFinishReason.saved:
-      print("saved")
+      Logger.sharedInstance.info("saved")
     @unknown default:
       break
     }

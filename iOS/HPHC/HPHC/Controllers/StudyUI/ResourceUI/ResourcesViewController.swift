@@ -43,7 +43,7 @@ class ResourcesViewController: UIViewController {
   }
 
   deinit {
-    Log("\(self) I'm gone ")
+    Logger.sharedInstance.info("\(self): deinit")
   }
 
   override func viewDidLoad() {
@@ -218,7 +218,7 @@ class ResourcesViewController: UIViewController {
         // compare lifetime
         if (startDateResult == .orderedAscending || startDateResult == .orderedSame) &&
             (endDateResult == .orderedDescending || endDateResult == .orderedSame)  {
-          print("current")
+          Logger.sharedInstance.info("current")
 
           tableViewRowDetails?.append(resource)
 
@@ -413,10 +413,10 @@ class ResourcesViewController: UIViewController {
       let foundRange = pdfData?.range(of: pdfHeader as Data, options: .anchored, in: myRange)
       if foundRange != nil && (foundRange?.count)! > 0 {
         isPDF = true
-        print("pdf")
+        Logger.sharedInstance.info("pdf")
       } else {
         isPDF = false
-        print("not pdf")
+        Logger.sharedInstance.info("not pdf")
         UserServices().getConsentPDFForStudy(
           studyId: (Study.currentStudy?.studyId)!, delegate: self)
       }
@@ -465,8 +465,8 @@ class ResourcesViewController: UIViewController {
       self.pushToResourceDetails()
 
     } catch let error as NSError {
-      print("error writing to url \(String(describing: fullPath))")
-      print(error.localizedDescription)
+      Logger.sharedInstance.warn("Error writing to url: \(String(describing: fullPath))")
+      Logger.sharedInstance.error(error.localizedDescription)
     }
 
   }
@@ -760,7 +760,7 @@ extension String {
         documentAttributes: nil)
       return attributedString.string
     } catch {
-      print("Error: \(error)")
+      Logger.sharedInstance.error("Error: \(error)")
       return ""
     }
   }

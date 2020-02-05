@@ -25,7 +25,7 @@ enum SelectedTab: String {
 }
 class StudyDashboardStatisticsTableViewCell: UITableViewCell {
 
-  //Fifth cell Outlets
+  // Fifth cell Outlets
   // MARK:- Outlets
   @IBOutlet var statisticsCollectionView: UICollectionView?
 
@@ -90,7 +90,7 @@ class StudyDashboardStatisticsTableViewCell: UITableViewCell {
 
   // MARK:- Button action
 
-  ///  Day, Week and Month Button clicked.
+  /// Day, Week and Month Button clicked.
   @IBAction func dayWeekMonthButtonAction(_ sender: AnyObject) {
 
     if sender.tag == 11 {
@@ -146,7 +146,7 @@ class StudyDashboardStatisticsTableViewCell: UITableViewCell {
 
     } else if sender.tag == 13 {
 
-      //Months clicked
+      // Months clicked
       buttonMonth?.setTitle(kMonthSpaces, for: UIControl.State.normal)
       buttonDay?.setTitle(kDay, for: UIControl.State.normal)
       buttonWeek?.setTitle(kWeek, for: UIControl.State.normal)

@@ -139,7 +139,7 @@ class FetalKickCounterStepViewController: ORKStepViewController {
         initialTime = initialTime + differenceInSec
       }
 
-      print("difference \(differenceInSec)")
+      Logger.sharedInstance.info("Difference: \(differenceInSec)")
       // Setting the maximum time allowed for the task
       self.totalTime = step.counDownTimer!  //10
 
@@ -151,13 +151,12 @@ class FetalKickCounterStepViewController: ORKStepViewController {
       let minutes = Int(initialTime) / 60 % 60
       let seconds = Int(initialTime) % 60
 
-      self.timerValue = initialTime  //self.totalTime    // step.counDownTimer!
+      self.timerValue = initialTime
 
       self.timerLabel?.text = (hours < 10 ? "0\(hours):" : "\(hours):") + (
         minutes < 10 ? "0\(minutes):" : "\(minutes):"
       ) + (seconds < 10 ? "0\(seconds)" : "\(seconds)")
-      //self.taskResult.duration = self.totalTime!
-
+     
       if autoStartTimer {
 
         let previousKicks: Int? = ud.value(forKey: kFetalKickCounterValue) as? Int

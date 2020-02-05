@@ -79,7 +79,7 @@ class NetworkManager {
     do {
       try reachability?.startNotifier()
     } catch let error {
-      print("could not start reachability notifier: ", error.localizedDescription)
+      Logger.sharedInstance.info("could not start reachability notifier: ", error.localizedDescription)
     }
   }
 

@@ -30,7 +30,7 @@ class DBHandler: NSObject {
     do {
       realm = try Realm(configuration: encryptionConfig)
     } catch let error {
-      print(error)
+      Logger.sharedInstance.error(error)
     }
     return realm
 
@@ -65,7 +65,7 @@ class DBHandler: NSObject {
             dbUser?.refreshToken = user.refreshToken
           }
       } catch let error {
-        print(error)
+        Logger.sharedInstance.error(error)
       }
     }
   }
@@ -284,7 +284,7 @@ class DBHandler: NSObject {
 
       study.userParticipateState = participatedStatus
 
-      print("status \(dbStudy.participatedStatus)")
+      Logger.sharedInstance.info("Status: \(dbStudy.participatedStatus)")
 
       // Append to user class participatesStudies also
       User.currentUser.participatedStudies.append(participatedStatus)
@@ -1110,7 +1110,7 @@ class DBHandler: NSObject {
           lhs: (completedRuns.count)*100, rhs: (completedRuns.count + incompleteRuns))))
 
     completionHandler(Int(completion), Int(adherence))
-    debugPrint("complete: \(completedRuns.count) , incomplete: \(incompleteRuns)")
+    Logger.sharedInstance.info("complete: \(completedRuns.count) , incomplete: \(incompleteRuns)")
 
   }
 
@@ -1930,7 +1930,7 @@ class DBHandler: NSObject {
         studyId, activityId: activity.sourceActivityId, questionKey: activity.sourceKey,
         anchorDateValue: activity.anchorDateValue!)
     }
-    print("Completed")
+    Logger.sharedInstance.info("Completed")
     completionHandler(anchorDateAvailable)
   }
 

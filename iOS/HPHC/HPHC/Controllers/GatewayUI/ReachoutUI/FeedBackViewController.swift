@@ -47,11 +47,8 @@ class FeedBackViewController: UIViewController {
 
     self.navigationItem.title = NSLocalizedString("LEAVE US YOUR FEEDBACK", comment: "")
 
-    //Used to set border color for bottom view
+    // Used to set border color for bottom view
     buttonSubmit?.layer.borderColor = kUicolorForButtonBackground
-
-    //Automatically takes care  of text field become first responder and scroll of tableview
-    // IQKeyboardManager.sharedManager().enable = true
 
     self.tableView?.estimatedRowHeight = 123
     self.tableView?.rowHeight = UITableView.automaticDimension
@@ -67,7 +64,7 @@ class FeedBackViewController: UIViewController {
   /// If all the validations satisfy send user feedback request
   /// - Parameter sender: Instance of submit UIButton.
   @IBAction func buttonSubmitAciton(_ sender: UIButton) {
-    //print("\(ContactUsFeilds.firstName)")
+ 
     if FeedbackDetail.subject.isEmpty && FeedbackDetail.feedback.isEmpty {
       UIUtilities.showAlertWithMessage(
         alertMessage: NSLocalizedString(kMessageAllFieldsAreEmpty, comment: ""))
@@ -136,7 +133,7 @@ extension FeedBackViewController: UITextViewDelegate {
   }
 
   func textViewDidEndEditing(_ textView: UITextView) {
-    print("textViewDidEndEditing")
+    Logger.sharedInstance.info("textViewDidEndEditing")
     if textView.tag == 101 && textView.text.count == 0 {
       textView.text = "Enter your feedback here"
       textView.textColor = UIColor.lightGray
@@ -148,7 +145,7 @@ extension FeedBackViewController: UITextViewDelegate {
   }
 
   func textViewDidBeginEditing(_ textView: UITextView) {
-    print("textViewDidBeginEditing")
+    Logger.sharedInstance.info("textViewDidBeginEditing")
 
     if textView.tag == 100 {
       textView.text = ""
@@ -162,7 +159,7 @@ extension FeedBackViewController: UITextViewDelegate {
 extension FeedBackViewController: UITextFieldDelegate {
 
   func textFieldDidEndEditing(_ textField: UITextField) {
-    print(textField.text!)
+    Logger.sharedInstance.info("Editing ended: ", textField.text!)
     textField.text = textField.text?.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines)
     FeedbackDetail.subject = textField.text!
   }
