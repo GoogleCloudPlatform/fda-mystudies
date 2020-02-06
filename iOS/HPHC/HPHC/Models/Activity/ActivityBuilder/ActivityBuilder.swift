@@ -103,13 +103,11 @@ class ActivityBuilder {
           if Utilities.isValidObject(someObject: stepDict as AnyObject?) {
 
             if Utilities.isValidValue(
-              someObject: stepDict[kActivityStepType] as AnyObject)
-            {
+              someObject: stepDict[kActivityStepType] as AnyObject) {
 
               switch ActivityStepType(
                 rawValue: (stepDict[kActivityStepType] as? String)!)!
-                as ActivityStepType
-              {
+                as ActivityStepType {
 
               case .instruction:
 
@@ -141,7 +139,7 @@ class ActivityBuilder {
             }
           } else {
             Logger.sharedInstance.debug("Activity:stepDict is null:\(stepDict)")
-            break;
+            break
           }
         }
 
@@ -186,8 +184,7 @@ class ActivityBuilder {
                 is ORKFormStep || (
                   step.isKind(of: ORKInstructionStep.self) && step.isKind(
                     of: ORKCompletionStep.self) == false
-                )
-              {
+                ) {
 
                 let activityStep: ActivityStep?
 
@@ -199,8 +196,7 @@ class ActivityBuilder {
                   activityStep = activityStepArray?[(i!)] as? ActivityQuestionStep
 
                 } else if step.isKind(of: ORKFormStep.self) || step.isKind(
-                  of: RepeatableFormStep.self)
-                {
+                  of: RepeatableFormStep.self) {
                   activityStep = activityStepArray?[(i!)] as? ActivityFormStep
 
                 } else {
@@ -256,11 +252,9 @@ class ActivityBuilder {
 
                     // Condition is not nil
                     if Utilities.isValidValue(
-                      someObject: dict[kCondtion] as AnyObject)
-                    {
+                      someObject: dict[kCondtion] as AnyObject) {
 
-                      switch (questionStep as? ORKQuestionStep)!.answerFormat
-                      {
+                      switch (questionStep as? ORKQuestionStep)!.answerFormat {
 
                       case is ORKTextChoiceAnswerFormat,
                         is ORKTextScaleAnswerFormat,
@@ -278,8 +272,7 @@ class ActivityBuilder {
                         if dict[kCondtion] != nil && dict[kDestination]
                           != nil && (
                             dict[kDestination] as? String
-                          )! == ""
-                        {
+                          )! == "" {
                           // this means c = value & d = ""
                           destination?.append(kCompletionStep)
 
@@ -314,10 +307,9 @@ class ActivityBuilder {
                           let operatorType: OperatorType = OperatorType(
                             rawValue: operatorValue)!
 
-                          switch (
+                          switch
                             (questionStep as? ORKQuestionStep)!
-                              .answerFormat
-                          ) {
+                              .answerFormat {
                           case is ORKNumericAnswerFormat,
                             is ORKHeightAnswerFormat,
                             is ORKHealthKitQuantityTypeAnswerFormat:  // Height & Numeric Question
@@ -329,11 +321,10 @@ class ActivityBuilder {
 
                             var style = ""
 
-                            if (
+                            if
                               (questionStep as? ORKQuestionStep)!
                                 .answerFormat!
-                                is ORKHeightAnswerFormat
-                            ) {
+                                is ORKHeightAnswerFormat {
                               minimumValue = 0
 
                             } else {
@@ -391,7 +382,7 @@ class ActivityBuilder {
 
                           case .none: break
 
-                          case .some(_): break
+                          case .some: break
 
                           }
                           choicePredicate.append(predicateQuestionChoiceA)
@@ -399,8 +390,7 @@ class ActivityBuilder {
                           if dict[kCondtion] != nil && dict[kDestination]
                             != nil && (
                               dict[kDestination] as? String
-                            )! == ""
-                          {
+                            )! == "" {
                             // this means c = value & d = ""
                             destination?.append(kCompletionStep)
 
@@ -418,23 +408,20 @@ class ActivityBuilder {
 
                         if (dict[kCondtion] as? String)!
                           .caseInsensitiveCompare("true")
-                          == ComparisonResult.orderedSame
-                        {
+                          == ComparisonResult.orderedSame {
                           boolValue = true
 
                         } else {
                           if (dict[kCondtion] as? String)!
                             .caseInsensitiveCompare("false")
-                            == ComparisonResult.orderedSame
-                          {
+                            == ComparisonResult.orderedSame {
                             boolValue = false
 
                           } else if (dict[kCondtion] as? String)! == "" {
                             boolValue = nil
                             if Utilities.isValidValue(
                               someObject: dict[kDestination]
-                                as AnyObject?)
-                            {
+                                as AnyObject?) {
 
                               defaultStepIdentifier = (
                                 dict[kDestination]! as? String
@@ -455,8 +442,7 @@ class ActivityBuilder {
                         if dict[kCondtion] != nil && dict[kDestination]
                           != nil && (
                             dict[kDestination] as? String
-                          )! == ""
-                        {
+                          )! == "" {
                           // this means c = value & d = ""
                           destination?.append(kCompletionStep)
 
@@ -475,8 +461,7 @@ class ActivityBuilder {
 
                         defaultStepExist = true
                         if Utilities.isValidValue(
-                          someObject: dict[kDestination] as AnyObject?)
-                        {
+                          someObject: dict[kDestination] as AnyObject?) {
                           // means we ahave valid destination
                           defaultStepIdentifier = (
                             dict[kDestination]! as? String
@@ -566,13 +551,11 @@ class ActivityBuilder {
           if Utilities.isValidObject(someObject: stepDict as AnyObject?) {
 
             if Utilities.isValidValue(
-              someObject: stepDict[kActivityStepType] as AnyObject)
-            {
+              someObject: stepDict[kActivityStepType] as AnyObject) {
 
               switch ActivityStepType(
                 rawValue: (stepDict[kActivityStepType] as? String)!)!
-                as ActivityStepType
-              {
+                as ActivityStepType {
 
               case .instruction:
 
@@ -608,7 +591,7 @@ class ActivityBuilder {
 
           } else {
             Logger.sharedInstance.debug("Activity:stepDict is null:\(stepDict)")
-            break;
+            break
           }
         }
 
@@ -697,7 +680,7 @@ class ActivityBuilder {
       predicate = ORKResultPredicate.predicateForNumericQuestionResult(
         with: resultSelector, minimumExpectedAnswerValue: lhs + 1,
         maximumExpectedAnswerValue: Double.infinity)
-        
+
     case .lessThan:
       predicate = ORKResultPredicate.predicateForNumericQuestionResult(
         with: resultSelector, minimumExpectedAnswerValue: Double(minimumValue),
@@ -706,11 +689,11 @@ class ActivityBuilder {
     case .greaterThanOrEqual:
       predicate = ORKResultPredicate.predicateForNumericQuestionResult(
         with: resultSelector, minimumExpectedAnswerValue: lhs)
-        
+
     case .lessThanOrEqual:
       predicate = ORKResultPredicate.predicateForNumericQuestionResult(
         with: resultSelector, maximumExpectedAnswerValue: lhs)
-        
+
     case .range: break
 
     }
@@ -735,7 +718,7 @@ class ActivityBuilder {
     case .equal:  //Equal
       predicate = ORKResultPredicate.predicateForNumericQuestionResult(
         with: resultSelector, expectedAnswer: Int(lhs))
-        
+
     case .notEqual:  //NotEqual
       let equalPredicate = ORKResultPredicate.predicateForNumericQuestionResult(
         with: resultSelector, expectedAnswer: Int(lhs))
@@ -793,13 +776,13 @@ class ActivityBuilder {
         let maxFraction = (activityStep as? ActivityQuestionStep)!.formatDict![
           kStepQuestionContinuosScaleMaxFractionDigits] as? Int
 
-        switch (maxFraction) {
+        switch maxFraction {
         case 0?:
           offset = -0.25
         case 1?, 2?, 3?:
           offset = 0.0
         case .none: break
-        case .some(_): break
+        case .some: break
         }
 
         predicate = NSPredicate.init(
@@ -827,7 +810,7 @@ class ActivityBuilder {
       predicate = ORKResultPredicate.predicateForScaleQuestionResult(
         with: resultSelector, minimumExpectedAnswerValue: lhs)
 
-    case .lessThanOrEqual: 
+    case .lessThanOrEqual:
       predicate = ORKResultPredicate.predicateForScaleQuestionResult(
         with: resultSelector, maximumExpectedAnswerValue: lhs)
 

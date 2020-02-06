@@ -33,7 +33,7 @@ enum SignUpLoadFrom: Int {
 
 class SignUpViewController: UIViewController {
 
-  // MARK:- Outlets
+  // MARK: - Outlets
   @IBOutlet var tableView: UITableView?
 
   @IBOutlet var tableViewFooterView: UIView?
@@ -42,7 +42,7 @@ class SignUpViewController: UIViewController {
   @IBOutlet var labelTermsAndConditions: FRHyperLabel?
   @IBOutlet var termsAndCondition: LinkTextView?
 
-  // MARK:- Properties
+  // MARK: - Properties
   var tableViewRowDetails: NSMutableArray?
 
   lazy var agreedToTerms: Bool = false
@@ -59,7 +59,7 @@ class SignUpViewController: UIViewController {
     Logger.sharedInstance.info("\(self): deinit")
   }
 
-  // MARK:- ViewController Lifecycle
+  // MARK: - ViewController Lifecycle
 
   override func viewDidLoad() {
     super.viewDidLoad()
@@ -73,7 +73,7 @@ class SignUpViewController: UIViewController {
     let plistPath = Bundle.main.path(
       forResource: "SignUpPlist", ofType: ".plist", inDirectory: nil)
     tableViewRowDetails = NSMutableArray.init(contentsOfFile: plistPath!)
-    
+
     // info button
     self.navigationItem.rightBarButtonItem = UIBarButtonItem.init(
       image: UIImage.init(named: "info"), style: .done, target: self,
@@ -122,7 +122,7 @@ class SignUpViewController: UIViewController {
     }
   }
 
-  // MARK:- Utility Methods
+  // MARK: - Utility Methods
 
   ///  Attributed string for Terms & Privacy Policy.
   func agreeToTermsAndConditions() {
@@ -160,8 +160,7 @@ class SignUpViewController: UIViewController {
   func validateAllFields() -> Bool {
     //(user.firstName?.isEmpty)! && (user.lastName?.isEmpty)! &&
     if (self.user.emailId?.isEmpty)! && (self.user.password?.isEmpty)! && confirmPassword
-      .isEmpty
-    {
+      .isEmpty {
       self.showAlertMessages(textMessage: kMessageAllFieldsAreEmpty)
       return false
     } else if self.user.emailId == "" {
@@ -182,7 +181,7 @@ class SignUpViewController: UIViewController {
     } else if confirmPassword == "" {
       self.showAlertMessages(textMessage: kMessageProfileConfirmPasswordBlank)
       return false
-    } else if (self.user.password != confirmPassword) {
+    } else if self.user.password != confirmPassword {
       self.showAlertMessages(textMessage: kMessageValidatePasswords)
       return false
     }
@@ -201,7 +200,7 @@ class SignUpViewController: UIViewController {
     self.performSegue(withIdentifier: "verificationSegue", sender: nil)
   }
 
-  // MARK:- Button Actions
+  // MARK: - Button Actions
 
   /// Used to check all the validations
   /// before making a Register webservice call.
@@ -236,7 +235,7 @@ class SignUpViewController: UIViewController {
       title: "Why Register?", message: kRegistrationInfoMessage as NSString)
   }
 
-  // MARK:- Segue Method
+  // MARK: - Segue Method
 
   override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
     if let verificationController = segue.destination as? VerificationViewController {
@@ -266,7 +265,7 @@ class SignUpViewController: UIViewController {
   }
 }
 
-// MARK:- Gesture Delegate
+// MARK: - Gesture Delegate
 extension SignUpViewController: UIGestureRecognizerDelegate {
   func gestureRecognizerShouldBegin(_ gestureRecognizer: UIGestureRecognizer) -> Bool {
     if gestureRecognizer.isKind(of: UITapGestureRecognizer.classForCoder()) {
@@ -278,7 +277,7 @@ extension SignUpViewController: UIGestureRecognizerDelegate {
   }
 }
 
-// MARK:- UITextView Delegate
+// MARK: - UITextView Delegate
 class LinkTextView: UITextView {
 
   override func canPerformAction(_ action: Selector, withSender sender: Any?) -> Bool {
@@ -293,18 +292,16 @@ class LinkTextView: UITextView {
   }
 }
 
-// MARK:- Textfield Delegate
+// MARK: - Textfield Delegate
 extension SignUpViewController: UITextViewDelegate {
 
   func textView(_ textView: UITextView, shouldInteractWith URL: URL, in characterRange: NSRange)
-    -> Bool
-  {
+    -> Bool {
 
     var link: String = (TermsAndPolicy.currentTermsAndPolicy?.termsURL)!  //kTermsAndConditionLink
     var title: String = kNavigationTitleTerms
     if URL.absoluteString == TermsAndPolicy.currentTermsAndPolicy?.policyURL && characterRange
-      .length == String("Privacy Policy").count
-    {
+      .length == String("Privacy Policy").count {
       link = (TermsAndPolicy.currentTermsAndPolicy?.policyURL)!  // kPrivacyPolicyLink
       title = kNavigationTitlePrivacyPolicy
     }
@@ -323,19 +320,18 @@ extension SignUpViewController: UITextViewDelegate {
   }
 
   func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldReceive press: UIPress)
-    -> Bool
-  {
+    -> Bool {
     return false
   }
 
   func textViewDidChangeSelection(_ textView: UITextView) {
-    if !NSEqualRanges(textView.selectedRange, NSMakeRange(0, 0)) {
-      textView.selectedRange = NSMakeRange(0, 0)
+    if !NSEqualRanges(textView.selectedRange, NSRange(location: 0, length: 0)) {
+      textView.selectedRange = NSRange(location: 0, length: 0)
     }
   }
 }
 
-// MARK:- TableView Datasource
+// MARK: - TableView Datasource
 extension SignUpViewController: UITableViewDataSource {
 
   func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -381,7 +377,7 @@ extension SignUpViewController: UITableViewDataSource {
   }
 }
 
-// MARK:- TableView Delegates
+// MARK: - TableView Delegates
 extension SignUpViewController: UITableViewDelegate {
 
   func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
@@ -389,7 +385,7 @@ extension SignUpViewController: UITableViewDelegate {
   }
 }
 
-// MARK:- Textfield Delegate
+// MARK: - Textfield Delegate
 extension SignUpViewController: UITextFieldDelegate {
 
   func textFieldDidBeginEditing(_ textField: UITextField) {
@@ -421,7 +417,7 @@ extension SignUpViewController: UITextFieldDelegate {
       if finalString.count > 64 {
         return false
       } else {
-        if (range.location == textField.text?.count && string == " ") {
+        if range.location == textField.text?.count && string == " " {
 
           textField.text = textField.text?.appending("\u{00a0}")
           return false
@@ -456,7 +452,7 @@ extension SignUpViewController: UITextFieldDelegate {
   }
 }
 
-// MARK:- Webservice delegates
+// MARK: - Webservice delegates
 extension SignUpViewController: NMWebServiceDelegate {
 
   func startedRequest(_ manager: NetworkManager, requestName: NSString) {
@@ -493,9 +489,8 @@ extension SignUpViewController: NMWebServiceDelegate {
 }
 
 // Helper function inserted by Swift 4.2 migrator.
-fileprivate func convertToOptionalNSAttributedStringKeyDictionary(_ input: [String: Any]?)
-  -> [NSAttributedString.Key: Any]?
-{
+private func convertToOptionalNSAttributedStringKeyDictionary(_ input: [String: Any]?)
+  -> [NSAttributedString.Key: Any]? {
   guard let input = input else { return nil }
   return Dictionary(
     uniqueKeysWithValues: input.map { key, value in

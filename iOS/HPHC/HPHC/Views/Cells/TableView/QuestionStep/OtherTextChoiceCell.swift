@@ -24,7 +24,7 @@ protocol OtherTextChoiceCellDelegate: class {
 
 class OtherTextChoiceCell: UITableViewCell {
 
-  // MARK:- Outlets
+  // MARK: - Outlets
   @IBOutlet weak var mainView: UIView!
 
   @IBOutlet weak var otherField: UITextField!

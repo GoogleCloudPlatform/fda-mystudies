@@ -35,12 +35,12 @@ enum ActivityAvailabilityStatus: Int {
 
 class ActivitiesViewController: UIViewController {
 
-  // MARK:- Outlets
+  // MARK: - Outlets
   @IBOutlet var tableView: UITableView?
 
   @IBOutlet var labelNoNetworkAvailable: UILabel?
 
-  // MARK:- Properties
+  // MARK: - Properties
   private lazy var tableViewSections: [[String: Any]]! = []
 
   private lazy var lastFetelKickIdentifer: String = ""  //TEMP
@@ -74,7 +74,7 @@ class ActivitiesViewController: UIViewController {
     Logger.sharedInstance.info("\(self): deinit")
   }
 
-  // MARK:- Viewcontroller Lifecycle
+  // MARK: - Viewcontroller Lifecycle
 
   override func viewDidLoad() {
     super.viewDidLoad()
@@ -131,7 +131,7 @@ class ActivitiesViewController: UIViewController {
 
   }
 
-  // MARK:- Helper Methods
+  // MARK: - Helper Methods
 
   func getLabkeyResponse() {
 
@@ -218,7 +218,7 @@ class ActivitiesViewController: UIViewController {
 
             let anchorDateObject = Study.currentStudy?.anchorDate
             // Fetch AnchorData based availablity
-            if (anchorDateObject != nil && (anchorDateObject?.isAnchorDateAvailable())!) {
+            if anchorDateObject != nil && (anchorDateObject?.isAnchorDateAvailable())! {
 
               let anchorDate = Study.currentStudy?.anchorDate?.date?.startOfDay
 
@@ -278,7 +278,7 @@ class ActivitiesViewController: UIViewController {
                         let message = resource.notificationMessage
                         let userInfo = [
                           "studyId": (Study.currentStudy?.studyId)!,
-                          "type": "resource",
+                          "type": "resource"
                         ]
                         LocalNotification.scheduleNotificationOn(
                           date: notificationDate!, message: message!,
@@ -314,7 +314,7 @@ class ActivitiesViewController: UIViewController {
   }
 
   func fetchActivityAnchorDateResponseFromLabkey() {
-    AnchorDateHandler().fetchActivityAnchorDateResponseFromLabkey { (status) in
+    AnchorDateHandler().fetchActivityAnchorDateResponseFromLabkey { (_) in
       self.loadActivitiesFromDatabase()
     }
   }
@@ -340,7 +340,7 @@ class ActivitiesViewController: UIViewController {
   func createActivity() {
 
     IQKeyboardManager.shared.enableAutoToolbar = false
-    
+
     if Utilities.isValidObject(someObject: Study.currentActivity?.steps as AnyObject?) {
       // Create ActivityBuilder instance.
       ActivityBuilder.currentActivityBuilder = ActivityBuilder()
@@ -484,10 +484,8 @@ class ActivitiesViewController: UIViewController {
         )
       })
 
-    let currentDetails = ["title": "CURRENT", "activities": sortedCurrentActivities] as [String:
-      Any]
-    let upcomingDetails = ["title": "UPCOMING", "activities": upcomingActivities] as [String:
-      Any]
+    let currentDetails = ["title": "CURRENT", "activities": sortedCurrentActivities] as [String: Any]
+    let upcomingDetails = ["title": "UPCOMING", "activities": upcomingActivities] as [String: Any]
     let pastDetails = ["title": "PAST", "activities": pastActivities] as [String: Any]
 
     allActivityList.append(currentDetails)
@@ -519,7 +517,7 @@ class ActivitiesViewController: UIViewController {
         //Register LocalNotifications
         LocalNotification.registerAllLocalNotificationFor(
           activities: (Study.currentStudy?.activities)!
-        ) { (finished, notificationlist) in
+        ) { (_, notificationlist) in
           Logger.sharedInstance.info("Notification set sucessfully")
           Study.currentStudy?.activitiesLocalNotificationUpdated = true
           DBHandler.saveRegisteredLocaNotifications(notificationList: notificationlist)
@@ -690,8 +688,7 @@ class ActivitiesViewController: UIViewController {
     if activity.currentRun != nil {
       // Status is not completed
       if activity.userParticipationStatus.status != UserActivityStatus.ActivityStatus
-        .completed
-      {
+        .completed {
         var incompleteRuns = activity.currentRunId - activity.compeltedRuns
         incompleteRuns -= 1
         activity.incompletedRuns = (incompleteRuns < 0) ? 0 : incompleteRuns
@@ -758,7 +755,7 @@ class ActivitiesViewController: UIViewController {
     WCPServices().getResourcesForStudy(studyId: (Study.currentStudy?.studyId)!, delegate: self)
   }
 
-  // MARK:- Button Actions
+  // MARK: - Button Actions
 
   @IBAction func homeButtonAction(_ sender: AnyObject) {
     self.performSegue(withIdentifier: kActivityUnwindToStudyListIdentifier, sender: self)
@@ -778,7 +775,7 @@ class ActivitiesViewController: UIViewController {
 
 }
 
-// MARK:- TableView Datasource
+// MARK: - TableView Datasource
 extension ActivitiesViewController: UITableViewDataSource {
 
   func numberOfSections(in tableView: UITableView) -> Int {
@@ -863,7 +860,7 @@ extension ActivitiesViewController: UITableViewDataSource {
   }
 }
 
-// MARK:- TableView Delegates
+// MARK: - TableView Delegates
 extension ActivitiesViewController: UITableViewDelegate {
 
   func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
@@ -884,8 +881,7 @@ extension ActivitiesViewController: UITableViewDelegate {
           let activityRunParticipationStatus = activity.userParticipationStatus
           if activityRunParticipationStatus?.status == .yetToJoin
             || activityRunParticipationStatus?
-            .status == .inProgress
-          {
+            .status == .inProgress {
             Study.updateCurrentActivity(activity: activities[indexPath.row])
 
             Logger.sharedInstance.info("Activity Fetching from db")
@@ -926,7 +922,7 @@ extension ActivitiesViewController: UITableViewDelegate {
   }
 }
 
-// MARK:- ActivitiesCell Delegate
+// MARK: - ActivitiesCell Delegate
 extension ActivitiesViewController: ActivitiesCellDelegate {
 
   func activityCell(cell: ActivitiesTableViewCell, activity: Activity) {
@@ -938,7 +934,7 @@ extension ActivitiesViewController: ActivitiesCellDelegate {
   }
 }
 
-// MARK:- ActivityFilterDelegate
+// MARK: - ActivityFilterDelegate
 extension ActivitiesViewController: ActivityFilterViewDelegate {
   func setSelectedFilter(selectedIndex: ActivityFilterType) {
 
@@ -980,8 +976,7 @@ extension ActivitiesViewController: ActivityFilterViewDelegate {
     for section in tableViewSections {
       let activities = (section[kActivities] as? [Activity])!
       var sectionDict: [String: Any]! = section
-      sectionDict[kActivities] = activities.filter(
-        {
+      sectionDict[kActivities] = activities.filter({
           $0.type == activityType
         })
 
@@ -993,7 +988,7 @@ extension ActivitiesViewController: ActivityFilterViewDelegate {
 
 }
 
-// MARK:- Webservice Delegates
+// MARK: - Webservice Delegates
 extension ActivitiesViewController: NMWebServiceDelegate {
 
   func startedRequest(_ manager: NetworkManager, requestName: NSString) {
@@ -1011,7 +1006,7 @@ extension ActivitiesViewController: NMWebServiceDelegate {
 
   func finishedRequest(_ manager: NetworkManager, requestName: NSString, response: AnyObject?) {
     Logger.sharedInstance.info(
-      "requestname : \(requestName) Response : \(String(describing:response))")
+      "requestname : \(requestName) Response : \(String(describing: response))")
 
     if requestName as String == RegistrationMethods.activityState.method.methodName {
       self.sendRequesToGetActivityList()
@@ -1020,7 +1015,7 @@ extension ActivitiesViewController: NMWebServiceDelegate {
       // get DashboardInfo
       self.sendRequestToGetDashboardInfo()
       self.fetchActivityAnchorDateResponseFromLabkey()
-      
+
       if self.refreshControl != nil && (self.refreshControl?.isRefreshing)! {
         self.refreshControl?.endRefreshing()
       }
@@ -1070,7 +1065,7 @@ extension ActivitiesViewController: NMWebServiceDelegate {
   func failedRequest(_ manager: NetworkManager, requestName: NSString, error: NSError) {
     Logger.sharedInstance.error("requestname : \(requestName)")
     self.removeProgressIndicator()
-    
+
     if self.refreshControl != nil && (self.refreshControl?.isRefreshing)! {
       self.refreshControl?.endRefreshing()
     }
@@ -1083,13 +1078,13 @@ extension ActivitiesViewController: NMWebServiceDelegate {
       })
     } else {
       if requestName as String == RegistrationMethods.activityState.method.methodName {
-        if (error.code != NoNetworkErrorCode) {
+        if error.code != NoNetworkErrorCode {
           self.loadActivitiesFromDatabase()
         } else {
-          
+
           self.tableView?.isHidden = true
           self.labelNoNetworkAvailable?.isHidden = false
-          
+
           UIUtilities.showAlertWithTitleAndMessage(
             title: NSLocalizedString(kErrorTitle, comment: "") as NSString,
             message: error.localizedDescription as NSString)
@@ -1103,12 +1098,11 @@ extension ActivitiesViewController: NMWebServiceDelegate {
   }
 }
 
-// MARK:- ORKTaskViewController Delegate
+// MARK: - ORKTaskViewController Delegate
 extension ActivitiesViewController: ORKTaskViewControllerDelegate {
 
   func taskViewControllerSupportsSaveAndRestore(_ taskViewController: ORKTaskViewController)
-    -> Bool
-  {
+    -> Bool {
     return true
   }
 
@@ -1118,8 +1112,7 @@ extension ActivitiesViewController: ORKTaskViewControllerDelegate {
 
       for result in results {
         if let choiceResult = result.results?.first as? ORKChoiceQuestionResult,
-          let answers = choiceResult.answer as? [Any]
-        {
+          let answers = choiceResult.answer as? [Any] {
           var selectedChoices: [Any] = []
 
           var otherChoiceDict = answers.filter({ $0 as? JSONDictionary != nil }).first
@@ -1148,7 +1141,7 @@ extension ActivitiesViewController: ORKTaskViewControllerDelegate {
     _ taskViewController: ORKTaskViewController,
     didFinishWith reason: ORKTaskViewControllerFinishReason, error: Error?
   ) {
-    
+
     IQKeyboardManager.shared.enableAutoToolbar = true
     self.managedResult.removeAll()
     updateResultForChoiceQuestions(taskViewController)
@@ -1198,7 +1191,7 @@ extension ActivitiesViewController: ORKTaskViewControllerDelegate {
 
     let activityId = Study.currentActivity?.actvityId
     let studyId = Study.currentStudy?.studyId
-    var response: [String: Any]? = nil
+    var response: [String: Any]?
 
     if taskViewController.task?.identifier == "ConsentTask" {
       consentbuilder?.consentResult?.initWithORKTaskResult(
@@ -1216,8 +1209,7 @@ extension ActivitiesViewController: ORKTaskViewControllerDelegate {
         Study.currentActivity?.userStatus = .completed
 
         if ActivityBuilder.currentActivityBuilder.actvityResult?.type == ActivityType
-          .activeTask
-        {
+          .activeTask {
 
           if (taskViewController.result.results?.count)! > 0 {
 
@@ -1375,8 +1367,7 @@ extension ActivitiesViewController: ORKTaskViewControllerDelegate {
     if (taskViewController.result.results?.count)! > 1 {
 
       if activityBuilder?.actvityResult?.result?.count == taskViewController.result.results?
-        .count
-      {
+        .count {
         activityBuilder?.actvityResult?.result?.removeLast()
       } else {
 
@@ -1397,8 +1388,7 @@ extension ActivitiesViewController: ORKTaskViewControllerDelegate {
         let activityStepResult: ActivityStepResult? = ActivityStepResult()
         if (activity?.activitySteps?.count)! > 0 {
 
-          let activityStepArray = activity?.activitySteps?.filter(
-            {
+          let activityStepArray = activity?.activitySteps?.filter({
               $0.key == orkStepResult?.identifier
             })
           if (activityStepArray?.count)! > 0 {
@@ -1411,8 +1401,7 @@ extension ActivitiesViewController: ORKTaskViewControllerDelegate {
 
         /// check for anchor date.
         if study?.anchorDate != nil && study?.anchorDate?.anchorDateActivityId == activity?
-          .actvityId
-        {
+          .actvityId {
 
           if (study?.anchorDate?.anchorDateQuestionKey)! == (activityStepResult?.key)! {
             if let value1 = activityStepResult?.value as? String {
@@ -1442,8 +1431,7 @@ extension ActivitiesViewController: ORKTaskViewControllerDelegate {
           && ud.bool(forKey: "FKC")
           && activityId != nil
           && activityId == Study.currentActivity?.actvityId
-          && (stepViewController is ORKInstructionStepViewController)
-        {
+          && (stepViewController is ORKInstructionStepViewController) {
 
           DispatchQueue.main.asyncAfter(deadline: .now()) {
             stepViewController.goForward()
@@ -1458,7 +1446,7 @@ extension ActivitiesViewController: ORKTaskViewControllerDelegate {
     }
   }
 
-  // MARK:- StepViewController Delegate
+  // MARK: - StepViewController Delegate
   public func stepViewController(
     _ stepViewController: ORKStepViewController,
     didFinishWith direction: ORKStepViewControllerNavigationDirection
@@ -1485,8 +1473,7 @@ extension ActivitiesViewController: ORKTaskViewControllerDelegate {
     }
 
     if let step = step as? QuestionStep,
-      step.answerFormat?.isKind(of: ORKTextChoiceAnswerFormat.self) ?? false
-    {
+      step.answerFormat?.isKind(of: ORKTextChoiceAnswerFormat.self) ?? false {
 
       var textChoiceQuestionController: TextChoiceQuestionController
 
@@ -1537,16 +1524,13 @@ extension ActivitiesViewController: ORKTaskViewControllerDelegate {
     // Saving the TextChoiceQuestionController result to publish it later.
     if taskViewController.currentStepViewController?.isKind(
       of: TextChoiceQuestionController.self)
-      ?? false
-    {
+      ?? false {
       if let result = result.stepResult(
         forStepIdentifier: taskViewController.currentStepViewController?.step?.identifier
-          ?? "")
-      {
+          ?? "") {
         self.managedResult[result.identifier] = result
       }
     }
   }
 
 }
-

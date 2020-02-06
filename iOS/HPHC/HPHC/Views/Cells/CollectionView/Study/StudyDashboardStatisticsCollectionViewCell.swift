@@ -58,7 +58,7 @@ enum StatisticsType: String {
 
 class StudyDashboardStatisticsCollectionViewCell: UICollectionViewCell {
 
-  // MARK:- Outlets
+  // MARK: - Outlets
   @IBOutlet var statisticsImage: UIImageView?
 
   @IBOutlet var labelStatisticsText: UILabel?
@@ -147,11 +147,10 @@ class StudyDashboardStatisticsCollectionViewCell: UICollectionViewCell {
     }
   }
 
-  // MARK:- Date Handlers
+  // MARK: - Date Handlers
   func handleForDay(date: Date) {
 
-    let dataList: [DBStatisticsData] = stats.statList.filter(
-      { $0.startDate! >= date.startOfDay && $0.startDate! <= date.endOfDay! })
+    let dataList: [DBStatisticsData] = stats.statList.filter({ $0.startDate! >= date.startOfDay && $0.startDate! <= date.endOfDay! })
 
     let array = dataList.map { $0.data }
 
@@ -164,8 +163,7 @@ class StudyDashboardStatisticsCollectionViewCell: UICollectionViewCell {
 
   func handleForWeek(startDate: Date, endDate: Date) {
 
-    let dataList: [DBStatisticsData] = stats.statList.filter(
-      { $0.startDate! >= startDate && $0.startDate! <= endDate })
+    let dataList: [DBStatisticsData] = stats.statList.filter({ $0.startDate! >= startDate && $0.startDate! <= endDate })
 
     let array = dataList.map { $0.data }
 
@@ -179,8 +177,7 @@ class StudyDashboardStatisticsCollectionViewCell: UICollectionViewCell {
 
   func handleForMonth(date: Date) {
 
-    let dataList: [DBStatisticsData] = stats.statList.filter(
-      { $0.startDate! >= date.startOfMonth() && $0.startDate! <= date.endOfMonth() })
+    let dataList: [DBStatisticsData] = stats.statList.filter({ $0.startDate! >= date.startOfMonth() && $0.startDate! <= date.endOfMonth() })
 
     let array = dataList.map { $0.data }
 

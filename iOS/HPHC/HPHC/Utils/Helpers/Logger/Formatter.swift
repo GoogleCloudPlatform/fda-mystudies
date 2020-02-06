@@ -12,8 +12,7 @@ open class Formatter {
     var items = items
     let fileInfo = ">> \(level.toUpperCase) \(line):\(column)"
     items.insert(fileInfo, at: 0)
-    return items.map(
-      {
+    return items.map({
         String(describing: $0)
       }).joined(separator: " ") + "\n"
   }

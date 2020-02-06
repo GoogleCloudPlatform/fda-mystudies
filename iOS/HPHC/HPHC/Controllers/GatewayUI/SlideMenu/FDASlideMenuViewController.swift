@@ -70,14 +70,12 @@ open class FDASlideMenuViewController: SlideMenuController {
 
       if Utilities.isStandaloneApp() {
         if vc is StudyHomeViewController || vc is NotificationViewController || vc
-          is GatewayResourcesListViewController || vc is ProfileViewController
-        {
+          is GatewayResourcesListViewController || vc is ProfileViewController {
           return true
         }
       } else {
         if vc is StudyListViewController || vc is NotificationViewController || vc
-          is GatewayResourcesListViewController || vc is ProfileViewController
-        {
+          is GatewayResourcesListViewController || vc is ProfileViewController {
           return true
         }
       }
@@ -151,7 +149,7 @@ open class FDASlideMenuViewController: SlideMenuController {
     _ = self.navigationController?.popToRootViewController(animated: true)
   }
 
-  // MARK:- Unwind Actions
+  // MARK: - Unwind Actions
   func navigateToHomeControllerForSignin() {
     self.performSegue(withIdentifier: "unwindToHomeSignin", sender: self)
   }

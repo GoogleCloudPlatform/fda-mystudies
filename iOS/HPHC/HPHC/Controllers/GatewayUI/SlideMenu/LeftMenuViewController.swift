@@ -36,7 +36,7 @@ let kAlertMessageSignOutSync
 
 let kAlertSignOutLaterTitle = "Sign Out later"
 
-// MARK:Segue Identifiers
+// MARK: Segue Identifiers
 let kLoginStoryboardIdentifier = "Login"
 
 enum LeftMenu: Int {
@@ -53,7 +53,7 @@ protocol LeftMenuProtocol: class {
 
 class LeftMenuViewController: UIViewController, LeftMenuProtocol {
 
-  // MARK:- Outlets
+  // MARK: - Outlets
   @IBOutlet weak var tableView: UITableView!
 
   @IBOutlet weak var labelVersion: UILabel!
@@ -62,7 +62,7 @@ class LeftMenuViewController: UIViewController, LeftMenuProtocol {
   @IBOutlet weak var tableFooterView: UIView!
   @IBOutlet weak var buttonSignOut: UIButton?
 
-  // MARK:- Properties
+  // MARK: - Properties
   lazy var menus: [[String: Any]] = [
     [
       "menuTitle": "Home",
@@ -74,7 +74,7 @@ class LeftMenuViewController: UIViewController, LeftMenuProtocol {
       "menuTitle": "Resources",
       "iconName": "resources_menu1",
       "menuType": LeftMenu.resources
-    ],
+    ]
   ]
 
   /// Standalone
@@ -99,7 +99,7 @@ class LeftMenuViewController: UIViewController, LeftMenuProtocol {
     super.init(coder: aDecoder)
   }
 
-  // MARK:- ViewController Lifecycle
+  // MARK: - ViewController Lifecycle
   override func viewDidLoad() {
     super.viewDidLoad()
 
@@ -169,7 +169,7 @@ class LeftMenuViewController: UIViewController, LeftMenuProtocol {
 
   }
 
-  // MARK:- UI Utils
+  // MARK: - UI Utils
 
   /// This method will setup the Menu in case of Standalone app.
   final private func setupStandaloneMenu() {
@@ -243,7 +243,7 @@ class LeftMenuViewController: UIViewController, LeftMenuProtocol {
         "menuTitle": "Home",
         "iconName": "home_menu1-1",
         "menuType": LeftMenu.studyList
-      ],
+      ]
     ]
 
     if !Utilities.isStandaloneApp() {
@@ -252,7 +252,7 @@ class LeftMenuViewController: UIViewController, LeftMenuProtocol {
         [
           "menuTitle": "Resources",
           "iconName": "resources_menu1",
-          "menuType": LeftMenu.resources,
+          "menuType": LeftMenu.resources
         ])
     }
 
@@ -324,21 +324,21 @@ class LeftMenuViewController: UIViewController, LeftMenuProtocol {
       menus.append(
         [
           "menuTitle": "My Account",
-          "iconName": "profile_menu1",
+          "iconName": "profile_menu1"
         ])
       self.tableView.tableFooterView?.isHidden = false
     } else {
       menus.append(
         [
           "menuTitle": "Sign In",
-          "iconName": "signin_menu1",
+          "iconName": "signin_menu1"
         ])
 
       menus.append(
         [
           "menuTitle": "New User?",
           "iconName": "newuser_menu1",
-          "subTitle": "Sign up",
+          "subTitle": "Sign up"
         ])
       self.tableView.tableFooterView?.isHidden = true
     }
@@ -412,7 +412,7 @@ class LeftMenuViewController: UIViewController, LeftMenuProtocol {
     }
   }
 
-  // MARK:- Button Actions
+  // MARK: - Button Actions
 
   /// Signout button clicked.
   /// - Parameter sender: Instance of UIButton.
@@ -484,7 +484,7 @@ class LeftMenuViewController: UIViewController, LeftMenuProtocol {
   }
 }
 
-// MARK:- UITableView Delegate
+// MARK: - UITableView Delegate
 extension LeftMenuViewController: UITableViewDelegate {
 
   func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
@@ -514,7 +514,7 @@ extension LeftMenuViewController: UITableViewDelegate {
   }
 }
 
-// MARK:- UITableView DataSource
+// MARK: - UITableView DataSource
 extension LeftMenuViewController: UITableViewDataSource {
 
   func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -542,7 +542,7 @@ extension LeftMenuViewController: UITableViewDataSource {
   }
 }
 
-// MARK:- UserService Response handler
+// MARK: - UserService Response handler
 extension LeftMenuViewController: NMWebServiceDelegate {
 
   func startedRequest(_ manager: NetworkManager, requestName: NSString) {

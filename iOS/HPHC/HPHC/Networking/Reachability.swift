@@ -144,7 +144,7 @@ public class Reachability {
   }
 }
 
-// MARK:- *** Notifier methods ***
+// MARK: - *** Notifier methods ***
 extension Reachability {
 
   public func startNotifier() throws {
@@ -295,7 +295,7 @@ extension Reachability {
 
   fileprivate var isConnectionRequiredAndTransientFlagSet: Bool {
     return reachabilityFlags.intersection([.connectionRequired, .transientConnection]) == [
-      .connectionRequired, .transientConnection,
+      .connectionRequired, .transientConnection
     ]
   }
 

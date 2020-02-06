@@ -35,19 +35,19 @@ class OverviewSection {
 
   /// Overview title
   var title: String?
-  
+
   /// Type of overview video/image
   var type: String?
-  
+
   /// Download url of image
   var imageURL: String?
-  
+
   /// Short description
   var text: String?
-  
+
   /// Media link
   var link: String?
-  
+
   /// Used for Website link
   var websiteLink: String?
 

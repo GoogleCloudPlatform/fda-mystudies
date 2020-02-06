@@ -30,7 +30,7 @@ enum ProfileTableViewCellType: Int {
 
 class ProfileTableViewCell: UITableViewCell {
 
-  // MARK:- Outlets
+  // MARK: - Outlets
   @IBOutlet var labelName: UILabel?
 
   @IBOutlet var switchToggle: UISwitch?

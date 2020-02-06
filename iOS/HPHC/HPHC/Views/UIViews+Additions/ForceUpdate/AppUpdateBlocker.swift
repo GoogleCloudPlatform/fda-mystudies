@@ -45,7 +45,7 @@ class AppUpdateBlocker: UIView {
 
   }
 
-  // MARK:- Action
+  // MARK: - Action
 
   @IBAction func buttonUpgradeAction() {
     guard

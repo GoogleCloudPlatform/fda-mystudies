@@ -108,10 +108,10 @@ class Utilities: NSObject {
     let title: String = pstr + " " + bstr
     let attributedString = NSMutableAttributedString(string: title)
     let stringAttributes1 = [
-      NSAttributedString.Key.font: UIFont(name: plainFontName, size: size)!,
+      NSAttributedString.Key.font: UIFont(name: plainFontName, size: size)!
     ]
     let stringAttributes2 = [
-      NSAttributedString.Key.font: UIFont(name: boldFontName, size: size)!,
+      NSAttributedString.Key.font: UIFont(name: boldFontName, size: size)!
     ]
 
     attributedString.addAttributes(
@@ -263,8 +263,7 @@ class Utilities: NSObject {
 
     if capitalresult == false || numberresult == false || specialresult == false
       || textCountResult
-      == false || lowercaseresult == false
-    {
+      == false || lowercaseresult == false {
       return false
     }
 
@@ -398,8 +397,7 @@ class Utilities: NSObject {
     if (someObject is NSNull) == false {
       if someObject as? [String: Any] != nil && (someObject as? [String: Any])?.isEmpty
         == false
-        && ((someObject as? [String: Any])?.count)! > 0
-      {
+        && ((someObject as? [String: Any])?.count)! > 0 {
         return true
 
       } else if someObject as? NSArray != nil && ((someObject as? NSArray)?.count)! > 0 {

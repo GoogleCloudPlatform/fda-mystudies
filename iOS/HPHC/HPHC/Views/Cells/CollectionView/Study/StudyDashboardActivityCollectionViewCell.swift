@@ -21,7 +21,7 @@ import UIKit
 /// Todays activities cell
 class StudyDashboardActivityCollectionViewCell: UICollectionViewCell {
 
-  // MARK:- Outlets
+  // MARK: - Outlets
   @IBOutlet var labelTitle: UILabel?
 
   @IBOutlet var labelCompletedCount: UILabel?

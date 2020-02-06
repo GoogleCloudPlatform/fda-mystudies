@@ -42,7 +42,7 @@ let kSelectTimeLabel = "Select Time"
 
 class FetalKickCounterStepViewController: ORKStepViewController {
 
-  // MARK:- Outlets
+  // MARK: - Outlets
 
   /// button to start task as well as increment the counter.
   @IBOutlet weak var startButton: UIButton?
@@ -126,8 +126,7 @@ class FetalKickCounterStepViewController: ORKStepViewController {
       var autoStartTimer = false
       if ud.bool(forKey: "FKC")
         && activityId != nil
-        && activityId == Study.currentActivity?.actvityId
-      {
+        && activityId == Study.currentActivity?.actvityId {
 
         let previousTimerStartDate = ud.object(forKey: kFetalKickStartTimeStamp) as! Date
         let currentDate = Date()
@@ -156,7 +155,7 @@ class FetalKickCounterStepViewController: ORKStepViewController {
       self.timerLabel?.text = (hours < 10 ? "0\(hours):" : "\(hours):") + (
         minutes < 10 ? "0\(minutes):" : "\(minutes):"
       ) + (seconds < 10 ? "0\(seconds)" : "\(seconds)")
-     
+
       if autoStartTimer {
 
         let previousKicks: Int? = ud.value(forKey: kFetalKickCounterValue) as? Int
@@ -171,7 +170,7 @@ class FetalKickCounterStepViewController: ORKStepViewController {
         expirationHandler: {
 
         })
-      
+
       // adding guesture to view to support outside tap
       let gestureRecognizer = UITapGestureRecognizer(
         target: self, action: #selector(FetalKickCounterStepViewController.handleTap(_:)))
@@ -197,7 +196,7 @@ class FetalKickCounterStepViewController: ORKStepViewController {
 
   }
 
-  // MARK:Helper Methods
+  // MARK: Helper Methods
 
   /// Updates the timer value
   func setCounterValue() {
@@ -213,7 +212,6 @@ class FetalKickCounterStepViewController: ORKStepViewController {
     }
   }
 
-  
   /// Updates the timer Value
   @objc func setCounter() {
 
@@ -356,7 +354,7 @@ class FetalKickCounterStepViewController: ORKStepViewController {
 
     return [
       (hoursIndex > 0 ? hoursIndex : 0), (minutesIndex > 0 ? minutesIndex : 0),
-      (secondsIndex > 0 ? secondsIndex : 0),
+      (secondsIndex > 0 ? secondsIndex : 0)
     ]
   }
 
@@ -388,7 +386,7 @@ class FetalKickCounterStepViewController: ORKStepViewController {
       })
   }
 
-  // MARK:Button Actions
+  // MARK: Button Actions
 
   @IBAction func editCounterButtonAction(_ sender: UIButton) {
     counterTextField?.isUserInteractionEnabled = true
@@ -470,7 +468,7 @@ class FetalKickCounterStepViewController: ORKStepViewController {
     let acp = ActionSheetMultipleStringPicker(
       title: kSelectTimeLabel, rows: timerArray, initialSelection: defaultTime,
       doneBlock: {
-        picker, values, indexes in
+        _, _, indexes in
 
         let result: [String] = (indexes as! [String])
         let hours = result.first?.components(
@@ -505,7 +503,7 @@ class FetalKickCounterStepViewController: ORKStepViewController {
         }
         return
       },
-      cancel: { ActionMultipleStringCancelBlock in
+      cancel: { _ in
         return
       }, origin: sender)
 
@@ -541,14 +539,13 @@ open class FetalKickCounterTaskResult: ORKResult {
 extension FetalKickCounterStepViewController: UIGestureRecognizerDelegate {
   func gestureRecognizer(
     _: UIGestureRecognizer,
-    shouldRecognizeSimultaneouslyWith shouldRecognizeSimultaneouslyWithGestureRecognizer:
-      UIGestureRecognizer
+    shouldRecognizeSimultaneouslyWith shouldRecognizeSimultaneouslyWithGestureRecognizer: UIGestureRecognizer
   ) -> Bool {
     return true
   }
 }
 
-// MARK:TextField Delegates
+// MARK: TextField Delegates
 extension FetalKickCounterStepViewController: UITextFieldDelegate {
 
   func textFieldDidBeginEditing(_ textField: UITextField) {

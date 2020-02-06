@@ -56,7 +56,7 @@ enum ResponseMethods: String {
 
 }
 
-// MARK:- Set the server end points.
+// MARK: - Set the server end points.
 enum ResponseServerURLConstants {
 
   /// Labkey Staging.
@@ -67,7 +67,7 @@ enum ResponseServerURLConstants {
 class ResponseServerConfiguration: NetworkConfiguration {
   static let configuration = ResponseServerConfiguration()
 
-  // MARK:  Delegates
+  // MARK: Delegates
   override func getProductionURL() -> String {
     return ResponseServerURLConstants.ProductionURL
   }

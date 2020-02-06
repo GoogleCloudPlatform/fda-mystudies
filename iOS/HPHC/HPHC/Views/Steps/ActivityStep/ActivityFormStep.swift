@@ -50,8 +50,7 @@ class ActivityFormStep: ActivityStep {
   func getFormStep() -> ORKFormStep? {
 
     if Utilities.isValidValue(someObject: key as AnyObject?)
-      && Utilities.isValidObject(someObject: self.itemsArray as AnyObject?)
-    {
+      && Utilities.isValidObject(someObject: self.itemsArray as AnyObject?) {
 
       let step: ORKFormStep?
 

@@ -26,7 +26,7 @@ enum ContactTextFieldTags: Int {
 
 class ContactUsTableViewCell: UITableViewCell {
 
-  // MARK:- Outlets
+  // MARK: - Outlets
   @IBOutlet var labelType: UILabel?
 
   @IBOutlet var textFieldValue: UITextField?

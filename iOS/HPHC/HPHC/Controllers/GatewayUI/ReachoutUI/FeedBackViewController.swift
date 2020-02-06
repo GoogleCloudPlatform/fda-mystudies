@@ -33,15 +33,15 @@ struct FeedbackDetail {
 
 class FeedBackViewController: UIViewController {
 
-  // MARK:- Outlets
+  // MARK: - Outlets
   @IBOutlet var buttonSubmit: UIButton?
 
   @IBOutlet var tableView: UITableView?
 
-  // MARK:- Properties
+  // MARK: - Properties
   var feedbackText: String = ""
 
-  // MARK:- ViewController Lifecycle
+  // MARK: - ViewController Lifecycle
   override func viewDidLoad() {
     super.viewDidLoad()
 
@@ -58,13 +58,13 @@ class FeedBackViewController: UIViewController {
     _ = FeedbackDetail.init()
   }
 
-  // MARK:- Button Actions
+  // MARK: - Button Actions
 
   /// Validations after clicking on submit button
   /// If all the validations satisfy send user feedback request
   /// - Parameter sender: Instance of submit UIButton.
   @IBAction func buttonSubmitAciton(_ sender: UIButton) {
- 
+
     if FeedbackDetail.subject.isEmpty && FeedbackDetail.feedback.isEmpty {
       UIUtilities.showAlertWithMessage(
         alertMessage: NSLocalizedString(kMessageAllFieldsAreEmpty, comment: ""))
@@ -80,7 +80,7 @@ class FeedBackViewController: UIViewController {
   }
 }
 
-// MARK:- TableView Datasource
+// MARK: - TableView Datasource
 extension FeedBackViewController: UITableViewDataSource {
 
   func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -112,7 +112,7 @@ extension FeedBackViewController: UITableViewDataSource {
   }
 }
 
-// MARK:- TableView Delegates
+// MARK: - TableView Delegates
 extension FeedBackViewController: UITableViewDelegate {
 
   func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
@@ -120,7 +120,7 @@ extension FeedBackViewController: UITableViewDelegate {
   }
 }
 
-// MARK:- UITextview Delegate
+// MARK: - UITextview Delegate
 extension FeedBackViewController: UITextViewDelegate {
 
   func textViewDidChange(_ textView: UITextView) {
@@ -155,7 +155,7 @@ extension FeedBackViewController: UITextViewDelegate {
   }
 }
 
-// MARK:- Textfield Delegate
+// MARK: - Textfield Delegate
 extension FeedBackViewController: UITextFieldDelegate {
 
   func textFieldDidEndEditing(_ textField: UITextField) {
@@ -165,7 +165,7 @@ extension FeedBackViewController: UITextFieldDelegate {
   }
 }
 
-// MARK- Webservice Delegates
+// MARK: Webservice Delegates
 extension FeedBackViewController: NMWebServiceDelegate {
 
   func startedRequest(_ manager: NetworkManager, requestName: NSString) {

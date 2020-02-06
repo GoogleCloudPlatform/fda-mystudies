@@ -125,7 +125,6 @@ class FileDownloadManager: NSObject, URLSessionDelegate, URLSessionDownloadDeleg
     }
   }
 
-  
   /// decrypts file at the URL specified using the  Key & IV, AES256 decryption is used
   class func decrytFile(pathURL: URL?) -> Data? {
 

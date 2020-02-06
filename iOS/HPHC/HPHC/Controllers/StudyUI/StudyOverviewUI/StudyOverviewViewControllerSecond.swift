@@ -22,7 +22,7 @@ import UIKit
 
 class StudyOverviewViewControllerSecond: UIViewController {
 
-  // MARK:- Outlets
+  // MARK: - Outlets
   @IBOutlet var buttonJoinStudy: UIButton?
 
   @IBOutlet var buttonLearnMore: UIButton?
@@ -31,13 +31,13 @@ class StudyOverviewViewControllerSecond: UIViewController {
   @IBOutlet var labelDescription: UILabel?
   @IBOutlet var imageViewStudy: UIImageView?
 
-  // MARK:- Properties
+  // MARK: - Properties
   var pageIndex: Int!
 
   var overViewWebsiteLink: String?
   var overviewSectionDetail: OverviewSection!
 
-  // MARK:- Viewcontroller lifecycle
+  // MARK: - Viewcontroller lifecycle
   override func viewDidLoad() {
     super.viewDidLoad()
 
@@ -70,7 +70,7 @@ class StudyOverviewViewControllerSecond: UIViewController {
       options: [
         NSAttributedString.DocumentReadingOptionKey.documentType: NSAttributedString
           .DocumentType
-          .html,
+          .html
       ],
       documentAttributes: nil)
 
@@ -80,7 +80,7 @@ class StudyOverviewViewControllerSecond: UIViewController {
       [
         NSAttributedString.Key.font: UIFont(
           name: "HelveticaNeue",
-          size: CGFloat(fontSize))!,
+          size: CGFloat(fontSize))!
       ], range: (attrStr.string as NSString).range(of: attrStr.string))
     attributedText.addAttribute(
       NSAttributedString.Key.foregroundColor, value: UIColor.black,
@@ -95,7 +95,7 @@ class StudyOverviewViewControllerSecond: UIViewController {
     self.labelDescription?.textAlignment = .center
   }
 
-  // MARK:- Button Actions 
+  // MARK: - Button Actions 
 
   @IBAction func buttonActionJoinStudy(_ sender: Any) {
 

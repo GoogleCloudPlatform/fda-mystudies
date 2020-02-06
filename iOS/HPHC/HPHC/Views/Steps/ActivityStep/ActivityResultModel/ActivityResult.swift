@@ -48,8 +48,7 @@ class ActivityResult {
 
     if Utilities.isValidObject(someObject: self.result as AnyObject?) == false && self.result?
       .count
-      == 0
-    {
+      == 0 {
 
       var i = 0
 
@@ -58,8 +57,7 @@ class ActivityResult {
 
         if (self.activity?.activitySteps?.count)! > 0 {
 
-          let activityStepArray = self.activity?.activitySteps?.filter(
-            {
+          let activityStepArray = self.activity?.activitySteps?.filter({
               $0.key == stepResult.identifier
             })
           if (activityStepArray?.count)! > 0 {
@@ -78,8 +76,7 @@ class ActivityResult {
           && stepResult.identifier != kFetalKickIntroductionStepIdentifier
           && stepResult.identifier != "instruction"
           && stepResult.identifier != "instruction1"
-          && stepResult.identifier != "conclusion"
-        {
+          && stepResult.identifier != "conclusion" {
 
           if activityStepResult?.step != nil && (
             activityStepResult?.step is ActivityInstructionStep
@@ -112,8 +109,7 @@ class ActivityResult {
 
         if Utilities.isValidValue(
           someObject: Utilities.getDateFromString(
-            dateString: (activityDict[kActivityStartTime] as? String)!) as AnyObject?)
-        {
+            dateString: (activityDict[kActivityStartTime] as? String)!) as AnyObject?) {
           self.startTime = Utilities.getDateFromString(
             dateString: (activityDict[kActivityStartTime] as? String)!)
 
@@ -125,8 +121,7 @@ class ActivityResult {
 
         if Utilities.isValidValue(
           someObject: Utilities.getDateFromString(
-            dateString: (activityDict[kActivityEndTime] as? String)!) as AnyObject?)
-        {
+            dateString: (activityDict[kActivityEndTime] as? String)!) as AnyObject?) {
           self.endTime = Utilities.getDateFromString(
             dateString: (activityDict[kActivityEndTime] as? String)!)
         } else {

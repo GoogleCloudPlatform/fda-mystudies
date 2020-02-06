@@ -110,7 +110,7 @@ extension UIViewController {
             progressView!.widthAnchor.constraint(
               equalToConstant: UIScreen.main.bounds.size.width),
             progressView!.heightAnchor.constraint(
-              equalToConstant: UIScreen.main.bounds.size.height),
+              equalToConstant: UIScreen.main.bounds.size.height)
           ])
       }
 
@@ -138,7 +138,7 @@ extension UIViewController {
       animations: {
         view?.alpha = 0
       }
-    ) { (completed) in
+    ) { (_) in
       view?.removeFromSuperview()
     }
   }

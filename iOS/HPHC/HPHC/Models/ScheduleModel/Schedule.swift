@@ -27,7 +27,7 @@ class Schedule {
   var frequency: Frequency = .One_Time
   var startTime: Date!
   var endTime: Date?
-  var lastRunTime: Date? = nil
+  var lastRunTime: Date?
   var nextRunTime: Date!
   weak var activity: Activity!
   var activityRuns: [ActivityRun]! = []
@@ -36,7 +36,7 @@ class Schedule {
   var scheduledTimings: [[String: Any]] = []
   var currentRunId = 0
 
-  var completionHandler: (([ActivityRun]) -> Void)? = nil
+  var completionHandler: (([ActivityRun]) -> Void)?
 
   init() {
   }
@@ -88,14 +88,13 @@ class Schedule {
   func getRunsForActivity(activity: Activity, handler: @escaping ([ActivityRun]) -> Void) {
 
     // get joiningDate
-    let studyStatus = User.currentUser.participatedStudies.filter(
-      { $0.studyId == activity.studyId }).last
+    let studyStatus = User.currentUser.participatedStudies.filter({ $0.studyId == activity.studyId }).last
 
     let joiningDate = studyStatus?.joiningDate.utcDate()
     let start = activity.startDate?.utcDate()
 
     self.completionHandler = handler
-    var endDateResult: ComparisonResult? = nil
+    var endDateResult: ComparisonResult?
     if activity.endDate != nil {
       let end = activity.endDate?.utcDate()
       endDateResult = (end?.compare(joiningDate!))! as ComparisonResult
@@ -164,7 +163,7 @@ class Schedule {
     let numberOfDays = self.getNumberOfDaysBetween(startDate: startTime, endDate: endTime!)
     Logger.sharedInstance.info("numberOfDays \(numberOfDays)")
     var runStartDate: Date? = startTime
-    var runEndDate: Date? = nil
+    var runEndDate: Date?
     let calendar = Calendar.currentUTC()
     for day in 1...numberOfDays {
 
@@ -413,7 +412,7 @@ class Schedule {
     return datetime
   }
 
-  // MARK:Utility Methods
+  // MARK: Utility Methods
 
   public static var _formatter: DateFormatter?
 

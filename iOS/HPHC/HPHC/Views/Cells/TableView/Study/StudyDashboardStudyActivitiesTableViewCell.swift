@@ -20,7 +20,7 @@ import UIKit
 
 class StudyDashboardStudyActivitiesTableViewCell: UITableViewCell {
 
-  // MARK:- Outlets
+  // MARK: - Outlets
   @IBOutlet var labelCompletedNumber: UILabel?
 
   @IBOutlet var labelSurveyNumber: UILabel?

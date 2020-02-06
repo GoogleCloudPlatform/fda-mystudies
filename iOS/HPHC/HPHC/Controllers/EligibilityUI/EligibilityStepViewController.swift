@@ -46,19 +46,19 @@ open class EligibilityTokenTaskResult: ORKResult {
 
 class EligibilityStepViewController: ORKStepViewController {
 
-  // MARK:- Outlets
+  // MARK: - Outlets
   @IBOutlet weak var tokenTextField: UITextField!
 
   @IBOutlet weak var buttonSubmit: UIButton?
   @IBOutlet weak var labelDescription: UILabel?
 
-  // MARK:- UI Properties
+  // MARK: - UI Properties
   var descriptionText: String?
 
   var taskResult: EligibilityTokenTaskResult = EligibilityTokenTaskResult(
     identifier: kFetalKickCounterStepDefaultIdentifier)
 
-  // MARK:- ORKStepViewController Intitialization Methods
+  // MARK: - ORKStepViewController Intitialization Methods
 
   override init(step: ORKStep?) {
     super.init(step: step)
@@ -85,7 +85,7 @@ class EligibilityStepViewController: ORKStepViewController {
 
   }
 
-  // MARK:- LifeCycle
+  // MARK: - LifeCycle
   override func viewDidLoad() {
     super.viewDidLoad()
 
@@ -117,11 +117,11 @@ class EligibilityStepViewController: ORKStepViewController {
         footerView.heightAnchor.constraint(equalToConstant: 100),
         footerView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor, constant: 0),
         footerView.trailingAnchor.constraint(
-          equalTo: self.view.trailingAnchor, constant: 0),
+          equalTo: self.view.trailingAnchor, constant: 0)
       ])
   }
 
-  // MARK:- UI Utils
+  // MARK: - UI Utils
 
   func showAlert(message: String) {
     let alert = UIAlertController(
@@ -134,7 +134,7 @@ class EligibilityStepViewController: ORKStepViewController {
     self.navigationController?.present(alert, animated: true, completion: nil)
   }
 
-  // MARK:- Action
+  // MARK: - Action
   @IBAction func buttonActionSubmit(sender: UIButton?) {
 
     self.view.endEditing(true)
@@ -212,7 +212,7 @@ extension EligibilityStepViewController: NMWebServiceDelegate {
     } else {
       if error.localizedDescription.localizedCaseInsensitiveContains(kStudyWithStudyId) {
 
-        self.showAlert(message: kMessageInvalidTokenOrIfStudyDoesNotExist) 
+        self.showAlert(message: kMessageInvalidTokenOrIfStudyDoesNotExist)
 
       } else {
         self.showAlert(message: error.localizedDescription)

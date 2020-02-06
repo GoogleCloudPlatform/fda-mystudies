@@ -25,7 +25,7 @@ import UIKit
 
 class StudyOverviewViewControllerFirst: UIViewController {
 
-  // MARK:- Outlets
+  // MARK: - Outlets
   @IBOutlet var buttonJoinStudy: UIButton?
 
   @IBOutlet var buttonWatchVideo: UIButton?
@@ -34,7 +34,7 @@ class StudyOverviewViewControllerFirst: UIViewController {
   @IBOutlet var labelDescription: UILabel?
   @IBOutlet var imageViewStudy: UIImageView?
 
-  // MARK:- Properties
+  // MARK: - Properties
   var pageIndex: Int!
 
   var overViewWebsiteLink: String?
@@ -45,7 +45,7 @@ class StudyOverviewViewControllerFirst: UIViewController {
     return .lightContent
   }
 
-  // MARK:- Viewcontroller Lifecycle
+  // MARK: - Viewcontroller Lifecycle
   override func viewDidLoad() {
     super.viewDidLoad()
 
@@ -83,7 +83,7 @@ class StudyOverviewViewControllerFirst: UIViewController {
       options: [
         NSAttributedString.DocumentReadingOptionKey.documentType: NSAttributedString
           .DocumentType
-          .html,
+          .html
       ],
       documentAttributes: nil)
 
@@ -93,7 +93,7 @@ class StudyOverviewViewControllerFirst: UIViewController {
       [
         NSAttributedString.Key.font: UIFont(
           name: "HelveticaNeue",
-          size: CGFloat(fontSize))!,
+          size: CGFloat(fontSize))!
       ], range: (attrStr.string as NSString).range(of: attrStr.string))
     attributedText.addAttribute(
       NSAttributedString.Key.foregroundColor, value: UIColor.white,
@@ -115,7 +115,7 @@ class StudyOverviewViewControllerFirst: UIViewController {
     self.playerViewController.dismiss(animated: true, completion: nil)
   }
 
-  // MARK:- Button Actions
+  // MARK: - Button Actions
 
   @IBAction func watchVideoButtonAction(_ sender: Any) {
 
@@ -167,7 +167,7 @@ class StudyOverviewViewControllerFirst: UIViewController {
   }
 }
 
-// MARK:- Webservice Delegates
+// MARK: - Webservice Delegates
 extension StudyOverviewViewControllerFirst: NMWebServiceDelegate {
 
   func startedRequest(_ manager: NetworkManager, requestName: NSString) {
@@ -192,6 +192,6 @@ extension StudyOverviewViewControllerFirst: NMWebServiceDelegate {
 }
 
 // Helper function inserted by Swift 4.2 migrator.
-fileprivate func convertFromAVAudioSessionCategory(_ input: AVAudioSession.Category) -> String {
+private func convertFromAVAudioSessionCategory(_ input: AVAudioSession.Category) -> String {
   return input.rawValue
 }

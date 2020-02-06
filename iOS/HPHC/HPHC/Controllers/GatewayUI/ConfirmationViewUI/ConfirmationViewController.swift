@@ -51,7 +51,7 @@ class StudyToDelete {
 
 class ConfirmationViewController: UIViewController {
 
-  // MARK:- Outlets
+  // MARK: - Outlets
   @IBOutlet var tableViewConfirmation: UITableView?
 
   @IBOutlet var tableViewHeaderViewConfirmation: UIView?
@@ -60,7 +60,7 @@ class ConfirmationViewController: UIViewController {
   @IBOutlet var buttonDoNotDeleteAccount: UIButton?
   @IBOutlet var LabelHeaderDescription: UILabel?
 
-  // MARK:- Properties
+  // MARK: - Properties
   var tableViewRowDetails: NSMutableArray?
 
   lazy var studiesToDisplay: [Study]! = []
@@ -68,7 +68,7 @@ class ConfirmationViewController: UIViewController {
   var studyWithoutWCData: Study?
   lazy var studiesToWithdrawn: [StudyToDelete]! = []
 
-  // MARK:- View Controller LifeCycle
+  // MARK: - View Controller LifeCycle
 
   override func viewDidLoad() {
     super.viewDidLoad()
@@ -108,7 +108,7 @@ class ConfirmationViewController: UIViewController {
     self.addBackBarButton()
   }
 
-  // MARK:- Utils
+  // MARK: - Utils
 
   private func checkWithdrawlConfigurationForNextSuty() {
 
@@ -155,7 +155,7 @@ class ConfirmationViewController: UIViewController {
     }
   }
 
-  // MARK:- Webservice Response Handlers
+  // MARK: - Webservice Response Handlers
   private func sendRequestToGetInfoForStudy(study: Study) {
     WCPServices().getStudyInformation(studyId: study.studyId, delegate: self)
   }
@@ -199,7 +199,7 @@ class ConfirmationViewController: UIViewController {
     self.withdrawnFromNextStudy()
   }
 
-  // MARK:- Button Actions
+  // MARK: - Button Actions
 
   /// Delete account button clicked.
   @IBAction func deleteAccountAction(_ sender: UIButton) {
@@ -243,7 +243,7 @@ class ConfirmationViewController: UIViewController {
   }
 }
 
-// MARK:- TableView Data source
+// MARK: - TableView Data source
 extension ConfirmationViewController: UITableViewDataSource {
 
   func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -284,7 +284,7 @@ extension ConfirmationViewController: UITableViewDataSource {
   }
 }
 
-// MARK:- TableView Delegates
+// MARK: - TableView Delegates
 extension ConfirmationViewController: UITableViewDelegate {
 
   func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
@@ -304,7 +304,7 @@ extension ConfirmationViewController: ConfirmationOptionalDelegate {
   }
 }
 
-// MARK:- UserService Response handler
+// MARK: - UserService Response handler
 extension ConfirmationViewController: NMWebServiceDelegate {
   func startedRequest(_ manager: NetworkManager, requestName: NSString) {
     Logger.sharedInstance.info("requestname : \(requestName)")
@@ -318,10 +318,10 @@ extension ConfirmationViewController: NMWebServiceDelegate {
       self.removeProgressIndicator()
       self.handleDeleteAccountResponse()
 
-    } else if (requestName as String == WCPMethods.studyInfo.rawValue) {
+    } else if requestName as String == WCPMethods.studyInfo.rawValue {
       self.handleStudyInformationResonse()
 
-    } else if (requestName as String == ResponseMethods.withdrawFromStudy.description) {
+    } else if requestName as String == ResponseMethods.withdrawFromStudy.description {
       self.handleWithdrawnFromStudyResponse()
     }
   }
@@ -339,13 +339,12 @@ extension ConfirmationViewController: NMWebServiceDelegate {
         })
 
     } else {
-      if (requestName as String == WCPMethods.studyInfo.rawValue) {
+      if requestName as String == WCPMethods.studyInfo.rawValue {
         self.removeProgressIndicator()
 
       } else if requestName as String == ResponseMethods.withdrawFromStudy.description {
         if error.localizedDescription.localizedCaseInsensitiveContains(
-          "Invalid ParticipantId.")
-        {
+          "Invalid ParticipantId.") {
 
           self.handleWithdrawnFromStudyResponse()
 

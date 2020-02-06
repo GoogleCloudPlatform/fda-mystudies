@@ -26,7 +26,7 @@ enum SelectedTab: String {
 class StudyDashboardStatisticsTableViewCell: UITableViewCell {
 
   // Fifth cell Outlets
-  // MARK:- Outlets
+  // MARK: - Outlets
   @IBOutlet var statisticsCollectionView: UICollectionView?
 
   @IBOutlet var buttonDay: UIButton?
@@ -51,7 +51,7 @@ class StudyDashboardStatisticsTableViewCell: UITableViewCell {
     let attributedStartDate: NSMutableAttributedString = NSMutableAttributedString(
       string: stringDate)
     attributedStartDate.addAttribute(
-      NSAttributedString.Key.foregroundColor, value: color, range: NSMakeRange(0, 2))
+      NSAttributedString.Key.foregroundColor, value: color, range: NSRange(location: 0, length: 2))
     labelDateValue?.attributedText = attributedStartDate
     self.buttonForward?.isEnabled = false
 
@@ -76,19 +76,19 @@ class StudyDashboardStatisticsTableViewCell: UITableViewCell {
     let attributedStartDate: NSMutableAttributedString = NSMutableAttributedString(
       string: stringStartDate)
     attributedStartDate.addAttribute(
-      NSAttributedString.Key.foregroundColor, value: color, range: NSMakeRange(0, 2))
+      NSAttributedString.Key.foregroundColor, value: color, range: NSRange(location: 0, length: 2))
 
     let attributedEndDate: NSMutableAttributedString = NSMutableAttributedString(
       string: stringEndDate)
     attributedEndDate.addAttribute(
-      NSAttributedString.Key.foregroundColor, value: color, range: NSMakeRange(0, 2))
+      NSAttributedString.Key.foregroundColor, value: color, range: NSRange(location: 0, length: 2))
 
     attributedStartDate.append(attributedEndDate)
 
     return attributedStartDate
   }
 
-  // MARK:- Button action
+  // MARK: - Button action
 
   /// Day, Week and Month Button clicked.
   @IBAction func dayWeekMonthButtonAction(_ sender: AnyObject) {
@@ -116,7 +116,7 @@ class StudyDashboardStatisticsTableViewCell: UITableViewCell {
       let attributedStartDate: NSMutableAttributedString = NSMutableAttributedString(
         string: stringDate)
       attributedStartDate.addAttribute(
-        NSAttributedString.Key.foregroundColor, value: color, range: NSMakeRange(0, 2))
+        NSAttributedString.Key.foregroundColor, value: color, range: NSRange(location: 0, length: 2))
       labelDateValue?.attributedText = attributedStartDate
       self.buttonForward?.isEnabled = false
 
@@ -189,7 +189,7 @@ class StudyDashboardStatisticsTableViewCell: UITableViewCell {
       let attributedStartDate: NSMutableAttributedString = NSMutableAttributedString(
         string: stringDate)
       attributedStartDate.addAttribute(
-        NSAttributedString.Key.foregroundColor, value: color, range: NSMakeRange(0, 2))
+        NSAttributedString.Key.foregroundColor, value: color, range: NSRange(location: 0, length: 2))
       labelDateValue?.attributedText = attributedStartDate
 
       let result = todaysDate.compare(Date())
@@ -247,7 +247,7 @@ class StudyDashboardStatisticsTableViewCell: UITableViewCell {
       let attributedStartDate: NSMutableAttributedString = NSMutableAttributedString(
         string: stringDate)
       attributedStartDate.addAttribute(
-        NSAttributedString.Key.foregroundColor, value: color, range: NSMakeRange(0, 2))
+        NSAttributedString.Key.foregroundColor, value: color, range: NSRange(location: 0, length: 2))
       labelDateValue?.attributedText = attributedStartDate
 
     case .Week:
@@ -266,12 +266,12 @@ class StudyDashboardStatisticsTableViewCell: UITableViewCell {
       let attributedStartDate: NSMutableAttributedString = NSMutableAttributedString(
         string: stringStartDate)
       attributedStartDate.addAttribute(
-        NSAttributedString.Key.foregroundColor, value: color, range: NSMakeRange(0, 2))
+        NSAttributedString.Key.foregroundColor, value: color, range: NSRange(location: 0, length: 2))
 
       let attributedEndDate: NSMutableAttributedString = NSMutableAttributedString(
         string: stringEndDate)
       attributedEndDate.addAttribute(
-        NSAttributedString.Key.foregroundColor, value: color, range: NSMakeRange(0, 2))
+        NSAttributedString.Key.foregroundColor, value: color, range: NSRange(location: 0, length: 2))
       attributedStartDate.append(attributedEndDate)
 
       labelDateValue?.attributedText = attributedStartDate
@@ -312,20 +312,17 @@ class StudyDashboardStatisticsTableViewCell: UITableViewCell {
   }()
 }
 
-// MARK:- Collection delegates
+// MARK: - Collection delegates
 extension StudyDashboardStatisticsTableViewCell: UICollectionViewDelegate,
-  UICollectionViewDataSource
-{
+  UICollectionViewDataSource {
 
   func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int)
-    -> Int
-  {
+    -> Int {
     return StudyDashboard.instance.statistics.count
   }
 
   func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath)
-    -> UICollectionViewCell
-  {
+    -> UICollectionViewCell {
 
     let cell = collectionView.dequeueReusableCell(
       withReuseIdentifier: kStatisticsCollectionViewCell, for: indexPath)

@@ -21,13 +21,13 @@ import UIKit
 
 class NotificationViewController: UIViewController {
 
-  // MARK:- Outlets
+  // MARK: - Outlets
   @IBOutlet var tableView: UITableView?
 
-  // MARK:- Properties
+  // MARK: - Properties
   lazy var notificationArray: [Any] = []
 
-  // MARK:- ViewController LifeCycle
+  // MARK: - ViewController LifeCycle
 
   override func viewDidLoad() {
     super.viewDidLoad()
@@ -48,7 +48,7 @@ class NotificationViewController: UIViewController {
     ud.synchronize()
   }
 
-  // MARK:- Utils
+  // MARK: - Utils
 
   private func handleNotificationListResponse() {
     if (Gateway.instance.notification?.count)! > 0 {
@@ -71,8 +71,7 @@ class NotificationViewController: UIViewController {
             // filter notification
             if notification.type == AppNotification.NotificationType.Study {
 
-              let study = Gateway.instance.studies?.filter(
-                { $0.studyId == notification.studyId })
+              let study = Gateway.instance.studies?.filter({ $0.studyId == notification.studyId })
                 .last
               if study != nil && self.isUserJoined(study: study!) {
                 self.notificationArray.append(notification)
@@ -233,7 +232,7 @@ class NotificationViewController: UIViewController {
   }
 }
 
-// MARK:- TableView Datasource
+// MARK: - TableView Datasource
 extension NotificationViewController: UITableViewDataSource {
 
   func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -253,7 +252,7 @@ extension NotificationViewController: UITableViewDataSource {
   }
 }
 
-// MARK:- TableView Delegates
+// MARK: - TableView Delegates
 extension NotificationViewController: UITableViewDelegate {
 
   func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
@@ -278,7 +277,7 @@ extension NotificationViewController: UITableViewDelegate {
   }
 }
 
-// MARK:- WebService Delegate
+// MARK: - WebService Delegate
 extension NotificationViewController: NMWebServiceDelegate {
 
   func startedRequest(_ manager: NetworkManager, requestName: NSString) {

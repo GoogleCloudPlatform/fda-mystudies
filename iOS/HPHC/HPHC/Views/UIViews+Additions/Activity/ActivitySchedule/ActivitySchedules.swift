@@ -18,10 +18,10 @@
 
 import UIKit
 
-// MARK:- ActivitySchedules Class
+// MARK: - ActivitySchedules Class
 class ActivitySchedules: UIView, UITableViewDelegate, UITableViewDataSource {
 
-  // MARK:- Outlets
+  // MARK: - Outlets
   @IBOutlet var tableview: UITableView?
 
   @IBOutlet var buttonCancel: UIButton!
@@ -53,7 +53,7 @@ class ActivitySchedules: UIView, UITableViewDelegate, UITableViewDataSource {
     return view
   }
 
-  // MARK:- Button Action
+  // MARK: - Button Action
   @IBAction func buttonCancelClicked(_: UIButton) {
     self.removeFromSuperview()
   }
@@ -208,8 +208,7 @@ class ResponseDataFetch: NMWebServiceDelegate {
         if activity?.type == ActivityType.activeTask {
 
           if activity?.taskSubType == "fetalKickCounter" || activity?.taskSubType
-            == "towerOfHanoi"
-          {
+            == "towerOfHanoi" {
             key = activityId!
           }
         }
@@ -249,7 +248,7 @@ class ResponseDataFetch: NMWebServiceDelegate {
 
   func finishedRequest(_ manager: NetworkManager, requestName: NSString, response: AnyObject?) {
     Logger.sharedInstance.info(
-      "requestname : \(requestName) Response : \(String(describing:response) )")
+      "requestname : \(requestName) Response : \(String(describing: response) )")
 
     if requestName as String == WCPMethods.studyDashboard.method.methodName {
       self.getDataKeysForCurrentStudy()

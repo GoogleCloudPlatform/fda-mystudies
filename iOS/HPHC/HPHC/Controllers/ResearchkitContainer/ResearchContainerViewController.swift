@@ -31,7 +31,7 @@ import UIKit
 
 class ResearchContainerViewController: UIViewController, HealthClientType {
 
-  // MARK:- Properties
+  // MARK: - Properties
 
   /// HealthClientType
   var healthStore: HKHealthStore?
@@ -43,7 +43,7 @@ class ResearchContainerViewController: UIViewController, HealthClientType {
     }
   }
 
-  // MARK:- ViewController Lifecycle
+  // MARK: - ViewController Lifecycle
 
   override func viewDidLoad() {
     super.viewDidLoad()
@@ -63,7 +63,7 @@ class ResearchContainerViewController: UIViewController, HealthClientType {
     }
   }
 
-  // MARK:- Unwind segues Actions
+  // MARK: - Unwind segues Actions
 
   @IBAction func unwindToStudy(_ segue: UIStoryboardSegue) {
     toStudy()
@@ -73,7 +73,7 @@ class ResearchContainerViewController: UIViewController, HealthClientType {
     toWithdrawl()
   }
 
-  // MARK:- Transitions
+  // MARK: - Transitions
 
   func toOnboarding() {
     performSegue(withIdentifier: "toOnboarding", sender: self)
@@ -94,5 +94,5 @@ extension ResearchContainerViewController: ORKTaskViewControllerDelegate {
     didFinishWith reason: ORKTaskViewControllerFinishReason, error: Error?
   ) {
   }
-    
+
 }

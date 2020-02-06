@@ -18,7 +18,7 @@
 
 import Foundation
 
-// MARK:- ActivitySchedules Class
+// MARK: - ActivitySchedules Class
 
 enum ActivityFilterType: Int {
   case all = 0
@@ -32,13 +32,13 @@ protocol ActivityFilterViewDelegate: class {
 
 class ActivityFilterView: UIView, UITableViewDelegate, UITableViewDataSource {
 
-  // MARK:- Outlets
+  // MARK: - Outlets
   @IBOutlet var tableview: UITableView?
 
   @IBOutlet var buttonCancel: UIButton!
   @IBOutlet var heightLayoutConstraint: NSLayoutConstraint!
 
-  // MARK:- Properties
+  // MARK: - Properties
   weak var delegate: ActivityFilterViewDelegate?
 
   lazy var filterArray = ["All", "Surveys", "Tasks"]
@@ -50,8 +50,7 @@ class ActivityFilterView: UIView, UITableViewDelegate, UITableViewDataSource {
   }
 
   class func instanceFromNib(frame: CGRect, selectedIndex: ActivityFilterType)
-    -> ActivityFilterView
-  {
+    -> ActivityFilterView {
     let view = UINib(nibName: "ActivityFilterView", bundle: nil).instantiate(
       withOwner: nil, options: nil)[0] as! ActivityFilterView
     view.frame = frame
@@ -70,7 +69,7 @@ class ActivityFilterView: UIView, UITableViewDelegate, UITableViewDataSource {
     return view
   }
 
-  // MARK:- Button Action
+  // MARK: - Button Action
   @IBAction func buttonCancelClicked(_: UIButton) {
     self.removeFromSuperview()
   }

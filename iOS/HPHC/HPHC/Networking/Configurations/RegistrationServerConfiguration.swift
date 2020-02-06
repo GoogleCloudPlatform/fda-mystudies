@@ -81,7 +81,7 @@ enum RegistrationMethods: String {
   }
 
 }
-// MARK:- Set the server end points
+// MARK: - Set the server end points
 enum RegistrationServerURLConstants {
 
   // Staging server
@@ -92,7 +92,7 @@ enum RegistrationServerURLConstants {
 class RegistrationServerConfiguration: NetworkConfiguration {
   static let configuration = RegistrationServerConfiguration()
 
-  // MARK:  Delegates
+  // MARK: Delegates
   override func getProductionURL() -> String {
     return RegistrationServerURLConstants.ProductionURL
   }
@@ -114,12 +114,12 @@ class RegistrationServerConfiguration: NetworkConfiguration {
       return [
         kUserAuthToken: User.currentUser.authToken,
         "applicationId": appId,
-        "orgId": orgId,
+        "orgId": orgId
       ]
     } else {
       return [
         "applicationId": appId,
-        "orgId": orgId,
+        "orgId": orgId
       ]
     }
   }

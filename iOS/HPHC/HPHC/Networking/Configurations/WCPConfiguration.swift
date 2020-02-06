@@ -53,7 +53,7 @@ enum WCPMethods: String {
     }
   }
 }
-// MARK:- Set the server end points
+// MARK: - Set the server end points
 enum WCPServerURLConstants {
 
   /// Staging.
@@ -66,7 +66,7 @@ class WCPConfiguration: NetworkConfiguration {
 
   static let configuration = WCPConfiguration()
 
-  // MARK:  Delegates
+  // MARK: Delegates
   override func getProductionURL() -> String {
     return WCPServerURLConstants.ProductionURL
   }
@@ -85,13 +85,13 @@ class WCPConfiguration: NetworkConfiguration {
     let orgId = infoDict!["OrganizationID"] as! String
 
     let token = "AvxfEsgX9u" + ":" + "ee91a4f6-d9c4-4ee9-a0e2-5682c5b1c916"
-  
+
     let base64token = "Basic " + token.toBase64()
 
     let headers = [
       "Authorization": base64token,
       "applicationId": appId,
-      "orgId": orgId,
+      "orgId": orgId
     ]
 
     return headers

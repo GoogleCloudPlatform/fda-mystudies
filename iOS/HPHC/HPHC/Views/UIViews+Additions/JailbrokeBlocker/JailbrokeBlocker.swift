@@ -45,7 +45,7 @@ class JailbrokeBlocker: UIView {
 
   }
 
-  // MARK:- Action
+  // MARK: - Action
 
   @IBAction func buttonUpgradeAction(_ sender: UIButton) {
 

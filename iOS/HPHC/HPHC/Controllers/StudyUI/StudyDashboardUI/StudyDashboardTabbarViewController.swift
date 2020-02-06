@@ -59,7 +59,7 @@ class StudyDashboardTabbarViewController: UITabBarController {
       alert.addAction(
         UIAlertAction.init(
           title: NSLocalizedString(kTitleOk, comment: ""), style: .default,
-          handler: { (action) in
+          handler: { (_) in
 
             self.dismiss(animated: true, completion: nil)
 

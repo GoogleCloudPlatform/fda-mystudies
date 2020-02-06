@@ -156,7 +156,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     let timeZoneCurrent = TimeZone.current
     let differenceFromCurrent = timeZoneCurrent.secondsFromGMT()
-   
+
     // Saving TimeZone to User Defaults
     let ud = UserDefaults.standard
     let setuptimeDiff = ud.value(forKey: ksetUpTimeIdentifier) as? Int
@@ -181,7 +181,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     ud.synchronize()
   }
 
-  // MARK:- Realm Migragion
+  // MARK: - Realm Migragion
   func generateRealmKeys() {
 
     // Realm Encryption key generation
@@ -212,7 +212,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     let config = Realm.Configuration(
       encryptionKey: keyData,
       schemaVersion: 1,
-      migrationBlock: { migration, oldSchemaVersion in
+      migrationBlock: { _, oldSchemaVersion in
         // We haven’t migrated anything yet, so oldSchemaVersion == 0
         if oldSchemaVersion < 1 {
           // Nothing to do!
@@ -225,7 +225,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     Realm.Configuration.defaultConfiguration = config
   }
 
-  // MARK:-  App Delegates methods
+  // MARK: - App Delegates methods
 
   func application(
     _ application: UIApplication,
@@ -339,24 +339,20 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
       )?.title ?? ""
 
       if (navController as? UINavigationController) != nil && isTaskViewControllerVisible
-        == false
-      {
+        == false {
 
         if (navController as? UINavigationController)?.visibleViewController?.isKind(
-          of: ORKPasscodeViewController.self) == false
-        {
+          of: ORKPasscodeViewController.self) == false {
           // Request for Passcode
           self.checkPasscode(viewController: navController!)
         }
 
       } else if (navController as? UINavigationController) != nil
         && isTaskViewControllerVisible == true
-        && navigationTitle == "Activity"
-      {
+        && navigationTitle == "Activity" {
 
         if (navController as? UINavigationController)?.visibleViewController?.isKind(
-          of: ORKPasscodeViewController.self) == false
-        {
+          of: ORKPasscodeViewController.self) == false {
           // Request for Passcode
           self.checkPasscode(viewController: navController!)
         }
@@ -391,7 +387,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
   }
 
-  // MARK:- NOTIFICATION
+  // MARK: - NOTIFICATION
 
   func application(
     _ application: UIApplication,
@@ -420,7 +416,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
   }
 
-  // MARK:- Jailbreak Methods
+  // MARK: - Jailbreak Methods
 
   /// Checks Jailbroken status
   /// - Parameter application: `UIApplication` instance
@@ -445,16 +441,14 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
       atPath: "/Library/MobileSubstrate/MobileSubstrate.dylib") || fileManager.fileExists(
         atPath: "/bin/bash") || fileManager.fileExists(atPath: "/usr/sbin/sshd")
       || fileManager
-      .fileExists(atPath: "/etc/apt") || fileManager.fileExists(atPath: "/usr/bin/ssh")
-    {
+      .fileExists(atPath: "/etc/apt") || fileManager.fileExists(atPath: "/usr/bin/ssh") {
       return true
     }
 
     if canOpen(path: "/Applications/Cydia.app") || canOpen(
       path: "/Library/MobileSubstrate/MobileSubstrate.dylib") || canOpen(path: "/bin/bash")
       || canOpen(path: "/usr/sbin/sshd") || canOpen(path: "/etc/apt") || canOpen(
-        path: "/usr/bin/ssh")
-    {
+        path: "/usr/bin/ssh") {
       return true
     }
 
@@ -475,7 +469,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     return true
   }
 
-  // MARK:- Add Retry Screen
+  // MARK: - Add Retry Screen
 
   /// Present Retry View
   /// - Parameter viewController: `UIViewController` instance
@@ -495,15 +489,15 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     UIApplication.shared.keyWindow?.bringSubviewToFront(retryView!)
   }
 
-  // MARK:- Custom Navigation Bar
+  // MARK: - Custom Navigation Bar
 
   func customizeNavigationBar() {
     UINavigationBar.appearance().titleTextAttributes = [
-      NSAttributedString.Key.font: UIFont(name: "HelveticaNeue-Medium", size: 18)!,
+      NSAttributedString.Key.font: UIFont(name: "HelveticaNeue-Medium", size: 18)!
     ]
   }
 
-  // MARK:- Checker Methods
+  // MARK: - Checker Methods
 
   /// Get the current App version from App Store and Adds the blocker screen if it is of lower version
   func checkForAppUpdate() {
@@ -651,8 +645,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         notificationType = userInfoDetails[kNotificationType] as? String
       }
       if Utilities.isValidValue(
-        someObject: userInfoDetails[kNotificationSubType] as AnyObject)
-      {
+        someObject: userInfoDetails[kNotificationSubType] as AnyObject) {
         notificationSubType = AppNotification.NotificationSubType(
           rawValue: (userInfoDetails[kNotificationSubType] as? String)!)
       }
@@ -723,8 +716,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
               if initialVC is ProfileViewController || initialVC
                 is ReachoutOptionsViewController
-                || initialVC is GatewayResourcesListViewController
-              {
+                || initialVC is GatewayResourcesListViewController {
 
                 NotificationHandler.instance.appOpenFromNotification = true
                 NotificationHandler.instance.studyId = studyId
@@ -889,8 +881,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
   func checkForStudyUpdates() {
 
     if Study.currentStudy != nil && Study.currentStudy?.userParticipateState.status
-      == UserStudyStatus.StudyStatus.inProgress
-    {
+      == UserStudyStatus.StudyStatus.inProgress {
 
       let userStudyStatus = (Study.currentStudy?.userParticipateState.status)!
 
@@ -1119,7 +1110,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
   }
 
-  //MARK: - Consent Handlers
+  // MARK: - Consent Handlers
   func studyEnrollmentFinished() {
     NotificationCenter.default.post(
       name: NSNotification.Name(rawValue: "NotificationStudyEnrollmentCompleted"), object: nil
@@ -1161,7 +1152,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
 
     ConsentBuilder.currentConsent?.consentStatus = .completed
- 
+
     if ConsentBuilder.currentConsent?.consentResult?.consentPdfData?.count == 0 {
 
       DispatchQueue.main.asyncAfter(deadline: .now()+3) {
@@ -1179,7 +1170,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
 }
 
-// MARK:- Handle network responses
+// MARK: - Handle network responses
 extension AppDelegate {
 
   /// Handle App update
@@ -1187,8 +1178,7 @@ extension AppDelegate {
 
     if let iosDict = response["ios"] as? JSONDictionary,
       let latestVersion = iosDict["latestVersion"] as? String,
-      let ForceUpdate = iosDict["forceUpdate"] as? String
-    {
+      let ForceUpdate = iosDict["forceUpdate"] as? String {
 
       let appVersion = Utilities.getAppVersion()
       guard let isForceUpdate = Bool(ForceUpdate) else { return }
@@ -1196,8 +1186,7 @@ extension AppDelegate {
       // latestVersion = "2.0" make it mutable to test and uncomment
       if appVersion != latestVersion,
         latestVersion.compare(appVersion, options: .numeric, range: nil, locale: nil)
-        == ComparisonResult.orderedDescending, isForceUpdate
-      {
+        == ComparisonResult.orderedDescending, isForceUpdate {
 
         // load and Update blockerScreen
         self.shouldAddForceUpgradeScreen = true
@@ -1223,8 +1212,7 @@ extension AppDelegate {
 extension AppDelegate: NMAuthChallengeDelegate {
 
   func networkCredential(_ manager: NetworkManager, challenge: URLAuthenticationChallenge)
-    -> URLCredential
-  {
+    -> URLCredential {
     var urlCredential: URLCredential = URLCredential()
     if challenge.protectionSpace.authenticationMethod == NSURLAuthenticationMethodServerTrust {
       if challenge.protectionSpace.host == "hphci-fdama-te-ur-01.labkey.com" {
@@ -1237,8 +1225,7 @@ extension AppDelegate: NMAuthChallengeDelegate {
   func networkChallengeDisposition(
     _ manager: NetworkManager, challenge: URLAuthenticationChallenge
   )
-    -> URLSession.AuthChallengeDisposition
-  {
+    -> URLSession.AuthChallengeDisposition {
     return URLSession.AuthChallengeDisposition.useCredential
   }
 }
@@ -1269,16 +1256,15 @@ extension AppDelegate: NMWebServiceDelegate {
         self.handleSignoutResponse()
       }
     } else if requestName as String == RegistrationMethods.updateEligibilityConsentStatus.method
-      .methodName
-    {
+      .methodName {
 
       self.addAndRemoveProgress(add: false)
       self.studyEnrollmentFinished()
 
-    } else if (requestName as String == WCPMethods.studyUpdates.rawValue) {
+    } else if requestName as String == WCPMethods.studyUpdates.rawValue {
       self.handleStudyUpdatedInformation()
 
-    } else if (requestName as String == RegistrationMethods.updateUserProfile.description) {
+    } else if requestName as String == RegistrationMethods.updateUserProfile.description {
 
       let ud = UserDefaults.standard
       ud.set(false, forKey: kNotificationRegistrationIsPending)
@@ -1300,12 +1286,11 @@ extension AppDelegate: NMWebServiceDelegate {
   }
 }
 
-// MARK:- ORKTaskViewController Delegate
+// MARK: - ORKTaskViewController Delegate
 extension AppDelegate: ORKTaskViewControllerDelegate {
-  
+
   func taskViewControllerSupportsSaveAndRestore(_ taskViewController: ORKTaskViewController)
-    -> Bool
-  {
+    -> Bool {
     return true
   }
 
@@ -1318,13 +1303,13 @@ extension AppDelegate: ORKTaskViewControllerDelegate {
 
     case ORKTaskViewControllerFinishReason.completed:
       print("completed")
-      if !(taskViewController.task?.identifier == kConsentTaskIdentifier)  { // other surveys/Active tasks/ Passcode
+      if !(taskViewController.task?.identifier == kConsentTaskIdentifier) { // other surveys/Active tasks/ Passcode
         let ud = UserDefaults.standard
         ud.set(false, forKey: kPasscodeIsPending)
         ud.synchronize()
         self.appIsResignedButDidNotEnteredBackground = false
       }
-      
+
     case ORKTaskViewControllerFinishReason.failed:
       print("failed")
 
@@ -1342,7 +1327,7 @@ extension AppDelegate: ORKTaskViewControllerDelegate {
       if taskViewController.task?.identifier == kConsentTaskIdentifier {
         self.popViewControllerAfterConsentDisagree()
       }
-      
+
     @unknown default:
       break
     }
@@ -1360,8 +1345,7 @@ extension AppDelegate: ORKTaskViewControllerDelegate {
     }
 
     if taskViewController.task?.identifier == kConsentTaskIdentifier && reason
-      == ORKTaskViewControllerFinishReason.completed
-    {
+      == ORKTaskViewControllerFinishReason.completed {
 
     }
   }
@@ -1376,8 +1360,7 @@ extension AppDelegate: ORKTaskViewControllerDelegate {
       if (taskViewController.result.results?.count)! > 1 {
 
         if activityBuilder?.actvityResult?.result?.count == taskViewController.result
-          .results?.count
-        {
+          .results?.count {
           // Removing the dummy result:Currentstep result which not presented yet
           activityBuilder?.actvityResult?.result?.removeLast()
         }
@@ -1388,8 +1371,7 @@ extension AppDelegate: ORKTaskViewControllerDelegate {
       if stepViewController.step?.identifier == kConsentCompletionStepIdentifier
         || stepViewController.step?.identifier == kVisualStepId
         || stepViewController.step?.identifier == kConsentSharePdfCompletionStep
-        || stepViewController.step?.identifier == kEligibilityVerifiedScreen
-      {
+        || stepViewController.step?.identifier == kEligibilityVerifiedScreen {
         if stepViewController.step?.identifier == kEligibilityVerifiedScreen {
           stepViewController.continueButtonTitle = kContinueButtonTitle
         }
@@ -1406,7 +1388,7 @@ extension AppDelegate: ORKTaskViewControllerDelegate {
         let consentSignatureResult: ConsentCompletionTaskResult? = orkStepResult?.results?
           .first
           as? ConsentCompletionTaskResult
-        
+
         // Checking if Signature is consented after Review Step
         if consentSignatureResult?.didTapOnViewPdf == false {
           // Directly moving to completion step by skipping Intermediate PDF viewer screen
@@ -1423,7 +1405,7 @@ extension AppDelegate: ORKTaskViewControllerDelegate {
     }
   }
 
-  // MARK:- StepViewController Delegate
+  // MARK: - StepViewController Delegate
 
   public func stepViewController(
     _ stepViewController: ORKStepViewController,
@@ -1450,8 +1432,7 @@ extension AppDelegate: ORKTaskViewControllerDelegate {
         != kConsentSharePdfCompletionStep && step.identifier
         != kConsentViewPdfCompletionStep
         && step.identifier != kComprehensionCompletionStepIdentifier && step.identifier
-        != kReviewTitle
-      {
+        != kReviewTitle {
 
         return nil
 
@@ -1635,8 +1616,7 @@ extension AppDelegate: ORKTaskViewControllerDelegate {
         if shareStep?.identifier == kConsentSharing && ConsentBuilder.currentConsent?
           .sharingConsent
           != nil && (ConsentBuilder.currentConsent?.sharingConsent?.allowWithoutSharing)!
-          == false
-        {
+          == false {
 
           let result = (shareStep?.results?.first as? ORKChoiceQuestionResult)
 
@@ -1767,7 +1747,7 @@ extension AppDelegate: ORKPasscodeDelegate {
   }
 }
 
-// MARK:- ComprehensionFailureDelegate
+// MARK: - ComprehensionFailureDelegate
 
 extension AppDelegate: ComprehensionFailureDelegate {
   func didTapOnCancel() {
@@ -1824,11 +1804,10 @@ extension AppDelegate: UNUserNotificationCenterDelegate {
       self.updateNotification()
 
     } else {
-      if (
+      if
         UIApplication.shared.applicationState == UIApplication.State.background || (
           UIApplication.shared.applicationState == UIApplication.State.inactive
-        )
-      ) {
+        ) {
         self.handleLocalNotification(userInfoDetails: (userInfo as? [String: Any])!)
       }
     }
@@ -1900,7 +1879,7 @@ extension UIWindow {
       animations: {
         view?.alpha = 0
       }
-    ) { (completed) in
+    ) { (_) in
       view?.removeFromSuperview()
     }
   }

@@ -21,7 +21,7 @@ import UIKit
 
 class SecondGatewayOverviewViewController: UIViewController {
 
-  // MARK:- Outlets
+  // MARK: - Outlets
   @IBOutlet var imageViewBackgroundImage: UIImageView?
 
   @IBOutlet var labelHeadingText: UILabel?
@@ -39,7 +39,7 @@ class SecondGatewayOverviewViewController: UIViewController {
     Logger.sharedInstance.info("\(self): deinit")
   }
 
-  // MARK:- ViewController Lifecycle
+  // MARK: - ViewController Lifecycle
   override func viewDidLoad() {
     super.viewDidLoad()
     // Used to set border color for bottom view
@@ -53,7 +53,7 @@ class SecondGatewayOverviewViewController: UIViewController {
     imageViewBackgroundImage?.image = UIImage.init(named: overviewSectionDetail.imageURL!)
   }
 
-  // MARK:-
+  // MARK: -
 
   /// Create the menu view using FDASlideMenuViewController and Gateway storyboard.
   func createMenuView() {
@@ -65,7 +65,7 @@ class SecondGatewayOverviewViewController: UIViewController {
     self.navigationController?.pushViewController(fda, animated: true)
   }
 
-  // MARK:- Button Actions
+  // MARK: - Button Actions
 
   /// To create FDASlideMenuViewController and Gateway storyboard.
   @IBAction func getStartedButtonClicked(_ sender: Any) {

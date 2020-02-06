@@ -121,7 +121,7 @@ class WebViewController: UIViewController {
       alert.addAction(
         UIAlertAction.init(
           title: NSLocalizedString("OK", comment: ""), style: .default,
-          handler: { (action) in
+          handler: { (_) in
 
             self.dismiss(animated: true, completion: nil)
 

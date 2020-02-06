@@ -64,8 +64,7 @@ class AnchorDateHandler {
 
     for activity in activities {
 
-      let act = User.currentUser.participatedActivites.filter(
-        { $0.activityId == activity.sourceActivityId }).last
+      let act = User.currentUser.participatedActivites.filter({ $0.activityId == activity.sourceActivityId }).last
 
       if act != nil && (act?.status == UserActivityStatus.ActivityStatus.completed) {
 
@@ -100,8 +99,7 @@ class AnchorDateHandler {
 
     for resource in resources {
 
-      let act = User.currentUser.participatedActivites.filter(
-        { $0.activityId == resource.sourceActivityId }).last
+      let act = User.currentUser.participatedActivites.filter({ $0.activityId == resource.sourceActivityId }).last
 
       if act != nil && (act?.status == UserActivityStatus.ActivityStatus.completed) {
 
@@ -158,7 +156,7 @@ class AnchorDateHandler {
       url: requstUrl!, cachePolicy: URLRequest.CachePolicy.reloadIgnoringLocalCacheData,
       timeoutInterval: NetworkConnectionConstants.ConnectionTimeoutInterval)
     request.httpMethod = method.methodType.methodTypeAsString
-    
+
     let session = URLSession.shared
     let dataTask = session.dataTask(
       with: request as URLRequest,
@@ -199,7 +197,7 @@ class AnchorDateHandler {
 
                   let anchorDateObject = data[emptyAnchorDateDetail.sourceKey]
                     as? [String: String]
-                  let anchorDateString = anchorDateObject?["value"] 
+                  let anchorDateString = anchorDateObject?["value"]
                   let date = ResponseDataFetch.labkeyDateFormatter.date(
                     from: anchorDateString!)
                   emptyAnchorDateDetail.anchorDate = date
@@ -224,8 +222,7 @@ class AnchorDateHandler {
   func saveAnchorDateInDatabase() {
 
     Logger.sharedInstance.info("Log DB Started - \(Date().timeIntervalSince1970)")
-    let listItems = emptyAnchorDatesList.filter(
-      { $0.anchorDate != nil && $0.isFinishedFetching == true })
+    let listItems = emptyAnchorDatesList.filter({ $0.anchorDate != nil && $0.isFinishedFetching == true })
     for item in listItems {
       Logger.sharedInstance.info("DB")
       if item.fetchAnchorDateFor == .activity {

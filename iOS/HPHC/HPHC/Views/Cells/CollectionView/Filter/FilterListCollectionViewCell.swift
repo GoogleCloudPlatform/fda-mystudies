@@ -20,7 +20,7 @@ import UIKit
 
 class FilterListCollectionViewCell: UICollectionViewCell {
 
-  // MARK:- Outlets
+  // MARK: - Outlets
   @IBOutlet weak var tableView: UITableView?
 
   @IBOutlet weak var tableViewHeader: UIView?
@@ -44,7 +44,7 @@ class FilterListCollectionViewCell: UICollectionViewCell {
     labelHeaderTitle?.sizeToFit()
   }
 }
-// MARK:- TableView Delegate & DataSource
+// MARK: - TableView Delegate & DataSource
 extension FilterListCollectionViewCell: UITableViewDelegate, UITableViewDataSource {
 
   func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {

@@ -25,7 +25,7 @@ let kVerficationMessageFromForgotPassword
 
 class ForgotPasswordViewController: UIViewController {
 
-  // MARK:- Outlets
+  // MARK: - Outlets
   @IBOutlet var buttonSubmit: UIButton?
 
   @IBOutlet var textFieldEmail: UITextField?
@@ -38,7 +38,7 @@ class ForgotPasswordViewController: UIViewController {
     Logger.sharedInstance.info("\(self): deinit")
   }
 
-  // MARK:- ViewController Delegates
+  // MARK: - ViewController Delegates
 
   override func viewDidLoad() {
     super.viewDidLoad()
@@ -70,7 +70,7 @@ class ForgotPasswordViewController: UIViewController {
     textFieldEmail?.becomeFirstResponder()
   }
 
-  // MARK:- Utility Methods
+  // MARK: - Utility Methods
 
   /// Dismiss key board when clicked on Background.
   @objc func dismissKeyboard() {
@@ -88,7 +88,7 @@ class ForgotPasswordViewController: UIViewController {
       errorAlertActionTitle: NSLocalizedString("OK", comment: ""), viewControllerUsed: self)
   }
 
-  // MARK:- Button Action
+  // MARK: - Button Action
 
   /// To check all the validations
   /// before making a logout webservice call.
@@ -106,7 +106,7 @@ class ForgotPasswordViewController: UIViewController {
     }
   }
 
-  // MARK:- Segue Methods
+  // MARK: - Segue Methods
   override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
 
     if let verifyController = segue.destination as? VerificationViewController {
@@ -122,7 +122,7 @@ class ForgotPasswordViewController: UIViewController {
   }
 }
 
-// MARK:- Webservices Delegates
+// MARK: - Webservices Delegates
 extension ForgotPasswordViewController: NMWebServiceDelegate {
 
   func startedRequest(_ manager: NetworkManager, requestName: NSString) {
@@ -169,7 +169,7 @@ extension ForgotPasswordViewController: NMWebServiceDelegate {
   }
 }
 
-// MARK:- TextField Delegates
+// MARK: - TextField Delegates
 extension ForgotPasswordViewController: UITextFieldDelegate {
 
   func textField(
@@ -179,7 +179,7 @@ extension ForgotPasswordViewController: UITextFieldDelegate {
     let finalString = textField.text! + string
     if string == " " || finalString.count > 255 {
       return false
-    } else {    
+    } else {
       return true
     }
   }

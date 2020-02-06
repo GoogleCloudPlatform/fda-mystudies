@@ -159,7 +159,7 @@ class User {
   func getFullName() -> String {
     return firstName! + " " + lastName!
   }
-  
+
   /// Setter method for `User` which initialize all properties
   /// - Parameter dict: `JSONDictionary` which contains all properties of `User`
   func setUser(dict: NSDictionary) {
@@ -236,8 +236,7 @@ class User {
   ///   - adherence: Current Study runs count
   /// - Returns: object of `UserStudyStatus`
   func udpateCompletionAndAdherence(studyId: String, completion: Int, adherence: Int)
-    -> UserStudyStatus
-  {
+    -> UserStudyStatus {
 
     let studies = self.participatedStudies as [UserStudyStatus]
     if let study = studies.filter({ $0.studyId == studyId }).first {
@@ -259,7 +258,7 @@ class User {
     }
   }
 
-  // MARK:Study Bookmark
+  // MARK: Study Bookmark
 
   /// Checks `Study` bookmarked status based on StudyId
   /// - Parameter studyId: StudyId to filter `UserActivityStatus`
@@ -315,7 +314,7 @@ class User {
     return nil
   }
 
-  // MARK:Activity Bookmark
+  // MARK: Activity Bookmark
 
   /// Checks `Activity` bookmarked status based on StudyId and ActivityId
   /// - Parameters:
@@ -325,10 +324,8 @@ class User {
   func isActivityBookmarked(studyId: String, activityId: String) -> Bool {
 
     let activityes = self.participatedActivites as [UserActivityStatus]
-    if let activity = activityes.filter(
-      { $0.studyId == studyId && $0.activityId == activityId })
-      .first
-    {
+    if let activity = activityes.filter({ $0.studyId == studyId && $0.activityId == activityId })
+      .first {
       return activity.bookmarked
     }
     return false
@@ -343,10 +340,8 @@ class User {
   func bookmarkActivity(studyId: String, activityId: String) -> UserActivityStatus {
 
     let activityes = self.participatedActivites as [UserActivityStatus]
-    if let activity = activityes.filter(
-      { $0.studyId == studyId && $0.activityId == activityId })
-      .first
-    {
+    if let activity = activityes.filter({ $0.studyId == studyId && $0.activityId == activityId })
+      .first {
       activity.bookmarked = true
       Logger.sharedInstance.info("Bookmark: activity is bookmarked : \(studyId)")
       return activity
@@ -372,16 +367,14 @@ class User {
   func removeBookbarkActivity(studyId: String, activityId: String) {
 
     let activityes = self.participatedActivites as [UserActivityStatus]
-    if let activity = activityes.filter(
-      { $0.studyId == studyId && $0.activityId == activityId })
-      .first
-    {
+    if let activity = activityes.filter({ $0.studyId == studyId && $0.activityId == activityId })
+      .first {
       activity.bookmarked = true
       Logger.sharedInstance.info("Bookmark: activity is removed from bookmarked : \(studyId)")
     }
   }
 
-  // MARK:Study Status
+  // MARK: Study Status
 
   /// Updates `Study` status
   /// - Parameters:
@@ -445,7 +438,7 @@ class User {
     return .yetToJoin
   }
 
-  // MARK:Activity Status
+  // MARK: Activity Status
 
   /// Updates `Activity` Status based on ActivityID and RunID
   /// - Parameters:
@@ -460,9 +453,7 @@ class User {
   ) -> UserActivityStatus {
 
     let activityes = self.participatedActivites as [UserActivityStatus]
-    if let activity = activityes.filter(
-      { $0.activityId == activityId && $0.activityRunId == runId }).first
-    {
+    if let activity = activityes.filter({ $0.activityId == activityId && $0.activityRunId == runId }).first {
       activity.status = status
       Logger.sharedInstance.info("User Activity Status: activity is updated : \(studyId)")
       return activity
@@ -485,8 +476,7 @@ class User {
   ///   - studyId:
   ///   - activityId: ActivityID to filter `UserActivityStatus`
   func getActivityStatus(studyId: String, activityId: String)
-    -> UserActivityStatus.ActivityStatus?
-  {
+    -> UserActivityStatus.ActivityStatus? {
 
     let activityes = self.participatedActivites as [UserActivityStatus]
     if let activity = activityes.filter({ $0.activityId == activityId }).first {
@@ -497,7 +487,7 @@ class User {
 
 }
 
-// MARK:User Settings
+// MARK: User Settings
 class Settings {
 
   var remoteNotifications: Bool?
@@ -718,16 +708,16 @@ class UserStudyStatus {
 
         let statusValue = (detail[kStatus] as? String)!
 
-        if (StudyStatus.inProgress.paramValue == statusValue) {
+        if StudyStatus.inProgress.paramValue == statusValue {
           self.status = .inProgress
 
-        } else if (StudyStatus.notEligible.paramValue == statusValue) {
+        } else if StudyStatus.notEligible.paramValue == statusValue {
           self.status = .notEligible
 
-        } else if (StudyStatus.completed.paramValue == statusValue) {
+        } else if StudyStatus.completed.paramValue == statusValue {
           self.status = .completed
 
-        } else if (StudyStatus.Withdrawn.paramValue == statusValue) {
+        } else if StudyStatus.Withdrawn.paramValue == statusValue {
           self.status = .Withdrawn
         }
       }
@@ -742,7 +732,7 @@ class UserStudyStatus {
 
     let studyDetail = [
       kStudyId: self.studyId ?? "",
-      kBookmarked: self.bookmarked,
+      kBookmarked: self.bookmarked
     ] as [String: Any]
     return studyDetail
   }
@@ -759,7 +749,7 @@ class UserStudyStatus {
     let studyDetail = [
       kStudyId: self.studyId!,
       kStudyStatus: self.status.paramValue,
-      kStudyParticipantId: id,
+      kStudyParticipantId: id
     ] as [String: Any]
     return studyDetail
   }
@@ -770,7 +760,7 @@ class UserStudyStatus {
     let studyDetail = [
       kStudyId: self.studyId!,
       "completion": completion,
-      "adherence": adherence,
+      "adherence": adherence
     ] as [String: Any]
     return studyDetail
   }
@@ -932,16 +922,16 @@ class UserActivityStatus {
 
         let statusValue = (detail[kActivityStatus] as? String)!
 
-        if (ActivityStatus.inProgress.paramValue == statusValue) {
+        if ActivityStatus.inProgress.paramValue == statusValue {
           self.status = .inProgress
 
-        } else if (ActivityStatus.yetToJoin.paramValue == statusValue) {
+        } else if ActivityStatus.yetToJoin.paramValue == statusValue {
           self.status = .yetToJoin
 
-        } else if (ActivityStatus.completed.paramValue == statusValue) {
+        } else if ActivityStatus.completed.paramValue == statusValue {
           self.status = .completed
 
-        } else if (ActivityStatus.abandoned.paramValue == statusValue) {
+        } else if ActivityStatus.abandoned.paramValue == statusValue {
           self.status = .abandoned
         }
       }
@@ -958,7 +948,7 @@ class UserActivityStatus {
     let studyDetail = [
       kStudyId: self.studyId ?? "",
       kActivityId: self.activityId ?? "",
-      kBookmarked: self.bookmarked,
+      kBookmarked: self.bookmarked
     ] as [String: Any]
     return studyDetail
   }
@@ -970,7 +960,7 @@ class UserActivityStatus {
     let runDetail = [
       "total": self.totalRuns,
       "completed": self.compeltedRuns,
-      "missed": self.incompletedRuns,
+      "missed": self.incompletedRuns
     ]
 
     let studyDetail = [
@@ -978,7 +968,7 @@ class UserActivityStatus {
       kActivityRunId: self.activityRunId ?? "",
       kActivityStatus: self.status.paramValue,
       kActivityVersion: self.activityVersion ?? "",
-      "activityRun": runDetail,
+      "activityRun": runDetail
     ] as [String: Any]
 
     return studyDetail

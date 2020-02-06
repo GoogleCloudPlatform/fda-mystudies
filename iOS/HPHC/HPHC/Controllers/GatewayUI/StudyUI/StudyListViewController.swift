@@ -32,7 +32,7 @@ let kNotificationViewControllerIdentifier = "NotificationViewControllerIdentifie
 
 class StudyListViewController: UIViewController {
 
-  // MARK:- Outlets
+  // MARK: - Outlets
 
   @IBOutlet weak var tableView: UITableView!
 
@@ -112,8 +112,7 @@ class StudyListViewController: UIViewController {
     setNeedsStatusBarAppearanceUpdate()
     // Checking if registering notification is pending
     if ud.value(forKey: kNotificationRegistrationIsPending) != nil,
-      ud.bool(forKey: kNotificationRegistrationIsPending) == true
-    {
+      ud.bool(forKey: kNotificationRegistrationIsPending) == true {
       appdelegate.askForNotification()
     }
 
@@ -252,7 +251,7 @@ class StudyListViewController: UIViewController {
     navigationItem.setRightBarButton(barItem, animated: true)
   }
 
-  // MARK:- Utils
+  // MARK: - Utils
   func checkIfNotificationEnabled() {
 
     var notificationEnabledFromAppSettings = false
@@ -263,8 +262,7 @@ class StudyListViewController: UIViewController {
 
     if (User.currentUser.settings?.remoteNotifications)!,
       (User.currentUser.settings?.localNotifications)!,
-      notificationEnabledFromAppSettings
-    {  // Notifications are enabled
+      notificationEnabledFromAppSettings {  // Notifications are enabled
       // Do Nothing
     } else {  // Notification is Disabled
       let ud = UserDefaults.standard
@@ -295,8 +293,7 @@ class StudyListViewController: UIViewController {
 
     do {
       let response = try JSONSerialization.jsonObject(with: data! as Data, options: [])
-        as? [String:
-        Any]
+        as? [String: Any]
 
       let studies = (response?[kStudies] as? [[String: Any]])!
       var listOfStudies: [Study] = []
@@ -496,7 +493,7 @@ class StudyListViewController: UIViewController {
   }
 
   @IBAction func searchButtonAction(_: UIBarButtonItem) {
-    
+
     searchView = SearchBarView.instanceFromNib(
       frame: CGRect(x: 0, y: -200, width: view.frame.size.width, height: 64.0), detail: nil)
 
@@ -518,7 +515,7 @@ class StudyListViewController: UIViewController {
           self.searchView?.textFieldSearch?.text = StudyFilterHandler.instance.searchText
         }
       }, completion: nil)
-    
+
   }
 
   // MARK: - Segue Methods
@@ -728,8 +725,7 @@ extension StudyListViewController: StudyFilterDelegates {
       || (pariticipationsStatus.isEmpty && currentUser != .AnonymousUser)
       || categories.isEmpty
       && searchText.isEmpty
-      && !bookmarked
-    {
+      && !bookmarked {
       self.studiesList = []
       refreshTableViewWith(searchText: searchText)
       return
@@ -962,7 +958,7 @@ extension StudyListViewController: searchBarDelegate {
           bookmarked: filterStrings.bookmark)
       }
     }
-   
+
     // filter by searched Text
     var searchTextFilteredStudies: [Study]! = []
     if text.count > 0 {
@@ -972,7 +968,7 @@ extension StudyListViewController: searchBarDelegate {
         $0.description!.containsIgnoringCase(text) ||
         $0.sponserName!.containsIgnoringCase(text)
       }
-        
+
       StudyFilterHandler.instance.searchText = text
       previousStudyList = studiesList
       studiesList = getSortedStudies(studies: searchTextFilteredStudies)

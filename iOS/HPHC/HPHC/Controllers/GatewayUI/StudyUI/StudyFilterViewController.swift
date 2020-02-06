@@ -42,14 +42,14 @@ enum FilterType: Int {
 
 class StudyFilterViewController: UIViewController {
 
-  // MARK:- Outlets
+  // MARK: - Outlets
 
   @IBOutlet weak var collectionView: UICollectionView?
 
   @IBOutlet weak var cancelButton: UIButton?
   @IBOutlet weak var applyButton: UIButton?
 
-  // MARK:- Properties
+  // MARK: - Properties
 
   weak var delegate: StudyFilterDelegates?
 
@@ -65,7 +65,7 @@ class StudyFilterViewController: UIViewController {
     Logger.sharedInstance.info("\(self): deinit")
   }
 
-  // MARK:- Viewcontroller lifecycle
+  // MARK: - Viewcontroller lifecycle
   override func viewDidLoad() {
     super.viewDidLoad()
 
@@ -84,7 +84,7 @@ class StudyFilterViewController: UIViewController {
     self.collectionView?.reloadData()
   }
 
-  // MARK:- Button Actions
+  // MARK: - Button Actions
 
   /// Navigate to Studylist screen on Apply button clicked.
   @IBAction func applyButtonAction(_ sender: AnyObject) {
@@ -101,10 +101,10 @@ class StudyFilterViewController: UIViewController {
 
         case .studyStatus:
           studyStatus.append(value.title)
-          
+
         case .participantStatus:
           pariticipationsStatus.append(value.title)
-          
+
         case .bookMark:
           if User.currentUser.userType == .FDAUser {
             bookmark = (value.isSelected)
@@ -153,18 +153,16 @@ class StudyFilterViewController: UIViewController {
   }
 }
 
-/// MARK:- Collection Data source & Delegate
+// MARK: - Collection Data source & Delegate
 extension StudyFilterViewController: UICollectionViewDataSource {  //,UICollectionViewDelegate {
 
   func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int)
-    -> Int
-  {
+    -> Int {
     return StudyFilterHandler.instance.filterOptions.count  //filterData!.count
   }
 
   func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath)
-    -> UICollectionViewCell
-  {
+    -> UICollectionViewCell {
     let cell = (
       collectionView.dequeueReusableCell(withReuseIdentifier: "cell", for: indexPath)
         as? FilterListCollectionViewCell

@@ -38,7 +38,7 @@ class ConsentPdfViewerStep: ORKStep {
 // Displays Signed Consent Pdf and provides option to share by Email
 class ConsentPdfViewerStepViewController: ORKStepViewController {
 
-  // MARK:- Outlets
+  // MARK: - Outlets
   @IBOutlet var webView: UIWebView?  //TBD: Update this
   @IBOutlet weak var buttonEmailPdf: UIBarButtonItem?
 
@@ -46,7 +46,7 @@ class ConsentPdfViewerStepViewController: ORKStepViewController {
 
   var pdfData: Data?
 
-  // MARK:- ORKstepView Controller Init methods
+  // MARK: - ORKstepView Controller Init methods
   override init(step: ORKStep?) {
     super.init(step: step)
   }
@@ -64,7 +64,7 @@ class ConsentPdfViewerStepViewController: ORKStepViewController {
     super.goForward()
   }
 
-  // MARK:- View controller Lifecycle
+  // MARK: - View controller Lifecycle
 
   override func viewDidLoad() {
     super.viewDidLoad()
@@ -101,14 +101,14 @@ class ConsentPdfViewerStepViewController: ORKStepViewController {
       alert.addAction(
         UIAlertAction.init(
           title: NSLocalizedString(kTitleOk, comment: ""), style: .default,
-          handler: { (action) in
+          handler: { (_) in
 
             self.dismiss(animated: true, completion: nil)
           }))
     }
   }
 
-  // MARK:- Button Actions
+  // MARK: - Button Actions
 
   @IBAction func buttonActionNext(sender: UIBarButtonItem?) {
     self.goForward()
@@ -132,7 +132,7 @@ extension ConsentPdfViewerStepViewController: MFMailComposeViewControllerDelegat
 
 }
 
-// MARK:- WebView Delegate
+// MARK: - WebView Delegate
 extension ConsentPdfViewerStepViewController: UIWebViewDelegate {
 
   func webViewDidFinishLoad(_ webView: UIWebView) {
@@ -151,7 +151,7 @@ extension ConsentPdfViewerStepViewController: UIWebViewDelegate {
     alert.addAction(
       UIAlertAction.init(
         title: buttonTitleOK, style: .default,
-        handler: { (action) in
+        handler: { (_) in
           self.dismiss(animated: true, completion: nil)
 
         }))

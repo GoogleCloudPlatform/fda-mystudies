@@ -34,7 +34,7 @@ enum ChangePasswordLoadFrom: Int {
 
 class ChangePasswordViewController: UIViewController {
 
-  // MARK:- Outlets
+  // MARK: - Outlets
   @IBOutlet var tableView: UITableView?
 
   @IBOutlet var buttonSubmit: UIButton?
@@ -50,7 +50,7 @@ class ChangePasswordViewController: UIViewController {
     return .default
   }
 
-  // MARK:- ViewController Lifecycle
+  // MARK: - ViewController Lifecycle
 
   override func viewDidLoad() {
     super.viewDidLoad()
@@ -92,7 +92,7 @@ class ChangePasswordViewController: UIViewController {
     }
   }
 
-  // MARK:- Utility Methods
+  // MARK: - Utility Methods
   func showAlertMessages(textMessage: String) {
     UIUtilities.showAlertMessage(
       "", errorMessage: NSLocalizedString(textMessage, comment: ""),
@@ -123,7 +123,7 @@ class ChangePasswordViewController: UIViewController {
     self.navigationController?.pushViewController(fdaVC, animated: true)
   }
 
-  // MARK:- Button Actions
+  // MARK: - Button Actions
 
   /// Validations after clicking on submit button
   /// If all the validations satisfy send user feedback request.
@@ -152,7 +152,7 @@ class ChangePasswordViewController: UIViewController {
   }
 }
 
-// MARK:- TableView Data source
+// MARK: - TableView Data source
 extension ChangePasswordViewController: UITableViewDataSource {
 
   func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -183,7 +183,7 @@ extension ChangePasswordViewController: UITableViewDataSource {
   }
 }
 
-// MARK:- TableView Delegates
+// MARK: - TableView Delegates
 extension ChangePasswordViewController: UITableViewDelegate {
 
   func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
@@ -192,11 +192,11 @@ extension ChangePasswordViewController: UITableViewDelegate {
   }
 }
 
-// MARK:- Textfield Delegate
+// MARK: - Textfield Delegate
 extension ChangePasswordViewController: UITextFieldDelegate {
 
   func textFieldDidBeginEditing(_ textField: UITextField) {
-    Logger.sharedInstance.info("Editing started: ",textField.tag)
+    Logger.sharedInstance.info("Editing started: ", textField.tag)
 
   }
 
@@ -212,7 +212,7 @@ extension ChangePasswordViewController: UITextFieldDelegate {
       if finalString.count > 64 {
         return false
       } else {
-        if (range.location == textField.text?.count && string == " ") {
+        if range.location == textField.text?.count && string == " " {
 
           textField.text = textField.text?.appending("\u{00a0}")
           return false
@@ -221,7 +221,7 @@ extension ChangePasswordViewController: UITextFieldDelegate {
       }
     } else {
 
-      if (range.location == textField.text?.count && string == " ") {
+      if range.location == textField.text?.count && string == " " {
 
         textField.text = textField.text?.appending("\u{00a0}")
         return false
@@ -231,7 +231,7 @@ extension ChangePasswordViewController: UITextFieldDelegate {
   }
 
   func textFieldDidEndEditing(_ textField: UITextField) {
-    Logger.sharedInstance.info("End Editing: ",textField.text!)
+    Logger.sharedInstance.info("End Editing: ", textField.text!)
     textField.text = textField.text?.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines)
 
     let tag = CPTextFeildTags(rawValue: textField.tag)!
@@ -248,7 +248,7 @@ extension ChangePasswordViewController: UITextFieldDelegate {
   }
 }
 
-// MARK:- Webservice delegates
+// MARK: - Webservice delegates
 extension ChangePasswordViewController: NMWebServiceDelegate {
 
   func startedRequest(_ manager: NetworkManager, requestName: NSString) {

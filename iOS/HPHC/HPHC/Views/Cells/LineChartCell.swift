@@ -24,14 +24,14 @@ class GraphChartTableViewCell: UITableViewCell {
 
 class LineChartCell: GraphChartTableViewCell {
 
-  // MARK:- Outlets
+  // MARK: - Outlets
   @IBOutlet weak var labelTitle: UILabel!
 
   @IBOutlet weak var labelAxisValue: UILabel!
   @IBOutlet weak var buttonForward: UIButton!
   @IBOutlet weak var buttonBackward: UIButton!
 
-  // MARK:- Properties
+  // MARK: - Properties
   var currentChart: DashboardCharts!
 
   lazy var frequencyPageIndex = 0
@@ -60,12 +60,12 @@ class LineChartCell: GraphChartTableViewCell {
     let attributedStartDate: NSMutableAttributedString = NSMutableAttributedString(
       string: stringStartDate)
     attributedStartDate.addAttribute(
-      NSAttributedString.Key.foregroundColor, value: color, range: NSMakeRange(0, 2))
+      NSAttributedString.Key.foregroundColor, value: color, range: NSRange(location: 0, length: 2))
 
     let attributedEndDate: NSMutableAttributedString = NSMutableAttributedString(
       string: stringEndDate)
     attributedEndDate.addAttribute(
-      NSAttributedString.Key.foregroundColor, value: color, range: NSMakeRange(0, 2))
+      NSAttributedString.Key.foregroundColor, value: color, range: NSRange(location: 0, length: 2))
 
     attributedStartDate.append(attributedEndDate)
 
@@ -73,8 +73,7 @@ class LineChartCell: GraphChartTableViewCell {
   }
 
   func getSchedulesAttributedText(stringStartDate: String, stringEndDate: String)
-    -> NSAttributedString
-  {
+    -> NSAttributedString {
 
     let stringStartDate2 = stringStartDate + " - "
 
@@ -83,12 +82,12 @@ class LineChartCell: GraphChartTableViewCell {
     let attributedStartDate: NSMutableAttributedString = NSMutableAttributedString(
       string: stringStartDate2)
     attributedStartDate.addAttribute(
-      NSAttributedString.Key.foregroundColor, value: color, range: NSMakeRange(0, 2))
+      NSAttributedString.Key.foregroundColor, value: color, range: NSRange(location: 0, length: 2))
 
     let attributedEndDate: NSMutableAttributedString = NSMutableAttributedString(
       string: stringEndDate)
     attributedEndDate.addAttribute(
-      NSAttributedString.Key.foregroundColor, value: color, range: NSMakeRange(0, 2))
+      NSAttributedString.Key.foregroundColor, value: color, range: NSRange(location: 0, length: 2))
 
     attributedStartDate.append(attributedEndDate)
 
@@ -149,7 +148,7 @@ class LineChartCell: GraphChartTableViewCell {
 
       let attributedText = self.getWeeklyAttributedText()
       labelAxisValue.attributedText = attributedText
-      
+
       self.buttonForward.isEnabled = false
 
       // Check for back button to disable
@@ -174,7 +173,7 @@ class LineChartCell: GraphChartTableViewCell {
       }
       xAxisTitles = Calendar.current.shortMonthSymbols
       for i in 0...11 {
-        if (i == 0 || i == 3 || i == 6 || i == 9 || i == 11) {
+        if i == 0 || i == 3 || i == 6 || i == 9 || i == 11 {
 
         } else {
           xAxisTitles[i] = ""
@@ -196,9 +195,9 @@ class LineChartCell: GraphChartTableViewCell {
       let attributedText = self.getSchedulesAttributedText(
         stringStartDate: stringStartDate, stringEndDate: stringEndDate)
       labelAxisValue.attributedText = attributedText
-      
+
       let runs = self.getNextSetOfFrequencyRuns()
-      
+
       self.handleRunsForDate(
         startDate: (charActivity?.startDate)!, endDate: (charActivity?.endDate)!, runs: runs
       )
@@ -216,7 +215,7 @@ class LineChartCell: GraphChartTableViewCell {
     (self.graphView as? ORKLineGraphChartView)!.dataSource = self
   }
 
-  // MARK:- Actions
+  // MARK: - Actions
   @IBAction func buttonForwardAction(_ sender: UIButton) {
 
     let timeRange = currentChart.dataSourceTimeRange!
@@ -463,8 +462,7 @@ class LineChartCell: GraphChartTableViewCell {
 
   func handleDaysOfMonthForDate(date: Date) {
 
-    let dataList: [DBStatisticsData] = currentChart.statList.filter(
-      { $0.startDate! >= date.startOfMonth() && $0.startDate! <= date.endOfMonth() })
+    let dataList: [DBStatisticsData] = currentChart.statList.filter({ $0.startDate! >= date.startOfMonth() && $0.startDate! <= date.endOfMonth() })
 
     var points: [ORKValueRange] = []
     xAxisTitles = []
@@ -510,8 +508,7 @@ class LineChartCell: GraphChartTableViewCell {
 
   func handleDaysOfWeekForStartDate(startDate: Date, endDate: Date) {
 
-    let dataList: [DBStatisticsData] = currentChart.statList.filter(
-      { $0.startDate! >= startDate && $0.startDate! <= endDate })
+    let dataList: [DBStatisticsData] = currentChart.statList.filter({ $0.startDate! >= startDate && $0.startDate! <= endDate })
 
     var points: [ORKValueRange] = []
 
@@ -530,7 +527,7 @@ class LineChartCell: GraphChartTableViewCell {
         let day = LineChartCell.shortDayFormatter.string(from: responseDate!)
         let value = data.data
         let currentDay = DayValue(rawValue: day)!
-        
+
         points[currentDay.dayIndex - 1] = ORKValueRange(value: Double(value))
         self.replaceXTitleForActiveTask(value: fk, atIndex: (currentDay.dayIndex - 1))
 
@@ -543,8 +540,7 @@ class LineChartCell: GraphChartTableViewCell {
 
   func handleMonthsOfYearForDate(date: Date) {
 
-    let dataList: [DBStatisticsData] = currentChart.statList.filter(
-      { $0.startDate! >= date.startOfYear() && $0.startDate! <= date.endOfYear() })
+    let dataList: [DBStatisticsData] = currentChart.statList.filter({ $0.startDate! >= date.startOfYear() && $0.startDate! <= date.endOfYear() })
 
     var points: [ORKValueRange] = []
 
@@ -574,8 +570,7 @@ class LineChartCell: GraphChartTableViewCell {
 
   func handleWeeksOfMonthForDate(date: Date) {
 
-    let dataList: [DBStatisticsData] = currentChart.statList.filter(
-      { $0.startDate! >= date.startOfMonth() && $0.startDate! <= date.endOfMonth() })
+    let dataList: [DBStatisticsData] = currentChart.statList.filter({ $0.startDate! >= date.startOfMonth() && $0.startDate! <= date.endOfMonth() })
 
     var points: [ORKValueRange] = []
     xAxisTitles = []
@@ -612,8 +607,7 @@ class LineChartCell: GraphChartTableViewCell {
 
   func handleHoursOfDayForDate(date: Date) {
 
-    let dataList: [DBStatisticsData] = currentChart.statList.filter(
-      { $0.startDate! >= date.startOfDay && $0.startDate! <= date.endOfDay! })
+    let dataList: [DBStatisticsData] = currentChart.statList.filter({ $0.startDate! >= date.startOfDay && $0.startDate! <= date.endOfDay! })
 
     var points: [ORKValueRange] = []
     xAxisTitles = []
@@ -642,7 +636,7 @@ class LineChartCell: GraphChartTableViewCell {
               from: data.startDate!)
             let responseDate = LineChartCell.dailyFormatter2.date(from: dateAsString)
 
-            if (responseDate! > runStartTime! && responseDate! < endTime!) {
+            if responseDate! > runStartTime! && responseDate! < endTime! {
               points[i] = ORKValueRange(value: Double(value))
               self.replaceXTitleForActiveTask(value: fk, atIndex: i)
 
@@ -660,8 +654,7 @@ class LineChartCell: GraphChartTableViewCell {
 
   func handleRunsForDate(startDate: Date, endDate: Date, runs: [[String: Any]]) {
 
-    let dataList: [DBStatisticsData] = currentChart.statList.filter(
-      { $0.startDate! >= startDate && $0.startDate! <= endDate })
+    let dataList: [DBStatisticsData] = currentChart.statList.filter({ $0.startDate! >= startDate && $0.startDate! <= endDate })
 
     let array = dataList.map { $0.data }
     var points: [ORKValueRange] = []

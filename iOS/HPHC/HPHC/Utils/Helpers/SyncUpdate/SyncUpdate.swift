@@ -22,7 +22,7 @@ import RealmSwift
 class SyncUpdate {
 
   private var isReachabilityChanged: Bool
-  static var currentSyncUpdate: SyncUpdate? = nil
+  static var currentSyncUpdate: SyncUpdate?
   var selectedRun: DBActivityRun?
 
   init() {
@@ -38,7 +38,6 @@ class SyncUpdate {
       }
     }
   }
-
 
   /// SyncData to server, called to sync responses stored in offline mode to server.
   func syncDataToServer() {
@@ -96,7 +95,6 @@ class SyncUpdate {
     }
   }
 
-  
   /// updates run information to server.
   func updateRunInformationToServer() {
 
@@ -119,9 +117,7 @@ class SyncUpdate {
       } else {
 
         let currentUser = User.currentUser
-        if let userStudyStatus = currentUser.participatedStudies.filter(
-          { $0.studyId == run?.studyId }).first
-        {
+        if let userStudyStatus = currentUser.participatedStudies.filter({ $0.studyId == run?.studyId }).first {
 
           let studyId = run?.studyId
           let activiyId = run?.activityId
@@ -134,7 +130,7 @@ class SyncUpdate {
             kActivityId: activiyId!,
             kActivityName: activityName!,
             "version": activityVersion!,
-            kActivityRunId: "\(currentRunId!)",
+            kActivityRunId: "\(currentRunId!)"
           ] as [String: String]
 
           let ActivityType = activity?.type
@@ -142,13 +138,13 @@ class SyncUpdate {
           let participationid = userStudyStatus.participantId
 
           var data: [String: Any] = [:]
-          
+
           if let runData = run?.responseData,
             let responseData = try? JSONSerialization.jsonObject(
             with: runData, options: []) as? [String: Any] {
             data = responseData["data"] as? [String: Any] ?? [:]
           }
-          
+
           // save to server
           LabKeyServices().processResponse(
             metaData: info, activityType: ActivityType!, responseData: data,
@@ -175,7 +171,7 @@ class SyncUpdate {
 
 }
 
-// MARK:- Webservices Delegates
+// MARK: - Webservices Delegates
 extension SyncUpdate: NMWebServiceDelegate {
 
   func startedRequest(_ manager: NetworkManager, requestName: NSString) {
@@ -183,7 +179,7 @@ extension SyncUpdate: NMWebServiceDelegate {
   }
 
   func finishedRequest(_ manager: NetworkManager, requestName: NSString, response: AnyObject?) {
-    Logger.sharedInstance.info("requestname : \(requestName) : \(String(describing:response))")
+    Logger.sharedInstance.info("requestname : \(requestName) : \(String(describing: response))")
     self.syncDataToServer()
   }
 

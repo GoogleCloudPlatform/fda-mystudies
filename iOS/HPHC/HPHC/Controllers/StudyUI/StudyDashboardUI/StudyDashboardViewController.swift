@@ -29,7 +29,7 @@ enum TableViewCells: Int {
 
 class StudyDashboardViewController: UIViewController {
 
-  // MARK:- Outlets
+  // MARK: - Outlets
   @IBOutlet var tableView: UITableView?
 
   @IBOutlet var labelStudyTitle: UILabel?
@@ -62,7 +62,7 @@ class StudyDashboardViewController: UIViewController {
     Logger.sharedInstance.info("\(self): deinit")
   }
 
-  // MARK:- ViewController Lifecycle
+  // MARK: - ViewController Lifecycle
   override func viewDidLoad() {
     super.viewDidLoad()
 
@@ -89,7 +89,7 @@ class StudyDashboardViewController: UIViewController {
 
   override func viewWillAppear(_ animated: Bool) {
     super.viewWillAppear(animated)
-    
+
     setNeedsStatusBarAppearanceUpdate()
 
     // Standalone App Settings
@@ -115,7 +115,7 @@ class StudyDashboardViewController: UIViewController {
 
   }
 
-  // MARK:- Helper Methods
+  // MARK: - Helper Methods
 
   /// Used to Create Eligibility Consent Task.
   func createEligibilityConsentTask() {
@@ -205,8 +205,7 @@ class StudyDashboardViewController: UIViewController {
         if activity?.type == ActivityType.activeTask {
 
           if activity?.taskSubType == "fetalKickCounter" || activity?.taskSubType
-            == "towerOfHanoi"
-          {
+            == "towerOfHanoi" {
             key = activityId!
           }
 
@@ -254,7 +253,7 @@ class StudyDashboardViewController: UIViewController {
 
   }
 
-  // MARK:- Button Actions
+  // MARK: - Button Actions
 
   /// Home button clicked.
   @IBAction func homeButtonAction(_ sender: AnyObject) {
@@ -286,7 +285,7 @@ class StudyDashboardViewController: UIViewController {
 
 }
 
-// MARK:- TableView Datasource
+// MARK: - TableView Datasource
 extension StudyDashboardViewController: UITableViewDataSource {
 
   func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -386,7 +385,7 @@ extension StudyDashboardViewController: UITableViewDataSource {
   }
 }
 
-// MARK:- TableView Delegates
+// MARK: - TableView Delegates
 extension StudyDashboardViewController: UITableViewDelegate {
   func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
 
@@ -398,7 +397,7 @@ extension StudyDashboardViewController: UITableViewDelegate {
   }
 }
 
-// MARK:- Webservice Delegates
+// MARK: - Webservice Delegates
 extension StudyDashboardViewController: NMWebServiceDelegate {
 
   func startedRequest(_ manager: NetworkManager, requestName: NSString) {
@@ -432,12 +431,11 @@ extension StudyDashboardViewController: NMWebServiceDelegate {
   }
 }
 
-// MARK:- ORKTaskViewController Delegate
+// MARK: - ORKTaskViewController Delegate
 extension StudyDashboardViewController: ORKTaskViewControllerDelegate {
 
   func taskViewControllerSupportsSaveAndRestore(_ taskViewController: ORKTaskViewController)
-    -> Bool
-  {
+    -> Bool {
     return true
   }
 
@@ -516,7 +514,7 @@ extension StudyDashboardViewController: ORKTaskViewControllerDelegate {
     }
   }
 
-  // MARK:- StepViewController Delegate
+  // MARK: - StepViewController Delegate
 
   public func stepViewController(
     _ stepViewController: ORKStepViewController,

@@ -32,7 +32,7 @@ protocol ConfirmationOptionalDelegate: class {
 
 class ConfirmationOptionalTableViewCell: UITableViewCell {
 
-  // MARK:- Outlets
+  // MARK: - Outlets
   @IBOutlet var buttonDeleteData: UIButton?
 
   @IBOutlet var buttonRetainData: UIButton?
@@ -40,12 +40,12 @@ class ConfirmationOptionalTableViewCell: UITableViewCell {
   @IBOutlet var imageViewDeleteCheckBox: UIImageView?
   @IBOutlet var imageViewRetainCheckBox: UIImageView?
 
-  // MARK:- Properties
+  // MARK: - Properties
   var study: Study!
 
   weak var delegate: ConfirmationOptionalDelegate?
 
-  // MARK:- Utils
+  // MARK: - Utils
 
   func setDefaultDeleteAction(defaultValue: String) {
     if defaultValue == kConfirmationOptionalDefaultTypeRetain {
@@ -58,7 +58,7 @@ class ConfirmationOptionalTableViewCell: UITableViewCell {
     }
   }
 
-  // MARK:- Actions
+  // MARK: - Actions
 
   /// When user press on Delete data or Retail Data button
   @IBAction func deleteOrRetainDataButtonAction(_ sender: UIButton?) {

@@ -26,7 +26,7 @@ protocol ActivitiesCellDelegate: class {
 
 class ActivitiesTableViewCell: UITableViewCell {
 
-  // MARK:- Outlets
+  // MARK: - Outlets
   @IBOutlet var imageIcon: UIImageView?
 
   @IBOutlet var labelDays: UILabel?
@@ -137,13 +137,11 @@ class ActivitiesTableViewCell: UITableViewCell {
 
     let currentUser = User.currentUser
 
-    if let userActivityStatus = currentUser.participatedActivites.filter(
-      {
+    if let userActivityStatus = currentUser.participatedActivites.filter({
         $0.activityId == activity.actvityId && $0.studyId == activity.studyId && $0
           .activityRunId
           == String(activity.currentRunId)
-      }).first
-    {
+      }).first {
 
       // assign to study
       activity.userParticipationStatus = userActivityStatus
@@ -286,7 +284,7 @@ class ActivitiesTableViewCell: UITableViewCell {
     }
   }
 
-  // MARK:- Button Action
+  // MARK: - Button Action
 
   /// Clicked on  More Schedules.
   @IBAction func buttonMoreSchedulesClicked(_: UIButton) {

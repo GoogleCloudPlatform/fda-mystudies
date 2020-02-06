@@ -20,7 +20,7 @@ import UIKit
 
 class StudyDashboardStudyPercentageTableViewCell: UITableViewCell {
 
-  // MARK:- OUTLETS
+  // MARK: - OUTLETS
   @IBOutlet var labelStudyCompletion: UILabel?
 
   @IBOutlet var labelStudyAdherence: UILabel?
@@ -57,15 +57,12 @@ class StudyDashboardStudyPercentageTableViewCell: UITableViewCell {
     completedPercentagePie?.glowAmount = 0.1
     completedPercentagePie?.set(colors: blueColor)
 
-    if let userStudyStatus = currentUser.participatedStudies.filter(
-      { $0.studyId == study?.studyId }).first
-    {
+    if let userStudyStatus = currentUser.participatedStudies.filter({ $0.studyId == study?.studyId }).first {
       //update completion %
 
-      if (
+      if
         Study.currentStudy?.totalIncompleteRuns == 0
-          && Study.currentStudy?.totalCompleteRuns == 0
-      ) {
+          && Study.currentStudy?.totalCompleteRuns == 0 {
 
         self.labelStudyCompletion?.text = "--"
         self.labelStudyAdherence?.text = "--"

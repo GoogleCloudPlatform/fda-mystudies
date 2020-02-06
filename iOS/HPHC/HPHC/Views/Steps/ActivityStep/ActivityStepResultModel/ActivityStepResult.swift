@@ -136,8 +136,7 @@ class ActivityStepResult {
 
         if Utilities.isValidValue(
           someObject: Utilities.getDateFromString(
-            dateString: (stepDict[kActivityStepStartTime] as? String)!) as AnyObject?)
-        {
+            dateString: (stepDict[kActivityStepStartTime] as? String)!) as AnyObject?) {
           self.startTime = Utilities.getDateFromString(
             dateString: (stepDict[kActivityStepStartTime] as? String)!)
         } else {
@@ -148,8 +147,7 @@ class ActivityStepResult {
 
         if Utilities.isValidValue(
           someObject: Utilities.getDateFromString(
-            dateString: (stepDict[kActivityStepEndTime] as? String)!) as AnyObject?)
-        {
+            dateString: (stepDict[kActivityStepEndTime] as? String)!) as AnyObject?) {
 
           self.endTime = Utilities.getDateFromString(
             dateString: (stepDict[kActivityStepEndTime] as? String)!)
@@ -248,8 +246,7 @@ class ActivityStepResult {
         if stepResult.results?.count == 1 && self.type != .form {
 
           if let questionstepResult: ORKQuestionResult? = stepResult.results?.first
-            as? ORKQuestionResult?
-          {
+            as? ORKQuestionResult? {
             self.setValue(questionstepResult: questionstepResult!)
 
           } else {
@@ -271,8 +268,7 @@ class ActivityStepResult {
           var isAddMore: Bool? = false
 
           if (stepResult.results?.count)! > (self.step as? ActivityFormStep)!.itemsArray
-            .count
-          {
+            .count {
             isAddMore = true
           }
           var localArray: [[String: Any]] = [[String: Any]]()
@@ -305,18 +301,16 @@ class ActivityStepResult {
             } else {
               activityStepResult?.key = result.identifier
             }
-            let itemDict = (self.step as? ActivityFormStep)!.itemsArray[j] as [String:
-              Any]
+            let itemDict = (self.step as? ActivityFormStep)!.itemsArray[j] as [String: Any]
             activityStepResult?.step?.resultType = (itemDict["resultType"] as? String)!
-            if ((result as? ORKQuestionResult) != nil) {
+            if (result as? ORKQuestionResult) != nil {
 
               let questionResult: ORKQuestionResult? = (result as? ORKQuestionResult)
 
               if Utilities.isValidValue(
                 someObject: (
                   activityStepResult?.step?.resultType as? String as AnyObject
-                ))
-              {
+                )) {
                 self.subTypeForForm = activityStepResult?.step?.resultType
                   as? String
 
@@ -352,7 +346,7 @@ class ActivityStepResult {
           }
         }
 
-      } else if (activityType == .activeTask) {
+      } else if activityType == .activeTask {
         // For Active task like Fetal Kick, Spatial Span Memory & Towers of Honoi
         let activityResult: ORKResult? = stepResult.results?.first
         var resultArray: [[String: Any]]? = Array()
@@ -366,8 +360,7 @@ class ActivityStepResult {
             && Utilities.isValidValue(
               someObject: stepTypeResult?.numberOfGames as AnyObject?)
             && Utilities.isValidValue(
-              someObject: stepTypeResult?.numberOfFailures as AnyObject?)
-          {
+              someObject: stepTypeResult?.numberOfFailures as AnyObject?) {
 
             for i in 0..<3 {
               var resultDict: [String: Any]? = Dictionary()
@@ -545,7 +538,7 @@ class ActivityStepResult {
     case ORKQuestionType.scale.rawValue:
       // scale and continuos scale
 
-      if ((questionstepResult as? ORKScaleQuestionResult) != nil) {
+      if (questionstepResult as? ORKScaleQuestionResult) != nil {
         let stepTypeResult = (questionstepResult as? ORKScaleQuestionResult)!
 
         if Utilities.isValidValue(someObject: stepTypeResult.scaleAnswer as AnyObject?) {
@@ -617,8 +610,7 @@ class ActivityStepResult {
 
           if resultType == QuestionStepType.imageChoice.rawValue || resultType
             == QuestionStepType
-            .valuePicker.rawValue
-          {
+            .valuePicker.rawValue {
 
             // for image choice and valuepicker
 
@@ -645,8 +637,7 @@ class ActivityStepResult {
         } else {
           if resultType == QuestionStepType.imageChoice.rawValue || resultType
             == QuestionStepType
-            .valuePicker.rawValue
-          {
+            .valuePicker.rawValue {
             self.value = ""
 
           } else {
@@ -656,8 +647,7 @@ class ActivityStepResult {
       } else {
         if resultType == QuestionStepType.imageChoice.rawValue || resultType
           == QuestionStepType
-          .valuePicker.rawValue
-        {
+          .valuePicker.rawValue {
           self.value = ""
 
         } else {
@@ -805,8 +795,7 @@ class ActivityStepResult {
       let stepTypeResult = (questionstepResult as? ORKLocationQuestionResult)!
 
       if stepTypeResult.locationAnswer != nil && CLLocationCoordinate2DIsValid(
-        (stepTypeResult.locationAnswer?.coordinate)!)
-      {
+        (stepTypeResult.locationAnswer?.coordinate)!) {
 
         let lat = stepTypeResult.locationAnswer?.coordinate.latitude
         let long = stepTypeResult.locationAnswer?.coordinate.longitude

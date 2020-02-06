@@ -24,7 +24,7 @@ protocol searchBarDelegate: class {
 
 class SearchBarView: UIView {
 
-  // MARK:- Outlets
+  // MARK: - Outlets
   @IBOutlet weak var textFieldSearch: UITextField?
 
   @IBOutlet weak var buttonCancel: UIButton?
@@ -59,7 +59,7 @@ class SearchBarView: UIView {
         self.frame = CGRect(x: 0, y: -300, width: self.frame.size.width, height: 64.0)
 
       },
-      completion: { (finished) -> Void in
+      completion: { (_) -> Void in
 
         self.delegate?.didTapOnCancel()
 

@@ -34,7 +34,7 @@ let kActivityStepRepeatable = "repeatable"
 let kActivityStepRepeatableText = "repeatableText"
 let kActivityStepDestinations = "destinations"
 
-// MARK:Enum for ActivityStepType
+// MARK: Enum for ActivityStepType
 enum ActivityStepType: String {
   case form = "form"
   case instruction = "instruction"
@@ -152,8 +152,7 @@ class ActivityStep {
         self.repeatable = stepDict[kActivityStepRepeatable] as? Bool
       }
       if Utilities.isValidValue(
-        someObject: stepDict[kActivityStepRepeatableText] as AnyObject)
-      {
+        someObject: stepDict[kActivityStepRepeatableText] as AnyObject) {
         self.repeatableText = stepDict[kActivityStepRepeatableText] as? String
       }
       if Utilities.isValidObject(someObject: stepDict[kActivityStepDestinations] as AnyObject) {

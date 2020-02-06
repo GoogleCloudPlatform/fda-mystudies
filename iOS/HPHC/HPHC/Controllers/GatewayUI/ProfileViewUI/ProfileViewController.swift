@@ -57,7 +57,7 @@ enum ToggelSwitchTags: Int {
 
 class ProfileViewController: UIViewController, SlideMenuControllerDelegate {
 
-  // MARK:- Outlets
+  // MARK: - Outlets
   @IBOutlet var tableViewProfile: UITableView?
 
   @IBOutlet var tableViewFooterViewProfile: UIView?
@@ -65,7 +65,7 @@ class ProfileViewController: UIViewController, SlideMenuControllerDelegate {
   @IBOutlet var editBarButtonItem: UIBarButtonItem?
   @IBOutlet var tableTopConstraint: NSLayoutConstraint?
 
-  // MARK:- Properties
+  // MARK: - Properties
   var tableViewRowDetails: NSMutableArray?
 
   var datePickerView: UIDatePicker?
@@ -79,7 +79,7 @@ class ProfileViewController: UIViewController, SlideMenuControllerDelegate {
     return .default
   }
 
-  // MARK:- ViewController Lifecycle
+  // MARK: - ViewController Lifecycle
 
   override func viewDidLoad() {
     super.viewDidLoad()
@@ -125,7 +125,7 @@ class ProfileViewController: UIViewController, SlideMenuControllerDelegate {
     Logger.sharedInstance.info("Left menu is closed")
   }
 
-  // MARK:- Button Actions
+  // MARK: - Button Actions
 
   /// Change password button clicked.
   @IBAction func buttonActionChangePassCode(_ sender: UIButton) {
@@ -179,7 +179,7 @@ class ProfileViewController: UIViewController, SlideMenuControllerDelegate {
     let action = UIAlertAction(
       title: kActionSheetDoneButtonTitle, style: UIAlertAction.Style.default,
       handler: {
-        action in
+        _ in
 
         let calender: Calendar? = Calendar.current
 
@@ -208,7 +208,7 @@ class ProfileViewController: UIViewController, SlideMenuControllerDelegate {
     let actionCancel = UIAlertAction(
       title: kActionSheetCancelButtonTitle, style: UIAlertAction.Style.default,
       handler: {
-        action in
+        _ in
 
       })
 
@@ -246,8 +246,7 @@ class ProfileViewController: UIViewController, SlideMenuControllerDelegate {
       var joinedStudies: [Study] = []
       if Utilities.isStandaloneApp() {
         let standaloneStudyId = Utilities.standaloneStudyId()
-        joinedStudies = studies?.filter(
-          {
+        joinedStudies = studies?.filter({
             (
               $0.userParticipateState.status == .inProgress || $0.userParticipateState
                 .status
@@ -255,8 +254,7 @@ class ProfileViewController: UIViewController, SlideMenuControllerDelegate {
             ) && ($0.studyId == standaloneStudyId)
           }) ?? []
       } else {
-        joinedStudies = studies?.filter(
-          {
+        joinedStudies = studies?.filter({
             $0.userParticipateState.status == .inProgress || $0.userParticipateState
               .status
               == .completed
@@ -296,7 +294,7 @@ class ProfileViewController: UIViewController, SlideMenuControllerDelegate {
 
   }
 
-  // MARK:- Utility Methods
+  // MARK: - Utility Methods
 
   @objc func dismissKeyboard() {
     self.view.endEditing(true)
@@ -373,8 +371,7 @@ class ProfileViewController: UIViewController, SlideMenuControllerDelegate {
   func setInitialDate() {
 
     if user.settings != nil && Utilities.isValidValue(
-      someObject: user.settings?.leadTime as AnyObject?)
-    {
+      someObject: user.settings?.leadTime as AnyObject?) {
       self.buttonLeadTime?.setTitle(user.settings?.leadTime, for: .normal)
     } else {
       Logger.sharedInstance.debug("settings/LeadTime is null")
@@ -401,8 +398,7 @@ class ProfileViewController: UIViewController, SlideMenuControllerDelegate {
 
     guard
       let keychainPasscodeDict = try? ORKKeychainWrapper.object(forKey: korkPasscode)
-      as? [String:
-      Any]
+      as? [String: Any]
     else {
       return
     }
@@ -455,7 +451,7 @@ class ProfileViewController: UIViewController, SlideMenuControllerDelegate {
         user.settings?.localNotifications = toggle?.isOn
 
         if (user.settings?.localNotifications)! {
-         
+
           Logger.sharedInstance.info("On")
           self.addProgressIndicator()
 
@@ -542,7 +538,7 @@ class ProfileViewController: UIViewController, SlideMenuControllerDelegate {
     }
   }
 
-  // MARK:- Segue Method
+  // MARK: - Segue Method
 
   /// Segue Delegate method for Navigation based on segue connected.
   override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
@@ -557,7 +553,7 @@ class ProfileViewController: UIViewController, SlideMenuControllerDelegate {
   }
 }
 
-// MARK:- TableView Data source
+// MARK: - TableView Data source
 extension ProfileViewController: UITableViewDataSource {
 
   func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -650,7 +646,7 @@ extension ProfileViewController: UITableViewDataSource {
       )!
       cell.setCellData(dict: tableViewData)
 
-      if (user.settings != nil) {
+      if user.settings != nil {
         cell.setToggleValue(indexValue: indexPath.row)
       }
       cell.switchToggle?.tag = indexPath.row
@@ -667,16 +663,16 @@ extension ProfileViewController: UITableViewDataSource {
   }
 }
 
-// MARK:- TableView Delegates
+// MARK: - TableView Delegates
 extension ProfileViewController: UITableViewDelegate {
 
   func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
     tableView.deselectRow(at: indexPath, animated: true)
-   
+
   }
 }
 
-// MARK:- Textfield Delegate
+// MARK: - Textfield Delegate
 extension ProfileViewController: UITextFieldDelegate {
 
   func textFieldDidBeginEditing(_ textField: UITextField) {
@@ -728,7 +724,7 @@ extension ProfileViewController: UITextFieldDelegate {
   }
 }
 
-// MARK:- UserService Response handler
+// MARK: - UserService Response handler
 extension ProfileViewController: NMWebServiceDelegate {
 
   func startedRequest(_ manager: NetworkManager, requestName: NSString) {
@@ -788,7 +784,7 @@ extension ProfileViewController: NMWebServiceDelegate {
   }
 }
 
-// MARK:- ORKPasscode Delegate
+// MARK: - ORKPasscode Delegate
 extension ProfileViewController: ORKPasscodeDelegate {
 
   func passcodeViewControllerDidFinish(withSuccess viewController: UIViewController) {
@@ -822,12 +818,11 @@ extension ProfileViewController: ORKPasscodeDelegate {
 
 }
 
-// MARK:- ORKTaskViewController Delegate
+// MARK: - ORKTaskViewController Delegate
 extension ProfileViewController: ORKTaskViewControllerDelegate {
 
   func taskViewControllerSupportsSaveAndRestore(_ taskViewController: ORKTaskViewController)
-    -> Bool
-  {
+    -> Bool {
     return true
   }
 

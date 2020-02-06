@@ -38,7 +38,7 @@ enum VerificationLoadFrom: Int {
 
 class VerificationViewController: UIViewController {
 
-  // MARK:- Outlets
+  // MARK: - Outlets
   @IBOutlet var buttonContinue: UIButton?
 
   @IBOutlet var buttonResendEmail: UIButton?
@@ -46,7 +46,7 @@ class VerificationViewController: UIViewController {
   @IBOutlet var textFieldEmail: UITextField?
   @IBOutlet var textFieldVerificationCode: UITextField?
 
-  // MARK:- Properties
+  // MARK: - Properties
   var labelMessage: String?
 
   lazy var isFromForgotPassword: Bool = false
@@ -58,7 +58,7 @@ class VerificationViewController: UIViewController {
     Logger.sharedInstance.info("\(self): deinit")
   }
 
-  // MARK:- View Controllere Lifecycle
+  // MARK: - View Controllere Lifecycle
   override func viewDidLoad() {
     super.viewDidLoad()
 
@@ -77,7 +77,7 @@ class VerificationViewController: UIViewController {
 
   }
 
-  // MARK:- Button Actions
+  // MARK: - Button Actions
 
   /// Navigate to previous screen.
   @IBAction func buttonActionBack(_ sender: UIButton) {
@@ -122,10 +122,10 @@ class VerificationViewController: UIViewController {
     } else {
       UserServices().resendEmailConfirmation(emailId: finalEmail, delegate: self)
     }
-    
+
   }
 
-  // MARK:- Segue Methods
+  // MARK: - Segue Methods
   override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
     if let singupCompletion = segue.destination as? SignUpCompleteViewController {
 
@@ -137,7 +137,7 @@ class VerificationViewController: UIViewController {
     }
   }
 
-  // MARK:- Utility Methods
+  // MARK: - Utility Methods
 
   /// Used to show the alert using Utility.
   func showAlertMessages(textMessage: String) {
@@ -170,7 +170,7 @@ class VerificationViewController: UIViewController {
   }
 }
 
-// MARK:- TextField Delegates
+// MARK: - TextField Delegates
 extension VerificationViewController: UITextFieldDelegate {
 
   func textField(
@@ -199,7 +199,7 @@ extension VerificationViewController: UITextFieldDelegate {
   }
 }
 
-// MARK:- Webservice Delegates
+// MARK: - Webservice Delegates
 extension VerificationViewController: NMWebServiceDelegate {
 
   func startedRequest(_ manager: NetworkManager, requestName: NSString) {
@@ -269,12 +269,11 @@ extension VerificationViewController: NMWebServiceDelegate {
   }
 }
 
-// MARK:- ORKTaskViewController Delegate
+// MARK: - ORKTaskViewController Delegate
 extension VerificationViewController: ORKTaskViewControllerDelegate {
 
   func taskViewControllerSupportsSaveAndRestore(_ taskViewController: ORKTaskViewController)
-    -> Bool
-  {
+    -> Bool {
     return true
   }
 

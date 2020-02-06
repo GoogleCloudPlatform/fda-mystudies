@@ -47,7 +47,7 @@ class LabKeyServices: NSObject {
 
     let params = [
       kEnrollmentToken: token,
-      kStudyId: studyId,
+      kStudyId: studyId
     ]
 
     self.sendRequestWith(method: method, params: params, headers: nil)
@@ -66,7 +66,7 @@ class LabKeyServices: NSObject {
 
     let params = [
       kEnrollmentToken: token,
-      kStudyId: studyId,
+      kStudyId: studyId
     ]
 
     self.sendRequestWith(method: method, params: params, headers: nil)
@@ -87,7 +87,7 @@ class LabKeyServices: NSObject {
 
     let params = [
       kParticipantId: participantId,
-      kDeleteResponses: deleteResponses,
+      kDeleteResponses: deleteResponses
     ] as [String: Any]
 
     self.sendRequestWith(method: method, params: params, headers: nil)
@@ -112,7 +112,7 @@ class LabKeyServices: NSObject {
       kActivityType: activityType,
       kActivityInfoMetaData: metaData,
       kParticipantId: participantId,
-      kActivityResponseData: responseData,
+      kActivityResponseData: responseData
     ] as [String: Any]
 
     print("processresponse \(params.preetyJSON())")
@@ -130,9 +130,7 @@ class LabKeyServices: NSObject {
     let method = ResponseMethods.processResponse.method
 
     let currentUser = User.currentUser
-    if let userStudyStatus = currentUser.participatedStudies.filter(
-      { $0.studyId == Study.currentStudy?.studyId! }).first
-    {
+    if let userStudyStatus = currentUser.participatedStudies.filter({ $0.studyId == Study.currentStudy?.studyId! }).first {
 
       let studyId = Study.currentStudy?.studyId!
       let activiyId = Study.currentActivity?.actvityId!
@@ -145,7 +143,7 @@ class LabKeyServices: NSObject {
         kActivityId: activiyId!,
         kActivityName: activityName!,
         "version": activityVersion!,
-        kActivityRunId: "\(currentRunId!)",
+        kActivityRunId: "\(currentRunId!)"
       ] as [String: String]
 
       let ActivityType = Study.currentActivity?.type?.rawValue
@@ -154,7 +152,7 @@ class LabKeyServices: NSObject {
         kActivityType: ActivityType!,
         kActivityInfoMetaData: info,
         kParticipantId: userStudyStatus.participantId! as String,
-        kActivityResponseData: responseData,
+        kActivityResponseData: responseData
       ] as [String: Any]
 
       print("processresponse : \(params.preetyJSON())")
@@ -182,7 +180,7 @@ class LabKeyServices: NSObject {
     let params = [
 
       kParticipantId: participantId,
-      "sql": query,
+      "sql": query
     ] as [String: Any]
 
     self.sendRequestWith(method: method, params: params, headers: nil)
@@ -203,7 +201,7 @@ class LabKeyServices: NSObject {
     self.sendRequestWith(method: method, params: params!, headers: headers)
   }
 
-  // MARK:Parsers
+  // MARK: Parsers
   func handleEnrollForStudy(response: [String: Any]) {
   }
 
@@ -263,7 +261,7 @@ class LabKeyServices: NSObject {
             let valueDetail = [
               "value": duration,
               "count": count,
-              "date": date,
+              "date": date
             ] as [String: Any]
 
             responseData?.values.append(valueDetail)
@@ -271,20 +269,18 @@ class LabKeyServices: NSObject {
           }  // Speatial Memory
           else if data["NumberofFailures"] != nil && data["NumberofGames"] != nil && data[
             "Score"]
-            != nil
-          {
+            != nil {
 
             for responseData in dashBoardResponse {
               if responseData.key == "NumberofFailures" {
                 // numberOfFailuresDetail
-                let numberOfFailuresDetail = data["NumberofFailures"] as? [String:
-                  Any]
+                let numberOfFailuresDetail = data["NumberofFailures"] as? [String: Any]
                 let numberOfFailures = (numberOfFailuresDetail?["value"] as? Float)!
 
                 let valueDetail1 = [
                   "value": numberOfFailures,
                   "count": Float(0.0),
-                  "date": date,
+                  "date": date
                 ] as [String: Any]
                 responseData.values.append(valueDetail1)
 
@@ -296,7 +292,7 @@ class LabKeyServices: NSObject {
                 let valueDetail3 = [
                   "value": numberOfGames,
                   "count": Float(0.0),
-                  "date": date,
+                  "date": date
                 ] as [String: Any]
 
                 responseData.values.append(valueDetail3)
@@ -308,7 +304,7 @@ class LabKeyServices: NSObject {
                 let valueDetail2 = [
                   "value": score,
                   "count": Float(0.0),
-                  "date": date,
+                  "date": date
                 ] as [String: Any]
 
                 responseData.values.append(valueDetail2)
@@ -321,8 +317,7 @@ class LabKeyServices: NSObject {
               if let keyValue = data[responseData.key!] as? [String: Any] {
 
                 if Utilities.isValidValue(
-                  someObject: keyValue["value"] as AnyObject?)
-                {
+                  someObject: keyValue["value"] as AnyObject?) {
                   var value: Float = 0.0
                   if let n = keyValue["value"] as? NSNumber {
                     value = n.floatValue
@@ -330,7 +325,7 @@ class LabKeyServices: NSObject {
                   let valueDetail = [
                     "value": value,
                     "count": Float(0.0),
-                    "date": date,
+                    "date": date
                   ] as [String: Any]
 
                   responseData.values.append(valueDetail)
@@ -393,7 +388,7 @@ extension LabKeyServices: NMWebServiceDelegate {
 
     if requestName as String == ResponseMethods.processResponse.description {
 
-      if (error.code == NoNetworkErrorCode) {
+      if error.code == NoNetworkErrorCode {
         // save in database
         print("save in database")
         DBHandler.saveRequestInformation(

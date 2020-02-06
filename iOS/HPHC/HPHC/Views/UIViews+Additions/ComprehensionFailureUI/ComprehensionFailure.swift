@@ -51,7 +51,7 @@ class ComprehensionFailure: UIView {
 
   }
 
-  // MARK:- Button Actions
+  // MARK: - Button Actions
 
   @IBAction func buttonCancelAction() {
     self.isHidden = true

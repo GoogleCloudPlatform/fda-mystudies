@@ -67,7 +67,7 @@ class EligibilityBuilder {
   /// contains array of Dictionary of steps for the test
   var testArray: [Any]?
 
-  static var currentEligibility: EligibilityBuilder? = nil
+  static var currentEligibility: EligibilityBuilder?
 
   /// array of Dictionary of step Results
   var correctAnswers: [[String: Any]]?
@@ -92,8 +92,7 @@ class EligibilityBuilder {
       self.type = EligibilityStepType(rawValue: eligibilityDict[kEligibilityType] as! String)
     }
     if Utilities.isValidObject(
-      someObject: eligibilityDict[kEligibilityCorrectAnswers] as AnyObject)
-    {
+      someObject: eligibilityDict[kEligibilityCorrectAnswers] as AnyObject) {
       self.correctAnswers = eligibilityDict[kEligibilityCorrectAnswers] as? [[String: Any]]
     }
     if Utilities.isValidValue(someObject: eligibilityDict[kEligibilityTokenTitle] as AnyObject?) {

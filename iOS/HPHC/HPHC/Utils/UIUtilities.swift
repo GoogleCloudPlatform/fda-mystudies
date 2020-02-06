@@ -51,7 +51,7 @@ class UIUtilities: NSObject {
     textField.layer.borderWidth = 2
     textField.layer.borderColor = Utilities.hexStringToUIColor(layerBorderColor).cgColor
     textField.backgroundColor = Utilities.hexStringToUIColor(backgroundColor)
-    
+
   }
 
   // MARK: UI effects & View Changes
@@ -169,7 +169,7 @@ class UIUtilities: NSObject {
   }
 
   // MARK: - JSON serialization helper methods
-  
+
   class func convertDictionaryIntoString(mutableDic: NSMutableDictionary) -> String {
 
     var jsonString: String!
@@ -186,7 +186,7 @@ class UIUtilities: NSObject {
   }
 
   class func convertNSMutableArrayIntoString(mutableArray: NSMutableArray) -> String {
-    
+
     var socialMediaNamesString: String!
     do {
       let jsonData: NSData = try JSONSerialization.data(
@@ -195,7 +195,7 @@ class UIUtilities: NSObject {
         as NSData
       socialMediaNamesString = NSString(
         data: jsonData as Data, encoding: String.Encoding.utf8.rawValue)! as String
-    }  catch let error {
+    } catch let error {
       Logger.sharedInstance.info("Error parsing data: ", error.localizedDescription)
     }
     return socialMediaNamesString
@@ -239,14 +239,14 @@ class UIUtilities: NSObject {
     alert.addAction(
       UIAlertAction(
         title: errorAlertActionTitle, style: UIAlertAction.Style.default,
-        handler: { (action) in
+        handler: { (_) in
           action1()
         }))
     if errorAlertActionTitle2 != nil {
       alert.addAction(
         UIAlertAction(
           title: errorAlertActionTitle2, style: UIAlertAction.Style.default,
-          handler: { (action) in
+          handler: { (_) in
             action2()
           }))
     }
@@ -266,14 +266,14 @@ class UIUtilities: NSObject {
     alert.addAction(
       UIAlertAction(
         title: errorAlertActionTitle, style: UIAlertAction.Style.default,
-        handler: { (action) in
+        handler: { (_) in
           action1()
         }))
     if errorAlertActionTitle2 != nil {
       alert.addAction(
         UIAlertAction(
           title: errorAlertActionTitle2, style: UIAlertAction.Style.default,
-          handler: { (action) in
+          handler: { (_) in
             action2()
           }))
     }
@@ -282,7 +282,7 @@ class UIUtilities: NSObject {
       alert.addAction(
         UIAlertAction(
           title: errorAlertActionTitle3, style: UIAlertAction.Style.default,
-          handler: { (action) in
+          handler: { (_) in
             action3()
           }))
     }
@@ -301,7 +301,7 @@ class UIUtilities: NSObject {
     alert.addAction(
       UIAlertAction(
         title: buttonTitle, style: UIAlertAction.Style.default,
-        handler: { (alertAction) in
+        handler: { (_) in
           action()
         }))
 

@@ -22,7 +22,7 @@ import UIKit
 
 class HomeViewController: UIViewController {
 
-  // MARK:- Outlets
+  // MARK: - Outlets
   @IBOutlet weak var container: UIView!
 
   @IBOutlet var pageControlView: UIPageControl?
@@ -37,7 +37,7 @@ class HomeViewController: UIViewController {
     Logger.sharedInstance.info("\(self): deinit")
   }
 
-  // MARK:- ViewController Lifecycle
+  // MARK: - ViewController Lifecycle
 
   override func loadView() {
     super.loadView()
@@ -66,7 +66,7 @@ class HomeViewController: UIViewController {
 
   }
 
-  // MARK:- UI Utils
+  // MARK: - UI Utils
 
   /// To load Initial Gateway data setup.
   func loadGatewayUI() {
@@ -94,7 +94,7 @@ class HomeViewController: UIViewController {
     Gateway.instance.overview = overview
   }
 
-  // MARK:- Segue Methods
+  // MARK: - Segue Methods
 
   override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
 
@@ -119,7 +119,7 @@ class HomeViewController: UIViewController {
     //pageViewController?.scrollToViewController(index: (pageControlView?.currentPage)!)
   }
 
-  // MARK:- Button Actions
+  // MARK: - Button Actions
 
   /// Calls menu view.
   @IBAction func getStartedButtonClicked(_ sender: UIButton) {
@@ -184,7 +184,7 @@ class HomeViewController: UIViewController {
   }
 }
 
-// MARK:- Page Control Delegates for handling Counts
+// MARK: - Page Control Delegates for handling Counts
 extension HomeViewController: PageViewControllerDelegate {
 
   func pageViewController(pageViewController: PageViewController, didUpdatePageCount count: Int) {

@@ -18,11 +18,11 @@
 
 import UIKit
 
-// MARK:- Api constants
+// MARK: - Api constants
 let kNotificationSkip = "skip"
 let kActivity = "activity"
 
-// MARK:- Study constants
+// MARK: - Study constants
 let kStudyTitle = "title"
 let kStudyCategory = "category"
 let kStudySponserName = "sponsorName"
@@ -39,10 +39,10 @@ let kStudyRejoin = "rejoin"
 let kStudyParticipantId = "participantId"
 let kStudyEnrolledDate = "enrolledDate"
 
-// MARK:- Resources constants
+// MARK: - Resources constants
 let kResources = "resources"
 
-// MARK:- Overview constants
+// MARK: - Overview constants
 let kOverViewInfo = "info"
 let kOverviewType = "type"
 let kOverviewImageLink = "image"
@@ -51,7 +51,7 @@ let kOverviewText = "text"
 let kOverviewMediaLink = "videoLink"  // link
 let kOverviewWebsiteLink = "website"
 
-// MARK:- Notification constants
+// MARK: - Notification constants
 let kNotifications = "notifications"
 let kNotificationId = "notificationId"
 let kNotificationType = "type"
@@ -62,15 +62,15 @@ let kNotificationMessage = "message"
 let kNotificationStudyId = "studyId"
 let kNotificationActivityId = "activityId"
 
-// MARK:- Feedback constants
+// MARK: - Feedback constants
 let kFeedbackSubject = "subject"
 let kFeedbackBody = "body"
 
-// MARK:- Contact-Us constants
+// MARK: - Contact-Us constants
 let kContactusEmail = "email"
 let kContactusFirstname = "firstName"
 
-// MARK:- Study updates constants
+// MARK: - Study updates constants
 let kStudyUpdates = "updates"
 let kStudyCurrentVersion = "currentVersion"
 let kStudyConsent = "consent"
@@ -78,12 +78,12 @@ let kStudyActivities = "activities"
 let kStudyResources = "resources"
 let kStudyInfo = "info"
 
-// MARK:- Study Withdrawal Configuration constants
+// MARK: - Study Withdrawal Configuration constants
 let kStudyWithdrawalConfigration = "withdrawalConfig"
 let kStudyWithdrawalMessage = "message"
 let kStudyWithdrawalType = "type"
 
-// MARK:- Study AnchorDate constants
+// MARK: - Study AnchorDate constants
 let kStudyAnchorDate = "anchorDate"
 let kStudyAnchorDateType = "type"
 let kStudyAnchorDateActivityId = "activityId"
@@ -96,7 +96,7 @@ class WCPServices: NSObject {
   var delegate: NMWebServiceDelegate?
   var delegateSource: NMWebServiceDelegate?
 
-  // MARK:Requests
+  // MARK: Requests
 
   /// Creates a request for App Updates
   /// - Parameter delegate: Class object to receive response
@@ -203,7 +203,7 @@ class WCPServices: NSObject {
     let headerParams = [
       kStudyId: studyId,
       kActivityId: activityId,
-      kActivityVersion: activityVersion,
+      kActivityVersion: activityVersion
     ]
     self.sendRequestWith(method: method, params: headerParams, headers: nil)
   }
@@ -256,7 +256,7 @@ class WCPServices: NSObject {
     let method = WCPMethods.feedback.method
     let params = [
       kFeedbackBody: FeedbackDetail.feedback,
-      kFeedbackSubject: FeedbackDetail.subject,
+      kFeedbackSubject: FeedbackDetail.subject
     ]
     self.sendRequestWith(method: method, params: params, headers: nil)
 
@@ -271,7 +271,7 @@ class WCPServices: NSObject {
       kFeedbackBody: ContactUsFeilds.message,
       kFeedbackSubject: ContactUsFeilds.subject,
       kContactusEmail: ContactUsFeilds.email,
-      kContactusFirstname: ContactUsFeilds.firstName,
+      kContactusFirstname: ContactUsFeilds.firstName
     ]
     self.sendRequestWith(method: method, params: params, headers: nil)
   }
@@ -285,7 +285,7 @@ class WCPServices: NSObject {
     let method = WCPMethods.studyUpdates.method
     let headerParams = [
       kStudyId: study.studyId!,
-      kStudyVersion: study.version!,
+      kStudyVersion: study.version!
     ]
     self.sendRequestWith(method: method, params: headerParams, headers: nil)
   }
@@ -295,7 +295,7 @@ class WCPServices: NSObject {
   /// Handles `Study` information response
   /// - Parameter response: Webservice response
   func handleStudyBasicInfo(response: [String: Any]) {
- 
+
     let studies = response[kStudies] as! [[String: Any]]
     var listOfStudies: [Study] = []
     for study in studies {
@@ -492,8 +492,7 @@ class WCPServices: NSObject {
 
       // WithdrawalConfigration
       if Utilities.isValidObject(
-        someObject: response[kStudyWithdrawalConfigration] as AnyObject?)
-      {
+        someObject: response[kStudyWithdrawalConfigration] as AnyObject?) {
 
         let studyWithdrawalConfig = StudyWithdrawalConfigration.init(
           withdrawalConfigration: response[kStudyWithdrawalConfigration] as! [String: Any]

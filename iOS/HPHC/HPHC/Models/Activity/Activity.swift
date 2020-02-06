@@ -156,7 +156,7 @@ class Activity {
   /// used for active tasks
   var taskSubType: String? = ""
 
-  var anchorDate: AnchorDate? = nil
+  var anchorDate: AnchorDate?
 
   var schedulingType: ActivityScheduleType = .regular
 
@@ -242,19 +242,16 @@ class Activity {
         let frequencyDict: Dictionary = (infoDict[kActivityFrequency] as? [String: Any])!
 
         if Utilities.isValidObject(
-          someObject: frequencyDict[kActivityFrequencyRuns] as AnyObject)
-        {
+          someObject: frequencyDict[kActivityFrequencyRuns] as AnyObject) {
           self.frequencyRuns = frequencyDict[kActivityFrequencyRuns] as? [[String: Any]]
         }
         if Utilities.isValidObject(
-          someObject: frequencyDict[kActivityManualAnchorRuns] as AnyObject)
-        {
+          someObject: frequencyDict[kActivityManualAnchorRuns] as AnyObject) {
           self.anchorRuns = frequencyDict[kActivityManualAnchorRuns] as? [[String: Any]]
         }
 
         if Utilities.isValidValue(
-          someObject: frequencyDict[kActivityFrequencyType] as AnyObject)
-        {
+          someObject: frequencyDict[kActivityFrequencyType] as AnyObject) {
           self.frequencyType = Frequency(
             rawValue: (frequencyDict[kActivityFrequencyType] as? String)!)!
         }
@@ -263,14 +260,12 @@ class Activity {
 
       // AnchorDate
       let anchorDateDetail = infoDict["anchorDate"] as? [String: Any]
-      if (anchorDateDetail != nil && self.schedulingType == .anchorDate) {
+      if anchorDateDetail != nil && self.schedulingType == .anchorDate {
         setActivityAvailability(anchorDateDetail ?? [:])
       }
 
       let currentUser = User.currentUser
-      if let userActivityStatus = currentUser.participatedActivites.filter(
-        { $0.activityId == self.actvityId && $0.studyId == self.studyId }).first
-      {
+      if let userActivityStatus = currentUser.participatedActivites.filter({ $0.activityId == self.actvityId && $0.studyId == self.studyId }).first {
         self.userParticipationStatus = userActivityStatus
 
       } else {
@@ -329,7 +324,7 @@ class Activity {
       if Utilities.isValidValue(someObject: infoDict[kActivityVersion] as AnyObject) {
         self.version = infoDict[kActivityVersion] as? String
       }
-      
+
     } else {
       Logger.sharedInstance.debug("infoDict is null:\(infoDict)")
     }
@@ -341,13 +336,11 @@ class Activity {
 
     if Utilities.isValidObject(someObject: configurationDict as AnyObject?) {
       if Utilities.isValidValue(
-        someObject: configurationDict[kActivityBranching] as AnyObject)
-      {
+        someObject: configurationDict[kActivityBranching] as AnyObject) {
         self.branching = configurationDict[kActivityBranching] as? Bool
       }
       if Utilities.isValidValue(
-        someObject: configurationDict[kActivityRandomization] as AnyObject)
-      {
+        someObject: configurationDict[kActivityRandomization] as AnyObject) {
         self.randomization = configurationDict[kActivityId] as? Bool
       }
     } else {

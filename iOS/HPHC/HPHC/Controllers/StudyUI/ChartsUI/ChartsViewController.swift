@@ -23,12 +23,12 @@ let kMessageForSharingCharts
 
 class ChartsViewController: UIViewController {
 
-  // MARK:- Outlets
+  // MARK: - Outlets
   @IBOutlet weak var tableView: UITableView!
 
   @IBOutlet weak var backButton: UIButton!
 
-  // MARK:- LifeCycle
+  // MARK: - LifeCycle
   override func viewDidLoad() {
     super.viewDidLoad()
     self.title = NSLocalizedString("TRENDS", comment: "")
@@ -45,7 +45,7 @@ class ChartsViewController: UIViewController {
     }
   }
 
-  // MARK:- Actions
+  // MARK: - Actions
   @IBAction func backButtonAction(_ sender: UIButton) {
     self.navigationController?.popViewController(animated: true)
   }

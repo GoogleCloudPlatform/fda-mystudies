@@ -90,14 +90,13 @@ class ViewController: UIViewController {
 
   /// Creates `ORKTask` instance and presents `ORKTaskViewController`
   func buildTask() {
-    
+
     let filePath = Bundle.main.path(forResource: "TaskSchema", ofType: "json")
     let data = NSData(contentsOfFile: filePath!)
 
     do {
       let dataDict = try JSONSerialization.jsonObject(with: data! as Data, options: [])
-        as? [String:
-        Any]
+        as? [String: Any]
 
       if Utilities.isValidObject(someObject: dataDict as AnyObject?) && (dataDict?.count)! > 0 {
 
@@ -105,14 +104,13 @@ class ViewController: UIViewController {
         let taskViewController: ORKTaskViewController?
 
         if Utilities.isValidObject(
-          someObject: dataDict?["Result"] as? [String: Any] as AnyObject?)
-        {
+          someObject: dataDict?["Result"] as? [String: Any] as AnyObject?) {
 
           activityBuilder?.initActivityWithDict(
             dict: dataDict?["Result"] as! [String: Any])
 
           task = activityBuilder?.createTask()
-          
+
           taskViewController = ORKTaskViewController(task: task, taskRun: nil)
           taskViewController?.delegate = self
           taskViewController?.outputDirectory = FileManager.default.urls(
@@ -213,11 +211,10 @@ class ViewController: UIViewController {
 }
 
 extension ViewController: ORKTaskViewControllerDelegate {
-  // MARK:ORKTaskViewController Delegate
+  // MARK: ORKTaskViewController Delegate
 
   func taskViewControllerSupportsSaveAndRestore(_ taskViewController: ORKTaskViewController)
-    -> Bool
-  {
+    -> Bool {
     return true
   }
 
@@ -272,8 +269,7 @@ extension ViewController: ORKTaskViewControllerDelegate {
     if (taskViewController.result.results?.count)! > 1 {
 
       if activityBuilder?.actvityResult?.result?.count == taskViewController.result.results?
-        .count
-      {
+        .count {
         activityBuilder?.actvityResult?.result?.removeLast()
       } else {
 
@@ -295,7 +291,7 @@ extension ViewController: ORKTaskViewControllerDelegate {
     }
   }
 
-  // MARK:StepViewController Delegate
+  // MARK: StepViewController Delegate
   public func stepViewController(
     _ stepViewController: ORKStepViewController,
     didFinishWith direction: ORKStepViewControllerNavigationDirection

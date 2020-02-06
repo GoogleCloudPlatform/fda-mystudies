@@ -38,7 +38,7 @@ struct ContactUsFeilds {
 
 class ContactUsViewController: UIViewController {
 
-  // MARK:- Outlets
+  // MARK: - Outlets
   @IBOutlet var buttonSubmit: UIButton?
 
   @IBOutlet var tableView: UITableView?
@@ -48,7 +48,7 @@ class ContactUsViewController: UIViewController {
   var tableViewRowDetails: NSMutableArray?
   var previousContentHeight: Double = 0.0
 
-  // MARK:- ViewController LifeCycle
+  // MARK: - ViewController LifeCycle
   override func viewDidLoad() {
     super.viewDidLoad()
 
@@ -56,7 +56,7 @@ class ContactUsViewController: UIViewController {
 
     //  Used to set border color for bottom view
     buttonSubmit?.layer.borderColor = kUicolorForButtonBackground
-    
+
     //  load plist info
     let plistPath = Bundle.main.path(
       forResource: "ContactUs", ofType: ".plist", inDirectory: nil)
@@ -86,7 +86,7 @@ class ContactUsViewController: UIViewController {
 
   }
 
-  // MARK:- Button Actions
+  // MARK: - Button Actions
 
   /// Validations after clicking on submit button
   /// If all the validations satisfy send contact-us request
@@ -95,8 +95,7 @@ class ContactUsViewController: UIViewController {
 
     if ContactUsFeilds.firstName.isEmpty && ContactUsFeilds.email.isEmpty && ContactUsFeilds
       .subject
-      .isEmpty && ContactUsFeilds.message.isEmpty
-    {
+      .isEmpty && ContactUsFeilds.message.isEmpty {
 
       UIUtilities.showAlertWithMessage(
         alertMessage: NSLocalizedString(kMessageAllFieldsAreEmpty, comment: ""))
@@ -121,7 +120,7 @@ class ContactUsViewController: UIViewController {
   }
 }
 
-// MARK:- TableView Datasource
+// MARK: - TableView Datasource
 extension ContactUsViewController: UITableViewDataSource {
 
   func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -167,7 +166,7 @@ extension ContactUsViewController: UITableViewDataSource {
   }
 }
 
-// MARK:- TableView Delegates
+// MARK: - TableView Delegates
 extension ContactUsViewController: UITableViewDelegate {
 
   func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
@@ -175,7 +174,7 @@ extension ContactUsViewController: UITableViewDelegate {
   }
 }
 
-// MARK:- TextView Delegates
+// MARK: - TextView Delegates
 extension ContactUsViewController: UITextViewDelegate {
 
   func textViewDidChange(_ textView: UITextView) {
@@ -209,7 +208,7 @@ extension ContactUsViewController: UITextViewDelegate {
   }
 }
 
-// MARK:- Textfield Delegate
+// MARK: - Textfield Delegate
 extension ContactUsViewController: UITextFieldDelegate {
 
   func textField(
@@ -258,7 +257,7 @@ extension ContactUsViewController: UITextFieldDelegate {
   }
 }
 
-// MARK:- Tableview cell class initialization
+// MARK: - Tableview cell class initialization
 class TextviewCell: UITableViewCell {
 
   @IBOutlet var labelTitle: UILabel?
@@ -266,7 +265,7 @@ class TextviewCell: UITableViewCell {
 
 }
 
-// MARK:- Webservice Delegates
+// MARK: - Webservice Delegates
 extension ContactUsViewController: NMWebServiceDelegate {
   func startedRequest(_ manager: NetworkManager, requestName: NSString) {
 

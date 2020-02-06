@@ -20,7 +20,7 @@ import UIKit
 
 class NotificationTableViewCell: UITableViewCell {
 
-  // MARK:- Outlets
+  // MARK: - Outlets
   @IBOutlet var labelNotificationText: UILabel?
 
   @IBOutlet var labelNotificationTime: UILabel?

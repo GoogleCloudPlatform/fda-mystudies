@@ -18,7 +18,7 @@
 
 import Foundation
 
-fileprivate func < <T: Comparable>(lhs: T?, rhs: T?) -> Bool {
+private func < <T: Comparable>(lhs: T?, rhs: T?) -> Bool {
   switch (lhs, rhs) {
   case let (l?, r?):
     return l < r
@@ -29,7 +29,7 @@ fileprivate func < <T: Comparable>(lhs: T?, rhs: T?) -> Bool {
   }
 }
 
-fileprivate func > <T: Comparable>(lhs: T?, rhs: T?) -> Bool {
+private func > <T: Comparable>(lhs: T?, rhs: T?) -> Bool {
   switch (lhs, rhs) {
   case let (l?, r?):
     return l > r
@@ -88,7 +88,7 @@ class NetworkConstants: NSObject {
   /// Returns the trusted hosts
   fileprivate func getTrustedHosts() -> NSArray {
     let array = [
-      TrustedHosts.TrustedHost1, TrustedHosts.TrustedHost2, TrustedHosts.TrustedHost3,
+      TrustedHosts.TrustedHost1, TrustedHosts.TrustedHost2, TrustedHosts.TrustedHost3
     ]
     return array as NSArray
   }

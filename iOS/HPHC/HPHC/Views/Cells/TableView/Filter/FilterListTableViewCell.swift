@@ -20,7 +20,7 @@ import UIKit
 
 class FilterListTableViewCell: UITableViewCell {
 
-  // MARK:- Outlets
+  // MARK: - Outlets
   @IBOutlet weak var name: UILabel?
 
   @IBOutlet weak var imageSelected: UIImageView?

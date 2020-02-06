@@ -20,7 +20,7 @@ import UIKit
 
 class FeedBackTableViewCell: UITableViewCell {
 
-  // MARK:- Outlets
+  // MARK: - Outlets
   @IBOutlet var labelHeadingText: UILabel?
 
   @IBOutlet var textViewFeedbackText: UITextView?

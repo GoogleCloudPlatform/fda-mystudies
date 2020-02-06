@@ -53,7 +53,7 @@ open class ConsentCompletionTaskResult: ORKResult {
 
 class ConsentSharePdfStepViewController: ORKStepViewController {
 
-  // MARK:- Outlets
+  // MARK: - Outlets
 
   @IBOutlet weak var buttonViewPdf: UIButton?  // button to Push to PdfViewer
   @IBOutlet weak var buttonNext: UIButton?  // button to take to next step
@@ -62,14 +62,14 @@ class ConsentSharePdfStepViewController: ORKStepViewController {
   @IBOutlet weak var labelTitle: UILabel!
   @IBOutlet weak var lableDescription: UILabel!
 
-  // MARK:- Properties
+  // MARK: - Properties
 
   var consentDocument: ORKConsentDocument?
 
   var taskResult: ConsentCompletionTaskResult = ConsentCompletionTaskResult(
     identifier: kConsentCompletionResultIdentifier)
 
-  // MARK:- ORKstepView Controller Init methods
+  // MARK: - ORKstepView Controller Init methods
 
   override init(step: ORKStep?) {
     super.init(step: step)
@@ -83,7 +83,7 @@ class ConsentSharePdfStepViewController: ORKStepViewController {
     NotificationCenter.default.removeObserver(self)
   }
 
-  // MARK:- Overriden Methods
+  // MARK: - Overriden Methods
   override func hasNextStep() -> Bool {
     super.hasNextStep()
     return true
@@ -99,7 +99,7 @@ class ConsentSharePdfStepViewController: ORKStepViewController {
     return orkResult
   }
 
-  // MARK:- View controller LifeCycle
+  // MARK: - View controller LifeCycle
 
   override func viewDidLoad() {
     super.viewDidLoad()
@@ -131,7 +131,7 @@ class ConsentSharePdfStepViewController: ORKStepViewController {
     )
   }
 
-  // MARK:- Utils
+  // MARK: - Utils
 
   fileprivate func addObservers() {
     NotificationCenter.default.addObserver(
@@ -158,7 +158,7 @@ class ConsentSharePdfStepViewController: ORKStepViewController {
       self.taskViewController!, didFinishWith: .failed, error: error)
   }
 
-  // MARK:- Button Actions
+  // MARK: - Button Actions
 
   @IBAction func buttonActionNext(sender: UIButton?) {
     self.taskResult.didTapOnViewPdf = false

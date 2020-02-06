@@ -37,7 +37,7 @@ class ResourcesTableViewCell: UITableViewCell {
         animations: {
           self.contentView.alpha = 0.1
         }
-      ) { (finished) in
+      ) { (_) in
         self.contentView.backgroundColor = UIColor.white
         self.contentView.alpha = 1.0
         resource.availableToday = false

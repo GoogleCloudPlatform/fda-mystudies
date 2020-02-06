@@ -34,7 +34,7 @@ class SignUpCompleteViewController: UIViewController {
     Logger.sharedInstance.info("\(self): deinit")
   }
 
-  // MARK:- ViewController Lifecycle
+  // MARK: - ViewController Lifecycle
   override func viewDidLoad() {
     super.viewDidLoad()
 
@@ -58,7 +58,7 @@ class SignUpCompleteViewController: UIViewController {
     self.navigationController?.setNavigationBarHidden(true, animated: true)
   }
 
-  // MARK:- button Actions
+  // MARK: - button Actions
 
   /// Next button clicked and navigate the screen to GateWay dashboard.
   @IBAction func nextButtonAction(_ sender: Any) {
@@ -78,7 +78,7 @@ class SignUpCompleteViewController: UIViewController {
 
   }
 
-  // MARK:- Utility Methods
+  // MARK: - Utility Methods
 
   /// Used to Navigate StudyList after completion.
   func navigateToGatewayDashboard() {
@@ -103,7 +103,7 @@ class SignUpCompleteViewController: UIViewController {
   }
 }
 
-// MARK:- UserService Response handler
+// MARK: - UserService Response handler
 extension SignUpCompleteViewController: NMWebServiceDelegate {
 
   func startedRequest(_ manager: NetworkManager, requestName: NSString) {

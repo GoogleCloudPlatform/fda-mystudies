@@ -188,8 +188,7 @@ class ConsentBuilder {
   /// Return an ConsentDocument
   func getConsentDocument() -> ORKConsentDocument {
     if consentDocument != nil,
-      Utilities.isValidObject(someObject: consentDocument?.sections as AnyObject?)
-    {
+      Utilities.isValidObject(someObject: consentDocument?.sections as AnyObject?) {
       return consentDocument!
     } else {
       consentDocument = createConsentDocument()
@@ -203,8 +202,7 @@ class ConsentBuilder {
 
     if Utilities.isValidValue(someObject: "title" as AnyObject),
       Utilities.isValidValue(someObject: "signaturePageTitle" as AnyObject),
-      Utilities.isValidValue(someObject: kConsentSignaturePageContent as AnyObject)
-    {
+      Utilities.isValidValue(someObject: kConsentSignaturePageContent as AnyObject) {
       consentDocument.title = Study.currentStudy?.name
       consentDocument.signaturePageTitle = kConsentSignaturePageTitle
       consentDocument.signaturePageContent = kConsentSignaturePageContent
@@ -293,8 +291,7 @@ class ConsentBuilder {
   func getConsentSharingStep() -> ConsentSharingStep? {
     if Utilities.isValidValue(someObject: sharingConsent?.shortDesc as AnyObject),
       Utilities.isValidValue(someObject: sharingConsent?.longDesc as AnyObject),
-      Utilities.isValidValue(someObject: sharingConsent?.learnMore as AnyObject)
-    {
+      Utilities.isValidValue(someObject: sharingConsent?.learnMore as AnyObject) {
       // create shareStep
       let sharingConsentStep = ConsentSharingStep(
         identifier: kConsentSharing,
@@ -470,18 +467,15 @@ struct ReviewConsent {
       }
 
       if Utilities.isValidValue(
-        someObject: dict[kConsentReviewStepSignatureTitle] as AnyObject)
-      {
+        someObject: dict[kConsentReviewStepSignatureTitle] as AnyObject) {
         signatureTitle = dict[kConsentReviewStepSignatureTitle] as? String
       }
       if Utilities.isValidValue(
-        someObject: dict[kConsentReviewStepSignatureContent] as AnyObject)
-      {
+        someObject: dict[kConsentReviewStepSignatureContent] as AnyObject) {
         signatureContent = dict[kConsentReviewStepSignatureContent] as? String
       }
       if Utilities.isValidValue(
-        someObject: dict[kConsentReviewStepReasonForConsent] as AnyObject)
-      {
+        someObject: dict[kConsentReviewStepReasonForConsent] as AnyObject) {
         reasonForConsent = dict[kConsentReviewStepReasonForConsent] as? String
       }
     } else {
@@ -518,13 +512,11 @@ struct Comprehension {
       }
 
       if Utilities.isValidObject(
-        someObject: dict[kConsentComprehensionQuestions] as AnyObject)
-      {
+        someObject: dict[kConsentComprehensionQuestions] as AnyObject) {
         questions = dict[kConsentComprehensionQuestions] as? [[String: Any]]
       }
       if Utilities.isValidObject(
-        someObject: dict[kConsentComprehensionCorrectAnswers] as AnyObject)
-      {
+        someObject: dict[kConsentComprehensionCorrectAnswers] as AnyObject) {
         correctAnswers = dict[kConsentComprehensionCorrectAnswers] as? [[String: Any]]
       }
     } else {

@@ -30,7 +30,7 @@ enum TextFieldTags: Int {
 
 class SignUpTableViewCell: UITableViewCell {
 
-  // MARK:- Outlets
+  // MARK: - Outlets
   @IBOutlet var labelType: UILabel?
 
   @IBOutlet var textFieldValue: UITextField?

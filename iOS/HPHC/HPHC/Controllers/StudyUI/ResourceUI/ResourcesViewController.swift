@@ -80,7 +80,7 @@ class ResourcesViewController: UIViewController {
       self.addHomeButton()
     }
     setNeedsStatusBarAppearanceUpdate()
-  
+
     self.navigationController?.setNavigationBarHidden(false, animated: true)
 
     self.tabBarController?.tabBar.isHidden = false
@@ -217,7 +217,7 @@ class ResourcesViewController: UIViewController {
 
         // compare lifetime
         if (startDateResult == .orderedAscending || startDateResult == .orderedSame) &&
-            (endDateResult == .orderedDescending || endDateResult == .orderedSame)  {
+            (endDateResult == .orderedDescending || endDateResult == .orderedSame) {
           Logger.sharedInstance.info("current")
 
           tableViewRowDetails?.append(resource)
@@ -225,7 +225,7 @@ class ResourcesViewController: UIViewController {
           // compare for today
           let endOfToday = resource.startDate
 
-          if (todayDate >= start! && todayDate <= endOfToday!) {
+          if todayDate >= start! && todayDate <= endOfToday! {
             resource.availableToday = true
           }
 
@@ -235,7 +235,7 @@ class ResourcesViewController: UIViewController {
       }
 
     }
-    
+
     tableView?.isHidden = false
     tableView?.reloadData()
 
@@ -447,7 +447,7 @@ class ResourcesViewController: UIViewController {
       if FileManager.default.fileExists(atPath: fullPath) {
         try FileManager.default.removeItem(atPath: fullPath)
       }
-      
+
       FileManager.default.createFile(
         atPath: fullPath, contents: consentData as Data?, attributes: [:])
 
@@ -482,8 +482,7 @@ class ResourcesViewController: UIViewController {
   private func handleResponseForWithdraw(response: JSONDictionary) {
     // clear all local data storage
     let currentUser = User.currentUser
-    let userActivityStatusList: [UserActivityStatus] = currentUser.participatedActivites.filter(
-      { $0.studyId == (Study.currentStudy?.studyId)! })
+    let userActivityStatusList: [UserActivityStatus] = currentUser.participatedActivites.filter({ $0.studyId == (Study.currentStudy?.studyId)! })
 
     for activityStatus in userActivityStatusList {
       let index = currentUser.participatedActivites.firstIndex(
@@ -718,8 +717,7 @@ extension ResourcesViewController: NMWebServiceDelegate {
       } else if requestName as String == ResponseMethods.withdrawFromStudy.description {
 
         if error.localizedDescription.localizedCaseInsensitiveContains(
-          "Invalid ParticipantId.")
-        {
+          "Invalid ParticipantId.") {
 
           UserServices().withdrawFromStudy(
             studyId: (Study.currentStudy?.studyId)!,
@@ -750,7 +748,7 @@ extension String {
 
     let attributedOptions: [NSAttributedString.DocumentReadingOptionKey: Any] = [
       .documentType: NSAttributedString.DocumentType.html,
-      .characterEncoding: String.Encoding.utf8.rawValue,
+      .characterEncoding: String.Encoding.utf8.rawValue
     ]
 
     do {

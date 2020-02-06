@@ -32,14 +32,14 @@ enum SignInLoadFrom: Int {
 
 class SignInViewController: UIViewController {
 
-  // MARK:- Outlets
+  // MARK: - Outlets
   @IBOutlet var tableView: UITableView?
 
   @IBOutlet var buttonSignIn: UIButton?
   @IBOutlet var buttonSignUp: UIButton?
   @IBOutlet var termsAndCondition: LinkTextView?
 
-  // MARK:- Properties
+  // MARK: - Properties
   lazy var viewLoadFrom: SignInLoadFrom = .menu
 
   var tableViewRowDetails: NSMutableArray?
@@ -54,7 +54,7 @@ class SignInViewController: UIViewController {
     Logger.sharedInstance.info("\(self): deinit")
   }
 
-  // MARK:- ViewController Lifecycle
+  // MARK: - ViewController Lifecycle
 
   override func viewDidLoad() {
     super.viewDidLoad()
@@ -135,7 +135,7 @@ class SignInViewController: UIViewController {
     }
   }
 
-  // MARK:- Button Action
+  // MARK: - Button Action
 
   @IBAction func signInButtonAction(_ sender: Any) {
 
@@ -170,7 +170,7 @@ class SignInViewController: UIViewController {
       title: "Why Register?", message: kRegistrationInfoMessage as NSString)
   }
 
-  // MARK:-
+  // MARK: -
 
   /// Initial Data Setup which displays email and password.
   func setInitialDate() {
@@ -248,7 +248,7 @@ class SignInViewController: UIViewController {
       storyboard.instantiateViewController(withIdentifier: kStoryboardIdentifierSlideMenuVC)
         as? FDASlideMenuViewController
     )!
-    
+
     self.navigationController?.pushViewController(fda, animated: true)
   }
 
@@ -278,7 +278,7 @@ class SignInViewController: UIViewController {
 
   }
 
-  // MARK:- Segue Methods
+  // MARK: - Segue Methods
 
   @IBAction func unwindFromVerification(_ segue: UIStoryboardSegue) {}
 
@@ -287,7 +287,7 @@ class SignInViewController: UIViewController {
     if let signUpController = segue.destination as? SignUpViewController {
       if viewLoadFrom == .menu {
         signUpController.viewLoadFrom = .menu_login
-      } else if (viewLoadFrom == .joinStudy) {
+      } else if viewLoadFrom == .joinStudy {
         signUpController.viewLoadFrom = .joinStudy_login
       } else {
         signUpController.viewLoadFrom = .login
@@ -313,7 +313,7 @@ class SignInViewController: UIViewController {
   }
 }
 
-// MARK:- TableView Data source
+// MARK: - TableView Data source
 extension SignInViewController: UITableViewDataSource {
 
   func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -344,7 +344,7 @@ extension SignInViewController: UITableViewDataSource {
   }
 }
 
-// MARK:- TableView Delegates
+// MARK: - TableView Delegates
 extension SignInViewController: UITableViewDelegate {
 
   func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
@@ -353,7 +353,7 @@ extension SignInViewController: UITableViewDelegate {
   }
 }
 
-// MARK:- Textfield Delegate
+// MARK: - Textfield Delegate
 extension SignInViewController: UITextFieldDelegate {
 
   func textFieldDidBeginEditing(_ textField: UITextField) {
@@ -375,7 +375,7 @@ extension SignInViewController: UITextFieldDelegate {
         return true
       }
     } else {
-      if (range.location == textField.text?.count && string == " ") {
+      if range.location == textField.text?.count && string == " " {
 
         textField.text = textField.text?.appending("\u{00a0}")
         return false
@@ -416,17 +416,15 @@ extension SignInViewController: UIGestureRecognizerDelegate {
 extension SignInViewController: UITextViewDelegate {
 
   func textView(_ textView: UITextView, shouldInteractWith URL: URL, in characterRange: NSRange)
-    -> Bool
-  {
+    -> Bool {
 
     print(characterRange.description)
 
     var link: String = (TermsAndPolicy.currentTermsAndPolicy?.termsURL)!
     var title: String = kNavigationTitleTerms
     if URL.absoluteString == TermsAndPolicy.currentTermsAndPolicy?.policyURL && characterRange
-      .length == String("Privacy Policy").count
-    {
-   
+      .length == String("Privacy Policy").count {
+
       print("terms")
       link = (TermsAndPolicy.currentTermsAndPolicy?.policyURL)!
       title = kNavigationTitlePrivacyPolicy
@@ -448,19 +446,18 @@ extension SignInViewController: UITextViewDelegate {
   }
 
   func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldReceive press: UIPress)
-    -> Bool
-  {
+    -> Bool {
     return false
   }
 
   func textViewDidChangeSelection(_ textView: UITextView) {
-    if !NSEqualRanges(textView.selectedRange, NSMakeRange(0, 0)) {
-      textView.selectedRange = NSMakeRange(0, 0)
+    if !NSEqualRanges(textView.selectedRange, NSRange(location: 0, length: 0)) {
+      textView.selectedRange = NSRange(location: 0, length: 0)
     }
   }
 }
 
-// MARK:- Webservices Delegate
+// MARK: - Webservices Delegate
 extension SignInViewController: NMWebServiceDelegate {
 
   func startedRequest(_ manager: NetworkManager, requestName: NSString) {
@@ -528,9 +525,8 @@ extension SignInViewController: NMWebServiceDelegate {
 }
 
 // Helper function inserted by Swift 4.2 migrator.
-fileprivate func convertToOptionalNSAttributedStringKeyDictionary(_ input: [String: Any]?)
-  -> [NSAttributedString.Key: Any]?
-{
+private func convertToOptionalNSAttributedStringKeyDictionary(_ input: [String: Any]?)
+  -> [NSAttributedString.Key: Any]? {
   guard let input = input else { return nil }
   return Dictionary(
     uniqueKeysWithValues: input.map { key, value in

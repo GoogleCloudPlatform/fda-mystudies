@@ -41,7 +41,7 @@ class GatewayResourcesListViewController: UIViewController {
 
   }
 
-  // MARK:- ViewController Lifecycle.
+  // MARK: - ViewController Lifecycle.
   override func viewDidLoad() {
     super.viewDidLoad()
     self.navigationItem.title = NSLocalizedString("RESOURCES", comment: "")
@@ -102,7 +102,7 @@ extension GatewayResourcesListViewController: NMWebServiceDelegate {
 
   func finishedRequest(_ manager: NetworkManager, requestName: NSString, response: AnyObject?) {
     Logger.sharedInstance.info(
-      "requestname : \(requestName) response : \(String(describing:response))")
+      "requestname : \(requestName) response : \(String(describing: response))")
 
     self.removeProgressIndicator()
 

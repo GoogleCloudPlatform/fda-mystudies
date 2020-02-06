@@ -55,12 +55,10 @@ class ConsentResult {
         if let questionstepResult: ORKChoiceQuestionResult? = (
           stepResult as? ORKStepResult
         )!
-          .results?[0] as? ORKChoiceQuestionResult?
-        {
+          .results?[0] as? ORKChoiceQuestionResult? {
 
           if Utilities.isValidValue(
-            someObject: questionstepResult?.choiceAnswers?[0] as AnyObject?)
-          {
+            someObject: questionstepResult?.choiceAnswers?[0] as AnyObject?) {
             // sharing choice result either 1 selected or 2 seleceted
 
           } else {
@@ -166,8 +164,7 @@ class ConsentResult {
         } else if let tokenStepResult: EligibilityTokenTaskResult? = (
           stepResult as? ORKStepResult
         )!
-          .results?[0] as? EligibilityTokenTaskResult?
-        {
+          .results?[0] as? EligibilityTokenTaskResult? {
           self.token = tokenStepResult?.enrollmentToken
         }
       }
@@ -196,8 +193,7 @@ class ConsentResult {
 
         if Utilities.isValidValue(
           someObject: Utilities.getDateFromString(
-            dateString: (activityDict[kActivityStartTime] as? String)!) as AnyObject?)
-        {
+            dateString: (activityDict[kActivityStartTime] as? String)!) as AnyObject?) {
           self.startTime = Utilities.getDateFromString(
             dateString: (activityDict[kActivityStartTime] as? String)!)
         } else {
@@ -208,8 +204,7 @@ class ConsentResult {
 
         if Utilities.isValidValue(
           someObject: Utilities.getDateFromString(
-            dateString: (activityDict[kActivityEndTime] as? String)!) as AnyObject?)
-        {
+            dateString: (activityDict[kActivityEndTime] as? String)!) as AnyObject?) {
           self.endTime = Utilities.getDateFromString(
             dateString: (activityDict[kActivityEndTime] as? String)!)
         } else {

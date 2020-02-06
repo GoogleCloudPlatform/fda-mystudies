@@ -28,14 +28,14 @@ class InEligibilityStep: ORKStep {
 
 class InEligibilityStepViewController: ORKStepViewController {
 
-  // MARK:- Outlets
+  // MARK: - Outlets
   @IBOutlet weak var buttonDone: UIButton?
 
   @IBOutlet weak var labelDescription: UILabel?
 
   var descriptionText: String?
 
-  // MARK:- ORKStepViewController Intitialization Methods
+  // MARK: - ORKStepViewController Intitialization Methods
 
   override init(step: ORKStep?) {
     super.init(step: step)
@@ -54,13 +54,13 @@ class InEligibilityStepViewController: ORKStepViewController {
     super.goForward()
   }
 
-  // MARK:- LifeCycle
+  // MARK: - LifeCycle
   override func viewDidLoad() {
     super.viewDidLoad()
     buttonDone?.layer.borderColor = kUicolorForButtonBackground
   }
 
-  // MARK:- UI Utils
+  // MARK: - UI Utils
 
   func showAlert(message: String) {
     let alert = UIAlertController(
@@ -74,7 +74,7 @@ class InEligibilityStepViewController: ORKStepViewController {
 
   }
 
-  // MARK:- Actions
+  // MARK: - Actions
   @IBAction func buttonActionDone(sender: UIButton?) {
     self.goForward()
   }

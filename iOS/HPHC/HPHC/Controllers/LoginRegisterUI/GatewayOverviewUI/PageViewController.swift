@@ -40,7 +40,7 @@ class PageViewController: UIPageViewController {
   var overview: Overview!
   lazy var currentIndex = 0
 
-  // MARK:- ViewController Lifecycle
+  // MARK: - ViewController Lifecycle
   deinit {
     Logger.sharedInstance.info("\(self): deinit")
   }
@@ -62,14 +62,13 @@ class PageViewController: UIPageViewController {
     scrollView.delegate = self
   }
 
-  // MARK:- Scroll Delegates
+  // MARK: - Scroll Delegates
 
   /// Scrolls to the next view controller.
   func scrollToNextViewController() {
     if let visibleViewController = viewControllers?.first,
       let nextViewController = pageViewController(
-        self, viewControllerAfter: visibleViewController)
-    {
+        self, viewControllerAfter: visibleViewController) {
       scrollToViewController(viewController: nextViewController)
     }
   }
@@ -83,7 +82,7 @@ class PageViewController: UIPageViewController {
       [viewController],
       direction: direction,
       animated: true,
-      completion: { (finished) -> Void in
+      completion: { (_) -> Void in
         // Setting the view controller programmatically does not fire
         // any delegate methods, so we have to manually notify the
         // 'tutorialDelegate' of the new index.
@@ -122,8 +121,7 @@ class PageViewController: UIPageViewController {
   func scrollToViewController(index newIndex: Int) {
 
     if let firstViewController = viewControllers?.first,
-      let currentIndex = orderedViewControllers.firstIndex(of: firstViewController)
-    {
+      let currentIndex = orderedViewControllers.firstIndex(of: firstViewController) {
       let direction: UIPageViewController.NavigationDirection = newIndex >= currentIndex
         ? .forward : .reverse
       let nextViewController = orderedViewControllers[newIndex]
@@ -197,7 +195,7 @@ class PageViewController: UIPageViewController {
   }
 }
 
-// MARK:- UIPageViewController DataSource
+// MARK: - UIPageViewController DataSource
 extension PageViewController: UIPageViewControllerDataSource {
 
   func pageViewController(
@@ -237,7 +235,7 @@ extension PageViewController: UIPageViewControllerDataSource {
   }
 }
 
-// MARK:- UIPageViewControllerDelegate
+// MARK: - UIPageViewControllerDelegate
 extension PageViewController: UIPageViewControllerDelegate {
 
   func pageViewController(
@@ -256,7 +254,7 @@ extension PageViewController: UIPageViewControllerDelegate {
   }
 }
 
-// MARK:- UIScrollview delegates
+// MARK: - UIScrollview delegates
 extension PageViewController: UIScrollViewDelegate {
 
   func scrollViewDidEndDragging(_ scrollView: UIScrollView, willDecelerate decelerate: Bool) {

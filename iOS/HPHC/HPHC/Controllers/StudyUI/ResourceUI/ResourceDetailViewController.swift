@@ -23,12 +23,12 @@ import WebKit
 
 class ResourceDetailViewController: UIViewController {
 
-  // MARK:- Outles
+  // MARK: - Outles
   @IBOutlet var webViewContainer: UIView?
   @IBOutlet var progressBar: UIProgressView?
   @IBOutlet var bottomToolBar: UIToolbar?
 
-  // MARK:- Properties
+  // MARK: - Properties
   var webView: WKWebView?
 
   var activityIndicator: UIActivityIndicatorView!
@@ -61,10 +61,10 @@ class ResourceDetailViewController: UIViewController {
 
     let wkUController = WKUserContentController()
     wkUController.addUserScript(userScript)
-    
+
     let wkWebConfig = WKWebViewConfiguration()
     wkWebConfig.userContentController = wkUController
-    
+
     let bottomBarHeight: CGFloat = 44.0
 
     let webViewFrame = CGRect(
@@ -103,8 +103,7 @@ class ResourceDetailViewController: UIViewController {
     super.viewWillAppear(animated)
 
     if self.isEmailComposerPresented == false,
-      self.resource?.file?.link != nil
-    {
+      self.resource?.file?.link != nil {
 
       activityIndicator = UIActivityIndicatorView(style: .gray)
       activityIndicator.center = CGPoint(
@@ -197,7 +196,7 @@ class ResourceDetailViewController: UIViewController {
       fileName as String, fileURL: encodedURL, destinationPath: resourcesDownloadPath)
   }
 
-  // MARK:- Button Actions
+  // MARK: - Button Actions
 
   @IBAction func cancelButtonClicked(_ sender: Any) {
     self.dismiss(animated: true, completion: nil)
@@ -244,7 +243,7 @@ extension ResourceDetailViewController: UIWebViewDelegate {
     alert.addAction(
       UIAlertAction.init(
         title: buttonTitleOK, style: .default,
-        handler: { (action) in
+        handler: { (_) in
 
           self.dismiss(animated: true, completion: nil)
 
@@ -312,13 +311,13 @@ extension ResourceDetailViewController: WKUIDelegate, WKNavigationDelegate {
       alertController.addAction(
         UIAlertAction(
           title: "Cancel", style: .cancel,
-          handler: { action in
+          handler: { _ in
             completionHandler(.cancelAuthenticationChallenge, nil)
           }))
       alertController.addAction(
         UIAlertAction(
           title: "Log In", style: .default,
-          handler: { action in
+          handler: { _ in
             guard let username = usernameTextField.text,
               let password = passwordTextField.text
             else {
@@ -377,7 +376,7 @@ extension ResourceDetailViewController: WKUIDelegate, WKNavigationDelegate {
     alertController.addAction(
       UIAlertAction(
         title: "OK", style: .default,
-        handler: { action in
+        handler: { _ in
           completionHandler()
         }))
     present(alertController, animated: true, completion: nil)
@@ -392,13 +391,13 @@ extension ResourceDetailViewController: WKUIDelegate, WKNavigationDelegate {
     alertController.addAction(
       UIAlertAction(
         title: "Cancel", style: .cancel,
-        handler: { action in
+        handler: { _ in
           completionHandler(false)
         }))
     alertController.addAction(
       UIAlertAction(
         title: "OK", style: .default,
-        handler: { action in
+        handler: { _ in
           completionHandler(true)
         }))
     present(alertController, animated: true, completion: nil)
@@ -420,13 +419,13 @@ extension ResourceDetailViewController: WKUIDelegate, WKNavigationDelegate {
     alertController.addAction(
       UIAlertAction(
         title: "Cancel", style: .cancel,
-        handler: { action in
+        handler: { _ in
           completionHandler(nil)
         }))
     alertController.addAction(
       UIAlertAction(
         title: "OK", style: .default,
-        handler: { action in
+        handler: { _ in
           completionHandler(alertTextField.text)
         }))
     present(alertController, animated: true, completion: nil)
@@ -434,7 +433,7 @@ extension ResourceDetailViewController: WKUIDelegate, WKNavigationDelegate {
 
 }
 
-// MARK:- Mail Compose Delegate
+// MARK: - Mail Compose Delegate
 extension ResourceDetailViewController: MFMailComposeViewControllerDelegate {
 
   func sendEmail() {
@@ -476,7 +475,7 @@ extension ResourceDetailViewController: MFMailComposeViewControllerDelegate {
       alert.addAction(
         UIAlertAction.init(
           title: NSLocalizedString("OK", comment: ""), style: .default,
-          handler: { (action) in
+          handler: { (_) in
 
             self.dismiss(animated: true, completion: nil)
 
@@ -494,7 +493,7 @@ extension ResourceDetailViewController: MFMailComposeViewControllerDelegate {
 
 }
 
-// MARK:- File Download Manager Delegates
+// MARK: - File Download Manager Delegates
 extension ResourceDetailViewController: FileDownloadManagerDelegates {
 
   func download(manager: FileDownloadManager, didUpdateProgress progress: Float) {

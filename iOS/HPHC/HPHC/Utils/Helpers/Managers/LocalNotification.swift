@@ -37,8 +37,7 @@ class LocalNotification: NSObject {
   ) {
 
     studies = (
-      Gateway.instance.studies?.filter(
-        {
+      Gateway.instance.studies?.filter({
           $0.userParticipateState.status == UserStudyStatus.StudyStatus.inProgress && $0
             .status
             == .Active
@@ -80,7 +79,7 @@ class LocalNotification: NSObject {
         LocalNotification.registerAllLocalNotificationFor(
           activities: activities,
           completionHandler: {
-            (done, _) in
+            (_, _) in
             completionHandler(true)
           })
       } else {
@@ -111,7 +110,7 @@ class LocalNotification: NSObject {
       for run in runsBeforeToday {
 
         switch activity.frequencyType {
-          
+
         case .One_Time:
           if run.endDate != nil {
             let date = run.endDate.addingTimeInterval(-24*3600)  // 24 hours before
@@ -194,7 +193,7 @@ class LocalNotification: NSObject {
 
     _ = [
       kStudyId: run.studyId,
-      kActivityId: run.activityId,
+      kActivityId: run.activityId
     ] as [String: String]
 
     // create App local notification object
@@ -255,10 +254,9 @@ class LocalNotification: NSObject {
       for notification in allNotificaiton {
         let userInfo = notification.content.userInfo
         if userInfo[kStudyId] != nil && userInfo[kActivityId] != nil {
-          if (
+          if
             userInfo[kStudyId] as! String == studyId && userInfo[kActivityId] as! String
-              == activityid
-          ) {
+              == activityid {
             nIdentifers.append(notification.identifier)
           }
         }
@@ -279,7 +277,7 @@ class LocalNotification: NSObject {
       for notification in allNotificaiton {
         let userInfo = notification.content.userInfo
         if userInfo[kStudyId] != nil {
-          if (userInfo[kStudyId] as! String == studyId) {
+          if userInfo[kStudyId] as! String == studyId {
             nIdentifers.append(notification.identifier)
           }
         }
@@ -311,32 +309,31 @@ class LocalNotification: NSObject {
     }
   }
 
-
   /// Cancels existing notifications and reschedules the top 50 notification from local notifications list
   class func refreshAllLocalNotification() {
-    
+
     //Fetch top 50 notifications
     DBHandler.getRecentLocalNotification { (localNotifications) in
-      
+
       if localNotifications.count > 0 {
         // Cancel All Local Notifications
         LocalNotification.cancelAllLocalNotification()
-        
+
         LocalNotification.scheduledNotificaiton()
         for notification in localNotifications {
-          
+
           // Generate User Info
           let userInfo = [
             kStudyId: notification.studyId!,
-            kActivityId: notification.activityId!,
+            kActivityId: notification.activityId!
           ]
-          
+
           // Reschedule top 50 Local Notifications
           LocalNotification.scheduleNotificationOn(
             date: notification.startDate!, message: notification.message!,
             userInfo: userInfo,
             id: notification.id)
-          
+
         }
         LocalNotification.scheduledNotificaiton()
       }

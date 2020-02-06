@@ -23,12 +23,12 @@ let resourcesDownloadPath = AKUtility.baseFilePath + "/Resources"
 
 class GatewayResourceDetailViewController: UIViewController {
 
-  // MARK:- Outlets
+  // MARK: - Outlets
   @IBOutlet var webView: UIWebView?
 
   @IBOutlet var progressBar: UIProgressView?
 
-  // MARK:- Properties
+  // MARK: - Properties
   var activityIndicator: UIActivityIndicatorView!
 
   var requestLink: String?
@@ -41,7 +41,7 @@ class GatewayResourceDetailViewController: UIViewController {
     return .default
   }
 
-  // MARK:- UIViewController LifeCycle
+  // MARK: - UIViewController LifeCycle
   override func viewDidLoad() {
     super.viewDidLoad()
     self.hidesBottomBarWhenPushed = true
@@ -142,7 +142,7 @@ class GatewayResourceDetailViewController: UIViewController {
       fileName as String, fileURL: encodedUrl, destinationPath: resourcesDownloadPath)
   }
 
-  // MARK:Button Actions
+  // MARK: Button Actions
 
   @IBAction func cancelButtonClicked(_ sender: Any) {
     self.dismiss(animated: true, completion: nil)
@@ -178,7 +178,7 @@ extension GatewayResourceDetailViewController: UIWebViewDelegate {
     alert.addAction(
       UIAlertAction.init(
         title: buttonTitleOK, style: .default,
-        handler: { (action) in
+        handler: { (_) in
 
           self.dismiss(animated: true, completion: nil)
 
@@ -236,7 +236,7 @@ extension GatewayResourceDetailViewController: MFMailComposeViewControllerDelega
       alert.addAction(
         UIAlertAction.init(
           title: NSLocalizedString("OK", comment: ""), style: .default,
-          handler: { (action) in
+          handler: { (_) in
 
             self.dismiss(animated: true, completion: nil)
 

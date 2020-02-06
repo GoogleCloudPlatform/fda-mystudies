@@ -27,14 +27,14 @@ class SplashViewController: UIViewController {
 
   var isAppOpenedForFirstTime: Bool? = false
 
-  // MARK:- Viewcontroller Lifecycle
+  // MARK: - Viewcontroller Lifecycle
 
   override func viewDidLoad() {
     super.viewDidLoad()
   }
 
   override func viewWillAppear(_ animated: Bool) {
-        
+
     if DBHandler().initilizeCurrentUser() {
 
       if let authToken = FDAKeychain.shared[kUserAuthTokenKeychainKey] {
@@ -102,7 +102,7 @@ class SplashViewController: UIViewController {
     let overview = Overview()
     overview.type = .study
     overview.sections = listOfOverviews
-    
+
     Study.currentStudy?.overview = overview
     self.navigateToStudyHomeController()
 
@@ -125,7 +125,7 @@ class SplashViewController: UIViewController {
   }
 
   @objc func studySetupComplete() {
-    
+
     NotificationCenter.default.removeObserver(
       self, name: NSNotification.Name(rawValue: "StudySetupCompleted"), object: nil)
     if User.currentUser.authToken != nil && User.currentUser.authToken.count > 0 {
@@ -135,7 +135,7 @@ class SplashViewController: UIViewController {
     } else {
       self.createMenuView()
     }
-    
+
   }
 
   /// Navigating to Study list and Load FDASlideMenuViewController from Gateway Storyboard
@@ -154,16 +154,15 @@ class SplashViewController: UIViewController {
       let appDelegate = UIApplication.shared.delegate as? AppDelegate
       appDelegate?.updateKeyAndInitializationVector()
     }
-    
+
   }
 }
 
-// MARK:- ORKTaskViewController Delegate
+// MARK: - ORKTaskViewController Delegate
 extension SplashViewController: ORKTaskViewControllerDelegate {
 
   func taskViewControllerSupportsSaveAndRestore(_ taskViewController: ORKTaskViewController)
-    -> Bool
-  {
+    -> Bool {
     return true
   }
 

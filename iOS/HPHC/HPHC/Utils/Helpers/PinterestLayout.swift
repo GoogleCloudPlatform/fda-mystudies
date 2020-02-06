@@ -38,7 +38,7 @@ class PinterestLayoutAttributes: UICollectionViewLayoutAttributes {
   // 3. Override isEqual
   override func isEqual(_ object: Any?) -> Bool {
     if let attributtes = object as? PinterestLayoutAttributes {
-      if (attributtes.photoHeight == photoHeight) {
+      if attributtes.photoHeight == photoHeight {
         return super.isEqual(object)
       }
     }
@@ -119,8 +119,7 @@ class PinterestLayout: UICollectionViewLayout {
   }
 
   override func layoutAttributesForElements(in rect: CGRect)
-    -> [UICollectionViewLayoutAttributes]?
-  {
+    -> [UICollectionViewLayoutAttributes]? {
 
     var layoutAttributes = [UICollectionViewLayoutAttributes]()
 

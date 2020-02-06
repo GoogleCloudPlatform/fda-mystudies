@@ -137,10 +137,8 @@ class StudyListCell: UITableViewCell {
   /// - Parameter study: Access the data from Study Class.
   func setUserStatusForStudy(study: Study) {
     let currentUser = User.currentUser
-    if let userStudyStatus = currentUser.participatedStudies.filter(
-      { $0.studyId == study.studyId })
-      .first
-    {
+    if let userStudyStatus = currentUser.participatedStudies.filter({ $0.studyId == study.studyId })
+      .first {
 
       // assign to study
       study.userParticipateState = userStudyStatus
@@ -193,8 +191,7 @@ class StudyListCell: UITableViewCell {
     let placeholderImage = #imageLiteral(resourceName: "placeholder")
     // Update study logo using SDWEBImage and cache it.
     if let logoURLString = study.logoURL,
-      let url = URL(string: logoURLString)
-    {
+      let url = URL(string: logoURLString) {
       studyLogoImage?.sd_setImage(
         with: url, placeholderImage: placeholderImage, options: .fromCacheOnly, completed: nil)
     } else {
@@ -202,7 +199,7 @@ class StudyListCell: UITableViewCell {
     }
   }
 
-  // MARK:- Button Actions
+  // MARK: - Button Actions
 
   /// Button bookmark clicked and delegate it back to Study home and
   /// Study list View controller.

@@ -60,7 +60,7 @@ class StandaloneStudy: NSObject {
     let study = Study.currentStudy
     DBHandler.loadStudyDetailsToUpdate(
       studyId: (study?.studyId)!,
-      completionHandler: { (success) in
+      completionHandler: { (_) in
         NotificationCenter.default.post(
           name: NSNotification.Name(rawValue: "StudySetupCompleted"), object: nil)
       })
@@ -89,7 +89,7 @@ class StandaloneStudy: NSObject {
   }
 }
 
-//MARK:- Webservices Delegates
+// MARK: - Webservices Delegates
 extension StandaloneStudy: NMWebServiceDelegate {
 
   func startedRequest(_ manager: NetworkManager, requestName: NSString) {
@@ -98,7 +98,7 @@ extension StandaloneStudy: NMWebServiceDelegate {
 
   func finishedRequest(_ manager: NetworkManager, requestName: NSString, response: AnyObject?) {
     Logger.sharedInstance.info(
-      "requestname FINISH: \(requestName) : \(String(describing:response))")
+      "requestname FINISH: \(requestName) : \(String(describing: response))")
 
     if requestName as String == WCPMethods.study.rawValue {
       self.handleStudyListResponse()
@@ -107,7 +107,7 @@ extension StandaloneStudy: NMWebServiceDelegate {
     if requestName as String == WCPMethods.studyInfo.rawValue {
 
       self.fetchStudyDashboardInfo()
-    } else if (requestName as String == RegistrationMethods.studyState.description) {
+    } else if requestName as String == RegistrationMethods.studyState.description {
 
       self.createStudyForStandalone()
     }

@@ -23,7 +23,7 @@ import UIKit
 
 class FirstGatewayOverviewViewController: UIViewController {
 
-  // MARK:- Outlets
+  // MARK: - Outlets
   @IBOutlet var imageViewBackgroundImage: UIImageView?
 
   @IBOutlet var buttonWatchVideo: UIButton?
@@ -31,7 +31,7 @@ class FirstGatewayOverviewViewController: UIViewController {
   @IBOutlet var labelDescriptionText: UILabel?
   @IBOutlet var labelTitleText: UILabel?
 
-  // MARK:- Properties
+  // MARK: - Properties
   var pageIndex: Int!
 
   var overviewSectionDetail: OverviewSection!
@@ -46,7 +46,7 @@ class FirstGatewayOverviewViewController: UIViewController {
     Logger.sharedInstance.info("\(self): deinit")
   }
 
-  // MARK:- View Controller Lifecycle
+  // MARK: - View Controller Lifecycle
   override func viewDidLoad() {
     super.viewDidLoad()
 
@@ -67,7 +67,7 @@ class FirstGatewayOverviewViewController: UIViewController {
 
   }
 
-  // MARK:- Movie Player methods
+  // MARK: - Movie Player methods
 
   func playerDidFinishPlaying(note: NSNotification) {
     NotificationCenter.default.removeObserver(
@@ -75,7 +75,7 @@ class FirstGatewayOverviewViewController: UIViewController {
     self.playerViewController.dismiss(animated: true, completion: nil)
   }
 
-  // MARK:- Button Action
+  // MARK: - Button Action
 
   /// Watch video button clicked.
   @IBAction func watchVideoButtonClicked(_ sender: Any) {

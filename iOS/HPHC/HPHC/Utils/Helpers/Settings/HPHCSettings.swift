@@ -29,7 +29,7 @@ class HPHCSettings {
 
     let production = UIAlertAction(
       title: "Production", style: .default,
-      handler: { (alert: UIAlertAction!) -> Void in
+      handler: { (_: UIAlertAction!) -> Void in
         ud.setValue(
           "https://hpwcp-stage.lkcompliant.net/StudyMetaData/", forKey: "WCPBaseURL")
         ud.setValue(
@@ -41,7 +41,7 @@ class HPHCSettings {
 
     let stagging = UIAlertAction(
       title: "Stagging", style: .default,
-      handler: { (alert: UIAlertAction!) -> Void in
+      handler: { (_: UIAlertAction!) -> Void in
         ud.setValue(
           "https://hpwcp-stage.lkcompliant.net/StudyMetaData/", forKey: "WCPBaseURL")
         ud.setValue(
@@ -53,7 +53,7 @@ class HPHCSettings {
 
     let local = UIAlertAction(
       title: "Local", style: .default,
-      handler: { (alert: UIAlertAction!) -> Void in
+      handler: { (_: UIAlertAction!) -> Void in
         ud.setValue("http://192.168.0.44:8080/StudyMetaData/", forKey: "WCPBaseURL")
         ud.setValue("http://192.168.0.125:8081/labkey/fdahpUserRegWS/", forKey: "URBaseURL")
         ud.setValue(
@@ -63,7 +63,7 @@ class HPHCSettings {
 
     let cancelAction = UIAlertAction(
       title: "Cancel(Staging)", style: .cancel,
-      handler: { (alert: UIAlertAction!) -> Void in
+      handler: { (_: UIAlertAction!) -> Void in
         ud.setValue(
           "https://hpwcp-stage.lkcompliant.net/StudyMetaData/", forKey: "WCPBaseURL")
         ud.setValue(

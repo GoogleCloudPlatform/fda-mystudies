@@ -36,13 +36,13 @@ class FetalKickIntroStep: ORKStep {
 
 class FetalKickIntroStepViewController: ORKStepViewController {
 
-  // MARK:- Outlets
+  // MARK: - Outlets
   @IBOutlet weak var descriptionLabel: UILabel?
 
   /// button to start task as well as increment the counter.
   @IBOutlet weak var buttonNext: UIButton?
 
-  // MARK:- Properties
+  // MARK: - Properties
 
   var iconImage: UIImage?
 
@@ -83,7 +83,7 @@ class FetalKickIntroStepViewController: ORKStepViewController {
     super.goForward()
   }
 
-  // MARK:IBActions
+  // MARK: IBActions
 
   @IBAction func nextButtonAction(_ sender: UIButton) {
     self.goForward()

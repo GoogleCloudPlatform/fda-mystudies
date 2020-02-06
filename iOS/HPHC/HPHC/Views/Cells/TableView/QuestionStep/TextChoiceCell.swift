@@ -21,7 +21,7 @@ import UIKit
 /// Customer `UITableViewCell` similar to `ORKTextChoiceCell`
 class TextChoiceCell: UITableViewCell {
 
-  // MARK:- Outlets
+  // MARK: - Outlets
   @IBOutlet weak var titleLbl: UILabel!
 
   @IBOutlet weak var checkmarkView: UIImageView!

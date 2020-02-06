@@ -116,41 +116,40 @@ class Resource {
 
     if Utilities.isValidObject(someObject: detail as AnyObject?) {
 
-      if (Utilities.isValidValue(someObject: (detail[kResourceId]) as AnyObject)) {
+      if Utilities.isValidValue(someObject: (detail[kResourceId]) as AnyObject) {
         self.resourcesId = detail[kResourceId] as? String
       }
-      if (Utilities.isValidValue(someObject: (detail[kResourceAudience]) as AnyObject)) {
+      if Utilities.isValidValue(someObject: (detail[kResourceAudience]) as AnyObject) {
         self.audience = Audience(rawValue: detail[kResourceAudience] as! String)
       }
-      if (Utilities.isValidValue(someObject: (detail[kResourceLevel]) as AnyObject)) {
+      if Utilities.isValidValue(someObject: (detail[kResourceLevel]) as AnyObject) {
         self.level = detail[kResourceLevel] as? ResourceLevel
       }
-      if (Utilities.isValidValue(someObject: (detail[kResourceKey]) as AnyObject)) {
+      if Utilities.isValidValue(someObject: (detail[kResourceKey]) as AnyObject) {
         self.key = detail[kResourceKey] as? String
       }
-      if (Utilities.isValidValue(someObject: (detail[kResourceType]) as AnyObject)) {
+      if Utilities.isValidValue(someObject: (detail[kResourceType]) as AnyObject) {
         self.type = detail[kResourceType] as? String
       }
-      if (Utilities.isValidValue(someObject: (detail[kResourceFile]) as AnyObject)) {
+      if Utilities.isValidValue(someObject: (detail[kResourceFile]) as AnyObject) {
         self.file?.setFile(dict: detail[kResourceFile] as! NSDictionary)
       }
-      if (Utilities.isValidValue(someObject: (detail["notificationText"]) as AnyObject)) {
+      if Utilities.isValidValue(someObject: (detail["notificationText"]) as AnyObject) {
         self.notificationMessage = detail["notificationText"] as? String
       }
 
       //Setting the configuration if any
-      if (Utilities.isValidObject(someObject: detail[kResourceConfigration] as AnyObject)) {
+      if Utilities.isValidObject(someObject: detail[kResourceConfigration] as AnyObject) {
         let configuration = detail[kResourceConfigration] as! [String: Any]
         self.povAvailable = true
 
-        if (
+        if
           Utilities.isValidValue(
-            someObject: (configuration["availableDate"]) as AnyObject)
-        ) {
+            someObject: (configuration["availableDate"]) as AnyObject) {
           self.startDate = Utilities.getDateFromStringWithFormat(
             "YYYY-MM-dd", resultDate: configuration["availableDate"] as! String)
         }
-        if (Utilities.isValidValue(someObject: (configuration["expiryDate"]) as AnyObject)) {
+        if Utilities.isValidValue(someObject: (configuration["expiryDate"]) as AnyObject) {
           self.endDate = Utilities.getDateFromStringWithFormat(
             "YYYY-MM-dd", resultDate: configuration["expiryDate"] as! String)
         }
@@ -158,34 +157,32 @@ class Resource {
         self.anchorDateStartDays = configuration["startDays"] as? Int
         self.anchorDateEndDays = configuration["endDays"] as? Int
 
-        if (
+        if
           Utilities.isValidValue(
-            someObject: (configuration["availabilityType"]) as AnyObject)
-        ) {
+            someObject: (configuration["availabilityType"]) as AnyObject) {
           self.availabilityType = ResourceAvailabilityType(
             rawValue: configuration["availabilityType"] as? String ?? "Regular")!
         }
 
-        if (Utilities.isValidValue(someObject: (configuration["sourceType"]) as AnyObject)) {
+        if Utilities.isValidValue(someObject: (configuration["sourceType"]) as AnyObject) {
           self.sourceType = AnchorDateSourceType(
             rawValue: configuration["sourceType"] as? String ?? "EnrollmentDate")!
         }
 
-        if (
+        if
           Utilities.isValidValue(
-            someObject: (configuration["sourceActivityId"]) as AnyObject)
-        ) {
+            someObject: (configuration["sourceActivityId"]) as AnyObject) {
           self.sourceActivityId = configuration["sourceActivityId"] as? String
         }
 
-        if (Utilities.isValidValue(someObject: (configuration["sourceKey"]) as AnyObject)) {
+        if Utilities.isValidValue(someObject: (configuration["sourceKey"]) as AnyObject) {
           self.sourceKey = configuration["sourceKey"] as? String
         }
 
-        if (Utilities.isValidValue(someObject: (configuration["startTime"]) as AnyObject)) {
+        if Utilities.isValidValue(someObject: (configuration["startTime"]) as AnyObject) {
           self.startTime = configuration["startTime"] as? String
         }
-        if (Utilities.isValidValue(someObject: (configuration["endTime"]) as AnyObject)) {
+        if Utilities.isValidValue(someObject: (configuration["endTime"]) as AnyObject) {
           self.endTime = configuration["endTime"] as? String
         }
 
@@ -193,7 +190,7 @@ class Resource {
         self.povAvailable = false
       }
 
-      if (Utilities.isValidValue(someObject: (detail[kResourceTitle]) as AnyObject)) {
+      if Utilities.isValidValue(someObject: (detail[kResourceTitle]) as AnyObject) {
         self.title = detail[kResourceTitle] as? String
       }
       self.file = File()
@@ -209,22 +206,22 @@ class Resource {
 
     if Utilities.isValidObject(someObject: dict) {
 
-      if (Utilities.isValidValue(someObject: (dict[kResourceId]) as AnyObject)) {
+      if Utilities.isValidValue(someObject: (dict[kResourceId]) as AnyObject) {
         self.resourcesId = dict[kResourceId] as? String
       }
-      if (Utilities.isValidValue(someObject: (dict[kResourceAudience]) as AnyObject)) {
+      if Utilities.isValidValue(someObject: (dict[kResourceAudience]) as AnyObject) {
         self.audience = Audience(rawValue: dict[kResourceAudience] as! String)
       }
-      if (Utilities.isValidValue(someObject: (dict[kResourceLevel]) as AnyObject)) {
+      if Utilities.isValidValue(someObject: (dict[kResourceLevel]) as AnyObject) {
         self.level = dict[kResourceLevel] as? ResourceLevel
       }
-      if (Utilities.isValidValue(someObject: (dict[kResourceKey]) as AnyObject)) {
+      if Utilities.isValidValue(someObject: (dict[kResourceKey]) as AnyObject) {
         self.key = dict[kResourceKey] as? String
       }
-      if (Utilities.isValidValue(someObject: (dict[kResourceType]) as AnyObject)) {
+      if Utilities.isValidValue(someObject: (dict[kResourceType]) as AnyObject) {
         self.type = dict[kResourceType] as? String
       }
-      if (Utilities.isValidValue(someObject: (dict["notificationText"]) as AnyObject)) {
+      if Utilities.isValidValue(someObject: (dict["notificationText"]) as AnyObject) {
         self.notificationMessage = dict["notificationText"] as? String
       }
 
@@ -236,63 +233,59 @@ class Resource {
 
         } else if self.level == ResourceLevel.gateway {
           // Gateway Level
-          if (Utilities.isValidValue(someObject: (dict[kResourceFile]) as AnyObject)) {
+          if Utilities.isValidValue(someObject: (dict[kResourceFile]) as AnyObject) {
             self.file?.setFile(dict: dict[kResourceFile] as! NSDictionary)
           }
         }
       }
 
       // Setting the configurations
-      if (Utilities.isValidObject(someObject: dict[kResourceConfigration] as AnyObject)) {
+      if Utilities.isValidObject(someObject: dict[kResourceConfigration] as AnyObject) {
         let configuration = dict[kResourceConfigration] as! [String: Any]
         self.povAvailable = true
-        if (
+        if
           Utilities.isValidValue(
-            someObject: (configuration["availableDate"]) as AnyObject)
-        ) {
+            someObject: (configuration["availableDate"]) as AnyObject) {
           self.startDate = Utilities.getDateFromStringWithFormat(
             "YYYY-MM-dd", resultDate: configuration["availableDate"] as! String)
         }
-        if (Utilities.isValidValue(someObject: (configuration["expiryDate"]) as AnyObject)) {
+        if Utilities.isValidValue(someObject: (configuration["expiryDate"]) as AnyObject) {
           self.endDate = Utilities.getDateFromStringWithFormat(
             "YYYY-MM-dd", resultDate: configuration["expiryDate"] as! String)
         }
         self.anchorDateStartDays = configuration["startDays"] as? Int
         self.anchorDateEndDays = configuration["endDays"] as? Int
 
-        if (
+        if
           Utilities.isValidValue(
-            someObject: (configuration["availabilityType"]) as AnyObject)
-        ) {
+            someObject: (configuration["availabilityType"]) as AnyObject) {
           self.availabilityType = ResourceAvailabilityType(
             rawValue: configuration["availabilityType"] as? String ?? "Regular")!
         }
 
-        if (Utilities.isValidValue(someObject: (configuration["sourceType"]) as AnyObject)) {
+        if Utilities.isValidValue(someObject: (configuration["sourceType"]) as AnyObject) {
           self.sourceType = AnchorDateSourceType(
             rawValue: configuration["sourceType"] as? String ?? "EnrollmentDate")!
         }
 
-        if (
+        if
           Utilities.isValidValue(
-            someObject: (configuration["sourceActivityId"]) as AnyObject)
-        ) {
+            someObject: (configuration["sourceActivityId"]) as AnyObject) {
           self.sourceActivityId = configuration["sourceActivityId"] as? String
         }
 
-        if (Utilities.isValidValue(someObject: (configuration["sourceKey"]) as AnyObject)) {
+        if Utilities.isValidValue(someObject: (configuration["sourceKey"]) as AnyObject) {
           self.sourceKey = configuration["sourceKey"] as? String
         }
-        if (
+        if
           Utilities.isValidValue(
-            someObject: (configuration["sourceFormKey"]) as AnyObject)
-        ) {
+            someObject: (configuration["sourceFormKey"]) as AnyObject) {
           self.sourceFormKey = configuration["sourceFormKey"] as? String
         }
-        if (Utilities.isValidValue(someObject: (configuration["startTime"]) as AnyObject)) {
+        if Utilities.isValidValue(someObject: (configuration["startTime"]) as AnyObject) {
           self.startTime = configuration["startTime"] as? String
         }
-        if (Utilities.isValidValue(someObject: (configuration["endTime"]) as AnyObject)) {
+        if Utilities.isValidValue(someObject: (configuration["endTime"]) as AnyObject) {
           self.endTime = configuration["endTime"] as? String
         }
 
@@ -302,7 +295,7 @@ class Resource {
 
       self.calculateAvailability()
 
-      if (Utilities.isValidValue(someObject: (dict[kResourceTitle]) as AnyObject)) {
+      if Utilities.isValidValue(someObject: (dict[kResourceTitle]) as AnyObject) {
         self.title = dict[kResourceTitle] as? String
       }
     } else {
