@@ -5,42 +5,49 @@ My Studies project is FISMA & HIPPA compliant.
 My Studies requires Xcode 11 or newer and can be run on iOS 11 and above.
 # Backend Server Integration
 My Studies fetches all the Studies, Activities, Consent and Resources from the backend, and responses provided by users is stored on the backend.
+
+#### Creating Build Configuration Files
+1. To create a build configuration file, open HPHC.xcworkspace, select the “File > New File…” menu item (⌘n), scroll down to the section labeled “Other”, and select the Configuration Settings File template. Next, save it somewhere in your project directory, making sure to add it to your desired targets.
+2. Once you’ve created an xcconfig file, you can assign it to one or more build configurations for its associated targets.
+3. Go to project info settings.
+4. Under build configuration, select the configuration settings file for project(not for any target) you created in Step 1.
+
 #### Registration Server
 Registration Server stores user information & user’s status for each study and activity.
-Once you have successfully setup Registration Server, replace registration server URL in RegistrationServerConfiguration.swift
-```swift
-struct RegistrationServerURLConstants {
-//TODO: Set the server end points
+Once you have successfully setup Registration Server, add registration 
+server URL in your configuration setting file which you created above.
 
-static let ProductionURL = "Your production server URL"
-static let DevelopmentURL = "Your development server URL"
-
-}
+```
+REGISTRATION_URL = xx
 ```
 
 #### WCP Server
 WCP Server provides the platform to create study, activities, consent, and Resources.
-Once you have successfully setup WCP Server, replace server URL in WCPConfiguration.swift
-```swift
-struct WCPServerURLConstants {
-//TODO: Set the server end points
+Once you have successfully setup WCP Server, add wcp server URL in same configuration setting file.
 
-static let ProductionURL = "Your production server URL"
-static let DevelopmentURL = "Your development server URL"
-}
 ```
+WCP_URL = xx
+
+```
+Also, add your Username(represented as bundle id) and Password(represented as appToken) in the same configuration file.
+This is used inside WCPConfiguration.swift in getDefaultHeaders() method.
+
+```
+AUTH_USERNAME = xx
+
+AUTH_PASSWORD = xx
+
+```
+
 #### Response Server
 Response Server stores all user’s response to each study activity.
-Once you have successfully setup WCP Server, replace server URL in ResponseServerConfiguration.swift
-```swift
-struct ResponseServerURLConstants {
-//TODO: Set the server end points
+Once you have successfully setup WCP Server, add response server URL in same configuration setting file.
 
-static let ProductionURL = "Your production server URL"
-static let DevelopmentURL = "Your development server URL"
-
-}
 ```
+RESPONSE_URL = xx
+
+```
+
 
 # Author
 Copyright © 2017-2019 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors.

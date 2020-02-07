@@ -60,10 +60,11 @@ enum ResponseMethods: String {
 enum ResponseServerURLConstants {
 
   /// Labkey Staging.
-  static let ProductionURL = "https://hpresp-stage.lkcompliant.net/mobileappstudy-"
-  static let DevelopmentURL = "https://hpresp-stage.lkcompliant.net/mobileappstudy-"
+  static let ProductionURL = API.responseURL
+  static let DevelopmentURL = API.responseURL // This will change based on config file.
 
 }
+
 class ResponseServerConfiguration: NetworkConfiguration {
   static let configuration = ResponseServerConfiguration()
 

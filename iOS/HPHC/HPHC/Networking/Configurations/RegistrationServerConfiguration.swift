@@ -85,8 +85,8 @@ enum RegistrationMethods: String {
 enum RegistrationServerURLConstants {
 
   // Staging server
-  static let ProductionURL = "https://hpreg-stage.lkcompliant.net/fdahpUserRegWS/"
-  static let DevelopmentURL = "https://hpreg-stage.lkcompliant.net/fdahpUserRegWS/"
+  static let ProductionURL = API.registrationURL
+  static let DevelopmentURL = API.registrationURL // This will change based on config file.
 
 }
 class RegistrationServerConfiguration: NetworkConfiguration {

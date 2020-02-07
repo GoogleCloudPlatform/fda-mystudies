@@ -57,8 +57,8 @@ enum WCPMethods: String {
 enum WCPServerURLConstants {
 
   /// Staging.
-  static let ProductionURL = "https://hpwcp-stage.lkcompliant.net/StudyMetaData/"
-  static let DevelopmentURL = "https://hpwcp-stage.lkcompliant.net/StudyMetaData/"
+  static let ProductionURL = API.wcpURL
+  static let DevelopmentURL = API.wcpURL // This will change based on config file.
 
 }
 
@@ -84,7 +84,7 @@ class WCPConfiguration: NetworkConfiguration {
     let appId = infoDict!["ApplicationID"] as! String
     let orgId = infoDict!["OrganizationID"] as! String
 
-    let token = "AvxfEsgX9u" + ":" + "ee91a4f6-d9c4-4ee9-a0e2-5682c5b1c916"
+    let token = API.authUsername + ":" + API.authPassword
 
     let base64token = "Basic " + token.toBase64()
 

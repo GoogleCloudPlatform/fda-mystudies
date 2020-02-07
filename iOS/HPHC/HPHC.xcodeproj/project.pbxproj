@@ -124,6 +124,7 @@
 		6FB89C24225F410500420A7B /* OtherTextChoiceCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FB89C20225F410500420A7B /* OtherTextChoiceCell.swift */; };
 		6FB89C25225F410500420A7B /* TextChoiceCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FB89C21225F410500420A7B /* TextChoiceCell.swift */; };
 		6FB89C28225F416C00420A7B /* Cell+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FB89C27225F416C00420A7B /* Cell+Extensions.swift */; };
+		6FD1E11623ED41E1009DACAE /* AppConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FD1E11523ED41E1009DACAE /* AppConfiguration.swift */; };
 		6FE00CF0238FFE9F0067A7B8 /* ActivitySchedules.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FE00CEF238FFE9F0067A7B8 /* ActivitySchedules.swift */; };
 		782AF87C221D247D000025CF /* StudyTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 782AF87B221D247D000025CF /* StudyTest.swift */; };
 		7878B311221574D80052FC23 /* StandaloneStudy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7878B30E221574D80052FC23 /* StandaloneStudy.swift */; };
@@ -138,8 +139,6 @@
 		8923429122B122DF0059F910 /* LoginAssets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 94B3DD2D1E6ED8E500327AE5 /* LoginAssets.xcassets */; };
 		8926D7EA2383F25C00558F4E /* KeyChain.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8926D7E92383F25C00558F4E /* KeyChain.swift */; };
 		892726DC22F98E4100893A00 /* GatewayOverview.plist in Resources */ = {isa = PBXBuildFile; fileRef = 486304D51E6FE77C003CD406 /* GatewayOverview.plist */; };
-		8948349D22BB9C59000B7BFA /* HPHCSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8948349C22BB9C59000B7BFA /* HPHCSettings.swift */; };
-		8948349F22BB9D56000B7BFA /* HPHCSettings.xib in Resources */ = {isa = PBXBuildFile; fileRef = 8948349E22BB9D56000B7BFA /* HPHCSettings.xib */; };
 		89893F0522B1115300A846CE /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 6E7D2D5D1E433E8800763D4C /* Main.storyboard */; };
 		89893F0622B1125300A846CE /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 6E7D2D601E433E8800763D4C /* Assets.xcassets */; };
 		89893F0722B112A000A846CE /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 6E7D2D621E433E8800763D4C /* LaunchScreen.storyboard */; };
@@ -407,6 +406,9 @@
 		6FB89C20225F410500420A7B /* OtherTextChoiceCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OtherTextChoiceCell.swift; sourceTree = "<group>"; };
 		6FB89C21225F410500420A7B /* TextChoiceCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TextChoiceCell.swift; sourceTree = "<group>"; };
 		6FB89C27225F416C00420A7B /* Cell+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Cell+Extensions.swift"; sourceTree = "<group>"; };
+		6FD1E10C23EC31A7009DACAE /* Development.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Development.xcconfig; sourceTree = "<group>"; };
+		6FD1E11423ED41B0009DACAE /* Production.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Production.xcconfig; sourceTree = "<group>"; };
+		6FD1E11523ED41E1009DACAE /* AppConfiguration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppConfiguration.swift; sourceTree = "<group>"; };
 		6FE00CEF238FFE9F0067A7B8 /* ActivitySchedules.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActivitySchedules.swift; sourceTree = "<group>"; };
 		782AF87B221D247D000025CF /* StudyTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StudyTest.swift; sourceTree = "<group>"; };
 		7878B30E221574D80052FC23 /* StandaloneStudy.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StandaloneStudy.swift; sourceTree = "<group>"; };
@@ -423,8 +425,6 @@
 		8905592923016852005FB284 /* UITestingHelpers.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UITestingHelpers.swift; sourceTree = "<group>"; };
 		8905592B230169FF005FB284 /* LoginVCTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginVCTests.swift; sourceTree = "<group>"; };
 		8926D7E92383F25C00558F4E /* KeyChain.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeyChain.swift; sourceTree = "<group>"; };
-		8948349C22BB9C59000B7BFA /* HPHCSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HPHCSettings.swift; sourceTree = "<group>"; };
-		8948349E22BB9D56000B7BFA /* HPHCSettings.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = HPHCSettings.xib; sourceTree = "<group>"; };
 		8987BC7722F8446000F6EECC /* Pods_HPHC.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = Pods_HPHC.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		89903061224A502C00B3A85C /* AnchorDateHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnchorDateHandler.swift; sourceTree = "<group>"; };
 		89CD64B92244CAA600008178 /* ResourceAnchorTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResourceAnchorTest.swift; sourceTree = "<group>"; };
@@ -503,12 +503,8 @@
 		94D20E9E1E9DFFE7005C3531 /* DBActivity.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DBActivity.swift; sourceTree = "<group>"; };
 		94FF031A1E95275D009F191B /* ReachoutOptionsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ReachoutOptionsViewController.swift; sourceTree = "<group>"; };
 		94FF031E1E952B0A009F191B /* ReachoutOptionCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ReachoutOptionCell.swift; sourceTree = "<group>"; };
-		9A6334C0EA7AE2035BEB653F /* Pods-mSPARC.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-mSPARC.debug.xcconfig"; path = "Pods/Target Support Files/Pods-mSPARC/Pods-mSPARC.debug.xcconfig"; sourceTree = "<group>"; };
 		A2CE974C81943F2AB0C602C1 /* Pods-HPHCTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-HPHCTests.release.xcconfig"; path = "Pods/Target Support Files/Pods-HPHCTests/Pods-HPHCTests.release.xcconfig"; sourceTree = "<group>"; };
-		B73AAB785148005861A9500D /* Pods-LimitJIA.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-LimitJIA.debug.xcconfig"; path = "Pods/Target Support Files/Pods-LimitJIA/Pods-LimitJIA.debug.xcconfig"; sourceTree = "<group>"; };
-		CCE3E1542247957EC71E0986 /* Pods-mSPARC.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-mSPARC.release.xcconfig"; path = "Pods/Target Support Files/Pods-mSPARC/Pods-mSPARC.release.xcconfig"; sourceTree = "<group>"; };
 		E4CF7BB238C017BF7E2A6346 /* Pods_HPHCUITests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_HPHCUITests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		EB4B78DC194D3CE076AD6A7F /* Pods-LimitJIA.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-LimitJIA.release.xcconfig"; path = "Pods/Target Support Files/Pods-LimitJIA/Pods-LimitJIA.release.xcconfig"; sourceTree = "<group>"; };
 		EC9CA22924E3FDD2E7D31960 /* Pods_HPHC.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_HPHC.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -583,10 +579,6 @@
 				414C7A7B347A68A89869556B /* Pods-HPHCUITests.release.xcconfig */,
 				7BDC002620C7855C409516D3 /* Pods-HPHC.debug.xcconfig */,
 				3BCFFA0DAD500A9A04C582CD /* Pods-HPHC.release.xcconfig */,
-				B73AAB785148005861A9500D /* Pods-LimitJIA.debug.xcconfig */,
-				EB4B78DC194D3CE076AD6A7F /* Pods-LimitJIA.release.xcconfig */,
-				9A6334C0EA7AE2035BEB653F /* Pods-mSPARC.debug.xcconfig */,
-				CCE3E1542247957EC71E0986 /* Pods-mSPARC.release.xcconfig */,
 			);
 			name = Pods;
 			sourceTree = "<group>";
@@ -657,6 +649,8 @@
 		6E7D2D581E433E8700763D4C /* HPHC */ = {
 			isa = PBXGroup;
 			children = (
+				6FD1E10C23EC31A7009DACAE /* Development.xcconfig */,
+				6FD1E11423ED41B0009DACAE /* Production.xcconfig */,
 				6F10BB15234DDFDA006388E2 /* Branding */,
 				6FE00CD5238FEDE80067A7B8 /* Utils */,
 				94CD96E31E4AF61800946477 /* Networking */,
@@ -1388,6 +1382,7 @@
 				94CD96EE1E4B16D900946477 /* WCPConfiguration.swift */,
 				9432C2F61E4C483D005984EC /* RegistrationServerConfiguration.swift */,
 				9432C2F81E4C4993005984EC /* ResponseServerConfiguration.swift */,
+				6FD1E11523ED41E1009DACAE /* AppConfiguration.swift */,
 			);
 			path = Configurations;
 			sourceTree = "<group>";
@@ -1454,8 +1449,6 @@
 			isa = PBXGroup;
 			children = (
 				8905592923016852005FB284 /* UITestingHelpers.swift */,
-				8948349C22BB9C59000B7BFA /* HPHCSettings.swift */,
-				8948349E22BB9D56000B7BFA /* HPHCSettings.xib */,
 			);
 			path = Settings;
 			sourceTree = "<group>";
@@ -1747,7 +1740,7 @@
 			attributes = {
 				LastSwiftUpdateCheck = 1020;
 				LastUpgradeCheck = 1100;
-				ORGANIZATIONNAME = BTC;
+				ORGANIZATIONNAME = Google;
 				TargetAttributes = {
 					6E7D2D551E433E8700763D4C = {
 						CreatedOnToolsVersion = 8.2.1;
@@ -1913,7 +1906,6 @@
 				6EE8E4D91F17459200028853 /* Eligibility_1B.json in Resources */,
 				892726DC22F98E4100893A00 /* GatewayOverview.plist in Resources */,
 				94B3DD441E6ED8E500327AE5 /* Profile.plist in Resources */,
-				8948349F22BB9D56000B7BFA /* HPHCSettings.xib in Resources */,
 				6E417AD31F4D5DA1007F27DA /* AnanomousFilterData.plist in Resources */,
 				6E7D2D8C1E4340B200763D4C /* UserProfile.plist in Resources */,
 				6E7D2D901E43526100763D4C /* Register.plist in Resources */,
@@ -2079,6 +2071,7 @@
 				6E4CECB61F31B41C005E0832 /* PinterestLayout.swift in Sources */,
 				6FB89C28225F416C00420A7B /* Cell+Extensions.swift in Sources */,
 				6F598F7523EAC7DB00DFA5F4 /* ViewController.swift in Sources */,
+				6FD1E11623ED41E1009DACAE /* AppConfiguration.swift in Sources */,
 				94D20E9F1E9DFFE7005C3531 /* DBActivity.swift in Sources */,
 				4884E35A1E827E6A002DA0B9 /* ContactUsTableViewCell.swift in Sources */,
 				6EE93D901E93B5700027A5DC /* ConsentSharePdfStepViewController.swift in Sources */,
@@ -2108,7 +2101,6 @@
 				6ED134361E5EB0370090C976 /* ConsentStep.swift in Sources */,
 				6EE93DCA1E93C8850027A5DC /* ActivitiesTableViewCell.swift in Sources */,
 				94B3DD501E6ED8E500327AE5 /* SecondGatewayOverviewViewController.swift in Sources */,
-				8948349D22BB9C59000B7BFA /* HPHCSettings.swift in Sources */,
 				6EF2FCEF1E72CDE900B5F212 /* LeftMenuResourceTableViewCell.swift in Sources */,
 				941909B81E5310D6001B01C5 /* Gateway.swift in Sources */,
 				94B3DD451E6ED8E500327AE5 /* ProfileTableViewCell.swift in Sources */,

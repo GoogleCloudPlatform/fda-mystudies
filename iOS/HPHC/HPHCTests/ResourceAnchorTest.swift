@@ -67,7 +67,7 @@ class ResourceAnchorTest: XCTestCase {
     delegate.asyncExpectation = expection
 
     _ = ["user": "Kyle"]
-    let url = "https://hpwcp-stage.lkcompliant.net/StudyMetaData/studyList"
+    let url = API.wcpURL + "studyList"
 
     let error = NSError.init(domain: "mocking", code: 500, userInfo: nil)
     stub(uri(url), failure(error))
@@ -106,7 +106,7 @@ class ResourceAnchorTest: XCTestCase {
     let path = Bundle(for: type(of: self)).url(forResource: "StudyList", withExtension: "json")!
     let data = try! Data(contentsOf: path)
 
-    let url = "https://hpwcp-stage.lkcompliant.net/StudyMetaData/studyList"
+    let url = API.wcpURL + "studyList"
     stub(http(.get, uri: url), jsonData(data))
 
     let services = WCPServices()

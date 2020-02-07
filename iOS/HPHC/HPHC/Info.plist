@@ -96,5 +96,15 @@
 	<true/>
 	<key>WebsiteLink</key>
 	<string>www.fda.gov</string>
+  <key>WCP_URL</key>
+  <string>$(WCP_URL)</string>
+  <key>RESPONSE_URL</key>
+  <string>$(RESPONSE_URL)</string>
+  <key>REGISTRATION_URL</key>
+  <string>$(REGISTRATION_URL)</string>
+  <key>AUTH_USERNAME</key>
+  <string>$(AUTH_USERNAME)</string>
+  <key>AUTH_PASSWORD</key>
+  <string>$(AUTH_PASSWORD)</string>
 </dict>
 </plist>
