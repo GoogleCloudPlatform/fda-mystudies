@@ -24,7 +24,7 @@ import com.harvard.R;
 import com.harvard.notificationmodule.model.NotificationDb;
 import com.harvard.storagemodule.DBServiceSubscriber;
 import com.harvard.studyAppModule.activityBuilder.model.ActivityRun;
-import com.harvard.studyAppModule.acvitityListModel.ActivitiesWS;
+import com.harvard.studyAppModule.acvitityListModelTemp.ActivitiesWS;
 import com.harvard.studyAppModule.studymodel.NotificationDbResources;
 import com.harvard.studyAppModule.studymodel.PendingIntentsResources;
 import com.harvard.studyAppModule.survayscheduler.SurvayScheduler;

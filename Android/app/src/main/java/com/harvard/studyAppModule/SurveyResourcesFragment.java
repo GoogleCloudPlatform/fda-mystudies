@@ -23,7 +23,7 @@ import com.harvard.AppConfig;
 import com.harvard.R;
 import com.harvard.notificationmodule.NotificationModuleSubscriber;
 import com.harvard.storagemodule.DBServiceSubscriber;
-import com.harvard.studyAppModule.acvitityListModel.AnchorDateSchedulingDetails;
+import com.harvard.studyAppModule.acvitityListModelTemp.AnchorDateSchedulingDetails;
 import com.harvard.studyAppModule.custom.result.StepRecordCustom;
 import com.harvard.studyAppModule.events.DeleteAccountEvent;
 import com.harvard.studyAppModule.events.GetResourceListEvent;

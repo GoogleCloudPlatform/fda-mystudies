@@ -15,7 +15,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.harvard.R;
-import com.harvard.studyAppModule.acvitityListModel.ActivitiesWS;
+import com.harvard.studyAppModule.acvitityListModelTemp.ActivitiesWS;
 import com.harvard.studyAppModule.survayscheduler.SurvayScheduler;
 import com.harvard.studyAppModule.survayscheduler.model.ActivityStatus;
 import com.harvard.utils.AppController;

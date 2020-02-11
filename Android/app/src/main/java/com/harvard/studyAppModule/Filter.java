@@ -1,6 +1,6 @@
 package com.harvard.studyAppModule;
 
-import com.harvard.studyAppModule.acvitityListModel.ActivitiesWS;
+import com.harvard.studyAppModule.acvitityListModelTemp.ActivitiesWS;
 import com.harvard.studyAppModule.survayscheduler.model.ActivityStatus;
 
 import java.util.ArrayList;
