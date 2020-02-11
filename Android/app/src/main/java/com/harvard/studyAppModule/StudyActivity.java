@@ -40,7 +40,7 @@ import com.harvard.R;
 import com.harvard.notificationModule.AlarmReceiver;
 import com.harvard.notificationModule.NotificationModuleSubscriber;
 import com.harvard.offlineModule.model.OfflineData;
-import com.harvard.storageModule.DBServiceSubscriber;
+import com.harvard.storageModuleTemp.DBServiceSubscriber;
 import com.harvard.studyAppModule.studyModel.Study;
 import com.harvard.studyAppModule.studyModel.StudyList;
 import com.harvard.usermodule.UserModulePresenter;

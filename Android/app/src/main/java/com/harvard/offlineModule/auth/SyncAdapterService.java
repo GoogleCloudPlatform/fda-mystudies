@@ -4,7 +4,7 @@ import android.app.Service;
 import android.content.Intent;
 import android.os.IBinder;
 
-import com.harvard.storageModule.DBServiceSubscriber;
+import com.harvard.storageModuleTemp.DBServiceSubscriber;
 
 /**
  * Service that keeps running SyncAdapter in background.

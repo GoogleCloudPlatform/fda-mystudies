@@ -6,7 +6,7 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.harvard.R;
-import com.harvard.storageModule.DBServiceSubscriber;
+import com.harvard.storageModuleTemp.DBServiceSubscriber;
 import com.harvard.studyAppModule.StudyFragment;
 import com.harvard.usermodule.UserModulePresenter;
 import com.harvard.usermodule.event.UpdatePreferenceEvent;

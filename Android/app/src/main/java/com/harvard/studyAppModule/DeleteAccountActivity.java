@@ -14,7 +14,7 @@ import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.harvard.R;
-import com.harvard.storageModule.DBServiceSubscriber;
+import com.harvard.storageModuleTemp.DBServiceSubscriber;
 import com.harvard.studyAppModule.events.DeleteAccountEvent;
 import com.harvard.studyAppModule.events.GetUserStudyInfoEvent;
 import com.harvard.studyAppModule.events.WithdrawFromStudyEvent;

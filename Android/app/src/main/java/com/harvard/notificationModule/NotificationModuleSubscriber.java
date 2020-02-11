@@ -8,7 +8,7 @@ import android.os.Build;
 
 import com.harvard.R;
 import com.harvard.notificationModule.model.NotificationDb;
-import com.harvard.storageModule.DBServiceSubscriber;
+import com.harvard.storageModuleTemp.DBServiceSubscriber;
 import com.harvard.studyAppModule.activityBuilder.model.ActivityRun;
 import com.harvard.studyAppModule.acvitityListModel.ActivitiesWS;
 import com.harvard.studyAppModule.studyModel.NotificationDbResources;

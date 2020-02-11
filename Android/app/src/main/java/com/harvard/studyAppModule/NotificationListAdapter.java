@@ -5,7 +5,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.support.v7.widget.AppCompatTextView;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,7 +12,7 @@ import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.harvard.R;
-import com.harvard.storageModule.DBServiceSubscriber;
+import com.harvard.storageModuleTemp.DBServiceSubscriber;
 import com.harvard.studyAppModule.studyModel.Notification;
 import com.harvard.studyAppModule.studyModel.Study;
 import com.harvard.studyAppModule.studyModel.StudyList;

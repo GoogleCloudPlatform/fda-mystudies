@@ -20,7 +20,7 @@ import android.widget.Toast;
 import com.github.barteksc.pdfviewer.PDFView;
 import com.github.barteksc.pdfviewer.scroll.DefaultScrollHandle;
 import com.harvard.R;
-import com.harvard.storageModule.DBServiceSubscriber;
+import com.harvard.storageModuleTemp.DBServiceSubscriber;
 import com.harvard.studyAppModule.events.ConsentPDFEvent;
 import com.harvard.studyAppModule.studyModel.ConsentPDF;
 import com.harvard.studyAppModule.studyModel.ConsentPdfData;

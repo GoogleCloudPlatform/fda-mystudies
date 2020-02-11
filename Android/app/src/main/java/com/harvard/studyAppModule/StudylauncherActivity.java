@@ -2,7 +2,6 @@ package com.harvard.studyAppModule;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 
@@ -13,9 +12,8 @@ import com.google.gson.JsonParser;
 import com.google.gson.JsonPrimitive;
 import com.google.gson.internal.LinkedTreeMap;
 import com.harvard.R;
-import com.harvard.storageModule.DBServiceSubscriber;
+import com.harvard.storageModuleTemp.DBServiceSubscriber;
 import com.harvard.studyAppModule.activityBuilder.model.serviceModel.ActivityObj;
-import com.harvard.studyAppModule.consent.model.EligibilityConsent;
 import com.harvard.studyAppModule.custom.Result.StepRecordCustom;
 import com.harvard.utils.AppController;
 
@@ -23,10 +21,6 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.util.Map;
 import java.util.Set;
 

@@ -22,7 +22,7 @@ import android.widget.Toast;
 import com.github.barteksc.pdfviewer.PDFView;
 import com.github.barteksc.pdfviewer.scroll.DefaultScrollHandle;
 import com.harvard.R;
-import com.harvard.storageModule.DBServiceSubscriber;
+import com.harvard.storageModuleTemp.DBServiceSubscriber;
 import com.harvard.studyAppModule.ResponseServerModel.ResponseServerData;
 import com.harvard.studyAppModule.consent.model.EligibilityConsent;
 import com.harvard.studyAppModule.events.EnrollIdEvent;

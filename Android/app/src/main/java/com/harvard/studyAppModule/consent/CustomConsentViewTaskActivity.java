@@ -26,7 +26,7 @@ import com.google.gson.Gson;
 import com.harvard.EligibilityModule.ComprehensionFailureActivity;
 import com.harvard.EligibilityModule.ComprehensionSuccessActivity;
 import com.harvard.R;
-import com.harvard.storageModule.DBServiceSubscriber;
+import com.harvard.storageModuleTemp.DBServiceSubscriber;
 import com.harvard.studyAppModule.ResponseServerModel.ResponseServerData;
 import com.harvard.studyAppModule.StudyFragment;
 import com.harvard.studyAppModule.StudyModulePresenter;

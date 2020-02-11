@@ -12,7 +12,7 @@ import android.os.Bundle;
 
 import com.harvard.R;
 import com.harvard.offlineModule.model.OfflineData;
-import com.harvard.storageModule.DBServiceSubscriber;
+import com.harvard.storageModuleTemp.DBServiceSubscriber;
 import com.harvard.studyAppModule.StudyModulePresenter;
 import com.harvard.studyAppModule.events.ProcessResponseEvent;
 import com.harvard.usermodule.UserModulePresenter;
