@@ -13,7 +13,7 @@ import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 
 import com.harvard.R;
-import com.harvard.studyAppModule.studyModel.Resource;
+import com.harvard.studyAppModule.studyModelTemp.Resource;
 import com.harvard.utils.AppController;
 
 import java.util.ArrayList;

@@ -12,11 +12,11 @@ import android.widget.Toast;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.harvard.R;
-import com.harvard.studyAppModule.studyModel.Categories;
-import com.harvard.studyAppModule.studyModel.ParticipationStatus;
-import com.harvard.studyAppModule.studyModel.StudyStatus;
+import com.harvard.studyAppModule.studyModelTemp.Categories;
+import com.harvard.studyAppModule.studyModelTemp.ParticipationStatus;
+import com.harvard.studyAppModule.studyModelTemp.StudyStatus;
 import com.harvard.utils.AppController;
-import com.harvard.studyAppModule.studyModel.Filter;
+import com.harvard.studyAppModule.studyModelTemp.Filter;
 
 import org.json.JSONException;
 import org.json.JSONObject;

@@ -15,7 +15,7 @@ import android.widget.RelativeLayout;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.harvard.R;
-import com.harvard.studyAppModule.studyModel.StudyInfo;
+import com.harvard.studyAppModule.studyModelTemp.StudyInfo;
 import com.harvard.utils.AppController;
 
 import io.realm.RealmList;

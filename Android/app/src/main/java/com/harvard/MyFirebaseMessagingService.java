@@ -16,8 +16,8 @@ import com.harvard.storagemodule.DBServiceSubscriber;
 import com.harvard.studyAppModule.StandaloneActivity;
 import com.harvard.studyAppModule.StudyActivity;
 import com.harvard.studyAppModule.StudyFragment;
-import com.harvard.studyAppModule.studyModel.Study;
-import com.harvard.studyAppModule.studyModel.StudyList;
+import com.harvard.studyAppModule.studyModelTemp.Study;
+import com.harvard.studyAppModule.studyModelTemp.StudyList;
 import com.harvard.usermodule.webservicemodel.UserProfileData;
 import com.harvard.utils.AppController;
 

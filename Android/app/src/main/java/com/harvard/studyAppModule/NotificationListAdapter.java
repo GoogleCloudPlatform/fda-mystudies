@@ -13,9 +13,9 @@ import android.widget.Toast;
 
 import com.harvard.R;
 import com.harvard.storagemodule.DBServiceSubscriber;
-import com.harvard.studyAppModule.studyModel.Notification;
-import com.harvard.studyAppModule.studyModel.Study;
-import com.harvard.studyAppModule.studyModel.StudyList;
+import com.harvard.studyAppModule.studyModelTemp.Notification;
+import com.harvard.studyAppModule.studyModelTemp.Study;
+import com.harvard.studyAppModule.studyModelTemp.StudyList;
 import com.harvard.utils.AppController;
 
 import io.realm.Realm;

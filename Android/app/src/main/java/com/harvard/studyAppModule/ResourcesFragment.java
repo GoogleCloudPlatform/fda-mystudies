@@ -11,8 +11,8 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.harvard.R;
-import com.harvard.studyAppModule.studyModel.Resource;
-import com.harvard.studyAppModule.studyModel.StudyResource;
+import com.harvard.studyAppModule.studyModelTemp.Resource;
+import com.harvard.studyAppModule.studyModelTemp.StudyResource;
 import com.harvard.utils.AppController;
 import com.harvard.webservicemodule.apihelper.ApiCall;
 
