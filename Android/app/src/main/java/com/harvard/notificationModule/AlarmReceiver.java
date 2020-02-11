@@ -19,7 +19,7 @@ import com.harvard.storageModule.DBServiceSubscriber;
 import com.harvard.studyAppModule.NotificationActivity;
 import com.harvard.studyAppModule.StandaloneActivity;
 import com.harvard.studyAppModule.StudyActivity;
-import com.harvard.userModule.webservicemodel.UserProfileData;
+import com.harvard.userModuleTemp.webservicemodel.UserProfileData;
 import com.harvard.utils.AppController;
 
 import java.util.Calendar;

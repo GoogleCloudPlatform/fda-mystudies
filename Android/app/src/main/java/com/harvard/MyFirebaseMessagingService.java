@@ -18,7 +18,7 @@ import com.harvard.studyAppModule.StudyActivity;
 import com.harvard.studyAppModule.StudyFragment;
 import com.harvard.studyAppModule.studyModel.Study;
 import com.harvard.studyAppModule.studyModel.StudyList;
-import com.harvard.userModule.webservicemodel.UserProfileData;
+import com.harvard.userModuleTemp.webservicemodel.UserProfileData;
 import com.harvard.utils.AppController;
 
 import java.util.Random;

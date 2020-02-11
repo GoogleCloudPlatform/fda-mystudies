@@ -14,10 +14,10 @@ import android.widget.Toast;
 
 import com.harvard.AppConfig;
 import com.harvard.R;
-import com.harvard.userModule.UserModulePresenter;
-import com.harvard.userModule.VerificationStepActivity;
-import com.harvard.userModule.event.ChangePasswordEvent;
-import com.harvard.userModule.webservicemodel.ChangePasswordData;
+import com.harvard.userModuleTemp.UserModulePresenter;
+import com.harvard.userModuleTemp.VerificationStepActivity;
+import com.harvard.userModuleTemp.event.ChangePasswordEvent;
+import com.harvard.userModuleTemp.webservicemodel.ChangePasswordData;
 import com.harvard.utils.AppController;
 import com.harvard.utils.SharedPreferenceHelper;
 import com.harvard.utils.URLs;
