@@ -24,7 +24,7 @@ import com.harvard.storageModule.DBServiceSubscriber;
 import com.harvard.studyAppModule.events.ConsentPDFEvent;
 import com.harvard.studyAppModule.studyModel.ConsentPDF;
 import com.harvard.studyAppModule.studyModel.ConsentPdfData;
-import com.harvard.userModuleTemp.UserModulePresenter;
+import com.harvard.usermodule.UserModulePresenter;
 import com.harvard.utils.AppController;
 import com.harvard.utils.URLs;
 import com.harvard.webservicemodule.apihelper.ApiCall;

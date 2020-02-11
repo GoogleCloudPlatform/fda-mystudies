@@ -28,12 +28,12 @@ import com.harvard.studyAppModule.studyModel.StudyList;
 import com.harvard.studyAppModule.studyModel.StudyResource;
 import com.harvard.studyAppModule.studyModel.StudyUpdate;
 import com.harvard.studyAppModule.studyModel.StudyUpdateListdata;
-import com.harvard.userModuleTemp.webservicemodel.Activities;
-import com.harvard.userModuleTemp.webservicemodel.ActivityData;
-import com.harvard.userModuleTemp.webservicemodel.ActivityRunPreference;
-import com.harvard.userModuleTemp.webservicemodel.Studies;
-import com.harvard.userModuleTemp.webservicemodel.StudyData;
-import com.harvard.userModuleTemp.webservicemodel.UserProfileData;
+import com.harvard.usermodule.webservicemodel.Activities;
+import com.harvard.usermodule.webservicemodel.ActivityData;
+import com.harvard.usermodule.webservicemodel.ActivityRunPreference;
+import com.harvard.usermodule.webservicemodel.Studies;
+import com.harvard.usermodule.webservicemodel.StudyData;
+import com.harvard.usermodule.webservicemodel.UserProfileData;
 import com.harvard.utils.AppController;
 
 import org.researchstack.backbone.task.Task;

@@ -7,7 +7,7 @@
     android:layout_height="match_parent"
     android:background="@android:color/white"
     android:orientation="vertical"
-    tools:context="com.harvard.userModuleTemp.SignupActivity">
+    tools:context="com.harvard.usermodule.SignupActivity">
 
     <android.support.v7.widget.AppCompatTextView
         android:id="@+id/submitButton"

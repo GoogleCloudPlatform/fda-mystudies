@@ -15,7 +15,7 @@ import com.harvard.studyAppModule.events.ProcessResponseEvent;
 import com.harvard.studyAppModule.events.UpdateEligibilityConsentStatusEvent;
 import com.harvard.studyAppModule.events.VerifyEnrollmentIdEvent;
 import com.harvard.studyAppModule.events.WithdrawFromStudyEvent;
-import com.harvard.userModuleTemp.event.GetTermsAndConditionEvent;
+import com.harvard.usermodule.event.GetTermsAndConditionEvent;
 
 /**
  * Created by Rohit on 3/6/2017.

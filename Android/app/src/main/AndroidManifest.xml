@@ -66,19 +66,19 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".userModuleTemp.SignupActivity"
+            android:name=".usermodule.SignupActivity"
             android:configChanges="screenLayout|orientation"
             android:screenOrientation="portrait"
             android:theme="@style/AppThemeNoActionBar"
             android:windowSoftInputMode="stateHidden|adjustPan"/>
         <activity
-            android:name=".userModuleTemp.VerificationStepActivity"
+            android:name=".usermodule.VerificationStepActivity"
             android:configChanges="screenLayout|orientation"
             android:screenOrientation="portrait"
             android:theme="@style/AppThemeNoActionBar"
             android:windowSoftInputMode="stateHidden"/>
         <activity
-            android:name=".userModuleTemp.SignupProcessCompleteActivity"
+            android:name=".usermodule.SignupProcessCompleteActivity"
             android:configChanges="screenLayout|orientation"
             android:screenOrientation="portrait"
             android:theme="@style/AppThemeNoActionBar"
@@ -89,25 +89,25 @@
             android:theme="@style/passcodeTheme"
             android:windowSoftInputMode="stateHidden"/>
         <activity
-            android:name=".userModuleTemp.ChooseTouchIDSignInActivity"
+            android:name=".usermodule.ChooseTouchIDSignInActivity"
             android:configChanges="screenLayout|orientation"
             android:screenOrientation="portrait"
             android:theme="@style/AppThemeNoActionBar"
             android:windowSoftInputMode="stateHidden"/>
         <activity
-            android:name=".userModuleTemp.SignInActivity"
+            android:name=".usermodule.SignInActivity"
             android:configChanges="screenLayout|orientation"
             android:screenOrientation="portrait"
             android:theme="@style/AppThemeNoActionBar"
             android:windowSoftInputMode="stateHidden|adjustNothing"/>
         <activity
-            android:name=".userModuleTemp.ForgotPasswordActivity"
+            android:name=".usermodule.ForgotPasswordActivity"
             android:configChanges="screenLayout|orientation"
             android:screenOrientation="portrait"
             android:theme="@style/AppThemeNoActionBar"
             android:windowSoftInputMode="adjustResize|stateHidden"/>
         <activity
-            android:name=".userModuleTemp.UseTouchIDPasscodeActivity"
+            android:name=".usermodule.UseTouchIDPasscodeActivity"
             android:configChanges="screenLayout|orientation"
             android:screenOrientation="portrait"
             android:theme="@style/AppThemeNoActionBar"
@@ -155,7 +155,7 @@
             android:theme="@style/AppThemeNoActionBar"
             android:windowSoftInputMode="stateHidden"/>
         <activity
-            android:name=".userModuleTemp.TermsPrivacyPolicyActivity"
+            android:name=".usermodule.TermsPrivacyPolicyActivity"
             android:configChanges="screenLayout|orientation"
             android:screenOrientation="portrait"
             android:theme="@style/AppThemeNoActionBar"
@@ -257,13 +257,13 @@
             android:theme="@style/Theme.BackboneApp"
             android:windowSoftInputMode="stateHidden"/>
         <activity
-            android:name=".userModuleTemp.NewPasscodeSetupActivity"
+            android:name=".usermodule.NewPasscodeSetupActivity"
             android:configChanges="screenLayout|orientation"
             android:screenOrientation="portrait"
             android:theme="@style/AppThemeNoActionBar"
             android:windowSoftInputMode="stateHidden|adjustResize"/>
         <activity
-            android:name=".userModuleTemp.ConfirmPasscodeSetup"
+            android:name=".usermodule.ConfirmPasscodeSetup"
             android:configChanges="screenLayout|orientation"
             android:screenOrientation="portrait"
             android:theme="@style/AppThemeNoActionBar"

@@ -17,7 +17,7 @@ import com.harvard.gatewayModule.GatewayActivity;
 import com.harvard.offlineModule.auth.SyncAdapterManager;
 import com.harvard.studyAppModule.StandaloneActivity;
 import com.harvard.studyAppModule.StudyActivity;
-import com.harvard.userModuleTemp.NewPasscodeSetupActivity;
+import com.harvard.usermodule.NewPasscodeSetupActivity;
 import com.harvard.utils.AppController;
 import com.harvard.utils.SharedPreferenceHelper;
 import com.harvard.utils.version.VersionChecker;

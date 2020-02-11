@@ -14,8 +14,8 @@ import com.harvard.R;
 import com.harvard.gatewayModule.events.GetStartedEvent;
 import com.harvard.studyAppModule.StandaloneActivity;
 import com.harvard.studyAppModule.StudyActivity;
-import com.harvard.userModuleTemp.SignInActivity;
-import com.harvard.userModuleTemp.SignupActivity;
+import com.harvard.usermodule.SignInActivity;
+import com.harvard.usermodule.SignupActivity;
 import com.harvard.utils.AppController;
 
 public class GatewayActivity extends AppCompatActivity {
