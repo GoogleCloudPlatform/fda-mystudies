@@ -3,8 +3,8 @@ package com.harvard.studyAppModule.activityBuilder;
 import android.content.Context;
 
 import com.harvard.storagemodule.DBServiceSubscriber;
-import com.harvard.studyAppModule.activityBuilder.model.serviceModel.ActivityObj;
-import com.harvard.studyAppModule.activityBuilder.model.serviceModel.Steps;
+import com.harvard.studyAppModule.activityBuilder.model.serviceModelTemp.ActivityObj;
+import com.harvard.studyAppModule.activityBuilder.model.serviceModelTemp.Steps;
 import com.harvard.studyAppModule.custom.result.StepRecordCustom;
 import com.harvard.utils.AppController;
 

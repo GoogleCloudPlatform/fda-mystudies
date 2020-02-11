@@ -16,7 +16,7 @@ import com.google.gson.internal.LinkedTreeMap;
 import com.harvard.R;
 import com.harvard.storagemodule.DBServiceSubscriber;
 import com.harvard.studyAppModule.activityBuilder.CustomSurveyViewTaskActivity;
-import com.harvard.studyAppModule.activityBuilder.model.serviceModel.ActivityObj;
+import com.harvard.studyAppModule.activityBuilder.model.serviceModelTemp.ActivityObj;
 import com.harvard.studyAppModule.custom.result.StepRecordCustom;
 import com.harvard.studyAppModule.events.ProcessResponseEvent;
 import com.harvard.usermodule.UserModulePresenter;
