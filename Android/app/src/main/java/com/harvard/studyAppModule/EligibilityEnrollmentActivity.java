@@ -11,7 +11,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.harvard.R;
-import com.harvard.studyAppModule.ResponseServerModel.ResponseServerData;
+import com.harvard.studyAppModule.ResponseServerModelTemp.ResponseServerData;
 import com.harvard.studyAppModule.events.VerifyEnrollmentIdEvent;
 import com.harvard.utils.AppController;
 import com.harvard.utils.URLs;
