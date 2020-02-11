@@ -12,7 +12,7 @@ import android.widget.Toast;
 
 import com.harvard.R;
 import com.harvard.studyAppModule.events.ContactUsEvent;
-import com.harvard.studyAppModule.studyModelTemp.ReachOut;
+import com.harvard.studyAppModule.studymodel.ReachOut;
 import com.harvard.utils.AppController;
 import com.harvard.utils.URLs;
 import com.harvard.webservicemodule.apihelper.ApiCall;
