@@ -21,7 +21,7 @@ import com.harvard.notificationmodule.NotificationModuleSubscriber;
 import com.harvard.storagemodule.DBServiceSubscriber;
 import com.harvard.storagemodule.events.DatabaseEvent;
 import com.harvard.studyAppModule.SurveyActivitiesFragment;
-import com.harvard.studyAppModule.activityBuilderTemp.model.ActivityRun;
+import com.harvard.studyAppModule.activitybuilder.model.ActivityRun;
 import com.harvard.studyAppModule.acvititylistmodel.ActivitiesWS;
 import com.harvard.studyAppModule.acvititylistmodel.ActivityListData;
 import com.harvard.studyAppModule.survayscheduler.model.ActivityStatus;

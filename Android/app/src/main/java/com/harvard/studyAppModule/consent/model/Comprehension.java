@@ -1,6 +1,6 @@
 package com.harvard.studyAppModule.consent.model;
 
-import com.harvard.studyAppModule.activityBuilderTemp.model.servicemodel.Steps;
+import com.harvard.studyAppModule.activitybuilder.model.servicemodel.Steps;
 
 import io.realm.RealmList;
 import io.realm.RealmObject;

@@ -1,4 +1,4 @@
-package com.harvard.studyAppModule.activityBuilderTemp.model;
+package com.harvard.studyAppModule.activitybuilder.model;
 
 import java.util.Date;
 

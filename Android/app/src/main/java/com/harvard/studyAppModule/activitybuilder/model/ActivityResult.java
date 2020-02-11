@@ -1,18 +1,18 @@
-package com.harvard.studyAppModule.activityBuilderTemp.model;
+package com.harvard.studyAppModule.activitybuilder.model;
 
+import java.util.ArrayList;
 import java.util.Date;
 
 /**
  * Created by Rohit on 2/23/2017.
  */
 
-public class ActivityStepResult {
+public class ActivityResult {
     private String type;
-    private ActivityStep step;
+    private Activity activity;
     private Date startTime;
     private Date endTime;
-    private String skipped;
-    private String value;
+    private ArrayList<ActivityStepResult> result;
 
     public String getType() {
         return type;
@@ -22,12 +22,12 @@ public class ActivityStepResult {
         this.type = type;
     }
 
-    public ActivityStep getStep() {
-        return step;
+    public Activity getActivity() {
+        return activity;
     }
 
-    public void setStep(ActivityStep step) {
-        this.step = step;
+    public void setActivity(Activity activity) {
+        this.activity = activity;
     }
 
     public Date getStartTime() {
@@ -46,19 +46,11 @@ public class ActivityStepResult {
         this.endTime = endTime;
     }
 
-    public String getSkipped() {
-        return skipped;
+    public ArrayList<ActivityStepResult> getResult() {
+        return result;
     }
 
-    public void setSkipped(String skipped) {
-        this.skipped = skipped;
-    }
-
-    public String getValue() {
-        return value;
-    }
-
-    public void setValue(String value) {
-        this.value = value;
+    public void setResult(ArrayList<ActivityStepResult> result) {
+        this.result = result;
     }
 }

@@ -1,6 +1,6 @@
 package com.harvard.studyAppModule.consent.model;
 
-import com.harvard.studyAppModule.activityBuilderTemp.model.Eligibility;
+import com.harvard.studyAppModule.activitybuilder.model.Eligibility;
 
 import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;

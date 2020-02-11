@@ -29,7 +29,7 @@ import com.harvard.R;
 import com.harvard.WebViewActivity;
 import com.harvard.gatewaymodule.CircleIndicator;
 import com.harvard.storagemodule.DBServiceSubscriber;
-import com.harvard.studyAppModule.activityBuilderTemp.model.servicemodel.Steps;
+import com.harvard.studyAppModule.activitybuilder.model.servicemodel.Steps;
 import com.harvard.studyAppModule.consent.model.CorrectAnswerString;
 import com.harvard.studyAppModule.consent.model.EligibilityConsent;
 import com.harvard.studyAppModule.events.GetUserStudyInfoEvent;

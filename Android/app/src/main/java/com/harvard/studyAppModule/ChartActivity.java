@@ -28,7 +28,7 @@ import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.data.Entry;
 import com.harvard.R;
 import com.harvard.storagemodule.DBServiceSubscriber;
-import com.harvard.studyAppModule.activityBuilderTemp.model.ActivityRun;
+import com.harvard.studyAppModule.activitybuilder.model.ActivityRun;
 import com.harvard.studyAppModule.acvititylistmodel.ActivitiesWS;
 import com.harvard.studyAppModule.custom.result.StepRecordCustom;
 import com.harvard.studyAppModule.studymodel.ChartDataSource;

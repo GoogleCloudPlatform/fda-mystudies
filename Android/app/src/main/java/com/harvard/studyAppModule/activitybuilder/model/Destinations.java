@@ -1,4 +1,4 @@
-package com.harvard.studyAppModule.activityBuilderTemp.model;
+package com.harvard.studyAppModule.activitybuilder.model;
 
 /**
  * Created by Rohit on 2/23/2017.
