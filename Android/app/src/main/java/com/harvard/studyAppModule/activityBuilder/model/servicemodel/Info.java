@@ -12,21 +12,21 @@
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package com.harvard.studyAppModule.activityBuilder.model.serviceModelTemp;
+package com.harvard.studyAppModule.activityBuilder.model.servicemodel;
 
-import io.realm.RealmList;
 import io.realm.RealmObject;
 
 /**
  * Created by Naveen Raj on 03/02/2017.
  */
-public class ActivityObj extends RealmObject {
-    private String type;
-    private Info metadata;
-    private String surveyId;
+public class Info extends RealmObject{
     private String studyId;
-    private RealmList<Steps> steps;
-
+    private String activityId;
+    private String name;
+    private String version;
+    private String lastModified;
+    private String startDate;
+    private String endDate;
 
     public String getStudyId() {
         return studyId;
@@ -36,38 +36,51 @@ public class ActivityObj extends RealmObject {
         this.studyId = studyId;
     }
 
-    public String getSurveyId() {
-        return surveyId;
+    public String getActivityId() {
+        return activityId;
     }
 
-    public void setSurveyId(String surveyId) {
-        this.surveyId = surveyId;
+    public void setActivityId(String activityId) {
+        this.activityId = activityId;
     }
 
-
-    public String getType() {
-        return type;
+    public String getName() {
+        return name;
     }
 
-    public void setType(String type) {
-        this.type = type;
+    public void setName(String name) {
+        this.name = name;
     }
 
-    public Info getMetadata() {
-        return metadata;
+    public String getVersion() {
+        return version;
     }
 
-    public void setMetadata(Info metadata) {
-        this.metadata = metadata;
+    public void setVersion(String version) {
+        this.version = version;
     }
 
-
-    public RealmList<Steps> getSteps() {
-        return steps;
+    public String getLastModified() {
+        return lastModified;
     }
 
-    public void setSteps(RealmList<Steps> steps) {
-        this.steps = steps;
+    public void setLastModified(String lastModified) {
+        this.lastModified = lastModified;
     }
 
+    public String getStartDate() {
+        return startDate;
+    }
+
+    public void setStartDate(String startDate) {
+        this.startDate = startDate;
+    }
+
+    public String getEndDate() {
+        return endDate;
+    }
+
+    public void setEndDate(String endDate) {
+        this.endDate = endDate;
+    }
 }
