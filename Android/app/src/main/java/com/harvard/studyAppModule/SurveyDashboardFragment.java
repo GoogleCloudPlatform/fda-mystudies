@@ -53,11 +53,11 @@ import com.harvard.studyAppModule.survayScheduler.model.CompletionAdeherenceCalc
 import com.harvard.userModule.webserviceModel.Studies;
 import com.harvard.utils.AppController;
 import com.harvard.utils.URLs;
-import com.harvard.webserviceModule.apihelper.ApiCall;
-import com.harvard.webserviceModule.apihelper.ConnectionDetector;
-import com.harvard.webserviceModule.apihelper.HttpRequest;
-import com.harvard.webserviceModule.apihelper.Responsemodel;
-import com.harvard.webserviceModule.events.WCPConfigEvent;
+import com.harvard.webserviceModuletemp.apihelper.ApiCall;
+import com.harvard.webserviceModuletemp.apihelper.ConnectionDetector;
+import com.harvard.webserviceModuletemp.apihelper.HttpRequest;
+import com.harvard.webserviceModuletemp.apihelper.Responsemodel;
+import com.harvard.webserviceModuletemp.events.WCPConfigEvent;
 
 import org.json.JSONArray;
 import org.json.JSONException;

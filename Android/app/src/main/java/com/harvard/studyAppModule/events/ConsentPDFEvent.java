@@ -1,6 +1,6 @@
 package com.harvard.studyAppModule.events;
 
-import com.harvard.webserviceModule.events.RegistrationServerConfigEvent;
+import com.harvard.webserviceModuletemp.events.RegistrationServerConfigEvent;
 
 /**
  * Created by Naveen Raj on 04/04/2017.

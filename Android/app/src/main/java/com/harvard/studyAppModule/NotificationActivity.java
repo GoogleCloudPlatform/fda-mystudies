@@ -20,8 +20,8 @@ import com.harvard.studyAppModule.studyModel.Study;
 import com.harvard.studyAppModule.studyModel.StudyList;
 import com.harvard.utils.AppController;
 import com.harvard.utils.URLs;
-import com.harvard.webserviceModule.apihelper.ApiCall;
-import com.harvard.webserviceModule.events.WCPConfigEvent;
+import com.harvard.webserviceModuletemp.apihelper.ApiCall;
+import com.harvard.webserviceModuletemp.events.WCPConfigEvent;
 
 import java.text.ParseException;
 import java.util.Calendar;

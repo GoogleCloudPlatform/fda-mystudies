@@ -27,11 +27,11 @@ import com.harvard.userModule.webserviceModel.Studies;
 import com.harvard.utils.AppController;
 import com.harvard.utils.SharedPreferenceHelper;
 import com.harvard.utils.URLs;
-import com.harvard.webserviceModule.apihelper.ApiCall;
-import com.harvard.webserviceModule.apihelper.ApiCallResponseServer;
-import com.harvard.webserviceModule.events.RegistrationServerConfigEvent;
-import com.harvard.webserviceModule.events.ResponseServerConfigEvent;
-import com.harvard.webserviceModule.events.WCPConfigEvent;
+import com.harvard.webserviceModuletemp.apihelper.ApiCall;
+import com.harvard.webserviceModuletemp.apihelper.ApiCallResponseServer;
+import com.harvard.webserviceModuletemp.events.RegistrationServerConfigEvent;
+import com.harvard.webserviceModuletemp.events.ResponseServerConfigEvent;
+import com.harvard.webserviceModuletemp.events.WCPConfigEvent;
 
 import org.json.JSONArray;
 import org.json.JSONException;

@@ -41,8 +41,8 @@ import com.harvard.userModule.webserviceModel.UpdateUserProfileData;
 import com.harvard.userModule.webserviceModel.UserProfileData;
 import com.harvard.utils.AppController;
 import com.harvard.utils.URLs;
-import com.harvard.webserviceModule.apihelper.ApiCall;
-import com.harvard.webserviceModule.events.RegistrationServerConfigEvent;
+import com.harvard.webserviceModuletemp.apihelper.ApiCall;
+import com.harvard.webserviceModuletemp.events.RegistrationServerConfigEvent;
 
 import org.json.JSONException;
 import org.json.JSONObject;

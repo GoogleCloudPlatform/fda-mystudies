@@ -23,8 +23,8 @@ import com.harvard.userModule.event.UpdatePreferenceEvent;
 import com.harvard.userModule.webserviceModel.LoginData;
 import com.harvard.utils.AppController;
 import com.harvard.utils.URLs;
-import com.harvard.webserviceModule.apihelper.ApiCall;
-import com.harvard.webserviceModule.events.RegistrationServerConfigEvent;
+import com.harvard.webserviceModuletemp.apihelper.ApiCall;
+import com.harvard.webserviceModuletemp.events.RegistrationServerConfigEvent;
 import com.itextpdf.text.Image;
 import com.itextpdf.text.pdf.PdfPCell;
 
