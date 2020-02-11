@@ -23,8 +23,8 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
-import com.harvard.EligibilityModuleTemp.ComprehensionFailureActivity;
-import com.harvard.EligibilityModuleTemp.ComprehensionSuccessActivity;
+import com.harvard.eligibilitymodule.ComprehensionFailureActivity;
+import com.harvard.eligibilitymodule.ComprehensionSuccessActivity;
 import com.harvard.R;
 import com.harvard.storagemodule.DBServiceSubscriber;
 import com.harvard.studyAppModule.ResponseServerModel.ResponseServerData;

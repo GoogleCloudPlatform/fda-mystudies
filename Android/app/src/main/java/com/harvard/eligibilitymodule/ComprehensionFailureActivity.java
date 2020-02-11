@@ -12,7 +12,7 @@
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package com.harvard.EligibilityModuleTemp;
+package com.harvard.eligibilitymodule;
 
 import android.content.ComponentName;
 import android.content.Intent;
@@ -27,59 +27,47 @@ import com.harvard.storagemodule.DBServiceSubscriber;
 import com.harvard.studyAppModule.ConsentCompletedActivity;
 import com.harvard.studyAppModule.StandaloneActivity;
 import com.harvard.studyAppModule.StudyActivity;
-import com.harvard.studyAppModule.StudyFragment;
 import com.harvard.studyAppModule.consent.ConsentBuilder;
 import com.harvard.studyAppModule.consent.CustomConsentViewTaskActivity;
 import com.harvard.studyAppModule.consent.model.Consent;
 import com.harvard.studyAppModule.consent.model.EligibilityConsent;
-import com.harvard.usermodule.UserModulePresenter;
-import com.harvard.usermodule.event.UpdatePreferenceEvent;
-import com.harvard.usermodule.webservicemodel.LoginData;
 import com.harvard.utils.AppController;
-import com.harvard.utils.URLs;
-import com.harvard.webservicemodule.apihelper.ApiCall;
-import com.harvard.webservicemodule.events.RegistrationServerConfigEvent;
 import com.itextpdf.text.Image;
 import com.itextpdf.text.pdf.PdfPCell;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
 import org.researchstack.backbone.step.Step;
 import org.researchstack.backbone.task.OrderedTask;
 import org.researchstack.backbone.task.Task;
 
-import java.util.HashMap;
 import java.util.List;
 
 import io.realm.Realm;
 
 import static com.harvard.studyAppModule.StudyFragment.CONSENT;
 
-public class EligibleActivity extends AppCompatActivity implements ApiCall.OnAsyncRequestComplete {
+public class ComprehensionFailureActivity extends AppCompatActivity {
 
     private static final int CONSENT_RESPONSECODE = 100;
-    EligibilityConsent eligibilityConsent;
     DBServiceSubscriber dbServiceSubscriber;
-    private static final int UPDATE_USERPREFERENCE_RESPONSECODE = 200;
+    EligibilityConsent eligibilityConsent;
     Realm mRealm;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_eligible);
-        dbServiceSubscriber = new DBServiceSubscriber();
-        mRealm=AppController.getRealmobj(this);
+        setContentView(R.layout.activity_comprehension_failure);
 
-        TextView button = (TextView) findViewById(R.id.continueButton);
-        button.setOnClickListener(new View.OnClickListener() {
+        TextView retrybutton = (TextView) findViewById(R.id.retrybutton);
+        dbServiceSubscriber = new DBServiceSubscriber();
+        mRealm = AppController.getRealmobj(this);
+        retrybutton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 eligibilityConsent = dbServiceSubscriber.getConsentMetadata(getIntent().getStringExtra("studyId"), mRealm);
                 startconsent(eligibilityConsent.getConsent());
+
             }
         });
-        updateuserpreference();
     }
 
     @Override
@@ -107,7 +95,6 @@ public class EligibleActivity extends AppCompatActivity implements ApiCall.OnAsy
                 intent.putExtra("title", getIntent().getStringExtra("title"));
                 intent.putExtra("eligibility", getIntent().getStringExtra("eligibility"));
                 intent.putExtra("type", data.getStringExtra(CustomConsentViewTaskActivity.TYPE));
-                // get the encrypted file path
                 intent.putExtra("PdfPath", data.getStringExtra("PdfPath"));
                 startActivity(intent);
                 finish();
@@ -147,46 +134,5 @@ public class EligibleActivity extends AppCompatActivity implements ApiCall.OnAsy
     }
 
 
-    public void updateuserpreference() {
-        AppController.getHelperProgressDialog().showProgress(EligibleActivity.this, "", "", false);
-        UpdatePreferenceEvent updatePreferenceEvent = new UpdatePreferenceEvent();
 
-        HashMap<String, String> header = new HashMap();
-        header.put("auth", AppController.getHelperSharedPreference().readPreference(this, getResources().getString(R.string.auth), ""));
-        header.put("userId", AppController.getHelperSharedPreference().readPreference(this, getResources().getString(R.string.userid), ""));
-
-        JSONObject jsonObject = new JSONObject();
-
-        JSONArray studieslist = new JSONArray();
-        JSONObject studiestatus = new JSONObject();
-        try {
-            studiestatus.put("studyId", getIntent().getStringExtra("studyId"));
-            studiestatus.put("status", StudyFragment.YET_TO_JOIN);
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-
-        studieslist.put(studiestatus);
-        try {
-            jsonObject.put("studies", studieslist);
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        RegistrationServerConfigEvent registrationServerConfigEvent = new RegistrationServerConfigEvent("post_object", URLs.UPDATE_STUDY_PREFERENCE, UPDATE_USERPREFERENCE_RESPONSECODE, this, LoginData.class, null, header, jsonObject, false, this);
-
-        updatePreferenceEvent.setmRegistrationServerConfigEvent(registrationServerConfigEvent);
-        UserModulePresenter userModulePresenter = new UserModulePresenter();
-        userModulePresenter.performUpdateUserPreference(updatePreferenceEvent);
-    }
-
-    @Override
-    public <T> void asyncResponse(T response, int responseCode) {
-        AppController.getHelperProgressDialog().dismissDialog();
-        dbServiceSubscriber.updateStudyPreferenceDB(this,getIntent().getStringExtra("studyId"), StudyFragment.YET_TO_JOIN, "", "", "");
-    }
-
-    @Override
-    public void asyncResponseFailure(int responseCode, String errormsg, String statusCode) {
-        AppController.getHelperProgressDialog().dismissDialog();
-    }
 }

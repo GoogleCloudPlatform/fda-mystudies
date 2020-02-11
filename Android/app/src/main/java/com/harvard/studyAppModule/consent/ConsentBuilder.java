@@ -2,7 +2,7 @@ package com.harvard.studyAppModule.consent;
 
 import android.content.Context;
 
-import com.harvard.EligibilityModuleTemp.StepsBuilder;
+import com.harvard.eligibilitymodule.StepsBuilder;
 import com.harvard.R;
 import com.harvard.studyAppModule.activityBuilder.model.serviceModel.Steps;
 import com.harvard.studyAppModule.consent.ConsentSharingStepCustom.ConsentSharingStepCustom;
