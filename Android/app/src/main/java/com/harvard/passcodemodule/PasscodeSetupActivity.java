@@ -29,7 +29,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.harvard.R;
-import com.harvard.gatewayModule.GatewayActivity;
+import com.harvard.gatewayModuleTemp.GatewayActivity;
 import com.harvard.storagemodule.DBServiceSubscriber;
 import com.harvard.utils.AppController;
 import com.harvard.utils.SharedPreferenceHelper;

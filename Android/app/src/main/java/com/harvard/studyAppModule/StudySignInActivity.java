@@ -11,7 +11,7 @@ import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.harvard.R;
-import com.harvard.gatewayModule.GatewayActivity;
+import com.harvard.gatewayModuleTemp.GatewayActivity;
 import com.harvard.utils.AppController;
 
 import java.util.ArrayList;

@@ -28,7 +28,7 @@ import com.harvard.EligibilityModule.CustomViewTaskActivity;
 import com.harvard.EligibilityModule.StepsBuilder;
 import com.harvard.R;
 import com.harvard.WebViewActivity;
-import com.harvard.gatewayModule.CircleIndicator;
+import com.harvard.gatewayModuleTemp.CircleIndicator;
 import com.harvard.offlinemodule.model.OfflineData;
 import com.harvard.storagemodule.DBServiceSubscriber;
 import com.harvard.studyAppModule.activityBuilder.model.serviceModel.Steps;

@@ -1,4 +1,4 @@
-package com.harvard.gatewayModule.events;
+package com.harvard.gatewayModuleTemp.events;
 
 /**
  * Created by Rohit on 3/10/2017.

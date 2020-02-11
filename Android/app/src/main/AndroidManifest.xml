@@ -48,7 +48,7 @@
         </provider>
 
         <activity
-            android:name=".gatewayModule.GatewayActivity"
+            android:name=".gatewayModuleTemp.GatewayActivity"
             android:configChanges="screenLayout|orientation"
             android:screenOrientation="portrait"
             android:theme="@style/AppThemeNoActionBar"
