@@ -23,7 +23,7 @@ import android.widget.TextView;
 import com.harvard.AppConfig;
 import com.harvard.R;
 import com.harvard.SplashActivity;
-import com.harvard.notificationModule.NotificationModuleSubscriber;
+import com.harvard.notificationModuleTemp.NotificationModuleSubscriber;
 import com.harvard.offlinemodule.model.OfflineData;
 import com.harvard.storagemodule.DBServiceSubscriber;
 import com.harvard.studyAppModule.StandaloneActivity;

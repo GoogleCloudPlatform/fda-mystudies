@@ -19,7 +19,7 @@ import com.google.gson.stream.JsonWriter;
 import com.harvard.AppConfig;
 import com.harvard.MyFirebaseMessagingService;
 import com.harvard.R;
-import com.harvard.notificationModule.AlarmReceiver;
+import com.harvard.notificationModuleTemp.AlarmReceiver;
 import com.harvard.storagemodule.DBServiceSubscriber;
 import com.harvard.storagemodule.events.DatabaseEvent;
 import com.harvard.studyAppModule.consent.ConsentBuilder;

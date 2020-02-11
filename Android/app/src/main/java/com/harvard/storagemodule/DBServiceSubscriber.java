@@ -16,8 +16,8 @@ package com.harvard.storagemodule;
 
 import android.content.Context;
 
-import com.harvard.notificationModule.PendingIntents;
-import com.harvard.notificationModule.model.NotificationDb;
+import com.harvard.notificationModuleTemp.PendingIntents;
+import com.harvard.notificationModuleTemp.model.NotificationDb;
 import com.harvard.offlinemodule.model.OfflineData;
 import com.harvard.storagemodule.events.DatabaseEvent;
 import com.harvard.studyAppModule.SurveyActivitiesFragment;

@@ -1,4 +1,4 @@
-package com.harvard.notificationModule.model;
+package com.harvard.notificationModuleTemp.model;
 
 import io.realm.RealmObject;
 

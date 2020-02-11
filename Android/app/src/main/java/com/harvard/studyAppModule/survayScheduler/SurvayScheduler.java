@@ -3,7 +3,7 @@ package com.harvard.studyAppModule.survayScheduler;
 import android.content.Context;
 
 import com.harvard.R;
-import com.harvard.notificationModule.NotificationModuleSubscriber;
+import com.harvard.notificationModuleTemp.NotificationModuleSubscriber;
 import com.harvard.storagemodule.DBServiceSubscriber;
 import com.harvard.storagemodule.events.DatabaseEvent;
 import com.harvard.studyAppModule.SurveyActivitiesFragment;
