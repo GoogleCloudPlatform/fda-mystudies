@@ -190,7 +190,7 @@
             android:theme="@style/Theme.BackboneApp"
             android:windowSoftInputMode="stateHidden|adjustResize"/>
         <activity
-            android:name=".EligibilityModule.CustomViewTaskActivity"
+            android:name=".EligibilityModuleTemp.CustomViewTaskActivity"
             android:configChanges="screenLayout|orientation"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.BackboneApp"
@@ -351,25 +351,25 @@
         </receiver>
 
         <activity
-            android:name=".EligibilityModule.NotEligibleActivity"
+            android:name=".EligibilityModuleTemp.NotEligibleActivity"
             android:configChanges="screenLayout|orientation"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.BackboneApp">
         </activity>
         <activity
-            android:name=".EligibilityModule.EligibleActivity"
+            android:name=".EligibilityModuleTemp.EligibleActivity"
             android:configChanges="screenLayout|orientation"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.BackboneApp">
         </activity>
         <activity
-            android:name=".EligibilityModule.ComprehensionSuccessActivity"
+            android:name=".EligibilityModuleTemp.ComprehensionSuccessActivity"
             android:configChanges="screenLayout|orientation"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.BackboneApp">
         </activity>
         <activity
-            android:name=".EligibilityModule.ComprehensionFailureActivity"
+            android:name=".EligibilityModuleTemp.ComprehensionFailureActivity"
             android:configChanges="screenLayout|orientation"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.BackboneApp">
