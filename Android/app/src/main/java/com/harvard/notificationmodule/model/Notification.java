@@ -1,4 +1,4 @@
-package com.harvard.notificationModuleTemp.model;
+package com.harvard.notificationmodule.model;
 
 /**
  * Created by Rohit on 3/3/2017.

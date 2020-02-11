@@ -293,7 +293,7 @@
             android:theme="@style/Theme.BackboneApp"
             android:windowSoftInputMode="stateHidden"/>
 
-        <receiver android:name=".notificationModuleTemp.AlarmReceiver">
+        <receiver android:name=".notificationmodule.AlarmReceiver">
             <intent-filter>
                 <action android:name="android.media.action.DISPLAY_NOTIFICATION"/>
 

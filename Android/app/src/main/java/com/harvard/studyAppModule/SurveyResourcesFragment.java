@@ -21,7 +21,7 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.harvard.AppConfig;
 import com.harvard.R;
-import com.harvard.notificationModuleTemp.NotificationModuleSubscriber;
+import com.harvard.notificationmodule.NotificationModuleSubscriber;
 import com.harvard.storagemodule.DBServiceSubscriber;
 import com.harvard.studyAppModule.acvitityListModel.AnchorDateSchedulingDetails;
 import com.harvard.studyAppModule.custom.Result.StepRecordCustom;

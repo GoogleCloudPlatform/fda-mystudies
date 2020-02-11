@@ -10,7 +10,7 @@ import android.support.multidex.MultiDex;
 
 import com.crashlytics.android.Crashlytics;
 import com.facebook.stetho.Stetho;
-import com.harvard.notificationModuleTemp.NotificationModuleSubscriber;
+import com.harvard.notificationmodule.NotificationModuleSubscriber;
 import com.harvard.passcodemodule.PasscodeSetupActivity;
 import com.harvard.storagemodule.DBServiceSubscriber;
 import com.harvard.studyAppModule.StudyModuleSubscriber;

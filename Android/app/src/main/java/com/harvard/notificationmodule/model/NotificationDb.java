@@ -1,4 +1,4 @@
-package com.harvard.notificationModuleTemp.model;
+package com.harvard.notificationmodule.model;
 
 import java.util.Date;
 

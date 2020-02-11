@@ -38,7 +38,7 @@ import com.google.firebase.iid.FirebaseInstanceId;
 import com.harvard.AppConfig;
 import com.harvard.BuildConfig;
 import com.harvard.R;
-import com.harvard.notificationModuleTemp.NotificationModuleSubscriber;
+import com.harvard.notificationmodule.NotificationModuleSubscriber;
 import com.harvard.studyAppModule.ChangePasswordActivity;
 import com.harvard.studyAppModule.StandaloneActivity;
 import com.harvard.studyAppModule.StudyActivity;
