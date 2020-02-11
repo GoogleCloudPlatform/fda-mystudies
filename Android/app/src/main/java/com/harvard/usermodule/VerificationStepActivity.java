@@ -26,7 +26,7 @@ import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.harvard.R;
-import com.harvard.gatewayModuleTemp.GatewayActivity;
+import com.harvard.gatewaymodule.GatewayActivity;
 import com.harvard.usermodule.event.ResendEmailEvent;
 import com.harvard.usermodule.event.VerifyUserEvent;
 import com.harvard.usermodule.webservicemodel.LoginData;

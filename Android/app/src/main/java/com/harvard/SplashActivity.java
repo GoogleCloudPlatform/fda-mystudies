@@ -13,7 +13,7 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.Toast;
 
-import com.harvard.gatewayModuleTemp.GatewayActivity;
+import com.harvard.gatewaymodule.GatewayActivity;
 import com.harvard.offlinemodule.auth.SyncAdapterManager;
 import com.harvard.studyAppModule.StandaloneActivity;
 import com.harvard.studyAppModule.StudyActivity;
