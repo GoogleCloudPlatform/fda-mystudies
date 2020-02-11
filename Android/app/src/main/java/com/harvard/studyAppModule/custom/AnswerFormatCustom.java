@@ -1,7 +1,7 @@
 package com.harvard.studyAppModule.custom;
 
-import com.harvard.studyAppModule.custom.activeTaskTemp.StepCountClass;
-import com.harvard.studyAppModule.custom.activeTaskTemp.Tappingactivity;
+import com.harvard.studyAppModule.custom.activetask.StepCountClass;
+import com.harvard.studyAppModule.custom.activetask.Tappingactivity;
 import com.harvard.studyAppModule.custom.question.AudioQuestionbody;
 import com.harvard.studyAppModule.custom.question.ContinuousScaleQuestion;
 import com.harvard.studyAppModule.custom.question.CustomDateQuestionBody;

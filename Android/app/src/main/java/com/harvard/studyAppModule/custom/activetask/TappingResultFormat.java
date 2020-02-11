@@ -12,42 +12,31 @@
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package com.harvard.studyAppModule.custom.activeTaskTemp;
+package com.harvard.studyAppModule.custom.activetask;
 
-import com.harvard.studyAppModule.custom.AnswerFormatCustom;
-import com.harvard.studyAppModule.custom.ChoiceAnswerFormatCustom;
+import java.io.Serializable;
 
 /**
- * Created by Naveen Raj on 04/12/2017.
+ * Created by Naveen Raj on 11/06/2017.
  */
 
-public class TappingAnswerFormat extends ChoiceAnswerFormatCustom {
+public class TappingResultFormat implements Serializable {
+    private String duration;
+    private double value;
 
-    private final ChoiceAnswerFormatCustom.CustomAnswerStyle style;
-    private final int duration;
-    private int mKickCount;
-
-
-    public TappingAnswerFormat(CustomAnswerStyle style, int duration, int kickCount) {
-        this.style = style;
-        this.duration = duration;
-        mKickCount = kickCount;
-    }
-
-    public int getKickCount() {
-        return mKickCount;
-    }
-
-    public ChoiceAnswerFormatCustom.CustomAnswerStyle getStyle() {
-        return style;
-    }
-
-    int getDuration() {
+    public String getDuration() {
         return duration;
     }
 
-    @Override
-    public AnswerFormatCustom.QuestionType getQuestionType() {
-        return Type.Tapping;
+    public void setDuration(String duration) {
+        this.duration = duration;
+    }
+
+    public double getValue() {
+        return value;
+    }
+
+    public void setValue(double value) {
+        this.value = value;
     }
 }
