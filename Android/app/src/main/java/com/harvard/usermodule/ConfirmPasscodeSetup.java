@@ -25,7 +25,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.harvard.R;
-import com.harvard.passcodeModuleTemp.PasscodeView;
+import com.harvard.passcodemodule.PasscodeView;
 import com.harvard.utils.AppController;
 
 public class ConfirmPasscodeSetup extends AppCompatActivity {

@@ -84,7 +84,7 @@
             android:theme="@style/AppThemeNoActionBar"
             android:windowSoftInputMode="stateHidden"/>
         <activity
-            android:name=".passcodeModuleTemp.PasscodeSetupActivity"
+            android:name=".passcodemodule.PasscodeSetupActivity"
             android:configChanges="screenLayout|orientation"
             android:theme="@style/passcodeTheme"
             android:windowSoftInputMode="stateHidden"/>
