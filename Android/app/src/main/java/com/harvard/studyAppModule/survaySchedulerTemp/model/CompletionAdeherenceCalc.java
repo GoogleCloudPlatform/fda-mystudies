@@ -1,4 +1,4 @@
-package com.harvard.studyAppModule.survayScheduler.model;
+package com.harvard.studyAppModule.survaySchedulerTemp.model;
 
 /**
  * Created by Rohit on 5/7/2017.

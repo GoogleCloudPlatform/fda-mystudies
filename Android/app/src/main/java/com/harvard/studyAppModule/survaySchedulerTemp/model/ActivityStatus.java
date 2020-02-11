@@ -1,4 +1,4 @@
-package com.harvard.studyAppModule.survayScheduler.model;
+package com.harvard.studyAppModule.survaySchedulerTemp.model;
 
 import java.util.Date;
 
