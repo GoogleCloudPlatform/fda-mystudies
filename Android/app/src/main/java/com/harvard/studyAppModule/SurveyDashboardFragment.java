@@ -43,7 +43,7 @@ import com.harvard.R;
 import com.harvard.storagemodule.DBServiceSubscriber;
 import com.harvard.studyAppModule.acvitityListModel.ActivitiesWS;
 import com.harvard.studyAppModule.acvitityListModel.ActivityListData;
-import com.harvard.studyAppModule.circularProgressBarTemp.DonutProgress;
+import com.harvard.studyAppModule.circularprogressbar.DonutProgress;
 import com.harvard.studyAppModule.custom.result.StepRecordCustom;
 import com.harvard.studyAppModule.events.GetActivityListEvent;
 import com.harvard.studyAppModule.studymodel.DashboardData;
