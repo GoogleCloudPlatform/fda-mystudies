@@ -28,7 +28,7 @@ import com.harvard.EligibilityModule.StepsBuilder;
 import com.harvard.R;
 import com.harvard.WebViewActivity;
 import com.harvard.gatewayModule.CircleIndicator;
-import com.harvard.storageModuleTemp.DBServiceSubscriber;
+import com.harvard.storagemodule.DBServiceSubscriber;
 import com.harvard.studyAppModule.activityBuilder.model.serviceModel.Steps;
 import com.harvard.studyAppModule.consent.model.CorrectAnswerString;
 import com.harvard.studyAppModule.consent.model.EligibilityConsent;

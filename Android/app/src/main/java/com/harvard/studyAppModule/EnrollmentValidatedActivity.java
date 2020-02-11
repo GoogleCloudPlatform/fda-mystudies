@@ -9,7 +9,7 @@ import android.view.View;
 
 import com.harvard.AppConfig;
 import com.harvard.R;
-import com.harvard.storageModuleTemp.DBServiceSubscriber;
+import com.harvard.storagemodule.DBServiceSubscriber;
 import com.harvard.studyAppModule.consent.ConsentBuilder;
 import com.harvard.studyAppModule.consent.CustomConsentViewTaskActivity;
 import com.harvard.studyAppModule.consent.model.Consent;

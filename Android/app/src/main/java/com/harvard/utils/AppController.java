@@ -25,7 +25,7 @@ import com.harvard.R;
 import com.harvard.SplashActivity;
 import com.harvard.notificationModule.NotificationModuleSubscriber;
 import com.harvard.offlineModule.model.OfflineData;
-import com.harvard.storageModuleTemp.DBServiceSubscriber;
+import com.harvard.storagemodule.DBServiceSubscriber;
 import com.harvard.studyAppModule.StandaloneActivity;
 import com.harvard.studyAppModule.StudyActivity;
 import com.harvard.utils.realm.RealmEncryptionHelper;

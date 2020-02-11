@@ -12,7 +12,7 @@ import com.crashlytics.android.Crashlytics;
 import com.facebook.stetho.Stetho;
 import com.harvard.notificationModule.NotificationModuleSubscriber;
 import com.harvard.passcodeModule.PasscodeSetupActivity;
-import com.harvard.storageModuleTemp.DBServiceSubscriber;
+import com.harvard.storagemodule.DBServiceSubscriber;
 import com.harvard.studyAppModule.StudyModuleSubscriber;
 import com.harvard.usermodule.UserModuleSubscriber;
 import com.harvard.usermodule.webservicemodel.UserProfileData;

@@ -11,7 +11,7 @@ import android.widget.Toast;
 
 import com.harvard.R;
 import com.harvard.notificationModule.model.NotificationDb;
-import com.harvard.storageModuleTemp.DBServiceSubscriber;
+import com.harvard.storagemodule.DBServiceSubscriber;
 import com.harvard.studyAppModule.events.GetUserStudyListEvent;
 import com.harvard.studyAppModule.studyModel.Notification;
 import com.harvard.studyAppModule.studyModel.NotificationData;

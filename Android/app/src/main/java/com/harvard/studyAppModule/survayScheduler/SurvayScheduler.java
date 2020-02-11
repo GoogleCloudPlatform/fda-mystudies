@@ -4,8 +4,8 @@ import android.content.Context;
 
 import com.harvard.R;
 import com.harvard.notificationModule.NotificationModuleSubscriber;
-import com.harvard.storageModuleTemp.DBServiceSubscriber;
-import com.harvard.storageModuleTemp.events.DatabaseEvent;
+import com.harvard.storagemodule.DBServiceSubscriber;
+import com.harvard.storagemodule.events.DatabaseEvent;
 import com.harvard.studyAppModule.SurveyActivitiesFragment;
 import com.harvard.studyAppModule.activityBuilder.model.ActivityRun;
 import com.harvard.studyAppModule.acvitityListModel.ActivitiesWS;

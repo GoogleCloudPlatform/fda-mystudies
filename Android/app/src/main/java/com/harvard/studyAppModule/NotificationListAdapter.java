@@ -12,7 +12,7 @@ import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.harvard.R;
-import com.harvard.storageModuleTemp.DBServiceSubscriber;
+import com.harvard.storagemodule.DBServiceSubscriber;
 import com.harvard.studyAppModule.studyModel.Notification;
 import com.harvard.studyAppModule.studyModel.Study;
 import com.harvard.studyAppModule.studyModel.StudyList;

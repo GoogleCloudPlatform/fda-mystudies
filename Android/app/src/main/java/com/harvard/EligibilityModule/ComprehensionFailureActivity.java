@@ -9,7 +9,7 @@ import android.widget.TextView;
 
 import com.harvard.AppConfig;
 import com.harvard.R;
-import com.harvard.storageModuleTemp.DBServiceSubscriber;
+import com.harvard.storagemodule.DBServiceSubscriber;
 import com.harvard.studyAppModule.ConsentCompletedActivity;
 import com.harvard.studyAppModule.StandaloneActivity;
 import com.harvard.studyAppModule.StudyActivity;
