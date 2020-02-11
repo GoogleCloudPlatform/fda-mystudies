@@ -12,39 +12,75 @@
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package com.harvard.studyAppModule.activityBuilder.model.servicemodel;
+package com.harvard.studyAppModule.activityBuilderTemp.model.servicemodel;
 
 import io.realm.RealmObject;
 
 /**
  * Created by Naveen Raj on 03/02/2017.
  */
-public class QuestionnaireConfiguration extends RealmObject{
-    private boolean branching;
-    private boolean randomization;
-    private String frequency;
+public class Info extends RealmObject{
+    private String studyId;
+    private String activityId;
+    private String name;
+    private String version;
+    private String lastModified;
+    private String startDate;
+    private String endDate;
 
-    public boolean isBranching() {
-        return branching;
+    public String getStudyId() {
+        return studyId;
     }
 
-    public void setBranching(boolean branching) {
-        this.branching = branching;
+    public void setStudyId(String studyId) {
+        this.studyId = studyId;
     }
 
-    public boolean isRandomization() {
-        return randomization;
+    public String getActivityId() {
+        return activityId;
     }
 
-    public void setRandomization(boolean randomization) {
-        this.randomization = randomization;
+    public void setActivityId(String activityId) {
+        this.activityId = activityId;
     }
 
-    public String getFrequency() {
-        return frequency;
+    public String getName() {
+        return name;
     }
 
-    public void setFrequency(String frequency) {
-        this.frequency = frequency;
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getVersion() {
+        return version;
+    }
+
+    public void setVersion(String version) {
+        this.version = version;
+    }
+
+    public String getLastModified() {
+        return lastModified;
+    }
+
+    public void setLastModified(String lastModified) {
+        this.lastModified = lastModified;
+    }
+
+    public String getStartDate() {
+        return startDate;
+    }
+
+    public void setStartDate(String startDate) {
+        this.startDate = startDate;
+    }
+
+    public String getEndDate() {
+        return endDate;
+    }
+
+    public void setEndDate(String endDate) {
+        this.endDate = endDate;
     }
 }

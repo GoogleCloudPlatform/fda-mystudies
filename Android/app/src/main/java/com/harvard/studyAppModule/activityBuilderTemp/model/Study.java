@@ -1,4 +1,4 @@
-package com.harvard.studyAppModule.activityBuilder.model;
+package com.harvard.studyAppModule.activityBuilderTemp.model;
 
 import com.harvard.studyAppModule.consent.model.Consent;
 

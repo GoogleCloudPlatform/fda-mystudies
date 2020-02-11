@@ -4,7 +4,7 @@ import android.content.Context;
 
 import com.harvard.eligibilitymodule.StepsBuilder;
 import com.harvard.R;
-import com.harvard.studyAppModule.activityBuilder.model.servicemodel.Steps;
+import com.harvard.studyAppModule.activityBuilderTemp.model.servicemodel.Steps;
 import com.harvard.studyAppModule.consent.ConsentSharingStepCustom.ConsentSharingStepCustom;
 import com.harvard.studyAppModule.consent.model.Consent;
 import com.harvard.studyAppModule.consent.model.ConsentSectionCustomImage;

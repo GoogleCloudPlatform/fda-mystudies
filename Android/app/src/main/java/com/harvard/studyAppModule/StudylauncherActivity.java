@@ -13,7 +13,7 @@ import com.google.gson.JsonPrimitive;
 import com.google.gson.internal.LinkedTreeMap;
 import com.harvard.R;
 import com.harvard.storagemodule.DBServiceSubscriber;
-import com.harvard.studyAppModule.activityBuilder.model.servicemodel.ActivityObj;
+import com.harvard.studyAppModule.activityBuilderTemp.model.servicemodel.ActivityObj;
 import com.harvard.studyAppModule.custom.result.StepRecordCustom;
 import com.harvard.utils.AppController;
 

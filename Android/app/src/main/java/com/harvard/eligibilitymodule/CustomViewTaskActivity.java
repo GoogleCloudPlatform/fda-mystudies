@@ -33,8 +33,8 @@ import android.view.MenuItem;
 import android.view.inputmethod.InputMethodManager;
 
 import com.harvard.R;
-import com.harvard.studyAppModule.activityBuilder.model.Eligibility;
-import com.harvard.studyAppModule.activityBuilder.model.servicemodel.ActivityObj;
+import com.harvard.studyAppModule.activityBuilderTemp.model.Eligibility;
+import com.harvard.studyAppModule.activityBuilderTemp.model.servicemodel.ActivityObj;
 import com.harvard.studyAppModule.consent.model.CorrectAnswers;
 import com.harvard.studyAppModule.custom.StepSwitcherCustom;
 import com.harvard.utils.AppController;

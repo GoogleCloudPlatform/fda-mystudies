@@ -5,7 +5,6 @@ import android.graphics.Paint;
 import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -15,7 +14,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.harvard.R;
-import com.harvard.studyAppModule.activityBuilder.CustomSurveyViewTaskActivity;
+import com.harvard.studyAppModule.activityBuilderTemp.CustomSurveyViewTaskActivity;
 import com.harvard.studyAppModule.custom.ChoiceAnswerFormatCustom;
 import com.harvard.studyAppModule.custom.QuestionStepCustom;
 import com.harvard.studyAppModule.custom.StepResultCustom;

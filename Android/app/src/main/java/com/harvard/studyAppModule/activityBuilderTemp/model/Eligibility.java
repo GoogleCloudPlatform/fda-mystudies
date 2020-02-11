@@ -1,6 +1,6 @@
-package com.harvard.studyAppModule.activityBuilder.model;
+package com.harvard.studyAppModule.activityBuilderTemp.model;
 
-import com.harvard.studyAppModule.activityBuilder.model.servicemodel.Steps;
+import com.harvard.studyAppModule.activityBuilderTemp.model.servicemodel.Steps;
 import com.harvard.studyAppModule.consent.model.CorrectAnswers;
 
 import io.realm.RealmList;

@@ -12,13 +12,39 @@
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package com.harvard.studyAppModule.activityBuilder.model.servicemodel;
+package com.harvard.studyAppModule.activityBuilderTemp.model.servicemodel;
 
 import io.realm.RealmObject;
 
 /**
  * Created by Naveen Raj on 03/02/2017.
  */
-public class ResourceContext extends RealmObject{
-    private String val;
+public class QuestionnaireConfiguration extends RealmObject{
+    private boolean branching;
+    private boolean randomization;
+    private String frequency;
+
+    public boolean isBranching() {
+        return branching;
+    }
+
+    public void setBranching(boolean branching) {
+        this.branching = branching;
+    }
+
+    public boolean isRandomization() {
+        return randomization;
+    }
+
+    public void setRandomization(boolean randomization) {
+        this.randomization = randomization;
+    }
+
+    public String getFrequency() {
+        return frequency;
+    }
+
+    public void setFrequency(String frequency) {
+        this.frequency = frequency;
+    }
 }

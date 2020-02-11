@@ -17,7 +17,7 @@ package com.harvard.eligibilitymodule;
 import android.content.Context;
 
 import com.harvard.R;
-import com.harvard.studyAppModule.activityBuilder.model.servicemodel.Steps;
+import com.harvard.studyAppModule.activityBuilderTemp.model.servicemodel.Steps;
 import com.harvard.studyAppModule.custom.AnswerFormatCustom;
 import com.harvard.studyAppModule.custom.ChoiceAnswerFormatCustom;
 import com.harvard.studyAppModule.custom.QuestionStepCustom;

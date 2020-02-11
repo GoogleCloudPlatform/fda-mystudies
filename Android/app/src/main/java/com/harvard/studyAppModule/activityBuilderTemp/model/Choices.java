@@ -1,4 +1,4 @@
-package com.harvard.studyAppModule.activityBuilder.model;
+package com.harvard.studyAppModule.activityBuilderTemp.model;
 
 import com.google.gson.annotations.SerializedName;
 import com.harvard.studyAppModule.custom.question.ChoiceTextOtherOption;

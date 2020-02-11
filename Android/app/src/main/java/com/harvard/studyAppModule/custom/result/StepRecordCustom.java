@@ -22,7 +22,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.google.gson.JsonPrimitive;
 import com.google.gson.internal.LinkedTreeMap;
-import com.harvard.studyAppModule.activityBuilder.model.Choices;
+import com.harvard.studyAppModule.activityBuilderTemp.model.Choices;
 
 import org.researchstack.backbone.result.StepResult;
 import org.researchstack.backbone.step.Step;

@@ -12,62 +12,29 @@
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package com.harvard.studyAppModule.activityBuilder.model.servicemodel;
-
-import io.realm.RealmList;
-import io.realm.RealmObject;
+package com.harvard.studyAppModule.activityBuilderTemp.model.servicemodel;
 
 /**
- * Created by Naveen Raj on 03/02/2017.
+ * Created by Naveen Raj on 04/11/2017.
  */
-public class ActivityObj extends RealmObject {
-    private String type;
-    private Info metadata;
-    private String surveyId;
-    private String studyId;
-    private RealmList<Steps> steps;
 
+public class ActivityInfoData {
+    private String message;
+    private ActivityObj activity;
 
-    public String getStudyId() {
-        return studyId;
+    public String getMessage() {
+        return message;
     }
 
-    public void setStudyId(String studyId) {
-        this.studyId = studyId;
+    public void setMessage(String message) {
+        this.message = message;
     }
 
-    public String getSurveyId() {
-        return surveyId;
+    public ActivityObj getActivity() {
+        return activity;
     }
 
-    public void setSurveyId(String surveyId) {
-        this.surveyId = surveyId;
+    public void setActivity(ActivityObj activity) {
+        this.activity = activity;
     }
-
-
-    public String getType() {
-        return type;
-    }
-
-    public void setType(String type) {
-        this.type = type;
-    }
-
-    public Info getMetadata() {
-        return metadata;
-    }
-
-    public void setMetadata(Info metadata) {
-        this.metadata = metadata;
-    }
-
-
-    public RealmList<Steps> getSteps() {
-        return steps;
-    }
-
-    public void setSteps(RealmList<Steps> steps) {
-        this.steps = steps;
-    }
-
 }

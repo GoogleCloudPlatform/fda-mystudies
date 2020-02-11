@@ -37,7 +37,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.harvard.R;
-import com.harvard.studyAppModule.activityBuilder.CustomSurveyViewTaskActivity;
+import com.harvard.studyAppModule.activityBuilderTemp.CustomSurveyViewTaskActivity;
 import com.harvard.studyAppModule.custom.QuestionStepCustom;
 import com.harvard.utils.ActiveTaskService;
 import com.ikovac.timepickerwithseconds.MyTimePickerDialog;

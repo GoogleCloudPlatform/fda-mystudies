@@ -23,7 +23,7 @@ import android.os.Build;
 import com.harvard.R;
 import com.harvard.notificationmodule.model.NotificationDb;
 import com.harvard.storagemodule.DBServiceSubscriber;
-import com.harvard.studyAppModule.activityBuilder.model.ActivityRun;
+import com.harvard.studyAppModule.activityBuilderTemp.model.ActivityRun;
 import com.harvard.studyAppModule.acvititylistmodel.ActivitiesWS;
 import com.harvard.studyAppModule.studymodel.NotificationDbResources;
 import com.harvard.studyAppModule.studymodel.PendingIntentsResources;

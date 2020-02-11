@@ -184,7 +184,7 @@
             android:theme="@style/AppThemeNoActionBar1"
             android:windowSoftInputMode="stateHidden"/>
         <activity
-            android:name=".studyAppModule.activityBuilder.CustomSurveyViewTaskActivity"
+            android:name=".studyAppModule.activityBuilderTemp.CustomSurveyViewTaskActivity"
             android:configChanges="screenLayout|orientation"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.BackboneApp"
