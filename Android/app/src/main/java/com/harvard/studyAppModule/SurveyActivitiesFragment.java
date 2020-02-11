@@ -54,7 +54,7 @@ import com.harvard.studyAppModule.consent.CustomConsentViewTaskActivity;
 import com.harvard.studyAppModule.consent.model.Consent;
 import com.harvard.studyAppModule.consent.model.CorrectAnswerString;
 import com.harvard.studyAppModule.consent.model.EligibilityConsent;
-import com.harvard.studyAppModule.custom.Result.StepRecordCustom;
+import com.harvard.studyAppModule.custom.ResultTemp.StepRecordCustom;
 import com.harvard.studyAppModule.events.GetActivityInfoEvent;
 import com.harvard.studyAppModule.events.GetActivityListEvent;
 import com.harvard.studyAppModule.events.GetResourceListEvent;

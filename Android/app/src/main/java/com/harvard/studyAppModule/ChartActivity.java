@@ -30,7 +30,7 @@ import com.harvard.R;
 import com.harvard.storagemodule.DBServiceSubscriber;
 import com.harvard.studyAppModule.activityBuilder.model.ActivityRun;
 import com.harvard.studyAppModule.acvitityListModel.ActivitiesWS;
-import com.harvard.studyAppModule.custom.Result.StepRecordCustom;
+import com.harvard.studyAppModule.custom.ResultTemp.StepRecordCustom;
 import com.harvard.studyAppModule.studymodel.ChartDataSource;
 import com.harvard.studyAppModule.studymodel.DashboardData;
 import com.harvard.studyAppModule.studymodel.RunChart;

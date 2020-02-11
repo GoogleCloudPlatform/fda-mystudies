@@ -32,8 +32,8 @@ import com.harvard.studyAppModule.activityBuilder.model.serviceModel.ActivityObj
 import com.harvard.studyAppModule.activityBuilder.model.serviceModel.Steps;
 import com.harvard.studyAppModule.custom.ChoiceAnswerFormatCustom;
 import com.harvard.studyAppModule.custom.QuestionStepCustom;
-import com.harvard.studyAppModule.custom.Result.StepRecordCustom;
-import com.harvard.studyAppModule.custom.Result.TaskRecordCustom;
+import com.harvard.studyAppModule.custom.ResultTemp.StepRecordCustom;
+import com.harvard.studyAppModule.custom.ResultTemp.TaskRecordCustom;
 import com.harvard.studyAppModule.custom.StepSwitcherCustom;
 import com.harvard.studyAppModule.studymodel.NotificationDbResources;
 import com.harvard.studyAppModule.studymodel.Resource;

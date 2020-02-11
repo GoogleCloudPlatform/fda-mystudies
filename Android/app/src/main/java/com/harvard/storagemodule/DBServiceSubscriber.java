@@ -27,7 +27,7 @@ import com.harvard.studyAppModule.activityBuilder.model.serviceModel.Steps;
 import com.harvard.studyAppModule.acvitityListModel.ActivitiesWS;
 import com.harvard.studyAppModule.acvitityListModel.ActivityListData;
 import com.harvard.studyAppModule.consent.model.EligibilityConsent;
-import com.harvard.studyAppModule.custom.Result.StepRecordCustom;
+import com.harvard.studyAppModule.custom.ResultTemp.StepRecordCustom;
 import com.harvard.studyAppModule.studymodel.ConsentDocumentData;
 import com.harvard.studyAppModule.studymodel.ConsentPDF;
 import com.harvard.studyAppModule.studymodel.ConsentPdfData;
