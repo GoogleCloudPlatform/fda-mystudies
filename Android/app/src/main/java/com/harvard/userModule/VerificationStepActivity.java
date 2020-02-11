@@ -15,7 +15,7 @@ import com.harvard.R;
 import com.harvard.gatewayModule.GatewayActivity;
 import com.harvard.userModule.event.ResendEmailEvent;
 import com.harvard.userModule.event.VerifyUserEvent;
-import com.harvard.userModule.webserviceModel.LoginData;
+import com.harvard.userModule.webserviceModelTemp.LoginData;
 import com.harvard.utils.AppController;
 import com.harvard.utils.SharedPreferenceHelper;
 import com.harvard.utils.URLs;

@@ -20,7 +20,7 @@ import com.harvard.studyAppModule.consent.model.Consent;
 import com.harvard.studyAppModule.consent.model.EligibilityConsent;
 import com.harvard.userModule.UserModulePresenter;
 import com.harvard.userModule.event.UpdatePreferenceEvent;
-import com.harvard.userModule.webserviceModel.LoginData;
+import com.harvard.userModule.webserviceModelTemp.LoginData;
 import com.harvard.utils.AppController;
 import com.harvard.utils.URLs;
 import com.harvard.webservicemodule.apihelper.ApiCall;

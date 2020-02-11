@@ -1,7 +1,6 @@
 package com.harvard.storageModule;
 
 import android.content.Context;
-import android.util.Log;
 
 import com.harvard.notificationModule.PendingIntents;
 import com.harvard.notificationModule.model.NotificationDb;
@@ -29,12 +28,12 @@ import com.harvard.studyAppModule.studyModel.StudyList;
 import com.harvard.studyAppModule.studyModel.StudyResource;
 import com.harvard.studyAppModule.studyModel.StudyUpdate;
 import com.harvard.studyAppModule.studyModel.StudyUpdateListdata;
-import com.harvard.userModule.webserviceModel.Activities;
-import com.harvard.userModule.webserviceModel.ActivityData;
-import com.harvard.userModule.webserviceModel.ActivityRunPreference;
-import com.harvard.userModule.webserviceModel.Studies;
-import com.harvard.userModule.webserviceModel.StudyData;
-import com.harvard.userModule.webserviceModel.UserProfileData;
+import com.harvard.userModule.webserviceModelTemp.Activities;
+import com.harvard.userModule.webserviceModelTemp.ActivityData;
+import com.harvard.userModule.webserviceModelTemp.ActivityRunPreference;
+import com.harvard.userModule.webserviceModelTemp.Studies;
+import com.harvard.userModule.webserviceModelTemp.StudyData;
+import com.harvard.userModule.webserviceModelTemp.UserProfileData;
 import com.harvard.utils.AppController;
 
 import org.researchstack.backbone.task.Task;

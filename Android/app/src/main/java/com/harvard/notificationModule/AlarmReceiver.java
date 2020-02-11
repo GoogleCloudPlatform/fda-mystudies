@@ -11,7 +11,6 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.NotificationManagerCompat;
-import android.util.Log;
 
 import com.harvard.AppConfig;
 import com.harvard.FDAApplication;
@@ -20,7 +19,7 @@ import com.harvard.storageModule.DBServiceSubscriber;
 import com.harvard.studyAppModule.NotificationActivity;
 import com.harvard.studyAppModule.StandaloneActivity;
 import com.harvard.studyAppModule.StudyActivity;
-import com.harvard.userModule.webserviceModel.UserProfileData;
+import com.harvard.userModule.webserviceModelTemp.UserProfileData;
 import com.harvard.utils.AppController;
 
 import java.util.Calendar;
