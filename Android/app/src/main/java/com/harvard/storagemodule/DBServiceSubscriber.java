@@ -18,7 +18,7 @@ import android.content.Context;
 
 import com.harvard.notificationModule.PendingIntents;
 import com.harvard.notificationModule.model.NotificationDb;
-import com.harvard.offlineModuleTemp.model.OfflineData;
+import com.harvard.offlinemodule.model.OfflineData;
 import com.harvard.storagemodule.events.DatabaseEvent;
 import com.harvard.studyAppModule.SurveyActivitiesFragment;
 import com.harvard.studyAppModule.activityBuilder.model.ActivityRun;

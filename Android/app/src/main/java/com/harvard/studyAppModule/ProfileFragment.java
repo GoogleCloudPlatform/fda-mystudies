@@ -21,7 +21,7 @@ import com.google.gson.Gson;
 import com.harvard.AppConfig;
 import com.harvard.R;
 import com.harvard.notificationModule.NotificationModuleSubscriber;
-import com.harvard.offlineModuleTemp.model.OfflineData;
+import com.harvard.offlinemodule.model.OfflineData;
 import com.harvard.passcodemodule.PasscodeSetupActivity;
 import com.harvard.storagemodule.DBServiceSubscriber;
 import com.harvard.usermodule.NewPasscodeSetupActivity;

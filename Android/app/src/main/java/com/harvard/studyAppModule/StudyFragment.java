@@ -23,7 +23,7 @@ import com.google.gson.reflect.TypeToken;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
 import com.harvard.R;
-import com.harvard.offlineModuleTemp.model.OfflineData;
+import com.harvard.offlinemodule.model.OfflineData;
 import com.harvard.storagemodule.DBServiceSubscriber;
 import com.harvard.storagemodule.events.DatabaseEvent;
 import com.harvard.studyAppModule.consent.ConsentBuilder;

@@ -1,4 +1,4 @@
-package com.harvard.offlineModuleTemp.auth;
+package com.harvard.offlinemodule.auth;
 
 import android.content.ContentProvider;
 import android.content.ContentValues;
