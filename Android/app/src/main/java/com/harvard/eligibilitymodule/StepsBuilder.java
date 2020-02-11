@@ -17,16 +17,16 @@ package com.harvard.eligibilitymodule;
 import android.content.Context;
 
 import com.harvard.R;
-import com.harvard.studyAppModule.activitybuilder.model.servicemodel.Steps;
-import com.harvard.studyAppModule.custom.AnswerFormatCustom;
-import com.harvard.studyAppModule.custom.ChoiceAnswerFormatCustom;
-import com.harvard.studyAppModule.custom.QuestionStepCustom;
-import com.harvard.studyAppModule.custom.question.ChoiceCustomImage;
-import com.harvard.studyAppModule.custom.question.ChoiceText;
-import com.harvard.studyAppModule.custom.question.ChoiceTextExclusive;
-import com.harvard.studyAppModule.custom.question.MultiChoiceImageAnswerFormat;
-import com.harvard.studyAppModule.custom.question.MultiChoiceTextAnswerFormat;
-import com.harvard.studyAppModule.custom.question.SingleChoiceTextAnswerFormat;
+import com.harvard.studyAppModuleTemp.activitybuilder.model.servicemodel.Steps;
+import com.harvard.studyAppModuleTemp.custom.AnswerFormatCustom;
+import com.harvard.studyAppModuleTemp.custom.ChoiceAnswerFormatCustom;
+import com.harvard.studyAppModuleTemp.custom.QuestionStepCustom;
+import com.harvard.studyAppModuleTemp.custom.question.ChoiceCustomImage;
+import com.harvard.studyAppModuleTemp.custom.question.ChoiceText;
+import com.harvard.studyAppModuleTemp.custom.question.ChoiceTextExclusive;
+import com.harvard.studyAppModuleTemp.custom.question.MultiChoiceImageAnswerFormat;
+import com.harvard.studyAppModuleTemp.custom.question.MultiChoiceTextAnswerFormat;
+import com.harvard.studyAppModuleTemp.custom.question.SingleChoiceTextAnswerFormat;
 
 import org.researchstack.backbone.answerformat.BooleanAnswerFormat;
 import org.researchstack.backbone.step.InstructionStep;

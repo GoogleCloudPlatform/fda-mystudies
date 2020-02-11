@@ -13,7 +13,7 @@ import com.facebook.stetho.Stetho;
 import com.harvard.notificationmodule.NotificationModuleSubscriber;
 import com.harvard.passcodemodule.PasscodeSetupActivity;
 import com.harvard.storagemodule.DBServiceSubscriber;
-import com.harvard.studyAppModule.StudyModuleSubscriber;
+import com.harvard.studyAppModuleTemp.StudyModuleSubscriber;
 import com.harvard.usermodule.UserModuleSubscriber;
 import com.harvard.usermodule.webservicemodel.UserProfileData;
 import com.harvard.utils.AppController;

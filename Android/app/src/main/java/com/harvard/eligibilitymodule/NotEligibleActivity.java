@@ -21,7 +21,7 @@ import android.widget.TextView;
 
 import com.harvard.R;
 import com.harvard.storagemodule.DBServiceSubscriber;
-import com.harvard.studyAppModule.StudyFragment;
+import com.harvard.studyAppModuleTemp.StudyFragment;
 import com.harvard.usermodule.UserModulePresenter;
 import com.harvard.usermodule.event.UpdatePreferenceEvent;
 import com.harvard.usermodule.webservicemodel.LoginData;

@@ -15,8 +15,8 @@ import android.widget.Toast;
 
 import com.harvard.gatewaymodule.GatewayActivity;
 import com.harvard.offlinemodule.auth.SyncAdapterManager;
-import com.harvard.studyAppModule.StandaloneActivity;
-import com.harvard.studyAppModule.StudyActivity;
+import com.harvard.studyAppModuleTemp.StandaloneActivity;
+import com.harvard.studyAppModuleTemp.StudyActivity;
 import com.harvard.usermodule.NewPasscodeSetupActivity;
 import com.harvard.utils.AppController;
 import com.harvard.utils.SharedPreferenceHelper;

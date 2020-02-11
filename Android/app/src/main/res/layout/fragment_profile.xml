@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:background="@android:color/white"
     android:orientation="vertical"
-    tools:context="com.harvard.studyAppModule.ProfileFragment">
+    tools:context="com.harvard.studyAppModuleTemp.ProfileFragment">
 
     <ScrollView
         android:layout_width="match_parent"

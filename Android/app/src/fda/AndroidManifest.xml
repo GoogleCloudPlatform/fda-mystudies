@@ -27,12 +27,12 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
-        <activity android:name=".studyAppModule.StandaloneStudyInfoActivity"
+        <activity android:name=".studyAppModuleTemp.StandaloneStudyInfoActivity"
                   android:screenOrientation="portrait"
                   android:theme="@style/AppThemeNoActionBar">
         </activity>
         <activity
-            android:name=".studyAppModule.StandaloneActivity"
+            android:name=".studyAppModuleTemp.StandaloneActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppThemeNoActionBar"/>
 
@@ -113,43 +113,43 @@
             android:theme="@style/AppThemeNoActionBar"
             android:windowSoftInputMode="stateHidden"/>
         <activity
-            android:name=".studyAppModule.StudyActivity"
+            android:name=".studyAppModuleTemp.StudyActivity"
             android:configChanges="screenLayout|orientation"
             android:screenOrientation="portrait"
             android:theme="@style/AppThemeNoActionBar"
             android:windowSoftInputMode="stateHidden|adjustNothing"/>
         <activity
-            android:name=".studyAppModule.StudySignInActivity"
+            android:name=".studyAppModuleTemp.StudySignInActivity"
             android:configChanges="screenLayout|orientation"
             android:screenOrientation="portrait"
             android:theme="@style/AppThemeNoActionBar"
             android:windowSoftInputMode="stateHidden"/>
         <activity
-            android:name=".studyAppModule.StudyInfoActivity"
+            android:name=".studyAppModuleTemp.StudyInfoActivity"
             android:configChanges="screenLayout|orientation"
             android:screenOrientation="portrait"
             android:theme="@style/AppThemeNoActionBar"
             android:windowSoftInputMode="stateHidden"/>
         <activity
-            android:name=".studyAppModule.SurveyActivity"
+            android:name=".studyAppModuleTemp.SurveyActivity"
             android:configChanges="screenLayout|orientation"
             android:screenOrientation="portrait"
             android:theme="@style/AppThemeNoActionBar"
             android:windowSoftInputMode="stateHidden"/>
         <activity
-            android:name=".studyAppModule.NotificationActivity"
+            android:name=".studyAppModuleTemp.NotificationActivity"
             android:configChanges="screenLayout|orientation"
             android:screenOrientation="portrait"
             android:theme="@style/AppThemeNoActionBar"
             android:windowSoftInputMode="stateHidden"/>
         <activity
-            android:name=".studyAppModule.ChangePasswordActivity"
+            android:name=".studyAppModuleTemp.ChangePasswordActivity"
             android:configChanges="screenLayout|orientation"
             android:screenOrientation="portrait"
             android:theme="@style/AppThemeNoActionBar"
             android:windowSoftInputMode="stateHidden|adjustPan"/>
         <activity
-            android:name=".studyAppModule.DeleteAccountActivity"
+            android:name=".studyAppModuleTemp.DeleteAccountActivity"
             android:configChanges="screenLayout|orientation"
             android:screenOrientation="portrait"
             android:theme="@style/AppThemeNoActionBar"
@@ -161,7 +161,7 @@
             android:theme="@style/AppThemeNoActionBar"
             android:windowSoftInputMode="stateHidden"/>
         <activity
-            android:name=".studyAppModule.consent.CustomConsentViewTaskActivity"
+            android:name=".studyAppModuleTemp.consent.CustomConsentViewTaskActivity"
             android:configChanges="screenLayout|orientation"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.BackboneApp"
@@ -178,13 +178,13 @@
             android:value="17d66c1b46986f6f6633cc62617443d13b9fbf1d"/>
 
         <activity
-            android:name=".studyAppModule.EligibilityEnrollmentActivity"
+            android:name=".studyAppModuleTemp.EligibilityEnrollmentActivity"
             android:configChanges="screenLayout|orientation"
             android:screenOrientation="portrait"
             android:theme="@style/AppThemeNoActionBar1"
             android:windowSoftInputMode="stateHidden"/>
         <activity
-            android:name=".studyAppModule.activitybuilder.CustomSurveyViewTaskActivity"
+            android:name=".studyAppModuleTemp.activitybuilder.CustomSurveyViewTaskActivity"
             android:configChanges="screenLayout|orientation"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.BackboneApp"
@@ -207,25 +207,25 @@
             android:theme="@style/Theme.BackboneApp"
             android:windowSoftInputMode="stateHidden"/>
         <activity
-            android:name=".studyAppModule.ConsentCompletedActivity"
+            android:name=".studyAppModuleTemp.ConsentCompletedActivity"
             android:configChanges="screenLayout|orientation"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.BackboneApp"
             android:windowSoftInputMode="stateHidden"/>
         <activity
-            android:name=".studyAppModule.ContactUsActivity"
+            android:name=".studyAppModuleTemp.ContactUsActivity"
             android:configChanges="screenLayout|orientation"
             android:screenOrientation="portrait"
             android:theme="@style/AppThemeNoActionBar"
             android:windowSoftInputMode="stateHidden|adjustPan"/>
         <activity
-            android:name=".studyAppModule.FeedbackActivity"
+            android:name=".studyAppModuleTemp.FeedbackActivity"
             android:configChanges="screenLayout|orientation"
             android:screenOrientation="portrait"
             android:theme="@style/AppThemeNoActionBar"
             android:windowSoftInputMode="stateHidden|adjustPan"/>
         <activity
-            android:name=".studyAppModule.EnrollmentValidatedActivity"
+            android:name=".studyAppModuleTemp.EnrollmentValidatedActivity"
             android:configChanges="screenLayout|orientation"
             android:screenOrientation="portrait"
             android:theme="@style/AppThemeNoActionBar"
@@ -239,19 +239,19 @@
             android:value="@integer/google_play_services_version"/>
 
         <activity
-            android:name=".studyAppModule.SurveyCompleteActivity"
+            android:name=".studyAppModuleTemp.SurveyCompleteActivity"
             android:configChanges="screenLayout|orientation"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.BackboneApp"
             android:windowSoftInputMode="stateHidden"/>
         <activity
-            android:name=".studyAppModule.ResourcesWebViewActivity"
+            android:name=".studyAppModuleTemp.ResourcesWebViewActivity"
             android:configChanges="screenLayout|orientation"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.BackboneApp"
             android:windowSoftInputMode="stateHidden"/>
         <activity
-            android:name=".studyAppModule.PDFDisplayActivity"
+            android:name=".studyAppModuleTemp.PDFDisplayActivity"
             android:configChanges="screenLayout|orientation"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.BackboneApp"
@@ -281,13 +281,13 @@
         </service>
 
         <activity
-            android:name=".studyAppModule.ChartActivity"
+            android:name=".studyAppModuleTemp.ChartActivity"
             android:configChanges="screenLayout|orientation"
             android:screenOrientation="portrait"
             android:theme="@style/AppThemeNoActionBar"
             android:windowSoftInputMode="stateHidden"/>
         <activity
-            android:name=".studyAppModule.GatewayResourcesWebViewActivity"
+            android:name=".studyAppModuleTemp.GatewayResourcesWebViewActivity"
             android:configChanges="screenLayout|orientation"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.BackboneApp"
@@ -338,7 +338,7 @@
         <receiver android:name=".utils.AlarmService"/>
 
         <activity
-            android:name=".studyAppModule.FilterActivity"
+            android:name=".studyAppModuleTemp.FilterActivity"
             android:configChanges="screenLayout|orientation"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.BackboneApp"
@@ -375,7 +375,7 @@
             android:theme="@style/Theme.BackboneApp">
         </activity>
         <activity
-            android:name=".studyAppModule.consent.ConsentSharingStepCustom.LoadMoreActivity"
+            android:name=".studyAppModuleTemp.consent.consentsharingstepcustom.LoadMoreActivity"
             android:configChanges="screenLayout|orientation"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.BackboneApp">

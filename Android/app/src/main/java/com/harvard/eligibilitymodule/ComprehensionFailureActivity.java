@@ -24,13 +24,13 @@ import android.widget.TextView;
 import com.harvard.AppConfig;
 import com.harvard.R;
 import com.harvard.storagemodule.DBServiceSubscriber;
-import com.harvard.studyAppModule.ConsentCompletedActivity;
-import com.harvard.studyAppModule.StandaloneActivity;
-import com.harvard.studyAppModule.StudyActivity;
-import com.harvard.studyAppModule.consent.ConsentBuilder;
-import com.harvard.studyAppModule.consent.CustomConsentViewTaskActivity;
-import com.harvard.studyAppModule.consent.model.Consent;
-import com.harvard.studyAppModule.consent.model.EligibilityConsent;
+import com.harvard.studyAppModuleTemp.ConsentCompletedActivity;
+import com.harvard.studyAppModuleTemp.StandaloneActivity;
+import com.harvard.studyAppModuleTemp.StudyActivity;
+import com.harvard.studyAppModuleTemp.consent.ConsentBuilder;
+import com.harvard.studyAppModuleTemp.consent.CustomConsentViewTaskActivity;
+import com.harvard.studyAppModuleTemp.consent.model.Consent;
+import com.harvard.studyAppModuleTemp.consent.model.EligibilityConsent;
 import com.harvard.utils.AppController;
 import com.itextpdf.text.Image;
 import com.itextpdf.text.pdf.PdfPCell;
@@ -43,7 +43,7 @@ import java.util.List;
 
 import io.realm.Realm;
 
-import static com.harvard.studyAppModule.StudyFragment.CONSENT;
+import static com.harvard.studyAppModuleTemp.StudyFragment.CONSENT;
 
 public class ComprehensionFailureActivity extends AppCompatActivity {
 
