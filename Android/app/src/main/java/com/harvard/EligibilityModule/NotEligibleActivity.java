@@ -2,7 +2,6 @@ package com.harvard.EligibilityModule;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
@@ -14,7 +13,7 @@ import com.harvard.userModule.event.UpdatePreferenceEvent;
 import com.harvard.userModule.webserviceModel.LoginData;
 import com.harvard.utils.AppController;
 import com.harvard.utils.URLs;
-import com.harvard.webserviceModule.apiHelper.ApiCall;
+import com.harvard.webserviceModule.apiHelperTemp.ApiCall;
 import com.harvard.webserviceModule.events.RegistrationServerConfigEvent;
 
 import org.json.JSONArray;

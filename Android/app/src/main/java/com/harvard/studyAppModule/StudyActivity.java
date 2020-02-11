@@ -25,7 +25,6 @@ import android.support.v7.widget.AppCompatTextView;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
@@ -51,7 +50,7 @@ import com.harvard.utils.AppController;
 import com.harvard.utils.SetDialogHelper;
 import com.harvard.utils.SharedPreferenceHelper;
 import com.harvard.utils.URLs;
-import com.harvard.webserviceModule.apiHelper.ApiCall;
+import com.harvard.webserviceModule.apiHelperTemp.ApiCall;
 import com.harvard.webserviceModule.events.RegistrationServerConfigEvent;
 
 import java.util.HashMap;

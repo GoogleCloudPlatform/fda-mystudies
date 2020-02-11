@@ -2,7 +2,6 @@ package com.harvard.studyAppModule;
 
 import android.Manifest;
 import android.app.Activity;
-import android.app.DatePickerDialog;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
@@ -25,13 +24,11 @@ import android.support.v7.widget.AppCompatTextView;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.style.ForegroundColorSpan;
-import android.util.Log;
 import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.DatePicker;
 import android.widget.HorizontalScrollView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -56,10 +53,10 @@ import com.harvard.studyAppModule.survayScheduler.model.CompletionAdeherenceCalc
 import com.harvard.userModule.webserviceModel.Studies;
 import com.harvard.utils.AppController;
 import com.harvard.utils.URLs;
-import com.harvard.webserviceModule.apiHelper.ApiCall;
-import com.harvard.webserviceModule.apiHelper.ConnectionDetector;
-import com.harvard.webserviceModule.apiHelper.HttpRequest;
-import com.harvard.webserviceModule.apiHelper.Responsemodel;
+import com.harvard.webserviceModule.apiHelperTemp.ApiCall;
+import com.harvard.webserviceModule.apiHelperTemp.ConnectionDetector;
+import com.harvard.webserviceModule.apiHelperTemp.HttpRequest;
+import com.harvard.webserviceModule.apiHelperTemp.Responsemodel;
 import com.harvard.webserviceModule.events.WCPConfigEvent;
 
 import org.json.JSONArray;

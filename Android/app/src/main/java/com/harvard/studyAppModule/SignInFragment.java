@@ -32,7 +32,6 @@ import com.harvard.userModule.NewPasscodeSetupActivity;
 import com.harvard.userModule.TermsPrivacyPolicyActivity;
 import com.harvard.userModule.UserModulePresenter;
 import com.harvard.userModule.VerificationStepActivity;
-import com.harvard.userModule.event.GetTermsAndConditionEvent;
 import com.harvard.userModule.event.GetUserProfileEvent;
 import com.harvard.userModule.event.LoginEvent;
 import com.harvard.userModule.event.UpdateUserProfileEvent;
@@ -42,9 +41,8 @@ import com.harvard.userModule.webserviceModel.UpdateUserProfileData;
 import com.harvard.userModule.webserviceModel.UserProfileData;
 import com.harvard.utils.AppController;
 import com.harvard.utils.URLs;
-import com.harvard.webserviceModule.apiHelper.ApiCall;
+import com.harvard.webserviceModule.apiHelperTemp.ApiCall;
 import com.harvard.webserviceModule.events.RegistrationServerConfigEvent;
-import com.harvard.webserviceModule.events.WCPConfigEvent;
 
 import org.json.JSONException;
 import org.json.JSONObject;

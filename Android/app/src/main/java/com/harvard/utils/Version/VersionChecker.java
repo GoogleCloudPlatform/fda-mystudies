@@ -9,8 +9,8 @@ import com.google.gson.Gson;
 import com.google.gson.stream.JsonReader;
 import com.harvard.AppConfig;
 import com.harvard.utils.URLs;
-import com.harvard.webserviceModule.apiHelper.HttpRequest;
-import com.harvard.webserviceModule.apiHelper.Responsemodel;
+import com.harvard.webserviceModule.apiHelperTemp.HttpRequest;
+import com.harvard.webserviceModule.apiHelperTemp.Responsemodel;
 
 import java.io.StringReader;
 import java.net.HttpURLConnection;

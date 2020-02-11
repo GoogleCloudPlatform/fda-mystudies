@@ -15,7 +15,7 @@ import com.harvard.studyAppModule.ResponseServerModel.ResponseServerData;
 import com.harvard.studyAppModule.events.VerifyEnrollmentIdEvent;
 import com.harvard.utils.AppController;
 import com.harvard.utils.URLs;
-import com.harvard.webserviceModule.apiHelper.ApiCallResponseServer;
+import com.harvard.webserviceModule.apiHelperTemp.ApiCallResponseServer;
 import com.harvard.webserviceModule.events.ResponseServerConfigEvent;
 
 import java.util.HashMap;

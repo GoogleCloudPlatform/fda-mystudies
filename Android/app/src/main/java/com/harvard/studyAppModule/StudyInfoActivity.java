@@ -47,10 +47,10 @@ import com.harvard.userModule.webserviceModel.Studies;
 import com.harvard.userModule.webserviceModel.StudyData;
 import com.harvard.utils.AppController;
 import com.harvard.utils.URLs;
-import com.harvard.webserviceModule.apiHelper.ApiCall;
-import com.harvard.webserviceModule.apiHelper.ConnectionDetector;
-import com.harvard.webserviceModule.apiHelper.HttpRequest;
-import com.harvard.webserviceModule.apiHelper.Responsemodel;
+import com.harvard.webserviceModule.apiHelperTemp.ApiCall;
+import com.harvard.webserviceModule.apiHelperTemp.ConnectionDetector;
+import com.harvard.webserviceModule.apiHelperTemp.HttpRequest;
+import com.harvard.webserviceModule.apiHelperTemp.Responsemodel;
 import com.harvard.webserviceModule.events.RegistrationServerConfigEvent;
 import com.harvard.webserviceModule.events.WCPConfigEvent;
 
@@ -59,10 +59,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.researchstack.backbone.task.OrderedTask;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.util.HashMap;
 
