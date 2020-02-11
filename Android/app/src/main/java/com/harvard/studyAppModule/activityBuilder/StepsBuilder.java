@@ -1,7 +1,6 @@
 package com.harvard.studyAppModule.activityBuilder;
 
 import android.content.Context;
-import android.util.Log;
 
 import com.harvard.R;
 import com.harvard.studyAppModule.activityBuilder.model.serviceModel.ActivityObj;
@@ -9,7 +8,7 @@ import com.harvard.studyAppModule.activityBuilder.model.serviceModel.Steps;
 import com.harvard.studyAppModule.custom.AnswerFormatCustom;
 import com.harvard.studyAppModule.custom.ChoiceAnswerFormatCustom;
 import com.harvard.studyAppModule.custom.QuestionStepCustom;
-import com.harvard.studyAppModule.custom.activeTask.TappingAnswerFormat;
+import com.harvard.studyAppModule.custom.activeTaskTemp.TappingAnswerFormat;
 import com.harvard.studyAppModule.custom.question.ChoiceCustomImage;
 import com.harvard.studyAppModule.custom.question.ChoiceText;
 import com.harvard.studyAppModule.custom.question.ChoiceTextExclusive;
