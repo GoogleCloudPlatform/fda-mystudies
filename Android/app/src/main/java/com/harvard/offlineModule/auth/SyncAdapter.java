@@ -20,8 +20,8 @@ import com.harvard.userModule.event.UpdatePreferenceEvent;
 import com.harvard.userModule.webserviceModel.LoginData;
 import com.harvard.utils.ActiveTaskService;
 import com.harvard.utils.AppController;
-import com.harvard.webserviceModule.apiHelperTemp.ApiCall;
-import com.harvard.webserviceModule.apiHelperTemp.ApiCallResponseServer;
+import com.harvard.webserviceModule.apihelper.ApiCall;
+import com.harvard.webserviceModule.apihelper.ApiCallResponseServer;
 import com.harvard.webserviceModule.events.RegistrationServerConfigEvent;
 import com.harvard.webserviceModule.events.ResponseServerConfigEvent;
 

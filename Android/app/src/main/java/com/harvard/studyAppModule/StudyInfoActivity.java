@@ -47,10 +47,10 @@ import com.harvard.userModule.webserviceModel.Studies;
 import com.harvard.userModule.webserviceModel.StudyData;
 import com.harvard.utils.AppController;
 import com.harvard.utils.URLs;
-import com.harvard.webserviceModule.apiHelperTemp.ApiCall;
-import com.harvard.webserviceModule.apiHelperTemp.ConnectionDetector;
-import com.harvard.webserviceModule.apiHelperTemp.HttpRequest;
-import com.harvard.webserviceModule.apiHelperTemp.Responsemodel;
+import com.harvard.webserviceModule.apihelper.ApiCall;
+import com.harvard.webserviceModule.apihelper.ConnectionDetector;
+import com.harvard.webserviceModule.apihelper.HttpRequest;
+import com.harvard.webserviceModule.apihelper.Responsemodel;
 import com.harvard.webserviceModule.events.RegistrationServerConfigEvent;
 import com.harvard.webserviceModule.events.WCPConfigEvent;
 

@@ -2,8 +2,8 @@ package com.harvard.webserviceModule;
 
 import com.harvard.R;
 import com.harvard.base.BaseSubscriber;
-import com.harvard.webserviceModule.apiHelperTemp.ApiCall;
-import com.harvard.webserviceModule.apiHelperTemp.ApiCallResponseServer;
+import com.harvard.webserviceModule.apihelper.ApiCall;
+import com.harvard.webserviceModule.apihelper.ApiCallResponseServer;
 import com.harvard.webserviceModule.events.RegistrationServerConfigEvent;
 import com.harvard.webserviceModule.events.ResponseServerConfigEvent;
 import com.harvard.webserviceModule.events.WCPConfigEvent;

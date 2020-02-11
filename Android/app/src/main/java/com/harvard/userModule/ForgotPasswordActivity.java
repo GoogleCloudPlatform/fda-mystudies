@@ -14,7 +14,7 @@ import com.harvard.userModule.event.ForgotPasswordEvent;
 import com.harvard.userModule.webserviceModel.ForgotPasswordData;
 import com.harvard.utils.AppController;
 import com.harvard.utils.URLs;
-import com.harvard.webserviceModule.apiHelperTemp.ApiCall;
+import com.harvard.webserviceModule.apihelper.ApiCall;
 import com.harvard.webserviceModule.events.RegistrationServerConfigEvent;
 
 import java.util.HashMap;
