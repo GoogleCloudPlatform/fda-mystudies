@@ -22,7 +22,7 @@ import com.harvard.AppConfig;
 import com.harvard.R;
 import com.harvard.notificationModule.NotificationModuleSubscriber;
 import com.harvard.offlineModule.model.OfflineData;
-import com.harvard.passcodeModule.PasscodeSetupActivity;
+import com.harvard.passcodeModuleTemp.PasscodeSetupActivity;
 import com.harvard.storagemodule.DBServiceSubscriber;
 import com.harvard.usermodule.NewPasscodeSetupActivity;
 import com.harvard.usermodule.UserModulePresenter;
