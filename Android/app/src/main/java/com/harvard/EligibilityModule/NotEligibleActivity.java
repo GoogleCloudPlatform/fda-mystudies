@@ -13,8 +13,8 @@ import com.harvard.userModule.event.UpdatePreferenceEvent;
 import com.harvard.userModule.webserviceModel.LoginData;
 import com.harvard.utils.AppController;
 import com.harvard.utils.URLs;
-import com.harvard.webserviceModuletemp.apihelper.ApiCall;
-import com.harvard.webserviceModuletemp.events.RegistrationServerConfigEvent;
+import com.harvard.webservicemodule.apihelper.ApiCall;
+import com.harvard.webservicemodule.events.RegistrationServerConfigEvent;
 
 import org.json.JSONArray;
 import org.json.JSONException;

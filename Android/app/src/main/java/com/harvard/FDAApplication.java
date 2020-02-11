@@ -19,7 +19,7 @@ import com.harvard.userModule.webserviceModel.UserProfileData;
 import com.harvard.utils.AppController;
 import com.harvard.utils.AppVisibilityDetector;
 import com.harvard.utils.realm.RealmEncryptionHelper;
-import com.harvard.webserviceModuletemp.WebserviceSubscriber;
+import com.harvard.webservicemodule.WebserviceSubscriber;
 import com.uphyca.stetho_realm.RealmInspectorModulesProvider;
 
 import org.researchstack.backbone.StorageAccess;

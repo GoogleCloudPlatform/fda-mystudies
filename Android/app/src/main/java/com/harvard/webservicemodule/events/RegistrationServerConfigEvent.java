@@ -1,4 +1,4 @@
-package com.harvard.webserviceModuletemp.events;
+package com.harvard.webservicemodule.events;
 
 import android.content.Context;
 

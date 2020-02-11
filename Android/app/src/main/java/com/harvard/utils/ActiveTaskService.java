@@ -24,10 +24,10 @@ import com.harvard.studyAppModule.events.ProcessResponseEvent;
 import com.harvard.userModule.UserModulePresenter;
 import com.harvard.userModule.event.UpdatePreferenceEvent;
 import com.harvard.userModule.webserviceModel.LoginData;
-import com.harvard.webserviceModuletemp.apihelper.ApiCall;
-import com.harvard.webserviceModuletemp.apihelper.ApiCallResponseServer;
-import com.harvard.webserviceModuletemp.events.RegistrationServerConfigEvent;
-import com.harvard.webserviceModuletemp.events.ResponseServerConfigEvent;
+import com.harvard.webservicemodule.apihelper.ApiCall;
+import com.harvard.webservicemodule.apihelper.ApiCallResponseServer;
+import com.harvard.webservicemodule.events.RegistrationServerConfigEvent;
+import com.harvard.webservicemodule.events.ResponseServerConfigEvent;
 
 import org.json.JSONException;
 import org.json.JSONObject;

@@ -22,7 +22,7 @@ import com.github.barteksc.pdfviewer.PDFView;
 import com.github.barteksc.pdfviewer.scroll.DefaultScrollHandle;
 import com.harvard.R;
 import com.harvard.utils.AppController;
-import com.harvard.webserviceModuletemp.apihelper.ConnectionDetector;
+import com.harvard.webservicemodule.apihelper.ConnectionDetector;
 
 import java.io.File;
 import java.io.FileInputStream;

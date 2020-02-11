@@ -14,7 +14,7 @@ import com.harvard.R;
 import com.harvard.studyAppModule.studyModel.Resource;
 import com.harvard.studyAppModule.studyModel.StudyResource;
 import com.harvard.utils.AppController;
-import com.harvard.webserviceModuletemp.apihelper.ApiCall;
+import com.harvard.webservicemodule.apihelper.ApiCall;
 
 import io.realm.RealmList;
 

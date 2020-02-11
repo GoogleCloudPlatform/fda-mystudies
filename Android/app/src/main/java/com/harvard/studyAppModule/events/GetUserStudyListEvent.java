@@ -1,6 +1,6 @@
 package com.harvard.studyAppModule.events;
 
-import com.harvard.webserviceModuletemp.events.WCPConfigEvent;
+import com.harvard.webservicemodule.events.WCPConfigEvent;
 
 /**
  * Created by Rohit on 3/27/2017.

@@ -15,8 +15,8 @@ import com.harvard.studyAppModule.events.ContactUsEvent;
 import com.harvard.studyAppModule.studyModel.ReachOut;
 import com.harvard.utils.AppController;
 import com.harvard.utils.URLs;
-import com.harvard.webserviceModuletemp.apihelper.ApiCall;
-import com.harvard.webserviceModuletemp.events.WCPConfigEvent;
+import com.harvard.webservicemodule.apihelper.ApiCall;
+import com.harvard.webservicemodule.events.WCPConfigEvent;
 
 import java.util.HashMap;
 

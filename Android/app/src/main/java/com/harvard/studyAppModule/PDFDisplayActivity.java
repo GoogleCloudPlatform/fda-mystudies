@@ -27,8 +27,8 @@ import com.harvard.studyAppModule.studyModel.ConsentPdfData;
 import com.harvard.userModule.UserModulePresenter;
 import com.harvard.utils.AppController;
 import com.harvard.utils.URLs;
-import com.harvard.webserviceModuletemp.apihelper.ApiCall;
-import com.harvard.webserviceModuletemp.events.RegistrationServerConfigEvent;
+import com.harvard.webservicemodule.apihelper.ApiCall;
+import com.harvard.webservicemodule.events.RegistrationServerConfigEvent;
 
 import java.io.File;
 import java.io.FileOutputStream;
