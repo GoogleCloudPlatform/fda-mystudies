@@ -28,7 +28,7 @@ import android.widget.Toast;
 import com.harvard.AppConfig;
 import com.harvard.R;
 import com.harvard.notificationModule.NotificationModuleSubscriber;
-import com.harvard.offlineModule.model.OfflineData;
+import com.harvard.offlineModuleTemp.model.OfflineData;
 import com.harvard.storagemodule.DBServiceSubscriber;
 import com.harvard.usermodule.UserModulePresenter;
 import com.harvard.usermodule.event.LogoutEvent;

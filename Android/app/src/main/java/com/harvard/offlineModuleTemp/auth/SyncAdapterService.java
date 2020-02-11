@@ -1,4 +1,4 @@
-package com.harvard.offlineModule.auth;
+package com.harvard.offlineModuleTemp.auth;
 
 import android.app.Service;
 import android.content.Intent;

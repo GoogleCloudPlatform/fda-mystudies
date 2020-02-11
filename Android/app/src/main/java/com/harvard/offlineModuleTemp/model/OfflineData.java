@@ -1,4 +1,4 @@
-package com.harvard.offlineModule.model;
+package com.harvard.offlineModuleTemp.model;
 
 import java.util.Date;
 

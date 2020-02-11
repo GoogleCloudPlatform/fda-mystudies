@@ -14,7 +14,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.widget.Toast;
 
 import com.harvard.gatewayModule.GatewayActivity;
-import com.harvard.offlineModule.auth.SyncAdapterManager;
+import com.harvard.offlineModuleTemp.auth.SyncAdapterManager;
 import com.harvard.studyAppModule.StandaloneActivity;
 import com.harvard.studyAppModule.StudyActivity;
 import com.harvard.usermodule.NewPasscodeSetupActivity;

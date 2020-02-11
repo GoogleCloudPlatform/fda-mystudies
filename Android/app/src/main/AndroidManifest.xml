@@ -302,13 +302,13 @@
         </receiver>
 
         <provider
-            android:name=".offlineModule.auth.StubContentProvider"
-            android:authorities="com.harvard.offlineModule.auth.syncadapterexample.provider"
+            android:name=".offlineModuleTemp.auth.StubContentProvider"
+            android:authorities="com.harvard.offlineModuleTemp.auth.syncadapterexample.provider"
             android:exported="false"
             android:syncable="true"
             tools:replace="android:authorities"/>
 
-        <service android:name=".offlineModule.auth.StubAuthenticatorService">
+        <service android:name=".offlineModuleTemp.auth.StubAuthenticatorService">
             <intent-filter>
                 <action android:name="android.accounts.AccountAuthenticator"/>
             </intent-filter>
@@ -318,7 +318,7 @@
                 android:resource="@xml/authenticator"/>
         </service>
         <service
-            android:name=".offlineModule.auth.SyncAdapterService"
+            android:name=".offlineModuleTemp.auth.SyncAdapterService"
             android:exported="false"
             android:process=":sync">
             <intent-filter>

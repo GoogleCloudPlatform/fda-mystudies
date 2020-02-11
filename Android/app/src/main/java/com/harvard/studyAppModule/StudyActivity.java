@@ -39,7 +39,7 @@ import com.harvard.MyFirebaseMessagingService;
 import com.harvard.R;
 import com.harvard.notificationModule.AlarmReceiver;
 import com.harvard.notificationModule.NotificationModuleSubscriber;
-import com.harvard.offlineModule.model.OfflineData;
+import com.harvard.offlineModuleTemp.model.OfflineData;
 import com.harvard.storagemodule.DBServiceSubscriber;
 import com.harvard.studyAppModule.studyModel.Study;
 import com.harvard.studyAppModule.studyModel.StudyList;

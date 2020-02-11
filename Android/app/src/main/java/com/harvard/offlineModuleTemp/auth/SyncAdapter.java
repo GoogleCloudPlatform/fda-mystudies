@@ -1,4 +1,4 @@
-package com.harvard.offlineModule.auth;
+package com.harvard.offlineModuleTemp.auth;
 
 import android.accounts.Account;
 import android.app.ActivityManager;
@@ -11,7 +11,7 @@ import android.os.Build;
 import android.os.Bundle;
 
 import com.harvard.R;
-import com.harvard.offlineModule.model.OfflineData;
+import com.harvard.offlineModuleTemp.model.OfflineData;
 import com.harvard.storagemodule.DBServiceSubscriber;
 import com.harvard.studyAppModule.StudyModulePresenter;
 import com.harvard.studyAppModule.events.ProcessResponseEvent;

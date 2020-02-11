@@ -17,7 +17,7 @@ import android.support.v4.app.NotificationCompat;
 
 import com.harvard.FDAApplication;
 import com.harvard.R;
-import com.harvard.offlineModule.model.OfflineData;
+import com.harvard.offlineModuleTemp.model.OfflineData;
 import com.harvard.storagemodule.DBServiceSubscriber;
 import com.harvard.studyAppModule.StudyModulePresenter;
 import com.harvard.studyAppModule.events.ProcessResponseEvent;

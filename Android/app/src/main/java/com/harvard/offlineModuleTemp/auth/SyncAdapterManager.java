@@ -1,4 +1,4 @@
-package com.harvard.offlineModule.auth;
+package com.harvard.offlineModuleTemp.auth;
 
 import android.accounts.Account;
 import android.accounts.AccountManager;
