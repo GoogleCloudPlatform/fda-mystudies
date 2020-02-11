@@ -23,7 +23,7 @@ import com.github.barteksc.pdfviewer.PDFView;
 import com.github.barteksc.pdfviewer.scroll.DefaultScrollHandle;
 import com.harvard.R;
 import com.harvard.storagemodule.DBServiceSubscriber;
-import com.harvard.studyAppModule.ResponseServerModelTemp.ResponseServerData;
+import com.harvard.studyAppModule.responseservermodel.ResponseServerData;
 import com.harvard.studyAppModule.consent.model.EligibilityConsent;
 import com.harvard.studyAppModule.events.EnrollIdEvent;
 import com.harvard.studyAppModule.events.GetUserStudyListEvent;

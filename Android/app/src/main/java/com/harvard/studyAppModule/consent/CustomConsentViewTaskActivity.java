@@ -27,7 +27,7 @@ import com.harvard.eligibilitymodule.ComprehensionFailureActivity;
 import com.harvard.eligibilitymodule.ComprehensionSuccessActivity;
 import com.harvard.R;
 import com.harvard.storagemodule.DBServiceSubscriber;
-import com.harvard.studyAppModule.ResponseServerModelTemp.ResponseServerData;
+import com.harvard.studyAppModule.responseservermodel.ResponseServerData;
 import com.harvard.studyAppModule.StudyFragment;
 import com.harvard.studyAppModule.StudyModulePresenter;
 import com.harvard.studyAppModule.consent.model.ComprehensionCorrectAnswers;

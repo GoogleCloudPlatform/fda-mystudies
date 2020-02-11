@@ -12,20 +12,52 @@
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package com.harvard.studyAppModule.ResponseServerModelTemp;
+package com.harvard.studyAppModule.responseservermodel;
+
+import java.util.ArrayList;
 
 /**
- * Created by Naveen Raj on 05/02/2017.
+ * Created by Naveen Raj on 03/28/2017.
  */
 
-public class Data {
-    private String appToken;
+public class ResponseServerData {
+    private ArrayList<Errors> errors;
 
-    public String getAppToken() {
-        return appToken;
+    private String exception;
+
+    private boolean success;
+
+    private Data data;
+
+    public Data getData() {
+        return data;
     }
 
-    public void setAppToken(String appToken) {
-        this.appToken = appToken;
+    public void setData(Data data) {
+        this.data = data;
+    }
+
+    public ArrayList<Errors> getErrors() {
+        return errors;
+    }
+
+    public void setErrors(ArrayList<Errors> errors) {
+        this.errors = errors;
+    }
+
+    public String getException() {
+        return exception;
+    }
+
+    public void setException(String exception) {
+        this.exception = exception;
+    }
+
+    public boolean isSuccess() {
+        return success;
+    }
+
+    public void setSuccess(boolean success) {
+        this.success = success;
     }
 }
