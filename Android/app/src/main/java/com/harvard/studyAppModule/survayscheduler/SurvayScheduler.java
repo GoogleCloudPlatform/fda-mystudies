@@ -12,7 +12,7 @@
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package com.harvard.studyAppModule.survaySchedulerTemp;
+package com.harvard.studyAppModule.survayscheduler;
 
 import android.content.Context;
 
@@ -24,8 +24,8 @@ import com.harvard.studyAppModule.SurveyActivitiesFragment;
 import com.harvard.studyAppModule.activityBuilder.model.ActivityRun;
 import com.harvard.studyAppModule.acvitityListModel.ActivitiesWS;
 import com.harvard.studyAppModule.acvitityListModel.ActivityListData;
-import com.harvard.studyAppModule.survaySchedulerTemp.model.ActivityStatus;
-import com.harvard.studyAppModule.survaySchedulerTemp.model.CompletionAdeherenceCalc;
+import com.harvard.studyAppModule.survayscheduler.model.ActivityStatus;
+import com.harvard.studyAppModule.survayscheduler.model.CompletionAdeherenceCalc;
 import com.harvard.usermodule.webservicemodel.Activities;
 import com.harvard.usermodule.webservicemodel.ActivityData;
 import com.harvard.usermodule.webservicemodel.StudyData;

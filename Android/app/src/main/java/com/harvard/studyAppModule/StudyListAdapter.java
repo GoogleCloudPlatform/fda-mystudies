@@ -18,7 +18,7 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.harvard.R;
 import com.harvard.studyAppModule.studyModel.StudyList;
-import com.harvard.studyAppModule.survaySchedulerTemp.model.CompletionAdeherenceCalc;
+import com.harvard.studyAppModule.survayscheduler.model.CompletionAdeherenceCalc;
 import com.harvard.utils.AppController;
 
 import java.util.ArrayList;
