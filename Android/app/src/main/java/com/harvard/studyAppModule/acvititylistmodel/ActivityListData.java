@@ -12,42 +12,66 @@
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package com.harvard.studyAppModule.acvitityListModelTemp;
+package com.harvard.studyAppModule.acvititylistmodel;
 
+
+import io.realm.RealmList;
 import io.realm.RealmObject;
+import io.realm.annotations.PrimaryKey;
 
 /**
  * Created by Naveen Raj on 04/06/2017.
  */
 
-public class QuestionInfo  extends RealmObject {
-    private String activityId;
+public class ActivityListData  extends RealmObject {
+    private String message;
 
-    private String activityVersion;
+    private String withdrawalConfig;
 
-    private String key;
+    private AnchorDate anchorDate;
 
-    public String getActivityId() {
-        return activityId;
+    @PrimaryKey
+    private String studyId;
+
+    private RealmList<ActivitiesWS> activities = new RealmList<>();
+
+    public String getStudyId() {
+        return studyId;
     }
 
-    public void setActivityId(String activityId) {
-        this.activityId = activityId;
+    public void setStudyId(String studyId) {
+        this.studyId = studyId;
     }
 
-    public String getActivityVersion() {
-        return activityVersion;
+    public String getMessage() {
+        return message;
     }
 
-    public void setActivityVersion(String activityVersion) {
-        this.activityVersion = activityVersion;
+    public void setMessage(String message) {
+        this.message = message;
     }
 
-    public String getKey() {
-        return key;
+    public String getWithdrawalConfig() {
+        return withdrawalConfig;
     }
 
-    public void setKey(String key) {
-        this.key = key;
+    public void setWithdrawalConfig(String withdrawalConfig) {
+        this.withdrawalConfig = withdrawalConfig;
+    }
+
+    public AnchorDate getAnchorDate() {
+        return anchorDate;
+    }
+
+    public void setAnchorDate(AnchorDate anchorDate) {
+        this.anchorDate = anchorDate;
+    }
+
+    public RealmList<ActivitiesWS> getActivities() {
+        return activities;
+    }
+
+    public void setActivities(RealmList<ActivitiesWS> activities) {
+        this.activities = activities;
     }
 }

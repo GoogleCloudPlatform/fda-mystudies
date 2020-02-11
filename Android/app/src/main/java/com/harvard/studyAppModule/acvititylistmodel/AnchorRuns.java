@@ -12,32 +12,39 @@
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package com.harvard.studyAppModule.acvitityListModelTemp;
+package com.harvard.studyAppModule.acvititylistmodel;
 
 import io.realm.RealmObject;
 
-/**
- * Created by Naveen Raj on 04/06/2017.
- */
+public class AnchorRuns extends RealmObject {
 
-public class AnchorDate  extends RealmObject {
-    private QuestionInfo questionInfo;
+    private int startDays;
 
-    private String type;
+    private int endDays;
 
-    public QuestionInfo getQuestionInfo() {
-        return questionInfo;
+    private String time;
+
+    public int getStartDays() {
+        return startDays;
     }
 
-    public void setQuestionInfo(QuestionInfo questionInfo) {
-        this.questionInfo = questionInfo;
+    public void setStartDays(int startDays) {
+        this.startDays = startDays;
     }
 
-    public String getType() {
-        return type;
+    public int getEndDays() {
+        return endDays;
     }
 
-    public void setType(String type) {
-        this.type = type;
+    public void setEndDays(int endDays) {
+        this.endDays = endDays;
+    }
+
+    public String getTime() {
+        return time;
+    }
+
+    public void setTime(String time) {
+        this.time = time;
     }
 }

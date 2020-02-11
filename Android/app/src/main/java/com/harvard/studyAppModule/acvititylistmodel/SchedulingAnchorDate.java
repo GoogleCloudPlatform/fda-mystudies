@@ -12,39 +12,68 @@
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package com.harvard.studyAppModule.acvitityListModelTemp;
+package com.harvard.studyAppModule.acvititylistmodel;
 
 import io.realm.RealmObject;
 
-public class AnchorRuns extends RealmObject {
+public class SchedulingAnchorDate extends RealmObject {
+    private String sourceType;
 
-    private int startDays;
+    private String sourceActivityId;
 
-    private int endDays;
+    private String sourceKey;
 
-    private String time;
+    private String sourceFormKey;
 
-    public int getStartDays() {
-        return startDays;
+    public String getSourceFormKey() {
+        return sourceFormKey;
     }
 
-    public void setStartDays(int startDays) {
-        this.startDays = startDays;
+    public void setSourceFormKey(String sourceFormKey) {
+        this.sourceFormKey = sourceFormKey;
     }
 
-    public int getEndDays() {
-        return endDays;
+    private SchedulingAnchorDateStart start;
+
+    private SchedulingAnchorDateEnd end;
+
+    public String getSourceType() {
+        return sourceType;
     }
 
-    public void setEndDays(int endDays) {
-        this.endDays = endDays;
+    public void setSourceType(String sourceType) {
+        this.sourceType = sourceType;
     }
 
-    public String getTime() {
-        return time;
+    public String getSourceActivityId() {
+        return sourceActivityId;
     }
 
-    public void setTime(String time) {
-        this.time = time;
+    public void setSourceActivityId(String sourceActivityId) {
+        this.sourceActivityId = sourceActivityId;
+    }
+
+    public String getSourceKey() {
+        return sourceKey;
+    }
+
+    public void setSourceKey(String sourceKey) {
+        this.sourceKey = sourceKey;
+    }
+
+    public SchedulingAnchorDateStart getStart() {
+        return start;
+    }
+
+    public void setStart(SchedulingAnchorDateStart start) {
+        this.start = start;
+    }
+
+    public SchedulingAnchorDateEnd getEnd() {
+        return end;
+    }
+
+    public void setEnd(SchedulingAnchorDateEnd end) {
+        this.end = end;
     }
 }
