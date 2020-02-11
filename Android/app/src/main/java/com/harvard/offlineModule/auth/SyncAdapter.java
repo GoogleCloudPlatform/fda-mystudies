@@ -17,7 +17,7 @@ import com.harvard.studyAppModule.StudyModulePresenter;
 import com.harvard.studyAppModule.events.ProcessResponseEvent;
 import com.harvard.userModule.UserModulePresenter;
 import com.harvard.userModule.event.UpdatePreferenceEvent;
-import com.harvard.userModule.webserviceModelTemp.LoginData;
+import com.harvard.userModule.webservicemodel.LoginData;
 import com.harvard.utils.ActiveTaskService;
 import com.harvard.utils.AppController;
 import com.harvard.webservicemodule.apihelper.ApiCall;

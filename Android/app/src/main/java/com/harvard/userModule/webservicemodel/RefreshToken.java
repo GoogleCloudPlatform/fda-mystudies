@@ -12,38 +12,60 @@
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package com.harvard.userModule.webserviceModelTemp;
+package com.harvard.userModule.webservicemodel;
 
 /**
- * Created by Rohit on 3/2/2017.
+ * Created by Naveen Raj on 09/13/2017.
  */
 
-public class Info {
-    private String os;
-    private String appVersion;
-    private String deviceToken;
+public class RefreshToken {
+    private String message;
 
-    public String getOs() {
-        return os;
+    private String verified;
+
+    private String userId;
+
+    private String refreshToken;
+
+    private String auth;
+
+    public String getMessage() {
+        return message;
     }
 
-    public void setOs(String os) {
-        this.os = os;
+    public void setMessage(String message) {
+        this.message = message;
     }
 
-    public String getAppVersion() {
-        return appVersion;
+    public String getVerified() {
+        return verified;
     }
 
-    public void setAppVersion(String appVersion) {
-        this.appVersion = appVersion;
+    public void setVerified(String verified) {
+        this.verified = verified;
     }
 
-    public String getDeviceToken() {
-        return deviceToken;
+    public String getUserId() {
+        return userId;
     }
 
-    public void setDeviceToken(String deviceToken) {
-        this.deviceToken = deviceToken;
+    public void setUserId(String userId) {
+        this.userId = userId;
+    }
+
+    public String getRefreshToken() {
+        return refreshToken;
+    }
+
+    public void setRefreshToken(String refreshToken) {
+        this.refreshToken = refreshToken;
+    }
+
+    public String getAuth() {
+        return auth;
+    }
+
+    public void setAuth(String auth) {
+        this.auth = auth;
     }
 }

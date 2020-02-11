@@ -12,56 +12,31 @@
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package com.harvard.userModule.webserviceModelTemp;
+package com.harvard.userModule.webservicemodel;
+
+import java.util.ArrayList;
 
 /**
- * Created by Rohit on 3/1/2017.
+ * Created by Rohit on 3/2/2017.
  */
 
-public class RegistrationData {
-    private String auth;
-    private boolean verified;
-    private String message;
-    private String userId;
-    private String refreshToken;
+public class UpdateUserPreferenceData {
+    private ArrayList<PreferenceStudy> preferenceStudies;
+    private ArrayList<PreferenceActivity> preferenceActivities;
 
-    public String getRefreshToken() {
-        return refreshToken;
+    public ArrayList<PreferenceStudy> getPreferenceStudies() {
+        return preferenceStudies;
     }
 
-    public void setRefreshToken(String refreshToken) {
-        this.refreshToken = refreshToken;
+    public void setPreferenceStudies(ArrayList<PreferenceStudy> preferenceStudies) {
+        this.preferenceStudies = preferenceStudies;
     }
 
-    public String getAuth() {
-        return auth;
+    public ArrayList<PreferenceActivity> getPreferenceActivities() {
+        return preferenceActivities;
     }
 
-    public void setAuth(String auth) {
-        this.auth = auth;
-    }
-
-    public boolean isVerified() {
-        return verified;
-    }
-
-    public void setVerified(boolean verified) {
-        this.verified = verified;
-    }
-
-    public String getMessage() {
-        return message;
-    }
-
-    public void setMessage(String message) {
-        this.message = message;
-    }
-
-    public String getUserId() {
-        return userId;
-    }
-
-    public void setUserId(String userId) {
-        this.userId = userId;
+    public void setPreferenceActivities(ArrayList<PreferenceActivity> preferenceActivities) {
+        this.preferenceActivities = preferenceActivities;
     }
 }

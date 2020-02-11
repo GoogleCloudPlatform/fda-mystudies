@@ -12,37 +12,28 @@
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package com.harvard.userModule.webserviceModelTemp;
+package com.harvard.userModule.webservicemodel;
 
-import io.realm.RealmObject;
-import io.realm.annotations.PrimaryKey;
+import java.util.ArrayList;
 
 /**
  * Created by Rohit on 3/2/2017.
  */
 
-public class UserProfileData extends RealmObject {
-
-    @PrimaryKey
-    private int id = 1;
-    private String message;
+public class UpdateProfileRequestData {
+    private ProfileUpdate profile;
     private Settings settings;
-    private Profile profile;
+    private Info info;
 
-    public int getId() {
-        return id;
+
+    private ArrayList<ParticipentInfo> participantInfo;
+
+    public ProfileUpdate getProfileUpdate() {
+        return profile;
     }
 
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public String getMessage() {
-        return message;
-    }
-
-    public void setMessage(String message) {
-        this.message = message;
+    public void setProfileUpdate(ProfileUpdate profile) {
+        this.profile = profile;
     }
 
     public Settings getSettings() {
@@ -53,11 +44,19 @@ public class UserProfileData extends RealmObject {
         this.settings = settings;
     }
 
-    public Profile getProfile() {
-        return profile;
+    public Info getInfo() {
+        return info;
     }
 
-    public void setProfile(Profile profile) {
-        this.profile = profile;
+    public void setInfo(Info info) {
+        this.info = info;
+    }
+
+    public ArrayList<ParticipentInfo> getParticipantInfo() {
+        return participantInfo;
+    }
+
+    public void setParticipantInfo(ArrayList<ParticipentInfo> participantInfo) {
+        this.participantInfo = participantInfo;
     }
 }

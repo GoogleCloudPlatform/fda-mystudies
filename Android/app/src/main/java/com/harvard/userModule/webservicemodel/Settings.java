@@ -12,65 +12,58 @@
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package com.harvard.userModule.webserviceModelTemp;
+package com.harvard.userModule.webservicemodel;
+
+import io.realm.RealmObject;
 
 /**
- * Created by Rohit on 3/1/2017.
+ * Created by Rohit on 3/2/2017.
  */
 
-public class LoginData {
-    private String auth;
-    private boolean verified;
-    private String message;
-    private String userId;
-    private String refreshToken;
-    private boolean resetPassword = false;
+public class Settings extends RealmObject {
+    private boolean localNotifications;
+    private boolean remoteNotifications;
+    private boolean passcode;
+    private String reminderLeadTime;
+    private boolean touchId;
 
-    public boolean getResetPassword() {
-        return resetPassword;
+    public boolean isLocalNotifications() {
+        return localNotifications;
     }
 
-    public void setResetPassword(boolean resetPassword) {
-        this.resetPassword = resetPassword;
+    public void setLocalNotifications(boolean localNotifications) {
+        this.localNotifications = localNotifications;
     }
 
-    public String getAuth() {
-        return auth;
+    public boolean isRemoteNotifications() {
+        return remoteNotifications;
     }
 
-    public String getRefreshToken() {
-        return refreshToken;
+    public void setRemoteNotifications(boolean remoteNotifications) {
+        this.remoteNotifications = remoteNotifications;
     }
 
-    public void setRefreshToken(String refreshToken) {
-        this.refreshToken = refreshToken;
+    public boolean isPasscode() {
+        return passcode;
     }
 
-    public void setAuth(String auth) {
-        this.auth = auth;
+    public void setPasscode(boolean passcode) {
+        this.passcode = passcode;
     }
 
-    public void setVerified(boolean verified) {
-        this.verified = verified;
+    public String getRemindersTime() {
+        return reminderLeadTime;
     }
 
-    public String getMessage() {
-        return message;
+    public void setRemindersTime(String remindersTime) {
+        this.reminderLeadTime = remindersTime;
     }
 
-    public void setMessage(String message) {
-        this.message = message;
+    public boolean isTouchId() {
+        return touchId;
     }
 
-    public boolean isVerified() {
-        return verified;
-    }
-
-    public String getUserId() {
-        return userId;
-    }
-
-    public void setUserId(String userId) {
-        this.userId = userId;
+    public void setTouchId(boolean touchId) {
+        this.touchId = touchId;
     }
 }

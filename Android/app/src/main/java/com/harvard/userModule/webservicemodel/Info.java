@@ -12,40 +12,38 @@
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package com.harvard.userModule.webserviceModelTemp;
-
-import io.realm.RealmObject;
+package com.harvard.userModule.webservicemodel;
 
 /**
  * Created by Rohit on 3/2/2017.
  */
 
-public class Profile extends RealmObject {
-    private String emailId;
-    private String firstName;
-    private String lastName;
+public class Info {
+    private String os;
+    private String appVersion;
+    private String deviceToken;
 
-    public String getEmailId() {
-        return emailId;
+    public String getOs() {
+        return os;
     }
 
-    public void setEmailId(String emailId) {
-        this.emailId = emailId;
+    public void setOs(String os) {
+        this.os = os;
     }
 
-    public String getFirstName() {
-        return firstName;
+    public String getAppVersion() {
+        return appVersion;
     }
 
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
+    public void setAppVersion(String appVersion) {
+        this.appVersion = appVersion;
     }
 
-    public String getLastName() {
-        return lastName;
+    public String getDeviceToken() {
+        return deviceToken;
     }
 
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
+    public void setDeviceToken(String deviceToken) {
+        this.deviceToken = deviceToken;
     }
 }

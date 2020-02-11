@@ -23,7 +23,7 @@ import com.google.gson.Gson;
 import com.google.gson.stream.JsonReader;
 import com.harvard.R;
 import com.harvard.studyAppModule.activityBuilder.model.serviceModel.ActivityInfoData;
-import com.harvard.userModule.webserviceModelTemp.RefreshToken;
+import com.harvard.userModule.webservicemodel.RefreshToken;
 import com.harvard.utils.AppController;
 import com.harvard.utils.URLs;
 

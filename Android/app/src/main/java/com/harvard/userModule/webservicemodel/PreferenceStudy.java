@@ -12,53 +12,16 @@
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package com.harvard.userModule.webserviceModelTemp;
-
-import io.realm.RealmObject;
+package com.harvard.userModule.webservicemodel;
 
 /**
- * Created by Naveen Raj on 03/24/2017.
+ * Created by Rohit on 3/2/2017.
  */
 
-public class Activities extends RealmObject {
-//    @PrimaryKey
-    private String activityId;
-
-    private String activityVersion;
-
+public class PreferenceStudy {
     private String studyId;
-
-    private String activityState;
-
-    private String activityRunId;
-
+    private String status;
     private String bookmarked;
-
-    private ActivityRunPreference activityRun;
-
-    public ActivityRunPreference getActivityRun() {
-        return activityRun;
-    }
-
-    public void setActivityRun(ActivityRunPreference activityRun) {
-        this.activityRun = activityRun;
-    }
-
-    public String getActivityId() {
-        return activityId;
-    }
-
-    public void setActivityId(String activityId) {
-        this.activityId = activityId;
-    }
-
-    public String getActivityVersion() {
-        return activityVersion;
-    }
-
-    public void setActivityVersion(String activityVersion) {
-        this.activityVersion = activityVersion;
-    }
 
     public String getStudyId() {
         return studyId;
@@ -69,19 +32,11 @@ public class Activities extends RealmObject {
     }
 
     public String getStatus() {
-        return activityState;
+        return status;
     }
 
     public void setStatus(String status) {
-        this.activityState = status;
-    }
-
-    public String getActivityRunId() {
-        return activityRunId;
-    }
-
-    public void setActivityRunId(String activityRunId) {
-        this.activityRunId = activityRunId;
+        this.status = status;
     }
 
     public String getBookmarked() {

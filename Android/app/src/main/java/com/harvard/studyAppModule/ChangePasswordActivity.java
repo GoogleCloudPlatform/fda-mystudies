@@ -17,7 +17,7 @@ import com.harvard.R;
 import com.harvard.userModule.UserModulePresenter;
 import com.harvard.userModule.VerificationStepActivity;
 import com.harvard.userModule.event.ChangePasswordEvent;
-import com.harvard.userModule.webserviceModelTemp.ChangePasswordData;
+import com.harvard.userModule.webservicemodel.ChangePasswordData;
 import com.harvard.utils.AppController;
 import com.harvard.utils.SharedPreferenceHelper;
 import com.harvard.utils.URLs;

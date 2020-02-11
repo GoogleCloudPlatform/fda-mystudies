@@ -12,20 +12,40 @@
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package com.harvard.userModule.webserviceModelTemp;
+package com.harvard.userModule.webservicemodel;
+
+import io.realm.RealmObject;
 
 /**
- * Created by Rohit on 3/2/2017.
+ * Created by Rohit on 5/4/2017.
  */
 
-public class ForgotPasswordData {
-    private String message;
+public class ActivityRunPreference extends RealmObject {
+    private int total;
+    private int missed;
+    private int completed;
 
-    public String getMessage() {
-        return message;
+    public int getTotal() {
+        return total;
     }
 
-    public void setMessage(String message) {
-        this.message = message;
+    public void setTotal(int total) {
+        this.total = total;
+    }
+
+    public int getMissed() {
+        return missed;
+    }
+
+    public void setMissed(int missed) {
+        this.missed = missed;
+    }
+
+    public int getCompleted() {
+        return completed;
+    }
+
+    public void setCompleted(int completed) {
+        this.completed = completed;
     }
 }

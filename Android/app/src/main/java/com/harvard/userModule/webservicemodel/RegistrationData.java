@@ -12,51 +12,56 @@
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package com.harvard.userModule.webserviceModelTemp;
-
-import java.util.ArrayList;
+package com.harvard.userModule.webservicemodel;
 
 /**
- * Created by Rohit on 3/2/2017.
+ * Created by Rohit on 3/1/2017.
  */
 
-public class UpdateProfileRequestData {
-    private ProfileUpdate profile;
-    private Settings settings;
-    private Info info;
+public class RegistrationData {
+    private String auth;
+    private boolean verified;
+    private String message;
+    private String userId;
+    private String refreshToken;
 
-
-    private ArrayList<ParticipentInfo> participantInfo;
-
-    public ProfileUpdate getProfileUpdate() {
-        return profile;
+    public String getRefreshToken() {
+        return refreshToken;
     }
 
-    public void setProfileUpdate(ProfileUpdate profile) {
-        this.profile = profile;
+    public void setRefreshToken(String refreshToken) {
+        this.refreshToken = refreshToken;
     }
 
-    public Settings getSettings() {
-        return settings;
+    public String getAuth() {
+        return auth;
     }
 
-    public void setSettings(Settings settings) {
-        this.settings = settings;
+    public void setAuth(String auth) {
+        this.auth = auth;
     }
 
-    public Info getInfo() {
-        return info;
+    public boolean isVerified() {
+        return verified;
     }
 
-    public void setInfo(Info info) {
-        this.info = info;
+    public void setVerified(boolean verified) {
+        this.verified = verified;
     }
 
-    public ArrayList<ParticipentInfo> getParticipantInfo() {
-        return participantInfo;
+    public String getMessage() {
+        return message;
     }
 
-    public void setParticipantInfo(ArrayList<ParticipentInfo> participantInfo) {
-        this.participantInfo = participantInfo;
+    public void setMessage(String message) {
+        this.message = message;
+    }
+
+    public String getUserId() {
+        return userId;
+    }
+
+    public void setUserId(String userId) {
+        this.userId = userId;
     }
 }

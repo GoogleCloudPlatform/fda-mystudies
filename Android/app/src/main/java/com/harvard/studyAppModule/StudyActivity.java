@@ -45,7 +45,7 @@ import com.harvard.studyAppModule.studyModel.Study;
 import com.harvard.studyAppModule.studyModel.StudyList;
 import com.harvard.userModule.UserModulePresenter;
 import com.harvard.userModule.event.LogoutEvent;
-import com.harvard.userModule.webserviceModelTemp.LoginData;
+import com.harvard.userModule.webservicemodel.LoginData;
 import com.harvard.utils.AppController;
 import com.harvard.utils.SetDialogHelper;
 import com.harvard.utils.SharedPreferenceHelper;

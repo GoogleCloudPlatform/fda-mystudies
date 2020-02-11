@@ -12,20 +12,34 @@
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package com.harvard.userModule.webserviceModelTemp;
+package com.harvard.userModule.webservicemodel;
+
+import io.realm.RealmList;
+import io.realm.RealmObject;
+import io.realm.annotations.PrimaryKey;
 
 /**
- * Created by Rohit on 3/2/2017.
+ * Created by Rohit on 5/4/2017.
  */
 
-public class UpdatePreferenceResponseData {
-    private String message;
+public class StudyData extends RealmObject {
+    @PrimaryKey
+    private String userId;
+    private RealmList<Studies> studies;
 
-    public String getMessage() {
-        return message;
+    public String getUserId() {
+        return userId;
     }
 
-    public void setMessage(String message) {
-        this.message = message;
+    public void setUserId(String userId) {
+        this.userId = userId;
+    }
+
+    public RealmList<Studies> getStudies() {
+        return studies;
+    }
+
+    public void setStudies(RealmList<Studies> studies) {
+        this.studies = studies;
     }
 }

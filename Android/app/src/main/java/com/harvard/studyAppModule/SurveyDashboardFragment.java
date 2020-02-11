@@ -50,7 +50,7 @@ import com.harvard.studyAppModule.studyModel.ResponseInfoActiveTaskModel;
 import com.harvard.studyAppModule.studyModel.Statistics;
 import com.harvard.studyAppModule.survayScheduler.SurvayScheduler;
 import com.harvard.studyAppModule.survayScheduler.model.CompletionAdeherenceCalc;
-import com.harvard.userModule.webserviceModelTemp.Studies;
+import com.harvard.userModule.webservicemodel.Studies;
 import com.harvard.utils.AppController;
 import com.harvard.utils.URLs;
 import com.harvard.webservicemodule.apihelper.ApiCall;

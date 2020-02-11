@@ -12,9 +12,9 @@ import com.harvard.studyAppModule.acvitityListModel.ActivitiesWS;
 import com.harvard.studyAppModule.acvitityListModel.ActivityListData;
 import com.harvard.studyAppModule.survayScheduler.model.ActivityStatus;
 import com.harvard.studyAppModule.survayScheduler.model.CompletionAdeherenceCalc;
-import com.harvard.userModule.webserviceModelTemp.Activities;
-import com.harvard.userModule.webserviceModelTemp.ActivityData;
-import com.harvard.userModule.webserviceModelTemp.StudyData;
+import com.harvard.userModule.webservicemodel.Activities;
+import com.harvard.userModule.webservicemodel.ActivityData;
+import com.harvard.userModule.webservicemodel.StudyData;
 import com.harvard.utils.AppController;
 
 import java.text.ParseException;

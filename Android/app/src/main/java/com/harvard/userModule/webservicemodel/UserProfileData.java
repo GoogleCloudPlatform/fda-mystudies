@@ -12,40 +12,52 @@
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package com.harvard.userModule.webserviceModelTemp;
+package com.harvard.userModule.webservicemodel;
 
 import io.realm.RealmObject;
+import io.realm.annotations.PrimaryKey;
 
 /**
- * Created by Rohit on 5/4/2017.
+ * Created by Rohit on 3/2/2017.
  */
 
-public class ActivityRunPreference extends RealmObject {
-    private int total;
-    private int missed;
-    private int completed;
+public class UserProfileData extends RealmObject {
 
-    public int getTotal() {
-        return total;
+    @PrimaryKey
+    private int id = 1;
+    private String message;
+    private Settings settings;
+    private Profile profile;
+
+    public int getId() {
+        return id;
     }
 
-    public void setTotal(int total) {
-        this.total = total;
+    public void setId(int id) {
+        this.id = id;
     }
 
-    public int getMissed() {
-        return missed;
+    public String getMessage() {
+        return message;
     }
 
-    public void setMissed(int missed) {
-        this.missed = missed;
+    public void setMessage(String message) {
+        this.message = message;
     }
 
-    public int getCompleted() {
-        return completed;
+    public Settings getSettings() {
+        return settings;
     }
 
-    public void setCompleted(int completed) {
-        this.completed = completed;
+    public void setSettings(Settings settings) {
+        this.settings = settings;
+    }
+
+    public Profile getProfile() {
+        return profile;
+    }
+
+    public void setProfile(Profile profile) {
+        this.profile = profile;
     }
 }

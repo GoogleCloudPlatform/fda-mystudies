@@ -12,30 +12,14 @@
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package com.harvard.userModule.webserviceModelTemp;
-
-import io.realm.RealmList;
-import io.realm.RealmObject;
-import io.realm.annotations.PrimaryKey;
+package com.harvard.userModule.webservicemodel;
 
 /**
- * Created by Rohit on 5/4/2017.
+ * Created by Rohit on 3/2/2017.
  */
 
-public class ActivityData extends RealmObject {
-
-    @PrimaryKey
-    private String studyId;
+public class ForgotPasswordData {
     private String message;
-    private RealmList<Activities> activities;
-
-    public String getStudyId() {
-        return studyId;
-    }
-
-    public void setStudyId(String studyId) {
-        this.studyId = studyId;
-    }
 
     public String getMessage() {
         return message;
@@ -43,13 +27,5 @@ public class ActivityData extends RealmObject {
 
     public void setMessage(String message) {
         this.message = message;
-    }
-
-    public RealmList<Activities> getActivities() {
-        return activities;
-    }
-
-    public void setActivities(RealmList<Activities> activities) {
-        this.activities = activities;
     }
 }

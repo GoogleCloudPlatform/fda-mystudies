@@ -12,34 +12,38 @@
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package com.harvard.userModule.webserviceModelTemp;
-
-import io.realm.RealmList;
-import io.realm.RealmObject;
-import io.realm.annotations.PrimaryKey;
+package com.harvard.userModule.webservicemodel;
 
 /**
- * Created by Rohit on 5/4/2017.
+ * Created by Rohit on 3/2/2017.
  */
 
-public class StudyData extends RealmObject {
-    @PrimaryKey
-    private String userId;
-    private RealmList<Studies> studies;
+public class ParticipentInfo {
+    private String studyId;
+    private String participantId;
+    private String appToken;
 
-    public String getUserId() {
-        return userId;
+    public String getStudyId() {
+        return studyId;
     }
 
-    public void setUserId(String userId) {
-        this.userId = userId;
+    public void setStudyId(String studyId) {
+        this.studyId = studyId;
     }
 
-    public RealmList<Studies> getStudies() {
-        return studies;
+    public String getParticipantId() {
+        return participantId;
     }
 
-    public void setStudies(RealmList<Studies> studies) {
-        this.studies = studies;
+    public void setParticipantId(String participantId) {
+        this.participantId = participantId;
+    }
+
+    public String getAppToken() {
+        return appToken;
+    }
+
+    public void setAppToken(String appToken) {
+        this.appToken = appToken;
     }
 }

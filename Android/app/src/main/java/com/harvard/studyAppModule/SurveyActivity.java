@@ -32,7 +32,7 @@ import com.harvard.offlineModule.model.OfflineData;
 import com.harvard.storageModule.DBServiceSubscriber;
 import com.harvard.userModule.UserModulePresenter;
 import com.harvard.userModule.event.LogoutEvent;
-import com.harvard.userModule.webserviceModelTemp.LoginData;
+import com.harvard.userModule.webservicemodel.LoginData;
 import com.harvard.utils.AppController;
 import com.harvard.utils.SharedPreferenceHelper;
 import com.harvard.utils.URLs;

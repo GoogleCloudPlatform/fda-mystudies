@@ -12,20 +12,56 @@
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package com.harvard.userModule.webserviceModelTemp;
+package com.harvard.userModule.webservicemodel;
 
 /**
  * Created by Rohit on 3/2/2017.
  */
 
-public class UpdateUserProfileData {
-    private String message;
+public class PreferenceActivity {
+    private String activityId;
+    private String studyId;
+    private String activityVersion;
+    private String status;
+    private String bookmarked;
 
-    public String getMessage() {
-        return message;
+    public String getActivityId() {
+        return activityId;
     }
 
-    public void setMessage(String message) {
-        this.message = message;
+    public void setActivityId(String activityId) {
+        this.activityId = activityId;
+    }
+
+    public String getStudyId() {
+        return studyId;
+    }
+
+    public void setStudyId(String studyId) {
+        this.studyId = studyId;
+    }
+
+    public String getActivityVersion() {
+        return activityVersion;
+    }
+
+    public void setActivityVersion(String activityVersion) {
+        this.activityVersion = activityVersion;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    public String getBookmarked() {
+        return bookmarked;
+    }
+
+    public void setBookmarked(String bookmarked) {
+        this.bookmarked = bookmarked;
     }
 }

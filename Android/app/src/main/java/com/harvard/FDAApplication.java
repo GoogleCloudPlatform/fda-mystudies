@@ -15,7 +15,7 @@ import com.harvard.passcodeModule.PasscodeSetupActivity;
 import com.harvard.storageModule.DBServiceSubscriber;
 import com.harvard.studyAppModule.StudyModuleSubscriber;
 import com.harvard.userModule.UserModuleSubscriber;
-import com.harvard.userModule.webserviceModelTemp.UserProfileData;
+import com.harvard.userModule.webservicemodel.UserProfileData;
 import com.harvard.utils.AppController;
 import com.harvard.utils.AppVisibilityDetector;
 import com.harvard.utils.realm.RealmEncryptionHelper;

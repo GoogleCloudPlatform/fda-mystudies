@@ -12,16 +12,64 @@
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package com.harvard.userModule.webserviceModelTemp;
+package com.harvard.userModule.webservicemodel;
+
+import io.realm.RealmObject;
+import io.realm.annotations.PrimaryKey;
 
 /**
- * Created by Rohit on 3/2/2017.
+ * Created by Naveen Raj on 03/24/2017.
  */
 
-public class PreferenceStudy {
+public class Studies extends RealmObject {
+    @PrimaryKey
     private String studyId;
+
     private String status;
-    private String bookmarked;
+
+    private String enrolledDate;
+
+    private boolean bookmarked;
+
+    private String participantId;
+
+    private int completion;
+
+    private int adherence;
+
+    private String version;
+
+    public String getVersion() {
+        return version;
+    }
+
+    public void setVersion(String version) {
+        this.version = version;
+    }
+
+    public int getCompletion() {
+        return completion;
+    }
+
+    public void setCompletion(int completion) {
+        this.completion = completion;
+    }
+
+    public int getAdherence() {
+        return adherence;
+    }
+
+    public void setAdherence(int adherence) {
+        this.adherence = adherence;
+    }
+
+    public String getParticipantId() {
+        return participantId;
+    }
+
+    public void setParticipantId(String participantId) {
+        this.participantId = participantId;
+    }
 
     public String getStudyId() {
         return studyId;
@@ -39,11 +87,19 @@ public class PreferenceStudy {
         this.status = status;
     }
 
-    public String getBookmarked() {
+    public String getEnrolledDate() {
+        return enrolledDate;
+    }
+
+    public void setEnrolledDate(String enrolledDate) {
+        this.enrolledDate = enrolledDate;
+    }
+
+    public boolean isBookmarked() {
         return bookmarked;
     }
 
-    public void setBookmarked(String bookmarked) {
+    public void setBookmarked(boolean bookmarked) {
         this.bookmarked = bookmarked;
     }
 }

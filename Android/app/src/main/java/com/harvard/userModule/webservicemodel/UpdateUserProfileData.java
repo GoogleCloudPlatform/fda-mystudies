@@ -12,31 +12,20 @@
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package com.harvard.userModule.webserviceModelTemp;
-
-import java.util.ArrayList;
+package com.harvard.userModule.webservicemodel;
 
 /**
  * Created by Rohit on 3/2/2017.
  */
 
-public class UpdateUserPreferenceData {
-    private ArrayList<PreferenceStudy> preferenceStudies;
-    private ArrayList<PreferenceActivity> preferenceActivities;
+public class UpdateUserProfileData {
+    private String message;
 
-    public ArrayList<PreferenceStudy> getPreferenceStudies() {
-        return preferenceStudies;
+    public String getMessage() {
+        return message;
     }
 
-    public void setPreferenceStudies(ArrayList<PreferenceStudy> preferenceStudies) {
-        this.preferenceStudies = preferenceStudies;
-    }
-
-    public ArrayList<PreferenceActivity> getPreferenceActivities() {
-        return preferenceActivities;
-    }
-
-    public void setPreferenceActivities(ArrayList<PreferenceActivity> preferenceActivities) {
-        this.preferenceActivities = preferenceActivities;
+    public void setMessage(String message) {
+        this.message = message;
     }
 }
