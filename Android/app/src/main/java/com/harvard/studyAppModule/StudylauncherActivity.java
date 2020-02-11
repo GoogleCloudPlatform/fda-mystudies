@@ -14,7 +14,7 @@ import com.google.gson.internal.LinkedTreeMap;
 import com.harvard.R;
 import com.harvard.storagemodule.DBServiceSubscriber;
 import com.harvard.studyAppModule.activityBuilder.model.serviceModel.ActivityObj;
-import com.harvard.studyAppModule.custom.ResultTemp.StepRecordCustom;
+import com.harvard.studyAppModule.custom.result.StepRecordCustom;
 import com.harvard.utils.AppController;
 
 import org.json.JSONArray;

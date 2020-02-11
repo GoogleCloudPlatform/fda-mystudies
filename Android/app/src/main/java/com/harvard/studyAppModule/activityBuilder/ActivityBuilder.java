@@ -5,7 +5,7 @@ import android.content.Context;
 import com.harvard.storagemodule.DBServiceSubscriber;
 import com.harvard.studyAppModule.activityBuilder.model.serviceModel.ActivityObj;
 import com.harvard.studyAppModule.activityBuilder.model.serviceModel.Steps;
-import com.harvard.studyAppModule.custom.ResultTemp.StepRecordCustom;
+import com.harvard.studyAppModule.custom.result.StepRecordCustom;
 import com.harvard.utils.AppController;
 
 import org.researchstack.backbone.result.StepResult;
