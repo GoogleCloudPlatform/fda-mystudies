@@ -20,7 +20,7 @@ import com.harvard.studyAppModule.StudyActivity;
 import com.harvard.userModule.NewPasscodeSetupActivity;
 import com.harvard.utils.AppController;
 import com.harvard.utils.SharedPreferenceHelper;
-import com.harvard.utils.Version.VersionChecker;
+import com.harvard.utils.Versiontemp.VersionChecker;
 
 import io.fabric.sdk.android.services.common.CommonUtils;
 
