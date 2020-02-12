@@ -33,10 +33,10 @@ import android.view.MenuItem;
 import android.view.inputmethod.InputMethodManager;
 
 import com.harvard.R;
-import com.harvard.studyAppModuleTemp.activitybuilder.model.Eligibility;
-import com.harvard.studyAppModuleTemp.activitybuilder.model.servicemodel.ActivityObj;
-import com.harvard.studyAppModuleTemp.consent.model.CorrectAnswers;
-import com.harvard.studyAppModuleTemp.custom.StepSwitcherCustom;
+import com.harvard.studyappmodule.activitybuilder.model.Eligibility;
+import com.harvard.studyappmodule.activitybuilder.model.servicemodel.ActivityObj;
+import com.harvard.studyappmodule.consent.model.CorrectAnswers;
+import com.harvard.studyappmodule.custom.StepSwitcherCustom;
 import com.harvard.utils.AppController;
 
 import org.researchstack.backbone.result.StepResult;

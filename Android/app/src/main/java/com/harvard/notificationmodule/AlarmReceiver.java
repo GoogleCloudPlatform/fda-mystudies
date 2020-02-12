@@ -30,9 +30,9 @@ import com.harvard.AppConfig;
 import com.harvard.FDAApplication;
 import com.harvard.R;
 import com.harvard.storagemodule.DBServiceSubscriber;
-import com.harvard.studyAppModuleTemp.NotificationActivity;
-import com.harvard.studyAppModuleTemp.StandaloneActivity;
-import com.harvard.studyAppModuleTemp.StudyActivity;
+import com.harvard.studyappmodule.NotificationActivity;
+import com.harvard.studyappmodule.StandaloneActivity;
+import com.harvard.studyappmodule.StudyActivity;
 import com.harvard.usermodule.webservicemodel.UserProfileData;
 import com.harvard.utils.AppController;
 

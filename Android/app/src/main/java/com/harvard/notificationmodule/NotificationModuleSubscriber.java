@@ -23,11 +23,11 @@ import android.os.Build;
 import com.harvard.R;
 import com.harvard.notificationmodule.model.NotificationDb;
 import com.harvard.storagemodule.DBServiceSubscriber;
-import com.harvard.studyAppModuleTemp.activitybuilder.model.ActivityRun;
-import com.harvard.studyAppModuleTemp.acvititylistmodel.ActivitiesWS;
-import com.harvard.studyAppModuleTemp.studymodel.NotificationDbResources;
-import com.harvard.studyAppModuleTemp.studymodel.PendingIntentsResources;
-import com.harvard.studyAppModuleTemp.survayscheduler.SurvayScheduler;
+import com.harvard.studyappmodule.activitybuilder.model.ActivityRun;
+import com.harvard.studyappmodule.acvititylistmodel.ActivitiesWS;
+import com.harvard.studyappmodule.studymodel.NotificationDbResources;
+import com.harvard.studyappmodule.studymodel.PendingIntentsResources;
+import com.harvard.studyappmodule.survayscheduler.SurvayScheduler;
 import com.harvard.utils.AppController;
 
 import java.text.SimpleDateFormat;

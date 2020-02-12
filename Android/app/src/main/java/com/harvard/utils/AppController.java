@@ -26,8 +26,8 @@ import com.harvard.SplashActivity;
 import com.harvard.notificationmodule.NotificationModuleSubscriber;
 import com.harvard.offlinemodule.model.OfflineData;
 import com.harvard.storagemodule.DBServiceSubscriber;
-import com.harvard.studyAppModuleTemp.StandaloneActivity;
-import com.harvard.studyAppModuleTemp.StudyActivity;
+import com.harvard.studyappmodule.StandaloneActivity;
+import com.harvard.studyappmodule.StudyActivity;
 import com.harvard.utils.realm.RealmEncryptionHelper;
 
 import java.io.ByteArrayInputStream;

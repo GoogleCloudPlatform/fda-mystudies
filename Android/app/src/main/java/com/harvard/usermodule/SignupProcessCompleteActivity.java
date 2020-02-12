@@ -23,8 +23,8 @@ import android.view.View;
 
 import com.harvard.AppConfig;
 import com.harvard.R;
-import com.harvard.studyAppModuleTemp.StandaloneActivity;
-import com.harvard.studyAppModuleTemp.StudyActivity;
+import com.harvard.studyappmodule.StandaloneActivity;
+import com.harvard.studyappmodule.StudyActivity;
 import com.harvard.utils.AppController;
 
 public class SignupProcessCompleteActivity extends AppCompatActivity {

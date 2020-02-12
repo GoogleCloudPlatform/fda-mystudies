@@ -24,14 +24,14 @@ import android.widget.TextView;
 import com.harvard.AppConfig;
 import com.harvard.R;
 import com.harvard.storagemodule.DBServiceSubscriber;
-import com.harvard.studyAppModuleTemp.ConsentCompletedActivity;
-import com.harvard.studyAppModuleTemp.StandaloneActivity;
-import com.harvard.studyAppModuleTemp.StudyActivity;
-import com.harvard.studyAppModuleTemp.StudyFragment;
-import com.harvard.studyAppModuleTemp.consent.ConsentBuilder;
-import com.harvard.studyAppModuleTemp.consent.CustomConsentViewTaskActivity;
-import com.harvard.studyAppModuleTemp.consent.model.Consent;
-import com.harvard.studyAppModuleTemp.consent.model.EligibilityConsent;
+import com.harvard.studyappmodule.ConsentCompletedActivity;
+import com.harvard.studyappmodule.StandaloneActivity;
+import com.harvard.studyappmodule.StudyActivity;
+import com.harvard.studyappmodule.StudyFragment;
+import com.harvard.studyappmodule.consent.ConsentBuilder;
+import com.harvard.studyappmodule.consent.CustomConsentViewTaskActivity;
+import com.harvard.studyappmodule.consent.model.Consent;
+import com.harvard.studyappmodule.consent.model.EligibilityConsent;
 import com.harvard.usermodule.UserModulePresenter;
 import com.harvard.usermodule.event.UpdatePreferenceEvent;
 import com.harvard.usermodule.webservicemodel.LoginData;
@@ -54,7 +54,7 @@ import java.util.List;
 
 import io.realm.Realm;
 
-import static com.harvard.studyAppModuleTemp.StudyFragment.CONSENT;
+import static com.harvard.studyappmodule.StudyFragment.CONSENT;
 
 public class EligibleActivity extends AppCompatActivity implements ApiCall.OnAsyncRequestComplete {
 

@@ -16,8 +16,8 @@ package com.harvard.usermodule;
 
 import com.harvard.FDAEventBus;
 import com.harvard.base.BaseSubscriber;
-import com.harvard.studyAppModuleTemp.events.ConsentPDFEvent;
-import com.harvard.studyAppModuleTemp.events.DeleteAccountEvent;
+import com.harvard.studyappmodule.events.ConsentPDFEvent;
+import com.harvard.studyappmodule.events.DeleteAccountEvent;
 import com.harvard.usermodule.event.ChangePasswordEvent;
 import com.harvard.usermodule.event.DeleteAccountRegServerEvent;
 import com.harvard.usermodule.event.DeleteAccountResServerEvent;
