@@ -17,54 +17,55 @@ package com.harvard.studyappmodule.studymodel;
 import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;
 
-/**
- * Created by Rohit on 2/28/2017.
- */
-
 public class ConsentPDF extends RealmObject {
-    private String message;
+  private String message;
 
-    private String sharing;
+  private String sharing;
 
-    @PrimaryKey
-    private String studyId;
+  @PrimaryKey private String studyId;
 
-    private ConsentData consent;
+  private ConsentData consent;
 
-    public String getStudyId() {
-        return studyId;
-    }
+  public String getStudyId() {
+    return studyId;
+  }
 
-    public void setStudyId(String studyId) {
-        this.studyId = studyId;
-    }
+  public void setStudyId(String studyId) {
+    this.studyId = studyId;
+  }
 
-    public String getMessage() {
-        return message;
-    }
+  public String getMessage() {
+    return message;
+  }
 
-    public void setMessage(String message) {
-        this.message = message;
-    }
+  public void setMessage(String message) {
+    this.message = message;
+  }
 
-    public String getSharing() {
-        return sharing;
-    }
+  public String getSharing() {
+    return sharing;
+  }
 
-    public void setSharing(String sharing) {
-        this.sharing = sharing;
-    }
+  public void setSharing(String sharing) {
+    this.sharing = sharing;
+  }
 
-    public ConsentData getConsent() {
-        return consent;
-    }
+  public ConsentData getConsent() {
+    return consent;
+  }
 
-    public void setConsent(ConsentData consent) {
-        this.consent = consent;
-    }
+  public void setConsent(ConsentData consent) {
+    this.consent = consent;
+  }
 
-    @Override
-    public String toString() {
-        return "ClassPojo [message = " + message + ", sharing = " + sharing + ", consent = " + consent + "]";
-    }
+  @Override
+  public String toString() {
+    return "ClassPojo [message = "
+        + message
+        + ", sharing = "
+        + sharing
+        + ", consent = "
+        + consent
+        + "]";
+  }
 }

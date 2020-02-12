@@ -16,50 +16,41 @@ package com.harvard.studyappmodule.studymodel;
 
 import io.realm.RealmObject;
 
-/**
- * Created by Rohit on 2/28/2017.
- */
-
 public class Filter extends RealmObject {
-    private StudyStatus studyStatus;
-    private ParticipationStatus participationStatus;
-    private boolean bookmarked;
-    private Categories categories;
+  private StudyStatus studyStatus;
+  private ParticipationStatus participationStatus;
+  private boolean bookmarked;
+  private Categories categories;
 
+  public StudyStatus getStudyStatus() {
+    return studyStatus;
+  }
 
+  public void setStudyStatus(StudyStatus studyStatus) {
+    this.studyStatus = studyStatus;
+  }
 
-    public StudyStatus getStudyStatus() {
-        return studyStatus;
-    }
+  public ParticipationStatus getParticipationStatus() {
+    return participationStatus;
+  }
 
-    public void setStudyStatus(StudyStatus studyStatus) {
-        this.studyStatus = studyStatus;
-    }
+  public void setParticipationStatus(ParticipationStatus participationStatus) {
+    this.participationStatus = participationStatus;
+  }
 
-    public ParticipationStatus getParticipationStatus() {
-        return participationStatus;
-    }
+  public Categories getCategories() {
+    return categories;
+  }
 
-    public void setParticipationStatus(ParticipationStatus participationStatus) {
-        this.participationStatus = participationStatus;
-    }
+  public void setCategories(Categories categories) {
+    this.categories = categories;
+  }
 
-    public Categories getCategories() {
-        return categories;
-    }
+  public boolean isBookmarked() {
+    return bookmarked;
+  }
 
-    public void setCategories(Categories categories) {
-        this.categories = categories;
-    }
-
-
-    public boolean isBookmarked() {
-        return bookmarked;
-    }
-
-    public void setBookmarked(boolean bookmarked) {
-        this.bookmarked = bookmarked;
-    }
-
-
+  public void setBookmarked(boolean bookmarked) {
+    this.bookmarked = bookmarked;
+  }
 }

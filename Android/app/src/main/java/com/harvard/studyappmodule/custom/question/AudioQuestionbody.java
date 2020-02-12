@@ -20,117 +20,108 @@ import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.Toast;
-
 import com.harvard.R;
 import com.harvard.studyappmodule.custom.QuestionStepCustom;
-
+import com.harvard.utils.Logger;
+import java.io.IOException;
+import java.util.Random;
 import org.researchstack.backbone.result.StepResult;
 import org.researchstack.backbone.step.Step;
 import org.researchstack.backbone.ui.step.body.BodyAnswer;
 import org.researchstack.backbone.ui.step.body.StepBody;
 
-import java.io.IOException;
-import java.util.Random;
-
-/**
- * Created by Naveen Raj on 11/14/2016.
- */
 public class AudioQuestionbody implements StepBody {
-    //-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
+  private StepResult<String> result;
+  private MediaRecorder mediaRecorder;
+  private boolean next;
+  // -*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
+  // View Fields
+  // -*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
+  private String audioSavePathInDevice = null;
+
+  public AudioQuestionbody(Step step, StepResult result) {
+    // -*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
     // Constructor Fields
-    //-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
-    private QuestionStepCustom step;
-    private StepResult<String> result;
-    MediaRecorder mediaRecorder;
-    boolean next;
-    //-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
-    // View Fields
-    //-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
-    private EditText editText;
-    String AudioSavePathInDevice = null;
+    // -*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
+    QuestionStepCustom step1 = (QuestionStepCustom) step;
+    this.result = result == null ? new StepResult<>(step1) : result;
+  }
 
-    public AudioQuestionbody(Step step, StepResult result) {
-        this.step = (QuestionStepCustom) step;
-        this.result = result == null ? new StepResult<>(this.step) : result;
+  @Override
+  public View getBodyView(int viewType, final LayoutInflater inflater, ViewGroup parent) {
+    LinearLayout linearLayout = new LinearLayout(inflater.getContext());
+    linearLayout.setOrientation(LinearLayout.VERTICAL);
+    Toast.makeText(inflater.getContext(), R.string.recording, Toast.LENGTH_SHORT).show();
+    audioSavePathInDevice =
+        Environment.getExternalStorageDirectory().getAbsolutePath()
+            + "/FDA/"
+            + CreateRandomAudioFileName(5)
+            + ".3gp";
+    MediaRecorderReady();
+
+    try {
+      mediaRecorder.prepare();
+      mediaRecorder.start();
+      next = false;
+    } catch (IllegalStateException | IOException e) {
+      Logger.log(e);
     }
 
-    @Override
-    public View getBodyView(int viewType, final LayoutInflater inflater, ViewGroup parent) {
-        LinearLayout linearLayout = new LinearLayout(inflater.getContext());
-        linearLayout.setOrientation(LinearLayout.VERTICAL);
-        Toast.makeText(inflater.getContext(), R.string.recording, Toast.LENGTH_SHORT).show();
-        AudioSavePathInDevice = Environment.getExternalStorageDirectory().getAbsolutePath() + "/FDA/" + CreateRandomAudioFileName(5) + ".3gp";
-        MediaRecorderReady();
+    Handler handler = new Handler();
+    handler.postDelayed(
+        new Runnable() {
+          public void run() {
+            next = true;
+            Toast.makeText(inflater.getContext(), R.string.stopping, Toast.LENGTH_SHORT).show();
+            mediaRecorder.stop();
+            mediaRecorder.release();
+            // Actions to do after 10 seconds
+          }
+        },
+        10000);
 
-        try {
-            mediaRecorder.prepare();
-            mediaRecorder.start();
-            next = false;
-        } catch (IllegalStateException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        } catch (IOException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
+    return linearLayout;
+  }
 
-        Handler handler = new Handler();
-        handler.postDelayed(new Runnable() {
-            public void run() {
-                next = true;
-                Toast.makeText(inflater.getContext(), R.string.stopping, Toast.LENGTH_SHORT).show();
-                mediaRecorder.stop();
-                mediaRecorder.release();
-                // Actions to do after 10 seconds
-            }
-        }, 10000);
-
-
-        return linearLayout;
+  @Override
+  public StepResult getStepResult(boolean skipped) {
+    if (skipped) {
+      result.setResult(null);
+    } else {
+      result.setResult("" + audioSavePathInDevice);
     }
+    return result;
+  }
 
-
-    @Override
-    public StepResult getStepResult(boolean skipped) {
-        if (skipped) {
-            result.setResult(null);
-        } else {
-            result.setResult("" + AudioSavePathInDevice);
-        }
-        return result;
+  @Override
+  public BodyAnswer getBodyAnswerState() {
+    if (next) {
+      return BodyAnswer.VALID;
     }
+    return BodyAnswer.INVALID;
+  }
 
-    @Override
-    public BodyAnswer getBodyAnswerState() {
-        if (next) {
-            return BodyAnswer.VALID;
-        }
-        return BodyAnswer.INVALID;
+  private void MediaRecorderReady() {
+    mediaRecorder = new MediaRecorder();
+    mediaRecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
+    mediaRecorder.setOutputFormat(MediaRecorder.OutputFormat.THREE_GPP);
+    mediaRecorder.setAudioEncoder(MediaRecorder.OutputFormat.AMR_NB);
+    mediaRecorder.setOutputFile(audioSavePathInDevice);
+  }
+
+  private String CreateRandomAudioFileName(int string) {
+    Random random = new Random();
+    String RandomAudioFileName = "ABCDEFGHIJKLMNOP";
+    StringBuilder stringBuilder = new StringBuilder(string);
+    int i = 0;
+    while (i < string) {
+      stringBuilder.append(
+          RandomAudioFileName.charAt(random.nextInt(RandomAudioFileName.length())));
+
+      i++;
     }
-
-    public void MediaRecorderReady() {
-        mediaRecorder = new MediaRecorder();
-        mediaRecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
-        mediaRecorder.setOutputFormat(MediaRecorder.OutputFormat.THREE_GPP);
-        mediaRecorder.setAudioEncoder(MediaRecorder.OutputFormat.AMR_NB);
-        mediaRecorder.setOutputFile(AudioSavePathInDevice);
-    }
-
-    public String CreateRandomAudioFileName(int string) {
-        Random random = new Random();
-        String RandomAudioFileName = "ABCDEFGHIJKLMNOP";
-        StringBuilder stringBuilder = new StringBuilder(string);
-        int i = 0;
-        while (i < string) {
-            stringBuilder.append(RandomAudioFileName.
-                    charAt(random.nextInt(RandomAudioFileName.length())));
-
-            i++;
-        }
-        return stringBuilder.toString();
-    }
-
+    return stringBuilder.toString();
+  }
 }

@@ -14,41 +14,36 @@
 
 package com.harvard.studyappmodule.studymodel;
 
-import java.io.Serializable;
-
 import io.realm.RealmList;
 import io.realm.RealmObject;
+import java.io.Serializable;
 
-/**
- * Created by Rohit on 5/5/2017.
- */
+public class ChartSetting extends RealmObject implements Serializable {
+  private String barColor;
+  private int numberOfPoints;
+  private RealmList<ChartPointValues> pointValues;
 
-public class ChartSetting extends RealmObject implements Serializable{
-    private String barColor;
-    private int numberOfPoints;
-    private RealmList<ChartPointValues> pointValues;
+  public String getBarColor() {
+    return barColor;
+  }
 
-    public String getBarColor() {
-        return barColor;
-    }
+  public void setBarColor(String barColor) {
+    this.barColor = barColor;
+  }
 
-    public void setBarColor(String barColor) {
-        this.barColor = barColor;
-    }
+  public int getNumberOfPoints() {
+    return numberOfPoints;
+  }
 
-    public int getNumberOfPoints() {
-        return numberOfPoints;
-    }
+  public void setNumberOfPoints(int numberOfPoints) {
+    this.numberOfPoints = numberOfPoints;
+  }
 
-    public void setNumberOfPoints(int numberOfPoints) {
-        this.numberOfPoints = numberOfPoints;
-    }
+  public RealmList<ChartPointValues> getPointValues() {
+    return pointValues;
+  }
 
-    public RealmList<ChartPointValues> getPointValues() {
-        return pointValues;
-    }
-
-    public void setPointValues(RealmList<ChartPointValues> pointValues) {
-        this.pointValues = pointValues;
-    }
+  public void setPointValues(RealmList<ChartPointValues> pointValues) {
+    this.pointValues = pointValues;
+  }
 }

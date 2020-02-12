@@ -29,62 +29,56 @@ import com.harvard.usermodule.event.UpdatePreferenceEvent;
 import com.harvard.usermodule.event.UpdateUserProfileEvent;
 import com.harvard.usermodule.event.VerifyUserEvent;
 
-/**
- * Created by Rohit on 2/20/2017.
- */
-
 public class UserModulePresenter {
-    public void performLogin(LoginEvent loginEvent) {
-        FDAEventBus.postEvent(loginEvent);
-    }
+  public void performLogin(LoginEvent loginEvent) {
+    FDAEventBus.postEvent(loginEvent);
+  }
 
-    public void performRegistration(RegisterUserEvent registerUserEvent) {
-        FDAEventBus.postEvent(registerUserEvent);
-    }
+  public void performRegistration(RegisterUserEvent registerUserEvent) {
+    FDAEventBus.postEvent(registerUserEvent);
+  }
 
-    public void performVerifyRegistration(VerifyUserEvent verifyUserEvent) {
-        FDAEventBus.postEvent(verifyUserEvent);
-    }
+  void performVerifyRegistration(VerifyUserEvent verifyUserEvent) {
+    FDAEventBus.postEvent(verifyUserEvent);
+  }
 
-    public void performForgotPassword(ForgotPasswordEvent forgotPasswordEvent) {
-        FDAEventBus.postEvent(forgotPasswordEvent);
-    }
+  void performForgotPassword(ForgotPasswordEvent forgotPasswordEvent) {
+    FDAEventBus.postEvent(forgotPasswordEvent);
+  }
 
-    public void performChangePassword(ChangePasswordEvent changePasswordEvent) {
-        FDAEventBus.postEvent(changePasswordEvent);
-    }
+  public void performChangePassword(ChangePasswordEvent changePasswordEvent) {
+    FDAEventBus.postEvent(changePasswordEvent);
+  }
 
-    public void performGetUserProfile(GetUserProfileEvent getUserProfileEvent) {
-        FDAEventBus.postEvent(getUserProfileEvent);
-    }
+  public void performGetUserProfile(GetUserProfileEvent getUserProfileEvent) {
+    FDAEventBus.postEvent(getUserProfileEvent);
+  }
 
-    public void performUpdateUserProfile(UpdateUserProfileEvent updateUserProfileEvent) {
-        FDAEventBus.postEvent(updateUserProfileEvent);
-    }
+  public void performUpdateUserProfile(UpdateUserProfileEvent updateUserProfileEvent) {
+    FDAEventBus.postEvent(updateUserProfileEvent);
+  }
 
-    public void performUpdateUserPreference(UpdatePreferenceEvent updatePreferenceEvent) {
-        FDAEventBus.postEvent(updatePreferenceEvent);
-    }
+  public void performUpdateUserPreference(UpdatePreferenceEvent updatePreferenceEvent) {
+    FDAEventBus.postEvent(updatePreferenceEvent);
+  }
 
-    public void performGetUserPreference(GetPreferenceEvent getPreferenceEvent) {
-        FDAEventBus.postEvent(getPreferenceEvent);
-    }
+  public void performGetUserPreference(GetPreferenceEvent getPreferenceEvent) {
+    FDAEventBus.postEvent(getPreferenceEvent);
+  }
 
-    public void performLogout(LogoutEvent logoutEvent) {
-        FDAEventBus.postEvent(logoutEvent);
-    }
+  public void performLogout(LogoutEvent logoutEvent) {
+    FDAEventBus.postEvent(logoutEvent);
+  }
 
-    public void performDeleteAccount(DeleteAccountEvent deleteAccountEvent) {
-        FDAEventBus.postEvent(deleteAccountEvent);
-    }
+  public void performDeleteAccount(DeleteAccountEvent deleteAccountEvent) {
+    FDAEventBus.postEvent(deleteAccountEvent);
+  }
 
-    public void performResendEmail(ResendEmailEvent resendEmailEvent) {
-        FDAEventBus.postEvent(resendEmailEvent);
-    }
+  void performResendEmail(ResendEmailEvent resendEmailEvent) {
+    FDAEventBus.postEvent(resendEmailEvent);
+  }
 
-    public void performConsentPDF(ConsentPDFEvent consentPDFEvent) {
-        FDAEventBus.postEvent(consentPDFEvent);
-    }
-
-
+  public void performConsentPDF(ConsentPDFEvent consentPDFEvent) {
+    FDAEventBus.postEvent(consentPDFEvent);
+  }
 }

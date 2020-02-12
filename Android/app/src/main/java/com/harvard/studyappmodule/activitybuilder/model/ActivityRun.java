@@ -14,67 +14,62 @@
 
 package com.harvard.studyappmodule.activitybuilder.model;
 
+import io.realm.RealmObject;
 import java.util.Date;
 
-import io.realm.RealmObject;
+public class ActivityRun extends RealmObject {
+  private int runId;
+  private Date startDate;
+  private Date endDate;
+  private String activityId;
+  private String studyId;
+  private boolean isCompleted;
 
-/**
- * Created by Rohit on 4/13/2017.
- */
+  public int getRunId() {
+    return runId;
+  }
 
-public class ActivityRun  extends RealmObject {
-    private int runId;
-    private Date startDate;
-    private Date endDate;
-    private String activityId;
-    private String studyId;
-    private boolean isCompleted;
+  public void setRunId(int runId) {
+    this.runId = runId;
+  }
 
-    public int getRunId() {
-        return runId;
-    }
+  public Date getStartDate() {
+    return startDate;
+  }
 
-    public void setRunId(int runId) {
-        this.runId = runId;
-    }
+  public void setStartDate(Date startDate) {
+    this.startDate = startDate;
+  }
 
-    public Date getStartDate() {
-        return startDate;
-    }
+  public Date getEndDate() {
+    return endDate;
+  }
 
-    public void setStartDate(Date startDate) {
-        this.startDate = startDate;
-    }
+  public void setEndDate(Date endDate) {
+    this.endDate = endDate;
+  }
 
-    public Date getEndDate() {
-        return endDate;
-    }
+  public String getActivityId() {
+    return activityId;
+  }
 
-    public void setEndDate(Date endDate) {
-        this.endDate = endDate;
-    }
+  public void setActivityId(String activityId) {
+    this.activityId = activityId;
+  }
 
-    public String getActivityId() {
-        return activityId;
-    }
+  public String getStudyId() {
+    return studyId;
+  }
 
-    public void setActivityId(String activityId) {
-        this.activityId = activityId;
-    }
+  public void setStudyId(String studyId) {
+    this.studyId = studyId;
+  }
 
-    public String getStudyId() {
-        return studyId;
-    }
+  public boolean isCompleted() {
+    return isCompleted;
+  }
 
-    public void setStudyId(String studyId) {
-        this.studyId = studyId;
-    }
-
-    public boolean isCompleted() {
-        return isCompleted;
-    }
-
-    public void setCompleted(boolean completed) {
-        isCompleted = completed;
-    }
+  public void setCompleted(boolean completed) {
+    isCompleted = completed;
+  }
 }
