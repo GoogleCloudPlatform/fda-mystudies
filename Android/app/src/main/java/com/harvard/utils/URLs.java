@@ -1,14 +1,32 @@
+/*
+ * Copyright © 2017-2019 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors.
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
+ * associated documentation files (the "Software"), to deal in the Software without restriction, including
+ * without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all copies or substantial
+ * portions of the Software.
+ *
+ * Funding Source: Food and Drug Administration (“Funding Agency”) effective 18 September 2014 as Contract no. HHSF22320140030I/HHSF22301006T (the “Prime Contract”).
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ */
+
 package com.harvard.utils;
+
+import com.harvard.BuildConfig;
 
 public class URLs {
 
   public static String BASE_URL_WCP_SERVER =
-      "https://hpwcp-stage.lkcompliant.net/StudyMetaData/"; // UAT
+      BuildConfig.BASE_URL_WCP_SERVER; // UAT
   public static String BASE_URL_REGISTRATION_SERVER =
-      "https://hpreg-stage.lkcompliant.net/fdahpUserRegWS/"; // UAT
-  public static String BASE_URL_RESPONSE_SERVER = "https://hpresp-stage.lkcompliant.net/"; // UAT
+      BuildConfig.BASE_URL_REGISTRATION_SERVER; // UAT
+  public static String BASE_URL_RESPONSE_SERVER = BuildConfig.BASE_URL_RESPONSE_SERVER; // UAT
 
-  /** Registration Server */
+  /**
+   * Registration Server
+   */
   public static String LOGIN = "login.api";
 
   public static String REGISTER_USER = "register.api";
@@ -28,7 +46,9 @@ public class URLs {
   public static String UPDATE_ELIGIBILITY_CONSENT = "updateEligibilityConsentStatus.api";
   public static String REFRESH_TOKEN = BASE_URL_REGISTRATION_SERVER + "refreshToken.api";
   public static String CONSENTPDF = "consentPDF.api";
-  /** WCP server */
+  /**
+   * WCP server
+   */
   public static String STUDY_INFO = "studyInfo";
 
   public static String CONSENT_METADATA = "eligibilityConsent";
@@ -43,7 +63,9 @@ public class URLs {
   public static String NOTIFICATIONS = "notifications";
   public static String DASHBOARD_INFO = "studyDashboard";
   public static String GET_CONSENT_DOC = "consentDocument";
-  /** Response server */
+  /**
+   * Response server
+   */
   public static String VALIDATE_ENROLLMENT_ID = "mobileappstudy-validateenrollmenttoken.api?";
 
   public static String ENROLL_ID = "mobileappstudy-enroll.api?";
