@@ -1,17 +1,3 @@
-/*
- * Copyright © 2017-2019 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors.
- * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
- * associated documentation files (the "Software"), to deal in the Software without restriction, including
- * without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
- *
- * The above copyright notice and this permission notice shall be included in all copies or substantial
- * portions of the Software.
- *
- * Funding Source: Food and Drug Administration (“Funding Agency”) effective 18 September 2014 as Contract no. HHSF22320140030I/HHSF22301006T (the “Prime Contract”).
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
- */
-
 package com.harvard.gatewaymodule;
 
 import android.content.Context;
@@ -24,9 +10,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
-
 import com.harvard.R;
 import com.harvard.utils.AppController;
+import com.harvard.utils.Logger;
 
 public class GatewayPagerAdapter extends PagerAdapter {
 
@@ -63,8 +49,8 @@ public class GatewayPagerAdapter extends PagerAdapter {
 
     @Override
     public Object instantiateItem(ViewGroup collection, int position) {
-        final LayoutInflater inflater = (LayoutInflater) collection.getContext()
-                .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        final LayoutInflater inflater =
+            (LayoutInflater) collection.getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         mContext = inflater.getContext();
         switch (position) {
             case 0:
@@ -101,11 +87,8 @@ public class GatewayPagerAdapter extends PagerAdapter {
                 return view3;
             default:
                 return null;
-
-
         }
     }
-
 
     private void initializeXMLId(int pos, View view) {
         if (pos == 0) {
@@ -115,13 +98,16 @@ public class GatewayPagerAdapter extends PagerAdapter {
             RelativeLayout mWatchVideo = (RelativeLayout) view.findViewById(R.id.watch_video);
             mWatchVideoLabel = (AppCompatTextView) view.findViewById(R.id.watchVideoLabel);
 
-            mWatchVideo.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://www.youtube.com/watch?v=6FGGquOrVic"));
-                    mContext.startActivity(intent);
-                }
-            });
+            mWatchVideo.setOnClickListener(
+                new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent intent =
+                            new Intent(
+                                Intent.ACTION_VIEW, Uri.parse("https://www.youtube.com/watch?v=6FGGquOrVic"));
+                        mContext.startActivity(intent);
+                    }
+                });
         } else {
             mBgImg = (AppCompatImageView) view.findViewById(R.id.bgImg);
             mWebsite = (AppCompatTextView) view.findViewById(R.id.website);
@@ -129,13 +115,16 @@ public class GatewayPagerAdapter extends PagerAdapter {
             mDesc = (AppCompatTextView) view.findViewById(R.id.desc);
         }
 
-        mWebsite.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("" + mContext.getString(R.string.website)));
-                mContext.startActivity(browserIntent);
-            }
-        });
+        mWebsite.setOnClickListener(
+            new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent browserIntent =
+                        new Intent(
+                            Intent.ACTION_VIEW, Uri.parse("" + mContext.getString(R.string.website)));
+                    mContext.startActivity(browserIntent);
+                }
+            });
     }
 
     private void setFont(int pos, View view) {
@@ -152,7 +141,7 @@ public class GatewayPagerAdapter extends PagerAdapter {
             }
 
         } catch (Exception e) {
-            e.printStackTrace();
+            Logger.log(e);
         }
     }
 
@@ -164,9 +153,5 @@ public class GatewayPagerAdapter extends PagerAdapter {
         if (pos == 3) {
             mBgImg.setImageResource(R.drawable.img_03);
         }
-
     }
-
-
-
 }

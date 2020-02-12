@@ -21,7 +21,7 @@ import org.researchstack.backbone.step.Step;
 import org.researchstack.backbone.ui.step.body.BodyAnswer;
 import org.researchstack.backbone.ui.step.body.StepBody;
 
-public class valuePickerQuestion<T> implements StepBody {
+public class TempValuePickerQuestion<T> implements StepBody {
     // -*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
     // Constructor Fields
     // -*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
@@ -32,7 +32,7 @@ public class valuePickerQuestion<T> implements StepBody {
     private TextView textView;
     private String resultValue;
 
-    public valuePickerQuestion(Step step, StepResult result) {
+    public TempValuePickerQuestion(Step step, StepResult result) {
         if (step instanceof QuestionStepCustom) {
             this.step = (QuestionStepCustom) step;
             this.result = result == null ? new StepResult<>(step) : result;
