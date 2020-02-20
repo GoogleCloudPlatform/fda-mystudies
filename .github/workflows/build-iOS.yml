@@ -2,10 +2,10 @@ on:
   push:
     branches:    
       - ios
-name: Build
+name: Build-iOS
 jobs:
   test:
-    name: Build-iOS
+    name: Build
     runs-on: macOS-latest
     strategy:
         matrix:
