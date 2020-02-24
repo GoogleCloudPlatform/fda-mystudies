@@ -10,9 +10,9 @@ import Foundation
 
 @discardableResult
 func measure<A>(name: String, _ block: () -> A) -> A {
-    let startTime = CFAbsoluteTimeGetCurrent()
-    let result = block()
-    let timeElapsed = CFAbsoluteTimeGetCurrent() - startTime
-    print("Time: \(name) : \(timeElapsed)")
-    return result
+  let startTime = CFAbsoluteTimeGetCurrent()
+  let result = block()
+  let timeElapsed = CFAbsoluteTimeGetCurrent() - startTime
+  print("Time: \(name) : \(timeElapsed)")
+  return result
 }

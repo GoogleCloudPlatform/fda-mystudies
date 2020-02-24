@@ -43,9 +43,9 @@
 	<key>NSAppTransportSecurity</key>
 	<dict>
 		<key>NSAllowsArbitraryLoads</key>
-		<false/>
+		<true/>
 		<key>NSAllowsArbitraryLoadsInWebContent</key>
-		<false/>
+		<true/>
 	</dict>
 	<key>NSCameraUsageDescription</key>
 	<string>$(PRODUCT_NAME) would like to access your camera</string>
@@ -68,7 +68,7 @@
 	<key>ProductTitleName</key>
 	<string>FDA MyStudies</string>
 	<key>StandaloneStudyId</key>
-	<string>appstudy2</string>
+	<string>Standalone01</string>
 	<key>UIAppFonts</key>
 	<array>
 		<string>Verdana Italic.ttf</string>
@@ -96,5 +96,15 @@
 	<true/>
 	<key>WebsiteLink</key>
 	<string>www.fda.gov</string>
+  <key>WCP_URL</key>
+  <string>$(WCP_URL)</string>
+  <key>RESPONSE_URL</key>
+  <string>$(RESPONSE_URL)</string>
+  <key>REGISTRATION_URL</key>
+  <string>$(REGISTRATION_URL)</string>
+  <key>AUTH_USERNAME</key>
+  <string>$(AUTH_USERNAME)</string>
+  <key>AUTH_PASSWORD</key>
+  <string>$(AUTH_PASSWORD)</string>
 </dict>
 </plist>
