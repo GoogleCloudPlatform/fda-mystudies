@@ -37,7 +37,7 @@ direction of FDA and the Harvard Pilgrim Research Institute, (HPHCI).
       <li>Ability to automatically forward survey responses stored in Response Server to external systems
       <li>Ability to partition user email addresses by folder in the Registration Server 
     </ul>
- <li><b>Application Security and Compabitility Updates</b>
+ <li><b>Application Security and Compabitility Updatess</b>
    <ul>
      <li> Compatibility with LabKey Server 19.2.X
    </ul>
