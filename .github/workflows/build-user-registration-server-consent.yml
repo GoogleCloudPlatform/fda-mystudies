@@ -1,6 +1,6 @@
 on:
   pull_request:
-    branches: [ master ]
+    branches: [ user-registration-server ]
 name: Build user-registration-server-ws-consent
 jobs:
   build:
