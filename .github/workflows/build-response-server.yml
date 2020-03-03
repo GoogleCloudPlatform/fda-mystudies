@@ -1,6 +1,6 @@
 on:
   pull_request:
-    branches: [ master ]
+    branches: [ response-server ]
 name: Build-response-server-ws
 jobs:
   build:
