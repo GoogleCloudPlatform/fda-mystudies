@@ -85,8 +85,6 @@ class OverviewSection {
       if Utilities.isValidValue(someObject: detail[kOverviewWebsiteLink] as AnyObject) {
         self.websiteLink = detail[kOverviewWebsiteLink] as? String
       }
-    } else {
-      Logger.sharedInstance.debug("Overview Dictionary is null:\(detail)")
     }
   }
 }

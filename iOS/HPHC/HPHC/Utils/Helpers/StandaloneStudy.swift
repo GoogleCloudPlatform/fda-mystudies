@@ -68,8 +68,6 @@ class StandaloneStudy: NSObject {
 
   func handleStudyListResponse() {
 
-    Logger.sharedInstance.info("Study Response Handler")
-
     if (Gateway.instance.studies?.count)! > 0 {
       DBHandler.loadStudyListFromDatabase { (studies) in
         if studies.count > 0 {

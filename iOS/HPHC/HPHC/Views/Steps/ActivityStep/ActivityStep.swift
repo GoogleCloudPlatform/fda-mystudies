@@ -158,8 +158,6 @@ class ActivityStep {
       if Utilities.isValidObject(someObject: stepDict[kActivityStepDestinations] as AnyObject) {
         self.destinations = stepDict[kActivityStepDestinations] as? [[String: Any]]
       }
-    } else {
-      Logger.sharedInstance.debug("Step Dictionary is null:\(stepDict)")
     }
   }
 

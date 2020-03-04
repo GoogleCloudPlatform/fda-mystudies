@@ -397,13 +397,11 @@ class StudyListViewController: UIViewController {
 
   /// Load the study data from Database.
   func loadStudiesFromDatabase() {
-    Logger.sharedInstance.info("Fetching Studies From DB")
     DBHandler.loadStudyListFromDatabase { studies in
       if studies.count > 0 {
         self.tableView?.isHidden = false
         self.studiesList = studies
         self.tableView?.reloadData()
-        Logger.sharedInstance.info("Studies displayed to user")
 
         self.previousStudyList = studies
         self.allStudyList = studies
@@ -582,8 +580,6 @@ class StudyListViewController: UIViewController {
 
   /// Handle the Study list webservice response.
   func handleStudyListResponse() {
-    Logger.sharedInstance.info("Study Response Handler")
-
     if (Gateway.instance.studies?.count)! > 0 {
       loadStudiesFromDatabase()
       let appDelegate = (UIApplication.shared.delegate as? AppDelegate)!

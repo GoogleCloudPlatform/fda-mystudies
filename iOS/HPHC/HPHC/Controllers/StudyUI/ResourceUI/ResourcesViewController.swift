@@ -218,7 +218,6 @@ class ResourcesViewController: UIViewController {
         // compare lifetime
         if (startDateResult == .orderedAscending || startDateResult == .orderedSame) &&
             (endDateResult == .orderedDescending || endDateResult == .orderedSame) {
-          Logger.sharedInstance.info("current")
 
           tableViewRowDetails?.append(resource)
 
@@ -413,10 +412,8 @@ class ResourcesViewController: UIViewController {
       let foundRange = pdfData?.range(of: pdfHeader as Data, options: .anchored, in: myRange)
       if foundRange != nil && (foundRange?.count)! > 0 {
         isPDF = true
-        Logger.sharedInstance.info("pdf")
       } else {
         isPDF = false
-        Logger.sharedInstance.info("not pdf")
         UserServices().getConsentPDFForStudy(
           studyId: (Study.currentStudy?.studyId)!, delegate: self)
       }

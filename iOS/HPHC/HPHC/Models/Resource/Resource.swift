@@ -195,8 +195,6 @@ class Resource {
       }
       self.file = File()
       self.file?.setFileForStudy(dict: detail as NSDictionary)
-    } else {
-      Logger.sharedInstance.debug("Resource Dictionary is null:\(detail)")
     }
   }
 
@@ -298,8 +296,6 @@ class Resource {
       if Utilities.isValidValue(someObject: (dict[kResourceTitle]) as AnyObject) {
         self.title = dict[kResourceTitle] as? String
       }
-    } else {
-      Logger.sharedInstance.debug("Resource Dictionary is null:\(dict)")
     }
   }
 

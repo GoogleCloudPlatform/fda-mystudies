@@ -60,8 +60,6 @@ class Schedule {
       if Utilities.isValidValue(someObject: detail[kActivityFrequency] as AnyObject) {
         self.frequency = Frequency(rawValue: detail[kActivityFrequency] as! String)!
       }
-    } else {
-      Logger.sharedInstance.debug("Schedule Dictionary is null:\(detail)")
     }
   }
 
@@ -161,7 +159,6 @@ class Schedule {
   func setDailyRuns() {
 
     let numberOfDays = self.getNumberOfDaysBetween(startDate: startTime, endDate: endTime!)
-    Logger.sharedInstance.info("numberOfDays \(numberOfDays)")
     var runStartDate: Date? = startTime
     var runEndDate: Date?
     let calendar = Calendar.currentUTC()
@@ -370,9 +367,6 @@ class Schedule {
         runEndDate = Utilities.getDateFromStringWithOutTimezone(
           dateString: scheduledEndTime! as! String)
       }
-
-      Logger.sharedInstance.info("Start date: \(runStartDate!) , End date: \(runEndDate!)")
-
       let offset = UserDefaults.standard.value(forKey: "offset") as? Int
       let updatedStartTime = runStartDate?.addingTimeInterval(TimeInterval(offset!))
 
@@ -462,7 +456,6 @@ class Schedule {
 
     let calendar = Calendar.currentUTC()
     let component = calendar.dateComponents([.weekday], from: date)
-    Logger.sharedInstance.info(component.weekday! as Int)
     let dayOfWeek = component.weekday! as Int
     return dayOfWeek
   }
@@ -485,8 +478,6 @@ class Schedule {
 
     let components = calendar.dateComponents(
       [Calendar.Component.weekOfYear], from: date1, to: date2)
-
-    Logger.sharedInstance.info(components.weekOfYear! as Int)
     return components.weekOfYear! as Int
   }
 
@@ -496,14 +487,10 @@ class Schedule {
   func getNumberOfDaysBetween(startDate: Date, endDate: Date) -> Int {
 
     let calendar = Calendar.currentUTC()
-
     // Replace the hour (time) of both dates with 00:00
     let date1 = startDate.startOfDay
     let date2 = endDate.endOfDay
-
     let components = calendar.dateComponents([Calendar.Component.day], from: date1, to: date2!)
-
-    Logger.sharedInstance.info(components.day! as Int)
     return components.day! as Int
   }
 

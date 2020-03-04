@@ -246,18 +246,15 @@ class Utilities: NSObject {
     let capitalLetterRegEx = ".*[A-Z]+.*"
     let texttest = NSPredicate(format: "SELF MATCHES %@", capitalLetterRegEx)
     let capitalresult = texttest.evaluate(with: text)
-    Logger.sharedInstance.info("\(capitalresult)")
 
     let numberRegEx = ".*[0-9]+.*"
     let texttest1 = NSPredicate(format: "SELF MATCHES %@", numberRegEx)
     let numberresult = texttest1.evaluate(with: text)
-    Logger.sharedInstance.info("\(numberresult)")
 
     let specialCharacterRegEx = ".*[!#$%&'()*+,-.:;\\[\\]<>=?@^_{}|~]+.*"
     let texttest2 = NSPredicate(format: "SELF MATCHES %@", specialCharacterRegEx)
 
     let specialresult = texttest2.evaluate(with: text)
-    Logger.sharedInstance.info("\(specialresult)")
 
     let textCountResult = text.count > 7 && text.count <= 64 ? true : false
 
@@ -306,13 +303,9 @@ class Utilities: NSObject {
     let texttest = NSPredicate(format: "SELF MATCHES %@", capitalLetterRegEx)
     let capitalresult = texttest.evaluate(with: password)
 
-    Logger.sharedInstance.info("\(capitalresult)")
-
     let numberRegEx = ".*[a-z0-9A-Z]+.*"
     let texttest1 = NSPredicate(format: "SELF MATCHES %@", numberRegEx)
     let numberresult = texttest1.evaluate(with: password)
-
-    Logger.sharedInstance.info("\(numberresult)")
 
     return capitalresult && numberresult
   }
@@ -380,7 +373,6 @@ class Utilities: NSObject {
         return false
       }
     } else {
-      Logger.sharedInstance.debug("Value is null:\(someObject)")
       return false
     }
   }
@@ -408,7 +400,6 @@ class Utilities: NSObject {
       }
 
     } else {
-      Logger.sharedInstance.debug("Object is null:\(someObject)")
       return false
     }
   }
@@ -580,7 +571,6 @@ extension FileManager {
           atPath: fullPath, withIntermediateDirectories: false, attributes: nil)
         return fullPath
       } catch let error as NSError {
-        Logger.sharedInstance.error(error.localizedDescription)
         return ""
       }
     }

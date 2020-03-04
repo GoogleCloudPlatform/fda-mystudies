@@ -184,8 +184,6 @@ class User {
       if Utilities.isValidValue(someObject: dict[kRefreshToken] as AnyObject) {
         self.refreshToken = dict[kRefreshToken] as? String
       }
-    } else {
-      Logger.sharedInstance.debug("User Dictionary is null:\(dict)")
     }
   }
 
@@ -281,20 +279,12 @@ class User {
     let studies = self.participatedStudies as [UserStudyStatus]
     if let study = studies.filter({ $0.studyId == studyId }).first {
       study.bookmarked = true
-      Logger.sharedInstance.info("Bookmark: study is bookmarked : \(studyId)")
-
       return study
     } else {
-      Logger.sharedInstance.info("Bookmark: study not found : \(studyId)")
-
       let studyStatus = UserStudyStatus()
       studyStatus.bookmarked = true
       studyStatus.studyId = studyId
-
       self.participatedStudies.append(studyStatus)
-
-      Logger.sharedInstance.info("Bookmark: study is bookmarked : \(studyId)")
-
       return studyStatus
     }
 
@@ -308,7 +298,6 @@ class User {
     let studies = self.participatedStudies as [UserStudyStatus]
     if let study = studies.filter({ $0.studyId == studyId }).first {
       study.bookmarked = false
-      Logger.sharedInstance.info("Bookmark: study is removed from bookmark : \(studyId)")
       return study
     }
     return nil
@@ -343,18 +332,13 @@ class User {
     if let activity = activityes.filter({ $0.studyId == studyId && $0.activityId == activityId })
       .first {
       activity.bookmarked = true
-      Logger.sharedInstance.info("Bookmark: activity is bookmarked : \(studyId)")
       return activity
     } else {
-      Logger.sharedInstance.info("Bookmark: activity not found : \(studyId)")
-
       let activityStatus = UserActivityStatus()
       activityStatus.bookmarked = true
       activityStatus.studyId = studyId
       activityStatus.activityId = activityId
       self.participatedActivites.append(activityStatus)
-
-      Logger.sharedInstance.info("Bookmark: activity is bookmarked : \(studyId)")
       return activityStatus
     }
 
@@ -370,7 +354,6 @@ class User {
     if let activity = activityes.filter({ $0.studyId == studyId && $0.activityId == activityId })
       .first {
       activity.bookmarked = true
-      Logger.sharedInstance.info("Bookmark: activity is removed from bookmarked : \(studyId)")
     }
   }
 
@@ -386,17 +369,12 @@ class User {
     let studies = self.participatedStudies as [UserStudyStatus]
     if let study = studies.filter({ $0.studyId == studyId }).first {
       study.status = status
-      Logger.sharedInstance.info("User Study Status: study is updated : \(studyId)")
       return study
     } else {
-      Logger.sharedInstance.info("User Study Status: study not found : \(studyId)")
-
       let studyStatus = UserStudyStatus()
       studyStatus.status = status
       studyStatus.studyId = studyId
       self.participatedStudies.append(studyStatus)
-
-      Logger.sharedInstance.info("User Study Status: study is updated : \(studyId)")
       return studyStatus
     }
   }
@@ -410,18 +388,12 @@ class User {
     let studies = self.participatedStudies as [UserStudyStatus]
     if let study = studies.filter({ $0.studyId == studyId }).first {
       study.participantId = participantId
-      Logger.sharedInstance.info("User Study Status: study is updated : \(studyId)")
       return study
-
     } else {
-      Logger.sharedInstance.info("User Study Status: study not found : \(studyId)")
-
       let studyStatus = UserStudyStatus()
       studyStatus.participantId = participantId
       studyStatus.studyId = studyId
       self.participatedStudies.append(studyStatus)
-
-      Logger.sharedInstance.info("User Study Status: study is updated : \(studyId)")
       return studyStatus
     }
   }
@@ -455,11 +427,8 @@ class User {
     let activityes = self.participatedActivites as [UserActivityStatus]
     if let activity = activityes.filter({ $0.activityId == activityId && $0.activityRunId == runId }).first {
       activity.status = status
-      Logger.sharedInstance.info("User Activity Status: activity is updated : \(studyId)")
       return activity
     } else {
-      Logger.sharedInstance.info("User Activity Status: activity not found : \(studyId)")
-
       let activityStatus = UserActivityStatus()
       activityStatus.status = status
       activityStatus.studyId = studyId
@@ -467,7 +436,6 @@ class User {
       activityStatus.activityRunId = runId
       self.participatedActivites.append(activityStatus)
       return activityStatus
-
     }
   }
 
@@ -574,11 +542,7 @@ class Settings {
       if Utilities.isValidValue(someObject: dict[kLocale] as AnyObject) {
         self.locale = dict[kLocale] as? String
       }
-
-    } else {
-      Logger.sharedInstance.debug("Settings Dictionary is null:\(dict)")
     }
-
   }
 }
 
@@ -721,8 +685,6 @@ class UserStudyStatus {
           self.status = .Withdrawn
         }
       }
-    } else {
-      Logger.sharedInstance.debug("UserStudyStatus Dictionary is null:\(detail)")
     }
   }
 
@@ -935,10 +897,7 @@ class UserActivityStatus {
           self.status = .abandoned
         }
       }
-    } else {
-      Logger.sharedInstance.debug("UserStudyStatus Dictionary is null:\(detail)")
     }
-
   }
 
   /// `JSONDictionary` contains StudyId, ActivityId and Bookmarked Status

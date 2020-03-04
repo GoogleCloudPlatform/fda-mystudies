@@ -72,7 +72,7 @@ extension ReachoutOptionsViewController: UITableViewDelegate {
     case 0:
       self.performSegue(withIdentifier: "feedbackSegue", sender: self)
     default:
-      Logger.sharedInstance.info("default")
+      break
     }
   }
 }

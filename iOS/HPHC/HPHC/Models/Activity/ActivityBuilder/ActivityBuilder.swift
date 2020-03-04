@@ -70,8 +70,6 @@ class ActivityBuilder {
       self.activity = activity
       self.actvityResult = ActivityResult()
       self.actvityResult?.setActivity(activity: self.activity!)
-    } else {
-      Logger.sharedInstance.debug("Activity:activity.steps is null:\(activity)")
     }
   }
 
@@ -138,7 +136,6 @@ class ActivityBuilder {
               }
             }
           } else {
-            Logger.sharedInstance.debug("Activity:stepDict is null:\(stepDict)")
             break
           }
         }
@@ -590,7 +587,6 @@ class ActivityBuilder {
             }
 
           } else {
-            Logger.sharedInstance.debug("Activity:stepDict is null:\(stepDict)")
             break
           }
         }
@@ -613,8 +609,6 @@ class ActivityBuilder {
           return nil
         }
       }
-    } else {
-      Logger.sharedInstance.debug("activity is null")
     }
     return nil
   }

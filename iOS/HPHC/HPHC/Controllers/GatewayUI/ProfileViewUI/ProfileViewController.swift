@@ -313,8 +313,7 @@ class ProfileViewController: UIViewController, SlideMenuControllerDelegate {
 
   /// SignOut Response handler for slider menu setup.
   func handleSignoutResponse() {
-    Logger.sharedInstance.info("SignOut")
-
+    
     if ORKPasscodeViewController.isPasscodeStoredInKeychain() {
       ORKPasscodeViewController.removePasscodeFromKeychain()
     }
@@ -374,7 +373,7 @@ class ProfileViewController: UIViewController, SlideMenuControllerDelegate {
       someObject: user.settings?.leadTime as AnyObject?) {
       self.buttonLeadTime?.setTitle(user.settings?.leadTime, for: .normal)
     } else {
-      Logger.sharedInstance.debug("settings/LeadTime is null")
+     // Settings/LeadTime is null
     }
     self.title = NSLocalizedString(kProfileTitleText, comment: "")
     self.isCellEditable = true
@@ -451,23 +450,16 @@ class ProfileViewController: UIViewController, SlideMenuControllerDelegate {
         user.settings?.localNotifications = toggle?.isOn
 
         if (user.settings?.localNotifications)! {
-
-          Logger.sharedInstance.info("On")
           self.addProgressIndicator()
-
           self.perform(
             #selector(self.registerLocalNotification), with: self, afterDelay: 1.0)
         } else {
-          Logger.sharedInstance.info("False")
           self.addProgressIndicator()
           self.perform(
             #selector(self.cancelAllLocalNotifications), with: self, afterDelay: 1.0)
-
         }
       }
       self.editBarButtonItem?.tintColor = UIColor.black
-    } else {
-      Logger.sharedInstance.debug("settings is null")
     }
   }
 
@@ -675,11 +667,6 @@ extension ProfileViewController: UITableViewDelegate {
 // MARK: - Textfield Delegate
 extension ProfileViewController: UITextFieldDelegate {
 
-  func textFieldDidBeginEditing(_ textField: UITextField) {
-    Logger.sharedInstance.info("Editing started: ", textField.tag)
-
-  }
-
   func textField(
     _ textField: UITextField, shouldChangeCharactersIn range: NSRange,
     replacementString string: String
@@ -703,8 +690,6 @@ extension ProfileViewController: UITextFieldDelegate {
   }
 
   func textFieldDidEndEditing(_ textField: UITextField) {
-    Logger.sharedInstance.info("Editing ended: ", textField.text!)
-
     // trimming white spaces
     textField.text = textField.text?.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines)
 
@@ -717,7 +702,6 @@ extension ProfileViewController: UITextFieldDelegate {
       user.password! = textField.text!
 
     default:
-      Logger.sharedInstance.info("No Matching data Found")
       break
     }
 

@@ -197,8 +197,6 @@ class DBHandler: NSObject {
     try? realm.write {
         realm.add(dbStudies, update: .modified)
       }
-
-    Logger.sharedInstance.info("Studies Saved in DB")
   }
 
   /// Creates an instance of DBStudy.
@@ -281,8 +279,6 @@ class DBHandler: NSObject {
       participatedStatus.joiningDate = dbStudy.joiningDate
 
       study.userParticipateState = participatedStatus
-
-      Logger.sharedInstance.info("Status: \(dbStudy.participatedStatus)")
 
       // Append to user class participatesStudies also
       User.currentUser.participatedStudies.append(participatedStatus)
@@ -608,7 +604,6 @@ class DBHandler: NSObject {
         realm.add(dbActivities, update: .all)
       }
     }
-    Logger.sharedInstance.info("Activities Saved in DB")
   }
 
   /// Fetches DBActivity object  from Database.
@@ -1101,8 +1096,6 @@ class DBHandler: NSObject {
           lhs: (completedRuns.count)*100, rhs: (completedRuns.count + incompleteRuns))))
 
     completionHandler(Int(completion), Int(adherence))
-    Logger.sharedInstance.info("complete: \(completedRuns.count) , incomplete: \(incompleteRuns)")
-
   }
 
   static func divide(lhs: Int, rhs: Int) -> Int {
@@ -1909,7 +1902,6 @@ class DBHandler: NSObject {
         studyId, activityId: activity.sourceActivityId, questionKey: activity.sourceKey,
         anchorDateValue: activity.anchorDateValue!)
     }
-    Logger.sharedInstance.info("Completed")
     completionHandler(anchorDateAvailable)
   }
 

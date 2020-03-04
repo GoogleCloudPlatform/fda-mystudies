@@ -139,8 +139,6 @@ class ActivityStepResult {
             dateString: (stepDict[kActivityStepStartTime] as? String)!) as AnyObject?) {
           self.startTime = Utilities.getDateFromString(
             dateString: (stepDict[kActivityStepStartTime] as? String)!)
-        } else {
-          Logger.sharedInstance.debug("Date Conversion is null:\(stepDict)")
         }
       }
       if Utilities.isValidValue(someObject: stepDict[kActivityStepEndTime] as AnyObject) {
@@ -151,19 +149,13 @@ class ActivityStepResult {
 
           self.endTime = Utilities.getDateFromString(
             dateString: (stepDict[kActivityStepEndTime] as? String)!)
-        } else {
-          Logger.sharedInstance.debug("Date Conversion is null:\(stepDict)")
         }
       }
 
       if Utilities.isValidValue(someObject: stepDict[kActivityStepSkipped] as AnyObject) {
         self.skipped = stepDict[kActivityStepSkipped] as? Bool
       }
-
-    } else {
-      Logger.sharedInstance.debug("Step Result Dictionary is null:\(stepDict)")
     }
-
   }
 
   /// Creates ActivityStepDictionary from step instance and returns ResultDictionary for storing data to Api/Local

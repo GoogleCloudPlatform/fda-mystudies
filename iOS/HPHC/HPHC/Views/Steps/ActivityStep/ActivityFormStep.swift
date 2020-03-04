@@ -41,8 +41,6 @@ class ActivityFormStep: ActivityStep {
       if Utilities.isValidObject(someObject: stepDict[kStepFormSteps] as AnyObject) {
         self.itemsArray = (stepDict[kStepFormSteps] as? [[String: Any]])!
       }
-    } else {
-      Logger.sharedInstance.debug("Instruction Step Dictionary is null:\(stepDict)")
     }
   }
 
@@ -92,8 +90,6 @@ class ActivityFormStep: ActivityStep {
           formItem01.isOptional = (questionStep?.skippable)!
           formItemsArray.append(formItem01)
 
-        } else {
-          Logger.sharedInstance.debug("item Dictionary is null :\(dict)")
         }
       }
 
@@ -105,8 +101,7 @@ class ActivityFormStep: ActivityStep {
       return step
 
     } else {
-      Logger.sharedInstance.debug("Form Data is null ")
-      return nil
+      return nil  // Form Data is null
     }
   }
 }

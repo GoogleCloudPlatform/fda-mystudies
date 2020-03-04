@@ -91,7 +91,6 @@ class ContactUsViewController: UIViewController {
   /// Validations after clicking on submit button
   /// If all the validations satisfy send contact-us request
   @IBAction func buttonSubmitAciton(_ sender: UIButton) {
-    Logger.sharedInstance.info("\(ContactUsFeilds.firstName)")
 
     if ContactUsFeilds.firstName.isEmpty && ContactUsFeilds.email.isEmpty && ContactUsFeilds
       .subject
@@ -187,7 +186,6 @@ extension ContactUsViewController: UITextViewDelegate {
   }
 
   func textViewDidEndEditing(_ textView: UITextView) {
-    Logger.sharedInstance.info("textViewDidEndEditing")
     if textView.tag == 101 && textView.text.count == 0 {
       textView.text = kMessageTextViewPlaceHolder
       textView.textColor = UIColor.lightGray
@@ -198,8 +196,6 @@ extension ContactUsViewController: UITextViewDelegate {
   }
 
   func textViewDidBeginEditing(_ textView: UITextView) {
-    Logger.sharedInstance.info("textViewDidBeginEditing")
-
     if textView.tag == 100 {
       textView.text = ""
       textView.textColor = UIColor.black
@@ -234,8 +230,7 @@ extension ContactUsViewController: UITextFieldDelegate {
   }
 
   func textFieldDidEndEditing(_ textField: UITextField) {
-    Logger.sharedInstance.info("Editing ended: ", textField.text!)
-
+ 
     textField.text = textField.text?.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines)
 
     let tag: ContactTextFieldTags = ContactTextFieldTags(rawValue: textField.tag)!

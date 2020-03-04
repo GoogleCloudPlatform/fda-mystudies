@@ -45,11 +45,7 @@ class ActivityInstructionStep: ActivityStep {
 
     if Utilities.isValidObject(someObject: stepDict as AnyObject?) {
       super.initWithDict(stepDict: stepDict)
-
-    } else {
-      Logger.sharedInstance.debug("Instruction Step Dictionary is null:\(stepDict)")
     }
-
   }
 
   /// Creates instruction step based on ActivityStep data and returns ORKInstructionStep
@@ -64,7 +60,6 @@ class ActivityInstructionStep: ActivityStep {
       instructionStep.text = text!
       return instructionStep
     } else {
-      Logger.sharedInstance.debug("Instruction Step Data is null ")
       return nil
     }
   }

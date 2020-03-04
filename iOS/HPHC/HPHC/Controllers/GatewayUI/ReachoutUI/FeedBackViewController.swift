@@ -133,7 +133,6 @@ extension FeedBackViewController: UITextViewDelegate {
   }
 
   func textViewDidEndEditing(_ textView: UITextView) {
-    Logger.sharedInstance.info("textViewDidEndEditing")
     if textView.tag == 101 && textView.text.count == 0 {
       textView.text = "Enter your feedback here"
       textView.textColor = UIColor.lightGray
@@ -145,7 +144,6 @@ extension FeedBackViewController: UITextViewDelegate {
   }
 
   func textViewDidBeginEditing(_ textView: UITextView) {
-    Logger.sharedInstance.info("textViewDidBeginEditing")
 
     if textView.tag == 100 {
       textView.text = ""
@@ -159,7 +157,6 @@ extension FeedBackViewController: UITextViewDelegate {
 extension FeedBackViewController: UITextFieldDelegate {
 
   func textFieldDidEndEditing(_ textField: UITextField) {
-    Logger.sharedInstance.info("Editing ended: ", textField.text!)
     textField.text = textField.text?.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines)
     FeedbackDetail.subject = textField.text!
   }

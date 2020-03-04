@@ -258,13 +258,10 @@ extension PageViewController: UIPageViewControllerDelegate {
 extension PageViewController: UIScrollViewDelegate {
 
   func scrollViewDidEndDragging(_ scrollView: UIScrollView, willDecelerate decelerate: Bool) {
-    Logger.sharedInstance.info(currentIndex)
 
     pageViewDelegate?.pageViewController(
       pageViewController: self, didUpdatePageIndex: currentIndex)
   }
 
-  func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
-    Logger.sharedInstance.info(currentIndex)
-  }
+  func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {}
 }

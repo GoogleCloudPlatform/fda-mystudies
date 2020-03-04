@@ -271,10 +271,7 @@ class ActivityQuestionStep: ActivityStep {
       if Utilities.isValidValue(someObject: stepDict[kStepQuestionHealthDataKey] as AnyObject) {
         self.healthDataKey = stepDict[kStepQuestionHealthDataKey] as! String?
       }
-    } else {
-      Logger.sharedInstance.debug("Question Step Dictionary is null:\(stepDict)")
     }
-
   }
 
   /// Creates question step based on QuestionStepType and returns ORKQuestionStep
@@ -369,8 +366,6 @@ class ActivityQuestionStep: ActivityStep {
             return nil
           }
         } else {
-          Logger.sharedInstance.debug(
-            "Scale Question Step has null values:\(String(describing: formatDict))")
           return nil
         }
       case .continuousScale:
@@ -490,9 +485,6 @@ class ActivityQuestionStep: ActivityStep {
             return nil
           }
         } else {
-          Logger.sharedInstance.debug(
-            "Continuous Scale Question Step has null values:\(String(describing: formatDict))"
-          )
           return nil
         }
       case .textscale:
@@ -518,9 +510,6 @@ class ActivityQuestionStep: ActivityStep {
             defaultIndex: defaultValue-1,
             vertical: (formatDict?[kStepQuestionTextScaleVertical] as? Bool)!)
         } else {
-          Logger.sharedInstance.debug(
-            "Text Scale Question Step has null values:\(String(describing: formatDict))"
-          )
           return nil
         }
       case .valuePicker:
@@ -537,9 +526,6 @@ class ActivityQuestionStep: ActivityStep {
           questionStepAnswerFormat = ORKAnswerFormat.valuePickerAnswerFormat(
             with: textChoiceArray!)
         } else {
-          Logger.sharedInstance.debug(
-            "valuePickerChoice Question Step has null values:\(String(describing: formatDict))"
-          )
           return nil
         }
       case .imageChoice:
@@ -557,11 +543,7 @@ class ActivityQuestionStep: ActivityStep {
             with: imageChoiceArray!)
 
         } else {
-          Logger.sharedInstance.debug(
-            "imageChoice Question Step has null values:\(String(describing: formatDict))"
-          )
           return nil
-
         }
       case .textChoice:
         if Utilities.isValidObject(
@@ -592,9 +574,6 @@ class ActivityQuestionStep: ActivityStep {
               style: ORKChoiceAnswerStyle.multipleChoice,
               textChoices: textChoiceArray!)
           } else {
-            Logger.sharedInstance.debug(
-              "kStepQuestionTextChoiceSelectionStyle has null value:\(String(describing: formatDict))"
-            )
             return nil
           }
 
@@ -615,9 +594,6 @@ class ActivityQuestionStep: ActivityStep {
           return questionStep
 
         } else {
-          Logger.sharedInstance.debug(
-            "textChoice Question Step has null values:\(String(describing: formatDict))"
-          )
           return nil
         }
 
@@ -717,8 +693,6 @@ class ActivityQuestionStep: ActivityStep {
             break
           }
         } else {
-          Logger.sharedInstance.debug(
-            "numeric has null values:\(String(describing: formatDict))")
           return nil
         }
       case .timeOfDay:
@@ -776,8 +750,6 @@ class ActivityQuestionStep: ActivityStep {
           }
 
         } else {
-          Logger.sharedInstance.debug(
-            "date has null values:\(String(describing: formatDict))")
           return nil
         }
       case .text:
@@ -831,8 +803,6 @@ class ActivityQuestionStep: ActivityStep {
           questionStepAnswerFormat = answerFormat
 
         } else {
-          Logger.sharedInstance.debug(
-            "text has null values:\(String(describing: formatDict))")
           return nil
         }
       case .email:
@@ -868,10 +838,7 @@ class ActivityQuestionStep: ActivityStep {
             return nil
           }
         } else {
-          Logger.sharedInstance.debug(
-            "timeInterval has null values:\(String(describing: formatDict))")
           return nil
-
         }
       case .height:
 
@@ -896,8 +863,6 @@ class ActivityQuestionStep: ActivityStep {
             placeholderText = formatDict?[kStepQuestionNumericPlaceholder] as? String
           }
         } else {
-          Logger.sharedInstance.debug(
-            "height has null values:\(String(describing: formatDict))")
           return nil
         }
       case .location:
@@ -910,8 +875,6 @@ class ActivityQuestionStep: ActivityStep {
 
           questionStepAnswerFormat = answerFormat
         } else {
-          Logger.sharedInstance.debug(
-            "location has null values:\(String(describing: formatDict))")
           return nil
         }
       default: break
@@ -930,8 +893,6 @@ class ActivityQuestionStep: ActivityStep {
       questionStep?.text = text
       return questionStep!
     } else {
-      Logger.sharedInstance.debug(
-        "FormatDict has null values:\(String(describing: formatDict))")
       return nil
     }
   }
@@ -991,10 +952,7 @@ class ActivityQuestionStep: ActivityStep {
         textChoiceArray.append(choice)
       }
 
-    } else {
-      Logger.sharedInstance.debug("dataArray has Invalid data: null for Text Choice ")
     }
-
     if textChoiceArray.isEmpty {
       return (nil, nil)
     } else {
@@ -1064,7 +1022,6 @@ class ActivityQuestionStep: ActivityStep {
         }
       }
     } else {
-      Logger.sharedInstance.debug("ORKImageChoice Array is null :\(dataArray)")
       return nil
     }
     return imageChoiceArray!

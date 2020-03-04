@@ -195,11 +195,6 @@ extension ChangePasswordViewController: UITableViewDelegate {
 // MARK: - Textfield Delegate
 extension ChangePasswordViewController: UITextFieldDelegate {
 
-  func textFieldDidBeginEditing(_ textField: UITextField) {
-    Logger.sharedInstance.info("Editing started: ", textField.tag)
-
-  }
-
   func textField(
     _ textField: UITextField, shouldChangeCharactersIn range: NSRange,
     replacementString string: String
@@ -231,7 +226,6 @@ extension ChangePasswordViewController: UITextFieldDelegate {
   }
 
   func textFieldDidEndEditing(_ textField: UITextField) {
-    Logger.sharedInstance.info("End Editing: ", textField.text!)
     textField.text = textField.text?.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines)
 
     let tag = CPTextFeildTags(rawValue: textField.tag)!

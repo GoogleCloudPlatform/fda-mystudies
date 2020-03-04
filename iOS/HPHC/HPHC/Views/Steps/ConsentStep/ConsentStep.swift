@@ -123,11 +123,7 @@ class ConsentSectionStep {
       if Utilities.isValidValue(someObject: stepDict[kConsentStepVisualStep] as AnyObject) {
         self.visualStep = stepDict[kConsentStepVisualStep] as? Bool
       }
-
-    } else {
-      Logger.sharedInstance.debug("ConsentDocument Step Dictionary is null:\(stepDict)")
     }
-
   }
 
   /// Creates Consent Section and returns a ORKConsentSection instance based on the properties

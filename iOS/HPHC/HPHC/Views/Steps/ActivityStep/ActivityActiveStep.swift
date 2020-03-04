@@ -164,10 +164,7 @@ class ActivityActiveStep: ActivityStep {
       if Utilities.isValidObject(someObject: stepDict[kActivityStepActiveFormat] as AnyObject) {
         self.formatDict = (stepDict[kActivityStepActiveFormat] as? Dictionary)!
       }
-    } else {
-      Logger.sharedInstance.debug("Question Step Dictionary is null:\(stepDict)")
     }
-
   }
 
   /// Returns Active Task based on ActiveStep Type
@@ -198,8 +195,6 @@ class ActivityActiveStep: ActivityStep {
             checkAudioLevel: true, options: self.options!)
 
         } else {
-          Logger.sharedInstance.debug(
-            "audioStep:formatDict has null values:\(String(describing: formatDict))")
           return nil
         }
 
@@ -221,8 +216,6 @@ class ActivityActiveStep: ActivityStep {
             )!,
             options: self.options!)
         } else {
-          Logger.sharedInstance.debug(
-            "fitnessStep:formatDict has null values:\(String(describing: formatDict))")
           return nil
         }
       case .holePegTestStep:
@@ -248,9 +241,6 @@ class ActivityActiveStep: ActivityStep {
             timeLimit: (formatDict?[kActiveHolePegTestTimeLimit] as? TimeInterval)!,
             options: self.options!)
         } else {
-          Logger.sharedInstance.debug(
-            "holePegTestStep:formatDict has null values:\(String(describing: formatDict))"
-          )
           return nil
         }
       case .psatStep:
@@ -279,8 +269,6 @@ class ActivityActiveStep: ActivityStep {
             options: self.options!)
 
         } else {
-          Logger.sharedInstance.debug(
-            "psatStep:formatDict has null values:\(String(describing: formatDict))")
           return nil
         }
       case .shortWalkStep:
@@ -299,9 +287,6 @@ class ActivityActiveStep: ActivityStep {
             options: self.options!)
 
         } else {
-          Logger.sharedInstance.debug(
-            "shortWalkStep:formatDict has null values:\(String(describing: formatDict))"
-          )
           return nil
         }
       case .spatialSpanMemoryStep:
@@ -395,9 +380,6 @@ class ActivityActiveStep: ActivityStep {
           }
 
         } else {
-          Logger.sharedInstance.debug(
-            "spatialSpanMemoryStep:formatDict has null values:\(String(describing: formatDict))"
-          )
           return nil
         }
       case .timedWalkStep:
@@ -424,9 +406,6 @@ class ActivityActiveStep: ActivityStep {
             options: self.options!)
 
         } else {
-          Logger.sharedInstance.debug(
-            "timedWalkStep:formatDict has null values:\(String(describing: formatDict))"
-          )
           return nil
         }
       case .toneAudiometryStep:
@@ -454,9 +433,6 @@ class ActivityActiveStep: ActivityStep {
             options: self.options!)
 
         } else {
-          Logger.sharedInstance.debug(
-            "toneAudiometryStep:formatDict has null values:\(String(describing: formatDict))"
-          )
           return nil
         }
       case .towerOfHanoi:
@@ -473,8 +449,6 @@ class ActivityActiveStep: ActivityStep {
           return orderedTask
 
         } else {
-          Logger.sharedInstance.debug(
-            "towerOfHanoi:formatDict has null values:\(String(describing: formatDict))")
           return nil
         }
       case .twoFingerTappingIntervalStep:
@@ -497,9 +471,6 @@ class ActivityActiveStep: ActivityStep {
             options: self.options!)
 
         } else {
-          Logger.sharedInstance.debug(
-            "twoFingerTappingIntervalStep:formatDict has null values:\(String(describing: formatDict))"
-          )
           return nil
         }
 
@@ -535,9 +506,6 @@ class ActivityActiveStep: ActivityStep {
               rawValue: (formatDict?[kActiveTremorTestHandOptions] as? UInt)!),
             options: self.options!)
         } else {
-          Logger.sharedInstance.debug(
-            "twoFingerTappingIntervalStep:formatDict has null values:\(String(describing: formatDict))"
-          )
           return nil
 
         }
@@ -565,21 +533,14 @@ class ActivityActiveStep: ActivityStep {
           }
           return fetalKickTask?.getTask()
         } else {
-          Logger.sharedInstance.debug(
-            "fetalKickCounter:formatDict has null values:\(String(describing: formatDict))"
-          )
           return nil
         }
 
       default:
-        Logger.sharedInstance.debug(
-          "Case Mismatch:Default Executed null values:\(String(describing: formatDict))")
         return nil
 
       }
     } else {
-      Logger.sharedInstance.debug(
-        "Format Dict have null values:\(String(describing: formatDict))")
       return nil
     }
   }

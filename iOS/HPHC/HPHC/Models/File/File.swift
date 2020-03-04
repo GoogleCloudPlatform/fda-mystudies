@@ -100,8 +100,6 @@ class File {
       if Utilities.isValidValue(someObject: dict[kFileLink] as AnyObject) {
         self.link = dict[kFileLink] as? String
       }
-    } else {
-      Logger.sharedInstance.debug("File Dictionary is null:\(dict)")
     }
   }
 
@@ -126,8 +124,6 @@ class File {
           self.localPath = "BundlePath"
         }
       }
-    } else {
-      Logger.sharedInstance.debug("File Dictionary is null:\(dict)")
     }
   }
 

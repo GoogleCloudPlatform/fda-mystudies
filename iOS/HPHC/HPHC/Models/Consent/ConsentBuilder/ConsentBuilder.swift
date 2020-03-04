@@ -220,7 +220,6 @@ class ConsentBuilder {
       consentDocument.addSignature(investigatorSignature)
       return consentDocument
     } else {
-      Logger.sharedInstance.debug("consent Step has null values:")
       return nil
     }
   }
@@ -308,7 +307,6 @@ class ConsentBuilder {
       }
       return sharingConsentStep
     } else {
-      Logger.sharedInstance.debug("consent Step has null values:")
       return nil
     }
   }
@@ -436,8 +434,6 @@ struct SharingConsent {
 
       allowWithoutSharing = true
 
-    } else {
-      Logger.sharedInstance.debug("ConsentDocument Step Dictionary is null:\(dict)")
     }
   }
 }
@@ -478,8 +474,6 @@ struct ReviewConsent {
         someObject: dict[kConsentReviewStepReasonForConsent] as AnyObject) {
         reasonForConsent = dict[kConsentReviewStepReasonForConsent] as? String
       }
-    } else {
-      Logger.sharedInstance.debug("ConsentDocument Step Dictionary is null:\(dict)")
     }
   }
 }
@@ -519,8 +513,6 @@ struct Comprehension {
         someObject: dict[kConsentComprehensionCorrectAnswers] as AnyObject) {
         correctAnswers = dict[kConsentComprehensionCorrectAnswers] as? [[String: Any]]
       }
-    } else {
-      Logger.sharedInstance.debug("Comprehension Step Dictionary is null:\(dict)")
     }
   }
 }

@@ -145,7 +145,6 @@ class StudyDashboardViewController: UIViewController {
 
     DBHandler.getDataSourceKeyForActivity(studyId: (Study.currentStudy?.studyId)!) {
       (activityKeys) in
-      Logger.sharedInstance.info(activityKeys)
       if activityKeys.count > 0 {
         self.dataSourceKeysForLabkey = activityKeys
         self.sendRequestToGetDashboardResponse()

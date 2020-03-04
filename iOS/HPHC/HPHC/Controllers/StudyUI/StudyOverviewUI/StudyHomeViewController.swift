@@ -413,7 +413,6 @@ class StudyHomeViewController: UIViewController {
           }
 
           if choicePredicate.count > 0, (destination?.count)! > 0 {
-            Logger.sharedInstance.info("choices in eligibility \(choicePredicate) ")
             predicateRule = ORKPredicateStepNavigationRule(
               resultPredicates: choicePredicate,
               destinationStepIdentifiers: destination!,

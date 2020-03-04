@@ -261,8 +261,6 @@ class TextChoiceQuestionController: ORKQuestionStepViewController {
       self.answers = nil
     }
 
-    Logger.sharedInstance.info(self.result as Any, "Result")
-
     // Get the ref of the super class table view
     if let tableView = self.view.allSubViewsOf(type: UITableView.self).first {
       self.tableView = tableView

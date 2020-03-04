@@ -1026,7 +1026,6 @@ extension UserServices: NMWebServiceDelegate {
 
         if error.code == NoNetworkErrorCode {
           // save in database
-          Logger.sharedInstance.info("save in database")
           DBHandler.saveRequestInformation(
             params: self.requestParams, headers: self.headerParams,
             method: requestName as String,

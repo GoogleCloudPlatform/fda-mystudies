@@ -51,8 +51,6 @@ class AnchorDateHandler {
     _ completionHandler: @escaping AnchordDateFetchCompletionHandler
   ) {
 
-    Logger.sharedInstance.info("Log Started - \(Date().timeIntervalSince1970)")
-
     handler = completionHandler
     // Get activities from database for anchor date is not present
     let activities = DBHandler.getActivitiesWithEmptyAnchorDateValue(
@@ -132,8 +130,6 @@ class AnchorDateHandler {
         { $0.isFinishedFetching == false })
       .first
     else {
-
-      Logger.sharedInstance.info("Log API Finished - \(Date().timeIntervalSince1970)")
       saveAnchorDateInDatabase()
       return
     }
@@ -163,7 +159,6 @@ class AnchorDateHandler {
       completionHandler: { (data, response, error) -> Void in
 
         if error != nil {
-          Logger.sharedInstance.error(error as Any)
           emptyAnchorDateDetail.isFinishedFetching = true
           self.sendRequestToFetchResponse()
         } else {
@@ -221,10 +216,8 @@ class AnchorDateHandler {
 
   func saveAnchorDateInDatabase() {
 
-    Logger.sharedInstance.info("Log DB Started - \(Date().timeIntervalSince1970)")
     let listItems = emptyAnchorDatesList.filter({ $0.anchorDate != nil && $0.isFinishedFetching == true })
     for item in listItems {
-      Logger.sharedInstance.info("DB")
       if item.fetchAnchorDateFor == .activity {
         DBHandler.updateActivityLifeTimeFor(item.activity, anchorDate: item.anchorDate!)
       } else if item.fetchAnchorDateFor == .resource {
@@ -240,7 +233,6 @@ class AnchorDateHandler {
         DBHandler.saveLifeTimeFor(resource: item.resource, anchorDate: anchorDate!)
       }
     }
-    Logger.sharedInstance.info("Log DB Finished - \(Date().timeIntervalSince1970)")
     handler(true)
   }
 

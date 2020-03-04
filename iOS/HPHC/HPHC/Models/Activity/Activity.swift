@@ -281,8 +281,6 @@ class Activity {
       ) {
         self.calculateActivityRuns(studyId: self.studyId!)
       }
-    } else {
-      Logger.sharedInstance.debug("infoDict is null:\(infoDict)")
     }
 
   }
@@ -302,12 +300,7 @@ class Activity {
       if Utilities.isValidObject(someObject: activityDict[kActivitySteps] as AnyObject?) {
         self.setStepArray(stepArray: (activityDict[kActivitySteps] as? Array)!)
 
-      } else {
-        Logger.sharedInstance.debug(
-          "infoDict is null:\(String(describing: activityDict[kActivitySteps]))")
       }
-    } else {
-      Logger.sharedInstance.debug("infoDict is null:\(activityDict)")
     }
   }
 
@@ -324,9 +317,6 @@ class Activity {
       if Utilities.isValidValue(someObject: infoDict[kActivityVersion] as AnyObject) {
         self.version = infoDict[kActivityVersion] as? String
       }
-
-    } else {
-      Logger.sharedInstance.debug("infoDict is null:\(infoDict)")
     }
   }
 
@@ -343,8 +333,6 @@ class Activity {
         someObject: configurationDict[kActivityRandomization] as AnyObject) {
         self.randomization = configurationDict[kActivityId] as? Bool
       }
-    } else {
-      Logger.sharedInstance.debug("configurationDict is null:\(configurationDict)")
     }
   }
 
@@ -394,8 +382,6 @@ class Activity {
 
     if Utilities.isValidObject(someObject: stepArray as AnyObject?) {
       self.steps? = stepArray
-    } else {
-      Logger.sharedInstance.debug("stepArray is null:\(stepArray)")
     }
   }
 
@@ -404,10 +390,7 @@ class Activity {
   func setORKSteps(orkStepArray: [ORKStep]) {
     if Utilities.isValidObject(someObject: orkStepArray as AnyObject?) {
       self.orkSteps = orkStepArray
-    } else {
-      Logger.sharedInstance.debug("stepArray is null:\(orkStepArray)")
     }
-
   }
 
   //method to set step array
@@ -418,8 +401,6 @@ class Activity {
 
     if Utilities.isValidObject(someObject: stepArray as AnyObject?) {
       self.activitySteps? = stepArray
-    } else {
-      Logger.sharedInstance.debug("stepArray is null:\(stepArray)")
     }
   }
 

@@ -118,7 +118,6 @@ class WCPServices: NSObject {
   /// Creates a request to receive collection of `Study`
   /// - Parameter delegate: Class object to receive response
   func getStudyList(_ delegate: NMWebServiceDelegate) {
-    Logger.sharedInstance.info("StudyList Start \(Date())")
     self.delegate = delegate
     let method = WCPMethods.studyList.method
     let params = [String: Any]()
@@ -302,11 +301,9 @@ class WCPServices: NSObject {
       let studyModelObj = Study(studyDetail: study)
       listOfStudies.append(studyModelObj)
     }
-    Logger.sharedInstance.info("Studies Parsing Finished")
     // assgin to Gateway
     Gateway.instance.studies = listOfStudies
 
-    Logger.sharedInstance.info("Studies Saving in DB")
     // save in database
     DBHandler().saveStudies(studies: listOfStudies)
   }
@@ -315,19 +312,14 @@ class WCPServices: NSObject {
   /// - Parameter response: Webservice response
   func handleStudyList(response: [String: Any]) {
 
-    Logger.sharedInstance.info("Studies Parsing Start")
-
     let studies = response[kStudies] as! [[String: Any]]
     var listOfStudies: [Study] = []
     for study in studies {
       let studyModelObj = Study(studyDetail: study)
       listOfStudies.append(studyModelObj)
     }
-    Logger.sharedInstance.info("Studies Parsing Finished")
     // assgin to Gateway
     Gateway.instance.studies = listOfStudies
-
-    Logger.sharedInstance.info("Studies Saving in DB")
     // save in database
     DBHandler().saveStudies(studies: listOfStudies)
 
@@ -515,8 +507,6 @@ class WCPServices: NSObject {
   /// - Parameter response: Webservice response
   func handleStudyActivityList(response: [String: Any]) {
 
-    Logger.sharedInstance.info("Activities Parsing Start")
-
     // Actual
     let activities = response[kActivites] as! [[String: Any]]
 
@@ -530,11 +520,8 @@ class WCPServices: NSObject {
             studyId: (Study.currentStudy?.studyId)!, infoDict: activityDict)
           activityList.append(activity)
         }
-
-        Logger.sharedInstance.info("Activities Parsing Finished")
         // save to current study object
         Study.currentStudy?.activities = activityList
-        Logger.sharedInstance.info("Activities Saving in DB")
         // save in database
         DBHandler.saveActivities(activities: (Study.currentStudy?.activities)!)
       }

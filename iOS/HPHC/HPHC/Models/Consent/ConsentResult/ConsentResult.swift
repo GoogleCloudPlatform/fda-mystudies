@@ -196,8 +196,6 @@ class ConsentResult {
             dateString: (activityDict[kActivityStartTime] as? String)!) as AnyObject?) {
           self.startTime = Utilities.getDateFromString(
             dateString: (activityDict[kActivityStartTime] as? String)!)
-        } else {
-          Logger.sharedInstance.debug("Date Conversion is null:\(activityDict)")
         }
       }
       if Utilities.isValidValue(someObject: activityDict[kActivityEndTime] as AnyObject) {
@@ -207,12 +205,8 @@ class ConsentResult {
             dateString: (activityDict[kActivityEndTime] as? String)!) as AnyObject?) {
           self.endTime = Utilities.getDateFromString(
             dateString: (activityDict[kActivityEndTime] as? String)!)
-        } else {
-          Logger.sharedInstance.debug("Date Conversion is null:\(activityDict)")
         }
       }
-    } else {
-      Logger.sharedInstance.debug("activityDict Result Dictionary is null:\(activityDict)")
     }
   }
 

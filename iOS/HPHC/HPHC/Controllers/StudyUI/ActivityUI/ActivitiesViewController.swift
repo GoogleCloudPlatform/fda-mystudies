@@ -106,7 +106,6 @@ class ActivitiesViewController: UIViewController {
 
   override func viewWillAppear(_ animated: Bool) {
     super.viewWillAppear(animated)
-    Logger.sharedInstance.info("ActivitiesViewController - viewWillAppear")
     self.navigationController?.interactivePopGestureRecognizer?.isEnabled = false
 
     if Utilities.isStandaloneApp() {
@@ -309,7 +308,6 @@ class ActivitiesViewController: UIViewController {
   }
 
   @objc func refresh(sender: AnyObject) {
-    Logger.sharedInstance.info("Request for study Updated...")
     WCPServices().getStudyUpdates(study: Study.currentStudy!, delegate: self)
   }
 
@@ -511,14 +509,11 @@ class ActivitiesViewController: UIViewController {
     }
 
     if (User.currentUser.settings?.localNotifications)! {
-      Logger.sharedInstance.info("localNotifications enabled")
       if !(Study.currentStudy?.activitiesLocalNotificationUpdated)! {
-        Logger.sharedInstance.info("Registering Notification")
         //Register LocalNotifications
         LocalNotification.registerAllLocalNotificationFor(
           activities: (Study.currentStudy?.activities)!
         ) { (_, notificationlist) in
-          Logger.sharedInstance.info("Notification set sucessfully")
           Study.currentStudy?.activitiesLocalNotificationUpdated = true
           DBHandler.saveRegisteredLocaNotifications(notificationList: notificationlist)
           DBHandler.updateLocalNotificationScheduleStatus(
@@ -528,9 +523,7 @@ class ActivitiesViewController: UIViewController {
 
       }
     }
-
     self.checkIfFetelKickCountRunning()
-    Logger.sharedInstance.info("Activities Displayed to user")
   }
 
   /// Updates Activity Run Status.
@@ -883,8 +876,6 @@ extension ActivitiesViewController: UITableViewDelegate {
             || activityRunParticipationStatus?
             .status == .inProgress {
             Study.updateCurrentActivity(activity: activities[indexPath.row])
-
-            Logger.sharedInstance.info("Activity Fetching from db")
             // check in database
             DBHandler.loadActivityMetaData(
               activity: activities[indexPath.row],
@@ -906,12 +897,12 @@ extension ActivitiesViewController: UITableViewDelegate {
             self.selectedIndexPath = indexPath
 
           } else {
-            Logger.sharedInstance.info("run is completed")
+            // Run is completed.
           }
         }
 
       } else if activity.userParticipationStatus?.status == .abandoned {
-        Logger.sharedInstance.info("run not available")
+        // Run not available.
         UIUtilities.showAlertWithMessage(
           alertMessage: NSLocalizedString(kActivityAbondonedAlertMessage, comment: ""))
       }
@@ -1041,7 +1032,7 @@ extension ActivitiesViewController: NMWebServiceDelegate {
 
     } else if requestName as String == WCPMethods.studyUpdates.method.methodName {
 
-      Logger.sharedInstance.info("Handling response for study updates...")
+      // Handle response for study updates.
       if Study.currentStudy?.version == StudyUpdates.studyVersion {
 
         self.loadActivitiesFromDatabase()

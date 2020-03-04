@@ -85,8 +85,6 @@ struct ConsentDocument {
         someObject: consentDoucumentdict[kConsentDocumentVersion] as AnyObject) {
         self.version = consentDoucumentdict[kConsentDocumentVersion] as? String
       }
-    } else {
-      Logger.sharedInstance.debug("Study Dictionary is null:\(consentDoucumentdict)")
     }
   }
 }
@@ -194,8 +192,6 @@ class Study: Hashable {
       } else {
         self.userParticipateState = UserStudyStatus()
       }
-    } else {
-      Logger.sharedInstance.debug("Study Dictionary is null:\(studyDetail)")
     }
   }
 

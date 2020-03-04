@@ -137,8 +137,7 @@ class FetalKickCounterStepViewController: ORKStepViewController {
       if differenceInSec >= 0 {
         initialTime = initialTime + differenceInSec
       }
-
-      Logger.sharedInstance.info("Difference: \(differenceInSec)")
+        
       // Setting the maximum time allowed for the task
       self.totalTime = step.counDownTimer!  //10
 
