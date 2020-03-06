@@ -389,7 +389,6 @@ extension SignUpViewController: UITableViewDelegate {
 extension SignUpViewController: UITextFieldDelegate {
 
   func textFieldDidBeginEditing(_ textField: UITextField) {
-    print(textField.tag)
     if textField.tag == TextFieldTags.EmailId.rawValue {
       textField.keyboardType = .emailAddress
     }
@@ -430,7 +429,6 @@ extension SignUpViewController: UITextFieldDelegate {
   }
 
   func textFieldDidEndEditing(_ textField: UITextField) {
-    print(textField.text!)
 
     textField.text = textField.text?.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines)
 

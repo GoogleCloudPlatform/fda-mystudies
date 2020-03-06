@@ -261,7 +261,7 @@ class LeftMenuViewController: UIViewController, LeftMenuProtocol {
         [
           "menuTitle": "My Account",
           "iconName": "profile_menu1",
-          "menuType": LeftMenu.profile_reachOut
+          "menuType": LeftMenu.profile_reachOut,
         ])
 
       if shouldAllowToGiveFeedback {
@@ -269,7 +269,7 @@ class LeftMenuViewController: UIViewController, LeftMenuProtocol {
           [
             "menuTitle": "Reach Out",
             "iconName": "reachout_menu1",
-            "menuType": LeftMenu.reachOut_signIn
+            "menuType": LeftMenu.reachOut_signIn,
           ])
       }
 
@@ -280,7 +280,7 @@ class LeftMenuViewController: UIViewController, LeftMenuProtocol {
           [
             "menuTitle": "Reach Out",
             "iconName": "reachout_menu1",
-            "menuType": LeftMenu.profile_reachOut
+            "menuType": LeftMenu.profile_reachOut,
           ])
       }
 
@@ -288,7 +288,7 @@ class LeftMenuViewController: UIViewController, LeftMenuProtocol {
         [
           "menuTitle": "Sign In",
           "iconName": "signin_menu1",
-          "menuType": LeftMenu.reachOut_signIn
+          "menuType": LeftMenu.reachOut_signIn,
         ])
 
       menus.append(
@@ -296,7 +296,7 @@ class LeftMenuViewController: UIViewController, LeftMenuProtocol {
           "menuTitle": "New User?",
           "iconName": "newuser_menu1",
           "subTitle": "Sign up",
-          "menuType": LeftMenu.signup
+          "menuType": LeftMenu.signup,
         ])
       self.buttonSignOut?.isHidden = true
     }

@@ -50,11 +50,14 @@ enum WCPMethods: String {
     switch self {
     case .feedback, .contactUs:
       return Method(
-        methodName: self.rawValue, methodType: .httpMethodPOST,
+        methodName: self.rawValue,
+        methodType: .httpMethodPOST,
         requestType: .requestTypeJSON)
     default:
       return Method(
-        methodName: self.rawValue, methodType: .httpMethodGet, requestType: .requestTypeHTTP
+        methodName: self.rawValue,
+        methodType: .httpMethodGet,
+        requestType: .requestTypeHTTP
       )
     }
   }

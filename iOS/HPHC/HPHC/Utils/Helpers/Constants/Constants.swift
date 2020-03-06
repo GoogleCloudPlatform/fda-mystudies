@@ -1,3 +1,9 @@
+//  Copyright 2020 Google LLC
+//
+//  Use of this source code is governed by an MIT-style
+//  license that can be found in the LICENSE file or at
+//  https://opensource.org/licenses/MIT.
+//
 // License Agreement for FDA My Studies
 // Copyright © 2017-2019 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors. Permission is
 // hereby granted, free of charge, to any person obtaining a copy of this software and associated
@@ -206,8 +212,49 @@ let filterListSegue = "filterscreenSegue"
 let kStagingUserEmailId = "aqibm@boston-technology.com"
 let kIsStagingUser = "StagingUser"
 
-enum BrandingConstant {
+// MARK: - AppDelegate Contants.
 
+let kBlockerScreenLabelText = "Please update to the latest version of app to continue."
+let kConsentUpdatedTitle = "Consent Updated"
+
+let kMessageConsentUpdatedPartTwo
+  = " Please review the revised Consent terms and provide your Informed Consent, to continue participating in the study."
+
+let kMessageConsentUpdated = "The Consent Document for this study has been updated."
+  + kMessageConsentUpdatedPartTwo
+
+let kReviewTitle = "Review"
+let kPasscodeStepIdentifier = "PasscodeStep"
+let kPasscodeTaskIdentifier = "PassCodeTask"
+let kMessagePasscode = "Passcode"
+let kMessagePasscodeSignOut
+  = "You will be signed out and will need to sign in again. Are you sure you want to proceed?"
+let kNewProgressViewNIB = "NewProgressView"
+let kforgotPasscodeTitle = "Forgot Passcode? Sign In Again"
+let kStudyStoryboard = "Study"
+let kPasscodeSetUpText = "Set up a passcode for the app"
+let kIphoneSimulator = "iPhone Simulator"
+
+let kBundleIdentier = "CFBundleIdentifier"
+let kPDFCreationNotificationId = "pdfCreationNotificationIdentifier"
+let ksetUpTimeIdentifier = "setUPTime"
+let kCFBundleShortVersion = "CFBundleShortVersionString"
+
+let kResultCount = "resultCount"
+let kResultsForAppStore = "results"
+let kAppStoreVersion = "version"
+
+let kContinueButtonTitle = NSLocalizedString("Continue", comment: "")
+let kType = "type"
+
+let kCurrentVersion = "currentVersion"
+let kForceUpdate = "forceUpdate"
+let kMessage = "message"
+let kVisualStepId = "visual"
+let kMessageString = "Message"
+
+// MARK: - Branding constants
+enum BrandingConstant {
   static let JoinStudyButtonTitle = "JoinStudyButtonTitle"
   static let ViewConsentButtonTitle = "ViewConsentButtonTitle"
   static let VisitWebsiteButtonTitle = "VisitWebsiteButtonTitle"

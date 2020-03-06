@@ -47,15 +47,18 @@ enum ResponseMethods: String {
     switch self {
     case .executeSQL:
       return Method(
-        methodName: (self.rawValue+".api"), methodType: .httpMethodGet,
+        methodName: (self.rawValue+".api"),
+        methodType: .httpMethodGet,
         requestType: .requestTypeHTTP)
     case .withdrawFromStudy, .getParticipantResponse, .validateEnrollmentToken:
       return Method(
-        methodName: (self.rawValue+".api"), methodType: .httpMethodPOST,
+        methodName: (self.rawValue+".api"),
+        methodType: .httpMethodPOST,
         requestType: .requestTypeHTTP)
     default:
       return Method(
-        methodName: (self.rawValue+".api"), methodType: .httpMethodPOST,
+        methodName: (self.rawValue+".api"),
+        methodType: .httpMethodPOST,
         requestType: .requestTypeJSON)
     }
   }

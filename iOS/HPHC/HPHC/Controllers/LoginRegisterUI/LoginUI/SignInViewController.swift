@@ -356,11 +356,6 @@ extension SignInViewController: UITableViewDelegate {
 // MARK: - Textfield Delegate
 extension SignInViewController: UITextFieldDelegate {
 
-  func textFieldDidBeginEditing(_ textField: UITextField) {
-    print(textField.tag)
-
-  }
-
   func textField(
     _ textField: UITextField, shouldChangeCharactersIn range: NSRange,
     replacementString string: String
@@ -385,7 +380,6 @@ extension SignInViewController: UITextFieldDelegate {
   }
 
   func textFieldDidEndEditing(_ textField: UITextField) {
-    print(textField.text!)
     switch textField.tag {
     case SignInTableViewTags.EmailId.rawValue:
       user.emailId = textField.text
@@ -396,7 +390,6 @@ extension SignInViewController: UITextFieldDelegate {
       break
 
     default:
-      print("No Matching data Found")
       break
     }
   }
@@ -417,15 +410,11 @@ extension SignInViewController: UITextViewDelegate {
 
   func textView(_ textView: UITextView, shouldInteractWith URL: URL, in characterRange: NSRange)
     -> Bool {
-
-    print(characterRange.description)
-
     var link: String = (TermsAndPolicy.currentTermsAndPolicy?.termsURL)!
     var title: String = kNavigationTitleTerms
     if URL.absoluteString == TermsAndPolicy.currentTermsAndPolicy?.policyURL && characterRange
       .length == String("Privacy Policy").count {
 
-      print("terms")
       link = (TermsAndPolicy.currentTermsAndPolicy?.policyURL)!
       title = kNavigationTitlePrivacyPolicy
 

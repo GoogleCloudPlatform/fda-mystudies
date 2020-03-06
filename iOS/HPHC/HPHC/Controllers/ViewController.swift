@@ -125,7 +125,7 @@ class ViewController: UIViewController {
 
       // use anyObj here
     } catch {
-      print("json error: \(error.localizedDescription)")
+      Logger.sharedInstance.info("json error: \(error.localizedDescription)")
     }
 
   }
@@ -228,16 +228,16 @@ extension ViewController: ORKTaskViewControllerDelegate {
     switch reason {
 
     case ORKTaskViewControllerFinishReason.completed:
-      print("completed")
+      Logger.sharedInstance.info("completed")
     //taskResult = taskViewController.result
     case ORKTaskViewControllerFinishReason.failed:
-      print("failed")
+      Logger.sharedInstance.info("failed")
     //taskResult = taskViewController.result
     case ORKTaskViewControllerFinishReason.discarded:
-      print("discarded")
+      Logger.sharedInstance.info("discarded")
     //taskResult = taskViewController.result
     case ORKTaskViewControllerFinishReason.saved:
-      print("saved")
+      Logger.sharedInstance.info("saved")
       //taskResult = taskViewController.restorationData
 
       if taskViewController.task?.identifier == "ConsentTask" {

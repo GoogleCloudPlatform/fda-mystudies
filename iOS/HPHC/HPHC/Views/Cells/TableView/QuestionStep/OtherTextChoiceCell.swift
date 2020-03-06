@@ -81,10 +81,6 @@ extension OtherTextChoiceCell: UITextFieldDelegate {
     delegate?.didEndEditing(with: textField.text)
   }
 
-  func textFieldDidBeginEditing(_ textField: UITextField) {
-    print("Editing start")
-  }
-
   func textField(
     _ textField: UITextField, shouldChangeCharactersIn range: NSRange,
     replacementString string: String

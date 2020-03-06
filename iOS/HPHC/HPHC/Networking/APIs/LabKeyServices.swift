@@ -115,7 +115,6 @@ class LabKeyServices: NSObject {
       kActivityResponseData: responseData
     ] as [String: Any]
 
-    print("processresponse \(params.preetyJSON())")
     self.sendRequestWith(method: method, params: params, headers: nil)
 
   }
@@ -155,7 +154,6 @@ class LabKeyServices: NSObject {
         kActivityResponseData: responseData
       ] as [String: Any]
 
-      print("processresponse : \(params.preetyJSON())")
       self.sendRequestWith(method: method, params: params, headers: nil)
     }
   }
@@ -202,21 +200,7 @@ class LabKeyServices: NSObject {
   }
 
   // MARK: Parsers
-  func handleEnrollForStudy(response: [String: Any]) {
-  }
-
-  func handleVerifyEnrollmentToken(response: [String: Any]) {
-  }
-
-  func handleWithdrawFromStudy(response: [String: Any]) {
-  }
-
-  func handleProcessResponse(response: [String: Any]) {
-  }
-
-  func handleGetParticipantResponse1(response: [String: Any]) {
-    print(response)
-  }
+  func handleEnrollForStudy(response: [String: Any]) {}
 
   /// Handles Participant Response
   /// - Parameter response: Webservice response
@@ -237,7 +221,6 @@ class LabKeyServices: NSObject {
     }
 
     if let rows = response["rows"] as? [[String: Any]] {
-      print("rows \(rows)")
 
       for rowDetail in rows {
         if let data = rowDetail["data"] as? [String: Any] {
@@ -376,7 +359,7 @@ extension LabKeyServices: NMWebServiceDelegate {
     case ResponseMethods.processResponse.description as String: break
     case ResponseMethods.withdrawFromStudy.description as String: break
     default:
-      print("Request was not sent with proper method name")
+        Logger.sharedInstance.info("Request was not sent with proper method name")
     }
 
     delegate?.finishedRequest(manager, requestName: requestName, response: response)
@@ -390,7 +373,6 @@ extension LabKeyServices: NMWebServiceDelegate {
 
       if error.code == NoNetworkErrorCode {
         // save in database
-        print("save in database")
         DBHandler.saveRequestInformation(
           params: self.requestParams, headers: self.headerParams,
           method: requestName as String,

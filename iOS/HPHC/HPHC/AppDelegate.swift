@@ -1,3 +1,9 @@
+//  Copyright 2020 Google LLC
+//
+//  Use of this source code is governed by an MIT-style
+//  license that can be found in the LICENSE file or at
+//  https://opensource.org/licenses/MIT.
+//
 // License Agreement for FDA My Studies
 // Copyright © 2017-2019 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors. Permission is
 // hereby granted, free of charge, to any person obtaining a copy of this software and associated
@@ -23,45 +29,6 @@ import IQKeyboardManagerSwift
 import RealmSwift
 import UIKit
 import UserNotifications
-
-let kBlockerScreenLabelText = "Please update to the latest version of app to continue."
-let kConsentUpdatedTitle = "Consent Updated"
-
-let kMessageConsentUpdatedPartTwo
-  = " Please review the revised Consent terms and provide your Informed Consent, to continue participating in the study."
-
-let kMessageConsentUpdated = "The Consent Document for this study has been updated."
-  + kMessageConsentUpdatedPartTwo
-
-let kReviewTitle = "Review"
-let kPasscodeStepIdentifier = "PasscodeStep"
-let kPasscodeTaskIdentifier = "PassCodeTask"
-let kMessagePasscode = "Passcode"
-let kMessagePasscodeSignOut
-  = "You will be signed out and will need to sign in again. Are you sure you want to proceed?"
-let kNewProgressViewNIB = "NewProgressView"
-let kforgotPasscodeTitle = "Forgot Passcode? Sign In Again"
-let kStudyStoryboard = "Study"
-let kPasscodeSetUpText = "Set up a passcode for the app"
-let kIphoneSimulator = "iPhone Simulator"
-
-let kBundleIdentier = "CFBundleIdentifier"
-let kPDFCreationNotificationId = "pdfCreationNotificationIdentifier"
-let ksetUpTimeIdentifier = "setUPTime"
-let kCFBundleShortVersion = "CFBundleShortVersionString"
-
-let kResultCount = "resultCount"
-let kResultsForAppStore = "results"
-let kAppStoreVersion = "version"
-
-let kContinueButtonTitle = NSLocalizedString("Continue", comment: "")
-let kType = "type"
-
-let kCurrentVersion = "currentVersion"
-let kForceUpdate = "forceUpdate"
-let kMessage = "message"
-let kVisualStepId = "visual"
-let kMessageString = "Message"
 
 @UIApplicationMain
 
@@ -195,7 +162,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
       if result == errSecSuccess {
         realmKey = key.base64EncodedString()
       } else {
-        print("Problem generating random bytes")
+        Logger.sharedInstance.info("Problem generating random bytes")
 
       }
       FDAKeychain.shared[kRealmEncryptionKeychainKey] = realmKey
@@ -235,7 +202,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     self.isAppLaunched = true
     IQKeyboardManager.shared.enable = true
-    print(Utilities.isStandaloneApp(), "standalone")
+    Logger.sharedInstance.info(Utilities.isStandaloneApp(), "Standalone")
     self.customizeNavigationBar()
     Fabric.with([Crashlytics.self])
 
@@ -412,7 +379,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     _ application: UIApplication, didFailToRegisterForRemoteNotificationsWithError error: Error
   ) {
 
-    print("Token Registration failed  \(error)")
+    Logger.sharedInstance.info("Token Registration failed  \(error)")
 
   }
 
@@ -512,7 +479,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
       let center = UNUserNotificationCenter.current()
       center.getPendingNotificationRequests(
         completionHandler: { requests in
-          print(requests)
           if requests.count < 50 {
             LocalNotification.refreshAllLocalNotification()
           }
@@ -532,7 +498,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     self.selectedController = controller
 
     if StudyUpdates.studyConsentUpdated {
-      print("Study consent is updated: Please Present Consent UI")
+      // Study consent is updated: Please Present Consent UI.
 
       let navigationController = (self.window?.rootViewController as? UINavigationController)!
 
@@ -557,7 +523,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         action2: {
         })
     } else {
-      print("Study consent not updated")
+      // Study consent not updated
     }
   }
 
@@ -1302,7 +1268,6 @@ extension AppDelegate: ORKTaskViewControllerDelegate {
     switch reason {
 
     case ORKTaskViewControllerFinishReason.completed:
-      print("completed")
       if !(taskViewController.task?.identifier == kConsentTaskIdentifier) { // other surveys/Active tasks/ Passcode
         let ud = UserDefaults.standard
         ud.set(false, forKey: kPasscodeIsPending)
@@ -1311,19 +1276,17 @@ extension AppDelegate: ORKTaskViewControllerDelegate {
       }
 
     case ORKTaskViewControllerFinishReason.failed:
-      print("failed")
+      Logger.sharedInstance.info("failed")
 
     case ORKTaskViewControllerFinishReason.discarded:
       if taskViewController.task?.identifier == kConsentTaskIdentifier {
         self.popViewControllerAfterConsentDisagree()
       }
-      print("discarded")
       if self.isComprehensionFailed! {
         self.isComprehensionFailed = false
       }
 
     case ORKTaskViewControllerFinishReason.saved:
-      print("saved")
       if taskViewController.task?.identifier == kConsentTaskIdentifier {
         self.popViewControllerAfterConsentDisagree()
       }
@@ -1788,8 +1751,6 @@ extension AppDelegate: UNUserNotificationCenterDelegate {
   ) {
 
     let userInfo = response.notification.request.content.userInfo
-
-    print("application state \(UIApplication.shared.applicationState.rawValue)")
     UIApplication.shared.applicationIconBadgeNumber = 0
 
     if UIApplication.shared.applicationState == UIApplication.State.background || (
