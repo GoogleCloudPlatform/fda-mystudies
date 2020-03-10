@@ -12,36 +12,36 @@
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package com.harvard.fda.studyAppModule.activityBuilder;
+package com.harvard.fda.studyappmodule.activitybuilder;
 
 import android.content.Context;
 import android.util.Log;
 
 import com.harvard.fda.R;
-import com.harvard.fda.studyAppModule.activityBuilder.model.serviceModel.ActivityObj;
-import com.harvard.fda.studyAppModule.activityBuilder.model.serviceModel.Steps;
-import com.harvard.fda.studyAppModule.custom.AnswerFormatCustom;
-import com.harvard.fda.studyAppModule.custom.ChoiceAnswerFormatCustom;
-import com.harvard.fda.studyAppModule.custom.QuestionStepCustom;
-import com.harvard.fda.studyAppModule.custom.activeTask.TappingAnswerFormat;
-import com.harvard.fda.studyAppModule.custom.question.ChoiceCustomImage;
-import com.harvard.fda.studyAppModule.custom.question.ChoiceTextExclusive;
-import com.harvard.fda.studyAppModule.custom.question.ContinousScaleAnswerFormat;
-import com.harvard.fda.studyAppModule.custom.question.DateAnswerformatCustom;
-import com.harvard.fda.studyAppModule.custom.question.DecimalUnitAnswerFormat;
-import com.harvard.fda.studyAppModule.custom.question.EmailAnswerFormatCustom;
-import com.harvard.fda.studyAppModule.custom.question.HeightAnswerFormat;
-import com.harvard.fda.studyAppModule.custom.question.IntegerUnitAnswerFormat;
-import com.harvard.fda.studyAppModule.custom.question.LocationAnswerFormat;
-import com.harvard.fda.studyAppModule.custom.question.MultiChoiceImageAnswerFormat;
-import com.harvard.fda.studyAppModule.custom.question.MultiChoiceTextAnswerFormat;
-import com.harvard.fda.studyAppModule.custom.question.ScaleAnswerFormat;
-import com.harvard.fda.studyAppModule.custom.question.ScaleTextAnswerFormat;
-import com.harvard.fda.studyAppModule.custom.question.SingleChoiceTextAnswerFormat;
-import com.harvard.fda.studyAppModule.custom.question.TaskInstructionAnswerFormat;
-import com.harvard.fda.studyAppModule.custom.question.TaskIntroductionAnswerFormat;
-import com.harvard.fda.studyAppModule.custom.question.TextAnswerFormatRegex;
-import com.harvard.fda.studyAppModule.custom.question.TimeIntervalAnswerFormat;
+import com.harvard.fda.studyappmodule.activitybuilder.model.servicemodel.ActivityObj;
+import com.harvard.fda.studyappmodule.activitybuilder.model.servicemodel.Steps;
+import com.harvard.fda.studyappmodule.custom.AnswerFormatCustom;
+import com.harvard.fda.studyappmodule.custom.ChoiceAnswerFormatCustom;
+import com.harvard.fda.studyappmodule.custom.QuestionStepCustom;
+import com.harvard.fda.studyappmodule.custom.activetask.TappingAnswerFormat;
+import com.harvard.fda.studyappmodule.custom.question.ChoiceCustomImage;
+import com.harvard.fda.studyappmodule.custom.question.ChoiceTextExclusive;
+import com.harvard.fda.studyappmodule.custom.question.ContinousScaleAnswerFormat;
+import com.harvard.fda.studyappmodule.custom.question.DateAnswerformatCustom;
+import com.harvard.fda.studyappmodule.custom.question.DecimalUnitAnswerFormat;
+import com.harvard.fda.studyappmodule.custom.question.EmailAnswerFormatCustom;
+import com.harvard.fda.studyappmodule.custom.question.HeightAnswerFormat;
+import com.harvard.fda.studyappmodule.custom.question.IntegerUnitAnswerFormat;
+import com.harvard.fda.studyappmodule.custom.question.LocationAnswerFormat;
+import com.harvard.fda.studyappmodule.custom.question.MultiChoiceImageAnswerFormat;
+import com.harvard.fda.studyappmodule.custom.question.MultiChoiceTextAnswerFormat;
+import com.harvard.fda.studyappmodule.custom.question.ScaleAnswerFormat;
+import com.harvard.fda.studyappmodule.custom.question.ScaleTextAnswerFormat;
+import com.harvard.fda.studyappmodule.custom.question.SingleChoiceTextAnswerFormat;
+import com.harvard.fda.studyappmodule.custom.question.TaskInstructionAnswerFormat;
+import com.harvard.fda.studyappmodule.custom.question.TaskIntroductionAnswerFormat;
+import com.harvard.fda.studyappmodule.custom.question.TextAnswerFormatRegex;
+import com.harvard.fda.studyappmodule.custom.question.TimeIntervalAnswerFormat;
 import com.harvard.fda.utils.AppController;
 
 import org.researchstack.backbone.answerformat.BooleanAnswerFormat;

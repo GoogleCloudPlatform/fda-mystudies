@@ -12,7 +12,7 @@
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package com.harvard.fda.studyAppModule;
+package com.harvard.fda.studyappmodule;
 
 import android.content.Context;
 import android.graphics.drawable.GradientDrawable;
@@ -30,9 +30,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.harvard.fda.R;
-import com.harvard.fda.studyAppModule.acvitityListModel.ActivitiesWS;
-import com.harvard.fda.studyAppModule.survayScheduler.SurvayScheduler;
-import com.harvard.fda.studyAppModule.survayScheduler.model.ActivityStatus;
+import com.harvard.fda.studyappmodule.activitymodel.ActivitiesWS;
+import com.harvard.fda.studyappmodule.surveyscheduler.SurveyScheduler;
+import com.harvard.fda.studyappmodule.surveyscheduler.model.ActivityStatus;
 import com.harvard.fda.utils.AppController;
 
 import java.text.ParseException;
@@ -236,7 +236,7 @@ public class SurveyActivitiesListAdapter extends RecyclerView.Adapter<SurveyActi
             } catch (ParseException e) {
                 e.printStackTrace();
             }
-            if (items.get(position).getFrequency().getType().equalsIgnoreCase(SurvayScheduler.FREQUENCY_TYPE_DAILY)) {
+            if (items.get(position).getFrequency().getType().equalsIgnoreCase(SurveyScheduler.FREQUENCY_TYPE_DAILY)) {
                 try {
                     String abc = "";
                     if (!items.get(position).getFrequency().getRuns().isEmpty()) {
@@ -267,7 +267,7 @@ public class SurveyActivitiesListAdapter extends RecyclerView.Adapter<SurveyActi
                     e.printStackTrace();
                 }
                 holder.more.setVisibility(View.GONE);
-            } else if (items.get(position).getFrequency().getType().equalsIgnoreCase(SurvayScheduler.FREQUENCY_TYPE_MONTHLY)) {
+            } else if (items.get(position).getFrequency().getType().equalsIgnoreCase(SurveyScheduler.FREQUENCY_TYPE_MONTHLY)) {
                 try {
                     String myDateString = items.get(position).getStartTime().toString();
                     Date date = simpleDateFormat5.parse(myDateString.split("\\.")[0]);
@@ -284,7 +284,7 @@ public class SurveyActivitiesListAdapter extends RecyclerView.Adapter<SurveyActi
                     e.printStackTrace();
                 }
                 holder.more.setVisibility(View.GONE);
-            } else if (items.get(position).getFrequency().getType().equalsIgnoreCase(SurvayScheduler.FREQUENCY_TYPE_WEEKLY)) {
+            } else if (items.get(position).getFrequency().getType().equalsIgnoreCase(SurveyScheduler.FREQUENCY_TYPE_WEEKLY)) {
                 try {
                     String myDateString = items.get(position).getStartTime().toString();
                     Date date = simpleDateFormat5.parse(myDateString.split("\\.")[0]);
@@ -301,7 +301,7 @@ public class SurveyActivitiesListAdapter extends RecyclerView.Adapter<SurveyActi
                     e.printStackTrace();
                 }
                 holder.more.setVisibility(View.GONE);
-            } else if (items.get(position).getFrequency().getType().equalsIgnoreCase(SurvayScheduler.FREQUENCY_TYPE_ONE_TIME)) {
+            } else if (items.get(position).getFrequency().getType().equalsIgnoreCase(SurveyScheduler.FREQUENCY_TYPE_ONE_TIME)) {
                 try {
                     if (endDate != null) {
                         holder.mDate.setText(simpleDateFormat2.format(startDate) + " - " + simpleDateFormat2.format(endDate));
@@ -313,7 +313,7 @@ public class SurveyActivitiesListAdapter extends RecyclerView.Adapter<SurveyActi
                 }
                 holder.mTime.setVisibility(View.GONE);
                 holder.more.setVisibility(View.GONE);
-            } else if (items.get(position).getFrequency().getType().equalsIgnoreCase(SurvayScheduler.FREQUENCY_TYPE_MANUALLY_SCHEDULE)) {
+            } else if (items.get(position).getFrequency().getType().equalsIgnoreCase(SurveyScheduler.FREQUENCY_TYPE_MANUALLY_SCHEDULE)) {
                 try {
 
 

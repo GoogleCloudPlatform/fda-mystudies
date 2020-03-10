@@ -12,7 +12,7 @@
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package com.harvard.fda.notificationModule;
+package com.harvard.fda.notificationmodule;
 
 import android.app.Notification;
 import android.app.PendingIntent;
@@ -29,11 +29,11 @@ import android.support.v4.app.NotificationManagerCompat;
 import com.harvard.fda.AppConfig;
 import com.harvard.fda.FDAApplication;
 import com.harvard.fda.R;
-import com.harvard.fda.storageModule.DBServiceSubscriber;
-import com.harvard.fda.studyAppModule.NotificationActivity;
-import com.harvard.fda.studyAppModule.StandaloneActivity;
-import com.harvard.fda.studyAppModule.StudyActivity;
-import com.harvard.fda.userModule.webserviceModel.UserProfileData;
+import com.harvard.fda.storagemodule.DBServiceSubscriber;
+import com.harvard.fda.studyappmodule.NotificationActivity;
+import com.harvard.fda.studyappmodule.StandaloneActivity;
+import com.harvard.fda.studyappmodule.StudyActivity;
+import com.harvard.fda.usermodule.webservicemodel.UserProfileData;
 import com.harvard.fda.utils.AppController;
 
 import java.util.Calendar;

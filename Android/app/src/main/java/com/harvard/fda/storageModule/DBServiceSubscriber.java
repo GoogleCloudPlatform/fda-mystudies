@@ -12,43 +12,43 @@
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package com.harvard.fda.storageModule;
+package com.harvard.fda.storagemodule;
 
 import android.content.Context;
 import android.util.Log;
 
-import com.harvard.fda.notificationModule.PendingIntents;
-import com.harvard.fda.notificationModule.model.NotificationDb;
-import com.harvard.fda.offlineModule.model.OfflineData;
-import com.harvard.fda.storageModule.events.DatabaseEvent;
-import com.harvard.fda.studyAppModule.SurveyActivitiesFragment;
-import com.harvard.fda.studyAppModule.activityBuilder.model.ActivityRun;
-import com.harvard.fda.studyAppModule.activityBuilder.model.serviceModel.ActivityObj;
-import com.harvard.fda.studyAppModule.activityBuilder.model.serviceModel.Steps;
-import com.harvard.fda.studyAppModule.acvitityListModel.ActivitiesWS;
-import com.harvard.fda.studyAppModule.acvitityListModel.ActivityListData;
-import com.harvard.fda.studyAppModule.consent.model.EligibilityConsent;
-import com.harvard.fda.studyAppModule.custom.Result.StepRecordCustom;
-import com.harvard.fda.studyAppModule.studyModel.ConsentDocumentData;
-import com.harvard.fda.studyAppModule.studyModel.ConsentPDF;
-import com.harvard.fda.studyAppModule.studyModel.ConsentPdfData;
-import com.harvard.fda.studyAppModule.studyModel.DashboardData;
-import com.harvard.fda.studyAppModule.studyModel.MotivationalNotification;
-import com.harvard.fda.studyAppModule.studyModel.NotificationData;
-import com.harvard.fda.studyAppModule.studyModel.NotificationDbResources;
-import com.harvard.fda.studyAppModule.studyModel.PendingIntentsResources;
-import com.harvard.fda.studyAppModule.studyModel.Study;
-import com.harvard.fda.studyAppModule.studyModel.StudyHome;
-import com.harvard.fda.studyAppModule.studyModel.StudyList;
-import com.harvard.fda.studyAppModule.studyModel.StudyResource;
-import com.harvard.fda.studyAppModule.studyModel.StudyUpdate;
-import com.harvard.fda.studyAppModule.studyModel.StudyUpdateListdata;
-import com.harvard.fda.userModule.webserviceModel.Activities;
-import com.harvard.fda.userModule.webserviceModel.ActivityData;
-import com.harvard.fda.userModule.webserviceModel.ActivityRunPreference;
-import com.harvard.fda.userModule.webserviceModel.Studies;
-import com.harvard.fda.userModule.webserviceModel.StudyData;
-import com.harvard.fda.userModule.webserviceModel.UserProfileData;
+import com.harvard.fda.notificationmodule.PendingIntents;
+import com.harvard.fda.notificationmodule.model.NotificationDb;
+import com.harvard.fda.offlinemodule.model.OfflineData;
+import com.harvard.fda.storagemodule.events.DatabaseEvent;
+import com.harvard.fda.studyappmodule.SurveyActivitiesFragment;
+import com.harvard.fda.studyappmodule.activitybuilder.model.ActivityRun;
+import com.harvard.fda.studyappmodule.activitybuilder.model.servicemodel.ActivityObj;
+import com.harvard.fda.studyappmodule.activitybuilder.model.servicemodel.Steps;
+import com.harvard.fda.studyappmodule.activitymodel.ActivitiesWS;
+import com.harvard.fda.studyappmodule.activitymodel.ActivityListData;
+import com.harvard.fda.studyappmodule.consent.model.EligibilityConsent;
+import com.harvard.fda.studyappmodule.custom.result.StepRecordCustom;
+import com.harvard.fda.studyappmodule.studymodel.ConsentDocumentData;
+import com.harvard.fda.studyappmodule.studymodel.ConsentPDF;
+import com.harvard.fda.studyappmodule.studymodel.ConsentPdfData;
+import com.harvard.fda.studyappmodule.studymodel.DashboardData;
+import com.harvard.fda.studyappmodule.studymodel.MotivationalNotification;
+import com.harvard.fda.studyappmodule.studymodel.NotificationData;
+import com.harvard.fda.studyappmodule.studymodel.NotificationDbResources;
+import com.harvard.fda.studyappmodule.studymodel.PendingIntentsResources;
+import com.harvard.fda.studyappmodule.studymodel.Study;
+import com.harvard.fda.studyappmodule.studymodel.StudyHome;
+import com.harvard.fda.studyappmodule.studymodel.StudyList;
+import com.harvard.fda.studyappmodule.studymodel.StudyResource;
+import com.harvard.fda.studyappmodule.studymodel.StudyUpdate;
+import com.harvard.fda.studyappmodule.studymodel.StudyUpdateListdata;
+import com.harvard.fda.usermodule.webservicemodel.Activities;
+import com.harvard.fda.usermodule.webservicemodel.ActivityData;
+import com.harvard.fda.usermodule.webservicemodel.ActivityRunPreference;
+import com.harvard.fda.usermodule.webservicemodel.Studies;
+import com.harvard.fda.usermodule.webservicemodel.StudyData;
+import com.harvard.fda.usermodule.webservicemodel.UserProfileData;
 import com.harvard.fda.utils.AppController;
 
 import org.researchstack.backbone.task.Task;

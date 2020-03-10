@@ -12,7 +12,7 @@
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package com.harvard.fda.studyAppModule;
+package com.harvard.fda.studyappmodule;
 
 import android.content.Context;
 import android.content.Intent;
@@ -39,39 +39,39 @@ import com.google.gson.reflect.TypeToken;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
 import com.harvard.fda.R;
-import com.harvard.fda.offlineModule.model.OfflineData;
-import com.harvard.fda.storageModule.DBServiceSubscriber;
-import com.harvard.fda.storageModule.events.DatabaseEvent;
-import com.harvard.fda.studyAppModule.consent.ConsentBuilder;
-import com.harvard.fda.studyAppModule.consent.CustomConsentViewTaskActivity;
-import com.harvard.fda.studyAppModule.consent.model.Consent;
-import com.harvard.fda.studyAppModule.consent.model.CorrectAnswerString;
-import com.harvard.fda.studyAppModule.consent.model.EligibilityConsent;
-import com.harvard.fda.studyAppModule.events.ConsentPDFEvent;
-import com.harvard.fda.studyAppModule.events.GetUserStudyInfoEvent;
-import com.harvard.fda.studyAppModule.events.GetUserStudyListEvent;
-import com.harvard.fda.studyAppModule.studyModel.ConsentDocumentData;
-import com.harvard.fda.studyAppModule.studyModel.ConsentPDF;
-import com.harvard.fda.studyAppModule.studyModel.Study;
-import com.harvard.fda.studyAppModule.studyModel.StudyList;
-import com.harvard.fda.studyAppModule.studyModel.StudyUpdate;
-import com.harvard.fda.studyAppModule.studyModel.StudyUpdateListdata;
-import com.harvard.fda.studyAppModule.survayScheduler.SurvayScheduler;
-import com.harvard.fda.studyAppModule.survayScheduler.model.CompletionAdeherenceCalc;
-import com.harvard.fda.userModule.UserModulePresenter;
-import com.harvard.fda.userModule.event.GetPreferenceEvent;
-import com.harvard.fda.userModule.event.UpdatePreferenceEvent;
-import com.harvard.fda.userModule.webserviceModel.LoginData;
-import com.harvard.fda.userModule.webserviceModel.Studies;
-import com.harvard.fda.userModule.webserviceModel.StudyData;
+import com.harvard.fda.offlinemodule.model.OfflineData;
+import com.harvard.fda.storagemodule.DBServiceSubscriber;
+import com.harvard.fda.storagemodule.events.DatabaseEvent;
+import com.harvard.fda.studyappmodule.consent.ConsentBuilder;
+import com.harvard.fda.studyappmodule.consent.CustomConsentViewTaskActivity;
+import com.harvard.fda.studyappmodule.consent.model.Consent;
+import com.harvard.fda.studyappmodule.consent.model.CorrectAnswerString;
+import com.harvard.fda.studyappmodule.consent.model.EligibilityConsent;
+import com.harvard.fda.studyappmodule.events.ConsentPDFEvent;
+import com.harvard.fda.studyappmodule.events.GetUserStudyInfoEvent;
+import com.harvard.fda.studyappmodule.events.GetUserStudyListEvent;
+import com.harvard.fda.studyappmodule.studymodel.ConsentDocumentData;
+import com.harvard.fda.studyappmodule.studymodel.ConsentPDF;
+import com.harvard.fda.studyappmodule.studymodel.Study;
+import com.harvard.fda.studyappmodule.studymodel.StudyList;
+import com.harvard.fda.studyappmodule.studymodel.StudyUpdate;
+import com.harvard.fda.studyappmodule.studymodel.StudyUpdateListdata;
+import com.harvard.fda.studyappmodule.surveyscheduler.SurveyScheduler;
+import com.harvard.fda.studyappmodule.surveyscheduler.model.CompletionAdeherenceCalc;
+import com.harvard.fda.usermodule.UserModulePresenter;
+import com.harvard.fda.usermodule.event.GetPreferenceEvent;
+import com.harvard.fda.usermodule.event.UpdatePreferenceEvent;
+import com.harvard.fda.usermodule.webservicemodel.LoginData;
+import com.harvard.fda.usermodule.webservicemodel.Studies;
+import com.harvard.fda.usermodule.webservicemodel.StudyData;
 import com.harvard.fda.utils.AppController;
 import com.harvard.fda.utils.URLs;
-import com.harvard.fda.webserviceModule.apiHelper.ApiCall;
-import com.harvard.fda.webserviceModule.apiHelper.ConnectionDetector;
-import com.harvard.fda.webserviceModule.apiHelper.HttpRequest;
-import com.harvard.fda.webserviceModule.apiHelper.Responsemodel;
-import com.harvard.fda.webserviceModule.events.RegistrationServerConfigEvent;
-import com.harvard.fda.webserviceModule.events.WCPConfigEvent;
+import com.harvard.fda.webservicemodule.apihelper.ApiCall;
+import com.harvard.fda.webservicemodule.apihelper.ConnectionDetector;
+import com.harvard.fda.webservicemodule.apihelper.HttpRequest;
+import com.harvard.fda.webservicemodule.apihelper.Responsemodel;
+import com.harvard.fda.webservicemodule.events.RegistrationServerConfigEvent;
+import com.harvard.fda.webservicemodule.events.WCPConfigEvent;
 import com.itextpdf.text.Document;
 import com.itextpdf.text.DocumentException;
 import com.itextpdf.text.Image;
@@ -264,10 +264,10 @@ public class StudyFragment extends Fragment implements ApiCall.OnAsyncRequestCom
         CompletionAdeherenceCalc completionAdeherenceCalc;
         CompletionAdeherenceCalc completionAdeherenceCalcSort = null;
 
-        SurvayScheduler survayScheduler = new SurvayScheduler(dbServiceSubscriber, realm);
+        SurveyScheduler surveyScheduler = new SurveyScheduler(dbServiceSubscriber, realm);
         for (int i = 0; i < studyListArrayList.size(); i++) {
             if (!AppController.getHelperSharedPreference().readPreference(mContext, mContext.getResources().getString(R.string.userid), "").equalsIgnoreCase("")) {
-                completionAdeherenceCalc = survayScheduler.completionAndAdherenceCalculation(studyListArrayList.get(i).getStudyId(), mContext);
+                completionAdeherenceCalc = surveyScheduler.completionAndAdherenceCalculation(studyListArrayList.get(i).getStudyId(), mContext);
                 if (completionAdeherenceCalc.isActivityAvailable()) {
                     completionAdeherenceCalcSort = completionAdeherenceCalc;
                 } else {

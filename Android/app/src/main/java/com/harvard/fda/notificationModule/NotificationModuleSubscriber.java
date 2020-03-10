@@ -12,7 +12,7 @@
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package com.harvard.fda.notificationModule;
+package com.harvard.fda.notificationmodule;
 
 import android.app.AlarmManager;
 import android.app.PendingIntent;
@@ -21,13 +21,13 @@ import android.content.Intent;
 import android.os.Build;
 
 import com.harvard.fda.R;
-import com.harvard.fda.notificationModule.model.NotificationDb;
-import com.harvard.fda.storageModule.DBServiceSubscriber;
-import com.harvard.fda.studyAppModule.activityBuilder.model.ActivityRun;
-import com.harvard.fda.studyAppModule.acvitityListModel.ActivitiesWS;
-import com.harvard.fda.studyAppModule.studyModel.NotificationDbResources;
-import com.harvard.fda.studyAppModule.studyModel.PendingIntentsResources;
-import com.harvard.fda.studyAppModule.survayScheduler.SurvayScheduler;
+import com.harvard.fda.notificationmodule.model.NotificationDb;
+import com.harvard.fda.storagemodule.DBServiceSubscriber;
+import com.harvard.fda.studyappmodule.activitybuilder.model.ActivityRun;
+import com.harvard.fda.studyappmodule.activitymodel.ActivitiesWS;
+import com.harvard.fda.studyappmodule.studymodel.NotificationDbResources;
+import com.harvard.fda.studyappmodule.studymodel.PendingIntentsResources;
+import com.harvard.fda.studyappmodule.surveyscheduler.SurveyScheduler;
 import com.harvard.fda.utils.AppController;
 
 import java.text.SimpleDateFormat;
@@ -74,7 +74,7 @@ public class NotificationModuleSubscriber {
         ActivitiesWS activitiesWS = dbServiceSubscriber.getActivityItem(activityRun.getStudyId(), activityRun.getActivityId(), mRealm);
         NotificationDb notificationsDb = dbServiceSubscriber.getNotificationDb(activityRun.getActivityId(), activityRun.getStudyId(), ACTIVITY, mRealm);
         try {
-            if (type.equalsIgnoreCase(SurvayScheduler.FREQUENCY_TYPE_ONE_TIME)) {
+            if (type.equalsIgnoreCase(SurveyScheduler.FREQUENCY_TYPE_ONE_TIME)) {
                 Date date = removeOffset(activityRun.getEndDate(), offset);
                 time.setTime(date);
                 time.add(Calendar.HOUR_OF_DAY, -24);
@@ -84,11 +84,11 @@ public class NotificationModuleSubscriber {
 
                 description = context.getResources().getString(R.string.the_activity) + " " + activitiesWS.getTitle() + " " + context.getResources().getString(R.string.participation_is_important);
                 description1 = context.getResources().getString(R.string.the_activity) + " " + activitiesWS.getTitle() + ", " + context.getResources().getString(R.string.now_available_to_take);
-            } else if (type.equalsIgnoreCase(SurvayScheduler.FREQUENCY_TYPE_MANUALLY_SCHEDULE)) {
+            } else if (type.equalsIgnoreCase(SurveyScheduler.FREQUENCY_TYPE_MANUALLY_SCHEDULE)) {
                 Date date = removeOffset(activityRun.getStartDate(), offset);
                 time.setTime(date);
                 description = context.getResources().getString(R.string.scheduled_activity) + " " + activitiesWS.getTitle() + ", " + context.getResources().getString(R.string.valid_until) + " " + notificationFormat.format(activityRun.getEndDate()) + context.getResources().getString(R.string.participation_is_important2);
-            } else if (type.equalsIgnoreCase(SurvayScheduler.FREQUENCY_TYPE_WEEKLY)) {
+            } else if (type.equalsIgnoreCase(SurveyScheduler.FREQUENCY_TYPE_WEEKLY)) {
                 Date date = removeOffset(activityRun.getEndDate(), offset);
                 time.setTime(date);
                 time.add(Calendar.HOUR_OF_DAY, -24);
@@ -98,7 +98,7 @@ public class NotificationModuleSubscriber {
 
                 description = context.getResources().getString(R.string.weekly_activity) + " " + activitiesWS.getTitle() + ", " + context.getResources().getString(R.string.participation_is_important);
                 description1 = context.getResources().getString(R.string.new_run) + " " + activitiesWS.getTitle() + ", " + context.getResources().getString(R.string.study_complete);
-            } else if (type.equalsIgnoreCase(SurvayScheduler.FREQUENCY_TYPE_MONTHLY)) {
+            } else if (type.equalsIgnoreCase(SurveyScheduler.FREQUENCY_TYPE_MONTHLY)) {
                 Date date = removeOffset(activityRun.getEndDate(), offset);
                 time.setTime(date);
                 time.add(Calendar.HOUR_OF_DAY, -72);
@@ -108,11 +108,11 @@ public class NotificationModuleSubscriber {
 
                 description = context.getResources().getString(R.string.monthly_activity) + " " + activitiesWS.getTitle() + ", " + context.getResources().getString(R.string.expire_in_three_days);
                 description1 = context.getResources().getString(R.string.new_run_monthly_activity) + " " + activitiesWS.getTitle() + ", " + context.getResources().getString(R.string.study_complete);
-            } else if (type.equalsIgnoreCase(SurvayScheduler.FREQUENCY_TYPE_DAILY)) {
+            } else if (type.equalsIgnoreCase(SurveyScheduler.FREQUENCY_TYPE_DAILY)) {
                 Date date = removeOffset(activityRun.getStartDate(), offset);
                 time.setTime(date);
                 description = context.getResources().getString(R.string.new_run_daily_activity) + " " + activitiesWS.getTitle() + ", " + context.getResources().getString(R.string.your_participation_important);
-            } else if (type.equalsIgnoreCase(SurvayScheduler.FREQUENCY_TYPE_WITHIN_A_DAY)) {
+            } else if (type.equalsIgnoreCase(SurveyScheduler.FREQUENCY_TYPE_WITHIN_A_DAY)) {
                 Date date = removeOffset(activityRun.getStartDate(), offset);
                 time.setTime(date);
                 description = context.getResources().getString(R.string.new_run_daily_activity) + " " + activitiesWS.getTitle() + ", " + context.getResources().getString(R.string.valid_until) + " " + notificationFormat.format(activityRun.getEndDate()) + context.getResources().getString(R.string.participation_is_important2);
@@ -192,7 +192,7 @@ public class NotificationModuleSubscriber {
             }
 
             // Notification availability for monthly, weekly, One time
-            if (type.equalsIgnoreCase(SurvayScheduler.FREQUENCY_TYPE_MONTHLY) || type.equalsIgnoreCase(SurvayScheduler.FREQUENCY_TYPE_WEEKLY) || type.equalsIgnoreCase(SurvayScheduler.FREQUENCY_TYPE_ONE_TIME)) {
+            if (type.equalsIgnoreCase(SurveyScheduler.FREQUENCY_TYPE_MONTHLY) || type.equalsIgnoreCase(SurveyScheduler.FREQUENCY_TYPE_WEEKLY) || type.equalsIgnoreCase(SurveyScheduler.FREQUENCY_TYPE_ONE_TIME)) {
                 if (time1.getTime().after(new Date())) {
                     if (notificationsDb != null) {
                         notificationId = notificationsDb.getNotificationId();

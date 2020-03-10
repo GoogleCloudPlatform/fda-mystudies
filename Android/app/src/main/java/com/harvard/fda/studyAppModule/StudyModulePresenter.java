@@ -12,24 +12,24 @@
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package com.harvard.fda.studyAppModule;
+package com.harvard.fda.studyappmodule;
 
 import com.harvard.fda.FDAEventBus;
-import com.harvard.fda.studyAppModule.events.ContactUsEvent;
-import com.harvard.fda.studyAppModule.events.EnrollIdEvent;
-import com.harvard.fda.studyAppModule.events.FeedbackEvent;
-import com.harvard.fda.studyAppModule.events.GetActivityInfoEvent;
-import com.harvard.fda.studyAppModule.events.GetActivityListEvent;
-import com.harvard.fda.studyAppModule.events.GetConsentMetaDataEvent;
-import com.harvard.fda.studyAppModule.events.GetResourceListEvent;
-import com.harvard.fda.studyAppModule.events.GetUserStudyInfoEvent;
-import com.harvard.fda.studyAppModule.events.GetUserStudyListEvent;
-import com.harvard.fda.studyAppModule.events.ProcessResponseDataEvent;
-import com.harvard.fda.studyAppModule.events.ProcessResponseEvent;
-import com.harvard.fda.studyAppModule.events.UpdateEligibilityConsentStatusEvent;
-import com.harvard.fda.studyAppModule.events.VerifyEnrollmentIdEvent;
-import com.harvard.fda.studyAppModule.events.WithdrawFromStudyEvent;
-import com.harvard.fda.userModule.event.GetTermsAndConditionEvent;
+import com.harvard.fda.studyappmodule.events.ContactUsEvent;
+import com.harvard.fda.studyappmodule.events.EnrollIdEvent;
+import com.harvard.fda.studyappmodule.events.FeedbackEvent;
+import com.harvard.fda.studyappmodule.events.GetActivityInfoEvent;
+import com.harvard.fda.studyappmodule.events.GetActivityListEvent;
+import com.harvard.fda.studyappmodule.events.GetConsentMetaDataEvent;
+import com.harvard.fda.studyappmodule.events.GetResourceListEvent;
+import com.harvard.fda.studyappmodule.events.GetUserStudyInfoEvent;
+import com.harvard.fda.studyappmodule.events.GetUserStudyListEvent;
+import com.harvard.fda.studyappmodule.events.ProcessResponseDataEvent;
+import com.harvard.fda.studyappmodule.events.ProcessResponseEvent;
+import com.harvard.fda.studyappmodule.events.UpdateEligibilityConsentStatusEvent;
+import com.harvard.fda.studyappmodule.events.VerifyEnrollmentIdEvent;
+import com.harvard.fda.studyappmodule.events.WithdrawFromStudyEvent;
+import com.harvard.fda.usermodule.event.GetTermsAndConditionEvent;
 
 /**
  * Created by Rohit on 3/6/2017.

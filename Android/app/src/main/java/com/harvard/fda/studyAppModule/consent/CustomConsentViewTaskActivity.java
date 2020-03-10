@@ -12,7 +12,7 @@
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package com.harvard.fda.studyAppModule.consent;
+package com.harvard.fda.studyappmodule.consent;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
@@ -34,14 +34,14 @@ import android.view.MenuItem;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Toast;
 
-import com.harvard.fda.EligibilityModule.ComprehensionFailureActivity;
-import com.harvard.fda.EligibilityModule.ComprehensionSuccessActivity;
+import com.harvard.fda.eligibilitymodule.ComprehensionFailureActivity;
+import com.harvard.fda.eligibilitymodule.ComprehensionSuccessActivity;
 import com.harvard.fda.R;
-import com.harvard.fda.storageModule.DBServiceSubscriber;
-import com.harvard.fda.studyAppModule.consent.model.ComprehensionCorrectAnswers;
-import com.harvard.fda.studyAppModule.consent.model.Consent;
-import com.harvard.fda.studyAppModule.consent.model.EligibilityConsent;
-import com.harvard.fda.studyAppModule.custom.StepSwitcherCustom;
+import com.harvard.fda.storagemodule.DBServiceSubscriber;
+import com.harvard.fda.studyappmodule.consent.model.ComprehensionCorrectAnswers;
+import com.harvard.fda.studyappmodule.consent.model.Consent;
+import com.harvard.fda.studyappmodule.consent.model.EligibilityConsent;
+import com.harvard.fda.studyappmodule.custom.StepSwitcherCustom;
 import com.harvard.fda.utils.AppController;
 
 import org.researchstack.backbone.result.StepResult;

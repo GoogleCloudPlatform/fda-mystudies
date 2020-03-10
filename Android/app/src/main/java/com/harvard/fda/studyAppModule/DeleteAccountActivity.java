@@ -12,7 +12,7 @@
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package com.harvard.fda.studyAppModule;
+package com.harvard.fda.studyappmodule;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -29,24 +29,24 @@ import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.harvard.fda.R;
-import com.harvard.fda.storageModule.DBServiceSubscriber;
-import com.harvard.fda.studyAppModule.events.DeleteAccountEvent;
-import com.harvard.fda.studyAppModule.events.GetUserStudyInfoEvent;
-import com.harvard.fda.studyAppModule.events.WithdrawFromStudyEvent;
-import com.harvard.fda.studyAppModule.studyModel.DeleteAccountData;
-import com.harvard.fda.studyAppModule.studyModel.StudyHome;
-import com.harvard.fda.studyAppModule.studyModel.StudyList;
-import com.harvard.fda.userModule.UserModulePresenter;
-import com.harvard.fda.userModule.webserviceModel.LoginData;
-import com.harvard.fda.userModule.webserviceModel.Studies;
+import com.harvard.fda.storagemodule.DBServiceSubscriber;
+import com.harvard.fda.studyappmodule.events.DeleteAccountEvent;
+import com.harvard.fda.studyappmodule.events.GetUserStudyInfoEvent;
+import com.harvard.fda.studyappmodule.events.WithdrawFromStudyEvent;
+import com.harvard.fda.studyappmodule.studymodel.DeleteAccountData;
+import com.harvard.fda.studyappmodule.studymodel.StudyHome;
+import com.harvard.fda.studyappmodule.studymodel.StudyList;
+import com.harvard.fda.usermodule.UserModulePresenter;
+import com.harvard.fda.usermodule.webservicemodel.LoginData;
+import com.harvard.fda.usermodule.webservicemodel.Studies;
 import com.harvard.fda.utils.AppController;
 import com.harvard.fda.utils.SharedPreferenceHelper;
 import com.harvard.fda.utils.URLs;
-import com.harvard.fda.webserviceModule.apiHelper.ApiCall;
-import com.harvard.fda.webserviceModule.apiHelper.ApiCallResponseServer;
-import com.harvard.fda.webserviceModule.events.RegistrationServerConfigEvent;
-import com.harvard.fda.webserviceModule.events.ResponseServerConfigEvent;
-import com.harvard.fda.webserviceModule.events.WCPConfigEvent;
+import com.harvard.fda.webservicemodule.apihelper.ApiCall;
+import com.harvard.fda.webservicemodule.apihelper.ApiCallResponseServer;
+import com.harvard.fda.webservicemodule.events.RegistrationServerConfigEvent;
+import com.harvard.fda.webservicemodule.events.ResponseServerConfigEvent;
+import com.harvard.fda.webservicemodule.events.WCPConfigEvent;
 
 import org.json.JSONArray;
 import org.json.JSONException;

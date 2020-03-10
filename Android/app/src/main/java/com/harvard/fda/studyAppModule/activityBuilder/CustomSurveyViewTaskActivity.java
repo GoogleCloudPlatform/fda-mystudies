@@ -12,7 +12,7 @@
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package com.harvard.fda.studyAppModule.activityBuilder;
+package com.harvard.fda.studyappmodule.activitybuilder;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
@@ -40,20 +40,20 @@ import android.widget.Toast;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.harvard.fda.R;
-import com.harvard.fda.notificationModule.NotificationModuleSubscriber;
-import com.harvard.fda.storageModule.DBServiceSubscriber;
-import com.harvard.fda.studyAppModule.SurveyCompleteActivity;
-import com.harvard.fda.studyAppModule.activityBuilder.model.Choices;
-import com.harvard.fda.studyAppModule.activityBuilder.model.serviceModel.ActivityObj;
-import com.harvard.fda.studyAppModule.activityBuilder.model.serviceModel.Steps;
-import com.harvard.fda.studyAppModule.custom.ChoiceAnswerFormatCustom;
-import com.harvard.fda.studyAppModule.custom.QuestionStepCustom;
-import com.harvard.fda.studyAppModule.custom.Result.StepRecordCustom;
-import com.harvard.fda.studyAppModule.custom.Result.TaskRecordCustom;
-import com.harvard.fda.studyAppModule.custom.StepSwitcherCustom;
-import com.harvard.fda.studyAppModule.studyModel.NotificationDbResources;
-import com.harvard.fda.studyAppModule.studyModel.Resource;
-import com.harvard.fda.studyAppModule.studyModel.StudyHome;
+import com.harvard.fda.notificationmodule.NotificationModuleSubscriber;
+import com.harvard.fda.storagemodule.DBServiceSubscriber;
+import com.harvard.fda.studyappmodule.SurveyCompleteActivity;
+import com.harvard.fda.studyappmodule.activitybuilder.model.Choices;
+import com.harvard.fda.studyappmodule.activitybuilder.model.servicemodel.ActivityObj;
+import com.harvard.fda.studyappmodule.activitybuilder.model.servicemodel.Steps;
+import com.harvard.fda.studyappmodule.custom.ChoiceAnswerFormatCustom;
+import com.harvard.fda.studyappmodule.custom.QuestionStepCustom;
+import com.harvard.fda.studyappmodule.custom.result.StepRecordCustom;
+import com.harvard.fda.studyappmodule.custom.result.TaskRecordCustom;
+import com.harvard.fda.studyappmodule.custom.StepSwitcherCustom;
+import com.harvard.fda.studyappmodule.studymodel.NotificationDbResources;
+import com.harvard.fda.studyappmodule.studymodel.Resource;
+import com.harvard.fda.studyappmodule.studymodel.StudyHome;
 import com.harvard.fda.utils.ActiveTaskService;
 import com.harvard.fda.utils.AppController;
 

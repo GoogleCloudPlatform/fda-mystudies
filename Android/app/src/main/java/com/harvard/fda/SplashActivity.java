@@ -27,14 +27,14 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.Toast;
 
-import com.harvard.fda.gatewayModule.GatewayActivity;
-import com.harvard.fda.offlineModule.auth.SyncAdapterManager;
-import com.harvard.fda.studyAppModule.StandaloneActivity;
-import com.harvard.fda.studyAppModule.StudyActivity;
-import com.harvard.fda.userModule.NewPasscodeSetupActivity;
+import com.harvard.fda.gatewaymodule.GatewayActivity;
+import com.harvard.fda.offlinemodule.auth.SyncAdapterManager;
+import com.harvard.fda.studyappmodule.StandaloneActivity;
+import com.harvard.fda.studyappmodule.StudyActivity;
+import com.harvard.fda.usermodule.NewPasscodeSetupActivity;
 import com.harvard.fda.utils.AppController;
 import com.harvard.fda.utils.SharedPreferenceHelper;
-import com.harvard.fda.utils.Version.VersionChecker;
+import com.harvard.fda.utils.version.VersionChecker;
 
 import io.fabric.sdk.android.services.common.CommonUtils;
 

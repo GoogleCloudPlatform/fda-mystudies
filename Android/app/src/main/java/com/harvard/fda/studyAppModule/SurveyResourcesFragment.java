@@ -12,7 +12,7 @@
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package com.harvard.fda.studyAppModule;
+package com.harvard.fda.studyappmodule;
 
 import android.app.Activity;
 import android.content.ComponentName;
@@ -36,32 +36,32 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.harvard.fda.AppConfig;
 import com.harvard.fda.R;
-import com.harvard.fda.notificationModule.NotificationModuleSubscriber;
-import com.harvard.fda.storageModule.DBServiceSubscriber;
-import com.harvard.fda.studyAppModule.acvitityListModel.AnchorDateSchedulingDetails;
-import com.harvard.fda.studyAppModule.custom.Result.StepRecordCustom;
-import com.harvard.fda.studyAppModule.events.GetResourceListEvent;
-import com.harvard.fda.studyAppModule.events.GetUserStudyInfoEvent;
-import com.harvard.fda.studyAppModule.events.WithdrawFromStudyEvent;
-import com.harvard.fda.studyAppModule.studyModel.NotificationDbResources;
-import com.harvard.fda.studyAppModule.studyModel.Resource;
-import com.harvard.fda.studyAppModule.studyModel.StudyHome;
-import com.harvard.fda.studyAppModule.studyModel.StudyResource;
-import com.harvard.fda.userModule.UserModulePresenter;
-import com.harvard.fda.userModule.event.UpdatePreferenceEvent;
-import com.harvard.fda.userModule.webserviceModel.Activities;
-import com.harvard.fda.userModule.webserviceModel.LoginData;
-import com.harvard.fda.userModule.webserviceModel.Studies;
+import com.harvard.fda.notificationmodule.NotificationModuleSubscriber;
+import com.harvard.fda.storagemodule.DBServiceSubscriber;
+import com.harvard.fda.studyappmodule.activitymodel.AnchorDateSchedulingDetails;
+import com.harvard.fda.studyappmodule.custom.result.StepRecordCustom;
+import com.harvard.fda.studyappmodule.events.GetResourceListEvent;
+import com.harvard.fda.studyappmodule.events.GetUserStudyInfoEvent;
+import com.harvard.fda.studyappmodule.events.WithdrawFromStudyEvent;
+import com.harvard.fda.studyappmodule.studymodel.NotificationDbResources;
+import com.harvard.fda.studyappmodule.studymodel.Resource;
+import com.harvard.fda.studyappmodule.studymodel.StudyHome;
+import com.harvard.fda.studyappmodule.studymodel.StudyResource;
+import com.harvard.fda.usermodule.UserModulePresenter;
+import com.harvard.fda.usermodule.event.UpdatePreferenceEvent;
+import com.harvard.fda.usermodule.webservicemodel.Activities;
+import com.harvard.fda.usermodule.webservicemodel.LoginData;
+import com.harvard.fda.usermodule.webservicemodel.Studies;
 import com.harvard.fda.utils.AppController;
 import com.harvard.fda.utils.URLs;
-import com.harvard.fda.webserviceModule.apiHelper.ApiCall;
-import com.harvard.fda.webserviceModule.apiHelper.ApiCallResponseServer;
-import com.harvard.fda.webserviceModule.apiHelper.ConnectionDetector;
-import com.harvard.fda.webserviceModule.apiHelper.HttpRequest;
-import com.harvard.fda.webserviceModule.apiHelper.Responsemodel;
-import com.harvard.fda.webserviceModule.events.RegistrationServerConfigEvent;
-import com.harvard.fda.webserviceModule.events.ResponseServerConfigEvent;
-import com.harvard.fda.webserviceModule.events.WCPConfigEvent;
+import com.harvard.fda.webservicemodule.apihelper.ApiCall;
+import com.harvard.fda.webservicemodule.apihelper.ApiCallResponseServer;
+import com.harvard.fda.webservicemodule.apihelper.ConnectionDetector;
+import com.harvard.fda.webservicemodule.apihelper.HttpRequest;
+import com.harvard.fda.webservicemodule.apihelper.Responsemodel;
+import com.harvard.fda.webservicemodule.events.RegistrationServerConfigEvent;
+import com.harvard.fda.webservicemodule.events.ResponseServerConfigEvent;
+import com.harvard.fda.webservicemodule.events.WCPConfigEvent;
 
 import org.json.JSONArray;
 import org.json.JSONException;

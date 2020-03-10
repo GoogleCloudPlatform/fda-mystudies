@@ -12,22 +12,22 @@
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package com.harvard.fda.userModule;
+package com.harvard.fda.usermodule;
 
 import com.harvard.fda.FDAEventBus;
-import com.harvard.fda.studyAppModule.events.ConsentPDFEvent;
-import com.harvard.fda.studyAppModule.events.DeleteAccountEvent;
-import com.harvard.fda.userModule.event.ChangePasswordEvent;
-import com.harvard.fda.userModule.event.ForgotPasswordEvent;
-import com.harvard.fda.userModule.event.GetPreferenceEvent;
-import com.harvard.fda.userModule.event.GetUserProfileEvent;
-import com.harvard.fda.userModule.event.LoginEvent;
-import com.harvard.fda.userModule.event.LogoutEvent;
-import com.harvard.fda.userModule.event.RegisterUserEvent;
-import com.harvard.fda.userModule.event.ResendEmailEvent;
-import com.harvard.fda.userModule.event.UpdatePreferenceEvent;
-import com.harvard.fda.userModule.event.UpdateUserProfileEvent;
-import com.harvard.fda.userModule.event.VerifyUserEvent;
+import com.harvard.fda.studyappmodule.events.ConsentPDFEvent;
+import com.harvard.fda.studyappmodule.events.DeleteAccountEvent;
+import com.harvard.fda.usermodule.event.ChangePasswordEvent;
+import com.harvard.fda.usermodule.event.ForgotPasswordEvent;
+import com.harvard.fda.usermodule.event.GetPreferenceEvent;
+import com.harvard.fda.usermodule.event.GetUserProfileEvent;
+import com.harvard.fda.usermodule.event.LoginEvent;
+import com.harvard.fda.usermodule.event.LogoutEvent;
+import com.harvard.fda.usermodule.event.RegisterUserEvent;
+import com.harvard.fda.usermodule.event.ResendEmailEvent;
+import com.harvard.fda.usermodule.event.UpdatePreferenceEvent;
+import com.harvard.fda.usermodule.event.UpdateUserProfileEvent;
+import com.harvard.fda.usermodule.event.VerifyUserEvent;
 
 /**
  * Created by Rohit on 2/20/2017.

@@ -12,23 +12,23 @@
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package com.harvard.fda.studyAppModule.survayScheduler;
+package com.harvard.fda.studyappmodule.surveyscheduler;
 
 import android.content.Context;
 
 import com.harvard.fda.R;
-import com.harvard.fda.notificationModule.NotificationModuleSubscriber;
-import com.harvard.fda.storageModule.DBServiceSubscriber;
-import com.harvard.fda.storageModule.events.DatabaseEvent;
-import com.harvard.fda.studyAppModule.SurveyActivitiesFragment;
-import com.harvard.fda.studyAppModule.activityBuilder.model.ActivityRun;
-import com.harvard.fda.studyAppModule.acvitityListModel.ActivitiesWS;
-import com.harvard.fda.studyAppModule.acvitityListModel.ActivityListData;
-import com.harvard.fda.studyAppModule.survayScheduler.model.ActivityStatus;
-import com.harvard.fda.studyAppModule.survayScheduler.model.CompletionAdeherenceCalc;
-import com.harvard.fda.userModule.webserviceModel.Activities;
-import com.harvard.fda.userModule.webserviceModel.ActivityData;
-import com.harvard.fda.userModule.webserviceModel.StudyData;
+import com.harvard.fda.notificationmodule.NotificationModuleSubscriber;
+import com.harvard.fda.storagemodule.DBServiceSubscriber;
+import com.harvard.fda.storagemodule.events.DatabaseEvent;
+import com.harvard.fda.studyappmodule.SurveyActivitiesFragment;
+import com.harvard.fda.studyappmodule.activitybuilder.model.ActivityRun;
+import com.harvard.fda.studyappmodule.activitymodel.ActivitiesWS;
+import com.harvard.fda.studyappmodule.activitymodel.ActivityListData;
+import com.harvard.fda.studyappmodule.surveyscheduler.model.ActivityStatus;
+import com.harvard.fda.studyappmodule.surveyscheduler.model.CompletionAdeherenceCalc;
+import com.harvard.fda.usermodule.webservicemodel.Activities;
+import com.harvard.fda.usermodule.webservicemodel.ActivityData;
+import com.harvard.fda.usermodule.webservicemodel.StudyData;
 import com.harvard.fda.utils.AppController;
 
 import java.text.ParseException;
@@ -45,7 +45,7 @@ import io.realm.Sort;
  * Created by Rohit on 3/1/2017.
  */
 
-public class SurvayScheduler {
+public class SurveyScheduler {
     public static final String FREQUENCY_TYPE_ONE_TIME = "One Time";
     public static final String FREQUENCY_TYPE_WITHIN_A_DAY = "Within a day";
     public static final String FREQUENCY_TYPE_DAILY = "Daily";
@@ -60,7 +60,7 @@ public class SurvayScheduler {
     private DBServiceSubscriber dbServiceSubscriber;
     Realm mRealm;
 
-    public SurvayScheduler(DBServiceSubscriber dbServiceSubscriber, Realm realm) {
+    public SurveyScheduler(DBServiceSubscriber dbServiceSubscriber, Realm realm) {
         this.dbServiceSubscriber = dbServiceSubscriber;
         mRealm = realm;
     }

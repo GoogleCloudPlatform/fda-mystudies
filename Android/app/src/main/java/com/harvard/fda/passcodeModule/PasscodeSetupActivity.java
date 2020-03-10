@@ -29,8 +29,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.harvard.fda.R;
-import com.harvard.fda.gatewayModule.GatewayActivity;
-import com.harvard.fda.storageModule.DBServiceSubscriber;
+import com.harvard.fda.gatewaymodule.GatewayActivity;
+import com.harvard.fda.storagemodule.DBServiceSubscriber;
 import com.harvard.fda.utils.AppController;
 import com.harvard.fda.utils.SharedPreferenceHelper;
 

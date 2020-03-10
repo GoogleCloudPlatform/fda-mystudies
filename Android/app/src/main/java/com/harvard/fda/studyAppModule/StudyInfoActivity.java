@@ -12,7 +12,7 @@
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package com.harvard.fda.studyAppModule;
+package com.harvard.fda.studyappmodule;
 
 
 import android.app.Activity;
@@ -38,35 +38,35 @@ import com.google.gson.reflect.TypeToken;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
 import com.harvard.fda.AppConfig;
-import com.harvard.fda.EligibilityModule.CustomViewTaskActivity;
-import com.harvard.fda.EligibilityModule.StepsBuilder;
+import com.harvard.fda.eligibilitymodule.CustomViewTaskActivity;
+import com.harvard.fda.eligibilitymodule.StepsBuilder;
 import com.harvard.fda.R;
 import com.harvard.fda.WebViewActivity;
-import com.harvard.fda.gatewayModule.CircleIndicator;
-import com.harvard.fda.offlineModule.model.OfflineData;
-import com.harvard.fda.storageModule.DBServiceSubscriber;
-import com.harvard.fda.studyAppModule.activityBuilder.model.serviceModel.Steps;
-import com.harvard.fda.studyAppModule.consent.model.CorrectAnswerString;
-import com.harvard.fda.studyAppModule.consent.model.EligibilityConsent;
-import com.harvard.fda.studyAppModule.events.GetUserStudyInfoEvent;
-import com.harvard.fda.studyAppModule.studyModel.ConsentDocumentData;
-import com.harvard.fda.studyAppModule.studyModel.StudyHome;
-import com.harvard.fda.studyAppModule.studyModel.StudyList;
-import com.harvard.fda.userModule.SignInActivity;
-import com.harvard.fda.userModule.UserModulePresenter;
-import com.harvard.fda.userModule.event.GetPreferenceEvent;
-import com.harvard.fda.userModule.event.UpdatePreferenceEvent;
-import com.harvard.fda.userModule.webserviceModel.LoginData;
-import com.harvard.fda.userModule.webserviceModel.Studies;
-import com.harvard.fda.userModule.webserviceModel.StudyData;
+import com.harvard.fda.gatewaymodule.CircleIndicator;
+import com.harvard.fda.offlinemodule.model.OfflineData;
+import com.harvard.fda.storagemodule.DBServiceSubscriber;
+import com.harvard.fda.studyappmodule.activitybuilder.model.servicemodel.Steps;
+import com.harvard.fda.studyappmodule.consent.model.CorrectAnswerString;
+import com.harvard.fda.studyappmodule.consent.model.EligibilityConsent;
+import com.harvard.fda.studyappmodule.events.GetUserStudyInfoEvent;
+import com.harvard.fda.studyappmodule.studymodel.ConsentDocumentData;
+import com.harvard.fda.studyappmodule.studymodel.StudyHome;
+import com.harvard.fda.studyappmodule.studymodel.StudyList;
+import com.harvard.fda.usermodule.SignInActivity;
+import com.harvard.fda.usermodule.UserModulePresenter;
+import com.harvard.fda.usermodule.event.GetPreferenceEvent;
+import com.harvard.fda.usermodule.event.UpdatePreferenceEvent;
+import com.harvard.fda.usermodule.webservicemodel.LoginData;
+import com.harvard.fda.usermodule.webservicemodel.Studies;
+import com.harvard.fda.usermodule.webservicemodel.StudyData;
 import com.harvard.fda.utils.AppController;
 import com.harvard.fda.utils.URLs;
-import com.harvard.fda.webserviceModule.apiHelper.ApiCall;
-import com.harvard.fda.webserviceModule.apiHelper.ConnectionDetector;
-import com.harvard.fda.webserviceModule.apiHelper.HttpRequest;
-import com.harvard.fda.webserviceModule.apiHelper.Responsemodel;
-import com.harvard.fda.webserviceModule.events.RegistrationServerConfigEvent;
-import com.harvard.fda.webserviceModule.events.WCPConfigEvent;
+import com.harvard.fda.webservicemodule.apihelper.ApiCall;
+import com.harvard.fda.webservicemodule.apihelper.ConnectionDetector;
+import com.harvard.fda.webservicemodule.apihelper.HttpRequest;
+import com.harvard.fda.webservicemodule.apihelper.Responsemodel;
+import com.harvard.fda.webservicemodule.events.RegistrationServerConfigEvent;
+import com.harvard.fda.webservicemodule.events.WCPConfigEvent;
 
 import org.json.JSONArray;
 import org.json.JSONException;

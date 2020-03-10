@@ -24,16 +24,16 @@ import android.support.multidex.MultiDex;
 
 import com.crashlytics.android.Crashlytics;
 import com.facebook.stetho.Stetho;
-import com.harvard.fda.notificationModule.NotificationModuleSubscriber;
+import com.harvard.fda.notificationmodule.NotificationModuleSubscriber;
 import com.harvard.fda.passcodeModule.PasscodeSetupActivity;
-import com.harvard.fda.storageModule.DBServiceSubscriber;
-import com.harvard.fda.studyAppModule.StudyModuleSubscriber;
-import com.harvard.fda.userModule.UserModuleSubscriber;
-import com.harvard.fda.userModule.webserviceModel.UserProfileData;
+import com.harvard.fda.storagemodule.DBServiceSubscriber;
+import com.harvard.fda.studyappmodule.StudyModuleSubscriber;
+import com.harvard.fda.usermodule.UserModuleSubscriber;
+import com.harvard.fda.usermodule.webservicemodel.UserProfileData;
 import com.harvard.fda.utils.AppController;
 import com.harvard.fda.utils.AppVisibilityDetector;
 import com.harvard.fda.utils.realm.RealmEncryptionHelper;
-import com.harvard.fda.webserviceModule.WebserviceSubscriber;
+import com.harvard.fda.webservicemodule.WebserviceSubscriber;
 import com.uphyca.stetho_realm.RealmInspectorModulesProvider;
 
 import org.researchstack.backbone.StorageAccess;

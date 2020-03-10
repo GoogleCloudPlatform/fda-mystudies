@@ -12,7 +12,7 @@
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package com.harvard.fda.studyAppModule;
+package com.harvard.fda.studyappmodule;
 
 import android.os.Bundle;
 import android.os.LocaleList;
@@ -25,19 +25,19 @@ import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.harvard.fda.R;
-import com.harvard.fda.notificationModule.model.LocalNotification;
-import com.harvard.fda.notificationModule.model.NotificationDb;
-import com.harvard.fda.storageModule.DBServiceSubscriber;
-import com.harvard.fda.studyAppModule.events.GetUserStudyListEvent;
-import com.harvard.fda.studyAppModule.studyModel.Notification;
-import com.harvard.fda.studyAppModule.studyModel.NotificationData;
-import com.harvard.fda.studyAppModule.studyModel.NotificationDbResources;
-import com.harvard.fda.studyAppModule.studyModel.Study;
-import com.harvard.fda.studyAppModule.studyModel.StudyList;
+import com.harvard.fda.notificationmodule.model.LocalNotification;
+import com.harvard.fda.notificationmodule.model.NotificationDb;
+import com.harvard.fda.storagemodule.DBServiceSubscriber;
+import com.harvard.fda.studyappmodule.events.GetUserStudyListEvent;
+import com.harvard.fda.studyappmodule.studymodel.Notification;
+import com.harvard.fda.studyappmodule.studymodel.NotificationData;
+import com.harvard.fda.studyappmodule.studymodel.NotificationDbResources;
+import com.harvard.fda.studyappmodule.studymodel.Study;
+import com.harvard.fda.studyappmodule.studymodel.StudyList;
 import com.harvard.fda.utils.AppController;
 import com.harvard.fda.utils.URLs;
-import com.harvard.fda.webserviceModule.apiHelper.ApiCall;
-import com.harvard.fda.webserviceModule.events.WCPConfigEvent;
+import com.harvard.fda.webservicemodule.apihelper.ApiCall;
+import com.harvard.fda.webservicemodule.events.WCPConfigEvent;
 
 import java.text.ParseException;
 import java.util.Calendar;

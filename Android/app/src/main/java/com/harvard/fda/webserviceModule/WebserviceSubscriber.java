@@ -12,15 +12,15 @@
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package com.harvard.fda.webserviceModule;
+package com.harvard.fda.webservicemodule;
 
 import com.harvard.fda.R;
 import com.harvard.fda.base.BaseSubscriber;
-import com.harvard.fda.webserviceModule.apiHelper.ApiCall;
-import com.harvard.fda.webserviceModule.apiHelper.ApiCallResponseServer;
-import com.harvard.fda.webserviceModule.events.RegistrationServerConfigEvent;
-import com.harvard.fda.webserviceModule.events.ResponseServerConfigEvent;
-import com.harvard.fda.webserviceModule.events.WCPConfigEvent;
+import com.harvard.fda.webservicemodule.apihelper.ApiCall;
+import com.harvard.fda.webservicemodule.apihelper.ApiCallResponseServer;
+import com.harvard.fda.webservicemodule.events.RegistrationServerConfigEvent;
+import com.harvard.fda.webservicemodule.events.ResponseServerConfigEvent;
+import com.harvard.fda.webservicemodule.events.WCPConfigEvent;
 
 /**
  * Created by Rohit on 2/16/2017.

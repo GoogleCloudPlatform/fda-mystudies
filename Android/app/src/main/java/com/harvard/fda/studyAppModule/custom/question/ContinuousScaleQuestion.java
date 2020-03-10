@@ -12,7 +12,7 @@
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package com.harvard.fda.studyAppModule.custom.question;
+package com.harvard.fda.studyappmodule.custom.question;
 
 import android.content.res.Resources;
 import android.util.Base64;
@@ -26,7 +26,7 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.harvard.fda.R;
-import com.harvard.fda.studyAppModule.custom.QuestionStepCustom;
+import com.harvard.fda.studyappmodule.custom.QuestionStepCustom;
 import com.harvard.fda.utils.VerticalSeekBar;
 
 import org.researchstack.backbone.result.StepResult;

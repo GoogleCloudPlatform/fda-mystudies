@@ -1,0 +1,19 @@
+package com.harvard.studyappmodule.events;
+
+import com.harvard.webservicemodule.events.WCPConfigEvent;
+
+/**
+ * Created by Naveen Raj on 04/06/2017.
+ */
+
+public class GetActivityListEvent {
+    private WCPConfigEvent wcpConfigEvent;
+
+    public WCPConfigEvent getWcpConfigEvent() {
+        return wcpConfigEvent;
+    }
+
+    public void setWcpConfigEvent(WCPConfigEvent wcpConfigEvent) {
+        this.wcpConfigEvent = wcpConfigEvent;
+    }
+}

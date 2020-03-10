@@ -12,7 +12,7 @@
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package com.harvard.fda.EligibilityModule;
+package com.harvard.fda.eligibilitymodule;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -21,16 +21,16 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.harvard.fda.R;
-import com.harvard.fda.storageModule.DBServiceSubscriber;
-import com.harvard.fda.studyAppModule.ConsentCompletedActivity;
-import com.harvard.fda.studyAppModule.StudyFragment;
-import com.harvard.fda.userModule.UserModulePresenter;
-import com.harvard.fda.userModule.event.UpdatePreferenceEvent;
-import com.harvard.fda.userModule.webserviceModel.LoginData;
+import com.harvard.fda.storagemodule.DBServiceSubscriber;
+import com.harvard.fda.studyappmodule.ConsentCompletedActivity;
+import com.harvard.fda.studyappmodule.StudyFragment;
+import com.harvard.fda.usermodule.UserModulePresenter;
+import com.harvard.fda.usermodule.event.UpdatePreferenceEvent;
+import com.harvard.fda.usermodule.webservicemodel.LoginData;
 import com.harvard.fda.utils.AppController;
 import com.harvard.fda.utils.URLs;
-import com.harvard.fda.webserviceModule.apiHelper.ApiCall;
-import com.harvard.fda.webserviceModule.events.RegistrationServerConfigEvent;
+import com.harvard.fda.webservicemodule.apihelper.ApiCall;
+import com.harvard.fda.webservicemodule.events.RegistrationServerConfigEvent;
 
 import org.json.JSONArray;
 import org.json.JSONException;

@@ -12,29 +12,29 @@
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package com.harvard.fda.studyAppModule.custom;
+package com.harvard.fda.studyappmodule.custom;
 
-import com.harvard.fda.studyAppModule.custom.activeTask.StepCountClass;
-import com.harvard.fda.studyAppModule.custom.activeTask.Tappingactivity;
-import com.harvard.fda.studyAppModule.custom.question.AudioQuestionbody;
-import com.harvard.fda.studyAppModule.custom.question.ContinuousScaleQuestion;
-import com.harvard.fda.studyAppModule.custom.question.CustomDateQuestionBody;
-import com.harvard.fda.studyAppModule.custom.question.DecimalUnitQuestionBody;
-import com.harvard.fda.studyAppModule.custom.question.EmailQuestion;
-import com.harvard.fda.studyAppModule.custom.question.FormBodyCustom;
-import com.harvard.fda.studyAppModule.custom.question.HeightQuestion;
-import com.harvard.fda.studyAppModule.custom.question.IntegerUnitQuestionBody;
-import com.harvard.fda.studyAppModule.custom.question.LocationQuestion;
-import com.harvard.fda.studyAppModule.custom.question.MultiChoiceImageQuestionBody;
-import com.harvard.fda.studyAppModule.custom.question.MultiChoiceTextQuestionBody;
-import com.harvard.fda.studyAppModule.custom.question.ScaleQuestion;
-import com.harvard.fda.studyAppModule.custom.question.ScaleTextQuestion;
-import com.harvard.fda.studyAppModule.custom.question.SingleChoiceTextQuestionBody;
-import com.harvard.fda.studyAppModule.custom.question.TaskInstructionStep;
-import com.harvard.fda.studyAppModule.custom.question.TaskIntroductionStep;
-import com.harvard.fda.studyAppModule.custom.question.TextQuestionRegexBody;
-import com.harvard.fda.studyAppModule.custom.question.TimeIntervalQuestion;
-import com.harvard.fda.studyAppModule.custom.question.valuePickerQuestion;
+import com.harvard.fda.studyappmodule.custom.activetask.StepCountClass;
+import com.harvard.fda.studyappmodule.custom.activetask.Tappingactivity;
+import com.harvard.fda.studyappmodule.custom.question.AudioQuestionbody;
+import com.harvard.fda.studyappmodule.custom.question.ContinuousScaleQuestion;
+import com.harvard.fda.studyappmodule.custom.question.CustomDateQuestionBody;
+import com.harvard.fda.studyappmodule.custom.question.DecimalUnitQuestionBody;
+import com.harvard.fda.studyappmodule.custom.question.EmailQuestion;
+import com.harvard.fda.studyappmodule.custom.question.FormBodyCustom;
+import com.harvard.fda.studyappmodule.custom.question.HeightQuestion;
+import com.harvard.fda.studyappmodule.custom.question.IntegerUnitQuestionBody;
+import com.harvard.fda.studyappmodule.custom.question.LocationQuestion;
+import com.harvard.fda.studyappmodule.custom.question.MultiChoiceImageQuestionBody;
+import com.harvard.fda.studyappmodule.custom.question.MultiChoiceTextQuestionBody;
+import com.harvard.fda.studyappmodule.custom.question.ScaleQuestion;
+import com.harvard.fda.studyappmodule.custom.question.ScaleTextQuestion;
+import com.harvard.fda.studyappmodule.custom.question.SingleChoiceTextQuestionBody;
+import com.harvard.fda.studyappmodule.custom.question.TaskInstructionStep;
+import com.harvard.fda.studyappmodule.custom.question.TaskIntroductionStep;
+import com.harvard.fda.studyappmodule.custom.question.TextQuestionRegexBody;
+import com.harvard.fda.studyappmodule.custom.question.TimeIntervalQuestion;
+import com.harvard.fda.studyappmodule.custom.question.valuePickerQuestion;
 
 import org.researchstack.backbone.answerformat.AnswerFormat;
 import org.researchstack.backbone.ui.step.body.NotImplementedStepBody;

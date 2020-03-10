@@ -12,7 +12,7 @@
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package com.harvard.fda.studyAppModule;
+package com.harvard.fda.studyappmodule;
 
 import android.Manifest;
 import android.app.Activity;
@@ -42,13 +42,13 @@ import android.widget.Toast;
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.data.Entry;
 import com.harvard.fda.R;
-import com.harvard.fda.storageModule.DBServiceSubscriber;
-import com.harvard.fda.studyAppModule.activityBuilder.model.ActivityRun;
-import com.harvard.fda.studyAppModule.acvitityListModel.ActivitiesWS;
-import com.harvard.fda.studyAppModule.custom.Result.StepRecordCustom;
-import com.harvard.fda.studyAppModule.studyModel.ChartDataSource;
-import com.harvard.fda.studyAppModule.studyModel.DashboardData;
-import com.harvard.fda.studyAppModule.studyModel.RunChart;
+import com.harvard.fda.storagemodule.DBServiceSubscriber;
+import com.harvard.fda.studyappmodule.activitybuilder.model.ActivityRun;
+import com.harvard.fda.studyappmodule.activitymodel.ActivitiesWS;
+import com.harvard.fda.studyappmodule.custom.result.StepRecordCustom;
+import com.harvard.fda.studyappmodule.studymodel.ChartDataSource;
+import com.harvard.fda.studyappmodule.studymodel.DashboardData;
+import com.harvard.fda.studyappmodule.studymodel.RunChart;
 import com.harvard.fda.utils.AppController;
 import com.harvard.fda.utils.CustomMarkerView;
 import com.harvard.fda.utils.TempGraphHelper;

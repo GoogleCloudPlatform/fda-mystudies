@@ -1,0 +1,19 @@
+package com.harvard.studyappmodule.events;
+
+import com.harvard.webservicemodule.events.WCPConfigEvent;
+
+/**
+ * Created by Naveen Raj on 03/28/2017.
+ */
+
+public class GetConsentMetaDataEvent {
+    private WCPConfigEvent wcpConfigEvent;
+
+    public WCPConfigEvent getWcpConfigEvent() {
+        return wcpConfigEvent;
+    }
+
+    public void setWcpConfigEvent(WCPConfigEvent wcpConfigEvent) {
+        this.wcpConfigEvent = wcpConfigEvent;
+    }
+}

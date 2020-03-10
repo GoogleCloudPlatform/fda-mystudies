@@ -12,7 +12,7 @@
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package com.harvard.fda.studyAppModule;
+package com.harvard.fda.studyappmodule;
 
 import android.Manifest;
 import android.app.Activity;
@@ -49,58 +49,58 @@ import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
 import com.harvard.fda.AppConfig;
 import com.harvard.fda.R;
-import com.harvard.fda.notificationModule.NotificationModuleSubscriber;
-import com.harvard.fda.offlineModule.model.OfflineData;
-import com.harvard.fda.storageModule.DBServiceSubscriber;
-import com.harvard.fda.storageModule.events.DatabaseEvent;
-import com.harvard.fda.studyAppModule.activityBuilder.ActivityBuilder;
-import com.harvard.fda.studyAppModule.activityBuilder.CustomSurveyViewTaskActivity;
-import com.harvard.fda.studyAppModule.activityBuilder.StepsBuilder;
-import com.harvard.fda.studyAppModule.activityBuilder.model.ActivityRun;
-import com.harvard.fda.studyAppModule.activityBuilder.model.serviceModel.ActivityInfoData;
-import com.harvard.fda.studyAppModule.activityBuilder.model.serviceModel.ActivityObj;
-import com.harvard.fda.studyAppModule.acvitityListModel.ActivitiesWS;
-import com.harvard.fda.studyAppModule.acvitityListModel.ActivityListData;
-import com.harvard.fda.studyAppModule.acvitityListModel.AnchorDateSchedulingDetails;
-import com.harvard.fda.studyAppModule.acvitityListModel.Frequency;
-import com.harvard.fda.studyAppModule.acvitityListModel.FrequencyRuns;
-import com.harvard.fda.studyAppModule.consent.ConsentBuilder;
-import com.harvard.fda.studyAppModule.consent.CustomConsentViewTaskActivity;
-import com.harvard.fda.studyAppModule.consent.model.Consent;
-import com.harvard.fda.studyAppModule.consent.model.CorrectAnswerString;
-import com.harvard.fda.studyAppModule.consent.model.EligibilityConsent;
-import com.harvard.fda.studyAppModule.custom.Result.StepRecordCustom;
-import com.harvard.fda.studyAppModule.events.GetActivityInfoEvent;
-import com.harvard.fda.studyAppModule.events.GetActivityListEvent;
-import com.harvard.fda.studyAppModule.events.GetResourceListEvent;
-import com.harvard.fda.studyAppModule.events.GetUserStudyInfoEvent;
-import com.harvard.fda.studyAppModule.events.GetUserStudyListEvent;
-import com.harvard.fda.studyAppModule.studyModel.MotivationalNotification;
-import com.harvard.fda.studyAppModule.studyModel.StudyHome;
-import com.harvard.fda.studyAppModule.studyModel.StudyList;
-import com.harvard.fda.studyAppModule.studyModel.StudyResource;
-import com.harvard.fda.studyAppModule.studyModel.StudyUpdate;
-import com.harvard.fda.studyAppModule.studyModel.StudyUpdateListdata;
-import com.harvard.fda.studyAppModule.survayScheduler.SurvayScheduler;
-import com.harvard.fda.studyAppModule.survayScheduler.model.ActivityStatus;
-import com.harvard.fda.userModule.UserModulePresenter;
-import com.harvard.fda.userModule.event.GetPreferenceEvent;
-import com.harvard.fda.userModule.event.UpdatePreferenceEvent;
-import com.harvard.fda.userModule.webserviceModel.Activities;
-import com.harvard.fda.userModule.webserviceModel.ActivityData;
-import com.harvard.fda.userModule.webserviceModel.LoginData;
-import com.harvard.fda.userModule.webserviceModel.Studies;
-import com.harvard.fda.userModule.webserviceModel.StudyData;
+import com.harvard.fda.notificationmodule.NotificationModuleSubscriber;
+import com.harvard.fda.offlinemodule.model.OfflineData;
+import com.harvard.fda.storagemodule.DBServiceSubscriber;
+import com.harvard.fda.storagemodule.events.DatabaseEvent;
+import com.harvard.fda.studyappmodule.activitybuilder.ActivityBuilder;
+import com.harvard.fda.studyappmodule.activitybuilder.CustomSurveyViewTaskActivity;
+import com.harvard.fda.studyappmodule.activitybuilder.StepsBuilder;
+import com.harvard.fda.studyappmodule.activitybuilder.model.ActivityRun;
+import com.harvard.fda.studyappmodule.activitybuilder.model.servicemodel.ActivityInfoData;
+import com.harvard.fda.studyappmodule.activitybuilder.model.servicemodel.ActivityObj;
+import com.harvard.fda.studyappmodule.activitymodel.ActivitiesWS;
+import com.harvard.fda.studyappmodule.activitymodel.ActivityListData;
+import com.harvard.fda.studyappmodule.activitymodel.AnchorDateSchedulingDetails;
+import com.harvard.fda.studyappmodule.activitymodel.Frequency;
+import com.harvard.fda.studyappmodule.activitymodel.FrequencyRuns;
+import com.harvard.fda.studyappmodule.consent.ConsentBuilder;
+import com.harvard.fda.studyappmodule.consent.CustomConsentViewTaskActivity;
+import com.harvard.fda.studyappmodule.consent.model.Consent;
+import com.harvard.fda.studyappmodule.consent.model.CorrectAnswerString;
+import com.harvard.fda.studyappmodule.consent.model.EligibilityConsent;
+import com.harvard.fda.studyappmodule.custom.result.StepRecordCustom;
+import com.harvard.fda.studyappmodule.events.GetActivityInfoEvent;
+import com.harvard.fda.studyappmodule.events.GetActivityListEvent;
+import com.harvard.fda.studyappmodule.events.GetResourceListEvent;
+import com.harvard.fda.studyappmodule.events.GetUserStudyInfoEvent;
+import com.harvard.fda.studyappmodule.events.GetUserStudyListEvent;
+import com.harvard.fda.studyappmodule.studymodel.MotivationalNotification;
+import com.harvard.fda.studyappmodule.studymodel.StudyHome;
+import com.harvard.fda.studyappmodule.studymodel.StudyList;
+import com.harvard.fda.studyappmodule.studymodel.StudyResource;
+import com.harvard.fda.studyappmodule.studymodel.StudyUpdate;
+import com.harvard.fda.studyappmodule.studymodel.StudyUpdateListdata;
+import com.harvard.fda.studyappmodule.surveyscheduler.SurveyScheduler;
+import com.harvard.fda.studyappmodule.surveyscheduler.model.ActivityStatus;
+import com.harvard.fda.usermodule.UserModulePresenter;
+import com.harvard.fda.usermodule.event.GetPreferenceEvent;
+import com.harvard.fda.usermodule.event.UpdatePreferenceEvent;
+import com.harvard.fda.usermodule.webservicemodel.Activities;
+import com.harvard.fda.usermodule.webservicemodel.ActivityData;
+import com.harvard.fda.usermodule.webservicemodel.LoginData;
+import com.harvard.fda.usermodule.webservicemodel.Studies;
+import com.harvard.fda.usermodule.webservicemodel.StudyData;
 import com.harvard.fda.utils.AppController;
 import com.harvard.fda.utils.SetDialogHelper;
 import com.harvard.fda.utils.URLs;
 import com.harvard.fda.utils.realm.Logger;
-import com.harvard.fda.webserviceModule.apiHelper.ApiCall;
-import com.harvard.fda.webserviceModule.apiHelper.ConnectionDetector;
-import com.harvard.fda.webserviceModule.apiHelper.HttpRequest;
-import com.harvard.fda.webserviceModule.apiHelper.Responsemodel;
-import com.harvard.fda.webserviceModule.events.RegistrationServerConfigEvent;
-import com.harvard.fda.webserviceModule.events.WCPConfigEvent;
+import com.harvard.fda.webservicemodule.apihelper.ApiCall;
+import com.harvard.fda.webservicemodule.apihelper.ConnectionDetector;
+import com.harvard.fda.webservicemodule.apihelper.HttpRequest;
+import com.harvard.fda.webservicemodule.apihelper.Responsemodel;
+import com.harvard.fda.webservicemodule.events.RegistrationServerConfigEvent;
+import com.harvard.fda.webservicemodule.events.WCPConfigEvent;
 import com.itextpdf.text.Document;
 import com.itextpdf.text.DocumentException;
 import com.itextpdf.text.Image;
@@ -1372,11 +1372,11 @@ public class SurveyActivitiesFragment extends Fragment implements ApiCall.OnAsyn
 
             if (activityListData2 != null) {
                 activitiesArrayList.addAll(activityListData2.getActivities());
-                SurvayScheduler survayScheduler = new SurvayScheduler(dbServiceSubscriber, mRealm);
+                SurveyScheduler surveyScheduler = new SurveyScheduler(dbServiceSubscriber, mRealm);
                 StudyData studyPreferences = dbServiceSubscriber.getStudyPreference(mRealm);
                 ActivityData activityData = dbServiceSubscriber.getActivityPreference(((SurveyActivity) mContext).getStudyId(), mRealm);
 
-                Date joiningDate = survayScheduler.getJoiningDateOfStudy(studyPreferences, ((SurveyActivity) mContext).getStudyId());
+                Date joiningDate = surveyScheduler.getJoiningDateOfStudy(studyPreferences, ((SurveyActivity) mContext).getStudyId());
 
                 Date currentDate = new Date();
 
@@ -1448,13 +1448,13 @@ public class SurveyActivitiesFragment extends Fragment implements ApiCall.OnAsyn
 
                     if (updateRun || activityRuns == null || activityRuns.size() == 0) {
                         if (!deleted)
-                            survayScheduler.setRuns(activitiesArrayList.get(i), ((SurveyActivity) mContext).getStudyId(), starttime, endtime, joiningDate, mContext);
+                            surveyScheduler.setRuns(activitiesArrayList.get(i), ((SurveyActivity) mContext).getStudyId(), starttime, endtime, joiningDate, mContext);
                     } else if (activityIds.size() > 0) {
                         // remove runs for these Ids and set runs once again
                         if (activityIds.contains(activitiesArrayList.get(i).getActivityId())) {
                             dbServiceSubscriber.deleteActivityRunsFromDb(mContext, activitiesArrayList.get(i).getActivityId(), ((SurveyActivity) mContext).getStudyId());
                             if (!deleted)
-                                survayScheduler.setRuns(activitiesArrayList.get(i), ((SurveyActivity) mContext).getStudyId(), starttime, endtime, joiningDate, mContext);
+                                surveyScheduler.setRuns(activitiesArrayList.get(i), ((SurveyActivity) mContext).getStudyId(), starttime, endtime, joiningDate, mContext);
                             // delete activity object that used for survey
                             dbServiceSubscriber.deleteActivityObjectFromDb(mContext, activitiesArrayList.get(i).getActivityId(), ((SurveyActivity) mContext).getStudyId());
                             for (int j = 0; j < activityData.getActivities().size(); j++) {
@@ -1480,9 +1480,9 @@ public class SurveyActivitiesFragment extends Fragment implements ApiCall.OnAsyn
                     }
                     Calendar calendarCurrentTime = Calendar.getInstance();
                     calendarCurrentTime.setTime(currentDate);
-                    calendarCurrentTime.setTimeInMillis(calendarCurrentTime.getTimeInMillis() - survayScheduler.getOffset(mContext));
+                    calendarCurrentTime.setTimeInMillis(calendarCurrentTime.getTimeInMillis() - surveyScheduler.getOffset(mContext));
                     if (!deleted) {
-                        ActivityStatus activityStatus = survayScheduler.getActivityStatus(activityData, ((SurveyActivity) mContext).getStudyId(), activitiesArrayList.get(i).getActivityId(), calendarCurrentTime.getTime());
+                        ActivityStatus activityStatus = surveyScheduler.getActivityStatus(activityData, ((SurveyActivity) mContext).getStudyId(), activitiesArrayList.get(i).getActivityId(), calendarCurrentTime.getTime());
                         if (activityStatus != null) {
                             if (activityStatus.getCompletedRun() >= 0) {
                                 completed = completed + activityStatus.getCompletedRun();

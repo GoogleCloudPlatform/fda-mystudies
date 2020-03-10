@@ -12,16 +12,16 @@
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package com.harvard.fda.studyAppModule.consent;
+package com.harvard.fda.studyappmodule.consent;
 
 import android.content.Context;
 
-import com.harvard.fda.EligibilityModule.StepsBuilder;
+import com.harvard.fda.eligibilitymodule.StepsBuilder;
 import com.harvard.fda.R;
-import com.harvard.fda.studyAppModule.activityBuilder.model.serviceModel.Steps;
-import com.harvard.fda.studyAppModule.consent.ConsentSharingStepCustom.ConsentSharingStepCustom;
-import com.harvard.fda.studyAppModule.consent.model.Consent;
-import com.harvard.fda.studyAppModule.consent.model.ConsentSectionCustomImage;
+import com.harvard.fda.studyappmodule.activitybuilder.model.servicemodel.Steps;
+import com.harvard.fda.studyappmodule.consent.ConsentSharingStepCustom.ConsentSharingStepCustom;
+import com.harvard.fda.studyappmodule.consent.model.Consent;
+import com.harvard.fda.studyappmodule.consent.model.ConsentSectionCustomImage;
 
 import org.researchstack.backbone.answerformat.AnswerFormat;
 import org.researchstack.backbone.answerformat.ChoiceAnswerFormat;

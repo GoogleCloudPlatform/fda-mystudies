@@ -24,11 +24,11 @@ import android.widget.TextView;
 import com.harvard.AppConfig;
 import com.harvard.R;
 import com.harvard.SplashActivity;
-import com.harvard.notificationModule.NotificationModuleSubscriber;
-import com.harvard.offlineModule.model.OfflineData;
-import com.harvard.storageModule.DBServiceSubscriber;
-import com.harvard.studyAppModule.StandaloneActivity;
-import com.harvard.studyAppModule.StudyActivity;
+import com.harvard.notificationmodule.NotificationModuleSubscriber;
+import com.harvard.offlinemodule.model.OfflineData;
+import com.harvard.storagemodule.DBServiceSubscriber;
+import com.harvard.studyappmodule.StandaloneActivity;
+import com.harvard.studyappmodule.StudyActivity;
 import com.harvard.utils.realm.RealmEncryptionHelper;
 
 import java.io.ByteArrayInputStream;

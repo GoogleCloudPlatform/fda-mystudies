@@ -12,7 +12,7 @@
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package com.harvard.fda.studyAppModule;
+package com.harvard.fda.studyappmodule;
 
 import android.Manifest;
 import android.app.Activity;
@@ -57,24 +57,24 @@ import com.google.gson.JsonSyntaxException;
 import com.google.gson.reflect.TypeToken;
 import com.harvard.fda.AppConfig;
 import com.harvard.fda.R;
-import com.harvard.fda.storageModule.DBServiceSubscriber;
-import com.harvard.fda.studyAppModule.acvitityListModel.ActivitiesWS;
-import com.harvard.fda.studyAppModule.acvitityListModel.ActivityListData;
-import com.harvard.fda.studyAppModule.custom.Result.StepRecordCustom;
-import com.harvard.fda.studyAppModule.events.GetActivityListEvent;
-import com.harvard.fda.studyAppModule.studyModel.DashboardData;
-import com.harvard.fda.studyAppModule.studyModel.ResponseInfoActiveTaskModel;
-import com.harvard.fda.studyAppModule.studyModel.Statistics;
-import com.harvard.fda.studyAppModule.survayScheduler.SurvayScheduler;
-import com.harvard.fda.studyAppModule.survayScheduler.model.CompletionAdeherenceCalc;
-import com.harvard.fda.userModule.webserviceModel.Studies;
+import com.harvard.fda.storagemodule.DBServiceSubscriber;
+import com.harvard.fda.studyappmodule.activitymodel.ActivitiesWS;
+import com.harvard.fda.studyappmodule.activitymodel.ActivityListData;
+import com.harvard.fda.studyappmodule.custom.result.StepRecordCustom;
+import com.harvard.fda.studyappmodule.events.GetActivityListEvent;
+import com.harvard.fda.studyappmodule.studymodel.DashboardData;
+import com.harvard.fda.studyappmodule.studymodel.ResponseInfoActiveTaskModel;
+import com.harvard.fda.studyappmodule.studymodel.Statistics;
+import com.harvard.fda.studyappmodule.surveyscheduler.SurveyScheduler;
+import com.harvard.fda.studyappmodule.surveyscheduler.model.CompletionAdeherenceCalc;
+import com.harvard.fda.usermodule.webservicemodel.Studies;
 import com.harvard.fda.utils.AppController;
 import com.harvard.fda.utils.URLs;
-import com.harvard.fda.webserviceModule.apiHelper.ApiCall;
-import com.harvard.fda.webserviceModule.apiHelper.ConnectionDetector;
-import com.harvard.fda.webserviceModule.apiHelper.HttpRequest;
-import com.harvard.fda.webserviceModule.apiHelper.Responsemodel;
-import com.harvard.fda.webserviceModule.events.WCPConfigEvent;
+import com.harvard.fda.webservicemodule.apihelper.ApiCall;
+import com.harvard.fda.webservicemodule.apihelper.ConnectionDetector;
+import com.harvard.fda.webservicemodule.apihelper.HttpRequest;
+import com.harvard.fda.webservicemodule.apihelper.Responsemodel;
+import com.harvard.fda.webservicemodule.events.WCPConfigEvent;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -108,9 +108,9 @@ public class SurveyDashboardFragment extends Fragment implements ApiCall.OnAsync
     private AppCompatTextView mTitle1;
     private RelativeLayout mShareBtn;
     private AppCompatTextView mCompletionValue;
-    private com.harvard.fda.studyAppModule.circularProgressBar.DonutProgress mProgressBar1;
+    private com.harvard.fda.studyappmodule.circularprogressbar.DonutProgress mProgressBar1;
     private AppCompatTextView mAdherenceValue;
-    private com.harvard.fda.studyAppModule.circularProgressBar.DonutProgress mProgressBar2;
+    private com.harvard.fda.studyappmodule.circularprogressbar.DonutProgress mProgressBar2;
     private AppCompatTextView mActivitiesLabel;
     private AppCompatTextView mTodayActivitiesCompletedValue1;
     private AppCompatTextView mTodayActivitiesCompletedLabel1;
@@ -1050,8 +1050,8 @@ public class SurveyDashboardFragment extends Fragment implements ApiCall.OnAsync
 
         @Override
         protected void onPostExecute(String result) {
-            SurvayScheduler survayScheduler = new SurvayScheduler(dbServiceSubscriber, mRealm);
-            completionAdeherenceCalc = survayScheduler.completionAndAdherenceCalculation(((SurveyActivity) mContext).getStudyId(), mContext);
+            SurveyScheduler surveyScheduler = new SurveyScheduler(dbServiceSubscriber, mRealm);
+            completionAdeherenceCalc = surveyScheduler.completionAndAdherenceCalculation(((SurveyActivity) mContext).getStudyId(), mContext);
             if (completionAdeherenceCalc.isNoCompletedAndMissed()) {
                 mCompletionValue.setText("-- ");
                 mProgressBar1.setProgress(0);

@@ -17,17 +17,17 @@ import android.support.v4.app.NotificationCompat;
 
 import com.harvard.FDAApplication;
 import com.harvard.R;
-import com.harvard.offlineModule.model.OfflineData;
-import com.harvard.storageModule.DBServiceSubscriber;
-import com.harvard.studyAppModule.StudyModulePresenter;
-import com.harvard.studyAppModule.events.ProcessResponseEvent;
-import com.harvard.userModule.UserModulePresenter;
-import com.harvard.userModule.event.UpdatePreferenceEvent;
-import com.harvard.userModule.webserviceModel.LoginData;
-import com.harvard.webserviceModule.apiHelper.ApiCall;
-import com.harvard.webserviceModule.apiHelper.ApiCallResponseServer;
-import com.harvard.webserviceModule.events.RegistrationServerConfigEvent;
-import com.harvard.webserviceModule.events.ResponseServerConfigEvent;
+import com.harvard.offlinemodule.model.OfflineData;
+import com.harvard.storagemodule.DBServiceSubscriber;
+import com.harvard.studyappmodule.StudyModulePresenter;
+import com.harvard.studyappmodule.events.ProcessResponseEvent;
+import com.harvard.usermodule.UserModulePresenter;
+import com.harvard.usermodule.event.UpdatePreferenceEvent;
+import com.harvard.usermodule.webservicemodel.LoginData;
+import com.harvard.webservicemodule.apihelper.ApiCall;
+import com.harvard.webservicemodule.apihelper.ApiCallResponseServer;
+import com.harvard.webservicemodule.events.RegistrationServerConfigEvent;
+import com.harvard.webservicemodule.events.ResponseServerConfigEvent;
 
 import org.json.JSONException;
 import org.json.JSONObject;

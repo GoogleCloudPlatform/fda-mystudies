@@ -12,13 +12,13 @@ import android.support.v4.app.NotificationManagerCompat;
 
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
-import com.harvard.storageModule.DBServiceSubscriber;
-import com.harvard.studyAppModule.StandaloneActivity;
-import com.harvard.studyAppModule.StudyActivity;
-import com.harvard.studyAppModule.StudyFragment;
-import com.harvard.studyAppModule.studyModel.Study;
-import com.harvard.studyAppModule.studyModel.StudyList;
-import com.harvard.userModule.webserviceModel.UserProfileData;
+import com.harvard.storagemodule.DBServiceSubscriber;
+import com.harvard.studyappmodule.StandaloneActivity;
+import com.harvard.studyappmodule.StudyActivity;
+import com.harvard.studyappmodule.StudyFragment;
+import com.harvard.studyappmodule.studymodel.Study;
+import com.harvard.studyappmodule.studymodel.StudyList;
+import com.harvard.usermodule.webservicemodel.UserProfileData;
 import com.harvard.utils.AppController;
 
 import java.util.Random;

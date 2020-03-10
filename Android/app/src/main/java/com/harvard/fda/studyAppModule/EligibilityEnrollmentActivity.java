@@ -12,7 +12,7 @@
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package com.harvard.fda.studyAppModule;
+package com.harvard.fda.studyappmodule;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -25,12 +25,12 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.harvard.fda.R;
-import com.harvard.fda.studyAppModule.ResponseServerModel.ResponseServerData;
-import com.harvard.fda.studyAppModule.events.VerifyEnrollmentIdEvent;
+import com.harvard.fda.studyappmodule.responseservermodel.ResponseServerData;
+import com.harvard.fda.studyappmodule.events.VerifyEnrollmentIdEvent;
 import com.harvard.fda.utils.AppController;
 import com.harvard.fda.utils.URLs;
-import com.harvard.fda.webserviceModule.apiHelper.ApiCallResponseServer;
-import com.harvard.fda.webserviceModule.events.ResponseServerConfigEvent;
+import com.harvard.fda.webservicemodule.apihelper.ApiCallResponseServer;
+import com.harvard.fda.webservicemodule.events.ResponseServerConfigEvent;
 
 import java.util.HashMap;
 
