@@ -24,7 +24,7 @@ import WebKit
 import SafariServices
 //let resourcesDownloadPath = AKUtility.baseFilePath + "/Resources"
 
-class ResourcesDetailViewControllerCopy: UIViewController {
+class ResourceDetailViewController: UIViewController {
     
     @IBOutlet var webViewContainer: UIView?
     var webView: WKWebView?
@@ -232,7 +232,7 @@ class ResourcesDetailViewControllerCopy: UIViewController {
     }
 }
 
-extension ResourcesDetailViewControllerCopy:UIWebViewDelegate {
+extension ResourceDetailViewController:UIWebViewDelegate {
     
     func webViewDidFinishLoad(_ webView: UIWebView) {
         self.activityIndicator.stopAnimating()
@@ -258,7 +258,7 @@ extension ResourcesDetailViewControllerCopy:UIWebViewDelegate {
     }
 }
 
-extension ResourcesDetailViewControllerCopy:WKUIDelegate,WKNavigationDelegate{
+extension ResourceDetailViewController:WKUIDelegate,WKNavigationDelegate{
     
     
     func webView(_ webView: WKWebView, didStartProvisionalNavigation navigation: WKNavigation) {
@@ -395,7 +395,7 @@ extension ResourcesDetailViewControllerCopy:WKUIDelegate,WKNavigationDelegate{
 
 
 
-extension ResourcesDetailViewControllerCopy:MFMailComposeViewControllerDelegate{
+extension ResourceDetailViewController:MFMailComposeViewControllerDelegate{
     
     func sendEmail() {
         let composeVC = MFMailComposeViewController()
@@ -461,7 +461,7 @@ extension ResourcesDetailViewControllerCopy:MFMailComposeViewControllerDelegate{
 }
 
 
-extension ResourcesDetailViewControllerCopy:FileDownloadManagerDelegates{
+extension ResourceDetailViewController:FileDownloadManagerDelegates{
     
     func download(manager: FileDownloadManager, didUpdateProgress progress: Float) {
         

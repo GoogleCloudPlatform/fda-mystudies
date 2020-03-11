@@ -18,12 +18,12 @@ OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE
 OTHER DEALINGS IN THE SOFTWARE.
  */
 
-
 import RealmSwift
 
 /**
  DB instance of User model 
  */
+
 class DBUser: Object {
     
     @objc dynamic var firstName: String = ""
