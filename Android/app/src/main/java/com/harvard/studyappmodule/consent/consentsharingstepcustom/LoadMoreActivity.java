@@ -1,4 +1,4 @@
-package com.harvard.studyappmodule.consent.ConsentSharingStepCustom;
+package com.harvard.studyappmodule.consent.consentsharingstepcustom;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;

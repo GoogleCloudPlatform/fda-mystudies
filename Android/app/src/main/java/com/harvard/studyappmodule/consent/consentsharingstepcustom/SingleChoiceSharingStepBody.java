@@ -1,4 +1,4 @@
-package com.harvard.studyappmodule.consent.ConsentSharingStepCustom;
+package com.harvard.studyappmodule.consent.consentsharingstepcustom;
 
 import android.content.Intent;
 import android.content.res.Resources;
@@ -15,6 +15,8 @@ import android.widget.TextView;
 
 import com.harvard.R;
 
+import com.harvard.studyappmodule.consent.consentsharingstepcustom.ConsentSharingStepCustom;
+import com.harvard.studyappmodule.consent.consentsharingstepcustom.LoadMoreActivity;
 import org.researchstack.backbone.answerformat.ChoiceAnswerFormat;
 import org.researchstack.backbone.model.Choice;
 import org.researchstack.backbone.result.StepResult;

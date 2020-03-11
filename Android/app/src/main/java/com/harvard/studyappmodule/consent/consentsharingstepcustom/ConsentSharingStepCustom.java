@@ -1,4 +1,4 @@
-package com.harvard.studyappmodule.consent.ConsentSharingStepCustom;
+package com.harvard.studyappmodule.consent.consentsharingstepcustom;
 
 import org.researchstack.backbone.step.QuestionStep;
 
