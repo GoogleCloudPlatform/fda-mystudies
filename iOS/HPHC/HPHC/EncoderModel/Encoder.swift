@@ -20,6 +20,6 @@ OTHER DEALINGS IN THE SOFTWARE.
 
 import Foundation
 
-class Encoder{
-    
+class Encoder {
+
 }

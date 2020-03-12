@@ -81,14 +81,13 @@ Codeless drop-in universal library allows to prevent issues of keyboard sliding 
         
         var isEnabled = enable
         
-//        let enableMode = _textFieldView?.enableMode
-//
-//        if enableMode == .enabled {
-//            isEnabled = true
-//        } else if enableMode == .disabled {
-//            isEnabled = false
-//        } else {
-        
+        let enableMode = _textFieldView?.enableMode
+
+        if enableMode == .enabled {
+            isEnabled = true
+        } else if enableMode == .disabled {
+            isEnabled = false
+        } else {
             if var textFieldViewController = _textFieldView?.viewContainingController() {
                 
                 //If it is searchBar textField embedded in Navigation Bar
@@ -131,7 +130,7 @@ Codeless drop-in universal library allows to prevent issues of keyboard sliding 
                     }
                 }
             }
-//        }
+        }
         
         return isEnabled
     }
@@ -165,19 +164,16 @@ Codeless drop-in universal library allows to prevent issues of keyboard sliding 
         
         return _privateMovedDistance
     }
+    
+    /**
+    Will be called then movedDistance will be changed
+     */
+    @objc public var movedDistanceChanged: ((CGFloat) -> Void)?
 
     /**
     Returns the default singleton instance.
     */
-    @objc public class var shared: IQKeyboardManager {
-        struct Static {
-            //Singleton instance. Initializing keyboard manger.
-            static let kbManager = IQKeyboardManager()
-        }
-        
-        /** @return Returns the default singleton instance. */
-        return Static.kbManager
-    }
+    @objc public static let shared = IQKeyboardManager()
     
     ///-------------------------
     /// MARK: IQToolbar handling
@@ -293,8 +289,11 @@ Codeless drop-in universal library allows to prevent issues of keyboard sliding 
      Toolbar previous/next/done button text, If nothing is provided then system default 'UIBarButtonSystemItemDone' will be used.
      */
     @objc public var toolbarPreviousBarButtonItemText: String?
+    @objc public var toolbarPreviousBarButtonItemAccessibilityLabel: String?
     @objc public var toolbarNextBarButtonItemText: String?
+    @objc public var toolbarNextBarButtonItemAccessibilityLabel: String?
     @objc public var toolbarDoneBarButtonItemText: String?
+    @objc public var toolbarDoneBarButtonItemAccessibilityLabel: String?
 
     /**
     If YES, then it add the textField's placeholder text on IQToolbar. Default is YES.
@@ -830,7 +829,11 @@ Codeless drop-in universal library allows to prevent issues of keyboard sliding 
     /** Boolean to maintain keyboard is showing or it is hide. To solve rootViewController.view.frame calculations. */
     private var         _privateIsKeyboardShowing = false
 
-    private var         _privateMovedDistance: CGFloat = 0.0
+    private var         _privateMovedDistance: CGFloat = 0.0 {
+        didSet {
+            movedDistanceChanged?(_privateMovedDistance)
+        }
+    }
     
     /** To use with keyboardDistanceFromTextField. */
     private var         _privateKeyboardDistanceFromTextField: CGFloat = 10.0
@@ -901,9 +904,25 @@ Codeless drop-in universal library allows to prevent issues of keyboard sliding 
                 static weak var keyWindow: UIWindow?
             }
 
+            var originalKeyWindow : UIWindow? = nil
+            
+            #if swift(>=5.1)
+            if #available(iOS 13, *) {
+                originalKeyWindow = UIApplication.shared.connectedScenes
+                    .compactMap { $0 as? UIWindowScene }
+                    .flatMap { $0.windows }
+                    .first(where: { $0.isKeyWindow })
+            } else {
+                originalKeyWindow = UIApplication.shared.keyWindow
+            }
+            #else
+            originalKeyWindow = UIApplication.shared.keyWindow
+            #endif
+
+            
+            
             //If original key window is not nil and the cached keywindow is also not original keywindow then changing keywindow.
-            if let originalKeyWindow = UIApplication.shared.keyWindow,
-                (Static.keyWindow == nil || Static.keyWindow != originalKeyWindow) {
+            if let originalKeyWindow = originalKeyWindow {
                 Static.keyWindow = originalKeyWindow
             }
 
@@ -1250,17 +1269,20 @@ Codeless drop-in universal library allows to prevent issues of keyboard sliding 
                 }
                 
                 //Updating contentInset
-                if let lastScrollViewRect = lastScrollView.superview?.convert(lastScrollView.frame, to: window) {
+                if let lastScrollViewRect = lastScrollView.superview?.convert(lastScrollView.frame, to: window),
+                    lastScrollView.shouldIgnoreContentInsetAdjustment == false {
                     
-                    let bottom: CGFloat = (kbSize.height-newKeyboardDistanceFromTextField)-(window.frame.height-lastScrollViewRect.maxY)
-                    
+                    var bottomInset: CGFloat = (kbSize.height)-(window.frame.height-lastScrollViewRect.maxY)
+                    var bottomScrollIndicatorInset = bottomInset - newKeyboardDistanceFromTextField
+
                     // Update the insets so that the scroll vew doesn't shift incorrectly when the offset is near the bottom of the scroll view.
-                    
-                    var bottomInset = max(_startingContentInsets.bottom, bottom)
-                    
+                    bottomInset = max(_startingContentInsets.bottom, bottomInset)
+                    bottomScrollIndicatorInset = max(_startingScrollIndicatorInsets.bottom, bottomScrollIndicatorInset)
+
                     #if swift(>=4.0)
                     if #available(iOS 11, *) {
                         bottomInset -= lastScrollView.safeAreaInsets.bottom
+                        bottomScrollIndicatorInset -= lastScrollView.safeAreaInsets.bottom
                     }
                     #endif
 
@@ -1273,20 +1295,20 @@ Codeless drop-in universal library allows to prevent issues of keyboard sliding 
                         UIView.animate(withDuration: _animationDuration, delay: 0, options: _animationCurve.union(.beginFromCurrentState), animations: { () -> Void in
                             lastScrollView.contentInset = movedInsets
                             
-                            var newInset : UIEdgeInsets
+                            var newScrollIndicatorInset : UIEdgeInsets
                             
                             #if swift(>=5.1)
                             if #available(iOS 11.1, *) {
-                                newInset = lastScrollView.verticalScrollIndicatorInsets
+                                newScrollIndicatorInset = lastScrollView.verticalScrollIndicatorInsets
                             } else {
-                                newInset = lastScrollView.scrollIndicatorInsets
+                                newScrollIndicatorInset = lastScrollView.scrollIndicatorInsets
                             }
                             #else
-                            newInset = lastScrollView.scrollIndicatorInsets
+                            newScrollIndicatorInset = lastScrollView.scrollIndicatorInsets
                             #endif
 
-                            newInset.bottom = movedInsets.bottom
-                            lastScrollView.scrollIndicatorInsets = newInset
+                            newScrollIndicatorInset.bottom = bottomScrollIndicatorInset
+                            lastScrollView.scrollIndicatorInsets = newScrollIndicatorInset
                         })
                     }
                 }
@@ -1530,6 +1552,8 @@ Codeless drop-in universal library allows to prevent issues of keyboard sliding 
         }
 
         if privateIsEnabled() == false {
+            restorePosition()
+            _topViewBeginOrigin = IQKeyboardManager.kIQCGPointInvalid
             return
         }
         
@@ -1779,7 +1803,10 @@ Codeless drop-in universal library allows to prevent issues of keyboard sliding 
         resignFirstResponderGesture.isEnabled = privateShouldResignOnTouchOutside()
         _textFieldView?.window?.addGestureRecognizer(resignFirstResponderGesture)    //   (Enhancement ID: #14)
 
-        if privateIsEnabled() == true {
+        if privateIsEnabled() == false {
+            restorePosition()
+            _topViewBeginOrigin = IQKeyboardManager.kIQCGPointInvalid
+        } else {
             if _topViewBeginOrigin.equalTo(IQKeyboardManager.kIQCGPointInvalid) == true {    //  (Bug ID: #5)
                 
                 _rootViewController = _textFieldView?.parentContainerViewController()
@@ -1981,6 +2008,7 @@ Codeless drop-in universal library allows to prevent issues of keyboard sliding 
                         } else {
                             rightConfiguration = IQBarButtonItemConfiguration(barButtonSystemItem: .done, action: #selector(self.doneAction(_:)))
                         }
+                        rightConfiguration.accessibilityLabel = toolbarDoneBarButtonItemAccessibilityLabel ?? "Done"
                         
                         //	If only one object is found, then adding only Done button.
                         if (siblings.count <= 1 && previousNextDisplayMode == .default) || previousNextDisplayMode == .alwaysHide {
@@ -2000,6 +2028,7 @@ Codeless drop-in universal library allows to prevent issues of keyboard sliding 
                             } else {
                                 prevConfiguration = IQBarButtonItemConfiguration(image: (UIImage.keyboardPreviousImage() ?? UIImage()), action: #selector(self.previousAction(_:)))
                             }
+                            prevConfiguration.accessibilityLabel = toolbarPreviousBarButtonItemAccessibilityLabel ?? "Previous"
 
                             let nextConfiguration: IQBarButtonItemConfiguration
                             
@@ -2010,6 +2039,7 @@ Codeless drop-in universal library allows to prevent issues of keyboard sliding 
                             } else {
                                 nextConfiguration = IQBarButtonItemConfiguration(image: (UIImage.keyboardNextImage() ?? UIImage()), action: #selector(self.nextAction(_:)))
                             }
+                            nextConfiguration.accessibilityLabel = toolbarNextBarButtonItemAccessibilityLabel ?? "Next"
 
                             textField.addKeyboardToolbarWithTarget(target: self, titleText: (shouldShowToolbarPlaceholder ? textField.drawingToolbarPlaceholder: nil), rightBarButtonConfiguration: rightConfiguration, previousBarButtonConfiguration: prevConfiguration, nextBarButtonConfiguration: nextConfiguration)
 
