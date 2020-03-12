@@ -16,18 +16,14 @@ package com.harvard.usermodule.event;
 
 import com.harvard.webservicemodule.events.ResponseServerConfigEvent;
 
-/**
- * Created by Rohit on 2/17/2017.
- */
-
 public class DeleteAccountResServerEvent {
-    private ResponseServerConfigEvent mResponseServerConfigEvent;
+  private ResponseServerConfigEvent mResponseServerConfigEvent;
 
-    public ResponseServerConfigEvent getmResponseServerConfigEvent() {
-        return mResponseServerConfigEvent;
-    }
+  public ResponseServerConfigEvent getmResponseServerConfigEvent() {
+    return mResponseServerConfigEvent;
+  }
 
-    public void setmResponseServerConfigEvent(ResponseServerConfigEvent mResponseServerConfigEvent) {
-        this.mResponseServerConfigEvent = mResponseServerConfigEvent;
-    }
+  public void setmResponseServerConfigEvent(ResponseServerConfigEvent mResponseServerConfigEvent) {
+    this.mResponseServerConfigEvent = mResponseServerConfigEvent;
+  }
 }

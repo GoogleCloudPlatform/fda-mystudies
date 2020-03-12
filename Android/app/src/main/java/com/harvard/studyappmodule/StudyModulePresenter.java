@@ -31,69 +31,65 @@ import com.harvard.studyappmodule.events.VerifyEnrollmentIdEvent;
 import com.harvard.studyappmodule.events.WithdrawFromStudyEvent;
 import com.harvard.usermodule.event.GetTermsAndConditionEvent;
 
-/**
- * Created by Rohit on 3/6/2017.
- */
-
 public class StudyModulePresenter {
-    public void performGetGateWayStudyInfo(GetUserStudyInfoEvent getUserStudyInfoEvent) {
-        FDAEventBus.postEvent(getUserStudyInfoEvent);
-    }
+  void performGetGateWayStudyInfo(GetUserStudyInfoEvent getUserStudyInfoEvent) {
+    FDAEventBus.postEvent(getUserStudyInfoEvent);
+  }
 
+  public void performGetConsentMetaData(GetConsentMetaDataEvent getConsentMetaDataEvent) {
+    FDAEventBus.postEvent(getConsentMetaDataEvent);
+  }
 
-    public void performGetConsentMetaData(GetConsentMetaDataEvent getConsentMetaDataEvent) {
-        FDAEventBus.postEvent(getConsentMetaDataEvent);
-    }
+  void performVerifyEnrollmentId(VerifyEnrollmentIdEvent verifyEnrollmentIdEvent) {
+    FDAEventBus.postEvent(verifyEnrollmentIdEvent);
+  }
 
-    public void performVerifyEnrollmentId(VerifyEnrollmentIdEvent verifyEnrollmentIdEvent) {
-        FDAEventBus.postEvent(verifyEnrollmentIdEvent);
-    }
+  public void performEnrollId(EnrollIdEvent enrollIdEvent) {
+    FDAEventBus.postEvent(enrollIdEvent);
+  }
 
-    public void performEnrollId(EnrollIdEvent enrollIdEvent) {
-        FDAEventBus.postEvent(enrollIdEvent);
-    }
+  public void performUpdateEligibilityConsent(
+      UpdateEligibilityConsentStatusEvent updateEligibilityConsentStatusEvent) {
+    FDAEventBus.postEvent(updateEligibilityConsentStatusEvent);
+  }
 
-    public void performUpdateEligibilityConsent(UpdateEligibilityConsentStatusEvent updateEligibilityConsentStatusEvent) {
-        FDAEventBus.postEvent(updateEligibilityConsentStatusEvent);
-    }
+  public void performGetGateWayStudyList(GetUserStudyListEvent userStudyListEvent) {
+    FDAEventBus.postEvent(userStudyListEvent);
+  }
 
-    public void performGetGateWayStudyList(GetUserStudyListEvent userStudyListEvent) {
-        FDAEventBus.postEvent(userStudyListEvent);
-    }
+  public void performGetTermsAndCondition(GetTermsAndConditionEvent getTermsAndConditionEvent) {
+    FDAEventBus.postEvent(getTermsAndConditionEvent);
+  }
 
-    public void performGetTermsAndCondition(GetTermsAndConditionEvent getTermsAndConditionEvent) {
-        FDAEventBus.postEvent(getTermsAndConditionEvent);
-    }
+  void performGetActivityList(GetActivityListEvent getActivityListEvent) {
+    FDAEventBus.postEvent(getActivityListEvent);
+  }
 
-    public void performGetActivityList(GetActivityListEvent getActivityListEvent) {
-        FDAEventBus.postEvent(getActivityListEvent);
-    }
+  void performGetActivityInfo(GetActivityInfoEvent getActivityInfoEvent) {
+    FDAEventBus.postEvent(getActivityInfoEvent);
+  }
 
-    public void performGetActivityInfo(GetActivityInfoEvent getActivityInfoEvent) {
-        FDAEventBus.postEvent(getActivityInfoEvent);
-    }
+  void performContactUsEvent(ContactUsEvent contactUsEvent) {
+    FDAEventBus.postEvent(contactUsEvent);
+  }
 
-    public void performContactUsEvent(ContactUsEvent contactUsEvent) {
-        FDAEventBus.postEvent(contactUsEvent);
-    }
+  public void performContactUsEvent(FeedbackEvent feedbackEvent) {
+    FDAEventBus.postEvent(feedbackEvent);
+  }
 
-    public void performContactUsEvent(FeedbackEvent feedbackEvent) {
-        FDAEventBus.postEvent(feedbackEvent);
-    }
+  void performGetResourceListEvent(GetResourceListEvent getResourceListEvent) {
+    FDAEventBus.postEvent(getResourceListEvent);
+  }
 
-    public void performGetResourceListEvent(GetResourceListEvent getResourceListEvent) {
-        FDAEventBus.postEvent(getResourceListEvent);
-    }
+  public void performProcessResponse(ProcessResponseEvent processResponseEvent) {
+    FDAEventBus.postEvent(processResponseEvent);
+  }
 
-    public void performProcessResponse(ProcessResponseEvent processResponseEvent) {
-        FDAEventBus.postEvent(processResponseEvent);
-    }
+  void performWithdrawFromStudy(WithdrawFromStudyEvent withdrawFromStudyEvent) {
+    FDAEventBus.postEvent(withdrawFromStudyEvent);
+  }
 
-    public void performWithdrawFromStudy(WithdrawFromStudyEvent withdrawFromStudyEvent) {
-        FDAEventBus.postEvent(withdrawFromStudyEvent);
-    }
-    public void performProcessData(ProcessResponseDataEvent processResponseDataEvent) {
-        FDAEventBus.postEvent(processResponseDataEvent);
-    }
-
+  public void performProcessData(ProcessResponseDataEvent processResponseDataEvent) {
+    FDAEventBus.postEvent(processResponseDataEvent);
+  }
 }

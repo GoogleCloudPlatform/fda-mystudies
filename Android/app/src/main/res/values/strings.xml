@@ -238,7 +238,7 @@
     <string name="enter_a_time">Enter a Time</string>
     <string name="setelct_time">Select Time</string>
     <string name="activities_not_found">Activities Not Found</string>
-    <string name="unable_to_parse">No internet connection/cannot connect to server</string>
+    <string name="unable_to_parse">Oops! something went wrong</string>
     <string name="enter_enrollment_id">Please Enter a Enrollment ID</string>
     <string name="not_able_create_pdf">Not able to create PDF</string>
     <string name="remainder_settings">Please enable remainder settings to set time.</string>

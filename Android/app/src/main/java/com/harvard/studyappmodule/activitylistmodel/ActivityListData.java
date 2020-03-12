@@ -12,66 +12,60 @@
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package com.harvard.studyappmodule.activitymodel;
-
+package com.harvard.studyappmodule.activitylistmodel;
 
 import io.realm.RealmList;
 import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;
 
-/**
- * Created by Naveen Raj on 04/06/2017.
- */
+public class ActivityListData extends RealmObject {
+  private String message;
 
-public class ActivityListData  extends RealmObject {
-    private String message;
+  private String withdrawalConfig;
 
-    private String withdrawalConfig;
+  private AnchorDate anchorDate;
 
-    private com.harvard.studyappmodule.activitymodel.AnchorDate anchorDate;
+  @PrimaryKey private String studyId;
 
-    @PrimaryKey
-    private String studyId;
+  private RealmList<ActivitiesWS> activities = new RealmList<>();
 
-    private RealmList<com.harvard.studyappmodule.activitymodel.ActivitiesWS> activities = new RealmList<>();
+  public String getStudyId() {
+    return studyId;
+  }
 
-    public String getStudyId() {
-        return studyId;
-    }
+  public void setStudyId(String studyId) {
+    this.studyId = studyId;
+  }
 
-    public void setStudyId(String studyId) {
-        this.studyId = studyId;
-    }
+  public String getMessage() {
+    return message;
+  }
 
-    public String getMessage() {
-        return message;
-    }
+  public void setMessage(String message) {
+    this.message = message;
+  }
 
-    public void setMessage(String message) {
-        this.message = message;
-    }
+  public String getWithdrawalConfig() {
+    return withdrawalConfig;
+  }
 
-    public String getWithdrawalConfig() {
-        return withdrawalConfig;
-    }
+  public void setWithdrawalConfig(String withdrawalConfig) {
+    this.withdrawalConfig = withdrawalConfig;
+  }
 
-    public void setWithdrawalConfig(String withdrawalConfig) {
-        this.withdrawalConfig = withdrawalConfig;
-    }
+  public AnchorDate getAnchorDate() {
+    return anchorDate;
+  }
 
-    public com.harvard.studyappmodule.activitymodel.AnchorDate getAnchorDate() {
-        return anchorDate;
-    }
+  public void setAnchorDate(AnchorDate anchorDate) {
+    this.anchorDate = anchorDate;
+  }
 
-    public void setAnchorDate(com.harvard.studyappmodule.activitymodel.AnchorDate anchorDate) {
-        this.anchorDate = anchorDate;
-    }
+  public RealmList<ActivitiesWS> getActivities() {
+    return activities;
+  }
 
-    public RealmList<com.harvard.studyappmodule.activitymodel.ActivitiesWS> getActivities() {
-        return activities;
-    }
-
-    public void setActivities(RealmList<com.harvard.studyappmodule.activitymodel.ActivitiesWS> activities) {
-        this.activities = activities;
-    }
+  public void setActivities(RealmList<ActivitiesWS> activities) {
+    this.activities = activities;
+  }
 }

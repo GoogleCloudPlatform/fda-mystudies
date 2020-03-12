@@ -16,18 +16,15 @@ package com.harvard.usermodule.event;
 
 import com.harvard.webservicemodule.events.RegistrationServerConfigEvent;
 
-/**
- * Created by Rohit on 3/2/2017.
- */
-
 public class UpdatePreferenceEvent {
-    private RegistrationServerConfigEvent mRegistrationServerConfigEvent ;
+  private RegistrationServerConfigEvent mRegistrationServerConfigEvent;
 
-    public RegistrationServerConfigEvent getmRegistrationServerConfigEvent() {
-        return mRegistrationServerConfigEvent;
-    }
+  public RegistrationServerConfigEvent getmRegistrationServerConfigEvent() {
+    return mRegistrationServerConfigEvent;
+  }
 
-    public void setmRegistrationServerConfigEvent(RegistrationServerConfigEvent mRegistrationServerConfigEvent) {
-        this.mRegistrationServerConfigEvent = mRegistrationServerConfigEvent;
-    }
+  public void setmRegistrationServerConfigEvent(
+      RegistrationServerConfigEvent mRegistrationServerConfigEvent) {
+    this.mRegistrationServerConfigEvent = mRegistrationServerConfigEvent;
+  }
 }

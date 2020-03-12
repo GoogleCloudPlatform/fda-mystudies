@@ -16,84 +16,82 @@ package com.harvard.studyappmodule.activitybuilder.model;
 
 import com.google.gson.annotations.SerializedName;
 import com.harvard.studyappmodule.custom.question.ChoiceTextOtherOption;
-
 import io.realm.RealmObject;
 
-/**
- * Created by Rohit on 2/23/2017.
- */
 public class Choices extends RealmObject {
-    private String text;
-    private String value;
-    @SerializedName("detail text")
-    private String Detailtext;
-    private String detail;
-    private boolean exclusive;
-    private String image;
-    private String selectedImage;
-    private ChoiceTextOtherOption other;
+  private String text;
+  private String value;
 
-    public ChoiceTextOtherOption getOther() {
-        return other;
-    }
+  @SerializedName("detail text")
+  private String detailText;
 
-    public void setOther(ChoiceTextOtherOption other) {
-        this.other = other;
-    }
+  private String detail;
+  private boolean exclusive;
+  private String image;
+  private String selectedImage;
+  private ChoiceTextOtherOption other;
 
-    public String getDetail() {
-        return detail;
-    }
+  public ChoiceTextOtherOption getOther() {
+    return other;
+  }
 
-    public void setDetail(String detail) {
-        this.detail = detail;
-    }
+  public void setOther(ChoiceTextOtherOption other) {
+    this.other = other;
+  }
 
-    public String getImage() {
-        return image;
-    }
+  public String getDetail() {
+    return detail;
+  }
 
-    public void setImage(String image) {
-        this.image = image;
-    }
+  public void setDetail(String detail) {
+    this.detail = detail;
+  }
 
-    public String getSelectedImage() {
-        return selectedImage;
-    }
+  public String getImage() {
+    return image;
+  }
 
-    public void setSelectedImage(String selectedImage) {
-        this.selectedImage = selectedImage;
-    }
+  public void setImage(String image) {
+    this.image = image;
+  }
 
-    public String getText() {
-        return text;
-    }
+  public String getSelectedImage() {
+    return selectedImage;
+  }
 
-    public void setText(String text) {
-        this.text = text;
-    }
+  public void setSelectedImage(String selectedImage) {
+    this.selectedImage = selectedImage;
+  }
 
-    public String getValue() {
-        return value;
-    }
+  public String getText() {
+    return text;
+  }
 
-    public void setValue(String value) {
-        this.value = value;
-    }
+  public void setText(String text) {
+    this.text = text;
+  }
 
-    public String getDetailtext() {
-        return Detailtext;
-    }
+  public String getValue() {
+    return value;
+  }
 
-    public void setDetailtext(String detailtext) {
-        Detailtext = detailtext;
-    }
+  public void setValue(String value) {
+    this.value = value;
+  }
 
-    public boolean isExclusive() {
-        return exclusive;
-    }
+  public String getDetailtext() {
+    return detailText;
+  }
 
-    public void setExclusive(boolean exclusive) {
-        this.exclusive = exclusive;
-    }
+  public void setDetailtext(String detailText) {
+    this.detailText = detailText;
+  }
+
+  public boolean isExclusive() {
+    return exclusive;
+  }
+
+  public void setExclusive(boolean exclusive) {
+    this.exclusive = exclusive;
+  }
 }

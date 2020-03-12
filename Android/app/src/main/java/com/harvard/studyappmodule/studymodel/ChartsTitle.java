@@ -14,22 +14,17 @@
 
 package com.harvard.studyappmodule.studymodel;
 
+import io.realm.RealmObject;
 import java.io.Serializable;
 
-import io.realm.RealmObject;
+public class ChartsTitle extends RealmObject implements Serializable {
+  private String titles;
 
-/**
- * Created by Rohit on 5/5/2017.
- */
+  public String getTitles() {
+    return titles;
+  }
 
-public class ChartsTitle extends RealmObject implements Serializable{
-    private String titles;
-
-    public String getTitles() {
-        return titles;
-    }
-
-    public void setTitles(String titles) {
-        this.titles = titles;
-    }
+  public void setTitles(String titles) {
+    this.titles = titles;
+  }
 }

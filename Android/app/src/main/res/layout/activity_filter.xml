@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/tab_color"
-    tool:context="com.harvard.studyAppModule.FilterActivity">
+    tool:context="com.harvard.studyappmodule.FilterActivity">
 
     <RelativeLayout
         android:id="@+id/mBottomLayout"

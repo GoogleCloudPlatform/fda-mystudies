@@ -15,23 +15,23 @@
 package com.harvard.utils.version;
 
 public class Android {
-    private String latestVersion;
+  private String latestVersion;
 
-    private String forceUpdate;
+  private String forceUpdate;
 
-    public String getLatestVersion() {
-        return latestVersion;
-    }
+  String getLatestVersion() {
+    return latestVersion;
+  }
 
-    public void setLatestVersion(String latestVersion) {
-        this.latestVersion = latestVersion;
-    }
+  public void setLatestVersion(String latestVersion) {
+    this.latestVersion = latestVersion;
+  }
 
-    public String getForceUpdate() {
-        return forceUpdate;
-    }
+  String getForceUpdate() {
+    return forceUpdate;
+  }
 
-    public void setForceUpdate(String forceUpdate) {
-        this.forceUpdate = forceUpdate;
-    }
+  public void setForceUpdate(String forceUpdate) {
+    this.forceUpdate = forceUpdate;
+  }
 }

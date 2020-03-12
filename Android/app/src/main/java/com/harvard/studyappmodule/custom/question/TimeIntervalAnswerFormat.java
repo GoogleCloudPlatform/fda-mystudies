@@ -14,42 +14,35 @@
 
 package com.harvard.studyappmodule.custom.question;
 
-import com.harvard.studyappmodule.custom.AnswerFormatCustom;
 import com.harvard.studyappmodule.custom.ChoiceAnswerFormatCustom;
-
-/**
- * Created by Naveen Raj on 04/13/2017.
- */
 
 public class TimeIntervalAnswerFormat extends ChoiceAnswerFormatCustom {
 
-    private final ChoiceAnswerFormatCustom.CustomAnswerStyle style;
-    private final int step;
-    private final String defaultvalue;
+  private final CustomAnswerStyle style;
+  private final int step;
+  private final String defaultvalue;
 
+  public TimeIntervalAnswerFormat(
+      CustomAnswerStyle style, int step, String defaultvalue) {
+    this.style = style;
+    this.step = step;
+    this.defaultvalue = defaultvalue;
+  }
 
-    public TimeIntervalAnswerFormat(ChoiceAnswerFormatCustom.CustomAnswerStyle style, int step,String defaultvalue) {
-        this.style = style;
-        this.step = step;
-        this.defaultvalue = defaultvalue;
-    }
+  public CustomAnswerStyle getStyle() {
+    return style;
+  }
 
-    public ChoiceAnswerFormatCustom.CustomAnswerStyle getStyle() {
-        return style;
-    }
+  public int getStep() {
+    return step;
+  }
 
-    public int getStep() {
-        return step;
-    }
+  String getDefaultvalue() {
+    return defaultvalue;
+  }
 
-    public String getDefaultvalue() {
-        return defaultvalue;
-    }
-
-    @Override
-    public AnswerFormatCustom.QuestionType getQuestionType() {
-        return Type.TimeInterval;
-    }
-
-
+  @Override
+  public QuestionType getQuestionType() {
+    return Type.TimeInterval;
+  }
 }

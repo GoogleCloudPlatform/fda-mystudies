@@ -14,40 +14,35 @@
 
 package com.harvard.studyappmodule.studymodel;
 
+import io.realm.RealmObject;
 import java.io.Serializable;
 
-import io.realm.RealmObject;
+public class StatisticsDataSource extends RealmObject implements Serializable {
+  private String type;
+  private String key;
+  private StatisticsActivity activity;
 
-/**
- * Created by Rohit on 5/5/2017.
- */
+  public String getType() {
+    return type;
+  }
 
-public class StatisticsDataSource extends RealmObject implements Serializable{
-    private String type;
-    private String key;
-    private StatisticsActivity activity;
+  public void setType(String type) {
+    this.type = type;
+  }
 
-    public String getType() {
-        return type;
-    }
+  public String getKey() {
+    return key;
+  }
 
-    public void setType(String type) {
-        this.type = type;
-    }
+  public void setKey(String key) {
+    this.key = key;
+  }
 
-    public String getKey() {
-        return key;
-    }
+  public StatisticsActivity getActivity() {
+    return activity;
+  }
 
-    public void setKey(String key) {
-        this.key = key;
-    }
-
-    public StatisticsActivity getActivity() {
-        return activity;
-    }
-
-    public void setActivity(StatisticsActivity activity) {
-        this.activity = activity;
-    }
+  public void setActivity(StatisticsActivity activity) {
+    this.activity = activity;
+  }
 }

@@ -12,38 +12,38 @@
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package com.harvard.studyappmodule.activitymodel;
+package com.harvard.studyappmodule.activitylistmodel;
 
 import io.realm.RealmObject;
 
 public class SchedulingAnchorDateEnd extends RealmObject {
-    private int anchorDays;
+  private int anchorDays;
 
-    private int repeatInterval;
+  private int repeatInterval;
 
-    private String time;
+  private String time;
 
-    public int getAnchorDays() {
-        return anchorDays;
-    }
+  public int getAnchorDays() {
+    return anchorDays;
+  }
 
-    public void setAnchorDays(int anchorDays) {
-        this.anchorDays = anchorDays;
-    }
+  public void setAnchorDays(int anchorDays) {
+    this.anchorDays = anchorDays;
+  }
 
-    public int getRepeatInterval() {
-        return repeatInterval;
-    }
+  public int getRepeatInterval() {
+    return repeatInterval;
+  }
 
-    public void setRepeatInterval(int repeatInterval) {
-        this.repeatInterval = repeatInterval;
-    }
+  public void setRepeatInterval(int repeatInterval) {
+    this.repeatInterval = repeatInterval;
+  }
 
-    public String getTime() {
-        return time;
-    }
+  public String getTime() {
+    return time;
+  }
 
-    public void setTime(String time) {
-        this.time = time;
-    }
+  public void setTime(String time) {
+    this.time = time;
+  }
 }

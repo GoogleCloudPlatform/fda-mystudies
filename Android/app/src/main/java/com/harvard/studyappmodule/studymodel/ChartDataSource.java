@@ -14,67 +14,62 @@
 
 package com.harvard.studyappmodule.studymodel;
 
+import io.realm.RealmObject;
 import java.io.Serializable;
 
-import io.realm.RealmObject;
+public class ChartDataSource extends RealmObject implements Serializable {
+  private String type;
+  private String key;
+  private String timeRangeType;
+  private String startTime;
+  private String endTime;
+  private ChartDataSourceActivity activity;
 
-/**
- * Created by Rohit on 5/5/2017.
- */
+  public String getType() {
+    return type;
+  }
 
-public class ChartDataSource extends RealmObject implements Serializable{
-    private String type;
-    private String key;
-    private String timeRangeType;
-    private String startTime;
-    private String endTime;
-    private ChartDataSourceActivity activity;
+  public void setType(String type) {
+    this.type = type;
+  }
 
-    public String getType() {
-        return type;
-    }
+  public String getKey() {
+    return key;
+  }
 
-    public void setType(String type) {
-        this.type = type;
-    }
+  public void setKey(String key) {
+    this.key = key;
+  }
 
-    public String getKey() {
-        return key;
-    }
+  public String getTimeRangeType() {
+    return timeRangeType;
+  }
 
-    public void setKey(String key) {
-        this.key = key;
-    }
+  public void setTimeRangeType(String timeRangeType) {
+    this.timeRangeType = timeRangeType;
+  }
 
-    public String getTimeRangeType() {
-        return timeRangeType;
-    }
+  public String getStartTime() {
+    return startTime;
+  }
 
-    public void setTimeRangeType(String timeRangeType) {
-        this.timeRangeType = timeRangeType;
-    }
+  public void setStartTime(String startTime) {
+    this.startTime = startTime;
+  }
 
-    public String getStartTime() {
-        return startTime;
-    }
+  public String getEndTime() {
+    return endTime;
+  }
 
-    public void setStartTime(String startTime) {
-        this.startTime = startTime;
-    }
+  public void setEndTime(String endTime) {
+    this.endTime = endTime;
+  }
 
-    public String getEndTime() {
-        return endTime;
-    }
+  public ChartDataSourceActivity getActivity() {
+    return activity;
+  }
 
-    public void setEndTime(String endTime) {
-        this.endTime = endTime;
-    }
-
-    public ChartDataSourceActivity getActivity() {
-        return activity;
-    }
-
-    public void setActivity(ChartDataSourceActivity activity) {
-        this.activity = activity;
-    }
+  public void setActivity(ChartDataSourceActivity activity) {
+    this.activity = activity;
+  }
 }

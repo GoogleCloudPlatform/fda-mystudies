@@ -12,39 +12,39 @@
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package com.harvard.studyappmodule.activitymodel;
+package com.harvard.studyappmodule.activitylistmodel;
 
 import io.realm.RealmObject;
 
 public class AnchorRuns extends RealmObject {
 
-    private int startDays;
+  private int startDays;
 
-    private int endDays;
+  private int endDays;
 
-    private String time;
+  private String time;
 
-    public int getStartDays() {
-        return startDays;
-    }
+  public int getStartDays() {
+    return startDays;
+  }
 
-    public void setStartDays(int startDays) {
-        this.startDays = startDays;
-    }
+  public void setStartDays(int startDays) {
+    this.startDays = startDays;
+  }
 
-    public int getEndDays() {
-        return endDays;
-    }
+  public int getEndDays() {
+    return endDays;
+  }
 
-    public void setEndDays(int endDays) {
-        this.endDays = endDays;
-    }
+  public void setEndDays(int endDays) {
+    this.endDays = endDays;
+  }
 
-    public String getTime() {
-        return time;
-    }
+  public String getTime() {
+    return time;
+  }
 
-    public void setTime(String time) {
-        this.time = time;
-    }
+  public void setTime(String time) {
+    this.time = time;
+  }
 }

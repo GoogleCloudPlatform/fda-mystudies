@@ -22,60 +22,74 @@ import android.content.Context;
 import android.os.Bundle;
 
 /**
- * We will not use Accounts in the app, but we need to have Authenticator implementation in order to use SyncAdapter concept.
- *
- *
+ * We will not use Accounts in the app, but we need to have Authenticator implementation in order to
+ * use SyncAdapter concept.
  */
 public class StubAuthenticator extends AbstractAccountAuthenticator {
 
-    public StubAuthenticator(Context context) {
-        super(context);
-    }
+  public StubAuthenticator(Context context) {
+    super(context);
+  }
 
-    @Override
-    public Bundle editProperties(AccountAuthenticatorResponse accountAuthenticatorResponse,
-                                 String s) {
+  @Override
+  public Bundle editProperties(
+      AccountAuthenticatorResponse accountAuthenticatorResponse, String s) {
 
-        throw new UnsupportedOperationException();
-    }
+    throw new UnsupportedOperationException();
+  }
 
-    @Override
-    public Bundle addAccount(AccountAuthenticatorResponse accountAuthenticatorResponse, String s,
-                             String s2, String[] strings, Bundle bundle) throws NetworkErrorException {
+  @Override
+  public Bundle addAccount(
+      AccountAuthenticatorResponse accountAuthenticatorResponse,
+      String s,
+      String s2,
+      String[] strings,
+      Bundle bundle)
+      throws NetworkErrorException {
 
-        return null;
-    }
+    return null;
+  }
 
-    @Override
-    public Bundle confirmCredentials(AccountAuthenticatorResponse accountAuthenticatorResponse,
-                                     Account account, Bundle bundle) throws NetworkErrorException {
+  @Override
+  public Bundle confirmCredentials(
+      AccountAuthenticatorResponse accountAuthenticatorResponse, Account account, Bundle bundle)
+      throws NetworkErrorException {
 
-        return null;
-    }
+    return null;
+  }
 
-    @Override
-    public Bundle getAuthToken(AccountAuthenticatorResponse accountAuthenticatorResponse,
-                               Account account, String s, Bundle bundle) throws NetworkErrorException {
+  @Override
+  public Bundle getAuthToken(
+      AccountAuthenticatorResponse accountAuthenticatorResponse,
+      Account account,
+      String s,
+      Bundle bundle)
+      throws NetworkErrorException {
 
-        throw new UnsupportedOperationException();
-    }
+    throw new UnsupportedOperationException();
+  }
 
-    @Override
-    public String getAuthTokenLabel(String s) {
-        throw new UnsupportedOperationException();
-    }
+  @Override
+  public String getAuthTokenLabel(String s) {
+    throw new UnsupportedOperationException();
+  }
 
-    @Override
-    public Bundle updateCredentials(AccountAuthenticatorResponse accountAuthenticatorResponse,
-                                    Account account, String s, Bundle bundle) throws NetworkErrorException {
+  @Override
+  public Bundle updateCredentials(
+      AccountAuthenticatorResponse accountAuthenticatorResponse,
+      Account account,
+      String s,
+      Bundle bundle)
+      throws NetworkErrorException {
 
-        throw new UnsupportedOperationException();
-    }
+    throw new UnsupportedOperationException();
+  }
 
-    @Override
-    public Bundle hasFeatures(AccountAuthenticatorResponse accountAuthenticatorResponse,
-                              Account account, String[] strings) throws NetworkErrorException {
+  @Override
+  public Bundle hasFeatures(
+      AccountAuthenticatorResponse accountAuthenticatorResponse, Account account, String[] strings)
+      throws NetworkErrorException {
 
-        throw new UnsupportedOperationException();
-    }
+    throw new UnsupportedOperationException();
+  }
 }

@@ -14,40 +14,37 @@
 
 package com.harvard.studyappmodule.custom.question;
 
-import com.harvard.studyappmodule.custom.AnswerFormatCustom;
 import com.harvard.studyappmodule.custom.ChoiceAnswerFormatCustom;
-
-/**
- * Created by Naveen Raj on 04/14/2017.
- */
 
 public class HeightAnswerFormat extends ChoiceAnswerFormatCustom {
 
-    private final ChoiceAnswerFormatCustom.CustomAnswerStyle style;
-    private final String placeholder;
-    private final String measurementSystem;
+  private final CustomAnswerStyle style;
+  private final String placeholder;
+  private final String measurementSystem;
 
+  public HeightAnswerFormat(
+      CustomAnswerStyle style,
+      String placeholder,
+      String measurementSystem) {
+    this.style = style;
+    this.placeholder = placeholder;
+    this.measurementSystem = measurementSystem;
+  }
 
-    public HeightAnswerFormat(ChoiceAnswerFormatCustom.CustomAnswerStyle style, String placeholder, String measurementSystem) {
-        this.style = style;
-        this.placeholder = placeholder;
-        this.measurementSystem = measurementSystem;
-    }
+  public CustomAnswerStyle getStyle() {
+    return style;
+  }
 
-    public ChoiceAnswerFormatCustom.CustomAnswerStyle getStyle() {
-        return style;
-    }
+  public String getPlaceholder() {
+    return placeholder;
+  }
 
-    public String getPlaceholder() {
-        return placeholder;
-    }
+  String getMeasurementSystem() {
+    return measurementSystem;
+  }
 
-    public String getMeasurementSystem() {
-        return measurementSystem;
-    }
-
-    @Override
-    public AnswerFormatCustom.QuestionType getQuestionType() {
-        return Type.Height;
-    }
+  @Override
+  public QuestionType getQuestionType() {
+    return Type.Height;
+  }
 }

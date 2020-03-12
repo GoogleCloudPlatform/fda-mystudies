@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/white"
-    tool:context="com.harvard.studyAppModule.SurveyDashboardFragment">
+    tool:context="com.harvard.studyappmodule.SurveyDashboardFragment">
 
     <android.support.v7.widget.Toolbar
         android:id="@+id/topView"
@@ -194,7 +194,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginRight="40dp">
 
-                        <com.harvard.studyAppModule.circularProgressBar.DonutProgress
+                        <com.harvard.studyappmodule.circularprogressbar.DonutProgress
                             android:id="@+id/progressBar1"
                             android:layout_width="130dp"
                             android:layout_height="130dp"
@@ -254,7 +254,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content">
 
-                        <com.harvard.studyAppModule.circularProgressBar.DonutProgress
+                        <com.harvard.studyappmodule.circularprogressbar.DonutProgress
                             android:id="@+id/progressBar2"
                             android:layout_width="130dp"
                             android:layout_height="130dp"

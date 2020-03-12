@@ -12,42 +12,38 @@
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package com.harvard.studyappmodule.activitymodel;
+package com.harvard.studyappmodule.activitylistmodel;
 
 import io.realm.RealmObject;
 
-/**
- * Created by Naveen Raj on 04/06/2017.
- */
+public class QuestionInfo extends RealmObject {
+  private String activityId;
 
-public class QuestionInfo  extends RealmObject {
-    private String activityId;
+  private String activityVersion;
 
-    private String activityVersion;
+  private String key;
 
-    private String key;
+  public String getActivityId() {
+    return activityId;
+  }
 
-    public String getActivityId() {
-        return activityId;
-    }
+  public void setActivityId(String activityId) {
+    this.activityId = activityId;
+  }
 
-    public void setActivityId(String activityId) {
-        this.activityId = activityId;
-    }
+  public String getActivityVersion() {
+    return activityVersion;
+  }
 
-    public String getActivityVersion() {
-        return activityVersion;
-    }
+  public void setActivityVersion(String activityVersion) {
+    this.activityVersion = activityVersion;
+  }
 
-    public void setActivityVersion(String activityVersion) {
-        this.activityVersion = activityVersion;
-    }
+  public String getKey() {
+    return key;
+  }
 
-    public String getKey() {
-        return key;
-    }
-
-    public void setKey(String key) {
-        this.key = key;
-    }
+  public void setKey(String key) {
+    this.key = key;
+  }
 }

@@ -12,43 +12,39 @@
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package com.harvard.studyappmodule.activitymodel;
+package com.harvard.studyappmodule.activitylistmodel;
 
 import io.realm.RealmList;
 import io.realm.RealmObject;
 
-/**
- * Created by Naveen Raj on 04/06/2017.
- */
+public class Frequency extends RealmObject {
+  private RealmList<FrequencyRuns> runs;
 
-public class Frequency  extends RealmObject {
-    private RealmList<com.harvard.studyappmodule.activitymodel.FrequencyRuns> runs;
+  private RealmList<AnchorRuns> anchorRuns;
 
-    private RealmList<com.harvard.studyappmodule.activitymodel.AnchorRuns> anchorRuns;
+  private String type;
 
-    private String type;
+  public RealmList<FrequencyRuns> getRuns() {
+    return runs;
+  }
 
-    public RealmList<com.harvard.studyappmodule.activitymodel.FrequencyRuns> getRuns() {
-        return runs;
-    }
+  public void setRuns(RealmList<FrequencyRuns> runs) {
+    this.runs = runs;
+  }
 
-    public void setRuns(RealmList<com.harvard.studyappmodule.activitymodel.FrequencyRuns> runs) {
-        this.runs = runs;
-    }
+  public String getType() {
+    return type;
+  }
 
-    public String getType() {
-        return type;
-    }
+  public void setType(String type) {
+    this.type = type;
+  }
 
-    public void setType(String type) {
-        this.type = type;
-    }
+  public RealmList<AnchorRuns> getAnchorRuns() {
+    return anchorRuns;
+  }
 
-    public RealmList<com.harvard.studyappmodule.activitymodel.AnchorRuns> getAnchorRuns() {
-        return anchorRuns;
-    }
-
-    public void setAnchorRuns(RealmList<com.harvard.studyappmodule.activitymodel.AnchorRuns> anchorRuns) {
-        this.anchorRuns = anchorRuns;
-    }
+  public void setAnchorRuns(RealmList<AnchorRuns> anchorRuns) {
+    this.anchorRuns = anchorRuns;
+  }
 }

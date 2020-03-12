@@ -15,6 +15,9 @@ repositories {
 }
 
 apply plugin: 'realm-android'
+def apikeyPropertiesFile = rootProject.file("api.properties");
+def apikeyProperties = new Properties()
+apikeyProperties.load(new FileInputStream(apikeyPropertiesFile))
 android {
     compileSdkVersion 28
     buildToolsVersion "28.0.3"
@@ -24,6 +27,10 @@ android {
         targetSdkVersion 28
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         multiDexEnabled true
+        buildConfigField("String", "apikey", apikeyProperties['apikey'])
+        buildConfigField("String", "BASE_URL_WCP_SERVER", apikeyProperties['BASE_URL_WCP_SERVER'])
+        buildConfigField("String", "BASE_URL_REGISTRATION_SERVER", apikeyProperties['BASE_URL_REGISTRATION_SERVER'])
+        buildConfigField("String", "BASE_URL_RESPONSE_SERVER", apikeyProperties['BASE_URL_RESPONSE_SERVER'])
     }
     buildTypes {
         release {
@@ -58,10 +65,9 @@ android {
         fda {
             dimension 'version'
             applicationId "com.harvard.fda"
-            versionCode 85
+            versionCode 88
             versionName "8.8"
         }
-
     }
 }
 

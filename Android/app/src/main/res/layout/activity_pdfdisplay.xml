@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.harvard.studyAppModule.PDFDisplayActivity">
+    tools:context="com.harvard.studyappmodule.PDFDisplayActivity">
 
     <android.support.v7.widget.Toolbar
         android:id="@+id/topView"

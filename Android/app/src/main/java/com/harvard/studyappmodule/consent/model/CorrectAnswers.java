@@ -14,43 +14,37 @@
 
 package com.harvard.studyappmodule.consent.model;
 
+import io.realm.RealmObject;
 import java.io.Serializable;
 
-import io.realm.RealmObject;
+public class CorrectAnswers extends RealmObject implements Serializable {
+  private String answer;
 
-/**
- * Created by Naveen Raj on 03/28/2017.
- */
+  private String key;
 
-public class CorrectAnswers extends RealmObject implements Serializable{
-    private String answer;
+  private String evaluation;
 
-    private String key;
+  public String getEvaluation() {
+    return evaluation;
+  }
 
-    private String evaluation;
+  public void setEvaluation(String evaluation) {
+    this.evaluation = evaluation;
+  }
 
-    public String getEvaluation() {
-        return evaluation;
-    }
+  public String getAnswer() {
+    return answer;
+  }
 
-    public void setEvaluation(String evaluation) {
-        this.evaluation = evaluation;
-    }
+  public void setAnswer(String answer) {
+    this.answer = answer;
+  }
 
-    public String getAnswer() {
-        return answer;
-    }
+  public String getKey() {
+    return key;
+  }
 
-    public void setAnswer(String answer) {
-        this.answer = answer;
-    }
-
-    public String getKey() {
-        return key;
-    }
-
-    public void setKey(String key) {
-        this.key = key;
-    }
-
+  public void setKey(String key) {
+    this.key = key;
+  }
 }

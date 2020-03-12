@@ -14,31 +14,26 @@
 
 package com.harvard.studyappmodule.studymodel;
 
+import io.realm.RealmObject;
 import java.io.Serializable;
 
-import io.realm.RealmObject;
+public class StatisticsActivity extends RealmObject implements Serializable {
+  private String activityId;
+  private String version;
 
-/**
- * Created by Rohit on 5/5/2017.
- */
+  public String getActivityId() {
+    return activityId;
+  }
 
-public class StatisticsActivity extends RealmObject implements Serializable{
-    private String activityId;
-    private String version;
+  public void setActivityId(String activityId) {
+    this.activityId = activityId;
+  }
 
-    public String getActivityId() {
-        return activityId;
-    }
+  public String getVersion() {
+    return version;
+  }
 
-    public void setActivityId(String activityId) {
-        this.activityId = activityId;
-    }
-
-    public String getVersion() {
-        return version;
-    }
-
-    public void setVersion(String version) {
-        this.version = version;
-    }
+  public void setVersion(String version) {
+    this.version = version;
+  }
 }

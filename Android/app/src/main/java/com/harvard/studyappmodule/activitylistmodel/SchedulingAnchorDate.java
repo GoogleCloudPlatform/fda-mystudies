@@ -12,68 +12,68 @@
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package com.harvard.studyappmodule.activitymodel;
+package com.harvard.studyappmodule.activitylistmodel;
 
 import io.realm.RealmObject;
 
 public class SchedulingAnchorDate extends RealmObject {
-    private String sourceType;
+  private String sourceType;
 
-    private String sourceActivityId;
+  private String sourceActivityId;
 
-    private String sourceKey;
+  private String sourceKey;
 
-    private String sourceFormKey;
+  private String sourceFormKey;
 
-    public String getSourceFormKey() {
-        return sourceFormKey;
-    }
+  public String getSourceFormKey() {
+    return sourceFormKey;
+  }
 
-    public void setSourceFormKey(String sourceFormKey) {
-        this.sourceFormKey = sourceFormKey;
-    }
+  public void setSourceFormKey(String sourceFormKey) {
+    this.sourceFormKey = sourceFormKey;
+  }
 
-    private com.harvard.studyappmodule.activitymodel.SchedulingAnchorDateStart start;
+  private SchedulingAnchorDateStart start;
 
-    private com.harvard.studyappmodule.activitymodel.SchedulingAnchorDateEnd end;
+  private SchedulingAnchorDateEnd end;
 
-    public String getSourceType() {
-        return sourceType;
-    }
+  public String getSourceType() {
+    return sourceType;
+  }
 
-    public void setSourceType(String sourceType) {
-        this.sourceType = sourceType;
-    }
+  public void setSourceType(String sourceType) {
+    this.sourceType = sourceType;
+  }
 
-    public String getSourceActivityId() {
-        return sourceActivityId;
-    }
+  public String getSourceActivityId() {
+    return sourceActivityId;
+  }
 
-    public void setSourceActivityId(String sourceActivityId) {
-        this.sourceActivityId = sourceActivityId;
-    }
+  public void setSourceActivityId(String sourceActivityId) {
+    this.sourceActivityId = sourceActivityId;
+  }
 
-    public String getSourceKey() {
-        return sourceKey;
-    }
+  public String getSourceKey() {
+    return sourceKey;
+  }
 
-    public void setSourceKey(String sourceKey) {
-        this.sourceKey = sourceKey;
-    }
+  public void setSourceKey(String sourceKey) {
+    this.sourceKey = sourceKey;
+  }
 
-    public com.harvard.studyappmodule.activitymodel.SchedulingAnchorDateStart getStart() {
-        return start;
-    }
+  public SchedulingAnchorDateStart getStart() {
+    return start;
+  }
 
-    public void setStart(com.harvard.studyappmodule.activitymodel.SchedulingAnchorDateStart start) {
-        this.start = start;
-    }
+  public void setStart(SchedulingAnchorDateStart start) {
+    this.start = start;
+  }
 
-    public com.harvard.studyappmodule.activitymodel.SchedulingAnchorDateEnd getEnd() {
-        return end;
-    }
+  public SchedulingAnchorDateEnd getEnd() {
+    return end;
+  }
 
-    public void setEnd(com.harvard.studyappmodule.activitymodel.SchedulingAnchorDateEnd end) {
-        this.end = end;
-    }
+  public void setEnd(SchedulingAnchorDateEnd end) {
+    this.end = end;
+  }
 }

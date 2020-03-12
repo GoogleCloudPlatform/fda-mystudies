@@ -23,89 +23,85 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
-
 import com.harvard.R;
 import com.harvard.utils.AppController;
-
+import com.harvard.utils.Logger;
 import java.util.ArrayList;
 
 public class ReachoutListAdapter extends RecyclerView.Adapter<ReachoutListAdapter.Holder> {
-    private final Context mContext;
-    private final ArrayList<String> mItems = new ArrayList<>();
+  private final Context mContext;
+  private final ArrayList<String> mItems = new ArrayList<>();
 
-    public ReachoutListAdapter(Context context, ArrayList<String> items) {
-        this.mContext = context;
-        this.mItems.addAll(items);
+  ReachoutListAdapter(Context context, ArrayList<String> items) {
+    this.mContext = context;
+    this.mItems.addAll(items);
+  }
+
+  @Override
+  public Holder onCreateViewHolder(ViewGroup parent, int viewType) {
+    View v =
+        LayoutInflater.from(parent.getContext())
+            .inflate(R.layout.reachout_list_item, parent, false);
+    return new Holder(v);
+  }
+
+  @Override
+  public int getItemCount() {
+    if (mItems == null) return 0;
+    return mItems.size();
+  }
+
+  class Holder extends RecyclerView.ViewHolder {
+
+    final RelativeLayout mContainer;
+    final AppCompatTextView mReachoutTitle;
+
+    Holder(View itemView) {
+      super(itemView);
+      mContainer = (RelativeLayout) itemView.findViewById(R.id.container);
+      mReachoutTitle = (AppCompatTextView) itemView.findViewById(R.id.reachoutTitle);
+      setFont();
     }
 
-    @Override
-    public Holder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.reachout_list_item, parent, false);
-        return new Holder(v);
+    private void setFont() {
+      try {
+        mReachoutTitle.setTypeface(AppController.getTypeface(mContext, "regular"));
+
+      } catch (Exception e) {
+        Logger.log(e);
+      }
     }
+  }
 
-    @Override
-    public int getItemCount() {
-        if (mItems == null) return 0;
-        return mItems.size();
-    }
+  @Override
+  public void onBindViewHolder(final Holder holder, final int position) {
+    final int i = holder.getAdapterPosition();
+    try {
+      holder.mReachoutTitle.setText(mItems.get(position));
 
-    class Holder extends RecyclerView.ViewHolder {
-
-        final RelativeLayout mContainer;
-        final AppCompatTextView mReachoutTitle;
-
-
-        Holder(View itemView) {
-            super(itemView);
-            mContainer = (RelativeLayout) itemView.findViewById(R.id.container);
-            mReachoutTitle = (AppCompatTextView) itemView.findViewById(R.id.reachoutTitle);
-            setFont();
-
-        }
-
-        private void setFont() {
-            try {
-                mReachoutTitle.setTypeface(AppController.getTypeface(mContext, "regular"));
-
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-    }
-
-
-    @Override
-    public void onBindViewHolder(final Holder holder, final int position) {
-        final int i = holder.getAdapterPosition();
-        try {
-            holder.mReachoutTitle.setText(mItems.get(position));
-
-            holder.mContainer.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    Toast.makeText(mContext, "GOTO Resources Details Screen " + i, Toast.LENGTH_LONG).show();
-                }
-            });
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        holder.mContainer.setOnClickListener(new View.OnClickListener() {
+      holder.mContainer.setOnClickListener(
+          new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(position == 0)
-                {
-                    Intent intent = new Intent(mContext, FeedbackActivity.class);
-                    mContext.startActivity(intent);
-                }
-                else
-                {
-                    Intent intent = new Intent(mContext, ContactUsActivity.class);
-                    mContext.startActivity(intent);
-                }
+              Toast.makeText(mContext, "GOTO Resources Details Screen " + i, Toast.LENGTH_LONG)
+                  .show();
             }
-        });
-
-
+          });
+    } catch (Exception e) {
+      Logger.log(e);
     }
+    holder.mContainer.setOnClickListener(
+        new View.OnClickListener() {
+          @Override
+          public void onClick(View view) {
+            if (position == 0) {
+              Intent intent = new Intent(mContext, FeedbackActivity.class);
+              mContext.startActivity(intent);
+            } else {
+              Intent intent = new Intent(mContext, ContactUsActivity.class);
+              mContext.startActivity(intent);
+            }
+          }
+        });
+  }
 }
