@@ -32,7 +32,8 @@ class StudyOverviewPageViewController: UIPageViewController {
         [firstViewController],
         direction: .forward,
         animated: true,
-        completion: nil)
+        completion: nil
+      )
     }
   }
 
@@ -42,7 +43,7 @@ class StudyOverviewPageViewController: UIPageViewController {
   private(set) lazy var orderedViewControllers: [UIViewController] = {
     return [
       self.newColoredViewController(ViewController: "First"),
-      self.newColoredViewController(ViewController: "Second")
+      self.newColoredViewController(ViewController: "Second"),
     ]
   }()
 
@@ -51,7 +52,8 @@ class StudyOverviewPageViewController: UIPageViewController {
   private func newColoredViewController(ViewController: String) -> UIViewController {
     return UIStoryboard(name: kLoginStoryboardIdentifier, bundle: nil)
       .instantiateViewController(
-        withIdentifier: "\(ViewController)OverviewViewController")
+        withIdentifier: "\(ViewController)OverviewViewController"
+      )
   }
 }
 

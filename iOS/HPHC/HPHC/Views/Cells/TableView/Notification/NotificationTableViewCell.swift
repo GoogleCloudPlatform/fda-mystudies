@@ -33,7 +33,8 @@ class NotificationTableViewCell: UITableViewCell {
       let appNotification = notification as! AppNotification
       if appNotification.date != nil {
         self.labelNotificationTime?.text = NotificationTableViewCell.formatter.string(
-          from: (appNotification.date)!)
+          from: (appNotification.date)!
+        )
 
         if appNotification.message != nil {
           labelNotificationText?.text = appNotification.message!
@@ -45,7 +46,8 @@ class NotificationTableViewCell: UITableViewCell {
 
         let appNotification = notification as! AppLocalNotification
         self.labelNotificationTime?.text = NotificationTableViewCell.formatter.string(
-          from: (appNotification.startDate)!)
+          from: (appNotification.startDate)!
+        )
 
         if appNotification.message != nil {
           labelNotificationText?.text = appNotification.message!
@@ -58,7 +60,8 @@ class NotificationTableViewCell: UITableViewCell {
     } else {
       let appNotification = notification as! AppLocalNotification
       self.labelNotificationTime?.text = NotificationTableViewCell.formatter.string(
-        from: (appNotification.startDate)!)
+        from: (appNotification.startDate)!
+      )
 
       if Utilities.isValidValue(someObject: appNotification.message! as AnyObject?) {
         labelNotificationText?.text = appNotification.message!

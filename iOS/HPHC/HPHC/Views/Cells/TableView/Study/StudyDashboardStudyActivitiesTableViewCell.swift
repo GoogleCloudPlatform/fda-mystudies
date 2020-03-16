@@ -35,11 +35,17 @@ class StudyDashboardStudyActivitiesTableViewCell: UITableViewCell {
     labelTaskNumber?.text = data["taskNumber"] as? String
 
     labelSurveyList?.text = String(
-      format: "%@ Completed, %@ Pending, %@ Missed", data["surveyCompleted"] as! String,
-      data["surveyPending"] as! String, data["surveyMissed"] as! String)
+      format: "%@ Completed, %@ Pending, %@ Missed",
+      data["surveyCompleted"] as! String,
+      data["surveyPending"] as! String,
+      data["surveyMissed"] as! String
+    )
 
     labelTaskList?.text = String(
-      format: "%@ Completed, %@ Pending, %@ Missed", data["taskCompleted"] as! String,
-      data["taskPending"] as! String, data["taskMissed"] as! String)
+      format: "%@ Completed, %@ Pending, %@ Missed",
+      data["taskCompleted"] as! String,
+      data["taskPending"] as! String,
+      data["taskMissed"] as! String
+    )
   }
 }

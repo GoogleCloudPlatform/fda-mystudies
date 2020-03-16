@@ -84,7 +84,8 @@ class FetalKickCounterStepViewController: ORKStepViewController {
   lazy var maxKicksAllowed: Int? = 0
 
   lazy var taskResult: FetalKickCounterTaskResult = FetalKickCounterTaskResult(
-    identifier: kFetalKickCounterStepDefaultIdentifier)
+    identifier: kFetalKickCounterStepDefaultIdentifier
+  )
 
   // MARK: ORKStepViewController Initializer methods
 
@@ -107,13 +108,18 @@ class FetalKickCounterStepViewController: ORKStepViewController {
 
     let notificationCenter = NotificationCenter.default
     notificationCenter.addObserver(
-      self, selector: #selector(appMovedToBackground),
-      name: UIApplication.willResignActiveNotification, object: nil)
+      self,
+      selector: #selector(appMovedToBackground),
+      name: UIApplication.willResignActiveNotification,
+      object: nil
+    )
 
     notificationCenter.addObserver(
-      self, selector: #selector(appBecameActive),
+      self,
+      selector: #selector(appBecameActive),
       name: UIApplication.didBecomeActiveNotification,
-      object: nil)
+      object: nil
+    )
 
     submitButton?.layer.borderColor = kUicolorForButtonBackground
 
@@ -126,7 +132,8 @@ class FetalKickCounterStepViewController: ORKStepViewController {
       var autoStartTimer = false
       if ud.bool(forKey: "FKC")
         && activityId != nil
-        && activityId == Study.currentActivity?.actvityId {
+        && activityId == Study.currentActivity?.actvityId
+      {
 
         let previousTimerStartDate = ud.object(forKey: kFetalKickStartTimeStamp) as! Date
         let currentDate = Date()
@@ -172,7 +179,9 @@ class FetalKickCounterStepViewController: ORKStepViewController {
 
       // adding guesture to view to support outside tap
       let gestureRecognizer = UITapGestureRecognizer(
-        target: self, action: #selector(FetalKickCounterStepViewController.handleTap(_:)))
+        target: self,
+        action: #selector(FetalKickCounterStepViewController.handleTap(_:))
+      )
       gestureRecognizer.delegate = self
       self.view.addGestureRecognizer(gestureRecognizer)
     }
@@ -307,7 +316,8 @@ class FetalKickCounterStepViewController: ORKStepViewController {
     Utilities.showAlertWithTitleAndMessage(
       title: kMessage,
       message: message,
-      on: self)
+      on: self
+    )
   }
 
   /// Updates results for the Task.
@@ -353,7 +363,7 @@ class FetalKickCounterStepViewController: ORKStepViewController {
 
     return [
       (hoursIndex > 0 ? hoursIndex : 0), (minutesIndex > 0 ? minutesIndex : 0),
-      (secondsIndex > 0 ? secondsIndex : 0)
+      (secondsIndex > 0 ? secondsIndex : 0),
     ]
   }
 
@@ -382,7 +392,8 @@ class FetalKickCounterStepViewController: ORKStepViewController {
         self.goForward()
       },
       action2: {
-      })
+      }
+    )
   }
 
   // MARK: Button Actions
@@ -400,10 +411,12 @@ class FetalKickCounterStepViewController: ORKStepViewController {
 
       if self.timer == nil {
         self.timer = Timer.scheduledTimer(
-          timeInterval: 1, target: self,
+          timeInterval: 1,
+          target: self,
           selector: #selector(FetalKickCounterStepViewController.setCounter),
           userInfo: nil,
-          repeats: true)
+          repeats: true
+        )
 
         // save start time stamp
         let ud = UserDefaults.standard
@@ -422,7 +435,8 @@ class FetalKickCounterStepViewController: ORKStepViewController {
 
         editCounterButton?.isHidden = false
         self.counterTextField?.text = self.kickCounter! < 10
-          ? ("0\(self.kickCounter!)" == "00" ? "000" : "00\(self.kickCounter!)") : (
+          ? ("0\(self.kickCounter!)" == "00" ? "000" : "00\(self.kickCounter!)")
+          : (
             self.kickCounter! >= 100 ? "\(self.kickCounter!)" : "0\(self.kickCounter!)"
           )
       }
@@ -433,7 +447,8 @@ class FetalKickCounterStepViewController: ORKStepViewController {
 
         editCounterButton?.isHidden = false
         self.counterTextField?.text = self.kickCounter! < 10
-          ? ("0\(self.kickCounter!)" == "00" ? "000" : "00\(self.kickCounter!)") : (
+          ? ("0\(self.kickCounter!)" == "00" ? "000" : "00\(self.kickCounter!)")
+          : (
             self.kickCounter! >= 100 ? "\(self.kickCounter!)" : "0\(self.kickCounter!)"
           )
 
@@ -465,17 +480,24 @@ class FetalKickCounterStepViewController: ORKStepViewController {
     let defaultTime = self.getIndexes()
 
     let acp = ActionSheetMultipleStringPicker(
-      title: kSelectTimeLabel, rows: timerArray, initialSelection: defaultTime,
+      title: kSelectTimeLabel,
+      rows: timerArray,
+      initialSelection: defaultTime,
       doneBlock: {
-        _, _, indexes in
+        _,
+        _,
+        indexes in
 
         let result: [String] = (indexes as! [String])
         let hours = result.first?.components(
-          separatedBy: CharacterSet.init(charactersIn: " h"))
+          separatedBy: CharacterSet.init(charactersIn: " h")
+        )
         let minutes = result[1].components(
-          separatedBy: CharacterSet.init(charactersIn: " m"))
+          separatedBy: CharacterSet.init(charactersIn: " m")
+        )
         let seconds = result.last?.components(
-          separatedBy: CharacterSet.init(charactersIn: " s"))
+          separatedBy: CharacterSet.init(charactersIn: " s")
+        )
 
         let hoursValue: Int = hours?.count != 0 ? Int(hours!.first!)! : 0
         let minuteValue: Int = minutes.count != 0 ? Int(minutes.first!)! : 0
@@ -495,7 +517,9 @@ class FetalKickCounterStepViewController: ORKStepViewController {
 
           Utilities.showAlertWithTitleAndMessage(
             title: kMessage,
-            message: "Please select a valid time(Max " + value + ")", on: self)
+            message: "Please select a valid time(Max " + value + ")",
+            on: self
+          )
 
         } else {
           self.setTimerValue()
@@ -504,7 +528,9 @@ class FetalKickCounterStepViewController: ORKStepViewController {
       },
       cancel: { _ in
         return
-      }, origin: sender)
+      },
+      origin: sender
+    )
 
     acp?.setTextColor(kUIColorForSubmitButtonBackground)
     acp?.pickerBackgroundColor = UIColor.white
@@ -538,7 +564,8 @@ open class FetalKickCounterTaskResult: ORKResult {
 extension FetalKickCounterStepViewController: UIGestureRecognizerDelegate {
   func gestureRecognizer(
     _: UIGestureRecognizer,
-    shouldRecognizeSimultaneouslyWith shouldRecognizeSimultaneouslyWithGestureRecognizer: UIGestureRecognizer
+    shouldRecognizeSimultaneouslyWith shouldRecognizeSimultaneouslyWithGestureRecognizer:
+      UIGestureRecognizer
   ) -> Bool {
     return true
   }
@@ -573,11 +600,14 @@ extension FetalKickCounterStepViewController: UITextFieldDelegate {
 
   func textFieldDidEndEditing(_ textField: UITextField) {
 
-    if textField == counterTextField! && (
-      Utilities.isValidValue(someObject: counterTextField?.text as AnyObject?) == false
-        || Int(
-          (counterTextField?.text)!)! <= 0
-    ) {
+    if textField == counterTextField!
+      && (
+        Utilities.isValidValue(someObject: counterTextField?.text as AnyObject?) == false
+          || Int(
+            (counterTextField?.text)!
+          )! <= 0
+      )
+    {
       counterTextField?.resignFirstResponder()
       if textField.text?.count == 0 || (Int((counterTextField?.text)!) != nil) {
         textField.text = "000"
@@ -615,7 +645,8 @@ extension FetalKickCounterStepViewController: UITextFieldDelegate {
   }
 
   func textField(
-    _ textField: UITextField, shouldChangeCharactersIn range: NSRange,
+    _ textField: UITextField,
+    shouldChangeCharactersIn range: NSRange,
     replacementString string: String
   ) -> Bool {
 

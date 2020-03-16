@@ -78,26 +78,35 @@ class StudyOverviewViewControllerFirst: UIViewController {
     let attrStr = try! NSAttributedString(
       data: (
         overviewSectionDetail.text?.data(
-          using: String.Encoding.unicode, allowLossyConversion: true)!
+          using: String.Encoding.unicode,
+          allowLossyConversion: true
+        )!
       )!,
       options: [
         NSAttributedString.DocumentReadingOptionKey.documentType: NSAttributedString
           .DocumentType
-          .html
+          .html,
       ],
-      documentAttributes: nil)
+      documentAttributes: nil
+    )
 
     let attributedText: NSMutableAttributedString = NSMutableAttributedString(
-      attributedString: attrStr)
+      attributedString: attrStr
+    )
     attributedText.addAttributes(
       [
         NSAttributedString.Key.font: UIFont(
           name: "HelveticaNeue",
-          size: CGFloat(fontSize))!
-      ], range: (attrStr.string as NSString).range(of: attrStr.string))
+          size: CGFloat(fontSize)
+        )!,
+      ],
+      range: (attrStr.string as NSString).range(of: attrStr.string)
+    )
     attributedText.addAttribute(
-      NSAttributedString.Key.foregroundColor, value: UIColor.white,
-      range: (attrStr.string as NSString).range(of: attrStr.string))
+      NSAttributedString.Key.foregroundColor,
+      value: UIColor.white,
+      range: (attrStr.string as NSString).range(of: attrStr.string)
+    )
 
     if Utilities.isValidValue(someObject: attrStr.string as AnyObject?) {
       self.labelDescription?.attributedText = attributedText
@@ -111,7 +120,10 @@ class StudyOverviewViewControllerFirst: UIViewController {
 
   @objc func playerDidFinishPlaying(note: NSNotification) {
     NotificationCenter.default.removeObserver(
-      self, name: NSNotification.Name.AVPlayerItemDidPlayToEndTime, object: nil)
+      self,
+      name: NSNotification.Name.AVPlayerItemDidPlayToEndTime,
+      object: nil
+    )
     self.playerViewController.dismiss(animated: true, completion: nil)
   }
 
@@ -134,7 +146,9 @@ class StudyOverviewViewControllerFirst: UIViewController {
       NotificationCenter.default.addObserver(
         self,
         selector: #selector(StudyOverviewViewControllerFirst.playerDidFinishPlaying(note:)),
-        name: NSNotification.Name.AVPlayerItemDidPlayToEndTime, object: player.currentItem)
+        name: NSNotification.Name.AVPlayerItemDidPlayToEndTime,
+        object: player.currentItem
+      )
       playerViewController = AVPlayerViewController()
       playerViewController.player = player
       self.present(playerViewController, animated: true) {
@@ -158,7 +172,8 @@ class StudyOverviewViewControllerFirst: UIViewController {
 
       let loginStoryboard = UIStoryboard.init(name: "Main", bundle: Bundle.main)
       let webViewController = loginStoryboard.instantiateViewController(
-        withIdentifier: "WebViewController") as! UINavigationController
+        withIdentifier: "WebViewController"
+      ) as! UINavigationController
       let webView = webViewController.viewControllers[0] as! WebViewController
 
       webView.requestLink = overViewWebsiteLink!

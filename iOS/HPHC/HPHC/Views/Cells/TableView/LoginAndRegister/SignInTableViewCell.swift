@@ -42,6 +42,8 @@ class SignInTableViewCell: UITableViewCell {
     }
     labelType?.text = NSLocalizedString((data["helpText"] as? String)!, comment: "")
     textFieldValue?.placeholder = NSLocalizedString(
-      (data["placeHolder"] as? String)!, comment: "")
+      (data["placeHolder"] as? String)!,
+      comment: ""
+    )
   }
 }

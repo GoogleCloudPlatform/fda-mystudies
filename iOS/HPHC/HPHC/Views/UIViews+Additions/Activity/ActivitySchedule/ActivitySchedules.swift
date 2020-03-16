@@ -36,7 +36,9 @@ class ActivitySchedules: UIView, UITableViewDelegate, UITableViewDataSource {
   class func instanceFromNib(frame: CGRect, activity: Activity) -> ActivitySchedules {
     let view = (
       UINib(nibName: "ActivitySchedules", bundle: nil).instantiate(
-        withOwner: nil, options: nil)[0]
+        withOwner: nil,
+        options: nil
+      )[0]
         as? ActivitySchedules
     )!
     view.frame = frame
@@ -44,10 +46,11 @@ class ActivitySchedules: UIView, UITableViewDelegate, UITableViewDataSource {
     view.tableview?.register(UITableViewCell.self, forCellReuseIdentifier: "Cell")
     view.tableview?.delegate = view
     view.tableview?.dataSource = view
-    let height = (activity.activityRuns.count*44) + 104
+    let height = (activity.activityRuns.count * 44) + 104
     let maxViewHeight = Int(UIScreen.main.bounds.size.height - 67)
     view.heightLayoutConstraint.constant = CGFloat(
-      (height > maxViewHeight) ? maxViewHeight : height)
+      (height > maxViewHeight) ? maxViewHeight : height
+    )
     view.layoutIfNeeded()
 
     return view
@@ -178,21 +181,24 @@ class ResponseDataFetch: NMWebServiceDelegate {
       if activity?.type == ActivityType.activeTask {
         if activity?.taskSubType == "fetalKickCounter" {
           keys = "\"count\",duration"
-          tableName = activityId!+activityId!
+          tableName = activityId! + activityId!
         } else if activity?.taskSubType == "towerOfHanoi" {
           keys = "numberOfMoves"
-          tableName = activityId!+activityId!
+          tableName = activityId! + activityId!
         } else if activity?.taskSubType == "spatialSpanMemory" {
           keys = "NumberofGames,Score,NumberofFailures"
-          tableName = activityId!+activityId!
+          tableName = activityId! + activityId!
         }
       }
       let participantId = Study.currentStudy?.userParticipateState.participantId
       // Get Survey Response from Server
       LabKeyServices().getParticipantResponse(
-        tableName: tableName!, activityId: activityId!, keys: keys!,
+        tableName: tableName!,
+        activityId: activityId!,
+        keys: keys!,
         participantId: participantId!,
-        delegate: self)
+        delegate: self
+      )
     } else {
       // save response in database
       let responses = StudyDashboard.instance.dashboardResponse
@@ -204,8 +210,10 @@ class ResponseDataFetch: NMWebServiceDelegate {
         var key = response.key
         if activity?.type == ActivityType.activeTask {
 
-          if activity?.taskSubType == "fetalKickCounter" || activity?.taskSubType
-            == "towerOfHanoi" {
+          if activity?.taskSubType == "fetalKickCounter"
+            || activity?.taskSubType
+              == "towerOfHanoi"
+          {
             key = activityId!
           }
         }
@@ -216,16 +224,21 @@ class ResponseDataFetch: NMWebServiceDelegate {
           let count = (value["count"] as? Float)!
           // SetData Format
           let date = ResponseDataFetch.labkeyDateFormatter.date(
-            from: (value["date"] as? String)!)
+            from: (value["date"] as? String)!
+          )
           let localDateAsString = ResponseDataFetch.localDateFormatter.string(from: date!)
 
           let localDate = ResponseDataFetch.localDateFormatter.date(
-            from: localDateAsString)
+            from: localDateAsString
+          )
           // Save Stats to DB
           DBHandler.saveStatisticsDataFor(
-            activityId: activityId!, key: key!, data: responseValue,
+            activityId: activityId!,
+            key: key!,
+            data: responseValue,
             fkDuration: Int(count),
-            date: localDate!)
+            date: localDate!
+          )
         }
 
       }
@@ -245,7 +258,8 @@ class ResponseDataFetch: NMWebServiceDelegate {
 
   func finishedRequest(_ manager: NetworkManager, requestName: NSString, response: AnyObject?) {
     Logger.sharedInstance.info(
-      "requestname : \(requestName) Response : \(String(describing: response) )")
+      "requestname : \(requestName) Response : \(String(describing: response) )"
+    )
 
     if requestName as String == WCPMethods.studyDashboard.method.methodName {
       self.getDataKeysForCurrentStudy()

@@ -37,8 +37,11 @@ class JailbrokeBlocker: UIView {
   /// - Returns: New object of `JailbrokeBlocker` Type
   class func instanceFromNib(frame: CGRect) -> JailbrokeBlocker {
 
-    let view = UINib(nibName: "JailbrokeBlocker", bundle: nil).instantiate(
-      withOwner: nil, options: nil)[0] as! JailbrokeBlocker
+    let view =
+      UINib(nibName: "JailbrokeBlocker", bundle: nil).instantiate(
+        withOwner: nil,
+        options: nil
+      )[0] as! JailbrokeBlocker
     view.frame = frame
     view.layoutIfNeeded()
     return view
@@ -51,7 +54,8 @@ class JailbrokeBlocker: UIView {
 
     guard
       let url = URL(
-        string: "https://itunes.apple.com/us/app/fda-my-studies/id1242835330?ls=1&mt=8")
+        string: "https://itunes.apple.com/us/app/fda-my-studies/id1242835330?ls=1&mt=8"
+      )
     else { return }
     if UIApplication.shared.canOpenURL(url) {
       UIApplication.shared.open(url, options: [:], completionHandler: nil)

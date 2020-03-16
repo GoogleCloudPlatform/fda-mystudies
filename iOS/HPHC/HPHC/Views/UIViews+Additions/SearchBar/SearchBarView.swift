@@ -38,8 +38,11 @@ class SearchBarView: UIView {
 
   class func instanceFromNib(frame: CGRect, detail: [String: Any]?) -> SearchBarView {
 
-    let view = UINib(nibName: "SearchBarView", bundle: nil).instantiate(
-      withOwner: nil, options: nil)[0] as! SearchBarView
+    let view =
+      UINib(nibName: "SearchBarView", bundle: nil).instantiate(
+        withOwner: nil,
+        options: nil
+      )[0] as! SearchBarView
     view.frame = frame
     view.layoutIfNeeded()
 
@@ -63,7 +66,8 @@ class SearchBarView: UIView {
 
         self.delegate?.didTapOnCancel()
 
-      })
+      }
+    )
   }
 }
 
@@ -73,7 +77,8 @@ extension SearchBarView: UITextFieldDelegate {
   }
 
   func textField(
-    _ textField: UITextField, shouldChangeCharactersIn range: NSRange,
+    _ textField: UITextField,
+    shouldChangeCharactersIn range: NSRange,
     replacementString string: String
   ) -> Bool {
 

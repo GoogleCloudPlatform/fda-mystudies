@@ -70,17 +70,23 @@ class SplashViewController: UIViewController {
   func navigateToHomeController() {
 
     let loginStoryboard = UIStoryboard.init(
-      name: kLoginStoryboardIdentifier, bundle: Bundle.main)
+      name: kLoginStoryboardIdentifier,
+      bundle: Bundle.main
+    )
     let homeViewController = loginStoryboard.instantiateViewController(
-      withIdentifier: "HomeViewController")
+      withIdentifier: "HomeViewController"
+    )
     self.navigationController?.pushViewController(homeViewController, animated: true)
   }
 
   func initilizeStudyForStandaloneApp() {
 
     NotificationCenter.default.addObserver(
-      self, selector: #selector(SplashViewController.studySetupComplete),
-      name: NSNotification.Name(rawValue: "StudySetupCompleted"), object: nil)
+      self,
+      selector: #selector(SplashViewController.studySetupComplete),
+      name: NSNotification.Name(rawValue: "StudySetupCompleted"),
+      object: nil
+    )
 
     StandaloneStudy().setupStandaloneStudy()
 
@@ -89,7 +95,10 @@ class SplashViewController: UIViewController {
   func initilizeStudyOverview() {
 
     let plistPath = Bundle.main.path(
-      forResource: "StudyOverview", ofType: ".plist", inDirectory: nil)
+      forResource: "StudyOverview",
+      ofType: ".plist",
+      inDirectory: nil
+    )
     let arrayContent = NSMutableArray.init(contentsOfFile: plistPath!)
 
     var listOfOverviews: [OverviewSection] = []
@@ -112,7 +121,8 @@ class SplashViewController: UIViewController {
   func navigateToStudyHomeController() {
     let studyStoryBoard = UIStoryboard.init(name: kStudyStoryboard, bundle: Bundle.main)
     let studyHomeController = studyStoryBoard.instantiateViewController(
-      withIdentifier: String(describing: StudyHomeViewController.classForCoder()))
+      withIdentifier: String(describing: StudyHomeViewController.classForCoder())
+    )
       as! StudyHomeViewController
     self.navigationController?.pushViewController(studyHomeController, animated: true)
   }
@@ -120,14 +130,20 @@ class SplashViewController: UIViewController {
   /// Navigate to gateway Dashboard
   func navigateToGatewayDashboard() {
     NotificationCenter.default.removeObserver(
-      self, name: NSNotification.Name(rawValue: "StudySetupCompleted"), object: nil)
+      self,
+      name: NSNotification.Name(rawValue: "StudySetupCompleted"),
+      object: nil
+    )
     self.createMenuView()
   }
 
   @objc func studySetupComplete() {
 
     NotificationCenter.default.removeObserver(
-      self, name: NSNotification.Name(rawValue: "StudySetupCompleted"), object: nil)
+      self,
+      name: NSNotification.Name(rawValue: "StudySetupCompleted"),
+      object: nil
+    )
     if User.currentUser.authToken != nil && User.currentUser.authToken.count > 0 {
       let appDelegate = UIApplication.shared.delegate as! AppDelegate
       appDelegate.checkPasscode(viewController: self)
@@ -142,7 +158,8 @@ class SplashViewController: UIViewController {
   func createMenuView() {
     let storyboard = UIStoryboard(name: kStoryboardIdentifierGateway, bundle: nil)
     let fda = storyboard.instantiateViewController(
-      withIdentifier: kStoryboardIdentifierSlideMenuVC)
+      withIdentifier: kStoryboardIdentifierSlideMenuVC
+    )
       as! FDASlideMenuViewController
     self.navigationController?.pushViewController(fda, animated: true)
   }
@@ -162,13 +179,15 @@ class SplashViewController: UIViewController {
 extension SplashViewController: ORKTaskViewControllerDelegate {
 
   func taskViewControllerSupportsSaveAndRestore(_ taskViewController: ORKTaskViewController)
-    -> Bool {
+    -> Bool
+  {
     return true
   }
 
   public func taskViewController(
     _ taskViewController: ORKTaskViewController,
-    didFinishWith reason: ORKTaskViewControllerFinishReason, error: Error?
+    didFinishWith reason: ORKTaskViewControllerFinishReason,
+    error: Error?
   ) {
 
     switch reason {

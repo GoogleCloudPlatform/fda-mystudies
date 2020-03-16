@@ -62,8 +62,11 @@ class StandaloneStudy: NSObject {
       studyId: (study?.studyId)!,
       completionHandler: { (_) in
         NotificationCenter.default.post(
-          name: NSNotification.Name(rawValue: "StudySetupCompleted"), object: nil)
-      })
+          name: NSNotification.Name(rawValue: "StudySetupCompleted"),
+          object: nil
+        )
+      }
+    )
   }
 
   func handleStudyListResponse() {
@@ -96,7 +99,8 @@ extension StandaloneStudy: NMWebServiceDelegate {
 
   func finishedRequest(_ manager: NetworkManager, requestName: NSString, response: AnyObject?) {
     Logger.sharedInstance.info(
-      "requestname FINISH: \(requestName) : \(String(describing: response))")
+      "requestname FINISH: \(requestName) : \(String(describing: response))"
+    )
 
     if requestName as String == WCPMethods.study.rawValue {
       self.handleStudyListResponse()

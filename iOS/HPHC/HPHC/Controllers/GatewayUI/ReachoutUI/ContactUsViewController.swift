@@ -59,7 +59,10 @@ class ContactUsViewController: UIViewController {
 
     //  load plist info
     let plistPath = Bundle.main.path(
-      forResource: "ContactUs", ofType: ".plist", inDirectory: nil)
+      forResource: "ContactUs",
+      ofType: ".plist",
+      inDirectory: nil
+    )
     tableViewRowDetails = NSMutableArray.init(contentsOfFile: plistPath!)
 
     self.addBackBarButton()
@@ -69,7 +72,9 @@ class ContactUsViewController: UIViewController {
 
     //  Used for background tap dismiss keyboard
     let tapGestureRecognizer: UITapGestureRecognizer = UITapGestureRecognizer.init(
-      target: self, action: #selector(ContactUsViewController.handleTapGesture))
+      target: self,
+      action: #selector(ContactUsViewController.handleTapGesture)
+    )
     self.tableView?.addGestureRecognizer(tapGestureRecognizer)
     _ = ContactUsFeilds.init()
   }
@@ -92,27 +97,36 @@ class ContactUsViewController: UIViewController {
   /// If all the validations satisfy send contact-us request
   @IBAction func buttonSubmitAciton(_ sender: UIButton) {
 
-    if ContactUsFeilds.firstName.isEmpty && ContactUsFeilds.email.isEmpty && ContactUsFeilds
-      .subject
-      .isEmpty && ContactUsFeilds.message.isEmpty {
+    if ContactUsFeilds.firstName.isEmpty && ContactUsFeilds.email.isEmpty
+      && ContactUsFeilds
+        .subject
+        .isEmpty
+      && ContactUsFeilds.message.isEmpty
+    {
 
       UIUtilities.showAlertWithMessage(
-        alertMessage: NSLocalizedString(kMessageAllFieldsAreEmpty, comment: ""))
+        alertMessage: NSLocalizedString(kMessageAllFieldsAreEmpty, comment: "")
+      )
     } else if ContactUsFeilds.firstName.isEmpty {
       UIUtilities.showAlertWithMessage(
-        alertMessage: NSLocalizedString(kMessageFirstNameBlank, comment: ""))
+        alertMessage: NSLocalizedString(kMessageFirstNameBlank, comment: "")
+      )
     } else if ContactUsFeilds.email.isEmpty {
       UIUtilities.showAlertWithMessage(
-        alertMessage: NSLocalizedString(kMessageEmailBlank, comment: ""))
+        alertMessage: NSLocalizedString(kMessageEmailBlank, comment: "")
+      )
     } else if ContactUsFeilds.subject.isEmpty {
       UIUtilities.showAlertWithMessage(
-        alertMessage: NSLocalizedString(kMessageSubjectBlankCheck, comment: ""))
+        alertMessage: NSLocalizedString(kMessageSubjectBlankCheck, comment: "")
+      )
     } else if ContactUsFeilds.message.isEmpty {
       UIUtilities.showAlertWithMessage(
-        alertMessage: NSLocalizedString(kMessageMessageBlankCheck, comment: ""))
+        alertMessage: NSLocalizedString(kMessageMessageBlankCheck, comment: "")
+      )
     } else if !(Utilities.isValidEmail(testStr: ContactUsFeilds.email)) {
       UIUtilities.showAlertWithMessage(
-        alertMessage: NSLocalizedString(kMessageValidEmail, comment: ""))
+        alertMessage: NSLocalizedString(kMessageValidEmail, comment: "")
+      )
     } else {
       WCPServices().sendUserContactUsRequest(delegate: self)
     }
@@ -138,7 +152,9 @@ extension ContactUsViewController: UITableViewDataSource {
       let tableViewData = tableViewRowDetails?.object(at: indexPath.row) as! NSDictionary
 
       let cell = tableView.dequeueReusableCell(
-        withIdentifier: kContactUsTableViewCellIdentifier, for: indexPath)
+        withIdentifier: kContactUsTableViewCellIdentifier,
+        for: indexPath
+      )
         as! ContactUsTableViewCell
 
       cell.textFieldValue?.tag = indexPath.row
@@ -208,7 +224,8 @@ extension ContactUsViewController: UITextViewDelegate {
 extension ContactUsViewController: UITextFieldDelegate {
 
   func textField(
-    _ textField: UITextField, shouldChangeCharactersIn range: NSRange,
+    _ textField: UITextField,
+    shouldChangeCharactersIn range: NSRange,
     replacementString string: String
   ) -> Bool {
 
@@ -273,8 +290,10 @@ extension ContactUsViewController: NMWebServiceDelegate {
     self.removeProgressIndicator()
 
     UIUtilities.showAlertMessageWithActionHandler(
-      "", message: NSLocalizedString(kMessageContactedSuccessfuly, comment: ""),
-      buttonTitle: kTitleOk, viewControllerUsed: self
+      "",
+      message: NSLocalizedString(kMessageContactedSuccessfuly, comment: ""),
+      buttonTitle: kTitleOk,
+      viewControllerUsed: self
     ) {
       _ = self.navigationController?.popViewController(animated: true)
     }
@@ -287,6 +306,7 @@ extension ContactUsViewController: NMWebServiceDelegate {
     Logger.sharedInstance.error("requestname : \(requestName)")
     UIUtilities.showAlertWithTitleAndMessage(
       title: NSLocalizedString("Error", comment: "") as NSString,
-      message: error.localizedDescription as NSString)
+      message: error.localizedDescription as NSString
+    )
   }
 }

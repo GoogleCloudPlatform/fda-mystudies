@@ -37,8 +37,11 @@ class AppUpdateBlocker: UIView {
   /// - Returns: New object of `AppUpdateBlocker` Type
   class func instanceFromNib(frame: CGRect) -> AppUpdateBlocker {
 
-    let view = UINib(nibName: "AppUpdateBlocker", bundle: nil).instantiate(
-      withOwner: nil, options: nil)[0] as! AppUpdateBlocker
+    let view =
+      UINib(nibName: "AppUpdateBlocker", bundle: nil).instantiate(
+        withOwner: nil,
+        options: nil
+      )[0] as! AppUpdateBlocker
     view.frame = frame
     view.layoutIfNeeded()
     return view
@@ -50,7 +53,8 @@ class AppUpdateBlocker: UIView {
   @IBAction func buttonUpgradeAction() {
     guard
       let url = URL(
-        string: "https://itunes.apple.com/us/app/fda-my-studies/id1242835330?ls=1&mt=8")
+        string: "https://itunes.apple.com/us/app/fda-my-studies/id1242835330?ls=1&mt=8"
+      )
     else { return }
     if UIApplication.shared.canOpenURL(url) {
       UIApplication.shared.open(url, options: [:], completionHandler: nil)

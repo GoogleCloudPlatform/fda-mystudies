@@ -56,7 +56,8 @@ class EligibilityStepViewController: ORKStepViewController {
   var descriptionText: String?
 
   var taskResult: EligibilityTokenTaskResult = EligibilityTokenTaskResult(
-    identifier: kFetalKickCounterStepDefaultIdentifier)
+    identifier: kFetalKickCounterStepDefaultIdentifier
+  )
 
   // MARK: - ORKStepViewController Intitialization Methods
 
@@ -117,7 +118,9 @@ class EligibilityStepViewController: ORKStepViewController {
         footerView.heightAnchor.constraint(equalToConstant: 100),
         footerView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor, constant: 0),
         footerView.trailingAnchor.constraint(
-          equalTo: self.view.trailingAnchor, constant: 0)
+          equalTo: self.view.trailingAnchor,
+          constant: 0
+        ),
       ])
   }
 
@@ -125,11 +128,17 @@ class EligibilityStepViewController: ORKStepViewController {
 
   func showAlert(message: String) {
     let alert = UIAlertController(
-      title: kErrorTitle as String, message: message as String,
-      preferredStyle: UIAlertController.Style.alert)
+      title: kErrorTitle as String,
+      message: message as String,
+      preferredStyle: UIAlertController.Style.alert
+    )
     alert.addAction(
       UIAlertAction(
-        title: NSLocalizedString(kTitleOK, comment: ""), style: .default, handler: nil))
+        title: NSLocalizedString(kTitleOK, comment: ""),
+        style: .default,
+        handler: nil
+      )
+    )
 
     self.navigationController?.present(alert, animated: true, completion: nil)
   }
@@ -143,7 +152,10 @@ class EligibilityStepViewController: ORKStepViewController {
     if (token?.isEmpty) == false {
 
       LabKeyServices().verifyEnrollmentToken(
-        studyId: (Study.currentStudy?.studyId)!, token: token!, delegate: self)
+        studyId: (Study.currentStudy?.studyId)!,
+        token: token!,
+        delegate: self
+      )
     } else {
       self.showAlert(title: kTitleMessage, message: kMessageValidToken)
 
@@ -160,7 +172,8 @@ extension EligibilityStepViewController: UITextFieldDelegate {
   }
 
   func textField(
-    _ textField: UITextField, shouldChangeCharactersIn range: NSRange,
+    _ textField: UITextField,
+    shouldChangeCharactersIn range: NSRange,
     replacementString string: String
   ) -> Bool {
 

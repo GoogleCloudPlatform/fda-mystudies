@@ -61,7 +61,11 @@ extension String {
     let options = NSStringDrawingOptions.usesFontLeading.union(.usesLineFragmentOrigin)
     let attributes = [NSAttributedString.Key.font: font]
     let rectangleHeight = self.boundingRect(
-      with: size, options: options, attributes: attributes, context: nil).height
+      with: size,
+      options: options,
+      attributes: attributes,
+      context: nil
+    ).height
     return rectangleHeight
   }
 }

@@ -48,20 +48,27 @@ class ActivityFormStep: ActivityStep {
   func getFormStep() -> ORKFormStep? {
 
     if Utilities.isValidValue(someObject: key as AnyObject?)
-      && Utilities.isValidObject(someObject: self.itemsArray as AnyObject?) {
+      && Utilities.isValidObject(someObject: self.itemsArray as AnyObject?)
+    {
 
       let step: ORKFormStep?
 
       if self.repeatable == true {
 
         step = RepeatableFormStep(
-          identifier: key!, title: (self.title == nil ? "" : self.title!), text: text!)
+          identifier: key!,
+          title: (self.title == nil ? "" : self.title!),
+          text: text!
+        )
         (step as? RepeatableFormStep)!.repeatable = true
         (step as? RepeatableFormStep)!.repeatableText = self.repeatableText
 
       } else {
         step = ORKFormStep(
-          identifier: key!, title: self.title ?? "", text: text!)
+          identifier: key!,
+          title: self.title ?? "",
+          text: text!
+        )
       }
 
       if Utilities.isValidValue(someObject: title! as AnyObject?) {
@@ -83,8 +90,10 @@ class ActivityFormStep: ActivityStep {
           let orkQuestionStep: ORKQuestionStep = (questionStep?.getQuestionStep())!
 
           let formItem01 = ORKFormItem(
-            identifier: orkQuestionStep.identifier, text: orkQuestionStep.question,
-            answerFormat: orkQuestionStep.answerFormat)
+            identifier: orkQuestionStep.identifier,
+            text: orkQuestionStep.question,
+            answerFormat: orkQuestionStep.answerFormat
+          )
           formItem01.placeholder = orkQuestionStep.placeholder == nil
             ? "" : orkQuestionStep.placeholder
           formItem01.isOptional = (questionStep?.skippable)!

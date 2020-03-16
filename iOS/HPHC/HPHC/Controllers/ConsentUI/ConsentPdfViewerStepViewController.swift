@@ -70,8 +70,11 @@ class ConsentPdfViewerStepViewController: ORKStepViewController {
     super.viewDidLoad()
 
     self.webView?.load(
-      pdfData!, mimeType: "application/pdf", textEncodingName: "UTF-8",
-      baseURL: URL.init(fileURLWithPath: ""))
+      pdfData!,
+      mimeType: "application/pdf",
+      textEncodingName: "UTF-8",
+      baseURL: URL.init(fileURLWithPath: "")
+    )
     webView?.delegate = self
     webView?.scalesPageToFit = true
   }
@@ -95,16 +98,21 @@ class ConsentPdfViewerStepViewController: ORKStepViewController {
     } else {
 
       let alert = UIAlertController(
-        title: NSLocalizedString(kTitleError, comment: ""), message: "",
-        preferredStyle: UIAlertController.Style.alert)
+        title: NSLocalizedString(kTitleError, comment: ""),
+        message: "",
+        preferredStyle: UIAlertController.Style.alert
+      )
 
       alert.addAction(
         UIAlertAction.init(
-          title: NSLocalizedString(kTitleOk, comment: ""), style: .default,
+          title: NSLocalizedString(kTitleOk, comment: ""),
+          style: .default,
           handler: { (_) in
 
             self.dismiss(animated: true, completion: nil)
-          }))
+          }
+        )
+      )
     }
   }
 
@@ -124,7 +132,8 @@ class ConsentPdfViewerStepViewController: ORKStepViewController {
 extension ConsentPdfViewerStepViewController: MFMailComposeViewControllerDelegate {
 
   func mailComposeController(
-    _ controller: MFMailComposeViewController, didFinishWith result: MFMailComposeResult,
+    _ controller: MFMailComposeViewController,
+    didFinishWith result: MFMailComposeResult,
     error: Error?
   ) {
     controller.dismiss(animated: true, completion: nil)
@@ -145,16 +154,21 @@ extension ConsentPdfViewerStepViewController: UIWebViewDelegate {
 
     let buttonTitleOK = NSLocalizedString("OK", comment: "")
     let alert = UIAlertController(
-      title: NSLocalizedString(kTitleError, comment: ""), message: error.localizedDescription,
-      preferredStyle: UIAlertController.Style.alert)
+      title: NSLocalizedString(kTitleError, comment: ""),
+      message: error.localizedDescription,
+      preferredStyle: UIAlertController.Style.alert
+    )
 
     alert.addAction(
       UIAlertAction.init(
-        title: buttonTitleOK, style: .default,
+        title: buttonTitleOK,
+        style: .default,
         handler: { (_) in
           self.dismiss(animated: true, completion: nil)
 
-        }))
+        }
+      )
+    )
 
     self.present(alert, animated: true, completion: nil)
   }

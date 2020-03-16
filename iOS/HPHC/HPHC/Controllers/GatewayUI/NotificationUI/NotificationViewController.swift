@@ -141,22 +141,26 @@ class NotificationViewController: UIViewController {
         UIUtilities.showAlertWithTitleAndMessage(
           title: "",
           message: NSLocalizedString("Please join study to go forward.", comment: "")
-            as NSString)
+            as NSString
+        )
       }
     case .Upcoming:
       UIUtilities.showAlertWithTitleAndMessage(
         title: "",
-        message: NSLocalizedString(kMessageForStudyUpcomingState, comment: "") as NSString)
+        message: NSLocalizedString(kMessageForStudyUpcomingState, comment: "") as NSString
+      )
 
     case .Paused:
       UIUtilities.showAlertWithTitleAndMessage(
         title: "",
-        message: NSLocalizedString(kMessageForStudyPausedState, comment: "") as NSString)
+        message: NSLocalizedString(kMessageForStudyPausedState, comment: "") as NSString
+      )
 
     case .Closed:
       UIUtilities.showAlertWithTitleAndMessage(
         title: "",
-        message: NSLocalizedString(kMessageForStudyClosedState, comment: "") as NSString)
+        message: NSLocalizedString(kMessageForStudyClosedState, comment: "") as NSString
+      )
 
     }
 
@@ -209,7 +213,8 @@ class NotificationViewController: UIViewController {
       self.navigationController?.setNavigationBarHidden(true, animated: true)
 
       viewController = storyboard.instantiateViewController(
-        withIdentifier: kStudyDashboardTabbarControllerIdentifier)
+        withIdentifier: kStudyDashboardTabbarControllerIdentifier
+      )
         as? StudyDashboardTabbarViewController
 
       switch type! as AppNotification.NotificationSubType {
@@ -243,7 +248,9 @@ extension NotificationViewController: UITableViewDataSource {
     var cell: NotificationTableViewCell?
 
     cell = tableView.dequeueReusableCell(
-      withIdentifier: kNotificationTableViewCellIdentifier, for: indexPath)
+      withIdentifier: kNotificationTableViewCellIdentifier,
+      for: indexPath
+    )
       as? NotificationTableViewCell
 
     cell?.populateCellWith(notification: (notificationArray[indexPath.row]))

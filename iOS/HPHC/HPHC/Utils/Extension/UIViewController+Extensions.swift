@@ -65,7 +65,10 @@ extension UIViewController {
   func showAlert(title: String, message: String) {
 
     let alert = UIAlertController(
-      title: title, message: message, preferredStyle: UIAlertController.Style.alert)
+      title: title,
+      message: message,
+      preferredStyle: UIAlertController.Style.alert
+    )
     alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
 
     self.present(alert, animated: true, completion: nil)
@@ -84,8 +87,11 @@ extension UIViewController {
     var progressView = self.view.viewWithTag(5000)
     if progressView == nil {
 
-      progressView = UINib(nibName: kNewProgressViewNIB, bundle: nil).instantiate(
-        withOwner: nil, options: nil)[0] as? UIView
+      progressView =
+        UINib(nibName: kNewProgressViewNIB, bundle: nil).instantiate(
+          withOwner: nil,
+          options: nil
+        )[0] as? UIView
 
       let url = Bundle.main.url(forResource: kResourceName, withExtension: "gif")!
 
@@ -108,9 +114,11 @@ extension UIViewController {
             progressView!.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
             progressView!.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
             progressView!.widthAnchor.constraint(
-              equalToConstant: UIScreen.main.bounds.size.width),
+              equalToConstant: UIScreen.main.bounds.size.width
+            ),
             progressView!.heightAnchor.constraint(
-              equalToConstant: UIScreen.main.bounds.size.height)
+              equalToConstant: UIScreen.main.bounds.size.height
+            ),
           ])
       }
 
@@ -164,7 +172,10 @@ extension UIViewController {
     let backbutton: UIButton = UIButton.init(frame: customView.frame)
     backbutton.setImage(#imageLiteral(resourceName: "homeIcon"), for: .normal)
     backbutton.addTarget(
-      self, action: #selector(self.popToSpecificController), for: .touchUpInside)
+      self,
+      action: #selector(self.popToSpecificController),
+      for: .touchUpInside
+    )
     customView.addSubview(backbutton)
 
     navigationItem.leftBarButtonItem = UIBarButtonItem.init(customView: customView)

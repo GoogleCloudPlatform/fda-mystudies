@@ -50,9 +50,13 @@ class ActivityFilterView: UIView, UITableViewDelegate, UITableViewDataSource {
   }
 
   class func instanceFromNib(frame: CGRect, selectedIndex: ActivityFilterType)
-    -> ActivityFilterView {
-    let view = UINib(nibName: "ActivityFilterView", bundle: nil).instantiate(
-      withOwner: nil, options: nil)[0] as! ActivityFilterView
+    -> ActivityFilterView
+  {
+    let view =
+      UINib(nibName: "ActivityFilterView", bundle: nil).instantiate(
+        withOwner: nil,
+        options: nil
+      )[0] as! ActivityFilterView
     view.frame = frame
 
     view.selectedIndex = selectedIndex
@@ -60,10 +64,11 @@ class ActivityFilterView: UIView, UITableViewDelegate, UITableViewDataSource {
     view.tableview?.register(UITableViewCell.self, forCellReuseIdentifier: "Cell")
     view.tableview?.delegate = view
     view.tableview?.dataSource = view
-    let height = (3*44) + 104
+    let height = (3 * 44) + 104
     let maxViewHeight = Int(UIScreen.main.bounds.size.height - 67)
     view.heightLayoutConstraint.constant = CGFloat(
-      (height > maxViewHeight) ? maxViewHeight : height)
+      (height > maxViewHeight) ? maxViewHeight : height
+    )
     view.layoutIfNeeded()
 
     return view

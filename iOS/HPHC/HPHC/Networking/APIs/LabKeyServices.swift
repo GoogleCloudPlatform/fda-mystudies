@@ -47,7 +47,7 @@ class LabKeyServices: NSObject {
 
     let params = [
       kEnrollmentToken: token,
-      kStudyId: studyId
+      kStudyId: studyId,
     ]
 
     self.sendRequestWith(method: method, params: params, headers: nil)
@@ -66,7 +66,7 @@ class LabKeyServices: NSObject {
 
     let params = [
       kEnrollmentToken: token,
-      kStudyId: studyId
+      kStudyId: studyId,
     ]
 
     self.sendRequestWith(method: method, params: params, headers: nil)
@@ -79,7 +79,9 @@ class LabKeyServices: NSObject {
   ///   - deleteResponses: withdraw status in form of `Bool`
   ///   - delegate: Class object to receive response
   func withdrawFromStudy(
-    studyId: String, participantId: String, deleteResponses: Bool,
+    studyId: String,
+    participantId: String,
+    deleteResponses: Bool,
     delegate: NMWebServiceDelegate
   ) {
     self.delegate = delegate
@@ -87,7 +89,7 @@ class LabKeyServices: NSObject {
 
     let params = [
       kParticipantId: participantId,
-      kDeleteResponses: deleteResponses
+      kDeleteResponses: deleteResponses,
     ] as [String: Any]
 
     self.sendRequestWith(method: method, params: params, headers: nil)
@@ -101,8 +103,11 @@ class LabKeyServices: NSObject {
   ///   - participantId: Participant ID
   ///   - delegate: Class object to receive response
   func processResponse(
-    metaData: [String: Any], activityType: String, responseData: [String: Any],
-    participantId: String, delegate: NMWebServiceDelegate
+    metaData: [String: Any],
+    activityType: String,
+    responseData: [String: Any],
+    participantId: String,
+    delegate: NMWebServiceDelegate
   ) {
 
     self.delegate = delegate
@@ -112,7 +117,7 @@ class LabKeyServices: NSObject {
       kActivityType: activityType,
       kActivityInfoMetaData: metaData,
       kParticipantId: participantId,
-      kActivityResponseData: responseData
+      kActivityResponseData: responseData,
     ] as [String: Any]
 
     self.sendRequestWith(method: method, params: params, headers: nil)
@@ -129,7 +134,9 @@ class LabKeyServices: NSObject {
     let method = ResponseMethods.processResponse.method
 
     let currentUser = User.currentUser
-    if let userStudyStatus = currentUser.participatedStudies.filter({ $0.studyId == Study.currentStudy?.studyId! }).first {
+    if let userStudyStatus = currentUser.participatedStudies.filter({
+      $0.studyId == Study.currentStudy?.studyId!
+    }).first {
 
       let studyId = Study.currentStudy?.studyId!
       let activiyId = Study.currentActivity?.actvityId!
@@ -142,7 +149,7 @@ class LabKeyServices: NSObject {
         kActivityId: activiyId!,
         kActivityName: activityName!,
         "version": activityVersion!,
-        kActivityRunId: "\(currentRunId!)"
+        kActivityRunId: "\(currentRunId!)",
       ] as [String: String]
 
       let ActivityType = Study.currentActivity?.type?.rawValue
@@ -151,7 +158,7 @@ class LabKeyServices: NSObject {
         kActivityType: ActivityType!,
         kActivityInfoMetaData: info,
         kParticipantId: userStudyStatus.participantId! as String,
-        kActivityResponseData: responseData
+        kActivityResponseData: responseData,
       ] as [String: Any]
 
       self.sendRequestWith(method: method, params: params, headers: nil)
@@ -166,7 +173,10 @@ class LabKeyServices: NSObject {
   ///   - participantId: Participant ID
   ///   - delegate: Class object to receive response
   func getParticipantResponse(
-    tableName: String, activityId: String, keys: String, participantId: String,
+    tableName: String,
+    activityId: String,
+    keys: String,
+    participantId: String,
     delegate: NMWebServiceDelegate
   ) {
 
@@ -178,7 +188,7 @@ class LabKeyServices: NSObject {
     let params = [
 
       kParticipantId: participantId,
-      "sql": query
+      "sql": query,
     ] as [String: Any]
 
     self.sendRequestWith(method: method, params: params, headers: nil)
@@ -191,7 +201,9 @@ class LabKeyServices: NSObject {
   ///   - headers: request headers
   ///   - delegate: Class object to receive response
   func syncOfflineSavedData(
-    method: Method, params: [String: Any]?, headers: [String: String]?,
+    method: Method,
+    params: [String: Any]?,
+    headers: [String: String]?,
     delegate: NMWebServiceDelegate
   ) {
 
@@ -244,15 +256,17 @@ class LabKeyServices: NSObject {
             let valueDetail = [
               "value": duration,
               "count": count,
-              "date": date
+              "date": date,
             ] as [String: Any]
 
             responseData?.values.append(valueDetail)
 
           }  // Speatial Memory
-          else if data["NumberofFailures"] != nil && data["NumberofGames"] != nil && data[
-            "Score"]
-            != nil {
+          else if data["NumberofFailures"] != nil && data["NumberofGames"] != nil
+            && data[
+              "Score"]
+              != nil
+          {
 
             for responseData in dashBoardResponse {
               if responseData.key == "NumberofFailures" {
@@ -263,7 +277,7 @@ class LabKeyServices: NSObject {
                 let valueDetail1 = [
                   "value": numberOfFailures,
                   "count": Float(0.0),
-                  "date": date
+                  "date": date,
                 ] as [String: Any]
                 responseData.values.append(valueDetail1)
 
@@ -275,7 +289,7 @@ class LabKeyServices: NSObject {
                 let valueDetail3 = [
                   "value": numberOfGames,
                   "count": Float(0.0),
-                  "date": date
+                  "date": date,
                 ] as [String: Any]
 
                 responseData.values.append(valueDetail3)
@@ -287,7 +301,7 @@ class LabKeyServices: NSObject {
                 let valueDetail2 = [
                   "value": score,
                   "count": Float(0.0),
-                  "date": date
+                  "date": date,
                 ] as [String: Any]
 
                 responseData.values.append(valueDetail2)
@@ -300,7 +314,8 @@ class LabKeyServices: NSObject {
               if let keyValue = data[responseData.key!] as? [String: Any] {
 
                 if Utilities.isValidValue(
-                  someObject: keyValue["value"] as AnyObject?) {
+                  someObject: keyValue["value"] as AnyObject?
+                ) {
                   var value: Float = 0.0
                   if let n = keyValue["value"] as? NSNumber {
                     value = n.floatValue
@@ -308,7 +323,7 @@ class LabKeyServices: NSObject {
                   let valueDetail = [
                     "value": value,
                     "count": Float(0.0),
-                    "date": date
+                    "date": date,
                   ] as [String: Any]
 
                   responseData.values.append(valueDetail)
@@ -338,7 +353,8 @@ class LabKeyServices: NSObject {
       method: method,
       params: params as NSDictionary?,
       headers: headers as NSDictionary?,
-      delegate: self)
+      delegate: self
+    )
   }
 }
 extension LabKeyServices: NMWebServiceDelegate {
@@ -359,7 +375,7 @@ extension LabKeyServices: NMWebServiceDelegate {
     case ResponseMethods.processResponse.description as String: break
     case ResponseMethods.withdrawFromStudy.description as String: break
     default:
-        Logger.sharedInstance.info("Request was not sent with proper method name")
+      Logger.sharedInstance.info("Request was not sent with proper method name")
     }
 
     delegate?.finishedRequest(manager, requestName: requestName, response: response)
@@ -374,9 +390,11 @@ extension LabKeyServices: NMWebServiceDelegate {
       if error.code == NoNetworkErrorCode {
         // save in database
         DBHandler.saveRequestInformation(
-          params: self.requestParams, headers: self.headerParams,
+          params: self.requestParams,
+          headers: self.headerParams,
           method: requestName as String,
-          server: "response")
+          server: "response"
+        )
       }
     }
   }

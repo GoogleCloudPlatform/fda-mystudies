@@ -49,8 +49,10 @@ class HomeViewController: UIViewController {
 
     /// Added to change next screen
     pageControlView?.addTarget(
-      self, action: #selector(HomeViewController.didChangePageControlValue),
-      for: .valueChanged)
+      self,
+      action: #selector(HomeViewController.didChangePageControlValue),
+      for: .valueChanged
+    )
 
     let infoDict = Utilities.getBrandingDetails()
     websiteName = infoDict?[BrandingConstant.WebsiteLink] as? String ?? ""
@@ -74,7 +76,10 @@ class HomeViewController: UIViewController {
     // load plist info
     guard
       let plistPath = Bundle.main.path(
-        forResource: "GatewayOverview", ofType: ".plist", inDirectory: nil),
+        forResource: "GatewayOverview",
+        ofType: ".plist",
+        inDirectory: nil
+      ),
       let arrayContent = NSMutableArray(contentsOfFile: plistPath)
     else { return }
 
@@ -131,7 +136,8 @@ class HomeViewController: UIViewController {
 
     let storyboard = UIStoryboard(name: kStoryboardIdentifierGateway, bundle: nil)
     let fdaSlideVC = storyboard.instantiateViewController(
-      withIdentifier: kStoryboardIdentifierSlideMenuVC)
+      withIdentifier: kStoryboardIdentifierSlideMenuVC
+    )
       as! FDASlideMenuViewController
 
     guard let window = UIApplication.shared.keyWindow else { return }
@@ -156,7 +162,8 @@ class HomeViewController: UIViewController {
 
     let loginStoryboard = UIStoryboard.init(name: "Main", bundle: Bundle.main)
     let webViewController = loginStoryboard.instantiateViewController(
-      withIdentifier: "WebViewController") as! UINavigationController
+      withIdentifier: "WebViewController"
+    ) as! UINavigationController
     let webView = webViewController.viewControllers[0] as! WebViewController
     webView.requestLink = "https://" + websiteName
     self.navigationController?.present(webViewController, animated: true, completion: nil)
@@ -203,7 +210,8 @@ extension HomeViewController: PageViewControllerDelegate {
         animations: {
           self.buttonGetStarted?.backgroundColor = kUIColorForSubmitButtonBackground
           self.buttonGetStarted?.setTitleColor(UIColor.white, for: .normal)
-        })
+        }
+      )
     } else {
 
       UIView.animate(
@@ -212,8 +220,11 @@ extension HomeViewController: PageViewControllerDelegate {
           // For All other pages
           self.buttonGetStarted?.backgroundColor = UIColor.white
           self.buttonGetStarted?.setTitleColor(
-            kUIColorForSubmitButtonBackground, for: .normal)
-        })
+            kUIColorForSubmitButtonBackground,
+            for: .normal
+          )
+        }
+      )
     }
   }
 }

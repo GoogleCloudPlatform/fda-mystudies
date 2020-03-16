@@ -54,7 +54,8 @@ class AnchorDateHandler {
     handler = completionHandler
     // Get activities from database for anchor date is not present
     let activities = DBHandler.getActivitiesWithEmptyAnchorDateValue(
-      (Study.currentStudy?.studyId)!)
+      (Study.currentStudy?.studyId)!
+    )
 
     guard activities.count != 0 else {
       return handler(false)
@@ -62,7 +63,9 @@ class AnchorDateHandler {
 
     for activity in activities {
 
-      let act = User.currentUser.participatedActivites.filter({ $0.activityId == activity.sourceActivityId }).last
+      let act = User.currentUser.participatedActivites.filter({
+        $0.activityId == activity.sourceActivityId
+      }).last
 
       if act != nil && (act?.status == UserActivityStatus.ActivityStatus.completed) {
 
@@ -89,7 +92,8 @@ class AnchorDateHandler {
   ) {
 
     let resources = DBHandler.getResourceWithEmptyAnchorDateValue(
-      (Study.currentStudy?.studyId)!)
+      (Study.currentStudy?.studyId)!
+    )
     handler = completionHandler
     guard resources.count != 0 else {
       return handler(false)
@@ -97,7 +101,9 @@ class AnchorDateHandler {
 
     for resource in resources {
 
-      let act = User.currentUser.participatedActivites.filter({ $0.activityId == resource.sourceActivityId }).last
+      let act = User.currentUser.participatedActivites.filter({
+        $0.activityId == resource.sourceActivityId
+      }).last
 
       if act != nil && (act?.status == UserActivityStatus.ActivityStatus.completed) {
 
@@ -128,7 +134,7 @@ class AnchorDateHandler {
     guard
       let emptyAnchorDateDetail = emptyAnchorDatesList.filter(
         { $0.isFinishedFetching == false })
-      .first
+        .first
     else {
       saveAnchorDateInDatabase()
       return
@@ -145,12 +151,15 @@ class AnchorDateHandler {
     var urlString = ResponseServerURLConstants.DevelopmentURL + method.methodName + "?"
       + kParticipantId + "=" + participantId + "&sql=" + query
     urlString = urlString.addingPercentEncoding(
-      withAllowedCharacters: CharacterSet.urlQueryAllowed)!
+      withAllowedCharacters: CharacterSet.urlQueryAllowed
+    )!
 
     let requstUrl = URL(string: urlString)
     var request = URLRequest.init(
-      url: requstUrl!, cachePolicy: URLRequest.CachePolicy.reloadIgnoringLocalCacheData,
-      timeoutInterval: NetworkConnectionConstants.ConnectionTimeoutInterval)
+      url: requstUrl!,
+      cachePolicy: URLRequest.CachePolicy.reloadIgnoringLocalCacheData,
+      timeoutInterval: NetworkConnectionConstants.ConnectionTimeoutInterval
+    )
     request.httpMethod = method.methodType.methodTypeAsString
 
     let session = URLSession.shared
@@ -171,7 +180,9 @@ class AnchorDateHandler {
 
               guard
                 let response = try? JSONSerialization.jsonObject(
-                  with: data!, options: .allowFragments) as? [String: Any]
+                  with: data!,
+                  options: .allowFragments
+                ) as? [String: Any]
               else {
 
                 emptyAnchorDateDetail.isFinishedFetching = true
@@ -194,7 +205,8 @@ class AnchorDateHandler {
                     as? [String: String]
                   let anchorDateString = anchorDateObject?["value"]
                   let date = ResponseDataFetch.labkeyDateFormatter.date(
-                    from: anchorDateString!)
+                    from: anchorDateString!
+                  )
                   emptyAnchorDateDetail.anchorDate = date
                   emptyAnchorDateDetail.isFinishedFetching = true
                   self.sendRequestToFetchResponse()
@@ -208,7 +220,8 @@ class AnchorDateHandler {
           }
 
         }
-      })
+      }
+    )
 
     dataTask.resume()
 
@@ -216,19 +229,23 @@ class AnchorDateHandler {
 
   func saveAnchorDateInDatabase() {
 
-    let listItems = emptyAnchorDatesList.filter({ $0.anchorDate != nil && $0.isFinishedFetching == true })
+    let listItems = emptyAnchorDatesList.filter({
+      $0.anchorDate != nil && $0.isFinishedFetching == true
+    })
     for item in listItems {
       if item.fetchAnchorDateFor == .activity {
         DBHandler.updateActivityLifeTimeFor(item.activity, anchorDate: item.anchorDate!)
       } else if item.fetchAnchorDateFor == .resource {
 
         var startDateStringEnrollment = Utilities.formatterShort?.string(
-          from: item.anchorDate!)
+          from: item.anchorDate!
+        )
         let startTimeEnrollment = "00:00:00"
         startDateStringEnrollment = (startDateStringEnrollment ?? "") + " "
           + startTimeEnrollment
         let anchorDate = Utilities.findDateFromString(
-          dateString: startDateStringEnrollment ?? "")
+          dateString: startDateStringEnrollment ?? ""
+        )
 
         DBHandler.saveLifeTimeFor(resource: item.resource, anchorDate: anchorDate!)
       }

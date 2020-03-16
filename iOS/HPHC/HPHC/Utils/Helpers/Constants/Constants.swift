@@ -30,13 +30,25 @@ let kAlertPleaseEnterValidValue = "Please Enter Valid Value"
 
 //Used for corner radius Color for sign in , sign up , forgot password etc screens
 let kUicolorForButtonBackground = UIColor.init(
-  red: 0/255.0, green: 124/255.0, blue: 186/255.0, alpha: 1.0).cgColor
+  red: 0 / 255.0,
+  green: 124 / 255.0,
+  blue: 186 / 255.0,
+  alpha: 1.0
+).cgColor
 
 let kUicolorForCancelBackground = UIColor.init(
-  red: 140/255.0, green: 149/255.0, blue: 163/255.0, alpha: 1.0).cgColor
+  red: 140 / 255.0,
+  green: 149 / 255.0,
+  blue: 163 / 255.0,
+  alpha: 1.0
+).cgColor
 
 let kUIColorForSubmitButtonBackground = UIColor.init(
-  red: 0/255.0, green: 124/255.0, blue: 186/255.0, alpha: 1.0)
+  red: 0 / 255.0,
+  green: 124 / 255.0,
+  blue: 186 / 255.0,
+  alpha: 1.0
+)
 
 let NoNetworkErrorCode = -101
 let CouldNotConnectToServerCode = -1001
@@ -48,14 +60,14 @@ let kImportantNoteMessage = "Important Note"
 let kTitleOk = "Ok"
 let kTitleCancel = "Cancel"
 let kTitleDeleteAccount = "Delete Account"
-let kRegistrationInfoMessage
-  = "Registration (or sign up) for the app  is requested only to provide you with a seamless experience of using the app. Your registration information does not become part of the data collected for any study(ies) housed in the app. Each study has its own consent process and your data for the study will not be collected without you providing your informed consent prior to joining the study."
+let kRegistrationInfoMessage =
+  "Registration (or sign up) for the app  is requested only to provide you with a seamless experience of using the app. Your registration information does not become part of the data collected for any study(ies) housed in the app. Each study has its own consent process and your data for the study will not be collected without you providing your informed consent prior to joining the study."
 
-let kDeleteAccountConfirmationMessage
-  = "Are you sure you wish to permanently delete your #APPNAME# account? You will need to register again if you wish to join a study."
+let kDeleteAccountConfirmationMessage =
+  "Are you sure you wish to permanently delete your #APPNAME# account? You will need to register again if you wish to join a study."
 let kMessageAccountDeletedSuccess = "Account has been deleted"
-let kMessageAppNotificationOffRemainder
-  = "Stay up-to-date! Turn ON notifications and reminders in app and phone settings to get notified about study activity in a timely manner."
+let kMessageAppNotificationOffRemainder =
+  "Stay up-to-date! Turn ON notifications and reminders in app and phone settings to get notified about study activity in a timely manner."
 
 // MARK: - Signin Constants
 let kSignInTitleText = "SIGN IN"
@@ -63,8 +75,8 @@ let kSignInTableViewCellIdentifier = "DetailsCell"
 
 // MARK: - ForgotPassword Constants
 let kForgotPasswordTitleText = "PASSWORD HELP"
-let kForgotPasswordResponseMessage
-  = "We have sent a temporary password to your registered email. Please login with temporary password and change your password."
+let kForgotPasswordResponseMessage =
+  "We have sent a temporary password to your registered email. Please login with temporary password and change your password."
 
 // MARK: - SignUp Constants
 let kSignUpTitleText = "SIGN UP"
@@ -97,8 +109,8 @@ let kMessageValidatePasswords = "The Password and Confirm password fields don't 
 let kMessageProfileValidatePasswords = "New password and confirm password fields don't match."
 
 let kMessageValidatePasswordCharacters = "Password should have minimum of 8 characters."
-let kMessageValidatePasswordComplexity
-  = "Your password must contain: 8 to 64 characters, lower case letter, upper case letter, numeric,  special characters \\!  # $ % & ' () * + , - . : ; < > = ? @ [] ^ _  { } | ~"
+let kMessageValidatePasswordComplexity =
+  "Your password must contain: 8 to 64 characters, lower case letter, upper case letter, numeric,  special characters \\!  # $ % & ' () * + , - . : ; < > = ? @ [] ^ _  { } | ~"
 let kMessageAgreeToTermsAndConditions = "Please agree to terms and conditions."
 
 let kMessageNewPasswordBlank = "Please enter your new password."
@@ -111,10 +123,10 @@ let kChangePawwordCellIdentifer = "changePasswordCell"
 let kChangePasswordResponseMessage = "Your password has been changed successfully"
 
 let kMessageAllFieldsAreEmpty = "Please enter all the fields"
-let kMessageValidFirstName
-  = "Please enter valid first name. Please use letters(length:1 - 100 characters)."
-let kMessageValidLastName
-  = "Please enter valid last name. Please use letters(length:1 - 100 characters)."
+let kMessageValidFirstName =
+  "Please enter valid first name. Please use letters(length:1 - 100 characters)."
+let kMessageValidLastName =
+  "Please enter valid last name. Please use letters(length:1 - 100 characters)."
 
 let kMessageValidateOldAndNewPasswords = "Old password and New password should not be same."
 
@@ -124,26 +136,30 @@ let kMessageVerificationCodeEmpty = "Please enter valid Verification Code"
 // MARK: - FeedbackviewController constants
 let kFeedbackTableViewCellIdentifier1 = "FeedbackCellFirst"
 let kFeedbackTableViewCellIdentifier2 = "FeedbackCellSecond"
-let kMessageFeedbackSubmittedSuccessfuly
-  = "Thank you for providing feedback. Your gesture is appreciated."
+let kMessageFeedbackSubmittedSuccessfuly =
+  "Thank you for providing feedback. Your gesture is appreciated."
 
 // MARK: - ContactUsviewController constants
 let kContactUsTableViewCellIdentifier = "ContactUsCell"
 let kMessageSubjectBlankCheck = "Please enter subject"
 let kMessageMessageBlankCheck = "Please enter message"
-let kMessageContactedSuccessfuly
-  = "Thank you for contacting us. We will get back to you on your email address at the earliest."
+let kMessageContactedSuccessfuly =
+  "Thank you for contacting us. We will get back to you on your email address at the earliest."
 let kMessageTextViewPlaceHolder = ""
 
 // MARK: - ActivitiesViewController constants
 let kBackgroundTableViewColor = UIColor.init(
-  red: 216/255.0, green: 227/255.0, blue: 230/255.0, alpha: 1)
+  red: 216 / 255.0,
+  green: 227 / 255.0,
+  blue: 230 / 255.0,
+  alpha: 1
+)
 let kActivitiesTableViewCell = "ActivitiesCell"
 let kActivitiesTableViewScheduledCell = "ActivitiesCellScheduled"
 
-let kYellowColor = UIColor.init(red: 245/255.0, green: 175/255.0, blue: 55/255.0, alpha: 1.0)
-let kBlueColor = UIColor.init(red: 0/255.0, green: 124/255.0, blue: 186/255.0, alpha: 1.0)
-let kGreenColor = UIColor.init(red: 76/255.0, green: 175/255.0, blue: 80/255.0, alpha: 1.0)
+let kYellowColor = UIColor.init(red: 245 / 255.0, green: 175 / 255.0, blue: 55 / 255.0, alpha: 1.0)
+let kBlueColor = UIColor.init(red: 0 / 255.0, green: 124 / 255.0, blue: 186 / 255.0, alpha: 1.0)
+let kGreenColor = UIColor.init(red: 76 / 255.0, green: 175 / 255.0, blue: 80 / 255.0, alpha: 1.0)
 
 let kResumeSpaces = "  Resume  "
 let kStartSpaces = "  Start  "
@@ -164,8 +180,8 @@ let kTrendTableViewCell = "trendCell"
 let kActivityCollectionViewCell = "ActivityCell"
 let kStatisticsCollectionViewCell = "StatisticsCell"
 
-let kDarkBlueColor = UIColor.init(red: 0/255.0, green: 124/255.0, blue: 186/255.0, alpha: 1.0)
-let kGreyColor = UIColor.init(red: 140/255.0, green: 149/255.0, blue: 163/255.0, alpha: 1.0)
+let kDarkBlueColor = UIColor.init(red: 0 / 255.0, green: 124 / 255.0, blue: 186 / 255.0, alpha: 1.0)
+let kGreyColor = UIColor.init(red: 140 / 255.0, green: 149 / 255.0, blue: 163 / 255.0, alpha: 1.0)
 
 let kDaySpaces = "  DAY  "
 let kDay = "Day"
@@ -181,20 +197,20 @@ let kMessageForInvalidToken = "Please enter valid enrollment token"
 let kMessageValidToken = "Please enter valid token"
 let kMessageForMissingStudyId = "Unable to Enroll, Please try again later."
 
-let kMessageInvalidTokenOrIfStudyDoesNotExist
-  = "Sorry, this token is invalid. Please enter a valid token to continue."
+let kMessageInvalidTokenOrIfStudyDoesNotExist =
+  "Sorry, this token is invalid. Please enter a valid token to continue."
 
 // MARK: - StudyHomeMessages
-let kMessageForStudyUpcomingState
-  = "This study is an upcoming one and isn't yet open for enrolling participants. Please check back later."
+let kMessageForStudyUpcomingState =
+  "This study is an upcoming one and isn't yet open for enrolling participants. Please check back later."
 let kMessageForStudyPausedState = "This study has been temporarily paused. Please check back later."
-let kMessageForStudyPausedAfterJoiningState
-  = "The study has been temporarily paused. You can participate in activities once it is resumed. Please check back later."
+let kMessageForStudyPausedAfterJoiningState =
+  "The study has been temporarily paused. You can participate in activities once it is resumed. Please check back later."
 let kMessageForStudyClosedState = "This study has been closed."
-let kMessageForStudyWithdrawnState
-  = "Sorry, this study currently does not allow previously enrolled participants to rejoin the study after they have withdrawn from the study. Please check back later or explore other studies"
-let kMessageForStudyEnrollingNotAllowed
-  = "Sorry, enrollment for this study has been closed for now. Please check back later or explore other studies you could join."
+let kMessageForStudyWithdrawnState =
+  "Sorry, this study currently does not allow previously enrolled participants to rejoin the study after they have withdrawn from the study. Please check back later or explore other studies"
+let kMessageForStudyEnrollingNotAllowed =
+  "Sorry, enrollment for this study has been closed for now. Please check back later or explore other studies you could join."
 
 // MARK: - StudyDashboardViewController segues
 let unwindToStudyListDashboard = "unwindToStudyListDashboardIdentifier"
@@ -212,8 +228,8 @@ let kIsStagingUser = "StagingUser"
 let kBlockerScreenLabelText = "Please update to the latest version of app to continue."
 let kConsentUpdatedTitle = "Consent Updated"
 
-let kMessageConsentUpdatedPartTwo
-  = " Please review the revised Consent terms and provide your Informed Consent, to continue participating in the study."
+let kMessageConsentUpdatedPartTwo =
+  " Please review the revised Consent terms and provide your Informed Consent, to continue participating in the study."
 
 let kMessageConsentUpdated = "The Consent Document for this study has been updated."
   + kMessageConsentUpdatedPartTwo
@@ -222,8 +238,8 @@ let kReviewTitle = "Review"
 let kPasscodeStepIdentifier = "PasscodeStep"
 let kPasscodeTaskIdentifier = "PassCodeTask"
 let kMessagePasscode = "Passcode"
-let kMessagePasscodeSignOut
-  = "You will be signed out and will need to sign in again. Are you sure you want to proceed?"
+let kMessagePasscodeSignOut =
+  "You will be signed out and will need to sign in again. Are you sure you want to proceed?"
 let kNewProgressViewNIB = "NewProgressView"
 let kforgotPasscodeTitle = "Forgot Passcode? Sign In Again"
 let kStudyStoryboard = "Study"

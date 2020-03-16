@@ -33,7 +33,7 @@ enum ResponseMethods: String {
     switch self {
 
     default:
-      return self.rawValue+".api"
+      return self.rawValue + ".api"
     }
   }
 
@@ -42,19 +42,22 @@ enum ResponseMethods: String {
     switch self {
     case .executeSQL:
       return Method(
-        methodName: (self.rawValue+".api"),
+        methodName: (self.rawValue + ".api"),
         methodType: .httpMethodGet,
-        requestType: .requestTypeHTTP)
+        requestType: .requestTypeHTTP
+      )
     case .withdrawFromStudy, .getParticipantResponse, .validateEnrollmentToken:
       return Method(
-        methodName: (self.rawValue+".api"),
+        methodName: (self.rawValue + ".api"),
         methodType: .httpMethodPOST,
-        requestType: .requestTypeHTTP)
+        requestType: .requestTypeHTTP
+      )
     default:
       return Method(
-        methodName: (self.rawValue+".api"),
+        methodName: (self.rawValue + ".api"),
         methodType: .httpMethodPOST,
-        requestType: .requestTypeJSON)
+        requestType: .requestTypeJSON
+      )
     }
   }
 
@@ -65,7 +68,8 @@ enum ResponseServerURLConstants {
 
   /// Labkey Staging.
   static let ProductionURL = API.responseURL
-  static let DevelopmentURL = API.responseURL // This will change based on config file.
+
+  static let DevelopmentURL = API.responseURL  // This will change based on config file.
 
 }
 
@@ -96,14 +100,18 @@ class ResponseServerConfiguration: NetworkConfiguration {
   override func parseError(errorResponse: [String: Any]) -> NSError {
 
     var error = NSError(
-      domain: NSURLErrorDomain, code: 101,
-      userInfo: [NSLocalizedDescriptionKey: "Could not connect to server"])
+      domain: NSURLErrorDomain,
+      code: 101,
+      userInfo: [NSLocalizedDescriptionKey: "Could not connect to server"]
+    )
 
     if let errorMessage = errorResponse["exception"] {
 
       error = NSError(
-        domain: NSURLErrorDomain, code: 101,
-        userInfo: [NSLocalizedDescriptionKey: errorMessage])
+        domain: NSURLErrorDomain,
+        code: 101,
+        userInfo: [NSLocalizedDescriptionKey: errorMessage]
+      )
     }
 
     return error

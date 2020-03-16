@@ -24,6 +24,7 @@ class WebViewController: UIViewController {
 
   // MARK: Outlets
   @IBOutlet var webView: UIWebView?
+
   @IBOutlet var barItemShare: UIBarButtonItem?
 
   var activityIndicator: UIActivityIndicatorView!
@@ -45,7 +46,7 @@ class WebViewController: UIViewController {
 
     // Used to add a loader
     activityIndicator = UIActivityIndicatorView(style: .gray)
-    activityIndicator.center = CGPoint(x: self.view.frame.midX, y: self.view.frame.midY-100)
+    activityIndicator.center = CGPoint(x: self.view.frame.midX, y: self.view.frame.midY - 100)
     self.view.addSubview(activityIndicator)
     activityIndicator.startAnimating()
 
@@ -63,8 +64,11 @@ class WebViewController: UIViewController {
       webView?.loadHTMLString(self.htmlString!, baseURL: nil)
     } else if self.pdfData != nil {
       self.webView?.load(
-        pdfData!, mimeType: "application/pdf", textEncodingName: "UTF-8",
-        baseURL: URL.init(fileURLWithPath: ""))
+        pdfData!,
+        mimeType: "application/pdf",
+        textEncodingName: "UTF-8",
+        baseURL: URL.init(fileURLWithPath: "")
+      )
     } else {
       // VisitWebsite
       self.activityIndicator.stopAnimating()
@@ -102,7 +106,10 @@ class WebViewController: UIViewController {
       let consentName: String! = (Study.currentStudy?.name!)! + "_SignedConsent"
 
       mailComposerVC.addAttachmentData(
-        self.pdfData!, mimeType: "application/pdf", fileName: consentName)
+        self.pdfData!,
+        mimeType: "application/pdf",
+        fileName: consentName
+      )
 
       mailComposerVC.setMessageBody("", isHTML: false)
     } else if self.htmlString != nil {
@@ -115,17 +122,22 @@ class WebViewController: UIViewController {
       self.present(mailComposerVC, animated: true, completion: nil)
     } else {
       let alert = UIAlertController(
-        title: NSLocalizedString(kTitleError, comment: ""), message: "",
-        preferredStyle: UIAlertController.Style.alert)
+        title: NSLocalizedString(kTitleError, comment: ""),
+        message: "",
+        preferredStyle: UIAlertController.Style.alert
+      )
 
       alert.addAction(
         UIAlertAction.init(
-          title: NSLocalizedString("OK", comment: ""), style: .default,
+          title: NSLocalizedString("OK", comment: ""),
+          style: .default,
           handler: { (_) in
 
             self.dismiss(animated: true, completion: nil)
 
-          }))
+          }
+        )
+      )
     }
 
   }
@@ -134,7 +146,8 @@ class WebViewController: UIViewController {
 
 extension WebViewController: MFMailComposeViewControllerDelegate {
   func mailComposeController(
-    _ controller: MFMailComposeViewController, didFinishWith result: MFMailComposeResult,
+    _ controller: MFMailComposeViewController,
+    didFinishWith result: MFMailComposeResult,
     error: Error?
   ) {
     controller.dismiss(animated: true, completion: nil)

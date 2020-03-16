@@ -46,8 +46,8 @@ open class AKUtility: NSObject {
       var fileDocDirectoryPath: NSString?
 
       if fileExtension.length > 0 {
-        fileDocDirectoryPath
-          = "\(filePath.deletingLastPathComponent)/\(suggestedFileName).\(fileExtension)"
+        fileDocDirectoryPath =
+          "\(filePath.deletingLastPathComponent)/\(suggestedFileName).\(fileExtension)"
           as NSString?
       } else {
         fileDocDirectoryPath = "\(filePath.deletingLastPathComponent)/\(suggestedFileName)"
@@ -55,7 +55,8 @@ open class AKUtility: NSObject {
       }
 
       let isFileAlreadyExists: Bool = fileManger.fileExists(
-        atPath: fileDocDirectoryPath! as String)
+        atPath: fileDocDirectoryPath! as String
+      )
 
       if isFileAlreadyExists {
         fileNumber += 1
@@ -74,21 +75,21 @@ open class AKUtility: NSObject {
 
   open class func calculateFileSizeInUnit(_ contentLength: Int64) -> Float {
     let dataLength: Float64 = Float64(contentLength)
-    if dataLength >= (1024.0*1024.0*1024.0) {
-      return Float(dataLength/(1024.0*1024.0*1024.0))
-    } else if dataLength >= 1024.0*1024.0 {
-      return Float(dataLength/(1024.0*1024.0))
+    if dataLength >= (1024.0 * 1024.0 * 1024.0) {
+      return Float(dataLength / (1024.0 * 1024.0 * 1024.0))
+    } else if dataLength >= 1024.0 * 1024.0 {
+      return Float(dataLength / (1024.0 * 1024.0))
     } else if dataLength >= 1024.0 {
-      return Float(dataLength/1024.0)
+      return Float(dataLength / 1024.0)
     } else {
       return Float(dataLength)
     }
   }
 
   open class func calculateUnit(_ contentLength: Int64) -> NSString {
-    if contentLength >= (1024*1024*1024) {
+    if contentLength >= (1024 * 1024 * 1024) {
       return "GB"
-    } else if contentLength >= (1024*1024) {
+    } else if contentLength >= (1024 * 1024) {
       return "MB"
     } else if contentLength >= 1024 {
       return "KB"
@@ -104,7 +105,9 @@ open class AKUtility: NSObject {
 
       do {
         try (url as NSURL).setResourceValue(
-          NSNumber(value: true as Bool), forKey: URLResourceKey.isExcludedFromBackupKey)
+          NSNumber(value: true as Bool),
+          forKey: URLResourceKey.isExcludedFromBackupKey
+        )
         return true
       } catch let error as NSError {
         print("Error excluding \(url.lastPathComponent) from backup \(error)")
@@ -118,11 +121,15 @@ open class AKUtility: NSObject {
 
   open class func getFreeDiskspace() -> Int64? {
     let documentDirectoryPath = NSSearchPathForDirectoriesInDomains(
-      .documentDirectory, .userDomainMask, true)
+      .documentDirectory,
+      .userDomainMask,
+      true
+    )
     let systemAttributes: AnyObject?
     do {
       systemAttributes = try FileManager.default.attributesOfFileSystem(
-        forPath: documentDirectoryPath.last!) as AnyObject?
+        forPath: documentDirectoryPath.last!
+      ) as AnyObject?
       let freeSize = systemAttributes?[FileAttributeKey.systemFreeSize] as? NSNumber
       return freeSize?.int64Value
     } catch let error as NSError {

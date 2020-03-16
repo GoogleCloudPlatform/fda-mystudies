@@ -64,14 +64,14 @@ let kConsentViewPdfStoryboardId = "ConsentPdfViewerStepViewControllerIdentifier"
 
 /// Comprehenion Instruction Step Keys
 let kConsentComprehensionTestTitle = "Comprehension"
-let kConsentComprehensionTestText
-  = "Let's do a quick and simple test of your understanding of this Study."
+let kConsentComprehensionTestText =
+  "Let's do a quick and simple test of your understanding of this Study."
 let kComprehensionInstructionStepIdentifier = "ComprehensionInstructionStep"
 
 /// Comprehension Completion Step Keys
 let kComprehensionCompletionTitle = "Great Job!"
-let kComprehensionCompletionText
-  = "You answered all of the questions correctly. Tap on Next to proceed"
+let kComprehensionCompletionText =
+  "You answered all of the questions correctly. Tap on Next to proceed"
 let kComprehensionCompletionStepIdentifier = "ComprehensionCompletionStep"
 
 /// Consent Completion
@@ -177,7 +177,9 @@ class ConsentBuilder {
       } else {
         // create Visual Consent Step
         let visualConsentStep = VisualConsentStep(
-          identifier: kVisualStepId, document: getConsentDocument())
+          identifier: kVisualStepId,
+          document: getConsentDocument()
+        )
         return visualConsentStep
       }
     } else {
@@ -188,7 +190,8 @@ class ConsentBuilder {
   /// Return an ConsentDocument
   func getConsentDocument() -> ORKConsentDocument {
     if consentDocument != nil,
-      Utilities.isValidObject(someObject: consentDocument?.sections as AnyObject?) {
+      Utilities.isValidObject(someObject: consentDocument?.sections as AnyObject?)
+    {
       return consentDocument!
     } else {
       consentDocument = createConsentDocument()
@@ -202,7 +205,8 @@ class ConsentBuilder {
 
     if Utilities.isValidValue(someObject: "title" as AnyObject),
       Utilities.isValidValue(someObject: "signaturePageTitle" as AnyObject),
-      Utilities.isValidValue(someObject: kConsentSignaturePageContent as AnyObject) {
+      Utilities.isValidValue(someObject: kConsentSignaturePageContent as AnyObject)
+    {
       consentDocument.title = Study.currentStudy?.name
       consentDocument.signaturePageTitle = kConsentSignaturePageTitle
       consentDocument.signaturePageContent = kConsentSignaturePageContent
@@ -214,8 +218,10 @@ class ConsentBuilder {
       }
 
       let investigatorSignature = ORKConsentSignature(
-        forPersonWithTitle: kConsentSignaturePageTitle, dateFormatString: "MM/dd/YYYY",
-        identifier: "Signature")
+        forPersonWithTitle: kConsentSignaturePageTitle,
+        dateFormatString: "MM/dd/YYYY",
+        identifier: "Signature"
+      )
 
       consentDocument.addSignature(investigatorSignature)
       return consentDocument
@@ -251,24 +257,31 @@ class ConsentBuilder {
       let consentDocument: ORKConsentDocument? = (getConsentDocument() as ORKConsentDocument)
       consentDocument?.htmlReviewContent = reviewConsent?.signatureContent
       consentDocument?.signaturePageContent = NSLocalizedString(
-        kSignaturePageContentText, comment: "")
+        kSignaturePageContentText,
+        comment: ""
+      )
 
       // Initialize review Step
       reviewConsentStep = ConsentReviewStep(
         identifier: kReviewTitle,
         signature: (getConsentDocument() as ORKConsentDocument).signatures?[0],
-        in: getConsentDocument())
+        in: getConsentDocument()
+      )
 
     } else {
       // create Consent Document
       let consentDocument: ORKConsentDocument? = (getConsentDocument() as ORKConsentDocument)
       consentDocument?.signaturePageContent = NSLocalizedString(
-        kSignaturePageContentText, comment: "")
+        kSignaturePageContentText,
+        comment: ""
+      )
 
       // Initialize review Step
       reviewConsentStep = ConsentReviewStep(
-        identifier: kReviewTitle, signature: consentDocument?.signatures?[0],
-        in: consentDocument!)
+        identifier: kReviewTitle,
+        signature: consentDocument?.signatures?[0],
+        in: consentDocument!
+      )
     }
 
     if Utilities.isValidValue(someObject: reviewConsent?.signatureTitle as AnyObject) {
@@ -290,13 +303,15 @@ class ConsentBuilder {
   func getConsentSharingStep() -> ConsentSharingStep? {
     if Utilities.isValidValue(someObject: sharingConsent?.shortDesc as AnyObject),
       Utilities.isValidValue(someObject: sharingConsent?.longDesc as AnyObject),
-      Utilities.isValidValue(someObject: sharingConsent?.learnMore as AnyObject) {
+      Utilities.isValidValue(someObject: sharingConsent?.learnMore as AnyObject)
+    {
       // create shareStep
       let sharingConsentStep = ConsentSharingStep(
         identifier: kConsentSharing,
         investigatorShortDescription: (sharingConsent?.shortDesc)!,
         investigatorLongDescription: (sharingConsent?.longDesc)!,
-        localizedLearnMoreHTMLContent: (sharingConsent?.learnMore)!)
+        localizedLearnMoreHTMLContent: (sharingConsent?.learnMore)!
+      )
 
       if Utilities.isValidValue(someObject: sharingConsent?.text as AnyObject) {
         sharingConsentStep.text = sharingConsent?.text
@@ -335,7 +350,8 @@ class ConsentBuilder {
     if comprehensionSteps != nil, (comprehensionSteps?.count)! > 0 {
       // adding Instruction Step for Comprehenion
       let comprehensionTestInstructionStep = customInstructionStep(
-        identifier: kComprehensionInstructionStepIdentifier)
+        identifier: kComprehensionInstructionStepIdentifier
+      )
       comprehensionTestInstructionStep.text = kConsentComprehensionTestText
 
       comprehensionTestInstructionStep.title = kConsentComprehensionTestTitle
@@ -348,7 +364,8 @@ class ConsentBuilder {
 
       // adding Completion Step
       let comprehensionCompletionStep = customInstructionStep(
-        identifier: kComprehensionCompletionStepIdentifier)
+        identifier: kComprehensionCompletionStepIdentifier
+      )
       comprehensionCompletionStep.text = kComprehensionCompletionText
 
       comprehensionCompletionStep.title = kComprehensionCompletionTitle
@@ -365,7 +382,8 @@ class ConsentBuilder {
 
     // PDF Generation Step
     let consentCompletionStep = ConsentCompletionStep(
-      identifier: kConsentSharePdfCompletionStep)
+      identifier: kConsentSharePdfCompletionStep
+    )
     consentCompletionStep.mainTitle = kConsentCompletionMainTitle
     consentCompletionStep.subTitle = kConsentCompletionSubTitle
 
@@ -382,7 +400,9 @@ class ConsentBuilder {
       // stepArray?.append(completionStep)
 
       let task = ORKNavigableOrderedTask(
-        identifier: kConsentTaskIdentifierText, steps: stepArray)
+        identifier: kConsentTaskIdentifierText,
+        steps: stepArray
+      )
       return task
     } else {
       return nil
@@ -463,15 +483,18 @@ struct ReviewConsent {
       }
 
       if Utilities.isValidValue(
-        someObject: dict[kConsentReviewStepSignatureTitle] as AnyObject) {
+        someObject: dict[kConsentReviewStepSignatureTitle] as AnyObject
+      ) {
         signatureTitle = dict[kConsentReviewStepSignatureTitle] as? String
       }
       if Utilities.isValidValue(
-        someObject: dict[kConsentReviewStepSignatureContent] as AnyObject) {
+        someObject: dict[kConsentReviewStepSignatureContent] as AnyObject
+      ) {
         signatureContent = dict[kConsentReviewStepSignatureContent] as? String
       }
       if Utilities.isValidValue(
-        someObject: dict[kConsentReviewStepReasonForConsent] as AnyObject) {
+        someObject: dict[kConsentReviewStepReasonForConsent] as AnyObject
+      ) {
         reasonForConsent = dict[kConsentReviewStepReasonForConsent] as? String
       }
     }
@@ -506,11 +529,13 @@ struct Comprehension {
       }
 
       if Utilities.isValidObject(
-        someObject: dict[kConsentComprehensionQuestions] as AnyObject) {
+        someObject: dict[kConsentComprehensionQuestions] as AnyObject
+      ) {
         questions = dict[kConsentComprehensionQuestions] as? [[String: Any]]
       }
       if Utilities.isValidObject(
-        someObject: dict[kConsentComprehensionCorrectAnswers] as AnyObject) {
+        someObject: dict[kConsentComprehensionCorrectAnswers] as AnyObject
+      ) {
         correctAnswers = dict[kConsentComprehensionCorrectAnswers] as? [[String: Any]]
       }
     }

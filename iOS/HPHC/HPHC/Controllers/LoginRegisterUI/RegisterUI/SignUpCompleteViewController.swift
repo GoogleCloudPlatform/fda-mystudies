@@ -97,7 +97,8 @@ class SignUpCompleteViewController: UIViewController {
     let storyboard = UIStoryboard(name: kStoryboardIdentifierGateway, bundle: nil)
 
     let fda = storyboard.instantiateViewController(
-      withIdentifier: kStoryboardIdentifierSlideMenuVC)
+      withIdentifier: kStoryboardIdentifierSlideMenuVC
+    )
       as! FDASlideMenuViewController
     self.navigationController?.pushViewController(fda, animated: true)
   }
@@ -132,6 +133,7 @@ extension SignUpCompleteViewController: NMWebServiceDelegate {
 
     UIUtilities.showAlertWithTitleAndMessage(
       title: NSLocalizedString(kErrorTitle, comment: "") as NSString,
-      message: error.localizedDescription as NSString)
+      message: error.localizedDescription as NSString
+    )
   }
 }

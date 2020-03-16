@@ -59,7 +59,9 @@ class GatewayResourceDetailViewController: UIViewController {
 
         activityIndicator = UIActivityIndicatorView(style: .gray)
         activityIndicator.center = CGPoint(
-          x: self.view.frame.midX, y: self.view.frame.midY-100)
+          x: self.view.frame.midX,
+          y: self.view.frame.midY - 100
+        )
 
         self.view.addSubview(activityIndicator)
 
@@ -72,7 +74,9 @@ class GatewayResourceDetailViewController: UIViewController {
             if self.resource?.file?.localPath == "BundlePath" {
 
               let path = Bundle.main.path(
-                forResource: self.resource?.file?.link!, ofType: ".pdf")
+                forResource: self.resource?.file?.link!,
+                ofType: ".pdf"
+              )
               self.loadWebViewWithPath(path: path!)
             } else {
               let path = resourcesDownloadPath + "/" + (
@@ -100,7 +104,8 @@ class GatewayResourceDetailViewController: UIViewController {
   func loadWebViewWithPath(path: String) {
 
     let url: URL? = URL.init(
-      string: path.addingPercentEncoding(withAllowedCharacters: .urlPathAllowed)!)
+      string: path.addingPercentEncoding(withAllowedCharacters: .urlPathAllowed)!
+    )
     let urlRequest = URLRequest(url: url!)
     webView?.loadRequest(urlRequest)
   }
@@ -108,8 +113,11 @@ class GatewayResourceDetailViewController: UIViewController {
   func loadWebViewWithData(data: Data) {
 
     self.webView?.load(
-      data, mimeType: "application/pdf", textEncodingName: "UTF-8",
-      baseURL: URL.init(fileURLWithPath: ""))
+      data,
+      mimeType: "application/pdf",
+      textEncodingName: "UTF-8",
+      baseURL: URL.init(fileURLWithPath: "")
+    )
 
   }
 
@@ -117,7 +125,10 @@ class GatewayResourceDetailViewController: UIViewController {
 
     if !FileManager.default.fileExists(atPath: resourcesDownloadPath) {
       try! FileManager.default.createDirectory(
-        atPath: resourcesDownloadPath, withIntermediateDirectories: true, attributes: nil)
+        atPath: resourcesDownloadPath,
+        withIntermediateDirectories: true,
+        attributes: nil
+      )
     }
     Logger.sharedInstance.error("custom download path: \(resourcesDownloadPath)")
 
@@ -129,7 +140,8 @@ class GatewayResourceDetailViewController: UIViewController {
 
     fileName = AKUtility.getUniqueFileNameWithPath(
       (resourcesDownloadPath as NSString).appendingPathComponent(fileName as String)
-        as NSString)
+        as NSString
+    )
 
     let fdm = FileDownloadManager()
     fdm.delegate = self
@@ -139,7 +151,10 @@ class GatewayResourceDetailViewController: UIViewController {
     }  // Tush
 
     fdm.downloadFile(
-      fileName as String, fileURL: encodedUrl, destinationPath: resourcesDownloadPath)
+      fileName as String,
+      fileURL: encodedUrl,
+      destinationPath: resourcesDownloadPath
+    )
   }
 
   // MARK: Button Actions
@@ -172,17 +187,22 @@ extension GatewayResourceDetailViewController: UIWebViewDelegate {
 
     let buttonTitleOK = NSLocalizedString("OK", comment: "")
     let alert = UIAlertController(
-      title: NSLocalizedString(kTitleError, comment: ""), message: error.localizedDescription,
-      preferredStyle: UIAlertController.Style.alert)
+      title: NSLocalizedString(kTitleError, comment: ""),
+      message: error.localizedDescription,
+      preferredStyle: UIAlertController.Style.alert
+    )
 
     alert.addAction(
       UIAlertAction.init(
-        title: buttonTitleOK, style: .default,
+        title: buttonTitleOK,
+        style: .default,
         handler: { (_) in
 
           self.dismiss(animated: true, completion: nil)
 
-        }))
+        }
+      )
+    )
 
     self.present(alert, animated: true, completion: nil)
 
@@ -204,10 +224,15 @@ extension GatewayResourceDetailViewController: MFMailComposeViewControllerDelega
 
         do {
           let file = Bundle.main.url(
-            forResource: self.resource?.file?.link!, withExtension: "pdf")
+            forResource: self.resource?.file?.link!,
+            withExtension: "pdf"
+          )
           let data = try Data(contentsOf: file!)
           composeVC.addAttachmentData(
-            data, mimeType: "application/pdf", fileName: (resource?.file?.name)!)
+            data,
+            mimeType: "application/pdf",
+            fileName: (resource?.file?.name)!
+          )
         } catch {
           Logger.sharedInstance.error("Resource file content error: ", error.localizedDescription)
         }
@@ -218,7 +243,10 @@ extension GatewayResourceDetailViewController: MFMailComposeViewControllerDelega
         let data = FileDownloadManager.decrytFile(pathURL: URL.init(string: fullPath))
 
         composeVC.addAttachmentData(
-          data!, mimeType: "application/pdf", fileName: (resource?.file?.name)!)
+          data!,
+          mimeType: "application/pdf",
+          fileName: (resource?.file?.name)!
+        )
       }
 
     } else {
@@ -230,23 +258,29 @@ extension GatewayResourceDetailViewController: MFMailComposeViewControllerDelega
 
     } else {
       let alert = UIAlertController(
-        title: NSLocalizedString(kTitleError, comment: ""), message: "",
-        preferredStyle: UIAlertController.Style.alert)
+        title: NSLocalizedString(kTitleError, comment: ""),
+        message: "",
+        preferredStyle: UIAlertController.Style.alert
+      )
 
       alert.addAction(
         UIAlertAction.init(
-          title: NSLocalizedString("OK", comment: ""), style: .default,
+          title: NSLocalizedString("OK", comment: ""),
+          style: .default,
           handler: { (_) in
 
             self.dismiss(animated: true, completion: nil)
 
-          }))
+          }
+        )
+      )
     }
   }
 
   func mailComposeController(
     _ controller: MFMailComposeViewController,
-    didFinishWith result: MFMailComposeResult, error: Error?
+    didFinishWith result: MFMailComposeResult,
+    error: Error?
   ) {
     self.isEmailComposerPresented = true
     controller.dismiss(animated: true, completion: nil)
@@ -270,7 +304,9 @@ extension GatewayResourceDetailViewController: FileDownloadManagerDelegates {
       self.resource?.file?.localPath = path
       let mimeType = "application/" + "\((self.resource?.file?.mimeType?.rawValue)!)"
       self.webView?.load(
-        data!, mimeType: mimeType, textEncodingName: "UTF-8",
+        data!,
+        mimeType: mimeType,
+        textEncodingName: "UTF-8",
         baseURL: URL.init(fileURLWithPath: "")
       )
     }

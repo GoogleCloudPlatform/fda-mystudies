@@ -49,12 +49,14 @@ class Schedule {
 
       if Utilities.isValidValue(someObject: detail[kActivityStartTime] as AnyObject) {
         self.startTime = Utilities.getDateFromString(
-          dateString: detail[kActivityStartTime] as! String)
+          dateString: detail[kActivityStartTime] as! String
+        )
       }
 
       if Utilities.isValidValue(someObject: detail[kActivityEndTime] as AnyObject) {
         self.endTime = Utilities.getDateFromString(
-          dateString: detail[kActivityEndTime] as! String)
+          dateString: detail[kActivityEndTime] as! String
+        )
       }
 
       if Utilities.isValidValue(someObject: detail[kActivityFrequency] as AnyObject) {
@@ -86,7 +88,8 @@ class Schedule {
   func getRunsForActivity(activity: Activity, handler: @escaping ([ActivityRun]) -> Void) {
 
     // get joiningDate
-    let studyStatus = User.currentUser.participatedStudies.filter({ $0.studyId == activity.studyId }).last
+    let studyStatus = User.currentUser.participatedStudies.filter({ $0.studyId == activity.studyId }
+    ).last
 
     let joiningDate = studyStatus?.joiningDate.utcDate()
     let start = activity.startDate?.utcDate()
@@ -189,11 +192,17 @@ class Schedule {
 
     // first day
     var runStartDate = calendar.date(
-      byAdding: .weekday, value: (targetDay - dayOfWeek), to: updatedStartTime)
+      byAdding: .weekday,
+      value: (targetDay - dayOfWeek),
+      to: updatedStartTime
+    )
     var runId = 1
     while runStartDate?.compare(updatedEndTime!) == .orderedAscending {
       var runEndDate = calendar.date(
-        byAdding: .second, value: ((7*86400) - 1), to: runStartDate!)
+        byAdding: .second,
+        value: ((7 * 86400) - 1),
+        to: runStartDate!
+      )
       if runEndDate?.compare(updatedEndTime!) == .orderedDescending {
         runEndDate = updatedEndTime
       }
@@ -223,7 +232,10 @@ class Schedule {
     var runId = 1
     while runStartDate.compare(updatedEndTime!) == .orderedAscending {
       let nextRunStartDate = calendar.date(
-        byAdding: .month, value: 1*runId, to: updatedStartTime)
+        byAdding: .month,
+        value: 1 * runId,
+        to: updatedStartTime
+      )
       var runEndDate = calendar.date(byAdding: .second, value: -1, to: nextRunStartDate!)
       // save range
       if runEndDate?.compare(updatedEndTime!) == .orderedDescending {
@@ -334,8 +346,8 @@ class Schedule {
 
         let anchorDate = activity.anchorDate?.anchorDateValue
 
-        let startDateInterval = TimeInterval(60*60*24*(startDays))
-        let endDateInterval = TimeInterval(60*60*24*(endDays))
+        let startDateInterval = TimeInterval(60 * 60 * 24 * (startDays))
+        let endDateInterval = TimeInterval(60 * 60 * 24 * (endDays))
 
         runStartDate = anchorDate?.addingTimeInterval(startDateInterval)
         runEndDate = anchorDate?.addingTimeInterval(endDateInterval)
@@ -360,12 +372,14 @@ class Schedule {
         // run start time creation
         let scheduledStartTime = timing[kScheduleStartTime]
         runStartDate = Utilities.getDateFromStringWithOutTimezone(
-          dateString: scheduledStartTime! as! String)
+          dateString: scheduledStartTime! as! String
+        )
 
         // run end time creation
         let scheduledEndTime = timing[kScheduleEndTime]
         runEndDate = Utilities.getDateFromStringWithOutTimezone(
-          dateString: scheduledEndTime! as! String)
+          dateString: scheduledEndTime! as! String
+        )
       }
       let offset = UserDefaults.standard.value(forKey: "offset") as? Int
       let updatedStartTime = runStartDate?.addingTimeInterval(TimeInterval(offset!))
@@ -477,7 +491,10 @@ class Schedule {
     let date2 = calendar.startOfDay(for: endDate)
 
     let components = calendar.dateComponents(
-      [Calendar.Component.weekOfYear], from: date1, to: date2)
+      [Calendar.Component.weekOfYear],
+      from: date1,
+      to: date2
+    )
     return components.weekOfYear! as Int
   }
 

@@ -91,7 +91,8 @@ class StudyListCell: UITableViewCell {
     let foundRange = attributedString.mutableString.range(of: study.category!)
     attributedString.addAttributes(
       [NSAttributedString.Key.font: UIFont(name: "HelveticaNeue-Bold", size: 12)!],
-      range: foundRange)
+      range: foundRange
+    )
     labelStudySponserName?.attributedText = attributedString
 
     studyLogoImage?.image = #imageLiteral(resourceName: "placeholder")
@@ -133,7 +134,8 @@ class StudyListCell: UITableViewCell {
   func setUserStatusForStudy(study: Study) {
     let currentUser = User.currentUser
     if let userStudyStatus = currentUser.participatedStudies.filter({ $0.studyId == study.studyId })
-      .first {
+      .first
+    {
 
       // assign to study
       study.userParticipateState = userStudyStatus
@@ -153,8 +155,8 @@ class StudyListCell: UITableViewCell {
       // update completion %
       self.labelCompletionValue?.text = String(userStudyStatus.completion) + "%"
       self.labelAdherenceValue?.text = String(userStudyStatus.adherence) + "%"
-      self.progressBarCompletion?.progress = Float(userStudyStatus.completion)/100
-      self.progressBarAdherence?.progress = Float(userStudyStatus.adherence)/100
+      self.progressBarCompletion?.progress = Float(userStudyStatus.completion) / 100
+      self.progressBarAdherence?.progress = Float(userStudyStatus.adherence) / 100
 
       switch userStudyStatus.status {
       case .inProgress:
@@ -186,9 +188,14 @@ class StudyListCell: UITableViewCell {
     let placeholderImage = #imageLiteral(resourceName: "placeholder")
     // Update study logo using SDWEBImage and cache it.
     if let logoURLString = study.logoURL,
-      let url = URL(string: logoURLString) {
+      let url = URL(string: logoURLString)
+    {
       studyLogoImage?.sd_setImage(
-        with: url, placeholderImage: placeholderImage, options: .fromCacheOnly, completed: nil)
+        with: url,
+        placeholderImage: placeholderImage,
+        options: .fromCacheOnly,
+        completed: nil
+      )
     } else {
       studyLogoImage?.image = placeholderImage
     }

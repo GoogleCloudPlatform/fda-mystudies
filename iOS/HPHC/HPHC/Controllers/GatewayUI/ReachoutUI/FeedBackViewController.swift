@@ -67,13 +67,16 @@ class FeedBackViewController: UIViewController {
 
     if FeedbackDetail.subject.isEmpty && FeedbackDetail.feedback.isEmpty {
       UIUtilities.showAlertWithMessage(
-        alertMessage: NSLocalizedString(kMessageAllFieldsAreEmpty, comment: ""))
+        alertMessage: NSLocalizedString(kMessageAllFieldsAreEmpty, comment: "")
+      )
     } else if FeedbackDetail.subject.isEmpty {
       UIUtilities.showAlertWithMessage(
-        alertMessage: NSLocalizedString("Please enter message", comment: ""))
+        alertMessage: NSLocalizedString("Please enter message", comment: "")
+      )
     } else if FeedbackDetail.feedback.isEmpty {
       UIUtilities.showAlertWithMessage(
-        alertMessage: NSLocalizedString("Please provide your feedback", comment: ""))
+        alertMessage: NSLocalizedString("Please provide your feedback", comment: "")
+      )
     } else {
       WCPServices().sendUserFeedback(delegate: self)
     }
@@ -93,12 +96,16 @@ extension FeedBackViewController: UITableViewDataSource {
 
     if indexPath.row == 0 {
       cell = tableView.dequeueReusableCell(
-        withIdentifier: kFeedbackTableViewCellIdentifier1, for: indexPath)
+        withIdentifier: kFeedbackTableViewCellIdentifier1,
+        for: indexPath
+      )
         as! FeedBackTableViewCell
 
     } else if indexPath.row == 1 {
       let cell = tableView.dequeueReusableCell(
-        withIdentifier: kContactUsTableViewCellIdentifier, for: indexPath)
+        withIdentifier: kContactUsTableViewCellIdentifier,
+        for: indexPath
+      )
         as! ContactUsTableViewCell
       cell.textFieldValue?.tag = indexPath.row
       return cell
@@ -176,8 +183,10 @@ extension FeedBackViewController: NMWebServiceDelegate {
     self.removeProgressIndicator()
 
     UIUtilities.showAlertMessageWithActionHandler(
-      "", message: NSLocalizedString(kMessageFeedbackSubmittedSuccessfuly, comment: ""),
-      buttonTitle: kTitleOk, viewControllerUsed: self
+      "",
+      message: NSLocalizedString(kMessageFeedbackSubmittedSuccessfuly, comment: ""),
+      buttonTitle: kTitleOk,
+      viewControllerUsed: self
     ) {
       _ = self.navigationController?.popViewController(animated: true)
     }
@@ -189,6 +198,7 @@ extension FeedBackViewController: NMWebServiceDelegate {
     Logger.sharedInstance.info("requestname : \(requestName)")
     UIUtilities.showAlertWithTitleAndMessage(
       title: NSLocalizedString("Error", comment: "") as NSString,
-      message: error.localizedDescription as NSString)
+      message: error.localizedDescription as NSString
+    )
   }
 }

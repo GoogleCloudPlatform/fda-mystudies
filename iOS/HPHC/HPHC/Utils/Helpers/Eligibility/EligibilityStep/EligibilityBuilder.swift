@@ -28,24 +28,24 @@ let kEligibilityInEligibleScreen = "InEligibleScreen"
 let kEligibilityInEligibleDescriptionText = "Sorry, You are Ineligible"
 
 let kEligibilityVerifiedScreen = "VerifiedScreen"
-let kEligibilityCompletionDescriptionText
-  = "Your enrollment token has been successfully validated. You are eligible to join the Study.\nPlease click Continue to proceed to the Consent section."
+let kEligibilityCompletionDescriptionText =
+  "Your enrollment token has been successfully validated. You are eligible to join the Study.\nPlease click Continue to proceed to the Consent section."
 let kEligibilityCompletionTitle = "You are Eligible!"
 
 let kEligibilityStep = "steps"
 
 let kEligibilityValidateScreen = "ValidatedScreen"
-let kEligibilityValidationDescriptionText
-  = "Your token has been validated. You are eligible to join the study. Please tap Get Started to proceed to the consent section."
+let kEligibilityValidationDescriptionText =
+  "Your token has been validated. You are eligible to join the study. Please tap Get Started to proceed to the consent section."
 let kEligibilityValidationTitle = "Validated!"
 
 let kEligibilityTestInstructionStep = "EligibilityTestInstructionStep"
 let kEligibilityTestInstructionTestTitle = "Eligibility Test"
-let kEligibilityInstructionTestText
-  = "Please answer some quick questions to confirm your eligibility for this study."
+let kEligibilityInstructionTestText =
+  "Please answer some quick questions to confirm your eligibility for this study."
 
-let kEligibilityCompletionTestDescriptionText
-  = "Based on the answers you provided, you are eligible to participate in this study.\nPlease click Continue to proceed to the Consent section."
+let kEligibilityCompletionTestDescriptionText =
+  "Based on the answers you provided, you are eligible to participate in this study.\nPlease click Continue to proceed to the Consent section."
 
 let kEligibilityCorrectAnswer = "answer"
 let kEligibilityCorrectAnswerKey = "key"
@@ -92,7 +92,8 @@ class EligibilityBuilder {
       self.type = EligibilityStepType(rawValue: eligibilityDict[kEligibilityType] as! String)
     }
     if Utilities.isValidObject(
-      someObject: eligibilityDict[kEligibilityCorrectAnswers] as AnyObject) {
+      someObject: eligibilityDict[kEligibilityCorrectAnswers] as AnyObject
+    ) {
       self.correctAnswers = eligibilityDict[kEligibilityCorrectAnswers] as? [[String: Any]]
     }
     if Utilities.isValidValue(someObject: eligibilityDict[kEligibilityTokenTitle] as AnyObject?) {
@@ -111,7 +112,8 @@ class EligibilityBuilder {
 
         // creating Eligibility Token Step
         let eligibilityStep: EligibilityStep? = EligibilityStep(
-          identifier: kEligibilityTokenStep)
+          identifier: kEligibilityTokenStep
+        )
         eligibilityStep?.type = "TOKEN"
 
         if self.tokenTitle != nil {
@@ -122,7 +124,8 @@ class EligibilityBuilder {
 
         // creating Token Validated Step
         let eligibilityValidationStep = customInstructionStep(
-          identifier: kEligibilityValidateScreen)
+          identifier: kEligibilityValidateScreen
+        )
         eligibilityValidationStep.text = kEligibilityValidationDescriptionText
 
         // Branding
@@ -140,7 +143,8 @@ class EligibilityBuilder {
         // add the Instruction step for eligibility Test
 
         let eligibilityTestInstructionStep = customInstructionStep(
-          identifier: kEligibilityTestInstructionStep)
+          identifier: kEligibilityTestInstructionStep
+        )
         eligibilityTestInstructionStep.text = kEligibilityInstructionTestText
 
         eligibilityTestInstructionStep.title = kEligibilityTestInstructionTestTitle
@@ -157,7 +161,8 @@ class EligibilityBuilder {
         // creating InEligibility Completion Step
 
         let eligibilityCompletionStep: InEligibilityStep? = InEligibilityStep(
-          identifier: kInEligibilityStep)
+          identifier: kInEligibilityStep
+        )
 
         stepsArray?.append(eligibilityCompletionStep!)
 
@@ -166,7 +171,8 @@ class EligibilityBuilder {
 
         // creating Token Step
         let eligibilityStep: EligibilityStep? = EligibilityStep(
-          identifier: kEligibilityTokenStep)
+          identifier: kEligibilityTokenStep
+        )
         eligibilityStep?.type = "TOKEN"
 
         if self.tokenTitle != nil {
@@ -176,7 +182,8 @@ class EligibilityBuilder {
 
         // add the Instruction step for eligibility Test
         let eligibilityTestInstructionStep = customInstructionStep(
-          identifier: kEligibilityTestInstructionStep)
+          identifier: kEligibilityTestInstructionStep
+        )
         eligibilityTestInstructionStep.text = kEligibilityInstructionTestText
 
         eligibilityTestInstructionStep.title = kEligibilityTestInstructionTestTitle
@@ -195,7 +202,8 @@ class EligibilityBuilder {
 
         // creating InEligibility Completion Step
         let eligibilityCompletionStep: InEligibilityStep? = InEligibilityStep(
-          identifier: kInEligibilityStep)
+          identifier: kInEligibilityStep
+        )
 
         stepsArray?.append(eligibilityCompletionStep!)
       }
@@ -206,7 +214,8 @@ class EligibilityBuilder {
 
           // creating Eligibility Completion Step
           let eligibilityCompletionStep = customInstructionStep(
-            identifier: kEligibilityVerifiedScreen)
+            identifier: kEligibilityVerifiedScreen
+          )
           eligibilityCompletionStep.text = kEligibilityCompletionTestDescriptionText
 
           eligibilityCompletionStep.title = kEligibilityCompletionTitle

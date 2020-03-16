@@ -77,11 +77,13 @@ class ViewController: UIViewController {
     taskViewController = ORKTaskViewController(task: task, taskRun: nil)
     taskViewController?.delegate = self
     taskViewController?.outputDirectory = FileManager.default.urls(
-      for: .documentDirectory, in: .userDomainMask).first!
+      for: .documentDirectory,
+      in: .userDomainMask
+    ).first!
     setNeedsStatusBarAppearanceUpdate()
 
-    UIView.appearance(whenContainedInInstancesOf: [ORKTaskViewController.self]).tintColor
-      = kUIColorForSubmitButtonBackground
+    UIView.appearance(whenContainedInInstancesOf: [ORKTaskViewController.self]).tintColor =
+      kUIColorForSubmitButtonBackground
     taskViewController?.navigationBar.prefersLargeTitles = false
     taskViewController?.modalPresentationStyle = .fullScreen
     present(taskViewController!, animated: true, completion: nil)
@@ -104,17 +106,21 @@ class ViewController: UIViewController {
         let taskViewController: ORKTaskViewController?
 
         if Utilities.isValidObject(
-          someObject: dataDict?["Result"] as? [String: Any] as AnyObject?) {
+          someObject: dataDict?["Result"] as? [String: Any] as AnyObject?
+        ) {
 
           activityBuilder?.initActivityWithDict(
-            dict: dataDict?["Result"] as! [String: Any])
+            dict: dataDict?["Result"] as! [String: Any]
+          )
 
           task = activityBuilder?.createTask()
 
           taskViewController = ORKTaskViewController(task: task, taskRun: nil)
           taskViewController?.delegate = self
           taskViewController?.outputDirectory = FileManager.default.urls(
-            for: .documentDirectory, in: .userDomainMask).first!
+            for: .documentDirectory,
+            in: .userDomainMask
+          ).first!
 
           setNeedsStatusBarAppearanceUpdate()
           taskViewController?.navigationBar.prefersLargeTitles = false
@@ -139,7 +145,7 @@ class ViewController: UIViewController {
 
         if Utilities.isValidObject(someObject: responseArray) {
 
-          for i in 0 ..< responseArray.count {
+          for i in 0..<responseArray.count {
 
             if Utilities.isValidObject(someObject: responseArray[i] as AnyObject?) {
               let resource: Resource? = Resource()
@@ -214,13 +220,15 @@ extension ViewController: ORKTaskViewControllerDelegate {
   // MARK: ORKTaskViewController Delegate
 
   func taskViewControllerSupportsSaveAndRestore(_ taskViewController: ORKTaskViewController)
-    -> Bool {
+    -> Bool
+  {
     return true
   }
 
   public func taskViewController(
     _ taskViewController: ORKTaskViewController,
-    didFinishWith reason: ORKTaskViewControllerFinishReason, error: Error?
+    didFinishWith reason: ORKTaskViewControllerFinishReason,
+    error: Error?
   ) {
 
     //var taskResult: Any?
@@ -251,10 +259,12 @@ extension ViewController: ORKTaskViewControllerDelegate {
 
     if taskViewController.task?.identifier == "ConsentTask" {
       consentbuilder?.consentResult?.initWithORKTaskResult(
-        taskResult: taskViewController.result)
+        taskResult: taskViewController.result
+      )
     } else {
       activityBuilder?.actvityResult?.initWithORKTaskResult(
-        taskResult: taskViewController.result)
+        taskResult: taskViewController.result
+      )
     }
 
     taskViewController.dismiss(animated: true, completion: nil)
@@ -268,8 +278,10 @@ extension ViewController: ORKTaskViewControllerDelegate {
 
     if (taskViewController.result.results?.count)! > 1 {
 
-      if activityBuilder?.actvityResult?.result?.count == taskViewController.result.results?
-        .count {
+      if activityBuilder?.actvityResult?.result?.count
+        == taskViewController.result.results?
+        .count
+      {
         activityBuilder?.actvityResult?.result?.removeLast()
       } else {
 
@@ -277,13 +289,15 @@ extension ViewController: ORKTaskViewControllerDelegate {
           taskViewController.result.results?.count
         )! {
 
-          let orkStepResult: ORKStepResult? = taskViewController.result.results?[
-            (taskViewController.result.results?.count)! - 2] as! ORKStepResult?
+          let orkStepResult: ORKStepResult? =
+            taskViewController.result.results?[
+              (taskViewController.result.results?.count)! - 2] as! ORKStepResult?
           let activityStepResult: ActivityStepResult? = ActivityStepResult()
 
           activityStepResult?.initWithORKStepResult(
             stepResult: orkStepResult! as ORKStepResult,
-            activityType: (activityBuilder?.actvityResult?.activity?.type)!)
+            activityType: (activityBuilder?.actvityResult?.activity?.type)!
+          )
           activityBuilder?.actvityResult?.result?.append(activityStepResult!)
 
         }
@@ -304,19 +318,22 @@ extension ViewController: ORKTaskViewControllerDelegate {
   }
 
   public func stepViewControllerDidFail(
-    _ stepViewController: ORKStepViewController, withError error: Error?
+    _ stepViewController: ORKStepViewController,
+    withError error: Error?
   ) {
 
   }
 
   func taskViewController(
-    _ taskViewController: ORKTaskViewController, viewControllerFor step: ORKStep
+    _ taskViewController: ORKTaskViewController,
+    viewControllerFor step: ORKStep
   ) -> ORKStepViewController? {
 
     if step.identifier == "FetalKickCounter" {
 
       let ttController = self.storyboard?.instantiateViewController(
-        withIdentifier: "FetalKickCounterStepViewController")
+        withIdentifier: "FetalKickCounterStepViewController"
+      )
         as! FetalKickCounterStepViewController
       ttController.step = step
 

@@ -16,8 +16,8 @@
 // OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 // OTHER DEALINGS IN THE SOFTWARE.
 
-import UIKit
 import ResearchKit
+import UIKit
 
 /// A value type whose instances will have Other Choice configuration in TextChoiceQuestionStep .
 struct OtherChoice {
@@ -45,9 +45,14 @@ struct OtherChoice {
   let value: String
 
   init(
-    isShowOtherCell: Bool = false, isShowOtherField: Bool = true, otherTitle: String = "Other",
-    placeholder: String = "enter here", isMandatory: Bool = true, isExclusive: Bool = false,
-    detailText: String = "", value: String = ""
+    isShowOtherCell: Bool = false,
+    isShowOtherField: Bool = true,
+    otherTitle: String = "Other",
+    placeholder: String = "enter here",
+    isMandatory: Bool = true,
+    isExclusive: Bool = false,
+    detailText: String = "",
+    value: String = ""
   ) {
     self.isShowOtherField = isShowOtherField
     self.otherTitle = otherTitle
@@ -67,7 +72,10 @@ class QuestionStep: ORKQuestionStep {
   lazy var otherChoice = OtherChoice()
 
   init(
-    identifier: String, title: String?, question: String, answer: ORKAnswerFormat,
+    identifier: String,
+    title: String?,
+    question: String,
+    answer: ORKAnswerFormat,
     otherChoice: OtherChoice
   ) {
     super.init(identifier: identifier)
@@ -117,7 +125,7 @@ class TextChoiceQuestionController: ORKQuestionStepViewController {
       if self.otherChoice.isShowOtherField {
         otherChoiceDict = [
           "other": otherChoice.otherTitle, "text": otherChoice.otherChoiceText,
-          "otherValue": otherChoice.value
+          "otherValue": otherChoice.value,
         ]
       } else {
         otherChoiceDict = ["other": otherChoice.otherTitle, "otherValue": otherChoice.value]
@@ -181,15 +189,17 @@ class TextChoiceQuestionController: ORKQuestionStepViewController {
 
     if let stepResult = (result as? ORKStepResult),
       let choiceResult = stepResult.result(forIdentifier: step.identifier)
-      as? ORKChoiceQuestionResult,
-      let choices = choiceResult.choiceAnswers {
+        as? ORKChoiceQuestionResult,
+      let choices = choiceResult.choiceAnswers
+    {
 
       for choice in choices {
 
         if let choice = choice as? String {
           self.answers?.append(choice)
         } else if let choiceDict = choice as? JSONDictionary,
-          let otherChoice = choiceDict["text"] as? String {
+          let otherChoice = choiceDict["text"] as? String
+        {
           self.answers?.append(otherChoice)
         }
       }
@@ -251,7 +261,8 @@ class TextChoiceQuestionController: ORKQuestionStepViewController {
     if let answers = self.answers {
       for answer in answers {
         if let selectedChoice = self.textChoices.filter({ $0.value as! String == answer })
-          .first {
+          .first
+        {
           self.selectedChoices.append(selectedChoice)
         } else {  // unable to find the answer in textchoices, perhaps other choice was selected
           self.isOtherCellSelected = true
@@ -278,7 +289,10 @@ class TextChoiceQuestionController: ORKQuestionStepViewController {
     if let nextBtn = self.view.allSubViewsOf(type: ORKContinueButton.self).last {
       self.continueBtn = nextBtn
       continueBtn?.addTarget(
-        self, action: #selector(didTapOnDoneOrNextBtn), for: .touchUpInside)
+        self,
+        action: #selector(didTapOnDoneOrNextBtn),
+        for: .touchUpInside
+      )
     } else {
       fatalError("Couldn't able to find continue Button")
     }
@@ -311,11 +325,17 @@ class TextChoiceQuestionController: ORKQuestionStepViewController {
       NSLayoutConstraint.activate(
         [
           questionLbl.topAnchor.constraint(
-            equalTo: newHeaderView.topAnchor, constant: 12),
+            equalTo: newHeaderView.topAnchor,
+            constant: 12
+          ),
           questionLbl.leadingAnchor.constraint(
-            equalTo: newHeaderView.leadingAnchor, constant: 12),
+            equalTo: newHeaderView.leadingAnchor,
+            constant: 12
+          ),
           questionLbl.trailingAnchor.constraint(
-            equalTo: newHeaderView.trailingAnchor, constant: -12)
+            equalTo: newHeaderView.trailingAnchor,
+            constant: -12
+          ),
         ])
 
       newHeaderView.sizeToFit()
@@ -351,7 +371,7 @@ class TextChoiceQuestionController: ORKQuestionStepViewController {
       [
         textLabel.leftAnchor.constraint(equalTo: headerView.leftAnchor, constant: 8),
         textLabel.rightAnchor.constraint(equalTo: headerView.rightAnchor, constant: -16),
-        textLabel.centerYAnchor.constraint(equalTo: headerView.centerYAnchor)
+        textLabel.centerYAnchor.constraint(equalTo: headerView.centerYAnchor),
       ])
 
     return headerView
@@ -378,13 +398,19 @@ class TextChoiceQuestionController: ORKQuestionStepViewController {
       NSLayoutConstraint.activate(
         [
           searchBar.trailingAnchor.constraint(
-            equalTo: newHeaderView.trailingAnchor, constant: -5),
+            equalTo: newHeaderView.trailingAnchor,
+            constant: -5
+          ),
           searchBar.leadingAnchor.constraint(
-            equalTo: newHeaderView.leadingAnchor, constant: 5),
+            equalTo: newHeaderView.leadingAnchor,
+            constant: 5
+          ),
           searchBar.topAnchor.constraint(equalTo: questionLbl.bottomAnchor, constant: 10),
           searchBar.bottomAnchor.constraint(
-            lessThanOrEqualTo: newHeaderView.bottomAnchor, constant: -12),
-          searchBar.heightAnchor.constraint(equalToConstant: self.searchBarHeight)
+            lessThanOrEqualTo: newHeaderView.bottomAnchor,
+            constant: -12
+          ),
+          searchBar.heightAnchor.constraint(equalToConstant: self.searchBarHeight),
         ])
     }
 
@@ -397,9 +423,11 @@ class TextChoiceQuestionController: ORKQuestionStepViewController {
   /// - Parameter indexPath: Indexpath of the tableView cell to check.
   /// - Returns: A Bool value indicating if it's Other cell indexPath or not.
   private func isLastCell(indexPath: IndexPath) -> Bool {
-    if (indexPath.row == self.textChoices.count && !isSearching) || (
-      indexPath.row == self.searchChoices.count && isSearching
-    ) {
+    if (indexPath.row == self.textChoices.count && !isSearching)
+      || (
+        indexPath.row == self.searchChoices.count && isSearching
+      )
+    {
       return true
     } else {
       return false
@@ -420,9 +448,11 @@ class TextChoiceQuestionController: ORKQuestionStepViewController {
 
     @discardableResult
     func removeOtherChoiceIfExclusive() -> Bool {
-      if (self.otherChoice.isExclusive && self.isOtherCellSelected) || (
-        choice?.exclusive ?? false && isOtherCellSelected
-      ) {
+      if (self.otherChoice.isExclusive && self.isOtherCellSelected)
+        || (
+          choice?.exclusive ?? false && isOtherCellSelected
+        )
+      {
         self.isOtherCellSelected = false
         self.tableView?.reloadData()
         return true
@@ -502,17 +532,20 @@ class TextChoiceQuestionController: ORKQuestionStepViewController {
 
     if self.otherChoice.isMandatory,
       self.otherChoice.otherChoiceText == "" || self.otherChoice.otherChoiceText == " ",
-      self.isOtherCellSelected {
+      self.isOtherCellSelected
+    {
 
       let alertVC = UIAlertController(
         title: "Answer required",
         message: "Please provide an input for the text field too.",
-        preferredStyle: .alert)
+        preferredStyle: .alert
+      )
 
       let okAction = UIAlertAction(title: "Ok", style: .default) { [unowned self] (_) in
         alertVC.dismiss(animated: true, completion: nil)
         if let otherCell = self.tableView?.cellForRow(
-          at: IndexPath(row: self.textChoices.count, section: 0)) as? OtherTextChoiceCell {
+          at: IndexPath(row: self.textChoices.count, section: 0)
+        ) as? OtherTextChoiceCell {
           otherCell.otherField.becomeFirstResponder()
         }
         self.updateNextOrContinueBtnState()
@@ -589,7 +622,9 @@ extension TextChoiceQuestionController: UITableViewDataSource, UITableViewDelega
     // If it's last cell, return other cell : Perhaps, other option
     if isLastCell(indexPath: indexPath) {
       let cell = tableView.dequeueReusableCell(
-        withIdentifier: OtherTextChoiceCell.reuseIdentifier, for: indexPath)
+        withIdentifier: OtherTextChoiceCell.reuseIdentifier,
+        for: indexPath
+      )
         as! OtherTextChoiceCell
 
       cell.delegate = self
@@ -614,7 +649,9 @@ extension TextChoiceQuestionController: UITableViewDataSource, UITableViewDelega
     }
 
     if let cell = tableView.dequeueReusableCell(
-      withIdentifier: TextChoiceCell.reuseIdentifier, for: indexPath) as? TextChoiceCell {
+      withIdentifier: TextChoiceCell.reuseIdentifier,
+      for: indexPath
+    ) as? TextChoiceCell {
 
       var choice: ORKTextChoice!
 
@@ -690,7 +727,9 @@ extension TextChoiceQuestionController: UITableViewDataSource, UITableViewDelega
     let horPadding: CGFloat = 24
     if let question = self.questionStep?.question {
       height = question.estimatedLabelHeight(
-        labelWidth: tableView.frame.width - horPadding, font: self.questionFont)
+        labelWidth: tableView.frame.width - horPadding,
+        font: self.questionFont
+      )
         + verticalPadding
     }
 
@@ -721,7 +760,9 @@ extension TextChoiceQuestionController: UISearchBarDelegate {
     if searchText == "" {
       self.searchChoices = textChoices
     } else {
-      self.searchChoices = textChoices.filter({ $0.text.localizedLowercase.contains(searchText.localizedLowercase) })
+      self.searchChoices = textChoices.filter({
+        $0.text.localizedLowercase.contains(searchText.localizedLowercase)
+      })
     }
     self.tableView?.reloadData()
   }
@@ -759,7 +800,8 @@ extension TextChoiceQuestionController: UISearchBarDelegate {
       DispatchQueue.main.asyncAfter(deadline: deadlineTime) {
 
         if let cell = self.tableView?.cellForRow(
-          at: IndexPath(row: self.textChoices.count, section: 0)) as? OtherTextChoiceCell {
+          at: IndexPath(row: self.textChoices.count, section: 0)
+        ) as? OtherTextChoiceCell {
           if (cell.otherField?.text?.isEmpty ?? true) && self.otherChoice.isShowOtherField {
             cell.otherField.becomeFirstResponder()
           } else {

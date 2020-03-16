@@ -64,7 +64,8 @@ class ActivitiesTableViewCell: UITableViewCell {
   ///   - activity:  Access the value from Activity class.
   ///   - availablityStatus: Access the value from ActivityAvailabilityStatus enum.
   func populateCellDataWithActivity(
-    activity: Activity, availablityStatus: ActivityAvailabilityStatus
+    activity: Activity,
+    availablityStatus: ActivityAvailabilityStatus
   ) {
 
     self.availabilityStatus = availablityStatus
@@ -138,10 +139,11 @@ class ActivitiesTableViewCell: UITableViewCell {
     let currentUser = User.currentUser
 
     if let userActivityStatus = currentUser.participatedActivites.filter({
-        $0.activityId == activity.actvityId && $0.studyId == activity.studyId && $0
+      $0.activityId == activity.actvityId && $0.studyId == activity.studyId
+        && $0
           .activityRunId
           == String(activity.currentRunId)
-      }).first {
+    }).first {
 
       // assign to study
       activity.userParticipationStatus = userActivityStatus
@@ -230,12 +232,14 @@ class ActivitiesTableViewCell: UITableViewCell {
         let startTime = dict[kScheduleStartTime] as! String
         let runStartTime = ActivitiesTableViewCell.dailyFormatter.date(from: startTime)
         let runStartTimeAsString = ActivitiesTableViewCell.timeFormatter.string(
-          from: runStartTime!)
+          from: runStartTime!
+        )
         runStartTimingsList.append(runStartTimeAsString)
       }
       let runStartTime = runStartTimingsList.joined(separator: " | ")
       let dailyStartDate = ActivitiesTableViewCell.dailyActivityFormatter.string(
-        from: startDate!)
+        from: startDate!
+      )
       let endDate = ActivitiesTableViewCell.dailyActivityFormatter.string(from: endDate!)
       labelTime?.text = runStartTime + "\n" + dailyStartDate + " to " + endDate
 
@@ -277,9 +281,11 @@ class ActivitiesTableViewCell: UITableViewCell {
         runEndDate = activity.endDate
       }
       let currentRunStartDate = ActivitiesTableViewCell.oneTimeFormatter.string(
-        from: runStartDate!)
+        from: runStartDate!
+      )
       let currentRunEndDate = ActivitiesTableViewCell.oneTimeFormatter.string(
-        from: runEndDate!)
+        from: runEndDate!
+      )
       labelTime?.text = currentRunStartDate + " - " + currentRunEndDate
     }
   }

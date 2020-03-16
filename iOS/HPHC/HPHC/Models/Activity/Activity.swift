@@ -226,7 +226,8 @@ class Activity {
 
       if Utilities.isValidValue(someObject: infoDict[kActivityStartTime] as AnyObject) {
         self.startDate = Utilities.getDateFromStringWithOutTimezone(
-          dateString: (infoDict[kActivityStartTime] as? String)!)
+          dateString: (infoDict[kActivityStartTime] as? String)!
+        )
       }
       if Utilities.isValidValue(someObject: infoDict["schedulingType"] as AnyObject) {
         let scheduleValue = infoDict["schedulingType"] as? String ?? "Regular"
@@ -234,7 +235,8 @@ class Activity {
       }
       if Utilities.isValidValue(someObject: infoDict[kActivityEndTime] as AnyObject) {
         self.endDate = Utilities.getDateFromStringWithOutTimezone(
-          dateString: (infoDict[kActivityEndTime] as? String)!)
+          dateString: (infoDict[kActivityEndTime] as? String)!
+        )
       }
 
       if Utilities.isValidObject(someObject: infoDict[kActivityFrequency] as AnyObject?) {
@@ -242,18 +244,22 @@ class Activity {
         let frequencyDict: Dictionary = (infoDict[kActivityFrequency] as? [String: Any])!
 
         if Utilities.isValidObject(
-          someObject: frequencyDict[kActivityFrequencyRuns] as AnyObject) {
+          someObject: frequencyDict[kActivityFrequencyRuns] as AnyObject
+        ) {
           self.frequencyRuns = frequencyDict[kActivityFrequencyRuns] as? [[String: Any]]
         }
         if Utilities.isValidObject(
-          someObject: frequencyDict[kActivityManualAnchorRuns] as AnyObject) {
+          someObject: frequencyDict[kActivityManualAnchorRuns] as AnyObject
+        ) {
           self.anchorRuns = frequencyDict[kActivityManualAnchorRuns] as? [[String: Any]]
         }
 
         if Utilities.isValidValue(
-          someObject: frequencyDict[kActivityFrequencyType] as AnyObject) {
+          someObject: frequencyDict[kActivityFrequencyType] as AnyObject
+        ) {
           self.frequencyType = Frequency(
-            rawValue: (frequencyDict[kActivityFrequencyType] as? String)!)!
+            rawValue: (frequencyDict[kActivityFrequencyType] as? String)!
+          )!
         }
 
       }
@@ -265,7 +271,9 @@ class Activity {
       }
 
       let currentUser = User.currentUser
-      if let userActivityStatus = currentUser.participatedActivites.filter({ $0.activityId == self.actvityId && $0.studyId == self.studyId }).first {
+      if let userActivityStatus = currentUser.participatedActivites.filter({
+        $0.activityId == self.actvityId && $0.studyId == self.studyId
+      }).first {
         self.userParticipationStatus = userActivityStatus
 
       } else {
@@ -276,9 +284,11 @@ class Activity {
         self.taskSubType = (infoDict[kActivityTaskSubType] as? String)!
       }
 
-      if self.startDate != nil && (
-        self.schedulingType == .regular || self.anchorDate?.sourceType == "EnrollmentDate"
-      ) {
+      if self.startDate != nil
+        && (
+          self.schedulingType == .regular || self.anchorDate?.sourceType == "EnrollmentDate"
+        )
+      {
         self.calculateActivityRuns(studyId: self.studyId!)
       }
     }
@@ -326,11 +336,13 @@ class Activity {
 
     if Utilities.isValidObject(someObject: configurationDict as AnyObject?) {
       if Utilities.isValidValue(
-        someObject: configurationDict[kActivityBranching] as AnyObject) {
+        someObject: configurationDict[kActivityBranching] as AnyObject
+      ) {
         self.branching = configurationDict[kActivityBranching] as? Bool
       }
       if Utilities.isValidValue(
-        someObject: configurationDict[kActivityRandomization] as AnyObject) {
+        someObject: configurationDict[kActivityRandomization] as AnyObject
+      ) {
         self.randomization = configurationDict[kActivityId] as? Bool
       }
     }
@@ -350,7 +362,8 @@ class Activity {
       startDateStringEnrollment = (startDateStringEnrollment ?? "") + " "
         + startTimeEnrollment
       enrollmentDate = Utilities.findDateFromString(
-        dateString: startDateStringEnrollment ?? "")
+        dateString: startDateStringEnrollment ?? ""
+      )
 
       self.anchorDate?.anchorDateValue = enrollmentDate
       let lifeTime = self.updateLifeTime(self.anchorDate!, frequency: self.frequencyType)
@@ -414,7 +427,8 @@ class Activity {
         if runs.count > 0 {
           self.activityRuns = runs
         }
-      })
+      }
+    )
   }
 
   /// Returns the RestortionData which is of type Data
@@ -450,36 +464,39 @@ class Activity {
     switch frequency {
     case .One_Time:
 
-      let startDateInterval = TimeInterval(60*60*24*(self.anchorDate?.startDays)!)
-      let endDateInterval = TimeInterval(60*60*24*(self.anchorDate?.endDays)!)
+      let startDateInterval = TimeInterval(60 * 60 * 24 * (self.anchorDate?.startDays)!)
+      let endDateInterval = TimeInterval(60 * 60 * 24 * (self.anchorDate?.endDays)!)
 
       startDate = date.addingTimeInterval(startDateInterval)
       endDate = date.addingTimeInterval(endDateInterval)
 
     case .Daily:
 
-      let startDateInterval = TimeInterval(60*60*24*(self.anchorDate?.startDays)!)
-      let endDateInterval = TimeInterval(60*60*24*(self.anchorDate?.repeatInterval)!)
+      let startDateInterval = TimeInterval(60 * 60 * 24 * (self.anchorDate?.startDays)!)
+      let endDateInterval = TimeInterval(60 * 60 * 24 * (self.anchorDate?.repeatInterval)!)
       startDate = date.addingTimeInterval(startDateInterval)
       endDate = startDate.addingTimeInterval(endDateInterval)
 
     case .Weekly:
 
-      let startDateInterval = TimeInterval(60*60*24*(self.anchorDate?.startDays)!)
-      let endDateInterval = TimeInterval(60*60*24*7*(self.anchorDate?.repeatInterval)!)
+      let startDateInterval = TimeInterval(60 * 60 * 24 * (self.anchorDate?.startDays)!)
+      let endDateInterval = TimeInterval(60 * 60 * 24 * 7 * (self.anchorDate?.repeatInterval)!)
       startDate = date.addingTimeInterval(startDateInterval)
       endDate = startDate.addingTimeInterval(endDateInterval)
     case .Monthly:
 
-      let startDateInterval = TimeInterval(60*60*24*(self.anchorDate?.startDays)!)
+      let startDateInterval = TimeInterval(60 * 60 * 24 * (self.anchorDate?.startDays)!)
       startDate = date.addingTimeInterval(startDateInterval)
       let calender = Calendar.current
       endDate = calender.date(
-        byAdding: .month, value: (self.anchorDate?.repeatInterval)!, to: startDate)
+        byAdding: .month,
+        value: (self.anchorDate?.repeatInterval)!,
+        to: startDate
+      )
     case .Scheduled:
 
-      let startDateInterval = TimeInterval(60*60*24*(self.anchorDate?.startDays)!)
-      let endDateInterval = TimeInterval(60*60*24*(self.anchorDate?.endDays)!)
+      let startDateInterval = TimeInterval(60 * 60 * 24 * (self.anchorDate?.startDays)!)
+      let endDateInterval = TimeInterval(60 * 60 * 24 * (self.anchorDate?.endDays)!)
 
       startDate = date.addingTimeInterval(startDateInterval)
       endDate = date.addingTimeInterval(endDateInterval)

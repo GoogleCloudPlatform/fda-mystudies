@@ -39,12 +39,14 @@ open class FDASlideMenuViewController: SlideMenuController {
 
       if Study.currentStudy?.userParticipateState.status == .inProgress {
         let studyTabBarController = studyStoryBoard.instantiateViewController(
-          withIdentifier: kStudyDashboardTabbarControllerIdentifier)
+          withIdentifier: kStudyDashboardTabbarControllerIdentifier
+        )
           as! StudyDashboardTabbarViewController
         self.mainViewController = studyTabBarController
       } else {
         let studyHomeViewController = studyStoryBoard.instantiateViewController(
-          withIdentifier: String(describing: kStudyHomeViewControllerIdentifier))
+          withIdentifier: String(describing: kStudyHomeViewControllerIdentifier)
+        )
           as! UINavigationController
         self.mainViewController = studyHomeViewController
       }
@@ -53,12 +55,14 @@ open class FDASlideMenuViewController: SlideMenuController {
 
       // Gateway- Studylist
       let controller = storyboard.instantiateViewController(
-        withIdentifier: kStudyListViewControllerIdentifier)
+        withIdentifier: kStudyListViewControllerIdentifier
+      )
       self.mainViewController = controller
     }
 
     let controller2 = storyboard.instantiateViewController(
-      withIdentifier: kLeftMenuViewControllerIdentifier)
+      withIdentifier: kLeftMenuViewControllerIdentifier
+    )
     self.leftViewController = controller2
     super.awakeFromNib()
 
@@ -69,13 +73,19 @@ open class FDASlideMenuViewController: SlideMenuController {
     if let vc = UIApplication.topViewController() {
 
       if Utilities.isStandaloneApp() {
-        if vc is StudyHomeViewController || vc is NotificationViewController || vc
-          is GatewayResourcesListViewController || vc is ProfileViewController {
+        if vc is StudyHomeViewController || vc is NotificationViewController
+          || vc
+            is GatewayResourcesListViewController
+          || vc is ProfileViewController
+        {
           return true
         }
       } else {
-        if vc is StudyListViewController || vc is NotificationViewController || vc
-          is GatewayResourcesListViewController || vc is ProfileViewController {
+        if vc is StudyListViewController || vc is NotificationViewController
+          || vc
+            is GatewayResourcesListViewController
+          || vc is ProfileViewController
+        {
           return true
         }
       }

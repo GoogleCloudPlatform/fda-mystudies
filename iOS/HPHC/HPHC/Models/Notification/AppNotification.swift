@@ -79,7 +79,8 @@ class AppNotification {
       }
       if Utilities.isValidValue(someObject: detail[kNotificationSubType] as AnyObject) {
         self.subType = NotificationSubType(
-          rawValue: detail[kNotificationSubType] as! String)!
+          rawValue: detail[kNotificationSubType] as! String
+        )!
       }
       if Utilities.isValidValue(someObject: detail[kNotificationAudience] as AnyObject) {
         self.audience = Audience(rawValue: detail[kNotificationAudience] as! String)!

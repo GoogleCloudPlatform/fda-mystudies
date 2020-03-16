@@ -89,7 +89,7 @@ extension UIView {
       if let aView = view as? T {
         all.append(aView)
       }
-      guard view.subviews.count>0 else { return }
+      guard view.subviews.count > 0 else { return }
       view.subviews.forEach { getSubview(view: $0) }
     }
     getSubview(view: self)

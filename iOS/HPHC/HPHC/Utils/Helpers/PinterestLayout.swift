@@ -11,13 +11,15 @@ import UIKit
 protocol PinterestLayoutDelegate: class {
   // 1. Method to ask the delegate for the height of the image
   func collectionView(
-    _ collectionView: UICollectionView, heightForPhotoAtIndexPath indexPath: IndexPath,
+    _ collectionView: UICollectionView,
+    heightForPhotoAtIndexPath indexPath: IndexPath,
     withWidth: CGFloat
   ) -> CGFloat
 
   // 2. Method to ask the delegate for the height of the annotation text
   func collectionView(
-    _ collectionView: UICollectionView, heightForAnnotationAtIndexPath indexPath: IndexPath,
+    _ collectionView: UICollectionView,
+    heightForAnnotationAtIndexPath indexPath: IndexPath,
     withWidth width: CGFloat
   ) -> CGFloat
 
@@ -77,26 +79,36 @@ class PinterestLayout: UICollectionViewLayout {
       // 2. Pre-Calculates the X Offset for every column and adds an array to increment the currently max Y Offset for each column
       let columnWidth = contentWidth / CGFloat(numberOfColumns)
       var xOffset = [CGFloat]()
-      for column in 0 ..< numberOfColumns {
+      for column in 0..<numberOfColumns {
         xOffset.append(CGFloat(column) * columnWidth)
       }
       var column = 0
       var yOffset = [CGFloat](repeating: 0, count: numberOfColumns)
 
       // 3. Iterates through the list of items in the first section
-      for item in 0 ..< collectionView!.numberOfItems(inSection: 0) {
+      for item in 0..<collectionView!.numberOfItems(inSection: 0) {
 
         let indexPath = IndexPath(item: item, section: 0)
 
         // 4. Asks the delegate for the height of the picture and the annotation and calculates the cell frame.
-        let width = columnWidth - cellPadding*2
+        let width = columnWidth - cellPadding * 2
         let photoHeight = delegate?.collectionView(
-          collectionView!, heightForPhotoAtIndexPath: indexPath, withWidth: width) ?? 0.0
+          collectionView!,
+          heightForPhotoAtIndexPath: indexPath,
+          withWidth: width
+        ) ?? 0.0
         let annotationHeight = delegate?.collectionView(
-          collectionView!, heightForAnnotationAtIndexPath: indexPath, withWidth: width) ?? 0.0
+          collectionView!,
+          heightForAnnotationAtIndexPath: indexPath,
+          withWidth: width
+        ) ?? 0.0
         let height = cellPadding + photoHeight + annotationHeight + cellPadding
         let frame = CGRect(
-          x: xOffset[column], y: yOffset[column], width: columnWidth, height: height)
+          x: xOffset[column],
+          y: yOffset[column],
+          width: columnWidth,
+          height: height
+        )
         let insetFrame = frame.insetBy(dx: cellPadding, dy: cellPadding)
 
         // 5. Creates an UICollectionViewLayoutItem with the frame and add it to the cache
@@ -119,7 +131,8 @@ class PinterestLayout: UICollectionViewLayout {
   }
 
   override func layoutAttributesForElements(in rect: CGRect)
-    -> [UICollectionViewLayoutAttributes]? {
+    -> [UICollectionViewLayoutAttributes]?
+  {
 
     var layoutAttributes = [UICollectionViewLayoutAttributes]()
 

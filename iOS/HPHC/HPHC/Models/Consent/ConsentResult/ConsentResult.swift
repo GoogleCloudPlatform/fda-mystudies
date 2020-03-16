@@ -52,21 +52,26 @@ class ConsentResult {
 
       if ((stepResult as? ORKStepResult)!.results?.count)! > 0 {
 
-        if let questionstepResult: ORKChoiceQuestionResult? = (
-          stepResult as? ORKStepResult
-        )!
-          .results?[0] as? ORKChoiceQuestionResult? {
+        if let questionstepResult:ORKChoiceQuestionResult? =
+          (
+            stepResult as? ORKStepResult
+          )!
+          .results?[0] as? ORKChoiceQuestionResult?
+        {
 
           if Utilities.isValidValue(
-            someObject: questionstepResult?.choiceAnswers?[0] as AnyObject?) {
+            someObject: questionstepResult?.choiceAnswers?[0] as AnyObject?
+          ) {
             // sharing choice result either 1 selected or 2 seleceted
 
           } else {
             // Do Nothing
           }
-        } else if let signatureStepResult: ORKConsentSignatureResult? = (
-          stepResult as? ORKStepResult
-        )!.results?[0] as? ORKConsentSignatureResult? {
+        } else if let signatureStepResult:ORKConsentSignatureResult? =
+          (
+            stepResult as? ORKStepResult
+          )!.results?[0] as? ORKConsentSignatureResult?
+        {
 
           signatureStepResult?.apply(to: self.consentDocument!)
 
@@ -92,8 +97,10 @@ class ConsentResult {
 
                 if !FileManager.default.fileExists(atPath: path) {
                   try! FileManager.default.createDirectory(
-                    atPath: path, withIntermediateDirectories: true,
-                    attributes: nil)
+                    atPath: path,
+                    withIntermediateDirectories: true,
+                    attributes: nil
+                  )
                 }
 
                 self.consentPdfData = Data()
@@ -106,20 +113,27 @@ class ConsentResult {
                     try FileManager.default.removeItem(atPath: fullPath)
                   }
                   FileManager.default.createFile(
-                    atPath: fullPath, contents: data, attributes: [:])
+                    atPath: fullPath,
+                    contents: data,
+                    attributes: [:]
+                  )
 
                   let defaultPath = fullPath
                   fullPath = "file://" + "\(fullPath!)"
 
                   try data?.write(to: URL(string: fullPath!)!)
                   FileDownloadManager.encyptFile(
-                    pathURL: URL(string: defaultPath!)!)
+                    pathURL: URL(string: defaultPath!)!
+                  )
 
                   let notificationName = Notification.Name(
-                    kPDFCreationNotificationId)
+                    kPDFCreationNotificationId
+                  )
                   // Post notification
                   NotificationCenter.default.post(
-                    name: notificationName, object: nil)
+                    name: notificationName,
+                    object: nil
+                  )
 
                 } catch let error as NSError {
                   Logger.sharedInstance.error(error.localizedDescription)
@@ -138,7 +152,10 @@ class ConsentResult {
 
             if !FileManager.default.fileExists(atPath: path) {
               try! FileManager.default.createDirectory(
-                atPath: path, withIntermediateDirectories: true, attributes: nil)
+                atPath: path,
+                withIntermediateDirectories: true,
+                attributes: nil
+              )
             }
 
             var data: Data? = Data.init()
@@ -151,7 +168,10 @@ class ConsentResult {
                 try FileManager.default.removeItem(atPath: fullPath)
               }
               FileManager.default.createFile(
-                atPath: fullPath, contents: data, attributes: [:])
+                atPath: fullPath,
+                contents: data,
+                attributes: [:]
+              )
               fullPath = "file://" + "\(fullPath!)"
 
               try data?.write(to: URL(string: fullPath!)!)
@@ -161,10 +181,12 @@ class ConsentResult {
               Logger.sharedInstance.error(error.localizedDescription)
             }
           }
-        } else if let tokenStepResult: EligibilityTokenTaskResult? = (
-          stepResult as? ORKStepResult
-        )!
-          .results?[0] as? EligibilityTokenTaskResult? {
+        } else if let tokenStepResult:EligibilityTokenTaskResult? =
+          (
+            stepResult as? ORKStepResult
+          )!
+          .results?[0] as? EligibilityTokenTaskResult?
+        {
           self.token = tokenStepResult?.enrollmentToken
         }
       }
@@ -193,18 +215,24 @@ class ConsentResult {
 
         if Utilities.isValidValue(
           someObject: Utilities.getDateFromString(
-            dateString: (activityDict[kActivityStartTime] as? String)!) as AnyObject?) {
+            dateString: (activityDict[kActivityStartTime] as? String)!
+          ) as AnyObject?
+        ) {
           self.startTime = Utilities.getDateFromString(
-            dateString: (activityDict[kActivityStartTime] as? String)!)
+            dateString: (activityDict[kActivityStartTime] as? String)!
+          )
         }
       }
       if Utilities.isValidValue(someObject: activityDict[kActivityEndTime] as AnyObject) {
 
         if Utilities.isValidValue(
           someObject: Utilities.getDateFromString(
-            dateString: (activityDict[kActivityEndTime] as? String)!) as AnyObject?) {
+            dateString: (activityDict[kActivityEndTime] as? String)!
+          ) as AnyObject?
+        ) {
           self.endTime = Utilities.getDateFromString(
-            dateString: (activityDict[kActivityEndTime] as? String)!)
+            dateString: (activityDict[kActivityEndTime] as? String)!
+          )
         }
       }
     }
@@ -244,7 +272,8 @@ class ConsentResult {
       for stepResult in result! {
         let activityStepResult = stepResult as ActivityStepResult
         activityResultArray.append(
-          (activityStepResult.getActivityStepResultDict())! as [String: Any])
+          (activityStepResult.getActivityStepResultDict())! as [String: Any]
+        )
       }
 
       activityDict?[kActivityResult] = activityResultArray

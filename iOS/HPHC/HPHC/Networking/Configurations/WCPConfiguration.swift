@@ -47,7 +47,8 @@ enum WCPMethods: String {
       return Method(
         methodName: self.rawValue,
         methodType: .httpMethodPOST,
-        requestType: .requestTypeJSON)
+        requestType: .requestTypeJSON
+      )
     default:
       return Method(
         methodName: self.rawValue,
@@ -62,7 +63,8 @@ enum WCPServerURLConstants {
 
   /// Staging.
   static let ProductionURL = API.wcpURL
-  static let DevelopmentURL = API.wcpURL // This will change based on config file.
+
+  static let DevelopmentURL = API.wcpURL  // This will change based on config file.
 
 }
 
@@ -95,7 +97,7 @@ class WCPConfiguration: NetworkConfiguration {
     let headers = [
       "Authorization": base64token,
       "applicationId": appId,
-      "orgId": orgId
+      "orgId": orgId,
     ]
 
     return headers

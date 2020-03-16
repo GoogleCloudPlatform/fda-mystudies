@@ -27,8 +27,8 @@ class StudyDashboardStudyPercentageTableViewCell: UITableViewCell {
   @IBOutlet var studyPercentagePie: KDCircularProgress?
   @IBOutlet var completedPercentagePie: KDCircularProgress?
 
-  let blueColor = UIColor.init(red: 56/255, green: 124/255, blue: 186/255, alpha: 1)
-  let greyColor = UIColor.init(red: 216/255, green: 227/255, blue: 230/255, alpha: 1)
+  let blueColor = UIColor.init(red: 56 / 255, green: 124 / 255, blue: 186 / 255, alpha: 1)
+  let greyColor = UIColor.init(red: 216 / 255, green: 227 / 255, blue: 230 / 255, alpha: 1)
 
   ///  Display Study Percentage cell.
   func displayThirdCellData(data: NSDictionary) {
@@ -57,12 +57,13 @@ class StudyDashboardStudyPercentageTableViewCell: UITableViewCell {
     completedPercentagePie?.glowAmount = 0.1
     completedPercentagePie?.set(colors: blueColor)
 
-    if let userStudyStatus = currentUser.participatedStudies.filter({ $0.studyId == study?.studyId }).first {
+    if let userStudyStatus = currentUser.participatedStudies.filter({ $0.studyId == study?.studyId }
+    ).first {
       //update completion %
 
-      if
-        Study.currentStudy?.totalIncompleteRuns == 0
-          && Study.currentStudy?.totalCompleteRuns == 0 {
+      if Study.currentStudy?.totalIncompleteRuns == 0
+        && Study.currentStudy?.totalCompleteRuns == 0
+      {
 
         self.labelStudyCompletion?.text = "--"
         self.labelStudyAdherence?.text = "--"
@@ -74,8 +75,8 @@ class StudyDashboardStudyPercentageTableViewCell: UITableViewCell {
         self.labelStudyCompletion?.text = String(userStudyStatus.adherence)
         self.labelStudyAdherence?.text = String(userStudyStatus.completion)
 
-        studyPercentagePie?.angle = Double(userStudyStatus.completion)/0.27777778
-        completedPercentagePie?.angle = Double(userStudyStatus.adherence)/0.27777778
+        studyPercentagePie?.angle = Double(userStudyStatus.completion) / 0.27777778
+        completedPercentagePie?.angle = Double(userStudyStatus.adherence) / 0.27777778
       }
 
     } else {

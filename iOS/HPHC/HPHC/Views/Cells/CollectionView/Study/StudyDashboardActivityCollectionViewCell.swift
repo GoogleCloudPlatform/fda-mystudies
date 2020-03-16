@@ -36,11 +36,14 @@ class StudyDashboardActivityCollectionViewCell: UICollectionViewCell {
     labelPendingCount?.text = data["pendingCount"] as? String
 
     labelCompletedSurveyTask?.text = String(
-      format: "%@ Survey, %@ Task", data["completedSurvey"] as! String,
-      data["completedTask"] as! String)
+      format: "%@ Survey, %@ Task",
+      data["completedSurvey"] as! String,
+      data["completedTask"] as! String
+    )
 
     labelPendingSurveyTask?.text = String(
-      format: "%@ Survey, %@ Task", data["pendingSurvey"] as! String,
+      format: "%@ Survey, %@ Task",
+      data["pendingSurvey"] as! String,
       data["pendingTask"] as! String
     )
   }

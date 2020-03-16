@@ -26,7 +26,10 @@ class GatewayResourcesListViewController: UIViewController {
   func loadResources() {
 
     let plistPath = Bundle.main.path(
-      forResource: "Resources", ofType: ".plist", inDirectory: nil)
+      forResource: "Resources",
+      ofType: ".plist",
+      inDirectory: nil
+    )
     let arrayContent = NSMutableArray.init(contentsOfFile: plistPath!)
 
     var listOfResources: [Resource] = []
@@ -86,7 +89,8 @@ extension GatewayResourcesListViewController: UITableViewDelegate {
     let resource = Gateway.instance.resources?[indexPath.row]
     let storyboard = UIStoryboard(name: kStudyStoryboard, bundle: nil)
     let resourceDetail = storyboard.instantiateViewController(
-      withIdentifier: "ResourceDetailViewControllerIdentifier")
+      withIdentifier: "ResourceDetailViewControllerIdentifier"
+    )
       as! GatewayResourceDetailViewController
     resourceDetail.resource = resource
     self.navigationController?.pushViewController(resourceDetail, animated: true)
@@ -102,7 +106,8 @@ extension GatewayResourcesListViewController: NMWebServiceDelegate {
 
   func finishedRequest(_ manager: NetworkManager, requestName: NSString, response: AnyObject?) {
     Logger.sharedInstance.info(
-      "requestname : \(requestName) response : \(String(describing: response))")
+      "requestname : \(requestName) response : \(String(describing: response))"
+    )
 
     self.removeProgressIndicator()
 

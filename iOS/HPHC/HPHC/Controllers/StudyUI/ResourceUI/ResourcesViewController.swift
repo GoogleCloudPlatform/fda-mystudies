@@ -85,16 +85,23 @@ class ResourcesViewController: UIViewController {
 
     self.tabBarController?.tabBar.isHidden = false
 
-    if Study.currentStudy?.withdrawalConfigration?.message == nil && (
-      Study.currentStudy?.withdrawalConfigration?.type == nil || Study.currentStudy?
-        .withdrawalConfigration?.type == .notAvailable
-    ) {
+    if Study.currentStudy?.withdrawalConfigration?.message == nil
+      && (
+        Study.currentStudy?.withdrawalConfigration?.type == nil
+          || Study.currentStudy?
+            .withdrawalConfigration?.type == .notAvailable
+      )
+    {
       WCPServices().getStudyInformation(
-        studyId: (Study.currentStudy?.studyId)!, delegate: self)
+        studyId: (Study.currentStudy?.studyId)!,
+        delegate: self
+      )
 
     } else if StudyUpdates.studyInfoUpdated {
       WCPServices().getStudyInformation(
-        studyId: (Study.currentStudy?.studyId)!, delegate: self)
+        studyId: (Study.currentStudy?.studyId)!,
+        delegate: self
+      )
 
     } else {
       self.checkForResourceUpdate()
@@ -110,7 +117,9 @@ class ResourcesViewController: UIViewController {
 
     if StudyUpdates.studyResourcesUpdated {
       WCPServices().getResourcesForStudy(
-        studyId: (Study.currentStudy?.studyId)!, delegate: self)
+        studyId: (Study.currentStudy?.studyId)!,
+        delegate: self
+      )
     } else {
       self.checkIfResourcePresent()
     }
@@ -120,7 +129,9 @@ class ResourcesViewController: UIViewController {
 
     if StudyUpdates.studyInfoUpdated {
       WCPServices().getStudyInformation(
-        studyId: (Study.currentStudy?.studyId)!, delegate: self)
+        studyId: (Study.currentStudy?.studyId)!,
+        delegate: self
+      )
     }
   }
 
@@ -136,7 +147,9 @@ class ResourcesViewController: UIViewController {
   func checkIfResourcePresent() {
     if DBHandler.isResourcesEmpty((Study.currentStudy?.studyId)!) {
       WCPServices().getResourcesForStudy(
-        studyId: (Study.currentStudy?.studyId)!, delegate: self)
+        studyId: (Study.currentStudy?.studyId)!,
+        delegate: self
+      )
     } else {
       self.loadResourceFromDatabase()
     }
@@ -216,8 +229,9 @@ class ResourcesViewController: UIViewController {
         let endDateResult = (end?.compare(todayDate))! as ComparisonResult
 
         // compare lifetime
-        if (startDateResult == .orderedAscending || startDateResult == .orderedSame) &&
-            (endDateResult == .orderedDescending || endDateResult == .orderedSame) {
+        if (startDateResult == .orderedAscending || startDateResult == .orderedSame)
+          && (endDateResult == .orderedDescending || endDateResult == .orderedSame)
+        {
 
           tableViewRowDetails?.append(resource)
 
@@ -257,7 +271,9 @@ class ResourcesViewController: UIViewController {
       withdrawlInformationNotFound = true
       withdrawalType = .notAvailable
       WCPServices().getStudyInformation(
-        studyId: (Study.currentStudy?.studyId)!, delegate: self)
+        studyId: (Study.currentStudy?.studyId)!,
+        delegate: self
+      )
       return
     }
 
@@ -279,7 +295,8 @@ class ResourcesViewController: UIViewController {
               "You are choosing to leave the study. Please choose if your response data can be retained and used for research purposes OR if your response data should be deleted.",
             errorAlertActionTitle: "Retain my data",
             errorAlertActionTitle2: "Delete my data",
-            errorAlertActionTitle3: "Cancel", viewControllerUsed: self,
+            errorAlertActionTitle3: "Cancel",
+            viewControllerUsed: self,
             action1: {
               // Retain Action
 
@@ -296,7 +313,8 @@ class ResourcesViewController: UIViewController {
             },
             action3: {
               // Cancel Action
-            })
+            }
+          )
 
         case .deleteData:
 
@@ -312,7 +330,8 @@ class ResourcesViewController: UIViewController {
             },
             action2: {
 
-            })
+            }
+          )
 
         case .noAction:
 
@@ -328,15 +347,17 @@ class ResourcesViewController: UIViewController {
             },
             action2: {
 
-            })
+            }
+          )
 
         default: break
         }
 
       },
       action2: {
-          // Handle cancel action
-      })
+        // Handle cancel action
+      }
+    )
 
   }
 
@@ -345,7 +366,8 @@ class ResourcesViewController: UIViewController {
     let studyStoryBoard = UIStoryboard.init(name: kStudyStoryboard, bundle: Bundle.main)
     let studyHomeController = (
       studyStoryBoard.instantiateViewController(
-        withIdentifier: String(describing: StudyHomeViewController.classForCoder()))
+        withIdentifier: String(describing: StudyHomeViewController.classForCoder())
+      )
         as? StudyHomeViewController
     )!
     studyHomeController.hideViewConsentAfterJoining = true
@@ -408,14 +430,16 @@ class ResourcesViewController: UIViewController {
       pdfBytes = [0x25, 0x50, 0x44, 0x46]
       let pdfHeader = NSData(bytes: pdfBytes, length: 4)
 
-      let myRange: Range = 0 ..< 1024
+      let myRange: Range = 0..<1024
       let foundRange = pdfData?.range(of: pdfHeader as Data, options: .anchored, in: myRange)
       if foundRange != nil && (foundRange?.count)! > 0 {
         isPDF = true
       } else {
         isPDF = false
         UserServices().getConsentPDFForStudy(
-          studyId: (Study.currentStudy?.studyId)!, delegate: self)
+          studyId: (Study.currentStudy?.studyId)!,
+          delegate: self
+        )
       }
     }
 
@@ -436,7 +460,10 @@ class ResourcesViewController: UIViewController {
 
     if !FileManager.default.fileExists(atPath: path) {
       try! FileManager.default.createDirectory(
-        atPath: path, withIntermediateDirectories: true, attributes: nil)
+        atPath: path,
+        withIntermediateDirectories: true,
+        attributes: nil
+      )
     }
 
     do {
@@ -446,7 +473,10 @@ class ResourcesViewController: UIViewController {
       }
 
       FileManager.default.createFile(
-        atPath: fullPath, contents: consentData as Data?, attributes: [:])
+        atPath: fullPath,
+        contents: consentData as Data?,
+        attributes: [:]
+      )
 
       let defaultPath = fullPath
 
@@ -472,14 +502,19 @@ class ResourcesViewController: UIViewController {
     //TBD: uncomment following for UAT
     let participantId = Study.currentStudy?.userParticipateState.participantId
     LabKeyServices().withdrawFromStudy(
-      studyId: (Study.currentStudy?.studyId)!, participantId: participantId!,
-      deleteResponses: deleteResponse, delegate: self)
+      studyId: (Study.currentStudy?.studyId)!,
+      participantId: participantId!,
+      deleteResponses: deleteResponse,
+      delegate: self
+    )
   }
 
   private func handleResponseForWithdraw(response: JSONDictionary) {
     // clear all local data storage
     let currentUser = User.currentUser
-    let userActivityStatusList: [UserActivityStatus] = currentUser.participatedActivites.filter({ $0.studyId == (Study.currentStudy?.studyId)! })
+    let userActivityStatusList: [UserActivityStatus] = currentUser.participatedActivites.filter({
+      $0.studyId == (Study.currentStudy?.studyId)!
+    })
 
     for activityStatus in userActivityStatusList {
       let index = currentUser.participatedActivites.firstIndex(
@@ -496,7 +531,9 @@ class ResourcesViewController: UIViewController {
     // Update status to false so notification can be registered again
     Study.currentStudy?.activitiesLocalNotificationUpdated = false
     DBHandler.updateLocalNotificationScheduleStatus(
-      studyId: (Study.currentStudy?.studyId)!, status: false)
+      studyId: (Study.currentStudy?.studyId)!,
+      status: false
+    )
 
     self.removeProgressIndicator()
     self.navigationController?.navigationBar.isHidden = false
@@ -507,8 +544,9 @@ class ResourcesViewController: UIViewController {
       Study.currentStudy = nil
       self.slideMenuController()?.leftViewController?.navigationController?
         .popToRootViewController(
-          animated: true)
-      DispatchQueue.main.asyncAfter(deadline: .now()+1) {
+          animated: true
+        )
+      DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
         UIApplication.shared.keyWindow?.removeProgressIndicatorFromWindow()
       }
     } else {
@@ -606,7 +644,9 @@ extension ResourcesViewController: UITableViewDelegate {
           self.pushToResourceDetails()
         } else {
           UserServices().getConsentPDFForStudy(
-            studyId: (Study.currentStudy?.studyId)!, delegate: self)
+            studyId: (Study.currentStudy?.studyId)!,
+            delegate: self
+          )
         }
       }
     }
@@ -623,7 +663,8 @@ extension ResourcesViewController: NMWebServiceDelegate {
 
   func finishedRequest(_ manager: NetworkManager, requestName: NSString, response: AnyObject?) {
     Logger.sharedInstance.info(
-      "requestname : \(requestName) response : \(String(describing: response))")
+      "requestname : \(requestName) response : \(String(describing: response))"
+    )
 
     switch requestName as String {
 
@@ -633,8 +674,10 @@ extension ResourcesViewController: NMWebServiceDelegate {
 
     case ResponseMethods.withdrawFromStudy.method.methodName:
       UserServices().withdrawFromStudy(
-        studyId: (Study.currentStudy?.studyId)!, shouldDeleteData: self.shouldDeleteData!,
-        delegate: self)
+        studyId: (Study.currentStudy?.studyId)!,
+        shouldDeleteData: self.shouldDeleteData!,
+        delegate: self
+      )
 
     case RegistrationMethods.withdraw.method.methodName:
       // Handle for withdraw account
@@ -644,7 +687,9 @@ extension ResourcesViewController: NMWebServiceDelegate {
         }
       } else {
         UserServices().deActivateAccount(
-          listOfStudyIds: [Study.currentStudy?.studyId ?? ""], delegate: self)
+          listOfStudyIds: [Study.currentStudy?.studyId ?? ""],
+          delegate: self
+        )
       }
 
     case RegistrationMethods.deactivate.method.methodName:
@@ -677,7 +722,8 @@ extension ResourcesViewController: NMWebServiceDelegate {
 
         if Utilities.isValidValue(someObject: consentDict[kConsentPdfContent] as AnyObject?) {
           self.saveConsentPdfToLocal(
-            base64dataString: (consentDict[kConsentPdfContent] as? String)!)
+            base64dataString: (consentDict[kConsentPdfContent] as? String)!
+          )
         }
       }
 
@@ -695,11 +741,14 @@ extension ResourcesViewController: NMWebServiceDelegate {
     if error.code == 403 {  // unauthorized
       self.removeProgressIndicator()
       UIUtilities.showAlertMessageWithActionHandler(
-        kErrorTitle, message: error.localizedDescription, buttonTitle: kTitleOk,
+        kErrorTitle,
+        message: error.localizedDescription,
+        buttonTitle: kTitleOk,
         viewControllerUsed: self,
         action: {
           self.fdaSlideMenuController()?.navigateToHomeAfterUnauthorizedAccess()
-        })
+        }
+      )
     } else {
 
       if requestName as String == WCPMethods.resources.method.methodName {
@@ -714,23 +763,27 @@ extension ResourcesViewController: NMWebServiceDelegate {
       } else if requestName as String == ResponseMethods.withdrawFromStudy.description {
 
         if error.localizedDescription.localizedCaseInsensitiveContains(
-          "Invalid ParticipantId.") {
+          "Invalid ParticipantId."
+        ) {
 
           UserServices().withdrawFromStudy(
             studyId: (Study.currentStudy?.studyId)!,
             shouldDeleteData: self.shouldDeleteData!,
-            delegate: self)
+            delegate: self
+          )
         } else {
           self.removeProgressIndicator()
           UIUtilities.showAlertWithTitleAndMessage(
             title: NSLocalizedString(kErrorTitle, comment: "") as NSString,
-            message: error.localizedDescription as NSString)
+            message: error.localizedDescription as NSString
+          )
         }
       } else {
         self.removeProgressIndicator()
         UIUtilities.showAlertWithTitleAndMessage(
           title: NSLocalizedString(kErrorTitle, comment: "") as NSString,
-          message: error.localizedDescription as NSString)
+          message: error.localizedDescription as NSString
+        )
         // checkDB if there is resources
         self.checkForResourceUpdate()
       }
@@ -745,14 +798,15 @@ extension String {
 
     let attributedOptions: [NSAttributedString.DocumentReadingOptionKey: Any] = [
       .documentType: NSAttributedString.DocumentType.html,
-      .characterEncoding: String.Encoding.utf8.rawValue
+      .characterEncoding: String.Encoding.utf8.rawValue,
     ]
 
     do {
       let attributedString = try NSAttributedString(
         data: encodedData,
         options: attributedOptions,
-        documentAttributes: nil)
+        documentAttributes: nil
+      )
       return attributedString.string
     } catch {
       Logger.sharedInstance.error("Error: \(error)")

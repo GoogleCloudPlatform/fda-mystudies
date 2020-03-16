@@ -51,7 +51,8 @@ protocol NMAuthChallengeDelegate {
   /// - Parameter manager: NetworkManager instance
   /// - Parameter challenge: NSURLAuthenticationChallenge
   func networkChallengeDisposition(
-    _ manager: NetworkManager, challenge: URLAuthenticationChallenge
+    _ manager: NetworkManager,
+    challenge: URLAuthenticationChallenge
   )
     -> URLSession.AuthChallengeDisposition
 }
@@ -72,14 +73,19 @@ class NetworkManager {
 
     reachability = Reachability.init()
     NotificationCenter.default.addObserver(
-      self, selector: #selector(reachabilityChanged(_:)),
+      self,
+      selector: #selector(reachabilityChanged(_:)),
       name: ReachabilityChangedNotification,
-      object: nil)
+      object: nil
+    )
 
     do {
       try reachability?.startNotifier()
     } catch let error {
-      Logger.sharedInstance.info("could not start reachability notifier: ", error.localizedDescription)
+      Logger.sharedInstance.info(
+        "could not start reachability notifier: ",
+        error.localizedDescription
+      )
     }
   }
 
@@ -108,17 +114,26 @@ class NetworkManager {
   /// - Parameter headers: headers of type Dictionary
   /// - Parameter delegate: NMWebServiceDelegate
   func composeRequest(
-    _ requestName: NSString, requestType: RequestType, method: HTTPMethod,
+    _ requestName: NSString,
+    requestType: RequestType,
+    method: HTTPMethod,
     params: NSDictionary?,
-    headers: NSDictionary?, delegate: NMWebServiceDelegate
+    headers: NSDictionary?,
+    delegate: NMWebServiceDelegate
   ) {
 
     let networkWSHandler = NetworkWebServiceHandler(
       delegate: delegate,
-      challengeDelegate: UIApplication.shared.delegate as? NMAuthChallengeDelegate)
+      challengeDelegate: UIApplication.shared.delegate as? NMAuthChallengeDelegate
+    )
     networkWSHandler.networkManager = self
     networkWSHandler.composeRequestFor(
-      requestName, requestType: requestType, method: method, params: params, headers: headers)
+      requestName,
+      requestType: requestType,
+      method: method,
+      params: params,
+      headers: headers
+    )
 
   }
 
@@ -129,16 +144,24 @@ class NetworkManager {
   /// - Parameter headers: headers of type Dictionary
   /// - Parameter delegate: NMWebServiceDelegate
   func composeRequest(
-    _ configuration: NetworkConfiguration, method: Method, params: NSDictionary?,
-    headers: NSDictionary?, delegate: NMWebServiceDelegate
+    _ configuration: NetworkConfiguration,
+    method: Method,
+    params: NSDictionary?,
+    headers: NSDictionary?,
+    delegate: NMWebServiceDelegate
   ) {
 
     let networkWSHandler = NetworkWebServiceHandler(
       delegate: delegate,
-      challengeDelegate: UIApplication.shared.delegate as? NMAuthChallengeDelegate)
+      challengeDelegate: UIApplication.shared.delegate as? NMAuthChallengeDelegate
+    )
     networkWSHandler.networkManager = self
     networkWSHandler.composeRequest(
-      configuration, method: method, params: params, headers: headers)
+      configuration,
+      method: method,
+      params: params,
+      headers: headers
+    )
 
   }
 

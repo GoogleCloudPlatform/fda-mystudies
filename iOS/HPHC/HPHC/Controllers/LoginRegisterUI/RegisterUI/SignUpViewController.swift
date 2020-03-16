@@ -20,8 +20,8 @@ import Foundation
 import IQKeyboardManagerSwift
 import UIKit
 
-let kVerifyMessageFromSignUp
-  = "An email has been sent to xyz@gmail.com. Please type in the Verification Code received in the email to complete the verification step."
+let kVerifyMessageFromSignUp =
+  "An email has been sent to xyz@gmail.com. Please type in the Verification Code received in the email to complete the verification step."
 
 enum SignUpLoadFrom: Int {
   case gatewayOverview
@@ -71,17 +71,25 @@ class SignUpViewController: UIViewController {
 
     // load plist info
     let plistPath = Bundle.main.path(
-      forResource: "SignUpPlist", ofType: ".plist", inDirectory: nil)
+      forResource: "SignUpPlist",
+      ofType: ".plist",
+      inDirectory: nil
+    )
     tableViewRowDetails = NSMutableArray.init(contentsOfFile: plistPath!)
 
     // info button
     self.navigationItem.rightBarButtonItem = UIBarButtonItem.init(
-      image: UIImage.init(named: "info"), style: .done, target: self,
-      action: #selector(self.buttonInfoAction(_:)))
+      image: UIImage.init(named: "info"),
+      style: .done,
+      target: self,
+      action: #selector(self.buttonInfoAction(_:))
+    )
 
     // Used for background tap dismiss keyboard
     let tapGestureRecognizer: UITapGestureRecognizer = UITapGestureRecognizer.init(
-      target: self, action: #selector(SignUpViewController.dismissKeyboard))
+      target: self,
+      action: #selector(SignUpViewController.dismissKeyboard)
+    )
     self.tableView?.addGestureRecognizer(tapGestureRecognizer)
 
     // unhide navigationbar
@@ -135,12 +143,16 @@ class SignUpViewController: UIViewController {
     var foundRange = attributedString.mutableString.range(of: "Terms")
     attributedString.addAttribute(
       NSAttributedString.Key.link,
-      value: (TermsAndPolicy.currentTermsAndPolicy?.termsURL!)! as String, range: foundRange)
+      value: (TermsAndPolicy.currentTermsAndPolicy?.termsURL!)! as String,
+      range: foundRange
+    )
 
     foundRange = attributedString.mutableString.range(of: "Privacy Policy")
     attributedString.addAttribute(
       NSAttributedString.Key.link,
-      value: (TermsAndPolicy.currentTermsAndPolicy?.policyURL!)! as String, range: foundRange)
+      value: (TermsAndPolicy.currentTermsAndPolicy?.policyURL!)! as String,
+      range: foundRange
+    )
 
     termsAndCondition?.attributedText = attributedString
 
@@ -159,8 +171,10 @@ class SignUpViewController: UIViewController {
   /// - Returns: A Boolean value indicating all the fields with valid data.
   func validateAllFields() -> Bool {
     //(user.firstName?.isEmpty)! && (user.lastName?.isEmpty)! &&
-    if (self.user.emailId?.isEmpty)! && (self.user.password?.isEmpty)! && confirmPassword
-      .isEmpty {
+    if (self.user.emailId?.isEmpty)! && (self.user.password?.isEmpty)!
+      && confirmPassword
+        .isEmpty
+    {
       self.showAlertMessages(textMessage: kMessageAllFieldsAreEmpty)
       return false
     } else if self.user.emailId == "" {
@@ -191,8 +205,11 @@ class SignUpViewController: UIViewController {
   /// Used to show the alert using Utility.
   func showAlertMessages(textMessage: String) {
     UIUtilities.showAlertMessage(
-      "", errorMessage: NSLocalizedString(textMessage, comment: ""),
-      errorAlertActionTitle: NSLocalizedString("OK", comment: ""), viewControllerUsed: self)
+      "",
+      errorMessage: NSLocalizedString(textMessage, comment: ""),
+      errorAlertActionTitle: NSLocalizedString("OK", comment: ""),
+      viewControllerUsed: self
+    )
   }
 
   /// Method to navigate to Verification Controller.
@@ -232,7 +249,9 @@ class SignUpViewController: UIViewController {
   /// Displays alert regarding why the user has to register.
   @IBAction func buttonInfoAction(_ sender: Any) {
     UIUtilities.showAlertWithTitleAndMessage(
-      title: "Why Register?", message: kRegistrationInfoMessage as NSString)
+      title: "Why Register?",
+      message: kRegistrationInfoMessage as NSString
+    )
   }
 
   // MARK: - Segue Method
@@ -258,7 +277,9 @@ class SignUpViewController: UIViewController {
       }
       let message = kVerifyMessageFromSignUp
       let modifiedMessage = message.replacingOccurrences(
-        of: kDefaultEmail, with: User.currentUser.emailId!)
+        of: kDefaultEmail,
+        with: User.currentUser.emailId!
+      )
       verificationController.labelMessage = modifiedMessage
 
     }
@@ -296,12 +317,15 @@ class LinkTextView: UITextView {
 extension SignUpViewController: UITextViewDelegate {
 
   func textView(_ textView: UITextView, shouldInteractWith URL: URL, in characterRange: NSRange)
-    -> Bool {
+    -> Bool
+  {
 
     var link: String = (TermsAndPolicy.currentTermsAndPolicy?.termsURL)!  //kTermsAndConditionLink
     var title: String = kNavigationTitleTerms
-    if URL.absoluteString == TermsAndPolicy.currentTermsAndPolicy?.policyURL && characterRange
-      .length == String("Privacy Policy").count {
+    if URL.absoluteString == TermsAndPolicy.currentTermsAndPolicy?.policyURL
+      && characterRange
+        .length == String("Privacy Policy").count
+    {
       link = (TermsAndPolicy.currentTermsAndPolicy?.policyURL)!  // kPrivacyPolicyLink
       title = kNavigationTitlePrivacyPolicy
     }
@@ -320,7 +344,8 @@ extension SignUpViewController: UITextViewDelegate {
   }
 
   func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldReceive press: UIPress)
-    -> Bool {
+    -> Bool
+  {
     return false
   }
 
@@ -343,7 +368,9 @@ extension SignUpViewController: UITableViewDataSource {
     let tableViewData = (tableViewRowDetails?.object(at: indexPath.row) as? NSDictionary)!
     let cell = (
       tableView.dequeueReusableCell(
-        withIdentifier: kSignUpTableViewCellIdentifier, for: indexPath)
+        withIdentifier: kSignUpTableViewCellIdentifier,
+        for: indexPath
+      )
         as? SignUpTableViewCell
     )!
 
@@ -370,7 +397,10 @@ extension SignUpViewController: UITableViewDataSource {
     }
     // Cell Data Setup
     cell.populateCellData(
-      data: tableViewData, securedText: isSecuredEntry, keyboardType: keyBoardType)
+      data: tableViewData,
+      securedText: isSecuredEntry,
+      keyboardType: keyBoardType
+    )
 
     cell.backgroundColor = UIColor.clear
     return cell
@@ -395,7 +425,8 @@ extension SignUpViewController: UITextFieldDelegate {
   }
 
   func textField(
-    _ textField: UITextField, shouldChangeCharactersIn range: NSRange,
+    _ textField: UITextField,
+    shouldChangeCharactersIn range: NSRange,
     replacementString string: String
   ) -> Bool {
 
@@ -482,16 +513,19 @@ extension SignUpViewController: NMWebServiceDelegate {
     self.removeProgressIndicator()
     UIUtilities.showAlertWithTitleAndMessage(
       title: NSLocalizedString(kErrorTitle, comment: "") as NSString,
-      message: error.localizedDescription as NSString)
+      message: error.localizedDescription as NSString
+    )
   }
 }
 
 // Helper function inserted by Swift 4.2 migrator.
 private func convertToOptionalNSAttributedStringKeyDictionary(_ input: [String: Any]?)
-  -> [NSAttributedString.Key: Any]? {
+  -> [NSAttributedString.Key: Any]?
+{
   guard let input = input else { return nil }
   return Dictionary(
     uniqueKeysWithValues: input.map { key, value in
       (NSAttributedString.Key(rawValue: key), value)
-    })
+    }
+  )
 }

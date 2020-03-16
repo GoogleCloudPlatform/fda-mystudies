@@ -18,8 +18,8 @@
 
 import UIKit
 
-let kMessageForSharingCharts
-  = "This action will create a shareable image file of the charts currently seen in this section. Proceed?"
+let kMessageForSharingCharts =
+  "This action will create a shareable image file of the charts currently seen in this section. Proceed?"
 
 class ChartsViewController: UIViewController {
 
@@ -67,7 +67,8 @@ class ChartsViewController: UIViewController {
 
         action2: {
           // Handle cancel action.
-        })
+        }
+      )
 
     }
 
@@ -84,7 +85,11 @@ class ChartsViewController: UIViewController {
     UIGraphicsBeginImageContextWithOptions(tableView.contentSize, self.view.isOpaque, 0.0)
     tableView.contentOffset = .zero
     tableView.frame = CGRect(
-      x: 0, y: 0, width: tableView.contentSize.width, height: tableView.contentSize.height)
+      x: 0,
+      y: 0,
+      width: tableView.contentSize.width,
+      height: tableView.contentSize.height
+    )
     tableView.layer.render(in: UIGraphicsGetCurrentContext()!)
     let image = UIGraphicsGetImageFromCurrentImageContext()
     UIGraphicsEndImageContext()
@@ -93,7 +98,10 @@ class ChartsViewController: UIViewController {
     tableView.frame = savedFrame
 
     (self.tabBarController as! StudyDashboardTabbarViewController).shareScreenshotByEmail(
-      image: image, subject: kEmailSubjectCharts, fileName: kEmailSubjectCharts)
+      image: image,
+      subject: kEmailSubjectCharts,
+      fileName: kEmailSubjectCharts
+    )
 
   }
 

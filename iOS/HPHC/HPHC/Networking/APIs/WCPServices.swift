@@ -195,14 +195,17 @@ class WCPServices: NSObject {
   ///   - activityVersion: `Activity` Version
   ///   - delegate: Class object to receive response
   func getStudyActivityMetadata(
-    studyId: String, activityId: String, activityVersion: String, delegate: NMWebServiceDelegate
+    studyId: String,
+    activityId: String,
+    activityVersion: String,
+    delegate: NMWebServiceDelegate
   ) {
     self.delegate = delegate
     let method = WCPMethods.activity.method
     let headerParams = [
       kStudyId: studyId,
       kActivityId: activityId,
-      kActivityVersion: activityVersion
+      kActivityVersion: activityVersion,
     ]
     self.sendRequestWith(method: method, params: headerParams, headers: nil)
   }
@@ -255,7 +258,7 @@ class WCPServices: NSObject {
     let method = WCPMethods.feedback.method
     let params = [
       kFeedbackBody: FeedbackDetail.feedback,
-      kFeedbackSubject: FeedbackDetail.subject
+      kFeedbackSubject: FeedbackDetail.subject,
     ]
     self.sendRequestWith(method: method, params: params, headers: nil)
 
@@ -270,7 +273,7 @@ class WCPServices: NSObject {
       kFeedbackBody: ContactUsFeilds.message,
       kFeedbackSubject: ContactUsFeilds.subject,
       kContactusEmail: ContactUsFeilds.email,
-      kContactusFirstname: ContactUsFeilds.firstName
+      kContactusFirstname: ContactUsFeilds.firstName,
     ]
     self.sendRequestWith(method: method, params: params, headers: nil)
   }
@@ -284,7 +287,7 @@ class WCPServices: NSObject {
     let method = WCPMethods.studyUpdates.method
     let headerParams = [
       kStudyId: study.studyId!,
-      kStudyVersion: study.version!
+      kStudyVersion: study.version!,
     ]
     self.sendRequestWith(method: method, params: headerParams, headers: nil)
   }
@@ -339,7 +342,8 @@ class WCPServices: NSObject {
     if Utilities.isValidObject(someObject: eligibility as AnyObject?) {
       EligibilityBuilder.currentEligibility = EligibilityBuilder()
       EligibilityBuilder.currentEligibility?.initEligibilityWithDict(
-        eligibilityDict: eligibility)
+        eligibilityDict: eligibility
+      )
     }
 
   }
@@ -375,7 +379,9 @@ class WCPServices: NSObject {
 
     // save in database
     DBHandler.saveResourcesForStudy(
-      studyId: (Study.currentStudy?.studyId)!, resources: listOfResources)
+      studyId: (Study.currentStudy?.studyId)!,
+      resources: listOfResources
+    )
 
     // assign to Gateway
     Study.currentStudy?.resources = listOfResources
@@ -404,7 +410,9 @@ class WCPServices: NSObject {
         StudyDashboard.instance.statistics = listOfStats
         // save stats in database
         DBHandler.saveDashBoardStatistics(
-          studyId: (Study.currentStudy?.studyId)!, statistics: listOfStats)
+          studyId: (Study.currentStudy?.studyId)!,
+          statistics: listOfStats
+        )
 
         // charts
         let chartList = dashboard["charts"] as! [[String: Any]]
@@ -419,7 +427,9 @@ class WCPServices: NSObject {
 
         // save charts in database
         DBHandler.saveDashBoardCharts(
-          studyId: (Study.currentStudy?.studyId)!, charts: listOfCharts)
+          studyId: (Study.currentStudy?.studyId)!,
+          charts: listOfCharts
+        )
       }
     }
   }
@@ -473,18 +483,22 @@ class WCPServices: NSObject {
       if Utilities.isValidObject(someObject: response[kStudyAnchorDate] as AnyObject?) {
 
         let studyAndhorDate = StudyAnchorDate.init(
-          detail: response[kStudyAnchorDate] as! [String: Any])
+          detail: response[kStudyAnchorDate] as! [String: Any]
+        )
 
         // update anchorDate to current study
         Study.currentStudy?.anchorDate = studyAndhorDate
 
         DBHandler.saveAnchorDateDetail(
-          anchorDate: studyAndhorDate, studyId: (Study.currentStudy?.studyId)!)
+          anchorDate: studyAndhorDate,
+          studyId: (Study.currentStudy?.studyId)!
+        )
       }
 
       // WithdrawalConfigration
       if Utilities.isValidObject(
-        someObject: response[kStudyWithdrawalConfigration] as AnyObject?) {
+        someObject: response[kStudyWithdrawalConfigration] as AnyObject?
+      ) {
 
         let studyWithdrawalConfig = StudyWithdrawalConfigration.init(
           withdrawalConfigration: response[kStudyWithdrawalConfigration] as! [String: Any]
@@ -494,7 +508,8 @@ class WCPServices: NSObject {
         Study.currentStudy?.withdrawalConfigration = studyWithdrawalConfig
         DBHandler.saveWithdrawalConfigration(
           withdrawalConfigration: studyWithdrawalConfig,
-          studyId: (Study.currentStudy?.studyId)!)
+          studyId: (Study.currentStudy?.studyId)!
+        )
       }
 
       // save in database
@@ -517,7 +532,9 @@ class WCPServices: NSObject {
         for activityDict in activities {
 
           let activity = Activity.init(
-            studyId: (Study.currentStudy?.studyId)!, infoDict: activityDict)
+            studyId: (Study.currentStudy?.studyId)!,
+            infoDict: activityDict
+          )
           activityList.append(activity)
         }
         // save to current study object
@@ -536,13 +553,15 @@ class WCPServices: NSObject {
   func handleGetStudyActivityMetadata(response: [String: Any]) {
 
     Study.currentActivity?.setActivityMetaData(
-      activityDict: response[kActivity] as! [String: Any])
+      activityDict: response[kActivity] as! [String: Any]
+    )
 
     if Utilities.isValidObject(someObject: Study.currentActivity?.steps as AnyObject?) {
 
       ActivityBuilder.currentActivityBuilder = ActivityBuilder()
       ActivityBuilder.currentActivityBuilder.initWithActivity(
-        activity: Study.currentActivity!)
+        activity: Study.currentActivity!
+      )
     }
 
     // Save and Update activity meta data
@@ -591,7 +610,8 @@ class WCPServices: NSObject {
       method: method,
       params: params as NSDictionary?,
       headers: headers as NSDictionary?,
-      delegate: delegateSource != nil ? delegateSource! : self)
+      delegate: delegateSource != nil ? delegateSource! : self
+    )
   }
 
 }

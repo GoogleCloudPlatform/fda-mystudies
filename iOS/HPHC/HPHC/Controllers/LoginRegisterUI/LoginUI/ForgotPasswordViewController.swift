@@ -20,8 +20,8 @@ import Foundation
 import UIKit
 
 let kVerifyViewControllerSegue = "VerifyViewControllerSegue"
-let kVerficationMessageFromForgotPassword
-  = "Your registered email(xyz@gmail.com) is pending verification. Enter the Verification Code received on this email to complete verification and try the Forgot Password action again."
+let kVerficationMessageFromForgotPassword =
+  "Your registered email(xyz@gmail.com) is pending verification. Enter the Verification Code received on this email to complete verification and try the Forgot Password action again."
 
 class ForgotPasswordViewController: UIViewController {
 
@@ -49,7 +49,9 @@ class ForgotPasswordViewController: UIViewController {
 
     // Used for background tap dismiss keyboard
     let gestureRecognizwe: UITapGestureRecognizer = UITapGestureRecognizer.init(
-      target: self, action: #selector(ForgotPasswordViewController.dismissKeyboard))
+      target: self,
+      action: #selector(ForgotPasswordViewController.dismissKeyboard)
+    )
     self.view?.addGestureRecognizer(gestureRecognizwe)
 
     self.addBackBarButton()
@@ -84,8 +86,11 @@ class ForgotPasswordViewController: UIViewController {
 
   func showAlertMessages(textMessage: String) {
     UIUtilities.showAlertMessage(
-      "", errorMessage: NSLocalizedString(textMessage, comment: ""),
-      errorAlertActionTitle: NSLocalizedString("OK", comment: ""), viewControllerUsed: self)
+      "",
+      errorMessage: NSLocalizedString(textMessage, comment: ""),
+      errorAlertActionTitle: NSLocalizedString("OK", comment: ""),
+      viewControllerUsed: self
+    )
   }
 
   // MARK: - Button Action
@@ -113,7 +118,9 @@ class ForgotPasswordViewController: UIViewController {
 
       let message = kVerficationMessageFromForgotPassword
       let modifiedMessage = message.replacingOccurrences(
-        of: kDefaultEmail, with: (textFieldEmail?.text)!)
+        of: kDefaultEmail,
+        with: (textFieldEmail?.text)!
+      )
 
       verifyController.labelMessage = modifiedMessage
       verifyController.viewLoadFrom = .forgotPassword
@@ -139,7 +146,8 @@ extension ForgotPasswordViewController: NMWebServiceDelegate {
       UIUtilities.showAlertMessageWithActionHandler(
         NSLocalizedString(kTitleMessage, comment: ""),
         message: NSLocalizedString(kForgotPasswordResponseMessage, comment: ""),
-        buttonTitle: NSLocalizedString(kTitleOk, comment: ""), viewControllerUsed: self
+        buttonTitle: NSLocalizedString(kTitleOk, comment: ""),
+        viewControllerUsed: self
       ) {
         _ = self.navigationController?.popViewController(animated: true)
       }
@@ -147,7 +155,8 @@ extension ForgotPasswordViewController: NMWebServiceDelegate {
       // for resend email
       UIUtilities.showAlertWithTitleAndMessage(
         title: NSLocalizedString(kAlertMessageText, comment: "") as NSString,
-        message: NSLocalizedString(kAlertMessageResendEmail, comment: "") as NSString)
+        message: NSLocalizedString(kAlertMessageResendEmail, comment: "") as NSString
+      )
 
     }
   }
@@ -157,14 +166,15 @@ extension ForgotPasswordViewController: NMWebServiceDelegate {
     self.removeProgressIndicator()
     Logger.sharedInstance.info("requestname : \(requestName)")
 
-    if requestName as String == RegistrationMethods.forgotPassword.description &&
-        error.code == 403 {
+    if requestName as String == RegistrationMethods.forgotPassword.description && error.code == 403
+    {
       self.navigateToVerifyViewController()
     } else {
       // if resend email fails
       UIUtilities.showAlertWithTitleAndMessage(
         title: NSLocalizedString(kTitleError, comment: "") as NSString,
-        message: error.localizedDescription as NSString)
+        message: error.localizedDescription as NSString
+      )
     }
   }
 }
@@ -173,7 +183,8 @@ extension ForgotPasswordViewController: NMWebServiceDelegate {
 extension ForgotPasswordViewController: UITextFieldDelegate {
 
   func textField(
-    _ textField: UITextField, shouldChangeCharactersIn range: NSRange,
+    _ textField: UITextField,
+    shouldChangeCharactersIn range: NSRange,
     replacementString string: String
   ) -> Bool {
     let finalString = textField.text! + string

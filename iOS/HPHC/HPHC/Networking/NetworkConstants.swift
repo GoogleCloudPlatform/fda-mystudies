@@ -65,6 +65,7 @@ enum HTTPHeaderValues {
 enum NetworkURLConstants {
   // Set the server end points
   static let ProductionURL = ""
+
   static let DevelopmentURL = ""
 }
 
@@ -88,7 +89,7 @@ class NetworkConstants: NSObject {
   /// Returns the trusted hosts
   fileprivate func getTrustedHosts() -> NSArray {
     let array = [
-      TrustedHosts.TrustedHost1, TrustedHosts.TrustedHost2, TrustedHosts.TrustedHost3
+      TrustedHosts.TrustedHost1, TrustedHosts.TrustedHost2, TrustedHosts.TrustedHost3,
     ]
     return array as NSArray
   }

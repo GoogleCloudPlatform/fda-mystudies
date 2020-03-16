@@ -37,23 +37,29 @@ enum ScreenSize {
 
 enum DeviceType {
 
-  static let IS_IPHONE_4_OR_LESS = UIDevice.current.userInterfaceIdiom == .phone && ScreenSize
-    .SCREEN_MAX_LENGTH < 568.0
+  static let IS_IPHONE_4_OR_LESS = UIDevice.current.userInterfaceIdiom == .phone
+    && ScreenSize
+      .SCREEN_MAX_LENGTH < 568.0
 
-  static let IS_IPHONE_5 = UIDevice.current.userInterfaceIdiom == .phone && ScreenSize
-    .SCREEN_MAX_LENGTH == 568.0
+  static let IS_IPHONE_5 = UIDevice.current.userInterfaceIdiom == .phone
+    && ScreenSize
+      .SCREEN_MAX_LENGTH == 568.0
 
-  static let IS_IPHONE_6 = UIDevice.current.userInterfaceIdiom == .phone && ScreenSize
-    .SCREEN_MAX_LENGTH == 667.0
+  static let IS_IPHONE_6 = UIDevice.current.userInterfaceIdiom == .phone
+    && ScreenSize
+      .SCREEN_MAX_LENGTH == 667.0
 
-  static let IS_IPHONE_6P = UIDevice.current.userInterfaceIdiom == .phone && ScreenSize
-    .SCREEN_MAX_LENGTH == 736.0
+  static let IS_IPHONE_6P = UIDevice.current.userInterfaceIdiom == .phone
+    && ScreenSize
+      .SCREEN_MAX_LENGTH == 736.0
 
-  static let IS_IPAD = UIDevice.current.userInterfaceIdiom == .pad && ScreenSize.SCREEN_MAX_LENGTH
-    == 1024.0
+  static let IS_IPAD = UIDevice.current.userInterfaceIdiom == .pad
+    && ScreenSize.SCREEN_MAX_LENGTH
+      == 1024.0
 
-  static let IS_IPHONE_X_OR_HIGH = UIDevice.current.userInterfaceIdiom == .phone && ScreenSize
-    .SCREEN_MAX_LENGTH >= 812
+  static let IS_IPHONE_X_OR_HIGH = UIDevice.current.userInterfaceIdiom == .phone
+    && ScreenSize
+      .SCREEN_MAX_LENGTH >= 812
 }
 
 enum iOSVersion {
@@ -101,23 +107,30 @@ class Utilities: NSObject {
   }
 
   class func getAttributedText(
-    plainString pstr: String, boldString bstr: String, fontSize size: CGFloat,
-    plainFontName: String, boldFontName: String
+    plainString pstr: String,
+    boldString bstr: String,
+    fontSize size: CGFloat,
+    plainFontName: String,
+    boldFontName: String
   ) -> NSAttributedString {
 
     let title: String = pstr + " " + bstr
     let attributedString = NSMutableAttributedString(string: title)
     let stringAttributes1 = [
-      NSAttributedString.Key.font: UIFont(name: plainFontName, size: size)!
+      NSAttributedString.Key.font: UIFont(name: plainFontName, size: size)!,
     ]
     let stringAttributes2 = [
-      NSAttributedString.Key.font: UIFont(name: boldFontName, size: size)!
+      NSAttributedString.Key.font: UIFont(name: boldFontName, size: size)!,
     ]
 
     attributedString.addAttributes(
-      stringAttributes1, range: (title as NSString).range(of: pstr))
+      stringAttributes1,
+      range: (title as NSString).range(of: pstr)
+    )
     attributedString.addAttributes(
-      stringAttributes2, range: (title as NSString).range(of: bstr))
+      stringAttributes2,
+      range: (title as NSString).range(of: bstr)
+    )
 
     return attributedString
   }
@@ -183,10 +196,14 @@ class Utilities: NSObject {
   class func frameForText(_ text: String, font: UIFont) -> CGSize {
 
     let attrString = NSAttributedString.init(
-      string: text, attributes: [NSAttributedString.Key.font: font])
+      string: text,
+      attributes: [NSAttributedString.Key.font: font]
+    )
     let rect = attrString.boundingRect(
       with: CGSize(width: MAX_WIDTH, height: MAX_HEIGHT),
-      options: NSStringDrawingOptions.usesLineFragmentOrigin, context: nil)
+      options: NSStringDrawingOptions.usesLineFragmentOrigin,
+      context: nil
+    )
     let size = CGSize(width: rect.size.width, height: rect.size.height)
     return size
   }
@@ -213,8 +230,8 @@ class Utilities: NSObject {
     } else if valueType == "Password" {
 
       // password validation for which is length >= 8 && contains any special character
-      valueRegex
-        = "^(?=.*[!\"#$%&'()*+,-./:;<=>?@\\^_`{|}~\\[\\]])[0-9A-Za-z!\"#$%&'()*+,-./:;<=>?@\\^_`{|}~\\[\\]]{8,}$"
+      valueRegex =
+        "^(?=.*[!\"#$%&'()*+,-./:;<=>?@\\^_`{|}~\\[\\]])[0-9A-Za-z!\"#$%&'()*+,-./:;<=>?@\\^_`{|}~\\[\\]]{8,}$"
     }
 
     let predicate = NSPredicate.init(format: "SELF MATCHES %@", valueRegex)
@@ -260,7 +277,9 @@ class Utilities: NSObject {
 
     if capitalresult == false || numberresult == false || specialresult == false
       || textCountResult
-      == false || lowercaseresult == false {
+        == false
+      || lowercaseresult == false
+    {
       return false
     }
 
@@ -323,24 +342,32 @@ class Utilities: NSObject {
     // is not null
     if (someObject is NSNull) == false {
 
-      if someObject as? Int != nil && (
-        (someObject as? Int)! >= 0 || (someObject as? Int)! < 0
-      ) {
+      if someObject as? Int != nil
+        && (
+          (someObject as? Int)! >= 0 || (someObject as? Int)! < 0
+        )
+      {
         return true
 
-      } else if someObject as? String != nil && ((someObject as? String)?.count)! > 0 && (
-        someObject as? String
-      ) != "" {
+      } else if someObject as? String != nil && ((someObject as? String)?.count)! > 0
+        && (
+          someObject as? String
+        ) != ""
+      {
         return true
 
-      } else if someObject as? Bool != nil && (
-        someObject as! Bool == true || someObject as! Bool == false
-      ) {
+      } else if someObject as? Bool != nil
+        && (
+          someObject as! Bool == true || someObject as! Bool == false
+        )
+      {
         return true
 
-      } else if someObject as? Double != nil && (someObject as? Double)?.isFinite == true && (
-        someObject as? Double
-      )?.isZero == false && (someObject as? Double)! > 0 {
+      } else if someObject as? Double != nil && (someObject as? Double)?.isFinite == true
+        && (
+          someObject as? Double
+        )?.isZero == false && (someObject as? Double)! > 0
+      {
         return true
 
       } else if someObject as? Date != nil {
@@ -387,9 +414,11 @@ class Utilities: NSObject {
     }
 
     if (someObject is NSNull) == false {
-      if someObject as? [String: Any] != nil && (someObject as? [String: Any])?.isEmpty
-        == false
-        && ((someObject as? [String: Any])?.count)! > 0 {
+      if someObject as? [String: Any] != nil
+        && (someObject as? [String: Any])?.isEmpty
+          == false
+        && ((someObject as? [String: Any])?.count)! > 0
+      {
         return true
 
       } else if someObject as? NSArray != nil && ((someObject as? NSArray)?.count)! > 0 {
@@ -517,7 +546,7 @@ class Utilities: NSObject {
 
     var randomString = ""
 
-    for _ in 0 ..< length {
+    for _ in 0..<length {
       let rand = arc4random_uniform(len)
       var nextChar = letters.character(at: Int(rand))
       randomString += NSString(characters: &nextChar, length: 1) as String
@@ -568,7 +597,10 @@ extension FileManager {
       // file does not exist
       do {
         try FileManager.default.createDirectory(
-          atPath: fullPath, withIntermediateDirectories: false, attributes: nil)
+          atPath: fullPath,
+          withIntermediateDirectories: false,
+          attributes: nil
+        )
         return fullPath
       } catch let error as NSError {
         return ""

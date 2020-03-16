@@ -78,15 +78,19 @@ class NetworkProtocols: NetworkConfigurationProtocol {
         let errorDesc = errResponse["message"] as? String ?? "Something went wrong"
 
         let error = NSError(
-          domain: NSURLErrorDomain, code: errorCode,
-          userInfo: [NSLocalizedDescriptionKey: errorDesc])
+          domain: NSURLErrorDomain,
+          code: errorCode,
+          userInfo: [NSLocalizedDescriptionKey: errorDesc]
+        )
         return error
       }
     }
 
     let error = NSError(
-      domain: NSURLErrorDomain, code: 101,
-      userInfo: [NSLocalizedDescriptionKey: "Your error localized description"])
+      domain: NSURLErrorDomain,
+      code: 101,
+      userInfo: [NSLocalizedDescriptionKey: "Your error localized description"]
+    )
     return error
 
   }

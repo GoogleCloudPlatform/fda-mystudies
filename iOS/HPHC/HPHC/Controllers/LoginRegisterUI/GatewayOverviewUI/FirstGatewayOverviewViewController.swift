@@ -71,7 +71,10 @@ class FirstGatewayOverviewViewController: UIViewController {
 
   func playerDidFinishPlaying(note: NSNotification) {
     NotificationCenter.default.removeObserver(
-      self, name: NSNotification.Name.AVPlayerItemDidPlayToEndTime, object: nil)
+      self,
+      name: NSNotification.Name.AVPlayerItemDidPlayToEndTime,
+      object: nil
+    )
     self.playerViewController.dismiss(animated: true, completion: nil)
   }
 
@@ -92,7 +95,9 @@ class FirstGatewayOverviewViewController: UIViewController {
       NotificationCenter.default.addObserver(
         self,
         selector: #selector(StudyOverviewViewControllerFirst.playerDidFinishPlaying(note:)),
-        name: NSNotification.Name.AVPlayerItemDidPlayToEndTime, object: player.currentItem)
+        name: NSNotification.Name.AVPlayerItemDidPlayToEndTime,
+        object: player.currentItem
+      )
       playerViewController = AVPlayerViewController()
       playerViewController.player = player
       self.present(playerViewController, animated: true) {
@@ -112,7 +117,8 @@ class FirstGatewayOverviewViewController: UIViewController {
     let storyboard = UIStoryboard(name: kStoryboardIdentifierGateway, bundle: nil)
 
     let fda = storyboard.instantiateViewController(
-      withIdentifier: kStoryboardIdentifierSlideMenuVC)
+      withIdentifier: kStoryboardIdentifierSlideMenuVC
+    )
       as! FDASlideMenuViewController
     self.navigationController?.pushViewController(fda, animated: true)
 

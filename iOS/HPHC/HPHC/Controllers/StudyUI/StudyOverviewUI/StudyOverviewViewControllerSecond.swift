@@ -65,26 +65,35 @@ class StudyOverviewViewControllerSecond: UIViewController {
     let attrStr = try! NSAttributedString(
       data: (
         overviewSectionDetail.text?.data(
-          using: String.Encoding.unicode, allowLossyConversion: true)!
+          using: String.Encoding.unicode,
+          allowLossyConversion: true
+        )!
       )!,
       options: [
         NSAttributedString.DocumentReadingOptionKey.documentType: NSAttributedString
           .DocumentType
-          .html
+          .html,
       ],
-      documentAttributes: nil)
+      documentAttributes: nil
+    )
 
     let attributedText: NSMutableAttributedString = NSMutableAttributedString(
-      attributedString: attrStr)
+      attributedString: attrStr
+    )
     attributedText.addAttributes(
       [
         NSAttributedString.Key.font: UIFont(
           name: "HelveticaNeue",
-          size: CGFloat(fontSize))!
-      ], range: (attrStr.string as NSString).range(of: attrStr.string))
+          size: CGFloat(fontSize)
+        )!,
+      ],
+      range: (attrStr.string as NSString).range(of: attrStr.string)
+    )
     attributedText.addAttribute(
-      NSAttributedString.Key.foregroundColor, value: UIColor.black,
-      range: (attrStr.string as NSString).range(of: attrStr.string))
+      NSAttributedString.Key.foregroundColor,
+      value: UIColor.black,
+      range: (attrStr.string as NSString).range(of: attrStr.string)
+    )
 
     if Utilities.isValidValue(someObject: attrStr.string as AnyObject?) {
       self.labelDescription?.attributedText = attributedText
@@ -107,7 +116,8 @@ class StudyOverviewViewControllerSecond: UIViewController {
       //TEMP
       UIUtilities.showAlertWithTitleAndMessage(
         title: NSLocalizedString(kAlertMessageText, comment: "") as NSString,
-        message: NSLocalizedString(kAlertMessageReachoutText, comment: "") as NSString)
+        message: NSLocalizedString(kAlertMessageReachoutText, comment: "") as NSString
+      )
     }
   }
 
@@ -115,7 +125,8 @@ class StudyOverviewViewControllerSecond: UIViewController {
 
     let loginStoryboard = UIStoryboard.init(name: "Main", bundle: Bundle.main)
     let webViewController = loginStoryboard.instantiateViewController(
-      withIdentifier: "WebViewController") as! UINavigationController
+      withIdentifier: "WebViewController"
+    ) as! UINavigationController
     let webView = webViewController.viewControllers[0] as! WebViewController
 
     if sender.tag == 1188 {

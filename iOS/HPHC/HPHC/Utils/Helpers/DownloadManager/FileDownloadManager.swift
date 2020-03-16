@@ -45,14 +45,20 @@ class FileDownloadManager: NSObject, URLSessionDelegate, URLSessionDownloadDeleg
     let request = URLRequest(url: url)
     let config = URLSessionConfiguration.default
     sessionManager = Foundation.URLSession.init(
-      configuration: config, delegate: self, delegateQueue: nil)
+      configuration: config,
+      delegate: self,
+      delegateQueue: nil
+    )
     let downloadTask = sessionManager.downloadTask(with: request)
 
     downloadTask.taskDescription = [fileName, fileURL, destinationPath].joined(separator: ",")
     downloadTask.resume()
 
     let downloadModel = FileDownloadModel.init(
-      fileName: fileName, fileURL: fileURL, destinationPath: destinationPath)
+      fileName: fileName,
+      fileURL: fileURL,
+      destinationPath: destinationPath
+    )
     downloadModel.startTime = Date()
     downloadModel.status = TaskStatus.downloading.description()
     downloadModel.task = downloadTask
@@ -61,8 +67,11 @@ class FileDownloadManager: NSObject, URLSessionDelegate, URLSessionDownloadDeleg
   }
 
   func urlSession(
-    _ session: Foundation.URLSession, downloadTask: URLSessionDownloadTask,
-    didWriteData bytesWritten: Int64, totalBytesWritten: Int64, totalBytesExpectedToWrite: Int64
+    _ session: Foundation.URLSession,
+    downloadTask: URLSessionDownloadTask,
+    didWriteData bytesWritten: Int64,
+    totalBytesWritten: Int64,
+    totalBytesExpectedToWrite: Int64
   ) {
 
     DispatchQueue.main.async(
@@ -77,7 +86,8 @@ class FileDownloadManager: NSObject, URLSessionDelegate, URLSessionDownloadDeleg
   }
 
   func urlSession(
-    _ session: Foundation.URLSession, downloadTask: URLSessionDownloadTask,
+    _ session: Foundation.URLSession,
+    downloadTask: URLSessionDownloadTask,
     didFinishDownloadingTo location: URL
   ) {
 
@@ -89,7 +99,8 @@ class FileDownloadManager: NSObject, URLSessionDelegate, URLSessionDownloadDeleg
         let basePath = downloadModel.destinationPath == ""
           ? AKUtility.baseFilePath : downloadModel.destinationPath
         let destinationPath = (basePath as NSString).appendingPathComponent(
-          fileName as String)
+          fileName as String
+        )
 
         let fileManager: FileManager = FileManager.default
 
@@ -105,7 +116,9 @@ class FileDownloadManager: NSObject, URLSessionDelegate, URLSessionDownloadDeleg
           FileDownloadManager.encyptFile(pathURL: fileURL)
 
           self.delegate?.download(
-            manager: self, didFinishDownloadingAtPath: fileName as String)
+            manager: self,
+            didFinishDownloadingAtPath: fileName as String
+          )
         } catch let error as NSError {
           debugPrint("Error while moving downloaded file to destination path:\(error)")
           DispatchQueue.main.async(
@@ -198,11 +211,14 @@ class FileDownloadManager: NSObject, URLSessionDelegate, URLSessionDownloadDeleg
 
         do {
           try encryptedData.write(
-            to: URL.init(string: pathString)!, options: Data.WritingOptions.atomic)
+            to: URL.init(string: pathString)!,
+            options: Data.WritingOptions.atomic
+          )
         } catch let error as NSError {
           print(error)
           debugPrint(
-            "Writing encrypted data to path failed \(error.localizedDescription)")
+            "Writing encrypted data to path failed \(error.localizedDescription)"
+          )
         }
       } catch let error as NSError {
         print(error)

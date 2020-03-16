@@ -56,7 +56,9 @@ class PageViewController: UIPageViewController {
     }
 
     pageViewDelegate?.pageViewController(
-      pageViewController: self, didUpdatePageCount: orderedViewControllers.count)
+      pageViewController: self,
+      didUpdatePageCount: orderedViewControllers.count
+    )
 
     let scrollView = (self.view.subviews.filter { $0 is UIScrollView }.first as? UIScrollView)!
     scrollView.delegate = self
@@ -68,7 +70,10 @@ class PageViewController: UIPageViewController {
   func scrollToNextViewController() {
     if let visibleViewController = viewControllers?.first,
       let nextViewController = pageViewController(
-        self, viewControllerAfter: visibleViewController) {
+        self,
+        viewControllerAfter: visibleViewController
+      )
+    {
       scrollToViewController(viewController: nextViewController)
     }
   }
@@ -87,7 +92,8 @@ class PageViewController: UIPageViewController {
         // any delegate methods, so we have to manually notify the
         // 'tutorialDelegate' of the new index.
         self.notifyTutorialDelegateOfNewIndex(prevViewController: nil)
-      })
+      }
+    )
   }
 
   /// Used to Notify that the current page index was updated.
@@ -121,7 +127,8 @@ class PageViewController: UIPageViewController {
   func scrollToViewController(index newIndex: Int) {
 
     if let firstViewController = viewControllers?.first,
-      let currentIndex = orderedViewControllers.firstIndex(of: firstViewController) {
+      let currentIndex = orderedViewControllers.firstIndex(of: firstViewController)
+    {
       let direction: UIPageViewController.NavigationDirection = newIndex >= currentIndex
         ? .forward : .reverse
       let nextViewController = orderedViewControllers[newIndex]
@@ -154,7 +161,7 @@ class PageViewController: UIPageViewController {
       controllers.append(firstController)
       if overview.sections.count >= 2 {
         let sections = overview.sections.count
-        for section in 1...(sections-1) {
+        for section in 1...(sections - 1) {
 
           let restControllers = (
             storyboard.instantiateViewController(withIdentifier: "SecondViewController")
@@ -178,7 +185,7 @@ class PageViewController: UIPageViewController {
 
       let sections = overview.sections.count
       if sections > 1 {
-        for section in 1...(sections-1) {
+        for section in 1...(sections - 1) {
 
           let restControllers = (
             storyboard.instantiateViewController(withIdentifier: "SecondViewController")
@@ -260,7 +267,9 @@ extension PageViewController: UIScrollViewDelegate {
   func scrollViewDidEndDragging(_ scrollView: UIScrollView, willDecelerate decelerate: Bool) {
 
     pageViewDelegate?.pageViewController(
-      pageViewController: self, didUpdatePageIndex: currentIndex)
+      pageViewController: self,
+      didUpdatePageIndex: currentIndex
+    )
   }
 
   func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {}

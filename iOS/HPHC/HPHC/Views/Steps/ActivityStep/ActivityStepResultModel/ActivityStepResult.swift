@@ -136,19 +136,25 @@ class ActivityStepResult {
 
         if Utilities.isValidValue(
           someObject: Utilities.getDateFromString(
-            dateString: (stepDict[kActivityStepStartTime] as? String)!) as AnyObject?) {
+            dateString: (stepDict[kActivityStepStartTime] as? String)!
+          ) as AnyObject?
+        ) {
           self.startTime = Utilities.getDateFromString(
-            dateString: (stepDict[kActivityStepStartTime] as? String)!)
+            dateString: (stepDict[kActivityStepStartTime] as? String)!
+          )
         }
       }
       if Utilities.isValidValue(someObject: stepDict[kActivityStepEndTime] as AnyObject) {
 
         if Utilities.isValidValue(
           someObject: Utilities.getDateFromString(
-            dateString: (stepDict[kActivityStepEndTime] as? String)!) as AnyObject?) {
+            dateString: (stepDict[kActivityStepEndTime] as? String)!
+          ) as AnyObject?
+        ) {
 
           self.endTime = Utilities.getDateFromString(
-            dateString: (stepDict[kActivityStepEndTime] as? String)!)
+            dateString: (stepDict[kActivityStepEndTime] as? String)!
+          )
         }
       }
 
@@ -237,8 +243,9 @@ class ActivityStepResult {
 
         if stepResult.results?.count == 1 && self.type != .form {
 
-          if let questionstepResult: ORKQuestionResult? = stepResult.results?.first
-            as? ORKQuestionResult? {
+          if let questionstepResult:ORKQuestionResult? = stepResult.results?.first
+            as? ORKQuestionResult?
+          {
             self.setValue(questionstepResult: questionstepResult!)
 
           } else {
@@ -259,8 +266,10 @@ class ActivityStepResult {
           var j: Int! = 0
           var isAddMore: Bool? = false
 
-          if (stepResult.results?.count)! > (self.step as? ActivityFormStep)!.itemsArray
-            .count {
+          if (stepResult.results?.count)!
+            > (self.step as? ActivityFormStep)!.itemsArray
+            .count
+          {
             isAddMore = true
           }
           var localArray: [[String: Any]] = [[String: Any]]()
@@ -302,7 +311,8 @@ class ActivityStepResult {
               if Utilities.isValidValue(
                 someObject: (
                   activityStepResult?.step?.resultType as? String as AnyObject
-                )) {
+                )
+              ) {
                 self.subTypeForForm = activityStepResult?.step?.resultType
                   as? String
 
@@ -350,14 +360,18 @@ class ActivityStepResult {
 
           if Utilities.isValidValue(someObject: stepTypeResult?.score as AnyObject?)
             && Utilities.isValidValue(
-              someObject: stepTypeResult?.numberOfGames as AnyObject?)
+              someObject: stepTypeResult?.numberOfGames as AnyObject?
+            )
             && Utilities.isValidValue(
-              someObject: stepTypeResult?.numberOfFailures as AnyObject?) {
+              someObject: stepTypeResult?.numberOfFailures as AnyObject?
+            )
+          {
 
             for i in 0..<3 {
               var resultDict: [String: Any]? = Dictionary()
 
-              resultDict?[kActivityActiveKeyResultType] = ActiveStepResultType.numeric
+              resultDict?[kActivityActiveKeyResultType] =
+                ActiveStepResultType.numeric
                 .rawValue
 
               switch SpatialSpanMemoryType(rawValue: i)! as SpatialSpanMemoryType {
@@ -366,36 +380,42 @@ class ActivityStepResult {
                 resultDict?[kActivityStepResultValue] = stepTypeResult?.score
 
               case .numberOfGames:
-                resultDict?[kActivityActiveStepKey]
-                  = kSpatialSpanMemoryKeyNumberOfGames
-                resultDict?[kActivityStepResultValue] = stepTypeResult?
+                resultDict?[kActivityActiveStepKey] = kSpatialSpanMemoryKeyNumberOfGames
+                resultDict?[kActivityStepResultValue] =
+                  stepTypeResult?
                   .numberOfGames
 
               case .numberOfFailures:
-                resultDict?[kActivityActiveStepKey]
-                  = kSpatialSpanMemoryKeyNumberOfFailures
-                resultDict?[kActivityStepResultValue] = stepTypeResult?
+                resultDict?[kActivityActiveStepKey] = kSpatialSpanMemoryKeyNumberOfFailures
+                resultDict?[kActivityStepResultValue] =
+                  stepTypeResult?
                   .numberOfFailures
               }
 
-              if self.startTime != nil && (
-                Utilities.getStringFromDate(date: self.startTime!) != nil
-              ) {
+              if self.startTime != nil
+                && (
+                  Utilities.getStringFromDate(date: self.startTime!) != nil
+                )
+              {
 
                 resultDict?[kActivityStepStartTime] = Utilities.getStringFromDate(
-                  date: self.startTime!)
+                  date: self.startTime!
+                )
               } else {
                 let currentDate = Date()
                 let dateString = Utilities.getStringFromDate(date: currentDate)
 
                 resultDict?[kActivityStepStartTime] = dateString
               }
-              if self.endTime != nil && (
-                Utilities.getStringFromDate(date: self.endTime!) != nil
-              ) {
+              if self.endTime != nil
+                && (
+                  Utilities.getStringFromDate(date: self.endTime!) != nil
+                )
+              {
 
                 resultDict?[kActivityStepEndTime] = Utilities.getStringFromDate(
-                  date: self.endTime!)
+                  date: self.endTime!
+                )
               } else {
                 let currentDate = Date()
                 let dateString = Utilities.getStringFromDate(date: currentDate)
@@ -421,23 +441,28 @@ class ActivityStepResult {
 
               resultDict?[kActivityActiveStepKey] = kTowerOfHanoiKeyPuzzleWasSolved
               resultDict?[kActivityStepResultValue] = stepTypeResult?.puzzleWasSolved
-              resultDict?[kActivityActiveKeyResultType] = ActiveStepResultType.boolean
+              resultDict?[kActivityActiveKeyResultType] =
+                ActiveStepResultType.boolean
                 .rawValue
 
             } else {
               // numberOfMoves
               resultDict?[kActivityActiveStepKey] = kTowerOfHanoiKeyNumberOfMoves
               resultDict?[kActivityStepResultValue] = stepTypeResult?.moves?.count
-              resultDict?[kActivityActiveKeyResultType] = ActiveStepResultType.numeric
+              resultDict?[kActivityActiveKeyResultType] =
+                ActiveStepResultType.numeric
                 .rawValue
             }
 
-            if self.startTime != nil && (
-              Utilities.getStringFromDate(date: self.startTime!) != nil
-            ) {
+            if self.startTime != nil
+              && (
+                Utilities.getStringFromDate(date: self.startTime!) != nil
+              )
+            {
 
               resultDict?[kActivityStepStartTime] = Utilities.getStringFromDate(
-                date: self.startTime!)
+                date: self.startTime!
+              )
             } else {
               let currentDate = Date()
               let dateString = Utilities.getStringFromDate(date: currentDate)
@@ -446,12 +471,15 @@ class ActivityStepResult {
             }
 
             // Saving Start & End Time of Step
-            if self.endTime != nil && (
-              Utilities.getStringFromDate(date: self.endTime!) != nil
-            ) {
+            if self.endTime != nil
+              && (
+                Utilities.getStringFromDate(date: self.endTime!) != nil
+              )
+            {
 
               resultDict?[kActivityStepEndTime] = Utilities.getStringFromDate(
-                date: self.endTime!)
+                date: self.endTime!
+              )
 
             } else {
               let currentDate = Date()
@@ -474,39 +502,48 @@ class ActivityStepResult {
           for i in 0..<2 {
             var resultDict: [String: Any]? = Dictionary()
 
-            resultDict?[kActivityActiveKeyResultType] = ActiveStepResultType.numeric
+            resultDict?[kActivityActiveKeyResultType] =
+              ActiveStepResultType.numeric
               .rawValue
 
             // Saving Duration & Kick Counts
             if i == 0 {  //Duration
               resultDict?[kActivityActiveStepKey] = kFetalKickCounterDuration
               resultDict?[kActivityStepResultValue] = Double(
-                (stepTypeResult?.duration) == nil ? 0 : (stepTypeResult?.duration)!)
+                (stepTypeResult?.duration) == nil ? 0 : (stepTypeResult?.duration)!
+              )
 
             } else {  // Kick Count
               resultDict?[kActivityActiveStepKey] = kFetalKickCounterCount
               resultDict?[kActivityStepResultValue] = Double(
                 (stepTypeResult?.totalKickCount) == nil
-                  ? 0 : (stepTypeResult?.totalKickCount)!)
+                  ? 0 : (stepTypeResult?.totalKickCount)!
+              )
             }
 
             // Saving Start & End Time of Step
-            if self.startTime != nil && (
-              Utilities.getStringFromDate(date: self.startTime!) != nil
-            ) {
+            if self.startTime != nil
+              && (
+                Utilities.getStringFromDate(date: self.startTime!) != nil
+              )
+            {
               resultDict?[kActivityStepStartTime] = Utilities.getStringFromDate(
-                date: self.startTime!)
+                date: self.startTime!
+              )
             } else {
               let currentDate = Date()
               let dateString = Utilities.getStringFromDate(date: currentDate)
               resultDict?[kActivityStepStartTime] = dateString
             }
-            if self.endTime != nil && (
-              Utilities.getStringFromDate(date: self.endTime!) != nil
-            ) {
+            if self.endTime != nil
+              && (
+                Utilities.getStringFromDate(date: self.endTime!) != nil
+              )
+            {
 
               resultDict?[kActivityStepEndTime] = Utilities.getStringFromDate(
-                date: self.endTime!)
+                date: self.endTime!
+              )
             } else {
               let currentDate = Date()
               let dateString = Utilities.getStringFromDate(date: currentDate)
@@ -535,9 +572,11 @@ class ActivityStepResult {
 
         if Utilities.isValidValue(someObject: stepTypeResult.scaleAnswer as AnyObject?) {
 
-          if self.step != nil && (self.step as? ActivityQuestionStep) != nil && (
-            (self.step as? ActivityQuestionStep)?.resultType as? String
-          )! == "continuousScale" {
+          if self.step != nil && (self.step as? ActivityQuestionStep) != nil
+            && (
+              (self.step as? ActivityQuestionStep)?.resultType as? String
+            )! == "continuousScale"
+          {
             let formatDict: [String: Any]
 
             formatDict = ((self.step as? ActivityQuestionStep)?.formatDict)!
@@ -549,19 +588,19 @@ class ActivityStepResult {
 
             } else if (maxFractionDigit as? Int)! == 1 {
               let v = (stepTypeResult.scaleAnswer as? Double)!
-              self.value = Double(round(10 * v)/10)
+              self.value = Double(round(10 * v) / 10)
 
             } else if (maxFractionDigit as? Int)! == 2 {
               let v = (stepTypeResult.scaleAnswer as? Double)!
-              self.value = Double(round(100 * v)/100)
+              self.value = Double(round(100 * v) / 100)
 
             } else if (maxFractionDigit as? Int)! == 3 {
               let v = (stepTypeResult.scaleAnswer as? Double)!
-              self.value = Double(round(1000 * v)/1000)
+              self.value = Double(round(1000 * v) / 1000)
 
             } else if (maxFractionDigit as? Int)! == 4 {
               let v = (stepTypeResult.scaleAnswer as? Double)!
-              self.value = Double(round(10000 * v)/10000)
+              self.value = Double(round(10000 * v) / 10000)
 
             } else {
               self.value = (stepTypeResult.scaleAnswer as? Double)!
@@ -600,9 +639,11 @@ class ActivityStepResult {
       if Utilities.isValidObject(someObject: stepTypeResult.choiceAnswers as AnyObject?) {
         if (stepTypeResult.choiceAnswers?.count)! > 0 {
 
-          if resultType == QuestionStepType.imageChoice.rawValue || resultType
-            == QuestionStepType
-            .valuePicker.rawValue {
+          if resultType == QuestionStepType.imageChoice.rawValue
+            || resultType
+              == QuestionStepType
+              .valuePicker.rawValue
+          {
 
             // for image choice and valuepicker
 
@@ -627,9 +668,11 @@ class ActivityStepResult {
           }
 
         } else {
-          if resultType == QuestionStepType.imageChoice.rawValue || resultType
-            == QuestionStepType
-            .valuePicker.rawValue {
+          if resultType == QuestionStepType.imageChoice.rawValue
+            || resultType
+              == QuestionStepType
+              .valuePicker.rawValue
+          {
             self.value = ""
 
           } else {
@@ -637,9 +680,11 @@ class ActivityStepResult {
           }
         }
       } else {
-        if resultType == QuestionStepType.imageChoice.rawValue || resultType
-          == QuestionStepType
-          .valuePicker.rawValue {
+        if resultType == QuestionStepType.imageChoice.rawValue
+          || resultType
+            == QuestionStepType
+            .valuePicker.rawValue
+        {
           self.value = ""
 
         } else {
@@ -767,7 +812,7 @@ class ActivityStepResult {
       let stepTypeResult = (questionstepResult as? ORKTimeIntervalQuestionResult)!
 
       if Utilities.isValidValue(someObject: stepTypeResult.intervalAnswer as AnyObject?) {
-        self.value = Double(truncating: stepTypeResult.intervalAnswer!)/3600
+        self.value = Double(truncating: stepTypeResult.intervalAnswer!) / 3600
 
       } else {
         self.value = 0.0
@@ -786,8 +831,11 @@ class ActivityStepResult {
     case ORKQuestionType.location.rawValue:
       let stepTypeResult = (questionstepResult as? ORKLocationQuestionResult)!
 
-      if stepTypeResult.locationAnswer != nil && CLLocationCoordinate2DIsValid(
-        (stepTypeResult.locationAnswer?.coordinate)!) {
+      if stepTypeResult.locationAnswer != nil
+        && CLLocationCoordinate2DIsValid(
+          (stepTypeResult.locationAnswer?.coordinate)!
+        )
+      {
 
         let lat = stepTypeResult.locationAnswer?.coordinate.latitude
         let long = stepTypeResult.locationAnswer?.coordinate.longitude

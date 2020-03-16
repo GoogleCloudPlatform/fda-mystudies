@@ -50,7 +50,7 @@ enum RegistrationMethods: String {
     switch self {
 
     default:
-      return self.rawValue+".api"
+      return self.rawValue + ".api"
     }
   }
 
@@ -62,21 +62,24 @@ enum RegistrationMethods: String {
       .userPreferences, .studyState, .versionInfo:
       // GET Methods
       return Method(
-        methodName: (self.rawValue+".api"),
+        methodName: (self.rawValue + ".api"),
         methodType: .httpMethodGet,
-        requestType: .requestTypeHTTP)
+        requestType: .requestTypeHTTP
+      )
     case .withdraw, .logout, .deactivate:
       // DELETE Methods
       return Method(
-        methodName: (self.rawValue+".api"),
+        methodName: (self.rawValue + ".api"),
         methodType: .httpMethodDELETE,
-        requestType: .requestTypeJSON)
+        requestType: .requestTypeJSON
+      )
     default:
       // POST Methods
       return Method(
-        methodName: (self.rawValue+".api"),
+        methodName: (self.rawValue + ".api"),
         methodType: .httpMethodPOST,
-        requestType: .requestTypeJSON)
+        requestType: .requestTypeJSON
+      )
 
     }
   }
@@ -87,7 +90,8 @@ enum RegistrationServerURLConstants {
 
   // Staging server
   static let ProductionURL = API.registrationURL
-  static let DevelopmentURL = API.registrationURL // This will change based on config file.
+
+  static let DevelopmentURL = API.registrationURL  // This will change based on config file.
 
 }
 class RegistrationServerConfiguration: NetworkConfiguration {
@@ -115,12 +119,12 @@ class RegistrationServerConfiguration: NetworkConfiguration {
       return [
         kUserAuthToken: User.currentUser.authToken,
         "applicationId": appId,
-        "orgId": orgId
+        "orgId": orgId,
       ]
     } else {
       return [
         "applicationId": appId,
-        "orgId": orgId
+        "orgId": orgId,
       ]
     }
   }

@@ -143,35 +143,41 @@ class Resource {
         let configuration = detail[kResourceConfigration] as! [String: Any]
         self.povAvailable = true
 
-        if
-          Utilities.isValidValue(
-            someObject: (configuration["availableDate"]) as AnyObject) {
+        if Utilities.isValidValue(
+          someObject: (configuration["availableDate"]) as AnyObject
+        ) {
           self.startDate = Utilities.getDateFromStringWithFormat(
-            "YYYY-MM-dd", resultDate: configuration["availableDate"] as! String)
+            "YYYY-MM-dd",
+            resultDate: configuration["availableDate"] as! String
+          )
         }
         if Utilities.isValidValue(someObject: (configuration["expiryDate"]) as AnyObject) {
           self.endDate = Utilities.getDateFromStringWithFormat(
-            "YYYY-MM-dd", resultDate: configuration["expiryDate"] as! String)
+            "YYYY-MM-dd",
+            resultDate: configuration["expiryDate"] as! String
+          )
         }
 
         self.anchorDateStartDays = configuration["startDays"] as? Int
         self.anchorDateEndDays = configuration["endDays"] as? Int
 
-        if
-          Utilities.isValidValue(
-            someObject: (configuration["availabilityType"]) as AnyObject) {
+        if Utilities.isValidValue(
+          someObject: (configuration["availabilityType"]) as AnyObject
+        ) {
           self.availabilityType = ResourceAvailabilityType(
-            rawValue: configuration["availabilityType"] as? String ?? "Regular")!
+            rawValue: configuration["availabilityType"] as? String ?? "Regular"
+          )!
         }
 
         if Utilities.isValidValue(someObject: (configuration["sourceType"]) as AnyObject) {
           self.sourceType = AnchorDateSourceType(
-            rawValue: configuration["sourceType"] as? String ?? "EnrollmentDate")!
+            rawValue: configuration["sourceType"] as? String ?? "EnrollmentDate"
+          )!
         }
 
-        if
-          Utilities.isValidValue(
-            someObject: (configuration["sourceActivityId"]) as AnyObject) {
+        if Utilities.isValidValue(
+          someObject: (configuration["sourceActivityId"]) as AnyObject
+        ) {
           self.sourceActivityId = configuration["sourceActivityId"] as? String
         }
 
@@ -241,43 +247,49 @@ class Resource {
       if Utilities.isValidObject(someObject: dict[kResourceConfigration] as AnyObject) {
         let configuration = dict[kResourceConfigration] as! [String: Any]
         self.povAvailable = true
-        if
-          Utilities.isValidValue(
-            someObject: (configuration["availableDate"]) as AnyObject) {
+        if Utilities.isValidValue(
+          someObject: (configuration["availableDate"]) as AnyObject
+        ) {
           self.startDate = Utilities.getDateFromStringWithFormat(
-            "YYYY-MM-dd", resultDate: configuration["availableDate"] as! String)
+            "YYYY-MM-dd",
+            resultDate: configuration["availableDate"] as! String
+          )
         }
         if Utilities.isValidValue(someObject: (configuration["expiryDate"]) as AnyObject) {
           self.endDate = Utilities.getDateFromStringWithFormat(
-            "YYYY-MM-dd", resultDate: configuration["expiryDate"] as! String)
+            "YYYY-MM-dd",
+            resultDate: configuration["expiryDate"] as! String
+          )
         }
         self.anchorDateStartDays = configuration["startDays"] as? Int
         self.anchorDateEndDays = configuration["endDays"] as? Int
 
-        if
-          Utilities.isValidValue(
-            someObject: (configuration["availabilityType"]) as AnyObject) {
+        if Utilities.isValidValue(
+          someObject: (configuration["availabilityType"]) as AnyObject
+        ) {
           self.availabilityType = ResourceAvailabilityType(
-            rawValue: configuration["availabilityType"] as? String ?? "Regular")!
+            rawValue: configuration["availabilityType"] as? String ?? "Regular"
+          )!
         }
 
         if Utilities.isValidValue(someObject: (configuration["sourceType"]) as AnyObject) {
           self.sourceType = AnchorDateSourceType(
-            rawValue: configuration["sourceType"] as? String ?? "EnrollmentDate")!
+            rawValue: configuration["sourceType"] as? String ?? "EnrollmentDate"
+          )!
         }
 
-        if
-          Utilities.isValidValue(
-            someObject: (configuration["sourceActivityId"]) as AnyObject) {
+        if Utilities.isValidValue(
+          someObject: (configuration["sourceActivityId"]) as AnyObject
+        ) {
           self.sourceActivityId = configuration["sourceActivityId"] as? String
         }
 
         if Utilities.isValidValue(someObject: (configuration["sourceKey"]) as AnyObject) {
           self.sourceKey = configuration["sourceKey"] as? String
         }
-        if
-          Utilities.isValidValue(
-            someObject: (configuration["sourceFormKey"]) as AnyObject) {
+        if Utilities.isValidValue(
+          someObject: (configuration["sourceFormKey"]) as AnyObject
+        ) {
           self.sourceFormKey = configuration["sourceFormKey"] as? String
         }
         if Utilities.isValidValue(someObject: (configuration["startTime"]) as AnyObject) {
@@ -311,7 +323,8 @@ class Resource {
       startDateStringEnrollment = (startDateStringEnrollment ?? "") + " "
         + startTimeEnrollment
       enrollmentDate = Utilities.findDateFromString(
-        dateString: startDateStringEnrollment ?? "")
+        dateString: startDateStringEnrollment ?? ""
+      )
 
       let lifeTime = self.updateLifeTime(enrollmentDate!)
 
@@ -340,8 +353,8 @@ class Resource {
     var startDate: Date!
     var endDate: Date!
 
-    let startDateInterval = TimeInterval(60*60*24*(self.anchorDateStartDays)!)
-    let endDateInterval = TimeInterval(60*60*24*(self.anchorDateEndDays)!)
+    let startDateInterval = TimeInterval(60 * 60 * 24 * (self.anchorDateStartDays)!)
+    let endDateInterval = TimeInterval(60 * 60 * 24 * (self.anchorDateEndDays)!)
 
     startDate = date.addingTimeInterval(startDateInterval)
     endDate = date.addingTimeInterval(endDateInterval)

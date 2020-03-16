@@ -107,7 +107,7 @@ class UserServices: NSObject {
     let params = [
       kUserEmailId: user.emailId!,
       kUserPassword: user.password!,
-      "appId": Utilities.getBundleIdentifier()
+      "appId": Utilities.getBundleIdentifier(),
     ]
 
     let method = RegistrationMethods.login.method
@@ -127,7 +127,7 @@ class UserServices: NSObject {
     let params = [
       kUserEmailId: user.emailId!,
       kUserPassword: user.password!,
-      "appId": Utilities.getBundleIdentifier()
+      "appId": Utilities.getBundleIdentifier(),
     ]
 
     let method = RegistrationMethods.register.method
@@ -159,7 +159,7 @@ class UserServices: NSObject {
 
     let param = [
       kVerifyCode: verificationCode,
-      kUserEmailId: emailId
+      kUserEmailId: emailId,
     ]
     let method = RegistrationMethods.verify.method
     self.sendRequestWith(method: method, params: param, headers: nil)
@@ -217,7 +217,7 @@ class UserServices: NSObject {
     let user = User.currentUser
     let headerParams = [
       kUserAuthToken: user.authToken,
-      kUserId: user.userId!
+      kUserId: user.userId!,
     ] as [String: String]
 
     let params = [kDeactivateAccountDeleteData: listOfStudyIds]
@@ -254,7 +254,7 @@ class UserServices: NSObject {
     let headerParams = [kUserId: user.userId!]
     let params = [
       kUserOldPassword: oldPassword,
-      kUserNewPassword: newPassword
+      kUserNewPassword: newPassword,
     ]
 
     let method = RegistrationMethods.changePassword.method
@@ -289,7 +289,7 @@ class UserServices: NSObject {
       kSettingsPassCode: (user.settings?.passcode)! as Bool,
       kSettingsLocalNotifications: (user.settings?.localNotifications)! as Bool,
       kSettingsLeadTime: (user.settings?.leadTime)! as String,
-      kSettingsLocale: (user.settings?.locale)! as String
+      kSettingsLocale: (user.settings?.locale)! as String,
     ] as [String: Any]
 
     let version = Utilities.getAppVersion()
@@ -297,13 +297,13 @@ class UserServices: NSObject {
     let info = [
       kAppVersion: version,
       kOSType: "ios",
-      kDeviceToken: token
+      kDeviceToken: token,
     ]
 
     let params = [
       kUserSettings: settings,
       kBasicInfo: info,
-      kParticipantInfo: []
+      kParticipantInfo: [],
     ] as [String: Any]
 
     let method = RegistrationMethods.updateUserProfile.method
@@ -324,13 +324,13 @@ class UserServices: NSObject {
     let info = [
       kAppVersion: version,
       kOSType: "ios",
-      kDeviceToken: deviceToken
+      kDeviceToken: deviceToken,
     ]
 
     let params = [
 
       kBasicInfo: info,
-      kParticipantInfo: []
+      kParticipantInfo: [],
     ] as [String: Any]
 
     let method = RegistrationMethods.updateUserProfile.method
@@ -347,7 +347,7 @@ class UserServices: NSObject {
     let user = User.currentUser
     let headerParams = [
       kUserId: user.userId!,
-      kUserAuthToken: user.authToken
+      kUserAuthToken: user.authToken,
     ] as [String: String]
 
     let method = RegistrationMethods.userPreferences.method
@@ -406,7 +406,8 @@ class UserServices: NSObject {
   ///   - activityStauts: Instance of `UserActivityStatus` to update
   ///   - delegate: Class object to receive response
   func updateActivityBookmarkStatus(
-    activityStauts: UserActivityStatus, delegate: NMWebServiceDelegate
+    activityStauts: UserActivityStatus,
+    delegate: NMWebServiceDelegate
   ) {
     self.delegate = delegate
 
@@ -441,7 +442,9 @@ class UserServices: NSObject {
   ///   - activityStatus: Instance of `UserActivityStatus` to update
   ///   - delegate: Class object to receive response
   func updateUserActivityParticipatedStatus(
-    studyId: String, activityStatus: UserActivityStatus, delegate: NMWebServiceDelegate
+    studyId: String,
+    activityStatus: UserActivityStatus,
+    delegate: NMWebServiceDelegate
   ) {
 
     self.delegate = delegate
@@ -450,7 +453,7 @@ class UserServices: NSObject {
     let headerParams = [kUserId: user.userId] as [String: String]
     let params = [
       kStudyId: studyId,
-      kActivity: [activityStatus.getParticipatedUserActivityStatus()]
+      kActivity: [activityStatus.getParticipatedUserActivityStatus()],
     ] as [String: Any]
     let method = RegistrationMethods.updateActivityState.method
     self.sendRequestWith(method: method, params: params, headers: headerParams)
@@ -462,7 +465,9 @@ class UserServices: NSObject {
   ///   - consentStatus: Instance of `ConsentStatus`
   ///   - delegate: Class object to receive response
   func updateUserEligibilityConsentStatus(
-    eligibilityStatus: Bool, consentStatus: ConsentStatus, delegate: NMWebServiceDelegate
+    eligibilityStatus: Bool,
+    consentStatus: ConsentStatus,
+    delegate: NMWebServiceDelegate
   ) {
 
     self.delegate = delegate
@@ -470,7 +475,7 @@ class UserServices: NSObject {
     let user = User.currentUser
     let headerParams = [
       kUserId: user.userId! as String,
-      kUserAuthToken: user.authToken! as String
+      kUserAuthToken: user.authToken! as String,
     ]
 
     let consentVersion: String?
@@ -486,14 +491,14 @@ class UserServices: NSObject {
     let consent = [
       kConsentDocumentVersion: consentVersion! as String,
       kStatus: consentStatus.rawValue,
-      kConsentpdf: "\(base64data!)" as Any
+      kConsentpdf: "\(base64data!)" as Any,
     ] as [String: Any]
 
     let params = [
       kStudyId: (Study.currentStudy?.studyId!)! as String,
       kEligibility: eligibilityStatus,
       kConsent: consent,
-      kConsentSharing: ""
+      kConsentSharing: "",
     ] as [String: Any]
     let method = RegistrationMethods.updateEligibilityConsentStatus.method
 
@@ -511,7 +516,7 @@ class UserServices: NSObject {
     let user = User.currentUser
     let params = [
       kStudyId: studyId,
-      "consentVersion": ""
+      "consentVersion": "",
     ]
 
     let headerParams = [kUserId: user.userId!]
@@ -554,7 +559,7 @@ class UserServices: NSObject {
 
     let params = [
       kStudyId: studyId,
-      kDeleteData: shouldDeleteData
+      kDeleteData: shouldDeleteData,
     ] as [String: Any]
 
     let method = RegistrationMethods.withdraw.method
@@ -580,7 +585,9 @@ class UserServices: NSObject {
   ///   - headers: Request headers
   ///   - delegate: Class object to receive response
   func syncOfflineSavedData(
-    method: Method, params: [String: Any]?, headers: [String: String]?,
+    method: Method,
+    params: [String: Any]?,
+    headers: [String: String]?,
     delegate: NMWebServiceDelegate
   ) {
 
@@ -769,7 +776,9 @@ class UserServices: NSObject {
       if Study.currentStudy != nil {
         for activity in activites {
           let participatedActivity = UserActivityStatus(
-            detail: activity, studyId: (Study.currentStudy?.studyId)!)
+            detail: activity,
+            studyId: (Study.currentStudy?.studyId)!
+          )
           user.participatedActivites.append(participatedActivity)
         }
       }
@@ -892,7 +901,9 @@ class UserServices: NSObject {
       ? [:] : self.failedRequestServices.headerParams
     self.sendRequestWith(
       method: self.failedRequestServices.method,
-      params: (self.requestParams == nil ? nil : self.requestParams), headers: headerParams)
+      params: (self.requestParams == nil ? nil : self.requestParams),
+      headers: headerParams
+    )
 
   }
 
@@ -911,7 +922,8 @@ class UserServices: NSObject {
       method: method,
       params: params as NSDictionary?,
       headers: headers as NSDictionary?,
-      delegate: self)
+      delegate: self
+    )
   }
 
 }
@@ -922,7 +934,8 @@ extension UserServices: NMWebServiceDelegate {
 
   func finishedRequest(_ manager: NetworkManager, requestName: NSString, response: AnyObject?) {
     Logger.sharedInstance.info(
-      "RUS Received Data: \(requestName), \(String(describing: response))")
+      "RUS Received Data: \(requestName), \(String(describing: response))"
+    )
     switch requestName {
     case RegistrationMethods.login.description as String:
 
@@ -995,9 +1008,12 @@ extension UserServices: NMWebServiceDelegate {
 
       Logger.sharedInstance.error("Failed: Refresh token Expired", error)
 
-      if User.currentUser.refreshToken == "" && requestName as String != RegistrationMethods
-        .login
-        .description {
+      if User.currentUser.refreshToken == ""
+        && requestName as String
+          != RegistrationMethods
+          .login
+          .description
+      {
         // Unauthorized Access
         let errorInfo = ["NSLocalizedDescription": "Your Session is Expired"]
         let localError = NSError.init(domain: error.domain, code: 403, userInfo: errorInfo)
@@ -1022,14 +1038,17 @@ extension UserServices: NMWebServiceDelegate {
       // handle failed request due to network connectivity
       if requestName as String == RegistrationMethods.updateStudyState.description
         || requestName
-        as String == RegistrationMethods.updateActivityState.description {
+          as String == RegistrationMethods.updateActivityState.description
+      {
 
         if error.code == NoNetworkErrorCode {
           // save in database
           DBHandler.saveRequestInformation(
-            params: self.requestParams, headers: self.headerParams,
+            params: self.requestParams,
+            headers: self.headerParams,
             method: requestName as String,
-            server: "registration")
+            server: "registration"
+          )
         }
       }
     }

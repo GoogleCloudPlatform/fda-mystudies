@@ -71,18 +71,22 @@ struct ConsentDocument {
     if Utilities.isValidObject(someObject: consentDoucumentdict as AnyObject?) {
 
       if Utilities.isValidValue(
-        someObject: consentDoucumentdict[kConsentDocumentType] as AnyObject) {
+        someObject: consentDoucumentdict[kConsentDocumentType] as AnyObject
+      ) {
         self.mimeType = MimeType(
-          rawValue: consentDoucumentdict[kConsentDocumentType] as! String)
+          rawValue: consentDoucumentdict[kConsentDocumentType] as! String
+        )
       }
 
       if Utilities.isValidValue(
-        someObject: consentDoucumentdict[kConsentDocumentContent] as AnyObject) {
+        someObject: consentDoucumentdict[kConsentDocumentContent] as AnyObject
+      ) {
         self.htmlString = consentDoucumentdict[kConsentDocumentContent] as? String
       }
 
       if Utilities.isValidValue(
-        someObject: consentDoucumentdict[kConsentDocumentVersion] as AnyObject) {
+        someObject: consentDoucumentdict[kConsentDocumentVersion] as AnyObject
+      ) {
         self.version = consentDoucumentdict[kConsentDocumentVersion] as? String
       }
     }
@@ -96,19 +100,24 @@ class Study: Hashable {
 
   /// Unique identifier
   var studyId: String!
+
   var name: String?
 
   /// Current Version
   var version: String?
+
   /// Updated Version
   var newVersion: String?
+
   var identifer: String?
 
   var category: String?
   var startDate: String?
   var endEnd: String?
+
   /// Current Study Status
   var status: StudyStatus = .Active
+
   var sponserName: String?
 
   var description: String?
@@ -116,13 +125,17 @@ class Study: Hashable {
   var logoURL: String?
   var overview: Overview!
   var activities: [Activity]! = []
+
   /// Resources for Study & Activities
   var resources: [Resource]? = []
+
   var userParticipateState: UserStudyStatus! = nil
 
   var studySettings: StudySettings!
+
   /// Study Consent Document
   var consentDocument: ConsentDocument?
+
   var signedConsentVersion: String?
 
   var signedConsentFilePath: String?
@@ -179,14 +192,16 @@ class Study: Hashable {
 
       if Utilities.isValidObject(someObject: studyDetail[kStudySettings] as AnyObject) {
         self.studySettings = StudySettings(
-          settings: studyDetail[kStudySettings] as! [String: Any])
+          settings: studyDetail[kStudySettings] as! [String: Any]
+        )
       } else {
         self.studySettings = StudySettings()
       }
 
       let currentUser = User.currentUser
 
-      if let userStudyStatus = currentUser.participatedStudies.filter({ $0.studyId == self.studyId }).last {
+      if let userStudyStatus = currentUser.participatedStudies.filter({ $0.studyId == self.studyId }
+      ).last {
         self.userParticipateState = userStudyStatus
 
       } else {
@@ -265,26 +280,30 @@ class StudyAnchorDate {
       }
 
       if Utilities.isValidObject(
-        someObject: detail[kStudyAnchorDateQuestionInfo] as AnyObject?) {
+        someObject: detail[kStudyAnchorDateQuestionInfo] as AnyObject?
+      ) {
 
         let questionInfo = detail[kStudyAnchorDateQuestionInfo] as! [String: Any]
 
         if Utilities.isValidValue(
-          someObject: questionInfo[kStudyAnchorDateActivityId] as AnyObject) {
+          someObject: questionInfo[kStudyAnchorDateActivityId] as AnyObject
+        ) {
           self.anchorDateActivityId = (
             questionInfo[kStudyAnchorDateActivityId] as? String
           )!
         }
 
         if Utilities.isValidValue(
-          someObject: questionInfo[kStudyAnchorDateActivityVersion] as AnyObject) {
+          someObject: questionInfo[kStudyAnchorDateActivityVersion] as AnyObject
+        ) {
           self.anchorDateActivityVersion = (
             questionInfo[kStudyAnchorDateActivityVersion] as? String
           )!
         }
 
         if Utilities.isValidValue(
-          someObject: questionInfo[kStudyAnchorDateQuestionKey] as AnyObject) {
+          someObject: questionInfo[kStudyAnchorDateQuestionKey] as AnyObject
+        ) {
           self.anchorDateQuestionKey = (
             questionInfo[kStudyAnchorDateQuestionKey] as? String
           )!
@@ -304,7 +323,9 @@ class StudyAnchorDate {
 
     if self.anchorDateType == "enrollment-date" {
       let currentUser = User.currentUser
-      if let userStudyStatus = currentUser.participatedStudies.filter({ $0.studyId == Study.currentStudy?.studyId }).first {
+      if let userStudyStatus = currentUser.participatedStudies.filter({
+        $0.studyId == Study.currentStudy?.studyId
+      }).first {
         self.date = userStudyStatus.joiningDate
 
         DBHandler.saveAnchorDate(date: self.date!, studyId: (Study.currentStudy?.studyId)!)
@@ -350,16 +371,19 @@ class StudyWithdrawalConfigration {
     if Utilities.isValidObject(someObject: withdrawalConfigration as AnyObject?) {
 
       if Utilities.isValidValue(
-        someObject: withdrawalConfigration[kStudyWithdrawalMessage] as AnyObject) {
+        someObject: withdrawalConfigration[kStudyWithdrawalMessage] as AnyObject
+      ) {
         self.message = (withdrawalConfigration[kStudyWithdrawalMessage] as? String)!
       } else {
         self.message = ""
       }
 
       if Utilities.isValidValue(
-        someObject: withdrawalConfigration[kStudyWithdrawalType] as AnyObject) {
+        someObject: withdrawalConfigration[kStudyWithdrawalType] as AnyObject
+      ) {
         self.type = StudyWithdrawalConfigrationType(
-          rawValue: (withdrawalConfigration[kStudyWithdrawalType] as? String)!)
+          rawValue: (withdrawalConfigration[kStudyWithdrawalType] as? String)!
+        )
       }
 
     }

@@ -102,7 +102,8 @@ class ConsentSectionStep {
 
       if Utilities.isValidValue(someObject: stepDict[kConsentStepType] as AnyObject) {
         self.type = ConsentStepSectionType(
-          rawValue: (stepDict[kConsentStepType] as? String)!)
+          rawValue: (stepDict[kConsentStepType] as? String)!
+        )
       }
 
       if Utilities.isValidValue(someObject: stepDict[kConsentStepTitle] as AnyObject) {

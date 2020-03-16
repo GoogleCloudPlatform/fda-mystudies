@@ -115,7 +115,10 @@ class User {
   ///   - userType: `User` Type
   ///   - userId: `User` ID
   init(
-    firstName: String?, lastName: String?, emailId: String?, userType: UserType?,
+    firstName: String?,
+    lastName: String?,
+    emailId: String?,
+    userType: UserType?,
     userId: String?
   ) {
     self.firstName = firstName
@@ -201,14 +204,18 @@ class User {
 
       if self.firstName != nil {
         profileDict.setValue(
-          self.firstName, forKey: ((kUserFirstName as NSCopying) as? String)!)
+          self.firstName,
+          forKey: ((kUserFirstName as NSCopying) as? String)!
+        )
 
       } else {
         profileDict.setValue("", forKey: ((kUserFirstName as NSCopying) as? String)!)
       }
       if self.lastName != nil {
         profileDict.setValue(
-          self.lastName, forKey: ((kUserLastName as NSCopying) as? String)!)
+          self.lastName,
+          forKey: ((kUserLastName as NSCopying) as? String)!
+        )
 
       } else {
         profileDict.setValue("", forKey: ((kUserLastName as NSCopying) as? String)!)
@@ -234,7 +241,8 @@ class User {
   ///   - adherence: Current Study runs count
   /// - Returns: object of `UserStudyStatus`
   func udpateCompletionAndAdherence(studyId: String, completion: Int, adherence: Int)
-    -> UserStudyStatus {
+    -> UserStudyStatus
+  {
 
     let studies = self.participatedStudies as [UserStudyStatus]
     if let study = studies.filter({ $0.studyId == studyId }).first {
@@ -314,7 +322,8 @@ class User {
 
     let activityes = self.participatedActivites as [UserActivityStatus]
     if let activity = activityes.filter({ $0.studyId == studyId && $0.activityId == activityId })
-      .first {
+      .first
+    {
       return activity.bookmarked
     }
     return false
@@ -330,7 +339,8 @@ class User {
 
     let activityes = self.participatedActivites as [UserActivityStatus]
     if let activity = activityes.filter({ $0.studyId == studyId && $0.activityId == activityId })
-      .first {
+      .first
+    {
       activity.bookmarked = true
       return activity
     } else {
@@ -352,7 +362,8 @@ class User {
 
     let activityes = self.participatedActivites as [UserActivityStatus]
     if let activity = activityes.filter({ $0.studyId == studyId && $0.activityId == activityId })
-      .first {
+      .first
+    {
       activity.bookmarked = true
     }
   }
@@ -420,12 +431,15 @@ class User {
   ///   - status: ActivityStatus to be assigned to `UserActivityStatus`
   /// - Returns:
   func updateActivityStatus(
-    studyId: String, activityId: String, runId: String,
+    studyId: String,
+    activityId: String,
+    runId: String,
     status: UserActivityStatus.ActivityStatus
   ) -> UserActivityStatus {
 
     let activityes = self.participatedActivites as [UserActivityStatus]
-    if let activity = activityes.filter({ $0.activityId == activityId && $0.activityRunId == runId }).first {
+    if let activity = activityes.filter({ $0.activityId == activityId && $0.activityRunId == runId }
+    ).first {
       activity.status = status
       return activity
     } else {
@@ -444,7 +458,8 @@ class User {
   ///   - studyId:
   ///   - activityId: ActivityID to filter `UserActivityStatus`
   func getActivityStatus(studyId: String, activityId: String)
-    -> UserActivityStatus.ActivityStatus? {
+    -> UserActivityStatus.ActivityStatus?
+  {
 
     let activityes = self.participatedActivites as [UserActivityStatus]
     if let activity = activityes.filter({ $0.activityId == activityId }).first {
@@ -666,7 +681,8 @@ class UserStudyStatus {
       }
       if Utilities.isValidValue(someObject: detail[kStudyEnrolledDate] as AnyObject) {
         self.joiningDate = Utilities.getDateFromString(
-          dateString: (detail[kStudyEnrolledDate] as? String)!)
+          dateString: (detail[kStudyEnrolledDate] as? String)!
+        )
       }
       if Utilities.isValidValue(someObject: detail[kStatus] as AnyObject) {
 
@@ -694,7 +710,7 @@ class UserStudyStatus {
 
     let studyDetail = [
       kStudyId: self.studyId ?? "",
-      kBookmarked: self.bookmarked
+      kBookmarked: self.bookmarked,
     ] as [String: Any]
     return studyDetail
   }
@@ -711,7 +727,7 @@ class UserStudyStatus {
     let studyDetail = [
       kStudyId: self.studyId!,
       kStudyStatus: self.status.paramValue,
-      kStudyParticipantId: id
+      kStudyParticipantId: id,
     ] as [String: Any]
     return studyDetail
   }
@@ -722,7 +738,7 @@ class UserStudyStatus {
     let studyDetail = [
       kStudyId: self.studyId!,
       "completion": completion,
-      "adherence": adherence
+      "adherence": adherence,
     ] as [String: Any]
     return studyDetail
   }
@@ -759,14 +775,16 @@ class TermsAndPolicy {
       if Utilities.isValidValue(someObject: dict[kTerms] as AnyObject?) {
 
         self.termsURL = (dict[kTerms] as! String?)?.trimmingCharacters(
-          in: CharacterSet.whitespacesAndNewlines)
+          in: CharacterSet.whitespacesAndNewlines
+        )
       } else {
         self.termsURL = ""
       }
 
       if Utilities.isValidValue(someObject: dict[kPolicy] as AnyObject?) {
         self.policyURL = (dict[kPolicy] as! String?)?.trimmingCharacters(
-          in: CharacterSet.whitespacesAndNewlines)
+          in: CharacterSet.whitespacesAndNewlines
+        )
 
       } else {
         self.policyURL = ""
@@ -907,7 +925,7 @@ class UserActivityStatus {
     let studyDetail = [
       kStudyId: self.studyId ?? "",
       kActivityId: self.activityId ?? "",
-      kBookmarked: self.bookmarked
+      kBookmarked: self.bookmarked,
     ] as [String: Any]
     return studyDetail
   }
@@ -919,7 +937,7 @@ class UserActivityStatus {
     let runDetail = [
       "total": self.totalRuns,
       "completed": self.compeltedRuns,
-      "missed": self.incompletedRuns
+      "missed": self.incompletedRuns,
     ]
 
     let studyDetail = [
@@ -927,7 +945,7 @@ class UserActivityStatus {
       kActivityRunId: self.activityRunId ?? "",
       kActivityStatus: self.status.paramValue,
       kActivityVersion: self.activityVersion ?? "",
-      "activityRun": runDetail
+      "activityRun": runDetail,
     ] as [String: Any]
 
     return studyDetail

@@ -21,8 +21,8 @@ import IQKeyboardManagerSwift
 import SlideMenuControllerSwift
 import UIKit
 
-let kVerifyMessageFromSignIn
-  = "Your registered email is pending verification. Please type in the Verification Code received in the email to complete this step and proceed to using the app."
+let kVerifyMessageFromSignIn =
+  "Your registered email is pending verification. Please type in the Verification Code received in the email to complete this step and proceed to using the app."
 
 enum SignInLoadFrom: Int {
   case gatewayOverview
@@ -65,27 +65,37 @@ class SignInViewController: UIViewController {
 
     // load plist info
     let plistPath = Bundle.main.path(
-      forResource: "SignInPlist", ofType: ".plist", inDirectory: nil)
+      forResource: "SignInPlist",
+      ofType: ".plist",
+      inDirectory: nil
+    )
     tableViewRowDetails = NSMutableArray(contentsOfFile: plistPath!)
 
     // Used for background tap dismiss keyboard
     let gestureRecognizer: UITapGestureRecognizer = UITapGestureRecognizer(
-      target: self, action: #selector(SignInViewController.dismissKeyboard))
+      target: self,
+      action: #selector(SignInViewController.dismissKeyboard)
+    )
     self.tableView?.addGestureRecognizer(gestureRecognizer)
 
     // info button
     self.navigationItem.rightBarButtonItem = UIBarButtonItem(
-      image: UIImage(named: "info"), style: .done, target: self,
-      action: #selector(self.buttonInfoAction(_:)))
+      image: UIImage(named: "info"),
+      style: .done,
+      target: self,
+      action: #selector(self.buttonInfoAction(_:))
+    )
 
     if let attributedTitle = buttonSignUp?.attributedTitle(for: .normal) {
       let mutableAttributedTitle = NSMutableAttributedString(
-        attributedString: attributedTitle)
+        attributedString: attributedTitle
+      )
 
       mutableAttributedTitle.addAttribute(
         NSAttributedString.Key.foregroundColor,
         value: #colorLiteral(red: 0, green: 0.4862745098, blue: 0.7294117647, alpha: 1),
-        range: NSRange(location: 10, length: 7))
+        range: NSRange(location: 10, length: 7)
+      )
 
       buttonSignUp?.setAttributedTitle(mutableAttributedTitle, for: .normal)
     }
@@ -167,7 +177,9 @@ class SignInViewController: UIViewController {
   /// To Display registration information.
   @IBAction func buttonInfoAction(_ sender: Any) {
     UIUtilities.showAlertWithTitleAndMessage(
-      title: "Why Register?", message: kRegistrationInfoMessage as NSString)
+      title: "Why Register?",
+      message: kRegistrationInfoMessage as NSString
+    )
   }
 
   // MARK: -
@@ -200,8 +212,11 @@ class SignInViewController: UIViewController {
   /// Used to show the alert using Utility.
   func showAlertMessages(textMessage: String) {
     UIUtilities.showAlertMessage(
-      "", errorMessage: NSLocalizedString(textMessage, comment: ""),
-      errorAlertActionTitle: NSLocalizedString("OK", comment: ""), viewControllerUsed: self)
+      "",
+      errorMessage: NSLocalizedString(textMessage, comment: ""),
+      errorAlertActionTitle: NSLocalizedString("OK", comment: ""),
+      viewControllerUsed: self
+    )
   }
 
   /// Dismiss key board when clicked on Background.
@@ -263,12 +278,16 @@ class SignInViewController: UIViewController {
     var foundRange = attributedString.mutableString.range(of: "Terms")
     attributedString.addAttribute(
       NSAttributedString.Key.link,
-      value: (TermsAndPolicy.currentTermsAndPolicy?.termsURL!)! as String, range: foundRange)
+      value: (TermsAndPolicy.currentTermsAndPolicy?.termsURL!)! as String,
+      range: foundRange
+    )
 
     foundRange = attributedString.mutableString.range(of: "Privacy Policy")
     attributedString.addAttribute(
       NSAttributedString.Key.link,
-      value: (TermsAndPolicy.currentTermsAndPolicy?.policyURL!)! as String, range: foundRange)
+      value: (TermsAndPolicy.currentTermsAndPolicy?.policyURL!)! as String,
+      range: foundRange
+    )
 
     termsAndCondition?.attributedText = attributedString
 
@@ -325,7 +344,9 @@ extension SignInViewController: UITableViewDataSource {
 
     let cell = (
       tableView.dequeueReusableCell(
-        withIdentifier: kSignInTableViewCellIdentifier, for: indexPath)
+        withIdentifier: kSignInTableViewCellIdentifier,
+        for: indexPath
+      )
         as? SignInTableViewCell
     )!
 
@@ -357,7 +378,8 @@ extension SignInViewController: UITableViewDelegate {
 extension SignInViewController: UITextFieldDelegate {
 
   func textField(
-    _ textField: UITextField, shouldChangeCharactersIn range: NSRange,
+    _ textField: UITextField,
+    shouldChangeCharactersIn range: NSRange,
     replacementString string: String
   ) -> Bool {
 
@@ -409,11 +431,14 @@ extension SignInViewController: UIGestureRecognizerDelegate {
 extension SignInViewController: UITextViewDelegate {
 
   func textView(_ textView: UITextView, shouldInteractWith URL: URL, in characterRange: NSRange)
-    -> Bool {
+    -> Bool
+  {
     var link: String = (TermsAndPolicy.currentTermsAndPolicy?.termsURL)!
     var title: String = kNavigationTitleTerms
-    if URL.absoluteString == TermsAndPolicy.currentTermsAndPolicy?.policyURL && characterRange
-      .length == String("Privacy Policy").count {
+    if URL.absoluteString == TermsAndPolicy.currentTermsAndPolicy?.policyURL
+      && characterRange
+        .length == String("Privacy Policy").count
+    {
 
       link = (TermsAndPolicy.currentTermsAndPolicy?.policyURL)!
       title = kNavigationTitlePrivacyPolicy
@@ -435,7 +460,8 @@ extension SignInViewController: UITextViewDelegate {
   }
 
   func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldReceive press: UIPress)
-    -> Bool {
+    -> Bool
+  {
     return false
   }
 
@@ -509,16 +535,19 @@ extension SignInViewController: NMWebServiceDelegate {
 
     UIUtilities.showAlertWithTitleAndMessage(
       title: NSLocalizedString(kErrorTitle, comment: "") as NSString,
-      message: error.localizedDescription as NSString)
+      message: error.localizedDescription as NSString
+    )
   }
 }
 
 // Helper function inserted by Swift 4.2 migrator.
 private func convertToOptionalNSAttributedStringKeyDictionary(_ input: [String: Any]?)
-  -> [NSAttributedString.Key: Any]? {
+  -> [NSAttributedString.Key: Any]?
+{
   guard let input = input else { return nil }
   return Dictionary(
     uniqueKeysWithValues: input.map { key, value in
       (NSAttributedString.Key(rawValue: key), value)
-    })
+    }
+  )
 }

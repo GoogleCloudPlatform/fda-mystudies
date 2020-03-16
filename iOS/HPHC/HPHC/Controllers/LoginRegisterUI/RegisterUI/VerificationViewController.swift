@@ -93,8 +93,10 @@ class VerificationViewController: UIViewController {
       self.showAlertMessages(textMessage: kMessageVerificationCodeEmpty)
     } else {
       UserServices().verifyEmail(
-        emailId: self.emailId!, verificationCode: (self.textFieldVerificationCode?.text)!,
-        delegate: self)
+        emailId: self.emailId!,
+        verificationCode: (self.textFieldVerificationCode?.text)!,
+        delegate: self
+      )
     }
   }
 
@@ -103,7 +105,9 @@ class VerificationViewController: UIViewController {
     if (textFieldVerificationCode?.text?.count)! > 0 {
       UserServices().verifyEmail(
         emailId: User.currentUser.emailId!,
-        verificationCode: (self.textFieldVerificationCode?.text)!, delegate: self)
+        verificationCode: (self.textFieldVerificationCode?.text)!,
+        delegate: self
+      )
     } else {
       self.showAlertMessages(textMessage: kMessageVerificationCodeEmpty)
     }
@@ -142,8 +146,11 @@ class VerificationViewController: UIViewController {
   /// Used to show the alert using Utility.
   func showAlertMessages(textMessage: String) {
     UIUtilities.showAlertMessage(
-      "", errorMessage: NSLocalizedString(textMessage, comment: ""),
-      errorAlertActionTitle: NSLocalizedString("OK", comment: ""), viewControllerUsed: self)
+      "",
+      errorMessage: NSLocalizedString(textMessage, comment: ""),
+      errorAlertActionTitle: NSLocalizedString("OK", comment: ""),
+      viewControllerUsed: self
+    )
   }
 
   /// Navigate to Sign up completion screen.
@@ -157,7 +164,8 @@ class VerificationViewController: UIViewController {
     let storyboard = UIStoryboard(name: kStoryboardIdentifierGateway, bundle: nil)
 
     let fda = storyboard.instantiateViewController(
-      withIdentifier: kChangePasswordViewControllerIdentifier)
+      withIdentifier: kChangePasswordViewControllerIdentifier
+    )
       as! ChangePasswordViewController
 
     if shouldCreateMenu {
@@ -174,7 +182,8 @@ class VerificationViewController: UIViewController {
 extension VerificationViewController: UITextFieldDelegate {
 
   func textField(
-    _ textField: UITextField, shouldChangeCharactersIn range: NSRange,
+    _ textField: UITextField,
+    shouldChangeCharactersIn range: NSRange,
     replacementString string: String
   ) -> Bool {
 
@@ -235,11 +244,13 @@ extension VerificationViewController: NMWebServiceDelegate {
       if requestName as String == RegistrationMethods.resendConfirmation.description {
         UIUtilities.showAlertWithTitleAndMessage(
           title: NSLocalizedString(kAlertMessageText, comment: "") as NSString,
-          message: NSLocalizedString(kAlertMessageResendEmail, comment: "") as NSString)
+          message: NSLocalizedString(kAlertMessageResendEmail, comment: "") as NSString
+        )
       } else {
         UIUtilities.showAlertWithTitleAndMessage(
           title: NSLocalizedString(kAlertMessageText, comment: "") as NSString,
-          message: NSLocalizedString(kAlertMessageVerifyEmail, comment: "") as NSString)
+          message: NSLocalizedString(kAlertMessageVerifyEmail, comment: "") as NSString
+        )
       }
     }
   }
@@ -250,16 +261,20 @@ extension VerificationViewController: NMWebServiceDelegate {
     self.removeProgressIndicator()
     if error.code == 403 {  //unauthorized
       UIUtilities.showAlertMessageWithActionHandler(
-        kErrorTitle, message: error.localizedDescription, buttonTitle: kTitleOk,
+        kErrorTitle,
+        message: error.localizedDescription,
+        buttonTitle: kTitleOk,
         viewControllerUsed: self,
         action: {
           _ = self.navigationController?.popToRootViewController(animated: true)
-        })
+        }
+      )
     } else {
 
       UIUtilities.showAlertWithTitleAndMessage(
         title: NSLocalizedString(kErrorTitle, comment: "") as NSString,
-        message: error.localizedDescription as NSString)
+        message: error.localizedDescription as NSString
+      )
     }
   }
 }
@@ -268,13 +283,15 @@ extension VerificationViewController: NMWebServiceDelegate {
 extension VerificationViewController: ORKTaskViewControllerDelegate {
 
   func taskViewControllerSupportsSaveAndRestore(_ taskViewController: ORKTaskViewController)
-    -> Bool {
+    -> Bool
+  {
     return true
   }
 
   public func taskViewController(
     _ taskViewController: ORKTaskViewController,
-    didFinishWith reason: ORKTaskViewControllerFinishReason, error: Error?
+    didFinishWith reason: ORKTaskViewControllerFinishReason,
+    error: Error?
   ) {
 
     switch reason {

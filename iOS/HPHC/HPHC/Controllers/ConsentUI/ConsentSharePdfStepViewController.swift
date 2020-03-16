@@ -67,7 +67,8 @@ class ConsentSharePdfStepViewController: ORKStepViewController {
   var consentDocument: ORKConsentDocument?
 
   var taskResult: ConsentCompletionTaskResult = ConsentCompletionTaskResult(
-    identifier: kConsentCompletionResultIdentifier)
+    identifier: kConsentCompletionResultIdentifier
+  )
 
   // MARK: - ORKstepView Controller Init methods
 
@@ -126,7 +127,8 @@ class ConsentSharePdfStepViewController: ORKStepViewController {
   override func viewWillDisappear(_ animated: Bool) {
     super.viewWillDisappear(animated)
     NotificationCenter.default.removeObserver(
-      self, name: NSNotification.Name(rawValue: "NotificationStudyEnrollmentCompleted"),
+      self,
+      name: NSNotification.Name(rawValue: "NotificationStudyEnrollmentCompleted"),
       object: nil
     )
   }
@@ -135,13 +137,18 @@ class ConsentSharePdfStepViewController: ORKStepViewController {
 
   fileprivate func addObservers() {
     NotificationCenter.default.addObserver(
-      self, selector: #selector(enrollmentCompleted),
-      name: NSNotification.Name(rawValue: "NotificationStudyEnrollmentCompleted"), object: nil
+      self,
+      selector: #selector(enrollmentCompleted),
+      name: NSNotification.Name(rawValue: "NotificationStudyEnrollmentCompleted"),
+      object: nil
     )
 
     NotificationCenter.default.addObserver(
-      self, selector: #selector(enrollmentFailed),
-      name: NSNotification.Name(rawValue: "NotificationStudyEnrollmentFailed"), object: nil)
+      self,
+      selector: #selector(enrollmentFailed),
+      name: NSNotification.Name(rawValue: "NotificationStudyEnrollmentFailed"),
+      object: nil
+    )
   }
 
   @objc private func enrollmentCompleted() {
@@ -155,7 +162,10 @@ class ConsentSharePdfStepViewController: ORKStepViewController {
   @objc func enrollmentFailed(notification: NSNotification) {
     let error = notification.object as? Error
     self.taskViewController?.delegate?.taskViewController(
-      self.taskViewController!, didFinishWith: .failed, error: error)
+      self.taskViewController!,
+      didFinishWith: .failed,
+      error: error
+    )
   }
 
   // MARK: - Button Actions
@@ -173,7 +183,8 @@ class ConsentSharePdfStepViewController: ORKStepViewController {
     self.consentDocument?.makePDF(
       completionHandler: { data, error in
         NSLog(
-          "data: \(String(describing: data))    \n  error: \(String(describing: error))")
+          "data: \(String(describing: data))    \n  error: \(String(describing: error))"
+        )
 
         self.taskResult.pdfData = data!
 

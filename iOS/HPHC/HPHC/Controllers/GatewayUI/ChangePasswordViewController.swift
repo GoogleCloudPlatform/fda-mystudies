@@ -60,12 +60,17 @@ class ChangePasswordViewController: UIViewController {
 
     // load plist info
     let plistPath = Bundle.main.path(
-      forResource: "ChangePasswordData", ofType: ".plist", inDirectory: nil)
+      forResource: "ChangePasswordData",
+      ofType: ".plist",
+      inDirectory: nil
+    )
     tableViewRowDetails = NSMutableArray.init(contentsOfFile: plistPath!)
 
     // Used for background tap dismiss keyboard
     let tapGesture: UITapGestureRecognizer = UITapGestureRecognizer.init(
-      target: self, action: #selector(ChangePasswordViewController.dismissKeyboard))
+      target: self,
+      action: #selector(ChangePasswordViewController.dismissKeyboard)
+    )
     self.tableView?.addGestureRecognizer(tapGesture)
 
     // unhide navigationbar
@@ -95,8 +100,11 @@ class ChangePasswordViewController: UIViewController {
   // MARK: - Utility Methods
   func showAlertMessages(textMessage: String) {
     UIUtilities.showAlertMessage(
-      "", errorMessage: NSLocalizedString(textMessage, comment: ""),
-      errorAlertActionTitle: NSLocalizedString("OK", comment: ""), viewControllerUsed: self)
+      "",
+      errorMessage: NSLocalizedString(textMessage, comment: ""),
+      errorAlertActionTitle: NSLocalizedString("OK", comment: ""),
+      viewControllerUsed: self
+    )
   }
 
   /// Dismiss key board when clicked on Background.
@@ -107,7 +115,10 @@ class ChangePasswordViewController: UIViewController {
   /// Api Call to Change Password.
   func requestToChangePassword() {
     UserServices().changePassword(
-      oldPassword: self.oldPassword, newPassword: self.newPassword, delegate: self)
+      oldPassword: self.oldPassword,
+      newPassword: self.newPassword,
+      delegate: self
+    )
   }
 
   /// Seting menu View using `FDASlideMenuViewController` and Gateway Storyboard.
@@ -165,7 +176,9 @@ extension ChangePasswordViewController: UITableViewDataSource {
 
     let cell = (
       tableView.dequeueReusableCell(
-        withIdentifier: kSignInTableViewCellIdentifier, for: indexPath)
+        withIdentifier: kSignInTableViewCellIdentifier,
+        for: indexPath
+      )
         as? SignInTableViewCell
     )!
 
@@ -196,7 +209,8 @@ extension ChangePasswordViewController: UITableViewDelegate {
 extension ChangePasswordViewController: UITextFieldDelegate {
 
   func textField(
-    _ textField: UITextField, shouldChangeCharactersIn range: NSRange,
+    _ textField: UITextField,
+    shouldChangeCharactersIn range: NSRange,
     replacementString string: String
   ) -> Bool {
 
@@ -259,7 +273,8 @@ extension ChangePasswordViewController: NMWebServiceDelegate {
       UIUtilities.showAlertMessageWithActionHandler(
         NSLocalizedString(kTitleMessage, comment: ""),
         message: NSLocalizedString(kChangePasswordResponseMessage, comment: ""),
-        buttonTitle: NSLocalizedString(kTitleOk, comment: ""), viewControllerUsed: self
+        buttonTitle: NSLocalizedString(kTitleOk, comment: ""),
+        viewControllerUsed: self
       ) {
 
         _ = self.navigationController?.popViewController(animated: true)
@@ -306,15 +321,19 @@ extension ChangePasswordViewController: NMWebServiceDelegate {
 
     if error.code == 403 {  //  unauthorized
       UIUtilities.showAlertMessageWithActionHandler(
-        kErrorTitle, message: error.localizedDescription, buttonTitle: kTitleOk,
+        kErrorTitle,
+        message: error.localizedDescription,
+        buttonTitle: kTitleOk,
         viewControllerUsed: self,
         action: {
           self.fdaSlideMenuController()?.navigateToHomeAfterUnauthorizedAccess()
-        })
+        }
+      )
     } else {
       UIUtilities.showAlertWithTitleAndMessage(
         title: NSLocalizedString(kErrorTitle, comment: "") as NSString,
-        message: error.localizedDescription as NSString)
+        message: error.localizedDescription as NSString
+      )
     }
   }
 }

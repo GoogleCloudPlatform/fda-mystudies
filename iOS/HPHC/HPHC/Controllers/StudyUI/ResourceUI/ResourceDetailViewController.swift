@@ -25,6 +25,7 @@ class ResourceDetailViewController: UIViewController {
 
   // MARK: - Outles
   @IBOutlet var webViewContainer: UIView?
+
   @IBOutlet var progressBar: UIProgressView?
   @IBOutlet var bottomToolBar: UIToolbar?
 
@@ -53,11 +54,14 @@ class ResourceDetailViewController: UIViewController {
 
     _ = WKWebViewConfiguration()
 
-    let jscript
-      = "var meta = document.createElement('meta'); meta.setAttribute('name', 'viewport'); meta.setAttribute('content', 'width=device-width'); document.getElementsByTagName('head')[0].appendChild(meta);"
+    let jscript =
+      "var meta = document.createElement('meta'); meta.setAttribute('name', 'viewport'); meta.setAttribute('content', 'width=device-width'); document.getElementsByTagName('head')[0].appendChild(meta);"
 
     let userScript = WKUserScript(
-      source: jscript, injectionTime: .atDocumentEnd, forMainFrameOnly: true)
+      source: jscript,
+      injectionTime: .atDocumentEnd,
+      forMainFrameOnly: true
+    )
 
     let wkUController = WKUserContentController()
     wkUController.addUserScript(userScript)
@@ -68,8 +72,11 @@ class ResourceDetailViewController: UIViewController {
     let bottomBarHeight: CGFloat = 44.0
 
     let webViewFrame = CGRect(
-      x: 0, y: 0, width: (webViewContainer?.frame.width)!,
-      height: (webViewContainer?.frame.height)! - bottomBarHeight)
+      x: 0,
+      y: 0,
+      width: (webViewContainer?.frame.width)!,
+      height: (webViewContainer?.frame.height)! - bottomBarHeight
+    )
 
     webView = WKWebView.init(frame: webViewFrame, configuration: wkWebConfig)
     webViewContainer?.addSubview(webView!)
@@ -79,21 +86,44 @@ class ResourceDetailViewController: UIViewController {
   override func viewDidLayoutSubviews() {
     super.viewDidLayoutSubviews()
     NSLayoutConstraint(
-      item: webView!, attribute: .left, relatedBy: .equal, toItem: webViewContainer,
-      attribute: .left, multiplier: 1.0, constant: 0.0).isActive = true
+      item: webView!,
+      attribute: .left,
+      relatedBy: .equal,
+      toItem: webViewContainer,
+      attribute: .left,
+      multiplier: 1.0,
+      constant: 0.0
+    ).isActive = true
 
     NSLayoutConstraint(
-      item: webView!, attribute: .right, relatedBy: .equal, toItem: webViewContainer,
-      attribute: .right, multiplier: 1.0, constant: 0.0).isActive = true
+      item: webView!,
+      attribute: .right,
+      relatedBy: .equal,
+      toItem: webViewContainer,
+      attribute: .right,
+      multiplier: 1.0,
+      constant: 0.0
+    ).isActive = true
 
     NSLayoutConstraint(
-      item: webView!, attribute: .top, relatedBy: .equal, toItem: webViewContainer,
+      item: webView!,
       attribute: .top,
-      multiplier: 1.0, constant: 0.0).isActive = true
+      relatedBy: .equal,
+      toItem: webViewContainer,
+      attribute: .top,
+      multiplier: 1.0,
+      constant: 0.0
+    ).isActive = true
 
     NSLayoutConstraint(
-      item: webView!, attribute: .bottom, relatedBy: .equal, toItem: webViewContainer,
-      attribute: .bottom, multiplier: 1.0, constant: -44.0).isActive = true
+      item: webView!,
+      attribute: .bottom,
+      relatedBy: .equal,
+      toItem: webViewContainer,
+      attribute: .bottom,
+      multiplier: 1.0,
+      constant: -44.0
+    ).isActive = true
 
     webView?.translatesAutoresizingMaskIntoConstraints = false
 
@@ -103,11 +133,14 @@ class ResourceDetailViewController: UIViewController {
     super.viewWillAppear(animated)
 
     if self.isEmailComposerPresented == false,
-      self.resource?.file?.link != nil {
+      self.resource?.file?.link != nil
+    {
 
       activityIndicator = UIActivityIndicatorView(style: .gray)
       activityIndicator.center = CGPoint(
-        x: self.view.frame.midX, y: self.view.frame.midY-100)
+        x: self.view.frame.midX,
+        y: self.view.frame.midY - 100
+      )
 
       self.view.addSubview(activityIndicator)
 
@@ -120,7 +153,9 @@ class ResourceDetailViewController: UIViewController {
           if self.resource?.file?.localPath == "BundlePath" {
 
             let path = Bundle.main.path(
-              forResource: self.resource?.file?.link!, ofType: ".pdf")
+              forResource: self.resource?.file?.link!,
+              ofType: ".pdf"
+            )
             self.loadWebViewWithPath(path: path!)
           } else {
             let path = resourcesDownloadPath + "/" + (
@@ -148,8 +183,9 @@ class ResourceDetailViewController: UIViewController {
   func loadWebViewWithPath(path: String) {
 
     guard
-      let url: URL = URL(
-        string: path.addingPercentEncoding(withAllowedCharacters: .urlPathAllowed)!)
+      let url:URL = URL(
+        string: path.addingPercentEncoding(withAllowedCharacters: .urlPathAllowed)!
+      )
     else { return }
     let urlRequest = URLRequest(url: url)
 
@@ -163,8 +199,11 @@ class ResourceDetailViewController: UIViewController {
     webView?.allowsBackForwardNavigationGestures = true
 
     _ = self.webView?.load(
-      data, mimeType: "application/pdf", characterEncodingName: "UTF-8",
-      baseURL: URL.init(fileURLWithPath: ""))
+      data,
+      mimeType: "application/pdf",
+      characterEncodingName: "UTF-8",
+      baseURL: URL.init(fileURLWithPath: "")
+    )
 
   }
 
@@ -172,7 +211,10 @@ class ResourceDetailViewController: UIViewController {
 
     if !FileManager.default.fileExists(atPath: resourcesDownloadPath) {
       try! FileManager.default.createDirectory(
-        atPath: resourcesDownloadPath, withIntermediateDirectories: true, attributes: nil)
+        atPath: resourcesDownloadPath,
+        withIntermediateDirectories: true,
+        attributes: nil
+      )
     }
 
     let fileURL = (self.resource?.file?.link)!
@@ -183,17 +225,22 @@ class ResourceDetailViewController: UIViewController {
 
     fileName = AKUtility.getUniqueFileNameWithPath(
       (resourcesDownloadPath as NSString).appendingPathComponent(fileName as String)
-        as NSString)
+        as NSString
+    )
 
     fdm = FileDownloadManager()
     fdm.delegate = self
 
     guard
       let encodedURL = fileURL.addingPercentEncoding(
-        withAllowedCharacters: CharacterSet.urlQueryAllowed)
+        withAllowedCharacters: CharacterSet.urlQueryAllowed
+      )
     else { return }
     fdm.downloadFile(
-      fileName as String, fileURL: encodedURL, destinationPath: resourcesDownloadPath)
+      fileName as String,
+      fileURL: encodedURL,
+      destinationPath: resourcesDownloadPath
+    )
   }
 
   // MARK: - Button Actions
@@ -237,17 +284,22 @@ extension ResourceDetailViewController: UIWebViewDelegate {
 
     let buttonTitleOK = NSLocalizedString("OK", comment: "")
     let alert = UIAlertController(
-      title: NSLocalizedString(kTitleError, comment: ""), message: error.localizedDescription,
-      preferredStyle: UIAlertController.Style.alert)
+      title: NSLocalizedString(kTitleError, comment: ""),
+      message: error.localizedDescription,
+      preferredStyle: UIAlertController.Style.alert
+    )
 
     alert.addAction(
       UIAlertAction.init(
-        title: buttonTitleOK, style: .default,
+        title: buttonTitleOK,
+        style: .default,
         handler: { (_) in
 
           self.dismiss(animated: true, completion: nil)
 
-        }))
+        }
+      )
+    )
 
     self.present(alert, animated: true, completion: nil)
 
@@ -265,7 +317,8 @@ extension ResourceDetailViewController: WKUIDelegate, WKNavigationDelegate {
   }
 
   func webView(
-    _ webView: WKWebView, decidePolicyFor navigationAction: WKNavigationAction,
+    _ webView: WKWebView,
+    decidePolicyFor navigationAction: WKNavigationAction,
     decisionHandler: (@escaping (WKNavigationActionPolicy) -> Void)
   ) {
     switch navigationAction.navigationType {
@@ -281,21 +334,25 @@ extension ResourceDetailViewController: WKUIDelegate, WKNavigationDelegate {
   }
 
   func webView(
-    _ webView: WKWebView, decidePolicyFor navigationResponse: WKNavigationResponse,
+    _ webView: WKWebView,
+    decidePolicyFor navigationResponse: WKNavigationResponse,
     decisionHandler: (@escaping (WKNavigationResponsePolicy) -> Void)
   ) {
     decisionHandler(.allow)
   }
 
   func webView(
-    _ webView: WKWebView, didReceive challenge: URLAuthenticationChallenge,
+    _ webView: WKWebView,
+    didReceive challenge: URLAuthenticationChallenge,
     completionHandler: @escaping (URLSession.AuthChallengeDisposition, URLCredential?) -> Void
   ) {
 
     switch challenge.protectionSpace.authenticationMethod {
     case NSURLAuthenticationMethodHTTPBasic:
       let alertController = UIAlertController(
-        title: "Authentication Required", message: webView.url?.host, preferredStyle: .alert
+        title: "Authentication Required",
+        message: webView.url?.host,
+        preferredStyle: .alert
       )
       weak var usernameTextField: UITextField!
       alertController.addTextField { textField in
@@ -310,13 +367,17 @@ extension ResourceDetailViewController: WKUIDelegate, WKNavigationDelegate {
       }
       alertController.addAction(
         UIAlertAction(
-          title: "Cancel", style: .cancel,
+          title: "Cancel",
+          style: .cancel,
           handler: { _ in
             completionHandler(.cancelAuthenticationChallenge, nil)
-          }))
+          }
+        )
+      )
       alertController.addAction(
         UIAlertAction(
-          title: "Log In", style: .default,
+          title: "Log In",
+          style: .default,
           handler: { _ in
             guard let username = usernameTextField.text,
               let password = passwordTextField.text
@@ -325,10 +386,14 @@ extension ResourceDetailViewController: WKUIDelegate, WKNavigationDelegate {
               return
             }
             let credential = URLCredential(
-              user: username, password: password,
-              persistence: URLCredential.Persistence.forSession)
+              user: username,
+              password: password,
+              persistence: URLCredential.Persistence.forSession
+            )
             completionHandler(.useCredential, credential)
-          }))
+          }
+        )
+      )
       present(alertController, animated: true, completion: nil)
     default:
       completionHandler(.rejectProtectionSpace, nil)
@@ -339,7 +404,9 @@ extension ResourceDetailViewController: WKUIDelegate, WKNavigationDelegate {
     _ webView: WKWebView,
     didReceiveServerRedirectForProvisionalNavigation navigation: WKNavigation
   ) {
-    Logger.sharedInstance.info("webView:\(webView) didReceiveServerRedirectForProvisionalNavigation:\(navigation)")
+    Logger.sharedInstance.info(
+      "webView:\(webView) didReceiveServerRedirectForProvisionalNavigation:\(navigation)"
+    )
   }
 
   func webView(_ webView: WKWebView, didFinish navigation: WKNavigation) {
@@ -350,67 +417,99 @@ extension ResourceDetailViewController: WKUIDelegate, WKNavigationDelegate {
   }
 
   func webView(_ webView: WKWebView, didFail navigation: WKNavigation, withError error: Error) {
-    Logger.sharedInstance.error("webView:\(webView) didFailNavigation:\(navigation) withError:\(error)")
+    Logger.sharedInstance.error(
+      "webView:\(webView) didFailNavigation:\(navigation) withError:\(error)"
+    )
 
     let alert = UIAlertController(
-      title: "Error", message: error.localizedDescription, preferredStyle: .alert)
+      title: "Error",
+      message: error.localizedDescription,
+      preferredStyle: .alert
+    )
     alert.addAction(UIAlertAction(title: "Ok", style: .default, handler: nil))
     present(alert, animated: true, completion: nil)
   }
 
   func webView(
-    _ webView: WKWebView, didFailProvisionalNavigation navigation: WKNavigation,
+    _ webView: WKWebView,
+    didFailProvisionalNavigation navigation: WKNavigation,
     withError error: Error
   ) {
-    Logger.sharedInstance.error("webView:\(webView) didFailProvisionalNavigation:\(navigation) withError:\(error)")
+    Logger.sharedInstance.error(
+      "webView:\(webView) didFailProvisionalNavigation:\(navigation) withError:\(error)"
+    )
   }
 
   // MARK: WKUIDelegate methods
 
   func webView(
-    _ webView: WKWebView, runJavaScriptAlertPanelWithMessage message: String,
-    initiatedByFrame frame: WKFrameInfo, completionHandler: (@escaping () -> Void)
+    _ webView: WKWebView,
+    runJavaScriptAlertPanelWithMessage message: String,
+    initiatedByFrame frame: WKFrameInfo,
+    completionHandler: (@escaping () -> Void)
   ) {
     let alertController = UIAlertController(
-      title: frame.request.url?.host, message: message, preferredStyle: .alert)
+      title: frame.request.url?.host,
+      message: message,
+      preferredStyle: .alert
+    )
     alertController.addAction(
       UIAlertAction(
-        title: "OK", style: .default,
+        title: "OK",
+        style: .default,
         handler: { _ in
           completionHandler()
-        }))
+        }
+      )
+    )
     present(alertController, animated: true, completion: nil)
   }
 
   func webView(
-    _ webView: WKWebView, runJavaScriptConfirmPanelWithMessage message: String,
-    initiatedByFrame frame: WKFrameInfo, completionHandler: (@escaping (Bool) -> Void)
+    _ webView: WKWebView,
+    runJavaScriptConfirmPanelWithMessage message: String,
+    initiatedByFrame frame: WKFrameInfo,
+    completionHandler: (@escaping (Bool) -> Void)
   ) {
     let alertController = UIAlertController(
-      title: frame.request.url?.host, message: message, preferredStyle: .alert)
+      title: frame.request.url?.host,
+      message: message,
+      preferredStyle: .alert
+    )
     alertController.addAction(
       UIAlertAction(
-        title: "Cancel", style: .cancel,
+        title: "Cancel",
+        style: .cancel,
         handler: { _ in
           completionHandler(false)
-        }))
+        }
+      )
+    )
     alertController.addAction(
       UIAlertAction(
-        title: "OK", style: .default,
+        title: "OK",
+        style: .default,
         handler: { _ in
           completionHandler(true)
-        }))
+        }
+      )
+    )
     present(alertController, animated: true, completion: nil)
   }
 
   func webView(
-    _ webView: WKWebView, runJavaScriptTextInputPanelWithPrompt prompt: String,
-    defaultText: String?, initiatedByFrame frame: WKFrameInfo,
+    _ webView: WKWebView,
+    runJavaScriptTextInputPanelWithPrompt prompt: String,
+    defaultText: String?,
+    initiatedByFrame frame: WKFrameInfo,
     completionHandler: @escaping (String?) -> Void
   ) {
 
     let alertController = UIAlertController(
-      title: frame.request.url?.host, message: prompt, preferredStyle: .alert)
+      title: frame.request.url?.host,
+      message: prompt,
+      preferredStyle: .alert
+    )
     weak var alertTextField: UITextField!
     alertController.addTextField { textField in
       textField.text = defaultText
@@ -418,16 +517,22 @@ extension ResourceDetailViewController: WKUIDelegate, WKNavigationDelegate {
     }
     alertController.addAction(
       UIAlertAction(
-        title: "Cancel", style: .cancel,
+        title: "Cancel",
+        style: .cancel,
         handler: { _ in
           completionHandler(nil)
-        }))
+        }
+      )
+    )
     alertController.addAction(
       UIAlertAction(
-        title: "OK", style: .default,
+        title: "OK",
+        style: .default,
         handler: { _ in
           completionHandler(alertTextField.text)
-        }))
+        }
+      )
+    )
     present(alertController, animated: true, completion: nil)
   }
 
@@ -446,11 +551,17 @@ extension ResourceDetailViewController: MFMailComposeViewControllerDelegate {
     if resource?.file?.localPath != nil {
 
       if self.resource?.file?.localPath == "BundlePath" {
-          if let file = Bundle.main.url(
-            forResource: self.resource?.file?.link!, withExtension: "pdf"),
-            let data = try? Data(contentsOf: file) {
+        if let file = Bundle.main.url(
+          forResource: self.resource?.file?.link!,
+          withExtension: "pdf"
+        ),
+          let data = try? Data(contentsOf: file)
+        {
           composeVC.addAttachmentData(
-            data, mimeType: "application/pdf", fileName: (resource?.file?.name)!)
+            data,
+            mimeType: "application/pdf",
+            fileName: (resource?.file?.name)!
+          )
         }
       } else {
         let fullPath = resourcesDownloadPath + "/" + (self.resource?.file?.localPath)!
@@ -458,7 +569,10 @@ extension ResourceDetailViewController: MFMailComposeViewControllerDelegate {
         let data = FileDownloadManager.decrytFile(pathURL: URL(string: fullPath))
 
         composeVC.addAttachmentData(
-          data!, mimeType: "application/pdf", fileName: (resource?.file?.name)!)
+          data!,
+          mimeType: "application/pdf",
+          fileName: (resource?.file?.name)!
+        )
       }
     } else {
       composeVC.setMessageBody((resource?.file?.link)!, isHTML: true)
@@ -469,23 +583,29 @@ extension ResourceDetailViewController: MFMailComposeViewControllerDelegate {
 
     } else {
       let alert = UIAlertController(
-        title: NSLocalizedString(kTitleError, comment: ""), message: "",
-        preferredStyle: UIAlertController.Style.alert)
+        title: NSLocalizedString(kTitleError, comment: ""),
+        message: "",
+        preferredStyle: UIAlertController.Style.alert
+      )
 
       alert.addAction(
         UIAlertAction.init(
-          title: NSLocalizedString("OK", comment: ""), style: .default,
+          title: NSLocalizedString("OK", comment: ""),
+          style: .default,
           handler: { (_) in
 
             self.dismiss(animated: true, completion: nil)
 
-          }))
+          }
+        )
+      )
     }
   }
 
   func mailComposeController(
     _ controller: MFMailComposeViewController,
-    didFinishWith result: MFMailComposeResult, error: Error?
+    didFinishWith result: MFMailComposeResult,
+    error: Error?
   ) {
     self.isEmailComposerPresented = true
     controller.dismiss(animated: true, completion: nil)
@@ -512,8 +632,11 @@ extension ResourceDetailViewController: FileDownloadManagerDelegates {
 
       DispatchQueue.main.async {
         self.webView?.load(
-          data!, mimeType: mimeType, characterEncodingName: mimeType,
-          baseURL: URL.init(fileURLWithPath: ""))
+          data!,
+          mimeType: mimeType,
+          characterEncodingName: mimeType,
+          baseURL: URL.init(fileURLWithPath: "")
+        )
       }
     }
 

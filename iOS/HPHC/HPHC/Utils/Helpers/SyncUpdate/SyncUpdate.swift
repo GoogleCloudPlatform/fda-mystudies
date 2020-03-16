@@ -32,7 +32,7 @@ class SyncUpdate {
   @objc func updateData() {
 
     if (NetworkManager.sharedInstance().reachability?.isReachable)! {
-      Logger.sharedInstance.info("*******************update Data***************")
+      // Update Data.
       DispatchQueue.main.asyncAfter(deadline: .now() + 5.0) {
         self.syncDataToServer()
       }
@@ -44,7 +44,9 @@ class SyncUpdate {
 
     let realm = try! Realm()
     let toBeSyncedData = realm.objects(DBDataOfflineSync.self).sorted(
-      byKeyPath: "date", ascending: true).first
+      byKeyPath: "date",
+      ascending: true
+    ).first
     if toBeSyncedData != nil {
 
       // request params
@@ -53,7 +55,9 @@ class SyncUpdate {
       if toBeSyncedData?.requestParams != nil {
 
         params = try? JSONSerialization.jsonObject(
-          with: (toBeSyncedData?.requestParams)!, options: []) as? [String: Any]
+          with: (toBeSyncedData?.requestParams)!,
+          options: []
+        ) as? [String: Any]
 
       }
 
@@ -63,7 +67,9 @@ class SyncUpdate {
       if toBeSyncedData?.headerParams != nil {
 
         headers = try? JSONSerialization.jsonObject(
-          with: (toBeSyncedData?.headerParams)!, options: []) as? [String: String]
+          with: (toBeSyncedData?.headerParams)!,
+          options: []
+        ) as? [String: String]
       }
 
       let methodString = toBeSyncedData?.method!
@@ -75,7 +81,11 @@ class SyncUpdate {
         let registrationMethod = RegistrationMethods(rawValue: methodName!)
         let method = registrationMethod?.method
         UserServices().syncOfflineSavedData(
-          method: method!, params: params, headers: headers, delegate: self)
+          method: method!,
+          params: params,
+          headers: headers,
+          delegate: self
+        )
 
       } else if server == "wcp" {
         // Do Nothing
@@ -85,7 +95,11 @@ class SyncUpdate {
         let registrationMethod = ResponseMethods(rawValue: methodName!)
         let method = registrationMethod?.method
         LabKeyServices().syncOfflineSavedData(
-          method: method!, params: params, headers: headers, delegate: self)
+          method: method!,
+          params: params,
+          headers: headers,
+          delegate: self
+        )
       }
 
       /// delete current database object
@@ -117,7 +131,9 @@ class SyncUpdate {
       } else {
 
         let currentUser = User.currentUser
-        if let userStudyStatus = currentUser.participatedStudies.filter({ $0.studyId == run?.studyId }).first {
+        if let userStudyStatus = currentUser.participatedStudies.filter({
+          $0.studyId == run?.studyId
+        }).first {
 
           let studyId = run?.studyId
           let activiyId = run?.activityId
@@ -130,7 +146,7 @@ class SyncUpdate {
             kActivityId: activiyId!,
             kActivityName: activityName!,
             "version": activityVersion!,
-            kActivityRunId: "\(currentRunId!)"
+            kActivityRunId: "\(currentRunId!)",
           ] as [String: String]
 
           let ActivityType = activity?.type
@@ -141,14 +157,21 @@ class SyncUpdate {
 
           if let runData = run?.responseData,
             let responseData = try? JSONSerialization.jsonObject(
-            with: runData, options: []) as? [String: Any] {
+              with: runData,
+              options: []
+            ) as? [String: Any]
+          {
             data = responseData["data"] as? [String: Any] ?? [:]
           }
 
           // save to server
           LabKeyServices().processResponse(
-            metaData: info, activityType: ActivityType!, responseData: data,
-            participantId: participationid!, delegate: self)
+            metaData: info,
+            activityType: ActivityType!,
+            responseData: data,
+            participantId: participationid!,
+            delegate: self
+          )
         }
       }
     } else {

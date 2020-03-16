@@ -33,7 +33,9 @@ class ResourcesTableViewCell: UITableViewCell {
       self.contentView.backgroundColor = UIColor.lightGray
       self.contentView.alpha = 0.6
       UIView.animate(
-        withDuration: 0.4, delay: 0, options: [.curveEaseInOut, .repeat, .autoreverse],
+        withDuration: 0.4,
+        delay: 0,
+        options: [.curveEaseInOut, .repeat, .autoreverse],
         animations: {
           self.contentView.alpha = 0.1
         }

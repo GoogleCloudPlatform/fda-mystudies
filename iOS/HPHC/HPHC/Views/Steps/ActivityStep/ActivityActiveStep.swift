@@ -91,8 +91,8 @@ let kActiveFetalKickCounterInstructionText = "text"
 let kActiveFetalKickCounterkickCounts = "kickCount"
 
 /// Completion Text
-let kActiveTaskCompletionStepText
-  = "Tap Done to submit responses. Responses cannot be modified after submission."
+let kActiveTaskCompletionStepText =
+  "Tap Done to submit responses. Responses cannot be modified after submission."
 
 enum ActiveStepType: String {
   /// Active Steps.
@@ -145,9 +145,10 @@ class ActivityActiveStep: ActivityStep {
       super.initWithDict(stepDict: stepDict)
 
       if Utilities.isValidObject(
-        someObject: stepDict[kActivityStepActiveOptions] as AnyObject) {
+        someObject: stepDict[kActivityStepActiveOptions] as AnyObject
+      ) {
 
-        for option: Int in (stepDict[kActivityStepActiveOptions] as? [Int])! {
+        for option:Int in (stepDict[kActivityStepActiveOptions] as? [Int])! {
 
           self.options?.insert(ORKPredefinedTaskOption(rawValue: UInt(option)))
         }
@@ -156,9 +157,11 @@ class ActivityActiveStep: ActivityStep {
       }
 
       if Utilities.isValidValue(
-        someObject: stepDict[kActivityStepActiveResultType] as AnyObject?) {
+        someObject: stepDict[kActivityStepActiveResultType] as AnyObject?
+      ) {
         self.activeType = ActiveStepType(
-          rawValue: (stepDict[kActivityStepActiveResultType] as? String)!)
+          rawValue: (stepDict[kActivityStepActiveResultType] as? String)!
+        )
       }
 
       if Utilities.isValidObject(someObject: stepDict[kActivityStepActiveFormat] as AnyObject) {
@@ -177,11 +180,15 @@ class ActivityActiveStep: ActivityStep {
         // creates an Audio step
 
         if Utilities.isValidValue(
-          someObject: formatDict?[kActiveAudioSpeechInstruction] as AnyObject?)
+          someObject: formatDict?[kActiveAudioSpeechInstruction] as AnyObject?
+        )
           && Utilities.isValidValue(
-            someObject: formatDict?[kActiveAudioShortSpeechInstruction] as AnyObject?)
+            someObject: formatDict?[kActiveAudioShortSpeechInstruction] as AnyObject?
+          )
           && Utilities.isValidValue(
-            someObject: formatDict?[kActiveAudioDuration] as AnyObject?) {
+            someObject: formatDict?[kActiveAudioDuration] as AnyObject?
+          )
+        {
 
           return ORKOrderedTask.audioTask(
             withIdentifier: key!,
@@ -192,7 +199,9 @@ class ActivityActiveStep: ActivityStep {
             )!,
             duration: (formatDict?[kActiveAudioDuration] as? TimeInterval)!,
             recordingSettings: nil,
-            checkAudioLevel: true, options: self.options!)
+            checkAudioLevel: true,
+            options: self.options!
+          )
 
         } else {
           return nil
@@ -201,9 +210,12 @@ class ActivityActiveStep: ActivityStep {
       case .fitnessStep:
         // creates an fitness check step
         if Utilities.isValidValue(
-          someObject: formatDict?[kActiveFitnessCheckWalkDuration] as AnyObject?)
+          someObject: formatDict?[kActiveFitnessCheckWalkDuration] as AnyObject?
+        )
           && Utilities.isValidValue(
-            someObject: formatDict?[kActiveFitnessCheckRestDuration] as AnyObject?) {
+            someObject: formatDict?[kActiveFitnessCheckRestDuration] as AnyObject?
+          )
+        {
 
           return ORKOrderedTask.fitnessCheck(
             withIdentifier: key!,
@@ -214,51 +226,67 @@ class ActivityActiveStep: ActivityStep {
             restDuration: (
               formatDict?[kActiveFitnessCheckRestDuration] as? TimeInterval
             )!,
-            options: self.options!)
+            options: self.options!
+          )
         } else {
           return nil
         }
       case .holePegTestStep:
         // creates an hole peg test step
         if Utilities.isValidValue(
-          someObject: formatDict?[kActiveHolePegTestDominantHand] as AnyObject?)
+          someObject: formatDict?[kActiveHolePegTestDominantHand] as AnyObject?
+        )
           && Utilities.isValidValue(
-            someObject: formatDict?[kActiveHolePegTestNumberOfPegs] as AnyObject?)
+            someObject: formatDict?[kActiveHolePegTestNumberOfPegs] as AnyObject?
+          )
           && Utilities.isValidValue(
-            someObject: formatDict?[kActiveHolePegTestThreshold] as AnyObject?)
+            someObject: formatDict?[kActiveHolePegTestThreshold] as AnyObject?
+          )
           && Utilities.isValidValue(
-            someObject: formatDict?[kActiveHolePegTestRotated] as AnyObject?)
+            someObject: formatDict?[kActiveHolePegTestRotated] as AnyObject?
+          )
           && Utilities.isValidValue(
-            someObject: formatDict?[kActiveHolePegTestTimeLimit] as AnyObject?) {
+            someObject: formatDict?[kActiveHolePegTestTimeLimit] as AnyObject?
+          )
+        {
 
           return ORKNavigableOrderedTask.holePegTest(
-            withIdentifier: key!, intendedUseDescription: title!,
+            withIdentifier: key!,
+            intendedUseDescription: title!,
             dominantHand: ORKBodySagittal(
-              rawValue: (formatDict?[kActiveHolePegTestDominantHand] as? Int)!)!,
+              rawValue: (formatDict?[kActiveHolePegTestDominantHand] as? Int)!
+            )!,
             numberOfPegs: (formatDict?[kActiveHolePegTestNumberOfPegs] as? Int32)!,
             threshold: (formatDict?[kActiveHolePegTestThreshold] as? Double)!,
             rotated: ((formatDict?[kActiveHolePegTestRotated]) != nil),
             timeLimit: (formatDict?[kActiveHolePegTestTimeLimit] as? TimeInterval)!,
-            options: self.options!)
+            options: self.options!
+          )
         } else {
           return nil
         }
       case .psatStep:
         // creates an PSAT Step
         if Utilities.isValidValue(
-          someObject: formatDict?[kActivePSATPresentationMode] as AnyObject?)
+          someObject: formatDict?[kActivePSATPresentationMode] as AnyObject?
+        )
           && Utilities.isValidValue(
-            someObject: formatDict?[kActivePSATInterStimulusInterval] as AnyObject?)
+            someObject: formatDict?[kActivePSATInterStimulusInterval] as AnyObject?
+          )
           && Utilities.isValidValue(
-            someObject: formatDict?[kActivePSATStimulusDuration] as AnyObject?)
+            someObject: formatDict?[kActivePSATStimulusDuration] as AnyObject?
+          )
           && Utilities.isValidValue(
-            someObject: formatDict?[kActivePSATSeriesLength] as AnyObject?) {
+            someObject: formatDict?[kActivePSATSeriesLength] as AnyObject?
+          )
+        {
 
           return ORKOrderedTask.psatTask(
             withIdentifier: key!,
             intendedUseDescription: title!,
             presentationMode: ORKPSATPresentationMode(
-              rawValue: (formatDict?[kActivePSATPresentationMode] as? Int)!),
+              rawValue: (formatDict?[kActivePSATPresentationMode] as? Int)!
+            ),
             interStimulusInterval: (
               formatDict?[kActivePSATInterStimulusInterval] as? TimeInterval
             )!,
@@ -266,7 +294,8 @@ class ActivityActiveStep: ActivityStep {
               formatDict?[kActivePSATStimulusDuration] as? TimeInterval
             )!,
             seriesLength: (formatDict?[kActivePSATSeriesLength] as? Int)!,
-            options: self.options!)
+            options: self.options!
+          )
 
         } else {
           return nil
@@ -274,17 +303,22 @@ class ActivityActiveStep: ActivityStep {
       case .shortWalkStep:
         // creates an short walk step
         if Utilities.isValidValue(
-          someObject: formatDict?[kActiveShortWalkNumberOfStepsPerLeg] as AnyObject?)
+          someObject: formatDict?[kActiveShortWalkNumberOfStepsPerLeg] as AnyObject?
+        )
           && Utilities.isValidValue(
-            someObject: formatDict?[kActiveShortWalkRestDuration] as AnyObject?) {
+            someObject: formatDict?[kActiveShortWalkRestDuration] as AnyObject?
+          )
+        {
 
           return ORKOrderedTask.shortWalk(
-            withIdentifier: key!, intendedUseDescription: title!,
+            withIdentifier: key!,
+            intendedUseDescription: title!,
             numberOfStepsPerLeg: (
               formatDict?[kActiveShortWalkNumberOfStepsPerLeg] as? Int
             )!,
             restDuration: (formatDict?[kActiveShortWalkRestDuration] as? TimeInterval)!,
-            options: self.options!)
+            options: self.options!
+          )
 
         } else {
           return nil
@@ -292,24 +326,33 @@ class ActivityActiveStep: ActivityStep {
       case .spatialSpanMemoryStep:
         // creates a spatial span memory step
         if Utilities.isValidValue(
-          someObject: formatDict?[kActiveSpatialSpanMemoryInitialSpan] as AnyObject?)
+          someObject: formatDict?[kActiveSpatialSpanMemoryInitialSpan] as AnyObject?
+        )
           && Utilities.isValidValue(
-            someObject: formatDict?[kActiveSpatialSpanMemoryMinimumSpan] as AnyObject?)
+            someObject: formatDict?[kActiveSpatialSpanMemoryMinimumSpan] as AnyObject?
+          )
           && Utilities.isValidValue(
-            someObject: formatDict?[kActiveSpatialSpanMemoryMaximumSpan] as AnyObject?)
+            someObject: formatDict?[kActiveSpatialSpanMemoryMaximumSpan] as AnyObject?
+          )
           && Utilities.isValidValue(
-            someObject: formatDict?[kActiveSpatialSpanMemoryPlaySpeed] as AnyObject?)
+            someObject: formatDict?[kActiveSpatialSpanMemoryPlaySpeed] as AnyObject?
+          )
           && Utilities.isValidValue(
-            someObject: formatDict?[kActiveSpatialSpanMemoryMaximumTests] as AnyObject?)
+            someObject: formatDict?[kActiveSpatialSpanMemoryMaximumTests] as AnyObject?
+          )
           && Utilities.isValidValue(
             someObject: formatDict?[kActiveSpatialSpanMemoryMaximumConsecutiveFailures]
-              as AnyObject?)
+              as AnyObject?
+          )
           && Utilities.isValidValue(
             someObject: formatDict?[kActiveSpatialSpanMemoryRequireReversal]
-              as AnyObject?) {
+              as AnyObject?
+          )
+        {
 
           let image = UIImage(
-            named: (formatDict?[kActiveSpatialSpanMemoryCustomTargetImage] as? String)!)
+            named: (formatDict?[kActiveSpatialSpanMemoryCustomTargetImage] as? String)!
+          )
 
           let initialSpan = (formatDict?[kActiveSpatialSpanMemoryInitialSpan] as? Int)
           let minimumSpan = (formatDict?[kActiveSpatialSpanMemoryMinimumSpan] as? Int)
@@ -324,7 +367,8 @@ class ActivityActiveStep: ActivityStep {
 
           if Utilities.isValidValue(
             someObject: formatDict?[kActiveSpatialSpanMemoryCustomTargetPluralName]
-              as AnyObject) {
+              as AnyObject
+          ) {
 
             customPluralName = (
               formatDict?[kActiveSpatialSpanMemoryCustomTargetPluralName] as? String
@@ -339,7 +383,8 @@ class ActivityActiveStep: ActivityStep {
             && playSpeed! > 0.4
             && playSpeed! < 21.0
             && maximumTest! >= 1
-            && maximumConsecutiveFailures! >= 1 {
+            && maximumConsecutiveFailures! >= 1
+          {
 
             let orderedTask = ORKOrderedTask.spatialSpanMemoryTask(
               withIdentifier: key!,
@@ -369,10 +414,13 @@ class ActivityActiveStep: ActivityStep {
               requireReversal: (
                 (formatDict?[kActiveSpatialSpanMemoryRequireReversal]) as? Bool
               )!,
-              options: self.options!)
+              options: self.options!
+            )
 
             (orderedTask.steps.last as? ORKCompletionStep)!.text = NSLocalizedString(
-              kActiveTaskCompletionStepText, comment: "")
+              kActiveTaskCompletionStepText,
+              comment: ""
+            )
             return orderedTask
 
           } else {
@@ -385,11 +433,15 @@ class ActivityActiveStep: ActivityStep {
       case .timedWalkStep:
         // creates a timed walk step
         if Utilities.isValidValue(
-          someObject: formatDict?[kActiveTimedWalkTistanceInMeters] as AnyObject?)
+          someObject: formatDict?[kActiveTimedWalkTistanceInMeters] as AnyObject?
+        )
           && Utilities.isValidValue(
-            someObject: formatDict?[kActiveTimedWalkTimeLimit] as AnyObject?)
+            someObject: formatDict?[kActiveTimedWalkTimeLimit] as AnyObject?
+          )
           && Utilities.isValidValue(
-            someObject: formatDict?[kActiveTimedWalkTurnAroundTimeLimit] as AnyObject?) {
+            someObject: formatDict?[kActiveTimedWalkTurnAroundTimeLimit] as AnyObject?
+          )
+        {
           // includeAssistiveDeviceForm set to false by default
 
           return ORKOrderedTask.timedWalk(
@@ -403,7 +455,8 @@ class ActivityActiveStep: ActivityStep {
               formatDict?[kActiveTimedWalkTurnAroundTimeLimit] as? TimeInterval
             )!,
             includeAssistiveDeviceForm: false,
-            options: self.options!)
+            options: self.options!
+          )
 
         } else {
           return nil
@@ -411,12 +464,16 @@ class ActivityActiveStep: ActivityStep {
       case .toneAudiometryStep:
         // creates a tone audiometry step
         if Utilities.isValidValue(
-          someObject: formatDict?[kActiveToneAudiometrySpeechInstruction] as AnyObject?)
+          someObject: formatDict?[kActiveToneAudiometrySpeechInstruction] as AnyObject?
+        )
           && Utilities.isValidValue(
             someObject: formatDict?[kActiveToneAudiometryShortSpeechInstruction]
-              as AnyObject?)
+              as AnyObject?
+          )
           && Utilities.isValidValue(
-            someObject: formatDict?[kActiveToneAudiometryToneDuration] as AnyObject?) {
+            someObject: formatDict?[kActiveToneAudiometryToneDuration] as AnyObject?
+          )
+        {
 
           return ORKOrderedTask.toneAudiometryTask(
             withIdentifier: key!,
@@ -430,7 +487,8 @@ class ActivityActiveStep: ActivityStep {
             toneDuration: (
               formatDict?[kActiveToneAudiometryToneDuration] as? TimeInterval
             )!,
-            options: self.options!)
+            options: self.options!
+          )
 
         } else {
           return nil
@@ -438,14 +496,18 @@ class ActivityActiveStep: ActivityStep {
       case .towerOfHanoi:
         // creates a tower of honoi step
         if Utilities.isValidValue(
-          someObject: formatDict?[kActiveTowerOfHanoiNumberOfDisks] as AnyObject?) {
+          someObject: formatDict?[kActiveTowerOfHanoiNumberOfDisks] as AnyObject?
+        ) {
           let orderedTask = ORKOrderedTask.towerOfHanoiTask(
             withIdentifier: key!,
             intendedUseDescription: self.text!,
             numberOfDisks: (formatDict?[kActiveTowerOfHanoiNumberOfDisks] as? UInt)!,
-            options: self.options!)
+            options: self.options!
+          )
           (orderedTask.steps.last as? ORKCompletionStep)!.text = NSLocalizedString(
-            kActiveTaskCompletionStepText, comment: "")
+            kActiveTaskCompletionStepText,
+            comment: ""
+          )
           return orderedTask
 
         } else {
@@ -454,10 +516,13 @@ class ActivityActiveStep: ActivityStep {
       case .twoFingerTappingIntervalStep:
         // creates a two finger tapping step
         if Utilities.isValidValue(
-          someObject: formatDict?[kActiveTwoFingerTappingIntervalDuration] as AnyObject?)
+          someObject: formatDict?[kActiveTwoFingerTappingIntervalDuration] as AnyObject?
+        )
           && Utilities.isValidValue(
             someObject: formatDict?[kActiveTwoFingerTappingIntervalHandOptions]
-              as AnyObject?) {
+              as AnyObject?
+          )
+        {
           return ORKOrderedTask.twoFingerTappingIntervalTask(
             withIdentifier: key!,
             intendedUseDescription: title!,
@@ -467,8 +532,10 @@ class ActivityActiveStep: ActivityStep {
             handOptions: ORKPredefinedTaskHandOption(
               rawValue: (
                 formatDict?[kActiveTwoFingerTappingIntervalHandOptions] as? UInt
-              )!),
-            options: self.options!)
+              )!
+            ),
+            options: self.options!
+          )
 
         } else {
           return nil
@@ -477,15 +544,19 @@ class ActivityActiveStep: ActivityStep {
       case .tremorTestStep:
         // creates a tremor test step
         if Utilities.isValidValue(
-          someObject: formatDict?[kActiveTremorTestActiveStepDuration] as AnyObject?)
+          someObject: formatDict?[kActiveTremorTestActiveStepDuration] as AnyObject?
+        )
           && Utilities.isValidValue(
-            someObject: formatDict?[kActiveTremorTestHandOptions] as AnyObject?) {
+            someObject: formatDict?[kActiveTremorTestHandOptions] as AnyObject?
+          )
+        {
 
           var activeOptions: ORKTremorActiveTaskOption?
           if Utilities.isValidObject(
-            someObject: formatDict?[kActivityStepActiveOptions] as AnyObject) {
+            someObject: formatDict?[kActivityStepActiveOptions] as AnyObject
+          ) {
             activeOptions = nil
-            for option: Int in (formatDict?[kActivityStepActiveOptions] as? [Int])! {
+            for option:Int in (formatDict?[kActivityStepActiveOptions] as? [Int])! {
 
               activeOptions?.insert(ORKTremorActiveTaskOption(rawValue: UInt(option)))
 
@@ -503,8 +574,10 @@ class ActivityActiveStep: ActivityStep {
             )!,
             activeTaskOptions: activeOptions!,
             handOptions: ORKPredefinedTaskHandOption(
-              rawValue: (formatDict?[kActiveTremorTestHandOptions] as? UInt)!),
-            options: self.options!)
+              rawValue: (formatDict?[kActiveTremorTestHandOptions] as? UInt)!
+            ),
+            options: self.options!
+          )
         } else {
           return nil
 
@@ -513,16 +586,20 @@ class ActivityActiveStep: ActivityStep {
       case .fetalKickCounter:
         // creates a fetal kick counter step
         if Utilities.isValidValue(
-          someObject: formatDict?[kActiveFetalKickCounterDuration] as AnyObject?) {
+          someObject: formatDict?[kActiveFetalKickCounterDuration] as AnyObject?
+        ) {
           let instructionText = self.text!
 
           let fetalKickTask: FetalKickCounterTask? = FetalKickCounterTask()
           fetalKickTask?.initWithFormat(
             duration: Float((formatDict?[kActiveFetalKickCounterDuration] as? Int)!),
-            identifier: self.key!, instructionText: instructionText)
+            identifier: self.key!,
+            instructionText: instructionText
+          )
 
           if Utilities.isValidValue(
-            someObject: formatDict?[kActiveFetalKickCounterkickCounts] as AnyObject) {
+            someObject: formatDict?[kActiveFetalKickCounterkickCounts] as AnyObject
+          ) {
             fetalKickTask?.maxKickCounts = (
               formatDict?[kActiveFetalKickCounterkickCounts] as? Int
             )!

@@ -31,8 +31,8 @@ let kLeftMenuCellSubTitleValue = "Sign up"
 let kAlertMessageReachoutText = "This feature will be available in the next sprint."
 
 let kAlertMessageForSignOut = "Are you sure you want to sign out?"
-let kAlertMessageSignOutSync
-  = "Are you sure you want to sign out? Incomplete activities and activities completed while offline must be re-started when you next sign in."
+let kAlertMessageSignOutSync =
+  "Are you sure you want to sign out? Incomplete activities and activities completed while offline must be re-started when you next sign in."
 
 let kAlertSignOutLaterTitle = "Sign Out later"
 
@@ -74,7 +74,7 @@ class LeftMenuViewController: UIViewController, LeftMenuProtocol {
       "menuTitle": "Resources",
       "iconName": "resources_menu1",
       "menuType": LeftMenu.resources
-    ]
+    ],
   ]
 
   /// Standalone
@@ -116,7 +116,12 @@ class LeftMenuViewController: UIViewController, LeftMenuProtocol {
     let navTitle = infoDict!["ProductTitleName"] as! String
     labelProductName.text = navTitle
 
-    self.tableView.separatorColor = UIColor(red: 224/255, green: 224/255, blue: 224/255, alpha: 1.0)
+    self.tableView.separatorColor = UIColor(
+      red: 224 / 255,
+      green: 224 / 255,
+      blue: 224 / 255,
+      alpha: 1.0
+    )
 
     if Utilities.isStandaloneApp() {
       setupStandaloneMenu()
@@ -138,32 +143,38 @@ class LeftMenuViewController: UIViewController, LeftMenuProtocol {
 
     self.studyListViewController = (
       storyboard.instantiateViewController(
-        withIdentifier: String(describing: StudyListViewController.classForCoder()))
+        withIdentifier: String(describing: StudyListViewController.classForCoder())
+      )
         as? UINavigationController
     )!
 
     self.notificationController = (
       storyboard.instantiateViewController(
-        withIdentifier: String(describing: NotificationViewController.classForCoder()))
+        withIdentifier: String(describing: NotificationViewController.classForCoder())
+      )
         as? UINavigationController
     )!
 
     self.resourcesViewController = (
       storyboard.instantiateViewController(
         withIdentifier: String(
-          describing: GatewayResourcesListViewController.classForCoder()))
+          describing: GatewayResourcesListViewController.classForCoder()
+        )
+      )
         as? UINavigationController
     )!
 
     self.profileviewController = (
       storyboard.instantiateViewController(
-        withIdentifier: String(describing: ProfileViewController.classForCoder()))
+        withIdentifier: String(describing: ProfileViewController.classForCoder())
+      )
         as? UINavigationController
     )!
 
     self.reachoutViewController = (
       storyboard.instantiateViewController(
-        withIdentifier: String(describing: ReachoutOptionsViewController.classForCoder()))
+        withIdentifier: String(describing: ReachoutOptionsViewController.classForCoder())
+      )
         as? UINavigationController
     )!
 
@@ -177,33 +188,40 @@ class LeftMenuViewController: UIViewController, LeftMenuProtocol {
     let studyStoryBoard = UIStoryboard.init(name: kStudyStoryboard, bundle: Bundle.main)
     // for standalone
     self.studyTabBarController = studyStoryBoard.instantiateViewController(
-      withIdentifier: kStudyDashboardTabbarControllerIdentifier)
+      withIdentifier: kStudyDashboardTabbarControllerIdentifier
+    )
       as! StudyDashboardTabbarViewController
 
     let storyboard = UIStoryboard(name: kStoryboardIdentifierGateway, bundle: nil)
 
     self.studyListViewController = storyboard.instantiateViewController(
-      withIdentifier: String(describing: StudyListViewController.classForCoder()))
+      withIdentifier: String(describing: StudyListViewController.classForCoder())
+    )
       as? UINavigationController
 
     self.studyHomeViewController = studyStoryBoard.instantiateViewController(
-      withIdentifier: String(describing: "StudyHomeNavigationController"))
+      withIdentifier: String(describing: "StudyHomeNavigationController")
+    )
       as? UINavigationController  // for standalone
 
     self.notificationController = storyboard.instantiateViewController(
-      withIdentifier: String(describing: NotificationViewController.classForCoder()))
+      withIdentifier: String(describing: NotificationViewController.classForCoder())
+    )
       as? UINavigationController
 
     self.resourcesViewController = storyboard.instantiateViewController(
-      withIdentifier: String(describing: GatewayResourcesListViewController.classForCoder()))
+      withIdentifier: String(describing: GatewayResourcesListViewController.classForCoder())
+    )
       as? UINavigationController
 
     self.profileviewController = storyboard.instantiateViewController(
-      withIdentifier: String(describing: ProfileViewController.classForCoder()))
+      withIdentifier: String(describing: ProfileViewController.classForCoder())
+    )
       as? UINavigationController
 
     self.reachoutViewController = storyboard.instantiateViewController(
-      withIdentifier: String(describing: ReachoutOptionsViewController.classForCoder()))
+      withIdentifier: String(describing: ReachoutOptionsViewController.classForCoder())
+    )
       as? UINavigationController
 
   }
@@ -214,7 +232,8 @@ class LeftMenuViewController: UIViewController, LeftMenuProtocol {
     let loginStoryBoard = UIStoryboard(name: kLoginStoryboardIdentifier, bundle: nil)
     let signInController = (
       loginStoryBoard.instantiateViewController(
-        withIdentifier: String(describing: SignInViewController.classForCoder()))
+        withIdentifier: String(describing: SignInViewController.classForCoder())
+      )
         as? SignInViewController
     )!
     self.signInViewController = UINavigationController(rootViewController: signInController)
@@ -223,7 +242,8 @@ class LeftMenuViewController: UIViewController, LeftMenuProtocol {
 
     let signUpController = (
       loginStoryBoard.instantiateViewController(
-        withIdentifier: String(describing: SignUpViewController.classForCoder()))
+        withIdentifier: String(describing: SignUpViewController.classForCoder())
+      )
         as? SignUpViewController
     )!
     self.signUpViewController = UINavigationController(rootViewController: signUpController)
@@ -243,7 +263,7 @@ class LeftMenuViewController: UIViewController, LeftMenuProtocol {
         "menuTitle": "Home",
         "iconName": "home_menu1-1",
         "menuType": LeftMenu.studyList
-      ]
+      ],
     ]
 
     if !Utilities.isStandaloneApp() {
@@ -252,7 +272,7 @@ class LeftMenuViewController: UIViewController, LeftMenuProtocol {
         [
           "menuTitle": "Resources",
           "iconName": "resources_menu1",
-          "menuType": LeftMenu.resources
+          "menuType": LeftMenu.resources,
         ])
     }
 
@@ -261,7 +281,7 @@ class LeftMenuViewController: UIViewController, LeftMenuProtocol {
         [
           "menuTitle": "My Account",
           "iconName": "profile_menu1",
-          "menuType": LeftMenu.profile_reachOut
+          "menuType": LeftMenu.profile_reachOut,
         ])
 
       if shouldAllowToGiveFeedback {
@@ -269,7 +289,7 @@ class LeftMenuViewController: UIViewController, LeftMenuProtocol {
           [
             "menuTitle": "Reach Out",
             "iconName": "reachout_menu1",
-            "menuType": LeftMenu.reachOut_signIn
+            "menuType": LeftMenu.reachOut_signIn,
           ])
       }
 
@@ -280,7 +300,7 @@ class LeftMenuViewController: UIViewController, LeftMenuProtocol {
           [
             "menuTitle": "Reach Out",
             "iconName": "reachout_menu1",
-            "menuType": LeftMenu.profile_reachOut
+            "menuType": LeftMenu.profile_reachOut,
           ])
       }
 
@@ -288,7 +308,7 @@ class LeftMenuViewController: UIViewController, LeftMenuProtocol {
         [
           "menuTitle": "Sign In",
           "iconName": "signin_menu1",
-          "menuType": LeftMenu.reachOut_signIn
+          "menuType": LeftMenu.reachOut_signIn,
         ])
 
       menus.append(
@@ -296,21 +316,27 @@ class LeftMenuViewController: UIViewController, LeftMenuProtocol {
           "menuTitle": "New User?",
           "iconName": "newuser_menu1",
           "subTitle": "Sign up",
-          "menuType": LeftMenu.signup
+          "menuType": LeftMenu.signup,
         ])
       self.buttonSignOut?.isHidden = true
     }
 
     // Setting proportion height of the header and footer view
     var height: CGFloat? = 0.0
-    height = (UIScreen.main.bounds.size.height - CGFloat(menus.count * 70))/2
+    height = (UIScreen.main.bounds.size.height - CGFloat(menus.count * 70)) / 2
 
     self.tableHeaderView.frame.size = CGSize(
-      width: self.tableHeaderView!.frame.size.width, height: height!)
+      width: self.tableHeaderView!.frame.size.width,
+      height: height!
+    )
     self.tableFooterView.frame.size = CGSize(
-      width: self.tableFooterView!.frame.size.width, height: height!)
+      width: self.tableFooterView!.frame.size.width,
+      height: height!
+    )
     self.tableView.frame.size = CGSize(
-      width: self.tableView.frame.width, height: UIScreen.main.bounds.size.height)
+      width: self.tableView.frame.width,
+      height: UIScreen.main.bounds.size.height
+    )
 
     self.tableView.reloadData()
 
@@ -324,21 +350,21 @@ class LeftMenuViewController: UIViewController, LeftMenuProtocol {
       menus.append(
         [
           "menuTitle": "My Account",
-          "iconName": "profile_menu1"
+          "iconName": "profile_menu1",
         ])
       self.tableView.tableFooterView?.isHidden = false
     } else {
       menus.append(
         [
           "menuTitle": "Sign In",
-          "iconName": "signin_menu1"
+          "iconName": "signin_menu1",
         ])
 
       menus.append(
         [
           "menuTitle": "New User?",
           "iconName": "newuser_menu1",
-          "subTitle": "Sign up"
+          "subTitle": "Sign up",
         ])
       self.tableView.tableFooterView?.isHidden = true
     }
@@ -346,11 +372,17 @@ class LeftMenuViewController: UIViewController, LeftMenuProtocol {
     /// Setting proportion height of the header and footer view
     let height = UIScreen.main.bounds.size.height * (220.0 / 667.0)  // calculate new height
     self.tableView.tableHeaderView?.frame.size = CGSize(
-      width: self.tableView.tableHeaderView!.frame.size.width, height: height)
+      width: self.tableView.tableHeaderView!.frame.size.width,
+      height: height
+    )
     self.tableView.tableFooterView?.frame.size = CGSize(
-      width: self.tableView.tableFooterView!.frame.size.width, height: height)
+      width: self.tableView.tableFooterView!.frame.size.width,
+      height: height
+    )
     self.tableView.frame.size = CGSize(
-      width: self.tableView.frame.width, height: UIScreen.main.bounds.size.height)
+      width: self.tableView.frame.width,
+      height: UIScreen.main.bounds.size.height
+    )
     self.tableView.reloadData()
   }
 
@@ -366,48 +398,66 @@ class LeftMenuViewController: UIViewController, LeftMenuProtocol {
       if isStandalone {
         if Study.currentStudy?.userParticipateState.status == .inProgress {
           self.slideMenuController()?.changeMainViewController(
-            self.studyTabBarController, close: true)
+            self.studyTabBarController,
+            close: true
+          )
         } else {
           self.slideMenuController()?.changeMainViewController(
-            self.studyHomeViewController, close: true)
+            self.studyHomeViewController,
+            close: true
+          )
         }
 
       } else {
         self.slideMenuController()?.changeMainViewController(
-          self.studyListViewController, close: true)
+          self.studyListViewController,
+          close: true
+        )
       }
 
     case .resources:
       self.slideMenuController()?.changeMainViewController(
-        self.resourcesViewController, close: true)
+        self.resourcesViewController,
+        close: true
+      )
 
     case .profile_reachOut:
 
       if User.currentUser.userType == .FDAUser {
         self.slideMenuController()?.changeMainViewController(
-          self.profileviewController, close: true)
+          self.profileviewController,
+          close: true
+        )
 
       } else {
         // go to ReachOut screen
         self.slideMenuController()?.changeMainViewController(
-          self.reachoutViewController, close: true)
+          self.reachoutViewController,
+          close: true
+        )
       }
 
     case .reachOut_signIn:
       if User.currentUser.userType == .FDAUser {
         // go to reach out
         self.slideMenuController()?.changeMainViewController(
-          self.reachoutViewController, close: true)
+          self.reachoutViewController,
+          close: true
+        )
 
       } else {
 
         // go sign in
         self.slideMenuController()?.changeMainViewController(
-          self.signInViewController, close: true)
+          self.signInViewController,
+          close: true
+        )
       }
     case .signup:
       self.slideMenuController()?.changeMainViewController(
-        self.signUpViewController, close: true)
+        self.signUpViewController,
+        close: true
+      )
 
     }
   }
@@ -432,7 +482,8 @@ class LeftMenuViewController: UIViewController, LeftMenuProtocol {
           },
           action2: {
             // Cancel Action.
-          })
+          }
+        )
       } else {
 
         UIUtilities.showAlertMessageWithTwoActionsAndHandler(
@@ -446,7 +497,8 @@ class LeftMenuViewController: UIViewController, LeftMenuProtocol {
           },
           action2: {
             // Cancel Action.
-          })
+          }
+        )
       }
     }
 
@@ -534,7 +586,9 @@ extension LeftMenuViewController: UITableViewDataSource {
     } else {
       var cell: LeftMenuResourceTableViewCell?
       cell = tableView.dequeueReusableCell(
-        withIdentifier: "LeftMenuResourceCell", for: indexPath)
+        withIdentifier: "LeftMenuResourceCell",
+        for: indexPath
+      )
         as? LeftMenuResourceTableViewCell
       cell?.populateCellData(data: menus[indexPath.row])
       return cell!
@@ -565,15 +619,19 @@ extension LeftMenuViewController: NMWebServiceDelegate {
 
     if error.code == 403 {  // unauthorized
       UIUtilities.showAlertMessageWithActionHandler(
-        kErrorTitle, message: error.localizedDescription, buttonTitle: kTitleOk,
+        kErrorTitle,
+        message: error.localizedDescription,
+        buttonTitle: kTitleOk,
         viewControllerUsed: self,
         action: {
           self.fdaSlideMenuController()?.navigateToHomeAfterUnauthorizedAccess()
-        })
+        }
+      )
     } else {
       UIUtilities.showAlertWithTitleAndMessage(
         title: NSLocalizedString(kErrorTitle, comment: "") as NSString,
-        message: error.localizedDescription as NSString)
+        message: error.localizedDescription as NSString
+      )
     }
   }
 }

@@ -19,14 +19,14 @@
 import UIKit
 
 let kConfirmationSegueIdentifier = "confirmationSegue"
-let kHeaderDescription
-  = "You have chosen to delete your #APPNAME# Account. This will result in automatic withdrawal from all studies.\nBelow is a list of studies that you are a part of and information on how your response data will be handled with each after you withdraw. Please review and confirm."
+let kHeaderDescription =
+  "You have chosen to delete your #APPNAME# Account. This will result in automatic withdrawal from all studies.\nBelow is a list of studies that you are a part of and information on how your response data will be handled with each after you withdraw. Please review and confirm."
 
-let kHeaderDescriptionStandalone
-  = "You have chosen to delete your #APPNAME# Account. This will result in automatic withdrawal from study.\nBelow is the study that you are a part of and information on how your response data will be handled after you withdraw. Please review and confirm."
+let kHeaderDescriptionStandalone =
+  "You have chosen to delete your #APPNAME# Account. This will result in automatic withdrawal from study.\nBelow is the study that you are a part of and information on how your response data will be handled after you withdraw. Please review and confirm."
 
-let kConfirmWithdrawlSelectOptionsAlert
-  = "Please select an option between Delete Data or Retain Data for all studies."
+let kConfirmWithdrawlSelectOptionsAlert =
+  "Please select an option between Delete Data or Retain Data for all studies."
 let kResponseDataDeletedText = "Response data will be deleted"
 let kResponseDataRetainedText = "Response data will be retained"
 
@@ -75,7 +75,10 @@ class ConfirmationViewController: UIViewController {
 
     // Load plist info
     let plistPath = Bundle.main.path(
-      forResource: kConfirmationPlist, ofType: kPlistFileType, inDirectory: nil)
+      forResource: kConfirmationPlist,
+      ofType: kPlistFileType,
+      inDirectory: nil
+    )
     tableViewRowDetails = NSMutableArray.init(contentsOfFile: plistPath!)
 
     var infoDict: NSDictionary?
@@ -167,8 +170,9 @@ class ConfirmationViewController: UIViewController {
       Study.currentStudy = nil
       self.slideMenuController()?.leftViewController?.navigationController?
         .popToRootViewController(
-          animated: true)
-      DispatchQueue.main.asyncAfter(deadline: .now()+1) {
+          animated: true
+        )
+      DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
         UIApplication.shared.keyWindow?.removeProgressIndicatorFromWindow()
       }
     } else {
@@ -209,7 +213,10 @@ class ConfirmationViewController: UIViewController {
 
         UIUtilities.showAlertWithMessage(
           alertMessage: NSLocalizedString(
-            kConfirmWithdrawlSelectOptionsAlert, comment: ""))
+            kConfirmWithdrawlSelectOptionsAlert,
+            comment: ""
+          )
+        )
         found = true
         break
       }
@@ -227,7 +234,9 @@ class ConfirmationViewController: UIViewController {
       LabKeyServices().withdrawFromStudy(
         studyId: (studyToWithdrawn?.studyId)!,
         participantId: (studyToWithdrawn?.participantId)!,
-        deleteResponses: (studyToWithdrawn?.shouldDelete)!, delegate: self)
+        deleteResponses: (studyToWithdrawn?.shouldDelete)!,
+        delegate: self
+      )
     } else {
       // call for delete account
 
@@ -255,7 +264,9 @@ extension ConfirmationViewController: UITableViewDataSource {
     if study.withdrawalConfigration?.type == StudyWithdrawalConfigrationType.askUser {
 
       let cell = tableView.dequeueReusableCell(
-        withIdentifier: kConfrimationOptionalCellIdentifier, for: indexPath)
+        withIdentifier: kConfrimationOptionalCellIdentifier,
+        for: indexPath
+      )
         as! ConfirmationOptionalTableViewCell
       cell.delegate = self
       cell.study = study
@@ -267,16 +278,22 @@ extension ConfirmationViewController: UITableViewDataSource {
     } else {
       // for ConfirmationTableViewCell data
       let cell = tableView.dequeueReusableCell(
-        withIdentifier: kConfrimationCellIdentifier, for: indexPath)
+        withIdentifier: kConfrimationCellIdentifier,
+        for: indexPath
+      )
         as! ConfirmationTableViewCell
       cell.labelTitle?.text = study.name
 
       if study.withdrawalConfigration?.type == StudyWithdrawalConfigrationType.deleteData {
         cell.labelTitleDescription?.text = NSLocalizedString(
-          kResponseDataDeletedText, comment: "")
+          kResponseDataDeletedText,
+          comment: ""
+        )
       } else {
         cell.labelTitleDescription?.text = NSLocalizedString(
-          kResponseDataRetainedText, comment: "")
+          kResponseDataRetainedText,
+          comment: ""
+        )
       }
       return cell
     }
@@ -294,7 +311,9 @@ extension ConfirmationViewController: UITableViewDelegate {
 extension ConfirmationViewController: ConfirmationOptionalDelegate {
 
   func confirmationCell(
-    cell: ConfirmationOptionalTableViewCell, forStudy study: Study, deleteData: Bool
+    cell: ConfirmationOptionalTableViewCell,
+    forStudy study: Study,
+    deleteData: Bool
   ) {
 
     if let withdrawnStudy = self.studiesToWithdrawn.filter({ $0.studyId == study.studyId }).last {
@@ -331,11 +350,14 @@ extension ConfirmationViewController: NMWebServiceDelegate {
     if error.code == 403 {  //unauthorized
       self.removeProgressIndicator()
       UIUtilities.showAlertMessageWithActionHandler(
-        kErrorTitle, message: error.localizedDescription, buttonTitle: kTitleOk,
+        kErrorTitle,
+        message: error.localizedDescription,
+        buttonTitle: kTitleOk,
         viewControllerUsed: self,
         action: {
           self.fdaSlideMenuController()?.navigateToHomeAfterUnauthorizedAccess()
-        })
+        }
+      )
 
     } else {
       if requestName as String == WCPMethods.studyInfo.rawValue {
@@ -343,7 +365,8 @@ extension ConfirmationViewController: NMWebServiceDelegate {
 
       } else if requestName as String == ResponseMethods.withdrawFromStudy.description {
         if error.localizedDescription.localizedCaseInsensitiveContains(
-          "Invalid ParticipantId.") {
+          "Invalid ParticipantId."
+        ) {
 
           self.handleWithdrawnFromStudyResponse()
 
@@ -354,7 +377,8 @@ extension ConfirmationViewController: NMWebServiceDelegate {
         self.removeProgressIndicator()
         UIUtilities.showAlertWithTitleAndMessage(
           title: NSLocalizedString(kErrorTitle, comment: "") as NSString,
-          message: error.localizedDescription as NSString)
+          message: error.localizedDescription as NSString
+        )
       }
     }
   }

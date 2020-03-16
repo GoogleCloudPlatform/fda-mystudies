@@ -99,8 +99,16 @@ class ActivityStep {
 
   /// Initializer method which initializes all params
   init(
-    activityId: String, type: ActivityStepType, resultType: String, key: String, title: String,
-    text: String, skippable: Bool, groupName: String, repeatable: Bool, repeatableText: String,
+    activityId: String,
+    type: ActivityStepType,
+    resultType: String,
+    key: String,
+    title: String,
+    text: String,
+    skippable: Bool,
+    groupName: String,
+    repeatable: Bool,
+    repeatableText: String,
     destinations: [[String: Any]]
   ) {
 
@@ -152,7 +160,8 @@ class ActivityStep {
         self.repeatable = stepDict[kActivityStepRepeatable] as? Bool
       }
       if Utilities.isValidValue(
-        someObject: stepDict[kActivityStepRepeatableText] as AnyObject) {
+        someObject: stepDict[kActivityStepRepeatableText] as AnyObject
+      ) {
         self.repeatableText = stepDict[kActivityStepRepeatableText] as? String
       }
       if Utilities.isValidObject(someObject: stepDict[kActivityStepDestinations] as AnyObject) {

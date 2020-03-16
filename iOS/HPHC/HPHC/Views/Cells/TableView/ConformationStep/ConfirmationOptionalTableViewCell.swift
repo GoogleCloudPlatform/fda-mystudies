@@ -26,7 +26,9 @@ let kConfirmationOptionalDefaultTypeDelete = "delete"
 
 protocol ConfirmationOptionalDelegate: class {
   func confirmationCell(
-    cell: ConfirmationOptionalTableViewCell, forStudy study: Study, deleteData: Bool
+    cell: ConfirmationOptionalTableViewCell,
+    forStudy study: Study,
+    deleteData: Bool
   )
 }
 

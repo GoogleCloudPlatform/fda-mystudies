@@ -36,7 +36,8 @@ public enum ReachabilityError: Error {
 public let ReachabilityChangedNotification = NSNotification.Name("ReachabilityChangedNotification")
 
 func callback(
-  reachability: SCNetworkReachability, flags: SCNetworkReachabilityFlags,
+  reachability: SCNetworkReachability,
+  flags: SCNetworkReachabilityFlags,
   info: UnsafeMutableRawPointer?
 ) {
 
@@ -125,11 +126,12 @@ public class Reachability {
     zeroAddress.sa_family = sa_family_t(AF_INET)
 
     guard
-      let ref: SCNetworkReachability = withUnsafePointer(
+      let ref:SCNetworkReachability = withUnsafePointer(
         to: &zeroAddress,
         {
           SCNetworkReachabilityCreateWithAddress(nil, UnsafePointer($0))
-        })
+        }
+      )
     else { return nil }
 
     self.init(reachabilityRef: ref)
@@ -152,9 +154,15 @@ extension Reachability {
     guard let reachabilityRef = reachabilityRef, !notifierRunning else { return }
 
     var context = SCNetworkReachabilityContext(
-      version: 0, info: nil, retain: nil, release: nil, copyDescription: nil)
+      version: 0,
+      info: nil,
+      retain: nil,
+      release: nil,
+      copyDescription: nil
+    )
     context.info = UnsafeMutableRawPointer(
-      Unmanaged<Reachability>.passUnretained(self).toOpaque())
+      Unmanaged<Reachability>.passUnretained(self).toOpaque()
+    )
     if !SCNetworkReachabilitySetCallback(reachabilityRef, callback, &context) {
       stopNotifier()
       throw ReachabilityError.UnableToSetCallback
@@ -295,7 +303,7 @@ extension Reachability {
 
   fileprivate var isConnectionRequiredAndTransientFlagSet: Bool {
     return reachabilityFlags.intersection([.connectionRequired, .transientConnection]) == [
-      .connectionRequired, .transientConnection
+      .connectionRequired, .transientConnection,
     ]
   }
 

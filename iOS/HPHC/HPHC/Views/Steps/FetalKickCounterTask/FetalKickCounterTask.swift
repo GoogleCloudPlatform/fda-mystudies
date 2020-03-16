@@ -21,13 +21,13 @@ import ResearchKit
 
 let kFetalKickInstructionStepIdentifier = "Instruction"
 let kFetalKickInstructionStepTitle = "Fetal Kick Counter"
-let kFetalKickInstructionStepText
-  = "This task needs you to record the number of times you experience fetal kicks in a given duration of time.Also called as the Fetal Kick Counter task, this will help assess the activity of the baby within."
+let kFetalKickInstructionStepText =
+  "This task needs you to record the number of times you experience fetal kicks in a given duration of time.Also called as the Fetal Kick Counter task, this will help assess the activity of the baby within."
 
 let kFetalKickIntroductionStepIdentifier = "FetalKickIntroduction"
 let kFetalKickIntroductionStepTitle = ""
-let kFetalKickIntroductionStepText
-  = "This task needs you to record the number of times you experience fetal kicks in a given duration of time.Also called as the Fetal Kick Counter task, this will help assess the activity of the baby within."
+let kFetalKickIntroductionStepText =
+  "This task needs you to record the number of times you experience fetal kicks in a given duration of time.Also called as the Fetal Kick Counter task, this will help assess the activity of the baby within."
 
 let kFetalKickCounterStepIdentifier = "FetalKickCounterStep"
 
@@ -112,8 +112,8 @@ class FetalKickCounterTask {
     let summaryStep = ORKCompletionStep(identifier: kFetalKickCounterStepCompletionTitle)
     summaryStep.title = "Activity Completed"
     summaryStep.image = #imageLiteral(resourceName: "successBlueBig")
-    summaryStep.detailText
-      = "Thank you for your time!\n\nTap Done to submit responses. Responses cannot be modified after submission."
+    summaryStep.detailText =
+      "Thank you for your time!\n\nTap Done to submit responses. Responses cannot be modified after submission."
 
     steps?.append(summaryStep)
 

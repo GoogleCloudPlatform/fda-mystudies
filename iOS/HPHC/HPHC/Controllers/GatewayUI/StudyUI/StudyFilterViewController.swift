@@ -23,8 +23,11 @@ import UIKit
 protocol StudyFilterDelegates: class {
 
   func appliedFilter(
-    studyStatus: [String], pariticipationsStatus: [String], categories: [String],
-    searchText: String, bookmarked: Bool
+    studyStatus: [String],
+    pariticipationsStatus: [String],
+    categories: [String],
+    searchText: String,
+    bookmarked: Bool
   )
 
   func didCancelFilter(_ cancel: Bool)
@@ -140,8 +143,12 @@ class StudyFilterViewController: UIViewController {
     previousCollectionData.append(categories.count == 0 ? [] : categories)
 
     delegate?.appliedFilter(
-      studyStatus: studyStatus, pariticipationsStatus: pariticipationsStatus,
-      categories: categories, searchText: searchText, bookmarked: bookmark)
+      studyStatus: studyStatus,
+      pariticipationsStatus: pariticipationsStatus,
+      categories: categories,
+      searchText: searchText,
+      bookmarked: bookmark
+    )
     self.dismiss(animated: true, completion: nil)
 
   }
@@ -157,12 +164,14 @@ class StudyFilterViewController: UIViewController {
 extension StudyFilterViewController: UICollectionViewDataSource {  //,UICollectionViewDelegate {
 
   func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int)
-    -> Int {
+    -> Int
+  {
     return StudyFilterHandler.instance.filterOptions.count  //filterData!.count
   }
 
   func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath)
-    -> UICollectionViewCell {
+    -> UICollectionViewCell
+  {
     let cell = (
       collectionView.dequeueReusableCell(withReuseIdentifier: "cell", for: indexPath)
         as? FilterListCollectionViewCell
@@ -180,7 +189,8 @@ extension StudyFilterViewController: PinterestLayoutDelegate {
 
   // 1. Returns the photo height
   func collectionView(
-    _ collectionView: UICollectionView, heightForPhotoAtIndexPath indexPath: IndexPath,
+    _ collectionView: UICollectionView,
+    heightForPhotoAtIndexPath indexPath: IndexPath,
     withWidth width: CGFloat
   ) -> CGFloat {
 
@@ -198,7 +208,8 @@ extension StudyFilterViewController: PinterestLayoutDelegate {
 
   // 2. Returns the annotation size based on the text
   func collectionView(
-    _ collectionView: UICollectionView, heightForAnnotationAtIndexPath indexPath: IndexPath,
+    _ collectionView: UICollectionView,
+    heightForAnnotationAtIndexPath indexPath: IndexPath,
     withWidth width: CGFloat
   ) -> CGFloat {
     return 0

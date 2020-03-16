@@ -53,24 +53,30 @@ class StudyDashboardTabbarViewController: UITabBarController {
     } else {
 
       let alert = UIAlertController(
-        title: NSLocalizedString(kTitleError, comment: ""), message: "",
-        preferredStyle: UIAlertController.Style.alert)
+        title: NSLocalizedString(kTitleError, comment: ""),
+        message: "",
+        preferredStyle: UIAlertController.Style.alert
+      )
 
       alert.addAction(
         UIAlertAction.init(
-          title: NSLocalizedString(kTitleOk, comment: ""), style: .default,
+          title: NSLocalizedString(kTitleOk, comment: ""),
+          style: .default,
           handler: { (_) in
 
             self.dismiss(animated: true, completion: nil)
 
-          }))
+          }
+        )
+      )
     }
   }
 }
 
 extension StudyDashboardTabbarViewController: MFMailComposeViewControllerDelegate {
   func mailComposeController(
-    _ controller: MFMailComposeViewController, didFinishWith result: MFMailComposeResult,
+    _ controller: MFMailComposeViewController,
+    didFinishWith result: MFMailComposeResult,
     error: Error?
   ) {
     controller.dismiss(animated: true, completion: nil)
