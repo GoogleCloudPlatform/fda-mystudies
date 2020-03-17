@@ -187,7 +187,7 @@ class AuthServices: NSObject {
     let header = [
       "clientId": clientId,
       "secretKey": seceretKey,
-      "userId": user.userId!
+      "userId": user.userId!,
     ]
     let method = AuthServerMethods.getRefreshedToken.method
     self.sendRequestWith(method: method, params: param, headers: header)

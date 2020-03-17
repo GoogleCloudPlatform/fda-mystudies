@@ -22,19 +22,15 @@ import UIKit
 
 class DBHandler: NSObject {
 
-  fileprivate class func getRealmObject() -> Realm! {
-
+  private static var realm: Realm = {
     let key = FDAKeychain.shared[kRealmEncryptionKeychainKey]
     let data = Data.init(base64Encoded: key!)
     let encryptionConfig = Realm.Configuration(encryptionKey: data)
-    var realm: Realm!
-    do {
-      realm = try Realm(configuration: encryptionConfig)
-    } catch let error {
-      Logger.sharedInstance.error(error)
-    }
-    return realm
+    return try! Realm(configuration: encryptionConfig)
+  }()
 
+  fileprivate class func getRealmObject() -> Realm? {
+    return DBHandler.realm
   }
 
   /// Used to save user details like userid, authkey, first name , last name etc

@@ -499,7 +499,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
       center.getPendingNotificationRequests(
         completionHandler: { requests in
           if requests.count < 50 {
-            LocalNotification.refreshAllLocalNotification()
+            DispatchQueue.main.async {
+              LocalNotification.refreshAllLocalNotification()
+            }
           }
         })
     }
@@ -507,7 +509,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
   /// Webservice request call to SignOut
   func sendRequestToSignOut() {
-    UserServices().logoutUser(self as NMWebServiceDelegate)
+    AuthServices().logoutUser(self as NMWebServiceDelegate)
   }
 
   /// Check the  current Consent Status for Updated Version
