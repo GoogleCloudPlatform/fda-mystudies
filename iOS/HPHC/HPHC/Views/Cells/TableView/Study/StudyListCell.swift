@@ -185,7 +185,7 @@ class StudyListCell: UITableViewCell {
     }
   }
 
-  // Updates the icon for `Study`
+  /// Updates the icon for `Study`
   /// - Parameter study: Instance of Study.
   fileprivate func updateStudyImage(_ study: Study) {
     // Update study logo using SDWEBImage and cache it.
@@ -196,7 +196,7 @@ class StudyListCell: UITableViewCell {
         with: url,
         placeholderImage: nil,
         options: .progressiveLoad,
-        completed: { [weak self] (image, error, _, _) in
+        completed: { [weak self] (image, _, _, _) in
           if let image = image {
             self?.studyLogoImage?.image = image
           }

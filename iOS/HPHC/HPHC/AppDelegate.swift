@@ -1889,13 +1889,9 @@ extension UIWindow {
         options: nil
       )[0] as? UIView
 
-    let url = Bundle.main.url(forResource: kResourceName, withExtension: "gif")!
-    _ = try! Data(contentsOf: url)
-    let webView = (view?.subviews.first as? UIWebView)!
-
-    webView.loadRequest(URLRequest.init(url: url))
-    webView.scalesPageToFit = true
-    webView.contentMode = UIView.ContentMode.scaleAspectFit
+    let gif = UIImage.gifImageWithName(kResourceName)
+    let imageView = view?.subviews.first as? UIImageView
+    imageView?.image = gif
 
     var frame = UIScreen.main.bounds
     frame.origin.y += 64
@@ -1920,13 +1916,9 @@ extension UIWindow {
           options: nil
         )[0] as? UIView
 
-      let url = Bundle.main.url(forResource: kResourceName, withExtension: "gif")!
-      _ = try! Data(contentsOf: url)
-      let webView = (view?.subviews.first as? UIWebView)!
-
-      webView.loadRequest(URLRequest.init(url: url))
-      webView.scalesPageToFit = true
-      webView.contentMode = UIView.ContentMode.scaleAspectFit
+      let gif = UIImage.gifImageWithName(kResourceName)
+      let imageView = view?.subviews.first as? UIImageView
+      imageView?.image = gif
 
       let frame = UIScreen.main.bounds
 

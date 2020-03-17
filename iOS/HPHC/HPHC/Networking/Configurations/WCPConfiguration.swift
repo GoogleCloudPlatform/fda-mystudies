@@ -87,8 +87,8 @@ class WCPConfiguration: NetworkConfiguration {
     if let path = Bundle.main.path(forResource: "Info", ofType: "plist") {
       infoDict = NSDictionary(contentsOfFile: path)
     }
-    let _ = infoDict!["ApplicationID"] as! String
-    let _ = infoDict!["OrganizationID"] as! String
+    _ = infoDict!["ApplicationID"] as! String
+    _ = infoDict!["OrganizationID"] as! String
 
     let token = API.authUsername + ":" + API.authPassword
 
