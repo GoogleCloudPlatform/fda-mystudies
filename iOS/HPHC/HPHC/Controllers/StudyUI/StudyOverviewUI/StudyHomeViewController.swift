@@ -1,6 +1,7 @@
 // License Agreement for FDA My Studies
-// Copyright © 2017-2019 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors. Permission is
-// hereby granted, free of charge, to any person obtaining a copy of this software and associated
+// Copyright © 2017-2019 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors.
+// Copyright 2020 Google LLC
+// Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated
 // documentation files (the &quot;Software&quot;), to deal in the Software without restriction, including without
 // limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the
 // Software, and to permit persons to whom the Software is furnished to do so, subject to the following
@@ -240,10 +241,17 @@ class StudyHomeViewController: UIViewController {
       consentResult?.token = appdelegate.consentToken
     }
 
-    LabKeyServices().enrollForStudy(
-      studyId: (Study.currentStudy?.studyId)!,
-      token: (ConsentBuilder.currentConsent?.consentResult?.token)!,
-      delegate: self
+    //TEMPBYPASS:
+    //    LabKeyServices().enrollForStudy(
+    //      studyId: (Study.currentStudy?.studyId)!,
+    //      token: (ConsentBuilder.currentConsent?.consentResult?.token)!, delegate: self)
+
+    let notificationName = Notification.Name(kPDFCreationNotificationId)
+    NotificationCenter.default.addObserver(
+      self,
+      selector: #selector(updateEligibilityConsentStatus),
+      name: notificationName,
+      object: nil
     )
   }
 
@@ -571,7 +579,7 @@ class StudyHomeViewController: UIViewController {
     // Stop listening notification
     NotificationCenter.default.removeObserver(self, name: notificationName, object: nil)
 
-    UserServices().updateUserEligibilityConsentStatus(
+    ConsentServices().updateUserEligibilityConsentStatus(
       eligibilityStatus: true,
       consentStatus: (ConsentBuilder.currentConsent?.consentStatus)!,
       delegate: self
@@ -922,7 +930,7 @@ extension StudyHomeViewController: NMWebServiceDelegate {
           )
 
         } else {
-          UserServices().updateUserEligibilityConsentStatus(
+          ConsentServices().updateUserEligibilityConsentStatus(
             eligibilityStatus: true,
             consentStatus: (ConsentBuilder.currentConsent?.consentStatus)!,
             delegate: self
@@ -938,16 +946,19 @@ extension StudyHomeViewController: NMWebServiceDelegate {
     }
 
     if requestName as String
-      == RegistrationMethods.updateEligibilityConsentStatus.method
+      == ConsentServerMethods.updateEligibilityConsentStatus.method
       .methodName
     {
-      if User.currentUser.getStudyStatus(studyId: (Study.currentStudy?.studyId)!)
-        == UserStudyStatus
-        .StudyStatus.inProgress
-      {
-        isGettingJoiningDate = true
-        UserServices().getStudyStates(self)
-      }
+      //TEMPBYPASS:
+      //      if User.currentUser.getStudyStatus(studyId: (Study.currentStudy?.studyId)!)
+      //        == UserStudyStatus
+      //        .StudyStatus.inProgress
+      //      {
+      //        isGettingJoiningDate = true
+      //        UserServices().getStudyStates(self)
+      //      }
+
+      self.postStudyEnrollmentFinishedNotif()
     }
 
     if requestName as String == WCPMethods.consentDocument.method.methodName {
@@ -986,7 +997,8 @@ extension StudyHomeViewController: NMWebServiceDelegate {
     Logger.sharedInstance.error("requestname : \(requestName)")
     removeProgressIndicator()
 
-    if error.code == 403 {  // unauthorized Access
+    if requestName as String == AuthServerMethods.getRefreshedToken.description && error.code == 401
+    {  // unauthorized Access
       let appdelegate = (UIApplication.shared.delegate as? AppDelegate)!
       appdelegate.window?.removeProgressIndicatorFromWindow()
       UIUtilities.showAlertMessageWithActionHandler(

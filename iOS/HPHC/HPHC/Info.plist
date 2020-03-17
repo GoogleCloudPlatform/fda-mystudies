@@ -7,11 +7,11 @@
 	<key>AUTH_USERNAME</key>
 	<string>$(AUTH_USERNAME)</string>
 	<key>ApplicationID</key>
-	<string>FMSA001</string>
+	<string>APP001</string>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>en</string>
 	<key>CFBundleDisplayName</key>
-	<string>MyStudies</string>
+	<string>$(PRODUCT_NAME)</string>
 	<key>CFBundleExecutable</key>
 	<string>$(EXECUTABLE_NAME)</string>
 	<key>CFBundleIdentifier</key>
@@ -23,7 +23,7 @@
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>
-	<string>1.3</string>
+	<string>$(MARKETING_VERSION)</string>
 	<key>CFBundleVersion</key>
 	<string>$(CURRENT_PROJECT_VERSION)</string>
 	<key>Fabric</key>
@@ -68,7 +68,7 @@
 	<key>NSSpeechRecognitionUsageDescription</key>
 	<string>$(PRODUCT_NAME) would like to use Speech Recognition for the task to give more accurate result.</string>
 	<key>OrganizationID</key>
-	<string>OrgName</string>
+	<string>Org001</string>
 	<key>ProductTitleName</key>
 	<string>FDA MyStudies</string>
 	<key>REGISTRATION_URL</key>

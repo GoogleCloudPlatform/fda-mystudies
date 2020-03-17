@@ -1100,7 +1100,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     NotificationCenter.default.removeObserver(self, name: notificationName, object: nil)
 
     // Update Consent status to Server
-    UserServices().updateUserEligibilityConsentStatus(
+    ConsentServices().updateUserEligibilityConsentStatus(
       eligibilityStatus: true,
       consentStatus: (ConsentBuilder.currentConsent?.consentStatus)!,
       delegate: self
@@ -1182,7 +1182,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     } else {
       // Update Consent Status to server
-      UserServices().updateUserEligibilityConsentStatus(
+      ConsentServices().updateUserEligibilityConsentStatus(
         eligibilityStatus: true,
         consentStatus: (ConsentBuilder.currentConsent?.consentStatus)!,
         delegate: self

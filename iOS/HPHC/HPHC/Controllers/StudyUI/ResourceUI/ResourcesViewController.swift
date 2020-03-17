@@ -1,6 +1,7 @@
 // License Agreement for FDA My Studies
-// Copyright © 2017-2019 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors. Permission is
-// hereby granted, free of charge, to any person obtaining a copy of this software and associated
+// Copyright © 2017-2019 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors.
+// Copyright 2020 Google LLC
+// Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated
 // documentation files (the &quot;Software&quot;), to deal in the Software without restriction, including without
 // limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the
 // Software, and to permit persons to whom the Software is furnished to do so, subject to the following
@@ -424,7 +425,7 @@ class ResourcesViewController: UIViewController {
     let pdfData = FileDownloadManager.decrytFile(pathURL: URL.init(string: fullPath))
 
     var isPDF: Bool = false
-    if (pdfData?.count)! >= 1024  // only check if bigger
+    if (pdfData?.count ?? 0) >= 1024  // only check if bigger
     {
       var pdfBytes = [UInt8]()
       pdfBytes = [0x25, 0x50, 0x44, 0x46]
@@ -436,7 +437,8 @@ class ResourcesViewController: UIViewController {
         isPDF = true
       } else {
         isPDF = false
-        UserServices().getConsentPDFForStudy(
+        print("not pdf")
+        ConsentServices().getConsentPDFForStudy(
           studyId: (Study.currentStudy?.studyId)!,
           delegate: self
         )
@@ -643,7 +645,7 @@ extension ResourcesViewController: UITableViewDelegate {
         if Study.currentStudy?.signedConsentFilePath != nil {
           self.pushToResourceDetails()
         } else {
-          UserServices().getConsentPDFForStudy(
+          ConsentServices().getConsentPDFForStudy(
             studyId: (Study.currentStudy?.studyId)!,
             delegate: self
           )
@@ -705,7 +707,7 @@ extension ResourcesViewController: NMWebServiceDelegate {
         handleStudyInfoResponse(response: response)
       }
 
-    case RegistrationMethods.consentPDF.method.methodName:
+    case ConsentServerMethods.consentPDF.method.methodName:
       self.removeProgressIndicator()
       let consentDict: [String: Any] = (
         (response as? [String: Any])![kConsentPdfKey] as? [String: Any]
@@ -738,7 +740,8 @@ extension ResourcesViewController: NMWebServiceDelegate {
   func failedRequest(_ manager: NetworkManager, requestName: NSString, error: NSError) {
     Logger.sharedInstance.info("requestname : \(requestName)")
 
-    if error.code == 403 {  // unauthorized
+    if requestName as String == AuthServerMethods.getRefreshedToken.description && error.code == 401
+    {  //unauthorized  // unauthorized
       self.removeProgressIndicator()
       UIUtilities.showAlertMessageWithActionHandler(
         kErrorTitle,

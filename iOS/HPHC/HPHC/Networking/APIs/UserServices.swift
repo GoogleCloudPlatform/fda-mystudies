@@ -1,6 +1,7 @@
 // License Agreement for FDA My Studies
-// Copyright © 2017-2019 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors. Permission is
-// hereby granted, free of charge, to any person obtaining a copy of this software and associated
+// Copyright © 2017-2019 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors.
+// Copyright 2020 Google LLC
+// Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated
 // documentation files (the &quot;Software&quot;), to deal in the Software without restriction, including without
 // limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the
 // Software, and to permit persons to whom the Software is furnished to do so, subject to the following
@@ -41,7 +42,7 @@ let kBasicInfo = "info"
 let kStudyId = "studyId"
 let kDeleteData = "deleteData"
 let kUserVerified = "verified"
-let kUserAuthToken = "auth"
+let kUserAuthToken = "accessToken"
 let kStudies = "studies"
 let kActivites = "activities"
 let kActivityKey = "activity"
@@ -159,10 +160,12 @@ class UserServices: NSObject {
 
     let param = [
       kVerifyCode: verificationCode,
-      kUserEmailId: emailId,
     ]
-    let method = RegistrationMethods.verify.method
-    self.sendRequestWith(method: method, params: param, headers: nil)
+    let header = [
+      "userId": User.currentUser.userId,
+    ] as [String: String]
+    let method = RegistrationMethods.verifyEmailId.method
+    self.sendRequestWith(method: method, params: param, headers: header)
 
   }
 
@@ -605,6 +608,7 @@ class UserServices: NSObject {
     user.userId = (response[kUserId] as? String)!
     user.verified = (response[kUserVerified] as? Bool)!
     user.authToken = (response[kUserAuthToken] as? String)!
+    user.clientToken = (response["clientToken"] as? String)!
     if let refreshToken = response[kRefreshToken] as? String {
       user.refreshToken = refreshToken
 
@@ -645,6 +649,7 @@ class UserServices: NSObject {
     user.userId = (response[kUserId] as? String)!
     user.verified = (response[kUserVerified] as? Bool)!
     user.authToken = (response[kUserAuthToken] as? String)!
+    user.clientToken = (response["clientToken"] as? String)!
 
     user.refreshToken = (response[kRefreshToken] as? String)!
     StudyFilterHandler.instance.previousAppliedFilters = []
@@ -888,14 +893,14 @@ class UserServices: NSObject {
 
   func handleUpdateTokenResponse(response: [String: Any]) {
 
-    let user = User.currentUser
-    user.authToken = (response[kUserAuthToken] as? String)!
-
-    FDAKeychain.shared[kUserAuthTokenKeychainKey] = user.authToken
-    FDAKeychain.shared[kUserRefreshTokenKeychainKey] = user.refreshToken
-
-    DBHandler().saveCurrentUser(user: user)
-    //re-send request which failed due to session expired
+    //    let user = User.currentUser
+    //    user.authToken = (response[kUserAuthToken] as? String)!
+    //
+    //    FDAKeychain.shared[kUserAuthTokenKeychainKey] = user.authToken
+    //    FDAKeychain.shared[kUserRefreshTokenKeychainKey] = user.refreshToken
+    //
+    //    DBHandler().saveCurrentUser(user: user)
+    //    //re-send request which failed due to session expired
 
     let headerParams = self.failedRequestServices.headerParams == nil
       ? [:] : self.failedRequestServices.headerParams
@@ -949,7 +954,7 @@ extension UserServices: NMWebServiceDelegate {
 
       self.handleConfirmRegistrationResponse(response: (response as? [String: Any])!)
 
-    case RegistrationMethods.verify.description as String:
+    case RegistrationMethods.verifyEmailId.description as String:
 
       self.handleEmailVerifyResponse(response: (response as? [String: Any])!)
 
@@ -989,7 +994,7 @@ extension UserServices: NMWebServiceDelegate {
 
     case RegistrationMethods.deactivate.description as String:
       self.handleDeActivateAccountResponse(response: (response as? [String: Any])!)
-    case RegistrationMethods.refreshToken.description as String:
+    case AuthServerMethods.getRefreshedToken.description as String:
       self.handleUpdateTokenResponse(response: (response as? [String: Any])!)
     default: break
     }
@@ -1000,7 +1005,10 @@ extension UserServices: NMWebServiceDelegate {
 
   func failedRequest(_ manager: NetworkManager, requestName: NSString, error: NSError) {
 
-    if error.code == 401 {
+    if requestName as String == AuthServerMethods.getRefreshedToken.description && error.code == 401
+    {  //unauthorized
+      delegate?.failedRequest(manager, requestName: requestName, error: error)
+    } else if error.code == 401 {
 
       self.failedRequestServices.headerParams = self.headerParams
       self.failedRequestServices.requestParams = self.requestParams
@@ -1021,7 +1029,7 @@ extension UserServices: NMWebServiceDelegate {
 
       } else {
         // Update Refresh Token
-        self.updateToken()
+        AuthServices().updateToken(delegate: self)
       }
 
     } else {

@@ -1,6 +1,7 @@
 // License Agreement for FDA My Studies
-// Copyright © 2017-2019 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors. Permission is
-// hereby granted, free of charge, to any person obtaining a copy of this software and associated
+// Copyright © 2017-2019 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors.
+// Copyright 2020 Google LLC
+// Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated
 // documentation files (the &quot;Software&quot;), to deal in the Software without restriction, including without
 // limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the
 // Software, and to permit persons to whom the Software is furnished to do so, subject to the following
@@ -73,19 +74,9 @@ class NetworkWebServiceHandler: NSObject, URLSessionDelegate {
 
   /// Returns Server Url of type String
   func getServerURLString() -> NSString {
-
-    let ud: Bool = UserDefaults.standard.bool(forKey: kIsStagingUser)
-
     #if DEBUG
-      if ud {
-        return self.configuration.getDevelopmentURL() as NSString
-
-      }
-      return self.configuration.getProductionURL() as NSString
+      return self.configuration.getDevelopmentURL() as NSString
     #else
-      if ud {
-        return self.configuration.getDevelopmentURL() as NSString
-      }
       return self.configuration.getProductionURL() as NSString
     #endif
   }

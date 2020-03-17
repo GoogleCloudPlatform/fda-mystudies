@@ -87,8 +87,8 @@ class WCPConfiguration: NetworkConfiguration {
     if let path = Bundle.main.path(forResource: "Info", ofType: "plist") {
       infoDict = NSDictionary(contentsOfFile: path)
     }
-    let appId = infoDict!["ApplicationID"] as! String
-    let orgId = infoDict!["OrganizationID"] as! String
+    let _ = infoDict!["ApplicationID"] as! String
+    let _ = infoDict!["OrganizationID"] as! String
 
     let token = API.authUsername + ":" + API.authPassword
 
@@ -96,8 +96,8 @@ class WCPConfiguration: NetworkConfiguration {
 
     let headers = [
       "Authorization": base64token,
-      "applicationId": appId,
-      "orgId": orgId,
+      "applicationId": "FMSA001",
+      "orgId": "OrgName",
     ]
 
     return headers

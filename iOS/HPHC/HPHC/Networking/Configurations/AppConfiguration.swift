@@ -33,26 +33,29 @@ private enum Configuration {
 
 enum API {
 
-  static private let baseProtocol = "https://"
+  private enum AppProtocol {
+    static let http = "http://"
+    static let https = "https://"
+  }
 
   static var wcpURL: String {
-    return baseProtocol + ((try? Configuration.value(for: "WCP_URL")) ?? "")
+    return AppProtocol.https + ((try? Configuration.value(for: "WCP_URL")) ?? "")
   }
 
   static var responseURL: String {
-    return baseProtocol + ((try? Configuration.value(for: "RESPONSE_URL")) ?? "")
+    return AppProtocol.https + ((try? Configuration.value(for: "RESPONSE_URL")) ?? "")
   }
 
   static var registrationURL: String {
-    return baseProtocol + ((try? Configuration.value(for: "REGISTRATION_URL")) ?? "")
+    return AppProtocol.http + ((try? Configuration.value(for: "REGISTRATION_URL")) ?? "")
   }
 
   static var authUsername: String {
-    return baseProtocol + ((try? Configuration.value(for: "AUTH_USERNAME")) ?? "")
+    return (try? Configuration.value(for: "AUTH_USERNAME")) ?? ""
   }
 
   static var authPassword: String {
-    return baseProtocol + ((try? Configuration.value(for: "AUTH_PASSWORD")) ?? "")
+    return (try? Configuration.value(for: "AUTH_PASSWORD")) ?? ""
   }
 
 }

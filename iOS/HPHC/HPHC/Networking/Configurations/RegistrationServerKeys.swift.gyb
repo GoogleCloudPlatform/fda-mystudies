@@ -1,0 +1,67 @@
+//
+//  RegistrationServerKeys.swift
+//  HPHC
+//  Copyright 2020 Google LLC
+//
+//  Use of this source code is governed by an MIT-style
+//  license that can be found in the LICENSE file or at
+//  https://opensource.org/licenses/MIT.
+
+%{
+import os
+
+def chunks(seq, size):
+    return (seq[i:(i + size)] for i in range(0, len(seq), size))
+
+def encode(string, cipher):
+    bytes = string.encode("UTF-8")
+    return [ord(bytes[i]) ^ cipher[i % len(cipher)] for i in range(0, len(bytes))]
+}%
+enum RegistrationServerAPIKey {
+    private static let salt: [UInt8] = [
+    %{ salt = [ord(byte) for byte in os.urandom(64)] }%
+    % for chunk in chunks(salt, 8):
+        ${"".join(["0x%02x, " % byte for byte in chunk])}
+    % end
+    ]
+
+    static var apiKey: String {
+        let encoded: [UInt8] = [
+        % for chunk in chunks(encode(os.environ.get('REGISTRATIONSERVER_API_KEY'), salt), 8):
+            ${"".join(["0x%02x, " % byte for byte in chunk])}
+        % end
+        ]
+
+        return decode(encoded, cipher: salt)
+    }
+
+    static func decode(_ encoded: [UInt8], cipher: [UInt8]) -> String {
+        String(decoding: encoded.enumerated().map { (offset, element) in
+            element ^ cipher[offset % cipher.count]
+        }, as: UTF8.self)
+    }
+}
+enum RegistrationServerSecretKey {
+    private static let salt: [UInt8] = [
+    %{ salt = [ord(byte) for byte in os.urandom(64)] }%
+    % for chunk in chunks(salt, 8):
+        ${"".join(["0x%02x, " % byte for byte in chunk])}
+    % end
+    ]
+
+    static var secretKey: String {
+        let encoded: [UInt8] = [
+        % for chunk in chunks(encode(os.environ.get('REGISTRATIONSERVER_API_SECERET'), salt), 8):
+            ${"".join(["0x%02x, " % byte for byte in chunk])}
+        % end
+        ]
+
+        return decode(encoded, cipher: salt)
+    }
+
+    static func decode(_ encoded: [UInt8], cipher: [UInt8]) -> String {
+        String(decoding: encoded.enumerated().map { (offset, element) in
+            element ^ cipher[offset % cipher.count]
+        }, as: UTF8.self)
+    }
+}

@@ -1,6 +1,7 @@
 // License Agreement for FDA My Studies
-// Copyright © 2017-2019 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors. Permission is
-// hereby granted, free of charge, to any person obtaining a copy of this software and associated
+// Copyright © 2017-2019 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors.
+// Copyright 2020 Google LLC
+// Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated
 // documentation files (the &quot;Software&quot;), to deal in the Software without restriction, including without
 // limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the
 // Software, and to permit persons to whom the Software is furnished to do so, subject to the following
@@ -50,6 +51,7 @@ class DBHandler: NSObject {
       dbUser?.emailId = user.emailId!
       dbUser?.userId = user.userId
       dbUser?.verified = user.verified
+      dbUser?.clientToken = user.clientToken
 
       try? realm.write {
         realm.add(dbUser!, update: .all)
@@ -61,6 +63,7 @@ class DBHandler: NSObject {
           dbUser?.userType = (user.userType?.rawValue)!
           dbUser?.emailId = user.emailId!
           dbUser?.authToken = user.authToken
+          dbUser?.clientToken = user.clientToken
           dbUser?.verified = user.verified
           dbUser?.refreshToken = user.refreshToken
         }
@@ -84,6 +87,7 @@ class DBHandler: NSObject {
       currentUser.verified = dbUser?.verified
       currentUser.userId = dbUser?.userId
       currentUser.emailId = dbUser?.emailId
+      currentUser.clientToken = dbUser?.clientToken
       currentUser.userType = (dbUser?.userType).map { UserType(rawValue: $0) }!
 
       let settings = Settings()

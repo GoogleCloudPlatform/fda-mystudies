@@ -42,7 +42,7 @@ enum RegistrationMethods: String {
   case changePassword
   case resendConfirmation
   case deactivate
-  case verify
+  case verifyEmailId
   case refreshToken
   case versionInfo
 
@@ -50,7 +50,18 @@ enum RegistrationMethods: String {
     switch self {
 
     default:
-      return self.rawValue + ".api"
+      return self.apiPath
+    }
+  }
+
+  var apiPath: String {
+    switch self {
+    case .register:
+      return self.rawValue
+    case .verifyEmailId:
+      return self.rawValue
+    default:
+      return self.rawValue
     }
   }
 
@@ -62,21 +73,21 @@ enum RegistrationMethods: String {
       .userPreferences, .studyState, .versionInfo:
       // GET Methods
       return Method(
-        methodName: (self.rawValue + ".api"),
+        methodName: self.apiPath,
         methodType: .httpMethodGet,
         requestType: .requestTypeHTTP
       )
     case .withdraw, .logout, .deactivate:
       // DELETE Methods
       return Method(
-        methodName: (self.rawValue + ".api"),
+        methodName: self.apiPath,
         methodType: .httpMethodDELETE,
         requestType: .requestTypeJSON
       )
     default:
       // POST Methods
       return Method(
-        methodName: (self.rawValue + ".api"),
+        methodName: self.apiPath,
         methodType: .httpMethodPOST,
         requestType: .requestTypeJSON
       )
@@ -114,19 +125,21 @@ class RegistrationServerConfiguration: NetworkConfiguration {
     }
     let appId = infoDict!["ApplicationID"] as! String
     let orgId = infoDict!["OrganizationID"] as! String
+    let clientId = RegistrationServerAPIKey.apiKey
+    let seceretKey = RegistrationServerSecretKey.secretKey
 
+    var header = [
+      "appId": appId,
+      "orgId": orgId,
+    ]
     if User.currentUser.authToken != nil {
-      return [
-        kUserAuthToken: User.currentUser.authToken,
-        "applicationId": appId,
-        "orgId": orgId,
-      ]
+      header[kUserAuthToken] = User.currentUser.authToken
+      header["clientToken"] = User.currentUser.clientToken
     } else {
-      return [
-        "applicationId": appId,
-        "orgId": orgId,
-      ]
+      header["clientId"] = clientId
+      header["secretKey"] = seceretKey
     }
+    return header
   }
 
   override func getDefaultRequestParameters() -> [String: Any] {
