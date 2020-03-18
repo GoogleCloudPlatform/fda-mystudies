@@ -656,7 +656,7 @@ extension ResourcesViewController: NMWebServiceDelegate {
   }
 
   func finishedRequest(_ manager: NetworkManager, requestName: NSString, response: AnyObject?) {
- 
+
     switch requestName as String {
 
     case WCPMethods.resources.method.methodName:
@@ -727,7 +727,7 @@ extension ResourcesViewController: NMWebServiceDelegate {
   }
 
   func failedRequest(_ manager: NetworkManager, requestName: NSString, error: NSError) {
-  
+
     if error.code == 403 {  // unauthorized
       self.removeProgressIndicator()
       UIUtilities.showAlertMessageWithActionHandler(

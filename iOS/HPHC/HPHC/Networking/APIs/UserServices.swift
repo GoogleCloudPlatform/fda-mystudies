@@ -785,27 +785,17 @@ class UserServices: NSObject {
     }
   }
 
-  func handleUpdateEligibilityConsentStatusResponse(response: [String: Any]) {
+  func handleUpdateEligibilityConsentStatusResponse(response: [String: Any]) {}
 
-  }
+  func handleGetConsentPDFResponse(response: [String: Any]) {}
 
-  func handleGetConsentPDFResponse(response: [String: Any]) {
-
-    if Utilities.isValidValue(someObject: response[kConsent] as AnyObject?) {
-      //Do nothing
-    }
-  }
-
-  func handleUpdateActivityStateResponse(response: [String: Any]) {
-
-  }
+  func handleUpdateActivityStateResponse(response: [String: Any]) {}
 
   func handleGetActivityStateResponse(response: [String: Any]) {
     _ = (response[kActivites] as? [[String: Any]])!
   }
 
-  func handleWithdrawFromStudyResponse(response: [String: Any]) {
-  }
+  func handleWithdrawFromStudyResponse(response: [String: Any]) {}
 
   func handleLogoutResponse(response: [String: Any]) {
 

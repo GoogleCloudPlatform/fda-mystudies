@@ -1,6 +1,3 @@
-//
-//  Config.swift
-//
 // License Agreement for FDA My Studies
 // Copyright © 2017-2019 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors. Permission is
 // hereby granted, free of charge, to any person obtaining a copy of this software and associated

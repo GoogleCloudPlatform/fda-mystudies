@@ -204,5 +204,5 @@ extension SyncUpdate: NMWebServiceDelegate {
   }
 
   func failedRequest(_ manager: NetworkManager, requestName: NSString, error: NSError) {}
-    
+
 }

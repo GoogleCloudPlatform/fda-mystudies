@@ -516,7 +516,7 @@ class ActivityBuilder {
                         if Utilities.isValidValue(
                           someObject: dict[kDestination] as AnyObject?
                         ) {
-                          // means we ahave valid destination
+                          // means we have a valid destination
                           defaultStepIdentifier = (
                             dict[kDestination]! as? String
                           )!
@@ -800,40 +800,40 @@ class ActivityBuilder {
 
     switch operatorType {
 
-    case .equal:  //Equal
+    case .equal:
       predicate = ORKResultPredicate.predicateForNumericQuestionResult(
         with: resultSelector,
         expectedAnswer: Int(lhs)
       )
 
-    case .notEqual:  //NotEqual
+    case .notEqual:
       let equalPredicate = ORKResultPredicate.predicateForNumericQuestionResult(
         with: resultSelector,
         expectedAnswer: Int(lhs)
       )
       predicate = NSCompoundPredicate.init(notPredicateWithSubpredicate: equalPredicate)
 
-    case .greaterThan:  //GreaterThan
+    case .greaterThan:
       predicate = ORKResultPredicate.predicateForTimeIntervalQuestionResult(
         with: resultSelector,
         minimumExpectedAnswerValue: lhs + 1,
         maximumExpectedAnswerValue: Double.infinity
       )
 
-    case .lessThan:  //LessThan
+    case .lessThan:
       predicate = ORKResultPredicate.predicateForTimeIntervalQuestionResult(
         with: resultSelector,
         minimumExpectedAnswerValue: 0.0,
         maximumExpectedAnswerValue: lhs - 1
       )
 
-    case .greaterThanOrEqual:  //GreaterThanOrEqual
+    case .greaterThanOrEqual:
       predicate = ORKResultPredicate.predicateForTimeIntervalQuestionResult(
         with: resultSelector,
         minimumExpectedAnswerValue: lhs
       )
 
-    case .lessThanOrEqual:  //LessThanOrEqual
+    case .lessThanOrEqual:
       predicate = ORKResultPredicate.predicateForTimeIntervalQuestionResult(
         with: resultSelector,
         maximumExpectedAnswerValue: lhs

@@ -164,7 +164,7 @@ class ActivitiesViewController: UIViewController {
   }
 
   /// Verifies whether if FetalKick Task is Still running and calculate the time difference.
-  func checkIfFetelKickCountRunning() {
+  func checkIfFetalKickCountRunning() {
 
     let ud = UserDefaults.standard
 
@@ -548,7 +548,7 @@ class ActivitiesViewController: UIViewController {
 
       }
     }
-    self.checkIfFetelKickCountRunning()
+    self.checkIfFetalKickCountRunning()
   }
 
   /// Updates Activity Run Status.
@@ -958,15 +958,10 @@ extension ActivitiesViewController: UITableViewDelegate {
                 }
               }
             )
-
             self.updateActivityStatusToInProgress()
             self.selectedIndexPath = indexPath
-
-          } else {
-            // Run is completed.
           }
         }
-
       } else if activity.userParticipationStatus?.status == .abandoned {
         // Run not available.
         UIUtilities.showAlertWithMessage(
@@ -1217,7 +1212,7 @@ extension ActivitiesViewController: ORKTaskViewControllerDelegate {
 
     case ORKTaskViewControllerFinishReason.failed: break
 
-    case ORKTaskViewControllerFinishReason.discarded: break
+    case ORKTaskViewControllerFinishReason.discarded:
 
       let study = Study.currentStudy
       let activity = Study.currentActivity
@@ -1239,7 +1234,7 @@ extension ActivitiesViewController: ORKTaskViewControllerDelegate {
 
       self.checkForActivitiesUpdates()
 
-    case ORKTaskViewControllerFinishReason.saved: break
+    case ORKTaskViewControllerFinishReason.saved:
 
       if taskViewController.task?.identifier == "ConsentTask" {
         // Do Nothing

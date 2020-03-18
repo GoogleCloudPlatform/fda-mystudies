@@ -90,9 +90,6 @@ class FileDownloadManager: NSObject, URLSessionDelegate, URLSessionDownloadDeleg
     downloadTask: URLSessionDownloadTask,
     didFinishDownloadingTo location: URL
   ) {
-
-    debugPrint("didFinishDownloadingToURL location \(location)")
-
     for (_, downloadModel) in downloadingArray.enumerated() {
       if downloadTask.isEqual(downloadModel.task) {
         let fileName = downloadModel.fileName as NSString
@@ -107,8 +104,6 @@ class FileDownloadManager: NSObject, URLSessionDelegate, URLSessionDownloadDeleg
         // If all set just move downloaded file to the destination
         // if fileManager.fileExists(atPath: basePath) {
         let fileURL = URL(fileURLWithPath: destinationPath as String)
-        debugPrint("directory path = \(destinationPath)")
-
         do {
           try fileManager.moveItem(at: location, to: fileURL)
 
@@ -120,7 +115,9 @@ class FileDownloadManager: NSObject, URLSessionDelegate, URLSessionDownloadDeleg
             didFinishDownloadingAtPath: fileName as String
           )
         } catch let error as NSError {
-          debugPrint("Error while moving downloaded file to destination path:\(error)")
+          Logger.sharedInstance.error(
+            "Error while moving downloaded file to destination path: \(error)"
+          )
           DispatchQueue.main.async(
             execute: { () -> Void in
               self.delegate?.download(manager: self, didFailedWithError: error)
@@ -171,8 +168,7 @@ class FileDownloadManager: NSObject, URLSessionDelegate, URLSessionDownloadDeleg
         return deCryptedData
 
       } catch let error as NSError {
-        debugPrint("Decrypting data failed \(error.localizedDescription)")
-        print(error)
+        Logger.sharedInstance.error("Decrypting data failed \(error.localizedDescription)")
         return nil
       }
 
@@ -215,14 +211,12 @@ class FileDownloadManager: NSObject, URLSessionDelegate, URLSessionDownloadDeleg
             options: Data.WritingOptions.atomic
           )
         } catch let error as NSError {
-          print(error)
-          debugPrint(
+          Logger.sharedInstance.error(
             "Writing encrypted data to path failed \(error.localizedDescription)"
           )
         }
       } catch let error as NSError {
-        print(error)
-        debugPrint("Encryting data failed \(error.localizedDescription)")
+        Logger.sharedInstance.error("Encryting data failed \(error.localizedDescription)")
       }
     }
   }

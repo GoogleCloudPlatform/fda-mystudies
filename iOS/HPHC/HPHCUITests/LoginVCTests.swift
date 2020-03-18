@@ -1,6 +1,3 @@
-//
-//  LoginVCTests.swift
-//
 // License Agreement for FDA My Studies
 // Copyright © 2017-2019 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors. Permission is
 // hereby granted, free of charge, to any person obtaining a copy of this software and associated
@@ -82,10 +79,10 @@ class LoginVCTests: UITestBase {
 extension XCUIElement {
   func clearText(andReplaceWith newText: String? = nil) {
     tap()
-    tap()  //When there is some text, its parts can be selected on the first tap, the second tap clears the selection
+    tap()  // When there is some text, its parts can be selected on the first tap, the second tap clears the selection
     press(forDuration: 1.0)
     let selectAll = XCUIApplication().menuItems["Select All"]
-    //For empty fields there will be no "Select All", so we need to check
+    // For empty fields there will be no "Select All", so we need to check
     if selectAll.waitForExistence(timeout: 0.5), selectAll.exists {
       selectAll.tap()
       typeText(String(XCUIKeyboardKey.delete.rawValue))

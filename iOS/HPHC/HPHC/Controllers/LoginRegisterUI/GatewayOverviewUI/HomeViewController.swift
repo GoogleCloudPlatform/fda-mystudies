@@ -91,7 +91,7 @@ class HomeViewController: UIViewController {
     overview.type = .gateway
     overview.sections = listOfOverviews
 
-    // assgin to Gateway
+    // Assign to Gateway
     Gateway.instance.overview = overview
   }
 

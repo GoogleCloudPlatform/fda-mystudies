@@ -304,7 +304,7 @@ class WCPServices: NSObject {
       let studyModelObj = Study(studyDetail: study)
       listOfStudies.append(studyModelObj)
     }
-    // assgin to Gateway
+    // Assign to Gateway
     Gateway.instance.studies = listOfStudies
 
     // save in database
@@ -321,7 +321,7 @@ class WCPServices: NSObject {
       let studyModelObj = Study(studyDetail: study)
       listOfStudies.append(studyModelObj)
     }
-    // assgin to Gateway
+    // Assign to Gateway
     Gateway.instance.studies = listOfStudies
     // save in database
     DBHandler().saveStudies(studies: listOfStudies)
@@ -359,7 +359,7 @@ class WCPServices: NSObject {
       listOfResources.append(resourceObj)
     }
 
-    // assgin to Gateway
+    // Assign to Gateway
     Gateway.instance.resources = listOfResources
   }
 
@@ -619,7 +619,7 @@ extension WCPServices: NMWebServiceDelegate {
   }
 
   func finishedRequest(_ manager: NetworkManager, requestName: NSString, response: AnyObject?) {
-    
+
     let methodName = WCPMethods(rawValue: requestName as String)!
 
     switch methodName {

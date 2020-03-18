@@ -128,7 +128,7 @@ class ConfirmationViewController: UIViewController {
         studiesToDisplay.append(study!)
         joinedStudies.removeFirst()
 
-        let studiesIds = studiesToDisplay.map({ $0.studyId! })
+        _ = studiesToDisplay.map({ $0.studyId! })
 
         self.checkWithdrawlConfigurationForNextSuty()
       }

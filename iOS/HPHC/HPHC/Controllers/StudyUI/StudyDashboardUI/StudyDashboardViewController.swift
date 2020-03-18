@@ -479,7 +479,7 @@ extension StudyDashboardViewController: ORKTaskViewControllerDelegate {
       )
 
     case ORKTaskViewControllerFinishReason.failed: break
-        
+
     case ORKTaskViewControllerFinishReason.discarded: break
 
     case ORKTaskViewControllerFinishReason.saved: break

@@ -100,7 +100,6 @@ class ProfileViewController: UIViewController, SlideMenuControllerDelegate {
     self.setInitialDate()
 
     self.fdaSlideMenuController()?.delegate = self
-
   }
 
   override func viewWillAppear(_ animated: Bool) {

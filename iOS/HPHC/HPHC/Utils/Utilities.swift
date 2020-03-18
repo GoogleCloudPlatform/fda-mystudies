@@ -603,6 +603,7 @@ extension FileManager {
         )
         return fullPath
       } catch let error as NSError {
+        Logger.sharedInstance.error("Unable to create Storage directory: ", error)
         return ""
       }
     }

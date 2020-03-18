@@ -37,7 +37,7 @@ class GatewayResourcesListViewController: UIViewController {
       let resourceObj = Resource(detail: resource as! [String: Any])
       listOfResources.append(resourceObj)
     }
-    // Assgin to Gateway
+    // Assign to Gateway
     Gateway.instance.resources = listOfResources
 
     self.tableView?.reloadData()

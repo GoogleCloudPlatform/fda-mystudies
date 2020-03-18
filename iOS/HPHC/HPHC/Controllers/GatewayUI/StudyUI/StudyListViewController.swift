@@ -73,14 +73,14 @@ class StudyListViewController: UIViewController {
     Study.currentStudy = nil
 
     let ud = UserDefaults.standard
-    var ispasscodePending: Bool? = false
+    var isPasscodePending: Bool? = false
 
     // Checking if User has missed out setting the passcode/TouchId
     if ud.value(forKey: kPasscodeIsPending) != nil {
-      ispasscodePending = (ud.value(forKey: kPasscodeIsPending) as? Bool)!
+      isPasscodePending = (ud.value(forKey: kPasscodeIsPending) as? Bool)!
     }
 
-    if ispasscodePending == true {
+    if isPasscodePending == true {
       if User.currentUser.userType == .FDAUser {
         tableView?.isHidden = true
         // Fetch the User Profile
@@ -312,7 +312,7 @@ class StudyListViewController: UIViewController {
         listOfStudies.append(studyModelObj)
       }
 
-      // assgin to Gateway
+      // Assign to Gateway
       Gateway.instance.studies = listOfStudies
 
     } catch {
@@ -320,8 +320,8 @@ class StudyListViewController: UIViewController {
     }
   }
 
-  /// CheckIfFetelKickCountRunning method verifies wheather if FetalKick Task is Still running and calculate the time difference.
-  func checkIfFetelKickCountRunning() {
+  /// checkIfFetalKickCountRunning method verifies wheather if FetalKick Task is Still running and calculate the time difference.
+  func checkIfFetalKickCountRunning() {
     let ud = UserDefaults.standard
 
     if ud.bool(forKey: "FKC"), ud.object(forKey: kFetalKickStartTimeStamp) != nil {
@@ -461,7 +461,7 @@ class StudyListViewController: UIViewController {
             bookmarked: filterStrings.bookmark
           )
         }
-        self.checkIfFetelKickCountRunning()
+        self.checkIfFetalKickCountRunning()
       } else {
         if !self.studyListRequestFailed {
           self.labelHelperText.isHidden = true

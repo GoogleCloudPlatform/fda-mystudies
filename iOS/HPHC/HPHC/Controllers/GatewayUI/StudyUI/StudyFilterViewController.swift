@@ -157,12 +157,12 @@ class StudyFilterViewController: UIViewController {
 }
 
 // MARK: - Collection Data source & Delegate
-extension StudyFilterViewController: UICollectionViewDataSource {  //,UICollectionViewDelegate {
+extension StudyFilterViewController: UICollectionViewDataSource {
 
   func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int)
     -> Int
   {
-    return StudyFilterHandler.instance.filterOptions.count  //filterData!.count
+    return StudyFilterHandler.instance.filterOptions.count
   }
 
   func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath)
@@ -293,7 +293,6 @@ extension AppDelegate {
       i = i + 1
     }
     StudyFilterHandler.instance.filterOptions = filterOptionsList
-
   }
 
   /// Query the filters settings.
@@ -330,7 +329,6 @@ extension AppDelegate {
 
         case .category:
           categories.append(value.title)
-
         }
       }
     }

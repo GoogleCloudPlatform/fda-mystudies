@@ -84,5 +84,4 @@ class InEligibilityStepViewController: ORKStepViewController {
   @IBAction func buttonActionDone(sender: UIButton?) {
     self.goForward()
   }
-
 }

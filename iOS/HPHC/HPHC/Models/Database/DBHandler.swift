@@ -33,7 +33,6 @@ class DBHandler: NSObject {
       Logger.sharedInstance.error(error)
     }
     return realm
-
   }
 
   /// Used to save user details like userid, authkey, first name , last name etc
@@ -1099,7 +1098,7 @@ class DBHandler: NSObject {
 
   /// Loads studyRuns and returns completion and adherence for the runs.
   /// - Parameters:
-  ///   - studyId: studyId description.  // TBD:
+  ///   - studyId: studyId to query runs from DB.
   ///   - completionHandler: completionHandler description.
   class func loadAllStudyRuns(
     studyId: String,

@@ -172,10 +172,7 @@ class FetalKickCounterStepViewController: ORKStepViewController {
 
         self.startButtonAction(UIButton())
       }
-      backgroundTaskIdentifier = UIApplication.shared.beginBackgroundTask(
-        expirationHandler: {
-
-        })
+      backgroundTaskIdentifier = UIApplication.shared.beginBackgroundTask(expirationHandler: {})
 
       // adding guesture to view to support outside tap
       let gestureRecognizer = UITapGestureRecognizer(
