@@ -64,10 +64,6 @@ class StudyFilterViewController: UIViewController {
 
   lazy var previousCollectionData: [[String]] = []
 
-  deinit {
-    Logger.sharedInstance.info("\(self): deinit")
-  }
-
   // MARK: - Viewcontroller lifecycle
   override func viewDidLoad() {
     super.viewDidLoad()

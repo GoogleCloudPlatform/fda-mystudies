@@ -1159,7 +1159,7 @@ class ActivityQuestionStep: ActivityStep {
         as? [String: Any]
 
     } catch let error as NSError {
-      Logger.sharedInstance.info("\(error)")
+      Logger.sharedInstance.error("\(error)")
     }
 
     let categoryDict = (resultDict!["Category"] as? [String: String])!

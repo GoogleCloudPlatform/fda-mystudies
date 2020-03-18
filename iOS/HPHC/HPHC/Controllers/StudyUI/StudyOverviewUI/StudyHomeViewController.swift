@@ -884,8 +884,6 @@ extension StudyHomeViewController: PageViewControllerDelegate {
 
 extension StudyHomeViewController: NMWebServiceDelegate {
   func startedRequest(_: NetworkManager, requestName: NSString) {
-    Logger.sharedInstance.info("requestname startedRequest : \(requestName)")
-
     if requestName as String == RegistrationMethods.logout.method.methodName {
     } else {
       addProgressIndicator()
@@ -893,8 +891,6 @@ extension StudyHomeViewController: NMWebServiceDelegate {
   }
 
   func finishedRequest(_: NetworkManager, requestName: NSString, response: AnyObject?) {
-    Logger.sharedInstance.info("requestname : \(requestName)")
-
     if requestName as String == WCPMethods.eligibilityConsent.method.methodName {
       removeProgressIndicator()
       createEligibilityConsentTask()
@@ -983,7 +979,6 @@ extension StudyHomeViewController: NMWebServiceDelegate {
   }
 
   func failedRequest(_: NetworkManager, requestName: NSString, error: NSError) {
-    Logger.sharedInstance.error("requestname : \(requestName)")
     removeProgressIndicator()
 
     if error.code == 403 {  // unauthorized Access
@@ -1066,16 +1061,10 @@ extension StudyHomeViewController: ORKTaskViewControllerDelegate {
     }
 
     switch reason {
-    case ORKTaskViewControllerFinishReason.completed:
-      Logger.sharedInstance.info("completed")
-    case ORKTaskViewControllerFinishReason.failed:
-      Logger.sharedInstance.info("failed")
-
-    case ORKTaskViewControllerFinishReason.discarded:
-      Logger.sharedInstance.info("discarded")
-
-    case ORKTaskViewControllerFinishReason.saved:
-      Logger.sharedInstance.info("saved")
+    case ORKTaskViewControllerFinishReason.completed: break
+    case ORKTaskViewControllerFinishReason.failed: break
+    case ORKTaskViewControllerFinishReason.discarded: break
+    case ORKTaskViewControllerFinishReason.saved: break
     @unknown default:
       break
     }

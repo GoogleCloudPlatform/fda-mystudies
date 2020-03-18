@@ -542,10 +542,7 @@ class WCPServices: NSObject {
         // save in database
         DBHandler.saveActivities(activities: (Study.currentStudy?.activities)!)
       }
-    } else {
-      Logger.sharedInstance.debug("activities is null:\(activities)")
     }
-
   }
 
   /// Handles Activity metadata response
@@ -618,14 +615,11 @@ class WCPServices: NSObject {
 extension WCPServices: NMWebServiceDelegate {
 
   func startedRequest(_ manager: NetworkManager, requestName: NSString) {
-    Logger.sharedInstance.info("WCP Request Called: \(requestName)")
     delegate?.startedRequest(manager, requestName: requestName)
   }
 
   func finishedRequest(_ manager: NetworkManager, requestName: NSString, response: AnyObject?) {
-
-    Logger.sharedInstance.info("StudyList Finished \(Date())")
-    Logger.sharedInstance.info("WCP Received Data: \(requestName)")
+    
     let methodName = WCPMethods(rawValue: requestName as String)!
 
     switch methodName {

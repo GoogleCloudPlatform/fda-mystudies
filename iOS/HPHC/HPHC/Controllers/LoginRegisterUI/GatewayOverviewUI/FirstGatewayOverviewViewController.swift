@@ -42,10 +42,6 @@ class FirstGatewayOverviewViewController: UIViewController {
     return .lightContent
   }
 
-  deinit {
-    Logger.sharedInstance.info("\(self): deinit")
-  }
-
   // MARK: - View Controller Lifecycle
   override func viewDidLoad() {
     super.viewDidLoad()

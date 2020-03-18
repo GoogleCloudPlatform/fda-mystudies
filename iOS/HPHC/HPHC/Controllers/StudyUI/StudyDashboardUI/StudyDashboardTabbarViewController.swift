@@ -21,10 +21,6 @@ import UIKit
 
 class StudyDashboardTabbarViewController: UITabBarController {
 
-  deinit {
-    Logger.sharedInstance.info("\(self): deinit")
-  }
-
   override func viewDidLoad() {
     super.viewDidLoad()
   }

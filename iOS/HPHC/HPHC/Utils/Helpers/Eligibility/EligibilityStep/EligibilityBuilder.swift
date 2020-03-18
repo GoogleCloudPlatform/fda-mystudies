@@ -228,7 +228,6 @@ class EligibilityBuilder {
         return nil
       }
     } else {
-      Logger.sharedInstance.debug("consent Step has null values:")
       return nil
     }
   }

@@ -197,17 +197,12 @@ class SyncUpdate {
 // MARK: - Webservices Delegates
 extension SyncUpdate: NMWebServiceDelegate {
 
-  func startedRequest(_ manager: NetworkManager, requestName: NSString) {
-    Logger.sharedInstance.info("requestname : \(requestName)")
-  }
+  func startedRequest(_ manager: NetworkManager, requestName: NSString) {}
 
   func finishedRequest(_ manager: NetworkManager, requestName: NSString, response: AnyObject?) {
-    Logger.sharedInstance.info("requestname : \(requestName) : \(String(describing: response))")
     self.syncDataToServer()
   }
 
-  func failedRequest(_ manager: NetworkManager, requestName: NSString, error: NSError) {
-    Logger.sharedInstance.info("requestname : \(requestName)")
-
-  }
+  func failedRequest(_ manager: NetworkManager, requestName: NSString, error: NSError) {}
+    
 }

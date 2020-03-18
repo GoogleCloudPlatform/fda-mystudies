@@ -33,7 +33,7 @@ open class Logger {
       column: column
     )
 
-    print(Date(), result, separator: "", terminator: "")
+    debugPrint(Date(), result, separator: "", terminator: "")
 
   }
 

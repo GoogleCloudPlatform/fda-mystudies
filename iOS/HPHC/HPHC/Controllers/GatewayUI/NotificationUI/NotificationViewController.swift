@@ -288,7 +288,6 @@ extension NotificationViewController: UITableViewDelegate {
 extension NotificationViewController: NMWebServiceDelegate {
 
   func startedRequest(_ manager: NetworkManager, requestName: NSString) {
-    Logger.sharedInstance.info("requestname : \(requestName)")
     self.addProgressIndicator()
   }
 
@@ -301,8 +300,6 @@ extension NotificationViewController: NMWebServiceDelegate {
   }
 
   func failedRequest(_ manager: NetworkManager, requestName: NSString, error: NSError) {
-    Logger.sharedInstance.info("requestname : \(requestName)")
     self.removeProgressIndicator()
-
   }
 }

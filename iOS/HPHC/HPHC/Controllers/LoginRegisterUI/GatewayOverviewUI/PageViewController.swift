@@ -41,9 +41,6 @@ class PageViewController: UIPageViewController {
   lazy var currentIndex = 0
 
   // MARK: - ViewController Lifecycle
-  deinit {
-    Logger.sharedInstance.info("\(self): deinit")
-  }
 
   override func viewDidLoad() {
     super.viewDidLoad()

@@ -157,9 +157,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
       }
       if result == errSecSuccess {
         realmKey = key.base64EncodedString()
-      } else {
-        Logger.sharedInstance.info("Problem generating random bytes")
-
       }
       FDAKeychain.shared[kRealmEncryptionKeychainKey] = realmKey
     }
@@ -199,7 +196,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     self.isAppLaunched = true
     IQKeyboardManager.shared.enable = true
-    Logger.sharedInstance.info(Utilities.isStandaloneApp(), "Standalone")
     self.customizeNavigationBar()
 
     UIView.appearance(whenContainedInInstancesOf: [ORKTaskViewController.self]).tintColor =
@@ -365,28 +361,20 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     _ application: UIApplication,
     didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data
   ) {
-
     let deviceTokenString = deviceToken.reduce("", { $0 + String(format: "%02X", $1) })
-    print("Token: \(deviceTokenString)")
-
     if User.currentUser.userType == .FDAUser {
-
       User.currentUser.settings?.remoteNotifications = true
       User.currentUser.settings?.localNotifications = true
       // Update device Token to Local server
       UserServices().updateUserProfile(deviceToken: deviceTokenString, delegate: self)
-
     }
-
   }
 
   func application(
     _ application: UIApplication,
     didFailToRegisterForRemoteNotificationsWithError error: Error
   ) {
-
-    Logger.sharedInstance.info("Token Registration failed  \(error)")
-
+    Logger.sharedInstance.error("Token Registration failed  \(error)")
   }
 
   // MARK: - Jailbreak Methods
@@ -1261,9 +1249,7 @@ extension AppDelegate: NMAuthChallengeDelegate {
 // MARK: Webservices delegates
 
 extension AppDelegate: NMWebServiceDelegate {
-  func startedRequest(_ manager: NetworkManager, requestName: NSString) {
-    Logger.sharedInstance.info("requestname : \(requestName)")
-  }
+  func startedRequest(_ manager: NetworkManager, requestName: NSString) {}
 
   func finishedRequest(_ manager: NetworkManager, requestName: NSString, response: AnyObject?) {
 
@@ -1303,8 +1289,6 @@ extension AppDelegate: NMWebServiceDelegate {
   }
 
   func failedRequest(_ manager: NetworkManager, requestName: NSString, error: NSError) {
-    Logger.sharedInstance.info("requestname : \(requestName)")
-
     // Remove Progress
     self.addAndRemoveProgress(add: false)
     if requestName as String == RegistrationMethods.logout.method.methodName {
@@ -1341,8 +1325,7 @@ extension AppDelegate: ORKTaskViewControllerDelegate {
         self.appIsResignedButDidNotEnteredBackground = false
       }
 
-    case ORKTaskViewControllerFinishReason.failed:
-      Logger.sharedInstance.info("failed")
+    case ORKTaskViewControllerFinishReason.failed: break
 
     case ORKTaskViewControllerFinishReason.discarded:
       if taskViewController.task?.identifier == kConsentTaskIdentifier {

@@ -292,3 +292,6 @@ public func Log<T>(
     )
   #endif
 }
+
+let activityBuilder: ActivityBuilder? = ActivityBuilder.currentActivityBuilder
+let consentbuilder: ConsentBuilder? = ConsentBuilder()

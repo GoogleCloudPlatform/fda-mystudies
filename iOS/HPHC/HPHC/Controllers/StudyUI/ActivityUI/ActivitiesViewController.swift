@@ -70,10 +70,6 @@ class ActivitiesViewController: UIViewController {
     appDelegate.checkConsentStatus(controller: self)
   }
 
-  deinit {
-    Logger.sharedInstance.info("\(self): deinit")
-  }
-
   // MARK: - Viewcontroller Lifecycle
 
   override func viewDidLoad() {
@@ -1054,8 +1050,6 @@ extension ActivitiesViewController: ActivityFilterViewDelegate {
 extension ActivitiesViewController: NMWebServiceDelegate {
 
   func startedRequest(_ manager: NetworkManager, requestName: NSString) {
-    Logger.sharedInstance.info(" START requestname : \(requestName)")
-
     if (requestName as String == RegistrationMethods.updateStudyState.method.methodName)
       || (
         requestName as String == RegistrationMethods.updateActivityState.method.methodName
@@ -1070,9 +1064,6 @@ extension ActivitiesViewController: NMWebServiceDelegate {
   }
 
   func finishedRequest(_ manager: NetworkManager, requestName: NSString, response: AnyObject?) {
-    Logger.sharedInstance.info(
-      "requestname : \(requestName) Response : \(String(describing: response))"
-    )
 
     if requestName as String == RegistrationMethods.activityState.method.methodName {
       self.sendRequesToGetActivityList()
@@ -1129,7 +1120,7 @@ extension ActivitiesViewController: NMWebServiceDelegate {
   }
 
   func failedRequest(_ manager: NetworkManager, requestName: NSString, error: NSError) {
-    Logger.sharedInstance.error("requestname : \(requestName)")
+
     self.removeProgressIndicator()
 
     if self.refreshControl != nil && (self.refreshControl?.isRefreshing)! {
@@ -1222,14 +1213,11 @@ extension ActivitiesViewController: ORKTaskViewControllerDelegate {
 
     switch reason {
 
-    case ORKTaskViewControllerFinishReason.completed:
-      Logger.sharedInstance.info("completed")
+    case ORKTaskViewControllerFinishReason.completed: break
 
-    case ORKTaskViewControllerFinishReason.failed:
-      Logger.sharedInstance.info("failed")
+    case ORKTaskViewControllerFinishReason.failed: break
 
-    case ORKTaskViewControllerFinishReason.discarded:
-      Logger.sharedInstance.info("discarded")
+    case ORKTaskViewControllerFinishReason.discarded: break
 
       let study = Study.currentStudy
       let activity = Study.currentActivity
@@ -1251,8 +1239,7 @@ extension ActivitiesViewController: ORKTaskViewControllerDelegate {
 
       self.checkForActivitiesUpdates()
 
-    case ORKTaskViewControllerFinishReason.saved:
-      Logger.sharedInstance.info("saved")
+    case ORKTaskViewControllerFinishReason.saved: break
 
       if taskViewController.task?.identifier == "ConsentTask" {
         // Do Nothing

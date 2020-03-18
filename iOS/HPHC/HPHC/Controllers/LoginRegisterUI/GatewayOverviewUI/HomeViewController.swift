@@ -33,10 +33,6 @@ class HomeViewController: UIViewController {
 
   var websiteName: String!
 
-  deinit {
-    Logger.sharedInstance.info("\(self): deinit")
-  }
-
   // MARK: - ViewController Lifecycle
 
   override func loadView() {

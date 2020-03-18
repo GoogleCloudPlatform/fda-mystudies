@@ -130,12 +130,9 @@ class GatewayResourceDetailViewController: UIViewController {
         attributes: nil
       )
     }
-    Logger.sharedInstance.error("custom download path: \(resourcesDownloadPath)")
 
     let fileURL = (self.resource?.file?.link)!
-
     let url = URL(string: fileURL)
-
     var fileName: NSString = url!.lastPathComponent as NSString
 
     fileName = AKUtility.getUniqueFileNameWithPath(
@@ -148,7 +145,7 @@ class GatewayResourceDetailViewController: UIViewController {
     guard let encodedUrl = fileURL.addingPercentEncoding(withAllowedCharacters: .urlHostAllowed)
     else {
       return
-    }  // Tush
+    }
 
     fdm.downloadFile(
       fileName as String,

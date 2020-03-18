@@ -316,7 +316,7 @@ class StudyListViewController: UIViewController {
       Gateway.instance.studies = listOfStudies
 
     } catch {
-      Logger.sharedInstance.info("json error: \(error.localizedDescription)")
+      Logger.sharedInstance.error("json error: \(error.localizedDescription)")
     }
   }
 
@@ -1045,16 +1045,11 @@ extension StudyListViewController: searchBarDelegate {
 
 extension StudyListViewController: NMWebServiceDelegate {
   func startedRequest(_: NetworkManager, requestName: NSString) {
-    Logger.sharedInstance.info("requestname START : \(requestName)")
-
     let appdelegate = (UIApplication.shared.delegate as? AppDelegate)!
     appdelegate.window?.addProgressIndicatorOnWindowFromTop()
   }
 
   func finishedRequest(_: NetworkManager, requestName: NSString, response: AnyObject?) {
-    Logger.sharedInstance.info(
-      "requestname FINISH: \(requestName) : \(String(describing: response))"
-    )
 
     let appdelegate = (UIApplication.shared.delegate as? AppDelegate)!
 
@@ -1091,7 +1086,7 @@ extension StudyListViewController: NMWebServiceDelegate {
   }
 
   func failedRequest(_: NetworkManager, requestName: NSString, error: NSError) {
-    Logger.sharedInstance.info("requestname Failed: \(requestName)")
+
     let appdelegate = (UIApplication.shared.delegate as? AppDelegate)!
     appdelegate.window?.removeProgressIndicatorFromWindow()
 
@@ -1156,19 +1151,12 @@ extension StudyListViewController: ORKTaskViewControllerDelegate {
   ) {
     switch reason {
     case ORKTaskViewControllerFinishReason.completed:
-      Logger.sharedInstance.info("completed")
       let ud = UserDefaults.standard
       ud.set(false, forKey: kPasscodeIsPending)
       ud.synchronize()
-
-    case ORKTaskViewControllerFinishReason.failed:
-      Logger.sharedInstance.info("failed")
-
-    case ORKTaskViewControllerFinishReason.discarded:
-      Logger.sharedInstance.info("discarded")
-
-    case ORKTaskViewControllerFinishReason.saved:
-      Logger.sharedInstance.info("saved")
+    case ORKTaskViewControllerFinishReason.failed: break
+    case ORKTaskViewControllerFinishReason.discarded: break
+    case ORKTaskViewControllerFinishReason.saved: break
     @unknown default: break
     }
 

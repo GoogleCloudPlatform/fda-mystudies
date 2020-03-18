@@ -35,10 +35,6 @@ class SecondGatewayOverviewViewController: UIViewController {
     return .lightContent
   }
 
-  deinit {
-    Logger.sharedInstance.info("\(self): deinit")
-  }
-
   // MARK: - ViewController Lifecycle
   override func viewDidLoad() {
     super.viewDidLoad()

@@ -325,13 +325,10 @@ extension ConfirmationViewController: ConfirmationOptionalDelegate {
 // MARK: - UserService Response handler
 extension ConfirmationViewController: NMWebServiceDelegate {
   func startedRequest(_ manager: NetworkManager, requestName: NSString) {
-    Logger.sharedInstance.info("requestname : \(requestName)")
     self.addProgressIndicator()
   }
 
   func finishedRequest(_ manager: NetworkManager, requestName: NSString, response: AnyObject?) {
-    Logger.sharedInstance.info("requestname : \(requestName)")
-
     if requestName as String == RegistrationMethods.deactivate.description {
       self.removeProgressIndicator()
       self.handleDeleteAccountResponse()
@@ -345,7 +342,6 @@ extension ConfirmationViewController: NMWebServiceDelegate {
   }
 
   func failedRequest(_ manager: NetworkManager, requestName: NSString, error: NSError) {
-    Logger.sharedInstance.info("requestname : \(requestName)")
 
     if error.code == 403 {  //unauthorized
       self.removeProgressIndicator()

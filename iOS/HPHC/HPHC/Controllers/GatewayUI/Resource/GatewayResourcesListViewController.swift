@@ -100,15 +100,10 @@ extension GatewayResourcesListViewController: UITableViewDelegate {
 
 extension GatewayResourcesListViewController: NMWebServiceDelegate {
   func startedRequest(_ manager: NetworkManager, requestName: NSString) {
-    Logger.sharedInstance.info("requestname : \(requestName)")
     self.addProgressIndicator()
   }
 
   func finishedRequest(_ manager: NetworkManager, requestName: NSString, response: AnyObject?) {
-    Logger.sharedInstance.info(
-      "requestname : \(requestName) response : \(String(describing: response))"
-    )
-
     self.removeProgressIndicator()
 
     if requestName as String == WCPMethods.gatewayInfo.method.methodName {
@@ -117,7 +112,6 @@ extension GatewayResourcesListViewController: NMWebServiceDelegate {
   }
 
   func failedRequest(_ manager: NetworkManager, requestName: NSString, error: NSError) {
-    Logger.sharedInstance.info("requestname : \(requestName)")
     self.removeProgressIndicator()
   }
 }

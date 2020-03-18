@@ -933,9 +933,6 @@ extension UserServices: NMWebServiceDelegate {
   }
 
   func finishedRequest(_ manager: NetworkManager, requestName: NSString, response: AnyObject?) {
-    Logger.sharedInstance.info(
-      "RUS Received Data: \(requestName), \(String(describing: response))"
-    )
     switch requestName {
     case RegistrationMethods.login.description as String:
 
@@ -1005,8 +1002,6 @@ extension UserServices: NMWebServiceDelegate {
       self.failedRequestServices.headerParams = self.headerParams
       self.failedRequestServices.requestParams = self.requestParams
       self.failedRequestServices.method = self.method
-
-      Logger.sharedInstance.error("Failed: Refresh token Expired", error)
 
       if User.currentUser.refreshToken == ""
         && requestName as String

@@ -30,10 +30,6 @@ class SignUpCompleteViewController: UIViewController {
   lazy var shouldCreateMenu: Bool = true
   lazy var viewLoadFrom: CompletionLoadFrom = .signup
 
-  deinit {
-    Logger.sharedInstance.info("\(self): deinit")
-  }
-
   // MARK: - ViewController Lifecycle
   override func viewDidLoad() {
     super.viewDidLoad()
@@ -108,13 +104,10 @@ class SignUpCompleteViewController: UIViewController {
 extension SignUpCompleteViewController: NMWebServiceDelegate {
 
   func startedRequest(_ manager: NetworkManager, requestName: NSString) {
-    Logger.sharedInstance.info("requestname : \(requestName)")
     self.addProgressIndicator()
   }
 
   func finishedRequest(_ manager: NetworkManager, requestName: NSString, response: AnyObject?) {
-    Logger.sharedInstance.info("requestname : \(requestName)")
-
     self.removeProgressIndicator()
     if requestName as String == RegistrationMethods.updateUserProfile.description {
       DBHandler.saveUserSettingsToDatabase()
@@ -128,7 +121,6 @@ extension SignUpCompleteViewController: NMWebServiceDelegate {
   }
 
   func failedRequest(_ manager: NetworkManager, requestName: NSString, error: NSError) {
-    Logger.sharedInstance.info("requestname : \(requestName)")
     self.removeProgressIndicator()
 
     UIUtilities.showAlertWithTitleAndMessage(

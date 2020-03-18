@@ -124,7 +124,7 @@ class ProfileViewController: UIViewController, SlideMenuControllerDelegate {
   }
 
   func leftDidClose() {
-    Logger.sharedInstance.info("Left menu is closed")
+    // Left menu is closed
   }
 
   // MARK: - Button Actions
@@ -776,17 +776,12 @@ extension ProfileViewController: UITextFieldDelegate {
 extension ProfileViewController: NMWebServiceDelegate {
 
   func startedRequest(_ manager: NetworkManager, requestName: NSString) {
-    Logger.sharedInstance.info("requestname : \(requestName)")
-
     if requestName as String != RegistrationMethods.updateUserProfile.description {
       self.addProgressIndicator()
     }
-
   }
 
   func finishedRequest(_ manager: NetworkManager, requestName: NSString, response: AnyObject?) {
-    Logger.sharedInstance.info("requestname : \(requestName)")
-
     self.removeProgressIndicator()
     if requestName as String == RegistrationMethods.logout.description {
 
@@ -812,7 +807,6 @@ extension ProfileViewController: NMWebServiceDelegate {
   }
 
   func failedRequest(_ manager: NetworkManager, requestName: NSString, error: NSError) {
-    Logger.sharedInstance.info("requestname : \(requestName)")
     self.removeProgressIndicator()
 
     if error.code == 403 {  //  unauthorized
@@ -899,15 +893,12 @@ extension ProfileViewController: ORKTaskViewControllerDelegate {
       ud.set(false, forKey: kPasscodeIsPending)
       ud.synchronize()
 
-    case .failed:
-      Logger.sharedInstance.info("failed")
-
+    case .failed: break
     case .discarded:
       if taskViewController.task?.identifier != "ChangePassCodeTask" {
         user.settings?.passcode = user.settings?.passcode == true ? false : true
       }
-    case .saved:
-      Logger.sharedInstance.info("saved")
+    case .saved: break
 
     @unknown default:
       break

@@ -55,10 +55,6 @@ class SignUpViewController: UIViewController {
     return .default
   }
 
-  deinit {
-    Logger.sharedInstance.info("\(self): deinit")
-  }
-
   // MARK: - ViewController Lifecycle
 
   override func viewDidLoad() {
@@ -486,7 +482,6 @@ extension SignUpViewController: NMWebServiceDelegate {
 
   func startedRequest(_ manager: NetworkManager, requestName: NSString) {
 
-    Logger.sharedInstance.info("requestname : \(requestName)")
     self.addProgressIndicator()
     if requestName.isEqual(to: RegistrationMethods.register.rawValue) {
 
@@ -494,8 +489,6 @@ extension SignUpViewController: NMWebServiceDelegate {
   }
 
   func finishedRequest(_ manager: NetworkManager, requestName: NSString, response: AnyObject?) {
-    Logger.sharedInstance.info("requestname : \(requestName)")
-
     self.removeProgressIndicator()
     if requestName.isEqual(to: RegistrationMethods.register.description) {
 
@@ -509,7 +502,6 @@ extension SignUpViewController: NMWebServiceDelegate {
   }
 
   func failedRequest(_ manager: NetworkManager, requestName: NSString, error: NSError) {
-    Logger.sharedInstance.info("requestname : \(requestName)")
     self.removeProgressIndicator()
     UIUtilities.showAlertWithTitleAndMessage(
       title: NSLocalizedString(kErrorTitle, comment: "") as NSString,

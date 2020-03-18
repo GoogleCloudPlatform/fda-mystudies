@@ -163,6 +163,6 @@ extension WebViewController: UIWebViewDelegate {
   func webView(_ webView: UIWebView, didFailLoadWithError error: Error) {
     self.activityIndicator.stopAnimating()
     self.activityIndicator.removeFromSuperview()
-    debugPrint("\(error.localizedDescription)")
+    Logger.sharedInstance.error("\(error.localizedDescription)")
   }
 }
