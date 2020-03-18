@@ -119,9 +119,8 @@
 		6EF2FCEF1E72CDE900B5F212 /* LeftMenuResourceTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6EF2FCEE1E72CDE900B5F212 /* LeftMenuResourceTableViewCell.swift */; };
 		6F0221792264729E00A2DBC8 /* TextChoiceCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6F0221772264729D00A2DBC8 /* TextChoiceCell.xib */; };
 		6F02217A2264729E00A2DBC8 /* OtherTextChoiceCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6F0221782264729E00A2DBC8 /* OtherTextChoiceCell.xib */; };
-		6F598F7523EAC7DB00DFA5F4 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F598F7223EAC7DB00DFA5F4 /* ViewController.swift */; };
-		6F8C38472420DB080016566C /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = 6F8C38442420DB080016566C /* README.md */; };
-		6F8C38532420FE2E0016566C /* UIImage+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F8C38522420FE2E0016566C /* UIImage+Extensions.swift */; };
+		6F4E1B2D24223C210051D3E2 /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = 6F4E1B2A24223C210051D3E2 /* README.md */; };
+		6F4E1B2F24223CA20051D3E2 /* UIImage+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F4E1B2E24223CA20051D3E2 /* UIImage+Extensions.swift */; };
 		6FB89C1B225F40EB00420A7B /* TextChoiceQuestionController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FB89C1A225F40EA00420A7B /* TextChoiceQuestionController.swift */; };
 		6FB89C24225F410500420A7B /* OtherTextChoiceCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FB89C20225F410500420A7B /* OtherTextChoiceCell.swift */; };
 		6FB89C25225F410500420A7B /* TextChoiceCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FB89C21225F410500420A7B /* TextChoiceCell.swift */; };
@@ -409,9 +408,8 @@
 		6EF2FCEE1E72CDE900B5F212 /* LeftMenuResourceTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LeftMenuResourceTableViewCell.swift; sourceTree = "<group>"; };
 		6F0221772264729D00A2DBC8 /* TextChoiceCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = TextChoiceCell.xib; sourceTree = "<group>"; };
 		6F0221782264729E00A2DBC8 /* OtherTextChoiceCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = OtherTextChoiceCell.xib; sourceTree = "<group>"; };
-		6F598F7223EAC7DB00DFA5F4 /* ViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
-		6F8C38442420DB080016566C /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; name = README.md; path = ../README.md; sourceTree = "<group>"; };
-		6F8C38522420FE2E0016566C /* UIImage+Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIImage+Extensions.swift"; sourceTree = "<group>"; };
+		6F4E1B2A24223C210051D3E2 /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; name = README.md; path = ../README.md; sourceTree = "<group>"; };
+		6F4E1B2E24223CA20051D3E2 /* UIImage+Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIImage+Extensions.swift"; sourceTree = "<group>"; };
 		6FB89C1A225F40EA00420A7B /* TextChoiceQuestionController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TextChoiceQuestionController.swift; sourceTree = "<group>"; };
 		6FB89C20225F410500420A7B /* OtherTextChoiceCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OtherTextChoiceCell.swift; sourceTree = "<group>"; };
 		6FB89C21225F410500420A7B /* TextChoiceCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TextChoiceCell.swift; sourceTree = "<group>"; };
@@ -642,7 +640,7 @@
 		6E7D2D4D1E433E8700763D4C = {
 			isa = PBXGroup;
 			children = (
-				6F8C38442420DB080016566C /* README.md */,
+				6F4E1B2A24223C210051D3E2 /* README.md */,
 				6EF0BC352223D1D5004F2357 /* ResearchKit.xcodeproj */,
 				6E7D2D581E433E8700763D4C /* HPHC */,
 				7878B31B2216C6E20052FC23 /* HPHCTests */,
@@ -1514,7 +1512,7 @@
 		94334F821E70054100755444 /* Extension */ = {
 			isa = PBXGroup;
 			children = (
-				6F8C38522420FE2E0016566C /* UIImage+Extensions.swift */,
+				6F4E1B2E24223CA20051D3E2 /* UIImage+Extensions.swift */,
 				94334F851E70055A00755444 /* UIViewController+Extensions.swift */,
 				94334F861E70055A00755444 /* UIApplication+Extensions.swift */,
 				946CA5E81E728C2300CC8535 /* String+Extensions.swift */,
@@ -1555,7 +1553,6 @@
 				94B3DD391E6ED8E500327AE5 /* StudyUI */,
 				6E2B25F01EAE3F1D00E2DFB2 /* ResearchkitContainer */,
 				6FE00CF3239003F40067A7B8 /* FetalKickUI */,
-				6F598F7223EAC7DB00DFA5F4 /* ViewController.swift */,
 				94B3DD0A1E6EC47700327AE5 /* SplashViewController.swift */,
 				481DFA4B1E6EEB70004C39EF /* WebViewController.swift */,
 			);
@@ -1915,7 +1912,7 @@
 				6EDDB65A1EE05E4C00C79337 /* NewProgressView.xib in Resources */,
 				6EDDB6611EE05FDC00C79337 /* fda_preload.gif in Resources */,
 				4833E9E31E712C2B0032D244 /* StudyOverview.plist in Resources */,
-				6F8C38472420DB080016566C /* README.md in Resources */,
+				6F4E1B2D24223C210051D3E2 /* README.md in Resources */,
 				94B3DD511E6ED8E500327AE5 /* Login.storyboard in Resources */,
 				942591C41EA8A2650010D892 /* ActivitySchedules.xib in Resources */,
 				6FD1E15023F17A41009DACAE /* RegistrationServerKeys.swift.gyb in Resources */,
@@ -2102,7 +2099,6 @@
 				946CA5E91E728C2300CC8535 /* String+Extensions.swift in Sources */,
 				6E4CECB61F31B41C005E0832 /* PinterestLayout.swift in Sources */,
 				6FB89C28225F416C00420A7B /* Cell+Extensions.swift in Sources */,
-				6F598F7523EAC7DB00DFA5F4 /* ViewController.swift in Sources */,
 				94D20E9F1E9DFFE7005C3531 /* DBActivity.swift in Sources */,
 				4884E35A1E827E6A002DA0B9 /* ContactUsTableViewCell.swift in Sources */,
 				6EE93D901E93B5700027A5DC /* ConsentSharePdfStepViewController.swift in Sources */,
@@ -2162,6 +2158,7 @@
 				6EBC2E801E94FB5300828CA1 /* StudyDashboardViewController.swift in Sources */,
 				941909B51E52FA9B001B01C5 /* Study.swift in Sources */,
 				94B3DD471E6ED8E500327AE5 /* ResourcesListCell.swift in Sources */,
+				6F4E1B2F24223CA20051D3E2 /* UIImage+Extensions.swift in Sources */,
 				89903062224A502C00B3A85C /* AnchorDateHandler.swift in Sources */,
 				7878B311221574D80052FC23 /* StandaloneStudy.swift in Sources */,
 				94B5F2F41ECA354800BC0336 /* LocalNotification.swift in Sources */,
@@ -2205,7 +2202,6 @@
 				6ED1B2331E54256700BF463F /* ActivityQuestionStep.swift in Sources */,
 				482CC61E1EC5F52E00BFE8C6 /* KDCircularProgress.swift in Sources */,
 				6EF0466B1ED1C943008098BB /* DBNotification.swift in Sources */,
-				6F8C38532420FE2E0016566C /* UIImage+Extensions.swift in Sources */,
 				6EE93DCB1E93C8850027A5DC /* ActivitiesViewController.swift in Sources */,
 				6ED1B2211E54253800BF463F /* Activity.swift in Sources */,
 				6E4D86E01F38A740003DBDD8 /* SearchBarView.swift in Sources */,

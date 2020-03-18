@@ -309,11 +309,9 @@ extension ResourceDetailViewController: UIWebViewDelegate {
 extension ResourceDetailViewController: WKUIDelegate, WKNavigationDelegate {
 
   func webView(_ webView: WKWebView, didStartProvisionalNavigation navigation: WKNavigation) {
-    Logger.sharedInstance.info("webView:\(webView) didStartProvisionalNavigation:\(navigation)")
   }
 
   func webView(_ webView: WKWebView, didCommit navigation: WKNavigation) {
-    Logger.sharedInstance.info("webView:\(webView) didCommitNavigation:\(navigation)")
   }
 
   func webView(
@@ -404,23 +402,13 @@ extension ResourceDetailViewController: WKUIDelegate, WKNavigationDelegate {
     _ webView: WKWebView,
     didReceiveServerRedirectForProvisionalNavigation navigation: WKNavigation
   ) {
-    Logger.sharedInstance.info(
-      "webView:\(webView) didReceiveServerRedirectForProvisionalNavigation:\(navigation)"
-    )
   }
 
   func webView(_ webView: WKWebView, didFinish navigation: WKNavigation) {
-    Logger.sharedInstance.info("webView:\(webView) didFinishNavigation:\(navigation)")
-
     self.activityIndicator.stopAnimating()
-
   }
 
   func webView(_ webView: WKWebView, didFail navigation: WKNavigation, withError error: Error) {
-    Logger.sharedInstance.error(
-      "webView:\(webView) didFailNavigation:\(navigation) withError:\(error)"
-    )
-
     let alert = UIAlertController(
       title: "Error",
       message: error.localizedDescription,
@@ -435,9 +423,6 @@ extension ResourceDetailViewController: WKUIDelegate, WKNavigationDelegate {
     didFailProvisionalNavigation navigation: WKNavigation,
     withError error: Error
   ) {
-    Logger.sharedInstance.error(
-      "webView:\(webView) didFailProvisionalNavigation:\(navigation) withError:\(error)"
-    )
   }
 
   // MARK: WKUIDelegate methods

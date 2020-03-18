@@ -173,13 +173,10 @@ extension FeedBackViewController: UITextFieldDelegate {
 extension FeedBackViewController: NMWebServiceDelegate {
 
   func startedRequest(_ manager: NetworkManager, requestName: NSString) {
-
-    Logger.sharedInstance.info("requestname : \(requestName)")
     self.addProgressIndicator()
   }
 
   func finishedRequest(_ manager: NetworkManager, requestName: NSString, response: AnyObject?) {
-    Logger.sharedInstance.info("requestname : \(requestName)")
     self.removeProgressIndicator()
 
     UIUtilities.showAlertMessageWithActionHandler(
@@ -195,7 +192,6 @@ extension FeedBackViewController: NMWebServiceDelegate {
   func failedRequest(_ manager: NetworkManager, requestName: NSString, error: NSError) {
 
     self.removeProgressIndicator()
-    Logger.sharedInstance.info("requestname : \(requestName)")
     UIUtilities.showAlertWithTitleAndMessage(
       title: NSLocalizedString("Error", comment: "") as NSString,
       message: error.localizedDescription as NSString

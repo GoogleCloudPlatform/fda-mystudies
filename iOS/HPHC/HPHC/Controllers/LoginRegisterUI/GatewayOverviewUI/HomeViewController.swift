@@ -33,10 +33,6 @@ class HomeViewController: UIViewController {
 
   var websiteName: String!
 
-  deinit {
-    Logger.sharedInstance.info("\(self): deinit")
-  }
-
   // MARK: - ViewController Lifecycle
 
   override func loadView() {
@@ -95,7 +91,7 @@ class HomeViewController: UIViewController {
     overview.type = .gateway
     overview.sections = listOfOverviews
 
-    // assgin to Gateway
+    // Assign to Gateway
     Gateway.instance.overview = overview
   }
 

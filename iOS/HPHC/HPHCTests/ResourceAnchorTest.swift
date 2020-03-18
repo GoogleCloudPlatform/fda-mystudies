@@ -40,29 +40,15 @@ class ResourceAnchorTest: XCTestCase {
     // Use XCTAssert and related functions to verify your tests produce the correct results.
   }
 
-  func testFetchingResourceList() {
-    //        let rlist =  DBHandler.resourceListFor(nil, questionKey: nil)
-    //        XCTAssertEqual(rlist.count, 1)
-  }
+  func testFetchingResourceList() {}
 
-  func testResourcesLifeTimeWhenAnchorDateIsAvailable() {
-    //        DBHandler.updateResourceLifeTime(nil, questionKey: nil, anchorDateValue: Date())
-    //        let rlist =  DBHandler.resourceListFor(nil, questionKey: nil)
-    //        XCTAssertEqual(rlist.count, 0)
-  }
+  func testResourcesLifeTimeWhenAnchorDateIsAvailable() {}
 
-  func testResourceIsEmpty() {
-    // let empty = DBHandler.isResourcesEmpty()
-    //XCTAssert(empty)
-  }
+  func testResourceIsEmpty() {}
 
-  func testResourcesLifeTimeWhenAnchorDateIsNotAvailable() {
-
-  }
+  func testResourcesLifeTimeWhenAnchorDateIsNotAvailable() {}
 
   func testWCP_GetStudies_Failure() {
-
-    //let delegate = WCPDelegate()
 
     let expection = expectation(description: "StudyList api call")
     delegate.asyncExpectation = expection
@@ -92,7 +78,6 @@ class ResourceAnchorTest: XCTestCase {
 
       XCTAssertEqual(error?.code, 500)
       XCTAssertNotEqual(WCPDelegate.State.none, result)
-      //XCTAssertNotEqual(WCPDelegate.State.start, result)
       XCTAssertEqual(WCPDelegate.State.failed, result)
       XCTAssertNil(data)
 
@@ -128,7 +113,6 @@ class ResourceAnchorTest: XCTestCase {
       let error = self.delegate.apiError
 
       XCTAssertNotEqual(WCPDelegate.State.none, result)
-      //XCTAssertNotEqual(WCPDelegate.State.start, result)
       XCTAssertEqual(WCPDelegate.State.finished, result)
       XCTAssertNotNil(data)
       XCTAssertEqual(Gateway.instance.studies?.count, 2)
@@ -182,8 +166,6 @@ class WCPDelegate: NMWebServiceDelegate {
     }
 
     delegateAsyncResult = .start
-    //expectation.fulfill()
-
   }
 
   func finishedRequest(_ manager: NetworkManager, requestName: NSString, response: AnyObject?) {

@@ -38,8 +38,7 @@ private func > <T: Comparable>(lhs: T?, rhs: T?) -> Bool {
   }
 }
 
-// MARK: WebRequestMethods
-//let kSM
+// MARK: - WebRequestMethods
 
 enum NetworkConnectionConstants {
   static let ConnectionTimeoutInterval = 30.0
@@ -78,11 +77,7 @@ class NetworkConstants: NSObject {
 
   /// Retrives common header parameters of type dictionary
   class func getCommonHeaderParameters() -> NSDictionary? {
-    //let cookie = UserDefaults.standard.value(forKey: "cookies")
     let headers: NSDictionary? = nil
-    // if (cookie != nil && (cookie as AnyObject).length > 0){
-    //            headers = ["cookie" : cookie!]
-    //        }
     return headers
   }
 

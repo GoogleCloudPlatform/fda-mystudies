@@ -191,14 +191,10 @@ extension EligibilityStepViewController: UITextFieldDelegate {
 extension EligibilityStepViewController: NMWebServiceDelegate {
 
   func startedRequest(_ manager: NetworkManager, requestName: NSString) {
-    Logger.sharedInstance.info("requestname : \(requestName)")
     self.addProgressIndicator()
   }
 
   func finishedRequest(_ manager: NetworkManager, requestName: NSString, response: AnyObject?) {
-    Logger.sharedInstance.info("requestname : \(requestName)")
-    Logger.sharedInstance.info("requestname : \(String(describing: response))")
-
     self.removeProgressIndicator()
 
     if (tokenTextField.text?.isEmpty) == false {
@@ -215,8 +211,6 @@ extension EligibilityStepViewController: NMWebServiceDelegate {
   }
 
   func failedRequest(_ manager: NetworkManager, requestName: NSString, error: NSError) {
-    Logger.sharedInstance.info("requestname : \(requestName)")
-
     self.removeProgressIndicator()
     if error.localizedDescription.localizedCaseInsensitiveContains(tokenTextField.text!) {
 

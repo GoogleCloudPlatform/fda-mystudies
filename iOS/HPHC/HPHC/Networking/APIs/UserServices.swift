@@ -790,27 +790,17 @@ class UserServices: NSObject {
     }
   }
 
-  func handleUpdateEligibilityConsentStatusResponse(response: [String: Any]) {
+  func handleUpdateEligibilityConsentStatusResponse(response: [String: Any]) {}
 
-  }
+  func handleGetConsentPDFResponse(response: [String: Any]) {}
 
-  func handleGetConsentPDFResponse(response: [String: Any]) {
-
-    if Utilities.isValidValue(someObject: response[kConsent] as AnyObject?) {
-      //Do nothing
-    }
-  }
-
-  func handleUpdateActivityStateResponse(response: [String: Any]) {
-
-  }
+  func handleUpdateActivityStateResponse(response: [String: Any]) {}
 
   func handleGetActivityStateResponse(response: [String: Any]) {
     _ = (response[kActivites] as? [[String: Any]])!
   }
 
-  func handleWithdrawFromStudyResponse(response: [String: Any]) {
-  }
+  func handleWithdrawFromStudyResponse(response: [String: Any]) {}
 
   func handleLogoutResponse(response: [String: Any]) {
 
@@ -938,9 +928,6 @@ extension UserServices: NMWebServiceDelegate {
   }
 
   func finishedRequest(_ manager: NetworkManager, requestName: NSString, response: AnyObject?) {
-    Logger.sharedInstance.info(
-      "RUS Received Data: \(requestName), \(String(describing: response))"
-    )
     switch requestName {
     case RegistrationMethods.login.description as String:
 
@@ -1013,8 +1000,6 @@ extension UserServices: NMWebServiceDelegate {
       self.failedRequestServices.headerParams = self.headerParams
       self.failedRequestServices.requestParams = self.requestParams
       self.failedRequestServices.method = self.method
-
-      Logger.sharedInstance.error("Failed: Refresh token Expired", error)
 
       if User.currentUser.refreshToken == ""
         && requestName as String

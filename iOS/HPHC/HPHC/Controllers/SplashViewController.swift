@@ -199,17 +199,13 @@ extension SplashViewController: ORKTaskViewControllerDelegate {
 
     switch reason {
 
-    case ORKTaskViewControllerFinishReason.completed:
-      Logger.sharedInstance.info("completed")
+    case ORKTaskViewControllerFinishReason.completed: break
 
-    case ORKTaskViewControllerFinishReason.failed:
-      Logger.sharedInstance.info("failed")
+    case ORKTaskViewControllerFinishReason.failed: break
 
-    case ORKTaskViewControllerFinishReason.discarded:
-      Logger.sharedInstance.info("discarded")
+    case ORKTaskViewControllerFinishReason.discarded: break
 
-    case ORKTaskViewControllerFinishReason.saved:
-      Logger.sharedInstance.info("saved")
+    case ORKTaskViewControllerFinishReason.saved: break
 
     @unknown default:
       break

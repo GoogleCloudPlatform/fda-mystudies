@@ -252,14 +252,9 @@ class ResponseDataFetch: NMWebServiceDelegate {
   }
 
   // MARK: Webservice Delegates
-  func startedRequest(_ manager: NetworkManager, requestName: NSString) {
-    Logger.sharedInstance.info(" START requestname : \(requestName)")
-  }
+  func startedRequest(_ manager: NetworkManager, requestName: NSString) {}
 
   func finishedRequest(_ manager: NetworkManager, requestName: NSString, response: AnyObject?) {
-    Logger.sharedInstance.info(
-      "requestname : \(requestName) Response : \(String(describing: response) )"
-    )
 
     if requestName as String == WCPMethods.studyDashboard.method.methodName {
       self.getDataKeysForCurrentStudy()
@@ -271,7 +266,6 @@ class ResponseDataFetch: NMWebServiceDelegate {
   }
 
   func failedRequest(_ manager: NetworkManager, requestName: NSString, error: NSError) {
-    Logger.sharedInstance.info("requestname : \(requestName)")
     if requestName as String == ResponseMethods.executeSQL.description {
       self.handleExecuteSQLResponse()
     }

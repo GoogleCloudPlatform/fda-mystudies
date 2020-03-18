@@ -35,10 +35,6 @@ class ForgotPasswordViewController: UIViewController {
     return .default
   }
 
-  deinit {
-    Logger.sharedInstance.info("\(self): deinit")
-  }
-
   // MARK: - ViewController Delegates
 
   override func viewDidLoad() {
@@ -134,13 +130,11 @@ class ForgotPasswordViewController: UIViewController {
 extension ForgotPasswordViewController: NMWebServiceDelegate {
 
   func startedRequest(_ manager: NetworkManager, requestName: NSString) {
-    Logger.sharedInstance.info("requestname : \(requestName)")
     self.addProgressIndicator()
   }
 
   func finishedRequest(_ manager: NetworkManager, requestName: NSString, response: AnyObject?) {
 
-    Logger.sharedInstance.info("requestname : \(requestName)")
     self.removeProgressIndicator()
 
     if requestName as String == AuthServerMethods.forgotPassword.description {
@@ -165,7 +159,6 @@ extension ForgotPasswordViewController: NMWebServiceDelegate {
   func failedRequest(_ manager: NetworkManager, requestName: NSString, error: NSError) {
 
     self.removeProgressIndicator()
-    Logger.sharedInstance.info("requestname : \(requestName)")
 
     if requestName as String == AuthServerMethods.forgotPassword.description && error.code == 403 {
       self.navigateToVerifyViewController()

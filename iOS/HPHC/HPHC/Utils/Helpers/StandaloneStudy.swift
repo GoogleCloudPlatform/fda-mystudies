@@ -93,14 +93,9 @@ class StandaloneStudy: NSObject {
 // MARK: - Webservices Delegates
 extension StandaloneStudy: NMWebServiceDelegate {
 
-  func startedRequest(_ manager: NetworkManager, requestName: NSString) {
-    Logger.sharedInstance.info("requestname START : \(requestName)")
-  }
+  func startedRequest(_ manager: NetworkManager, requestName: NSString) {}
 
   func finishedRequest(_ manager: NetworkManager, requestName: NSString, response: AnyObject?) {
-    Logger.sharedInstance.info(
-      "requestname FINISH: \(requestName) : \(String(describing: response))"
-    )
 
     if requestName as String == WCPMethods.study.rawValue {
       self.handleStudyListResponse()
@@ -117,7 +112,6 @@ extension StandaloneStudy: NMWebServiceDelegate {
   }
 
   func failedRequest(_ manager: NetworkManager, requestName: NSString, error: NSError) {
-    Logger.sharedInstance.info("requestname Failed: \(requestName)")
 
     let appdelegate = UIApplication.shared.delegate as! AppDelegate
 

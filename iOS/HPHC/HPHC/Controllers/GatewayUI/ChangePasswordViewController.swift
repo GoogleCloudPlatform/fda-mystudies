@@ -261,12 +261,10 @@ extension ChangePasswordViewController: UITextFieldDelegate {
 extension ChangePasswordViewController: NMWebServiceDelegate {
 
   func startedRequest(_ manager: NetworkManager, requestName: NSString) {
-    Logger.sharedInstance.info("requestname : \(requestName)")
     self.addProgressIndicator()
   }
 
   func finishedRequest(_ manager: NetworkManager, requestName: NSString, response: AnyObject?) {
-    Logger.sharedInstance.info("requestname : \(requestName)")
     self.removeProgressIndicator()
 
     if viewLoadFrom == .profile {
@@ -316,8 +314,6 @@ extension ChangePasswordViewController: NMWebServiceDelegate {
   }
 
   func failedRequest(_ manager: NetworkManager, requestName: NSString, error: NSError) {
-    Logger.sharedInstance.info("requestname : \(requestName)")
-
     self.removeProgressIndicator()
 
     if requestName as String == AuthServerMethods.getRefreshedToken.description && error.code == 401

@@ -43,10 +43,6 @@ class ResourcesViewController: UIViewController {
     return .default
   }
 
-  deinit {
-    Logger.sharedInstance.info("\(self): deinit")
-  }
-
   override func viewDidLoad() {
     super.viewDidLoad()
 
@@ -494,7 +490,6 @@ class ResourcesViewController: UIViewController {
       self.pushToResourceDetails()
 
     } catch let error as NSError {
-      Logger.sharedInstance.warn("Error writing to url: \(String(describing: fullPath))")
       Logger.sharedInstance.error(error.localizedDescription)
     }
 
@@ -659,14 +654,10 @@ extension ResourcesViewController: UITableViewDelegate {
 
 extension ResourcesViewController: NMWebServiceDelegate {
   func startedRequest(_ manager: NetworkManager, requestName: NSString) {
-    Logger.sharedInstance.info("requestname : \(requestName)")
     self.addProgressIndicator()
   }
 
   func finishedRequest(_ manager: NetworkManager, requestName: NSString, response: AnyObject?) {
-    Logger.sharedInstance.info(
-      "requestname : \(requestName) response : \(String(describing: response))"
-    )
 
     switch requestName as String {
 
@@ -738,7 +729,6 @@ extension ResourcesViewController: NMWebServiceDelegate {
   }
 
   func failedRequest(_ manager: NetworkManager, requestName: NSString, error: NSError) {
-    Logger.sharedInstance.info("requestname : \(requestName)")
 
     if requestName as String == AuthServerMethods.getRefreshedToken.description && error.code == 401
     {  //unauthorized  // unauthorized

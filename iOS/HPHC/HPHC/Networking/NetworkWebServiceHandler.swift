@@ -297,7 +297,7 @@ class NetworkWebServiceHandler: NSObject, URLSessionDelegate {
     }
 
     let requestUrl = URL(string: requestString as String)!
-    Logger.sharedInstance.info("Request URL:  \(requestUrl)")
+
     var request = URLRequest.init(
       url: requestUrl,
       cachePolicy: URLRequest.CachePolicy.reloadIgnoringLocalCacheData,

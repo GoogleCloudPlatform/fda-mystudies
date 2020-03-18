@@ -57,8 +57,6 @@ extension CellConfigurable where Self: UICollectionViewCell {
 extension UITableViewCell: CellConfigurable {}
 extension UICollectionViewCell: CellConfigurable {}
 
-// ========================================================
-
 /// The `CellRegistrable` protocol is adopted objects that want to provide an easy
 /// way to register the cells that conform to the `CellConfigurable` protocol.
 /// 

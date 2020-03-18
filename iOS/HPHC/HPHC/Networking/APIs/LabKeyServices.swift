@@ -375,7 +375,7 @@ extension LabKeyServices: NMWebServiceDelegate {
     case ResponseMethods.processResponse.description as String: break
     case ResponseMethods.withdrawFromStudy.description as String: break
     default:
-      Logger.sharedInstance.info("Request was not sent with proper method name")
+      break  // Request was not sent with proper method name.
     }
 
     delegate?.finishedRequest(manager, requestName: requestName, response: response)

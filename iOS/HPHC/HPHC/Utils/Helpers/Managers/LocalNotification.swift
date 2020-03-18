@@ -353,7 +353,7 @@ class LocalNotification: NSObject {
   /// Cancels existing notifications and reschedules the top 50 notification from local notifications list
   class func refreshAllLocalNotification() {
 
-    //Fetch top 50 notifications
+    // Fetch top 50 notifications
     DBHandler.getRecentLocalNotification { (localNotifications) in
 
       if localNotifications.count > 0 {

@@ -35,9 +35,7 @@ class EmptyAnchordDates {
   var isFinishedFetching: Bool = false
   var fetchAnchorDateFor: FetchAnchorDateFor = .activity
 
-  init() {
-
-  }
+  init() {}
 
 }
 

@@ -51,10 +51,6 @@ class SignInViewController: UIViewController {
     return .default
   }
 
-  deinit {
-    Logger.sharedInstance.info("\(self): deinit")
-  }
-
   // MARK: - ViewController Lifecycle
 
   override func viewDidLoad() {
@@ -477,12 +473,10 @@ extension SignInViewController: UITextViewDelegate {
 extension SignInViewController: NMWebServiceDelegate {
 
   func startedRequest(_ manager: NetworkManager, requestName: NSString) {
-    Logger.sharedInstance.info("requestname : \(requestName)")
     self.addProgressIndicator()
   }
 
   func finishedRequest(_ manager: NetworkManager, requestName: NSString, response: AnyObject?) {
-    Logger.sharedInstance.info("requestname : \(requestName)")
     self.removeProgressIndicator()
 
     if requestName as String == WCPMethods.termsPolicy.method.methodName {
@@ -530,7 +524,6 @@ extension SignInViewController: NMWebServiceDelegate {
   }
 
   func failedRequest(_ manager: NetworkManager, requestName: NSString, error: NSError) {
-    Logger.sharedInstance.info("requestname : \(requestName)")
 
     self.removeProgressIndicator()
 

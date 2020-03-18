@@ -55,10 +55,6 @@ class VerificationViewController: UIViewController {
   lazy var shouldCreateMenu: Bool = true
   lazy var viewLoadFrom: VerificationLoadFrom = .signup
 
-  deinit {
-    Logger.sharedInstance.info("\(self): deinit")
-  }
-
   // MARK: - View Controllere Lifecycle
   override func viewDidLoad() {
     super.viewDidLoad()
@@ -208,13 +204,10 @@ extension VerificationViewController: UITextFieldDelegate {
 extension VerificationViewController: NMWebServiceDelegate {
 
   func startedRequest(_ manager: NetworkManager, requestName: NSString) {
-
     self.addProgressIndicator()
-    Logger.sharedInstance.info("requestname : \(requestName)")
   }
 
   func finishedRequest(_ manager: NetworkManager, requestName: NSString, response: AnyObject?) {
-    Logger.sharedInstance.info("requestname : \(requestName)")
 
     self.removeProgressIndicator()
 
@@ -257,7 +250,6 @@ extension VerificationViewController: NMWebServiceDelegate {
   }
 
   func failedRequest(_ manager: NetworkManager, requestName: NSString, error: NSError) {
-    Logger.sharedInstance.info("requestname : \(requestName)")
 
     self.removeProgressIndicator()
     if requestName as String == AuthServerMethods.getRefreshedToken.description && error.code == 401
@@ -295,17 +287,11 @@ extension VerificationViewController: ORKTaskViewControllerDelegate {
     didFinishWith reason: ORKTaskViewControllerFinishReason,
     error: Error?
   ) {
-
     switch reason {
-
-    case ORKTaskViewControllerFinishReason.completed:
-      Logger.sharedInstance.info("completed")
-    case ORKTaskViewControllerFinishReason.failed:
-      Logger.sharedInstance.info("failed")
-    case ORKTaskViewControllerFinishReason.discarded:
-      Logger.sharedInstance.info("discarded")
-    case ORKTaskViewControllerFinishReason.saved:
-      Logger.sharedInstance.info("saved")
+    case ORKTaskViewControllerFinishReason.completed: break
+    case ORKTaskViewControllerFinishReason.failed: break
+    case ORKTaskViewControllerFinishReason.discarded: break
+    case ORKTaskViewControllerFinishReason.saved: break
     @unknown default: break
     }
     taskViewController.dismiss(animated: true, completion: nil)

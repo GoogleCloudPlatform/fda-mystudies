@@ -185,7 +185,7 @@ class UIUtilities: NSObject {
       jsonString = NSString(data: jsonData as Data, encoding: String.Encoding.utf8.rawValue)!
         as String
     } catch let error {
-      Logger.sharedInstance.info("Error parsing data: ", error.localizedDescription)
+      Logger.sharedInstance.error("Error parsing data: ", error.localizedDescription)
     }
     return jsonString
   }
@@ -204,7 +204,7 @@ class UIUtilities: NSObject {
         encoding: String.Encoding.utf8.rawValue
       )! as String
     } catch let error {
-      Logger.sharedInstance.info("Error parsing data: ", error.localizedDescription)
+      Logger.sharedInstance.error("Error parsing data: ", error.localizedDescription)
     }
     return socialMediaNamesString
   }

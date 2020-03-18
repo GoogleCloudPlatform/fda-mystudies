@@ -58,10 +58,6 @@ class StudyDashboardViewController: UIViewController {
     return formatter
   }()
 
-  deinit {
-    Logger.sharedInstance.info("\(self): deinit")
-  }
-
   // MARK: - ViewController Lifecycle
   override func viewDidLoad() {
     super.viewDidLoad()
@@ -430,7 +426,6 @@ extension StudyDashboardViewController: UITableViewDelegate {
 extension StudyDashboardViewController: NMWebServiceDelegate {
 
   func startedRequest(_ manager: NetworkManager, requestName: NSString) {
-    Logger.sharedInstance.info("requestname : \(requestName)")
     self.addProgressIndicator()
   }
 
@@ -448,8 +443,6 @@ extension StudyDashboardViewController: NMWebServiceDelegate {
   }
 
   func failedRequest(_ manager: NetworkManager, requestName: NSString, error: NSError) {
-    Logger.sharedInstance.error("requestname : \(requestName)")
-
     if requestName as String == WCPMethods.consentDocument.method.methodName {
       self.removeProgressIndicator()
     } else if requestName as String == ResponseMethods.executeSQL.description {
@@ -476,10 +469,7 @@ extension StudyDashboardViewController: ORKTaskViewControllerDelegate {
   ) {
 
     switch reason {
-
     case ORKTaskViewControllerFinishReason.completed:
-      Logger.sharedInstance.info("completed")
-
       ConsentBuilder.currentConsent?.consentResult?.consentDocument =
         ConsentBuilder
         .currentConsent?
@@ -488,14 +478,11 @@ extension StudyDashboardViewController: ORKTaskViewControllerDelegate {
         taskResult: taskViewController.result
       )
 
-    case ORKTaskViewControllerFinishReason.failed:
-      Logger.sharedInstance.error("failed")
+    case ORKTaskViewControllerFinishReason.failed: break
 
-    case ORKTaskViewControllerFinishReason.discarded:
-      Logger.sharedInstance.info("discarded")
+    case ORKTaskViewControllerFinishReason.discarded: break
 
-    case ORKTaskViewControllerFinishReason.saved:
-      Logger.sharedInstance.info("saved")
+    case ORKTaskViewControllerFinishReason.saved: break
 
     @unknown default: break
     }

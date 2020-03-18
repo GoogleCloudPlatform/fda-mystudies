@@ -522,8 +522,6 @@ class TextChoiceQuestionController: ORKQuestionStepViewController {
   }
 
   override func goBackward() {
-    //super.delegate?.stepViewControllerResultDidChange(self)
-    Logger.sharedInstance.info("\(self) User did pressed on back button")
     super.goBackward()
   }
 
@@ -562,7 +560,7 @@ class TextChoiceQuestionController: ORKQuestionStepViewController {
   }
 
   @objc func didTapOnDoneOrNextBtn(_ sender: UIButton) {
-    Logger.sharedInstance.info("\(self): Next or done button pressed.")
+    // Next or done button pressed.
   }
 
   private func didTapOnOtherCell(didSelect: Bool) {

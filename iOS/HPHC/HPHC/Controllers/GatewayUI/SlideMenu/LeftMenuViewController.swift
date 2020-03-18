@@ -601,13 +601,10 @@ extension LeftMenuViewController: UITableViewDataSource {
 extension LeftMenuViewController: NMWebServiceDelegate {
 
   func startedRequest(_ manager: NetworkManager, requestName: NSString) {
-    Logger.sharedInstance.info("requestname : \(requestName)")
     UIApplication.shared.keyWindow?.addProgressIndicatorOnWindowFromTop()
   }
 
   func finishedRequest(_ manager: NetworkManager, requestName: NSString, response: AnyObject?) {
-    Logger.sharedInstance.info("requestname : \(requestName)")
-
     if requestName as String == RegistrationMethods.logout.description {
       self.signout()
     }
@@ -615,7 +612,6 @@ extension LeftMenuViewController: NMWebServiceDelegate {
   }
 
   func failedRequest(_ manager: NetworkManager, requestName: NSString, error: NSError) {
-    Logger.sharedInstance.info("requestname : \(requestName)")
     UIApplication.shared.keyWindow?.addProgressIndicatorOnWindowFromTop()
 
     if requestName as String == AuthServerMethods.getRefreshedToken.description && error.code == 401
