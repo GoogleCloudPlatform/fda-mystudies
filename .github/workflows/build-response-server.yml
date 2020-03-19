@@ -1,6 +1,6 @@
 on:
   pull_request:
-    branches: [ response-server ]
+    branches: [ unc-cv19 ]
 name: Build-response-server-ws
 jobs:
   build:
