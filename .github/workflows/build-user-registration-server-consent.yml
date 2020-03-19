@@ -1,6 +1,6 @@
 on:
   pull_request:
-    branches: [ user-registration-server ]
+    branches: [ unc-cv19 ]
 name: Build user-registration-server-ws-consent
 jobs:
   build:
