@@ -36,7 +36,7 @@ import com.harvard.utils.Logger;
 import com.harvard.utils.SharedPreferenceHelper;
 import com.harvard.utils.URLs;
 import com.harvard.webservicemodule.apihelper.ApiCall;
-import com.harvard.webservicemodule.events.RegistrationServerConfigEvent;
+import com.harvard.webservicemodule.events.AuthServerConfigEvent;
 import java.util.HashMap;
 
 public class ChangePasswordActivity extends AppCompatActivity
@@ -238,7 +238,7 @@ public class ChangePasswordActivity extends AppCompatActivity
     ChangePasswordEvent changePasswordEvent = new ChangePasswordEvent();
 
     HashMap<String, String> header = new HashMap<>();
-    header.put("auth", mAuth);
+    header.put("accessToken", mAuth);
     header.put("userId", mUserId);
 
     HashMap<String, String> params = new HashMap<>();
@@ -249,8 +249,8 @@ public class ChangePasswordActivity extends AppCompatActivity
     }
     params.put("newPassword", mNewPassword.getText().toString());
 
-    RegistrationServerConfigEvent registrationServerConfigEvent =
-        new RegistrationServerConfigEvent(
+    AuthServerConfigEvent authServerConfigEvent =
+        new AuthServerConfigEvent(
             "post",
             URLs.CHANGE_PASSWORD,
             CHANGE_PASSWORD_REQUEST,
@@ -261,7 +261,7 @@ public class ChangePasswordActivity extends AppCompatActivity
             null,
             false,
             ChangePasswordActivity.this);
-    changePasswordEvent.setmRegistrationServerConfigEvent(registrationServerConfigEvent);
+    changePasswordEvent.setAuthServerConfigEvent(authServerConfigEvent);
     UserModulePresenter userModulePresenter = new UserModulePresenter();
     userModulePresenter.performChangePassword(changePasswordEvent);
   }

@@ -56,6 +56,7 @@ import com.harvard.utils.AppController;
 import com.harvard.utils.Logger;
 import com.harvard.utils.URLs;
 import com.harvard.webservicemodule.apihelper.ApiCall;
+import com.harvard.webservicemodule.events.AuthServerConfigEvent;
 import com.harvard.webservicemodule.events.RegistrationServerConfigEvent;
 import java.util.HashMap;
 import org.json.JSONException;
@@ -147,8 +148,8 @@ public class SignInFragment extends Fragment implements ApiCall.OnAsyncRequestCo
           @Override
           public void updateDrawState(TextPaint ds) {
             ds.setColor(
-                ContextCompat.getColor(mContext, R.color.colorPrimary)); // you can use custom color
-            ds.setUnderlineText(false); // this remove the underline
+                ContextCompat.getColor(mContext, R.color.colorPrimary));
+            ds.setUnderlineText(false);
           }
 
           @Override
@@ -180,8 +181,8 @@ public class SignInFragment extends Fragment implements ApiCall.OnAsyncRequestCo
           @Override
           public void updateDrawState(TextPaint ds) {
             ds.setColor(
-                ContextCompat.getColor(mContext, R.color.colorPrimary)); // you can use custom color
-            ds.setUnderlineText(false); // this remove the underline
+                ContextCompat.getColor(mContext, R.color.colorPrimary));
+            ds.setUnderlineText(false);
           }
 
           @Override
@@ -254,8 +255,6 @@ public class SignInFragment extends Fragment implements ApiCall.OnAsyncRequestCo
         new View.OnClickListener() {
           @Override
           public void onClick(View view) {
-            //                Toast.makeText(mContext, "Go to SignUp ...",
-            // Toast.LENGTH_SHORT).show();
             ((StudyActivity) getContext()).loadsignup();
           }
         });
@@ -293,8 +292,8 @@ public class SignInFragment extends Fragment implements ApiCall.OnAsyncRequestCo
       params.put("password", mPassword.getText().toString());
       params.put("appId", BuildConfig.APPLICATION_ID);
 
-      RegistrationServerConfigEvent registrationServerConfigEvent =
-          new RegistrationServerConfigEvent(
+      AuthServerConfigEvent authServerConfigEvent =
+          new AuthServerConfigEvent(
               "post",
               URLs.LOGIN,
               LOGIN_REQUEST,
@@ -305,7 +304,7 @@ public class SignInFragment extends Fragment implements ApiCall.OnAsyncRequestCo
               null,
               false,
               this);
-      loginEvent.setmRegistrationServerConfigEvent(registrationServerConfigEvent);
+      loginEvent.setAuthServerConfigEvent(authServerConfigEvent);
       UserModulePresenter userModulePresenter = new UserModulePresenter();
       userModulePresenter.performLogin(loginEvent);
     }
@@ -325,6 +324,9 @@ public class SignInFragment extends Fragment implements ApiCall.OnAsyncRequestCo
         AppController.getHelperSharedPreference()
             .writePreference(
                 mContext, getString(R.string.refreshToken), loginData.getRefreshToken());
+        AppController.getHelperSharedPreference()
+            .writePreference(
+                mContext, mContext.getString(R.string.clientToken), loginData.getClientToken());
         new GetFCMRefreshToken().execute();
       } else {
         Toast.makeText(
@@ -336,7 +338,7 @@ public class SignInFragment extends Fragment implements ApiCall.OnAsyncRequestCo
     } else if (responseCode == UPDATE_USER_PROFILE) {
       UpdateUserProfileData updateUserProfileData = (UpdateUserProfileData) response;
       if (updateUserProfileData != null) {
-        if (updateUserProfileData.getMessage().equalsIgnoreCase("success")) {
+        if (updateUserProfileData.getMessage().equalsIgnoreCase("Profile Updated successfully")) {
           callUserProfileWebService();
         } else {
           Toast.makeText(
@@ -404,7 +406,7 @@ public class SignInFragment extends Fragment implements ApiCall.OnAsyncRequestCo
 
   private void callUserProfileWebService() {
     HashMap<String, String> header = new HashMap<>();
-    header.put("auth", mUserAuth);
+    header.put("accessToken", mUserAuth);
     header.put("userId", mUserID);
     GetUserProfileEvent getUserProfileEvent = new GetUserProfileEvent();
     RegistrationServerConfigEvent registrationServerConfigEvent =
@@ -485,7 +487,7 @@ public class SignInFragment extends Fragment implements ApiCall.OnAsyncRequestCo
     AppController.getHelperProgressDialog().showProgress(mContext, "", "", false);
     UpdateUserProfileEvent updateUserProfileEvent = new UpdateUserProfileEvent();
     HashMap<String, String> params = new HashMap<>();
-    params.put("auth", mUserAuth);
+    params.put("accessToken", mUserAuth);
     params.put("userId", mUserID);
 
     JSONObject jsonObjBody = new JSONObject();

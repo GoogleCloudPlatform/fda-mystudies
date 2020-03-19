@@ -36,10 +36,10 @@ import com.google.gson.reflect.TypeToken;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
 import com.harvard.AppConfig;
-import com.harvard.R;
-import com.harvard.WebViewActivity;
 import com.harvard.eligibilitymodule.CustomViewTaskActivity;
 import com.harvard.eligibilitymodule.StepsBuilder;
+import com.harvard.R;
+import com.harvard.WebViewActivity;
 import com.harvard.gatewaymodule.CircleIndicator;
 import com.harvard.offlinemodule.model.OfflineData;
 import com.harvard.storagemodule.DBServiceSubscriber;
@@ -64,18 +64,18 @@ import com.harvard.webservicemodule.apihelper.ApiCall;
 import com.harvard.webservicemodule.apihelper.ConnectionDetector;
 import com.harvard.webservicemodule.apihelper.HttpRequest;
 import com.harvard.webservicemodule.apihelper.Responsemodel;
-import com.harvard.webservicemodule.events.RegistrationServerConfigEvent;
+import com.harvard.webservicemodule.events.RegistrationServerEnrollmentConfigEvent;
 import com.harvard.webservicemodule.events.WCPConfigEvent;
-import io.realm.Realm;
-import io.realm.RealmList;
-import io.realm.RealmObject;
-import java.io.IOException;
-import java.net.HttpURLConnection;
-import java.util.HashMap;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.researchstack.backbone.task.OrderedTask;
+import java.io.IOException;
+import java.net.HttpURLConnection;
+import java.util.HashMap;
+import io.realm.Realm;
+import io.realm.RealmList;
+import io.realm.RealmObject;
 
 public class StudyInfoActivity extends AppCompatActivity implements ApiCall.OnAsyncRequestComplete {
   private static final int STUDY_INFO = 10;
@@ -504,7 +504,7 @@ public class StudyInfoActivity extends AppCompatActivity implements ApiCall.OnAs
         GetPreferenceEvent getPreferenceEvent = new GetPreferenceEvent();
         HashMap<String, String> header = new HashMap();
         header.put(
-            "auth",
+            "accessToken",
             AppController.getHelperSharedPreference()
                 .readPreference(
                     StudyInfoActivity.this, getResources().getString(R.string.auth), ""));
@@ -513,8 +513,13 @@ public class StudyInfoActivity extends AppCompatActivity implements ApiCall.OnAs
             AppController.getHelperSharedPreference()
                 .readPreference(
                     StudyInfoActivity.this, getResources().getString(R.string.userid), ""));
-        RegistrationServerConfigEvent registrationServerConfigEvent =
-            new RegistrationServerConfigEvent(
+        header.put(
+            "clientToken",
+            AppController.getHelperSharedPreference()
+                .readPreference(
+                    StudyInfoActivity.this, getResources().getString(R.string.clientToken), ""));
+        RegistrationServerEnrollmentConfigEvent registrationServerEnrollmentConfigEvent =
+            new RegistrationServerEnrollmentConfigEvent(
                 "get",
                 URLs.STUDY_STATE,
                 GET_PREFERENCES,
@@ -526,7 +531,8 @@ public class StudyInfoActivity extends AppCompatActivity implements ApiCall.OnAs
                 false,
                 this);
 
-        getPreferenceEvent.setmRegistrationServerConfigEvent(registrationServerConfigEvent);
+        getPreferenceEvent.setRegistrationServerEnrollmentConfigEvent(
+            registrationServerEnrollmentConfigEvent);
         UserModulePresenter userModulePresenter = new UserModulePresenter();
         userModulePresenter.performGetUserPreference(getPreferenceEvent);
       }
@@ -767,13 +773,17 @@ public class StudyInfoActivity extends AppCompatActivity implements ApiCall.OnAs
 
     HashMap<String, String> header = new HashMap();
     header.put(
-        "auth",
+        "accessToken",
         AppController.getHelperSharedPreference()
             .readPreference(this, getResources().getString(R.string.auth), ""));
     header.put(
         "userId",
         AppController.getHelperSharedPreference()
             .readPreference(this, getResources().getString(R.string.userid), ""));
+    header.put(
+        "clientToken",
+        AppController.getHelperSharedPreference()
+            .readPreference(this, getResources().getString(R.string.clientToken), ""));
 
     JSONObject jsonObject = new JSONObject();
 
@@ -821,8 +831,8 @@ public class StudyInfoActivity extends AppCompatActivity implements ApiCall.OnAs
       Logger.log(e);
     }
     //////////
-    RegistrationServerConfigEvent registrationServerConfigEvent =
-        new RegistrationServerConfigEvent(
+    RegistrationServerEnrollmentConfigEvent registrationServerEnrollmentConfigEvent =
+        new RegistrationServerEnrollmentConfigEvent(
             "post_object",
             URLs.UPDATE_STUDY_PREFERENCE,
             UPDATE_PREFERENCES,
@@ -834,7 +844,8 @@ public class StudyInfoActivity extends AppCompatActivity implements ApiCall.OnAs
             false,
             this);
 
-    updatePreferenceEvent.setmRegistrationServerConfigEvent(registrationServerConfigEvent);
+    updatePreferenceEvent.setRegistrationServerEnrollmentConfigEvent(
+        registrationServerEnrollmentConfigEvent);
     UserModulePresenter userModulePresenter = new UserModulePresenter();
     userModulePresenter.performUpdateUserPreference(updatePreferenceEvent);
   }

@@ -36,10 +36,10 @@ import com.google.gson.reflect.TypeToken;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
 import com.harvard.AppConfig;
-import com.harvard.R;
-import com.harvard.WebViewActivity;
 import com.harvard.eligibilitymodule.CustomViewTaskActivity;
 import com.harvard.eligibilitymodule.StepsBuilder;
+import com.harvard.R;
+import com.harvard.WebViewActivity;
 import com.harvard.gatewaymodule.CircleIndicator;
 import com.harvard.storagemodule.DBServiceSubscriber;
 import com.harvard.studyappmodule.activitybuilder.model.servicemodel.Steps;
@@ -63,15 +63,15 @@ import com.harvard.webservicemodule.apihelper.ApiCall;
 import com.harvard.webservicemodule.apihelper.ConnectionDetector;
 import com.harvard.webservicemodule.apihelper.HttpRequest;
 import com.harvard.webservicemodule.apihelper.Responsemodel;
-import com.harvard.webservicemodule.events.RegistrationServerConfigEvent;
+import com.harvard.webservicemodule.events.RegistrationServerEnrollmentConfigEvent;
 import com.harvard.webservicemodule.events.WCPConfigEvent;
-import io.realm.Realm;
-import io.realm.RealmList;
-import io.realm.RealmObject;
+import org.researchstack.backbone.task.OrderedTask;
 import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.util.HashMap;
-import org.researchstack.backbone.task.OrderedTask;
+import io.realm.Realm;
+import io.realm.RealmList;
+import io.realm.RealmObject;
 
 public class StandaloneStudyInfoActivity extends AppCompatActivity
     implements ApiCall.OnAsyncRequestComplete {
@@ -673,7 +673,7 @@ public class StandaloneStudyInfoActivity extends AppCompatActivity
         GetPreferenceEvent getPreferenceEvent = new GetPreferenceEvent();
         HashMap<String, String> header = new HashMap();
         header.put(
-            "auth",
+            "accessToken",
             AppController.getHelperSharedPreference()
                 .readPreference(
                     StandaloneStudyInfoActivity.this, getResources().getString(R.string.auth), ""));
@@ -684,8 +684,15 @@ public class StandaloneStudyInfoActivity extends AppCompatActivity
                     StandaloneStudyInfoActivity.this,
                     getResources().getString(R.string.userid),
                     ""));
-        RegistrationServerConfigEvent registrationServerConfigEvent =
-            new RegistrationServerConfigEvent(
+        header.put(
+            "clientToken",
+            AppController.getHelperSharedPreference()
+                .readPreference(
+                    StandaloneStudyInfoActivity.this,
+                    getResources().getString(R.string.clientToken),
+                    ""));
+        RegistrationServerEnrollmentConfigEvent registrationServerConfigEvent =
+            new RegistrationServerEnrollmentConfigEvent(
                 "get",
                 URLs.STUDY_STATE,
                 GET_PREFERENCES,
@@ -697,7 +704,8 @@ public class StandaloneStudyInfoActivity extends AppCompatActivity
                 false,
                 this);
 
-        getPreferenceEvent.setmRegistrationServerConfigEvent(registrationServerConfigEvent);
+        getPreferenceEvent.setRegistrationServerEnrollmentConfigEvent(
+            registrationServerConfigEvent);
         UserModulePresenter userModulePresenter = new UserModulePresenter();
         userModulePresenter.performGetUserPreference(getPreferenceEvent);
       }

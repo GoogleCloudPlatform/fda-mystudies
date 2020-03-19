@@ -54,6 +54,7 @@ import com.harvard.usermodule.webservicemodel.LoginData;
 import com.harvard.usermodule.webservicemodel.Studies;
 import com.harvard.utils.AppController;
 import com.harvard.utils.Logger;
+import com.harvard.utils.SharedPreferenceHelper;
 import com.harvard.utils.URLs;
 import com.harvard.webservicemodule.apihelper.ApiCall;
 import com.harvard.webservicemodule.apihelper.ApiCallResponseServer;
@@ -61,11 +62,12 @@ import com.harvard.webservicemodule.apihelper.ConnectionDetector;
 import com.harvard.webservicemodule.apihelper.HttpRequest;
 import com.harvard.webservicemodule.apihelper.Responsemodel;
 import com.harvard.webservicemodule.events.RegistrationServerConfigEvent;
+import com.harvard.webservicemodule.events.RegistrationServerEnrollmentConfigEvent;
 import com.harvard.webservicemodule.events.ResponseServerConfigEvent;
 import com.harvard.webservicemodule.events.WCPConfigEvent;
-import io.realm.Realm;
-import io.realm.RealmList;
-import io.realm.RealmResults;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 import java.lang.reflect.Type;
 import java.net.HttpURLConnection;
 import java.text.ParseException;
@@ -74,9 +76,9 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
+import io.realm.Realm;
+import io.realm.RealmList;
+import io.realm.RealmResults;
 
 public class SurveyResourcesFragment<T> extends Fragment
     implements ApiCall.OnAsyncRequestComplete, ApiCallResponseServer.OnAsyncRequestComplete {
@@ -652,18 +654,48 @@ public class SurveyResourcesFragment<T> extends Fragment
       ConnectionDetector connectionDetector = new ConnectionDetector(mContext);
 
       if (connectionDetector.isConnectingToInternet()) {
+        Realm realm = AppController.getRealmobj(mContext);
+        Studies studies =
+            realm
+                .where(Studies.class)
+                .equalTo("studyId", anchorDateSchedulingDetails.getStudyId())
+                .findFirst();
+
+        HashMap<String, String> header = new HashMap<>();
+        header.put(
+            getString(R.string.clientToken),
+            SharedPreferenceHelper.readPreference(mContext, getString(R.string.clientToken), ""));
+        header.put(
+            "accessToken",
+            SharedPreferenceHelper.readPreference(mContext, getString(R.string.auth), ""));
+        header.put(
+            "userId",
+            SharedPreferenceHelper.readPreference(mContext, getString(R.string.userid), ""));
         mResponseModel =
             HttpRequest.getRequest(
                 URLs.PROCESSRESPONSEDATA
-                    + "sql=SELECT%20%22"
-                    + anchorDateSchedulingDetails.getSourceKey()
-                    + "%22%20FROM%20%22"
+                    + AppConfig.ORG_ID_KEY
+                    + "="
+                    + AppConfig.ORG_ID_VALUE
+                    + "&"
+                    + AppConfig.APP_ID_KEY
+                    + "="
+                    + AppConfig.APP_ID_VALUE
+                    + "&participantId="
+                    + anchorDateSchedulingDetails.getParticipantId()
+                    + "&tokenIdentifier="
+                    + studies.getHashedToken()
+                    + "&siteId="
+                    + studies.getSiteId()
+                    + "&studyId="
+                    + studies.getStudyId()
+                    + "&activityId="
                     + anchorDateSchedulingDetails.getSourceActivityId()
-                    + anchorDateSchedulingDetails.getSourceFormKey()
-                    + "%22&participantId="
-                    + anchorDateSchedulingDetails.getParticipantId(),
-                new HashMap<String, String>(),
+                    + "&activityVersion="
+                    + anchorDateSchedulingDetails.getActivityVersion(),
+                header,
                 "Response");
+        dbServiceSubscriber.closeRealmObj(realm);
         responseCode = mResponseModel.getResponseCode();
         response = mResponseModel.getResponseData();
         if (responseCode.equalsIgnoreCase("0") && response.equalsIgnoreCase("timeout")) {
@@ -890,8 +922,8 @@ public class SurveyResourcesFragment<T> extends Fragment
       Logger.log(e);
     }
 
-    RegistrationServerConfigEvent registrationServerConfigEvent =
-        new RegistrationServerConfigEvent(
+    RegistrationServerEnrollmentConfigEvent registrationServerEnrollmentConfigEvent =
+        new RegistrationServerEnrollmentConfigEvent(
             "delete_object",
             URLs.WITHDRAW,
             UPDATE_USERPREFERENCE_RESPONSECODE,
@@ -903,7 +935,8 @@ public class SurveyResourcesFragment<T> extends Fragment
             false,
             this);
 
-    updatePreferenceEvent.setmRegistrationServerConfigEvent(registrationServerConfigEvent);
+    updatePreferenceEvent.setRegistrationServerEnrollmentConfigEvent(
+        registrationServerEnrollmentConfigEvent);
     UserModulePresenter userModulePresenter = new UserModulePresenter();
     userModulePresenter.performUpdateUserPreference(updatePreferenceEvent);
   }
@@ -1005,7 +1038,7 @@ public class SurveyResourcesFragment<T> extends Fragment
   public void deactivateAccount() {
     HashMap<String, String> header = new HashMap();
     header.put(
-        "auth",
+        "accessToken",
         AppController.getHelperSharedPreference()
             .readPreference(mContext, getResources().getString(R.string.auth), ""));
     header.put(
@@ -1021,13 +1054,14 @@ public class SurveyResourcesFragment<T> extends Fragment
       obj = new JSONObject(json);
       JSONArray jsonArray1 = new JSONArray();
       jsonArray1.put(AppConfig.StudyId);
+      //      jsonArray1.put("Test");
       obj.put("deleteData", jsonArray1);
     } catch (JSONException e) {
       Logger.log(e);
     }
     RegistrationServerConfigEvent registrationServerConfigEvent =
         new RegistrationServerConfigEvent(
-            "delete",
+            "delete_object",
             URLs.DELETE_ACCOUNT,
             DELETE_ACCOUNT_REPSONSECODE,
             mContext,

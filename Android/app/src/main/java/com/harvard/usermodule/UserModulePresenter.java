@@ -17,6 +17,7 @@ package com.harvard.usermodule;
 import com.harvard.FDAEventBus;
 import com.harvard.studyappmodule.events.ConsentPDFEvent;
 import com.harvard.studyappmodule.events.DeleteAccountEvent;
+import com.harvard.usermodule.event.ActivityStateEvent;
 import com.harvard.usermodule.event.ChangePasswordEvent;
 import com.harvard.usermodule.event.ForgotPasswordEvent;
 import com.harvard.usermodule.event.GetPreferenceEvent;
@@ -64,6 +65,10 @@ public class UserModulePresenter {
 
   public void performGetUserPreference(GetPreferenceEvent getPreferenceEvent) {
     FDAEventBus.postEvent(getPreferenceEvent);
+  }
+
+  public void performActivityState(ActivityStateEvent activityStateEvent) {
+    FDAEventBus.postEvent(activityStateEvent);
   }
 
   public void performLogout(LogoutEvent logoutEvent) {

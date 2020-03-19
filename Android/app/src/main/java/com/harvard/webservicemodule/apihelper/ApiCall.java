@@ -18,23 +18,26 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.os.AsyncTask;
 import android.support.v7.app.AlertDialog;
+import android.util.Log;
 import com.google.gson.Gson;
 import com.google.gson.stream.JsonReader;
+import com.harvard.AppConfig;
 import com.harvard.R;
 import com.harvard.studyappmodule.activitybuilder.model.servicemodel.ActivityInfoData;
 import com.harvard.usermodule.webservicemodel.RefreshToken;
 import com.harvard.utils.AppController;
 import com.harvard.utils.Logger;
+import com.harvard.utils.SharedPreferenceHelper;
 import com.harvard.utils.URLs;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.StringReader;
 import java.net.HttpURLConnection;
 import java.util.HashMap;
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 public class ApiCall<T, V> extends AsyncTask<T, String, String> {
 
@@ -296,6 +299,14 @@ public class ApiCall<T, V> extends AsyncTask<T, String, String> {
     ConnectionDetector connectionDetector = new ConnectionDetector(mContext);
     String response;
     if (connectionDetector.isConnectingToInternet()) {
+      if (mHeadersData != null
+          && (mHeadersData.containsKey("accessToken") || mHeadersData.containsKey("auth"))) {
+        mHeadersData.put(
+            AppConfig.CLIENT_TOKEN,
+            AppController.getHelperSharedPreference()
+                .readPreference(mContext, mContext.getString(R.string.clientToken), ""));
+      }
+
       switch (mWebserviceType) {
         case "get":
           mResponseModel = HttpRequest.getRequest(mUrlPassed, mHeadersData, serverType);
@@ -370,7 +381,7 @@ public class ApiCall<T, V> extends AsyncTask<T, String, String> {
       } else if (Integer.parseInt(responseCode) == HttpURLConnection.HTTP_UNAUTHORIZED) {
         response = "session expired";
 
-        if (!this.mUrlPassed.contains("login.api")) {
+        if (!this.mUrlPassed.contains(URLs.LOGIN)) {
           String refreshTokenUrl = URLs.REFRESH_TOKEN;
           JSONObject refreshTokenJsonData = new JSONObject();
           try {
@@ -381,18 +392,28 @@ public class ApiCall<T, V> extends AsyncTask<T, String, String> {
           } catch (JSONException e) {
             Logger.log(e);
           }
-          HashMap<String, String> refreshTokenHashMap = new HashMap<>();
+          HashMap<String, String> refreshTokenHeader = new HashMap<>();
+          refreshTokenHeader.put(
+              "userId",
+              SharedPreferenceHelper.readPreference(
+                  mContext, mContext.getString(R.string.userid), ""));
 
           mResponseModel =
               HttpRequest.makePostRequestWithJsonRefreshToken(
-                  refreshTokenUrl, refreshTokenJsonData, refreshTokenHashMap, "");
+                  refreshTokenUrl, refreshTokenJsonData, refreshTokenHeader, "");
           String s = checkResponse(true, mResponseModel, HttpURLConnection.HTTP_FORBIDDEN);
           if (s.equalsIgnoreCase("success")) {
-            if (mHeadersData.containsKey("auth")) {
+            if (mHeadersData.containsKey("accessToken") || mHeadersData.containsKey("auth")) {
               String s1 =
                   AppController.getHelperSharedPreference()
                       .readPreference(mContext, mContext.getString(R.string.auth), "");
-              mHeadersData.put("auth", "" + s1);
+              mHeadersData.put("accessToken", "" + s1);
+            }
+            if (mHeadersData.containsKey("accessToken") || mHeadersData.containsKey("auth")) {
+              mHeadersData.put(
+                  AppConfig.CLIENT_TOKEN,
+                  AppController.getHelperSharedPreference()
+                      .readPreference(mContext, mContext.getString(R.string.clientToken), ""));
             }
             switch (mWebserviceType) {
               case "get":
@@ -524,6 +545,14 @@ public class ApiCall<T, V> extends AsyncTask<T, String, String> {
 
   public void onPostExecute(String response) {
     String msg;
+    Log.e(
+        "response",
+        ""
+            + response
+            + "  "
+            + mResponseModel.getServermsg()
+            + "   "
+            + mResponseModel.getResponseCode());
     switch (response) {
       case "timeout":
         msg = mResponseModel.getServermsg();
@@ -623,6 +652,11 @@ public class ApiCall<T, V> extends AsyncTask<T, String, String> {
                   mContext,
                   mContext.getString(R.string.refreshToken),
                   refreshToken.getRefreshToken());
+          AppController.getHelperSharedPreference()
+              .writePreference(
+                  mContext,
+                  mContext.getString(R.string.clientToken),
+                  refreshToken.getClientToken());
         } else {
           response = "error";
         }

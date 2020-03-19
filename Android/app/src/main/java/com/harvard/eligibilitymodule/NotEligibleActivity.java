@@ -28,11 +28,11 @@ import com.harvard.utils.AppController;
 import com.harvard.utils.Logger;
 import com.harvard.utils.URLs;
 import com.harvard.webservicemodule.apihelper.ApiCall;
-import com.harvard.webservicemodule.events.RegistrationServerConfigEvent;
-import java.util.HashMap;
+import com.harvard.webservicemodule.events.RegistrationServerEnrollmentConfigEvent;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import java.util.HashMap;
 
 public class NotEligibleActivity extends AppCompatActivity
     implements ApiCall.OnAsyncRequestComplete {
@@ -61,13 +61,17 @@ public class NotEligibleActivity extends AppCompatActivity
 
     HashMap<String, String> header = new HashMap();
     header.put(
-        "auth",
+        "accessToken",
         AppController.getHelperSharedPreference()
             .readPreference(this, getResources().getString(R.string.auth), ""));
     header.put(
         "userId",
         AppController.getHelperSharedPreference()
             .readPreference(this, getResources().getString(R.string.userid), ""));
+    header.put(
+        "clientToken",
+        AppController.getHelperSharedPreference()
+            .readPreference(this, getResources().getString(R.string.clientToken), ""));
 
     JSONObject jsonObject = new JSONObject();
 
@@ -86,8 +90,8 @@ public class NotEligibleActivity extends AppCompatActivity
     } catch (JSONException e) {
       Logger.log(e);
     }
-    RegistrationServerConfigEvent registrationServerConfigEvent =
-        new RegistrationServerConfigEvent(
+    RegistrationServerEnrollmentConfigEvent registrationServerEnrollmentConfigEvent =
+        new RegistrationServerEnrollmentConfigEvent(
             "post_object",
             URLs.UPDATE_STUDY_PREFERENCE,
             UPDATE_USERPREFERENCE_RESPONSECODE,
@@ -99,7 +103,8 @@ public class NotEligibleActivity extends AppCompatActivity
             false,
             this);
 
-    updatePreferenceEvent.setmRegistrationServerConfigEvent(registrationServerConfigEvent);
+    updatePreferenceEvent.setRegistrationServerEnrollmentConfigEvent(
+        registrationServerEnrollmentConfigEvent);
     UserModulePresenter userModulePresenter = new UserModulePresenter();
     userModulePresenter.performUpdateUserPreference(updatePreferenceEvent);
   }
@@ -108,7 +113,7 @@ public class NotEligibleActivity extends AppCompatActivity
   public <T> void asyncResponse(T response, int responseCode) {
     AppController.getHelperProgressDialog().dismissDialog();
     dbServiceSubscriber.updateStudyPreferenceDB(
-        this, getIntent().getStringExtra("studyId"), StudyFragment.NOT_ELIGIBLE, "", "", "");
+        this, getIntent().getStringExtra("studyId"), StudyFragment.NOT_ELIGIBLE, "", "", "", "");
   }
 
   @Override

@@ -15,7 +15,6 @@
 package com.harvard.eligibilitymodule;
 
 import static com.harvard.studyappmodule.StudyFragment.CONSENT;
-
 import android.content.ComponentName;
 import android.content.Intent;
 import android.os.Bundle;
@@ -40,7 +39,7 @@ import com.harvard.utils.AppController;
 import com.harvard.utils.Logger;
 import com.harvard.utils.URLs;
 import com.harvard.webservicemodule.apihelper.ApiCall;
-import com.harvard.webservicemodule.events.RegistrationServerConfigEvent;
+import com.harvard.webservicemodule.events.RegistrationServerEnrollmentConfigEvent;
 import com.itextpdf.text.Image;
 import com.itextpdf.text.pdf.PdfPCell;
 import io.realm.Realm;
@@ -160,13 +159,17 @@ public class EligibleActivity extends AppCompatActivity implements ApiCall.OnAsy
 
     HashMap<String, String> header = new HashMap();
     header.put(
-        "auth",
+        "accessToken",
         AppController.getHelperSharedPreference()
             .readPreference(this, getResources().getString(R.string.auth), ""));
     header.put(
         "userId",
         AppController.getHelperSharedPreference()
             .readPreference(this, getResources().getString(R.string.userid), ""));
+    header.put(
+        "clientToken",
+        AppController.getHelperSharedPreference()
+            .readPreference(this, getResources().getString(R.string.clientToken), ""));
 
     JSONObject jsonObject = new JSONObject();
 
@@ -185,8 +188,8 @@ public class EligibleActivity extends AppCompatActivity implements ApiCall.OnAsy
     } catch (JSONException e) {
       Logger.log(e);
     }
-    RegistrationServerConfigEvent registrationServerConfigEvent =
-        new RegistrationServerConfigEvent(
+    RegistrationServerEnrollmentConfigEvent registrationServerEnrollmentConfigEvent =
+        new RegistrationServerEnrollmentConfigEvent(
             "post_object",
             URLs.UPDATE_STUDY_PREFERENCE,
             UPDATE_USERPREFERENCE_RESPONSECODE,
@@ -198,7 +201,8 @@ public class EligibleActivity extends AppCompatActivity implements ApiCall.OnAsy
             false,
             this);
 
-    updatePreferenceEvent.setmRegistrationServerConfigEvent(registrationServerConfigEvent);
+    updatePreferenceEvent.setRegistrationServerEnrollmentConfigEvent(
+        registrationServerEnrollmentConfigEvent);
     UserModulePresenter userModulePresenter = new UserModulePresenter();
     userModulePresenter.performUpdateUserPreference(updatePreferenceEvent);
   }
@@ -207,11 +211,14 @@ public class EligibleActivity extends AppCompatActivity implements ApiCall.OnAsy
   public <T> void asyncResponse(T response, int responseCode) {
     AppController.getHelperProgressDialog().dismissDialog();
     dbServiceSubscriber.updateStudyPreferenceDB(
-        this, getIntent().getStringExtra("studyId"), StudyFragment.YET_TO_JOIN, "", "", "");
+        this, getIntent().getStringExtra("studyId"), StudyFragment.YET_TO_JOIN, "", "", "", "");
   }
 
   @Override
   public void asyncResponseFailure(int responseCode, String errormsg, String statusCode) {
     AppController.getHelperProgressDialog().dismissDialog();
+
+    dbServiceSubscriber.updateStudyPreferenceDB(
+        this, getIntent().getStringExtra("studyId"), StudyFragment.YET_TO_JOIN, "", "", "", "");
   }
 }

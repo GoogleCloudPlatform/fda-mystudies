@@ -29,7 +29,7 @@ import com.harvard.utils.AppController;
 import com.harvard.utils.Logger;
 import com.harvard.utils.URLs;
 import com.harvard.webservicemodule.apihelper.ApiCall;
-import com.harvard.webservicemodule.events.RegistrationServerConfigEvent;
+import com.harvard.webservicemodule.events.AuthServerConfigEvent;
 import java.util.HashMap;
 
 public class ForgotPasswordActivity extends AppCompatActivity
@@ -139,8 +139,8 @@ public class ForgotPasswordActivity extends AppCompatActivity
     params.put("emailId", mEmail.getText().toString());
 
     ForgotPasswordEvent forgotPasswordEvent = new ForgotPasswordEvent();
-    RegistrationServerConfigEvent registrationServerConfigEvent =
-        new RegistrationServerConfigEvent(
+    AuthServerConfigEvent authServerConfigEvent =
+        new AuthServerConfigEvent(
             "post",
             URLs.FORGOT_PASSWORD,
             FORGOT_PASSWORD_REQUEST,
@@ -151,7 +151,7 @@ public class ForgotPasswordActivity extends AppCompatActivity
             null,
             false,
             ForgotPasswordActivity.this);
-    forgotPasswordEvent.setmRegistrationServerConfigEvent(registrationServerConfigEvent);
+    forgotPasswordEvent.setAuthServerConfigEvent(authServerConfigEvent);
     UserModulePresenter userModulePresenter = new UserModulePresenter();
     userModulePresenter.performForgotPassword(forgotPasswordEvent);
   }

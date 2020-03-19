@@ -51,10 +51,10 @@ import com.harvard.utils.Logger;
 import com.harvard.utils.SharedPreferenceHelper;
 import com.harvard.utils.URLs;
 import com.harvard.webservicemodule.apihelper.ApiCall;
-import com.harvard.webservicemodule.events.RegistrationServerConfigEvent;
+import com.harvard.webservicemodule.events.AuthServerConfigEvent;
+import java.util.HashMap;
 import io.realm.Realm;
 import io.realm.RealmResults;
-import java.util.HashMap;
 
 public class SurveyActivity extends AppCompatActivity
     implements View.OnClickListener,
@@ -409,11 +409,11 @@ public class SurveyActivity extends AppCompatActivity
                     AppController.getHelperSharedPreference()
                         .readPreference(SurveyActivity.this, getString(R.string.userid), ""));
                 header.put(
-                    "auth",
+                    "accessToken",
                     AppController.getHelperSharedPreference()
                         .readPreference(SurveyActivity.this, getString(R.string.auth), ""));
-                RegistrationServerConfigEvent registrationServerConfigEvent =
-                    new RegistrationServerConfigEvent(
+                AuthServerConfigEvent authServerConfigEvent =
+                    new AuthServerConfigEvent(
                         "delete",
                         URLs.LOGOUT,
                         LOGOUT_REPSONSECODE,
@@ -424,7 +424,7 @@ public class SurveyActivity extends AppCompatActivity
                         null,
                         false,
                         SurveyActivity.this);
-                logoutEvent.setmRegistrationServerConfigEvent(registrationServerConfigEvent);
+                logoutEvent.setAuthServerConfigEvent(authServerConfigEvent);
                 UserModulePresenter userModulePresenter = new UserModulePresenter();
                 userModulePresenter.performLogout(logoutEvent);
               }

@@ -144,8 +144,8 @@ public class SignupActivity extends AppCompatActivity implements ApiCall.OnAsync
           public void updateDrawState(TextPaint ds) {
             ds.setColor(
                 ContextCompat.getColor(
-                    SignupActivity.this, R.color.colorPrimary)); // you can use custom color
-            ds.setUnderlineText(false); // this remove the underline
+                    SignupActivity.this, R.color.colorPrimary));
+            ds.setUnderlineText(false);
           }
 
           @Override
@@ -180,8 +180,8 @@ public class SignupActivity extends AppCompatActivity implements ApiCall.OnAsync
           public void updateDrawState(TextPaint ds) {
             ds.setColor(
                 ContextCompat.getColor(
-                    SignupActivity.this, R.color.colorPrimary)); // you can use custom color
-            ds.setUnderlineText(false); // this remove the underline
+                    SignupActivity.this, R.color.colorPrimary));
+            ds.setUnderlineText(false);
           }
 
           @Override
@@ -369,6 +369,16 @@ public class SignupActivity extends AppCompatActivity implements ApiCall.OnAsync
       if (mRegistrationData != null) {
         mUserID = mRegistrationData.getUserId();
         mUserAuth = mRegistrationData.getAuth();
+        AppController.getHelperSharedPreference()
+            .writePreference(
+                SignupActivity.this,
+                getString(R.string.refreshToken),
+                mRegistrationData.getRefreshToken());
+        AppController.getHelperSharedPreference()
+            .writePreference(
+                SignupActivity.this,
+                getString(R.string.clientToken),
+                mRegistrationData.getClientToken());
         new GetFCMRefreshToken().execute();
       } else {
         Toast.makeText(
@@ -378,7 +388,7 @@ public class SignupActivity extends AppCompatActivity implements ApiCall.OnAsync
     } else if (responseCode == UPDATE_USER_PROFILE) {
       UpdateUserProfileData updateUserProfileData = (UpdateUserProfileData) response;
       if (updateUserProfileData != null) {
-        if (updateUserProfileData.getMessage().equalsIgnoreCase("success")) {
+        if (updateUserProfileData.getMessage().equalsIgnoreCase("Profile Updated successfully")) {
           signup(mRegistrationData);
         } else {
           Toast.makeText(
@@ -395,12 +405,17 @@ public class SignupActivity extends AppCompatActivity implements ApiCall.OnAsync
 
   private void signup(RegistrationData registrationData) {
     if (registrationData != null) {
-      AppController.getHelperSharedPreference()
-          .writePreference(
-              SignupActivity.this,
-              getString(R.string.refreshToken),
-              registrationData.getRefreshToken());
       if (registrationData.isVerified()) {
+        AppController.getHelperSharedPreference()
+            .writePreference(
+                SignupActivity.this,
+                getString(R.string.refreshToken),
+                registrationData.getRefreshToken());
+        AppController.getHelperSharedPreference()
+            .writePreference(
+                SignupActivity.this,
+                getString(R.string.clientToken),
+                registrationData.getClientToken());
         AppController.getHelperSharedPreference()
             .writePreference(
                 SignupActivity.this, getString(R.string.userid), "" + registrationData.getUserId());
@@ -498,7 +513,7 @@ public class SignupActivity extends AppCompatActivity implements ApiCall.OnAsync
     AppController.getHelperProgressDialog().showProgress(SignupActivity.this, "", "", false);
     UpdateUserProfileEvent updateUserProfileEvent = new UpdateUserProfileEvent();
     HashMap<String, String> params = new HashMap<>();
-    params.put("auth", mUserAuth);
+    params.put("accessToken", mUserAuth);
     params.put("userId", mUserID);
 
     JSONObject jsonObjBody = new JSONObject();

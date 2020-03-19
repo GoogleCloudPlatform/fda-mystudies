@@ -66,6 +66,7 @@ import com.harvard.studyappmodule.surveyscheduler.model.CompletionAdeherenceCalc
 import com.harvard.usermodule.webservicemodel.Studies;
 import com.harvard.utils.AppController;
 import com.harvard.utils.Logger;
+import com.harvard.utils.SharedPreferenceHelper;
 import com.harvard.utils.URLs;
 import com.harvard.webservicemodule.apihelper.ApiCall;
 import com.harvard.webservicemodule.apihelper.ConnectionDetector;
@@ -1072,6 +1073,14 @@ public class SurveyDashboardFragment extends Fragment implements ApiCall.OnAsync
                     .getDataSource()
                     .getActivity()
                     .getActivityId());
+            responseInfoActiveTaskModel.setActivityVersion(
+                dashboardData
+                    .getDashboard()
+                    .getCharts()
+                    .get(i)
+                    .getDataSource()
+                    .getActivity()
+                    .getVersion());
             responseInfoActiveTaskModel.setKey(
                 dashboardData.getDashboard().getStatistics().get(i).getDataSource().getKey());
             mArrayList.add(responseInfoActiveTaskModel);
@@ -1104,6 +1113,14 @@ public class SurveyDashboardFragment extends Fragment implements ApiCall.OnAsync
                     .getDataSource()
                     .getActivity()
                     .getActivityId());
+            responseInfoActiveTaskModel.setActivityVersion(
+                dashboardData
+                    .getDashboard()
+                    .getCharts()
+                    .get(i)
+                    .getDataSource()
+                    .getActivity()
+                    .getVersion());
             responseInfoActiveTaskModel.setKey(
                 dashboardData.getDashboard().getCharts().get(i).getDataSource().getKey());
             mArrayList.add(responseInfoActiveTaskModel);
@@ -1245,17 +1262,45 @@ public class SurveyDashboardFragment extends Fragment implements ApiCall.OnAsync
       ConnectionDetector connectionDetector = new ConnectionDetector(mContext);
 
       if (connectionDetector.isConnectingToInternet()) {
+        Realm realm = AppController.getRealmobj(mContext);
+        Studies studies = realm.where(Studies.class).equalTo("studyId", studyId).findFirst();
+
+        HashMap<String, String> header = new HashMap<>();
+        header.put(
+            getString(R.string.clientToken),
+            SharedPreferenceHelper.readPreference(mContext, getString(R.string.clientToken), ""));
+        header.put(
+            "accessToken",
+            SharedPreferenceHelper.readPreference(mContext, getString(R.string.auth), ""));
+        header.put(
+            "userId",
+            SharedPreferenceHelper.readPreference(mContext, getString(R.string.userid), ""));
+
         mResponseModel =
             HttpRequest.getRequest(
                 URLs.PROCESSRESPONSEDATA
-                    + "sql=SELECT%20"
-                    + queryParam
-                    + "%20FROM%20%22"
-                    + id
-                    + "%22&participantId="
-                    + participateId,
-                new HashMap<String, String>(),
+                    + AppConfig.ORG_ID_KEY
+                    + "="
+                    + AppConfig.ORG_ID_VALUE
+                    + "&"
+                    + AppConfig.APP_ID_KEY
+                    + "="
+                    + AppConfig.APP_ID_VALUE
+                    + "&participantId="
+                    + participateId
+                    + "&tokenIdentifier="
+                    + studies.getHashedToken()
+                    + "&siteId="
+                    + studies.getSiteId()
+                    + "&studyId="
+                    + studies.getStudyId()
+                    + "&activityId="
+                    + responseInfoActiveTaskModel.getActivityId()
+                    + "&activityVersion="
+                    + responseInfoActiveTaskModel.getActivityVersion(),
+                header,
                 "Response");
+        dbServiceSubscriber.closeRealmObj(realm);
         responseCode = mResponseModel.getResponseCode();
         response = mResponseModel.getResponseData();
         if (responseCode.equalsIgnoreCase("0") && response.equalsIgnoreCase("timeout")) {

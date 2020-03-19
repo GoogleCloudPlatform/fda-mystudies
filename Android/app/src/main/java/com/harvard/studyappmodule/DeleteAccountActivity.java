@@ -46,13 +46,13 @@ import com.harvard.webservicemodule.apihelper.ApiCallResponseServer;
 import com.harvard.webservicemodule.events.RegistrationServerConfigEvent;
 import com.harvard.webservicemodule.events.ResponseServerConfigEvent;
 import com.harvard.webservicemodule.events.WCPConfigEvent;
-import io.realm.Realm;
-import io.realm.RealmResults;
-import java.util.ArrayList;
-import java.util.HashMap;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import java.util.ArrayList;
+import java.util.HashMap;
+import io.realm.Realm;
+import io.realm.RealmResults;
 
 public class DeleteAccountActivity extends AppCompatActivity
     implements ApiCall.OnAsyncRequestComplete, ApiCallResponseServer.OnAsyncRequestComplete {
@@ -404,7 +404,7 @@ public class DeleteAccountActivity extends AppCompatActivity
   public void deactivateAccount() {
     HashMap<String, String> header = new HashMap();
     header.put(
-        "auth",
+        "accessToken",
         AppController.getHelperSharedPreference()
             .readPreference(
                 DeleteAccountActivity.this, getResources().getString(R.string.auth), ""));
@@ -425,6 +425,7 @@ public class DeleteAccountActivity extends AppCompatActivity
         for (int i = 0; i < mRealmStudie.size(); i++) {
           jsonArray1.put(mRealmStudie.get(i).getStudyId());
         }
+        //        jsonArray1.put("Test");
         obj.put("deleteData", jsonArray1);
       }
     } catch (JSONException e) {
@@ -433,7 +434,7 @@ public class DeleteAccountActivity extends AppCompatActivity
     try {
       RegistrationServerConfigEvent registrationServerConfigEvent =
           new RegistrationServerConfigEvent(
-              "delete",
+              "delete_object",
               URLs.DELETE_ACCOUNT,
               DELETE_ACCOUNT_REPSONSECODE,
               DeleteAccountActivity.this,

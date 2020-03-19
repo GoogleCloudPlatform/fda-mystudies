@@ -81,7 +81,7 @@ import com.harvard.studyappmodule.studymodel.StudyUpdateListdata;
 import com.harvard.studyappmodule.surveyscheduler.SurveyScheduler;
 import com.harvard.studyappmodule.surveyscheduler.model.ActivityStatus;
 import com.harvard.usermodule.UserModulePresenter;
-import com.harvard.usermodule.event.GetPreferenceEvent;
+import com.harvard.usermodule.event.ActivityStateEvent;
 import com.harvard.usermodule.event.UpdatePreferenceEvent;
 import com.harvard.usermodule.webservicemodel.Activities;
 import com.harvard.usermodule.webservicemodel.ActivityData;
@@ -91,12 +91,14 @@ import com.harvard.usermodule.webservicemodel.StudyData;
 import com.harvard.utils.AppController;
 import com.harvard.utils.Logger;
 import com.harvard.utils.SetDialogHelper;
+import com.harvard.utils.SharedPreferenceHelper;
 import com.harvard.utils.URLs;
 import com.harvard.webservicemodule.apihelper.ApiCall;
 import com.harvard.webservicemodule.apihelper.ConnectionDetector;
 import com.harvard.webservicemodule.apihelper.HttpRequest;
 import com.harvard.webservicemodule.apihelper.Responsemodel;
-import com.harvard.webservicemodule.events.RegistrationServerConfigEvent;
+import com.harvard.webservicemodule.events.RegistrationServerEnrollmentConfigEvent;
+import com.harvard.webservicemodule.events.ResponseServerConfigEvent;
 import com.harvard.webservicemodule.events.WCPConfigEvent;
 import io.realm.Realm;
 import io.realm.RealmList;
@@ -637,19 +639,52 @@ public class SurveyActivitiesFragment extends Fragment
       activityListData = (ActivityListData) response;
       activityListData.setStudyId(((SurveyActivity) mContext).getStudyId());
 
-      GetPreferenceEvent getPreferenceEvent = new GetPreferenceEvent();
+      ActivityStateEvent activityStateEvent = new ActivityStateEvent();
       HashMap<String, String> header = new HashMap();
       header.put(
-          "auth",
+          "accessToken",
           AppController.getHelperSharedPreference()
               .readPreference(mContext, mContext.getResources().getString(R.string.auth), ""));
       header.put(
           "userId",
           AppController.getHelperSharedPreference()
               .readPreference(mContext, mContext.getResources().getString(R.string.userid), ""));
+      header.put(
+          "clientToken",
+          AppController.getHelperSharedPreference()
+              .readPreference(
+                  mContext, mContext.getResources().getString(R.string.clientToken), ""));
+
+      //      ActivityData activityData1 = new ActivityData();
+      //      activityData1.setActivities(new RealmList<Activities>());
+      //      activityData1.setStudyId(((SurveyActivity) mContext).getStudyId());
+      //      ActivityData activityData = new ActivityData();
+      //      RealmList<Activities> activities = new RealmList<>();
+      //      activityData.setMessage(activityData1.getMessage());
+      //      activityData.setActivities(activities);
+      //      activityData.setStudyId(((SurveyActivity) mContext).getStudyId());
+      //      activityDataDB =
+      //          dbServiceSubscriber.getActivityPreference(
+      //              ((SurveyActivity) mContext).getStudyId(), mRealm);
+      //      if (activityDataDB == null) {
+      //        for (int i = 0; i < activityData1.getActivities().size(); i++) {
+      //          activityData1.getActivities().get(i).setStudyId(((SurveyActivity)
+      // mContext).getStudyId());
+      //          if (activityData1.getActivities().get(i).getActivityVersion() != null) {
+      //            activityData.getActivities().add(activityData1.getActivities().get(i));
+      //          }
+      //        }
+      //        dbServiceSubscriber.updateActivityState(mContext, activityData);
+      //        activityDataDB =
+      //            dbServiceSubscriber.getActivityPreference(
+      //                ((SurveyActivity) mContext).getStudyId(), mRealm);
+      //      }
+      //
+      //      calculateStartAnsEndDateForActivities();
+
       String url = URLs.ACTIVITY_STATE + "?studyId=" + ((SurveyActivity) mContext).getStudyId();
-      RegistrationServerConfigEvent registrationServerConfigEvent =
-          new RegistrationServerConfigEvent(
+      ResponseServerConfigEvent responseServerConfigEvent =
+          new ResponseServerConfigEvent(
               "get",
               url,
               GET_PREFERENCES,
@@ -661,9 +696,9 @@ public class SurveyActivitiesFragment extends Fragment
               false,
               this);
 
-      getPreferenceEvent.setmRegistrationServerConfigEvent(registrationServerConfigEvent);
+      activityStateEvent.setResponseServerConfigEvent(responseServerConfigEvent);
       UserModulePresenter userModulePresenter = new UserModulePresenter();
-      userModulePresenter.performGetUserPreference(getPreferenceEvent);
+      userModulePresenter.performActivityState(activityStateEvent);
 
     } else if (responseCode == GET_PREFERENCES) {
       ActivityData activityData1 = (ActivityData) response;
@@ -805,6 +840,8 @@ public class SurveyActivitiesFragment extends Fragment
                   activityListData.getActivities().get(i).getAnchorDate().getSourceType());
               anchorDateSchedulingDetails.setStudyId(((SurveyActivity) mContext).getStudyId());
               anchorDateSchedulingDetails.setParticipantId(studies.getParticipantId());
+              anchorDateSchedulingDetails.setActivityVersion(
+                  activityListData.getActivities().get(i).getActivityVersion());
               anchorDateSchedulingDetails.setTargetActivityId(
                   activityListData.getActivities().get(i).getActivityId());
 
@@ -830,6 +867,8 @@ public class SurveyActivitiesFragment extends Fragment
               anchorDateSchedulingDetails.setParticipantId(studies.getParticipantId());
               anchorDateSchedulingDetails.setTargetActivityId(
                   activityListData.getActivities().get(i).getActivityId());
+              anchorDateSchedulingDetails.setActivityVersion(
+                  activityListData.getActivities().get(i).getActivityVersion());
               anchorDateSchedulingDetails.setAnchorDate(studies.getEnrolledDate());
               mArrayList.add(anchorDateSchedulingDetails);
             }
@@ -1715,9 +1754,10 @@ public class SurveyActivitiesFragment extends Fragment
             dbServiceSubscriber.getActivityPreference(
                 ((SurveyActivity) mContext).getStudyId(), mRealm);
 
-        Date joiningDate =
-            survayScheduler.getJoiningDateOfStudy(
-                studyPreferences, ((SurveyActivity) mContext).getStudyId());
+        //        Date joiningDate =
+        //            survayScheduler.getJoiningDateOfStudy(
+        //                studyPreferences, ((SurveyActivity) mContext).getStudyId());
+        Date joiningDate = new Date();
 
         Date currentDate = new Date();
 
@@ -2343,13 +2383,17 @@ public class SurveyActivitiesFragment extends Fragment
 
     HashMap<String, String> header = new HashMap();
     header.put(
-        "auth",
+        "accessToken",
         AppController.getHelperSharedPreference()
             .readPreference(mContext, mContext.getResources().getString(R.string.auth), ""));
     header.put(
         "userId",
         AppController.getHelperSharedPreference()
             .readPreference(mContext, mContext.getResources().getString(R.string.userid), ""));
+    header.put(
+        "clientToken",
+        AppController.getHelperSharedPreference()
+            .readPreference(mContext, mContext.getResources().getString(R.string.clientToken), ""));
 
     JSONObject jsonObject = new JSONObject();
 
@@ -2370,8 +2414,8 @@ public class SurveyActivitiesFragment extends Fragment
     } catch (JSONException e) {
       Logger.log(e);
     }
-    RegistrationServerConfigEvent registrationServerConfigEvent =
-        new RegistrationServerConfigEvent(
+    RegistrationServerEnrollmentConfigEvent registrationServerEnrollmentConfigEvent =
+        new RegistrationServerEnrollmentConfigEvent(
             "post_object",
             URLs.UPDATE_STUDY_PREFERENCE,
             UPDATE_STUDY_PREFERENCE,
@@ -2383,7 +2427,8 @@ public class SurveyActivitiesFragment extends Fragment
             false,
             this);
 
-    updatePreferenceEvent.setmRegistrationServerConfigEvent(registrationServerConfigEvent);
+    updatePreferenceEvent.setRegistrationServerEnrollmentConfigEvent(
+        registrationServerEnrollmentConfigEvent);
     UserModulePresenter userModulePresenter = new UserModulePresenter();
     userModulePresenter.performUpdateUserPreference(updatePreferenceEvent);
   }
@@ -2736,7 +2781,9 @@ public class SurveyActivitiesFragment extends Fragment
   }
 
   public boolean hasPermissions(String[] permissions) {
-    if (android.os.Build.VERSION.SDK_INT >= VERSION_CODES.M && mContext != null && permissions != null) {
+    if (android.os.Build.VERSION.SDK_INT >= VERSION_CODES.M
+        && mContext != null
+        && permissions != null) {
       for (String permission : permissions) {
         if (ActivityCompat.checkSelfPermission(mContext, permission)
             != PackageManager.PERMISSION_GRANTED) {
@@ -2749,18 +2796,25 @@ public class SurveyActivitiesFragment extends Fragment
 
   public void updateUserPreference(
       String studyId, String status, String activityId, int activityRunId) {
-    UpdatePreferenceEvent updatePreferenceEvent = new UpdatePreferenceEvent();
+    ActivityStateEvent activityStateEvent = new ActivityStateEvent();
     AppController.getHelperProgressDialog().showProgress(mContext, "", "", false);
     HashMap<String, String> header = new HashMap();
+    Realm realm = AppController.getRealmobj(mContext);
+    Studies mStudies = dbServiceSubscriber.getStudies(studyId, realm);
     header.put(
-        "auth",
+        "accessToken",
         AppController.getHelperSharedPreference()
             .readPreference(mContext, mContext.getResources().getString(R.string.auth), ""));
     header.put(
         "userId",
         AppController.getHelperSharedPreference()
             .readPreference(mContext, mContext.getResources().getString(R.string.userid), ""));
-
+    header.put(
+        "clientToken",
+        AppController.getHelperSharedPreference()
+            .readPreference(mContext, mContext.getResources().getString(R.string.clientToken), ""));
+    header.put("participantId", mStudies.getParticipantId());
+    dbServiceSubscriber.closeRealmObj(realm);
     JSONObject jsonObject = new JSONObject();
 
     JSONArray activitylist = new JSONArray();
@@ -2829,8 +2883,8 @@ public class SurveyActivitiesFragment extends Fragment
     }
     //////////
 
-    RegistrationServerConfigEvent registrationServerConfigEvent =
-        new RegistrationServerConfigEvent(
+    ResponseServerConfigEvent responseServerConfigEvent =
+        new ResponseServerConfigEvent(
             "post_object",
             URLs.UPDATE_ACTIVITY_PREFERENCE,
             UPDATE_USERPREFERENCE_RESPONSECODE,
@@ -2842,9 +2896,9 @@ public class SurveyActivitiesFragment extends Fragment
             false,
             this);
 
-    updatePreferenceEvent.setmRegistrationServerConfigEvent(registrationServerConfigEvent);
+    activityStateEvent.setResponseServerConfigEvent(responseServerConfigEvent);
     UserModulePresenter userModulePresenter = new UserModulePresenter();
-    userModulePresenter.performUpdateUserPreference(updatePreferenceEvent);
+    userModulePresenter.performActivityState(activityStateEvent);
   }
 
   @Override
@@ -2891,18 +2945,61 @@ public class SurveyActivitiesFragment extends Fragment
       ConnectionDetector connectionDetector = new ConnectionDetector(mContext);
 
       if (connectionDetector.isConnectingToInternet()) {
+        //        mResponseModel =
+        //            HttpRequest.getRequest(
+        //                URLs.PROCESSRESPONSEDATA
+        //                    + "sql=SELECT%20%22"
+        //                    + anchorDateSchedulingDetails.getSourceKey()
+        //                    + "%22%20FROM%20%22"
+        //                    + anchorDateSchedulingDetails.getSourceActivityId()
+        //                    + anchorDateSchedulingDetails.getSourceFormKey()
+        //                    + "%22&participantId="
+        //                    + anchorDateSchedulingDetails.getParticipantId(),
+        //                new HashMap<String, String>(),
+        //                "Response");
+        Realm realm = AppController.getRealmobj(mContext);
+        Studies studies =
+            realm
+                .where(Studies.class)
+                .equalTo("studyId", anchorDateSchedulingDetails.getStudyId())
+                .findFirst();
+
+        HashMap<String, String> header = new HashMap<>();
+        header.put(
+            getString(R.string.clientToken),
+            SharedPreferenceHelper.readPreference(mContext, getString(R.string.clientToken), ""));
+        header.put(
+            "accessToken",
+            SharedPreferenceHelper.readPreference(mContext, getString(R.string.auth), ""));
+        header.put(
+            "userId",
+            SharedPreferenceHelper.readPreference(mContext, getString(R.string.userid), ""));
+
         mResponseModel =
             HttpRequest.getRequest(
                 URLs.PROCESSRESPONSEDATA
-                    + "sql=SELECT%20%22"
-                    + anchorDateSchedulingDetails.getSourceKey()
-                    + "%22%20FROM%20%22"
+                    + AppConfig.ORG_ID_KEY
+                    + "="
+                    + AppConfig.ORG_ID_VALUE
+                    + "&"
+                    + AppConfig.APP_ID_KEY
+                    + "="
+                    + AppConfig.APP_ID_VALUE
+                    + "&participantId="
+                    + anchorDateSchedulingDetails.getParticipantId()
+                    + "&tokenIdentifier="
+                    + studies.getHashedToken()
+                    + "&siteId="
+                    + studies.getSiteId()
+                    + "&studyId="
+                    + studies.getStudyId()
+                    + "&activityId="
                     + anchorDateSchedulingDetails.getSourceActivityId()
-                    + anchorDateSchedulingDetails.getSourceFormKey()
-                    + "%22&participantId="
-                    + anchorDateSchedulingDetails.getParticipantId(),
-                new HashMap<String, String>(),
+                    + "&activityVersion="
+                    + anchorDateSchedulingDetails.getActivityVersion(),
+                header,
                 "Response");
+        dbServiceSubscriber.closeRealmObj(realm);
         responseCode = mResponseModel.getResponseCode();
         response = mResponseModel.getResponseData();
         if (responseCode.equalsIgnoreCase("0") && response.equalsIgnoreCase("timeout")) {

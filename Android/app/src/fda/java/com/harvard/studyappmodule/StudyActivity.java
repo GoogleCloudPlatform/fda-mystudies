@@ -63,11 +63,11 @@ import com.harvard.utils.SetDialogHelper;
 import com.harvard.utils.SharedPreferenceHelper;
 import com.harvard.utils.URLs;
 import com.harvard.webservicemodule.apihelper.ApiCall;
-import com.harvard.webservicemodule.events.RegistrationServerConfigEvent;
+import com.harvard.webservicemodule.events.AuthServerConfigEvent;
+import java.util.HashMap;
 import io.realm.Realm;
 import io.realm.RealmList;
 import io.realm.RealmResults;
-import java.util.HashMap;
 
 public class StudyActivity extends AppCompatActivity
     implements View.OnClickListener, ApiCall.OnAsyncRequestComplete {
@@ -270,13 +270,13 @@ public class StudyActivity extends AppCompatActivity
                       Logger.log(e);
                     }
                     if (studyListArrayList
-                        .get(i)
-                        .getStatus()
-                        .equalsIgnoreCase(getString(R.string.active))
+                            .get(i)
+                            .getStatus()
+                            .equalsIgnoreCase(getString(R.string.active))
                         && studyListArrayList
-                        .get(i)
-                        .getStudyStatus()
-                        .equalsIgnoreCase(StudyFragment.IN_PROGRESS)) {
+                            .get(i)
+                            .getStudyStatus()
+                            .equalsIgnoreCase(StudyFragment.IN_PROGRESS)) {
                       Intent intent = new Intent(StudyActivity.this, SurveyActivity.class);
                       intent.putExtra("studyId", studyId);
                       startActivity(intent);
@@ -382,13 +382,13 @@ public class StudyActivity extends AppCompatActivity
                       Logger.log(e);
                     }
                     if (studyListArrayList
-                        .get(i)
-                        .getStatus()
-                        .equalsIgnoreCase(getString(R.string.active))
+                            .get(i)
+                            .getStatus()
+                            .equalsIgnoreCase(getString(R.string.active))
                         && studyListArrayList
-                        .get(i)
-                        .getStudyStatus()
-                        .equalsIgnoreCase(StudyFragment.IN_PROGRESS)) {
+                            .get(i)
+                            .getStudyStatus()
+                            .equalsIgnoreCase(StudyFragment.IN_PROGRESS)) {
                       if (subType.equalsIgnoreCase("Resource")) {
                         mStudyFragment.getStudyUpdate(
                             studyListArrayList.get(i).getStudyId(),
@@ -528,11 +528,9 @@ public class StudyActivity extends AppCompatActivity
     mSearchEditText.addTextChangedListener(
         new TextWatcher() {
 
-          public void afterTextChanged(Editable s) {
-          }
+          public void afterTextChanged(Editable s) {}
 
-          public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-          }
+          public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
 
           public void onTextChanged(CharSequence s, int start, int before, int count) {
             if (s.length() > 0) {
@@ -555,9 +553,9 @@ public class StudyActivity extends AppCompatActivity
                 hideKeyboard();
               } else {
                 Toast.makeText(
-                    StudyActivity.this,
-                    getResources().getString(R.string.please_enter_key),
-                    Toast.LENGTH_LONG)
+                        StudyActivity.this,
+                        getResources().getString(R.string.please_enter_key),
+                        Toast.LENGTH_LONG)
                     .show();
               }
               return true;
@@ -598,8 +596,7 @@ public class StudyActivity extends AppCompatActivity
     mDrawer.addDrawerListener(
         new DrawerLayout.DrawerListener() {
           @Override
-          public void onDrawerSlide(View drawerView, float slideOffset) {
-          }
+          public void onDrawerSlide(View drawerView, float slideOffset) {}
 
           @Override
           public void onDrawerOpened(View drawerView) {
@@ -607,12 +604,10 @@ public class StudyActivity extends AppCompatActivity
           }
 
           @Override
-          public void onDrawerClosed(View drawerView) {
-          }
+          public void onDrawerClosed(View drawerView) {}
 
           @Override
-          public void onDrawerStateChanged(int newState) {
-          }
+          public void onDrawerStateChanged(int newState) {}
         });
 
     mInfoIcon.setOnClickListener(
@@ -814,14 +809,13 @@ public class StudyActivity extends AppCompatActivity
                     if (mEditTxt
                         .getText()
                         .toString()
-                        .equalsIgnoreCase(getResources().getString(R.string.edit))) {
+                        .equalsIgnoreCase(getResources().getString(R.string.edit)))
                       enableEditText();
-                    } else if (mEditTxt
+                    else if (mEditTxt
                         .getText()
                         .toString()
-                        .equalsIgnoreCase(getResources().getString(R.string.cancel))) {
+                        .equalsIgnoreCase(getResources().getString(R.string.cancel)))
                       disableEditText();
-                    }
                   }
                 });
             closeDrawer();
@@ -936,11 +930,11 @@ public class StudyActivity extends AppCompatActivity
                     AppController.getHelperSharedPreference()
                         .readPreference(StudyActivity.this, getString(R.string.userid), ""));
                 header.put(
-                    "auth",
+                    "accessToken",
                     AppController.getHelperSharedPreference()
                         .readPreference(StudyActivity.this, getString(R.string.auth), ""));
-                RegistrationServerConfigEvent registrationServerConfigEvent =
-                    new RegistrationServerConfigEvent(
+                AuthServerConfigEvent authServerConfigEvent =
+                    new AuthServerConfigEvent(
                         "delete",
                         URLs.LOGOUT,
                         LOGOUT_REPSONSECODE,
@@ -951,7 +945,7 @@ public class StudyActivity extends AppCompatActivity
                         null,
                         false,
                         StudyActivity.this);
-                logoutEvent.setmRegistrationServerConfigEvent(registrationServerConfigEvent);
+                logoutEvent.setAuthServerConfigEvent(authServerConfigEvent);
                 UserModulePresenter userModulePresenter = new UserModulePresenter();
                 userModulePresenter.performLogout(logoutEvent);
               }
@@ -1007,9 +1001,7 @@ public class StudyActivity extends AppCompatActivity
       settings.edit().clear().apply();
       // delete passcode from keystore
       String pass = AppController.refreshKeys("passcode");
-      if (pass != null) {
-        AppController.deleteKey("passcode_" + pass);
-      }
+      if (pass != null) AppController.deleteKey("passcode_" + pass);
 
       try {
         NotificationModuleSubscriber notificationModuleSubscriber =
@@ -1173,9 +1165,7 @@ public class StudyActivity extends AppCompatActivity
 
   @Override
   protected void onDestroy() {
-    if (dbServiceSubscriber != null && mRealm != null) {
-      dbServiceSubscriber.closeRealmObj(mRealm);
-    }
+    if (dbServiceSubscriber != null && mRealm != null) dbServiceSubscriber.closeRealmObj(mRealm);
     super.onDestroy();
   }
 

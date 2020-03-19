@@ -18,6 +18,7 @@
     <string name="view_consent">View Consent</string>
     <string name="visit_website">Visit Website</string>
     <string name="join_study">Join Study</string>
+    <string name="clientToken">clientToken</string>
 
     <!--must change strings-->
     <string name="FileProvider_authorities">com.myfileprovider</string>

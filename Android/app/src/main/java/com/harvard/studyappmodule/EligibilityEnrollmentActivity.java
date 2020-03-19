@@ -24,17 +24,18 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 import com.harvard.R;
+import com.harvard.studyappmodule.enroll.EnrollData;
 import com.harvard.studyappmodule.events.VerifyEnrollmentIdEvent;
-import com.harvard.studyappmodule.responseservermodel.ResponseServerData;
 import com.harvard.utils.AppController;
 import com.harvard.utils.Logger;
+import com.harvard.utils.SharedPreferenceHelper;
 import com.harvard.utils.URLs;
-import com.harvard.webservicemodule.apihelper.ApiCallResponseServer;
-import com.harvard.webservicemodule.events.ResponseServerConfigEvent;
+import com.harvard.webservicemodule.apihelper.ApiCall;
+import com.harvard.webservicemodule.events.RegistrationServerEnrollmentConfigEvent;
 import java.util.HashMap;
 
 public class EligibilityEnrollmentActivity extends AppCompatActivity
-    implements ApiCallResponseServer.OnAsyncRequestComplete {
+    implements ApiCall.OnAsyncRequestComplete {
 
   private static final int VERIFY_ENROLLMENT_ID = 101;
 
@@ -125,30 +126,58 @@ public class EligibilityEnrollmentActivity extends AppCompatActivity
     params.put("studyId", "" + getIntent().getStringExtra("studyId"));
     params.put("token", mEnrollmentID.getText().toString());
 
-    ResponseServerConfigEvent responseServerConfigEvent =
-        new ResponseServerConfigEvent(
+    HashMap<String, String> header = new HashMap<>();
+    header.put(
+        "userId",
+        SharedPreferenceHelper.readPreference(
+            EligibilityEnrollmentActivity.this, getString(R.string.userid), ""));
+    header.put(
+        "clientToken",
+        SharedPreferenceHelper.readPreference(
+            EligibilityEnrollmentActivity.this, getString(R.string.clientToken), ""));
+    header.put(
+        "accessToken",
+        SharedPreferenceHelper.readPreference(
+            EligibilityEnrollmentActivity.this, getString(R.string.auth), ""));
+
+    RegistrationServerEnrollmentConfigEvent registrationServerEnrollmentConfigEvent =
+        new RegistrationServerEnrollmentConfigEvent(
             "post_json",
             URLs.VALIDATE_ENROLLMENT_ID,
             VERIFY_ENROLLMENT_ID,
             EligibilityEnrollmentActivity.this,
-            ResponseServerData.class,
+            EnrollData.class,
             params,
-            null,
+            header,
             null,
             false,
             EligibilityEnrollmentActivity.this);
 
-    verifyEnrollmentIdEvent.setResponseServerConfigEvent(responseServerConfigEvent);
+    verifyEnrollmentIdEvent.setRegistrationServerEnrollmentConfigEvent(
+        registrationServerEnrollmentConfigEvent);
     StudyModulePresenter studyModulePresenter = new StudyModulePresenter();
     studyModulePresenter.performVerifyEnrollmentId(verifyEnrollmentIdEvent);
   }
 
   @Override
-  public <T> void asyncResponse(T response, int responseCode, String serverType) {
+  protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+    super.onActivityResult(requestCode, resultCode, data);
+    if (requestCode == 12345) {
+      if (resultCode == RESULT_OK) {
+        Intent intent = new Intent();
+        intent.putExtra("enrollId", "" + mEnteredId);
+        setResult(RESULT_OK, intent);
+        finish();
+      }
+    }
+  }
+
+  @Override
+  public <T> void asyncResponse(T response, int responseCode) {
     AppController.getHelperProgressDialog().dismissDialog();
     if (responseCode == VERIFY_ENROLLMENT_ID) {
-      ResponseServerData responseServerData = (ResponseServerData) response;
-      if (responseServerData != null) {
+      EnrollData enrollData = (EnrollData) response;
+      if (enrollData != null) {
 
         Intent intent = new Intent(this, EnrollmentValidatedActivity.class);
         intent.putExtra("enrollId", mEnrollmentID.getText().toString());
@@ -174,27 +203,8 @@ public class EligibilityEnrollmentActivity extends AppCompatActivity
   }
 
   @Override
-  protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-    super.onActivityResult(requestCode, resultCode, data);
-    if (requestCode == 12345) {
-      if (resultCode == RESULT_OK) {
-        Intent intent = new Intent();
-        intent.putExtra("enrollId", "" + mEnteredId);
-        setResult(RESULT_OK, intent);
-        finish();
-      }
-    }
-  }
-
-  @Override
-  public <T> void asyncResponseFailure(
-      int responseCode, String errormsg, String statusCode, T response) {
+  public void asyncResponseFailure(int responseCode, String errormsg, String statusCode) {
     AppController.getHelperProgressDialog().dismissDialog();
-    ResponseServerData responseServerData = (ResponseServerData) response;
-    if (responseServerData != null) {
-      Toast.makeText(this, responseServerData.getException().toString(), Toast.LENGTH_SHORT).show();
-    } else {
-      Toast.makeText(this, R.string.unable_to_parse, Toast.LENGTH_SHORT).show();
-    }
+    Toast.makeText(this, errormsg, Toast.LENGTH_SHORT).show();
   }
 }

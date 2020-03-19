@@ -62,21 +62,22 @@ import com.harvard.webservicemodule.apihelper.ApiCall;
 import com.harvard.webservicemodule.apihelper.ConnectionDetector;
 import com.harvard.webservicemodule.apihelper.HttpRequest;
 import com.harvard.webservicemodule.apihelper.Responsemodel;
-import com.harvard.webservicemodule.events.RegistrationServerConfigEvent;
+import com.harvard.webservicemodule.events.RegistrationServerConsentConfigEvent;
+import com.harvard.webservicemodule.events.RegistrationServerEnrollmentConfigEvent;
 import com.harvard.webservicemodule.events.WCPConfigEvent;
 import com.itextpdf.text.Image;
 import com.itextpdf.text.pdf.PdfPCell;
-import io.realm.Realm;
-import io.realm.RealmList;
-import io.realm.RealmObject;
+import org.researchstack.backbone.step.Step;
+import org.researchstack.backbone.task.OrderedTask;
+import org.researchstack.backbone.task.Task;
 import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import org.researchstack.backbone.step.Step;
-import org.researchstack.backbone.task.OrderedTask;
-import org.researchstack.backbone.task.Task;
+import io.realm.Realm;
+import io.realm.RealmList;
+import io.realm.RealmObject;
 
 public class StandaloneActivity extends AppCompatActivity
     implements ApiCall.OnAsyncRequestComplete {
@@ -197,7 +198,7 @@ public class StandaloneActivity extends AppCompatActivity
             GetPreferenceEvent getPreferenceEvent = new GetPreferenceEvent();
             HashMap<String, String> header = new HashMap();
             header.put(
-                "auth",
+                "accessToken",
                 AppController.getHelperSharedPreference()
                     .readPreference(
                         StandaloneActivity.this, getResources().getString(R.string.auth), ""));
@@ -206,8 +207,16 @@ public class StandaloneActivity extends AppCompatActivity
                 AppController.getHelperSharedPreference()
                     .readPreference(
                         StandaloneActivity.this, getResources().getString(R.string.userid), ""));
-            RegistrationServerConfigEvent registrationServerConfigEvent =
-                new RegistrationServerConfigEvent(
+            header.put(
+                "clientToken",
+                AppController.getHelperSharedPreference()
+                    .readPreference(
+                        StandaloneActivity.this,
+                        getResources().getString(R.string.clientToken),
+                        ""));
+
+            RegistrationServerEnrollmentConfigEvent registrationServerEnrollmentConfigEvent =
+                new RegistrationServerEnrollmentConfigEvent(
                     "get",
                     URLs.STUDY_STATE,
                     GET_PREFERENCES,
@@ -219,7 +228,8 @@ public class StandaloneActivity extends AppCompatActivity
                     false,
                     this);
 
-            getPreferenceEvent.setmRegistrationServerConfigEvent(registrationServerConfigEvent);
+            getPreferenceEvent.setRegistrationServerEnrollmentConfigEvent(
+                registrationServerEnrollmentConfigEvent);
             UserModulePresenter userModulePresenter = new UserModulePresenter();
             userModulePresenter.performGetUserPreference(getPreferenceEvent);
           } else {
@@ -838,7 +848,7 @@ public class StandaloneActivity extends AppCompatActivity
     ConsentPDFEvent consentPDFEvent = new ConsentPDFEvent();
     HashMap<String, String> header = new HashMap<>();
     header.put(
-        "auth",
+        "accessToken",
         AppController.getHelperSharedPreference()
             .readPreference(StandaloneActivity.this, getResources().getString(R.string.auth), ""));
     header.put(
@@ -847,8 +857,8 @@ public class StandaloneActivity extends AppCompatActivity
             .readPreference(
                 StandaloneActivity.this, getResources().getString(R.string.userid), ""));
     String url = URLs.CONSENTPDF + "?studyId=" + mStudyId + "&consentVersion=";
-    RegistrationServerConfigEvent registrationServerConfigEvent =
-        new RegistrationServerConfigEvent(
+    RegistrationServerConsentConfigEvent registrationServerConsentConfigEvent =
+        new RegistrationServerConsentConfigEvent(
             "get",
             url,
             CONSENTPDF,
@@ -859,7 +869,7 @@ public class StandaloneActivity extends AppCompatActivity
             null,
             false,
             StandaloneActivity.this);
-    consentPDFEvent.setmRegistrationServerConfigEvent(registrationServerConfigEvent);
+    consentPDFEvent.setRegistrationServerConsentConfigEvent(registrationServerConsentConfigEvent);
     UserModulePresenter userModulePresenter = new UserModulePresenter();
     userModulePresenter.performConsentPDF(consentPDFEvent);
   }
@@ -1276,61 +1286,61 @@ public class StandaloneActivity extends AppCompatActivity
       try {
         studyListArrayList.addAll(closed);
       } catch (Exception e) {
-          Logger.log(e);
+        Logger.log(e);
       }
 
       try {
         studyListArrayList.addAll(others);
       } catch (Exception e) {
-          Logger.log(e);
+        Logger.log(e);
       }
     }
 
     try {
       completionAdeherenceCalcs.clear();
     } catch (Exception e) {
-        Logger.log(e);
+      Logger.log(e);
     }
     try {
       completionAdeherenceCalcs.addAll(activeInprogressCompletionAdeherenceCalc);
     } catch (Exception e) {
-        Logger.log(e);
+      Logger.log(e);
     }
 
     try {
       completionAdeherenceCalcs.addAll(activeYetToJoinCompletionAdeherenceCalc);
     } catch (Exception e) {
-        Logger.log(e);
+      Logger.log(e);
     }
 
     try {
       completionAdeherenceCalcs.addAll(activeOthersCompletionAdeherenceCalc);
     } catch (Exception e) {
-        Logger.log(e);
+      Logger.log(e);
     }
 
     try {
       completionAdeherenceCalcs.addAll(upComingCompletionAdeherenceCalc);
     } catch (Exception e) {
-        Logger.log(e);
+      Logger.log(e);
     }
 
     try {
       completionAdeherenceCalcs.addAll(pausedCompletionAdeherenceCalc);
     } catch (Exception e) {
-        Logger.log(e);
+      Logger.log(e);
     }
 
     try {
       completionAdeherenceCalcs.addAll(closedCompletionAdeherenceCalc);
     } catch (Exception e) {
-        Logger.log(e);
+      Logger.log(e);
     }
 
     try {
       completionAdeherenceCalcs.addAll(othersCompletionAdeherenceCalc);
     } catch (Exception e) {
-        Logger.log(e);
+      Logger.log(e);
     }
 
     activeInprogress.clear();

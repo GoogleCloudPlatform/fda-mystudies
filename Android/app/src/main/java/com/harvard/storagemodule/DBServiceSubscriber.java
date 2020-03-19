@@ -49,15 +49,15 @@ import com.harvard.usermodule.webservicemodel.StudyData;
 import com.harvard.usermodule.webservicemodel.UserProfileData;
 import com.harvard.utils.AppController;
 import com.harvard.utils.Logger;
+import org.researchstack.backbone.task.Task;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import io.realm.Realm;
 import io.realm.RealmList;
 import io.realm.RealmObject;
 import io.realm.RealmResults;
 import io.realm.Sort;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import org.researchstack.backbone.task.Task;
 
 public class DBServiceSubscriber {
 
@@ -885,6 +885,7 @@ public class DBServiceSubscriber {
       String status,
       String enrolleddate,
       String participantId,
+      String siteId,
       String version) {
     realm = AppController.getRealmobj(context);
     Studies studies = realm.where(Studies.class).equalTo("studyId", studyId).findFirst();
@@ -894,6 +895,7 @@ public class DBServiceSubscriber {
       studies.setEnrolledDate(enrolleddate);
       studies.setVersion(version);
       studies.setParticipantId(participantId);
+      studies.setSiteId(siteId);
     } else {
       StudyData studyData = getStudyPreferencesListFromDB(realm);
       Studies studies1 = new Studies();
@@ -903,6 +905,7 @@ public class DBServiceSubscriber {
       studies1.setVersion(version);
       studies1.setEnrolledDate(enrolleddate);
       studies1.setParticipantId(participantId);
+      studies1.setSiteId(siteId);
       studyData.getStudies().add(studies1);
     }
     realm.commitTransaction();

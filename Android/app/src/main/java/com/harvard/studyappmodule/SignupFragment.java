@@ -339,6 +339,14 @@ public class SignupFragment extends Fragment implements ApiCall.OnAsyncRequestCo
       if (mRegistrationData != null) {
         mUserID = mRegistrationData.getUserId();
         mUserAuth = mRegistrationData.getAuth();
+        AppController.getHelperSharedPreference()
+            .writePreference(
+                mContext, getString(R.string.refreshToken), mRegistrationData.getRefreshToken());
+        AppController.getHelperSharedPreference()
+            .writePreference(
+                mContext,
+                mContext.getString(R.string.clientToken),
+                mRegistrationData.getClientToken());
         new GetFCMRefreshToken().execute();
       } else {
         Toast.makeText(
@@ -352,7 +360,7 @@ public class SignupFragment extends Fragment implements ApiCall.OnAsyncRequestCo
     } else if (responseCode == UPDATE_USER_PROFILE) {
       UpdateUserProfileData updateUserProfileData = (UpdateUserProfileData) response;
       if (updateUserProfileData != null) {
-        if (updateUserProfileData.getMessage().equalsIgnoreCase("success")) {
+        if (updateUserProfileData.getMessage().equalsIgnoreCase("Profile Updated successfully")) {
           signup(mRegistrationData);
         } else {
           Toast.makeText(
@@ -386,6 +394,11 @@ public class SignupFragment extends Fragment implements ApiCall.OnAsyncRequestCo
               getContext(),
               getString(R.string.refreshToken),
               "" + registrationData.getRefreshToken());
+      AppController.getHelperSharedPreference()
+          .writePreference(
+              mContext,
+              mContext.getString(R.string.clientToken),
+              registrationData.getClientToken());
       AppController.getHelperSharedPreference()
           .writePreference(
               getContext(), getString(R.string.email), "" + mEmail.getText().toString());
@@ -430,7 +443,7 @@ public class SignupFragment extends Fragment implements ApiCall.OnAsyncRequestCo
     AppController.getHelperProgressDialog().showProgress(mContext, "", "", false);
     UpdateUserProfileEvent updateUserProfileEvent = new UpdateUserProfileEvent();
     HashMap<String, String> params = new HashMap<>();
-    params.put("auth", mUserAuth);
+    params.put("accessToken", mUserAuth);
     params.put("userId", mUserID);
 
     JSONObject jsonObjBody = new JSONObject();

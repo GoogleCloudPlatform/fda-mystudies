@@ -69,23 +69,25 @@ import com.harvard.webservicemodule.apihelper.ConnectionDetector;
 import com.harvard.webservicemodule.apihelper.HttpRequest;
 import com.harvard.webservicemodule.apihelper.Responsemodel;
 import com.harvard.webservicemodule.events.RegistrationServerConfigEvent;
+import com.harvard.webservicemodule.events.RegistrationServerConsentConfigEvent;
+import com.harvard.webservicemodule.events.RegistrationServerEnrollmentConfigEvent;
 import com.harvard.webservicemodule.events.WCPConfigEvent;
 import com.itextpdf.text.Image;
 import com.itextpdf.text.pdf.PdfPCell;
-import io.realm.Realm;
-import io.realm.RealmList;
-import io.realm.RealmObject;
-import java.io.IOException;
-import java.net.HttpURLConnection;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.researchstack.backbone.step.Step;
 import org.researchstack.backbone.task.OrderedTask;
 import org.researchstack.backbone.task.Task;
+import java.io.IOException;
+import java.net.HttpURLConnection;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import io.realm.Realm;
+import io.realm.RealmList;
+import io.realm.RealmObject;
 
 public class StudyFragment extends Fragment implements ApiCall.OnAsyncRequestComplete {
   private static final int STUDY_UPDATES = 201;
@@ -856,15 +858,39 @@ public class StudyFragment extends Fragment implements ApiCall.OnAsyncRequestCom
           GetPreferenceEvent getPreferenceEvent = new GetPreferenceEvent();
           HashMap<String, String> header = new HashMap();
           header.put(
-              "auth",
+              "accessToken",
               AppController.getHelperSharedPreference()
                   .readPreference(mContext, getResources().getString(R.string.auth), ""));
           header.put(
               "userId",
               AppController.getHelperSharedPreference()
                   .readPreference(mContext, getResources().getString(R.string.userid), ""));
-          RegistrationServerConfigEvent registrationServerConfigEvent =
-              new RegistrationServerConfigEvent(
+          header.put(
+              "clientToken",
+              AppController.getHelperSharedPreference()
+                  .readPreference(mContext, getResources().getString(R.string.clientToken), ""));
+
+          // temp
+          //          AppController.getHelperSharedPreference()
+          //              .writePreference(mContext, "firstStudyState", "Done");
+          //          AppController.getHelperProgressDialog().dismissDialog();
+          //          onItemsLoadComplete();
+          //          webserviceCall = false;
+          //          setStudyList(false);
+          //
+          //          StudyData studies = new StudyData();
+          //          studies.setUserId(
+          //              AppController.getHelperSharedPreference()
+          //                  .readPreference(mContext, getString(R.string.userid), ""));
+          //
+          //          StudyData studyData =
+          // dbServiceSubscriber.getStudyPreferencesListFromDB(realm);
+          //          if (studyData == null) {
+          //            dbServiceSubscriber.saveStudyPreferencesToDB(mContext, studies);
+          //          }
+
+          RegistrationServerEnrollmentConfigEvent registrationServerEnrollmentConfigEvent =
+              new RegistrationServerEnrollmentConfigEvent(
                   "get",
                   URLs.STUDY_STATE,
                   GET_PREFERENCES,
@@ -876,7 +902,8 @@ public class StudyFragment extends Fragment implements ApiCall.OnAsyncRequestCom
                   false,
                   this);
 
-          getPreferenceEvent.setmRegistrationServerConfigEvent(registrationServerConfigEvent);
+          getPreferenceEvent.setRegistrationServerEnrollmentConfigEvent(
+              registrationServerEnrollmentConfigEvent);
           UserModulePresenter userModulePresenter = new UserModulePresenter();
           userModulePresenter.performGetUserPreference(getPreferenceEvent);
         }
@@ -1031,7 +1058,7 @@ public class StudyFragment extends Fragment implements ApiCall.OnAsyncRequestCom
     ConsentPDFEvent consentPDFEvent = new ConsentPDFEvent();
     HashMap<String, String> header = new HashMap<>();
     header.put(
-        "auth",
+        "accessToken",
         AppController.getHelperSharedPreference()
             .readPreference(mContext, getResources().getString(R.string.auth), ""));
     header.put(
@@ -1039,19 +1066,20 @@ public class StudyFragment extends Fragment implements ApiCall.OnAsyncRequestCom
         AppController.getHelperSharedPreference()
             .readPreference(mContext, getResources().getString(R.string.userid), ""));
     String url = URLs.CONSENTPDF + "?studyId=" + mStudyId + "&consentVersion=";
-    RegistrationServerConfigEvent registrationServerConfigEvent =
-        new RegistrationServerConfigEvent(
+    //    String url = URLs.CONSENTPDF + "?studyId=" + "Test" + "&consentVersion=";
+    RegistrationServerConsentConfigEvent registrationServerConsentConfigEvent =
+        new RegistrationServerConsentConfigEvent(
             "get",
             url,
             CONSENTPDF,
-            getActivity(),
+            mContext,
             ConsentPDF.class,
             null,
             header,
             null,
             false,
             StudyFragment.this);
-    consentPDFEvent.setmRegistrationServerConfigEvent(registrationServerConfigEvent);
+    consentPDFEvent.setRegistrationServerConsentConfigEvent(registrationServerConsentConfigEvent);
     UserModulePresenter userModulePresenter = new UserModulePresenter();
     userModulePresenter.performConsentPDF(consentPDFEvent);
   }
@@ -1362,13 +1390,17 @@ public class StudyFragment extends Fragment implements ApiCall.OnAsyncRequestCom
     lastUpdatedStatusStatus = studyStatus;
     HashMap<String, String> header = new HashMap();
     header.put(
-        "auth",
+        "accessToken",
         AppController.getHelperSharedPreference()
             .readPreference(mContext, getResources().getString(R.string.auth), ""));
     header.put(
         "userId",
         AppController.getHelperSharedPreference()
             .readPreference(mContext, getResources().getString(R.string.userid), ""));
+    header.put(
+        "clientToken",
+        AppController.getHelperSharedPreference()
+            .readPreference(mContext, getResources().getString(R.string.clientToken), ""));
 
     JSONObject jsonObject = new JSONObject();
 
@@ -1416,8 +1448,8 @@ public class StudyFragment extends Fragment implements ApiCall.OnAsyncRequestCom
     }
     //////////
 
-    RegistrationServerConfigEvent registrationServerConfigEvent =
-        new RegistrationServerConfigEvent(
+    RegistrationServerEnrollmentConfigEvent registrationServerEnrollmentConfigEvent =
+        new RegistrationServerEnrollmentConfigEvent(
             "post_object",
             URLs.UPDATE_STUDY_PREFERENCE,
             UPDATE_PREFERENCES,
@@ -1429,7 +1461,8 @@ public class StudyFragment extends Fragment implements ApiCall.OnAsyncRequestCom
             false,
             this);
 
-    updatePreferenceEvent.setmRegistrationServerConfigEvent(registrationServerConfigEvent);
+    updatePreferenceEvent.setRegistrationServerEnrollmentConfigEvent(
+        registrationServerEnrollmentConfigEvent);
     UserModulePresenter userModulePresenter = new UserModulePresenter();
     userModulePresenter.performUpdateUserPreference(updatePreferenceEvent);
   }

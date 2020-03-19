@@ -36,10 +36,11 @@ import android.view.MenuItem;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Toast;
 import com.google.gson.Gson;
-import com.harvard.R;
 import com.harvard.eligibilitymodule.ComprehensionFailureActivity;
 import com.harvard.eligibilitymodule.ComprehensionSuccessActivity;
+import com.harvard.R;
 import com.harvard.storagemodule.DBServiceSubscriber;
+import com.harvard.studyappmodule.enroll.EnrollData;
 import com.harvard.studyappmodule.StudyFragment;
 import com.harvard.studyappmodule.StudyModulePresenter;
 import com.harvard.studyappmodule.consent.model.ComprehensionCorrectAnswers;
@@ -49,7 +50,6 @@ import com.harvard.studyappmodule.custom.StepSwitcherCustom;
 import com.harvard.studyappmodule.events.EnrollIdEvent;
 import com.harvard.studyappmodule.events.GetUserStudyListEvent;
 import com.harvard.studyappmodule.events.UpdateEligibilityConsentStatusEvent;
-import com.harvard.studyappmodule.responseservermodel.ResponseServerData;
 import com.harvard.studyappmodule.studymodel.Study;
 import com.harvard.studyappmodule.studymodel.StudyList;
 import com.harvard.studyappmodule.studymodel.StudyUpdate;
@@ -61,10 +61,13 @@ import com.harvard.usermodule.webservicemodel.Studies;
 import com.harvard.usermodule.webservicemodel.StudyData;
 import com.harvard.utils.AppController;
 import com.harvard.utils.Logger;
+import com.harvard.utils.SharedPreferenceHelper;
 import com.harvard.utils.URLs;
 import com.harvard.webservicemodule.apihelper.ApiCall;
 import com.harvard.webservicemodule.apihelper.ApiCallResponseServer;
 import com.harvard.webservicemodule.events.RegistrationServerConfigEvent;
+import com.harvard.webservicemodule.events.RegistrationServerConsentConfigEvent;
+import com.harvard.webservicemodule.events.RegistrationServerEnrollmentConfigEvent;
 import com.harvard.webservicemodule.events.ResponseServerConfigEvent;
 import com.harvard.webservicemodule.events.WCPConfigEvent;
 import com.itextpdf.text.Document;
@@ -76,19 +79,6 @@ import com.itextpdf.text.Phrase;
 import com.itextpdf.text.pdf.PdfPCell;
 import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfWriter;
-import io.realm.Realm;
-import io.realm.RealmList;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.OutputStream;
-import java.lang.reflect.Constructor;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import javax.crypto.CipherInputStream;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -100,11 +90,22 @@ import org.researchstack.backbone.task.Task;
 import org.researchstack.backbone.ui.callbacks.StepCallbacks;
 import org.researchstack.backbone.ui.step.layout.ConsentSignatureStepLayout;
 import org.researchstack.backbone.ui.step.layout.StepLayout;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.lang.reflect.Constructor;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import javax.crypto.CipherInputStream;
+import io.realm.Realm;
+import io.realm.RealmList;
 
 public class CustomConsentViewTaskActivity extends AppCompatActivity
-    implements StepCallbacks,
-        ApiCall.OnAsyncRequestComplete,
-        ApiCallResponseServer.OnAsyncRequestComplete {
+    implements StepCallbacks, ApiCall.OnAsyncRequestComplete {
   private static final String EXTRA_TASK = "ViewTaskActivity.ExtraTask";
   private static final String EXTRA_TASK_RESULT = "ViewTaskActivity.ExtraTaskResult";
   private static final String EXTRA_STEP = "ViewTaskActivity.ExtraStep";
@@ -132,6 +133,7 @@ public class CustomConsentViewTaskActivity extends AppCompatActivity
   public static final String CONSENT = "consent";
   private String type;
   private String participantId = "";
+  private String siteId = "";
   private int score = 0;
   private int passScore = 0;
   private Consent mConsent;
@@ -463,9 +465,13 @@ public class CustomConsentViewTaskActivity extends AppCompatActivity
           && getIntent().getStringExtra(TYPE).equalsIgnoreCase("update")) {
         Studies mStudies =
             dbServiceSubscriber.getStudies(getIntent().getStringExtra(STUDYID), mRealm);
-        if (mStudies != null) participantId = mStudies.getParticipantId();
+        if (mStudies != null) {
+          participantId = mStudies.getParticipantId();
+          siteId = mStudies.getSiteId();
+        }
         mCompletionAdherenceStatus = false;
         getStudySate();
+
       } else {
         enrollId();
       }
@@ -478,20 +484,35 @@ public class CustomConsentViewTaskActivity extends AppCompatActivity
     params.put("studyId", getIntent().getStringExtra(STUDYID));
     params.put("token", getIntent().getStringExtra(ENROLLID));
 
-    ResponseServerConfigEvent responseServerConfigEvent =
-        new ResponseServerConfigEvent(
+    HashMap<String, String> header = new HashMap<>();
+    header.put(
+        "userId",
+        SharedPreferenceHelper.readPreference(
+            CustomConsentViewTaskActivity.this, getString(R.string.userid), ""));
+    header.put(
+        "clientToken",
+        SharedPreferenceHelper.readPreference(
+            CustomConsentViewTaskActivity.this, getString(R.string.clientToken), ""));
+    header.put(
+        "accessToken",
+        SharedPreferenceHelper.readPreference(
+            CustomConsentViewTaskActivity.this, getString(R.string.auth), ""));
+
+    RegistrationServerEnrollmentConfigEvent registrationServerEnrollmentConfigEvent =
+        new RegistrationServerEnrollmentConfigEvent(
             "post_json",
             URLs.ENROLL_ID,
             ENROLL_ID_RESPONSECODE,
             CustomConsentViewTaskActivity.this,
-            ResponseServerData.class,
+            EnrollData.class,
             params,
-            null,
+            header,
             null,
             false,
             CustomConsentViewTaskActivity.this);
 
-    enrollIdEvent.setResponseServerConfigEvent(responseServerConfigEvent);
+    enrollIdEvent.setRegistrationServerEnrollmentConfigEvent(
+        registrationServerEnrollmentConfigEvent);
     StudyModulePresenter studyModulePresenter = new StudyModulePresenter();
     studyModulePresenter.performEnrollId(enrollIdEvent);
   }
@@ -502,13 +523,17 @@ public class CustomConsentViewTaskActivity extends AppCompatActivity
 
     HashMap<String, String> header = new HashMap();
     header.put(
-        "auth",
+        "accessToken",
         AppController.getHelperSharedPreference()
             .readPreference(this, getResources().getString(R.string.auth), ""));
     header.put(
         "userId",
         AppController.getHelperSharedPreference()
             .readPreference(this, getResources().getString(R.string.userid), ""));
+    header.put(
+        "clientToken",
+        AppController.getHelperSharedPreference()
+            .readPreference(this, getResources().getString(R.string.clientToken), ""));
 
     JSONObject jsonObject = new JSONObject();
 
@@ -518,14 +543,15 @@ public class CustomConsentViewTaskActivity extends AppCompatActivity
       if (studies != null) {
         studiestatus.put("studyId", studies.getStudyId());
         studiestatus.put("status", StudyFragment.IN_PROGRESS);
-        //                studiestatus.put("bookmarked", studies.isBookmarked());
       } else {
         studiestatus.put("studyId", getIntent().getStringExtra(STUDYID));
         studiestatus.put("status", StudyFragment.IN_PROGRESS);
-        //                studiestatus.put("bookmarked", false);
       }
       if (participantId != null && !participantId.equalsIgnoreCase("")) {
         studiestatus.put("participantId", participantId);
+      }
+      if (siteId != null && !siteId.equalsIgnoreCase("")) {
+        studiestatus.put("siteId", siteId);
       }
       if (mCompletionAdherenceStatus) {
         studiestatus.put("completion", "0");
@@ -543,8 +569,8 @@ public class CustomConsentViewTaskActivity extends AppCompatActivity
     } catch (JSONException e) {
       Logger.log(e);
     }
-    RegistrationServerConfigEvent registrationServerConfigEvent =
-        new RegistrationServerConfigEvent(
+    RegistrationServerEnrollmentConfigEvent registrationServerEnrollmentConfigEvent =
+        new RegistrationServerEnrollmentConfigEvent(
             "post_object",
             URLs.UPDATE_STUDY_PREFERENCE,
             UPDATE_USERPREFERENCE_RESPONSECODE,
@@ -556,7 +582,8 @@ public class CustomConsentViewTaskActivity extends AppCompatActivity
             false,
             this);
 
-    updatePreferenceEvent.setmRegistrationServerConfigEvent(registrationServerConfigEvent);
+    updatePreferenceEvent.setRegistrationServerEnrollmentConfigEvent(
+        registrationServerEnrollmentConfigEvent);
     UserModulePresenter userModulePresenter = new UserModulePresenter();
     userModulePresenter.performUpdateUserPreference(updatePreferenceEvent);
   }
@@ -594,6 +621,7 @@ public class CustomConsentViewTaskActivity extends AppCompatActivity
           StudyFragment.IN_PROGRESS,
           enrolleddate,
           participantId,
+          siteId,
           AppController.getHelperSharedPreference()
               .readPreference(
                   CustomConsentViewTaskActivity.this,
@@ -629,6 +657,16 @@ public class CustomConsentViewTaskActivity extends AppCompatActivity
       } else {
         Toast.makeText(this, getResources().getString(R.string.unable_to_parse), Toast.LENGTH_SHORT)
             .show();
+      }
+    } else if (responseCode == ENROLL_ID_RESPONSECODE) {
+      EnrollData enrollData = (EnrollData) response;
+      if (enrollData.getCode() == 200) {
+        participantId = enrollData.getParticipantId();
+        siteId = enrollData.getSiteId();
+        updateuserpreference();
+
+      } else {
+        Toast.makeText(this, enrollData.getMessage(), Toast.LENGTH_SHORT).show();
       }
     }
   }
@@ -716,7 +754,7 @@ public class CustomConsentViewTaskActivity extends AppCompatActivity
           docBuilder =
               new StringBuilder(
                   "</br><div style=\"padding: 10px 10px 10px 10px;\" class='header'>");
-          String title = studyList.getTitle();
+          String title = "Overview";
           docBuilder.append(
               String.format(
                   "<h1 style=\"text-align: center; font-family:sans-serif-light;\">%1$s</h1>",
@@ -839,7 +877,7 @@ public class CustomConsentViewTaskActivity extends AppCompatActivity
             + "?studyId="
             + getIntent().getStringExtra(STUDYID)
             + "&studyVersion="
-            + studyList.getStudyVersion();
+            + "2.4";
     WCPConfigEvent wcpConfigEvent =
         new WCPConfigEvent(
             "get",
@@ -864,7 +902,7 @@ public class CustomConsentViewTaskActivity extends AppCompatActivity
         new UpdateEligibilityConsentStatusEvent();
     HashMap headerparams = new HashMap();
     headerparams.put(
-        "auth",
+        "accessToken",
         AppController.getHelperSharedPreference()
             .readPreference(CustomConsentViewTaskActivity.this, getString(R.string.auth), ""));
     headerparams.put(
@@ -896,8 +934,8 @@ public class CustomConsentViewTaskActivity extends AppCompatActivity
       Logger.log(e);
     }
 
-    RegistrationServerConfigEvent registrationServerConfigEvent =
-        new RegistrationServerConfigEvent(
+    RegistrationServerConsentConfigEvent registrationServerConsentConfigEvent =
+        new RegistrationServerConsentConfigEvent(
             "post_object",
             URLs.UPDATE_ELIGIBILITY_CONSENT,
             UPDATE_ELIGIBILITY_CONSENT_RESPONSECODE,
@@ -908,8 +946,8 @@ public class CustomConsentViewTaskActivity extends AppCompatActivity
             body,
             false,
             CustomConsentViewTaskActivity.this);
-    updateEligibilityConsentStatusEvent.setRegistrationServerConfigEvent(
-        registrationServerConfigEvent);
+    updateEligibilityConsentStatusEvent.setRegistrationServerConsentConfigEvent(
+        registrationServerConsentConfigEvent);
     StudyModulePresenter studyModulePresenter = new StudyModulePresenter();
     studyModulePresenter.performUpdateEligibilityConsent(updateEligibilityConsentStatusEvent);
   }
@@ -917,15 +955,14 @@ public class CustomConsentViewTaskActivity extends AppCompatActivity
   private String convertFileToString(String filepath) throws IOException {
     CipherInputStream cis = AppController.genarateDecryptedConsentPDF(filepath);
     byte[] byteArray = AppController.cipherInputStreamConvertToByte(cis);
-    String encoded = Base64.encodeToString(byteArray, Base64.DEFAULT);
-    return encoded;
+    return Base64.encodeToString(byteArray, Base64.DEFAULT);
   }
 
   private void getStudySate() {
     GetPreferenceEvent getPreferenceEvent = new GetPreferenceEvent();
     HashMap<String, String> header = new HashMap();
     header.put(
-        "auth",
+        "accessToken",
         AppController.getHelperSharedPreference()
             .readPreference(
                 CustomConsentViewTaskActivity.this, getResources().getString(R.string.auth), ""));
@@ -934,8 +971,16 @@ public class CustomConsentViewTaskActivity extends AppCompatActivity
         AppController.getHelperSharedPreference()
             .readPreference(
                 CustomConsentViewTaskActivity.this, getResources().getString(R.string.userid), ""));
-    RegistrationServerConfigEvent registrationServerConfigEvent =
-        new RegistrationServerConfigEvent(
+    header.put(
+        "clientToken",
+        AppController.getHelperSharedPreference()
+            .readPreference(
+                CustomConsentViewTaskActivity.this,
+                getResources().getString(R.string.clientToken),
+                ""));
+
+    RegistrationServerEnrollmentConfigEvent registrationServerEnrollmentConfigEvent =
+        new RegistrationServerEnrollmentConfigEvent(
             "get",
             URLs.STUDY_STATE,
             GET_PREFERENCES,
@@ -947,42 +992,10 @@ public class CustomConsentViewTaskActivity extends AppCompatActivity
             false,
             this);
 
-    getPreferenceEvent.setmRegistrationServerConfigEvent(registrationServerConfigEvent);
+    getPreferenceEvent.setRegistrationServerEnrollmentConfigEvent(
+        registrationServerEnrollmentConfigEvent);
     UserModulePresenter userModulePresenter = new UserModulePresenter();
     userModulePresenter.performGetUserPreference(getPreferenceEvent);
-  }
-
-  @Override
-  public <T> void asyncResponse(T response, int responseCode, String serverType) {
-    if (responseCode == ENROLL_ID_RESPONSECODE) {
-      ResponseServerData responseServerData = (ResponseServerData) response;
-      if (responseServerData.isSuccess()) {
-        participantId = responseServerData.getData().getAppToken();
-        updateuserpreference();
-      } else {
-        Toast.makeText(this, responseServerData.getException(), Toast.LENGTH_SHORT).show();
-      }
-    }
-  }
-
-  @Override
-  public <T> void asyncResponseFailure(
-      int responseCode, String errormsg, String statusCode, T response) {
-    AppController.getHelperProgressDialog().dismissDialog();
-    if (statusCode.equalsIgnoreCase("401")) {
-      AppController.getHelperSessionExpired(this, errormsg);
-    } else if (responseCode == ENROLL_ID_RESPONSECODE) {
-      ResponseServerData responseServerData = (ResponseServerData) response;
-      if (responseServerData != null) {
-        Toast.makeText(this, responseServerData.getException().toString(), Toast.LENGTH_SHORT)
-            .show();
-      } else {
-        Toast.makeText(this, getResources().getString(R.string.unable_to_parse), Toast.LENGTH_SHORT)
-            .show();
-      }
-    } else if (responseCode == UPDATE_USERPREFERENCE_RESPONSECODE) {
-      Toast.makeText(this, errormsg, Toast.LENGTH_SHORT).show();
-    }
   }
 
   @Override
@@ -993,6 +1006,8 @@ public class CustomConsentViewTaskActivity extends AppCompatActivity
     } else if (responseCode == UPDATE_ELIGIBILITY_CONSENT_RESPONSECODE) {
       Toast.makeText(this, errormsg, Toast.LENGTH_SHORT).show();
     } else if (responseCode == UPDATE_USERPREFERENCE_RESPONSECODE) {
+      Toast.makeText(this, errormsg, Toast.LENGTH_SHORT).show();
+    } else if (responseCode == ENROLL_ID_RESPONSECODE) {
       Toast.makeText(this, errormsg, Toast.LENGTH_SHORT).show();
     }
   }

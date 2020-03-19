@@ -43,7 +43,7 @@ import com.harvard.utils.AppController;
 import com.harvard.utils.Logger;
 import com.harvard.utils.URLs;
 import com.harvard.webservicemodule.apihelper.ApiCall;
-import com.harvard.webservicemodule.events.RegistrationServerConfigEvent;
+import com.harvard.webservicemodule.events.RegistrationServerConsentConfigEvent;
 import io.realm.Realm;
 import java.io.File;
 import java.io.FileOutputStream;
@@ -163,7 +163,7 @@ public class PDFDisplayActivity extends AppCompatActivity
     ConsentPDFEvent consentPDFEvent = new ConsentPDFEvent();
     HashMap<String, String> header = new HashMap<>();
     header.put(
-        "auth",
+        "accessToken",
         AppController.getHelperSharedPreference()
             .readPreference(this, getResources().getString(R.string.auth), ""));
     header.put(
@@ -171,8 +171,8 @@ public class PDFDisplayActivity extends AppCompatActivity
         AppController.getHelperSharedPreference()
             .readPreference(this, getResources().getString(R.string.userid), ""));
     String url = URLs.CONSENTPDF + "?studyId=" + mStudyId + "&consentVersion=";
-    RegistrationServerConfigEvent registrationServerConfigEvent =
-        new RegistrationServerConfigEvent(
+    RegistrationServerConsentConfigEvent registrationServerConsentConfigEvent =
+        new RegistrationServerConsentConfigEvent(
             "get",
             url,
             CONSENTPDF,
@@ -183,7 +183,7 @@ public class PDFDisplayActivity extends AppCompatActivity
             null,
             false,
             PDFDisplayActivity.this);
-    consentPDFEvent.setmRegistrationServerConfigEvent(registrationServerConfigEvent);
+    consentPDFEvent.setRegistrationServerConsentConfigEvent(registrationServerConsentConfigEvent);
     UserModulePresenter userModulePresenter = new UserModulePresenter();
     userModulePresenter.performConsentPDF(consentPDFEvent);
   }

@@ -72,7 +72,7 @@ public class UserModuleSubscriber extends BaseSubscriber {
 
   /** Login */
   public void onEvent(LoginEvent loginEvent) {
-    FDAEventBus.postEvent(loginEvent.getmRegistrationServerConfigEvent());
+    FDAEventBus.postEvent(loginEvent.getAuthServerConfigEvent());
   }
 
   /** touchId login */
@@ -87,12 +87,12 @@ public class UserModuleSubscriber extends BaseSubscriber {
 
   /** Forgot password */
   public void onEvent(ForgotPasswordEvent forgotPasswordEvent) {
-    FDAEventBus.postEvent(forgotPasswordEvent.getmRegistrationServerConfigEvent());
+    FDAEventBus.postEvent(forgotPasswordEvent.getAuthServerConfigEvent());
   }
 
   /** change password */
   public void onEvent(ChangePasswordEvent changePasswordEvent) {
-    FDAEventBus.postEvent(changePasswordEvent.getmRegistrationServerConfigEvent());
+    FDAEventBus.postEvent(changePasswordEvent.getAuthServerConfigEvent());
   }
 
   /** delete account from registration server */
@@ -119,7 +119,7 @@ public class UserModuleSubscriber extends BaseSubscriber {
   }
 
   public void onEvent(UpdatePreferenceEvent updatePreferenceEvent) {
-    FDAEventBus.postEvent(updatePreferenceEvent.getmRegistrationServerConfigEvent());
+    FDAEventBus.postEvent(updatePreferenceEvent.getRegistrationServerEnrollmentConfigEvent());
   }
 
   public void onEvent(ResendEmailEvent resendEmailEvent) {
@@ -127,11 +127,11 @@ public class UserModuleSubscriber extends BaseSubscriber {
   }
 
   public void onEvent(LogoutEvent logoutEvent) {
-    FDAEventBus.postEvent(logoutEvent.getmRegistrationServerConfigEvent());
+    FDAEventBus.postEvent(logoutEvent.getAuthServerConfigEvent());
   }
 
   public void onEvent(GetPreferenceEvent getPreferenceEvent) {
-    FDAEventBus.postEvent(getPreferenceEvent.getmRegistrationServerConfigEvent());
+    FDAEventBus.postEvent(getPreferenceEvent.getRegistrationServerEnrollmentConfigEvent());
   }
 
   public void onEvent(DeleteAccountEvent deleteAccountEvent) {
@@ -139,6 +139,6 @@ public class UserModuleSubscriber extends BaseSubscriber {
   }
 
   public void onEvent(ConsentPDFEvent consentPDFEvent) {
-    FDAEventBus.postEvent(consentPDFEvent.getmRegistrationServerConfigEvent());
+    FDAEventBus.postEvent(consentPDFEvent.getmRegistrationServerConsentConfigEvent());
   }
 }

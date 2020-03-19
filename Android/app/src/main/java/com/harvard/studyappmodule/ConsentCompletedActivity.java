@@ -209,8 +209,6 @@ public class ConsentCompletedActivity extends AppCompatActivity {
             public void onClick(View v) {
               Intent shareIntent = new Intent(Intent.ACTION_SEND);
               shareIntent.setData(Uri.parse("mailto:"));
-              //                    shareIntent.putExtra(Intent.EXTRA_SUBJECT,
-              // AppController.getHelperSharedPreference().readPreference(ConsentCompletedActivity.this, getString(R.string.title), "") + " - Consent");
               shareIntent.putExtra(Intent.EXTRA_SUBJECT, getString(R.string.signed_consent));
               shareIntent.setType("application/pdf");
               Uri fileUri =

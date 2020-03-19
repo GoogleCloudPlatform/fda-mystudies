@@ -78,7 +78,6 @@ public class VersionChecker extends AsyncTask<String, String, String> {
   protected void onPostExecute(String s) {
     super.onPostExecute(s);
     String currentVersion = currentVersion();
-    //        currentVersion = "1.0";
     if ((currentVersion != null && currentVersion.equalsIgnoreCase(newVersion))
         || newVersion == null) {
       upgrade.isUpgrade(false, newVersion, force);

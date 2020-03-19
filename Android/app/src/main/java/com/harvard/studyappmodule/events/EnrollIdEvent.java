@@ -14,16 +14,17 @@
 
 package com.harvard.studyappmodule.events;
 
-import com.harvard.webservicemodule.events.ResponseServerConfigEvent;
+import com.harvard.webservicemodule.events.RegistrationServerEnrollmentConfigEvent;
 
 public class EnrollIdEvent {
-  private ResponseServerConfigEvent mResponseServerConfigEvent;
+  private RegistrationServerEnrollmentConfigEvent registrationServerEnrollmentConfigEvent;
 
-  public ResponseServerConfigEvent getResponseServerConfigEvent() {
-    return mResponseServerConfigEvent;
+  public RegistrationServerEnrollmentConfigEvent getRegistrationServerEnrollmentConfigEvent() {
+    return registrationServerEnrollmentConfigEvent;
   }
 
-  public void setResponseServerConfigEvent(ResponseServerConfigEvent responseServerConfigEvent) {
-    mResponseServerConfigEvent = responseServerConfigEvent;
+  public void setRegistrationServerEnrollmentConfigEvent(
+      RegistrationServerEnrollmentConfigEvent registrationServerEnrollmentConfigEvent) {
+    this.registrationServerEnrollmentConfigEvent = registrationServerEnrollmentConfigEvent;
   }
 }

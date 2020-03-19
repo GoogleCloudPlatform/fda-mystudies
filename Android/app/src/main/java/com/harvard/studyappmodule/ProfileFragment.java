@@ -52,6 +52,7 @@ import com.harvard.utils.Logger;
 import com.harvard.utils.SharedPreferenceHelper;
 import com.harvard.utils.URLs;
 import com.harvard.webservicemodule.apihelper.ApiCall;
+import com.harvard.webservicemodule.events.AuthServerConfigEvent;
 import com.harvard.webservicemodule.events.RegistrationServerConfigEvent;
 import io.realm.Realm;
 import java.util.Calendar;
@@ -122,7 +123,7 @@ public class ProfileFragment extends Fragment
   private void callUserProfileWebService() {
     HashMap<String, String> header = new HashMap<>();
     header.put(
-        "auth",
+        "accessToken",
         AppController.getHelperSharedPreference()
             .readPreference(mContext, mContext.getString(R.string.auth), ""));
     header.put(
@@ -324,15 +325,15 @@ public class ProfileFragment extends Fragment
     params.put("reason", "user_action");
     HashMap<String, String> header = new HashMap<String, String>();
     header.put(
-        "auth",
+        "accessToken",
         AppController.getHelperSharedPreference()
             .readPreference(mContext, getString(R.string.auth), ""));
     header.put(
         "userId",
         AppController.getHelperSharedPreference()
             .readPreference(mContext, getString(R.string.userid), ""));
-    RegistrationServerConfigEvent registrationServerConfigEvent =
-        new RegistrationServerConfigEvent(
+    AuthServerConfigEvent authServerConfigEvent =
+        new AuthServerConfigEvent(
             "delete",
             URLs.LOGOUT,
             LOGOUT_REPSONSECODE,
@@ -343,7 +344,7 @@ public class ProfileFragment extends Fragment
             null,
             false,
             this);
-    logoutEvent.setmRegistrationServerConfigEvent(registrationServerConfigEvent);
+    logoutEvent.setAuthServerConfigEvent(authServerConfigEvent);
     UserModulePresenter userModulePresenter = new UserModulePresenter();
     userModulePresenter.performLogout(logoutEvent);
   }
@@ -434,7 +435,6 @@ public class ProfileFragment extends Fragment
               mContext, getResources().getString(R.string.profile_updated), Toast.LENGTH_SHORT)
           .show();
       try {
-        //
         Realm realm = AppController.getRealmobj(mContext);
         realm.beginTransaction();
         mUserProfileData
@@ -457,7 +457,7 @@ public class ProfileFragment extends Fragment
         dbServiceSubscriber.closeRealmObj(realm);
         // save mUserProfileData to db
         dbServiceSubscriber.saveUserProfileData(mContext, mUserProfileData);
-        /// delete offline row sync
+        // delete offline row sync
         dbServiceSubscriber.deleteOfflineDataRow(mContext, mDeleteIndexNumberDB);
       } catch (Exception e) {
         Logger.log(e);
@@ -618,7 +618,7 @@ public class ProfileFragment extends Fragment
 
       HashMap<String, String> header = new HashMap<>();
       header.put(
-          "auth",
+          "accessToken",
           AppController.getHelperSharedPreference()
               .readPreference(mContext, getString(R.string.auth), ""));
       header.put(
@@ -626,7 +626,7 @@ public class ProfileFragment extends Fragment
           AppController.getHelperSharedPreference()
               .readPreference(mContext, getString(R.string.userid), ""));
 
-      /////////// offline data storing
+      // offline data storing
       try {
         int number = dbServiceSubscriber.getUniqueID(mRealm);
         if (number == 0) {
@@ -657,7 +657,6 @@ public class ProfileFragment extends Fragment
       } catch (Exception e) {
         Logger.log(e);
       }
-      //////////
 
       RegistrationServerConfigEvent registrationServerConfigEvent =
           new RegistrationServerConfigEvent(

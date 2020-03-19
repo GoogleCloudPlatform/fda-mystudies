@@ -43,6 +43,16 @@ public class AnchorDateSchedulingDetails {
 
   private String sourceType;
 
+  private String activityVersion;
+
+  public String getActivityVersion() {
+    return activityVersion;
+  }
+
+  public void setActivityVersion(String activityVersion) {
+    this.activityVersion = activityVersion;
+  }
+
   public String getSourceType() {
     return sourceType;
   }

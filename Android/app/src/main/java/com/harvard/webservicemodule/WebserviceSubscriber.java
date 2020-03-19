@@ -18,7 +18,10 @@ import com.harvard.R;
 import com.harvard.base.BaseSubscriber;
 import com.harvard.webservicemodule.apihelper.ApiCall;
 import com.harvard.webservicemodule.apihelper.ApiCallResponseServer;
+import com.harvard.webservicemodule.events.AuthServerConfigEvent;
 import com.harvard.webservicemodule.events.RegistrationServerConfigEvent;
+import com.harvard.webservicemodule.events.RegistrationServerConsentConfigEvent;
+import com.harvard.webservicemodule.events.RegistrationServerEnrollmentConfigEvent;
 import com.harvard.webservicemodule.events.ResponseServerConfigEvent;
 import com.harvard.webservicemodule.events.WCPConfigEvent;
 
@@ -176,6 +179,176 @@ public class WebserviceSubscriber extends BaseSubscriber {
     }
   }
 
+  public void onEvent(RegistrationServerConsentConfigEvent registrationServerConsentConfigEvent) {
+    String url = "";
+    if (registrationServerConsentConfigEvent
+        .getmContext()
+        .getResources()
+        .getString(R.string.app_stage)
+        .equalsIgnoreCase("development")) {
+      url =
+          registrationServerConsentConfigEvent.getDevelopmentUrl()
+              + registrationServerConsentConfigEvent.getmUrl();
+    } else {
+      url =
+          registrationServerConsentConfigEvent.getProductionUrl()
+              + registrationServerConsentConfigEvent.getmUrl();
+    }
+    url = url.replaceAll(" ", "%20");
+    if (registrationServerConsentConfigEvent.getmRequestType().equalsIgnoreCase("get")) {
+      ApiCall apiCall = new ApiCall(registrationServerConsentConfigEvent.getmContext());
+      apiCall.apiCallGet(
+          url,
+          registrationServerConsentConfigEvent.getmHeaders(),
+          registrationServerConsentConfigEvent.gettClass(),
+          registrationServerConsentConfigEvent.getmResponseCode(),
+          registrationServerConsentConfigEvent.getV(),
+          registrationServerConsentConfigEvent.ismShowAlert(),
+          "");
+    } else if (registrationServerConsentConfigEvent
+        .getmRequestType()
+        .equalsIgnoreCase("post_object")) {
+      ApiCall apiCall = new ApiCall(registrationServerConsentConfigEvent.getmContext());
+      apiCall.apiCallPostJson(
+          url,
+          registrationServerConsentConfigEvent.getmHeaders(),
+          registrationServerConsentConfigEvent.gettClass(),
+          registrationServerConsentConfigEvent.getmRequestParamsJson(),
+          registrationServerConsentConfigEvent.getmResponseCode(),
+          registrationServerConsentConfigEvent.getV(),
+          registrationServerConsentConfigEvent.ismShowAlert(),
+          "");
+    } else if (registrationServerConsentConfigEvent.getmRequestType().equalsIgnoreCase("delete")) {
+      ApiCall apiCall = new ApiCall(registrationServerConsentConfigEvent.getmContext());
+      apiCall.apiCallDeleteHashmap(
+          url,
+          registrationServerConsentConfigEvent.getmHeaders(),
+          registrationServerConsentConfigEvent.gettClass(),
+          registrationServerConsentConfigEvent.getmRequestParams(),
+          registrationServerConsentConfigEvent.getmResponseCode(),
+          registrationServerConsentConfigEvent.getV(),
+          registrationServerConsentConfigEvent.ismShowAlert(),
+          "");
+    } else if (registrationServerConsentConfigEvent
+        .getmRequestType()
+        .equalsIgnoreCase("delete_object")) {
+      ApiCall apiCall = new ApiCall(registrationServerConsentConfigEvent.getmContext());
+      apiCall.apiCallDeleteJson(
+          url,
+          registrationServerConsentConfigEvent.getmHeaders(),
+          registrationServerConsentConfigEvent.gettClass(),
+          registrationServerConsentConfigEvent.getmRequestParamsJson(),
+          registrationServerConsentConfigEvent.getmResponseCode(),
+          registrationServerConsentConfigEvent.getV(),
+          registrationServerConsentConfigEvent.ismShowAlert(),
+          "");
+    } else if (registrationServerConsentConfigEvent
+        .getmRequestType()
+        .equalsIgnoreCase("delete_array")) {
+      ApiCall apiCall = new ApiCall(registrationServerConsentConfigEvent.getmContext());
+      apiCall.apiCallDeleteJsonArray(
+          url,
+          registrationServerConsentConfigEvent.getmHeaders(),
+          registrationServerConsentConfigEvent.gettClass(),
+          registrationServerConsentConfigEvent.getmRequestParamsJsonArray(),
+          registrationServerConsentConfigEvent.getmResponseCode(),
+          registrationServerConsentConfigEvent.getV(),
+          registrationServerConsentConfigEvent.ismShowAlert(),
+          "");
+    } else {
+      ApiCall apiCall = new ApiCall(registrationServerConsentConfigEvent.getmContext());
+      apiCall.apiCallPostHashmap(
+          url,
+          registrationServerConsentConfigEvent.getmHeaders(),
+          registrationServerConsentConfigEvent.gettClass(),
+          registrationServerConsentConfigEvent.getmRequestParams(),
+          registrationServerConsentConfigEvent.getmResponseCode(),
+          registrationServerConsentConfigEvent.getV(),
+          registrationServerConsentConfigEvent.ismShowAlert(),
+          "");
+    }
+  }
+
+  public void onEvent(AuthServerConfigEvent authServerConfigEvent) {
+    String url = "";
+    if (authServerConfigEvent
+        .getmContext()
+        .getResources()
+        .getString(R.string.app_stage)
+        .equalsIgnoreCase("development")) {
+      url = authServerConfigEvent.getDevelopmentUrl() + authServerConfigEvent.getmUrl();
+    } else {
+      url = authServerConfigEvent.getProductionUrl() + authServerConfigEvent.getmUrl();
+    }
+    url = url.replaceAll(" ", "%20");
+    if (authServerConfigEvent.getmRequestType().equalsIgnoreCase("get")) {
+      ApiCall apiCall = new ApiCall(authServerConfigEvent.getmContext());
+      apiCall.apiCallGet(
+          url,
+          authServerConfigEvent.getmHeaders(),
+          authServerConfigEvent.gettClass(),
+          authServerConfigEvent.getmResponseCode(),
+          authServerConfigEvent.getV(),
+          authServerConfigEvent.ismShowAlert(),
+          "");
+    } else if (authServerConfigEvent.getmRequestType().equalsIgnoreCase("post_object")) {
+      ApiCall apiCall = new ApiCall(authServerConfigEvent.getmContext());
+      apiCall.apiCallPostJson(
+          url,
+          authServerConfigEvent.getmHeaders(),
+          authServerConfigEvent.gettClass(),
+          authServerConfigEvent.getmRequestParamsJson(),
+          authServerConfigEvent.getmResponseCode(),
+          authServerConfigEvent.getV(),
+          authServerConfigEvent.ismShowAlert(),
+          "");
+    } else if (authServerConfigEvent.getmRequestType().equalsIgnoreCase("delete")) {
+      ApiCall apiCall = new ApiCall(authServerConfigEvent.getmContext());
+      apiCall.apiCallDeleteHashmap(
+          url,
+          authServerConfigEvent.getmHeaders(),
+          authServerConfigEvent.gettClass(),
+          authServerConfigEvent.getmRequestParams(),
+          authServerConfigEvent.getmResponseCode(),
+          authServerConfigEvent.getV(),
+          authServerConfigEvent.ismShowAlert(),
+          "");
+    } else if (authServerConfigEvent.getmRequestType().equalsIgnoreCase("delete_object")) {
+      ApiCall apiCall = new ApiCall(authServerConfigEvent.getmContext());
+      apiCall.apiCallDeleteJson(
+          url,
+          authServerConfigEvent.getmHeaders(),
+          authServerConfigEvent.gettClass(),
+          authServerConfigEvent.getmRequestParamsJson(),
+          authServerConfigEvent.getmResponseCode(),
+          authServerConfigEvent.getV(),
+          authServerConfigEvent.ismShowAlert(),
+          "");
+    } else if (authServerConfigEvent.getmRequestType().equalsIgnoreCase("delete_array")) {
+      ApiCall apiCall = new ApiCall(authServerConfigEvent.getmContext());
+      apiCall.apiCallDeleteJsonArray(
+          url,
+          authServerConfigEvent.getmHeaders(),
+          authServerConfigEvent.gettClass(),
+          authServerConfigEvent.getmRequestParamsJsonArray(),
+          authServerConfigEvent.getmResponseCode(),
+          authServerConfigEvent.getV(),
+          authServerConfigEvent.ismShowAlert(),
+          "");
+    } else {
+      ApiCall apiCall = new ApiCall(authServerConfigEvent.getmContext());
+      apiCall.apiCallPostHashmap(
+          url,
+          authServerConfigEvent.getmHeaders(),
+          authServerConfigEvent.gettClass(),
+          authServerConfigEvent.getmRequestParams(),
+          authServerConfigEvent.getmResponseCode(),
+          authServerConfigEvent.getV(),
+          authServerConfigEvent.ismShowAlert(),
+          "");
+    }
+  }
+
   public void onEvent(ResponseServerConfigEvent responseServerConfigEvent) {
     String url = "";
     if (responseServerConfigEvent
@@ -235,6 +408,99 @@ public class WebserviceSubscriber extends BaseSubscriber {
           responseServerConfigEvent.getV(),
           responseServerConfigEvent.ismShowAlert(),
           "Response");
+    }
+  }
+
+  public void onEvent(
+      RegistrationServerEnrollmentConfigEvent registrationServerEnrollmentConfigEvent) {
+    String url = "";
+    if (registrationServerEnrollmentConfigEvent
+        .getmContext()
+        .getResources()
+        .getString(R.string.app_stage)
+        .equalsIgnoreCase("development")) {
+      url =
+          registrationServerEnrollmentConfigEvent.getDevelopmentUrl()
+              + registrationServerEnrollmentConfigEvent.getmUrl();
+    } else {
+      url =
+          registrationServerEnrollmentConfigEvent.getProductionUrl()
+              + registrationServerEnrollmentConfigEvent.getmUrl();
+    }
+    url = url.replaceAll(" ", "%20");
+    if (registrationServerEnrollmentConfigEvent.getmRequestType().equalsIgnoreCase("get")) {
+      ApiCall apiCall = new ApiCall(registrationServerEnrollmentConfigEvent.getmContext());
+      apiCall.apiCallGet(
+          url,
+          registrationServerEnrollmentConfigEvent.getmHeaders(),
+          registrationServerEnrollmentConfigEvent.gettClass(),
+          registrationServerEnrollmentConfigEvent.getmResponseCode(),
+          registrationServerEnrollmentConfigEvent.getV(),
+          registrationServerEnrollmentConfigEvent.ismShowAlert(),
+          "");
+    } else if (registrationServerEnrollmentConfigEvent
+        .getmRequestType()
+        .equalsIgnoreCase("post_object")) {
+      ApiCall apiCall = new ApiCall(registrationServerEnrollmentConfigEvent.getmContext());
+      apiCall.apiCallPostJson(
+          url,
+          registrationServerEnrollmentConfigEvent.getmHeaders(),
+          registrationServerEnrollmentConfigEvent.gettClass(),
+          registrationServerEnrollmentConfigEvent.getmRequestParamsJson(),
+          registrationServerEnrollmentConfigEvent.getmResponseCode(),
+          registrationServerEnrollmentConfigEvent.getV(),
+          registrationServerEnrollmentConfigEvent.ismShowAlert(),
+          "");
+    } else if (registrationServerEnrollmentConfigEvent
+        .getmRequestType()
+        .equalsIgnoreCase("delete")) {
+      ApiCall apiCall = new ApiCall(registrationServerEnrollmentConfigEvent.getmContext());
+      apiCall.apiCallDeleteHashmap(
+          url,
+          registrationServerEnrollmentConfigEvent.getmHeaders(),
+          registrationServerEnrollmentConfigEvent.gettClass(),
+          registrationServerEnrollmentConfigEvent.getmRequestParams(),
+          registrationServerEnrollmentConfigEvent.getmResponseCode(),
+          registrationServerEnrollmentConfigEvent.getV(),
+          registrationServerEnrollmentConfigEvent.ismShowAlert(),
+          "");
+    } else if (registrationServerEnrollmentConfigEvent
+        .getmRequestType()
+        .equalsIgnoreCase("delete_object")) {
+      ApiCall apiCall = new ApiCall(registrationServerEnrollmentConfigEvent.getmContext());
+      apiCall.apiCallDeleteJson(
+          url,
+          registrationServerEnrollmentConfigEvent.getmHeaders(),
+          registrationServerEnrollmentConfigEvent.gettClass(),
+          registrationServerEnrollmentConfigEvent.getmRequestParamsJson(),
+          registrationServerEnrollmentConfigEvent.getmResponseCode(),
+          registrationServerEnrollmentConfigEvent.getV(),
+          registrationServerEnrollmentConfigEvent.ismShowAlert(),
+          "");
+    } else if (registrationServerEnrollmentConfigEvent
+        .getmRequestType()
+        .equalsIgnoreCase("delete_array")) {
+      ApiCall apiCall = new ApiCall(registrationServerEnrollmentConfigEvent.getmContext());
+      apiCall.apiCallDeleteJsonArray(
+          url,
+          registrationServerEnrollmentConfigEvent.getmHeaders(),
+          registrationServerEnrollmentConfigEvent.gettClass(),
+          registrationServerEnrollmentConfigEvent.getmRequestParamsJsonArray(),
+          registrationServerEnrollmentConfigEvent.getmResponseCode(),
+          registrationServerEnrollmentConfigEvent.getV(),
+          registrationServerEnrollmentConfigEvent.ismShowAlert(),
+          "");
+    } else {
+      ApiCall apiCall = new ApiCall(registrationServerEnrollmentConfigEvent.getmContext());
+      apiCall.apiCallPostHashmap(
+          url,
+          registrationServerEnrollmentConfigEvent.getmHeaders(),
+          registrationServerEnrollmentConfigEvent.gettClass(),
+          registrationServerEnrollmentConfigEvent.getmRequestParams(),
+          registrationServerEnrollmentConfigEvent.getmResponseCode(),
+          registrationServerEnrollmentConfigEvent.getV(),
+          registrationServerEnrollmentConfigEvent.ismShowAlert(),
+          "");
     }
   }
 }

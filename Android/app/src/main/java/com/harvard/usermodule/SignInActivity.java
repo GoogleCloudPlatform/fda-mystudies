@@ -53,6 +53,7 @@ import com.harvard.utils.Logger;
 import com.harvard.utils.SetDialogHelper;
 import com.harvard.utils.URLs;
 import com.harvard.webservicemodule.apihelper.ApiCall;
+import com.harvard.webservicemodule.events.AuthServerConfigEvent;
 import com.harvard.webservicemodule.events.RegistrationServerConfigEvent;
 import java.util.Calendar;
 import java.util.HashMap;
@@ -156,8 +157,8 @@ public class SignInActivity extends AppCompatActivity implements ApiCall.OnAsync
           public void updateDrawState(TextPaint ds) {
             ds.setColor(
                 ContextCompat.getColor(
-                    SignInActivity.this, R.color.colorPrimary)); // you can use custom color
-            ds.setUnderlineText(false); // this remove the underline
+                    SignInActivity.this, R.color.colorPrimary));
+            ds.setUnderlineText(false);
           }
 
           @Override
@@ -192,8 +193,8 @@ public class SignInActivity extends AppCompatActivity implements ApiCall.OnAsync
           public void updateDrawState(TextPaint ds) {
             ds.setColor(
                 ContextCompat.getColor(
-                    SignInActivity.this, R.color.colorPrimary)); // you can use custom color
-            ds.setUnderlineText(false); // this remove the underline
+                    SignInActivity.this, R.color.colorPrimary));
+            ds.setUnderlineText(false);
           }
 
           @Override
@@ -337,8 +338,8 @@ public class SignInActivity extends AppCompatActivity implements ApiCall.OnAsync
       params.put("emailId", mEmail.getText().toString());
       params.put("password", mPassword.getText().toString());
       params.put("appId", BuildConfig.APPLICATION_ID);
-      RegistrationServerConfigEvent registrationServerConfigEvent =
-          new RegistrationServerConfigEvent(
+      AuthServerConfigEvent authServerConfigEvent =
+          new AuthServerConfigEvent(
               "post",
               URLs.LOGIN,
               LOGIN_REQUEST,
@@ -349,7 +350,7 @@ public class SignInActivity extends AppCompatActivity implements ApiCall.OnAsync
               null,
               false,
               this);
-      loginEvent.setmRegistrationServerConfigEvent(registrationServerConfigEvent);
+      loginEvent.setAuthServerConfigEvent(authServerConfigEvent);
       UserModulePresenter userModulePresenter = new UserModulePresenter();
       userModulePresenter.performLogin(loginEvent);
     }
@@ -363,18 +364,22 @@ public class SignInActivity extends AppCompatActivity implements ApiCall.OnAsync
       AppController.getHelperSharedPreference()
           .writePreference(SignInActivity.this, getString(R.string.json_object_filter), "");
       loginData = (LoginData) response;
+      loginData.setVerified(true);
       if (loginData != null) {
         mUserAuth = loginData.getAuth();
         mUserID = loginData.getUserId();
         AppController.getHelperSharedPreference()
             .writePreference(
                 SignInActivity.this, getString(R.string.refreshToken), loginData.getRefreshToken());
+        AppController.getHelperSharedPreference()
+            .writePreference(
+                SignInActivity.this, getString(R.string.clientToken), loginData.getClientToken());
         new GetFCMRefreshToken().execute();
       }
     } else if (responseCode == UPDATE_USER_PROFILE) {
       UpdateUserProfileData updateUserProfileData = (UpdateUserProfileData) response;
       if (updateUserProfileData != null) {
-        if (updateUserProfileData.getMessage().equalsIgnoreCase("success")) {
+        if (updateUserProfileData.getMessage().equalsIgnoreCase("Profile Updated successfully")) {
           callUserProfileWebService();
         } else {
           Toast.makeText(
@@ -585,7 +590,7 @@ public class SignInActivity extends AppCompatActivity implements ApiCall.OnAsync
     AppController.getHelperProgressDialog().showProgress(SignInActivity.this, "", "", false);
     UpdateUserProfileEvent updateUserProfileEvent = new UpdateUserProfileEvent();
     HashMap<String, String> params = new HashMap<>();
-    params.put("auth", mUserAuth);
+    params.put("accessToken", mUserAuth);
     params.put("userId", mUserID);
 
     JSONObject jsonObjBody = new JSONObject();
@@ -619,7 +624,7 @@ public class SignInActivity extends AppCompatActivity implements ApiCall.OnAsync
 
   private void callUserProfileWebService() {
     HashMap<String, String> header = new HashMap<>();
-    header.put("auth", mUserAuth);
+    header.put("accessToken", mUserAuth);
     header.put("userId", mUserID);
     GetUserProfileEvent getUserProfileEvent = new GetUserProfileEvent();
     RegistrationServerConfigEvent registrationServerConfigEvent =

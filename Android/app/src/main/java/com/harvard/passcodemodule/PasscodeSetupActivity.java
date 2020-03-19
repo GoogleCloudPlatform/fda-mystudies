@@ -100,8 +100,7 @@ public class PasscodeSetupActivity extends AppCompatActivity {
         new View.OnClickListener() {
           @Override
           public void onClick(View v) {
-            //                You will be signed out and will need to sign in again. Are you sure
-            // you want to proceed?
+            // display sign out confirmation.
             AlertDialog.Builder adb = new AlertDialog.Builder(PasscodeSetupActivity.this);
             adb.setTitle(getResources().getString(R.string.app_name));
             adb.setIcon(android.R.drawable.ic_dialog_alert);

@@ -14,17 +14,16 @@
 
 package com.harvard.usermodule.event;
 
-import com.harvard.webservicemodule.events.RegistrationServerConfigEvent;
+import com.harvard.webservicemodule.events.AuthServerConfigEvent;
 
 public class LoginEvent {
-  private RegistrationServerConfigEvent mRegistrationServerConfigEvent;
+  private AuthServerConfigEvent authServerConfigEvent;
 
-  public RegistrationServerConfigEvent getmRegistrationServerConfigEvent() {
-    return mRegistrationServerConfigEvent;
+  public AuthServerConfigEvent getAuthServerConfigEvent() {
+    return authServerConfigEvent;
   }
 
-  public void setmRegistrationServerConfigEvent(
-      RegistrationServerConfigEvent mRegistrationServerConfigEvent) {
-    this.mRegistrationServerConfigEvent = mRegistrationServerConfigEvent;
+  public void setAuthServerConfigEvent(AuthServerConfigEvent authServerConfigEvent) {
+    this.authServerConfigEvent = authServerConfigEvent;
   }
 }

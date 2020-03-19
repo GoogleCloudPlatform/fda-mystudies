@@ -26,6 +26,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.google.gson.JsonPrimitive;
 import com.google.gson.internal.LinkedTreeMap;
+import com.harvard.AppConfig;
 import com.harvard.R;
 import com.harvard.storagemodule.DBServiceSubscriber;
 import com.harvard.studyappmodule.activitybuilder.CustomSurveyViewTaskActivity;
@@ -33,6 +34,7 @@ import com.harvard.studyappmodule.activitybuilder.model.servicemodel.ActivityObj
 import com.harvard.studyappmodule.custom.result.StepRecordCustom;
 import com.harvard.studyappmodule.events.ProcessResponseEvent;
 import com.harvard.usermodule.UserModulePresenter;
+import com.harvard.usermodule.event.ActivityStateEvent;
 import com.harvard.usermodule.event.UpdatePreferenceEvent;
 import com.harvard.usermodule.webservicemodel.Activities;
 import com.harvard.usermodule.webservicemodel.LoginData;
@@ -40,19 +42,20 @@ import com.harvard.usermodule.webservicemodel.Studies;
 import com.harvard.usermodule.webservicemodel.StudyData;
 import com.harvard.utils.AppController;
 import com.harvard.utils.Logger;
+import com.harvard.utils.SharedPreferenceHelper;
 import com.harvard.utils.URLs;
 import com.harvard.webservicemodule.apihelper.ApiCall;
 import com.harvard.webservicemodule.apihelper.ApiCallResponseServer;
-import com.harvard.webservicemodule.events.RegistrationServerConfigEvent;
+import com.harvard.webservicemodule.events.RegistrationServerEnrollmentConfigEvent;
 import com.harvard.webservicemodule.events.ResponseServerConfigEvent;
-import io.realm.Realm;
-import io.realm.RealmResults;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
+import io.realm.Realm;
+import io.realm.RealmResults;
 
 public class SurveyCompleteActivity extends AppCompatActivity
     implements ApiCall.OnAsyncRequestComplete, ApiCallResponseServer.OnAsyncRequestComplete {
@@ -117,10 +120,22 @@ public class SurveyCompleteActivity extends AppCompatActivity
             .where(Studies.class)
             .equalTo("studyId", getIntent().getStringExtra(STUDYID))
             .findFirst();
-    String participantId = "";
-    if (studies != null) participantId = studies.getParticipantId();
 
     if (activities != null && activityObj != null) {
+
+      HashMap<String, String> header = new HashMap<>();
+      header.put(
+          getString(R.string.clientToken),
+          SharedPreferenceHelper.readPreference(
+              SurveyCompleteActivity.this, getString(R.string.clientToken), ""));
+      header.put(
+          "accessToken",
+          SharedPreferenceHelper.readPreference(
+              SurveyCompleteActivity.this, getString(R.string.auth), ""));
+      header.put(
+          "userId",
+          SharedPreferenceHelper.readPreference(
+              SurveyCompleteActivity.this, getString(R.string.userid), ""));
 
       ResponseServerConfigEvent responseServerConfigEvent =
           new ResponseServerConfigEvent(
@@ -130,8 +145,8 @@ public class SurveyCompleteActivity extends AppCompatActivity
               this,
               LoginData.class,
               null,
-              null,
-              getResponseDataJson(activityObj, activities, participantId),
+              header,
+              getResponseDataJson(activityObj, activities, studies),
               false,
               this);
       processResponseEvent.setResponseServerConfigEvent(responseServerConfigEvent);
@@ -147,20 +162,25 @@ public class SurveyCompleteActivity extends AppCompatActivity
   }
 
   private JSONObject getResponseDataJson(
-      ActivityObj activityObj, Activities activities, String participantId) {
+      ActivityObj activityObj, Activities activities, Studies studies) {
     JSONObject ProcessResponsejson = new JSONObject();
     try {
       ProcessResponsejson.put("type", activityObj.getType());
+      ProcessResponsejson.put("participantId", studies.getParticipantId());
+      ProcessResponsejson.put("tokenIdentifier", studies.getHashedToken());
+      ProcessResponsejson.put("applicationId", AppConfig.APP_ID_VALUE);
+      ProcessResponsejson.put("orgId", AppConfig.ORG_ID_VALUE);
+      ProcessResponsejson.put("siteId", activityObj.getType());
 
       JSONObject InfoJson = new JSONObject();
-      InfoJson.put("studyId", activities.getStudyId());
+      InfoJson.put("studyId", studies.getStudyId());
+      InfoJson.put("studyVersion", studies.getVersion());
       InfoJson.put("activityId", activities.getActivityId());
       InfoJson.put("name", activityObj.getMetadata().getName());
       InfoJson.put("version", activities.getActivityVersion());
       InfoJson.put("activityRunId", activities.getActivityRunId());
 
       ProcessResponsejson.put("metadata", InfoJson);
-      ProcessResponsejson.put("participantId", "" + participantId);
       ProcessResponsejson.put(
           "data", generateresult(activityObj, getIntent().getStringExtra(EXTRA_STUDYID)));
     } catch (JSONException e) {
@@ -539,19 +559,28 @@ public class SurveyCompleteActivity extends AppCompatActivity
   }
 
   public void updateUserPreference() {
-    UpdatePreferenceEvent updatePreferenceEvent = new UpdatePreferenceEvent();
+    ActivityStateEvent activityStateEvent = new ActivityStateEvent();
     HashMap<String, String> header = new HashMap();
+    Realm realm = AppController.getRealmobj(SurveyCompleteActivity.this);
+    Studies mStudies =
+        dbServiceSubscriber.getStudies(
+            getIntent().getStringExtra(CustomSurveyViewTaskActivity.STUDYID), realm);
     header.put(
-        "auth",
+        "accessToken",
         AppController.getHelperSharedPreference()
             .readPreference(this, getResources().getString(R.string.auth), ""));
     header.put(
         "userId",
         AppController.getHelperSharedPreference()
             .readPreference(this, getResources().getString(R.string.userid), ""));
+    header.put(
+        "clientToken",
+        AppController.getHelperSharedPreference()
+            .readPreference(this, getResources().getString(R.string.clientToken), ""));
+    header.put("participantId", mStudies.getParticipantId());
 
-    RegistrationServerConfigEvent registrationServerConfigEvent =
-        new RegistrationServerConfigEvent(
+    ResponseServerConfigEvent responseServerConfigEvent =
+        new ResponseServerConfigEvent(
             "post_object",
             URLs.UPDATE_ACTIVITY_PREFERENCE,
             UPDATE_USERPREFERENCE_RESPONSECODE,
@@ -563,9 +592,9 @@ public class SurveyCompleteActivity extends AppCompatActivity
             false,
             this);
 
-    updatePreferenceEvent.setmRegistrationServerConfigEvent(registrationServerConfigEvent);
+    activityStateEvent.setResponseServerConfigEvent(responseServerConfigEvent);
     UserModulePresenter userModulePresenter = new UserModulePresenter();
-    userModulePresenter.performUpdateUserPreference(updatePreferenceEvent);
+    userModulePresenter.performActivityState(activityStateEvent);
   }
 
   private JSONObject getActivityPreferenceJson() {
@@ -1001,8 +1030,6 @@ public class SurveyCompleteActivity extends AppCompatActivity
               .where(Studies.class)
               .equalTo("studyId", getIntent().getStringExtra(STUDYID))
               .findFirst();
-      String participantId = "";
-      if (studies != null) participantId = studies.getParticipantId();
 
       try {
         int number = dbServiceSubscriber.getUniqueID(realm);
@@ -1017,7 +1044,7 @@ public class SurveyCompleteActivity extends AppCompatActivity
             "post_object",
             URLs.PROCESS_RESPONSE,
             "",
-            getResponseDataJson(activityObj, activities, participantId).toString(),
+            getResponseDataJson(activityObj, activities, studies).toString(),
             "response",
             "",
             "",
@@ -1145,16 +1172,20 @@ public class SurveyCompleteActivity extends AppCompatActivity
 
     HashMap<String, String> header = new HashMap();
     header.put(
-        "auth",
+        "accessToken",
         AppController.getHelperSharedPreference()
             .readPreference(this, getResources().getString(R.string.auth), ""));
     header.put(
         "userId",
         AppController.getHelperSharedPreference()
             .readPreference(this, getResources().getString(R.string.userid), ""));
+    header.put(
+        "clientToken",
+        AppController.getHelperSharedPreference()
+            .readPreference(this, getResources().getString(R.string.clientToken), ""));
 
-    RegistrationServerConfigEvent registrationServerConfigEvent =
-        new RegistrationServerConfigEvent(
+    RegistrationServerEnrollmentConfigEvent registrationServerEnrollmentConfigEvent =
+        new RegistrationServerEnrollmentConfigEvent(
             "post_object",
             URLs.UPDATE_STUDY_PREFERENCE,
             UPDATE_STUDY_PREFERENCE,
@@ -1166,7 +1197,8 @@ public class SurveyCompleteActivity extends AppCompatActivity
             false,
             this);
 
-    updatePreferenceEvent.setmRegistrationServerConfigEvent(registrationServerConfigEvent);
+    updatePreferenceEvent.setRegistrationServerEnrollmentConfigEvent(
+        registrationServerEnrollmentConfigEvent);
     UserModulePresenter userModulePresenter = new UserModulePresenter();
     userModulePresenter.performUpdateUserPreference(updatePreferenceEvent);
   }

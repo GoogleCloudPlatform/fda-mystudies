@@ -19,6 +19,18 @@ import android.util.Base64;
 import com.google.gson.Gson;
 import com.harvard.AppConfig;
 import com.harvard.utils.Logger;
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpResponse;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.conn.ConnectTimeoutException;
+import org.apache.http.entity.StringEntity;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.params.BasicHttpParams;
+import org.apache.http.params.HttpConnectionParams;
+import org.apache.http.params.HttpParams;
+import org.json.JSONArray;
+import org.json.JSONObject;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
@@ -40,18 +52,6 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 import javax.net.ssl.HttpsURLConnection;
-import org.apache.http.HttpEntity;
-import org.apache.http.HttpResponse;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.conn.ConnectTimeoutException;
-import org.apache.http.entity.StringEntity;
-import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.params.BasicHttpParams;
-import org.apache.http.params.HttpConnectionParams;
-import org.apache.http.params.HttpParams;
-import org.json.JSONArray;
-import org.json.JSONObject;
 
 public class HttpRequest {
 
@@ -77,12 +77,18 @@ public class HttpRequest {
       urlConnection = (HttpURLConnection) obj.openConnection();
       urlConnection.setRequestMethod("GET");
       urlConnection.setReadTimeout(180000); // 3 min timeout
+      urlConnection.setRequestProperty("Content-Type", "application/json");
+      urlConnection.setRequestProperty(AppConfig.APP_ID_KEY, AppConfig.APP_ID_VALUE);
+      urlConnection.setRequestProperty(AppConfig.ORG_ID_KEY, AppConfig.ORG_ID_VALUE);
+      urlConnection.setRequestProperty(AppConfig.CLIENT_ID_KEY, AppConfig.CLIENT_ID_VALUE);
+      urlConnection.setRequestProperty(AppConfig.SECRET_KEY, AppConfig.SECRET_KEY_VALUE);
+
       if (serverType.equalsIgnoreCase("WCP")) {
         String encoding = Base64.encodeToString(basicAuth.getBytes(), Base64.DEFAULT);
         urlConnection.setRequestProperty("Authorization", "Basic " + encoding);
+        urlConnection.setRequestProperty(AppConfig.WCP_APP_ID_KEY, AppConfig.APP_ID_VALUE);
+        urlConnection.setRequestProperty(AppConfig.ORG_ID_KEY, "OrgName");
       }
-      urlConnection.setRequestProperty(AppConfig.APP_ID_KEY, AppConfig.APP_ID_VALUE);
-      urlConnection.setRequestProperty(AppConfig.ORG_ID_KEY, AppConfig.ORG_ID_VALUE);
 
       if (mHeadersData != null) {
         Set mapSet = (Set) mHeadersData.entrySet();
@@ -192,12 +198,18 @@ public class HttpRequest {
       conn.setRequestMethod("POST");
       conn.setDoInput(true);
       conn.setRequestProperty("Content-Type", "application/json");
+
+      conn.setRequestProperty(AppConfig.APP_ID_KEY, AppConfig.APP_ID_VALUE);
+      conn.setRequestProperty(AppConfig.ORG_ID_KEY, AppConfig.ORG_ID_VALUE);
+      conn.setRequestProperty(AppConfig.CLIENT_ID_KEY, AppConfig.CLIENT_ID_VALUE);
+      conn.setRequestProperty(AppConfig.SECRET_KEY, AppConfig.SECRET_KEY_VALUE);
+
       if (serverType.equalsIgnoreCase("WCP")) {
         String encoding = Base64.encodeToString(basicAuth.getBytes(), Base64.DEFAULT);
         conn.setRequestProperty("Authorization", "Basic " + encoding);
+        conn.setRequestProperty(AppConfig.WCP_APP_ID_KEY, AppConfig.APP_ID_VALUE);
+        conn.setRequestProperty(AppConfig.ORG_ID_KEY, "OrgName");
       }
-      conn.setRequestProperty(AppConfig.APP_ID_KEY, AppConfig.APP_ID_VALUE);
-      conn.setRequestProperty(AppConfig.ORG_ID_KEY, AppConfig.ORG_ID_VALUE);
 
       if (mHeadersData != null) {
         Set mapSet = (Set) mHeadersData.entrySet();
@@ -309,12 +321,18 @@ public class HttpRequest {
       conn.setRequestMethod("POST");
       conn.setDoInput(true);
       conn.setRequestProperty("Content-Type", "application/json");
+
+      conn.setRequestProperty(AppConfig.APP_ID_KEY, AppConfig.APP_ID_VALUE);
+      conn.setRequestProperty(AppConfig.ORG_ID_KEY, AppConfig.ORG_ID_VALUE);
+      conn.setRequestProperty(AppConfig.CLIENT_ID_KEY, AppConfig.CLIENT_ID_VALUE);
+      conn.setRequestProperty(AppConfig.SECRET_KEY, AppConfig.SECRET_KEY_VALUE);
+
       if (serverType.equalsIgnoreCase("WCP")) {
         String encoding = Base64.encodeToString(basicAuth.getBytes(), Base64.DEFAULT);
         conn.setRequestProperty("Authorization", "Basic " + encoding);
+        conn.setRequestProperty(AppConfig.WCP_APP_ID_KEY, AppConfig.APP_ID_VALUE);
+        conn.setRequestProperty(AppConfig.ORG_ID_KEY, "OrgName");
       }
-      conn.setRequestProperty(AppConfig.APP_ID_KEY, AppConfig.APP_ID_VALUE);
-      conn.setRequestProperty(AppConfig.ORG_ID_KEY, AppConfig.ORG_ID_VALUE);
 
       if (mHeadersData != null) {
         Set mapSet = (Set) mHeadersData.entrySet();
@@ -426,12 +444,18 @@ public class HttpRequest {
       conn.setRequestMethod("POST");
       conn.setDoInput(true);
       conn.setRequestProperty("Content-Type", "application/json");
+
+      conn.setRequestProperty(AppConfig.APP_ID_KEY, AppConfig.APP_ID_VALUE);
+      conn.setRequestProperty(AppConfig.ORG_ID_KEY, AppConfig.ORG_ID_VALUE);
+      conn.setRequestProperty(AppConfig.CLIENT_ID_KEY, AppConfig.CLIENT_ID_VALUE);
+      conn.setRequestProperty(AppConfig.SECRET_KEY, AppConfig.SECRET_KEY_VALUE);
+
       if (serverType.equalsIgnoreCase("WCP")) {
         String encoding = Base64.encodeToString(basicAuth.getBytes(), Base64.DEFAULT);
         conn.setRequestProperty("Authorization", "Basic " + encoding);
+        conn.setRequestProperty(AppConfig.WCP_APP_ID_KEY, AppConfig.APP_ID_VALUE);
+        conn.setRequestProperty(AppConfig.ORG_ID_KEY, "OrgName");
       }
-      conn.setRequestProperty(AppConfig.APP_ID_KEY, AppConfig.APP_ID_VALUE);
-      conn.setRequestProperty(AppConfig.ORG_ID_KEY, AppConfig.ORG_ID_VALUE);
 
       if (mHeadersData != null) {
         Set mapSet = (Set) mHeadersData.entrySet();
@@ -558,12 +582,19 @@ public class HttpRequest {
       httpConn.setConnectTimeout(180000);
       httpConn.setRequestProperty("Content-Type", "multipart/form-data;");
       httpConn.setRequestProperty("User-Agent", "CodeJava Agent");
+
+      httpConn.setRequestProperty(AppConfig.APP_ID_KEY, AppConfig.APP_ID_VALUE);
+      httpConn.setRequestProperty(AppConfig.ORG_ID_KEY, AppConfig.ORG_ID_VALUE);
+      httpConn.setRequestProperty(AppConfig.CLIENT_ID_KEY, AppConfig.CLIENT_ID_VALUE);
+      httpConn.setRequestProperty(AppConfig.SECRET_KEY, AppConfig.SECRET_KEY_VALUE);
+
       if (serverType.equalsIgnoreCase("WCP")) {
         String encoding = Base64.encodeToString(basicAuth.getBytes(), Base64.DEFAULT);
         httpConn.setRequestProperty("Authorization", "Basic " + encoding);
+        httpConn.setRequestProperty(AppConfig.WCP_APP_ID_KEY, AppConfig.APP_ID_VALUE);
+        httpConn.setRequestProperty(AppConfig.ORG_ID_KEY, "OrgName");
       }
-      httpConn.setRequestProperty(AppConfig.APP_ID_KEY, AppConfig.APP_ID_VALUE);
-      httpConn.setRequestProperty(AppConfig.ORG_ID_KEY, AppConfig.ORG_ID_VALUE);
+
       OutputStream outputStream = httpConn.getOutputStream();
       PrintWriter writer = new PrintWriter(new OutputStreamWriter(outputStream, "UTF-8"), true);
 
@@ -711,6 +742,9 @@ public class HttpRequest {
 
         conn.setRequestProperty(AppConfig.APP_ID_KEY, AppConfig.APP_ID_VALUE);
         conn.setRequestProperty(AppConfig.ORG_ID_KEY, AppConfig.ORG_ID_VALUE);
+        conn.setRequestProperty(AppConfig.CLIENT_ID_KEY, AppConfig.CLIENT_ID_VALUE);
+        conn.setRequestProperty(AppConfig.SECRET_KEY, AppConfig.SECRET_KEY_VALUE);
+
         if (mHeadersData != null) {
           Set mapSet = (Set) mHeadersData.entrySet();
           Iterator mapIterator = mapSet.iterator();
@@ -813,8 +847,10 @@ public class HttpRequest {
           }
         }
         httppost.addHeader("Content-Type", "application/json");
-        httppost.addHeader("applicationId", "123");
-        httppost.addHeader("orgId", "12");
+        httppost.addHeader(AppConfig.APP_ID_KEY, AppConfig.APP_ID_VALUE);
+        httppost.addHeader(AppConfig.ORG_ID_KEY, AppConfig.ORG_ID_VALUE);
+        httppost.addHeader(AppConfig.CLIENT_ID_KEY, AppConfig.CLIENT_ID_VALUE);
+        httppost.addHeader(AppConfig.SECRET_KEY, AppConfig.SECRET_KEY_VALUE);
 
         StringEntity params1 = new StringEntity(getPostDataString(params));
         httppost.setEntity(params1);
@@ -909,12 +945,19 @@ public class HttpRequest {
         conn.setRequestMethod("DELETE");
         conn.setDoInput(true);
         conn.setRequestProperty("Content-Type", "application/json");
+
+        conn.setRequestProperty(AppConfig.APP_ID_KEY, AppConfig.APP_ID_VALUE);
+        conn.setRequestProperty(AppConfig.ORG_ID_KEY, AppConfig.ORG_ID_VALUE);
+        conn.setRequestProperty(AppConfig.CLIENT_ID_KEY, AppConfig.CLIENT_ID_VALUE);
+        conn.setRequestProperty(AppConfig.SECRET_KEY, AppConfig.SECRET_KEY_VALUE);
+
         if (serverType.equalsIgnoreCase("WCP")) {
           String encoding = Base64.encodeToString(basicAuth.getBytes(), Base64.DEFAULT);
           conn.setRequestProperty("Authorization", "Basic " + encoding);
+          conn.setRequestProperty(AppConfig.WCP_APP_ID_KEY, AppConfig.APP_ID_VALUE);
+          conn.setRequestProperty(AppConfig.ORG_ID_KEY, "OrgName");
         }
-        conn.setRequestProperty(AppConfig.APP_ID_KEY, AppConfig.APP_ID_VALUE);
-        conn.setRequestProperty(AppConfig.ORG_ID_KEY, AppConfig.ORG_ID_VALUE);
+
         if (mHeadersData != null) {
           Set mapSet = (Set) mHeadersData.entrySet();
           Iterator mapIterator = mapSet.iterator();
@@ -1010,8 +1053,11 @@ public class HttpRequest {
           }
         }
         httppost.addHeader("Content-Type", "application/json");
-        httppost.addHeader("applicationId", "123");
-        httppost.addHeader("orgId", "12");
+        httppost.addHeader(AppConfig.APP_ID_KEY, AppConfig.APP_ID_VALUE);
+        httppost.addHeader(AppConfig.ORG_ID_KEY, AppConfig.ORG_ID_VALUE);
+        httppost.addHeader(AppConfig.CLIENT_ID_KEY, AppConfig.CLIENT_ID_VALUE);
+        httppost.addHeader(AppConfig.SECRET_KEY, AppConfig.SECRET_KEY_VALUE);
+
         StringEntity params1 = new StringEntity(jsonObject.toString());
         httppost.setEntity(params1);
 
@@ -1104,12 +1150,19 @@ public class HttpRequest {
         conn.setRequestMethod("DELETE");
         conn.setDoInput(true);
         conn.setRequestProperty("Content-Type", "application/json");
+
+        conn.setRequestProperty(AppConfig.APP_ID_KEY, AppConfig.APP_ID_VALUE);
+        conn.setRequestProperty(AppConfig.ORG_ID_KEY, AppConfig.ORG_ID_VALUE);
+        conn.setRequestProperty(AppConfig.CLIENT_ID_KEY, AppConfig.CLIENT_ID_VALUE);
+        conn.setRequestProperty(AppConfig.SECRET_KEY, AppConfig.SECRET_KEY_VALUE);
+
         if (serverType.equalsIgnoreCase("WCP")) {
           String encoding = Base64.encodeToString(basicAuth.getBytes(), Base64.DEFAULT);
           conn.setRequestProperty("Authorization", "Basic " + encoding);
+          conn.setRequestProperty(AppConfig.WCP_APP_ID_KEY, AppConfig.APP_ID_VALUE);
+          conn.setRequestProperty(AppConfig.ORG_ID_KEY, "OrgName");
         }
-        conn.setRequestProperty(AppConfig.APP_ID_KEY, AppConfig.APP_ID_VALUE);
-        conn.setRequestProperty(AppConfig.ORG_ID_KEY, AppConfig.ORG_ID_VALUE);
+
         if (mHeadersData != null) {
           Set mapSet = (Set) mHeadersData.entrySet();
           Iterator mapIterator = mapSet.iterator();
@@ -1205,8 +1258,11 @@ public class HttpRequest {
           }
         }
         httppost.addHeader("Content-Type", "application/json");
-        httppost.addHeader("applicationId", "123");
-        httppost.addHeader("orgId", "12");
+        httppost.addHeader(AppConfig.APP_ID_KEY, AppConfig.APP_ID_VALUE);
+        httppost.addHeader(AppConfig.ORG_ID_KEY, AppConfig.ORG_ID_VALUE);
+        httppost.addHeader(AppConfig.CLIENT_ID_KEY, AppConfig.CLIENT_ID_VALUE);
+        httppost.addHeader(AppConfig.SECRET_KEY, AppConfig.SECRET_KEY_VALUE);
+
         StringEntity params1 = new StringEntity(jsonArray.toString());
         httppost.setEntity(params1);
 

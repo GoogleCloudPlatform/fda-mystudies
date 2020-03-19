@@ -178,6 +178,10 @@ public class VerificationStepActivity extends AppCompatActivity
             } else {
               AppController.getHelperProgressDialog()
                   .showProgress(VerificationStepActivity.this, "", "", false);
+
+              header.put("userId", mUserId);
+              header.put("accessToken", mAuth);
+
               params.put("emailId", mEmailId);
               params.put("code", mVerificationCode.getText().toString());
               RegistrationServerConfigEvent registrationServerConfigEvent =

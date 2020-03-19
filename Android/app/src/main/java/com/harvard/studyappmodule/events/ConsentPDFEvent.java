@@ -14,17 +14,17 @@
 
 package com.harvard.studyappmodule.events;
 
-import com.harvard.webservicemodule.events.RegistrationServerConfigEvent;
+import com.harvard.webservicemodule.events.RegistrationServerConsentConfigEvent;
 
 public class ConsentPDFEvent {
-  private RegistrationServerConfigEvent mRegistrationServerConfigEvent;
+  private RegistrationServerConsentConfigEvent registrationServerConsentConfigEvent;
 
-  public RegistrationServerConfigEvent getmRegistrationServerConfigEvent() {
-    return mRegistrationServerConfigEvent;
+  public RegistrationServerConsentConfigEvent getmRegistrationServerConsentConfigEvent() {
+    return registrationServerConsentConfigEvent;
   }
 
-  public void setmRegistrationServerConfigEvent(
-      RegistrationServerConfigEvent mRegistrationServerConfigEvent) {
-    this.mRegistrationServerConfigEvent = mRegistrationServerConfigEvent;
+  public void setRegistrationServerConsentConfigEvent(
+      RegistrationServerConsentConfigEvent mRegistrationServerConsentConfigEvent) {
+    this.registrationServerConsentConfigEvent = mRegistrationServerConsentConfigEvent;
   }
 }

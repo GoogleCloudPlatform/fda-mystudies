@@ -39,14 +39,14 @@ import com.harvard.usermodule.event.UpdatePreferenceEvent;
 import com.harvard.usermodule.webservicemodel.LoginData;
 import com.harvard.webservicemodule.apihelper.ApiCall;
 import com.harvard.webservicemodule.apihelper.ApiCallResponseServer;
-import com.harvard.webservicemodule.events.RegistrationServerConfigEvent;
+import com.harvard.webservicemodule.events.RegistrationServerEnrollmentConfigEvent;
 import com.harvard.webservicemodule.events.ResponseServerConfigEvent;
-import io.realm.Realm;
-import io.realm.RealmResults;
-import java.util.Calendar;
-import java.util.HashMap;
 import org.json.JSONException;
 import org.json.JSONObject;
+import java.util.Calendar;
+import java.util.HashMap;
+import io.realm.Realm;
+import io.realm.RealmResults;
 
 public class ActiveTaskService extends Service
     implements ApiCall.OnAsyncRequestComplete, ApiCallResponseServer.OnAsyncRequestComplete {
@@ -234,8 +234,8 @@ public class ActiveTaskService extends Service
               .readPreference(this, getResources().getString(R.string.userid), ""));
 
       UpdatePreferenceEvent updatePreferenceEvent = new UpdatePreferenceEvent();
-      RegistrationServerConfigEvent registrationServerConfigEvent =
-          new RegistrationServerConfigEvent(
+      RegistrationServerEnrollmentConfigEvent RegistrationServerEnrollmentConfigEvent =
+          new RegistrationServerEnrollmentConfigEvent(
               httpMethod,
               url,
               UPDATE_USERPREFERENCE_RESPONSECODE,
@@ -246,7 +246,8 @@ public class ActiveTaskService extends Service
               jsonObject,
               false,
               this);
-      updatePreferenceEvent.setmRegistrationServerConfigEvent(registrationServerConfigEvent);
+      updatePreferenceEvent.setRegistrationServerEnrollmentConfigEvent(
+          RegistrationServerEnrollmentConfigEvent);
       UserModulePresenter userModulePresenter = new UserModulePresenter();
       userModulePresenter.performUpdateUserPreference(updatePreferenceEvent);
     } else if (serverType.equalsIgnoreCase("response")) {
