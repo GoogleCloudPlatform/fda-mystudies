@@ -211,7 +211,7 @@ public class EligibleActivity extends AppCompatActivity implements ApiCall.OnAsy
   public <T> void asyncResponse(T response, int responseCode) {
     AppController.getHelperProgressDialog().dismissDialog();
     dbServiceSubscriber.updateStudyPreferenceDB(
-        this, getIntent().getStringExtra("studyId"), StudyFragment.YET_TO_JOIN, "", "", "", "");
+        this, getIntent().getStringExtra("studyId"), StudyFragment.YET_TO_JOIN, "", "", "", "", "");
   }
 
   @Override
@@ -219,6 +219,6 @@ public class EligibleActivity extends AppCompatActivity implements ApiCall.OnAsy
     AppController.getHelperProgressDialog().dismissDialog();
 
     dbServiceSubscriber.updateStudyPreferenceDB(
-        this, getIntent().getStringExtra("studyId"), StudyFragment.YET_TO_JOIN, "", "", "", "");
+        this, getIntent().getStringExtra("studyId"), StudyFragment.YET_TO_JOIN, "", "", "", "", "");
   }
 }

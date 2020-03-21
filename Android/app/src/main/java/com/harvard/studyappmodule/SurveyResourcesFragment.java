@@ -691,10 +691,12 @@ public class SurveyResourcesFragment<T> extends Fragment
                     + studies.getStudyId()
                     + "&activityId="
                     + anchorDateSchedulingDetails.getSourceActivityId()
+                    + "&questionKey="
+                    + anchorDateSchedulingDetails.getSourceKey()
                     + "&activityVersion="
                     + anchorDateSchedulingDetails.getActivityVersion(),
                 header,
-                "Response");
+                "");
         dbServiceSubscriber.closeRealmObj(realm);
         responseCode = mResponseModel.getResponseCode();
         response = mResponseModel.getResponseData();
@@ -763,21 +765,29 @@ public class SurveyResourcesFragment<T> extends Fragment
             JSONArray jsonArray = (JSONArray) jsonObject.get("rows");
             Gson gson = new Gson();
 
-            JSONObject jsonObject1 =
-                (JSONObject) new JSONObject(String.valueOf(jsonArray.get(0))).get("data");
-            Type type = new TypeToken<Map<String, Object>>() {}.getType();
-            Map<String, Object> myMap = gson.fromJson(String.valueOf(jsonObject1), type);
+            //            JSONObject jsonObject1 =
+            //                (JSONObject) new
+            // JSONObject(String.valueOf(jsonArray.get(0))).get("data");
+
+            JSONObject jsonObject1 = new JSONObject(String.valueOf(jsonArray.get(0)));
+            JSONArray jsonArray1 = (JSONArray) jsonObject1.get("data");
             Object value = null;
-            for (Map.Entry<String, Object> entry : myMap.entrySet()) {
-              String key = entry.getKey();
-              String valueobj = gson.toJson(entry.getValue());
-              Map<String, Object> vauleMap = gson.fromJson(String.valueOf(valueobj), type);
-              value = vauleMap.get("value");
-              try {
-                Date anchordate = AppController.getLabkeyDateFormat().parse("" + value);
-                value = AppController.getDateFormat().format(anchordate);
-              } catch (ParseException e) {
-                Logger.log(e);
+            for (int j = 0; j < jsonArray1.length(); j++) {
+              Type type = new TypeToken<Map<String, Object>>() {}.getType();
+              JSONObject jsonObject_data = (JSONObject) jsonArray1.get(j);
+              Map<String, Object> myMap = gson.fromJson(String.valueOf(jsonObject_data), type);
+
+              for (Map.Entry<String, Object> entry : myMap.entrySet()) {
+                String key = entry.getKey();
+                String valueobj = gson.toJson(entry.getValue());
+                Map<String, Object> vauleMap = gson.fromJson(String.valueOf(valueobj), type);
+                value = vauleMap.get("value");
+                try {
+                  Date anchordate = AppController.getLabkeyDateFormat().parse("" + value);
+                  value = AppController.getDateFormat().format(anchordate);
+                } catch (ParseException e) {
+                  Logger.log(e);
+                }
               }
             }
 
@@ -1054,7 +1064,6 @@ public class SurveyResourcesFragment<T> extends Fragment
       obj = new JSONObject(json);
       JSONArray jsonArray1 = new JSONArray();
       jsonArray1.put(AppConfig.StudyId);
-      //      jsonArray1.put("Test");
       obj.put("deleteData", jsonArray1);
     } catch (JSONException e) {
       Logger.log(e);

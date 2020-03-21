@@ -82,6 +82,7 @@ import com.harvard.studyappmodule.surveyscheduler.SurveyScheduler;
 import com.harvard.studyappmodule.surveyscheduler.model.ActivityStatus;
 import com.harvard.usermodule.UserModulePresenter;
 import com.harvard.usermodule.event.ActivityStateEvent;
+import com.harvard.usermodule.event.GetPreferenceEvent;
 import com.harvard.usermodule.event.UpdatePreferenceEvent;
 import com.harvard.usermodule.webservicemodel.Activities;
 import com.harvard.usermodule.webservicemodel.ActivityData;
@@ -97,6 +98,7 @@ import com.harvard.webservicemodule.apihelper.ApiCall;
 import com.harvard.webservicemodule.apihelper.ConnectionDetector;
 import com.harvard.webservicemodule.apihelper.HttpRequest;
 import com.harvard.webservicemodule.apihelper.Responsemodel;
+import com.harvard.webservicemodule.events.RegistrationServerConfigEvent;
 import com.harvard.webservicemodule.events.RegistrationServerEnrollmentConfigEvent;
 import com.harvard.webservicemodule.events.ResponseServerConfigEvent;
 import com.harvard.webservicemodule.events.WCPConfigEvent;
@@ -654,35 +656,16 @@ public class SurveyActivitiesFragment extends Fragment
           AppController.getHelperSharedPreference()
               .readPreference(
                   mContext, mContext.getResources().getString(R.string.clientToken), ""));
+      Realm realm = AppController.getRealmobj(mContext);
+      Studies mStudies =
+          dbServiceSubscriber.getStudies(((SurveyActivity) mContext).getStudyId(), realm);
 
-      //      ActivityData activityData1 = new ActivityData();
-      //      activityData1.setActivities(new RealmList<Activities>());
-      //      activityData1.setStudyId(((SurveyActivity) mContext).getStudyId());
-      //      ActivityData activityData = new ActivityData();
-      //      RealmList<Activities> activities = new RealmList<>();
-      //      activityData.setMessage(activityData1.getMessage());
-      //      activityData.setActivities(activities);
-      //      activityData.setStudyId(((SurveyActivity) mContext).getStudyId());
-      //      activityDataDB =
-      //          dbServiceSubscriber.getActivityPreference(
-      //              ((SurveyActivity) mContext).getStudyId(), mRealm);
-      //      if (activityDataDB == null) {
-      //        for (int i = 0; i < activityData1.getActivities().size(); i++) {
-      //          activityData1.getActivities().get(i).setStudyId(((SurveyActivity)
-      // mContext).getStudyId());
-      //          if (activityData1.getActivities().get(i).getActivityVersion() != null) {
-      //            activityData.getActivities().add(activityData1.getActivities().get(i));
-      //          }
-      //        }
-      //        dbServiceSubscriber.updateActivityState(mContext, activityData);
-      //        activityDataDB =
-      //            dbServiceSubscriber.getActivityPreference(
-      //                ((SurveyActivity) mContext).getStudyId(), mRealm);
-      //      }
-      //
-      //      calculateStartAnsEndDateForActivities();
-
-      String url = URLs.ACTIVITY_STATE + "?studyId=" + ((SurveyActivity) mContext).getStudyId();
+      String url =
+          URLs.ACTIVITY_STATE
+              + "?studyId="
+              + ((SurveyActivity) mContext).getStudyId()
+              + "&participantId="
+              + mStudies.getParticipantId();
       ResponseServerConfigEvent responseServerConfigEvent =
           new ResponseServerConfigEvent(
               "get",
@@ -1335,11 +1318,10 @@ public class SurveyActivitiesFragment extends Fragment
         }
       }
 
-    //            boolean updateRun = true;
     // If any activities available in Db we take from Db otherwise from Webservice
 
     // find any updates on available activity
-    if (activityDataDB != null && activityListData != null) { // && activityData != null
+    if (activityDataDB != null && activityListData != null) {
       for (int j = 0; j < activityListData.getActivities().size(); j++) {
         boolean activityAvailable = false;
         for (int i = 0; i < activityDataDB.getActivities().size(); i++) {
@@ -1438,7 +1420,6 @@ public class SurveyActivitiesFragment extends Fragment
         }
       }
     }
-    //            }
 
     displayData(activityListData, activityIds, runIds, null);
   }
@@ -1753,10 +1734,6 @@ public class SurveyActivitiesFragment extends Fragment
         ActivityData activityData =
             dbServiceSubscriber.getActivityPreference(
                 ((SurveyActivity) mContext).getStudyId(), mRealm);
-
-        //        Date joiningDate =
-        //            survayScheduler.getJoiningDateOfStudy(
-        //                studyPreferences, ((SurveyActivity) mContext).getStudyId());
         Date joiningDate = new Date();
 
         Date currentDate = new Date();
@@ -2842,12 +2819,13 @@ public class SurveyActivitiesFragment extends Fragment
 
     try {
       jsonObject.put("studyId", studyId);
+      jsonObject.put("participantId", mStudies.getParticipantId());
       jsonObject.put("activity", activitylist);
     } catch (JSONException e) {
       Logger.log(e);
     }
 
-    /////////// offline data storing
+    // offline data storing
     try {
       int number = dbServiceSubscriber.getUniqueID(mRealm);
       if (number == 0) {
@@ -2881,7 +2859,6 @@ public class SurveyActivitiesFragment extends Fragment
     } catch (Exception e) {
       Logger.log(e);
     }
-    //////////
 
     ResponseServerConfigEvent responseServerConfigEvent =
         new ResponseServerConfigEvent(
@@ -2945,18 +2922,6 @@ public class SurveyActivitiesFragment extends Fragment
       ConnectionDetector connectionDetector = new ConnectionDetector(mContext);
 
       if (connectionDetector.isConnectingToInternet()) {
-        //        mResponseModel =
-        //            HttpRequest.getRequest(
-        //                URLs.PROCESSRESPONSEDATA
-        //                    + "sql=SELECT%20%22"
-        //                    + anchorDateSchedulingDetails.getSourceKey()
-        //                    + "%22%20FROM%20%22"
-        //                    + anchorDateSchedulingDetails.getSourceActivityId()
-        //                    + anchorDateSchedulingDetails.getSourceFormKey()
-        //                    + "%22&participantId="
-        //                    + anchorDateSchedulingDetails.getParticipantId(),
-        //                new HashMap<String, String>(),
-        //                "Response");
         Realm realm = AppController.getRealmobj(mContext);
         Studies studies =
             realm
@@ -2995,10 +2960,12 @@ public class SurveyActivitiesFragment extends Fragment
                     + studies.getStudyId()
                     + "&activityId="
                     + anchorDateSchedulingDetails.getSourceActivityId()
+                    + "&questionKey="
+                    + anchorDateSchedulingDetails.getSourceKey()
                     + "&activityVersion="
                     + anchorDateSchedulingDetails.getActivityVersion(),
                 header,
-                "Response");
+                "");
         dbServiceSubscriber.closeRealmObj(realm);
         responseCode = mResponseModel.getResponseCode();
         response = mResponseModel.getResponseData();
@@ -3067,21 +3034,23 @@ public class SurveyActivitiesFragment extends Fragment
             JSONArray jsonArray = (JSONArray) jsonObject.get("rows");
             Gson gson = new Gson();
 
-            JSONObject jsonObject1 =
-                (JSONObject) new JSONObject(String.valueOf(jsonArray.get(0))).get("data");
-            Type type = new TypeToken<Map<String, Object>>() {}.getType();
-            Map<String, Object> myMap = gson.fromJson(String.valueOf(jsonObject1), type);
+            JSONObject jsonObject1 = new JSONObject(String.valueOf(jsonArray.get(0)));
+            JSONArray jsonArray1 = (JSONArray) jsonObject1.get("data");
             Object value = null;
-            for (Map.Entry<String, Object> entry : myMap.entrySet()) {
-              String key = entry.getKey();
-              String valueobj = gson.toJson(entry.getValue());
-              Map<String, Object> vauleMap = gson.fromJson(String.valueOf(valueobj), type);
-              value = vauleMap.get("value");
-              try {
-                Date anchordate = AppController.getLabkeyDateFormat().parse("" + value);
-                value = AppController.getDateFormat().format(anchordate);
-              } catch (ParseException e) {
-                Logger.log(e);
+            for (int i = 0; i < jsonArray1.length(); i++) {
+              Type type = new TypeToken<Map<String, Object>>() {}.getType();
+              Map<String, Object> myMap = gson.fromJson(String.valueOf(jsonArray1.get(i)), type);
+              for (Map.Entry<String, Object> entry : myMap.entrySet()) {
+                String key = entry.getKey();
+                String valueobj = gson.toJson(entry.getValue());
+                Map<String, Object> vauleMap = gson.fromJson(String.valueOf(valueobj), type);
+                value = vauleMap.get("value");
+                try {
+                  Date anchordate = AppController.getLabkeyDateFormat().parse("" + value);
+                  value = AppController.getDateFormat().format(anchordate);
+                } catch (ParseException e) {
+                  Logger.log(e);
+                }
               }
             }
 

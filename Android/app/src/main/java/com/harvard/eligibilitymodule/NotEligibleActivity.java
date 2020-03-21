@@ -113,7 +113,14 @@ public class NotEligibleActivity extends AppCompatActivity
   public <T> void asyncResponse(T response, int responseCode) {
     AppController.getHelperProgressDialog().dismissDialog();
     dbServiceSubscriber.updateStudyPreferenceDB(
-        this, getIntent().getStringExtra("studyId"), StudyFragment.NOT_ELIGIBLE, "", "", "", "");
+        this,
+        getIntent().getStringExtra("studyId"),
+        StudyFragment.NOT_ELIGIBLE,
+        "",
+        "",
+        "",
+        "",
+        "");
   }
 
   @Override

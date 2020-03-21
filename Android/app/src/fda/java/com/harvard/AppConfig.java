@@ -24,9 +24,11 @@ public class AppConfig {
   public static String StudyId = "Demo2";
 
   // AppId
-  public static String APP_ID_KEY = "applicationId";
+  public static String APP_ID_KEY = "appId";
   public static String WCP_APP_ID_KEY = "applicationId";
-  public static String APP_ID_VALUE = "BTCHIM01 ";
+  public static String APP_ID_VALUE = "GCPMS001";
+//  public static String APP_ID_VALUE = "BTCHIM01";
+//  public static String APP_ID_VALUE = "BTCGDEM01";
   // OrgId
   public static String ORG_ID_KEY = "orgId";
   public static String ORG_ID_VALUE = "OrgName";

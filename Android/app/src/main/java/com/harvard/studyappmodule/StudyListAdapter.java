@@ -34,8 +34,8 @@ import com.harvard.studyappmodule.studymodel.StudyList;
 import com.harvard.studyappmodule.surveyscheduler.model.CompletionAdeherenceCalc;
 import com.harvard.utils.AppController;
 import com.harvard.utils.Logger;
-import io.realm.RealmList;
 import java.util.ArrayList;
+import io.realm.RealmList;
 
 public class StudyListAdapter extends RecyclerView.Adapter<StudyListAdapter.Holder> {
   private final Context mContext;
@@ -45,10 +45,10 @@ public class StudyListAdapter extends RecyclerView.Adapter<StudyListAdapter.Hold
   private boolean mClick = true;
 
   StudyListAdapter(
-          Context context,
-          RealmList<StudyList> items,
-          StudyFragment studyFragment,
-          ArrayList<CompletionAdeherenceCalc> completionAdeherenceCalcs) {
+      Context context,
+      RealmList<StudyList> items,
+      StudyFragment studyFragment,
+      ArrayList<CompletionAdeherenceCalc> completionAdeherenceCalcs) {
     this.mContext = context;
     this.mItems = items;
     this.studyFragment = studyFragment;
@@ -386,8 +386,8 @@ public class StudyListAdapter extends RecyclerView.Adapter<StudyListAdapter.Hold
   }
 
   void modifyAdapter(
-          RealmList<StudyList> searchResultList,
-          ArrayList<CompletionAdeherenceCalc> completionAdeherenceCalcs) {
+      RealmList<StudyList> searchResultList,
+      ArrayList<CompletionAdeherenceCalc> completionAdeherenceCalcs) {
     mItems = searchResultList;
     this.completionAdeherenceCalcs = completionAdeherenceCalcs;
   }

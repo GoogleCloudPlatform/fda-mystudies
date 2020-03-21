@@ -17,7 +17,6 @@ package com.harvard.webservicemodule;
 import com.harvard.R;
 import com.harvard.base.BaseSubscriber;
 import com.harvard.webservicemodule.apihelper.ApiCall;
-import com.harvard.webservicemodule.apihelper.ApiCallResponseServer;
 import com.harvard.webservicemodule.events.AuthServerConfigEvent;
 import com.harvard.webservicemodule.events.RegistrationServerConfigEvent;
 import com.harvard.webservicemodule.events.RegistrationServerConsentConfigEvent;
@@ -362,8 +361,7 @@ public class WebserviceSubscriber extends BaseSubscriber {
     }
     url = url.replaceAll(" ", "%20");
     if (responseServerConfigEvent.getmRequestType().equalsIgnoreCase("get")) {
-      ApiCallResponseServer apiCall =
-          new ApiCallResponseServer(responseServerConfigEvent.getmContext());
+      ApiCall apiCall = new ApiCall(responseServerConfigEvent.getmContext());
       apiCall.apiCallGet(
           url,
           responseServerConfigEvent.getmHeaders(),
@@ -371,10 +369,9 @@ public class WebserviceSubscriber extends BaseSubscriber {
           responseServerConfigEvent.getmResponseCode(),
           responseServerConfigEvent.getV(),
           responseServerConfigEvent.ismShowAlert(),
-          "Response");
+          "");
     } else if (responseServerConfigEvent.getmRequestType().equalsIgnoreCase("post_object")) {
-      ApiCallResponseServer apiCall =
-          new ApiCallResponseServer(responseServerConfigEvent.getmContext());
+      ApiCall apiCall = new ApiCall(responseServerConfigEvent.getmContext());
       apiCall.apiCallPostJson(
           url,
           responseServerConfigEvent.getmHeaders(),
@@ -383,10 +380,9 @@ public class WebserviceSubscriber extends BaseSubscriber {
           responseServerConfigEvent.getmResponseCode(),
           responseServerConfigEvent.getV(),
           responseServerConfigEvent.ismShowAlert(),
-          "Response");
+          "");
     } else if (responseServerConfigEvent.getmRequestType().equalsIgnoreCase("delete")) {
-      ApiCallResponseServer apiCall =
-          new ApiCallResponseServer(responseServerConfigEvent.getmContext());
+      ApiCall apiCall = new ApiCall(responseServerConfigEvent.getmContext());
       apiCall.apiCallDeleteHashmap(
           url,
           responseServerConfigEvent.getmHeaders(),
@@ -395,10 +391,9 @@ public class WebserviceSubscriber extends BaseSubscriber {
           responseServerConfigEvent.getmResponseCode(),
           responseServerConfigEvent.getV(),
           responseServerConfigEvent.ismShowAlert(),
-          "Response");
+          "");
     } else {
-      ApiCallResponseServer apiCall =
-          new ApiCallResponseServer(responseServerConfigEvent.getmContext());
+      ApiCall apiCall = new ApiCall(responseServerConfigEvent.getmContext());
       apiCall.apiCallPostHashmap(
           url,
           responseServerConfigEvent.getmHeaders(),
@@ -407,7 +402,7 @@ public class WebserviceSubscriber extends BaseSubscriber {
           responseServerConfigEvent.getmResponseCode(),
           responseServerConfigEvent.getV(),
           responseServerConfigEvent.ismShowAlert(),
-          "Response");
+          "");
     }
   }
 

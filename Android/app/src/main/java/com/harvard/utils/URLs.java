@@ -17,7 +17,7 @@ package com.harvard.utils;
 import com.harvard.BuildConfig;
 
 public class URLs {
-  public static String BASE_URL_WCP_SERVER = "http://3.130.0.100:8080/StudyMetaData/";
+  public static String BASE_URL_WCP_SERVER = BuildConfig.BASE_URL_WCP_SERVER;
   public static String BASE_URL_REGISTRATION_SERVER = BuildConfig.BASE_URL_REGISTRATION_SERVER;
   public static String BASE_URL_REGISTRATION_CONSENT_SERVER = BuildConfig.BASE_URL_REGISTRATION_CONSENT_SERVER;
   public static String BASE_URL_REGISTRATION_ENROLLMENT_SERVER = BuildConfig.BASE_URL_REGISTRATION_ENROLLMENT_SERVER;
@@ -49,7 +49,7 @@ public class URLs {
 
   // Registration consent Server
   public static String UPDATE_ELIGIBILITY_CONSENT = "updateEligibilityConsentStatus";
-  public static String CONSENTPDF = "consentPDF";
+  public static String CONSENTPDF = "consentDocument";
 
   // WCP server
   public static String STUDY_INFO = "studyInfo";
@@ -69,8 +69,8 @@ public class URLs {
   // Response server
   public static String PROCESS_RESPONSE = "participant/process-response";
   public static String PROCESSRESPONSEDATA = BASE_URL_RESPONSE_SERVER + "participant/getresponse?";
-  public static String UPDATE_ACTIVITY_PREFERENCE = "updateActivityState";
-  public static String ACTIVITY_STATE = "activityState";
+  public static String UPDATE_ACTIVITY_PREFERENCE = "participant/update-activity-state";
+  public static String ACTIVITY_STATE = "participant/get-activity-state";
 
   public static String WITHDRAWFROMSTUDY = "withdrawFromStudy";
 }

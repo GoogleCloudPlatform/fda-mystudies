@@ -41,6 +41,7 @@ import com.harvard.eligibilitymodule.ComprehensionSuccessActivity;
 import com.harvard.R;
 import com.harvard.storagemodule.DBServiceSubscriber;
 import com.harvard.studyappmodule.enroll.EnrollData;
+import com.harvard.studyappmodule.responseservermodel.ResponseServerData;
 import com.harvard.studyappmodule.StudyFragment;
 import com.harvard.studyappmodule.StudyModulePresenter;
 import com.harvard.studyappmodule.consent.model.ComprehensionCorrectAnswers;
@@ -133,6 +134,7 @@ public class CustomConsentViewTaskActivity extends AppCompatActivity
   public static final String CONSENT = "consent";
   private String type;
   private String participantId = "";
+  private String hashToken = "";
   private String siteId = "";
   private int score = 0;
   private int passScore = 0;
@@ -467,6 +469,7 @@ public class CustomConsentViewTaskActivity extends AppCompatActivity
             dbServiceSubscriber.getStudies(getIntent().getStringExtra(STUDYID), mRealm);
         if (mStudies != null) {
           participantId = mStudies.getParticipantId();
+          hashToken = mStudies.getHashedToken();
           siteId = mStudies.getSiteId();
         }
         mCompletionAdherenceStatus = false;
@@ -550,6 +553,9 @@ public class CustomConsentViewTaskActivity extends AppCompatActivity
       if (participantId != null && !participantId.equalsIgnoreCase("")) {
         studiestatus.put("participantId", participantId);
       }
+      if (hashToken != null && !hashToken.equalsIgnoreCase("")) {
+        studiestatus.put("hashToken", hashToken);
+      }
       if (siteId != null && !siteId.equalsIgnoreCase("")) {
         studiestatus.put("siteId", siteId);
       }
@@ -622,6 +628,7 @@ public class CustomConsentViewTaskActivity extends AppCompatActivity
           enrolleddate,
           participantId,
           siteId,
+          hashToken,
           AppController.getHelperSharedPreference()
               .readPreference(
                   CustomConsentViewTaskActivity.this,
@@ -662,6 +669,7 @@ public class CustomConsentViewTaskActivity extends AppCompatActivity
       EnrollData enrollData = (EnrollData) response;
       if (enrollData.getCode() == 200) {
         participantId = enrollData.getParticipantId();
+        hashToken = enrollData.getHashedToken();
         siteId = enrollData.getSiteId();
         updateuserpreference();
 
@@ -877,7 +885,7 @@ public class CustomConsentViewTaskActivity extends AppCompatActivity
             + "?studyId="
             + getIntent().getStringExtra(STUDYID)
             + "&studyVersion="
-            + "2.4";
+            + studyList.getStudyVersion();
     WCPConfigEvent wcpConfigEvent =
         new WCPConfigEvent(
             "get",

@@ -30,6 +30,7 @@ import com.harvard.studyappmodule.events.ProcessResponseEvent;
 import com.harvard.studyappmodule.events.UpdateEligibilityConsentStatusEvent;
 import com.harvard.studyappmodule.events.VerifyEnrollmentIdEvent;
 import com.harvard.studyappmodule.events.WithdrawFromStudyEvent;
+import com.harvard.usermodule.event.ActivityStateEvent;
 import com.harvard.usermodule.event.GetTermsAndConditionEvent;
 
 public class StudyModuleSubscriber extends BaseSubscriber {
@@ -92,5 +93,9 @@ public class StudyModuleSubscriber extends BaseSubscriber {
 
   public void onEvent(ProcessResponseDataEvent processResponseDataEvent) {
     FDAEventBus.postEvent(processResponseDataEvent.getResponseServerConfigEvent());
+  }
+
+  public void onEvent(ActivityStateEvent activityStateEvent) {
+    FDAEventBus.postEvent(activityStateEvent.getResponseServerConfigEvent());
   }
 }

@@ -1076,7 +1076,7 @@ public class SurveyDashboardFragment extends Fragment implements ApiCall.OnAsync
             responseInfoActiveTaskModel.setActivityVersion(
                 dashboardData
                     .getDashboard()
-                    .getCharts()
+                    .getStatistics()
                     .get(i)
                     .getDataSource()
                     .getActivity()
@@ -1296,10 +1296,12 @@ public class SurveyDashboardFragment extends Fragment implements ApiCall.OnAsync
                     + studies.getStudyId()
                     + "&activityId="
                     + responseInfoActiveTaskModel.getActivityId()
+                    + "&questionKey="
+                    + responseInfoActiveTaskModel.getKey()
                     + "&activityVersion="
                     + responseInfoActiveTaskModel.getActivityVersion(),
                 header,
-                "Response");
+                "");
         dbServiceSubscriber.closeRealmObj(realm);
         responseCode = mResponseModel.getResponseCode();
         response = mResponseModel.getResponseData();
@@ -1406,94 +1408,99 @@ public class SurveyDashboardFragment extends Fragment implements ApiCall.OnAsync
             JSONArray jsonArray = (JSONArray) jsonObject.get("rows");
             Gson gson = new Gson();
             for (int i = 0; i < jsonArray.length(); i++) {
-              JSONObject jsonObject1 =
-                  (JSONObject) new JSONObject(String.valueOf(jsonArray.get(i))).get("data");
-              Type type = new TypeToken<Map<String, Object>>() {}.getType();
-              Map<String, Object> myMap = gson.fromJson(String.valueOf(jsonObject1), type);
-              StepRecordCustom stepRecordCustom = new StepRecordCustom();
-              Date completedDate = new Date();
-              int duration = 0;
-              try {
-                Object completedDateValMap = gson.toJson(myMap.get("Created"));
-                Map<String, Object> completedDateVal =
-                    gson.fromJson(String.valueOf(completedDateValMap), type);
-                completedDate =
-                    simpleDateFormat.parse(String.valueOf(completedDateVal.get("value")));
-              } catch (JsonSyntaxException | ParseException e) {
-                Logger.log(e);
-              }
+              JSONObject jsonObject1 = new JSONObject(String.valueOf(jsonArray.get(i)));
+              JSONArray jsonArray1 = (JSONArray) jsonObject1.get("data");
+              for (int j = 0; j < jsonArray1.length(); j++) {
+                JSONObject jsonObject_data = (JSONObject) jsonArray1.get(j);
+                Type type = new TypeToken<Map<String, Object>>() {}.getType();
+                Map<String, Object> myMap = gson.fromJson(String.valueOf(jsonObject_data), type);
+                StepRecordCustom stepRecordCustom = new StepRecordCustom();
+                Date completedDate = new Date();
+                int duration = 0;
+                try {
+                  Object completedDateValMap = gson.toJson(myMap.get("Created"));
+                  Map<String, Object> completedDateVal =
+                      gson.fromJson(String.valueOf(completedDateValMap), type);
+                  if (completedDateVal != null)
+                    completedDate =
+                        simpleDateFormat.parse(String.valueOf(completedDateVal.get("value")));
+                } catch (JsonSyntaxException | ParseException e) {
+                  Logger.log(e);
+                }
 
-              try {
-                Object durationValMap = gson.toJson(myMap.get("duration"));
-                Map<String, Object> completedDateVal =
-                    gson.fromJson(String.valueOf(durationValMap), type);
-                duration = (int) Double.parseDouble("" + completedDateVal.get("value"));
-              } catch (Exception e) {
-                Logger.log(e);
-              }
-              for (Map.Entry<String, Object> entry : myMap.entrySet()) {
-                String key = entry.getKey();
-                String valueobj = gson.toJson(entry.getValue());
-                Map<String, Object> vauleMap = gson.fromJson(String.valueOf(valueobj), type);
-                Object value = vauleMap.get("value");
-                if (!key.equalsIgnoreCase("container")
-                    && !key.equalsIgnoreCase("ParticipantId")
-                    && !key.equalsIgnoreCase("EntityId")
-                    && !key.equalsIgnoreCase("Modified")
-                    && !key.equalsIgnoreCase("lastIndexed")
-                    && !key.equalsIgnoreCase("ModifiedBy")
-                    && !key.equalsIgnoreCase("CreatedBy")
-                    && !key.equalsIgnoreCase("Key")
-                    && !key.equalsIgnoreCase("duration")
-                    && !key.equalsIgnoreCase(stepKey + "Id")
-                    && !key.equalsIgnoreCase("Created")) {
-                  int runId =
-                      dbServiceSubscriber.getActivityRunForStatsAndCharts(
-                          responseInfoActiveTaskModel.getActivityId(),
-                          studyId,
-                          completedDate,
-                          mRealm);
-                  if (key.equalsIgnoreCase("count")) {
-                    stepRecordCustom.setStepId(stepKey);
-                    stepRecordCustom.setTaskStepID(
+                try {
+                  Object durationValMap = gson.toJson(myMap.get("duration"));
+                  Map<String, Object> completedDateVal =
+                      gson.fromJson(String.valueOf(durationValMap), type);
+                  if (completedDateVal != null)
+                    duration = (int) Double.parseDouble("" + completedDateVal.get("value"));
+                } catch (Exception e) {
+                  Logger.log(e);
+                }
+                for (Map.Entry<String, Object> entry : myMap.entrySet()) {
+                  String key = entry.getKey();
+                  String valueobj = gson.toJson(entry.getValue());
+                  Map<String, Object> vauleMap = gson.fromJson(String.valueOf(valueobj), type);
+                  Object value = vauleMap.get("value");
+                  if (!key.equalsIgnoreCase("container")
+                      && !key.equalsIgnoreCase("ParticipantId")
+                      && !key.equalsIgnoreCase("EntityId")
+                      && !key.equalsIgnoreCase("Modified")
+                      && !key.equalsIgnoreCase("lastIndexed")
+                      && !key.equalsIgnoreCase("ModifiedBy")
+                      && !key.equalsIgnoreCase("CreatedBy")
+                      && !key.equalsIgnoreCase("Key")
+                      && !key.equalsIgnoreCase("duration")
+                      && !key.equalsIgnoreCase(stepKey + "Id")
+                      && !key.equalsIgnoreCase("Created")) {
+                    int runId =
+                        dbServiceSubscriber.getActivityRunForStatsAndCharts(
+                            responseInfoActiveTaskModel.getActivityId(),
+                            studyId,
+                            completedDate,
+                            mRealm);
+                    if (key.equalsIgnoreCase("count")) {
+                      stepRecordCustom.setStepId(stepKey);
+                      stepRecordCustom.setTaskStepID(
+                          studyId
+                              + "_STUDYID_"
+                              + responseInfoActiveTaskModel.getActivityId()
+                              + "_"
+                              + runId
+                              + "_"
+                              + stepKey);
+                    } else {
+                      stepRecordCustom.setStepId(key);
+                      stepRecordCustom.setTaskStepID(
+                          studyId
+                              + "_STUDYID_"
+                              + responseInfoActiveTaskModel.getActivityId()
+                              + "_"
+                              + runId
+                              + "_"
+                              + key);
+                    }
+                    stepRecordCustom.setStudyId(studyId);
+                    stepRecordCustom.setActivityID(
+                        studyId + "_STUDYID_" + responseInfoActiveTaskModel.getActivityId());
+                    stepRecordCustom.setTaskId(
                         studyId
                             + "_STUDYID_"
                             + responseInfoActiveTaskModel.getActivityId()
                             + "_"
-                            + runId
-                            + "_"
-                            + stepKey);
-                  } else {
-                    stepRecordCustom.setStepId(key);
-                    stepRecordCustom.setTaskStepID(
-                        studyId
-                            + "_STUDYID_"
-                            + responseInfoActiveTaskModel.getActivityId()
-                            + "_"
-                            + runId
-                            + "_"
-                            + key);
+                            + runId);
+
+                    stepRecordCustom.setCompleted(completedDate);
+                    stepRecordCustom.setStarted(completedDate);
+
+                    try {
+                      Date anchordate = AppController.getLabkeyDateFormat().parse("" + value);
+                      value = AppController.getDateFormat().format(anchordate);
+                    } catch (ParseException e) {
+                      Logger.log(e);
+                    }
                   }
-                  stepRecordCustom.setStudyId(studyId);
-                  stepRecordCustom.setActivityID(
-                      studyId + "_STUDYID_" + responseInfoActiveTaskModel.getActivityId());
-                  stepRecordCustom.setTaskId(
-                      studyId
-                          + "_STUDYID_"
-                          + responseInfoActiveTaskModel.getActivityId()
-                          + "_"
-                          + runId);
-
-                  stepRecordCustom.setCompleted(completedDate);
-                  stepRecordCustom.setStarted(completedDate);
                   JSONObject jsonObject2 = new JSONObject();
-                  try {
-                    Date anchordate = AppController.getLabkeyDateFormat().parse("" + value);
-                    value = AppController.getDateFormat().format(anchordate);
-                  } catch (ParseException e) {
-                    Logger.log(e);
-                  }
-
                   ActivitiesWS activityObj =
                       dbServiceSubscriber.getActivityObj(
                           responseInfoActiveTaskModel.getActivityId(), studyId, mRealm);
@@ -1531,17 +1538,40 @@ public class SurveyDashboardFragment extends Fragment implements ApiCall.OnAsync
             }
           } catch (Exception e) {
             Logger.log(e);
-            addViewStatisticsValues();
-            AppController.getHelperProgressDialog().dismissDialog();
+            if (mArrayList.size() > (position + 1))
+              new ResponseData(
+                      ((SurveyActivity) mContext).getStudyId(),
+                      mArrayList.get((position + 1)),
+                      mStudies.getParticipantId(),
+                      position + 1)
+                  .execute();
+            else {
+              addViewStatisticsValues();
+              AppController.getHelperProgressDialog().dismissDialog();
+              Toast.makeText(
+                      mContext,
+                      mContext.getResources().getString(R.string.unable_to_retrieve_data),
+                      Toast.LENGTH_SHORT)
+                  .show();
+            }
           }
         } else {
-          addViewStatisticsValues();
-          AppController.getHelperProgressDialog().dismissDialog();
-          Toast.makeText(
-                  mContext,
-                  mContext.getResources().getString(R.string.unable_to_retrieve_data),
-                  Toast.LENGTH_SHORT)
-              .show();
+          if (mArrayList.size() > (position + 1))
+            new ResponseData(
+                    ((SurveyActivity) mContext).getStudyId(),
+                    mArrayList.get((position + 1)),
+                    mStudies.getParticipantId(),
+                    position + 1)
+                .execute();
+          else {
+            addViewStatisticsValues();
+            AppController.getHelperProgressDialog().dismissDialog();
+            Toast.makeText(
+                    mContext,
+                    mContext.getResources().getString(R.string.unable_to_retrieve_data),
+                    Toast.LENGTH_SHORT)
+                .show();
+          }
         }
       } else {
         addViewStatisticsValues();

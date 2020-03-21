@@ -419,13 +419,12 @@ public class DeleteAccountActivity extends AppCompatActivity
     String json = gson.toJson(deleteAccountData);
     JSONObject obj = null;
     try {
+      obj = new JSONObject(json);
       if (mRealmStudie.size() > 0) {
-        obj = new JSONObject(json);
         JSONArray jsonArray1 = new JSONArray();
         for (int i = 0; i < mRealmStudie.size(); i++) {
           jsonArray1.put(mRealmStudie.get(i).getStudyId());
         }
-        //        jsonArray1.put("Test");
         obj.put("deleteData", jsonArray1);
       }
     } catch (JSONException e) {

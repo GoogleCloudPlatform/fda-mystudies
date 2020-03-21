@@ -16,8 +16,9 @@ package com.harvard.webservicemodule.events;
 
 import android.content.Context;
 import com.harvard.utils.URLs;
-import java.util.HashMap;
+import org.json.JSONArray;
 import org.json.JSONObject;
+import java.util.HashMap;
 
 public class ResponseServerConfigEvent<V> extends WebserviceConfigEvent {
   public ResponseServerConfigEvent(
@@ -32,6 +33,19 @@ public class ResponseServerConfigEvent<V> extends WebserviceConfigEvent {
       boolean showAlert,
       V o) {
     super(method, url, requestCode, context, modelclass, params, header, jsonobj, showAlert, o);
+  }
+
+  public ResponseServerConfigEvent(
+      String method,
+      String Url,
+      int RequestCode,
+      Context context,
+      Class modelclass,
+      HashMap<String, String> headers,
+      JSONArray jsonArray,
+      boolean showAlert,
+      V v) {
+    super(method, Url, RequestCode, context, modelclass, headers, jsonArray, showAlert, v);
   }
 
   @Override
