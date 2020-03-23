@@ -1,10 +1,9 @@
-/**
- * ***************************************************************************** Copyright 2020
- * Google LLC
+/*
+ * Copyright 2020 Google LLC
  *
- * <p>Use of this source code is governed by an MIT-style license that can be found in the LICENSE
- * file or at https://opensource.org/licenses/MIT.
- * ****************************************************************************
+ * Use of this source code is governed by an MIT-style
+ * license that can be found in the LICENSE file or at
+ * https://opensource.org/licenses/MIT.
  */
 package com.google.cloud.healthcare.fdamystudies.dao;
 
@@ -30,13 +29,6 @@ public class CommonDaoImpl implements CommonDao {
   @Autowired private EntityManagerFactory entityManagerFactory;
 
   @Override
-  public boolean validateServerClientCredentials(
-      String applicationId, String clientId, String clientSecret) {
-    // TODO - With Auth Server Open ID implementation
-    return true;
-  }
-
-  @Override
   public ParticipantBo getParticipantInfoDetails(String participantId) {
     logger.info("CommonDaoImpl getParticipantInfoDetails() - Ends ");
     CriteriaBuilder criteriaBuilder = null;
@@ -55,7 +47,7 @@ public class CommonDaoImpl implements CommonDao {
       participantBoList = session.createQuery(participantBoCriteriaQuery).getResultList();
       if (!participantBoList.isEmpty()) {
         participantBO = participantBoList.get(0);
-        //        userDetailsId = userDetails.getUserDetailsId();
+        // userDetailsId = userDetails.getUserDetailsId();
       }
     } catch (Exception e) {
       logger.error("CommonDaoImpl getParticipantInfoDetails() - error ", e);

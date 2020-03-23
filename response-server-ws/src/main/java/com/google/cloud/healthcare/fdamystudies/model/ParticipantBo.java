@@ -1,10 +1,15 @@
-/**
- * ***************************************************************************** Copyright 2020
- * Google LLC
+/*
+ * Copyright 2020 Google LLC
  *
+<<<<<<< HEAD
  * <p>Use of this source code is governed by an MIT-style license that can be found in the LICENSE
  * file or at https://opensource.org/licenses/MIT.
  * ****************************************************************************
+=======
+ * Use of this source code is governed by an MIT-style
+ * license that can be found in the LICENSE file or at
+ * https://opensource.org/licenses/MIT.
+>>>>>>> c605cb6680704f7d4e3292b682c96035f36faeb1
  */
 package com.google.cloud.healthcare.fdamystudies.model;
 
@@ -16,11 +21,13 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import com.google.cloud.healthcare.fdamystudies.utils.AppConstants;
 
 @Entity
 @Table(name = "participant_info")
 public class ParticipantBo implements Serializable {
-  private static final long serialVersionUID = 1L;
+
+  private static final long serialVersionUID = -8669517487080184697L;
 
   @Id
   @Column(name = "id")
@@ -28,10 +35,10 @@ public class ParticipantBo implements Serializable {
   private Integer id;
 
   @Column(name = "participant_identifier", unique = true)
-  private String participantIdentifier = "";
+  private String participantIdentifier = AppConstants.EMPTY_STR;
 
   @Column(name = "token_identifier")
-  private String tokenIdentifier = "";
+  private String tokenIdentifier = AppConstants.EMPTY_STR;
 
   @Column(name = "created", columnDefinition = "TIMESTAMP")
   private LocalDateTime created;

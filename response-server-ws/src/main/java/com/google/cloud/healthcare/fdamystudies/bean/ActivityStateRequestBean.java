@@ -1,10 +1,8 @@
-/**
- * ***************************************************************************** Copyright 2020
- * Google LLC
+/*
+ * Copyright 2020 Google LLC
  *
- * <p>Use of this source code is governed by an MIT-style license that can be found in the LICENSE
- * file or at https://opensource.org/licenses/MIT.
- * ****************************************************************************
+ * Use of this source code is governed by an MIT-style license that can be found in the LICENSE file
+ * or at https://opensource.org/licenses/MIT.
  */
 package com.google.cloud.healthcare.fdamystudies.bean;
 
@@ -18,9 +16,8 @@ import lombok.ToString;
 @Getter
 @ToString
 public class ActivityStateRequestBean {
-  // private ActivitiesBean activity;
   private String participantId;
   private String studyId;
-  List<ParticipantActivityBean> activity = new ArrayList<>();
+  private List<ParticipantActivityBean> activity = new ArrayList<>();
   private String message = null;
 }

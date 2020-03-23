@@ -1,8 +1,4 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Copyright 2020 Google LLC 
-Use of this source code is governed by an MIT-style
-license that can be found in the LICENSE file or at 
-https://opensource.org/licenses/MIT.  -->
 <Configuration status="WARN" monitorInterval="30">
 	<Properties>
 		<Property name="LOG_PATTERN">%d{yyyy-MM-dd'T'HH:mm:ss.SSSZ} %p %m%n
@@ -15,8 +11,8 @@ https://opensource.org/licenses/MIT.  -->
 		</Console>
 
 		<RollingFile name="appLog"
-			fileName="/opt/tomcat/logs/fda-mystudies-response-server.log"
-			filePattern="/opt/tomcat/logs/fda-mystudies-response-server-%d{yyyy-MM-dd}-%i.log">
+			fileName="/opt/tomcat/logs/fda-mystudies/response-server.log"
+			filePattern="/opt/tomcat/logs/fda-mystudies/response-server-%d{yyyy-MM-dd}-%i.log">
 			<PatternLayout pattern="${LOG_PATTERN}" />
 			<Policies>
 				<SizeBasedTriggeringPolicy size="10MB" />
@@ -25,8 +21,8 @@ https://opensource.org/licenses/MIT.  -->
 		</RollingFile>
 
 		<RollingFile name="debugLog"
-			fileName="/opt/tomcat/logs/fda-mystudies-response-server.log"
-			filePattern="/opt/tomcat/logs/fda-mystudies-response-server-%d{yyyy-MM-dd}-%i.log">
+			fileName="/opt/tomcat/logs/fda-mystudies/response-server-debug.log"
+			filePattern="/opt/tomcat/logs/fda-mystudies/response-server-debug-%d{yyyy-MM-dd}-%i.log">
 			<PatternLayout pattern="${LOG_PATTERN}" />
 			<Policies>
 				<SizeBasedTriggeringPolicy size="10MB" />

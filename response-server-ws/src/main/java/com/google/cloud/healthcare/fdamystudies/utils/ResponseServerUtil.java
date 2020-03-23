@@ -1,13 +1,14 @@
-/**
- * ***************************************************************************** Copyright 2020
- * Google LLC
+/*
+ * Copyright 2020 Google LLC
  *
- * <p>Use of this source code is governed by an MIT-style license that can be found in the LICENSE
- * file or at https://opensource.org/licenses/MIT.
- * ****************************************************************************
+ * Use of this source code is governed by an MIT-style
+ * license that can be found in the LICENSE file or at
+ * https://opensource.org/licenses/MIT.
  */
 package com.google.cloud.healthcare.fdamystudies.utils;
 
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import javax.servlet.http.HttpServletResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -70,7 +71,25 @@ public class ResponseServerUtil {
       }
 
     } catch (Exception e) {
-      logger.info("MyStudiesUserRegUtil - getFailureResponse() :: ERROR ", e);
+      logger.info("ResponseServerUtil - getFailureResponse() :: ERROR ", e);
     }
+  }
+
+  public static String getHashedValue(String secretToHash) {
+    logger.info("ResponseServerUtil - getHashedValue() - starts");
+    String generatedHash = null;
+    try {
+      MessageDigest md = MessageDigest.getInstance("SHA-256");
+      byte[] bytes = md.digest(secretToHash.getBytes());
+      StringBuilder sb = new StringBuilder();
+      for (int i = 0; i < bytes.length; i++) {
+        sb.append(Integer.toString((bytes[i] & 0xff) + 0x100, 16).substring(1));
+      }
+      generatedHash = sb.toString();
+    } catch (NoSuchAlgorithmException e) {
+      logger.info("ResponseServerUtil getHashedValue() - error() ", e);
+    }
+    logger.info("ResponseServerUtil - getHashedValue() - ends");
+    return generatedHash;
   }
 }

@@ -1,36 +1,42 @@
-/**
- * ***************************************************************************** Copyright 2020
- * Google LLC
+/*
+ * Copyright 2020 Google LLC
  *
- * <p>Use of this source code is governed by an MIT-style license that can be found in the LICENSE
- * file or at https://opensource.org/licenses/MIT.
- * ****************************************************************************
+ * Use of this source code is governed by an MIT-style
+ * license that can be found in the LICENSE file or at
+ * https://opensource.org/licenses/MIT.
  */
 package com.google.cloud.healthcare.fdamystudies.bean;
 
 import java.util.ArrayList;
 import java.util.List;
+import com.google.cloud.healthcare.fdamystudies.utils.AppConstants;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
 
 /**
  * Provides active task steps information. For example, activity type, format details, title of
  * activity, destinations metadata {@link DestinationBean} and steps details {@link
  * QuestionnaireActivityStepsBean}
  */
+@Setter
+@Getter
+@ToString
 public class ActiveTaskActivityStepsBean {
 
-  private String type = "";
-  private String resultType = "";
-  private String key = "";
-  private String text = "";
+  private String type = AppConstants.EMPTY_STR;
+  private String resultType = AppConstants.EMPTY_STR;
+  private String key = AppConstants.EMPTY_STR;
+  private String text = AppConstants.EMPTY_STR;
   private String[] options = new String[0];
   private Object format = new Object();
-  private String title = "";
+  private String title = AppConstants.EMPTY_STR;
   private Boolean skippable = false;
-  private String groupName = "";
+  private String groupName = AppConstants.EMPTY_STR;
   private Boolean repeatable = false;
-  private String repeatableText = "";
+  private String repeatableText = AppConstants.EMPTY_STR;
   private List<DestinationBean> destinations = new ArrayList<>();
-  private String healthDataKey = "";
+  private String healthDataKey = AppConstants.EMPTY_STR;
   private List<QuestionnaireActivityStepsBean> steps = new ArrayList<>();
 
   public String getType() {

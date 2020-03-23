@@ -1,43 +1,23 @@
-/**
- * ***************************************************************************** Copyright 2020
- * Google LLC
+/*
+ * Copyright 2020 Google LLC
  *
- * <p>Use of this source code is governed by an MIT-style license that can be found in the LICENSE
- * file or at https://opensource.org/licenses/MIT.
- * ****************************************************************************
+ * Use of this source code is governed by an MIT-style
+ * license that can be found in the LICENSE file or at
+ * https://opensource.org/licenses/MIT.
  */
 package com.google.cloud.healthcare.fdamystudies.bean;
 
-/** Provides destination details */
+import com.google.cloud.healthcare.fdamystudies.utils.AppConstants;
+import lombok.Getter;
+import lombok.Setter;
+
+@Setter
+@Getter
 public class DestinationBean {
 
-  private String condition = "";
-  private String operator = "";
-  private String destination = "";
-
-  public String getCondition() {
-    return condition;
-  }
-
-  public void setCondition(String condition) {
-    this.condition = condition;
-  }
-
-  public String getOperator() {
-    return operator;
-  }
-
-  public void setOperator(String operator) {
-    this.operator = operator;
-  }
-
-  public String getDestination() {
-    return destination;
-  }
-
-  public void setDestination(String destination) {
-    this.destination = destination;
-  }
+  private String condition = AppConstants.EMPTY_STR;
+  private String operator = AppConstants.EMPTY_STR;
+  private String destination = AppConstants.EMPTY_STR;
 
   @Override
   public String toString() {

@@ -1,10 +1,9 @@
-/**
- * ***************************************************************************** Copyright 2020
- * Google LLC
+/*
+ * Copyright 2020 Google LLC
  *
- * <p>Use of this source code is governed by an MIT-style license that can be found in the LICENSE
- * file or at https://opensource.org/licenses/MIT.
- * ****************************************************************************
+ * Use of this source code is governed by an MIT-style
+ * license that can be found in the LICENSE file or at
+ * https://opensource.org/licenses/MIT.
  */
 package com.google.cloud.healthcare.fdamystudies.utils;
 
@@ -23,7 +22,7 @@ public class AppConstants {
   public static final String PARTICIPANT_ID_KEY = "participantId";
   public static final String PARTICIPANT_ID_RESPONSE = "ParticipantId";
   public static final String CREATED_TS_KEY = "createdTimestamp";
-  public static final String DATE_FORMAT_RESPONSE = "YYYY-MM-dd HH:mm:ss:SSS";
+  public static final String ISO_DATE_FORMAT_RESPONSE = "yyyy-MM-dd'T'HH:mm:ss:SSSZZZZZ";
   public static final String CREATED_RESPONSE = "Created";
   public static final String RESULT_TYPE_KEY = "resultType";
   public static final String QUESTION_ID_KEY = "key";
@@ -48,7 +47,7 @@ public class AppConstants {
   public static final String ERROR_STR = "Error";
   public static final String OPTIONS_METHOD = "OPTIONS";
   public static final String CLIENT_ID_PARAM = "clientId";
-  public static final String CLIENT_SECRET_PARAM = "clientSecret";
+  public static final String CLIENT_SECRET_PARAM = "secretKey";
   public static final String SITE_ID_KEY = "siteId";
   public static final String STUDY_VERSION_KEY = "studyVersion";
   public static final String SHARING_CONSENT_KEY = "sharingConsent";
@@ -60,5 +59,15 @@ public class AppConstants {
   public static final String COMPLETED = "Completed";
   public static final String WITHDRAWAL_STATUS_KEY = "withdrawalStatus";
   public static final int FS_BATCH_COMMIT_LIMIT = 500;
-  private static final String RESPONSE_SERVER_SYSTEM_USER = "RESPONSE_SERVER_SYSTEM_USER";
+
+  public static final String ACCESS_CONTROL_ALLOW_ORIGIN = "Access-Control-Allow-Origin";
+  public static final String ACCESS_CONTROL_ALLOW_HEADERS = "Access-Control-Allow-Headers";
+  public static final String ACCESS_CONTROL_ALLOW_CREDENTIALS = "Access-Control-Allow-Credentials";
+  public static final String ACCESS_CONTROL_ALLOW_METHODS = "Access-Control-Allow-Methods";
+  public static final String HTTP_METHODS = "GET, POST, PUT, DELETE, OPTIONS, HEAD";
+  public static final String CODE = "code";
+  public static final String USER_MESSAGE = "userMessage";
+  public static final String TYPE = "type";
+  public static final String DETAIL_MESSAGE = "detailMessage";
+  public static final String BASIC_PREFIX = "Basic ";
 }

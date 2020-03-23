@@ -1,13 +1,13 @@
-/**
- * ***************************************************************************** Copyright 2020
- * Google LLC
+/*
+ * Copyright 2020 Google LLC
  *
- * <p>Use of this source code is governed by an MIT-style license that can be found in the LICENSE
- * file or at https://opensource.org/licenses/MIT.
- * ****************************************************************************
+ * Use of this source code is governed by an MIT-style
+ * license that can be found in the LICENSE file or at
+ * https://opensource.org/licenses/MIT.
  */
 package com.google.cloud.healthcare.fdamystudies.bean;
 
+import com.google.cloud.healthcare.fdamystudies.utils.AppConstants;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -16,10 +16,10 @@ import lombok.ToString;
 @Getter
 @ToString
 public class StudiesBean {
-  private String studyId = "";
-  private String status = "";
+  private String studyId = AppConstants.EMPTY_STR;
+  private String status = AppConstants.EMPTY_STR;
   private Boolean bookmarked;
-  private String enrolledDate = "";
+  private String enrolledDate = AppConstants.EMPTY_STR;
   private Integer completion;
   private Integer adherence;
   private String participantId;

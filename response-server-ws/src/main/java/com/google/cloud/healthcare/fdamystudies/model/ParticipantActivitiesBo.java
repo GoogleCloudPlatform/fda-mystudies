@@ -1,13 +1,13 @@
-/**
- * ***************************************************************************** Copyright 2020
- * Google LLC
+/*
+ * Copyright 2020 Google LLC
  *
- * <p>Use of this source code is governed by an MIT-style license that can be found in the LICENSE
- * file or at https://opensource.org/licenses/MIT.
- * ****************************************************************************
+ * Use of this source code is governed by an MIT-style
+ * license that can be found in the LICENSE file or at
+ * https://opensource.org/licenses/MIT.
  */
 package com.google.cloud.healthcare.fdamystudies.model;
 
+import java.io.Serializable;
 import java.time.LocalDateTime;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -22,15 +22,15 @@ import lombok.Setter;
 @Getter
 @Entity
 @Table(name = "participant_activities")
-public class ParticipantActivitiesBo {
+public class ParticipantActivitiesBo implements Serializable {
+
+  private static final long serialVersionUID = 1005603353927628403L;
 
   @Id
   @GeneratedValue(strategy = GenerationType.AUTO)
   @Column(name = "id")
   private Integer id;
 
-  // @ManyToOne(cascade = CascadeType.ALL)
-  // @JoinColumn(name = "participant_identifier", insertable = false, updatable = false)
   @Column(name = "participant_identifier")
   private String participantId;
 

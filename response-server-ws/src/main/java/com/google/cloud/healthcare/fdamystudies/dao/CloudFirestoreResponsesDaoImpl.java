@@ -1,10 +1,9 @@
-/**
- * ***************************************************************************** Copyright 2020
- * Google LLC
+/*
+ * Copyright 2020 Google LLC
  *
- * <p>Use of this source code is governed by an MIT-style license that can be found in the LICENSE
- * file or at https://opensource.org/licenses/MIT.
- * ****************************************************************************
+ * Use of this source code is governed by an MIT-style
+ * license that can be found in the LICENSE file or at
+ * https://opensource.org/licenses/MIT.
  */
 package com.google.cloud.healthcare.fdamystudies.dao;
 
@@ -95,9 +94,7 @@ public class CloudFirestoreResponsesDaoImpl implements ResponsesDao {
       initializeFirestore();
 
       Map<String, Object> studyVersionMap = new HashMap<>();
-      // TEST CODE
       studyVersionMap.put("studyVersion", dataToStoreActivityResults.get("studyVersion"));
-      // END TEST CODE
       ApiFuture<WriteResult> futuresStudyColl =
           this.responsesDb.collection(studyCollectionName).document(studyId).set(studyVersionMap);
       WriteResult wresultStudy = futuresStudyColl.get();
@@ -123,7 +120,8 @@ public class CloudFirestoreResponsesDaoImpl implements ResponsesDao {
       String studyId,
       String siteId,
       String participantId,
-      String activityId)
+      String activityId,
+      String questionKey)
       throws ProcessResponseException {
     try {
       initializeFirestore();
@@ -131,7 +129,7 @@ public class CloudFirestoreResponsesDaoImpl implements ResponsesDao {
       // only through the console or CLI, not programmatically. So this method will not depend on
       // the index to sort the data, based on timestamp in firestore. It will do the sort on the
       // query result object
-
+      //
       final Query activitiesQuery =
           this.responsesDb
               .collection(studyCollectionName)
@@ -140,6 +138,9 @@ public class CloudFirestoreResponsesDaoImpl implements ResponsesDao {
               .whereEqualTo(AppConstants.PARTICIPANT_ID_KEY, participantId)
               .whereEqualTo(AppConstants.SITE_ID_KEY, siteId)
               .whereEqualTo(AppConstants.ACTIVITY_ID_KEY, activityId);
+      if (!StringUtils.isBlank(questionKey)) {
+        activitiesQuery.whereEqualTo("results." + AppConstants.QUESTION_ID_KEY, questionKey);
+      }
       final ApiFuture<QuerySnapshot> querySnapshotActivities = activitiesQuery.get();
       List<QueryDocumentSnapshot> documentsActivities =
           querySnapshotActivities.get().getDocuments();
@@ -333,7 +334,6 @@ public class CloudFirestoreResponsesDaoImpl implements ResponsesDao {
   }
 
   private void initializeFirestore() {
-    // this.testMethodInit();
     if (this.responsesDb == null) {
       logger.debug("In CloudFirestoreResponsesDaoImpl constructor, initializing Firestore");
       FirestoreOptions firestoreOptions =
@@ -371,7 +371,8 @@ public class CloudFirestoreResponsesDaoImpl implements ResponsesDao {
       try {
         timestampFromResponse =
             Long.parseLong((String) activityResponseMap.get(AppConstants.CREATED_TS_KEY));
-        DateFormat simpleDateFormat = new SimpleDateFormat(AppConstants.DATE_FORMAT_RESPONSE);
+
+        DateFormat simpleDateFormat = new SimpleDateFormat(AppConstants.ISO_DATE_FORMAT_RESPONSE);
         String formattedDate = simpleDateFormat.format(timestampFromResponse);
         mapTSValue.put(AppConstants.VALUE_KEY_STR, formattedDate);
 
@@ -397,52 +398,54 @@ public class CloudFirestoreResponsesDaoImpl implements ResponsesDao {
   }
 
   private void addResponsesToMap(ResponseRows responsesRow, List<Object> results) {
-    for (Object result : results) {
-      if (result instanceof Map) {
-        Map<String, Object> mapResult = (Map<String, Object>) result;
-        String questionResultType = (String) mapResult.get(AppConstants.RESULT_TYPE_KEY);
-        String questionIdKey = null;
-        String questionValue = null;
-        Map<Object, Object> tempMapForQuestions = new HashMap<>();
-        Map<Object, Object> tempMapQuestionsValue = new HashMap<>();
+    if (results != null) {
+      for (Object result : results) {
+        if (result instanceof Map) {
+          Map<String, Object> mapResult = (Map<String, Object>) result;
+          String questionResultType = (String) mapResult.get(AppConstants.RESULT_TYPE_KEY);
+          String questionIdKey = null;
+          String questionValue = null;
+          Map<Object, Object> tempMapForQuestions = new HashMap<>();
+          Map<Object, Object> tempMapQuestionsValue = new HashMap<>();
 
-        if (!StringUtils.isBlank(questionResultType)) {
-          if (questionResultType.equalsIgnoreCase(AppConstants.GROUPED_FIELD_KEY)) {
-            Map<String, Object> resultsForm =
-                (Map<String, Object>) mapResult.get("actvityValueGroup");
-            List<Object> obj = (List<Object>) resultsForm.get("results");
-            this.addResponsesToMap(responsesRow, obj);
+          if (!StringUtils.isBlank(questionResultType)) {
+            if (questionResultType.equalsIgnoreCase(AppConstants.GROUPED_FIELD_KEY)) {
+              Map<String, Object> resultsForm =
+                  (Map<String, Object>) mapResult.get("actvityValueGroup");
+              List<Object> obj = (List<Object>) resultsForm.get("results");
+              this.addResponsesToMap(responsesRow, obj);
 
-          } else {
-            questionIdKey = (String) mapResult.get(AppConstants.QUESTION_ID_KEY);
-            questionValue = (String) mapResult.get(AppConstants.VALUE_KEY_STR);
-            if (StringUtils.containsIgnoreCase(
-                    appConfig.getResponseSupportedQTypeDouble(), questionResultType)
-                && !StringUtils.isBlank(questionValue)) {
-              Double questionValueDouble = null;
-              try {
-                questionValueDouble = Double.parseDouble(questionValue);
-                tempMapQuestionsValue.put(AppConstants.VALUE_KEY_STR, questionValueDouble);
-                tempMapForQuestions.put(questionIdKey, tempMapQuestionsValue);
-                responsesRow.getData().add(tempMapForQuestions);
-              } catch (NumberFormatException e) {
-                logger.error(
-                    "Could not format value to Double. Value input string is: " + questionValue);
-              }
-            } else if (StringUtils.containsIgnoreCase(
-                    appConfig.getResponseSupportedQTypeDate(), questionResultType)
-                && !StringUtils.isBlank(questionValue)) {
-              tempMapQuestionsValue.put(AppConstants.VALUE_KEY_STR, questionValue);
-              tempMapForQuestions.put(questionIdKey, tempMapQuestionsValue);
-              responsesRow.getData().add(tempMapForQuestions);
             } else {
-              if (appConfig.getSupportStringResponse().equalsIgnoreCase(AppConstants.TRUE_STR)
-                  && StringUtils.containsIgnoreCase(
-                      appConfig.getResponseSupportedQTypeString(), questionResultType)
+              questionIdKey = (String) mapResult.get(AppConstants.QUESTION_ID_KEY);
+              questionValue = (String) mapResult.get(AppConstants.VALUE_KEY_STR);
+              if (StringUtils.containsIgnoreCase(
+                      appConfig.getResponseSupportedQTypeDouble(), questionResultType)
+                  && !StringUtils.isBlank(questionValue)) {
+                Double questionValueDouble = null;
+                try {
+                  questionValueDouble = Double.parseDouble(questionValue);
+                  tempMapQuestionsValue.put(AppConstants.VALUE_KEY_STR, questionValueDouble);
+                  tempMapForQuestions.put(questionIdKey, tempMapQuestionsValue);
+                  responsesRow.getData().add(tempMapForQuestions);
+                } catch (NumberFormatException e) {
+                  logger.error(
+                      "Could not format value to Double. Value input string is: " + questionValue);
+                }
+              } else if (StringUtils.containsIgnoreCase(
+                      appConfig.getResponseSupportedQTypeDate(), questionResultType)
                   && !StringUtils.isBlank(questionValue)) {
                 tempMapQuestionsValue.put(AppConstants.VALUE_KEY_STR, questionValue);
                 tempMapForQuestions.put(questionIdKey, tempMapQuestionsValue);
                 responsesRow.getData().add(tempMapForQuestions);
+              } else {
+                if (appConfig.getSupportStringResponse().equalsIgnoreCase(AppConstants.TRUE_STR)
+                    && StringUtils.containsIgnoreCase(
+                        appConfig.getResponseSupportedQTypeString(), questionResultType)
+                    && !StringUtils.isBlank(questionValue)) {
+                  tempMapQuestionsValue.put(AppConstants.VALUE_KEY_STR, questionValue);
+                  tempMapForQuestions.put(questionIdKey, tempMapQuestionsValue);
+                  responsesRow.getData().add(tempMapForQuestions);
+                }
               }
             }
           }

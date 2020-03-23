@@ -1,11 +1,11 @@
-/**
- * ***************************************************************************** Copyright 2020
- * Google LLC
+/*
+ * Copyright 2020 Google LLC
  *
- * <p>Use of this source code is governed by an MIT-style license that can be found in the LICENSE
- * file or at https://opensource.org/licenses/MIT.
- * ****************************************************************************
+ * Use of this source code is governed by an MIT-style
+ * license that can be found in the LICENSE file or at
+ * https://opensource.org/licenses/MIT.
  */
+
 package com.google.cloud.healthcare.fdamystudies.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +20,7 @@ public class ParticipantServiceImpl implements ParticipantService {
 
   @Override
   public String saveParticipant(ParticipantBo participantBo) throws ProcessResponseException {
+    System.out.println("ParticipantServiceImpl saveParticipant starts");
     return participantDao.saveParticipant(participantBo);
   }
 

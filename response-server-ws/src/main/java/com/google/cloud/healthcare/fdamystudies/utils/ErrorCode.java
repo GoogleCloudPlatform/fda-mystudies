@@ -1,10 +1,9 @@
-/**
- * ***************************************************************************** Copyright 2020
- * Google LLC
+/*
+ * Copyright 2020 Google LLC
  *
- * <p>Use of this source code is governed by an MIT-style license that can be found in the LICENSE
- * file or at https://opensource.org/licenses/MIT.
- * ****************************************************************************
+ * Use of this source code is governed by an MIT-style
+ * license that can be found in the LICENSE file or at
+ * https://opensource.org/licenses/MIT.
  */
 package com.google.cloud.healthcare.fdamystudies.utils;
 
@@ -55,7 +54,7 @@ public enum ErrorCode {
 
   EC_711(711, "Invalid Input"),
 
-  EC_712(712, "Could not delete response data for participant."),
+  EC_712(712, "Could not delete/update response data for withdrawn participant."),
 
   EC_713(713, "Could not get the activity state data for participant."),
 
@@ -65,7 +64,14 @@ public enum ErrorCode {
 
   EC_716(
       716,
-      "Could not process and store the response data as the participant has withdrawn from the study.");
+      "Could not process and store the response data as the participant has withdrawn from the study."),
+
+  EC_717(
+      717,
+      "Deleted/Updated response data for withdrawn participant, but could not delete participant activity state data."),
+
+  EC_718(718, "UNAUTHORIZED"),
+  EC_719(719, "Invalid clientId or secretKey");
 
   private final int code;
   private final String errorMessage;

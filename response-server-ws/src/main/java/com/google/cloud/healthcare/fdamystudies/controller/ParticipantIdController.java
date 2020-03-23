@@ -1,10 +1,9 @@
-/**
- * ***************************************************************************** Copyright 2020
- * Google LLC
+/*
+ * Copyright 2020 Google LLC
  *
- * <p>Use of this source code is governed by an MIT-style license that can be found in the LICENSE
- * file or at https://opensource.org/licenses/MIT.
- * ****************************************************************************
+ * Use of this source code is governed by an MIT-style
+ * license that can be found in the LICENSE file or at
+ * https://opensource.org/licenses/MIT.
  */
 package com.google.cloud.healthcare.fdamystudies.controller;
 
@@ -21,6 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.google.cloud.healthcare.fdamystudies.bean.EnrollmentTokenIdentifierBean;
 import com.google.cloud.healthcare.fdamystudies.bean.ErrorBean;
 import com.google.cloud.healthcare.fdamystudies.model.ParticipantBo;
+import com.google.cloud.healthcare.fdamystudies.service.CommonService;
 import com.google.cloud.healthcare.fdamystudies.service.ParticipantService;
 import com.google.cloud.healthcare.fdamystudies.utils.AppConstants;
 import com.google.cloud.healthcare.fdamystudies.utils.AppUtil;
@@ -30,15 +30,21 @@ import com.google.cloud.healthcare.fdamystudies.utils.ErrorCode;
 public class ParticipantIdController {
 
   @Autowired private ParticipantService participantService;
+
+  @Autowired private CommonService commonService;
+
   private static final Logger logger = LoggerFactory.getLogger(ParticipantIdController.class);
 
   @PostMapping("/participant/add")
   public ResponseEntity<?> addParticipantIdentifier(
       @RequestHeader("applicationId") String applicationId,
-      @RequestBody EnrollmentTokenIdentifierBean enrollmentTokenIdentifierBean) {
+      @RequestBody EnrollmentTokenIdentifierBean enrollmentTokenIdentifierBean,
+      @RequestHeader String clientId) {
+    logger.info("ParticipantIdController addParticipantIdentifier() - starts ");
     if (enrollmentTokenIdentifierBean == null
         || StringUtils.isBlank(enrollmentTokenIdentifierBean.getTokenIdentifier())
         || StringUtils.isBlank(enrollmentTokenIdentifierBean.getCustomStudyId())) {
+      logger.info("ParticipantIdController addParticipantIdentifier() Inside Error");
       ErrorBean errorBean =
           AppUtil.dynamicResponse(
               ErrorCode.EC_701.code(),
@@ -53,6 +59,14 @@ public class ParticipantIdController {
       participantBo.setStudyId(enrollmentTokenIdentifierBean.getCustomStudyId());
       participantBo.setCreatedBy(applicationId);
       String particpantUniqueIdentifier = participantService.saveParticipant(participantBo);
+      commonService.createActivityLog(
+          null,
+          "Participant Id generated successfully",
+          "Participant Id generated successfully for partcipant "
+              + particpantUniqueIdentifier
+              + " .",
+          clientId);
+      logger.info("ParticipantIdController addParticipantIdentifier() - Ends ");
       return new ResponseEntity<>(particpantUniqueIdentifier, HttpStatus.OK);
     } catch (Exception e) {
       ErrorBean errorBean =
@@ -62,7 +76,7 @@ public class ParticipantIdController {
               AppConstants.ERROR_STR,
               e.getMessage());
       logger.error("Could not create participant identifier: ");
-      return new ResponseEntity<>(errorBean, HttpStatus.BAD_REQUEST);
+      return new ResponseEntity<>(errorBean, HttpStatus.INTERNAL_SERVER_ERROR);
     }
   }
 }

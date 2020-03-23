@@ -1,11 +1,11 @@
-/**
- * ***************************************************************************** Copyright 2020
- * Google LLC
+/*
+ * Copyright 2020 Google LLC
  *
- * <p>Use of this source code is governed by an MIT-style license that can be found in the LICENSE
- * file or at https://opensource.org/licenses/MIT.
- * ****************************************************************************
+ * Use of this source code is governed by an MIT-style
+ * license that can be found in the LICENSE file or at
+ * https://opensource.org/licenses/MIT.
  */
+
 package com.google.cloud.healthcare.fdamystudies.service;
 
 import java.beans.BeanInfo;
@@ -43,7 +43,6 @@ import com.google.gson.GsonBuilder;
 public class ActivityResponseProcessorServiceImpl implements ActivityResponseProcessorService {
   @Autowired
   @Qualifier("cloudFirestoreResponsesDaoImpl")
-  // @Qualifier("fileResponsesDaoImpl")
   private ResponsesDao responsesDao;
 
   @Autowired private ApplicationConfiguration appConfig;
@@ -118,6 +117,30 @@ public class ActivityResponseProcessorServiceImpl implements ActivityResponsePro
     }
   }
 
+  @Override
+  public StoredResponseBean getActivityResponseDataForParticipant(
+      String studyId, String siteId, String participantId, String activityId, String questionKey)
+      throws ProcessResponseException {
+    if (StringUtils.isBlank(studyId)) {
+      throw new ProcessResponseException(
+          "getActivityResponseDataForParticipant() method: Study Id argument is null or empty.");
+    }
+    String studyCollectionName = AppUtil.makeStudyCollectionName(studyId);
+    return responsesDao.getActivityResponseDataForParticipant(
+        studyCollectionName, studyId, siteId, participantId, activityId, questionKey);
+  }
+
+  @Override
+  public void updateWithdrawalStatusForParticipant(String studyId, String participantId)
+      throws ProcessResponseException {
+    if (StringUtils.isBlank(studyId) || StringUtils.isBlank(participantId)) {
+      throw new ProcessResponseException(
+          "updateWithdrawalStatusForParticipant() method: Study Id argument or Participant Id argument is null or empty.");
+    }
+    String studyCollectionName = AppUtil.makeStudyCollectionName(studyId);
+    responsesDao.updateWithdrawalStatusForParticipant(studyCollectionName, studyId, participantId);
+  }
+
   private void processActivityResponses(
       List<QuestionnaireActivityStepsBean> questionnaireResponses,
       List<QuestionnaireActivityStepsBean> activityMetadataBeanFromWCP) {
@@ -150,6 +173,16 @@ public class ActivityResponseProcessorServiceImpl implements ActivityResponsePro
           List<HashMap> objListMap = (ArrayList<HashMap>) valuObj;
           Gson gson = new Gson();
           for (HashMap valueObjMap : objListMap) {
+            String json = gson.toJson(valueObjMap, Map.class);
+            QuestionnaireActivityStepsBean valueBean =
+                gson.fromJson(json, QuestionnaireActivityStepsBean.class);
+            plugInMetadataToResponses(activityMetadataBeanFromWCP, valueBean, true);
+            valueResponseBeanList.add(valueBean);
+          }
+        } else {
+          if (valuObj instanceof Map) {
+            Map<String, Object> valueObjMap = (HashMap<String, Object>) valuObj;
+            Gson gson = new Gson();
             String json = gson.toJson(valueObjMap, Map.class);
             QuestionnaireActivityStepsBean valueBean =
                 gson.fromJson(json, QuestionnaireActivityStepsBean.class);
@@ -344,29 +377,5 @@ public class ActivityResponseProcessorServiceImpl implements ActivityResponsePro
       }
     }
     return dataToStore;
-  }
-
-  @Override
-  public StoredResponseBean getActivityResponseDataForParticipant(
-      String studyId, String siteId, String participantId, String activityId)
-      throws ProcessResponseException {
-    if (StringUtils.isBlank(studyId)) {
-      throw new ProcessResponseException(
-          "getActivityResponseDataForParticipant() method: Study Id argument is null or empty.");
-    }
-    String studyCollectionName = AppUtil.makeStudyCollectionName(studyId);
-    return responsesDao.getActivityResponseDataForParticipant(
-        studyCollectionName, studyId, siteId, participantId, activityId);
-  }
-
-  @Override
-  public void updateWithdrawalStatusForParticipant(String studyId, String participantId)
-      throws ProcessResponseException {
-    if (StringUtils.isBlank(studyId) || StringUtils.isBlank(participantId)) {
-      throw new ProcessResponseException(
-          "updateWithdrawalStatusForParticipant() method: Study Id argument or Participant Id argument is null or empty.");
-    }
-    String studyCollectionName = AppUtil.makeStudyCollectionName(studyId);
-    responsesDao.updateWithdrawalStatusForParticipant(studyCollectionName, studyId, participantId);
   }
 }

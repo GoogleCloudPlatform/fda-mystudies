@@ -7,11 +7,12 @@
  */
 package com.google.cloud.healthcare.fdamystudies.exception;
 
-public class InvalidStudyIdException extends Exception {
+public class SystemException extends Exception {
 
-  private static final long serialVersionUID = 9102553162539180056L;
+  private static final long serialVersionUID = -6158756148390030536L;
 
-  public InvalidStudyIdException() {
+  public SystemException() {
+
     super();
   }
 }

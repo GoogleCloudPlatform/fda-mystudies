@@ -1,17 +1,9 @@
-/**
+/*
  * Copyright 2020 Google LLC
  *
- * <p>Permission is hereby granted, free of charge, to any person obtaining a copy of this software
- * and associated documentation files (the "Software"), to deal in the Software without restriction,
- * including without limitation the rights to use, copy, modify, merge, publish, distribute,
- * sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is
- * furnished to do so, subject to the following conditions: The above copyright notice and this
- * permission notice shall be included in all copies or substantial portions of the Software.THE
- * SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT
- * LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
- * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
- * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ * Use of this source code is governed by an MIT-style
+ * license that can be found in the LICENSE file or at
+ * https://opensource.org/licenses/MIT.
  */
 package com.google.cloud.healthcare.fdamystudies.dao;
 
@@ -85,7 +77,6 @@ public class ParticipantActivitiesDaoImpl implements ParticipantActivitiesDao {
       logger.error("saveParticipantActivities - error ", e.getMessage());
       throw new ProcessActivityStateException(
           "Exception save activity state data" + e.getMessage());
-
     } finally {
       if (transaction != null) {
         transaction.rollback();
@@ -94,6 +85,42 @@ public class ParticipantActivitiesDaoImpl implements ParticipantActivitiesDao {
         session.close();
       }
       logger.debug("saveParticipantActivities() - Ends ");
+    }
+  }
+
+  @Override
+  public void deleteParticipantActivites(String studyId, String participantId)
+      throws ProcessActivityStateException {
+    logger.debug("deleteParticipantActivites()...start");
+    Transaction transaction = null;
+    Session session = null;
+    if (studyId != null && participantId != null) {
+      try {
+        session = entityManagerFactory.unwrap(SessionFactory.class).openSession();
+        transaction = session.beginTransaction();
+
+        session
+            .createQuery(
+                "delete from ParticipantActivitiesBo where participantId = :participantId and studyId = :studyId")
+            .setParameter("participantId", participantId)
+            .setParameter("studyId", studyId)
+            .executeUpdate();
+        logger.debug("deleteParticipantActivites()...end ");
+      } catch (Exception e) {
+        logger.error("deleteParticipantActivites: (ERROR) ", e);
+        throw new ProcessActivityStateException(
+            "Exception deleting activity state data" + e.getMessage());
+      } finally {
+        if (transaction != null) {
+          transaction.rollback();
+        }
+        if (session != null) {
+          session.close();
+        }
+        logger.debug("deleteParticipantActivites() - Ends ");
+      }
+    } else {
+      throw new ProcessActivityStateException("Required input parameter is null");
     }
   }
 }

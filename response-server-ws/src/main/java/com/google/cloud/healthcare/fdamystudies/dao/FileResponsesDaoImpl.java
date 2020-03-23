@@ -1,10 +1,9 @@
-/**
- * ***************************************************************************** Copyright 2020
- * Google LLC
+/*
+ * Copyright 2020 Google LLC
  *
- * <p>Use of this source code is governed by an MIT-style license that can be found in the LICENSE
- * file or at https://opensource.org/licenses/MIT.
- * ****************************************************************************
+ * Use of this source code is governed by an MIT-style
+ * license that can be found in the LICENSE file or at
+ * https://opensource.org/licenses/MIT.
  */
 package com.google.cloud.healthcare.fdamystudies.dao;
 
@@ -86,7 +85,8 @@ public class FileResponsesDaoImpl implements ResponsesDao {
       String studyId,
       String siteId,
       String participantId,
-      String activityId)
+      String activityId,
+      String questionKey)
       throws ProcessResponseException {
     // Unimplemeted method. A reference implementation has been provided for Cloud Firestore
     throw new ProcessResponseException(

@@ -1,27 +1,34 @@
-/**
- * ***************************************************************************** Copyright 2020
- * Google LLC
+/*
+ * Copyright 2020 Google LLC
  *
- * <p>Use of this source code is governed by an MIT-style license that can be found in the LICENSE
- * file or at https://opensource.org/licenses/MIT.
- * ****************************************************************************
+ * Use of this source code is governed by an MIT-style
+ * license that can be found in the LICENSE file or at
+ * https://opensource.org/licenses/MIT.
  */
 package com.google.cloud.healthcare.fdamystudies.service;
 
+import java.time.LocalDateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestClientResponseException;
 import org.springframework.web.client.RestTemplate;
 import com.google.cloud.healthcare.fdamystudies.bean.BodyForProvider;
 import com.google.cloud.healthcare.fdamystudies.config.ApplicationConfiguration;
 import com.google.cloud.healthcare.fdamystudies.dao.CommonDao;
+import com.google.cloud.healthcare.fdamystudies.exception.InvalidRequestException;
+import com.google.cloud.healthcare.fdamystudies.exception.SystemException;
+import com.google.cloud.healthcare.fdamystudies.exception.UnAuthorizedRequestException;
+import com.google.cloud.healthcare.fdamystudies.model.ActivityLog;
 import com.google.cloud.healthcare.fdamystudies.model.ParticipantBo;
+import com.google.cloud.healthcare.fdamystudies.repository.ActivityLogRepository;
 import com.google.cloud.healthcare.fdamystudies.utils.AppConstants;
 
 @Service
@@ -33,20 +40,54 @@ public class CommonServiceImpl implements CommonService {
 
   @Autowired private ApplicationConfiguration appConfig;
 
+  @Autowired private ActivityLogRepository activityLogRepository;
+
   private static Logger logger = LoggerFactory.getLogger(CommonServiceImpl.class);
 
   @Override
-  public boolean validateServerClientCredentials(
-      String applicationId, String clientId, String clientSecret) {
-    boolean isAuthenticated = false;
-    try {
-      isAuthenticated =
-          commonDao.validateServerClientCredentials(applicationId, clientId, clientSecret);
+  public boolean validateServerClientCredentials(String clientId, String clientSecret)
+      throws SystemException, UnAuthorizedRequestException, InvalidRequestException {
 
-    } catch (Exception e) {
-      logger.error("UserConsentManagementServiceImpl validatedAuthKey() - error ", e);
+    HttpHeaders headers = null;
+    HttpEntity<BodyForProvider> requestBody = null;
+    ResponseEntity<?> responseEntity = null;
+    try {
+
+      headers = new HttpHeaders();
+      headers.setContentType(MediaType.APPLICATION_JSON);
+      headers.set(AppConstants.CLIENT_ID_PARAM, clientId);
+      headers.set(AppConstants.CLIENT_SECRET_PARAM, clientSecret);
+      requestBody = new HttpEntity<>(null, headers);
+      logger.debug("CommonServiceImpl validateServerClientCredentials() Begin");
+      responseEntity =
+          restTemplate.exchange(
+              appConfig.getAuthServerClientValidationUrl(),
+              HttpMethod.POST,
+              requestBody,
+              String.class);
+      HttpStatus status = responseEntity.getStatusCode();
+      if (status == HttpStatus.OK) {
+        return true;
+      }
+    } catch (RestClientResponseException e) {
+
+      logger.error("ERROR: " + e.getRawStatusCode());
+      logger.error("Headers: " + e.getResponseHeaders());
+      logger.error("Body: " + e.getResponseBodyAsString());
+      logger.error("ERROR: ", e);
+
+      if (e.getRawStatusCode() == 401) {
+        logger.error("Invalid client Id or client secret. Client id is: " + clientId);
+        throw new UnAuthorizedRequestException();
+      } else if (e.getRawStatusCode() == 400) {
+        logger.error("Client verification ended with Bad Request");
+        throw new InvalidRequestException();
+      } else {
+        throw new SystemException();
+      }
     }
-    return isAuthenticated;
+    logger.error("Invalid client Id or client secret. Client id is: " + clientId);
+    throw new SystemException();
   }
 
   @Override
@@ -54,7 +95,7 @@ public class CommonServiceImpl implements CommonService {
     logger.info("CommonServiceImpl validateAccessToken() - starts ");
     Integer value = null;
     HttpHeaders headers = null;
-    BodyForProvider providerBody = null;
+
     HttpEntity<BodyForProvider> requestBody = null;
     ResponseEntity<?> responseEntity = null;
     try {
@@ -63,7 +104,7 @@ public class CommonServiceImpl implements CommonService {
       headers.set(AppConstants.CLIENT_TOKEN_KEY, clientToken);
       headers.set(AppConstants.USER_ID_KEY, userId);
       headers.set(AppConstants.ACCESS_TOKEN_KEY, accessToken);
-      requestBody = new HttpEntity<BodyForProvider>(null, headers);
+      requestBody = new HttpEntity<>(null, headers);
       logger.debug("CommonServiceImpl validateAccessToken() Begin");
       responseEntity =
           restTemplate.exchange(
@@ -91,5 +132,26 @@ public class CommonServiceImpl implements CommonService {
 
     logger.info("CommonServiceImpl getParticipantInfoDetails() - starts ");
     return participantInfo;
+  }
+
+  @Override
+  public ActivityLog createActivityLog(
+      String userId, String activityName, String activtyDesc, String clientId) {
+    logger.info("CommonServiceImpl createActivityLog() - starts ");
+    ActivityLog activityLog = new ActivityLog();
+    try {
+      activityLog.setAuthUserId(userId);
+      activityLog.setActivityName(activityName);
+      activityLog.setActivtyDesc(activtyDesc);
+      activityLog.setActivityDateTime(LocalDateTime.now());
+      activityLog.setServerClientId(clientId);
+      activityLogRepository.save(activityLog);
+
+    } catch (Exception e) {
+      logger.error("CommonServiceImpl createActivityLog() - error ", e);
+    }
+    logger.info("CommonServiceImpl createActivityLog() - ends ");
+
+    return activityLog;
   }
 }

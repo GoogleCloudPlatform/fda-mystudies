@@ -1,10 +1,9 @@
-/**
- * ***************************************************************************** Copyright 2020
- * Google LLC
+/*
+ * Copyright 2020 Google LLC
  *
- * <p>Use of this source code is governed by an MIT-style license that can be found in the LICENSE
- * file or at https://opensource.org/licenses/MIT.
- * ****************************************************************************
+ * Use of this source code is governed by an MIT-style
+ * license that can be found in the LICENSE file or at
+ * https://opensource.org/licenses/MIT.
  */
 package com.google.cloud.healthcare.fdamystudies.service;
 
@@ -114,6 +113,12 @@ public class ParticipantActivityStateResponseServiceImpl
     logger.debug("saveParticipantActivities() - Ends ");
   }
 
+  @Override
+  public void deleteParticipantActivites(String studyId, String participantId)
+      throws ProcessActivityStateException {
+    participantActivitiesDao.deleteParticipantActivites(studyId, participantId);
+  }
+
   private List<ParticipantActivitiesBo> getConsolidatedParticipantListToUpdate(
       List<ParticipantActivitiesBo> inputParticipantActivitiesList,
       List<ParticipantActivitiesBo> saveOrUpdateParticipantActivitiesList) {
@@ -151,9 +156,7 @@ public class ParticipantActivityStateResponseServiceImpl
   private List<ParticipantActivitiesBo> getDtoObject(
       ActivityStateRequestBean activityStateRequestBean) {
     List<ParticipantActivitiesBo> retList = new ArrayList<>();
-    if (activityStateRequestBean != null
-        && activityStateRequestBean.getActivity() != null
-        && activityStateRequestBean.getActivity() != null) {
+    if (activityStateRequestBean != null && activityStateRequestBean.getActivity() != null) {
       for (ParticipantActivityBean activityRequestBean : activityStateRequestBean.getActivity()) {
         ParticipantActivitiesBo tempParticipantActivitiesBo = new ParticipantActivitiesBo();
         tempParticipantActivitiesBo.setActivityId(activityRequestBean.getActivityId());

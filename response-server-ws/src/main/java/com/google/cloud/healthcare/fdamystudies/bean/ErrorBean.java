@@ -1,18 +1,19 @@
-/**
- * ***************************************************************************** Copyright 2020
- * Google LLC
+/*
+ * Copyright 2020 Google LLC
  *
- * <p>Use of this source code is governed by an MIT-style license that can be found in the LICENSE
- * file or at https://opensource.org/licenses/MIT.
- * ****************************************************************************
+ * Use of this source code is governed by an MIT-style
+ * license that can be found in the LICENSE file or at
+ * https://opensource.org/licenses/MIT.
  */
 package com.google.cloud.healthcare.fdamystudies.bean;
 
+import com.google.cloud.healthcare.fdamystudies.utils.AppConstants;
+
 public class ErrorBean {
   private Integer appErrorCode = 0;
-  private String userMessage = "";
-  private String type = "";
-  private String detailMessage = "";
+  private String userMessage = AppConstants.EMPTY_STR;
+  private String type = AppConstants.EMPTY_STR;
+  private String detailMessage = AppConstants.EMPTY_STR;
 
   public ErrorBean() {}
 

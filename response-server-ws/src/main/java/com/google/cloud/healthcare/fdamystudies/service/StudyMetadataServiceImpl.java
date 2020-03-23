@@ -1,10 +1,9 @@
-/**
- * ***************************************************************************** Copyright 2020
- * Google LLC
+/*
+ * Copyright 2020 Google LLC
  *
- * <p>Use of this source code is governed by an MIT-style license that can be found in the LICENSE
- * file or at https://opensource.org/licenses/MIT.
- * ****************************************************************************
+ * Use of this source code is governed by an MIT-style
+ * license that can be found in the LICENSE file or at
+ * https://opensource.org/licenses/MIT.
  */
 package com.google.cloud.healthcare.fdamystudies.service;
 
@@ -14,8 +13,10 @@ import java.beans.Introspector;
 import java.beans.PropertyDescriptor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.Base64;
 import java.util.HashMap;
 import java.util.Map;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,7 +46,6 @@ public class StudyMetadataServiceImpl implements StudyMetadataService {
 
   @Autowired
   @Qualifier("cloudFirestoreResponsesDaoImpl")
-  // @Qualifier("fileResponsesDaoImpl")
   private ResponsesDao responsesDao;
 
   private static Logger logger = LoggerFactory.getLogger(StudyMetadataServiceImpl.class);
@@ -115,7 +115,7 @@ public class StudyMetadataServiceImpl implements StudyMetadataService {
       headers.setContentType(MediaType.APPLICATION_JSON);
       headers.set(AppConstants.ORG_ID_HEADER, orgId);
       headers.set(AppConstants.APPLICATION_ID_HEADER_WCP, applicationId);
-      headers.set(AppConstants.AUTHORIZATION_HEADER, appConfig.getWcpAuthorizationHeader());
+      headers.set(AppConstants.AUTHORIZATION_HEADER, this.getWcpAuthorizationHeader());
 
       UriComponentsBuilder studyMetadataUriBuilder =
           UriComponentsBuilder.fromHttpUrl(appConfig.getWcpStudyActivityMetadataUrl())
@@ -143,6 +143,24 @@ public class StudyMetadataServiceImpl implements StudyMetadataService {
     } catch (Exception e) {
       logger.error(e.getMessage(), e);
       throw new ProcessResponseException(e.getMessage());
+    }
+  }
+
+  private String getWcpAuthorizationHeader() throws ProcessResponseException {
+    try {
+      String wcpAuthUserName = appConfig.getWcpAuthUsername();
+      String wcpAuthPassword = appConfig.getWcpAuthPassword();
+      // Get Base64 String Representation of username and password
+      if (!StringUtils.isBlank(wcpAuthUserName) && !StringUtils.isBlank(wcpAuthPassword)) {
+        String wcpAuthStr = wcpAuthUserName + ":" + wcpAuthPassword;
+        String wcpAuthStrEncoded = Base64.getEncoder().encodeToString(wcpAuthStr.getBytes());
+        return AppConstants.BASIC_PREFIX + wcpAuthStrEncoded;
+      } else {
+        throw new ProcessResponseException(
+            "Could not create AUthorization header for WCP as credentials are null.");
+      }
+    } catch (Exception e) {
+      throw new ProcessResponseException("Could not create AUthorization header for WCP");
     }
   }
 }

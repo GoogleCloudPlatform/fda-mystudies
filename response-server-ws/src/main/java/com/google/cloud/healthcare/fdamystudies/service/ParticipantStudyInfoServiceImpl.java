@@ -1,10 +1,9 @@
-/**
- * ***************************************************************************** Copyright 2020
- * Google LLC
+/*
+ * Copyright 2020 Google LLC
  *
- * <p>Use of this source code is governed by an MIT-style license that can be found in the LICENSE
- * file or at https://opensource.org/licenses/MIT.
- * ****************************************************************************
+ * Use of this source code is governed by an MIT-style
+ * license that can be found in the LICENSE file or at
+ * https://opensource.org/licenses/MIT.
  */
 package com.google.cloud.healthcare.fdamystudies.service;
 
@@ -23,6 +22,7 @@ import com.google.cloud.healthcare.fdamystudies.bean.ParticipantStudyInformation
 import com.google.cloud.healthcare.fdamystudies.config.ApplicationConfiguration;
 import com.google.cloud.healthcare.fdamystudies.utils.AppConstants;
 import com.google.cloud.healthcare.fdamystudies.utils.ProcessResponseException;
+import com.google.cloud.healthcare.fdamystudies.utils.ResponseServerUtil;
 
 @Service
 public class ParticipantStudyInfoServiceImpl implements ParticipantStudyInfoService {
@@ -45,6 +45,10 @@ public class ParticipantStudyInfoServiceImpl implements ParticipantStudyInfoServ
       headers.setContentType(MediaType.APPLICATION_JSON);
       headers.set(AppConstants.ORG_ID_HEADER, orgId);
       headers.set(AppConstants.APPLICATION_ID_HEADER_WCP, applicationId);
+      headers.set(AppConstants.CLIENT_ID_PARAM, appConfig.getRegServerClientId());
+      headers.set(
+          AppConstants.CLIENT_SECRET_PARAM,
+          ResponseServerUtil.getHashedValue(appConfig.getRegServerClientSecret()));
       headers.set(AppConstants.STUDY_ID_PARAM, studyId);
       headers.set(AppConstants.PARTICIPANT_ID_KEY, participantId);
 
