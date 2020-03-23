@@ -1,5 +1,5 @@
 /*
- * Copyright © 2017-2018 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors.
+ * Copyright Â© 2017-2018 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors.
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction, including
  * without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies
@@ -23,7 +23,6 @@
 package com.hphc.mystudies.dto;
 
 import java.io.Serializable;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -31,54 +30,46 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
-/**
- * Provides line chart x-axis configuration details.
- * 
- * @author BTC
- *
- */
+
 @Entity
 @Table(name = "line_chart_x_axis")
 public class LineChartXAxisDto implements Serializable {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1502788661705421580L;
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
-	@Column(name = "id")
-	private Integer id;
+  private static final long serialVersionUID = 1502788661705421580L;
 
-	@Column(name = "title")
-	private String title;
+  @Id
+  @GeneratedValue(strategy = GenerationType.AUTO)
+  @Column(name = "id")
+  private Integer id;
 
-	@Column(name = "line_chart_id")
-	private Integer lineChartId;
+  @Column(name = "title")
+  private String title;
 
-	public Integer getId() {
-		return id;
-	}
+  @Column(name = "line_chart_id")
+  private Integer lineChartId;
 
-	public void setId(Integer id) {
-		this.id = id;
-	}
+  public Integer getId() {
+    return id;
+  }
 
-	public String getTitle() {
-		return title;
-	}
+  public void setId(Integer id) {
+    this.id = id;
+  }
 
-	public void setTitle(String title) {
-		this.title = title;
-	}
+  public String getTitle() {
+    return title;
+  }
 
-	public Integer getLineChartId() {
-		return lineChartId;
-	}
+  public void setTitle(String title) {
+    this.title = title;
+  }
 
-	public void setLineChartId(Integer lineChartId) {
-		this.lineChartId = lineChartId;
-	}
+  public Integer getLineChartId() {
+    return lineChartId;
+  }
 
+  public void setLineChartId(Integer lineChartId) {
+    this.lineChartId = lineChartId;
+  }
 }

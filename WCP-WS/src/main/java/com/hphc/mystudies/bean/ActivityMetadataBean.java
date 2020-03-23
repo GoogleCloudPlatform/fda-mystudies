@@ -1,5 +1,5 @@
 /*
- * Copyright © 2017-2018 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors.
+ * Copyright Â© 2017-2018 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors.
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction, including
  * without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies
@@ -22,77 +22,75 @@
  */
 package com.hphc.mystudies.bean;
 
-/**
- * Provides activity metadata information like activity identifier, name of
- * activity, version of activity etc
- * 
- * @author BTC
- *
- */
 public class ActivityMetadataBean {
 
-	private String studyId = "";
-	private String activityId = "";
-	private String name = "";
-	private String version = "";
-	private String lastModified = "";
-	private String startDate = "";
-	private String endDate = "";
+  private String studyId = "";
 
-	public String getStudyId() {
-		return studyId;
-	}
+  private String activityId = "";
 
-	public void setStudyId(String studyId) {
-		this.studyId = studyId;
-	}
+  private String name = "";
 
-	public String getActivityId() {
-		return activityId;
-	}
+  private String version = "";
 
-	public void setActivityId(String activityId) {
-		this.activityId = activityId;
-	}
+  private String lastModified = "";
 
-	public String getName() {
-		return name;
-	}
+  private String startDate = "";
 
-	public void setName(String name) {
-		this.name = name;
-	}
+  private String endDate = "";
 
-	public String getVersion() {
-		return version;
-	}
+  public String getStudyId() {
+    return studyId;
+  }
 
-	public void setVersion(String version) {
-		this.version = version;
-	}
+  public void setStudyId(String studyId) {
+    this.studyId = studyId;
+  }
 
-	public String getLastModified() {
-		return lastModified;
-	}
+  public String getActivityId() {
+    return activityId;
+  }
 
-	public void setLastModified(String lastModified) {
-		this.lastModified = lastModified;
-	}
+  public void setActivityId(String activityId) {
+    this.activityId = activityId;
+  }
 
-	public String getStartDate() {
-		return startDate;
-	}
+  public String getName() {
+    return name;
+  }
 
-	public void setStartDate(String startDate) {
-		this.startDate = startDate;
-	}
+  public void setName(String name) {
+    this.name = name;
+  }
 
-	public String getEndDate() {
-		return endDate;
-	}
+  public String getVersion() {
+    return version;
+  }
 
-	public void setEndDate(String endDate) {
-		this.endDate = endDate;
-	}
+  public void setVersion(String version) {
+    this.version = version;
+  }
 
+  public String getLastModified() {
+    return lastModified;
+  }
+
+  public void setLastModified(String lastModified) {
+    this.lastModified = lastModified;
+  }
+
+  public String getStartDate() {
+    return startDate;
+  }
+
+  public void setStartDate(String startDate) {
+    this.startDate = startDate;
+  }
+
+  public String getEndDate() {
+    return endDate;
+  }
+
+  public void setEndDate(String endDate) {
+    this.endDate = endDate;
+  }
 }

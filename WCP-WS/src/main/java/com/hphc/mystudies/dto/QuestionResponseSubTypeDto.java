@@ -1,5 +1,5 @@
 /*
- * Copyright © 2017-2018 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors.
+ * Copyright Â© 2017-2018 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors.
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction, including
  * without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies
@@ -23,7 +23,6 @@
 package com.hphc.mystudies.dto;
 
 import java.io.Serializable;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -31,175 +30,167 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
-/**
- * Provides questionnaire response sub type information.
- * 
- * @author BTC
- *
- */
+
 @Entity
 @Table(name = "response_sub_type_value")
 public class QuestionResponseSubTypeDto implements Serializable {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = -7906353217574963756L;
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "response_sub_type_value_id")
-	private Integer responseSubTypeValueId;
+  private static final long serialVersionUID = -7906353217574963756L;
 
-	@Column(name = "response_type_id")
-	private Integer responseTypeId;
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  @Column(name = "response_sub_type_value_id")
+  private Integer responseSubTypeValueId;
 
-	@Column(name = "text")
-	private String text;
+  @Column(name = "response_type_id")
+  private Integer responseTypeId;
 
-	@Column(name = "value")
-	private String value;
+  @Column(name = "text")
+  private String text;
 
-	@Column(name = "detail")
-	private String detail;
+  @Column(name = "value")
+  private String value;
 
-	@Column(name = "exclusive")
-	private String exclusive;
+  @Column(name = "detail")
+  private String detail;
 
-	@Column(name = "image")
-	private String image;
+  @Column(name = "exclusive")
+  private String exclusive;
 
-	@Column(name = "selected_image")
-	private String selectedImage;
+  @Column(name = "image")
+  private String image;
 
-	@Column(name = "study_version")
-	private Integer studyVersion = 1;
+  @Column(name = "selected_image")
+  private String selectedImage;
 
-	@Column(name = "destination_step_id")
-	private Integer destinationStepId;
+  @Column(name = "study_version")
+  private Integer studyVersion = 1;
 
-	@Column(name = "active")
-	private Boolean active;
+  @Column(name = "destination_step_id")
+  private Integer destinationStepId;
 
-	@Column(name = "value_of_x")
-	private String valueOfX;
+  @Column(name = "active")
+  private Boolean active;
 
-	@Column(name = "operator")
-	private String operator;
+  @Column(name = "value_of_x")
+  private String valueOfX;
 
-	@Column(name = "description")
-	private String description;
+  @Column(name = "operator")
+  private String operator;
 
-	public Integer getResponseSubTypeValueId() {
-		return responseSubTypeValueId;
-	}
+  @Column(name = "description")
+  private String description;
 
-	public void setResponseSubTypeValueId(Integer responseSubTypeValueId) {
-		this.responseSubTypeValueId = responseSubTypeValueId;
-	}
+  public Integer getResponseSubTypeValueId() {
+    return responseSubTypeValueId;
+  }
 
-	public Integer getResponseTypeId() {
-		return responseTypeId;
-	}
+  public void setResponseSubTypeValueId(Integer responseSubTypeValueId) {
+    this.responseSubTypeValueId = responseSubTypeValueId;
+  }
 
-	public void setResponseTypeId(Integer responseTypeId) {
-		this.responseTypeId = responseTypeId;
-	}
+  public Integer getResponseTypeId() {
+    return responseTypeId;
+  }
 
-	public String getText() {
-		return text;
-	}
+  public void setResponseTypeId(Integer responseTypeId) {
+    this.responseTypeId = responseTypeId;
+  }
 
-	public void setText(String text) {
-		this.text = text;
-	}
+  public String getText() {
+    return text;
+  }
 
-	public String getValue() {
-		return value;
-	}
+  public void setText(String text) {
+    this.text = text;
+  }
 
-	public void setValue(String value) {
-		this.value = value;
-	}
+  public String getValue() {
+    return value;
+  }
 
-	public String getDetail() {
-		return detail;
-	}
+  public void setValue(String value) {
+    this.value = value;
+  }
 
-	public void setDetail(String detail) {
-		this.detail = detail;
-	}
+  public String getDetail() {
+    return detail;
+  }
 
-	public String getExclusive() {
-		return exclusive;
-	}
+  public void setDetail(String detail) {
+    this.detail = detail;
+  }
 
-	public void setExclusive(String exclusive) {
-		this.exclusive = exclusive;
-	}
+  public String getExclusive() {
+    return exclusive;
+  }
 
-	public String getImage() {
-		return image;
-	}
+  public void setExclusive(String exclusive) {
+    this.exclusive = exclusive;
+  }
 
-	public void setImage(String image) {
-		this.image = image;
-	}
+  public String getImage() {
+    return image;
+  }
 
-	public String getSelectedImage() {
-		return selectedImage;
-	}
+  public void setImage(String image) {
+    this.image = image;
+  }
 
-	public void setSelectedImage(String selectedImage) {
-		this.selectedImage = selectedImage;
-	}
+  public String getSelectedImage() {
+    return selectedImage;
+  }
 
-	public Integer getStudyVersion() {
-		return studyVersion;
-	}
+  public void setSelectedImage(String selectedImage) {
+    this.selectedImage = selectedImage;
+  }
 
-	public void setStudyVersion(Integer studyVersion) {
-		this.studyVersion = studyVersion;
-	}
+  public Integer getStudyVersion() {
+    return studyVersion;
+  }
 
-	public Integer getDestinationStepId() {
-		return destinationStepId;
-	}
+  public void setStudyVersion(Integer studyVersion) {
+    this.studyVersion = studyVersion;
+  }
 
-	public void setDestinationStepId(Integer destinationStepId) {
-		this.destinationStepId = destinationStepId;
-	}
+  public Integer getDestinationStepId() {
+    return destinationStepId;
+  }
 
-	public Boolean getActive() {
-		return active;
-	}
+  public void setDestinationStepId(Integer destinationStepId) {
+    this.destinationStepId = destinationStepId;
+  }
 
-	public void setActive(Boolean active) {
-		this.active = active;
-	}
+  public Boolean getActive() {
+    return active;
+  }
 
-	public String getValueOfX() {
-		return valueOfX;
-	}
+  public void setActive(Boolean active) {
+    this.active = active;
+  }
 
-	public void setValueOfX(String valueOfX) {
-		this.valueOfX = valueOfX;
-	}
+  public String getValueOfX() {
+    return valueOfX;
+  }
 
-	public String getOperator() {
-		return operator;
-	}
+  public void setValueOfX(String valueOfX) {
+    this.valueOfX = valueOfX;
+  }
 
-	public void setOperator(String operator) {
-		this.operator = operator;
-	}
+  public String getOperator() {
+    return operator;
+  }
 
-	public String getDescription() {
-		return description;
-	}
+  public void setOperator(String operator) {
+    this.operator = operator;
+  }
 
-	public void setDescription(String description) {
-		this.description = description;
-	}
+  public String getDescription() {
+    return description;
+  }
 
+  public void setDescription(String description) {
+    this.description = description;
+  }
 }

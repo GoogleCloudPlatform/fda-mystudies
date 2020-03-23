@@ -1,23 +1,24 @@
 package com.hphc.mystudies.bean;
 
 public class DeviceVersion {
-	private String latestVersion;
 
-	private String forceUpdate;
+  private String latestVersion;
 
-	public String getLatestVersion() {
-		return latestVersion;
-	}
+  private String forceUpdate;
 
-	public void setLatestVersion(String latestVersion) {
-		this.latestVersion = latestVersion;
-	}
+  public String getLatestVersion() {
+    return latestVersion;
+  }
 
-	public String getForceUpdate() {
-		return forceUpdate;
-	}
+  public void setLatestVersion(String latestVersion) {
+    this.latestVersion = latestVersion;
+  }
 
-	public void setForceUpdate(String forceUpdate) {
-		this.forceUpdate = forceUpdate;
-	}
+  public String getForceUpdate() {
+    return forceUpdate;
+  }
+
+  public void setForceUpdate(String forceUpdate) {
+    this.forceUpdate = forceUpdate;
+  }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright © 2017-2018 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors.
+ * Copyright Â© 2017-2018 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors.
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction, including
  * without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies
@@ -23,7 +23,6 @@
 package com.hphc.mystudies.dto;
 
 import java.io.Serializable;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -31,54 +30,46 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
-/**
- * Provides active task formula details.
- * 
- * @author BTC
- *
- */
+
 @Entity
 @Table(name = "activetask_formula")
 public class ActiveTaskFormulaDto implements Serializable {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 7509273488651910859L;
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "activetask_formula_id")
-	private Integer activetaskFormulaId;
+  private static final long serialVersionUID = 7509273488651910859L;
 
-	@Column(name = "value")
-	private String value;
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  @Column(name = "activetask_formula_id")
+  private Integer activetaskFormulaId;
 
-	@Column(name = "formula")
-	private String formula;
+  @Column(name = "value")
+  private String value;
 
-	public Integer getActivetaskFormulaId() {
-		return activetaskFormulaId;
-	}
+  @Column(name = "formula")
+  private String formula;
 
-	public void setActivetaskFormulaId(Integer activetaskFormulaId) {
-		this.activetaskFormulaId = activetaskFormulaId;
-	}
+  public Integer getActivetaskFormulaId() {
+    return activetaskFormulaId;
+  }
 
-	public String getValue() {
-		return value;
-	}
+  public void setActivetaskFormulaId(Integer activetaskFormulaId) {
+    this.activetaskFormulaId = activetaskFormulaId;
+  }
 
-	public void setValue(String value) {
-		this.value = value;
-	}
+  public String getValue() {
+    return value;
+  }
 
-	public String getFormula() {
-		return formula;
-	}
+  public void setValue(String value) {
+    this.value = value;
+  }
 
-	public void setFormula(String formula) {
-		this.formula = formula;
-	}
+  public String getFormula() {
+    return formula;
+  }
 
+  public void setFormula(String formula) {
+    this.formula = formula;
+  }
 }
