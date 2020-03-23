@@ -9,16 +9,12 @@ package com.google.cloud.healthcare.fdamystudies.beans;
 
 import lombok.Getter;
 import lombok.Setter;
-import lombok.ToString;
 
 @Setter
 @Getter
-@ToString
-public class ParticipantInfoRespBean {
+public class WithdrawFromStudyBean {
 
-  private String sharing;
-  private String enrollment;
-  private String withdrawal;
-  private String message;
-  private Integer code;
+  private String participantId;
+  private String studyId;
+  private boolean delete;
 }

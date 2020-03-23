@@ -1,10 +1,19 @@
+/*
+ * Copyright 2020 Google LLC
+ *
+ * Use of this source code is governed by an MIT-style
+ * license that can be found in the LICENSE file or at
+ * https://opensource.org/licenses/MIT.
+ */
 package com.google.cloud.healthcare.fdamystudies.util;
 
 import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Map;
+import java.util.TimeZone;
 import javax.servlet.http.HttpServletResponse;
 import javax.transaction.SystemException;
 import org.slf4j.Logger;
@@ -294,9 +303,40 @@ public class MyStudiesUserRegUtil {
   }
 
   public static boolean isPasswordStrong(String password) {
-    if (password != null /* && password.length() >= 8 */) {
+    if (password != null) {
       return password.matches(
           "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[!\\\"#$%&'()*+,-.:;<=>?@\\\\[\\\\]^_`{|}~]).{8,64}$");
     } else return false;
+  }
+
+  public static String getHashedValue(String passwordToHash) {
+    String generatedHash = null;
+
+    try {
+      MessageDigest md = MessageDigest.getInstance("SHA-256");
+      byte[] bytes = md.digest(passwordToHash.getBytes());
+      StringBuilder sb = new StringBuilder();
+      for (int i = 0; i < bytes.length; i++) {
+        sb.append(Integer.toString((bytes[i] & 0xff) + 0x100, 16).substring(1));
+      }
+      generatedHash = sb.toString();
+    } catch (NoSuchAlgorithmException e) {
+      logger.info("MyStudiesUserRegUtil getHashedValue() - error() ", e);
+    }
+    logger.info("MyStudiesUserRegUtil - getHashedValue() - ends");
+    return generatedHash;
+  }
+
+  public static String getIsoDateFormat(Date date) {
+    String returnDate = "";
+    try {
+      SimpleDateFormat sdf;
+      sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSXXX");
+      sdf.setTimeZone(TimeZone.getTimeZone("CET"));
+      returnDate = sdf.format(date);
+    } catch (Exception e) {
+      logger.info("MyStudiesUserRegUtil - getCurrentUtilDateTime() :: ERROR ", e);
+    }
+    return returnDate;
   }
 }

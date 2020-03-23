@@ -1,3 +1,10 @@
+/*
+ * Copyright 2020 Google LLC
+ *
+ * Use of this source code is governed by an MIT-style
+ * license that can be found in the LICENSE file or at
+ * https://opensource.org/licenses/MIT.
+ */
 package com.google.cloud.healthcare.fdamystudies.model;
 
 import java.io.Serializable;
@@ -8,10 +15,17 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
 
+@Setter
+@Getter
+@ToString
 @Entity
 @Table(name = "locations")
 public class LocationBo implements Serializable {
+
   private static final long serialVersionUID = 1L;
 
   @Id
@@ -32,75 +46,11 @@ public class LocationBo implements Serializable {
   private String description = "";
 
   @Column(name = "is_default", columnDefinition = "CHAR(1)")
-  private String is_default = "";
+  private String isdefault = "";
 
   @Column(name = "created", columnDefinition = "TIMESTAMP")
   private LocalDateTime created;
 
   @Column(name = "created_by", columnDefinition = "INT(20) default 0")
   private Integer createdBy;
-
-  public Integer getId() {
-    return id;
-  }
-
-  public void setId(Integer id) {
-    this.id = id;
-  }
-
-  public String getCustomId() {
-    return customId;
-  }
-
-  public void setCustomId(String customId) {
-    this.customId = customId;
-  }
-
-  public String getStatus() {
-    return status;
-  }
-
-  public void setStatus(String status) {
-    this.status = status;
-  }
-
-  public String getName() {
-    return name;
-  }
-
-  public void setName(String name) {
-    this.name = name;
-  }
-
-  public String getDescription() {
-    return description;
-  }
-
-  public void setDescription(String description) {
-    this.description = description;
-  }
-
-  public String getIs_default() {
-    return is_default;
-  }
-
-  public void setIs_default(String is_default) {
-    this.is_default = is_default;
-  }
-
-  public LocalDateTime getCreated() {
-    return created;
-  }
-
-  public void setCreated(LocalDateTime created) {
-    this.created = created;
-  }
-
-  public Integer getCreatedBy() {
-    return createdBy;
-  }
-
-  public void setCreatedBy(Integer createdBy) {
-    this.createdBy = createdBy;
-  }
 }

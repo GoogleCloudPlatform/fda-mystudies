@@ -1,3 +1,10 @@
+/*
+ * Copyright 2020 Google LLC
+ *
+ * Use of this source code is governed by an MIT-style
+ * license that can be found in the LICENSE file or at
+ * https://opensource.org/licenses/MIT.
+ */
 package com.google.cloud.healthcare.fdamystudies.util;
 
 import java.security.MessageDigest;
@@ -27,7 +34,10 @@ public class ErrorResponseUtil {
     STATUS_105("105"), // If there is no data to update.
     STATUS_106("106"), // Failed to generate token.
     STATUS_107("107"), // Failed to complete transaction.
+
+    STATUS_401("401"), // UNAUTHORIZED
     EC_500("500"), // Internal Server Error
+
     SESSION_EXPIRED_MSG("Session expired."),
     INVALID_AUTH_CODE("INVALID_AUTH_CODE"),
     INVALID_EMAIL("Invalid Email"),
@@ -96,6 +106,9 @@ public class ErrorResponseUtil {
     TOKEN_ALREADY_USE("Token already in use"),
     INVALID_TOKEN("Invalid Token"),
     UNKNOWN_TOKEN("Unknown token"),
+    UNAUTHORIZED_CLIENT("Unauthorized client"),
+    UNAUTHORIZED("Unauthorized"),
+    INTERNAL_SERER_ERROR("Internal Serer Error"),
     TOKEN_REQUIRED("Token is required");
 
     private final String value;
@@ -121,7 +134,8 @@ public class ErrorResponseUtil {
       if (status.equalsIgnoreCase(ErrorCodes.STATUS_102.getValue())) {
         response.sendError(HttpServletResponse.SC_BAD_REQUEST, message);
       }
-      if (status.equalsIgnoreCase(ErrorCodes.STATUS_101.getValue())) {
+      if (status.equalsIgnoreCase(ErrorCodes.STATUS_101.getValue())
+          || status.equalsIgnoreCase(ErrorCodes.STATUS_401.getValue())) {
         if (message.equalsIgnoreCase(ErrorCodes.SESSION_EXPIRED_MSG.getValue())) {
           response.sendError(
               HttpServletResponse.SC_UNAUTHORIZED, ErrorCodes.SESSION_EXPIRED_MSG.getValue());
@@ -132,6 +146,10 @@ public class ErrorResponseUtil {
 
       if (status.equalsIgnoreCase(ErrorCodes.STATUS_103.getValue())) {
         response.sendError(HttpServletResponse.SC_FORBIDDEN, message);
+      }
+
+      if (status.equalsIgnoreCase(ErrorCodes.EC_500.getValue())) {
+        response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, message);
       }
 
     } catch (Exception e) {

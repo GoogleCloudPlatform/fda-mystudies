@@ -1,3 +1,10 @@
+/*
+ * Copyright 2020 Google LLC
+ *
+ * Use of this source code is governed by an MIT-style
+ * license that can be found in the LICENSE file or at
+ * https://opensource.org/licenses/MIT.
+ */
 package com.google.cloud.healthcare.fdamystudies.service;
 
 import javax.validation.constraints.NotNull;
@@ -7,6 +14,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.google.cloud.healthcare.fdamystudies.beans.EnrollmentResponseBean;
 import com.google.cloud.healthcare.fdamystudies.dao.EnrollmentTokenDao;
+import com.google.cloud.healthcare.fdamystudies.exception.InvalidRequestException;
+import com.google.cloud.healthcare.fdamystudies.exception.SystemException;
+import com.google.cloud.healthcare.fdamystudies.exception.UnAuthorizedRequestException;
 import com.google.cloud.healthcare.fdamystudies.util.EnrollmentManagementUtil;
 
 @Service
@@ -29,8 +39,7 @@ public class EnrollmentTokenServiceImpl implements EnrollmentTokenService {
     } catch (Exception e) {
       logger.error("EnrollmentTokenServiceImpl enrollmentTokenRequired() - error ", e);
     }
-    //    return isTokenRequired;
-    return true;
+    return isTokenRequired;
   }
 
   @Override
@@ -56,8 +65,7 @@ public class EnrollmentTokenServiceImpl implements EnrollmentTokenService {
       logger.error("EnrollmentTokenServiceImpl isValidStudyToken() - error ", e);
     }
     logger.info("EnrollmentTokenServiceImpl isValidStudyToken() - Ends ");
-    //    return isValidStudyToken;
-    return true;
+    return isValidStudyToken;
   }
 
   @Override
@@ -71,32 +79,39 @@ public class EnrollmentTokenServiceImpl implements EnrollmentTokenService {
     }
 
     logger.info("EnrollmentTokenServiceImpl studyExists() - Ends ");
-    //    return isStudyExist;
-    return true;
+    return isStudyExist;
   }
 
   @Override
   public EnrollmentResponseBean enrollParticipant(
-      @NotNull String shortName, String tokenValue, String userId) {
+      @NotNull String shortName, String tokenValue, String userId)
+      throws SystemException, InvalidRequestException, UnAuthorizedRequestException {
     logger.info("EnrollmentTokenServiceImpl enrollParticipant() - Starts ");
     EnrollmentResponseBean participantBean = null;
     String hashedTokenValue = "";
     boolean isTokenRequired = false;
+    String participantId = "";
     try {
       isTokenRequired = enrollmentTokenDao.enrollmentTokenRequired(shortName);
       hashedTokenValue = EnrollmentManagementUtil.getHashedValue(tokenValue);
+      participantId = enrollUtil.getParticipantId("", hashedTokenValue, shortName);
       participantBean =
           enrollmentTokenDao.enrollParticipant(
               shortName,
               tokenValue,
               commonService.getUserInfoDetails(userId),
               isTokenRequired,
-              enrollUtil.getParticipantId("", "", "", hashedTokenValue, shortName));
+              participantId);
       if (participantBean != null) {
         participantBean.setHashedToken(hashedTokenValue);
+        participantBean.setParticipantId(participantId);
       }
-    } catch (Exception e) {
+    } catch (InvalidRequestException | UnAuthorizedRequestException e) {
       logger.error("EnrollmentTokenServiceImpl enrollParticipant() - error ", e);
+      throw e;
+    } catch (Exception e) {
+      logger.error("********EnrollmentTokenServiceImpl enrollParticipant() - error ", e);
+      throw new SystemException();
     }
     logger.info("EnrollmentTokenServiceImpl enrollParticipant() - Ends ");
     return participantBean;

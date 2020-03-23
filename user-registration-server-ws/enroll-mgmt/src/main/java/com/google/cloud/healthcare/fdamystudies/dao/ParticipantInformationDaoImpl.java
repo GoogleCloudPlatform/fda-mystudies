@@ -1,3 +1,10 @@
+/*
+ * Copyright 2020 Google LLC
+ *
+ * Use of this source code is governed by an MIT-style
+ * license that can be found in the LICENSE file or at
+ * https://opensource.org/licenses/MIT.
+ */
 package com.google.cloud.healthcare.fdamystudies.dao;
 
 import java.util.List;
@@ -14,7 +21,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import com.google.cloud.healthcare.fdamystudies.beans.ParticipantInfoRespBean;
 import com.google.cloud.healthcare.fdamystudies.model.ParticipantStudiesBO;
-import com.google.cloud.healthcare.fdamystudies.util.AppConstants;
+import com.google.cloud.healthcare.fdamystudies.model.StudyInfoBO;
 
 @Repository
 public class ParticipantInformationDaoImpl implements ParticipantInformationDao {
@@ -24,9 +31,10 @@ public class ParticipantInformationDaoImpl implements ParticipantInformationDao 
   @Autowired private EntityManagerFactory entityManagerFactory;
 
   @Override
-  public ParticipantInfoRespBean getParticipantInfoDetails(String particpinatId, String studyId) {
+  public ParticipantInfoRespBean getParticipantInfoDetails(String particpinatId, Integer studyId) {
     logger.info("ParticipantInformationDaoImpl getParticipantDetails() - starts ");
     CriteriaBuilder criteriaBuilder = null;
+
     CriteriaQuery<ParticipantStudiesBO> participantBoCriteria = null;
     Root<ParticipantStudiesBO> participantBoRoot = null;
     Predicate[] predicates = new Predicate[2];
@@ -36,25 +44,29 @@ public class ParticipantInformationDaoImpl implements ParticipantInformationDao 
 
     try (Session session = entityManagerFactory.unwrap(SessionFactory.class).openSession()) {
       criteriaBuilder = session.getCriteriaBuilder();
+      StudyInfoBO studyInfo = session.get(StudyInfoBO.class, studyId);
       participantBoCriteria = criteriaBuilder.createQuery(ParticipantStudiesBO.class);
       participantBoRoot = participantBoCriteria.from(ParticipantStudiesBO.class);
       predicates[0] = criteriaBuilder.equal(participantBoRoot.get("participantId"), particpinatId);
-      predicates[1] = criteriaBuilder.equal(participantBoRoot.get(AppConstants.STUDY_ID), studyId);
-
+      predicates[1] = criteriaBuilder.equal(participantBoRoot.get("studyInfo"), studyInfo);
       participantBoCriteria.select(participantBoRoot).where(predicates);
       participantBoList = session.createQuery(participantBoCriteria).getResultList();
-
       if (!participantBoList.isEmpty()) {
         participantBo = participantBoList.get(0);
         if (participantBo != null) {
           participantRespBean = new ParticipantInfoRespBean();
-          participantRespBean.setSharing(participantBo.getSharing());
-          participantRespBean.setEnrollment(participantBo.getEnrolledDate().toString());
-          participantRespBean.setWithdrawl(participantBo.getWithdrawalDate().toString());
+          if (participantBo.getSharing() != null)
+            participantRespBean.setSharing(participantBo.getSharing());
+          if (participantBo.getEnrolledDate().toString() != null)
+            participantRespBean.setEnrollment(participantBo.getEnrolledDate().toString());
+          if (participantBo.getWithdrawalDate() != null) {
+            if (participantBo.getWithdrawalDate().toString() != null)
+              participantRespBean.setWithdrawal(participantBo.getWithdrawalDate().toString());
+          }
         }
       }
     } catch (Exception e) {
-      logger.error("UserConsentManagementDaoImpl validatedUserAppDetailsByAllApi() - error ", e);
+      logger.error("ParticipantInformationDaoImpl getParticipantDetails() - error ", e);
     }
     logger.info("ParticipantInformationDaoImpl getParticipantDetails() - ends ");
     return participantRespBean;

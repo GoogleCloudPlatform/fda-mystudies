@@ -1,3 +1,10 @@
+/*
+ * Copyright 2020 Google LLC
+ *
+ * Use of this source code is governed by an MIT-style
+ * license that can be found in the LICENSE file or at
+ * https://opensource.org/licenses/MIT.
+ */
 package com.google.cloud.healthcare.fdamystudies.model;
 
 import java.io.Serializable;
@@ -8,7 +15,13 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
 
+@Setter
+@Getter
+@ToString
 @Entity
 @Table(name = "ur_admin_user")
 public class UserRegAdminUser implements Serializable {
@@ -52,100 +65,4 @@ public class UserRegAdminUser implements Serializable {
 
   @Column(name = "created_by", columnDefinition = "INT(20) default 0")
   private Integer createdBy;
-
-  public Integer getId() {
-    return id;
-  }
-
-  public void setId(Integer id) {
-    this.id = id;
-  }
-
-  public String getEmail() {
-    return email;
-  }
-
-  public void setEmail(String email) {
-    this.email = email;
-  }
-
-  public String getUrAdminAuthId() {
-    return urAdminAuthId;
-  }
-
-  public void setUrAdminAuthId(String urAdminAuthId) {
-    this.urAdminAuthId = urAdminAuthId;
-  }
-
-  public String getFirstName() {
-    return firstName;
-  }
-
-  public void setFirstName(String firstName) {
-    this.firstName = firstName;
-  }
-
-  public String getLastName() {
-    return lastName;
-  }
-
-  public void setLastName(String lastName) {
-    this.lastName = lastName;
-  }
-
-  public String getPhoneNumber() {
-    return phoneNumber;
-  }
-
-  public void setPhoneNumber(String phoneNumber) {
-    this.phoneNumber = phoneNumber;
-  }
-
-  public Integer getEmailChanged() {
-    return emailChanged;
-  }
-
-  public void setEmailChanged(Integer emailChanged) {
-    this.emailChanged = emailChanged;
-  }
-
-  public Integer getStatus() {
-    return status;
-  }
-
-  public void setStatus(Integer status) {
-    this.status = status;
-  }
-
-  public Integer getManageUsers() {
-    return manageUsers;
-  }
-
-  public void setManageUsers(Integer manageUsers) {
-    this.manageUsers = manageUsers;
-  }
-
-  public Integer getManageLocations() {
-    return manageLocations;
-  }
-
-  public void setManageLocations(Integer manageLocations) {
-    this.manageLocations = manageLocations;
-  }
-
-  public LocalDateTime getCreated() {
-    return created;
-  }
-
-  public void setCreated(LocalDateTime created) {
-    this.created = created;
-  }
-
-  public Integer getCreatedBy() {
-    return createdBy;
-  }
-
-  public void setCreatedBy(Integer createdBy) {
-    this.createdBy = createdBy;
-  }
 }

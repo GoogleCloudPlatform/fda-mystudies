@@ -1,6 +1,12 @@
+/*
+ * Copyright 2020 Google LLC
+ *
+ * Use of this source code is governed by an MIT-style
+ * license that can be found in the LICENSE file or at
+ * https://opensource.org/licenses/MIT.
+ */
 package com.google.cloud.healthcare.fdamystudies.util;
 
-/** @author Aswini */
 import java.util.Properties;
 import javax.activation.DataHandler;
 import javax.activation.DataSource;
@@ -22,7 +28,6 @@ import org.apache.logging.log4j.Logger;
 
 public class Mail {
 
-  /** */
   private static final Logger logger = LogManager.getLogger(Mail.class);
 
   private String toemail;

@@ -1,7 +1,14 @@
+/*
+ * Copyright 2020 Google LLC
+ *
+ * Use of this source code is governed by an MIT-style
+ * license that can be found in the LICENSE file or at
+ * https://opensource.org/licenses/MIT.
+ */
 package com.google.cloud.healthcare.fdamystudies.model;
 
 import java.io.Serializable;
-import java.time.LocalDateTime;
+import java.util.Date;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -10,10 +17,12 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToOne;
 import javax.persistence.Table;
-import org.hibernate.annotations.Cascade;
+import lombok.Getter;
+import lombok.Setter;
 
+@Setter
+@Getter
 @Entity
 @Table(name = "sites")
 public class SiteBo implements Serializable {
@@ -42,85 +51,16 @@ public class SiteBo implements Serializable {
   @Column(name = "name", columnDefinition = "VARCHAR(255)")
   private String name = "";
 
-  @Column(name = "created", columnDefinition = "TIMESTAMP")
-  private LocalDateTime created;
+  @Column(name = "created" /*, columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP"*/)
+  private Date created;
 
   @Column(name = "created_by", columnDefinition = "INT(20) default 0")
   private Integer createdBy;
 
-  @OneToOne(mappedBy = "siteBo")
-  @Cascade(value = org.hibernate.annotations.CascadeType.SAVE_UPDATE)
-  private SitePermission sitePermission;
+  @Column(name = "modified_date" /*,
+      columnDefinition = "TIMESTAMP CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP"*/)
+  private Date modifiedDate;
 
-  public Integer getId() {
-    return id;
-  }
-
-  public void setId(Integer id) {
-    this.id = id;
-  }
-
-  public LocationBo getLocations() {
-    return locations;
-  }
-
-  public void setLocations(LocationBo locations) {
-    this.locations = locations;
-  }
-
-  public StudyInfoBO getStudyInfo() {
-    return studyInfo;
-  }
-
-  public void setStudyInfo(StudyInfoBO studyInfo) {
-    this.studyInfo = studyInfo;
-  }
-
-  public Integer getStatus() {
-    return status;
-  }
-
-  public void setStatus(Integer status) {
-    this.status = status;
-  }
-
-  public Integer getTargetEnrollment() {
-    return targetEnrollment;
-  }
-
-  public void setTargetEnrollment(Integer targetEnrollment) {
-    this.targetEnrollment = targetEnrollment;
-  }
-
-  public String getName() {
-    return name;
-  }
-
-  public void setName(String name) {
-    this.name = name;
-  }
-
-  public LocalDateTime getCreated() {
-    return created;
-  }
-
-  public void setCreated(LocalDateTime created) {
-    this.created = created;
-  }
-
-  public Integer getCreatedBy() {
-    return createdBy;
-  }
-
-  public void setCreatedBy(Integer createdBy) {
-    this.createdBy = createdBy;
-  }
-
-  public SitePermission getSitePermission() {
-    return sitePermission;
-  }
-
-  public void setSitePermission(SitePermission sitePermission) {
-    this.sitePermission = sitePermission;
-  }
+  @Column(name = "modified_by", columnDefinition = "INT(20)")
+  private Integer modifiedBy;
 }

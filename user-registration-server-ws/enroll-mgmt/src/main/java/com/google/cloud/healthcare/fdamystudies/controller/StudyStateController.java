@@ -1,3 +1,10 @@
+/*
+ * Copyright 2020 Google LLC
+ *
+ * Use of this source code is governed by an MIT-style
+ * license that can be found in the LICENSE file or at
+ * https://opensource.org/licenses/MIT.
+ */
 package com.google.cloud.healthcare.fdamystudies.controller;
 
 import java.util.List;
@@ -19,17 +26,26 @@ import com.google.cloud.healthcare.fdamystudies.beans.StudiesBean;
 import com.google.cloud.healthcare.fdamystudies.beans.StudyStateBean;
 import com.google.cloud.healthcare.fdamystudies.beans.StudyStateReqBean;
 import com.google.cloud.healthcare.fdamystudies.beans.StudyStateRespBean;
+import com.google.cloud.healthcare.fdamystudies.beans.StudyStateResponse;
+import com.google.cloud.healthcare.fdamystudies.beans.WithDrawFromStudyRespBean;
+import com.google.cloud.healthcare.fdamystudies.beans.WithdrawFromStudyBean;
 import com.google.cloud.healthcare.fdamystudies.exception.InvalidUserIdException;
-import com.google.cloud.healthcare.fdamystudies.exception.NoStudyEnrolledException;
 import com.google.cloud.healthcare.fdamystudies.model.ParticipantStudiesBO;
+import com.google.cloud.healthcare.fdamystudies.model.UserDetailsBO;
+import com.google.cloud.healthcare.fdamystudies.service.CommonService;
 import com.google.cloud.healthcare.fdamystudies.service.StudyStateService;
+import com.google.cloud.healthcare.fdamystudies.util.AppConstants;
+import com.google.cloud.healthcare.fdamystudies.util.BeanUtil;
 import com.google.cloud.healthcare.fdamystudies.util.MyStudiesUserRegUtil;
 
 @RestController
 public class StudyStateController {
+
   private static final Logger logger = LoggerFactory.getLogger(StudyStateController.class);
 
   @Autowired StudyStateService studyStateService;
+
+  @Autowired CommonService commonService;
 
   @PostMapping(
       value = "/updateStudyState",
@@ -45,22 +61,47 @@ public class StudyStateController {
       if (studyStateReqBean != null && userId != null && !StringUtils.isEmpty(userId)) {
         if (studyStateReqBean.getStudies() != null && !studyStateReqBean.getStudies().isEmpty()) {
           List<StudiesBean> studiesBeenList = studyStateReqBean.getStudies();
-          List<ParticipantStudiesBO> existParticipantStudies =
-              studyStateService.getParticipantStudiesList(userId);
-          if (existParticipantStudies != null
-              && !existParticipantStudies.isEmpty()
-              && studiesBeenList != null
-              && !studiesBeenList.isEmpty()) {
-            studyStateRespBean =
-                studyStateService.saveParticipantStudies(
-                    studiesBeenList, existParticipantStudies, userId);
-            if (studyStateRespBean != null
-                && studyStateRespBean
-                    .getMessage()
-                    .equalsIgnoreCase(MyStudiesUserRegUtil.ErrorCodes.SUCCESS.getValue())) {
-              studyStateRespBean.setCode(HttpStatus.OK.value());
+          UserDetailsBO user = commonService.getUserInfoDetails(userId);
+          System.out.println(user.getUserDetailsId());
+          if (user != null) {
+            List<ParticipantStudiesBO> existParticipantStudies =
+                studyStateService.getParticipantStudiesList(user);
+            if (existParticipantStudies != null
+                && !existParticipantStudies.isEmpty()
+                && studiesBeenList != null
+                && !studiesBeenList.isEmpty()) {
+              studyStateRespBean =
+                  studyStateService.saveParticipantStudies(
+                      studiesBeenList, existParticipantStudies, userId);
+              if (studyStateRespBean != null
+                  && studyStateRespBean
+                      .getMessage()
+                      .equalsIgnoreCase(MyStudiesUserRegUtil.ErrorCodes.SUCCESS.getValue())) {
+                studyStateRespBean.setCode(HttpStatus.OK.value());
+              }
+            } else {
+              MyStudiesUserRegUtil.getFailureResponse(
+                  MyStudiesUserRegUtil.ErrorCodes.STATUS_102.getValue(),
+                  MyStudiesUserRegUtil.ErrorCodes.INVALID_INPUT.getValue(),
+                  MyStudiesUserRegUtil.ErrorCodes.INVALID_INPUT_ERROR_MSG.getValue(),
+                  response);
+              return null;
             }
+          } else {
+            MyStudiesUserRegUtil.getFailureResponse(
+                MyStudiesUserRegUtil.ErrorCodes.STATUS_102.getValue(),
+                MyStudiesUserRegUtil.ErrorCodes.INVALID_INPUT.getValue(),
+                MyStudiesUserRegUtil.ErrorCodes.INVALID_USER_ID.getValue(),
+                response);
+            return null;
           }
+        } else {
+          MyStudiesUserRegUtil.getFailureResponse(
+              MyStudiesUserRegUtil.ErrorCodes.STATUS_102.getValue(),
+              MyStudiesUserRegUtil.ErrorCodes.INVALID_INPUT.getValue(),
+              MyStudiesUserRegUtil.ErrorCodes.INVALID_INPUT_ERROR_MSG.getValue(),
+              response);
+          return null;
         }
       } else {
         MyStudiesUserRegUtil.getFailureResponse(
@@ -77,21 +118,20 @@ public class StudyStateController {
     return new ResponseEntity<>(studyStateRespBean, HttpStatus.OK);
   }
 
-  @GetMapping(
-      value = "/studyState",
-      consumes = MediaType.APPLICATION_JSON_VALUE,
-      produces = MediaType.APPLICATION_JSON_VALUE)
+  @GetMapping(value = "/studyState", produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<?> getStudyState(
       @RequestHeader("userId") String userId, @Context HttpServletResponse response) {
 
     logger.info("(C)...StudyStateController.getStudyState()...Started");
     if (((userId.length() != 0) || StringUtils.isNotEmpty(userId))) {
-      List<StudyStateBean> studyStateList = null;
+      StudyStateResponse studyStateResponse = BeanUtil.getBean(StudyStateResponse.class);
       try {
-        studyStateList = studyStateService.getStudiesState(userId);
-        if (studyStateList != null && studyStateList.size() > 0) {
-          return new ResponseEntity<>(studyStateList, HttpStatus.OK);
-        } else {
+        List<StudyStateBean> studies = studyStateService.getStudiesState(userId);
+        //        if (studies != null && !studies.isEmpty()) {
+        studyStateResponse.setStudies(studies);
+        studyStateResponse.setMessage(AppConstants.SUCCESS);
+        return new ResponseEntity<>(studyStateResponse, HttpStatus.OK);
+        /*} else {
           MyStudiesUserRegUtil.getFailureResponse(
               MyStudiesUserRegUtil.ErrorCodes.STATUS_102.getValue(),
               MyStudiesUserRegUtil.ErrorCodes.INVALID_INPUT.getValue(),
@@ -99,7 +139,7 @@ public class StudyStateController {
               response);
           logger.info("(C)...StudyStateController.getStudyState()...Ended with INVALID_INPUT");
           return null;
-        }
+        }*/
       } catch (InvalidUserIdException e) {
         MyStudiesUserRegUtil.getFailureResponse(
             MyStudiesUserRegUtil.ErrorCodes.STATUS_128.getValue(),
@@ -108,15 +148,15 @@ public class StudyStateController {
             response);
         logger.info("(C)...StudyStateController.getStudyState()...Ended with INVALID_USER_ID");
         return null;
-      } catch (NoStudyEnrolledException e) {
-        MyStudiesUserRegUtil.getFailureResponse(
-            MyStudiesUserRegUtil.ErrorCodes.STATUS_102.getValue(),
-            MyStudiesUserRegUtil.ErrorCodes.INVALID_INPUT.getValue(),
-            MyStudiesUserRegUtil.ErrorCodes.NO_STUDIES_FOUND.getValue(),
-            response);
-        logger.info("(C)...StudyStateController.getStudyState()...Ended with NO_STUDIES_FOUND");
-        return null;
-      } catch (Exception e) {
+      } /*catch (NoStudyEnrolledException e) {
+          MyStudiesUserRegUtil.getFailureResponse(
+              MyStudiesUserRegUtil.ErrorCodes.STATUS_102.getValue(),
+              MyStudiesUserRegUtil.ErrorCodes.INVALID_INPUT.getValue(),
+              MyStudiesUserRegUtil.ErrorCodes.NO_STUDIES_FOUND.getValue(),
+              response);
+          logger.info("(C)...StudyStateController.getStudyState()...Ended with NO_STUDIES_FOUND");
+          return null;
+        } */ catch (Exception e) {
         MyStudiesUserRegUtil.getFailureResponse(
             MyStudiesUserRegUtil.ErrorCodes.EC_500.getValue(),
             MyStudiesUserRegUtil.ErrorCodes.UNKNOWN.getValue(),
@@ -135,5 +175,59 @@ public class StudyStateController {
       logger.info("(C)...StudyStateController.getStudyState()...Ended with INVALID_INPUT");
       return null;
     }
+  }
+
+  @PostMapping(
+      value = "/withdrawfromstudy",
+      consumes = MediaType.APPLICATION_JSON_VALUE,
+      produces = MediaType.APPLICATION_JSON_VALUE)
+  public ResponseEntity<?> withdrawFromStudy(
+      @RequestBody WithdrawFromStudyBean withdrawFromStudyBean,
+      @Context HttpServletResponse response) {
+    logger.info("StudyStateController withdrawFromStudy() - Starts ");
+    WithDrawFromStudyRespBean respBean = null;
+    try {
+      if (withdrawFromStudyBean != null) {
+        if (withdrawFromStudyBean.getParticipantId() != null
+            && !withdrawFromStudyBean.getParticipantId().isEmpty()
+            && withdrawFromStudyBean.getStudyId() != null
+            && !withdrawFromStudyBean.getStudyId().isEmpty()) {
+          respBean =
+              studyStateService.withdrawFromStudy(
+                  withdrawFromStudyBean.getParticipantId(),
+                  withdrawFromStudyBean.getStudyId(),
+                  withdrawFromStudyBean.isDelete());
+          if (respBean != null) {
+
+          } else {
+            MyStudiesUserRegUtil.getFailureResponse(
+                MyStudiesUserRegUtil.ErrorCodes.STATUS_104.getValue(),
+                MyStudiesUserRegUtil.ErrorCodes.UNKNOWN.getValue(),
+                MyStudiesUserRegUtil.ErrorCodes.FAILURE.getValue(),
+                response);
+            return null;
+          }
+
+        } else {
+          MyStudiesUserRegUtil.getFailureResponse(
+              MyStudiesUserRegUtil.ErrorCodes.STATUS_102.getValue(),
+              MyStudiesUserRegUtil.ErrorCodes.INVALID_INPUT.getValue(),
+              MyStudiesUserRegUtil.ErrorCodes.INVALID_INPUT_ERROR_MSG.getValue(),
+              response);
+          return null;
+        }
+      } else {
+        MyStudiesUserRegUtil.getFailureResponse(
+            MyStudiesUserRegUtil.ErrorCodes.STATUS_102.getValue(),
+            MyStudiesUserRegUtil.ErrorCodes.INVALID_INPUT.getValue(),
+            MyStudiesUserRegUtil.ErrorCodes.INVALID_INPUT_ERROR_MSG.getValue(),
+            response);
+        return null;
+      }
+    } catch (Exception e) {
+      logger.error("StudyStateController withdrawFromStudy() - error ", e);
+    }
+    logger.info("StudyStateController withdrawFromStudy() - Ends ");
+    return new ResponseEntity<>(respBean, HttpStatus.OK);
   }
 }

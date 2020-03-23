@@ -1,8 +1,16 @@
+/*
+ * Copyright 2020 Google LLC
+ *
+ * Use of this source code is governed by an MIT-style
+ * license that can be found in the LICENSE file or at
+ * https://opensource.org/licenses/MIT.
+ */
 package com.google.cloud.healthcare.fdamystudies.dao;
 
 import javax.validation.constraints.NotNull;
 import org.springframework.lang.Nullable;
 import com.google.cloud.healthcare.fdamystudies.beans.EnrollmentResponseBean;
+import com.google.cloud.healthcare.fdamystudies.model.UserDetailsBO;
 
 public interface EnrollmentTokenDao {
 
@@ -17,7 +25,7 @@ public interface EnrollmentTokenDao {
   public EnrollmentResponseBean enrollParticipant(
       @NotNull String shortName,
       @Nullable String tokenValue,
-      Integer userDetailsId,
+      UserDetailsBO userDetailsBO,
       boolean isTokenRequired,
       String participantId);
 }

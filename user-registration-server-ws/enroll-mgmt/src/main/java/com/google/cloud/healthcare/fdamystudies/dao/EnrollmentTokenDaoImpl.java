@@ -1,3 +1,10 @@
+/*
+ * Copyright 2020 Google LLC
+ *
+ * Use of this source code is governed by an MIT-style
+ * license that can be found in the LICENSE file or at
+ * https://opensource.org/licenses/MIT.
+ */
 package com.google.cloud.healthcare.fdamystudies.dao;
 
 import java.util.ArrayList;
@@ -20,6 +27,7 @@ import com.google.cloud.healthcare.fdamystudies.model.ParticipantRegistrySite;
 import com.google.cloud.healthcare.fdamystudies.model.ParticipantStudiesBO;
 import com.google.cloud.healthcare.fdamystudies.model.SiteBo;
 import com.google.cloud.healthcare.fdamystudies.model.StudyInfoBO;
+import com.google.cloud.healthcare.fdamystudies.model.UserDetailsBO;
 import com.google.cloud.healthcare.fdamystudies.util.AppConstants;
 import com.google.cloud.healthcare.fdamystudies.util.EnrollmentManagementUtil;
 
@@ -41,19 +49,16 @@ public class EnrollmentTokenDaoImpl implements EnrollmentTokenDao {
     StudyInfoBO studyInfoBO = null;
     boolean isStudyExist = false;
     try (Session session = entityManagerFactory.unwrap(SessionFactory.class).openSession()) {
-      System.out.println("studyId->" + studyId);
       criteriaBuilder = session.getCriteriaBuilder();
       studyInfoBoCriteria = criteriaBuilder.createQuery(StudyInfoBO.class);
       studyInfoBoRoot = studyInfoBoCriteria.from(StudyInfoBO.class);
-      predicates[0] =
-          criteriaBuilder.equal(studyInfoBoRoot.get(AppConstants.CUSTOM_STUDY_ID), studyId);
+      predicates[0] = criteriaBuilder.equal(studyInfoBoRoot.get("customId"), studyId);
       studyInfoBoCriteria.select(studyInfoBoRoot).where(predicates);
       studyInfoBoList = session.createQuery(studyInfoBoCriteria).getResultList();
 
       if (!studyInfoBoList.isEmpty()) {
         studyInfoBO = studyInfoBoList.get(0);
       }
-
       if (studyInfoBO != null) {
         isStudyExist = true;
       }
@@ -68,30 +73,22 @@ public class EnrollmentTokenDaoImpl implements EnrollmentTokenDao {
   @Override
   public boolean isValidStudyToken(@NotNull String token, @NotNull String studyId) {
     logger.info("EnrollmentTokenDaoImpl isValidStudyToken() - Started ");
-    List<SiteBo> siteBo = new ArrayList<>();
+    CriteriaBuilder criteriaBuilder = null;
+    CriteriaQuery<StudyInfoBO> studyInfoBoCriteria = null;
+    Root<StudyInfoBO> studyInfoBoRoot = null;
+    Predicate[] predicates = new Predicate[1];
+    List<StudyInfoBO> studyInfoBoList = null;
+    StudyInfoBO studyInfoBO = null;
     List<ParticipantRegistrySite> participantRegistrySite = new ArrayList<>();
     Integer siteId = 0;
-    SiteBo siteDetails = null;
     ParticipantRegistrySite participantRegistrySiteDetails = null;
     boolean isValidStudyToken = false;
     try (Session session = entityManagerFactory.unwrap(SessionFactory.class).openSession()) {
-      siteBo =
-          session
-              .createQuery("from SiteBo where studyInfo.customStudyId =:studyId")
-              //              .createQuery("from SiteBo where studyId =:studyId")
-              .setParameter("studyId", studyId)
-              .getResultList();
-
-      if (!siteBo.isEmpty()) {
-        siteDetails = siteBo.get(0);
-        siteId = siteDetails.getId();
-      }
-
       participantRegistrySite =
           session
               .createQuery(
-                  "from ParticipantRegistrySite where sites.id =:siteId and enrollmentToken=:token")
-              .setParameter("siteId", siteId)
+                  "from ParticipantRegistrySite PS where studyInfo.customId =:studyId and enrollmentToken=:token")
+              .setParameter("studyId", studyId)
               .setParameter("token", token)
               .getResultList();
 
@@ -101,9 +98,8 @@ public class EnrollmentTokenDaoImpl implements EnrollmentTokenDao {
       if (participantRegistrySiteDetails != null) {
         isValidStudyToken = true;
       }
-
     } catch (Exception e) {
-      logger.error("EnrollmentTokenDaoImpl hasParticipant() - error ", e);
+      logger.error("EnrollmentTokenDaoImpl isValidStudyToken() - error ", e);
     }
     logger.info("EnrollmentTokenDaoImpl isValidStudyToken() - Ends ");
     return isValidStudyToken;
@@ -114,20 +110,17 @@ public class EnrollmentTokenDaoImpl implements EnrollmentTokenDao {
   public boolean hasParticipant(@NotNull String studyId, @NotNull String tokenValue) {
     logger.info("EnrollmentTokenDaoImpl hasParticipant() - Started ");
     ParticipantStudiesBO participants = null;
-    List<ParticipantStudiesBO> participantList = null;
+    List<Object[]> participantList = null;
     boolean hasParticipant = false;
     try (Session session = entityManagerFactory.unwrap(SessionFactory.class).openSession()) {
       participantList =
           session
               .createQuery(
-                  "from ParticipantStudiesBO PS,StudyInfoBO SB, ParticipantRegistrySite PR where SB.studyInfoId =PS.studyId and PR.id=PS.parfticipantRegistrySiteId and PR.enrollmentToken=:token and SB.customStudyId=:studyId")
+                  "from ParticipantStudiesBO PS,StudyInfoBO SB, ParticipantRegistrySite PR where SB.id =PS.studyInfo.id and PS.participantRegistrySite.id=PR.id and PR.enrollmentToken=:token and SB.customId=:studyId")
               .setParameter("token", tokenValue)
               .setParameter("studyId", studyId)
               .getResultList();
       if (!participantList.isEmpty()) {
-        participants = participantList.get(0);
-      }
-      if (participants != null) {
         hasParticipant = true;
       }
     } catch (Exception e) {
@@ -152,19 +145,15 @@ public class EnrollmentTokenDaoImpl implements EnrollmentTokenDao {
       criteriaBuilder = session.getCriteriaBuilder();
       studyInfoBoCriteria = criteriaBuilder.createQuery(StudyInfoBO.class);
       studyInfoBoRoot = studyInfoBoCriteria.from(StudyInfoBO.class);
-      predicates[0] =
-          criteriaBuilder.equal(studyInfoBoRoot.get(AppConstants.CUSTOM_STUDY_ID), studyId);
+      predicates[0] = criteriaBuilder.equal(studyInfoBoRoot.get("customId"), studyId);
       studyInfoBoCriteria.select(studyInfoBoRoot).where(predicates);
       studyInfoBoList = session.createQuery(studyInfoBoCriteria).getResultList();
-
       if (!studyInfoBoList.isEmpty()) {
         studyInfoBO = studyInfoBoList.get(0);
       }
-
-      if (studyInfoBO != null && studyInfoBO.getStudyType().equalsIgnoreCase("Closed")) {
+      if (studyInfoBO != null && studyInfoBO.getType().equalsIgnoreCase(AppConstants.CLOSE_STUDY)) {
         isTokenRequired = true;
       }
-
     } catch (Exception e) {
       logger.error("EnrollmentTokenDaoImpl enrollmentTokenRequired() - error ", e);
     }
@@ -177,7 +166,7 @@ public class EnrollmentTokenDaoImpl implements EnrollmentTokenDao {
   public EnrollmentResponseBean enrollParticipant(
       @NotNull String studyId,
       String tokenValue,
-      Integer userDetailsId,
+      UserDetailsBO userDetail,
       boolean isTokenRequired,
       String participantid) {
     logger.info("EnrollmentTokenDaoImpl enrollParticipant() - Started ");
@@ -204,85 +193,82 @@ public class EnrollmentTokenDaoImpl implements EnrollmentTokenDao {
     EnrollmentResponseBean participantBeans = new EnrollmentResponseBean();
     boolean isUpdated = false;
     Integer countAddregistry = 0;
-
     try (Session session = entityManagerFactory.unwrap(SessionFactory.class).openSession()) {
       transaction = session.beginTransaction();
       criteriaBuilder = session.getCriteriaBuilder();
       studyInfoBoCriteria = criteriaBuilder.createQuery(StudyInfoBO.class);
       studyInfoBoRoot = studyInfoBoCriteria.from(StudyInfoBO.class);
-      predicates[0] =
-          criteriaBuilder.equal(studyInfoBoRoot.get(AppConstants.CUSTOM_STUDY_ID), studyId);
+      predicates[0] = criteriaBuilder.equal(studyInfoBoRoot.get("customId"), studyId);
       studyInfoBoCriteria.select(studyInfoBoRoot).where(predicates);
       studyInfoBoList = session.createQuery(studyInfoBoCriteria).getResultList();
-
       if (!studyInfoBoList.isEmpty()) {
         studyInfoBO = studyInfoBoList.get(0);
+        if (isTokenRequired) {
+          participantRegistryCriteria = criteriaBuilder.createQuery(ParticipantRegistrySite.class);
+          participantRegistryRoot = participantRegistryCriteria.from(ParticipantRegistrySite.class);
+          participantRegistryPredicates[0] =
+              criteriaBuilder.equal(participantRegistryRoot.get("enrollmentToken"), tokenValue);
+          participantRegistryCriteria
+              .select(participantRegistryRoot)
+              .where(participantRegistryPredicates);
+          participantRegistryList =
+              session.createQuery(participantRegistryCriteria).getResultList();
+          if (!participantRegistryList.isEmpty()) {
+            participantRegistry = participantRegistryList.get(0);
 
-        /* siteBoCriteria = criteriaBuilder.createQuery(SiteBo.class);
-        siteBoRoot = siteBoCriteria.from(SiteBo.class);
-        siteBoPredicates[0] =
-            criteriaBuilder.equal(
-                siteBoRoot.get(AppConstants.STUDY_ID), studyInfoBO.getStudyInfoId());
-        siteBoCriteria.select(siteBoRoot).where(siteBoPredicates);
-         siteBoList = session.createQuery(siteBoCriteria).getResultList();
-         */
+            siteBoList =
+                session
+                    .createQuery("from SiteBo where id =:Id")
+                    .setParameter("Id", participantRegistry.getSites().getId())
+                    .getResultList();
+            if (!siteBoList.isEmpty()) {
+              siteBo = siteBoList.get(0);
+              participants.setSiteBo(siteBo);
+              participants.setStudyInfo(studyInfoBO);
+              participants.setParticipantId(participantid);
+              participants.setUserDetails(userDetail);
+              participants.setParticipantRegistrySite(participantRegistry);
+              participants.setStatus(AppConstants.ENROLLED);
+              participants.setEnrolledDate(EnrollmentManagementUtil.getCurrentUtilDateTime());
+              countAddParticipant = (Integer) session.save(participants);
+            }
+          }
+          if (countAddParticipant > 0) {
+            SiteBo sites = session.get(SiteBo.class, siteBo.getId());
+            participantRegistry.setSites(sites);
+            participantRegistry.setInvitationDate(
+                EnrollmentManagementUtil.getCurrentUtilDateTime());
+            participantRegistry.setOnboardingStatus("E");
+            session.update(participantRegistry);
+            isUpdated = true;
+          }
+        } else {
 
-        siteBoList =
-            session
-                .createQuery("from SiteBo where studyInfo.studyInfoId =:Id")
-                .setParameter("Id", studyInfoBO.getStudyInfoId())
-                .getResultList();
+          participantregistrySite = new ParticipantRegistrySite();
+          participantregistrySite.setEnrollmentToken(tokenValue);
+          SiteBo sites =
+              session.get(SiteBo.class, 1); // Need to check Default site for the open Study
+          participantregistrySite.setSites(sites);
+          participantregistrySite.setInvitationDate(
+              EnrollmentManagementUtil.getCurrentUtilDateTime());
+          participantregistrySite.setOnboardingStatus("E");
+          participantregistrySite.setStudyInfo(studyInfoBO);
+          countAddregistry = (Integer) session.save(participantregistrySite);
 
-        if (!siteBoList.isEmpty()) {
-          siteBo = siteBoList.get(0);
-          participants.setSiteId(siteBo.getId());
-          participants.setStudyId(studyInfoBO.getStudyInfoId());
-          // participants.setParticipantId(EnrollmentManagementUtil.randomString(32));
+          participants.setSiteBo(sites);
+          participants.setStudyInfo(studyInfoBO);
           participants.setParticipantId(participantid);
-          participants.setUserId(userDetailsId);
+          participants.setUserDetails(userDetail);
+          participants.setParticipantRegistrySite(participantregistrySite);
           participants.setStatus(AppConstants.ENROLLED);
           participants.setEnrolledDate(EnrollmentManagementUtil.getCurrentUtilDateTime());
           countAddParticipant = (Integer) session.save(participants);
         }
-      }
 
-      participantRegistryCriteria = criteriaBuilder.createQuery(ParticipantRegistrySite.class);
-      participantRegistryRoot = participantRegistryCriteria.from(ParticipantRegistrySite.class);
-      participantRegistryPredicates[0] =
-          criteriaBuilder.equal(participantRegistryRoot.get("enrollmentToken"), tokenValue);
-      participantRegistryCriteria
-          .select(participantRegistryRoot)
-          .where(participantRegistryPredicates);
-      participantRegistryList = session.createQuery(participantRegistryCriteria).getResultList();
-
-      if (!participantRegistryList.isEmpty()) {
-        participantRegistry = participantRegistryList.get(0);
-      }
-      if (countAddParticipant > 0 && participantRegistry != null) {
-        SiteBo sites = session.get(SiteBo.class, siteBo.getId());
-        participantRegistry.setSites(sites);
-        participantRegistry.setEmail("");
-        participantRegistry.setInvitationDate(EnrollmentManagementUtil.getCurrentUtilDateTime());
-        participantRegistry.setOnboardingStatus("E");
-        session.update(participantRegistry);
-        isUpdated = true;
-      } else if (countAddParticipant > 0 && !isTokenRequired) {
-        participantregistrySite = new ParticipantRegistrySite();
-        tokenValue = EnrollmentManagementUtil.randomString(32);
-        participantregistrySite.setEnrollmentToken(tokenValue);
-        SiteBo sites = session.get(SiteBo.class, siteBo.getId());
-        participantregistrySite.setSites(sites);
-        participantregistrySite.setEmail("");
-        participantregistrySite.setInvitationDate(
-            EnrollmentManagementUtil.getCurrentUtilDateTime());
-        participantregistrySite.setOnboardingStatus("E");
-        countAddregistry = (Integer) session.save(participantregistrySite);
-      }
-
-      if ((countAddParticipant > 0 && isUpdated)
-          || (countAddParticipant > 0 && countAddregistry > 0)) {
-        participantBeans.setAppToken(participantid);
-        participantBeans.setSiteId(participants.getSiteId());
+        if ((countAddParticipant > 0 && isUpdated) || countAddregistry > 0) {
+          participantBeans.setAppToken(participantid);
+          participantBeans.setSiteId(participants.getSiteBo().getId());
+        }
       }
       transaction.commit();
     } catch (Exception e) {

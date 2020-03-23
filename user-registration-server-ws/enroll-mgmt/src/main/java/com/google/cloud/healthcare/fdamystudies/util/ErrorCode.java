@@ -1,3 +1,10 @@
+/*
+ * Copyright 2020 Google LLC
+ *
+ * Use of this source code is governed by an MIT-style
+ * license that can be found in the LICENSE file or at
+ * https://opensource.org/licenses/MIT.
+ */
 package com.google.cloud.healthcare.fdamystudies.util;
 
 public enum ErrorCode {
@@ -126,6 +133,14 @@ public enum ErrorCode {
   EC_406(406, "Information which was sent, was not accepted."),
 
   EC_500(500, "Internal Server Error."),
+
+  EC_718(718, "UNAUTHORIZED"),
+
+  EC_719(719, "Invalid clientId or secretKey"),
+
+  EC_701(701, "The argument that you provided is a required argument but it is blank or null."),
+
+  EC_711(711, "Invalid Input"),
 
   EC_1001(1001, "Your Session has been expired."),
 

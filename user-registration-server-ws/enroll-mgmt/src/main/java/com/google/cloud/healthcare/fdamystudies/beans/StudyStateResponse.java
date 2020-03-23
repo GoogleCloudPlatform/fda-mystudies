@@ -7,18 +7,20 @@
  */
 package com.google.cloud.healthcare.fdamystudies.beans;
 
+import java.util.List;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
-@Setter
 @Getter
+@Setter
 @ToString
-public class ParticipantInfoRespBean {
+@Component
+@Scope(value = "prototype")
+public class StudyStateResponse {
 
-  private String sharing;
-  private String enrollment;
-  private String withdrawal;
-  private String message;
-  private Integer code;
+  private String message = "";
+  private List<StudyStateBean> studies;
 }

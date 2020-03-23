@@ -1,3 +1,10 @@
+/*
+ * Copyright 2020 Google LLC
+ *
+ * Use of this source code is governed by an MIT-style
+ * license that can be found in the LICENSE file or at
+ * https://opensource.org/licenses/MIT.
+ */
 package com.google.cloud.healthcare.fdamystudies.config;
 
 import org.springframework.beans.factory.annotation.Value;
@@ -8,8 +15,7 @@ import lombok.Setter;
 import lombok.ToString;
 
 @Configuration
-// @PropertySource("classpath:application-${spring.profiles.active}.properties")
-@PropertySource("classpath:messageResource.properties")
+@PropertySource("classpath:applicationConfiguration.properties")
 @Setter
 @Getter
 @ToString
@@ -63,6 +69,9 @@ public class ApplicationPropertyConfiguration {
   @Value("${auth.server.url}")
   private String authServerUrl;
 
+  @Value("${authServerClientValidationUrl}")
+  private String authServerClientValidationUrl;
+
   @Value("${auth.server.updateStatusUrl}")
   private String authServerUpdateStatusUrl;
 
@@ -75,9 +84,12 @@ public class ApplicationPropertyConfiguration {
   @Value("${interceptor}")
   private String interceptorUrls;
 
-  @Value("${invalidUrl}")
-  private String invalidUrl;
+  @Value("${serverApiUrls}")
+  private String serverApiUrls;
 
   @Value("${response.server.url}")
   private String responseServerUrl;
+
+  @Value("${response.server.url.addParticipantId}")
+  private String addParticipantId;
 }

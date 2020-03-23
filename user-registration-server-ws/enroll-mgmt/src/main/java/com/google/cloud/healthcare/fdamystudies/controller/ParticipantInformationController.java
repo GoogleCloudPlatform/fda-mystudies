@@ -1,3 +1,10 @@
+/*
+ * Copyright 2020 Google LLC
+ *
+ * Use of this source code is governed by an MIT-style
+ * license that can be found in the LICENSE file or at
+ * https://opensource.org/licenses/MIT.
+ */
 package com.google.cloud.healthcare.fdamystudies.controller;
 
 import javax.servlet.http.HttpServletResponse;
@@ -9,11 +16,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.StringUtils;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RestController;
 import com.google.cloud.healthcare.fdamystudies.beans.ParticipantInfoRespBean;
-import com.google.cloud.healthcare.fdamystudies.beans.ParticipantInformationReqBean;
 import com.google.cloud.healthcare.fdamystudies.service.ParticipantInformationService;
 import com.google.cloud.healthcare.fdamystudies.util.AppUtil;
 import com.google.cloud.healthcare.fdamystudies.util.MyStudiesUserRegUtil;
@@ -26,22 +32,21 @@ public class ParticipantInformationController {
 
   @Autowired ParticipantInformationService participantInfoService;
 
-  @PostMapping(value = "/getParticipantInfo", produces = MediaType.APPLICATION_JSON_VALUE)
+  @GetMapping(value = "/participantInfo", produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<?> getParticipantDetails(
-      @RequestBody ParticipantInformationReqBean participantBean,
+      @RequestHeader("participantId") String participantId,
+      @RequestHeader("studyId") String studyId,
       @Context HttpServletResponse response) {
     logger.info("ParticipantInformationController getParticipantDetails() - starts ");
     ParticipantInfoRespBean participantInfoResp = null;
     try {
-      if ((participantBean != null)
-          && StringUtils.hasText(participantBean.getParticipantId())
-          && StringUtils.hasText(participantBean.getStudyId())) {
+      if (StringUtils.hasText(participantId) && StringUtils.hasText(studyId)) {
         participantInfoResp =
-            participantInfoService.getParticipantInfoDetails(
-                participantBean.getParticipantId(), participantBean.getStudyId());
+            participantInfoService.getParticipantInfoDetails(participantId, studyId);
         if (participantInfoResp != null) {
           participantInfoResp.setMessage(
               MyStudiesUserRegUtil.ErrorCodes.SUCCESS.getValue().toLowerCase());
+          participantInfoResp.setCode(HttpStatus.OK.value());
         } else {
           MyStudiesUserRegUtil.getFailureResponse(
               MyStudiesUserRegUtil.ErrorCodes.STATUS_102.getValue(),

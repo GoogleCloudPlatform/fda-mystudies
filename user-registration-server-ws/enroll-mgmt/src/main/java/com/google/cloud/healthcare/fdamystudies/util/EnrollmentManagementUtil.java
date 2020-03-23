@@ -1,3 +1,10 @@
+/*
+ * Copyright 2020 Google LLC
+ *
+ * Use of this source code is governed by an MIT-style
+ * license that can be found in the LICENSE file or at
+ * https://opensource.org/licenses/MIT.
+ */
 package com.google.cloud.healthcare.fdamystudies.util;
 
 import java.security.MessageDigest;
@@ -18,14 +25,17 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
+import org.springframework.web.client.RestClientResponseException;
 import org.springframework.web.client.RestTemplate;
 import com.google.cloud.healthcare.fdamystudies.beans.EnrollmentBodyProvider;
+import com.google.cloud.healthcare.fdamystudies.beans.WithdrawFromStudyBodyProvider;
 import com.google.cloud.healthcare.fdamystudies.config.ApplicationPropertyConfiguration;
+import com.google.cloud.healthcare.fdamystudies.exception.InvalidRequestException;
+import com.google.cloud.healthcare.fdamystudies.exception.SystemException;
+import com.google.cloud.healthcare.fdamystudies.exception.UnAuthorizedRequestException;
 
 @Component
 public class EnrollmentManagementUtil {
-
-  //  private String validInputChars;
 
   private static final Random generator = new Random();
   static final String SOURCE = "0123456789abcdefghijklmnopqrstuvwxyz";
@@ -37,12 +47,6 @@ public class EnrollmentManagementUtil {
   @Autowired private RestTemplate restTemplate;
 
   @Autowired private ApplicationPropertyConfiguration appConfig;
-
-  /*
-   * This method is used to validate the user
-   * and user's current session through a REST API
-   * call to AuthServer.
-   */
 
   public boolean isChecksumValid(@NotNull String token) {
     try {
@@ -124,14 +128,9 @@ public class EnrollmentManagementUtil {
     return generatedHash;
   }
 
-  public String getParticipantId(
-      String applicationId,
-      String clientId,
-      String clientSecret,
-      String hashedTokenValue,
-      String studyId) {
+  public String getParticipantId(String applicationId, String hashedTokenValue, String studyId)
+      throws InvalidRequestException, UnAuthorizedRequestException, SystemException {
     logger.info("EnrollmentManagementUtil deactivateAcct() - starts ");
-    Integer value = null;
     HttpHeaders headers = null;
     EnrollmentBodyProvider bodyProvider = null;
     HttpEntity<EnrollmentBodyProvider> requestBody = null;
@@ -141,13 +140,58 @@ public class EnrollmentManagementUtil {
       headers = new HttpHeaders();
       headers.setContentType(MediaType.APPLICATION_JSON);
       headers.set("applicationId", applicationId);
-      headers.set("clientId", clientId);
-      headers.set("clientSecret", clientSecret);
+      headers.set(AppConstants.CLIENT_ID, appConfig.getClientId());
+
+      headers.set(
+          AppConstants.SECRET_KEY, MyStudiesUserRegUtil.getHashedValue(appConfig.getSecretKey()));
 
       bodyProvider = new EnrollmentBodyProvider();
       bodyProvider.setTokenIdentifier(hashedTokenValue);
       bodyProvider.setCustomStudyId(studyId);
-      requestBody = new HttpEntity<EnrollmentBodyProvider>(bodyProvider, headers);
+      requestBody = new HttpEntity<>(bodyProvider, headers);
+      responseEntity =
+          restTemplate.exchange(
+              appConfig.getAddParticipantId(), HttpMethod.POST, requestBody, String.class);
+
+      if (responseEntity.getStatusCode() == HttpStatus.OK) {
+        participantId = (String) responseEntity.getBody();
+      }
+    } catch (RestClientResponseException e) {
+
+      if (e.getRawStatusCode() == 401) {
+        throw new UnAuthorizedRequestException();
+      } else if (e.getRawStatusCode() == 400) {
+        throw new InvalidRequestException();
+      } else {
+        throw new SystemException();
+      }
+    } catch (Exception e) {
+      logger.error("UserManagementUtil deactivateAcct() - Ends ");
+      throw new SystemException();
+    }
+    logger.info("UserManagementUtil deactivateAcct() - Ends ");
+    return participantId;
+  }
+
+  public String withDrawParticipantFromStudy(String participantId, String studyId, boolean delete) {
+    logger.info("EnrollmentManagementUtil withDrawParticipantFromStudy() - starts ");
+    Integer value = null;
+    HttpHeaders headers = null;
+    WithdrawFromStudyBodyProvider bodyProvider = null;
+    HttpEntity<WithdrawFromStudyBodyProvider> requestBody = null;
+    ResponseEntity<?> responseEntity = null;
+    String message = "";
+    try {
+      headers = new HttpHeaders();
+      headers.setContentType(MediaType.APPLICATION_JSON);
+      headers.set("applicationId", AppConstants.RESP_SERVER_APPLICATION_ID);
+      headers.set("clientId", AppConstants.RESP_SERVER_CLIENT_ID);
+      headers.set("clientSecret", AppConstants.RESP_SERVER_CLIENT_SECRET_KEY);
+
+      bodyProvider = new WithdrawFromStudyBodyProvider();
+      bodyProvider.setParticipantId(participantId);
+      bodyProvider.setCustomStudyId(studyId);
+      requestBody = new HttpEntity<>(bodyProvider, headers);
       responseEntity =
           restTemplate.exchange(
               appConfig.getResponseServerUrl() + "/participant/add",
@@ -155,12 +199,12 @@ public class EnrollmentManagementUtil {
               requestBody,
               String.class);
       if (responseEntity.getStatusCode() == HttpStatus.OK) {
-        participantId = (String) responseEntity.getBody();
+        message = (String) responseEntity.getBody();
       }
     } catch (Exception e) {
-      logger.error("UserManagementUtil deactivateAcct() - error ", e);
+      logger.error("EnrollmentManagementUtil withDrawParticipantFromStudy() - error ", e);
     }
-    logger.info("UserManagementUtil deactivateAcct() - Ends ");
-    return participantId;
+    logger.info("EnrollmentManagementUtil withDrawParticipantFromStudy() - Ends ");
+    return message;
   }
 }

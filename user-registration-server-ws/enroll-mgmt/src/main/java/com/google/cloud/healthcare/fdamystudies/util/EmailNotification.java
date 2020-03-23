@@ -1,3 +1,10 @@
+/*
+ * Copyright 2020 Google LLC
+ *
+ * Use of this source code is governed by an MIT-style
+ * license that can be found in the LICENSE file or at
+ * https://opensource.org/licenses/MIT.
+ */
 package com.google.cloud.healthcare.fdamystudies.util;
 
 import java.util.List;
@@ -7,22 +14,12 @@ import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import com.google.cloud.healthcare.fdamystudies.config.ApplicationPropertyConfiguration;
 
-/** @author Aswini */
 public class EmailNotification {
 
   private static final Logger logger = LogManager.getLogger(EmailNotification.class);
 
   @Autowired private ApplicationPropertyConfiguration appConfig;
 
-  /**
-   * @param subjectProprtyName
-   * @param content
-   * @param toMail
-   * @param ccMailList
-   * @param bccMailList
-   * @return boolean
-   * @throws Exception
-   */
   public boolean sendEmailNotification(
       String subject,
       String content,
