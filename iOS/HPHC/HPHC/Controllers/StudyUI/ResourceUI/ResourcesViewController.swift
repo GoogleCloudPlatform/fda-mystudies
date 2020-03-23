@@ -1,6 +1,7 @@
 // License Agreement for FDA My Studies
-// Copyright © 2017-2019 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors. Permission is
-// hereby granted, free of charge, to any person obtaining a copy of this software and associated
+// Copyright © 2017-2019 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors.
+// Copyright 2020 Google LLC
+// Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated
 // documentation files (the &quot;Software&quot;), to deal in the Software without restriction, including without
 // limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the
 // Software, and to permit persons to whom the Software is furnished to do so, subject to the following
@@ -338,8 +339,8 @@ class ResourcesViewController: UIViewController {
             errorAlertActionTitle2: NSLocalizedString("Cancel", comment: ""),
             viewControllerUsed: self,
             action1: {
-              self.shouldDeleteData = false
-              self.withdrawalFromStudy(deleteResponse: false)
+              self.shouldDeleteData = true
+              self.withdrawalFromStudy(deleteResponse: true)
             },
             action2: {
 
@@ -410,17 +411,15 @@ class ResourcesViewController: UIViewController {
     WCPServices().getStudyInformation(studyId: study.studyId, delegate: self)
   }
 
-  func pushToResourceDetails() {
+  func pushToResourceDetails(with consentPath: String) {
 
     let path = AKUtility.baseFilePath + "/study"
-    let consentPath = Study.currentStudy?.signedConsentFilePath
+    let fullPath = path + "/" + consentPath
 
-    let fullPath = path + "/" + consentPath!
-
-    let pdfData = FileDownloadManager.decrytFile(pathURL: URL.init(string: fullPath))
+    let pdfData = FileDownloadManager.decrytFile(pathURL: URL(string: fullPath))
 
     var isPDF: Bool = false
-    if (pdfData?.count)! >= 1024  // only check if bigger
+    if (pdfData?.count ?? 0) >= 1024  // only check if bigger
     {
       var pdfBytes = [UInt8]()
       pdfBytes = [0x25, 0x50, 0x44, 0x46]
@@ -432,8 +431,10 @@ class ResourcesViewController: UIViewController {
         isPDF = true
       } else {
         isPDF = false
-        UserServices().getConsentPDFForStudy(
-          studyId: (Study.currentStudy?.studyId)!,
+        let currentStudy = Study.currentStudy
+        ConsentServices().getConsentPDFForStudy(
+          studyId: currentStudy?.studyId ?? "",
+          consentVersion: currentStudy?.signedConsentVersion ?? "",
           delegate: self
         )
       }
@@ -478,25 +479,27 @@ class ResourcesViewController: UIViewController {
 
       fullPath = "file://" + "\(fullPath!)"
 
-      try consentData?.write(to: URL(string: fullPath!)!)
+      do {
+        try consentData?.write(to: URL(string: fullPath!)!)
+      } catch {
+        Logger.sharedInstance.error(error)
+      }
 
       FileDownloadManager.encyptFile(pathURL: URL(string: defaultPath!)!)
 
       Study.currentStudy?.signedConsentFilePath = fileName
       DBHandler.saveConsentInformation(study: Study.currentStudy!)
 
-      self.pushToResourceDetails()
+      self.pushToResourceDetails(with: fileName)
 
     } catch let error as NSError {
       Logger.sharedInstance.error(error.localizedDescription)
     }
-
   }
 
   func withdrawalFromStudy(deleteResponse: Bool) {
-    //TBD: uncomment following for UAT
     let participantId = Study.currentStudy?.userParticipateState.participantId
-    LabKeyServices().withdrawFromStudy(
+    EnrollServices().withdrawFromStudy(
       studyId: (Study.currentStudy?.studyId)!,
       participantId: participantId!,
       deleteResponses: deleteResponse,
@@ -620,7 +623,8 @@ extension ResourcesViewController: UITableViewDelegate {
   func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
     tableView.deselectRow(at: indexPath, animated: true)
 
-    let resource = (tableViewRowDetails?[indexPath.row])!
+    guard let currentStudy = Study.currentStudy else { return }
+    let resource = tableViewRowDetails?[indexPath.row]
 
     if (resource as? Resource) != nil {
 
@@ -632,14 +636,15 @@ extension ResourcesViewController: UITableViewDelegate {
       if (resource as? String)! == leaveStudy {
         self.handleLeaveStudy()
       } else if (resource as? String)! == aboutTheStudy {
-        self.checkDatabaseForStudyInfo(study: Study.currentStudy!)
+        self.checkDatabaseForStudyInfo(study: currentStudy)
       } else if (resource as? String)! == consentPDF {
         // PENDING
-        if Study.currentStudy?.signedConsentFilePath != nil {
-          self.pushToResourceDetails()
+        if let consentPath = Study.currentStudy?.signedConsentFilePath, !consentPath.isEmpty {
+          self.pushToResourceDetails(with: consentPath)
         } else {
-          UserServices().getConsentPDFForStudy(
-            studyId: (Study.currentStudy?.studyId)!,
+          ConsentServices().getConsentPDFForStudy(
+            studyId: currentStudy.studyId ?? "",
+            consentVersion: currentStudy.signedConsentVersion ?? "",
             delegate: self
           )
         }
@@ -663,15 +668,7 @@ extension ResourcesViewController: NMWebServiceDelegate {
       self.removeProgressIndicator()
       self.loadResourceFromDatabase()
 
-    case ResponseMethods.withdrawFromStudy.method.methodName:
-      UserServices().withdrawFromStudy(
-        studyId: (Study.currentStudy?.studyId)!,
-        shouldDeleteData: self.shouldDeleteData!,
-        delegate: self
-      )
-
-    case RegistrationMethods.withdraw.method.methodName:
-      // Handle for withdraw account
+    case EnrollmentMethods.withdrawfromstudy.method.methodName:
       if !Utilities.isStandaloneApp() {
         if let response = response as? JSONDictionary {
           handleResponseForWithdraw(response: response)
@@ -696,7 +693,7 @@ extension ResourcesViewController: NMWebServiceDelegate {
         handleStudyInfoResponse(response: response)
       }
 
-    case RegistrationMethods.consentPDF.method.methodName:
+    case ConsentServerMethods.consentDocument.method.methodName:
       self.removeProgressIndicator()
       let consentDict: [String: Any] = (
         (response as? [String: Any])![kConsentPdfKey] as? [String: Any]
@@ -728,7 +725,8 @@ extension ResourcesViewController: NMWebServiceDelegate {
 
   func failedRequest(_ manager: NetworkManager, requestName: NSString, error: NSError) {
 
-    if error.code == 403 {  // unauthorized
+    if requestName as String == AuthServerMethods.getRefreshedToken.description && error.code == 401
+    {  //unauthorized  // unauthorized
       self.removeProgressIndicator()
       UIUtilities.showAlertMessageWithActionHandler(
         kErrorTitle,
@@ -750,24 +748,12 @@ extension ResourcesViewController: NMWebServiceDelegate {
         self.tableView?.isHidden = false
         self.tableView?.reloadData()
 
-      } else if requestName as String == ResponseMethods.withdrawFromStudy.description {
-
-        if error.localizedDescription.localizedCaseInsensitiveContains(
-          "Invalid ParticipantId."
-        ) {
-
-          UserServices().withdrawFromStudy(
-            studyId: (Study.currentStudy?.studyId)!,
-            shouldDeleteData: self.shouldDeleteData!,
-            delegate: self
-          )
-        } else {
-          self.removeProgressIndicator()
-          UIUtilities.showAlertWithTitleAndMessage(
-            title: NSLocalizedString(kErrorTitle, comment: "") as NSString,
-            message: error.localizedDescription as NSString
-          )
-        }
+      } else if requestName as String == EnrollmentMethods.withdrawfromstudy.description {
+        self.removeProgressIndicator()
+        UIUtilities.showAlertWithTitleAndMessage(
+          title: NSLocalizedString(kErrorTitle, comment: "") as NSString,
+          message: error.localizedDescription as NSString
+        )
       } else {
         self.removeProgressIndicator()
         UIUtilities.showAlertWithTitleAndMessage(

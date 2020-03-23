@@ -1,6 +1,7 @@
 // License Agreement for FDA My Studies
-// Copyright © 2017-2019 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors. Permission is
-// hereby granted, free of charge, to any person obtaining a copy of this software and associated
+// Copyright © 2017-2019 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors.
+// Copyright 2020 Google LLC
+// Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated
 // documentation files (the &quot;Software&quot;), to deal in the Software without restriction, including without
 // limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the
 // Software, and to permit persons to whom the Software is furnished to do so, subject to the following
@@ -568,9 +569,10 @@ class ActivitiesViewController: UIViewController {
     activityStatus.totalRuns = activity.totalRuns
     activityStatus.activityVersion = activity.version
 
-    /// Update participationStatus to server
-    UserServices().updateUserActivityParticipatedStatus(
+    // Update participationStatus to server
+    ResponseServices().updateUserActivityParticipatedStatus(
       studyId: activity.studyId!,
+      participantId: Study.currentStudy?.userParticipateState.participantId ?? "",
       activityStatus: activityStatus,
       delegate: self
     )
@@ -631,7 +633,7 @@ class ActivitiesViewController: UIViewController {
     )
 
     /// Update to server
-    UserServices().updateCompletionAdherence(studyStatus: status, delegate: self)
+    EnrollServices().updateCompletionAdherence(studyStatus: status, delegate: self)
     /// Update Local DB
     DBHandler.updateStudyParticipationStatus(study: Study.currentStudy!)
 
@@ -747,8 +749,9 @@ class ActivitiesViewController: UIViewController {
     activityStatus.activityVersion = activity.version
 
     // Update User Participation Status to server
-    UserServices().updateUserActivityParticipatedStatus(
+    ResponseServices().updateUserActivityParticipatedStatus(
       studyId: activity.studyId!,
+      participantId: Study.currentStudy?.userParticipateState.participantId ?? "",
       activityStatus: activityStatus,
       delegate: self
     )
@@ -787,7 +790,7 @@ class ActivitiesViewController: UIViewController {
 
   /// Send Request To Get ActivityStates.
   func sendRequestToGetActivityStates() {
-    UserServices().getUserActivityState(studyId: (Study.currentStudy?.studyId)!, delegate: self)
+    ResponseServices().getUserActivityState(studyId: (Study.currentStudy?.studyId)!, delegate: self)
   }
 
   /// Send Request To Get ActivityList.
@@ -1045,9 +1048,9 @@ extension ActivitiesViewController: ActivityFilterViewDelegate {
 extension ActivitiesViewController: NMWebServiceDelegate {
 
   func startedRequest(_ manager: NetworkManager, requestName: NSString) {
-    if (requestName as String == RegistrationMethods.updateStudyState.method.methodName)
+    if (requestName as String == EnrollmentMethods.updateStudyState.method.methodName)
       || (
-        requestName as String == RegistrationMethods.updateActivityState.method.methodName
+        requestName as String == ResponseMethods.updateActivityState.method.methodName
       ) || (requestName as String == WCPMethods.studyDashboard.method.methodName)
       || (
         requestName as String == WCPMethods.resources.method.methodName
@@ -1060,7 +1063,7 @@ extension ActivitiesViewController: NMWebServiceDelegate {
 
   func finishedRequest(_ manager: NetworkManager, requestName: NSString, response: AnyObject?) {
 
-    if requestName as String == RegistrationMethods.activityState.method.methodName {
+    if requestName as String == ResponseMethods.activityState.method.methodName {
       self.sendRequesToGetActivityList()
     } else if requestName as String == WCPMethods.activityList.method.methodName {
 
@@ -1121,7 +1124,8 @@ extension ActivitiesViewController: NMWebServiceDelegate {
     if self.refreshControl != nil && (self.refreshControl?.isRefreshing)! {
       self.refreshControl?.endRefreshing()
     }
-    if error.code == 403 {  // unauthorized
+    if requestName as String == AuthServerMethods.getRefreshedToken.description && error.code == 401
+    {  //unauthorized  // unauthorized
       UIUtilities.showAlertMessageWithActionHandler(
         kErrorTitle,
         message: error.localizedDescription,
@@ -1132,7 +1136,7 @@ extension ActivitiesViewController: NMWebServiceDelegate {
         }
       )
     } else {
-      if requestName as String == RegistrationMethods.activityState.method.methodName {
+      if requestName as String == ResponseMethods.activityState.method.methodName {
         if error.code != NoNetworkErrorCode {
           self.loadActivitiesFromDatabase()
         } else {
@@ -1408,7 +1412,7 @@ extension ActivitiesViewController: ORKTaskViewControllerDelegate {
         }
 
         // send response to labkey
-        LabKeyServices().processResponse(responseData: response!, delegate: self)
+        ResponseServices().processResponse(responseData: response!, delegate: self)
       }
     }
     taskViewController.dismiss(

@@ -1,6 +1,7 @@
 // License Agreement for FDA My Studies
-// Copyright © 2017-2019 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors. Permission is
-// hereby granted, free of charge, to any person obtaining a copy of this software and associated
+// Copyright © 2017-2019 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors.
+// Copyright 2020 Google LLC
+// Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated
 // documentation files (the &quot;Software&quot;), to deal in the Software without restriction, including without
 // limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the
 // Software, and to permit persons to whom the Software is furnished to do so, subject to the following
@@ -100,10 +101,8 @@ class ForgotPasswordViewController: UIViewController {
 
     } else if !(Utilities.isValidEmail(testStr: (textFieldEmail?.text)!)) {
       self.showAlertMessages(textMessage: kMessageValidEmail)
-
     } else {
-      debugPrint("Call the Webservice")
-      UserServices().forgotPassword(email: (textFieldEmail?.text)!, delegate: self)
+      AuthServices().forgotPassword(email: (textFieldEmail?.text)!, delegate: self)
     }
   }
 
@@ -136,7 +135,7 @@ extension ForgotPasswordViewController: NMWebServiceDelegate {
 
     self.removeProgressIndicator()
 
-    if requestName as String == RegistrationMethods.forgotPassword.description {
+    if requestName as String == AuthServerMethods.forgotPassword.description {
       UIUtilities.showAlertMessageWithActionHandler(
         NSLocalizedString(kTitleMessage, comment: ""),
         message: NSLocalizedString(kForgotPasswordResponseMessage, comment: ""),
@@ -159,8 +158,7 @@ extension ForgotPasswordViewController: NMWebServiceDelegate {
 
     self.removeProgressIndicator()
 
-    if requestName as String == RegistrationMethods.forgotPassword.description && error.code == 403
-    {
+    if requestName as String == AuthServerMethods.forgotPassword.description && error.code == 403 {
       self.navigateToVerifyViewController()
     } else {
       // if resend email fails

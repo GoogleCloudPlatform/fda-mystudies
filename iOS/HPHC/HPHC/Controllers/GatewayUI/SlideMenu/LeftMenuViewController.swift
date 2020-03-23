@@ -1,6 +1,7 @@
 // License Agreement for FDA My Studies
-// Copyright © 2017-2019 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors. Permission is
-// hereby granted, free of charge, to any person obtaining a copy of this software and associated
+// Copyright © 2017-2019 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors.
+// Copyright 2020 Google LLC
+// Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated
 // documentation files (the &quot;Software&quot;), to deal in the Software without restriction, including without
 // limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the
 // Software, and to permit persons to whom the Software is furnished to do so, subject to the following
@@ -506,9 +507,7 @@ class LeftMenuViewController: UIViewController, LeftMenuProtocol {
 
   /// Call webservice to logout current user.
   func sendRequestToSignOut() {
-
-    UserServices().logoutUser(self as NMWebServiceDelegate)
-
+    AuthServices().logoutUser(self as NMWebServiceDelegate)
   }
 
   /// As the user is Signed out Remove passcode from the keychain
@@ -604,7 +603,7 @@ extension LeftMenuViewController: NMWebServiceDelegate {
   }
 
   func finishedRequest(_ manager: NetworkManager, requestName: NSString, response: AnyObject?) {
-    if requestName as String == RegistrationMethods.logout.description {
+    if requestName as String == AuthServerMethods.logout.description {
       self.signout()
     }
     UIApplication.shared.keyWindow?.addProgressIndicatorOnWindowFromTop()
@@ -613,7 +612,8 @@ extension LeftMenuViewController: NMWebServiceDelegate {
   func failedRequest(_ manager: NetworkManager, requestName: NSString, error: NSError) {
     UIApplication.shared.keyWindow?.addProgressIndicatorOnWindowFromTop()
 
-    if error.code == 403 {  // unauthorized
+    if requestName as String == AuthServerMethods.getRefreshedToken.description && error.code == 401
+    {  //unauthorized  // unauthorized
       UIUtilities.showAlertMessageWithActionHandler(
         kErrorTitle,
         message: error.localizedDescription,
@@ -623,6 +623,8 @@ extension LeftMenuViewController: NMWebServiceDelegate {
           self.fdaSlideMenuController()?.navigateToHomeAfterUnauthorizedAccess()
         }
       )
+    } else if requestName as String == AuthServerMethods.logout.description && error.code == 403 {
+      self.signout()
     } else {
       UIUtilities.showAlertWithTitleAndMessage(
         title: NSLocalizedString(kErrorTitle, comment: "") as NSString,

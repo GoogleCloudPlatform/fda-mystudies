@@ -2,8 +2,9 @@
 // Copyright (c) 2016, Muhammad Zeeshan https://github.com/mzeeshanid/MZDownloadManager.git
 // All rights reserved.
 // License Agreement for FDA My Studies
-// Copyright © 2017-2019 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors. Permission is
-// hereby granted, free of charge, to any person obtaining a copy of this software and associated
+// Copyright © 2017-2019 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors.
+// Copyright 2020 Google LLC
+// Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated
 // documentation files (the &quot;Software&quot;), to deal in the Software without restriction, including without
 // limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the
 // Software, and to permit persons to whom the Software is furnished to do so, subject to the following
@@ -147,21 +148,10 @@ class FileDownloadManager: NSObject, URLSessionDelegate, URLSessionDownloadDeleg
 
       do {
 
-        var key = ""
-        var initializationVector = ""
+        let key = FDAKeychain.shared[kEncryptionKey] ?? kdefaultKeyForEncrytion
+        let initializationVector = FDAKeychain.shared[kEncryptionIV] ?? kdefaultIVForEncryption
 
-        if let ekey = FDAKeychain.shared[kEncryptionKey] {
-          key = ekey
-        } else {
-          key = kdefaultKeyForEncrytion
-        }
-        if let ekey = FDAKeychain.shared[kEncryptionIV] {
-          initializationVector = ekey
-        } else {
-          initializationVector = kdefaultIVForEncryption
-        }
-
-        let data = try Data.init(contentsOf: URL.init(string: pathString)!)
+        let data = try Data.init(contentsOf: URL(string: pathString)!)
         let aes = try AES(key: key, iv: initializationVector)
         let deCipherText = try aes.decrypt(Array(data))
         let deCryptedData = Data(deCipherText)
@@ -178,45 +168,37 @@ class FileDownloadManager: NSObject, URLSessionDelegate, URLSessionDownloadDeleg
   }
 
   /// encrypts file at the URL specified using the random generated Key & IV, AES256 encryption is used
-  class func encyptFile(pathURL: URL?) {
+  class func encyptFile(pathURL: URL) {
 
-    var pathString = "file://" + "\((pathURL?.absoluteString)!)"
-    if (pathURL?.absoluteString.contains("file://"))! {
-      pathString = (pathURL?.absoluteString)!
-    }
+    let pathString = pathURL.absoluteString.contains("file://")
+      ? pathURL.absoluteString
+      : "file://" + pathURL.absoluteString
+    guard let updatedPathURL = URL(string: pathString)
+    else { return }
+
     if !FileManager.default.fileExists(atPath: pathString) {
 
+      let key = FDAKeychain.shared[kEncryptionKey] ?? kdefaultKeyForEncrytion
+      let initializationVector = FDAKeychain.shared[kEncryptionIV] ?? kdefaultIVForEncryption
       do {
-        var key = ""
-        var initializationVector = ""
-
-        if let ekey = FDAKeychain.shared[kEncryptionKey] {
-          key = ekey
-        } else {
-          key = kdefaultKeyForEncrytion
-        }
-        if let ekey = FDAKeychain.shared[kEncryptionIV] {
-          initializationVector = ekey
-        } else {
-          initializationVector = kdefaultIVForEncryption
-        }
-        let data = try Data.init(contentsOf: URL.init(string: pathString)!)
+        let data = try Data(contentsOf: updatedPathURL)
         let aes = try AES(key: key, iv: initializationVector)  // aes128
         let ciphertext = try aes.encrypt(Array(data))
         let encryptedData = Data(ciphertext)
-
-        do {
-          try encryptedData.write(
-            to: URL.init(string: pathString)!,
-            options: Data.WritingOptions.atomic
-          )
-        } catch let error as NSError {
-          Logger.sharedInstance.error(
-            "Writing encrypted data to path failed \(error.localizedDescription)"
-          )
-        }
-      } catch let error as NSError {
-        Logger.sharedInstance.error("Encryting data failed \(error.localizedDescription)")
+        try encryptedData.write(
+          to: updatedPathURL,
+          options: Data.WritingOptions.atomic
+        )
+      } catch let error as AES.Error {
+        Logger.sharedInstance.error(
+          "Encrypting data failed: ",
+          error.localizedDescription
+        )
+      } catch {
+        Logger.sharedInstance.error(
+          "Writing encrypted data to path failed: ",
+          error.localizedDescription
+        )
       }
     }
   }

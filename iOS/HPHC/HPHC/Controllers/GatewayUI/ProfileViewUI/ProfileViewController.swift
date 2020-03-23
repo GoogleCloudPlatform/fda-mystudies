@@ -1,6 +1,7 @@
 // License Agreement for FDA My Studies
-// Copyright © 2017-2019 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors. Permission is
-// hereby granted, free of charge, to any person obtaining a copy of this software and associated
+// Copyright © 2017-2019 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors.
+// Copyright 2020 Google LLC
+// Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated
 // documentation files (the &quot;Software&quot;), to deal in the Software without restriction, including without
 // limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the
 // Software, and to permit persons to whom the Software is furnished to do so, subject to the following
@@ -321,7 +322,7 @@ class ProfileViewController: UIViewController, SlideMenuControllerDelegate {
 
   /// Api Call to SignOut.
   func sendRequestToSignOut() {
-    UserServices().logoutUser(self)
+    AuthServices().logoutUser(self)
   }
 
   /// Api call to delete account.
@@ -782,7 +783,7 @@ extension ProfileViewController: NMWebServiceDelegate {
 
   func finishedRequest(_ manager: NetworkManager, requestName: NSString, response: AnyObject?) {
     self.removeProgressIndicator()
-    if requestName as String == RegistrationMethods.logout.description {
+    if requestName as String == AuthServerMethods.logout.description {
 
       self.handleSignoutResponse()
     } else if requestName as String == RegistrationMethods.userProfile.description {
@@ -808,7 +809,8 @@ extension ProfileViewController: NMWebServiceDelegate {
   func failedRequest(_ manager: NetworkManager, requestName: NSString, error: NSError) {
     self.removeProgressIndicator()
 
-    if error.code == 403 {  //  unauthorized
+    if requestName as String == AuthServerMethods.getRefreshedToken.description && error.code == 401
+    {  //unauthorized
 
       UIUtilities.showAlertMessageWithActionHandler(
         kErrorTitle,

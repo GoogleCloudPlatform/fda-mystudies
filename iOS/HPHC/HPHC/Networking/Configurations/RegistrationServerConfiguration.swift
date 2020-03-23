@@ -20,8 +20,6 @@
 import UIKit
 
 enum RegistrationMethods: String {
-  //TODO : Write exact name for request method
-  case login
 
   case register
   case confirmRegistration
@@ -29,28 +27,27 @@ enum RegistrationMethods: String {
   case updateUserProfile
   case userPreferences
   case updatePreferences
-  case updateEligibilityConsentStatus
-  case consentPDF
-  case updateStudyState
-  case studyState
-  case updateActivityState
-  case activityState
-  case withdraw
-  case forgotPassword
-  case logout
-  case deleteAccount
-  case changePassword
   case resendConfirmation
   case deactivate
-  case verify
-  case refreshToken
+  case verifyEmailId
   case versionInfo
 
   var description: String {
     switch self {
 
     default:
-      return self.rawValue + ".api"
+      return self.apiPath
+    }
+  }
+
+  var apiPath: String {
+    switch self {
+    case .register:
+      return self.rawValue
+    case .verifyEmailId:
+      return self.rawValue
+    default:
+      return self.rawValue
     }
   }
 
@@ -58,25 +55,25 @@ enum RegistrationMethods: String {
 
     switch self {
 
-    case .activityState, .consentPDF, .deleteAccount, .confirmRegistration, .userProfile,
-      .userPreferences, .studyState, .versionInfo:
+    case .confirmRegistration, .userProfile,
+      .userPreferences, .versionInfo:
       // GET Methods
       return Method(
-        methodName: (self.rawValue + ".api"),
+        methodName: self.apiPath,
         methodType: .httpMethodGet,
         requestType: .requestTypeHTTP
       )
-    case .withdraw, .logout, .deactivate:
+    case .deactivate:
       // DELETE Methods
       return Method(
-        methodName: (self.rawValue + ".api"),
+        methodName: self.apiPath,
         methodType: .httpMethodDELETE,
         requestType: .requestTypeJSON
       )
     default:
       // POST Methods
       return Method(
-        methodName: (self.rawValue + ".api"),
+        methodName: self.apiPath,
         methodType: .httpMethodPOST,
         requestType: .requestTypeJSON
       )
@@ -87,13 +84,10 @@ enum RegistrationMethods: String {
 }
 // MARK: - Set the server end points
 enum RegistrationServerURLConstants {
-
-  // Staging server
   static let ProductionURL = API.registrationURL
-
   static let DevelopmentURL = API.registrationURL  // This will change based on config file.
-
 }
+
 class RegistrationServerConfiguration: NetworkConfiguration {
   static let configuration = RegistrationServerConfiguration()
 
@@ -108,25 +102,22 @@ class RegistrationServerConfiguration: NetworkConfiguration {
 
   override func getDefaultHeaders() -> [String: String] {
 
-    var infoDict: NSDictionary?
-    if let path = Bundle.main.path(forResource: "Info", ofType: "plist") {
-      infoDict = NSDictionary(contentsOfFile: path)
-    }
-    let appId = infoDict!["ApplicationID"] as! String
-    let orgId = infoDict!["OrganizationID"] as! String
+    let clientId = RegistrationServerAPIKey.apiKey
+    let seceretKey = RegistrationServerSecretKey.secretKey
+
+    var header = [
+      "appId": AppConfiguration.appID,
+      "orgId": AppConfiguration.orgID,
+    ]
 
     if User.currentUser.authToken != nil {
-      return [
-        kUserAuthToken: User.currentUser.authToken,
-        "applicationId": appId,
-        "orgId": orgId,
-      ]
+      header[kUserAuthToken] = User.currentUser.authToken
+      header["clientToken"] = User.currentUser.clientToken
     } else {
-      return [
-        "applicationId": appId,
-        "orgId": orgId,
-      ]
+      header["clientId"] = clientId
+      header["secretKey"] = seceretKey
     }
+    return header
   }
 
   override func getDefaultRequestParameters() -> [String: Any] {

@@ -93,20 +93,18 @@ extension UIViewController {
           options: nil
         )[0] as? UIView
 
-      let url = Bundle.main.url(forResource: kResourceName, withExtension: "gif")!
-
-      let webView = progressView?.subviews.first as! UIWebView
-      webView.loadRequest(URLRequest(url: url))
+      let fdaGif = UIImage.gifImageWithName(kResourceName)
+      let imageView = progressView?.subviews.first as? UIImageView
+      imageView?.image = fdaGif
 
       UI:do {
-        webView.scalesPageToFit = true
-        webView.contentMode = UIView.ContentMode.scaleAspectFit
         progressView!.alpha = 0
         progressView!.tag = 5000
       }
 
       layout:do {
         self.view.addSubview(progressView!)
+
         progressView!.translatesAutoresizingMaskIntoConstraints = false
 
         NSLayoutConstraint.activate(

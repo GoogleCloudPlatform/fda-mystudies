@@ -1,6 +1,7 @@
 // License Agreement for FDA My Studies
-// Copyright © 2017-2019 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors. Permission is
-// hereby granted, free of charge, to any person obtaining a copy of this software and associated
+// Copyright © 2017-2019 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors.
+// Copyright 2020 Google LLC
+// Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated
 // documentation files (the &quot;Software&quot;), to deal in the Software without restriction, including without
 // limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the
 // Software, and to permit persons to whom the Software is furnished to do so, subject to the following
@@ -15,7 +16,6 @@
 // LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT
 // OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 // OTHER DEALINGS IN THE SOFTWARE.
-
 import UIKit
 
 let kConfirmationSegueIdentifier = "confirmationSegue"
@@ -63,10 +63,10 @@ class ConfirmationViewController: UIViewController {
   // MARK: - Properties
   var tableViewRowDetails: NSMutableArray?
 
-  lazy var studiesToDisplay: [Study]! = []
+  lazy var studiesToDisplay: [Study] = []
   lazy var joinedStudies: [Study]! = []
   var studyWithoutWCData: Study?
-  lazy var studiesToWithdrawn: [StudyToDelete]! = []
+  lazy var studiesToWithdrawn: [StudyToDelete] = []
 
   // MARK: - View Controller LifeCycle
 
@@ -195,13 +195,6 @@ class ConfirmationViewController: UIViewController {
     self.tableViewConfirmation?.reloadData()
   }
 
-  /// Update the properties with the webservice response.
-  private func handleWithdrawnFromStudyResponse() {
-
-    studiesToWithdrawn.removeFirst()
-    self.withdrawnFromNextStudy()
-  }
-
   // MARK: - Button Actions
 
   /// Delete account button clicked.
@@ -227,22 +220,8 @@ class ConfirmationViewController: UIViewController {
   }
 
   func withdrawnFromNextStudy() {
-
-    if studiesToWithdrawn.count != 0 {
-
-      let studyToWithdrawn = studiesToWithdrawn.first
-      LabKeyServices().withdrawFromStudy(
-        studyId: (studyToWithdrawn?.studyId)!,
-        participantId: (studyToWithdrawn?.participantId)!,
-        deleteResponses: (studyToWithdrawn?.shouldDelete)!,
-        delegate: self
-      )
-    } else {
-      // call for delete account
-
-      let studiesIds = studiesToDisplay.map({ $0.studyId! })
-      UserServices().deActivateAccount(listOfStudyIds: studiesIds, delegate: self)
-    }
+    let studiesWithdrawnIDs = studiesToWithdrawn.compactMap({ $0.studyId })
+    UserServices().deActivateAccount(listOfStudyIds: studiesWithdrawnIDs, delegate: self)
   }
 
   /// Don't Delete button action.
@@ -332,12 +311,8 @@ extension ConfirmationViewController: NMWebServiceDelegate {
     if requestName as String == RegistrationMethods.deactivate.description {
       self.removeProgressIndicator()
       self.handleDeleteAccountResponse()
-
     } else if requestName as String == WCPMethods.studyInfo.rawValue {
       self.handleStudyInformationResonse()
-
-    } else if requestName as String == ResponseMethods.withdrawFromStudy.description {
-      self.handleWithdrawnFromStudyResponse()
     }
   }
 
@@ -354,21 +329,9 @@ extension ConfirmationViewController: NMWebServiceDelegate {
           self.fdaSlideMenuController()?.navigateToHomeAfterUnauthorizedAccess()
         }
       )
-
     } else {
       if requestName as String == WCPMethods.studyInfo.rawValue {
         self.removeProgressIndicator()
-
-      } else if requestName as String == ResponseMethods.withdrawFromStudy.description {
-        if error.localizedDescription.localizedCaseInsensitiveContains(
-          "Invalid ParticipantId."
-        ) {
-
-          self.handleWithdrawnFromStudyResponse()
-
-        } else {
-          self.removeProgressIndicator()
-        }
       } else {
         self.removeProgressIndicator()
         UIUtilities.showAlertWithTitleAndMessage(

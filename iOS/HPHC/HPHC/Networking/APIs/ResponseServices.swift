@@ -1,6 +1,7 @@
 // License Agreement for FDA My Studies
-// Copyright © 2017-2019 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors. Permission is
-// hereby granted, free of charge, to any person obtaining a copy of this software and associated
+// Copyright © 2017-2019 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors.
+// Copyright 2020 Google LLC
+// Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated
 // documentation files (the &quot;Software&quot;), to deal in the Software without restriction, including without
 // limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the
 // Software, and to permit persons to whom the Software is furnished to do so, subject to the following
@@ -24,76 +25,28 @@ let kParticipantId = "participantId"
 let kEnrollmentTokenValid = "valid"
 let kDeleteResponses = "delete"
 
-class LabKeyServices: NSObject {
+class ResponseServices: NSObject {
 
   let networkManager = NetworkManager.sharedInstance()
   var delegate: NMWebServiceDelegate?
   var activityId: String!
   var keys: String!
   var requestParams: [String: Any]? = [:]
-
   var headerParams: [String: String]? = [:]
 
+  private enum JSONKey {
+    static let applicationId = "applicationId"
+    static let studyVersion = "studyVersion"
+    static let tokenIdentifier = "tokenIdentifier"
+    static let orgID = "orgId"
+    static let siteID = "siteId"
+    static let appID = "appId"
+    static let studyID = "studyId"
+    static let activityID = "activityId"
+    static let userID = "userId"
+  }
+
   // MARK: Requests
-
-  /// Creates a request to enroll in a `Study`
-  /// - Parameters:
-  ///   - studyId: ID of `Study`
-  ///   - token: Enrollment Token Id
-  ///   - delegate: Class object to receive response
-  func enrollForStudy(studyId: String, token: String, delegate: NMWebServiceDelegate) {
-    self.delegate = delegate
-    let method = ResponseMethods.enroll.method
-
-    let params = [
-      kEnrollmentToken: token,
-      kStudyId: studyId,
-    ]
-
-    self.sendRequestWith(method: method, params: params, headers: nil)
-  }
-
-  /// Creates a request to verify Enrollment Token
-  /// - Parameters:
-  ///   - studyId: ID of `Study`
-  ///   - token: Enrollment Token Id
-  ///   - delegate: Class object to receive response
-  func verifyEnrollmentToken(studyId: String, token: String, delegate: NMWebServiceDelegate) {
-
-    self.delegate = delegate
-
-    let method = ResponseMethods.validateEnrollmentToken.method
-
-    let params = [
-      kEnrollmentToken: token,
-      kStudyId: studyId,
-    ]
-
-    self.sendRequestWith(method: method, params: params, headers: nil)
-  }
-
-  /// Creates a request to withdraw from `Study`
-  /// - Parameters:
-  ///   - studyId: ID of `Study`
-  ///   - participantId: Participant ID
-  ///   - deleteResponses: withdraw status in form of `Bool`
-  ///   - delegate: Class object to receive response
-  func withdrawFromStudy(
-    studyId: String,
-    participantId: String,
-    deleteResponses: Bool,
-    delegate: NMWebServiceDelegate
-  ) {
-    self.delegate = delegate
-    let method = ResponseMethods.withdrawFromStudy.method
-
-    let params = [
-      kParticipantId: participantId,
-      kDeleteResponses: deleteResponses,
-    ] as [String: Any]
-
-    self.sendRequestWith(method: method, params: params, headers: nil)
-  }
 
   /// Creates a request to process `Activity` response
   /// - Parameters:
@@ -106,7 +59,7 @@ class LabKeyServices: NSObject {
     metaData: [String: Any],
     activityType: String,
     responseData: [String: Any],
-    participantId: String,
+    studyStatus: UserStudyStatus,
     delegate: NMWebServiceDelegate
   ) {
 
@@ -116,11 +69,19 @@ class LabKeyServices: NSObject {
     let params = [
       kActivityType: activityType,
       kActivityInfoMetaData: metaData,
-      kParticipantId: participantId,
+      kParticipantId: studyStatus.participantId ?? "",
+      JSONKey.tokenIdentifier: studyStatus.tokenIdentifier ?? "",
+      JSONKey.siteID: studyStatus.siteID ?? "",
+      JSONKey.applicationId: AppConfiguration.appID,
+      JSONKey.orgID: AppConfiguration.orgID,
       kActivityResponseData: responseData,
     ] as [String: Any]
 
-    self.sendRequestWith(method: method, params: params, headers: nil)
+    let headers: [String: String] = [
+      "userId": User.currentUser.userId ?? "",
+    ]
+
+    self.sendRequestWith(method: method, params: params, headers: headers)
 
   }
 
@@ -137,19 +98,21 @@ class LabKeyServices: NSObject {
     if let userStudyStatus = currentUser.participatedStudies.filter({
       $0.studyId == Study.currentStudy?.studyId!
     }).first {
+      let currentStudy = Study.currentStudy
 
-      let studyId = Study.currentStudy?.studyId!
-      let activiyId = Study.currentActivity?.actvityId!
-      let activityName = Study.currentActivity?.shortName!
-      let activityVersion = Study.currentActivity?.version!
-      let currentRunId = Study.currentActivity?.currentRunId
-
+      let studyId = currentStudy?.studyId ?? ""
+      let activiyId = Study.currentActivity?.actvityId ?? ""
+      let activityName = Study.currentActivity?.shortName ?? ""
+      let activityVersion = Study.currentActivity?.version ?? ""
+      let currentRunId = Study.currentActivity?.currentRunId ?? 0
+      let studyVersion = currentStudy?.version ?? ""
       let info = [
-        kStudyId: studyId!,
-        kActivityId: activiyId!,
-        kActivityName: activityName!,
-        "version": activityVersion!,
-        kActivityRunId: "\(currentRunId!)",
+        kStudyId: studyId,
+        kActivityId: activiyId,
+        kActivityName: activityName,
+        "version": activityVersion,
+        kActivityRunId: "\(currentRunId)",
+        JSONKey.studyVersion: studyVersion,
       ] as [String: String]
 
       let ActivityType = Study.currentActivity?.type?.rawValue
@@ -157,11 +120,18 @@ class LabKeyServices: NSObject {
       let params = [
         kActivityType: ActivityType!,
         kActivityInfoMetaData: info,
-        kParticipantId: userStudyStatus.participantId! as String,
+        kParticipantId: userStudyStatus.participantId ?? "",
+        JSONKey.tokenIdentifier: userStudyStatus.tokenIdentifier ?? "",
+        JSONKey.siteID: userStudyStatus.siteID ?? "",
         kActivityResponseData: responseData,
+        JSONKey.applicationId: AppConfiguration.appID,
+        JSONKey.orgID: AppConfiguration.orgID,
       ] as [String: Any]
 
-      self.sendRequestWith(method: method, params: params, headers: nil)
+      let headers: [String: String] = [
+        JSONKey.userID: currentUser.userId ?? "",
+      ]
+      self.sendRequestWith(method: method, params: params, headers: headers)
     }
   }
 
@@ -169,29 +139,36 @@ class LabKeyServices: NSObject {
   /// - Parameters:
   ///   - tableName: ID of `Activity` to create a query
   ///   - activityId: ActivityID
-  ///   - keys: //TBD
+  ///   - keys: Combination of activities IDs
   ///   - participantId: Participant ID
   ///   - delegate: Class object to receive response
   func getParticipantResponse(
-    tableName: String,
-    activityId: String,
+    activity: Activity,
+    study: Study,
     keys: String,
-    participantId: String,
     delegate: NMWebServiceDelegate
   ) {
-
     self.delegate = delegate
-    self.activityId = activityId
+    self.activityId = activity.actvityId ?? ""
     self.keys = keys
-    let method = ResponseMethods.executeSQL.method
-    let query = "SELECT " + keys + ",Created" + " FROM " + tableName
-    let params = [
+    let method = ResponseMethods.getParticipantResponse.method
+    let userStudyStatus = study.userParticipateState
 
-      kParticipantId: participantId,
-      "sql": query,
+    let params = [
+      JSONKey.appID: AppConfiguration.appID,
+      JSONKey.orgID: AppConfiguration.orgID,
+      JSONKey.siteID: userStudyStatus?.siteID ?? "",
+      JSONKey.studyID: study.studyId ?? "",
+      JSONKey.activityID: self.activityId!,
+      kParticipantId: userStudyStatus?.participantId ?? "",
+      "activityVersion": activity.version ?? "",
+      "questionKey": "",
+      JSONKey.tokenIdentifier: userStudyStatus?.tokenIdentifier ?? "",
     ] as [String: Any]
 
-    self.sendRequestWith(method: method, params: params, headers: nil)
+    let headers: [String: String] = [JSONKey.userID: User.currentUser.userId ?? ""]
+
+    self.sendRequestWith(method: method, params: params, headers: headers)
   }
 
   /// Creates a request to sync offline data
@@ -211,8 +188,76 @@ class LabKeyServices: NSObject {
     self.sendRequestWith(method: method, params: params!, headers: headers)
   }
 
+  /// Creates a request to get `Activity` status
+  /// - Parameters:
+  ///   - studyId: ID of `Study`
+  ///   - delegate: Class object to receive response
+  func getUserActivityState(studyId: String, delegate: NMWebServiceDelegate) {
+
+    self.delegate = delegate
+
+    let user = User.currentUser
+    let params = [
+      kStudyId: studyId,
+      kParticipantId: Study.currentStudy?.userParticipateState.participantId ?? "",
+    ]
+    let headerParams = [
+      kUserId: user.userId!,
+      "Content-Type": "application/json",
+    ]
+    let method = ResponseMethods.activityState.method
+    self.sendRequestWith(method: method, params: params, headers: headerParams)
+  }
+
+  /// Creates a request to update `Activity` participation status
+  /// - Parameters:
+  ///   - studyId: ID of Study
+  ///   - activityStatus: Instance of `UserActivityStatus` to update
+  ///   - delegate: Class object to receive response
+  func updateUserActivityParticipatedStatus(
+    studyId: String,
+    participantId: String,
+    activityStatus: UserActivityStatus,
+    delegate: NMWebServiceDelegate
+  ) {
+
+    self.delegate = delegate
+
+    let user = User.currentUser
+    let headerParams = [
+      kUserId: user.userId,
+      kParticipantId: participantId,
+    ] as [String: String]
+
+    let params = [
+      kStudyId: studyId,
+      kParticipantId: participantId,
+      kActivity: [activityStatus.getParticipatedUserActivityStatus()],
+    ] as [String: Any]
+    let method = ResponseMethods.updateActivityState.method
+    self.sendRequestWith(method: method, params: params, headers: headerParams)
+  }
+
+  /// Creates a request to update `Activity` bookmark status
+  /// - Parameters:
+  ///   - activityStauts: Instance of `UserActivityStatus` to update
+  ///   - delegate: Class object to receive response
+  func updateActivityBookmarkStatus(
+    activityStauts: UserActivityStatus,
+    delegate: NMWebServiceDelegate
+  ) {
+    self.delegate = delegate
+
+    let user = User.currentUser
+    let headerParams = [kUserId: user.userId] as [String: String]
+
+    let params = [kActivites: [activityStauts.getBookmarkUserActivityStatus()]] as [String: Any]
+    let method = ResponseMethods.updateActivityState.method
+
+    self.sendRequestWith(method: method, params: params, headers: headerParams)
+  }
+
   // MARK: Parsers
-  func handleEnrollForStudy(response: [String: Any]) {}
 
   /// Handles Participant Response
   /// - Parameter response: Webservice response
@@ -232,13 +277,19 @@ class LabKeyServices: NSObject {
       dashBoardResponse.append(responseData)
     }
 
-    if let rows = response["rows"] as? [[String: Any]] {
+    if let rows = response["rows"] as? [JSONDictionary] {
 
       for rowDetail in rows {
-        if let data = rowDetail["data"] as? [String: Any] {
+        if let dataDictArr = rowDetail["data"] as? [JSONDictionary] {
           // created date
-          let dateDetail = data["Created"] as? [String: Any]
-          let date = (dateDetail?["value"] as? String)!
+          let data = dataDictArr[safe: 2] ?? [:]
+          var date: String = ""
+
+          if let createdDict = dataDictArr[safe: 1],
+            let dateDetail = createdDict["Created"] as? JSONDictionary
+          {
+            date = dateDetail["value"] as? String ?? ""
+          }
 
           // FetalKick
           if data["count"] != nil && data["duration"] != nil {
@@ -261,8 +312,7 @@ class LabKeyServices: NSObject {
 
             responseData?.values.append(valueDetail)
 
-          }  // Speatial Memory
-          else if data["NumberofFailures"] != nil && data["NumberofGames"] != nil
+          } else if data["NumberofFailures"] != nil && data["NumberofGames"] != nil
             && data[
               "Score"]
               != nil
@@ -338,6 +388,23 @@ class LabKeyServices: NSObject {
     StudyDashboard.instance.saveDashboardResponse(responseList: dashBoardResponse)
   }
 
+  /// Handles `Activity` status response
+  /// - Parameter response: Webservice response
+  func handleGetActivityStatesResponse(response: [String: Any]) {
+    let user = User.currentUser
+    if let activites = response[kActivites] as? [[String: Any]] {
+      if Study.currentStudy != nil {
+        for activity in activites {
+          let participatedActivity = UserActivityStatus(
+            detail: activity,
+            studyId: (Study.currentStudy?.studyId)!
+          )
+          user.participatedActivites.append(participatedActivity)
+        }
+      }
+    }
+  }
+
   /// Sends request
   /// - Parameters:
   ///   - method: instance of `Method`
@@ -357,7 +424,7 @@ class LabKeyServices: NSObject {
     )
   }
 }
-extension LabKeyServices: NMWebServiceDelegate {
+extension ResponseServices: NMWebServiceDelegate {
   func startedRequest(_ manager: NetworkManager, requestName: NSString) {
     delegate?.startedRequest(manager, requestName: requestName)
   }
@@ -365,15 +432,14 @@ extension LabKeyServices: NMWebServiceDelegate {
   func finishedRequest(_ manager: NetworkManager, requestName: NSString, response: AnyObject?) {
 
     switch requestName {
-    case ResponseMethods.validateEnrollmentToken.description as String: break
-
-    case ResponseMethods.enroll.description as String:
-      self.handleEnrollForStudy(response: response as! [String: Any])
-    case ResponseMethods.getParticipantResponse.description as String: break
-    case ResponseMethods.executeSQL.description as String:
+    case ResponseMethods.getParticipantResponse.description as String:
       self.handleGetParticipantResponse(response: response as! [String: Any])
+
     case ResponseMethods.processResponse.description as String: break
-    case ResponseMethods.withdrawFromStudy.description as String: break
+    case ResponseMethods.updateActivityState.description as String: break
+    case ResponseMethods.activityState.description as String:
+      self.handleGetActivityStatesResponse(response: (response as? [String: Any])!)
+
     default:
       break  // Request was not sent with proper method name.
     }
@@ -385,7 +451,10 @@ extension LabKeyServices: NMWebServiceDelegate {
 
     delegate?.failedRequest(manager, requestName: requestName, error: error)
 
-    if requestName as String == ResponseMethods.processResponse.description {
+    // handle failed request due to network connectivity
+    if requestName as String == ResponseMethods.processResponse.description
+      || requestName as String == ResponseMethods.updateActivityState.description
+    {
 
       if error.code == NoNetworkErrorCode {
         // save in database

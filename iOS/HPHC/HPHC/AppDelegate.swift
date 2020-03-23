@@ -94,8 +94,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     let subStringFromDate = String(currentDate[..<currentIndex])
 
     if User.currentUser.userType == .FDAUser {  // Registered/LogedIn User
-
-      let index = User.currentUser.userId.index(User.currentUser.userId.endIndex, offsetBy: -16)
+      // Key byte size shouldn't exceed more than 16.
+      let index = User.currentUser.userId.index(User.currentUser.userId.endIndex, offsetBy: -43)
       let subKey = String(User.currentUser.userId[..<index])
       FDAKeychain.shared[kEncryptionKey] = subKey + subStringFromDate
     } else {  // Anonymous User
@@ -371,7 +371,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     _ application: UIApplication,
     didFailToRegisterForRemoteNotificationsWithError error: Error
   ) {
-    Logger.sharedInstance.error("Token Registration failed  \(error)")
+    // Logger.sharedInstance.error("Token Registration failed  \(error)")
   }
 
   // MARK: - Jailbreak Methods
@@ -494,7 +494,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
   /// Webservice request call to SignOut
   func sendRequestToSignOut() {
-    UserServices().logoutUser(self as NMWebServiceDelegate)
+    AuthServices().logoutUser(self as NMWebServiceDelegate)
   }
 
   /// Check the  current Consent Status for Updated Version
@@ -1073,7 +1073,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     NotificationCenter.default.removeObserver(self, name: notificationName, object: nil)
 
     // Update Consent status to Server
-    UserServices().updateUserEligibilityConsentStatus(
+    ConsentServices().updateUserEligibilityConsentStatus(
       eligibilityStatus: true,
       consentStatus: (ConsentBuilder.currentConsent?.consentStatus)!,
       delegate: self
@@ -1154,7 +1154,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     } else {
       // Update Consent Status to server
-      UserServices().updateUserEligibilityConsentStatus(
+      ConsentServices().updateUserEligibilityConsentStatus(
         eligibilityStatus: true,
         consentStatus: (ConsentBuilder.currentConsent?.consentStatus)!,
         delegate: self
@@ -1247,7 +1247,7 @@ extension AppDelegate: NMWebServiceDelegate {
     } else if requestName as String == WCPMethods.eligibilityConsent.method.methodName {
       self.createEligibilityConsentTask()
 
-    } else if requestName as String == RegistrationMethods.logout.method.methodName {
+    } else if requestName as String == AuthServerMethods.logout.method.methodName {
 
       if iscomingFromForgotPasscode! {
         self.handleSignoutAfterLogoutResponse()
@@ -1255,7 +1255,7 @@ extension AppDelegate: NMWebServiceDelegate {
         self.handleSignoutResponse()
       }
     } else if requestName as String
-      == RegistrationMethods.updateEligibilityConsentStatus.method
+      == ConsentServerMethods.updateEligibilityConsentStatus.method
       .methodName
     {
 
@@ -1276,7 +1276,7 @@ extension AppDelegate: NMWebServiceDelegate {
   func failedRequest(_ manager: NetworkManager, requestName: NSString, error: NSError) {
     // Remove Progress
     self.addAndRemoveProgress(add: false)
-    if requestName as String == RegistrationMethods.logout.method.methodName {
+    if requestName as String == AuthServerMethods.logout.method.methodName {
       self.addAndRemoveProgress(add: false)
 
     } else if requestName as String == WCPMethods.eligibilityConsent.method.methodName {
@@ -1847,13 +1847,9 @@ extension UIWindow {
         options: nil
       )[0] as? UIView
 
-    let url = Bundle.main.url(forResource: kResourceName, withExtension: "gif")!
-    _ = try! Data(contentsOf: url)
-    let webView = (view?.subviews.first as? UIWebView)!
-
-    webView.loadRequest(URLRequest.init(url: url))
-    webView.scalesPageToFit = true
-    webView.contentMode = UIView.ContentMode.scaleAspectFit
+    let gif = UIImage.gifImageWithName(kResourceName)
+    let imageView = view?.subviews.first as? UIImageView
+    imageView?.image = gif
 
     var frame = UIScreen.main.bounds
     frame.origin.y += 64
@@ -1878,13 +1874,9 @@ extension UIWindow {
           options: nil
         )[0] as? UIView
 
-      let url = Bundle.main.url(forResource: kResourceName, withExtension: "gif")!
-      _ = try! Data(contentsOf: url)
-      let webView = (view?.subviews.first as? UIWebView)!
-
-      webView.loadRequest(URLRequest.init(url: url))
-      webView.scalesPageToFit = true
-      webView.contentMode = UIView.ContentMode.scaleAspectFit
+      let gif = UIImage.gifImageWithName(kResourceName)
+      let imageView = view?.subviews.first as? UIImageView
+      imageView?.image = gif
 
       let frame = UIScreen.main.bounds
 

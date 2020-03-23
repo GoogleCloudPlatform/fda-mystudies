@@ -4,14 +4,16 @@
 <dict>
 	<key>AUTH_PASSWORD</key>
 	<string>$(AUTH_PASSWORD)</string>
+	<key>AUTH_URL</key>
+	<string>$(AUTH_URL)</string>
 	<key>AUTH_USERNAME</key>
 	<string>$(AUTH_USERNAME)</string>
 	<key>ApplicationID</key>
-	<string>FMSA001</string>
+	<string>$(APP_ID)</string>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>en</string>
 	<key>CFBundleDisplayName</key>
-	<string>MyStudies</string>
+	<string>$(PRODUCT_NAME)</string>
 	<key>CFBundleExecutable</key>
 	<string>$(EXECUTABLE_NAME)</string>
 	<key>CFBundleIdentifier</key>
@@ -23,9 +25,13 @@
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>
-	<string>1.3</string>
+	<string>$(MARKETING_VERSION)</string>
 	<key>CFBundleVersion</key>
 	<string>$(CURRENT_PROJECT_VERSION)</string>
+	<key>CONSENTMGMT_URL</key>
+	<string>$(CONSENTMGMT_URL)</string>
+	<key>ENROLLMENT_URL</key>
+	<string>$(ENROLLMENT_URL)</string>
 	<key>Fabric</key>
 	<dict>
 		<key>APIKey</key>
@@ -68,9 +74,13 @@
 	<key>NSSpeechRecognitionUsageDescription</key>
 	<string>$(PRODUCT_NAME) would like to use Speech Recognition for the task to give more accurate result.</string>
 	<key>OrganizationID</key>
-	<string>OrgName</string>
+	<string>$(ORG_ID)</string>
 	<key>ProductTitleName</key>
 	<string>FDA MyStudies</string>
+	<key>REGISTRATIONSERVER_API_KEY</key>
+	<string>$(REGISTRATIONSERVER_API_KEY)</string>
+	<key>REGISTRATIONSERVER_API_SECERET</key>
+	<string>$(REGISTRATIONSERVER_API_SECERET)</string>
 	<key>REGISTRATION_URL</key>
 	<string>$(REGISTRATION_URL)</string>
 	<key>RESPONSE_URL</key>

@@ -1,6 +1,7 @@
 // License Agreement for FDA My Studies
-// Copyright © 2017-2019 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors. Permission is
-// hereby granted, free of charge, to any person obtaining a copy of this software and associated
+// Copyright © 2017-2019 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors.
+// Copyright 2020 Google LLC
+// Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated
 // documentation files (the &quot;Software&quot;), to deal in the Software without restriction, including without
 // limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the
 // Software, and to permit persons to whom the Software is furnished to do so, subject to the following
@@ -21,18 +22,15 @@ import UIKit
 
 class DBHandler: NSObject {
 
-  fileprivate class func getRealmObject() -> Realm! {
-
+  private static var realm: Realm = {
     let key = FDAKeychain.shared[kRealmEncryptionKeychainKey]
     let data = Data.init(base64Encoded: key!)
     let encryptionConfig = Realm.Configuration(encryptionKey: data)
-    var realm: Realm!
-    do {
-      realm = try Realm(configuration: encryptionConfig)
-    } catch let error {
-      Logger.sharedInstance.error(error)
-    }
-    return realm
+    return try! Realm(configuration: encryptionConfig)
+  }()
+
+  fileprivate class func getRealmObject() -> Realm? {
+    return DBHandler.realm
   }
 
   /// Used to save user details like userid, authkey, first name , last name etc
@@ -49,6 +47,7 @@ class DBHandler: NSObject {
       dbUser?.emailId = user.emailId!
       dbUser?.userId = user.userId
       dbUser?.verified = user.verified
+      dbUser?.clientToken = user.clientToken
 
       try? realm.write {
         realm.add(dbUser!, update: .all)
@@ -60,6 +59,7 @@ class DBHandler: NSObject {
           dbUser?.userType = (user.userType?.rawValue)!
           dbUser?.emailId = user.emailId!
           dbUser?.authToken = user.authToken
+          dbUser?.clientToken = user.clientToken
           dbUser?.verified = user.verified
           dbUser?.refreshToken = user.refreshToken
         }
@@ -83,6 +83,7 @@ class DBHandler: NSObject {
       currentUser.verified = dbUser?.verified
       currentUser.userId = dbUser?.userId
       currentUser.emailId = dbUser?.emailId
+      currentUser.clientToken = dbUser?.clientToken
       currentUser.userType = (dbUser?.userType).map { UserType(rawValue: $0) }!
 
       let settings = Settings()
@@ -172,13 +173,16 @@ class DBHandler: NSObject {
           dbStudy?.enrolling = study.studySettings.enrollingAllowed
           dbStudy?.rejoin = study.studySettings.rejoinStudyAfterWithdrawn
           dbStudy?.platform = study.studySettings.platform
-          dbStudy?.participatedStatus = study.userParticipateState.status.rawValue
-          dbStudy?.participatedId = study.userParticipateState.participantId
-          dbStudy?.joiningDate = study.userParticipateState.joiningDate
-          dbStudy?.completion = study.userParticipateState.completion
-          dbStudy?.adherence = study.userParticipateState.adherence
-          dbStudy?.bookmarked = study.userParticipateState.bookmarked
-
+          if let studyStatus = study.userParticipateState {
+            dbStudy?.participatedStatus = studyStatus.status.rawValue
+            dbStudy?.participatedId = studyStatus.participantId
+            dbStudy?.siteID = studyStatus.siteID
+            dbStudy?.tokenIdentifier = studyStatus.tokenIdentifier
+            dbStudy?.joiningDate = studyStatus.joiningDate
+            dbStudy?.completion = studyStatus.completion
+            dbStudy?.adherence = studyStatus.adherence
+            dbStudy?.bookmarked = studyStatus.bookmarked
+          }
           if dbStudy?.participatedStatus
             == UserStudyStatus.StudyStatus.inProgress
             .rawValue
@@ -221,12 +225,16 @@ class DBHandler: NSObject {
     dbStudy.rejoin = study.studySettings.rejoinStudyAfterWithdrawn
     dbStudy.platform = study.studySettings.platform
     dbStudy.status = study.status.rawValue
-    dbStudy.participatedStatus = study.userParticipateState.status.rawValue
-    dbStudy.participatedId = study.userParticipateState.participantId
-    dbStudy.joiningDate = study.userParticipateState.joiningDate
-    dbStudy.completion = study.userParticipateState.completion
-    dbStudy.adherence = study.userParticipateState.adherence
-    dbStudy.bookmarked = study.userParticipateState.bookmarked
+    if let userStudyStatus = study.userParticipateState {
+      dbStudy.participatedStatus = userStudyStatus.status.rawValue
+      dbStudy.participatedId = userStudyStatus.participantId
+      dbStudy.siteID = userStudyStatus.siteID
+      dbStudy.tokenIdentifier = userStudyStatus.tokenIdentifier
+      dbStudy.joiningDate = userStudyStatus.joiningDate
+      dbStudy.completion = userStudyStatus.completion
+      dbStudy.adherence = userStudyStatus.adherence
+      dbStudy.bookmarked = userStudyStatus.bookmarked
+    }
     dbStudy.withdrawalConfigrationMessage = study.withdrawalConfigration?.message
     dbStudy.withdrawalConfigrationType = study.withdrawalConfigration?.type?.rawValue
     return dbStudy
@@ -276,6 +284,8 @@ class DBHandler: NSObject {
       participatedStatus.bookmarked = dbStudy.bookmarked
       participatedStatus.studyId = dbStudy.studyId
       participatedStatus.participantId = dbStudy.participatedId
+      participatedStatus.siteID = dbStudy.siteID ?? ""
+      participatedStatus.tokenIdentifier = dbStudy.tokenIdentifier ?? ""
       participatedStatus.adherence = dbStudy.adherence
       participatedStatus.completion = dbStudy.completion
       participatedStatus.joiningDate = dbStudy.joiningDate
@@ -477,11 +487,15 @@ class DBHandler: NSObject {
     let dbStudy = studies.last
 
     try? realm.write {
-      dbStudy?.participatedStatus = study.userParticipateState.status.rawValue
-      dbStudy?.participatedId = study.userParticipateState.participantId
-      dbStudy?.joiningDate = study.userParticipateState.joiningDate
-      dbStudy?.completion = study.userParticipateState.completion
-      dbStudy?.adherence = study.userParticipateState.adherence
+      if let studyStatus = study.userParticipateState {
+        dbStudy?.participatedStatus = studyStatus.status.rawValue
+        dbStudy?.participatedId = studyStatus.participantId
+        dbStudy?.siteID = studyStatus.siteID
+        dbStudy?.tokenIdentifier = studyStatus.tokenIdentifier
+        dbStudy?.joiningDate = studyStatus.joiningDate
+        dbStudy?.completion = studyStatus.completion
+        dbStudy?.adherence = studyStatus.adherence
+      }
     }
   }
 

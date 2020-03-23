@@ -1,6 +1,7 @@
 // License Agreement for FDA My Studies
-// Copyright © 2017-2019 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors. Permission is
-// hereby granted, free of charge, to any person obtaining a copy of this software and associated
+// Copyright © 2017-2019 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors.
+// Copyright 2020 Google LLC
+// Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated
 // documentation files (the &quot;Software&quot;), to deal in the Software without restriction, including without
 // limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the
 // Software, and to permit persons to whom the Software is furnished to do so, subject to the following
@@ -15,7 +16,6 @@
 // LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT
 // OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 // OTHER DEALINGS IN THE SOFTWARE.
-
 import Foundation
 
 enum UserType: Int {
@@ -78,6 +78,7 @@ class User {
 
   var verified: Bool!
   var authToken: String!
+  var clientToken: String!
   var participatedStudies: [UserStudyStatus]! = []
   var participatedActivites: [UserActivityStatus]! = []
   var logoutReason: LogoutReason = .user_action
@@ -641,22 +642,22 @@ class UserStudyStatus {
 
   }
 
-  var bookmarked: Bool = false
-  var studyId: String! = ""
-  var status: StudyStatus = .yetToJoin
-  var consent: String! = ""
+  lazy var bookmarked: Bool = false
+  lazy var studyId: String = ""
+  lazy var status: StudyStatus = .yetToJoin
+  lazy var consent: String = ""
 
   /// User joined Date for study
   var joiningDate: Date!
 
-  var completion: Int = 0
+  lazy var completion: Int = 0
+  lazy var adherence: Int = 0
 
-  var adherence: Int = 0
   var participantId: String?
+  var siteID: String!
+  var tokenIdentifier: String!
 
-  init() {
-
-  }
+  init() {}
 
   /// Initializer which initialize all properties
   /// - Parameter detail: `JSONDictionary` contians all properties of `UerStudyStatus`
@@ -679,6 +680,8 @@ class UserStudyStatus {
       if Utilities.isValidValue(someObject: detail[kStudyParticipantId] as AnyObject) {
         self.participantId = detail[kStudyParticipantId] as? String
       }
+      self.siteID = detail["siteId"] as? String ?? ""
+      self.tokenIdentifier = detail["hashedToken"] as? String ?? ""
       if Utilities.isValidValue(someObject: detail[kStudyEnrolledDate] as AnyObject) {
         self.joiningDate = Utilities.getDateFromString(
           dateString: (detail[kStudyEnrolledDate] as? String)!
@@ -709,7 +712,7 @@ class UserStudyStatus {
   func getBookmarkUserStudyStatus() -> [String: Any] {
 
     let studyDetail = [
-      kStudyId: self.studyId ?? "",
+      kStudyId: self.studyId,
       kBookmarked: self.bookmarked,
     ] as [String: Any]
     return studyDetail
@@ -719,13 +722,9 @@ class UserStudyStatus {
   /// - Returns: `JSONDictionary` object
   func getParticipatedUserStudyStatus() -> [String: Any] {
 
-    var id = ""
-    if self.participantId != nil {
-      id = self.participantId!
-    }
-
+    let id = self.participantId ?? ""
     let studyDetail = [
-      kStudyId: self.studyId!,
+      kStudyId: self.studyId,
       kStudyStatus: self.status.paramValue,
       kStudyParticipantId: id,
     ] as [String: Any]
@@ -736,7 +735,7 @@ class UserStudyStatus {
   /// - Returns: `JSONDictionary` object
   func getCompletionAdherence() -> [String: Any] {
     let studyDetail = [
-      kStudyId: self.studyId!,
+      kStudyId: self.studyId,
       "completion": completion,
       "adherence": adherence,
     ] as [String: Any]

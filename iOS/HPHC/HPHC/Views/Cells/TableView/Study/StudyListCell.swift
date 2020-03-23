@@ -44,6 +44,12 @@ class StudyListCell: UITableViewCell {
   var selectedStudy: Study!
   weak var delegate: StudyListDelegates?
 
+  /// Cell cleanup.
+  override func prepareForReuse() {
+    super.prepareForReuse()
+    studyLogoImage?.image = UIImage(named: "placeholder")
+  }
+
   /// Used to change the cell background color.
   override func setSelected(_ selected: Bool, animated: Bool) {
     let color = studyStatusIndicator?.backgroundColor
@@ -70,8 +76,10 @@ class StudyListCell: UITableViewCell {
   /// Used to populate the cell data.
   /// - Parameter study: Access the data from Study class.
   func populateCellWith(study: Study) {
+
     selectedStudy = study
     labelStudyTitle?.text = study.name
+    updateStudyImage(study)
 
     labelStudyShortDescription?.text = study.description
     if study.sponserName != nil {
@@ -93,8 +101,6 @@ class StudyListCell: UITableViewCell {
     )
     labelStudySponserName?.attributedText = attributedString
 
-    studyLogoImage?.image = #imageLiteral(resourceName: "placeholder")
-
     // study status
     self.setStudyStatus(study: study)
 
@@ -104,9 +110,6 @@ class StudyListCell: UITableViewCell {
       // set participatedStudies
       self.setUserStatusForStudy(study: study)
     }
-    // logo
-    updateStudyImage(study)
-
   }
 
   /// Used to set the Study State.
@@ -183,19 +186,20 @@ class StudyListCell: UITableViewCell {
   /// Updates the icon for `Study`
   /// - Parameter study: Instance of Study.
   fileprivate func updateStudyImage(_ study: Study) {
-    let placeholderImage = #imageLiteral(resourceName: "placeholder")
     // Update study logo using SDWEBImage and cache it.
     if let logoURLString = study.logoURL,
       let url = URL(string: logoURLString)
     {
       studyLogoImage?.sd_setImage(
         with: url,
-        placeholderImage: placeholderImage,
-        options: .fromCacheOnly,
-        completed: nil
+        placeholderImage: nil,
+        options: .progressiveLoad,
+        completed: { [weak self] (image, _, _, _) in
+          if let image = image {
+            self?.studyLogoImage?.image = image
+          }
+        }
       )
-    } else {
-      studyLogoImage?.image = placeholderImage
     }
   }
 
