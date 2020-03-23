@@ -163,18 +163,6 @@ class UserServices: NSObject {
 
   }
 
-  /// Creates a request to delete an `User` account
-  /// - Parameter delegate: Class object to receive response
-  func deleteAccount(_ delegate: NMWebServiceDelegate) {
-
-    self.delegate = delegate
-
-    let user = User.currentUser
-    let headerParams = [kUserAuthToken: user.authToken] as [String: String]
-    let method = RegistrationMethods.deleteAccount.method
-    self.sendRequestWith(method: method, params: nil, headers: headerParams)
-  }
-
   /// Creates a request to deactivate an `User` account
   /// - Parameters:
   ///   - listOfStudyIds: Collection of Study Id
@@ -185,12 +173,10 @@ class UserServices: NSObject {
 
     let user = User.currentUser
     let headerParams = [
-      kUserAuthToken: user.authToken,
-      kUserId: user.userId!,
+      kUserId: user.userId ?? "",
     ] as [String: String]
 
     let params = [kDeactivateAccountDeleteData: listOfStudyIds]
-
     let method = RegistrationMethods.deactivate.method
     self.sendRequestWith(method: method, params: params, headers: headerParams)
   }
@@ -200,9 +186,7 @@ class UserServices: NSObject {
   func getUserProfile(_ delegate: NMWebServiceDelegate) {
 
     self.delegate = delegate
-
     let user = User.currentUser
-
     let headerParams = [kUserId: user.userId!]
     let method = RegistrationMethods.userProfile.method
     self.sendRequestWith(method: method, params: nil, headers: headerParams)
@@ -293,27 +277,6 @@ class UserServices: NSObject {
   /// - Parameter delegate: Class object to receive response
   func updateUserActivityState(_ delegate: NMWebServiceDelegate) {
     self.delegate = delegate
-  }
-
-  /// Creates a request to withdraw from `Study`
-  /// - Parameters:
-  ///   - studyId: ID of `Study`
-  ///   - shouldDeleteData: withdraw status
-  ///   - delegate: Class object to receive response
-  func withdrawFromStudy(studyId: String, shouldDeleteData: Bool, delegate: NMWebServiceDelegate) {
-
-    self.delegate = delegate
-    let user = User.currentUser
-    let headerParams = [kUserId: user.userId! as String]
-
-    let params = [
-      kStudyId: studyId,
-      kDeleteData: shouldDeleteData,
-    ] as [String: Any]
-
-    let method = RegistrationMethods.withdraw.method
-
-    self.sendRequestWith(method: method, params: params, headers: headerParams)
   }
 
   /// Creattes a request to sync offline data
@@ -464,30 +427,6 @@ class UserServices: NSObject {
 
   func handleWithdrawFromStudyResponse(response: [String: Any]) {}
 
-  func handleDeleteAccountResponse(response: [String: Any]) {
-
-    let appDomain = Bundle.main.bundleIdentifier!
-    UserDefaults.standard.removePersistentDomain(forName: appDomain)
-    UserDefaults.standard.synchronize()
-
-    // Delete from database
-    DBHandler.deleteCurrentUser()
-
-    // reset user object
-    User.resetCurrentUser()
-
-    // delete complete database
-    DBHandler.deleteAll()
-
-    // cancel all local notification
-    LocalNotification.cancelAllLocalNotification()
-
-    // reset Filters
-    StudyFilterHandler.instance.previousAppliedFilters = []
-    StudyFilterHandler.instance.searchText = ""
-
-  }
-
   func handleDeActivateAccountResponse(response: [String: Any]) {
     let ud = UserDefaults.standard
     ud.removeObject(forKey: kUserAuthToken)
@@ -561,11 +500,6 @@ extension UserServices: NMWebServiceDelegate {
       self.handleGetPreferenceResponse(response: (response as? [String: Any])!)
       
     case RegistrationMethods.updatePreferences.description as String: break  //did not handled response
-      
-    case RegistrationMethods.withdraw.description as String: break
-      
-    case RegistrationMethods.deleteAccount.description as String:
-      self.handleDeleteAccountResponse(response: (response as? [String: Any])!)
 
     case RegistrationMethods.deactivate.description as String:
       self.handleDeActivateAccountResponse(response: (response as? [String: Any])!)

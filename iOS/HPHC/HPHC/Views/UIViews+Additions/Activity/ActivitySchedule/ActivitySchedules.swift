@@ -187,12 +187,15 @@ class ResponseDataFetch: NMWebServiceDelegate {
           keys = "NumberofGames,Score,NumberofFailures"
         }
       }
-      
-      let currentStudy = Study.currentStudy
+      guard let currentActivity = activity,
+        let study = Study.currentStudy else {
+          handleExecuteSQLResponse()
+          return
+      }
       // Get Survey Response from Server
       ResponseServices().getParticipantResponse(
-        activity: activity!,
-        study: currentStudy!,
+        activity: currentActivity,
+        study: study,
         keys: keys,
         delegate: self
       )

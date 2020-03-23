@@ -12,7 +12,8 @@ enum EnrollmentMethods: String {
   case validateEnrollmentToken
   case updateStudyState
   case studyState
-
+  case withdrawfromstudy
+  
   var description: String {
     switch self {
     default:
@@ -30,7 +31,7 @@ enum EnrollmentMethods: String {
         methodType: .httpMethodGet,
         requestType: .requestTypeHTTP
       )
-    case .validateEnrollmentToken, .enroll, .updateStudyState:
+    case .validateEnrollmentToken, .enroll, .updateStudyState, .withdrawfromstudy:
       return Method(
         methodName: self.rawValue,
         methodType: .httpMethodPOST,

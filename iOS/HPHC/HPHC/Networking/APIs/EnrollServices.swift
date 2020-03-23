@@ -17,6 +17,30 @@ class EnrollServices: NSObject {
 
   // MARK: - Requests
 
+  /// Creates a request to withdraw from `Study`
+  /// - Parameters:
+  ///   - studyId: ID of `Study`
+  ///   - participantId: Participant ID
+  ///   - deleteResponses: withdraw status in form of `Bool`
+  ///   - delegate: Class object to receive response
+  func withdrawFromStudy(
+    studyId: String,
+    participantId: String,
+    deleteResponses: Bool,
+    delegate: NMWebServiceDelegate
+  ) {
+    self.delegate = delegate
+    let method = EnrollmentMethods.withdrawfromstudy.method
+
+    let params = [
+      kParticipantId: participantId,
+      kDeleteResponses: deleteResponses,
+      "studyId": studyId,
+    ] as [String: Any]
+    let headers = ["userId": User.currentUser.userId ?? ""]
+    self.sendRequestWith(method: method, params: params, headers: headers)
+  }
+  
   /// Creates a request to get `Study` States
   /// - Parameter delegate: Class object to receive response
   func getStudyStates(_ delegate: NMWebServiceDelegate) {

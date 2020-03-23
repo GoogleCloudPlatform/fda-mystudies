@@ -22,7 +22,6 @@ import UIKit
 enum ResponseMethods: String {
   
   case processResponse = "process-response"
-  case withdrawFromStudy
   case getParticipantResponse = "getresponse"
   case updateActivityState = "update-activity-state"
   case activityState = "get-activity-state"
@@ -56,12 +55,6 @@ enum ResponseMethods: String {
       return Method(
         methodName: self.path,
         methodType: .httpMethodGet,
-        requestType: .requestTypeHTTP
-      )
-    case .withdrawFromStudy:
-      return Method(
-        methodName: path,
-        methodType: .httpMethodPOST,
         requestType: .requestTypeHTTP
       )
     default:

@@ -339,8 +339,8 @@ class ResourcesViewController: UIViewController {
             errorAlertActionTitle2: NSLocalizedString("Cancel", comment: ""),
             viewControllerUsed: self,
             action1: {
-              self.shouldDeleteData = false
-              self.withdrawalFromStudy(deleteResponse: false)
+              self.shouldDeleteData = true
+              self.withdrawalFromStudy(deleteResponse: true)
             },
             action2: {
 
@@ -496,12 +496,11 @@ class ResourcesViewController: UIViewController {
     } catch let error as NSError {
       Logger.sharedInstance.error(error.localizedDescription)
     }
-
   }
 
   func withdrawalFromStudy(deleteResponse: Bool) {
     let participantId = Study.currentStudy?.userParticipateState.participantId
-    ResponseServices().withdrawFromStudy(
+    EnrollServices().withdrawFromStudy(
       studyId: (Study.currentStudy?.studyId)!,
       participantId: participantId!,
       deleteResponses: deleteResponse,
@@ -670,15 +669,7 @@ extension ResourcesViewController: NMWebServiceDelegate {
       self.removeProgressIndicator()
       self.loadResourceFromDatabase()
 
-    case ResponseMethods.withdrawFromStudy.method.methodName:
-      UserServices().withdrawFromStudy(
-        studyId: (Study.currentStudy?.studyId)!,
-        shouldDeleteData: self.shouldDeleteData!,
-        delegate: self
-      )
-
-    case RegistrationMethods.withdraw.method.methodName:
-      // Handle for withdraw account
+    case EnrollmentMethods.withdrawfromstudy.method.methodName:
       if !Utilities.isStandaloneApp() {
         if let response = response as? JSONDictionary {
           handleResponseForWithdraw(response: response)
@@ -758,24 +749,12 @@ extension ResourcesViewController: NMWebServiceDelegate {
         self.tableView?.isHidden = false
         self.tableView?.reloadData()
 
-      } else if requestName as String == ResponseMethods.withdrawFromStudy.description {
-
-        if error.localizedDescription.localizedCaseInsensitiveContains(
-          "Invalid ParticipantId."
-        ) {
-
-          UserServices().withdrawFromStudy(
-            studyId: (Study.currentStudy?.studyId)!,
-            shouldDeleteData: self.shouldDeleteData!,
-            delegate: self
-          )
-        } else {
+      } else if requestName as String == EnrollmentMethods.withdrawfromstudy.description {
           self.removeProgressIndicator()
           UIUtilities.showAlertWithTitleAndMessage(
             title: NSLocalizedString(kErrorTitle, comment: "") as NSString,
             message: error.localizedDescription as NSString
           )
-        }
       } else {
         self.removeProgressIndicator()
         UIUtilities.showAlertWithTitleAndMessage(

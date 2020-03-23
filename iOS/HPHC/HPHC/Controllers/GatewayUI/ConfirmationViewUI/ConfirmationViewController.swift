@@ -63,10 +63,10 @@ class ConfirmationViewController: UIViewController {
   // MARK: - Properties
   var tableViewRowDetails: NSMutableArray?
 
-  lazy var studiesToDisplay: [Study]! = []
+  lazy var studiesToDisplay: [Study] = []
   lazy var joinedStudies: [Study]! = []
   var studyWithoutWCData: Study?
-  lazy var studiesToWithdrawn: [StudyToDelete]! = []
+  lazy var studiesToWithdrawn: [StudyToDelete] = []
 
   // MARK: - View Controller LifeCycle
 
@@ -195,13 +195,6 @@ class ConfirmationViewController: UIViewController {
     self.tableViewConfirmation?.reloadData()
   }
 
-  /// Update the properties with the webservice response.
-  private func handleWithdrawnFromStudyResponse() {
-
-    studiesToWithdrawn.removeFirst()
-    self.withdrawnFromNextStudy()
-  }
-
   // MARK: - Button Actions
 
   /// Delete account button clicked.
@@ -227,22 +220,8 @@ class ConfirmationViewController: UIViewController {
   }
 
   func withdrawnFromNextStudy() {
-
-    if studiesToWithdrawn.count != 0 {
-
-      let studyToWithdrawn = studiesToWithdrawn.first
-      ResponseServices().withdrawFromStudy(
-        studyId: (studyToWithdrawn?.studyId)!,
-        participantId: (studyToWithdrawn?.participantId)!,
-        deleteResponses: (studyToWithdrawn?.shouldDelete)!,
-        delegate: self
-      )
-    } else {
-      // call for delete account
-
-      let studiesIds = studiesToDisplay.map({ $0.studyId! })
-      UserServices().deActivateAccount(listOfStudyIds: studiesIds, delegate: self)
-    }
+    let studiesWithdrawnIDs = studiesToWithdrawn.compactMap({$0.studyId})
+    UserServices().deActivateAccount(listOfStudyIds: studiesWithdrawnIDs, delegate: self)
   }
 
   /// Don't Delete button action.
@@ -332,12 +311,8 @@ extension ConfirmationViewController: NMWebServiceDelegate {
     if requestName as String == RegistrationMethods.deactivate.description {
       self.removeProgressIndicator()
       self.handleDeleteAccountResponse()
-
     } else if requestName as String == WCPMethods.studyInfo.rawValue {
       self.handleStudyInformationResonse()
-
-    } else if requestName as String == ResponseMethods.withdrawFromStudy.description {
-      self.handleWithdrawnFromStudyResponse()
     }
   }
 
@@ -354,21 +329,9 @@ extension ConfirmationViewController: NMWebServiceDelegate {
           self.fdaSlideMenuController()?.navigateToHomeAfterUnauthorizedAccess()
         }
       )
-
     } else {
       if requestName as String == WCPMethods.studyInfo.rawValue {
         self.removeProgressIndicator()
-
-      } else if requestName as String == ResponseMethods.withdrawFromStudy.description {
-        if error.localizedDescription.localizedCaseInsensitiveContains(
-          "Invalid ParticipantId."
-        ) {
-
-          self.handleWithdrawnFromStudyResponse()
-
-        } else {
-          self.removeProgressIndicator()
-        }
       } else {
         self.removeProgressIndicator()
         UIUtilities.showAlertWithTitleAndMessage(

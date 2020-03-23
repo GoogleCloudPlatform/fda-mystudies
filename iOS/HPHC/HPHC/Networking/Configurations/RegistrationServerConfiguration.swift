@@ -27,8 +27,6 @@ enum RegistrationMethods: String {
   case updateUserProfile
   case userPreferences
   case updatePreferences
-  case withdraw
-  case deleteAccount
   case resendConfirmation
   case deactivate
   case verifyEmailId
@@ -57,7 +55,7 @@ enum RegistrationMethods: String {
 
     switch self {
 
-    case .deleteAccount, .confirmRegistration, .userProfile,
+    case .confirmRegistration, .userProfile,
       .userPreferences, .versionInfo:
       // GET Methods
       return Method(
@@ -65,7 +63,7 @@ enum RegistrationMethods: String {
         methodType: .httpMethodGet,
         requestType: .requestTypeHTTP
       )
-    case .withdraw, .deactivate:
+    case .deactivate:
       // DELETE Methods
       return Method(
         methodName: self.apiPath,

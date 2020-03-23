@@ -2329,7 +2329,7 @@
 /* Begin XCBuildConfiguration section */
 		6E7D2D7C1E433E8800763D4C /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 6FD1E11423ED41B0009DACAE /* Production.xcconfig */;
+			baseConfigurationReference = 6FD1E10C23EC31A7009DACAE /* Development.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
@@ -2463,7 +2463,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				MARKETING_VERSION = 1.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
-				PRODUCT_BUNDLE_IDENTIFIER = com.btc.gcpapp;
+				PRODUCT_BUNDLE_IDENTIFIER = com.btc.mystudiesgcp;
 				PRODUCT_NAME = GCPMyStudies;
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_OBJC_BRIDGING_HEADER = "HPHC/Utils/Helpers/FDA-Bridging-Header.h";
@@ -2496,7 +2496,7 @@
 				IS_STANDALONE_STUDY = false;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.btc.gcpapp;
+				PRODUCT_BUNDLE_IDENTIFIER = com.btc.mystudiesgcp;
 				PRODUCT_NAME = GCPMyStudies;
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_OBJC_BRIDGING_HEADER = "HPHC/Utils/Helpers/FDA-Bridging-Header.h";

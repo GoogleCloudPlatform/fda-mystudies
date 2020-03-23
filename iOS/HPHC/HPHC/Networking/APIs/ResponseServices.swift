@@ -48,29 +48,6 @@ class ResponseServices: NSObject {
   
   // MARK: Requests
 
-  /// Creates a request to withdraw from `Study`
-  /// - Parameters:
-  ///   - studyId: ID of `Study`
-  ///   - participantId: Participant ID
-  ///   - deleteResponses: withdraw status in form of `Bool`
-  ///   - delegate: Class object to receive response
-  func withdrawFromStudy(
-    studyId: String,
-    participantId: String,
-    deleteResponses: Bool,
-    delegate: NMWebServiceDelegate
-  ) {
-    self.delegate = delegate
-    let method = ResponseMethods.withdrawFromStudy.method
-
-    let params = [
-      kParticipantId: participantId,
-      kDeleteResponses: deleteResponses,
-    ] as [String: Any]
-
-    self.sendRequestWith(method: method, params: params, headers: nil)
-  }
-
   /// Creates a request to process `Activity` response
   /// - Parameters:
   ///   - metaData: Activity MetaData in form of `JSONDictionary`
@@ -458,7 +435,6 @@ extension ResponseServices: NMWebServiceDelegate {
        self.handleGetParticipantResponse(response: response as! [String: Any])
       
     case ResponseMethods.processResponse.description as String: break
-    case ResponseMethods.withdrawFromStudy.description as String: break
     case ResponseMethods.updateActivityState.description as String: break
     case ResponseMethods.activityState.description as String:
       self.handleGetActivityStatesResponse(response: (response as? [String: Any])!)
