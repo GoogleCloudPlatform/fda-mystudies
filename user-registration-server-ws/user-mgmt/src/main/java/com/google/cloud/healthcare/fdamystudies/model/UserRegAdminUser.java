@@ -1,11 +1,8 @@
-/**
- * *****************************************************************************
+/*
+ *Copyright 2020 Google LLC
  *
- * <p>Copyright 2020 Google LLC
- *
- * <p>Use of this source code is governed by an MIT-style license that can be found in the LICENSE
- * file or at https://opensource.org/licenses/MIT.
- * *****************************************************************************
+ *Use of this source code is governed by an MIT-style license that can be found in the LICENSE file
+ *or at https://opensource.org/licenses/MIT.
  */
 package com.google.cloud.healthcare.fdamystudies.model;
 
@@ -19,16 +16,14 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 import lombok.Getter;
 import lombok.Setter;
-import lombok.ToString;
 
 @Setter
 @Getter
-@ToString
 @Entity
 @Table(name = "ur_admin_user")
 public class UserRegAdminUser implements Serializable {
 
-  private static final long serialVersionUID = 1L;
+  private static final long serialVersionUID = -8807472639054757047L;
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)

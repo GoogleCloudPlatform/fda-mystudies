@@ -1,19 +1,18 @@
-/**
- * *****************************************************************************
+/*
+ *Copyright 2020 Google LLC
  *
- * <p>Copyright 2020 Google LLC
- *
- * <p>Use of this source code is governed by an MIT-style license that can be found in the LICENSE
- * file or at https://opensource.org/licenses/MIT.
- * *****************************************************************************
+ *Use of this source code is governed by an MIT-style license that can be found in the LICENSE file
+ *or at https://opensource.org/licenses/MIT.
  */
 package com.google.cloud.healthcare.fdamystudies.util;
 
 import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.Map.Entry;
 import java.util.Set;
-import javax.transaction.SystemException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -49,29 +48,20 @@ public class UserManagementUtil {
 
   @Autowired private ApplicationPropertyConfiguration appConfig;
 
-  /*
-   * This method is used to validate the user and user's current session through a REST API call to
-   * AuthServer.
-   */
   public Integer validateAccessToken(String userId, String accessToken, String clientToken) {
     logger.info("UserManagementUtil validateAccessToken() - starts ");
     Integer value = null;
     HttpHeaders headers = null;
-    // BodyForProvider providerBody = null;
     HttpEntity<BodyForProvider> requestBody = null;
     ResponseEntity<?> responseEntity = null;
     try {
       headers = new HttpHeaders();
       headers.setContentType(MediaType.APPLICATION_JSON);
-      headers.set("clientToken", clientToken);
-      headers.set("userId", userId);
-      headers.set("accessToken", accessToken);
+      headers.set(AppConstants.CLIENT_TOKEN, clientToken);
+      headers.set(AppConstants.USER_ID, userId);
+      headers.set(AppConstants.ACCESS_TOKEN, accessToken);
 
-      /*providerBody = new BodyForProvider();
-      providerBody.setUserId(userId);
-      providerBody.setAccessToken(accessToken);*/
-
-      requestBody = new HttpEntity<BodyForProvider>(null, headers);
+      requestBody = new HttpEntity<>(null, headers);
 
       responseEntity =
           restTemplate.exchange(
@@ -88,11 +78,6 @@ public class UserManagementUtil {
     return value;
   }
 
-  /*
-   * This method is used to validate the user and user's current session through a REST API call to
-   * AuthServer.
-   */
-
   public String changePassword(
       String userId, String clientToken, String oldPassword, String newPassword) {
     logger.info("UserManagementUtil changePassword() - starts ");
@@ -106,14 +91,14 @@ public class UserManagementUtil {
     try {
       headers = new HttpHeaders();
       headers.setContentType(MediaType.APPLICATION_JSON);
-      headers.set("clientToken", clientToken);
-      headers.set("userId", userId);
-      providerBody = new ChangePasswordBean();
+      headers.set(AppConstants.CLIENT_TOKEN, clientToken);
+      headers.set(AppConstants.USER_ID, userId);
 
+      providerBody = new ChangePasswordBean();
       providerBody.setCurrentPassword(oldPassword);
       providerBody.setNewPassword(newPassword);
 
-      requestBody = new HttpEntity<ChangePasswordBean>(providerBody, headers);
+      requestBody = new HttpEntity<>(providerBody, headers);
 
       responseEntity =
           restTemplate.exchange(
@@ -124,16 +109,10 @@ public class UserManagementUtil {
       value = (Integer) responseEntity.getBody();
 
       if (value == 1) {
-        responseBean.setMessage("Success");
+        responseBean.setMessage(AppConstants.SUCCESS);
       } else {
-        responseBean.setMessage("Failure");
+        responseBean.setMessage(AppConstants.FAILURE);
       }
-      /*if (responseEntity.getStatusCode().equals(HttpStatus.OK)) {
-        ResponseBean responseBean = (ResponseBean) responseEntity.getBody();
-        if (responseBean != null) {
-          respMessage = responseBean.getMessage();
-        }
-      }*/
     } catch (Exception e) {
       logger.error("UserManagementUtil changePassword() - error ", e);
     }
@@ -141,21 +120,8 @@ public class UserManagementUtil {
     return respMessage;
   }
 
-  /**
-   * @author Chiranjibi Dash
-   * @param accountInfo
-   * @param userId
-   * @param accessToken
-   * @param appId
-   * @param orgId
-   * @param clientId
-   * @param secretKey
-   * @return UpdateAccountInfoResponseBean
-   * @throws SystemException
-   */
   public UpdateAccountInfoResponseBean updateUserInfoInAuthServer(
-      UpdateAccountInfo accountInfo, String userId, String accessToken, String clientToken)
-      throws SystemException {
+      UpdateAccountInfo accountInfo, String userId, String accessToken, String clientToken) {
     logger.info("(Util)....UserManagementUtil.updateUserInfoInAuthServer()......STARTED");
 
     UpdateAccountInfoResponseBean authResponse = null;
@@ -163,21 +129,18 @@ public class UserManagementUtil {
     HttpHeaders headers = new HttpHeaders();
     headers.setContentType(MediaType.APPLICATION_JSON);
 
-    headers.set("accessToken", accessToken);
-    headers.set("userId", userId);
-    headers.set("clientToken", clientToken);
+    headers.set(AppConstants.CLIENT_TOKEN, clientToken);
+    headers.set(AppConstants.USER_ID, userId);
+    headers.set(AppConstants.ACCESS_TOKEN, accessToken);
 
-    HttpEntity<UpdateAccountInfo> request = new HttpEntity<UpdateAccountInfo>(accountInfo, headers);
+    HttpEntity<UpdateAccountInfo> request = new HttpEntity<>(accountInfo, headers);
 
     ObjectMapper objectMapper = null;
     try {
 
-      logger.info("AUTH SERVER CALL WITH REQUEST: " + request);
       ResponseEntity<?> responseEntity =
           restTemplate.exchange(
               appConfig.getAuthServerUpdateStatusUrl(), HttpMethod.POST, request, String.class);
-      logger.info("StatusCode: " + responseEntity.getStatusCode());
-      logger.info("responseEntity: " + responseEntity);
 
       if (responseEntity.getStatusCode() == HttpStatus.OK) {
 
@@ -188,8 +151,6 @@ public class UserManagementUtil {
 
         try {
           authResponse = objectMapper.readValue(body, UpdateAccountInfoResponseBean.class);
-          logger.info("authResponse: " + authResponse);
-          logger.info("(Util)....UserManagementUtil.updateUserInfoInAuthServer()......ENDED");
           return authResponse;
         } catch (JsonParseException e) {
           return authResponse;
@@ -204,23 +165,21 @@ public class UserManagementUtil {
 
     } catch (RestClientResponseException e) {
 
-      logger.error("Headers: " + e.getResponseHeaders());
       if (e.getRawStatusCode() == 401) {
         Set<Entry<String, List<String>>> headerSet = e.getResponseHeaders().entrySet();
         authResponse = new UpdateAccountInfoResponseBean();
         for (Entry<String, List<String>> entry : headerSet) {
 
-          if ("status".equals(entry.getKey())) {
+          if (AppConstants.STATUS.equals(entry.getKey())) {
             authResponse.setCode(entry.getValue().get(0));
           }
-          if ("StatusMessage".equals(entry.getKey())) {
+          if (AppConstants.STATUS_MESSAGE.equals(entry.getKey())) {
             authResponse.setMessage(entry.getValue().get(0));
           }
         }
         authResponse.setHttpStatusCode(401 + "");
 
       } else if (e.getRawStatusCode() == 500) {
-        logger.error("Internal Server Error: 500");
         authResponse = new UpdateAccountInfoResponseBean();
         authResponse.setHttpStatusCode(500 + "");
 
@@ -229,10 +188,10 @@ public class UserManagementUtil {
         authResponse = new UpdateAccountInfoResponseBean();
         for (Entry<String, List<String>> entry : headerSet) {
 
-          if ("status".equals(entry.getKey())) {
+          if (AppConstants.STATUS.equals(entry.getKey())) {
             authResponse.setCode(entry.getValue().get(0));
           }
-          if ("StatusMessage".equals(entry.getKey())) {
+          if (AppConstants.STATUS_MESSAGE.equals(entry.getKey())) {
             authResponse.setMessage(entry.getValue().get(0));
           }
         }
@@ -243,34 +202,22 @@ public class UserManagementUtil {
     }
   }
 
-  /**
-   * @author Chiranjibi Dash
-   * @param userId
-   * @param appId
-   * @param orgId
-   * @param clientId
-   * @param secretKey
-   * @return DeleteAccountInfoResponseBean
-   * @throws SystemException
-   */
   public DeleteAccountInfoResponseBean deleteUserInfoInAuthServer(
-      String userId, String clientToken, String accessToken) throws SystemException {
+      String userId, String clientToken, String accessToken) {
     logger.info("(Util)....UserRegistrationController.deleteUserInfoInAuthServer()......STARTED");
 
     DeleteAccountInfoResponseBean authResponse = null;
 
     HttpHeaders headers = new HttpHeaders();
     headers.setContentType(MediaType.APPLICATION_JSON);
-    headers.set("userId", userId);
-    headers.set("clientToken", clientToken);
-    headers.set("accessToken", accessToken);
+    headers.set(AppConstants.CLIENT_TOKEN, clientToken);
+    headers.set(AppConstants.USER_ID, userId);
+    headers.set(AppConstants.ACCESS_TOKEN, accessToken);
 
     HttpEntity<?> request = new HttpEntity<>(null, headers);
     ObjectMapper objectMapper = null;
 
     try {
-      logger.info("AUTH SERVER CALL WITH REQUEST: " + request);
-      logger.info("URL is:" + appConfig.getAuthServerDeleteStatusUrl());
       ResponseEntity<?> responseEntity =
           restTemplate.exchange(
               appConfig.getAuthServerDeleteStatusUrl(), HttpMethod.DELETE, request, String.class);
@@ -278,7 +225,6 @@ public class UserManagementUtil {
       if (responseEntity.getStatusCode() == HttpStatus.OK) {
 
         String body = (String) responseEntity.getBody();
-        logger.info(body);
 
         objectMapper = new ObjectMapper();
 
@@ -296,22 +242,22 @@ public class UserManagementUtil {
       } else {
         return authResponse;
       }
+
     } catch (RestClientResponseException e) {
       if (e.getRawStatusCode() == 401) {
         Set<Entry<String, List<String>>> headerSet = e.getResponseHeaders().entrySet();
         authResponse = new DeleteAccountInfoResponseBean();
         for (Entry<String, List<String>> entry : headerSet) {
-          if ("status".equals(entry.getKey())) {
+          if (AppConstants.STATUS.equals(entry.getKey())) {
             authResponse.setCode(entry.getValue().get(0));
           }
-          if ("StatusMessage".equals(entry.getKey())) {
+          if (AppConstants.STATUS_MESSAGE.equals(entry.getKey())) {
             authResponse.setMessage(entry.getValue().get(0));
           }
         }
         authResponse.setHttpStatusCode(401 + "");
 
       } else if (e.getRawStatusCode() == 500) {
-        logger.error("Internal Server Error: 500");
         authResponse = new DeleteAccountInfoResponseBean();
         authResponse.setHttpStatusCode(500 + "");
 
@@ -319,10 +265,10 @@ public class UserManagementUtil {
         Set<Entry<String, List<String>>> headerSet = e.getResponseHeaders().entrySet();
         authResponse = new DeleteAccountInfoResponseBean();
         for (Entry<String, List<String>> entry : headerSet) {
-          if ("status".equals(entry.getKey())) {
+          if (AppConstants.STATUS.equals(entry.getKey())) {
             authResponse.setCode(entry.getValue().get(0));
           }
-          if ("StatusMessage".equals(entry.getKey())) {
+          if (AppConstants.STATUS_MESSAGE.equals(entry.getKey())) {
             authResponse.setMessage(entry.getValue().get(0));
           }
         }
@@ -334,48 +280,31 @@ public class UserManagementUtil {
     }
   }
 
-  /**
-   * @author Chiranjibi Dash
-   * @param userForm
-   * @param appId
-   * @param orgId
-   * @param clientId
-   * @param secretKey
-   * @return AuthRegistrationResponseBean
-   * @throws SystemException
-   */
   public AuthRegistrationResponseBean registerUserInAuthServer(
-      UserRegistrationForm userForm, String appId, String orgId, String clientId, String secretKey)
-      throws SystemException {
-    logger.info("(Util)....UserRegistrationController.registerUserInAuthServer......STARTED");
-    // String url = "http://localhost:8000/authServer/register";
+      UserRegistrationForm userForm,
+      String appId,
+      String orgId,
+      String clientId,
+      String secretKey) {
+    logger.info("UserManagementUtil.registerUserInAuthServer......Starts");
     AuthRegistrationResponseBean authServerResponse = null;
 
     HttpHeaders headers = new HttpHeaders();
     headers.setContentType(MediaType.APPLICATION_JSON);
-    headers.set("appId", appId);
-    headers.set("orgId", orgId);
-    headers.set("clientId", clientId);
-    headers.set("secretKey", secretKey);
+    headers.set(AppConstants.APP_ID, appId);
+    headers.set(AppConstants.ORGANIZATION_ID, orgId);
+    headers.set(AppConstants.CLIENT_ID, clientId);
+    headers.set(AppConstants.SECRET_KEY, secretKey);
 
     AuthServerRegistrationBody providerBody = new AuthServerRegistrationBody();
     providerBody.setEmailId(userForm.getEmailId());
     providerBody.setPassword(userForm.getPassword());
-    /*
-     * if (userForm != null) { providerBody.setEmailId(userForm.getEmailId());
-     * providerBody.setPassword(userForm.getPassword()); } else { authServerResponse = new
-     * AuthRegistrationResponseBean(); authServerResponse.setCode(ErrorCode.EC_128.code() + "");
-     * authServerResponse.setMessage(ErrorCode.EC_128.errorMessage()); return authServerResponse; }
-     */
 
-    logger.info("userForm: " + userForm);
-    HttpEntity<AuthServerRegistrationBody> request =
-        new HttpEntity<AuthServerRegistrationBody>(providerBody, headers);
-    logger.info("AUTH SERVER CALL WITH REQUEST: " + request);
+    HttpEntity<AuthServerRegistrationBody> request = new HttpEntity<>(providerBody, headers);
     ObjectMapper objectMapper = null;
     try {
-      logger.info("URL is: " + appConfig.getAuthServerRegisterStatusUrl());
       RestTemplate template = new RestTemplate();
+
       ResponseEntity<?> responseEntity =
           template.exchange(
               appConfig.getAuthServerRegisterStatusUrl(), HttpMethod.POST, request, String.class);
@@ -403,21 +332,20 @@ public class UserManagementUtil {
         authServerResponse = new AuthRegistrationResponseBean();
         for (Entry<String, List<String>> entry : headerSet) {
 
-          if ("status".equals(entry.getKey())) {
+          if (AppConstants.STATUS.equals(entry.getKey())) {
             authServerResponse.setCode(entry.getValue().get(0));
           }
 
-          if ("title".equals(entry.getKey())) {
+          if (AppConstants.TITLE.equals(entry.getKey())) {
             authServerResponse.setTitle(entry.getValue().get(0));
           }
-          if ("StatusMessage".equals(entry.getKey())) {
+          if (AppConstants.STATUS_MESSAGE.equals(entry.getKey())) {
             authServerResponse.setMessage(entry.getValue().get(0));
           }
         }
         authServerResponse.setHttpStatusCode(401 + "");
 
       } else if (e.getRawStatusCode() == 500) {
-        logger.error("Internal Server Error: 500");
         authServerResponse = new AuthRegistrationResponseBean();
         authServerResponse.setHttpStatusCode(500 + "");
 
@@ -426,14 +354,14 @@ public class UserManagementUtil {
         authServerResponse = new AuthRegistrationResponseBean();
         for (Entry<String, List<String>> entry : headerSet) {
 
-          if ("status".equals(entry.getKey())) {
+          if (AppConstants.STATUS.equals(entry.getKey())) {
             authServerResponse.setCode(entry.getValue().get(0));
           }
 
-          if ("title".equals(entry.getKey())) {
+          if (AppConstants.TITLE.equals(entry.getKey())) {
             authServerResponse.setTitle(entry.getValue().get(0));
           }
-          if ("StatusMessage".equals(entry.getKey())) {
+          if (AppConstants.STATUS_MESSAGE.equals(entry.getKey())) {
             authServerResponse.setMessage(entry.getValue().get(0));
           }
         }
@@ -455,10 +383,11 @@ public class UserManagementUtil {
     try {
       headers = new HttpHeaders();
       headers.setContentType(MediaType.APPLICATION_JSON);
-      headers.set("userId", userId);
-      headers.set("accessToken", accessToken);
-      headers.set("clientToken", clientToken);
-      requestBody = new HttpEntity<BodyForProvider>(bodyProvider, headers);
+      headers.set(AppConstants.CLIENT_TOKEN, clientToken);
+      headers.set(AppConstants.USER_ID, userId);
+      headers.set(AppConstants.ACCESS_TOKEN, accessToken);
+
+      requestBody = new HttpEntity<>(bodyProvider, headers);
       responseEntity =
           restTemplate.exchange(
               appConfig.getAuthServerUrl() + "/deactivate",
@@ -475,5 +404,17 @@ public class UserManagementUtil {
     }
     logger.info("UserManagementUtil deactivateAcct() - Ends ");
     return respMessage;
+  }
+
+  public static Date getCurrentUtilDateTime() {
+    Date date = new Date();
+    Calendar currentDate = Calendar.getInstance();
+    String dateNow = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(currentDate.getTime());
+    try {
+      date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(dateNow);
+    } catch (Exception e) {
+      logger.info("URWebAppWSUtil - getCurrentUtilDateTime() :: ERROR ", e);
+    }
+    return date;
   }
 }

@@ -1,13 +1,9 @@
-/**
- * *****************************************************************************
+/*
+ *Copyright 2020 Google LLC
  *
- * <p>Copyright 2020 Google LLC
- *
- * <p>Use of this source code is governed by an MIT-style license that can be found in the LICENSE
- * file or at https://opensource.org/licenses/MIT.
- * *****************************************************************************
+ *Use of this source code is governed by an MIT-style license that can be found in the LICENSE file
+ *or at https://opensource.org/licenses/MIT.
  */
-/** */
 package com.google.cloud.healthcare.fdamystudies.controller;
 
 import java.time.LocalDateTime;
@@ -35,19 +31,15 @@ import com.google.cloud.healthcare.fdamystudies.beans.DeleteAccountInfoResponseB
 import com.google.cloud.healthcare.fdamystudies.beans.UserRegistrationForm;
 import com.google.cloud.healthcare.fdamystudies.dao.CommonDao;
 import com.google.cloud.healthcare.fdamystudies.exceptions.SystemException;
-import com.google.cloud.healthcare.fdamystudies.model.UserDetails;
+import com.google.cloud.healthcare.fdamystudies.model.UserDetailsBO;
+import com.google.cloud.healthcare.fdamystudies.service.CommonService;
 import com.google.cloud.healthcare.fdamystudies.service.FdaEaUserDetailsService;
-import com.google.cloud.healthcare.fdamystudies.service.UserRegAdminUserService;
+import com.google.cloud.healthcare.fdamystudies.util.AppConstants;
 import com.google.cloud.healthcare.fdamystudies.util.EmailNotification;
 import com.google.cloud.healthcare.fdamystudies.util.ErrorCode;
 import com.google.cloud.healthcare.fdamystudies.util.MyStudiesUserRegUtil;
 import com.google.cloud.healthcare.fdamystudies.util.UserManagementUtil;
 
-/**
- * Project Name: UserManagementServiceBundle
- *
- * @author Chiranjibi Dash
- */
 @RestController
 public class UserRegistrationController {
 
@@ -61,7 +53,7 @@ public class UserRegistrationController {
 
   @Autowired private UserManagementUtil userManagementUtil;
 
-  @Autowired private UserRegAdminUserService adminUserService;
+  @Autowired private CommonService commonService;
 
   @Value("${email.code.expire_time}")
   private long expireTime;
@@ -71,15 +63,6 @@ public class UserRegistrationController {
     return ResponseEntity.ok("Up and Running");
   }
 
-  /**
-   * @author Chiranjibi Dash
-   * @param userForm
-   * @param applicationId
-   * @param orgId
-   * @param accessToken
-   * @param response
-   * @return ResponseEntity<?>
-   */
   @PostMapping("/register")
   public ResponseEntity<?> registerUser(
       @RequestBody UserRegistrationForm userForm,
@@ -89,8 +72,9 @@ public class UserRegistrationController {
       @RequestHeader("secretKey") String secretKey,
       @Context HttpServletResponse response) {
 
-    logger.info("UserRegistrationController.registerUser() Started");
+    logger.info("UserRegistrationController registerUser() - starts");
     UserRegistrationResponse registrationResponse = null;
+    AuthRegistrationResponseBean authServerResponse = null;
 
     if ((clientId.length() == 0 || clientId == null && StringUtils.isEmpty(clientId))
         || (secretKey.length() == 0 || secretKey == null && StringUtils.isEmpty(secretKey))
@@ -105,30 +89,23 @@ public class UserRegistrationController {
       registrationResponse.setCode(400);
       registrationResponse.setMessage(
           MyStudiesUserRegUtil.ErrorCodes.INVALID_INPUT_ERROR_MSG.getValue());
-      logger.info("UserRegistrationController.registerUser() ENDED with BAD_REQUEST");
+      logger.info(AppConstants.USER_REGISTRATION_CONTROLLER_ENDS_MESSAGE);
       return new ResponseEntity<>(registrationResponse, HttpStatus.BAD_REQUEST);
     }
 
-    boolean emailResponse = false;
     try {
 
       if ((userForm.getEmailId() != null && StringUtils.isNotEmpty(userForm.getEmailId()))
           && (userForm.getPassword() != null && StringUtils.isNotEmpty(userForm.getPassword()))) {
 
-        // SAVING USER INFORMATION in AUTH SERVER By calling registerUserInAuthServer()
-        AuthRegistrationResponseBean authServerResponse =
+        authServerResponse =
             userManagementUtil.registerUserInAuthServer(
                 userForm, appId, orgId, clientId, secretKey);
-        logger.info("(C)...REGISTRATION RESPONSE BEAN: " + authServerResponse);
 
         if (authServerResponse != null && "OK".equals(authServerResponse.getMessage())) {
-          logger.info("providerResponse: " + authServerResponse.getMessage());
-
-          // save userId and email in the UserRegistration server
-
-          UserDetails userDetailsUsingUserId = prepareUserDetails(authServerResponse.getUserId());
+          UserDetailsBO userDetailsUsingUserId = prepareUserDetails(authServerResponse.getUserId());
           if (userDetailsUsingUserId != null) {
-            // prepare error response here
+
             MyStudiesUserRegUtil.getFailureResponse(
                 400 + "",
                 MyStudiesUserRegUtil.ErrorCodes.INVALID_INPUT.getValue(),
@@ -139,18 +116,24 @@ public class UserRegistrationController {
             registrationResponse.setCode(400);
             registrationResponse.setMessage(
                 MyStudiesUserRegUtil.ErrorCodes.EMAIL_EXISTS.getValue());
-            logger.info("UserRegistrationController.registerUser() ENDED");
+
+            commonService.createActivityLog(
+                null,
+                AppConstants.USER_REGD_FAILURE,
+                AppConstants.USER_REGD_FAILURE_DESC + userForm.getEmailId() + " .");
+            logger.info(AppConstants.USER_REGISTRATION_CONTROLLER_ENDS_MESSAGE);
             return new ResponseEntity<>(registrationResponse, HttpStatus.BAD_REQUEST);
           }
 
-          UserDetails userDetails = null;
+          UserDetailsBO userDetailsBO = null;
           try {
-
-            // prepare the UserDetails and save in DB
-            logger.info("GETTING PRIMERY KEY OF APPID AND ORGID");
             AppOrgInfoBean appInfo = profiledao.getUserAppDetailsByAllApi(null, appId, orgId);
-            logger.info(appInfo.getAppInfoId() + "   " + appInfo.getOrgInfoId());
             if (appInfo == null || appInfo.getAppInfoId() == 0) {
+
+              commonService.createActivityLog(
+                  null,
+                  AppConstants.USER_REGD_FAILURE,
+                  AppConstants.USER_REGD_FAILURE_DESC + userForm.getEmailId() + " .");
               logger.info(
                   "(URS)...DELETING record in Auth Server STARTED. Though appId and orgId are not valid in UserRegistration server");
               DeleteAccountInfoResponseBean deleteResponse =
@@ -163,7 +146,7 @@ public class UserRegistrationController {
                 logger.info(
                     "Due to System failure in User Registration Server, user is deleted in Auth Server: "
                         + userForm.getEmailId());
-                logger.info("(URS)...DELETING record in Auth Server ENDED.");
+                logger.info("(URS)...record has been deleted in Auth Server.");
               }
               MyStudiesUserRegUtil.getFailureResponse(
                   401 + "",
@@ -175,32 +158,30 @@ public class UserRegistrationController {
               registrationResponse.setCode(401);
               registrationResponse.setMessage(
                   MyStudiesUserRegUtil.ErrorCodes.UNAUTHORIZED.getValue());
-              logger.info("UserRegistrationController.registerUser() ENDED");
+              logger.info(AppConstants.USER_REGISTRATION_CONTROLLER_ENDS_MESSAGE);
               return new ResponseEntity<>(registrationResponse, HttpStatus.UNAUTHORIZED);
             } else {
               userForm.setUserId(authServerResponse.getUserId());
               userForm.setPassword(null);
 
-              userDetails = getUserDetails(userForm);
-              userDetails.setAppInfoId(appInfo.getAppInfoId());
-              userDetails.setEmailCode(RandomStringUtils.randomAlphanumeric(6));
-              // set the Otp Expire Time
-              userDetails.setCodeExpireDate(LocalDateTime.now().plusMinutes(expireTime));
-              logger.info("USERDETAILS TO BE SAVED IN DB" + userDetails);
-              UserDetails serviceResp = service.saveUser(userDetails);
-              logger.info("(C)...serviceResp: " + serviceResp);
-              // TODO: serviceResp null check
+              userDetailsBO = getUserDetails(userForm);
+              userDetailsBO.setAppInfoId(appInfo.getAppInfoId());
+              userDetailsBO.setEmailCode(RandomStringUtils.randomAlphanumeric(6));
+
+              userDetailsBO.setCodeExpireDate(LocalDateTime.now().plusMinutes(expireTime));
+              UserDetailsBO serviceResp = service.saveUser(userDetailsBO);
+
               if (serviceResp != null) {
+                commonService.createActivityLog(
+                    authServerResponse.getUserId(),
+                    "User Registration Success",
+                    "User Registration Successful for email" + serviceResp.getEmail() + ".");
                 List<String> emailContent = prepareEmailContent(serviceResp.getEmailCode());
-                logger.info("emailContent: " + emailContent);
-                emailResponse =
-                    emailNotification.sendEmailNotification(
-                        emailContent.get(0),
-                        emailContent.get(1),
-                        serviceResp.getEmail(),
-                        null,
-                        null);
-                logger.info("emailNotification; " + emailResponse);
+
+                if (emailContent != null && !emailContent.isEmpty()) {
+                  emailNotification.sendEmailNotification(
+                      emailContent.get(0), emailContent.get(1), serviceResp.getEmail(), null, null);
+                }
 
                 MyStudiesUserRegUtil.getFailureResponse(
                     MyStudiesUserRegUtil.ErrorCodes.STATUS_200.getValue(),
@@ -214,11 +195,15 @@ public class UserRegistrationController {
                 registrationResponse.setRefreshToken(authServerResponse.getRefreshToken());
                 registrationResponse.setUserId(authServerResponse.getUserId());
                 registrationResponse.setClientToken(authServerResponse.getClientToken());
-                logger.info("UserRegistrationController.registerUser() ENDED");
+                logger.info(AppConstants.USER_REGISTRATION_CONTROLLER_ENDS_MESSAGE);
                 return new ResponseEntity<>(registrationResponse, HttpStatus.OK);
               } else throw new SystemException();
             }
           } catch (SystemException e) {
+            commonService.createActivityLog(
+                null,
+                AppConstants.USER_REGD_FAILURE,
+                AppConstants.USER_REGD_FAILURE_DESC + userForm.getEmailId() + " .");
             logger.error("UserRegistrationController.registerUser(): ", e);
             logger.info(
                 "(URS)...DELETING record in Auth Server STARTED. Though it could not able to save record in UserRegistration server");
@@ -232,43 +217,23 @@ public class UserRegistrationController {
               logger.info(
                   "Due to System failure in User Registration Server, user is deleted in Auth Server: "
                       + userForm.getEmailId());
-              logger.info("(URS)...DELETING record in Auth Server ENDED.");
+              logger.info("(URS)...record has been deleted in Auth Server.");
             }
             MyStudiesUserRegUtil.getFailureResponse(
                 500 + "",
                 MyStudiesUserRegUtil.ErrorCodes.UNKNOWN.getValue(),
                 MyStudiesUserRegUtil.ErrorCodes.CONNECTION_ERROR_MSG.getValue(),
                 response);
-            logger.info("UserRegistrationController.registerUser() ENDED");
-            return new ResponseEntity<>(registrationResponse, HttpStatus.INTERNAL_SERVER_ERROR);
-          } catch (Exception e) {
-            logger.error("UserRegistrationController.registerUser(): ", e);
-            DeleteAccountInfoResponseBean deleteResponse =
-                userManagementUtil.deleteUserInfoInAuthServer(
-                    authServerResponse.getUserId(),
-                    authServerResponse.getClientToken(),
-                    authServerResponse.getClientToken());
-            if (deleteResponse != null && "200".equals(deleteResponse.getCode())) {
-              logger.info(
-                  "Due to System failure in User Registration Server, user is deleted in Auth Server: "
-                      + userForm.getEmailId());
-              logger.info("(URS)...DELETING record in Auth Server ENDED.");
-            }
-            MyStudiesUserRegUtil.getFailureResponse(
-                500 + "",
-                MyStudiesUserRegUtil.ErrorCodes.UNKNOWN.getValue(),
-                MyStudiesUserRegUtil.ErrorCodes.CONNECTION_ERROR_MSG.getValue(),
-                response);
-
-            registrationResponse = new UserRegistrationResponse();
-            registrationResponse.setCode(500);
-            registrationResponse.setMessage(
-                MyStudiesUserRegUtil.ErrorCodes.CONNECTION_ERROR_MSG.getValue());
-            logger.info("UserRegistrationController.registerUser() ENDED");
+            logger.info(AppConstants.USER_REGISTRATION_CONTROLLER_ENDS_MESSAGE);
             return new ResponseEntity<>(registrationResponse, HttpStatus.INTERNAL_SERVER_ERROR);
           }
 
         } else {
+          commonService.createActivityLog(
+              null,
+              AppConstants.USER_REGD_FAILURE,
+              AppConstants.USER_REGD_FAILURE_DESC + userForm.getEmailId() + " .");
+
           if ("400".equals(authServerResponse.getHttpStatusCode())) {
             MyStudiesUserRegUtil.getFailureResponse(
                 authServerResponse.getCode(),
@@ -279,8 +244,9 @@ public class UserRegistrationController {
             registrationResponse = new UserRegistrationResponse();
             registrationResponse.setCode(400);
             registrationResponse.setMessage(authServerResponse.getMessage());
-            logger.info("UserRegistrationController.registerUser() ENDED");
+            logger.info(AppConstants.USER_REGISTRATION_CONTROLLER_ENDS_MESSAGE);
             return new ResponseEntity<>(registrationResponse, HttpStatus.BAD_REQUEST);
+
           } else if ("401".equals(authServerResponse.getHttpStatusCode())) {
             MyStudiesUserRegUtil.getFailureResponse(
                 authServerResponse.getCode(),
@@ -290,7 +256,7 @@ public class UserRegistrationController {
             registrationResponse = new UserRegistrationResponse();
             registrationResponse.setCode(401);
             registrationResponse.setMessage(authServerResponse.getMessage());
-            logger.info("UserRegistrationController.registerUser() ENDED");
+            logger.info(AppConstants.USER_REGISTRATION_CONTROLLER_ENDS_MESSAGE);
             return new ResponseEntity<>(registrationResponse, HttpStatus.UNAUTHORIZED);
           } else {
             MyStudiesUserRegUtil.getFailureResponse(
@@ -303,11 +269,15 @@ public class UserRegistrationController {
             registrationResponse.setCode(500);
             registrationResponse.setMessage(
                 MyStudiesUserRegUtil.ErrorCodes.CONNECTION_ERROR_MSG.getValue());
-            logger.info("UserRegistrationController.registerUser() ENDED");
+            logger.info(AppConstants.USER_REGISTRATION_CONTROLLER_ENDS_MESSAGE);
             return new ResponseEntity<>(registrationResponse, HttpStatus.INTERNAL_SERVER_ERROR);
           }
         }
       } else {
+        commonService.createActivityLog(
+            null,
+            AppConstants.USER_REGD_FAILURE,
+            AppConstants.USER_REGD_FAILURE_DESC + userForm.getEmailId() + " .");
         MyStudiesUserRegUtil.getFailureResponse(
             400 + "",
             MyStudiesUserRegUtil.ErrorCodes.INVALID_INPUT.getValue(),
@@ -316,11 +286,32 @@ public class UserRegistrationController {
         registrationResponse = new UserRegistrationResponse();
         registrationResponse.setCode(400);
         registrationResponse.setMessage(MyStudiesUserRegUtil.ErrorCodes.USER_FORM_EMPTY.getValue());
-        logger.info("UserRegistrationController.registerUser() ENDED");
+
+        logger.info(AppConstants.USER_REGISTRATION_CONTROLLER_ENDS_MESSAGE);
         return new ResponseEntity<>(registrationResponse, HttpStatus.BAD_REQUEST);
       }
     } catch (Exception e) {
       logger.error("UserRegistrationController.registerUser(): ", e);
+      commonService.createActivityLog(
+          null,
+          AppConstants.USER_REGD_FAILURE,
+          AppConstants.USER_REGD_FAILURE_DESC + userForm.getEmailId() + " .");
+      DeleteAccountInfoResponseBean deleteResponse = null;
+      if (authServerResponse != null) {
+        deleteResponse =
+            userManagementUtil.deleteUserInfoInAuthServer(
+                authServerResponse.getUserId(),
+                authServerResponse.getClientToken(),
+                authServerResponse.getClientToken());
+
+        if (deleteResponse != null && "200".equals(deleteResponse.getCode())) {
+          logger.info(
+              "Due to System failure in User Registration Server, user is deleted in Auth Server: "
+                  + userForm.getEmailId());
+          logger.info("(URS)...DELETING record in Auth Server ENDED.");
+        }
+      }
+
       MyStudiesUserRegUtil.getFailureResponse(
           500 + "",
           MyStudiesUserRegUtil.ErrorCodes.UNKNOWN.getValue(),
@@ -335,11 +326,6 @@ public class UserRegistrationController {
     }
   }
 
-  /**
-   * @author Chiranjibi Dash
-   * @param otp
-   * @return List<String>
-   */
   private List<String> prepareEmailContent(String otp) {
     List<String> emailContent = null;
     if (otp != null) {
@@ -371,45 +357,32 @@ public class UserRegistrationController {
     return emailContent;
   }
 
-  /**
-   * @author Chiranjibi Dash
-   * @param form
-   * @param appId
-   * @param orgId
-   * @return UserDetails
-   */
-  private UserDetails getUserDetails(UserRegistrationForm form) {
-    UserDetails userDetails = new UserDetails();
+  private UserDetailsBO getUserDetails(UserRegistrationForm form) {
+    UserDetailsBO userDetailsBO = new UserDetailsBO();
 
-    userDetails.setStatus(2);
-    userDetails.setVerificationDate(MyStudiesUserRegUtil.getCurrentUtilDateTime());
-    // userDetails.setPasswordUpdatedDate(MyStudiesUserRegUtil.getCurrentUtilDateTime());
+    userDetailsBO.setStatus(2);
+    userDetailsBO.setVerificationDate(MyStudiesUserRegUtil.getCurrentUtilDateTime());
 
-    if (form.getUserId() != null) userDetails.setUserId(form.getUserId());
+    if (form.getUserId() != null) userDetailsBO.setUserId(form.getUserId());
 
-    if (form.getEmailId() != null) userDetails.setEmail(form.getEmailId());
+    if (form.getEmailId() != null) userDetailsBO.setEmail(form.getEmailId());
 
-    if (form.isUsePassCode() != false) userDetails.setUsePassCode(form.isUsePassCode());
+    if (form.isUsePassCode() != AppConstants.FALSE)
+      userDetailsBO.setUsePassCode(form.isUsePassCode());
 
-    if (form.isLocalNotification() != false)
-      userDetails.setLocalNotificationFlag(form.isLocalNotification());
+    if (form.isLocalNotification() != AppConstants.FALSE)
+      userDetailsBO.setLocalNotificationFlag(form.isLocalNotification());
 
-    if (form.isRemoteNotification() != false)
-      userDetails.setRemoteNotificationFlag(form.isRemoteNotification());
+    if (form.isRemoteNotification() != AppConstants.FALSE)
+      userDetailsBO.setRemoteNotificationFlag(form.isRemoteNotification());
 
-    if (form.isTouchId() != false) userDetails.setTouchId(form.isTouchId());
+    if (form.isTouchId() != AppConstants.FALSE) userDetailsBO.setTouchId(form.isTouchId());
 
-    return userDetails;
+    return userDetailsBO;
   }
 
-  /**
-   * @author Chiranjibi Dash
-   * @param userId0
-   * @return UserDetails
-   * @throws SystemException
-   */
-  private UserDetails prepareUserDetails(String userId) throws SystemException {
-    UserDetails serviceResponse = null;
+  private UserDetailsBO prepareUserDetails(String userId) throws SystemException {
+    UserDetailsBO serviceResponse = null;
     if (userId != null) {
       serviceResponse = service.loadUserDetailsByUserId(userId);
       logger.info("loadUserDetailsByUserId(userId) called");

@@ -1,13 +1,9 @@
-/**
- * *****************************************************************************
+/*
+ *Copyright 2020 Google LLC
  *
- * <p>Copyright 2020 Google LLC
- *
- * <p>Use of this source code is governed by an MIT-style license that can be found in the LICENSE
- * file or at https://opensource.org/licenses/MIT.
- * *****************************************************************************
+ *Use of this source code is governed by an MIT-style license that can be found in the LICENSE file
+ *or at https://opensource.org/licenses/MIT.
  */
-/** */
 package com.google.cloud.healthcare.fdamystudies.service;
 
 import java.time.LocalDateTime;
@@ -17,18 +13,14 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import com.google.cloud.healthcare.fdamystudies.beans.VerifyCodeResponse;
 import com.google.cloud.healthcare.fdamystudies.dao.FdaEaUserDetailsDao;
 import com.google.cloud.healthcare.fdamystudies.exceptions.InvalidUserIdOrEmailCodeException;
 import com.google.cloud.healthcare.fdamystudies.exceptions.SystemException;
 import com.google.cloud.healthcare.fdamystudies.model.AuthInfoBO;
 import com.google.cloud.healthcare.fdamystudies.model.UserAppDetailsBO;
-import com.google.cloud.healthcare.fdamystudies.model.UserDetails;
+import com.google.cloud.healthcare.fdamystudies.model.UserDetailsBO;
 
-/**
- * Project Name: UserManagementServiceBundle
- *
- * @author Chiranjibi Dash, Date: 03-Jan-2020, Time: 3:50:58 pm
- */
 @Service
 public class FdaEaUserDetailsServiceImpl implements FdaEaUserDetailsService {
 
@@ -40,93 +32,80 @@ public class FdaEaUserDetailsServiceImpl implements FdaEaUserDetailsService {
 
   @Autowired private FdaEaUserDetailsDao userDetailsDao;
 
-  /*@Override
-  public List<UserDetails> loadParticipantDetailsListByEmail(String emailId) {
-    List<UserDetails> userDetails = null;
-    if (emailId != null) {
-      userDetails = userDetailsDao.loadParticipantDetailsListByEmail(emailId);
-    }
-    return userDetails;
-  }*/
-
   @Override
   @Transactional
-  public UserDetails saveUser(UserDetails userDetails) throws SystemException {
-    // call dao layer to save the userDetails
-    logger.info("(S)...FdaEaUserDetailsServiceImpl.saveUser()...STARTED");
-    UserDetails daoResp = null;
+  public UserDetailsBO saveUser(UserDetailsBO userDetailsBO) throws SystemException {
+    logger.info("FdaEaUserDetailsServiceImpl saveUser() - starts");
+    UserDetailsBO daoResp = null;
     try {
-      if (userDetails != null) {
-        daoResp = userDetailsDao.saveUser(userDetails);
+      if (userDetailsBO != null) {
+        daoResp = userDetailsDao.saveUser(userDetailsBO);
 
-        // TODO: insert required records in auth_info table
         AuthInfoBO authInfo = new AuthInfoBO();
         authInfo.setAppId(daoResp.getAppInfoId());
         authInfo.setUserId(daoResp.getUserDetailsId());
         authInfo.setCreatedOn(LocalDateTime.now(ZoneId.systemDefault()));
         authInfo = authInfoService.save(authInfo);
-        logger.info("(C)...authInfo: " + authInfo);
 
-        // TODO: insert required records in user_app_details table
         UserAppDetailsBO userAppDetails = new UserAppDetailsBO();
         userAppDetails.setAppInfoId(daoResp.getAppInfoId());
         userAppDetails.setCreatedOn(LocalDateTime.now(ZoneId.systemDefault()));
         userAppDetails.setUserDetailsId(daoResp.getUserDetailsId());
         userAppDetails = userAppDetailsService.save(userAppDetails);
-        logger.info("(C)...userAppDetails: " + userAppDetails);
       }
+      logger.info("FdaEaUserDetailsServiceImpl saveUser() - ends");
     } catch (Exception e) {
-      logger.error("(S)...FdaEaUserDetailsServiceImpl.saveUser()...Ended", e);
+      logger.error("FdaEaUserDetailsServiceImpl saveUser(): ", e);
       throw new SystemException();
     }
     return daoResp;
   }
 
   @Override
-  public UserDetails loadUserDetailsByUserId(String userId) throws SystemException {
+  public UserDetailsBO loadUserDetailsByUserId(String userId) throws SystemException {
     // call dao layer to get the user details using userId
-    logger.info("FdaEaUserDetailsServiceImpl.loadUserDetailsByUserId()...STARTED");
-    UserDetails daoResp = null;
+    logger.info("FdaEaUserDetailsServiceImpl loadUserDetailsByUserId() - starts");
+    UserDetailsBO daoResp = null;
     if (userId != null) {
       daoResp = userDetailsDao.loadUserDetailsByUserId(userId);
     }
+    logger.info("FdaEaUserDetailsServiceImpl loadUserDetailsByUserId() - ends");
     return daoResp;
   }
 
   @Override
-  public boolean verifyCode(String code, String userId)
+  public VerifyCodeResponse verifyCode(String code, String userId)
       throws SystemException, InvalidUserIdOrEmailCodeException {
 
-    UserDetails daoResopnse = null;
+    logger.info("FdaEaUserDetailsServiceImpl verifyCode() - calls");
+    VerifyCodeResponse response = null;
+    UserDetailsBO daoResopnse = null;
     if (userId != null) {
       daoResopnse = userDetailsDao.loadEmailCodeByUserId(userId);
-      logger.info("(S)....daoResopnse: " + daoResopnse);
 
       if (daoResopnse != null
           && code.equals(daoResopnse.getEmailCode())
           && !LocalDateTime.now().isAfter(daoResopnse.getCodeExpireDate())) {
         logger.info("(S)......OTP CODE VERIFIED as true");
 
-        // Calling User Registration Server to update Status == 1 and make emailCode = null
-
-        UserDetails userDetails = userDetailsDao.loadUserDetailsByUserId(userId);
-
-        userDetails.setStatus(1);
-        userDetails.setEmailCode(null);
-        userDetails.setCodeExpireDate(null);
-        UserDetails updatedUserDetails = userDetailsDao.saveUser(userDetails);
+        daoResopnse.setStatus(1);
+        daoResopnse.setEmailCode(null);
+        daoResopnse.setCodeExpireDate(null);
+        UserDetailsBO updatedUserDetails = userDetailsDao.saveUser(daoResopnse);
 
         if (updatedUserDetails != null) {
           if (updatedUserDetails.getStatus() == 1) {
-            return true;
-          } else return false;
+            response = new VerifyCodeResponse();
+            response.setEmailId(updatedUserDetails.getEmail());
+            response.setIsCodeVerified(true);
+            return response;
+          } else return response;
         } else throw new SystemException();
       } else {
-        logger.info("No User Found Exception 2");
+        logger.info("No User Found Exception");
         throw new InvalidUserIdOrEmailCodeException();
       }
     }
-    logger.info("(S)....daoResopnse: " + daoResopnse);
-    return false;
+    return response;
   }
 }

@@ -1,11 +1,8 @@
-/**
- * *****************************************************************************
+/*
+ *Copyright 2020 Google LLC
  *
- * <p>Copyright 2020 Google LLC
- *
- * <p>Use of this source code is governed by an MIT-style license that can be found in the LICENSE
- * file or at https://opensource.org/licenses/MIT.
- * *****************************************************************************
+ *Use of this source code is governed by an MIT-style license that can be found in the LICENSE file
+ *or at https://opensource.org/licenses/MIT.
  */
 package com.google.cloud.healthcare.fdamystudies.dao;
 
@@ -33,11 +30,10 @@ import com.google.cloud.healthcare.fdamystudies.config.ApplicationPropertyConfig
 import com.google.cloud.healthcare.fdamystudies.model.AppInfoDetailsBO;
 import com.google.cloud.healthcare.fdamystudies.model.AuthInfoBO;
 import com.google.cloud.healthcare.fdamystudies.model.LoginAttemptsBO;
-import com.google.cloud.healthcare.fdamystudies.model.ParticipantActivities;
 import com.google.cloud.healthcare.fdamystudies.model.ParticipantStudiesBO;
 import com.google.cloud.healthcare.fdamystudies.model.StudyInfoBO;
 import com.google.cloud.healthcare.fdamystudies.model.UserAppDetailsBO;
-import com.google.cloud.healthcare.fdamystudies.model.UserDetails;
+import com.google.cloud.healthcare.fdamystudies.model.UserDetailsBO;
 import com.google.cloud.healthcare.fdamystudies.util.AppConstants;
 import com.google.cloud.healthcare.fdamystudies.util.ErrorCode;
 
@@ -53,29 +49,30 @@ public class UserProfileManagementDaoImpl implements UserProfileManagementDao {
   @Autowired CommonDao commonDao;
 
   @Override
-  public UserDetails getParticipantInfoDetails(String userId) {
+  public UserDetailsBO getParticipantInfoDetails(String userId) {
+
     logger.info("UserProfileManagementDaoImpl getParticipantInfoDetails() - Starts ");
     CriteriaBuilder criteriaBuilder = null;
-    CriteriaQuery<UserDetails> criteriaQuery = null;
-    Root<UserDetails> userDetailsBoRoot = null;
+    CriteriaQuery<UserDetailsBO> criteriaQuery = null;
+    Root<UserDetailsBO> userDetailsBoRoot = null;
     Predicate[] predicates = new Predicate[1];
-    List<UserDetails> userDetailsBoList = null;
-    UserDetails userDetails = null;
+    List<UserDetailsBO> userDetailsBoList = null;
+    UserDetailsBO userDetailsBO = null;
     try (Session session = entityManagerFactory.unwrap(SessionFactory.class).openSession()) {
       criteriaBuilder = session.getCriteriaBuilder();
-      criteriaQuery = criteriaBuilder.createQuery(UserDetails.class);
-      userDetailsBoRoot = criteriaQuery.from(UserDetails.class);
+      criteriaQuery = criteriaBuilder.createQuery(UserDetailsBO.class);
+      userDetailsBoRoot = criteriaQuery.from(UserDetailsBO.class);
       predicates[0] = criteriaBuilder.equal(userDetailsBoRoot.get(AppConstants.KEY_USERID), userId);
       criteriaQuery.select(userDetailsBoRoot).where(predicates);
       userDetailsBoList = session.createQuery(criteriaQuery).getResultList();
       if (!userDetailsBoList.isEmpty()) {
-        userDetails = userDetailsBoList.get(0);
+        userDetailsBO = userDetailsBoList.get(0);
       }
     } catch (Exception e) {
       logger.error("UserProfileManagementDaoImpl getParticipantInfoDetails() - error ", e);
     }
     logger.info("UserProfileManagementDaoImpl getParticipantInfoDetails() - Ends ");
-    return userDetails;
+    return userDetailsBO;
   }
 
   @Override
@@ -106,7 +103,7 @@ public class UserProfileManagementDaoImpl implements UserProfileManagementDao {
   }
 
   @Override
-  public ErrorBean updateUserProfile(String userId, UserDetails userDetail, AuthInfoBO authInfo) {
+  public ErrorBean updateUserProfile(String userId, UserDetailsBO userDetail, AuthInfoBO authInfo) {
     logger.info("UserProfileManagementDaoImpl updateUserProfile() - Starts ");
     Transaction transaction = null;
     ErrorBean errorBean = null;
@@ -141,32 +138,32 @@ public class UserProfileManagementDaoImpl implements UserProfileManagementDao {
   }
 
   @Override
-  public UserDetails getParticipantDetailsByEmail(
+  public UserDetailsBO getParticipantDetailsByEmail(
       String email, Integer appInfoId, Integer orgInfoId) {
     logger.info("UserProfileManagementDaoImpl getParticipantDetailsByEmail() - Starts ");
-    UserDetails userDetails = null;
+    UserDetailsBO userDetailsBO = null;
     CriteriaBuilder criteriaBuilder = null;
-    CriteriaQuery<UserDetails> criteriaQuery = null;
-    Root<UserDetails> userDetailsBoRoot = null;
+    CriteriaQuery<UserDetailsBO> criteriaQuery = null;
+    Root<UserDetailsBO> userDetailsBoRoot = null;
     Predicate[] predicates = new Predicate[2];
-    List<UserDetails> userDetailsBoList = null;
+    List<UserDetailsBO> userDetailsBoList = null;
 
     try (Session session = entityManagerFactory.unwrap(SessionFactory.class).openSession()) {
       criteriaBuilder = session.getCriteriaBuilder();
-      criteriaQuery = criteriaBuilder.createQuery(UserDetails.class);
-      userDetailsBoRoot = criteriaQuery.from(UserDetails.class);
+      criteriaQuery = criteriaBuilder.createQuery(UserDetailsBO.class);
+      userDetailsBoRoot = criteriaQuery.from(UserDetailsBO.class);
       predicates[0] = criteriaBuilder.equal(userDetailsBoRoot.get(AppConstants.EMAIL), email);
       predicates[1] = criteriaBuilder.equal(userDetailsBoRoot.get("appInfoId"), appInfoId);
       criteriaQuery.select(userDetailsBoRoot).where(predicates);
       userDetailsBoList = session.createQuery(criteriaQuery).getResultList();
       if (!userDetailsBoList.isEmpty()) {
-        userDetails = userDetailsBoList.get(0);
+        userDetailsBO = userDetailsBoList.get(0);
       }
     } catch (Exception e) {
       logger.error("UserProfileManagementDaoImpl getParticipantInfoDetails() - error ", e);
     }
     logger.info("UserProfileManagementDaoImpl getParticipantDetailsByEmail() - Ends ");
-    return userDetails;
+    return userDetailsBO;
   }
 
   @Override
@@ -198,30 +195,30 @@ public class UserProfileManagementDaoImpl implements UserProfileManagementDao {
   }
 
   @Override
-  public UserDetails saveParticipant(UserDetails participant) {
+  public UserDetailsBO saveParticipant(UserDetailsBO participant) {
     logger.info("UserProfileManagementDaoImpl saveParticipant() - Starts ");
     Transaction transaction = null;
     CriteriaBuilder criteriaBuilder = null;
-    CriteriaQuery<UserDetails> criteriaQuery = null;
+    CriteriaQuery<UserDetailsBO> criteriaQuery = null;
     Predicate[] predicates = new Predicate[1];
-    Root<UserDetails> userDetailsRoot = null;
-    List<UserDetails> userDetailsList = null;
-    UserDetails userDetails = null;
+    Root<UserDetailsBO> userDetailsRoot = null;
+    List<UserDetailsBO> userDetailsList = null;
+    UserDetailsBO userDetailsBO = null;
     try (Session session = entityManagerFactory.unwrap(SessionFactory.class).openSession()) {
       criteriaBuilder = session.getCriteriaBuilder();
       transaction = session.beginTransaction();
-      criteriaQuery = criteriaBuilder.createQuery(UserDetails.class);
-      userDetailsRoot = criteriaQuery.from(UserDetails.class);
+      criteriaQuery = criteriaBuilder.createQuery(UserDetailsBO.class);
+      userDetailsRoot = criteriaQuery.from(UserDetailsBO.class);
       predicates[0] =
           criteriaBuilder.equal(
               userDetailsRoot.get(AppConstants.USER_DETAILS_ID), participant.getUserDetailsId());
       criteriaQuery.select(userDetailsRoot).where(predicates);
       userDetailsList = session.createQuery(criteriaQuery).getResultList();
       if (!userDetailsList.isEmpty()) {
-        userDetails = userDetailsList.get(0);
-        userDetails.setEmailCode(participant.getEmailCode());
-        userDetails.setCodeExpireDate(participant.getCodeExpireDate());
-        session.update(userDetails);
+        userDetailsBO = userDetailsList.get(0);
+        userDetailsBO.setEmailCode(participant.getEmailCode());
+        userDetailsBO.setCodeExpireDate(participant.getCodeExpireDate());
+        session.update(userDetailsBO);
       }
       transaction.commit();
     } catch (Exception e) {
@@ -237,7 +234,7 @@ public class UserProfileManagementDaoImpl implements UserProfileManagementDao {
       }
     }
     logger.info("UserProfileManagementDaoImpl saveParticipant() - Ends ");
-    return userDetails;
+    return userDetailsBO;
   }
 
   @Override
@@ -252,7 +249,7 @@ public class UserProfileManagementDaoImpl implements UserProfileManagementDao {
       transaction = session.beginTransaction();
       criteriaDelete = criteriaBuilder.createCriteriaDelete(LoginAttemptsBO.class);
       attemptRoot = criteriaDelete.from(LoginAttemptsBO.class);
-      criteriaDelete.where(criteriaBuilder.equal(attemptRoot.get("userEmailId"), email));
+      criteriaDelete.where(criteriaBuilder.equal(attemptRoot.get("email"), email));
       session.createQuery(criteriaDelete).executeUpdate();
       transaction.commit();
     } catch (Exception e) {
@@ -270,29 +267,29 @@ public class UserProfileManagementDaoImpl implements UserProfileManagementDao {
   }
 
   @Override
-  public UserDetails getParticipantDetails(String userId) {
+  public UserDetailsBO getParticipantDetails(String userId) {
     logger.info("UserProfileManagementDaoImpl getParticipantDetails() - Starts ");
-    UserDetails userDetails = null;
+    UserDetailsBO userDetailsBO = null;
     CriteriaBuilder criteriaBuilder = null;
-    CriteriaQuery<UserDetails> criteriaQuery = null;
-    Root<UserDetails> userDetailsBoRoot = null;
+    CriteriaQuery<UserDetailsBO> criteriaQuery = null;
+    Root<UserDetailsBO> userDetailsBoRoot = null;
     Predicate[] predicates = new Predicate[1];
-    List<UserDetails> userDetailsBoList = null;
+    List<UserDetailsBO> userDetailsBoList = null;
     try (Session session = entityManagerFactory.unwrap(SessionFactory.class).openSession()) {
       criteriaBuilder = session.getCriteriaBuilder();
-      criteriaQuery = criteriaBuilder.createQuery(UserDetails.class);
-      userDetailsBoRoot = criteriaQuery.from(UserDetails.class);
+      criteriaQuery = criteriaBuilder.createQuery(UserDetailsBO.class);
+      userDetailsBoRoot = criteriaQuery.from(UserDetailsBO.class);
       predicates[0] = criteriaBuilder.equal(userDetailsBoRoot.get(AppConstants.KEY_USERID), userId);
       criteriaQuery.select(userDetailsBoRoot).where(predicates);
       userDetailsBoList = session.createQuery(criteriaQuery).getResultList();
       if (!userDetailsBoList.isEmpty()) {
-        userDetails = userDetailsBoList.get(0);
+        userDetailsBO = userDetailsBoList.get(0);
       }
     } catch (Exception e) {
       logger.error("UserProfileManagementDaoImpl getParticipantDetails() - error ", e);
     }
     logger.info("UserProfileManagementDaoImpl getParticipantDetails() - Ends ");
-    return userDetails;
+    return userDetailsBO;
   }
 
   @Override
@@ -307,34 +304,34 @@ public class UserProfileManagementDaoImpl implements UserProfileManagementDao {
     CriteriaDelete<AuthInfoBO> criteriaAuthInfoDelete = null;
     Root<AuthInfoBO> authInfoRoot = null;
 
-    CriteriaDelete<UserDetails> criteriaUserDetailsDelete = null;
-    Root<UserDetails> userDetailsRoot = null;
-    CriteriaUpdate<UserDetails> criteriaUserDetailsUpdate = null;
-    Root<UserDetails> userDetailsRootUpdate = null;
+    // CriteriaDelete<UserDetailsBO> criteriaUserDetailsDelete = null;
+    // Root<UserDetailsBO> userDetailsRoot = null;
+    CriteriaUpdate<UserDetailsBO> criteriaUserDetailsUpdate = null;
+    Root<UserDetailsBO> userDetailsRootUpdate = null;
 
-    CriteriaDelete<ParticipantActivities> criteriaParticipantActivitiesDelete = null;
-    Root<ParticipantActivities> participantActivitiesRoot = null;
+    // CriteriaDelete<ParticipantActivities> criteriaParticipantActivitiesDelete = null;
+    //    Root<ParticipantActivities> participantActivitiesRoot = null;
 
-    CriteriaDelete<ParticipantStudiesBO> criteriaParticipantStudiesDelete = null;
-    Root<ParticipantStudiesBO> participantStudiesRootDelete = null;
+    //    CriteriaDelete<ParticipantStudiesBO> criteriaParticipantStudiesDelete = null;
+    //    Root<ParticipantStudiesBO> participantStudiesRootDelete = null;
 
     CriteriaUpdate<ParticipantStudiesBO> CriteriaParticipantStudiesUpdate = null;
     Root<ParticipantStudiesBO> participantStudiesRoot = null;
-    CriteriaQuery<ParticipantStudiesBO> participantStudiesCriteriaQuery = null;
+    //    CriteriaQuery<ParticipantStudiesBO> participantStudiesCriteriaQuery = null;
     List<Predicate> studyIdPredicates = new ArrayList<Predicate>();
     Predicate[] studyInfoIdPredicates = new Predicate[1];
     Expression<String> studyIdExpression = null;
     Predicate[] predicatesAuthInfo = new Predicate[1];
     Predicate[] predicatesUserDetails = new Predicate[1];
     Predicate[] predicatesUserAppDetails = new Predicate[1];
-    Predicate[] predicatesParticiapntActivities = new Predicate[3];
-    List<ParticipantStudiesBO> participantStudiesBoList = null;
-    ParticipantStudiesBO participantStudiesBO = null;
+    //    Predicate[] predicatesParticiapntActivities = new Predicate[3];
+    //    List<ParticipantStudiesBO> participantStudiesBoList = null;
+    //    ParticipantStudiesBO participantStudiesBO = null;
     CriteriaQuery<StudyInfoBO> studyInfoQuery = null;
     Root<StudyInfoBO> root_studyBO = null;
     List<StudyInfoBO> studyInfoBoList = null;
-    StudyInfoBO studyInfoBO = null;
-    List<Integer> studyInfoIdList = new ArrayList<>();
+    // StudyInfoBO studyInfoBO = null;
+    List<Integer> studyInfoIdList = null;
     int isUpdated = 0;
     int count = 0;
     boolean returnVal = false;
@@ -344,38 +341,28 @@ public class UserProfileManagementDaoImpl implements UserProfileManagementDao {
       if (!deactivateAcctBean.getDeleteData().isEmpty()) {
         studyInfoQuery = criteriaBuilder.createQuery(StudyInfoBO.class);
         root_studyBO = studyInfoQuery.from(StudyInfoBO.class);
-        studyIdExpression = root_studyBO.get("customStudyId");
+        studyIdExpression = root_studyBO.get("customId");
         studyInfoIdPredicates[0] = studyIdExpression.in(deactivateAcctBean.getDeleteData());
         studyInfoQuery.select(root_studyBO).where(studyInfoIdPredicates);
         studyInfoBoList = session.createQuery(studyInfoQuery).getResultList();
         studyInfoIdList =
-            studyInfoBoList.stream().map(StudyInfoBO::getStudyInfoId).collect(Collectors.toList());
+            studyInfoBoList.stream().map(StudyInfoBO::getId).collect(Collectors.toList());
         CriteriaParticipantStudiesUpdate =
             criteriaBuilder.createCriteriaUpdate(ParticipantStudiesBO.class);
         participantStudiesRoot = CriteriaParticipantStudiesUpdate.from(ParticipantStudiesBO.class);
         CriteriaParticipantStudiesUpdate.set("status", "Withdrawn");
         CriteriaParticipantStudiesUpdate.set("participantId", "NULL");
+        UserDetailsBO userDetails = session.get(UserDetailsBO.class, userDetailsId);
         studyIdPredicates.add(
-            criteriaBuilder.equal(participantStudiesRoot.get("userDetailsId"), userDetailsId));
-        studyIdExpression = participantStudiesRoot.get("studyInfoId");
-        studyIdPredicates.add(studyIdExpression.in(studyInfoIdList));
+            criteriaBuilder.equal(participantStudiesRoot.get("userDetails"), userDetails));
+        // studyIdExpression = participantStudiesRoot.get("studyInfoId");
+        studyIdExpression = participantStudiesRoot.get("studyInfo");
+        // studyIdPredicates.add(studyIdExpression.in(studyInfoIdList));
+        studyIdPredicates.add(studyIdExpression.in(studyInfoBoList));
         CriteriaParticipantStudiesUpdate.where(
             studyIdPredicates.toArray(new Predicate[studyIdPredicates.size()]));
         isUpdated = session.createQuery(CriteriaParticipantStudiesUpdate).executeUpdate();
       }
-
-      /*criteriaParticipantActivitiesDelete =
-          criteriaBuilder.createCriteriaDelete(ParticipantActivities.class);
-      participantActivitiesRoot =
-          criteriaParticipantActivitiesDelete.from(ParticipantActivities.class);
-      predicatesParticiapntActivities[0] =
-          criteriaBuilder.equal(participantActivitiesRoot.get("userId"), userId);
-      predicatesParticiapntActivities[1] =
-          criteriaBuilder.equal(participantActivitiesRoot.get("applicationId"), applicationId);
-      predicatesParticiapntActivities[2] =
-          criteriaBuilder.equal(participantActivitiesRoot.get("orgId"), orgId);
-      criteriaParticipantActivitiesDelete.where(predicatesParticiapntActivities);
-      session.createQuery(criteriaParticipantActivitiesDelete).executeUpdate();*/
 
       criteriaAuthInfoDelete = criteriaBuilder.createCriteriaDelete(AuthInfoBO.class);
       authInfoRoot = criteriaAuthInfoDelete.from(AuthInfoBO.class);
@@ -390,17 +377,8 @@ public class UserProfileManagementDaoImpl implements UserProfileManagementDao {
       criteriaUserAppDetailsDelete.where(predicatesUserAppDetails);
       session.createQuery(criteriaUserAppDetailsDelete).executeUpdate();
 
-      /*criteriaUserDetailsDelete = criteriaBuilder.createCriteriaDelete(UserDetails.class);
-      userDetailsRoot = criteriaUserDetailsDelete.from(UserDetails.class);
-      predicatesUserDetails[0] = criteriaBuilder.equal(userDetailsRoot.get("userId"), userId);
-      predicatesUserDetails[1] =
-          criteriaBuilder.equal(
-              userDetailsRoot.get(AppConstants.APPLICATION_ID), appOrgInfoBean.getAppInfoId());
-      criteriaUserDetailsDelete.where(predicatesUserDetails);
-      count = session.createQuery(criteriaUserDetailsDelete).executeUpdate();*/
-
-      criteriaUserDetailsUpdate = criteriaBuilder.createCriteriaUpdate(UserDetails.class);
-      userDetailsRootUpdate = criteriaUserDetailsUpdate.from(UserDetails.class);
+      criteriaUserDetailsUpdate = criteriaBuilder.createCriteriaUpdate(UserDetailsBO.class);
+      userDetailsRootUpdate = criteriaUserDetailsUpdate.from(UserDetailsBO.class);
       criteriaUserDetailsUpdate.set("status", 3);
       predicatesUserDetails[0] = criteriaBuilder.equal(userDetailsRootUpdate.get("userId"), userId);
       criteriaUserDetailsUpdate.where(predicatesUserDetails);
@@ -425,12 +403,12 @@ public class UserProfileManagementDaoImpl implements UserProfileManagementDao {
 
   @Override
   public AppInfoDetailsBO getAppPropertiesDetailsByAppId(Integer appId) {
+    logger.info("UserProfileManagementDaoImpl - resetLoginAttempts() - starts");
     AppInfoDetailsBO appPropertiesDetails = null;
     CriteriaBuilder criteriaBuilder = null;
     CriteriaQuery<AppInfoDetailsBO> criteriaQuery = null;
     Root<AppInfoDetailsBO> appDetailsRoot = null;
     List<AppInfoDetailsBO> appPropetiesDetailList = null;
-    logger.info("UserProfileManagementDaoImpl - resetLoginAttempts() - starts");
     try (Session session = entityManagerFactory.unwrap(SessionFactory.class).openSession()) {
       criteriaBuilder = session.getCriteriaBuilder();
       criteriaQuery = criteriaBuilder.createQuery(AppInfoDetailsBO.class);

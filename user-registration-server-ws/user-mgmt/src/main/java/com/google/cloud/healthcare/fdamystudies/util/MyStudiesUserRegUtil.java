@@ -1,11 +1,8 @@
-/**
- * *****************************************************************************
+/*
+ *Copyright 2020 Google LLC
  *
- * <p>Copyright 2020 Google LLC
- *
- * <p>Use of this source code is governed by an MIT-style license that can be found in the LICENSE
- * file or at https://opensource.org/licenses/MIT.
- * *****************************************************************************
+ *Use of this source code is governed by an MIT-style license that can be found in the LICENSE file
+ *or at https://opensource.org/licenses/MIT.
  */
 package com.google.cloud.healthcare.fdamystudies.util;
 
@@ -28,7 +25,6 @@ public class MyStudiesUserRegUtil {
   @Autowired UserProfileManagementDao userProfileManagementDao;
 
   static String Email = "";
-  // static MailHelper.MultipartMessage msg;
 
   public enum ErrorCodes {
     INVALID_INPUT("INVALID_INPUT"),
@@ -52,31 +48,7 @@ public class MyStudiesUserRegUtil {
     STATUS_129("129"), // Client Id is missing
     STATUS_130("130"), // Secret Key is missing
 
-    /*STATUS_400("400"), // Bad request
-        STATUS_401("401"), // Unauthorized
-        STATUS_500("500"), // Internal Server Error
-    */
     EC_500("500"), // Internal Server Error
-
-    // EC_112(112, "User is already registered"),
-
-    // EC_113(113, "Unknown Error Found"),
-
-    // EC_114(114, "Email Id is missing"),
-
-    // EC_118(118, "System error found"),
-
-    // EC_119(119, "Password is missing"),
-
-    /* EC_126(126, "appId is missing"), */
-
-    /* EC_127(127, "orgId is missing"), */
-
-    /* EC_129(129, "Client Id is missing"), */
-
-    /* EC_130(130, "Secret Key is missing"), */
-
-    /* EC_131(131, "Invalid Client Id or Secret Key"), */
 
     INVALID_EMAILID("Enter a valid emailId"),
 
@@ -286,12 +258,6 @@ public class MyStudiesUserRegUtil {
     return emailContent;
   }
 
-  /**
-   * @author Chiranjibi Dash
-   * @param password
-   * @return boolean
-   * @throws SystemException
-   */
   public static boolean isValidEmailId(String emailId) throws SystemException {
     logger.info("isValidEmailId() called");
     try {
@@ -307,11 +273,6 @@ public class MyStudiesUserRegUtil {
     }
   }
 
-  /**
-   * @author Chiranjibi Dash
-   * @param password
-   * @return boolean
-   */
   public static boolean isPasswordStrong(String password) {
     if (password != null /* && password.length() >= 8 */) {
       return password.matches(

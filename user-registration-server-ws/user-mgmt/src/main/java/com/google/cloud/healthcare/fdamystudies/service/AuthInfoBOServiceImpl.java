@@ -1,11 +1,8 @@
-/**
- * *****************************************************************************
+/*
+ *Copyright 2020 Google LLC
  *
- * <p>Copyright 2020 Google LLC
- *
- * <p>Use of this source code is governed by an MIT-style license that can be found in the LICENSE
- * file or at https://opensource.org/licenses/MIT.
- * *****************************************************************************
+ *Use of this source code is governed by an MIT-style license that can be found in the LICENSE file
+ *or at https://opensource.org/licenses/MIT.
  */
 package com.google.cloud.healthcare.fdamystudies.service;
 
@@ -17,11 +14,6 @@ import com.google.cloud.healthcare.fdamystudies.dao.AuthInfoBODao;
 import com.google.cloud.healthcare.fdamystudies.exceptions.SystemException;
 import com.google.cloud.healthcare.fdamystudies.model.AuthInfoBO;
 
-/**
- * user-management-service-bundle
- *
- * @author Chiranjibi Dash
- */
 @Service
 public class AuthInfoBOServiceImpl implements AuthInfoBOService {
 
@@ -30,11 +22,12 @@ public class AuthInfoBOServiceImpl implements AuthInfoBOService {
 
   @Override
   public AuthInfoBO save(AuthInfoBO authInfo) throws SystemException {
-    logger.info("AuthInfoBOServiceImpl.save()...Started");
+    logger.info("AuthInfoBOServiceImpl save() - starts");
     AuthInfoBO dbResponse = null;
     if (authInfo != null) {
       dbResponse = authInfoDao.save(authInfo);
     }
+    logger.info("AuthInfoBOServiceImpl save() - ends");
     return dbResponse;
   }
 }

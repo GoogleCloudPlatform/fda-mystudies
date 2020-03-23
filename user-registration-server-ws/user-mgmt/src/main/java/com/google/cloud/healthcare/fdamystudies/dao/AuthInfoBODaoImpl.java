@@ -1,11 +1,8 @@
-/**
- * *****************************************************************************
+/*
+ *Copyright 2020 Google LLC
  *
- * <p>Copyright 2020 Google LLC
- *
- * <p>Use of this source code is governed by an MIT-style license that can be found in the LICENSE
- * file or at https://opensource.org/licenses/MIT.
- * *****************************************************************************
+ *Use of this source code is governed by an MIT-style license that can be found in the LICENSE file
+ *or at https://opensource.org/licenses/MIT.
  */
 package com.google.cloud.healthcare.fdamystudies.dao;
 
@@ -17,11 +14,6 @@ import com.google.cloud.healthcare.fdamystudies.exceptions.SystemException;
 import com.google.cloud.healthcare.fdamystudies.model.AuthInfoBO;
 import com.google.cloud.healthcare.fdamystudies.repository.AuthInfoBORepository;
 
-/**
- * user-management-service-bundle
- *
- * @author Chiranjibi Dash
- */
 @Service
 public class AuthInfoBODaoImpl implements AuthInfoBODao {
 
@@ -30,16 +22,15 @@ public class AuthInfoBODaoImpl implements AuthInfoBODao {
 
   @Override
   public AuthInfoBO save(AuthInfoBO authInfo) throws SystemException {
-    logger.info("AuthInfoBODaoImpl.save()...Started");
+    logger.info("AuthInfoBODaoImpl save() - starts");
+    AuthInfoBO dbResponse = null;
     if (authInfo != null) {
       try {
-        AuthInfoBO dbResponse = null;
-        if (authInfo != null) {
-          dbResponse = authInfoRepository.save(authInfo);
-        }
+        dbResponse = authInfoRepository.save(authInfo);
+        logger.info("AuthInfoBODaoImpl save() - ends");
         return dbResponse;
       } catch (Exception e) {
-        logger.error("AuthInfoBODaoImpl.save()...Ended");
+        logger.error("AuthInfoBODaoImpl save(): ", e);
         throw new SystemException();
       }
     } else return null;

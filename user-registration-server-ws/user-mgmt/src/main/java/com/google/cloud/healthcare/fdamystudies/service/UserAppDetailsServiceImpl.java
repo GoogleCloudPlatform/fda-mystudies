@@ -1,11 +1,8 @@
-/**
- * *****************************************************************************
+/*
+ *Copyright 2020 Google LLC
  *
- * <p>Copyright 2020 Google LLC
- *
- * <p>Use of this source code is governed by an MIT-style license that can be found in the LICENSE
- * file or at https://opensource.org/licenses/MIT.
- * *****************************************************************************
+ *Use of this source code is governed by an MIT-style license that can be found in the LICENSE file
+ *or at https://opensource.org/licenses/MIT.
  */
 package com.google.cloud.healthcare.fdamystudies.service;
 
@@ -17,11 +14,6 @@ import com.google.cloud.healthcare.fdamystudies.dao.UserAppDetailsDao;
 import com.google.cloud.healthcare.fdamystudies.exceptions.SystemException;
 import com.google.cloud.healthcare.fdamystudies.model.UserAppDetailsBO;
 
-/**
- * user-management-service-bundle
- *
- * @author Chiranjibi Dash
- */
 @Service
 public class UserAppDetailsServiceImpl implements UserAppDetailsService {
 
@@ -31,13 +23,17 @@ public class UserAppDetailsServiceImpl implements UserAppDetailsService {
   @Override
   public UserAppDetailsBO save(UserAppDetailsBO userAppDetails) throws SystemException {
 
-    logger.info("UserAppDetailsServiceImpl.save()...Started");
+    logger.info("UserAppDetailsServiceImpl save() - starts");
 
     UserAppDetailsBO dbResponse = null;
 
     if (userAppDetails != null) {
       dbResponse = userAppDetailsDao.save(userAppDetails);
+      logger.info("UserAppDetailsServiceImpl save() - ends");
       return dbResponse;
-    } else return dbResponse;
+    } else {
+      logger.info("UserAppDetailsServiceImpl save() - ends");
+      return dbResponse;
+    }
   }
 }

@@ -1,11 +1,8 @@
-/**
- * *****************************************************************************
+/*
+ *Copyright 2020 Google LLC
  *
- * <p>Copyright 2020 Google LLC
- *
- * <p>Use of this source code is governed by an MIT-style license that can be found in the LICENSE
- * file or at https://opensource.org/licenses/MIT.
- * *****************************************************************************
+ *Use of this source code is governed by an MIT-style license that can be found in the LICENSE file
+ *or at https://opensource.org/licenses/MIT.
  */
 package com.google.cloud.healthcare.fdamystudies.service;
 
@@ -17,11 +14,6 @@ import com.google.cloud.healthcare.fdamystudies.dao.UserRegAdminUserDao;
 import com.google.cloud.healthcare.fdamystudies.exceptions.SystemException;
 import com.google.cloud.healthcare.fdamystudies.model.UserRegAdminUser;
 
-/**
- * user-management-service-bundle
- *
- * @author Chiranjibi Dash
- */
 @Service
 public class UserRegAdminUserServiceImpl implements UserRegAdminUserService {
 
@@ -31,13 +23,12 @@ public class UserRegAdminUserServiceImpl implements UserRegAdminUserService {
   @Override
   public UserRegAdminUser save(UserRegAdminUser adminUser) throws SystemException {
 
-    logger.info("(S)...UserRegAdminUserServiceImpl.save()...Started");
+    logger.info("UserRegAdminUserServiceImpl save() - starts");
     UserRegAdminUser userRegAdminUser = null;
     if (adminUser != null) {
       userRegAdminUser = adminUserDao.save(adminUser);
-      logger.info("(S)...UserRegAdminUserServiceImpl.save()...Ended: ");
-      return userRegAdminUser;
     }
+    logger.info("UserRegAdminUserServiceImpl save() - ends");
     return userRegAdminUser;
   }
 }

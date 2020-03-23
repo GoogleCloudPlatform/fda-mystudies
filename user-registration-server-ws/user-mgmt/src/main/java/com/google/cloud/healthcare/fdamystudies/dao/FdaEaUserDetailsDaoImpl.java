@@ -1,13 +1,9 @@
-/**
- * *****************************************************************************
+/*
+ *Copyright 2020 Google LLC
  *
- * <p>Copyright 2020 Google LLC
- *
- * <p>Use of this source code is governed by an MIT-style license that can be found in the LICENSE
- * file or at https://opensource.org/licenses/MIT.
- * *****************************************************************************
+ *Use of this source code is governed by an MIT-style license that can be found in the LICENSE file
+ *or at https://opensource.org/licenses/MIT.
  */
-/** */
 package com.google.cloud.healthcare.fdamystudies.dao;
 
 import org.slf4j.Logger;
@@ -16,74 +12,64 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 import com.google.cloud.healthcare.fdamystudies.exceptions.SystemException;
-import com.google.cloud.healthcare.fdamystudies.model.UserDetails;
+import com.google.cloud.healthcare.fdamystudies.model.UserDetailsBO;
 import com.google.cloud.healthcare.fdamystudies.repository.UserDetailsBORepository;
 
-/**
- * Project Name: MyStudies-UserReg-WS
- *
- * @author Chiranjibi Dash, Date: Dec 18, 2019, Time: 5:40:27 PM
- */
 @Repository
 public class FdaEaUserDetailsDaoImpl implements FdaEaUserDetailsDao {
 
   @Autowired private UserDetailsBORepository repository;
 
-  //    @Autowired private EntityManagerFactory entityManagerFactory;
-
   private static final Logger logger = LoggerFactory.getLogger(FdaEaUserDetailsDaoImpl.class);
 
   @Override
   @Transactional
-  public UserDetails loadUserDetailsByUserId(String userId) throws SystemException {
-
+  public UserDetailsBO loadUserDetailsByUserId(String userId) throws SystemException {
+    logger.info("FdaEaUserDetailsDaoImpl loadUserDetailsByUserId() - starts");
     try {
-      logger.info("(DAO)....FdaEaUserDetailsDaoImpl.loadUserDetailsByUserId()....Started");
-      UserDetails userDetails = null;
-      // get the user details using the userId
+      UserDetailsBO userDetailsBO = null;
       if (userId != null) {
-        userDetails = repository.findByUserId(userId);
+        userDetailsBO = repository.findByUserId(userId);
       }
-      logger.info("(DAO)....FdaEaUserDetailsDaoImpl.loadUserDetailsByUserId()....Ended");
-      return userDetails;
+      logger.info("FdaEaUserDetailsDaoImpl loadUserDetailsByUserId() - ends");
+      return userDetailsBO;
     } catch (Exception e) {
-      logger.error("(DAO)....FdaEaUserDetailsDaoImpl.loadUserDetailsByUserId()....Ended");
+      logger.error("UserRegistrationController.registerUser(): ", e);
       throw new SystemException();
     }
   }
 
   @Override
-  public UserDetails saveUser(UserDetails userDetails) throws SystemException {
-
+  public UserDetailsBO saveUser(UserDetailsBO userDetailsBO) throws SystemException {
+    logger.info("FdaEaUserDetailsDaoImpl saveUser() - starts");
     try {
-      logger.info("(DAO)....FdaEaUserDetailsDaoImpl.saveUser()....Started");
-      // save user here, using repository
-      UserDetails savedUserDetails = null;
-      if (userDetails != null) {
-        savedUserDetails = repository.save(userDetails);
+      UserDetailsBO savedUserDetails = null;
+      if (userDetailsBO != null) {
+        savedUserDetails = repository.save(userDetailsBO);
       }
-      logger.info("(DAO)....FdaEaUserDetailsDaoImpl.saveUser()....Ended");
+      logger.info("FdaEaUserDetailsDaoImpl saveUser() - ends");
       return savedUserDetails;
     } catch (Exception e) {
-      logger.error("(DAO)....FdaEaUserDetailsDaoImpl.saveUser()....Ended");
+      logger.error("UserRegistrationController.saveUser(): ", e);
       throw new SystemException();
     }
   }
 
   @Override
-  public UserDetails loadEmailCodeByUserId(String userId) throws SystemException {
+  public UserDetailsBO loadEmailCodeByUserId(String userId) throws SystemException {
+    logger.info("FdaEaUserDetailsDaoImpl loadEmailCodeByUserId() - starts");
     try {
-      logger.info("(DAO)....FdaEaUserDetailsDaoImpl.loadEmailCodeByUserId()....Started");
-      UserDetails dbResponse = null;
+      UserDetailsBO dbResponse = null;
       if (userId != null) {
         dbResponse = repository.findByUserId(userId);
+        logger.info("FdaEaUserDetailsDaoImpl loadEmailCodeByUserId() -ends");
         return dbResponse;
       } else {
-        logger.info("(DAO)....FdaEaUserDetailsDaoImpl.loadEmailCodeByUserId()....Ended");
+        logger.info("FdaEaUserDetailsDaoImpl loadEmailCodeByUserId() -ends");
         return dbResponse;
       }
     } catch (Exception e) {
-      logger.error("(DAO)....FdaEaUserDetailsDaoImpl.loadEmailCodeByUserId()....Ended");
+      logger.error("FdaEaUserDetailsDaoImpl.loadEmailCodeByUserId(): ", e);
       throw new SystemException();
     }
   }

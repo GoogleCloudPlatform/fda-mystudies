@@ -1,15 +1,11 @@
-/**
- * *****************************************************************************
+/*
+ *Copyright 2020 Google LLC
  *
- * <p>Copyright 2020 Google LLC
- *
- * <p>Use of this source code is governed by an MIT-style license that can be found in the LICENSE
- * file or at https://opensource.org/licenses/MIT.
- * *****************************************************************************
+ *Use of this source code is governed by an MIT-style license that can be found in the LICENSE file
+ *or at https://opensource.org/licenses/MIT.
  */
 package com.google.cloud.healthcare.fdamystudies.util;
 
-/** @author Aswini */
 import java.util.Properties;
 import javax.activation.DataHandler;
 import javax.activation.DataSource;
@@ -31,7 +27,6 @@ import org.apache.logging.log4j.Logger;
 
 public class Mail {
 
-  /** */
   private static final Logger logger = LogManager.getLogger(Mail.class);
 
   private String toemail;
@@ -51,7 +46,7 @@ public class Mail {
   private String attachmentPath;
 
   public boolean sendemail() throws Exception {
-    logger.warn(" sendemail() ====start");
+    logger.warn(" sendemail() ==== starts");
     boolean sentMail = false;
     try {
       final String username = this.getFromEmailAddress();
@@ -90,7 +85,7 @@ public class Mail {
       message.setSubject(this.subject);
       message.setContent(this.getMessageBody(), "text/html");
       Transport.send(message);
-      logger.debug("sendemail()====end");
+      logger.debug("sendemail()==== ends");
       sentMail = true;
     } catch (MessagingException e) {
       logger.error("sendemail() MessagingException- error", e);
@@ -102,7 +97,7 @@ public class Mail {
   }
 
   public boolean sendMailWithAttachment() throws Exception {
-    logger.debug("sendemail()====start");
+    logger.debug("sendemail()==== start");
     boolean sentMail = false;
     try {
       final String username = this.getFromEmailAddress();

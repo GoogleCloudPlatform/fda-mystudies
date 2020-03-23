@@ -1,11 +1,8 @@
-/**
- * *****************************************************************************
+/*
+ *Copyright 2020 Google LLC
  *
- * <p>Copyright 2020 Google LLC
- *
- * <p>Use of this source code is governed by an MIT-style license that can be found in the LICENSE
- * file or at https://opensource.org/licenses/MIT.
- * *****************************************************************************
+ *Use of this source code is governed by an MIT-style license that can be found in the LICENSE file
+ *or at https://opensource.org/licenses/MIT.
  */
 package com.google.cloud.healthcare.fdamystudies.controller;
 
@@ -34,13 +31,12 @@ import com.google.cloud.healthcare.fdamystudies.beans.ResponseBean;
 import com.google.cloud.healthcare.fdamystudies.beans.UserProfileRespBean;
 import com.google.cloud.healthcare.fdamystudies.beans.UserRequestBean;
 import com.google.cloud.healthcare.fdamystudies.config.ApplicationPropertyConfiguration;
-import com.google.cloud.healthcare.fdamystudies.model.UserDetails;
+import com.google.cloud.healthcare.fdamystudies.model.UserDetailsBO;
 import com.google.cloud.healthcare.fdamystudies.service.CommonService;
 import com.google.cloud.healthcare.fdamystudies.service.UserManagementProfileService;
 import com.google.cloud.healthcare.fdamystudies.util.AppUtil;
 import com.google.cloud.healthcare.fdamystudies.util.ErrorCode;
 import com.google.cloud.healthcare.fdamystudies.util.MyStudiesUserRegUtil;
-import com.google.cloud.healthcare.fdamystudies.util.UserManagementUtil;
 
 @RestController
 public class UserProfileController {
@@ -52,8 +48,6 @@ public class UserProfileController {
   @Autowired CommonService commonService;
 
   @Autowired ApplicationPropertyConfiguration appConfig;
-
-  @Autowired private UserManagementUtil userManagementUtil;
 
   @RequestMapping(value = "/ping")
   public String ping() {
@@ -97,12 +91,13 @@ public class UserProfileController {
       @Context HttpServletResponse response) {
     logger.info("UserProfileController updateUserProfile() - Starts ");
     ErrorBean errorBean = null;
-    String clientId = "";
-    String secretKey = "";
-    Integer value = null;
     try {
       errorBean = userManagementProfService.updateUserProfile(userId, user);
       if (errorBean.getCode() == ErrorCode.EC_200.code()) {
+        commonService.createActivityLog(
+            userId,
+            "PROFILE UPDATE",
+            "User " + userId + " Profile/Preferences updated successfully.");
         errorBean = new ErrorBean(HttpStatus.OK.value(), ErrorCode.EC_30.errorMessage());
       } else {
         return new ResponseEntity<>(errorBean, HttpStatus.CONFLICT);
@@ -128,14 +123,15 @@ public class UserProfileController {
     logger.info("UserProfileController deactivateAccount() - Starts ");
     String message = MyStudiesUserRegUtil.ErrorCodes.FAILURE.getValue();
     ResponseBean responseBean = new ResponseBean();
-    String clientId = "";
-    String secretKey = "";
-    Integer value = null;
     try {
       message =
           userManagementProfService.deActivateAcct(
               userId, deactivateAcctBean, accessToken, clientToken);
       if (message.equalsIgnoreCase(MyStudiesUserRegUtil.ErrorCodes.SUCCESS.getValue())) {
+        commonService.createActivityLog(
+            userId,
+            "ACCOUNT DELETE(Deactivation of an user)",
+            "Account deactivated for user " + userId + ".");
         responseBean.setMessage(MyStudiesUserRegUtil.ErrorCodes.SUCCESS.getValue().toLowerCase());
 
       } else {
@@ -164,8 +160,8 @@ public class UserProfileController {
       @Context HttpServletResponse response) {
     logger.info("UserProfileController resendConfirmation() - Starts ");
     String isValidAppMsg = "";
-    UserDetails participantDetails = null;
-    UserDetails updParticipantDetails = null;
+    UserDetailsBO participantDetails = null;
+    UserDetailsBO updParticipantDetails = null;
     int isSent = 0;
     String code = "";
     ResponseBean responseBean = new ResponseBean();
@@ -197,6 +193,10 @@ public class UserProfileController {
                     userManagementProfService.resendConfirmationthroughEmail(
                         appId, participantDetails.getEmailCode(), participantDetails.getEmail());
                 if (isSent == 2) {
+                  commonService.createActivityLog(
+                      null,
+                      "Requested Confirmation mail",
+                      "Confirmation mail sent to email " + loginBean.getEmailId() + ".");
                   responseBean.setMessage(
                       MyStudiesUserRegUtil.ErrorCodes.SUCCESS.getValue().toLowerCase());
                 }

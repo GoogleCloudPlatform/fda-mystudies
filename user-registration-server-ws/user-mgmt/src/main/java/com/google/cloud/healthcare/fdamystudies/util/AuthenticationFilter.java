@@ -1,11 +1,8 @@
-/**
- * *****************************************************************************
+/*
+ *Copyright 2020 Google LLC
  *
- * <p>Copyright 2020 Google LLC
- *
- * <p>Use of this source code is governed by an MIT-style license that can be found in the LICENSE
- * file or at https://opensource.org/licenses/MIT.
- * *****************************************************************************
+ *Use of this source code is governed by an MIT-style license that can be found in the LICENSE file
+ *or at https://opensource.org/licenses/MIT.
  */
 package com.google.cloud.healthcare.fdamystudies.util;
 
@@ -24,6 +21,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 import com.google.cloud.healthcare.fdamystudies.config.ApplicationPropertyConfiguration;
 import com.google.cloud.healthcare.fdamystudies.service.CommonServiceImpl;
+import com.google.cloud.healthcare.fdamystudies.util.MyStudiesUserRegUtil.ErrorCodes;
 
 @Component
 public class AuthenticationFilter implements Filter {
@@ -45,28 +43,21 @@ public class AuthenticationFilter implements Filter {
         String userId = httpServletRequest.getHeader("userId");
         String accessToken = httpServletRequest.getHeader("accessToken");
         String clientToken = httpServletRequest.getHeader("clientToken");
+
         Integer value = null;
         boolean isInterceptorURL = false;
         boolean isInvalidURL = false;
         ApplicationPropertyConfiguration applicationConfiguratation =
             BeanUtil.getBean(ApplicationPropertyConfiguration.class);
         String interceptorURL = applicationConfiguratation.getInterceptorUrls();
-        String invalidURL = applicationConfiguratation.getInvalidUrl();
         String uri = ((HttpServletRequest) request).getRequestURI();
         String[] list = interceptorURL.split(",");
-        String[] invalidUrlList = invalidURL.split(",");
         for (int i = 0; i < list.length; i++) {
+          logger.info(list[i]);
           if (uri.endsWith(list[i].trim())) {
             isInterceptorURL = true;
           }
         }
-        // TODO: removed below Logic once studyState API implemented during sprint 3 development
-        for (int i = 0; i < invalidUrlList.length; i++) {
-          if (uri.endsWith(invalidUrlList[i].trim())) {
-            isInvalidURL = true;
-          }
-        }
-        // End Here
 
         if (isInterceptorURL) {
           httpServletResponse.setHeader("Access-Control-Allow-Origin", "*");
@@ -75,13 +66,6 @@ public class AuthenticationFilter implements Filter {
           httpServletResponse.setHeader(
               "Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS, HEAD");
           chain.doFilter(request, response);
-        } else if (isInvalidURL) {
-          httpServletResponse.setHeader("Access-Control-Allow-Origin", "*");
-          httpServletResponse.setHeader("Access-Control-Allow-Headers", "*");
-          httpServletResponse.setHeader("Access-Control-Allow-Credentials", "true");
-          httpServletResponse.setHeader(
-              "Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS, HEAD");
-          httpServletResponse.setStatus(HttpServletResponse.SC_NOT_FOUND);
         } else {
           if ((accessToken != null)
               && !StringUtils.isEmpty(accessToken)
@@ -105,6 +89,8 @@ public class AuthenticationFilter implements Filter {
                 httpServletResponse.setHeader("Access-Control-Allow-Credentials", "true");
                 httpServletResponse.setHeader(
                     "Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS, HEAD");
+                httpServletResponse.sendError(
+                    HttpServletResponse.SC_UNAUTHORIZED, ErrorCodes.UNAUTHORIZED.getValue());
                 httpServletResponse.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
               }
             }
@@ -114,6 +100,8 @@ public class AuthenticationFilter implements Filter {
             httpServletResponse.setHeader("Access-Control-Allow-Credentials", "true");
             httpServletResponse.setHeader(
                 "Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS, HEAD");
+            httpServletResponse.sendError(
+                HttpServletResponse.SC_UNAUTHORIZED, ErrorCodes.UNAUTHORIZED.getValue());
             httpServletResponse.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
           }
         }

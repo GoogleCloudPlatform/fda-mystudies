@@ -1,11 +1,8 @@
-/**
- * *****************************************************************************
+/*
+ *Copyright 2020 Google LLC
  *
- * <p>Copyright 2020 Google LLC
- *
- * <p>Use of this source code is governed by an MIT-style license that can be found in the LICENSE
- * file or at https://opensource.org/licenses/MIT.
- * *****************************************************************************
+ *Use of this source code is governed by an MIT-style license that can be found in the LICENSE file
+ *or at https://opensource.org/licenses/MIT.
  */
 package com.google.cloud.healthcare.fdamystudies.config;
 
@@ -18,17 +15,11 @@ import lombok.ToString;
 
 @Configuration
 // @PropertySource("classpath:application-${spring.profiles.active}.properties")
-@PropertySource("classpath:messageResource.properties")
+@PropertySource("classpath:appConfigurations.properties")
 @Setter
 @Getter
 @ToString
 public class ApplicationPropertyConfiguration {
-
-  @Value("${max.login.attempts}")
-  private String maxLoginAttempts;
-
-  @Value("${expiration.login.attempts.minute}")
-  private String expirationLoginAttemptsMinute;
 
   @Value("${from.email.address}")
   private String fromEmailAddress;
@@ -51,9 +42,6 @@ public class ApplicationPropertyConfiguration {
   @Value("${passwd.reset.link.content}")
   private String passwdResetLinkContent;
 
-  @Value("${password.history.count}")
-  private String passwordHistoryCount;
-
   @Value("${resend.confirmation.mail.subject}")
   private String resendConfirmationMailSubject;
 
@@ -62,12 +50,6 @@ public class ApplicationPropertyConfiguration {
 
   @Value("${authServerAccessTokenValidationUrl}")
   private String authServerAccessTokenValidationUrl;
-
-  @Value("${clientId}")
-  private String clientId;
-
-  @Value("${secretKey}")
-  private String secretKey;
 
   @Value("${auth.server.url}")
   private String authServerUrl;
@@ -83,7 +65,4 @@ public class ApplicationPropertyConfiguration {
 
   @Value("${interceptor}")
   private String interceptorUrls;
-
-  @Value("${invalidUrl}")
-  private String invalidUrl;
 }

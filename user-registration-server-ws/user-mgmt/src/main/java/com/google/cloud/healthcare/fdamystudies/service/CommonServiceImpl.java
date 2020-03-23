@@ -1,14 +1,12 @@
-/**
- * *****************************************************************************
+/*
+ *Copyright 2020 Google LLC
  *
- * <p>Copyright 2020 Google LLC
- *
- * <p>Use of this source code is governed by an MIT-style license that can be found in the LICENSE
- * file or at https://opensource.org/licenses/MIT.
- * *****************************************************************************
+ *Use of this source code is governed by an MIT-style license that can be found in the LICENSE file
+ *or at https://opensource.org/licenses/MIT.
  */
 package com.google.cloud.healthcare.fdamystudies.service;
 
+import java.time.LocalDateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +21,9 @@ import com.google.cloud.healthcare.fdamystudies.beans.AppOrgInfoBean;
 import com.google.cloud.healthcare.fdamystudies.beans.BodyForProvider;
 import com.google.cloud.healthcare.fdamystudies.config.ApplicationPropertyConfiguration;
 import com.google.cloud.healthcare.fdamystudies.dao.CommonDao;
+import com.google.cloud.healthcare.fdamystudies.model.ActivityLog;
+import com.google.cloud.healthcare.fdamystudies.repository.ActivityLogRepository;
+import com.google.cloud.healthcare.fdamystudies.util.AppConstants;
 
 @Service
 public class CommonServiceImpl implements CommonService {
@@ -31,14 +32,16 @@ public class CommonServiceImpl implements CommonService {
 
   @Autowired private ApplicationPropertyConfiguration appConfig;
 
-  @Autowired CommonDao commonDao;
+  @Autowired private CommonDao commonDao;
+
+  @Autowired private ActivityLogRepository activityLogRepository;
 
   private static Logger logger = LoggerFactory.getLogger(CommonServiceImpl.class);
 
   @Override
   public String validatedUserAppDetailsByAllApi(
       String userId, String email, String appId, String orgId) {
-    logger.info("UserManagementProfileServiceImpl validatedUserAppDetailsByAllApi() - Started ");
+    logger.info("UserManagementProfileServiceImpl validatedUserAppDetailsByAllApi() - starts");
     String message = "";
     AppOrgInfoBean appOrgInfoBean = new AppOrgInfoBean();
     try {
@@ -50,7 +53,7 @@ public class CommonServiceImpl implements CommonService {
       logger.error(
           "UserManagementProfileServiceImpl validatedUserAppDetailsByAllApi() - error ", e);
     }
-    logger.info("UserManagementProfileServiceImpl validatedUserAppDetailsByAllApi() - Ends ");
+    logger.info("UserManagementProfileServiceImpl validatedUserAppDetailsByAllApi() - ends");
     return message;
   }
 
@@ -58,37 +61,32 @@ public class CommonServiceImpl implements CommonService {
   public AppOrgInfoBean getUserAppDetailsByAllApi(
       String userId, String emailId, String appId, String orgId) {
     AppOrgInfoBean appOrgInfoBean = new AppOrgInfoBean();
-    logger.info("MyStudiesUserRegUtil - getUserAppDetailsByAllApi() Start");
+    logger.info("MyStudiesUserRegUtil getUserAppDetailsByAllApi() - starts");
     try {
       appOrgInfoBean = commonDao.getUserAppDetailsByAllApi(userId, appId, orgId);
     } catch (Exception e) {
-      logger.error("MyStudiesUserRegUtil - getUserAppDetailsByAllApi() - error() ", e);
+      logger.error("MyStudiesUserRegUtil getUserAppDetailsByAllApi() - error() ", e);
     }
 
-    logger.info("MyStudiesUserRegUtil - getUserAppDetailsByAllApi() Ends");
+    logger.info("MyStudiesUserRegUtil getUserAppDetailsByAllApi() - ends");
     return appOrgInfoBean;
   }
 
   @Override
   public Integer validateAccessToken(String userId, String accessToken, String clientToken) {
-    logger.info("CommonServiceImpl validateAccessToken() - starts ");
+    logger.info("CommonServiceImpl validateAccessToken() - starts");
     Integer value = null;
     HttpHeaders headers = null;
-    BodyForProvider providerBody = null;
     HttpEntity<BodyForProvider> requestBody = null;
     ResponseEntity<?> responseEntity = null;
     try {
       headers = new HttpHeaders();
       headers.setContentType(MediaType.APPLICATION_JSON);
-      headers.set("clientToken", clientToken);
-      headers.set("userId", userId);
-      headers.set("accessToken", accessToken);
+      headers.set(AppConstants.CLIENT_TOKEN, clientToken);
+      headers.set(AppConstants.USER_ID, userId);
+      headers.set(AppConstants.ACCESS_TOKEN, accessToken);
 
-      /*providerBody = new BodyForProvider();
-      providerBody.setUserId(userId);
-      providerBody.setAccessToken(accessToken);*/
-
-      requestBody = new HttpEntity<BodyForProvider>(null, headers);
+      requestBody = new HttpEntity<>(null, headers);
       logger.info("CommonServiceImpl validateAccessToken() " + restTemplate.hashCode());
       responseEntity =
           restTemplate.exchange(
@@ -100,7 +98,24 @@ public class CommonServiceImpl implements CommonService {
     } catch (Exception e) {
       logger.error("CommonServiceImpl validateAccessToken() - error ", e);
     }
-    logger.info("CommonServiceImpl validateAccessToken() - ends ");
+    logger.info("CommonServiceImpl validateAccessToken() - ends");
     return value;
+  }
+
+  @Override
+  public ActivityLog createActivityLog(String userId, String activityName, String activtyDesc) {
+    logger.info("CommonServiceImpl createActivityLog() - starts");
+    ActivityLog activityLog = new ActivityLog();
+    try {
+      activityLog.setAuthUserId(userId);
+      activityLog.setActivityName(activityName);
+      activityLog.setActivtyDesc(activtyDesc);
+      activityLog.setActivityDateTime(LocalDateTime.now());
+      activityLogRepository.save(activityLog);
+    } catch (Exception e) {
+      logger.error("CommonServiceImpl createActivityLog() - error ", e);
+    }
+    logger.info("CommonServiceImpl createActivityLog() - ends");
+    return activityLog;
   }
 }

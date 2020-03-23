@@ -1,11 +1,8 @@
-/**
- * *****************************************************************************
+/*
+ *Copyright 2020 Google LLC
  *
- * <p>Copyright 2020 Google LLC
- *
- * <p>Use of this source code is governed by an MIT-style license that can be found in the LICENSE
- * file or at https://opensource.org/licenses/MIT.
- * *****************************************************************************
+ *Use of this source code is governed by an MIT-style license that can be found in the LICENSE file
+ *or at https://opensource.org/licenses/MIT.
  */
 package com.google.cloud.healthcare.fdamystudies.util;
 
@@ -17,7 +14,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import com.google.cloud.healthcare.fdamystudies.config.ApplicationPropertyConfiguration;
 
-/** @author Aswini */
 @Component
 public class EmailNotification {
 
@@ -25,15 +21,6 @@ public class EmailNotification {
 
   @Autowired private ApplicationPropertyConfiguration appConfig;
 
-  /**
-   * @param subjectProprtyName
-   * @param content
-   * @param toMail
-   * @param ccMailList
-   * @param bccMailList
-   * @return boolean
-   * @throws Exception
-   */
   public boolean sendEmailNotification(
       String subject,
       String content,

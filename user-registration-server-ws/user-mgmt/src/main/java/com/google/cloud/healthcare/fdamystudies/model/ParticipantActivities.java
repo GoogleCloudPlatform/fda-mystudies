@@ -1,11 +1,8 @@
-/**
- * *****************************************************************************
+/*
+ *Copyright 2020 Google LLC
  *
- * <p>Copyright 2020 Google LLC
- *
- * <p>Use of this source code is governed by an MIT-style license that can be found in the LICENSE
- * file or at https://opensource.org/licenses/MIT.
- * *****************************************************************************
+ *Use of this source code is governed by an MIT-style license that can be found in the LICENSE file
+ *or at https://opensource.org/licenses/MIT.
  */
 package com.google.cloud.healthcare.fdamystudies.model;
 
@@ -30,7 +27,7 @@ public class ParticipantActivities {
   private Integer id;
 
   @Column(name = "_ts")
-  private String _ts;
+  private String ts;
 
   @Column(name = "participant_id")
   private String participantId;
