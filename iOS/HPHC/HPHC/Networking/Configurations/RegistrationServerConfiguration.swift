@@ -20,30 +20,18 @@
 import UIKit
 
 enum RegistrationMethods: String {
-  //TODO : Write exact name for request method
-  case login
-
+  
   case register
   case confirmRegistration
   case userProfile
   case updateUserProfile
   case userPreferences
   case updatePreferences
-  case updateEligibilityConsentStatus
-  case consentPDF
-  case updateStudyState
-  case studyState
-  case updateActivityState
-  case activityState
   case withdraw
-  case forgotPassword
-  case logout
   case deleteAccount
-  case changePassword
   case resendConfirmation
   case deactivate
   case verifyEmailId
-  case refreshToken
   case versionInfo
 
   var description: String {
@@ -69,15 +57,15 @@ enum RegistrationMethods: String {
 
     switch self {
 
-    case .activityState, .consentPDF, .deleteAccount, .confirmRegistration, .userProfile,
-      .userPreferences, .studyState, .versionInfo:
+    case .deleteAccount, .confirmRegistration, .userProfile,
+      .userPreferences, .versionInfo:
       // GET Methods
       return Method(
         methodName: self.apiPath,
         methodType: .httpMethodGet,
         requestType: .requestTypeHTTP
       )
-    case .withdraw, .logout, .deactivate:
+    case .withdraw, .deactivate:
       // DELETE Methods
       return Method(
         methodName: self.apiPath,
@@ -98,13 +86,10 @@ enum RegistrationMethods: String {
 }
 // MARK: - Set the server end points
 enum RegistrationServerURLConstants {
-
-  // Staging server
   static let ProductionURL = API.registrationURL
-
   static let DevelopmentURL = API.registrationURL  // This will change based on config file.
-
 }
+
 class RegistrationServerConfiguration: NetworkConfiguration {
   static let configuration = RegistrationServerConfiguration()
 
@@ -119,19 +104,14 @@ class RegistrationServerConfiguration: NetworkConfiguration {
 
   override func getDefaultHeaders() -> [String: String] {
 
-    var infoDict: NSDictionary?
-    if let path = Bundle.main.path(forResource: "Info", ofType: "plist") {
-      infoDict = NSDictionary(contentsOfFile: path)
-    }
-    let appId = infoDict!["ApplicationID"] as! String
-    let orgId = infoDict!["OrganizationID"] as! String
     let clientId = RegistrationServerAPIKey.apiKey
     let seceretKey = RegistrationServerSecretKey.secretKey
 
     var header = [
-      "appId": appId,
-      "orgId": orgId,
+      "appId": AppConfiguration.appID,
+      "orgId": AppConfiguration.orgID,
     ]
+    
     if User.currentUser.authToken != nil {
       header[kUserAuthToken] = User.currentUser.authToken
       header["clientToken"] = User.currentUser.clientToken

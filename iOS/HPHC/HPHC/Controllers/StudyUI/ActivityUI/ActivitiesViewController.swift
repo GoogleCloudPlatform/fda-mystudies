@@ -569,9 +569,10 @@ class ActivitiesViewController: UIViewController {
     activityStatus.totalRuns = activity.totalRuns
     activityStatus.activityVersion = activity.version
 
-    /// Update participationStatus to server
-    UserServices().updateUserActivityParticipatedStatus(
+    // Update participationStatus to server
+    ResponseServices().updateUserActivityParticipatedStatus(
       studyId: activity.studyId!,
+      participantId: Study.currentStudy?.userParticipateState.participantId ?? "",
       activityStatus: activityStatus,
       delegate: self
     )
@@ -632,7 +633,7 @@ class ActivitiesViewController: UIViewController {
     )
 
     /// Update to server
-    UserServices().updateCompletionAdherence(studyStatus: status, delegate: self)
+    EnrollServices().updateCompletionAdherence(studyStatus: status, delegate: self)
     /// Update Local DB
     DBHandler.updateStudyParticipationStatus(study: Study.currentStudy!)
 
@@ -748,8 +749,9 @@ class ActivitiesViewController: UIViewController {
     activityStatus.activityVersion = activity.version
 
     // Update User Participation Status to server
-    UserServices().updateUserActivityParticipatedStatus(
+    ResponseServices().updateUserActivityParticipatedStatus(
       studyId: activity.studyId!,
+      participantId: Study.currentStudy?.userParticipateState.participantId ?? "",
       activityStatus: activityStatus,
       delegate: self
     )
@@ -788,8 +790,7 @@ class ActivitiesViewController: UIViewController {
 
   /// Send Request To Get ActivityStates.
   func sendRequestToGetActivityStates() {
-    //TEMPBYPASS:
-    //UserServices().getUserActivityState(studyId: (Study.currentStudy?.studyId)!, delegate: self)
+    ResponseServices().getUserActivityState(studyId: (Study.currentStudy?.studyId)!, delegate: self)
   }
 
   /// Send Request To Get ActivityList.
@@ -1047,9 +1048,9 @@ extension ActivitiesViewController: ActivityFilterViewDelegate {
 extension ActivitiesViewController: NMWebServiceDelegate {
 
   func startedRequest(_ manager: NetworkManager, requestName: NSString) {
-    if (requestName as String == RegistrationMethods.updateStudyState.method.methodName)
+    if (requestName as String == EnrollmentMethods.updateStudyState.method.methodName)
       || (
-        requestName as String == RegistrationMethods.updateActivityState.method.methodName
+        requestName as String == ResponseMethods.updateActivityState.method.methodName
       ) || (requestName as String == WCPMethods.studyDashboard.method.methodName)
       || (
         requestName as String == WCPMethods.resources.method.methodName
@@ -1062,7 +1063,7 @@ extension ActivitiesViewController: NMWebServiceDelegate {
 
   func finishedRequest(_ manager: NetworkManager, requestName: NSString, response: AnyObject?) {
 
-    if requestName as String == RegistrationMethods.activityState.method.methodName {
+    if requestName as String == ResponseMethods.activityState.method.methodName {
       self.sendRequesToGetActivityList()
     } else if requestName as String == WCPMethods.activityList.method.methodName {
 
@@ -1135,7 +1136,7 @@ extension ActivitiesViewController: NMWebServiceDelegate {
         }
       )
     } else {
-      if requestName as String == RegistrationMethods.activityState.method.methodName {
+      if requestName as String == ResponseMethods.activityState.method.methodName {
         if error.code != NoNetworkErrorCode {
           self.loadActivitiesFromDatabase()
         } else {
@@ -1411,7 +1412,7 @@ extension ActivitiesViewController: ORKTaskViewControllerDelegate {
         }
 
         // send response to labkey
-        LabKeyServices().processResponse(responseData: response!, delegate: self)
+        ResponseServices().processResponse(responseData: response!, delegate: self)
       }
     }
     taskViewController.dismiss(

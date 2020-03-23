@@ -56,7 +56,7 @@ class ConsentServices: NSObject {
     ] as [String: Any]
 
     let params = [
-      kStudyId: "Test",  //(Study.currentStudy?.studyId!)! as String,  //TEMPBYPASS:
+      kStudyId: Study.currentStudy?.studyId ?? "",
       kEligibility: eligibilityStatus,
       kConsent: consent,
       kConsentSharing: "",
@@ -70,7 +70,9 @@ class ConsentServices: NSObject {
   /// - Parameters:
   ///   - studyId: ID of `Study`
   ///   - delegate: Class object to receive response
-  func getConsentPDFForStudy(studyId: String, delegate: NMWebServiceDelegate) {
+  func getConsentPDFForStudy(studyId: String,
+                             consentVersion: String,
+                             delegate: NMWebServiceDelegate) {
 
     self.delegate = delegate
 
@@ -81,7 +83,7 @@ class ConsentServices: NSObject {
     ]
 
     let headerParams = [kUserId: user.userId!]
-    let method = ConsentServerMethods.consentPDF.method
+    let method = ConsentServerMethods.consentDocument.method
 
     self.sendRequestWith(method: method, params: params, headers: headerParams)
   }
@@ -125,12 +127,9 @@ extension ConsentServices: NMWebServiceDelegate {
   }
 
   func finishedRequest(_ manager: NetworkManager, requestName: NSString, response: AnyObject?) {
-    Logger.sharedInstance.info(
-      "RUS Received Data: \(requestName), \(String(describing: response))"
-    )
     switch requestName {
     case ConsentServerMethods.updateEligibilityConsentStatus.description as String: break
-    case ConsentServerMethods.consentPDF.description as String: break
+    case ConsentServerMethods.consentDocument.description as String: break
     case AuthServerMethods.getRefreshedToken.description as String:
       self.handleUpdateTokenResponse(response: (response as? [String: Any])!)
     default: break
@@ -141,8 +140,9 @@ extension ConsentServices: NMWebServiceDelegate {
   }
 
   func failedRequest(_ manager: NetworkManager, requestName: NSString, error: NSError) {
+ 
     if requestName as String == AuthServerMethods.getRefreshedToken.description && error.code == 401
-    {  //unauthorized
+    {  // Session expired.
       delegate?.failedRequest(manager, requestName: requestName, error: error)
     } else if error.code == 401 {
 
@@ -150,11 +150,9 @@ extension ConsentServices: NMWebServiceDelegate {
       self.failedRequestServices.requestParams = self.requestParams
       self.failedRequestServices.method = self.method
 
-      print("Failed: Refresh token Expired")
-
       if User.currentUser.refreshToken == ""
         && requestName as String
-          != RegistrationMethods
+          != AuthServerMethods
           .login
           .description
       {
@@ -162,24 +160,18 @@ extension ConsentServices: NMWebServiceDelegate {
         let errorInfo = ["NSLocalizedDescription": "Your Session is Expired"]
         let localError = NSError.init(domain: error.domain, code: 403, userInfo: errorInfo)
         delegate?.failedRequest(manager, requestName: requestName, error: localError)
-
       } else {
         // Update Refresh Token
-        //self.updateToken()
         AuthServices().updateToken(delegate: self)
       }
-
     } else {
-
       var errorInfo = error.userInfo
       var localError = error
       if error.code == 403 {
         errorInfo = ["NSLocalizedDescription": "Your Session is Expired"]
         localError = NSError.init(domain: error.domain, code: 403, userInfo: errorInfo)
       }
-
       delegate?.failedRequest(manager, requestName: requestName, error: localError)
-
     }
   }
 }

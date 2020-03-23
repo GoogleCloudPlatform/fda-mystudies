@@ -507,9 +507,7 @@ class LeftMenuViewController: UIViewController, LeftMenuProtocol {
 
   /// Call webservice to logout current user.
   func sendRequestToSignOut() {
-
     AuthServices().logoutUser(self as NMWebServiceDelegate)
-
   }
 
   /// As the user is Signed out Remove passcode from the keychain
@@ -605,7 +603,7 @@ extension LeftMenuViewController: NMWebServiceDelegate {
   }
 
   func finishedRequest(_ manager: NetworkManager, requestName: NSString, response: AnyObject?) {
-    if requestName as String == RegistrationMethods.logout.description {
+    if requestName as String == AuthServerMethods.logout.description {
       self.signout()
     }
     UIApplication.shared.keyWindow?.addProgressIndicatorOnWindowFromTop()
@@ -625,6 +623,8 @@ extension LeftMenuViewController: NMWebServiceDelegate {
           self.fdaSlideMenuController()?.navigateToHomeAfterUnauthorizedAccess()
         }
       )
+    } else if requestName as String == AuthServerMethods.logout.description && error.code == 403{
+      self.signout()
     } else {
       UIUtilities.showAlertWithTitleAndMessage(
         title: NSLocalizedString(kErrorTitle, comment: "") as NSString,

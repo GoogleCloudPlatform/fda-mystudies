@@ -240,12 +240,11 @@ class StudyHomeViewController: UIViewController {
       let appdelegate = (UIApplication.shared.delegate as? AppDelegate)!
       consentResult?.token = appdelegate.consentToken
     }
-
-    //TEMPBYPASS:
-    //    LabKeyServices().enrollForStudy(
-    //      studyId: (Study.currentStudy?.studyId)!,
-    //      token: (ConsentBuilder.currentConsent?.consentResult?.token)!, delegate: self)
-
+    
+    EnrollServices().enrollForStudy(
+      studyId: (Study.currentStudy?.studyId)!,
+      token: (ConsentBuilder.currentConsent?.consentResult?.token)!, delegate: self)
+    
     let notificationName = Notification.Name(kPDFCreationNotificationId)
     NotificationCenter.default.addObserver(
       self,
@@ -263,7 +262,7 @@ class StudyHomeViewController: UIViewController {
       let headerParams = [kUserId: user.userId!]
       let params = [kUserLogoutReason: user.logoutReason.rawValue]
 
-      let method = RegistrationMethods.logout.method
+      let method = AuthServerMethods.logout.method
       NetworkManager.sharedInstance().composeRequest(
         RegistrationServerConfiguration.configuration,
         method: method,
@@ -690,7 +689,7 @@ class StudyHomeViewController: UIViewController {
     }
 
     isStudyBookMarked = true
-    UserServices().updateStudyBookmarkStatus(studyStatus: userStudyStatus, delegate: self)
+    EnrollServices().updateStudyBookmarkStatus(studyStatus: userStudyStatus, delegate: self)
   }
 
   @IBAction func visitWebsiteButtonAction(_ sender: UIButton) {
@@ -722,7 +721,7 @@ class StudyHomeViewController: UIViewController {
     if UserDefaults.standard.bool(forKey: kPasscodeIsPending) {
       UserServices().getUserProfile(self as NMWebServiceDelegate)
     } else {
-      UserServices().getStudyStates(self)
+      EnrollServices().getStudyStates(self)
     }
   }
 
@@ -789,22 +788,24 @@ class StudyHomeViewController: UIViewController {
 
   func handleStudyEnrollmentResponse(response: [String: Any]) {
 
-    let tokenDict = (response["data"] as? [String: Any])!
-    if Utilities.isValidObject(someObject: tokenDict as AnyObject?) {
-      let apptoken = (tokenDict["appToken"] as? String)!
-
+    if let apptoken = response["appToken"] as? String {
+      
+      let siteID = response["siteId"] as? String ?? ""
+      let tokenIdentifier = response["hashedToken"] as? String ?? ""
       // update token
       let currentUserStudyStatus = User.currentUser.updateStudyStatus(
         studyId: (Study.currentStudy?.studyId)!,
         status: .inProgress
       )
+      currentUserStudyStatus.tokenIdentifier = tokenIdentifier
       currentUserStudyStatus.participantId = apptoken
+      currentUserStudyStatus.siteID = siteID
       Study.currentStudy?.userParticipateState = currentUserStudyStatus
 
       DBHandler.updateStudyParticipationStatus(study: Study.currentStudy!)
 
       ConsentBuilder.currentConsent?.consentStatus = .completed
-      UserServices().updateUserParticipatedStatus(
+      EnrollServices().updateUserParticipatedStatus(
         studyStauts: currentUserStudyStatus,
         delegate: self
       )
@@ -892,7 +893,7 @@ extension StudyHomeViewController: PageViewControllerDelegate {
 
 extension StudyHomeViewController: NMWebServiceDelegate {
   func startedRequest(_: NetworkManager, requestName: NSString) {
-    if requestName as String == RegistrationMethods.logout.method.methodName {
+    if requestName as String == AuthServerMethods.logout.method.methodName {
     } else {
       addProgressIndicator()
     }
@@ -904,7 +905,7 @@ extension StudyHomeViewController: NMWebServiceDelegate {
       createEligibilityConsentTask()
     }
 
-    if requestName as String == RegistrationMethods.updateStudyState.method.methodName {
+    if requestName as String == EnrollmentMethods.updateStudyState.method.methodName {
       if isStudyBookMarked || isUpdatingIneligibility {
         removeProgressIndicator()
 
@@ -935,7 +936,7 @@ extension StudyHomeViewController: NMWebServiceDelegate {
       }
     }
 
-    if requestName as String == ResponseMethods.enroll.description {
+    if requestName as String == EnrollmentMethods.enroll.description {
       if Utilities.isValidObject(someObject: response) {
         handleStudyEnrollmentResponse(response: response as! [String: Any])
       }
@@ -945,15 +946,15 @@ extension StudyHomeViewController: NMWebServiceDelegate {
       == ConsentServerMethods.updateEligibilityConsentStatus.method
       .methodName
     {
-      //TEMPBYPASS:
-      //      if User.currentUser.getStudyStatus(studyId: (Study.currentStudy?.studyId)!)
-      //        == UserStudyStatus
-      //        .StudyStatus.inProgress
-      //      {
-      //        isGettingJoiningDate = true
-      //        UserServices().getStudyStates(self)
-      //      }
-
+  
+      if User.currentUser.getStudyStatus(studyId: (Study.currentStudy?.studyId)!)
+        == UserStudyStatus
+          .StudyStatus.inProgress
+      {
+        isGettingJoiningDate = true
+        EnrollServices().getStudyStates(self)
+      }
+      
       self.postStudyEnrollmentFinishedNotif()
     }
 
@@ -962,7 +963,7 @@ extension StudyHomeViewController: NMWebServiceDelegate {
       displayConsentDocument()
     }
 
-    if requestName as String == RegistrationMethods.studyState.description {
+    if requestName as String == EnrollmentMethods.studyState.description {
       if isGettingJoiningDate {
         // update in Study
         let currentUser = User.currentUser
@@ -984,7 +985,7 @@ extension StudyHomeViewController: NMWebServiceDelegate {
       if User.currentUser.settings?.passcode == true {
         setPassCode()
       } else {
-        UserServices().getStudyStates(self)
+        EnrollServices().getStudyStates(self)
       }
     }
   }
@@ -1005,14 +1006,14 @@ extension StudyHomeViewController: NMWebServiceDelegate {
           self.fdaSlideMenuController()?.navigateToHomeAfterUnauthorizedAccess()
         }
       )
-    } else if requestName as String == ResponseMethods.enroll.description {
+    } else if requestName as String == EnrollmentMethods.enroll.description {
 
       unHideSubViews()
       self.studyEnrollmentFailed(error: error)
 
-    } else if requestName as String == RegistrationMethods.updateStudyState.method.methodName
+    } else if requestName as String == EnrollmentMethods.updateStudyState.method.methodName
       || requestName as String
-        == RegistrationMethods.updateEligibilityConsentStatus.method.methodName
+        == ConsentServerMethods.updateEligibilityConsentStatus.method.methodName
     {
       unHideSubViews()
 
@@ -1065,8 +1066,8 @@ extension StudyHomeViewController: ORKTaskViewControllerDelegate {
       taskViewController.dismiss(
         animated: true,
         completion: {
-          // call api to get all study stats
-          UserServices().getStudyStates(self)
+          // Call API to get all study stats
+          EnrollServices().getStudyStates(self)
         }
       )
       return
@@ -1123,7 +1124,7 @@ extension StudyHomeViewController: ORKTaskViewControllerDelegate {
 
             isUpdatingIneligibility = true
 
-            UserServices().updateUserParticipatedStatus(
+            EnrollServices().updateUserParticipatedStatus(
               studyStauts: currentUserStudyStatus,
               delegate: self
             )
@@ -1374,7 +1375,7 @@ extension StudyHomeViewController: ORKTaskViewControllerDelegate {
           completion: {
             self.isUpdatingIneligibility = true
 
-            UserServices().updateUserParticipatedStatus(
+            EnrollServices().updateUserParticipatedStatus(
               studyStauts: currentUserStudyStatus,
               delegate: self
             )

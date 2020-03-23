@@ -139,11 +139,11 @@ class AnchorDateHandler {
     }
 
     // send request to get response"
-
+    // TBD :- Update this
     let keys = emptyAnchorDateDetail.sourceKey!
     let formKey: String = emptyAnchorDateDetail.sourceFormKey ?? ""
     let tableName = emptyAnchorDateDetail.sourceActivityId + formKey
-    let method = ResponseMethods.executeSQL.method
+    let method = ResponseMethods.getParticipantResponse.method
     let query: String = "SELECT " + keys + ",Created" + " FROM " + tableName
     let participantId: String = (Study.currentStudy?.userParticipateState.participantId)!
     var urlString = ResponseServerURLConstants.DevelopmentURL + method.methodName + "?"

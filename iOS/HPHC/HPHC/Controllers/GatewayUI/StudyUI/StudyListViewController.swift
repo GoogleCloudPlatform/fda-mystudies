@@ -69,18 +69,14 @@ class StudyListViewController: UIViewController {
       return
     }
     addRightNavigationItem()
-    let appdelegate = (UIApplication.shared.delegate as? AppDelegate)!
-
+    navigationController?.setNavigationBarHidden(false, animated: true)
+    navigationController?.navigationBar.isHidden = false
+    
     Study.currentStudy = nil
-
     let ud = UserDefaults.standard
-    var isPasscodePending: Bool? = false
-
     // Checking if User has missed out setting the passcode/TouchId
-    if ud.value(forKey: kPasscodeIsPending) != nil {
-      isPasscodePending = (ud.value(forKey: kPasscodeIsPending) as? Bool)!
-    }
-
+    let isPasscodePending = ud.value(forKey: kPasscodeIsPending) as? Bool ?? false
+    
     if isPasscodePending == true {
       if User.currentUser.userType == .FDAUser {
         tableView?.isHidden = true
@@ -91,17 +87,13 @@ class StudyListViewController: UIViewController {
 
     labelHelperText.isHidden = true
     setNavigationBarItem()
-    navigationController?.setNavigationBarHidden(false, animated: true)
-    navigationController?.navigationBar.isHidden = false
 
     if User.currentUser.userType == .FDAUser {  // For LoggedIn User
       tableView?.estimatedRowHeight = 145
       tableView?.rowHeight = UITableView.automaticDimension
 
       if !(fdaSlideMenuController()?.isLeftOpen())! {
-        //TEMPBYPASS:
-        //sendRequestToGetUserPreference()
-        sendRequestToGetStudyList()
+        sendRequestToGetUserPreference()
       }
     } else {  // For ananomous User
       tableView?.estimatedRowHeight = 140
@@ -110,12 +102,14 @@ class StudyListViewController: UIViewController {
       sendRequestToGetStudyList()
     }
 
-    // UIApplication.shared.statusBarStyle = .default
     setNeedsStatusBarAppearanceUpdate()
+    self.navigationController?.view.layoutSubviews()
+    
     // Checking if registering notification is pending
     if ud.value(forKey: kNotificationRegistrationIsPending) != nil,
       ud.bool(forKey: kNotificationRegistrationIsPending) == true
     {
+      let appdelegate = (UIApplication.shared.delegate as? AppDelegate)!
       appdelegate.askForNotification()
     }
 
@@ -130,6 +124,8 @@ class StudyListViewController: UIViewController {
 
   /// To update the navigation bar items , by adding Notification Button, Notification Indicator & Filter Button.
   func addRightNavigationItem() {
+    guard navigationItem.rightBarButtonItems == nil
+      else {return} // No need to add again.
     let view = UIView(frame: CGRect(x: 0, y: 4, width: 110, height: 40))
 
     // Notification Button
@@ -137,20 +133,14 @@ class StudyListViewController: UIViewController {
     view.addSubview(button)
     button.isExclusiveTouch = true
 
-    // notification Indicator
+    // Notification Indicator
     let label = addNotificationIndication()
     view.addSubview(label)
 
-    let ud = UserDefaults.standard
-    let showNotification = ud.bool(forKey: kShowNotification)
+    let isShowNotification = UserDefaults.standard.bool(forKey: kShowNotification)
+    label.isHidden = isShowNotification ? false : true
 
-    if showNotification {
-      label.isHidden = false
-    } else {
-      label.isHidden = true
-    }
-
-    //  filter Button
+    //  Filter Button
     let filterButton = addFilterButton()
     view.addSubview(filterButton)
     filterButton.isExclusiveTouch = true
@@ -230,7 +220,7 @@ class StudyListViewController: UIViewController {
 
   fileprivate func setupStudyListTableView() {
     let refresher = UIRefreshControl()
-    refresher.addTarget(self, action: #selector(sendRequestToGetStudyList), for: .valueChanged)
+    refresher.addTarget(self, action: #selector(sendRequestToGetUserPreference), for: .valueChanged)
     refresher.attributedTitle = NSAttributedString(string: "Pull to refresh")
     tableView.refreshControl = refresher
   }
@@ -602,14 +592,14 @@ class StudyListViewController: UIViewController {
   }
 
   ///  Send the webservice request to get UserPreferences.
-  func sendRequestToGetUserPreference() {
-    UserServices().getStudyStates(self)
+  @objc func sendRequestToGetUserPreference() {
+    EnrollServices().getStudyStates(self)
   }
 
   /// Send the webservice request to Update BookMarkStatus.
   /// - Parameter userStudyStatus: Instance of `UserStudyStatus`.
   func sendRequestToUpdateBookMarkStatus(userStudyStatus: UserStudyStatus) {
-    UserServices().updateStudyBookmarkStatus(studyStatus: userStudyStatus, delegate: self)
+    EnrollServices().updateStudyBookmarkStatus(studyStatus: userStudyStatus, delegate: self)
   }
 
   // MARK: - Webservice Responses
@@ -1065,8 +1055,7 @@ extension StudyListViewController: NMWebServiceDelegate {
       appdelegate.window?.removeProgressIndicatorFromWindow()
       navigateBasedOnUserStatus()
 
-    } else if requestName as String == RegistrationMethods.studyState.description {
-      appdelegate.window?.removeProgressIndicatorFromWindow()
+    } else if requestName as String == EnrollmentMethods.studyState.description {
       sendRequestToGetStudyList()
 
     } else if requestName as String == WCPMethods.studyUpdates.rawValue {
@@ -1083,7 +1072,7 @@ extension StudyListViewController: NMWebServiceDelegate {
         UserDefaults.standard.synchronize()
       }
 
-    } else if requestName as String == RegistrationMethods.updateStudyState.description {
+    } else if requestName as String == EnrollmentMethods.updateStudyState.description {
       appdelegate.window?.removeProgressIndicatorFromWindow()
     }
   }
@@ -1105,7 +1094,7 @@ extension StudyListViewController: NMWebServiceDelegate {
         }
       )
     } else {
-      if requestName as String == RegistrationMethods.studyState.description {
+      if requestName as String == EnrollmentMethods.studyState.description {
         sendRequestToGetStudyList()
 
       } else if requestName as String == WCPMethods.studyList.rawValue {

@@ -1,6 +1,7 @@
 // License Agreement for FDA My Studies
-// Copyright © 2017-2019 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors. Permission is
-// hereby granted, free of charge, to any person obtaining a copy of this software and associated
+// Copyright © 2017-2019 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors.
+// Copyright 2020 Google LLC
+// Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated
 // documentation files (the &quot;Software&quot;), to deal in the Software without restriction, including without
 // limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the
 // Software, and to permit persons to whom the Software is furnished to do so, subject to the following
@@ -174,29 +175,25 @@ class ResponseDataFetch: NMWebServiceDelegate {
     if self.dataSourceKeysForLabkey.count != 0 {
       let details = self.dataSourceKeysForLabkey.first
       let activityId = details?["activityId"]
-      var tableName = activityId
       let activity = Study.currentStudy?.activities.filter({ $0.actvityId == activityId })
         .first
-      var keys = details?["keys"]
+      var keys = details?["keys"] ?? ""
       if activity?.type == ActivityType.activeTask {
         if activity?.taskSubType == "fetalKickCounter" {
           keys = "\"count\",duration"
-          tableName = activityId! + activityId!
         } else if activity?.taskSubType == "towerOfHanoi" {
           keys = "numberOfMoves"
-          tableName = activityId! + activityId!
         } else if activity?.taskSubType == "spatialSpanMemory" {
           keys = "NumberofGames,Score,NumberofFailures"
-          tableName = activityId! + activityId!
         }
       }
-      let participantId = Study.currentStudy?.userParticipateState.participantId
+      
+      let currentStudy = Study.currentStudy
       // Get Survey Response from Server
-      LabKeyServices().getParticipantResponse(
-        tableName: tableName!,
-        activityId: activityId!,
-        keys: keys!,
-        participantId: participantId!,
+      ResponseServices().getParticipantResponse(
+        activity: activity!,
+        study: currentStudy!,
+        keys: keys,
         delegate: self
       )
     } else {
@@ -222,25 +219,24 @@ class ResponseDataFetch: NMWebServiceDelegate {
         for value in values {
           let responseValue = (value["value"] as? Float)!
           let count = (value["count"] as? Float)!
+          let dateString = value["date"] as? String ?? ""
           // SetData Format
-          let date = ResponseDataFetch.labkeyDateFormatter.date(
-            from: (value["date"] as? String)!
-          )
-          let localDateAsString = ResponseDataFetch.localDateFormatter.string(from: date!)
-
-          let localDate = ResponseDataFetch.localDateFormatter.date(
-            from: localDateAsString
-          )
-          // Save Stats to DB
-          DBHandler.saveStatisticsDataFor(
-            activityId: activityId!,
-            key: key!,
-            data: responseValue,
-            fkDuration: Int(count),
-            date: localDate!
-          )
+          if let date = ResponseDataFetch.labkeyDateFormatter.date(from: dateString) {
+            let localDateAsString = ResponseDataFetch.localDateFormatter.string(from: date)
+            if let localDate = ResponseDataFetch.localDateFormatter.date(
+              from: localDateAsString
+              ) {
+              // Save Stats to DB
+              DBHandler.saveStatisticsDataFor(
+                activityId: activityId!,
+                key: key!,
+                data: responseValue,
+                fkDuration: Int(count),
+                date: localDate
+              )
+            }
+          }
         }
-
       }
       let key = "LabKeyResponse" + (Study.currentStudy?.studyId)!
       UserDefaults.standard.set(true, forKey: key)
@@ -259,14 +255,14 @@ class ResponseDataFetch: NMWebServiceDelegate {
     if requestName as String == WCPMethods.studyDashboard.method.methodName {
       self.getDataKeysForCurrentStudy()
 
-    } else if requestName as String == ResponseMethods.executeSQL.description {
+    } else if requestName as String == ResponseMethods.getParticipantResponse.description {
       self.handleExecuteSQLResponse()
     }
 
   }
 
   func failedRequest(_ manager: NetworkManager, requestName: NSString, error: NSError) {
-    if requestName as String == ResponseMethods.executeSQL.description {
+    if requestName as String == ResponseMethods.getParticipantResponse.description {
       self.handleExecuteSQLResponse()
     }
   }

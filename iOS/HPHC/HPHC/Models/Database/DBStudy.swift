@@ -1,6 +1,7 @@
 // License Agreement for FDA My Studies
-// Copyright © 2017-2019 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors. Permission is
-// hereby granted, free of charge, to any person obtaining a copy of this software and associated
+// Copyright © 2017-2019 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors.
+// Copyright 2020 Google LLC
+// Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated
 // documentation files (the &quot;Software&quot;), to deal in the Software without restriction, including without
 // limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the
 // Software, and to permit persons to whom the Software is furnished to do so, subject to the following
@@ -48,15 +49,17 @@ class DBStudy: Object {
   @objc dynamic var signedConsentVersion: String?
   @objc dynamic var signedConsentFilePath: String?
 
-  //study state info
+  // Study state info
+  
   @objc dynamic var participatedStatus: Int = 0
-
   @objc dynamic var participatedId: String?
+  @objc dynamic var siteID: String?
+  @objc dynamic var tokenIdentifier: String?
   @objc dynamic var joiningDate: Date?
   @objc dynamic var completion: Int = 0
   @objc dynamic var adherence: Int = 0
 
-  //anchor date values
+  /// Anchor date value
   @objc dynamic var anchorDate: Date?
 
   @objc dynamic var anchorDateType: String?
@@ -65,10 +68,9 @@ class DBStudy: Object {
   @objc dynamic var anchorDateQuestionKey: String?
   @objc dynamic var activitiesLocalNotificationUpdated = false
 
-  //withdrawalConfigration
-
+  // Withdraw Configration
+  
   @objc dynamic var withdrawalConfigrationMessage: String?
-
   @objc dynamic var withdrawalConfigrationType: String?
 
   var sections = List<DBOverviewSection>()

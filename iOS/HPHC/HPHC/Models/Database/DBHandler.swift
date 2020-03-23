@@ -173,13 +173,16 @@ class DBHandler: NSObject {
           dbStudy?.enrolling = study.studySettings.enrollingAllowed
           dbStudy?.rejoin = study.studySettings.rejoinStudyAfterWithdrawn
           dbStudy?.platform = study.studySettings.platform
-          dbStudy?.participatedStatus = study.userParticipateState.status.rawValue
-          dbStudy?.participatedId = study.userParticipateState.participantId
-          dbStudy?.joiningDate = study.userParticipateState.joiningDate
-          dbStudy?.completion = study.userParticipateState.completion
-          dbStudy?.adherence = study.userParticipateState.adherence
-          dbStudy?.bookmarked = study.userParticipateState.bookmarked
-
+          if let studyStatus = study.userParticipateState {
+            dbStudy?.participatedStatus = studyStatus.status.rawValue
+            dbStudy?.participatedId = studyStatus.participantId
+            dbStudy?.siteID = studyStatus.siteID
+            dbStudy?.tokenIdentifier = studyStatus.tokenIdentifier
+            dbStudy?.joiningDate = studyStatus.joiningDate
+            dbStudy?.completion = studyStatus.completion
+            dbStudy?.adherence = studyStatus.adherence
+            dbStudy?.bookmarked = studyStatus.bookmarked
+          }
           if dbStudy?.participatedStatus
             == UserStudyStatus.StudyStatus.inProgress
             .rawValue
@@ -222,12 +225,16 @@ class DBHandler: NSObject {
     dbStudy.rejoin = study.studySettings.rejoinStudyAfterWithdrawn
     dbStudy.platform = study.studySettings.platform
     dbStudy.status = study.status.rawValue
-    dbStudy.participatedStatus = study.userParticipateState.status.rawValue
-    dbStudy.participatedId = study.userParticipateState.participantId
-    dbStudy.joiningDate = study.userParticipateState.joiningDate
-    dbStudy.completion = study.userParticipateState.completion
-    dbStudy.adherence = study.userParticipateState.adherence
-    dbStudy.bookmarked = study.userParticipateState.bookmarked
+    if let userStudyStatus = study.userParticipateState {
+      dbStudy.participatedStatus = userStudyStatus.status.rawValue
+      dbStudy.participatedId = userStudyStatus.participantId
+      dbStudy.siteID = userStudyStatus.siteID
+      dbStudy.tokenIdentifier = userStudyStatus.tokenIdentifier
+      dbStudy.joiningDate = userStudyStatus.joiningDate
+      dbStudy.completion = userStudyStatus.completion
+      dbStudy.adherence = userStudyStatus.adherence
+      dbStudy.bookmarked = userStudyStatus.bookmarked
+    }
     dbStudy.withdrawalConfigrationMessage = study.withdrawalConfigration?.message
     dbStudy.withdrawalConfigrationType = study.withdrawalConfigration?.type?.rawValue
     return dbStudy
@@ -277,6 +284,8 @@ class DBHandler: NSObject {
       participatedStatus.bookmarked = dbStudy.bookmarked
       participatedStatus.studyId = dbStudy.studyId
       participatedStatus.participantId = dbStudy.participatedId
+      participatedStatus.siteID = dbStudy.siteID ?? ""
+      participatedStatus.tokenIdentifier = dbStudy.tokenIdentifier ?? ""
       participatedStatus.adherence = dbStudy.adherence
       participatedStatus.completion = dbStudy.completion
       participatedStatus.joiningDate = dbStudy.joiningDate
@@ -478,11 +487,15 @@ class DBHandler: NSObject {
     let dbStudy = studies.last
 
     try? realm.write {
-      dbStudy?.participatedStatus = study.userParticipateState.status.rawValue
-      dbStudy?.participatedId = study.userParticipateState.participantId
-      dbStudy?.joiningDate = study.userParticipateState.joiningDate
-      dbStudy?.completion = study.userParticipateState.completion
-      dbStudy?.adherence = study.userParticipateState.adherence
+      if let studyStatus = study.userParticipateState {
+        dbStudy?.participatedStatus = studyStatus.status.rawValue
+        dbStudy?.participatedId = studyStatus.participantId
+        dbStudy?.siteID = studyStatus.siteID
+        dbStudy?.tokenIdentifier = studyStatus.tokenIdentifier
+        dbStudy?.joiningDate = studyStatus.joiningDate
+        dbStudy?.completion = studyStatus.completion
+        dbStudy?.adherence = studyStatus.adherence
+      }
     }
   }
 

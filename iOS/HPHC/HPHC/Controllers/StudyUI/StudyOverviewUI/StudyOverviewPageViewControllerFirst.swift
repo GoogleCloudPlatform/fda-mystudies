@@ -191,9 +191,6 @@ extension StudyOverviewViewControllerFirst: NMWebServiceDelegate {
 
   func finishedRequest(_ manager: NetworkManager, requestName: NSString, response: AnyObject?) {
     self.removeProgressIndicator()
-    if requestName as String == RegistrationMethods.logout.description {
-
-    }
   }
 
   func failedRequest(_ manager: NetworkManager, requestName: NSString, error: NSError) {

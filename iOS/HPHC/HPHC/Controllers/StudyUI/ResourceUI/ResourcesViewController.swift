@@ -411,15 +411,13 @@ class ResourcesViewController: UIViewController {
     WCPServices().getStudyInformation(studyId: study.studyId, delegate: self)
   }
 
-  func pushToResourceDetails() {
+  func pushToResourceDetails(with consentPath: String) {
 
     let path = AKUtility.baseFilePath + "/study"
-    let consentPath = Study.currentStudy?.signedConsentFilePath
+    let fullPath = path + "/" + consentPath
 
-    let fullPath = path + "/" + consentPath!
-
-    let pdfData = FileDownloadManager.decrytFile(pathURL: URL.init(string: fullPath))
-
+    let pdfData = FileDownloadManager.decrytFile(pathURL: URL(string: fullPath))
+    
     var isPDF: Bool = false
     if (pdfData?.count ?? 0) >= 1024  // only check if bigger
     {
@@ -433,9 +431,10 @@ class ResourcesViewController: UIViewController {
         isPDF = true
       } else {
         isPDF = false
-        print("not pdf")
+        let currentStudy = Study.currentStudy
         ConsentServices().getConsentPDFForStudy(
-          studyId: (Study.currentStudy?.studyId)!,
+          studyId: currentStudy?.studyId ?? "",
+          consentVersion: currentStudy?.signedConsentVersion ?? "",
           delegate: self
         )
       }
@@ -480,14 +479,19 @@ class ResourcesViewController: UIViewController {
 
       fullPath = "file://" + "\(fullPath!)"
 
-      try consentData?.write(to: URL(string: fullPath!)!)
+      do {
+        try consentData?.write(to: URL(string: fullPath!)!)
+      } catch {
+        Logger.sharedInstance.error(error)
+      }
+      
 
       FileDownloadManager.encyptFile(pathURL: URL(string: defaultPath!)!)
 
       Study.currentStudy?.signedConsentFilePath = fileName
       DBHandler.saveConsentInformation(study: Study.currentStudy!)
 
-      self.pushToResourceDetails()
+      self.pushToResourceDetails(with: fileName)
 
     } catch let error as NSError {
       Logger.sharedInstance.error(error.localizedDescription)
@@ -496,9 +500,8 @@ class ResourcesViewController: UIViewController {
   }
 
   func withdrawalFromStudy(deleteResponse: Bool) {
-    //TBD: uncomment following for UAT
     let participantId = Study.currentStudy?.userParticipateState.participantId
-    LabKeyServices().withdrawFromStudy(
+    ResponseServices().withdrawFromStudy(
       studyId: (Study.currentStudy?.studyId)!,
       participantId: participantId!,
       deleteResponses: deleteResponse,
@@ -622,8 +625,9 @@ extension ResourcesViewController: UITableViewDelegate {
   func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
     tableView.deselectRow(at: indexPath, animated: true)
 
-    let resource = (tableViewRowDetails?[indexPath.row])!
-
+    guard let currentStudy = Study.currentStudy else {return}
+    let resource = tableViewRowDetails?[indexPath.row]
+    
     if (resource as? Resource) != nil {
 
       resourceLink = (resource as? Resource)?.file?.getFileLink()
@@ -634,14 +638,15 @@ extension ResourcesViewController: UITableViewDelegate {
       if (resource as? String)! == leaveStudy {
         self.handleLeaveStudy()
       } else if (resource as? String)! == aboutTheStudy {
-        self.checkDatabaseForStudyInfo(study: Study.currentStudy!)
+        self.checkDatabaseForStudyInfo(study: currentStudy)
       } else if (resource as? String)! == consentPDF {
         // PENDING
-        if Study.currentStudy?.signedConsentFilePath != nil {
-          self.pushToResourceDetails()
+        if let consentPath = Study.currentStudy?.signedConsentFilePath, !consentPath.isEmpty {
+          self.pushToResourceDetails(with: consentPath)
         } else {
           ConsentServices().getConsentPDFForStudy(
-            studyId: (Study.currentStudy?.studyId)!,
+            studyId: currentStudy.studyId ?? "",
+            consentVersion: currentStudy.signedConsentVersion ?? "",
             delegate: self
           )
         }
@@ -698,7 +703,7 @@ extension ResourcesViewController: NMWebServiceDelegate {
         handleStudyInfoResponse(response: response)
       }
 
-    case ConsentServerMethods.consentPDF.method.methodName:
+    case ConsentServerMethods.consentDocument.method.methodName:
       self.removeProgressIndicator()
       let consentDict: [String: Any] = (
         (response as? [String: Any])![kConsentPdfKey] as? [String: Any]

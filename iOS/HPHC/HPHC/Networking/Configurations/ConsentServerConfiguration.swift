@@ -1,6 +1,3 @@
-//
-//  AuthServerConfiguration.swift
-//  HPHC
 //  Copyright 2020 Google LLC
 //
 //  Use of this source code is governed by an MIT-style
@@ -10,14 +7,12 @@
 import UIKit
 
 enum ConsentServerMethods: String {
-  //TODO : Write exact name for request method
+ 
   case updateEligibilityConsentStatus
-
-  case consentPDF
+  case consentDocument
 
   var description: String {
     switch self {
-
     default:
       return self.apiPath
     }
@@ -34,7 +29,7 @@ enum ConsentServerMethods: String {
 
     switch self {
 
-    case .consentPDF:
+    case .consentDocument:
       //DELETE Methods
       return Method(
         methodName: self.apiPath,
@@ -51,18 +46,16 @@ enum ConsentServerMethods: String {
 
     }
   }
-
+  
 }
 // MARK: - Set the server end points
 enum ConsentServerURLConstants {
-
-  //Staging server
-  static let ProductionURL = "https://hpreg-stage.lkcompliant.net/fdahpUserRegWS/"
-
-  static let DevelopmentURL = "http://192.168.0.44:3247/myStudiesConsentMgmtWS/"
-
+  static let ProductionURL = API.consentMgmtURL
+  static let DevelopmentURL = API.consentMgmtURL
 }
+
 class ConsentServerConfiguration: NetworkConfiguration {
+ 
   static let configuration = ConsentServerConfiguration()
 
   // MARK: Delegates
@@ -75,27 +68,13 @@ class ConsentServerConfiguration: NetworkConfiguration {
   }
 
   override func getDefaultHeaders() -> [String: String] {
-
-    var infoDict: NSDictionary?
-    if let path = Bundle.main.path(forResource: "Info", ofType: "plist") {
-      infoDict = NSDictionary(contentsOfFile: path)
-    }
-    let appId = infoDict!["ApplicationID"] as! String
-    let orgId = infoDict!["OrganizationID"] as! String
-    let clientId = RegistrationServerAPIKey.apiKey
-    let seceretKey = RegistrationServerSecretKey.secretKey
-
-    var header = [
-      "appId": appId,
-      "orgId": orgId,
+    
+    let header = [
+      "appId": AppConfiguration.appID,
+      "orgId": AppConfiguration.orgID,
+      kUserAuthToken : User.currentUser.authToken ?? "",
+      "clientToken" : User.currentUser.clientToken ?? "",
     ]
-    if User.currentUser.authToken != nil {
-      header[kUserAuthToken] = User.currentUser.authToken
-      header["clientToken"] = User.currentUser.clientToken
-    } else {
-      header["clientId"] = clientId
-      header["secretKey"] = seceretKey
-    }
     return header
   }
 

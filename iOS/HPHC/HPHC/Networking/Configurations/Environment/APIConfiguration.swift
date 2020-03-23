@@ -1,6 +1,3 @@
-//
-//  Configuration.swift
-//  HPHC
 //  Copyright 2020 Google LLC
 //
 //  Use of this source code is governed by an MIT-style
@@ -9,7 +6,7 @@
 
 import Foundation
 
-private enum Configuration {
+enum Configuration {
   enum Error: Swift.Error {
     case missingKey, invalidValue
   }
@@ -39,17 +36,29 @@ enum API {
   }
 
   static var wcpURL: String {
-    return AppProtocol.https + ((try? Configuration.value(for: "WCP_URL")) ?? "")
+    return AppProtocol.http + ((try? Configuration.value(for: "WCP_URL")) ?? "")
   }
 
   static var responseURL: String {
-    return AppProtocol.https + ((try? Configuration.value(for: "RESPONSE_URL")) ?? "")
+    return AppProtocol.http + ((try? Configuration.value(for: "RESPONSE_URL")) ?? "")
   }
 
   static var registrationURL: String {
     return AppProtocol.http + ((try? Configuration.value(for: "REGISTRATION_URL")) ?? "")
   }
 
+  static var authURL: String {
+    return AppProtocol.http + ((try? Configuration.value(for: "AUTH_URL")) ?? "")
+  }
+  
+  static var enrollmentURL: String {
+    return AppProtocol.http + ((try? Configuration.value(for: "ENROLLMENT_URL")) ?? "")
+  }
+    
+  static var consentMgmtURL: String {
+     return AppProtocol.http + ((try? Configuration.value(for: "CONSENTMGMT_URL")) ?? "")
+  }
+  
   static var authUsername: String {
     return (try? Configuration.value(for: "AUTH_USERNAME")) ?? ""
   }
@@ -57,5 +66,6 @@ enum API {
   static var authPassword: String {
     return (try? Configuration.value(for: "AUTH_PASSWORD")) ?? ""
   }
-
+  
 }
+

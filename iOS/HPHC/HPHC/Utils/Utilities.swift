@@ -471,7 +471,6 @@ class Utilities: NSObject {
     let finalString = dateFormatter.string(from: date)
     let finalDate = dateFormatter.date(from: finalString)
     return finalDate
-
   }
 
   // Method to get DateFromString for default dateFormatter

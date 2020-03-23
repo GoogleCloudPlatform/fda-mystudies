@@ -2,12 +2,38 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-	<key>AUTH_PASSWORD</key>
-	<string>$(AUTH_PASSWORD)</string>
+	<key>RESPONSE_URL</key>
+	<string>$(RESPONSE_URL)</string>
+	<key>REGISTRATION_URL</key>
+	<string>$(REGISTRATION_URL)</string>
+	<key>AUTH_URL</key>
+	<string>$(AUTH_URL)</string>
+	<key>ENROLLMENT_URL</key>
+	<string>$(ENROLLMENT_URL)</string>
+	<key>WCP_URL</key>
+	<string>$(WCP_URL)</string>
+	<key>CONSENTMGMT_URL</key>
+	<string>$(CONSENTMGMT_URL)</string>
 	<key>AUTH_USERNAME</key>
 	<string>$(AUTH_USERNAME)</string>
+	<key>AUTH_PASSWORD</key>
+	<string>$(AUTH_PASSWORD)</string>
+	<key>REGISTRATIONSERVER_API_KEY</key>
+	<string>$(REGISTRATIONSERVER_API_KEY)</string>
+	<key>REGISTRATIONSERVER_API_SECERET</key>
+	<string>$(REGISTRATIONSERVER_API_SECERET)</string>
+	<key>OrganizationID</key>
+	<string>$(ORG_ID)</string>
 	<key>ApplicationID</key>
-	<string>APP001</string>
+	<string>$(APP_ID)</string>
+	<key>StandaloneStudyId</key>
+	<string>Standalone01</string>
+	<key>IsStandaloneStudyApp</key>
+	<string>$(IS_STANDALONE_STUDY)</string>
+	<key>ProductTitleName</key>
+	<string>FDA MyStudies</string>
+	<key>WebsiteLink</key>
+	<string>www.fda.gov</string>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>en</string>
 	<key>CFBundleDisplayName</key>
@@ -40,8 +66,6 @@
 			</dict>
 		</array>
 	</dict>
-	<key>IsStandaloneStudyApp</key>
-	<string>$(IS_STANDALONE_STUDY)</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>NSAppTransportSecurity</key>
@@ -67,16 +91,6 @@
 	<string>$(PRODUCT_NAME) would like to use Motion data</string>
 	<key>NSSpeechRecognitionUsageDescription</key>
 	<string>$(PRODUCT_NAME) would like to use Speech Recognition for the task to give more accurate result.</string>
-	<key>OrganizationID</key>
-	<string>Org001</string>
-	<key>ProductTitleName</key>
-	<string>FDA MyStudies</string>
-	<key>REGISTRATION_URL</key>
-	<string>$(REGISTRATION_URL)</string>
-	<key>RESPONSE_URL</key>
-	<string>$(RESPONSE_URL)</string>
-	<key>StandaloneStudyId</key>
-	<string>Standalone01</string>
 	<key>UIAppFonts</key>
 	<array>
 		<string>Verdana Italic.ttf</string>
@@ -102,9 +116,5 @@
 	<string>Light</string>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<true/>
-	<key>WCP_URL</key>
-	<string>$(WCP_URL)</string>
-	<key>WebsiteLink</key>
-	<string>www.fda.gov</string>
 </dict>
 </plist>

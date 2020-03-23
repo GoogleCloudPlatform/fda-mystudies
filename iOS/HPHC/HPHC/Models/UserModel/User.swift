@@ -642,22 +642,22 @@ class UserStudyStatus {
 
   }
 
-  var bookmarked: Bool = false
-  var studyId: String! = ""
-  var status: StudyStatus = .yetToJoin
-  var consent: String! = ""
+  lazy var bookmarked: Bool = false
+  lazy var studyId: String = ""
+  lazy var status: StudyStatus = .yetToJoin
+  lazy var consent: String = ""
 
   /// User joined Date for study
   var joiningDate: Date!
-
-  var completion: Int = 0
-
-  var adherence: Int = 0
+  
+  lazy var completion: Int = 0
+  lazy var adherence: Int = 0
+  
   var participantId: String?
-
-  init() {
-
-  }
+  var siteID: String!
+  var tokenIdentifier: String!
+  
+  init() {}
 
   /// Initializer which initialize all properties
   /// - Parameter detail: `JSONDictionary` contians all properties of `UerStudyStatus`
@@ -680,6 +680,8 @@ class UserStudyStatus {
       if Utilities.isValidValue(someObject: detail[kStudyParticipantId] as AnyObject) {
         self.participantId = detail[kStudyParticipantId] as? String
       }
+      self.siteID = detail["siteId"] as? String ?? ""
+      self.tokenIdentifier = detail["hashedToken"] as? String ?? ""
       if Utilities.isValidValue(someObject: detail[kStudyEnrolledDate] as AnyObject) {
         self.joiningDate = Utilities.getDateFromString(
           dateString: (detail[kStudyEnrolledDate] as? String)!
@@ -710,7 +712,7 @@ class UserStudyStatus {
   func getBookmarkUserStudyStatus() -> [String: Any] {
 
     let studyDetail = [
-      kStudyId: self.studyId ?? "",
+      kStudyId: self.studyId,
       kBookmarked: self.bookmarked,
     ] as [String: Any]
     return studyDetail
@@ -720,13 +722,9 @@ class UserStudyStatus {
   /// - Returns: `JSONDictionary` object
   func getParticipatedUserStudyStatus() -> [String: Any] {
 
-    var id = ""
-    if self.participantId != nil {
-      id = self.participantId!
-    }
-
+    let id = self.participantId ?? ""
     let studyDetail = [
-      kStudyId: self.studyId!,
+      kStudyId: self.studyId,
       kStudyStatus: self.status.paramValue,
       kStudyParticipantId: id,
     ] as [String: Any]
@@ -737,7 +735,7 @@ class UserStudyStatus {
   /// - Returns: `JSONDictionary` object
   func getCompletionAdherence() -> [String: Any] {
     let studyDetail = [
-      kStudyId: self.studyId!,
+      kStudyId: self.studyId,
       "completion": completion,
       "adherence": adherence,
     ] as [String: Any]

@@ -1,6 +1,3 @@
-//
-//  AuthServerConfiguration.swift
-//  HPHC
 //  Copyright 2020 Google LLC
 //
 //  Use of this source code is governed by an MIT-style
@@ -10,9 +7,8 @@
 import UIKit
 
 enum AuthServerMethods: String {
-  //TODO : Write exact name for request method
+ 
   case login
-
   case forgotPassword
   case logout
   case changePassword
@@ -20,7 +16,6 @@ enum AuthServerMethods: String {
 
   var description: String {
     switch self {
-
     default:
       return self.apiPath
     }
@@ -58,13 +53,10 @@ enum AuthServerMethods: String {
 }
 // MARK: - Set the server end points
 enum AuthServerURLConstants {
-
-  //Staging server
-  static let ProductionURL = "https://hpreg-stage.lkcompliant.net/fdahpUserRegWS/"
-
-  static let DevelopmentURL = "http://192.168.0.44:3247/AuthServer/"
-
+  static let ProductionURL = API.authURL
+  static let DevelopmentURL = API.authURL
 }
+
 class AuthServerConfiguration: NetworkConfiguration {
   static let configuration = AuthServerConfiguration()
 
@@ -79,19 +71,14 @@ class AuthServerConfiguration: NetworkConfiguration {
 
   override func getDefaultHeaders() -> [String: String] {
 
-    var infoDict: NSDictionary?
-    if let path = Bundle.main.path(forResource: "Info", ofType: "plist") {
-      infoDict = NSDictionary(contentsOfFile: path)
-    }
-    let appId = infoDict!["ApplicationID"] as! String
-    let orgId = infoDict!["OrganizationID"] as! String
     let clientId = RegistrationServerAPIKey.apiKey
     let seceretKey = RegistrationServerSecretKey.secretKey
 
     var header = [
-      "appId": appId,
-      "orgId": orgId,
+      "appId": AppConfiguration.appID,
+      "orgId": AppConfiguration.orgID,
     ]
+    
     if User.currentUser.authToken != nil {
       header[kUserAuthToken] = User.currentUser.authToken
       header["clientToken"] = User.currentUser.clientToken

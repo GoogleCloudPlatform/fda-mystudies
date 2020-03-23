@@ -20,41 +20,53 @@
 import UIKit
 
 enum ResponseMethods: String {
-  //TODO : Write exact name for request method
-  case enroll
-
-  case validateEnrollmentToken
-  case processResponse
+  
+  case processResponse = "process-response"
   case withdrawFromStudy
-  case getParticipantResponse
-  case executeSQL
+  case getParticipantResponse = "getresponse"
+  case updateActivityState = "update-activity-state"
+  case activityState = "get-activity-state"
 
   var description: String {
     switch self {
-
     default:
-      return self.rawValue + ".api"
+      return self.path
+    }
+  }
+  
+  var base: String {
+    switch self {
+    default:
+      return "participant/"
     }
   }
 
+  var path: String {
+    switch self {
+    default:
+      return base + self.rawValue
+    }
+  }
+  
   var method: Method {
 
     switch self {
-    case .executeSQL:
+    case .activityState, .getParticipantResponse:
+      // GET Methods
       return Method(
-        methodName: (self.rawValue + ".api"),
+        methodName: self.path,
         methodType: .httpMethodGet,
         requestType: .requestTypeHTTP
       )
-    case .withdrawFromStudy, .getParticipantResponse, .validateEnrollmentToken:
+    case .withdrawFromStudy:
       return Method(
-        methodName: (self.rawValue + ".api"),
+        methodName: path,
         methodType: .httpMethodPOST,
         requestType: .requestTypeHTTP
       )
     default:
       return Method(
-        methodName: (self.rawValue + ".api"),
+        methodName: path,
         methodType: .httpMethodPOST,
         requestType: .requestTypeJSON
       )
@@ -65,12 +77,8 @@ enum ResponseMethods: String {
 
 // MARK: - Set the server end points.
 enum ResponseServerURLConstants {
-
-  /// Labkey Staging.
   static let ProductionURL = API.responseURL
-
   static let DevelopmentURL = API.responseURL  // This will change based on config file.
-
 }
 
 class ResponseServerConfiguration: NetworkConfiguration {
@@ -86,7 +94,14 @@ class ResponseServerConfiguration: NetworkConfiguration {
   }
 
   override func getDefaultHeaders() -> [String: String] {
-    return Dictionary()
+    
+    let header = [
+      "appId": AppConfiguration.appID,
+      "orgId": AppConfiguration.orgID,
+      kUserAuthToken : User.currentUser.authToken ?? "",
+      "clientToken" : User.currentUser.clientToken ?? "",
+    ]
+    return header
   }
 
   override func getDefaultRequestParameters() -> [String: Any] {
@@ -106,12 +121,16 @@ class ResponseServerConfiguration: NetworkConfiguration {
     )
 
     if let errorMessage = errorResponse["exception"] {
-
       error = NSError(
         domain: NSURLErrorDomain,
         code: 101,
         userInfo: [NSLocalizedDescriptionKey: errorMessage]
       )
+    }
+    
+    if let code = errorResponse["status"] as? Int {
+      let message = errorResponse["error"] as? String ?? ""
+      error = NSError(domain: message, code: code, userInfo: errorResponse)
     }
 
     return error

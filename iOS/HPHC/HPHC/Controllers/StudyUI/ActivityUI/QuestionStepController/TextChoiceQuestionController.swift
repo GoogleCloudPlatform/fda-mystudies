@@ -628,7 +628,7 @@ extension TextChoiceQuestionController: UITableViewDataSource, UITableViewDelega
       cell.delegate = self
       cell.otherField.text = self.otherChoice.otherChoiceText
       cell.otherField.placeholder = otherChoice.placeholder
-      cell.detailedTextLbl.text = otherChoice.detailText  // TBD
+      cell.detailedTextLbl.text = otherChoice.detailText 
       cell.titleLbl.text = self.otherChoice.otherTitle
 
       if self.isOtherCellSelected {

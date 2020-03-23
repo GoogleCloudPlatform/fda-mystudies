@@ -94,8 +94,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     let subStringFromDate = String(currentDate[..<currentIndex])
 
     if User.currentUser.userType == .FDAUser {  // Registered/LogedIn User
-
-      let index = User.currentUser.userId.index(User.currentUser.userId.endIndex, offsetBy: -16)
+      // Key byte size shouldn't exceed more than 16.
+      let index = User.currentUser.userId.index(User.currentUser.userId.endIndex, offsetBy: -43)
       let subKey = String(User.currentUser.userId[..<index])
       FDAKeychain.shared[kEncryptionKey] = subKey + subStringFromDate
     } else {  // Anonymous User
@@ -371,7 +371,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     _ application: UIApplication,
     didFailToRegisterForRemoteNotificationsWithError error: Error
   ) {
-    Logger.sharedInstance.error("Token Registration failed  \(error)")
+    // Logger.sharedInstance.error("Token Registration failed  \(error)")
   }
 
   // MARK: - Jailbreak Methods
@@ -1247,7 +1247,7 @@ extension AppDelegate: NMWebServiceDelegate {
     } else if requestName as String == WCPMethods.eligibilityConsent.method.methodName {
       self.createEligibilityConsentTask()
 
-    } else if requestName as String == RegistrationMethods.logout.method.methodName {
+    } else if requestName as String == AuthServerMethods.logout.method.methodName {
 
       if iscomingFromForgotPasscode! {
         self.handleSignoutAfterLogoutResponse()
@@ -1255,7 +1255,7 @@ extension AppDelegate: NMWebServiceDelegate {
         self.handleSignoutResponse()
       }
     } else if requestName as String
-      == RegistrationMethods.updateEligibilityConsentStatus.method
+      == ConsentServerMethods.updateEligibilityConsentStatus.method
       .methodName
     {
 
@@ -1276,7 +1276,7 @@ extension AppDelegate: NMWebServiceDelegate {
   func failedRequest(_ manager: NetworkManager, requestName: NSString, error: NSError) {
     // Remove Progress
     self.addAndRemoveProgress(add: false)
-    if requestName as String == RegistrationMethods.logout.method.methodName {
+    if requestName as String == AuthServerMethods.logout.method.methodName {
       self.addAndRemoveProgress(add: false)
 
     } else if requestName as String == WCPMethods.eligibilityConsent.method.methodName {

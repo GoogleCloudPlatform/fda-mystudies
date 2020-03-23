@@ -82,22 +82,14 @@ class WCPConfiguration: NetworkConfiguration {
   }
 
   override func getDefaultHeaders() -> [String: String] {
-
-    var infoDict: NSDictionary?
-    if let path = Bundle.main.path(forResource: "Info", ofType: "plist") {
-      infoDict = NSDictionary(contentsOfFile: path)
-    }
-    _ = infoDict!["ApplicationID"] as! String
-    _ = infoDict!["OrganizationID"] as! String
-
+    
     let token = API.authUsername + ":" + API.authPassword
-
     let base64token = "Basic " + token.toBase64()
 
     let headers = [
       "Authorization": base64token,
-      "applicationId": "FMSA001",
-      "orgId": "OrgName",
+      "applicationId": AppConfiguration.appID,
+      "orgId": AppConfiguration.orgID,
     ]
 
     return headers

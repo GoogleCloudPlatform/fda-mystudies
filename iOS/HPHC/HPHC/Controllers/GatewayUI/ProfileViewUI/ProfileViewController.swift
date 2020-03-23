@@ -322,7 +322,7 @@ class ProfileViewController: UIViewController, SlideMenuControllerDelegate {
 
   /// Api Call to SignOut.
   func sendRequestToSignOut() {
-    UserServices().logoutUser(self)
+    AuthServices().logoutUser(self)
   }
 
   /// Api call to delete account.
@@ -783,7 +783,7 @@ extension ProfileViewController: NMWebServiceDelegate {
 
   func finishedRequest(_ manager: NetworkManager, requestName: NSString, response: AnyObject?) {
     self.removeProgressIndicator()
-    if requestName as String == RegistrationMethods.logout.description {
+    if requestName as String == AuthServerMethods.logout.description {
 
       self.handleSignoutResponse()
     } else if requestName as String == RegistrationMethods.userProfile.description {
