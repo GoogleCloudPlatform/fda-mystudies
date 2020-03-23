@@ -1,3 +1,10 @@
+/*
+ * Copyright 2020 Google LLC
+ *
+ * Use of this source code is governed by an MIT-style
+ * license that can be found in the LICENSE file or at
+ * https://opensource.org/licenses/MIT.
+ */
 package com.google.cloud.healthcare.fdamystudies.utils;
 
 public enum ErrorCode {
@@ -128,8 +135,6 @@ public enum ErrorCode {
   EC_500(500, "Internal Server Error."),
 
   EC_1001(1001, "Your Session has been expired."),
-
-  // EC_1002(1002, "Your Session has been time out."),
 
   EC_1003(1003, "Invalid refresh token."),
 

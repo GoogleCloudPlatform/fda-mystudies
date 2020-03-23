@@ -1,3 +1,10 @@
+/*
+ * Copyright 2020 Google LLC
+ *
+ * Use of this source code is governed by an MIT-style
+ * license that can be found in the LICENSE file or at
+ * https://opensource.org/licenses/MIT.
+ */
 package com.google.cloud.healthcare.fdamystudies.model;
 
 import javax.persistence.Column;
@@ -5,6 +12,8 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 @Entity
@@ -34,18 +43,16 @@ public class StudyConsentBO {
   @Column(name = "pdfpath")
   private String pdfPath;
 
+  @ManyToOne
+  @JoinColumn(name = "participant_study_id", insertable = false, updatable = true)
+  private ParticipantStudiesBO participantStudiesBO;
+
   // represents whether pdf content is stored in db=0 or gcp=1
   @Column(name = "pdfStorage", nullable = false, columnDefinition = "TINYINT")
   private int pdfStorage;
 
-  /*  @Column(name = "application_id")
-  private String applicationId;
-
-  @Column(name = "org_id")
-  private String orgId;*/
-
   @Column(name = "_ts")
-  private String _ts;
+  private String ts;
 
   public Integer getId() {
     return id;
@@ -95,12 +102,12 @@ public class StudyConsentBO {
     this.pdfStorage = pdfStorage;
   }
 
-  public String get_ts() {
-    return _ts;
+  public String getTs() {
+    return ts;
   }
 
-  public void set_ts(String _ts) {
-    this._ts = _ts;
+  public void setTs(String ts) {
+    this.ts = ts;
   }
 
   public Integer getStudyInfoId() {
@@ -117,5 +124,13 @@ public class StudyConsentBO {
 
   public void setUserId(Integer userId) {
     this.userId = userId;
+  }
+
+  public ParticipantStudiesBO getParticipantStudiesBO() {
+    return participantStudiesBO;
+  }
+
+  public void setParticipantStudiesBO(ParticipantStudiesBO participantStudiesBO) {
+    this.participantStudiesBO = participantStudiesBO;
   }
 }

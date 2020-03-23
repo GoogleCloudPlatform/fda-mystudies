@@ -1,3 +1,10 @@
+/*
+ * Copyright 2020 Google LLC
+ *
+ * Use of this source code is governed by an MIT-style
+ * license that can be found in the LICENSE file or at
+ * https://opensource.org/licenses/MIT.
+ */
 package com.google.cloud.healthcare.fdamystudies.controller;
 
 import java.io.File;
@@ -33,6 +40,7 @@ import com.google.cloud.healthcare.fdamystudies.model.StudyConsentBO;
 import com.google.cloud.healthcare.fdamystudies.service.CommonService;
 import com.google.cloud.healthcare.fdamystudies.service.FileStorageService;
 import com.google.cloud.healthcare.fdamystudies.service.UserConsentManagementService;
+import com.google.cloud.healthcare.fdamystudies.utils.AppConstants;
 import com.google.cloud.healthcare.fdamystudies.utils.AppUtil;
 import com.google.cloud.healthcare.fdamystudies.utils.ErrorCode;
 import com.google.cloud.healthcare.fdamystudies.utils.MyStudiesUserRegUtil;
@@ -86,7 +94,7 @@ public class UserConsentManagementController {
                   studyInfoBean.getStudyInfoId(), userId);
           if (participantStudies != null) {
             if (consentStatusBean.getEligibility() != null) {
-              participantStudies.setEligbibility(consentStatusBean.getEligibility());
+              participantStudies.setEligibility(consentStatusBean.getEligibility());
             }
             if ((consentStatusBean.getSharing() != null)
                 && !StringUtils.isEmpty(consentStatusBean.getSharing())) {
@@ -129,7 +137,6 @@ public class UserConsentManagementController {
                           + new SimpleDateFormat("MMddyyyyHHmmss").format(new Date())
                           + ".pdf";
                   String content = consentStatusBean.getConsent().getPdf();
-
                   String path = cloudStorageService.saveFile(fileName, content, underDirectory);
                   // String path = saveStudyConsentDocument(studyConsent);
                   studyConsent.setPdfPath(path);
@@ -143,7 +150,6 @@ public class UserConsentManagementController {
                 studyConsent.setStudyInfoId(studyInfoBean.getStudyInfoId());
                 studyConsent.setStatus(consentStatusBean.getConsent().getStatus());
                 studyConsent.setVersion(consentStatusBean.getConsent().getVersion());
-                studyConsent.setPdf(consentStatusBean.getConsent().getPdf());
                 if ((consentStatusBean.getConsent().getPdf() != null)
                     && !StringUtils.isEmpty(consentStatusBean.getConsent().getPdf())) {
                   String underDirectory = userId + "/" + consentStatusBean.getStudyId();
@@ -171,6 +177,13 @@ public class UserConsentManagementController {
                   && message.equalsIgnoreCase(
                       MyStudiesUserRegUtil.ErrorCodes.SUCCESS.getValue()))) {
                 errorBean = new ErrorBean(ErrorCode.EC_200.code(), ErrorCode.EC_110.errorMessage());
+
+                commonService.createActivityLog(
+                    userId,
+                    AppConstants.AUDIT_EVENT_UPDATE_ELIGIBILITY_CONSENT_NAME,
+                    String.format(
+                        AppConstants.AUDIT_EVENT_UPDATE_ELIGIBILITY_CONSENT_DESC,
+                        consentStatusBean.getStudyId()));
               } else {
                 errorBean = new ErrorBean(ErrorCode.EC_111.code(), ErrorCode.EC_111.errorMessage());
               }

@@ -1,3 +1,10 @@
+/*
+ * Copyright 2020 Google LLC
+ *
+ * Use of this source code is governed by an MIT-style
+ * license that can be found in the LICENSE file or at
+ * https://opensource.org/licenses/MIT.
+ */
 package com.google.cloud.healthcare.fdamystudies.utils;
 
 import java.text.SimpleDateFormat;
@@ -29,6 +36,7 @@ public class MyStudiesUserRegUtil {
     STATUS_107("107"), // Failed to complete transaction.
     EC_500("500"), // Internal Server Error
     SESSION_EXPIRED_MSG("Session expired."),
+
     INVALID_CLIENTID_OR_SECRET_KEY("Invalid Client Id or Secret Key"),
     ACCESS_TOKEN_OR_USER_ID_INVALID("Access token or User id is invalid"),
     INVALID_AUTH_CODE("INVALID_AUTH_CODE"),
@@ -88,7 +96,8 @@ public class MyStudiesUserRegUtil {
     ORG_NOTEXIST(
         "Sorry, this email is already in use for platform-powered app(s) belonging to another organization. Please use another email to sign up for this app."),
     LOGIN_ORG_NOTEXIST(
-        "Sorry, this account is in use for platform-powered app(s) belonging to another organization. Please sign up with a different email and try again.");
+        "Sorry, this account is in use for platform-powered app(s) belonging to another organization. Please sign up with a different email and try again."),
+    UNAUTHORIZED("Unauthorized");
 
     private final String value;
 

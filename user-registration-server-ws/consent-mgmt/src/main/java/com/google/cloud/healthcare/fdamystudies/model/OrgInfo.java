@@ -7,7 +7,6 @@
  */
 package com.google.cloud.healthcare.fdamystudies.model;
 
-import java.io.Serializable;
 import java.util.Date;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -17,26 +16,37 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
 @Setter
 @Getter
+@ToString
 @Entity
-@Table(name = "user_app_details")
-public class UserAppDetailsBO implements Serializable {
-
-  private static final long serialVersionUID = 4985607753888575491L;
-
+@Table(name = "org_info")
+public class OrgInfo {
   @Id
-  @GeneratedValue(strategy = GenerationType.AUTO)
-  @Column(name = "user_app_details_id")
-  private Integer userAppDetailsId;
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  @Column(name = "id")
+  private Integer id;
 
-  @Column(name = "app_info_id")
-  private Integer appInfoId;
+  @Column(name = "name")
+  private String name;
 
-  @Column(name = "user_details_id")
-  private Integer userDetailsId;
+  // added by malay
+  // this field is coming from WCP hence added here
+
+  @Column(name = "org_id")
+  private String orgId;
 
   @Column(name = "created_on")
   private Date createdOn;
+
+  @Column(name = "created_by", columnDefinition = "INT(20) default 0")
+  private Integer createdBy;
+
+  @Column(name = "modified_by", columnDefinition = "INT(20)")
+  private Integer modifiedBy;
+
+  @Column(name = "modified_date")
+  private Date modifiedDate;
 }

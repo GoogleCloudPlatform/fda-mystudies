@@ -1,3 +1,10 @@
+/*
+ * Copyright 2020 Google LLC
+ *
+ * Use of this source code is governed by an MIT-style
+ * license that can be found in the LICENSE file or at
+ * https://opensource.org/licenses/MIT.
+ */
 package com.google.cloud.healthcare.fdamystudies.model;
 
 import java.time.LocalDateTime;
@@ -7,6 +14,8 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import lombok.Getter;
 import lombok.Setter;
@@ -25,30 +34,21 @@ public class ParticipantStudiesBO {
   @Column(name = "participant_id", unique = true)
   private String participantId;
 
-  /*  @ManyToOne
-  @JoinColumn(name = "study_info_id", insertable = false, updatable = false)
-  private StudyInfoBO studyInfoBo;*/
-  @Column(name = "study_info_id")
-  private Integer studyInfoId;
+  @ManyToOne
+  @JoinColumn(name = "study_info_id", insertable = true, updatable = false)
+  private StudyInfoBO studyInfo;
 
-  /*  @ManyToOne
-  @JoinColumn(name = "participant_registry_site_id", insertable = false, updatable = true)
-  private ParticipantRegistrySite participantRegistrySite;*/
+  @ManyToOne
+  @JoinColumn(name = "participant_registry_site_id", insertable = true, updatable = false)
+  private ParticipantRegistrySite participantRegistrySite;
 
-  @Column(name = "participant_registry_site_id")
-  private Integer parfticipantRegistrySiteId;
+  @ManyToOne
+  @JoinColumn(name = "site_id", insertable = true, updatable = false)
+  private SiteBo siteBo;
 
-  /*  @ManyToOne
-  @JoinColumn(name = "site_id", insertable = false, updatable = false)
-  private SiteBo siteBo;*/
-  @Column(name = "site_id")
-  private Integer siteId;
-
-  /*@ManyToOne
-  @JoinColumn(name = "user_details_id", insertable = false, updatable = false)
-  private UserDetails userDetails;*/
-  @Column(name = "user_details_id")
-  private Integer userId;
+  @ManyToOne
+  @JoinColumn(name = "user_details_id", insertable = true, updatable = false)
+  private UserDetailsBO userDetails;
 
   @Column(name = "consent_status", columnDefinition = "TINYINT(1)")
   private Boolean consentStatus = false;
@@ -59,8 +59,8 @@ public class ParticipantStudiesBO {
   @Column(name = "bookmark", columnDefinition = "TINYINT(1)")
   private Boolean bookmark = false;
 
-  @Column(name = "eligbibility", columnDefinition = "TINYINT(1)")
-  private Boolean eligbibility = false;
+  @Column(name = "eligibility", columnDefinition = "TINYINT(1)")
+  private Boolean eligibility = false;
 
   @Column(name = "enrolled_date")
   private Date enrolledDate;
@@ -73,9 +73,6 @@ public class ParticipantStudiesBO {
 
   @Column(name = "adherence")
   private Integer adherence;
-
-  @Column(name = "_ts")
-  private String _ts;
 
   @Column(name = "withdrawal_date")
   private LocalDateTime withdrawalDate;

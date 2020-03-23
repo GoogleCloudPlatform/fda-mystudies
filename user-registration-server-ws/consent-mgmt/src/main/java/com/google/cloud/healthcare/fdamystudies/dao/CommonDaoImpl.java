@@ -1,3 +1,10 @@
+/*
+ * Copyright 2020 Google LLC
+ *
+ * Use of this source code is governed by an MIT-style
+ * license that can be found in the LICENSE file or at
+ * https://opensource.org/licenses/MIT.
+ */
 package com.google.cloud.healthcare.fdamystudies.dao;
 
 import java.util.List;
@@ -17,7 +24,7 @@ import org.springframework.util.StringUtils;
 import com.google.cloud.healthcare.fdamystudies.bean.AppOrgInfoBean;
 import com.google.cloud.healthcare.fdamystudies.config.ApplicationPropertyConfiguration;
 import com.google.cloud.healthcare.fdamystudies.model.AppInfoDetailsBO;
-import com.google.cloud.healthcare.fdamystudies.model.OraganizationsInfoBO;
+import com.google.cloud.healthcare.fdamystudies.model.OrgInfo;
 import com.google.cloud.healthcare.fdamystudies.model.UserDetailsBO;
 import com.google.cloud.healthcare.fdamystudies.utils.AppConstants;
 
@@ -34,6 +41,7 @@ public class CommonDaoImpl implements CommonDao {
   public AppOrgInfoBean getUserAppDetailsByAllApi(String userId, String appId, String orgId) {
     logger.info("UserConsentManagementDaoImpl validatedUserAppDetailsByAllApi() - Started ");
     Transaction transaction = null;
+
     CriteriaBuilder criteriaBuilder = null;
     CriteriaQuery<AppInfoDetailsBO> appDetailsBoCriteria = null;
     Root<AppInfoDetailsBO> appDetailsBoRoot = null;
@@ -41,25 +49,23 @@ public class CommonDaoImpl implements CommonDao {
     List<AppInfoDetailsBO> appDetailsList = null;
     AppInfoDetailsBO appDetailsBO = null;
 
-    CriteriaQuery<OraganizationsInfoBO> orgDetailsBoCriteria = null;
-    Root<OraganizationsInfoBO> orgDetailsBoRoot = null;
+    CriteriaQuery<OrgInfo> orgDetailsBoCriteria = null;
+    Root<OrgInfo> orgDetailsBoRoot = null;
     Predicate[] orgDetailsBoPredicates = new Predicate[1];
-    List<OraganizationsInfoBO> orgDetailsBoList = null;
-    OraganizationsInfoBO orgDetailsBo = null;
+    List<OrgInfo> orgDetailsBoList = null;
+    OrgInfo orgDetailsBo = null;
     AppOrgInfoBean appOrgInfoBean = new AppOrgInfoBean();
     String message = "";
     int appInfoId = 0;
     int orgInfoId = 0;
 
     try (Session session = entityManagerFactory.unwrap(SessionFactory.class).openSession()) {
-      //      transaction = session.beginTransaction();
       criteriaBuilder = session.getCriteriaBuilder();
 
       if (!StringUtils.isEmpty(appId)) {
         appDetailsBoCriteria = criteriaBuilder.createQuery(AppInfoDetailsBO.class);
         appDetailsBoRoot = appDetailsBoCriteria.from(AppInfoDetailsBO.class);
-        appDetailsPredicates[0] =
-            criteriaBuilder.equal(appDetailsBoRoot.get(AppConstants.CUSTOM_APPLICATION_ID), appId);
+        appDetailsPredicates[0] = criteriaBuilder.equal(appDetailsBoRoot.get("appId"), appId);
         appDetailsBoCriteria.select(appDetailsBoRoot).where(appDetailsPredicates);
         appDetailsList = session.createQuery(appDetailsBoCriteria).getResultList();
         if (!appDetailsList.isEmpty()) {
@@ -70,16 +76,15 @@ public class CommonDaoImpl implements CommonDao {
 
       if (!StringUtils.isEmpty(orgId)) {
 
-        orgDetailsBoCriteria = criteriaBuilder.createQuery(OraganizationsInfoBO.class);
-        orgDetailsBoRoot = orgDetailsBoCriteria.from(OraganizationsInfoBO.class);
-        orgDetailsBoPredicates[0] =
-            criteriaBuilder.equal(orgDetailsBoRoot.get("customOrgId"), orgId);
+        orgDetailsBoCriteria = criteriaBuilder.createQuery(OrgInfo.class);
+        orgDetailsBoRoot = orgDetailsBoCriteria.from(OrgInfo.class);
+        orgDetailsBoPredicates[0] = criteriaBuilder.equal(orgDetailsBoRoot.get("orgId"), orgId);
         orgDetailsBoCriteria.select(orgDetailsBoRoot).where(orgDetailsBoPredicates);
         orgDetailsBoList = session.createQuery(orgDetailsBoCriteria).getResultList();
 
         if (!orgDetailsBoList.isEmpty()) {
           orgDetailsBo = orgDetailsBoList.get(0);
-          orgInfoId = orgDetailsBo.getOrgInfoId();
+          orgInfoId = orgDetailsBo.getId();
         }
       }
       appOrgInfoBean.setAppInfoId(appInfoId);
@@ -106,7 +111,6 @@ public class CommonDaoImpl implements CommonDao {
     UserDetailsBO userDetailsBO = null;
     Integer userDetailsId = 0;
     try (Session session = entityManagerFactory.unwrap(SessionFactory.class).openSession()) {
-      //      transaction = session.beginTransaction();
       criteriaBuilder = session.getCriteriaBuilder();
       if (!StringUtils.isEmpty(userId)) {
 

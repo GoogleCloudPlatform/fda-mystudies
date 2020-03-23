@@ -8,7 +8,7 @@
 package com.google.cloud.healthcare.fdamystudies.model;
 
 import java.io.Serializable;
-import java.util.Date;
+import java.time.LocalDateTime;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -21,22 +21,25 @@ import lombok.Setter;
 @Setter
 @Getter
 @Entity
-@Table(name = "login_attempts")
-public class LoginAttemptsBO implements Serializable {
+@Table(name = "activity_log")
+public class ActivityLogBO implements Serializable {
 
-  private static final long serialVersionUID = 4985607753888575491L;
+  private static final long serialVersionUID = -3019529323339411129L;
 
   @Id
+  @Column(name = "activity_log_id")
   @GeneratedValue(strategy = GenerationType.AUTO)
-  @Column(name = "id")
   private Integer id;
 
-  @Column(name = "email")
-  private String email;
+  @Column(name = "auth_user_id")
+  private String authUserId;
 
-  @Column(name = "last_modified")
-  private Date lastModified;
+  @Column(name = "actvity_name")
+  private String activityName;
 
-  @Column(name = "no_of_attempts")
-  private Integer attempts;
+  @Column(name = "activity_description")
+  private String activtyDesc;
+
+  @Column(name = "activity_date_time")
+  private LocalDateTime activityDateTime;
 }

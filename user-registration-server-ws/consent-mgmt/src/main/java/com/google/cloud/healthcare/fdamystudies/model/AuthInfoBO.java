@@ -1,5 +1,14 @@
+/*
+ * Copyright 2020 Google LLC
+ *
+ * Use of this source code is governed by an MIT-style
+ * license that can be found in the LICENSE file or at
+ * https://opensource.org/licenses/MIT.
+ */
 package com.google.cloud.healthcare.fdamystudies.model;
 
+import java.io.Serializable;
+import java.time.LocalDateTime;
 import java.util.Date;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -9,12 +18,14 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
 @Setter
 @Getter
+@ToString
 @Entity
 @Table(name = "auth_info")
-public class AuthInfoBO {
+public class AuthInfoBO implements Serializable {
 
   private static final long serialVersionUID = 4985607753888575491L;
 
@@ -45,13 +56,10 @@ public class AuthInfoBO {
   private String iosAppVersion;
 
   @Column(name = "created_on")
-  private Date createdOn;
+  private LocalDateTime createdOn;
 
   @Column(name = "modified_on")
   private Date modifiedOn;
-
-  /*@Column(name = "participant_id")
-  private String participantId;*/
 
   @Column(name = "remote_notification_flag", columnDefinition = "TINYINT(1)")
   private Boolean remoteNotificationFlag = false;

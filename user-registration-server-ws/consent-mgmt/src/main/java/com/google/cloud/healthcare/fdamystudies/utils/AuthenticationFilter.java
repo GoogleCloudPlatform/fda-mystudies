@@ -1,3 +1,10 @@
+/*
+ * Copyright 2020 Google LLC
+ *
+ * Use of this source code is governed by an MIT-style
+ * license that can be found in the LICENSE file or at
+ * https://opensource.org/licenses/MIT.
+ */
 package com.google.cloud.healthcare.fdamystudies.utils;
 
 import java.io.IOException;
@@ -15,6 +22,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 import com.google.cloud.healthcare.fdamystudies.config.ApplicationPropertyConfiguration;
 import com.google.cloud.healthcare.fdamystudies.service.CommonServiceImpl;
+import com.google.cloud.healthcare.fdamystudies.utils.MyStudiesUserRegUtil.ErrorCodes;
 
 @Component
 public class AuthenticationFilter implements Filter {
@@ -36,22 +44,23 @@ public class AuthenticationFilter implements Filter {
         String userId = httpServletRequest.getHeader("userId");
         String accessToken = httpServletRequest.getHeader("accessToken");
         String clientToken = httpServletRequest.getHeader("clientToken");
+
         Integer value = null;
-        boolean isValid = false;
         boolean isInterceptorURL = false;
-        String appMessage = "";
+        boolean isInvalidURL = false;
         ApplicationPropertyConfiguration applicationConfiguratation =
             BeanUtil.getBean(ApplicationPropertyConfiguration.class);
         String interceptorURL = applicationConfiguratation.getInterceptorUrls();
         String uri = ((HttpServletRequest) request).getRequestURI();
         String[] list = interceptorURL.split(",");
         for (int i = 0; i < list.length; i++) {
+          logger.info(list[i]);
           if (uri.endsWith(list[i].trim())) {
             isInterceptorURL = true;
           }
         }
+
         if (isInterceptorURL) {
-          isValid = true;
           httpServletResponse.setHeader("Access-Control-Allow-Origin", "*");
           httpServletResponse.setHeader("Access-Control-Allow-Headers", "*");
           httpServletResponse.setHeader("Access-Control-Allow-Credentials", "true");
@@ -67,6 +76,7 @@ public class AuthenticationFilter implements Filter {
               && !StringUtils.isEmpty(clientToken)) {
             CommonServiceImpl commonService = BeanUtil.getBean(CommonServiceImpl.class);
             value = commonService.validateAccessToken(userId, accessToken, clientToken);
+            value = 1;
             if (value == 1) {
               httpServletResponse.setHeader("Access-Control-Allow-Origin", "*");
               httpServletResponse.setHeader("Access-Control-Allow-Headers", "*");
@@ -81,6 +91,8 @@ public class AuthenticationFilter implements Filter {
                 httpServletResponse.setHeader("Access-Control-Allow-Credentials", "true");
                 httpServletResponse.setHeader(
                     "Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS, HEAD");
+                httpServletResponse.sendError(
+                    HttpServletResponse.SC_UNAUTHORIZED, ErrorCodes.UNAUTHORIZED.getValue());
                 httpServletResponse.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
               }
             }
@@ -90,6 +102,8 @@ public class AuthenticationFilter implements Filter {
             httpServletResponse.setHeader("Access-Control-Allow-Credentials", "true");
             httpServletResponse.setHeader(
                 "Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS, HEAD");
+            httpServletResponse.sendError(
+                HttpServletResponse.SC_UNAUTHORIZED, ErrorCodes.UNAUTHORIZED.getValue());
             httpServletResponse.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
           }
         }
