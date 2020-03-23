@@ -45,9 +45,6 @@ import org.researchstack.backbone.ui.step.body.StepBody;
 
 public class SingleChoiceTextQuestionBody<T>
     implements StepBody, CompoundButton.OnCheckedChangeListener {
-  // -*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
-  // Constructor Fields
-  // -*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
   private QuestionStepCustom step;
   private StepResult<T[]> result;
   private ChoiceText<T>[] choices;

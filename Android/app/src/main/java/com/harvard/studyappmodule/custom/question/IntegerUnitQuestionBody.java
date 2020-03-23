@@ -34,16 +34,9 @@ import org.researchstack.backbone.ui.step.body.StepBody;
 import org.researchstack.backbone.utils.TextUtils;
 
 public class IntegerUnitQuestionBody implements StepBody {
-  // -*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
-  // Constructor Fields
-  // -*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
   private QuestionStepCustom step;
   private StepResult<Integer> result;
   private IntegerUnitAnswerFormat format;
-
-  // -*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
-  // View Fields
-  // -*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
   private EditText editText;
   private TextView unit;
 

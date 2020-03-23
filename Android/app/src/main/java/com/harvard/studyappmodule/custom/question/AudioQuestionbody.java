@@ -36,15 +36,9 @@ public class AudioQuestionbody implements StepBody {
   private StepResult<String> result;
   private MediaRecorder mediaRecorder;
   private boolean next;
-  // -*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
-  // View Fields
-  // -*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
   private String audioSavePathInDevice = null;
 
   public AudioQuestionbody(Step step, StepResult result) {
-    // -*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
-    // Constructor Fields
-    // -*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
     QuestionStepCustom step1 = (QuestionStepCustom) step;
     this.result = result == null ? new StepResult<>(step1) : result;
   }

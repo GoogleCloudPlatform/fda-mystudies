@@ -36,10 +36,6 @@ import org.researchstack.backbone.ui.step.body.BodyAnswer;
 import org.researchstack.backbone.ui.step.body.StepBody;
 
 public class ValuePickerQuestion<T> implements StepBody {
-
-  // -*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
-  // Constructor Fields
-  // -*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
   private QuestionStepCustom step;
   private StepResult<String> result;
   private Choice<T>[] choices;

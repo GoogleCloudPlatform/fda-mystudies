@@ -69,9 +69,6 @@ public class LocationQuestion
         GoogleApiClient.OnConnectionFailedListener,
         LocationListener,
         GpsStatus.Listener {
-  // -*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
-  // Constructor Fields
-  // -*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
   private QuestionStepCustom step;
   private StepResult<String> result;
   private LocationAnswerFormat format;

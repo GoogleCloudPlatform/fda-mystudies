@@ -29,9 +29,6 @@ import org.researchstack.backbone.ui.step.body.BodyAnswer;
 import org.researchstack.backbone.ui.step.body.StepBody;
 
 public class TaskInstructionStep implements StepBody {
-  // -*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
-  // Constructor Fields
-  // -*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
   private QuestionStepCustom step;
   private TaskInstructionAnswerFormat format;
 

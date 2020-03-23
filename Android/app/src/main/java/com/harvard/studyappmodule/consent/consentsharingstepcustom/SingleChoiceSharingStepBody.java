@@ -35,9 +35,6 @@ import org.researchstack.backbone.ui.step.body.BodyAnswer;
 import org.researchstack.backbone.ui.step.body.StepBody;
 
 public class SingleChoiceSharingStepBody<T> implements StepBody {
-  // -*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
-  // Constructor Fields
-  // -*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
   private ConsentSharingStepCustom step;
   private StepResult<T> result;
   private ChoiceAnswerFormat format;

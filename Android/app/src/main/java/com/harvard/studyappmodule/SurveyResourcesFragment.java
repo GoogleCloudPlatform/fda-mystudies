@@ -915,7 +915,7 @@ public class SurveyResourcesFragment<T> extends Fragment
 
     HashMap<String, String> header = new HashMap();
     header.put(
-        "auth",
+        "accessToken",
         AppController.getHelperSharedPreference()
             .readPreference(mContext, mContext.getResources().getString(R.string.auth), ""));
     header.put(
@@ -925,16 +925,20 @@ public class SurveyResourcesFragment<T> extends Fragment
 
     JSONObject jsonObject = new JSONObject();
 
+    Studies mStudies =
+            dbServiceSubscriber.getStudies(((SurveyActivity) mContext).getStudyId(), mRealm);
+
     try {
+      jsonObject.put("participantId", mStudies.getParticipantId());
       jsonObject.put("studyId", ((SurveyActivity) mContext).getStudyId());
-      jsonObject.put("deleteData", mRegistrationServer);
+      jsonObject.put("delete", mRegistrationServer);
     } catch (JSONException e) {
       Logger.log(e);
     }
 
     RegistrationServerEnrollmentConfigEvent registrationServerEnrollmentConfigEvent =
         new RegistrationServerEnrollmentConfigEvent(
-            "delete_object",
+            "post_json",
             URLs.WITHDRAW,
             UPDATE_USERPREFERENCE_RESPONSECODE,
             mContext,
@@ -954,31 +958,10 @@ public class SurveyResourcesFragment<T> extends Fragment
   public void responseServerWithdrawFromStudy(String flag) {
     mRegistrationServer = flag;
     AppController.getHelperProgressDialog().showProgress(getActivity(), "", "", false);
-    try {
-      Studies studies = dbServiceSubscriber.getParticipantId(mStudyId, mRealm);
-      HashMap<String, String> params = new HashMap<>();
-      params.put("participantId", studies.getParticipantId());
-      params.put("delete", flag);
-      WithdrawFromStudyEvent withdrawFromStudyEvent = new WithdrawFromStudyEvent();
-      ResponseServerConfigEvent responseServerConfigEvent =
-          new ResponseServerConfigEvent(
-              "post_json",
-              URLs.WITHDRAWFROMSTUDY,
-              WITHDRAWFROMSTUDY,
-              mContext,
-              LoginData.class,
-              params,
-              null,
-              null,
-              false,
-              this);
-      withdrawFromStudyEvent.setResponseServerConfigEvent(responseServerConfigEvent);
-      StudyModulePresenter studyModulePresenter = new StudyModulePresenter();
-      studyModulePresenter.performWithdrawFromStudy(withdrawFromStudyEvent);
-    } catch (Exception e) {
-      AppController.getHelperProgressDialog().dismissDialog();
-      Logger.log(e);
-    }
+    dbServiceSubscriber.deleteActivityRunsFromDbByStudyID(
+            mContext, ((SurveyActivity) mContext).getStudyId());
+    dbServiceSubscriber.deleteResponseFromDb(((SurveyActivity) mContext).getStudyId(), mRealm);
+    updateuserpreference();
   }
 
   @Override

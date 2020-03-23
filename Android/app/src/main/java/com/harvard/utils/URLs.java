@@ -39,7 +39,7 @@ public class URLs {
   public static String RESEND_CONFIRMATION = "resendConfirmation";
   public static String DELETE_ACCOUNT = "deactivate";
 
-  public static String WITHDRAW = "withdraw";
+  public static String WITHDRAW = "withdrawfromstudy";
 
   // Registration Enrollment Server
   public static String UPDATE_STUDY_PREFERENCE = "updateStudyState";

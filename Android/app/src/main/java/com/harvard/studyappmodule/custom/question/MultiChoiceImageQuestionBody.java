@@ -32,9 +32,6 @@ import org.researchstack.backbone.ui.step.body.BodyAnswer;
 import org.researchstack.backbone.ui.step.body.StepBody;
 
 public class MultiChoiceImageQuestionBody<T> implements StepBody {
-  // -*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
-  // Constructor Fields
-  // -*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
   private QuestionStepCustom step;
   private StepResult<T> result;
   private ChoiceCustomImage<T>[] choices;
@@ -46,7 +43,6 @@ public class MultiChoiceImageQuestionBody<T> implements StepBody {
     this.result = result == null ? new StepResult<>(step) : result;
     MultiChoiceImageAnswerFormat format = (MultiChoiceImageAnswerFormat) this.step.getAnswerFormat1();
     this.choices = format.getChoicechoices();
-    //        this.mContext = format.getContext();
 
     // Restore results
     T resultValue = this.result.getResult();

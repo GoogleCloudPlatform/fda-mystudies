@@ -545,14 +545,6 @@ public class ApiCall<T, V> extends AsyncTask<T, String, String> {
 
   public void onPostExecute(String response) {
     String msg;
-    Log.e(
-        "response",
-        ""
-            + response
-            + "  "
-            + mResponseModel.getServermsg()
-            + "   "
-            + mResponseModel.getResponseCode());
     switch (response) {
       case "timeout":
         msg = mResponseModel.getServermsg();

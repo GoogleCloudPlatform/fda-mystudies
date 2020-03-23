@@ -44,16 +44,9 @@ import org.researchstack.backbone.ui.step.body.StepBody;
 import org.researchstack.backbone.ui.views.ObservableScrollView;
 
 public class FormBodyCustom implements StepBody {
-  // -*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
-  // Constructor Fields
-  // -*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
   private QuestionStep step;
   private StepResult<StepResult> result;
   private ChoiceAnswerFormatCustom format;
-
-  // -*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
-  // View Fields
-  // -*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
   private List<StepBody> formStepChildren;
   private ArrayList<QuestionStep> questionSteps;
   private ArrayList<QuestionStep> tempquestionSteps;

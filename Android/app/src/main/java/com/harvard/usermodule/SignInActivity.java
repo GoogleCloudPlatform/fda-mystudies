@@ -364,7 +364,6 @@ public class SignInActivity extends AppCompatActivity implements ApiCall.OnAsync
       AppController.getHelperSharedPreference()
           .writePreference(SignInActivity.this, getString(R.string.json_object_filter), "");
       loginData = (LoginData) response;
-      loginData.setVerified(true);
       if (loginData != null) {
         mUserAuth = loginData.getAuth();
         mUserID = loginData.getUserId();

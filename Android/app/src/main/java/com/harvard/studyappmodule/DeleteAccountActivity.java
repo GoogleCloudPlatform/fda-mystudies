@@ -152,14 +152,8 @@ public class DeleteAccountActivity extends AppCompatActivity
                 }
               }
             }
-            // if joined study is there then withdraw that
-            if (noData) {
-              responseServerWithdrawFromStudy(
-                  mStudyIdList.get(0), mStoreWithdrawalTypeDeleteFlag.get(0));
-            } else if (mStudyIdList.size() == 0 || mStudyIdList == null) {
-              // if joined study is not there, then directly call this method
-              deactivateAccount();
-            }
+            AppController.getHelperProgressDialog().showProgress(DeleteAccountActivity.this, "", "", false);
+            deactivateAccount();
           }
         });
   }
