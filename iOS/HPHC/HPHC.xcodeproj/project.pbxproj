@@ -2329,7 +2329,7 @@
 /* Begin XCBuildConfiguration section */
 		6E7D2D7C1E433E8800763D4C /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 6FD1E10C23EC31A7009DACAE /* Development.xcconfig */;
+			baseConfigurationReference = 6F07148824279452002749DA /* Default.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
@@ -2390,7 +2390,7 @@
 		};
 		6E7D2D7D1E433E8800763D4C /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 6FD1E11423ED41B0009DACAE /* Production.xcconfig */;
+			baseConfigurationReference = 6F07148824279452002749DA /* Default.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
