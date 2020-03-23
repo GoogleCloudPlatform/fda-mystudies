@@ -240,11 +240,13 @@ class StudyHomeViewController: UIViewController {
       let appdelegate = (UIApplication.shared.delegate as? AppDelegate)!
       consentResult?.token = appdelegate.consentToken
     }
-    
+
     EnrollServices().enrollForStudy(
       studyId: (Study.currentStudy?.studyId)!,
-      token: (ConsentBuilder.currentConsent?.consentResult?.token)!, delegate: self)
-    
+      token: (ConsentBuilder.currentConsent?.consentResult?.token)!,
+      delegate: self
+    )
+
     let notificationName = Notification.Name(kPDFCreationNotificationId)
     NotificationCenter.default.addObserver(
       self,
@@ -789,7 +791,7 @@ class StudyHomeViewController: UIViewController {
   func handleStudyEnrollmentResponse(response: [String: Any]) {
 
     if let apptoken = response["appToken"] as? String {
-      
+
       let siteID = response["siteId"] as? String ?? ""
       let tokenIdentifier = response["hashedToken"] as? String ?? ""
       // update token
@@ -946,15 +948,15 @@ extension StudyHomeViewController: NMWebServiceDelegate {
       == ConsentServerMethods.updateEligibilityConsentStatus.method
       .methodName
     {
-  
+
       if User.currentUser.getStudyStatus(studyId: (Study.currentStudy?.studyId)!)
         == UserStudyStatus
-          .StudyStatus.inProgress
+        .StudyStatus.inProgress
       {
         isGettingJoiningDate = true
         EnrollServices().getStudyStates(self)
       }
-      
+
       self.postStudyEnrollmentFinishedNotif()
     }
 

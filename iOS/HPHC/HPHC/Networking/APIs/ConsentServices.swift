@@ -70,9 +70,11 @@ class ConsentServices: NSObject {
   /// - Parameters:
   ///   - studyId: ID of `Study`
   ///   - delegate: Class object to receive response
-  func getConsentPDFForStudy(studyId: String,
-                             consentVersion: String,
-                             delegate: NMWebServiceDelegate) {
+  func getConsentPDFForStudy(
+    studyId: String,
+    consentVersion: String,
+    delegate: NMWebServiceDelegate
+  ) {
 
     self.delegate = delegate
 
@@ -140,7 +142,7 @@ extension ConsentServices: NMWebServiceDelegate {
   }
 
   func failedRequest(_ manager: NetworkManager, requestName: NSString, error: NSError) {
- 
+
     if requestName as String == AuthServerMethods.getRefreshedToken.description && error.code == 401
     {  // Session expired.
       delegate?.failedRequest(manager, requestName: requestName, error: error)

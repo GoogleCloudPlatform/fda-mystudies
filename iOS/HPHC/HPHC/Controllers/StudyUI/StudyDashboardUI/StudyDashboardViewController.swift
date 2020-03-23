@@ -440,7 +440,7 @@ extension StudyDashboardViewController: NMWebServiceDelegate {
     if requestName as String == WCPMethods.consentDocument.method.methodName {
       self.removeProgressIndicator()
     } else if requestName as String == ResponseMethods.getParticipantResponse.description {
-      self.handleExecuteSQLResponse() // TBD :- Call APIs in the parallel (DispatchQueryGroup)
+      self.handleExecuteSQLResponse()  // TBD :- Call APIs in the parallel (DispatchQueryGroup)
     } else {
       self.removeProgressIndicator()
     }

@@ -50,8 +50,9 @@ class DBStudy: Object {
   @objc dynamic var signedConsentFilePath: String?
 
   // Study state info
-  
+
   @objc dynamic var participatedStatus: Int = 0
+
   @objc dynamic var participatedId: String?
   @objc dynamic var siteID: String?
   @objc dynamic var tokenIdentifier: String?
@@ -69,8 +70,9 @@ class DBStudy: Object {
   @objc dynamic var activitiesLocalNotificationUpdated = false
 
   // Withdraw Configration
-  
+
   @objc dynamic var withdrawalConfigrationMessage: String?
+
   @objc dynamic var withdrawalConfigrationType: String?
 
   var sections = List<DBOverviewSection>()

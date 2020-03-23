@@ -40,7 +40,7 @@ class EnrollServices: NSObject {
     let headers = ["userId": User.currentUser.userId ?? ""]
     self.sendRequestWith(method: method, params: params, headers: headers)
   }
-  
+
   /// Creates a request to get `Study` States
   /// - Parameter delegate: Class object to receive response
   func getStudyStates(_ delegate: NMWebServiceDelegate) {
@@ -102,7 +102,7 @@ class EnrollServices: NSObject {
 
     self.sendRequestWith(method: method, params: params, headers: headerParams)
   }
-  
+
   /// Creates a request to enroll in a `Study`
   /// - Parameters:
   ///   - studyId: ID of `Study`
@@ -117,7 +117,7 @@ class EnrollServices: NSObject {
       kStudyId: studyId,
     ]
     let headers: [String: String] = [
-      "userId": User.currentUser.userId ?? ""
+      "userId": User.currentUser.userId ?? "",
     ]
     self.sendRequestWith(method: method, params: params, headers: headers)
   }
@@ -154,7 +154,7 @@ class EnrollServices: NSObject {
     )
 
   }
-  
+
   /// Handles `Study` status response
   /// - Parameter response: Webservice response
   func handleGetStudyStatesResponse(response: [String: Any]) {
@@ -168,9 +168,9 @@ class EnrollServices: NSObject {
       }
     }
   }
-  
+
   func handleEnrollForStudy(response: [String: Any]) {}
-  
+
   /// Sends Request
   /// - Parameters:
   ///   - method: instance of `Method`
@@ -192,7 +192,7 @@ class EnrollServices: NSObject {
 
 }
 extension EnrollServices: NMWebServiceDelegate {
-  
+
   func startedRequest(_ manager: NetworkManager, requestName: NSString) {
     delegate?.startedRequest(manager, requestName: requestName)
   }
@@ -201,16 +201,16 @@ extension EnrollServices: NMWebServiceDelegate {
     switch requestName {
     case EnrollmentMethods.studyState.description as String:
       self.handleGetStudyStatesResponse(response: response as? JSONDictionary ?? [:])
-      
+
     case EnrollmentMethods.updateStudyState.description as String: break
     case EnrollmentMethods.validateEnrollmentToken.description as String: break
-      
+
     case EnrollmentMethods.enroll.description as String:
       self.handleEnrollForStudy(response: response as? [String: Any] ?? [:])
-      
+
     case AuthServerMethods.getRefreshedToken.description as String:
       self.handleUpdateTokenResponse(response: (response as? [String: Any])!)
-      
+
     default: break
     }
     delegate?.finishedRequest(manager, requestName: requestName, response: response)

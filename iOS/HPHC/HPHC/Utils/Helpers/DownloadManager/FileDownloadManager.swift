@@ -174,10 +174,10 @@ class FileDownloadManager: NSObject, URLSessionDelegate, URLSessionDownloadDeleg
       ? pathURL.absoluteString
       : "file://" + pathURL.absoluteString
     guard let updatedPathURL = URL(string: pathString)
-      else {return}
-    
+    else { return }
+
     if !FileManager.default.fileExists(atPath: pathString) {
-      
+
       let key = FDAKeychain.shared[kEncryptionKey] ?? kdefaultKeyForEncrytion
       let initializationVector = FDAKeychain.shared[kEncryptionIV] ?? kdefaultIVForEncryption
       do {
@@ -191,10 +191,14 @@ class FileDownloadManager: NSObject, URLSessionDelegate, URLSessionDownloadDeleg
         )
       } catch let error as AES.Error {
         Logger.sharedInstance.error(
-          "Encrypting data failed: ", error.localizedDescription)
-      } catch{
+          "Encrypting data failed: ",
+          error.localizedDescription
+        )
+      } catch {
         Logger.sharedInstance.error(
-          "Writing encrypted data to path failed: ", error.localizedDescription)
+          "Writing encrypted data to path failed: ",
+          error.localizedDescription
+        )
       }
     }
   }

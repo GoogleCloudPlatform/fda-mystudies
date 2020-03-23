@@ -20,7 +20,7 @@
 import UIKit
 
 enum ResponseMethods: String {
-  
+
   case processResponse = "process-response"
   case getParticipantResponse = "getresponse"
   case updateActivityState = "update-activity-state"
@@ -32,7 +32,7 @@ enum ResponseMethods: String {
       return self.path
     }
   }
-  
+
   var base: String {
     switch self {
     default:
@@ -46,7 +46,7 @@ enum ResponseMethods: String {
       return base + self.rawValue
     }
   }
-  
+
   var method: Method {
 
     switch self {
@@ -87,12 +87,12 @@ class ResponseServerConfiguration: NetworkConfiguration {
   }
 
   override func getDefaultHeaders() -> [String: String] {
-    
+
     let header = [
       "appId": AppConfiguration.appID,
       "orgId": AppConfiguration.orgID,
-      kUserAuthToken : User.currentUser.authToken ?? "",
-      "clientToken" : User.currentUser.clientToken ?? "",
+      kUserAuthToken: User.currentUser.authToken ?? "",
+      "clientToken": User.currentUser.clientToken ?? "",
     ]
     return header
   }
@@ -120,7 +120,7 @@ class ResponseServerConfiguration: NetworkConfiguration {
         userInfo: [NSLocalizedDescriptionKey: errorMessage]
       )
     }
-    
+
     if let code = errorResponse["status"] as? Int {
       let message = errorResponse["error"] as? String ?? ""
       error = NSError(domain: message, code: code, userInfo: errorResponse)

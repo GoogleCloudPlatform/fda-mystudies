@@ -50,15 +50,15 @@ enum API {
   static var authURL: String {
     return AppProtocol.http + ((try? Configuration.value(for: "AUTH_URL")) ?? "")
   }
-  
+
   static var enrollmentURL: String {
     return AppProtocol.http + ((try? Configuration.value(for: "ENROLLMENT_URL")) ?? "")
   }
-    
+
   static var consentMgmtURL: String {
-     return AppProtocol.http + ((try? Configuration.value(for: "CONSENTMGMT_URL")) ?? "")
+    return AppProtocol.http + ((try? Configuration.value(for: "CONSENTMGMT_URL")) ?? "")
   }
-  
+
   static var authUsername: String {
     return (try? Configuration.value(for: "AUTH_USERNAME")) ?? ""
   }
@@ -66,6 +66,5 @@ enum API {
   static var authPassword: String {
     return (try? Configuration.value(for: "AUTH_PASSWORD")) ?? ""
   }
-  
-}
 
+}

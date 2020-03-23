@@ -7,7 +7,7 @@
 import UIKit
 
 enum AuthServerMethods: String {
- 
+
   case login
   case forgotPassword
   case logout
@@ -78,7 +78,7 @@ class AuthServerConfiguration: NetworkConfiguration {
       "appId": AppConfiguration.appID,
       "orgId": AppConfiguration.orgID,
     ]
-    
+
     if User.currentUser.authToken != nil {
       header[kUserAuthToken] = User.currentUser.authToken
       header["clientToken"] = User.currentUser.clientToken

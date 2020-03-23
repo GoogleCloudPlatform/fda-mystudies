@@ -20,7 +20,7 @@
 import UIKit
 
 enum RegistrationMethods: String {
-  
+
   case register
   case confirmRegistration
   case userProfile
@@ -109,7 +109,7 @@ class RegistrationServerConfiguration: NetworkConfiguration {
       "appId": AppConfiguration.appID,
       "orgId": AppConfiguration.orgID,
     ]
-    
+
     if User.currentUser.authToken != nil {
       header[kUserAuthToken] = User.currentUser.authToken
       header["clientToken"] = User.currentUser.clientToken

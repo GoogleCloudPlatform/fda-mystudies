@@ -188,9 +188,10 @@ class ResponseDataFetch: NMWebServiceDelegate {
         }
       }
       guard let currentActivity = activity,
-        let study = Study.currentStudy else {
-          handleExecuteSQLResponse()
-          return
+        let study = Study.currentStudy
+      else {
+        handleExecuteSQLResponse()
+        return
       }
       // Get Survey Response from Server
       ResponseServices().getParticipantResponse(
@@ -228,7 +229,7 @@ class ResponseDataFetch: NMWebServiceDelegate {
             let localDateAsString = ResponseDataFetch.localDateFormatter.string(from: date)
             if let localDate = ResponseDataFetch.localDateFormatter.date(
               from: localDateAsString
-              ) {
+            ) {
               // Save Stats to DB
               DBHandler.saveStatisticsDataFor(
                 activityId: activityId!,

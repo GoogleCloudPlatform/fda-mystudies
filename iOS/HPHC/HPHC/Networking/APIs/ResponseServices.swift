@@ -45,7 +45,7 @@ class ResponseServices: NSObject {
     static let activityID = "activityId"
     static let userID = "userId"
   }
-  
+
   // MARK: Requests
 
   /// Creates a request to process `Activity` response
@@ -76,11 +76,11 @@ class ResponseServices: NSObject {
       JSONKey.orgID: AppConfiguration.orgID,
       kActivityResponseData: responseData,
     ] as [String: Any]
-    
+
     let headers: [String: String] = [
       "userId": User.currentUser.userId ?? "",
     ]
-    
+
     self.sendRequestWith(method: method, params: params, headers: headers)
 
   }
@@ -99,7 +99,7 @@ class ResponseServices: NSObject {
       $0.studyId == Study.currentStudy?.studyId!
     }).first {
       let currentStudy = Study.currentStudy
-      
+
       let studyId = currentStudy?.studyId ?? ""
       let activiyId = Study.currentActivity?.actvityId ?? ""
       let activityName = Study.currentActivity?.shortName ?? ""
@@ -127,7 +127,7 @@ class ResponseServices: NSObject {
         JSONKey.applicationId: AppConfiguration.appID,
         JSONKey.orgID: AppConfiguration.orgID,
       ] as [String: Any]
-      
+
       let headers: [String: String] = [
         JSONKey.userID: currentUser.userId ?? "",
       ]
@@ -153,7 +153,7 @@ class ResponseServices: NSObject {
     self.keys = keys
     let method = ResponseMethods.getParticipantResponse.method
     let userStudyStatus = study.userParticipateState
-    
+
     let params = [
       JSONKey.appID: AppConfiguration.appID,
       JSONKey.orgID: AppConfiguration.orgID,
@@ -165,9 +165,9 @@ class ResponseServices: NSObject {
       "questionKey": "",
       JSONKey.tokenIdentifier: userStudyStatus?.tokenIdentifier ?? "",
     ] as [String: Any]
-    
+
     let headers: [String: String] = [JSONKey.userID: User.currentUser.userId ?? ""]
-    
+
     self.sendRequestWith(method: method, params: params, headers: headers)
   }
 
@@ -187,7 +187,7 @@ class ResponseServices: NSObject {
     self.delegate = delegate
     self.sendRequestWith(method: method, params: params!, headers: headers)
   }
-  
+
   /// Creates a request to get `Activity` status
   /// - Parameters:
   ///   - studyId: ID of `Study`
@@ -227,8 +227,8 @@ class ResponseServices: NSObject {
     let headerParams = [
       kUserId: user.userId,
       kParticipantId: participantId,
-      ] as [String: String]
-    
+    ] as [String: String]
+
     let params = [
       kStudyId: studyId,
       kParticipantId: participantId,
@@ -237,7 +237,7 @@ class ResponseServices: NSObject {
     let method = ResponseMethods.updateActivityState.method
     self.sendRequestWith(method: method, params: params, headers: headerParams)
   }
-  
+
   /// Creates a request to update `Activity` bookmark status
   /// - Parameters:
   ///   - activityStauts: Instance of `UserActivityStatus` to update
@@ -256,7 +256,7 @@ class ResponseServices: NSObject {
 
     self.sendRequestWith(method: method, params: params, headers: headerParams)
   }
-  
+
   // MARK: Parsers
 
   /// Handles Participant Response
@@ -284,12 +284,13 @@ class ResponseServices: NSObject {
           // created date
           let data = dataDictArr[safe: 2] ?? [:]
           var date: String = ""
-          
+
           if let createdDict = dataDictArr[safe: 1],
-            let dateDetail = createdDict["Created"] as? JSONDictionary {
+            let dateDetail = createdDict["Created"] as? JSONDictionary
+          {
             date = dateDetail["value"] as? String ?? ""
           }
-          
+
           // FetalKick
           if data["count"] != nil && data["duration"] != nil {
 
@@ -386,7 +387,7 @@ class ResponseServices: NSObject {
 
     StudyDashboard.instance.saveDashboardResponse(responseList: dashBoardResponse)
   }
-  
+
   /// Handles `Activity` status response
   /// - Parameter response: Webservice response
   func handleGetActivityStatesResponse(response: [String: Any]) {
@@ -432,13 +433,13 @@ extension ResponseServices: NMWebServiceDelegate {
 
     switch requestName {
     case ResponseMethods.getParticipantResponse.description as String:
-       self.handleGetParticipantResponse(response: response as! [String: Any])
-      
+      self.handleGetParticipantResponse(response: response as! [String: Any])
+
     case ResponseMethods.processResponse.description as String: break
     case ResponseMethods.updateActivityState.description as String: break
     case ResponseMethods.activityState.description as String:
       self.handleGetActivityStatesResponse(response: (response as? [String: Any])!)
-      
+
     default:
       break  // Request was not sent with proper method name.
     }
@@ -447,12 +448,13 @@ extension ResponseServices: NMWebServiceDelegate {
   }
 
   func failedRequest(_ manager: NetworkManager, requestName: NSString, error: NSError) {
-   
+
     delegate?.failedRequest(manager, requestName: requestName, error: error)
 
     // handle failed request due to network connectivity
     if requestName as String == ResponseMethods.processResponse.description
-    || requestName as String == ResponseMethods.updateActivityState.description {
+      || requestName as String == ResponseMethods.updateActivityState.description
+    {
 
       if error.code == NoNetworkErrorCode {
         // save in database

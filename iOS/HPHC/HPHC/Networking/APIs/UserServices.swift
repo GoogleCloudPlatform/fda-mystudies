@@ -498,7 +498,7 @@ extension UserServices: NMWebServiceDelegate {
 
     case RegistrationMethods.userPreferences.description as String:
       self.handleGetPreferenceResponse(response: (response as? [String: Any])!)
-      
+
     case RegistrationMethods.updatePreferences.description as String: break  //did not handled response
 
     case RegistrationMethods.deactivate.description as String:
@@ -512,7 +512,7 @@ extension UserServices: NMWebServiceDelegate {
   }
 
   func failedRequest(_ manager: NetworkManager, requestName: NSString, error: NSError) {
-   
+
     if requestName as String == AuthServerMethods.getRefreshedToken.description && error.code == 401
     {  //unauthorized
       delegate?.failedRequest(manager, requestName: requestName, error: error)
@@ -551,7 +551,7 @@ extension UserServices: NMWebServiceDelegate {
 
       // handle failed request due to network connectivity
       if requestName
-          as String == ResponseMethods.updateActivityState.description
+        as String == ResponseMethods.updateActivityState.description
       {
 
         if error.code == NoNetworkErrorCode {

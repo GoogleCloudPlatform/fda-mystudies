@@ -23,7 +23,7 @@ class AuthServices: NSObject {
   /// Creates a request to login an `User`
   /// - Parameter delegate: Class object to receive response
   func loginUser(_ delegate: NMWebServiceDelegate) {
-    
+
     self.delegate = delegate
     let user = User.currentUser
     let params = [
@@ -37,7 +37,7 @@ class AuthServices: NSObject {
   /// Creates a request to logout an `User`
   /// - Parameter delegate: Class object to receive response
   func logoutUser(_ delegate: NMWebServiceDelegate) {
-    
+
     self.delegate = delegate
     let user = User.currentUser
     let headerParams = [kUserId: user.userId ?? ""]
@@ -51,7 +51,7 @@ class AuthServices: NSObject {
   ///   - email: Email Id of the`User `
   ///   - delegate: Class object to receive response
   func forgotPassword(email: String, delegate: NMWebServiceDelegate) {
-    
+
     self.delegate = delegate
     let params = [kUserEmailId: email]
     let method = AuthServerMethods.forgotPassword.method
@@ -64,7 +64,7 @@ class AuthServices: NSObject {
   ///   - newPassword:
   ///   - delegate: Class object to receive response
   func changePassword(oldPassword: String, newPassword: String, delegate: NMWebServiceDelegate) {
-    
+
     self.delegate = delegate
     let user = User.currentUser
     let headerParams = [kUserId: user.userId ?? ""]
@@ -88,7 +88,7 @@ class AuthServices: NSObject {
     user.authToken = response[kUserAuthToken] as? String ?? ""
     user.clientToken = response["clientToken"] as? String ?? ""
     user.refreshToken = response[kRefreshToken] as? String ?? ""
-    
+
     if let isTempPassword = response[kUserIsTempPassword] as? Bool {
       user.isLoginWithTempPassword = isTempPassword
     }
@@ -109,7 +109,7 @@ class AuthServices: NSObject {
       let ud = UserDefaults.standard
       ud.set(true, forKey: kPasscodeIsPending)
       ud.synchronize()
-      
+
       StudyFilterHandler.instance.previousAppliedFilters = []
     }
   }
@@ -171,27 +171,30 @@ class AuthServices: NSObject {
       "userId": user.userId!,
     ]
     let method = AuthServerMethods.getRefreshedToken.method
-    self.sendRequestWith(method: method,
-                         params: param,
-                         headers: header)
+    self.sendRequestWith(
+      method: method,
+      params: param,
+      headers: header
+    )
   }
 
   func handleUpdateTokenResponse(response: [String: Any]) {
-    
+
     let user = User.currentUser
     user.authToken = (response[kUserAuthToken] as? String)!
     user.clientToken = (response["clientToken"] as? String)!
     FDAKeychain.shared[kUserAuthTokenKeychainKey] = user.authToken
     FDAKeychain.shared[kUserRefreshTokenKeychainKey] = user.refreshToken
     DBHandler().saveCurrentUser(user: user)
-    
+
     // Re-send request which failed due to session expired.
     let headerParams = self.failedRequestServices.headerParams == nil
       ? [:] : self.failedRequestServices.headerParams
     self.sendRequestWith(
       method: self.failedRequestServices.method,
       params: (self.requestParams == nil ? nil : self.requestParams),
-      headers: headerParams)
+      headers: headerParams
+    )
   }
 
   /// Sends Request
@@ -220,7 +223,7 @@ extension AuthServices: NMWebServiceDelegate {
   }
 
   func finishedRequest(_ manager: NetworkManager, requestName: NSString, response: AnyObject?) {
-    
+
     let response = response as? JSONDictionary ?? [:]
     switch requestName {
     case AuthServerMethods.login.description as String:
@@ -230,20 +233,20 @@ extension AuthServices: NMWebServiceDelegate {
 
     case AuthServerMethods.changePassword.description as String:
       self.handleChangePasswordResponse(response: response)
-      
+
     case AuthServerMethods.logout.description as String:
       self.handleLogoutResponse()
 
     case AuthServerMethods.getRefreshedToken.description as String:
       self.handleUpdateTokenResponse(response: response)
-      
+
     default: break
     }
 
     delegate?.finishedRequest(manager, requestName: requestName, response: response as AnyObject)
   }
 
- func failedRequest(_ manager: NetworkManager, requestName: NSString, error: NSError) {
+  func failedRequest(_ manager: NetworkManager, requestName: NSString, error: NSError) {
     if requestName as String == AuthServerMethods.getRefreshedToken.description && error.code == 401
     {  // Unauthorized
       delegate?.failedRequest(manager, requestName: requestName, error: error)

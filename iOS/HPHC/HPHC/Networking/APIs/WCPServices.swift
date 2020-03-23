@@ -334,7 +334,7 @@ class WCPServices: NSObject {
   func handleEligibilityConsentMetaData(response: [String: Any]) {
     guard let consent = response[kConsent] as? [String: Any],
       let eligibility = response[kEligibility] as? [String: Any]
-      else {return}
+    else { return }
 
     if Utilities.isValidObject(someObject: consent as AnyObject?) {
       ConsentBuilder.currentConsent = ConsentBuilder()

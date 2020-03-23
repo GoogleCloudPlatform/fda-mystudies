@@ -7,13 +7,13 @@
 import Foundation
 
 enum EnrollmentMethods: String {
-    
+
   case enroll
   case validateEnrollmentToken
   case updateStudyState
   case studyState
   case withdrawfromstudy
-  
+
   var description: String {
     switch self {
     default:
@@ -61,12 +61,12 @@ class EnrollmentServerConfiguration: NetworkConfiguration {
   }
 
   override func getDefaultHeaders() -> [String: String] {
-    
+
     let header = [
       "appId": AppConfiguration.appID,
       "orgId": AppConfiguration.orgID,
-      kUserAuthToken : User.currentUser.authToken ?? "",
-      "clientToken" : User.currentUser.clientToken ?? "",
+      kUserAuthToken: User.currentUser.authToken ?? "",
+      "clientToken": User.currentUser.clientToken ?? "",
     ]
     return header
   }
@@ -95,7 +95,7 @@ class EnrollmentServerConfiguration: NetworkConfiguration {
         userInfo: [NSLocalizedDescriptionKey: errorMessage]
       )
     }
-    
+
     if let code = errorResponse["status"] as? Int {
       let message = errorResponse["message"] as? String ?? ""
       error = NSError(domain: message, code: code, userInfo: errorResponse)

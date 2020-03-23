@@ -417,7 +417,7 @@ class ResourcesViewController: UIViewController {
     let fullPath = path + "/" + consentPath
 
     let pdfData = FileDownloadManager.decrytFile(pathURL: URL(string: fullPath))
-    
+
     var isPDF: Bool = false
     if (pdfData?.count ?? 0) >= 1024  // only check if bigger
     {
@@ -484,7 +484,6 @@ class ResourcesViewController: UIViewController {
       } catch {
         Logger.sharedInstance.error(error)
       }
-      
 
       FileDownloadManager.encyptFile(pathURL: URL(string: defaultPath!)!)
 
@@ -624,9 +623,9 @@ extension ResourcesViewController: UITableViewDelegate {
   func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
     tableView.deselectRow(at: indexPath, animated: true)
 
-    guard let currentStudy = Study.currentStudy else {return}
+    guard let currentStudy = Study.currentStudy else { return }
     let resource = tableViewRowDetails?[indexPath.row]
-    
+
     if (resource as? Resource) != nil {
 
       resourceLink = (resource as? Resource)?.file?.getFileLink()
@@ -750,11 +749,11 @@ extension ResourcesViewController: NMWebServiceDelegate {
         self.tableView?.reloadData()
 
       } else if requestName as String == EnrollmentMethods.withdrawfromstudy.description {
-          self.removeProgressIndicator()
-          UIUtilities.showAlertWithTitleAndMessage(
-            title: NSLocalizedString(kErrorTitle, comment: "") as NSString,
-            message: error.localizedDescription as NSString
-          )
+        self.removeProgressIndicator()
+        UIUtilities.showAlertWithTitleAndMessage(
+          title: NSLocalizedString(kErrorTitle, comment: "") as NSString,
+          message: error.localizedDescription as NSString
+        )
       } else {
         self.removeProgressIndicator()
         UIUtilities.showAlertWithTitleAndMessage(

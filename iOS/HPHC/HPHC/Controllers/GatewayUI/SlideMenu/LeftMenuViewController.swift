@@ -623,7 +623,7 @@ extension LeftMenuViewController: NMWebServiceDelegate {
           self.fdaSlideMenuController()?.navigateToHomeAfterUnauthorizedAccess()
         }
       )
-    } else if requestName as String == AuthServerMethods.logout.description && error.code == 403{
+    } else if requestName as String == AuthServerMethods.logout.description && error.code == 403 {
       self.signout()
     } else {
       UIUtilities.showAlertWithTitleAndMessage(

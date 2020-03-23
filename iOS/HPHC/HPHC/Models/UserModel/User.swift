@@ -649,14 +649,14 @@ class UserStudyStatus {
 
   /// User joined Date for study
   var joiningDate: Date!
-  
+
   lazy var completion: Int = 0
   lazy var adherence: Int = 0
-  
+
   var participantId: String?
   var siteID: String!
   var tokenIdentifier: String!
-  
+
   init() {}
 
   /// Initializer which initialize all properties

@@ -220,7 +220,7 @@ class ConfirmationViewController: UIViewController {
   }
 
   func withdrawnFromNextStudy() {
-    let studiesWithdrawnIDs = studiesToWithdrawn.compactMap({$0.studyId})
+    let studiesWithdrawnIDs = studiesToWithdrawn.compactMap({ $0.studyId })
     UserServices().deActivateAccount(listOfStudyIds: studiesWithdrawnIDs, delegate: self)
   }
 

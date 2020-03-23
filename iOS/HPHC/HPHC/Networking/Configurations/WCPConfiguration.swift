@@ -82,7 +82,7 @@ class WCPConfiguration: NetworkConfiguration {
   }
 
   override func getDefaultHeaders() -> [String: String] {
-    
+
     let token = API.authUsername + ":" + API.authPassword
     let base64token = "Basic " + token.toBase64()
 

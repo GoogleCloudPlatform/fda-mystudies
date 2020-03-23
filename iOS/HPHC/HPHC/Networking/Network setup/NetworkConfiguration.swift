@@ -86,12 +86,12 @@ class NetworkProtocols: NetworkConfigurationProtocol {
         return error
       }
     }
-    
+
     if let code = errorResponse["status"] as? Int {
       let message = errorResponse["message"] as? String ?? ""
       return NSError(domain: message, code: code, userInfo: errorResponse)
     }
-    
+
     let error = NSError(
       domain: NSURLErrorDomain,
       code: 101,

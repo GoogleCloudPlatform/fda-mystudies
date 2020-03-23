@@ -7,7 +7,7 @@
 import UIKit
 
 enum ConsentServerMethods: String {
- 
+
   case updateEligibilityConsentStatus
   case consentDocument
 
@@ -46,7 +46,7 @@ enum ConsentServerMethods: String {
 
     }
   }
-  
+
 }
 // MARK: - Set the server end points
 enum ConsentServerURLConstants {
@@ -55,7 +55,7 @@ enum ConsentServerURLConstants {
 }
 
 class ConsentServerConfiguration: NetworkConfiguration {
- 
+
   static let configuration = ConsentServerConfiguration()
 
   // MARK: Delegates
@@ -68,12 +68,12 @@ class ConsentServerConfiguration: NetworkConfiguration {
   }
 
   override func getDefaultHeaders() -> [String: String] {
-    
+
     let header = [
       "appId": AppConfiguration.appID,
       "orgId": AppConfiguration.orgID,
-      kUserAuthToken : User.currentUser.authToken ?? "",
-      "clientToken" : User.currentUser.clientToken ?? "",
+      kUserAuthToken: User.currentUser.authToken ?? "",
+      "clientToken": User.currentUser.clientToken ?? "",
     ]
     return header
   }

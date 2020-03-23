@@ -71,12 +71,12 @@ class StudyListViewController: UIViewController {
     addRightNavigationItem()
     navigationController?.setNavigationBarHidden(false, animated: true)
     navigationController?.navigationBar.isHidden = false
-    
+
     Study.currentStudy = nil
     let ud = UserDefaults.standard
     // Checking if User has missed out setting the passcode/TouchId
     let isPasscodePending = ud.value(forKey: kPasscodeIsPending) as? Bool ?? false
-    
+
     if isPasscodePending == true {
       if User.currentUser.userType == .FDAUser {
         tableView?.isHidden = true
@@ -104,7 +104,7 @@ class StudyListViewController: UIViewController {
 
     setNeedsStatusBarAppearanceUpdate()
     self.navigationController?.view.layoutSubviews()
-    
+
     // Checking if registering notification is pending
     if ud.value(forKey: kNotificationRegistrationIsPending) != nil,
       ud.bool(forKey: kNotificationRegistrationIsPending) == true
@@ -125,7 +125,7 @@ class StudyListViewController: UIViewController {
   /// To update the navigation bar items , by adding Notification Button, Notification Indicator & Filter Button.
   func addRightNavigationItem() {
     guard navigationItem.rightBarButtonItems == nil
-      else {return} // No need to add again.
+    else { return }  // No need to add again.
     let view = UIView(frame: CGRect(x: 0, y: 4, width: 110, height: 40))
 
     // Notification Button

@@ -53,17 +53,17 @@ enum DefaultHeaders {
 }
 
 class NetworkWebServiceHandler: NSObject, URLSessionDelegate {
-  
+
   var shouldRetryRequest = NetworkConnectionConstants.EnableRequestRetry
   var maxRequestRetryCount = NetworkConnectionConstants.NoOfRequestRetry
   var connectionTimeoutInterval: Double = NetworkConnectionConstants.ConnectionTimeoutInterval
-  
+
   var delegate: NMWebServiceDelegate?
   var challengeDelegate: NMAuthChallengeDelegate?
-  
+
   weak var networkManager: NetworkManager?
   var configuration: NetworkConfiguration!
-  
+
   /// Initializer method which initialize properties of NetworkWebServiceHandler
   /// - Parameter delegate: NMWebServiceDelegate
   /// - Parameter challengeDelegate: NMAuthChallengeDelegate
@@ -71,28 +71,28 @@ class NetworkWebServiceHandler: NSObject, URLSessionDelegate {
     self.delegate = delegate
     self.challengeDelegate = challengeDelegate
   }
-  
+
   /// Returns Server Url of type String
   func getServerURLString() -> NSString {
     #if DEBUG
-    return self.configuration.getDevelopmentURL() as NSString
+      return self.configuration.getDevelopmentURL() as NSString
     #else
-    return self.configuration.getProductionURL() as NSString
+      return self.configuration.getProductionURL() as NSString
     #endif
   }
-  
+
   /// Returns base Url of type NSString
   /// - Parameter requestName: name of the request of type NSString
   fileprivate func getBaseURLString(_ requestName: NSString) -> NSString {
-    
+
     let serverPath = self.getServerURLString()
     return NSString.init(format: "%@%@", serverPath, requestName)
   }
-  
+
   /// Combines common params and request params and returns combined dictionary
   /// - Parameter params: request params of type dictionary
   fileprivate func getCombinedWithCommonParams(_ params: NSDictionary?) -> NSDictionary? {
-    
+
     let commonParams = self.configuration.getDefaultRequestParameters() as NSDictionary?
     var mParams: NSMutableDictionary?
     if commonParams != nil {
@@ -107,21 +107,21 @@ class NetworkWebServiceHandler: NSObject, URLSessionDelegate {
     }
     return mParams!
   }
-  
+
   /// Combines requestHeaders and defaultHeaders and returns dictionary
   /// - Parameter userHeaders: request headers of type dictionary
   /// - Parameter defaultHeaders: default headers of type dictionary
   fileprivate func getCombinedHeaders(_ userHeaders: NSDictionary?, defaultHeaders: NSDictionary?)
     -> NSDictionary?
   {
-    
+
     let commonParams: NSDictionary? = self.configuration.getDefaultHeaders() as NSDictionary?
-    
+
     var mParams: NSMutableDictionary?
     if commonParams != nil {
       mParams = NSMutableDictionary.init(dictionary: commonParams!)
     }
-    
+
     if defaultHeaders != nil {
       if mParams != nil {
         mParams!.addEntries(from: defaultHeaders as! [AnyHashable: Any])
@@ -138,7 +138,7 @@ class NetworkWebServiceHandler: NSObject, URLSessionDelegate {
     }
     return mParams
   }
-  
+
   /// Returns method type of string based on HTTPMethod
   /// - Parameter methods: instance of HTTPMethod
   func getRequestMethod(_ methods: HTTPMethod) -> NSString {
@@ -153,12 +153,12 @@ class NetworkWebServiceHandler: NSObject, URLSessionDelegate {
       return "DELETE"
     }
   }
-  
+
   /// Creates url based on parameters and returns url of type NSString
   /// - Parameter requestName: name of request
   /// - Parameter parameters: parameters of type dictionary
   fileprivate func getHttpRequest(_ requestName: NSString, parameters: NSDictionary?) -> NSString {
-    
+
     // get from uptiiq
     var url: String = ""
     if !(parameters == nil || parameters?.count == 0) {
@@ -169,16 +169,16 @@ class NetworkWebServiceHandler: NSObject, URLSessionDelegate {
             format: "%@=%@&",
             String(describing: key),
             parameters?[key as! String] as! CVarArg
-        )
+          )
       }
       let length = url.count - 1
       let index = url.index(url.startIndex, offsetBy: length)
       url = String(url[..<index])  //url.substring(to: index) //url.substring(to: length)
     }
     return url as NSString
-    
+
   }
-  
+
   /// Compose request based on RequestType
   /// - Parameter requestName: name of the request
   /// - Parameter requestType: instance of RequestType
@@ -192,11 +192,11 @@ class NetworkWebServiceHandler: NSObject, URLSessionDelegate {
     params: NSDictionary?,
     headers: NSDictionary?
   ) {
-    
+
     if (delegate?.startedRequest) != nil {
       delegate?.startedRequest(networkManager!, requestName: requestName)
     }
-    
+
     var requestParams: NSDictionary?
     if params != nil {
       requestParams = self.getCombinedWithCommonParams(params)
@@ -220,7 +220,7 @@ class NetworkWebServiceHandler: NSObject, URLSessionDelegate {
       break
     }
   }
-  
+
   /// Compose request based on RequestType
   /// - Parameter configuration: instance of NetworkConfiguration
   /// - Parameter method: instance of Method
@@ -232,13 +232,13 @@ class NetworkWebServiceHandler: NSObject, URLSessionDelegate {
     params: NSDictionary?,
     headers: NSDictionary?
   ) {
-    
+
     self.configuration = configuration
-    
+
     if (delegate?.startedRequest) != nil {
       delegate?.startedRequest(networkManager!, requestName: method.methodName as NSString)
     }
-    
+
     var requestParams: NSDictionary?
     if params != nil {
       requestParams = self.getCombinedWithCommonParams(params)
@@ -262,7 +262,7 @@ class NetworkWebServiceHandler: NSObject, URLSessionDelegate {
       break
     }
   }
-  
+
   /// Generates http request
   /// - Parameters:
   ///   - requestName: name of the request
@@ -275,29 +275,29 @@ class NetworkWebServiceHandler: NSObject, URLSessionDelegate {
     params: NSDictionary?,
     headers: NSDictionary?
   ) {
-    
+
     let httpHeaders: NSDictionary? = self.getCombinedHeaders(headers, defaultHeaders: nil)
     let baseURLString: NSString = self.getBaseURLString(requestName)
     let httpRequestString: NSString? = self.getHttpRequest(requestName, parameters: params)
     var requestString: NSString!
-    
+
     if httpRequestString?.length == 0 {
       requestString = baseURLString
     } else {
       requestString = String(format: "%@?%@", baseURLString, httpRequestString!) as NSString?
     }
-    
+
     if #available(iOS 9, *) {
       requestString = requestString.addingPercentEncoding(
         withAllowedCharacters: CharacterSet.urlQueryAllowed
-        ) as NSString?
+      ) as NSString?
     } else {
       requestString = requestString.addingPercentEscapes(using: String.Encoding.utf8.rawValue)
         as NSString?
     }
-    
+
     let requestUrl = URL(string: requestString as String)!
-    
+
     var request = URLRequest.init(
       url: requestUrl,
       cachePolicy: URLRequest.CachePolicy.reloadIgnoringLocalCacheData,
@@ -309,7 +309,7 @@ class NetworkWebServiceHandler: NSObject, URLSessionDelegate {
     }
     self.fireRequest(request, requestName: requestName)
   }
-  
+
   /// Generates JSON request
   /// - Parameters:
   ///   - requestName: name of the request
@@ -327,19 +327,19 @@ class NetworkWebServiceHandler: NSObject, URLSessionDelegate {
       defaultheaders = nil
     }
     let httpHeaders: NSDictionary?
-    
+
     httpHeaders = self.getCombinedHeaders(headers, defaultHeaders: defaultheaders)
-    
+
     let baseURLString: NSString = self.getBaseURLString(requestName)
     let requestUrl = URL(string: baseURLString as String)
     do {
-      
+
       var request = URLRequest.init(
         url: requestUrl!,
         cachePolicy: URLRequest.CachePolicy.reloadIgnoringLocalCacheData,
         timeoutInterval: self.connectionTimeoutInterval
       )
-      
+
       if params != nil && (params?.count)! > 0 {
         let data = try JSONSerialization.data(
           withJSONObject: params!,
@@ -347,33 +347,33 @@ class NetworkWebServiceHandler: NSObject, URLSessionDelegate {
         )
         request.httpBody = data
       }
-      
+
       request.httpMethod = self.getRequestMethod(method) as String
       if httpHeaders != nil {
         request.allHTTPHeaderFields = httpHeaders! as? [String: String]
       }
       self.fireRequest(request, requestName: requestName)
-      
+
     } catch let error {
       Logger.sharedInstance.error("Serialization error: ", error.localizedDescription)
     }
   }
-  
+
   /// Fires the request and handle the data which is received
   /// - Parameters:
   ///   - request: instance of URLRequest
   ///   - requestName: name of the request of type String
   fileprivate func fireRequest(_ request: URLRequest?, requestName: NSString?) {
-    
+
     if NetworkManager.isNetworkAvailable() {
-      
+
       let config = URLSessionConfiguration.default
       let session = Foundation.URLSession.init(
         configuration: config,
         delegate: self,
         delegateQueue: nil
       )
-      
+
       session.dataTask(with: request!) { (data, response, error) -> Void in
         if let data = data {
           DispatchQueue.main.async {
@@ -394,23 +394,23 @@ class NetworkWebServiceHandler: NSObject, URLSessionDelegate {
           }
         }
       }.resume()
-      
+
     } else {
       if (delegate?.failedRequest) != nil {
-        
+
         let error1 = NSError(
           domain: NSURLErrorDomain,
           code: NoNetworkErrorCode,
           userInfo: [
             NSLocalizedDescriptionKey:
-            "You seem to be offline. Please connect to a network to proceed with this action.",
+              "You seem to be offline. Please connect to a network to proceed with this action.",
           ]
         )
         delegate?.failedRequest(networkManager!, requestName: requestName!, error: error1)
       }
     }
   }
-  
+
   /// Handles the resposne and pass the reponse through delegates
   /// - Parameters:
   ///   - data: instance Data
@@ -423,12 +423,12 @@ class NetworkWebServiceHandler: NSObject, URLSessionDelegate {
     requestName: NSString?,
     error: NSError?
   ) {
-    
+
     if error != nil {
       if shouldRetryRequest && maxRequestRetryCount > 0 {
         maxRequestRetryCount -= 1
       } else {
-        
+
         if error?.code == -1001 {  //Could not connect to the server.
         }
         if (delegate?.failedRequest) != nil {
@@ -438,7 +438,7 @@ class NetworkWebServiceHandler: NSObject, URLSessionDelegate {
             error: error!
           )
         }
-        
+
       }
     } else {
       let status = NetworkConstants.checkResponseHeaders(response!)
@@ -446,36 +446,36 @@ class NetworkWebServiceHandler: NSObject, URLSessionDelegate {
       var error1: NSError?
       if statusCode == 200 || statusCode == 0 {
         var responseDict: NSDictionary?
-        
+
         do {
           //NSJSONReadingOptions.MutableContainers
           responseDict = try JSONSerialization.jsonObject(with: data!, options: [])
             as? NSDictionary
-          
+
         } catch let error {
           Logger.sharedInstance.error("Serialization error: ", error.localizedDescription)
         }
-        
+
         if (delegate?.finishedRequest) != nil {
-          
+
           if responseDict == nil || statusCode == 200 {
             delegate?.finishedRequest(
               networkManager!,
               requestName: requestName!,
               response: responseDict ?? [:]
             )
-            
+
           } else {
-            
+
             error1 = NSError(
               domain: NSURLErrorDomain,
               code: 300,
               userInfo: [
                 NSLocalizedDescriptionKey:
-                "Could not connect to server. Please try again later.",
+                  "Could not connect to server. Please try again later.",
               ]
             )
-            
+
             if (delegate?.failedRequest) != nil {
               delegate?.failedRequest(
                 networkManager!,
@@ -486,13 +486,13 @@ class NetworkWebServiceHandler: NSObject, URLSessionDelegate {
           }
         }
       } else {
-        
+
         if self.configuration.shouldParseErrorMessage() {
-          
+
           let responseDict = try? JSONSerialization.jsonObject(
             with: data!,
             options: .allowFragments
-            )
+          )
             as? [String: Any]
           error1 = self.configuration.parseError(errorResponse: responseDict ?? [:])
         } else {
@@ -502,7 +502,7 @@ class NetworkWebServiceHandler: NSObject, URLSessionDelegate {
             userInfo: [NSLocalizedDescriptionKey: status.1]
           )
         }
-        
+
         if (delegate?.failedRequest) != nil {
           delegate?.failedRequest(
             networkManager!,

@@ -95,7 +95,7 @@ class Schedule {
       handler([])
       return
     }
-     let start = joiningDate.utcDate()
+    let start = joiningDate.utcDate()
 
     self.completionHandler = handler
     var endDateResult: ComparisonResult?
