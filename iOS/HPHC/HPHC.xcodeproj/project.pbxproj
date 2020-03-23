@@ -122,6 +122,7 @@
 		6F07148924279452002749DA /* Default.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 6F07148824279452002749DA /* Default.xcconfig */; };
 		6F07148C2428DCE2002749DA /* Collection+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F07148B2428DCE2002749DA /* Collection+Extensions.swift */; };
 		6F2392DE2423E0F300013AC0 /* EnrollServices.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F2392DD2423E0F300013AC0 /* EnrollServices.swift */; };
+		6F36467824293ED2008F815A /* RegistrationServerKeys.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FD1E15123F17ACA009DACAE /* RegistrationServerKeys.swift */; };
 		6F4E1B2D24223C210051D3E2 /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = 6F4E1B2A24223C210051D3E2 /* README.md */; };
 		6F4E1B2F24223CA20051D3E2 /* UIImage+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F4E1B2E24223CA20051D3E2 /* UIImage+Extensions.swift */; };
 		6F99755F242387300044944E /* AppConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F99755E242387300044944E /* AppConfiguration.swift */; };
@@ -130,8 +131,6 @@
 		6FB89C24225F410500420A7B /* OtherTextChoiceCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FB89C20225F410500420A7B /* OtherTextChoiceCell.swift */; };
 		6FB89C25225F410500420A7B /* TextChoiceCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FB89C21225F410500420A7B /* TextChoiceCell.swift */; };
 		6FB89C28225F416C00420A7B /* Cell+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FB89C27225F416C00420A7B /* Cell+Extensions.swift */; };
-		6FD1E15023F17A41009DACAE /* RegistrationServerKeys.swift.gyb in Resources */ = {isa = PBXBuildFile; fileRef = 6FD1E14F23F17A41009DACAE /* RegistrationServerKeys.swift.gyb */; };
-		6FD1E15223F17ACA009DACAE /* RegistrationServerKeys.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FD1E15123F17ACA009DACAE /* RegistrationServerKeys.swift */; };
 		6FD1E15723F18228009DACAE /* ConsentServices.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FD1E15623F18228009DACAE /* ConsentServices.swift */; };
 		6FD1E15A23F18239009DACAE /* ConsentServerConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FD1E15823F18239009DACAE /* ConsentServerConfiguration.swift */; };
 		6FD1E15B23F18239009DACAE /* APIConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FD1E15923F18239009DACAE /* APIConfiguration.swift */; };
@@ -425,7 +424,6 @@
 		6FB89C27225F416C00420A7B /* Cell+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Cell+Extensions.swift"; sourceTree = "<group>"; };
 		6FD1E10C23EC31A7009DACAE /* Development.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Development.xcconfig; sourceTree = "<group>"; };
 		6FD1E11423ED41B0009DACAE /* Production.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Production.xcconfig; sourceTree = "<group>"; };
-		6FD1E14F23F17A41009DACAE /* RegistrationServerKeys.swift.gyb */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = RegistrationServerKeys.swift.gyb; path = ../RegistrationServerKeys.swift.gyb; sourceTree = "<group>"; };
 		6FD1E15123F17ACA009DACAE /* RegistrationServerKeys.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = RegistrationServerKeys.swift; path = ../RegistrationServerKeys.swift; sourceTree = "<group>"; };
 		6FD1E15623F18228009DACAE /* ConsentServices.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ConsentServices.swift; sourceTree = "<group>"; };
 		6FD1E15823F18239009DACAE /* ConsentServerConfiguration.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ConsentServerConfiguration.swift; sourceTree = "<group>"; };
@@ -1005,7 +1003,6 @@
 			isa = PBXGroup;
 			children = (
 				6FD1E15923F18239009DACAE /* APIConfiguration.swift */,
-				6FD1E14F23F17A41009DACAE /* RegistrationServerKeys.swift.gyb */,
 				6FD1E15123F17ACA009DACAE /* RegistrationServerKeys.swift */,
 			);
 			path = Environment;
@@ -1714,7 +1711,6 @@
 			buildConfigurationList = 6E7D2D7E1E433E8800763D4C /* Build configuration list for PBXNativeTarget "HPHC" */;
 			buildPhases = (
 				E6A210CE88E5E2E81D293918 /* [CP] Check Pods Manifest.lock */,
-				6FD1E14C23F17A28009DACAE /* ShellScript */,
 				6E7D2D521E433E8700763D4C /* Sources */,
 				6E7D2D531E433E8700763D4C /* Frameworks */,
 				6E7D2D541E433E8700763D4C /* Resources */,
@@ -1930,7 +1926,6 @@
 				6F4E1B2D24223C210051D3E2 /* README.md in Resources */,
 				94B3DD511E6ED8E500327AE5 /* Login.storyboard in Resources */,
 				942591C41EA8A2650010D892 /* ActivitySchedules.xib in Resources */,
-				6FD1E15023F17A41009DACAE /* RegistrationServerKeys.swift.gyb in Resources */,
 				94B3DD491E6ED8E500327AE5 /* StudyList.json in Resources */,
 				6EA889C51E701E8200F160A1 /* Confirmation.plist in Resources */,
 				6E14F2031F0224AD00EA8D1E /* Notification.json in Resources */,
@@ -2020,23 +2015,6 @@
 			shellPath = /bin/sh;
 			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-HPHC/Pods-HPHC-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
-		};
-		6FD1E14C23F17A28009DACAE /* ShellScript */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-			);
-			inputPaths = (
-			);
-			outputFileListPaths = (
-			);
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "find . -name '*.gyb' |                                               \\\nwhile read file; do                                              \\\n    /usr/local/Cellar/gyb/2019-01-18/bin/gyb  --line-directive '' -o \"${file%.gyb}\" \"$file\";\ndone\n";
 		};
 		8D2C5B3AD544C453A00EC3BB /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -2160,7 +2138,6 @@
 				94334F801E6FE65600755444 /* FDASlideMenuViewController.swift in Sources */,
 				6E7D2D5A1E433E8800763D4C /* AppDelegate.swift in Sources */,
 				4833E9DF1E7126900032D244 /* StudyHomeViewController.swift in Sources */,
-				6FD1E15223F17ACA009DACAE /* RegistrationServerKeys.swift in Sources */,
 				6ED1D06F1EA884BD00E5A794 /* ConsentPdfViewerStepViewController.swift in Sources */,
 				6E8D910D223B9FD800C082C9 /* Dictionary+Extensions.swift in Sources */,
 				6EBC2E851E94FB5300828CA1 /* StudyDashboardStatisticsTableViewCell.swift in Sources */,
@@ -2202,6 +2179,7 @@
 				6ED1B2241E54254900BF463F /* ActivityResult.swift in Sources */,
 				48567FE11F14FB3C00857193 /* StudyFilterViewController.swift in Sources */,
 				9432C2FB1E4C9EF8005984EC /* UserServices.swift in Sources */,
+				6F36467824293ED2008F815A /* RegistrationServerKeys.swift in Sources */,
 				94FF031F1E952B0A009F191B /* ReachoutOptionCell.swift in Sources */,
 				4884E3521E825E7D002DA0B9 /* FeedBackViewController.swift in Sources */,
 				94B3DD4F1E6ED8E500327AE5 /* PageViewController.swift in Sources */,
