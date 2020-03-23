@@ -2,49 +2,49 @@ package com.fdahpstudydesigner.bean;
 
 public class FormulaInfoBean {
 
-	String lhsData = "";
-	String message = "failure";
-	String outPutData = "";
-	String rhsData = "";
-	String statusMessage = "";
+  String lhsData = "";
+  String message = "failure";
+  String outPutData = "";
+  String rhsData = "";
+  String statusMessage = "";
 
-	public String getLhsData() {
-		return lhsData;
-	}
+  public String getLhsData() {
+    return lhsData;
+  }
 
-	public String getMessage() {
-		return message;
-	}
+  public void setLhsData(String lhsData) {
+    this.lhsData = lhsData;
+  }
 
-	public String getOutPutData() {
-		return outPutData;
-	}
+  public String getMessage() {
+    return message;
+  }
 
-	public String getRhsData() {
-		return rhsData;
-	}
+  public void setMessage(String message) {
+    this.message = message;
+  }
 
-	public String getStatusMessage() {
-		return statusMessage;
-	}
+  public String getOutPutData() {
+    return outPutData;
+  }
 
-	public void setLhsData(String lhsData) {
-		this.lhsData = lhsData;
-	}
+  public void setOutPutData(String outPutData) {
+    this.outPutData = outPutData;
+  }
 
-	public void setMessage(String message) {
-		this.message = message;
-	}
+  public String getRhsData() {
+    return rhsData;
+  }
 
-	public void setOutPutData(String outPutData) {
-		this.outPutData = outPutData;
-	}
+  public void setRhsData(String rhsData) {
+    this.rhsData = rhsData;
+  }
 
-	public void setRhsData(String rhsData) {
-		this.rhsData = rhsData;
-	}
+  public String getStatusMessage() {
+    return statusMessage;
+  }
 
-	public void setStatusMessage(String statusMessage) {
-		this.statusMessage = statusMessage;
-	}
+  public void setStatusMessage(String statusMessage) {
+    this.statusMessage = statusMessage;
+  }
 }

@@ -91,9 +91,8 @@
 											<div class="studyCount">${studyBo.name}</div>
 										</div>
 										<div class="text-right dis-inline pull-right">
-											<!-- <span class="sprites_icon delete"></span> -->
 											<span class="ml-lg imageBg"><img class="arrow"
-												src="/fdahpStudyDesigner/images/icons/slide-down.png" /></span>
+												src="/fdahpStudyDesigner/images/icons/slide-down.png" alt="" /></span>
 										</div>
 									</a>
 								</div>
@@ -111,7 +110,7 @@
 									<div>
 										<div class="thumb">
 											<img src="/fdahpStudyDesigner/images/dummy-img.jpg"
-												class="wid100" />
+												class="wid100" alt=""/>
 										</div>
 										<div class="dis-inline imgCls">
 											<span id="" class="blue-link removeUrl elaborateHide">X<a
@@ -185,7 +184,7 @@
 												<span class="sprites_icon delete elaborateHide"></span>
 											</c:if>
 											<span class="ml-lg imageBg"><img class="arrow"
-												src="/fdahpStudyDesigner/images/icons/slide-down.png" /></span>
+												src="/fdahpStudyDesigner/images/icons/slide-down.png" alt=""/></span>
 										</div>
 									</a>
 								</div>
@@ -206,7 +205,7 @@
 												<img
 													src="<spring:eval expression="@propertyConfigurer.getProperty('fda.imgDisplaydPath')" />studypages/${fn:escapeXml(studyPageBo.imagePath)}"
 													onerror="this.src='/fdahpStudyDesigner/images/dummy-img.jpg';"
-													class="wid100" />
+													class="wid100" alt=""/>
 											</div>
 											<div class="dis-inline imgCls">
 												<span id="remUrl${spbSt.count}"

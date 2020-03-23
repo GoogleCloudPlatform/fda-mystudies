@@ -60,7 +60,7 @@ function isNumberKey(evt)
    <div class="right-content-head">
       <div class="text-right">
          <div class="black-md-f dis-line pull-left line34">
-            <span class="mr-sm cur-pointer" onclick="goToBackPage(this);"><img src="../images/icons/back-b.png"/></span>
+            <span class="mr-sm cur-pointer" onclick="goToBackPage(this);"><img src="../images/icons/back-b.png" alt=""/></span>
             <c:if test="${actionTypeForQuestionPage == 'edit'}">Edit Question Step</c:if>
          	<c:if test="${actionTypeForQuestionPage == 'view'}">View Question Step <c:set var="isLive">${_S}isLive</c:set>${not empty  sessionScope[isLive]?'<span class="eye-inc ml-sm vertical-align-text-top"></span>':''}</c:if>
          	<c:if test="${actionTypeForQuestionPage == 'add'}">Add Question Step</c:if>
@@ -377,9 +377,9 @@ function isNumberKey(evt)
             <div class="clearfix"></div>
             <div>
                <div>
-                  <span class="mr-lg"><span class="mr-sm"><img src="../images/icons/tick.png"/></span><span>Current Day</span></span>
-                  <span class="mr-lg"><span class="mr-sm"><img src="../images/icons/tick.png"/></span><span>Current Week</span></span>
-                  <span class="mr-lg"><span class="mr-sm"><img src="../images/icons/tick.png"/></span><span>Current Month</span></span>
+                  <span class="mr-lg"><span class="mr-sm"><img src="../images/icons/tick.png" alt=""/></span><span>Current Day</span></span>
+                  <span class="mr-lg"><span class="mr-sm"><img src="../images/icons/tick.png" alt=""/></span><span>Current Week</span></span>
+                  <span class="mr-lg"><span class="mr-sm"><img src="../images/icons/tick.png" alt=""/></span><span>Current Month</span></span>
                   <span class="txt-gray">(Rollback option provided for these three options)</span>
                </div>
             </div>
@@ -518,9 +518,8 @@ function isNumberKey(evt)
 				   <div class="form-group col-smthumb-2">
 				      <div class="sm-thumb-btn" onclick="openUploadWindow(this);">
 				         <div class="thumb-img">
-				            <img src="<spring:eval expression="@propertyConfigurer.getProperty('fda.imgDisplaydPath')" />questionnaire/${fn:escapeXml(questionnairesStepsBo.questionReponseTypeBo.minImage)}" onerror="this.src='/fdahpStudyDesigner/images/icons/sm-thumb.jpg';" class="imageChoiceWidth"/>
+				            <img src="<spring:eval expression="@propertyConfigurer.getProperty('fda.imgDisplaydPath')" />questionnaire/${fn:escapeXml(questionnairesStepsBo.questionReponseTypeBo.minImage)}" onerror="this.src='/fdahpStudyDesigner/images/icons/sm-thumb.jpg';" class="imageChoiceWidth" alt=""/>
 				         </div>
-				         <!-- <div class="scaleMinimagePathId">Change</div> -->
 				         <c:if test="${empty questionnairesStepsBo.questionReponseTypeBo.minImage}"><div class="textLabelscaleMinImagePathId" >Upload</div></c:if>
 					     <c:if test="${not empty questionnairesStepsBo.questionReponseTypeBo.minImage}"><div class="textLabelscaleMinImagePathId" >Change</div></c:if>
 				      </div>
@@ -537,9 +536,8 @@ function isNumberKey(evt)
 				   <div class="form-group col-smthumb-2">
 				      <div class="sm-thumb-btn" onclick="openUploadWindow(this);">
 				         <div class="thumb-img">
-				            <img src="<spring:eval expression="@propertyConfigurer.getProperty('fda.imgDisplaydPath')" />questionnaire/${fn:escapeXml(questionnairesStepsBo.questionReponseTypeBo.maxImage)}" onerror="this.src='/fdahpStudyDesigner/images/icons/sm-thumb.jpg';" class="imageChoiceWidth"/>
+				            <img src="<spring:eval expression="@propertyConfigurer.getProperty('fda.imgDisplaydPath')" />questionnaire/${fn:escapeXml(questionnairesStepsBo.questionReponseTypeBo.maxImage)}" onerror="this.src='/fdahpStudyDesigner/images/icons/sm-thumb.jpg';" class="imageChoiceWidth" alt=""/>
 				         </div>
-				         <!-- <div class="scaleMaximagePathId">Change</div> -->
 				         <c:if test="${empty questionnairesStepsBo.questionReponseTypeBo.maxImage}"><div class="textLabelscaleMaxImagePathId" >Upload</div></c:if>
 					     <c:if test="${not empty questionnairesStepsBo.questionReponseTypeBo.maxImage}"><div class="textLabelscaleMaxImagePathId" >Change</div></c:if>
 				      </div>
@@ -624,9 +622,8 @@ function isNumberKey(evt)
 				   <div class="form-group col-smthumb-2">
 				      <div class="sm-thumb-btn" onclick="openUploadWindow(this);">
 				         <div class="thumb-img">
-				            <img src="<spring:eval expression="@propertyConfigurer.getProperty('fda.imgDisplaydPath')" />questionnaire/${fn:escapeXml(questionnairesStepsBo.questionReponseTypeBo.minImage)}" onerror="this.src='/fdahpStudyDesigner/images/icons/sm-thumb.jpg';" class="imageChoiceWidth"/>
+				            <img src="<spring:eval expression="@propertyConfigurer.getProperty('fda.imgDisplaydPath')" />questionnaire/${fn:escapeXml(questionnairesStepsBo.questionReponseTypeBo.minImage)}" onerror="this.src='/fdahpStudyDesigner/images/icons/sm-thumb.jpg';" class="imageChoiceWidth" alt=""/>
 				         </div>
-				         <!-- <div class="scaleMinimagePathId">Change</div> -->
 				         <c:if test="${empty questionnairesStepsBo.questionReponseTypeBo.minImage}"><div class="textLabelcontinuesScaleMinImagePathId" >Upload</div></c:if>
 					     <c:if test="${not empty questionnairesStepsBo.questionReponseTypeBo.minImage}"><div class="textLabelcontinuesScaleMinImagePathId" >Change</div></c:if>
 				      </div>
@@ -643,7 +640,7 @@ function isNumberKey(evt)
 				   <div class="form-group col-smthumb-2">
 				      <div class="sm-thumb-btn" onclick="openUploadWindow(this);">
 				         <div class="thumb-img">
-				            <img src="<spring:eval expression="@propertyConfigurer.getProperty('fda.imgDisplaydPath')" />questionnaire/${fn:escapeXml(questionnairesStepsBo.questionReponseTypeBo.maxImage)}" onerror="this.src='/fdahpStudyDesigner/images/icons/sm-thumb.jpg';" class="imageChoiceWidth"/>
+				            <img src="<spring:eval expression="@propertyConfigurer.getProperty('fda.imgDisplaydPath')" />questionnaire/${fn:escapeXml(questionnairesStepsBo.questionReponseTypeBo.maxImage)}" onerror="this.src='/fdahpStudyDesigner/images/icons/sm-thumb.jpg';" class="imageChoiceWidth" alt=""/>
 				         </div>
 				         <c:if test="${empty questionnairesStepsBo.questionReponseTypeBo.maxImage}"><div class="textLabelcontinuesScaleMaxImagePathId" >Upload</div></c:if>
 					     <c:if test="${not empty questionnairesStepsBo.questionReponseTypeBo.maxImage}"><div class="textLabelcontinuesScaleMaxImagePathId" >Change</div></c:if>
@@ -1264,9 +1261,9 @@ function isNumberKey(evt)
 					         </div>
 					      </div>
 					      <div class="col-md-3 pl-none">
-					         <div class="gray-xs-f mb-xs">Value (1 to 50 characters)<span class="requiredStar">*</span> </div>
+					         <div class="gray-xs-f mb-xs">Value (1 to 100 characters)<span class="requiredStar">*</span> </div>
 					         <div class="form-group mb-none">
-					            <input type="text" class="form-control TextChoiceRequired textChoiceVal" name="questionResponseSubTypeList[${subtype.index}].value" id="displayTextChoiceValue${subtype.index}" value="${fn:escapeXml(questionResponseSubType.value)}" maxlength="50">
+					            <input type="text" class="form-control TextChoiceRequired textChoiceVal" name="questionResponseSubTypeList[${subtype.index}].value" id="displayTextChoiceValue${subtype.index}" value="${fn:escapeXml(questionResponseSubType.value)}" maxlength="100">
 					            <div class="help-block with-errors red-txt"></div>
 					         </div>
 					      </div>
@@ -1323,9 +1320,9 @@ function isNumberKey(evt)
 				         </div>
 				      </div>
 				      <div class="col-md-3 pl-none">
-				         <div class="gray-xs-f mb-xs">Value (1 to 50 characters)<span class="requiredStar">*</span> </div>
+				         <div class="gray-xs-f mb-xs">Value (1 to 100 characters)<span class="requiredStar">*</span> </div>
 				         <div class="form-group mb-none">
-				            <input type="text" class="form-control TextChoiceRequired textChoiceVal" name="questionResponseSubTypeList[0].value" id="displayTextChoiceValue0" value="${fn:escapeXml(questionnairesStepsBo.questionResponseSubTypeList[0].value)}" maxlength="50">
+				            <input type="text" class="form-control TextChoiceRequired textChoiceVal" name="questionResponseSubTypeList[0].value" id="displayTextChoiceValue0" value="${fn:escapeXml(questionnairesStepsBo.questionResponseSubTypeList[0].value)}" maxlength="100">
 				            <div class="help-block with-errors red-txt"></div>
 				         </div>
 				      </div>
@@ -1378,9 +1375,9 @@ function isNumberKey(evt)
 					         </div>
 					      </div>
 					      <div class="col-md-3 pl-none">
-					         <div class="gray-xs-f mb-xs">Value (1 to 50 characters)<span class="requiredStar">*</span> </div>
+					         <div class="gray-xs-f mb-xs">Value (1 to 100 characters)<span class="requiredStar">*</span> </div>
 					         <div class="form-group mb-none">
-					            <input type="text" class="form-control TextChoiceRequired textChoiceVal" name="questionResponseSubTypeList[1].value" id="displayTextChoiceValue1" value="${fn:escapeXml(questionnairesStepsBo.questionResponseSubTypeList[1].value)}" maxlength="50">
+					            <input type="text" class="form-control TextChoiceRequired textChoiceVal" name="questionResponseSubTypeList[1].value" id="displayTextChoiceValue1" value="${fn:escapeXml(questionnairesStepsBo.questionResponseSubTypeList[1].value)}" maxlength="100">
 					            <div class="help-block with-errors red-txt"></div>
 					         </div>
 					      </div>
@@ -1443,9 +1440,9 @@ function isNumberKey(evt)
 				         </div>
 				      </div>
 				      <div class="col-md-3 pl-none">
-				         <div class="gray-xs-f mb-xs">Value (1 to 50 characters)<span class="requiredStar">*</span> </div>
+				         <div class="gray-xs-f mb-xs">Value (1 to 100 characters)<span class="requiredStar">*</span> </div>
 				         <div class="form-group mb-none">
-				            <input type="text" class="form-control TextChoiceRequired" name="questionReponseTypeBo.otherValue" id="" value="${questionnairesStepsBo.questionReponseTypeBo.otherValue}" maxlength="50">
+				            <input type="text" class="form-control TextChoiceRequired" name="questionReponseTypeBo.otherValue" id="" value="${questionnairesStepsBo.questionReponseTypeBo.otherValue}" maxlength="100">
 				            <div class="help-block with-errors red-txt"></div>
 				         </div>
 				      </div>
@@ -4104,9 +4101,9 @@ function addTextChoice(){
 	      "   </div>"+
 	      "</div>"+
 	      "<div class='col-md-3 pl-none'>"+
-	      "   <div class='gray-xs-f mb-xs'>Value (1 to 50 characters)<span class='requiredStar'>*</span> </div>"+
+	      "   <div class='gray-xs-f mb-xs'>Value (1 to 100 characters)<span class='requiredStar'>*</span> </div>"+
 	      "   <div class='form-group mb-none'>"+
-	          "   <input type='text' class='form-control TextChoiceRequired textChoiceVal' name='questionResponseSubTypeList["+choiceCount+"].value' id='displayTextChoiceValue"+choiceCount+"'  maxlength='50' required onblur='validateForUniqueValue(this,&#34;Text Choice&#34;,function(){});'>"+
+	          "   <input type='text' class='form-control TextChoiceRequired textChoiceVal' name='questionResponseSubTypeList["+choiceCount+"].value' id='displayTextChoiceValue"+choiceCount+"'  maxlength='100' required onblur='validateForUniqueValue(this,&#34;Text Choice&#34;,function(){});'>"+
 	      "      <div class='help-block with-errors red-txt'></div>"+
 	      "   </div>"+
 	      "</div>"+

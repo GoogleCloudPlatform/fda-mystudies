@@ -2,216 +2,209 @@ package com.fdahpstudydesigner.util;
 
 import java.io.Serializable;
 import java.util.List;
-
 import com.fdahpstudydesigner.bean.StudySessionBean;
 
-/**
- * @author
- *
- */
 public class SessionObject implements Serializable {
 
-	/**
-	 *
-	 */
-	private static final long serialVersionUID = 9080727824545069556L;
 
-	private Integer adminstratorId = 0;
-	private Integer auditLogUniqueId = 0;
-	private String createdDate = "";
-	private String currentHomeUrl = "";
-	private String email = "";
-	private String firstName = "";
-	private Boolean isAdminstrating = false;
-	private boolean isSuperAdmin = false;
-	private String lastName = "";
-	private boolean loginStatus = false;
-	private String passwordExpairdedDateTime;
-	private String phoneNumber = "";
-	private String privacyPolicyText = "";
-	private List<Integer> studySession;
-	private List<StudySessionBean> studySessionBeans;
-	private Integer superAdminId = 0;
-	private String termsText = "";
-	private Integer userId = 0;
-	private String userName = "";
-	private String userPermissions = "";
-	private String userType = "";
-	private String role = "";
+  private static final long serialVersionUID = 9080727824545069556L;
 
-	public Integer getAdminstratorId() {
-		return adminstratorId;
-	}
+  private Integer adminstratorId = 0;
+  private Integer auditLogUniqueId = 0;
+  private String createdDate = "";
+  private String currentHomeUrl = "";
+  private String email = "";
+  private String firstName = "";
+  private Boolean isAdminstrating = false;
+  private boolean isSuperAdmin = false;
+  private String lastName = "";
+  private boolean loginStatus = false;
+  private String passwordExpairdedDateTime;
+  private String phoneNumber = "";
+  private String privacyPolicyText = "";
+  private List<Integer> studySession;
+  private List<StudySessionBean> studySessionBeans;
+  private Integer superAdminId = 0;
+  private String termsText = "";
+  private Integer userId = 0;
+  private String userName = "";
+  private String userPermissions = "";
+  private String userType = "";
+  private String role = "";
 
-	public Integer getAuditLogUniqueId() {
-		return auditLogUniqueId;
-	}
+  public Integer getAdminstratorId() {
+    return adminstratorId;
+  }
 
-	public String getCreatedDate() {
-		return createdDate;
-	}
+  public Integer getAuditLogUniqueId() {
+    return auditLogUniqueId;
+  }
 
-	public String getCurrentHomeUrl() {
-		return currentHomeUrl;
-	}
+  public String getCreatedDate() {
+    return createdDate;
+  }
 
-	public String getEmail() {
-		return email;
-	}
+  public String getCurrentHomeUrl() {
+    return currentHomeUrl;
+  }
 
-	public String getFirstName() {
-		return firstName;
-	}
+  public String getEmail() {
+    return email;
+  }
 
-	public Boolean getIsAdminstrating() {
-		return isAdminstrating;
-	}
+  public String getFirstName() {
+    return firstName;
+  }
 
-	public String getLastName() {
-		return lastName;
-	}
+  public Boolean getIsAdminstrating() {
+    return isAdminstrating;
+  }
 
-	public String getPasswordExpairdedDateTime() {
-		return passwordExpairdedDateTime;
-	}
+  public String getLastName() {
+    return lastName;
+  }
 
-	public String getPhoneNumber() {
-		return phoneNumber;
-	}
+  public String getPasswordExpairdedDateTime() {
+    return passwordExpairdedDateTime;
+  }
 
-	public String getPrivacyPolicyText() {
-		return privacyPolicyText;
-	}
+  public String getPhoneNumber() {
+    return phoneNumber;
+  }
 
-	public List<Integer> getStudySession() {
-		return studySession;
-	}
+  public String getPrivacyPolicyText() {
+    return privacyPolicyText;
+  }
 
-	public List<StudySessionBean> getStudySessionBeans() {
-		return studySessionBeans;
-	}
+  public List<Integer> getStudySession() {
+    return studySession;
+  }
 
-	public Integer getSuperAdminId() {
-		return superAdminId;
-	}
+  public List<StudySessionBean> getStudySessionBeans() {
+    return studySessionBeans;
+  }
 
-	public String getTermsText() {
-		return termsText;
-	}
+  public Integer getSuperAdminId() {
+    return superAdminId;
+  }
 
-	public Integer getUserId() {
-		return userId;
-	}
+  public String getTermsText() {
+    return termsText;
+  }
 
-	public String getUserName() {
-		return userName;
-	}
+  public Integer getUserId() {
+    return userId;
+  }
 
-	public String getUserPermissions() {
-		return userPermissions;
-	}
+  public String getUserName() {
+    return userName;
+  }
 
-	public String getUserType() {
-		return userType;
-	}
+  public String getUserPermissions() {
+    return userPermissions;
+  }
 
-	public boolean isLoginStatus() {
-		return loginStatus;
-	}
+  public String getUserType() {
+    return userType;
+  }
 
-	public boolean isSuperAdmin() {
-		return isSuperAdmin;
-	}
+  public boolean isLoginStatus() {
+    return loginStatus;
+  }
 
-	public void setAdminstratorId(Integer adminstratorId) {
-		this.adminstratorId = adminstratorId;
-	}
+  public boolean isSuperAdmin() {
+    return isSuperAdmin;
+  }
 
-	public void setAuditLogUniqueId(Integer auditLogUniqueId) {
-		this.auditLogUniqueId = auditLogUniqueId;
-	}
+  public void setAdminstratorId(Integer adminstratorId) {
+    this.adminstratorId = adminstratorId;
+  }
 
-	public void setCreatedDate(String createdDate) {
-		this.createdDate = createdDate;
-	}
+  public void setAuditLogUniqueId(Integer auditLogUniqueId) {
+    this.auditLogUniqueId = auditLogUniqueId;
+  }
 
-	public void setCurrentHomeUrl(String currentHomeUrl) {
-		this.currentHomeUrl = currentHomeUrl;
-	}
+  public void setCreatedDate(String createdDate) {
+    this.createdDate = createdDate;
+  }
 
-	public void setEmail(String email) {
-		this.email = email;
-	}
+  public void setCurrentHomeUrl(String currentHomeUrl) {
+    this.currentHomeUrl = currentHomeUrl;
+  }
 
-	public void setFirstName(String firstName) {
-		this.firstName = firstName;
-	}
+  public void setEmail(String email) {
+    this.email = email;
+  }
 
-	public void setIsAdminstrating(Boolean isAdminstrating) {
-		this.isAdminstrating = isAdminstrating;
-	}
+  public void setFirstName(String firstName) {
+    this.firstName = firstName;
+  }
 
-	public void setLastName(String lastName) {
-		this.lastName = lastName;
-	}
+  public void setIsAdminstrating(Boolean isAdminstrating) {
+    this.isAdminstrating = isAdminstrating;
+  }
 
-	public void setLoginStatus(boolean loginStatus) {
-		this.loginStatus = loginStatus;
-	}
+  public void setLastName(String lastName) {
+    this.lastName = lastName;
+  }
 
-	public void setPasswordExpairdedDateTime(String passwordExpairdedDateTime) {
-		this.passwordExpairdedDateTime = passwordExpairdedDateTime;
-	}
+  public void setLoginStatus(boolean loginStatus) {
+    this.loginStatus = loginStatus;
+  }
 
-	public void setPhoneNumber(String phoneNumber) {
-		this.phoneNumber = phoneNumber;
-	}
+  public void setPasswordExpairdedDateTime(String passwordExpairdedDateTime) {
+    this.passwordExpairdedDateTime = passwordExpairdedDateTime;
+  }
 
-	public void setPrivacyPolicyText(String privacyPolicyText) {
-		this.privacyPolicyText = privacyPolicyText;
-	}
+  public void setPhoneNumber(String phoneNumber) {
+    this.phoneNumber = phoneNumber;
+  }
 
-	public void setStudySession(List<Integer> studySession) {
-		this.studySession = studySession;
-	}
+  public void setPrivacyPolicyText(String privacyPolicyText) {
+    this.privacyPolicyText = privacyPolicyText;
+  }
 
-	public void setStudySessionBeans(List<StudySessionBean> studySessionBeans) {
-		this.studySessionBeans = studySessionBeans;
-	}
+  public void setStudySession(List<Integer> studySession) {
+    this.studySession = studySession;
+  }
 
-	public void setSuperAdmin(boolean isSuperAdmin) {
-		this.isSuperAdmin = isSuperAdmin;
-	}
+  public void setStudySessionBeans(List<StudySessionBean> studySessionBeans) {
+    this.studySessionBeans = studySessionBeans;
+  }
 
-	public void setSuperAdminId(Integer superAdminId) {
-		this.superAdminId = superAdminId;
-	}
+  public void setSuperAdmin(boolean isSuperAdmin) {
+    this.isSuperAdmin = isSuperAdmin;
+  }
 
-	public void setTermsText(String termsText) {
-		this.termsText = termsText;
-	}
+  public void setSuperAdminId(Integer superAdminId) {
+    this.superAdminId = superAdminId;
+  }
 
-	public void setUserId(Integer userId) {
-		this.userId = userId;
-	}
+  public void setTermsText(String termsText) {
+    this.termsText = termsText;
+  }
 
-	public void setUserName(String userName) {
-		this.userName = userName;
-	}
+  public void setUserId(Integer userId) {
+    this.userId = userId;
+  }
 
-	public void setUserPermissions(String userPermissions) {
-		this.userPermissions = userPermissions;
-	}
+  public void setUserName(String userName) {
+    this.userName = userName;
+  }
 
-	public void setUserType(String userType) {
-		this.userType = userType;
-	}
+  public void setUserPermissions(String userPermissions) {
+    this.userPermissions = userPermissions;
+  }
 
-	public String getRole() {
-		return role;
-	}
+  public void setUserType(String userType) {
+    this.userType = userType;
+  }
 
-	public void setRole(String role) {
-		this.role = role;
-	}
+  public String getRole() {
+    return role;
+  }
+
+  public void setRole(String role) {
+    this.role = role;
+  }
 }

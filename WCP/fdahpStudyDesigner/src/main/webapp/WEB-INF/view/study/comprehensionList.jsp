@@ -67,9 +67,9 @@ function isNumber(evt) {
          <table id="comprehension_list" class="display bor-none" cellspacing="0" width="100%">
            <thead>
 			   <tr>
-			      <th><span class="marL10">#</span></th>
-			      <th>Question</th>
-			      <th>
+			      <th id=""><span class="marL10">#</span></th>
+			      <th id="">Question</th>
+			      <th id="">
 			       <c:if test="${empty permission}">
 			         <div class="dis-line form-group mb-none">
 			            <button type="button" class="btn btn-primary blue-btn" id="addQuestionId" onclick="addComphernsionQuestionPage();">Add Question</button>

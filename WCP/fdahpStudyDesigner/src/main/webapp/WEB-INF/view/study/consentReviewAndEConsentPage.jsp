@@ -44,7 +44,6 @@
               <div class="tab-content pl-xlg pr-xlg">
                 <input type="hidden" id="version" name="version" value="${consentBo.version}">
                 <div id="menu1" class="tab-pane fade in active">
-                 <!--   <div class="mt-xlg text-weight-semibold" style="text-align: center;">This feature is work in progress and coming soon.</div> -->
                    <div class="mt-lg" >
                    		<div class="gray-xs-f mb-sm">Enable share data permissions step for this study? <span class="gray-xs-f mb-xs">(Please ensure you have the IRB mandate to allow this)</span></div>
                    		<div class="col-md-12 pl-none">
@@ -109,39 +108,11 @@
 	                        </div>
                     	</div> --%>
                     	 <div class="col-md-12 pl-none mt-lg mb-xlg">
-                    	<!--  <div class="mt-lg"> -->
-<!-- 		                   	<a  class="preview__text" href="javascript:void()" data-toggle="modal" data-target="#myModal"> -->
 		                   	<a  class="preview__text" href="javascript:void()" data-toggle="modal" onclick="previewDataSharing();">
-							   <img class="mr-xs" src="../images/icons/eye-icn.png"> <span>Preview</span>
+							   <img class="mr-xs" src="../images/icons/eye-icn.png" alt=""> <span>Preview</span>
 							</a>
-						 <!-- </div> -->
-                    	 	<!-- <span data-toggle="modal" data-target="#myModal" class="eye__preview"><span class="sprites_icon preview-g mr-sm" data-toggle="tooltip" data-placement="top" title="" data-original-title="View"></span><span class="gray-xs-f">Preview</span></span> -->
                     	 </div>
                     	 </div>
-                    	 <!-- <div class="container">
-							  <div class="modal fade" id="myModal" role="dialog">
-							    <div class="modal-dialog" id="i__phone">
-							    	<button type="button" class="close" data-dismiss="modal">&times;</button>
-							    	<div class="i__phone__bg">
-							    		<div class="i__phone__content">
-							    			<div class=" ">
-							    				<div class="black-md-f text-uppercase dis-line line34 mb-sm mt-xlg">Title</div>
-							    				<div class="gray-xs-f mb-sm">Tagline Description</div>
-							    				<div classs=""mb-xlg><a href="#">Learn More</a></div>
-							    			</div>
-							    			<div>
-							    				<ul>
-							    					<li>List</li>
-							    					<li>List</li>
-							    					<li>List</li>
-							    				</ul>
-							    			</div>
-							    		</div>
-							    	</div>
-							    </div>
-							  </div>
-							  
-							</div> -->
                    </div>
                    <div class="clearfix"></div>
 					
@@ -260,7 +231,6 @@
 	              <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
 					  <div class="modal-dialog modal-sm">
 					    <div class="">              
-					     	<!-- <button style="position: absolute;left: 0;right: 0;margin: auto;top: -10px;" type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button> -->
 					         <div class="pp__img__container">
 								  <img src="../images/preview_phone.png" alt="Norway" style="width:100%;">
 								  <div class="pp__top">

@@ -2,148 +2,153 @@ package com.fdahpstudydesigner.bean;
 
 public class StudyListBean {
 
-	private String category;
-	private String createdFirstName;
-	private String createdLastName;
-	private String createdOn;
-	private String customStudyId;
-	private boolean flag = false;
-	private Integer id;
-	private Integer liveStudyId;
-	private String name;
-	private String projectLeadName;
-	private String researchSponsor;
-	private String status;
-	private boolean viewPermission;
+  private String category;
+  private String createdFirstName;
+  private String createdLastName;
+  private String createdOn;
+  private String customStudyId;
+  private boolean flag = false;
+  private Integer id;
+  private Integer liveStudyId;
+  private String name;
+  private String projectLeadName;
+  private String researchSponsor;
+  private String status;
+  private boolean viewPermission;
 
-	public StudyListBean(Integer id, String customStudyId, String name,
-			boolean viewPermission) {
-		super();
-		this.id = id;
-		this.customStudyId = customStudyId;
-		this.name = name;
-		this.viewPermission = viewPermission;
-	}
+  public StudyListBean(Integer id, String customStudyId, String name, boolean viewPermission) {
+    super();
+    this.id = id;
+    this.customStudyId = customStudyId;
+    this.name = name;
+    this.viewPermission = viewPermission;
+  }
 
-	public StudyListBean(Integer id, String customStudyId, String name,
-			String category, String researchSponsor, String createdFirstName,
-			String createdLastName, boolean viewPermission, String status,
-			String createdOn) {
-		super();
-		this.id = id;
-		this.customStudyId = customStudyId;
-		this.name = name;
-		this.category = category;
-		this.researchSponsor = researchSponsor;
-		this.createdFirstName = createdFirstName;
-		this.createdLastName = createdLastName;
-		this.viewPermission = viewPermission;
-		this.status = status;
-		this.createdOn = createdOn;
-	}
+  public StudyListBean(
+      Integer id,
+      String customStudyId,
+      String name,
+      String category,
+      String researchSponsor,
+      String createdFirstName,
+      String createdLastName,
+      boolean viewPermission,
+      String status,
+      String createdOn) {
+    super();
+    this.id = id;
+    this.customStudyId = customStudyId;
+    this.name = name;
+    this.category = category;
+    this.researchSponsor = researchSponsor;
+    this.createdFirstName = createdFirstName;
+    this.createdLastName = createdLastName;
+    this.viewPermission = viewPermission;
+    this.status = status;
+    this.createdOn = createdOn;
+  }
 
-	public String getCategory() {
-		return category;
-	}
+  public String getCategory() {
+    return category;
+  }
 
-	public String getCreatedFirstName() {
-		return createdFirstName;
-	}
+  public void setCategory(String category) {
+    this.category = category;
+  }
 
-	public String getCreatedLastName() {
-		return createdLastName;
-	}
+  public String getCreatedFirstName() {
+    return createdFirstName;
+  }
 
-	public String getCreatedOn() {
-		return createdOn;
-	}
+  public void setCreatedFirstName(String createdFirstName) {
+    this.createdFirstName = createdFirstName;
+  }
 
-	public String getCustomStudyId() {
-		return customStudyId;
-	}
+  public String getCreatedLastName() {
+    return createdLastName;
+  }
 
-	public Integer getId() {
-		return id;
-	}
+  public void setCreatedLastName(String createdLastName) {
+    this.createdLastName = createdLastName;
+  }
 
-	public Integer getLiveStudyId() {
-		return liveStudyId;
-	}
+  public String getCreatedOn() {
+    return createdOn;
+  }
 
-	public String getName() {
-		return name;
-	}
+  public void setCreatedOn(String createdOn) {
+    this.createdOn = createdOn;
+  }
 
-	public String getProjectLeadName() {
-		return projectLeadName;
-	}
+  public String getCustomStudyId() {
+    return customStudyId;
+  }
 
-	public String getResearchSponsor() {
-		return researchSponsor;
-	}
+  public void setCustomStudyId(String customStudyId) {
+    this.customStudyId = customStudyId;
+  }
 
-	public String getStatus() {
-		return status;
-	}
+  public boolean isFlag() {
+    return flag;
+  }
 
-	public boolean isFlag() {
-		return flag;
-	}
+  public void setFlag(boolean flag) {
+    this.flag = flag;
+  }
 
-	public boolean isViewPermission() {
-		return viewPermission;
-	}
+  public Integer getId() {
+    return id;
+  }
 
-	public void setCategory(String category) {
-		this.category = category;
-	}
+  public void setId(Integer id) {
+    this.id = id;
+  }
 
-	public void setCreatedFirstName(String createdFirstName) {
-		this.createdFirstName = createdFirstName;
-	}
+  public Integer getLiveStudyId() {
+    return liveStudyId;
+  }
 
-	public void setCreatedLastName(String createdLastName) {
-		this.createdLastName = createdLastName;
-	}
+  public void setLiveStudyId(Integer liveStudyId) {
+    this.liveStudyId = liveStudyId;
+  }
 
-	public void setCreatedOn(String createdOn) {
-		this.createdOn = createdOn;
-	}
+  public String getName() {
+    return name;
+  }
 
-	public void setCustomStudyId(String customStudyId) {
-		this.customStudyId = customStudyId;
-	}
+  public void setName(String name) {
+    this.name = name;
+  }
 
-	public void setFlag(boolean flag) {
-		this.flag = flag;
-	}
+  public String getProjectLeadName() {
+    return projectLeadName;
+  }
 
-	public void setId(Integer id) {
-		this.id = id;
-	}
+  public void setProjectLeadName(String projectLeadName) {
+    this.projectLeadName = projectLeadName;
+  }
 
-	public void setLiveStudyId(Integer liveStudyId) {
-		this.liveStudyId = liveStudyId;
-	}
+  public String getResearchSponsor() {
+    return researchSponsor;
+  }
 
-	public void setName(String name) {
-		this.name = name;
-	}
+  public void setResearchSponsor(String researchSponsor) {
+    this.researchSponsor = researchSponsor;
+  }
 
-	public void setProjectLeadName(String projectLeadName) {
-		this.projectLeadName = projectLeadName;
-	}
+  public String getStatus() {
+    return status;
+  }
 
-	public void setResearchSponsor(String researchSponsor) {
-		this.researchSponsor = researchSponsor;
-	}
+  public void setStatus(String status) {
+    this.status = status;
+  }
 
-	public void setStatus(String status) {
-		this.status = status;
-	}
+  public boolean isViewPermission() {
+    return viewPermission;
+  }
 
-	public void setViewPermission(boolean viewPermission) {
-		this.viewPermission = viewPermission;
-	}
-
+  public void setViewPermission(boolean viewPermission) {
+    this.viewPermission = viewPermission;
+  }
 }

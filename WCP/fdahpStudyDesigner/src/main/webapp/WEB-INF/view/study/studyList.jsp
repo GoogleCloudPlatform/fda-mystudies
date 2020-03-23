@@ -9,15 +9,15 @@
             <table id="studies_list" class="table wid100 tbl">
             <thead>
               <tr>
-                <th style="display: none;"> <span class="sort"></span></th>
-                <th style="display: none;">Live Study ID <span class="sort"></span></th>
-                <th>Study ID <span class="sort"></span></th>
-                <th>Study name <span class="sort"></span></th>
-                <th>Study Category <span class="sort"></span></th>
-                <th>FDA PROJECT LEAD <span class="sort"></span></th>
-                <th>Research Sponsor <span class="sort"></span></th>
-                <th>Status <span class="sort"></span></th>
-                <th>Actions</th>
+                <th style="display: none;" id=""> <span class="sort"></span></th>
+                <th style="display: none;" id="">Live Study ID <span class="sort"></span></th>
+                <th id="">Study ID <span class="sort"></span></th>
+                <th id="">Study name <span class="sort"></span></th>
+                <th id="">Study Category <span class="sort"></span></th>
+                <th id="">FDA PROJECT LEAD <span class="sort"></span></th>
+                <th id="">Research Sponsor <span class="sort"></span></th>
+                <th id="">Status <span class="sort"></span></th>
+                <th id="">Actions</th>
               </tr>
             </thead>
             <tbody>
@@ -32,7 +32,6 @@
                 <td>${study.researchSponsor}</td>
                 <td>${study.status}</td>
                 <td>
-                    <!-- <span class="sprites_icon preview-g mr-lg"></span> -->
                     <span class="sprites_icon preview-g mr-lg viewStudyClass" isLive="" studyId="${study.id}" permission="view" data-toggle="tooltip" data-placement="top" title="View"></span>
                     <span class="${(not empty study.liveStudyId)?((study.flag)?'edit-inc-draft mr-md':'edit-inc mr-md'):'edit-inc-draft mr-md'}
                         addEditStudyClass 

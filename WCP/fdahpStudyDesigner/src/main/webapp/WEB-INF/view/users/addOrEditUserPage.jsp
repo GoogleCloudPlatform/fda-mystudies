@@ -12,7 +12,7 @@
 		<div class="black-lg-f">
 			<span class="mr-xs"><a href="javascript:void(0)"
 				class="backOrCancelBttn"><img
-					src="/fdahpStudyDesigner/images/icons/back-b.png" /></a> </span>
+					src="/fdahpStudyDesigner/images/icons/back-b.png" alt=""/></a> </span>
 			<c:if test="${actionPage eq 'ADD_PAGE'}">
               	Add New User
               </c:if>
@@ -170,7 +170,6 @@
 							Assign Role<span class="requiredStar"> *</span>
 						</div>
 						<div class="form-group">
-							<!-- <input type="text" class="form-control"/> -->
 							<select id="roleId"
 								class="selectpicker <c:if test="${actionPage eq 'VIEW_PAGE'}">linkDis</c:if>"
 								name="roleId" required>
@@ -239,25 +238,6 @@
 					</span>
 				</div>
 
-				<!-- Gray Widget-->
-				<!--  <div class="edit-user-list-widget">
-                     <span class="checkbox checkbox-inline">
-                        <input type="checkbox" id="inlineCheckbox2" value="option1">
-                        <label for="inlineCheckbox2"> Manage Repository </label>
-                    </span>
-                    <span class="pull-right">
-                        <span class="radio radio-info radio-inline p-45">
-                            <input type="radio" id="inlineRadio3" value="option1" name="radioInline2">
-                            <label for="inlineRadio3"></label>
-                        </span>
-                        <span class="radio radio-inline">
-                            <input type="radio" id="inlineRadio4" value="option1" name="radioInline2">
-                            <label for="inlineRadio4"></label>
-                        </span>
-                    </span>
-                </div> -->
-
-				<!-- Gray Widget-->
 				<div class="edit-user-list-widget">
 					<span class="checkbox checkbox-inline"> <input
 						type="checkbox" id="inlineCheckbox3" class="chk" value="option1"
@@ -331,7 +311,7 @@
 									<c:if test="${actionPage ne 'VIEW_PAGE'}">
 										<span class="mr-md"><img
 											src="/fdahpStudyDesigner/images/icons/close.png"
-											onclick="del(${study.id});" /></span>
+											onclick="del(${study.id});" alt=""/></span>
 									</c:if>
 									<span>${study.name}&nbsp;(${study.customStudyId})</span> <span
 										class="pull-right"> <span

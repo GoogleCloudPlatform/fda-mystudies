@@ -5,7 +5,7 @@
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 <!DOCTYPE html>
-<html class="overflow-hidden">
+<html class="overflow-hidden" lang="">
 	<head>
         
     <!-- Basic -->
@@ -56,19 +56,6 @@
     <div id="loader"><span></span></div>
     <div id="lg-container" class="lg-container">
         
-        <!-- Login Left Section-->
-        <!-- <div class="lg-space-left">
-            <div class="lg-space-img">
-                <img src="images/logo/fda-logo-w.png"/>
-            </div>
-            <div class="lg-space-txt">
-               My Studies <br>Management Portal
-            </div>
-             <div class="lg-space-cover">
-                <img src="images/icons/web.png"/>
-            </div>
-        </div> -->
-        <!-- End Login Left Section-->
         
         <!-- Login Right Section-->
         <!-- <div class="lg-space-right">
@@ -103,7 +90,7 @@
 
 
               <div class="logo__ll">
-            <img src="images/logo/fda-logo-w.png"/>
+            <img src="images/logo/fda-logo-w.png" alt=""/>
         </div>
         
         <div class="login__container">
@@ -166,7 +153,7 @@
       </div>
       <div class="modal-body pt-xs pb-lg pl-xlg pr-xlg">
       		 <div>
-      			<div class="mt-md mb-md"><u><b>Terms</b></u></div>
+      			<div class="mt-md mb-md"><u><strong>Terms</strong></u></div>
 		               <span>${masterDataBO.termsText}</span>
             </div>
       </div>
@@ -185,7 +172,7 @@
       
       <div class="modal-body pt-xs pb-lg pl-xlg pr-xlg">
       		 <div>
-      			<div class="mt-md mb-md"><u><b>Privacy Policy</b></u></div>
+      			<div class="mt-md mb-md"><u><strong>Privacy Policy</strong></u></div>
 		               <span>${masterDataBO.privacyPolicyText}</span>
             </div>
       </div>

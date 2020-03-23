@@ -3,7 +3,7 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 <%@page import="com.fdahpstudydesigner.util.SessionObject"%>
 <!DOCTYPE html>
-<html class="overflow-hidden">
+<html class="overflow-hidden" lang="">
 	<head>
         
     <!-- Basic -->
@@ -58,22 +58,6 @@
 	</form>
     <div id="lg-container" class="lg-container">
         
-        <!-- Login Left Section-->
-        <!-- <div class="lg-space-left">
-            <div class="lg-space-img">
-                <img src="/fdahpStudyDesigner/images/logo/fda-logo-w.png"/>
-            </div>
-            <div class="lg-space-txt">
-               MyStudies <br>Management Portal
-            </div>
-             <div class="lg-space-cover">
-                <img src="/fdahpStudyDesigner/images/icons/web.png"/>
-            </div>
-        </div> -->
-        <!-- End Login Left Section-->
-        <!-- <div>
-          <a href="javascript:formSubmit();">Logout</a>
-        </div> -->
         <!-- Login Right Section-->
         <!-- <div class="lg-space-right">
         	<div class="logout">
@@ -124,11 +108,11 @@
         <!-- End Login Right Section-->
         <div class="logout">
                <div class="dis-line pull-right ml-md line34">
-                 <a href="/fdahpStudyDesigner/sessionOut.do" class="blue-link text-weight-normal text-uppercase"><span class="white__text">sign Out</span> <!-- <span class="ml-xs"><img src="/fdahpStudyDesigner/images/icons/logout.png"/></span> --></a>  
+                 <a href="/fdahpStudyDesigner/sessionOut.do" class="blue-link text-weight-normal text-uppercase"><span class="white__text">sign Out</span> </a>  
                </div>
            	</div>
         <div class="logo__ll">
-            <img src="../images/logo/fda-logo-w.png"/>
+            <img src="../images/logo/fda-logo-w.png" alt=""/>
         </div>
         <div class="landing__container">
         <!--container-->
@@ -146,7 +130,7 @@
                        <ul class="lg-icons-list"> 
                         <li class="studyListId">
                             <a class='' href='javascript:void(0)'>
-                                <img class="mt-xlg" src="../images/icons/studies-w.png">
+                                <img class="mt-xlg" src="../images/icons/studies-w.png" alt="">
                             </a>
                             <div class='studyList'>Studies<br><span>&nbsp;</span></div>
                         </li>
@@ -156,19 +140,19 @@
                         </li> 
                         <li class="notificationListId">
                              <a class='' href='javascript:void(0)'>
-                                <img class="mt-xlg" src="../images/icons/notifications-w.png">
+                                <img class="mt-xlg" src="../images/icons/notifications-w.png" alt="">
                             </a>
                             <div class='studyList'>Notifications<br><span>&nbsp;</span></div>
                         </li> 
                        <li class="userListId">
                              <a class='' href='javascript:void(0)'>
-                                <img class="mt-xlg" src="../images/icons/user-w.png">
+                                <img class="mt-xlg" src="../images/icons/user-w.png" alt="">
                             </a>
                             <div>Users<br><span>&nbsp;</span></div>
                         </li> 
                         <li class="myAccountId">
                             <a class='' href='javascript:void(0)'>
-                                <img class="mt-xlg" src="../images/icons/account-w.png">
+                                <img class="mt-xlg" src="../images/icons/account-w.png" alt="">
                             </a>
                             <div>My Account<br><span>&nbsp;</span></div>
                         </li>
@@ -197,7 +181,7 @@
       </div>
       <div class="modal-body pt-xs pb-lg pl-xlg pr-xlg">
       		 <div>
-      			<div class="mt-md mb-md"><u><b>Terms</b></u></div>
+      			<div class="mt-md mb-md"><u><strong>Terms</strong></u></div>
 		               <span>${sessionObject.termsText}</span>
             </div>
       </div>
@@ -215,7 +199,7 @@
       </div>
       <div class="modal-body pt-xs pb-lg pl-xlg pr-xlg">
       		 <div>
-      			<div class="mt-md mb-md"><u><b>Privacy Policy</b></u></div>
+      			<div class="mt-md mb-md"><u><strong>Privacy Policy</strong></u></div>
 		               <span>${sessionObject.privacyPolicyText}</span>
             </div>
       </div>

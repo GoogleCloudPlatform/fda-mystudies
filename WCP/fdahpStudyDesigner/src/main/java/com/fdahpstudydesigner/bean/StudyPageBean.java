@@ -4,103 +4,94 @@ import org.springframework.web.multipart.MultipartFile;
 
 public class StudyPageBean {
 
-	private String actionType = "";
+  private String actionType = "";
+  private String description[];
+  private String imagePath[];
+  private String mediaLink = "";
+  private MultipartFile multipartFiles[];
+  private String originalFileName[];
+  private String pageId[];
+  private String studyId;
+  private String title[];
+  private Integer userId;
 
-	private String description[];
+  public String getActionType() {
+    return actionType;
+  }
 
-	private String imagePath[];
+  public void setActionType(String actionType) {
+    this.actionType = actionType;
+  }
 
-	private String mediaLink = "";
+  public String[] getDescription() {
+    return description;
+  }
 
-	private MultipartFile multipartFiles[];
+  public void setDescription(String[] description) {
+    this.description = description;
+  }
 
-	private String originalFileName[];
+  public String[] getImagePath() {
+    return imagePath;
+  }
 
-	private String pageId[];
+  public void setImagePath(String[] imagePath) {
+    this.imagePath = imagePath;
+  }
 
-	private String studyId;
+  public String getMediaLink() {
+    return mediaLink;
+  }
 
-	private String title[];
+  public void setMediaLink(String mediaLink) {
+    this.mediaLink = mediaLink;
+  }
 
-	private Integer userId;
+  public MultipartFile[] getMultipartFiles() {
+    return multipartFiles;
+  }
 
-	public String getActionType() {
-		return actionType;
-	}
+  public void setMultipartFiles(MultipartFile[] multipartFiles) {
+    this.multipartFiles = multipartFiles;
+  }
 
-	public String[] getDescription() {
-		return description;
-	}
+  public String[] getOriginalFileName() {
+    return originalFileName;
+  }
 
-	public String[] getImagePath() {
-		return imagePath;
-	}
+  public void setOriginalFileName(String[] originalFileName) {
+    this.originalFileName = originalFileName;
+  }
 
-	public String getMediaLink() {
-		return mediaLink;
-	}
+  public String[] getPageId() {
+    return pageId;
+  }
 
-	public MultipartFile[] getMultipartFiles() {
-		return multipartFiles;
-	}
+  public void setPageId(String[] pageId) {
+    this.pageId = pageId;
+  }
 
-	public String[] getOriginalFileName() {
-		return originalFileName;
-	}
+  public String getStudyId() {
+    return studyId;
+  }
 
-	public String[] getPageId() {
-		return pageId;
-	}
+  public void setStudyId(String studyId) {
+    this.studyId = studyId;
+  }
 
-	public String getStudyId() {
-		return studyId;
-	}
+  public String[] getTitle() {
+    return title;
+  }
 
-	public String[] getTitle() {
-		return title;
-	}
+  public void setTitle(String[] title) {
+    this.title = title;
+  }
 
-	public Integer getUserId() {
-		return userId;
-	}
+  public Integer getUserId() {
+    return userId;
+  }
 
-	public void setActionType(String actionType) {
-		this.actionType = actionType;
-	}
-
-	public void setDescription(String[] description) {
-		this.description = description;
-	}
-
-	public void setImagePath(String[] imagePath) {
-		this.imagePath = imagePath;
-	}
-
-	public void setMediaLink(String mediaLink) {
-		this.mediaLink = mediaLink;
-	}
-
-	public void setMultipartFiles(MultipartFile[] multipartFiles) {
-		this.multipartFiles = multipartFiles;
-	}
-
-	public void setOriginalFileName(String[] originalFileName) {
-		this.originalFileName = originalFileName;
-	}
-
-	public void setPageId(String[] pageId) {
-		this.pageId = pageId;
-	}
-
-	public void setStudyId(String string) {
-		this.studyId = string;
-	}
-
-	public void setTitle(String[] title) {
-		this.title = title;
-	}
-
-	public void setUserId(Integer userId) {
-		this.userId = userId;
-	}
+  public void setUserId(Integer userId) {
+    this.userId = userId;
+  }
 }

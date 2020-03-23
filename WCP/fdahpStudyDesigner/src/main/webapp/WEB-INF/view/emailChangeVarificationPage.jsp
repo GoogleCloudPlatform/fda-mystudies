@@ -5,7 +5,7 @@
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 <!DOCTYPE html>
-<html class="overflow-hidden">
+<html class="overflow-hidden" lang="">
 	<head>
         
     <!-- Basic -->
@@ -56,19 +56,6 @@
     <div id="loader"><span></span></div>
     <div id="lg-container" class="lg-container">
         
-        <!-- Login Left Section-->
-        <!-- <div class="lg-space-left">
-            <div class="lg-space-img">
-                <img src="images/logo/fda-logo-w.png"/>
-            </div>
-            <div class="lg-space-txt">
-               My Studies <br>Management Portal
-            </div>
-             <div class="lg-space-cover">
-                <img src="images/icons/web.png"/>
-            </div>
-        </div> -->
-        <!-- End Login Left Section-->
         
         <!-- Login Right Section-->
         <!-- <div class="lg-space-right">
@@ -103,16 +90,12 @@
 
 
               <div class="logo__ll">
-            <img src="images/logo/fda-logo-w.png"/>
+            <img src="images/logo/fda-logo-w.png" alt=""/>
         </div>
         
         <div class="login__container">
             <div class="">
              <input type="hidden" id="csrfDet" csrfParamName="${_csrf.parameterName}" csrfToken="${_csrf.token}" />
-             <!-- <div class="lg-space-txt text-center">
-                    FDA My Studies Management Portal
-                </div>
-                <div class="ll__border__bottom"></div> -->
              <form:form id="accessCodeForm" data-toggle="validator" role="form" action="validateAccessCode.do" method="post" autocomplete="off">
 
                     <div id="errMsg" class="error_msg">${errMsg}</div>

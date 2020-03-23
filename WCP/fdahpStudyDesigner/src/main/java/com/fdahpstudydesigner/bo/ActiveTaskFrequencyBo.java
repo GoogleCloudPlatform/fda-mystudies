@@ -1,7 +1,6 @@
 package com.fdahpstudydesigner.bo;
 
 import java.io.Serializable;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -10,143 +9,127 @@ import javax.persistence.Id;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 
-/**
- * The persistent class for the active_task_frequencies database table.
- *
- * @author BTC
- */
+
 @Entity
 @Table(name = "active_task_frequencies")
 @NamedQuery(name = "ActiveTaskFrequencyBo.findAll", query = "SELECT a FROM ActiveTaskFrequencyBo a")
 public class ActiveTaskFrequencyBo implements Serializable {
-	private static final long serialVersionUID = 1L;
 
-	@Column(name = "active_task_id")
-	private Integer activeTaskId;
+  private static final long serialVersionUID = 1L;
 
-	@Column(name = "frequency_date")
-	private String frequencyDate;
+  @Column(name = "active_task_id")
+  private Integer activeTaskId;
 
-	@Column(name = "frequency_time")
-	private String frequencyTime;
+  @Column(name = "frequency_date")
+  private String frequencyDate;
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long id;
+  @Column(name = "frequency_time")
+  private String frequencyTime;
 
-	@Column(name = "is_launch_study")
-	private Boolean isLaunchStudy = false;
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  private Long id;
 
-	@Column(name = "is_study_life_time")
-	private Boolean isStudyLifeTime = false;
-	
-	@Column(name = "x_days_sign", length = 1)
-	private boolean xDaysSign = false;
+  @Column(name = "is_launch_study")
+  private Boolean isLaunchStudy = false;
 
-	@Column(name = "y_days_sign", length = 1)
-	private boolean yDaysSign = false;
-	
-	@Column(name = "time_period_from_days")
-	private Integer timePeriodFromDays;
+  @Column(name = "is_study_life_time")
+  private Boolean isStudyLifeTime = false;
 
-	@Column(name = "time_period_to_days")
-	private Integer timePeriodToDays;
+  @Column(name = "x_days_sign", length = 1)
+  private boolean xDaysSign = false;
 
-	public ActiveTaskFrequencyBo() {
-		// Do nothing
-	}
+  @Column(name = "y_days_sign", length = 1)
+  private boolean yDaysSign = false;
 
-	public Integer getActiveTaskId() {
-		return activeTaskId;
-	}
+  @Column(name = "time_period_from_days")
+  private Integer timePeriodFromDays;
 
-	public String getFrequencyDate() {
-		return this.frequencyDate;
-	}
+  @Column(name = "time_period_to_days")
+  private Integer timePeriodToDays;
 
-	public String getFrequencyTime() {
-		return this.frequencyTime;
-	}
+  public ActiveTaskFrequencyBo() {}
 
-	public Long getId() {
-		return this.id;
-	}
+  public Integer getActiveTaskId() {
+    return activeTaskId;
+  }
 
-	/**
-	 * @return the isLaunchStudy
-	 */
-	public Boolean getIsLaunchStudy() {
-		return isLaunchStudy;
-	}
+  public String getFrequencyDate() {
+    return this.frequencyDate;
+  }
 
-	/**
-	 * @return the isStudyLifeTime
-	 */
-	public Boolean getIsStudyLifeTime() {
-		return isStudyLifeTime;
-	}
+  public String getFrequencyTime() {
+    return this.frequencyTime;
+  }
 
-	public void setActiveTaskId(Integer activeTaskId) {
-		this.activeTaskId = activeTaskId;
-	}
+  public Long getId() {
+    return this.id;
+  }
 
-	public void setFrequencyDate(String frequencyDate) {
-		this.frequencyDate = frequencyDate;
-	}
 
-	public void setFrequencyTime(String frequencyTime) {
-		this.frequencyTime = frequencyTime;
-	}
+  public Boolean getIsLaunchStudy() {
+    return isLaunchStudy;
+  }
 
-	public void setId(Long id) {
-		this.id = id;
-	}
+  public Boolean getIsStudyLifeTime() {
+    return isStudyLifeTime;
+  }
 
-	/**
-	 * @param isLaunchStudy
-	 *            the isLaunchStudy to set
-	 */
-	public void setIsLaunchStudy(Boolean isLaunchStudy) {
-		this.isLaunchStudy = isLaunchStudy;
-	}
+  public void setActiveTaskId(Integer activeTaskId) {
+    this.activeTaskId = activeTaskId;
+  }
 
-	/**
-	 * @param isStudyLifeTime
-	 *            the isStudyLifeTime to set
-	 */
-	public void setIsStudyLifeTime(Boolean isStudyLifeTime) {
-		this.isStudyLifeTime = isStudyLifeTime;
-	}
+  public void setFrequencyDate(String frequencyDate) {
+    this.frequencyDate = frequencyDate;
+  }
 
-	public boolean isxDaysSign() {
-		return xDaysSign;
-	}
+  public void setFrequencyTime(String frequencyTime) {
+    this.frequencyTime = frequencyTime;
+  }
 
-	public void setxDaysSign(boolean xDaysSign) {
-		this.xDaysSign = xDaysSign;
-	}
+  public void setId(Long id) {
+    this.id = id;
+  }
 
-	public boolean isyDaysSign() {
-		return yDaysSign;
-	}
 
-	public void setyDaysSign(boolean yDaysSign) {
-		this.yDaysSign = yDaysSign;
-	}
+  public void setIsLaunchStudy(Boolean isLaunchStudy) {
+    this.isLaunchStudy = isLaunchStudy;
+  }
 
-	public Integer getTimePeriodFromDays() {
-		return timePeriodFromDays;
-	}
 
-	public void setTimePeriodFromDays(Integer timePeriodFromDays) {
-		this.timePeriodFromDays = timePeriodFromDays;
-	}
+  public void setIsStudyLifeTime(Boolean isStudyLifeTime) {
+    this.isStudyLifeTime = isStudyLifeTime;
+  }
 
-	public Integer getTimePeriodToDays() {
-		return timePeriodToDays;
-	}
+  public boolean isxDaysSign() {
+    return xDaysSign;
+  }
 
-	public void setTimePeriodToDays(Integer timePeriodToDays) {
-		this.timePeriodToDays = timePeriodToDays;
-	}
+  public void setxDaysSign(boolean xDaysSign) {
+    this.xDaysSign = xDaysSign;
+  }
+
+  public boolean isyDaysSign() {
+    return yDaysSign;
+  }
+
+  public void setyDaysSign(boolean yDaysSign) {
+    this.yDaysSign = yDaysSign;
+  }
+
+  public Integer getTimePeriodFromDays() {
+    return timePeriodFromDays;
+  }
+
+  public void setTimePeriodFromDays(Integer timePeriodFromDays) {
+    this.timePeriodFromDays = timePeriodFromDays;
+  }
+
+  public Integer getTimePeriodToDays() {
+    return timePeriodToDays;
+  }
+
+  public void setTimePeriodToDays(Integer timePeriodToDays) {
+    this.timePeriodToDays = timePeriodToDays;
+  }
 }
