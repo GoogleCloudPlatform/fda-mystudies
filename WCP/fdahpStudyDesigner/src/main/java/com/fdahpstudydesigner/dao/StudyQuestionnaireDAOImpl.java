@@ -1,3 +1,26 @@
+/*
+ * Copyright Â© 2017-2018 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors.
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
+ * associated documentation files (the "Software"), to deal in the Software without restriction, including
+ * without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies
+ * of the Software, and to permit persons to whom the Software is furnished to do so, subject to the
+ * following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all copies or substantial
+ * portions of the Software.
+ *
+ * Funding Source: Food and Drug Administration ("Funding Agency") effective 18 September 2014 as Contract no.
+ * HHSF22320140030I/HHSF22301006T (the "Prime Contract").
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT. IN NO EVENT SHALL
+ * THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR
+ * OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
+ * ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+ * OTHER DEALINGS IN THE SOFTWARE.
+ */
+
 package com.fdahpstudydesigner.dao;
 
 import java.math.BigDecimal;
@@ -45,7 +68,6 @@ import com.fdahpstudydesigner.util.FdahpStudyDesignerConstants;
 import com.fdahpstudydesigner.util.FdahpStudyDesignerUtil;
 import com.fdahpstudydesigner.util.SessionObject;
 
-
 @Repository
 public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
 
@@ -61,7 +83,6 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
 
   private Transaction transaction = null;
 
-  
   @SuppressWarnings("unchecked")
   @Override
   public String checkFromQuestionShortTitle(
@@ -138,7 +159,6 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
     return message;
   }
 
-  
   @Override
   public String checkQuestionnaireResponseTypeValidation(Integer studyId, String customStudyId) {
     logger.info("StudyQuestionnaireDAOImpl - checkQuestionnaireResponseTypeValidation() - starts");
@@ -184,7 +204,6 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
     return message;
   }
 
-  
   @SuppressWarnings("unchecked")
   @Override
   public String checkQuestionnaireShortTitle(
@@ -253,7 +272,6 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
     return message;
   }
 
-  
   @SuppressWarnings("unchecked")
   @Override
   public String checkQuestionnaireStepShortTitle(
@@ -330,7 +348,6 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
     return message;
   }
 
-  
   @SuppressWarnings("unchecked")
   @Override
   public String checkStatShortTitle(Integer studyId, String shortTitle, String customStudyId) {
@@ -433,7 +450,6 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
     return message;
   }
 
-  
   @SuppressWarnings("unchecked")
   @Override
   public QuestionnaireBo copyStudyQuestionnaireBo(
@@ -913,7 +929,6 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
     return newQuestionnaireBo;
   }
 
-  
   @Override
   public String deleteFromStepQuestion(
       Integer formId, Integer questionId, SessionObject sessionObject, String customStudyId) {
@@ -1041,7 +1056,6 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
     return message;
   }
 
-  
   @SuppressWarnings("unchecked")
   @Override
   public String deleteQuestionnaireStep(
@@ -1228,7 +1242,6 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
     return message;
   }
 
-  
   public String deleteQuestionnaireStep(
       Integer stepId,
       Integer questionnaireId,
@@ -1359,7 +1372,6 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
     return message;
   }
 
-  
   @Override
   public String deleteQuestuionnaireInfo(
       Integer studyId, Integer questionnaireId, SessionObject sessionObject, String customStudyId) {
@@ -1381,7 +1393,6 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
       studyVersionBo = (StudyVersionBo) query.uniqueResult();
 
       // delete anchordate from question start
-      /** * ------------------ * */
       boolean isChange = true;
       message =
           updateAnchordateInQuestionnaire(
@@ -1398,7 +1409,6 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
       if (!message.equalsIgnoreCase(FdahpStudyDesignerConstants.SUCCESS)) {
         return message;
       }
-      /** **** ----------------------- * */
       // delete anchordate from question end
 
       if (studyVersionBo != null) {
@@ -1450,7 +1460,6 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
     return message;
   }
 
-  
   public String deleteQuestuionnaireInfo(
       Integer studyId,
       Integer questionnaireId,
@@ -1581,7 +1590,6 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
     return message;
   }
 
-  
   @SuppressWarnings("unchecked")
   @Override
   public List<HealthKitKeysInfo> getHeanlthKitKeyInfoList() {
@@ -1603,7 +1611,6 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
     return healthKitKeysInfoList;
   }
 
-  
   @Override
   public InstructionsBo getInstructionsBo(
       Integer instructionId,
@@ -1674,7 +1681,6 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
     return instructionsBo;
   }
 
-  
   @Override
   @SuppressWarnings({"unchecked"})
   public List<QuestionConditionBranchBo> getQuestionConditionalBranchingLogic(
@@ -1733,7 +1739,6 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
     return newQuestionConditionBranchList;
   }
 
-  
   @SuppressWarnings("unchecked")
   @Override
   public QuestionnaireBo getQuestionnaireById(Integer questionnaireId, String customStudyId) {
@@ -1837,7 +1842,6 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
     return questionnaireBo;
   }
 
-  
   @SuppressWarnings("unchecked")
   @Override
   public List<QuestionnairesStepsBo> getQuestionnairesStepsList(
@@ -1863,7 +1867,6 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
     return questionnairesStepsList;
   }
 
-  
   @SuppressWarnings({"rawtypes", "unchecked"})
   @Override
   public QuestionnairesStepsBo getQuestionnaireStep(
@@ -2136,7 +2139,6 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
     return questionnairesStepsBo;
   }
 
-  
   @SuppressWarnings("unchecked")
   @Override
   public SortedMap<Integer, QuestionnaireStepBean> getQuestionnaireStepList(
@@ -2339,7 +2341,6 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
     return qTreeMap;
   }
 
-  
   @SuppressWarnings("unchecked")
   @Override
   public List<QuestionResponseTypeMasterInfoBo> getQuestionReponseTypeList() {
@@ -2361,7 +2362,6 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
     return questionResponseTypeMasterInfoBos;
   }
 
-  
   @SuppressWarnings("unchecked")
   @Override
   public QuestionsBo getQuestionsById(
@@ -2551,7 +2551,6 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
     return questionsBo;
   }
 
-  
   public QuestionReponseTypeBo getQuestionsResponseTypeBo(
       QuestionReponseTypeBo questionsResponseTypeBo, Session session) {
     logger.info("StudyQuestionnaireDAOImpl - getQuestionsResponseTypeBo() - Starts");
@@ -2831,7 +2830,6 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
     return addOrUpdateQuestionsResponseTypeBo;
   }
 
-  
   @SuppressWarnings("unchecked")
   @Override
   public List<QuestionnaireBo> getStudyQuestionnairesByStudyId(String studyId, Boolean isLive) {
@@ -2867,7 +2865,6 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
     return questionnaires;
   }
 
-  
   @Override
   public Boolean isAnchorDateExistsForStudy(Integer studyId, String customStudyId) {
     logger.info("StudyQuestionnaireDAOImpl - isAnchorDateExistsForStudy() - starts");
@@ -2945,7 +2942,6 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
     return isExists;
   }
 
-  
   @Override
   public Boolean isQuestionnairesCompleted(Integer studyId) {
     logger.info("StudyQuestionnaireDAOImpl - isAnchorDateExistsForStudy() - starts");
@@ -2972,7 +2968,6 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
     return isExists;
   }
 
-  
   @Override
   public String reOrderFormStepQuestions(Integer formId, int oldOrderNumber, int newOrderNumber) {
     logger.info("StudyQuestionnaireDAOImpl - reOrderFormStepQuestions() - Starts");
@@ -3046,7 +3041,6 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
     return message;
   }
 
-  
   @SuppressWarnings("unchecked")
   @Override
   public String reOrderQuestionnaireSteps(
@@ -3180,7 +3174,6 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
     return message;
   }
 
-  
   @Override
   public QuestionnairesStepsBo saveOrUpdateFromQuestionnaireStep(
       QuestionnairesStepsBo questionnairesStepsBo, SessionObject sesObj, String customStudyId) {
@@ -3338,7 +3331,6 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
     return addOrUpdateQuestionnairesStepsBo;
   }
 
-  
   @Override
   public InstructionsBo saveOrUpdateInstructionsBo(
       InstructionsBo instructionsBo, SessionObject sessionObject, String customStudyId) {
@@ -3489,7 +3481,6 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
     return instructionsBo;
   }
 
-  
   @Override
   public QuestionsBo saveOrUpdateQuestion(QuestionsBo questionsBo) {
     logger.info("StudyQuestionnaireDAOImpl - saveOrUpdateQuestion() - Starts");
@@ -3699,7 +3690,6 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
     return questionsBo;
   }
 
-  
   @Override
   public QuestionnaireBo saveORUpdateQuestionnaire(
       QuestionnaireBo questionnaireBo, SessionObject sessionObject, String customStudyId) {
@@ -3975,7 +3965,6 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
     return questionnaireBo;
   }
 
-  
   @Override
   public QuestionnairesStepsBo saveOrUpdateQuestionStep(
       QuestionnairesStepsBo questionnairesStepsBo,
@@ -4322,7 +4311,6 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
     this.hibernateTemplate = new HibernateTemplate(sessionFactory);
   }
 
-  
   public String updateLineChartSchedule(
       Integer questionnaireId,
       String frequency,
@@ -4427,7 +4415,6 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
     return message;
   }
 
-  
   @Override
   public String validateLineChartSchedule(Integer questionnaireId, String frequency) {
     logger.info("StudyQuestionnaireDAOImpl - validateLineChartSchedule() - starts");
@@ -4475,7 +4462,6 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
     return message;
   }
 
-  
   @Override
   public String validateRepetableFormQuestionStats(Integer formId) {
     logger.info("StudyQuestionnaireDAOImpl - validateRepetableFormQuestionStats() - starts");
@@ -4502,7 +4488,6 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
     return message;
   }
 
-  
   @Override
   public String checkUniqueAnchorDateName(
       String anchordateText, String customStudyId, String anchorDateId) {

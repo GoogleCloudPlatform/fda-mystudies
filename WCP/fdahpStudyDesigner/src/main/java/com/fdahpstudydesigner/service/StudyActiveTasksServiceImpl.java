@@ -1,10 +1,30 @@
+/*
+ * Copyright Â© 2017-2018 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors.
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
+ * associated documentation files (the "Software"), to deal in the Software without restriction, including
+ * without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies
+ * of the Software, and to permit persons to whom the Software is furnished to do so, subject to the
+ * following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all copies or substantial
+ * portions of the Software.
+ *
+ * Funding Source: Food and Drug Administration ("Funding Agency") effective 18 September 2014 as Contract no.
+ * HHSF22320140030I/HHSF22301006T (the "Prime Contract").
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT. IN NO EVENT SHALL
+ * THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR
+ * OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
+ * ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+ * OTHER DEALINGS IN THE SOFTWARE.
+ */
+
 package com.fdahpstudydesigner.service;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,12 +37,10 @@ import com.fdahpstudydesigner.bo.ActiveTaskListBo;
 import com.fdahpstudydesigner.bo.ActiveTaskMasterAttributeBo;
 import com.fdahpstudydesigner.bo.ActivetaskFormulaBo;
 import com.fdahpstudydesigner.bo.StatisticImageListBo;
-import com.fdahpstudydesigner.bo.StudyBo;
 import com.fdahpstudydesigner.dao.StudyActiveTasksDAO;
 import com.fdahpstudydesigner.util.FdahpStudyDesignerConstants;
 import com.fdahpstudydesigner.util.FdahpStudyDesignerUtil;
 import com.fdahpstudydesigner.util.SessionObject;
-
 
 @Service
 public class StudyActiveTasksServiceImpl implements StudyActiveTasksService {
@@ -31,7 +49,6 @@ public class StudyActiveTasksServiceImpl implements StudyActiveTasksService {
 
   @Autowired private StudyActiveTasksDAO studyActiveTasksDAO;
 
-  
   @Override
   public String deleteActiveTask(
       Integer activeTaskInfoId, Integer studyId, SessionObject sesObj, String customStudyId) {
@@ -50,7 +67,6 @@ public class StudyActiveTasksServiceImpl implements StudyActiveTasksService {
     return message;
   }
 
-  
   @Override
   public ActiveTaskBo getActiveTaskById(Integer ativeTaskId, String customStudyId) {
     logger.info("StudyActiveTasksServiceImpl - getActiveTaskById() - Starts");
@@ -148,7 +164,6 @@ public class StudyActiveTasksServiceImpl implements StudyActiveTasksService {
     return activeTask;
   }
 
-  
   @Override
   public List<ActivetaskFormulaBo> getActivetaskFormulas() {
     logger.info("StudyActiveTasksServiceImpl - getActivetaskFormulas() - Starts");
@@ -162,7 +177,6 @@ public class StudyActiveTasksServiceImpl implements StudyActiveTasksService {
     return activetaskFormulaList;
   }
 
-  
   @Override
   public List<ActiveTaskMasterAttributeBo> getActiveTaskMasterAttributesByType(
       String activeTaskType) {
@@ -179,7 +193,6 @@ public class StudyActiveTasksServiceImpl implements StudyActiveTasksService {
     return taskMasterAttributeBos;
   }
 
-  
   @Override
   public List<ActiveTaskListBo> getAllActiveTaskTypes(String platformType) {
     logger.info("StudyActiveTasksServiceImpl - getAllActiveTaskTypes() - Starts");
@@ -193,7 +206,6 @@ public class StudyActiveTasksServiceImpl implements StudyActiveTasksService {
     return activeTaskListBos;
   }
 
-  
   @Override
   public List<StatisticImageListBo> getStatisticImages() {
     logger.info("StudyActiveTasksServiceImpl - getStatisticImages() - Starts");
@@ -207,7 +219,6 @@ public class StudyActiveTasksServiceImpl implements StudyActiveTasksService {
     return statisticImageListBos;
   }
 
-  
   @Override
   public List<ActiveTaskBo> getStudyActiveTasksByStudyId(String studyId, Boolean isLive) {
     logger.info("StudyActiveTasksServiceImpl - getStudyActiveTasksByStudyId() - Starts");
@@ -221,7 +232,6 @@ public class StudyActiveTasksServiceImpl implements StudyActiveTasksService {
     return activeTasks;
   }
 
-  
   @Override
   public ActiveTaskBo saveOrUpdateActiveTask(
       ActiveTaskBo activeTaskBo, SessionObject sessionObject, String customStudyId) {
@@ -291,7 +301,6 @@ public class StudyActiveTasksServiceImpl implements StudyActiveTasksService {
     return updateActiveTaskBo;
   }
 
-  
   @Override
   public ActiveTaskBo saveOrUpdateActiveTask(ActiveTaskBo activeTaskBo, String customStudyId) {
     logger.info("StudyQuestionnaireServiceImpl - saveORUpdateQuestionnaire - Starts");
@@ -435,7 +444,6 @@ public class StudyActiveTasksServiceImpl implements StudyActiveTasksService {
     return addActiveTaskeBo;
   }
 
-  
   @Override
   public boolean validateActiveTaskAttrById(
       Integer studyId,
@@ -462,7 +470,6 @@ public class StudyActiveTasksServiceImpl implements StudyActiveTasksService {
     return valid;
   }
 
-  
   @Override
   public List<ActiveStatisticsBean> validateActiveTaskStatIds(
       String customStudyId, List<ActiveStatisticsBean> activeStatisticsBeans) {

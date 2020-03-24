@@ -1,3 +1,26 @@
+/*
+ * Copyright Â© 2017-2018 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors.
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
+ * associated documentation files (the "Software"), to deal in the Software without restriction, including
+ * without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies
+ * of the Software, and to permit persons to whom the Software is furnished to do so, subject to the
+ * following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all copies or substantial
+ * portions of the Software.
+ *
+ * Funding Source: Food and Drug Administration ("Funding Agency") effective 18 September 2014 as Contract no.
+ * HHSF22320140030I/HHSF22301006T (the "Prime Contract").
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT. IN NO EVENT SHALL
+ * THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR
+ * OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
+ * ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+ * OTHER DEALINGS IN THE SOFTWARE.
+ */
+
 package com.fdahpstudydesigner.controller;
 
 import java.util.List;
@@ -24,7 +47,6 @@ public class NotificationController {
 
   @Autowired private NotificationService notificationService;
 
-  
   @RequestMapping("/adminNotificationEdit/deleteNotification.do")
   public ModelAndView deleteNotification(HttpServletRequest request) {
     logger.info("NotificationController - deleteNotification - Starts");
@@ -69,7 +91,6 @@ public class NotificationController {
     return mav;
   }
 
-  
   @RequestMapping("/adminNotificationEdit/getNotificationToEdit.do")
   public ModelAndView getNotificationToEdit(HttpServletRequest request) {
     logger.info("NotificationController - getNotificationToEdit - Starts");
@@ -143,7 +164,6 @@ public class NotificationController {
     return mav;
   }
 
- 
   @RequestMapping("/adminNotificationView/getNotificationToView.do")
   public ModelAndView getNotificationToView(HttpServletRequest request) {
     logger.info("NotificationController - getNotification - Starts");
@@ -196,7 +216,6 @@ public class NotificationController {
     return mav;
   }
 
- 
   @RequestMapping("/adminNotificationEdit/saveOrUpdateNotification.do")
   public ModelAndView saveOrUpdateOrResendNotification(
       HttpServletRequest request, NotificationBO notificationBO) {
@@ -306,7 +325,6 @@ public class NotificationController {
     logger.info("NotificationController - saveOrUpdateOrResendNotification - Ends");
     return mav;
   }
-
 
   @RequestMapping("/adminNotificationView/viewNotificationList.do")
   public ModelAndView viewNotificationList(HttpServletRequest request) {

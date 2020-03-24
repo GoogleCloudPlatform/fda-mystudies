@@ -1,3 +1,26 @@
+/*
+ * Copyright Â© 2017-2018 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors.
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
+ * associated documentation files (the "Software"), to deal in the Software without restriction, including
+ * without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies
+ * of the Software, and to permit persons to whom the Software is furnished to do so, subject to the
+ * following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all copies or substantial
+ * portions of the Software.
+ *
+ * Funding Source: Food and Drug Administration ("Funding Agency") effective 18 September 2014 as Contract no.
+ * HHSF22320140030I/HHSF22301006T (the "Prime Contract").
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT. IN NO EVENT SHALL
+ * THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR
+ * OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
+ * ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+ * OTHER DEALINGS IN THE SOFTWARE.
+ */
+
 package com.fdahpstudydesigner.controller;
 
 import java.io.PrintWriter;
@@ -43,7 +66,6 @@ import com.fdahpstudydesigner.service.StudyService;
 import com.fdahpstudydesigner.util.FdahpStudyDesignerConstants;
 import com.fdahpstudydesigner.util.FdahpStudyDesignerUtil;
 import com.fdahpstudydesigner.util.SessionObject;
-
 
 @Controller
 public class StudyQuestionnaireController {
@@ -630,7 +652,6 @@ public class StudyQuestionnaireController {
     return mav;
   }
 
-  
   @RequestMapping("/adminStudies/formQuestion.do")
   public ModelAndView getFormStepQuestionPage(
       HttpServletRequest request, HttpServletResponse response) {
@@ -861,7 +882,6 @@ public class StudyQuestionnaireController {
     return mav;
   }
 
- 
   @RequestMapping("/adminStudies/instructionsStep.do")
   public ModelAndView getInstructionsPage(
       HttpServletRequest request, HttpServletResponse response) {
@@ -1035,7 +1055,6 @@ public class StudyQuestionnaireController {
     return mav;
   }
 
- 
   @RequestMapping(value = "/adminStudies/viewQuestionnaire.do")
   public ModelAndView getQuestionnairePage(
       HttpServletRequest request, HttpServletResponse response) {
@@ -1215,7 +1234,6 @@ public class StudyQuestionnaireController {
     return mav;
   }
 
-  
   @RequestMapping("/adminStudies/questionStep.do")
   public ModelAndView getQuestionStepPage(
       HttpServletRequest request, HttpServletResponse response) {
@@ -1432,7 +1450,6 @@ public class StudyQuestionnaireController {
     return mav;
   }
 
-  
   @RequestMapping(value = "/adminStudies/reOrderFormQuestions.do", method = RequestMethod.POST)
   public void reOrderFromStepQuestionsInfo(
       HttpServletRequest request, HttpServletResponse response) {
@@ -1502,7 +1519,6 @@ public class StudyQuestionnaireController {
     logger.info("StudyQuestionnaireController - reOrderQuestionnaireStepInfo - Ends");
   }
 
- 
   @RequestMapping(
       value = "/adminStudies/reOrderQuestionnaireStepInfo.do",
       method = RequestMethod.POST)
@@ -1684,7 +1700,6 @@ public class StudyQuestionnaireController {
     logger.info("StudyQuestionnaireController - saveFormStep - Ends");
   }
 
-
   @RequestMapping(value = "/adminStudies/saveInstructionStep.do")
   public void saveInstructionStep(HttpServletRequest request, HttpServletResponse response) {
     logger.info("StudyQuestionnaireController - saveInstructionStep - Starts");
@@ -1770,7 +1785,6 @@ public class StudyQuestionnaireController {
     logger.info("StudyQuestionnaireController - saveInstructionStep - Ends");
   }
 
- 
   @RequestMapping("/adminStudies/saveOrUpdateFromQuestion.do")
   public ModelAndView saveOrUpdateFormQuestion(
       HttpServletRequest request, HttpServletResponse response, QuestionsBo questionsBo) {
@@ -1851,6 +1865,7 @@ public class StudyQuestionnaireController {
     logger.info("StudyQuestionnaireController - saveOrUpdateFormQuestion - Ends");
     return mav;
   }
+
   @RequestMapping("/adminStudies/saveOrUpdateFromStepQuestionnaire.do")
   public ModelAndView saveOrUpdateFormStepQuestionnaire(
       HttpServletRequest request,
@@ -1935,7 +1950,6 @@ public class StudyQuestionnaireController {
     return mav;
   }
 
-  
   @RequestMapping("/adminStudies/saveOrUpdateInstructionStep.do")
   public ModelAndView saveOrUpdateInstructionStep(
       HttpServletRequest request, HttpServletResponse response, InstructionsBo instructionsBo) {
@@ -2119,7 +2133,6 @@ public class StudyQuestionnaireController {
     return mav;
   }
 
-  
   @RequestMapping("/adminStudies/saveOrUpdateQuestionStepQuestionnaire.do")
   public ModelAndView saveOrUpdateQuestionStepQuestionnaire(
       HttpServletRequest request,
@@ -2314,7 +2327,6 @@ public class StudyQuestionnaireController {
     }
     logger.info("StudyQuestionnaireController - saveQuestion - Ends");
   }
-
 
   @RequestMapping(value = "/adminStudies/saveQuestionnaireSchedule.do", method = RequestMethod.POST)
   public void saveQuestionnaireSchedule(HttpServletRequest request, HttpServletResponse response) {
@@ -2588,7 +2600,6 @@ public class StudyQuestionnaireController {
     logger.info("StudyQuestionnaireController - validateconditionalFormula - Ends");
   }
 
-  
   @RequestMapping(value = "/adminStudies/validateLineChartSchedule.do", method = RequestMethod.POST)
   public void validateQuestionnaireLineChartSchedule(
       HttpServletRequest request, HttpServletResponse response) {
@@ -2699,7 +2710,6 @@ public class StudyQuestionnaireController {
     logger.info("StudyQuestionnaireController - validateQuestionnaireShortTitle - Ends");
   }
 
-  
   @RequestMapping(
       value = "/adminStudies/validateQuestionnaireStepKey.do",
       method = RequestMethod.POST)
@@ -2768,7 +2778,6 @@ public class StudyQuestionnaireController {
     logger.info("StudyQuestionnaireController - validateQuestionnaireStepShortTitle - Ends");
   }
 
- 
   @RequestMapping(value = "/adminStudies/validateQuestionKey.do", method = RequestMethod.POST)
   public void validateQuestionShortTitle(HttpServletRequest request, HttpServletResponse response) {
     logger.info("StudyQuestionnaireController - validateQuestionShortTitle - Starts");
@@ -2829,7 +2838,6 @@ public class StudyQuestionnaireController {
     logger.info("StudyQuestionnaireController - validateQuestionShortTitle - Ends");
   }
 
-  
   @RequestMapping(value = "/adminStudies/validateStatsShortName.do", method = RequestMethod.POST)
   public void validateQuestionStatsShortTitle(
       HttpServletRequest request, HttpServletResponse response) {
@@ -2878,7 +2886,6 @@ public class StudyQuestionnaireController {
     logger.info("StudyQuestionnaireController - validateQuestionStatsShortTitle - Ends");
   }
 
-  
   @RequestMapping(
       value = "/adminStudies/validateRepeatableQuestion.do",
       method = RequestMethod.POST)
@@ -2911,7 +2918,6 @@ public class StudyQuestionnaireController {
     logger.info("StudyQuestionnaireController - validateRepeatableQuestion - Ends");
   }
 
-  
   @RequestMapping("/adminStudies/viewStudyQuestionnaires.do")
   public ModelAndView viewStudyQuestionnaires(HttpServletRequest request) {
     logger.info("StudyQuestionnaireController - viewStudyQuestionnaires - Starts");
@@ -3049,7 +3055,6 @@ public class StudyQuestionnaireController {
     return mav;
   }
 
- 
   @RequestMapping(value = "/adminStudies/validateAnchorDateName.do", method = RequestMethod.POST)
   public void validateAnchorDateName(HttpServletRequest request, HttpServletResponse response) {
     logger.info("StudyQuestionnaireController - validateAnchorDateName - Starts");

@@ -1,3 +1,25 @@
+/*
+ * Copyright � 2017-2018 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors.
+ * Copyright 2020 Google LLC
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
+ * associated documentation files (the "Software"), to deal in the Software without restriction,
+ * including without limitation the rights to use, copy, modify, merge, publish, distribute,
+ * sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all copies or
+ * substantial portions of the Software.
+ *
+ * Funding Source: Food and Drug Administration ("Funding Agency") effective 18 September 2014 as
+ * Contract no. HHSF22320140030I/HHSF22301006T (the "Prime Contract").
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT
+ * NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+ * NON-INFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
+ * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ */
+
 package com.fdahpstudydesigner.dao;
 
 import java.math.BigInteger;
@@ -109,7 +131,6 @@ public class StudyDAOImpl implements StudyDAO {
     return message;
   }
 
-
   @Override
   public int comprehensionTestQuestionOrder(Integer studyId) {
     logger.info("StudyDAOImpl - comprehensionTestQuestionOrder() - Starts");
@@ -169,7 +190,6 @@ public class StudyDAOImpl implements StudyDAO {
     logger.info("StudyDAOImpl - consentInfoOrder() - Ends");
     return count;
   }
-
 
   @SuppressWarnings("unchecked")
   @Override
@@ -241,7 +261,6 @@ public class StudyDAOImpl implements StudyDAO {
     return message;
   }
 
-  
   @SuppressWarnings("unchecked")
   @Override
   public String deleteConsentInfo(
@@ -331,7 +350,6 @@ public class StudyDAOImpl implements StudyDAO {
     return message;
   }
 
- 
   @SuppressWarnings("unchecked")
   @Override
   public String deleteEligibilityTestQusAnsById(
@@ -423,7 +441,6 @@ public class StudyDAOImpl implements StudyDAO {
     return result;
   }
 
-  
   @Override
   public boolean deleteLiveStudy(String customStudyId) {
     logger.info("StudyDAOImpl - deleteLiveStudy() - Starts");
@@ -492,7 +509,6 @@ public class StudyDAOImpl implements StudyDAO {
     logger.info("StudyDAOImpl - deleteLiveStudy() - Ends");
     return flag;
   }
-
 
   @Override
   public String deleteOverviewStudyPageById(String studyId, String pageId) {
@@ -583,7 +599,6 @@ public class StudyDAOImpl implements StudyDAO {
     return message;
   }
 
-  
   @Override
   public boolean deleteStudyByCustomStudyId(String customStudyId) {
     logger.info("StudyDAOImpl - deleteStudyByCustomStudyId() - Starts");
@@ -609,7 +624,6 @@ public class StudyDAOImpl implements StudyDAO {
     logger.info("StudyDAOImpl - deleteStudyByCustomStudyId() - Ends");
     return falg;
   }
-
 
   @SuppressWarnings("unchecked")
   @Override
@@ -984,7 +998,6 @@ public class StudyDAOImpl implements StudyDAO {
               .executeUpdate();
         }
 
-       
         idList = null;
         queryString = "";
         queryString = "SELECT id FROM resources WHERE study_id in" + subQuery;
@@ -1046,7 +1059,6 @@ public class StudyDAOImpl implements StudyDAO {
     return message;
   }
 
- 
   @Override
   public int eligibilityTestOrderCount(Integer eligibilityId) {
     logger.info("StudyDAOImpl - eligibilityTestOrderCount - Starts");
@@ -1072,7 +1084,6 @@ public class StudyDAOImpl implements StudyDAO {
     return count;
   }
 
-  
   @SuppressWarnings("unchecked")
   @Override
   public List<UserBO> getActiveNonAddedUserList(Integer studyId, Integer userId) {
@@ -1114,7 +1125,6 @@ public class StudyDAOImpl implements StudyDAO {
     return userList;
   }
 
-  
   @SuppressWarnings("unchecked")
   @Override
   public List<StudyPermissionBO> getAddedUserListToStudy(Integer studyId, Integer userId) {
@@ -1162,7 +1172,6 @@ public class StudyDAOImpl implements StudyDAO {
     return studyPermissionList;
   }
 
-  
   @SuppressWarnings("unchecked")
   @Override
   public List<StudyBo> getAllStudyList() {
@@ -1188,7 +1197,6 @@ public class StudyDAOImpl implements StudyDAO {
     return studyBOList;
   }
 
-  
   @Override
   public Checklist getchecklistInfo(Integer studyId) {
     logger.info("StudyDAOImpl - getchecklistInfo() - Starts");
@@ -1212,7 +1220,6 @@ public class StudyDAOImpl implements StudyDAO {
     return checklist;
   }
 
-  
   @SuppressWarnings("unchecked")
   @Override
   public ComprehensionTestQuestionBo getComprehensionTestQuestionById(Integer questionId) {
@@ -1243,7 +1250,6 @@ public class StudyDAOImpl implements StudyDAO {
     return comprehensionTestQuestionBo;
   }
 
- 
   @SuppressWarnings("unchecked")
   @Override
   public List<ComprehensionTestQuestionBo> getComprehensionTestQuestionList(Integer studyId) {
@@ -1294,7 +1300,6 @@ public class StudyDAOImpl implements StudyDAO {
     return comprehensionTestResponseList;
   }
 
-  
   @Override
   public ConsentBo getConsentDetailsByStudyId(String studyId) {
     logger.info("INFO: StudyDAOImpl - getConsentDetailsByStudyId() :: Starts");
@@ -1316,7 +1321,6 @@ public class StudyDAOImpl implements StudyDAO {
     return consentBo;
   }
 
- 
   @Override
   public ConsentInfoBo getConsentInfoById(Integer consentInfoId) {
     logger.info("StudyDAOImpl - getConsentInfoById() - Starts");
@@ -1359,7 +1363,6 @@ public class StudyDAOImpl implements StudyDAO {
     return consentInfoBo;
   }
 
- 
   @SuppressWarnings("unchecked")
   @Override
   public List<ConsentInfoBo> getConsentInfoDetailsListByStudyId(String studyId) {
@@ -1431,7 +1434,6 @@ public class StudyDAOImpl implements StudyDAO {
     return consentInfoList;
   }
 
-  
   @SuppressWarnings("unchecked")
   @Override
   public List<ConsentMasterInfoBo> getConsentMasterInfoList() {
@@ -1453,7 +1455,6 @@ public class StudyDAOImpl implements StudyDAO {
     return consentMasterInfoList;
   }
 
-  
   public String getErrorBasedonAction(StudySequenceBo studySequenceBo) {
     String message = FdahpStudyDesignerConstants.SUCCESS;
     if (studySequenceBo != null) {
@@ -1495,7 +1496,6 @@ public class StudyDAOImpl implements StudyDAO {
     return message;
   }
 
- 
   @Override
   public StudyIdBean getLiveVersion(String customStudyId) {
     logger.info("StudyDAOImpl - getLiveVersion() - Starts");
@@ -1563,7 +1563,6 @@ public class StudyDAOImpl implements StudyDAO {
     return studyIdBean;
   }
 
-  
   @Override
   public NotificationBO getNotificationByResourceId(Integer resourseId) {
     logger.info("StudyDAOImpl - getNotificationByResourceId() - Starts");
@@ -1586,7 +1585,6 @@ public class StudyDAOImpl implements StudyDAO {
     return notificationBO;
   }
 
-  
   @SuppressWarnings("unchecked")
   @Override
   public List<StudyPageBo> getOverviewStudyPagesById(String studyId, Integer userId) {
@@ -1667,7 +1665,6 @@ public class StudyDAOImpl implements StudyDAO {
     return referenceMap;
   }
 
- 
   @Override
   public ResourceBO getResourceInfo(Integer resourceInfoId) {
     logger.info("StudyDAOImpl - getResourceInfo() - Starts");
@@ -1688,7 +1685,6 @@ public class StudyDAOImpl implements StudyDAO {
     return resourceBO;
   }
 
- 
   @SuppressWarnings("unchecked")
   @Override
   public List<ResourceBO> getResourceList(Integer studyId) {
@@ -1754,7 +1750,6 @@ public class StudyDAOImpl implements StudyDAO {
     return notificationSavedList;
   }
 
- 
   @Override
   public StudyBo getStudyById(String studyId, Integer userId) {
     logger.info("StudyDAOImpl - getStudyById() - Starts");
@@ -1832,7 +1827,6 @@ public class StudyDAOImpl implements StudyDAO {
     return studyBo;
   }
 
-  
   @Override
   public EligibilityBo getStudyEligibiltyByStudyId(String studyId) {
     logger.info("StudyDAOImpl - getStudyEligibiltyByStudyId() - Starts");
@@ -1988,7 +1982,6 @@ public class StudyDAOImpl implements StudyDAO {
     return studyListBeans;
   }
 
-  
   @Override
   public StudyBo getStudyLiveStatusByCustomId(String customStudyId) {
     logger.info("StudyDAOImpl - getStudyLiveStatusByCustomId() - Starts");
@@ -2012,7 +2005,6 @@ public class StudyDAOImpl implements StudyDAO {
     return studyLive;
   }
 
-  
   @Override
   public ResourceBO getStudyProtocol(Integer studyId) {
     logger.info("StudyDAOImpl - getStudyProtocol() - Starts");
@@ -2060,7 +2052,6 @@ public class StudyDAOImpl implements StudyDAO {
     return superAdminUserIds;
   }
 
-  
   @Override
   public String markAsCompleted(
       int studyId, String markCompleted, boolean flag, SessionObject sesObj, String customStudyId) {
@@ -2243,7 +2234,6 @@ public class StudyDAOImpl implements StudyDAO {
     return msg;
   }
 
- 
   @Override
   public String reOrderComprehensionTestQuestion(
       Integer studyId, int oldOrderNumber, int newOrderNumber) {
@@ -2342,7 +2332,6 @@ public class StudyDAOImpl implements StudyDAO {
     return message;
   }
 
-  
   @Override
   public String reOrderConsentInfoList(Integer studyId, int oldOrderNumber, int newOrderNumber) {
     logger.info("StudyDAOImpl - reOrderConsentInfoList() - Starts");
@@ -2618,7 +2607,6 @@ public class StudyDAOImpl implements StudyDAO {
     return message;
   }
 
- 
   @SuppressWarnings({"rawtypes", "unchecked"})
   @Override
   public boolean resetDraftStudyByCustomStudyId(
@@ -3481,7 +3469,6 @@ public class StudyDAOImpl implements StudyDAO {
     return count;
   }
 
- 
   @SuppressWarnings("unchecked")
   @Override
   public List<ResourceBO> resourcesSaved(Integer studyId) {
@@ -3507,7 +3494,6 @@ public class StudyDAOImpl implements StudyDAO {
     return resourceBOList;
   }
 
- 
   @SuppressWarnings("unchecked")
   @Override
   public List<ResourceBO> resourcesWithAnchorDate(Integer studyId) {
@@ -3533,7 +3519,6 @@ public class StudyDAOImpl implements StudyDAO {
     return resourceList;
   }
 
- 
   @SuppressWarnings("unchecked")
   @Override
   public ConsentBo saveOrCompleteConsentReviewDetails(
@@ -3677,7 +3662,6 @@ public class StudyDAOImpl implements StudyDAO {
     return consentBo;
   }
 
- 
   @Override
   public Integer saveOrDoneChecklist(Checklist checklist) {
     logger.info("StudyDAOImpl - saveOrDoneChecklist() - Starts");
@@ -3705,7 +3689,6 @@ public class StudyDAOImpl implements StudyDAO {
     return checklistId;
   }
 
-  
   @Override
   public ComprehensionTestQuestionBo saveOrUpdateComprehensionTestQuestion(
       ComprehensionTestQuestionBo comprehensionTestQuestionBo) {
@@ -4093,7 +4076,6 @@ public class StudyDAOImpl implements StudyDAO {
     return resourceId;
   }
 
-
   @SuppressWarnings("unchecked")
   @Override
   public String saveOrUpdateStudy(StudyBo studyBo, SessionObject sessionObject) {
@@ -4247,7 +4229,6 @@ public class StudyDAOImpl implements StudyDAO {
     return message;
   }
 
- 
   @Override
   public String saveOrUpdateStudyEligibilty(
       EligibilityBo eligibilityBo, SessionObject sesObj, String customStudyId) {
@@ -4334,7 +4315,6 @@ public class StudyDAOImpl implements StudyDAO {
     logger.info("StudyDAOImpl - saveOrUpdateStudyEligibilty() - Ends");
     return result;
   }
-
 
   @SuppressWarnings({"unchecked"})
   @Override
@@ -4648,7 +4628,6 @@ public class StudyDAOImpl implements StudyDAO {
     return result;
   }
 
- 
   public Integer saveOverviewStudyPageById(String studyId) {
     Integer pageId = 0;
     Session session = null;
@@ -4706,7 +4685,6 @@ public class StudyDAOImpl implements StudyDAO {
     this.hibernateTemplate = new HibernateTemplate(sessionFactory);
   }
 
- 
   @SuppressWarnings("unchecked")
   public String studyDraftCreation(StudyBo studyBo, Session session) {
     logger.info("StudyDAOImpl - studyDraftCreation() - Starts");
@@ -5727,7 +5705,6 @@ public class StudyDAOImpl implements StudyDAO {
     return message;
   }
 
- 
   @SuppressWarnings("unchecked")
   @Override
   public String updateStudyActionOnAction(String studyId, String buttonText, SessionObject sesObj) {
@@ -6081,7 +6058,6 @@ public class StudyDAOImpl implements StudyDAO {
     return message;
   }
 
-  
   @SuppressWarnings("unchecked")
   @Override
   public String validateActivityComplete(String studyId, String action) {
@@ -6166,7 +6142,6 @@ public class StudyDAOImpl implements StudyDAO {
     return message;
   }
 
- 
   @SuppressWarnings("unchecked")
   public String validateDateForStudyAction(StudyBo studyBo, String buttonText) {
     boolean resourceFlag = true;
@@ -6479,7 +6454,6 @@ public class StudyDAOImpl implements StudyDAO {
     return result;
   }
 
-
   @Override
   public String validateStudyAction(String studyId, String buttonText) {
     logger.info("StudyDAOImpl - validateStudyAction() - Ends");
@@ -6584,7 +6558,6 @@ public class StudyDAOImpl implements StudyDAO {
     return message;
   }
 
-  
   @SuppressWarnings("unchecked")
   @Override
   public boolean validateStudyId(String customStudyId) {
@@ -6637,7 +6610,6 @@ public class StudyDAOImpl implements StudyDAO {
     return eligibilityTestList;
   }
 
-  
   @Override
   public EligibilityTestBo viewEligibilityTestQusAnsById(Integer eligibilityTestId) {
     logger.info("StudyDAOImpl - viewEligibilityTestQusAnsById - Starts");
@@ -6928,7 +6900,6 @@ public class StudyDAOImpl implements StudyDAO {
     return message;
   }
 
-  
   @SuppressWarnings("unchecked")
   @Override
   public boolean validateAppId(String customStudyId, String appId, String studyType) {

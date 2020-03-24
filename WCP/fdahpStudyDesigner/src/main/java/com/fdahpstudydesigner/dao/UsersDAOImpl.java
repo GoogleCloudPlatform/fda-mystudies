@@ -1,10 +1,32 @@
+/*
+ * Copyright Â© 2017-2018 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors.
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
+ * associated documentation files (the "Software"), to deal in the Software without restriction, including
+ * without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies
+ * of the Software, and to permit persons to whom the Software is furnished to do so, subject to the
+ * following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all copies or substantial
+ * portions of the Software.
+ *
+ * Funding Source: Food and Drug Administration ("Funding Agency") effective 18 September 2014 as Contract no.
+ * HHSF22320140030I/HHSF22301006T (the "Prime Contract").
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT. IN NO EVENT SHALL
+ * THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR
+ * OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
+ * ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+ * OTHER DEALINGS IN THE SOFTWARE.
+ */
+
 package com.fdahpstudydesigner.dao;
 
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import javax.servlet.http.HttpServletRequest;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.hibernate.Query;
@@ -14,14 +36,12 @@ import org.hibernate.Transaction;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.orm.hibernate3.HibernateTemplate;
 import org.springframework.stereotype.Repository;
-import org.springframework.web.servlet.ModelAndView;
 import com.fdahpstudydesigner.bo.RoleBO;
 import com.fdahpstudydesigner.bo.StudyPermissionBO;
 import com.fdahpstudydesigner.bo.UserBO;
 import com.fdahpstudydesigner.bo.UserPermissions;
 import com.fdahpstudydesigner.util.FdahpStudyDesignerConstants;
 import com.fdahpstudydesigner.util.SessionObject;
-
 
 @Repository
 public class UsersDAOImpl implements UsersDAO {
@@ -39,7 +59,6 @@ public class UsersDAOImpl implements UsersDAO {
     this.hibernateTemplate = new HibernateTemplate(sessionFactory);
   }
 
-  
   @Override
   public String activateOrDeactivateUser(
       int userId, int userStatus, int loginUser, SessionObject userSession) {
@@ -116,7 +135,6 @@ public class UsersDAOImpl implements UsersDAO {
     return msg;
   }
 
-  
   @SuppressWarnings("unchecked")
   @Override
   public String addOrUpdateUserDetails(
@@ -213,8 +231,6 @@ public class UsersDAOImpl implements UsersDAO {
     return msg;
   }
 
-  
-  @SuppressWarnings("unchecked")
   @Override
   public String enforcePasswordChange(Integer userId, String email) {
     logger.info("UsersDAOImpl - enforcePasswordChange() - Starts");
@@ -263,7 +279,6 @@ public class UsersDAOImpl implements UsersDAO {
     return message;
   }
 
-  
   @SuppressWarnings("unchecked")
   @Override
   public List<String> getActiveUserEmailIds() {
@@ -291,7 +306,6 @@ public class UsersDAOImpl implements UsersDAO {
     return emails;
   }
 
-  
   @SuppressWarnings("unchecked")
   @Override
   public List<Integer> getPermissionsByUserId(Integer userId) {
@@ -318,7 +332,6 @@ public class UsersDAOImpl implements UsersDAO {
     return permissions;
   }
 
-  
   @Override
   public List<String> getSuperAdminList() {
     logger.info("UsersDAOImpl - getSuperAdminList() - Starts");
@@ -342,7 +355,6 @@ public class UsersDAOImpl implements UsersDAO {
     return userSuperAdminList;
   }
 
-  
   @Override
   public UserBO getSuperAdminNameByEmailId(String emailId) {
     logger.info("UsersDAOImpl - getSuperAdminNameByEmailId() - Starts");
@@ -364,7 +376,6 @@ public class UsersDAOImpl implements UsersDAO {
     return userBo;
   }
 
-  
   @Override
   public UserBO getUserDetails(int userId) {
     logger.info("UsersDAOImpl - getUserDetails() - Starts");
@@ -397,7 +408,6 @@ public class UsersDAOImpl implements UsersDAO {
     return userBO;
   }
 
-  
   @SuppressWarnings("unchecked")
   @Override
   public List<UserBO> getUserList() {
@@ -443,7 +453,6 @@ public class UsersDAOImpl implements UsersDAO {
     return userList;
   }
 
-  
   @Override
   public Integer getUserPermissionByUserId(Integer sessionUserId) {
     logger.info("UsersDAOImpl - getUserPermissionByUserId() - Starts");
@@ -468,7 +477,6 @@ public class UsersDAOImpl implements UsersDAO {
     return userId;
   }
 
-  
   @Override
   public RoleBO getUserRole(int roleId) {
     logger.info("UsersDAOImpl - getUserRole() - Starts");
@@ -490,7 +498,6 @@ public class UsersDAOImpl implements UsersDAO {
     return roleBO;
   }
 
-  
   @SuppressWarnings("unchecked")
   @Override
   public List<RoleBO> getUserRoleList() {

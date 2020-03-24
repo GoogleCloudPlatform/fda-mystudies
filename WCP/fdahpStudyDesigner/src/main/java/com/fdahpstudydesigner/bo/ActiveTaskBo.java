@@ -1,3 +1,26 @@
+/*
+ * Copyright Â© 2017-2018 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors.
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
+ * associated documentation files (the "Software"), to deal in the Software without restriction, including
+ * without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies
+ * of the Software, and to permit persons to whom the Software is furnished to do so, subject to the
+ * following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all copies or substantial
+ * portions of the Software.
+ *
+ * Funding Source: Food and Drug Administration ("Funding Agency") effective 18 September 2014 as Contract no.
+ * HHSF22320140030I/HHSF22301006T (the "Prime Contract").
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT. IN NO EVENT SHALL
+ * THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR
+ * OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
+ * ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+ * OTHER DEALINGS IN THE SOFTWARE.
+ */
+
 package com.fdahpstudydesigner.bo;
 
 import java.io.Serializable;
@@ -12,7 +35,6 @@ import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 import javax.persistence.Transient;
-
 
 @Entity
 @Table(name = "active_task")
@@ -157,16 +179,13 @@ public class ActiveTaskBo implements Serializable {
     return active;
   }
 
-
   public List<ActiveTaskCustomScheduleBo> getActiveTaskCustomScheduleBo() {
     return activeTaskCustomScheduleBo;
   }
 
- 
   public ActiveTaskFrequencyBo getActiveTaskFrequenciesBo() {
     return activeTaskFrequenciesBo;
   }
-
 
   public List<ActiveTaskFrequencyBo> getActiveTaskFrequenciesList() {
     return activeTaskFrequenciesList;
@@ -192,7 +211,6 @@ public class ActiveTaskBo implements Serializable {
     return createdBy;
   }
 
-  
   public String getCreatedDate() {
     return createdDate;
   }
@@ -216,7 +234,6 @@ public class ActiveTaskBo implements Serializable {
   public String getFetalCickDuration() {
     return fetalCickDuration;
   }
-
 
   public String getFrequency() {
     return frequency;
@@ -242,7 +259,6 @@ public class ActiveTaskBo implements Serializable {
     return live;
   }
 
-
   public Integer getModifiedBy() {
     return modifiedBy;
   }
@@ -254,7 +270,6 @@ public class ActiveTaskBo implements Serializable {
   public String getPreviousFrequency() {
     return previousFrequency;
   }
-
 
   public Integer getRepeatActiveTask() {
     return repeatActiveTask;
@@ -280,12 +295,10 @@ public class ActiveTaskBo implements Serializable {
     return taskTypeId;
   }
 
-
   public String getTitle() {
     return title;
   }
 
- 
   public String getType() {
     return type;
   }
@@ -322,13 +335,11 @@ public class ActiveTaskBo implements Serializable {
     this.active = active;
   }
 
-
   public void setActiveTaskCustomScheduleBo(
       List<ActiveTaskCustomScheduleBo> activeTaskCustomScheduleBo) {
     this.activeTaskCustomScheduleBo = activeTaskCustomScheduleBo;
   }
 
- 
   public void setActiveTaskFrequenciesBo(ActiveTaskFrequencyBo activeTaskFrequenciesBo) {
     this.activeTaskFrequenciesBo = activeTaskFrequenciesBo;
   }
@@ -361,12 +372,10 @@ public class ActiveTaskBo implements Serializable {
     this.buttonText = buttonText;
   }
 
-  
   public void setCreatedBy(Integer createdBy) {
     this.createdBy = createdBy;
   }
 
-  
   public void setCreatedDate(String createdDate) {
     this.createdDate = createdDate;
   }
@@ -375,7 +384,6 @@ public class ActiveTaskBo implements Serializable {
     this.customStudyId = customStudyId;
   }
 
- 
   public void setDayOfTheWeek(String dayOfTheWeek) {
     this.dayOfTheWeek = dayOfTheWeek;
   }
@@ -416,7 +424,6 @@ public class ActiveTaskBo implements Serializable {
     this.live = live;
   }
 
-
   public void setModifiedBy(Integer modifiedBy) {
     this.modifiedBy = modifiedBy;
   }
@@ -453,11 +460,9 @@ public class ActiveTaskBo implements Serializable {
     this.taskTypeId = taskTypeId;
   }
 
-
   public void setTitle(String title) {
     this.title = title;
   }
-
 
   public void setType(String type) {
     this.type = type;
