@@ -1,0 +1,47 @@
+//  Copyright 2020 Google LLC
+//
+//  Use of this source code is governed by an MIT-style
+//  license that can be found in the LICENSE file or at
+//  https://opensource.org/licenses/MIT.
+
+// Configuration settings file format documentation can be found at:
+// https://help.apple.com/xcode/#/dev745c5c974
+
+// Server configuration
+// Sample URL format - 35.12.123.43:8081/StudyMetaData/
+
+// Study builder ws URL
+WCP_URL = xxxxxxx
+
+// Response server ws URL
+RESPONSE_URL = xxxxxxx
+
+// Registration server ws URL
+REGISTRATION_URL = xxxxxxx
+
+// Auth server ws URL
+AUTH_URL = xxxxxxx
+
+// Enroll server ws URL
+ENROLLMENT_URL = xxxxxxx
+
+// Consent server ws URL
+CONSENTMGMT_URL = xxxxxxx
+
+// Username for basic authentication used for WCP ws
+AUTH_USERNAME = xxxxxxxx
+
+// Password for basic authentication used for WCP ws
+AUTH_PASSWORD = xxxxxxxx
+
+// Client ID
+REGISTRATIONSERVER_API_KEY = xxxxxxxxxxxxxxxxxxxx
+
+// Secret Key
+REGISTRATIONSERVER_API_SECERET = xxxxxxxxxxxxxxxxxxxx
+
+// ORG ID
+ORG_ID = xxxx
+
+// Application ID 
+APP_ID = xxxx
