@@ -84,7 +84,6 @@ public class TestPDFUpload {
     logger.info("UserConsentManagementController testPDFDownload() - starts ");
     ErrorBean errorBean = null;
 
-    //    String bucketName = "my_study_consent_documents";
     String bucketName = "consent-test-pdf";
 
     String fileData = "";

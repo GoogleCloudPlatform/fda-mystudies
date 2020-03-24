@@ -41,7 +41,6 @@ public class CommonDaoImpl implements CommonDao {
   public AppOrgInfoBean getUserAppDetailsByAllApi(String userId, String appId, String orgId) {
     logger.info("UserConsentManagementDaoImpl validatedUserAppDetailsByAllApi() - Started ");
     Transaction transaction = null;
-
     CriteriaBuilder criteriaBuilder = null;
     CriteriaQuery<AppInfoDetailsBO> appDetailsBoCriteria = null;
     Root<AppInfoDetailsBO> appDetailsBoRoot = null;

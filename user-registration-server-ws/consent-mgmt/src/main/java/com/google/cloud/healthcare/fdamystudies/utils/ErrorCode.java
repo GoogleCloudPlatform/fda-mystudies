@@ -28,8 +28,6 @@ public enum ErrorCode {
 
   EC_33(33, "Leave cancelled successfully"),
 
-  // EC_33(33, "Data updated successfully."),
-
   EC_34(34, " Unable to update user profile"),
 
   EC_35(35, "Unable to update request status"),

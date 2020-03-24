@@ -138,7 +138,6 @@ public class UserConsentManagementController {
                           + ".pdf";
                   String content = consentStatusBean.getConsent().getPdf();
                   String path = cloudStorageService.saveFile(fileName, content, underDirectory);
-                  // String path = saveStudyConsentDocument(studyConsent);
                   studyConsent.setPdfPath(path);
                   studyConsent.setPdfStorage(1);
                 }
@@ -165,7 +164,6 @@ public class UserConsentManagementController {
                   String content = consentStatusBean.getConsent().getPdf();
 
                   String path = cloudStorageService.saveFile(fileName, content, underDirectory);
-                  // String path = saveStudyConsentDocument(studyConsent);
                   studyConsent.setPdfPath(path);
                   studyConsent.setPdfStorage(1);
                 }
@@ -248,10 +246,7 @@ public class UserConsentManagementController {
         try {
           pdfFileInByte = Base64.decodeBase64(studyConsent.getPdf());
           fileName = "user_" + studyConsent.getUserId() + ".pdf";
-          file = new File("src/main/webapp/consentDucmentPdfFiles/" + fileName); // for local
-          //          file = new File(catalinaHome + "/webapps/consentDucmentPdfFiles/" +
-          // fileName);//  for uat
-
+          file = new File("src/main/webapp/consentDucmentPdfFiles/" + fileName);
           fop = new FileOutputStream(file);
           fop.write(pdfFileInByte);
           fop.flush();

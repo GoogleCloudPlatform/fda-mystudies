@@ -16,11 +16,9 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 import lombok.Getter;
 import lombok.Setter;
-import lombok.ToString;
 
 @Setter
 @Getter
-@ToString
 @Entity
 @Table(name = "org_info")
 public class OrgInfo {
@@ -31,9 +29,6 @@ public class OrgInfo {
 
   @Column(name = "name")
   private String name;
-
-  // added by malay
-  // this field is coming from WCP hence added here
 
   @Column(name = "org_id")
   private String orgId;

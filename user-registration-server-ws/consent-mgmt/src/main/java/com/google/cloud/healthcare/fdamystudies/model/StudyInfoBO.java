@@ -54,8 +54,6 @@ public class StudyInfoBO {
   @Column(name = "created_by", columnDefinition = "INT(20)")
   private Integer createdBy;
 
-  // added by WCP: these fields are coming from WCP hence added here
-
   @Column(name = "modified_date", columnDefinition = "TIMESTAMP")
   private Date modifiedDate;
 
