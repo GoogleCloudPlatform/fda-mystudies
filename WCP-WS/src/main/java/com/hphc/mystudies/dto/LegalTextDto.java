@@ -1,5 +1,5 @@
 /*
- * Copyright © 2017-2018 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors.
+ * Copyright Â© 2017-2018 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors.
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction, including
  * without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies
@@ -23,7 +23,6 @@
 package com.hphc.mystudies.dto;
 
 import java.io.Serializable;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -31,124 +30,113 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
-/**
- * Provides application privacy and policy, terms of use information.
- * 
- * @author BTC
- *
- */
+
 @Entity
 @Table(name = "legal_text")
 public class LegalTextDto implements Serializable {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 6256475646468023254L;
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "id")
-	private Integer id;
+  private static final long serialVersionUID = 6256475646468023254L;
 
-	@Column(name = "mobile_app_terms")
-	private String mobileAppTerms;
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  @Column(name = "id")
+  private Integer id;
 
-	@Column(name = "mobile_app_terms_modified_datetime")
-	private String mobileAppTermsModifiedDatetime;
+  @Column(name = "mobile_app_terms")
+  private String mobileAppTerms;
 
-	@Column(name = "mobile_app_privacy_policy")
-	private String mobileAppPrivacyPolicy;
+  @Column(name = "mobile_app_terms_modified_datetime")
+  private String mobileAppTermsModifiedDatetime;
 
-	@Column(name = "mobile_app_privacy_policy_modified_datetime")
-	private String mobileAppPrivacyPolicyModifiedDatetime;
+  @Column(name = "mobile_app_privacy_policy")
+  private String mobileAppPrivacyPolicy;
 
-	@Column(name = "web_app_terms")
-	private String webAppTerms;
+  @Column(name = "mobile_app_privacy_policy_modified_datetime")
+  private String mobileAppPrivacyPolicyModifiedDatetime;
 
-	@Column(name = "web_app_terms_modified_datetime")
-	private String webAppTermsModifiedDatetime;
+  @Column(name = "web_app_terms")
+  private String webAppTerms;
 
-	@Column(name = "web_app_privacy_policy")
-	private String webAppPrivacyPolicy;
+  @Column(name = "web_app_terms_modified_datetime")
+  private String webAppTermsModifiedDatetime;
 
-	@Column(name = "web_app_privacy_policy_modified_datetime")
-	private String webAppPrivacyPolicyModifiedDatetime;
+  @Column(name = "web_app_privacy_policy")
+  private String webAppPrivacyPolicy;
 
-	public Integer getId() {
-		return id;
-	}
+  @Column(name = "web_app_privacy_policy_modified_datetime")
+  private String webAppPrivacyPolicyModifiedDatetime;
 
-	public void setId(Integer id) {
-		this.id = id;
-	}
+  public Integer getId() {
+    return id;
+  }
 
-	public String getMobileAppTerms() {
-		return mobileAppTerms;
-	}
+  public void setId(Integer id) {
+    this.id = id;
+  }
 
-	public void setMobileAppTerms(String mobileAppTerms) {
-		this.mobileAppTerms = mobileAppTerms;
-	}
+  public String getMobileAppTerms() {
+    return mobileAppTerms;
+  }
 
-	public String getMobileAppTermsModifiedDatetime() {
-		return mobileAppTermsModifiedDatetime;
-	}
+  public void setMobileAppTerms(String mobileAppTerms) {
+    this.mobileAppTerms = mobileAppTerms;
+  }
 
-	public void setMobileAppTermsModifiedDatetime(
-			String mobileAppTermsModifiedDatetime) {
-		this.mobileAppTermsModifiedDatetime = mobileAppTermsModifiedDatetime;
-	}
+  public String getMobileAppTermsModifiedDatetime() {
+    return mobileAppTermsModifiedDatetime;
+  }
 
-	public String getMobileAppPrivacyPolicy() {
-		return mobileAppPrivacyPolicy;
-	}
+  public void setMobileAppTermsModifiedDatetime(String mobileAppTermsModifiedDatetime) {
+    this.mobileAppTermsModifiedDatetime = mobileAppTermsModifiedDatetime;
+  }
 
-	public void setMobileAppPrivacyPolicy(String mobileAppPrivacyPolicy) {
-		this.mobileAppPrivacyPolicy = mobileAppPrivacyPolicy;
-	}
+  public String getMobileAppPrivacyPolicy() {
+    return mobileAppPrivacyPolicy;
+  }
 
-	public String getMobileAppPrivacyPolicyModifiedDatetime() {
-		return mobileAppPrivacyPolicyModifiedDatetime;
-	}
+  public void setMobileAppPrivacyPolicy(String mobileAppPrivacyPolicy) {
+    this.mobileAppPrivacyPolicy = mobileAppPrivacyPolicy;
+  }
 
-	public void setMobileAppPrivacyPolicyModifiedDatetime(
-			String mobileAppPrivacyPolicyModifiedDatetime) {
-		this.mobileAppPrivacyPolicyModifiedDatetime = mobileAppPrivacyPolicyModifiedDatetime;
-	}
+  public String getMobileAppPrivacyPolicyModifiedDatetime() {
+    return mobileAppPrivacyPolicyModifiedDatetime;
+  }
 
-	public String getWebAppTerms() {
-		return webAppTerms;
-	}
+  public void setMobileAppPrivacyPolicyModifiedDatetime(
+      String mobileAppPrivacyPolicyModifiedDatetime) {
+    this.mobileAppPrivacyPolicyModifiedDatetime = mobileAppPrivacyPolicyModifiedDatetime;
+  }
 
-	public void setWebAppTerms(String webAppTerms) {
-		this.webAppTerms = webAppTerms;
-	}
+  public String getWebAppTerms() {
+    return webAppTerms;
+  }
 
-	public String getWebAppTermsModifiedDatetime() {
-		return webAppTermsModifiedDatetime;
-	}
+  public void setWebAppTerms(String webAppTerms) {
+    this.webAppTerms = webAppTerms;
+  }
 
-	public void setWebAppTermsModifiedDatetime(
-			String webAppTermsModifiedDatetime) {
-		this.webAppTermsModifiedDatetime = webAppTermsModifiedDatetime;
-	}
+  public String getWebAppTermsModifiedDatetime() {
+    return webAppTermsModifiedDatetime;
+  }
 
-	public String getWebAppPrivacyPolicy() {
-		return webAppPrivacyPolicy;
-	}
+  public void setWebAppTermsModifiedDatetime(String webAppTermsModifiedDatetime) {
+    this.webAppTermsModifiedDatetime = webAppTermsModifiedDatetime;
+  }
 
-	public void setWebAppPrivacyPolicy(String webAppPrivacyPolicy) {
-		this.webAppPrivacyPolicy = webAppPrivacyPolicy;
-	}
+  public String getWebAppPrivacyPolicy() {
+    return webAppPrivacyPolicy;
+  }
 
-	public String getWebAppPrivacyPolicyModifiedDatetime() {
-		return webAppPrivacyPolicyModifiedDatetime;
-	}
+  public void setWebAppPrivacyPolicy(String webAppPrivacyPolicy) {
+    this.webAppPrivacyPolicy = webAppPrivacyPolicy;
+  }
 
-	public void setWebAppPrivacyPolicyModifiedDatetime(
-			String webAppPrivacyPolicyModifiedDatetime) {
-		this.webAppPrivacyPolicyModifiedDatetime = webAppPrivacyPolicyModifiedDatetime;
-	}
+  public String getWebAppPrivacyPolicyModifiedDatetime() {
+    return webAppPrivacyPolicyModifiedDatetime;
+  }
 
+  public void setWebAppPrivacyPolicyModifiedDatetime(String webAppPrivacyPolicyModifiedDatetime) {
+    this.webAppPrivacyPolicyModifiedDatetime = webAppPrivacyPolicyModifiedDatetime;
+  }
 }

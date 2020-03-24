@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html lang="">
 	<head>
         
     <!-- Basic -->
@@ -81,7 +81,7 @@
 <body class="txt-center grayeef2f5-bg">
 
 	<div class="err_page_container">
-	    <div class="txt-left"><img src="/fdahpStudyDesigner/images/logo/fda-logo.png"/></div>
+	    <div class="txt-left"><img src="/fdahpStudyDesigner/images/logo/fda-logo.png" alt=""/></div>
 	    <div class="err_page_txt">
 	        <table id="aD__container">
 		        <tr><td>App Name : </td><td>Lorem Epsum</td></tr>

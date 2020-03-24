@@ -187,9 +187,9 @@
                              <div>
                                <div class="gray-xs-f mb-sm">Time ranges options available to the mobile app user</div>
 				               <div>
-				                  <span class="mr-lg"><span class="mr-sm"><img src="../images/icons/tick.png"/></span><span>Current Day</span></span>
-				                  <span class="mr-lg"><span class="mr-sm"><img src="../images/icons/tick.png"/></span><span>Current Week</span></span>
-				                  <span class="mr-lg"><span class="mr-sm"><img src="../images/icons/tick.png"/></span><span>Current Month</span></span>
+				                  <span class="mr-lg"><span class="mr-sm"><img src="../images/icons/tick.png" alt=""/></span><span>Current Day</span></span>
+				                  <span class="mr-lg"><span class="mr-sm"><img src="../images/icons/tick.png" alt=""/></span><span>Current Week</span></span>
+				                  <span class="mr-lg"><span class="mr-sm"><img src="../images/icons/tick.png" alt=""/></span><span>Current Month</span></span>
 				                  <span class="txt-gray">(Rollback option provided for these three options)</span>
 				               </div>
 				            </div>
@@ -359,9 +359,9 @@
 	                         <div>
 	                           <div class="gray-xs-f mb-sm">Time ranges options available to the mobile app user</div>
 				               <div>
-				                  <span class="mr-lg"><span class="mr-sm"><img src="../images/icons/tick.png"/></span><span>Current Day</span></span>
-				                  <span class="mr-lg"><span class="mr-sm"><img src="../images/icons/tick.png"/></span><span>Current Week</span></span>
-				                  <span class="mr-lg"><span class="mr-sm"><img src="../images/icons/tick.png"/></span><span>Current Month</span></span>
+				                  <span class="mr-lg"><span class="mr-sm"><img src="../images/icons/tick.png" alt=""/></span><span>Current Day</span></span>
+				                  <span class="mr-lg"><span class="mr-sm"><img src="../images/icons/tick.png" alt=""/></span><span>Current Week</span></span>
+				                  <span class="mr-lg"><span class="mr-sm"><img src="../images/icons/tick.png" alt=""/></span><span>Current Month</span></span>
 				                  <span class="txt-gray">(Rollback option provided for these three options)</span>
 				               </div>
 				            </div>

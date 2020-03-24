@@ -24,5 +24,7 @@
 	<string>https://www.fda.gov/AboutFDA/AboutThisWebsite/WebsitePolicies/#privacy</string>
 	<key>ValidatedTitle</key>
 	<string>Validated!</string>
+	<key>AllowFeedback</key>
+	<true/>
 </dict>
 </plist>

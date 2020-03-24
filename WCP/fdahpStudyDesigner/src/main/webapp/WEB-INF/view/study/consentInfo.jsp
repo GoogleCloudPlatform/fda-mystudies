@@ -22,7 +22,7 @@
 			<div class="text-right">
 				<div class="black-md-f dis-line pull-left line34">
 					<span class="pr-sm cur-pointer" onclick="goToBackPage(this);">
-						<img src="../images/icons/back-b.png" /></span>
+						<img src="../images/icons/back-b.png" alt=""/></span>
 					<c:if test="${empty consentInfoBo.id}"> Add Consent Section</c:if>
 					<c:if test="${not empty consentInfoBo.id && actionPage eq 'addEdit'}">Edit Consent Section</c:if>
 					<c:if test="${not empty consentInfoBo.id && actionPage eq 'view'}">View Consent Section <c:set var="isLive">${_S}isLive</c:set>${not empty  sessionScope[isLive]?'<span class="eye-inc ml-sm vertical-align-text-top"></span>':''}</c:if>

@@ -1,5 +1,5 @@
 /*
- * Copyright © 2017-2018 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors.
+ * Copyright Â© 2017-2018 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors.
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction, including
  * without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies
@@ -25,141 +25,145 @@ package com.hphc.mystudies.bean;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Provides active task steps information. For example, activity type, format
- * details, title of activity, destinations metadata {@link DestinationBean} and
- * steps details {@link QuestionnaireActivityStepsBean}
- * 
- * @author BTC
- *
- */
 public class ActiveTaskActivityStepsBean {
 
-	private String type = "";
-	private String resultType = "";
-	private String key = "";
-	private String text = "";
-	private String[] options = new String[0];
-	private Object format = new Object();
-	private String title = "";
-	private Boolean skippable = false;
-	private String groupName = "";
-	private Boolean repeatable = false;
-	private String repeatableText = "";
-	private List<DestinationBean> destinations = new ArrayList<>();
-	private String healthDataKey = "";
-	private List<QuestionnaireActivityStepsBean> steps = new ArrayList<>();
+  private String type = "";
 
-	public String getType() {
-		return type;
-	}
+  private String resultType = "";
 
-	public void setType(String type) {
-		this.type = type;
-	}
+  private String key = "";
 
-	public String getResultType() {
-		return resultType;
-	}
+  private String text = "";
 
-	public void setResultType(String resultType) {
-		this.resultType = resultType;
-	}
+  private String[] options = new String[0];
 
-	public String getKey() {
-		return key;
-	}
+  private Object format = new Object();
 
-	public void setKey(String key) {
-		this.key = key;
-	}
+  private String title = "";
 
-	public String getText() {
-		return text;
-	}
+  private Boolean skippable = false;
 
-	public void setText(String text) {
-		this.text = text;
-	}
+  private String groupName = "";
 
-	public String[] getOptions() {
-		return options;
-	}
+  private Boolean repeatable = false;
 
-	public void setOptions(String[] options) {
-		this.options = options;
-	}
+  private String repeatableText = "";
 
-	public String getTitle() {
-		return title;
-	}
+  private List<DestinationBean> destinations = new ArrayList<>();
 
-	public Object getFormat() {
-		return format;
-	}
+  private String healthDataKey = "";
 
-	public void setFormat(Object format) {
-		this.format = format;
-	}
+  private List<QuestionnaireActivityStepsBean> steps = new ArrayList<>();
 
-	public void setTitle(String title) {
-		this.title = title;
-	}
+  public String getType() {
+    return type;
+  }
 
-	public Boolean getSkippable() {
-		return skippable;
-	}
+  public void setType(String type) {
+    this.type = type;
+  }
 
-	public void setSkippable(Boolean skippable) {
-		this.skippable = skippable;
-	}
+  public String getResultType() {
+    return resultType;
+  }
 
-	public String getGroupName() {
-		return groupName;
-	}
+  public void setResultType(String resultType) {
+    this.resultType = resultType;
+  }
 
-	public void setGroupName(String groupName) {
-		this.groupName = groupName;
-	}
+  public String getKey() {
+    return key;
+  }
 
-	public Boolean getRepeatable() {
-		return repeatable;
-	}
+  public void setKey(String key) {
+    this.key = key;
+  }
 
-	public void setRepeatable(Boolean repeatable) {
-		this.repeatable = repeatable;
-	}
+  public String getText() {
+    return text;
+  }
 
-	public String getRepeatableText() {
-		return repeatableText;
-	}
+  public void setText(String text) {
+    this.text = text;
+  }
 
-	public void setRepeatableText(String repeatableText) {
-		this.repeatableText = repeatableText;
-	}
+  public String[] getOptions() {
+    return options;
+  }
 
-	public List<DestinationBean> getDestinations() {
-		return destinations;
-	}
+  public void setOptions(String[] options) {
+    this.options = options;
+  }
 
-	public void setDestinations(List<DestinationBean> destinations) {
-		this.destinations = destinations;
-	}
+  public String getTitle() {
+    return title;
+  }
 
-	public String getHealthDataKey() {
-		return healthDataKey;
-	}
+  public Object getFormat() {
+    return format;
+  }
 
-	public void setHealthDataKey(String healthDataKey) {
-		this.healthDataKey = healthDataKey;
-	}
+  public void setFormat(Object format) {
+    this.format = format;
+  }
 
-	public List<QuestionnaireActivityStepsBean> getSteps() {
-		return steps;
-	}
+  public void setTitle(String title) {
+    this.title = title;
+  }
 
-	public void setSteps(List<QuestionnaireActivityStepsBean> steps) {
-		this.steps = steps;
-	}
+  public Boolean getSkippable() {
+    return skippable;
+  }
 
+  public void setSkippable(Boolean skippable) {
+    this.skippable = skippable;
+  }
+
+  public String getGroupName() {
+    return groupName;
+  }
+
+  public void setGroupName(String groupName) {
+    this.groupName = groupName;
+  }
+
+  public Boolean getRepeatable() {
+    return repeatable;
+  }
+
+  public void setRepeatable(Boolean repeatable) {
+    this.repeatable = repeatable;
+  }
+
+  public String getRepeatableText() {
+    return repeatableText;
+  }
+
+  public void setRepeatableText(String repeatableText) {
+    this.repeatableText = repeatableText;
+  }
+
+  public List<DestinationBean> getDestinations() {
+    return destinations;
+  }
+
+  public void setDestinations(List<DestinationBean> destinations) {
+    this.destinations = destinations;
+  }
+
+  public String getHealthDataKey() {
+    return healthDataKey;
+  }
+
+  public void setHealthDataKey(String healthDataKey) {
+    this.healthDataKey = healthDataKey;
+  }
+
+  public List<QuestionnaireActivityStepsBean> getSteps() {
+    return steps;
+  }
+
+  public void setSteps(List<QuestionnaireActivityStepsBean> steps) {
+    this.steps = steps;
+  }
 }

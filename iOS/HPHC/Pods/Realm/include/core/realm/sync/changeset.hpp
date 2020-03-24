@@ -59,6 +59,7 @@ struct Changeset {
     Changeset& operator=(const Changeset&) = delete;
 
     InternString intern_string(StringData); // Slow!
+    InternString find_string(StringData) const noexcept; // Slow!
     StringData string_data() const noexcept;
 
     StringBuffer& string_buffer() noexcept;

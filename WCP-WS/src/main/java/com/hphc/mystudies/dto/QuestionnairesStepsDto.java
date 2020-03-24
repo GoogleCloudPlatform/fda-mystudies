@@ -1,5 +1,5 @@
 /*
- * Copyright © 2017-2018 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors.
+ * Copyright Â© 2017-2018 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors.
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction, including
  * without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies
@@ -23,7 +23,6 @@
 package com.hphc.mystudies.dto;
 
 import java.io.Serializable;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -32,219 +31,210 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
-/**
- * Provides questionnaire steps details for study {@link StudyDto}.
- * 
- * @author BTC
- *
- */
+
 @Entity
 @Table(name = "questionnaires_steps")
 public class QuestionnairesStepsDto implements Serializable {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = -6626878023643784669L;
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
-	@Column(name = "step_id")
-	private Integer stepId;
+  private static final long serialVersionUID = -6626878023643784669L;
 
-	@Column(name = "questionnaires_id")
-	private Integer questionnairesId;
+  @Id
+  @GeneratedValue(strategy = GenerationType.AUTO)
+  @Column(name = "step_id")
+  private Integer stepId;
 
-	@Column(name = "instruction_form_id")
-	private Integer instructionFormId;
+  @Column(name = "questionnaires_id")
+  private Integer questionnairesId;
 
-	@Column(name = "step_type")
-	private String stepType;
+  @Column(name = "instruction_form_id")
+  private Integer instructionFormId;
 
-	@Column(name = "sequence_no")
-	private Integer sequenceNo;
+  @Column(name = "step_type")
+  private String stepType;
 
-	@Column(name = "step_short_title")
-	private String stepShortTitle;
+  @Column(name = "sequence_no")
+  private Integer sequenceNo;
 
-	@Column(name = "skiappable")
-	private String skiappable;
+  @Column(name = "step_short_title")
+  private String stepShortTitle;
 
-	@Column(name = "destination_step")
-	private Integer destinationStep;
+  @Column(name = "skiappable")
+  private String skiappable;
 
-	@Column(name = "repeatable")
-	private String repeatable = "No";
+  @Column(name = "destination_step")
+  private Integer destinationStep;
 
-	@Column(name = "repeatable_text")
-	private String repeatableText;
+  @Column(name = "repeatable")
+  private String repeatable = "No";
 
-	@Column(name = "status")
-	private Boolean status;
+  @Column(name = "repeatable_text")
+  private String repeatableText;
 
-	@Column(name = "created_on")
-	private String createdOn;
+  @Column(name = "status")
+  private Boolean status;
 
-	@Column(name = "modified_on")
-	private String modifiedOn;
+  @Column(name = "created_on")
+  private String createdOn;
 
-	@Column(name = "created_by")
-	private Integer createdBy;
+  @Column(name = "modified_on")
+  private String modifiedOn;
 
-	@Column(name = "modified_by")
-	private Integer modifiedBy;
+  @Column(name = "created_by")
+  private Integer createdBy;
 
-	@Column(name = "study_version")
-	private Integer studyVersion = 1;
+  @Column(name = "modified_by")
+  private Integer modifiedBy;
 
-	@Column(name = "active")
-	private Boolean active;
+  @Column(name = "study_version")
+  private Integer studyVersion = 1;
 
-	@Transient
-	private String destinationStepType;
+  @Column(name = "active")
+  private Boolean active;
 
-	public Integer getStepId() {
-		return stepId;
-	}
+  @Transient private String destinationStepType;
 
-	public void setStepId(Integer stepId) {
-		this.stepId = stepId;
-	}
+  public Integer getStepId() {
+    return stepId;
+  }
 
-	public Integer getQuestionnairesId() {
-		return questionnairesId;
-	}
+  public void setStepId(Integer stepId) {
+    this.stepId = stepId;
+  }
 
-	public void setQuestionnairesId(Integer questionnairesId) {
-		this.questionnairesId = questionnairesId;
-	}
+  public Integer getQuestionnairesId() {
+    return questionnairesId;
+  }
 
-	public Integer getInstructionFormId() {
-		return instructionFormId;
-	}
+  public void setQuestionnairesId(Integer questionnairesId) {
+    this.questionnairesId = questionnairesId;
+  }
 
-	public void setInstructionFormId(Integer instructionFormId) {
-		this.instructionFormId = instructionFormId;
-	}
+  public Integer getInstructionFormId() {
+    return instructionFormId;
+  }
 
-	public String getStepType() {
-		return stepType;
-	}
+  public void setInstructionFormId(Integer instructionFormId) {
+    this.instructionFormId = instructionFormId;
+  }
 
-	public void setStepType(String stepType) {
-		this.stepType = stepType;
-	}
+  public String getStepType() {
+    return stepType;
+  }
 
-	public Integer getSequenceNo() {
-		return sequenceNo;
-	}
+  public void setStepType(String stepType) {
+    this.stepType = stepType;
+  }
 
-	public void setSequenceNo(Integer sequenceNo) {
-		this.sequenceNo = sequenceNo;
-	}
+  public Integer getSequenceNo() {
+    return sequenceNo;
+  }
 
-	public String getStepShortTitle() {
-		return stepShortTitle;
-	}
+  public void setSequenceNo(Integer sequenceNo) {
+    this.sequenceNo = sequenceNo;
+  }
 
-	public void setStepShortTitle(String stepShortTitle) {
-		this.stepShortTitle = stepShortTitle;
-	}
+  public String getStepShortTitle() {
+    return stepShortTitle;
+  }
 
-	public String getSkiappable() {
-		return skiappable;
-	}
+  public void setStepShortTitle(String stepShortTitle) {
+    this.stepShortTitle = stepShortTitle;
+  }
 
-	public void setSkiappable(String skiappable) {
-		this.skiappable = skiappable;
-	}
+  public String getSkiappable() {
+    return skiappable;
+  }
 
-	public Integer getDestinationStep() {
-		return destinationStep;
-	}
+  public void setSkiappable(String skiappable) {
+    this.skiappable = skiappable;
+  }
 
-	public void setDestinationStep(Integer destinationStep) {
-		this.destinationStep = destinationStep;
-	}
+  public Integer getDestinationStep() {
+    return destinationStep;
+  }
 
-	public String getRepeatable() {
-		return repeatable;
-	}
+  public void setDestinationStep(Integer destinationStep) {
+    this.destinationStep = destinationStep;
+  }
 
-	public void setRepeatable(String repeatable) {
-		this.repeatable = repeatable;
-	}
+  public String getRepeatable() {
+    return repeatable;
+  }
 
-	public String getRepeatableText() {
-		return repeatableText;
-	}
+  public void setRepeatable(String repeatable) {
+    this.repeatable = repeatable;
+  }
 
-	public void setRepeatableText(String repeatableText) {
-		this.repeatableText = repeatableText;
-	}
+  public String getRepeatableText() {
+    return repeatableText;
+  }
 
-	public Boolean getStatus() {
-		return status;
-	}
+  public void setRepeatableText(String repeatableText) {
+    this.repeatableText = repeatableText;
+  }
 
-	public void setStatus(Boolean status) {
-		this.status = status;
-	}
+  public Boolean getStatus() {
+    return status;
+  }
 
-	public String getCreatedOn() {
-		return createdOn;
-	}
+  public void setStatus(Boolean status) {
+    this.status = status;
+  }
 
-	public void setCreatedOn(String createdOn) {
-		this.createdOn = createdOn;
-	}
+  public String getCreatedOn() {
+    return createdOn;
+  }
 
-	public String getModifiedOn() {
-		return modifiedOn;
-	}
+  public void setCreatedOn(String createdOn) {
+    this.createdOn = createdOn;
+  }
 
-	public void setModifiedOn(String modifiedOn) {
-		this.modifiedOn = modifiedOn;
-	}
+  public String getModifiedOn() {
+    return modifiedOn;
+  }
 
-	public Integer getCreatedBy() {
-		return createdBy;
-	}
+  public void setModifiedOn(String modifiedOn) {
+    this.modifiedOn = modifiedOn;
+  }
 
-	public void setCreatedBy(Integer createdBy) {
-		this.createdBy = createdBy;
-	}
+  public Integer getCreatedBy() {
+    return createdBy;
+  }
 
-	public Integer getModifiedBy() {
-		return modifiedBy;
-	}
+  public void setCreatedBy(Integer createdBy) {
+    this.createdBy = createdBy;
+  }
 
-	public void setModifiedBy(Integer modifiedBy) {
-		this.modifiedBy = modifiedBy;
-	}
+  public Integer getModifiedBy() {
+    return modifiedBy;
+  }
 
-	public Integer getStudyVersion() {
-		return studyVersion;
-	}
+  public void setModifiedBy(Integer modifiedBy) {
+    this.modifiedBy = modifiedBy;
+  }
 
-	public void setStudyVersion(Integer studyVersion) {
-		this.studyVersion = studyVersion;
-	}
+  public Integer getStudyVersion() {
+    return studyVersion;
+  }
 
-	public Boolean getActive() {
-		return active;
-	}
+  public void setStudyVersion(Integer studyVersion) {
+    this.studyVersion = studyVersion;
+  }
 
-	public void setActive(Boolean active) {
-		this.active = active;
-	}
+  public Boolean getActive() {
+    return active;
+  }
 
-	public String getDestinationStepType() {
-		return destinationStepType;
-	}
+  public void setActive(Boolean active) {
+    this.active = active;
+  }
 
-	public void setDestinationStepType(String destinationStepType) {
-		this.destinationStepType = destinationStepType;
-	}
+  public String getDestinationStepType() {
+    return destinationStepType;
+  }
 
+  public void setDestinationStepType(String destinationStepType) {
+    this.destinationStepType = destinationStepType;
+  }
 }

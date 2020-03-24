@@ -51,10 +51,10 @@
          <table id="consent_list" class="display bor-none" cellspacing="0" width="100%">
             <thead>
                <tr>
-                  <th><span class="marL10">#</span></th>
-                  <th>Consent Title</th>
-                  <th>visual step</th>
-                  <th>
+                  <th id=""><span class="marL10">#</span></th>
+                  <th id="">Consent Title</th>
+                  <th id="">visual step</th>
+                  <th id="">
                   	 <div class="dis-line form-group mb-none">
                   	 <c:if test="${empty permission}">
                         <button type="button" class="btn btn-primary blue-btn" onclick="addConsentPage();">Add Consent Section</button>

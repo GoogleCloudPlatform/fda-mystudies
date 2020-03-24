@@ -22,10 +22,14 @@
 			<value>messageResource</value>
 		</property>
 	</bean>
-	<util:properties id="propertyConfigurer"
-		location="#{contextParameters.property_file_location_config}" />
-	<context:property-placeholder
-		properties-ref="propertyConfigurer" />
+<!-- 	<util:properties id="propertyConfigurer"
+		location="#{contextParameters.property_file_location_config}" /> -->
+	<util:properties id="propertyConfigurer" location="classpath:application_local.properties" 
+		/>
+	<!-- <context:property-placeholder
+		properties-ref="propertyConfigurer" /> -->
+		<context:property-placeholder location="classpath:application_local.properties" 
+		/>
 	<bean id="dataSource"
 		class="org.springframework.jdbc.datasource.DriverManagerDataSource">
 		<property name="driverClassName" value="com.mysql.jdbc.Driver" />
