@@ -22,20 +22,25 @@ import lombok.Setter;
 @Setter
 @Getter
 @Entity
-@Table(name = "sessions")
-public class AuthInfoBO implements Serializable {
+@Table(name = "activity_log")
+public class ActivityLogBO implements Serializable {
 
-  private static final long serialVersionUID = 6321017194474071886L;
+  private static final long serialVersionUID = -2704684231429666459L;
 
   @Id
+  @Column(name = "activity_log_id")
   @GeneratedValue(strategy = GenerationType.AUTO)
   private Integer id;
 
-  @Column(columnDefinition = "TIMESTAMP")
-  private LocalDateTime expireDate;
+  @Column(name = "auth_user_id")
+  private String authUserId;
 
-  private String refreshToken;
-  private String accessToken;
-  private String userId;
-  private String clientToken;
+  @Column(name = "actvity_name")
+  private String activityName;
+
+  @Column(name = "activity_description")
+  private String activtyDesc;
+
+  @Column(name = "activity_date_time")
+  private LocalDateTime activityDateTime;
 }

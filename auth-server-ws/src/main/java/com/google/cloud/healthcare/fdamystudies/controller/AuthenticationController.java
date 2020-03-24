@@ -1,8 +1,9 @@
 /*
- *Copyright 2020 Google LLC
+ * Copyright 2020 Google LLC
  *
- *Use of this source code is governed by an MIT-style license that can be found in the LICENSE file
- *or at https://opensource.org/licenses/MIT.
+ * Use of this source code is governed by an MIT-style
+ * license that can be found in the LICENSE file or at
+ * https://opensource.org/licenses/MIT.
  */
 
 package com.google.cloud.healthcare.fdamystudies.controller;
@@ -55,6 +56,7 @@ import com.google.cloud.healthcare.fdamystudies.exception.UserNotFoundException;
 import com.google.cloud.healthcare.fdamystudies.model.AuthInfoBO;
 import com.google.cloud.healthcare.fdamystudies.model.DaoUserBO;
 import com.google.cloud.healthcare.fdamystudies.model.LoginAttemptsBO;
+import com.google.cloud.healthcare.fdamystudies.service.ActivityLogService;
 import com.google.cloud.healthcare.fdamystudies.service.ClientService;
 import com.google.cloud.healthcare.fdamystudies.service.UserDetailsService;
 import com.google.cloud.healthcare.fdamystudies.service.UserSessionService;
@@ -80,6 +82,8 @@ public class AuthenticationController {
   @Autowired private ClientService clientInfoService;
 
   @Autowired ApplicationPropertyConfiguration appConfig;
+
+  @Autowired private ActivityLogService activityLogService;
 
   @DeleteMapping("/deleteUser")
   public ResponseEntity<?> deleteUser(
@@ -257,7 +261,10 @@ public class AuthenticationController {
     String appCode = null;
     try {
       appCode = clientInfoService.checkClientInfo(clientId, secretKey);
-      if (AppConstants.MA.equals(appCode) || AppConstants.USWS.equals(appCode)) {
+      if (AppConstants.MA.equals(appCode)
+          || AppConstants.USWS.equals(appCode)
+          || AppConstants.URS.equals(appCode)
+          || AppConstants.RS.equals(appCode)) {
 
         responseEntity = new ValidateClientCredentialsResponse();
         responseEntity.setCode(MyStudiesUserRegUtil.ErrorCodes.STATUS_200.getValue());
@@ -369,6 +376,11 @@ public class AuthenticationController {
       responseEntity = new RefreshTokenControllerResponse();
       responseEntity.setCode(HttpStatus.UNAUTHORIZED.value());
       responseEntity.setMessage(ErrorCode.EC_1003.errorMessage());
+
+      activityLogService.createActivityLog(
+          userId,
+          AppConstants.AUDIT_EVENT_FAILED_REFRESH_TOKEN_NAME,
+          AppConstants.AUDIT_EVENT_FAILED_REFRESH_TOKEN_DESC);
       logger.error(
           "AuthenticationController getRefreshedToken() - error with UNAUTHORIZED request: ", e);
       return new ResponseEntity<>(responseEntity, HttpStatus.UNAUTHORIZED);
@@ -676,6 +688,11 @@ public class AuthenticationController {
                 MyStudiesUserRegUtil.ErrorCodes.ACCOUNT_LOCKED.getValue(),
                 response);
             loginResp.setMessage(MyStudiesUserRegUtil.ErrorCodes.ACCOUNT_LOCKED.getValue());
+            activityLogService.createActivityLog(
+                participantDetails.getUserId(),
+                AppConstants.AUDIT_EVENT_FAILED_SIGN_IN_NAME,
+                String.format(
+                    AppConstants.AUDIT_EVENT_FAILED_SIGN_IN_DESC, participantDetails.getUserId()));
             logger.info("AuthenticationController login() - ends with ACCOUNT_LOCKED");
             return new ResponseEntity<>(loginResp, HttpStatus.BAD_REQUEST);
           } else if (loginResp.getCode() == ErrorCode.EC_92.code()) {
@@ -687,17 +704,38 @@ public class AuthenticationController {
             loginResp.setCode(HttpStatus.UNAUTHORIZED.value());
             loginResp.setMessage(
                 MyStudiesUserRegUtil.ErrorCodes.INVALID_USERNAME_PASSWORD_MSG.getValue());
+            activityLogService.createActivityLog(
+                participantDetails.getUserId(),
+                AppConstants.AUDIT_EVENT_FAILED_SIGN_IN_NAME,
+                String.format(
+                    AppConstants.AUDIT_EVENT_FAILED_SIGN_IN_DESC, participantDetails.getUserId()));
             logger.info("AuthenticationController login() - ends with UNAUTHORIZED request");
             return new ResponseEntity<>(loginResp, HttpStatus.UNAUTHORIZED);
           }
         }
 
+        String eventName = AppConstants.AUDIT_EVENT_SIGN_IN_NAME;
+        String eventDesc = AppConstants.AUDIT_EVENT_SIGN_IN_DESC;
+        if (loginResp.isResetPassword()) {
+          eventName = AppConstants.AUDIT_EVENT_SIGN_IN_WITH_TMP_PASSD_NAME;
+          eventDesc = AppConstants.AUDIT_EVENT_SIGN_IN_WITH_TMP_PASSD_DESC;
+        }
+        activityLogService.createActivityLog(
+            participantDetails.getUserId(),
+            eventName,
+            String.format(eventDesc, participantDetails.getUserId()));
       } else {
         MyStudiesUserRegUtil.getFailureResponse(
             MyStudiesUserRegUtil.ErrorCodes.STATUS_102.getValue(),
             MyStudiesUserRegUtil.ErrorCodes.INVALID_INPUT.getValue(),
             MyStudiesUserRegUtil.ErrorCodes.INVALID_EMAIL_PASSWORD_MSG.getValue(),
             response);
+        activityLogService.createActivityLog(
+            loginRequest.getEmailId(),
+            AppConstants.AUDIT_EVENT_FAILED_SIGN_IN_NAME,
+            String.format(
+                AppConstants.AUDIT_EVENT_FAILED_SIGN_IN_WRONG_EMAIL_DESC,
+                loginRequest.getEmailId()));
         logger.info("AuthenticationController login() - ends with INVALID_EMAIL_PASSWORD");
         return new ResponseEntity<>(loginResp, HttpStatus.BAD_REQUEST);
       }
@@ -742,6 +780,10 @@ public class AuthenticationController {
           logoutResponse = new LogoutResponse();
           logoutResponse.setCode(ErrorCode.EC_200.code());
           logoutResponse.setMessage(ErrorCode.EC_200.errorMessage());
+          activityLogService.createActivityLog(
+              userId,
+              AppConstants.AUDIT_EVENT_SIGN_OUT_NAME,
+              String.format(AppConstants.AUDIT_EVENT_SIGN_OUT_DESC, userId));
           logger.info("AuthenticationController logout() - ends");
           return new ResponseEntity<>(logoutResponse, HttpStatus.OK);
         } else {
@@ -753,11 +795,19 @@ public class AuthenticationController {
           logoutResponse = new LogoutResponse();
           logoutResponse.setCode(HttpStatus.UNAUTHORIZED.value());
           logoutResponse.setMessage(ErrorCode.EC_1001.errorMessage());
+          activityLogService.createActivityLog(
+              userId,
+              AppConstants.AUDIT_EVENT_SIGN_OUT_UNSUCCESSFUL_NAME,
+              String.format(AppConstants.AUDIT_EVENT_SIGN_OUT_UNSUCCESSFUL_DESC, userId));
           logger.info("AuthenticationController logout() - ends with UNAUTHORIZED request");
           return new ResponseEntity<>(logoutResponse, HttpStatus.UNAUTHORIZED);
         }
 
       } catch (UserNotFoundException e) {
+        activityLogService.createActivityLog(
+            userId,
+            AppConstants.AUDIT_EVENT_SIGN_OUT_UNSUCCESSFUL_NAME,
+            String.format(AppConstants.AUDIT_EVENT_SIGN_OUT_UNSUCCESSFUL_DESC, userId));
         MyStudiesUserRegUtil.getFailureResponse(
             400 + "",
             MyStudiesUserRegUtil.ErrorCodes.INVALID_INPUT.getValue(),
@@ -776,6 +826,10 @@ public class AuthenticationController {
           MyStudiesUserRegUtil.ErrorCodes.UNKNOWN.getValue(),
           MyStudiesUserRegUtil.ErrorCodes.SYSTEM_ERROR_FOUND.getValue(),
           response);
+      activityLogService.createActivityLog(
+          userId,
+          AppConstants.AUDIT_EVENT_SIGN_OUT_UNSUCCESSFUL_NAME,
+          String.format(AppConstants.AUDIT_EVENT_SIGN_OUT_UNSUCCESSFUL_DESC, userId));
       logoutResponse = new LogoutResponse();
       logoutResponse.setCode(HttpStatus.INTERNAL_SERVER_ERROR.value());
       logoutResponse.setMessage(ErrorCode.EC_118.errorMessage());
@@ -870,6 +924,11 @@ public class AuthenticationController {
                     responseBean.setMessage(
                         MyStudiesUserRegUtil.ErrorCodes.SUCCESS.getValue().toLowerCase());
                     userDetailsService.resetLoginAttempts(forgotPwdBean.getEmailId());
+                    activityLogService.createActivityLog(
+                        userDetails.getUserId(),
+                        AppConstants.AUDIT_EVENT_PASSWORD_HELP_NAME,
+                        String.format(
+                            AppConstants.AUDIT_EVENT_PASSWORD_HELP_DESC, userDetails.getUserId()));
                   } else {
                     MyStudiesUserRegUtil.getFailureResponse(
                         MyStudiesUserRegUtil.ErrorCodes.STATUS_104.getValue(),
@@ -991,7 +1050,9 @@ public class AuthenticationController {
                 .getCurrentPassword()
                 .equals(changePasswordBean.getNewPassword())) {
 
-              if (MyStudiesUserRegUtil.isPasswordStrong(changePasswordBean.getNewPassword())) {
+              if (MyStudiesUserRegUtil.isPasswordStrong(changePasswordBean.getNewPassword())
+                  && !(MyStudiesUserRegUtil.isPasswordContainsEmailId(
+                      changePasswordBean.getNewPassword()))) {
 
                 isValidPassword =
                     userDetailsService.getPasswordHistory(
@@ -1028,7 +1089,19 @@ public class AuthenticationController {
                       responseBean.setCode(ErrorCode.EC_200.code());
                       responseBean.setMessage(
                           MyStudiesUserRegUtil.ErrorCodes.SUCCESS.getValue().toLowerCase());
+                      activityLogService.createActivityLog(
+                          userId,
+                          AppConstants.AUDIT_EVENT_CHANGE_PASSWORD_NAME,
+                          String.format(AppConstants.AUDIT_EVENT_CHANGE_PASSWORD_DESC, userId));
                     }
+                  } else if (MyStudiesUserRegUtil.ErrorCodes.FAILURE
+                      .getValue()
+                      .equalsIgnoreCase(responseBean.getMessage())) {
+                    activityLogService.createActivityLog(
+                        userId,
+                        AppConstants.AUDIT_EVENT_CHANGE_PASSWORD_UNSUCCESSFUL_NAME,
+                        String.format(
+                            AppConstants.AUDIT_EVENT_CHANGE_PASSWORD_UNSUCCESSFUL_DESC, userId));
                   }
                 } else {
                   MyStudiesUserRegUtil.getFailureResponse(
@@ -1038,6 +1111,11 @@ public class AuthenticationController {
                       MyStudiesUserRegUtil.ErrorCodes.NEW_PASSWORD_NOT_SAME_LAST_PASSWORD
                           .getValue(),
                       response);
+                  activityLogService.createActivityLog(
+                      userId,
+                      AppConstants.AUDIT_EVENT_CHANGE_PASSWORD_UNSUCCESSFUL_NAME,
+                      String.format(
+                          AppConstants.AUDIT_EVENT_CHANGE_PASSWORD_UNSUCCESSFUL_DESC, userId));
                   responseBean = new ResponseBean();
                   responseBean.setCode(HttpStatus.BAD_REQUEST.value());
                   responseBean.setMessage(
@@ -1052,6 +1130,11 @@ public class AuthenticationController {
                     MyStudiesUserRegUtil.ErrorCodes.INVALID_INPUT.getValue(),
                     MyStudiesUserRegUtil.ErrorCodes.INVALID_INPUT.getValue(),
                     response);
+                activityLogService.createActivityLog(
+                    userId,
+                    AppConstants.AUDIT_EVENT_CHANGE_PASSWORD_UNSUCCESSFUL_NAME,
+                    String.format(
+                        AppConstants.AUDIT_EVENT_CHANGE_PASSWORD_UNSUCCESSFUL_DESC, userId));
                 responseBean = new ResponseBean();
                 responseBean.setCode(HttpStatus.BAD_REQUEST.value());
                 responseBean.setMessage(
@@ -1064,6 +1147,11 @@ public class AuthenticationController {
                   MyStudiesUserRegUtil.ErrorCodes.INVALID_INPUT.getValue(),
                   MyStudiesUserRegUtil.ErrorCodes.OLD_PASSWORD_AND_NEW_PASSWORD_NOT_SAME.getValue(),
                   response);
+              activityLogService.createActivityLog(
+                  userId,
+                  AppConstants.AUDIT_EVENT_CHANGE_PASSWORD_UNSUCCESSFUL_NAME,
+                  String.format(
+                      AppConstants.AUDIT_EVENT_CHANGE_PASSWORD_UNSUCCESSFUL_DESC, userId));
               responseBean = new ResponseBean();
               responseBean.setCode(HttpStatus.BAD_REQUEST.value());
               responseBean.setMessage(
@@ -1078,6 +1166,10 @@ public class AuthenticationController {
                 MyStudiesUserRegUtil.ErrorCodes.INVALID_INPUT.getValue(),
                 MyStudiesUserRegUtil.ErrorCodes.OLD_PASSWORD_NOT_EXISTS.getValue(),
                 response);
+            activityLogService.createActivityLog(
+                userId,
+                AppConstants.AUDIT_EVENT_CHANGE_PASSWORD_UNSUCCESSFUL_NAME,
+                String.format(AppConstants.AUDIT_EVENT_CHANGE_PASSWORD_UNSUCCESSFUL_DESC, userId));
             responseBean = new ResponseBean();
             responseBean.setCode(HttpStatus.BAD_REQUEST.value());
             responseBean.setMessage(
@@ -1114,6 +1206,10 @@ public class AuthenticationController {
           MyStudiesUserRegUtil.ErrorCodes.UNKNOWN.getValue(),
           MyStudiesUserRegUtil.ErrorCodes.CONNECTION_ERROR_MSG.getValue(),
           response);
+      activityLogService.createActivityLog(
+          userId,
+          AppConstants.AUDIT_EVENT_CHANGE_PASSWORD_UNSUCCESSFUL_NAME,
+          String.format(AppConstants.AUDIT_EVENT_CHANGE_PASSWORD_UNSUCCESSFUL_DESC, userId));
       responseBean = new ResponseBean();
       responseBean.setCode(HttpStatus.BAD_REQUEST.value());
       responseBean.setMessage(ErrorCode.EC_113.errorMessage());
