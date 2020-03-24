@@ -66,7 +66,6 @@ import com.hphc.mystudies.util.StudyMetaDataConstants;
 import com.hphc.mystudies.util.StudyMetaDataEnum;
 import com.hphc.mystudies.util.StudyMetaDataUtil;
 
-
 @Path("/")
 public class StudyMetaDataService {
 
@@ -81,7 +80,6 @@ public class StudyMetaDataService {
       new DashboardMetaDataOrchestration();
   AppMetaDataOrchestration appMetaDataOrchestration = new AppMetaDataOrchestration();
 
-  
   @GET
   @Produces(MediaType.APPLICATION_JSON)
   @Consumes(MediaType.APPLICATION_JSON)
@@ -113,7 +111,6 @@ public class StudyMetaDataService {
     return gatewayInfo;
   }
 
-  
   @GET
   @Produces(MediaType.APPLICATION_JSON)
   @Consumes(MediaType.APPLICATION_JSON)
@@ -155,7 +152,6 @@ public class StudyMetaDataService {
     return studyResponse;
   }
 
-  
   @GET
   @Produces(MediaType.APPLICATION_JSON)
   @Consumes(MediaType.APPLICATION_JSON)
@@ -211,7 +207,6 @@ public class StudyMetaDataService {
     return eligibilityConsentResponse;
   }
 
-  
   @GET
   @Produces(MediaType.APPLICATION_JSON)
   @Consumes(MediaType.APPLICATION_JSON)
@@ -272,7 +267,6 @@ public class StudyMetaDataService {
     return consentDocumentResponse;
   }
 
-  
   @GET
   @Produces(MediaType.APPLICATION_JSON)
   @Consumes(MediaType.APPLICATION_JSON)
@@ -328,7 +322,6 @@ public class StudyMetaDataService {
     return resourcesResponse;
   }
 
-  
   @GET
   @Produces(MediaType.APPLICATION_JSON)
   @Consumes(MediaType.APPLICATION_JSON)
@@ -384,7 +377,6 @@ public class StudyMetaDataService {
     return studyInfoResponse;
   }
 
-  
   @GET
   @Produces(MediaType.APPLICATION_JSON)
   @Consumes(MediaType.APPLICATION_JSON)
@@ -441,7 +433,6 @@ public class StudyMetaDataService {
     return activityResponse;
   }
 
-  
   @GET
   @Produces(MediaType.APPLICATION_JSON)
   @Consumes(MediaType.APPLICATION_JSON)
@@ -547,7 +538,6 @@ public class StudyMetaDataService {
     }
   }
 
-  
   @GET
   @Produces(MediaType.APPLICATION_JSON)
   @Consumes(MediaType.APPLICATION_JSON)
@@ -603,7 +593,6 @@ public class StudyMetaDataService {
     return studyDashboardResponse;
   }
 
-  
   @GET
   @Produces(MediaType.APPLICATION_JSON)
   @Consumes(MediaType.APPLICATION_JSON)
@@ -633,7 +622,6 @@ public class StudyMetaDataService {
     return termsPolicyResponse;
   }
 
-  
   @GET
   @Produces(MediaType.APPLICATION_JSON)
   @Consumes(MediaType.APPLICATION_JSON)
@@ -678,7 +666,6 @@ public class StudyMetaDataService {
     return notificationsResponse;
   }
 
-  
   @POST
   @Produces(MediaType.APPLICATION_JSON)
   @Consumes(MediaType.APPLICATION_JSON)
@@ -715,7 +702,6 @@ public class StudyMetaDataService {
     return appResponse;
   }
 
-  
   @POST
   @Produces(MediaType.APPLICATION_JSON)
   @Consumes(MediaType.APPLICATION_JSON)
@@ -756,7 +742,6 @@ public class StudyMetaDataService {
     return appResponse;
   }
 
-  
   @GET
   @Consumes(MediaType.APPLICATION_JSON)
   @Produces(MediaType.APPLICATION_JSON)
@@ -793,7 +778,6 @@ public class StudyMetaDataService {
     return appUpdatesResponse;
   }
 
-  
   @GET
   @Consumes(MediaType.APPLICATION_JSON)
   @Produces(MediaType.APPLICATION_JSON)
@@ -850,7 +834,6 @@ public class StudyMetaDataService {
     return studyUpdatesResponse;
   }
 
-  
   @POST
   @Produces(MediaType.APPLICATION_JSON)
   @Consumes(MediaType.APPLICATION_JSON)
@@ -931,7 +914,6 @@ public class StudyMetaDataService {
     return updateAppVersionResponse;
   }
 
-  
   @GET
   @Produces(MediaType.APPLICATION_JSON)
   @Consumes(MediaType.APPLICATION_JSON)
@@ -980,7 +962,6 @@ public class StudyMetaDataService {
     return enrollmentTokenResponse;
   }
 
-  
   @GET
   @Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
   @Consumes(MediaType.APPLICATION_XML)
@@ -992,7 +973,6 @@ public class StudyMetaDataService {
     return response;
   }
 
-  
   @GET
   @Produces(MediaType.APPLICATION_JSON)
   @Consumes(MediaType.APPLICATION_JSON)
@@ -1048,31 +1028,9 @@ public class StudyMetaDataService {
       throws Exception {
     LOGGER.info("INFO: StudyMetaDataService - storeJsonResponseFile() :: starts");
     ErrorResponse errorResponse = new ErrorResponse();
-    // boolean isValidEnrollmentId = false;
-    // ActivityConditionDto activityConditionDto = null;
     try {
 
       if (StringUtils.isNotEmpty(params)) {
-        /*
-         * // authenticate logged In user errorResponse =
-         * userService.authenticateUser(accessToken, userId, response); if
-         * (response.getStatus() == HttpServletResponse.SC_UNAUTHORIZED) { return new
-         * ResponseEntity<>(errorResponse, HttpStatus.UNAUTHORIZED); } else if
-         * (response.getStatus() == HttpServletResponse.SC_FORBIDDEN) { return new
-         * ResponseEntity<>(errorResponse, HttpStatus.FORBIDDEN); }
-         */
-
-        /*
-         * isValidEnrollmentId = studyService.validateEnrollmentId(enrollmentId); if
-         * (!isValidEnrollmentId) { return
-         * AppUtil.httpResponseForNotFound(ErrorCode.EC_95.code()); }
-         */
-
-        /*
-         * activityConditionDto = activityService.
-         * fetchActivityConditionDetailsByIdandType(activityConditionId,
-         * AppConstants.FIND_BY_TYPE_ACTIVITY_CONDITIONID);
-         */
 
         errorResponse = appMetaDataOrchestration.storeResponseActivitiesTemp(params);
 
@@ -1095,13 +1053,11 @@ public class StudyMetaDataService {
       }
     } catch (JSONException e) {
       LOGGER.error("ERROR: StudyMetaDataService - storeJsonResponseFile()", e);
-      // return AppUtil.httpResponseForNotAcceptable(ErrorCode.EC_44.code());
       return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
           .entity(StudyMetaDataConstants.FAILURE)
           .build();
     } catch (Exception e) {
       LOGGER.error("ERROR: StudyMetaDataService - storeJsonResponseFile()", e);
-      // return AppUtil.httpResponseForInternalServerError();
       return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
           .entity(StudyMetaDataConstants.FAILURE)
           .build();

@@ -75,10 +75,6 @@ public class StudyMetaDataUtil {
       }
       ServletContext context = ServletContextHolder.getServletContext();
       Properties prop = new Properties();
-      /*
-       * prop.load(new
-       * FileInputStream(context.getInitParameter("property_file_location_path")));
-       */
 
       InputStream inputStream =
           HibernateUtil.class.getClassLoader().getResourceAsStream("application_local.properties");

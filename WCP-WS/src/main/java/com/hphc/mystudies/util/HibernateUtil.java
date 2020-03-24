@@ -49,11 +49,7 @@ public class HibernateUtil {
                 .getResourceAsStream("application_local.properties");
 
         Properties properties = new Properties();
-        /*
-         * properties.load(new FileInputStream(
-         * ServletContextHolder.getServletContext().getInitParameter(
-         * "property_file_location_path")));
-         */
+
         properties.load(inputStream);
         sessionFactory =
             new AnnotationConfiguration()

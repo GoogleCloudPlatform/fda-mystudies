@@ -42,7 +42,6 @@ import com.hphc.mystudies.util.Mail;
 import com.hphc.mystudies.util.StudyMetaDataConstants;
 import com.hphc.mystudies.util.StudyMetaDataUtil;
 
-
 public class AppMetaDataOrchestration {
 
   private static final Logger LOGGER = Logger.getLogger(AppMetaDataOrchestration.class);
@@ -52,7 +51,6 @@ public class AppMetaDataOrchestration {
 
   AppMetaDataDao appMetaDataDao = new AppMetaDataDao();
 
-  
   public TermsPolicyResponse termsPolicy() throws OrchestrationException {
     LOGGER.info("INFO: AppMetaDataOrchestration - termsPolicy() :: Starts");
     TermsPolicyResponse termsPolicyResponse = new TermsPolicyResponse();
@@ -65,7 +63,6 @@ public class AppMetaDataOrchestration {
     return termsPolicyResponse;
   }
 
-  
   public NotificationsResponse notifications(String skip, String authorization, String appId)
       throws OrchestrationException {
     LOGGER.info("INFO: AppMetaDataOrchestration - notifications() :: Starts");
@@ -79,7 +76,6 @@ public class AppMetaDataOrchestration {
     return notificationsResponse;
   }
 
-  
   public AppResponse feedback(String subject, String body) throws OrchestrationException {
     LOGGER.info("INFO: AppMetaDataOrchestration - feedback() :: Starts");
     AppResponse response = new AppResponse();
@@ -112,7 +108,6 @@ public class AppMetaDataOrchestration {
     return response;
   }
 
-  
   public AppResponse contactUsDetails(String subject, String body, String firstName, String email)
       throws OrchestrationException {
     LOGGER.info("INFO: AppMetaDataOrchestration - contactUsDetails() :: Starts");
@@ -164,7 +159,6 @@ public class AppMetaDataOrchestration {
     return response;
   }
 
-  
   public AppUpdatesResponse appUpdates(String appVersion, String app)
       throws OrchestrationException {
     LOGGER.info("INFO: AppMetaDataOrchestration - appUpdates() :: Starts");
@@ -178,7 +172,6 @@ public class AppMetaDataOrchestration {
     return appUpdates;
   }
 
-  
   public StudyUpdatesResponse studyUpdates(String studyId, String studyVersion)
       throws OrchestrationException {
     LOGGER.info("INFO: AppMetaDataOrchestration - studyUpdates() :: Starts");
@@ -192,7 +185,6 @@ public class AppMetaDataOrchestration {
     return studyUpdates;
   }
 
-  
   public String updateAppVersionDetails(
       String forceUpdate,
       String osType,
@@ -253,11 +245,6 @@ public class AppMetaDataOrchestration {
       String version = metadataJson.getString("version");
       String participantId = json.getString("participantId");
 
-      /*
-       * String activityId = "aaa"; String studyId = "bbb"; String activityRunId =
-       * "ccc"; String participantId = "dddd"; String version = "1.0";
-       */
-
       if (StringUtils.isNotEmpty(activityId)
           && StringUtils.isNotEmpty(studyId)
           && StringUtils.isNotEmpty(activityRunId)
@@ -267,27 +254,11 @@ public class AppMetaDataOrchestration {
             StudyMetaDataUtil.saveResponsesActivityDocument(
                 jsonData, activityId, studyId, activityRunId, participantId, version);
         if (StringUtils.isNotEmpty(jsonResponseDocName)) {
-          /*
-           * responseActivityTempDto.setUserId(Integer.parseInt(userId)).setEnrollmentID(
-           * enrollmentId)
-           * .setCreatedDate(AppUtil.getCurrentDateTime()).setJsonFile(jsonResponseDocName
-           * ); studyDao.saveOrUpdateResponseActivityTemp(responseActivityTempDto,
-           * AppConstants.DB_SAVE); errorResponse =
-           * this.storeResponsesBasedOnType(conditionId, activityId ,
-           * AppUtil.getFilePathOFResponseDoucument(jsonResponseDocName), activityType,
-           * enrollmentId);
-           */
+
           ErrorBean errorBean = new ErrorBean();
           errorBean.setStatus(StudyMetaDataConstants.SUCCESS);
           errorResponse.setError(errorBean);
-        } /*
-           * else {
-           *
-           * errorResponse.setError(new ErrorBean().setCode(ErrorCode.EC_112.code())
-           * .setMessage(ErrorCode.EC_112.errorMessage()));
-           *
-           * }
-           */
+        }
       }
 
     } catch (Exception e) {

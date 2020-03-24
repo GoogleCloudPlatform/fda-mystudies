@@ -261,15 +261,7 @@ public class StudyMetaDataDao {
                     StudyMetaDataEnum.QF_STATUS.value(),
                     StudyMetaDataConstants.STUDY_STATUS_PRE_PUBLISH)
                 .list();
-        /*
-         * studiesList = session .createQuery( "from StudyDto SDTO" +
-         * " where SDTO.type= :type and SDTO.platform like '%" + platformType + "%'" +
-         * " and (SDTO.status= :status OR SDTO.live=1)")
-         * .setString(StudyMetaDataEnum.QF_TYPE.value(),
-         * StudyMetaDataConstants.STUDY_TYPE_GT)
-         * .setString(StudyMetaDataEnum.QF_STATUS.value(),
-         * StudyMetaDataConstants.STUDY_STATUS_PRE_PUBLISH) .list();
-         */
+
         if ((null != studiesList) && !studiesList.isEmpty()) {
           List<StudyBean> studyBeanList = new ArrayList<>();
           for (StudyDto studyDto : studiesList) {
@@ -318,11 +310,6 @@ public class StudyMetaDataDao {
 
             if (StringUtils.isNotEmpty(studyDto.getCategory())
                 && StringUtils.isNotEmpty(studyDto.getResearchSponsor())) {
-              /*
-               * List<ReferenceTablesDto> referenceTablesList = session
-               * .createQuery("from ReferenceTablesDto RTDTO" + " where RTDTO.id IN (" +
-               * studyDto.getCategory() + "," + studyDto.getResearchSponsor() + ")") .list();
-               */
               List<ReferenceTablesDto> referenceTablesList =
                   session
                       .createQuery(
@@ -338,10 +325,7 @@ public class StudyMetaDataDao {
                       .equalsIgnoreCase(StudyMetaDataConstants.STUDY_REF_CATEGORIES)) {
                     studyBean.setCategory(
                         StringUtils.isEmpty(reference.getValue()) ? "" : reference.getValue());
-                  } /*
-                     * else { studyBean.setSponsorName( StringUtils.isEmpty(reference.getValue()) ?
-                     * "" : reference.getValue()); }
-                     */
+                  }
                 }
               }
             }

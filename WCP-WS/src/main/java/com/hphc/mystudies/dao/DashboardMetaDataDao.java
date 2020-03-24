@@ -168,13 +168,6 @@ public class DashboardMetaDataDao {
                   addToDashboardFlag = true;
                 }
               }
-
-              /*
-               * if (StudyMetaDataConstants.SDF_DATE.parse(
-               * questionnaireDto.getModifiedDate()).after( StudyMetaDataConstants.SDF_DATE
-               * .parse(questionnaireDto .getStudyLifetimeStart()))) { addToDashboardFlag =
-               * true; }
-               */
             }
 
             if (addToDashboardFlag) {
