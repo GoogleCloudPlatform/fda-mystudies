@@ -1,9 +1,11 @@
 /*
- *Copyright 2020 Google LLC
+ * Copyright 2020 Google LLC
  *
- *Use of this source code is governed by an MIT-style license that can be found in the LICENSE file
- *or at https://opensource.org/licenses/MIT.
+ * Use of this source code is governed by an MIT-style
+ * license that can be found in the LICENSE file or at
+ * https://opensource.org/licenses/MIT.
  */
+
 package com.google.cloud.healthcare.fdamystudies.controller;
 
 import org.apache.commons.lang3.StringUtils;
@@ -35,12 +37,11 @@ public class StudiesController {
     ErrorBean errorBean = null;
     try {
       if (StringUtils.isBlank(studyMetadataBean.getStudyVersion())
-          || StringUtils.isBlank(studyMetadataBean.getAppId())) {
-
-        errorBean = new ErrorBean(ErrorCode.EC_41.code(), ErrorCode.EC_41.errorMessage());
+          || StringUtils.isBlank(studyMetadataBean.getAppId())
+          || StringUtils.isBlank(studyMetadataBean.getStudyId())
+          || StringUtils.isBlank(studyMetadataBean.getOrgId())) {
         return new ResponseEntity<>(errorBean, HttpStatus.BAD_REQUEST);
       }
-
       errorBean = studiesServices.saveStudyMetadata(studyMetadataBean);
       if (errorBean.getCode() != ErrorCode.EC_200.code()) {
         return new ResponseEntity<>(errorBean, HttpStatus.BAD_REQUEST);

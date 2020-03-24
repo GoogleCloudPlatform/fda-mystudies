@@ -1,9 +1,11 @@
 /*
- *Copyright 2020 Google LLC
+ * Copyright 2020 Google LLC
  *
- *Use of this source code is governed by an MIT-style license that can be found in the LICENSE file
- *or at https://opensource.org/licenses/MIT.
+ * Use of this source code is governed by an MIT-style
+ * license that can be found in the LICENSE file or at
+ * https://opensource.org/licenses/MIT.
  */
+
 package com.google.cloud.healthcare.fdamystudies.dao;
 
 import java.util.List;
@@ -12,6 +14,7 @@ import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
+import org.apache.commons.lang3.StringUtils;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
@@ -22,9 +25,11 @@ import org.springframework.stereotype.Repository;
 import com.google.cloud.healthcare.fdamystudies.bean.StudyMetadataBean;
 import com.google.cloud.healthcare.fdamystudies.beans.ErrorBean;
 import com.google.cloud.healthcare.fdamystudies.model.AppInfoDetailsBO;
+import com.google.cloud.healthcare.fdamystudies.model.LocationBo;
 import com.google.cloud.healthcare.fdamystudies.model.OrgInfo;
 import com.google.cloud.healthcare.fdamystudies.model.SiteBo;
 import com.google.cloud.healthcare.fdamystudies.model.StudyInfoBO;
+import com.google.cloud.healthcare.fdamystudies.util.AppConstants;
 import com.google.cloud.healthcare.fdamystudies.util.ErrorCode;
 import com.google.cloud.healthcare.fdamystudies.util.UserManagementUtil;
 
@@ -110,6 +115,7 @@ public class StudiesDaoImpl implements StudiesDao {
           decommisionSiteFromStudy(session, studyInfo.getId());
         }
       } else {
+
         if (orgInfo == null) {
           orgInfo = new OrgInfo();
           orgInfo.setOrgId(studyMetadataBean.getOrgId());
@@ -142,7 +148,24 @@ public class StudiesDaoImpl implements StudiesDao {
         studyInfo.setAppInfo(appInfo);
         studyInfo.setCreatedBy(0);
         studyInfo.setCreatedOn(UserManagementUtil.getCurrentUtilDateTime());
-        session.save(studyInfo);
+        int generatedStudyid = (int) session.save(studyInfo);
+
+        if (!StringUtils.isBlank(studyMetadataBean.getStudyType())
+            && studyMetadataBean.getStudyType().equals(AppConstants.OPEN_STUDY)) {
+          LocationBo defaultLocation =
+              (LocationBo)
+                  session.createQuery("from LocationBo where isdefault='Y'").getSingleResult();
+          if (defaultLocation != null) {
+            StudyInfoBO studyInfoCreated = session.get(StudyInfoBO.class, generatedStudyid);
+            SiteBo siteBO = new SiteBo();
+            siteBO.setStudyInfo(studyInfoCreated);
+            siteBO.setLocations(defaultLocation);
+            siteBO.setCreatedBy(0);
+            siteBO.setStatus(1);
+            siteBO.setTargetEnrollment(0);
+            session.save(siteBO);
+          }
+        }
       }
       errorBean = new ErrorBean(ErrorCode.EC_200.code(), ErrorCode.EC_200.errorMessage());
       transaction.commit();

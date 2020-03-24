@@ -1,9 +1,11 @@
 /*
- *Copyright 2020 Google LLC
+ * Copyright 2020 Google LLC
  *
- *Use of this source code is governed by an MIT-style license that can be found in the LICENSE file
- *or at https://opensource.org/licenses/MIT.
+ * Use of this source code is governed by an MIT-style
+ * license that can be found in the LICENSE file or at
+ * https://opensource.org/licenses/MIT.
  */
+
 package com.google.cloud.healthcare.fdamystudies.util;
 
 import java.security.MessageDigest;
@@ -83,7 +85,8 @@ public class MyStudiesUserRegUtil {
 
     INVALID_REFRESH_TOKEN("Invalid refresh token"),
     INVALID_EMAIL_ID("Invalid email id"),
-    INVALID_USER_ID_Or_EMAIL_CODE("Invalid user id or email code"),
+    INVALID_USER_ID("Invalid user id"),
+    INVALID_EMAIL_CODE("Invalid email code"),
     UNAUTHORIZED("Unauthorized"),
 
     SESSION_EXPIRED_MSG("Session expired."),
@@ -274,7 +277,7 @@ public class MyStudiesUserRegUtil {
   }
 
   public static boolean isPasswordStrong(String password) {
-    if (password != null /* && password.length() >= 8 */) {
+    if (password != null) {
       return password.matches(
           "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[!\\\"#$%&'()*+,-.:;<=>?@\\\\[\\\\]^_`{|}~]).{8,64}$");
     } else return false;

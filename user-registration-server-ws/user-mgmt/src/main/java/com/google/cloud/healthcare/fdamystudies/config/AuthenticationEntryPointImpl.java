@@ -1,9 +1,11 @@
 /*
- *Copyright 2020 Google LLC
+ * Copyright 2020 Google LLC
  *
- *Use of this source code is governed by an MIT-style license that can be found in the LICENSE file
- *or at https://opensource.org/licenses/MIT.
+ * Use of this source code is governed by an MIT-style
+ * license that can be found in the LICENSE file or at
+ * https://opensource.org/licenses/MIT.
  */
+
 package com.google.cloud.healthcare.fdamystudies.config;
 
 import java.io.IOException;
@@ -29,7 +31,6 @@ public class AuthenticationEntryPointImpl extends BasicAuthenticationEntryPoint 
 
   @Override
   public void afterPropertiesSet() throws Exception {
-    // RealmName appears in the login window (Firefox).
     setRealmName("myStudiesUserMgmtWS");
     super.afterPropertiesSet();
   }

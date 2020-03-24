@@ -1,9 +1,11 @@
 /*
- *Copyright 2020 Google LLC
+ * Copyright 2020 Google LLC
  *
- *Use of this source code is governed by an MIT-style license that can be found in the LICENSE file
- *or at https://opensource.org/licenses/MIT.
+ * Use of this source code is governed by an MIT-style
+ * license that can be found in the LICENSE file or at
+ * https://opensource.org/licenses/MIT.
  */
+
 package com.google.cloud.healthcare.fdamystudies.model;
 
 import java.io.Serializable;
@@ -34,10 +36,6 @@ public class ParticipantRegistrySite implements Serializable {
   @ManyToOne
   @JoinColumn(name = "site_id", insertable = false, updatable = false)
   private SiteBo sites;
-
-  /*  @ManyToOne
-  @JoinColumn(name = "participant_study_info_id", insertable = false, updatable = false)
-  private ParticipantStudiesBO participantStudies;*/
 
   @Column(name = "email", columnDefinition = "VARCHAR(255)")
   private String email = "";

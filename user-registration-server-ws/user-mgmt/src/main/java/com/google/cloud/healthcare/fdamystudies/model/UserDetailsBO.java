@@ -1,9 +1,11 @@
 /*
- *Copyright 2020 Google LLC
+ * Copyright 2020 Google LLC
  *
- *Use of this source code is governed by an MIT-style license that can be found in the LICENSE file
- *or at https://opensource.org/licenses/MIT.
+ * Use of this source code is governed by an MIT-style
+ * license that can be found in the LICENSE file or at
+ * https://opensource.org/licenses/MIT.
  */
+
 package com.google.cloud.healthcare.fdamystudies.model;
 
 import java.io.Serializable;
@@ -81,21 +83,4 @@ public class UserDetailsBO implements Serializable {
 
   @Column(name = "email_code")
   private String emailCode;
-
-  /*
-   @Column(name = "password")
-   private String password;
-
-  @Column(name = "temp_password", columnDefinition = "TINYINT(1)")
-  private Boolean tempPassword = false;
-
-  @Column(name = "reset_password")
-  private String resetPassword;
-
-  @Column(name = "temp_password_date")
-  private Date tempPasswordDate;
-
-  @Column(name = "password_updated_date")
-  private Date passwordUpdatedDate;
-  */
 }

@@ -1,9 +1,11 @@
 /*
- *Copyright 2020 Google LLC
+ * Copyright 2020 Google LLC
  *
- *Use of this source code is governed by an MIT-style license that can be found in the LICENSE file
- *or at https://opensource.org/licenses/MIT.
+ * Use of this source code is governed by an MIT-style
+ * license that can be found in the LICENSE file or at
+ * https://opensource.org/licenses/MIT.
  */
+
 package com.google.cloud.healthcare.fdamystudies.service;
 
 import java.time.LocalDateTime;
@@ -15,7 +17,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.google.cloud.healthcare.fdamystudies.beans.VerifyCodeResponse;
 import com.google.cloud.healthcare.fdamystudies.dao.FdaEaUserDetailsDao;
-import com.google.cloud.healthcare.fdamystudies.exceptions.InvalidUserIdOrEmailCodeException;
+import com.google.cloud.healthcare.fdamystudies.exceptions.InvalidEmailCodeException;
+import com.google.cloud.healthcare.fdamystudies.exceptions.InvalidUserIdException;
 import com.google.cloud.healthcare.fdamystudies.exceptions.SystemException;
 import com.google.cloud.healthcare.fdamystudies.model.AuthInfoBO;
 import com.google.cloud.healthcare.fdamystudies.model.UserAppDetailsBO;
@@ -51,7 +54,7 @@ public class FdaEaUserDetailsServiceImpl implements FdaEaUserDetailsService {
         userAppDetails.setAppInfoId(daoResp.getAppInfoId());
         userAppDetails.setCreatedOn(LocalDateTime.now(ZoneId.systemDefault()));
         userAppDetails.setUserDetailsId(daoResp.getUserDetailsId());
-        userAppDetails = userAppDetailsService.save(userAppDetails);
+        userAppDetailsService.save(userAppDetails);
       }
       logger.info("FdaEaUserDetailsServiceImpl saveUser() - ends");
     } catch (Exception e) {
@@ -75,7 +78,7 @@ public class FdaEaUserDetailsServiceImpl implements FdaEaUserDetailsService {
 
   @Override
   public VerifyCodeResponse verifyCode(String code, String userId)
-      throws SystemException, InvalidUserIdOrEmailCodeException {
+      throws SystemException, InvalidUserIdException, InvalidEmailCodeException {
 
     logger.info("FdaEaUserDetailsServiceImpl verifyCode() - calls");
     VerifyCodeResponse response = null;
@@ -83,27 +86,28 @@ public class FdaEaUserDetailsServiceImpl implements FdaEaUserDetailsService {
     if (userId != null) {
       daoResopnse = userDetailsDao.loadEmailCodeByUserId(userId);
 
-      if (daoResopnse != null
-          && code.equals(daoResopnse.getEmailCode())
-          && !LocalDateTime.now().isAfter(daoResopnse.getCodeExpireDate())) {
-        logger.info("(S)......OTP CODE VERIFIED as true");
+      if (daoResopnse != null) {
+        if (code.equals(daoResopnse.getEmailCode())
+            && !LocalDateTime.now().isAfter(daoResopnse.getCodeExpireDate())) {
+          logger.info("(S)......OTP CODE VERIFIED as true");
 
-        daoResopnse.setStatus(1);
-        daoResopnse.setEmailCode(null);
-        daoResopnse.setCodeExpireDate(null);
-        UserDetailsBO updatedUserDetails = userDetailsDao.saveUser(daoResopnse);
+          daoResopnse.setStatus(1);
+          daoResopnse.setEmailCode(null);
+          daoResopnse.setCodeExpireDate(null);
+          UserDetailsBO updatedUserDetails = userDetailsDao.saveUser(daoResopnse);
 
-        if (updatedUserDetails != null) {
-          if (updatedUserDetails.getStatus() == 1) {
-            response = new VerifyCodeResponse();
-            response.setEmailId(updatedUserDetails.getEmail());
-            response.setIsCodeVerified(true);
-            return response;
-          } else return response;
-        } else throw new SystemException();
+          if (updatedUserDetails != null) {
+            if (updatedUserDetails.getStatus() == 1) {
+              response = new VerifyCodeResponse();
+              response.setEmailId(updatedUserDetails.getEmail());
+              response.setIsCodeVerified(true);
+              return response;
+            } else return response;
+          } else throw new SystemException();
+        } else throw new InvalidEmailCodeException();
       } else {
         logger.info("No User Found Exception");
-        throw new InvalidUserIdOrEmailCodeException();
+        throw new InvalidUserIdException();
       }
     }
     return response;

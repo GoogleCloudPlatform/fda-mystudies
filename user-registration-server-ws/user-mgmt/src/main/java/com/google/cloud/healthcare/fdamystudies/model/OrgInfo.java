@@ -1,9 +1,11 @@
 /*
- *Copyright 2020 Google LLC
+ * Copyright 2020 Google LLC
  *
- *Use of this source code is governed by an MIT-style license that can be found in the LICENSE file
- *or at https://opensource.org/licenses/MIT.
+ * Use of this source code is governed by an MIT-style
+ * license that can be found in the LICENSE file or at
+ * https://opensource.org/licenses/MIT.
  */
+
 package com.google.cloud.healthcare.fdamystudies.model;
 
 import java.util.Date;
@@ -28,9 +30,6 @@ public class OrgInfo {
 
   @Column(name = "name")
   private String name;
-
-  // added by WCP
-  // this field is coming from WCP hence added here
 
   @Column(name = "org_id")
   private String orgId;

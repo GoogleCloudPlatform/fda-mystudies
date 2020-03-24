@@ -1,9 +1,11 @@
 /*
- *Copyright 2020 Google LLC
+ * Copyright 2020 Google LLC
  *
- *Use of this source code is governed by an MIT-style license that can be found in the LICENSE file
- *or at https://opensource.org/licenses/MIT.
+ * Use of this source code is governed by an MIT-style
+ * license that can be found in the LICENSE file or at
+ * https://opensource.org/licenses/MIT.
  */
+
 package com.google.cloud.healthcare.fdamystudies.dao;
 
 import java.util.ArrayList;
@@ -303,34 +305,20 @@ public class UserProfileManagementDaoImpl implements UserProfileManagementDao {
     Root<UserAppDetailsBO> userAppDetailsRoot = null;
     CriteriaDelete<AuthInfoBO> criteriaAuthInfoDelete = null;
     Root<AuthInfoBO> authInfoRoot = null;
-
-    // CriteriaDelete<UserDetailsBO> criteriaUserDetailsDelete = null;
-    // Root<UserDetailsBO> userDetailsRoot = null;
     CriteriaUpdate<UserDetailsBO> criteriaUserDetailsUpdate = null;
     Root<UserDetailsBO> userDetailsRootUpdate = null;
 
-    // CriteriaDelete<ParticipantActivities> criteriaParticipantActivitiesDelete = null;
-    //    Root<ParticipantActivities> participantActivitiesRoot = null;
-
-    //    CriteriaDelete<ParticipantStudiesBO> criteriaParticipantStudiesDelete = null;
-    //    Root<ParticipantStudiesBO> participantStudiesRootDelete = null;
-
     CriteriaUpdate<ParticipantStudiesBO> CriteriaParticipantStudiesUpdate = null;
     Root<ParticipantStudiesBO> participantStudiesRoot = null;
-    //    CriteriaQuery<ParticipantStudiesBO> participantStudiesCriteriaQuery = null;
     List<Predicate> studyIdPredicates = new ArrayList<Predicate>();
     Predicate[] studyInfoIdPredicates = new Predicate[1];
     Expression<String> studyIdExpression = null;
     Predicate[] predicatesAuthInfo = new Predicate[1];
     Predicate[] predicatesUserDetails = new Predicate[1];
     Predicate[] predicatesUserAppDetails = new Predicate[1];
-    //    Predicate[] predicatesParticiapntActivities = new Predicate[3];
-    //    List<ParticipantStudiesBO> participantStudiesBoList = null;
-    //    ParticipantStudiesBO participantStudiesBO = null;
     CriteriaQuery<StudyInfoBO> studyInfoQuery = null;
     Root<StudyInfoBO> root_studyBO = null;
     List<StudyInfoBO> studyInfoBoList = null;
-    // StudyInfoBO studyInfoBO = null;
     List<Integer> studyInfoIdList = null;
     int isUpdated = 0;
     int count = 0;
@@ -355,9 +343,7 @@ public class UserProfileManagementDaoImpl implements UserProfileManagementDao {
         UserDetailsBO userDetails = session.get(UserDetailsBO.class, userDetailsId);
         studyIdPredicates.add(
             criteriaBuilder.equal(participantStudiesRoot.get("userDetails"), userDetails));
-        // studyIdExpression = participantStudiesRoot.get("studyInfoId");
         studyIdExpression = participantStudiesRoot.get("studyInfo");
-        // studyIdPredicates.add(studyIdExpression.in(studyInfoIdList));
         studyIdPredicates.add(studyIdExpression.in(studyInfoBoList));
         CriteriaParticipantStudiesUpdate.where(
             studyIdPredicates.toArray(new Predicate[studyIdPredicates.size()]));

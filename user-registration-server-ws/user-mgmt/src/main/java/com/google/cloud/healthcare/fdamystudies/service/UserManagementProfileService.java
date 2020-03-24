@@ -1,9 +1,11 @@
 /*
- *Copyright 2020 Google LLC
+ * Copyright 2020 Google LLC
  *
- *Use of this source code is governed by an MIT-style license that can be found in the LICENSE file
- *or at https://opensource.org/licenses/MIT.
+ * Use of this source code is governed by an MIT-style
+ * license that can be found in the LICENSE file or at
+ * https://opensource.org/licenses/MIT.
  */
+
 package com.google.cloud.healthcare.fdamystudies.service;
 
 import com.google.cloud.healthcare.fdamystudies.beans.DeactivateAcctBean;
@@ -32,11 +34,6 @@ public interface UserManagementProfileService {
 
   public UserDetailsBO getParticipantDetails(String id);
 
-  /* public Boolean getPasswordHistory(String userId, String newPassword);
-
-  public ResponseBean savePasswordHistory(
-      String userId, String password, String applicationId, String orgId);*/
-
   public UserDetailsBO saveParticipant(UserDetailsBO participant);
 
   public String deActivateAcct(
@@ -44,7 +41,4 @@ public interface UserManagementProfileService {
 
   public int resendConfirmationthroughEmail(
       String applicationId, String securityToken, String emailId);
-
-  /*public AppOrgInfoBean getUserAppDetailsByAllApi(
-  String userId, String emailId, String appId, String orgId);*/
 }

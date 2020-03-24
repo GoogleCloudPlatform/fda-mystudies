@@ -1,9 +1,11 @@
 /*
- *Copyright 2020 Google LLC
+ * Copyright 2020 Google LLC
  *
- *Use of this source code is governed by an MIT-style license that can be found in the LICENSE file
- *or at https://opensource.org/licenses/MIT.
+ * Use of this source code is governed by an MIT-style
+ * license that can be found in the LICENSE file or at
+ * https://opensource.org/licenses/MIT.
  */
+
 package com.google.cloud.healthcare.fdamystudies.util;
 
 public class AppConstants {
@@ -48,4 +50,7 @@ public class AppConstants {
   public static final String SUCCESS = "SUCCESS";
   public static final String FAILURE = "FAILURE";
   public static final String INVALID_CLIENTID_SECRETKEY = "Invalid clientId or secretKey";
+
+  public static final String OPEN_STUDY = "OPEN";
+  public static final String CLOSE_STUDY = "CLOSE";
 }

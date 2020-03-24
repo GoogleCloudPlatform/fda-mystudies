@@ -1,9 +1,11 @@
 /*
- *Copyright 2020 Google LLC
+ * Copyright 2020 Google LLC
  *
- *Use of this source code is governed by an MIT-style license that can be found in the LICENSE file
- *or at https://opensource.org/licenses/MIT.
+ * Use of this source code is governed by an MIT-style
+ * license that can be found in the LICENSE file or at
+ * https://opensource.org/licenses/MIT.
  */
+
 package com.google.cloud.healthcare.fdamystudies.controller;
 
 import javax.servlet.http.HttpServletResponse;
@@ -23,7 +25,9 @@ import com.google.cloud.healthcare.fdamystudies.beans.EmailIdVerificationForm;
 import com.google.cloud.healthcare.fdamystudies.beans.UpdateAccountInfo;
 import com.google.cloud.healthcare.fdamystudies.beans.UpdateAccountInfoResponseBean;
 import com.google.cloud.healthcare.fdamystudies.beans.VerifyCodeResponse;
-import com.google.cloud.healthcare.fdamystudies.exceptions.InvalidUserIdOrEmailCodeException;
+import com.google.cloud.healthcare.fdamystudies.exceptions.InvalidEmailCodeException;
+import com.google.cloud.healthcare.fdamystudies.exceptions.InvalidUserIdException;
+import com.google.cloud.healthcare.fdamystudies.exceptions.SystemException;
 import com.google.cloud.healthcare.fdamystudies.service.CommonService;
 import com.google.cloud.healthcare.fdamystudies.service.FdaEaUserDetailsService;
 import com.google.cloud.healthcare.fdamystudies.util.AppConstants;
@@ -143,31 +147,31 @@ public class VerifyEmailIdController {
               logger.info(AppConstants.VERIFY_EMAILID_CONTROLLER_ENDS_MESSAGE);
               return new ResponseEntity<>(authResponse, HttpStatus.INTERNAL_SERVER_ERROR);
             }
-          } else {
-            MyStudiesUserRegUtil.getFailureResponse(
-                400 + "",
-                MyStudiesUserRegUtil.ErrorCodes.INVALID_INPUT.getValue(),
-                MyStudiesUserRegUtil.ErrorCodes.INVALID_USER_ID_Or_EMAIL_CODE.getValue(),
-                response);
-
-            verifyEmailIdResponse = new VerifyEmailIdResponse();
-            verifyEmailIdResponse.setCode(HttpStatus.BAD_REQUEST.value());
-            verifyEmailIdResponse.setMessage(
-                MyStudiesUserRegUtil.ErrorCodes.INVALID_USER_ID_Or_EMAIL_CODE.getValue());
-            logger.info(AppConstants.VERIFY_EMAILID_CONTROLLER_ENDS_MESSAGE);
-            return new ResponseEntity<>(verifyEmailIdResponse, HttpStatus.BAD_REQUEST);
-          }
-        } catch (InvalidUserIdOrEmailCodeException e) {
+          } else throw new InvalidUserIdException(); // InvalidEmailCodeException
+        } catch (InvalidUserIdException e) {
           MyStudiesUserRegUtil.getFailureResponse(
               400 + "",
               MyStudiesUserRegUtil.ErrorCodes.INVALID_INPUT.getValue(),
-              MyStudiesUserRegUtil.ErrorCodes.INVALID_USER_ID_Or_EMAIL_CODE.getValue(),
+              MyStudiesUserRegUtil.ErrorCodes.INVALID_USER_ID.getValue(),
               response);
 
           verifyEmailIdResponse = new VerifyEmailIdResponse();
           verifyEmailIdResponse.setCode(HttpStatus.BAD_REQUEST.value());
           verifyEmailIdResponse.setMessage(
-              MyStudiesUserRegUtil.ErrorCodes.INVALID_USER_ID_Or_EMAIL_CODE.getValue());
+              MyStudiesUserRegUtil.ErrorCodes.INVALID_USER_ID.getValue());
+          logger.info(AppConstants.VERIFY_EMAILID_CONTROLLER_ENDS_MESSAGE + ": ", e);
+          return new ResponseEntity<>(verifyEmailIdResponse, HttpStatus.BAD_REQUEST);
+        } catch (InvalidEmailCodeException e) {
+          MyStudiesUserRegUtil.getFailureResponse(
+              400 + "",
+              MyStudiesUserRegUtil.ErrorCodes.INVALID_INPUT.getValue(),
+              MyStudiesUserRegUtil.ErrorCodes.INVALID_EMAIL_CODE.getValue(),
+              response);
+
+          verifyEmailIdResponse = new VerifyEmailIdResponse();
+          verifyEmailIdResponse.setCode(HttpStatus.BAD_REQUEST.value());
+          verifyEmailIdResponse.setMessage(
+              MyStudiesUserRegUtil.ErrorCodes.INVALID_EMAIL_CODE.getValue());
           logger.info(AppConstants.VERIFY_EMAILID_CONTROLLER_ENDS_MESSAGE + ": ", e);
           return new ResponseEntity<>(verifyEmailIdResponse, HttpStatus.BAD_REQUEST);
         }
@@ -199,7 +203,7 @@ public class VerifyEmailIdController {
             MyStudiesUserRegUtil.ErrorCodes.INVALID_ACCESS_TOKEN.getValue());
         logger.info(AppConstants.VERIFY_EMAILID_CONTROLLER_ENDS_MESSAGE);
         return new ResponseEntity<>(verifyEmailIdResponse, HttpStatus.UNAUTHORIZED);
-      } else {
+      } else if (verificationResponse != null && verificationResponse == 3) {
         // prepare invalid clientId or secretKey
         MyStudiesUserRegUtil.getFailureResponse(
             401 + "",
@@ -213,7 +217,7 @@ public class VerifyEmailIdController {
             MyStudiesUserRegUtil.ErrorCodes.INVALID_CLIENT_TOKEN.getValue());
         logger.info(AppConstants.VERIFY_EMAILID_CONTROLLER_ENDS_MESSAGE);
         return new ResponseEntity<>(verifyEmailIdResponse, HttpStatus.UNAUTHORIZED);
-      }
+      } else throw new SystemException();
     } catch (Exception e) {
       // prepare system failure Response
       MyStudiesUserRegUtil.getFailureResponse(
