@@ -188,7 +188,18 @@ public class EnrollmentTokenDaoImpl implements EnrollmentTokenDao {
     SiteBo siteBo = null;
     Integer countAddParticipant = 0;
 
-    ParticipantStudiesBO participants = new ParticipantStudiesBO();
+    CriteriaQuery<ParticipantStudiesBO> criteriaQuery = null;
+    Root<ParticipantStudiesBO> root = null;
+    Predicate[] participantPredicates = new Predicate[2];
+    List<ParticipantStudiesBO> participantStudiesList = null;
+
+    CriteriaQuery<SiteBo> siteCriteria = null;
+    Root<SiteBo> siteRoot = null;
+    Predicate[] sitePredicates = new Predicate[1];
+    List<SiteBo> siteList = null;
+    SiteBo site = null;
+
+    ParticipantStudiesBO participants = null;
     ParticipantRegistrySite participantregistrySite = null;
     EnrollmentResponseBean participantBeans = new EnrollmentResponseBean();
     boolean isUpdated = false;
@@ -223,51 +234,103 @@ public class EnrollmentTokenDaoImpl implements EnrollmentTokenDao {
                     .getResultList();
             if (!siteBoList.isEmpty()) {
               siteBo = siteBoList.get(0);
-              participants.setSiteBo(siteBo);
-              participants.setStudyInfo(studyInfoBO);
-              participants.setParticipantId(participantid);
-              participants.setUserDetails(userDetail);
-              participants.setParticipantRegistrySite(participantRegistry);
-              participants.setStatus(AppConstants.ENROLLED);
-              participants.setEnrolledDate(EnrollmentManagementUtil.getCurrentUtilDateTime());
-              countAddParticipant = (Integer) session.save(participants);
+              criteriaQuery = criteriaBuilder.createQuery(ParticipantStudiesBO.class);
+              root = criteriaQuery.from(ParticipantStudiesBO.class);
+              participantPredicates[0] = criteriaBuilder.equal(root.get("userDetails"), userDetail);
+              participantPredicates[1] = criteriaBuilder.equal(root.get("studyInfo"), studyInfoBO);
+              criteriaQuery.select(root).where(participantPredicates);
+              participantStudiesList = session.createQuery(criteriaQuery).getResultList();
+              if (!participantStudiesList.isEmpty()) {
+                participants = participantStudiesList.get(0);
+                participants.setSiteBo(siteBo);
+                participants.setStudyInfo(studyInfoBO);
+                participants.setParticipantId(participantid);
+                participants.setUserDetails(userDetail);
+                participants.setParticipantRegistrySite(participantRegistry);
+                participants.setStatus(AppConstants.ENROLLED);
+                participants.setEnrolledDate(EnrollmentManagementUtil.getCurrentUtilDateTime());
+                session.update(participants);
+                countAddParticipant = 1;
+              } else {
+                participants = new ParticipantStudiesBO();
+                participants.setSiteBo(siteBo);
+                participants.setStudyInfo(studyInfoBO);
+                participants.setParticipantId(participantid);
+                participants.setUserDetails(userDetail);
+                participants.setParticipantRegistrySite(participantRegistry);
+                participants.setStatus(AppConstants.ENROLLED);
+                participants.setEnrolledDate(EnrollmentManagementUtil.getCurrentUtilDateTime());
+                countAddParticipant = (Integer) session.save(participants);
+              }
+              if (countAddParticipant > 0) {
+                SiteBo sites = session.get(SiteBo.class, siteBo.getId());
+                participantRegistry.setSites(sites);
+                participantRegistry.setInvitationDate(
+                    EnrollmentManagementUtil.getCurrentUtilDateTime());
+                participantRegistry.setOnboardingStatus("E");
+                session.update(participantRegistry);
+                isUpdated = true;
+              }
             }
           }
-          if (countAddParticipant > 0) {
-            SiteBo sites = session.get(SiteBo.class, siteBo.getId());
-            participantRegistry.setSites(sites);
-            participantRegistry.setInvitationDate(
-                EnrollmentManagementUtil.getCurrentUtilDateTime());
-            participantRegistry.setOnboardingStatus("E");
-            session.update(participantRegistry);
-            isUpdated = true;
+          if ((countAddParticipant > 0 && isUpdated)) {
+            participantBeans.setAppToken(participantid);
+            participantBeans.setSiteId(participants.getSiteBo().getId());
           }
         } else {
-
           participantregistrySite = new ParticipantRegistrySite();
           participantregistrySite.setEnrollmentToken(tokenValue);
-          SiteBo sites =
-              session.get(SiteBo.class, 1); // Need to check Default site for the open Study
-          participantregistrySite.setSites(sites);
+
+          siteCriteria = criteriaBuilder.createQuery(SiteBo.class);
+          siteRoot = siteCriteria.from(SiteBo.class);
+          sitePredicates[0] = criteriaBuilder.equal(siteRoot.get("studyInfo"), studyInfoBO);
+          siteCriteria.select(siteRoot).where(sitePredicates);
+          siteList = session.createQuery(siteCriteria).getResultList();
+
+          if (!siteList.isEmpty()) {
+            site = siteList.get(0);
+            participantregistrySite.setSites(site);
+          }
           participantregistrySite.setInvitationDate(
               EnrollmentManagementUtil.getCurrentUtilDateTime());
           participantregistrySite.setOnboardingStatus("E");
           participantregistrySite.setStudyInfo(studyInfoBO);
           countAddregistry = (Integer) session.save(participantregistrySite);
 
-          participants.setSiteBo(sites);
-          participants.setStudyInfo(studyInfoBO);
-          participants.setParticipantId(participantid);
-          participants.setUserDetails(userDetail);
-          participants.setParticipantRegistrySite(participantregistrySite);
-          participants.setStatus(AppConstants.ENROLLED);
-          participants.setEnrolledDate(EnrollmentManagementUtil.getCurrentUtilDateTime());
-          countAddParticipant = (Integer) session.save(participants);
-        }
+          criteriaQuery = criteriaBuilder.createQuery(ParticipantStudiesBO.class);
+          root = criteriaQuery.from(ParticipantStudiesBO.class);
+          participantPredicates[0] = criteriaBuilder.equal(root.get("userDetails"), userDetail);
+          participantPredicates[1] = criteriaBuilder.equal(root.get("studyInfo"), studyInfoBO);
+          criteriaQuery.select(root).where(participantPredicates);
+          participantStudiesList = session.createQuery(criteriaQuery).getResultList();
 
-        if ((countAddParticipant > 0 && isUpdated) || countAddregistry > 0) {
-          participantBeans.setAppToken(participantid);
-          participantBeans.setSiteId(participants.getSiteBo().getId());
+          if (!participantStudiesList.isEmpty()) {
+            participants = participantStudiesList.get(0);
+            participants.setStudyInfo(studyInfoBO);
+            participants.setParticipantId(participantid);
+            participants.setUserDetails(userDetail);
+            participants.setParticipantRegistrySite(participantregistrySite);
+            participants.setStatus(AppConstants.ENROLLED);
+            participants.setEnrolledDate(EnrollmentManagementUtil.getCurrentUtilDateTime());
+            participants.setSiteBo(site);
+            session.update(participants);
+            countAddParticipant = 1;
+          } else {
+            participants = new ParticipantStudiesBO();
+            participants.setSiteBo(site);
+            participants.setStudyInfo(studyInfoBO);
+            participants.setParticipantId(participantid);
+            participants.setUserDetails(userDetail);
+            participants.setParticipantRegistrySite(participantregistrySite);
+            participants.setStatus(AppConstants.ENROLLED);
+            participants.setEnrolledDate(EnrollmentManagementUtil.getCurrentUtilDateTime());
+            countAddParticipant = (Integer) session.save(participants);
+          }
+
+          if (countAddParticipant > 0 || countAddregistry > 0) {
+            participantBeans.setAppToken(participantid);
+            participantBeans.setSiteId(site.getId());
+          }
         }
       }
       transaction.commit();
@@ -277,7 +340,7 @@ public class EnrollmentTokenDaoImpl implements EnrollmentTokenDao {
         try {
           transaction.rollback();
         } catch (Exception e1) {
-          logger.error("UserProfileManagementDaoImpl - enrollParticipant() - error rollback", e1);
+          logger.error("EnrollmentTokenDaoImpl - enrollParticipant() - error rollback", e1);
         }
       }
     }

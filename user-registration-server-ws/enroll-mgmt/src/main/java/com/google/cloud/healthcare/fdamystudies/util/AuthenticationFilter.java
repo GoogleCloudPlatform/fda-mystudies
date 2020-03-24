@@ -106,6 +106,9 @@ public class AuthenticationFilter implements Filter {
                 httpServletResponse.setHeader(
                     AppConstants.ACCESS_CONTROL_ALLOW_METHODS, AppConstants.HTTP_METHODS);
                 httpServletResponse.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+
+                httpServletResponse.sendError(
+                    HttpServletResponse.SC_UNAUTHORIZED, ErrorCode.EC_718.errorMessage());
               }
             }
           } catch (UnAuthorizedRequestException e) {
@@ -125,6 +128,10 @@ public class AuthenticationFilter implements Filter {
                 AppConstants.DETAIL_MESSAGE, ErrorCode.EC_719.errorMessage());
 
             httpServletResponse.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+
+            httpServletResponse.sendError(
+                HttpServletResponse.SC_UNAUTHORIZED, ErrorCode.EC_718.errorMessage());
+
           } catch (InvalidRequestException e) {
             httpServletResponse.setHeader(AppConstants.ACCESS_CONTROL_ALLOW_ORIGIN, "*");
             httpServletResponse.setHeader(AppConstants.ACCESS_CONTROL_ALLOW_HEADERS, "*");
@@ -142,6 +149,10 @@ public class AuthenticationFilter implements Filter {
                 AppConstants.DETAIL_MESSAGE, ErrorCode.EC_701.errorMessage());
 
             httpServletResponse.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+
+            httpServletResponse.sendError(
+                HttpServletResponse.SC_BAD_REQUEST, ErrorCode.EC_701.errorMessage());
+
           } catch (Exception e) {
             logger.error("AuthenticationFilter doFilter : (error) ", e);
             httpServletResponse.setHeader(AppConstants.ACCESS_CONTROL_ALLOW_ORIGIN, "*");
@@ -160,6 +171,9 @@ public class AuthenticationFilter implements Filter {
                 AppConstants.DETAIL_MESSAGE, ErrorCode.EC_500.errorMessage());
 
             httpServletResponse.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+
+            httpServletResponse.sendError(
+                HttpServletResponse.SC_INTERNAL_SERVER_ERROR, ErrorCode.EC_500.errorMessage());
           }
         } else {
           if ((accessToken != null)
@@ -188,6 +202,9 @@ public class AuthenticationFilter implements Filter {
                 httpServletResponse.setHeader(
                     AppConstants.ACCESS_CONTROL_ALLOW_METHODS, AppConstants.HTTP_METHODS);
                 httpServletResponse.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+
+                httpServletResponse.sendError(
+                    HttpServletResponse.SC_UNAUTHORIZED, ErrorCode.EC_718.errorMessage());
               }
             }
           } else {
@@ -198,6 +215,9 @@ public class AuthenticationFilter implements Filter {
             httpServletResponse.setHeader(
                 AppConstants.ACCESS_CONTROL_ALLOW_METHODS, AppConstants.HTTP_METHODS);
             httpServletResponse.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+
+            httpServletResponse.sendError(
+                HttpServletResponse.SC_UNAUTHORIZED, ErrorCode.EC_718.errorMessage());
           }
         }
       } else {

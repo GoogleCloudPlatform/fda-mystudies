@@ -59,7 +59,6 @@ public class CommonDaoImpl implements CommonDao {
       userDetailsBoList = session.createQuery(userDetailsCriteriaQuery).getResultList();
       if (!userDetailsBoList.isEmpty()) {
         userDetailsBO = userDetailsBoList.get(0);
-        //        userDetailsId = userDetails.getUserDetailsId();
       }
     } catch (Exception e) {
       logger.error("CommonDaoImpl getUserInfoDetails() - error ", e);
@@ -134,8 +133,9 @@ public class CommonDaoImpl implements CommonDao {
         activityLog.setActivityName(activityName);
         activityLog.setActivtyDesc(activityDesc);
         activityLog.setActivityDateTime(LocalDateTime.now());
-        activityLogRepository.saveAll(activityLogList);
+        activityLogList.add(activityLog);
       }
+      activityLogRepository.saveAll(activityLogList);
     } catch (Exception e) {
       logger.error("CommonDaoImpl createActivityLogList() - error ", e);
     }

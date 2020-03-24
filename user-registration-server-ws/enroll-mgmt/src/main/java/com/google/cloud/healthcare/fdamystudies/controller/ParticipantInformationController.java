@@ -17,8 +17,9 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestHeader;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
+import com.google.cloud.healthcare.fdamystudies.beans.ParticipantDetailsRequest;
 import com.google.cloud.healthcare.fdamystudies.beans.ParticipantInfoRespBean;
 import com.google.cloud.healthcare.fdamystudies.service.ParticipantInformationService;
 import com.google.cloud.healthcare.fdamystudies.util.AppUtil;
@@ -34,15 +35,15 @@ public class ParticipantInformationController {
 
   @GetMapping(value = "/participantInfo", produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<?> getParticipantDetails(
-      @RequestHeader("participantId") String participantId,
-      @RequestHeader("studyId") String studyId,
-      @Context HttpServletResponse response) {
+      @RequestBody ParticipantDetailsRequest request, @Context HttpServletResponse response) {
     logger.info("ParticipantInformationController getParticipantDetails() - starts ");
     ParticipantInfoRespBean participantInfoResp = null;
     try {
-      if (StringUtils.hasText(participantId) && StringUtils.hasText(studyId)) {
+      if (StringUtils.hasText(request.getParticipantId())
+          && StringUtils.hasText(request.getStudyId())) {
         participantInfoResp =
-            participantInfoService.getParticipantInfoDetails(participantId, studyId);
+            participantInfoService.getParticipantInfoDetails(
+                request.getParticipantId(), request.getStudyId());
         if (participantInfoResp != null) {
           participantInfoResp.setMessage(
               MyStudiesUserRegUtil.ErrorCodes.SUCCESS.getValue().toLowerCase());

@@ -37,6 +37,7 @@ public class MyStudiesUserRegUtil {
     STATUS_105("105"), // If there is no data to update.
     STATUS_106("106"), // Failed to generate token.
     STATUS_107("107"), // Failed to complete transaction.
+    STATUS_108("108"), // UnAuthorized
     STATUS_112("112"), // User is already registered
     STATUS_114("114"), // Email Id is missing
     STATUS_119("119"), // Password is missing
@@ -171,7 +172,8 @@ public class MyStudiesUserRegUtil {
     ORG_NOTEXIST(
         "Sorry, this email is already in use for platform-powered app(s) belonging to another organization. Please use another email to sign up for this app."),
     LOGIN_ORG_NOTEXIST(
-        "Sorry, this account is in use for platform-powered app(s) belonging to another organization. Please sign up with a different email and try again.");
+        "Sorry, this account is in use for platform-powered app(s) belonging to another organization. Please sign up with a different email and try again."),
+    INTERNAL_SERVER_ERROR("Internal server error");
 
     private final String value;
 
@@ -199,6 +201,7 @@ public class MyStudiesUserRegUtil {
         response.sendError(HttpServletResponse.SC_BAD_REQUEST, message);
       }
       if (status.equalsIgnoreCase(ErrorCodes.STATUS_101.getValue())
+          || status.equalsIgnoreCase(ErrorCodes.STATUS_108.getValue())
           || status.equalsIgnoreCase(ErrorCodes.STATUS_128.getValue())
           || status.equalsIgnoreCase(ErrorCodes.STATUS_131.getValue())) {
         if (message.equalsIgnoreCase(ErrorCodes.SESSION_EXPIRED_MSG.getValue())) {
@@ -211,6 +214,9 @@ public class MyStudiesUserRegUtil {
 
       if (status.equalsIgnoreCase(ErrorCodes.STATUS_103.getValue())) {
         response.sendError(HttpServletResponse.SC_FORBIDDEN, message);
+      }
+      if (status.equalsIgnoreCase(ErrorCodes.EC_500.getValue())) {
+        response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, message);
       }
 
     } catch (Exception e) {

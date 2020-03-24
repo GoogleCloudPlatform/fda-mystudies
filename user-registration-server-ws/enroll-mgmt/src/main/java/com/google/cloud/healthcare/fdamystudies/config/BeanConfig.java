@@ -25,20 +25,12 @@ public class BeanConfig implements WebMvcConfigurer {
 
   @Autowired ApplicationPropertyConfiguration appConfig;
 
-  /*  @Bean
-  public EmailNotification emailNotification() {
-    return new EmailNotification(appConfig);
-  }*/
-
   @Bean
   public WebMvcConfigurer corsConfigurer() {
     return new WebMvcConfigurer() {
       @Override
       public void addCorsMappings(CorsRegistry registry) {
         registry.addMapping("/**").allowedOrigins("*").allowedHeaders("*").allowedMethods("*");
-        //            	.exposedHeaders("");
-        //            	.allowedHeaders("*")
-        //            	.allowedMethods("*");
       }
     };
   }
@@ -49,9 +41,6 @@ public class BeanConfig implements WebMvcConfigurer {
         new FilterRegistrationBean<>();
     authenticationBean.setFilter(new AuthenticationFilter());
     authenticationBean.addUrlPatterns("/*");
-    //	     authenticationBean.addUrlPatterns("/admin/manageUser/*");
-    //	     authenticationBean.addUrlPatterns("/search/*");
-
     return authenticationBean;
   }
 

@@ -17,9 +17,7 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 import lombok.Getter;
 import lombok.Setter;
-import lombok.ToString;
 
-@ToString
 @Setter
 @Getter
 @Entity
@@ -81,21 +79,4 @@ public class UserDetailsBO {
 
   @Column(name = "email_code")
   private String emailCode;
-
-  /*
-   @Column(name = "password")
-   private String password;
-
-  @Column(name = "temp_password", columnDefinition = "TINYINT(1)")
-  private Boolean tempPassword = false;
-
-  @Column(name = "reset_password")
-  private String resetPassword;
-
-  @Column(name = "temp_password_date")
-  private Date tempPasswordDate;
-
-  @Column(name = "password_updated_date")
-  private Date passwordUpdatedDate;
-  */
 }

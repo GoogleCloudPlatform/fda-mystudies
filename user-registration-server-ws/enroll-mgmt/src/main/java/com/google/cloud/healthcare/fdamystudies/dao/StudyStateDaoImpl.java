@@ -51,7 +51,6 @@ public class StudyStateDaoImpl implements StudyStateDao {
       predicates[0] = criteriaBuilder.equal(root.get("userDetails"), user);
       criteriaQuery.select(root).where(predicates);
       participantStudiesList = session.createQuery(criteriaQuery).getResultList();
-      System.out.println("Size" + participantStudiesList.size());
     } catch (Exception e) {
       logger.error("StudyStateDaoImpl getParticipantStudiesList() - error ", e);
     }
@@ -151,7 +150,6 @@ public class StudyStateDaoImpl implements StudyStateDao {
         criteriaUpdate = criteriaBuilder.createCriteriaUpdate(ParticipantStudiesBO.class);
         participantStudiesBoRoot = criteriaUpdate.from(ParticipantStudiesBO.class);
         criteriaUpdate.set("status", AppConstants.WITHDRAWN);
-        //        criteriaUpdate.set("participantId", "NULL");
         predicates.add(
             criteriaBuilder.equal(participantStudiesBoRoot.get("participantId"), participantId));
         predicates.add(criteriaBuilder.equal(participantStudiesBoRoot.get("studyInfo"), studyInfo));

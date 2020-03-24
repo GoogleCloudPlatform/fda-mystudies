@@ -13,6 +13,8 @@ import java.security.SecureRandom;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Random;
 import javax.validation.constraints.NotNull;
 import org.slf4j.Logger;
@@ -28,6 +30,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestClientResponseException;
 import org.springframework.web.client.RestTemplate;
 import com.google.cloud.healthcare.fdamystudies.beans.EnrollmentBodyProvider;
+import com.google.cloud.healthcare.fdamystudies.beans.SuccessResponseBean;
 import com.google.cloud.healthcare.fdamystudies.beans.WithdrawFromStudyBodyProvider;
 import com.google.cloud.healthcare.fdamystudies.config.ApplicationPropertyConfiguration;
 import com.google.cloud.healthcare.fdamystudies.exception.InvalidRequestException;
@@ -173,36 +176,48 @@ public class EnrollmentManagementUtil {
     return participantId;
   }
 
-  public String withDrawParticipantFromStudy(String participantId, String studyId, boolean delete) {
+  public String withDrawParticipantFromStudy(String participantId, String studyId, boolean delete)
+      throws UnAuthorizedRequestException, InvalidRequestException, SystemException {
     logger.info("EnrollmentManagementUtil withDrawParticipantFromStudy() - starts ");
-    Integer value = null;
     HttpHeaders headers = null;
-    WithdrawFromStudyBodyProvider bodyProvider = null;
-    HttpEntity<WithdrawFromStudyBodyProvider> requestBody = null;
+    HttpEntity<WithdrawFromStudyBodyProvider> request = null;
     ResponseEntity<?> responseEntity = null;
     String message = "";
     try {
       headers = new HttpHeaders();
       headers.setContentType(MediaType.APPLICATION_JSON);
-      headers.set("applicationId", AppConstants.RESP_SERVER_APPLICATION_ID);
-      headers.set("clientId", AppConstants.RESP_SERVER_CLIENT_ID);
-      headers.set("clientSecret", AppConstants.RESP_SERVER_CLIENT_SECRET_KEY);
+      headers.set(AppConstants.APPLICATION_ID, null);
+      headers.set(AppConstants.CLIENT_ID, appConfig.getClientId());
+      headers.set(AppConstants.SECRET_KEY, appConfig.getSecretKey());
 
-      bodyProvider = new WithdrawFromStudyBodyProvider();
-      bodyProvider.setParticipantId(participantId);
-      bodyProvider.setCustomStudyId(studyId);
-      requestBody = new HttpEntity<>(bodyProvider, headers);
+      Map<String, String> params = new HashMap<>();
+      params.put(AppConstants.STUDY_ID, studyId);
+      params.put(AppConstants.PARTICIPANT_ID, participantId);
+      params.put(AppConstants.DELETE_RESPONSES, delete + "");
+
+      request = new HttpEntity<>(null, headers);
       responseEntity =
           restTemplate.exchange(
-              appConfig.getResponseServerUrl() + "/participant/add",
-              HttpMethod.POST,
-              requestBody,
-              String.class);
+              appConfig.getWithdrawStudyUrl(), HttpMethod.POST, request, String.class, params);
+
       if (responseEntity.getStatusCode() == HttpStatus.OK) {
-        message = (String) responseEntity.getBody();
+        SuccessResponseBean response = (SuccessResponseBean) responseEntity.getBody();
+        logger.info("response: " + response);
+        if (response != null && AppConstants.SUCCESS.equals(response.getMessage())) {
+          message = AppConstants.SUCCESS;
+        }
       }
-    } catch (Exception e) {
-      logger.error("EnrollmentManagementUtil withDrawParticipantFromStudy() - error ", e);
+
+    } catch (RestClientResponseException e) {
+      if (e.getRawStatusCode() == 401) {
+        logger.error("Invalid client Id or client secret. Client id is: " + AppConstants.CLIENT_ID);
+        throw new UnAuthorizedRequestException();
+      } else if (e.getRawStatusCode() == 400) {
+        logger.error("Client verification ended with Bad Request");
+        throw new InvalidRequestException();
+      } else {
+        throw new SystemException();
+      }
     }
     logger.info("EnrollmentManagementUtil withDrawParticipantFromStudy() - Ends ");
     return message;

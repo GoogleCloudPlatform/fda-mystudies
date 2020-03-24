@@ -39,9 +39,6 @@ public class AppInfoDetailsBO implements Serializable {
   @Column(name = "app_name", columnDefinition = "VARCHAR(255)")
   private String appName;
 
-  // added by malay
-  // appDescription is coming from WCP hence added here
-
   @Column(name = "app_description", columnDefinition = "VARCHAR(255)")
   private String appDescription;
 

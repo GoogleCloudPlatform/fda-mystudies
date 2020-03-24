@@ -92,4 +92,7 @@ public class ApplicationPropertyConfiguration {
 
   @Value("${response.server.url.addParticipantId}")
   private String addParticipantId;
+
+  @Value("${response.server.url.participant.withdraw}")
+  private String withdrawStudyUrl;
 }

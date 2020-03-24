@@ -14,11 +14,9 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 import lombok.Getter;
 import lombok.Setter;
-import lombok.ToString;
 
 @Setter
 @Getter
-@ToString
 @Entity
 @Table(name = "client_info")
 public class ClientInfoBO implements Serializable {

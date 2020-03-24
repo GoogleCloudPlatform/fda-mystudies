@@ -51,14 +51,15 @@ public class SiteBo implements Serializable {
   @Column(name = "name", columnDefinition = "VARCHAR(255)")
   private String name = "";
 
-  @Column(name = "created" /*, columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP"*/)
+  @Column(name = "created", columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
   private Date created;
 
   @Column(name = "created_by", columnDefinition = "INT(20) default 0")
   private Integer createdBy;
 
-  @Column(name = "modified_date" /*,
-      columnDefinition = "TIMESTAMP CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP"*/)
+  @Column(
+      name = "modified_date",
+      columnDefinition = "TIMESTAMP CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP")
   private Date modifiedDate;
 
   @Column(name = "modified_by", columnDefinition = "INT(20)")

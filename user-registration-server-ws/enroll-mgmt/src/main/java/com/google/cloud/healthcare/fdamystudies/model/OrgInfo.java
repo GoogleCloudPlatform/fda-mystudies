@@ -24,8 +24,6 @@ import lombok.Setter;
 @Table(name = "org_info")
 public class OrgInfo implements Serializable {
 
-  // private static final long serialVersionUID = -6548592878457293132L;
-
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   @Column(name = "id")
@@ -33,9 +31,6 @@ public class OrgInfo implements Serializable {
 
   @Column(name = "name")
   private String name;
-
-  // added by malay
-  // this field is coming from WCP hence added here
 
   @Column(name = "org_id")
   private String orgId;

@@ -27,13 +27,16 @@ public class AppConstants {
   public static final String OPEN_STUDY = "OPEN";
   public static final String CLOSE_STUDY = "CLOSE";
 
-  public static final String RESP_SERVER_APPLICATION_ID = "Withdrawn";
-  public static final String RESP_SERVER_CLIENT_ID = "Withdrawn";
-  public static final String RESP_SERVER_CLIENT_SECRET_KEY = "Withdrawn";
   public static final String AUDIT_EVENT_UPDATE_STUDY_STATE_NAME =
       "Save or update of an user study info";
   public static final String AUDIT_EVENT_UPDATE_STUDY_STATE_DESC =
       "Study state has been updated for custom study id :%s";
+
+  public static final String AUDIT_EVENT_UPDATE_STUDY_STATE_FAILED_NAME =
+      "Save or update of an user study info failed";
+  public static final String AUDIT_EVENT_UPDATE_STUDY_STATE_FAILED_DESC =
+      "Study state has been unscuccessful for custom study id :%s";
+
   public static final String CLIENT_ID = "clientId";
   public static final String SECRET_KEY = "secretKey";
 
@@ -53,4 +56,9 @@ public class AppConstants {
   public static final String USER_MESSAGE = "userMessage";
   public static final String TYPE = "type";
   public static final String DETAIL_MESSAGE = "detailMessage";
+  public static final String PARTICIPANT_ID = "participantId";
+  public static final String DELETE_RESPONSES = "deleteResponses";
+  public static final String RESP_SERVER_APPLICATION_ID = "applicationId";
+  public static final String RESP_SERVER_CLIENT_ID = "clientId";
+  public static final String RESP_SERVER_CLIENT_SECRET_KEY = "clientSecret";
 }

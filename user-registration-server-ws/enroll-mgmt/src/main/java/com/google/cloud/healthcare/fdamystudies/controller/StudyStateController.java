@@ -36,6 +36,7 @@ import com.google.cloud.healthcare.fdamystudies.service.CommonService;
 import com.google.cloud.healthcare.fdamystudies.service.StudyStateService;
 import com.google.cloud.healthcare.fdamystudies.util.AppConstants;
 import com.google.cloud.healthcare.fdamystudies.util.BeanUtil;
+import com.google.cloud.healthcare.fdamystudies.util.ErrorCode;
 import com.google.cloud.healthcare.fdamystudies.util.MyStudiesUserRegUtil;
 
 @RestController
@@ -62,7 +63,6 @@ public class StudyStateController {
         if (studyStateReqBean.getStudies() != null && !studyStateReqBean.getStudies().isEmpty()) {
           List<StudiesBean> studiesBeenList = studyStateReqBean.getStudies();
           UserDetailsBO user = commonService.getUserInfoDetails(userId);
-          System.out.println(user.getUserDetailsId());
           if (user != null) {
             List<ParticipantStudiesBO> existParticipantStudies =
                 studyStateService.getParticipantStudiesList(user);
@@ -127,19 +127,9 @@ public class StudyStateController {
       StudyStateResponse studyStateResponse = BeanUtil.getBean(StudyStateResponse.class);
       try {
         List<StudyStateBean> studies = studyStateService.getStudiesState(userId);
-        //        if (studies != null && !studies.isEmpty()) {
         studyStateResponse.setStudies(studies);
         studyStateResponse.setMessage(AppConstants.SUCCESS);
         return new ResponseEntity<>(studyStateResponse, HttpStatus.OK);
-        /*} else {
-          MyStudiesUserRegUtil.getFailureResponse(
-              MyStudiesUserRegUtil.ErrorCodes.STATUS_102.getValue(),
-              MyStudiesUserRegUtil.ErrorCodes.INVALID_INPUT.getValue(),
-              MyStudiesUserRegUtil.ErrorCodes.INVALID_INPUT_ERROR_MSG.getValue(),
-              response);
-          logger.info("(C)...StudyStateController.getStudyState()...Ended with INVALID_INPUT");
-          return null;
-        }*/
       } catch (InvalidUserIdException e) {
         MyStudiesUserRegUtil.getFailureResponse(
             MyStudiesUserRegUtil.ErrorCodes.STATUS_128.getValue(),
@@ -148,15 +138,7 @@ public class StudyStateController {
             response);
         logger.info("(C)...StudyStateController.getStudyState()...Ended with INVALID_USER_ID");
         return null;
-      } /*catch (NoStudyEnrolledException e) {
-          MyStudiesUserRegUtil.getFailureResponse(
-              MyStudiesUserRegUtil.ErrorCodes.STATUS_102.getValue(),
-              MyStudiesUserRegUtil.ErrorCodes.INVALID_INPUT.getValue(),
-              MyStudiesUserRegUtil.ErrorCodes.NO_STUDIES_FOUND.getValue(),
-              response);
-          logger.info("(C)...StudyStateController.getStudyState()...Ended with NO_STUDIES_FOUND");
-          return null;
-        } */ catch (Exception e) {
+      } catch (Exception e) {
         MyStudiesUserRegUtil.getFailureResponse(
             MyStudiesUserRegUtil.ErrorCodes.EC_500.getValue(),
             MyStudiesUserRegUtil.ErrorCodes.UNKNOWN.getValue(),
@@ -198,7 +180,11 @@ public class StudyStateController {
                   withdrawFromStudyBean.getStudyId(),
                   withdrawFromStudyBean.isDelete());
           if (respBean != null) {
+            logger.info("StudyStateController withdrawFromStudy() - Ends ");
+            respBean.setCode(ErrorCode.EC_200.code());
+            respBean.setMessage(MyStudiesUserRegUtil.ErrorCodes.SUCCESS.getValue());
 
+            return new ResponseEntity<>(respBean, HttpStatus.OK);
           } else {
             MyStudiesUserRegUtil.getFailureResponse(
                 MyStudiesUserRegUtil.ErrorCodes.STATUS_104.getValue(),
@@ -207,7 +193,6 @@ public class StudyStateController {
                 response);
             return null;
           }
-
         } else {
           MyStudiesUserRegUtil.getFailureResponse(
               MyStudiesUserRegUtil.ErrorCodes.STATUS_102.getValue(),

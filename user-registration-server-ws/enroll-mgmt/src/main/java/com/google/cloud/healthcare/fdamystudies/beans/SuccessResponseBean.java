@@ -5,20 +5,16 @@
  * license that can be found in the LICENSE file or at
  * https://opensource.org/licenses/MIT.
  */
+
 package com.google.cloud.healthcare.fdamystudies.beans;
 
-import java.util.List;
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Component;
 import lombok.Getter;
 import lombok.Setter;
 
 @Getter
 @Setter
-@Component
-@Scope(value = "prototype")
-public class StudyStateResponse {
+public class SuccessResponseBean {
 
+  private Integer code = 0;
   private String message = "";
-  private List<StudyStateBean> studies;
 }
