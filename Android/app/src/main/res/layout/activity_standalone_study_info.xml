@@ -5,7 +5,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:background="@android:color/white"
-                tools:context="com.harvard.gatewayModule.GatewayActivity">
+                tools:context="com.harvard.gatewaymodule.GatewayActivity">
 
 
     <FrameLayout
@@ -17,7 +17,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
 
-        <com.harvard.gatewayModule.CircleIndicator
+        <com.harvard.gatewaymodule.CircleIndicator
             android:id="@+id/indicator"
             android:layout_width="match_parent"
             android:layout_height="48dp"
