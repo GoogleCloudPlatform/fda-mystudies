@@ -239,6 +239,11 @@
 					<target>1.7</target>
 				</configuration>
 			</plugin>
+			<plugin>
+				<groupId>com.google.appengine</groupId>
+				<artifactId>appengine-maven-plugin</artifactId>
+				<version>1.9.79</version>
+			</plugin>
 		</plugins>
 	</build>
 
