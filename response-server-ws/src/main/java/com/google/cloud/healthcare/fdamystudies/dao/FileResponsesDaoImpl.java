@@ -169,48 +169,4 @@ public class FileResponsesDaoImpl implements ResponsesDao {
     throw new ProcessResponseException(
         "Unimplemented method. Needs to be implemented with a datastore");
   }
-
-  // OLD METHODS - TO BE REMOVED
-  // @Override
-  // public void saveActivityResponseData(String studyCollectionName, String studyId,
-  // String participantCollectionName, String activitiesCollectionName,
-  // Map<String, Object> dataToStoreParticipantCollectionMap,
-  // Map<String, Object> dataToStoreActivityResults) throws ProcessResponseException {
-  // if (studyCollectionName != null && dataToStoreParticipantCollectionMap != null
-  // && dataToStoreActivityResults != null) {
-  // try {
-  // logger
-  // .info("saveActivityResponseData() : \n Study Collection Name: " + studyCollectionName);
-  // Gson gson = new Gson();
-  // StringBuilder studyResponseDataJsonStr = new StringBuilder();
-  // studyResponseDataJsonStr.append(gson.toJson(dataToStoreParticipantCollectionMap));
-  // studyResponseDataJsonStr.append(gson.toJson(dataToStoreActivityResults));
-  //
-  // String studyDirName = appConfig.getResponseDataFilePath() + studyId;
-  // Path studyDirPath = Paths.get(studyDirName);
-  // if (!Files.exists(studyDirPath)) {
-  // Files.createDirectories(studyDirPath);
-  // }
-  // Files.write(Paths.get(studyDirPath + AppConstants.FILE_SEPARATOR + studyCollectionName
-  // + AppConstants.HYPHEN + System.currentTimeMillis() + AppConstants.JSON_FILE_EXTENSION),
-  // studyResponseDataJsonStr.toString().getBytes(), StandardOpenOption.CREATE);
-  // logger.debug("saveActivityResponseData() : \n Document in study collection: "
-  // + studyCollectionName + " with document ID. Path to StudyMetadata file: \n"
-  // + studyDirPath + AppConstants.FILE_SEPARATOR + studyCollectionName + AppConstants.HYPHEN
-  // + System.currentTimeMillis() + AppConstants.JSON_FILE_EXTENSION);
-  // } catch (Exception e) {
-  // logger.error(e.getMessage(), e);
-  // throw new ProcessResponseException(
-  // "FileResponsesDaoImpl.saveActivityResponseData() - Exception when saving data to file storage:
-  // "
-  // + e.getMessage());
-  // }
-  // } else {
-  // throw new ProcessResponseException(
-  // "FileResponsesDaoImpl.saveActivityResponseData() - Study Collection is null or
-  // dataToStoreResults is null");
-  // }
-  //
-  // }
-
 }

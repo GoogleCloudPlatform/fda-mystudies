@@ -47,7 +47,6 @@ public class CommonDaoImpl implements CommonDao {
       participantBoList = session.createQuery(participantBoCriteriaQuery).getResultList();
       if (!participantBoList.isEmpty()) {
         participantBO = participantBoList.get(0);
-        // userDetailsId = userDetails.getUserDetailsId();
       }
     } catch (Exception e) {
       logger.error("CommonDaoImpl getParticipantInfoDetails() - error ", e);

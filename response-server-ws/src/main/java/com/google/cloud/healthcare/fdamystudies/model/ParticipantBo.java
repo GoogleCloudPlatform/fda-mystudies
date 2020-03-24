@@ -1,15 +1,9 @@
 /*
  * Copyright 2020 Google LLC
  *
-<<<<<<< HEAD
- * <p>Use of this source code is governed by an MIT-style license that can be found in the LICENSE
- * file or at https://opensource.org/licenses/MIT.
- * ****************************************************************************
-=======
  * Use of this source code is governed by an MIT-style
  * license that can be found in the LICENSE file or at
  * https://opensource.org/licenses/MIT.
->>>>>>> c605cb6680704f7d4e3292b682c96035f36faeb1
  */
 package com.google.cloud.healthcare.fdamystudies.model;
 
