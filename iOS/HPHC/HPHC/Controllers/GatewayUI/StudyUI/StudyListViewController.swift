@@ -1083,7 +1083,7 @@ extension StudyListViewController: NMWebServiceDelegate {
     appdelegate.window?.removeProgressIndicatorFromWindow()
 
     if requestName as String == AuthServerMethods.getRefreshedToken.description && error.code == 401
-    {  //unauthorized  // unauthorized Access
+    {  // unauthorized Access
       UIUtilities.showAlertMessageWithActionHandler(
         kErrorTitle,
         message: error.localizedDescription,

@@ -613,7 +613,7 @@ extension LeftMenuViewController: NMWebServiceDelegate {
     UIApplication.shared.keyWindow?.addProgressIndicatorOnWindowFromTop()
 
     if requestName as String == AuthServerMethods.getRefreshedToken.description && error.code == 401
-    {  //unauthorized  // unauthorized
+    {  // unauthorized
       UIUtilities.showAlertMessageWithActionHandler(
         kErrorTitle,
         message: error.localizedDescription,

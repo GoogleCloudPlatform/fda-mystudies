@@ -72,7 +72,7 @@ class AuthServerConfiguration: NetworkConfiguration {
   override func getDefaultHeaders() -> [String: String] {
 
     let clientId = RegistrationServerAPIKey.apiKey
-    let seceretKey = RegistrationServerSecretKey.secretKey
+    let secretKey = RegistrationServerSecretKey.secretKey
 
     var header = [
       "appId": AppConfiguration.appID,
@@ -84,7 +84,7 @@ class AuthServerConfiguration: NetworkConfiguration {
       header["clientToken"] = User.currentUser.clientToken
     } else {
       header["clientId"] = clientId
-      header["secretKey"] = seceretKey
+      header["secretKey"] = secretKey
     }
     return header
   }
