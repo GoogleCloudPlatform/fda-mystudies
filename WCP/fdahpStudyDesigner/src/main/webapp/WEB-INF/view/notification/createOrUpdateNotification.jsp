@@ -11,7 +11,7 @@
 	<div class="col-sm-12 col-md-12 col-lg-12 p-none">
 	   <div class="black-lg-f">
 	     <span class="mr-xs"><a href="javascript:void(0)" class="backOrCancelBtnOfNotification">
-	     <img src="/fdahpStudyDesigner/images/icons/back-b.png"/></a></span> 
+	     <img src="/fdahpStudyDesigner/images/icons/back-b.png" alt=""/></a></span> 
 	     <c:if test="${notificationBO.actionPage eq 'addOrCopy' || notificationBO eq null}">Create Notification</c:if>
 	    <c:if test="${notificationBO.actionPage eq 'edit'}">Edit Notification</c:if>
 	    <c:if test="${notificationBO.actionPage eq 'view'}">View Notification</c:if>

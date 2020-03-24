@@ -42,7 +42,6 @@
 }
 
 </style>
-<!-- <div id="schedule" class="tab-pane fade in active mt-xlg"> -->
     <div class="gray-xs-f mb-sm">Activetask Schedule Type</div>
     <div class="pb-lg ">
                <span class="radio radio-info radio-inline p-40">
@@ -57,7 +56,7 @@
                </span>
     </div>
     <!-- Anchor date type -->
-    <form:form action="" name="anchorFormId" id="anchorFormId" method="post" role="form" data-toggle="validator">
+    <form:form action="" name="anchorFormId" id="anchorFormId" method="post" role="form" data-toggle="validator" >
     <div class="anchortypeclass" style="display:none;">
     <c:if test="${fn:length(anchorTypeList) gt 0}">
     <div class="gray-xs-f mb-sm">Select Anchor Date Type</div>
@@ -243,7 +242,6 @@
 	        <span class='help-block with-errors red-txt'></span>
 	        </span> 
 	        <span class="addBtnDis addbtn mr-sm align-span-center ${(activeTaskBo.isDuplicate > 0)?'cursor-none' : ''}" onclick='addTime();'>+</span>
-	        <!-- <span class="delete vertical-align-middle remBtnDis hide pl-md align-span-center" onclick='removeTime(this);'></span> -->
 	     </div>
 	    </c:if>
 	    <c:if test="${fn:length(activeTaskBo.activeTaskFrequenciesList) gt 0}">
@@ -346,7 +344,6 @@
 	       </span>
 	       </div>
 	       <span class="form-group m-none dis-inline vertical-align-middle pr-md">
-<!-- 	       <span class="gray-xs-f">&nbsp;</span><br/> -->
 	       <input id="selectWeeklyTime" type="text" class="form-control mt-sm clock ${(activeTaskBo.isDuplicate > 0)?'cursor-none' : ''}" required onclick="timep(this.id)" placeholder="Time" name="activeTaskFrequenciesBo.frequencyTime" value="${activeTaskBo.activeTaskFrequenciesBo.frequencyTime}"/>
 	       <span class='help-block with-errors red-txt'></span>
 	       </span>                        
@@ -443,7 +440,6 @@
 	       </span>
 	       </span>
 	       <span class="form-group m-none dis-inline vertical-align-middle pr-md">
-<!-- 	       <span class="gray-xs-f">&nbsp;</span><br/> -->
 	       <input id="selectMonthlyTime" type="text" class="form-control mt-sm clock ${(activeTaskBo.isDuplicate > 0)?'cursor-none' : ''}" required onclick="timep(this.id)"  placeholder="Time" name="activeTaskFrequenciesBo.frequencyTime" value="${activeTaskBo.activeTaskFrequenciesBo.frequencyTime}"/>
 	       <span class='help-block with-errors red-txt'></span>
 	       </span>
@@ -554,7 +550,6 @@
 	         <span class='help-block with-errors red-txt'></span>
 	        </span>
 	        <span class="addBtnDis addbtn mr-sm align-span-center" onclick='addDate();'>+</span>
-	        <!-- <span id="delete" class="sprites_icon delete vertical-align-middle remBtnDis hide align-span-center" onclick="removeDate(this);"></span> -->
 	     </div>
 	      </c:if>
 	      <c:if test="${fn:length(activeTaskBo.activeTaskCustomScheduleBo) gt 0}">
@@ -641,9 +636,7 @@
 						placeholder="Time" required /> <span
 						class='help-block with-errors red-txt'></span>
 					</span> <span class="addbtn addBtnDis dis-inline vertical-align-middle "
-						onclick="addDateAnchor();">+</span> <!-- <span id="deleteAncchor"
-						class="sprites_icon delete vertical-align-middle remBtnDis hide align-span-center"
-						onclick="removeDateAnchor(this);"></span> -->
+						onclick="addDateAnchor();">+</span>
 				</div>
 			</c:if>
 			<c:if
@@ -723,7 +716,6 @@
 	    </div>
 	 </div>
 	</form:form> 
-<!-- </div> -->
 <script type="text/javascript">
 var count = 0;
 var customCount = 0;

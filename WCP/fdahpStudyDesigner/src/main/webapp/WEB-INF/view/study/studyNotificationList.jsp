@@ -33,9 +33,9 @@
                     <table id="notification_list" class="display bor-none tbl_rightalign" cellspacing="0" width="100%">
                          <thead>
                             <tr>
-                                <th>Title</th>  
-                                <th class="linkDis">Status</th>                             
-                                <th class="text-right">
+                                <th id="">Title</th>  
+                                <th class="linkDis" id="">Status</th>                             
+                                <th class="text-right" id="">
                                     <c:if test="${empty permission}">
                                     <div class="dis-line form-group mb-none">
                                          <button type="button" class="btn btn-primary blue-btn hideButtonIfPaused studyNotificationDetails">Add Notification</button>

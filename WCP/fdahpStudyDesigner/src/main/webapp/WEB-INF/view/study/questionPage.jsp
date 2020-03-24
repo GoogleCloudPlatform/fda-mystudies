@@ -53,7 +53,7 @@ function isNumberKey(evt)
    <div class="right-content-head">
       <div class="text-right">
          <div class="black-md-f dis-line pull-left line34">
-            <span class="mr-sm cur-pointer" onclick="goToBackPage(this);"><img src="../images/icons/back-b.png"/></span>
+            <span class="mr-sm cur-pointer" onclick="goToBackPage(this);"><img src="../images/icons/back-b.png" alt=""/></span>
             <c:if test="${actionTypeForFormStep == 'edit'}">Edit Question</c:if>
          	<c:if test="${actionTypeForFormStep == 'view'}">View Question <c:set var="isLive">${_S}isLive</c:set>${not empty  sessionScope[isLive]?'<span class="eye-inc ml-sm vertical-align-text-top"></span>':''}</c:if>
          	<c:if test="${actionTypeForFormStep == 'add'}">Add Question</c:if>
@@ -354,9 +354,9 @@ function isNumberKey(evt)
             <div class="clearfix"></div>
             <div>
                <div>
-                  <span class="mr-lg"><span class="mr-sm"><img src="../images/icons/tick.png"/></span><span>Current Day</span></span>
-                  <span class="mr-lg"><span class="mr-sm"><img src="../images/icons/tick.png"/></span><span>Current Week</span></span>
-                  <span class="mr-lg"><span class="mr-sm"><img src="../images/icons/tick.png"/></span><span>Current Month</span></span>
+                  <span class="mr-lg"><span class="mr-sm"><img src="../images/icons/tick.png" alt=""/></span><span>Current Day</span></span>
+                  <span class="mr-lg"><span class="mr-sm"><img src="../images/icons/tick.png" alt=""/></span><span>Current Week</span></span>
+                  <span class="mr-lg"><span class="mr-sm"><img src="../images/icons/tick.png" alt=""/></span><span>Current Month</span></span>
                   <span class="txt-gray">(Rollback option provided for these three options)</span>
                </div>
                
@@ -499,7 +499,7 @@ function isNumberKey(evt)
 				   <div class="form-group col-smthumb-2">
 				      <div class="sm-thumb-btn" onclick="openUploadWindow(this);">
 				         <div class="thumb-img">
-				            <img src="<spring:eval expression="@propertyConfigurer.getProperty('fda.imgDisplaydPath')" />questionnaire/${fn:escapeXml(questionsBo.questionReponseTypeBo.minImage)}" onerror="this.src='/fdahpStudyDesigner/images/icons/sm-thumb.jpg';" class="imageChoiceWidth"/>
+				            <img src="<spring:eval expression="@propertyConfigurer.getProperty('fda.imgDisplaydPath')" />questionnaire/${fn:escapeXml(questionsBo.questionReponseTypeBo.minImage)}" onerror="this.src='/fdahpStudyDesigner/images/icons/sm-thumb.jpg';" class="imageChoiceWidth" alt=""/>
 				         </div>
 				        
 				         <c:if test="${empty questionsBo.questionReponseTypeBo.minImage}"><div class="textLabelscaleMinImagePathId" >Upload</div></c:if>
@@ -518,7 +518,7 @@ function isNumberKey(evt)
 				   <div class="form-group col-smthumb-2">
 				      <div class="sm-thumb-btn" onclick="openUploadWindow(this);">
 				         <div class="thumb-img">
-				            <img src="<spring:eval expression="@propertyConfigurer.getProperty('fda.imgDisplaydPath')" />questionnaire/${fn:escapeXml(questionsBo.questionReponseTypeBo.maxImage)}" onerror="this.src='/fdahpStudyDesigner/images/icons/sm-thumb.jpg';" class="imageChoiceWidth"/>
+				            <img src="<spring:eval expression="@propertyConfigurer.getProperty('fda.imgDisplaydPath')" />questionnaire/${fn:escapeXml(questionsBo.questionReponseTypeBo.maxImage)}" onerror="this.src='/fdahpStudyDesigner/images/icons/sm-thumb.jpg';" class="imageChoiceWidth" alt=""/>
 				         </div>
 				        
 				         <c:if test="${empty questionsBo.questionReponseTypeBo.maxImage}"><div class="textLabelscaleMaxImagePathId" >Upload</div></c:if>
@@ -606,7 +606,7 @@ function isNumberKey(evt)
 				   <div class="form-group col-smthumb-2">
 				      <div class="sm-thumb-btn" onclick="openUploadWindow(this);">
 				         <div class="thumb-img">
-				            <img src="<spring:eval expression="@propertyConfigurer.getProperty('fda.imgDisplaydPath')" />questionnaire/${fn:escapeXml(questionsBo.questionReponseTypeBo.minImage)}" onerror="this.src='/fdahpStudyDesigner/images/icons/sm-thumb.jpg';" class="imageChoiceWidth"/>
+				            <img src="<spring:eval expression="@propertyConfigurer.getProperty('fda.imgDisplaydPath')" />questionnaire/${fn:escapeXml(questionsBo.questionReponseTypeBo.minImage)}" onerror="this.src='/fdahpStudyDesigner/images/icons/sm-thumb.jpg';" class="imageChoiceWidth" alt=""/>
 				         </div>
 				       
 				         <c:if test="${empty questionsBo.questionReponseTypeBo.minImage}"><div class="textLabelcontinuesScaleMinImagePathId" >Upload</div></c:if>
@@ -625,7 +625,7 @@ function isNumberKey(evt)
 				   <div class="form-group col-smthumb-2">
 				      <div class="sm-thumb-btn" onclick="openUploadWindow(this);">
 				         <div class="thumb-img">
-				            <img src="<spring:eval expression="@propertyConfigurer.getProperty('fda.imgDisplaydPath')" />questionnaire/${fn:escapeXml(questionsBo.questionReponseTypeBo.maxImage)}" onerror="this.src='/fdahpStudyDesigner/images/icons/sm-thumb.jpg';" class="imageChoiceWidth"/>
+				            <img src="<spring:eval expression="@propertyConfigurer.getProperty('fda.imgDisplaydPath')" />questionnaire/${fn:escapeXml(questionsBo.questionReponseTypeBo.maxImage)}" onerror="this.src='/fdahpStudyDesigner/images/icons/sm-thumb.jpg';" class="imageChoiceWidth" alt=""/>
 				         </div>
 				       
 				         <c:if test="${empty questionsBo.questionReponseTypeBo.maxImage}"><div class="textLabelcontinuesScaleMaxImagePathId" >Upload</div></c:if>
@@ -1177,9 +1177,9 @@ function isNumberKey(evt)
 						         </div>
 						      </div>
 						      <div class="col-md-3 pl-none">
-						         <div class="gray-xs-f mb-xs">Value (1 to 50 characters)<span class="requiredStar">*</span> </div>
+						         <div class="gray-xs-f mb-xs">Value (1 to 100 characters)<span class="requiredStar">*</span> </div>
 						         <div class="form-group mb-none">
-						            <input type="text" class="form-control TextChoiceRequired textChoiceVal" name="questionResponseSubTypeList[${subtype.index}].value" id="displayTextChoiceValue${subtype.index}" value="${fn:escapeXml(questionResponseSubType.value)}" maxlength="50">
+						            <input type="text" class="form-control TextChoiceRequired textChoiceVal" name="questionResponseSubTypeList[${subtype.index}].value" id="displayTextChoiceValue${subtype.index}" value="${fn:escapeXml(questionResponseSubType.value)}" maxlength="100">
 						            <div class="help-block with-errors red-txt"></div>
 						         </div>
 						      </div>
@@ -1220,9 +1220,9 @@ function isNumberKey(evt)
 					         </div>
 					      </div>
 					      <div class="col-md-3 pl-none">
-					         <div class="gray-xs-f mb-xs">Value (1 to 50 characters)<span class="requiredStar">*</span> </div>
+					         <div class="gray-xs-f mb-xs">Value (1 to 100 characters)<span class="requiredStar">*</span> </div>
 					         <div class="form-group mb-none">
-					            <input type="text" class="form-control TextChoiceRequired textChoiceVal" name="questionResponseSubTypeList[0].value" id="displayTextChoiceValue0" value="${fn:escapeXml(questionsBo.questionResponseSubTypeList[0].value)}" maxlength="50">
+					            <input type="text" class="form-control TextChoiceRequired textChoiceVal" name="questionResponseSubTypeList[0].value" id="displayTextChoiceValue0" value="${fn:escapeXml(questionsBo.questionResponseSubTypeList[0].value)}" maxlength="100">
 					            <div class="help-block with-errors red-txt"></div>
 					         </div>
 					      </div>
@@ -1259,9 +1259,9 @@ function isNumberKey(evt)
 					         </div>
 					      </div>
 					      <div class="col-md-3 pl-none">
-					         <div class="gray-xs-f mb-xs">Value (1 to 50 characters)<span class="requiredStar">*</span> </div>
+					         <div class="gray-xs-f mb-xs">Value (1 to 100 characters)<span class="requiredStar">*</span> </div>
 					         <div class="form-group mb-none">
-					            <input type="text" class="form-control TextChoiceRequired textChoiceVal" name="questionResponseSubTypeList[1].value" id="displayTextChoiceValue0" value="${fn:escapeXml(questionsBo.questionResponseSubTypeList[1].value)}" maxlength="50">
+					            <input type="text" class="form-control TextChoiceRequired textChoiceVal" name="questionResponseSubTypeList[1].value" id="displayTextChoiceValue0" value="${fn:escapeXml(questionsBo.questionResponseSubTypeList[1].value)}" maxlength="100">
 					            <div class="help-block with-errors red-txt"></div>
 					         </div>
 					      </div>
@@ -3240,9 +3240,9 @@ function addTextChoice(){
 					    "   </div>"+
 					    "</div>"+
 					    "<div class='col-md-3 pl-none'>"+
-					    "   <div class='gray-xs-f mb-xs'>Value (1 to 50 characters)<span class='requiredStar'>*</span> </div>"+
+					    "   <div class='gray-xs-f mb-xs'>Value (1 to 100 characters)<span class='requiredStar'>*</span> </div>"+
 					    "   <div class='form-group mb-none'>"+
-					    "   <input type='text' class='form-control TextChoiceRequired textChoiceVal' name='questionResponseSubTypeList["+choiceCount+"].value' id='displayTextChoiceValue"+choiceCount+"'  maxlength='50' required onblur='validateForUniqueValue(this,&#34;Text Choice&#34;,function(){});'>"+
+					    "   <input type='text' class='form-control TextChoiceRequired textChoiceVal' name='questionResponseSubTypeList["+choiceCount+"].value' id='displayTextChoiceValue"+choiceCount+"'  maxlength='100' required onblur='validateForUniqueValue(this,&#34;Text Choice&#34;,function(){});'>"+
 					    "      <div class='help-block with-errors red-txt'></div>"+
 					    "   </div>"+
 					    "</div>"+
@@ -3306,7 +3306,7 @@ function addImageChoice(){
 						 "	   <div class='col-md-2 pl-none col-smthumb-2'>"+
 						 "   <div class='form-group'>"+
 						 "      <div class='sm-thumb-btn' onclick='openUploadWindow(this);'>"+
-						 "         <div class='thumb-img'><img src='../images/icons/sm-thumb.jpg'/></div>"+
+						 "         <div class='thumb-img'><img src='../images/icons/sm-thumb.jpg' /></div>"+
 						 "         <div class='textLabelimagePathId"+imageCount+"'>Upload</div>"+
 						 "      </div>"+
 						 "      <input class='dis-none ImageChoiceRequired upload-image' data-imageId='"+imageCount+"' name='questionResponseSubTypeList["+imageCount+"].imageFile' id='imageFileId"+imageCount+"' type='file'  accept='.png, .jpg, .jpeg' onchange='readURL(this);' required>"+

@@ -98,21 +98,6 @@
 						<div class="help-block with-errors red-txt"></div>
 					</div>
 				</div>
-				<!-- 				<div class="col-md-6 pr-none"> -->
-				<!-- 					<div class="gray-xs-f mb-xs"> -->
-				<!-- 						Org ID <small>(15 characters max)</small><span -->
-				<!-- 							class="requiredStar"> *</span><span><span data-toggle="tooltip" data-placement="top" title="Enter a unique human-readable identifier corresponding to the organization that this study belongs to." class="filled-tooltip"></span></span> -->
-				<!-- 					</div> -->
-				<!-- 					<div class="form-group appIdClass"> -->
-				<!-- 						<input type="text" custAttType="cust" -->
-				<!-- 							class="form-control aq-inp orgIdCls" name="orgId" -->
-				<!-- 							id="orgId" maxlength="15" -->
-				<%-- 							value="${studyBo.orgId}" --%>
-				<%-- 							<c:if test="${not empty studyBo.status && (studyBo.status == 'Active' || studyBo.status == 'Published' || studyBo.status == 'Paused' || studyBo.status == 'Deactivated')}"> disabled</c:if> --%>
-				<!-- 							required /> -->
-				<!-- 						<div class="help-block with-errors red-txt"></div> -->
-				<!-- 					</div> -->
-				<!-- 				</div> -->
 			</div>
 			<!--phase2a sp1-->
 
@@ -303,7 +288,7 @@
 								<c:if test="${not empty studyBo.thumbnailImage}">src="<spring:eval expression="@propertyConfigurer.getProperty('fda.imgDisplaydPath')" />studylogo/${studyBo.thumbnailImage}" </c:if>
 								<c:if test="${empty studyBo.thumbnailImage}">src="/fdahpStudyDesigner/images/dummy-img.jpg" </c:if>
 								onerror="this.src='/fdahpStudyDesigner/images/dummy-img.jpg';"
-								class="wid100" />
+								class="wid100" alt="" />
 						</div>
 						<div class="dis-inline ">
 							<span id="removeUrl" class="blue-link elaborateHide">X<a

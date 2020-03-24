@@ -37,9 +37,9 @@
 <body class="txt-center grayeef2f5-bg">
 
 <div class="err_page_container">
-    <div class="txt-left"><img src="/fdahpStudyDesigner/images/logo/fda-logo.png"/></div>
+    <div class="txt-left"><img src="/fdahpStudyDesigner/images/logo/fda-logo.png" alt=""/></div>
     <div class="err_page_txt">
-        <img src="/fdahpStudyDesigner/images/icons/404.png"/>
+        <img src="/fdahpStudyDesigner/images/icons/404.png" alt=""/>
         <div>Sorry, this page does not exist.</div>
         <div>Please check the URL in the browser's address bar or try launching the site again</div>
         <div>

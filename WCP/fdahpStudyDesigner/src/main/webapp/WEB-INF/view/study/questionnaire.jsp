@@ -28,10 +28,9 @@
 	display: none;
 }
 
-.manually-option:last-child .addBtnDis {  
+.manually-option:last-child .addBtnDis {
 	display: inline-block;
 }
-
 
 .manually-anchor-option .addBtnDis {
 	display: none;
@@ -55,7 +54,7 @@
 	*border-collapse: expression('separate', cellSpacing = '10px');
 }
 
-.dis_inlinetop{
+.dis_inlinetop {
 	display: inline-block;
 	vertical-align: top;
 }
@@ -99,7 +98,7 @@ function isNumber(evt, thisAttr) {
 		<div class="text-right">
 			<div class="black-md-f text-uppercase dis-line pull-left line34">
 				<span class="pr-sm cur-pointer" onclick="goToBackPage(this);"><img
-					src="../images/icons/back-b.png" class="pr-md" /></span>
+					src="../images/icons/back-b.png" class="pr-md" alt="" /></span>
 				<c:if test="${actionType eq 'add'}">Add Questionnaire</c:if>
 				<c:if test="${actionType eq 'edit'}">Edit Questionnaire</c:if>
 				<c:if test="${actionType eq 'view'}">View Questionnaire <c:set
@@ -172,7 +171,6 @@ function isNumber(evt, thisAttr) {
 						value="">
 					<input type="hidden" name="formId" id="formId" value="">
 					<input type="hidden" name="questionId" id="questionId" value="">
-					<!-- <input type="hidden" id="actionType" name="actionType"> -->
 					<input type="hidden" id="actionTypeForQuestionPage"
 						name="actionTypeForQuestionPage">
 					<div class="gray-xs-f mb-xs">
@@ -541,7 +539,6 @@ function isNumber(evt, thisAttr) {
 								</span>
 							</div>
 						</div>
-						<!-- <div class="gray-xs-f mb-sm mt-md">Lifetime of the run and of the questionnaire (pick one)<span class="requiredStar">*</span></div> -->
 						<div class="gray-xs-f mb-sm mt-md">
 							Lifetime of the run/questionnaire (choose between Study Lifetime
 							and custom end date)<span class="requiredStar">*</span>
@@ -661,9 +658,7 @@ function isNumber(evt, thisAttr) {
 										onclick='timep(this.id);' /> <span
 										class='help-block with-errors red-txt'></span>
 									</span> <span class="addBtnDis addbtn mr-sm align-span-center"
-										onclick='addTime();'>+</span> <!-- <span
-										class="delete vertical-align-middle remBtnDis hide pl-md align-span-center"
-										onclick='removeTime(this);'></span> -->
+										onclick='addTime();'>+</span>
 								</div>
 							</c:if>
 							<c:if
@@ -801,8 +796,7 @@ function isNumber(evt, thisAttr) {
 							<span class="gray-xs-f">Day/Time (of the week) <span
 								class="requiredStar">*</span><br /> <span
 								class=" form-group m-none dis-inline vertical-align-middle pr-md">
-									<span class=""> 
-									<select id="startDateWeekly"
+									<span class=""> <select id="startDateWeekly"
 										class="form-control mt-sm ${(questionnaireBo.shortTitleDuplicate > 0)?'cursor-none' : ''} weeklyCls"
 										name="dayOfTheWeek" required>
 											<option value=''>Select</option>
@@ -826,8 +820,7 @@ function isNumber(evt, thisAttr) {
 							</span>
 							</span> <span
 								class="form-group m-none dis-inline vertical-align-middle pr-md">
-								<!-- <span class="gray-xs-f">&nbsp;</span><br/> --> <input
-								id="selectWeeklyTime" type="text"
+								<input id="selectWeeklyTime" type="text"
 								class="form-control mt-sm clock ${(questionnaireBo.shortTitleDuplicate > 0)?'cursor-none' : ''} weeklyCls"
 								required onclick="timep(this.id)" placeholder="Time"
 								name="questionnairesFrequenciesBo.frequencyTime"
@@ -895,21 +888,21 @@ function isNumber(evt, thisAttr) {
 										<span class='help-block with-errors red-txt'></span>
 									</span>
 								</div>
-								
+
 								<div class="dis_inlinetop">
 									<span
-									class="form-group m-none dis-inline vertical-align-middle pr-md">
-									<span class="gray-xs-f">No. of times to repeat the
-										questionnaire <span class="requiredStar">*</span>
-								</span><br /> <input id="weeksAnchor" type="text"
-									class="form-control mt-sm numChk ${(questionnaireBo.shortTitleDuplicate > 0)?'cursor-none' : ''}"
-									name="repeatQuestionnaire" placeholder="No of Times"
-									value="${questionnaireBo.repeatQuestionnaire}" required
-									onkeypress="return isNumber(event, this)"
-									pattern="^(0{0,2}[1-9]|0?[1-9][0-9]|[1-9][0-9][0-9])$"
-									data-pattern-error="Please enter valid number." maxlength="3" />
-									<span class='help-block with-errors red-txt'></span>
-								</span>
+										class="form-group m-none dis-inline vertical-align-middle pr-md">
+										<span class="gray-xs-f">No. of times to repeat the
+											questionnaire <span class="requiredStar">*</span>
+									</span><br /> <input id="weeksAnchor" type="text"
+										class="form-control mt-sm numChk ${(questionnaireBo.shortTitleDuplicate > 0)?'cursor-none' : ''}"
+										name="repeatQuestionnaire" placeholder="No of Times"
+										value="${questionnaireBo.repeatQuestionnaire}" required
+										onkeypress="return isNumber(event, this)"
+										pattern="^(0{0,2}[1-9]|0?[1-9][0-9]|[1-9][0-9][0-9])$"
+										data-pattern-error="Please enter valid number." maxlength="3" />
+										<span class='help-block with-errors red-txt'></span>
+									</span>
 								</div>
 
 							</div>
@@ -982,7 +975,6 @@ function isNumber(evt, thisAttr) {
 							</span>
 							</span> <span
 								class="form-group m-none dis-inline vertical-align-middle pr-md">
-								<!-- 	                  <span class="gray-xs-f">&nbsp;</span><br/> -->
 								<input id="selectMonthlyTime" type="text"
 								class="form-control mt-sm clock ${(questionnaireBo.shortTitleDuplicate > 0)?'cursor-none' : ''}"
 								required onclick="timep(this.id)" placeholder="Time"
@@ -1007,7 +999,7 @@ function isNumber(evt, thisAttr) {
 									readonly="readonly" /> <span
 									class='help-block with-errors red-txt'></span>
 								</span>
-							</div> 		
+							</div>
 							<div class="dis_inlinetop p-none monthlyRegular">
 								<span
 									class="form-group m-none dis-inline vertical-align-middle pr-md">
@@ -1025,8 +1017,7 @@ function isNumber(evt, thisAttr) {
 							</div>
 						</div>
 						<!-- Anchordate start-->
-						<!-- <div class="mt-lg"> -->
-							<%-- <div class="monthlyStartCls dis_inlinetop p-none">
+						<%-- <div class="monthlyStartCls dis_inlinetop p-none">
 								<span
 									class="form-group m-none dis-inline vertical-align-middle pr-md">
 									<span class="gray-xs-f">Start date (pick a date) <span
@@ -1040,56 +1031,55 @@ function isNumber(evt, thisAttr) {
 									class='help-block with-errors red-txt'></span>
 								</span>
 							</div> --%>
-							<div class="monthlyanchorDiv"
-								style="display: none;">
-								<div class="dis_inlinetop p-none">
-									<div class=" resetDate dis_inlinetop p-none">
-										<div>
-											<span
-												class="form-group m-none dis-inline vertical-align-middle pr-md">
-												<span class="gray-xs-f">Start date (pick a date) <span
-													class="requiredStar">*</span></span><br /> <span class="pr-md">Anchor
-													Date</span> <span> <select
-													class="signDropDown selectpicker sign-box ${(questionnaireBo.shortTitleDuplicate > 0)?'cursor-none' : ''}"
-													title="Select" name="questionnairesFrequenciesBo.xDaysSign"
-													id="monthlyXSign">
-														<option value="0"
-															${not questionnaireBo.questionnairesFrequenciesBo.xDaysSign ?'selected':''}>+</option>
-														<option value="1"
-															${questionnaireBo.questionnairesFrequenciesBo.xDaysSign ?'selected':''}>-</option>
-												</select>
-											</span> <span
-												class="form-group m-none dis-inline vertical-align-middle">
-													<input id="monthlyxdaysId" type="text"
-													class="form-control wid70 disRadBtn1 disBtn1 remReqOnSave daysMask mt-sm ${(questionnaireBo.shortTitleDuplicate > 0)?'cursor-none' : ''}"
-													placeholder="X"
-													name="questionnairesFrequenciesBo.timePeriodFromDays"
-													value="${questionnaireBo.questionnairesFrequenciesBo.timePeriodFromDays}"
-													maxlength="3" pattern="[0-9]+"
-													data-pattern-error="Please enter valid number." /> <span
-													class="help-block with-errors red-txt"></span>
-											</span> <span class="mb-sm pr-md"> <span
-													class="light-txt opacity06">days</span>
-											</span>
-											</span>
-										</div>
+						<div class="monthlyanchorDiv" style="display: none;">
+							<div class="dis_inlinetop p-none">
+								<div class=" resetDate dis_inlinetop p-none">
+									<div>
+										<span
+											class="form-group m-none dis-inline vertical-align-middle pr-md">
+											<span class="gray-xs-f">Start date (pick a date) <span
+												class="requiredStar">*</span></span><br /> <span class="pr-md">Anchor
+												Date</span> <span> <select
+												class="signDropDown selectpicker sign-box ${(questionnaireBo.shortTitleDuplicate > 0)?'cursor-none' : ''}"
+												title="Select" name="questionnairesFrequenciesBo.xDaysSign"
+												id="monthlyXSign">
+													<option value="0"
+														${not questionnaireBo.questionnairesFrequenciesBo.xDaysSign ?'selected':''}>+</option>
+													<option value="1"
+														${questionnaireBo.questionnairesFrequenciesBo.xDaysSign ?'selected':''}>-</option>
+											</select>
+										</span> <span
+											class="form-group m-none dis-inline vertical-align-middle">
+												<input id="monthlyxdaysId" type="text"
+												class="form-control wid70 disRadBtn1 disBtn1 remReqOnSave daysMask mt-sm ${(questionnaireBo.shortTitleDuplicate > 0)?'cursor-none' : ''}"
+												placeholder="X"
+												name="questionnairesFrequenciesBo.timePeriodFromDays"
+												value="${questionnaireBo.questionnairesFrequenciesBo.timePeriodFromDays}"
+												maxlength="3" pattern="[0-9]+"
+												data-pattern-error="Please enter valid number." /> <span
+												class="help-block with-errors red-txt"></span>
+										</span> <span class="mb-sm pr-md"> <span
+												class="light-txt opacity06">days</span>
+										</span>
+										</span>
 									</div>
 								</div>
-								
-								
-							  <div class="dis_inlinetop p-none">
-									<span class="gray-xs-f">Time <span class="requiredStar">*</span></span><br />
-									<span
-										class="form-group m-none dis-inline vertical-align-middle pr-md">
-										<input id="selectMonthlyTimeAnchor" type="text"
-										class="form-control mt-sm clock ${(questionnaireBo.shortTitleDuplicate > 0)?'cursor-none' : ''}"
-										required onclick="timep(this.id)" placeholder="Time"
-										name="questionnairesFrequenciesBo.frequencyTime"
-										value="${questionnaireBo.questionnairesFrequenciesBo.frequencyTime}" />
-										<span class='help-block with-errors red-txt'></span>
-									</span>
-								</div>
-									<div class="dis_inlinetop">
+							</div>
+
+
+							<div class="dis_inlinetop p-none">
+								<span class="gray-xs-f">Time <span class="requiredStar">*</span></span><br />
+								<span
+									class="form-group m-none dis-inline vertical-align-middle pr-md">
+									<input id="selectMonthlyTimeAnchor" type="text"
+									class="form-control mt-sm clock ${(questionnaireBo.shortTitleDuplicate > 0)?'cursor-none' : ''}"
+									required onclick="timep(this.id)" placeholder="Time"
+									name="questionnairesFrequenciesBo.frequencyTime"
+									value="${questionnaireBo.questionnairesFrequenciesBo.frequencyTime}" />
+									<span class='help-block with-errors red-txt'></span>
+								</span>
+							</div>
+							<div class="dis_inlinetop">
 								<span
 									class="form-group m-none dis-inline vertical-align-middle pr-md">
 									<span class="gray-xs-f">No. of times to repeat the
@@ -1103,11 +1093,10 @@ function isNumber(evt, thisAttr) {
 									data-pattern-error="Please enter valid number." maxlength="3" />
 									<span class='help-block with-errors red-txt'></span>
 								</span>
-							</div> 
 							</div>
-						<!-- </div> -->
+						</div>
 						<!-- Anchordate End -->
-						
+
 						<div class="mt-md col-md-12 p-none">
 							<div class="gray-xs-f mb-xs">End Date</div>
 							<div class="black-xs-f" id="monthEndDate">${not empty questionnaireBo.studyLifetimeEnd ? questionnaireBo.studyLifetimeEnd :'NA'}</div>
@@ -1175,9 +1164,7 @@ function isNumber(evt, thisAttr) {
 										placeholder="Time" onclick='timep(this.id);' disabled required />
 										<span class='help-block with-errors red-txt'></span>
 									</span> <span class="addbtn addBtnDis align-span-center mr-md"
-										onclick="addDate();">+</span> <!-- <span id="delete"
-										class="sprites_icon delete vertical-align-middle remBtnDis hide align-span-center"
-										onclick="removeDate(this);"></span> -->
+										onclick="addDate();">+</span>
 								</div>
 							</c:if>
 							<c:if
@@ -1302,9 +1289,7 @@ function isNumber(evt, thisAttr) {
 										class='help-block with-errors red-txt'></span>
 									</span> <span id="addbtn0"
 										class="addbtn addBtnDis dis-inline vertical-align-middle mr-sm"
-										onclick="addDateAnchor();">+</span> <!-- <span id="deleteAncchor0"
-										class="sprites_icon delete vertical-align-middle remBtnDis hide align-span-center"
-										onclick="removeDateAnchor(this);"></span> -->
+										onclick="addDateAnchor();">+</span>
 								</div>
 							</c:if>
 							<c:if
@@ -1417,7 +1402,7 @@ function isNumber(evt, thisAttr) {
 			<div class="modal-header cust-hdr pt-lg">
 				<button type="button" class="close pull-right" data-dismiss="modal">&times;</button>
 				<h4 class="modal-title pl-lg">
-					<b>Setting up a Questionnaire</b>
+					<strong>Setting up a Questionnaire</strong>
 				</h4>
 			</div>
 

@@ -1,5 +1,5 @@
 /*
- * Copyright © 2017-2018 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors.
+ * Copyright Â© 2017-2018 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors.
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction, including
  * without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies
@@ -23,146 +23,140 @@
 package com.hphc.mystudies.dto;
 
 import java.io.Serializable;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
-
 import org.hibernate.annotations.NamedQueries;
 import org.hibernate.annotations.NamedQuery;
 
-/**
- * Provides instruction step details for study {@link StudyDto}.
- * 
- * @author BTC
- *
- */
+
 @Entity
 @Table(name = "instructions")
-@NamedQueries(value = {
-
-@NamedQuery(name = "getInstructionsListFromIds", query = "from InstructionsDto IDTO"
-		+ " where IDTO.status=true and IDTO.id IN (:instructionIdList)"), })
+@NamedQueries(
+    value = {
+      @NamedQuery(
+          name = "getInstructionsListFromIds",
+          query =
+              "from InstructionsDto IDTO"
+                  + " where IDTO.status=true and IDTO.id IN (:instructionIdList)"),
+    })
 public class InstructionsDto implements Serializable {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = -8485388252282207892L;
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
-	@Column(name = "id")
-	private Integer id;
+  private static final long serialVersionUID = -8485388252282207892L;
 
-	@Column(name = "instruction_title", length = 250)
-	private String instructionTitle;
+  @Id
+  @GeneratedValue(strategy = GenerationType.AUTO)
+  @Column(name = "id")
+  private Integer id;
 
-	@Column(name = "instruction_text", length = 2500)
-	private String instructionText;
+  @Column(name = "instruction_title", length = 250)
+  private String instructionTitle;
 
-	@Column(name = "created_on")
-	private String createdOn;
+  @Column(name = "instruction_text", length = 2500)
+  private String instructionText;
 
-	@Column(name = "modified_on")
-	private String modifiedOn;
+  @Column(name = "created_on")
+  private String createdOn;
 
-	@Column(name = "created_by")
-	private Integer createdBy;
+  @Column(name = "modified_on")
+  private String modifiedOn;
 
-	@Column(name = "modified_by")
-	private Integer modifiedBy;
+  @Column(name = "created_by")
+  private Integer createdBy;
 
-	@Column(name = "study_version")
-	private Integer studyVersion = 1;
+  @Column(name = "modified_by")
+  private Integer modifiedBy;
 
-	@Column(name = "active")
-	private Boolean active;
+  @Column(name = "study_version")
+  private Integer studyVersion = 1;
 
-	@Column(name = "status")
-	private Boolean status;
+  @Column(name = "active")
+  private Boolean active;
 
-	public Integer getId() {
-		return id;
-	}
+  @Column(name = "status")
+  private Boolean status;
 
-	public void setId(Integer id) {
-		this.id = id;
-	}
+  public Integer getId() {
+    return id;
+  }
 
-	public String getInstructionTitle() {
-		return instructionTitle;
-	}
+  public void setId(Integer id) {
+    this.id = id;
+  }
 
-	public void setInstructionTitle(String instructionTitle) {
-		this.instructionTitle = instructionTitle;
-	}
+  public String getInstructionTitle() {
+    return instructionTitle;
+  }
 
-	public String getInstructionText() {
-		return instructionText;
-	}
+  public void setInstructionTitle(String instructionTitle) {
+    this.instructionTitle = instructionTitle;
+  }
 
-	public void setInstructionText(String instructionText) {
-		this.instructionText = instructionText;
-	}
+  public String getInstructionText() {
+    return instructionText;
+  }
 
-	public String getCreatedOn() {
-		return createdOn;
-	}
+  public void setInstructionText(String instructionText) {
+    this.instructionText = instructionText;
+  }
 
-	public void setCreatedOn(String createdOn) {
-		this.createdOn = createdOn;
-	}
+  public String getCreatedOn() {
+    return createdOn;
+  }
 
-	public String getModifiedOn() {
-		return modifiedOn;
-	}
+  public void setCreatedOn(String createdOn) {
+    this.createdOn = createdOn;
+  }
 
-	public void setModifiedOn(String modifiedOn) {
-		this.modifiedOn = modifiedOn;
-	}
+  public String getModifiedOn() {
+    return modifiedOn;
+  }
 
-	public Integer getCreatedBy() {
-		return createdBy;
-	}
+  public void setModifiedOn(String modifiedOn) {
+    this.modifiedOn = modifiedOn;
+  }
 
-	public void setCreatedBy(Integer createdBy) {
-		this.createdBy = createdBy;
-	}
+  public Integer getCreatedBy() {
+    return createdBy;
+  }
 
-	public Integer getModifiedBy() {
-		return modifiedBy;
-	}
+  public void setCreatedBy(Integer createdBy) {
+    this.createdBy = createdBy;
+  }
 
-	public void setModifiedBy(Integer modifiedBy) {
-		this.modifiedBy = modifiedBy;
-	}
+  public Integer getModifiedBy() {
+    return modifiedBy;
+  }
 
-	public Integer getStudyVersion() {
-		return studyVersion;
-	}
+  public void setModifiedBy(Integer modifiedBy) {
+    this.modifiedBy = modifiedBy;
+  }
 
-	public void setStudyVersion(Integer studyVersion) {
-		this.studyVersion = studyVersion;
-	}
+  public Integer getStudyVersion() {
+    return studyVersion;
+  }
 
-	public Boolean getActive() {
-		return active;
-	}
+  public void setStudyVersion(Integer studyVersion) {
+    this.studyVersion = studyVersion;
+  }
 
-	public void setActive(Boolean active) {
-		this.active = active;
-	}
+  public Boolean getActive() {
+    return active;
+  }
 
-	public Boolean getStatus() {
-		return status;
-	}
+  public void setActive(Boolean active) {
+    this.active = active;
+  }
 
-	public void setStatus(Boolean status) {
-		this.status = status;
-	}
+  public Boolean getStatus() {
+    return status;
+  }
 
+  public void setStatus(Boolean status) {
+    this.status = status;
+  }
 }

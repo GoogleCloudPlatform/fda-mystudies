@@ -1,5 +1,5 @@
 /*
- * Copyright © 2017-2018 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors.
+ * Copyright Â© 2017-2018 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors.
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction, including
  * without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies
@@ -23,102 +23,93 @@
 package com.hphc.mystudies.dto;
 
 import java.io.Serializable;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
-
 import org.hibernate.annotations.NamedQueries;
 import org.hibernate.annotations.NamedQuery;
 
-/**
- * Provides eligibility details for study {@link StudyDto}.
- * 
- * @author BTC
- *
- */
+
 @Entity
 @Table(name = "eligibility")
 @NamedQueries({
-
-@NamedQuery(name = "eligibilityDtoByStudyId", query = "from EligibilityDto EDTO"
-		+ " where EDTO.studyId =:studyId "), })
+  @NamedQuery(
+      name = "eligibilityDtoByStudyId",
+      query = "from EligibilityDto EDTO" + " where EDTO.studyId =:studyId "),
+})
 public class EligibilityDto implements Serializable {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = -4520158278072115802L;
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "id")
-	private Integer id;
+  private static final long serialVersionUID = -4520158278072115802L;
 
-	@Column(name = "study_id")
-	private Integer studyId;
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  @Column(name = "id")
+  private Integer id;
 
-	@Column(name = "eligibility_mechanism")
-	private Integer eligibilityMechanism;
+  @Column(name = "study_id")
+  private Integer studyId;
 
-	@Column(name = "instructional_text")
-	private String instructionalText;
+  @Column(name = "eligibility_mechanism")
+  private Integer eligibilityMechanism;
 
-	@Column(name = "failure_outcome_text")
-	private String failureOutcomeText;
+  @Column(name = "instructional_text")
+  private String instructionalText;
 
-	@Column(name = "study_version")
-	private Integer studyVersion = 1;
+  @Column(name = "failure_outcome_text")
+  private String failureOutcomeText;
 
-	public Integer getId() {
-		return id;
-	}
+  @Column(name = "study_version")
+  private Integer studyVersion = 1;
 
-	public void setId(Integer id) {
-		this.id = id;
-	}
+  public Integer getId() {
+    return id;
+  }
 
-	public Integer getStudyId() {
-		return studyId;
-	}
+  public void setId(Integer id) {
+    this.id = id;
+  }
 
-	public void setStudyId(Integer studyId) {
-		this.studyId = studyId;
-	}
+  public Integer getStudyId() {
+    return studyId;
+  }
 
-	public Integer getEligibilityMechanism() {
-		return eligibilityMechanism;
-	}
+  public void setStudyId(Integer studyId) {
+    this.studyId = studyId;
+  }
 
-	public void setEligibilityMechanism(Integer eligibilityMechanism) {
-		this.eligibilityMechanism = eligibilityMechanism;
-	}
+  public Integer getEligibilityMechanism() {
+    return eligibilityMechanism;
+  }
 
-	public String getInstructionalText() {
-		return instructionalText;
-	}
+  public void setEligibilityMechanism(Integer eligibilityMechanism) {
+    this.eligibilityMechanism = eligibilityMechanism;
+  }
 
-	public void setInstructionalText(String instructionalText) {
-		this.instructionalText = instructionalText;
-	}
+  public String getInstructionalText() {
+    return instructionalText;
+  }
 
-	public String getFailureOutcomeText() {
-		return failureOutcomeText;
-	}
+  public void setInstructionalText(String instructionalText) {
+    this.instructionalText = instructionalText;
+  }
 
-	public void setFailureOutcomeText(String failureOutcomeText) {
-		this.failureOutcomeText = failureOutcomeText;
-	}
+  public String getFailureOutcomeText() {
+    return failureOutcomeText;
+  }
 
-	public Integer getStudyVersion() {
-		return studyVersion;
-	}
+  public void setFailureOutcomeText(String failureOutcomeText) {
+    this.failureOutcomeText = failureOutcomeText;
+  }
 
-	public void setStudyVersion(Integer studyVersion) {
-		this.studyVersion = studyVersion;
-	}
+  public Integer getStudyVersion() {
+    return studyVersion;
+  }
 
+  public void setStudyVersion(Integer studyVersion) {
+    this.studyVersion = studyVersion;
+  }
 }
