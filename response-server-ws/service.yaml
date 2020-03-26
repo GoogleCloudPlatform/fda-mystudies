@@ -1,0 +1,14 @@
+# LoadBalancer service for Response server.
+# See https://cloud.google.com/kubernetes-engine/docs/how-to/exposing-apps#creating_a_service_of_type_loadbalancer
+apiVersion: v1
+kind: Service
+metadata:
+  name: response-server-lb
+spec:
+  type: LoadBalancer
+  selector:
+    app: response-server
+  ports:
+  - protocol: TCP
+    port: 60000
+    targetPort: 8080
