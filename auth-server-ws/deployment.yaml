@@ -1,0 +1,46 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: auth-server-ws
+  labels:
+    app: auth-server-ws
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: auth-server
+  template:
+    metadata:
+      labels:
+        app: auth-server
+    spec:
+      containers:
+        - name: auth-server-ws
+          image: gcr.io/heroes-hat-dev/auth-server-ws:latest
+          env:
+            - name: DB_USER
+              valueFrom:
+                secretKeyRef:
+                  name: auth-server-db-credentials
+                  key: username
+            - name: DB_PASS
+              valueFrom:
+                secretKeyRef:
+                  name: auth-server-db-credentials
+                  key: password
+            - name: DB_NAME
+              valueFrom:
+                secretKeyRef:
+                  name: auth-server-db-credentials
+                  key: dbname
+        - name: cloudsql-proxy
+          image: gcr.io/cloudsql-docker/gce-proxy:latest
+          command: ['/cloud_sql_proxy', '-instances=heroes-hat-dev:us-west1:my-studies=tcp:3306', '-credential_file=/secrets/cloudsql/sql_credentials.json']
+          volumeMounts:
+            - name: my-secrets-volume
+              mountPath: /secrets/cloudsql
+              readOnly: true
+      volumes:
+        - name: my-secrets-volume
+          secret:
+            secretName: auth-server-instance-credentials
