@@ -10,5 +10,5 @@ spec:
     app: response-server
   ports:
   - protocol: TCP
-    port: 60000
+    port: 50000
     targetPort: 8080
