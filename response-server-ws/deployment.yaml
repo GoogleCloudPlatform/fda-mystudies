@@ -16,7 +16,7 @@ spec:
     spec: 
       containers: 
         - name: response-server-ws 
-          image: gcr.io/heroes-hat-dev/response-server-ws:yc-test
+          image: gcr.io/heroes-hat-dev/response-server-ws:latest
           env: 
             - name: DB_USER 
               valueFrom: 
