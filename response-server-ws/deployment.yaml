@@ -33,6 +33,8 @@ spec:
                 secretKeyRef: 
                   name: cloudsql-db-credentials 
                   key: dbname 
+            - name: FIRESTORE_PROJECT_ID
+              value: "heroes-hat-dev"
           ports:
           - containerPort: 8080
         - name: cloudsql-proxy 
