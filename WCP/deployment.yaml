@@ -16,7 +16,7 @@ spec:
     spec: 
       containers: 
         - name: study-designer 
-          image: gcr.io/heroes-hat-dev/study-designer:yc-test
+          image: gcr.io/heroes-hat-dev/study-designer:latest
           env: 
             - name: DB_USER 
               valueFrom: 
