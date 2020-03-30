@@ -1,3 +1,4 @@
+# TODO: Rename this from study-meta-data to study-server.
 apiVersion: apps/v1 
 kind: Deployment 
 metadata: 
