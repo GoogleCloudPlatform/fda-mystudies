@@ -31,7 +31,7 @@ CREATE TABLE IF NOT EXISTS `activity_log` (
 
 -- Dumping structure for table mystudies_response_server.hibernate_sequence
 CREATE TABLE IF NOT EXISTS `hibernate_sequence` (
-  `next_val` bigint(20) DEFAULT NULL
+  `next_val` bigint(20) DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
 -- Data exporting was unselected.
