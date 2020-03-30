@@ -8,6 +8,7 @@
 	<name>StudyMetaData</name>
 	<description>HPHCI My Studies Web Services</description>
 	<url>http://maven.apache.org</url>
+  <!--
 	<repositories>
 		<repository>
 			<id>maven2-repository.java.net</id>
@@ -30,6 +31,7 @@
 			</releases>
 		</pluginRepository>
 	</pluginRepositories>
+  -->
 
 	<dependencies>
 		<dependency>
