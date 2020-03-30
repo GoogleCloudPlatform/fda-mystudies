@@ -138,7 +138,6 @@ public class UserProfileController {
               "ACCOUNT DELETE(Deactivation of an user)",
               "Account deactivated for user " + userId + ".");
           responseBean.setMessage(MyStudiesUserRegUtil.ErrorCodes.SUCCESS.getValue().toLowerCase());
-
         } else {
           MyStudiesUserRegUtil.getFailureResponse(
               MyStudiesUserRegUtil.ErrorCodes.STATUS_104.getValue(),

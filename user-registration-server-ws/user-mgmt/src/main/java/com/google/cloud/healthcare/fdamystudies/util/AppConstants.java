@@ -44,6 +44,15 @@ public class AppConstants {
   public static final String ACCESS_CONTROL_ALLOW_CREDENTIALS = "Access-Control-Allow-Credentials";
   public static final String ACCESS_CONTROL_ALLOW_METHODS = "Access-Control-Allow-Methods";
   public static final String HTTP_METHODS = "GET, POST, PUT, DELETE, OPTIONS, HEAD";
+  public static final String OPTIONS_METHOD = "OPTIONS";
+
+  public static final String TRUE_STR = "true";
+  public static final String ERROR_STR = "Error";
+
+  public static final String CODE = "code";
+  public static final String USER_MESSAGE = "userMessage";
+  public static final String TYPE = "type";
+  public static final String DETAIL_MESSAGE = "detailMessage";
 
   public static final String STATUS = "status";
   public static final String STATUS_MESSAGE = "StatusMessage";
@@ -53,4 +62,10 @@ public class AppConstants {
 
   public static final String OPEN_STUDY = "OPEN";
   public static final String CLOSE_STUDY = "CLOSE";
+
+  public static final String DEVICE_ANDROID = "android";
+  public static final String DEVICE_IOS = "ios";
+
+  public static final String STUDY = "Study";
+  public static final String GATEWAY = "Gateway";
 }

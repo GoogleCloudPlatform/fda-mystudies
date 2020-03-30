@@ -8,7 +8,13 @@
 
 package com.google.cloud.healthcare.fdamystudies.dao;
 
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import org.json.JSONArray;
 import com.google.cloud.healthcare.fdamystudies.beans.AppOrgInfoBean;
+import com.google.cloud.healthcare.fdamystudies.model.AppInfoDetailsBO;
+import com.google.cloud.healthcare.fdamystudies.model.StudyInfoBO;
 
 public interface CommonDao {
 
@@ -17,4 +23,13 @@ public interface CommonDao {
   public AppOrgInfoBean getUserAppDetailsByAllApi(String userId, String appId, String orgId);
 
   public Integer getUserInfoDetails(String userId);
+
+  public List<AppInfoDetailsBO> getAppInfoIds(HashSet<String> appIds);
+
+  public List<StudyInfoBO> getStudyInfoIds(HashSet<String> studySetSet);
+
+  public Map<Integer, Map<String, JSONArray>> getStudyLevelDeviceToken(
+      List<Integer> studyInfoIds, List<Integer> appInfoIds);
+
+  public String getParticicpantId(Integer id, String customeStudyId);
 }

@@ -21,6 +21,8 @@ import com.google.cloud.healthcare.fdamystudies.beans.DeactivateAcctBean;
 import com.google.cloud.healthcare.fdamystudies.beans.ErrorBean;
 import com.google.cloud.healthcare.fdamystudies.beans.UserProfileRespBean;
 import com.google.cloud.healthcare.fdamystudies.beans.UserRequestBean;
+import com.google.cloud.healthcare.fdamystudies.beans.WithdrawFromStudyBean;
+import com.google.cloud.healthcare.fdamystudies.beans.WithdrawFromStudyRespFromServer;
 import com.google.cloud.healthcare.fdamystudies.config.ApplicationPropertyConfiguration;
 import com.google.cloud.healthcare.fdamystudies.dao.CommonDao;
 import com.google.cloud.healthcare.fdamystudies.dao.UserProfileManagementDao;
@@ -263,15 +265,39 @@ public class UserManagementProfileServiceImpl implements UserManagementProfileSe
     String message = MyStudiesUserRegUtil.ErrorCodes.FAILURE.getValue();
     Integer userDetailsId = 0;
     boolean returnVal = false;
-
+    WithdrawFromStudyBean studyBean = null;
+    WithdrawFromStudyRespFromServer resp = null;
+    String participantId = "";
+    String retVal = MyStudiesUserRegUtil.ErrorCodes.FAILURE.getValue();
+    ;
     try {
       userDetailsId = commonDao.getUserInfoDetails(userId);
-      returnVal =
-          userProfileManagementDao.deActivateAcct(userId, deactivateAcctBean, userDetailsId);
-      if (returnVal) {
-        message = userManagementUtil.deactivateAcct(userId, accessToken, clientToken);
+      message = userManagementUtil.deactivateAcct(userId, accessToken, clientToken);
+      if (message.equalsIgnoreCase(MyStudiesUserRegUtil.ErrorCodes.SUCCESS.getValue())) {
+        for (String customeStudyId : deactivateAcctBean.getDeleteData()) {
+          studyBean = new WithdrawFromStudyBean();
+          participantId = commonDao.getParticicpantId(userDetailsId, customeStudyId);
+          studyBean.setStudyId(customeStudyId);
+          if (participantId != null && !participantId.isEmpty())
+            studyBean.setParticipantId(participantId);
+          studyBean.setDelete(true);
+          retVal =
+              userManagementUtil.withDrawParticipantFromStudy(
+                  studyBean.getParticipantId(), studyBean.getStudyId(), studyBean.isDelete());
+        }
+        if (retVal != null
+            && retVal.equalsIgnoreCase(MyStudiesUserRegUtil.ErrorCodes.SUCCESS.getValue())) {
+          returnVal =
+              userProfileManagementDao.deActivateAcct(userId, deactivateAcctBean, userDetailsId);
+          if (returnVal) {
+            message = MyStudiesUserRegUtil.ErrorCodes.SUCCESS.getValue();
+          } else {
+            message = MyStudiesUserRegUtil.ErrorCodes.FAILURE.getValue();
+          }
+        }
       }
     } catch (Exception e) {
+      message = MyStudiesUserRegUtil.ErrorCodes.FAILURE.getValue();
       logger.error("UserManagementProfileServiceImpl - deActivateAcct() - error() ", e);
     }
     logger.info("UserManagementProfileServiceImpl - deActivateAcct() - Ends");
