@@ -1,7 +1,7 @@
 on:
   pull_request:
     branches: [ early-access ]
-name: Build-response-server-ws
+name: Build-auth-server-ws
 jobs:
   build:
     runs-on: ubuntu-latest
