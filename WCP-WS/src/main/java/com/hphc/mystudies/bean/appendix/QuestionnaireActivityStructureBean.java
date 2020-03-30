@@ -27,7 +27,6 @@ import java.util.List;
 import com.hphc.mystudies.bean.ActivityMetadataBean;
 import com.hphc.mystudies.bean.QuestionnaireActivityStepsBean;
 
-
 public class QuestionnaireActivityStructureBean {
 
   private String type = "";

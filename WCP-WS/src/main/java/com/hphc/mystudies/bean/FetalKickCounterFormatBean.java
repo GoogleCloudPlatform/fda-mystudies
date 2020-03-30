@@ -24,7 +24,6 @@ package com.hphc.mystudies.bean;
 
 import com.hphc.mystudies.util.StudyMetaDataConstants;
 
-
 public class FetalKickCounterFormatBean {
 
   private Integer duration = Integer.parseInt(StudyMetaDataConstants.FETAL_MAX_DURATION);

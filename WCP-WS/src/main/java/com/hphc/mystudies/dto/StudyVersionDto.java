@@ -32,7 +32,6 @@ import javax.persistence.Table;
 import org.hibernate.annotations.NamedQueries;
 import org.hibernate.annotations.NamedQuery;
 
-
 @Entity
 @Table(name = "study_version")
 @NamedQueries({
@@ -59,7 +58,6 @@ import org.hibernate.annotations.NamedQuery;
 })
 public class StudyVersionDto implements Serializable {
 
- 
   private static final long serialVersionUID = 4330801191289201775L;
 
   @Id

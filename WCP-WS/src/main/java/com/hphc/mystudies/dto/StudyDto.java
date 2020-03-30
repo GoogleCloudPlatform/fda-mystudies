@@ -33,7 +33,6 @@ import org.hibernate.annotations.NamedQueries;
 import org.hibernate.annotations.NamedQuery;
 import org.hibernate.annotations.Type;
 
-
 @Entity
 @Table(name = "studies")
 @NamedQueries({
@@ -58,7 +57,6 @@ import org.hibernate.annotations.Type;
 })
 public class StudyDto implements Serializable {
 
-  
   private static final long serialVersionUID = -5843091568457462789L;
 
   @Id

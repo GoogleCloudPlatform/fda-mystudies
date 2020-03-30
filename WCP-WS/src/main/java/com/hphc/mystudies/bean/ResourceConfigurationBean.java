@@ -22,7 +22,6 @@
  */
 package com.hphc.mystudies.bean;
 
-
 public class ResourceConfigurationBean {
 
   private String availableDate = "";

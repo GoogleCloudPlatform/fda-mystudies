@@ -32,14 +32,12 @@ import javax.persistence.Table;
 import org.hibernate.annotations.NamedQueries;
 import org.hibernate.annotations.NamedQuery;
 
-
 @Entity
 @Table(name = "gateway_info")
 @NamedQueries({
   @NamedQuery(name = "getGatewayInfo", query = " from GatewayInfoDto GWID "),
 })
 public class GatewayInfoDto implements Serializable {
-
 
   private static final long serialVersionUID = 1150671454003333803L;
 
