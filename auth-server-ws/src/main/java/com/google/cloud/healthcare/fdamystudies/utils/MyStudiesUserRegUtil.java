@@ -54,7 +54,7 @@ public class MyStudiesUserRegUtil {
     INVALID_CLIENT_TOKEN("Invalid client token"),
     SYSTEM_ERROR_FOUND("System error found"),
     SESSION_EXPIRED_MSG("Session expired."),
-    INVALID_EMAIL_PASSWORD_MSG("Invalid emailId or password"),
+    INVALID_EMAIL_PASSWORD_MSG("Invalid credentials"),
     EMAIL_EXISTS("This email has already been used. Please try with different email address."),
     INVALID_INPUT_ERROR_MSG("Invalid input."),
     SUCCESS("SUCCESS"),
@@ -73,7 +73,7 @@ public class MyStudiesUserRegUtil {
     EMAIL_NOT_VERIFIED(
         "Your account is not verified. Please verify your account by clicking on verification link which has been sent to your registered email. If not received, would you like to resend verification link?"),
 
-    INVALID_USERNAME_PASSWORD_MSG("Invalid username or password"),
+    INVALID_USERNAME_PASSWORD_MSG("Invalid credentials"),
 
     PASSWORD_EXPIRED("Password has expired"),
 

@@ -264,7 +264,8 @@ public class AuthenticationController {
       if (AppConstants.MA.equals(appCode)
           || AppConstants.USWS.equals(appCode)
           || AppConstants.URS.equals(appCode)
-          || AppConstants.RS.equals(appCode)) {
+          || AppConstants.RS.equals(appCode)
+          || AppConstants.WCP.equals(appCode)) {
 
         responseEntity = new ValidateClientCredentialsResponse();
         responseEntity.setCode(MyStudiesUserRegUtil.ErrorCodes.STATUS_200.getValue());
