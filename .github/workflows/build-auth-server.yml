@@ -1,7 +1,7 @@
 on:
   pull_request:
     branches: [ early-access ]
-name: Build user-registration-server-ws-consent
+name: Build-response-server-ws
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -13,5 +13,5 @@ jobs:
         java-version: 1.8
     - name: Build with Maven
       run: |
-          cd user-registration-server-ws/consent-mgmt
+          cd auth-server-ws
           mvn -B package --file pom.xml
