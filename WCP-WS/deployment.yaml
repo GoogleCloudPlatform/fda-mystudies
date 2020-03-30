@@ -33,6 +33,12 @@ spec:
                 secretKeyRef: 
                   name: cloudsql-db-credentials 
                   key: dbname 
+            - name: RESPONSE_SERVER
+              value: "35.196.119.71:60000"
+            - name: USER_REGISTRATION_SERVER
+              value: "35.196.79.108:60000"
+            - name: STUDY_DESIGNER
+              value: "34.74.173.54:50000"
           ports:
           - containerPort: 8080
         - name: cloudsql-proxy 
