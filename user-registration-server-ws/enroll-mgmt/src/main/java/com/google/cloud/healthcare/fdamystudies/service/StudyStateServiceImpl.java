@@ -25,8 +25,10 @@ import com.google.cloud.healthcare.fdamystudies.dao.CommonDao;
 import com.google.cloud.healthcare.fdamystudies.dao.ParticipantStudiesInfoDao;
 import com.google.cloud.healthcare.fdamystudies.dao.StudyStateDao;
 import com.google.cloud.healthcare.fdamystudies.dao.UserRegAdminUserDao;
+import com.google.cloud.healthcare.fdamystudies.exception.InvalidRequestException;
 import com.google.cloud.healthcare.fdamystudies.exception.InvalidUserIdException;
 import com.google.cloud.healthcare.fdamystudies.exception.SystemException;
+import com.google.cloud.healthcare.fdamystudies.exception.UnAuthorizedRequestException;
 import com.google.cloud.healthcare.fdamystudies.model.ParticipantStudiesBO;
 import com.google.cloud.healthcare.fdamystudies.model.StudyInfoBO;
 import com.google.cloud.healthcare.fdamystudies.model.UserDetailsBO;
@@ -238,7 +240,8 @@ public class StudyStateServiceImpl implements StudyStateService {
 
   @Override
   public WithDrawFromStudyRespBean withdrawFromStudy(
-      String participantId, String studyId, boolean delete) {
+      String participantId, String studyId, boolean delete)
+      throws UnAuthorizedRequestException, InvalidRequestException, SystemException {
     logger.info("StudyStateServiceImpl withdrawFromStudy() - Starts ");
     WithDrawFromStudyRespBean respBean = null;
     String message = MyStudiesUserRegUtil.ErrorCodes.FAILURE.getValue();
@@ -250,8 +253,12 @@ public class StudyStateServiceImpl implements StudyStateService {
         respBean.setCode(HttpStatus.OK.value());
         respBean.setMessage(MyStudiesUserRegUtil.ErrorCodes.SUCCESS.getValue().toLowerCase());
       }
+    } catch (UnAuthorizedRequestException | InvalidRequestException e) {
+      logger.error("StudyStateServiceImpl withdrawFromStudy() - error ", e);
+      throw e;
     } catch (Exception e) {
       logger.error("StudyStateServiceImpl withdrawFromStudy() - error ", e);
+      throw new SystemException();
     }
     logger.info("StudyStateServiceImpl withdrawFromStudy() - Ends ");
     return respBean;
