@@ -5,7 +5,7 @@ metadata:
   labels:
     app: user-registration-server-ws
 spec:
-  replicas: 3
+  replicas: 1
   selector:
     matchLabels:
       app: user-registration-server
