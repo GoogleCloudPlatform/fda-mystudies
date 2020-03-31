@@ -1,0 +1,48 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: user-registration-server-ws
+  labels:
+    app: user-registration-server-ws
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: user-registration-server
+  template:
+    metadata:
+      labels:
+        app: user-registration-server
+    spec:
+      containers:
+        - name: user-registration-ws
+          image: gcr.io/heroes-hat-dev/user-registration-server-ws:latest
+          env:
+            - name: DB_USER
+              valueFrom:
+                secretKeyRef:
+                  name: cloudsql-db-credentials
+                  key: username
+            - name: DB_PASS
+              valueFrom:
+                secretKeyRef:
+                  name: cloudsql-db-credentials
+                  key: password
+            - name: DB_NAME
+              valueFrom:
+                secretKeyRef:
+                  name: cloudsql-db-credentials
+                  key: dbname
+        - name: cloudsql-proxy
+          image: gcr.io/cloudsql-docker/gce-proxy:latest
+          command: ["/cloud_sql_proxy",
+            "-instances=heroes-hat-dev:us-east1:my-studies2=tcp:3306",
+            "-credential_file=/secrets/cloudsql/sql_credentials.json"]
+          volumeMounts:
+            - name: my-secrets-volume
+              mountPath: /secrets/cloudsql
+              readOnly: true
+      volumes:
+        - name: my-secrets-volume
+          secret:
+            secretName: cloudsql-instance-credentials
