@@ -33,6 +33,10 @@ spec:
                 secretKeyRef:
                   name: cloudsql-db-credentials
                   key: dbname
+            - name: AUTH_SERVER_URL
+              value: "35.243.237.139:50000"
+            - name: RESPONSE_SERVER_URL
+              value: "35.196.119.71:60000"
         - name: cloudsql-proxy
           image: gcr.io/cloudsql-docker/gce-proxy:latest
           command: ["/cloud_sql_proxy",
