@@ -5,5 +5,6 @@ WORKDIR /app/
 RUN mvn package
 
 FROM tomcat:9.0.33-jdk11-openjdk
-COPY --from=maven_builder /app/target/StudyMetaData-0.0.1-SNAPSHOT.war /usr/local/tomcat/webapps/
+# Note that the filename at dest is different from src.
+COPY --from=maven_builder /app/target/StudyMetaData-0.0.1-SNAPSHOT.war /usr/local/tomcat/webapps/StudyMetaData.war
 CMD ["catalina.sh","run"]
