@@ -34,6 +34,11 @@ CREATE TABLE IF NOT EXISTS `hibernate_sequence` (
   `next_val` bigint(20) DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
+-- Insert 0 into hibernate_sequence if the table is empty.
+INSERT INTO mystudies_response_server.hibernate_sequence (next_val)
+SELECT 0
+WHERE NOT EXISTS (SELECT * FROM mystudies_response_server.hibernate_sequence);
+
 -- Data exporting was unselected.
 
 -- Dumping structure for table mystudies_response_server.participant_activities
