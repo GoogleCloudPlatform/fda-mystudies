@@ -1,20 +1,26 @@
-# FDA MyStudies Mobile Application System
-This repository contains all the necessary code and documentation for running the FDA MyStudies mobile applications (iOS and Android), Study builder, and Participant and Response datastores. 
+# FDA MyStudies
+This repository contains all the necessary code and documentation for  building and deploying FDA MyStudies. 
 
-### Mobile Apps can be found in:
+This release of FDA MyStudies contains
+- mobile applications for study participants (iOS and Android)
+- study builder for researchers and study designers
+- participant and response datastores for managing study data
+
+
+### Mobile Applications can be found in:
 <ul>
   <li>`/Android`
   <li>`/iOS`
 </ul>
 
-### Study Builder server and web client can be found in:
+### The Study Builder server and web client can be found in:
 <ul>
-  <li>`/WCP-WS`
-  <li>`/Resources-WCP`
-  <li>`/WCP`
+  <li>Study builder server: `/WCP-WS`
+  <li>Study builder resources: `/Resources-WCP`
+  <li>Study builder application: `/WCP`
 </ul>
 
-### Participant and Response datastores can be found in:
+### Participant and response datastores can be found in:
 <ul>
 <li>Participant Datastore: `/user-registration-server-ws`
   <ul>

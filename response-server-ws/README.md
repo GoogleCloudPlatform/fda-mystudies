@@ -1,2 +1,2 @@
 # FDA MyStudies Response Datastore
-Response datastore is the back-end components that stores and manage participant response data.
+Response datastore is the back-end component that stores and manage participant response data.
