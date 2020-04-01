@@ -44,6 +44,11 @@ CREATE TABLE IF NOT EXISTS `hibernate_sequence` (
   `next_val` bigint(20) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
+-- Insert 0 into hibernate_sequence if the table is empty.
+INSERT INTO auth_server.hibernate_sequence (next_val)
+SELECT 0
+WHERE NOT EXISTS (SELECT * FROM auth_server.hibernate_sequence);
+
 -- Data exporting was unselected.
 
 -- Dumping structure for table auth_server.login_attempts

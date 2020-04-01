@@ -108,8 +108,13 @@ CREATE TABLE IF NOT EXISTS `client_info` (
 
 -- Dumping structure for table mystudies_userregistration.hibernate_sequence
 CREATE TABLE IF NOT EXISTS `hibernate_sequence` (
-  `next_val` bigint(20) DEFAULT NULL
+  `next_val` bigint(20) DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- Insert 0 into hibernate_sequence if the table is empty.
+INSERT INTO mystudies_userregistration.hibernate_sequence (next_val)
+SELECT 0
+WHERE NOT EXISTS (SELECT * FROM mystudies_userregistration.hibernate_sequence);
 
 -- Data exporting was unselected.
 
