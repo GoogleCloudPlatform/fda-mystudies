@@ -37,6 +37,7 @@ import com.google.cloud.healthcare.fdamystudies.dao.StudiesDao;
 import com.google.cloud.healthcare.fdamystudies.model.AppInfoDetailsBO;
 import com.google.cloud.healthcare.fdamystudies.model.StudyInfoBO;
 import com.google.cloud.healthcare.fdamystudies.util.AppConstants;
+import com.google.cloud.healthcare.fdamystudies.util.EnrollmentManagementUtil;
 import com.google.cloud.healthcare.fdamystudies.util.ErrorCode;
 import com.notnoop.apns.APNS;
 import com.notnoop.apns.ApnsService;
@@ -68,157 +69,123 @@ public class StudiesServicesImpl implements StudiesServices {
     return errorBean;
   }
 
-  @SuppressWarnings("unlikely-arg-type")
   @Override
   public ErrorBean SendNotificationAction(NotificationForm notificationForm) {
     HashSet<String> studySet = new HashSet<>();
     HashSet<String> appSet = new HashSet<>();
     Map<Integer, Map<String, JSONArray>> studiesMap = null;
-    ErrorBean errorBean = null;
-    List<Integer> studyInfoIds = new ArrayList<Integer>();
     Map<Object, StudyInfoBO> studyInfobyStudyCustomId = new HashMap<>();
     Map<String, JSONArray> allDeviceTokens = new HashMap<>();
-    List<Integer> appInfoIds = new ArrayList<>();
     Map<Object, AppInfoDetailsBO> appInfobyAppCustomId = new HashMap<>();
-    logger.info("StudiesServicesImpl - SendNotificationAction() : starts");
+    logger.info("StudiesServicesImpl - SendNotificationAction() - starts");
     try {
 
       for (NotificationBean notificationBean : notificationForm.getNotifications()) {
         if (notificationBean.getNotificationType().equalsIgnoreCase(AppConstants.STUDY_LEVEL)) {
           studySet.add(notificationBean.getCustomStudyId());
-          appSet.add(notificationBean.getAppId());
-        } else {
-          appSet.add(notificationBean.getAppId());
         }
+        appSet.add(notificationBean.getAppId());
       }
-      if (appSet != null && !appSet.isEmpty()) {
-        List<AppInfoDetailsBO> appInfos = commonDao.getAppInfoIds(appSet);
-        if (appInfos != null && !appInfos.isEmpty()) {
-          appInfoIds =
-              appInfos.stream().map(a -> a.getAppInfoId()).distinct().collect(Collectors.toList());
 
+      if (appSet == null && appSet.isEmpty()) {
+        return new ErrorBean(ErrorCode.EC_400.code(), ErrorCode.EC_400.errorMessage());
+      } else {
+        List<AppInfoDetailsBO> appInfos = commonDao.getAppInfoSet(appSet);
+        if (appInfos != null && !appInfos.isEmpty()) {
+          allDeviceTokens = authInfoBODao.getDeviceTokenOfAllUsers(appInfos);
           appInfobyAppCustomId =
               appInfos
                   .stream()
                   .collect(Collectors.toMap(AppInfoDetailsBO::getAppId, Function.identity()));
-
-          if (appInfoIds != null && !appInfoIds.isEmpty()) {
-            allDeviceTokens = authInfoBODao.getDeviceTokenOfAllUsers(appInfoIds);
-          }
         }
-        if (studySet != null
-            && !studySet.isEmpty()
-            && appInfoIds != null
-            && !appInfoIds.isEmpty()) {
 
-          List<StudyInfoBO> studyInfos = commonDao.getStudyInfoIds(studySet);
+        if (studySet != null && !studySet.isEmpty()) {
+          List<StudyInfoBO> studyInfos = commonDao.getStudyInfoSet(studySet);
           if (studyInfos != null && !studyInfos.isEmpty()) {
-            studyInfoIds =
-                studyInfos.stream().map(a -> a.getId()).distinct().collect(Collectors.toList());
-
+            studiesMap = commonDao.getStudyLevelDeviceToken(studyInfos);
             studyInfobyStudyCustomId =
                 studyInfos
                     .stream()
                     .collect(Collectors.toMap(StudyInfoBO::getCustomId, Function.identity()));
-
-            if (studyInfoIds != null && !studyInfoIds.isEmpty()) {
-              studiesMap = commonDao.getStudyLevelDeviceToken(studyInfoIds, appInfoIds);
-            }
           }
         }
         if ((allDeviceTokens != null && !allDeviceTokens.isEmpty())
             || (studiesMap != null && !studiesMap.isEmpty())) {
           for (NotificationBean notificationBean : notificationForm.getNotifications()) {
-            if (notificationBean
-                .getNotificationType()
-                .equalsIgnoreCase(AppConstants.GATEWAY_LEVEL)) {
+            if (notificationBean.getNotificationType().equalsIgnoreCase(AppConstants.GATEWAY_LEVEL)
+                && appInfobyAppCustomId != null) {
 
-              notificationBean.setNotificationType(AppConstants.GATEWAY);
-              if (allDeviceTokens.get(AppConstants.DEVICE_ANDROID) != null
-                  && allDeviceTokens.get(AppConstants.DEVICE_ANDROID).length() != 0) {
-
-                notificationBean.setDeviceToken(allDeviceTokens.get(AppConstants.DEVICE_ANDROID));
-                if (notificationBean.getDeviceToken() != null
-                    && notificationBean.getDeviceToken().length() > 0
-                    && appInfobyAppCustomId != null
-                    && appInfobyAppCustomId.get(notificationBean.getAppId()) != null) {
-                  pushFCMNotification(
-                      notificationBean, appInfobyAppCustomId.get(notificationBean.getAppId()));
-                }
-              }
-              if (allDeviceTokens.get(AppConstants.DEVICE_IOS) != null) {
-
-                notificationBean.setDeviceToken(allDeviceTokens.get(AppConstants.DEVICE_IOS));
-                if (notificationBean.getDeviceToken() != null
-                    && notificationBean.getDeviceToken().length() > 0
-                    && appInfobyAppCustomId != null
-                    && appInfobyAppCustomId.get(notificationBean.getAppId()) != null) {
-                  pushNotification(
-                      notificationBean, appInfobyAppCustomId.get(notificationBean.getAppId()));
-                }
-              }
+              sendGatewaylevelNotification(allDeviceTokens, appInfobyAppCustomId, notificationBean);
             } else if (notificationBean
                     .getNotificationType()
                     .equalsIgnoreCase(AppConstants.STUDY_LEVEL)
                 && studyInfobyStudyCustomId != null
                 && studyInfobyStudyCustomId.get(notificationBean.getCustomStudyId()) != null
                 && studiesMap != null) {
-              Map<String, JSONArray> deviceTokensMap =
-                  studiesMap.get(
-                      studyInfobyStudyCustomId.get(notificationBean.getCustomStudyId()).getId());
 
-              notificationBean.setNotificationType(AppConstants.STUDY);
-              if (deviceTokensMap != null) {
-                if (deviceTokensMap.get(AppConstants.DEVICE_ANDROID) != null) {
-
-                  notificationBean.setDeviceToken(deviceTokensMap.get(AppConstants.DEVICE_ANDROID));
-                  if (notificationBean.getDeviceToken() != null
-                      && notificationBean.getDeviceToken().length() > 0
-                      && appInfobyAppCustomId != null
-                      && appInfobyAppCustomId.get(notificationBean.getAppId()) != null) {
-                    pushFCMNotification(
-                        notificationBean, appInfobyAppCustomId.get(notificationBean.getAppId()));
-                  }
-                }
-                if (deviceTokensMap.get(AppConstants.DEVICE_IOS) != null) {
-
-                  notificationBean.setDeviceToken(deviceTokensMap.get(AppConstants.DEVICE_IOS));
-                  if (notificationBean.getDeviceToken() != null
-                      && notificationBean.getDeviceToken().length() > 0
-                      && appInfobyAppCustomId != null
-                      && appInfobyAppCustomId.get(notificationBean.getAppId()) != null) {
-                    pushNotification(
-                        notificationBean, appInfobyAppCustomId.get(notificationBean.getAppId()));
-                  }
-                }
-              }
+              sendStudyLevelNotification(
+                  studiesMap, studyInfobyStudyCustomId, appInfobyAppCustomId, notificationBean);
             }
           }
+        } else {
+          return new ErrorBean(ErrorCode.EC_400.code(), ErrorCode.EC_400.errorMessage());
         }
-      } else {
-        errorBean = new ErrorBean(ErrorCode.EC_400.code(), ErrorCode.EC_400.errorMessage());
-        return errorBean;
       }
-      errorBean = new ErrorBean(ErrorCode.EC_200.code(), ErrorCode.EC_200.errorMessage());
     } catch (Exception e) {
-      logger.info("StudiesServicesImpl - SendNotificationAction() : error", e);
-      errorBean = new ErrorBean(ErrorCode.EC_500.code(), ErrorCode.EC_500.errorMessage());
+      logger.error("StudiesServicesImpl - SendNotificationAction() : error", e);
+      return new ErrorBean(ErrorCode.EC_500.code(), ErrorCode.EC_500.errorMessage());
     }
     logger.info("StudiesServicesImpl - SendNotificationAction() : ends");
-    return errorBean;
+    return new ErrorBean(ErrorCode.EC_200.code(), ErrorCode.EC_200.errorMessage());
   }
-  /**
-   * Andriod push notification
-   *
-   * @param notification
-   */
+
+  private void sendStudyLevelNotification(
+      Map<Integer, Map<String, JSONArray>> studiesMap,
+      Map<Object, StudyInfoBO> studyInfobyStudyCustomId,
+      Map<Object, AppInfoDetailsBO> appInfobyAppCustomId,
+      NotificationBean notificationBean) {
+    Map<String, JSONArray> deviceTokensMap =
+        studiesMap.get(studyInfobyStudyCustomId.get(notificationBean.getCustomStudyId()).getId());
+
+    notificationBean.setNotificationType(AppConstants.STUDY);
+    if (deviceTokensMap != null) {
+      if (deviceTokensMap.get(AppConstants.DEVICE_ANDROID) != null) {
+        notificationBean.setDeviceToken(deviceTokensMap.get(AppConstants.DEVICE_ANDROID));
+        pushFCMNotification(
+            notificationBean, appInfobyAppCustomId.get(notificationBean.getAppId()));
+      }
+      if (deviceTokensMap.get(AppConstants.DEVICE_IOS) != null) {
+        notificationBean.setDeviceToken(deviceTokensMap.get(AppConstants.DEVICE_IOS));
+        pushNotification(notificationBean, appInfobyAppCustomId.get(notificationBean.getAppId()));
+      }
+    }
+  }
+
+  private void sendGatewaylevelNotification(
+      Map<String, JSONArray> allDeviceTokens,
+      Map<Object, AppInfoDetailsBO> appInfobyAppCustomId,
+      NotificationBean notificationBean) {
+    notificationBean.setNotificationType(AppConstants.GATEWAY);
+    if (allDeviceTokens.get(AppConstants.DEVICE_ANDROID) != null
+        && allDeviceTokens.get(AppConstants.DEVICE_ANDROID).length() != 0) {
+      notificationBean.setDeviceToken(allDeviceTokens.get(AppConstants.DEVICE_ANDROID));
+      pushFCMNotification(notificationBean, appInfobyAppCustomId.get(notificationBean.getAppId()));
+    }
+    if (allDeviceTokens.get(AppConstants.DEVICE_IOS) != null) {
+      notificationBean.setDeviceToken(allDeviceTokens.get(AppConstants.DEVICE_IOS));
+      pushNotification(notificationBean, appInfobyAppCustomId.get(notificationBean.getAppId()));
+    }
+  }
+
   public void pushFCMNotification(
       NotificationBean notification, AppInfoDetailsBO appPropertiesDetails) {
     String authKey = "";
     logger.info("StudiesServicesImpl - pushFCMNotification() : starts");
     try {
+      if (notification.getDeviceToken() != null
+          && notification.getDeviceToken().length() > 0
+          && appPropertiesDetails != null) {
 
-      if (appPropertiesDetails != null) {
         authKey = appPropertiesDetails.getAndroidServerKey(); // You FCM AUTH key
 
         URL url = new URL((String) applicationPropertyConfiguration.getApiUrlFcm());
@@ -253,7 +220,7 @@ public class StudiesServicesImpl implements StudiesServices {
         conn.getInputStream();
       }
     } catch (Exception e) {
-      logger.info("StudiesServicesImpl - pushFCMNotification() : error", e);
+      logger.error("StudiesServicesImpl - pushFCMNotification() : error", e);
     }
     logger.info("StudiesServicesImpl - pushFCMNotification() : ends");
   }
@@ -264,7 +231,9 @@ public class StudiesServicesImpl implements StudiesServices {
     String certificatePassword = "";
     try {
       File file = null;
-      if (appPropertiesDetails != null) {
+      if (notificationBean.getDeviceToken() != null
+          && notificationBean.getDeviceToken().length() > 0
+          && appPropertiesDetails != null) {
         File root = null;
         certificatePassword = appPropertiesDetails.getIosCertificatePassword();
         try {
@@ -274,7 +243,6 @@ public class StudiesServicesImpl implements StudiesServices {
               java.util.Base64.getDecoder()
                   .decode(appPropertiesDetails.getIosCertificate().replaceAll("\n", ""));
           file = File.createTempFile("pushCert_" + appPropertiesDetails.getAppId(), ".p12");
-          System.out.println(file.getAbsolutePath());
           fop = new FileOutputStream(file);
           fop.write(decodedBytes);
           fop.flush();
@@ -290,20 +258,11 @@ public class StudiesServicesImpl implements StudiesServices {
                   .withCert(file.getPath(), certificatePassword)
                   .withProductionDestination()
                   .build();
-          // for Production with production certificate
-          /* service =
-          APNS.newService()
-              .withCert(file.getPath(), certificatePassword)
-              .withSandboxDestination()
-              .build();*/
-          // for Test and UAT with dev certificate
-
           List<String> tokens = new ArrayList<String>();
-          if (notificationBean.getDeviceToken() != null) {
-            for (int i = 0; i < notificationBean.getDeviceToken().length(); i++) {
-              String token = (String) notificationBean.getDeviceToken().get(i);
-              tokens.add(token);
-            }
+
+          for (int i = 0; i < notificationBean.getDeviceToken().length(); i++) {
+            String token = (String) notificationBean.getDeviceToken().get(i);
+            tokens.add(token);
           }
           String customPayload =
               APNS.newPayload()

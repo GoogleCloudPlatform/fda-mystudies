@@ -8,14 +8,17 @@
 
 package com.google.cloud.healthcare.fdamystudies.service;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
+import com.google.cloud.healthcare.fdamystudies.bean.StudyReqBean;
 import com.google.cloud.healthcare.fdamystudies.beans.AppOrgInfoBean;
 import com.google.cloud.healthcare.fdamystudies.beans.DeactivateAcctBean;
 import com.google.cloud.healthcare.fdamystudies.beans.ErrorBean;
@@ -269,26 +272,33 @@ public class UserManagementProfileServiceImpl implements UserManagementProfileSe
     WithdrawFromStudyRespFromServer resp = null;
     String participantId = "";
     String retVal = MyStudiesUserRegUtil.ErrorCodes.FAILURE.getValue();
-    ;
+    List<String> deleteData = new ArrayList<String>();
     try {
       userDetailsId = commonDao.getUserInfoDetails(userId);
       message = userManagementUtil.deactivateAcct(userId, accessToken, clientToken);
       if (message.equalsIgnoreCase(MyStudiesUserRegUtil.ErrorCodes.SUCCESS.getValue())) {
-        for (String customeStudyId : deactivateAcctBean.getDeleteData()) {
-          studyBean = new WithdrawFromStudyBean();
-          participantId = commonDao.getParticicpantId(userDetailsId, customeStudyId);
-          studyBean.setStudyId(customeStudyId);
-          if (participantId != null && !participantId.isEmpty())
-            studyBean.setParticipantId(participantId);
-          studyBean.setDelete(true);
-          retVal =
-              userManagementUtil.withDrawParticipantFromStudy(
-                  studyBean.getParticipantId(), studyBean.getStudyId(), studyBean.isDelete());
+        if (deactivateAcctBean != null
+            && deactivateAcctBean.getDeleteData() != null
+            && !deactivateAcctBean.getDeleteData().isEmpty()) {
+          for (StudyReqBean studyReqBean : deactivateAcctBean.getDeleteData()) {
+            studyBean = new WithdrawFromStudyBean();
+            participantId = commonDao.getParticicpantId(userDetailsId, studyReqBean.getStudyId());
+            studyReqBean.setStudyId(studyReqBean.getStudyId());
+            if (participantId != null && !participantId.isEmpty())
+              studyBean.setParticipantId(participantId);
+            studyBean.setDelete(studyReqBean.getDelete());
+            studyBean.setStudyId(studyReqBean.getStudyId());
+            deleteData.add(studyReqBean.getStudyId());
+            retVal =
+                userManagementUtil.withdrawParticipantFromStudy(
+                    studyBean.getParticipantId(), studyBean.getStudyId(), studyBean.getDelete());
+          }
+        } else {
+          retVal = MyStudiesUserRegUtil.ErrorCodes.SUCCESS.getValue();
         }
         if (retVal != null
             && retVal.equalsIgnoreCase(MyStudiesUserRegUtil.ErrorCodes.SUCCESS.getValue())) {
-          returnVal =
-              userProfileManagementDao.deActivateAcct(userId, deactivateAcctBean, userDetailsId);
+          returnVal = userProfileManagementDao.deActivateAcct(userId, deleteData, userDetailsId);
           if (returnVal) {
             message = MyStudiesUserRegUtil.ErrorCodes.SUCCESS.getValue();
           } else {

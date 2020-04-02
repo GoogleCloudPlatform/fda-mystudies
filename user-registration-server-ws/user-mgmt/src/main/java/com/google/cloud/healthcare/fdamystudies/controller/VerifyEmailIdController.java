@@ -153,7 +153,7 @@ public class VerifyEmailIdController {
       verifyEmailIdResponse = new VerifyEmailIdResponse();
       verifyEmailIdResponse.setCode(HttpStatus.BAD_REQUEST.value());
       verifyEmailIdResponse.setMessage(MyStudiesUserRegUtil.ErrorCodes.INVALID_USER_ID.getValue());
-      logger.info(AppConstants.VERIFY_EMAILID_CONTROLLER_ENDS_MESSAGE + ": ", e);
+      logger.error(AppConstants.VERIFY_EMAILID_CONTROLLER_ENDS_MESSAGE + ": ", e);
       return new ResponseEntity<>(verifyEmailIdResponse, HttpStatus.BAD_REQUEST);
     } catch (InvalidEmailCodeException e) {
       MyStudiesUserRegUtil.getFailureResponse(
@@ -166,7 +166,7 @@ public class VerifyEmailIdController {
       verifyEmailIdResponse.setCode(HttpStatus.BAD_REQUEST.value());
       verifyEmailIdResponse.setMessage(
           MyStudiesUserRegUtil.ErrorCodes.INVALID_EMAIL_CODE.getValue());
-      logger.info(AppConstants.VERIFY_EMAILID_CONTROLLER_ENDS_MESSAGE + ": ", e);
+      logger.error(AppConstants.VERIFY_EMAILID_CONTROLLER_ENDS_MESSAGE + ": ", e);
       return new ResponseEntity<>(verifyEmailIdResponse, HttpStatus.BAD_REQUEST);
     } catch (Exception e) {
       // prepare system failure Response
@@ -181,7 +181,7 @@ public class VerifyEmailIdController {
       verifyEmailIdResponse.setMessage(
           MyStudiesUserRegUtil.ErrorCodes.CONNECTION_ERROR_MSG.getValue());
 
-      logger.info(AppConstants.VERIFY_EMAILID_CONTROLLER_ENDS_MESSAGE + ": ", e);
+      logger.error(AppConstants.VERIFY_EMAILID_CONTROLLER_ENDS_MESSAGE + ": ", e);
       return new ResponseEntity<>(verifyEmailIdResponse, HttpStatus.INTERNAL_SERVER_ERROR);
     }
   }

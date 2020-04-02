@@ -24,12 +24,12 @@ public interface CommonDao {
 
   public Integer getUserInfoDetails(String userId);
 
-  public List<AppInfoDetailsBO> getAppInfoIds(HashSet<String> appIds);
+  public List<AppInfoDetailsBO> getAppInfoSet(HashSet<String> appIds);
 
-  public List<StudyInfoBO> getStudyInfoIds(HashSet<String> studySetSet);
+  public List<StudyInfoBO> getStudyInfoSet(HashSet<String> studySetSet);
 
   public Map<Integer, Map<String, JSONArray>> getStudyLevelDeviceToken(
-      List<Integer> studyInfoIds, List<Integer> appInfoIds);
+      List<StudyInfoBO> studyInfoIds);
 
   public String getParticicpantId(Integer id, String customeStudyId);
 }

@@ -437,12 +437,12 @@ public class UserManagementUtil {
       }
       generatedHash = sb.toString();
     } catch (NoSuchAlgorithmException e) {
-      logger.info("No Such Algorithm Exception: ", e);
+      logger.error("No Such Algorithm Exception: ", e);
     }
     return generatedHash;
   }
 
-  public String withDrawParticipantFromStudy(String participantId, String studyId, boolean delete)
+  public String withdrawParticipantFromStudy(String participantId, String studyId, String delete)
       throws UnAuthorizedRequestException, InvalidRequestException, SystemException {
     logger.info("EnrollmentManagementUtil withDrawParticipantFromStudy() - starts ");
     HttpHeaders headers = null;
@@ -476,12 +476,13 @@ public class UserManagementUtil {
     } catch (RestClientResponseException e) {
       message = MyStudiesUserRegUtil.ErrorCodes.FAILURE.getValue();
       if (e.getRawStatusCode() == 401) {
-        logger.error("Invalid client Id or client secret. Client id is: " + AppConstants.CLIENT_ID);
+        logger.error("Invalid client Id or client secret.");
         throw new UnAuthorizedRequestException();
       } else if (e.getRawStatusCode() == 400) {
         logger.error("Client verification ended with Bad Request");
         throw new InvalidRequestException();
       } else {
+        logger.error("Client verification ended with Internal Server Error");
         throw new SystemException();
       }
     }

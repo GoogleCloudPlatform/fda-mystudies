@@ -44,7 +44,7 @@ public class ParticipantStudiesBO {
   private ParticipantRegistrySite participantRegistrySite;
 
   @ManyToOne
-  @JoinColumn(name = "site_id", insertable = true, updatable = false)
+  @JoinColumn(name = "site_id", insertable = true, updatable = true)
   private SiteBo siteBo;
 
   @ManyToOne

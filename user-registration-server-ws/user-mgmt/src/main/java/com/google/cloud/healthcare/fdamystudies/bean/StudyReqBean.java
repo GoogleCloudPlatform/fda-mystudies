@@ -5,19 +5,15 @@
  * license that can be found in the LICENSE file or at
  * https://opensource.org/licenses/MIT.
  */
-package com.google.cloud.healthcare.fdamystudies.beans;
 
-import java.util.List;
+package com.google.cloud.healthcare.fdamystudies.bean;
+
 import lombok.Getter;
 import lombok.Setter;
 
 @Setter
 @Getter
-public class WithdrawFromStudyBean {
-
-  private String participantId;
+public class StudyReqBean {
   private String studyId;
-  //  private boolean delete;
   private String delete;
-  private List<String> studyIds;
 }

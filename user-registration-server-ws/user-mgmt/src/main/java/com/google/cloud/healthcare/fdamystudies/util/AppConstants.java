@@ -68,4 +68,6 @@ public class AppConstants {
 
   public static final String STUDY = "Study";
   public static final String GATEWAY = "Gateway";
+
+  public static final String WITHDRAWN = "Withdrawn";
 }

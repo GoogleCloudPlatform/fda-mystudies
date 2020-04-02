@@ -12,10 +12,11 @@ import java.util.List;
 import java.util.Map;
 import org.json.JSONArray;
 import com.google.cloud.healthcare.fdamystudies.exceptions.SystemException;
+import com.google.cloud.healthcare.fdamystudies.model.AppInfoDetailsBO;
 import com.google.cloud.healthcare.fdamystudies.model.AuthInfoBO;
 
 public interface AuthInfoBODao {
   AuthInfoBO save(AuthInfoBO authInfo) throws SystemException;
 
-  Map<String, JSONArray> getDeviceTokenOfAllUsers(List<Integer> appIds);
+  Map<String, JSONArray> getDeviceTokenOfAllUsers(List<AppInfoDetailsBO> appInfos);
 }

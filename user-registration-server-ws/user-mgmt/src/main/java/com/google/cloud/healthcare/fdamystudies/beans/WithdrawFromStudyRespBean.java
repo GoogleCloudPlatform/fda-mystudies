@@ -7,17 +7,15 @@
  */
 package com.google.cloud.healthcare.fdamystudies.beans;
 
-import java.util.List;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
 @Setter
 @Getter
-public class WithdrawFromStudyBean {
+@ToString
+public class WithdrawFromStudyRespBean {
 
-  private String participantId;
-  private String studyId;
-  //  private boolean delete;
-  private String delete;
-  private List<String> studyIds;
+  private Integer code = 0;
+  private String message = "";
 }

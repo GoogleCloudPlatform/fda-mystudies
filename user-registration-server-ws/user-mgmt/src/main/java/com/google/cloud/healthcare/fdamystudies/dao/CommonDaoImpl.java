@@ -13,6 +13,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
@@ -212,8 +213,8 @@ public class CommonDaoImpl implements CommonDao {
   }
 
   @Override
-  public List<AppInfoDetailsBO> getAppInfoIds(HashSet<String> appIds) {
-    logger.info("CommonDaoImpl getAppInfoIds() - starts ");
+  public List<AppInfoDetailsBO> getAppInfoSet(HashSet<String> appIds) {
+    logger.info("CommonDaoImpl getAppInfoIds() - start ");
     List<AppInfoDetailsBO> appInfos = new ArrayList();
     try (Session session = entityManagerFactory.unwrap(SessionFactory.class).openSession()) {
       appInfos =
@@ -223,7 +224,7 @@ public class CommonDaoImpl implements CommonDao {
               .getResultList();
 
     } catch (Exception e) {
-      logger.info("CommonDaoImpl getAppInfoIds() - error ", e);
+      logger.error("CommonDaoImpl getAppInfoIds() - error ", e);
     }
     logger.info("CommonDaoImpl getAppInfoIds() - ends ");
 
@@ -231,7 +232,7 @@ public class CommonDaoImpl implements CommonDao {
   }
 
   @Override
-  public List<StudyInfoBO> getStudyInfoIds(HashSet<String> studyIdSet) {
+  public List<StudyInfoBO> getStudyInfoSet(HashSet<String> studyIdSet) {
     logger.info("CommonDaoImpl getStudyInfoIds() - starts ");
     List<StudyInfoBO> studyInfos = new ArrayList();
     try (Session session = entityManagerFactory.unwrap(SessionFactory.class).openSession()) {
@@ -242,7 +243,7 @@ public class CommonDaoImpl implements CommonDao {
               .getResultList();
 
     } catch (Exception e) {
-      logger.info("CommonDaoImpl getStudyInfoIds() - error ", e);
+      logger.error("CommonDaoImpl getStudyInfoIds() - error ", e);
     }
     logger.info("CommonDaoImpl getStudyInfoIds() - ends ");
 
@@ -251,60 +252,65 @@ public class CommonDaoImpl implements CommonDao {
 
   @Override
   public Map<Integer, Map<String, JSONArray>> getStudyLevelDeviceToken(
-      List<Integer> studyInfoIds, List<Integer> appInfoIds) {
-    logger.info("CommonDaoImpl.getStudyLevelDeviceToken()-Start");
+      List<StudyInfoBO> studyInfos) {
+    logger.info("CommonDaoImpl.getStudyLevelDeviceToken() - starts");
 
     Map<Integer, Map<String, JSONArray>> studyDeviceTokenMap = new HashMap<>();
     try (Session session = entityManagerFactory.unwrap(SessionFactory.class).openSession()) {
-      List<Object[]> rs =
-          session
-              .createSQLQuery(
-                  "SELECT sp.study_info_id, GROUP_CONCAT(a.device_token) as device_token,GROUP_CONCAT(a.device_type) as device_type FROM participant_study_info sp, auth_info a\r\n"
-                      + " where sp.user_details_id = a.user_details_id and sp.status not in('yetToJoin','withdrawn','notEligible') and a.auth_key != '0' and a.remote_notification_flag=1 \r\n"
-                      + "and sp.study_info_id in (:studyIds)  and (a.device_token is not NULL and a.device_token != '' and a.device_type is not \r\n"
-                      + "NULL and a.device_type != '') GROUP BY sp.study_info_id")
-              .setParameterList("studyIds", studyInfoIds)
-              .getResultList();
-      System.out.println(rs);
-      if (rs != null) {
-        for (Object[] objects : rs) {
 
-          Integer studyid = (Integer) objects[0];
-          String deviceToken = (String) objects[1];
-          String deviceType = (String) objects[2];
-          if (deviceToken != null) {
-            String[] deviceTokens = deviceToken.split(",");
-            String[] deviceTypes = deviceType.split(",");
+      if (studyInfos != null && !studyInfos.isEmpty()) {
 
-            if (((deviceTokens != null && deviceTokens.length > 0)
-                    && (deviceType != null && deviceTypes.length > 0))
-                && (deviceTokens.length == deviceTypes.length)) {
+        List<Integer> studyInfoIds =
+            studyInfos.stream().map(a -> a.getId()).distinct().collect(Collectors.toList());
+        List<Object[]> rs =
+            session
+                .createSQLQuery(
+                    "SELECT sp.study_info_id, GROUP_CONCAT(a.device_token) as device_token,GROUP_CONCAT(a.device_type) as device_type FROM participant_study_info sp, auth_info a"
+                        + " where sp.user_details_id = a.user_details_id and sp.status not in('yetToJoin','withdrawn','notEligible') and a.remote_notification_flag=1"
+                        + " and sp.study_info_id in (:studyIds)  and (a.device_token is not NULL and a.device_token != '' and a.device_type is not"
+                        + " NULL and a.device_type != '') GROUP BY sp.study_info_id")
+                .setParameterList("studyIds", studyInfoIds)
+                .getResultList();
+        if (rs != null) {
+          for (Object[] objects : rs) {
 
-              JSONArray jsonArray = new JSONArray();
-              JSONArray iosJsonArray = new JSONArray();
-              Map<String, JSONArray> deviceMap = new HashMap<>();
-              for (int i = 0; i < deviceTokens.length; i++) {
-                if (deviceTypes[i] != null
-                    && deviceTypes[i].equalsIgnoreCase(AppConstants.DEVICE_ANDROID)) {
-                  jsonArray.put(deviceTokens[i].trim());
-                } else if (deviceTypes[i] != null
-                    && deviceTypes[i].equalsIgnoreCase(AppConstants.DEVICE_IOS)) {
-                  iosJsonArray.put(deviceTokens[i].trim());
+            Integer studyId = (Integer) objects[0];
+            String deviceToken = (String) objects[1];
+            String deviceType = (String) objects[2];
+            if (deviceToken != null) {
+              String[] deviceTokens = deviceToken.split(",");
+              String[] deviceTypes = deviceType.split(",");
+
+              if (((deviceTokens != null && deviceTokens.length > 0)
+                      && (deviceType != null && deviceTypes.length > 0))
+                  && (deviceTokens.length == deviceTypes.length)) {
+
+                JSONArray jsonArray = new JSONArray();
+                JSONArray iosJsonArray = new JSONArray();
+                Map<String, JSONArray> deviceMap = new HashMap<>();
+                for (int i = 0; i < deviceTokens.length; i++) {
+                  if (deviceTypes[i] != null
+                      && deviceTypes[i].equalsIgnoreCase(AppConstants.DEVICE_ANDROID)) {
+                    jsonArray.put(deviceTokens[i].trim());
+                  } else if (deviceTypes[i] != null
+                      && deviceTypes[i].equalsIgnoreCase(AppConstants.DEVICE_IOS)) {
+                    iosJsonArray.put(deviceTokens[i].trim());
+                  }
                 }
-              }
-              deviceMap.put(AppConstants.DEVICE_ANDROID, jsonArray);
-              deviceMap.put(AppConstants.DEVICE_IOS, iosJsonArray);
+                deviceMap.put(AppConstants.DEVICE_ANDROID, jsonArray);
+                deviceMap.put(AppConstants.DEVICE_IOS, iosJsonArray);
 
-              studyDeviceTokenMap.put(studyid, deviceMap);
+                studyDeviceTokenMap.put(studyId, deviceMap);
+              }
             }
           }
         }
       }
 
     } catch (Exception e) {
-      logger.info("CommonDaoImpl.getStudyLevelDeviceToken()-error ", e);
+      logger.error("CommonDaoImpl.getStudyLevelDeviceToken() - error ", e);
     }
-    logger.info("CommonDaoImpl.getStudyLevelDeviceToken()-ends ");
+    logger.info("CommonDaoImpl.getStudyLevelDeviceToken() - ends ");
     return studyDeviceTokenMap;
   }
 

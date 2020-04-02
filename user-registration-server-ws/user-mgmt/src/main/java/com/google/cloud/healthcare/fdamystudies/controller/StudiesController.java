@@ -62,7 +62,7 @@ public class StudiesController {
 
   @PostMapping("/sendNotification")
   public ResponseEntity<?> SendNotification(@RequestBody NotificationForm notificationForm) {
-    logger.error("StudiesController - SendNotification() : starts");
+    logger.info("StudiesController - SendNotification() : starts");
     ErrorBean errorBean = null;
     try {
       if (notificationForm != null
@@ -80,7 +80,7 @@ public class StudiesController {
       errorBean = new ErrorBean(ErrorCode.EC_500.code(), ErrorCode.EC_500.errorMessage());
       return new ResponseEntity<>(errorBean, HttpStatus.BAD_REQUEST);
     }
-    logger.error("StudiesController - SendNotification() : ends");
+    logger.info("StudiesController - SendNotification() : ends");
     errorBean = new ErrorBean(ErrorCode.EC_200.code(), ErrorCode.EC_200.errorMessage());
     return new ResponseEntity<>(errorBean, HttpStatus.OK);
   }

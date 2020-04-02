@@ -153,7 +153,7 @@ public class CommonServiceImpl implements CommonService {
     } catch (RestClientResponseException e) {
 
       if (e.getRawStatusCode() == 401) {
-        logger.error("Invalid client Id or client secret. Client id is: " + clientId);
+        logger.error("Invalid client Id or client secret.");
         throw new UnAuthorizedRequestException();
       } else if (e.getRawStatusCode() == 400) {
         logger.error("Client verification ended with Bad Request");
@@ -162,7 +162,7 @@ public class CommonServiceImpl implements CommonService {
         throw new SystemException();
       }
     }
-    logger.error("Invalid client Id or client secret. Client id is: " + clientId);
+    logger.error("Invalid client Id or client secret.");
     throw new SystemException();
   }
 }
