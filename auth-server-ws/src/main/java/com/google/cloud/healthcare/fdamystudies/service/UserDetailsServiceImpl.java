@@ -11,7 +11,6 @@ package com.google.cloud.healthcare.fdamystudies.service;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -623,15 +622,11 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     List<PasswordHistoryBO> passwordHistories = null;
     List<Integer> pwsIds = new ArrayList<>();
     try {
-      passwordHistories = passHistoryRepo.findByUserId(userId);
+      passwordHistories = passHistoryRepo.findByUserIdOrderByPasswordHistoryIdAsc(userId);
       if (passwordHistories != null
           && !passwordHistories.isEmpty()
           && passwordHistories.size() > (Integer.parseInt(passwordHistoryCount) - 1)) {
-        for (PasswordHistoryBO passwordHistoryBO : passwordHistories) {
-          pwsIds.add(passwordHistoryBO.getPasswordHistoryId());
-        }
-        Collections.sort(pwsIds);
-        passHistoryRepo.deleteById(pwsIds.get(0));
+        passHistoryRepo.deleteById(passwordHistories.get(0).getPasswordHistoryId());
       }
       passHistoryBo = new PasswordHistoryBO();
       passHistoryBo.setUserId(userId);

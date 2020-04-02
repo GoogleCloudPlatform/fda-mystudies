@@ -448,17 +448,6 @@ public class AuthenticationController {
         logger.info("AuthenticationController registerUser() - ends with BAD_REQUEST");
         return new ResponseEntity<>(controllerResp, HttpStatus.BAD_REQUEST);
       }
-      if (((user.getPassword() == null) && StringUtils.isBlank(user.getPassword()))
-          || (!MyStudiesUserRegUtil.isPasswordStrong(user.getPassword()))
-          || (MyStudiesUserRegUtil.isPasswordContainsEmailId(user.getPassword()))) {
-        MyStudiesUserRegUtil.getFailureResponse(
-            400 + "",
-            MyStudiesUserRegUtil.ErrorCodes.INVALID_INPUT.getValue(),
-            MyStudiesUserRegUtil.ErrorCodes.NEW_PASSWORD_IS_INVALID.getValue(),
-            response);
-        logger.info("AuthenticationController registerUser() - ends with BAD_REQUEST");
-        return new ResponseEntity<>(controllerResp, HttpStatus.BAD_REQUEST);
-      }
 
       if (((user.getEmailId() == null) && StringUtils.isBlank(user.getEmailId()))
           || (!MyStudiesUserRegUtil.isValidEmailId(user.getEmailId()))) {
@@ -466,6 +455,18 @@ public class AuthenticationController {
             400 + "",
             MyStudiesUserRegUtil.ErrorCodes.INVALID_INPUT.getValue(),
             MyStudiesUserRegUtil.ErrorCodes.INVALID_EMAIL_ID.getValue(),
+            response);
+        logger.info("AuthenticationController registerUser() - ends with BAD_REQUEST");
+        return new ResponseEntity<>(controllerResp, HttpStatus.BAD_REQUEST);
+      }
+
+      if (((user.getPassword() == null) && StringUtils.isBlank(user.getPassword()))
+          || (!MyStudiesUserRegUtil.isPasswordStrong(user.getPassword()))
+          || (user.getEmailId().equalsIgnoreCase(user.getPassword()))) {
+        MyStudiesUserRegUtil.getFailureResponse(
+            400 + "",
+            MyStudiesUserRegUtil.ErrorCodes.INVALID_INPUT.getValue(),
+            MyStudiesUserRegUtil.ErrorCodes.NEW_PASSWORD_IS_INVALID.getValue(),
             response);
         logger.info("AuthenticationController registerUser() - ends with BAD_REQUEST");
         return new ResponseEntity<>(controllerResp, HttpStatus.BAD_REQUEST);
@@ -699,7 +700,7 @@ public class AuthenticationController {
           } else if (loginResp.getCode() == ErrorCode.EC_92.code()) {
             MyStudiesUserRegUtil.getFailureResponse(
                 MyStudiesUserRegUtil.ErrorCodes.STATUS_101.getValue(),
-                MyStudiesUserRegUtil.ErrorCodes.INVALID_USERNAME_PASSWORD_MSG.name(),
+                MyStudiesUserRegUtil.ErrorCodes.INVALID_INPUT.name(),
                 MyStudiesUserRegUtil.ErrorCodes.INVALID_USERNAME_PASSWORD_MSG.getValue(),
                 response);
             loginResp.setCode(HttpStatus.UNAUTHORIZED.value());
@@ -729,7 +730,7 @@ public class AuthenticationController {
         MyStudiesUserRegUtil.getFailureResponse(
             MyStudiesUserRegUtil.ErrorCodes.STATUS_102.getValue(),
             MyStudiesUserRegUtil.ErrorCodes.INVALID_INPUT.getValue(),
-            MyStudiesUserRegUtil.ErrorCodes.INVALID_EMAIL_PASSWORD_MSG.getValue(),
+            MyStudiesUserRegUtil.ErrorCodes.INVALID_USERNAME_PASSWORD_MSG.getValue(),
             response);
         activityLogService.createActivityLog(
             loginRequest.getEmailId(),
@@ -737,8 +738,8 @@ public class AuthenticationController {
             String.format(
                 AppConstants.AUDIT_EVENT_FAILED_SIGN_IN_WRONG_EMAIL_DESC,
                 loginRequest.getEmailId()));
-        logger.info("AuthenticationController login() - ends with INVALID_EMAIL_PASSWORD");
-        return new ResponseEntity<>(loginResp, HttpStatus.BAD_REQUEST);
+        logger.info("AuthenticationController login() - ends with account deactivated");
+        return new ResponseEntity<>(loginResp, HttpStatus.UNAUTHORIZED);
       }
     } catch (PasswordExpiredException e) {
       MyStudiesUserRegUtil.getFailureResponse(
@@ -1052,8 +1053,9 @@ public class AuthenticationController {
                 .equals(changePasswordBean.getNewPassword())) {
 
               if (MyStudiesUserRegUtil.isPasswordStrong(changePasswordBean.getNewPassword())
-                  && !(MyStudiesUserRegUtil.isPasswordContainsEmailId(
-                      changePasswordBean.getNewPassword()))) {
+                  && !(userInfo
+                      .getEmailId()
+                      .equalsIgnoreCase(changePasswordBean.getNewPassword()))) {
 
                 isValidPassword =
                     userDetailsService.getPasswordHistory(
