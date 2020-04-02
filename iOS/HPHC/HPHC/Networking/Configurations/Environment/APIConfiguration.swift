@@ -31,32 +31,39 @@ enum Configuration {
 enum API {
 
   private enum AppProtocol {
-    static let http = "http://"
-    static let https = "https://"
+    private static let http = "http://"
+    private static let https = "https://"
+    static var value: String {
+      #if DEBUG
+        return http
+      #else
+        return https
+      #endif
+    }
   }
 
   static var wcpURL: String {
-    return AppProtocol.http + ((try? Configuration.value(for: "WCP_URL")) ?? "")
+    return AppProtocol.value + ((try? Configuration.value(for: "WCP_URL")) ?? "")
   }
 
   static var responseURL: String {
-    return AppProtocol.http + ((try? Configuration.value(for: "RESPONSE_URL")) ?? "")
+    return AppProtocol.value + ((try? Configuration.value(for: "RESPONSE_URL")) ?? "")
   }
 
   static var registrationURL: String {
-    return AppProtocol.http + ((try? Configuration.value(for: "REGISTRATION_URL")) ?? "")
+    return AppProtocol.value + ((try? Configuration.value(for: "REGISTRATION_URL")) ?? "")
   }
 
   static var authURL: String {
-    return AppProtocol.http + ((try? Configuration.value(for: "AUTH_URL")) ?? "")
+    return AppProtocol.value + ((try? Configuration.value(for: "AUTH_URL")) ?? "")
   }
 
   static var enrollmentURL: String {
-    return AppProtocol.http + ((try? Configuration.value(for: "ENROLLMENT_URL")) ?? "")
+    return AppProtocol.value + ((try? Configuration.value(for: "ENROLLMENT_URL")) ?? "")
   }
 
   static var consentMgmtURL: String {
-    return AppProtocol.http + ((try? Configuration.value(for: "CONSENTMGMT_URL")) ?? "")
+    return AppProtocol.value + ((try? Configuration.value(for: "CONSENTMGMT_URL")) ?? "")
   }
 
   static var authUsername: String {
