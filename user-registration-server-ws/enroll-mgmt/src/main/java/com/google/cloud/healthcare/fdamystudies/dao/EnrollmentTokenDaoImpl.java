@@ -263,12 +263,6 @@ public class EnrollmentTokenDaoImpl implements EnrollmentTokenDao {
                 countAddParticipant = (Integer) session.save(participants);
               }
               if (countAddParticipant > 0) {
-                //                SiteBo sites = session.get(SiteBo.class, siteBo.getId());
-                //                participantRegistry.setSites(sites);
-                //                participantRegistry.setInvitationDate(
-                //                    EnrollmentManagementUtil.getCurrentUtilDateTime());
-                //                participantRegistry.setOnboardingStatus("E");
-                //                session.update(participantRegistry);
                 isUpdated = true;
               }
             }
