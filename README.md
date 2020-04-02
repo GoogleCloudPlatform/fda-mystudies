@@ -1,7 +1,7 @@
 # FDA MyStudies
 This repository contains all the necessary code and documentation for  building and deploying FDA MyStudies. 
 
-This release of FDA MyStudies contains
+This release of FDA MyStudies contains:
 - mobile applications for study participants (iOS and Android)
 - study builder for researchers and study designers
 - participant and response datastores for managing study data
