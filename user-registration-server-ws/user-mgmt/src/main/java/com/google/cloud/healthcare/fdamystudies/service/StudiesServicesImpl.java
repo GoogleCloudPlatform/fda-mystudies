@@ -1,8 +1,9 @@
 /*
- *Copyright 2020 Google LLC
+ * Copyright 2020 Google LLC
  *
- *Use of this source code is governed by an MIT-style license that can be found in the LICENSE file
- *or at https://opensource.org/licenses/MIT.
+ * Use of this source code is governed by an MIT-style
+ * license that can be found in the LICENSE file or at
+ * https://opensource.org/licenses/MIT.
  */
 
 package com.google.cloud.healthcare.fdamystudies.service;
@@ -37,7 +38,6 @@ import com.google.cloud.healthcare.fdamystudies.dao.StudiesDao;
 import com.google.cloud.healthcare.fdamystudies.model.AppInfoDetailsBO;
 import com.google.cloud.healthcare.fdamystudies.model.StudyInfoBO;
 import com.google.cloud.healthcare.fdamystudies.util.AppConstants;
-import com.google.cloud.healthcare.fdamystudies.util.EnrollmentManagementUtil;
 import com.google.cloud.healthcare.fdamystudies.util.ErrorCode;
 import com.notnoop.apns.APNS;
 import com.notnoop.apns.ApnsService;
@@ -77,7 +77,7 @@ public class StudiesServicesImpl implements StudiesServices {
     Map<Object, StudyInfoBO> studyInfobyStudyCustomId = new HashMap<>();
     Map<String, JSONArray> allDeviceTokens = new HashMap<>();
     Map<Object, AppInfoDetailsBO> appInfobyAppCustomId = new HashMap<>();
-    logger.info("StudiesServicesImpl - SendNotificationAction() - starts");
+    logger.info("StudiesServicesImpl.SendNotificationAction() - starts");
     try {
 
       for (NotificationBean notificationBean : notificationForm.getNotifications()) {
@@ -132,10 +132,10 @@ public class StudiesServicesImpl implements StudiesServices {
         }
       }
     } catch (Exception e) {
-      logger.error("StudiesServicesImpl - SendNotificationAction() : error", e);
+      logger.error("StudiesServicesImpl.SendNotificationAction() - error", e);
       return new ErrorBean(ErrorCode.EC_500.code(), ErrorCode.EC_500.errorMessage());
     }
-    logger.info("StudiesServicesImpl - SendNotificationAction() : ends");
+    logger.info("StudiesServicesImpl.SendNotificationAction() - ends");
     return new ErrorBean(ErrorCode.EC_200.code(), ErrorCode.EC_200.errorMessage());
   }
 

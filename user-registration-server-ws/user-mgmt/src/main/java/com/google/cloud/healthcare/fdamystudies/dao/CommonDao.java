@@ -26,7 +26,7 @@ public interface CommonDao {
 
   public List<AppInfoDetailsBO> getAppInfoSet(HashSet<String> appIds);
 
-  public List<StudyInfoBO> getStudyInfoSet(HashSet<String> studySetSet);
+  public List<StudyInfoBO> getStudyInfoSet(HashSet<String> studyInfoSet);
 
   public Map<Integer, Map<String, JSONArray>> getStudyLevelDeviceToken(
       List<StudyInfoBO> studyInfoIds);

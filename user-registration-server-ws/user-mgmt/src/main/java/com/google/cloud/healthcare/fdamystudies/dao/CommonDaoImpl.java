@@ -295,6 +295,8 @@ public class CommonDaoImpl implements CommonDao {
                   } else if (deviceTypes[i] != null
                       && deviceTypes[i].equalsIgnoreCase(AppConstants.DEVICE_IOS)) {
                     iosJsonArray.put(deviceTokens[i].trim());
+                  } else {
+                    logger.error("Invalid Device Type");
                   }
                 }
                 deviceMap.put(AppConstants.DEVICE_ANDROID, jsonArray);
