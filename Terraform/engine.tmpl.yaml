@@ -1,0 +1,57 @@
+# Terraform Engine (https://github.com/GoogleCloudPlatform/healthcare/tree/master/deploy/engine) config to generate baseline.
+
+{{$BASE := "../recipes"}}
+
+data:
+  ORG_ID: "707577601068"
+  BILLING_ACCOUNT: "01EA90-3519E1-89CB1F"
+  STORAGE_LOCATION: "us-central1"
+
+templates:
+- name: "foundation"
+  recipe_path: "{{$BASE}}/org/foundation.yaml"
+  data:
+    DEVOPS:
+      PROJECT_ID: "heroes-hat-dev-devops"
+      STATE_BUCKET: "heroes-hat-dev-terraform-state-08679"
+      ENABLE_BOOTSTRAP_GCS_BACKEND: true
+    AUDIT:
+      PROJECT_ID: "heroes-hat-dev-audit"
+      DATASET_NAME: "1yr_org_audit_logs"
+      BUCKET_NAME: "7yr-org-audit-logs-08679" # suffix is sha256("heroes-hat-dev")[:5]
+      AUDITORS: "group:heroes-hat-auditors@example.com"
+    ORG_POLICIES:
+      ENABLE: true
+
+# Folder
+- name: "folder-heroes-hat"
+  recipe_path: "{{$BASE}}/org/folder.yaml"
+  output_ref: "foundation.org_dir"
+  data:
+    DISPLAY_NAME: "heroes-hat"
+
+# Projects
+- name: "project-network"
+  recipe_path: "{{$BASE}}/folder/project.yaml"
+  output_ref: "folder-heroes-hat.dir"
+  data:
+    PROJECT_ID: "heroes-hat-dev-network"
+    PROJECT_OWNERS:
+    - "group:heroes-hat-dev-network-owners@example.com"
+
+- name: "project-apps"
+  recipe_path: "{{$BASE}}/folder/project.yaml"
+  output_ref: "folder-heroes-hat.dir"
+  data:
+    PROJECT_ID: "heroes-hat-dev-apps"
+    PROJECT_OWNERS:
+    - "group:heroes-hat-dev-apps-owners@example.com"
+
+- name: "project-data"
+  recipe_path: "{{$BASE}}/folder/project.yaml"
+  output_ref: "folder-heroes-hat.dir"
+  data:
+    PROJECT_ID: "heroes-hat-dev-data"
+    PROJECT_OWNERS:
+    - "group:heroes-hat-dev-data-owners@example.com"
+
