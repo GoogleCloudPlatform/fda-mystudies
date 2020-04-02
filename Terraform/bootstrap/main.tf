@@ -1,12 +1,10 @@
-// TODO(umairidris): replace with https://github.com/terraform-google-modules/terraform-google-bootstrap
-
-
-terraform {
-  backend "gcs" {
-    bucket = "heroes-hat-dev-terraform-state-08679"
-    prefix = "bootstrap"
-  }
-}
+# TODO(user): Uncomment after deployment and run `terraform init`.
+# terraform {
+#   backend "gcs" {
+#     bucket = "heroes-hat-dev-terraform-state-08679"
+#     prefix = "bootstrap"
+#   }
+# }
 
 
 module "project" {
