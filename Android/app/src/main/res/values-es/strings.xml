@@ -16,7 +16,7 @@
     <!--Shared Preference-->
     <string name="studyId">studyId</string>
 
-    <string name="app_name">My Studies</string>
+    <string name="app_name">FDA MyStudies</string>
     <string name="ok">OK</string>
     <string name="signup">SIGN UP</string>
     <string name="cancel">Cancel</string>
@@ -89,7 +89,7 @@
     <string name="gateway_welcome1">Leveraging the Power of Mobility for Research</string>
     <string name="gateway_welcome2">Improving Health Outcomes</string>
     <string name="gateway_welcome3">Protecting Your Privacy</string>
-    <string name="gateway_des">The FDA is pleased to offer the FDA My Studies app as a tool to gather real time, contextual data about medication use and other health issues facing the people we serve.</string>
+    <string name="gateway_des">The FDA is pleased to offer the FDA MyStudies app as a tool to gather real time, contextual data about medication use and other health issues facing the people we serve.</string>
     <string name="gateway_des1">Available for iOS and Android devices, this app will house studies conducted by FDA and other institutions, enabling researchers to engage more directly with people to gather data via questionnaires.</string>
     <string name="gateway_des2">Explore and participate in studies for which you are eligible and help generate more data, better insights and improved outcomes.</string>
     <string name="gateway_des3">All studies in this app have been approved by an Institutional Review Board, follow strict federal research guidelines, and securely store your responses to ensure your privacy is always protected.</string>
@@ -111,7 +111,7 @@
     <string name="terms">TERMS OF USE</string>
     <string name="privacy_policy">PRIVACY POLICY</string>
     <string name="privacy_policy_content">It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. \n\nThe point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using Content here, content here, making it look like readable English. Many desktop publishing packages and web page editors now use Lorem Ipsum as their default model text, and a search for lorem ipsum will uncover many web sites still in their infancy. \n \nThere are many variations of passages of Lorem Ipsum available, but the majority have suffered alteration in some form, by injected humour, or randomised words which dont look even slightly believable. If you are going to use a passage of Lorem Ipsum, you need to be sure there isnt anything embarrassing hidden in the middle of text. All the Lorem Ipsum generators on the Internet tend to repeat predefined chunks as necessary, making this the first true generator on the Internet.</string>
-    <string name="delete_account_content">You have chosen to delete your FDA My Studies Account. This will result in automatic withdrawal from all studies.\n\nBelow is a list of studies that you are a part of and information on how your response data will be handled with each after you withdraw. Please review and confirm.</string>
+    <string name="delete_account_content">You have chosen to delete your FDA MyStudies Account. This will result in automatic withdrawal from all studies.\n\nBelow is a list of studies that you are a part of and information on how your response data will be handled with each after you withdraw. Please review and confirm.</string>
     <string name="medication_survey">Medication survey</string>
     <string name="response_retained">Response data will be retained</string>
     <string name="study_pregnant_women">A Study for pregnant women</string>
@@ -405,8 +405,8 @@
     <string name="exit_activity">Responses will be stored on device (unless you sign out) so you can resume the survey before it expires.</string>
 
     <!--Localization-->
-    <string name="my_studies">My Studies</string>
-    <string name="studie_your_enrolled">It\'s been a while since you visited the FDA My Studies app. Please consider continuing your participation in any studies in which you\'re enrolled.</string>
+    <string name="my_studies">MyStudies</string>
+    <string name="studie_your_enrolled">It\'s been a while since you visited the FDA MyStudies app. Please consider continuing your participation in any studies in which you\'re enrolled.</string>
     <string name="resource_available">A new resource is available Please check.</string>
     <string name="the_activity">The activity</string>
     <string name="participation_is_important">will expire in 24 hours. Your participation is important. Please visit the study to complete it now.</string>
