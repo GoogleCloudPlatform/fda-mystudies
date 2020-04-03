@@ -121,6 +121,8 @@
 		6F02217A2264729E00A2DBC8 /* OtherTextChoiceCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6F0221782264729E00A2DBC8 /* OtherTextChoiceCell.xib */; };
 		6F07148924279452002749DA /* Default.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 6F07148824279452002749DA /* Default.xcconfig */; };
 		6F07148C2428DCE2002749DA /* Collection+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F07148B2428DCE2002749DA /* Collection+Extensions.swift */; };
+		6F209EF9242E12B1005DD23F /* Production.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 6FD1E11423ED41B0009DACAE /* Production.xcconfig */; };
+		6F209F02242E5E96005DD23F /* Data+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F209F01242E5E96005DD23F /* Data+Extensions.swift */; };
 		6F2392DE2423E0F300013AC0 /* EnrollServices.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F2392DD2423E0F300013AC0 /* EnrollServices.swift */; };
 		6F36467824293ED2008F815A /* RegistrationServerKeys.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FD1E15123F17ACA009DACAE /* RegistrationServerKeys.swift */; };
 		6F4E1B2D24223C210051D3E2 /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = 6F4E1B2A24223C210051D3E2 /* README.md */; };
@@ -413,6 +415,7 @@
 		6F0221782264729E00A2DBC8 /* OtherTextChoiceCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = OtherTextChoiceCell.xib; sourceTree = "<group>"; };
 		6F07148824279452002749DA /* Default.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Default.xcconfig; sourceTree = "<group>"; };
 		6F07148B2428DCE2002749DA /* Collection+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Collection+Extensions.swift"; sourceTree = "<group>"; };
+		6F209F01242E5E96005DD23F /* Data+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Data+Extensions.swift"; sourceTree = "<group>"; };
 		6F2392DD2423E0F300013AC0 /* EnrollServices.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EnrollServices.swift; sourceTree = "<group>"; };
 		6F4E1B2A24223C210051D3E2 /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; name = README.md; path = ../README.md; sourceTree = "<group>"; };
 		6F4E1B2E24223CA20051D3E2 /* UIImage+Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIImage+Extensions.swift"; sourceTree = "<group>"; };
@@ -423,7 +426,7 @@
 		6FB89C21225F410500420A7B /* TextChoiceCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TextChoiceCell.swift; sourceTree = "<group>"; };
 		6FB89C27225F416C00420A7B /* Cell+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Cell+Extensions.swift"; sourceTree = "<group>"; };
 		6FD1E10C23EC31A7009DACAE /* Development.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Development.xcconfig; sourceTree = "<group>"; };
-		6FD1E11423ED41B0009DACAE /* Production.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Production.xcconfig; sourceTree = "<group>"; };
+		6FD1E11423ED41B0009DACAE /* Production.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; name = Production.xcconfig; path = ../Production.xcconfig; sourceTree = "<group>"; };
 		6FD1E15123F17ACA009DACAE /* RegistrationServerKeys.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = RegistrationServerKeys.swift; path = ../RegistrationServerKeys.swift; sourceTree = "<group>"; };
 		6FD1E15623F18228009DACAE /* ConsentServices.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ConsentServices.swift; sourceTree = "<group>"; };
 		6FD1E15823F18239009DACAE /* ConsentServerConfiguration.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ConsentServerConfiguration.swift; sourceTree = "<group>"; };
@@ -1533,6 +1536,7 @@
 				6E8D910C223B9FD800C082C9 /* Dictionary+Extensions.swift */,
 				6FB89C27225F416C00420A7B /* Cell+Extensions.swift */,
 				6F07148B2428DCE2002749DA /* Collection+Extensions.swift */,
+				6F209F01242E5E96005DD23F /* Data+Extensions.swift */,
 			);
 			path = Extension;
 			sourceTree = "<group>";
@@ -1773,7 +1777,7 @@
 			isa = PBXProject;
 			attributes = {
 				LastSwiftUpdateCheck = 1020;
-				LastUpgradeCheck = 1130;
+				LastUpgradeCheck = 1140;
 				ORGANIZATIONNAME = Google;
 				TargetAttributes = {
 					6E7D2D551E433E8700763D4C = {
@@ -1919,6 +1923,7 @@
 				89055913230148FD005FB284 /* Branding.plist in Resources */,
 				940577AC1E767C8D0043215C /* ChangePasswordData.plist in Resources */,
 				6ED134381E5F1B110090C976 /* Consent.json in Resources */,
+				6F209EF9242E12B1005DD23F /* Production.xcconfig in Resources */,
 				94B3DD541E6ED8E500327AE5 /* SignInPlist.plist in Resources */,
 				6EDDB65A1EE05E4C00C79337 /* NewProgressView.xib in Resources */,
 				6EDDB6611EE05FDC00C79337 /* fda_preload.gif in Resources */,
@@ -2118,6 +2123,7 @@
 				94B3DD4A1E6ED8E500327AE5 /* StudyListCell.swift in Sources */,
 				94B3DD5A1E6ED8E500327AE5 /* SignUpViewController.swift in Sources */,
 				6FB89C1B225F40EB00420A7B /* TextChoiceQuestionController.swift in Sources */,
+				6F209F02242E5E96005DD23F /* Data+Extensions.swift in Sources */,
 				6FE00CF0238FFE9F0067A7B8 /* ActivitySchedules.swift in Sources */,
 				6F99755F242387300044944E /* AppConfiguration.swift in Sources */,
 				6ED86F641EA6498D00365AF0 /* RepeatableFormStepViewController.m in Sources */,
@@ -2307,7 +2313,7 @@
 /* Begin XCBuildConfiguration section */
 		6E7D2D7C1E433E8800763D4C /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 6F07148824279452002749DA /* Default.xcconfig */;
+			baseConfigurationReference = 6FD1E11423ED41B0009DACAE /* Production.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
@@ -2431,8 +2437,8 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
-				DEBUG_INFORMATION_FORMAT = dwarf;
+				CURRENT_PROJECT_VERSION = 5;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = 3485DDCN2M;
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = HPHC/Info.plist;
@@ -2465,7 +2471,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 5;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = 3485DDCN2M;
 				ENABLE_BITCODE = NO;

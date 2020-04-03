@@ -35,13 +35,12 @@ class ActivitySchedules: UIView, UITableViewDelegate, UITableViewDataSource {
   }
 
   class func instanceFromNib(frame: CGRect, activity: Activity) -> ActivitySchedules {
-    let view = (
-      UINib(nibName: "ActivitySchedules", bundle: nil).instantiate(
+    let view =
+      (UINib(nibName: "ActivitySchedules", bundle: nil).instantiate(
         withOwner: nil,
         options: nil
       )[0]
-        as? ActivitySchedules
-    )!
+      as? ActivitySchedules)!
     view.frame = frame
     view.activity = activity
     view.tableview?.register(UITableViewCell.self, forCellReuseIdentifier: "Cell")
@@ -76,7 +75,8 @@ class ActivitySchedules: UIView, UITableViewDelegate, UITableViewDataSource {
     let cell = tableView.dequeueReusableCell(withIdentifier: "Cell", for: indexPath)
     cell.textLabel?.font = UIFont(name: "HelveticaNeue-Light", size: 13)
     let activityRun = self.activity.activityRuns[indexPath.row]
-    cell.textLabel?.text = ActivitySchedules.formatter.string(from: activityRun.startDate)
+    cell.textLabel?.text =
+      ActivitySchedules.formatter.string(from: activityRun.startDate)
       + " - "
       + ActivitySchedules.formatter.string(from: activityRun.endDate)
 
@@ -101,11 +101,13 @@ class ResponseDataFetch: NMWebServiceDelegate {
 
   var dataSourceKeysForLabkey: [[String: String]] = []
 
-  static let labkeyDateFormatter: DateFormatter = {
-    let formatter = DateFormatter()
-    formatter.timeZone = TimeZone.init(identifier: "America/New_York")
-    formatter.dateFormat = "YYYY-MM-dd HH:mm:ss.SSS"
-    return formatter
+  static let responseDateFormatter: DateFormatter = {
+    let dateFormatter = DateFormatter()
+    let locale = Locale(identifier: "en_US_POSIX")
+    dateFormatter.timeZone = TimeZone.current
+    dateFormatter.locale = locale
+    dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSSZ"
+    return dateFormatter
   }()
 
   public static let localDateFormatter: DateFormatter = {
@@ -225,7 +227,7 @@ class ResponseDataFetch: NMWebServiceDelegate {
           let count = (value["count"] as? Float)!
           let dateString = value["date"] as? String ?? ""
           // SetData Format
-          if let date = ResponseDataFetch.labkeyDateFormatter.date(from: dateString) {
+          if let date = ResponseDataFetch.responseDateFormatter.date(from: dateString) {
             let localDateAsString = ResponseDataFetch.localDateFormatter.string(from: date)
             if let localDate = ResponseDataFetch.localDateFormatter.date(
               from: localDateAsString
