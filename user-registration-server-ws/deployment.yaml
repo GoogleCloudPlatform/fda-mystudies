@@ -40,7 +40,7 @@ spec:
             - name: CLIENT_ID
               value: "413422181706-c9r0uv1t2du10ttjf748mh6490g2ir5u.apps.googleusercontent.com"
             - name: SECRET_KEY
-              value: "idk"
+              value: "dummy-value"
             - name: FROM_EMAIL_ADDRESS
               value: "apps.heros.hat@gmail.com"
             - name: FROM_EMAIL_PASSWORD
