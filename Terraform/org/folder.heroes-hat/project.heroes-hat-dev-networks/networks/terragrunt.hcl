@@ -22,6 +22,6 @@ dependency "service_project_data" {
 inputs = {
   service_projects = [
     dependency.service_project_apps.outputs.project_id,
-    service_project_data = dependency.service_project_data.outputs.project_id,
+    dependency.service_project_data.outputs.project_id,
   ]
 }
