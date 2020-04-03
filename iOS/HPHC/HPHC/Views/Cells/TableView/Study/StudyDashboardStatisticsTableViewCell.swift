@@ -69,9 +69,10 @@ class StudyDashboardStatisticsTableViewCell: UITableViewCell {
 
     var startDate = startDateOfWeek
     startDate = startDate?.addingTimeInterval(24 * 3600)
-    let stringStartDate = StudyDashboardStatisticsTableViewCell.formatter.string(
-      from: startDate!
-    )
+    let stringStartDate =
+      StudyDashboardStatisticsTableViewCell.formatter.string(
+        from: startDate!
+      )
       + " - "
     let stringEndDate = StudyDashboardStatisticsTableViewCell.formatter.string(
       from: endDateOfWeek!
@@ -286,9 +287,10 @@ class StudyDashboardStatisticsTableViewCell: UITableViewCell {
 
       startDateOfWeek = calendar.date(byAdding: .day, value: -7, to: startDateOfWeek!)
       endDateOfWeek = calendar.date(byAdding: .day, value: -7, to: endDateOfWeek!)
-      let stringStartDate = StudyDashboardStatisticsTableViewCell.formatter.string(
-        from: startDateOfWeek!
-      ) + " - "
+      let stringStartDate =
+        StudyDashboardStatisticsTableViewCell.formatter.string(
+          from: startDateOfWeek!
+        ) + " - "
       let stringEndDate = StudyDashboardStatisticsTableViewCell.formatter.string(
         from: endDateOfWeek!
       )
@@ -368,10 +370,11 @@ extension StudyDashboardStatisticsTableViewCell: UICollectionViewDelegate,
     -> UICollectionViewCell
   {
 
-    let cell = collectionView.dequeueReusableCell(
-      withReuseIdentifier: kStatisticsCollectionViewCell,
-      for: indexPath
-    )
+    let cell =
+      collectionView.dequeueReusableCell(
+        withReuseIdentifier: kStatisticsCollectionViewCell,
+        for: indexPath
+      )
       as! StudyDashboardStatisticsCollectionViewCell
     let stats = StudyDashboard.instance.statistics[indexPath.row]
 

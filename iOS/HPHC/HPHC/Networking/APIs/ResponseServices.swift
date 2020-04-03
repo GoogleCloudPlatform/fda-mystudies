@@ -66,16 +66,17 @@ class ResponseServices: NSObject {
     self.delegate = delegate
     let method = ResponseMethods.processResponse.method
 
-    let params = [
-      kActivityType: activityType,
-      kActivityInfoMetaData: metaData,
-      kParticipantId: studyStatus.participantId ?? "",
-      JSONKey.tokenIdentifier: studyStatus.tokenIdentifier ?? "",
-      JSONKey.siteID: studyStatus.siteID ?? "",
-      JSONKey.applicationId: AppConfiguration.appID,
-      JSONKey.orgID: AppConfiguration.orgID,
-      kActivityResponseData: responseData,
-    ] as [String: Any]
+    let params =
+      [
+        kActivityType: activityType,
+        kActivityInfoMetaData: metaData,
+        kParticipantId: studyStatus.participantId ?? "",
+        JSONKey.tokenIdentifier: studyStatus.tokenIdentifier ?? "",
+        JSONKey.siteID: studyStatus.siteID ?? "",
+        JSONKey.applicationId: AppConfiguration.appID,
+        JSONKey.orgID: AppConfiguration.orgID,
+        kActivityResponseData: responseData,
+      ] as [String: Any]
 
     let headers: [String: String] = [
       "userId": User.currentUser.userId ?? "",
@@ -106,27 +107,29 @@ class ResponseServices: NSObject {
       let activityVersion = Study.currentActivity?.version ?? ""
       let currentRunId = Study.currentActivity?.currentRunId ?? 0
       let studyVersion = currentStudy?.version ?? ""
-      let info = [
-        kStudyId: studyId,
-        kActivityId: activiyId,
-        kActivityName: activityName,
-        "version": activityVersion,
-        kActivityRunId: "\(currentRunId)",
-        JSONKey.studyVersion: studyVersion,
-      ] as [String: String]
+      let info =
+        [
+          kStudyId: studyId,
+          kActivityId: activiyId,
+          kActivityName: activityName,
+          "version": activityVersion,
+          kActivityRunId: "\(currentRunId)",
+          JSONKey.studyVersion: studyVersion,
+        ] as [String: String]
 
       let ActivityType = Study.currentActivity?.type?.rawValue
 
-      let params = [
-        kActivityType: ActivityType!,
-        kActivityInfoMetaData: info,
-        kParticipantId: userStudyStatus.participantId ?? "",
-        JSONKey.tokenIdentifier: userStudyStatus.tokenIdentifier ?? "",
-        JSONKey.siteID: userStudyStatus.siteID ?? "",
-        kActivityResponseData: responseData,
-        JSONKey.applicationId: AppConfiguration.appID,
-        JSONKey.orgID: AppConfiguration.orgID,
-      ] as [String: Any]
+      let params =
+        [
+          kActivityType: ActivityType!,
+          kActivityInfoMetaData: info,
+          kParticipantId: userStudyStatus.participantId ?? "",
+          JSONKey.tokenIdentifier: userStudyStatus.tokenIdentifier ?? "",
+          JSONKey.siteID: userStudyStatus.siteID ?? "",
+          kActivityResponseData: responseData,
+          JSONKey.applicationId: AppConfiguration.appID,
+          JSONKey.orgID: AppConfiguration.orgID,
+        ] as [String: Any]
 
       let headers: [String: String] = [
         JSONKey.userID: currentUser.userId ?? "",
@@ -154,17 +157,18 @@ class ResponseServices: NSObject {
     let method = ResponseMethods.getParticipantResponse.method
     let userStudyStatus = study.userParticipateState
 
-    let params = [
-      JSONKey.appID: AppConfiguration.appID,
-      JSONKey.orgID: AppConfiguration.orgID,
-      JSONKey.siteID: userStudyStatus?.siteID ?? "",
-      JSONKey.studyID: study.studyId ?? "",
-      JSONKey.activityID: self.activityId!,
-      kParticipantId: userStudyStatus?.participantId ?? "",
-      "activityVersion": activity.version ?? "",
-      "questionKey": "",
-      JSONKey.tokenIdentifier: userStudyStatus?.tokenIdentifier ?? "",
-    ] as [String: Any]
+    let params =
+      [
+        JSONKey.appID: AppConfiguration.appID,
+        JSONKey.orgID: AppConfiguration.orgID,
+        JSONKey.siteID: userStudyStatus?.siteID ?? "",
+        JSONKey.studyID: study.studyId ?? "",
+        JSONKey.activityID: self.activityId!,
+        kParticipantId: userStudyStatus?.participantId ?? "",
+        "activityVersion": activity.version ?? "",
+        "questionKey": "",
+        JSONKey.tokenIdentifier: userStudyStatus?.tokenIdentifier ?? "",
+      ] as [String: Any]
 
     let headers: [String: String] = [JSONKey.userID: User.currentUser.userId ?? ""]
 
@@ -224,16 +228,18 @@ class ResponseServices: NSObject {
     self.delegate = delegate
 
     let user = User.currentUser
-    let headerParams = [
-      kUserId: user.userId,
-      kParticipantId: participantId,
-    ] as [String: String]
+    let headerParams =
+      [
+        kUserId: user.userId,
+        kParticipantId: participantId,
+      ] as [String: String]
 
-    let params = [
-      kStudyId: studyId,
-      kParticipantId: participantId,
-      kActivity: [activityStatus.getParticipatedUserActivityStatus()],
-    ] as [String: Any]
+    let params =
+      [
+        kStudyId: studyId,
+        kParticipantId: participantId,
+        kActivity: [activityStatus.getParticipatedUserActivityStatus()],
+      ] as [String: Any]
     let method = ResponseMethods.updateActivityState.method
     self.sendRequestWith(method: method, params: params, headers: headerParams)
   }
@@ -304,17 +310,19 @@ class ResponseServices: NSObject {
             let durationDetail = data["duration"] as? [String: Any]
             let duration = (durationDetail?["value"] as? Float)!
 
-            let valueDetail = [
-              "value": duration,
-              "count": count,
-              "date": date,
-            ] as [String: Any]
+            let valueDetail =
+              [
+                "value": duration,
+                "count": count,
+                "date": date,
+              ] as [String: Any]
 
             responseData?.values.append(valueDetail)
 
           } else if data["NumberofFailures"] != nil && data["NumberofGames"] != nil
             && data[
-              "Score"]
+              "Score"
+            ]
               != nil
           {
 
@@ -324,11 +332,12 @@ class ResponseServices: NSObject {
                 let numberOfFailuresDetail = data["NumberofFailures"] as? [String: Any]
                 let numberOfFailures = (numberOfFailuresDetail?["value"] as? Float)!
 
-                let valueDetail1 = [
-                  "value": numberOfFailures,
-                  "count": Float(0.0),
-                  "date": date,
-                ] as [String: Any]
+                let valueDetail1 =
+                  [
+                    "value": numberOfFailures,
+                    "count": Float(0.0),
+                    "date": date,
+                  ] as [String: Any]
                 responseData.values.append(valueDetail1)
 
               } else if responseData.key == "NumberofGames" {
@@ -336,11 +345,12 @@ class ResponseServices: NSObject {
                 let numberOfGamesDetail = data["NumberofGames"] as? [String: Any]
                 let numberOfGames = (numberOfGamesDetail?["value"] as? Float)!
 
-                let valueDetail3 = [
-                  "value": numberOfGames,
-                  "count": Float(0.0),
-                  "date": date,
-                ] as [String: Any]
+                let valueDetail3 =
+                  [
+                    "value": numberOfGames,
+                    "count": Float(0.0),
+                    "date": date,
+                  ] as [String: Any]
 
                 responseData.values.append(valueDetail3)
               } else if responseData.key == "Score" {
@@ -348,11 +358,12 @@ class ResponseServices: NSObject {
                 let scoreDetail = data["Score"] as? [String: Any]
                 let score = (scoreDetail?["value"] as? Float)!
 
-                let valueDetail2 = [
-                  "value": score,
-                  "count": Float(0.0),
-                  "date": date,
-                ] as [String: Any]
+                let valueDetail2 =
+                  [
+                    "value": score,
+                    "count": Float(0.0),
+                    "date": date,
+                  ] as [String: Any]
 
                 responseData.values.append(valueDetail2)
               }
@@ -370,11 +381,12 @@ class ResponseServices: NSObject {
                   if let n = keyValue["value"] as? NSNumber {
                     value = n.floatValue
                   }
-                  let valueDetail = [
-                    "value": value,
-                    "count": Float(0.0),
-                    "date": date,
-                  ] as [String: Any]
+                  let valueDetail =
+                    [
+                      "value": value,
+                      "count": Float(0.0),
+                      "date": date,
+                    ] as [String: Any]
 
                   responseData.values.append(valueDetail)
                 }

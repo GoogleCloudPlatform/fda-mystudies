@@ -31,7 +31,7 @@ extension UIImage {
   }
 
   public class func gifImageWithURL(_ gifUrl: String) -> UIImage? {
-    guard let bundleURL:URL = URL(string: gifUrl)
+    guard let bundleURL: URL = URL(string: gifUrl)
     else {
       return nil
     }
@@ -160,7 +160,7 @@ extension UIImage {
     let duration: Int = {
       var sum = 0
 
-      for val:Int in delays {
+      for val: Int in delays {
         sum += val
       }
 

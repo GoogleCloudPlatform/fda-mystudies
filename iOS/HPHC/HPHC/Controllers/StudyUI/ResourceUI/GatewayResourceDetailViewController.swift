@@ -79,9 +79,7 @@ class GatewayResourceDetailViewController: UIViewController {
               )
               self.loadWebViewWithPath(path: path!)
             } else {
-              let path = resourcesDownloadPath + "/" + (
-                self.resource?.file?.localPath
-              )!
+              let path = resourcesDownloadPath + "/" + (self.resource?.file?.localPath)!
               let pdfData = FileDownloadManager.decrytFile(pathURL: URL(string: path))
               self.loadWebViewWithData(data: pdfData!)
 

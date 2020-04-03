@@ -177,12 +177,14 @@ class UIUtilities: NSObject {
 
     var jsonString: String!
     do {
-      let jsonData: NSData = try JSONSerialization.data(
-        withJSONObject: mutableDic,
-        options: JSONSerialization.WritingOptions.prettyPrinted
-      )
+      let jsonData: NSData =
+        try JSONSerialization.data(
+          withJSONObject: mutableDic,
+          options: JSONSerialization.WritingOptions.prettyPrinted
+        )
         as NSData
-      jsonString = NSString(data: jsonData as Data, encoding: String.Encoding.utf8.rawValue)!
+      jsonString =
+        NSString(data: jsonData as Data, encoding: String.Encoding.utf8.rawValue)!
         as String
     } catch let error {
       Logger.sharedInstance.error("Error parsing data: ", error.localizedDescription)
@@ -194,15 +196,17 @@ class UIUtilities: NSObject {
 
     var socialMediaNamesString: String!
     do {
-      let jsonData: NSData = try JSONSerialization.data(
-        withJSONObject: mutableArray,
-        options: JSONSerialization.WritingOptions.prettyPrinted
-      )
+      let jsonData: NSData =
+        try JSONSerialization.data(
+          withJSONObject: mutableArray,
+          options: JSONSerialization.WritingOptions.prettyPrinted
+        )
         as NSData
-      socialMediaNamesString = NSString(
-        data: jsonData as Data,
-        encoding: String.Encoding.utf8.rawValue
-      )! as String
+      socialMediaNamesString =
+        NSString(
+          data: jsonData as Data,
+          encoding: String.Encoding.utf8.rawValue
+        )! as String
     } catch let error {
       Logger.sharedInstance.error("Error parsing data: ", error.localizedDescription)
     }

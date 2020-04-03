@@ -95,22 +95,25 @@ extension FeedBackViewController: UITableViewDataSource {
     var cell: UITableViewCell?
 
     if indexPath.row == 0 {
-      cell = tableView.dequeueReusableCell(
-        withIdentifier: kFeedbackTableViewCellIdentifier1,
-        for: indexPath
-      )
+      cell =
+        tableView.dequeueReusableCell(
+          withIdentifier: kFeedbackTableViewCellIdentifier1,
+          for: indexPath
+        )
         as! FeedBackTableViewCell
 
     } else if indexPath.row == 1 {
-      let cell = tableView.dequeueReusableCell(
-        withIdentifier: kContactUsTableViewCellIdentifier,
-        for: indexPath
-      )
+      let cell =
+        tableView.dequeueReusableCell(
+          withIdentifier: kContactUsTableViewCellIdentifier,
+          for: indexPath
+        )
         as! ContactUsTableViewCell
       cell.textFieldValue?.tag = indexPath.row
       return cell
     } else {
-      cell = tableView.dequeueReusableCell(withIdentifier: "textviewCell", for: indexPath)
+      cell =
+        tableView.dequeueReusableCell(withIdentifier: "textviewCell", for: indexPath)
         as! TextviewCell
 
     }

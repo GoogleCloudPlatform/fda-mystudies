@@ -181,7 +181,8 @@ class DashboardCharts {
     self.chartSubType = configuration["subType"] as? String ?? ""
     self.studyId = Study.currentStudy?.studyId
 
-    self.chartId = self.studyId! + (self.activityId == nil ? "" : self.activityId!) + self
+    self.chartId =
+      self.studyId! + (self.activityId == nil ? "" : self.activityId!) + self
       .dataSourceKey!
 
   }

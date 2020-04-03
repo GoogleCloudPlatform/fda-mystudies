@@ -53,7 +53,8 @@ extension FilterListCollectionViewCell: UITableViewDelegate, UITableViewDataSour
 
   func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
 
-    let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath)
+    let cell =
+      tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath)
       as! FilterListTableViewCell
 
     let data = filterOptions.filterValues[indexPath.row]

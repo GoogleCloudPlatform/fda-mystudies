@@ -52,10 +52,8 @@ class ConsentResult {
 
       if ((stepResult as? ORKStepResult)!.results?.count)! > 0 {
 
-        if let questionstepResult:ORKChoiceQuestionResult? =
-          (
-            stepResult as? ORKStepResult
-          )!
+        if let questionstepResult: ORKChoiceQuestionResult? =
+          (stepResult as? ORKStepResult)!
           .results?[0] as? ORKChoiceQuestionResult?
         {
 
@@ -67,16 +65,15 @@ class ConsentResult {
           } else {
             // Do Nothing
           }
-        } else if let signatureStepResult:ORKConsentSignatureResult? =
-          (
-            stepResult as? ORKStepResult
-          )!.results?[0] as? ORKConsentSignatureResult?
+        } else if let signatureStepResult: ORKConsentSignatureResult? =
+          (stepResult as? ORKStepResult)!.results?[0] as? ORKConsentSignatureResult?
         {
 
           signatureStepResult?.apply(to: self.consentDocument!)
 
           if self.consentPdfData?.count == 0 {
-            self.consentPath = "Consent" + "_" + "\((Study.currentStudy?.studyId)!)"
+            self.consentPath =
+              "Consent" + "_" + "\((Study.currentStudy?.studyId)!)"
               + ".pdf"
 
             self.consentDocument?.makePDF(
@@ -87,7 +84,8 @@ class ConsentResult {
 
                 var fullPath: String!
                 let path = AKUtility.baseFilePath + "/study"
-                let fileName: String = "Consent" + "_"
+                let fileName: String =
+                  "Consent" + "_"
                   + "\((Study.currentStudy?.studyId)!)"
                   + ".pdf"
 
@@ -143,7 +141,8 @@ class ConsentResult {
 
             var fullPath: String!
             let path = AKUtility.baseFilePath + "/study"
-            let fileName: String = "Consent" + "_" + "\((Study.currentStudy?.studyId)!)"
+            let fileName: String =
+              "Consent" + "_" + "\((Study.currentStudy?.studyId)!)"
               + ".pdf"
 
             self.consentPath = fileName
@@ -181,10 +180,8 @@ class ConsentResult {
               Logger.sharedInstance.error(error.localizedDescription)
             }
           }
-        } else if let tokenStepResult:EligibilityTokenTaskResult? =
-          (
-            stepResult as? ORKStepResult
-          )!
+        } else if let tokenStepResult: EligibilityTokenTaskResult? =
+          (stepResult as? ORKStepResult)!
           .results?[0] as? EligibilityTokenTaskResult?
         {
           self.token = tokenStepResult?.enrollmentToken

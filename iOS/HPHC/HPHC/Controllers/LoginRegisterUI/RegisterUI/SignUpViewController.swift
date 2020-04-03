@@ -132,9 +132,7 @@ class SignUpViewController: UIViewController {
   func agreeToTermsAndConditions() {
 
     self.termsAndCondition?.delegate = self
-    let attributedString = (
-      termsAndCondition?.attributedText.mutableCopy() as? NSMutableAttributedString
-    )!
+    let attributedString = (termsAndCondition?.attributedText.mutableCopy() as? NSMutableAttributedString)!
 
     var foundRange = attributedString.mutableString.range(of: "Terms")
     attributedString.addAttribute(
@@ -326,10 +324,9 @@ extension SignUpViewController: UITextViewDelegate {
       title = kNavigationTitlePrivacyPolicy
     }
     let loginStoryboard = UIStoryboard.init(name: "Main", bundle: Bundle.main)
-    let webViewController = (
-      loginStoryboard.instantiateViewController(withIdentifier: "WebViewController")
-        as? UINavigationController
-    )!
+    let webViewController =
+      (loginStoryboard.instantiateViewController(withIdentifier: "WebViewController")
+      as? UINavigationController)!
     let webview = (webViewController.viewControllers[0] as? WebViewController)!
     webview.requestLink = link
     webview.title = title
@@ -362,13 +359,12 @@ extension SignUpViewController: UITableViewDataSource {
   func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
 
     let tableViewData = (tableViewRowDetails?.object(at: indexPath.row) as? NSDictionary)!
-    let cell = (
-      tableView.dequeueReusableCell(
+    let cell =
+      (tableView.dequeueReusableCell(
         withIdentifier: kSignUpTableViewCellIdentifier,
         for: indexPath
       )
-        as? SignUpTableViewCell
-    )!
+      as? SignUpTableViewCell)!
 
     cell.textFieldValue?.text = ""
     var isSecuredEntry: Bool = false

@@ -94,7 +94,8 @@ class ActivityFormStep: ActivityStep {
             text: orkQuestionStep.question,
             answerFormat: orkQuestionStep.answerFormat
           )
-          formItem01.placeholder = orkQuestionStep.placeholder == nil
+          formItem01.placeholder =
+            orkQuestionStep.placeholder == nil
             ? "" : orkQuestionStep.placeholder
           formItem01.isOptional = (questionStep?.skippable)!
           formItemsArray.append(formItem01)

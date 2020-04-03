@@ -50,7 +50,8 @@ open class AKUtility: NSObject {
           "\(filePath.deletingLastPathComponent)/\(suggestedFileName).\(fileExtension)"
           as NSString?
       } else {
-        fileDocDirectoryPath = "\(filePath.deletingLastPathComponent)/\(suggestedFileName)"
+        fileDocDirectoryPath =
+          "\(filePath.deletingLastPathComponent)/\(suggestedFileName)"
           as NSString?
       }
 
@@ -127,9 +128,10 @@ open class AKUtility: NSObject {
     )
     let systemAttributes: AnyObject?
     do {
-      systemAttributes = try FileManager.default.attributesOfFileSystem(
-        forPath: documentDirectoryPath.last!
-      ) as AnyObject?
+      systemAttributes =
+        try FileManager.default.attributesOfFileSystem(
+          forPath: documentDirectoryPath.last!
+        ) as AnyObject?
       let freeSize = systemAttributes?[FileAttributeKey.systemFreeSize] as? NSNumber
       return freeSize?.int64Value
     } catch let error as NSError {

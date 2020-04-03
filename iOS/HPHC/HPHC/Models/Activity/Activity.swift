@@ -285,9 +285,7 @@ class Activity {
       }
 
       if self.startDate != nil
-        && (
-          self.schedulingType == .regular || self.anchorDate?.sourceType == "EnrollmentDate"
-        )
+        && (self.schedulingType == .regular || self.anchorDate?.sourceType == "EnrollmentDate")
       {
         self.calculateActivityRuns(studyId: self.studyId!)
       }
@@ -359,7 +357,8 @@ class Activity {
       // update start date
       var startDateStringEnrollment = Utilities.formatterShort?.string(from: enrollmentDate!)
       let startTimeEnrollment = "00:00:00"
-      startDateStringEnrollment = (startDateStringEnrollment ?? "") + " "
+      startDateStringEnrollment =
+        (startDateStringEnrollment ?? "") + " "
         + startTimeEnrollment
       enrollmentDate = Utilities.findDateFromString(
         dateString: startDateStringEnrollment ?? ""
@@ -370,14 +369,16 @@ class Activity {
 
       // update start date
       var startDateString = Utilities.formatterShort?.string(from: lifeTime.0!)
-      let startTime = (self.anchorDate?.startTime == nil)
+      let startTime =
+        (self.anchorDate?.startTime == nil)
         ? "00:00:00" : (self.anchorDate?.startTime)!
       startDateString = (startDateString ?? "") + " " + startTime
       let startdate = Utilities.findDateFromString(dateString: startDateString ?? "")
 
       // update end date
       var endDateString = Utilities.formatterShort?.string(from: lifeTime.1!)
-      let endTime = (self.anchorDate?.endTime == nil)
+      let endTime =
+        (self.anchorDate?.endTime == nil)
         ? "00:00:00" : (self.anchorDate?.endTime)!
       endDateString = (endDateString ?? "") + " " + endTime
       let endDate = Utilities.findDateFromString(dateString: endDateString ?? "")

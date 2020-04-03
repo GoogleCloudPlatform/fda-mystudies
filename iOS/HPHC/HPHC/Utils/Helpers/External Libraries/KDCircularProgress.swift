@@ -586,7 +586,8 @@ public class KDCircularProgress: UIView, CAAnimationDelegate {
 
     private func drawGradientWith(context: CGContext!, componentsArray: [CGFloat]) {
       let baseSpace = CGColorSpaceCreateDeviceRGB()
-      let locations = locationsCache
+      let locations =
+        locationsCache
         ?? gradientLocationsFor(
           colorCount: componentsArray.count / 4,
           gradientWidth: bounds.size.width
@@ -617,10 +618,11 @@ public class KDCircularProgress: UIView, CAAnimationDelegate {
       let angleInRadians = Conversion.degreesToRadians(
         value: rotateSpeed * CGFloat(angle) - 90
       )
-      let oppositeAngle = angleInRadians > floatPi
+      let oppositeAngle =
+        angleInRadians > floatPi
         ? angleInRadians - floatPi
         : angleInRadians
-        + floatPi
+          + floatPi
 
       let startPoint = CGPoint(
         x: (cos(angleInRadians) * halfX) + halfX,
