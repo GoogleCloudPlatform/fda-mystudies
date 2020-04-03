@@ -25,7 +25,6 @@ package com.hphc.mystudies.bean.appendix;
 import java.util.ArrayList;
 import java.util.List;
 
-
 public class FormatStructureBean {
 
   List<String> textChoices = new ArrayList<>();

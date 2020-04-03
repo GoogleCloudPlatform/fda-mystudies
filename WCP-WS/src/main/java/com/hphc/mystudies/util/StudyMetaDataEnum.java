@@ -22,10 +22,7 @@
  */
 package com.hphc.mystudies.util;
 
-
 public enum StudyMetaDataEnum {
-
- 
   RP_AUTHORIZATION("Authorization"),
 
   RP_STUDY_IDENTIFIER("studyId"),
@@ -98,7 +95,6 @@ public enum StudyMetaDataEnum {
     return this.value;
   }
 
-  
   public static StudyMetaDataEnum fromValue(String value) {
     for (StudyMetaDataEnum smde : StudyMetaDataEnum.values()) {
       if (smde.value.equals(value)) {

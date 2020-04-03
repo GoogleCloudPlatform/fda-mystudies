@@ -25,7 +25,6 @@ package com.hphc.mystudies.bean.appendix;
 import java.util.HashMap;
 import java.util.Map;
 
-
 public class QuestionStepStructureBean {
 
   private String title = "";

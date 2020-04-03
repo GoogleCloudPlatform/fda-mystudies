@@ -32,7 +32,6 @@ import javax.persistence.Table;
 import org.hibernate.annotations.NamedQueries;
 import org.hibernate.annotations.NamedQuery;
 
-
 @Entity
 @Table(name = "study_sequence")
 @NamedQueries({
@@ -42,7 +41,6 @@ import org.hibernate.annotations.NamedQuery;
 })
 public class StudySequenceDto implements Serializable {
 
-  
   private static final long serialVersionUID = 6095431690838787358L;
 
   @Id

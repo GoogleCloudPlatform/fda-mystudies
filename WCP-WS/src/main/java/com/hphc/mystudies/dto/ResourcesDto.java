@@ -32,7 +32,6 @@ import javax.persistence.Table;
 import org.hibernate.annotations.NamedQueries;
 import org.hibernate.annotations.NamedQuery;
 
-
 @Entity
 @Table(name = "resources")
 @NamedQueries({
@@ -45,7 +44,6 @@ import org.hibernate.annotations.NamedQuery;
 })
 public class ResourcesDto implements Serializable {
 
- 
   private static final long serialVersionUID = -5367238661369825902L;
 
   @Id

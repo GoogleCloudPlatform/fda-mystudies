@@ -29,7 +29,9 @@ import com.google.cloud.healthcare.fdamystudies.beans.StudyStateRespBean;
 import com.google.cloud.healthcare.fdamystudies.beans.StudyStateResponse;
 import com.google.cloud.healthcare.fdamystudies.beans.WithDrawFromStudyRespBean;
 import com.google.cloud.healthcare.fdamystudies.beans.WithdrawFromStudyBean;
+import com.google.cloud.healthcare.fdamystudies.exception.InvalidRequestException;
 import com.google.cloud.healthcare.fdamystudies.exception.InvalidUserIdException;
+import com.google.cloud.healthcare.fdamystudies.exception.UnAuthorizedRequestException;
 import com.google.cloud.healthcare.fdamystudies.model.ParticipantStudiesBO;
 import com.google.cloud.healthcare.fdamystudies.model.UserDetailsBO;
 import com.google.cloud.healthcare.fdamystudies.service.CommonService;
@@ -209,10 +211,30 @@ public class StudyStateController {
             response);
         return null;
       }
+    } catch (UnAuthorizedRequestException e) {
+      logger.error("StudyStateController withdrawFromStudy() - error ", e);
+      MyStudiesUserRegUtil.getFailureResponse(
+          MyStudiesUserRegUtil.ErrorCodes.STATUS_108.getValue(),
+          MyStudiesUserRegUtil.ErrorCodes.UNAUTHORIZED.getValue(),
+          MyStudiesUserRegUtil.ErrorCodes.INVALID_CLIENTID_OR_SECRET_KEY.getValue(),
+          response);
+      return null;
+    } catch (InvalidRequestException e) {
+      logger.error("StudyStateController withdrawFromStudy() - error ", e);
+      MyStudiesUserRegUtil.getFailureResponse(
+          MyStudiesUserRegUtil.ErrorCodes.STATUS_102.getValue(),
+          MyStudiesUserRegUtil.ErrorCodes.INVALID_INPUT.getValue(),
+          MyStudiesUserRegUtil.ErrorCodes.INVALID_INPUT_ERROR_MSG.getValue(),
+          response);
+      return null;
     } catch (Exception e) {
       logger.error("StudyStateController withdrawFromStudy() - error ", e);
+      MyStudiesUserRegUtil.getFailureResponse(
+          MyStudiesUserRegUtil.ErrorCodes.EC_500.getValue(),
+          MyStudiesUserRegUtil.ErrorCodes.UNKNOWN.getValue(),
+          MyStudiesUserRegUtil.ErrorCodes.CONNECTION_ERROR_MSG.getValue(),
+          response);
+      return null;
     }
-    logger.info("StudyStateController withdrawFromStudy() - Ends ");
-    return new ResponseEntity<>(respBean, HttpStatus.OK);
   }
 }

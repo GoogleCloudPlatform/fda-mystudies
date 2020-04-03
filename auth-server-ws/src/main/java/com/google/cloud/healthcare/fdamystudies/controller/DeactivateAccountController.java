@@ -35,7 +35,7 @@ public class DeactivateAccountController {
 
   @GetMapping("/healthCheck")
   public ResponseEntity<?> healthCheck() {
-    return ResponseEntity.ok("Up and Running");
+    return ResponseEntity.ok("Auth Server Up and Running");
   }
 
   @PostMapping(value = "/deactivate")

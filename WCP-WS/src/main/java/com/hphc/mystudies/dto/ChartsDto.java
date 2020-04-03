@@ -30,12 +30,10 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
-
 @Entity
 @Table(name = "charts")
 public class ChartsDto implements Serializable {
 
-  
   private static final long serialVersionUID = 2394186946423804987L;
 
   @Id

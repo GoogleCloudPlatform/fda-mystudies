@@ -36,7 +36,6 @@ import org.apache.log4j.Logger;
 import com.hphc.mystudies.exception.ErrorCodes;
 import com.hphc.mystudies.util.StudyMetaDataConstants;
 
-
 public class RestAuthenticationFilter implements Filter {
 
   public static final Logger LOGGER = Logger.getLogger(RestAuthenticationFilter.class);

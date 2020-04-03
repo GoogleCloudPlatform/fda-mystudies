@@ -30,11 +30,9 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
-
 @Entity
 @Table(name = "legal_text")
 public class LegalTextDto implements Serializable {
-
 
   private static final long serialVersionUID = 6256475646468023254L;
 

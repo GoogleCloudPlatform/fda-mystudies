@@ -29,7 +29,6 @@ import com.hphc.mystudies.dao.DashboardMetaDataDao;
 import com.hphc.mystudies.exception.OrchestrationException;
 import com.hphc.mystudies.util.StudyMetaDataUtil;
 
-
 public class DashboardMetaDataOrchestration {
 
   private static final Logger LOGGER = Logger.getLogger(DashboardMetaDataOrchestration.class);
@@ -39,7 +38,6 @@ public class DashboardMetaDataOrchestration {
 
   DashboardMetaDataDao dashboardMetaDataDao = new DashboardMetaDataDao();
 
-  
   public StudyDashboardResponse studyDashboardInfo(String studyId) throws OrchestrationException {
     LOGGER.info("INFO: DashboardMetaDataOrchestration - studyDashboardInfo() :: Starts");
     StudyDashboardResponse studyDashboardResponse = new StudyDashboardResponse();

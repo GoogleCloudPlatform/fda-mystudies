@@ -13,8 +13,6 @@ import java.security.SecureRandom;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Random;
 import javax.validation.constraints.NotNull;
 import org.slf4j.Logger;
@@ -22,7 +20,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -30,7 +27,6 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestClientResponseException;
 import org.springframework.web.client.RestTemplate;
 import com.google.cloud.healthcare.fdamystudies.beans.EnrollmentBodyProvider;
-import com.google.cloud.healthcare.fdamystudies.beans.SuccessResponseBean;
 import com.google.cloud.healthcare.fdamystudies.beans.WithdrawFromStudyBodyProvider;
 import com.google.cloud.healthcare.fdamystudies.config.ApplicationPropertyConfiguration;
 import com.google.cloud.healthcare.fdamystudies.exception.InvalidRequestException;
@@ -144,18 +140,13 @@ public class EnrollmentManagementUtil {
       headers.setContentType(MediaType.APPLICATION_JSON);
       headers.set("applicationId", applicationId);
       headers.set(AppConstants.CLIENT_ID, appConfig.getClientId());
-
-      headers.set(
-          AppConstants.SECRET_KEY, MyStudiesUserRegUtil.getHashedValue(appConfig.getSecretKey()));
-
+      headers.set(AppConstants.SECRET_KEY, getHashedValue(appConfig.getSecretKey()));
       bodyProvider = new EnrollmentBodyProvider();
       bodyProvider.setTokenIdentifier(hashedTokenValue);
       bodyProvider.setCustomStudyId(studyId);
       requestBody = new HttpEntity<>(bodyProvider, headers);
       responseEntity =
-          restTemplate.exchange(
-              appConfig.getAddParticipantId(), HttpMethod.POST, requestBody, String.class);
-
+          restTemplate.postForEntity(appConfig.getAddParticipantId(), requestBody, String.class);
       if (responseEntity.getStatusCode() == HttpStatus.OK) {
         participantId = (String) responseEntity.getBody();
       }
@@ -181,31 +172,29 @@ public class EnrollmentManagementUtil {
     logger.info("EnrollmentManagementUtil withDrawParticipantFromStudy() - starts ");
     HttpHeaders headers = null;
     HttpEntity<WithdrawFromStudyBodyProvider> request = null;
-    ResponseEntity<?> responseEntity = null;
     String message = "";
     try {
       headers = new HttpHeaders();
       headers.setContentType(MediaType.APPLICATION_JSON);
       headers.set(AppConstants.APPLICATION_ID, null);
       headers.set(AppConstants.CLIENT_ID, appConfig.getClientId());
-      headers.set(AppConstants.SECRET_KEY, appConfig.getSecretKey());
-
-      Map<String, String> params = new HashMap<>();
-      params.put(AppConstants.STUDY_ID, studyId);
-      params.put(AppConstants.PARTICIPANT_ID, participantId);
-      params.put(AppConstants.DELETE_RESPONSES, delete + "");
+      headers.set(AppConstants.SECRET_KEY, getHashedValue(appConfig.getSecretKey()));
 
       request = new HttpEntity<>(null, headers);
-      responseEntity =
-          restTemplate.exchange(
-              appConfig.getWithdrawStudyUrl(), HttpMethod.POST, request, String.class, params);
 
-      if (responseEntity.getStatusCode() == HttpStatus.OK) {
-        SuccessResponseBean response = (SuccessResponseBean) responseEntity.getBody();
-        logger.info("response: " + response);
-        if (response != null && AppConstants.SUCCESS.equals(response.getMessage())) {
-          message = AppConstants.SUCCESS;
-        }
+      String url =
+          appConfig.getWithdrawStudyUrl()
+              + "?studyId="
+              + studyId
+              + "&participantId="
+              + participantId
+              + "&deleteResponses="
+              + String.valueOf(delete);
+
+      ResponseEntity<?> response = restTemplate.postForEntity(url, request, String.class);
+
+      if (response.getStatusCode() == HttpStatus.OK) {
+        message = "SUCCESS";
       }
 
     } catch (RestClientResponseException e) {

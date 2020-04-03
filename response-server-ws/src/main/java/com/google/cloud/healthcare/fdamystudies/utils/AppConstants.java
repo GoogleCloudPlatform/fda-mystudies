@@ -70,4 +70,5 @@ public class AppConstants {
   public static final String TYPE = "type";
   public static final String DETAIL_MESSAGE = "detailMessage";
   public static final String BASIC_PREFIX = "Basic ";
+  public static final String COMMA_STR = ",";
 }

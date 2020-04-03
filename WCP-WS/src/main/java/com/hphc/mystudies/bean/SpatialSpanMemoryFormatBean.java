@@ -22,7 +22,6 @@
  */
 package com.hphc.mystudies.bean;
 
-
 public class SpatialSpanMemoryFormatBean {
 
   private Integer initialSpan = 0;

@@ -76,15 +76,13 @@ public class ProcessActivityResponseController {
       activityVersion = questionnaireActivityResponseBean.getMetadata().getVersion();
       participantId = questionnaireActivityResponseBean.getParticipantId();
       secureEnrollmentToken = questionnaireActivityResponseBean.getTokenIdentifier();
-      logger.info(
+      logger.debug(
           "Input values are :\n Study Id: "
               + studyId
               + "\n Activity Id: "
               + activityId
               + "\n Activity Version: "
-              + activityVersion
-              + "\n Particpant Id: "
-              + participantId);
+              + activityVersion);
       if (StringUtils.isBlank(orgId)
           || StringUtils.isBlank(applicationId)
           || StringUtils.isBlank(secureEnrollmentToken)
@@ -150,14 +148,9 @@ public class ProcessActivityResponseController {
 
         // Get ParticipantStudyInfo from Registration Server
         ParticipantStudyInformation partStudyInfo =
-            partStudyInfoService.getParticipantStudyInfo(
-                orgId, applicationId, studyId, participantId);
+            partStudyInfoService.getParticipantStudyInfo(studyId, participantId);
         if (partStudyInfo == null) {
-          logger.error(
-              "Input values are :\n Study Id: "
-                  + studyId
-                  + "\n participantId Id: "
-                  + participantId);
+          logger.error("GetParticipantStudyInfo() - ParticipantInfo is null. Study Id: " + studyId);
           commonService.createActivityLog(
               userId,
               "Study response data could not be saved for participant",
@@ -259,9 +252,7 @@ public class ProcessActivityResponseController {
                   + "\n Activity Id: "
                   + activityId
                   + "\n Activity Version: "
-                  + activityVersion
-                  + "\n Particpant Id: "
-                  + participantId);
+                  + activityVersion);
           return new ResponseEntity<>(errorBean, HttpStatus.BAD_REQUEST);
         }
       } else {
@@ -293,9 +284,7 @@ public class ProcessActivityResponseController {
                 + "\n Activity Id: "
                 + activityId
                 + "\n Activity Version: "
-                + activityVersion
-                + "\n Particpant Id: "
-                + participantId);
+                + activityVersion);
 
         return new ResponseEntity<>(errorBean, HttpStatus.BAD_REQUEST);
       }
@@ -322,9 +311,7 @@ public class ProcessActivityResponseController {
                 + "\n Activity Id: "
                 + activityId
                 + "\n Activity Version: "
-                + activityVersion
-                + "\n Particpant Id: "
-                + participantId);
+                + activityVersion);
         return new ResponseEntity<>(errorBean, HttpStatus.BAD_REQUEST);
       } else {
         commonService.createActivityLog(
@@ -347,9 +334,7 @@ public class ProcessActivityResponseController {
                 + "\n Activity Id: "
                 + activityId
                 + "\n Activity Version: "
-                + activityVersion
-                + "\n Particpant Id: "
-                + participantId);
+                + activityVersion);
         return new ResponseEntity<>(errorBean, HttpStatus.BAD_REQUEST);
       }
     }
@@ -368,15 +353,13 @@ public class ProcessActivityResponseController {
       @RequestHeader String userId) {
     try {
 
-      logger.info(
+      logger.debug(
           "Input values are :\n Study Id: "
               + studyId
               + "\n Site Id: "
               + siteId
               + "\n Activity Id: "
-              + activityId
-              + "\n Particpant Id: "
-              + participantId);
+              + activityId);
       if (StringUtils.isBlank(orgId)
           || StringUtils.isBlank(applicationId)
           || StringUtils.isBlank(studyId)
@@ -432,9 +415,7 @@ public class ProcessActivityResponseController {
                 + "\n Site Id: "
                 + siteId
                 + "\n Activity Id: "
-                + activityId
-                + "\n Particpant Id: "
-                + participantId);
+                + activityId);
         commonService.createActivityLog(
             userId,
             "Response data could not be retrieved by participant with id: ",
@@ -458,9 +439,7 @@ public class ProcessActivityResponseController {
               + "\n Site Id: "
               + siteId
               + "\n Activity Id: "
-              + activityId
-              + "\n Particpant Id: "
-              + participantId);
+              + activityId);
       commonService.createActivityLog(
           userId,
           "Response data could not be retrieved by participant with id: ",
@@ -479,7 +458,7 @@ public class ProcessActivityResponseController {
       @RequestParam(name = "participantId") String participantId,
       @RequestParam(name = "deleteResponses") String deleteResponses,
       @RequestHeader String clientId) {
-    logger.info("Input values are :\n Study Id: " + studyId + "\n Particpant Id: " + participantId);
+
     if (StringUtils.isBlank(studyId) || StringUtils.isBlank(participantId)) {
       ErrorBean errorBean =
           AppUtil.dynamicResponse(
@@ -562,7 +541,6 @@ public class ProcessActivityResponseController {
               "Could not successfully withdraw for participant.\n Study Id: "
                   + studyId
                   + "\n Particpant Id: "
-                  + participantId
                   + " Withdrawal Action "
                   + deleteResponses);
           return new ResponseEntity<>(errorBean, HttpStatus.BAD_REQUEST);
@@ -585,7 +563,6 @@ public class ProcessActivityResponseController {
               "Could not successfully withdraw for participant.\n Study Id: "
                   + studyId
                   + "\n Particpant Id: "
-                  + participantId
                   + " Withdrawal Action "
                   + deleteResponses);
           return new ResponseEntity<>(errorBean, HttpStatus.BAD_REQUEST);
