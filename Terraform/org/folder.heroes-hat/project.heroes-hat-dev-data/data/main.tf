@@ -12,7 +12,7 @@ module "example_bucket" {
 }
 
 module "example_cloudsql" {
-  source  = "terraform-google-modules/sql-db/google//modules/mysql"
+  source  = "GoogleCloudPlatform/sql-db/google//modules/mysql"
   version = "~> 3.0"
 
   name        = "example-cloudsql"

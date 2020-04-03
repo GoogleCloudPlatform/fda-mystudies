@@ -23,7 +23,7 @@ module "private" {
 }
 
 module "cloudsql_private_service_access" {
-  source      = "terraform-google-modules/sql-db/google//modules/private_service_access"
+  source      = "GoogleCloudPlatform/sql-db/google//modules/private_service_access"
   version = "~> 3.0"
 
   project_id  = var.project_id
