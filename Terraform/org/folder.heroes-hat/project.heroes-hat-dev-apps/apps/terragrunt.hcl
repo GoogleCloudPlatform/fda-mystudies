@@ -11,7 +11,7 @@ dependency "network" {
   config_path = "../../project.heroes-hat-dev-networks/networks/"
 
   mock_outputs = {
-    network_name = "mock-network"
+    network = "mock-network"
   }
 }
 inputs = {
