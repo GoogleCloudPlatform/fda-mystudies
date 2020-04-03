@@ -35,12 +35,26 @@ spec:
                   key: dbname 
             - name: FIRESTORE_PROJECT_ID
               value: "heroes-hat-dev"
+            - name: AUTH_SERVER_URL
+              value: "35.243.237.139:50000"
+            - name: REGISTRATION_CLIENT_ID
+              value: "dummy-value"
+            - name: REGISTRATION_CLIENT_SECRET
+              value: "dummy-value"
+            - name: WCP_USER
+              value: "dummy-value"
+            - name: WCP_PASS
+              value: "dummy-value"
+            - name: WCP_STUDY_METADATA_SERVER_URL
+              value: "34.74.32.124:50000"
+            - name: REGISTRATION_SERVER_URL
+              value: "35.196.79.108:60000"
           ports:
           - containerPort: 8080
         - name: cloudsql-proxy 
           image: gcr.io/cloudsql-docker/gce-proxy:latest 
           command: ["/cloud_sql_proxy", 
-            "-instances=heroes-hat-dev:us-west1:my-studies=tcp:3306", 
+            "-instances=heroes-hat-dev:us-east1:my-studies2=tcp:3306", 
             "-credential_file=/secrets/cloudsql/sql_credentials.json"] 
           volumeMounts: 
             - name: my-secrets-volume 
