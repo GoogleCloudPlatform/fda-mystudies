@@ -22,7 +22,6 @@
  */
 package com.hphc.mystudies.bean.appendix;
 
-
 public class InfoStructureBean {
 
   private String studyId = "";

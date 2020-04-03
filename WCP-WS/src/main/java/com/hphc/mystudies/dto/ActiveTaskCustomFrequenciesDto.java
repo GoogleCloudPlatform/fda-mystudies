@@ -30,7 +30,6 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
-
 @Entity
 @Table(name = "active_task_custom_frequencies")
 public class ActiveTaskCustomFrequenciesDto implements Serializable {

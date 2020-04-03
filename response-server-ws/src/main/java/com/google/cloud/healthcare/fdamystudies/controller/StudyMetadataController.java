@@ -35,17 +35,13 @@ public class StudyMetadataController {
 
   @PostMapping("/studymetadata")
   public ResponseEntity<?> addUpdateStudyMetadata(
-      @RequestHeader("applicationId") String applicationId,
-      @RequestBody StudyMetadataBean studyMetadataBean,
-      @RequestHeader String clientId) {
-
+      @RequestBody StudyMetadataBean studyMetadataBean, @RequestHeader String clientId) {
     String studyIdToUpdate = null;
     try {
       studyIdToUpdate = studyMetadataBean.getStudyId();
       if (StringUtils.isBlank(studyIdToUpdate)
           || StringUtils.isBlank(studyMetadataBean.getStudyVersion())
           || StringUtils.isBlank(studyMetadataBean.getAppId())) {
-
         ErrorBean errorBean =
             AppUtil.dynamicResponse(
                 ErrorCode.EC_701.code(),

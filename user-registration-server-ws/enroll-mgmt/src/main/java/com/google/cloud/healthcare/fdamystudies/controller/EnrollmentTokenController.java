@@ -51,7 +51,7 @@ public class EnrollmentTokenController {
 
   @RequestMapping(value = "/ping")
   public String ping() {
-    logger.info(" ValidateEnrollmentTokenController - ping()  ");
+    logger.info(" EnrollmentTokenController - ping()  ");
     return "Mystudies UserRegistration Webservice Enrollment Management Service Bundle Started !!!";
   }
 

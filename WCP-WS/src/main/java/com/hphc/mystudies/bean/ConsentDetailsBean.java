@@ -25,7 +25,6 @@ package com.hphc.mystudies.bean;
 import java.util.ArrayList;
 import java.util.List;
 
-
 public class ConsentDetailsBean {
 
   private String version = "";

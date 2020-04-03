@@ -22,7 +22,6 @@
  */
 package com.hphc.mystudies.exception;
 
-
 public interface ErrorCodes {
 
   String DAO_FACTORY_INIT_EXP = "DAO100";

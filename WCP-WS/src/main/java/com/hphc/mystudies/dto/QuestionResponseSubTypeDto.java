@@ -30,11 +30,9 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
-
 @Entity
 @Table(name = "response_sub_type_value")
 public class QuestionResponseSubTypeDto implements Serializable {
-
 
   private static final long serialVersionUID = -7906353217574963756L;
 

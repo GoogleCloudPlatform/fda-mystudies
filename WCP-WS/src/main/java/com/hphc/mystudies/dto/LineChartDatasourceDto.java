@@ -30,12 +30,10 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
-
 @Entity
 @Table(name = "line_chart_datasource")
 public class LineChartDatasourceDto implements Serializable {
 
-  
   private static final long serialVersionUID = -5758103951133634472L;
 
   @Id

@@ -32,7 +32,6 @@ import javax.persistence.Table;
 import org.hibernate.annotations.NamedQueries;
 import org.hibernate.annotations.NamedQuery;
 
-
 @Entity
 @Table(name = "branding")
 @NamedQueries({
@@ -41,7 +40,6 @@ import org.hibernate.annotations.NamedQuery;
       query = "from BrandingDto BDTO" + " where BDTO.studyId =:studyId"),
 })
 public class BrandingDto implements Serializable {
-
 
   private static final long serialVersionUID = -3782834655524137288L;
 
