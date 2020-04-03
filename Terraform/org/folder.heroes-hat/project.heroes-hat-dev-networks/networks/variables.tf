@@ -2,6 +2,10 @@ variable "project_id" {
   type = string
 }
 
+variable "service_projects" {
+  type = list(string)
+}
+
 variable "gke_region" {
   description = "The region where the network and subnets will be created for the GKE clusters"
   default     = "us-central1"

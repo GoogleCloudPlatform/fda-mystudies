@@ -1,3 +1,7 @@
+terraform {
+  backend "gcs" {}
+}
+
 module "example_bucket" {
   source  = "terraform-google-modules/cloud-storage/google//modules/simple_bucket"
   version = "~> 1.4"
