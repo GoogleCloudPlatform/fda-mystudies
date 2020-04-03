@@ -54,6 +54,10 @@ public class ParticipantActivityStateResponseServiceImpl
             if (!StringUtils.isBlank(participantActivity.getActivityRunId())) {
               tempParticipantActivityBean.setActivityRunId(participantActivity.getActivityRunId());
             }
+            if (!StringUtils.isBlank(participantActivity.getActivityVersion())) {
+              tempParticipantActivityBean.setActivityVersion(
+                  participantActivity.getActivityVersion());
+            }
             if (participantActivity.getBookmark() != null) {
               tempParticipantActivityBean.setBookmarked(participantActivity.getBookmark());
             }
@@ -162,10 +166,10 @@ public class ParticipantActivityStateResponseServiceImpl
         tempParticipantActivitiesBo.setActivityId(activityRequestBean.getActivityId());
         tempParticipantActivitiesBo.setActivityRunId(activityRequestBean.getActivityRunId());
         tempParticipantActivitiesBo.setActivityState(activityRequestBean.getActivityState());
+        tempParticipantActivitiesBo.setActivityVersion(activityRequestBean.getActivityVersion());
         tempParticipantActivitiesBo.setBookmark(activityRequestBean.getBookmarked());
         tempParticipantActivitiesBo.setParticipantId(activityStateRequestBean.getParticipantId());
         tempParticipantActivitiesBo.setStudyId(activityStateRequestBean.getStudyId());
-
         if (activityRequestBean.getActivityRun() != null) {
           tempParticipantActivitiesBo.setTotal(activityRequestBean.getActivityRun().getTotal());
           tempParticipantActivitiesBo.setMissed(activityRequestBean.getActivityRun().getMissed());

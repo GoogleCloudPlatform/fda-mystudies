@@ -41,14 +41,6 @@ public class EmailNotification {
       List<String> bccMailList) {
 
     Map<String, String> propMap = FdahpStudyDesignerUtil.getAppProperties();
-    logger.info(
-        "EmailNotification - Starts: sendLinkToEmail() - Input arg are ServletContext ,  Email = "
-            + toMail
-            + " Subject = "
-            + propMap.get(subjectProprtyName)
-            + " contents ="
-            + content
-            + " : ");
     boolean sentMail = false;
     try {
       Mail mail = new Mail();
@@ -91,14 +83,6 @@ public class EmailNotification {
         for (String mailId : toMailList) {
           mailId = mailId.trim();
           toMailListNew.add(mailId.toLowerCase());
-          logger.info(
-              "EmailNotification - Starts: sendEmailNotificationToMany() - Input arg are ServletContext ,  Email = "
-                  + mailId
-                  + " Subject = "
-                  + propMap.get(subjectProprtyName)
-                  + " contents ="
-                  + content
-                  + " : ");
         }
         mail.setToemail(StringUtils.join(toMailListNew, ','));
       }
@@ -131,14 +115,6 @@ public class EmailNotification {
       List<String> bccMailList,
       String attachmentPath) {
     Map<String, String> propMap = FdahpStudyDesignerUtil.getAppProperties();
-    logger.info(
-        "EmailNotification - Starts: sendLinkToEmail() - Input arg are ServletContext ,  Email = "
-            + toMail
-            + " Subject = "
-            + propMap.get(subjectProprtyName)
-            + " contents ="
-            + content
-            + " : ");
     boolean sentMail = false;
     try {
       Mail mail = new Mail();
