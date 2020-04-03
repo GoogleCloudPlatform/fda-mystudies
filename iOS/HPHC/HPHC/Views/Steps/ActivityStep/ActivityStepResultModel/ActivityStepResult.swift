@@ -1,6 +1,7 @@
 // License Agreement for FDA MyStudies
-// Copyright © 2017-2019 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors. Permission is
-// hereby granted, free of charge, to any person obtaining a copy of this software and associated
+// Copyright © 2017-2019 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors.
+// Copyright 2020 Google LLC
+// Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated
 // documentation files (the &quot;Software&quot;), to deal in the Software without restriction, including without
 // limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the
 // Software, and to permit persons to whom the Software is furnished to do so, subject to the following
@@ -91,7 +92,6 @@ class ActivityStepResult {
     self.startTime = Date.init(timeIntervalSinceNow: 0)
     self.endTime = Date.init(timeIntervalSinceNow: 0)
     self.skipped = false
-    self.value = 0
     self.questionStep = nil
     self.subTypeForForm = ""
 
@@ -182,8 +182,9 @@ class ActivityStepResult {
 
       if self.step?.resultType != nil {
 
-        stepDict?[kActivityStepResultType] = (self.step?.resultType as? String)!
-          == "fetalKickCounter" ? "grouped" : (self.step?.resultType)
+        stepDict?[kActivityStepResultType] =
+          (self.step?.resultType as? String)!
+            == "fetalKickCounter" ? "grouped" : (self.step?.resultType)
 
       } else {
         stepDict?[kActivityStepResultType] = "grouped"
@@ -226,7 +227,8 @@ class ActivityStepResult {
         }
       }
     } else {
-      stepDict?[kActivityStepSkipped] = self.skipped!
+      stepDict?[kActivityStepSkipped] = self.skipped ?? true
+      stepDict?[kActivityStepResultValue] = self.value
     }
     return stepDict
   }
@@ -243,7 +245,7 @@ class ActivityStepResult {
 
         if stepResult.results?.count == 1 && self.type != .form {
 
-          if let questionstepResult:ORKQuestionResult? = stepResult.results?.first
+          if let questionstepResult: ORKQuestionResult? = stepResult.results?.first
             as? ORKQuestionResult?
           {
             self.setValue(questionstepResult: questionstepResult!)
@@ -251,9 +253,8 @@ class ActivityStepResult {
           } else {
 
             // for consent step result we are storing the ORKConsentSignatureResult
-            let consentStepResult: ORKConsentSignatureResult? = (
-              stepResult.results?.first as? ORKConsentSignatureResult?
-            )!
+            let consentStepResult: ORKConsentSignatureResult? =
+              (stepResult.results?.first as? ORKConsentSignatureResult?)!
             self.value = consentStepResult
 
           }
@@ -293,9 +294,7 @@ class ActivityStepResult {
                 localArray = [[String: Any]]()
               }
 
-              let stepDict = (
-                ((self.step as? ActivityFormStep)!.itemsArray) as [[String: Any]]
-              )[j]
+              let stepDict = (((self.step as? ActivityFormStep)!.itemsArray) as [[String: Any]])[j]
 
               activityStepResult?.key = stepDict["key"] as! String?
 
@@ -309,11 +308,10 @@ class ActivityStepResult {
               let questionResult: ORKQuestionResult? = (result as? ORKQuestionResult)
 
               if Utilities.isValidValue(
-                someObject: (
-                  activityStepResult?.step?.resultType as? String as AnyObject
-                )
+                someObject: (activityStepResult?.step?.resultType as? String as AnyObject)
               ) {
-                self.subTypeForForm = activityStepResult?.step?.resultType
+                self.subTypeForForm =
+                  activityStepResult?.step?.resultType
                   as? String
 
               } else {
@@ -355,7 +353,8 @@ class ActivityStepResult {
 
         if (activityResult as? ORKSpatialSpanMemoryResult) != nil {
           // Result Handling for Spatial Span Memory
-          let stepTypeResult: ORKSpatialSpanMemoryResult? = activityResult
+          let stepTypeResult: ORKSpatialSpanMemoryResult? =
+            activityResult
             as? ORKSpatialSpanMemoryResult
 
           if Utilities.isValidValue(someObject: stepTypeResult?.score as AnyObject?)
@@ -393,9 +392,7 @@ class ActivityStepResult {
               }
 
               if self.startTime != nil
-                && (
-                  Utilities.getStringFromDate(date: self.startTime!) != nil
-                )
+                && (Utilities.getStringFromDate(date: self.startTime!) != nil)
               {
 
                 resultDict?[kActivityStepStartTime] = Utilities.getStringFromDate(
@@ -408,9 +405,7 @@ class ActivityStepResult {
                 resultDict?[kActivityStepStartTime] = dateString
               }
               if self.endTime != nil
-                && (
-                  Utilities.getStringFromDate(date: self.endTime!) != nil
-                )
+                && (Utilities.getStringFromDate(date: self.endTime!) != nil)
               {
 
                 resultDict?[kActivityStepEndTime] = Utilities.getStringFromDate(
@@ -431,7 +426,8 @@ class ActivityStepResult {
           }
         } else if (activityResult as? ORKTowerOfHanoiResult) != nil {
           // Result Handling for Towers of Honoi
-          let stepTypeResult: ORKTowerOfHanoiResult? = activityResult
+          let stepTypeResult: ORKTowerOfHanoiResult? =
+            activityResult
             as? ORKTowerOfHanoiResult
 
           for i in 0..<2 {
@@ -455,9 +451,7 @@ class ActivityStepResult {
             }
 
             if self.startTime != nil
-              && (
-                Utilities.getStringFromDate(date: self.startTime!) != nil
-              )
+              && (Utilities.getStringFromDate(date: self.startTime!) != nil)
             {
 
               resultDict?[kActivityStepStartTime] = Utilities.getStringFromDate(
@@ -472,9 +466,7 @@ class ActivityStepResult {
 
             // Saving Start & End Time of Step
             if self.endTime != nil
-              && (
-                Utilities.getStringFromDate(date: self.endTime!) != nil
-              )
+              && (Utilities.getStringFromDate(date: self.endTime!) != nil)
             {
 
               resultDict?[kActivityStepEndTime] = Utilities.getStringFromDate(
@@ -496,7 +488,8 @@ class ActivityStepResult {
 
         } else if (activityResult as? FetalKickCounterTaskResult) != nil {
           // Result handling for FetalKickCounter
-          let stepTypeResult: FetalKickCounterTaskResult? = activityResult
+          let stepTypeResult: FetalKickCounterTaskResult? =
+            activityResult
             as? FetalKickCounterTaskResult
 
           for i in 0..<2 {
@@ -523,9 +516,7 @@ class ActivityStepResult {
 
             // Saving Start & End Time of Step
             if self.startTime != nil
-              && (
-                Utilities.getStringFromDate(date: self.startTime!) != nil
-              )
+              && (Utilities.getStringFromDate(date: self.startTime!) != nil)
             {
               resultDict?[kActivityStepStartTime] = Utilities.getStringFromDate(
                 date: self.startTime!
@@ -536,9 +527,7 @@ class ActivityStepResult {
               resultDict?[kActivityStepStartTime] = dateString
             }
             if self.endTime != nil
-              && (
-                Utilities.getStringFromDate(date: self.endTime!) != nil
-              )
+              && (Utilities.getStringFromDate(date: self.endTime!) != nil)
             {
 
               resultDict?[kActivityStepEndTime] = Utilities.getStringFromDate(
@@ -567,21 +556,19 @@ class ActivityStepResult {
     case ORKQuestionType.scale.rawValue:
       // scale and continuos scale
 
-      if (questionstepResult as? ORKScaleQuestionResult) != nil {
-        let stepTypeResult = (questionstepResult as? ORKScaleQuestionResult)!
+      if let stepTypeResult = questionstepResult as? ORKScaleQuestionResult {
 
         if Utilities.isValidValue(someObject: stepTypeResult.scaleAnswer as AnyObject?) {
 
           if self.step != nil && (self.step as? ActivityQuestionStep) != nil
-            && (
-              (self.step as? ActivityQuestionStep)?.resultType as? String
-            )! == "continuousScale"
+            && ((self.step as? ActivityQuestionStep)?.resultType as? String)! == "continuousScale"
           {
             let formatDict: [String: Any]
 
             formatDict = ((self.step as? ActivityQuestionStep)?.formatDict)!
             let maxFractionDigit = formatDict[
-              kStepQuestionContinuosScaleMaxFractionDigits]
+              kStepQuestionContinuosScaleMaxFractionDigits
+            ]
 
             if (maxFractionDigit as? Int)! == 0 {
               self.value = round((stepTypeResult.scaleAnswer as? Double)!)
@@ -603,26 +590,21 @@ class ActivityStepResult {
               self.value = Double(round(10000 * v) / 10000)
 
             } else {
-              self.value = (stepTypeResult.scaleAnswer as? Double)!
+              self.value = stepTypeResult.scaleAnswer as? Double
             }
           } else {
-            self.value = (stepTypeResult.scaleAnswer as? Double)!
+            self.value = stepTypeResult.scaleAnswer as? Double
           }
         } else {
-          self.value = 0.0
+          self.skipped = true  // Result is not avaiable because the Step was skippable and skipped.
         }
-      } else {
-        let stepTypeResult = (questionstepResult as? ORKChoiceQuestionResult)!
-        if Utilities.isValidObject(someObject: stepTypeResult.choiceAnswers as AnyObject?) {
-
-          if (stepTypeResult.choiceAnswers?.count)! > 0 {
-            self.value = stepTypeResult.choiceAnswers?.first
-
-          } else {
-            self.value = ""
-          }
+      } else if let stepTypeResult = questionstepResult as? ORKChoiceQuestionResult {
+        if let choices = stepTypeResult.choiceAnswers,
+          choices.count > 0
+        {
+          self.value = stepTypeResult.choiceAnswers?.first
         } else {
-          self.value = ""
+          self.skipped = true  // Choice count should be greater than 0 unless user skipped the Step.
         }
       }
 
@@ -676,7 +658,7 @@ class ActivityStepResult {
             self.value = ""
 
           } else {
-            self.value = []
+            self.skipped = true
           }
         }
       } else {
@@ -688,20 +670,15 @@ class ActivityStepResult {
           self.value = ""
 
         } else {
-          self.value = []
+          self.skipped = true
         }
       }
     case ORKQuestionType.multipleChoice.rawValue:
       // textchoice + imageChoice
-
-      let stepTypeResult = (questionstepResult as? ORKChoiceQuestionResult)!
-
-      if let answers = stepTypeResult.choiceAnswers {
-
+      let stepTypeResult = questionstepResult as? ORKChoiceQuestionResult
+      if let answers = stepTypeResult?.choiceAnswers {
         var resultArray: [Any] = []
-
         for value in answers {
-
           if let stringValue = value as? String {
             resultArray.append(stringValue)
           } else if let otherDict = value as? [String: Any] {
@@ -709,141 +686,92 @@ class ActivityStepResult {
           } else {
             resultArray.append(value)
           }
-
         }
         self.value = resultArray
-
       } else {
-        self.value = []
+        self.skipped = true
       }
 
     case ORKQuestionType.boolean.rawValue:
-
-      let stepTypeResult = (questionstepResult as? ORKBooleanQuestionResult)!
-
-      if Utilities.isValidValue(someObject: stepTypeResult.booleanAnswer as AnyObject?) {
-        self.value = stepTypeResult.booleanAnswer! == 1 ? true : false
-
+      let stepTypeResult = questionstepResult as? ORKBooleanQuestionResult
+      if let answer = stepTypeResult?.booleanAnswer {
+        self.value = answer == 1 ? true : false
       } else {
-        self.value = false
+        self.skipped = true
       }
 
-    case ORKQuestionType.integer.rawValue:
+    case ORKQuestionType.integer.rawValue, ORKQuestionType.decimal.rawValue:
       // numeric type
-      let stepTypeResult = (questionstepResult as? ORKNumericQuestionResult)!
-
-      if Utilities.isValidValue(someObject: stepTypeResult.numericAnswer as AnyObject?) {
-        self.value = Double(truncating: stepTypeResult.numericAnswer!)
-
+      let stepTypeResult = questionstepResult as? ORKNumericQuestionResult
+      if let answer = stepTypeResult?.numericAnswer {
+        self.value = Double(truncating: answer)
       } else {
-        self.value = 0.0
-      }
-
-    case ORKQuestionType.decimal.rawValue:
-      // numeric type
-      let stepTypeResult = (questionstepResult as? ORKNumericQuestionResult)!
-
-      if Utilities.isValidValue(someObject: stepTypeResult.numericAnswer as AnyObject?) {
-        self.value = Double(truncating: stepTypeResult.numericAnswer!)
-
-      } else {
-        self.value = 0.0
+        self.skipped = true
       }
 
     case ORKQuestionType.timeOfDay.rawValue:
-      let stepTypeResult = (questionstepResult as? ORKTimeOfDayQuestionResult)!
+      let stepTypeResult = questionstepResult as? ORKTimeOfDayQuestionResult
 
-      if stepTypeResult.dateComponentsAnswer != nil {
+      if let dateComponent = stepTypeResult?.dateComponentsAnswer {
 
-        let hour: Int? = (
-          stepTypeResult.dateComponentsAnswer?.hour == nil
-            ? 0 : stepTypeResult.dateComponentsAnswer?.hour
-        )
-        let minute: Int? = (
-          stepTypeResult.dateComponentsAnswer?.minute == nil
-            ? 0 : stepTypeResult.dateComponentsAnswer?.minute
-        )
-        let seconds: Int? = (
-          stepTypeResult.dateComponentsAnswer?.second == nil
-            ? 0 : stepTypeResult.dateComponentsAnswer?.second
-        )
+        let hour: Int = dateComponent.hour ?? 0
+        let minute: Int = dateComponent.minute ?? 0
+        let seconds: Int = dateComponent.second ?? 0
 
-        self.value = (
-          (hour! < 10 ? ("0" + "\(hour!)") : "\(hour!)") + ":" + (
-            minute! < 10 ? ("0" + "\(minute!)") : "\(minute!)"
-          ) + ":" + (seconds! < 10 ? ("0" + "\(seconds!)") : "\(seconds!)")
-        )
-
+        self.value =
+          ((hour < 10 ? ("0" + "\(hour)") : "\(hour)") + ":" + (minute < 10 ? ("0" + "\(minute)") : "\(minute)")
+            + ":" + (seconds < 10 ? ("0" + "\(seconds)") : "\(seconds)"))
       } else {
-        self.value = "00:00:00"
+        self.skipped = true
       }
 
-    case ORKQuestionType.date.rawValue:
-      let stepTypeResult = (questionstepResult as? ORKDateQuestionResult)!
-
-      if Utilities.isValidValue(someObject: stepTypeResult.dateAnswer as AnyObject?) {
-        self.value = Utilities.getStringFromDate(date: stepTypeResult.dateAnswer!)
+    case ORKQuestionType.date.rawValue, ORKQuestionType.dateAndTime.rawValue:
+      let stepTypeResult = questionstepResult as? ORKDateQuestionResult
+      if let dateString = stepTypeResult?.dateAnswer,
+        let date = Utilities.getStringFromDate(date: dateString)
+      {
+        self.value = date
       } else {
-        self.value = "0000-00-00'T'00:00:00"
+        self.skipped = true
       }
-    case ORKQuestionType.dateAndTime.rawValue:
-      let stepTypeResult = (questionstepResult as? ORKDateQuestionResult)!
 
-      if Utilities.isValidValue(someObject: stepTypeResult.dateAnswer as AnyObject?) {
-        self.value = Utilities.getStringFromDate(date: stepTypeResult.dateAnswer!)
-
-      } else {
-        self.value = "0000-00-00'T'00:00:00"
-      }
     case ORKQuestionType.text.rawValue:
       // text + email
-
-      let stepTypeResult = (questionstepResult as? ORKTextQuestionResult)!
-
-      if Utilities.isValidValue(someObject: stepTypeResult.answer as AnyObject?) {
-        self.value = (stepTypeResult.answer as? String)!
-
+      let stepTypeResult = questionstepResult as? ORKTextQuestionResult
+      if let value = stepTypeResult?.answer as? String {
+        self.value = value
       } else {
-        self.value = ""
+        self.skipped = true
       }
 
     case ORKQuestionType.timeInterval.rawValue:
-
-      let stepTypeResult = (questionstepResult as? ORKTimeIntervalQuestionResult)!
-
-      if Utilities.isValidValue(someObject: stepTypeResult.intervalAnswer as AnyObject?) {
-        self.value = Double(truncating: stepTypeResult.intervalAnswer!) / 3600
-
+      let stepTypeResult = questionstepResult as? ORKTimeIntervalQuestionResult
+      if let intervalAnswer = stepTypeResult?.intervalAnswer {
+        self.value = Double(truncating: intervalAnswer) / 3600
       } else {
-        self.value = 0.0
+        self.skipped = true
       }
 
     case ORKQuestionType.height.rawValue:
-
-      let stepTypeResult = (questionstepResult as? ORKNumericQuestionResult)!
-      if Utilities.isValidValue(someObject: stepTypeResult.numericAnswer as AnyObject?) {
-        self.value = Double(truncating: stepTypeResult.numericAnswer!)
-
+      let stepTypeResult = questionstepResult as? ORKNumericQuestionResult
+      if let answer = stepTypeResult?.numericAnswer {
+        self.value = Double(truncating: answer)
       } else {
-        self.value = 0.0
+        self.skipped = true
       }
 
     case ORKQuestionType.location.rawValue:
-      let stepTypeResult = (questionstepResult as? ORKLocationQuestionResult)!
-
-      if stepTypeResult.locationAnswer != nil
-        && CLLocationCoordinate2DIsValid(
-          (stepTypeResult.locationAnswer?.coordinate)!
-        )
-      {
-
-        let lat = stepTypeResult.locationAnswer?.coordinate.latitude
-        let long = stepTypeResult.locationAnswer?.coordinate.longitude
-
-        self.value = "\(lat!)" + "," + "\(long!)"
-
+      let stepTypeResult = questionstepResult as? ORKLocationQuestionResult
+      if let locationAnswer = stepTypeResult?.locationAnswer {
+        if CLLocationCoordinate2DIsValid(locationAnswer.coordinate) {
+          let lat = locationAnswer.coordinate.latitude
+          let long = locationAnswer.coordinate.longitude
+          self.value = "\(lat)" + "," + "\(long)"
+        } else {
+          self.value = "0.0,0.0"
+        }
       } else {
-        self.value = "0.0,0.0"
+        self.skipped = true
       }
     default: break
     }
