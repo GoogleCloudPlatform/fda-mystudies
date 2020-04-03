@@ -160,9 +160,10 @@ class VerificationViewController: UIViewController {
 
     let storyboard = UIStoryboard(name: kStoryboardIdentifierGateway, bundle: nil)
 
-    let fda = storyboard.instantiateViewController(
-      withIdentifier: kChangePasswordViewControllerIdentifier
-    )
+    let fda =
+      storyboard.instantiateViewController(
+        withIdentifier: kChangePasswordViewControllerIdentifier
+      )
       as! ChangePasswordViewController
 
     if shouldCreateMenu {
@@ -252,8 +253,7 @@ extension VerificationViewController: NMWebServiceDelegate {
   func failedRequest(_ manager: NetworkManager, requestName: NSString, error: NSError) {
 
     self.removeProgressIndicator()
-    if requestName as String == AuthServerMethods.getRefreshedToken.description && error.code == 401
-    {  //unauthorized
+    if requestName as String == AuthServerMethods.getRefreshedToken.description && error.code == 401 {  //unauthorized
       UIUtilities.showAlertMessageWithActionHandler(
         kErrorTitle,
         message: error.localizedDescription,

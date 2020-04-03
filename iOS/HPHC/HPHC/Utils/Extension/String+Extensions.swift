@@ -48,6 +48,11 @@ extension String {
       return !isEmpty && range(of: "[^a-zA-Z0-9]", options: .regularExpression) == nil
     }
   }
+
+  static func randomString(length: Int) -> String {
+    let letters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
+    return String((0..<length).compactMap { _ in letters.randomElement() })
+  }
 }
 
 extension String {

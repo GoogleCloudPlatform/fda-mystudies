@@ -212,9 +212,10 @@ class NotificationViewController: UIViewController {
 
       self.navigationController?.setNavigationBarHidden(true, animated: true)
 
-      viewController = storyboard.instantiateViewController(
-        withIdentifier: kStudyDashboardTabbarControllerIdentifier
-      )
+      viewController =
+        storyboard.instantiateViewController(
+          withIdentifier: kStudyDashboardTabbarControllerIdentifier
+        )
         as? StudyDashboardTabbarViewController
 
       switch type! as AppNotification.NotificationSubType {
@@ -247,10 +248,11 @@ extension NotificationViewController: UITableViewDataSource {
   func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
     var cell: NotificationTableViewCell?
 
-    cell = tableView.dequeueReusableCell(
-      withIdentifier: kNotificationTableViewCellIdentifier,
-      for: indexPath
-    )
+    cell =
+      tableView.dequeueReusableCell(
+        withIdentifier: kNotificationTableViewCellIdentifier,
+        for: indexPath
+      )
       as? NotificationTableViewCell
 
     cell?.populateCellWith(notification: (notificationArray[indexPath.row]))

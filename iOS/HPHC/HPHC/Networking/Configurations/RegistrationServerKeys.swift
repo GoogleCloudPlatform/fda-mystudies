@@ -5,13 +5,13 @@
 //  https://opensource.org/licenses/MIT.
 
 enum RegistrationServerAPIKey {
-    static var apiKey: String {
-         return (try? Configuration.value(for: "REGISTRATIONSERVER_API_KEY")) ?? ""
-    }
+  static var apiKey: String {
+    return (try? Configuration.value(for: "REGISTRATIONSERVER_API_KEY")) ?? ""
+  }
 }
 
 enum RegistrationServerSecretKey {
-    static var secretKey: String {
-         return (try? Configuration.value(for: "REGISTRATIONSERVER_API_SECERET"))  ?? ""
-    }
+  static var secretKey: String {
+    return (try? Configuration.value(for: "REGISTRATIONSERVER_API_SECERET")) ?? ""
+  }
 }

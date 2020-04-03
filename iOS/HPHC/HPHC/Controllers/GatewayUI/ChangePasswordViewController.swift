@@ -127,10 +127,9 @@ class ChangePasswordViewController: UIViewController {
 
     let storyboard = UIStoryboard(name: kStoryboardIdentifierGateway, bundle: nil)
 
-    let fdaVC = (
-      storyboard.instantiateViewController(withIdentifier: kStoryboardIdentifierSlideMenuVC)
-        as? FDASlideMenuViewController
-    )!
+    let fdaVC =
+      (storyboard.instantiateViewController(withIdentifier: kStoryboardIdentifierSlideMenuVC)
+      as? FDASlideMenuViewController)!
 
     self.navigationController?.pushViewController(fdaVC, animated: true)
   }
@@ -175,13 +174,12 @@ extension ChangePasswordViewController: UITableViewDataSource {
   func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
     let tableViewData = (tableViewRowDetails?.object(at: indexPath.row) as? NSDictionary)!
 
-    let cell = (
-      tableView.dequeueReusableCell(
+    let cell =
+      (tableView.dequeueReusableCell(
         withIdentifier: kSignInTableViewCellIdentifier,
         for: indexPath
       )
-        as? SignInTableViewCell
-    )!
+      as? SignInTableViewCell)!
 
     cell.populateCellData(data: tableViewData, securedText: true)
     var tagIncremental = 100
@@ -293,9 +291,7 @@ extension ChangePasswordViewController: NMWebServiceDelegate {
 
       // do not create menu
 
-      let leftController = (
-        slideMenuController()?.leftViewController as? LeftMenuViewController
-      )!
+      let leftController = (slideMenuController()?.leftViewController as? LeftMenuViewController)!
       leftController.createLeftmenuItems()
       leftController.changeViewController(.studyList)
 
@@ -305,9 +301,7 @@ extension ChangePasswordViewController: NMWebServiceDelegate {
       self.createMenuView()
     } else if viewLoadFrom == .joinStudy {
 
-      let leftController = (
-        slideMenuController()?.leftViewController as? LeftMenuViewController
-      )!
+      let leftController = (slideMenuController()?.leftViewController as? LeftMenuViewController)!
       leftController.createLeftmenuItems()
       self.performSegue(withIdentifier: "unwindStudyHomeSegue", sender: self)
     }
@@ -316,8 +310,7 @@ extension ChangePasswordViewController: NMWebServiceDelegate {
   func failedRequest(_ manager: NetworkManager, requestName: NSString, error: NSError) {
     self.removeProgressIndicator()
 
-    if requestName as String == AuthServerMethods.getRefreshedToken.description && error.code == 401
-    {  //unauthorized
+    if requestName as String == AuthServerMethods.getRefreshedToken.description && error.code == 401 {  //unauthorized
       UIUtilities.showAlertMessageWithActionHandler(
         kErrorTitle,
         message: error.localizedDescription,

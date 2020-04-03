@@ -203,7 +203,6 @@ class Study: Hashable {
       if let userStudyStatus = currentUser.participatedStudies.filter({ $0.studyId == self.studyId }
       ).last {
         self.userParticipateState = userStudyStatus
-
       } else {
         self.userParticipateState = UserStudyStatus()
       }
@@ -288,25 +287,19 @@ class StudyAnchorDate {
         if Utilities.isValidValue(
           someObject: questionInfo[kStudyAnchorDateActivityId] as AnyObject
         ) {
-          self.anchorDateActivityId = (
-            questionInfo[kStudyAnchorDateActivityId] as? String
-          )!
+          self.anchorDateActivityId = (questionInfo[kStudyAnchorDateActivityId] as? String)!
         }
 
         if Utilities.isValidValue(
           someObject: questionInfo[kStudyAnchorDateActivityVersion] as AnyObject
         ) {
-          self.anchorDateActivityVersion = (
-            questionInfo[kStudyAnchorDateActivityVersion] as? String
-          )!
+          self.anchorDateActivityVersion = (questionInfo[kStudyAnchorDateActivityVersion] as? String)!
         }
 
         if Utilities.isValidValue(
           someObject: questionInfo[kStudyAnchorDateQuestionKey] as AnyObject
         ) {
-          self.anchorDateQuestionKey = (
-            questionInfo[kStudyAnchorDateQuestionKey] as? String
-          )!
+          self.anchorDateQuestionKey = (questionInfo[kStudyAnchorDateQuestionKey] as? String)!
         }
       }
     }

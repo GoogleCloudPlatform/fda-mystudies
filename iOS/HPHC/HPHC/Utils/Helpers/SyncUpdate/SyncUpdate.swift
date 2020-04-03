@@ -55,10 +55,11 @@ class SyncUpdate {
 
       if toBeSyncedData?.requestParams != nil {
 
-        params = try? JSONSerialization.jsonObject(
-          with: (toBeSyncedData?.requestParams)!,
-          options: []
-        ) as? [String: Any]
+        params =
+          try? JSONSerialization.jsonObject(
+            with: (toBeSyncedData?.requestParams)!,
+            options: []
+          ) as? [String: Any]
 
       }
 
@@ -67,10 +68,11 @@ class SyncUpdate {
 
       if toBeSyncedData?.headerParams != nil {
 
-        headers = try? JSONSerialization.jsonObject(
-          with: (toBeSyncedData?.headerParams)!,
-          options: []
-        ) as? [String: String]
+        headers =
+          try? JSONSerialization.jsonObject(
+            with: (toBeSyncedData?.headerParams)!,
+            options: []
+          ) as? [String: String]
       }
 
       let methodString = toBeSyncedData?.method!
@@ -80,27 +82,26 @@ class SyncUpdate {
 
         let methodName = methodString?.components(separatedBy: ".").first
         let registrationMethod = RegistrationMethods(rawValue: methodName!)
-        let method = registrationMethod?.method
-        UserServices().syncOfflineSavedData(
-          method: method!,
-          params: params,
-          headers: headers,
-          delegate: self
-        )
-
-      } else if server == "wcp" {
-        // Do Nothing
+        if let method = registrationMethod?.method {
+          UserServices().syncOfflineSavedData(
+            method: method,
+            params: params,
+            headers: headers,
+            delegate: self
+          )
+        }
       } else if server == "response" {
 
         let methodName = methodString?.components(separatedBy: ".").first
         let registrationMethod = ResponseMethods(rawValue: methodName!)
-        let method = registrationMethod?.method
-        ResponseServices().syncOfflineSavedData(
-          method: method!,
-          params: params,
-          headers: headers,
-          delegate: self
-        )
+        if let method = registrationMethod?.method {
+          ResponseServices().syncOfflineSavedData(
+            method: method,
+            params: params,
+            headers: headers,
+            delegate: self
+          )
+        }
       }
 
       /// delete current database object
@@ -142,13 +143,14 @@ class SyncUpdate {
           let activityVersion = activity?.version!
           let currentRunId = run?.runId
 
-          let info = [
-            kStudyId: studyId!,
-            kActivityId: activiyId!,
-            kActivityName: activityName!,
-            "version": activityVersion!,
-            kActivityRunId: "\(currentRunId!)",
-          ] as [String: String]
+          let info =
+            [
+              kStudyId: studyId!,
+              kActivityId: activiyId!,
+              kActivityName: activityName!,
+              "version": activityVersion!,
+              kActivityRunId: "\(currentRunId!)",
+            ] as [String: String]
 
           let activityType = activity?.type
           var data: [String: Any] = [:]

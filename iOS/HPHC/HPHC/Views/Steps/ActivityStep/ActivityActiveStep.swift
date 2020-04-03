@@ -148,7 +148,7 @@ class ActivityActiveStep: ActivityStep {
         someObject: stepDict[kActivityStepActiveOptions] as AnyObject
       ) {
 
-        for option:Int in (stepDict[kActivityStepActiveOptions] as? [Int])! {
+        for option: Int in (stepDict[kActivityStepActiveOptions] as? [Int])! {
 
           self.options?.insert(ORKPredefinedTaskOption(rawValue: UInt(option)))
         }
@@ -194,9 +194,7 @@ class ActivityActiveStep: ActivityStep {
             withIdentifier: key!,
             intendedUseDescription: title!,
             speechInstruction: (formatDict?[kActiveAudioSpeechInstruction] as? String)!,
-            shortSpeechInstruction: (
-              formatDict?[kActiveAudioShortSpeechInstruction] as? String
-            )!,
+            shortSpeechInstruction: (formatDict?[kActiveAudioShortSpeechInstruction] as? String)!,
             duration: (formatDict?[kActiveAudioDuration] as? TimeInterval)!,
             recordingSettings: nil,
             checkAudioLevel: true,
@@ -220,12 +218,8 @@ class ActivityActiveStep: ActivityStep {
           return ORKOrderedTask.fitnessCheck(
             withIdentifier: key!,
             intendedUseDescription: title!,
-            walkDuration: (
-              formatDict?[kActiveFitnessCheckWalkDuration] as? TimeInterval
-            )!,
-            restDuration: (
-              formatDict?[kActiveFitnessCheckRestDuration] as? TimeInterval
-            )!,
+            walkDuration: (formatDict?[kActiveFitnessCheckWalkDuration] as? TimeInterval)!,
+            restDuration: (formatDict?[kActiveFitnessCheckRestDuration] as? TimeInterval)!,
             options: self.options!
           )
         } else {
@@ -287,12 +281,8 @@ class ActivityActiveStep: ActivityStep {
             presentationMode: ORKPSATPresentationMode(
               rawValue: (formatDict?[kActivePSATPresentationMode] as? Int)!
             ),
-            interStimulusInterval: (
-              formatDict?[kActivePSATInterStimulusInterval] as? TimeInterval
-            )!,
-            stimulusDuration: (
-              formatDict?[kActivePSATStimulusDuration] as? TimeInterval
-            )!,
+            interStimulusInterval: (formatDict?[kActivePSATInterStimulusInterval] as? TimeInterval)!,
+            stimulusDuration: (formatDict?[kActivePSATStimulusDuration] as? TimeInterval)!,
             seriesLength: (formatDict?[kActivePSATSeriesLength] as? Int)!,
             options: self.options!
           )
@@ -313,9 +303,7 @@ class ActivityActiveStep: ActivityStep {
           return ORKOrderedTask.shortWalk(
             withIdentifier: key!,
             intendedUseDescription: title!,
-            numberOfStepsPerLeg: (
-              formatDict?[kActiveShortWalkNumberOfStepsPerLeg] as? Int
-            )!,
+            numberOfStepsPerLeg: (formatDict?[kActiveShortWalkNumberOfStepsPerLeg] as? Int)!,
             restDuration: (formatDict?[kActiveShortWalkRestDuration] as? TimeInterval)!,
             options: self.options!
           )
@@ -359,9 +347,7 @@ class ActivityActiveStep: ActivityStep {
           let maximumSpan = (formatDict?[kActiveSpatialSpanMemoryMaximumSpan] as? Int)
           let playSpeed = (formatDict?[kActiveSpatialSpanMemoryPlaySpeed] as? Float)
           let maximumTest = (formatDict?[kActiveSpatialSpanMemoryMaximumTests] as? Int)
-          let maximumConsecutiveFailures = (
-            formatDict?[kActiveSpatialSpanMemoryMaximumConsecutiveFailures] as? Int
-          )
+          let maximumConsecutiveFailures = (formatDict?[kActiveSpatialSpanMemoryMaximumConsecutiveFailures] as? Int)
           // Default Flowers are used
           var customPluralName: String? = "flowers"
 
@@ -370,9 +356,7 @@ class ActivityActiveStep: ActivityStep {
               as AnyObject
           ) {
 
-            customPluralName = (
-              formatDict?[kActiveSpatialSpanMemoryCustomTargetPluralName] as? String
-            )!
+            customPluralName = (formatDict?[kActiveSpatialSpanMemoryCustomTargetPluralName] as? String)!
 
           }
           // Initilize Spatial Span Memory task only if matches the following criteria
@@ -390,30 +374,16 @@ class ActivityActiveStep: ActivityStep {
               withIdentifier: key!,
               intendedUseDescription:
                 self.text!,
-              initialSpan: (
-                formatDict?[kActiveSpatialSpanMemoryInitialSpan] as? Int
-              )!,
-              minimumSpan: (
-                formatDict?[kActiveSpatialSpanMemoryMinimumSpan] as? Int
-              )!,
-              maximumSpan: (
-                formatDict?[kActiveSpatialSpanMemoryMaximumSpan] as? Int
-              )!,
-              playSpeed: (
-                formatDict?[kActiveSpatialSpanMemoryPlaySpeed] as? TimeInterval
-              )!,
-              maximumTests: (
-                formatDict?[kActiveSpatialSpanMemoryMaximumTests] as? Int
-              )!,
-              maximumConsecutiveFailures: (
-                formatDict?[kActiveSpatialSpanMemoryMaximumConsecutiveFailures]
-                  as? Int
-              )!,
+              initialSpan: (formatDict?[kActiveSpatialSpanMemoryInitialSpan] as? Int)!,
+              minimumSpan: (formatDict?[kActiveSpatialSpanMemoryMinimumSpan] as? Int)!,
+              maximumSpan: (formatDict?[kActiveSpatialSpanMemoryMaximumSpan] as? Int)!,
+              playSpeed: (formatDict?[kActiveSpatialSpanMemoryPlaySpeed] as? TimeInterval)!,
+              maximumTests: (formatDict?[kActiveSpatialSpanMemoryMaximumTests] as? Int)!,
+              maximumConsecutiveFailures: (formatDict?[kActiveSpatialSpanMemoryMaximumConsecutiveFailures]
+                as? Int)!,
               customTargetImage: image,
               customTargetPluralName: customPluralName,
-              requireReversal: (
-                (formatDict?[kActiveSpatialSpanMemoryRequireReversal]) as? Bool
-              )!,
+              requireReversal: ((formatDict?[kActiveSpatialSpanMemoryRequireReversal]) as? Bool)!,
               options: self.options!
             )
 
@@ -447,13 +417,9 @@ class ActivityActiveStep: ActivityStep {
           return ORKOrderedTask.timedWalk(
             withIdentifier: key!,
             intendedUseDescription: title!,
-            distanceInMeters: (
-              formatDict?[kActiveTimedWalkTistanceInMeters] as? Double
-            )!,
+            distanceInMeters: (formatDict?[kActiveTimedWalkTistanceInMeters] as? Double)!,
             timeLimit: (formatDict?[kActiveTimedWalkTimeLimit] as? TimeInterval)!,
-            turnAroundTimeLimit: (
-              formatDict?[kActiveTimedWalkTurnAroundTimeLimit] as? TimeInterval
-            )!,
+            turnAroundTimeLimit: (formatDict?[kActiveTimedWalkTurnAroundTimeLimit] as? TimeInterval)!,
             includeAssistiveDeviceForm: false,
             options: self.options!
           )
@@ -478,15 +444,9 @@ class ActivityActiveStep: ActivityStep {
           return ORKOrderedTask.toneAudiometryTask(
             withIdentifier: key!,
             intendedUseDescription: title!,
-            speechInstruction: (
-              formatDict?[kActiveToneAudiometrySpeechInstruction] as? String
-            )!,
-            shortSpeechInstruction: (
-              formatDict?[kActiveToneAudiometryShortSpeechInstruction] as? String
-            )!,
-            toneDuration: (
-              formatDict?[kActiveToneAudiometryToneDuration] as? TimeInterval
-            )!,
+            speechInstruction: (formatDict?[kActiveToneAudiometrySpeechInstruction] as? String)!,
+            shortSpeechInstruction: (formatDict?[kActiveToneAudiometryShortSpeechInstruction] as? String)!,
+            toneDuration: (formatDict?[kActiveToneAudiometryToneDuration] as? TimeInterval)!,
             options: self.options!
           )
 
@@ -526,13 +486,9 @@ class ActivityActiveStep: ActivityStep {
           return ORKOrderedTask.twoFingerTappingIntervalTask(
             withIdentifier: key!,
             intendedUseDescription: title!,
-            duration: (
-              formatDict?[kActiveTwoFingerTappingIntervalDuration] as? TimeInterval
-            )!,
+            duration: (formatDict?[kActiveTwoFingerTappingIntervalDuration] as? TimeInterval)!,
             handOptions: ORKPredefinedTaskHandOption(
-              rawValue: (
-                formatDict?[kActiveTwoFingerTappingIntervalHandOptions] as? UInt
-              )!
+              rawValue: (formatDict?[kActiveTwoFingerTappingIntervalHandOptions] as? UInt)!
             ),
             options: self.options!
           )
@@ -556,7 +512,7 @@ class ActivityActiveStep: ActivityStep {
             someObject: formatDict?[kActivityStepActiveOptions] as AnyObject
           ) {
             activeOptions = nil
-            for option:Int in (formatDict?[kActivityStepActiveOptions] as? [Int])! {
+            for option: Int in (formatDict?[kActivityStepActiveOptions] as? [Int])! {
 
               activeOptions?.insert(ORKTremorActiveTaskOption(rawValue: UInt(option)))
 
@@ -569,9 +525,7 @@ class ActivityActiveStep: ActivityStep {
           return ORKOrderedTask.tremorTest(
             withIdentifier: key!,
             intendedUseDescription: title!,
-            activeStepDuration: (
-              formatDict?[kActiveTremorTestActiveStepDuration] as? TimeInterval
-            )!,
+            activeStepDuration: (formatDict?[kActiveTremorTestActiveStepDuration] as? TimeInterval)!,
             activeTaskOptions: activeOptions!,
             handOptions: ORKPredefinedTaskHandOption(
               rawValue: (formatDict?[kActiveTremorTestHandOptions] as? UInt)!
@@ -600,9 +554,7 @@ class ActivityActiveStep: ActivityStep {
           if Utilities.isValidValue(
             someObject: formatDict?[kActiveFetalKickCounterkickCounts] as AnyObject
           ) {
-            fetalKickTask?.maxKickCounts = (
-              formatDict?[kActiveFetalKickCounterkickCounts] as? Int
-            )!
+            fetalKickTask?.maxKickCounts = (formatDict?[kActiveFetalKickCounterkickCounts] as? Int)!
 
           } else {
             // Default Fetal Kicks
