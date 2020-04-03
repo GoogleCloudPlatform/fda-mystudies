@@ -5099,7 +5099,7 @@ public class StudyController {
       headers = new HttpHeaders();
       headers.setContentType(MediaType.APPLICATION_JSON);
       headers.set("clientId", map.get("WCPClientId"));
-      headers.set("clientSecret", map.get("WCPSecretKey"));
+      headers.set("secretKey", map.get("WCPSecretKey"));
 
       userRegistrationServerUrl = map.get("userRegistrationServerUrl");
 
@@ -5139,7 +5139,7 @@ public class StudyController {
       headers.setContentType(MediaType.APPLICATION_JSON);
       headers.set("applicationId", "TEST");
       headers.set("clientId", map.get("WCPClientId"));
-      headers.set("clientSecret", map.get("WCPSecretKey"));
+      headers.set("secretKey", map.get("WCPSecretKey"));
 
       responseServerUrl = map.get("responseServerUrl");
 
