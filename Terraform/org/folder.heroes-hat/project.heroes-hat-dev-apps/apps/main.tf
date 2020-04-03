@@ -21,7 +21,7 @@ module "gke-auth-server" {
   project_id             = var.project_id
   region                 = var.region
   regional               = true
-  network                = var.network_name
+  network                = var.network
   subnetwork             = "auth-server-ws-cluster-subnet"
   ip_range_pods          = "auth-server-ws-cluster-ip-range-pods"
   ip_range_services      = "auth-server-ws-cluster-ip-range-svc"
@@ -47,7 +47,7 @@ module "gke-response-server" {
   project_id             = var.project_id
   region                 = var.region
   regional               = true
-  network                = var.network_name
+  network                = var.network
   subnetwork             = "response-server-ws-cluster-subnet"
   ip_range_pods          = "response-server-ws-cluster-ip-range-pods"
   ip_range_services      = "response-server-ws-cluster-ip-range-svc"
@@ -73,7 +73,7 @@ module "gke-study-designer" {
   project_id             = var.project_id
   region                 = var.region
   regional               = true
-  network                = var.network_name
+  network                = var.network
   subnetwork             = "study-designer-cluster-subnet"
   ip_range_pods          = "study-designer-cluster-ip-range-pods"
   ip_range_services      = "study-designer-cluster-ip-range-svc"
@@ -99,7 +99,7 @@ module "gke-study-metadata" {
   project_id             = var.project_id
   region                 = var.region
   regional               = true
-  network                = var.network_name
+  network                = var.network
   subnetwork             = "study-meta-data-cluster-subnet"
   ip_range_pods          = "study-meta-data-cluster-ip-range-pods"
   ip_range_services      = "study-meta-data-cluster-ip-range-svc"
@@ -125,7 +125,7 @@ module "gke-registration-server" {
   project_id             = var.project_id
   region                 = var.region
   regional               = true
-  network                = var.network_name
+  network                = var.network
   subnetwork             = "user-registration-server-ws-cluster-subnet"
   ip_range_pods          = "user-registration-server-ws-cluster-ip-range-pods"
   ip_range_services      = "user-registration-server-ws-cluster-ip-range-svc"

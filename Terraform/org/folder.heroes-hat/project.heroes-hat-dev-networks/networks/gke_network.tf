@@ -2,7 +2,7 @@ provider "google" {
   version = "~> 3.12.0"
 }
 
-module "gcp-network" {
+module "gke_network" {
   source       = "terraform-google-modules/network/google"
   version      = "~> 2.0"
   project_id   = var.project_id

@@ -9,8 +9,8 @@ variable "region" {
   type        = string
 }
 
-variable "network_name" {
-  description = "The name of the network to use for the clusters"
+variable "network" {
+  description = "The network to use for the clusters"
   type        = string
   default     = "default"
 }
