@@ -4,7 +4,7 @@ dependency "project" {
 }
 
 dependency "network" {
-  config_path: "../../project.heroes-hat-dev-network/network"
+  config_path: "../../project.heroes-hat-dev-networks/networks"
 
   mock_outputs = {
     private_network = "mock-network"
