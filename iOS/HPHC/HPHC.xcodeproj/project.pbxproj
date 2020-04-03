@@ -119,9 +119,7 @@
 		6EF2FCEF1E72CDE900B5F212 /* LeftMenuResourceTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6EF2FCEE1E72CDE900B5F212 /* LeftMenuResourceTableViewCell.swift */; };
 		6F0221792264729E00A2DBC8 /* TextChoiceCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6F0221772264729D00A2DBC8 /* TextChoiceCell.xib */; };
 		6F02217A2264729E00A2DBC8 /* OtherTextChoiceCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6F0221782264729E00A2DBC8 /* OtherTextChoiceCell.xib */; };
-		6F07148924279452002749DA /* Default.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 6F07148824279452002749DA /* Default.xcconfig */; };
 		6F07148C2428DCE2002749DA /* Collection+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F07148B2428DCE2002749DA /* Collection+Extensions.swift */; };
-		6F209EF9242E12B1005DD23F /* Production.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 6FD1E11423ED41B0009DACAE /* Production.xcconfig */; };
 		6F209F02242E5E96005DD23F /* Data+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F209F01242E5E96005DD23F /* Data+Extensions.swift */; };
 		6F2392DE2423E0F300013AC0 /* EnrollServices.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F2392DD2423E0F300013AC0 /* EnrollServices.swift */; };
 		6F36467824293ED2008F815A /* RegistrationServerKeys.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FD1E15123F17ACA009DACAE /* RegistrationServerKeys.swift */; };
@@ -1923,7 +1921,6 @@
 				89055913230148FD005FB284 /* Branding.plist in Resources */,
 				940577AC1E767C8D0043215C /* ChangePasswordData.plist in Resources */,
 				6ED134381E5F1B110090C976 /* Consent.json in Resources */,
-				6F209EF9242E12B1005DD23F /* Production.xcconfig in Resources */,
 				94B3DD541E6ED8E500327AE5 /* SignInPlist.plist in Resources */,
 				6EDDB65A1EE05E4C00C79337 /* NewProgressView.xib in Resources */,
 				6EDDB6611EE05FDC00C79337 /* fda_preload.gif in Resources */,
@@ -1948,7 +1945,6 @@
 				94B3DD441E6ED8E500327AE5 /* Profile.plist in Resources */,
 				6E417AD31F4D5DA1007F27DA /* AnanomousFilterData.plist in Resources */,
 				6E7D2D8C1E4340B200763D4C /* UserProfile.plist in Resources */,
-				6F07148924279452002749DA /* Default.xcconfig in Resources */,
 				6E7D2D901E43526100763D4C /* Register.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -2313,7 +2309,7 @@
 /* Begin XCBuildConfiguration section */
 		6E7D2D7C1E433E8800763D4C /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 6FD1E11423ED41B0009DACAE /* Production.xcconfig */;
+			baseConfigurationReference = 6F07148824279452002749DA /* Default.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
