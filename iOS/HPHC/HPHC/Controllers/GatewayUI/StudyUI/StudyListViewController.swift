@@ -1,4 +1,4 @@
-// License Agreement for FDA My Studies
+// License Agreement for FDA MyStudies
 // Copyright © 2017-2019 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors.
 // Copyright 2020 Google LLC
 // Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated
@@ -278,7 +278,7 @@ class StudyListViewController: UIViewController {
 
       if daysLastSeen >= 7 {  // Notification is disabled for 7 or more Days
         UIUtilities.showAlertWithTitleAndMessage(
-          title: NSLocalizedString("FDA My Studies", comment: "") as NSString,
+          title: NSLocalizedString("FDA MyStudies", comment: "") as NSString,
           message: NSLocalizedString(kMessageAppNotificationOffRemainder, comment: "")
             as NSString
         )
@@ -295,7 +295,8 @@ class StudyListViewController: UIViewController {
     let data = NSData(contentsOfFile: filePath!)
 
     do {
-      let response = try JSONSerialization.jsonObject(with: data! as Data, options: [])
+      let response =
+        try JSONSerialization.jsonObject(with: data! as Data, options: [])
         as? [String: Any]
 
       let studies = (response?[kStudies] as? [[String: Any]])!
@@ -344,24 +345,22 @@ class StudyListViewController: UIViewController {
       name: kStoryboardIdentifierGateway,
       bundle: Bundle.main
     )
-    let notificationController = (
-      gatewayStoryBoard.instantiateViewController(
+    let notificationController =
+      (gatewayStoryBoard.instantiateViewController(
         withIdentifier: kNotificationViewControllerIdentifier
       )
-        as? NotificationViewController
-    )!
+      as? NotificationViewController)!
     navigationController?.pushViewController(notificationController, animated: true)
   }
 
   /// Navigate to StudyHomeViewController screen.
   func navigateToStudyHome() {
     let studyStoryBoard = UIStoryboard(name: kStudyStoryboard, bundle: Bundle.main)
-    let studyHomeController = (
-      studyStoryBoard.instantiateViewController(
+    let studyHomeController =
+      (studyStoryBoard.instantiateViewController(
         withIdentifier: String(describing: StudyHomeViewController.classForCoder())
       )
-        as? StudyHomeViewController
-    )!
+      as? StudyHomeViewController)!
     studyHomeController.delegate = self
     navigationController?.pushViewController(studyHomeController, animated: true)
   }
@@ -370,12 +369,11 @@ class StudyListViewController: UIViewController {
   func pushToStudyDashboard(animated: Bool = true) {
     let studyStoryBoard = UIStoryboard(name: kStudyStoryboard, bundle: Bundle.main)
 
-    let studyDashboard = (
-      studyStoryBoard.instantiateViewController(
+    let studyDashboard =
+      (studyStoryBoard.instantiateViewController(
         withIdentifier: kStudyDashboardTabbarControllerIdentifier
       )
-        as? StudyDashboardTabbarViewController
-    )!
+      as? StudyDashboardTabbarViewController)!
 
     navigationController?.navigationBar.isHidden = true
     navigationController?.pushViewController(studyDashboard, animated: animated)
@@ -389,6 +387,7 @@ class StudyListViewController: UIViewController {
 
     let passcodeStep = ORKPasscodeStep(identifier: kPasscodeStepIdentifier)
     passcodeStep.passcodeType = .type4Digit
+    passcodeStep.text = kSetPasscodeDescription
 
     let task = ORKOrderedTask(identifier: kPasscodeTaskIdentifier, steps: [passcodeStep])
     let taskViewController = ORKTaskViewController(task: task, taskRun: nil)
@@ -478,12 +477,11 @@ class StudyListViewController: UIViewController {
       by: { (study1: Study, study2: Study) -> Bool in
 
         if study1.status == study2.status {
-          return (
-            study1.userParticipateState.status.sortIndex
-              < study2.userParticipateState
-              .status
-              .sortIndex
-          )
+          return
+            (study1.userParticipateState.status.sortIndex
+            < study2.userParticipateState
+            .status
+            .sortIndex)
         }
         return (study1.status.sortIndex < study2.status.sortIndex)
       })
@@ -795,12 +793,8 @@ extension StudyListViewController: StudyFilterDelegates {
     if !searchText.isEmpty {
       searchTextFilteredStudies = allStudyList.filter {
         ($0.name?.containsIgnoringCase(searchText))!
-          || (
-            $0.category?.containsIgnoringCase(searchText)
-          )! || ($0.description?.containsIgnoringCase(searchText))!
-          || (
-            $0.sponserName?.containsIgnoringCase(searchText)
-          )!
+          || ($0.category?.containsIgnoringCase(searchText))! || ($0.description?.containsIgnoringCase(searchText))!
+          || ($0.sponserName?.containsIgnoringCase(searchText))!
       }
     }
 
@@ -874,10 +868,9 @@ extension StudyListViewController: UITableViewDataSource {
       cellIdentifier = "anonymousStudyCell"
     }
 
-    let cell = (
-      tableView.dequeueReusableCell(withIdentifier: cellIdentifier, for: indexPath)
-        as? StudyListCell
-    )!
+    let cell =
+      (tableView.dequeueReusableCell(withIdentifier: cellIdentifier, for: indexPath)
+      as? StudyListCell)!
 
     cell.populateCellWith(study: studiesList[indexPath.row])
     cell.delegate = self
@@ -1082,8 +1075,7 @@ extension StudyListViewController: NMWebServiceDelegate {
     let appdelegate = (UIApplication.shared.delegate as? AppDelegate)!
     appdelegate.window?.removeProgressIndicatorFromWindow()
 
-    if requestName as String == AuthServerMethods.getRefreshedToken.description && error.code == 401
-    {  // unauthorized Access
+    if requestName as String == AuthServerMethods.getRefreshedToken.description && error.code == 401 {  // unauthorized Access
       UIUtilities.showAlertMessageWithActionHandler(
         kErrorTitle,
         message: error.localizedDescription,
@@ -1122,9 +1114,7 @@ extension StudyListViewController: StudyHomeViewDontrollerDelegate {
       let appdelegate = (UIApplication.shared.delegate as? AppDelegate)!
       appdelegate.window?.removeProgressIndicatorFromWindow()
 
-      let leftController = (
-        self.slideMenuController()?.leftViewController as? LeftMenuViewController
-      )!
+      let leftController = (self.slideMenuController()?.leftViewController as? LeftMenuViewController)!
       leftController.changeViewController(.reachOut_signIn)
     }
   }

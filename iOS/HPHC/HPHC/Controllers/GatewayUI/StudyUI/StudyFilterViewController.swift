@@ -1,4 +1,4 @@
-// License Agreement for FDA My Studies
+// License Agreement for FDA MyStudies
 // Copyright © 2017-2019 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors. Permission is
 // hereby granted, free of charge, to any person obtaining a copy of this software and associated
 // documentation files (the &quot;Software&quot;), to deal in the Software without restriction, including without
@@ -168,10 +168,9 @@ extension StudyFilterViewController: UICollectionViewDataSource {
   func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath)
     -> UICollectionViewCell
   {
-    let cell = (
-      collectionView.dequeueReusableCell(withReuseIdentifier: "cell", for: indexPath)
-        as? FilterListCollectionViewCell
-    )!
+    let cell =
+      (collectionView.dequeueReusableCell(withReuseIdentifier: "cell", for: indexPath)
+      as? FilterListCollectionViewCell)!
 
     let filterOption = StudyFilterHandler.instance.filterOptions[indexPath.row]
     cell.displayCollectionData(data: filterOption)
@@ -195,7 +194,8 @@ extension StudyFilterViewController: PinterestLayoutDelegate {
     if filterOptions.title.count > 0 {
       headerHeight = 60
     }
-    let cellTableViewHeight = CGFloat(filterOptions.filterValues.count)
+    let cellTableViewHeight =
+      CGFloat(filterOptions.filterValues.count)
       * FilterListCollectionViewCell.filterTableViewCellHeight
 
     let totalHeight: CGFloat = cellTableViewHeight + headerHeight

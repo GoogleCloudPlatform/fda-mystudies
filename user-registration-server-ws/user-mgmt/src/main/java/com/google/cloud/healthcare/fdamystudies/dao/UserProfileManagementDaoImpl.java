@@ -26,7 +26,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
-import com.google.cloud.healthcare.fdamystudies.beans.DeactivateAcctBean;
 import com.google.cloud.healthcare.fdamystudies.beans.ErrorBean;
 import com.google.cloud.healthcare.fdamystudies.config.ApplicationPropertyConfiguration;
 import com.google.cloud.healthcare.fdamystudies.model.AppInfoDetailsBO;
@@ -295,8 +294,9 @@ public class UserProfileManagementDaoImpl implements UserProfileManagementDao {
   }
 
   @Override
-  public boolean deActivateAcct(
-      String userId, DeactivateAcctBean deactivateAcctBean, Integer userDetailsId) {
+  /*public boolean deActivateAcct(
+  String userId, DeactivateAcctBean deactivateAcctBean, Integer userDetailsId) {*/
+  public boolean deActivateAcct(String userId, List<String> deleteData, Integer userDetailsId) {
     logger.info("UserProfileManagementDaoImpl deActivateAcct() - Starts ");
     Transaction transaction = null;
     CriteriaBuilder criteriaBuilder = null;
@@ -308,16 +308,16 @@ public class UserProfileManagementDaoImpl implements UserProfileManagementDao {
     CriteriaUpdate<UserDetailsBO> criteriaUserDetailsUpdate = null;
     Root<UserDetailsBO> userDetailsRootUpdate = null;
 
-    CriteriaUpdate<ParticipantStudiesBO> CriteriaParticipantStudiesUpdate = null;
+    CriteriaUpdate<ParticipantStudiesBO> criteriaParticipantStudiesUpdate = null;
     Root<ParticipantStudiesBO> participantStudiesRoot = null;
-    List<Predicate> studyIdPredicates = new ArrayList<Predicate>();
+    List<Predicate> studyIdPredicates = new ArrayList<>();
     Predicate[] studyInfoIdPredicates = new Predicate[1];
     Expression<String> studyIdExpression = null;
     Predicate[] predicatesAuthInfo = new Predicate[1];
     Predicate[] predicatesUserDetails = new Predicate[1];
     Predicate[] predicatesUserAppDetails = new Predicate[1];
     CriteriaQuery<StudyInfoBO> studyInfoQuery = null;
-    Root<StudyInfoBO> root_studyBO = null;
+    Root<StudyInfoBO> rootStudyBO = null;
     List<StudyInfoBO> studyInfoBoList = null;
     List<Integer> studyInfoIdList = null;
     int isUpdated = 0;
@@ -326,28 +326,28 @@ public class UserProfileManagementDaoImpl implements UserProfileManagementDao {
     try (Session session = entityManagerFactory.unwrap(SessionFactory.class).openSession()) {
       transaction = session.beginTransaction();
       criteriaBuilder = session.getCriteriaBuilder();
-      if (!deactivateAcctBean.getDeleteData().isEmpty()) {
+      if (deleteData != null && !deleteData.isEmpty()) {
         studyInfoQuery = criteriaBuilder.createQuery(StudyInfoBO.class);
-        root_studyBO = studyInfoQuery.from(StudyInfoBO.class);
-        studyIdExpression = root_studyBO.get("customId");
-        studyInfoIdPredicates[0] = studyIdExpression.in(deactivateAcctBean.getDeleteData());
-        studyInfoQuery.select(root_studyBO).where(studyInfoIdPredicates);
+        rootStudyBO = studyInfoQuery.from(StudyInfoBO.class);
+        studyIdExpression = rootStudyBO.get("customId");
+        studyInfoIdPredicates[0] = studyIdExpression.in(deleteData);
+        studyInfoQuery.select(rootStudyBO).where(studyInfoIdPredicates);
         studyInfoBoList = session.createQuery(studyInfoQuery).getResultList();
         studyInfoIdList =
             studyInfoBoList.stream().map(StudyInfoBO::getId).collect(Collectors.toList());
-        CriteriaParticipantStudiesUpdate =
+        criteriaParticipantStudiesUpdate =
             criteriaBuilder.createCriteriaUpdate(ParticipantStudiesBO.class);
-        participantStudiesRoot = CriteriaParticipantStudiesUpdate.from(ParticipantStudiesBO.class);
-        CriteriaParticipantStudiesUpdate.set("status", "Withdrawn");
-        CriteriaParticipantStudiesUpdate.set("participantId", "NULL");
+        participantStudiesRoot = criteriaParticipantStudiesUpdate.from(ParticipantStudiesBO.class);
+        criteriaParticipantStudiesUpdate.set("status", "Withdrawn");
+        criteriaParticipantStudiesUpdate.set("participantId", "NULL");
         UserDetailsBO userDetails = session.get(UserDetailsBO.class, userDetailsId);
         studyIdPredicates.add(
             criteriaBuilder.equal(participantStudiesRoot.get("userDetails"), userDetails));
         studyIdExpression = participantStudiesRoot.get("studyInfo");
         studyIdPredicates.add(studyIdExpression.in(studyInfoBoList));
-        CriteriaParticipantStudiesUpdate.where(
+        criteriaParticipantStudiesUpdate.where(
             studyIdPredicates.toArray(new Predicate[studyIdPredicates.size()]));
-        isUpdated = session.createQuery(CriteriaParticipantStudiesUpdate).executeUpdate();
+        isUpdated = session.createQuery(criteriaParticipantStudiesUpdate).executeUpdate();
       }
 
       criteriaAuthInfoDelete = criteriaBuilder.createCriteriaDelete(AuthInfoBO.class);

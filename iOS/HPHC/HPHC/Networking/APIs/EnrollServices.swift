@@ -32,11 +32,12 @@ class EnrollServices: NSObject {
     self.delegate = delegate
     let method = EnrollmentMethods.withdrawfromstudy.method
 
-    let params = [
-      kParticipantId: participantId,
-      kDeleteResponses: deleteResponses,
-      "studyId": studyId,
-    ] as [String: Any]
+    let params =
+      [
+        kParticipantId: participantId,
+        kDeleteResponses: deleteResponses,
+        "studyId": studyId,
+      ] as [String: Any]
     let headers = ["userId": User.currentUser.userId ?? ""]
     self.sendRequestWith(method: method, params: params, headers: headers)
   }
@@ -145,7 +146,8 @@ class EnrollServices: NSObject {
 
   func handleUpdateTokenResponse(response: [String: Any]) {
 
-    let headerParams = self.failedRequestServices.headerParams == nil
+    let headerParams =
+      self.failedRequestServices.headerParams == nil
       ? [:] : self.failedRequestServices.headerParams
     self.sendRequestWith(
       method: self.failedRequestServices.method,
@@ -218,8 +220,7 @@ extension EnrollServices: NMWebServiceDelegate {
 
   func failedRequest(_ manager: NetworkManager, requestName: NSString, error: NSError) {
 
-    if requestName as String == AuthServerMethods.getRefreshedToken.description && error.code == 401
-    {  // Unauthorized
+    if requestName as String == AuthServerMethods.getRefreshedToken.description && error.code == 401 {  // Unauthorized
       delegate?.failedRequest(manager, requestName: requestName, error: error)
     } else if error.code == 401 {
 

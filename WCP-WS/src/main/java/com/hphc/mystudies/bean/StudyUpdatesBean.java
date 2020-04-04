@@ -22,7 +22,6 @@
  */
 package com.hphc.mystudies.bean;
 
-
 public class StudyUpdatesBean {
 
   private Boolean consent = false;

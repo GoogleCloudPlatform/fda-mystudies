@@ -1,4 +1,4 @@
-// License Agreement for FDA My Studies
+// License Agreement for FDA MyStudies
 // Copyright © 2017-2019 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors. Permission is
 // hereby granted, free of charge, to any person obtaining a copy of this software and associated
 // documentation files (the &quot;Software&quot;), to deal in the Software without restriction, including without
@@ -18,7 +18,6 @@
 
 import ActionSheetPicker_3_0
 import Foundation
-import IQKeyboardManagerSwift
 import IQKeyboardManagerSwift
 import ResearchKit
 
@@ -158,9 +157,9 @@ class FetalKickCounterStepViewController: ORKStepViewController {
 
       self.timerValue = initialTime
 
-      self.timerLabel?.text = (hours < 10 ? "0\(hours):" : "\(hours):") + (
-        minutes < 10 ? "0\(minutes):" : "\(minutes):"
-      ) + (seconds < 10 ? "0\(seconds)" : "\(seconds)")
+      self.timerLabel?.text =
+        (hours < 10 ? "0\(hours):" : "\(hours):") + (minutes < 10 ? "0\(minutes):" : "\(minutes):")
+        + (seconds < 10 ? "0\(seconds)" : "\(seconds)")
 
       if autoStartTimer {
 
@@ -261,9 +260,9 @@ class FetalKickCounterStepViewController: ORKStepViewController {
     let minutes = Int(self.timerValue!) / 60 % 60
     let seconds = Int(self.timerValue!) % 60
 
-    self.timerLabel?.text = (hours < 10 ? "0\(hours):" : "\(hours):") + (
-      minutes < 10 ? "0\(minutes):" : "\(minutes):"
-    ) + (seconds < 10 ? "0\(seconds)" : "\(seconds)")
+    self.timerLabel?.text =
+      (hours < 10 ? "0\(hours):" : "\(hours):") + (minutes < 10 ? "0\(minutes):" : "\(minutes):")
+      + (seconds < 10 ? "0\(seconds)" : "\(seconds)")
 
     self.taskResult.totalKickCount = self.kickCounter!
   }
@@ -307,7 +306,8 @@ class FetalKickCounterStepViewController: ORKStepViewController {
   /// Alerts User if Kick counts or time is exceeded.
   func showAlertForGreaterValues() {
 
-    let message = kGreaterValueMessage + "\(self.maxKicksAllowed!) kicks, " + "please enter "
+    let message =
+      kGreaterValueMessage + "\(self.maxKicksAllowed!) kicks, " + "please enter "
       + "\(self.maxKicksAllowed!) kicks only"
 
     Utilities.showAlertWithTitleAndMessage(
@@ -375,7 +375,8 @@ class FetalKickCounterStepViewController: ORKStepViewController {
     }
 
     let timeConsumed = (self.timerLabel?.text!)
-    let message = kConfirmMessage + "\(self.kickCounter!) kicks in " + "\(timeConsumed!)."
+    let message =
+      kConfirmMessage + "\(self.kickCounter!) kicks in " + "\(timeConsumed!)."
       + kConfirmMessage2
 
     UIUtilities.showAlertMessageWithTwoActionsAndHandler(
@@ -431,11 +432,10 @@ class FetalKickCounterStepViewController: ORKStepViewController {
         self.kickCounter = self.kickCounter! + 1
 
         editCounterButton?.isHidden = false
-        self.counterTextField?.text = self.kickCounter! < 10
+        self.counterTextField?.text =
+          self.kickCounter! < 10
           ? ("0\(self.kickCounter!)" == "00" ? "000" : "00\(self.kickCounter!)")
-          : (
-            self.kickCounter! >= 100 ? "\(self.kickCounter!)" : "0\(self.kickCounter!)"
-          )
+          : (self.kickCounter! >= 100 ? "\(self.kickCounter!)" : "0\(self.kickCounter!)")
       }
 
     } else {
@@ -443,11 +443,10 @@ class FetalKickCounterStepViewController: ORKStepViewController {
         self.kickCounter = self.kickCounter! + 1
 
         editCounterButton?.isHidden = false
-        self.counterTextField?.text = self.kickCounter! < 10
+        self.counterTextField?.text =
+          self.kickCounter! < 10
           ? ("0\(self.kickCounter!)" == "00" ? "000" : "00\(self.kickCounter!)")
-          : (
-            self.kickCounter! >= 100 ? "\(self.kickCounter!)" : "0\(self.kickCounter!)"
-          )
+          : (self.kickCounter! >= 100 ? "\(self.kickCounter!)" : "0\(self.kickCounter!)")
 
         if self.kickCounter == self.maxKicksAllowed! {
           self.setResults()
@@ -508,9 +507,9 @@ class FetalKickCounterStepViewController: ORKStepViewController {
           let minutes = Int(self.totalTime!) / 60 % 60
           let seconds = Int(self.totalTime!) % 60
 
-          let value = (hours < 10 ? "0\(hours):" : "\(hours):") + (
-            minutes < 10 ? "0\(minutes):" : "\(minutes):"
-          ) + (seconds < 10 ? "0\(seconds)" : "\(seconds)")
+          let value =
+            (hours < 10 ? "0\(hours):" : "\(hours):") + (minutes < 10 ? "0\(minutes):" : "\(minutes):")
+            + (seconds < 10 ? "0\(seconds)" : "\(seconds)")
 
           Utilities.showAlertWithTitleAndMessage(
             title: kMessage,
@@ -598,12 +597,10 @@ extension FetalKickCounterStepViewController: UITextFieldDelegate {
   func textFieldDidEndEditing(_ textField: UITextField) {
 
     if textField == counterTextField!
-      && (
-        Utilities.isValidValue(someObject: counterTextField?.text as AnyObject?) == false
-          || Int(
-            (counterTextField?.text)!
-          )! <= 0
-      )
+      && (Utilities.isValidValue(someObject: counterTextField?.text as AnyObject?) == false
+        || Int(
+          (counterTextField?.text)!
+        )! <= 0)
     {
       counterTextField?.resignFirstResponder()
       if textField.text?.count == 0 || (Int((counterTextField?.text)!) != nil) {

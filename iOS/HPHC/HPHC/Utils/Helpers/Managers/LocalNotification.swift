@@ -1,4 +1,4 @@
-// License Agreement for FDA My Studies
+// License Agreement for FDA MyStudies
 // Copyright © 2017-2019 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors. Permission is
 // hereby granted, free of charge, to any person obtaining a copy of this software and associated
 // documentation files (the &quot;Software&quot;), to deal in the Software without restriction, including without
@@ -36,14 +36,13 @@ class LocalNotification: NSObject {
     completionHandler: @escaping (Bool) -> Void
   ) {
 
-    studies = (
-      Gateway.instance.studies?.filter({
+    studies =
+      (Gateway.instance.studies?.filter({
         $0.userParticipateState.status == UserStudyStatus.StudyStatus.inProgress
           && $0
             .status
             == .Active
-      })
-    )!
+      }))!
 
     handler = completionHandler
     LocalNotification.registerForStudy()
@@ -117,7 +116,8 @@ class LocalNotification: NSObject {
         case .One_Time:
           if run.endDate != nil {
             let date = run.endDate.addingTimeInterval(-24 * 3600)  // 24 hours before
-            let message = "The activity " + activity.name!
+            let message =
+              "The activity " + activity.name!
               + " will expire in 24 hours. Your participation is important. Please visit the study to complete it now."
             LocalNotification.composeRunNotification(
               startDate: date,
@@ -130,7 +130,8 @@ class LocalNotification: NSObject {
         case .Daily:
           if activity.frequencyRuns?.count == 1 {
             let date = run.startDate!  // 24 hours before
-            let message = "A new run of the daily activity " + activity.name!
+            let message =
+              "A new run of the daily activity " + activity.name!
               + ", is now available. Your participation is important. Please visit the study to complete it now."
             LocalNotification.composeRunNotification(
               startDate: date,
@@ -141,7 +142,8 @@ class LocalNotification: NSObject {
           } else {
             let date = run.startDate!  // 24 hours before
             let message1 = "A new run of the daily activity " + activity.name!
-            let message2 = ", is now available and is valid until "
+            let message2 =
+              ", is now available and is valid until "
               + LocalNotification
               .timeFormatter.string(from: run.endDate!)
             let messgge3 =
@@ -158,7 +160,8 @@ class LocalNotification: NSObject {
         case .Weekly:
           // expiry notificaiton
           let date = run.endDate.addingTimeInterval(-24 * 3600)
-          let message = "The current run of the weekly activity " + activity.name!
+          let message =
+            "The current run of the weekly activity " + activity.name!
             + " will expire in 24 hours. Your participation is important. Please visit the study to complete it now."
           LocalNotification.composeRunNotification(
             startDate: date,
@@ -167,7 +170,8 @@ class LocalNotification: NSObject {
             run: run
           )
           // start notification
-          let startMessage = "A new run of the weekly activity " + activity.name!
+          let startMessage =
+            "A new run of the weekly activity " + activity.name!
             + ", is now available. Please visit the study to complete it now."
           LocalNotification.composeRunNotification(
             startDate: run.startDate!,
@@ -178,7 +182,8 @@ class LocalNotification: NSObject {
 
         case .Monthly:
           let date = run.endDate.addingTimeInterval(-72 * 3600)
-          let message = "The current run of the monthly activity " + activity.name!
+          let message =
+            "The current run of the monthly activity " + activity.name!
             + " will expire in 3 days. Your participation is important. Please visit the study to complete it now."
           LocalNotification.composeRunNotification(
             startDate: date,
@@ -187,7 +192,8 @@ class LocalNotification: NSObject {
             run: run
           )
           // start notification
-          let startMessage = "A new run of the monthly activity " + activity.name!
+          let startMessage =
+            "A new run of the monthly activity " + activity.name!
             + ", is now available. Please visit the study to complete it now."
           LocalNotification.composeRunNotification(
             startDate: run.startDate!,
@@ -228,10 +234,11 @@ class LocalNotification: NSObject {
     run: ActivityRun
   ) {
 
-    _ = [
-      kStudyId: run.studyId,
-      kActivityId: run.activityId,
-    ] as [String: String]
+    _ =
+      [
+        kStudyId: run.studyId,
+        kActivityId: run.activityId,
+      ] as [String: String]
 
     // create App local notification object
     let notification = AppLocalNotification()

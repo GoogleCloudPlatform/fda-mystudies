@@ -1,5 +1,5 @@
 /*
- * Copyright Â© 2017-2018 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors.
+ * Copyright © 2017-2018 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors.
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction, including
  * without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies
@@ -50,7 +50,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler;
-import org.springframework.web.client.RestTemplate;
 import com.fdahpstudydesigner.bean.PushNotificationBean;
 import com.fdahpstudydesigner.bo.AuditLogBO;
 import com.fdahpstudydesigner.bo.UserBO;
@@ -85,11 +84,6 @@ public class FDASchedulerService {
     ThreadPoolTaskScheduler taskScheduler = new ThreadPoolTaskScheduler();
     taskScheduler.setPoolSize(2);
     return taskScheduler;
-  }
-
-  @Bean
-  public RestTemplate restTemplate() {
-    return new RestTemplate();
   }
 
   @Scheduled(cron = "0 0 0 * * ?")
@@ -224,6 +218,11 @@ public class FDASchedulerService {
                     + FdahpStudyDesignerUtil.getAppProperties().get("push.notification.uri"));
 
         post.setHeader("Content-type", "application/json");
+
+        post.setHeader("clientId", configMap.get("WCPClientId").toString());
+        post.setHeader(
+            "secretKey",
+            FdahpStudyDesignerUtil.getHashedValue(configMap.get("WCPSecretKey").toString()));
 
         StringEntity requestEntity =
             new StringEntity(json.toString(), ContentType.APPLICATION_JSON);

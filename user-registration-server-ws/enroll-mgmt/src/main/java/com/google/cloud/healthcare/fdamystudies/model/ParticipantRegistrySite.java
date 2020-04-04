@@ -34,7 +34,7 @@ public class ParticipantRegistrySite implements Serializable {
   private Integer id;
 
   @ManyToOne
-  @JoinColumn(name = "site_id", insertable = false, updatable = false)
+  @JoinColumn(name = "site_id", insertable = true, updatable = false)
   private SiteBo sites;
 
   @ManyToOne

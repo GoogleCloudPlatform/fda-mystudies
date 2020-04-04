@@ -178,17 +178,20 @@ class AuthServices: NSObject {
   func handleUpdateTokenResponse(response: [String: Any]) {
 
     let user = User.currentUser
-    user.authToken = (response[kUserAuthToken] as? String)!
-    user.clientToken = (response["clientToken"] as? String)!
+    user.refreshToken = response["refreshToken"] as? String ?? ""
+    user.authToken = response[kUserAuthToken] as? String ?? ""
+    user.clientToken = response["clientToken"] as? String ?? ""
     FDAKeychain.shared[kUserAuthTokenKeychainKey] = user.authToken
     FDAKeychain.shared[kUserRefreshTokenKeychainKey] = user.refreshToken
     DBHandler().saveCurrentUser(user: user)
 
     // Re-send request which failed due to session expired.
-    let headerParams = self.failedRequestServices.headerParams == nil
+    guard let method = self.failedRequestServices.method else { return }
+    let headerParams =
+      self.failedRequestServices.headerParams == nil
       ? [:] : self.failedRequestServices.headerParams
     self.sendRequestWith(
-      method: self.failedRequestServices.method,
+      method: method,
       params: (self.requestParams == nil ? nil : self.requestParams),
       headers: headerParams
     )
@@ -244,8 +247,7 @@ extension AuthServices: NMWebServiceDelegate {
   }
 
   func failedRequest(_ manager: NetworkManager, requestName: NSString, error: NSError) {
-    if requestName as String == AuthServerMethods.getRefreshedToken.description && error.code == 401
-    {  // Unauthorized
+    if requestName as String == AuthServerMethods.getRefreshedToken.description && error.code == 401 {  // Unauthorized
       delegate?.failedRequest(manager, requestName: requestName, error: error)
     } else if error.code == 401 {
       // Save failed service

@@ -1,6 +1,7 @@
-// License Agreement for FDA My Studies
-// Copyright © 2017-2019 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors. Permission is
-// hereby granted, free of charge, to any person obtaining a copy of this software and associated
+// License Agreement for FDA MyStudies
+// Copyright © 2017-2019 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors.
+// Copyright 2020 Google LLC
+// Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated
 // documentation files (the &quot;Software&quot;), to deal in the Software without restriction, including without
 // limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the
 // Software, and to permit persons to whom the Software is furnished to do so, subject to the following
@@ -24,62 +25,53 @@ let kRetainButtonTag = 11221
 let kConfirmationOptionalDefaultTypeRetain = "retain"
 let kConfirmationOptionalDefaultTypeDelete = "delete"
 
-protocol ConfirmationOptionalDelegate: class {
-  func confirmationCell(
-    cell: ConfirmationOptionalTableViewCell,
-    forStudy study: Study,
-    deleteData: Bool
-  )
-}
-
 class ConfirmationOptionalTableViewCell: UITableViewCell {
 
   // MARK: - Outlets
-  @IBOutlet var buttonDeleteData: UIButton?
-
-  @IBOutlet var buttonRetainData: UIButton?
-  @IBOutlet var labelTitle: UILabel?
-  @IBOutlet var imageViewDeleteCheckBox: UIImageView?
-  @IBOutlet var imageViewRetainCheckBox: UIImageView?
+  @IBOutlet var buttonDeleteData: UIButton!
+  @IBOutlet var buttonRetainData: UIButton!
+  @IBOutlet var labelTitle: UILabel!
+  @IBOutlet var imageViewDeleteCheckBox: UIImageView!
+  @IBOutlet var imageViewRetainCheckBox: UIImageView!
 
   // MARK: - Properties
-  var study: Study!
-
-  weak var delegate: ConfirmationOptionalDelegate?
+  var study: StudyToDelete?
 
   // MARK: - Utils
 
-  func setDefaultDeleteAction(defaultValue: String) {
-    if defaultValue == kConfirmationOptionalDefaultTypeRetain {
-      imageViewRetainCheckBox?.image = #imageLiteral(resourceName: "notChecked")
-      imageViewDeleteCheckBox?.image = #imageLiteral(resourceName: "checked")
-
+  func configureCell(with study: StudyToDelete) {
+    if let deleteData = study.shouldDelete, deleteData {
+      if deleteData {
+        imageViewRetainCheckBox?.image = #imageLiteral(resourceName: "notChecked")
+        imageViewDeleteCheckBox?.image = #imageLiteral(resourceName: "checked")
+      } else {
+        imageViewRetainCheckBox?.image = #imageLiteral(resourceName: "checked")
+        imageViewDeleteCheckBox?.image = #imageLiteral(resourceName: "notChecked")
+      }
     } else {
-      imageViewDeleteCheckBox?.image = #imageLiteral(resourceName: "checked")
       imageViewRetainCheckBox?.image = #imageLiteral(resourceName: "notChecked")
+      imageViewDeleteCheckBox?.image = #imageLiteral(resourceName: "notChecked")
     }
+    self.study = study
+    self.labelTitle.text = study.studyName
   }
 
   // MARK: - Actions
 
   /// When user press on Delete data or Retail Data button
-  @IBAction func deleteOrRetainDataButtonAction(_ sender: UIButton?) {
+  @IBAction func deleteOrRetainDataButtonAction(_ sender: UIButton) {
 
     var deleteData = false
-    if sender?.tag == kDeleteButtonTag {
-      if (imageViewDeleteCheckBox?.image?.isEqual(#imageLiteral(resourceName: "notChecked")))! {
-        imageViewDeleteCheckBox?.image = #imageLiteral(resourceName: "checked")
-        imageViewRetainCheckBox?.image = #imageLiteral(resourceName: "notChecked")
-        deleteData = true
-      }
+    if sender.tag == kDeleteButtonTag {
+      imageViewDeleteCheckBox.image = #imageLiteral(resourceName: "checked")
+      imageViewRetainCheckBox.image = #imageLiteral(resourceName: "notChecked")
+      deleteData = true
     } else {
-      if (imageViewRetainCheckBox?.image?.isEqual(#imageLiteral(resourceName: "notChecked")))! {
-        imageViewRetainCheckBox?.image = #imageLiteral(resourceName: "checked")
-        imageViewDeleteCheckBox?.image = #imageLiteral(resourceName: "notChecked")
-        deleteData = false
-      }
+      imageViewRetainCheckBox.image = #imageLiteral(resourceName: "checked")
+      imageViewDeleteCheckBox.image = #imageLiteral(resourceName: "notChecked")
+      deleteData = false
     }
-    self.delegate?.confirmationCell(cell: self, forStudy: study, deleteData: deleteData)
+    study?.shouldDelete = deleteData
   }
 
 }

@@ -342,11 +342,28 @@ public class ActivityResponseProcessorServiceImpl implements ActivityResponsePro
                     stepsList.add(tempMap);
                   } else if (valueObj instanceof String) {
                     if (valueObj != null) {
+                      Object tmpPropertyValue = dataToStore.get(propertyName);
+                      if (tmpPropertyValue != null) {
+                        String tmpPropertyValueStr = (String) tmpPropertyValue.toString();
+                        if (!StringUtils.isBlank(tmpPropertyValueStr)) {
+                          valueObj = tmpPropertyValueStr + AppConstants.COMMA_STR + valueObj;
+                        }
+                      }
                       dataToStore.put(propertyName, valueObj);
                     }
                   } else {
-                    propertyValue = gson.toJson(valueObj);
-                    dataToStore.put(propertyName, propertyValue);
+                    if (valueObj != null) {
+                      propertyValue = gson.toJson(valueObj);
+                      Object tmpPropertyValue = dataToStore.get(propertyName);
+                      if (tmpPropertyValue != null) {
+                        String tmpPropertyValueStr = (String) tmpPropertyValue.toString();
+                        if (!StringUtils.isBlank(tmpPropertyValueStr)) {
+                          propertyValue =
+                              tmpPropertyValueStr + AppConstants.COMMA_STR + propertyValue;
+                        }
+                      }
+                      dataToStore.put(propertyName, propertyValue);
+                    }
                   }
                   if (stepsList != null && !stepsList.isEmpty()) {
                     dataToStore.put(AppConstants.RESULTS_FIELD_KEY, stepsList);
@@ -368,7 +385,7 @@ public class ActivityResponseProcessorServiceImpl implements ActivityResponsePro
           logger.debug(
               "getHashMapForBean() : \n Property Name: "
                   + propertyName
-                  + "\t Propert Value : "
+                  + "\t Property Value : "
                   + propertyValue);
         } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
           logger.error(e.getMessage(), e);

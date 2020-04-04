@@ -1,4 +1,4 @@
-// License Agreement for FDA My Studies
+// License Agreement for FDA MyStudies
 // Copyright © 2017-2019 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors. Permission is
 // hereby granted, free of charge, to any person obtaining a copy of this software and associated
 // documentation files (the &quot;Software&quot;), to deal in the Software without restriction, including without
@@ -64,7 +64,8 @@ class SignUpCompleteViewController: UIViewController {
     appDelegate.updateKeyAndInitializationVector()
 
     if self.viewLoadFrom == .joinStudy {
-      let leftController = slideMenuController()?.leftViewController
+      let leftController =
+        slideMenuController()?.leftViewController
         as! LeftMenuViewController
       leftController.createLeftmenuItems()
       self.performSegue(withIdentifier: "unwindStudyHomeSegue", sender: self)
@@ -81,7 +82,8 @@ class SignUpCompleteViewController: UIViewController {
     if shouldCreateMenu {
       self.createMenuView()
     } else {
-      let leftController = slideMenuController()?.leftViewController
+      let leftController =
+        slideMenuController()?.leftViewController
         as! LeftMenuViewController
       leftController.createLeftmenuItems()
       leftController.changeViewController(.studyList)
@@ -92,9 +94,10 @@ class SignUpCompleteViewController: UIViewController {
   func createMenuView() {
     let storyboard = UIStoryboard(name: kStoryboardIdentifierGateway, bundle: nil)
 
-    let fda = storyboard.instantiateViewController(
-      withIdentifier: kStoryboardIdentifierSlideMenuVC
-    )
+    let fda =
+      storyboard.instantiateViewController(
+        withIdentifier: kStoryboardIdentifierSlideMenuVC
+      )
       as! FDASlideMenuViewController
     self.navigationController?.pushViewController(fda, animated: true)
   }

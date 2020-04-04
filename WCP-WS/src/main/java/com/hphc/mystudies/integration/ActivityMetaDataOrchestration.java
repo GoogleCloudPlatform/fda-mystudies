@@ -31,7 +31,6 @@ import com.hphc.mystudies.dao.ActivityMetaDataDao;
 import com.hphc.mystudies.exception.OrchestrationException;
 import com.hphc.mystudies.util.StudyMetaDataUtil;
 
-
 public class ActivityMetaDataOrchestration {
 
   private static final Logger LOGGER = Logger.getLogger(ActivityMetaDataOrchestration.class);
@@ -41,7 +40,6 @@ public class ActivityMetaDataOrchestration {
 
   ActivityMetaDataDao activityMetaDataDao = new ActivityMetaDataDao();
 
-  
   public ActivityResponse studyActivityList(String studyId, String authorization)
       throws OrchestrationException {
     LOGGER.info("INFO: ActivityMetaDataOrchestration - studyActivityList() :: Starts");
@@ -55,7 +53,6 @@ public class ActivityMetaDataOrchestration {
     return activityResponse;
   }
 
-  
   public ActiveTaskActivityMetaDataResponse studyActiveTaskActivityMetadata(
       String studyId, String activityId, String activityVersion) throws OrchestrationException {
     LOGGER.info(
@@ -72,7 +69,6 @@ public class ActivityMetaDataOrchestration {
     return activeTaskActivityMetaDataResponse;
   }
 
-  
   public QuestionnaireActivityMetaDataResponse studyQuestionnaireActivityMetadata(
       String studyId, String activityId, String activityVersion) throws OrchestrationException {
     LOGGER.info(

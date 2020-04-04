@@ -19,6 +19,8 @@ public interface PasswordHistoryRepository extends JpaRepository<PasswordHistory
 
   List<PasswordHistoryBO> findByUserId(String userId);
 
+  List<PasswordHistoryBO> findByUserIdOrderByPasswordHistoryIdAsc(String userId);
+
   @Transactional
   long deleteByUserId(String userId);
 }

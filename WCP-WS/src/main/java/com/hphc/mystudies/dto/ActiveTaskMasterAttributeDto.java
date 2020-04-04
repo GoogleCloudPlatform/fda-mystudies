@@ -33,7 +33,6 @@ import org.hibernate.annotations.NamedQueries;
 import org.hibernate.annotations.NamedQuery;
 import org.hibernate.annotations.Type;
 
-
 @Entity
 @Table(name = "active_task_master_attribute")
 @NamedQueries(
@@ -46,7 +45,6 @@ import org.hibernate.annotations.Type;
     })
 public class ActiveTaskMasterAttributeDto implements Serializable {
 
- 
   private static final long serialVersionUID = 3945410061495684065L;
 
   @Id

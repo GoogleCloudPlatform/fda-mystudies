@@ -30,12 +30,10 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
-
 @Entity
 @Table(name = "statistic_master_images")
 public class StatisticImageListDto implements Serializable {
 
-  
   private static final long serialVersionUID = 3551713191125830055L;
 
   @Id

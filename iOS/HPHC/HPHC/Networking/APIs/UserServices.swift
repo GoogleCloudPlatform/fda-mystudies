@@ -1,4 +1,4 @@
-// License Agreement for FDA My Studies
+// License Agreement for FDA MyStudies
 // Copyright © 2017-2019 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors.
 // Copyright 2020 Google LLC
 // Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated
@@ -142,9 +142,10 @@ class UserServices: NSObject {
     let param = [
       kVerifyCode: verificationCode,
     ]
-    let header = [
-      "userId": User.currentUser.userId,
-    ] as [String: String]
+    let header =
+      [
+        "userId": User.currentUser.userId,
+      ] as [String: String]
     let method = RegistrationMethods.verifyEmailId.method
     self.sendRequestWith(method: method, params: param, headers: header)
 
@@ -167,16 +168,26 @@ class UserServices: NSObject {
   /// - Parameters:
   ///   - listOfStudyIds: Collection of Study Id
   ///   - delegate: Class object to receive response
-  func deActivateAccount(listOfStudyIds: [String], delegate: NMWebServiceDelegate) {
+  func deActivateAccount(studiesToDelete: [StudyToDelete], delegate: NMWebServiceDelegate) {
 
     self.delegate = delegate
 
     let user = User.currentUser
-    let headerParams = [
-      kUserId: user.userId ?? "",
-    ] as [String: String]
+    var studiesDict: [JSONDictionary] = []
+    for studyToDelete in studiesToDelete {
+      let dict: JSONDictionary =
+        [
+          "studyId": studyToDelete.studyId,
+          "delete": "\(studyToDelete.shouldDelete ?? false)",
+        ]
+      studiesDict.append(dict)
+    }
+    let headerParams =
+      [
+        kUserId: user.userId ?? "",
+      ] as [String: String]
 
-    let params = [kDeactivateAccountDeleteData: listOfStudyIds]
+    let params = [kDeactivateAccountDeleteData: studiesDict]
     let method = RegistrationMethods.deactivate.method
     self.sendRequestWith(method: method, params: params, headers: headerParams)
   }
@@ -201,28 +212,30 @@ class UserServices: NSObject {
     let user = User.currentUser
     let headerParams = [kUserId: user.userId!]
 
-    let settings = [
-      kSettingsRemoteNotifications: (user.settings?.remoteNotifications)! as Bool,
-      kSettingsTouchId: (user.settings?.touchId)! as Bool,
-      kSettingsPassCode: (user.settings?.passcode)! as Bool,
-      kSettingsLocalNotifications: (user.settings?.localNotifications)! as Bool,
-      kSettingsLeadTime: (user.settings?.leadTime)! as String,
-      kSettingsLocale: (user.settings?.locale)! as String,
-    ] as [String: Any]
+    let settings =
+      [
+        kSettingsRemoteNotifications: (user.settings?.remoteNotifications)! as Bool,
+        kSettingsTouchId: (user.settings?.touchId)! as Bool,
+        kSettingsPassCode: (user.settings?.passcode)! as Bool,
+        kSettingsLocalNotifications: (user.settings?.localNotifications)! as Bool,
+        kSettingsLeadTime: (user.settings?.leadTime)! as String,
+        kSettingsLocale: (user.settings?.locale)! as String,
+      ] as [String: Any]
 
     let version = Utilities.getAppVersion()
-    let token = Utilities.getBundleIdentifier()
+
     let info = [
       kAppVersion: version,
       kOSType: "ios",
-      kDeviceToken: token,
+      kDeviceToken: "",
     ]
 
-    let params = [
-      kUserSettings: settings,
-      kBasicInfo: info,
-      kParticipantInfo: [],
-    ] as [String: Any]
+    let params =
+      [
+        kUserSettings: settings,
+        kBasicInfo: info,
+        kParticipantInfo: [],
+      ] as [String: Any]
 
     let method = RegistrationMethods.updateUserProfile.method
 
@@ -245,11 +258,11 @@ class UserServices: NSObject {
       kDeviceToken: deviceToken,
     ]
 
-    let params = [
-
-      kBasicInfo: info,
-      kParticipantInfo: [],
-    ] as [String: Any]
+    let params =
+      [
+        kBasicInfo: info,
+        kParticipantInfo: [],
+      ] as [String: Any]
 
     let method = RegistrationMethods.updateUserProfile.method
 
@@ -263,10 +276,11 @@ class UserServices: NSObject {
     self.delegate = delegate
 
     let user = User.currentUser
-    let headerParams = [
-      kUserId: user.userId!,
-      kUserAuthToken: user.authToken,
-    ] as [String: String]
+    let headerParams =
+      [
+        kUserId: user.userId!,
+        kUserAuthToken: user.authToken,
+      ] as [String: String]
 
     let method = RegistrationMethods.userPreferences.method
 
@@ -513,8 +527,7 @@ extension UserServices: NMWebServiceDelegate {
 
   func failedRequest(_ manager: NetworkManager, requestName: NSString, error: NSError) {
 
-    if requestName as String == AuthServerMethods.getRefreshedToken.description && error.code == 401
-    {  //unauthorized
+    if requestName as String == AuthServerMethods.getRefreshedToken.description && error.code == 401 {  //unauthorized
       delegate?.failedRequest(manager, requestName: requestName, error: error)
     } else if error.code == 401 {
 

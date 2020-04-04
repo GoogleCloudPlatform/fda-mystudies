@@ -51,6 +51,8 @@ spec:
               value: "413422181706-c9r0uv1t2du10ttjf748mh6490g2ir5u.apps.googleusercontent.com"
             - name: SECRET_KEY
               value: "dummy-value"
+            - name: GCP_BUCKET_NAME
+              value: "heroes-hat-dev-my-study-consent-documents"
             - name: GOOGLE_APPLICATION_CREDENTIALS
               value: "/secrets/gcloud_key/key.json"
           volumeMounts:

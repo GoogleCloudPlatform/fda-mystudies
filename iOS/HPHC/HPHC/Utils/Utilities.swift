@@ -1,4 +1,4 @@
-// License Agreement for FDA My Studies
+// License Agreement for FDA MyStudies
 // Copyright © 2017-2019 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors. Permission is
 // hereby granted, free of charge, to any person obtaining a copy of this software and associated
 // documentation files (the &quot;Software&quot;), to deal in the Software without restriction, including without
@@ -37,27 +37,33 @@ enum ScreenSize {
 
 enum DeviceType {
 
-  static let IS_IPHONE_4_OR_LESS = UIDevice.current.userInterfaceIdiom == .phone
+  static let IS_IPHONE_4_OR_LESS =
+    UIDevice.current.userInterfaceIdiom == .phone
     && ScreenSize
       .SCREEN_MAX_LENGTH < 568.0
 
-  static let IS_IPHONE_5 = UIDevice.current.userInterfaceIdiom == .phone
+  static let IS_IPHONE_5 =
+    UIDevice.current.userInterfaceIdiom == .phone
     && ScreenSize
       .SCREEN_MAX_LENGTH == 568.0
 
-  static let IS_IPHONE_6 = UIDevice.current.userInterfaceIdiom == .phone
+  static let IS_IPHONE_6 =
+    UIDevice.current.userInterfaceIdiom == .phone
     && ScreenSize
       .SCREEN_MAX_LENGTH == 667.0
 
-  static let IS_IPHONE_6P = UIDevice.current.userInterfaceIdiom == .phone
+  static let IS_IPHONE_6P =
+    UIDevice.current.userInterfaceIdiom == .phone
     && ScreenSize
       .SCREEN_MAX_LENGTH == 736.0
 
-  static let IS_IPAD = UIDevice.current.userInterfaceIdiom == .pad
+  static let IS_IPAD =
+    UIDevice.current.userInterfaceIdiom == .pad
     && ScreenSize.SCREEN_MAX_LENGTH
       == 1024.0
 
-  static let IS_IPHONE_X_OR_HIGH = UIDevice.current.userInterfaceIdiom == .phone
+  static let IS_IPHONE_X_OR_HIGH =
+    UIDevice.current.userInterfaceIdiom == .phone
     && ScreenSize
       .SCREEN_MAX_LENGTH >= 812
 }
@@ -343,30 +349,22 @@ class Utilities: NSObject {
     if (someObject is NSNull) == false {
 
       if someObject as? Int != nil
-        && (
-          (someObject as? Int)! >= 0 || (someObject as? Int)! < 0
-        )
+        && ((someObject as? Int)! >= 0 || (someObject as? Int)! < 0)
       {
         return true
 
       } else if someObject as? String != nil && ((someObject as? String)?.count)! > 0
-        && (
-          someObject as? String
-        ) != ""
+        && (someObject as? String) != ""
       {
         return true
 
       } else if someObject as? Bool != nil
-        && (
-          someObject as! Bool == true || someObject as! Bool == false
-        )
+        && (someObject as! Bool == true || someObject as! Bool == false)
       {
         return true
 
       } else if someObject as? Double != nil && (someObject as? Double)?.isFinite == true
-        && (
-          someObject as? Double
-        )?.isZero == false && (someObject as? Double)! > 0
+        && (someObject as? Double)?.isZero == false && (someObject as? Double)! > 0
       {
         return true
 
@@ -560,7 +558,8 @@ extension FileManager {
   // Method to get documentDirectory of Application
   //     return path of documentDirectory
   class func documentsDir() -> String {
-    let paths = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true)
+    let paths =
+      NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true)
       as [String]
     return paths[0]
   }
@@ -569,7 +568,8 @@ extension FileManager {
   //     return path of CacheDirectory
   class func cachesDir() -> String {
 
-    let paths = NSSearchPathForDirectoriesInDomains(.cachesDirectory, .userDomainMask, true)
+    let paths =
+      NSSearchPathForDirectoriesInDomains(.cachesDirectory, .userDomainMask, true)
       as [String]
     return paths[0]
   }

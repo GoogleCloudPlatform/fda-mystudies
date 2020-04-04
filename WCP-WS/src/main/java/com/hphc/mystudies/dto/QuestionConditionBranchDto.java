@@ -32,7 +32,6 @@ import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 
-
 @Entity
 @Table(name = "question_condtion_branching")
 @NamedQueries({

@@ -99,6 +99,7 @@ public class MyStudiesUserRegUtil {
     INACTIVE("INACTIVE"),
     SUCCESS("SUCCESS"),
     FAILURE("FAILURE"),
+    PARTIAL("PARTIALS"),
     JOINED("Joined"),
     COMPLETED("Completed"),
     STARTED("Started"),

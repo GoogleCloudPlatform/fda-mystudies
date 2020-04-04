@@ -25,7 +25,6 @@ package com.hphc.mystudies.bean;
 import com.hphc.mystudies.bean.appendix.QuestionnaireActivityStructureBean;
 import com.hphc.mystudies.util.StudyMetaDataConstants;
 
-
 public class QuestionnaireActivityMetaDataResponse {
 
   private String message = StudyMetaDataConstants.FAILURE;

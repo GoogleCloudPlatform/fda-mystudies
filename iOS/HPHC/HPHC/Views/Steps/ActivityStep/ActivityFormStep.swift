@@ -1,4 +1,4 @@
-// License Agreement for FDA My Studies
+// License Agreement for FDA MyStudies
 // Copyright © 2017-2019 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors. Permission is
 // hereby granted, free of charge, to any person obtaining a copy of this software and associated
 // documentation files (the &quot;Software&quot;), to deal in the Software without restriction, including without
@@ -94,7 +94,8 @@ class ActivityFormStep: ActivityStep {
             text: orkQuestionStep.question,
             answerFormat: orkQuestionStep.answerFormat
           )
-          formItem01.placeholder = orkQuestionStep.placeholder == nil
+          formItem01.placeholder =
+            orkQuestionStep.placeholder == nil
             ? "" : orkQuestionStep.placeholder
           formItem01.isOptional = (questionStep?.skippable)!
           formItemsArray.append(formItem01)

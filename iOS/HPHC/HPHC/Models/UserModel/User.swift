@@ -1,4 +1,4 @@
-// License Agreement for FDA My Studies
+// License Agreement for FDA MyStudies
 // Copyright © 2017-2019 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors.
 // Copyright 2020 Google LLC
 // Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated
@@ -704,6 +704,12 @@ class UserStudyStatus {
           self.status = .Withdrawn
         }
       }
+      if self.status == .yetToJoin || self.status == .Withdrawn || self.status == .notEligible {
+        self.participantId = nil
+        self.tokenIdentifier = ""
+        self.siteID = ""
+        self.joiningDate = nil
+      }
     }
   }
 
@@ -711,10 +717,11 @@ class UserStudyStatus {
   /// - Returns: `JSONDictionary` object
   func getBookmarkUserStudyStatus() -> [String: Any] {
 
-    let studyDetail = [
-      kStudyId: self.studyId,
-      kBookmarked: self.bookmarked,
-    ] as [String: Any]
+    let studyDetail =
+      [
+        kStudyId: self.studyId,
+        kBookmarked: self.bookmarked,
+      ] as [String: Any]
     return studyDetail
   }
 
@@ -723,22 +730,24 @@ class UserStudyStatus {
   func getParticipatedUserStudyStatus() -> [String: Any] {
 
     let id = self.participantId ?? ""
-    let studyDetail = [
-      kStudyId: self.studyId,
-      kStudyStatus: self.status.paramValue,
-      kStudyParticipantId: id,
-    ] as [String: Any]
+    let studyDetail =
+      [
+        kStudyId: self.studyId,
+        kStudyStatus: self.status.paramValue,
+        kStudyParticipantId: id,
+      ] as [String: Any]
     return studyDetail
   }
 
   /// JSONDictionary` contains StudyID, Completion Status and Adherence Status
   /// - Returns: `JSONDictionary` object
   func getCompletionAdherence() -> [String: Any] {
-    let studyDetail = [
-      kStudyId: self.studyId,
-      "completion": completion,
-      "adherence": adherence,
-    ] as [String: Any]
+    let studyDetail =
+      [
+        kStudyId: self.studyId,
+        "completion": completion,
+        "adherence": adherence,
+      ] as [String: Any]
     return studyDetail
   }
 
@@ -899,18 +908,19 @@ class UserActivityStatus {
 
       if Utilities.isValidValue(someObject: detail[kActivityStatus] as AnyObject) {
 
-        let statusValue = (detail[kActivityStatus] as? String)!
+        var statusValue = detail[kActivityStatus] as? String ?? ""
+        statusValue = statusValue.lowercased()
 
-        if ActivityStatus.inProgress.paramValue == statusValue {
+        if ActivityStatus.inProgress.paramValue.lowercased() == statusValue {
           self.status = .inProgress
 
-        } else if ActivityStatus.yetToJoin.paramValue == statusValue {
+        } else if ActivityStatus.yetToJoin.paramValue.lowercased() == statusValue {
           self.status = .yetToJoin
 
-        } else if ActivityStatus.completed.paramValue == statusValue {
+        } else if ActivityStatus.completed.paramValue.lowercased() == statusValue {
           self.status = .completed
 
-        } else if ActivityStatus.abandoned.paramValue == statusValue {
+        } else if ActivityStatus.abandoned.paramValue.lowercased() == statusValue {
           self.status = .abandoned
         }
       }
@@ -921,11 +931,12 @@ class UserActivityStatus {
   /// - Returns: `JSONDictionary` object
   func getBookmarkUserActivityStatus() -> [String: Any] {
 
-    let studyDetail = [
-      kStudyId: self.studyId ?? "",
-      kActivityId: self.activityId ?? "",
-      kBookmarked: self.bookmarked,
-    ] as [String: Any]
+    let studyDetail =
+      [
+        kStudyId: self.studyId ?? "",
+        kActivityId: self.activityId ?? "",
+        kBookmarked: self.bookmarked,
+      ] as [String: Any]
     return studyDetail
   }
 
@@ -939,13 +950,14 @@ class UserActivityStatus {
       "missed": self.incompletedRuns,
     ]
 
-    let studyDetail = [
-      kActivityId: self.activityId ?? "",
-      kActivityRunId: self.activityRunId ?? "",
-      kActivityStatus: self.status.paramValue,
-      kActivityVersion: self.activityVersion ?? "",
-      "activityRun": runDetail,
-    ] as [String: Any]
+    let studyDetail =
+      [
+        kActivityId: self.activityId ?? "",
+        kActivityRunId: self.activityRunId ?? "",
+        kActivityStatus: self.status.paramValue,
+        kActivityVersion: self.activityVersion ?? "",
+        "activityRun": runDetail,
+      ] as [String: Any]
 
     return studyDetail
   }

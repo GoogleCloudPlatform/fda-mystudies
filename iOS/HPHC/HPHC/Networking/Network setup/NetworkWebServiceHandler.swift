@@ -1,4 +1,4 @@
-// License Agreement for FDA My Studies
+// License Agreement for FDA MyStudies
 // Copyright © 2017-2019 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors.
 // Copyright 2020 Google LLC
 // Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated
@@ -164,7 +164,8 @@ class NetworkWebServiceHandler: NSObject, URLSessionDelegate {
     if !(parameters == nil || parameters?.count == 0) {
       let allKeys = parameters?.allKeys
       for key in allKeys! {
-        url = (url as String)
+        url =
+          (url as String)
           + String(
             format: "%@=%@&",
             String(describing: key),
@@ -288,11 +289,13 @@ class NetworkWebServiceHandler: NSObject, URLSessionDelegate {
     }
 
     if #available(iOS 9, *) {
-      requestString = requestString.addingPercentEncoding(
-        withAllowedCharacters: CharacterSet.urlQueryAllowed
-      ) as NSString?
+      requestString =
+        requestString.addingPercentEncoding(
+          withAllowedCharacters: CharacterSet.urlQueryAllowed
+        ) as NSString?
     } else {
-      requestString = requestString.addingPercentEscapes(using: String.Encoding.utf8.rawValue)
+      requestString =
+        requestString.addingPercentEscapes(using: String.Encoding.utf8.rawValue)
         as NSString?
     }
 
@@ -448,12 +451,14 @@ class NetworkWebServiceHandler: NSObject, URLSessionDelegate {
         var responseDict: NSDictionary?
 
         do {
-          //NSJSONReadingOptions.MutableContainers
-          responseDict = try JSONSerialization.jsonObject(with: data!, options: [])
+          
+          responseDict =
+            try JSONSerialization.jsonObject(with: data!, options: [])
             as? NSDictionary
 
         } catch let error {
           Logger.sharedInstance.error("Serialization error: ", error.localizedDescription)
+          responseDict = [:]
         }
 
         if (delegate?.finishedRequest) != nil {
@@ -489,12 +494,17 @@ class NetworkWebServiceHandler: NSObject, URLSessionDelegate {
 
         if self.configuration.shouldParseErrorMessage() {
 
-          let responseDict = try? JSONSerialization.jsonObject(
-            with: data!,
-            options: .allowFragments
-          )
+          let responseDict =
+            try? JSONSerialization.jsonObject(
+              with: data!,
+              options: .allowFragments
+            )
             as? [String: Any]
-          error1 = self.configuration.parseError(errorResponse: responseDict ?? [:])
+          if let errorBody = responseDict {
+            error1 = self.configuration.parseError(errorResponse: errorBody)
+          } else {
+            error1 = error ?? NSError(domain: "", code: -101, userInfo: [:])
+          }
         } else {
           error1 = NSError(
             domain: NSURLErrorDomain,

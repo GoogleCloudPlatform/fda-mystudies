@@ -22,7 +22,6 @@
  */
 package com.hphc.mystudies.bean;
 
-
 public class FailureResponse extends SuccessResponse {
 
   private ErrorBean errors = new ErrorBean();
