@@ -1278,7 +1278,6 @@ public class DBServiceSubscriber {
     return realm.where(StudyHome.class).equalTo("mStudyId", studyId).findFirst();
   }
 
-  // Rajeesh
   public void deleteStudyResourceDuplicateRow(Context context, final String studyId) {
     realm = AppController.getRealmobj(context);
     realm.executeTransaction(

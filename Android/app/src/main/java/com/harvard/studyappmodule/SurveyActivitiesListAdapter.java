@@ -1,5 +1,6 @@
 /*
  * Copyright © 2017-2019 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors.
+ * Copyright 2020 Google LLC
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction, including
  * without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
@@ -47,19 +48,19 @@ public class SurveyActivitiesListAdapter
   private SurveyActivitiesFragment mSurveyActivitiesFragment;
   ArrayList<String> mStatus;
   private String TEXT_EVERY = " every ";
-  private String TEXT_EVERY_MONTH = " every month";
+  private String TEXT_EVERY_MONTH = " each month";
   ArrayList<ActivityStatus> mCurrentRunStatusForActivities;
   private boolean mClick = true;
   private boolean paused;
   private ArrayList<Integer> timePos = new ArrayList<>();
 
   SurveyActivitiesListAdapter(
-          Context context,
-          ArrayList<ActivitiesWS> items,
-          ArrayList<String> status,
-          ArrayList<ActivityStatus> currentRunStatusForActivities,
-          SurveyActivitiesFragment surveyActivitiesFragment,
-          boolean paused) {
+      Context context,
+      ArrayList<ActivitiesWS> items,
+      ArrayList<String> status,
+      ArrayList<ActivityStatus> currentRunStatusForActivities,
+      SurveyActivitiesFragment surveyActivitiesFragment,
+      boolean paused) {
     this.mContext = context;
     this.items = items;
     this.mStatus = status;
@@ -274,7 +275,7 @@ public class SurveyActivitiesListAdapter
       Date startDate = null;
       Date endDate = null;
       SimpleDateFormat simpleDateFormat = AppController.getDateFormat();
-      SimpleDateFormat simpleDateFormat1 = AppController.getDateFormatType1();
+      SimpleDateFormat simpleDateFormat1 = AppController.getDateFormatType12();
       SimpleDateFormat simpleDateFormat2 = AppController.getDateFormatType9();
       SimpleDateFormat simpleDateFormat5 = AppController.getDateFormatUTC1();
       try {
@@ -314,7 +315,7 @@ public class SurveyActivitiesListAdapter
             }
           }
           if (!abc.isEmpty()) {
-            holder.mTime.setText(Html.fromHtml(abc), TextView.BufferType.SPANNABLE);
+            holder.mTime.setText(Html.fromHtml(abc) + " everyday", TextView.BufferType.SPANNABLE);
             holder.mTime.setVisibility(View.VISIBLE);
           }
           holder.mDate.setText(
@@ -343,6 +344,7 @@ public class SurveyActivitiesListAdapter
               formattedDate1
                   + " "
                   + mContext.getResources().getString(R.string.on)
+                  + " day"
                   + " "
                   + formattedDate2
                   + TEXT_EVERY_MONTH;
@@ -393,7 +395,7 @@ public class SurveyActivitiesListAdapter
         try {
           if (endDate != null) {
             holder.mDate.setText(
-                simpleDateFormat2.format(startDate) + " - " + simpleDateFormat2.format(endDate));
+                simpleDateFormat2.format(startDate) + " to " + simpleDateFormat2.format(endDate));
           } else {
             holder.mDate.setText(
                 mContext.getResources().getString(R.string.from)
@@ -474,7 +476,7 @@ public class SurveyActivitiesListAdapter
                           .getEndTime()
                           .split("\\.")[0],
                       i);
-              finalTime = startTime + " - " + endTime;
+              finalTime = startTime + " to " + endTime;
               mScheduledTime.add(finalTime);
 
               if (mStatus
@@ -493,7 +495,7 @@ public class SurveyActivitiesListAdapter
                                       .getStartTime()
                                       .toString()
                                       .split("\\.")[0]))
-                          + " - "
+                          + " to "
                           + simpleDateFormat2.format(
                               simpleDateFormat5.parse(
                                   items
@@ -521,7 +523,7 @@ public class SurveyActivitiesListAdapter
                                       .getStartTime()
                                       .toString()
                                       .split("\\.")[0]))
-                          + " - "
+                          + " to "
                           + simpleDateFormat2.format(
                               simpleDateFormat5.parse(
                                   items
@@ -558,7 +560,7 @@ public class SurveyActivitiesListAdapter
                                 .toString()
                                 .split("\\.")[0]);
                     holder.mDate.setText(
-                        simpleDateFormat2.format(d1) + " - " + simpleDateFormat2.format(d2));
+                        simpleDateFormat2.format(d1) + " to " + simpleDateFormat2.format(d2));
                   } catch (Exception e) {
                     Logger.log(e);
                   }

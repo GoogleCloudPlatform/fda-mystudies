@@ -651,7 +651,7 @@ public class ProfileFragment extends Fragment
             URLs.UPDATE_USER_PROFILE,
             "",
             obj.toString(),
-            "registration",
+            "RegistrationServer",
             userProfileId,
             "",
             "");

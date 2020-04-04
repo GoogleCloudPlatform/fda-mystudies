@@ -83,7 +83,6 @@ import com.harvard.studyappmodule.surveyscheduler.SurveyScheduler;
 import com.harvard.studyappmodule.surveyscheduler.model.ActivityStatus;
 import com.harvard.usermodule.UserModulePresenter;
 import com.harvard.usermodule.event.ActivityStateEvent;
-import com.harvard.usermodule.event.GetPreferenceEvent;
 import com.harvard.usermodule.event.UpdatePreferenceEvent;
 import com.harvard.usermodule.webservicemodel.Activities;
 import com.harvard.usermodule.webservicemodel.ActivityData;
@@ -99,7 +98,6 @@ import com.harvard.webservicemodule.apihelper.ApiCall;
 import com.harvard.webservicemodule.apihelper.ConnectionDetector;
 import com.harvard.webservicemodule.apihelper.HttpRequest;
 import com.harvard.webservicemodule.apihelper.Responsemodel;
-import com.harvard.webservicemodule.events.RegistrationServerConfigEvent;
 import com.harvard.webservicemodule.events.RegistrationServerEnrollmentConfigEvent;
 import com.harvard.webservicemodule.events.ResponseServerConfigEvent;
 import com.harvard.webservicemodule.events.WCPConfigEvent;
@@ -2853,7 +2851,7 @@ public class SurveyActivitiesFragment extends Fragment
           URLs.UPDATE_ACTIVITY_PREFERENCE,
           "",
           jsonObject.toString(),
-          "registration",
+          "ResponseServer",
           "",
           "",
           studyIdActivityId);
@@ -3084,11 +3082,6 @@ public class SurveyActivitiesFragment extends Fragment
           }
         } else {
           metadataProcess();
-          Toast.makeText(
-                  mContext,
-                  mContext.getResources().getString(R.string.unable_to_retrieve_data),
-                  Toast.LENGTH_SHORT)
-              .show();
         }
       } else {
         metadataProcess();

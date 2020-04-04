@@ -70,7 +70,7 @@ android {
         fda {
             dimension 'version'
             applicationId "com.harvard.fda"
-            versionCode 1
+            versionCode 6
             versionName "1.0"
         }
     }
@@ -100,9 +100,7 @@ dependencies {
     implementation 'com.android.support:multidex:1.0.3'
     implementation 'com.google.firebase:firebase-messaging:17.4.0'
     implementation 'com.google.firebase:firebase-core:16.0.7'
-    implementation 'com.itextpdf:itextg:5.5.10'
     implementation 'com.github.barteksc:android-pdf-viewer:2.4.0'
-    implementation 'com.joanzapata.pdfview:android-pdfview:1.0.4@aar'
     implementation 'org.apache.directory.studio:org.apache.commons.io:2.4'
     implementation 'com.google.android.gms:play-services-location:16.0.0'
     implementation 'com.google.android.gms:play-services-maps:16.1.0'
@@ -111,5 +109,6 @@ dependencies {
     annotationProcessor 'org.projectlombok:lombok:1.14.8'
     testImplementation 'junit:junit:4.12'
     testImplementation 'org.mockito:mockito-android:2.11.0'
+    implementation 'com.tom_roush:pdfbox-android:1.8.10.1'
 }
 apply plugin: 'com.google.gms.google-services'

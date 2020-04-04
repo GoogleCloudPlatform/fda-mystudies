@@ -42,7 +42,6 @@ import com.harvard.studyappmodule.custom.result.StepRecordCustom;
 import com.harvard.studyappmodule.events.DeleteAccountEvent;
 import com.harvard.studyappmodule.events.GetResourceListEvent;
 import com.harvard.studyappmodule.events.GetUserStudyInfoEvent;
-import com.harvard.studyappmodule.events.WithdrawFromStudyEvent;
 import com.harvard.studyappmodule.studymodel.DeleteAccountData;
 import com.harvard.studyappmodule.studymodel.NotificationDbResources;
 import com.harvard.studyappmodule.studymodel.Resource;
@@ -58,13 +57,11 @@ import com.harvard.utils.Logger;
 import com.harvard.utils.SharedPreferenceHelper;
 import com.harvard.utils.URLs;
 import com.harvard.webservicemodule.apihelper.ApiCall;
-import com.harvard.webservicemodule.apihelper.ApiCallResponseServer;
 import com.harvard.webservicemodule.apihelper.ConnectionDetector;
 import com.harvard.webservicemodule.apihelper.HttpRequest;
 import com.harvard.webservicemodule.apihelper.Responsemodel;
 import com.harvard.webservicemodule.events.RegistrationServerConfigEvent;
 import com.harvard.webservicemodule.events.RegistrationServerEnrollmentConfigEvent;
-import com.harvard.webservicemodule.events.ResponseServerConfigEvent;
 import com.harvard.webservicemodule.events.WCPConfigEvent;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -81,8 +78,7 @@ import io.realm.Realm;
 import io.realm.RealmList;
 import io.realm.RealmResults;
 
-public class SurveyResourcesFragment<T> extends Fragment
-    implements ApiCall.OnAsyncRequestComplete, ApiCallResponseServer.OnAsyncRequestComplete {
+public class SurveyResourcesFragment<T> extends Fragment implements ApiCall.OnAsyncRequestComplete {
 
   private static final int STUDY_INFO = 10;
   private static final int UPDATE_USERPREFERENCE_RESPONSECODE = 100;
@@ -816,11 +812,6 @@ public class SurveyResourcesFragment<T> extends Fragment
           }
         } else {
           metadataProcess();
-          Toast.makeText(
-                  mContext,
-                  mContext.getResources().getString(R.string.unable_to_retrieve_data),
-                  Toast.LENGTH_SHORT)
-              .show();
         }
       } else {
         metadataProcess();
@@ -922,7 +913,7 @@ public class SurveyResourcesFragment<T> extends Fragment
     JSONObject jsonObject = new JSONObject();
 
     Studies mStudies =
-            dbServiceSubscriber.getStudies(((SurveyActivity) mContext).getStudyId(), mRealm);
+        dbServiceSubscriber.getStudies(((SurveyActivity) mContext).getStudyId(), mRealm);
 
     try {
       jsonObject.put("participantId", mStudies.getParticipantId());
@@ -934,7 +925,7 @@ public class SurveyResourcesFragment<T> extends Fragment
 
     RegistrationServerEnrollmentConfigEvent registrationServerEnrollmentConfigEvent =
         new RegistrationServerEnrollmentConfigEvent(
-            "post_json",
+            "post_object",
             URLs.WITHDRAW,
             UPDATE_USERPREFERENCE_RESPONSECODE,
             mContext,
@@ -955,31 +946,9 @@ public class SurveyResourcesFragment<T> extends Fragment
     mRegistrationServer = flag;
     AppController.getHelperProgressDialog().showProgress(getActivity(), "", "", false);
     dbServiceSubscriber.deleteActivityRunsFromDbByStudyID(
-            mContext, ((SurveyActivity) mContext).getStudyId());
+        mContext, ((SurveyActivity) mContext).getStudyId());
     dbServiceSubscriber.deleteResponseFromDb(((SurveyActivity) mContext).getStudyId(), mRealm);
     updateuserpreference();
-  }
-
-  @Override
-  public <T> void asyncResponse(T response, int responseCode, String serverType) {
-    // WITHDRAWFROMSTUDY: once 'leave study'  call responseServerWithdrawFromStudy after that we
-    // need to call updateuserpreference();
-    if (responseCode != WITHDRAWFROMSTUDY) AppController.getHelperProgressDialog().dismissDialog();
-
-    if (responseCode == WITHDRAWFROMSTUDY) {
-      // delete data from local db
-      dbServiceSubscriber.deleteActivityRunsFromDbByStudyID(
-          mContext, ((SurveyActivity) mContext).getStudyId());
-      dbServiceSubscriber.deleteResponseFromDb(((SurveyActivity) mContext).getStudyId(), mRealm);
-      updateuserpreference();
-    }
-  }
-
-  @Override
-  public <T> void asyncResponseFailure(
-      int responseCode, String errormsg, String statusCode, T response) {
-    AppController.getHelperProgressDialog().dismissDialog();
-    Toast.makeText(getActivity(), errormsg, Toast.LENGTH_LONG).show();
   }
 
   @Override
@@ -1040,9 +1009,12 @@ public class SurveyResourcesFragment<T> extends Fragment
     String json = gson.toJson(deleteAccountData);
     JSONObject obj = null;
     try {
-      obj = new JSONObject(json);
+      obj = new JSONObject();
       JSONArray jsonArray1 = new JSONArray();
-      jsonArray1.put(AppConfig.StudyId);
+      JSONObject jsonObject = new JSONObject();
+      jsonObject.put("studyId", AppConfig.StudyId);
+      jsonObject.put("delete", mRegistrationServer);
+      jsonArray1.put(jsonObject);
       obj.put("deleteData", jsonArray1);
     } catch (JSONException e) {
       Logger.log(e);

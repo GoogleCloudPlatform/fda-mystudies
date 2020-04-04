@@ -1549,11 +1549,6 @@ public class SurveyDashboardFragment extends Fragment implements ApiCall.OnAsync
             else {
               addViewStatisticsValues();
               AppController.getHelperProgressDialog().dismissDialog();
-              Toast.makeText(
-                      mContext,
-                      mContext.getResources().getString(R.string.unable_to_retrieve_data),
-                      Toast.LENGTH_SHORT)
-                  .show();
             }
           }
         } else {
@@ -1567,11 +1562,6 @@ public class SurveyDashboardFragment extends Fragment implements ApiCall.OnAsync
           else {
             addViewStatisticsValues();
             AppController.getHelperProgressDialog().dismissDialog();
-            Toast.makeText(
-                    mContext,
-                    mContext.getResources().getString(R.string.unable_to_retrieve_data),
-                    Toast.LENGTH_SHORT)
-                .show();
           }
         }
       } else {
