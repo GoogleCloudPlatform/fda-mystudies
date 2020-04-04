@@ -1,4 +1,4 @@
-// License Agreement for FDA My Studies
+// License Agreement for FDA MyStudies
 // Copyright © 2017-2019 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors. Permission is
 // hereby granted, free of charge, to any person obtaining a copy of this software and associated
 // documentation files (the &quot;Software&quot;), to deal in the Software without restriction, including without
@@ -116,7 +116,8 @@ class ActivitiesTableViewCell: UITableViewCell {
 
     let currentRunId = (activity.totalRuns != 0) ? String(activity.currentRunId) : "0"
 
-    self.labelRunStatus?.text = "Run: " + currentRunId + "/" + String(activity.totalRuns) + ", "
+    self.labelRunStatus?.text =
+      "Run: " + currentRunId + "/" + String(activity.totalRuns) + ", "
       + String(activity.compeltedRuns) + " done" + ", " + String(activity.incompletedRuns)
       + " missed"
 

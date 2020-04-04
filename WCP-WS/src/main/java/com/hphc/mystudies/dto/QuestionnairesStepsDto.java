@@ -31,11 +31,9 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
-
 @Entity
 @Table(name = "questionnaires_steps")
 public class QuestionnairesStepsDto implements Serializable {
-
 
   private static final long serialVersionUID = -6626878023643784669L;
 

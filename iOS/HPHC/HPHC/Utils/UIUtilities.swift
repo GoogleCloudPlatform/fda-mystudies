@@ -1,4 +1,4 @@
-// License Agreement for FDA My Studies
+// License Agreement for FDA MyStudies
 // Copyright © 2017-2019 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors. Permission is
 // hereby granted, free of charge, to any person obtaining a copy of this software and associated
 // documentation files (the &quot;Software&quot;), to deal in the Software without restriction, including without
@@ -177,12 +177,14 @@ class UIUtilities: NSObject {
 
     var jsonString: String!
     do {
-      let jsonData: NSData = try JSONSerialization.data(
-        withJSONObject: mutableDic,
-        options: JSONSerialization.WritingOptions.prettyPrinted
-      )
+      let jsonData: NSData =
+        try JSONSerialization.data(
+          withJSONObject: mutableDic,
+          options: JSONSerialization.WritingOptions.prettyPrinted
+        )
         as NSData
-      jsonString = NSString(data: jsonData as Data, encoding: String.Encoding.utf8.rawValue)!
+      jsonString =
+        NSString(data: jsonData as Data, encoding: String.Encoding.utf8.rawValue)!
         as String
     } catch let error {
       Logger.sharedInstance.error("Error parsing data: ", error.localizedDescription)
@@ -194,15 +196,17 @@ class UIUtilities: NSObject {
 
     var socialMediaNamesString: String!
     do {
-      let jsonData: NSData = try JSONSerialization.data(
-        withJSONObject: mutableArray,
-        options: JSONSerialization.WritingOptions.prettyPrinted
-      )
+      let jsonData: NSData =
+        try JSONSerialization.data(
+          withJSONObject: mutableArray,
+          options: JSONSerialization.WritingOptions.prettyPrinted
+        )
         as NSData
-      socialMediaNamesString = NSString(
-        data: jsonData as Data,
-        encoding: String.Encoding.utf8.rawValue
-      )! as String
+      socialMediaNamesString =
+        NSString(
+          data: jsonData as Data,
+          encoding: String.Encoding.utf8.rawValue
+        )! as String
     } catch let error {
       Logger.sharedInstance.error("Error parsing data: ", error.localizedDescription)
     }

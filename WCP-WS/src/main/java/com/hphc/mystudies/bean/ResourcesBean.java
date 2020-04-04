@@ -25,7 +25,6 @@ package com.hphc.mystudies.bean;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-
 public class ResourcesBean {
 
   private String title = "";

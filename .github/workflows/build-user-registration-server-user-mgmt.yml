@@ -1,6 +1,6 @@
 on:
   pull_request:
-    branches: [ unc-cv19 ]
+    branches: [ early-access ]
 name: Build user-registration-server-ws-user-mgmt
 jobs:
   build:

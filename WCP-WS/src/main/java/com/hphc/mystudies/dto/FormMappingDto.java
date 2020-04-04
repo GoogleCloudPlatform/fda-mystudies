@@ -30,12 +30,10 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
-
 @Entity
 @Table(name = "form_mapping")
 public class FormMappingDto implements Serializable {
 
- 
   private static final long serialVersionUID = -4348587952657053397L;
 
   @Id

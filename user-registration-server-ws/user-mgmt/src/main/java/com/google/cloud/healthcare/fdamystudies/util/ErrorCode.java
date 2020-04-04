@@ -27,7 +27,15 @@ public enum ErrorCode {
 
   EC_403(403, "You are forbidden to access this information."),
 
-  EC_500(500, "Internal Server Error.");
+  EC_500(500, "Internal Server Error."),
+
+  EC_701(701, "The argument that you provided is a required argument but it is blank or null."),
+
+  EC_711(711, "Invalid Input"),
+
+  EC_718(718, "UNAUTHORIZED"),
+
+  EC_719(719, "Invalid clientId or secretKey");
 
   private final int code;
 

@@ -1,4 +1,4 @@
-// License Agreement for FDA My Studies
+// License Agreement for FDA MyStudies
 // Copyright © 2017-2019 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors. Permission is
 // hereby granted, free of charge, to any person obtaining a copy of this software and associated
 // documentation files (the &quot;Software&quot;), to deal in the Software without restriction, including without
@@ -424,9 +424,7 @@ class TextChoiceQuestionController: ORKQuestionStepViewController {
   /// - Returns: A Bool value indicating if it's Other cell indexPath or not.
   private func isLastCell(indexPath: IndexPath) -> Bool {
     if (indexPath.row == self.textChoices.count && !isSearching)
-      || (
-        indexPath.row == self.searchChoices.count && isSearching
-      )
+      || (indexPath.row == self.searchChoices.count && isSearching)
     {
       return true
     } else {
@@ -449,9 +447,7 @@ class TextChoiceQuestionController: ORKQuestionStepViewController {
     @discardableResult
     func removeOtherChoiceIfExclusive() -> Bool {
       if (self.otherChoice.isExclusive && self.isOtherCellSelected)
-        || (
-          choice?.exclusive ?? false && isOtherCellSelected
-        )
+        || (choice?.exclusive ?? false && isOtherCellSelected)
       {
         self.isOtherCellSelected = false
         self.tableView?.reloadData()
@@ -619,10 +615,11 @@ extension TextChoiceQuestionController: UITableViewDataSource, UITableViewDelega
 
     // If it's last cell, return other cell : Perhaps, other option
     if isLastCell(indexPath: indexPath) {
-      let cell = tableView.dequeueReusableCell(
-        withIdentifier: OtherTextChoiceCell.reuseIdentifier,
-        for: indexPath
-      )
+      let cell =
+        tableView.dequeueReusableCell(
+          withIdentifier: OtherTextChoiceCell.reuseIdentifier,
+          for: indexPath
+        )
         as! OtherTextChoiceCell
 
       cell.delegate = self
@@ -724,10 +721,11 @@ extension TextChoiceQuestionController: UITableViewDataSource, UITableViewDelega
     let verticalPadding: CGFloat = (self.isShowSearchBar) ? 80 : 24
     let horPadding: CGFloat = 24
     if let question = self.questionStep?.question {
-      height = question.estimatedLabelHeight(
-        labelWidth: tableView.frame.width - horPadding,
-        font: self.questionFont
-      )
+      height =
+        question.estimatedLabelHeight(
+          labelWidth: tableView.frame.width - horPadding,
+          font: self.questionFont
+        )
         + verticalPadding
     }
 

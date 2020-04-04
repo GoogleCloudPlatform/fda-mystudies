@@ -1,4 +1,4 @@
-// License Agreement for FDA My Studies
+// License Agreement for FDA MyStudies
 // Copyright © 2017-2019 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors.
 // Copyright 2020 Google LLC
 // Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated
@@ -160,9 +160,10 @@ class VerificationViewController: UIViewController {
 
     let storyboard = UIStoryboard(name: kStoryboardIdentifierGateway, bundle: nil)
 
-    let fda = storyboard.instantiateViewController(
-      withIdentifier: kChangePasswordViewControllerIdentifier
-    )
+    let fda =
+      storyboard.instantiateViewController(
+        withIdentifier: kChangePasswordViewControllerIdentifier
+      )
       as! ChangePasswordViewController
 
     if shouldCreateMenu {
@@ -252,8 +253,7 @@ extension VerificationViewController: NMWebServiceDelegate {
   func failedRequest(_ manager: NetworkManager, requestName: NSString, error: NSError) {
 
     self.removeProgressIndicator()
-    if requestName as String == AuthServerMethods.getRefreshedToken.description && error.code == 401
-    {  //unauthorized
+    if requestName as String == AuthServerMethods.getRefreshedToken.description && error.code == 401 {  //unauthorized
       UIUtilities.showAlertMessageWithActionHandler(
         kErrorTitle,
         message: error.localizedDescription,

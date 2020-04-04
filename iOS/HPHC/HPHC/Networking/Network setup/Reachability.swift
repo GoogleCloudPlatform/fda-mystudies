@@ -126,7 +126,7 @@ public class Reachability {
     zeroAddress.sa_family = sa_family_t(AF_INET)
 
     guard
-      let ref:SCNetworkReachability = withUnsafePointer(
+      let ref: SCNetworkReachability = withUnsafePointer(
         to: &zeroAddress,
         {
           SCNetworkReachabilityCreateWithAddress(nil, UnsafePointer($0))

@@ -126,32 +126,20 @@ public class UserProfileController {
     String message = MyStudiesUserRegUtil.ErrorCodes.FAILURE.getValue();
     ResponseBean responseBean = new ResponseBean();
     try {
-      if (deactivateAcctBean != null
-          && deactivateAcctBean.getDeleteData() != null
-          && !deactivateAcctBean.getDeleteData().isEmpty()) {
-        message =
-            userManagementProfService.deActivateAcct(
-                userId, deactivateAcctBean, accessToken, clientToken);
-        if (message.equalsIgnoreCase(MyStudiesUserRegUtil.ErrorCodes.SUCCESS.getValue())) {
-          commonService.createActivityLog(
-              userId,
-              "ACCOUNT DELETE(Deactivation of an user)",
-              "Account deactivated for user " + userId + ".");
-          responseBean.setMessage(MyStudiesUserRegUtil.ErrorCodes.SUCCESS.getValue().toLowerCase());
-
-        } else {
-          MyStudiesUserRegUtil.getFailureResponse(
-              MyStudiesUserRegUtil.ErrorCodes.STATUS_104.getValue(),
-              MyStudiesUserRegUtil.ErrorCodes.UNKNOWN.getValue(),
-              MyStudiesUserRegUtil.ErrorCodes.FAILURE.getValue(),
-              response);
-          return null;
-        }
+      message =
+          userManagementProfService.deActivateAcct(
+              userId, deactivateAcctBean, accessToken, clientToken);
+      if (message.equalsIgnoreCase(MyStudiesUserRegUtil.ErrorCodes.SUCCESS.getValue())) {
+        commonService.createActivityLog(
+            userId,
+            "ACCOUNT DELETE(Deactivation of an user)",
+            "Account deactivated for user " + userId + ".");
+        responseBean.setMessage(MyStudiesUserRegUtil.ErrorCodes.SUCCESS.getValue().toLowerCase());
       } else {
         MyStudiesUserRegUtil.getFailureResponse(
-            MyStudiesUserRegUtil.ErrorCodes.STATUS_102.getValue(),
-            MyStudiesUserRegUtil.ErrorCodes.INVALID_INPUT.getValue(),
-            MyStudiesUserRegUtil.ErrorCodes.INVALID_INPUT_ERROR_MSG.getValue(),
+            MyStudiesUserRegUtil.ErrorCodes.STATUS_104.getValue(),
+            MyStudiesUserRegUtil.ErrorCodes.UNKNOWN.getValue(),
+            MyStudiesUserRegUtil.ErrorCodes.FAILURE.getValue(),
             response);
         return null;
       }

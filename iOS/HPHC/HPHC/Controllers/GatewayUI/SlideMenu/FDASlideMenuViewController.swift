@@ -1,4 +1,4 @@
-// License Agreement for FDA My Studies
+// License Agreement for FDA MyStudies
 // Copyright © 2017-2019 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors. Permission is
 // hereby granted, free of charge, to any person obtaining a copy of this software and associated
 // documentation files (the &quot;Software&quot;), to deal in the Software without restriction, including without
@@ -38,15 +38,17 @@ open class FDASlideMenuViewController: SlideMenuController {
       let studyStoryBoard = UIStoryboard.init(name: kStudyStoryboard, bundle: Bundle.main)
 
       if Study.currentStudy?.userParticipateState.status == .inProgress {
-        let studyTabBarController = studyStoryBoard.instantiateViewController(
-          withIdentifier: kStudyDashboardTabbarControllerIdentifier
-        )
+        let studyTabBarController =
+          studyStoryBoard.instantiateViewController(
+            withIdentifier: kStudyDashboardTabbarControllerIdentifier
+          )
           as! StudyDashboardTabbarViewController
         self.mainViewController = studyTabBarController
       } else {
-        let studyHomeViewController = studyStoryBoard.instantiateViewController(
-          withIdentifier: String(describing: kStudyHomeViewControllerIdentifier)
-        )
+        let studyHomeViewController =
+          studyStoryBoard.instantiateViewController(
+            withIdentifier: String(describing: kStudyHomeViewControllerIdentifier)
+          )
           as! UINavigationController
         self.mainViewController = studyHomeViewController
       }
@@ -112,11 +114,13 @@ open class FDASlideMenuViewController: SlideMenuController {
     self.leftViewController?.view.isHidden = true
     _ = self.navigationController?.popToRootViewController(animated: true)
 
-    let navVC: UINavigationController = UIApplication.shared.keyWindow?.rootViewController
+    let navVC: UINavigationController =
+      UIApplication.shared.keyWindow?.rootViewController
       as! UINavigationController
 
     if navVC.viewControllers.count > 0 {
-      let splashVC: SplashViewController = navVC.viewControllers.first
+      let splashVC: SplashViewController =
+        navVC.viewControllers.first
         as! SplashViewController
 
       splashVC.navigateToGatewayDashboard()

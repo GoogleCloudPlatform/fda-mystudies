@@ -75,3 +75,4 @@ spec:
         - name: gcloud-key-volume
           secret:
             secretName: user-registration-server-ws-gcloud-key
+

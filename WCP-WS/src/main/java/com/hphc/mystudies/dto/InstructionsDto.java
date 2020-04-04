@@ -32,7 +32,6 @@ import javax.persistence.Table;
 import org.hibernate.annotations.NamedQueries;
 import org.hibernate.annotations.NamedQuery;
 
-
 @Entity
 @Table(name = "instructions")
 @NamedQueries(
@@ -44,7 +43,6 @@ import org.hibernate.annotations.NamedQuery;
                   + " where IDTO.status=true and IDTO.id IN (:instructionIdList)"),
     })
 public class InstructionsDto implements Serializable {
-
 
   private static final long serialVersionUID = -8485388252282207892L;
 

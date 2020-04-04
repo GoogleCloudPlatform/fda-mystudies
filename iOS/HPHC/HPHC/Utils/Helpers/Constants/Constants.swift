@@ -1,4 +1,4 @@
-// License Agreement for FDA My Studies
+// License Agreement for FDA MyStudies
 // Copyright © 2017-2019 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors.
 // Copyright 2020 Google LLC
 // Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated
@@ -68,6 +68,8 @@ let kDeleteAccountConfirmationMessage =
 let kMessageAccountDeletedSuccess = "Account has been deleted"
 let kMessageAppNotificationOffRemainder =
   "Stay up-to-date! Turn ON notifications and reminders in app and phone settings to get notified about study activity in a timely manner."
+let kSetPasscodeDescription =
+  "A passcode helps with quick and secure access to the app. You can turn off the passcode at any time by using a setting provided in the app."
 
 // MARK: - Signin Constants
 let kSignInTitleText = "SIGN IN"
@@ -231,7 +233,8 @@ let kConsentUpdatedTitle = "Consent Updated"
 let kMessageConsentUpdatedPartTwo =
   " Please review the revised Consent terms and provide your Informed Consent, to continue participating in the study."
 
-let kMessageConsentUpdated = "The Consent Document for this study has been updated."
+let kMessageConsentUpdated =
+  "The Consent Document for this study has been updated."
   + kMessageConsentUpdatedPartTwo
 
 let kReviewTitle = "Review"

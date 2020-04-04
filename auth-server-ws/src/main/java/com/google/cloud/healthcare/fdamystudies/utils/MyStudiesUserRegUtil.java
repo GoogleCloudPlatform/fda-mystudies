@@ -54,7 +54,6 @@ public class MyStudiesUserRegUtil {
     INVALID_CLIENT_TOKEN("Invalid client token"),
     SYSTEM_ERROR_FOUND("System error found"),
     SESSION_EXPIRED_MSG("Session expired."),
-    INVALID_EMAIL_PASSWORD_MSG("Invalid emailId or password"),
     EMAIL_EXISTS("This email has already been used. Please try with different email address."),
     INVALID_INPUT_ERROR_MSG("Invalid input."),
     SUCCESS("SUCCESS"),
@@ -189,18 +188,6 @@ public class MyStudiesUserRegUtil {
       } else return false;
     } catch (Exception e) {
       logger.error("MyStudiesUserRegUtil - isPasswordStrong() - error() ", e);
-      throw new SystemException();
-    }
-  }
-
-  public static boolean isPasswordContainsEmailId(String password) throws SystemException {
-    logger.info("MyStudiesUserRegUtil - isPasswordContainsEmailId() start");
-    try {
-      if (password != null) {
-        return password.matches("([A-Za-z0-9-_.+]+@[A-Za-z0-9-_]+(?:\\\\.[A-Za-z0-9]+)+)");
-      } else return false;
-    } catch (Exception e) {
-      logger.error("MyStudiesUserRegUtil - isPasswordContainsEmailId() - error() ", e);
       throw new SystemException();
     }
   }

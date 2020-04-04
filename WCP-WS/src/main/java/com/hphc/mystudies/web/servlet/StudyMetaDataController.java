@@ -33,7 +33,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.apache.log4j.Logger;
 
-
 public class StudyMetaDataController extends HttpServlet {
 
   private static final Logger LOGGER = Logger.getLogger(StudyMetaDataController.class);

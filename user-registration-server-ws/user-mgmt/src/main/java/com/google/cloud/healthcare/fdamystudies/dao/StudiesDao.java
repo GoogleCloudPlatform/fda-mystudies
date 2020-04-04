@@ -13,4 +13,6 @@ import com.google.cloud.healthcare.fdamystudies.beans.ErrorBean;
 
 public interface StudiesDao {
   public ErrorBean saveStudyMetadata(StudyMetadataBean studyMetadataBean);
+
+  public String withdrawFromStudy(String participantId, String studyIds, boolean delete);
 }

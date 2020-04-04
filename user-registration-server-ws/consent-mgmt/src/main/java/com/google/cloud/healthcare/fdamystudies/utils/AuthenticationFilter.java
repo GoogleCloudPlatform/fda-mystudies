@@ -61,11 +61,7 @@ public class AuthenticationFilter implements Filter {
         }
 
         if (isInterceptorURL) {
-          httpServletResponse.setHeader("Access-Control-Allow-Origin", "*");
-          httpServletResponse.setHeader("Access-Control-Allow-Headers", "*");
-          httpServletResponse.setHeader("Access-Control-Allow-Credentials", "true");
-          httpServletResponse.setHeader(
-              "Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS, HEAD");
+          setCommonHeaders(httpServletResponse);
           chain.doFilter(request, response);
         } else {
           if ((accessToken != null)
@@ -78,30 +74,18 @@ public class AuthenticationFilter implements Filter {
             value = commonService.validateAccessToken(userId, accessToken, clientToken);
             value = 1;
             if (value == 1) {
-              httpServletResponse.setHeader("Access-Control-Allow-Origin", "*");
-              httpServletResponse.setHeader("Access-Control-Allow-Headers", "*");
-              httpServletResponse.setHeader("Access-Control-Allow-Credentials", "true");
-              httpServletResponse.setHeader(
-                  "Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS, HEAD");
+              setCommonHeaders(httpServletResponse);
               chain.doFilter(request, response);
             } else {
               if (response instanceof HttpServletResponse) {
-                httpServletResponse.setHeader("Access-Control-Allow-Origin", "*");
-                httpServletResponse.setHeader("Access-Control-Allow-Headers", "*");
-                httpServletResponse.setHeader("Access-Control-Allow-Credentials", "true");
-                httpServletResponse.setHeader(
-                    "Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS, HEAD");
+                setCommonHeaders(httpServletResponse);
                 httpServletResponse.sendError(
                     HttpServletResponse.SC_UNAUTHORIZED, ErrorCodes.UNAUTHORIZED.getValue());
                 httpServletResponse.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
               }
             }
           } else {
-            httpServletResponse.setHeader("Access-Control-Allow-Origin", "*");
-            httpServletResponse.setHeader("Access-Control-Allow-Headers", "*");
-            httpServletResponse.setHeader("Access-Control-Allow-Credentials", "true");
-            httpServletResponse.setHeader(
-                "Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS, HEAD");
+            setCommonHeaders(httpServletResponse);
             httpServletResponse.sendError(
                 HttpServletResponse.SC_UNAUTHORIZED, ErrorCodes.UNAUTHORIZED.getValue());
             httpServletResponse.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
@@ -113,6 +97,14 @@ public class AuthenticationFilter implements Filter {
         chain.doFilter(request, response);
       }
     }
+  }
+
+  private void setCommonHeaders(HttpServletResponse httpServletResponse) {
+    httpServletResponse.setHeader("Access-Control-Allow-Origin", "*");
+    httpServletResponse.setHeader("Access-Control-Allow-Headers", "*");
+    httpServletResponse.setHeader("Access-Control-Allow-Credentials", "true");
+    httpServletResponse.setHeader(
+        "Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS, HEAD");
   }
 
   @Override

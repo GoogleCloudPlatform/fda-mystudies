@@ -25,7 +25,6 @@ package com.hphc.mystudies.bean.appendix;
 import java.util.ArrayList;
 import java.util.List;
 
-
 public class QuestionnaireConfigurationStructureBean {
 
   private boolean branching = false;

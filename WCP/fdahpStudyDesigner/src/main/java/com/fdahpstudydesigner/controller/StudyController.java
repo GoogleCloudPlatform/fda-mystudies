@@ -1,5 +1,5 @@
 /*
- * Copyright � 2017-2018 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors.
+ * Copyright © 2017-2018 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors.
  * Copyright 2020 Google LLC
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction,
@@ -4722,7 +4722,7 @@ public class StudyController {
     String sucMsg = "";
     String errMsg = "";
     EligibilityBo eligibilityBo;
-    List<EligibilityTestBo> eligibilityTestList = null;
+    List<EligibilityTestBo> eligibilityTestList = new ArrayList<>();
     Boolean isLiveStudy = false;
     try {
       SessionObject sesObj =
@@ -4795,8 +4795,10 @@ public class StudyController {
             eligibilityBo.setInstructionalText(
                 FdahpStudyDesignerConstants.ELIGIBILITY_TOKEN_TEXT_DEFAULT);
           }
-          eligibilityTestList =
-              studyService.viewEligibilityTestQusAnsByEligibilityId(eligibilityBo.getId());
+          if (eligibilityBo.getId() != null) {
+            eligibilityTestList =
+                studyService.viewEligibilityTestQusAnsByEligibilityId(eligibilityBo.getId());
+          }
           map.addAttribute("eligibilityTestList", eligibilityTestList);
           map.addAttribute("eligibility", eligibilityBo);
           map.addAttribute(FdahpStudyDesignerConstants.PERMISSION, permission);
@@ -5099,7 +5101,7 @@ public class StudyController {
       headers = new HttpHeaders();
       headers.setContentType(MediaType.APPLICATION_JSON);
       headers.set("clientId", map.get("WCPClientId"));
-      headers.set("clientSecret", map.get("WCPSecretKey"));
+      headers.set("secretKey", FdahpStudyDesignerUtil.getHashedValue(map.get("WCPSecretKey")));
 
       userRegistrationServerUrl = map.get("userRegistrationServerUrl");
 
@@ -5137,9 +5139,8 @@ public class StudyController {
       map = FdahpStudyDesignerUtil.getAppProperties();
       headers = new HttpHeaders();
       headers.setContentType(MediaType.APPLICATION_JSON);
-      headers.set("applicationId", "TEST");
       headers.set("clientId", map.get("WCPClientId"));
-      headers.set("clientSecret", map.get("WCPSecretKey"));
+      headers.set("secretKey", FdahpStudyDesignerUtil.getHashedValue(map.get("WCPSecretKey")));
 
       responseServerUrl = map.get("responseServerUrl");
 

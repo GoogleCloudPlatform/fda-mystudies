@@ -165,6 +165,7 @@ public class ParticipantActivityStateResponseServiceImpl
         tempParticipantActivitiesBo.setBookmark(activityRequestBean.getBookmarked());
         tempParticipantActivitiesBo.setParticipantId(activityStateRequestBean.getParticipantId());
         tempParticipantActivitiesBo.setStudyId(activityStateRequestBean.getStudyId());
+
         if (activityRequestBean.getActivityRun() != null) {
           tempParticipantActivitiesBo.setTotal(activityRequestBean.getActivityRun().getTotal());
           tempParticipantActivitiesBo.setMissed(activityRequestBean.getActivityRun().getMissed());

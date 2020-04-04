@@ -68,11 +68,7 @@ public class AuthenticationFilter implements Filter {
 
         if (isInterceptorURL) {
           isValid = true;
-          httpServletResponse.setHeader(AppConstants.ACCESS_CONTROL_ALLOW_ORIGIN, "*");
-          httpServletResponse.setHeader(AppConstants.ACCESS_CONTROL_ALLOW_HEADERS, "*");
-          httpServletResponse.setHeader(AppConstants.ACCESS_CONTROL_ALLOW_CREDENTIALS, "true");
-          httpServletResponse.setHeader(
-              AppConstants.ACCESS_CONTROL_ALLOW_METHODS, AppConstants.HTTP_METHODS);
+          setCommonHeaders(httpServletResponse);
           chain.doFilter(request, response);
           logger.info(AppConstants.AUTHENTICATION_FILTER_ENDS);
         } else {
@@ -94,22 +90,12 @@ public class AuthenticationFilter implements Filter {
                 isValidAccessToken = userDetailsService.validateAccessToken(authInfo);
 
                 if (isValidAccessToken == 1) {
-                  httpServletResponse.setHeader(AppConstants.ACCESS_CONTROL_ALLOW_ORIGIN, "*");
-                  httpServletResponse.setHeader(AppConstants.ACCESS_CONTROL_ALLOW_HEADERS, "*");
-                  httpServletResponse.setHeader(
-                      AppConstants.ACCESS_CONTROL_ALLOW_CREDENTIALS, "true");
-                  httpServletResponse.setHeader(
-                      AppConstants.ACCESS_CONTROL_ALLOW_METHODS, AppConstants.HTTP_METHODS);
+                  setCommonHeaders(httpServletResponse);
                   chain.doFilter(request, response);
                   logger.info(AppConstants.AUTHENTICATION_FILTER_ENDS);
                 } else if (isValidAccessToken == 2) {
                   if (response instanceof HttpServletResponse) {
-                    httpServletResponse.setHeader(AppConstants.ACCESS_CONTROL_ALLOW_ORIGIN, "*");
-                    httpServletResponse.setHeader(AppConstants.ACCESS_CONTROL_ALLOW_HEADERS, "*");
-                    httpServletResponse.setHeader(
-                        AppConstants.ACCESS_CONTROL_ALLOW_CREDENTIALS, "true");
-                    httpServletResponse.setHeader(
-                        AppConstants.ACCESS_CONTROL_ALLOW_METHODS, AppConstants.HTTP_METHODS);
+                    setCommonHeaders(httpServletResponse);
 
                     httpServletResponse.setHeader(AppConstants.STATUS, "401");
                     httpServletResponse.setHeader(
@@ -124,12 +110,7 @@ public class AuthenticationFilter implements Filter {
                   }
                 } else {
                   if (response instanceof HttpServletResponse) {
-                    httpServletResponse.setHeader(AppConstants.ACCESS_CONTROL_ALLOW_ORIGIN, "*");
-                    httpServletResponse.setHeader(AppConstants.ACCESS_CONTROL_ALLOW_HEADERS, "*");
-                    httpServletResponse.setHeader(
-                        AppConstants.ACCESS_CONTROL_ALLOW_CREDENTIALS, "true");
-                    httpServletResponse.setHeader(
-                        AppConstants.ACCESS_CONTROL_ALLOW_METHODS, AppConstants.HTTP_METHODS);
+                    setCommonHeaders(httpServletResponse);
 
                     httpServletResponse.setHeader(AppConstants.STATUS, "401");
                     httpServletResponse.setHeader(
@@ -158,11 +139,7 @@ public class AuthenticationFilter implements Filter {
 
             } catch (Exception e) {
               logger.error("AuthenticationFilter.doFilter(): ", e);
-              httpServletResponse.setHeader(AppConstants.ACCESS_CONTROL_ALLOW_ORIGIN, "*");
-              httpServletResponse.setHeader(AppConstants.ACCESS_CONTROL_ALLOW_HEADERS, "*");
-              httpServletResponse.setHeader(AppConstants.ACCESS_CONTROL_ALLOW_CREDENTIALS, "true");
-              httpServletResponse.setHeader(
-                  AppConstants.ACCESS_CONTROL_ALLOW_METHODS, AppConstants.HTTP_METHODS);
+              setCommonHeaders(httpServletResponse);
 
               httpServletResponse.setHeader(AppConstants.STATUS, "500");
               httpServletResponse.setHeader(
@@ -175,11 +152,7 @@ public class AuthenticationFilter implements Filter {
             }
           } else {
             logger.info("Invalid Request");
-            httpServletResponse.setHeader(AppConstants.ACCESS_CONTROL_ALLOW_ORIGIN, "*");
-            httpServletResponse.setHeader(AppConstants.ACCESS_CONTROL_ALLOW_HEADERS, "*");
-            httpServletResponse.setHeader(AppConstants.ACCESS_CONTROL_ALLOW_CREDENTIALS, "true");
-            httpServletResponse.setHeader(
-                AppConstants.ACCESS_CONTROL_ALLOW_METHODS, AppConstants.HTTP_METHODS);
+            setCommonHeaders(httpServletResponse);
             httpServletResponse.setHeader(AppConstants.STATUS, "400");
             httpServletResponse.setHeader(
                 AppConstants.TITLE, MyStudiesUserRegUtil.ErrorCodes.INVALID_INPUT.getValue());
@@ -195,6 +168,14 @@ public class AuthenticationFilter implements Filter {
         chain.doFilter(request, response);
       }
     }
+  }
+
+  private void setCommonHeaders(HttpServletResponse httpServletResponse) {
+    httpServletResponse.setHeader(AppConstants.ACCESS_CONTROL_ALLOW_ORIGIN, "*");
+    httpServletResponse.setHeader(AppConstants.ACCESS_CONTROL_ALLOW_HEADERS, "*");
+    httpServletResponse.setHeader(AppConstants.ACCESS_CONTROL_ALLOW_CREDENTIALS, "true");
+    httpServletResponse.setHeader(
+        AppConstants.ACCESS_CONTROL_ALLOW_METHODS, AppConstants.HTTP_METHODS);
   }
 
   @Override
