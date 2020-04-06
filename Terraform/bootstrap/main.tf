@@ -1,13 +1,3 @@
-# ========================================== STEP 2 BEGIN ==========================================
-# TODO(user): Uncomment after deployment and run `terraform init`.
-# terraform {
-#   backend "gcs" {
-#     bucket = "heroes-hat-dev-terraform-state-08679"
-#     prefix = "bootstrap"
-#   }
-# }
-# =========================================== STEP 2 END ===========================================
-
 # ========================================== STEP 1 BEGIN ==========================================
 locals {
   cloudbuild_apis = ["cloudbuild.googleapis.com"]
@@ -30,7 +20,7 @@ module "state_bucket" {
   version = "~> 1.4"
 
   name       = var.state_bucket
-  project_id = var.project_id
+  project_id = module.project.project_id
   location   = var.storage_location
 }
 
@@ -42,6 +32,16 @@ resource "google_project_service" "cloudbuild_apis" {
   disable_on_destroy = false
 }
 # =========================================== STEP 1 END ===========================================
+
+# ========================================== STEP 2 BEGIN ==========================================
+# TODO(user): Uncomment after deployment and run `terraform init`.
+# terraform {
+#   backend "gcs" {
+#     bucket = "heroes-hat-dev-terraform-state-08679"
+#     prefix = "bootstrap"
+#   }
+# }
+# =========================================== STEP 2 END ===========================================
 
 # ========================================== STEP 3 BEGIN ==========================================
 
