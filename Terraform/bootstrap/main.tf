@@ -66,98 +66,117 @@ resource "google_storage_bucket_iam_member" "cloudbuild_state_iam" {
 # ========================================== STEP 4 BEGIN ==========================================
 # TODO(user): Uncomment and run after install the Cloud Build app and connect GitHub repo in Cloud Build.
 # Cloud Build triggers for repository CI/CD.
-# resource "google_cloudbuild_trigger" "validate" {
-#   provider = google-beta
-#   project  = module.project.project_id
-#   name     = "tf-validate"
+resource "google_cloudbuild_trigger" "validate" {
+  provider = google-beta
+  project  = module.project.project_id
+  name     = "tf-validate"
 
-#   github {
-#     owner = var.repo_owner
-#     name  = var.repo_name
-#     pull_request {
-#       branch = var.cloudbuild_trigger_branch
-#     }
-#   }
+  github {
+    owner = var.repo_owner
+    name  = var.repo_name
+    pull_request {
+      branch = var.cloudbuild_trigger_branch
+    }
+  }
 
-#   filename = "Terraform/cicd/tf-validate.yaml"
-# }
+  filename = "Terraform/cicd/tf-validate.yaml"
+}
 
-# # Other users defined Cloud Build triggers.
-# resource "google_cloudbuild_trigger" "wcp" {
-#   provider = google-beta
-#   project  = module.project.project_id
-#   name     = "wcp"
+resource "google_cloudbuild_trigger" "plan" {
+  count    = var.continuous_deployment_enabled ? 1 : 0
+  provider = google-beta
+  project  = module.project.project_id
+  name     = "tf-plan"
 
-#   github {
-#     owner = var.repo_owner
-#     name  = var.repo_name
-#     push {
-#       branch = var.cloudbuild_trigger_branch
-#     }
-#   }
+  github {
+    owner = var.repo_owner
+    name  = var.repo_name
+    pull_request {
+      branch = var.cloudbuild_trigger_branch
+    }
+  }
 
-#   filename = "WCP/cloudbuild.yaml"
-# }
+  filename = "Terraform/cicd/tf-plan.yaml"
+}
 
-# resource "google_cloudbuild_trigger" "auth_server_ws" {
-#   provider = google-beta
-#   project  = module.project.project_id
-#   name     = "auth-server-ws"
+# Other users defined Cloud Build triggers.
+resource "google_cloudbuild_trigger" "wcp" {
+  provider = google-beta
+  project  = module.project.project_id
+  name     = "wcp"
 
-#   github {
-#     owner = var.repo_owner
-#     name  = var.repo_name
-#     push {
-#       branch = var.cloudbuild_trigger_branch
-#     }
-#   }
+  github {
+    owner = var.repo_owner
+    name  = var.repo_name
+    push {
+      branch = var.cloudbuild_trigger_branch
+    }
+  }
 
-#   filename = "auth-server-ws/cloudbuild.yaml"
-# }
-# resource "google_cloudbuild_trigger" "wcp_ws" {
-#   provider = google-beta
-#   project  = module.project.project_id
-#   name     = "wcp-ws"
+  filename = "WCP/cloudbuild.yaml"
+}
 
-#   github {
-#     owner = var.repo_owner
-#     name  = var.repo_name
-#     push {
-#       branch = var.cloudbuild_trigger_branch
-#     }
-#   }
+resource "google_cloudbuild_trigger" "auth_server_ws" {
+  provider = google-beta
+  project  = module.project.project_id
+  name     = "auth-server-ws"
 
-#   filename = "WCP-WS/cloudbuild.yaml"
-# }
-# resource "google_cloudbuild_trigger" "user_registration_server_ws" {
-#   provider = google-beta
-#   project  = module.project.project_id
-#   name     = "user-registration-server-ws"
+  github {
+    owner = var.repo_owner
+    name  = var.repo_name
+    push {
+      branch = var.cloudbuild_trigger_branch
+    }
+  }
 
-#   github {
-#     owner = var.repo_owner
-#     name  = var.repo_name
-#     push {
-#       branch = var.cloudbuild_trigger_branch
-#     }
-#   }
+  filename = "auth-server-ws/cloudbuild.yaml"
+}
 
-#   filename = "user-registration-server-ws/cloudbuild.yaml"
-# }
+resource "google_cloudbuild_trigger" "wcp_ws" {
+  provider = google-beta
+  project  = module.project.project_id
+  name     = "wcp-ws"
 
-# resource "google_cloudbuild_trigger" "response_server_ws" {
-#   provider = google-beta
-#   project  = module.project.project_id
-#   name     = "response-server-ws"
+  github {
+    owner = var.repo_owner
+    name  = var.repo_name
+    push {
+      branch = var.cloudbuild_trigger_branch
+    }
+  }
 
-#   github {
-#     owner = var.repo_owner
-#     name  = var.repo_name
-#     push {
-#       branch = var.cloudbuild_trigger_branch
-#     }
-#   }
+  filename = "WCP-WS/cloudbuild.yaml"
+}
 
-#   filename = "response-server-ws/cloudbuild.yaml"
-# }
+resource "google_cloudbuild_trigger" "user_registration_server_ws" {
+  provider = google-beta
+  project  = module.project.project_id
+  name     = "user-registration-server-ws"
+
+  github {
+    owner = var.repo_owner
+    name  = var.repo_name
+    push {
+      branch = var.cloudbuild_trigger_branch
+    }
+  }
+
+  filename = "user-registration-server-ws/cloudbuild.yaml"
+}
+
+resource "google_cloudbuild_trigger" "response_server_ws" {
+  provider = google-beta
+  project  = module.project.project_id
+  name     = "response-server-ws"
+
+  github {
+    owner = var.repo_owner
+    name  = var.repo_name
+    push {
+      branch = var.cloudbuild_trigger_branch
+    }
+  }
+
+  filename = "response-server-ws/cloudbuild.yaml"
+}
 # =========================================== STEP 4 END ===========================================

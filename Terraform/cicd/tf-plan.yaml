@@ -12,7 +12,9 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-timeout: 600s
+timeout: 1200s
+options:
+    machineType: "N1_HIGHCPU_32"
 
 steps:
   # TODO: use a Google container.
@@ -21,21 +23,11 @@ steps:
     args: ["version"]
 
   - name: "docker.io/alpine/terragrunt:0.12.24"
-    entrypoint: terraform
+    entrypoint: terragrunt
     args: ["init"]
-    dir: "Terraform"
-
-  - name: "docker.io/alpine/terragrunt:0.12.24"
-    entrypoint: terraform
-    args: ["fmt", "-recursive", "-check"]
-    dir: "Terraform"
+    dir: "Terraform/org"
 
   - name: "docker.io/alpine/terragrunt:0.12.24"
     entrypoint: terragrunt
-    args: ["hclfmt", "--terragrunt-check"]
-    dir: "Terraform"
-
-  - name: "docker.io/alpine/terragrunt:0.12.24"
-    entrypoint: terraform
-    args: ["validate"]
-    dir: "Terraform"
+    args: ["plan-all"]
+    dir: "Terraform/org"
