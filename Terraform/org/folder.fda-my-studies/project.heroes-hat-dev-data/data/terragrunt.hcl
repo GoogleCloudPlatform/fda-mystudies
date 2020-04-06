@@ -3,7 +3,7 @@ include {
 }
 
 dependency "project" {
-  config_path = "../project"
+  config_path  = "../project"
   skip_outputs = true
 }
 
@@ -16,5 +16,5 @@ dependency "network" {
 }
 
 inputs = {
-    network = dependency.network.outputs.private_network
+  network = dependency.network.outputs.private_network
 }
