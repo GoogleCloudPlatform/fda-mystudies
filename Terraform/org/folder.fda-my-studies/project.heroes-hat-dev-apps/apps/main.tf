@@ -22,7 +22,7 @@ module "gke-auth-server" {
   region                 = var.region
   regional               = true
   network                = var.network
-  subnetwork             = "auth-server-ws-cluster-subnet"
+  subnetwork             = var.subnetwork
   ip_range_pods          = "auth-server-ws-cluster-ip-range-pods"
   ip_range_services      = "auth-server-ws-cluster-ip-range-svc"
   master_ipv4_cidr_block = "172.16.0.0/28"
@@ -48,7 +48,7 @@ module "gke-response-server" {
   region                 = var.region
   regional               = true
   network                = var.network
-  subnetwork             = "response-server-ws-cluster-subnet"
+  subnetwork             = var.subnetwork
   ip_range_pods          = "response-server-ws-cluster-ip-range-pods"
   ip_range_services      = "response-server-ws-cluster-ip-range-svc"
   master_ipv4_cidr_block = "172.16.1.0/28"
@@ -74,7 +74,7 @@ module "gke-study-designer" {
   region                 = var.region
   regional               = true
   network                = var.network
-  subnetwork             = "study-designer-cluster-subnet"
+  subnetwork             = var.subnetwork
   ip_range_pods          = "study-designer-cluster-ip-range-pods"
   ip_range_services      = "study-designer-cluster-ip-range-svc"
   master_ipv4_cidr_block = "172.16.2.0/28"
@@ -100,7 +100,7 @@ module "gke-study-metadata" {
   region                 = var.region
   regional               = true
   network                = var.network
-  subnetwork             = "study-meta-data-cluster-subnet"
+  subnetwork             = var.subnetwork
   ip_range_pods          = "study-meta-data-cluster-ip-range-pods"
   ip_range_services      = "study-meta-data-cluster-ip-range-svc"
   master_ipv4_cidr_block = "172.16.3.0/28"
@@ -126,7 +126,7 @@ module "gke-registration-server" {
   region                 = var.region
   regional               = true
   network                = var.network
-  subnetwork             = "user-registration-server-ws-cluster-subnet"
+  subnetwork             = var.subnetwork
   ip_range_pods          = "user-registration-server-ws-cluster-ip-range-pods"
   ip_range_services      = "user-registration-server-ws-cluster-ip-range-svc"
   master_ipv4_cidr_block = "172.16.4.0/28"

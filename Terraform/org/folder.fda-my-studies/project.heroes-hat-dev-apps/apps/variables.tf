@@ -15,3 +15,8 @@ variable "network" {
   default     = "default"
 }
 
+variable "subnetwork" {
+  description = "The subnetwork to use for the clusters"
+  type        = string
+  default     = "default"
+}
