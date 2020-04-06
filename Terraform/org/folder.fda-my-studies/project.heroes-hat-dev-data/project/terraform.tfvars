@@ -6,5 +6,5 @@ apis = [
   "servicenetworking.googleapis.com",
 ]
 owners = [
-  "group:heroes-hat-dev-data-owners@example.com",
+  "group:rocketturtle-gcp-admin@rocketturtle.net",
 ]

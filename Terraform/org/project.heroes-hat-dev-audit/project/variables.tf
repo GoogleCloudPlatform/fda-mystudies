@@ -24,3 +24,7 @@ variable "enable_lien" {
   type    = bool
   default = true
 }
+
+variable "owners" {
+  type = list(string)
+}

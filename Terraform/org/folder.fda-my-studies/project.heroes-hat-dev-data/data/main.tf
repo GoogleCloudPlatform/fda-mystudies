@@ -11,28 +11,35 @@ module "images_bucket" {
   location   = var.storage_location
 }
 
-module "images_bucket" {
+module "my_studies_consent_documents_bucket" {
   source  = "terraform-google-modules/cloud-storage/google//modules/simple_bucket"
   version = "~> 1.4"
 
-  name       = "heroes-hat-dev-my-study-consent-documents"
+  name       = "heroes-hat-dev-my-studies-consent-documents"
   project_id = var.project_id
   location   = var.storage_location
 }
 
 module "my_studies_cloudsql" {
-  source  = "GoogleCloudPlatform/sql-db/google//modules/mysql"
+  source  = "GoogleCloudPlatform/sql-db/google//modules/safer_mysql"
   version = "~> 3.0"
 
-  name        = "my-studies"
-  project_id  = var.project_id
-  region      = var.cloudsql_region
-  zone        = var.cloudsql_zone
-  vpc_network = var.network
+  name             = "my-studies"
+  project_id       = var.project_id
+  region           = var.cloudsql_region
+  zone             = var.cloudsql_zone
+  database_version = "MYSQL_5_7"
+  vpc_network      = var.network
+
+  backup_configuration = {
+    enabled            = true
+    binary_log_enabled = true
+    start_time         = "20:55"
+  }
 
   failover_replica                                 = true
   failover_replica_tier                            = "db-n1-standard-1"
-  failover_replica_zone                            = "b"
+  failover_replica_zone                            = var.cloudsql_failover_zone
   failover_replica_activation_policy               = "ALWAYS"
   failover_replica_disk_autoresize                 = true
   failover_replica_disk_type                       = "PD_SSD"

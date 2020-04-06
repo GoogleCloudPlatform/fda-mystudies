@@ -1,9 +1,5 @@
-provider "google" {
-  version = "~> 3.12.0"
-}
-
-provider "google-beta" {
-  version = "~> 3.12.0"
+terraform {
+  backend "gcs" {}
 }
 
 # Network values are defined the same way in the network component.

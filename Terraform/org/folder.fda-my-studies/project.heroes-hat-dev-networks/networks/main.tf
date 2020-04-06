@@ -35,7 +35,7 @@ module "private" {
   # These ranges must not overlap.
   # See https://cloud.google.com/kubernetes-engine/docs/how-to/alias-ips#cluster_sizing_secondary_range_pods for how many nodes the /20 ranges get.
   secondary_ranges = {
-    "${var.gke_clusters_subnet_name}" = [
+    "${local.gke_clusters_subnet_name}" = [
       # Auth server.
       {
         range_name    = "auth-server-ws-cluster-ip-range-pods"
