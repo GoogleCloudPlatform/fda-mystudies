@@ -12,8 +12,10 @@ dependency "network" {
 
   mock_outputs = {
     network = "mock-network"
+    subnetwork = "mock-subnetwork"
   }
 }
 inputs = {
-  network = dependency.network.outputs.gke_network
+  network = dependency.network.outputs.private_network
+  subnetwork = dependency.network.outputs.gke_subnetwork
 }
