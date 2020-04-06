@@ -2,20 +2,29 @@ terraform {
   backend "gcs" {}
 }
 
-module "example_bucket" {
+module "images_bucket" {
   source  = "terraform-google-modules/cloud-storage/google//modules/simple_bucket"
   version = "~> 1.4"
 
-  name       = "example-bucket"
+  name       = "heroes-hat-dev-images"
   project_id = var.project_id
   location   = var.storage_location
 }
 
-module "example_cloudsql" {
+module "images_bucket" {
+  source  = "terraform-google-modules/cloud-storage/google//modules/simple_bucket"
+  version = "~> 1.4"
+
+  name       = "heroes-hat-dev-my-study-consent-documents"
+  project_id = var.project_id
+  location   = var.storage_location
+}
+
+module "my_studies_cloudsql" {
   source  = "GoogleCloudPlatform/sql-db/google//modules/mysql"
   version = "~> 3.0"
 
-  name        = "example-cloudsql"
+  name        = "my-studies"
   project_id  = var.project_id
   region      = var.cloudsql_region
   zone        = var.cloudsql_zone
