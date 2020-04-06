@@ -30,3 +30,5 @@ steps:
   - name: "docker.io/hashicorp/terraform"
     args: ["validate"]
     dir: "Terraform"
+
+  # Run `terragrunt hclfmt --terragrunt-check` after using a container with terragrunt installed.
