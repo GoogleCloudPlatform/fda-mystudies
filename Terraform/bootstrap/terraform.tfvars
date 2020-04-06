@@ -5,4 +5,4 @@ state_bucket              = "heroes-hat-dev-terraform-state-08679"
 storage_location          = "us-central1"
 repo_owner                = "GoogleCloudPlatform"
 repo_name                 = "fda-mystudies"
-cloudbuild_trigger_branch = "early-access"
+cloudbuild_trigger_branch = "terraform" # Change to "early-access" or the final prod branch.

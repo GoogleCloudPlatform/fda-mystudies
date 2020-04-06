@@ -32,3 +32,8 @@ variable "cloudbuild_trigger_branch" {
   type    = string
   default = "master"
 }
+
+variable "continuous_deployment_enabled" {
+  type    = bool
+  default = false
+}

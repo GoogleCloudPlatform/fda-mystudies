@@ -41,6 +41,19 @@ resource "google_project_service" "cloudbuild_apis" {
   service            = each.value
   disable_on_destroy = false
 }
+
+# Cloud Build - IAM bindings
+
+# IAM bindings to allow Cloud Build SA to access state.
+resource "google_storage_bucket_iam_member" "cloudbuild_state_iam" {
+  count  = var.continuous_deployment_enabled ? 1 : 0
+  bucket = module.state_bucket.bucket
+  role   = "roles/storage.admin"
+  member = "serviceAccount:${module.project.project_number}@cloudbuild.gserviceaccount.com"
+  depends_on = [
+    google_project_service.cloudbuild_apis,
+  ]
+}
 # =========================================== STEP 1 END ===========================================
 
 # ========================================== STEP 3 BEGIN ==========================================
@@ -52,6 +65,24 @@ resource "google_project_service" "cloudbuild_apis" {
 
 # ========================================== STEP 4 BEGIN ==========================================
 # TODO(user): Uncomment and run after install the Cloud Build app and connect GitHub repo in Cloud Build.
+# Cloud Build triggers for repository CI/CD.
+# resource "google_cloudbuild_trigger" "validate" {
+#   provider = google-beta
+#   project  = module.project.project_id
+#   name     = "tf-validate"
+
+#   github {
+#     owner = var.repo_owner
+#     name  = var.repo_name
+#     pull_request {
+#       branch = var.cloudbuild_trigger_branch
+#     }
+#   }
+
+#   filename = "Terraform/cicd/tf-validate.yaml"
+# }
+
+# # Other users defined Cloud Build triggers.
 # resource "google_cloudbuild_trigger" "wcp" {
 #   provider = google-beta
 #   project  = module.project.project_id
