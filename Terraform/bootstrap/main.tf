@@ -82,6 +82,23 @@ resource "google_storage_bucket_iam_member" "cloudbuild_state_iam" {
 #   filename = "Terraform/cicd/tf-validate.yaml"
 # }
 
+# resource "google_cloudbuild_trigger" "plan" {
+#   count    = var.continuous_deployment_enabled ? 1 : 0
+#   provider = google-beta
+#   project  = module.project.project_id
+#   name     = "tf-plan"
+
+#   github {
+#     owner = var.repo_owner
+#     name  = var.repo_name
+#     pull_request {
+#       branch = var.cloudbuild_trigger_branch
+#     }
+#   }
+
+#   filename = "Terraform/cicd/tf-plan.yaml"
+# }
+
 # # Other users defined Cloud Build triggers.
 # resource "google_cloudbuild_trigger" "wcp" {
 #   provider = google-beta
@@ -114,6 +131,7 @@ resource "google_storage_bucket_iam_member" "cloudbuild_state_iam" {
 
 #   filename = "auth-server-ws/cloudbuild.yaml"
 # }
+
 # resource "google_cloudbuild_trigger" "wcp_ws" {
 #   provider = google-beta
 #   project  = module.project.project_id
@@ -129,6 +147,7 @@ resource "google_storage_bucket_iam_member" "cloudbuild_state_iam" {
 
 #   filename = "WCP-WS/cloudbuild.yaml"
 # }
+
 # resource "google_cloudbuild_trigger" "user_registration_server_ws" {
 #   provider = google-beta
 #   project  = module.project.project_id
