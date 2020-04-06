@@ -70,7 +70,7 @@ module "storage_log_export" {
 # TODO(b/152869064): Replace with terraform-google-modules/log-export/google//modules/storage
 # once https://github.com/terraform-google-modules/terraform-google-log-export/pull/52  is fixed.
 module "storage_destination" {
-  source = "terraform-google-modules/cloud-storage/google//modules/simple_bucket"
+  source  = "terraform-google-modules/cloud-storage/google//modules/simple_bucket"
   version = "~> 1.4"
 
   name          = var.bucket_name

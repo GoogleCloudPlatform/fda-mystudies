@@ -25,5 +25,5 @@ variable "enable_lien" {
   default = true
 }
 variable "owners" {
-  type    = list(string)
+  type = list(string)
 }

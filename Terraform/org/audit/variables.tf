@@ -3,7 +3,7 @@ variable "org_id" {
 }
 
 variable "project_id" {
- type = string
+  type = string
 }
 
 variable "dataset_name" {

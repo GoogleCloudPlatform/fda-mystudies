@@ -4,9 +4,9 @@ billing_account = "01EA90-3519E1-89CB1F"
 
 
 apis = [
-  
+
   "bigquery.googleapis.com",
-  
+
   "logging.googleapis.com",
-  
+
 ]

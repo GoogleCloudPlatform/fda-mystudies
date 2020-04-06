@@ -3,5 +3,5 @@ variable "display_name" {
 }
 
 variable "parent" {
-  type    = string
+  type = string
 }
