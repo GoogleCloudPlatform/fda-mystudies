@@ -1,11 +1,11 @@
 # ========================================== STEP 2 BEGIN ==========================================
 # TODO(user): Uncomment after initial deployment (step 1) and run `terraform init`.
-# terraform {
-#   backend "gcs" {
-#     bucket = "heroes-hat-dev-terraform-state-08679"
-#     prefix = "bootstrap"
-#   }
-# }
+terraform {
+  backend "gcs" {
+    bucket = "heroes-hat-dev-terraform-state-08679"
+    prefix = "bootstrap"
+  }
+}
 # =========================================== STEP 2 END ===========================================
 
 # ========================================== STEP 1 BEGIN ==========================================
