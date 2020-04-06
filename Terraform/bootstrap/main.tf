@@ -46,13 +46,20 @@ resource "google_project_service" "cloudbuild_apis" {
 
 # IAM bindings to allow Cloud Build SA to access state.
 resource "google_storage_bucket_iam_member" "cloudbuild_state_iam" {
-  count  = var.continuous_deployment_enabled ? 1 : 0
-  bucket = module.state_bucket.bucket
-  role   = "roles/storage.admin"
+  bucket = module.state_bucket.bucket.name
+  role   = "roles/storage.objectViewer"
   member = "serviceAccount:${module.project.project_number}@cloudbuild.gserviceaccount.com"
   depends_on = [
     google_project_service.cloudbuild_apis,
   ]
+}
+
+# View access to the whole organization.
+# TODO: narrow this permission.
+resource "google_organization_iam_member" "cloudbuild_org_viewer_iam" {
+  org_id = "707577601068"
+  role   = "roles/viewer"
+  member = "serviceAccount:${module.project.project_number}@cloudbuild.gserviceaccount.com"
 }
 # =========================================== STEP 1 END ===========================================
 
@@ -83,7 +90,6 @@ resource "google_cloudbuild_trigger" "validate" {
 }
 
 resource "google_cloudbuild_trigger" "plan" {
-  count    = var.continuous_deployment_enabled ? 1 : 0
   provider = google-beta
   project  = module.project.project_id
   name     = "tf-plan"
