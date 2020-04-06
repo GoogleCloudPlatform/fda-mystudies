@@ -21,7 +21,11 @@ templates:
       BUCKET_NAME: "7yr-org-audit-logs-08679" # suffix is sha256("heroes-hat-dev")[:5]
       AUDITORS: "group:heroes-hat-auditors@example.com"
     ORG_POLICIES:
-      ENABLE: true
+      ALLOWED_SHARED_VPC_HOST_PROJECTS:
+      - "projects/heroes-hat-dev-network"
+      # ALLOWED_POLICY_MEMBER_DOMAINS:
+      # - Add G Suite Customer IDs for the domains
+
 
 # Folder
 - name: "folder-heroes-hat"
