@@ -92,7 +92,8 @@ class StudyListCell: UITableViewCell {
     progressBarCompletion?.layer.cornerRadius = 2
     progressBarCompletion?.layer.masksToBounds = true
 
-    let attributedString = labelStudySponserName?.attributedText?.mutableCopy()
+    let attributedString =
+      labelStudySponserName?.attributedText?.mutableCopy()
       as! NSMutableAttributedString
 
     let foundRange = attributedString.mutableString.range(of: study.category!)

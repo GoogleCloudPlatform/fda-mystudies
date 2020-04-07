@@ -44,7 +44,8 @@ extension ReachoutOptionsViewController: UITableViewDataSource {
 
   func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
 
-    let cell = tableView.dequeueReusableCell(withIdentifier: "reachoutCell", for: indexPath)
+    let cell =
+      tableView.dequeueReusableCell(withIdentifier: "reachoutCell", for: indexPath)
       as! ReachoutOptionCell
 
     switch indexPath.row {

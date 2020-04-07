@@ -70,7 +70,8 @@ extension GatewayResourcesListViewController: UITableViewDataSource {
 
   func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
 
-    let cell = tableView.dequeueReusableCell(withIdentifier: "resourcesCell", for: indexPath)
+    let cell =
+      tableView.dequeueReusableCell(withIdentifier: "resourcesCell", for: indexPath)
       as! ResourcesListCell
 
     let resource = Gateway.instance.resources?[indexPath.row]
@@ -88,9 +89,10 @@ extension GatewayResourcesListViewController: UITableViewDelegate {
 
     let resource = Gateway.instance.resources?[indexPath.row]
     let storyboard = UIStoryboard(name: kStudyStoryboard, bundle: nil)
-    let resourceDetail = storyboard.instantiateViewController(
-      withIdentifier: "ResourceDetailViewControllerIdentifier"
-    )
+    let resourceDetail =
+      storyboard.instantiateViewController(
+        withIdentifier: "ResourceDetailViewControllerIdentifier"
+      )
       as! GatewayResourceDetailViewController
     resourceDetail.resource = resource
     self.navigationController?.pushViewController(resourceDetail, animated: true)

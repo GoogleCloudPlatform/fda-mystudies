@@ -763,17 +763,21 @@ class DBHandler: NSObject {
     let date = Utilities.getDateFromString(dateString: userInputDate)
 
     for activity in dbActivities {
-      self.updateActivityLifeTimeFor(activity, anchorDate: date!)
+      if let anchorDate = date {
+        self.updateActivityLifeTimeFor(activity, anchorDate: anchorDate)
+      }
+    }
+    if let anchorDate = date {
+      DBHandler.updateResourceLifeTime(
+        studyId,
+        activityId: activityId,
+        questionKey: sourceKey,
+        anchorDateValue: anchorDate
+      )
+      return true
     }
 
-    DBHandler.updateResourceLifeTime(
-      studyId,
-      activityId: activityId,
-      questionKey: sourceKey,
-      anchorDateValue: date!
-    )
-
-    return true
+    return false
   }
 
   /// Updates anchor date in the Database for `DBActivity`.
@@ -1003,16 +1007,18 @@ class DBHandler: NSObject {
     activity.state = dbActivity.state
     activity.taskSubType = dbActivity.taskSubType
 
-    let frequencyRuns = try? JSONSerialization.jsonObject(
-      with: dbActivity.frequencyRunsData!,
-      options: []
-    ) as? JSONDictionary
+    let frequencyRuns =
+      try? JSONSerialization.jsonObject(
+        with: dbActivity.frequencyRunsData!,
+        options: []
+      ) as? JSONDictionary
     activity.frequencyRuns = frequencyRuns?["data"] as? [JSONDictionary]
 
-    let anchorRuns = try? JSONSerialization.jsonObject(
-      with: dbActivity.anchorRunsData!,
-      options: []
-    ) as? JSONDictionary
+    let anchorRuns =
+      try? JSONSerialization.jsonObject(
+        with: dbActivity.anchorRunsData!,
+        options: []
+      ) as? JSONDictionary
     activity.anchorRuns = anchorRuns?["data"] as? [JSONDictionary]
 
     if activity.totalRuns != 0 {
@@ -1059,7 +1065,8 @@ class DBHandler: NSObject {
     userStatus.totalRuns = activity.totalRuns
 
     let incompleteRuns = activity.currentRunId - activity.compeltedRuns
-    activity.incompletedRuns = ((incompleteRuns < 0) || activity.totalRuns == 0)
+    activity.incompletedRuns =
+      ((incompleteRuns < 0) || activity.totalRuns == 0)
       ? 0 : incompleteRuns
 
     if activity.currentRun == nil {
@@ -1591,7 +1598,8 @@ class DBHandler: NSObject {
     dbChart.scrollable = chart.scrollable
 
     dbChart.studyId = chart.studyId
-    dbChart.chartId = chart.studyId! + (chart.activityId ?? "") + chart
+    dbChart.chartId =
+      chart.studyId! + (chart.activityId ?? "") + chart
       .dataSourceKey!
 
     return dbChart
@@ -1707,10 +1715,11 @@ class DBHandler: NSObject {
       }
 
       let keyString = keys.joined(separator: ",")
-      let dict = [
-        "activityId": activityId,
-        "keys": keyString,
-      ] as [String: String]
+      let dict =
+        [
+          "activityId": activityId,
+          "keys": keyString,
+        ] as [String: String]
 
       activityAndQuestionKeys.append(dict)
 
@@ -1870,10 +1879,8 @@ class DBHandler: NSObject {
     let dbResourceList = realm.objects(DBResources.self)
       .filter {
         $0.studyId == studyId
-          && (
-            $0.povAvailable == false
-              || $0.startDate != nil
-          )
+          && ($0.povAvailable == false
+            || $0.startDate != nil)
       }
 
     var resourceList: [Resource] = []

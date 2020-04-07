@@ -63,12 +63,10 @@ class StudyOverviewViewControllerSecond: UIViewController {
     }
 
     let attrStr = try! NSAttributedString(
-      data: (
-        overviewSectionDetail.text?.data(
-          using: String.Encoding.unicode,
-          allowLossyConversion: true
-        )!
-      )!,
+      data: (overviewSectionDetail.text?.data(
+        using: String.Encoding.unicode,
+        allowLossyConversion: true
+      )!)!,
       options: [
         NSAttributedString.DocumentReadingOptionKey.documentType: NSAttributedString
           .DocumentType
@@ -109,7 +107,8 @@ class StudyOverviewViewControllerSecond: UIViewController {
   @IBAction func buttonActionJoinStudy(_ sender: Any) {
 
     if User.currentUser.userType == UserType.AnonymousUser {
-      let leftController = slideMenuController()?.leftViewController
+      let leftController =
+        slideMenuController()?.leftViewController
         as! LeftMenuViewController
       leftController.changeViewController(.reachOut_signIn)
     } else {
@@ -124,9 +123,10 @@ class StudyOverviewViewControllerSecond: UIViewController {
   @IBAction func visitWebsiteButtonAction(_ sender: UIButton) {
 
     let loginStoryboard = UIStoryboard.init(name: "Main", bundle: Bundle.main)
-    let webViewController = loginStoryboard.instantiateViewController(
-      withIdentifier: "WebViewController"
-    ) as! UINavigationController
+    let webViewController =
+      loginStoryboard.instantiateViewController(
+        withIdentifier: "WebViewController"
+      ) as! UINavigationController
     let webView = webViewController.viewControllers[0] as! WebViewController
 
     if sender.tag == 1188 {

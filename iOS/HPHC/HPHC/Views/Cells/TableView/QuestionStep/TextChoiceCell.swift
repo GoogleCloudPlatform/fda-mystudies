@@ -30,8 +30,12 @@ class TextChoiceCell: UITableViewCell {
   var didSelected: Bool = false {
     didSet {
       if didSelected {
-        self.titleLbl.textColor = #colorLiteral(red: 0.2431372549, green: 0.5411764706,
-        blue: 0.9921568627, alpha: 1)
+        self.titleLbl.textColor = #colorLiteral(
+          red: 0.2431372549,
+          green: 0.5411764706,
+          blue: 0.9921568627,
+          alpha: 1
+        )
         self.checkmarkView.isHidden = false
       } else {
         self.titleLbl.textColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)

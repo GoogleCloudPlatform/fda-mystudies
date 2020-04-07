@@ -76,12 +76,10 @@ class StudyOverviewViewControllerFirst: UIViewController {
     }
 
     let attrStr = try! NSAttributedString(
-      data: (
-        overviewSectionDetail.text?.data(
-          using: String.Encoding.unicode,
-          allowLossyConversion: true
-        )!
-      )!,
+      data: (overviewSectionDetail.text?.data(
+        using: String.Encoding.unicode,
+        allowLossyConversion: true
+      )!)!,
       options: [
         NSAttributedString.DocumentReadingOptionKey.documentType: NSAttributedString
           .DocumentType
@@ -160,7 +158,8 @@ class StudyOverviewViewControllerFirst: UIViewController {
   @IBAction func buttonActionJoinStudy(_ sender: Any) {
 
     if User.currentUser.userType == UserType.AnonymousUser {
-      let leftController = slideMenuController()?.leftViewController
+      let leftController =
+        slideMenuController()?.leftViewController
         as! LeftMenuViewController
       leftController.changeViewController(.reachOut_signIn)
     }
@@ -171,9 +170,10 @@ class StudyOverviewViewControllerFirst: UIViewController {
     if overViewWebsiteLink != nil {
 
       let loginStoryboard = UIStoryboard.init(name: "Main", bundle: Bundle.main)
-      let webViewController = loginStoryboard.instantiateViewController(
-        withIdentifier: "WebViewController"
-      ) as! UINavigationController
+      let webViewController =
+        loginStoryboard.instantiateViewController(
+          withIdentifier: "WebViewController"
+        ) as! UINavigationController
       let webView = webViewController.viewControllers[0] as! WebViewController
 
       webView.requestLink = overViewWebsiteLink!
