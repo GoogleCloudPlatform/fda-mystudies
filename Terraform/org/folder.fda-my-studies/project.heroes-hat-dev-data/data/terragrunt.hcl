@@ -16,5 +16,5 @@ dependency "network" {
 }
 
 inputs = {
-  network = dependency.network.outputs.private_network
+  network = dependency.network.outputs.private_network.id
 }

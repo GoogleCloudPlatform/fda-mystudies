@@ -16,6 +16,6 @@ dependency "network" {
   }
 }
 inputs = {
-  network    = dependency.network.outputs.private_network
-  subnetwork = dependency.network.outputs.gke_subnetwork
+  network    = dependency.network.outputs.private_network.name
+  subnetwork = dependency.network.outputs.gke_subnetwork.name
 }

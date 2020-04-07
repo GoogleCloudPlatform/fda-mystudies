@@ -3,7 +3,13 @@ variable "project_id" {
   type        = string
 }
 
-variable "region" {
+variable "network_project_id" {
+  description = "The project ID of the network host project."
+  type        = string
+}
+
+
+variable "gke_region" {
   description = "The region to host the clusters in"
   default     = "us-central1"
   type        = string

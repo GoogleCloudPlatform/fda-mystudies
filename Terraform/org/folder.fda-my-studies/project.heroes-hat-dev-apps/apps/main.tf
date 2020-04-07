@@ -15,8 +15,9 @@ module "gke-auth-server" {
   name                   = "auth-server-ws-cluster"
   kubernetes_version     = "1.14.10-gke.24"
   project_id             = var.project_id
-  region                 = var.region
+  region                 = var.gke_region
   regional               = true
+  network_project_id     = var.network_project_id
   network                = var.network
   subnetwork             = var.subnetwork
   ip_range_pods          = "auth-server-ws-cluster-ip-range-pods"
@@ -41,8 +42,9 @@ module "gke-response-server" {
   name                   = "response-server-ws-cluster"
   kubernetes_version     = "1.14.10-gke.24"
   project_id             = var.project_id
-  region                 = var.region
+  region                 = var.gke_region
   regional               = true
+  network_project_id     = var.network_project_id
   network                = var.network
   subnetwork             = var.subnetwork
   ip_range_pods          = "response-server-ws-cluster-ip-range-pods"
@@ -67,8 +69,9 @@ module "gke-study-designer" {
   name                   = "study-designer-cluster"
   kubernetes_version     = "1.14.10-gke.24"
   project_id             = var.project_id
-  region                 = var.region
+  region                 = var.gke_region
   regional               = true
+  network_project_id     = var.network_project_id
   network                = var.network
   subnetwork             = var.subnetwork
   ip_range_pods          = "study-designer-cluster-ip-range-pods"
@@ -93,8 +96,9 @@ module "gke-study-metadata" {
   name                   = "study-meta-data-cluster"
   kubernetes_version     = "1.14.10-gke.24"
   project_id             = var.project_id
-  region                 = var.region
+  region                 = var.gke_region
   regional               = true
+  network_project_id     = var.network_project_id
   network                = var.network
   subnetwork             = var.subnetwork
   ip_range_pods          = "study-meta-data-cluster-ip-range-pods"
@@ -119,8 +123,9 @@ module "gke-registration-server" {
   name                   = "user-registration-server-ws-cluster"
   kubernetes_version     = "1.14.10-gke.24"
   project_id             = var.project_id
-  region                 = var.region
+  region                 = var.gke_region
   regional               = true
+  network_project_id     = var.network_project_id
   network                = var.network
   subnetwork             = var.subnetwork
   ip_range_pods          = "user-registration-server-ws-cluster-ip-range-pods"

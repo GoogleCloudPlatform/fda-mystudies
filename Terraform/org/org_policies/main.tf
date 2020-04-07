@@ -97,17 +97,6 @@ resource "google_organization_policy" "compute_trusted_image_projects" {
   }
 }
 
-resource "google_organization_policy" "compute_vm_can_ip_forward" {
-  org_id     = var.org_id
-  constraint = "compute.vmCanIpForward"
-
-  list_policy {
-    deny {
-      all = true
-    }
-  }
-}
-
 # Cloud Identity and Access Management
 resource "google_organization_policy" "iam_allowed_policy_member_domains" {
   count      = length(var.allowed_policy_member_domains) != 0 ? 1 : 0
