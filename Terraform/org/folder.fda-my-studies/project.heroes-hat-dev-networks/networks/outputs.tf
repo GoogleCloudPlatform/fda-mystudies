@@ -3,5 +3,5 @@ output "private_network" {
 }
 
 output "gke_subnetwork" {
-  value = module.private.subnets["${var.gke_region}/${local.gke_clusters_subnet_name}"]
+  value = local.gke_subnet
 }
