@@ -3,6 +3,8 @@ terraform {
   backend "gcs" {}
 }
 
+# Run after install the Cloud Build app and connect GitHub repo in Cloud Build by following
+# https://cloud.google.com/cloud-build/docs/automating-builds/create-github-app-triggers#installing_the_cloud_build_app.
 resource "google_cloudbuild_trigger" "wcp" {
   # Disable for now as don't know when the owners want to generate new images.
   disabled = true
