@@ -203,11 +203,8 @@ class StudyListViewController: UIViewController {
 
   /// Add the navigation title from the branding plist.
   fileprivate func addNavigationTitle() {
-    var infoDict: NSDictionary?
-    if let path = Bundle.main.path(forResource: "Info", ofType: "plist") {
-      infoDict = NSDictionary(contentsOfFile: path)
-    }
-    let navTitle = infoDict!["ProductTitleName"] as! String
+
+    let navTitle = Branding.NavigationTitleName
     let titleLabel = UILabel()
     titleLabel.text = NSLocalizedString(navTitle, comment: "")
     titleLabel.font = UIFont(name: "HelveticaNeue-Medium", size: 18)
@@ -278,7 +275,7 @@ class StudyListViewController: UIViewController {
 
       if daysLastSeen >= 7 {  // Notification is disabled for 7 or more Days
         UIUtilities.showAlertWithTitleAndMessage(
-          title: NSLocalizedString("FDA MyStudies", comment: "") as NSString,
+          title: NSLocalizedString("App Name", comment: "") as NSString,
           message: NSLocalizedString(kMessageAppNotificationOffRemainder, comment: "")
             as NSString
         )
@@ -1032,7 +1029,9 @@ extension StudyListViewController: searchBarDelegate {
 extension StudyListViewController: NMWebServiceDelegate {
   func startedRequest(_: NetworkManager, requestName: NSString) {
     let appdelegate = (UIApplication.shared.delegate as? AppDelegate)!
-    appdelegate.window?.addProgressIndicatorOnWindowFromTop()
+    if !self.topMostViewController().isKind(of: ORKTaskViewController.self) {
+      appdelegate.window?.addProgressIndicatorOnWindowFromTop()
+    }
   }
 
   func finishedRequest(_: NetworkManager, requestName: NSString, response: AnyObject?) {

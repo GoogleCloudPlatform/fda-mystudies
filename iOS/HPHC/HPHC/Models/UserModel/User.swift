@@ -955,8 +955,8 @@ class UserActivityStatus {
         kActivityId: self.activityId ?? "",
         kActivityRunId: self.activityRunId ?? "",
         kActivityStatus: self.status.paramValue,
-        kActivityVersion: self.activityVersion ?? "",
         "activityRun": runDetail,
+        kActivityVersion: self.activityVersion ?? "",
       ] as [String: Any]
 
     return studyDetail

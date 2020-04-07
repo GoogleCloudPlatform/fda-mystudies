@@ -1,6 +1,7 @@
 // License Agreement for FDA MyStudies
-// Copyright © 2017-2019 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors. Permission is
-// hereby granted, free of charge, to any person obtaining a copy of this software and associated
+// Copyright © 2017-2019 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors.
+// Copyright 2020 Google LLC
+// Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated
 // documentation files (the &quot;Software&quot;), to deal in the Software without restriction, including without
 // limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the
 // Software, and to permit persons to whom the Software is furnished to do so, subject to the following
@@ -52,7 +53,7 @@ class ContactUsViewController: UIViewController {
   override func viewDidLoad() {
     super.viewDidLoad()
 
-    self.navigationItem.title = NSLocalizedString("CONTACT US", comment: "")
+    self.navigationItem.title = NSLocalizedString("Contact Us", comment: "")
 
     //  Used to set border color for bottom view
     buttonSubmit?.layer.borderColor = kUicolorForButtonBackground
@@ -147,6 +148,7 @@ extension ContactUsViewController: UITableViewDataSource {
       let cell =
         tableView.dequeueReusableCell(withIdentifier: "textviewCell", for: indexPath)
         as! TextviewCell
+      cell.textView?.text = ContactUsFeilds.message
       return cell
     } else {
 
@@ -166,8 +168,14 @@ extension ContactUsViewController: UITableViewDataSource {
 
       // Cell ContactTextField data setup
       switch textFieldTag {
-      case .FirstName, .Subject:
+      case .FirstName:
         keyBoardType = .default
+        cell.textFieldValue?.text = ContactUsFeilds.firstName
+
+      case .Subject:
+        keyBoardType = .default
+        cell.textFieldValue?.text = ContactUsFeilds.subject
+
       case .Email:
         cell.textFieldValue?.text = User.currentUser.emailId!
         ContactUsFeilds.email = User.currentUser.emailId!

@@ -1,6 +1,7 @@
 // License Agreement for FDA MyStudies
-// Copyright © 2017-2019 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors. Permission is
-// hereby granted, free of charge, to any person obtaining a copy of this software and associated
+// Copyright © 2017-2019 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors.
+// Copyright 2020 Google LLC
+// Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated
 // documentation files (the &quot;Software&quot;), to deal in the Software without restriction, including without
 // limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the
 // Software, and to permit persons to whom the Software is furnished to do so, subject to the following
@@ -218,16 +219,13 @@ class ActivitiesTableViewCell: UITableViewCell {
 
     switch frequency {
     case .One_Time:  // Handle for One Time Frequency
-
       if endDate != nil {
-        labelTime?.text = startDateString + " - " + endDateString
-
+        labelTime?.text = startDateString + " to\n" + endDateString
       } else {
         labelTime?.text = startDateString
       }
 
     case .Daily:  // Handle for Daily Frequency
-
       var runStartTimingsList: [String] = []
       for dict in activity.frequencyRuns! {
         let startTime = dict[kScheduleStartTime] as! String
@@ -237,7 +235,9 @@ class ActivitiesTableViewCell: UITableViewCell {
         )
         runStartTimingsList.append(runStartTimeAsString)
       }
-      let runStartTime = runStartTimingsList.joined(separator: " | ")
+      var runStartTime = runStartTimingsList.joined(separator: " | ")
+      runStartTime += " everyday"
+
       let dailyStartDate = ActivitiesTableViewCell.dailyActivityFormatter.string(
         from: startDate!
       )
@@ -245,37 +245,30 @@ class ActivitiesTableViewCell: UITableViewCell {
       labelTime?.text = runStartTime + "\n" + dailyStartDate + " to " + endDate
 
     case .Weekly:  // Handle for Weekly Frequency
-
       var weeklyStartTime = ActivitiesTableViewCell.weeklyformatter.string(from: startDate!)
-      weeklyStartTime = weeklyStartTime.replacingOccurrences(of: ",", with: "every")
+      weeklyStartTime = weeklyStartTime.replacingOccurrences(of: "+", with: "every")
+      weeklyStartTime = weeklyStartTime.replacingOccurrences(of: ";", with: "\n")
       let endDate = ActivitiesTableViewCell.formatter.string(from: endDate!)
 
       labelTime?.text = weeklyStartTime + " to " + endDate
 
     case .Monthly:  // Handle for Monthly Frequency
-
       var monthlyStartTime = ActivitiesTableViewCell.monthlyformatter.string(from: startDate!)
-      monthlyStartTime = monthlyStartTime.replacingOccurrences(of: ",", with: "on")
-      monthlyStartTime = monthlyStartTime.replacingOccurrences(of: ";", with: "every month\n")
-
+      monthlyStartTime = monthlyStartTime.replacingOccurrences(of: "+", with: "on day")
+      monthlyStartTime = monthlyStartTime.replacingOccurrences(of: ";", with: "each month\n")
       let endDate = ActivitiesTableViewCell.formatter.string(from: endDate!)
       labelTime?.text = monthlyStartTime + " to " + endDate
 
     case .Scheduled:  // Handle for Scheduled Frequency
-
       var runStartDate: Date?
       var runEndDate: Date?
       if activity.currentRun != nil {
-
         runStartDate = activity.currentRun.startDate
         runEndDate = activity.currentRun.endDate
-
       } else {
-
         let run = activity.activityRuns.filter({ $0.runId == activity.currentRunId }).first
         runStartDate = run?.startDate
         runEndDate = run?.endDate
-
       }
       if runEndDate == nil || runStartDate == nil {
         runStartDate = activity.startDate
@@ -287,7 +280,7 @@ class ActivitiesTableViewCell: UITableViewCell {
       let currentRunEndDate = ActivitiesTableViewCell.oneTimeFormatter.string(
         from: runEndDate!
       )
-      labelTime?.text = currentRunStartDate + " - " + currentRunEndDate
+      labelTime?.text = currentRunStartDate + " to " + currentRunEndDate
     }
   }
 
@@ -301,31 +294,31 @@ class ActivitiesTableViewCell: UITableViewCell {
   /// Formatters for different frequency types.
   private static let formatter: DateFormatter = {
     let formatter = DateFormatter()
-    formatter.dateFormat = "MMM dd YYYY"
+    formatter.dateFormat = "MMM dd, YYYY"
     return formatter
   }()
 
   private static let dailyActivityFormatter: DateFormatter = {
     let formatter = DateFormatter()
-    formatter.dateFormat = "MMM dd YYYY"
+    formatter.dateFormat = "MMM dd, YYYY"
     return formatter
   }()
 
   private static let oneTimeFormatter: DateFormatter = {
     let formatter = DateFormatter()
-    formatter.dateFormat = "hh:mma, MMM dd YYYY"
+    formatter.dateFormat = "hh:mma, MMM dd, YYYY"
     return formatter
   }()
 
   private static let weeklyformatter: DateFormatter = {
     let formatter = DateFormatter()
-    formatter.dateFormat = "hh:mma , EEE MMM dd YYYY"
+    formatter.dateFormat = "hh:mma + EEE;MMM dd, YYYY"
     return formatter
   }()
 
   private static let monthlyformatter: DateFormatter = {
     let formatter = DateFormatter()
-    formatter.dateFormat = "hh:mma , dd ;MMM dd YYYY"
+    formatter.dateFormat = "hh:mma + dd ;MMM dd, YYYY"
     return formatter
   }()
 

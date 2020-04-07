@@ -54,14 +54,8 @@ class ResourcesViewController: UIViewController {
     }
 
     // Branding
-    let brandingDetail = Utilities.getBrandingDetails()
-    if let leavetitle = brandingDetail?[BrandingConstant.LeaveStudy] as? String {
-      leaveStudy = leavetitle
-    }
-
-    if let consent = brandingDetail?[BrandingConstant.ConsentPDF] as? String {
-      consentPDF = consent
-    }
+    leaveStudy = Branding.LeaveStudy
+    consentPDF = Branding.ConsentPDF
 
   }
 

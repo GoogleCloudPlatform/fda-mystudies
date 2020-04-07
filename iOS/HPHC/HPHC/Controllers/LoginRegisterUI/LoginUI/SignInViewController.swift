@@ -97,16 +97,11 @@ class SignInViewController: UIViewController {
       buttonSignUp?.setAttributedTitle(mutableAttributedTitle, for: .normal)
     }
 
-    let brandingDetail = Utilities.getBrandingDetails()
     TermsAndPolicy.currentTermsAndPolicy = TermsAndPolicy()
-    guard let policyURL = brandingDetail?[BrandingConstant.PrivacyPolicyURL] as? String,
-      let terms = brandingDetail?[BrandingConstant.TermsAndConditionURL] as? String
-    else {
-      return
-    }
+    let policyURL = Branding.PrivacyPolicyURL
+    let terms = Branding.TermsAndConditionURL
     TermsAndPolicy.currentTermsAndPolicy?.initWith(terms: terms, policy: policyURL)
     self.agreeToTermsAndConditions()
-
   }
 
   override func viewWillAppear(_ animated: Bool) {
@@ -422,17 +417,17 @@ extension SignInViewController: UITextViewDelegate {
   func textView(_ textView: UITextView, shouldInteractWith URL: URL, in characterRange: NSRange)
     -> Bool
   {
-    var link: String = (TermsAndPolicy.currentTermsAndPolicy?.termsURL)!
+    var link: String = TermsAndPolicy.currentTermsAndPolicy?.termsURL ?? ""
     var title: String = kNavigationTitleTerms
     if URL.absoluteString == TermsAndPolicy.currentTermsAndPolicy?.policyURL
       && characterRange
         .length == String("Privacy Policy").count
     {
-
-      link = (TermsAndPolicy.currentTermsAndPolicy?.policyURL)!
+      link = TermsAndPolicy.currentTermsAndPolicy?.policyURL ?? ""
       title = kNavigationTitlePrivacyPolicy
-
     }
+    guard !link.isEmpty else { return false }
+
     let loginStoryboard = UIStoryboard.init(name: "Main", bundle: Bundle.main)
     let webViewController =
       (loginStoryboard.instantiateViewController(withIdentifier: "WebViewController")

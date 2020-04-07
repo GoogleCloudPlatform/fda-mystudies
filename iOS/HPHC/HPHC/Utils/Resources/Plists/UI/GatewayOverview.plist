@@ -6,47 +6,23 @@
 		<key>title</key>
 		<string>Welcome! </string>
 		<key>text</key>
-		<string>The FDA is pleased to offer the FDA MyStudies app as a tool to gather real time, contextual data about medication use and other health issues facing the people we serve.</string>
+		<string>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. </string>
 		<key>type</key>
 		<string>video</string>
 		<key>image</key>
 		<string>welcomeBg</string>
 		<key>videoLink</key>
-		<string></string>
+		<string>https://videolinkhere.com</string>
 	</dict>
 	<dict>
 		<key>title</key>
 		<string>Leveraging the Power of Mobility for Research </string>
 		<key>text</key>
-		<string>Available for iOS and Android devices, this app will house studies conducted by FDA and other institutions, enabling researchers to engage more directly with people to gather data via questionnaires.</string>
+		<string>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laboru.</string>
 		<key>type</key>
 		<string></string>
 		<key>image</key>
 		<string>img_01</string>
-		<key>videoLink</key>
-		<string></string>
-	</dict>
-	<dict>
-		<key>title</key>
-		<string>Improving Health Outcomes</string>
-		<key>text</key>
-		<string>Explore and participate in studies for which you are eligible and help generate more data, better insights and improved outcomes.</string>
-		<key>type</key>
-		<string></string>
-		<key>image</key>
-		<string>img_02</string>
-		<key>videoLink</key>
-		<string></string>
-	</dict>
-	<dict>
-		<key>title</key>
-		<string>Protecting Your Privacy</string>
-		<key>text</key>
-		<string>All studies in this app have been approved by an Institutional Review Board, follow strict federal research guidelines, and securely store your responses to ensure your privacy is always protected.</string>
-		<key>type</key>
-		<string></string>
-		<key>image</key>
-		<string>img_03</string>
 		<key>videoLink</key>
 		<string></string>
 	</dict>

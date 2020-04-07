@@ -115,18 +115,14 @@ class StudyHomeViewController: UIViewController {
       }
     }
 
-    let brandingDetail = Utilities.getBrandingDetails()
-    let joinStudyTitle = brandingDetail?[BrandingConstant.JoinStudyButtonTitle] as? String
-    if joinStudyTitle != nil {
-      buttonJoinStudy?.setTitle(joinStudyTitle, for: .normal)
-    }
+    let joinStudyTitle = Branding.JoinStudyButtonTitle
+    buttonJoinStudy?.setTitle(joinStudyTitle, for: .normal)
 
-    if let visitWebsite = brandingDetail?[BrandingConstant.VisitWebsiteButtonTitle] as? String {
-      buttonVisitWebsite?.setTitle(visitWebsite, for: .normal)
-    }
-    if let viewConsent = brandingDetail?[BrandingConstant.ViewConsentButtonTitle] as? String {
-      buttonViewConsent?.setTitle(viewConsent, for: .normal)
-    }
+    let visitWebsite = Branding.VisitWebsiteButtonTitle
+    buttonVisitWebsite?.setTitle(visitWebsite, for: .normal)
+
+    let viewConsent = Branding.ViewConsentButtonTitle
+    buttonViewConsent?.setTitle(viewConsent, for: .normal)
   }
 
   override func viewWillAppear(_ animated: Bool) {

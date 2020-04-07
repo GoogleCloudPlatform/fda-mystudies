@@ -4,7 +4,7 @@
 <array>
 	<dict>
 		<key>helpText</key>
-		<string>Email ID</string>
+		<string>Username</string>
 		<key>placeHolder</key>
 		<string>enter email</string>
 	</dict>
