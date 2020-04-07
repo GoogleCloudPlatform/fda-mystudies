@@ -122,4 +122,20 @@ resource "google_cloudbuild_trigger" "plan" {
 
   filename = "Terraform/cicd/tf-plan.yaml"
 }
+
+resource "google_cloudbuild_trigger" "apply" {
+  provider = google-beta
+  project  = module.project.project_id
+  name     = "tf-apply"
+
+  github {
+    owner = var.repo_owner
+    name  = var.repo_name
+    push {
+      branch = var.cloudbuild_trigger_branch
+    }
+  }
+
+  filename = "Terraform/cicd/tf-apply.yaml"
+}
 # =========================================== STEP 4 END ===========================================
