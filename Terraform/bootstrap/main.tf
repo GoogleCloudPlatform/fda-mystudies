@@ -28,7 +28,12 @@ locals {
     "roles/viewer",
     "roles/iam.securityReviewer",
   ]
-  cloudbuild_sa_editor_roles = []
+  cloudbuild_sa_editor_roles = [
+    # TODO: Change to apply roles.
+    "roles/browser",
+    "roles/viewer",
+    "roles/iam.securityReviewer",
+  ]
 }
 
 module "project" {
@@ -121,5 +126,22 @@ resource "google_cloudbuild_trigger" "plan" {
   }
 
   filename = "Terraform/cicd/tf-plan.yaml"
+}
+
+resource "google_cloudbuild_trigger" "apply" {
+  count    = var.continuous_deployment_enabled ? 1 : 0
+  provider = google-beta
+  project  = module.project.project_id
+  name     = "tf-apply"
+
+  github {
+    owner = var.repo_owner
+    name  = var.repo_name
+    push {
+      branch = var.cloudbuild_trigger_branch
+    }
+  }
+
+  filename = "Terraform/cicd/tf-apply.yaml"
 }
 # =========================================== STEP 4 END ===========================================

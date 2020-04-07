@@ -28,13 +28,13 @@ dependency "service_project_data" {
 inputs = {
   service_projects = [
     {
-      id  = dependency.service_project_apps.outputs.project_id
-      num = dependency.service_project_apps.outputs.project_number
+      id      = dependency.service_project_apps.outputs.project_id
+      num     = dependency.service_project_apps.outputs.project_number
       has_gke = true
     },
     {
-      id  = dependency.service_project_data.outputs.project_id
-      num = dependency.service_project_data.outputs.project_number
+      id      = dependency.service_project_data.outputs.project_id
+      num     = dependency.service_project_data.outputs.project_number
       has_gke = false
     },
   ]
