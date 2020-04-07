@@ -1014,7 +1014,7 @@ public class AuthenticationController {
       responseBean.setMessage(ErrorCode.EC_113.errorMessage());
       return new ResponseEntity<>(responseBean, HttpStatus.BAD_REQUEST);
     }
-    logger.error("AuthenticationController forgotPassword() - Ends ");
+    logger.info("AuthenticationController forgotPassword() - Ends ");
     return new ResponseEntity<>(responseBean, HttpStatus.OK);
   }
 
