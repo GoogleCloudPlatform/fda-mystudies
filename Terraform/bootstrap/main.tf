@@ -21,11 +21,14 @@ locals {
     "serviceusage.googleapis.com",
     "sqladmin.googleapis.com",
   ]
-  cloudbuild_sa_roles = [
+  cloudbuild_sa_viewer_roles = [
+    "roles/browser",
+    # Consider using viewer roles for individual services. But it is hard to know beforehand what
+    # services are used in each project.
     "roles/viewer",
     "roles/iam.securityReviewer",
-    "roles/resourcemanager.folderViewer",
   ]
+  cloudbuild_sa_editor_roles = []
 }
 
 module "project" {
@@ -71,7 +74,7 @@ resource "google_storage_bucket_iam_member" "cloudbuild_state_iam" {
 
 # View access to the whole organization.
 resource "google_organization_iam_member" "cloudbuild_sa_iam" {
-  for_each = toset(local.cloudbuild_sa_roles)
+  for_each = toset(var.continuous_deployment_enabled ? local.cloudbuild_sa_editor_roles : local.cloudbuild_sa_viewer_roles)
   org_id   = var.org_id
   role     = each.value
   member   = "serviceAccount:${module.project.project_number}@cloudbuild.gserviceaccount.com"

@@ -29,5 +29,5 @@ steps:
 
   - name: "docker.io/alpine/terragrunt:0.12.24"
     entrypoint: terragrunt
-    args: ["plan-all"]
+    args: ["plan-all", "--lock=false"]
     dir: "Terraform/org"
