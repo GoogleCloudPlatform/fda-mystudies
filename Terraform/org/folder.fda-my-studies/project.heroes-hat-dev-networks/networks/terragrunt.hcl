@@ -8,6 +8,6 @@ dependency "project" {
 }
 
 dependency "shared_vpc" {
-config_path  = "../shared_vpc"
+  config_path  = "../shared_vpc"
   skip_outputs = true
 }
