@@ -107,11 +107,11 @@ class LeftMenuViewController: UIViewController, LeftMenuProtocol {
 
     self.view.isHidden = true
 
-    shouldAllowToGiveFeedback = Branding.AllowFeedback
+    shouldAllowToGiveFeedback = Branding.allowFeedback
     self.createLeftmenuItems()
 
-    labelProductName.text = Branding.NavigationTitleName
-    labelPoweredBy.text = Branding.PoweredByTitleName
+    labelProductName.text = Branding.navigationTitleName
+    labelPoweredBy.text = Branding.poweredByTitleName
 
     self.tableView.separatorColor = UIColor(
       red: 224 / 255,

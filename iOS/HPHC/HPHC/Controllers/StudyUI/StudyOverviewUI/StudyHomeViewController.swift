@@ -115,13 +115,13 @@ class StudyHomeViewController: UIViewController {
       }
     }
 
-    let joinStudyTitle = Branding.JoinStudyButtonTitle
+    let joinStudyTitle = Branding.joinStudyButtonTitle
     buttonJoinStudy?.setTitle(joinStudyTitle, for: .normal)
 
-    let visitWebsite = Branding.VisitWebsiteButtonTitle
+    let visitWebsite = Branding.visitWebsiteButtonTitle
     buttonVisitWebsite?.setTitle(visitWebsite, for: .normal)
 
-    let viewConsent = Branding.ViewConsentButtonTitle
+    let viewConsent = Branding.viewConsentButtonTitle
     buttonViewConsent?.setTitle(viewConsent, for: .normal)
   }
 

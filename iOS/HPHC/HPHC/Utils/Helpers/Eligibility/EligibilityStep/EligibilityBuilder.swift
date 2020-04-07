@@ -130,7 +130,7 @@ class EligibilityBuilder {
         eligibilityValidationStep.text = kEligibilityValidationDescriptionText
 
         // Branding
-        eligibilityValidationStep.title = Branding.ValidatedTitle
+        eligibilityValidationStep.title = Branding.validatedTitle
 
         eligibilityValidationStep.image = #imageLiteral(resourceName: "successBlueBig")
         stepsArray?.append(eligibilityValidationStep)

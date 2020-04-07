@@ -34,59 +34,59 @@ enum Branding {
     return nsDictionary as? JSONDictionary ?? [:]
   }
 
-  static var JoinStudyButtonTitle: String {
+  static var joinStudyButtonTitle: String {
     return brandConfig[JSONKey.joinStudyButtonTitle] as? String ?? ""
   }
 
-  static var ViewConsentButtonTitle: String {
+  static var viewConsentButtonTitle: String {
     return brandConfig[JSONKey.viewConsentButtonTitle] as? String ?? ""
   }
 
-  static var VisitWebsiteButtonTitle: String {
+  static var visitWebsiteButtonTitle: String {
     return brandConfig[JSONKey.visitWebsiteButtonTitle] as? String ?? ""
   }
 
-  static var ConsentPDF: String {
+  static var consentPDFTitle: String {
     return brandConfig[JSONKey.consentPDF] as? String ?? ""
   }
 
-  static var LeaveStudy: String {
+  static var leaveStudyTitle: String {
     return brandConfig[JSONKey.leaveStudy] as? String ?? ""
   }
 
-  static var LeaveStudyConfirmationText: String {
+  static var leaveStudyConfirmationText: String {
     return brandConfig[JSONKey.leaveStudyConfirmationText] as? String ?? ""
   }
 
-  static var WebsiteLink: String {
+  static var websiteLink: String {
     return brandConfig[JSONKey.websiteLink] as? String ?? ""
   }
 
-  static var WebsiteButtonTitle: String {
-    return brandConfig[JSONKey.websiteButtonTitle] as? String ?? Branding.WebsiteLink
+  static var websiteButtonTitle: String {
+    return brandConfig[JSONKey.websiteButtonTitle] as? String ?? Branding.websiteLink
   }
 
-  static var TermsAndConditionURL: String {
+  static var termsAndConditionURL: String {
     return brandConfig[JSONKey.termsAndConditionURL] as? String ?? ""
   }
 
-  static var PrivacyPolicyURL: String {
+  static var privacyPolicyURL: String {
     return brandConfig[JSONKey.privacyPolicyURL] as? String ?? ""
   }
 
-  static var ValidatedTitle: String {
+  static var validatedTitle: String {
     return brandConfig[JSONKey.validatedTitle] as? String ?? ""
   }
 
-  static var AllowFeedback: Bool {
+  static var allowFeedback: Bool {
     return brandConfig[JSONKey.allowFeedback] as? Bool ?? true
   }
 
-  static var NavigationTitleName: String {
+  static var navigationTitleName: String {
     return brandConfig[JSONKey.navigationTitleName] as? String ?? ""
   }
 
-  static var PoweredByTitleName: String {
+  static var poweredByTitleName: String {
     return brandConfig[JSONKey.poweredByTitleName] as? String ?? ""
   }
 

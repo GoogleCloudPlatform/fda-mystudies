@@ -204,7 +204,7 @@ class StudyListViewController: UIViewController {
   /// Add the navigation title from the branding plist.
   fileprivate func addNavigationTitle() {
 
-    let navTitle = Branding.NavigationTitleName
+    let navTitle = Branding.navigationTitleName
     let titleLabel = UILabel()
     titleLabel.text = NSLocalizedString(navTitle, comment: "")
     titleLabel.font = UIFont(name: "HelveticaNeue-Medium", size: 18)
@@ -275,7 +275,7 @@ class StudyListViewController: UIViewController {
 
       if daysLastSeen >= 7 {  // Notification is disabled for 7 or more Days
         UIUtilities.showAlertWithTitleAndMessage(
-          title: NSLocalizedString("App Name", comment: "") as NSString,
+            title: NSLocalizedString(Branding.productTitle, comment: "") as NSString,
           message: NSLocalizedString(kMessageAppNotificationOffRemainder, comment: "")
             as NSString
         )

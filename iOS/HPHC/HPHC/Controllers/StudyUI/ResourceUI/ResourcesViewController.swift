@@ -54,8 +54,8 @@ class ResourcesViewController: UIViewController {
     }
 
     // Branding
-    leaveStudy = Branding.LeaveStudy
-    consentPDF = Branding.ConsentPDF
+    leaveStudy = Branding.leaveStudyTitle
+    consentPDF = Branding.consentPDFTitle
 
   }
 

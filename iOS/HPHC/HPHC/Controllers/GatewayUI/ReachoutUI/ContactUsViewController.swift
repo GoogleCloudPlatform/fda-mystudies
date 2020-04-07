@@ -22,7 +22,7 @@ import IQKeyboardManagerSwift
 import UIKit
 
 // Contact us field description
-struct ContactUsFeilds {
+struct ContactUsFields {
 
   static var firstName: String = ""
   static var email: String = ""
@@ -30,10 +30,10 @@ struct ContactUsFeilds {
   static var message: String = ""
 
   init() {
-    ContactUsFeilds.firstName = ""
-    ContactUsFeilds.email = ""
-    ContactUsFeilds.subject = ""
-    ContactUsFeilds.message = ""
+    ContactUsFields.firstName = ""
+    ContactUsFields.email = ""
+    ContactUsFields.subject = ""
+    ContactUsFields.message = ""
   }
 }
 
@@ -77,7 +77,7 @@ class ContactUsViewController: UIViewController {
       action: #selector(ContactUsViewController.handleTapGesture)
     )
     self.tableView?.addGestureRecognizer(tapGestureRecognizer)
-    _ = ContactUsFeilds.init()
+    _ = ContactUsFields.init()
   }
 
   @objc func handleTapGesture(gesture: UIGestureRecognizer) {
@@ -98,33 +98,33 @@ class ContactUsViewController: UIViewController {
   /// If all the validations satisfy send contact-us request
   @IBAction func buttonSubmitAciton(_ sender: UIButton) {
 
-    if ContactUsFeilds.firstName.isEmpty && ContactUsFeilds.email.isEmpty
-      && ContactUsFeilds
+    if ContactUsFields.firstName.isEmpty && ContactUsFields.email.isEmpty
+      && ContactUsFields
         .subject
         .isEmpty
-      && ContactUsFeilds.message.isEmpty
+      && ContactUsFields.message.isEmpty
     {
 
       UIUtilities.showAlertWithMessage(
         alertMessage: NSLocalizedString(kMessageAllFieldsAreEmpty, comment: "")
       )
-    } else if ContactUsFeilds.firstName.isEmpty {
+    } else if ContactUsFields.firstName.isEmpty {
       UIUtilities.showAlertWithMessage(
         alertMessage: NSLocalizedString(kMessageFirstNameBlank, comment: "")
       )
-    } else if ContactUsFeilds.email.isEmpty {
+    } else if ContactUsFields.email.isEmpty {
       UIUtilities.showAlertWithMessage(
         alertMessage: NSLocalizedString(kMessageEmailBlank, comment: "")
       )
-    } else if ContactUsFeilds.subject.isEmpty {
+    } else if ContactUsFields.subject.isEmpty {
       UIUtilities.showAlertWithMessage(
         alertMessage: NSLocalizedString(kMessageSubjectBlankCheck, comment: "")
       )
-    } else if ContactUsFeilds.message.isEmpty {
+    } else if ContactUsFields.message.isEmpty {
       UIUtilities.showAlertWithMessage(
         alertMessage: NSLocalizedString(kMessageMessageBlankCheck, comment: "")
       )
-    } else if !(Utilities.isValidEmail(testStr: ContactUsFeilds.email)) {
+    } else if !(Utilities.isValidEmail(testStr: ContactUsFields.email)) {
       UIUtilities.showAlertWithMessage(
         alertMessage: NSLocalizedString(kMessageValidEmail, comment: "")
       )
@@ -148,7 +148,7 @@ extension ContactUsViewController: UITableViewDataSource {
       let cell =
         tableView.dequeueReusableCell(withIdentifier: "textviewCell", for: indexPath)
         as! TextviewCell
-      cell.textView?.text = ContactUsFeilds.message
+      cell.textView?.text = ContactUsFields.message
       return cell
     } else {
 
@@ -170,15 +170,15 @@ extension ContactUsViewController: UITableViewDataSource {
       switch textFieldTag {
       case .FirstName:
         keyBoardType = .default
-        cell.textFieldValue?.text = ContactUsFeilds.firstName
+        cell.textFieldValue?.text = ContactUsFields.firstName
 
       case .Subject:
         keyBoardType = .default
-        cell.textFieldValue?.text = ContactUsFeilds.subject
+        cell.textFieldValue?.text = ContactUsFields.subject
 
       case .Email:
         cell.textFieldValue?.text = User.currentUser.emailId!
-        ContactUsFeilds.email = User.currentUser.emailId!
+        ContactUsFields.email = User.currentUser.emailId!
         keyBoardType = .emailAddress
       }
 
@@ -217,7 +217,7 @@ extension ContactUsViewController: UITextViewDelegate {
       textView.textColor = UIColor.lightGray
       textView.tag = 100
     } else {
-      ContactUsFeilds.message = textView.text!
+      ContactUsFields.message = textView.text!
     }
   }
 
@@ -265,15 +265,15 @@ extension ContactUsViewController: UITextFieldDelegate {
     switch tag {
 
     case .Email:
-      ContactUsFeilds.email = textField.text!
+      ContactUsFields.email = textField.text!
       break
 
     case .FirstName:
-      ContactUsFeilds.firstName = textField.text!
+      ContactUsFields.firstName = textField.text!
       break
 
     case .Subject:
-      ContactUsFeilds.subject = textField.text!
+      ContactUsFields.subject = textField.text!
       break
     }
   }

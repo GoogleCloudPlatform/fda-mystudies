@@ -89,7 +89,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
   /// Updates Key & InitializationVector for Encryption
   func updateKeyAndInitializationVector() {
 
-    if User.currentUser.userType == .FDAUser {  // Registered/LogedIn User
+    if User.currentUser.userType == .FDAUser {  // Registered/LoggedIn User
       // Key byte size shouldn't exceed more than 16.
       FDAKeychain.shared[kEncryptionKey] = String.randomString(length: 16)
     } else {  // Anonymous User

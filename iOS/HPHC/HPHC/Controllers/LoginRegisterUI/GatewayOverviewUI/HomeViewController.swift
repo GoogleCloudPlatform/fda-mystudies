@@ -51,8 +51,8 @@ class HomeViewController: UIViewController {
       for: .valueChanged
     )
 
-    websiteName = Branding.WebsiteLink
-    let title = Branding.WebsiteButtonTitle
+    websiteName = Branding.websiteLink
+    let title = Branding.websiteButtonTitle
 
     buttonLink.setTitle(title, for: .normal)
   }
@@ -157,7 +157,7 @@ class HomeViewController: UIViewController {
   /// To initialize WebViewController using
   /// Main storyboard.
   @IBAction func linkButtonAction(_ sender: Any) {
-    guard let websiteLink = URL(string: Branding.WebsiteLink) else { return }
+    guard let websiteLink = URL(string: Branding.websiteLink) else { return }
     let loginStoryboard = UIStoryboard.init(name: "Main", bundle: Bundle.main)
     let webViewController =
       loginStoryboard.instantiateViewController(

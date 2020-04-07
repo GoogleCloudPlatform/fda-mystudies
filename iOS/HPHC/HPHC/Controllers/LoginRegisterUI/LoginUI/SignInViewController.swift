@@ -98,8 +98,8 @@ class SignInViewController: UIViewController {
     }
 
     TermsAndPolicy.currentTermsAndPolicy = TermsAndPolicy()
-    let policyURL = Branding.PrivacyPolicyURL
-    let terms = Branding.TermsAndConditionURL
+    let policyURL = Branding.privacyPolicyURL
+    let terms = Branding.termsAndConditionURL
     TermsAndPolicy.currentTermsAndPolicy?.initWith(terms: terms, policy: policyURL)
     self.agreeToTermsAndConditions()
   }
