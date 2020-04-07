@@ -21,6 +21,11 @@ locals {
     "serviceusage.googleapis.com",
     "sqladmin.googleapis.com",
   ]
+  cloudbuild_sa_roles = [
+    "roles/viewer",
+    "roles/iam.securityReviewer",
+    "roles/resourcemanager.folderViewer",
+  ]
 }
 
 module "project" {
@@ -65,22 +70,11 @@ resource "google_storage_bucket_iam_member" "cloudbuild_state_iam" {
 }
 
 # View access to the whole organization.
-resource "google_organization_iam_member" "cloudbuild_viewer_iam" {
-  org_id = var.org_id
-  role   = "roles/viewer"
-  member = "serviceAccount:${module.project.project_number}@cloudbuild.gserviceaccount.com"
-}
-
-resource "google_organization_iam_member" "cloudbuild_iam_viewer_iam" {
-  org_id = var.org_id
-  role   = "roles/iam.securityReviewer"
-  member = "serviceAccount:${module.project.project_number}@cloudbuild.gserviceaccount.com"
-}
-
-resource "google_organization_iam_member" "cloudbuild_folder_viewer_iam" {
-  org_id = var.org_id
-  role   = "roles/resourcemanager.folderViewer"
-  member = "serviceAccount:${module.project.project_number}@cloudbuild.gserviceaccount.com"
+resource "google_organization_iam_member" "cloudbuild_sa_iam" {
+  for_each = toset(local.cloudbuild_sa_roles)
+  org_id   = var.org_id
+  role     = each.value
+  member   = "serviceAccount:${module.project.project_number}@cloudbuild.gserviceaccount.com"
 }
 # =========================================== STEP 1 END ===========================================
 
