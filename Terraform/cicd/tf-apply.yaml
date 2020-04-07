@@ -29,5 +29,10 @@ steps:
 
   - name: "docker.io/alpine/terragrunt:0.12.24"
     entrypoint: terragrunt
-    args: ["plan-all", "--lock=false"]
-    dir: "Terraform/org"
+    args: ["plan"]
+    dir: "Terraform/org/folder.fda-my-studies/project.heroes-hat-dev-resp-firebase/firebase"
+
+  - name: "docker.io/alpine/terragrunt:0.12.24"
+    entrypoint: terragrunt
+    args: ["apply", "-auto-approve"]
+    dir: "Terraform/org/folder.fda-my-studies/project.heroes-hat-dev-resp-firebase/firebase"

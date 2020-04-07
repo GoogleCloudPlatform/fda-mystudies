@@ -20,6 +20,7 @@ locals {
     "iam.googleapis.com",
     "serviceusage.googleapis.com",
     "sqladmin.googleapis.com",
+    "firebase.googleapis.com",
   ]
   cloudbuild_sa_viewer_roles = [
     "roles/browser",
@@ -28,12 +29,10 @@ locals {
     "roles/viewer",
     "roles/iam.securityReviewer",
   ]
-  cloudbuild_sa_editor_roles = [
-    # TODO: Change to apply roles.
-    "roles/browser",
-    "roles/viewer",
-    "roles/iam.securityReviewer",
-  ]
+  cloudbuild_sa_editor_roles = concat(local.cloudbuild_sa_viewer_roles, [
+    "roles/firebase.admin",
+    "roles/serviceusage.serviceUsageAdmin",
+  ])
 }
 
 module "project" {
@@ -133,6 +132,10 @@ resource "google_cloudbuild_trigger" "apply" {
   provider = google-beta
   project  = module.project.project_id
   name     = "tf-apply"
+
+  included_files = [
+    "Terraform/org/folder.fda-my-studies/project.heroes-hat-dev-resp-firebase/firebase/**"
+  ]
 
   github {
     owner = var.repo_owner

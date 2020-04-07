@@ -1,1 +1,1 @@
-project_id = "heroes-hat-dev-response-firebase"
+project_id = "heroes-hat-dev-resp-firebase"
