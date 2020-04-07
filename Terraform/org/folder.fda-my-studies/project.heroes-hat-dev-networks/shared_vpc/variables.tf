@@ -4,8 +4,8 @@ variable "project_id" {
 
 variable "service_projects" {
   type = list(object({
-    id: string
-    num: number
-    gke: bool
+    id : string
+    num : number
+    gke : bool
   }))
 }
