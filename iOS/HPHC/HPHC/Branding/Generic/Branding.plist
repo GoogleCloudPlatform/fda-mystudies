@@ -2,6 +2,8 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
+	<key>ProductTitleName</key>
+	<string>App Name</string>
 	<key>JoinStudyButtonTitle</key>
 	<string>Join Study</string>
 	<key>ViewConsentButtonTitle</key>
@@ -15,16 +17,20 @@
 	<key>LeaveStudyConfirmationText</key>
 	<string>If you tap “Proceed” you will no longer be able to use this app for eye doctor appointments and medication tracking</string>
 	<key>WebsiteLink</key>
-	<string>www.fda.gov</string>
+	<string></string>
 	<key>WebsiteButtonTitle</key>
-	<string>www.fda.gov</string>
+	<string>App Website</string>
 	<key>TermsAndConditionURL</key>
-	<string>https://www.fda.gov/AboutFDA/AboutThisWebsite/WebsitePolicies/</string>
+	<string>https://www.google.com</string>
 	<key>PrivacyPolicyURL</key>
-	<string>https://www.fda.gov/AboutFDA/AboutThisWebsite/WebsitePolicies/#privacy</string>
+	<string></string>
 	<key>ValidatedTitle</key>
-	<string>Validated!</string>
+	<string>Eligibility Confirmed</string>
 	<key>AllowFeedback</key>
 	<true/>
+	<key>NavigationTitleName</key>
+	<string>App Name</string>
+	<key>PoweredByTitleName</key>
+	<string>Powered by FDA MyStudies on Google Cloud</string>
 </dict>
 </plist>

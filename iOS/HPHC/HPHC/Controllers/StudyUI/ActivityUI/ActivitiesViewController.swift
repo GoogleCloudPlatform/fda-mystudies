@@ -81,7 +81,7 @@ class ActivitiesViewController: UIViewController {
     self.tableView?.estimatedRowHeight = 126
     self.tableView?.rowHeight = UITableView.automaticDimension
 
-    self.navigationItem.title = NSLocalizedString("STUDY ACTIVITIES", comment: "")
+    self.navigationItem.title = NSLocalizedString("Study Activities", comment: "")
     self.tableView?.sectionHeaderHeight = 30
 
     self.navigationController?.navigationItem.rightBarButtonItem?.tintColor = UIColor.gray
@@ -563,13 +563,16 @@ class ActivitiesViewController: UIViewController {
     activityStatus.totalRuns = activity.totalRuns
     activityStatus.activityVersion = activity.version
 
-    // Update participationStatus to server
-    ResponseServices().updateUserActivityParticipatedStatus(
-      studyId: activity.studyId!,
-      participantId: Study.currentStudy?.userParticipateState.participantId ?? "",
-      activityStatus: activityStatus,
-      delegate: self
-    )
+    DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) { [weak self] in
+      guard let strongSelf = self else { return }
+      // Update participationStatus to server
+      ResponseServices().updateUserActivityParticipatedStatus(
+        studyId: activity.studyId!,
+        participantId: Study.currentStudy?.userParticipateState.participantId ?? "",
+        activityStatus: activityStatus,
+        delegate: strongSelf
+      )
+    }
 
     /// Update participationStatus to DB
     DBHandler.updateParticipationStatus(for: activity)

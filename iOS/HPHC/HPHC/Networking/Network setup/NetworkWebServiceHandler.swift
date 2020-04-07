@@ -358,7 +358,7 @@ class NetworkWebServiceHandler: NSObject, URLSessionDelegate {
       self.fireRequest(request, requestName: requestName)
 
     } catch let error {
-      Logger.sharedInstance.error("Serialization error: ", error.localizedDescription)
+      Logger.sharedInstance.error("Serialization error: \(requestName) - ", error.localizedDescription)
     }
   }
 

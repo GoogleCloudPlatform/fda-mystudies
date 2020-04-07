@@ -1,6 +1,7 @@
 // License Agreement for FDA MyStudies
-// Copyright © 2017-2019 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors. Permission is
-// hereby granted, free of charge, to any person obtaining a copy of this software and associated
+// Copyright © 2017-2019 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors.
+// Copyright 2020 Google LLC
+// Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated
 // documentation files (the &quot;Software&quot;), to deal in the Software without restriction, including without
 // limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the
 // Software, and to permit persons to whom the Software is furnished to do so, subject to the following
@@ -50,9 +51,9 @@ class HomeViewController: UIViewController {
       for: .valueChanged
     )
 
-    let infoDict = Utilities.getBrandingDetails()
-    websiteName = infoDict?[BrandingConstant.WebsiteLink] as? String ?? ""
-    let title = infoDict?[BrandingConstant.WebsiteButtonTitle] as? String ?? websiteName
+    websiteName = Branding.websiteLink
+    let title = Branding.websiteButtonTitle
+
     buttonLink.setTitle(title, for: .normal)
   }
 
@@ -156,14 +157,14 @@ class HomeViewController: UIViewController {
   /// To initialize WebViewController using
   /// Main storyboard.
   @IBAction func linkButtonAction(_ sender: Any) {
-
+    guard let websiteLink = URL(string: Branding.websiteLink) else { return }
     let loginStoryboard = UIStoryboard.init(name: "Main", bundle: Bundle.main)
     let webViewController =
       loginStoryboard.instantiateViewController(
         withIdentifier: "WebViewController"
       ) as! UINavigationController
     let webView = webViewController.viewControllers[0] as! WebViewController
-    webView.requestLink = "https://" + websiteName
+    webView.requestLink = websiteLink.absoluteString
     self.navigationController?.present(webViewController, animated: true, completion: nil)
   }
 

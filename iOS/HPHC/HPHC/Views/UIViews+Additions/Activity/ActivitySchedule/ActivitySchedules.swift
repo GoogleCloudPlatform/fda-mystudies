@@ -77,7 +77,7 @@ class ActivitySchedules: UIView, UITableViewDelegate, UITableViewDataSource {
     let activityRun = self.activity.activityRuns[indexPath.row]
     cell.textLabel?.text =
       ActivitySchedules.formatter.string(from: activityRun.startDate)
-      + " - "
+      + " to "
       + ActivitySchedules.formatter.string(from: activityRun.endDate)
 
     if activityRun.runId == self.activity.currentRunId {
@@ -87,12 +87,13 @@ class ActivitySchedules: UIView, UITableViewDelegate, UITableViewDataSource {
       cell.textLabel?.textColor = UIColor.gray
     }
     cell.textLabel?.textAlignment = .center
+    cell.textLabel?.adjustsFontSizeToFitWidth = true
     return cell
   }
 
   private static let formatter: DateFormatter = {
     let formatter = DateFormatter()
-    formatter.dateFormat = "hh:mma, MMM dd YYYY"
+    formatter.dateFormat = "hh:mma, MMM dd, YYYY"
     return formatter
   }()
 }
