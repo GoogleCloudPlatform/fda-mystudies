@@ -13,7 +13,7 @@ resource "google_compute_shared_vpc_service_project" "service_projects" {
 }
 
 locals {
-  gke_service_projects = [for p in var.service_projects : p if p.gke]
+  gke_service_projects = [for p in var.service_projects : p if p.has_gke]
 }
 
 resource "google_project_iam_member" "k8s_host_service_agent_users" {

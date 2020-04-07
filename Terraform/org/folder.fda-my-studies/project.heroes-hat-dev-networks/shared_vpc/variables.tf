@@ -6,6 +6,6 @@ variable "service_projects" {
   type = list(object({
     id : string
     num : number
-    gke : bool
+    has_gke : bool
   }))
 }

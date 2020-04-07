@@ -30,12 +30,12 @@ inputs = {
     {
       id  = dependency.service_project_apps.outputs.project_id
       num = dependency.service_project_apps.outputs.project_number
-      gke = true
+      has_gke = true
     },
     {
       id  = dependency.service_project_data.outputs.project_id
       num = dependency.service_project_data.outputs.project_number
-      gke = false
+      has_gke = false
     },
   ]
 }
