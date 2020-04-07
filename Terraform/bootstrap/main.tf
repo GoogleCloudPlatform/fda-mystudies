@@ -10,7 +10,17 @@ terraform {
 
 # ========================================== STEP 1 BEGIN ==========================================
 locals {
-  cloudbuild_apis = ["cloudbuild.googleapis.com"]
+  devops_apis = [
+    # TODO(xingao): Figure out how to use user_project_override and disable APIs in devops project
+    # that are needed to obtain resource information in other projects.
+    "bigquery.googleapis.com",
+    "cloudbuild.googleapis.com",
+    "cloudresourcemanager.googleapis.com",
+    "container.googleapis.com",
+    "iam.googleapis.com",
+    "serviceusage.googleapis.com",
+    "sqladmin.googleapis.com",
+  ]
 }
 
 module "project" {
@@ -35,8 +45,8 @@ module "state_bucket" {
 }
 
 # Cloud Build - API
-resource "google_project_service" "cloudbuild_apis" {
-  for_each           = toset(local.cloudbuild_apis)
+resource "google_project_service" "devops_apis" {
+  for_each           = toset(local.devops_apis)
   project            = module.project.project_id
   service            = each.value
   disable_on_destroy = false
@@ -50,15 +60,26 @@ resource "google_storage_bucket_iam_member" "cloudbuild_state_iam" {
   role   = "roles/storage.objectViewer"
   member = "serviceAccount:${module.project.project_number}@cloudbuild.gserviceaccount.com"
   depends_on = [
-    google_project_service.cloudbuild_apis,
+    google_project_service.devops_apis,
   ]
 }
 
 # View access to the whole organization.
-# TODO: narrow this permission.
-resource "google_organization_iam_member" "cloudbuild_org_viewer_iam" {
-  org_id = "707577601068"
+resource "google_organization_iam_member" "cloudbuild_viewer_iam" {
+  org_id = var.org_id
   role   = "roles/viewer"
+  member = "serviceAccount:${module.project.project_number}@cloudbuild.gserviceaccount.com"
+}
+
+resource "google_organization_iam_member" "cloudbuild_iam_viewer_iam" {
+  org_id = var.org_id
+  role   = "roles/iam.securityReviewer"
+  member = "serviceAccount:${module.project.project_number}@cloudbuild.gserviceaccount.com"
+}
+
+resource "google_organization_iam_member" "cloudbuild_folder_viewer_iam" {
+  org_id = var.org_id
+  role   = "roles/resourcemanager.folderViewer"
   member = "serviceAccount:${module.project.project_number}@cloudbuild.gserviceaccount.com"
 }
 # =========================================== STEP 1 END ===========================================
