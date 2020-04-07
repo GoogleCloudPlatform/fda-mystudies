@@ -27,13 +27,6 @@ public class EmailNotification {
       List<String> ccMailList,
       List<String> bccMailList)
       throws Exception {
-    logger.info(
-        "EmailNotification - sendEmailNotification() ,Email = "
-            + toMail
-            + ", Subject = "
-            + subject
-            + ", contents ="
-            + content);
     boolean sentMail = false;
     try {
       Mail mail = new Mail();

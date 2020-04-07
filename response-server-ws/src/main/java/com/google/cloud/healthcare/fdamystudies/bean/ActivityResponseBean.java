@@ -20,7 +20,7 @@ public class ActivityResponseBean {
   private String participantId;
   private String tokenIdentifier;
   private String siteId;
-  private Boolean sharingConsent;
+  private String sharingConsent;
   private Boolean withdrawalStatus;
   private String type;
   private ActivityMetadataBean metadata = new ActivityMetadataBean();

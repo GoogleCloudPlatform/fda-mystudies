@@ -8,12 +8,10 @@
 
 package com.google.cloud.healthcare.fdamystudies.dao;
 
-import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.CriteriaUpdate;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 import org.apache.commons.lang3.StringUtils;
@@ -29,12 +27,10 @@ import com.google.cloud.healthcare.fdamystudies.beans.ErrorBean;
 import com.google.cloud.healthcare.fdamystudies.model.AppInfoDetailsBO;
 import com.google.cloud.healthcare.fdamystudies.model.LocationBo;
 import com.google.cloud.healthcare.fdamystudies.model.OrgInfo;
-import com.google.cloud.healthcare.fdamystudies.model.ParticipantStudiesBO;
 import com.google.cloud.healthcare.fdamystudies.model.SiteBo;
 import com.google.cloud.healthcare.fdamystudies.model.StudyInfoBO;
 import com.google.cloud.healthcare.fdamystudies.util.AppConstants;
 import com.google.cloud.healthcare.fdamystudies.util.ErrorCode;
-import com.google.cloud.healthcare.fdamystudies.util.MyStudiesUserRegUtil;
 import com.google.cloud.healthcare.fdamystudies.util.UserManagementUtil;
 
 @Repository
@@ -214,62 +210,5 @@ public class StudiesDaoImpl implements StudiesDao {
       logger.error("StudiesDaoImpl - decommisionSiteFromStudy() : error ", e);
     }
     logger.info("StudiesDaoImpl - decommisionSiteFromStudy() : ends");
-  }
-
-  @Override
-  public String withdrawFromStudy(String participantId, String studyId, boolean delete) {
-    logger.info("StudiesDaoImpl withdrawFromStudy() - Ends ");
-    String message = MyStudiesUserRegUtil.ErrorCodes.FAILURE.getValue();
-    Transaction transaction = null;
-    CriteriaBuilder criteriaBuilder = null;
-
-    CriteriaQuery<StudyInfoBO> studiesBoCriteria = null;
-    Root<StudyInfoBO> studiesBoRoot = null;
-    Predicate[] studiesBoPredicates = new Predicate[1];
-    List<StudyInfoBO> studiesBoList = null;
-    StudyInfoBO studyInfo = null;
-
-    CriteriaUpdate<ParticipantStudiesBO> criteriaUpdate = null;
-    Root<ParticipantStudiesBO> participantStudiesBoRoot = null;
-    List<Predicate> predicates = new ArrayList<>();
-    int isUpdated = 0;
-    try (Session session = entityManagerFactory.unwrap(SessionFactory.class).openSession()) {
-
-      transaction = session.beginTransaction();
-      criteriaBuilder = session.getCriteriaBuilder();
-
-      studiesBoCriteria = criteriaBuilder.createQuery(StudyInfoBO.class);
-      studiesBoRoot = studiesBoCriteria.from(StudyInfoBO.class);
-      studiesBoPredicates[0] = criteriaBuilder.equal(studiesBoRoot.get("customId"), studyId);
-      studiesBoCriteria.select(studiesBoRoot).where(studiesBoPredicates);
-      studiesBoList = session.createQuery(studiesBoCriteria).getResultList();
-      if (!studiesBoList.isEmpty()) {
-        studyInfo = studiesBoList.get(0);
-        criteriaUpdate = criteriaBuilder.createCriteriaUpdate(ParticipantStudiesBO.class);
-        participantStudiesBoRoot = criteriaUpdate.from(ParticipantStudiesBO.class);
-        criteriaUpdate.set("status", AppConstants.WITHDRAWN);
-        //        criteriaUpdate.set("participantId", "NULL");
-        predicates.add(
-            criteriaBuilder.equal(participantStudiesBoRoot.get("participantId"), participantId));
-        predicates.add(criteriaBuilder.equal(participantStudiesBoRoot.get("studyInfo"), studyInfo));
-        criteriaUpdate.where(predicates.toArray(new Predicate[predicates.size()]));
-        isUpdated = session.createQuery(criteriaUpdate).executeUpdate();
-        if (isUpdated > 0) {
-          message = MyStudiesUserRegUtil.ErrorCodes.SUCCESS.getValue();
-        }
-      }
-      transaction.commit();
-    } catch (Exception e) {
-      logger.error("StudiesDaoImpl withdrawFromStudy() - error ", e);
-      if (transaction != null) {
-        try {
-          transaction.rollback();
-        } catch (Exception e1) {
-          logger.error("StudiesDaoImpl - withdrawFromStudy() - error rollback", e1);
-        }
-      }
-    }
-    logger.info("StudiesDaoImpl withdrawFromStudy() - Ends ");
-    return message;
   }
 }

@@ -484,16 +484,17 @@ public class AuthenticationController {
             "AuthenticationController registerUser() - ends with INVALID CLIENTID OR SECRET KEY");
         return new ResponseEntity<>(controllerResp, HttpStatus.UNAUTHORIZED);
       }
-      if ("MA".equals(appCode) && ((appId.length() == 0) || StringUtils.isBlank(appId))
-          || ((orgId.length() == 0) || StringUtils.isBlank(orgId))) {
-
-        MyStudiesUserRegUtil.getFailureResponse(
-            400 + "",
-            MyStudiesUserRegUtil.ErrorCodes.INVALID_INPUT.getValue(),
-            MyStudiesUserRegUtil.ErrorCodes.INVALID_INPUT_ERROR_MSG.getValue(),
-            response);
-        logger.info("AuthenticationController registerUser() - ends");
-        return new ResponseEntity<>(controllerResp, HttpStatus.BAD_REQUEST);
+      if ("MA".equals(appCode)) {
+        if (((appId.length() == 0) || StringUtils.isBlank(appId))
+            || ((orgId.length() == 0) || StringUtils.isBlank(orgId))) {
+          MyStudiesUserRegUtil.getFailureResponse(
+              400 + "",
+              MyStudiesUserRegUtil.ErrorCodes.INVALID_INPUT.getValue(),
+              MyStudiesUserRegUtil.ErrorCodes.INVALID_INPUT_ERROR_MSG.getValue(),
+              response);
+          logger.info("AuthenticationController registerUser() - ends");
+          return new ResponseEntity<>(controllerResp, HttpStatus.BAD_REQUEST);
+        }
       }
 
       ServiceRegistrationSuccessResponse serviceResp = null;
@@ -521,7 +522,7 @@ public class AuthenticationController {
       MyStudiesUserRegUtil.getFailureResponse(
           500 + "",
           MyStudiesUserRegUtil.ErrorCodes.UNKNOWN.getValue(),
-          MyStudiesUserRegUtil.ErrorCodes.CONNECTION_ERROR_MSG.getValue(),
+          MyStudiesUserRegUtil.ErrorCodes.SYSTEM_ERROR_FOUND.getValue(),
           response);
       logger.error(
           "AuthenticationController getRefreshedToken() - error with INTERNAL_SERVER_ERROR: ", e);
@@ -591,15 +592,17 @@ public class AuthenticationController {
         return new ResponseEntity<>(loginResp, HttpStatus.UNAUTHORIZED);
       }
 
-      if ("MA".equals(appCode) && ((appId.length() == 0) || StringUtils.isBlank(appId))
-          || ((orgId.length() == 0) || StringUtils.isBlank(orgId))) {
-        MyStudiesUserRegUtil.getFailureResponse(
-            400 + "",
-            MyStudiesUserRegUtil.ErrorCodes.INVALID_INPUT.getValue(),
-            MyStudiesUserRegUtil.ErrorCodes.INVALID_INPUT_ERROR_MSG.getValue(),
-            response);
-        logger.info("AuthenticationController login() - ends with INVALID_INPUT");
-        return new ResponseEntity<>(loginResp, HttpStatus.BAD_REQUEST);
+      if ("MA".equals(appCode)) {
+        if (((appId.length() == 0) || StringUtils.isBlank(appId))
+            || ((orgId.length() == 0) || StringUtils.isBlank(orgId))) {
+          MyStudiesUserRegUtil.getFailureResponse(
+              400 + "",
+              MyStudiesUserRegUtil.ErrorCodes.INVALID_INPUT.getValue(),
+              MyStudiesUserRegUtil.ErrorCodes.INVALID_INPUT_ERROR_MSG.getValue(),
+              response);
+          logger.info("AuthenticationController login() - ends with INVALID_INPUT");
+          return new ResponseEntity<>(loginResp, HttpStatus.BAD_REQUEST);
+        }
       }
 
       if (!"MA".equals(appCode)) {
@@ -1131,7 +1134,7 @@ public class AuthenticationController {
                 MyStudiesUserRegUtil.getFailureResponse(
                     MyStudiesUserRegUtil.ErrorCodes.STATUS_102.getValue(),
                     MyStudiesUserRegUtil.ErrorCodes.INVALID_INPUT.getValue(),
-                    MyStudiesUserRegUtil.ErrorCodes.INVALID_INPUT.getValue(),
+                    MyStudiesUserRegUtil.ErrorCodes.NEW_PASSWORD_IS_INVALID.getValue(),
                     response);
                 activityLogService.createActivityLog(
                     userId,

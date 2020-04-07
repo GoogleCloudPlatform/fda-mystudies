@@ -167,9 +167,7 @@ public class ProcessActivityResponseController {
                   ErrorCode.EC_715.errorMessage());
           return new ResponseEntity<>(errorBean, HttpStatus.BAD_REQUEST);
         }
-        Boolean sharingConsent =
-            !StringUtils.isBlank(partStudyInfo.getSharing())
-                && partStudyInfo.getSharing().equalsIgnoreCase(AppConstants.TRUE_STR);
+        String sharingConsent = partStudyInfo.getSharing();
 
         questionnaireActivityResponseBean.setSharingConsent(sharingConsent);
         boolean withdrawalStatus = !StringUtils.isBlank(partStudyInfo.getWithdrawal());
@@ -195,25 +193,15 @@ public class ProcessActivityResponseController {
               activityStateRequestBean);
           SuccessResponseBean srBean = new SuccessResponseBean();
           srBean.setMessage(AppConstants.SUCCESS_MSG);
-          if (sharingConsent) {
-            commonService.createActivityLog(
-                userId,
-                "Participant provided data sharing consent ",
-                "Participant Id: "
-                    + participantId
-                    + " has provided data sharing consent for study with id:  "
-                    + studyId,
-                null);
-          } else {
-            commonService.createActivityLog(
-                userId,
-                "Participant has not provided data sharing consent ",
-                "Participant Id: "
-                    + participantId
-                    + " has not provided data sharing consent for study with id:  "
-                    + studyId,
-                null);
-          }
+          commonService.createActivityLog(
+              userId,
+              "Participant data sharing consent is: " + sharingConsent,
+              " Participant Id: "
+                  + participantId
+                  + " has not provided data sharing consent for study with id:  "
+                  + studyId,
+              null);
+
           commonService.createActivityLog(
               userId,
               "Study response data successfully saved for participant",

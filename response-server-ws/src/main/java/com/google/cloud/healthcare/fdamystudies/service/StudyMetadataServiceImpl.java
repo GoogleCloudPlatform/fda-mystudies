@@ -148,8 +148,8 @@ public class StudyMetadataServiceImpl implements StudyMetadataService {
 
   private String getWcpAuthorizationHeader() throws ProcessResponseException {
     try {
-      String wcpAuthUserName = appConfig.getWcpAuthUsername();
-      String wcpAuthPassword = appConfig.getWcpAuthPassword();
+      String wcpAuthUserName = appConfig.getWcpBundleId();
+      String wcpAuthPassword = appConfig.getWcpAppToken();
       // Get Base64 String Representation of username and password
       if (!StringUtils.isBlank(wcpAuthUserName) && !StringUtils.isBlank(wcpAuthPassword)) {
         String wcpAuthStr = wcpAuthUserName + ":" + wcpAuthPassword;
