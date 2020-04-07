@@ -75,8 +75,7 @@ public class VerifyEmailIdController {
       return new ResponseEntity<>(verifyEmailIdResponse, HttpStatus.BAD_REQUEST);
     }
     try {
-      verificationCode =
-          verificationForm.getCode().replaceAll("\\s", ""); // trim the surrounding whitespace.
+      verificationCode = verificationForm.getCode().trim(); // trim the surrounding whitespace.
       VerifyCodeResponse serviceResult = userDetailsService.verifyCode(verificationCode, userId);
 
       if (serviceResult != null && Boolean.TRUE.equals(serviceResult.getIsCodeVerified())) {
