@@ -127,9 +127,10 @@ class SplashViewController: UIViewController {
   /// Navigate to `StudyHomeViewController`
   func navigateToStudyHomeController() {
     let studyStoryBoard = UIStoryboard.init(name: kStudyStoryboard, bundle: Bundle.main)
-    let studyHomeController = studyStoryBoard.instantiateViewController(
-      withIdentifier: String(describing: StudyHomeViewController.classForCoder())
-    )
+    let studyHomeController =
+      studyStoryBoard.instantiateViewController(
+        withIdentifier: String(describing: StudyHomeViewController.classForCoder())
+      )
       as! StudyHomeViewController
     self.navigationController?.pushViewController(studyHomeController, animated: true)
   }
@@ -164,9 +165,10 @@ class SplashViewController: UIViewController {
   /// Navigating to Study list and Load FDASlideMenuViewController from Gateway Storyboard
   func createMenuView() {
     let storyboard = UIStoryboard(name: kStoryboardIdentifierGateway, bundle: nil)
-    let fda = storyboard.instantiateViewController(
-      withIdentifier: kStoryboardIdentifierSlideMenuVC
-    )
+    let fda =
+      storyboard.instantiateViewController(
+        withIdentifier: kStoryboardIdentifierSlideMenuVC
+      )
       as! FDASlideMenuViewController
     self.navigationController?.pushViewController(fda, animated: true)
   }

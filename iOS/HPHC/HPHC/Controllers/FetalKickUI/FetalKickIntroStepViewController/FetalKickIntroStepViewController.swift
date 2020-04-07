@@ -17,7 +17,6 @@
 // OTHER DEALINGS IN THE SOFTWARE.
 
 import Foundation
-import Foundation
 import ResearchKit
 
 let kFetalKickIntroStepDefaultIdentifier = "FetalIntroStepIdentifier"

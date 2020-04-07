@@ -158,9 +158,7 @@ class ResourceDetailViewController: UIViewController {
             )
             self.loadWebViewWithPath(path: path!)
           } else {
-            let path = resourcesDownloadPath + "/" + (
-              self.resource?.file?.localPath
-            )!
+            let path = resourcesDownloadPath + "/" + (self.resource?.file?.localPath)!
             let pdfData = FileDownloadManager.decrytFile(pathURL: URL(string: path))
             self.loadWebViewWithData(data: pdfData!)
 
@@ -183,7 +181,7 @@ class ResourceDetailViewController: UIViewController {
   func loadWebViewWithPath(path: String) {
 
     guard
-      let url:URL = URL(
+      let url: URL = URL(
         string: path.addingPercentEncoding(withAllowedCharacters: .urlPathAllowed)!
       )
     else { return }

@@ -94,7 +94,8 @@ class Resource {
     self.level = ResourceLevel(rawValue: dbResource.level!)
 
     self.availabilityType = ResourceAvailabilityType(rawValue: dbResource.availabilityType!)!
-    self.sourceType = (dbResource.sourceType != nil)
+    self.sourceType =
+      (dbResource.sourceType != nil)
       ? AnchorDateSourceType(rawValue: dbResource.sourceType!)! : nil
     self.sourceActivityId = dbResource.sourceActivityId
     self.sourceKey = dbResource.sourceKey
@@ -320,7 +321,8 @@ class Resource {
       //update start date
       var startDateStringEnrollment = Utilities.formatterShort?.string(from: enrollmentDate!)
       let startTimeEnrollment = "00:00:00"
-      startDateStringEnrollment = (startDateStringEnrollment ?? "") + " "
+      startDateStringEnrollment =
+        (startDateStringEnrollment ?? "") + " "
         + startTimeEnrollment
       enrollmentDate = Utilities.findDateFromString(
         dateString: startDateStringEnrollment ?? ""

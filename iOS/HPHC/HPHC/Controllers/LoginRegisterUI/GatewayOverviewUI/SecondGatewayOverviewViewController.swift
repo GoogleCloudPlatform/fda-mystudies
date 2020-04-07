@@ -55,9 +55,10 @@ class SecondGatewayOverviewViewController: UIViewController {
   func createMenuView() {
 
     let storyboard = UIStoryboard(name: kStoryboardIdentifierGateway, bundle: nil)
-    let fda = storyboard.instantiateViewController(
-      withIdentifier: kStoryboardIdentifierSlideMenuVC
-    )
+    let fda =
+      storyboard.instantiateViewController(
+        withIdentifier: kStoryboardIdentifierSlideMenuVC
+      )
       as! FDASlideMenuViewController
     self.navigationController?.pushViewController(fda, animated: true)
   }

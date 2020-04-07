@@ -19,7 +19,7 @@
 
 import UIKit
 
-class EmptyAnchordDates {
+class AnchorDateQueryMetaData {
 
   enum FetchAnchorDateFor {
     case activity
@@ -35,6 +35,7 @@ class EmptyAnchordDates {
   var sourceFormId: String!
   var isFinishedFetching: Bool = false
   var fetchAnchorDateFor: FetchAnchorDateFor = .activity
+  lazy var sourceActivityVersion: String = ""
 
   init() {}
 
@@ -42,9 +43,14 @@ class EmptyAnchordDates {
 
 class AnchorDateHandler {
 
-  var emptyAnchorDatesList: [EmptyAnchordDates] = []
+  var emptyAnchorDateMetaDataList: [AnchorDateQueryMetaData] = []
   typealias AnchordDateFetchCompletionHandler = (_ success: Bool) -> Void
   var handler: AnchordDateFetchCompletionHandler!
+  var study: Study
+
+  init(study: Study) {
+    self.study = study
+  }
 
   func fetchActivityAnchorDateResponseFromLabkey(
     _ completionHandler: @escaping AnchordDateFetchCompletionHandler
@@ -53,11 +59,12 @@ class AnchorDateHandler {
     handler = completionHandler
     // Get activities from database for anchor date is not present
     let activities = DBHandler.getActivitiesWithEmptyAnchorDateValue(
-      (Study.currentStudy?.studyId)!
+      (study.studyId)
     )
 
     guard activities.count != 0 else {
-      return handler(false)
+      handler(false)
+      return
     }
 
     for activity in activities {
@@ -66,100 +73,142 @@ class AnchorDateHandler {
         $0.activityId == activity.sourceActivityId
       }).last
 
-      if act != nil && (act?.status == UserActivityStatus.ActivityStatus.completed) {
-
-        let emptyAnchorDateDetail = EmptyAnchordDates()
+      if act != nil && (act?.status == .completed) {
+        let emptyAnchorDateDetail = AnchorDateQueryMetaData()
         emptyAnchorDateDetail.activity = activity
         emptyAnchorDateDetail.sourceKey = activity.sourceKey
         emptyAnchorDateDetail.sourceActivityId = activity.sourceActivityId
         emptyAnchorDateDetail.sourceFormKey = activity.sourceFormKey
-        emptyAnchorDatesList.append(emptyAnchorDateDetail)
+        emptyAnchorDateMetaDataList.append(emptyAnchorDateDetail)
       }
-
     }
 
-    guard emptyAnchorDatesList.count != 0 else {
-      return handler(false)
+    guard !emptyAnchorDateMetaDataList.isEmpty else {
+      handler(false)
+      return
     }
 
-    sendRequestToFetchResponse()
+    let queryGroup = DispatchGroup()
 
+    for anchorMetaData in emptyAnchorDateMetaDataList {
+      queryGroup.enter()
+      requestAnchorDateForActivityResponse(for: anchorMetaData) {
+        queryGroup.leave()
+      }
+    }
+
+    queryGroup.notify(queue: DispatchQueue.main) {
+      self.saveAnchorDateInDatabase()
+      self.handler(true)
+    }
   }
 
   func fetchActivityAnchorDateForResourceFromLabkey(
     _ completionHandler: @escaping AnchordDateFetchCompletionHandler
   ) {
 
-    let resources = DBHandler.getResourceWithEmptyAnchorDateValue(
-      (Study.currentStudy?.studyId)!
-    )
     handler = completionHandler
+
+    let resources = DBHandler.getResourceWithEmptyAnchorDateValue(
+      study.studyId
+    )
+
     guard resources.count != 0 else {
-      return handler(false)
+      handler(false)
+      return
     }
 
     for resource in resources {
 
-      let act = User.currentUser.participatedActivites.filter({
+      let act = User.currentUser.participatedActivites.filter {
         $0.activityId == resource.sourceActivityId
-      }).last
+      }.last
 
       if act != nil && (act?.status == UserActivityStatus.ActivityStatus.completed) {
 
-        let emptyAnchorDateDetail = EmptyAnchordDates()
+        let emptyAnchorDateDetail = AnchorDateQueryMetaData()
         emptyAnchorDateDetail.fetchAnchorDateFor = .resource
         emptyAnchorDateDetail.resource = resource
+        emptyAnchorDateDetail.sourceActivityVersion = act?.activityVersion ?? ""
         emptyAnchorDateDetail.sourceKey = resource.sourceKey
         emptyAnchorDateDetail.sourceActivityId = resource.sourceActivityId
         emptyAnchorDateDetail.sourceFormKey = resource.sourceFormKey
-        emptyAnchorDatesList.append(emptyAnchorDateDetail)
+        emptyAnchorDateMetaDataList.append(emptyAnchorDateDetail)
       }
 
     }
 
-    guard emptyAnchorDatesList.count != 0 else {
-      return handler(false)
+    guard emptyAnchorDateMetaDataList.count != 0 else {
+      handler(false)
+      return
     }
 
-    sendRequestToFetchResponse()
+    let queryGroup = DispatchGroup()
 
+    for anchorMetaData in emptyAnchorDateMetaDataList {
+      queryGroup.enter()
+      requestAnchorDateForActivityResponse(for: anchorMetaData) {
+        queryGroup.leave()
+      }
+    }
+
+    queryGroup.notify(queue: DispatchQueue.main) {
+      self.saveAnchorDateInDatabase()
+      self.handler(true)
+    }
   }
 
-  func sendRequestToFetchResponse() {
+  func requestAnchorDateForActivityResponse(
+    for emptyAnchorDateDetail: AnchorDateQueryMetaData,
+    completion: @escaping () -> Void
+  ) {
 
-    if Study.currentStudy == nil {
-      return
-    }
-    guard
-      let emptyAnchorDateDetail = emptyAnchorDatesList.filter(
-        { $0.isFinishedFetching == false })
-        .first
-    else {
-      saveAnchorDateInDatabase()
-      return
-    }
-
-    // send request to get response"
-    // TBD :- Update this
-    let keys = emptyAnchorDateDetail.sourceKey!
-    let formKey: String = emptyAnchorDateDetail.sourceFormKey ?? ""
-    let tableName = emptyAnchorDateDetail.sourceActivityId + formKey
     let method = ResponseMethods.getParticipantResponse.method
-    let query: String = "SELECT " + keys + ",Created" + " FROM " + tableName
-    let participantId: String = (Study.currentStudy?.userParticipateState.participantId)!
-    var urlString = ResponseServerURLConstants.DevelopmentURL + method.methodName + "?"
-      + kParticipantId + "=" + participantId + "&sql=" + query
-    urlString = urlString.addingPercentEncoding(
-      withAllowedCharacters: CharacterSet.urlQueryAllowed
-    )!
 
-    let requstUrl = URL(string: urlString)
-    var request = URLRequest.init(
-      url: requstUrl!,
+    let sourceActivityID = emptyAnchorDateDetail.sourceActivityId ?? ""
+    let orgID = AppConfiguration.orgID
+    let appID = AppConfiguration.appID
+    let studyID = self.study.studyId ?? ""
+    let tokenIdentifier = study.userParticipateState.tokenIdentifier ?? ""
+    let siteID = study.userParticipateState.siteID ?? ""
+    let activityVersion =
+      emptyAnchorDateDetail.activity.version ?? emptyAnchorDateDetail.sourceActivityVersion
+    let participantId = study.userParticipateState.participantId ?? ""
+
+    var urlString = ResponseServerURLConstants.DevelopmentURL + method.methodName + "?"
+    urlString += "&orgId" + "=" + orgID
+    urlString += "&appId" + "=" + appID
+    urlString += "&studyId" + "=" + studyID
+    urlString += "&siteId" + "=" + siteID
+    urlString += "&activityId" + "=" + sourceActivityID
+    urlString += "&activityVersion" + "=" + activityVersion
+    urlString += "&participantId" + "=" + participantId
+    urlString += "&questionKey"
+    urlString += "&tokenIdentifier" + "=" + tokenIdentifier
+
+    urlString =
+      urlString.addingPercentEncoding(
+        withAllowedCharacters: CharacterSet.urlQueryAllowed
+      ) ?? ""
+
+    guard let requestUrl = URL(string: urlString) else {
+      completion()
+      return
+    }
+
+    let headers: [String: String] = [
+      "accessToken": User.currentUser.authToken ?? "",
+      "clientToken": User.currentUser.clientToken ?? "",
+      "userId": User.currentUser.userId ?? "",
+    ]
+
+    var request = URLRequest(
+      url: requestUrl,
       cachePolicy: URLRequest.CachePolicy.reloadIgnoringLocalCacheData,
       timeoutInterval: NetworkConnectionConstants.ConnectionTimeoutInterval
     )
     request.httpMethod = method.methodType.methodTypeAsString
+    request.allHTTPHeaderFields = headers
 
     let session = URLSession.shared
     let dataTask = session.dataTask(
@@ -167,70 +216,49 @@ class AnchorDateHandler {
       completionHandler: { (data, response, error) -> Void in
 
         if error != nil {
-          emptyAnchorDateDetail.isFinishedFetching = true
-          self.sendRequestToFetchResponse()
-        } else {
+          completion()
+        } else if let response = response, let data = data {
 
-          let status = NetworkConstants.checkResponseHeaders(response!)
+          let status = NetworkConstants.checkResponseHeaders(response)
           let statusCode = status.0
           if statusCode == 200 || statusCode == 0 {
 
-            DispatchQueue.main.async {
+            guard let responseDict = data.toJSONDictionary(),
+              let rows = responseDict["rows"] as? [JSONDictionary],
+              let latestResponse = rows.last
+            else {
+              completion()
+              return
+            }
 
-              guard
-                let response = try? JSONSerialization.jsonObject(
-                  with: data!,
-                  options: .allowFragments
-                ) as? [String: Any]
-              else {
-
-                emptyAnchorDateDetail.isFinishedFetching = true
-                self.sendRequestToFetchResponse()
-
-                return
-              }
-
-              guard let rows = response["rows"] as? [[String: Any]], rows.count > 0
-              else {
-                emptyAnchorDateDetail.isFinishedFetching = true
-                self.sendRequestToFetchResponse()
-                return
-              }
-
-              for rowDetail in rows {
-                if let data = rowDetail["data"] as? [String: Any] {
-
-                  let anchorDateObject = data[emptyAnchorDateDetail.sourceKey]
-                    as? [String: String]
-                  let anchorDateString = anchorDateObject?["value"]
-                  let date = ResponseDataFetch.labkeyDateFormatter.date(
-                    from: anchorDateString!
-                  )
-                  emptyAnchorDateDetail.anchorDate = date
-                  emptyAnchorDateDetail.isFinishedFetching = true
-                  self.sendRequestToFetchResponse()
-
-                }
-              }
+            if let data = latestResponse["data"] as? [JSONDictionary],
+              let userResponseDict = data[safe: 2],
+              let anchorDateObject = userResponseDict[emptyAnchorDateDetail.sourceKey]
+                as? [String: String],
+              let anchorDateString = anchorDateObject["value"]
+            {
+              let date = ResponseDataFetch.responseDateFormatter.date(from: anchorDateString)
+              emptyAnchorDateDetail.anchorDate = date
+              completion()
+            } else {
+              completion()
             }
           } else {
-            emptyAnchorDateDetail.isFinishedFetching = true
-            self.sendRequestToFetchResponse()
+            completion()
           }
-
+        } else {
+          completion()
         }
       }
     )
-
     dataTask.resume()
-
   }
 
   func saveAnchorDateInDatabase() {
 
-    let listItems = emptyAnchorDatesList.filter({
-      $0.anchorDate != nil && $0.isFinishedFetching == true
-    })
+    let listItems = emptyAnchorDateMetaDataList.filter {
+      $0.anchorDate != nil
+    }
     for item in listItems {
       if item.fetchAnchorDateFor == .activity {
         DBHandler.updateActivityLifeTimeFor(item.activity, anchorDate: item.anchorDate!)
@@ -240,16 +268,15 @@ class AnchorDateHandler {
           from: item.anchorDate!
         )
         let startTimeEnrollment = "00:00:00"
-        startDateStringEnrollment = (startDateStringEnrollment ?? "") + " "
+        startDateStringEnrollment =
+          (startDateStringEnrollment ?? "") + " "
           + startTimeEnrollment
         let anchorDate = Utilities.findDateFromString(
           dateString: startDateStringEnrollment ?? ""
         )
-
         DBHandler.saveLifeTimeFor(resource: item.resource, anchorDate: anchorDate!)
       }
     }
-    handler(true)
   }
 
 }

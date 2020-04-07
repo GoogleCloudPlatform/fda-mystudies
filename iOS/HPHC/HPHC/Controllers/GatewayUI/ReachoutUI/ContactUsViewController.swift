@@ -144,17 +144,19 @@ extension ContactUsViewController: UITableViewDataSource {
 
     if indexPath.row == 3 {
 
-      let cell = tableView.dequeueReusableCell(withIdentifier: "textviewCell", for: indexPath)
+      let cell =
+        tableView.dequeueReusableCell(withIdentifier: "textviewCell", for: indexPath)
         as! TextviewCell
       return cell
     } else {
 
       let tableViewData = tableViewRowDetails?.object(at: indexPath.row) as! NSDictionary
 
-      let cell = tableView.dequeueReusableCell(
-        withIdentifier: kContactUsTableViewCellIdentifier,
-        for: indexPath
-      )
+      let cell =
+        tableView.dequeueReusableCell(
+          withIdentifier: kContactUsTableViewCellIdentifier,
+          for: indexPath
+        )
         as! ContactUsTableViewCell
 
       cell.textFieldValue?.tag = indexPath.row

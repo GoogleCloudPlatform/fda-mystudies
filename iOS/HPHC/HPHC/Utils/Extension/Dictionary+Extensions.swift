@@ -26,7 +26,8 @@ extension Dictionary {
       options: JSONSerialization.WritingOptions.prettyPrinted
     )
 
-    let jsonString = NSString(data: jsonData, encoding: String.Encoding.utf8.rawValue)!
+    let jsonString =
+      NSString(data: jsonData, encoding: String.Encoding.utf8.rawValue)!
       as String
 
     return jsonString
