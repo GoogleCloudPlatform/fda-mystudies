@@ -133,7 +133,7 @@ class ProfileViewController: UIViewController, SlideMenuControllerDelegate {
   @IBAction func buttonActionChangePassCode(_ sender: UIButton) {
 
     let passcodeViewController = ORKPasscodeViewController.passcodeEditingViewController(
-      withText: "",
+      withText: kSetPasscodeDescription,
       delegate: self,
       passcodeType: .type4Digit
     )
@@ -280,12 +280,7 @@ class ProfileViewController: UIViewController, SlideMenuControllerDelegate {
         self.performSegue(withIdentifier: "confirmationSegue", sender: joinedStudies)
       } else {
 
-        var infoDict: NSDictionary?
-        if let path = Bundle.main.path(forResource: "Info", ofType: "plist") {
-          infoDict = NSDictionary(contentsOfFile: path)
-        }
-        let navTitle = infoDict!["ProductTitleName"] as! String
-
+        let navTitle = Branding.productTitle
         var descriptionText = kDeleteAccountConfirmationMessage
         descriptionText = descriptionText.replacingOccurrences(
           of: "#APPNAME#",
@@ -541,6 +536,7 @@ class ProfileViewController: UIViewController, SlideMenuControllerDelegate {
       if ORKPasscodeViewController.isPasscodeStoredInKeychain() == false {
         let passcodeStep = ORKPasscodeStep(identifier: kPasscodeStepIdentifier)
         passcodeStep.passcodeType = .type4Digit
+        passcodeStep.text = kSetPasscodeDescription
         let task = ORKOrderedTask(
           identifier: kPasscodeTaskIdentifier,
           steps: [passcodeStep]

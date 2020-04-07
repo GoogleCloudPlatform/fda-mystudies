@@ -271,10 +271,10 @@ class WCPServices: NSObject {
     self.delegate = delegate
     let method = WCPMethods.contactUs.method
     let params = [
-      kFeedbackBody: ContactUsFeilds.message,
-      kFeedbackSubject: ContactUsFeilds.subject,
-      kContactusEmail: ContactUsFeilds.email,
-      kContactusFirstname: ContactUsFeilds.firstName,
+      kFeedbackBody: ContactUsFields.message,
+      kFeedbackSubject: ContactUsFields.subject,
+      kContactusEmail: ContactUsFields.email,
+      kContactusFirstname: ContactUsFields.firstName,
     ]
     self.sendRequestWith(method: method, params: params, headers: nil)
   }

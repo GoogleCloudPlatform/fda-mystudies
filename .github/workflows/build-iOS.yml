@@ -13,6 +13,6 @@ jobs:
       - name: Build
         run: |
           cd iOS/HPHC
-          xcodebuild clean build -workspace HPHC.xcworkspace -scheme HPHC -destination "${destination}" CODE_SIGN_IDENTITY="" CODE_SIGNING_REQUIRED=NO ONLY_ACTIVE_ARCH=NO
+          xcodebuild clean build -workspace HPHC.xcworkspace -scheme HPHC -destination "${destination}" CODE_SIGN_IDENTITY="" CODE_SIGNING_REQUIRED=NO ONLY_ACTIVE_ARCH=YES
         env: 
          destination: ${{ matrix.destination }}

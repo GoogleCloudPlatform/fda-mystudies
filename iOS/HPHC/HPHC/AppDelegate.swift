@@ -89,15 +89,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
   /// Updates Key & InitializationVector for Encryption
   func updateKeyAndInitializationVector() {
 
-    let currentDate = "\(Date(timeIntervalSinceNow: 0))"
-    let currentIndex = currentDate.index(currentDate.endIndex, offsetBy: -13)
-    let subStringFromDate = String(currentDate[..<currentIndex])
-
-    if User.currentUser.userType == .FDAUser {  // Registered/LogedIn User
+    if User.currentUser.userType == .FDAUser {  // Registered/LoggedIn User
       // Key byte size shouldn't exceed more than 16.
-      let index = User.currentUser.userId.index(User.currentUser.userId.endIndex, offsetBy: -43)
-      let subKey = String(User.currentUser.userId[..<index])
-      FDAKeychain.shared[kEncryptionKey] = subKey + subStringFromDate
+      FDAKeychain.shared[kEncryptionKey] = String.randomString(length: 16)
     } else {  // Anonymous User
       FDAKeychain.shared[kEncryptionKey] = kEncryptionKey
     }
@@ -480,7 +474,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
       let center = UNUserNotificationCenter.current()
       center.getPendingNotificationRequests(
         completionHandler: { requests in
-          if requests.count < 50 {
+           if requests.count < 50 {
             DispatchQueue.main.async {
               // This should get called on main thread to avoid crash.
               LocalNotification.refreshAllLocalNotification()
@@ -740,7 +734,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
           let passcodeStep = ORKPasscodeStep(identifier: kPasscodeStepIdentifier)
           passcodeStep.passcodeType = .type4Digit
-
+          passcodeStep.text = kSetPasscodeDescription
           let task = ORKOrderedTask(
             identifier: kPasscodeTaskIdentifier,
             steps: [passcodeStep]

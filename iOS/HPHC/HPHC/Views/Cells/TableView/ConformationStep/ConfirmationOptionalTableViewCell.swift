@@ -53,7 +53,7 @@ class ConfirmationOptionalTableViewCell: UITableViewCell {
       imageViewDeleteCheckBox?.image = #imageLiteral(resourceName: "notChecked")
     }
     self.study = study
-    self.labelTitle.text = study.studyName
+    self.labelTitle.text = study.name
   }
 
   // MARK: - Actions

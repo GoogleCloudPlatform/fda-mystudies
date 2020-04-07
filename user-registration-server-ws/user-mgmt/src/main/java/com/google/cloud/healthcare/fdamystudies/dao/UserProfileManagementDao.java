@@ -36,8 +36,5 @@ public interface UserProfileManagementDao {
 
   public UserDetailsBO getParticipantDetails(String id);
 
-  /*  public boolean deActivateAcct(
-  String userId, DeactivateAcctBean deactivateBean, Integer userDetailsId);*/
-
   public boolean deActivateAcct(String userId, List<String> deleteData, Integer userDetailsId);
 }

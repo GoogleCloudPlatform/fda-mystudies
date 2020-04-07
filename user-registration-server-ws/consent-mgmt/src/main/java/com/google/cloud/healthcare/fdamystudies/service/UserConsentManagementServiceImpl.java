@@ -108,8 +108,6 @@ public class UserConsentManagementServiceImpl implements UserConsentManagementSe
 
           ByteArrayOutputStream baos = new ByteArrayOutputStream();
           cloudStorageService.downloadFileTo(path, baos);
-          //          consentStudyResponseBean.getConsent().setContent(new
-          // String(baos.toByteArray()));
           consentStudyResponseBean
               .getConsent()
               .setContent(new String(Base64.getEncoder().encode(baos.toByteArray())));

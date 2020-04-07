@@ -146,7 +146,11 @@ public class JwtTokenUtil implements Serializable {
       if (subject != null) {
         DaoUserBO userDetails =
             userRepo.findByEmailIdAndAppIdAndOrgIdAndAppCode(subject, appId, orgId, appCode);
-        return userDetails.getUserId();
+
+        if (userDetails != null) {
+          return userDetails.getUserId();
+        } else return null;
+
       } else {
         logger.info("JwtTokenUtil getUserId() - ends");
         return null;
