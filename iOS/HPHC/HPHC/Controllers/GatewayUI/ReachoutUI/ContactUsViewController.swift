@@ -1,6 +1,7 @@
 // License Agreement for FDA MyStudies
-// Copyright © 2017-2019 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors. Permission is
-// hereby granted, free of charge, to any person obtaining a copy of this software and associated
+// Copyright © 2017-2019 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors.
+// Copyright 2020 Google LLC
+// Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated
 // documentation files (the &quot;Software&quot;), to deal in the Software without restriction, including without
 // limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the
 // Software, and to permit persons to whom the Software is furnished to do so, subject to the following
@@ -21,7 +22,7 @@ import IQKeyboardManagerSwift
 import UIKit
 
 // Contact us field description
-struct ContactUsFeilds {
+struct ContactUsFields {
 
   static var firstName: String = ""
   static var email: String = ""
@@ -29,10 +30,10 @@ struct ContactUsFeilds {
   static var message: String = ""
 
   init() {
-    ContactUsFeilds.firstName = ""
-    ContactUsFeilds.email = ""
-    ContactUsFeilds.subject = ""
-    ContactUsFeilds.message = ""
+    ContactUsFields.firstName = ""
+    ContactUsFields.email = ""
+    ContactUsFields.subject = ""
+    ContactUsFields.message = ""
   }
 }
 
@@ -52,7 +53,7 @@ class ContactUsViewController: UIViewController {
   override func viewDidLoad() {
     super.viewDidLoad()
 
-    self.navigationItem.title = NSLocalizedString("CONTACT US", comment: "")
+    self.navigationItem.title = NSLocalizedString("Contact Us", comment: "")
 
     //  Used to set border color for bottom view
     buttonSubmit?.layer.borderColor = kUicolorForButtonBackground
@@ -76,7 +77,7 @@ class ContactUsViewController: UIViewController {
       action: #selector(ContactUsViewController.handleTapGesture)
     )
     self.tableView?.addGestureRecognizer(tapGestureRecognizer)
-    _ = ContactUsFeilds.init()
+    _ = ContactUsFields.init()
   }
 
   @objc func handleTapGesture(gesture: UIGestureRecognizer) {
@@ -97,33 +98,33 @@ class ContactUsViewController: UIViewController {
   /// If all the validations satisfy send contact-us request
   @IBAction func buttonSubmitAciton(_ sender: UIButton) {
 
-    if ContactUsFeilds.firstName.isEmpty && ContactUsFeilds.email.isEmpty
-      && ContactUsFeilds
+    if ContactUsFields.firstName.isEmpty && ContactUsFields.email.isEmpty
+      && ContactUsFields
         .subject
         .isEmpty
-      && ContactUsFeilds.message.isEmpty
+      && ContactUsFields.message.isEmpty
     {
 
       UIUtilities.showAlertWithMessage(
         alertMessage: NSLocalizedString(kMessageAllFieldsAreEmpty, comment: "")
       )
-    } else if ContactUsFeilds.firstName.isEmpty {
+    } else if ContactUsFields.firstName.isEmpty {
       UIUtilities.showAlertWithMessage(
         alertMessage: NSLocalizedString(kMessageFirstNameBlank, comment: "")
       )
-    } else if ContactUsFeilds.email.isEmpty {
+    } else if ContactUsFields.email.isEmpty {
       UIUtilities.showAlertWithMessage(
         alertMessage: NSLocalizedString(kMessageEmailBlank, comment: "")
       )
-    } else if ContactUsFeilds.subject.isEmpty {
+    } else if ContactUsFields.subject.isEmpty {
       UIUtilities.showAlertWithMessage(
         alertMessage: NSLocalizedString(kMessageSubjectBlankCheck, comment: "")
       )
-    } else if ContactUsFeilds.message.isEmpty {
+    } else if ContactUsFields.message.isEmpty {
       UIUtilities.showAlertWithMessage(
         alertMessage: NSLocalizedString(kMessageMessageBlankCheck, comment: "")
       )
-    } else if !(Utilities.isValidEmail(testStr: ContactUsFeilds.email)) {
+    } else if !(Utilities.isValidEmail(testStr: ContactUsFields.email)) {
       UIUtilities.showAlertWithMessage(
         alertMessage: NSLocalizedString(kMessageValidEmail, comment: "")
       )
@@ -147,6 +148,7 @@ extension ContactUsViewController: UITableViewDataSource {
       let cell =
         tableView.dequeueReusableCell(withIdentifier: "textviewCell", for: indexPath)
         as! TextviewCell
+      cell.textView?.text = ContactUsFields.message
       return cell
     } else {
 
@@ -166,11 +168,17 @@ extension ContactUsViewController: UITableViewDataSource {
 
       // Cell ContactTextField data setup
       switch textFieldTag {
-      case .FirstName, .Subject:
+      case .FirstName:
         keyBoardType = .default
+        cell.textFieldValue?.text = ContactUsFields.firstName
+
+      case .Subject:
+        keyBoardType = .default
+        cell.textFieldValue?.text = ContactUsFields.subject
+
       case .Email:
         cell.textFieldValue?.text = User.currentUser.emailId!
-        ContactUsFeilds.email = User.currentUser.emailId!
+        ContactUsFields.email = User.currentUser.emailId!
         keyBoardType = .emailAddress
       }
 
@@ -209,7 +217,7 @@ extension ContactUsViewController: UITextViewDelegate {
       textView.textColor = UIColor.lightGray
       textView.tag = 100
     } else {
-      ContactUsFeilds.message = textView.text!
+      ContactUsFields.message = textView.text!
     }
   }
 
@@ -257,15 +265,15 @@ extension ContactUsViewController: UITextFieldDelegate {
     switch tag {
 
     case .Email:
-      ContactUsFeilds.email = textField.text!
+      ContactUsFields.email = textField.text!
       break
 
     case .FirstName:
-      ContactUsFeilds.firstName = textField.text!
+      ContactUsFields.firstName = textField.text!
       break
 
     case .Subject:
-      ContactUsFeilds.subject = textField.text!
+      ContactUsFields.subject = textField.text!
       break
     }
   }

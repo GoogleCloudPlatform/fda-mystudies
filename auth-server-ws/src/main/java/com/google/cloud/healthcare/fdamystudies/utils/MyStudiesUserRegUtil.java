@@ -52,7 +52,8 @@ public class MyStudiesUserRegUtil {
     EMAIL_ID_VERIFIED("EmailId has already verified"),
     INVALID_CLIENTID_OR_SECRET_KEY("Invalid Client Id or Secret Key"),
     INVALID_CLIENT_TOKEN("Invalid client token"),
-    SYSTEM_ERROR_FOUND("System error found"),
+    SYSTEM_ERROR_FOUND(
+        "Sorry, an error has occurred and your request could not be processed. Please try again later."),
     SESSION_EXPIRED_MSG("Session expired."),
     EMAIL_EXISTS("This email has already been used. Please try with different email address."),
     INVALID_INPUT_ERROR_MSG("Invalid input."),

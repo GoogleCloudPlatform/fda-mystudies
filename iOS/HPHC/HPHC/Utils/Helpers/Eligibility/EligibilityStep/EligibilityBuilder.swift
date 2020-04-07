@@ -1,6 +1,7 @@
 // License Agreement for FDA MyStudies
-// Copyright © 2017-2019 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors. Permission is
-// hereby granted, free of charge, to any person obtaining a copy of this software and associated
+// Copyright © 2017-2019 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors.
+// Copyright 2020 Google LLC
+// Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated
 // documentation files (the &quot;Software&quot;), to deal in the Software without restriction, including without
 // limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the
 // Software, and to permit persons to whom the Software is furnished to do so, subject to the following
@@ -30,13 +31,13 @@ let kEligibilityInEligibleDescriptionText = "Sorry, You are Ineligible"
 let kEligibilityVerifiedScreen = "VerifiedScreen"
 let kEligibilityCompletionDescriptionText =
   "Your enrollment token has been successfully validated. You are eligible to join the Study.\nPlease click Continue to proceed to the Consent section."
-let kEligibilityCompletionTitle = "You are Eligible!"
+let kEligibilityCompletionTitle = "Eligibility Confirmed"
 
 let kEligibilityStep = "steps"
 
 let kEligibilityValidateScreen = "ValidatedScreen"
 let kEligibilityValidationDescriptionText =
-  "Your token has been validated. You are eligible to join the study. Please tap Get Started to proceed to the consent section."
+  "Your eligibility to participate in this study has been successfully verified.\nYou may proceed to the next steps."
 let kEligibilityValidationTitle = "Validated!"
 
 let kEligibilityTestInstructionStep = "EligibilityTestInstructionStep"
@@ -45,7 +46,7 @@ let kEligibilityInstructionTestText =
   "Please answer some quick questions to confirm your eligibility for this study."
 
 let kEligibilityCompletionTestDescriptionText =
-  "Based on the answers you provided, you are eligible to participate in this study.\nPlease click Continue to proceed to the Consent section."
+  "Based on the answers you provided, you are eligible to participate in this study.\nYou may proceed to the next steps."
 
 let kEligibilityCorrectAnswer = "answer"
 let kEligibilityCorrectAnswerKey = "key"
@@ -129,12 +130,7 @@ class EligibilityBuilder {
         eligibilityValidationStep.text = kEligibilityValidationDescriptionText
 
         // Branding
-        let brandingDetail = Utilities.getBrandingDetails()
-        if let validationTitle = brandingDetail?[BrandingConstant.ValidatedTitle] as? String {
-          eligibilityValidationStep.title = validationTitle
-        } else {
-          eligibilityValidationStep.title = kEligibilityValidationTitle
-        }
+        eligibilityValidationStep.title = Branding.validatedTitle
 
         eligibilityValidationStep.image = #imageLiteral(resourceName: "successBlueBig")
         stepsArray?.append(eligibilityValidationStep)
