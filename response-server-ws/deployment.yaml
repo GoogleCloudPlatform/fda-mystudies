@@ -37,14 +37,26 @@ spec:
               value: "heroes-hat-dev"
             - name: AUTH_SERVER_URL
               value: "35.243.237.139:50000"
-            - name: REGISTRATION_CLIENT_ID
-              value: "test_client_id_rs"
-            - name: REGISTRATION_CLIENT_SECRET
-              value: "test_secret_key"
-            - name: WCP_USER
-              value: "com.labkey.fda"
-            - name: WCP_PASS
-              value: "83d92ad3-ec27-424b-af92-fa7aa9a88c7b"
+            - name: REGISTRATION_CLIENT_ID 
+              valueFrom: 
+                secretKeyRef: 
+                  name: response-server-credentials
+                  key: REGISTRATION_CLIENT_ID 
+            - name: REGISTRATION_CLIENT_SECRET 
+              valueFrom: 
+                secretKeyRef: 
+                  name: response-server-credentials
+                  key: REGISTRATION_CLIENT_SECRET 
+            - name: WCP_USER 
+              valueFrom: 
+                secretKeyRef: 
+                  name: response-server-credentials
+                  key: WCP_USER 
+            - name: WCP_PASS 
+              valueFrom: 
+                secretKeyRef: 
+                  name: response-server-credentials
+                  key: WCP_PASS 
             - name: WCP_STUDY_METADATA_SERVER_URL
               value: "34.74.32.124:50000"
             - name: REGISTRATION_SERVER_URL
