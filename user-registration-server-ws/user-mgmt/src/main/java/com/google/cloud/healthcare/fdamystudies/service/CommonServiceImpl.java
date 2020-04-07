@@ -115,9 +115,9 @@ public class CommonServiceImpl implements CommonService {
     ActivityLog activityLog = new ActivityLog();
     try {
       activityLog.setAuthUserId(userId);
-      activityLog.setActivityName(activityName);
-      activityLog.setActivtyDesc(activtyDesc);
-      activityLog.setActivityDateTime(LocalDateTime.now());
+      activityLog.setEvent(activityName);
+      activityLog.setDescription(activtyDesc);
+      activityLog.setCreatedDateTime(LocalDateTime.now());
       activityLogRepository.save(activityLog);
     } catch (Exception e) {
       logger.error("CommonServiceImpl createActivityLog() - error ", e);
