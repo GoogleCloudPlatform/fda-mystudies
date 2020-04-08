@@ -15,13 +15,11 @@
 
 package com.harvard.utils.version;
 
-import android.content.Context;
-import android.content.pm.PackageInfo;
-import android.content.pm.PackageManager;
 import android.os.AsyncTask;
 import com.google.gson.Gson;
 import com.google.gson.stream.JsonReader;
 import com.harvard.AppConfig;
+import com.harvard.BuildConfig;
 import com.harvard.utils.Logger;
 import com.harvard.utils.URLs;
 import com.harvard.webservicemodule.apihelper.HttpRequest;
@@ -34,14 +32,12 @@ public class VersionChecker extends AsyncTask<String, String, String> {
   private String newVersion;
   private boolean force = false;
   private Upgrade upgrade;
-  private Context context;
-  private String versionUrl = URLs.BASE_URL_WCP_SERVER + "versionInfo";
+  private String versionUrl = URLs.BASE_URL_WCP_SERVER + URLs.VERSION_INFO;
   public static String PLAY_STORE_URL =
-      "https://play.google.com/store/apps/details?id=" + AppConfig.PackageName + "&hl=en";
+      "https://play.google.com/store/apps/details?id=" + AppConfig.PackageName;
 
-  public VersionChecker(Upgrade upgrade, Context context) {
+  public VersionChecker(Upgrade upgrade) {
     this.upgrade = upgrade;
-    this.context = context;
   }
 
   @Override
@@ -78,9 +74,9 @@ public class VersionChecker extends AsyncTask<String, String, String> {
   @Override
   protected void onPostExecute(String s) {
     super.onPostExecute(s);
-    String currentVersion = currentVersion();
-    if ((currentVersion != null && currentVersion.equalsIgnoreCase(newVersion))
-        || newVersion == null) {
+    Version curr_ver = new Version(currentVersion());
+    Version new_ver = new Version(newVersion);
+    if (curr_ver.equals(new_ver) || curr_ver.compareTo(new_ver) > 0) {
       upgrade.isUpgrade(false, newVersion, force);
     } else {
       upgrade.isUpgrade(true, newVersion, force);
@@ -92,16 +88,6 @@ public class VersionChecker extends AsyncTask<String, String, String> {
   }
 
   public String currentVersion() {
-    PackageInfo pInfo = null;
-    try {
-      pInfo = context.getPackageManager().getPackageInfo(context.getPackageName(), 0);
-    } catch (PackageManager.NameNotFoundException e) {
-      Logger.log(e);
-    }
-    if (pInfo == null) {
-      return null;
-    } else {
-      return pInfo.versionName;
-    }
+    return BuildConfig.VERSION_NAME + "." + BuildConfig.VERSION_CODE;
   }
 }

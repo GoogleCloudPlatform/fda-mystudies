@@ -824,7 +824,7 @@ public class StudyInfoActivity extends AppCompatActivity implements ApiCall.OnAs
           URLs.UPDATE_STUDY_PREFERENCE,
           "",
           jsonObject.toString(),
-          "registration",
+          "RegistrationServerEnrollment",
           "",
           studyId,
           "");

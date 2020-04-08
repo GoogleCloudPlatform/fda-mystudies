@@ -312,8 +312,6 @@ public class ResourcesWebViewActivity extends AppCompatActivity {
         InputStream input = new BufferedInputStream(url.openStream(), 8192);
 
         // Output stream to write file
-        //                OutputStream output = new
-        // FileOutputStream("/storage/emulated/0/SamplePDF/downloadedfile.pdf");
         OutputStream output = new FileOutputStream(filePath + fileName + ".pdf");
 
         byte data[] = new byte[1024];

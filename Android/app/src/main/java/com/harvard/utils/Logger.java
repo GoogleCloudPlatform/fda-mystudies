@@ -9,7 +9,7 @@
 package com.harvard.utils;
 
 import android.util.Log;
-import com.crashlytics.android.BuildConfig;
+import com.harvard.BuildConfig;
 
 /**
  * Android Log wrapper class that can use {@link String#format(String, Object...)} in logging

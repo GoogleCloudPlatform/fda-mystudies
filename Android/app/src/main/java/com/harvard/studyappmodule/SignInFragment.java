@@ -148,8 +148,7 @@ public class SignInFragment extends Fragment implements ApiCall.OnAsyncRequestCo
         new ClickableSpan() {
           @Override
           public void updateDrawState(TextPaint ds) {
-            ds.setColor(
-                ContextCompat.getColor(mContext, R.color.colorPrimary));
+            ds.setColor(ContextCompat.getColor(mContext, R.color.colorPrimary));
             ds.setUnderlineText(false);
           }
 
@@ -181,8 +180,7 @@ public class SignInFragment extends Fragment implements ApiCall.OnAsyncRequestCo
 
           @Override
           public void updateDrawState(TextPaint ds) {
-            ds.setColor(
-                ContextCompat.getColor(mContext, R.color.colorPrimary));
+            ds.setColor(ContextCompat.getColor(mContext, R.color.colorPrimary));
             ds.setUnderlineText(false);
           }
 
@@ -495,7 +493,7 @@ public class SignInFragment extends Fragment implements ApiCall.OnAsyncRequestCo
     JSONObject infoJson = new JSONObject();
     try {
       infoJson.put("os", "android");
-      infoJson.put("appVersion", BuildConfig.VERSION_NAME);
+      infoJson.put("appVersion", BuildConfig.VERSION_NAME + "." + BuildConfig.VERSION_CODE);
       infoJson.put("deviceToken", deviceToken);
 
       jsonObjBody.put("info", infoJson);

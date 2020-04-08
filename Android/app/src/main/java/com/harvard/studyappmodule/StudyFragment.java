@@ -69,12 +69,9 @@ import com.harvard.webservicemodule.apihelper.ApiCall;
 import com.harvard.webservicemodule.apihelper.ConnectionDetector;
 import com.harvard.webservicemodule.apihelper.HttpRequest;
 import com.harvard.webservicemodule.apihelper.Responsemodel;
-import com.harvard.webservicemodule.events.RegistrationServerConfigEvent;
 import com.harvard.webservicemodule.events.RegistrationServerConsentConfigEvent;
 import com.harvard.webservicemodule.events.RegistrationServerEnrollmentConfigEvent;
 import com.harvard.webservicemodule.events.WCPConfigEvent;
-import com.itextpdf.text.Image;
-import com.itextpdf.text.pdf.PdfPCell;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -871,25 +868,6 @@ public class StudyFragment extends Fragment implements ApiCall.OnAsyncRequestCom
               AppController.getHelperSharedPreference()
                   .readPreference(mContext, getResources().getString(R.string.clientToken), ""));
 
-          // temp
-          //          AppController.getHelperSharedPreference()
-          //              .writePreference(mContext, "firstStudyState", "Done");
-          //          AppController.getHelperProgressDialog().dismissDialog();
-          //          onItemsLoadComplete();
-          //          webserviceCall = false;
-          //          setStudyList(false);
-          //
-          //          StudyData studies = new StudyData();
-          //          studies.setUserId(
-          //              AppController.getHelperSharedPreference()
-          //                  .readPreference(mContext, getString(R.string.userid), ""));
-          //
-          //          StudyData studyData =
-          // dbServiceSubscriber.getStudyPreferencesListFromDB(realm);
-          //          if (studyData == null) {
-          //            dbServiceSubscriber.saveStudyPreferencesToDB(mContext, studies);
-          //          }
-
           RegistrationServerEnrollmentConfigEvent registrationServerEnrollmentConfigEvent =
               new RegistrationServerEnrollmentConfigEvent(
                   "get",
@@ -1067,7 +1045,6 @@ public class StudyFragment extends Fragment implements ApiCall.OnAsyncRequestCom
         AppController.getHelperSharedPreference()
             .readPreference(mContext, getResources().getString(R.string.userid), ""));
     String url = URLs.CONSENTPDF + "?studyId=" + mStudyId + "&consentVersion=";
-    //    String url = URLs.CONSENTPDF + "?studyId=" + "Test" + "&consentVersion=";
     RegistrationServerConsentConfigEvent registrationServerConsentConfigEvent =
         new RegistrationServerConsentConfigEvent(
             "get",
@@ -1351,8 +1328,6 @@ public class StudyFragment extends Fragment implements ApiCall.OnAsyncRequestCom
       // offline handling
       if (responseCode == UPDATE_PREFERENCES) {
         realm.beginTransaction();
-        //
-        // studyListArrayList.get(lastUpdatedPosition).setBookmarked(lastUpdatedBookMark);
         if (mSearchResultList.size() > 0) {
           // searchlist
           int pos = getFilterdArrayListPosition(lastUpdatedStudyId);
@@ -1440,7 +1415,7 @@ public class StudyFragment extends Fragment implements ApiCall.OnAsyncRequestCom
           URLs.UPDATE_STUDY_PREFERENCE,
           "",
           jsonObject.toString(),
-          "registration",
+          "RegistrationServerEnrollment",
           "",
           studyId,
           "");
@@ -1483,20 +1458,6 @@ public class StudyFragment extends Fragment implements ApiCall.OnAsyncRequestCom
         startActivity(intent);
       }
     }
-  }
-
-  public PdfPCell getImage(Image image, int alignment) {
-    PdfPCell cell;
-    if (image != null) {
-      cell = new PdfPCell(image);
-    } else {
-      cell = new PdfPCell();
-    }
-    cell.setPadding(10);
-    cell.setHorizontalAlignment(alignment);
-    cell.setVerticalAlignment(PdfPCell.ALIGN_BOTTOM);
-    cell.setBorder(PdfPCell.NO_BORDER);
-    return cell;
   }
 
   @Override

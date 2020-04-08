@@ -37,7 +37,7 @@ import com.harvard.utils.SharedPreferenceHelper;
 
 public class PasscodeSetupActivity extends AppCompatActivity {
   private RelativeLayout mBackBtn;
-  private AppCompatTextView mTitle, hrLine1;
+  private AppCompatTextView mTitle, mSetup, hrLine1;
   private RelativeLayout mCancelBtn;
   private PasscodeView mPasscodeView;
   private TextView forgot;
@@ -60,6 +60,7 @@ public class PasscodeSetupActivity extends AppCompatActivity {
   private void initializeXMLId() {
     mBackBtn = (RelativeLayout) findViewById(R.id.backBtn);
     mTitle = (AppCompatTextView) findViewById(R.id.title);
+    mSetup = (AppCompatTextView) findViewById(R.id.setup_info);
     hrLine1 = (AppCompatTextView) findViewById(R.id.hrLine1);
     mCancelBtn = (RelativeLayout) findViewById(R.id.cancelBtn);
     mPasscodeView = (PasscodeView) findViewById(R.id.passcode_view);
@@ -74,6 +75,7 @@ public class PasscodeSetupActivity extends AppCompatActivity {
     hrLine1.setVisibility(View.GONE);
     mPasscodeDesc.setVisibility(View.INVISIBLE);
     mTitle.setText("");
+    mSetup.setText("");
     mPasscodeTitle.setText(getString(R.string.enter_your_passcode));
   }
 
