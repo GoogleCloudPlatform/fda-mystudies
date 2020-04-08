@@ -16,6 +16,5 @@ import lombok.Setter;
 @Setter
 @Getter
 public class DeactivateAcctBean {
-  //  private List<String> deleteData;
   private List<StudyReqBean> deleteData;
 }

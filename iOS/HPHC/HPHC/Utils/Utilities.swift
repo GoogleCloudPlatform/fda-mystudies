@@ -1,6 +1,7 @@
 // License Agreement for FDA MyStudies
-// Copyright © 2017-2019 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors. Permission is
-// hereby granted, free of charge, to any person obtaining a copy of this software and associated
+// Copyright © 2017-2019 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors.
+// Copyright 2020 Google LLC
+// Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated
 // documentation files (the &quot;Software&quot;), to deal in the Software without restriction, including without
 // limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the
 // Software, and to permit persons to whom the Software is furnished to do so, subject to the following
@@ -77,15 +78,6 @@ enum iOSVersion {
 }
 
 class Utilities: NSObject {
-
-  class func getBrandingDetails() -> NSDictionary? {
-
-    var infoDict: NSDictionary?
-    if let path = Bundle.main.path(forResource: "Branding", ofType: "plist") {
-      infoDict = NSDictionary(contentsOfFile: path)
-    }
-    return infoDict!
-  }
 
   class func isStandaloneApp() -> Bool {
 
@@ -246,16 +238,9 @@ class Utilities: NSObject {
   }
 
   class func isValidEmail(testStr: String) -> Bool {
-
-    let emailRegEx = "[A-Z0-9a-z._-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}"
-
-    let emailTest = NSPredicate(format: "SELF MATCHES %@", emailRegEx)
-
-    if testStr.count > 255 {
-      return false
-    } else {
-      return emailTest.evaluate(with: testStr)
-    }
+    let emailRegEx = "[A-Z0-9a-z._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,64}"
+    let emailPred = NSPredicate(format:"SELF MATCHES %@", emailRegEx)
+    return emailPred.evaluate(with: testStr)
   }
 
   /// checks all the validations for password

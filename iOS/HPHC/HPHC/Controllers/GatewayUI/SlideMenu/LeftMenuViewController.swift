@@ -59,6 +59,7 @@ class LeftMenuViewController: UIViewController, LeftMenuProtocol {
 
   @IBOutlet weak var labelVersion: UILabel!
   @IBOutlet weak var labelProductName: UILabel!
+  @IBOutlet weak var labelPoweredBy: UILabel!
   @IBOutlet weak var tableHeaderView: UIView!
   @IBOutlet weak var tableFooterView: UIView!
   @IBOutlet weak var buttonSignOut: UIButton?
@@ -106,16 +107,11 @@ class LeftMenuViewController: UIViewController, LeftMenuProtocol {
 
     self.view.isHidden = true
 
-    let branding = Utilities.getBrandingDetails()
-    shouldAllowToGiveFeedback = branding!["AllowFeedback"] as! Bool
+    shouldAllowToGiveFeedback = Branding.allowFeedback
     self.createLeftmenuItems()
 
-    var infoDict: NSDictionary?
-    if let path = Bundle.main.path(forResource: "Info", ofType: "plist") {
-      infoDict = NSDictionary(contentsOfFile: path)
-    }
-    let navTitle = infoDict!["ProductTitleName"] as! String
-    labelProductName.text = navTitle
+    labelProductName.text = Branding.navigationTitleName
+    labelPoweredBy.text = Branding.poweredByTitleName
 
     self.tableView.separatorColor = UIColor(
       red: 224 / 255,

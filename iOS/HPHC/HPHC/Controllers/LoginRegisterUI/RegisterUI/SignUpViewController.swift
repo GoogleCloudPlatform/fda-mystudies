@@ -1,6 +1,7 @@
 // License Agreement for FDA MyStudies
-// Copyright © 2017-2019 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors. Permission is
-// hereby granted, free of charge, to any person obtaining a copy of this software and associated
+// Copyright © 2017-2019 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors.
+// Copyright 2020 Google LLC
+// Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated
 // documentation files (the &quot;Software&quot;), to deal in the Software without restriction, including without
 // limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the
 // Software, and to permit persons to whom the Software is furnished to do so, subject to the following
@@ -91,13 +92,9 @@ class SignUpViewController: UIViewController {
     // unhide navigationbar
     self.navigationController?.setNavigationBarHidden(false, animated: true)
 
-    let brandingDetail = Utilities.getBrandingDetails()
     TermsAndPolicy.currentTermsAndPolicy = TermsAndPolicy()
-    guard let policyURL = brandingDetail?[BrandingConstant.PrivacyPolicyURL] as? String,
-      let terms = brandingDetail?[BrandingConstant.TermsAndConditionURL] as? String
-    else {
-      return
-    }
+    let policyURL = Branding.privacyPolicyURL
+    let terms = Branding.termsAndConditionURL
     TermsAndPolicy.currentTermsAndPolicy?.initWith(terms: terms, policy: policyURL)
     self.agreeToTermsAndConditions()
   }
@@ -314,15 +311,16 @@ extension SignUpViewController: UITextViewDelegate {
     -> Bool
   {
 
-    var link: String = (TermsAndPolicy.currentTermsAndPolicy?.termsURL)!  //kTermsAndConditionLink
+    var link: String = TermsAndPolicy.currentTermsAndPolicy?.termsURL ?? ""
     var title: String = kNavigationTitleTerms
     if URL.absoluteString == TermsAndPolicy.currentTermsAndPolicy?.policyURL
       && characterRange
         .length == String("Privacy Policy").count
     {
-      link = (TermsAndPolicy.currentTermsAndPolicy?.policyURL)!  // kPrivacyPolicyLink
+      link = TermsAndPolicy.currentTermsAndPolicy?.policyURL ?? ""
       title = kNavigationTitlePrivacyPolicy
     }
+    guard !link.isEmpty else { return false }
     let loginStoryboard = UIStoryboard.init(name: "Main", bundle: Bundle.main)
     let webViewController =
       (loginStoryboard.instantiateViewController(withIdentifier: "WebViewController")

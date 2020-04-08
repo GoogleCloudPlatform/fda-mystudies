@@ -52,9 +52,9 @@ public class VerifyEmailIdController {
       @RequestHeader("clientToken") String clientToken,
       @RequestHeader("accessToken") String accessToken,
       @Context HttpServletResponse response) {
-
     logger.info("VerifyEmailIdController verifyEmailId() - starts");
     VerifyEmailIdResponse verifyEmailIdResponse = null;
+    String verificationCode = "";
 
     if ((clientToken.length() == 0 || StringUtils.isEmpty(clientToken))
         || (accessToken.length() == 0 || StringUtils.isEmpty(accessToken))
@@ -75,8 +75,8 @@ public class VerifyEmailIdController {
       return new ResponseEntity<>(verifyEmailIdResponse, HttpStatus.BAD_REQUEST);
     }
     try {
-      VerifyCodeResponse serviceResult =
-          userDetailsService.verifyCode(verificationForm.getCode(), userId);
+      verificationCode = verificationForm.getCode().trim(); // trim the surrounding whitespace.
+      VerifyCodeResponse serviceResult = userDetailsService.verifyCode(verificationCode, userId);
 
       if (serviceResult != null && Boolean.TRUE.equals(serviceResult.getIsCodeVerified())) {
         UpdateAccountInfo accountStatus = new UpdateAccountInfo();

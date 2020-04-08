@@ -17,7 +17,6 @@ public class WithdrawFromStudyBean {
 
   private String participantId;
   private String studyId;
-  //  private boolean delete;
   private String delete;
   private List<String> studyIds;
 }
