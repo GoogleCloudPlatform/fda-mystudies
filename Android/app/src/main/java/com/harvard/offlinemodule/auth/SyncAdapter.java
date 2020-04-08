@@ -36,7 +36,6 @@ import com.harvard.utils.ActiveTaskService;
 import com.harvard.utils.AppController;
 import com.harvard.utils.Logger;
 import com.harvard.webservicemodule.apihelper.ApiCall;
-import com.harvard.webservicemodule.apihelper.ApiCallResponseServer;
 import com.harvard.webservicemodule.events.RegistrationServerEnrollmentConfigEvent;
 import com.harvard.webservicemodule.events.ResponseServerConfigEvent;
 import org.json.JSONException;
@@ -46,7 +45,7 @@ import io.realm.Realm;
 import io.realm.RealmResults;
 
 public class SyncAdapter extends AbstractThreadedSyncAdapter
-    implements ApiCall.OnAsyncRequestComplete, ApiCallResponseServer.OnAsyncRequestComplete {
+    implements ApiCall.OnAsyncRequestComplete {
 
   private Context mContext;
   private int UPDATE_USERPREFERENCE_RESPONSECODE = 102;
@@ -94,12 +93,12 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter
       dbServiceSubscriber = new DBServiceSubscriber();
 
       RealmResults<OfflineData> results = dbServiceSubscriber.getOfflineData(mRealm);
-      if (results.size() > 0) {
+      if (!results.isEmpty()) {
         for (int i = 0; i < results.size(); i++) {
-          String httpMethod = results.get(i).getHttpMethod().toString();
-          String url = results.get(i).getUrl().toString();
-          String jsonObject = results.get(i).getJsonParam().toString();
-          String serverType = results.get(i).getServerType().toString();
+          String httpMethod = results.get(i).getHttpMethod();
+          String url = results.get(i).getUrl();
+          String jsonObject = results.get(i).getJsonParam();
+          String serverType = results.get(i).getServerType();
           updateServer(httpMethod, url, jsonObject, serverType);
           break;
         }
@@ -121,7 +120,7 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter
       Logger.log(e);
     }
 
-    if (serverType.equalsIgnoreCase("registration")) {
+    if (serverType.equalsIgnoreCase("RegistrationServerEnrollment")) {
       HashMap<String, String> header = new HashMap();
       header.put(
           "auth",
@@ -149,7 +148,16 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter
           registrationServerEnrollmentConfigEvent);
       UserModulePresenter userModulePresenter = new UserModulePresenter();
       userModulePresenter.performUpdateUserPreference(updatePreferenceEvent);
-    } else if (serverType.equalsIgnoreCase("response")) {
+    } else if (serverType.equalsIgnoreCase("ResponseServer")) {
+      HashMap<String, String> header = new HashMap();
+      header.put(
+          "auth",
+          AppController.getHelperSharedPreference()
+              .readPreference(mContext, mContext.getResources().getString(R.string.auth), ""));
+      header.put(
+          "userId",
+          AppController.getHelperSharedPreference()
+              .readPreference(mContext, mContext.getResources().getString(R.string.userid), ""));
       ProcessResponseEvent processResponseEvent = new ProcessResponseEvent();
       ResponseServerConfigEvent responseServerConfigEvent =
           new ResponseServerConfigEvent(
@@ -159,7 +167,7 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter
               mContext,
               LoginData.class,
               null,
-              null,
+              header,
               jsonObject,
               false,
               this);
@@ -180,16 +188,4 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter
 
   @Override
   public void asyncResponseFailure(int responseCode, String errormsg, String statusCode) {}
-
-  @Override
-  public <T> void asyncResponse(T response, int responseCode, String serverType) {
-    if (responseCode == UPDATE_USERPREFERENCE_RESPONSECODE) {
-      dbServiceSubscriber.removeOfflineData(mContext);
-      getPendingData();
-    }
-  }
-
-  @Override
-  public <T> void asyncResponseFailure(
-      int responseCode, String errormsg, String statusCode, T response) {}
 }

@@ -20,8 +20,10 @@ import com.harvard.BuildConfig;
 public class URLs {
   public static String BASE_URL_WCP_SERVER = BuildConfig.BASE_URL_WCP_SERVER;
   public static String BASE_URL_REGISTRATION_SERVER = BuildConfig.BASE_URL_REGISTRATION_SERVER;
-  public static String BASE_URL_REGISTRATION_CONSENT_SERVER = BuildConfig.BASE_URL_REGISTRATION_CONSENT_SERVER;
-  public static String BASE_URL_REGISTRATION_ENROLLMENT_SERVER = BuildConfig.BASE_URL_REGISTRATION_ENROLLMENT_SERVER;
+  public static String BASE_URL_REGISTRATION_CONSENT_SERVER =
+      BuildConfig.BASE_URL_REGISTRATION_CONSENT_SERVER;
+  public static String BASE_URL_REGISTRATION_ENROLLMENT_SERVER =
+      BuildConfig.BASE_URL_REGISTRATION_ENROLLMENT_SERVER;
   public static String BASE_URL_AUTH_SERVER = BuildConfig.BASE_URL_AUTH_SERVER;
   public static String BASE_URL_RESPONSE_SERVER = BuildConfig.BASE_URL_RESPONSE_SERVER;
 
@@ -39,7 +41,6 @@ public class URLs {
   public static String CONFIRM_REGISTER_USER = "verifyEmailId";
   public static String RESEND_CONFIRMATION = "resendConfirmation";
   public static String DELETE_ACCOUNT = "deactivate";
-
   public static String WITHDRAW = "withdrawfromstudy";
 
   // Registration Enrollment Server
@@ -66,12 +67,11 @@ public class URLs {
   public static String NOTIFICATIONS = "notifications";
   public static String DASHBOARD_INFO = "studyDashboard";
   public static String GET_CONSENT_DOC = "consentDocument";
+  public static String VERSION_INFO = "versionInfo";
 
   // Response server
   public static String PROCESS_RESPONSE = "participant/process-response";
   public static String PROCESSRESPONSEDATA = BASE_URL_RESPONSE_SERVER + "participant/getresponse?";
   public static String UPDATE_ACTIVITY_PREFERENCE = "participant/update-activity-state";
   public static String ACTIVITY_STATE = "participant/get-activity-state";
-
-  public static String WITHDRAWFROMSTUDY = "withdrawFromStudy";
 }

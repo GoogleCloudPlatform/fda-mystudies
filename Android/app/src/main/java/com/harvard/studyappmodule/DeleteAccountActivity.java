@@ -31,7 +31,6 @@ import com.harvard.R;
 import com.harvard.storagemodule.DBServiceSubscriber;
 import com.harvard.studyappmodule.events.DeleteAccountEvent;
 import com.harvard.studyappmodule.events.GetUserStudyInfoEvent;
-import com.harvard.studyappmodule.events.WithdrawFromStudyEvent;
 import com.harvard.studyappmodule.studymodel.DeleteAccountData;
 import com.harvard.studyappmodule.studymodel.StudyHome;
 import com.harvard.studyappmodule.studymodel.StudyList;
@@ -43,9 +42,7 @@ import com.harvard.utils.Logger;
 import com.harvard.utils.SharedPreferenceHelper;
 import com.harvard.utils.URLs;
 import com.harvard.webservicemodule.apihelper.ApiCall;
-import com.harvard.webservicemodule.apihelper.ApiCallResponseServer;
 import com.harvard.webservicemodule.events.RegistrationServerConfigEvent;
-import com.harvard.webservicemodule.events.ResponseServerConfigEvent;
 import com.harvard.webservicemodule.events.WCPConfigEvent;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -56,7 +53,7 @@ import io.realm.Realm;
 import io.realm.RealmResults;
 
 public class DeleteAccountActivity extends AppCompatActivity
-    implements ApiCall.OnAsyncRequestComplete, ApiCallResponseServer.OnAsyncRequestComplete {
+    implements ApiCall.OnAsyncRequestComplete {
   private RelativeLayout mBackBtn;
   private AppCompatTextView mTitle;
   private View mHrLine;
@@ -73,7 +70,6 @@ public class DeleteAccountActivity extends AppCompatActivity
   private boolean mNoDataFlag = false;
   private int mTempPos;
   private static final int STUDY_INFO = 10;
-  private static final int WITHDRAWFROMSTUDY = 105;
   private RealmResults<Studies> mRealmStudie;
   private DBServiceSubscriber mDBServiceSubscriber;
   private Realm mRealm;
@@ -152,9 +148,14 @@ public class DeleteAccountActivity extends AppCompatActivity
                   noData = true;
                 }
               }
+            } else {
+              noData = true;
             }
-            AppController.getHelperProgressDialog().showProgress(DeleteAccountActivity.this, "", "", false);
-            deactivateAccount();
+            if (noData) {
+              AppController.getHelperProgressDialog()
+                  .showProgress(DeleteAccountActivity.this, "", "", false);
+              deactivateAccount();
+            }
           }
         });
   }
@@ -318,35 +319,6 @@ public class DeleteAccountActivity extends AppCompatActivity
     mHrLine.setVisibility(View.VISIBLE);
   }
 
-  public void responseServerWithdrawFromStudy(String mStudyId, String flag) {
-    AppController.getHelperProgressDialog().showProgress(DeleteAccountActivity.this, "", "", false);
-    try {
-      Studies studies = mDBServiceSubscriber.getParticipantId(mStudyId, mRealm);
-      HashMap<String, String> params = new HashMap<>();
-      params.put("participantId", studies.getParticipantId());
-      params.put("delete", flag);
-      WithdrawFromStudyEvent withdrawFromStudyEvent = new WithdrawFromStudyEvent();
-      ResponseServerConfigEvent responseServerConfigEvent =
-          new ResponseServerConfigEvent(
-              "post_json",
-              URLs.WITHDRAWFROMSTUDY,
-              WITHDRAWFROMSTUDY,
-              DeleteAccountActivity.this,
-              LoginData.class,
-              params,
-              null,
-              null,
-              false,
-              this);
-      withdrawFromStudyEvent.setResponseServerConfigEvent(responseServerConfigEvent);
-      StudyModulePresenter studyModulePresenter = new StudyModulePresenter();
-      studyModulePresenter.performWithdrawFromStudy(withdrawFromStudyEvent);
-    } catch (Exception e) {
-      AppController.getHelperProgressDialog().dismissDialog();
-      Logger.log(e);
-    }
-  }
-
   @Override
   public <T> void asyncResponse(T response, int responseCode) {
     if (responseCode != STUDY_INFO) AppController.getHelperProgressDialog().dismissDialog();
@@ -414,14 +386,19 @@ public class DeleteAccountActivity extends AppCompatActivity
     String json = gson.toJson(deleteAccountData);
     JSONObject obj = null;
     try {
-      obj = new JSONObject(json);
-      if (mRealmStudie.size() > 0) {
-        JSONArray jsonArray1 = new JSONArray();
-        for (int i = 0; i < mRealmStudie.size(); i++) {
-          jsonArray1.put(mRealmStudie.get(i).getStudyId());
+      obj = new JSONObject();
+      JSONArray jsonArray1 = new JSONArray();
+      if (mStudyIdList.size() > 0) {
+        JSONObject jsonObject;
+        for (int i = 0; i < mStudyIdList.size(); i++) {
+          jsonObject = new JSONObject();
+          jsonObject.put("studyId", mStudyIdList.get(i));
+          jsonObject.put("delete", mStoreWithdrawalTypeDeleteFlag.get(i));
+
+          jsonArray1.put(jsonObject);
         }
-        obj.put("deleteData", jsonArray1);
       }
+      obj.put("deleteData", jsonArray1);
     } catch (JSONException e) {
       Logger.log(e);
     }
@@ -455,37 +432,6 @@ public class DeleteAccountActivity extends AppCompatActivity
     } else {
       Toast.makeText(DeleteAccountActivity.this, errormsg, Toast.LENGTH_SHORT).show();
     }
-  }
-
-  @Override
-  public <T> void asyncResponse(T response, int responseCode, String serverType) {
-    if (responseCode != WITHDRAWFROMSTUDY) AppController.getHelperProgressDialog().dismissDialog();
-    if (responseCode == WITHDRAWFROMSTUDY) {
-      try {
-        // remove the value's because already executed and we have to get next studyId and flag
-        // value
-        mDBServiceSubscriber.deleteActivityRunsFromDbByStudyID(this, mStudyIdList.get(0));
-        mDBServiceSubscriber.deleteResponseFromDb(mStudyIdList.get(0), mRealm);
-        mStoreWithdrawalTypeDeleteFlag.remove(0);
-        mStudyIdList.remove(0);
-        if (mStoreWithdrawalTypeDeleteFlag.isEmpty()) {
-          // for every studyid called responseServerWithdrawFromStudy services then call
-          // registration api
-          deactivateAccount();
-        } else {
-          responseServerWithdrawFromStudy(
-              mStudyIdList.get(0), mStoreWithdrawalTypeDeleteFlag.get(0));
-        }
-      } catch (Exception e) {
-        Logger.log(e);
-      }
-    }
-  }
-
-  @Override
-  public <T> void asyncResponseFailure(
-      int responseCode, String errormsg, String statusCode, T response) {
-    AppController.getHelperProgressDialog().dismissDialog();
   }
 
   @Override
