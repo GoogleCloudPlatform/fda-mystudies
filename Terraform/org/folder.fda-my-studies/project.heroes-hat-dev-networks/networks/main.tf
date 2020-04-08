@@ -16,9 +16,13 @@ module "private" {
   # All the clusters can be in the same network and subnet.
   subnets = [
     {
-      subnet_name   = local.gke_clusters_subnet_name
-      subnet_ip     = "10.0.0.0/17"
-      subnet_region = var.gke_region
+      subnet_name      = local.gke_clusters_subnet_name
+      subnet_ip        = "10.0.0.0/17"
+      subnet_region    = var.gke_region
+      subnet_flow_logs = "true"
+
+      # Needed for access to Cloud SQL.
+      subnet_private_access = "true"
     },
   ]
 
