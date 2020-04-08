@@ -9,5 +9,5 @@ repo_name                     = "fda-mystudies"
 cloudbuild_trigger_branch     = "terraform" # Change to "early-access" or the final prod branch.
 continuous_deployment_enabled = true
 devops_owners = [
-    "group:rocketturtle-gcp-admin@rocketturtle.net",
+  "group:rocketturtle-gcp-admin@rocketturtle.net",
 ]
