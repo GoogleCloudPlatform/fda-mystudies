@@ -39,7 +39,6 @@ import com.harvard.usermodule.UserModulePresenter;
 import com.harvard.usermodule.event.UpdatePreferenceEvent;
 import com.harvard.usermodule.webservicemodel.LoginData;
 import com.harvard.webservicemodule.apihelper.ApiCall;
-import com.harvard.webservicemodule.apihelper.ApiCallResponseServer;
 import com.harvard.webservicemodule.events.RegistrationServerEnrollmentConfigEvent;
 import com.harvard.webservicemodule.events.ResponseServerConfigEvent;
 import org.json.JSONException;
@@ -49,8 +48,7 @@ import java.util.HashMap;
 import io.realm.Realm;
 import io.realm.RealmResults;
 
-public class ActiveTaskService extends Service
-    implements ApiCall.OnAsyncRequestComplete, ApiCallResponseServer.OnAsyncRequestComplete {
+public class ActiveTaskService extends Service implements ApiCall.OnAsyncRequestComplete {
   private int sec;
   private Thread t;
   private int UPDATE_USERPREFERENCE_RESPONSECODE = 102;
@@ -76,7 +74,7 @@ public class ActiveTaskService extends Service
         Bitmap icon = BitmapFactory.decodeResource(getResources(), R.mipmap.ic_launcher);
         Notification notification =
             new NotificationCompat.Builder(this)
-                .setContentTitle(getResources().getString(R.string.prject_name))
+                .setContentTitle(getResources().getString(R.string.app_name))
                 .setTicker("Sync adapter")
                 .setContentText("Syncing offline data")
                 .setChannelId(FDAApplication.NOTIFICATION_CHANNEL_ID_SERVICE)
@@ -94,7 +92,7 @@ public class ActiveTaskService extends Service
           Bitmap icon = BitmapFactory.decodeResource(getResources(), R.mipmap.ic_launcher);
           Notification notification =
               new NotificationCompat.Builder(this)
-                  .setContentTitle(getResources().getString(R.string.prject_name))
+                  .setContentTitle(getResources().getString(R.string.app_name))
                   .setTicker(getResources().getString(R.string.fetal_kick_recorder_activity))
                   .setContentText(
                       getResources().getString(R.string.fetal_kick_recorder_activity_in_progress))
@@ -122,7 +120,7 @@ public class ActiveTaskService extends Service
                             .setSmallIcon(R.mipmap.ic_launcher)
                             .setLargeIcon(
                                 BitmapFactory.decodeResource(getResources(), R.mipmap.ic_launcher))
-                            .setContentTitle(getResources().getString(R.string.prject_name))
+                            .setContentTitle(getResources().getString(R.string.app_name))
                             .setContentText(getString(R.string.activetaskremindertxt))
                             .setChannelId(FDAApplication.NOTIFICATION_CHANNEL_ID_SERVICE);
 
@@ -191,11 +189,11 @@ public class ActiveTaskService extends Service
       RealmResults<OfflineData> results = dbServiceSubscriber.getOfflineData(mRealm);
       if (!results.isEmpty()) {
         for (int i = 0; i < results.size(); i++) {
-          String httpMethod = results.get(i).getHttpMethod().toString();
-          String url = results.get(i).getUrl().toString();
-          String normalParam = results.get(i).getNormalParam().toString();
-          String jsonObject = results.get(i).getJsonParam().toString();
-          String serverType = results.get(i).getServerType().toString();
+          String httpMethod = results.get(i).getHttpMethod();
+          String url = results.get(i).getUrl();
+          String normalParam = results.get(i).getNormalParam();
+          String jsonObject = results.get(i).getJsonParam();
+          String serverType = results.get(i).getServerType();
           updateServer(httpMethod, url, normalParam, jsonObject, serverType);
           break;
         }
@@ -223,7 +221,7 @@ public class ActiveTaskService extends Service
       Logger.log(e);
     }
 
-    if (serverType.equalsIgnoreCase("registration")) {
+    if (serverType.equalsIgnoreCase("RegistrationServerEnrollment")) {
       HashMap<String, String> header = new HashMap();
       header.put(
           "auth",
@@ -251,7 +249,17 @@ public class ActiveTaskService extends Service
           RegistrationServerEnrollmentConfigEvent);
       UserModulePresenter userModulePresenter = new UserModulePresenter();
       userModulePresenter.performUpdateUserPreference(updatePreferenceEvent);
-    } else if (serverType.equalsIgnoreCase("response")) {
+    } else if (serverType.equalsIgnoreCase("ResponseServer")) {
+      HashMap<String, String> header = new HashMap();
+      header.put(
+          "auth",
+          AppController.getHelperSharedPreference()
+              .readPreference(this, getResources().getString(R.string.auth), ""));
+      header.put(
+          "userId",
+          AppController.getHelperSharedPreference()
+              .readPreference(this, getResources().getString(R.string.userid), ""));
+
       ProcessResponseEvent processResponseEvent = new ProcessResponseEvent();
       ResponseServerConfigEvent responseServerConfigEvent =
           new ResponseServerConfigEvent(
@@ -261,7 +269,7 @@ public class ActiveTaskService extends Service
               this,
               LoginData.class,
               null,
-              null,
+              header,
               jsonObject,
               false,
               this);
@@ -269,7 +277,6 @@ public class ActiveTaskService extends Service
       processResponseEvent.setResponseServerConfigEvent(responseServerConfigEvent);
       StudyModulePresenter studyModulePresenter = new StudyModulePresenter();
       studyModulePresenter.performProcessResponse(processResponseEvent);
-    } else if (serverType.equalsIgnoreCase("wcp")) {
     }
   }
 
@@ -283,20 +290,6 @@ public class ActiveTaskService extends Service
 
   @Override
   public void asyncResponseFailure(int responseCode, String errormsg, String statusCode) {
-    stopSelf();
-  }
-
-  @Override
-  public <T> void asyncResponse(T response, int responseCode, String serverType) {
-    if (responseCode == UPDATE_USERPREFERENCE_RESPONSECODE) {
-      dbServiceSubscriber.removeOfflineData(this);
-      getPendingData();
-    }
-  }
-
-  @Override
-  public <T> void asyncResponseFailure(
-      int responseCode, String errormsg, String statusCode, T response) {
     stopSelf();
   }
 }

@@ -60,7 +60,7 @@ public class NotificationModuleSubscriber {
 
   public void generateActivityLocalNotification(
       ActivityRun activityRun, Context context, String type, int offset) {
-    String title = context.getResources().getString(R.string.my_studies);
+    String title = context.getResources().getString(R.string.app_name);
     String description = "";
     String description1 = "";
     SimpleDateFormat notificationFormat = AppController.getNotificationDateFormat();
@@ -314,7 +314,7 @@ public class NotificationModuleSubscriber {
 
   public void generateTwoWeekNotification(Date date, Context context) {
     try {
-      String title = context.getResources().getString(R.string.my_studies);
+      String title = context.getResources().getString(R.string.app_name);
       Calendar calendar = Calendar.getInstance();
       calendar.setTime(date);
       AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
@@ -345,7 +345,7 @@ public class NotificationModuleSubscriber {
   public void cancelTwoWeekNotification(Context context) {
     try {
       AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
-      String title = context.getResources().getString(R.string.my_studies);
+      String title = context.getResources().getString(R.string.app_name);
       Intent notificationIntent = new Intent(context, AlarmReceiver.class);
       notificationIntent.setAction("android.media.action.DISPLAY_NOTIFICATION");
       notificationIntent.addCategory("android.intent.category.DEFAULT");
@@ -365,7 +365,7 @@ public class NotificationModuleSubscriber {
 
   public void generateNotificationTurnOffNotification(Date date, Context context) {
     try {
-      String title = context.getResources().getString(R.string.my_studies);
+      String title = context.getResources().getString(R.string.app_name);
       Calendar calendar = Calendar.getInstance();
       calendar.setTime(date);
       calendar.add(Calendar.DAY_OF_MONTH, 7);
@@ -397,7 +397,7 @@ public class NotificationModuleSubscriber {
   public void cancelNotificationTurnOffNotification(Context context) {
     try {
       AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
-      String title = context.getResources().getString(R.string.my_studies);
+      String title = context.getResources().getString(R.string.app_name);
       Intent notificationIntent = new Intent(context, AlarmReceiver.class);
       notificationIntent.setAction("android.media.action.DISPLAY_NOTIFICATION");
       notificationIntent.addCategory("android.intent.category.DEFAULT");

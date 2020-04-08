@@ -33,7 +33,7 @@
                 <android.support.v7.widget.AppCompatTextView
                     android:id="@+id/fda_listen"
                     style="@style/TextType2"
-                    android:text="@string/fda_listens"
+                    android:text="@string/app_name"
                     android:textColor="@color/colorPrimary" />
             </RelativeLayout>
 

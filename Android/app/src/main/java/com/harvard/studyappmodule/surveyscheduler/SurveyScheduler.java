@@ -1,5 +1,6 @@
 /*
  * Copyright © 2017-2019 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors.
+ * Copyright 2020 Google LLC
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction, including
  * without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
@@ -92,9 +93,9 @@ public class SurveyScheduler {
     }
 
     return Integer.parseInt(
-        AppController.getHelperSharedPreference()
-            .readPreference(
-                context, context.getResources().getString(R.string.startOffset), ""))
+            AppController.getHelperSharedPreference()
+                .readPreference(
+                    context, context.getResources().getString(R.string.startOffset), ""))
         - currentOffset;
   }
 
@@ -483,7 +484,7 @@ public class SurveyScheduler {
               Calendar.DATE,
               -7
                   + (startTimeCalender.get(Calendar.DAY_OF_WEEK)
-                  - startCalendar.get(Calendar.DAY_OF_WEEK)));
+                      - startCalendar.get(Calendar.DAY_OF_WEEK)));
         }
         startCalendar.set(Calendar.HOUR_OF_DAY, startTimeCalender.get(Calendar.HOUR_OF_DAY));
         startCalendar.set(Calendar.MINUTE, startTimeCalender.get(Calendar.MINUTE));
@@ -519,9 +520,7 @@ public class SurveyScheduler {
     }
   }
 
-  /**
-   * get activity run for insert
-   */
+  /** get activity run for insert */
   private ActivityRun getActivityRun(
       String activityId,
       String studyId,
@@ -678,8 +677,7 @@ public class SurveyScheduler {
     Activities activities = null;
     if (activityData != null && activityData.getActivities() != null) {
       for (int i = 0; i < activityData.getActivities().size(); i++) {
-        if (activityData.getActivities().get(i).getActivityId()
-            .equalsIgnoreCase(activityId)) {
+        if (activityData.getActivities().get(i).getActivityId().equalsIgnoreCase(activityId)) {
           return activityData.getActivities().get(i);
         }
       }
@@ -712,29 +710,23 @@ public class SurveyScheduler {
       for (int i = 0; i < activityListDataDB.getActivities().size(); i++) {
 
         try {
-          if (!checkafter(
-              simpleDateFormat.parse(
-                  activityListDataDB.getActivities().get(i).getStartTime().split("\\.")[0]))) {
-            ActivityStatus activityStatus =
-                getActivityStatus(
-                    activityData,
-                    studyId,
-                    activityListDataDB.getActivities().get(i).getActivityId(),
-                    calendarCurrentTime.getTime());
-            if (activityStatus != null) {
-              if (activityStatus.getCompletedRun() >= 0) {
-                completed = completed + activityStatus.getCompletedRun();
-              }
-              if (activityStatus.getMissedRun() >= 0) {
-                missed = missed + activityStatus.getMissedRun();
-              }
-              if (activityStatus.getTotalRun() >= 0) {
-                total = total + activityStatus.getTotalRun();
-              }
+          ActivityStatus activityStatus =
+              getActivityStatus(
+                  activityData,
+                  studyId,
+                  activityListDataDB.getActivities().get(i).getActivityId(),
+                  calendarCurrentTime.getTime());
+          if (activityStatus != null) {
+            if (activityStatus.getCompletedRun() >= 0) {
+              completed = completed + activityStatus.getCompletedRun();
+            }
+            if (activityStatus.getMissedRun() >= 0) {
+              missed = missed + activityStatus.getMissedRun();
+            }
+            if (activityStatus.getTotalRun() >= 0) {
+              total = total + activityStatus.getTotalRun();
             }
           }
-        } catch (ParseException e) {
-          Logger.log(e);
         } catch (Exception e) {
           Logger.log(e);
         }

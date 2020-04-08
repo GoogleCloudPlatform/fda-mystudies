@@ -714,7 +714,7 @@ public class StudyActivity extends AppCompatActivity
     switch (view.getId()) {
       case R.id.mHomeLayout:
         mPreviousValue = R.id.mHomeLayout;
-        mTitleFDAListens.setText(getResources().getString(R.string.fda_listens));
+        mTitleFDAListens.setText(getResources().getString(R.string.app_name));
         mTitle.setText("");
         mEditBtnLayout.setVisibility(View.GONE);
         mNotificationBtn.setVisibility(View.VISIBLE);
@@ -997,7 +997,7 @@ public class StudyActivity extends AppCompatActivity
   @Override
   public <T> void asyncResponse(T response, int responseCode) {
     if (responseCode == LOGOUT_REPSONSECODE) {
-      Toast.makeText(this, getResources().getString(R.string.signOut), Toast.LENGTH_SHORT).show();
+      Toast.makeText(this, getResources().getString(R.string.signed_out), Toast.LENGTH_SHORT).show();
       SharedPreferences settings = SharedPreferenceHelper.getPreferences(StudyActivity.this);
       settings.edit().clear().apply();
       // delete passcode from keystore
@@ -1034,7 +1034,7 @@ public class StudyActivity extends AppCompatActivity
   public void loadstudylist() {
     checkSignOrSignOutScenario();
     mPreviousValue = R.id.mHomeLayout;
-    mTitleFDAListens.setText(getResources().getString(R.string.fda_listens));
+    mTitleFDAListens.setText(getResources().getString(R.string.app_name));
     mTitle.setText("");
     mEditBtnLayout.setVisibility(View.GONE);
     mNotificationBtn.setVisibility(View.VISIBLE);
@@ -1154,7 +1154,7 @@ public class StudyActivity extends AppCompatActivity
       NotificationManagerCompat notificationManager =
           NotificationManagerCompat.from(StudyActivity.this);
       notificationManager.cancelAll();
-
+      Toast.makeText(StudyActivity.this, R.string.signed_out,Toast.LENGTH_SHORT).show();
       loadstudylist();
     }
 

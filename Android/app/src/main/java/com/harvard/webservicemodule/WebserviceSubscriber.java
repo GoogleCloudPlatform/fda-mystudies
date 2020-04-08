@@ -120,7 +120,7 @@ public class WebserviceSubscriber extends BaseSubscriber {
           registrationServerConfigEvent.getmResponseCode(),
           registrationServerConfigEvent.getV(),
           registrationServerConfigEvent.ismShowAlert(),
-          "");
+          "RegistrationServer");
     } else if (registrationServerConfigEvent.getmRequestType().equalsIgnoreCase("post_object")) {
       ApiCall apiCall = new ApiCall(registrationServerConfigEvent.getmContext());
       apiCall.apiCallPostJson(
@@ -131,7 +131,7 @@ public class WebserviceSubscriber extends BaseSubscriber {
           registrationServerConfigEvent.getmResponseCode(),
           registrationServerConfigEvent.getV(),
           registrationServerConfigEvent.ismShowAlert(),
-          "");
+          "RegistrationServer");
     } else if (registrationServerConfigEvent.getmRequestType().equalsIgnoreCase("delete")) {
       ApiCall apiCall = new ApiCall(registrationServerConfigEvent.getmContext());
       apiCall.apiCallDeleteHashmap(
@@ -142,7 +142,7 @@ public class WebserviceSubscriber extends BaseSubscriber {
           registrationServerConfigEvent.getmResponseCode(),
           registrationServerConfigEvent.getV(),
           registrationServerConfigEvent.ismShowAlert(),
-          "");
+          "RegistrationServer");
     } else if (registrationServerConfigEvent.getmRequestType().equalsIgnoreCase("delete_object")) {
       ApiCall apiCall = new ApiCall(registrationServerConfigEvent.getmContext());
       apiCall.apiCallDeleteJson(
@@ -153,7 +153,7 @@ public class WebserviceSubscriber extends BaseSubscriber {
           registrationServerConfigEvent.getmResponseCode(),
           registrationServerConfigEvent.getV(),
           registrationServerConfigEvent.ismShowAlert(),
-          "");
+          "RegistrationServer");
     } else if (registrationServerConfigEvent.getmRequestType().equalsIgnoreCase("delete_array")) {
       ApiCall apiCall = new ApiCall(registrationServerConfigEvent.getmContext());
       apiCall.apiCallDeleteJsonArray(
@@ -164,7 +164,7 @@ public class WebserviceSubscriber extends BaseSubscriber {
           registrationServerConfigEvent.getmResponseCode(),
           registrationServerConfigEvent.getV(),
           registrationServerConfigEvent.ismShowAlert(),
-          "");
+          "RegistrationServer");
     } else {
       ApiCall apiCall = new ApiCall(registrationServerConfigEvent.getmContext());
       apiCall.apiCallPostHashmap(
@@ -175,7 +175,7 @@ public class WebserviceSubscriber extends BaseSubscriber {
           registrationServerConfigEvent.getmResponseCode(),
           registrationServerConfigEvent.getV(),
           registrationServerConfigEvent.ismShowAlert(),
-          "");
+          "RegistrationServer");
     }
   }
 
@@ -204,7 +204,7 @@ public class WebserviceSubscriber extends BaseSubscriber {
           registrationServerConsentConfigEvent.getmResponseCode(),
           registrationServerConsentConfigEvent.getV(),
           registrationServerConsentConfigEvent.ismShowAlert(),
-          "");
+          "RegistrationServerConsent");
     } else if (registrationServerConsentConfigEvent
         .getmRequestType()
         .equalsIgnoreCase("post_object")) {
@@ -217,7 +217,7 @@ public class WebserviceSubscriber extends BaseSubscriber {
           registrationServerConsentConfigEvent.getmResponseCode(),
           registrationServerConsentConfigEvent.getV(),
           registrationServerConsentConfigEvent.ismShowAlert(),
-          "");
+          "RegistrationServerConsent");
     } else if (registrationServerConsentConfigEvent.getmRequestType().equalsIgnoreCase("delete")) {
       ApiCall apiCall = new ApiCall(registrationServerConsentConfigEvent.getmContext());
       apiCall.apiCallDeleteHashmap(
@@ -228,7 +228,7 @@ public class WebserviceSubscriber extends BaseSubscriber {
           registrationServerConsentConfigEvent.getmResponseCode(),
           registrationServerConsentConfigEvent.getV(),
           registrationServerConsentConfigEvent.ismShowAlert(),
-          "");
+          "RegistrationServerConsent");
     } else if (registrationServerConsentConfigEvent
         .getmRequestType()
         .equalsIgnoreCase("delete_object")) {
@@ -241,7 +241,7 @@ public class WebserviceSubscriber extends BaseSubscriber {
           registrationServerConsentConfigEvent.getmResponseCode(),
           registrationServerConsentConfigEvent.getV(),
           registrationServerConsentConfigEvent.ismShowAlert(),
-          "");
+          "RegistrationServerConsent");
     } else if (registrationServerConsentConfigEvent
         .getmRequestType()
         .equalsIgnoreCase("delete_array")) {
@@ -254,7 +254,7 @@ public class WebserviceSubscriber extends BaseSubscriber {
           registrationServerConsentConfigEvent.getmResponseCode(),
           registrationServerConsentConfigEvent.getV(),
           registrationServerConsentConfigEvent.ismShowAlert(),
-          "");
+          "RegistrationServerConsent");
     } else {
       ApiCall apiCall = new ApiCall(registrationServerConsentConfigEvent.getmContext());
       apiCall.apiCallPostHashmap(
@@ -265,7 +265,7 @@ public class WebserviceSubscriber extends BaseSubscriber {
           registrationServerConsentConfigEvent.getmResponseCode(),
           registrationServerConsentConfigEvent.getV(),
           registrationServerConsentConfigEvent.ismShowAlert(),
-          "");
+          "RegistrationServerConsent");
     }
   }
 
@@ -290,7 +290,7 @@ public class WebserviceSubscriber extends BaseSubscriber {
           authServerConfigEvent.getmResponseCode(),
           authServerConfigEvent.getV(),
           authServerConfigEvent.ismShowAlert(),
-          "");
+          "AuthServer");
     } else if (authServerConfigEvent.getmRequestType().equalsIgnoreCase("post_object")) {
       ApiCall apiCall = new ApiCall(authServerConfigEvent.getmContext());
       apiCall.apiCallPostJson(
@@ -301,7 +301,7 @@ public class WebserviceSubscriber extends BaseSubscriber {
           authServerConfigEvent.getmResponseCode(),
           authServerConfigEvent.getV(),
           authServerConfigEvent.ismShowAlert(),
-          "");
+          "AuthServer");
     } else if (authServerConfigEvent.getmRequestType().equalsIgnoreCase("delete")) {
       ApiCall apiCall = new ApiCall(authServerConfigEvent.getmContext());
       apiCall.apiCallDeleteHashmap(
@@ -312,7 +312,7 @@ public class WebserviceSubscriber extends BaseSubscriber {
           authServerConfigEvent.getmResponseCode(),
           authServerConfigEvent.getV(),
           authServerConfigEvent.ismShowAlert(),
-          "");
+          "AuthServer");
     } else if (authServerConfigEvent.getmRequestType().equalsIgnoreCase("delete_object")) {
       ApiCall apiCall = new ApiCall(authServerConfigEvent.getmContext());
       apiCall.apiCallDeleteJson(
@@ -323,7 +323,7 @@ public class WebserviceSubscriber extends BaseSubscriber {
           authServerConfigEvent.getmResponseCode(),
           authServerConfigEvent.getV(),
           authServerConfigEvent.ismShowAlert(),
-          "");
+          "AuthServer");
     } else if (authServerConfigEvent.getmRequestType().equalsIgnoreCase("delete_array")) {
       ApiCall apiCall = new ApiCall(authServerConfigEvent.getmContext());
       apiCall.apiCallDeleteJsonArray(
@@ -334,7 +334,7 @@ public class WebserviceSubscriber extends BaseSubscriber {
           authServerConfigEvent.getmResponseCode(),
           authServerConfigEvent.getV(),
           authServerConfigEvent.ismShowAlert(),
-          "");
+          "AuthServer");
     } else {
       ApiCall apiCall = new ApiCall(authServerConfigEvent.getmContext());
       apiCall.apiCallPostHashmap(
@@ -345,7 +345,7 @@ public class WebserviceSubscriber extends BaseSubscriber {
           authServerConfigEvent.getmResponseCode(),
           authServerConfigEvent.getV(),
           authServerConfigEvent.ismShowAlert(),
-          "");
+          "AuthServer");
     }
   }
 
@@ -370,7 +370,7 @@ public class WebserviceSubscriber extends BaseSubscriber {
           responseServerConfigEvent.getmResponseCode(),
           responseServerConfigEvent.getV(),
           responseServerConfigEvent.ismShowAlert(),
-          "");
+          "ResponseServer");
     } else if (responseServerConfigEvent.getmRequestType().equalsIgnoreCase("post_object")) {
       ApiCall apiCall = new ApiCall(responseServerConfigEvent.getmContext());
       apiCall.apiCallPostJson(
@@ -381,7 +381,7 @@ public class WebserviceSubscriber extends BaseSubscriber {
           responseServerConfigEvent.getmResponseCode(),
           responseServerConfigEvent.getV(),
           responseServerConfigEvent.ismShowAlert(),
-          "");
+          "ResponseServer");
     } else if (responseServerConfigEvent.getmRequestType().equalsIgnoreCase("delete")) {
       ApiCall apiCall = new ApiCall(responseServerConfigEvent.getmContext());
       apiCall.apiCallDeleteHashmap(
@@ -392,7 +392,7 @@ public class WebserviceSubscriber extends BaseSubscriber {
           responseServerConfigEvent.getmResponseCode(),
           responseServerConfigEvent.getV(),
           responseServerConfigEvent.ismShowAlert(),
-          "");
+          "ResponseServer");
     } else {
       ApiCall apiCall = new ApiCall(responseServerConfigEvent.getmContext());
       apiCall.apiCallPostHashmap(
@@ -403,7 +403,7 @@ public class WebserviceSubscriber extends BaseSubscriber {
           responseServerConfigEvent.getmResponseCode(),
           responseServerConfigEvent.getV(),
           responseServerConfigEvent.ismShowAlert(),
-          "");
+          "ResponseServer");
     }
   }
 
@@ -433,7 +433,7 @@ public class WebserviceSubscriber extends BaseSubscriber {
           registrationServerEnrollmentConfigEvent.getmResponseCode(),
           registrationServerEnrollmentConfigEvent.getV(),
           registrationServerEnrollmentConfigEvent.ismShowAlert(),
-          "");
+          "RegistrationServerEnrollment");
     } else if (registrationServerEnrollmentConfigEvent
         .getmRequestType()
         .equalsIgnoreCase("post_object")) {
@@ -446,7 +446,7 @@ public class WebserviceSubscriber extends BaseSubscriber {
           registrationServerEnrollmentConfigEvent.getmResponseCode(),
           registrationServerEnrollmentConfigEvent.getV(),
           registrationServerEnrollmentConfigEvent.ismShowAlert(),
-          "");
+          "RegistrationServerEnrollment");
     } else if (registrationServerEnrollmentConfigEvent
         .getmRequestType()
         .equalsIgnoreCase("delete")) {
@@ -459,7 +459,7 @@ public class WebserviceSubscriber extends BaseSubscriber {
           registrationServerEnrollmentConfigEvent.getmResponseCode(),
           registrationServerEnrollmentConfigEvent.getV(),
           registrationServerEnrollmentConfigEvent.ismShowAlert(),
-          "");
+          "RegistrationServerEnrollment");
     } else if (registrationServerEnrollmentConfigEvent
         .getmRequestType()
         .equalsIgnoreCase("delete_object")) {
@@ -472,7 +472,7 @@ public class WebserviceSubscriber extends BaseSubscriber {
           registrationServerEnrollmentConfigEvent.getmResponseCode(),
           registrationServerEnrollmentConfigEvent.getV(),
           registrationServerEnrollmentConfigEvent.ismShowAlert(),
-          "");
+          "RegistrationServerEnrollment");
     } else if (registrationServerEnrollmentConfigEvent
         .getmRequestType()
         .equalsIgnoreCase("delete_array")) {
@@ -485,7 +485,7 @@ public class WebserviceSubscriber extends BaseSubscriber {
           registrationServerEnrollmentConfigEvent.getmResponseCode(),
           registrationServerEnrollmentConfigEvent.getV(),
           registrationServerEnrollmentConfigEvent.ismShowAlert(),
-          "");
+          "RegistrationServerEnrollment");
     } else {
       ApiCall apiCall = new ApiCall(registrationServerEnrollmentConfigEvent.getmContext());
       apiCall.apiCallPostHashmap(
@@ -496,7 +496,7 @@ public class WebserviceSubscriber extends BaseSubscriber {
           registrationServerEnrollmentConfigEvent.getmResponseCode(),
           registrationServerEnrollmentConfigEvent.getV(),
           registrationServerEnrollmentConfigEvent.ismShowAlert(),
-          "");
+          "RegistrationServerEnrollment");
     }
   }
 }
