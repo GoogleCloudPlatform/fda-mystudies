@@ -238,16 +238,9 @@ class Utilities: NSObject {
   }
 
   class func isValidEmail(testStr: String) -> Bool {
-
-    let emailRegEx = "[A-Z0-9a-z._-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}"
-
-    let emailTest = NSPredicate(format: "SELF MATCHES %@", emailRegEx)
-
-    if testStr.count > 255 {
-      return false
-    } else {
-      return emailTest.evaluate(with: testStr)
-    }
+    let emailRegEx = "[A-Z0-9a-z._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,64}"
+    let emailPred = NSPredicate(format:"SELF MATCHES %@", emailRegEx)
+    return emailPred.evaluate(with: testStr)
   }
 
   /// checks all the validations for password
