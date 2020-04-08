@@ -158,7 +158,8 @@ resource "google_cloudbuild_trigger" "apply" {
   name     = "tf-apply"
 
   included_files = [
-    "Terraform/org/**"
+    "Terraform/org/**",
+    "Terraform/cicd/tf-apply.yaml",
   ]
 
   github {
