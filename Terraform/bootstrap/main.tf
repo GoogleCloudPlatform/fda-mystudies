@@ -30,8 +30,12 @@ locals {
     "roles/iam.securityReviewer",
   ]
   cloudbuild_sa_editor_roles = concat(local.cloudbuild_sa_viewer_roles, [
-    "roles/firebase.admin",
-    "roles/serviceusage.serviceUsageAdmin",
+    "roles/billing.user",
+    "roles/orgpolicy.policyAdmin",
+    "roles/owner",
+    "roles/resourcemanager.organizationAdmin",
+    "roles/resourcemanager.folderCreator",
+    "roles/resourcemanager.projectCreator",
   ])
 }
 
@@ -142,7 +146,7 @@ resource "google_cloudbuild_trigger" "apply" {
   name     = "tf-apply"
 
   included_files = [
-    "Terraform/org/folder.fda-my-studies/project.heroes-hat-dev-resp-firebase/firebase/**"
+    "Terraform/org/**"
   ]
 
   github {
