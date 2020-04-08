@@ -91,8 +91,9 @@ module "cloudsql_private_service_access" {
   vpc_network = module.private.network_name
 
   # Be explicit to avoid overlapping with the GKE ranges.
-  # The subnet range is 10.0.0.0/17, which goes up to 10.0.127.254, so
-  # 10.1.0.0/17 is safe.
+  # The GKE subnet range is 10.0.0.0/17, which goes up to 10.0.127.254; here
+  # we're using 10.1.0.0/17, which does not overlap at all with the GKE range.
+  # The default prefix length is /16, so /17 is close enough and probably safe.
   ip_version    = "IPV4"
   address       = "10.1.0.0"
   prefix_length = "17"
