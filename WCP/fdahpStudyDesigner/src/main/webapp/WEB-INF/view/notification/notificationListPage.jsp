@@ -65,13 +65,13 @@
         </div>
   </div>
 </div>
-<form:form action="/fdahpStudyDesigner/adminNotificationEdit/getNotificationToEdit.do" id="getNotificationEditPage" name="getNotificationEditPage" method="post">
+<form:form action="/studybuilder/adminNotificationEdit/getNotificationToEdit.do" id="getNotificationEditPage" name="getNotificationEditPage" method="post">
 		<input type="hidden" id="notificationId" name="notificationId">
 		<input type="hidden" id="notificationText" name="notificationText">
 		<input type="hidden" id="actionType" name="actionType">
 		<input type="hidden" name="chkRefreshflag" value="y">
 </form:form>
-<form:form action="/fdahpStudyDesigner/adminNotificationView/getNotificationToView.do" id="getNotificationViewPage" name="getNotificationViewPage" method="post">
+<form:form action="/studybuilder/adminNotificationView/getNotificationToView.do" id="getNotificationViewPage" name="getNotificationViewPage" method="post">
 		<input type="hidden" id="notificationIdToView" name="notificationId">
 		<input type="hidden" id="actionTypeToView" name="actionType">
 		<input type="hidden" name="chkRefreshflag" value="y">

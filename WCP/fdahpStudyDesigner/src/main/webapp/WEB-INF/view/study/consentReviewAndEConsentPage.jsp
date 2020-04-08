@@ -7,11 +7,11 @@
 <!-- ============================================================== -->
  <div class="col-sm-10 col-rc white-bg p-none">
 	<!--  Start top tab section-->
-	<form:form action="/fdahpStudyDesigner/adminStudies/studyList.do?_S=${param._S}" name="cancelConsentReviewFormId" id="cancelConsentReviewFormId" method="POST" role="form">
+	<form:form action="/studybuilder/adminStudies/studyList.do?_S=${param._S}" name="cancelConsentReviewFormId" id="cancelConsentReviewFormId" method="POST" role="form">
 		<input type="hidden" id="studyId" name="studyId" value="${studyId}">
 		<input type="hidden" id="consentId" name="consentId" value="${consentBo.id}">
 	</form:form>
-	<form:form action="/fdahpStudyDesigner/adminStudies/saveConsentReviewAndEConsentInfo.do?_S=${param._S}" name="consentReviewFormId" id="consentReviewFormId" method="post" role="form">
+	<form:form action="/studybuilder/adminStudies/saveConsentReviewAndEConsentInfo.do?_S=${param._S}" name="consentReviewFormId" id="consentReviewFormId" method="post" role="form">
 		<input type="hidden" id="studyId" name="studyId" value="${studyId}">
 		<input type="hidden" id="consentId" name="consentId" value="${consentBo.id}">
 		<input type="hidden" id="consentBo" name="consentBo" value="${consentBo}">
@@ -666,7 +666,7 @@ $(document).ready(function(){
 	    	if(null != aggrement_of_theconsent){consentInfo.aggrementOfTheConsent = aggrement_of_theconsent;}
 	    	var data = JSON.stringify(consentInfo);
 	    	$.ajax({ 
-		          url: "/fdahpStudyDesigner/adminStudies/saveConsentReviewAndEConsentInfo.do?_S=${param._S}",
+		          url: "/studybuilder/adminStudies/saveConsentReviewAndEConsentInfo.do?_S=${param._S}",
 		          type: "POST",
 		          datatype: "json",
 		          data: {consentInfo:data},
@@ -691,7 +691,7 @@ $(document).ready(function(){
 						}
 						if(item == "doneId"){
 							var a = document.createElement('a');
-							a.href = "/fdahpStudyDesigner/adminStudies/consentReviewMarkAsCompleted.do?_S=${param._S}";
+							a.href = "/studybuilder/adminStudies/consentReviewMarkAsCompleted.do?_S=${param._S}";
 							document.body.appendChild(a).click();
 						}else{
 							$("#alertMsg").removeClass('e-box').addClass('s-box').html("Content saved as draft.");
@@ -746,7 +746,7 @@ function goToBackPage(item){
 		    callback: function(result) {
 		        if (result) {
 		        	var a = document.createElement('a');
-		        	a.href = "/fdahpStudyDesigner/adminStudies/consentListPage.do?_S=${param._S}";
+		        	a.href = "/studybuilder/adminStudies/consentListPage.do?_S=${param._S}";
 		        	document.body.appendChild(a).click();
 		        }else{
 		        	$(item).prop('disabled', false);
@@ -756,7 +756,7 @@ function goToBackPage(item){
 	</c:if>
 	<c:if test="${permission eq 'view'}">
    	var a = document.createElement('a');
-	a.href = "/fdahpStudyDesigner/adminStudies/consentListPage.do?_S=${param._S}";
+	a.href = "/studybuilder/adminStudies/consentListPage.do?_S=${param._S}";
 	document.body.appendChild(a).click();
   </c:if>
 }

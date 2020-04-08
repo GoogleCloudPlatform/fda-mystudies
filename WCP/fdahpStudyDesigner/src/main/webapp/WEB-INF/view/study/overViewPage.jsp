@@ -10,7 +10,7 @@
 <!-- ============================================================== -->
 <div class="col-sm-10 col-rc white-bg p-none">
 	<form:form
-		action="/fdahpStudyDesigner/adminStudies/saveOrUpdateStudyOverviewPage.do?${_csrf.parameterName}=${_csrf.token}&_S=${param._S}"
+		action="/studybuilder/adminStudies/saveOrUpdateStudyOverviewPage.do?${_csrf.parameterName}=${_csrf.token}&_S=${param._S}"
 		data-toggle="validator" role="form" id="overViewFormId" method="post"
 		autocomplete="off" enctype="multipart/form-data">
 		<!--  Start top tab section-->
@@ -92,7 +92,7 @@
 										</div>
 										<div class="text-right dis-inline pull-right">
 											<span class="ml-lg imageBg"><img class="arrow"
-												src="/fdahpStudyDesigner/images/icons/slide-down.png" alt="" /></span>
+												src="/studybuilder/images/icons/slide-down.png" alt="" /></span>
 										</div>
 									</a>
 								</div>
@@ -109,7 +109,7 @@
 									</div>
 									<div>
 										<div class="thumb">
-											<img src="/fdahpStudyDesigner/images/dummy-img.jpg"
+											<img src="/studybuilder/images/dummy-img.jpg"
 												class="wid100" alt=""/>
 										</div>
 										<div class="dis-inline imgCls">
@@ -184,7 +184,7 @@
 												<span class="sprites_icon delete elaborateHide"></span>
 											</c:if>
 											<span class="ml-lg imageBg"><img class="arrow"
-												src="/fdahpStudyDesigner/images/icons/slide-down.png" alt=""/></span>
+												src="/studybuilder/images/icons/slide-down.png" alt=""/></span>
 										</div>
 									</a>
 								</div>
@@ -196,7 +196,7 @@
 										<div class="gray-xs-f mb-sm">
 											Image <span><span class="filled-tooltip"
 												data-toggle="tooltip" data-placement="top" data-html="true"
-												title="" src="/fdahpStudyDesigner/images/icons/tooltip.png"
+												title="" src="/studybuilder/images/icons/tooltip.png"
 												data-original-title="<span class='font24'>.</span></span> JPEG/PNG<br><span class='font24'>.</span> Recommended Size: <c:if test='${spbSt.first}'>750x1334</c:if><c:if test='${not spbSt.first}'>750x570</c:if> pixels"></span>
 												<span class="requiredStar"> *</span>
 										</div>
@@ -204,7 +204,7 @@
 											<div class="thumb">
 												<img
 													src="<spring:eval expression="@propertyConfigurer.getProperty('fda.imgDisplaydPath')" />studypages/${fn:escapeXml(studyPageBo.imagePath)}"
-													onerror="this.src='/fdahpStudyDesigner/images/dummy-img.jpg';"
+													onerror="this.src='/studybuilder/images/dummy-img.jpg';"
 													class="wid100" alt=""/>
 											</div>
 											<div class="dis-inline imgCls">
@@ -292,13 +292,13 @@
 				message : 'Your user account details have been updated. Please sign in again to continue using the portal.',	
 			    callback: function(result) {
 			    	var a = document.createElement('a');
-			    	a.href = "/fdahpStudyDesigner/sessionOut.do";
+			    	a.href = "/studybuilder/sessionOut.do";
 					document.body.appendChild(a).click();
 			    }
 		    });
 		</c:if>
 		
-    	$('body').find('a[aria-expanded=true]').find('.imageBg').html('<img class="arrow" src="/fdahpStudyDesigner/images/icons/slide-up.png" />');
+    	$('body').find('a[aria-expanded=true]').find('.imageBg').html('<img class="arrow" src="/studybuilder/images/icons/slide-up.png" />');
       	$(".menuNav li.active").removeClass('active');
 	   	$(".menuNav li.third").addClass('active');
 	   	
@@ -326,7 +326,7 @@
 		// Removing selected file upload image
 		$(document).on("click",".removeUrl", function(){
 			$(this).css("visibility","hidden");
-    	  	$(this).parent().parent().find(".thumb img").attr("src","/fdahpStudyDesigner/images/dummy-img.jpg");
+    	  	$(this).parent().parent().find(".thumb img").attr("src","/studybuilder/images/dummy-img.jpg");
     	  	$(this).parent().parent().find(".uploadImg").val('').attr('required', 'required');
     	  	$(this).parent().parent().find(".imagePathCls").val('');
        	});
@@ -402,7 +402,7 @@
         		  "</div>"+
         		  "<div class='dis-inline pull-right text-right'>"+
         		  "<span class='delete mr-lg sprites_icon'></span> "+
-        		  "<span class='imageBg'><img src='/fdahpStudyDesigner/images/icons/slide-down.png'></span>"+
+        		  "<span class='imageBg'><img src='/studybuilder/images/icons/slide-down.png'></span>"+
         		  "</div>"+
         		  "</a>"+
         		  "</div>"+
@@ -410,9 +410,9 @@
         		  "<div class='collapse panel-collapse' id='collapse"+count+"'>"+
         		  "<div class=panel-body  pt-none>"+
         		  "<div>"+
-        		  "<div class='gray-xs-f mb-sm'>Image <span><span class='filled-tooltip' data-toggle='tooltip' data-placement='top' data-html='true' title='' src='/fdahpStudyDesigner/images/icons/tooltip.png' data-original-title='<span class= font24>.</span></span> JPEG/PNG<br><span class=font24>.</span> Recommended Size: 750x570 pixels'></span><span class='requiredStar'> *</span> </div>"+
+        		  "<div class='gray-xs-f mb-sm'>Image <span><span class='filled-tooltip' data-toggle='tooltip' data-placement='top' data-html='true' title='' src='/studybuilder/images/icons/tooltip.png' data-original-title='<span class= font24>.</span></span> JPEG/PNG<br><span class=font24>.</span> Recommended Size: 750x570 pixels'></span><span class='requiredStar'> *</span> </div>"+
         		  "<div>"+
-        		  "<div class=thumb><img src=/fdahpStudyDesigner/images/dummy-img.jpg class=wid100></div>"+
+        		  "<div class=thumb><img src=/studybuilder/images/dummy-img.jpg class=wid100></div>"+
         		  "<div class=dis-inline>"+
         		  "<span class='blue-link removeUrl elaborateHide' id='hideRemoveUrl"+count+"'>X<a href='javascript:void(0)' class='blue-link pl-xs txt-decoration-underline'>Remove Image</a></span>"+
         		  "<div class='form-group mb-none mt-sm'>"+
@@ -473,16 +473,16 @@
        });
        $(document).on('show.bs.collapse','.panel-collapse', function(){
        		$('.panel-collapse').not(this).collapse('hide').removeClass('in');
-       		$('body').not(this).find('.imageBg').html('<img class="arrow" src="/fdahpStudyDesigner/images/icons/slide-down.png" />');
+       		$('body').not(this).find('.imageBg').html('<img class="arrow" src="/studybuilder/images/icons/slide-down.png" />');
        		
        });
        $(document).on('hide.bs.collapse','.panel-collapse', function(){
-       		$('body').not('a[aria-expanded=true]').find('.imageBg').html('<img class="arrow" src="/fdahpStudyDesigner/images/icons/slide-down.png" />');
+       		$('body').not('a[aria-expanded=true]').find('.imageBg').html('<img class="arrow" src="/studybuilder/images/icons/slide-down.png" />');
        		
        });
        $(document).on('shown.bs.collapse','.panel-collapse', function(){
        		var $panel = $(this).parent().ScrollTo();
-       		$('body').find('a[aria-expanded=true]').find('.imageBg').html('<img class="arrow" src="/fdahpStudyDesigner/images/icons/slide-up.png" />');
+       		$('body').find('a[aria-expanded=true]').find('.imageBg').html('<img class="arrow" src="/studybuilder/images/icons/slide-up.png" />');
        });
        $('.submitEle').click(function(e) {
 		   $('#actTy').remove();

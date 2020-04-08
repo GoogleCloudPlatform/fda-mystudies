@@ -19,9 +19,9 @@
 
 <!-- Favicon -->
 <link rel="shortcut icon"
-	href="/fdahpStudyDesigner/images/icons/fav.png" type="image/x-icon" />
+	href="/studybuilder/images/icons/fav.png" type="image/x-icon" />
 <link rel="apple-touch-icon"
-	href="/fdahpStudyDesigner/images/icons/fav.png">
+	href="/studybuilder/images/icons/fav.png">
 
 <!-- Mobile Metas -->
 <meta name="viewport"
@@ -33,64 +33,64 @@
 
 <!-- Vendor CSS -->
 <link rel="stylesheet"
-	href="/fdahpStudyDesigner/vendor/boostrap/bootstrap.min.css">
+	href="/studybuilder/vendor/boostrap/bootstrap.min.css">
 <link rel="stylesheet"
-	href="/fdahpStudyDesigner/vendor/datatable/css/dataTables.bootstrap.min.css">
+	href="/studybuilder/vendor/datatable/css/dataTables.bootstrap.min.css">
 <link rel="stylesheet"
-	href="/fdahpStudyDesigner/vendor/datatable/css/jquery.dataTables.min.css">
+	href="/studybuilder/vendor/datatable/css/jquery.dataTables.min.css">
 
 <!-- Your custom styles (optional) -->
-<link href="/fdahpStudyDesigner/css/loader.css" rel="stylesheet">
+<link href="/studybuilder/css/loader.css" rel="stylesheet">
 
 <link rel="stylesheet"
-	href="/fdahpStudyDesigner/vendor/datatable/css/rowReorder.dataTables.min.css">
+	href="/studybuilder/vendor/datatable/css/rowReorder.dataTables.min.css">
 <link rel="stylesheet"
-	href="/fdahpStudyDesigner/vendor/dragula/dragula.min.css">
+	href="/studybuilder/vendor/dragula/dragula.min.css">
 <link rel="stylesheet"
-	href="/fdahpStudyDesigner/vendor/magnific-popup/magnific-popup.css">
+	href="/studybuilder/vendor/magnific-popup/magnific-popup.css">
 <link rel="stylesheet"
-	href="/fdahpStudyDesigner/vendor/font-awesome/font-awesome.min.css">
+	href="/studybuilder/vendor/font-awesome/font-awesome.min.css">
 <link rel="stylesheet"
-	href="/fdahpStudyDesigner/vendor/select2/bootstrap-select.min.css">
+	href="/studybuilder/vendor/select2/bootstrap-select.min.css">
 <link rel="stylesheet"
-	href="/fdahpStudyDesigner/vendor/select2/bootstrap-multiselect.css">
+	href="/studybuilder/vendor/select2/bootstrap-multiselect.css">
 <link rel="stylesheet"
-	href="/fdahpStudyDesigner/vendor/animation/animate.css">
+	href="/studybuilder/vendor/animation/animate.css">
 
 <!-- Theme Responsive CSS -->
-<link rel="stylesheet" href="/fdahpStudyDesigner/css/layout.css">
+<link rel="stylesheet" href="/studybuilder/css/layout.css">
 
 <!-- Theme CSS -->
-<link rel="stylesheet" href="/fdahpStudyDesigner/css/theme.css">
-<link rel="stylesheet" href="/fdahpStudyDesigner/css/style.css">
+<link rel="stylesheet" href="/studybuilder/css/theme.css">
+<link rel="stylesheet" href="/studybuilder/css/style.css">
 <link rel="stylesheet"
-	href="/fdahpStudyDesigner/css/jquery-password-validator.css"></link>
-<link rel="stylesheet" href="/fdahpStudyDesigner/css/sprites_icon.css">
+	href="/studybuilder/css/jquery-password-validator.css"></link>
+<link rel="stylesheet" href="/studybuilder/css/sprites_icon.css">
 
 <!-- Head Libs -->
-<script src="/fdahpStudyDesigner/vendor/modernizr/modernizr.js"></script>
+<script src="/studybuilder/vendor/modernizr/modernizr.js"></script>
 
 <!-- Vendor -->
-<script src="/fdahpStudyDesigner/vendor/jquery/jquery-3.1.1.min.js"></script>
-<script src="/fdahpStudyDesigner/vendor/boostrap/bootstrap.min.js"></script>
-<script src="/fdahpStudyDesigner/js/validator.min.js"></script>
-<script src="/fdahpStudyDesigner/vendor/animation/wow.min.js"></script>
+<script src="/studybuilder/vendor/jquery/jquery-3.1.1.min.js"></script>
+<script src="/studybuilder/vendor/boostrap/bootstrap.min.js"></script>
+<script src="/studybuilder/js/validator.min.js"></script>
+<script src="/studybuilder/vendor/animation/wow.min.js"></script>
 <script
-	src="/fdahpStudyDesigner/vendor/datatable/js/jquery.dataTables.min.js"></script>
+	src="/studybuilder/vendor/datatable/js/jquery.dataTables.min.js"></script>
 <script
-	src="/fdahpStudyDesigner/vendor/datatable/js/dataTables.rowReorder.min.js"></script>
-<script src="/fdahpStudyDesigner/vendor/dragula/react-dragula.min.js"></script>
+	src="/studybuilder/vendor/datatable/js/dataTables.rowReorder.min.js"></script>
+<script src="/studybuilder/vendor/dragula/react-dragula.min.js"></script>
 <script
-	src="/fdahpStudyDesigner/vendor/magnific-popup/jquery.magnific-popup.min.js"></script>
+	src="/studybuilder/vendor/magnific-popup/jquery.magnific-popup.min.js"></script>
 <script
-	src="/fdahpStudyDesigner/vendor/slimscroll/jquery.slimscroll.min.js"></script>
-<script src="/fdahpStudyDesigner/vendor/select2/bootstrap-select.min.js"></script>
+	src="/studybuilder/vendor/slimscroll/jquery.slimscroll.min.js"></script>
+<script src="/studybuilder/vendor/select2/bootstrap-select.min.js"></script>
 
 
-<script src="/fdahpStudyDesigner/js/jquery.password-validator.js"></script>
+<script src="/studybuilder/js/jquery.password-validator.js"></script>
 
-<script src="/fdahpStudyDesigner/js/underscore-min.js"></script>
-<script type="text/javascript" src="/fdahpStudyDesigner/js/loader.js"></script>
+<script src="/studybuilder/js/underscore-min.js"></script>
+<script type="text/javascript" src="/studybuilder/js/loader.js"></script>
 
 
 <script>
@@ -390,16 +390,16 @@
 		</div>
 	</div>
 
-	<form:form action="/fdahpStudyDesigner/login.do" id="backToLoginForm"
+	<form:form action="/studybuilder/login.do" id="backToLoginForm"
 		name="backToLoginForm" method="post">
 	</form:form>
 
-	<script src="/fdahpStudyDesigner/js/theme.js"></script>
-	<script src="/fdahpStudyDesigner/js/jquery.mask.min.js"></script>
-	<script src="/fdahpStudyDesigner/js/common.js"></script>
-	<script src="/fdahpStudyDesigner/js/jquery.nicescroll.min.js"></script>
-	<script src="/fdahpStudyDesigner/vendor/tinymce/tinymce.min.js"></script>
-	<script src="/fdahpStudyDesigner/js/bootbox.min.js"></script>
+	<script src="/studybuilder/js/theme.js"></script>
+	<script src="/studybuilder/js/jquery.mask.min.js"></script>
+	<script src="/studybuilder/js/common.js"></script>
+	<script src="/studybuilder/js/jquery.nicescroll.min.js"></script>
+	<script src="/studybuilder/vendor/tinymce/tinymce.min.js"></script>
+	<script src="/studybuilder/js/bootbox.min.js"></script>
 
 
 	<script>
@@ -458,7 +458,7 @@
                     $(thisAttr).parent().find(".help-block").html("<ul class='list-unstyled'><li></li></ul>");
                         if(email != ''){
                             $.ajax({
-                                url: "/fdahpStudyDesigner/isEmailValid.do?"+csrfDetcsrfParamName+"="+csrfToken,
+                                url: "/studybuilder/isEmailValid.do?"+csrfDetcsrfParamName+"="+csrfToken,
                                 type: "POST",
                                 datatype: "json",
                                 data: {

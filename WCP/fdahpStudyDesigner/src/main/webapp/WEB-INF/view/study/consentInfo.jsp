@@ -8,7 +8,7 @@
 <!-- ============================================================== -->
  <div class="col-sm-10 col-rc white-bg p-none">
 	<!--  Start top tab section-->
-	<form:form action="/fdahpStudyDesigner/adminStudies/saveOrUpdateConsentInfo.do?_S=${param._S}&${_csrf.parameterName}=${_csrf.token}" name="consentInfoFormId" id="consentInfoFormId" method="post" data-toggle="validator" role="form" autocomplete="off">
+	<form:form action="/studybuilder/adminStudies/saveOrUpdateConsentInfo.do?_S=${param._S}&${_csrf.parameterName}=${_csrf.token}" name="consentInfoFormId" id="consentInfoFormId" method="post" data-toggle="validator" role="form" autocomplete="off">
 		<input type="hidden" id="id" name="id" value="${consentInfoBo.id}">
 		<c:if test="${not empty consentInfoBo.id}">
 			<input type="hidden" id="studyId" name="studyId" value="${consentInfoBo.studyId}">
@@ -252,7 +252,7 @@ function saveConsentInfo(item){
 		
 		var data = JSON.stringify(consentInfo);
 		$.ajax({ 
-            url: "/fdahpStudyDesigner/adminStudies/saveConsentInfo.do?_S=${param._S}",
+            url: "/studybuilder/adminStudies/saveConsentInfo.do?_S=${param._S}",
             type: "POST",
             datatype: "json",
             data: {consentInfo:data},
@@ -309,7 +309,7 @@ function goToBackPage(item){
 			    callback: function(result) {
 			        if (result) {
 			        	var a = document.createElement('a');
-			        	a.href = "/fdahpStudyDesigner/adminStudies/consentListPage.do?_S=${param._S}";
+			        	a.href = "/studybuilder/adminStudies/consentListPage.do?_S=${param._S}";
 			        	document.body.appendChild(a).click();
 			        }else{
 			        	$(item).prop('disabled', false);
@@ -319,7 +319,7 @@ function goToBackPage(item){
 	</c:if>
 	<c:if test="${actionPage eq 'view'}">
 		var a = document.createElement('a');
-		a.href = "/fdahpStudyDesigner/adminStudies/consentListPage.do?_S=${param._S}";
+		a.href = "/studybuilder/adminStudies/consentListPage.do?_S=${param._S}";
 		document.body.appendChild(a).click();
 	</c:if>
 }

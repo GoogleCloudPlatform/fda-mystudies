@@ -57,7 +57,7 @@
             </tbody>
           </table>
         </div>  
-<form:form action="/fdahpStudyDesigner/adminStudies/viewBasicInfo.do" id="addEditStudyForm" name="addEditStudyForm" method="post">
+<form:form action="/studybuilder/adminStudies/viewBasicInfo.do" id="addEditStudyForm" name="addEditStudyForm" method="post">
   <input type="hidden" id="studyId" name="studyId">
 </form:form>
 <script>
@@ -80,7 +80,7 @@
 				input.value= '${_csrf.token}';
 				form.appendChild(input);
 				
-		    	form.action= '/fdahpStudyDesigner/adminStudies/viewStudyDetails.do';
+		    	form.action= '/studybuilder/adminStudies/viewStudyDetails.do';
 		    	document.body.appendChild(form);
 		    	form.submit();
 		 });
@@ -112,7 +112,7 @@
 				input.value= '${_csrf.token}';
 				form.appendChild(input);
 				
-		    	form.action= '/fdahpStudyDesigner/adminStudies/viewStudyDetails.do';
+		    	form.action= '/studybuilder/adminStudies/viewStudyDetails.do';
 		    	document.body.appendChild(form);
 		    	form.submit();
  	     });
@@ -151,7 +151,7 @@
 				input.value= '${_csrf.token}';
 				form.appendChild(input);
 				
-		    	form.action= '/fdahpStudyDesigner/adminStudies/crateNewStudy.do';
+		    	form.action= '/studybuilder/adminStudies/crateNewStudy.do';
 		    	document.body.appendChild(form);
 		    	form.submit();
 	     });

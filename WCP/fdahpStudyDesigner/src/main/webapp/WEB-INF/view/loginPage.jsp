@@ -15,8 +15,8 @@
     <meta name="author" content="">
 
     <!-- Favicon -->
-    <link rel="shortcut icon" href="/fdahpStudyDesigner/images/icons/fav.png" type="image/x-icon" />
-    <link rel="apple-touch-icon" href="/fdahpStudyDesigner/images/icons/fav.png">
+    <link rel="shortcut icon" href="/studybuilder/images/icons/fav.png" type="image/x-icon" />
+    <link rel="apple-touch-icon" href="/studybuilder/images/icons/fav.png">
         
     <!-- Mobile Metas -->
     <meta name="viewport" content="width=device-width, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
@@ -25,43 +25,43 @@
    <link href="https://fonts.googleapis.com/css?family=Roboto:300,400" rel="stylesheet">
         
     <!-- Vendor CSS -->
-    <link rel="stylesheet" href="/fdahpStudyDesigner/vendor/boostrap/bootstrap.min.css">
-    <link rel="stylesheet" href="/fdahpStudyDesigner/vendor/datatable/css/dataTables.bootstrap.min.css">
-    <link rel="stylesheet" href="/fdahpStudyDesigner/vendor/datatable/css/jquery.dataTables.min.css">
+    <link rel="stylesheet" href="/studybuilder/vendor/boostrap/bootstrap.min.css">
+    <link rel="stylesheet" href="/studybuilder/vendor/datatable/css/dataTables.bootstrap.min.css">
+    <link rel="stylesheet" href="/studybuilder/vendor/datatable/css/jquery.dataTables.min.css">
     
      <!-- Your custom styles (optional) -->
-    <link href="/fdahpStudyDesigner/css/loader.css" rel="stylesheet">
+    <link href="/studybuilder/css/loader.css" rel="stylesheet">
     
-    <link rel="stylesheet" href="/fdahpStudyDesigner/vendor/datatable/css/rowReorder.dataTables.min.css">
-    <link rel="stylesheet" href="/fdahpStudyDesigner/vendor/dragula/dragula.min.css">
-    <link rel="stylesheet" href="/fdahpStudyDesigner/vendor/magnific-popup/magnific-popup.css">
-    <link rel="stylesheet" href="/fdahpStudyDesigner/vendor/font-awesome/font-awesome.min.css"> 
-    <link rel="stylesheet" href="/fdahpStudyDesigner/vendor/select2/bootstrap-select.min.css">  
-    <link rel="stylesheet" href="/fdahpStudyDesigner/vendor/animation/animate.css">
+    <link rel="stylesheet" href="/studybuilder/vendor/datatable/css/rowReorder.dataTables.min.css">
+    <link rel="stylesheet" href="/studybuilder/vendor/dragula/dragula.min.css">
+    <link rel="stylesheet" href="/studybuilder/vendor/magnific-popup/magnific-popup.css">
+    <link rel="stylesheet" href="/studybuilder/vendor/font-awesome/font-awesome.min.css"> 
+    <link rel="stylesheet" href="/studybuilder/vendor/select2/bootstrap-select.min.css">  
+    <link rel="stylesheet" href="/studybuilder/vendor/animation/animate.css">
         
     <!-- Theme Responsive CSS -->
-    <link rel="stylesheet" href="/fdahpStudyDesigner/css/layout.css">   
+    <link rel="stylesheet" href="/studybuilder/css/layout.css">   
         
     <!-- Theme CSS -->
-    <link rel="stylesheet" href="/fdahpStudyDesigner/css/theme.css">
-    <link rel="stylesheet" href="/fdahpStudyDesigner/css/style.css">
-    <link rel="stylesheet" href="/fdahpStudyDesigner/css/sprites_icon.css">
+    <link rel="stylesheet" href="/studybuilder/css/theme.css">
+    <link rel="stylesheet" href="/studybuilder/css/style.css">
+    <link rel="stylesheet" href="/studybuilder/css/sprites_icon.css">
         
     <!-- Head Libs -->
-    <script src="/fdahpStudyDesigner/vendor/modernizr/modernizr.js"></script>
+    <script src="/studybuilder/vendor/modernizr/modernizr.js"></script>
     
     <!-- Vendor -->
-    <script src="/fdahpStudyDesigner/vendor/jquery/jquery-3.1.1.min.js"></script>
-    <script src="/fdahpStudyDesigner/vendor/boostrap/bootstrap.min.js"></script>
-    <script src="/fdahpStudyDesigner/js/validator.min.js"></script>
-    <script src="/fdahpStudyDesigner/vendor/animation/wow.min.js"></script>
-    <script src="/fdahpStudyDesigner/vendor/datatable/js/jquery.dataTables.min.js"></script>
-     <script src="/fdahpStudyDesigner/vendor/datatable/js/dataTables.rowReorder.min.js"></script>
-    <script src="/fdahpStudyDesigner/vendor/dragula/react-dragula.min.js"></script>
-    <script src="/fdahpStudyDesigner/vendor/magnific-popup/jquery.magnific-popup.min.js"></script>    
-    <script src="/fdahpStudyDesigner/vendor/slimscroll/jquery.slimscroll.min.js"></script>
-    <script src="/fdahpStudyDesigner/vendor/select2/bootstrap-select.min.js"></script>
-     <script type="text/javascript" src="/fdahpStudyDesigner/js/loader.js"></script>
+    <script src="/studybuilder/vendor/jquery/jquery-3.1.1.min.js"></script>
+    <script src="/studybuilder/vendor/boostrap/bootstrap.min.js"></script>
+    <script src="/studybuilder/js/validator.min.js"></script>
+    <script src="/studybuilder/vendor/animation/wow.min.js"></script>
+    <script src="/studybuilder/vendor/datatable/js/jquery.dataTables.min.js"></script>
+     <script src="/studybuilder/vendor/datatable/js/dataTables.rowReorder.min.js"></script>
+    <script src="/studybuilder/vendor/dragula/react-dragula.min.js"></script>
+    <script src="/studybuilder/vendor/magnific-popup/jquery.magnific-popup.min.js"></script>    
+    <script src="/studybuilder/vendor/slimscroll/jquery.slimscroll.min.js"></script>
+    <script src="/studybuilder/vendor/select2/bootstrap-select.min.js"></script>
+     <script type="text/javascript" src="/studybuilder/js/loader.js"></script>
     
     
     
@@ -216,7 +216,7 @@
                             <button type="button" class="btn lg-btn" id="siginNoteBtnId">SIGN IN</button>
                         </div>
                         <div class="pb-md pt-xs">
-                            <a id="forgot_pwd" class="gray-link white__text" href="javascript:void(0)">Forgot Password?</a>
+                            <span class="white__text">Forgot Password? </span> <a id="forgot_pwd" class="gray-link white__text" href="javascript:void(0)">Get Help</a>
                         </div>
                    </div>
                    <input type="password" name="password" id="hidePass" style="display: none;"/>
@@ -225,7 +225,7 @@
                    <div class="pwd dis-none">
                      <div class="mb-lg">
                          <h3 style="    color: #fff; padding-top: 20px;" class="mt-none">Forgot Password?</h3>
-                        <div class="mt-md white__text">Enter your Email address to get  a link to reset password</div>
+                        <div class="mt-md white__text">Enter your Email address to get a link to reset your password</div>
                         </div>
                         <div class="mb-lg form-group">
                             <input type="text" class="input-field wow_input" id="emailReg" name="email" maxlength="100" placeholder="Email Address" 
@@ -289,14 +289,14 @@
    </div>
 </div>
 <input type="hidden" id="csrfDet" csrfParamName="${_csrf.parameterName}" csrfToken="${_csrf.token}" />    
-    <script src="/fdahpStudyDesigner/js/theme.js"></script>
-    <script src="/fdahpStudyDesigner/js/jquery.mask.min.js"></script>
-    <script src="/fdahpStudyDesigner/js/common.js"></script>
-    <script src="/fdahpStudyDesigner/js/jquery.nicescroll.min.js"></script>
-    <script src="/fdahpStudyDesigner/vendor/tinymce/tinymce.min.js"></script>
-    <script src="/fdahpStudyDesigner/js/bootbox.min.js"></script>
-    <script src="/fdahpStudyDesigner/js/autofill-event.js"></script>
-   	<script src="/fdahpStudyDesigner/js/ajaxRequestInterceptor.js"></script>
+    <script src="/studybuilder/js/theme.js"></script>
+    <script src="/studybuilder/js/jquery.mask.min.js"></script>
+    <script src="/studybuilder/js/common.js"></script>
+    <script src="/studybuilder/js/jquery.nicescroll.min.js"></script>
+    <script src="/studybuilder/vendor/tinymce/tinymce.min.js"></script>
+    <script src="/studybuilder/js/bootbox.min.js"></script>
+    <script src="/studybuilder/js/autofill-event.js"></script>
+   	<script src="/studybuilder/js/ajaxRequestInterceptor.js"></script>
    
    <script>
    		var isChanged = true;
