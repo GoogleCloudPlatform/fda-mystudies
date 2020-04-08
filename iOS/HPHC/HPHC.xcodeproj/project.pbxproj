@@ -228,6 +228,217 @@
 		94FF031F1E952B0A009F191B /* ReachoutOptionCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94FF031E1E952B0A009F191B /* ReachoutOptionCell.swift */; };
 		951EC5B5601293CE0771D248 /* libPods-HPHCTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 0AF448A6C2B509B3DB605C42 /* libPods-HPHCTests.a */; };
 		972663AD23F7242B537B8E82 /* Pods_HPHC.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EC9CA22924E3FDD2E7D31960 /* Pods_HPHC.framework */; };
+		AB4F5B93243DA6DC00572AFC /* UIApplication+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94334F861E70055A00755444 /* UIApplication+Extensions.swift */; };
+		AB4F5B94243DA6DC00572AFC /* UIViewController+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94334F851E70055A00755444 /* UIViewController+Extensions.swift */; };
+		AB4F5B95243DA6DC00572AFC /* SignUpTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94B3DD361E6ED8E500327AE5 /* SignUpTableViewCell.swift */; };
+		AB4F5B96243DA6DC00572AFC /* NotificationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94B3DD191E6ED8E500327AE5 /* NotificationViewController.swift */; };
+		AB4F5B97243DA6DC00572AFC /* LeftMenuCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94334F891E7005BF00755444 /* LeftMenuCell.swift */; };
+		AB4F5B98243DA6DC00572AFC /* String+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 946CA5E81E728C2300CC8535 /* String+Extensions.swift */; };
+		AB4F5B99243DA6DC00572AFC /* PinterestLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6E4CECB51F31B41C005E0832 /* PinterestLayout.swift */; };
+		AB4F5B9A243DA6DC00572AFC /* Cell+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FB89C27225F416C00420A7B /* Cell+Extensions.swift */; };
+		AB4F5B9B243DA6DC00572AFC /* DBActivity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94D20E9E1E9DFFE7005C3531 /* DBActivity.swift */; };
+		AB4F5B9C243DA6DC00572AFC /* ContactUsTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4884E3591E827E6A002DA0B9 /* ContactUsTableViewCell.swift */; };
+		AB4F5B9D243DA6DC00572AFC /* ConsentSharePdfStepViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6EE93D8F1E93B5700027A5DC /* ConsentSharePdfStepViewController.swift */; };
+		AB4F5B9E243DA6DC00572AFC /* ConsentServerConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FD1E15823F18239009DACAE /* ConsentServerConfiguration.swift */; };
+		AB4F5B9F243DA6DC00572AFC /* FRHyperLabel.m in Sources */ = {isa = PBXBuildFile; fileRef = 94B3DD261E6ED8E500327AE5 /* FRHyperLabel.m */; };
+		AB4F5BA0243DA6DC00572AFC /* StepProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6ECA927E1E499F8C00DA6287 /* StepProvider.swift */; };
+		AB4F5BA1243DA6DC00572AFC /* ActivityInstructionStep.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6ED1B22D1E54256700BF463F /* ActivityInstructionStep.swift */; };
+		AB4F5BA2243DA6DC00572AFC /* SplashViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94B3DD0A1E6EC47700327AE5 /* SplashViewController.swift */; };
+		AB4F5BA3243DA6DC00572AFC /* ResearchContainerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6E2B25F21EAE3F1D00E2DFB2 /* ResearchContainerViewController.swift */; };
+		AB4F5BA4243DA6DC00572AFC /* Logger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6ED8A2E51E447AA2004DEC01 /* Logger.swift */; };
+		AB4F5BA5243DA6DC00572AFC /* EligibilityBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6EED7B321E65421D002C1FA3 /* EligibilityBuilder.swift */; };
+		AB4F5BA6243DA6DC00572AFC /* NetworkConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94CD96E41E4AF61800946477 /* NetworkConstants.swift */; };
+		AB4F5BA7243DA6DC00572AFC /* RepeatableFormStep.m in Sources */ = {isa = PBXBuildFile; fileRef = 6ED86F601EA6498D00365AF0 /* RepeatableFormStep.m */; };
+		AB4F5BA8243DA6DC00572AFC /* StudyDashboardTabbarViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6EBC2E7D1E94FB5300828CA1 /* StudyDashboardTabbarViewController.swift */; };
+		AB4F5BA9243DA6DC00572AFC /* ConfirmationOptionalTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6EA889BF1E6FD22800F160A1 /* ConfirmationOptionalTableViewCell.swift */; };
+		AB4F5BAA243DA6DC00572AFC /* StudyDashboardStudyPercentageTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6EBC2E7C1E94FB5300828CA1 /* StudyDashboardStudyPercentageTableViewCell.swift */; };
+		AB4F5BAB243DA6DC00572AFC /* DBStudy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9432C49B1E83CEEF00EB419C /* DBStudy.swift */; };
+		AB4F5BAC243DA6DC00572AFC /* FeedBackTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4884E3531E82665C002DA0B9 /* FeedBackTableViewCell.swift */; };
+		AB4F5BAD243DA6DC00572AFC /* KeyChain.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8926D7E92383F25C00558F4E /* KeyChain.swift */; };
+		AB4F5BAE243DA6DC00572AFC /* ResourcesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6EE93DBD1E93C8850027A5DC /* ResourcesViewController.swift */; };
+		AB4F5BAF243DA6DC00572AFC /* HealthClientType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6ECE8BFA1EAF0E3A00A025F5 /* HealthClientType.swift */; };
+		AB4F5BB0243DA6DC00572AFC /* ConsentServices.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FD1E15623F18228009DACAE /* ConsentServices.swift */; };
+		AB4F5BB1243DA6DC00572AFC /* StudyListCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94B3DD211E6ED8E500327AE5 /* StudyListCell.swift */; };
+		AB4F5BB2243DA6DC00572AFC /* SignUpViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94B3DD371E6ED8E500327AE5 /* SignUpViewController.swift */; };
+		AB4F5BB3243DA6DC00572AFC /* TextChoiceQuestionController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FB89C1A225F40EA00420A7B /* TextChoiceQuestionController.swift */; };
+		AB4F5BB4243DA6DC00572AFC /* Data+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F209F01242E5E96005DD23F /* Data+Extensions.swift */; };
+		AB4F5BB5243DA6DC00572AFC /* ActivitySchedules.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FE00CEF238FFE9F0067A7B8 /* ActivitySchedules.swift */; };
+		AB4F5BB6243DA6DC00572AFC /* AppConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F99755E242387300044944E /* AppConfiguration.swift */; };
+		AB4F5BB7243DA6DC00572AFC /* RepeatableFormStepViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6ED86F621EA6498D00365AF0 /* RepeatableFormStepViewController.m */; };
+		AB4F5BB8243DA6DC00572AFC /* DBHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9491F7F71E825F5D0018C15E /* DBHandler.swift */; };
+		AB4F5BB9243DA6DC00572AFC /* ConsentStep.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6ED134351E5EB0370090C976 /* ConsentStep.swift */; };
+		AB4F5BBA243DA6DC00572AFC /* ActivitiesTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6EE93DB81E93C8850027A5DC /* ActivitiesTableViewCell.swift */; };
+		AB4F5BBB243DA6DC00572AFC /* SecondGatewayOverviewViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94B3DD2B1E6ED8E500327AE5 /* SecondGatewayOverviewViewController.swift */; };
+		AB4F5BBC243DA6DC00572AFC /* LeftMenuResourceTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6EF2FCEE1E72CDE900B5F212 /* LeftMenuResourceTableViewCell.swift */; };
+		AB4F5BBD243DA6DC00572AFC /* Gateway.swift in Sources */ = {isa = PBXBuildFile; fileRef = 941909B71E5310D6001B01C5 /* Gateway.swift */; };
+		AB4F5BBE243DA6DC00572AFC /* ProfileTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94B3DD1C1E6ED8E500327AE5 /* ProfileTableViewCell.swift */; };
+		AB4F5BBF243DA6DC00572AFC /* FetalKickCounterStep.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6EED7B381E6574FE002C1FA3 /* FetalKickCounterStep.swift */; };
+		AB4F5BC0243DA6DC00572AFC /* ChartsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94C13DBB1EC1988600E3AEBF /* ChartsViewController.swift */; };
+		AB4F5BC1243DA6DC00572AFC /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6EC8019A1E67EF3400CC5966 /* Constants.swift */; };
+		AB4F5BC2243DA6DC00572AFC /* UITestingHelpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8905592923016852005FB284 /* UITestingHelpers.swift */; };
+		AB4F5BC3243DA6DC00572AFC /* SignUpCompleteViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94B3DD341E6ED8E500327AE5 /* SignUpCompleteViewController.swift */; };
+		AB4F5BC4243DA6DC00572AFC /* ForgotPasswordViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94B3DD2F1E6ED8E500327AE5 /* ForgotPasswordViewController.swift */; };
+		AB4F5BC5243DA6DC00572AFC /* NetworkManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94CD96E51E4AF61800946477 /* NetworkManager.swift */; };
+		AB4F5BC6243DA6DC00572AFC /* FDASlideMenuViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94334F7F1E6FE65600755444 /* FDASlideMenuViewController.swift */; };
+		AB4F5BC7243DA6DC00572AFC /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6E7D2D591E433E8800763D4C /* AppDelegate.swift */; };
+		AB4F5BC8243DA6DC00572AFC /* StudyHomeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4833E9DE1E7126900032D244 /* StudyHomeViewController.swift */; };
+		AB4F5BC9243DA6DC00572AFC /* ConsentPdfViewerStepViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6ED1D06E1EA884BD00E5A794 /* ConsentPdfViewerStepViewController.swift */; };
+		AB4F5BCA243DA6DC00572AFC /* Dictionary+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6E8D910C223B9FD800C082C9 /* Dictionary+Extensions.swift */; };
+		AB4F5BCB243DA6DC00572AFC /* StudyDashboardStatisticsTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6EBC2E7A1E94FB5300828CA1 /* StudyDashboardStatisticsTableViewCell.swift */; };
+		AB4F5BCC243DA6DC00572AFC /* ConsentBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6ED134331E5EB0280090C976 /* ConsentBuilder.swift */; };
+		AB4F5BCD243DA6DC00572AFC /* JailbrokeBlocker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6E91D6801ECD662E0012F49F /* JailbrokeBlocker.swift */; };
+		AB4F5BCE243DA6DC00572AFC /* HomeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94B3DD291E6ED8E500327AE5 /* HomeViewController.swift */; };
+		AB4F5BCF243DA6DC00572AFC /* FileDownloadManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6E183AB01E966230005D7A27 /* FileDownloadManager.swift */; };
+		AB4F5BD0243DA6DC00572AFC /* AppNotification.swift in Sources */ = {isa = PBXBuildFile; fileRef = 948710291E546C3800246109 /* AppNotification.swift */; };
+		AB4F5BD1243DA6DC00572AFC /* NotificationTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94B3DD181E6ED8E500327AE5 /* NotificationTableViewCell.swift */; };
+		AB4F5BD2243DA6DC00572AFC /* FilterListCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 484ACBF51F2896A500BCC819 /* FilterListCollectionViewCell.swift */; };
+		AB4F5BD3243DA6DC00572AFC /* Formatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6ED8A2E31E447AA2004DEC01 /* Formatter.swift */; };
+		AB4F5BD4243DA6DC00572AFC /* StudyDashboardViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6EBC2E751E94FB5300828CA1 /* StudyDashboardViewController.swift */; };
+		AB4F5BD5243DA6DC00572AFC /* Study.swift in Sources */ = {isa = PBXBuildFile; fileRef = 941909B41E52FA9B001B01C5 /* Study.swift */; };
+		AB4F5BD6243DA6DC00572AFC /* ResourcesListCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94B3DD1E1E6ED8E500327AE5 /* ResourcesListCell.swift */; };
+		AB4F5BD7243DA6DC00572AFC /* UIImage+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F4E1B2E24223CA20051D3E2 /* UIImage+Extensions.swift */; };
+		AB4F5BD8243DA6DC00572AFC /* Collection+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F07148B2428DCE2002749DA /* Collection+Extensions.swift */; };
+		AB4F5BD9243DA6DC00572AFC /* AnchorDateHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89903061224A502C00B3A85C /* AnchorDateHandler.swift */; };
+		AB4F5BDA243DA6DC00572AFC /* StandaloneStudy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7878B30E221574D80052FC23 /* StandaloneStudy.swift */; };
+		AB4F5BDB243DA6DC00572AFC /* LocalNotification.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94B5F2F31ECA354800BC0336 /* LocalNotification.swift */; };
+		AB4F5BDC243DA6DC00572AFC /* ConfirmationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6EA889BB1E6FD16B00F160A1 /* ConfirmationViewController.swift */; };
+		AB4F5BDD243DA6DC00572AFC /* FetalKickCounterTask.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6EED7B3C1E65752C002C1FA3 /* FetalKickCounterTask.swift */; };
+		AB4F5BDE243DA6DC00572AFC /* OtherTextChoiceCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FB89C20225F410500420A7B /* OtherTextChoiceCell.swift */; };
+		AB4F5BDF243DA6DC00572AFC /* AKUtility.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6E183AB21E966230005D7A27 /* AKUtility.swift */; };
+		AB4F5BE0243DA6DC00572AFC /* AuthServices.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89AD25AB23D7295A00F9450C /* AuthServices.swift */; };
+		AB4F5BE1243DA6DC00572AFC /* APIConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FD1E15923F18239009DACAE /* APIConfiguration.swift */; };
+		AB4F5BE2243DA6DC00572AFC /* ConfirmationTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6EA889BD1E6FD20000F160A1 /* ConfirmationTableViewCell.swift */; };
+		AB4F5BE3243DA6DC00572AFC /* ActivityBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6E9B39BF1E55DFF10037D09D /* ActivityBuilder.swift */; };
+		AB4F5BE4243DA6DC00572AFC /* File.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6ECA92841E49B5CF00DA6287 /* File.swift */; };
+		AB4F5BE5243DA6DC00572AFC /* StudyDashboardActivityCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6EBC2E771E94FB5300828CA1 /* StudyDashboardActivityCollectionViewCell.swift */; };
+		AB4F5BE6243DA6DC00572AFC /* SignInViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94B3DD321E6ED8E500327AE5 /* SignInViewController.swift */; };
+		AB4F5BE7243DA6DC00572AFC /* StudyDashboardTrendsTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6EBC2E7E1E94FB5300828CA1 /* StudyDashboardTrendsTableViewCell.swift */; };
+		AB4F5BE8243DA6DC00572AFC /* EnrollmentServerConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F9975612423B7EA0044944E /* EnrollmentServerConfiguration.swift */; };
+		AB4F5BE9243DA6DC00572AFC /* ResponseServerConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9432C2F81E4C4993005984EC /* ResponseServerConfiguration.swift */; };
+		AB4F5BEA243DA6DC00572AFC /* GatewayResourceDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6E183AA81E962AA4005D7A27 /* GatewayResourceDetailViewController.swift */; };
+		AB4F5BEB243DA6DC00572AFC /* NetworkWebServiceHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94CD96E61E4AF61800946477 /* NetworkWebServiceHandler.swift */; };
+		AB4F5BEC243DA6DC00572AFC /* ActivityActiveStep.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6ED1B22B1E54256700BF463F /* ActivityActiveStep.swift */; };
+		AB4F5BED243DA6DC00572AFC /* LineChartCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94C13DBD1EC19E4700E3AEBF /* LineChartCell.swift */; };
+		AB4F5BEE243DA6DC00572AFC /* WebViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 481DFA4B1E6EEB70004C39EF /* WebViewController.swift */; };
+		AB4F5BEF243DA6DC00572AFC /* ActivityResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6ED1B2231E54254900BF463F /* ActivityResult.swift */; };
+		AB4F5BF0243DA6DC00572AFC /* StudyFilterViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48567FE01F14FB3C00857193 /* StudyFilterViewController.swift */; };
+		AB4F5BF1243DA6DC00572AFC /* UserServices.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9432C2FA1E4C9EF8005984EC /* UserServices.swift */; };
+		AB4F5BF2243DA6DC00572AFC /* RegistrationServerKeys.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FD1E15123F17ACA009DACAE /* RegistrationServerKeys.swift */; };
+		AB4F5BF3243DA6DC00572AFC /* ReachoutOptionCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94FF031E1E952B0A009F191B /* ReachoutOptionCell.swift */; };
+		AB4F5BF4243DA6DC00572AFC /* FeedBackViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4884E3511E825E7D002DA0B9 /* FeedBackViewController.swift */; };
+		AB4F5BF5243DA6DC00572AFC /* PageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94B3DD2A1E6ED8E500327AE5 /* PageViewController.swift */; };
+		AB4F5BF6243DA6DC00572AFC /* ResourceDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6E90D23F1EF40D2100F5140F /* ResourceDetailViewController.swift */; };
+		AB4F5BF7243DA6DC00572AFC /* ReachoutOptionsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94FF031A1E95275D009F191B /* ReachoutOptionsViewController.swift */; };
+		AB4F5BF8243DA6DC00572AFC /* Utilities.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6ECA92871E49F0CD00DA6287 /* Utilities.swift */; };
+		AB4F5BF9243DA6DC00572AFC /* SyncUpdate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6E9E81D51ECEDA770007B492 /* SyncUpdate.swift */; };
+		AB4F5BFA243DA6DC00572AFC /* LeftMenuViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94334F7B1E6FE60900755444 /* LeftMenuViewController.swift */; };
+		AB4F5BFB243DA6DC00572AFC /* UIUtilities.swift in Sources */ = {isa = PBXBuildFile; fileRef = 482062511E68532300C7A7AF /* UIUtilities.swift */; };
+		AB4F5BFC243DA6DC00572AFC /* TextChoiceCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FB89C21225F410500420A7B /* TextChoiceCell.swift */; };
+		AB4F5BFD243DA6DC00572AFC /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6E7D2D891E43400100763D4C /* User.swift */; };
+		AB4F5BFE243DA6DC00572AFC /* ProfileViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94B3DD1D1E6ED8E500327AE5 /* ProfileViewController.swift */; };
+		AB4F5BFF243DA6DC00572AFC /* StudyOverviewPageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94B3DD3D1E6ED8E500327AE5 /* StudyOverviewPageViewController.swift */; };
+		AB4F5C00243DA6DC00572AFC /* InEligibilityStepViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6E31DC681F17AF9C00C3E1DB /* InEligibilityStepViewController.swift */; };
+		AB4F5C01243DA6DC00572AFC /* Schedule.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6ED1B21D1E54252500BF463F /* Schedule.swift */; };
+		AB4F5C02243DA6DC00572AFC /* GatewayResourcesListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94B3DD1F1E6ED8E500327AE5 /* GatewayResourcesListViewController.swift */; };
+		AB4F5C03243DA6DC00572AFC /* ActivityQuestionStep.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6ED1B22E1E54256700BF463F /* ActivityQuestionStep.swift */; };
+		AB4F5C04243DA6DC00572AFC /* KDCircularProgress.swift in Sources */ = {isa = PBXBuildFile; fileRef = 482CC61D1EC5F52E00BFE8C6 /* KDCircularProgress.swift */; };
+		AB4F5C05243DA6DC00572AFC /* DBNotification.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6EF0466A1ED1C943008098BB /* DBNotification.swift */; };
+		AB4F5C06243DA6DC00572AFC /* ActivitiesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6EE93DB91E93C8850027A5DC /* ActivitiesViewController.swift */; };
+		AB4F5C07243DA6DC00572AFC /* Activity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6ED1B2201E54253800BF463F /* Activity.swift */; };
+		AB4F5C08243DA6DC00572AFC /* SearchBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6E4D86DF1F38A740003DBDD8 /* SearchBarView.swift */; };
+		AB4F5C09243DA6DC00572AFC /* AppUpdateBlocker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94C6BD431EB8513300D4AA72 /* AppUpdateBlocker.swift */; };
+		AB4F5C0A243DA6DC00572AFC /* FetalKickIntroStepViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6EB740251E9D028000A4C773 /* FetalKickIntroStepViewController.swift */; };
+		AB4F5C0B243DA6DC00572AFC /* DBUser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9491F7F91E825FA80018C15E /* DBUser.swift */; };
+		AB4F5C0C243DA6DC00572AFC /* EnrollServices.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F2392DD2423E0F300013AC0 /* EnrollServices.swift */; };
+		AB4F5C0D243DA6DC00572AFC /* ActivityStep.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6ED1B22F1E54256700BF463F /* ActivityStep.swift */; };
+		AB4F5C0E243DA6DC00572AFC /* Branding.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FA10A1724374DC200932622 /* Branding.swift */; };
+		AB4F5C0F243DA6DC00572AFC /* FilterListTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 484ACBFF1F28BC8800BCC819 /* FilterListTableViewCell.swift */; };
+		AB4F5C10243DA6DC00572AFC /* StudyDashboardActivityTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6EBC2E781E94FB5300828CA1 /* StudyDashboardActivityTableViewCell.swift */; };
+		AB4F5C11243DA6DC00572AFC /* ConsentResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6EC1291E1E64241200B90167 /* ConsentResult.swift */; };
+		AB4F5C12243DA6DC00572AFC /* WCPConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94CD96EE1E4B16D900946477 /* WCPConfiguration.swift */; };
+		AB4F5C13243DA6DC00572AFC /* StudyOverviewPageViewControllerFirst.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94B3DD3E1E6ED8E500327AE5 /* StudyOverviewPageViewControllerFirst.swift */; };
+		AB4F5C14243DA6DC00572AFC /* Overview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 941909BA1E533AA9001B01C5 /* Overview.swift */; };
+		AB4F5C15243DA6DC00572AFC /* StudyDashboard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94C5504F1EBA153F007740D0 /* StudyDashboard.swift */; };
+		AB4F5C16243DA6DC00572AFC /* ChangePasswordViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 940577A71E767AC60043215C /* ChangePasswordViewController.swift */; };
+		AB4F5C17243DA6DC00572AFC /* ComprehensionFailure.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6E61BCC51F27271000C156B9 /* ComprehensionFailure.swift */; };
+		AB4F5C18243DA6DC00572AFC /* ActivityFilterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6E7DC76B1F69479C001A05B6 /* ActivityFilterView.swift */; };
+		AB4F5C19243DA6DC00572AFC /* VerificationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94B3DD381E6ED8E500327AE5 /* VerificationViewController.swift */; };
+		AB4F5C1A243DA6DC00572AFC /* FirstGatewayOverviewViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94B3DD281E6ED8E500327AE5 /* FirstGatewayOverviewViewController.swift */; };
+		AB4F5C1B243DA6DC00572AFC /* ResearchContainerSegue.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6E2B25F11EAE3F1D00E2DFB2 /* ResearchContainerSegue.swift */; };
+		AB4F5C1C243DA6DC00572AFC /* AuthServerConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89AD25A923D7241900F9450C /* AuthServerConfiguration.swift */; };
+		AB4F5C1D243DA6DC00572AFC /* WCPServices.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94C602301E51C7D500CB72F7 /* WCPServices.swift */; };
+		AB4F5C1E243DA6DC00572AFC /* ResponseServices.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9487102B1E54870000246109 /* ResponseServices.swift */; };
+		AB4F5C1F243DA6DC00572AFC /* FileDownloadModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6E183AB11E966230005D7A27 /* FileDownloadModel.swift */; };
+		AB4F5C20243DA6DC00572AFC /* StudyDashboardStatisticsCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6EBC2E791E94FB5300828CA1 /* StudyDashboardStatisticsCollectionViewCell.swift */; };
+		AB4F5C21243DA6DC00572AFC /* ActivityStepResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6ED1B2271E54255900BF463F /* ActivityStepResult.swift */; };
+		AB4F5C22243DA6DC00572AFC /* NetworkConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94CD96EC1E4AFAFF00946477 /* NetworkConfiguration.swift */; };
+		AB4F5C23243DA6DC00572AFC /* RegistrationServerConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9432C2F61E4C483D005984EC /* RegistrationServerConfiguration.swift */; };
+		AB4F5C24243DA6DC00572AFC /* EligibilityStepViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6EBC8A2A1E8113110020F9E6 /* EligibilityStepViewController.swift */; };
+		AB4F5C25243DA6DC00572AFC /* ResourcesTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6EE93DBC1E93C8850027A5DC /* ResourcesTableViewCell.swift */; };
+		AB4F5C26243DA6DC00572AFC /* StudyOverviewViewControllerSecond.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94B3DD3F1E6ED8E500327AE5 /* StudyOverviewViewControllerSecond.swift */; };
+		AB4F5C27243DA6DC00572AFC /* ActivityFormStep.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6ED1B22C1E54256700BF463F /* ActivityFormStep.swift */; };
+		AB4F5C28243DA6DC00572AFC /* StudyDashboardStudyActivitiesTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6EBC2E7B1E94FB5300828CA1 /* StudyDashboardStudyActivitiesTableViewCell.swift */; };
+		AB4F5C29243DA6DC00572AFC /* SignInTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94B3DD311E6ED8E500327AE5 /* SignInTableViewCell.swift */; };
+		AB4F5C2A243DA6DC00572AFC /* Resource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6ECA92811E49B3BB00DA6287 /* Resource.swift */; };
+		AB4F5C2B243DA6DC00572AFC /* ContactUsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4884E3571E827E5B002DA0B9 /* ContactUsViewController.swift */; };
+		AB4F5C2C243DA6DC00572AFC /* Reachability.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94CD96E71E4AF61800946477 /* Reachability.swift */; };
+		AB4F5C2D243DA6DC00572AFC /* StudyDashboardWelcomeTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6EBC2E7F1E94FB5300828CA1 /* StudyDashboardWelcomeTableViewCell.swift */; };
+		AB4F5C2E243DA6DC00572AFC /* StudyListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94B3DD221E6ED8E500327AE5 /* StudyListViewController.swift */; };
+		AB4F5C2F243DA6DC00572AFC /* FetalKickCounterStepViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6EED7B3A1E65751D002C1FA3 /* FetalKickCounterStepViewController.swift */; };
+		AB4F5C31243DA6DC00572AFC /* HealthKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6EEBA4791F25FAA100FB0258 /* HealthKit.framework */; };
+		AB4F5C32243DA6DC00572AFC /* Pods_HPHC.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EC9CA22924E3FDD2E7D31960 /* Pods_HPHC.framework */; };
+		AB4F5C33243DA6DC00572AFC /* ResearchKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6EF0BC3C2223D1D6004F2357 /* ResearchKit.framework */; };
+		AB4F5C34243DA6DC00572AFC /* (null) in Frameworks */ = {isa = PBXBuildFile; };
+		AB4F5C36243DA6DC00572AFC /* Study.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 94B3DD3A1E6ED8E500327AE5 /* Study.storyboard */; };
+		AB4F5C37243DA6DC00572AFC /* SearchBarView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6E4D86DB1F389DF1003DBDD8 /* SearchBarView.xib */; };
+		AB4F5C38243DA6DC00572AFC /* LoginAssets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 94B3DD2D1E6ED8E500327AE5 /* LoginAssets.xcassets */; };
+		AB4F5C39243DA6DC00572AFC /* ConsentLatest.json in Resources */ = {isa = PBXBuildFile; fileRef = 6E93C7E01EE2EC26006788B1 /* ConsentLatest.json */; };
+		AB4F5C3A243DA6DC00572AFC /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 6E7D2D601E433E8800763D4C /* Assets.xcassets */; };
+		AB4F5C3B243DA6DC00572AFC /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 6E7D2D621E433E8800763D4C /* LaunchScreen.storyboard */; };
+		AB4F5C3C243DA6DC00572AFC /* UserPreferences.plist in Resources */ = {isa = PBXBuildFile; fileRef = 6E7D2D8D1E43445600763D4C /* UserPreferences.plist */; };
+		AB4F5C3D243DA6DC00572AFC /* AppGlossary.pdf in Resources */ = {isa = PBXBuildFile; fileRef = 9450598E1F29FA2C007906A7 /* AppGlossary.pdf */; };
+		AB4F5C3E243DA6DC00572AFC /* Verdana Italic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 6ED593721F011D5B00AC3636 /* Verdana Italic.ttf */; };
+		AB4F5C3F243DA6DC00572AFC /* SignUpPlist.plist in Resources */ = {isa = PBXBuildFile; fileRef = 94B3DD351E6ED8E500327AE5 /* SignUpPlist.plist */; };
+		AB4F5C40243DA6DC00572AFC /* AppUpdateBlocker.xib in Resources */ = {isa = PBXBuildFile; fileRef = 94C6BD451EB8515000D4AA72 /* AppUpdateBlocker.xib */; };
+		AB4F5C41243DA6DC00572AFC /* Gateway.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 6EE5756B1E891440009BAA25 /* Gateway.xcassets */; };
+		AB4F5C42243DA6DC00572AFC /* ActivityFilterView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6E7DC76C1F69479C001A05B6 /* ActivityFilterView.xib */; };
+		AB4F5C43243DA6DC00572AFC /* Study.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 94B3DD3B1E6ED8E500327AE5 /* Study.xcassets */; };
+		AB4F5C44243DA6DC00572AFC /* Units.json in Resources */ = {isa = PBXBuildFile; fileRef = 6ED5B0581FCD550F00925352 /* Units.json */; };
+		AB4F5C45243DA6DC00572AFC /* ResourcesUI.plist in Resources */ = {isa = PBXBuildFile; fileRef = 6EE93DBB1E93C8850027A5DC /* ResourcesUI.plist */; };
+		AB4F5C46243DA6DC00572AFC /* StudyDashboard.plist in Resources */ = {isa = PBXBuildFile; fileRef = 6EBC2E761E94FB5300828CA1 /* StudyDashboard.plist */; };
+		AB4F5C47243DA6DC00572AFC /* OtherTextChoiceCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6F0221782264729E00A2DBC8 /* OtherTextChoiceCell.xib */; };
+		AB4F5C48243DA6DC00572AFC /* Resources.plist in Resources */ = {isa = PBXBuildFile; fileRef = 6EAB39A81E4B0B4A003442B8 /* Resources.plist */; };
+		AB4F5C49243DA6DC00572AFC /* JailbrokeBlocker.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6E91D6811ECD662E0012F49F /* JailbrokeBlocker.xib */; };
+		AB4F5C4A243DA6DC00572AFC /* StepProvider.plist in Resources */ = {isa = PBXBuildFile; fileRef = 6EF05A981E4DC36400CD7661 /* StepProvider.plist */; };
+		AB4F5C4B243DA6DC00572AFC /* ProgressView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 946CA5EC1E72DCA300CC8535 /* ProgressView.xib */; };
+		AB4F5C4C243DA6DC00572AFC /* FetalKickCounter.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 6ECF75CF1E6EF140008C935E /* FetalKickCounter.storyboard */; };
+		AB4F5C4D243DA6DC00572AFC /* Branding.plist in Resources */ = {isa = PBXBuildFile; fileRef = 89055912230148FD005FB284 /* Branding.plist */; };
+		AB4F5C4E243DA6DC00572AFC /* ChangePasswordData.plist in Resources */ = {isa = PBXBuildFile; fileRef = 940577AB1E767C8D0043215C /* ChangePasswordData.plist */; };
+		AB4F5C4F243DA6DC00572AFC /* Consent.json in Resources */ = {isa = PBXBuildFile; fileRef = 6ED134371E5F1B110090C976 /* Consent.json */; };
+		AB4F5C50243DA6DC00572AFC /* SignInPlist.plist in Resources */ = {isa = PBXBuildFile; fileRef = 94B3DD301E6ED8E500327AE5 /* SignInPlist.plist */; };
+		AB4F5C51243DA6DC00572AFC /* NewProgressView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6EDDB6591EE05E4C00C79337 /* NewProgressView.xib */; };
+		AB4F5C52243DA6DC00572AFC /* fda_preload.gif in Resources */ = {isa = PBXBuildFile; fileRef = 6EDDB6601EE05FDC00C79337 /* fda_preload.gif */; };
+		AB4F5C53243DA6DC00572AFC /* StudyOverview.plist in Resources */ = {isa = PBXBuildFile; fileRef = 4833E9E21E712C2B0032D244 /* StudyOverview.plist */; };
+		AB4F5C54243DA6DC00572AFC /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = 6F4E1B2A24223C210051D3E2 /* README.md */; };
+		AB4F5C55243DA6DC00572AFC /* Login.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 94B3DD2C1E6ED8E500327AE5 /* Login.storyboard */; };
+		AB4F5C56243DA6DC00572AFC /* ActivitySchedules.xib in Resources */ = {isa = PBXBuildFile; fileRef = 942591C31EA8A2650010D892 /* ActivitySchedules.xib */; };
+		AB4F5C57243DA6DC00572AFC /* Confirmation.plist in Resources */ = {isa = PBXBuildFile; fileRef = 6EA889C41E701E8200F160A1 /* Confirmation.plist */; };
+		AB4F5C58243DA6DC00572AFC /* Notification.json in Resources */ = {isa = PBXBuildFile; fileRef = 6E14F2021F0224AD00EA8D1E /* Notification.json */; };
+		AB4F5C59243DA6DC00572AFC /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 6E7D2D5D1E433E8800763D4C /* Main.storyboard */; };
+		AB4F5C5A243DA6DC00572AFC /* TextChoiceCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6F0221772264729D00A2DBC8 /* TextChoiceCell.xib */; };
+		AB4F5C5B243DA6DC00572AFC /* FilterData.plist in Resources */ = {isa = PBXBuildFile; fileRef = 484ACBFB1F28A82B00BCC819 /* FilterData.plist */; };
+		AB4F5C5C243DA6DC00572AFC /* Activities.plist in Resources */ = {isa = PBXBuildFile; fileRef = 6EE93DB71E93C8850027A5DC /* Activities.plist */; };
+		AB4F5C5D243DA6DC00572AFC /* FetalKickCounter.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 6ECF75D11E6EF1E7008C935E /* FetalKickCounter.xcassets */; };
+		AB4F5C5E243DA6DC00572AFC /* ContactUs.plist in Resources */ = {isa = PBXBuildFile; fileRef = 4884E35B1E827F8F002DA0B9 /* ContactUs.plist */; };
+		AB4F5C5F243DA6DC00572AFC /* FetalKickTest.json in Resources */ = {isa = PBXBuildFile; fileRef = 6EB740171E9CD38100A4C773 /* FetalKickTest.json */; };
+		AB4F5C60243DA6DC00572AFC /* Gateway.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 94B3DD151E6ED8E500327AE5 /* Gateway.storyboard */; };
+		AB4F5C61243DA6DC00572AFC /* ComprehensionFailure.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6E61BCC31F27262F00C156B9 /* ComprehensionFailure.xib */; };
+		AB4F5C62243DA6DC00572AFC /* GatewayOverview.plist in Resources */ = {isa = PBXBuildFile; fileRef = 486304D51E6FE77C003CD406 /* GatewayOverview.plist */; };
+		AB4F5C63243DA6DC00572AFC /* Profile.plist in Resources */ = {isa = PBXBuildFile; fileRef = 94B3DD1B1E6ED8E500327AE5 /* Profile.plist */; };
+		AB4F5C64243DA6DC00572AFC /* AnanomousFilterData.plist in Resources */ = {isa = PBXBuildFile; fileRef = 6E417AD21F4D5DA1007F27DA /* AnanomousFilterData.plist */; };
+		AB4F5C65243DA6DC00572AFC /* UserProfile.plist in Resources */ = {isa = PBXBuildFile; fileRef = 6E7D2D8B1E4340B200763D4C /* UserProfile.plist */; };
+		AB4F5C66243DA6DC00572AFC /* Register.plist in Resources */ = {isa = PBXBuildFile; fileRef = 6E7D2D8F1E43526100763D4C /* Register.plist */; };
+		AB4F5C69243DA6DC00572AFC /* ResearchKit.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 6EF0BC3C2223D1D6004F2357 /* ResearchKit.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -266,6 +477,13 @@
 			remoteGlobalIDString = B183A4731A8535D100C76870;
 			remoteInfo = ResearchKit;
 		};
+		AB4F5B90243DA6DC00572AFC /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 6EF0BC352223D1D5004F2357 /* ResearchKit.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = B183A4731A8535D100C76870;
+			remoteInfo = ResearchKit;
+		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -276,6 +494,17 @@
 			dstSubfolderSpec = 10;
 			files = (
 				89EDB46D2271EFDF0070F16C /* ResearchKit.framework in Embed Frameworks */,
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		AB4F5C68243DA6DC00572AFC /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				AB4F5C69243DA6DC00572AFC /* ResearchKit.framework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -522,6 +751,8 @@
 		94FF031A1E95275D009F191B /* ReachoutOptionsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ReachoutOptionsViewController.swift; sourceTree = "<group>"; };
 		94FF031E1E952B0A009F191B /* ReachoutOptionCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ReachoutOptionCell.swift; sourceTree = "<group>"; };
 		A2CE974C81943F2AB0C602C1 /* Pods-HPHCTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-HPHCTests.release.xcconfig"; path = "Pods/Target Support Files/Pods-HPHCTests/Pods-HPHCTests.release.xcconfig"; sourceTree = "<group>"; };
+		AB4F5C6D243DA6DC00572AFC /* HeroesHealth.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = HeroesHealth.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		AB4F5C70243DA6DF00572AFC /* HPHC copy-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = "HPHC copy-Info.plist"; path = "/Users/ykyyip/Source/fda-mystudies/iOS/HPHC/HPHC copy-Info.plist"; sourceTree = "<absolute>"; };
 		E4CF7BB238C017BF7E2A6346 /* Pods_HPHCUITests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_HPHCUITests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		EC9CA22924E3FDD2E7D31960 /* Pods_HPHC.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_HPHC.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -551,6 +782,17 @@
 			buildActionMask = 2147483647;
 			files = (
 				83E41E58CE40BA32BA0F019B /* Pods_HPHCUITests.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		AB4F5C30243DA6DC00572AFC /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				AB4F5C31243DA6DC00572AFC /* HealthKit.framework in Frameworks */,
+				AB4F5C32243DA6DC00572AFC /* Pods_HPHC.framework in Frameworks */,
+				AB4F5C33243DA6DC00572AFC /* ResearchKit.framework in Frameworks */,
+				AB4F5C34243DA6DC00572AFC /* (null) in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -649,6 +891,7 @@
 				6E7D2D571E433E8700763D4C /* Products */,
 				62CD35D6D8DE746AB43D70D6 /* Pods */,
 				5E6053B2479953DCC93BD8D4 /* Frameworks */,
+				AB4F5C70243DA6DF00572AFC /* HPHC copy-Info.plist */,
 			);
 			sourceTree = "<group>";
 		};
@@ -658,6 +901,7 @@
 				6E7D2D561E433E8700763D4C /* GCPMyStudies.app */,
 				7878B31A2216C6E10052FC23 /* HPHCTests.xctest */,
 				89055918230149AD005FB284 /* HPHCUITests.xctest */,
+				AB4F5C6D243DA6DC00572AFC /* HeroesHealth.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -1766,6 +2010,27 @@
 			productReference = 89055918230149AD005FB284 /* HPHCUITests.xctest */;
 			productType = "com.apple.product-type.bundle.ui-testing";
 		};
+		AB4F5B8E243DA6DC00572AFC /* HeroesHealth */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = AB4F5C6A243DA6DC00572AFC /* Build configuration list for PBXNativeTarget "HeroesHealth" */;
+			buildPhases = (
+				AB4F5B91243DA6DC00572AFC /* [CP] Check Pods Manifest.lock */,
+				AB4F5B92243DA6DC00572AFC /* Sources */,
+				AB4F5C30243DA6DC00572AFC /* Frameworks */,
+				AB4F5C35243DA6DC00572AFC /* Resources */,
+				AB4F5C67243DA6DC00572AFC /* [CP] Embed Pods Frameworks */,
+				AB4F5C68243DA6DC00572AFC /* Embed Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				AB4F5B8F243DA6DC00572AFC /* PBXTargetDependency */,
+			);
+			name = HeroesHealth;
+			productName = FDA;
+			productReference = AB4F5C6D243DA6DC00572AFC /* HeroesHealth.app */;
+			productType = "com.apple.product-type.application";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -1804,6 +2069,10 @@
 						DevelopmentTeam = 3485DDCN2M;
 						ProvisioningStyle = Automatic;
 						TestTargetID = 6E7D2D551E433E8700763D4C;
+					};
+					AB4F5B8E243DA6DC00572AFC = {
+						DevelopmentTeam = EQHXZ8M8AV;
+						ProvisioningStyle = Manual;
 					};
 				};
 			};
@@ -1864,6 +2133,7 @@
 			);
 			projectRoot = "";
 			targets = (
+				AB4F5B8E243DA6DC00572AFC /* HeroesHealth */,
 				6E7D2D551E433E8700763D4C /* HPHC */,
 				7878B3192216C6E10052FC23 /* HPHCTests */,
 				89055917230149AD005FB284 /* HPHCUITests */,
@@ -1959,6 +2229,62 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		AB4F5C35243DA6DC00572AFC /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				AB4F5C36243DA6DC00572AFC /* Study.storyboard in Resources */,
+				AB4F5C37243DA6DC00572AFC /* SearchBarView.xib in Resources */,
+				AB4F5C38243DA6DC00572AFC /* LoginAssets.xcassets in Resources */,
+				AB4F5C39243DA6DC00572AFC /* ConsentLatest.json in Resources */,
+				AB4F5C3A243DA6DC00572AFC /* Assets.xcassets in Resources */,
+				AB4F5C3B243DA6DC00572AFC /* LaunchScreen.storyboard in Resources */,
+				AB4F5C3C243DA6DC00572AFC /* UserPreferences.plist in Resources */,
+				AB4F5C3D243DA6DC00572AFC /* AppGlossary.pdf in Resources */,
+				AB4F5C3E243DA6DC00572AFC /* Verdana Italic.ttf in Resources */,
+				AB4F5C3F243DA6DC00572AFC /* SignUpPlist.plist in Resources */,
+				AB4F5C40243DA6DC00572AFC /* AppUpdateBlocker.xib in Resources */,
+				AB4F5C41243DA6DC00572AFC /* Gateway.xcassets in Resources */,
+				AB4F5C42243DA6DC00572AFC /* ActivityFilterView.xib in Resources */,
+				AB4F5C43243DA6DC00572AFC /* Study.xcassets in Resources */,
+				AB4F5C44243DA6DC00572AFC /* Units.json in Resources */,
+				AB4F5C45243DA6DC00572AFC /* ResourcesUI.plist in Resources */,
+				AB4F5C46243DA6DC00572AFC /* StudyDashboard.plist in Resources */,
+				AB4F5C47243DA6DC00572AFC /* OtherTextChoiceCell.xib in Resources */,
+				AB4F5C48243DA6DC00572AFC /* Resources.plist in Resources */,
+				AB4F5C49243DA6DC00572AFC /* JailbrokeBlocker.xib in Resources */,
+				AB4F5C4A243DA6DC00572AFC /* StepProvider.plist in Resources */,
+				AB4F5C4B243DA6DC00572AFC /* ProgressView.xib in Resources */,
+				AB4F5C4C243DA6DC00572AFC /* FetalKickCounter.storyboard in Resources */,
+				AB4F5C4D243DA6DC00572AFC /* Branding.plist in Resources */,
+				AB4F5C4E243DA6DC00572AFC /* ChangePasswordData.plist in Resources */,
+				AB4F5C4F243DA6DC00572AFC /* Consent.json in Resources */,
+				AB4F5C50243DA6DC00572AFC /* SignInPlist.plist in Resources */,
+				AB4F5C51243DA6DC00572AFC /* NewProgressView.xib in Resources */,
+				AB4F5C52243DA6DC00572AFC /* fda_preload.gif in Resources */,
+				AB4F5C53243DA6DC00572AFC /* StudyOverview.plist in Resources */,
+				AB4F5C54243DA6DC00572AFC /* README.md in Resources */,
+				AB4F5C55243DA6DC00572AFC /* Login.storyboard in Resources */,
+				AB4F5C56243DA6DC00572AFC /* ActivitySchedules.xib in Resources */,
+				AB4F5C57243DA6DC00572AFC /* Confirmation.plist in Resources */,
+				AB4F5C58243DA6DC00572AFC /* Notification.json in Resources */,
+				AB4F5C59243DA6DC00572AFC /* Main.storyboard in Resources */,
+				AB4F5C5A243DA6DC00572AFC /* TextChoiceCell.xib in Resources */,
+				AB4F5C5B243DA6DC00572AFC /* FilterData.plist in Resources */,
+				AB4F5C5C243DA6DC00572AFC /* Activities.plist in Resources */,
+				AB4F5C5D243DA6DC00572AFC /* FetalKickCounter.xcassets in Resources */,
+				AB4F5C5E243DA6DC00572AFC /* ContactUs.plist in Resources */,
+				AB4F5C5F243DA6DC00572AFC /* FetalKickTest.json in Resources */,
+				AB4F5C60243DA6DC00572AFC /* Gateway.storyboard in Resources */,
+				AB4F5C61243DA6DC00572AFC /* ComprehensionFailure.xib in Resources */,
+				AB4F5C62243DA6DC00572AFC /* GatewayOverview.plist in Resources */,
+				AB4F5C63243DA6DC00572AFC /* Profile.plist in Resources */,
+				AB4F5C64243DA6DC00572AFC /* AnanomousFilterData.plist in Resources */,
+				AB4F5C65243DA6DC00572AFC /* UserProfile.plist in Resources */,
+				AB4F5C66243DA6DC00572AFC /* Register.plist in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
@@ -2032,6 +2358,54 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		AB4F5B91243DA6DC00572AFC /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-HPHC-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		AB4F5C67243DA6DC00572AFC /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-HPHC/Pods-HPHC-frameworks.sh",
+				"${BUILT_PRODUCTS_DIR}/ActionSheetPicker-3.0/ActionSheetPicker_3_0.framework",
+				"${BUILT_PRODUCTS_DIR}/CryptoSwift/CryptoSwift.framework",
+				"${BUILT_PRODUCTS_DIR}/IQKeyboardManagerSwift/IQKeyboardManagerSwift.framework",
+				"${BUILT_PRODUCTS_DIR}/Realm/Realm.framework",
+				"${BUILT_PRODUCTS_DIR}/RealmSwift/RealmSwift.framework",
+				"${BUILT_PRODUCTS_DIR}/SDWebImage/SDWebImage.framework",
+				"${BUILT_PRODUCTS_DIR}/SlideMenuControllerSwift/SlideMenuControllerSwift.framework",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputPaths = (
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/ActionSheetPicker_3_0.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/CryptoSwift.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/IQKeyboardManagerSwift.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Realm.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/RealmSwift.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SDWebImage.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SlideMenuControllerSwift.framework",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-HPHC/Pods-HPHC-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 		C872B313DD02BA18462846BA /* [CP] Check Pods Manifest.lock */ = {
@@ -2263,6 +2637,170 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		AB4F5B92243DA6DC00572AFC /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				AB4F5B93243DA6DC00572AFC /* UIApplication+Extensions.swift in Sources */,
+				AB4F5B94243DA6DC00572AFC /* UIViewController+Extensions.swift in Sources */,
+				AB4F5B95243DA6DC00572AFC /* SignUpTableViewCell.swift in Sources */,
+				AB4F5B96243DA6DC00572AFC /* NotificationViewController.swift in Sources */,
+				AB4F5B97243DA6DC00572AFC /* LeftMenuCell.swift in Sources */,
+				AB4F5B98243DA6DC00572AFC /* String+Extensions.swift in Sources */,
+				AB4F5B99243DA6DC00572AFC /* PinterestLayout.swift in Sources */,
+				AB4F5B9A243DA6DC00572AFC /* Cell+Extensions.swift in Sources */,
+				AB4F5B9B243DA6DC00572AFC /* DBActivity.swift in Sources */,
+				AB4F5B9C243DA6DC00572AFC /* ContactUsTableViewCell.swift in Sources */,
+				AB4F5B9D243DA6DC00572AFC /* ConsentSharePdfStepViewController.swift in Sources */,
+				AB4F5B9E243DA6DC00572AFC /* ConsentServerConfiguration.swift in Sources */,
+				AB4F5B9F243DA6DC00572AFC /* FRHyperLabel.m in Sources */,
+				AB4F5BA0243DA6DC00572AFC /* StepProvider.swift in Sources */,
+				AB4F5BA1243DA6DC00572AFC /* ActivityInstructionStep.swift in Sources */,
+				AB4F5BA2243DA6DC00572AFC /* SplashViewController.swift in Sources */,
+				AB4F5BA3243DA6DC00572AFC /* ResearchContainerViewController.swift in Sources */,
+				AB4F5BA4243DA6DC00572AFC /* Logger.swift in Sources */,
+				AB4F5BA5243DA6DC00572AFC /* EligibilityBuilder.swift in Sources */,
+				AB4F5BA6243DA6DC00572AFC /* NetworkConstants.swift in Sources */,
+				AB4F5BA7243DA6DC00572AFC /* RepeatableFormStep.m in Sources */,
+				AB4F5BA8243DA6DC00572AFC /* StudyDashboardTabbarViewController.swift in Sources */,
+				AB4F5BA9243DA6DC00572AFC /* ConfirmationOptionalTableViewCell.swift in Sources */,
+				AB4F5BAA243DA6DC00572AFC /* StudyDashboardStudyPercentageTableViewCell.swift in Sources */,
+				AB4F5BAB243DA6DC00572AFC /* DBStudy.swift in Sources */,
+				AB4F5BAC243DA6DC00572AFC /* FeedBackTableViewCell.swift in Sources */,
+				AB4F5BAD243DA6DC00572AFC /* KeyChain.swift in Sources */,
+				AB4F5BAE243DA6DC00572AFC /* ResourcesViewController.swift in Sources */,
+				AB4F5BAF243DA6DC00572AFC /* HealthClientType.swift in Sources */,
+				AB4F5BB0243DA6DC00572AFC /* ConsentServices.swift in Sources */,
+				AB4F5BB1243DA6DC00572AFC /* StudyListCell.swift in Sources */,
+				AB4F5BB2243DA6DC00572AFC /* SignUpViewController.swift in Sources */,
+				AB4F5BB3243DA6DC00572AFC /* TextChoiceQuestionController.swift in Sources */,
+				AB4F5BB4243DA6DC00572AFC /* Data+Extensions.swift in Sources */,
+				AB4F5BB5243DA6DC00572AFC /* ActivitySchedules.swift in Sources */,
+				AB4F5BB6243DA6DC00572AFC /* AppConfiguration.swift in Sources */,
+				AB4F5BB7243DA6DC00572AFC /* RepeatableFormStepViewController.m in Sources */,
+				AB4F5BB8243DA6DC00572AFC /* DBHandler.swift in Sources */,
+				AB4F5BB9243DA6DC00572AFC /* ConsentStep.swift in Sources */,
+				AB4F5BBA243DA6DC00572AFC /* ActivitiesTableViewCell.swift in Sources */,
+				AB4F5BBB243DA6DC00572AFC /* SecondGatewayOverviewViewController.swift in Sources */,
+				AB4F5BBC243DA6DC00572AFC /* LeftMenuResourceTableViewCell.swift in Sources */,
+				AB4F5BBD243DA6DC00572AFC /* Gateway.swift in Sources */,
+				AB4F5BBE243DA6DC00572AFC /* ProfileTableViewCell.swift in Sources */,
+				AB4F5BBF243DA6DC00572AFC /* FetalKickCounterStep.swift in Sources */,
+				AB4F5BC0243DA6DC00572AFC /* ChartsViewController.swift in Sources */,
+				AB4F5BC1243DA6DC00572AFC /* Constants.swift in Sources */,
+				AB4F5BC2243DA6DC00572AFC /* UITestingHelpers.swift in Sources */,
+				AB4F5BC3243DA6DC00572AFC /* SignUpCompleteViewController.swift in Sources */,
+				AB4F5BC4243DA6DC00572AFC /* ForgotPasswordViewController.swift in Sources */,
+				AB4F5BC5243DA6DC00572AFC /* NetworkManager.swift in Sources */,
+				AB4F5BC6243DA6DC00572AFC /* FDASlideMenuViewController.swift in Sources */,
+				AB4F5BC7243DA6DC00572AFC /* AppDelegate.swift in Sources */,
+				AB4F5BC8243DA6DC00572AFC /* StudyHomeViewController.swift in Sources */,
+				AB4F5BC9243DA6DC00572AFC /* ConsentPdfViewerStepViewController.swift in Sources */,
+				AB4F5BCA243DA6DC00572AFC /* Dictionary+Extensions.swift in Sources */,
+				AB4F5BCB243DA6DC00572AFC /* StudyDashboardStatisticsTableViewCell.swift in Sources */,
+				AB4F5BCC243DA6DC00572AFC /* ConsentBuilder.swift in Sources */,
+				AB4F5BCD243DA6DC00572AFC /* JailbrokeBlocker.swift in Sources */,
+				AB4F5BCE243DA6DC00572AFC /* HomeViewController.swift in Sources */,
+				AB4F5BCF243DA6DC00572AFC /* FileDownloadManager.swift in Sources */,
+				AB4F5BD0243DA6DC00572AFC /* AppNotification.swift in Sources */,
+				AB4F5BD1243DA6DC00572AFC /* NotificationTableViewCell.swift in Sources */,
+				AB4F5BD2243DA6DC00572AFC /* FilterListCollectionViewCell.swift in Sources */,
+				AB4F5BD3243DA6DC00572AFC /* Formatter.swift in Sources */,
+				AB4F5BD4243DA6DC00572AFC /* StudyDashboardViewController.swift in Sources */,
+				AB4F5BD5243DA6DC00572AFC /* Study.swift in Sources */,
+				AB4F5BD6243DA6DC00572AFC /* ResourcesListCell.swift in Sources */,
+				AB4F5BD7243DA6DC00572AFC /* UIImage+Extensions.swift in Sources */,
+				AB4F5BD8243DA6DC00572AFC /* Collection+Extensions.swift in Sources */,
+				AB4F5BD9243DA6DC00572AFC /* AnchorDateHandler.swift in Sources */,
+				AB4F5BDA243DA6DC00572AFC /* StandaloneStudy.swift in Sources */,
+				AB4F5BDB243DA6DC00572AFC /* LocalNotification.swift in Sources */,
+				AB4F5BDC243DA6DC00572AFC /* ConfirmationViewController.swift in Sources */,
+				AB4F5BDD243DA6DC00572AFC /* FetalKickCounterTask.swift in Sources */,
+				AB4F5BDE243DA6DC00572AFC /* OtherTextChoiceCell.swift in Sources */,
+				AB4F5BDF243DA6DC00572AFC /* AKUtility.swift in Sources */,
+				AB4F5BE0243DA6DC00572AFC /* AuthServices.swift in Sources */,
+				AB4F5BE1243DA6DC00572AFC /* APIConfiguration.swift in Sources */,
+				AB4F5BE2243DA6DC00572AFC /* ConfirmationTableViewCell.swift in Sources */,
+				AB4F5BE3243DA6DC00572AFC /* ActivityBuilder.swift in Sources */,
+				AB4F5BE4243DA6DC00572AFC /* File.swift in Sources */,
+				AB4F5BE5243DA6DC00572AFC /* StudyDashboardActivityCollectionViewCell.swift in Sources */,
+				AB4F5BE6243DA6DC00572AFC /* SignInViewController.swift in Sources */,
+				AB4F5BE7243DA6DC00572AFC /* StudyDashboardTrendsTableViewCell.swift in Sources */,
+				AB4F5BE8243DA6DC00572AFC /* EnrollmentServerConfiguration.swift in Sources */,
+				AB4F5BE9243DA6DC00572AFC /* ResponseServerConfiguration.swift in Sources */,
+				AB4F5BEA243DA6DC00572AFC /* GatewayResourceDetailViewController.swift in Sources */,
+				AB4F5BEB243DA6DC00572AFC /* NetworkWebServiceHandler.swift in Sources */,
+				AB4F5BEC243DA6DC00572AFC /* ActivityActiveStep.swift in Sources */,
+				AB4F5BED243DA6DC00572AFC /* LineChartCell.swift in Sources */,
+				AB4F5BEE243DA6DC00572AFC /* WebViewController.swift in Sources */,
+				AB4F5BEF243DA6DC00572AFC /* ActivityResult.swift in Sources */,
+				AB4F5BF0243DA6DC00572AFC /* StudyFilterViewController.swift in Sources */,
+				AB4F5BF1243DA6DC00572AFC /* UserServices.swift in Sources */,
+				AB4F5BF2243DA6DC00572AFC /* RegistrationServerKeys.swift in Sources */,
+				AB4F5BF3243DA6DC00572AFC /* ReachoutOptionCell.swift in Sources */,
+				AB4F5BF4243DA6DC00572AFC /* FeedBackViewController.swift in Sources */,
+				AB4F5BF5243DA6DC00572AFC /* PageViewController.swift in Sources */,
+				AB4F5BF6243DA6DC00572AFC /* ResourceDetailViewController.swift in Sources */,
+				AB4F5BF7243DA6DC00572AFC /* ReachoutOptionsViewController.swift in Sources */,
+				AB4F5BF8243DA6DC00572AFC /* Utilities.swift in Sources */,
+				AB4F5BF9243DA6DC00572AFC /* SyncUpdate.swift in Sources */,
+				AB4F5BFA243DA6DC00572AFC /* LeftMenuViewController.swift in Sources */,
+				AB4F5BFB243DA6DC00572AFC /* UIUtilities.swift in Sources */,
+				AB4F5BFC243DA6DC00572AFC /* TextChoiceCell.swift in Sources */,
+				AB4F5BFD243DA6DC00572AFC /* User.swift in Sources */,
+				AB4F5BFE243DA6DC00572AFC /* ProfileViewController.swift in Sources */,
+				AB4F5BFF243DA6DC00572AFC /* StudyOverviewPageViewController.swift in Sources */,
+				AB4F5C00243DA6DC00572AFC /* InEligibilityStepViewController.swift in Sources */,
+				AB4F5C01243DA6DC00572AFC /* Schedule.swift in Sources */,
+				AB4F5C02243DA6DC00572AFC /* GatewayResourcesListViewController.swift in Sources */,
+				AB4F5C03243DA6DC00572AFC /* ActivityQuestionStep.swift in Sources */,
+				AB4F5C04243DA6DC00572AFC /* KDCircularProgress.swift in Sources */,
+				AB4F5C05243DA6DC00572AFC /* DBNotification.swift in Sources */,
+				AB4F5C06243DA6DC00572AFC /* ActivitiesViewController.swift in Sources */,
+				AB4F5C07243DA6DC00572AFC /* Activity.swift in Sources */,
+				AB4F5C08243DA6DC00572AFC /* SearchBarView.swift in Sources */,
+				AB4F5C09243DA6DC00572AFC /* AppUpdateBlocker.swift in Sources */,
+				AB4F5C0A243DA6DC00572AFC /* FetalKickIntroStepViewController.swift in Sources */,
+				AB4F5C0B243DA6DC00572AFC /* DBUser.swift in Sources */,
+				AB4F5C0C243DA6DC00572AFC /* EnrollServices.swift in Sources */,
+				AB4F5C0D243DA6DC00572AFC /* ActivityStep.swift in Sources */,
+				AB4F5C0E243DA6DC00572AFC /* Branding.swift in Sources */,
+				AB4F5C0F243DA6DC00572AFC /* FilterListTableViewCell.swift in Sources */,
+				AB4F5C10243DA6DC00572AFC /* StudyDashboardActivityTableViewCell.swift in Sources */,
+				AB4F5C11243DA6DC00572AFC /* ConsentResult.swift in Sources */,
+				AB4F5C12243DA6DC00572AFC /* WCPConfiguration.swift in Sources */,
+				AB4F5C13243DA6DC00572AFC /* StudyOverviewPageViewControllerFirst.swift in Sources */,
+				AB4F5C14243DA6DC00572AFC /* Overview.swift in Sources */,
+				AB4F5C15243DA6DC00572AFC /* StudyDashboard.swift in Sources */,
+				AB4F5C16243DA6DC00572AFC /* ChangePasswordViewController.swift in Sources */,
+				AB4F5C17243DA6DC00572AFC /* ComprehensionFailure.swift in Sources */,
+				AB4F5C18243DA6DC00572AFC /* ActivityFilterView.swift in Sources */,
+				AB4F5C19243DA6DC00572AFC /* VerificationViewController.swift in Sources */,
+				AB4F5C1A243DA6DC00572AFC /* FirstGatewayOverviewViewController.swift in Sources */,
+				AB4F5C1B243DA6DC00572AFC /* ResearchContainerSegue.swift in Sources */,
+				AB4F5C1C243DA6DC00572AFC /* AuthServerConfiguration.swift in Sources */,
+				AB4F5C1D243DA6DC00572AFC /* WCPServices.swift in Sources */,
+				AB4F5C1E243DA6DC00572AFC /* ResponseServices.swift in Sources */,
+				AB4F5C1F243DA6DC00572AFC /* FileDownloadModel.swift in Sources */,
+				AB4F5C20243DA6DC00572AFC /* StudyDashboardStatisticsCollectionViewCell.swift in Sources */,
+				AB4F5C21243DA6DC00572AFC /* ActivityStepResult.swift in Sources */,
+				AB4F5C22243DA6DC00572AFC /* NetworkConfiguration.swift in Sources */,
+				AB4F5C23243DA6DC00572AFC /* RegistrationServerConfiguration.swift in Sources */,
+				AB4F5C24243DA6DC00572AFC /* EligibilityStepViewController.swift in Sources */,
+				AB4F5C25243DA6DC00572AFC /* ResourcesTableViewCell.swift in Sources */,
+				AB4F5C26243DA6DC00572AFC /* StudyOverviewViewControllerSecond.swift in Sources */,
+				AB4F5C27243DA6DC00572AFC /* ActivityFormStep.swift in Sources */,
+				AB4F5C28243DA6DC00572AFC /* StudyDashboardStudyActivitiesTableViewCell.swift in Sources */,
+				AB4F5C29243DA6DC00572AFC /* SignInTableViewCell.swift in Sources */,
+				AB4F5C2A243DA6DC00572AFC /* Resource.swift in Sources */,
+				AB4F5C2B243DA6DC00572AFC /* ContactUsViewController.swift in Sources */,
+				AB4F5C2C243DA6DC00572AFC /* Reachability.swift in Sources */,
+				AB4F5C2D243DA6DC00572AFC /* StudyDashboardWelcomeTableViewCell.swift in Sources */,
+				AB4F5C2E243DA6DC00572AFC /* StudyListViewController.swift in Sources */,
+				AB4F5C2F243DA6DC00572AFC /* FetalKickCounterStepViewController.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
@@ -2280,6 +2818,11 @@
 			isa = PBXTargetDependency;
 			name = ResearchKit;
 			targetProxy = 89EDB46E2271EFDF0070F16C /* PBXContainerItemProxy */;
+		};
+		AB4F5B8F243DA6DC00572AFC /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = ResearchKit;
+			targetProxy = AB4F5B90243DA6DC00572AFC /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -2583,6 +3126,94 @@
 			};
 			name = Release;
 		};
+		AB4F5C6B243DA6DC00572AFC /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 7BDC002620C7855C409516D3 /* Pods-HPHC.debug.xcconfig */;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				APP_ID = GCPMS001;
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				AUTH_PASSWORD = "ee91a4f6-d9c4-4ee9-a0e2-5682c5b1c916";
+				AUTH_URL = "35.243.237.139:50000/AuthServer/";
+				AUTH_USERNAME = AvxfEsgX9u;
+				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_ENTITLEMENTS = HPHC/FDA.entitlements;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_STYLE = Manual;
+				CONSENTMGMT_URL = "35.196.79.108:60000/myStudiesConsentMgmtWS/";
+				CURRENT_PROJECT_VERSION = 3;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DEVELOPMENT_TEAM = EQHXZ8M8AV;
+				ENABLE_BITCODE = NO;
+				ENROLLMENT_URL = "35.196.79.108:60000/myStudiesEnrollmentMgmt/";
+				INFOPLIST_FILE = "HeroesHealth-Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
+				IS_STANDALONE_STUDY = false;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				MARKETING_VERSION = 1.0.0;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				ORG_ID = OrgName;
+				PRODUCT_BUNDLE_IDENTIFIER = com.google.HeroesHealth.dev;
+				PRODUCT_NAME = HeroesHealth;
+				PROVISIONING_PROFILE_SPECIFIER = "Heroes Health Dev";
+				REGISTRATIONSERVER_API_KEY = test_client_id_ma;
+				REGISTRATIONSERVER_API_SECERET = caff08160ade4cd738f9531dbd2ed33c12715abb402296f3479170f626bc7f56;
+				REGISTRATION_URL = "35.196.79.108:60000/myStudiesUserMgmtWS";
+				RESPONSE_URL = "35.196.119.71:60000/mystudies-response-server/";
+				SWIFT_OBJC_BRIDGING_HEADER = "HPHC/Utils/Helpers/FDA-Bridging-Header.h";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 1;
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
+				WCP_URL = "34.74.32.124:50000/StudyMetaData/";
+			};
+			name = Debug;
+		};
+		AB4F5C6C243DA6DC00572AFC /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 3BCFFA0DAD500A9A04C582CD /* Pods-HPHC.release.xcconfig */;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				APP_ID = GCPMS001;
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				AUTH_PASSWORD = "ee91a4f6-d9c4-4ee9-a0e2-5682c5b1c916";
+				AUTH_URL = "35.243.237.139:50000/AuthServer/";
+				AUTH_USERNAME = AvxfEsgX9u;
+				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_ENTITLEMENTS = HPHC/FDA.entitlements;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_STYLE = Manual;
+				CONSENTMGMT_URL = "35.196.79.108:60000/myStudiesConsentMgmtWS/";
+				CURRENT_PROJECT_VERSION = 3;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DEVELOPMENT_TEAM = EQHXZ8M8AV;
+				ENABLE_BITCODE = NO;
+				ENROLLMENT_URL = "35.196.79.108:60000/myStudiesEnrollmentMgmt/";
+				INFOPLIST_FILE = "HeroesHealth-Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
+				IS_STANDALONE_STUDY = false;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				MARKETING_VERSION = 1.0.0;
+				ORG_ID = OrgName;
+				PRODUCT_BUNDLE_IDENTIFIER = com.google.HeroesHealth.dev;
+				PRODUCT_NAME = HeroesHealth;
+				PROVISIONING_PROFILE_SPECIFIER = "Heroes Health Dev";
+				REGISTRATIONSERVER_API_KEY = test_client_id_ma;
+				REGISTRATIONSERVER_API_SECERET = caff08160ade4cd738f9531dbd2ed33c12715abb402296f3479170f626bc7f56;
+				REGISTRATION_URL = "35.196.79.108:60000/myStudiesUserMgmtWS";
+				RESPONSE_URL = "35.196.119.71:60000/mystudies-response-server/";
+				SWIFT_OBJC_BRIDGING_HEADER = "HPHC/Utils/Helpers/FDA-Bridging-Header.h";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 1;
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
+				WCP_URL = "34.74.32.124:50000/StudyMetaData/";
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -2618,6 +3249,15 @@
 			buildConfigurations = (
 				89055920230149AD005FB284 /* Debug */,
 				89055921230149AD005FB284 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		AB4F5C6A243DA6DC00572AFC /* Build configuration list for PBXNativeTarget "HeroesHealth" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				AB4F5C6B243DA6DC00572AFC /* Debug */,
+				AB4F5C6C243DA6DC00572AFC /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
