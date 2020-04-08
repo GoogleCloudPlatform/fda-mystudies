@@ -49,6 +49,12 @@ spec:
               value: "34.74.32.124:50000"
             - name: REGISTRATION_SERVER_URL
               value: "35.196.79.108:60000"
+            - name: GOOGLE_APPLICATION_CREDENTIALS
+              value: "/secrets/gcloud_key/key.json"
+          volumeMounts:
+            - name: gcloud-key-volume
+              mountPath: /secrets/gcloud_key
+              readOnly: true
           ports:
           - containerPort: 8080
         - name: cloudsql-proxy 
@@ -64,3 +70,6 @@ spec:
         - name: my-secrets-volume 
           secret: 
             secretName: cloudsql-instance-credentials
+        - name: gcloud-key-volume
+          secret:
+            secretName: response-server-ws-gcloud-key
