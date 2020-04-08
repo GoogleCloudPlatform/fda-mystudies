@@ -16,9 +16,13 @@ module "private" {
   # All the clusters can be in the same network and subnet.
   subnets = [
     {
-      subnet_name   = local.gke_clusters_subnet_name
-      subnet_ip     = "10.0.0.0/17"
-      subnet_region = var.gke_region
+      subnet_name      = local.gke_clusters_subnet_name
+      subnet_ip        = "10.0.0.0/17"
+      subnet_region    = var.gke_region
+      subnet_flow_logs = "true"
+
+      # Needed for access to Cloud SQL.
+      subnet_private_access = "true"
     },
   ]
 
@@ -85,4 +89,12 @@ module "cloudsql_private_service_access" {
 
   project_id  = var.project_id
   vpc_network = module.private.network_name
+
+  # Be explicit to avoid overlapping with the GKE ranges.
+  # The GKE subnet range is 10.0.0.0/17, which goes up to 10.0.127.254; here
+  # we're using 10.1.0.0/17, which does not overlap at all with the GKE range.
+  # The default prefix length is /16, so /17 is close enough and probably safe.
+  ip_version    = "IPV4"
+  address       = "10.1.0.0"
+  prefix_length = "17"
 }

@@ -112,6 +112,10 @@ resource "google_cloudbuild_trigger" "validate" {
   project  = module.project.project_id
   name     = "tf-validate"
 
+  included_files = [
+    "Terraform/**"
+  ]
+
   github {
     owner = var.repo_owner
     name  = var.repo_name
@@ -127,6 +131,10 @@ resource "google_cloudbuild_trigger" "plan" {
   provider = google-beta
   project  = module.project.project_id
   name     = "tf-plan"
+
+  included_files = [
+    "Terraform/**"
+  ]
 
   github {
     owner = var.repo_owner
