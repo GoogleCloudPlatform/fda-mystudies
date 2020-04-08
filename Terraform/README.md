@@ -1,4 +1,4 @@
-# Heroes Hat Terraform Infrastructure
+# FDA MyStudies Terraform Infrastructure
 
 These directories define the entire GCP infrastructure app to run the Heroes Hat
 application.
@@ -63,15 +63,27 @@ A deployment typically contains the following files:
 ## Layout
 
 |- bootstrap: one time setup to create projects to host Terraform state and CICD pipeline.
+
 |- cicd: CloudBuild configs for the CICD pipeline.
+
 |- org: org level resources.
+
   |- terragrunt.hcl: root Terragrunt config which defines remote state for all deployments.
+
   |- project.X-devops: additional resources that will go in the devops project.
+
   |- project.X-audit: the project to hold all audit logs for the org.
+
   |- audit: deployment to setup auditing for the org.
+
   |- iam: org level iam definitions such as org admins.
+
   |- folder.fda-my-studies: folder to hold all projects related to FDA MyStudies.
+
     |- project.X-apps: apps project and resources (GKE)
+
     |- project.X-data: data project and resources (GCS buckets, CloudSQL instances)
+
     |- project.X-networks: network project and resources (VPC)
+
     |- project.X-firebase: firebase project (firestores)
