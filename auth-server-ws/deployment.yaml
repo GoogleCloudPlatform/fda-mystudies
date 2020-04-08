@@ -33,6 +33,12 @@ spec:
                 secretKeyRef:
                   name: auth-server-db-credentials
                   key: dbname
+          ports:
+          - containerPort: 8080
+          readinessProbe:
+            httpGet:
+              path: /AuthServer/healthCheck
+              port: 8080
         - name: cloudsql-proxy
           image: gcr.io/cloudsql-docker/gce-proxy:latest
           command: ['/cloud_sql_proxy', '-instances=heroes-hat-dev:us-east1:my-studies2=tcp:3306', '-credential_file=/secrets/cloudsql/sql_credentials.json']
