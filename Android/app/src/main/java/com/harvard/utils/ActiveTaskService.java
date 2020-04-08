@@ -74,7 +74,7 @@ public class ActiveTaskService extends Service implements ApiCall.OnAsyncRequest
         Bitmap icon = BitmapFactory.decodeResource(getResources(), R.mipmap.ic_launcher);
         Notification notification =
             new NotificationCompat.Builder(this)
-                .setContentTitle(getResources().getString(R.string.prject_name))
+                .setContentTitle(getResources().getString(R.string.app_name))
                 .setTicker("Sync adapter")
                 .setContentText("Syncing offline data")
                 .setChannelId(FDAApplication.NOTIFICATION_CHANNEL_ID_SERVICE)
@@ -92,7 +92,7 @@ public class ActiveTaskService extends Service implements ApiCall.OnAsyncRequest
           Bitmap icon = BitmapFactory.decodeResource(getResources(), R.mipmap.ic_launcher);
           Notification notification =
               new NotificationCompat.Builder(this)
-                  .setContentTitle(getResources().getString(R.string.prject_name))
+                  .setContentTitle(getResources().getString(R.string.app_name))
                   .setTicker(getResources().getString(R.string.fetal_kick_recorder_activity))
                   .setContentText(
                       getResources().getString(R.string.fetal_kick_recorder_activity_in_progress))
@@ -120,7 +120,7 @@ public class ActiveTaskService extends Service implements ApiCall.OnAsyncRequest
                             .setSmallIcon(R.mipmap.ic_launcher)
                             .setLargeIcon(
                                 BitmapFactory.decodeResource(getResources(), R.mipmap.ic_launcher))
-                            .setContentTitle(getResources().getString(R.string.prject_name))
+                            .setContentTitle(getResources().getString(R.string.app_name))
                             .setContentText(getString(R.string.activetaskremindertxt))
                             .setChannelId(FDAApplication.NOTIFICATION_CHANNEL_ID_SERVICE);
 

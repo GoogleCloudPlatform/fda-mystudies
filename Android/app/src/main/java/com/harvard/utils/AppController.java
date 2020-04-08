@@ -305,7 +305,7 @@ public class AppController {
   }
 
   public static SimpleDateFormat getLabkeyDateFormat() {
-    return new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS"); // "2017/06/15 08:27:07"
+    return new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss:SSSZ"); // "2017/06/15 08:27:07"
   }
 
   public static SimpleDateFormat getHourAMPMFormat() {
@@ -871,7 +871,7 @@ public class AppController {
       }
       generatedHash = sb.toString();
     } catch (NoSuchAlgorithmException e) {
-      e.printStackTrace();
+      Logger.log(e);
     }
     return generatedHash;
   }

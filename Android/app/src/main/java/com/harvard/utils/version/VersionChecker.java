@@ -30,7 +30,7 @@ import java.net.HttpURLConnection;
 public class VersionChecker extends AsyncTask<String, String, String> {
 
   private String newVersion;
-  private boolean force = true;
+  private boolean force = false;
   private Upgrade upgrade;
   private String versionUrl = URLs.BASE_URL_WCP_SERVER + URLs.VERSION_INFO;
   public static String PLAY_STORE_URL =

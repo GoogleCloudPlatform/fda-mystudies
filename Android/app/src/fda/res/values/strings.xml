@@ -1,16 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE resources [
+    <!ENTITY app_name "App Name">
+    ]>
+
 <resources>
-    <string name="app_name">App Name</string>
-    <string name="fda_listens">App Name</string>
-    <string name="poweredby">Powered by FDA MyStudies</string>
+    <string name="app_name">&app_name;</string>
+    <string name="poweredby">Powered by FDA MyStudies on Google Cloud</string>
     <string name="website">https://www.google.com/</string>
     <string name="websitetxt">App Website</string>
-    <string name="gateway_des"> Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum</string>
-    <string name="gateway_des1"> Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum</string>
-    <string name="delete_account_content">You have chosen to delete your App Name Account. This will result in automatic withdrawal from all studies.\n\nBelow is a list of studies that you are a part of and information on how your response data will be handled with each after you withdraw. Please review and confirm.</string>
-    <string name="delete_message">Are you sure you wish to permanently delete your App Name Gateway app account?  You will need to register again if you wish to join a study.</string>
-    <string name="my_studies">App Name</string>
+    <string name="gateway_des">&lt;Introductory content paragraph goes here&gt;</string>
+    <string name="gateway_des1">&lt;Introductory content paragraph goes here&gt;</string>
+    <string name="delete_account_content">You have chosen to delete your FDA MyStudies Account. This will result in automatic withdrawal from all studies.\n\nBelow is a list of studies that you are a part of and information on how your response data will be handled with each after you withdraw. Please review and confirm.</string>
+    <string name="delete_message">Are you sure you wish to permanently delete your FDA MyStudies Gateway app account?  You will need to register again if you wish to join a study.</string>
     <string name="studie_your_enrolled">It\'s been a while since you visited the App Name app. Please consider continuing your participation in any studies in which you\'re enrolled.</string>
-    <string name="prject_name">App Name</string>
     <string name="termsurl">https://www.google.com/</string>
     <string name="privacyurl">https://www.google.com/</string>
     <string name="view_consent">View Consent</string>

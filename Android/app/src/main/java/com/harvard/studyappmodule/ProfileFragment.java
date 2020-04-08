@@ -476,6 +476,7 @@ public class ProfileFragment extends Fragment
         // delete passcode from keystore
         String pass = AppController.refreshKeys("passcode");
         AppController.deleteKey("passcode_" + pass);
+        Toast.makeText(mContext, R.string.signed_out,Toast.LENGTH_SHORT).show();
         if (AppConfig.AppType.equalsIgnoreCase(getString(R.string.app_gateway))) {
           ((StudyActivity) mContext).loadstudylist();
         } else {

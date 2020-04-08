@@ -13,6 +13,6 @@
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="100dp"
-        android:background="@drawable/fda_logo2" />
+        android:background="@drawable/logo2" />
 
 </RelativeLayout>

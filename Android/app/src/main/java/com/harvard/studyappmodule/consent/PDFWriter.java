@@ -10,6 +10,7 @@ package com.harvard.studyappmodule.consent;
 
 import android.content.Context;
 
+import com.harvard.utils.Logger;
 import com.tom_roush.pdfbox.pdmodel.PDDocument;
 import com.tom_roush.pdfbox.pdmodel.PDPage;
 import com.tom_roush.pdfbox.pdmodel.PDPageContentStream;
@@ -85,7 +86,7 @@ public class PDFWriter {
             if (contents != null) contents.close();
           } catch (IOException e) {
             ok = false;
-            e.printStackTrace();
+            Logger.log(e);
           }
           page = new PDPage();
           doc.addPage(page);
@@ -109,7 +110,7 @@ public class PDFWriter {
           if (contents != null) contents.close();
         } catch (IOException e) {
           ok = false;
-          e.printStackTrace();
+          Logger.log(e);
         }
         page = new PDPage();
         doc.addPage(page);
@@ -119,14 +120,14 @@ public class PDFWriter {
       contents.drawImage(pdImage, startX, yOffset);
       ok = true;
     } catch (IOException e) {
-      e.printStackTrace();
+      Logger.log(e);
       ok = false;
     } finally {
       try {
         if (contents != null) contents.close();
       } catch (IOException e) {
         ok = false;
-        e.printStackTrace();
+        Logger.log(e);
       }
     }
 
@@ -137,12 +138,12 @@ public class PDFWriter {
     try {
       doc.save(pdfOutputDirectory + pdfFileName);
     } catch (IOException e) {
-      e.printStackTrace();
+      Logger.log(e);
     } finally {
       try {
         doc.close();
       } catch (IOException e) {
-        e.printStackTrace();
+        Logger.log(e);
       }
     }
   }

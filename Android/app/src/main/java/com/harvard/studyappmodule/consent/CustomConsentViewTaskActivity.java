@@ -720,7 +720,7 @@ public class CustomConsentViewTaskActivity extends AppCompatActivity
           SharingConsent = resultObj.get("answer").toString();
         }
       } catch (Exception e) {
-        e.printStackTrace();
+        Logger.log(e);
       }
 
       getFile("/data/data/" + getPackageName() + "/files/");
@@ -769,7 +769,6 @@ public class CustomConsentViewTaskActivity extends AppCompatActivity
             docBuilder.append("</br>");
             docBuilder.append("</br>");
           }
-          //          docBuilder.append(Html.fromHtml(docBuilder.toString()).toString());
         } else {
           docBuilder.append("");
         }
@@ -853,18 +852,18 @@ public class CustomConsentViewTaskActivity extends AppCompatActivity
     try {
       fOut = new FileOutputStream(f);
     } catch (FileNotFoundException e) {
-      e.printStackTrace();
+      Logger.log(e);
     }
     mBitmap.compress(Bitmap.CompressFormat.PNG, 100, fOut);
     try {
       fOut.flush();
     } catch (IOException e) {
-      e.printStackTrace();
+      Logger.log(e);
     }
     try {
       fOut.close();
     } catch (IOException e) {
-      e.printStackTrace();
+      Logger.log(e);
     }
   }
 

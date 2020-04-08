@@ -212,7 +212,6 @@ public class SurveyActivitiesFragment extends Fragment
     bindEvents();
     getStudyUpdateFomWS(false);
 
-    com.harvard.utils.realm.Logger.showDbStats();
     return view;
   }
 
