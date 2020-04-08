@@ -15,27 +15,26 @@
 timeout: 600s
 
 steps:
-  # TODO: use a Google container.
-  - name: "docker.io/alpine/terragrunt:0.12.24"
+  - name: "gcr.io/cloud-foundation-cicd/cft/developer-tools@sha256:98d9f335176185eb73392c212d51e3a6e65847d1b4a9e6e34b6b67141c0e2c78"
     entrypoint: terraform
     args: ["version"]
 
-  - name: "docker.io/alpine/terragrunt:0.12.24"
+  - name: "gcr.io/cloud-foundation-cicd/cft/developer-tools@sha256:98d9f335176185eb73392c212d51e3a6e65847d1b4a9e6e34b6b67141c0e2c78"
     entrypoint: terraform
     args: ["init"]
     dir: "Terraform"
 
-  - name: "docker.io/alpine/terragrunt:0.12.24"
+  - name: "gcr.io/cloud-foundation-cicd/cft/developer-tools@sha256:98d9f335176185eb73392c212d51e3a6e65847d1b4a9e6e34b6b67141c0e2c78"
     entrypoint: terraform
     args: ["fmt", "-recursive", "-check"]
     dir: "Terraform"
 
-  - name: "docker.io/alpine/terragrunt:0.12.24"
+  - name: "gcr.io/cloud-foundation-cicd/cft/developer-tools@sha256:98d9f335176185eb73392c212d51e3a6e65847d1b4a9e6e34b6b67141c0e2c78"
     entrypoint: terragrunt
     args: ["hclfmt", "--terragrunt-check"]
     dir: "Terraform"
 
-  - name: "docker.io/alpine/terragrunt:0.12.24"
+  - name: "gcr.io/cloud-foundation-cicd/cft/developer-tools@sha256:98d9f335176185eb73392c212d51e3a6e65847d1b4a9e6e34b6b67141c0e2c78"
     entrypoint: terraform
     args: ["validate"]
     dir: "Terraform"

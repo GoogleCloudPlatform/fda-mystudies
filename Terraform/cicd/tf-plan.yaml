@@ -17,17 +17,16 @@ options:
     machineType: "N1_HIGHCPU_32"
 
 steps:
-  # TODO: use a Google container.
-  - name: "docker.io/alpine/terragrunt:0.12.24"
+  - name: "gcr.io/cloud-foundation-cicd/cft/developer-tools@sha256:98d9f335176185eb73392c212d51e3a6e65847d1b4a9e6e34b6b67141c0e2c78"
     entrypoint: terraform
     args: ["version"]
 
-  - name: "docker.io/alpine/terragrunt:0.12.24"
+  - name: "gcr.io/cloud-foundation-cicd/cft/developer-tools@sha256:98d9f335176185eb73392c212d51e3a6e65847d1b4a9e6e34b6b67141c0e2c78"
     entrypoint: terragrunt
     args: ["init"]
     dir: "Terraform/org"
 
-  - name: "docker.io/alpine/terragrunt:0.12.24"
+  - name: "gcr.io/cloud-foundation-cicd/cft/developer-tools@sha256:98d9f335176185eb73392c212d51e3a6e65847d1b4a9e6e34b6b67141c0e2c78"
     entrypoint: terragrunt
     args: ["plan-all", "--lock=false"]
     dir: "Terraform/org"
