@@ -44,7 +44,7 @@ class StudyToDelete {
   var studyId: String
   var shouldDelete: Bool?
   var participantId: String
-  var studyName: String
+  var name: String
   var withdrawalConfigration: StudyWithdrawalConfigration
   internal init(
     studyId: String,
@@ -54,7 +54,7 @@ class StudyToDelete {
   ) {
     self.studyId = studyId
     self.participantId = participantId
-    self.studyName = studyName
+    self.name = studyName
     self.withdrawalConfigration = withdrawalConfigration
   }
 }
@@ -76,7 +76,7 @@ class ConfirmationViewController: UIViewController {
   lazy var studiesToDisplay: [Study] = []
   lazy var joinedStudies: [Study]! = []
   var studyWithoutWCData: Study?
-  lazy var studiesToWithdrawn: [StudyToDelete] = []
+  lazy var studiesToWithdraw: [StudyToDelete] = []
 
   // MARK: - View Controller LifeCycle
 
@@ -91,12 +91,7 @@ class ConfirmationViewController: UIViewController {
     )
     tableViewRowDetails = NSMutableArray.init(contentsOfFile: plistPath!)
 
-    var infoDict: NSDictionary?
-    if let path = Bundle.main.path(forResource: "Info", ofType: "plist") {
-      infoDict = NSDictionary(contentsOfFile: path)
-    }
-    let navTitle = infoDict!["ProductTitleName"] as! String
-
+    let navTitle = Branding.productTitle
     var descriptionText =
       Utilities.isStandaloneApp()
       ? kHeaderDescriptionStandalone : kHeaderDescription
@@ -160,7 +155,7 @@ class ConfirmationViewController: UIViewController {
       } else if study.withdrawalConfigration?.type == StudyWithdrawalConfigrationType.noAction {
         withdrawnStudy.shouldDelete = false
       }
-      studiesToWithdrawn.append(withdrawnStudy)
+      studiesToWithdraw.append(withdrawnStudy)
     }
     self.tableViewConfirmation?.reloadData()
   }
@@ -207,7 +202,7 @@ class ConfirmationViewController: UIViewController {
   @IBAction func deleteAccountAction(_ sender: UIButton) {
 
     var found: Bool = false
-    for withdrawnStudy in studiesToWithdrawn {
+    for withdrawnStudy in studiesToWithdraw {
       if withdrawnStudy.shouldDelete == nil {
 
         UIUtilities.showAlertWithMessage(
@@ -226,7 +221,7 @@ class ConfirmationViewController: UIViewController {
   }
 
   func withdrawnFromNextStudy() {
-    UserServices().deActivateAccount(studiesToDelete: studiesToWithdrawn, delegate: self)
+    UserServices().deActivateAccount(studiesToDelete: studiesToWithdraw, delegate: self)
   }
 
   /// Don't Delete button action.
@@ -239,12 +234,12 @@ class ConfirmationViewController: UIViewController {
 extension ConfirmationViewController: UITableViewDataSource {
 
   func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-    return studiesToWithdrawn.count
+    return studiesToWithdraw.count
   }
 
   func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
 
-    let study = studiesToWithdrawn[indexPath.row]
+    let study = studiesToWithdraw[indexPath.row]
     if study.withdrawalConfigration.type == StudyWithdrawalConfigrationType.askUser {
       let cell =
         tableView.dequeueReusableCell(
@@ -262,7 +257,7 @@ extension ConfirmationViewController: UITableViewDataSource {
           for: indexPath
         )
         as! ConfirmationTableViewCell
-      cell.labelTitle?.text = study.studyName
+      cell.labelTitle?.text = study.name
 
       if study.withdrawalConfigration.type == StudyWithdrawalConfigrationType.deleteData {
         cell.labelTitleDescription?.text = NSLocalizedString(

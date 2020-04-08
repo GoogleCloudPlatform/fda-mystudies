@@ -87,4 +87,7 @@ public class ApplicationPropertyConfiguration {
 
   @Value("${response.server.url.participant.withdraw}")
   private String withdrawStudyUrl;
+
+  @Value("${ios.push.notification.type}")
+  private String iosPushNotificationType;
 }

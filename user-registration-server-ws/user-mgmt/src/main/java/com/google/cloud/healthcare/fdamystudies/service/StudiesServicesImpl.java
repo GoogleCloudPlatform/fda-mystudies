@@ -53,7 +53,7 @@ public class StudiesServicesImpl implements StudiesServices {
 
   @Autowired private CommonDao commonDao;
 
-  @Autowired private ApplicationPropertyConfiguration applicationPropertyConfiguration;
+  @Autowired static ApplicationPropertyConfiguration applicationPropertyConfiguration;
 
   @Override
   public ErrorBean saveStudyMetadata(StudyMetadataBean studyMetadataBean) {
@@ -229,6 +229,8 @@ public class StudiesServicesImpl implements StudiesServices {
       NotificationBean notificationBean, AppInfoDetailsBO appPropertiesDetails) {
     logger.info("StudiesServicesImpl - pushNotification() : starts");
     String certificatePassword = "";
+    String iosNotificationType = applicationPropertyConfiguration.getIosPushNotificationType();
+
     try {
       File file = null;
       if (notificationBean.getDeviceToken() != null
@@ -253,11 +255,19 @@ public class StudiesServicesImpl implements StudiesServices {
         }
         ApnsService service = null;
         if (file != null) {
-          service =
-              APNS.newService()
-                  .withCert(file.getPath(), certificatePassword)
-                  .withProductionDestination()
-                  .build();
+          if (iosNotificationType.equals("production")) {
+            service =
+                APNS.newService()
+                    .withCert(file.getPath(), certificatePassword)
+                    .withProductionDestination()
+                    .build();
+          } else {
+            service =
+                APNS.newService()
+                    .withCert(file.getPath(), certificatePassword)
+                    .withSandboxDestination()
+                    .build();
+          }
           List<String> tokens = new ArrayList<String>();
 
           for (int i = 0; i < notificationBean.getDeviceToken().length(); i++) {

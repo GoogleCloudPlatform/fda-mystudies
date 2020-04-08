@@ -1,6 +1,7 @@
 // License Agreement for FDA MyStudies
-// Copyright © 2017-2019 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors. Permission is
-// hereby granted, free of charge, to any person obtaining a copy of this software and associated
+// Copyright © 2017-2019 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors.
+// Copyright 2020 Google LLC
+// Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated
 // documentation files (the &quot;Software&quot;), to deal in the Software without restriction, including without
 // limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the
 // Software, and to permit persons to whom the Software is furnished to do so, subject to the following
@@ -380,16 +381,14 @@ class FetalKickCounterStepViewController: ORKStepViewController {
       + kConfirmMessage2
 
     UIUtilities.showAlertMessageWithTwoActionsAndHandler(
-      NSLocalizedString(kMessageString, comment: ""),
+      NSLocalizedString(kConfirmation, comment: ""),
       errorMessage: NSLocalizedString(message, comment: ""),
-      errorAlertActionTitle: NSLocalizedString(kProceedTitle, comment: ""),
-      errorAlertActionTitle2: NSLocalizedString(kTitleCancel, comment: ""),
+      errorAlertActionTitle: NSLocalizedString(kTitleCancel, comment: ""),
+      errorAlertActionTitle2: NSLocalizedString(kProceedTitle, comment: ""),
       viewControllerUsed: self,
-      action1: {
-
-        self.goForward()
-      },
+      action1: {},
       action2: {
+        self.goForward()
       }
     )
   }

@@ -81,14 +81,22 @@ public class AppMetaDataOrchestration {
     AppResponse response = new AppResponse();
     Boolean flag = false;
     try {
-      String feedbackSubject = propMap.get("fda.smd.email.title") + " App Feedback: " + subject;
-      String feedbackBody = "<div>" + "<div><span>Hi</span></div><br>"
-          + "<div><span>A user of the FDA MyStudies mobile app has provided feedback via the app. Here&#39;s the content of the feedback:</span></div><br>"
-          + "<div><span><i>" + body + "</i></span></div><br>" + "<div>" + "<span>Thanks,</span><br><span>"
-          + propMap.get("fda.smd.email.title") + "</span><br>"
-          + "<span>---------------------------------------------------------</span><br>"
-          + "<span style='font-size:9px;'>PS - This is an auto-generated email. Please do not reply.</span>" + "</div>"
-          + "</div>";
+      String feedbackSubject = "My Studies App Feedback: " + subject;
+      String feedbackBody =
+          "<div>"
+              + "<div><span>Hi</span></div><br>"
+              + "<div><span>A user of the FDA My Studies mobile app has provided feedback via the app. Here&#39;s the content of the feedback:</span></div><br>"
+              + "<div><span><i>"
+              + body
+              + "</i></span></div><br>"
+              + "<div>"
+              + "<span>Thanks,</span><br><span>"
+              + propMap.get("fda.smd.email.title")
+              + "</span><br>"
+              + "<span>---------------------------------------------------------</span><br>"
+              + "<span style='font-size:9px;'>PS - This is an auto-generated email. Please do not reply.</span>"
+              + "</div>"
+              + "</div>";
       flag = Mail.sendemail(propMap.get("fda.smd.feedback"), feedbackSubject, feedbackBody);
       if (flag) {
         response.setMessage(StudyMetaDataConstants.SUCCESS);
@@ -107,19 +115,38 @@ public class AppMetaDataOrchestration {
     Boolean flag = false;
     try {
       String contactUsSubject = "My Studies App HelpDesk: '" + subject + "'";
-      String contactUsContent = "<div>" + "<div><span>Hi</span></div><br>"
-          + "<div style='padding-bottom:10px;'><span>A user of the FDA MyStudies mobile app has reached out to the Helpdesk."
-          + " Below are the contact form details:</span></div>" + "<div>"
-          + "<div>___________________________________________</div>" + "<div style='padding-top:20px;'>First Name: "
-          + firstName + "</div>" + "<div style='padding-top:10px;'>Email: <a href='mailto:" + email + "'>" + email
-          + "</a></div>" + "<div style='padding-top:10px;'>Subject: " + subject + "</div>"
-          + "<div style='padding-top:10px;padding-bottom:10px'>Message: " + body + "</div>" + "</div>"
-          + "<div>___________________________________________</div><br>"
-          + "<div style='padding-top:10px;'><span>Please respond to the app user at the email he/she has provided.</span></div><br>"
-          + "<div>" + "<span>Thanks,</span><br><span>" + propMap.get("fda.smd.email.title") + "</span><br>"
-          + "<span>---------------------------------------------------------</span><br>"
-          + "<span style='font-size:9px;'>PS - This is an auto-generated email. Please do not reply.</span>" + "</div>"
-          + "</div>";
+      String contactUsContent =
+          "<div>"
+              + "<div><span>Hi</span></div><br>"
+              + "<div style='padding-bottom:10px;'><span>A user of the FDA My Studies mobile app has reached out to the Helpdesk."
+              + " Below are the contact form details:</span></div>"
+              + "<div>"
+              + "<div>___________________________________________</div>"
+              + "<div style='padding-top:20px;'>First Name: "
+              + firstName
+              + "</div>"
+              + "<div style='padding-top:10px;'>Email: <a href='mailto:"
+              + email
+              + "'>"
+              + email
+              + "</a></div>"
+              + "<div style='padding-top:10px;'>Subject: "
+              + subject
+              + "</div>"
+              + "<div style='padding-top:10px;padding-bottom:10px'>Message: "
+              + body
+              + "</div>"
+              + "</div>"
+              + "<div>___________________________________________</div><br>"
+              + "<div style='padding-top:10px;'><span>Please respond to the app user at the email he/she has provided.</span></div><br>"
+              + "<div>"
+              + "<span>Thanks,</span><br><span>"
+              + propMap.get("fda.smd.email.title")
+              + "</span><br>"
+              + "<span>---------------------------------------------------------</span><br>"
+              + "<span style='font-size:9px;'>PS - This is an auto-generated email. Please do not reply.</span>"
+              + "</div>"
+              + "</div>";
       flag = Mail.sendemail(propMap.get("fda.smd.contactus"), contactUsSubject, contactUsContent);
 
       if (flag) {
@@ -132,7 +159,8 @@ public class AppMetaDataOrchestration {
     return response;
   }
 
-  public AppUpdatesResponse appUpdates(String appVersion, String app) throws OrchestrationException {
+  public AppUpdatesResponse appUpdates(String appVersion, String app)
+      throws OrchestrationException {
     LOGGER.info("INFO: AppMetaDataOrchestration - appUpdates() :: Starts");
     AppUpdatesResponse appUpdates = new AppUpdatesResponse();
     try {
@@ -144,7 +172,8 @@ public class AppMetaDataOrchestration {
     return appUpdates;
   }
 
-  public StudyUpdatesResponse studyUpdates(String studyId, String studyVersion) throws OrchestrationException {
+  public StudyUpdatesResponse studyUpdates(String studyId, String studyVersion)
+      throws OrchestrationException {
     LOGGER.info("INFO: AppMetaDataOrchestration - studyUpdates() :: Starts");
     StudyUpdatesResponse studyUpdates = new StudyUpdatesResponse();
     try {
@@ -156,13 +185,20 @@ public class AppMetaDataOrchestration {
     return studyUpdates;
   }
 
-  public String updateAppVersionDetails(String forceUpdate, String osType, String appVersion, String bundleId,
-      String customStudyId, String message) throws OrchestrationException {
+  public String updateAppVersionDetails(
+      String forceUpdate,
+      String osType,
+      String appVersion,
+      String bundleId,
+      String customStudyId,
+      String message)
+      throws OrchestrationException {
     LOGGER.info("INFO: AppMetaDataOrchestration - updateAppVersionDetails() :: Starts");
     String updateAppVersionResponse = "OOPS! Something went wrong.";
     try {
-      updateAppVersionResponse = appMetaDataDao.updateAppVersionDetails(forceUpdate, osType, appVersion, bundleId,
-          customStudyId, message);
+      updateAppVersionResponse =
+          appMetaDataDao.updateAppVersionDetails(
+              forceUpdate, osType, appVersion, bundleId, customStudyId, message);
     } catch (Exception e) {
       LOGGER.error("AppMetaDataOrchestration - updateAppVersionDetails() :: ERROR", e);
     }
@@ -209,11 +245,14 @@ public class AppMetaDataOrchestration {
       String version = metadataJson.getString("version");
       String participantId = json.getString("participantId");
 
-      if (StringUtils.isNotEmpty(activityId) && StringUtils.isNotEmpty(studyId) && StringUtils.isNotEmpty(activityRunId)
+      if (StringUtils.isNotEmpty(activityId)
+          && StringUtils.isNotEmpty(studyId)
+          && StringUtils.isNotEmpty(activityRunId)
           && StringUtils.isNotEmpty(participantId)) {
         // responseActivityTempDto = new ResponseActivityTempDto();
-        String jsonResponseDocName = StudyMetaDataUtil.saveResponsesActivityDocument(jsonData, activityId, studyId,
-            activityRunId, participantId, version);
+        String jsonResponseDocName =
+            StudyMetaDataUtil.saveResponsesActivityDocument(
+                jsonData, activityId, studyId, activityRunId, participantId, version);
         if (StringUtils.isNotEmpty(jsonResponseDocName)) {
 
           ErrorBean errorBean = new ErrorBean();
