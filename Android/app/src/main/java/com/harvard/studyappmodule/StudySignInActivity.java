@@ -60,7 +60,7 @@ public class StudySignInActivity extends AppCompatActivity {
   }
 
   private void setTextForView() {
-    mFDAListenTitle.setText(getResources().getString(R.string.fda_listens));
+    mFDAListenTitle.setText(getResources().getString(R.string.app_name));
   }
 
   private void setFont() {
