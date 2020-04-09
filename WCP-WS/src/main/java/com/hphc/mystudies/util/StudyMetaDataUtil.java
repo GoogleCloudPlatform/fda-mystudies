@@ -74,11 +74,8 @@ public class StudyMetaDataUtil {
         hm.put(key, value);
       }
       ServletContext context = ServletContextHolder.getServletContext();
-      Properties prop = new Properties();
 
-      InputStream inputStream =
-          HibernateUtil.class.getClassLoader().getResourceAsStream("application.properties");
-      prop.load(inputStream);
+      Properties prop = PropertiesUtil.makePropertiesWithEnvironmentVariables("application.properties");
       objectKeys = prop.keys();
       while (objectKeys.hasMoreElements()) {
         String key = (String) objectKeys.nextElement();

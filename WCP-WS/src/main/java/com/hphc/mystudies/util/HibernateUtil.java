@@ -42,18 +42,9 @@ public class HibernateUtil {
     logger.info("INFO: HibernateUtil - getSessionFactory() :: Starts");
     try {
       if (sessionFactory == null) {
-
-        InputStream inputStream =
-            HibernateUtil.class
-                .getClassLoader()
-                .getResourceAsStream("application.properties");
-
-        Properties properties = new Properties();
-
-        properties.load(inputStream);
         sessionFactory =
             new AnnotationConfiguration()
-                .addProperties(properties)
+                .addProperties(PropertiesUtil.makePropertiesWithEnvironmentVariables("application.properties"))
                 .configure("hibernate.cfg.xml")
                 .buildSessionFactory();
       }
