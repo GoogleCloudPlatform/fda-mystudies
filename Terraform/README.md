@@ -1,7 +1,7 @@
 # FDA MyStudies Terraform Infrastructure
 
-These directories define the entire GCP infrastructure app to run the Heroes Hat
-application.
+These directories define the entire GCP infrastructure app to run the FDA
+MyStudies application.
 
 ## Pre-Requisites
 
@@ -26,20 +26,35 @@ application.
 1. [Create admin groups](https://support.google.com/a/answer/33343?hl=en) in the
   G Suite Domain:
 
-  - X-org-admins@domain.com
-  - X-devops-owners@domain.com
-  - X-audit-owners@domain.com
-  - X-apps-owners@domain.com
-  - X-data-owners@domain.com
-  - X-networks-owners@domain.com
-  - X-firebase-owners@domain.com
-  - X-auditors@domain.com
+  - X-org-admins@domain.com: This group has administrative access to the entire
+    org.
 
-  NOTE: It is always recommended to use CICD to deploy changes to the
-  infrastructure. These groups should remain empty and only have humans added
-  for emergency break-glass situations or when debugging is required.
+  - X-devops-owners@domain.com: This group has owners access to the devops
+    project.
+
+  - X-audit-owners@domain.com: This group has owners access to the audit
+    project.
+
+  - X-apps-owners@domain.com: This group has owners access to the apps project.
+
+  - X-data-owners@domain.com: This group has owners access to the data project.
+
+  - X-networks-owners@domain.com: This group has owners access to the networks
+    project.
+
+  - X-firebase-owners@domain.com: This group has owners access to the firebase
+    project.
+
+  - X-auditors@domain.com: This group has security reviewer (metadata viewer)
+    access to the entire org, as well as viewer access to the audit logs
+    BigQuery and Cloud Storage resources.
+
+  WARNING: It is always recommended to use CICD to deploy changes to the
+  infrastructure. The groups above should remain empty and only have humans
+  added for emergency break-glass situations or when debugging is required.
   Always join the group that grants you access to the fewest number of
-  resources to do the job.
+  resources to do the job through a standardized approval process and revoke
+  access as soon as possible.
 
 
 ## Directory Structure
