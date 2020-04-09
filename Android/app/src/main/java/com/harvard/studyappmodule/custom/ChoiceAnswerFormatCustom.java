@@ -1,5 +1,6 @@
 /*
  * Copyright © 2017-2019 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors.
+ * Copyright 2020 Google LLC
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction, including
  * without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
@@ -34,9 +35,7 @@ public class ChoiceAnswerFormatCustom extends AnswerFormatCustom {
    * @param choices an array of {@link Choice} objects, all of the same type
    */
   public ChoiceAnswerFormatCustom(
-      CustomAnswerStyle answerStyle,
-      QuestionStep questionStep,
-      Choice... choices) {
+      CustomAnswerStyle answerStyle, QuestionStep questionStep, Choice... choices) {
     this.answerStyle = answerStyle;
     this.choices = choices.clone();
     mQuestionStep = questionStep;
@@ -73,8 +72,7 @@ public class ChoiceAnswerFormatCustom extends AnswerFormatCustom {
     else if (answerStyle == CustomAnswerStyle.stepcount) return Type.stepcount;
     else if (answerStyle == CustomAnswerStyle.valuePicker) return Type.valuePicker;
     else if (answerStyle == CustomAnswerStyle.Scale) return Type.Scale;
-    //        else if (answerStyle == CustomAnswerStyle.TimeofDay)
-    //            return Type.TimeofDay;
+    else if (answerStyle == CustomAnswerStyle.TimeofDay) return Type.TimeOfDay;
     else if (answerStyle == CustomAnswerStyle.Location) return Type.Location;
     else if (answerStyle == CustomAnswerStyle.Form) return Type.Form;
     else if (answerStyle == CustomAnswerStyle.ContinousScale) return Type.ContinousScale;

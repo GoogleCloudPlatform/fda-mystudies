@@ -130,14 +130,14 @@ public class AppController {
     dbServiceSubscriber.deleteDb(context);
     try {
       NotificationModuleSubscriber notificationModuleSubscriber =
-              new NotificationModuleSubscriber(dbServiceSubscriber, realm);
+          new NotificationModuleSubscriber(dbServiceSubscriber, realm);
       notificationModuleSubscriber.cancleActivityLocalNotification(context);
       notificationModuleSubscriber.cancleResourcesLocalNotification(context);
     } catch (Exception e) {
       Logger.log(e);
     }
     NotificationModuleSubscriber notificationModuleSubscriber =
-            new NotificationModuleSubscriber(dbServiceSubscriber, realm);
+        new NotificationModuleSubscriber(dbServiceSubscriber, realm);
     notificationModuleSubscriber.cancelNotificationTurnOffNotification(context);
     dbServiceSubscriber.closeRealmObj(realm);
 
@@ -162,7 +162,7 @@ public class AppController {
 
   public static void getHelperHideKeyboard(Activity activity) {
     InputMethodManager imm =
-            (InputMethodManager) activity.getSystemService(Activity.INPUT_METHOD_SERVICE);
+        (InputMethodManager) activity.getSystemService(Activity.INPUT_METHOD_SERVICE);
     View view = activity.getCurrentFocus();
     if (view == null) {
       view = new View(activity);
@@ -181,8 +181,8 @@ public class AppController {
 
   public static void blockscreenshot(Activity activity) {
     activity
-            .getWindow()
-            .setFlags(WindowManager.LayoutParams.FLAG_SECURE, WindowManager.LayoutParams.FLAG_SECURE);
+        .getWindow()
+        .setFlags(WindowManager.LayoutParams.FLAG_SECURE, WindowManager.LayoutParams.FLAG_SECURE);
   }
 
   public static Typeface getTypeface(Context context, String whichType) {
@@ -211,13 +211,13 @@ public class AppController {
   public static Realm getRealmobj(Context context) {
     if (config == null) {
       RealmEncryptionHelper realmEncryptionHelper =
-              RealmEncryptionHelper.initHelper(context, context.getString(R.string.app_name));
+          RealmEncryptionHelper.initHelper(context, context.getString(R.string.app_name));
       byte[] key = realmEncryptionHelper.getEncryptKey();
       config =
-              new RealmConfiguration.Builder()
-                      .encryptionKey(key)
-                      .deleteRealmIfMigrationNeeded()
-                      .build();
+          new RealmConfiguration.Builder()
+              .encryptionKey(key)
+              .deleteRealmIfMigrationNeeded()
+              .build();
     }
     return Realm.getInstance(config);
   }
@@ -251,7 +251,7 @@ public class AppController {
   }
 
   public static SimpleDateFormat getDateFormatType12() {
-    return new SimpleDateFormat("MMM dd yyyy hh:mma");
+    return new SimpleDateFormat("MMM dd, yyyy");
   }
 
   public static SimpleDateFormat getDateFormatType4() {
@@ -268,7 +268,7 @@ public class AppController {
   }
 
   public static SimpleDateFormat getDateFormatType9() {
-    return new SimpleDateFormat("hh:mma, MMM dd yyyy");
+    return new SimpleDateFormat("hh:mma, MMM dd, yyyy");
   }
 
   public static SimpleDateFormat getDateFormatType10() {
@@ -305,7 +305,7 @@ public class AppController {
   }
 
   public static SimpleDateFormat getLabkeyDateFormat() {
-    return new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS"); // "2017/06/15 08:27:07"
+    return new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss:SSSZ"); // "2017/06/15 08:27:07"
   }
 
   public static SimpleDateFormat getHourAMPMFormat() {
@@ -325,7 +325,7 @@ public class AppController {
   }
 
   public static SimpleDateFormat getHourAMPMMonthDayYearFormat() {
-    return new SimpleDateFormat("hh:mmaa, MMM dd yyyy");
+    return new SimpleDateFormat("hh:mmaa, MMM dd, yyyy");
   }
 
   public static void showPasscodeActivity(Context context1, Class context2) {
@@ -334,114 +334,114 @@ public class AppController {
   }
 
   public static AlertDialog upgrade(
-          int resultCode, boolean forceUpgrade, Context context, String version, String message) {
+      int resultCode, boolean forceUpgrade, Context context, String version, String message) {
     AlertDialog alertDialog;
     if (forceUpgrade) {
       alertDialog =
-              setNeutralDialog(
-                      resultCode,
-                      forceUpgrade,
-                      context,
-                      context.getResources().getString(R.string.force_upgrade),
-                      false,
-                      context.getResources().getString(R.string.upgrade),
-                      context.getResources().getString(R.string.upgrade),
-                      version,
-                      message);
+          setNeutralDialog(
+              resultCode,
+              forceUpgrade,
+              context,
+              context.getResources().getString(R.string.force_upgrade),
+              false,
+              context.getResources().getString(R.string.upgrade),
+              context.getResources().getString(R.string.upgrade),
+              version,
+              message);
     } else {
       alertDialog =
-              setNeutralDialog(
-                      resultCode,
-                      forceUpgrade,
-                      context,
-                      context.getResources().getString(R.string.normal_upgrade),
-                      false,
-                      context.getResources().getString(R.string.upgrade),
-                      context.getResources().getString(R.string.upgrade),
-                      version,
-                      message);
+          setNeutralDialog(
+              resultCode,
+              forceUpgrade,
+              context,
+              context.getResources().getString(R.string.normal_upgrade),
+              false,
+              context.getResources().getString(R.string.upgrade),
+              context.getResources().getString(R.string.upgrade),
+              version,
+              message);
     }
     return alertDialog;
   }
 
   public static AlertDialog setNeutralDialog(
-          final int resultCode,
-          final boolean forceUpgrade,
-          final Context context,
-          String message,
-          final boolean finish,
-          String positiveButton,
-          String title,
-          String version,
-          String versionMessage) {
+      final int resultCode,
+      final boolean forceUpgrade,
+      final Context context,
+      String message,
+      final boolean finish,
+      String positiveButton,
+      String title,
+      String version,
+      String versionMessage) {
     if (!forceUpgrade) {
       AlertDialog.Builder alertDialogBuilder =
-              new AlertDialog.Builder(context, R.style.MyAlertDialogStyle);
+          new AlertDialog.Builder(context, R.style.MyAlertDialogStyle);
       alertDialogBuilder.setTitle(title);
       alertDialogBuilder
-              .setMessage(message)
-              .setCancelable(false)
-              .setPositiveButton(
-                      positiveButton,
-                      new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int id) {}
-                      })
-              .setNegativeButton(
-                      context.getResources().getString(R.string.cancel),
-                      new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int id) {
-                          dialog.dismiss();
-                          if (finish) {
-                            ((Activity) context).finish();
-                          }
-                        }
-                      });
+          .setMessage(message)
+          .setCancelable(false)
+          .setPositiveButton(
+              positiveButton,
+              new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int id) {}
+              })
+          .setNegativeButton(
+              context.getResources().getString(R.string.cancel),
+              new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int id) {
+                  dialog.dismiss();
+                  if (finish) {
+                    ((Activity) context).finish();
+                  }
+                }
+              });
 
       final AlertDialog alertDialog = alertDialogBuilder.create();
       alertDialog.show();
       alertDialog
-              .getButton(AlertDialog.BUTTON_POSITIVE)
-              .setOnClickListener(
-                      new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                          // Do stuff, possibly set wantToCloseDialog to true then...
-                          final String appPackageName = context.getPackageName();
-                          try {
-                            ((Activity) context)
-                                    .startActivityForResult(
-                                            new Intent(
-                                                    Intent.ACTION_VIEW,
-                                                    Uri.parse("market://details?id=" + appPackageName)),
-                                            resultCode);
-                          } catch (android.content.ActivityNotFoundException anfe) {
-                            ((Activity) context)
-                                    .startActivityForResult(
-                                            new Intent(
-                                                    Intent.ACTION_VIEW,
-                                                    Uri.parse(
-                                                            "https://play.google.com/store/apps/details?id="
-                                                                    + appPackageName)),
-                                            resultCode);
-                          }
-                          if (finish) {
-                            ((Activity) context).finish();
-                          }
-                          if (!forceUpgrade) alertDialog.dismiss();
-                          // else dialog stays open. Make sure you have an obvious way to close the dialog
-                          // especially if you set cancellable to false.
-                        }
-                      });
+          .getButton(AlertDialog.BUTTON_POSITIVE)
+          .setOnClickListener(
+              new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                  // Do stuff, possibly set wantToCloseDialog to true then...
+                  final String appPackageName = context.getPackageName();
+                  try {
+                    ((Activity) context)
+                        .startActivityForResult(
+                            new Intent(
+                                Intent.ACTION_VIEW,
+                                Uri.parse("market://details?id=" + appPackageName)),
+                            resultCode);
+                  } catch (android.content.ActivityNotFoundException anfe) {
+                    ((Activity) context)
+                        .startActivityForResult(
+                            new Intent(
+                                Intent.ACTION_VIEW,
+                                Uri.parse(
+                                    "https://play.google.com/store/apps/details?id="
+                                        + appPackageName)),
+                            resultCode);
+                  }
+                  if (finish) {
+                    ((Activity) context).finish();
+                  }
+                  if (!forceUpgrade) alertDialog.dismiss();
+                  // else dialog stays open. Make sure you have an obvious way to close the dialog
+                  // especially if you set cancellable to false.
+                }
+              });
       alertDialog
-              .getButton(AlertDialog.BUTTON_NEGATIVE)
-              .setOnClickListener(
-                      new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                          alertDialog.dismiss();
-                          ((SplashActivity) context).loadsplash();
-                        }
-                      });
+          .getButton(AlertDialog.BUTTON_NEGATIVE)
+          .setOnClickListener(
+              new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                  alertDialog.dismiss();
+                  ((SplashActivity) context).loadsplash();
+                }
+              });
       return alertDialog;
     } else {
       AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(context);
@@ -455,27 +455,27 @@ public class AppController {
       TextView desc = (TextView) dialogView.findViewById(R.id.desc);
       desc.setText(versionMessage);
       upgrade.setOnClickListener(
-              new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                  final String appPackageName = context.getPackageName();
-                  try {
-                    ((Activity) context)
-                            .startActivityForResult(
-                                    new Intent(
-                                            Intent.ACTION_VIEW, Uri.parse("market://details?id=" + appPackageName)),
-                                    resultCode);
-                  } catch (android.content.ActivityNotFoundException anfe) {
-                    ((Activity) context)
-                            .startActivityForResult(
-                                    new Intent(
-                                            Intent.ACTION_VIEW,
-                                            Uri.parse(
-                                                    "https://play.google.com/store/apps/details?id=" + appPackageName)),
-                                    resultCode);
-                  }
-                }
-              });
+          new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+              final String appPackageName = context.getPackageName();
+              try {
+                ((Activity) context)
+                    .startActivityForResult(
+                        new Intent(
+                            Intent.ACTION_VIEW, Uri.parse("market://details?id=" + appPackageName)),
+                        resultCode);
+              } catch (android.content.ActivityNotFoundException anfe) {
+                ((Activity) context)
+                    .startActivityForResult(
+                        new Intent(
+                            Intent.ACTION_VIEW,
+                            Uri.parse(
+                                "https://play.google.com/store/apps/details?id=" + appPackageName)),
+                        resultCode);
+              }
+            }
+          });
       dialogBuilder.setView(dialogView);
       title1.setText(version);
 
@@ -508,7 +508,6 @@ public class AppController {
     }
     String secretKeyVal = refreshKeys("key");
     if (secretKeyVal == null) {
-      //            String alias = getRandomString();
       // to identify specific key and get that using key_
       String alias1 = "key_" + secretKeyToString();
       // genarate random iv and to get using iv_
@@ -557,13 +556,13 @@ public class AppController {
         Calendar end = Calendar.getInstance();
         end.add(Calendar.YEAR, 1);
         KeyPairGeneratorSpec spec =
-                new KeyPairGeneratorSpec.Builder(context)
-                        .setAlias(alias)
-                        .setSubject(new X500Principal("CN=Sample Name, O=Android Authority"))
-                        .setSerialNumber(BigInteger.ONE)
-                        .setStartDate(start.getTime())
-                        .setEndDate(end.getTime())
-                        .build();
+            new KeyPairGeneratorSpec.Builder(context)
+                .setAlias(alias)
+                .setSubject(new X500Principal("CN=Sample Name, O=Android Authority"))
+                .setSerialNumber(BigInteger.ONE)
+                .setStartDate(start.getTime())
+                .setEndDate(end.getTime())
+                .build();
         KeyPairGenerator generator = KeyPairGenerator.getInstance("RSA", "AndroidKeyStore");
         generator.initialize(spec);
         generator.generateKeyPair();
@@ -576,9 +575,7 @@ public class AppController {
   // delete the keystore value
   public static void deleteKey(String key) {
     try {
-      //            refreshKeys();
       mKeyStore.deleteEntry(key);
-      //            refreshKeys();
     } catch (KeyStoreException e) {
       Logger.log(e);
     }
@@ -589,7 +586,7 @@ public class AppController {
     try {
       refreshKeys("key");
       KeyStore.PrivateKeyEntry privateKeyEntry =
-              (KeyStore.PrivateKeyEntry) mKeyStore.getEntry(mKeystoreValue, null);
+          (KeyStore.PrivateKeyEntry) mKeyStore.getEntry(mKeystoreValue, null);
       RSAPublicKey publicKey = (RSAPublicKey) privateKeyEntry.getCertificate().getPublicKey();
 
       Cipher inCipher = Cipher.getInstance("RSA/ECB/PKCS1Padding", "AndroidOpenSSL");
@@ -612,21 +609,21 @@ public class AppController {
     try {
       refreshKeys("key");
       KeyStore.PrivateKeyEntry privateKeyEntry =
-              (KeyStore.PrivateKeyEntry) mKeyStore.getEntry(mKeystoreValue, null);
+          (KeyStore.PrivateKeyEntry) mKeyStore.getEntry(mKeystoreValue, null);
       RSAPrivateKey privateKey = (RSAPrivateKey) privateKeyEntry.getPrivateKey();
 
       Cipher output = Cipher.getInstance("RSA/ECB/PKCS1Padding", "AndroidOpenSSL");
       output.init(Cipher.DECRYPT_MODE, privateKey);
 
       String cipherText =
-              "FRxCp9t99YTZvWEVewZ3PRMN3Xfc4kV7mlO9dPy8BBNSRz/y89BC+wLIq3/HTN9zKCFcNkO7Xg2h\n"
-                      + "eCUULE9MWQb7Sj1pjQR2A81N/kBgHNZjOzsfLLzKYPSMHVHy85xXnXwkY/5Jc5Jo4d8S65DeLY/7\n"
-                      + "6bDIhqanYzSAJr4IaQI6tC3mU+SMqA6GyyadNk3R9EwqIjTaXSj4aj/5hDCl37aW807Q3jfbX0XK\n"
-                      + "d8dY8zY+w/H3PazNah6/MyQYbN0y1buxIZRyN2C2rZv6F1UA3kb0/u+G/TusZy1fV38kkOC+/pbV\n"
-                      + "xh9ouDOLEjkR0yLSgkJKqsFE1PiLs+AS9/C0iQ==";
+          "FRxCp9t99YTZvWEVewZ3PRMN3Xfc4kV7mlO9dPy8BBNSRz/y89BC+wLIq3/HTN9zKCFcNkO7Xg2h\n"
+              + "eCUULE9MWQb7Sj1pjQR2A81N/kBgHNZjOzsfLLzKYPSMHVHy85xXnXwkY/5Jc5Jo4d8S65DeLY/7\n"
+              + "6bDIhqanYzSAJr4IaQI6tC3mU+SMqA6GyyadNk3R9EwqIjTaXSj4aj/5hDCl37aW807Q3jfbX0XK\n"
+              + "d8dY8zY+w/H3PazNah6/MyQYbN0y1buxIZRyN2C2rZv6F1UA3kb0/u+G/TusZy1fV38kkOC+/pbV\n"
+              + "xh9ouDOLEjkR0yLSgkJKqsFE1PiLs+AS9/C0iQ==";
       CipherInputStream cipherInputStream =
-              new CipherInputStream(
-                      new ByteArrayInputStream(Base64.decode(cipherText, Base64.DEFAULT)), output);
+          new CipherInputStream(
+              new ByteArrayInputStream(Base64.decode(cipherText, Base64.DEFAULT)), output);
       ArrayList<Byte> values = new ArrayList<>();
       int nextByte;
       while ((nextByte = cipherInputStream.read()) != -1) {
@@ -648,7 +645,6 @@ public class AppController {
   private static String getRandomString() {
     Random generator = new Random();
     StringBuilder randomStringBuilder = new StringBuilder();
-    //        int randomLength = generator.nextInt(MAX_LENGTH);
     // sometime random val coming null so legth 7 hard-coded
     int randomLength = 7;
     char tempChar;
@@ -723,7 +719,7 @@ public class AppController {
 
       try {
         encipher.init(
-                Cipher.ENCRYPT_MODE, skey, new IvParameterSpec(Base64.decode(ivBytes, Base64.DEFAULT)));
+            Cipher.ENCRYPT_MODE, skey, new IvParameterSpec(Base64.decode(ivBytes, Base64.DEFAULT)));
       } catch (InvalidAlgorithmParameterException e) {
         Logger.log(e);
       }
@@ -760,13 +756,16 @@ public class AppController {
       byte[] ivBytes = AppController.stringToIvBytes(getStringIvByte);
       try {
         encipher.init(
-                Cipher.DECRYPT_MODE, skey, new IvParameterSpec(Base64.decode(ivBytes, Base64.DEFAULT)));
+            Cipher.DECRYPT_MODE, skey, new IvParameterSpec(Base64.decode(ivBytes, Base64.DEFAULT)));
       } catch (InvalidAlgorithmParameterException e) {
         Logger.log(e);
       }
       CipherInputStream cis = new CipherInputStream(fis, encipher);
       return cis;
-    } catch (FileNotFoundException | NoSuchPaddingException | NoSuchAlgorithmException | InvalidKeyException e) {
+    } catch (FileNotFoundException
+        | NoSuchPaddingException
+        | NoSuchAlgorithmException
+        | InvalidKeyException e) {
       Logger.log(e);
     }
     return null;
@@ -802,16 +801,16 @@ public class AppController {
   activityId----> handling SurveyActivitiesFragment duplication other class pass it ""
    */
   public static void pendingService(
-          Context context,
-          int number,
-          String httpMethod,
-          String url,
-          String normalParam,
-          String jsonParam,
-          String serverType,
-          String userProfileId,
-          String studyId,
-          String activityId) {
+      Context context,
+      int number,
+      String httpMethod,
+      String url,
+      String normalParam,
+      String jsonParam,
+      String serverType,
+      String userProfileId,
+      String studyId,
+      String activityId) {
 
     try {
       OfflineData offlineData = new OfflineData();
@@ -845,14 +844,14 @@ public class AppController {
     dbServiceSubscriber.deleteDb(context);
     try {
       NotificationModuleSubscriber notificationModuleSubscriber =
-              new NotificationModuleSubscriber(dbServiceSubscriber, realm);
+          new NotificationModuleSubscriber(dbServiceSubscriber, realm);
       notificationModuleSubscriber.cancleActivityLocalNotification(context);
       notificationModuleSubscriber.cancleResourcesLocalNotification(context);
     } catch (Exception e) {
       Logger.log(e);
     }
     NotificationModuleSubscriber notificationModuleSubscriber =
-            new NotificationModuleSubscriber(dbServiceSubscriber, realm);
+        new NotificationModuleSubscriber(dbServiceSubscriber, realm);
     notificationModuleSubscriber.cancelNotificationTurnOffNotification(context);
     dbServiceSubscriber.closeRealmObj(realm);
 
@@ -872,7 +871,7 @@ public class AppController {
       }
       generatedHash = sb.toString();
     } catch (NoSuchAlgorithmException e) {
-      e.printStackTrace();
+      Logger.log(e);
     }
     return generatedHash;
   }

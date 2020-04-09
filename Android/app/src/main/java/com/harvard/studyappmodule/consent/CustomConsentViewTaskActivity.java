@@ -20,6 +20,8 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
@@ -42,7 +44,6 @@ import com.harvard.eligibilitymodule.ComprehensionSuccessActivity;
 import com.harvard.R;
 import com.harvard.storagemodule.DBServiceSubscriber;
 import com.harvard.studyappmodule.enroll.EnrollData;
-import com.harvard.studyappmodule.responseservermodel.ResponseServerData;
 import com.harvard.studyappmodule.StudyFragment;
 import com.harvard.studyappmodule.StudyModulePresenter;
 import com.harvard.studyappmodule.consent.model.ComprehensionCorrectAnswers;
@@ -66,21 +67,14 @@ import com.harvard.utils.Logger;
 import com.harvard.utils.SharedPreferenceHelper;
 import com.harvard.utils.URLs;
 import com.harvard.webservicemodule.apihelper.ApiCall;
-import com.harvard.webservicemodule.apihelper.ApiCallResponseServer;
-import com.harvard.webservicemodule.events.RegistrationServerConfigEvent;
 import com.harvard.webservicemodule.events.RegistrationServerConsentConfigEvent;
 import com.harvard.webservicemodule.events.RegistrationServerEnrollmentConfigEvent;
-import com.harvard.webservicemodule.events.ResponseServerConfigEvent;
 import com.harvard.webservicemodule.events.WCPConfigEvent;
-import com.itextpdf.text.Document;
-import com.itextpdf.text.DocumentException;
-import com.itextpdf.text.Image;
-import com.itextpdf.text.PageSize;
-import com.itextpdf.text.Paragraph;
-import com.itextpdf.text.Phrase;
-import com.itextpdf.text.pdf.PdfPCell;
-import com.itextpdf.text.pdf.PdfPTable;
-import com.itextpdf.text.pdf.PdfWriter;
+import com.tom_roush.pdfbox.pdmodel.PDDocument;
+import com.tom_roush.pdfbox.pdmodel.PDPage;
+import com.tom_roush.pdfbox.pdmodel.PDPageContentStream;
+import com.tom_roush.pdfbox.pdmodel.graphics.image.LosslessFactory;
+import com.tom_roush.pdfbox.pdmodel.graphics.image.PDImageXObject;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -93,9 +87,9 @@ import org.researchstack.backbone.ui.callbacks.StepCallbacks;
 import org.researchstack.backbone.ui.step.layout.ConsentSignatureStepLayout;
 import org.researchstack.backbone.ui.step.layout.StepLayout;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.OutputStream;
 import java.lang.reflect.Constructor;
 import java.util.ArrayList;
 import java.util.Date;
@@ -151,6 +145,7 @@ public class CustomConsentViewTaskActivity extends AppCompatActivity
   private EligibilityConsent eligibilityConsent;
   private StudyList studyList;
   private String pdfPath;
+  String SharingConsent = "n/a";
 
   public static Intent newIntent(
       Context context,
@@ -718,24 +713,20 @@ public class CustomConsentViewTaskActivity extends AppCompatActivity
       JSONObject lastNameResult = lastNameObj.getJSONObject("results");
       String lastName = lastNameResult.getString("answer");
 
+      try {
+        StepResult result = taskResult.getStepResult("sharing");
+        if (result != null) {
+          JSONObject resultObj = new JSONObject(result.getResults().toString());
+          SharingConsent = resultObj.get("answer").toString();
+        }
+      } catch (Exception e) {
+        Logger.log(e);
+      }
+
       getFile("/data/data/" + getPackageName() + "/files/");
       String timeStamp = AppController.getDateFormatType3();
-      String mFileName = timeStamp;
-      String filePath = "/data/data/" + getPackageName() + "/files/" + timeStamp + ".pdf";
-      File myFile = new File(filePath);
-      if (!myFile.exists()) myFile.createNewFile();
-      OutputStream output = new FileOutputStream(myFile);
 
-      Document document = new Document();
-      PdfWriter writer = PdfWriter.getInstance(document, output);
-      writer.setFullCompression();
-
-      document.addCreationDate();
-      document.setPageSize(PageSize.A4);
-      document.setMargins(10, 10, 10, 10);
-
-      document.open();
-      Paragraph consentItem;
+      StringBuilder docBuilder = null;
       if (eligibilityConsent != null
           && eligibilityConsent.getConsent() != null
           && eligibilityConsent.getConsent().getReview() != null
@@ -745,19 +736,14 @@ public class CustomConsentViewTaskActivity extends AppCompatActivity
               .getReview()
               .getSignatureContent()
               .equalsIgnoreCase("")) {
-        consentItem =
-            new Paragraph(
-                Html.fromHtml(
-                        eligibilityConsent
-                            .getConsent()
-                            .getReview()
-                            .getSignatureContent()
-                            .toString())
-                    .toString());
+        docBuilder.append(
+            Html.fromHtml(
+                    eligibilityConsent.getConsent().getReview().getSignatureContent().toString())
+                .toString());
       } else if (eligibilityConsent != null
           && eligibilityConsent.getConsent() != null
           && eligibilityConsent.getConsent().getVisualScreens() != null) {
-        StringBuilder docBuilder;
+
         if (eligibilityConsent.getConsent().getVisualScreens().size() > 0) {
           // Create our HTML to show the user and have them accept or decline.
           docBuilder =
@@ -783,95 +769,122 @@ public class CustomConsentViewTaskActivity extends AppCompatActivity
             docBuilder.append("</br>");
             docBuilder.append("</br>");
           }
-          consentItem = new Paragraph(Html.fromHtml(docBuilder.toString()).toString());
         } else {
-          consentItem = new Paragraph("");
+          docBuilder.append("");
         }
       } else {
-        consentItem = new Paragraph("");
+        docBuilder.append("");
       }
-      StringBuilder docBuilder =
+      StringBuilder agreeBuilder =
           new StringBuilder("</br><div style=\"padding: 10px 10px 10px 10px;\" class='header'>");
       String participant = getResources().getString(R.string.participant);
-      docBuilder.append(String.format("<p style=\"text-align: center\">%1$s</p>", participant));
+      agreeBuilder.append(String.format("<p style=\"text-align: center\">%1$s</p>", participant));
       String detail = getResources().getString(R.string.agree_participate_research_study);
-      docBuilder.append(String.format("<p style=\"text-align: center\">%1$s</p>", detail));
-      consentItem.add(Html.fromHtml(docBuilder.toString()).toString());
+      agreeBuilder.append(String.format("<p style=\"text-align: center\">%1$s</p>", detail));
 
-      byte[] signatureBytes;
-      Image myImg = null;
-      if (signatureBase64 != null) {
-        signatureBytes = Base64.decode(signatureBase64, Base64.DEFAULT);
-        myImg = Image.getInstance(signatureBytes);
-        myImg.setScaleToFitHeight(true);
-        myImg.scalePercent(50f);
+      PDFWriter pdfWriter = new PDFWriter("/data/data/" + getPackageName() + "/files/", timeStamp);
+      pdfWriter.createPdfFile(CustomConsentViewTaskActivity.this);
+      String heading = "";
+      StringBuffer pageText = new StringBuffer();
+      String[] doc_string = docBuilder.toString().split("</br>");
+      if (doc_string.length > 0) {
+        for (String s : doc_string) {
+          pageText.append(Html.fromHtml(s).toString().replace("\n", ""));
+          pageText.append(System.getProperty("line.separator"));
+        }
       }
 
-      PdfPTable table = new PdfPTable(3);
-      table.setWidthPercentage(100);
-      table.addCell(getCell(firstName + " " + lastName, PdfPCell.ALIGN_CENTER));
-      table.addCell(getImage(myImg, PdfPCell.ALIGN_CENTER));
-      table.addCell(getCell(signatureDate, PdfPCell.ALIGN_CENTER));
-      consentItem.add(table);
+      String[] agree_string = agreeBuilder.toString().split("</p>");
+      if (agree_string.length > 0) {
+        for (String s : agree_string) {
+          pageText.append(Html.fromHtml(s).toString().replace("\n", ""));
+          pageText.append(System.getProperty("line.separator"));
+        }
+      }
+      pageText.append(System.getProperty("line.separator"));
+      pageText.append(System.getProperty("line.separator"));
+      pageText.append("------------------------------------");
+      pageText.append(System.getProperty("line.separator"));
+      pageText.append(System.getProperty("line.separator"));
 
-      PdfPTable table1 = new PdfPTable(3);
-      table1.setWidthPercentage(100);
-      table1.addCell(
-          getCell(getResources().getString(R.string.participans_name), PdfPCell.ALIGN_CENTER));
-      table1.addCell(
-          getCell(
-              getResources().getString(R.string.participants_signature), PdfPCell.ALIGN_CENTER));
-      table1.addCell(getCell(getResources().getString(R.string.date), PdfPCell.ALIGN_CENTER));
-      consentItem.add(table1);
+      pageText
+          .append(getResources().getString(R.string.participans_name))
+          .append(": ")
+          .append(firstName)
+          .append(" ")
+          .append(lastName);
+      pageText.append(System.getProperty("line.separator"));
+      pageText.append(getResources().getString(R.string.date)).append(": ").append(signatureDate);
+      pageText.append(System.getProperty("line.separator"));
+      pageText.append(getResources().getString(R.string.participants_signature));
 
-      document.add(consentItem);
-      document.close();
+      Bitmap bitmap =
+          BitmapFactory.decodeByteArray(
+              Base64.decode(signatureBase64, Base64.DEFAULT),
+              0,
+              Base64.decode(signatureBase64, Base64.DEFAULT).length);
+      File sign = new File("/data/data/" + getPackageName() + "/files/" + "signature" + ".png");
+      saveBitmap(sign, bitmap);
+      pdfWriter.addPage(heading, pageText, sign.getPath());
+      pdfWriter.saveAndClose();
+      sign.delete();
 
       // encrypt the genarated pdf
       File encryptFile =
           AppController.genarateEncryptedConsentPDF(
-              "/data/data/" + getPackageName() + "/files/", mFileName);
+              "/data/data/" + getPackageName() + "/files/", timeStamp);
       filepath = encryptFile.getAbsolutePath();
       // After encryption delete the pdf file
       if (encryptFile != null) {
-        File file = new File("/data/data/" + getPackageName() + "/files/" + mFileName + ".pdf");
+        File file = new File("/data/data/" + getPackageName() + "/files/" + timeStamp + ".pdf");
         file.delete();
       }
 
-    } catch (IOException | DocumentException e) {
-      Toast.makeText(
-              CustomConsentViewTaskActivity.this, R.string.not_able_create_pdf, Toast.LENGTH_SHORT)
-          .show();
-      Logger.log(e);
-    } catch (JSONException e) {
-      Logger.log(e);
     } catch (Exception e) {
       Logger.log(e);
     }
     return filepath;
   }
 
-  public PdfPCell getImage(Image image, int alignment) {
-    PdfPCell cell;
-    if (image != null) {
-      cell = new PdfPCell(image);
-    } else {
-      cell = new PdfPCell();
+  public void saveBitmap(File f, Bitmap mBitmap) {
+
+    FileOutputStream fOut = null;
+    try {
+      fOut = new FileOutputStream(f);
+    } catch (FileNotFoundException e) {
+      Logger.log(e);
     }
-    cell.setPadding(10);
-    cell.setHorizontalAlignment(alignment);
-    cell.setVerticalAlignment(PdfPCell.ALIGN_BOTTOM);
-    cell.setBorder(PdfPCell.NO_BORDER);
-    return cell;
+    mBitmap.compress(Bitmap.CompressFormat.PNG, 100, fOut);
+    try {
+      fOut.flush();
+    } catch (IOException e) {
+      Logger.log(e);
+    }
+    try {
+      fOut.close();
+    } catch (IOException e) {
+      Logger.log(e);
+    }
   }
 
-  public PdfPCell getCell(String text, int alignment) {
-    PdfPCell cell = new PdfPCell(new Phrase(text));
-    cell.setPadding(10);
-    cell.setHorizontalAlignment(alignment);
-    cell.setVerticalAlignment(PdfPCell.ALIGN_BOTTOM);
-    cell.setBorder(PdfPCell.NO_BORDER);
-    return cell;
+  private void insertSignature(
+      PDDocument pdfDocument,
+      String signatureBase64,
+      PDPageContentStream sign_Stream,
+      PDPage sign_page)
+      throws IOException {
+    Bitmap bitmap =
+        BitmapFactory.decodeByteArray(
+            Base64.decode(signatureBase64, Base64.DEFAULT),
+            0,
+            Base64.decode(signatureBase64, Base64.DEFAULT).length);
+    PDImageXObject pdImage = LosslessFactory.createFromImage(pdfDocument, bitmap);
+    pdImage.setWidth(200);
+    pdImage.setHeight(100);
+    sign_Stream.drawImage(
+        pdImage,
+        10 + pdImage.getWidth() - 180,
+        sign_page.getMediaBox().getUpperRightY() - 10 - pdImage.getHeight() - 130);
   }
 
   private void getStudyUpdateFomWS() {
@@ -938,7 +951,7 @@ public class CustomConsentViewTaskActivity extends AppCompatActivity
 
       body.put("consent", consentbody);
 
-      body.put("sharing", "");
+      body.put("sharing", SharingConsent);
     } catch (JSONException e) {
       Logger.log(e);
     }

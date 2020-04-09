@@ -41,8 +41,6 @@ import com.harvard.utils.Logger;
 import com.harvard.utils.URLs;
 import com.harvard.webservicemodule.apihelper.ApiCall;
 import com.harvard.webservicemodule.events.RegistrationServerEnrollmentConfigEvent;
-import com.itextpdf.text.Image;
-import com.itextpdf.text.pdf.PdfPCell;
 import io.realm.Realm;
 import java.util.HashMap;
 import java.util.List;
@@ -138,20 +136,6 @@ public class EligibleActivity extends AppCompatActivity implements ApiCall.OnAsy
         finish();
       }
     }
-  }
-
-  public PdfPCell getImage(Image image, int alignment) {
-    PdfPCell cell;
-    if (image != null) {
-      cell = new PdfPCell(image);
-    } else {
-      cell = new PdfPCell();
-    }
-    cell.setPadding(10);
-    cell.setHorizontalAlignment(alignment);
-    cell.setVerticalAlignment(PdfPCell.ALIGN_BOTTOM);
-    cell.setBorder(PdfPCell.NO_BORDER);
-    return cell;
   }
 
   public void updateuserpreference() {

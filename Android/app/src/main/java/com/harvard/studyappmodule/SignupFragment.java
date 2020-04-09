@@ -451,7 +451,7 @@ public class SignupFragment extends Fragment implements ApiCall.OnAsyncRequestCo
     JSONObject infoJson = new JSONObject();
     try {
       infoJson.put("os", "android");
-      infoJson.put("appVersion", BuildConfig.VERSION_NAME);
+      infoJson.put("appVersion", BuildConfig.VERSION_NAME + "." + BuildConfig.VERSION_CODE);
       infoJson.put("deviceToken", deviceToken);
 
       jsonObjBody.put("info", infoJson);

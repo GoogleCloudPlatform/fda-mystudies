@@ -1,5 +1,6 @@
 /*
  * Copyright © 2017-2019 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors.
+ * Copyright 2020 Google LLC
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction, including
  * without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
@@ -33,8 +34,6 @@ import com.harvard.studyappmodule.consent.CustomConsentViewTaskActivity;
 import com.harvard.studyappmodule.consent.model.Consent;
 import com.harvard.studyappmodule.consent.model.EligibilityConsent;
 import com.harvard.utils.AppController;
-import com.itextpdf.text.Image;
-import com.itextpdf.text.pdf.PdfPCell;
 import io.realm.Realm;
 import java.util.List;
 import org.researchstack.backbone.step.Step;
@@ -123,19 +122,5 @@ public class ComprehensionFailureActivity extends AppCompatActivity {
         finish();
       }
     }
-  }
-
-  public PdfPCell getImage(Image image, int alignment) {
-    PdfPCell cell;
-    if (image != null) {
-      cell = new PdfPCell(image);
-    } else {
-      cell = new PdfPCell();
-    }
-    cell.setPadding(10);
-    cell.setHorizontalAlignment(alignment);
-    cell.setVerticalAlignment(PdfPCell.ALIGN_BOTTOM);
-    cell.setBorder(PdfPCell.NO_BORDER);
-    return cell;
   }
 }
