@@ -210,8 +210,8 @@
 				<!-- Assign Permissions -->
 				<div class="blue-md-f text-uppercase mt-lg">Assign Permissions</div>
 				<div class="pull-right mb-xs">
-					<span class="gray-xs-f">View Only</span> <span
-						class="gray-xs-f ml-lg">View & Edit</span>
+					<span class="gray-xs-f">View only</span> <span
+						class="gray-xs-f ml-lg">View and edit</span>
 				</div>
 				<div class="clearfix"></div>
 
@@ -221,7 +221,7 @@
 						type="checkbox" class="chk" id="inlineCheckbox1" value="option1"
 						<c:if test="${fn:contains(permissions,7)}">checked</c:if>
 						<c:if test="${actionPage eq 'VIEW_PAGE'}">disabled</c:if>>
-						<label for="inlineCheckbox1"> Manage Users </label>
+						<label for="inlineCheckbox1"> Users </label>
 					</span> <span class="pull-right"> <span
 						class="radio radio-info radio-inline p-45"> <input
 							type="radio" class="musr" id="inlineRadio1" value="0"
@@ -243,8 +243,7 @@
 						type="checkbox" id="inlineCheckbox3" class="chk" value="option1"
 						<c:if test="${fn:contains(permissions,4)}">checked</c:if>
 						<c:if test="${actionPage eq 'VIEW_PAGE'}">disabled</c:if>>
-						<label for="inlineCheckbox3"> Manage App-Wide
-							Notifications </label>
+						<label for="inlineCheckbox3"> Notifications </label>
 					</span> <span class="pull-right"> <span
 						class="radio radio-info radio-inline p-45"> <input
 							type="radio" id="inlineRadio5" class="mnotf" value="0"
@@ -268,7 +267,7 @@
 						type="checkbox" id="inlineCheckbox4" name="manageStudies"
 						<c:if test="${fn:contains(permissions,2)}">value="1" checked</c:if>
 						<c:if test="${actionPage eq 'VIEW_PAGE'}">disabled</c:if>>
-						<label for="inlineCheckbox4"> Manage Studies </label>
+						<label for="inlineCheckbox4"> Studies </label>
 					</span>
 					<div class="mt-lg pl-lg">
 						<div class="pb-md bor-dashed">
@@ -294,8 +293,7 @@
 							</c:if>
 						</div>
 						<div class="addHide">
-							<span class="mr-lg text-weight-semibold text-uppercase">Existing
-								Studies</span>
+							<span class="mr-lg text-weight-semibold">Existing Study Permissions</span>
 							<c:if test="${actionPage ne 'VIEW_PAGE'}">
 								<span class="ablue removeAll changeView">x Remove all</span>
 							</c:if>

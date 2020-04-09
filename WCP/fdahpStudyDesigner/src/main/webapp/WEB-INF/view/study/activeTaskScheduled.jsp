@@ -42,7 +42,7 @@
 }
 
 </style>
-    <div class="gray-xs-f mb-sm">Activetask Schedule Type</div>
+    <div class="gray-xs-f mb-sm">Active Task Schedule Type</div>
     <div class="pb-lg ">
                <span class="radio radio-info radio-inline p-40">
                <input type="radio" id="schedule1" class="typeofschedule" scheduletype="Regular" value="Regular" name="scheduleType" ${empty activeTaskBo.scheduleType  || activeTaskBo.scheduleType=='Regular' ?'checked':''} ${(activeTaskBo.isDuplicate > 0)?'disabled' : ''}
@@ -52,7 +52,7 @@
                <span class="radio radio-inline p-40">
                <input type="radio" id="schedule2" class="typeofschedule" scheduletype="AnchorDate" value="AnchorDate" name="scheduleType" ${isAnchorQuestionnaire?'disabled':''} ${activeTaskBo.scheduleType=='AnchorDate' ?'checked':''} ${(activeTaskBo.isDuplicate > 0)?'disabled' : ''}
                                                       <c:if test="${empty anchorTypeList}">disabled</c:if> >
-               <label for="schedule2">Anchor-Date-based</label>
+               <label for="schedule2">Anchor date based</label>
                </span>
     </div>
     <!-- Anchor date type -->
@@ -77,7 +77,7 @@
      </div>
      </form:form> 
      <!-- Ancor date type -->
-	<div class="gray-xs-f mb-sm">Active Task Frequency</div>
+	<div class="gray-xs-f mb-sm">Active Task Scheduling Options</div>
 	<div class="pb-lg b-bor">
 	   <span class="radio radio-info radio-inline p-40">
 	   <input type="radio" id="oneTimeRadio1" class="schedule" frequencytype="oneTime" value="One time" name="frequency" ${empty activeTaskBo.frequency  || activeTaskBo.frequency=='One time' ?'checked':''} ${(activeTaskBo.isDuplicate > 0)?'disabled' : ''} >
@@ -261,7 +261,7 @@
 	    <div class="mt-md"> 
 	       <div class="dailyStartCls col-md-3 pl-none">                       
 	       <span class="form-group m-none dis-inline vertical-align-middle pr-md">
-	       <span class="gray-xs-f">Start date (pick a date)<span class="requiredStar"> * </span></span><br/>                          
+	       <span class="gray-xs-f">Start date <span class="requiredStar"> * </span></span><br/>                          
 	       <input id="startDate" type="text" class="form-control mt-sm calendar ${(activeTaskBo.isDuplicate > 0)?'cursor-none' : ''}" placeholder="Choose Date" required name="activeTaskLifetimeStart" value="${activeTaskBo.activeTaskLifetimeStart}"/>
 	       <span class='help-block with-errors red-txt'></span>
 	       </span>
@@ -271,7 +271,7 @@
              <div class=" resetDate">
                <div>
                     <span class="form-group m-none dis-inline vertical-align-middle pr-md">
-                              <span class="gray-xs-f">Start date (pick a date) <span class="requiredStar">*</span></span><br/>
+                              <span class="gray-xs-f">Start date <span class="requiredStar">*</span></span><br/>
 	                <span class="pr-md">Anchor Date</span>
 	                <span>
 		                 <select class="signDropDown selectpicker sign-box ${(activeTaskBo.isDuplicate > 0)?'cursor-none' : ''}" title="Select" name="activeTaskFrequenciesList[0].xDaysSign" id="dailyXSign">
@@ -351,7 +351,7 @@
 	    <div class="mt-md">
 	       <span class="weeklyStartCls  col-md-3 pl-none">                         
 	       <span class="form-group m-none dis-inline vertical-align-middle pr-md">
-	       <span class="gray-xs-f">Start date<span class="requiredStar"> * </span></span><br/>                           
+	       <span class="gray-xs-f">Start date <span class="requiredStar"> * </span></span><br/>                           
 	       <input id="startWeeklyDate" type="text" class="form-control mt-sm calendar ${(activeTaskBo.isDuplicate > 0)?'cursor-none' : ''}" required name="activeTaskLifetimeStart"  placeholder="Choose Date" value="${activeTaskBo.activeTaskLifetimeStart}" readonly="readonly"/>
 	       <span class='help-block with-errors red-txt'></span>
 	       </span>
@@ -361,7 +361,7 @@
              <div class=" resetDate dis_inlinetop p-none">
                <div>
                    <span class="form-group m-none dis-inline vertical-align-middle pr-md">
-                             <span class="gray-xs-f">Start date (pick a date) <span class="requiredStar">*</span></span><br/>
+                             <span class="gray-xs-f">Start date <span class="requiredStar">*</span></span><br/>
                 <span class="pr-md">Anchor Date</span>
                 <span>
 	                 <select class="signDropDown selectpicker sign-box ${(activeTaskBo.isDuplicate > 0)?'cursor-none' : ''}" title="Select" name="activeTaskFrequenciesBo.xDaysSign" id="weeklyXSign">
@@ -448,7 +448,7 @@
 	    <div class="mt-xs"> 
 	       <div class="monthlyStartCls  col-md-3 pl-none">                       
 	       <span class="form-group m-none dis-inline vertical-align-middle pr-md">
-	       <span class="gray-xs-f">Start date<span class="requiredStar"> * </span></span><br/>      
+	       <span class="gray-xs-f">Start date <span class="requiredStar"> * </span></span><br/>      
 	       <input id="pickStartDate" type="text" class="form-control mt-sm calendar ${(activeTaskBo.isDuplicate > 0)?'cursor-none' : ''}"  placeholder="Choose Start Date" required name="activeTaskLifetimeStart" value="${activeTaskBo.activeTaskLifetimeStart}" readonly="readonly"/>
 	       <span class='help-block with-errors red-txt'></span>
 	       </span>
@@ -458,7 +458,7 @@
 		          <div class="dis_inlinetop resetDate">
 		              <div>
 		                   <span class="form-group m-none dis-inline vertical-align-middle pr-md">
-		                             <span class="gray-xs-f">Start date (pick a date) <span class="requiredStar">*</span></span><br/>
+		                             <span class="gray-xs-f">Start date <span class="requiredStar">*</span></span><br/>
 		                <span class="pr-md">Anchor Date</span>
 		                <span>
 			                 <select class="signDropDown selectpicker sign-box ${(activeTaskBo.isDuplicate > 0)?'cursor-none' : ''}" title="Select" name="activeTaskFrequenciesBo.xDaysSign" id="monthlyXSign">

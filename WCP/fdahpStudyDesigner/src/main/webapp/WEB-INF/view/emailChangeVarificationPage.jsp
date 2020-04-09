@@ -12,15 +12,15 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
             
-    <title>FDA MSMP</title>	
+    <title>&lt;Org Name&gt; MSMP</title>	
     
     <meta name="description" content="">
     <meta name="keywords" content="">
     <meta name="author" content="">
 
     <!-- Favicon -->
-    <link rel="shortcut icon" href="/studybuilder/images/icons/fav.png" type="image/x-icon" />
-    <link rel="apple-touch-icon" href="/studybuilder/images/icons/fav.png">
+    <link rel="shortcut icon" href="/studybuilder/images/icons/FAV_Icon.png" type="image/x-icon" />
+    <link rel="apple-touch-icon" href="/studybuilder/images/icons/FAV_Icon.png">
         
     <!-- Mobile Metas -->
     <meta name="viewport" content="width=device-width, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
@@ -90,7 +90,7 @@
 
 
               <div class="logo__ll">
-            <img src="images/logo/fda-logo-w.png" alt=""/>
+            <img src="images/logo/logo_innerScreens.png" alt=""/>
         </div>
         
         <div class="login__container">
@@ -120,7 +120,7 @@
         </div>
 
         <div class="footer">
-            <div><span>Copyright © 2017 FDA</span><span><a href="https://www.fda.gov/AboutFDA/AboutThisWebsite/WebsitePolicies/" class="" target="_blank">Terms</a></span><span><a href="https://www.fda.gov/AboutFDA/AboutThisWebsite/WebsitePolicies/#privacy" class="" target="_blank">Privacy Policy</a></span></div>
+            <div><span>Copyright © 2017 &lt;Org Name&gt;</span><span><a href="/studybuilder/terms.do" class="" target="_blank">Terms</a></span><span><a href="/studybuilder/privacyPolicy.do" class="" target="_blank">Privacy Policy</a></span></div>
         </div>
              
         </div>

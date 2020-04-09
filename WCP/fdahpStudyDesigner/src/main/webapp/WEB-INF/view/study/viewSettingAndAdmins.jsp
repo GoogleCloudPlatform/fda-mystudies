@@ -107,7 +107,7 @@ table.dataTable thead th:last-child {
 			<!-- Start Section-->
 			<div class="col-md-12 p-none">
 				<div class="gray-xs-f mb-sm">
-					Use Enrollment Date as Anchor Date in study activity scheduling?<span
+					Use participant enrollment date as Anchor Date?<span
 						class="requiredStar"> *</span><span><span
 						data-toggle="tooltip" data-placement="top"
 						title="Select this option to distribute a questionnaire, active task or resource, N number of days after participant enrollment. N is configured in the schedule settings of that study activity or resource."
@@ -162,7 +162,7 @@ table.dataTable thead th:last-child {
 			<!-- Start Section-->
 			<div class="col-md-12 p-none">
 				<div class="gray-xs-f mb-sm">
-					Allow users to rejoin a Study once they leave it? <span
+					Allow app user to rejoin a study after withdrawing from it? <span
 						class="requiredStar">*</span>
 				</div>
 
