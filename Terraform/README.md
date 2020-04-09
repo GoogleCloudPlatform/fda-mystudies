@@ -23,8 +23,8 @@ MyStudies application.
    [organization](https://cloud.google.com/resource-manager/docs/creating-managing-organization) for GCP resources
    and [G Suite Domain](https://gsuite.google.com/) for groups.
 
-1. [Create admin groups](https://support.google.com/a/answer/33343?hl=en) in the
-   G Suite Domain:
+1. [Create administrative groups](https://support.google.com/a/answer/33343?hl=en)
+   in the G Suite Domain:
 
    - X-org-admins@domain.com: This group has administrative access to the entire
      org.
