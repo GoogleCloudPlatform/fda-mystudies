@@ -35,11 +35,11 @@ spec:
                   name: study-meta-data-db-credentials 
                   key: dbname 
             - name: RESPONSE_SERVER
-              value: "35.196.119.71:60000"
+              value: "response-server-np:50000"
             - name: USER_REGISTRATION_SERVER
-              value: "35.196.79.108:60000"
+              value: "user-registration-server-np:60000"
             - name: STUDY_DESIGNER
-              value: "34.74.173.54:50000"
+              value: "study-designer-np:50000"
           ports:
           - containerPort: 8080
           readinessProbe:

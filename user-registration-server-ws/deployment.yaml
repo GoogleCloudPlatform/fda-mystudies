@@ -44,9 +44,9 @@ spec:
                   name: email-credentials
                   key: email_password
             - name: AUTH_SERVER_URL
-              value: "35.243.237.139:50000"
+              value: "auth-server-np:50000"
             - name: RESPONSE_SERVER_URL
-              value: "35.196.119.71:60000"
+              value: "response-server-np:50000"
             - name: CLIENT_ID
               value: "413422181706-c9r0uv1t2du10ttjf748mh6490g2ir5u.apps.googleusercontent.com"
             - name: SECRET_KEY
