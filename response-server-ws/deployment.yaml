@@ -38,25 +38,41 @@ spec:
             - name: AUTH_SERVER_URL
               value: "35.243.237.139:50000"
             - name: REGISTRATION_CLIENT_ID
-              value: "dummy-value"
+              valueFrom:
+                secretKeyRef:
+                  key: REGISTRATION_CLIENT_ID
+                  name: response-server-credentials
             - name: REGISTRATION_CLIENT_SECRET
-              value: "dummy-value"
+              valueFrom:
+                secretKeyRef:
+                  key: REGISTRATION_CLIENT_SECRET
+                  name: response-server-credentials
             - name: WCP_USER
-              value: "dummy-value"
+              valueFrom:
+                secretKeyRef:
+                  key: WCP_USER
+                  name: response-server-credentials
             - name: WCP_PASS
-              value: "dummy-value"
+              valueFrom:
+                secretKeyRef:
+                  key: WCP_PASS
+                  name: response-server-credentials
             - name: WCP_STUDY_METADATA_SERVER_URL
               value: "34.74.32.124:50000"
             - name: REGISTRATION_SERVER_URL
               value: "35.196.79.108:60000"
             - name: GOOGLE_APPLICATION_CREDENTIALS
               value: "/secrets/gcloud_key/key.json"
+          ports:
+          - containerPort: 8080
+          readinessProbe:
+            httpGet:
+              path: /mystudies-response-server/health
+              port: 8080
           volumeMounts:
             - name: gcloud-key-volume
               mountPath: /secrets/gcloud_key
               readOnly: true
-          ports:
-          - containerPort: 8080
         - name: cloudsql-proxy 
           image: gcr.io/cloudsql-docker/gce-proxy:latest 
           command: ["/cloud_sql_proxy", 
