@@ -42,6 +42,10 @@ spec:
               value: "34.74.173.54:50000"
           ports:
           - containerPort: 8080
+          readinessProbe:
+            httpGet:
+              path: /StudyMetaData/ping
+              port: 8080
         - name: cloudsql-proxy 
           image: gcr.io/cloudsql-docker/gce-proxy:latest 
           command: ["/cloud_sql_proxy", 
