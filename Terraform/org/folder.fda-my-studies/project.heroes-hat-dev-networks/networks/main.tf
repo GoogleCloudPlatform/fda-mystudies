@@ -43,6 +43,10 @@ module "private" {
       },
       # Remove after TF runs.
       {
+        range_name    = "auth-server-ws-cluster-ip-range-pods"
+        ip_cidr_range = "192.168.0.0/20"
+      },
+      {
         range_name    = "auth-server-ws-cluster-ip-range-svc"
         ip_cidr_range = "192.168.16.0/20"
       },
