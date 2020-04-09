@@ -21,17 +21,17 @@ spec:
             - name: DB_USER 
               valueFrom: 
                 secretKeyRef: 
-                  name: cloudsql-db-credentials 
+                  name: response-server-cloudsql-db-credentials 
                   key: username 
             - name: DB_PASS 
               valueFrom: 
                 secretKeyRef: 
-                  name: cloudsql-db-credentials 
+                  name: response-server-cloudsql-db-credentials 
                   key: password 
             - name: DB_NAME 
               valueFrom: 
                 secretKeyRef: 
-                  name: cloudsql-db-credentials 
+                  name: response-server-cloudsql-db-credentials 
                   key: dbname 
             - name: FIRESTORE_PROJECT_ID
               value: "heroes-hat-dev"
@@ -77,15 +77,12 @@ spec:
           image: gcr.io/cloudsql-docker/gce-proxy:latest 
           command: ["/cloud_sql_proxy", 
             "-instances=heroes-hat-dev:us-east1:my-studies2=tcp:3306", 
-            "-credential_file=/secrets/cloudsql/sql_credentials.json"] 
+            "-credential_file=/secrets/cloudsql/key.json"] 
           volumeMounts: 
-            - name: my-secrets-volume 
+            - name: gcloud-key-volume
               mountPath: /secrets/cloudsql 
               readOnly: true 
       volumes: 
-        - name: my-secrets-volume 
-          secret: 
-            secretName: cloudsql-instance-credentials
         - name: gcloud-key-volume
           secret:
             secretName: response-server-ws-gcloud-key
