@@ -7,54 +7,54 @@ MyStudies application.
 
 1. Install the following dependencies and add them to your PATH:
 
-  - [GCloud](https://cloud.google.com/sdk/gcloud)
-  - [Terraform](https://www.terraform.io/)
-  - [Terragrunt](https://terragrunt.gruntwork.io/)
+   - [GCloud](https://cloud.google.com/sdk/gcloud)
+   - [Terraform](https://www.terraform.io/)
+   - [Terragrunt](https://terragrunt.gruntwork.io/)
 
 1. Get familiar with [GCP](https://cloud.google.com/docs/overview),
-  [Terraform](https://www.terraform.io/intro/index.html) and
-  [Terragrunt](https://blog.gruntwork.io/terragrunt-how-to-keep-your-terraform-code-dry-and-maintainable-f61ae06959d8).
+   [Terraform](https://www.terraform.io/intro/index.html) and
+   [Terragrunt](https://blog.gruntwork.io/terragrunt-how-to-keep-your-terraform-code-dry-and-maintainable-f61ae06959d8).
 
-  The infrastructure is deployed using Terraform, which is an industry standard
-  for defining infrastructure-as-code. Terragrunt is used as a wrapper around
-  Terraform to manage multiple Terraform deployments and reduce duplication.
+   The infrastructure is deployed using Terraform, which is an industry standard
+   for defining infrastructure-as-code. Terragrunt is used as a wrapper around
+   Terraform to manage multiple Terraform deployments and reduce duplication.
 
 1. Setup your
-  [organization](https://cloud.google.com/resource-manager/docs/creating-managing-organization) for GCP resources
-  and [G Suite Domain](https://gsuite.google.com/) for groups.
+   [organization](https://cloud.google.com/resource-manager/docs/creating-managing-organization) for GCP resources
+   and [G Suite Domain](https://gsuite.google.com/) for groups.
 
 1. [Create admin groups](https://support.google.com/a/answer/33343?hl=en) in the
-  G Suite Domain:
+   G Suite Domain:
 
-  - X-org-admins@domain.com: This group has administrative access to the entire
-    org.
+   - X-org-admins@domain.com: This group has administrative access to the entire
+     org.
 
-  - X-devops-owners@domain.com: This group has owners access to the devops
-    project.
+   - X-devops-owners@domain.com: This group has owners access to the devops
+     project.
 
-  - X-audit-owners@domain.com: This group has owners access to the audit
-    project.
+   - X-audit-owners@domain.com: This group has owners access to the audit
+     project.
 
-  - X-apps-owners@domain.com: This group has owners access to the apps project.
+   - X-apps-owners@domain.com: This group has owners access to the apps project.
 
-  - X-data-owners@domain.com: This group has owners access to the data project.
+   - X-data-owners@domain.com: This group has owners access to the data project.
 
-  - X-networks-owners@domain.com: This group has owners access to the networks
-    project.
+   - X-networks-owners@domain.com: This group has owners access to the networks
+     project.
 
-  - X-firebase-owners@domain.com: This group has owners access to the firebase
-    project.
+   - X-firebase-owners@domain.com: This group has owners access to the firebase
+     project.
 
-  - X-auditors@domain.com: This group has security reviewer (metadata viewer)
-    access to the entire org, as well as viewer access to the audit logs
-    BigQuery and Cloud Storage resources.
+   - X-auditors@domain.com: This group has security reviewer (metadata viewer)
+     access to the entire org, as well as viewer access to the audit logs
+     BigQuery and Cloud Storage resources.
 
-  WARNING: It is always recommended to use CICD to deploy changes to the
-  infrastructure. The groups above should remain empty and only have humans
-  added for emergency break-glass situations or when debugging is required.
-  Always join the group that grants you access to the fewest number of
-  resources to do the job through a standardized approval process and revoke
-  access as soon as possible.
+   WARNING: It is always recommended to use CICD to deploy changes to the
+   infrastructure. The groups above should remain empty and only have humans
+   added for emergency break-glass situations or when debugging is required.
+   Always join the group that grants you access to the fewest number of
+   resources to do the job through a standardized approval process and revoke
+   access as soon as possible.
 
 
 ## Directory Structure
@@ -102,19 +102,19 @@ A deployment typically contains the following files:
 
 1. Authenticate as a super admin using `gcloud auth login`.
 
-  WARNING: remember to run `gcloud auth revoke` to logout as a super admin.
-  Being logged in as a super admin beyond the initial setup is dangerous!
+   WARNING: remember to run `gcloud auth revoke` to logout as a super admin.
+   Being logged in as a super admin beyond the initial setup is dangerous!
 
 1. Checkout the Terraform configs and set some helper environment variables.
 
-  ```
-  $ git clone my-repo
-  $ cd my-repo
-  $ ROOT=$PWD
-  ```
+   ```
+   $ git clone my-repo
+   $ cd my-repo
+   $ ROOT=$PWD
+   ```
 
 1. The bootstrap config must be deployed first in order to create the devops
-  project which will host your Terraform state and CICD pipelines.
+   project which will host your Terraform state and CICD pipelines.
 
    ```
    $ cd $ROOT/boootstrap
@@ -123,17 +123,17 @@ A deployment typically contains the following files:
    $ terraform apply
    ```
 
-  Your devops project should now be ready.
+   Your devops project should now be ready.
 
 1. Backup the state of the devops project to the newly created state bucket by
-  uncommenting out the `terraform` block in `$ROOT/bootstrap/main.tf` and
-  running:
+   uncommenting out the `terraform` block in `$ROOT/bootstrap/main.tf` and
+   running:
 
-  ```
-  $ terraform init
-  ```
+   ```
+   $ terraform init
+   ```
 
 1. TODO(xingao): describe how to setup CICD pipeline
 
 1. Revoke your super admin access by running `gcloud auth revoke` and
-  authenticate as a normal user for daily activities.
+   authenticate as a normal user for daily activities.
