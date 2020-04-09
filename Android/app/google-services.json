@@ -41,42 +41,6 @@
           ]
         }
       }
-    },
-    {
-      "client_info": {
-        "mobilesdk_app_id": "1:413422181706:android:24f080aba5d65443e8f5b3",
-        "android_client_info": {
-          "package_name": "com.heroeshealth.HeroesHealth"
-        }
-      },
-      "oauth_client": [
-        {
-          "client_id": "413422181706-c9r0uv1t2du10ttjf748mh6490g2ir5u.apps.googleusercontent.com",
-          "client_type": 3
-        }
-      ],
-      "api_key": [
-        {
-          "current_key": "AIzaSyBIoWJwXL-x_Kp3icL2SbBRygB6aZ9pJPg"
-        }
-      ],
-      "services": {
-        "appinvite_service": {
-          "other_platform_oauth_client": [
-            {
-              "client_id": "413422181706-c9r0uv1t2du10ttjf748mh6490g2ir5u.apps.googleusercontent.com",
-              "client_type": 3
-            },
-            {
-              "client_id": "413422181706-hkv9icg4bigdmmdhisjj74fab1iqn8a3.apps.googleusercontent.com",
-              "client_type": 2,
-              "ios_info": {
-                "bundle_id": "com.google.HeroesHealth.dev"
-              }
-            }
-          ]
-        }
-      }
     }
   ],
   "configuration_version": "1"
