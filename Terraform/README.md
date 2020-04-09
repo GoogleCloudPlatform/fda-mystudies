@@ -91,7 +91,7 @@ A deployment typically contains the following files:
   |- project.X-audit: the project to hold all audit logs for the org.
   |- audit: deployment to setup auditing for the org.
   |- iam: org level iam definitions such as org admins.
-  |- folder.fda-my-studies: folder to hold all projects related to FDA MyStudies.
+  |- folder.fda-mystudies: folder to hold all projects related to FDA MyStudies.
     |- project.X-apps: apps project and resources (GKE)
     |- project.X-data: data project and resources (GCS buckets, CloudSQL instances)
     |- project.X-networks: network project and resources (VPC)
