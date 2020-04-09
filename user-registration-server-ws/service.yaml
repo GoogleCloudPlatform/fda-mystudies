@@ -1,14 +1,12 @@
-# LoadBalancer service for Response server.
-# See https://cloud.google.com/kubernetes-engine/docs/how-to/exposing-apps#creating_a_service_of_type_loadbalancer
 apiVersion: v1
 kind: Service
 metadata:
-  name: user-registration-server-lb
+  name: user-registration-server-np
 spec:
-  type: LoadBalancer
+  type: NodePort
   selector:
     app: user-registration-server
   ports:
   - protocol: TCP
-    port: 60000
+    port: 50000
     targetPort: 8080
