@@ -12,27 +12,72 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-timeout: 1200s
+timeout: 21600s
 options:
     machineType: "N1_HIGHCPU_32"
 
 steps:
-  # TODO: use a Google container.
-  - name: "docker.io/alpine/terragrunt:0.12.24"
+  - name: "gcr.io/cloud-foundation-cicd/cft/developer-tools@sha256:a09ad46f513847d31e2cfe20f818c2d64809e7d12695e2e6098900296f6527bf"
     entrypoint: terraform
     args: ["version"]
 
-  - name: "docker.io/alpine/terragrunt:0.12.24"
+  - name: "gcr.io/cloud-foundation-cicd/cft/developer-tools@sha256:a09ad46f513847d31e2cfe20f818c2d64809e7d12695e2e6098900296f6527bf"
     entrypoint: terragrunt
     args: ["init"]
     dir: "Terraform/org"
 
-  - name: "docker.io/alpine/terragrunt:0.12.24"
+  # org_policies
+  - name: "gcr.io/cloud-foundation-cicd/cft/developer-tools@sha256:a09ad46f513847d31e2cfe20f818c2d64809e7d12695e2e6098900296f6527bf"
     entrypoint: terragrunt
-    args: ["plan"]
-    dir: "Terraform/org/folder.fda-my-studies/project.heroes-hat-dev-resp-firebase/firebase"
+    args: ["plan-all", "--terragrunt-non-interactive"]
+    dir: "Terraform/org/org_policies"
 
-  - name: "docker.io/alpine/terragrunt:0.12.24"
+  - name: "gcr.io/cloud-foundation-cicd/cft/developer-tools@sha256:a09ad46f513847d31e2cfe20f818c2d64809e7d12695e2e6098900296f6527bf"
     entrypoint: terragrunt
-    args: ["apply", "-auto-approve"]
-    dir: "Terraform/org/folder.fda-my-studies/project.heroes-hat-dev-resp-firebase/firebase"
+    args: ["apply-all", "--terragrunt-non-interactive"]
+    dir: "Terraform/org/org_policies"
+
+  # project.heroes-hat-dev-devops
+  - name: "gcr.io/cloud-foundation-cicd/cft/developer-tools@sha256:a09ad46f513847d31e2cfe20f818c2d64809e7d12695e2e6098900296f6527bf"
+    entrypoint: terragrunt
+    args: ["plan-all", "--terragrunt-non-interactive"]
+    dir: "Terraform/org/project.heroes-hat-dev-devops"
+
+  - name: "gcr.io/cloud-foundation-cicd/cft/developer-tools@sha256:a09ad46f513847d31e2cfe20f818c2d64809e7d12695e2e6098900296f6527bf"
+    entrypoint: terragrunt
+    args: ["apply-all", "--terragrunt-non-interactive"]
+    dir: "Terraform/org/project.heroes-hat-dev-devops"
+
+  # project.heroes-hat-dev-audit
+  - name: "gcr.io/cloud-foundation-cicd/cft/developer-tools@sha256:a09ad46f513847d31e2cfe20f818c2d64809e7d12695e2e6098900296f6527bf"
+    entrypoint: terragrunt
+    args: ["plan-all", "--terragrunt-non-interactive"]
+    dir: "Terraform/org/project.heroes-hat-dev-audit"
+
+  - name: "gcr.io/cloud-foundation-cicd/cft/developer-tools@sha256:a09ad46f513847d31e2cfe20f818c2d64809e7d12695e2e6098900296f6527bf"
+    entrypoint: terragrunt
+    args: ["apply-all", "--terragrunt-non-interactive"]
+    dir: "Terraform/org/project.heroes-hat-dev-audit"
+
+  # audit
+  - name: "gcr.io/cloud-foundation-cicd/cft/developer-tools@sha256:a09ad46f513847d31e2cfe20f818c2d64809e7d12695e2e6098900296f6527bf"
+    entrypoint: terragrunt
+    args: ["plan-all", "--terragrunt-non-interactive"]
+    dir: "Terraform/org/audit"
+
+  - name: "gcr.io/cloud-foundation-cicd/cft/developer-tools@sha256:a09ad46f513847d31e2cfe20f818c2d64809e7d12695e2e6098900296f6527bf"
+    entrypoint: terragrunt
+    args: ["apply-all", "--terragrunt-non-interactive"]
+    dir: "Terraform/org/audit"
+
+  # folder.fda-my-studies
+  - name: "gcr.io/cloud-foundation-cicd/cft/developer-tools@sha256:a09ad46f513847d31e2cfe20f818c2d64809e7d12695e2e6098900296f6527bf"
+    entrypoint: terragrunt
+    args: ["plan-all", "--terragrunt-non-interactive"]
+    dir: "Terraform/org/folder.fda-my-studies"
+
+  - name: "gcr.io/cloud-foundation-cicd/cft/developer-tools@sha256:a09ad46f513847d31e2cfe20f818c2d64809e7d12695e2e6098900296f6527bf"
+    entrypoint: terragrunt
+    args: ["apply-all", "--terragrunt-non-interactive"]
+    dir: "Terraform/org/folder.fda-my-studies"
+

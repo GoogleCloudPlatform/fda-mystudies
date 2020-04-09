@@ -13,7 +13,7 @@ module "private" {
   project_id   = var.project_id
   network_name = "private"
 
-  # All the clusters can be in the same network and subnet.
+  # Multiple clusters can be in the same network and subnet.
   subnets = [
     {
       subnet_name      = local.gke_clusters_subnet_name
@@ -30,7 +30,18 @@ module "private" {
   # See https://cloud.google.com/kubernetes-engine/docs/how-to/alias-ips#cluster_sizing_secondary_range_pods for how many nodes the /20 ranges get.
   secondary_ranges = {
     "${local.gke_clusters_subnet_name}" = [
-      # Auth server.
+      # The Heroes Hat GKE cluster.
+      # /14 is the default size for the subnet's secondary IP range for Pods when the secondary range assignment method is managed by GKE, so imitate that.
+      # Calculated using http://www.davidc.net/sites/default/subnets/subnets.html
+      {
+        range_name    = "heroes-hat-cluster-ip-range-pods"
+        ip_cidr_range = "172.16.0.0/14"
+      },
+      {
+        range_name    = "heroes-hat-cluster-ip-range-svc"
+        ip_cidr_range = "172.20.0.0/14"
+      },
+      # Remove after TF runs.
       {
         range_name    = "auth-server-ws-cluster-ip-range-pods"
         ip_cidr_range = "192.168.0.0/20"

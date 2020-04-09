@@ -30,8 +30,12 @@ locals {
     "roles/iam.securityReviewer",
   ]
   cloudbuild_sa_editor_roles = concat(local.cloudbuild_sa_viewer_roles, [
-    "roles/firebase.admin",
-    "roles/serviceusage.serviceUsageAdmin",
+    "roles/billing.user",
+    "roles/orgpolicy.policyAdmin",
+    "roles/owner",
+    "roles/resourcemanager.organizationAdmin",
+    "roles/resourcemanager.folderCreator",
+    "roles/resourcemanager.projectCreator",
   ])
 }
 
@@ -39,7 +43,7 @@ module "project" {
   source  = "terraform-google-modules/project-factory/google"
   version = "~> 7.0"
 
-  name                    = var.project_id
+  name                    = var.devops_project_id
   org_id                  = var.org_id
   billing_account         = var.billing_account
   lien                    = true
@@ -56,12 +60,24 @@ module "state_bucket" {
   location   = var.storage_location
 }
 
+resource "google_project_iam_binding" "devops_owners" {
+  project = module.project.project_id
+  role    = "roles/owner"
+  members = var.devops_owners
+}
+
 # Cloud Build - API
 resource "google_project_service" "devops_apis" {
   for_each           = toset(local.devops_apis)
   project            = module.project.project_id
   service            = each.value
   disable_on_destroy = false
+}
+
+resource "google_organization_iam_member" "org_admin" {
+  org_id = var.org_id
+  role   = "roles/resourcemanager.organizationAdmin"
+  member = var.org_admin
 }
 
 # Cloud Build - IAM bindings
@@ -142,7 +158,8 @@ resource "google_cloudbuild_trigger" "apply" {
   name     = "tf-apply"
 
   included_files = [
-    "Terraform/org/folder.fda-my-studies/project.heroes-hat-dev-resp-firebase/firebase/**"
+    "Terraform/org/**",
+    "Terraform/cicd/tf-apply.yaml",
   ]
 
   github {
