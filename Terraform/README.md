@@ -26,28 +26,30 @@ MyStudies application.
 1. [Create administrative groups](https://support.google.com/a/answer/33343?hl=en)
    in the G Suite Domain:
 
-   - X-org-admins@domain.com: This group has administrative access to the entire
-     org.
+   - {PREFIX}-org-admins@{DOMAIN}.com: This group has administrative access to the
+     entire org.
 
-   - X-devops-owners@domain.com: This group has owners access to the devops
+   - {PREFIX}-devops-owners@{DOMAIN}.com: This group has owners access to the
+     devops project.
+
+   - {PREFIX}-audit-owners@{DOMAIN}.com: This group has owners access to the
+     audit project.
+
+   - {PREFIX}-apps-owners@{DOMAIN}.com: This group has owners access to the apps
      project.
 
-   - X-audit-owners@domain.com: This group has owners access to the audit
+   - {PREFIX}-data-owners@{DOMAIN}.com: This group has owners access to the data
      project.
 
-   - X-apps-owners@domain.com: This group has owners access to the apps project.
+   - {PREFIX}-networks-owners@{DOMAIN}.com: This group has owners access to the
+     networks project.
 
-   - X-data-owners@domain.com: This group has owners access to the data project.
+   - {PREFIX}-firebase-owners@{DOMAIN}.com: This group has owners access to the
+     firebase project.
 
-   - X-networks-owners@domain.com: This group has owners access to the networks
-     project.
-
-   - X-firebase-owners@domain.com: This group has owners access to the firebase
-     project.
-
-   - X-auditors@domain.com: This group has security reviewer (metadata viewer)
-     access to the entire org, as well as viewer access to the audit logs
-     BigQuery and Cloud Storage resources.
+   - {PREFIX}-auditors@{DOMAIN}.com: This group has security reviewer
+     (metadata viewer) access to the entire org, as well as viewer access to the
+     audit logs BigQuery and Cloud Storage resources.
 
    WARNING: It is always recommended to use CICD to deploy changes to the
    infrastructure. The groups above should remain empty and only have humans
@@ -87,15 +89,15 @@ A deployment typically contains the following files:
 |- cicd: CloudBuild configs for the CICD pipeline.
 |- org: org level resources. Resources within this directory should be managed by CICD pipeline.
   |- terragrunt.hcl: root Terragrunt config which defines remote state for all deployments.
-  |- project.X-devops: additional resources that will go in the devops project.
-  |- project.X-audit: the project to hold all audit logs for the org.
+  |- project.{PREFIX}-devops: additional resources that will go in the devops project.
+  |- project.{PREFIX}-audit: the project to hold all audit logs for the org.
   |- audit: deployment to setup auditing for the org.
   |- iam: org level iam definitions such as org admins.
   |- folder.fda-mystudies: folder to hold all projects related to FDA MyStudies.
-    |- project.X-apps: apps project and resources (GKE)
-    |- project.X-data: data project and resources (GCS buckets, CloudSQL instances)
-    |- project.X-networks: network project and resources (VPC)
-    |- project.X-firebase: firebase project (firestores)
+    |- project.{PREFIX}-apps: apps project and resources (GKE)
+    |- project.{PREFIX}-data: data project and resources (GCS buckets, CloudSQL instances)
+    |- project.{PREFIX}-networks: network project and resources (VPC)
+    |- project.{PREFIX}-firebase: firebase project (firestores)
 ```
 
 ## Deployment Steps
