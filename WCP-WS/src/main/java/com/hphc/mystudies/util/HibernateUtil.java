@@ -46,7 +46,7 @@ public class HibernateUtil {
         InputStream inputStream =
             HibernateUtil.class
                 .getClassLoader()
-                .getResourceAsStream("application_local.properties");
+                .getResourceAsStream("application.properties");
 
         Properties properties = new Properties();
 

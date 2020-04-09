@@ -77,7 +77,7 @@ public class StudyMetaDataUtil {
       Properties prop = new Properties();
 
       InputStream inputStream =
-          HibernateUtil.class.getClassLoader().getResourceAsStream("application_local.properties");
+          HibernateUtil.class.getClassLoader().getResourceAsStream("application.properties");
       prop.load(inputStream);
       objectKeys = prop.keys();
       while (objectKeys.hasMoreElements()) {
