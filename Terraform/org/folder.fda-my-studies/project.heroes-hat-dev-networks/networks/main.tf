@@ -41,6 +41,51 @@ module "private" {
         range_name    = "heroes-hat-cluster-ip-range-svc"
         ip_cidr_range = "172.20.0.0/14"
       },
+      # Remove after TF runs.
+      {
+        range_name    = "auth-server-ws-cluster-ip-range-svc"
+        ip_cidr_range = "192.168.16.0/20"
+      },
+
+      # Response server.
+      {
+        range_name    = "response-server-ws-cluster-ip-range-pods"
+        ip_cidr_range = "192.168.32.0/20"
+      },
+      {
+        range_name    = "response-server-ws-cluster-ip-range-svc"
+        ip_cidr_range = "192.168.48.0/20"
+      },
+
+      # Study designer.
+      {
+        range_name    = "study-designer-cluster-ip-range-pods"
+        ip_cidr_range = "192.168.64.0/20"
+      },
+      {
+        range_name    = "study-designer-cluster-ip-range-svc"
+        ip_cidr_range = "192.168.80.0/20"
+      },
+
+      # Study metadata.
+      {
+        range_name    = "study-meta-data-cluster-ip-range-pods"
+        ip_cidr_range = "192.168.96.0/20"
+      },
+      {
+        range_name    = "study-meta-data-cluster-ip-range-svc"
+        ip_cidr_range = "192.168.112.0/20"
+      },
+
+      # User registration server.
+      {
+        range_name    = "user-registration-server-ws-cluster-ip-range-pods"
+        ip_cidr_range = "192.168.128.0/20"
+      },
+      {
+        range_name    = "user-registration-server-ws-cluster-ip-range-svc"
+        ip_cidr_range = "192.168.144.0/20"
+      },
     ],
   }
 }
