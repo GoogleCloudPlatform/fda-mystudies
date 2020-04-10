@@ -13,3 +13,15 @@ spec:
             backend:
               serviceName: auth-server-np
               servicePort: 50000
+          - path: /mystudies-response-server/*
+            backend:
+              serviceName: response-server-np
+              servicePort: 50000
+          - path: /myStudiesUserMgmtWS/*
+            backend:
+              serviceName: user-registration-server-np
+              servicePort: 50000
+          - path: /StudyMetaData/*
+            backend:
+              serviceName: study-meta-data-np
+              servicePort: 50000
