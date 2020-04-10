@@ -8,7 +8,7 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta http-equiv="refresh" content="1700">        
-    <title>&lt;Org Name&gt; MSMP</title>	
+    <title>Study Builder</title>	
     
     <meta name="description" content="">
     <meta name="keywords" content="">
@@ -18,7 +18,6 @@
     <link rel="shortcut icon" href="/studybuilder/images/icons/FAV_Icon.png" type="image/x-icon" />
     <link rel="apple-touch-icon" href="/studybuilder/images/icons/FAV_Icon.png">
 
-        
     <!-- Mobile Metas -->
     <meta name="viewport" content="width=device-width, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
         

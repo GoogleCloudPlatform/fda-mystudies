@@ -6,7 +6,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta http-equiv="x-ua-compatible" content="ie=edge">
-    <title>&lt;Org Name&gt; MSMP</title>
+    <title>Study Builder</title>
     
     <!-- Favicon -->
     <link rel="shortcut icon" href="/studybuilder/images/icons/FAV_Icon.png" type="image/x-icon" />

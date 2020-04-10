@@ -12,7 +12,7 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
             
-    <title>&lt;Org Name&gt; MSMP</title>	
+    <title>Study Builder</title>	
     
     <meta name="description" content="">
     <meta name="keywords" content="">
@@ -137,7 +137,7 @@
             <div class="clearfix"></div>
             
              <div class="footer">
-                    <span>Copyright © 2017 &lt;Org Name&gt;</span><span><a href="http://localhost:8080/fdahpStudyDesigner/terms.do" id="" target="_blank">Terms</a></span><span><a href="http://localhost:8080/fdahpStudyDesigner/privacyPolicy.do" id="" target="_blank">Privacy Policy</a></span>
+                    <span>Copyright © 2017 &lt;Org Name&gt;</span><span><a href="/studybuilder/terms.do" id="" target="_blank">Terms</a></span><span><a href="/studybuilder/privacyPolicy.do" id="" target="_blank">Privacy Policy</a></span>
               </div>
              
         </div>

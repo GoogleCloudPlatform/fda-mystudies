@@ -293,7 +293,8 @@
 							</c:if>
 						</div>
 						<div class="addHide">
-							<span class="mr-lg text-weight-semibold">Existing Study Permissions</span>
+							<span class="mr-lg text-weight-semibold text-uppercase">Existing Study Permissions</span>
+
 							<c:if test="${actionPage ne 'VIEW_PAGE'}">
 								<span class="ablue removeAll changeView">x Remove all</span>
 							</c:if>
