@@ -68,7 +68,7 @@
             <!--  End body tab section -->
         </div>
         <!-- End right Content here -->
-<form:form action="/fdahpStudyDesigner/adminStudies/getStudyNotification.do?_S=${param._S}" id="getStudyNotificationEditPage" name="getNotificationEditPage" method="post">
+<form:form action="/studybuilder/adminStudies/getStudyNotification.do?_S=${param._S}" id="getStudyNotificationEditPage" name="getNotificationEditPage" method="post">
 		<input type="hidden" id="notificationId" name="notificationId">
 		<input type="hidden" id="notificationText" name="notificationText">
 		<input type="hidden" id="actionType" name="actionType">
@@ -76,10 +76,10 @@
 		<input type="hidden" name="chkRefreshflag" value="y">
 </form:form>
 
-<form:form action="/fdahpStudyDesigner/adminStudies/studyList.do?_S=${param._S}" name="studyListPage" id="studyListPage" method="post">
+<form:form action="/studybuilder/adminStudies/studyList.do?_S=${param._S}" name="studyListPage" id="studyListPage" method="post">
 </form:form>        
 
-<form:form action="/fdahpStudyDesigner/adminStudies/notificationMarkAsCompleted.do?_S=${param._S}" name="notificationMarkAsCompletedForm" id="notificationMarkAsCompletedForm" method="post">
+<form:form action="/studybuilder/adminStudies/notificationMarkAsCompleted.do?_S=${param._S}" name="notificationMarkAsCompletedForm" id="notificationMarkAsCompletedForm" method="post">
 </form:form>
     <script>
         $(document).ready(function(){ 

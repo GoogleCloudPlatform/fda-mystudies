@@ -19,8 +19,8 @@
     <meta name="author" content="">
 
     <!-- Favicon -->
-    <link rel="shortcut icon" href="/fdahpStudyDesigner/images/icons/fav.png" type="image/x-icon" />
-    <link rel="apple-touch-icon" href="/fdahpStudyDesigner/images/icons/fav.png">
+    <link rel="shortcut icon" href="/studybuilder/images/icons/fav.png" type="image/x-icon" />
+    <link rel="apple-touch-icon" href="/studybuilder/images/icons/fav.png">
         
     <!-- Mobile Metas -->
     <meta name="viewport" content="width=device-width, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
@@ -29,60 +29,60 @@
    <link href="https://fonts.googleapis.com/css?family=Roboto:300,400" rel="stylesheet">
         
     <!-- Vendor CSS -->
-    <link rel="stylesheet" href="/fdahpStudyDesigner/vendor/boostrap/bootstrap.min.css">
-    <link rel="stylesheet" href="/fdahpStudyDesigner/vendor/datetimepicker/css/bootstrap-timepicker.min.css">
-    <link rel="stylesheet" href="/fdahpStudyDesigner/vendor/scrollbar/jquery.mCustomScrollbar.min.css">
-    <link rel="stylesheet" href="/fdahpStudyDesigner/vendor/datetimepicker/css/bootstrap-datetimepicker.min.css">
-    <link rel="stylesheet" href="/fdahpStudyDesigner/vendor/datatable/css/dataTables.bootstrap.min.css">
+    <link rel="stylesheet" href="/studybuilder/vendor/boostrap/bootstrap.min.css">
+    <link rel="stylesheet" href="/studybuilder/vendor/datetimepicker/css/bootstrap-timepicker.min.css">
+    <link rel="stylesheet" href="/studybuilder/vendor/scrollbar/jquery.mCustomScrollbar.min.css">
+    <link rel="stylesheet" href="/studybuilder/vendor/datetimepicker/css/bootstrap-datetimepicker.min.css">
+    <link rel="stylesheet" href="/studybuilder/vendor/datatable/css/dataTables.bootstrap.min.css">
     
      <!-- Your custom styles (optional) -->
-    <link href="/fdahpStudyDesigner/css/loader.css" rel="stylesheet">
-    <link rel="stylesheet" href="/fdahpStudyDesigner/vendor/datatable/css/jquery.dataTables.min.css">
-    <link rel="stylesheet" href="/fdahpStudyDesigner/vendor/datatable/css/rowReorder.dataTables.min.css">
-    <link rel="stylesheet" href="/fdahpStudyDesigner/vendor/dragula/dragula.min.css">
-    <link rel="stylesheet" href="/fdahpStudyDesigner/vendor/magnific-popup/magnific-popup.css">
-    <link rel="stylesheet" href="/fdahpStudyDesigner/vendor/font-awesome/font-awesome.min.css"> 
-    <link rel="stylesheet" href="/fdahpStudyDesigner/vendor/select2/bootstrap-select.min.css">      
-    <link rel="stylesheet" href="/fdahpStudyDesigner/vendor/animation/animate.css">
+    <link href="/studybuilder/css/loader.css" rel="stylesheet">
+    <link rel="stylesheet" href="/studybuilder/vendor/datatable/css/jquery.dataTables.min.css">
+    <link rel="stylesheet" href="/studybuilder/vendor/datatable/css/rowReorder.dataTables.min.css">
+    <link rel="stylesheet" href="/studybuilder/vendor/dragula/dragula.min.css">
+    <link rel="stylesheet" href="/studybuilder/vendor/magnific-popup/magnific-popup.css">
+    <link rel="stylesheet" href="/studybuilder/vendor/font-awesome/font-awesome.min.css"> 
+    <link rel="stylesheet" href="/studybuilder/vendor/select2/bootstrap-select.min.css">      
+    <link rel="stylesheet" href="/studybuilder/vendor/animation/animate.css">
         
     <!-- Theme Responsive CSS -->
-    <link rel="stylesheet" href="/fdahpStudyDesigner/css/layout.css">   
+    <link rel="stylesheet" href="/studybuilder/css/layout.css">   
         
     <!-- Theme CSS -->
-    <link rel="stylesheet" href="/fdahpStudyDesigner/css/theme.css">
-    <link rel="stylesheet" href="/fdahpStudyDesigner/css/style.css">
-    <link rel="stylesheet" href="/fdahpStudyDesigner/css/sprites_icon.css">
-    <link rel="stylesheet" href="/fdahpStudyDesigner/css/sprites-icons-2.css"> 
-    <link rel="stylesheet" href="/fdahpStudyDesigner/css/sprites_v3.css">
-    <link rel="stylesheet" href="/fdahpStudyDesigner/css/jquery-password-validator.css">
+    <link rel="stylesheet" href="/studybuilder/css/theme.css">
+    <link rel="stylesheet" href="/studybuilder/css/style.css">
+    <link rel="stylesheet" href="/studybuilder/css/sprites_icon.css">
+    <link rel="stylesheet" href="/studybuilder/css/sprites-icons-2.css"> 
+    <link rel="stylesheet" href="/studybuilder/css/sprites_v3.css">
+    <link rel="stylesheet" href="/studybuilder/css/jquery-password-validator.css">
    
    
         
     <!-- Head Libs -->
-    <script src="/fdahpStudyDesigner/vendor/modernizr/modernizr.js"></script>
+    <script src="/studybuilder/vendor/modernizr/modernizr.js"></script>
     
     
     <!-- Vendor -->
-    <script src="/fdahpStudyDesigner/vendor/jquery/jquery-3.1.1.min.js"></script>
-    <script src="/fdahpStudyDesigner/vendor/boostrap/bootstrap.min.js"></script>
-    <script src="/fdahpStudyDesigner/vendor/scrollbar/jquery.mCustomScrollbar.concat.min.js"></script>
-     <script src="/fdahpStudyDesigner/vendor/datetimepicker/js/moment.min.js"></script>
-    <script src="/fdahpStudyDesigner/vendor/datetimepicker/js/bootstrap-timepicker.min.js"></script>
-    <script src="/fdahpStudyDesigner/vendor/datetimepicker/js/bootstrap-datetimepicker.min.js"></script>
-    <script src="/fdahpStudyDesigner/js/validator.min.js"></script>
-    <script src="/fdahpStudyDesigner/vendor/animation/wow.min.js"></script>
-    <script src="/fdahpStudyDesigner/vendor/datatable/js/jquery.dataTables.min.js"></script>
-    <script src="/fdahpStudyDesigner/vendor/datatable/js/dataTables.rowReorder.min.js"></script>
-    <script src="/fdahpStudyDesigner/vendor/dragula/react-dragula.min.js"></script>
-    <script src="/fdahpStudyDesigner/vendor/magnific-popup/jquery.magnific-popup.min.js"></script>    
-	<!-- <script src="/fdahpStudyDesigner/vendor/slimscroll/jquery.slimscroll.min.js"></script> -->
-    <script src="/fdahpStudyDesigner/vendor/select2/bootstrap-select.min.js"></script>
+    <script src="/studybuilder/vendor/jquery/jquery-3.1.1.min.js"></script>
+    <script src="/studybuilder/vendor/boostrap/bootstrap.min.js"></script>
+    <script src="/studybuilder/vendor/scrollbar/jquery.mCustomScrollbar.concat.min.js"></script>
+     <script src="/studybuilder/vendor/datetimepicker/js/moment.min.js"></script>
+    <script src="/studybuilder/vendor/datetimepicker/js/bootstrap-timepicker.min.js"></script>
+    <script src="/studybuilder/vendor/datetimepicker/js/bootstrap-datetimepicker.min.js"></script>
+    <script src="/studybuilder/js/validator.min.js"></script>
+    <script src="/studybuilder/vendor/animation/wow.min.js"></script>
+    <script src="/studybuilder/vendor/datatable/js/jquery.dataTables.min.js"></script>
+    <script src="/studybuilder/vendor/datatable/js/dataTables.rowReorder.min.js"></script>
+    <script src="/studybuilder/vendor/dragula/react-dragula.min.js"></script>
+    <script src="/studybuilder/vendor/magnific-popup/jquery.magnific-popup.min.js"></script>    
+	<!-- <script src="/studybuilder/vendor/slimscroll/jquery.slimscroll.min.js"></script> -->
+    <script src="/studybuilder/vendor/select2/bootstrap-select.min.js"></script>
     
-    <script src="/fdahpStudyDesigner/js/jquery.password-validator.js"></script>
+    <script src="/studybuilder/js/jquery.password-validator.js"></script>
     
-    <script src="/fdahpStudyDesigner/js/underscore-min.js"></script>
-    <script src="/fdahpStudyDesigner/js/ajaxRequestInterceptor.js"></script>
-    <script type="text/javascript" src="/fdahpStudyDesigner/js/loader.js"></script>
+    <script src="/studybuilder/js/underscore-min.js"></script>
+    <script src="/studybuilder/js/ajaxRequestInterceptor.js"></script>
+    <script type="text/javascript" src="/studybuilder/js/loader.js"></script>
     <script>
 //       (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
 //       (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
@@ -127,15 +127,15 @@
 	<a href="javascript:void(0)" id="return-to-top"><i class="fa fa-angle-up" aria-hidden="true"></i></a>
 	
 	<!-- Theme Custom JS-->
-    <script src="/fdahpStudyDesigner/js/theme.js"></script>
-    <script src="/fdahpStudyDesigner/js/jquery.mask.min.js"></script>
-    <script src="/fdahpStudyDesigner/js/jquery-scrollto.js" ></script>
-    <script src="/fdahpStudyDesigner/js/jquery.nicescroll.min.js"></script>
-    <script src="/fdahpStudyDesigner/vendor/tinymce/tinymce.min.js"></script>
-    <script src="/fdahpStudyDesigner/js/bootbox.min.js"></script>
+    <script src="/studybuilder/js/theme.js"></script>
+    <script src="/studybuilder/js/jquery.mask.min.js"></script>
+    <script src="/studybuilder/js/jquery-scrollto.js" ></script>
+    <script src="/studybuilder/js/jquery.nicescroll.min.js"></script>
+    <script src="/studybuilder/vendor/tinymce/tinymce.min.js"></script>
+    <script src="/studybuilder/js/bootbox.min.js"></script>
     
     
-    <script src="/fdahpStudyDesigner/js/common.js"></script>
+    <script src="/studybuilder/js/common.js"></script>
     
     <script>
     window.history.forward();
@@ -156,7 +156,7 @@
 			});
 		 	if('${sessionScope.sessionObject}' != ''){
 		   	  	setTimeout(function(){
-			 		 window.location.href = '/fdahpStudyDesigner/errorRedirect.do?error=timeOut';
+			 		 window.location.href = '/studybuilder/errorRedirect.do?error=timeOut';
 			 	}, 1000 * 60 * 31);
    	  	 	}
    	  	 	setInterval('clock()', 1000);

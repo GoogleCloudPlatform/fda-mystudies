@@ -9,25 +9,25 @@
     <title>FDA MSMP</title>
     
     <!-- Favicon -->
-    <link rel="shortcut icon" href="/fdahpStudyDesigner/images/icons/fav.png" type="image/x-icon" />
-    <link rel="apple-touch-icon" href="/fdahpStudyDesigner/images/icons/fav.png">
+    <link rel="shortcut icon" href="/studybuilder/images/icons/fav.png" type="image/x-icon" />
+    <link rel="apple-touch-icon" href="/studybuilder/images/icons/fav.png">
     
     <!-- Web Fonts  -->
     <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700" rel="stylesheet">
     
     <!-- Bootstrap core CSS -->
-    <link href="/fdahpStudyDesigner/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/studybuilder/css/bootstrap.min.css" rel="stylesheet">
 
     <!--bootstarp select -->
-    <link href="/fdahpStudyDesigner/css/bootstrap-select.min.css" rel="stylesheet">
+    <link href="/studybuilder/css/bootstrap-select.min.css" rel="stylesheet">
     
     <!-- Material Design Bootstrap -->
-    <link href="/fdahpStudyDesigner/css/jquery.dataTables.min.css" rel="stylesheet">
+    <link href="/studybuilder/css/jquery.dataTables.min.css" rel="stylesheet">
     
     
     <!-- Your custom styles (optional) -->
-    <link href="/fdahpStudyDesigner/css/theme.css" rel="stylesheet">
-    <link href="/fdahpStudyDesigner/css/style.css" rel="stylesheet">
+    <link href="/studybuilder/css/theme.css" rel="stylesheet">
+    <link href="/studybuilder/css/style.css" rel="stylesheet">
     
   
 
@@ -37,13 +37,13 @@
 <body class="txt-center grayeef2f5-bg">
 
 <div class="err_page_container">
-    <div class="txt-left"><img src="/fdahpStudyDesigner/images/logo/fda-logo.png" alt=""/></div>
+    <div class="txt-left"><img src="/studybuilder/images/logo/fda-logo.png" alt=""/></div>
     <div class="err_page_txt">
-        <img src="/fdahpStudyDesigner/images/icons/404.png" alt=""/>
+        <img src="/studybuilder/images/icons/404.png" alt=""/>
         <div>Sorry, this page does not exist.</div>
         <div>Please check the URL in the browser's address bar or try launching the site again</div>
         <div>
-            <a href="/fdahpStudyDesigner/login.do">Go back Home</a>
+            <a href="/studybuilder/login.do">Go back Home</a>
         </div>
     </div>
 </div>
@@ -53,16 +53,16 @@
 
 
     <!-- Bootstrap core JavaScript -->
-    <script type="text/javascript" src="/fdahpStudyDesigner/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="/studybuilder/js/bootstrap.min.js"></script>
     
     <!-- bootstrap select -->
-    <script type="text/javascript" src="/fdahpStudyDesigner/js/bootstrap-select.min.js"></script>
+    <script type="text/javascript" src="/studybuilder/js/bootstrap-select.min.js"></script>
     
     <!-- Datatables -->
-    <script type="text/javascript" src="/fdahpStudyDesigner/js/jquery.dataTables.min.js"></script>
+    <script type="text/javascript" src="/studybuilder/js/jquery.dataTables.min.js"></script>
 	
     <!--common js-->
-	<script type="text/javascript" src="/fdahpStudyDesigner/js/common.js"></script>
+	<script type="text/javascript" src="/studybuilder/js/common.js"></script>
    
 </body>
 

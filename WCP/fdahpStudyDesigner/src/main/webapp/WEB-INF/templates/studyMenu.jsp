@@ -164,7 +164,7 @@ $("#rowId").addClass('lc-gray-bg');
 		    callback: function(result) {
 		        if (result) {
 		        	var a = document.createElement('a');
-		    		a.href = "/fdahpStudyDesigner/adminStudies/studyList.do";
+		    		a.href = "/studybuilder/adminStudies/studyList.do";
 		    		document.body.appendChild(a).click();
 		        }else{
 		        	$('.cancelBut').prop('disabled', false);
@@ -174,79 +174,79 @@ $("#rowId").addClass('lc-gray-bg');
 	   </c:if>
 	   <c:if test="${not empty permission}">
 		   	var a = document.createElement('a');
-			a.href = "/fdahpStudyDesigner/adminStudies/studyList.do";
+			a.href = "/studybuilder/adminStudies/studyList.do";
 			document.body.appendChild(a).click();
 	   </c:if>
 	});
    
    var a = document.createElement('a');
    $('.first').click(function() {
-		a.href = "/fdahpStudyDesigner/adminStudies/viewBasicInfo.do?_S=${param._S}";
+		a.href = "/studybuilder/adminStudies/viewBasicInfo.do?_S=${param._S}";
 		document.body.appendChild(a).click();
 	});
    
    <c:if test="${not empty studyBo.studySequenceBo && studyBo.studySequenceBo.basicInfo}">
 	   $('.second').click(function() {
-			a.href = "/fdahpStudyDesigner/adminStudies/viewSettingAndAdmins.do?_S=${param._S}";
+			a.href = "/studybuilder/adminStudies/viewSettingAndAdmins.do?_S=${param._S}";
 			document.body.appendChild(a).click();
 		});
 	   <c:if test="${studyBo.studySequenceBo.settingAdmins}">
 		   $('.third').click(function() {
-				a.href = "/fdahpStudyDesigner/adminStudies/overviewStudyPages.do?_S=${param._S}";
+				a.href = "/studybuilder/adminStudies/overviewStudyPages.do?_S=${param._S}";
 				document.body.appendChild(a).click();
 			});
 		   $('.fourth').click(function() {
-				a.href = "/fdahpStudyDesigner/adminStudies/viewStudyEligibilty.do?_S=${param._S}";
+				a.href = "/studybuilder/adminStudies/viewStudyEligibilty.do?_S=${param._S}";
 				document.body.appendChild(a).click();
 			});
 			$('.fifth').click(function() {
-				a.href = "/fdahpStudyDesigner/adminStudies/consentListPage.do?_S=${param._S}";
+				a.href = "/studybuilder/adminStudies/consentListPage.do?_S=${param._S}";
 				document.body.appendChild(a).click();
 			});
 			$('.fifthConsent').click(function() {
-				a.href = "/fdahpStudyDesigner/adminStudies/consentListPage.do?_S=${param._S}";
+				a.href = "/studybuilder/adminStudies/consentListPage.do?_S=${param._S}";
 				document.body.appendChild(a).click();
 			});
  			$('.fifthComre').click(function() {
- 				a.href = "/fdahpStudyDesigner/adminStudies/comprehensionQuestionList.do?_S=${param._S}";
+ 				a.href = "/studybuilder/adminStudies/comprehensionQuestionList.do?_S=${param._S}";
  				document.body.appendChild(a).click();
 			});
 			$('.fifthConsentReview').click(function() {
-				a.href = "/fdahpStudyDesigner/adminStudies/consentReview.do?_S=${param._S}";
+				a.href = "/studybuilder/adminStudies/consentReview.do?_S=${param._S}";
 				document.body.appendChild(a).click();
 			});
 			$('.sixth , .sixthQuestionnaires').click(function() {
-				a.href = "/fdahpStudyDesigner/adminStudies/viewStudyQuestionnaires.do?_S=${param._S}";
+				a.href = "/studybuilder/adminStudies/viewStudyQuestionnaires.do?_S=${param._S}";
 				document.body.appendChild(a).click();
 
 			});
 			$('.sixthTask').click(function() {
-				a.href = "/fdahpStudyDesigner/adminStudies/viewStudyActiveTasks.do?_S=${param._S}";
+				a.href = "/studybuilder/adminStudies/viewStudyActiveTasks.do?_S=${param._S}";
 				document.body.appendChild(a).click();
 			});
 
 			$('.eight').click(function() {
-				a.href = "/fdahpStudyDesigner/adminStudies/getResourceList.do?_S=${param._S}";
+				a.href = "/studybuilder/adminStudies/getResourceList.do?_S=${param._S}";
 				document.body.appendChild(a).click();
 			});
 			$('.eighthResources').click(function() {
 				$('.eighthResources').addClass('cursor-none');
-				a.href = "/fdahpStudyDesigner/adminStudies/getResourceList.do?_S=${param._S}";
+				a.href = "/studybuilder/adminStudies/getResourceList.do?_S=${param._S}";
 				document.body.appendChild(a).click();
 			});
 			$('.eigthNotification').click(function() {
 				$('.eigthNotification').addClass('cursor-none');
-				a.href = "/fdahpStudyDesigner/adminStudies/viewStudyNotificationList.do?_S=${param._S}";
+				a.href = "/studybuilder/adminStudies/viewStudyNotificationList.do?_S=${param._S}";
 				document.body.appendChild(a).click();
 			});
 			$('.nine').click(function() {
 				$('.nine').addClass('cursor-none');
-				a.href = "/fdahpStudyDesigner/adminStudies/getChecklist.do?_S=${param._S}";
+				a.href = "/studybuilder/adminStudies/getChecklist.do?_S=${param._S}";
 				document.body.appendChild(a).click();
 			});
 			$('.tenth').click(function() {
 				$('.tenth').addClass('cursor-none');
-				a.href = "/fdahpStudyDesigner/adminStudies/actionList.do?_S=${param._S}";
+				a.href = "/studybuilder/adminStudies/actionList.do?_S=${param._S}";
 				document.body.appendChild(a).click();
 			});
 		</c:if>

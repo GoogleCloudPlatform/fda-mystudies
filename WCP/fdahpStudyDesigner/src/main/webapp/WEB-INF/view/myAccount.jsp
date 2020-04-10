@@ -14,7 +14,7 @@
     
     <div  class="clearfix"></div>
 </div>
-   <form:form action="/fdahpStudyDesigner/adminDashboard/updateUserDetails.do?${_csrf.parameterName}=${_csrf.token}" id="userDetailsForm" 
+   <form:form action="/studybuilder/adminDashboard/updateUserDetails.do?${_csrf.parameterName}=${_csrf.token}" id="userDetailsForm" 
          			name="userDetailsForm" role="form" data-toggle="validator" method="post" autocomplete="off">
 <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 p-none mb-lg">
      <div class="white-bg box-space">
@@ -312,7 +312,7 @@
 					$(".changepwd .help-block ul").remove();
 					$("#updateBtn").prop('disabled', true);
 					$.ajax({
-						url : "/fdahpStudyDesigner/adminDashboard/changePassword.do",
+						url : "/studybuilder/adminDashboard/changePassword.do",
 						type : "POST",
 						datatype : "json",
 						data : {

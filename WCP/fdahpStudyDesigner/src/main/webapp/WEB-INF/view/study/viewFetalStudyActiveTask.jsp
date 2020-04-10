@@ -3,7 +3,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 <div class="changeContent">
-        <form:form action="/fdahpStudyDesigner/adminStudies/saveOrUpdateActiveTaskContent.do?_S=${param._S}" name="activeContentFormId" id="activeContentFormId" method="post" role="form">
+        <form:form action="/studybuilder/adminStudies/saveOrUpdateActiveTaskContent.do?_S=${param._S}" name="activeContentFormId" id="activeContentFormId" method="post" role="form">
         <input type="hidden" name="id" id="taskContentId" value="${activeTaskBo.id}">
         <input type="hidden" name="taskTypeId" value="${activeTaskBo.taskTypeId}">
         <input type="hidden" name="studyId" value="${activeTaskBo.studyId}">
@@ -835,7 +835,7 @@
 		    $('.shortTitleClass').parent().find(".help-block").empty();
 		     if(existedKey !=shortTitle){
 	 			$.ajax({
-	 				url: "/fdahpStudyDesigner/adminStudies/validateActiveTaskShortTitleId.do?_S=${param._S}",
+	 				url: "/studybuilder/adminStudies/validateActiveTaskShortTitleId.do?_S=${param._S}",
 	                type: "POST",
 	                datatype: "json",
 	                data: {
@@ -888,7 +888,7 @@
 	    	 //alert("dbIdentifierVal"+dbIdentifierVal);
 	    	 if(dbIdentifierVal!=activeTaskAttIdVal){
 	    		 $.ajax({
-		               url: "/fdahpStudyDesigner/adminStudies/validateActiveTaskShortTitleId.do?_S=${param._S}",
+		               url: "/studybuilder/adminStudies/validateActiveTaskShortTitleId.do?_S=${param._S}",
 		               type: "POST",
 		               datatype: "json",
 		               data: {
@@ -936,7 +936,7 @@
 		 	}
 	     }else{
 	    	 $.ajax({
-	               url: "/fdahpStudyDesigner/adminStudies/validateActiveTaskShortTitleId.do?_S=${param._S}",
+	               url: "/studybuilder/adminStudies/validateActiveTaskShortTitleId.do?_S=${param._S}",
 	               type: "POST",
 	               datatype: "json",
 	               data: {

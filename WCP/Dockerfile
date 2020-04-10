@@ -7,5 +7,5 @@ RUN mvn package
 RUN ls /app/target
 
 FROM tomcat:9.0.33-jdk11-openjdk
-COPY --from=maven_builder /app/target/fdahpStudyDesigner.war /usr/local/tomcat/webapps/
+COPY --from=maven_builder /app/target/studybuilder.war /usr/local/tomcat/webapps/
 CMD ["catalina.sh","run"]

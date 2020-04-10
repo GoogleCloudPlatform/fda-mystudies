@@ -19,8 +19,8 @@
     <meta name="author" content="">
 
     <!-- Favicon -->
-    <link rel="shortcut icon" href="/fdahpStudyDesigner/images/icons/fav.png" type="image/x-icon" />
-    <link rel="apple-touch-icon" href="/fdahpStudyDesigner/images/icons/fav.png">
+    <link rel="shortcut icon" href="/studybuilder/images/icons/fav.png" type="image/x-icon" />
+    <link rel="apple-touch-icon" href="/studybuilder/images/icons/fav.png">
         
     <!-- Mobile Metas -->
     <meta name="viewport" content="width=device-width, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
@@ -33,7 +33,7 @@
     <link rel="stylesheet" href="vendor/datatable/css/dataTables.bootstrap.min.css">
     
      <!-- Your custom styles (optional) -->
-    <link href="/fdahpStudyDesigner/css/loader.css" rel="stylesheet">
+    <link href="/studybuilder/css/loader.css" rel="stylesheet">
     
     <link rel="stylesheet" href="vendor/dragula/dragula.min.css">
     <link rel="stylesheet" href="vendor/magnific-popup/magnific-popup.css">        
@@ -101,7 +101,7 @@
                     <div id="sucMsg" class="suceess_msg">${sucMsg}</div>
                     <c:if test="${isValidToken}">
                     <div>
-                    <p class="white__text">To begin using the services on FDA and complete your account setup process, kindly use the access code provided on your email and set up your account password.</p>
+                    <p class="white__text">Please set up your new password using this form. You would be required to enter the access code provided to you over email for the same.</p>
                         <div class="mb-lg form-group">
                              <input autofocus="autofocus" type="text" class="input-field wow_input" id="" tabindex="1" name="accessCode" maxlength="6" placeholder="Access Code" data-error="Access Code is invalid" required autocomplete="off"/>
                             <div class="help-block with-errors red-txt"></div>
@@ -181,7 +181,7 @@
 </div>
         
     </div>
-    <form:form action="/fdahpStudyDesigner/login.do" id="backToLoginForm" name="backToLoginForm" method="post">
+    <form:form action="/studybuilder/login.do" id="backToLoginForm" name="backToLoginForm" method="post">
 	</form:form>
     
     <!-- Vendor -->
@@ -193,15 +193,15 @@
     <script src="vendor/magnific-popup/jquery.magnific-popup.min.js"></script>    
     <script src="vendor/slimscroll/jquery.slimscroll.min.js"></script>
     <script src="js/validator.min.js"></script>
-    <script src="/fdahpStudyDesigner/js/jquery.mask.min.js"></script>
-    <script src="/fdahpStudyDesigner/js/jquery.password-validator.js"></script>
-    <script type="text/javascript" src="/fdahpStudyDesigner/js/loader.js"></script>   
-    <script type="text/javascript" src="/fdahpStudyDesigner/js/jquery.password-validator.js"></script>
-	<script src="/fdahpStudyDesigner/js/underscore-min.js"></script>
+    <script src="/studybuilder/js/jquery.mask.min.js"></script>
+    <script src="/studybuilder/js/jquery.password-validator.js"></script>
+    <script type="text/javascript" src="/studybuilder/js/loader.js"></script>   
+    <script type="text/javascript" src="/studybuilder/js/jquery.password-validator.js"></script>
+	<script src="/studybuilder/js/underscore-min.js"></script>
     
     <!-- Theme Custom JS-->
-    <script src="/fdahpStudyDesigner/js/theme.js"></script>
-    <script src="/fdahpStudyDesigner/js/common.js"></script>
+    <script src="/studybuilder/js/theme.js"></script>
+    <script src="/studybuilder/js/common.js"></script>
     <!--common js-->
     
    
