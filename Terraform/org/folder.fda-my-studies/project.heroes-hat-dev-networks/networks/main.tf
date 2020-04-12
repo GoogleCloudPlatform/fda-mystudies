@@ -8,7 +8,7 @@ locals {
 
 module "private" {
   source  = "terraform-google-modules/network/google"
-  version = "~> 2.0"
+  version = "~> 2.2"
 
   project_id   = var.project_id
   network_name = "private"
@@ -18,7 +18,7 @@ module "private" {
     {
       subnet_name      = local.gke_clusters_subnet_name
       subnet_ip        = "10.0.0.0/17"
-      subnet_region    = var.gke_region
+      subnet_region    = var.region
       subnet_flow_logs = "true"
 
       # Needed for access to Cloud SQL.
