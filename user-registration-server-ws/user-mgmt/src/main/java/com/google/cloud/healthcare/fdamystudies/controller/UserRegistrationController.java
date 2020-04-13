@@ -75,222 +75,94 @@ public class UserRegistrationController {
       @Context HttpServletResponse response) {
 
     logger.info("UserRegistrationController registerUser() - starts");
-    UserRegistrationResponse registrationResponse = null;
     AuthRegistrationResponseBean authServerResponse = null;
 
-    if ((clientId.length() == 0 || clientId == null && StringUtils.isEmpty(clientId))
-        || (secretKey.length() == 0 || secretKey == null && StringUtils.isEmpty(secretKey))
-        || (userForm.getEmailId() == null && StringUtils.isEmpty(userForm.getEmailId()))
-        || (userForm.getPassword() == null && StringUtils.isEmpty(userForm.getPassword()))) {
-      MyStudiesUserRegUtil.getFailureResponse(
-          400 + "",
-          MyStudiesUserRegUtil.ErrorCodes.INVALID_INPUT.getValue(),
-          MyStudiesUserRegUtil.ErrorCodes.INVALID_INPUT_ERROR_MSG.getValue(),
-          response);
-      registrationResponse = new UserRegistrationResponse();
-      registrationResponse.setCode(400);
-      registrationResponse.setMessage(
-          MyStudiesUserRegUtil.ErrorCodes.INVALID_INPUT_ERROR_MSG.getValue());
-      logger.info(AppConstants.USER_REGISTRATION_CONTROLLER_ENDS_MESSAGE);
-      return new ResponseEntity<>(registrationResponse, HttpStatus.BAD_REQUEST);
+    if (StringUtils.isEmpty(clientId) ||
+        StringUtils.isEmpty(secretKey) ||
+        StringUtils.isEmpty(userForm.getEmailId()) ||
+        StringUtils.isEmpty(userForm.getPassword())) {
+      return makeServerError(400, 
+                             MyStudiesUserRegUtil.ErrorCodes.INVALID_INPUT.getValue(),
+                             MyStudiesUserRegUtil.ErrorCodes.INVALID_INPUT_ERROR_MSG.getValue(),
+                             response);
     }
 
     try {
-
-      if ((userForm.getEmailId() != null && StringUtils.isNotEmpty(userForm.getEmailId()))
-          && (userForm.getPassword() != null && StringUtils.isNotEmpty(userForm.getPassword()))) {
-
-        authServerResponse =
+      authServerResponse =
             userManagementUtil.registerUserInAuthServer(
                 userForm, appId, orgId, clientId, secretKey);
 
-        if (authServerResponse != null && "OK".equals(authServerResponse.getMessage())) {
-          UserDetailsBO userDetailsUsingUserId = prepareUserDetails(authServerResponse.getUserId());
-          if (userDetailsUsingUserId != null) {
-
-            MyStudiesUserRegUtil.getFailureResponse(
-                400 + "",
-                MyStudiesUserRegUtil.ErrorCodes.INVALID_INPUT.getValue(),
-                MyStudiesUserRegUtil.ErrorCodes.EMAIL_EXISTS.getValue(),
-                response);
-
-            registrationResponse = new UserRegistrationResponse();
-            registrationResponse.setCode(400);
-            registrationResponse.setMessage(
-                MyStudiesUserRegUtil.ErrorCodes.EMAIL_EXISTS.getValue());
-
-            commonService.createActivityLog(
-                null,
-                AppConstants.USER_REGD_FAILURE,
-                AppConstants.USER_REGD_FAILURE_DESC + userForm.getEmailId() + " .");
-            logger.info(AppConstants.USER_REGISTRATION_CONTROLLER_ENDS_MESSAGE);
-            return new ResponseEntity<>(registrationResponse, HttpStatus.BAD_REQUEST);
-          }
-
-          UserDetailsBO userDetailsBO = null;
-          try {
-            AppOrgInfoBean appInfo = profiledao.getUserAppDetailsByAllApi(null, appId, orgId);
-            if (appInfo == null || appInfo.getAppInfoId() == 0) {
-
-              commonService.createActivityLog(
-                  null,
-                  AppConstants.USER_REGD_FAILURE,
-                  AppConstants.USER_REGD_FAILURE_DESC + userForm.getEmailId() + " .");
-              logger.info(
-                  "(URS)...DELETING record in Auth Server STARTED. Though appId and orgId are not valid in UserRegistration server");
-              DeleteAccountInfoResponseBean deleteResponse =
-                  userManagementUtil.deleteUserInfoInAuthServer(
-                      authServerResponse.getUserId(),
-                      authServerResponse.getClientToken(),
-                      authServerResponse.getAccessToken());
-
-              if (deleteResponse != null && "200".equals(deleteResponse.getCode())) {
-                logger.info(
-                    "Due to System failure in User Registration Server, user is deleted in Auth Server: "
-                        + userForm.getEmailId());
-                logger.info("(URS)...record has been deleted in Auth Server.");
-              }
-              MyStudiesUserRegUtil.getFailureResponse(
-                  401 + "",
-                  MyStudiesUserRegUtil.ErrorCodes.UNAUTHORIZED.getValue(),
-                  MyStudiesUserRegUtil.ErrorCodes.UNAUTHORIZED.getValue(),
-                  response);
-
-              registrationResponse = new UserRegistrationResponse();
-              registrationResponse.setCode(401);
-              registrationResponse.setMessage(
-                  MyStudiesUserRegUtil.ErrorCodes.UNAUTHORIZED.getValue());
-              logger.info(AppConstants.USER_REGISTRATION_CONTROLLER_ENDS_MESSAGE);
-              return new ResponseEntity<>(registrationResponse, HttpStatus.UNAUTHORIZED);
-            } else {
-              userForm.setUserId(authServerResponse.getUserId());
-              userForm.setPassword(null);
-
-              userDetailsBO = getUserDetails(userForm);
-              userDetailsBO.setAppInfoId(appInfo.getAppInfoId());
-              userDetailsBO.setEmailCode(RandomStringUtils.randomAlphanumeric(6));
-
-              userDetailsBO.setCodeExpireDate(LocalDateTime.now().plusMinutes(expireTime));
-              UserDetailsBO serviceResp = service.saveUser(userDetailsBO);
-
-              if (serviceResp != null) {
-                commonService.createActivityLog(
-                    authServerResponse.getUserId(),
-                    "User Registration Success",
-                    "User Registration Successful for email" + serviceResp.getEmail() + ".");
-                List<String> emailContent = prepareEmailContent(serviceResp.getEmailCode());
-
-                if (emailContent != null && !emailContent.isEmpty()) {
-                  emailNotification.sendEmailNotification(
-                      emailContent.get(0), emailContent.get(1), serviceResp.getEmail(), null, null);
-                }
-
-                MyStudiesUserRegUtil.getFailureResponse(
-                    MyStudiesUserRegUtil.ErrorCodes.STATUS_200.getValue(),
-                    MyStudiesUserRegUtil.ErrorCodes.SUCCESS.getValue(),
-                    MyStudiesUserRegUtil.ErrorCodes.SUCCESS.getValue(),
-                    response);
-                registrationResponse = new UserRegistrationResponse();
-                registrationResponse.setCode(ErrorCode.EC_200.code());
-                registrationResponse.setMessage(ErrorCode.EC_200.errorMessage());
-                registrationResponse.setAccessToken(authServerResponse.getAccessToken());
-                registrationResponse.setRefreshToken(authServerResponse.getRefreshToken());
-                registrationResponse.setUserId(authServerResponse.getUserId());
-                registrationResponse.setClientToken(authServerResponse.getClientToken());
-                logger.info(AppConstants.USER_REGISTRATION_CONTROLLER_ENDS_MESSAGE);
-                return new ResponseEntity<>(registrationResponse, HttpStatus.OK);
-              } else throw new SystemException();
-            }
-          } catch (SystemException e) {
-            commonService.createActivityLog(
-                null,
-                AppConstants.USER_REGD_FAILURE,
-                AppConstants.USER_REGD_FAILURE_DESC + userForm.getEmailId() + " .");
-            logger.error("UserRegistrationController.registerUser(): ", e);
-            logger.info(
-                "(URS)...DELETING record in Auth Server STARTED. Though it could not able to save record in UserRegistration server");
-            DeleteAccountInfoResponseBean deleteResponse =
-                userManagementUtil.deleteUserInfoInAuthServer(
-                    authServerResponse.getUserId(),
-                    authServerResponse.getClientToken(),
-                    authServerResponse.getClientToken());
-
-            if (deleteResponse != null && "200".equals(deleteResponse.getCode())) {
-              logger.info(
-                  "Due to System failure in User Registration Server, user is deleted in Auth Server: "
-                      + userForm.getEmailId());
-              logger.info("(URS)...record has been deleted in Auth Server.");
-            }
-            MyStudiesUserRegUtil.getFailureResponse(
-                500 + "",
-                MyStudiesUserRegUtil.ErrorCodes.UNKNOWN.getValue(),
-                MyStudiesUserRegUtil.ErrorCodes.CONNECTION_ERROR_MSG.getValue(),
-                response);
-            logger.info(AppConstants.USER_REGISTRATION_CONTROLLER_ENDS_MESSAGE);
-            return new ResponseEntity<>(registrationResponse, HttpStatus.INTERNAL_SERVER_ERROR);
-          }
-
-        } else {
-          commonService.createActivityLog(
-              null,
-              AppConstants.USER_REGD_FAILURE,
-              AppConstants.USER_REGD_FAILURE_DESC + userForm.getEmailId() + " .");
-
-          if ("400".equals(authServerResponse.getHttpStatusCode())) {
-            MyStudiesUserRegUtil.getFailureResponse(
-                authServerResponse.getCode(),
-                authServerResponse.getTitle(),
-                authServerResponse.getMessage(),
-                response);
-
-            registrationResponse = new UserRegistrationResponse();
-            registrationResponse.setCode(400);
-            registrationResponse.setMessage(authServerResponse.getMessage());
-            logger.info(AppConstants.USER_REGISTRATION_CONTROLLER_ENDS_MESSAGE);
-            return new ResponseEntity<>(registrationResponse, HttpStatus.BAD_REQUEST);
-
-          } else if ("401".equals(authServerResponse.getHttpStatusCode())) {
-            MyStudiesUserRegUtil.getFailureResponse(
-                authServerResponse.getCode(),
-                authServerResponse.getTitle(),
-                authServerResponse.getMessage(),
-                response);
-            registrationResponse = new UserRegistrationResponse();
-            registrationResponse.setCode(401);
-            registrationResponse.setMessage(authServerResponse.getMessage());
-            logger.info(AppConstants.USER_REGISTRATION_CONTROLLER_ENDS_MESSAGE);
-            return new ResponseEntity<>(registrationResponse, HttpStatus.UNAUTHORIZED);
-          } else {
-            MyStudiesUserRegUtil.getFailureResponse(
-                500 + "",
-                MyStudiesUserRegUtil.ErrorCodes.UNKNOWN.getValue(),
-                MyStudiesUserRegUtil.ErrorCodes.CONNECTION_ERROR_MSG.getValue(),
-                response);
-
-            registrationResponse = new UserRegistrationResponse();
-            registrationResponse.setCode(500);
-            registrationResponse.setMessage(
-                MyStudiesUserRegUtil.ErrorCodes.CONNECTION_ERROR_MSG.getValue());
-            logger.info(AppConstants.USER_REGISTRATION_CONTROLLER_ENDS_MESSAGE);
-            return new ResponseEntity<>(registrationResponse, HttpStatus.INTERNAL_SERVER_ERROR);
-          }
-        }
-      } else {
+      if (authServerResponse == null || !"OK".equals(authServerResponse.getMessage())) {
+        commonService.createActivityLog(null, AppConstants.USER_REGD_FAILURE,
+                                        AppConstants.USER_REGD_FAILURE_DESC + userForm.getEmailId() + " .");
+        return makeAuthServerErrorResponse(authServerResponse, response);
+      }
+      UserDetailsBO userDetailsUsingUserId = prepareUserDetails(authServerResponse.getUserId());
+      if (userDetailsUsingUserId != null) {
         commonService.createActivityLog(
-            null,
-            AppConstants.USER_REGD_FAILURE,
-            AppConstants.USER_REGD_FAILURE_DESC + userForm.getEmailId() + " .");
-        MyStudiesUserRegUtil.getFailureResponse(
-            400 + "",
-            MyStudiesUserRegUtil.ErrorCodes.INVALID_INPUT.getValue(),
-            MyStudiesUserRegUtil.ErrorCodes.USER_FORM_EMPTY.getValue(),
-            response);
-        registrationResponse = new UserRegistrationResponse();
-        registrationResponse.setCode(400);
-        registrationResponse.setMessage(MyStudiesUserRegUtil.ErrorCodes.USER_FORM_EMPTY.getValue());
+          null,
+          AppConstants.USER_REGD_FAILURE,
+          AppConstants.USER_REGD_FAILURE_DESC + userForm.getEmailId() + " .");
+        return makeServerError(400, 
+                               MyStudiesUserRegUtil.ErrorCodes.INVALID_INPUT.getValue(),
+                               MyStudiesUserRegUtil.ErrorCodes.EMAIL_EXISTS.getValue(),
+                               response);
+      }
 
+      UserDetailsBO userDetailsBO = null;
+      AppOrgInfoBean appInfo = profiledao.getUserAppDetailsByAllApi(null, appId, orgId);
+      if (appInfo == null || appInfo.getAppInfoId() == 0) {
+        commonService.createActivityLog(
+          null,
+          AppConstants.USER_REGD_FAILURE,
+          AppConstants.USER_REGD_FAILURE_DESC + userForm.getEmailId() + " .");
+        logger.info(
+          "(URS)...DELETING record in Auth Server STARTED. Though appId and orgId are not valid in UserRegistration server");
+        deleteUserFromAuthServer(authServerResponse, userForm.getEmailId());
+        return makeServerError(401, 
+                               MyStudiesUserRegUtil.ErrorCodes.UNAUTHORIZED.getValue(),
+                               MyStudiesUserRegUtil.ErrorCodes.UNAUTHORIZED.getValue(),
+                               response);
+      } else {
+        userForm.setUserId(authServerResponse.getUserId());
+        userForm.setPassword(null);
+
+        userDetailsBO = getUserDetails(userForm);
+        userDetailsBO.setAppInfoId(appInfo.getAppInfoId());
+        userDetailsBO.setEmailCode(RandomStringUtils.randomAlphanumeric(6));
+
+        userDetailsBO.setCodeExpireDate(LocalDateTime.now().plusMinutes(expireTime));
+        UserDetailsBO serviceResp = service.saveUser(userDetailsBO);
+
+        if (serviceResp == null) {
+          throw new SystemException();
+        }
+
+        commonService.createActivityLog(
+          authServerResponse.getUserId(),
+          "User Registration Success",
+          "User Registration Successful for email" + serviceResp.getEmail() + ".");
+        List<String> emailContent = prepareEmailContent(serviceResp.getEmailCode());
+
+        if (emailContent != null && !emailContent.isEmpty()) {
+          emailNotification.sendEmailNotification(
+            emailContent.get(0), emailContent.get(1), serviceResp.getEmail(), null, null);
+        }
+
+        MyStudiesUserRegUtil.getFailureResponse(
+          MyStudiesUserRegUtil.ErrorCodes.STATUS_200.getValue(),
+          MyStudiesUserRegUtil.ErrorCodes.SUCCESS.getValue(),
+          MyStudiesUserRegUtil.ErrorCodes.SUCCESS.getValue(),
+          response);
+        UserRegistrationResponse registrationResponse = new UserRegistrationResponse();
+        registrationResponse.setCode(ErrorCode.EC_200.code());
+        registrationResponse.setMessage(ErrorCode.EC_200.errorMessage());
+        registrationResponse.setAccessToken(authServerResponse.getAccessToken());
+        registrationResponse.setRefreshToken(authServerResponse.getRefreshToken());
+        registrationResponse.setUserId(authServerResponse.getUserId());
+        registrationResponse.setClientToken(authServerResponse.getClientToken());
         logger.info(AppConstants.USER_REGISTRATION_CONTROLLER_ENDS_MESSAGE);
-        return new ResponseEntity<>(registrationResponse, HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(registrationResponse, HttpStatus.OK);
       }
     } catch (Exception e) {
       logger.error("UserRegistrationController.registerUser(): ", e);
@@ -298,33 +170,64 @@ public class UserRegistrationController {
           null,
           AppConstants.USER_REGD_FAILURE,
           AppConstants.USER_REGD_FAILURE_DESC + userForm.getEmailId() + " .");
-      DeleteAccountInfoResponseBean deleteResponse = null;
       if (authServerResponse != null) {
-        deleteResponse =
-            userManagementUtil.deleteUserInfoInAuthServer(
-                authServerResponse.getUserId(),
-                authServerResponse.getClientToken(),
-                authServerResponse.getClientToken());
-
-        if (deleteResponse != null && "200".equals(deleteResponse.getCode())) {
-          logger.info(
-              "Due to System failure in User Registration Server, user is deleted in Auth Server: "
-                  + userForm.getEmailId());
-          logger.info("(URS)...DELETING record in Auth Server ENDED.");
-        }
+        deleteUserFromAuthServer(authServerResponse, userForm.getEmailId());
       }
 
-      MyStudiesUserRegUtil.getFailureResponse(
-          500 + "",
+      logger.error("UserRegistrationController.registerUser() ENDED");
+      return makeServerError(500, 
+                             MyStudiesUserRegUtil.ErrorCodes.UNKNOWN.getValue(),
+                             MyStudiesUserRegUtil.ErrorCodes.CONNECTION_ERROR_MSG.getValue(),
+                             response);
+    }
+  }
+
+  private ResponseEntity<?> makeServerError(Integer errorCode, String errorTitle, String errorMessage,
+                                            HttpServletResponse response) {
+    UserRegistrationResponse registrationResponse = new UserRegistrationResponse();
+    MyStudiesUserRegUtil.getFailureResponse(
+          errorCode + "", errorTitle,
+          errorMessage, response);
+    registrationResponse.setCode(errorCode);
+    registrationResponse.setMessage(errorMessage);
+
+    logger.info(AppConstants.USER_REGISTRATION_CONTROLLER_ENDS_MESSAGE);
+    return new ResponseEntity<>(registrationResponse, toHttpStatus(errorCode));
+  }
+
+  void deleteUserFromAuthServer(AuthRegistrationResponseBean authServerResponse, String emailId) {
+    DeleteAccountInfoResponseBean deleteResponse = 
+      userManagementUtil.deleteUserInfoInAuthServer(
+        authServerResponse.getUserId(),
+        authServerResponse.getClientToken(),
+        authServerResponse.getClientToken());
+
+    if (deleteResponse != null && "200".equals(deleteResponse.getCode())) {
+      logger.info(
+        "Due to System failure in User Registration Server, user is deleted in Auth Server: "
+          + emailId);
+      logger.info("(URS)...DELETING record in Auth Server ENDED.");
+    }
+  }
+
+  // Returns a UserRegistrationResponse for a failed AuthServerResponse.
+  private ResponseEntity<?> makeAuthServerErrorResponse(AuthRegistrationResponseBean authServerResponse,
+                                                        HttpServletResponse response) {
+    UserRegistrationResponse registrationResponse = new UserRegistrationResponse();
+    Integer httpCode = authServerResponse != null ? Integer.parseInt(authServerResponse.getHttpStatusCode())
+                                                  : 500;
+    switch (httpCode) {
+      case 400:
+      case 401:
+        return makeServerError(httpCode,
+                               authServerResponse.getTitle(),
+                               authServerResponse.getMessage(),
+                               response);
+      default:
+        return makeServerError(500,
           MyStudiesUserRegUtil.ErrorCodes.UNKNOWN.getValue(),
           MyStudiesUserRegUtil.ErrorCodes.CONNECTION_ERROR_MSG.getValue(),
           response);
-      registrationResponse = new UserRegistrationResponse();
-      registrationResponse.setCode(500);
-      registrationResponse.setMessage(
-          MyStudiesUserRegUtil.ErrorCodes.CONNECTION_ERROR_MSG.getValue());
-      logger.error("UserRegistrationController.registerUser() ENDED");
-      return new ResponseEntity<>(registrationResponse, HttpStatus.INTERNAL_SERVER_ERROR);
     }
   }
 
@@ -390,5 +293,17 @@ public class UserRegistrationController {
       logger.info("loadUserDetailsByUserId(userId) called");
     }
     return serviceResponse;
+  }
+
+  private HttpStatus toHttpStatus(Integer statusCode) {
+    switch (statusCode) {
+      case 400:
+        return HttpStatus.BAD_REQUEST;
+      case 401:
+        return HttpStatus.UNAUTHORIZED;
+      case 500:
+      default:
+        return HttpStatus.INTERNAL_SERVER_ERROR;
+    }
   }
 }
