@@ -35,7 +35,7 @@ class UserDomainWhitelist {
   // Returns true if an email address domain is whitelisted for use. If no whitelist is present
   // then returns true by default.
   public Boolean isValidDomain(String email) {
-    if (whitelistedDomains.isEmpty()) return true;
+    if (!whitelistedDomains.isPresent()) return true;
     return whitelistedDomains.get().contains(email.substring(email.lastIndexOf("@") + 1));
   }
 };
