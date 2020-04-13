@@ -27,7 +27,6 @@ public class ApplicationPropertyConfiguration {
 
   @Value("${from.email.password}")
   private String fromEmailPassword;
-
   @Value("${factory.value}")
   private String sslFactoryValue;
 
@@ -90,4 +89,8 @@ public class ApplicationPropertyConfiguration {
 
   @Value("${ios.push.notification.type}")
   private String iosPushNotificationType;
+
+  // Comma separated list of whitelisted domains.
+  @Value("${email.whitelisted_domains}")
+  private String whitelistedUserDomains;
 }
