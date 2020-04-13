@@ -17,8 +17,8 @@
     <meta name="author" content="">
 
     <!-- Favicon -->
-    <link rel="shortcut icon" href="/fdahpStudyDesigner/images/icons/fav.png" type="image/x-icon" />
-    <link rel="apple-touch-icon" href="/fdahpStudyDesigner/images/icons/fav.png">
+    <link rel="shortcut icon" href="/studybuilder/images/icons/fav.png" type="image/x-icon" />
+    <link rel="apple-touch-icon" href="/studybuilder/images/icons/fav.png">
         
     <!-- Mobile Metas -->
     <meta name="viewport" content="width=device-width, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
@@ -27,36 +27,36 @@
    <link href="https://fonts.googleapis.com/css?family=Roboto:300,400" rel="stylesheet">
         
     <!-- Vendor CSS -->
-    <link rel="stylesheet" href="/fdahpStudyDesigner/vendor/boostrap/bootstrap.min.css">
+    <link rel="stylesheet" href="/studybuilder/vendor/boostrap/bootstrap.min.css">
     
      <!-- Your custom styles (optional) -->
-    <link href="/fdahpStudyDesigner/css/loader.css" rel="stylesheet">
+    <link href="/studybuilder/css/loader.css" rel="stylesheet">
     
     <!-- Theme Responsive CSS -->
-    <link rel="stylesheet" href="/fdahpStudyDesigner/css/sprites.css">   
-    <link rel="stylesheet" href="/fdahpStudyDesigner/css/layout.css">   
+    <link rel="stylesheet" href="/studybuilder/css/sprites.css">   
+    <link rel="stylesheet" href="/studybuilder/css/layout.css">   
         
     <!-- Theme CSS -->
-    <link rel="stylesheet" href="/fdahpStudyDesigner/css/theme.css">
-     <link rel="stylesheet" href="/fdahpStudyDesigner/css/jquery-password-validator.css"></link>
-    <link rel="stylesheet" href="/fdahpStudyDesigner/css/style.css">
+    <link rel="stylesheet" href="/studybuilder/css/theme.css">
+     <link rel="stylesheet" href="/studybuilder/css/jquery-password-validator.css"></link>
+    <link rel="stylesheet" href="/studybuilder/css/style.css">
         
     <!-- Head Libs -->
-    <script src="/fdahpStudyDesigner/vendor/modernizr/modernizr.js"></script>
+    <script src="/studybuilder/vendor/modernizr/modernizr.js"></script>
     
     
     <!-- Vendor -->
-    <script src="/fdahpStudyDesigner/vendor/jquery/jquery-3.1.1.min.js"></script>
-    <script src="/fdahpStudyDesigner/vendor/boostrap/bootstrap.min.js"></script>
-    <script src="/fdahpStudyDesigner/js/validator.min.js"></script>
-    <script src="/fdahpStudyDesigner/vendor/animation/wow.min.js"></script>
-    <script src="/fdahpStudyDesigner/vendor/select2/bootstrap-select.min.js"></script>
+    <script src="/studybuilder/vendor/jquery/jquery-3.1.1.min.js"></script>
+    <script src="/studybuilder/vendor/boostrap/bootstrap.min.js"></script>
+    <script src="/studybuilder/js/validator.min.js"></script>
+    <script src="/studybuilder/vendor/animation/wow.min.js"></script>
+    <script src="/studybuilder/vendor/select2/bootstrap-select.min.js"></script>
     
-    <script src="/fdahpStudyDesigner/js/jquery.password-validator.js"></script>
+    <script src="/studybuilder/js/jquery.password-validator.js"></script>
     
-    <script src="/fdahpStudyDesigner/js/underscore-min.js"></script>
-    <script src="/fdahpStudyDesigner/js/ajaxRequestInterceptor.js"></script>
-    <script type="text/javascript" src="/fdahpStudyDesigner/js/loader.js"></script>
+    <script src="/studybuilder/js/underscore-min.js"></script>
+    <script src="/studybuilder/js/ajaxRequestInterceptor.js"></script>
+    <script type="text/javascript" src="/studybuilder/js/loader.js"></script>
     <style type="text/css">
     .has-error .checkbox, .has-error .checkbox-inline, .has-error .control-label, .has-error .help-block, .has-error .radio, .has-error .radio-inline, .has-error.checkbox label, .has-error.checkbox-inline label, .has-error.radio label, .has-error.radio-inline label{
 	    color:#fff !important;
@@ -78,7 +78,7 @@
 		<!-- <div class="lg-space-right">
 			<div>
 			    <input type="hidden" id="csrfDet" csrfParamName="${_csrf.parameterName}" csrfToken="${_csrf.token}" />
-				<form:form id="passwordResetForm" data-toggle="validator" role="form" action="/fdahpStudyDesigner/changePassword.do" method="post" autocomplete="off">
+				<form:form id="passwordResetForm" data-toggle="validator" role="form" action="/studybuilder/changePassword.do" method="post" autocomplete="off">
 					<div>
 						<p>Your password has expired. You need to reset your password to proceed further.</p>
 			        	<div class="mb-lg form-group">
@@ -112,7 +112,7 @@
 	  	</div> -->
 	<div class="logout">
 	        <div class="dis-line pull-right ml-md line34">
-	          <a href="/fdahpStudyDesigner/sessionOut.do" class="blue-link text-weight-normal text-uppercase"><span class="white__text">sign Out</span> </a>  
+	          <a href="/studybuilder/sessionOut.do" class="blue-link text-weight-normal text-uppercase"><span class="white__text">sign Out</span> </a>  
 	        </div>
     </div>
 	<div class="logo__ll">
@@ -123,7 +123,7 @@
       	<div>
 		    <!-- change password box-->
 		    <input type="hidden" id="csrfDet" csrfParamName="${_csrf.parameterName}" csrfToken="${_csrf.token}" />
-			<form:form id="passwordResetForm" data-toggle="validator" role="form" action="/fdahpStudyDesigner/changePassword.do" method="post" autocomplete="off">
+			<form:form id="passwordResetForm" data-toggle="validator" role="form" action="/studybuilder/changePassword.do" method="post" autocomplete="off">
 				<div>
 					<div id="errMsg" class="error_msg">${errMsg}</div>
                     <div id="sucMsg" class="suceess_msg">${sucMsg}</div>
@@ -159,8 +159,8 @@
         </div>  
     </div> 
 </div>
-	<script src="/fdahpStudyDesigner/js/theme.js"></script>
-    <script src="/fdahpStudyDesigner/js/common.js"></script>
+	<script src="/studybuilder/js/theme.js"></script>
+    <script src="/studybuilder/js/common.js"></script>
 <script>
 	$(document).ready(function(e) {
 		addPasswordPopup();

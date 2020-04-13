@@ -7,7 +7,7 @@
 <!-- ============================================================== --> 
  <div class="col-sm-10 col-rc white-bg p-none">
    <!--  Start top tab section-->
-   <form:form action="/fdahpStudyDesigner/adminStudies/saveOrUpdateComprehensionTestQuestion.do?_S=${param._S}&${_csrf.parameterName}=${_csrf.token}" name="comprehensionFormId" id="comprehensionFormId" method="post" role="form">
+   <form:form action="/studybuilder/adminStudies/saveOrUpdateComprehensionTestQuestion.do?_S=${param._S}&${_csrf.parameterName}=${_csrf.token}" name="comprehensionFormId" id="comprehensionFormId" method="post" role="form">
    <div class="right-content-head">
       <div class="text-right">
          <div class="black-md-f dis-line pull-left line34"><span class="pr-sm cur-pointer" onclick="goToBackPage(this);"><img src="../images/icons/back-b.png" alt=""/></span>
@@ -273,7 +273,7 @@ function goToBackPage(item){
 			    callback: function(result) {
 			        if (result) {
 			        	var a = document.createElement('a');
-			        	a.href = "/fdahpStudyDesigner/adminStudies/comprehensionQuestionList.do?_S=${param._S}";
+			        	a.href = "/studybuilder/adminStudies/comprehensionQuestionList.do?_S=${param._S}";
 			        	document.body.appendChild(a).click();
 			        }else{
 			        	$(item).prop('disabled', false);
@@ -283,7 +283,7 @@ function goToBackPage(item){
 	</c:if>
 	<c:if test="${actionPage eq 'view'}">
 		var a = document.createElement('a');
-		a.href = "/fdahpStudyDesigner/adminStudies/comprehensionQuestionList.do?_S=${param._S}";
+		a.href = "/studybuilder/adminStudies/comprehensionQuestionList.do?_S=${param._S}";
 		document.body.appendChild(a).click();
 	</c:if>
 }
@@ -315,7 +315,7 @@ function saveComrehensionTestQuestion(){
 			questiontext != null && questiontext!= '' && typeof questiontext != 'undefined'){
 		formData.append("comprehenstionQuestionInfo", JSON.stringify(comprehensionTestQuestion)); 
 		$.ajax({ 
-	         url: "/fdahpStudyDesigner/adminStudies/saveComprehensionTestQuestion.do?_S=${param._S}",
+	         url: "/studybuilder/adminStudies/saveComprehensionTestQuestion.do?_S=${param._S}",
 	          type: "POST",
 	          datatype: "json",
 	          data: formData,

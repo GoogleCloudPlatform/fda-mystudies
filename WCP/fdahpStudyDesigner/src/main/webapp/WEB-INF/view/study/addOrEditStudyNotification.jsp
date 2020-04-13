@@ -7,7 +7,7 @@
 <c:set var="tz" value="America/Los_Angeles"/>
 
  <div class="col-sm-10 col-rc white-bg p-none">
-       <form:form action="/fdahpStudyDesigner/adminStudies/saveOrUpdateStudyNotification.do?${_csrf.parameterName}=${_csrf.token}&_S=${param._S}" 
+       <form:form action="/studybuilder/adminStudies/saveOrUpdateStudyNotification.do?${_csrf.parameterName}=${_csrf.token}&_S=${param._S}" 
        data-toggle="validator" role="form" id="studyNotificationFormId"  method="post" autocomplete="off">       
        <input type="hidden" name="buttonType" id="buttonType">
        <input type="hidden" name="notificationId" value="${notificationBO.notificationId}">
@@ -17,7 +17,7 @@
            <div class="text-right">
                <div class="black-md-f dis-line pull-left line34">
 	               <span class="pr-sm">
-	               		<a href="javascript:void(0)" class="goToNotificationListForm" id="goToNotificationListForm"><img src="/fdahpStudyDesigner/images/icons/back-b.png" alt=""/></a>
+	               		<a href="javascript:void(0)" class="goToNotificationListForm" id="goToNotificationListForm"><img src="/studybuilder/images/icons/back-b.png" alt=""/></a>
 	               </span>
 	               <c:if test="${notificationBO.actionPage eq 'edit'}">Edit Notification</c:if>
 	               <c:if test="${notificationBO.actionPage eq 'addOrCopy'}">Add Notification</c:if>
@@ -111,13 +111,13 @@
             <!--  End body tab section -->
 </div>
 
-<form:form action="/fdahpStudyDesigner/adminStudies/viewStudyNotificationList.do?_S=${param._S}" id="viewStudyNotificationListPage" name="viewStudyNotificationListPage" method="post">
+<form:form action="/studybuilder/adminStudies/viewStudyNotificationList.do?_S=${param._S}" id="viewStudyNotificationListPage" name="viewStudyNotificationListPage" method="post">
 </form:form>
 
-<form:form action="/fdahpStudyDesigner/adminStudies/studyList.do?_S=${param._S}" name="studyListPage" id="studyListPage" method="post">
+<form:form action="/studybuilder/adminStudies/studyList.do?_S=${param._S}" name="studyListPage" id="studyListPage" method="post">
 </form:form>
 
-<form:form action="/fdahpStudyDesigner/adminStudies/deleteStudyNotification.do?_S=${param._S}" id="deleteStudyNotificationForm" name="deleteStudyNotificationForm" method="post">
+<form:form action="/studybuilder/adminStudies/deleteStudyNotification.do?_S=${param._S}" id="deleteStudyNotificationForm" name="deleteStudyNotificationForm" method="post">
 	<input type="hidden" name="notificationId" value="${notificationBO.notificationId}">
 </form:form>
 <script>

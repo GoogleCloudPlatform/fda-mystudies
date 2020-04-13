@@ -4,4 +4,4 @@ metadata:
   name: heroes-hat-cert
 spec:
   domains:
-    - heroes-hat.rocketturtle.net
+    - dev.heroes-hat.rocketturtle.net

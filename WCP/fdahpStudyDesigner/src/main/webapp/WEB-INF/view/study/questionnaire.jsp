@@ -152,7 +152,7 @@ function isNumber(evt, thisAttr) {
 			<!-- Content-->
 			<div id="contentTab" class="tab-pane fade in active mt-lg">
 				<form:form
-					action="/fdahpStudyDesigner/adminStudies/saveorUpdateQuestionnaireSchedule.do?_S=${param._S}"
+					action="/studybuilder/adminStudies/saveorUpdateQuestionnaireSchedule.do?_S=${param._S}"
 					name="contentFormId" id="contentFormId" method="post"
 					data-toggle="validator" role="form">
 					<input type="hidden" name="${csrf.parameterName}"
@@ -410,7 +410,7 @@ function isNumber(evt, thisAttr) {
 				</div>
 				<!-- One Time Section-->
 				<form:form
-					action="/fdahpStudyDesigner/adminStudies/saveorUpdateQuestionnaireSchedule.do?_S=${param._S}"
+					action="/studybuilder/adminStudies/saveorUpdateQuestionnaireSchedule.do?_S=${param._S}"
 					name="oneTimeFormId" id="oneTimeFormId" method="post" role="form"
 					data-toggle="validator">
 					<input type="hidden" name="frequency" id="frequencyId"
@@ -629,7 +629,7 @@ function isNumber(evt, thisAttr) {
 				</form:form>
 				<!-- Daily Section-->
 				<form:form
-					action="/fdahpStudyDesigner/adminStudies/saveorUpdateQuestionnaireSchedule.do?_S=${param._S}"
+					action="/studybuilder/adminStudies/saveorUpdateQuestionnaireSchedule.do?_S=${param._S}"
 					name="dailyFormId" id="dailyFormId" method="post" role="form"
 					data-toggle="validator">
 					<input type="hidden" name="frequency" id="dailyFrequencyId"
@@ -777,7 +777,7 @@ function isNumber(evt, thisAttr) {
 				</form:form>
 				<!-- Weekly Section-->
 				<form:form
-					action="/fdahpStudyDesigner/adminStudies/saveorUpdateQuestionnaireSchedule.do?_S=${param._S}"
+					action="/studybuilder/adminStudies/saveorUpdateQuestionnaireSchedule.do?_S=${param._S}"
 					name="weeklyFormId" id="weeklyFormId" method="post" role="form"
 					data-toggle="validator">
 					<input type="hidden" name="frequency" id="weeklyfrequencyId">
@@ -946,7 +946,7 @@ function isNumber(evt, thisAttr) {
 				</form:form>
 				<!-- Monthly Section-->
 				<form:form
-					action="/fdahpStudyDesigner/adminStudies/saveorUpdateQuestionnaireSchedule.do?_S=${param._S}"
+					action="/studybuilder/adminStudies/saveorUpdateQuestionnaireSchedule.do?_S=${param._S}"
 					name="monthlyFormId" id="monthlyFormId" method="post" role="form"
 					data-toggle="validator">
 					<input type="hidden" name="frequency" id="monthlyfrequencyId"
@@ -1118,7 +1118,7 @@ function isNumber(evt, thisAttr) {
 				</form:form>
 				<!-- Manually Section-->
 				<form:form
-					action="/fdahpStudyDesigner/adminStudies/saveorUpdateQuestionnaireSchedule.do?_S=${param._S}"
+					action="/studybuilder/adminStudies/saveorUpdateQuestionnaireSchedule.do?_S=${param._S}"
 					name="customFormId" id="customFormId" method="post" role="form"
 					data-toggle="validator">
 					<input type="hidden" name="id" id="id"
@@ -1748,7 +1748,7 @@ $(document).ready(function() {
 			&& newOrderNumber !== undefined && newOrderNumber != null && newOrderNumber != ""){
 	    	
 	    	$.ajax({
-				url: "/fdahpStudyDesigner/adminStudies/reOrderQuestionnaireStepInfo.do?_S=${param._S}",
+				url: "/studybuilder/adminStudies/reOrderQuestionnaireStepInfo.do?_S=${param._S}",
 				type: "POST",
 				datatype: "json",
 				data:{
@@ -2288,7 +2288,7 @@ $(document).ready(function() {
 						if(val) {
 							validateLinceChartSchedule('','',function(valid){
 								if(valid){
-									document.contentFormId.action="/fdahpStudyDesigner/adminStudies/viewStudyQuestionnaires.do?_S=${param._S}";
+									document.contentFormId.action="/studybuilder/adminStudies/viewStudyQuestionnaires.do?_S=${param._S}";
 									document.contentFormId.submit();
 								}else{
 									$("body").removeClass("loading");
@@ -3145,7 +3145,7 @@ function saveQuestionnaire(item, callback){
 	if(study_id != null && short_title != '' && short_title != null && isFormValid ){
 		$("body").addClass("loading");
 		$.ajax({ 
-	        url: "/fdahpStudyDesigner/adminStudies/saveQuestionnaireSchedule.do?_S=${param._S}",
+	        url: "/studybuilder/adminStudies/saveQuestionnaireSchedule.do?_S=${param._S}",
 	        type: "POST",
 	        datatype: "json",
 	        data: {questionnaireScheduleInfo:data},
@@ -3364,7 +3364,7 @@ function deletStep(stepId,stepType){
 				if((stepId != null && stepId != '' && typeof stepId != 'undefined') && 
 						(questionnaireId != null && questionnaireId != '' && typeof questionnaireId != 'undefined')){
 					$.ajax({
-		    			url: "/fdahpStudyDesigner/adminStudies/deleteQuestionnaireStep.do?_S=${param._S}",
+		    			url: "/studybuilder/adminStudies/deleteQuestionnaireStep.do?_S=${param._S}",
 		    			type: "POST",
 		    			datatype: "json",
 		    			data:{
@@ -3518,13 +3518,13 @@ function ellipseUnHover(item){
 function getQuestionnaireStep(stepType){
 	$("#actionTypeForQuestionPage").val('add');
 	if(stepType == 'Instruction'){
-		document.contentFormId.action="/fdahpStudyDesigner/adminStudies/instructionsStep.do?_S=${param._S}";
+		document.contentFormId.action="/studybuilder/adminStudies/instructionsStep.do?_S=${param._S}";
 		document.contentFormId.submit();
 	}else if(stepType == 'Form'){
-		document.contentFormId.action="/fdahpStudyDesigner/adminStudies/formStep.do?_S=${param._S}";
+		document.contentFormId.action="/studybuilder/adminStudies/formStep.do?_S=${param._S}";
 		document.contentFormId.submit();
 	}else if(stepType == 'Question'){
-		document.contentFormId.action="/fdahpStudyDesigner/adminStudies/questionStep.do?_S=${param._S}";
+		document.contentFormId.action="/studybuilder/adminStudies/questionStep.do?_S=${param._S}";
 		document.contentFormId.submit();
 	}
 }
@@ -3532,15 +3532,15 @@ function editStep(stepId,stepType){
 	$("#actionTypeForQuestionPage").val('edit');
 	if(stepType == 'Instruction'){
 		$("#instructionId").val(stepId);
-		document.contentFormId.action="/fdahpStudyDesigner/adminStudies/instructionsStep.do?_S=${param._S}";
+		document.contentFormId.action="/studybuilder/adminStudies/instructionsStep.do?_S=${param._S}";
 		document.contentFormId.submit();
 	}else if(stepType == 'Form'){
 		$("#formId").val(stepId);
-		document.contentFormId.action="/fdahpStudyDesigner/adminStudies/formStep.do?_S=${param._S}";
+		document.contentFormId.action="/studybuilder/adminStudies/formStep.do?_S=${param._S}";
 		document.contentFormId.submit();
 	}else if(stepType == 'Question'){
 		$("#questionId").val(stepId);
-		document.contentFormId.action="/fdahpStudyDesigner/adminStudies/questionStep.do?_S=${param._S}";
+		document.contentFormId.action="/studybuilder/adminStudies/questionStep.do?_S=${param._S}";
 		document.contentFormId.submit();
 	}
 }
@@ -3549,15 +3549,15 @@ function viewStep(stepId,stepType){
 	$("#actionTypeForQuestionPage").val('view');
 	if(stepType == 'Instruction'){
 		$("#instructionId").val(stepId);
-		document.contentFormId.action="/fdahpStudyDesigner/adminStudies/instructionsStep.do?_S=${param._S}";
+		document.contentFormId.action="/studybuilder/adminStudies/instructionsStep.do?_S=${param._S}";
 		document.contentFormId.submit();
 	}else if(stepType == 'Form'){
 		$("#formId").val(stepId);
-		document.contentFormId.action="/fdahpStudyDesigner/adminStudies/formStep.do?_S=${param._S}";
+		document.contentFormId.action="/studybuilder/adminStudies/formStep.do?_S=${param._S}";
 		document.contentFormId.submit();
 	}else if(stepType == 'Question'){
 		$("#questionId").val(stepId);
-		document.contentFormId.action="/fdahpStudyDesigner/adminStudies/questionStep.do?_S=${param._S}";
+		document.contentFormId.action="/studybuilder/adminStudies/questionStep.do?_S=${param._S}";
 		document.contentFormId.submit();
 	}
 }
@@ -3579,7 +3579,7 @@ function goToBackPage(item){
 			    callback: function(result) {
 			        if (result) {
 			        	var a = document.createElement('a');
-			        	a.href = "/fdahpStudyDesigner/adminStudies/viewStudyQuestionnaires.do?_S=${param._S}";
+			        	a.href = "/studybuilder/adminStudies/viewStudyQuestionnaires.do?_S=${param._S}";
 			        	document.body.appendChild(a).click();
 			        }else{
 			        	$(item).prop('disabled', false);
@@ -3589,7 +3589,7 @@ function goToBackPage(item){
 		</c:if>
 		<c:if test="${actionType eq 'view'}">
 			var a = document.createElement('a');
-			a.href = "/fdahpStudyDesigner/adminStudies/viewStudyQuestionnaires.do?_S=${param._S}";
+			a.href = "/studybuilder/adminStudies/viewStudyQuestionnaires.do?_S=${param._S}";
 			document.body.appendChild(a).click();
 		</c:if>
 }
@@ -3625,7 +3625,7 @@ function validateShortTitle(item,callback){
         $(thisAttr).parent().find(".help-block").html("");
 		if( existedKey !=shortTitle){
 		$.ajax({
-            url: "/fdahpStudyDesigner/adminStudies/validateQuestionnaireKey.do?_S=${param._S}",
+            url: "/studybuilder/adminStudies/validateQuestionnaireKey.do?_S=${param._S}",
             type: "POST",
             datatype: "json",
             data: {
@@ -3676,7 +3676,7 @@ function validateLinceChartSchedule(questionnaireId,frequency,callback){
 	if((questionnaireId != null && questionnaireId !='' && typeof questionnaireId!= 'undefined') &&
 			(frequencyTxt != null && frequencyTxt !='' && typeof frequencyTxt!= 'undefined')){
 		 $.ajax({
-            url: "/fdahpStudyDesigner/adminStudies/validateLineChartSchedule.do?_S=${param._S}",
+            url: "/studybuilder/adminStudies/validateLineChartSchedule.do?_S=${param._S}",
             type: "POST",
             datatype: "json",
             data: {

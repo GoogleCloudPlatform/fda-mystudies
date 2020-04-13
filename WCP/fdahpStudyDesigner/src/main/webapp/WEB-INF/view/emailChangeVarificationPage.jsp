@@ -19,8 +19,8 @@
     <meta name="author" content="">
 
     <!-- Favicon -->
-    <link rel="shortcut icon" href="/fdahpStudyDesigner/images/icons/fav.png" type="image/x-icon" />
-    <link rel="apple-touch-icon" href="/fdahpStudyDesigner/images/icons/fav.png">
+    <link rel="shortcut icon" href="/studybuilder/images/icons/fav.png" type="image/x-icon" />
+    <link rel="apple-touch-icon" href="/studybuilder/images/icons/fav.png">
         
     <!-- Mobile Metas -->
     <meta name="viewport" content="width=device-width, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
@@ -33,7 +33,7 @@
     <link rel="stylesheet" href="vendor/datatable/css/dataTables.bootstrap.min.css">
     
      <!-- Your custom styles (optional) -->
-    <link href="/fdahpStudyDesigner/css/loader.css" rel="stylesheet">
+    <link href="/studybuilder/css/loader.css" rel="stylesheet">
     
     <link rel="stylesheet" href="vendor/dragula/dragula.min.css">
     <link rel="stylesheet" href="vendor/magnific-popup/magnific-popup.css">        
@@ -125,7 +125,7 @@
              
         </div>
         <!-- End Login Right Section-->
-    <form:form action="/fdahpStudyDesigner/login.do" id="backToLoginForm" name="backToLoginForm" method="post">
+    <form:form action="/studybuilder/login.do" id="backToLoginForm" name="backToLoginForm" method="post">
 	</form:form>
     
     <!-- Vendor -->
@@ -137,15 +137,15 @@
     <script src="vendor/magnific-popup/jquery.magnific-popup.min.js"></script>    
     <script src="vendor/slimscroll/jquery.slimscroll.min.js"></script>
     <script src="js/validator.min.js"></script>
-    <script src="/fdahpStudyDesigner/js/jquery.mask.min.js"></script>
-    <script src="/fdahpStudyDesigner/js/jquery.password-validator.js"></script>
-    <script type="text/javascript" src="/fdahpStudyDesigner/js/loader.js"></script>   
-    <script type="text/javascript" src="/fdahpStudyDesigner/js/jquery.password-validator.js"></script>
-	<script src="/fdahpStudyDesigner/js/underscore-min.js"></script>
+    <script src="/studybuilder/js/jquery.mask.min.js"></script>
+    <script src="/studybuilder/js/jquery.password-validator.js"></script>
+    <script type="text/javascript" src="/studybuilder/js/loader.js"></script>   
+    <script type="text/javascript" src="/studybuilder/js/jquery.password-validator.js"></script>
+	<script src="/studybuilder/js/underscore-min.js"></script>
     
     <!-- Theme Custom JS-->
-    <script src="/fdahpStudyDesigner/js/theme.js"></script>
-    <script src="/fdahpStudyDesigner/js/common.js"></script>
+    <script src="/studybuilder/js/theme.js"></script>
+    <script src="/studybuilder/js/common.js"></script>
     <!--common js-->
     
    

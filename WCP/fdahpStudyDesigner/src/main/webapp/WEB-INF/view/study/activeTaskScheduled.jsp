@@ -101,7 +101,7 @@
 	   </span>
 	</div>
 	<!-- One time Section-->    
-	<form:form action="/fdahpStudyDesigner/adminStudies/saveOrUpdateActiveTaskSchedule.do?_S=${param._S}" name="oneTimeFormId" id="oneTimeFormId" method="post" role="form">
+	<form:form action="/studybuilder/adminStudies/saveOrUpdateActiveTaskSchedule.do?_S=${param._S}" name="oneTimeFormId" id="oneTimeFormId" method="post" role="form">
 	 <input type="hidden" name="frequency" id="frequencyId" value="${activeTaskBo.frequency}">
 	 <input type="hidden" name="previousFrequency" id="previousFrequency" value="${activeTaskBo.frequency}">
 	 <input type="hidden" name="id" id="activeTaskId" class="activeTaskIdClass" value="${activeTaskBo.id}">
@@ -224,7 +224,7 @@
 	 </div>
 	</form:form>
 	<!-- Daily Section-->    
-	<form:form action="/fdahpStudyDesigner/adminStudies/saveOrUpdateActiveTaskSchedule.do?_S=${param._S}" name="dailyFormId" id="dailyFormId" method="post" role="form">
+	<form:form action="/studybuilder/adminStudies/saveOrUpdateActiveTaskSchedule.do?_S=${param._S}" name="dailyFormId" id="dailyFormId" method="post" role="form">
 		 <input type="hidden" name="frequency" id="dailyFrequencyId" value="${activeTaskBo.frequency}">
 		 <input type="hidden" name="previousFrequency" id="previousFrequency" value="${activeTaskBo.frequency}">
 	  <input type="hidden" name="id" id="id" value="${activeTaskBo.id}">
@@ -318,7 +318,7 @@
 	 </div> 
 	</form:form>
 	<!-- Weekly Section-->    
-	<form:form action="/fdahpStudyDesigner/adminStudies/saveOrUpdateActiveTaskSchedule.do?_S=${param._S}" name="weeklyFormId" id="weeklyFormId" method="post" role="form">
+	<form:form action="/studybuilder/adminStudies/saveOrUpdateActiveTaskSchedule.do?_S=${param._S}" name="weeklyFormId" id="weeklyFormId" method="post" role="form">
 	  <input type="hidden" name="frequency" id="weeklyfrequencyId">
 	  <input type="hidden" name="previousFrequency" id="previousFrequency" value="${activeTaskBo.frequency}">
 	  <input type="hidden" name="id" id="id" class="activeTaskIdClass" value="${activeTaskBo.id}">
@@ -423,7 +423,7 @@
 	 </div> 
 	</form:form>
 	<!-- Monthly Section-->   
-	<form:form action="/fdahpStudyDesigner/adminStudies/saveOrUpdateActiveTaskSchedule.do?_S=${param._S}" name="monthlyFormId" id="monthlyFormId" method="post" role="form"> 
+	<form:form action="/studybuilder/adminStudies/saveOrUpdateActiveTaskSchedule.do?_S=${param._S}" name="monthlyFormId" id="monthlyFormId" method="post" role="form"> 
 	 <input type="hidden" name="frequency" id="monthlyfrequencyId" value="${activeTaskBo.frequency}">
 	 <input type="hidden" name="previousFrequency" id="previousFrequency" value="${activeTaskBo.frequency}">
 	 <input type="hidden" name="id" id="id" class="activeTaskIdClass" value="${activeTaskBo.id}">
@@ -522,7 +522,7 @@
 	 </div> 
 	</form:form>
 	<!-- Manually Section-->    
-	<form:form action="/fdahpStudyDesigner/adminStudies/saveOrUpdateActiveTaskSchedule.do?_S=${param._S}" name="customFormId" id="customFormId" method="post" role="form">
+	<form:form action="/studybuilder/adminStudies/saveOrUpdateActiveTaskSchedule.do?_S=${param._S}" name="customFormId" id="customFormId" method="post" role="form">
 	<input type="hidden" name="id" id="id" value="${activeTaskBo.id}">
 	   <input type="hidden" name="studyId" id="studyId" value="${not empty activeTaskBo.studyId ? activeTaskBo.studyId : studyBo.id}">
 	   <input type="hidden" name="frequency" id="customfrequencyId" value="${activeTaskBo.frequency}">
@@ -2154,7 +2154,7 @@ function saveActiveTask(item, actType, callback){
 // 				        if (result) {
 // 				        	$("body").addClass("loading");
 // 				    		$.ajax({ 
-// 				    	        url: "/fdahpStudyDesigner/adminStudies/saveActiveTaskSchedule.do?_S=${param._S}",
+// 				    	        url: "/studybuilder/adminStudies/saveActiveTaskSchedule.do?_S=${param._S}",
 // 				    	        type: "POST",
 // 				    	        datatype: "json",
 // 				    	        data: {activeTaskScheduleInfo:data},
@@ -2202,7 +2202,7 @@ function saveActiveTask(item, actType, callback){
 // 			}else{
 				$("body").addClass("loading");
 				$.ajax({ 
-			        url: "/fdahpStudyDesigner/adminStudies/saveActiveTaskSchedule.do?_S=${param._S}",
+			        url: "/studybuilder/adminStudies/saveActiveTaskSchedule.do?_S=${param._S}",
 			        type: "POST",
 			        datatype: "json",
 			        data: {activeTaskScheduleInfo:data},
@@ -2251,7 +2251,7 @@ function saveActiveTask(item, actType, callback){
 		}else{
 			$("body").addClass("loading");
 			$.ajax({ 
-		        url: "/fdahpStudyDesigner/adminStudies/saveActiveTaskSchedule.do?_S=${param._S}",
+		        url: "/studybuilder/adminStudies/saveActiveTaskSchedule.do?_S=${param._S}",
 		        type: "POST",
 		        datatype: "json",
 		        data: {activeTaskScheduleInfo:data},

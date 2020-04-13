@@ -8,7 +8,7 @@
      <div class="md-container">
          <!-- <div class="col-sm-12 col-md-12 col-lg-12 p-none">
             <div class="black-lg-f">
-              <span class="mr-xs"><a href="javascript:void(0)" class="backOrCancelBtn"><img src="/fdahpStudyDesigner/images/icons/back-b.png"/></a></span> Create Study
+              <span class="mr-xs"><a href="javascript:void(0)" class="backOrCancelBtn"><img src="/studybuilder/images/icons/back-b.png"/></a></span> Create Study
             </div>
          </div> -->
          <div class="text-center"> 
@@ -38,9 +38,9 @@
 </div>
 <!-- StudyList Section End-->
 
-<form:form action="/fdahpStudyDesigner/adminStudies/viewStudyDetails.do" id="addEditStudyForm" name="addEditStudyForm" method="post">
+<form:form action="/studybuilder/adminStudies/viewStudyDetails.do" id="addEditStudyForm" name="addEditStudyForm" method="post">
 </form:form> 
-<form:form action="/fdahpStudyDesigner/adminStudies/studyList.do" id="backOrCancelForm" name="backOrCancelForm" method="post">
+<form:form action="/studybuilder/adminStudies/studyList.do" id="backOrCancelForm" name="backOrCancelForm" method="post">
 </form:form>
 
 <script type="text/javascript">

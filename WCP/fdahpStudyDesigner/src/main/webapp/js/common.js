@@ -225,7 +225,7 @@ $(document)
 											if (email !== '') {
 												$
 														.ajax({
-															url : "/fdahpStudyDesigner/isEmailValid.do?"
+															url : "/studybuilder/isEmailValid.do?"
 																	+ csrfDetcsrfParamName
 																	+ "="
 																	+ csrfToken,
@@ -688,7 +688,7 @@ $(document)
 																		.submit();
 																var a = document
 																		.createElement('a');
-																a.href = "/fdahpStudyDesigner/adminDashboard/viewDashBoard.do?action=landing";
+																a.href = "/studybuilder/adminDashboard/viewDashBoard.do?action=landing";
 																document.body
 																		.appendChild(
 																				a)
