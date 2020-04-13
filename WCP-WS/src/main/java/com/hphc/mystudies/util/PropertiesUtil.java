@@ -16,7 +16,7 @@ public class PropertiesUtil {
   public static Properties makePropertiesWithEnvironmentVariables(String properties_file) {
     Properties properties = new Properties();
     try {
-    properties.load(PropertiesUtil.class.getClassLoader().getResourceAsStream(properties_file));
+      properties.load(PropertiesUtil.class.getClassLoader().getResourceAsStream(properties_file));
     } catch (IOException ex) {
       logger.error("Unable to access " + properties_file, ex);
     }
@@ -31,11 +31,11 @@ public class PropertiesUtil {
   // Otherwise substitutes an empty string.
   // Expects environment variables to be in the form ${VAR_NAME}.
   private static String resolveValueWithEnvVars(String value) {
-    Pattern p = Pattern.compile("\\$\\{(\\w+)\\}|\\$(\\w+)");
+    Pattern p = Pattern.compile("\\$\\{(\\w+)\\}");
     Matcher m = p.matcher(value);
     StringBuffer sb = new StringBuffer();
     while (m.find()) {
-        String envVarName = null == m.group(1) ? m.group(2) : m.group(1);
+        String envVarName = m.group(1);
         String envVarValue = System.getenv(envVarName);
         m.appendReplacement(sb,
             null == envVarValue ? "" : Matcher.quoteReplacement(envVarValue));
