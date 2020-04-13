@@ -40,6 +40,7 @@ import com.google.cloud.healthcare.fdamystudies.util.AppConstants;
 import com.google.cloud.healthcare.fdamystudies.util.EmailNotification;
 import com.google.cloud.healthcare.fdamystudies.util.ErrorCode;
 import com.google.cloud.healthcare.fdamystudies.util.MyStudiesUserRegUtil;
+import com.google.cloud.healthcare.fdamystudies.util.UserDomainWhitelist;
 import com.google.cloud.healthcare.fdamystudies.util.UserManagementUtil;
 
 @RestController
@@ -52,6 +53,8 @@ public class UserRegistrationController {
   @Autowired private EmailNotification emailNotification;
 
   @Autowired private CommonDao profiledao;
+
+  @Autowired private UserDomainWhitelist userDomainWhitelist;
 
   @Autowired private UserManagementUtil userManagementUtil;
 
@@ -84,6 +87,13 @@ public class UserRegistrationController {
       return makeServerError(400, 
                              MyStudiesUserRegUtil.ErrorCodes.INVALID_INPUT.getValue(),
                              MyStudiesUserRegUtil.ErrorCodes.INVALID_INPUT_ERROR_MSG.getValue(),
+                             response);
+    }
+
+    if (!userDomainWhitelist.isValidDomain(userForm.getEmailId())) {
+      return makeServerError(401,
+                             MyStudiesUserRegUtil.ErrorCodes.INVALID_INPUT.getValue(),
+                             MyStudiesUserRegUtil.ErrorCodes.DOMAIN_NOT_WHITELISTED.getValue(),
                              response);
     }
 
