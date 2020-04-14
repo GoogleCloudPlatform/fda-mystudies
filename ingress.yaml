@@ -21,6 +21,14 @@ spec:
             backend:
               serviceName: user-registration-server-np
               servicePort: 50000
+          - path: /myStudiesConsentMgmtWS/*
+            backend:
+              serviceName: user-registration-server-np
+              servicePort: 50000
+          - path: /myStudiesEnrollmentMgmt/*
+            backend:
+              serviceName: user-registration-server-np
+              servicePort: 50000
           - path: /StudyMetaData/*
             backend:
               serviceName: study-meta-data-np
