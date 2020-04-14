@@ -131,8 +131,8 @@ A deployment typically contains the following files:
     Your devops project should now be ready.
 
 1.  Backup the state of the devops project to the newly created state bucket by
-    uncommenting out the STEP 2 `terraform` block in `$ROOT/bootstrap/main.tf`
-    and running:
+    uncommenting out the `terraform` block in `$ROOT/bootstrap/main.tf` and
+    running:
 
     ```
     $ terraform init
