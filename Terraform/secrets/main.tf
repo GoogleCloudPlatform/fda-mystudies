@@ -1,6 +1,6 @@
 terraform {
   backend "gcs" {
-  bucket = "heroes-hat-dev-terraform-state-08679"
+    bucket = "heroes-hat-dev-terraform-state-08679"
     prefix = "secrets"
   }
 }
