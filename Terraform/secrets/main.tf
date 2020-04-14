@@ -1,7 +1,18 @@
-resource "google_secret_manager_secret" "my_studies_sql_default_user_password" {
+terraform {
+  backend "gcs" {
+  bucket = "heroes-hat-dev-terraform-state-08679"
+    prefix = "secrets"
+  }
+}
+
+resource "google_secret_manager_secret" "secrets" {
   provider = google-beta
 
-  secret_id = "my-studies-sql-default-user-password"
+  for_each = toset([
+    "my-studies-sql-default-user-password",
+  ])
+
+  secret_id = each.key
   project   = var.project_id
 
   replication {
