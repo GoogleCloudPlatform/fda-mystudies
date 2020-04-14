@@ -14,7 +14,7 @@
 
 # $ gcloud compute ssh bastion-vm --zone=<var.zone> --project=<var.project_id>
 # $ mysql -h <sql_internal_ip> -u root
-module "iap_bastion" {
+module "bastion" {
   source = "terraform-google-modules/bastion-host/google"
 
   name           = "bastion-vm"
@@ -39,7 +39,7 @@ EOF
 }
 
 # NAT to allow bastion-VM to connect to the Internet to install `mysql-client-core-5.7`.
-module "cloud-nat" {
+module "bastion_router" {
   source  = "terraform-google-modules/cloud-router/google"
   name    = "bastion-router"
   region  = var.region
