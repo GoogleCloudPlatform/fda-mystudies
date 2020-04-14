@@ -154,7 +154,8 @@ public class SignInFragment extends Fragment implements ApiCall.OnAsyncRequestCo
 
           @Override
           public void onClick(View widget) {
-            if (mTermsAndConditionData != null) {
+            if (mTermsAndConditionData != null
+                && !mTermsAndConditionData.getTerms().equalsIgnoreCase("")) {
               Intent termsIntent = new Intent(mContext, TermsPrivacyPolicyActivity.class);
               termsIntent.putExtra("title", getResources().getString(R.string.terms));
               termsIntent.putExtra("url", mTermsAndConditionData.getTerms());
@@ -186,7 +187,8 @@ public class SignInFragment extends Fragment implements ApiCall.OnAsyncRequestCo
 
           @Override
           public void onClick(View widget) {
-            if (mTermsAndConditionData != null) {
+            if (mTermsAndConditionData != null
+                && !mTermsAndConditionData.getPrivacy().equalsIgnoreCase("")) {
               Intent termsIntent = new Intent(mContext, TermsPrivacyPolicyActivity.class);
               termsIntent.putExtra("title", getResources().getString(R.string.privacy_policy));
               termsIntent.putExtra("url", mTermsAndConditionData.getPrivacy());
@@ -356,40 +358,51 @@ public class SignInFragment extends Fragment implements ApiCall.OnAsyncRequestCo
     } else if (responseCode == USER_PROFILE_REQUEST) {
       UserProfileData userProfileData = (UserProfileData) response;
       if (userProfileData != null) {
-        if (userProfileData.getSettings().isPasscode()) {
-          AppController.getHelperSharedPreference()
-              .writePreference(mContext, getString(R.string.initialpasscodeset), "no");
-          if (loginData.isVerified()) {
-            AppController.getHelperSharedPreference()
-                .writePreference(
-                    getContext(), getString(R.string.userid), "" + loginData.getUserId());
-            AppController.getHelperSharedPreference()
-                .writePreference(getContext(), getString(R.string.auth), "" + loginData.getAuth());
-            AppController.getHelperSharedPreference()
-                .writePreference(
-                    getContext(), getString(R.string.verified), "" + loginData.isVerified());
-            AppController.getHelperSharedPreference()
-                .writePreference(
-                    getContext(), getString(R.string.email), "" + mEmail.getText().toString());
-            AppController.getHelperSharedPreference()
-                .writePreference(
-                    mContext, getString(R.string.refreshToken), loginData.getRefreshToken());
-            Intent intent = new Intent(mContext, NewPasscodeSetupActivity.class);
-            intent.putExtra("from", "signin");
-            startActivityForResult(intent, PASSCODE_RESPONSE);
-          } else {
-            Intent intent = new Intent(mContext, VerificationStepActivity.class);
-            intent.putExtra("from", "SignInFragment");
-            intent.putExtra("type", "Signin");
-            intent.putExtra("userid", loginData.getUserId());
-            intent.putExtra("auth", loginData.getAuth());
-            intent.putExtra("verified", loginData.isVerified());
-            intent.putExtra("email", mEmail.getText().toString());
-            intent.putExtra("password", mPassword.getText().toString());
-            startActivity(intent);
-          }
+        if (loginData.getResetPassword()) {
+          Intent intent = new Intent(mContext, ChangePasswordActivity.class);
+          intent.putExtra("userid", loginData.getUserId());
+          intent.putExtra("password", mPassword.getText().toString());
+          intent.putExtra("auth", loginData.getAuth());
+          intent.putExtra("verified", loginData.isVerified());
+          intent.putExtra("email", mEmail.getText().toString());
+          startActivity(intent);
         } else {
-          login();
+          if (userProfileData.getSettings().isPasscode()) {
+            AppController.getHelperSharedPreference()
+                .writePreference(mContext, getString(R.string.initialpasscodeset), "no");
+            if (loginData.isVerified()) {
+              AppController.getHelperSharedPreference()
+                  .writePreference(
+                      getContext(), getString(R.string.userid), "" + loginData.getUserId());
+              AppController.getHelperSharedPreference()
+                  .writePreference(
+                      getContext(), getString(R.string.auth), "" + loginData.getAuth());
+              AppController.getHelperSharedPreference()
+                  .writePreference(
+                      getContext(), getString(R.string.verified), "" + loginData.isVerified());
+              AppController.getHelperSharedPreference()
+                  .writePreference(
+                      getContext(), getString(R.string.email), "" + mEmail.getText().toString());
+              AppController.getHelperSharedPreference()
+                  .writePreference(
+                      mContext, getString(R.string.refreshToken), loginData.getRefreshToken());
+              Intent intent = new Intent(mContext, NewPasscodeSetupActivity.class);
+              intent.putExtra("from", "signin");
+              startActivityForResult(intent, PASSCODE_RESPONSE);
+            } else {
+              Intent intent = new Intent(mContext, VerificationStepActivity.class);
+              intent.putExtra("from", "SignInFragment");
+              intent.putExtra("type", "Signin");
+              intent.putExtra("userid", loginData.getUserId());
+              intent.putExtra("auth", loginData.getAuth());
+              intent.putExtra("verified", loginData.isVerified());
+              intent.putExtra("email", mEmail.getText().toString());
+              intent.putExtra("password", mPassword.getText().toString());
+              startActivity(intent);
+            }
+          } else {
+            login();
+          }
         }
       } else {
         Toast.makeText(
@@ -426,15 +439,7 @@ public class SignInFragment extends Fragment implements ApiCall.OnAsyncRequestCo
   }
 
   private void login() {
-    if (loginData.getResetPassword()) {
-      Intent intent = new Intent(mContext, ChangePasswordActivity.class);
-      intent.putExtra("userid", loginData.getUserId());
-      intent.putExtra("password", mPassword.getText().toString());
-      intent.putExtra("auth", loginData.getAuth());
-      intent.putExtra("verified", loginData.isVerified());
-      intent.putExtra("email", mEmail.getText().toString());
-      startActivity(intent);
-    } else if (loginData.isVerified()) {
+    if (loginData.isVerified()) {
       AppController.getHelperSharedPreference()
           .writePreference(getContext(), getString(R.string.userid), "" + loginData.getUserId());
       AppController.getHelperSharedPreference()

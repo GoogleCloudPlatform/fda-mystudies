@@ -128,15 +128,7 @@ public class SplashActivity extends AppCompatActivity implements VersionChecker.
       Version curr_ver = new Version(versionChecker.currentVersion());
       Version new_ver = new Version(newVersion);
       if (curr_ver.equals(new_ver) || curr_ver.compareTo(new_ver) > 0) {
-        if (AppController.getHelperSharedPreference()
-            .readPreference(SplashActivity.this, getString(R.string.initialpasscodeset), "yes")
-            .equalsIgnoreCase("no")) {
-          Intent intent = new Intent(SplashActivity.this, NewPasscodeSetupActivity.class);
-          intent.putExtra("from", "signin");
-          startActivityForResult(intent, PASSCODE_RESPONSE);
-        } else {
-          loadsplash();
-        }
+        proceedToApp();
       } else {
         if (force) {
           Toast.makeText(
@@ -149,19 +141,11 @@ public class SplashActivity extends AppCompatActivity implements VersionChecker.
           Toast.makeText(
                   SplashActivity.this, "Please consider updating app next time", Toast.LENGTH_SHORT)
               .show();
-          if (AppController.getHelperSharedPreference()
-              .readPreference(SplashActivity.this, getString(R.string.initialpasscodeset), "yes")
-              .equalsIgnoreCase("no")) {
-            Intent intent = new Intent(SplashActivity.this, NewPasscodeSetupActivity.class);
-            intent.putExtra("from", "signin");
-            startActivityForResult(intent, PASSCODE_RESPONSE);
-          } else {
-            loadsplash();
-          }
+          proceedToApp();
         }
       }
     } else if (requestCode == PASSCODE_RESPONSE) {
-      loadsplash();
+      startmain();
     }
   }
 
@@ -229,32 +213,29 @@ public class SplashActivity extends AppCompatActivity implements VersionChecker.
                         .show();
                     finish();
                   } else {
-                    if (AppController.getHelperSharedPreference()
-                        .readPreference(
-                            SplashActivity.this, getString(R.string.initialpasscodeset), "yes")
-                        .equalsIgnoreCase("no")) {
-                      Intent intent =
-                          new Intent(SplashActivity.this, NewPasscodeSetupActivity.class);
-                      intent.putExtra("from", "signin");
-                      startActivityForResult(intent, PASSCODE_RESPONSE);
-                    } else {
-                      loadsplash();
-                    }
+                    proceedToApp();
                   }
                 }
               });
       AlertDialog alertDialog = alertDialogBuilder.create();
       alertDialog.show();
     } else {
-      if (AppController.getHelperSharedPreference()
-          .readPreference(SplashActivity.this, getString(R.string.initialpasscodeset), "yes")
-          .equalsIgnoreCase("no")) {
-        Intent intent = new Intent(SplashActivity.this, NewPasscodeSetupActivity.class);
-        intent.putExtra("from", "signin");
-        startActivityForResult(intent, PASSCODE_RESPONSE);
-      } else {
-        loadsplash();
-      }
+      proceedToApp();
+    }
+  }
+
+  private void proceedToApp() {
+    if (!AppController.getHelperSharedPreference()
+            .readPreference(SplashActivity.this, getResources().getString(R.string.userid), "")
+            .equalsIgnoreCase("")
+        && AppController.getHelperSharedPreference()
+            .readPreference(SplashActivity.this, getString(R.string.initialpasscodeset), "yes")
+            .equalsIgnoreCase("no")) {
+      Intent intent = new Intent(SplashActivity.this, NewPasscodeSetupActivity.class);
+      intent.putExtra("from", "signin");
+      startActivityForResult(intent, PASSCODE_RESPONSE);
+    } else {
+      loadsplash();
     }
   }
 }

@@ -149,7 +149,8 @@ public class SignupActivity extends AppCompatActivity implements ApiCall.OnAsync
 
           @Override
           public void onClick(View widget) {
-            if (mTermsAndConditionData != null) {
+            if (mTermsAndConditionData != null
+                && !mTermsAndConditionData.getTerms().equalsIgnoreCase("")) {
               Intent termsIntent =
                   new Intent(SignupActivity.this, TermsPrivacyPolicyActivity.class);
               termsIntent.putExtra("title", getResources().getString(R.string.terms));
@@ -183,7 +184,8 @@ public class SignupActivity extends AppCompatActivity implements ApiCall.OnAsync
 
           @Override
           public void onClick(View widget) {
-            if (mTermsAndConditionData != null) {
+            if (mTermsAndConditionData != null
+                && !mTermsAndConditionData.getPrivacy().equalsIgnoreCase("")) {
               Intent termsIntent =
                   new Intent(SignupActivity.this, TermsPrivacyPolicyActivity.class);
               termsIntent.putExtra("title", getResources().getString(R.string.privacy_policy));

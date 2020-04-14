@@ -145,7 +145,8 @@ public class SignupFragment extends Fragment implements ApiCall.OnAsyncRequestCo
 
           @Override
           public void onClick(View widget) {
-            if (mTermsAndConditionData != null) {
+            if (mTermsAndConditionData != null
+                && !mTermsAndConditionData.getTerms().equalsIgnoreCase("")) {
               Intent termsIntent = new Intent(mContext, TermsPrivacyPolicyActivity.class);
               termsIntent.putExtra("title", getResources().getString(R.string.terms));
               termsIntent.putExtra("url", mTermsAndConditionData.getTerms());
@@ -178,7 +179,8 @@ public class SignupFragment extends Fragment implements ApiCall.OnAsyncRequestCo
 
           @Override
           public void onClick(View widget) {
-            if (mTermsAndConditionData != null) {
+            if (mTermsAndConditionData != null
+                && !mTermsAndConditionData.getPrivacy().equalsIgnoreCase("")) {
               Intent termsIntent = new Intent(mContext, TermsPrivacyPolicyActivity.class);
               termsIntent.putExtra("title", getResources().getString(R.string.privacy_policy));
               termsIntent.putExtra("url", mTermsAndConditionData.getPrivacy());

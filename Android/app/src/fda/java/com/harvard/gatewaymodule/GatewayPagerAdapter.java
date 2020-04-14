@@ -134,10 +134,12 @@ public class GatewayPagerAdapter extends PagerAdapter {
         new View.OnClickListener() {
           @Override
           public void onClick(View v) {
-            Intent browserIntent =
-                new Intent(
-                    Intent.ACTION_VIEW, Uri.parse("" + mContext.getString(R.string.website)));
-            mContext.startActivity(browserIntent);
+            if (!mContext.getString(R.string.website).equalsIgnoreCase("")) {
+              Intent browserIntent =
+                  new Intent(
+                      Intent.ACTION_VIEW, Uri.parse("" + mContext.getString(R.string.website)));
+              mContext.startActivity(browserIntent);
+            }
           }
         });
   }
