@@ -35,10 +35,10 @@ locals {
     "cloudbuild.googleapis.com",
     "cloudresourcemanager.googleapis.com",
     "container.googleapis.com",
+    "firebase.googleapis.com",
     "iam.googleapis.com",
     "serviceusage.googleapis.com",
     "sqladmin.googleapis.com",
-    "firebase.googleapis.com",
   ]
   cloudbuild_sa_viewer_roles = [
     "roles/browser",
