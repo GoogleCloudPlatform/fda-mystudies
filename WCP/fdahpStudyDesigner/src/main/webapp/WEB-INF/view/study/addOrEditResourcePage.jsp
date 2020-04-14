@@ -7,11 +7,11 @@
          <!-- Start right Content here -->
          <!-- ============================================================== --> 
         <div class="col-sm-10 col-rc white-bg p-none">
-        <form:form action="/fdahpStudyDesigner/adminStudies/saveOrUpdateResource.do?${_csrf.parameterName}=${_csrf.token}&_S=${param._S}" data-toggle="validator" id="resourceForm" role="form" method="post" autocomplete="off" enctype="multipart/form-data">    
+        <form:form action="/studybuilder/adminStudies/saveOrUpdateResource.do?${_csrf.parameterName}=${_csrf.token}&_S=${param._S}" data-toggle="validator" id="resourceForm" role="form" method="post" autocomplete="off" enctype="multipart/form-data">    
             <!--  Start top tab section-->
             <div class="right-content-head">        
                 <div class="text-right">
-                    <div class="black-md-f dis-line pull-left line34"><span class="pr-sm"><a href="javascript:void(0)" class="goToResourceListForm" id="goToResourceListForm"><img src="/fdahpStudyDesigner/images/icons/back-b.png" alt=""/></a></span>
+                    <div class="black-md-f dis-line pull-left line34"><span class="pr-sm"><a href="javascript:void(0)" class="goToResourceListForm" id="goToResourceListForm"><img src="/studybuilder/images/icons/back-b.png" alt=""/></a></span>
                     <c:if test="${isstudyProtocol ne 'isstudyProtocol'}">
                     <c:if test="${actionOn eq 'add'}">Add Resource</c:if>
                     <c:if test="${actionOn eq 'edit'}">Edit Resource</c:if>
@@ -246,9 +246,9 @@
         </form:form>   
         </div>
         <!-- End right Content here -->
-<form:form action="/fdahpStudyDesigner/adminStudies/getResourceList.do?_S=${param._S}" name="resourceListForm" id="resourceListForm" method="post">
+<form:form action="/studybuilder/adminStudies/getResourceList.do?_S=${param._S}" name="resourceListForm" id="resourceListForm" method="post">
 </form:form>
-<form:form action="/fdahpStudyDesigner/downloadPdf.do?_S=${param._S}"  id="pdfDownloadFormId" method="post" target="_blank" >
+<form:form action="/studybuilder/downloadPdf.do?_S=${param._S}"  id="pdfDownloadFormId" method="post" target="_blank" >
 	<input type="hidden" value="studyResources"  name="fileFolder"/>
 	<input type="hidden" value="${resourceBO.pdfUrl}"  name="fileName"/>
 </form:form>

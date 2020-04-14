@@ -17,8 +17,8 @@
     <meta name="author" content="">
 
     <!-- Favicon -->
-    <link rel="shortcut icon" href="/fdahpStudyDesigner/images/icons/fav.png" type="image/x-icon" />
-    <link rel="apple-touch-icon" href="/fdahpStudyDesigner/images/icons/fav.png">
+    <link rel="shortcut icon" href="/studybuilder/images/icons/fav.png" type="image/x-icon" />
+    <link rel="apple-touch-icon" href="/studybuilder/images/icons/fav.png">
         
     <!-- Mobile Metas -->
     <meta name="viewport" content="width=device-width, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
@@ -27,26 +27,26 @@
    <link href="https://fonts.googleapis.com/css?family=Roboto:300,400" rel="stylesheet">
         
     <!-- Vendor CSS -->
-    <link rel="stylesheet" href="/fdahpStudyDesigner/vendor/boostrap/bootstrap.min.css">
+    <link rel="stylesheet" href="/studybuilder/vendor/boostrap/bootstrap.min.css">
     
      <!-- Your custom styles (optional) -->
-    <link href="/fdahpStudyDesigner/css/loader.css" rel="stylesheet">
+    <link href="/studybuilder/css/loader.css" rel="stylesheet">
     
-    <link rel="stylesheet" href="/fdahpStudyDesigner/vendor/datatable/css/dataTables.bootstrap.min.css">
-    <link rel="stylesheet" href="/fdahpStudyDesigner/vendor/dragula/dragula.min.css">
-    <link rel="stylesheet" href="/fdahpStudyDesigner/vendor/magnific-popup/magnific-popup.css">        
-    <link rel="stylesheet" href="/fdahpStudyDesigner/vendor/animation/animate.css">    
+    <link rel="stylesheet" href="/studybuilder/vendor/datatable/css/dataTables.bootstrap.min.css">
+    <link rel="stylesheet" href="/studybuilder/vendor/dragula/dragula.min.css">
+    <link rel="stylesheet" href="/studybuilder/vendor/magnific-popup/magnific-popup.css">        
+    <link rel="stylesheet" href="/studybuilder/vendor/animation/animate.css">    
         
     <!-- Theme Responsive CSS -->
-    <link rel="stylesheet" href="/fdahpStudyDesigner/css/sprites.css">   
-    <link rel="stylesheet" href="/fdahpStudyDesigner/css/layout.css">   
+    <link rel="stylesheet" href="/studybuilder/css/sprites.css">   
+    <link rel="stylesheet" href="/studybuilder/css/layout.css">   
         
     <!-- Theme CSS -->
-    <link rel="stylesheet" href="/fdahpStudyDesigner/css/theme.css">
-    <link rel="stylesheet" href="/fdahpStudyDesigner/css/style.css">
+    <link rel="stylesheet" href="/studybuilder/css/theme.css">
+    <link rel="stylesheet" href="/studybuilder/css/style.css">
         
     <!-- Head Libs -->
-    <script src="/fdahpStudyDesigner/vendor/modernizr/modernizr.js"></script>
+    <script src="/studybuilder/vendor/modernizr/modernizr.js"></script>
 </head>
 <body class="loading background__img" onload="noBack();" onpageshow="if (event.persisted) noBack();" onunload="">
 	<div id="loader"><span></span></div>
@@ -62,7 +62,7 @@
         <!-- <div class="lg-space-right">
         	<div class="logout">
                <div class="dis-line pull-right ml-md line34">
-                 <a href="/fdahpStudyDesigner/sessionOut.do" class="blue-link text-weight-normal text-uppercase"><span>sign Out</span> <span class="ml-xs"><img src="/fdahpStudyDesigner/images/icons/logout.png"/></span></a>  
+                 <a href="/studybuilder/sessionOut.do" class="blue-link text-weight-normal text-uppercase"><span>sign Out</span> <span class="ml-xs"><img src="/studybuilder/images/icons/logout.png"/></span></a>  
                </div>
            	</div>
             <div class="lg-space-container wd">
@@ -108,7 +108,7 @@
         <!-- End Login Right Section-->
         <div class="logout">
                <div class="dis-line pull-right ml-md line34">
-                 <a href="/fdahpStudyDesigner/sessionOut.do" class="blue-link text-weight-normal text-uppercase"><span class="white__text">sign Out</span> </a>  
+                 <a href="/studybuilder/sessionOut.do" class="blue-link text-weight-normal text-uppercase"><span class="white__text">sign Out</span> </a>  
                </div>
            	</div>
         <div class="logo__ll">
@@ -209,20 +209,20 @@
     
     
     <!-- Vendor -->
-    <script src="/fdahpStudyDesigner/vendor/jquery/jquery-3.1.1.min.js"></script>
-    <script src="/fdahpStudyDesigner/vendor/boostrap/bootstrap.min.js"></script>
-    <script src="/fdahpStudyDesigner/vendor/animation/wow.min.js"></script>
-    <script src="/fdahpStudyDesigner/vendor/datatable/js/jquery.dataTables.min.js"></script>
-    <script src="/fdahpStudyDesigner/vendor/dragula/react-dragula.min.js"></script>
-    <script src="/fdahpStudyDesigner/vendor/magnific-popup/jquery.magnific-popup.min.js"></script>    
-    <script src="/fdahpStudyDesigner/vendor/slimscroll/jquery.slimscroll.min.js"></script>
-    <script src="/fdahpStudyDesigner/js/jquery.mask.min.js"></script>
+    <script src="/studybuilder/vendor/jquery/jquery-3.1.1.min.js"></script>
+    <script src="/studybuilder/vendor/boostrap/bootstrap.min.js"></script>
+    <script src="/studybuilder/vendor/animation/wow.min.js"></script>
+    <script src="/studybuilder/vendor/datatable/js/jquery.dataTables.min.js"></script>
+    <script src="/studybuilder/vendor/dragula/react-dragula.min.js"></script>
+    <script src="/studybuilder/vendor/magnific-popup/jquery.magnific-popup.min.js"></script>    
+    <script src="/studybuilder/vendor/slimscroll/jquery.slimscroll.min.js"></script>
+    <script src="/studybuilder/js/jquery.mask.min.js"></script>
     
-    <script type="text/javascript" src="/fdahpStudyDesigner/js/loader.js"></script>    
+    <script type="text/javascript" src="/studybuilder/js/loader.js"></script>    
     
     <!-- Theme Custom JS-->
-    <script src="/fdahpStudyDesigner/js/theme.js"></script>
-    <script src="/fdahpStudyDesigner/js/common.js"></script>
+    <script src="/studybuilder/js/theme.js"></script>
+    <script src="/studybuilder/js/common.js"></script>
     
     <script>
       (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
@@ -260,26 +260,26 @@
     	 
     	 
     	 $(".studyListId").click(function(){	
-    		document.studyListForm.action="/fdahpStudyDesigner/adminStudies/studyList.do";
+    		document.studyListForm.action="/studybuilder/adminStudies/studyList.do";
     		document.studyListForm.submit();
     	 });
     	 
     	 $(".userListId").click(function(){	
-    		document.studyListForm.action="/fdahpStudyDesigner/adminUsersView/getUserList.do";
+    		document.studyListForm.action="/studybuilder/adminUsersView/getUserList.do";
     		document.studyListForm.submit();
     	 });
     	 
     	 $(".notificationListId").click(function(){	
-     		document.studyListForm.action="/fdahpStudyDesigner/adminNotificationView/viewNotificationList.do";
+     		document.studyListForm.action="/studybuilder/adminNotificationView/viewNotificationList.do";
      		document.studyListForm.submit();
      	 });
     	 $(".myAccountId").click(function(){	
-      		document.studyListForm.action="/fdahpStudyDesigner/adminDashboard/viewUserDetails.do";
+      		document.studyListForm.action="/studybuilder/adminDashboard/viewUserDetails.do";
       		document.studyListForm.submit();
       	 });
       	 if('${sessionScope.sessionObject}' != ''){
 	   	  	setTimeout(function(){
-		 		 window.location.href = '/fdahpStudyDesigner/errorRedirect.do?error=timeOut';
+		 		 window.location.href = '/studybuilder/errorRedirect.do?error=timeOut';
 		 	}, 1000 * 60 * 31);
    	  	 }
     });

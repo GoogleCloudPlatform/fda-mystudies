@@ -15,7 +15,7 @@ table.dataTable thead th:last-child {
 </style>
 <div class="col-sm-10 col-rc white-bg p-none" id="settingId">
 	<form:form
-		action="/fdahpStudyDesigner/adminStudies/saveOrUpdateSettingAndAdmins.do?_S=${param._S}"
+		action="/studybuilder/adminStudies/saveOrUpdateSettingAndAdmins.do?_S=${param._S}"
 		data-toggle="validator" role="form" id="settingfoFormId" method="post"
 		autocomplete="off">
 		<input type="hidden" name="buttonText" id="buttonText">
@@ -299,7 +299,7 @@ table.dataTable thead th:last-child {
 				<div class="black-md-f dis-line pull-left line34">
 					<span class="pr-sm"><a href="javascript:void(0)"
 						onclick="cancelAddAdmin();"><img
-							src="/fdahpStudyDesigner/images/icons/back-b.png" alt="" /></a></span>Add
+							src="/studybuilder/images/icons/back-b.png" alt="" /></a></span>Add
 					Admins
 				</div>
 
@@ -401,7 +401,7 @@ $(document).ready(function(){
 				message : 'Your user account details have been updated. Please sign in again to continue using the portal.',	
 			    callback: function(result) {
 			    	var a = document.createElement('a');
-			    	a.href = "/fdahpStudyDesigner/sessionOut.do";
+			    	a.href = "/studybuilder/sessionOut.do";
 					document.body.appendChild(a).click();
 			    }
 		    });
@@ -556,7 +556,7 @@ function platformTypeValidation(buttonText){
 		$('.actBut').prop('disabled',true);
 		$("body").addClass("loading");
 		$.ajax({
-            url: "/fdahpStudyDesigner/adminStudies/studyPlatformValidationforActiveTask.do?_S=${param._S}",		
+            url: "/studybuilder/adminStudies/studyPlatformValidationforActiveTask.do?_S=${param._S}",		
             type: "POST",
             datatype: "json",
             data: {

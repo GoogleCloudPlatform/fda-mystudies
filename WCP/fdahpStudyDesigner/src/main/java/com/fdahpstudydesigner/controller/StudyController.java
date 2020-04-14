@@ -5155,7 +5155,7 @@ public class StudyController {
         logger.info("StudyController - submitResponseToResponseServer() - INFO ==>> SUCCESS");
       } else {
         logger.error("StudyController - submitResponseToResponseServer() - ERROR ==>> FAILURE");
-        throw new Exception("There is some issue in submitting data to Response Server ");
+        throw new Exception("There is some issue while submitting data to Response Server ");
       }
     } catch (Exception e) {
       logger.error("StudyController - submitResponseToResponseServer() - ERROR ", e);

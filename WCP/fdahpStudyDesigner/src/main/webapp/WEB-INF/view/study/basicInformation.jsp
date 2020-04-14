@@ -12,7 +12,7 @@
 <div class="col-sm-10 col-rc white-bg p-none">
 
 	<form:form
-		action="/fdahpStudyDesigner/adminStudies/saveOrUpdateBasicInfo.do?${_csrf.parameterName}=${_csrf.token}&_S=${param._S}"
+		action="/studybuilder/adminStudies/saveOrUpdateBasicInfo.do?${_csrf.parameterName}=${_csrf.token}&_S=${param._S}"
 		data-toggle="validator" role="form" id="basicInfoFormId" method="post"
 		autocomplete="off" enctype="multipart/form-data">
 		<!--  Start top tab section-->
@@ -286,8 +286,8 @@
 						<div class="thumb">
 							<img
 								<c:if test="${not empty studyBo.thumbnailImage}">src="<spring:eval expression="@propertyConfigurer.getProperty('fda.imgDisplaydPath')" />studylogo/${studyBo.thumbnailImage}" </c:if>
-								<c:if test="${empty studyBo.thumbnailImage}">src="/fdahpStudyDesigner/images/dummy-img.jpg" </c:if>
-								onerror="this.src='/fdahpStudyDesigner/images/dummy-img.jpg';"
+								<c:if test="${empty studyBo.thumbnailImage}">src="/studybuilder/images/dummy-img.jpg" </c:if>
+								onerror="this.src='/studybuilder/images/dummy-img.jpg';"
 								class="wid100" alt="" />
 						</div>
 						<div class="dis-inline ">
@@ -379,7 +379,7 @@
             
         // Removing selected file upload image
         $("#removeUrl").click(function(){
-            $(".thumb img").attr("src","/fdahpStudyDesigner/images/dummy-img.jpg");
+            $(".thumb img").attr("src","/studybuilder/images/dummy-img.jpg");
             $('#uploadImg').val('');
             $('#thumbnailImageId').val('');
             var file = $('#uploadImg').val();
@@ -586,7 +586,7 @@
 	                	$('#removeUrl').css("visibility","visible");
 	                }else{
 	                	$("#uploadImg").parent().find(".help-block").append('<ul class="list-unstyled"><li>Please upload image as per provided guidelines.</li></ul>');
-	                	$(".thumb img").attr("src","/fdahpStudyDesigner/images/dummy-img.jpg");
+	                	$(".thumb img").attr("src","/studybuilder/images/dummy-img.jpg");
 	                	$('#uploadImg, #thumbnailImageId').val('');
 	                	$('#removeUrl').css("visibility","hidden");
 	                }
@@ -603,7 +603,7 @@
 	            img.onerror = function() {
 	                $("#uploadImg").parent().find(".help-block").append('<ul class="list-unstyled"><li>Please upload image as per provided guidelines.</li></ul>');
 	                $('#removeUrl').css("visibility","hidden");
-	                $(".thumb img").attr("src","/fdahpStudyDesigner/images/dummy-img.jpg");
+	                $(".thumb img").attr("src","/studybuilder/images/dummy-img.jpg");
 	                $('#uploadImg, #thumbnailImageId').val('');
 	                var file = $('#uploadImg').val();
 			         var thumbnailImageId = $('#thumbnailImageId').val();
@@ -636,7 +636,7 @@
 	if(customStudyId != null && customStudyId !='' && typeof customStudyId!= 'undefined'){
 		if( dbcustomStudyId !=customStudyId){
 			$.ajax({
-				url: "/fdahpStudyDesigner/adminStudies/validateStudyId.do?_S=${param._S}",
+				url: "/studybuilder/adminStudies/validateStudyId.do?_S=${param._S}",
                 type: "POST",
                 datatype: "json",
                 data: {
@@ -697,7 +697,7 @@ function validateAppId(item,callback){
 	var customStudyId = $("#customStudyId").val();
 	if(appId != null && appId !='' && typeof appId!= 'undefined'){
 			$.ajax({
-				url: "/fdahpStudyDesigner/adminStudies/validateAppId.do?_S=${param._S}",
+				url: "/studybuilder/adminStudies/validateAppId.do?_S=${param._S}",
                 type: "POST",
                 datatype: "json",
                 data: {
