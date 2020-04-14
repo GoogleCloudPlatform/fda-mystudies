@@ -104,7 +104,7 @@ A deployment typically contains the following files:
 
 ## Deployment Steps
 
-1.  Authenticate as a super admin using `gcloud auth login`.
+1.  Authenticate as a super admin using `gcloud auth login [ACCOUNT]`.
 
     WARNING: remember to run `gcloud auth revoke` to logout as a super admin.
     Being logged in as a super admin beyond the initial setup is dangerous!
@@ -137,32 +137,8 @@ A deployment typically contains the following files:
     $ terraform init
     ```
 
-1.  Follow
-    [instructions](https://cloud.google.com/cloud-build/docs/automating-builds/create-github-app-triggers#installing_the_cloud_build_app)
-    to install the Cloud Build app and connect your GitHub repository to your
-    Cloud project.
-
-1.  Deploy the CICD Cloud Build Triggers by uncommenting out the STEP 4
-    `terraform` block in `$ROOT/bootstrap/main.tf`, reviewing the triggering
-    configurations, and running:
-
-    ```
-    $ terraform init
-    $ terraform plan
-    $ terraform apply
-    ```
-
-    Two presubmit triggers are created by default and results are posted in the
-    Pull Request. Failing these presubmits will block Pull Request submission.
-
-    1.  `tf-validate`: Perform Terraform format and syntax check.
-    1.  `tf-plan`: Generate speculative plans to show a set of possible changes
-        if the pending config changes are deployed.
-
-    Optionally, set `continuous_deployment_enabled` to `true` to create an
-    additional Cloud Build Trigger and grant the Cloud Build Service Account
-    necessary permissions to automaticaly apply the config changes to GCP after
-    the Pull Request is approved and submitted.
+1.  Follow `$ROOT/cicd/README.md` to set up CICD pipelines for Terraform
+    configs.
 
 1.  Revoke your super admin access by running `gcloud auth revoke` and
     authenticate as a normal user for daily activities.
