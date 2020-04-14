@@ -2,10 +2,6 @@ terraform {
   backend "gcs" {}
 }
 
-resource "random_id" "random_hash_suffix" {
-  byte_length = 4
-}
-
 module "images_bucket" {
   source  = "terraform-google-modules/cloud-storage/google//modules/simple_bucket"
   version = "~> 1.4"
@@ -28,7 +24,7 @@ module "my_studies_cloudsql" {
   source  = "GoogleCloudPlatform/sql-db/google//modules/safer_mysql"
   version = "~> 3.0"
 
-  name             = "my-studies-${random_id.random_hash_suffix.hex}"
+  name             = "my-studies-2"
   project_id       = var.project_id
   region           = var.cloudsql_region
   zone             = var.cloudsql_zone
