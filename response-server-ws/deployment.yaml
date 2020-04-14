@@ -36,7 +36,7 @@ spec:
             - name: FIRESTORE_PROJECT_ID
               value: "heroes-hat-dev"
             - name: AUTH_SERVER_URL
-              value: "35.243.237.139:50000"
+              value: "auth-server-np:50000"
             - name: REGISTRATION_CLIENT_ID
               valueFrom:
                 secretKeyRef:
