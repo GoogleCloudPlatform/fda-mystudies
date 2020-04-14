@@ -20,6 +20,12 @@ module "my_studies_consent_documents_bucket" {
   location   = var.storage_location
 }
 
+data "google_secret_manager_secret_version" "sql_password" {
+  provider = google-beta
+  project  = var.secrets_project_id
+  secret   = "my-studies-sql-default-user-password"
+}
+
 module "my_studies_cloudsql" {
   source  = "GoogleCloudPlatform/sql-db/google//modules/safer_mysql"
   version = "~> 3.0"
@@ -30,6 +36,7 @@ module "my_studies_cloudsql" {
   zone             = var.cloudsql_zone
   database_version = "MYSQL_5_7"
   vpc_network      = var.network
+  user_password    = data.google_secret_manager_secret_version.sql_password.secret_data
 
   backup_configuration = {
     enabled            = true
