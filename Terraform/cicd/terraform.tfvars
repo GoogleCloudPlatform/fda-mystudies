@@ -19,4 +19,4 @@ repo_owner                    = "GoogleCloudPlatform"
 repo_name                     = "fda-mystudies"
 cloudbuild_trigger_branch     = "terraform" # Change to "early-access" or the final prod branch.
 continuous_deployment_enabled = true
-trigger_disabled              = false
+trigger_enabled               = true

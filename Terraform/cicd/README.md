@@ -31,7 +31,7 @@ Account broder permissions to automaticaly apply the config changes to GCP after
 the Pull Request is approved and submitted.
 
 After the triggers are created, to temporarily disable or re-enable them, set
-the `trigger_disabled` in `terraform.tfvars` to `true` or `false` and apply the
+the `trigger_enabled` in `terraform.tfvars` to `false` or `true` and apply the
 changes by running:
 
 ```

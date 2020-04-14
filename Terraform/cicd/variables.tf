@@ -48,8 +48,8 @@ variable "continuous_deployment_enabled" {
   default     = false
 }
 
-variable "trigger_disabled" {
-  description = "Whether or not to disable all Cloud Build Triggers"
+variable "trigger_enabled" {
+  description = "Whether or not to enable all Cloud Build Triggers"
   type        = bool
-  default     = false
+  default     = true
 }

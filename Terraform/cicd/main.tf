@@ -89,7 +89,7 @@ resource "google_organization_iam_member" "cloudbuild_sa_iam" {
 
 # Cloud Build Triggers for CI.
 resource "google_cloudbuild_trigger" "validate" {
-  disabled = var.trigger_disabled
+  disabled = ! var.trigger_enabled
   provider = google-beta
   project  = var.devops_project_id
   name     = "tf-validate"
@@ -114,7 +114,7 @@ resource "google_cloudbuild_trigger" "validate" {
 }
 
 resource "google_cloudbuild_trigger" "plan" {
-  disabled = var.trigger_disabled
+  disabled = ! var.trigger_enabled
   provider = google-beta
   project  = var.devops_project_id
   name     = "tf-plan"
@@ -141,7 +141,7 @@ resource "google_cloudbuild_trigger" "plan" {
 # Cloud Build Triggers for CD.
 resource "google_cloudbuild_trigger" "apply" {
   count    = var.continuous_deployment_enabled ? 1 : 0
-  disabled = var.trigger_disabled
+  disabled = ! var.trigger_enabled
   provider = google-beta
   project  = var.devops_project_id
   name     = "tf-apply"
