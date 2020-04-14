@@ -11,7 +11,6 @@ variable "network_project_id" {
 
 variable "gke_region" {
   description = "The region to host the clusters in"
-  default     = "us-central1"
   type        = string
 }
 
