@@ -2,6 +2,10 @@ variable "project_id" {
   type = string
 }
 
+variable "secrets_project_id" {
+  type = string
+}
+
 variable "network" {
   type = string
 }

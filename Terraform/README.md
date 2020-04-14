@@ -88,7 +88,8 @@ A deployment typically contains the following files:
 
 ```
 |- bootstrap: one time setup to create projects to host Terraform state and CICD pipeline.
-|- cicd: Cloud Build configs for the CICD pipeline.
+|- cicd: CloudBuild configs for the CICD pipeline.
+|- secrets: Definitions of secrets used in the org (secret values are not set in configs).
 |- org: org level resources. Resources within this directory should be managed by CICD pipeline.
   |- terragrunt.hcl: root Terragrunt config which defines remote state for all deployments.
   |- project.{PREFIX}-devops: additional resources that will go in the devops project.
@@ -136,6 +137,18 @@ A deployment typically contains the following files:
     ```
     $ terraform init
     ```
+
+1.  Deploy secrets used in the org in the devops project.
+
+    ```
+    $ cd $ROOT/secrets
+    $ terraform init
+    $ terraform plan
+    $ terraform apply
+    ```
+
+    After the secrets have been created you must go in Console and open the
+    secrets manager and fill in their values.
 
 1.  Follow `$ROOT/cicd/README.md` to set up CICD pipelines for Terraform
     configs.
