@@ -1,5 +1,5 @@
 project_id             = "heroes-hat-dev-data"
 storage_location       = "us"
-cloudsql_region        = "us-central1"
-cloudsql_zone          = "a"
-cloudsql_failover_zone = "b"
+cloudsql_region        = "us-east1"
+cloudsql_zone          = "b"
+cloudsql_failover_zone = "c"
