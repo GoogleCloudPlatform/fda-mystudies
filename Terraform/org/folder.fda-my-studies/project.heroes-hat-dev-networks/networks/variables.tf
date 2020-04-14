@@ -4,7 +4,6 @@ variable "project_id" {
 
 variable "gke_region" {
   description = "The region where the network and subnets will be created for the GKE clusters"
-  default     = "us-central1"
   type        = string
 }
 
