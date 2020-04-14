@@ -13,24 +13,32 @@
 # limitations under the License.
 
 # $ gcloud compute ssh bastion-vm --zone=<var.zone> --project=<var.project_id>
-# $ sudo apt install mysql-client-core-5.7
 # $ mysql -h <sql_internal_ip> -u root
 module "iap_bastion" {
   source = "terraform-google-modules/bastion-host/google"
 
-  name         = "bastion-vm"
-  host_project = var.project_id
-  project      = var.project_id
-  region       = var.region
-  zone         = var.zone
-  network      = module.private.network_self_link
-  subnet       = local.gke_subnet.self_link
-  image_family = "ubuntu-1804-lts"
-  members      = var.bastion_users
+  name           = "bastion-vm"
+  host_project   = var.project_id
+  project        = var.project_id
+  region         = var.region
+  zone           = var.zone
+  network        = module.private.network_self_link
+  subnet         = module.private.subnets["${var.region}/${local.bastion_subnet_name}"].self_link
+  image_family   = "ubuntu-1804-lts"
+  members        = var.bastion_users
+  startup_script = <<EOF
+#!/bin/bash
+dpkg -l mysql-client-core-5.7
+if [ $? -eq 0 ]; then
+  echo "mysql-client already installed"
+else
+  sudo apt-get -y update
+  sudo apt-get -y install mysql-client-core-5.7
+fi
+EOF
 }
 
-# Temporarily allow bastion-VM to connect to the Internet to install `mysql-client-core-5.7`.
-# Remove after installation.
+# NAT to allow bastion-VM to connect to the Internet to install `mysql-client-core-5.7`.
 module "cloud-nat" {
   source  = "terraform-google-modules/cloud-router/google"
   name    = "bastion-router"
@@ -38,11 +46,12 @@ module "cloud-nat" {
   project = var.project_id
   network = module.private.network_name
   nats = [{
-    name                             = "bastion-nat"
-    min_ports_per_vm                 = "64"
-    udp_idle_timeout_sec             = "30"
-    icmp_idle_timeout_sec            = "30"
-    tcp_established_idle_timeout_sec = "1200"
-    tcp_transitory_idle_timeout_sec  = "30"
+    name                               = "bastion-nat"
+    source_subnetwork_ip_ranges_to_nat = "LIST_OF_SUBNETWORKS"
+    subnetworks = [{
+      name                     = module.private.subnets["${var.region}/${local.bastion_subnet_name}"].self_link
+      source_ip_ranges_to_nat  = ["PRIMARY_IP_RANGE"]
+      secondary_ip_range_names = []
+    }]
   }]
 }
