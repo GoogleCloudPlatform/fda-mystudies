@@ -1,6 +1,8 @@
 This directory defines resources needed to setup CICD pipelines of Terraform
 configs.
 
+## Setup
+
 In order to use Cloud Build and Cloud Build Triggers with GitHub, First follow
 [installing_the_cloud_build_app](https://cloud.google.com/cloud-build/docs/automating-builds/create-github-app-triggers#installing_the_cloud_build_app)
 to install the Cloud Build app and connect your GitHub repository to your Cloud
@@ -37,3 +39,21 @@ $ terraform init
 $ terraform plan
 $ terraform apply
 ```
+
+## Operation
+
+### Continuous Integration (presubmit)
+
+Presubmit Cloud Build results will be posted as a Cloud Build job link in the
+Pull Request, and they should be configured to block Pull Request submission.
+
+Every new push to the Pull Request at the configured branches will automatically
+trigger presubmit runs. To manually re-trigger CI jobs, comment `/gcbrun` in the
+Pull Ruquest.
+
+### Continuous Deployment (postsubmit)
+
+Postsubmit Cloud Build job will automatically start when a Pull Ruquest is
+submitted to a configured branch. To view the result of the Cloud Build run, go
+to https://console.cloud.google.com/cloud-build/builds and look for your commit
+to view the Cloud Build job triggered by your merged commit.
