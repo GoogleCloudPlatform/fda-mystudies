@@ -1,4 +1,5 @@
 project_id             = "heroes-hat-dev-data"
+secrets_project_id     = "heroes-hat-dev-devops"
 storage_location       = "us"
 cloudsql_region        = "us-central1"
 cloudsql_zone          = "a"

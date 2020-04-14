@@ -135,6 +135,18 @@ A deployment typically contains the following files:
    $ terraform init
    ```
 
+1.  Deploy secrets used in the org in the devops project.
+
+    ```
+    $ cd $ROOT/secrets
+    $ terraform init
+    $ terraform plan
+    $ terraform apply
+    ```
+
+    After the secrets have been created you must go in Console and open the
+    secrets manager and fill in their values.
+
 1. TODO(xingao): describe how to setup CICD pipeline
 
 1. Revoke your super admin access by running `gcloud auth revoke` and
