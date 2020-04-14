@@ -33,12 +33,12 @@ module "iap_bastion" {
 # Remove after installation.
 module "cloud-nat" {
   source  = "terraform-google-modules/cloud-router/google"
-  name = "bastion-router"
+  name    = "bastion-router"
   region  = var.region
   project = var.project_id
   network = module.private.network_name
   nats = [{
-    name = "bastion-nat"
+    name                             = "bastion-nat"
     min_ports_per_vm                 = "64"
     udp_idle_timeout_sec             = "30"
     icmp_idle_timeout_sec            = "30"
