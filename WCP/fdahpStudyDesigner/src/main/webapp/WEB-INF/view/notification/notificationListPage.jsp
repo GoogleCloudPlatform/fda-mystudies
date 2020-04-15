@@ -15,7 +15,7 @@
          <!-- widgets section-->        
          <div class="col-sm-12 col-md-12 col-lg-12 p-none">
             <div class="black-lg-f">
-                App-level
+                Manage App-level Notifications
             </div>          
             <div class="dis-line pull-right ml-md">
              	<c:if test="${fn:contains(sessionObject.userPermissions,'ROLE_MANAGE_APP_WIDE_NOTIFICATION_EDIT')}">

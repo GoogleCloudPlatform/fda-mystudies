@@ -185,7 +185,7 @@
                     </div>
                     
                     <div class="mt-lg">
-                        <button id="loginBtnId" type="button" class="btn btn-primary blue-btn float__left" >Sign In</button>
+                        <button  type="button" class="btn btn-primary blue-btn float__left" >Sign In</button>
                         <button id="cancelbtn" type="button" class="btn btn-default gray-btn ml-sm float__left">Cancel</button>
                     </div>
                 </div>
@@ -213,7 +213,7 @@
                             <div class="help-block with-errors red-txt"></div>
                         </div>
                         <div class="mb-lg form-group">
-                            <button type="button" class="btn lg-btn" id="siginNoteBtnId">SIGN IN</button>
+                            <button type="button" id="loginBtnId" class="btn lg-btn" >SIGN IN</button>
                         </div>
                         <div class="pb-md pt-xs">
                             <span class="white__text">Forgot Password? </span> <a id="forgot_pwd" class="gray-link white__text" href="javascript:void(0)">Get Help</a>
@@ -246,7 +246,7 @@
         </div>
         <div class="clearfix"></div>
         <div class="footer">
-            <div><span>Copyright © 2017 &lt;Org Name&gt;</span><span><a href="/studybuilder/terms.do" class="" target="_blank">Terms</a></span><span><a href="/studybuilder/privacyPolicy.do" class="" target="_blank">Privacy Policy</a></span></div>
+            <div><span>Copyright Placeholder</span><span><a href="/studybuilder/terms.do" class="" target="_blank">Terms</a></span><span><a href="/studybuilder/privacyPolicy.do" class="" target="_blank">Privacy Policy</a></span></div>
         </div>
         <!-- new login --> 
     </div>

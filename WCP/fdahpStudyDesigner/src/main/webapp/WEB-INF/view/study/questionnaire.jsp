@@ -331,7 +331,7 @@ function isNumber(evt, thisAttr) {
 					</span> <span id="anchorspanId" class="tool-tip" data-toggle="tooltip"
 						data-html="true" data-placement="top"
 						<c:if test="${isAnchorQuestionnaire}">
-	             title="This option has been disabled, since this questionnaire has 1 or more Anchor Dates defined in it." 
+	             title="This option has been disabled, since this questionnaire has 1 or more anchor dates defined in it." 
 	           </c:if>>
 						<span class="radio radio-inline p-40"> <input type="radio"
 							id="schedule2" class="typeofschedule" scheduletype="AnchorDate"
@@ -3387,7 +3387,7 @@ function deletStep(stepId,stepType){
 		    					}
 		    					var isAnchorQuestionnaire = jsonobject.isAnchorQuestionnaire;
 		    					if(isAnchorQuestionnaire){
-		    						$('#anchorspanId').prop('title','This option has been disabled, since this questionnaire has 1 or more Anchor Dates defined in it.');
+		    						$('#anchorspanId').prop('title','This option has been disabled, since this questionnaire has 1 or more anchor dates defined in it.');
 		    						$('#anchorspanId').attr('disabled',true);
 		    						$('#schedule2').attr('disabled',true);
 		    						$('.schedule').attr('disabled',true);

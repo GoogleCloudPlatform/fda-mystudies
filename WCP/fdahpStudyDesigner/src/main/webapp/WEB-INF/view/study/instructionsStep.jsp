@@ -38,7 +38,7 @@
       <input type="hidden" id="type" name="type" value="complete" />
        <input type="hidden" name="questionnairesStepsBo.stepId" id="stepId" value="${instructionsBo.questionnairesStepsBo.stepId}">
 		    <div class="col-md-6 pl-none">
-			   <div class="gray-xs-f mb-xs">Step Short Title or Key (15 characters max)<span class="requiredStar">*</span><span class="ml-xs sprites_v3 filled-tooltip" data-toggle="tooltip" title="A human readable step identifier and must be unique across all steps of the questionnaire . Note that this field cannot be edited once the study is Launched."></span></div>
+			   <div class="gray-xs-f mb-xs">Step Short Title or Key (15 characters max)<span class="requiredStar">*</span><span class="ml-xs sprites_v3 filled-tooltip" data-toggle="tooltip" title="A human readable step identifier and must be unique across all steps of the questionnaire. Note that this field cannot be edited once the study is Launched."></span></div>
 			   <div class="form-group">
 			      <input autofocus="autofocus" type="text" custAttType="cust" class="form-control" name="questionnairesStepsBo.stepShortTitle" id="shortTitleId" value="${fn:escapeXml(instructionsBo.questionnairesStepsBo.stepShortTitle)}" required="required" 
 			      maxlength="15" <c:if test="${not empty instructionsBo.questionnairesStepsBo.isShorTitleDuplicate && (instructionsBo.questionnairesStepsBo.isShorTitleDuplicate gt 0)}"> disabled</c:if>/>

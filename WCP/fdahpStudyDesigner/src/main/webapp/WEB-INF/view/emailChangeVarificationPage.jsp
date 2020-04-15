@@ -120,7 +120,7 @@
         </div>
 
         <div class="footer">
-            <div><span>Copyright © 2017 &lt;Org Name&gt;</span><span><a href="/studybuilder/terms.do" class="" target="_blank">Terms</a></span><span><a href="/studybuilder/privacyPolicy.do" class="" target="_blank">Privacy Policy</a></span></div>
+            <div><span>Copyright Placeholder</span><span><a href="/studybuilder/terms.do" class="" target="_blank">Terms</a></span><span><a href="/studybuilder/privacyPolicy.do" class="" target="_blank">Privacy Policy</a></span></div>
         </div>
              
         </div>
