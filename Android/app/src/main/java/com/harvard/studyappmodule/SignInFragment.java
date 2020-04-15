@@ -155,7 +155,7 @@ public class SignInFragment extends Fragment implements ApiCall.OnAsyncRequestCo
           @Override
           public void onClick(View widget) {
             if (mTermsAndConditionData != null
-                && !mTermsAndConditionData.getTerms().equalsIgnoreCase("")) {
+                && !mTermsAndConditionData.getTerms().isEmpty()) {
               Intent termsIntent = new Intent(mContext, TermsPrivacyPolicyActivity.class);
               termsIntent.putExtra("title", getResources().getString(R.string.terms));
               termsIntent.putExtra("url", mTermsAndConditionData.getTerms());
@@ -188,7 +188,7 @@ public class SignInFragment extends Fragment implements ApiCall.OnAsyncRequestCo
           @Override
           public void onClick(View widget) {
             if (mTermsAndConditionData != null
-                && !mTermsAndConditionData.getPrivacy().equalsIgnoreCase("")) {
+                && !mTermsAndConditionData.getPrivacy().isEmpty()) {
               Intent termsIntent = new Intent(mContext, TermsPrivacyPolicyActivity.class);
               termsIntent.putExtra("title", getResources().getString(R.string.privacy_policy));
               termsIntent.putExtra("url", mTermsAndConditionData.getPrivacy());
@@ -262,21 +262,21 @@ public class SignInFragment extends Fragment implements ApiCall.OnAsyncRequestCo
   }
 
   private void callLoginWebService() {
-    if (mEmail.getText().toString().equalsIgnoreCase("")
-        && mPassword.getText().toString().equalsIgnoreCase("")) {
+    if (mEmail.getText().toString().isEmpty()
+        && mPassword.getText().toString().isEmpty()) {
       Toast.makeText(
               mContext,
               getResources().getString(R.string.enter_all_field_empty),
               Toast.LENGTH_SHORT)
           .show();
-    } else if (mEmail.getText().toString().equalsIgnoreCase("")) {
+    } else if (mEmail.getText().toString().isEmpty()) {
       Toast.makeText(mContext, getResources().getString(R.string.email_empty), Toast.LENGTH_SHORT)
           .show();
     } else if (!AppController.getHelperIsValidEmail(mEmail.getText().toString())) {
       Toast.makeText(
               mContext, getResources().getString(R.string.email_validation), Toast.LENGTH_SHORT)
           .show();
-    } else if (mPassword.getText().toString().equalsIgnoreCase("")) {
+    } else if (mPassword.getText().toString().isEmpty()) {
       Toast.makeText(
               mContext, getResources().getString(R.string.password_empty), Toast.LENGTH_SHORT)
           .show();
@@ -530,12 +530,12 @@ public class SignInFragment extends Fragment implements ApiCall.OnAsyncRequestCo
       String token = "";
 
       if (FirebaseInstanceId.getInstance().getToken() == null
-          || FirebaseInstanceId.getInstance().getToken().equalsIgnoreCase("")) {
+          || FirebaseInstanceId.getInstance().getToken().isEmpty()) {
         boolean regIdStatus = false;
         while (!regIdStatus) {
           token =
               AppController.getHelperSharedPreference().readPreference(mContext, "deviceToken", "");
-          if (!token.equalsIgnoreCase("")) regIdStatus = true;
+          if (!token.isEmpty()) regIdStatus = true;
         }
       } else {
         AppController.getHelperSharedPreference()

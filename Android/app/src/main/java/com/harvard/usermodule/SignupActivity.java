@@ -150,7 +150,7 @@ public class SignupActivity extends AppCompatActivity implements ApiCall.OnAsync
           @Override
           public void onClick(View widget) {
             if (mTermsAndConditionData != null
-                && !mTermsAndConditionData.getTerms().equalsIgnoreCase("")) {
+                && !mTermsAndConditionData.getTerms().isEmpty()) {
               Intent termsIntent =
                   new Intent(SignupActivity.this, TermsPrivacyPolicyActivity.class);
               termsIntent.putExtra("title", getResources().getString(R.string.terms));
@@ -185,7 +185,7 @@ public class SignupActivity extends AppCompatActivity implements ApiCall.OnAsync
           @Override
           public void onClick(View widget) {
             if (mTermsAndConditionData != null
-                && !mTermsAndConditionData.getPrivacy().equalsIgnoreCase("")) {
+                && !mTermsAndConditionData.getPrivacy().isEmpty()) {
               Intent termsIntent =
                   new Intent(SignupActivity.this, TermsPrivacyPolicyActivity.class);
               termsIntent.putExtra("title", getResources().getString(R.string.privacy_policy));
@@ -284,19 +284,19 @@ public class SignupActivity extends AppCompatActivity implements ApiCall.OnAsync
   private void callRegisterUserWebService() {
     String PASSWORD_PATTERN =
         "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[!\"#$%&'()*+,-.:;<=>?@\\[\\]^_`{|}~])(?=\\S+$).{8,64}$";
-    if (mPassword.getText().toString().equalsIgnoreCase("")
-        && mEmail.getText().toString().equalsIgnoreCase("")
-        && mConfirmPassword.getText().toString().equalsIgnoreCase("")) {
+    if (mPassword.getText().toString().isEmpty()
+        && mEmail.getText().toString().isEmpty()
+        && mConfirmPassword.getText().toString().isEmpty()) {
       Toast.makeText(
               this, getResources().getString(R.string.enter_all_field_empty), Toast.LENGTH_SHORT)
           .show();
-    } else if (mEmail.getText().toString().equalsIgnoreCase("")) {
+    } else if (mEmail.getText().toString().isEmpty()) {
       Toast.makeText(this, getResources().getString(R.string.email_empty), Toast.LENGTH_SHORT)
           .show();
     } else if (!AppController.getHelperIsValidEmail(mEmail.getText().toString())) {
       Toast.makeText(this, getResources().getString(R.string.email_validation), Toast.LENGTH_SHORT)
           .show();
-    } else if (mPassword.getText().toString().equalsIgnoreCase("")) {
+    } else if (mPassword.getText().toString().isEmpty()) {
       Toast.makeText(this, getResources().getString(R.string.password_empty), Toast.LENGTH_SHORT)
           .show();
     } else if (!mPassword.getText().toString().matches(PASSWORD_PATTERN)) {
@@ -311,7 +311,7 @@ public class SignupActivity extends AppCompatActivity implements ApiCall.OnAsync
       Toast.makeText(
               this, getResources().getString(R.string.password_contain_email), Toast.LENGTH_SHORT)
           .show();
-    } else if (mConfirmPassword.getText().toString().equalsIgnoreCase("")) {
+    } else if (mConfirmPassword.getText().toString().isEmpty()) {
       Toast.makeText(
               this, getResources().getString(R.string.confirm_password_empty), Toast.LENGTH_SHORT)
           .show();
@@ -560,13 +560,13 @@ public class SignupActivity extends AppCompatActivity implements ApiCall.OnAsync
     protected String doInBackground(String... params) {
       String token = "";
       if (FirebaseInstanceId.getInstance().getToken() == null
-          || FirebaseInstanceId.getInstance().getToken().equalsIgnoreCase("")) {
+          || FirebaseInstanceId.getInstance().getToken().isEmpty()) {
         boolean regIdStatus = false;
         while (!regIdStatus) {
           token =
               AppController.getHelperSharedPreference()
                   .readPreference(SignupActivity.this, "deviceToken", "");
-          if (!token.equalsIgnoreCase("")) regIdStatus = true;
+          if (!token.isEmpty()) regIdStatus = true;
         }
       } else {
         AppController.getHelperSharedPreference()
