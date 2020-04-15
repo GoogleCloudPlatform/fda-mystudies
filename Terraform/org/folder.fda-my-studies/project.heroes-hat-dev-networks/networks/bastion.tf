@@ -28,8 +28,7 @@ module "bastion" {
   members        = var.bastion_users
   startup_script = <<EOF
 #!/bin/bash
-dpkg -l mysql-client-core-5.7
-if [ $? -eq 0 ]; then
+if dpkg -l mysql-client-core-5.7; then
   echo "mysql-client already installed"
 else
   sudo apt-get -y update
