@@ -3,19 +3,19 @@ include {
 }
 
 dependency "apps" {
-  config_path  = "../apps"
+  config_path = "../apps"
 
   mock_outputs = {
     gke_cluster = {
-      name = "mock-name"
-      location = "mock-location"
+      name            = "mock-name"
+      location        = "mock-location"
       service_account = "mock-service-account"
     }
   }
 }
 
 dependency "data" {
-  config_path  = "../../project.heroes-hat-dev-data/data/"
+  config_path = "../../project.heroes-hat-dev-data/data/"
 
   mock_outputs = {
     instance_name = "mock-db"
