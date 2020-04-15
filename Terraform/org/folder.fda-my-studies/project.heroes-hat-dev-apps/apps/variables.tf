@@ -24,17 +24,3 @@ variable "subnetwork" {
   type        = string
   default     = "default"
 }
-
-variable "sql_instance_name" {
-  description = "The name of the SQL instance"
-  type        = string
-}
-
-variable "sql_instance_user" {
-  description = "The name of the user to use to log into the SQL instance"
-  type        = string
-}
-
-variable "secrets_project_id" {
-  type = string
-}
