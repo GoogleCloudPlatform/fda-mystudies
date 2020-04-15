@@ -11,7 +11,7 @@ resource "google_compute_shared_vpc_service_project" "service_projects" {
 locals {
   gke_service_projects          = [for p in var.service_projects : p if p.has_gke]
   gke_service_project_id_to_num = { for p in local.gke_service_projects : p.id => p.num }
-  gke_subnet                    = module.private.subnets["${var.gke_region}/${local.gke_clusters_subnet_name}"]
+  gke_subnet                    = module.private.subnets["${var.region}/${local.gke_clusters_subnet_name}"]
 }
 
 resource "google_project_iam_member" "k8s_host_service_agent_users" {
@@ -28,7 +28,6 @@ resource "google_compute_subnetwork_iam_member" "k8s_network_users" {
   role       = "roles/compute.networkUser"
   member     = "serviceAccount:service-${each.value}@container-engine-robot.iam.gserviceaccount.com"
 }
-
 
 resource "google_compute_subnetwork_iam_member" "google_apis_network_users" {
   for_each   = local.gke_service_project_id_to_num
