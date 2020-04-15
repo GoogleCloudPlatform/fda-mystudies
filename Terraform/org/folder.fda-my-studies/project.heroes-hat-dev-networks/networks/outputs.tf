@@ -5,3 +5,7 @@ output "private_network" {
 output "gke_subnetwork" {
   value = local.gke_subnet
 }
+
+output "bastion_service_account" {
+  value = module.bastion.service_account
+}
