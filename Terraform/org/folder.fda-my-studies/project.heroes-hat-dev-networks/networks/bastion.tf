@@ -18,16 +18,16 @@
 module "bastion" {
   source = "terraform-google-modules/bastion-host/google"
 
-  name           = "bastion-vm"
-  host_project   = var.project_id
-  project        = var.project_id
-  region         = var.region
-  zone           = var.zone
-  network        = module.private.network_self_link
-  subnet         = module.private.subnets["${var.region}/${local.bastion_subnet_name}"].self_link
-  image_family   = "ubuntu-1804-lts"
-  members        = var.bastion_users
-  scopes         = [
+  name         = "bastion-vm"
+  host_project = var.project_id
+  project      = var.project_id
+  region       = var.region
+  zone         = var.zone
+  network      = module.private.network_self_link
+  subnet       = module.private.subnets["${var.region}/${local.bastion_subnet_name}"].self_link
+  image_family = "ubuntu-1804-lts"
+  members      = var.bastion_users
+  scopes = [
     "https://www.googleapis.com/auth/sqlservice.admin",
   ]
   startup_script = <<EOF
