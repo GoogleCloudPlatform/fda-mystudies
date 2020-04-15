@@ -1,6 +1,6 @@
 data "google_container_cluster" "gke_cluster" {
-  name     = var.heroes_hat_cluster.name
-  location = var.heroes_hat_cluster.location
+  name     = var.my_studies_cluster.name
+  location = var.my_studies_cluster.location
   project  = var.project_id
 }
 
@@ -70,7 +70,7 @@ resource "kubernetes_secret" "email_credentials" {
 
 # Secrets from service accounts.
 resource "google_service_account_key" "gke_cluster_service_account_key" {
-  service_account_id = var.heroes_hat_cluster.service_account
+  service_account_id = var.my_studies_cluster.service_account
 }
 
 resource "kubernetes_secret" "cloudsql_instance_credentials" {

@@ -17,7 +17,7 @@ variable "secrets_project_id" {
   type = string
 }
 
-variable "heroes_hat_cluster" {
+variable "my_studies_cluster" {
   description = "The GKE cluster module"
   type = object({
     name            = string
