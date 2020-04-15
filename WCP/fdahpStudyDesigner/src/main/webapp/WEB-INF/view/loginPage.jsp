@@ -340,15 +340,6 @@
     			$('#privacyModal').modal('show');
     		});
 			
-// 			$('input:last').change(function() {
-// 				if(isChanged) {
-// 					if($('#email').val()){
-// 						setTimeout(function(){$('button').removeClass('disabled');}, 200);
-// 					}
-// 					isChanged = false;
-// 				}
-// 			});
-    		
     		var errMsg = '${errMsg}';
 			if(errMsg.length > 0){
 				$("#errMsg").html(errMsg);

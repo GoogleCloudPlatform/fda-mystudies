@@ -13,8 +13,8 @@
                 <th style="display: none;" id="">Live Study ID <span class="sort"></span></th>
                 <th id="">Study ID <span class="sort"></span></th>
                 <th id="">Study name <span class="sort"></span></th>
-                <th id="">CATEGORY <span class="sort"></span></th>
-                <th id="">&lt;Org Name&gt; PROJECT LEAD <span class="sort"></span></th>
+                <th id="">Category <span class="sort"></span></th>
+                <th id="">&lt;Org Name&gt; Project lead <span class="sort"></span></th>
                 <th id="">Research Sponsor <span class="sort"></span></th>
                 <th id="">Status <span class="sort"></span></th>
                 <th id="">Actions</th>

@@ -60,7 +60,7 @@
                     	</div>
                     	<div class="<c:if test="${consentBo.shareDataPermissions eq 'No'}">ct_panel</c:if>" id="rootContainer">
                     	<div class="col-md-12 p-none">
-		                    <div class="gray-xs-f mb-xs">Screen Title <small>(250 characters max)</small><span class="requiredStar">*</span> E.g.Sharing Options</div>
+		                    <div class="gray-xs-f mb-xs">Screen Title <small>(250 characters max)</small><span class="requiredStar">*</span> E.g. Sharing Options</div>
 		                    <div class="form-group">
 		                        <input type="text" class="form-control requiredClass" placeholde="" id="titleId" name="title" value="${consentBo.title}" maxlength="250"/>
 		                        <div class="help-block with-errors red-txt"></div>

@@ -37,8 +37,8 @@
 <body class="txt-center grayeef2f5-bg">
 
 <div class="err_page_container">
+    
     <div class="txt-left"><img src="/studybuilder/images/logo/logo_innerScreens.png" alt=""/></div>
-
     <div class="err_page_txt">
         <img src="/studybuilder/images/icons/404.png" alt=""/>
         <div>Sorry, this page does not exist.</div>
