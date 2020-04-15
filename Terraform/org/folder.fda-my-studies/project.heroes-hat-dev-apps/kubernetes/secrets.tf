@@ -20,7 +20,7 @@ data "google_secret_manager_secret_version" "secrets" {
   project  = var.secrets_project_id
   secret   = each.key
 
-  for_each = [
+  for_each = toset([
     "my-studies-sql-default-user-password",
     "registration_client_id",
     "registration_client_secret",
@@ -28,7 +28,7 @@ data "google_secret_manager_secret_version" "secrets" {
     "wcp_pass",
     "email_address",
     "email_password",
-  ]
+  ])
 }
 
 # Secrets from Secret Manager.
