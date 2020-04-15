@@ -10,12 +10,6 @@ resource "google_secret_manager_secret" "secrets" {
 
   for_each = toset([
     "my-studies-sql-default-user-password",
-    "my-studies-registration-client-id",
-    "my-studies-registration-client-secret",
-    "my-studies-wcp-user",
-    "my-studies-wcp-pass",
-    "my-studies-email-address",
-    "my-studies-email-password",
   ])
 
   secret_id = each.key
