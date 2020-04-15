@@ -53,9 +53,9 @@ spec:
             "-credential_file=/secrets/cloudsql/key.json"] 
           volumeMounts: 
             - name: gcloud-key-volume
-              mountPath: /secrets/cloudsql 
+              mountPath: /secrets/cloudsql
               readOnly: true 
       volumes: 
         - name: gcloud-key-volume
           secret: 
-            secretName: study-meta-data-db-credentials
+            secretName: study-meta-data-gcloud-key
