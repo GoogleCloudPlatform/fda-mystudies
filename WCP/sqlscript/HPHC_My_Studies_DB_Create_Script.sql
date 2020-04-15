@@ -11,7 +11,6 @@
 /*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
 /*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
 
-
 -- Dumping database structure for fda_hphc
 DROP DATABASE IF EXISTS `fda_hphc`;
 CREATE DATABASE IF NOT EXISTS `fda_hphc` /*!40100 DEFAULT CHARACTER SET utf8 */;
@@ -433,9 +432,8 @@ CREATE TABLE IF NOT EXISTS `consent_master_info` (
 -- Dumping structure for procedure fda_hphc.deleteInActiveActivity
 DROP PROCEDURE IF EXISTS `deleteInActiveActivity`;
 DELIMITER //
-CREATE DEFINER=`root`@`localhost` PROCEDURE `deleteInActiveActivity`(
+CREATE DEFINER=`root`@`%` PROCEDURE `deleteInActiveActivity`(
 	IN `studyId` INT(11)
-
 )
 BEGIN
 
@@ -560,7 +558,7 @@ DELIMITER ;
 -- Dumping structure for procedure fda_hphc.deleteQuestionnaire
 DROP PROCEDURE IF EXISTS `deleteQuestionnaire`;
 DELIMITER //
-CREATE DEFINER=`root`@`localhost` PROCEDURE `deleteQuestionnaire`(
+CREATE DEFINER=`root`@`%` PROCEDURE `deleteQuestionnaire`(
 	IN `questionnaireId` INT(11),
 	IN `modifiedOn` VARCHAR(255),
 	IN `modifiedBy` INT(11),
@@ -588,7 +586,7 @@ DELIMITER ;
 -- Dumping structure for procedure fda_hphc.deleteQuestionnaireFrequencies
 DROP PROCEDURE IF EXISTS `deleteQuestionnaireFrequencies`;
 DELIMITER //
-CREATE DEFINER=`root`@`localhost` PROCEDURE `deleteQuestionnaireFrequencies`(
+CREATE DEFINER=`root`@`%` PROCEDURE `deleteQuestionnaireFrequencies`(
 	IN `questionnaireId` INT(11)
 
 )
@@ -603,7 +601,7 @@ DELIMITER ;
 -- Dumping structure for procedure fda_hphc.deleteQuestionnaireStep
 DROP PROCEDURE IF EXISTS `deleteQuestionnaireStep`;
 DELIMITER //
-CREATE DEFINER=`root`@`localhost` PROCEDURE `deleteQuestionnaireStep`(
+CREATE DEFINER=`root`@`%` PROCEDURE `deleteQuestionnaireStep`(
 	IN `questionnaireId` INT(11),
 	IN `modifiedOn` VARCHAR(255),
 	IN `modifiedBy` INT(11),
