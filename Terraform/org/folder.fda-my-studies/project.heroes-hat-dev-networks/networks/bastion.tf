@@ -13,7 +13,8 @@
 # limitations under the License.
 
 # $ gcloud compute ssh bastion-vm --zone=<var.zone> --project=<var.project_id>
-# $ mysql -h <sql_internal_ip> -u root
+# $ ./cloud_sql_proxy -instances=example-data-project:us-east1:my-studies=tcp:3306
+# $ mysql -u default -p --host 127.0.0.1
 module "bastion" {
   source = "terraform-google-modules/bastion-host/google"
 
