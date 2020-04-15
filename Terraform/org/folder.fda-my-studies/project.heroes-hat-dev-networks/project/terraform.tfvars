@@ -6,6 +6,7 @@ apis = [
   "container.googleapis.com",
   "iap.googleapis.com",
   "servicenetworking.googleapis.com",
+  "sqladmin.googleapis.com",
 ]
 owners = [
   "group:rocketturtle-gcp-admin@rocketturtle.net",

@@ -11,10 +11,21 @@ dependency "apps" {
   config_path = "../../project.heroes-hat-dev-apps/apps"
 
   mock_outputs = {
-    service_account = "mock-service-account"
+    service_account = "mock-gke-service-account"
+  }
+}
+
+dependency "networks" {
+  config_path = "../../project.heroes-hat-dev-networks/networks"
+
+  mock_outputs = {
+    bastion_service_account = "mock-bastion-service-account"
   }
 }
 
 inputs = {
-  gke_service_account = dependency.apps.outputs.service_account
+  sql_clients = [
+    dependency.apps.outputs.service_account,
+    dependency.networks.outputs.bastion_service_account,
+  ]
 }

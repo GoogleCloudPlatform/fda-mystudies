@@ -26,14 +26,15 @@ module "bastion" {
   subnet         = module.private.subnets["${var.region}/${local.bastion_subnet_name}"].self_link
   image_family   = "ubuntu-1804-lts"
   members        = var.bastion_users
+  scopes         = [
+    "https://www.googleapis.com/auth/sqlservice.admin",
+  ]
   startup_script = <<EOF
 #!/bin/bash
-if dpkg -l mysql-client-core-5.7; then
-  echo "mysql-client already installed"
-else
-  sudo apt-get -y update
-  sudo apt-get -y install mysql-client-core-5.7
-fi
+sudo apt-get -y update
+sudo apt-get -y install mysql-client-core-5.7
+wget https://dl.google.com/cloudsql/cloud_sql_proxy.linux.amd64 -O cloud_sql_proxy
+chmod +x ./cloudsql_sql_proxy
 EOF
 }
 
