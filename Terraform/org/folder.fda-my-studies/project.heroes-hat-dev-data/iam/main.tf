@@ -2,8 +2,10 @@ terraform {
   backend "gcs" {}
 }
 
-resource "google_project_iam_member" "gke_sql_access" {
+resource "google_project_iam_member" "sql_client_service_accounts" {
+  for_each = toset(var.sql_client_service_accounts)
+
   project = var.project_id
   role    = "roles/cloudsql.client"
-  member  = "serviceAccount:${var.gke_service_account}"
+  member  = "serviceAccount:${each.key}"
 }
