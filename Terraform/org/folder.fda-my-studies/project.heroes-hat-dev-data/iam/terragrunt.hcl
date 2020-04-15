@@ -24,7 +24,7 @@ dependency "networks" {
 }
 
 inputs = {
-  sql_clients = [
+  sql_client_service_accounts = [
     dependency.apps.outputs.service_account,
     dependency.networks.outputs.bastion_service_account,
   ]
