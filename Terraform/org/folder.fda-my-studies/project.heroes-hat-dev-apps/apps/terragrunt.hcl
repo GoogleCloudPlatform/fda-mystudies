@@ -21,10 +21,15 @@ dependency "network" {
   config_path = "../../project.heroes-hat-dev-networks/networks/"
 
   mock_outputs = {
-    network    = "mock-network"
-    subnetwork = "mock-subnetwork"
+    private_network = {
+      name = "mock-network"
+    }
+    gke_subnetwork = {
+      name = "mock-subnetwork"
+    }
   }
 }
+
 inputs = {
   network    = dependency.network.outputs.private_network.name
   subnetwork = dependency.network.outputs.gke_subnetwork.name
