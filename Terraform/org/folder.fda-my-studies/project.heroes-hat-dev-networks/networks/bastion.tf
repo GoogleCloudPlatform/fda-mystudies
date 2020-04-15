@@ -13,27 +13,29 @@
 # limitations under the License.
 
 # $ gcloud compute ssh bastion-vm --zone=<var.zone> --project=<var.project_id>
-# $ mysql -h <sql_internal_ip> -u root
+# $ ./cloud_sql_proxy -instances=example-data-project:us-east1:my-studies=tcp:3306
+# $ mysql -u default -p --host 127.0.0.1
 module "bastion" {
   source = "terraform-google-modules/bastion-host/google"
 
-  name           = "bastion-vm"
-  host_project   = var.project_id
-  project        = var.project_id
-  region         = var.region
-  zone           = var.zone
-  network        = module.private.network_self_link
-  subnet         = module.private.subnets["${var.region}/${local.bastion_subnet_name}"].self_link
-  image_family   = "ubuntu-1804-lts"
-  members        = var.bastion_users
+  name         = "bastion-vm"
+  host_project = var.project_id
+  project      = var.project_id
+  region       = var.region
+  zone         = var.zone
+  network      = module.private.network_self_link
+  subnet       = module.private.subnets["${var.region}/${local.bastion_subnet_name}"].self_link
+  image_family = "ubuntu-1804-lts"
+  members      = var.bastion_users
+  scopes = [
+    "https://www.googleapis.com/auth/sqlservice.admin",
+  ]
   startup_script = <<EOF
 #!/bin/bash
-if dpkg -l mysql-client-core-5.7; then
-  echo "mysql-client already installed"
-else
-  sudo apt-get -y update
-  sudo apt-get -y install mysql-client-core-5.7
-fi
+sudo apt-get -y update
+sudo apt-get -y install mysql-client-core-5.7
+wget https://dl.google.com/cloudsql/cloud_sql_proxy.linux.amd64 -O cloud_sql_proxy
+chmod +x ./cloudsql_sql_proxy
 EOF
 }
 
