@@ -8,16 +8,16 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta http-equiv="refresh" content="1700">        
-    <title>FDA MSMP</title>	
+    <title>Study Builder</title>	
     
     <meta name="description" content="">
     <meta name="keywords" content="">
     <meta name="author" content="">
 
     <!-- Favicon -->
-    <link rel="shortcut icon" href="/studybuilder/images/icons/fav.png" type="image/x-icon" />
-    <link rel="apple-touch-icon" href="/studybuilder/images/icons/fav.png">
-        
+    <link rel="shortcut icon" href="/studybuilder/images/icons/FAV_Icon.png" type="image/x-icon" />
+    <link rel="apple-touch-icon" href="/studybuilder/images/icons/FAV_Icon.png">
+
     <!-- Mobile Metas -->
     <meta name="viewport" content="width=device-width, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
         
@@ -165,7 +165,7 @@
         <!-- new login -->
         <!-- Logo-->
         <div class="logo__ll">
-            <img src="images/logo/fda-logo-w.png" alt=""/>
+            <img src="images/logo/logo_landing_welcome.png" alt=""/>
         </div>
         <div class="clearfix"></div>
         <div class="login__container">
@@ -181,11 +181,11 @@
                     </ul>
                     
                     <div>
-                        By clicking Sign In, you agree to the the above-mentioned points as well as to the US FDA MyStudies Management Portal <a href="https://www.fda.gov/AboutFDA/AboutThisWebsite/WebsitePolicies/" class="" target="_blank">Terms</a> and <a href="https://www.fda.gov/AboutFDA/AboutThisWebsite/WebsitePolicies/#privacy" class="" target="_blank">Privacy Policy</a>
+                        By clicking Sign In, you agree to the the above-mentioned points as well as to the &lt;Org Name&gt; MyStudies Management Portal <a href="/studybuilder/terms.do" class="" target="_blank">Terms</a> and <a href="/studybuilder/privacyPolicy.do" class="" target="_blank">Privacy Policy</a>
                     </div>
                     
                     <div class="mt-lg">
-                        <button id="loginBtnId" type="button" class="btn btn-primary blue-btn float__left" >Sign In</button>
+                        <button  type="button" class="btn btn-primary blue-btn float__left" >Sign In</button>
                         <button id="cancelbtn" type="button" class="btn btn-default gray-btn ml-sm float__left">Cancel</button>
                     </div>
                 </div>
@@ -193,7 +193,7 @@
            
             <div class="login-box">
                 <div class="lg-space-txt">
-                    FDA MyStudies Management Portal
+                    Study Builder Portal
                 </div>
                 <div class="ll__border__bottom"></div>
              <c:url value='/j_spring_security_check' var="fdaLink"/>
@@ -213,7 +213,7 @@
                             <div class="help-block with-errors red-txt"></div>
                         </div>
                         <div class="mb-lg form-group">
-                            <button type="button" class="btn lg-btn" id="siginNoteBtnId">SIGN IN</button>
+                            <button type="button" id="loginBtnId" class="btn lg-btn" >SIGN IN</button>
                         </div>
                         <div class="pb-md pt-xs">
                             <span class="white__text">Forgot Password? </span> <a id="forgot_pwd" class="gray-link white__text" href="javascript:void(0)">Get Help</a>
@@ -246,7 +246,7 @@
         </div>
         <div class="clearfix"></div>
         <div class="footer">
-            <div><span>Copyright © 2017 FDA</span><span><a href="https://www.fda.gov/AboutFDA/AboutThisWebsite/WebsitePolicies/" class="" target="_blank">Terms</a></span><span><a href="https://www.fda.gov/AboutFDA/AboutThisWebsite/WebsitePolicies/#privacy" class="" target="_blank">Privacy Policy</a></span></div>
+            <div><span>Copyright Placeholder</span><span><a href="/studybuilder/terms.do" class="" target="_blank">Terms</a></span><span><a href="/studybuilder/privacyPolicy.do" class="" target="_blank">Privacy Policy</a></span></div>
         </div>
         <!-- new login --> 
     </div>
@@ -340,15 +340,6 @@
     			$('#privacyModal').modal('show');
     		});
 			
-// 			$('input:last').change(function() {
-// 				if(isChanged) {
-// 					if($('#email').val()){
-// 						setTimeout(function(){$('button').removeClass('disabled');}, 200);
-// 					}
-// 					isChanged = false;
-// 				}
-// 			});
-    		
     		var errMsg = '${errMsg}';
 			if(errMsg.length > 0){
 				$("#errMsg").html(errMsg);

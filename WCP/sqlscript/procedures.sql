@@ -3,7 +3,6 @@ DROP PROCEDURE IF EXISTS `deleteInActiveActivity`;
 DELIMITER //
 CREATE PROCEDURE `deleteInActiveActivity`(
 	IN `studyId` INT(11)
-
 )
 BEGIN
 
@@ -133,7 +132,6 @@ CREATE PROCEDURE `deleteQuestionnaire`(
 	IN `modifiedOn` VARCHAR(255),
 	IN `modifiedBy` INT(11),
 	IN `studyId` INT(50)
-
 )
 BEGIN
 
@@ -158,7 +156,6 @@ DROP PROCEDURE IF EXISTS `deleteQuestionnaireFrequencies`;
 DELIMITER //
 CREATE PROCEDURE `deleteQuestionnaireFrequencies`(
 	IN `questionnaireId` INT(11)
-
 )
 BEGIN
 
@@ -178,7 +175,6 @@ CREATE PROCEDURE `deleteQuestionnaireStep`(
 	IN `sequenceNo` INT(11),
 	IN `stepId` INT(11),
 	IN `steptype` VARCHAR(255)
-
 )
 BEGIN
 update questionnaires_steps qs set qs.sequence_no=qs.sequence_no-1,qs.modified_on=modifiedOn,qs.modified_by=modifiedBy where qs.questionnaires_id=questionnaireId and qs.active=1 and qs.sequence_no>=sequenceNo;

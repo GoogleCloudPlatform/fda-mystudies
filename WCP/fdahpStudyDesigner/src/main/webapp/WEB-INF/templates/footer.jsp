@@ -2,7 +2,7 @@
     
 <div class="md-container ft_con">
      <div class="foot">
-        <span>Copyright © 2017 FDA</span><span><a href="https://www.fda.gov/AboutFDA/AboutThisWebsite/WebsitePolicies/" id="" target="_blank">Terms</a></span><span><a href="https://www.fda.gov/AboutFDA/AboutThisWebsite/WebsitePolicies/#privacy" id="" target="_blank">Privacy Policy</a></span>
+        <span>Copyright Placeholder</span><span><a href="/studybuilder/terms.do" id="" target="_blank">Terms</a></span><span><a href="/studybuilder/privacyPolicy.do" id="" target="_blank">Privacy Policy</a></span>
     </div>
 </div>
 <!-- Modal -->

@@ -1,7 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!DOCTYPE resources [
-    <!ENTITY app_name "App Name">
-    ]>
+<?xml version="1.0" encoding="utf-8"?><!DOCTYPE resources [<!ENTITY app_name "App Name">]>
 <resources>
     <!--Shared Preference-->
     <string name="auth">authentication</string>
@@ -155,6 +152,7 @@
     <string name="password_mismatch_error">The Password and Confirm password fields don\'t match.</string>
     <string name="password_mismatch_error1">New password and confirm password fields don\'t match.</string>
     <string name="password_change_message">Your password has been changed successfully</string>
+    <string name="password_change_message_signin">Your password has been changed successfully. Please login again</string>
     <string name="email_verification">An email verification link has been sent to your registered email.</string>
     <string name="verify_email">Please verify your email address.</string>
     <string name="registration_message">Registration (or sign up) for the app  is requested only to provide you with a seamless experience of using the app. Your registration information does not become part of the data collected for any study(ies) housed in the app.  Each study has its own consent process and your data for the study will not be collected without you providing your informed consent prior to joining the study.</string>
@@ -387,8 +385,8 @@
     <string name="paused_first_cap">Paused</string>
     <string name="active_caps">Active</string>
     <string name="closed_caps">Closed</string>
-    <string name="participation_status_small">Participation\nStatus</string>
-    <string name="bookmarked">Bookmarked</string>
+    <string name="participation_status_small">Participation Status</string>
+    <string name="bookmarked">Show bookmarked studies only</string>
     <string name="categories">Categories</string>
     <string name="pregnancy">Pregnancy</string>
     <string name="fitness">Fitness</string>

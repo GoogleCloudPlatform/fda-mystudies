@@ -53,7 +53,7 @@ public class StudiesServicesImpl implements StudiesServices {
 
   @Autowired private CommonDao commonDao;
 
-  @Autowired static ApplicationPropertyConfiguration applicationPropertyConfiguration;
+  @Autowired ApplicationPropertyConfiguration applicationPropertyConfiguration;
 
   @Override
   public ErrorBean saveStudyMetadata(StudyMetadataBean studyMetadataBean) {
@@ -225,7 +225,7 @@ public class StudiesServicesImpl implements StudiesServices {
     logger.info("StudiesServicesImpl - pushFCMNotification() : ends");
   }
 
-  public static void pushNotification(
+  public void pushNotification(
       NotificationBean notificationBean, AppInfoDetailsBO appPropertiesDetails) {
     logger.info("StudiesServicesImpl - pushNotification() : starts");
     String certificatePassword = "";

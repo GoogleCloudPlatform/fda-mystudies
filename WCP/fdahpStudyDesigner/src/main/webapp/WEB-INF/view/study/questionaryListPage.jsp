@@ -47,7 +47,7 @@
                             <tr>
                             	<th style="display: none;" id=""></th>
                                 <th id="">TITLE<span class="sort" ></span></th>
-                                <th id="">FREQUENCY<span class="sort" ></span></th>                                
+                                <th id="">Schedule Type<span class="sort" ></span></th>                                
                                 <th id="">
                                 <c:if test="${empty permission}">
                                     <div class="dis-line form-group mb-none">

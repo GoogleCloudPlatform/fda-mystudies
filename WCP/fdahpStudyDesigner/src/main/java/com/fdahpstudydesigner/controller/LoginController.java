@@ -269,6 +269,14 @@ public class LoginController {
     return new ModelAndView("privacypolicy", map);
   }
 
+  @RequestMapping("/terms.do")
+  public ModelAndView termsAndConditions() {
+    logger.info("LoginController - termsAndConditions() - Starts");
+    ModelMap map = new ModelMap();
+    logger.info("LoginController - termsAndConditions() - Ends");
+    return new ModelAndView("termsAndCondition", map);
+  }
+
   @RequestMapping("/validateSecurityToken.do")
   public ModelAndView securityTokenValidate(HttpServletRequest request) {
     ModelMap map = new ModelMap();
