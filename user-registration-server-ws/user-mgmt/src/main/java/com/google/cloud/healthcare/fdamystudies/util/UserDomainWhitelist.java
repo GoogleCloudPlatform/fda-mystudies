@@ -11,7 +11,7 @@ import java.util.Optional;
 import javax.annotation.PostConstruct;
 
 @Component
-class UserDomainWhitelist {
+public class UserDomainWhitelist {
 
   private static Logger logger = LoggerFactory.getLogger(UserDomainWhitelist.class);
 
