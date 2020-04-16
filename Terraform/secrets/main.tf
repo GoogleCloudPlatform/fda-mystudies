@@ -1,3 +1,5 @@
+# This folder contains Terraform resources to for secrets stored in Google Cloud Secret Manager.
+
 terraform {
   backend "gcs" {
     bucket = "heroes-hat-dev-terraform-state-08679"

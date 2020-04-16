@@ -1,7 +1,14 @@
+# This folder contains Terraform resources related to audit, which includes:
+# - Organization IAM Audit log configs (https://cloud.google.com/logging/docs/audit),
+# - BigQuery log sink creation and configuration for short term log storage,
+# - Cloud Storage log sink creation and configuration for long term log storage,
+# - IAM permissions to grant log Auditors iam.securityReviewer role to view the logs.
+
 terraform {
   backend "gcs" {}
 }
 
+# IAM Audit log configs to enable collection of all possible audit logs.
 resource "google_organization_iam_audit_config" "config" {
   org_id  = var.org_id
   service = "allServices"
@@ -17,6 +24,7 @@ resource "google_organization_iam_audit_config" "config" {
   }
 }
 
+# BigQuery log sink.
 module "bigquery_log_export" {
   source  = "terraform-google-modules/log-export/google"
   version = "~> 4.0"
@@ -57,6 +65,7 @@ resource "google_project_iam_member" "bigquery_sink_member" {
   member  = module.bigquery_log_export.writer_identity
 }
 
+# Cloud Storage log sink.
 module "storage_log_export" {
   source  = "terraform-google-modules/log-export/google"
   version = "~> 4.0"
@@ -96,6 +105,7 @@ resource "google_storage_bucket_iam_member" "storage_sink_member" {
   member = module.storage_log_export.writer_identity
 }
 
+# IAM permissions to grant log Auditors iam.securityReviewer role to view the logs.
 resource "google_organization_iam_member" "security_reviewer_auditors" {
   org_id = var.org_id
   role   = "roles/iam.securityReviewer"

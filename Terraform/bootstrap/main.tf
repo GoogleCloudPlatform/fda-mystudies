@@ -1,3 +1,11 @@
+# This folder contains Terraform resources to setup the devops project, which includes:
+# - The devops project itself,
+# - API to enable in the devops project,
+# - Deletion lien of the devops project,
+# - A Cloud Storage bucket to store Terraform states for all deployments,
+# - Project level IAM permissions for the devops project owners,
+# - Org level IAM permissions for org admins.
+
 # ====================================================================================
 # TODO(user): Uncomment after initial deployment and run `terraform init`.
 terraform {
@@ -8,6 +16,7 @@ terraform {
 }
 # ======================================================================================
 
+# Devops project, with APIs to enable and deletion lien created.
 module "project" {
   source  = "terraform-google-modules/project-factory/google"
   version = "~> 7.0"
@@ -24,6 +33,7 @@ module "project" {
   ]
 }
 
+# Terraform state bucket, hosted in the devops project.
 module "state_bucket" {
   source  = "terraform-google-modules/cloud-storage/google//modules/simple_bucket"
   version = "~> 1.4"
@@ -33,12 +43,14 @@ module "state_bucket" {
   location   = var.storage_location
 }
 
+# Project level IAM permissions for devops project owners.
 resource "google_project_iam_binding" "devops_owners" {
   project = module.project.project_id
   role    = "roles/owner"
   members = var.devops_owners
 }
 
+# Org level IAM permissions for org admins.
 resource "google_organization_iam_member" "org_admin" {
   org_id = var.org_id
   role   = "roles/resourcemanager.organizationAdmin"
