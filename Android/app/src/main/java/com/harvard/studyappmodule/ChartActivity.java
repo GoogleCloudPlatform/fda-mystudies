@@ -241,7 +241,7 @@ public class ChartActivity extends AppCompatActivity {
                   filteredXValues.add(day[k]);
                 }
               } else if (chartDataSource.getTimeRangeType().equalsIgnoreCase("days_of_month")) {
-                SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd");
+                SimpleDateFormat simpleDateFormat = new SimpleDateFormat("d");
                 int month = starttime.getMonth(), year = starttime.getYear();
                 filteredXValues.clear();
                 for (int k = 1; k <= numberOfDaysInMonth(month, year); k++) {
@@ -1170,7 +1170,7 @@ public class ChartActivity extends AppCompatActivity {
           filteredXValues.add(day[k]);
         }
       } else if (tag.equalsIgnoreCase("days_of_month")) {
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd");
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("d");
         int month = startTime.getMonth(), year = startTime.getYear();
         for (int k = 1; k <= numberOfDaysInMonth(month, year); k++) {
           for (int j = 0, size = stepRecordCustomList.size(); j < size; j++) {

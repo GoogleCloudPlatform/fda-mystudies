@@ -171,7 +171,10 @@ public class DeleteAccountActivity extends AppCompatActivity
       for (int i = 0; i < mStudyIdList.size(); i++) {
         // get all study title, mStudyTitleList
         StudyList studyList = mDBServiceSubscriber.getStudyTitle(mStudyIdList.get(i), mRealm);
-        String title = studyList.getTitle();
+        String title = null;
+        if (studyList != null) {
+          title = studyList.getTitle();
+        }
         if (title == null || title.equalsIgnoreCase("")) mStudyTitleList.add(mNoData);
         else mStudyTitleList.add(title);
         // get all withdawalType, mWithdrawalTypeList[]
@@ -429,6 +432,9 @@ public class DeleteAccountActivity extends AppCompatActivity
     if (statusCode.equalsIgnoreCase("401")) {
       Toast.makeText(DeleteAccountActivity.this, errormsg, Toast.LENGTH_SHORT).show();
       AppController.getHelperSessionExpired(DeleteAccountActivity.this, errormsg);
+    } else if (responseCode == STUDY_INFO) {
+      Toast.makeText(DeleteAccountActivity.this, errormsg, Toast.LENGTH_SHORT).show();
+      finish();
     } else {
       Toast.makeText(DeleteAccountActivity.this, errormsg, Toast.LENGTH_SHORT).show();
     }
