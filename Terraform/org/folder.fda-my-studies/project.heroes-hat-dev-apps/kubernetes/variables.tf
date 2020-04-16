@@ -30,3 +30,8 @@ variable "my_studies_cluster" {
     service_account = string
   })
 }
+
+variable "apps_service_accounts" {
+  description = "Mapping of app name to app service account"
+  type        = map
+}

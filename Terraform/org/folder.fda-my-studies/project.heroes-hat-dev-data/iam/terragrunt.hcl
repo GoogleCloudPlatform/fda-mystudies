@@ -11,7 +11,8 @@ dependency "apps" {
   config_path = "../../project.heroes-hat-dev-apps/apps"
 
   mock_outputs = {
-    service_account = "mock-gke-service-account"
+    service_account       = "mock-gke-service-account"
+    apps_service_accounts = {}
   }
 }
 
@@ -24,8 +25,10 @@ dependency "networks" {
 }
 
 inputs = {
-  sql_client_service_accounts = [
-    dependency.apps.outputs.service_account,
-    dependency.networks.outputs.bastion_service_account,
-  ]
+  sql_client_service_accounts = concat(
+    [
+      dependency.apps.outputs.service_account,
+      dependency.networks.outputs.bastion_service_account,
+    ],
+  values(dependency.apps.outputs.apps_service_accounts)[*].email)
 }

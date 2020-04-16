@@ -11,6 +11,7 @@ dependency "apps" {
       location        = "mock-location"
       service_account = "mock-service-account"
     }
+    apps_service_accounts = {}
   }
 }
 
@@ -33,4 +34,5 @@ inputs = {
     location        = dependency.apps.outputs.gke_cluster.location
     service_account = dependency.apps.outputs.gke_cluster.service_account
   }
+  apps_service_accounts = dependency.apps.outputs.apps_service_accounts
 }
