@@ -22,12 +22,12 @@ data "google_secret_manager_secret_version" "secrets" {
 
   for_each = toset([
     "my-studies-sql-default-user-password",
-    "registration_client_id",
-    "registration_client_secret",
-    "wcp_user",
-    "wcp_pass",
-    "email_address",
-    "email_password",
+    "my-studies-registration-client-id",
+    "my-studies-registration-client-secret",
+    "my-studies-wcp-user",
+    "my-studies-wcp-pass",
+    "my-studies-email-address",
+    "my-studies-email-password",
   ])
 }
 
@@ -50,10 +50,10 @@ resource "kubernetes_secret" "response_server_credentials" {
   }
 
   data = {
-    REGISTRATION_CLIENT_ID     = data.google_secret_manager_secret_version.secrets["registration_client_id"].secret_data
-    REGISTRATION_CLIENT_SECRET = data.google_secret_manager_secret_version.secrets["registration_client_secret"].secret_data
-    WCP_USER                   = data.google_secret_manager_secret_version.secrets["wcp_user"].secret_data
-    WCP_PASS                   = data.google_secret_manager_secret_version.secrets["wcp_pass"].secret_data
+    REGISTRATION_CLIENT_ID     = data.google_secret_manager_secret_version.secrets["my-studies-registration-client-id"].secret_data
+    REGISTRATION_CLIENT_SECRET = data.google_secret_manager_secret_version.secrets["my-studies-registration-client-secret"].secret_data
+    WCP_USER                   = data.google_secret_manager_secret_version.secrets["my-studies-wcp-user"].secret_data
+    WCP_PASS                   = data.google_secret_manager_secret_version.secrets["my-studies-wcp-pass"].secret_data
   }
 }
 
@@ -63,8 +63,8 @@ resource "kubernetes_secret" "email_credentials" {
   }
 
   data = {
-    email_address  = data.google_secret_manager_secret_version.secrets["email_address"].secret_data
-    email_password = data.google_secret_manager_secret_version.secrets["email_password"].secret_data
+    email_address  = data.google_secret_manager_secret_version.secrets["my-studies-email-address"].secret_data
+    email_password = data.google_secret_manager_secret_version.secrets["my-studies-email-password"].secret_data
   }
 }
 
