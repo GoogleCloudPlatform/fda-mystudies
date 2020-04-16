@@ -13,11 +13,11 @@
 # limitations under the License.
 
 # This folder contains Terraform resources to setup the devops project, which includes:
-# - The devops project itself,
-# - API to enable in the devops project,
-# - Deletion lien of the devops project,
+# - The project itself,
+# - APIs to enable,
+# - Deletion lien,
+# - Project level IAM permissions for the project owners,
 # - A Cloud Storage bucket to store Terraform states for all deployments,
-# - Project level IAM permissions for the devops project owners,
 # - Org level IAM permissions for org admins.
 
 # ====================================================================================
