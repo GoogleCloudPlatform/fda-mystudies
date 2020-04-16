@@ -21,17 +21,17 @@ spec:
             - name: DB_USER 
               valueFrom: 
                 secretKeyRef: 
-                  name: cloudsql-db-credentials 
+                  name: study-designer-db-credentials 
                   key: username 
             - name: DB_PASS 
               valueFrom: 
                 secretKeyRef: 
-                  name: cloudsql-db-credentials 
+                  name: study-designer-db-credentials 
                   key: password 
             - name: DB_NAME 
               valueFrom: 
                 secretKeyRef: 
-                  name: cloudsql-db-credentials 
+                  name: study-designer-db-credentials 
                   key: dbname 
             - name: REGISTRATION_SERVER_URL
               value: "35.196.79.108:60000"
@@ -39,16 +39,20 @@ spec:
               value: "35.196.119.71:60000"
           ports:
           - containerPort: 8080
+          readinessProbe:
+            httpGet:
+              path: /fdahpStudyDesigner/appDetails.do
+              port: 8080
         - name: cloudsql-proxy 
           image: gcr.io/cloudsql-docker/gce-proxy:latest 
           command: ["/cloud_sql_proxy", 
             "-instances=heroes-hat-dev:us-east1:my-studies2=tcp:3306", 
-            "-credential_file=/secrets/cloudsql/sql_credentials.json"] 
+            "-credential_file=/secrets/cloudsql/key.json"] 
           volumeMounts: 
-            - name: my-secrets-volume 
+            - name: gcloud-key-volume 
               mountPath: /secrets/cloudsql 
               readOnly: true 
       volumes: 
-        - name: my-secrets-volume 
+        - name: gcloud-key-volume
           secret: 
-            secretName: cloudsql-instance-credentials
+            secretName: study-meta-data-gcloud-key
