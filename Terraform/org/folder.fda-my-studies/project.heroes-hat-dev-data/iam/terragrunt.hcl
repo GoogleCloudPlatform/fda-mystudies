@@ -11,8 +11,10 @@ dependency "apps" {
   config_path = "../../project.heroes-hat-dev-apps/apps"
 
   mock_outputs = {
-    service_account       = "mock-gke-service-account"
-    apps_service_accounts = {}
+    service_account = "mock-gke-service-account"
+    apps_service_accounts = {
+      mock-app = "mock-app-gke@mock-project.iam.gserviceaccount.com"
+    }
   }
 }
 

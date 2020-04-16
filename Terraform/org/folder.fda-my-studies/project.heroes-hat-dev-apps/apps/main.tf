@@ -46,7 +46,7 @@ locals {
 resource "google_service_account" "apps_service_accounts" {
   for_each = toset(local.apps)
 
-  account_id  = "${each.key}-gke-sa"
+  account_id  = "${each.key}-gke"
   description = "Terraform-generated service account for use by the ${each.key} GKE app"
   project     = var.project_id
 }
