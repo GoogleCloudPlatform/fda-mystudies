@@ -14,7 +14,6 @@ provider "kubernetes" {
 
 
 # Data sources from Secret Manager.
-
 data "google_secret_manager_secret_version" "secrets" {
   provider = google-beta
   project  = var.secrets_project_id
