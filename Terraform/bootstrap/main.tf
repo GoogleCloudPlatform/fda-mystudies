@@ -3,8 +3,8 @@
 # - API to enable in the devops project,
 # - Deletion lien of the devops project,
 # - A Cloud Storage bucket to store Terraform states for all deployments,
-# - Project level IAM bindings for the devops project,
-# - Org level IAM bindings for the org.
+# - Project level IAM permissions for the devops project owners,
+# - Org level IAM permissions for org admins.
 
 # ====================================================================================
 # TODO(user): Uncomment after initial deployment and run `terraform init`.
@@ -43,14 +43,14 @@ module "state_bucket" {
   location   = var.storage_location
 }
 
-# Project level IAM bindings for devops project owners.
+# Project level IAM permissions for devops project owners.
 resource "google_project_iam_binding" "devops_owners" {
   project = module.project.project_id
   role    = "roles/owner"
   members = var.devops_owners
 }
 
-# Org level IAM bindings.
+# Org level IAM permissions for org admins.
 resource "google_organization_iam_member" "org_admin" {
   org_id = var.org_id
   role   = "roles/resourcemanager.organizationAdmin"

@@ -14,7 +14,7 @@
 
 # This folder contains Terraform resources to setup CI/CD, which includes:
 # - Necessary APIs to enable in the devops project for CI/CD purposes,
-# - Necessary IAM bindings to set to enable Cloud Build Service Account perform CI/CD jobs.
+# - Necessary IAM permissions to set to enable Cloud Build Service Account perform CI/CD jobs.
 # - Cloud Build Triggers to monitor GitHub repos to start CI/CD jobs.
 #
 # The Cloud Build configs can be found under the configs/ sub-folder.
@@ -72,8 +72,8 @@ resource "google_project_service" "devops_apis" {
   disable_on_destroy = false
 }
 
-# Cloud Build - IAM bindings
-# IAM bindings to allow Cloud Build SA to access state.
+# Cloud Build - IAM permissions
+# IAM permissions to allow Cloud Build SA to access state.
 resource "google_storage_bucket_iam_member" "cloudbuild_state_iam" {
   bucket = var.state_bucket
   role   = "roles/storage.objectViewer"

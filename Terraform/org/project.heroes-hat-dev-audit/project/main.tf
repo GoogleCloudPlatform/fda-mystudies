@@ -2,7 +2,7 @@
 # - The audit project itself,
 # - API to enable in the audit project,
 # - Deletion lien of the audit project,
-# - Project level IAM bindings for the audit project.
+# - Project level IAM permissions for the audit project owners.
 
 terraform {
   backend "gcs" {}
@@ -26,7 +26,7 @@ module "project" {
   skip_gcloud_download    = true
 }
 
-# Project level IAM bindings for audit project owners.
+# Project level IAM permissions for audit project owners.
 resource "google_project_iam_binding" "owners" {
   project = module.project.project_id
   role    = "roles/owner"
