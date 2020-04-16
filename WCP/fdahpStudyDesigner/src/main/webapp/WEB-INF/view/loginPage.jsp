@@ -169,7 +169,7 @@
         </div>
         <div class="clearfix"></div>
         <div class="login__container">
-            <!-- <div class="cs-model-box hide askSignInCls">        
+            <div class="cs-model-box hide askSignInCls">        
                 <div></div>
                 <div>
                     <div>Important Note</div>
@@ -189,7 +189,7 @@
                         <button id="cancelbtn" type="button" class="btn btn-default gray-btn ml-sm float__left">Cancel</button>
                     </div>
                 </div>
-            </div> -->
+            </div>
            
             <div class="login-box">
                 <div class="lg-space-txt">
