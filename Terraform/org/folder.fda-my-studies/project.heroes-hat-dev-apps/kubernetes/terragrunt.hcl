@@ -18,15 +18,15 @@ dependency "data" {
   config_path = "../../project.heroes-hat-dev-data/data/"
 
   mock_outputs = {
-    instance_name = "mock-db"
-    instance_user = "mock-db-user"
+    instance_name          = "mock-db"
+    instance_user          = "mock-db-user"
     instance_user_password = "mock-db-user-password"
   }
 }
 
 inputs = {
-  sql_instance_name = dependency.data.outputs.instance_name
-  sql_instance_user = dependency.data.outputs.instance_user
+  sql_instance_name          = dependency.data.outputs.instance_name
+  sql_instance_user          = dependency.data.outputs.instance_user
   sql_instance_user_password = dependency.data.outputs.instance_user_password
   my_studies_cluster = {
     name            = dependency.apps.outputs.gke_cluster.name
