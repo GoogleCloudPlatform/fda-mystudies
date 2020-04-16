@@ -276,7 +276,7 @@ $(document).ready(function(){
 		 $('#doneResourceId').prop('disabled',true);
           if( chkDaysValid(true) && isFromValid('#resourceForm')){
         	  if($('#inlineRadio5').is(':checked')){
-        		  var text = "You have chosen to use a period of visibility based on an Anchor Date. Please ensure that the Source Questionnaire providing the Anchor Date response is scheduled appropriately.";
+        		  var text = "You have chosen to use a period of visibility based on an anchor date. Please ensure that the Source Questionnaire providing the anchor date response is scheduled appropriately.";
               	  bootbox.confirm({
               		closeButton: false,
               		message: text,

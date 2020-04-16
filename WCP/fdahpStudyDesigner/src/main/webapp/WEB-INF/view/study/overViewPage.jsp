@@ -46,8 +46,7 @@
 
 			<div>
 				<div class="gray-xs-f mb-xs">
-					Study Video URL (if available <span>e.g:
-						http://www.google.com</span>) <small>(300 characters max) </small>
+					Study Video URL (if available) <small>(300 characters max) </small>
 				</div>
 				<div class="form-group">
 					<input autofocus="autofocus" type="text" class="form-control"
@@ -64,7 +63,7 @@
 			<div class="overview_section">
 				<div class="panel-group overview-panel" id="accordion">
 					<div class="black-md-f mb-md">
-						Manage Overview Pages <span><span class="filled-tooltip"
+						Study Overview Pages <span><span class="filled-tooltip"
 							data-toggle="tooltip" data-placement="right" data-html="true"
 							title=""
 							data-original-title="

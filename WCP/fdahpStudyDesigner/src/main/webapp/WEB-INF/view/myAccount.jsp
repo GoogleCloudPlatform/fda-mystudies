@@ -186,25 +186,25 @@
              
              <!-- Assigned Permissions List-->
              <div class="edit-user-list-widget mb-xs">
-                 <span>Manage Users</span>
+                 <span>Users</span>
                  <span class="gray-xs-f pull-right">
-	                 <c:if test="${!fn:contains(sessionObject.userPermissions,'ROLE_MANAGE_USERS_EDIT')}">View Only</c:if>
-	                 <c:if test="${fn:contains(sessionObject.userPermissions,'ROLE_MANAGE_USERS_EDIT')}">View & Edit</c:if>
+	                 <c:if test="${!fn:contains(sessionObject.userPermissions,'ROLE_MANAGE_USERS_EDIT')}">View only</c:if>
+	                 <c:if test="${fn:contains(sessionObject.userPermissions,'ROLE_MANAGE_USERS_EDIT')}">View & edit</c:if>
                  </span>
              </div>
              
              <div class="edit-user-list-widget mb-xs">
-                 <span>Manage App-Wide Notifications</span>
+                 <span>Notifications</span>
                  <span class="gray-xs-f pull-right">
-	                 <c:if test="${!fn:contains(sessionObject.userPermissions,'ROLE_MANAGE_APP_WIDE_NOTIFICATION_EDIT')}">View Only</c:if>
-	                 <c:if test="${fn:contains(sessionObject.userPermissions,'ROLE_MANAGE_APP_WIDE_NOTIFICATION_EDIT')}">View & Edit</c:if>
+	                 <c:if test="${!fn:contains(sessionObject.userPermissions,'ROLE_MANAGE_APP_WIDE_NOTIFICATION_EDIT')}">View only</c:if>
+	                 <c:if test="${fn:contains(sessionObject.userPermissions,'ROLE_MANAGE_APP_WIDE_NOTIFICATION_EDIT')}">View & edit</c:if>
                  </span>
              </div>
              
              
              <!-- Assigned Permissions List-->
              <div class="edit-user-list-widget">
-                 <span>Manage Studies</span>
+                 <span>Studies</span>
                  <span class="gray-xs-f pull-right">
 	                 <c:if test="${!fn:contains(sessionObject.userPermissions,'ROLE_MANAGE_STUDIES')}">No</c:if>
 	                 <c:if test="${fn:contains(sessionObject.userPermissions,'ROLE_MANAGE_STUDIES')}">Yes</c:if>
@@ -217,14 +217,14 @@
 		                    </div>
 	                    </c:if>
 	                    <div class="pl-sm pt-md">
-	                        <span class="gray-xs-f text-weight-semibold text-uppercase">Existing Studies</span>
+	                        <span class="gray-xs-f text-weight-semibold text-uppercase">Existing Study Permissions</span>
 	                     </div>
 	                     <c:forEach items="${studyAndPermissionList}" var="studyAndPermission">
 		                     <div class="pt-sm pb-sm pl-sm b-bor-dark">
 		                            <span class="dot" id="${studyAndPermission.customStudyId}">${studyAndPermission.name}&nbsp;(${studyAndPermission.customStudyId})</span>
 		                            <span class="gray-xs-f pull-right">
-			                            <c:if test="${not studyAndPermission.viewPermission}">View Only</c:if>
-			                            <c:if test="${studyAndPermission.viewPermission}">View & Edit</c:if>
+			                            <c:if test="${not studyAndPermission.viewPermission}">View only</c:if>
+			                            <c:if test="${studyAndPermission.viewPermission}">View and edit</c:if>
 		                            </span>
 		                     </div>
 	                    </c:forEach>

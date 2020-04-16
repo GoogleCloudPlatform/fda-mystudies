@@ -106,7 +106,7 @@ public class EnrollmentManagementUtil {
     try {
       date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(dateNow);
     } catch (Exception e) {
-      logger.info("EnrollmentManagementUtil - getCurrentUtilDateTime() :: ERROR ", e);
+      logger.error("EnrollmentManagementUtil - getCurrentUtilDateTime() :: ERROR ", e);
     }
     return date;
   }
@@ -122,7 +122,7 @@ public class EnrollmentManagementUtil {
       }
       generatedHash = sb.toString();
     } catch (NoSuchAlgorithmException e) {
-      logger.info("No Such Algorithm Exception: ", e);
+      logger.error("No Such Algorithm Exception: ", e);
     }
     return generatedHash;
   }
@@ -160,10 +160,10 @@ public class EnrollmentManagementUtil {
         throw new SystemException();
       }
     } catch (Exception e) {
-      logger.error("UserManagementUtil deactivateAcct() - Ends ");
+      logger.error("EnrollmentManagementUtil deactivateAcct() - Ends ", e);
       throw new SystemException();
     }
-    logger.info("UserManagementUtil deactivateAcct() - Ends ");
+    logger.info("EnrollmentManagementUtil deactivateAcct() - Ends ");
     return participantId;
   }
 
@@ -199,7 +199,7 @@ public class EnrollmentManagementUtil {
 
     } catch (RestClientResponseException e) {
       if (e.getRawStatusCode() == 401) {
-        logger.error("Invalid client Id or client secret. Client id is: " + AppConstants.CLIENT_ID);
+        logger.error("Invalid client credential");
         throw new UnAuthorizedRequestException();
       } else if (e.getRawStatusCode() == 400) {
         logger.error("Client verification ended with Bad Request");
@@ -207,6 +207,9 @@ public class EnrollmentManagementUtil {
       } else {
         throw new SystemException();
       }
+    } catch (Exception e) {
+      logger.error("EnrollmentManagementUtil withDrawParticipantFromStudy() - Ends ", e);
+      throw new SystemException();
     }
     logger.info("EnrollmentManagementUtil withDrawParticipantFromStudy() - Ends ");
     return message;

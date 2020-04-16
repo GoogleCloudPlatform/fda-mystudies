@@ -41,21 +41,21 @@
 		<!--  End  top tab section-->
 		<!--  Start body tab section -->
 		<div class="right-content-body">
-			<div class="gray-xs-f mb-xs">Select Consent Section type <span class="requiredStar">*</span></div>
+			<div class="gray-xs-f mb-xs">Consent Section Type<span class="requiredStar">*</span></div>
 			<div class="mt-sm form-group">
 				<span class="radio radio-info radio-inline p-45"> 
 					<input type="radio" id="inlineRadio1" value="ResearchKit/ResearchStack" name="consentItemType" required data-error="Please choose type"
 					 ${empty consentInfoBo.consentItemType  || consentInfoBo.consentItemType=='ResearchKit/ResearchStack' ?'checked':''}>
-					<label for="inlineRadio1">ResearchKit/ResearchStack</label>
+					<label for="inlineRadio1">Default Options</label>
 				</span> 
 				<span class="radio radio-inline p-45"> 
 					<input type="radio" id="inlineRadio2" value="Custom" name="consentItemType" required data-error="Please choose type" ${consentInfoBo.consentItemType=='Custom'?'checked':''}> 
-					<label for="inlineRadio2">Custom</label>
+					<label for="inlineRadio2">Create Custom</label>
 				</span>
 				<div class="help-block with-errors red-txt"></div>
 			</div>
 			<div id="titleContainer">
-				<div class="gray-xs-f mb-xs">Title <span class="requiredStar">*</span></div>
+				<div class="gray-xs-f mb-xs">Topic <span class="requiredStar">*</span></div>
 				<div class="col-md-5 p-none form-group elaborateClass consentTitle">
 					<select class="selectpicker" id="consentItemTitleId" name="consentItemTitleId"  required data-error="Please choose one title">
 						<option value="">Select</option>
@@ -71,7 +71,7 @@
 			<input type="hidden" id="briefSummaryTemp" name="briefSummaryTemp" value="${consentInfoBo.briefSummary}">
 			<textarea name="hide" id="elaboratedTemp" style="display:none;">${consentInfoBo.elaborated}</textarea>
 			<div id="displayTitleId">
-				<div class="gray-xs-f mb-xs">Display Title  <small>(75 characters max)</small><span class="requiredStar">*</span></div>
+				<div class="gray-xs-f mb-xs">Title <small>(75 characters max)</small><span class="requiredStar">*</span></div>
 				<div class="form-group">
 					<input autofocus="autofocus" type="text" id="displayTitle" class="form-control" name="displayTitle" required value="${fn:escapeXml(consentInfoBo.displayTitle)}" maxlength="75">
 					<div class="help-block with-errors red-txt"></div>
@@ -86,7 +86,7 @@
 			</div>
 			<div class="clearfix"></div>
 			<div>
-				<div class="gray-xs-f mb-xs">Elaborated Content <span class="requiredStar">*</span></div>
+				<div class="gray-xs-f mb-xs">Elaborated Content (appears in a 'Learn More' section) <span class="requiredStar">*</span></div>
 				<div class="form-group">
 					<textarea class="" rows="8" id="elaboratedRTE" name="elaboratedRTE" required>${consentInfoBo.elaborated}</textarea>
 					<div class="help-block with-errors red-txt"></div>
@@ -94,7 +94,7 @@
 			</div>
 			<div class="clearfix"></div>
 			<div>
-				<div class="gray-xs-f mb-xs">Show as a visual step in the Consent Info section? <span class="requiredStar">*</span><span class="ml-xs sprites_v3 filled-tooltip" data-toggle="tooltip" title="Choose Yes if you wish this section to appear as a standalone Visual Step in the app prior to the full Consent Document. A Visual Step screen shows the section Title, and the Brief Summary with a link to the elaborated version of the content."></span></div>
+				<div class="gray-xs-f mb-xs">Show as a visual step? <span class="requiredStar">*</span><span class="ml-xs sprites_v3 filled-tooltip" data-toggle="tooltip" title="Choose Yes if you wish this section to appear as a standalone Visual Step in the app prior to the full Consent Document. A Visual Step screen shows the section Title, and the Brief Summary with a link to the elaborated version of the content."></span></div>
 				<div class="form-group visualStepDiv">
 					<span class="radio radio-info radio-inline p-45"> 
 						<input class="" type="radio" id="inlineRadio3" value="Yes" name="visualStep" required data-error="Please choose one visual step" ${consentInfoBo.visualStep=='Yes'?'checked':''}> 
