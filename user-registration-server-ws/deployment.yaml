@@ -53,12 +53,18 @@ spec:
               value: "dummy-value"
             - name: GCP_BUCKET_NAME
               value: "heroes-hat-dev-data-my-study-consent-documents"
+            - name: GOOGLE_APPLICATION_CREDENTIALS
+              value: "/secrets/gcloud_key/key.json"
           ports:
           - containerPort: 8080
           readinessProbe:
             httpGet:
               path: /myStudiesUserMgmtWS/healthCheck
               port: 8080
+          volumeMounts:
+            - name: gcloud-key-volume
+              mountPath: /secrets/gcloud_key
+              readOnly: true
         - name: cloudsql-proxy
           image: gcr.io/cloudsql-docker/gce-proxy:latest
           command: ["/cloud_sql_proxy",
@@ -72,3 +78,6 @@ spec:
         - name: my-secrets-volume
           secret:
             secretName: cloudsql-instance-credentials
+        - name: gcloud-key-volume
+          secret:
+            secretName: user-registration-server-ws-gcloud-key
