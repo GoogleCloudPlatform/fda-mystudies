@@ -641,7 +641,7 @@ public class StudyInfoActivity extends AppCompatActivity implements ApiCall.OnAs
         } else if (studyList.getStatus().equalsIgnoreCase(StudyFragment.PAUSED)) {
           Toast.makeText(getApplication(), R.string.study_paused, Toast.LENGTH_SHORT).show();
         } else if (!studyList.getSetting().getRejoin()
-            && studyList.getStatus().equalsIgnoreCase(StudyFragment.WITHDRAWN)) {
+            && studyList.getStudyStatus().equalsIgnoreCase(StudyFragment.WITHDRAWN)) {
           Toast.makeText(getApplication(), R.string.cannot_rejoin_study, Toast.LENGTH_SHORT).show();
         } else {
           new callConsentMetaData(false).execute();
@@ -731,7 +731,7 @@ public class StudyInfoActivity extends AppCompatActivity implements ApiCall.OnAs
           mBookmarkimage.setImageResource(R.drawable.star_yellow_big);
           mBookmarked = true;
         }
-        dbServiceSubscriber.updateStudyPreferenceToDb(this, mStudyId, mBookmarked, mStatus);
+        dbServiceSubscriber.updateStudyPreferenceToDb(this, mStudyId, mBookmarked, mStudyStatus);
       }
       mStudyHome = dbServiceSubscriber.getStudyInfoListFromDB(mStudyId, mRealm);
       if (mStudyHome != null) {
