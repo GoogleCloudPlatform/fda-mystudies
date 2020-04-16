@@ -80,20 +80,3 @@ resource "kubernetes_secret" "cloudsql_instance_credentials" {
   }
 }
 
-resource "kubernetes_secret" "response_server_ws_gcloud_key" {
-  metadata {
-    name = "response-server-ws-gcloud-key"
-  }
-  data = {
-    "key.json" = base64decode(google_service_account_key.gke_cluster_service_account_key.private_key)
-  }
-}
-
-resource "kubernetes_secret" "user_registration_server_ws_gcloud_key" {
-  metadata {
-    name = "user-registration-server-ws-gcloud-key"
-  }
-  data = {
-    "key.json" = base64decode(google_service_account_key.gke_cluster_service_account_key.private_key)
-  }
-}
