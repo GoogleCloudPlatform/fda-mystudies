@@ -12,6 +12,9 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-project_id         = "heroes-hat-dev-apps"
-network_project_id = "heroes-hat-dev-networks"
-gke_region         = "us-east1"
+project_id                = "heroes-hat-dev-apps"
+network_project_id        = "heroes-hat-dev-networks"
+gke_region                = "us-east1"
+repo_owner                = "GoogleCloudPlatform"
+repo_name                 = "fda-mystudies"
+cloudbuild_trigger_branch = "early-access"
