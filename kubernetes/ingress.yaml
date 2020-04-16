@@ -1,0 +1,15 @@
+apiVersion: networking.k8s.io/v1beta1
+kind: Ingress
+metadata:
+  name: heroes-hat-dev
+  annotations:
+    kubernetes.io/ingress.global-static-ip-name: heroes-hat
+    networking.gke.io/managed-certificates: heroes-hat-cert
+spec:
+  rules:
+    - http:
+        paths:
+          - path: /AuthServer/*
+            backend:
+              serviceName: auth-server-np
+              servicePort: 50000

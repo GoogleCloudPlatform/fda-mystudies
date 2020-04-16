@@ -16,7 +16,7 @@ spec:
     spec: 
       containers: 
         - name: response-server-ws 
-          image: gcr.io/heroes-hat-dev/response-server-ws:latest
+          image: gcr.io/heroes-hat-dev-apps/response-server-ws:latest
           env: 
             - name: DB_USER 
               valueFrom: 
@@ -34,27 +34,49 @@ spec:
                   name: cloudsql-db-credentials 
                   key: dbname 
             - name: FIRESTORE_PROJECT_ID
-              value: "heroes-hat-dev"
+              value: "heroes-hat-dev-resp-firebase"
             - name: AUTH_SERVER_URL
-              value: "35.243.237.139:50000"
+              value: "auth-server-np:50000"
             - name: REGISTRATION_CLIENT_ID
-              value: "dummy-value"
+              valueFrom:
+                secretKeyRef:
+                  key: REGISTRATION_CLIENT_ID
+                  name: response-server-credentials
             - name: REGISTRATION_CLIENT_SECRET
-              value: "dummy-value"
+              valueFrom:
+                secretKeyRef:
+                  key: REGISTRATION_CLIENT_SECRET
+                  name: response-server-credentials
             - name: WCP_USER
-              value: "dummy-value"
+              valueFrom:
+                secretKeyRef:
+                  key: WCP_USER
+                  name: response-server-credentials
             - name: WCP_PASS
-              value: "dummy-value"
+              valueFrom:
+                secretKeyRef:
+                  key: WCP_PASS
+                  name: response-server-credentials
             - name: WCP_STUDY_METADATA_SERVER_URL
-              value: "34.74.32.124:50000"
+              value: "study-meta-data-np:50000"
             - name: REGISTRATION_SERVER_URL
-              value: "35.196.79.108:60000"
+              value: "user-registration-server-np:60000"
+            - name: GOOGLE_APPLICATION_CREDENTIALS
+              value: "/secrets/gcloud_key/key.json"
           ports:
           - containerPort: 8080
+          readinessProbe:
+            httpGet:
+              path: /mystudies-response-server/health
+              port: 8080
+          volumeMounts:
+            - name: gcloud-key-volume
+              mountPath: /secrets/gcloud_key
+              readOnly: true
         - name: cloudsql-proxy 
           image: gcr.io/cloudsql-docker/gce-proxy:latest 
           command: ["/cloud_sql_proxy", 
-            "-instances=heroes-hat-dev:us-east1:my-studies2=tcp:3306", 
+            "-instances=heroes-hat-dev-data:us-central1:my-studies-1=tcp:3306", 
             "-credential_file=/secrets/cloudsql/sql_credentials.json"] 
           volumeMounts: 
             - name: my-secrets-volume 
@@ -64,3 +86,6 @@ spec:
         - name: my-secrets-volume 
           secret: 
             secretName: cloudsql-instance-credentials
+        - name: gcloud-key-volume
+          secret:
+            secretName: response-server-ws-gcloud-key

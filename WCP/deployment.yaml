@@ -16,7 +16,7 @@ spec:
     spec: 
       containers: 
         - name: study-designer 
-          image: gcr.io/heroes-hat-dev/study-designer:latest
+          image: gcr.io/heroes-hat-dev-apps/study-designer:latest
           env: 
             - name: DB_USER 
               valueFrom: 
@@ -34,15 +34,15 @@ spec:
                   name: cloudsql-db-credentials 
                   key: dbname 
             - name: REGISTRATION_SERVER_URL
-              value: "35.196.79.108:60000"
+              value: "user-registration-server-np:60000"
             - name: RESPONSE_SERVER_URL
-              value: "35.196.119.71:60000"
+              value: "response-server-np:50000"
           ports:
           - containerPort: 8080
         - name: cloudsql-proxy 
           image: gcr.io/cloudsql-docker/gce-proxy:latest 
           command: ["/cloud_sql_proxy", 
-            "-instances=heroes-hat-dev:us-east1:my-studies2=tcp:3306", 
+            "-instances=heroes-hat-dev-data:us-central1:my-studies-1=tcp:3306",
             "-credential_file=/secrets/cloudsql/sql_credentials.json"] 
           volumeMounts: 
             - name: my-secrets-volume 
