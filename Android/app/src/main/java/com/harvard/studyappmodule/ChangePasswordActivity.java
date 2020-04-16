@@ -290,34 +290,12 @@ public class ChangePasswordActivity extends AppCompatActivity
               ChangePasswordActivity.this, getString(R.string.verified), "" + isVerified);
       AppController.getHelperSharedPreference()
           .writePreference(ChangePasswordActivity.this, getString(R.string.email), "" + mEmailId);
-      if (isVerified) {
-        Toast.makeText(
-                this,
-                getResources().getString(R.string.password_change_message),
-                Toast.LENGTH_SHORT)
-            .show();
-        if (AppConfig.AppType.equalsIgnoreCase(getString(R.string.app_gateway))) {
-          Intent intent = new Intent(ChangePasswordActivity.this, StudyActivity.class);
-          ComponentName cn = intent.getComponent();
-          Intent mainIntent = Intent.makeRestartActivityTask(cn);
-          startActivity(mainIntent);
-          finish();
-        } else {
-          Intent intent = new Intent(ChangePasswordActivity.this, StandaloneActivity.class);
-          ComponentName cn = intent.getComponent();
-          Intent mainIntent = Intent.makeRestartActivityTask(cn);
-          startActivity(mainIntent);
-          finish();
-        }
-      } else {
-        Intent intent = new Intent(ChangePasswordActivity.this, VerificationStepActivity.class);
-        intent.putExtra("userid", mUserId);
-        intent.putExtra("auth", mAuth);
-        intent.putExtra("verified", isVerified);
-        intent.putExtra("email", mEmailId);
-        startActivity(intent);
-        finish();
-      }
+      Toast.makeText(
+              this,
+              getResources().getString(R.string.password_change_message_signin),
+              Toast.LENGTH_SHORT)
+          .show();
+      AppController.forceSignout(ChangePasswordActivity.this);
     }
   }
 

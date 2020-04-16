@@ -42,6 +42,7 @@ import com.harvard.offlinemodule.model.OfflineData;
 import com.harvard.storagemodule.DBServiceSubscriber;
 import com.harvard.studyappmodule.StandaloneActivity;
 import com.harvard.studyappmodule.StudyActivity;
+import com.harvard.usermodule.SignInActivity;
 import com.harvard.utils.realm.RealmEncryptionHelper;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -858,6 +859,12 @@ public class AppController {
     // clear notifications from notification tray
     NotificationManagerCompat notificationManager = NotificationManagerCompat.from(context);
     notificationManager.cancelAll();
+
+    Intent intent = new Intent(context, SignInActivity.class);
+    ComponentName cn = intent.getComponent();
+    Intent mainIntent = Intent.makeRestartActivityTask(cn);
+    context.startActivity(mainIntent);
+    ((Activity) context).finish();
   }
 
   public static String getHashedValue(String valueToHash) {
