@@ -12,6 +12,9 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+# This folder contains Terraform resources to setup additional IAM permissions to allow certain
+# IAM members to connect to the private CloudSQL instance.
+
 terraform {
   backend "gcs" {}
 }

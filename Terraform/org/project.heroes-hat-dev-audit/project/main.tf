@@ -13,10 +13,10 @@
 # limitations under the License.
 
 # This folder contains Terraform resources to setup the audit project, which includes:
-# - The audit project itself,
-# - API to enable in the audit project,
-# - Deletion lien of the audit project,
-# - Project level IAM permissions for the audit project owners.
+# - The project itself,
+# - APIs to enable,
+# - Deletion lien,
+# - Project level IAM permissions for the project owners,
 
 terraform {
   backend "gcs" {}

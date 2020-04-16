@@ -12,6 +12,12 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+# This folder contains Terraform resources to setup the basis of the apps project, which includes:
+# - The project itself,
+# - APIs to enable,
+# - Deletion lien, if enabled,
+# - Project level IAM permissions for the project owners.
+
 terraform {
   backend "gcs" {}
 }

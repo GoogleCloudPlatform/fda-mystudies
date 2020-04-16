@@ -12,6 +12,9 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+# This folder contains Terraform resources to setup a Google Cloud Firebase instance. It enables
+# Firebase resources on the given GCP project.
+
 terraform {
   backend "gcs" {}
 }
