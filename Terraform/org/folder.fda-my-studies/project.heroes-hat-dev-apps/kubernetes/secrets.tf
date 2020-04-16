@@ -20,7 +20,6 @@ data "google_secret_manager_secret_version" "secrets" {
   secret   = each.key
 
   for_each = toset([
-    "my-studies-sql-default-user-password",
     "my-studies-registration-client-id",
     "my-studies-registration-client-secret",
     "my-studies-wcp-user",
@@ -38,7 +37,7 @@ resource "kubernetes_secret" "cloudsql_db_credentials" {
 
   data = {
     username = var.sql_instance_user
-    password = data.google_secret_manager_secret_version.secrets["my-studies-sql-default-user-password"].secret_data
+    password = var.sql_instance_user_password
     dbname   = var.sql_instance_name
   }
 }

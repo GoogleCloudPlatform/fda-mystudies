@@ -7,3 +7,6 @@ output "instance_name" {
 output "instance_user" {
   value = "default"
 }
+output "instance_user_password" {
+  value = data.google_secret_manager_secret_version.sql_password.secret_data
+}
