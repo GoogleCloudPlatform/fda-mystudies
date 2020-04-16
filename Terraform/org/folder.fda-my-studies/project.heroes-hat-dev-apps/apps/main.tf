@@ -48,4 +48,5 @@ resource "google_service_account" "apps_service_accounts" {
 
   account_id  = "${each.key}-gke-sa"
   description = "Terraform-generated service account for use by the ${each.key} GKE app"
+  project     = var.project_id
 }
