@@ -34,9 +34,9 @@ spec:
                   name: study-designer-db-credentials 
                   key: dbname 
             - name: REGISTRATION_SERVER_URL
-              value: "35.196.79.108:60000"
+              value: "user-registration-server-np:50000"
             - name: RESPONSE_SERVER_URL
-              value: "35.196.119.71:60000"
+              value: "response-server-np:50000"
           ports:
           - containerPort: 8080
           readinessProbe:
