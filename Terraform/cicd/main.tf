@@ -12,6 +12,13 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+# This folder contains Terraform resources to setup CI/CD, which includes:
+# - Necessary APIs to enable in the devops project for CI/CD purposes,
+# - Necessary IAM bindings to set to enable Cloud Build Service Account perform CI/CD jobs.
+# - Cloud Build Triggers to monitor GitHub repos to start CI/CD jobs.
+#
+# The Cloud Build configs can be found under the configs/ sub-folder.
+
 # ***NOTE***: First follow
 # https://cloud.google.com/cloud-build/docs/automating-builds/create-github-app-triggers#installing_the_cloud_build_app
 # to install the Cloud Build app and connect your GitHub repository to your Cloud project.
