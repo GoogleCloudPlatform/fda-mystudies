@@ -13,11 +13,6 @@ variable "sql_instance_user" {
   type        = string
 }
 
-variable "sql_instance_user_password" {
-  description = "The password for the user used to log into the SQL instance"
-  type        = string
-}
-
 variable "secrets_project_id" {
   type = string
 }
