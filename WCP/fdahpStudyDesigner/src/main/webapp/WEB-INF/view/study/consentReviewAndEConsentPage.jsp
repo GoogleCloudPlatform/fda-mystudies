@@ -37,7 +37,7 @@
             <!--  Start body tab section -->
             <div class="right-content-body pt-none pl-none">
              <ul class="nav nav-tabs review-tabs">
-                <li class="shareData active"><a data-toggle="tab" href="#menu1" >Share Data Permissions</a></li>
+                <li class="shareData active"><a data-toggle="tab" href="#menu1" >Data-sharing Permission</a></li>
                 <li class="consentReview"><a data-toggle="tab" href="#menu2" >Consent Document for Review</a></li>
                 <li class="econsentForm"><a data-toggle="tab" href="#menu3" >E-Consent Form	</a></li>               
               </ul>
@@ -45,7 +45,7 @@
                 <input type="hidden" id="version" name="version" value="${consentBo.version}">
                 <div id="menu1" class="tab-pane fade in active">
                    <div class="mt-lg" >
-                   		<div class="gray-xs-f mb-sm">Enable share data permissions step for this study? <span class="gray-xs-f mb-xs">(Please ensure you have the IRB mandate to allow this)</span></div>
+                   		<div class="gray-xs-f mb-sm">Enable data-sharing permission step for this study? (This will let participants choose whether they want to allow their data to be shared with 3rd parties)</div>
                    		<div class="col-md-12 pl-none">
 	                        <div class="form-group">
 	                            <span class="radio radio-info radio-inline p-45">
@@ -60,35 +60,35 @@
                     	</div>
                     	<div class="<c:if test="${consentBo.shareDataPermissions eq 'No'}">ct_panel</c:if>" id="rootContainer">
                     	<div class="col-md-12 p-none">
-		                    <div class="gray-xs-f mb-xs">Title <small>(250 characters max)</small><span class="requiredStar">*</span></div>
+		                    <div class="gray-xs-f mb-xs">Screen Title <small>(250 characters max)</small><span class="requiredStar">*</span> E.g. Sharing Options</div>
 		                    <div class="form-group">
 		                        <input type="text" class="form-control requiredClass" placeholde="" id="titleId" name="title" value="${consentBo.title}" maxlength="250"/>
 		                        <div class="help-block with-errors red-txt"></div>
 		                    </div>
 		                </div>
 		                <div class="col-md-12 p-none">
-		                    <div class="gray-xs-f mb-xs">1 line description or tagline <small>(250 characters max)</small><span class="requiredStar">*</span></div>
+		                    <div class="gray-xs-f mb-xs">Brief description <small>(500 characters max)</small><span class="requiredStar">*</span> E.g. &lt;Institution&gt; and its partners will receive your study data from your participation in the study. Please indicate if you permit to share your data more broadly to other parties for research.</div>
 		                    <div class="form-group">
 		                        <input type="text" class="form-control requiredClass" placeholder="" maxlength="250" name="taglineDescription" id="taglineDescriptionId" value="${consentBo.taglineDescription}" />
 		                        <div class="help-block with-errors red-txt"></div>
 		                    </div>
 		                </div>
 		                <div class="col-md-12 p-none">
-		                    <div class="gray-xs-f mb-xs">Short Description for RO (Research Organization or Data Partner) <small>(250 characters max)</small><span class="requiredStar">*</span></div>
+		                    <div class="gray-xs-f mb-xs">Option 1: Share my data with &lt;institution&gt; and qualified researchers worldwide. <small>(250 characters max)</small><span class="requiredStar">*</span></div>
 		                    <div class="form-group">
 		                        <input type="text" class="form-control requiredClass" placeholder=""  maxlength="250" name="shortDescription" id="shortDescriptionId" value="${consentBo.shortDescription}"/>
 		                        <div class="help-block with-errors red-txt"></div>
 		                    </div>
 		                </div>
 		                <div class="col-md-12 p-none">
-		                    <div class="gray-xs-f mb-xs">Long Description for RO (Research Organization or Data Partner) <small>(500 characters max)</small><span class="requiredStar">*</span></div>
+		                    <div class="gray-xs-f mb-xs">Option 2: Only share my data with &lt;institution and its partners&gt; <small>(500 characters max)</small><span class="requiredStar">*</span></div>
 		                    <div class="form-group">
 		                        <textarea class="form-control requiredClass"  rows="5" maxlength="500"  placeholder="" name="longDescription" id="longDescriptionId">${consentBo.longDescription}</textarea>
 		                        <div class="help-block with-errors red-txt"></div>
 		                    </div>
 		                </div>
 		                <div class="col-md-12 p-none">
-		                     <div class="gray-xs-f mb-xs">Learn More text (Elaborated content that explains how data will be shared)<span class="requiredStar">*</span></div>
+		                     <div class="gray-xs-f mb-xs">Explanatory text that can be provided in a 'Learn More' section <span class="requiredStar">*</span></div>
 		                     <div class="form-group">
 		                        <textarea  id="learnMoreTextId" name="learnMoreText" required>${consentBo.learnMoreText}</textarea>
 		                        <div class="help-block with-errors red-txt"></div>
@@ -109,7 +109,7 @@
                     	</div> --%>
                     	 <div class="col-md-12 pl-none mt-lg mb-xlg">
 		                   	<a  class="preview__text" href="javascript:void()" data-toggle="modal" onclick="previewDataSharing();">
-							   <img class="mr-xs" src="../images/icons/eye-icn.png" alt=""> <span>Preview</span>
+							   <img class="mr-xs" src="../images/icons/eye-icn.png" alt=""> <span>See Screen Preview</span>
 							</a>
                     	 </div>
                     	 </div>
@@ -121,16 +121,16 @@
                 </div>
 	                <div id="menu2" class="tab-pane fade">
 	                    <div class="mt-lg">
-	                    <div class="gray-xs-f mb-sm">Select a method of creation for the Consent Document </div>
+	                    <div class="gray-xs-f mb-sm">Select a method of creation for the consent document: </div>
 		                	<div class="form-group mb-none">
 			                	<div id="consentDocTypeDivId">
 			                         <span class="radio radio-info radio-inline p-45">
 			                            <input type="radio" id="inlineRadio1" value="Auto" name="consentDocType" required data-error="Please choose consent document type" ${consentBo.consentDocType=='Auto'?'checked':''}>
-			                            <label for="inlineRadio1">Use auto-created Consent Document</label>
+			                            <label for="inlineRadio1">Automatic creation</label>
 			                        </span>
 			                        <span class="radio radio-inline">
 			                            <input type="radio" id="inlineRadio2" value="New" name="consentDocType" required data-error="Please choose consent document type" ${consentBo.consentDocType=='New'?'checked':''}>
-			                            <label for="inlineRadio2">Create New Consent Document</label>
+			                            <label for="inlineRadio2">Manual content entry</label>
 			                        </span>
 			                        <div class="help-block with-errors red-txt"></div>
 			                    </div>
@@ -171,10 +171,10 @@
 	                    </div>
 	                </div>
                 <div id="menu3" class="tab-pane fade">
-                    <div class="mt-xlg text-weight-semibold">The mobile app captures the following from the user as  part of Consent to the study : </div>
+                    <div class="mt-xlg text-weight-semibold">The mobile app captures the following from the user as part of the e-Consent process for the study in the app: </div>
                     <div class="mt-lg">
 	                    <ul class="list-style-image">
-	                    	<li>Agreement to the content in the Consent Document <small>(250 characters max)</small><span class="requiredStar">*</span><span class="ml-xs sprites_v3 filled-tooltip" data-toggle="tooltip" title="Text message shown to the prospect participant on the app, to confirm Review of and Agreement to the Consent Document."></span>
+	                    	<li>Explicit confirmation of consent document review and agreement <small>(250 characters max)</small><span class="requiredStar">*</span><span class="ml-xs sprites_v3 filled-tooltip" data-toggle="tooltip" title="Text message shown to the prospect participant on the app, to confirm Review of and Agreement to the Consent Document."></span>
 			                    <div class="form-group mt-sm mb-none">
 			                        <input type="text" class="form-control" placeholder="" required  name="aggrementOfTheConsent" id="aggrementOfTheConsentId" value="${consentBo.aggrementOfTheConsent}" maxlength="250"/>
 			                        <div class="help-block with-errors red-txt"></div>

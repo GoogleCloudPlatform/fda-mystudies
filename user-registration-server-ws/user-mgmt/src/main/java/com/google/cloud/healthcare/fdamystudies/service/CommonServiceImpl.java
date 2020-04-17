@@ -115,9 +115,9 @@ public class CommonServiceImpl implements CommonService {
     ActivityLog activityLog = new ActivityLog();
     try {
       activityLog.setAuthUserId(userId);
-      activityLog.setEvent(activityName);
-      activityLog.setDescription(activtyDesc);
-      activityLog.setCreatedDateTime(LocalDateTime.now());
+      activityLog.setActivityName(activityName);
+      activityLog.setActivtyDesc(activtyDesc);
+      activityLog.setActivityDateTime(LocalDateTime.now());
       activityLogRepository.save(activityLog);
     } catch (Exception e) {
       logger.error("CommonServiceImpl createActivityLog() - error ", e);
@@ -161,8 +161,11 @@ public class CommonServiceImpl implements CommonService {
       } else {
         throw new SystemException();
       }
+    } catch (Exception e) {
+      logger.error("CommonServiceImpl validateServerClientCredentials - error ", e);
+      throw new SystemException();
     }
-    logger.error("Invalid client Id or client secret.");
-    throw new SystemException();
+
+    return false;
   }
 }

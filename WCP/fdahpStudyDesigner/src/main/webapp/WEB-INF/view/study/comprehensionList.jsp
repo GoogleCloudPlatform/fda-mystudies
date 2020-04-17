@@ -47,7 +47,7 @@ function isNumber(evt) {
 	<!--  End  top tab section-->
 	<div class="right-content-head"> 
 	<div class="mb-xlg" id="displayTitleId">
-         <div class="gray-xs-f mb-xs">Do you need a Comprehension Test for your study? <span class="ct_panel" id="addHelpNote"><small>(Please save to continue)</small></span></div>
+         <div class="gray-xs-f mb-xs">Add a comprehension test? <span class="ct_panel" id="addHelpNote"><small>(Please save to continue)</small></span></div>
          <div class="form-group col-md-5 p-none">
 			   <span class="radio radio-info radio-inline p-45">
 			  	 <input type="radio" id="comprehensionTestYes" value="Yes" name="needComprehensionTest" ${consentBo.needComprehensionTest eq 'Yes' ? 'checked' : ''}>

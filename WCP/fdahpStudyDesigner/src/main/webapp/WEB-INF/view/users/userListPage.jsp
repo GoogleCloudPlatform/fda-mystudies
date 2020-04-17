@@ -36,7 +36,7 @@
              <div class="dis-line pull-right" style="margin-top: 10px;height: auto;">
               	<div class="mb-none mt-xs">
                   <select class="selectpicker btn-md" id="filterRole">
-                    <option value="" selected>Filter by Role</option>
+                    <option value="" selected>Filter by role</option>
                     <c:forEach items="${roleList}" var="role">
                         <option value="${role.roleName}">${role.roleName}</option>
                      </c:forEach>

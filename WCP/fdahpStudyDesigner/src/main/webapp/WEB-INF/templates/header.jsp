@@ -16,7 +16,7 @@
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>                        
               </button>
-              <a class="navbar-brand pt-none pb-none" href="javascript:void(0)" id="landingScreen"><img src="/studybuilder/images/logo/logo-sm.png"/></a>
+              <a class="navbar-brand pt-none pb-none" href="javascript:void(0)" id="landingScreen"><img src="/studybuilder/images/logo/logo_innerScreens.png"/></a>
             </div>
             <div class="collapse navbar-collapse p-none" id="myNavbar">
               <ul class="nav navbar-nav">

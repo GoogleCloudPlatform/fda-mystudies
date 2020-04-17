@@ -21,42 +21,6 @@ import lombok.ToString;
 @ToString
 public class ApplicationPropertyConfiguration {
 
-  @Value("${max.login.attempts}")
-  private String maxLoginAttempts;
-
-  @Value("${expiration.login.attempts.minute}")
-  private String expirationLoginAttemptsMinute;
-
-  @Value("${from.email.address}")
-  private String fromEmailAddress;
-
-  @Value("${from.email.password}")
-  private String fromEmailPassword;
-
-  @Value("${factory.value}")
-  private String sslFactoryValue;
-
-  @Value("${port}")
-  private String smtpPortValue;
-
-  @Value("${host.name}")
-  private String smtpHostName;
-
-  @Value("${passwd.reset.link.subject}")
-  private String passwdResetLinkSubject;
-
-  @Value("${passwd.reset.link.content}")
-  private String passwdResetLinkContent;
-
-  @Value("${password.history.count}")
-  private String passwordHistoryCount;
-
-  @Value("${resend.confirmation.mail.subject}")
-  private String resendConfirmationMailSubject;
-
-  @Value("${resend.confirmation.mail.content}")
-  private String resendConfirmationMail;
-
   @Value("${authServerAccessTokenValidationUrl}")
   private String authServerAccessTokenValidationUrl;
 

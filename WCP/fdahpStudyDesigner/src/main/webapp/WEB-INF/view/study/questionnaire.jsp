@@ -192,7 +192,7 @@ function isNumber(evt, thisAttr) {
 					</div>
 					<div class="clearfix"></div>
 					<div class="gray-xs-f mb-xs">
-						Title (1 to 300 characters)<span class="requiredStar">*</span>
+						Title (300 characters max)<span class="requiredStar">*</span>
 					</div>
 					<div class="form-group">
 						<input type="text" class="form-control" name="title" id="titleId"
@@ -319,7 +319,7 @@ function isNumber(evt, thisAttr) {
 			<!-- End Content-->
 			<!-- Schedule-->
 			<div id="schedule" class="tab-pane fade mt-lg">
-				<div class="gray-xs-f mb-sm">Questionnaire Schedule Type</div>
+				<div class="gray-xs-f mb-sm">Schedule Type</div>
 				<div class="pb-lg ">
 					<span class="radio radio-info radio-inline p-40"> <input
 						type="radio" id="schedule1" class="typeofschedule"
@@ -331,7 +331,7 @@ function isNumber(evt, thisAttr) {
 					</span> <span id="anchorspanId" class="tool-tip" data-toggle="tooltip"
 						data-html="true" data-placement="top"
 						<c:if test="${isAnchorQuestionnaire}">
-	             title="This option has been disabled, since this questionnaire has 1 or more Anchor Dates defined in it." 
+	             title="This option has been disabled, since this questionnaire has 1 or more anchor dates defined in it." 
 	           </c:if>>
 						<span class="radio radio-inline p-40"> <input type="radio"
 							id="schedule2" class="typeofschedule" scheduletype="AnchorDate"
@@ -340,7 +340,7 @@ function isNumber(evt, thisAttr) {
 							${questionnaireBo.scheduleType=='AnchorDate' ?'checked':''}
 							${questionnaireBo.shortTitleDuplicate > 0?'disabled' : ''}
 							<c:if test="${empty anchorTypeList}">disabled</c:if>> <label
-							for="schedule2">Anchor-Date-based</label>
+							for="schedule2">Anchor date based</label>
 					</span>
 					</span>
 				</div>
@@ -370,7 +370,7 @@ function isNumber(evt, thisAttr) {
 					</div>
 				</form:form>
 				<!-- Ancor date type -->
-				<div class="gray-xs-f mb-sm">Questionnaire Frequency</div>
+				<div class="gray-xs-f mb-sm">Questionnaire Scheduling Options</div>
 				<div class="pb-lg b-bor">
 					<span class="radio radio-info radio-inline p-40"> <input
 						type="radio" id="inlineRadio1" class="schedule"
@@ -693,7 +693,7 @@ function isNumber(evt, thisAttr) {
 							<div class="dailyStartCls col-md-3 pl-none">
 								<span
 									class="form-group m-none dis-inline vertical-align-middle pr-md">
-									<span class="gray-xs-f">Start date (pick a date) <span
+									<span class="gray-xs-f">Start date <span
 										class="requiredStar">*</span></span><br /> <input id="startDate"
 									type="text"
 									class="form-control mt-sm calendar ${(questionnaireBo.shortTitleDuplicate > 0)?'cursor-none' : ''}"
@@ -709,7 +709,7 @@ function isNumber(evt, thisAttr) {
 									<div>
 										<span
 											class="form-group m-none dis-inline vertical-align-middle pr-md">
-											<span class="gray-xs-f">Start date (pick a date) <span
+											<span class="gray-xs-f">Start date <span
 												class="requiredStar">*</span></span><br /> <span class="pr-md">Anchor
 												Date</span> <span> <select
 												class="signDropDown selectpicker sign-box ${(questionnaireBo.shortTitleDuplicate > 0)?'cursor-none' : ''}"
@@ -832,7 +832,7 @@ function isNumber(evt, thisAttr) {
 							<div class="weeklyStartCls col-md-3 pl-none">
 								<span
 									class="form-group m-none dis-inline vertical-align-middle pr-md">
-									<span class="gray-xs-f">Start date (pick a date) <span
+									<span class="gray-xs-f">Start date <span
 										class="requiredStar">*</span></span><br /> <input
 									id="startWeeklyDate" type="text"
 									class="form-control mt-sm calendar ${(questionnaireBo.shortTitleDuplicate > 0)?'cursor-none' : ''}"
@@ -849,7 +849,7 @@ function isNumber(evt, thisAttr) {
 									<div>
 										<span
 											class="form-group m-none dis-inline vertical-align-middle pr-md">
-											<span class="gray-xs-f">Start date (pick a date) <span
+											<span class="gray-xs-f">Start date <span
 												class="requiredStar">*</span></span><br /> <span class="pr-md">Anchor
 												Date</span> <span> <select
 												class="signDropDown selectpicker sign-box ${(questionnaireBo.shortTitleDuplicate > 0)?'cursor-none' : ''}"
@@ -989,7 +989,7 @@ function isNumber(evt, thisAttr) {
 							<div class="monthlyStartCls dis_inlinetop p-none">
 								<span
 									class="form-group m-none dis-inline vertical-align-middle pr-md">
-									<span class="gray-xs-f">Start date (pick a date) <span
+									<span class="gray-xs-f">Start date <span
 										class="requiredStar">*</span></span><br /> <input id="pickStartDate"
 									type="text"
 									class="form-control mt-sm calendar ${(questionnaireBo.shortTitleDuplicate > 0)?'cursor-none' : ''}"
@@ -1037,7 +1037,7 @@ function isNumber(evt, thisAttr) {
 									<div>
 										<span
 											class="form-group m-none dis-inline vertical-align-middle pr-md">
-											<span class="gray-xs-f">Start date (pick a date) <span
+											<span class="gray-xs-f">Start date <span
 												class="requiredStar">*</span></span><br /> <span class="pr-md">Anchor
 												Date</span> <span> <select
 												class="signDropDown selectpicker sign-box ${(questionnaireBo.shortTitleDuplicate > 0)?'cursor-none' : ''}"
@@ -3387,7 +3387,7 @@ function deletStep(stepId,stepType){
 		    					}
 		    					var isAnchorQuestionnaire = jsonobject.isAnchorQuestionnaire;
 		    					if(isAnchorQuestionnaire){
-		    						$('#anchorspanId').prop('title','This option has been disabled, since this questionnaire has 1 or more Anchor Dates defined in it.');
+		    						$('#anchorspanId').prop('title','This option has been disabled, since this questionnaire has 1 or more anchor dates defined in it.');
 		    						$('#anchorspanId').attr('disabled',true);
 		    						$('#schedule2').attr('disabled',true);
 		    						$('.schedule').attr('disabled',true);

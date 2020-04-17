@@ -100,7 +100,7 @@ function isNumberKey(evt)
          <div id="sla" class="tab-pane fade in active mt-xlg">
             <div class="row">
                <div class="col-md-6 pl-none">
-                  <div class="gray-xs-f mb-xs">Step title or Key (1 to 15 characters) <span class="requiredStar">*</span><span class="ml-xs sprites_v3 filled-tooltip"  data-toggle="tooltip" title="A human readable step identifier and must be unique across all steps of the questionnaire.Note that this field cannot be edited once the study is Launched."></span></div>
+                  <div class="gray-xs-f mb-xs">Short Title or Key (15 characters max) <span class="requiredStar">*</span><span class="ml-xs sprites_v3 filled-tooltip"  data-toggle="tooltip" title="A human readable step identifier and must be unique across all steps of the questionnaire. Note that this field cannot be edited once the study is Launched."></span></div>
                   <div class="form-group">
                      <input  type="text" <c:if test="${empty questionnairesStepsBo.stepShortTitle}">autofocus="autofocus"</c:if> custAttType="cust" class="form-control" name="stepShortTitle" id="stepShortTitle" value="${fn:escapeXml(questionnairesStepsBo.stepShortTitle)}" 
                        <c:if test="${not empty questionnairesStepsBo.isShorTitleDuplicate && (questionnairesStepsBo.isShorTitleDuplicate gt 0)}"> disabled</c:if> required maxlength="15"/>
@@ -133,7 +133,7 @@ function isNumberKey(evt)
          <div id="qla" class="tab-pane fade mt-xlg">
           <input type="hidden" name="questionsBo.id" id="questionId" value="${questionnairesStepsBo.questionsBo.id}">
             <div class="col-md-10 p-none">
-               <div class="gray-xs-f mb-xs">Text of the question (1 to 300 characters)<span class="requiredStar">*</span><span class="ml-xs sprites_v3 filled-tooltip"  data-toggle="tooltip" title="The question you wish to ask the participant."></span></div>
+               <div class="gray-xs-f mb-xs">Question Text (1 to 300 characters)<span class="requiredStar">*</span><span class="ml-xs sprites_v3 filled-tooltip"  data-toggle="tooltip" title="The question you wish to ask the participant."></span></div>
                <div class="form-group">
                   <input autofocus="autofocus" type="text" class="form-control" name="questionsBo.question" id="questionTextId" placeholder="Type the question you wish to ask the participant" value="${fn:escapeXml(questionnairesStepsBo.questionsBo.question)}" required maxlength="300"/>
                   <div class="help-block with-errors red-txt"></div>
@@ -195,12 +195,12 @@ function isNumberKey(evt)
             		<span class="tool-tip" data-toggle="tooltip" data-html="true" data-placement="top"  title="The date supplied by a participant in response to this question can be used to dictate the schedule for other questionnaires or active tasks in the study, or to determine the Period of Visibility of study resources."  >
             		<span class="checkbox checkbox-inline">
 			               <input type="checkbox" id="useAnchorDateId" name="questionsBo.useAnchorDate" value="true" ${questionnairesStepsBo.questionsBo.useAnchorDate ? 'checked':''} <c:if test="${not empty questionnairesStepsBo.isShorTitleDuplicate && (questionnairesStepsBo.isShorTitleDuplicate gt 0)}"> disabled</c:if>>
-			               <label for="useAnchorDateId"> Use response as Anchor Date </label>
+			               <label for="useAnchorDateId"> Use response as anchor date </label>
 		             </span>
 		             </span>
 		             <div class="clearfix"></div>
 	            	<div class="col-md-6 p-none useAnchorDateName mt-md" style="display: none">
-		                <div class="gray-xs-f mb-xs">Define name for Anchor date<span class="requiredStar">*</span></div>
+		                <div class="gray-xs-f mb-xs">Define name for anchor date<span class="requiredStar">*</span></div>
 		                <div class="form-group">
 		                  <input type="text" class="form-control" name="questionsBo.anchorDateName" id="anchorTextId" value="${questionnairesStepsBo.questionsBo.anchorDateName}" maxlength="50" <c:if test="${not empty questionnairesStepsBo.isShorTitleDuplicate && (questionnairesStepsBo.isShorTitleDuplicate gt 0)}"> disabled</c:if>/>
 		                  <div class="help-block with-errors red-txt"></div>
@@ -221,12 +221,12 @@ function isNumberKey(evt)
 		               <span class="checkbox checkbox-inline">
 		               
 			               <input type="checkbox" id="useAnchorDateId" name="questionsBo.useAnchorDate" value="true" ${questionnairesStepsBo.questionsBo.useAnchorDate ? 'checked':''} <c:if test="${questionnaireBo.frequency ne 'One time' || questionnaireBo.scheduleType ne 'Regular'}"> disabled </c:if> <c:if test="${not empty questionnairesStepsBo.isShorTitleDuplicate && (questionnairesStepsBo.isShorTitleDuplicate gt 0)}"> disabled</c:if>>
-			               <label for="useAnchorDateId"> Use response as Anchor Date </label>
+			               <label for="useAnchorDateId"> Use response as anchor date </label>
 		               </span>
 	               </span>
 	               <div class="clearfix"></div>
 	            	<div class="col-md-6 p-none useAnchorDateName mt-md" style="display: none">
-		                <div class="gray-xs-f mb-xs">Define name for Anchor date<span class="requiredStar">*</span></div>
+		                <div class="gray-xs-f mb-xs">Define name for anchor date<span class="requiredStar">*</span></div>
 		                <div class="form-group">
 		                  <input type="text" class="form-control" name="questionsBo.anchorDateName" id="anchorTextId" value="${fn:escapeXml(questionnairesStepsBo.questionsBo.anchorDateName)}" maxlength="50" <c:if test="${questionsBo.isShorTitleDuplicate gt 0}">disabled</c:if> <c:if test="${not empty questionnairesStepsBo.isShorTitleDuplicate && (questionnairesStepsBo.isShorTitleDuplicate gt 0)}"> disabled</c:if>/>
 		                  <div class="help-block with-errors red-txt"></div>
@@ -2300,7 +2300,7 @@ $(document).ready(function(){
 					    				 }else{
 					    					 bootbox.confirm({
 					    							closeButton: false,
-					    							message : "This question provides an Anchor Date response element, but has been marked Skippable. Are you sure you wish to proceed?",	
+					    							message : "This question provides an anchor date response element, but has been marked Skippable. Are you sure you wish to proceed?",	
 					    						    buttons: {
 					    						        'cancel': {
 					    						            label: 'Cancel',
@@ -2341,7 +2341,7 @@ $(document).ready(function(){
 		    					 $("#doneId").attr("disabled",false);
 		    					 bootbox.confirm({
 		    							closeButton: false,
-		    							message : "This question provides an Anchor Date response element, but has been marked Skippable. Are you sure you wish to proceed?",	
+		    							message : "This question provides an anchor date response element, but has been marked Skippable. Are you sure you wish to proceed?",	
 		    						    buttons: {
 		    						        'cancel': {
 		    						            label: 'Cancel',
