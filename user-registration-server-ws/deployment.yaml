@@ -21,17 +21,17 @@ spec:
             - name: DB_USER
               valueFrom:
                 secretKeyRef:
-                  name: cloudsql-db-credentials
+                  name: user-registration-db-credentials
                   key: username
             - name: DB_PASS
               valueFrom:
                 secretKeyRef:
-                  name: cloudsql-db-credentials
+                  name: user-registration-db-credentials
                   key: password
             - name: DB_NAME
               valueFrom:
                 secretKeyRef:
-                  name: cloudsql-db-credentials
+                  name: user-registration-db-credentials
                   key: dbname
             - name: FROM_EMAIL_ADDRESS
               valueFrom:
@@ -62,22 +62,19 @@ spec:
               path: /myStudiesUserMgmtWS/healthCheck
               port: 8080
           volumeMounts:
-            - name: gcloud-key-volume
-              mountPath: /secrets/gcloud_key
-              readOnly: true
+          - name: gcloud-key-volume
+            mountPath: /secrets/gcloud_key
+            readOnly: true
         - name: cloudsql-proxy
           image: gcr.io/cloudsql-docker/gce-proxy:latest
           command: ["/cloud_sql_proxy",
             "-instances=heroes-hat-dev-data:us-central1:my-studies-1=tcp:3306",
-            "-credential_file=/secrets/cloudsql/sql_credentials.json"]
+            "-credential_file=/secrets/gcloud_key/key.json"]
           volumeMounts:
-            - name: my-secrets-volume
-              mountPath: /secrets/cloudsql
-              readOnly: true
+          - name: gcloud-key-volume
+            mountPath: /secrets/gcloud_key
+            readOnly: true
       volumes:
-        - name: my-secrets-volume
-          secret:
-            secretName: cloudsql-instance-credentials
-        - name: gcloud-key-volume
-          secret:
-            secretName: user-registration-server-ws-gcloud-key
+      - name: gcloud-key-volume
+        secret:
+          secretName: user-registration-gcloud-key
