@@ -199,16 +199,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     UIApplication.shared.applicationIconBadgeNumber = 0
 
-    SyncUpdate.currentSyncUpdate = SyncUpdate()
-
-    // Register observer for Network change
-    NotificationCenter.default.addObserver(
-      SyncUpdate.currentSyncUpdate as Any,
-      selector: #selector(SyncUpdate.currentSyncUpdate?.updateData),
-      name: ReachabilityChangedNotification,
-      object: nil
-    )
-
     let ud1 = UserDefaults.standard
 
     // Check if App is launched because of Notification Received

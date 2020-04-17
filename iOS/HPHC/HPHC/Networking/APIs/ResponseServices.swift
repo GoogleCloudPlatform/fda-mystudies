@@ -269,6 +269,7 @@ class ResponseServices: NSObject {
   /// - Parameter response: Webservice response
   func handleGetParticipantResponse(response: [String: Any]) {
 
+    guard !response.isEmpty else { return }
     var dashBoardResponse: [DashboardResponse] = []
     let keysArray = self.keys.components(separatedBy: ",")
     for key in keysArray {
