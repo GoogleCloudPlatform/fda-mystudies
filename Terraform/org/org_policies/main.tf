@@ -20,15 +20,15 @@ terraform {
   backend "gcs" {}
 }
 
-# App Engine
-resource "google_organization_policy" "appengine_disable_code_download" {
-  org_id     = var.org_id
-  constraint = "appengine.disableCodeDownload"
+# # App Engine
+# resource "google_organization_policy" "appengine_disable_code_download" {
+#   org_id     = var.org_id
+#   constraint = "appengine.disableCodeDownload"
 
-  boolean_policy {
-    enforced = true
-  }
-}
+#   boolean_policy {
+#     enforced = true
+#   }
+# }
 
 # Cloud SQL
 resource "google_organization_policy" "sql_restrict_authorized_networks" {
