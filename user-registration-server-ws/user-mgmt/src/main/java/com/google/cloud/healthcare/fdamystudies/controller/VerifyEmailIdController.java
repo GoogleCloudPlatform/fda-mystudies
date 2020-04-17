@@ -56,11 +56,10 @@ public class VerifyEmailIdController {
     VerifyEmailIdResponse verifyEmailIdResponse = null;
     String verificationCode = "";
 
-    if ((clientToken.length() == 0 || StringUtils.isEmpty(clientToken))
-        || (accessToken.length() == 0 || StringUtils.isEmpty(accessToken))
-        || (userId.length() == 0 || StringUtils.isEmpty(userId))
-        || (verificationForm.getCode() == null
-            || StringUtils.isEmpty(verificationForm.getCode()))) {
+     if (StringUtils.isEmpty(clientToken)
+        || StringUtils.isEmpty(accessToken)
+        || StringUtils.isEmpty(userId)
+        || StringUtils.isEmpty(verificationForm.getCode())) {
 
       MyStudiesUserRegUtil.getFailureResponse(
           400 + "",
