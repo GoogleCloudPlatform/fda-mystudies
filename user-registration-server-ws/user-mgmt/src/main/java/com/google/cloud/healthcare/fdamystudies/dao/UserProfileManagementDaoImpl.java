@@ -146,7 +146,7 @@ public class UserProfileManagementDaoImpl implements UserProfileManagementDao {
     CriteriaBuilder criteriaBuilder = null;
     CriteriaQuery<UserDetailsBO> criteriaQuery = null;
     Root<UserDetailsBO> userDetailsBoRoot = null;
-    Predicate[] predicates = new Predicate[2];
+    Predicate[] predicates = new Predicate[3];
     List<UserDetailsBO> userDetailsBoList = null;
 
     try (Session session = entityManagerFactory.unwrap(SessionFactory.class).openSession()) {
@@ -155,6 +155,7 @@ public class UserProfileManagementDaoImpl implements UserProfileManagementDao {
       userDetailsBoRoot = criteriaQuery.from(UserDetailsBO.class);
       predicates[0] = criteriaBuilder.equal(userDetailsBoRoot.get(AppConstants.EMAIL), email);
       predicates[1] = criteriaBuilder.equal(userDetailsBoRoot.get("appInfoId"), appInfoId);
+      predicates[2] = criteriaBuilder.notEqual(userDetailsBoRoot.get("emailCode"), "Null");
       criteriaQuery.select(userDetailsBoRoot).where(predicates);
       userDetailsBoList = session.createQuery(criteriaQuery).getResultList();
       if (!userDetailsBoList.isEmpty()) {
@@ -294,8 +295,6 @@ public class UserProfileManagementDaoImpl implements UserProfileManagementDao {
   }
 
   @Override
-  /*public boolean deActivateAcct(
-  String userId, DeactivateAcctBean deactivateAcctBean, Integer userDetailsId) {*/
   public boolean deActivateAcct(String userId, List<String> deleteData, Integer userDetailsId) {
     logger.info("UserProfileManagementDaoImpl deActivateAcct() - Starts ");
     Transaction transaction = null;

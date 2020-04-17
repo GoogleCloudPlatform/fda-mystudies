@@ -24,6 +24,7 @@ import lombok.Setter;
 @Entity
 @Table(name = "locations")
 public class LocationBo implements Serializable {
+
   private static final long serialVersionUID = 1L;
 
   @Id

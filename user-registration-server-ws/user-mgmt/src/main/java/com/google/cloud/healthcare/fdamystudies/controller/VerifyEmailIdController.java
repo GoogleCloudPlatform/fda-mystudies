@@ -60,7 +60,7 @@ public class VerifyEmailIdController {
         || (accessToken.length() == 0 || StringUtils.isEmpty(accessToken))
         || (userId.length() == 0 || StringUtils.isEmpty(userId))
         || (verificationForm.getCode() == null
-            && StringUtils.isEmpty(verificationForm.getCode()))) {
+            || StringUtils.isEmpty(verificationForm.getCode()))) {
 
       MyStudiesUserRegUtil.getFailureResponse(
           400 + "",
