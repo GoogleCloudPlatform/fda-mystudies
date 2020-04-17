@@ -1,54 +1,60 @@
-apiVersion: apps/v1 
-kind: Deployment 
-metadata: 
-  name: study-designer 
-  labels: 
-    app: study-designer 
-spec: 
-  replicas: 1 
-  selector: 
-    matchLabels: 
-      app: study-designer 
-  template: 
-    metadata: 
-      labels: 
-        app: study-designer 
-    spec: 
-      containers: 
-        - name: study-designer 
-          image: gcr.io/heroes-hat-dev/study-designer:latest
-          env: 
-            - name: DB_USER 
-              valueFrom: 
-                secretKeyRef: 
-                  name: cloudsql-db-credentials 
-                  key: username 
-            - name: DB_PASS 
-              valueFrom: 
-                secretKeyRef: 
-                  name: cloudsql-db-credentials 
-                  key: password 
-            - name: DB_NAME 
-              valueFrom: 
-                secretKeyRef: 
-                  name: cloudsql-db-credentials 
-                  key: dbname 
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: study-designer
+  labels:
+    app: study-designer
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: study-designer
+  template:
+    metadata:
+      labels:
+        app: study-designer
+    spec:
+      containers:
+        - name: study-designer
+          image: gcr.io/heroes-hat-dev-apps/study-designer:latest
+          env:
+            - name: DB_USER
+              valueFrom:
+                secretKeyRef:
+                  name: study-designer-db-credentials
+                  key: username
+            - name: DB_PASS
+              valueFrom:
+                secretKeyRef:
+                  name: study-designer-db-credentials
+                  key: password
+            - name: DB_NAME
+              valueFrom:
+                secretKeyRef:
+                  name: study-designer-db-credentials
+                  key: dbname
             - name: REGISTRATION_SERVER_URL
-              value: "35.196.79.108:60000"
+              value: "user-registration-server-np:60000"
             - name: RESPONSE_SERVER_URL
-              value: "35.196.119.71:60000"
+              value: "response-server-np:50000"
+            - name: GOOGLE_APPLICATION_CREDENTIALS
+              value: "/secrets/gcloud_key/key.json"
           ports:
           - containerPort: 8080
-        - name: cloudsql-proxy 
-          image: gcr.io/cloudsql-docker/gce-proxy:latest 
-          command: ["/cloud_sql_proxy", 
-            "-instances=heroes-hat-dev:us-east1:my-studies2=tcp:3306", 
-            "-credential_file=/secrets/cloudsql/sql_credentials.json"] 
-          volumeMounts: 
-            - name: my-secrets-volume 
-              mountPath: /secrets/cloudsql 
-              readOnly: true 
-      volumes: 
-        - name: my-secrets-volume 
-          secret: 
-            secretName: cloudsql-instance-credentials
+          volumeMounts:
+          - name: gcloud-key-volume
+            mountPath: /secrets/gcloud_key
+            readOnly: true
+        - name: cloudsql-proxy
+          image: gcr.io/cloudsql-docker/gce-proxy:latest
+          command: ["/cloud_sql_proxy",
+            "-instances=heroes-hat-dev-data:us-central1:my-studies-1=tcp:3306",
+            "-credential_file=/secrets/gcloud_key/key.json"]
+          volumeMounts:
+          - name: gcloud-key-volume
+            mountPath: /secrets/gcloud_key
+            readOnly: true
+      volumes:
+      - name: gcloud-key-volume
+        secret:
+          secretName: study-designer-gcloud-key
