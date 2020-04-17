@@ -54,7 +54,7 @@
 		                <span class="radio radio-inline">
 		                    <input type="radio" id="inlineRadio2" value="immediate" name="currentDateTime"
 		                    <c:if test="${notificationBO.notificationScheduleType eq 'immediate'}">checked</c:if>>
-		                    <label for="inlineRadio2">Send Immediately</label>
+		                    <label for="inlineRadio2">Send immediately</label>
 		                </span>
 	                	<div class="help-block with-errors red-txt"></div>
 	                	<c:if test="${not empty notificationHistoryNoDateTime}">
@@ -70,7 +70,7 @@
 	            
 	            
 	            <div class="add_notify_option mandatoryForAppNotification">
-	                <div class="gray-xs-f mb-xs">Select Date <span class="requiredStar">*</span></div>
+	                <div class="gray-xs-f mb-xs">Date<span class="requiredStar">*</span></div>
 	                 <div class="form-group date">
 	                     <input id='datetimepicker' type="text" class="form-control calendar datepicker resetVal" 
 	                     name="scheduleDate" value="${notificationBO.scheduleDate}" oldValue="${notificationBO.scheduleDate}" 
@@ -91,7 +91,7 @@
 	            
             <div class=" ">
                   <div class="form-group">
-                  <div class="gray-xs-f mb-xs">Select App ID</div>
+                  <div class="gray-xs-f mb-xs">App to which the notification must be sent</div>
                      <select id="appId" class="selectpicker" name="appId" >
                       <option value='' >Select</option>
                       <c:forEach items="${gatewayAppList}" var="app">

@@ -194,42 +194,6 @@ public class UserManagementProfileServiceImpl implements UserManagementProfileSe
   }
 
   @Override
-  public int sendPasswordResetLinkthroughEmail(
-      String emailId, String tempPassword, UserDetailsBO participantDetails) {
-    logger.info("UserManagementProfileServiceImpl - sendPasswordResetLinkthroughEmail() - Starts");
-    String dynamicContent = "";
-    String content = "";
-    Map<String, String> emailMap = null;
-    boolean isSent = false;
-    int isEmailSent = 0;
-    String subject = "";
-    UserDetailsBO upParticipantDetails = null;
-    try {
-      upParticipantDetails = userProfileManagementDao.saveParticipant(participantDetails);
-      if (upParticipantDetails != null) {
-        subject = appConfig.getPasswdResetLinkSubject();
-        content = appConfig.getPasswdResetLinkContent();
-        dynamicContent = MyStudiesUserRegUtil.generateEmailContent(content, emailMap);
-        isSent =
-            emailNotification.sendEmailNotification(subject, dynamicContent, emailId, null, null);
-        if (!isSent) {
-          isEmailSent = 1;
-        } else {
-          isEmailSent = 2;
-        }
-      } else {
-        isEmailSent = 2;
-      }
-    } catch (Exception e) {
-      isEmailSent = 3;
-      logger.error(
-          "UserManagementProfileServiceImpl - sendPasswordResetLinkthroughEmail() - error() ", e);
-    }
-    logger.info("UserManagementProfileServiceImpl - sendPasswordResetLinkthroughEmail() - Ends");
-    return isEmailSent;
-  }
-
-  @Override
   public UserDetailsBO getParticipantDetails(String id) {
     logger.info("UserManagementProfileServiceImpl - getParticipantDetails() - Starts");
     UserDetailsBO userDetailsBO = null;

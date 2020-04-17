@@ -6,11 +6,11 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta http-equiv="x-ua-compatible" content="ie=edge">
-    <title>FDA MSMP</title>
+    <title>Study Builder</title>
     
     <!-- Favicon -->
-    <link rel="shortcut icon" href="/studybuilder/images/icons/fav.png" type="image/x-icon" />
-    <link rel="apple-touch-icon" href="/studybuilder/images/icons/fav.png">
+    <link rel="shortcut icon" href="/studybuilder/images/icons/FAV_Icon.png" type="image/x-icon" />
+    <link rel="apple-touch-icon" href="/studybuilder/images/icons/FAV_Icon.png">
     
     <!-- Web Fonts  -->
     <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700" rel="stylesheet">
@@ -37,7 +37,8 @@
 <body class="txt-center grayeef2f5-bg">
 
 <div class="err_page_container">
-    <div class="txt-left"><img src="/studybuilder/images/logo/fda-logo.png" alt=""/></div>
+    
+    <div class="txt-left"><img src="/studybuilder/images/logo/logo_innerScreens.png" alt=""/></div>
     <div class="err_page_txt">
         <img src="/studybuilder/images/icons/404.png" alt=""/>
         <div>Sorry, this page does not exist.</div>

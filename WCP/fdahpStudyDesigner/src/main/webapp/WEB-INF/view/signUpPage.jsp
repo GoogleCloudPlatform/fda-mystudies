@@ -11,7 +11,7 @@
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 
-<title>FDA MSMP</title>
+<title>Study Builder</title>
 
 <meta name="description" content="">
 <meta name="keywords" content="">
@@ -19,9 +19,9 @@
 
 <!-- Favicon -->
 <link rel="shortcut icon"
-	href="/studybuilder/images/icons/fav.png" type="image/x-icon" />
+	href="/studybuilder/images/icons/FAV_Icon.png" type="image/x-icon" />
 <link rel="apple-touch-icon"
-	href="/studybuilder/images/icons/fav.png">
+	href="/studybuilder/images/icons/FAV_Icon.png">
 
 <!-- Mobile Metas -->
 <meta name="viewport"
@@ -211,7 +211,7 @@
               </div> -->
 
 		<div class="logo__ll">
-			<img src="images/logo/fda-logo-w.png" alt="" />
+			<img src="images/logo/logo_landing_welcome.png" alt="" />
 		</div>
 		<div class="signup__container">
 			<!--container-->
@@ -227,7 +227,7 @@
 						<div id="sucMsg" class="suceess_msg">${sucMsg}</div>
 						<c:if test="${isValidToken}">
 							<p class="col-xs-12  text-center boxcenter mb-xlg white__text">To
-								begin using the services on FDA and complete your account setup
+								begin using the services on &lt;Org Name&gt and complete your account setup
 								process, kindly use the access code provided on your email and
 								set up your account password.</p>
 							<div class=" col-md-6 boxcenter">
@@ -308,9 +308,9 @@
 											type="checkbox" id="inlineCheckbox" value="option1"
 											required="required"> <label for="inlineCheckbox">
 												<span class="white__text">I agree to the <a
-													href="https://www.fda.gov/AboutFDA/AboutThisWebsite/WebsitePolicies/"
+													href="/studybuilder/terms.do"
 													class="grey__text" target="_blank">Terms</a> and <a
-													href="https://www.fda.gov/AboutFDA/AboutThisWebsite/WebsitePolicies/#privacy"
+													href="/studybuilder/privacyPolicy.do"
 													class="grey__text" target="_blank">Privacy Policy</a>
 													associated with using this portal
 											</span>
@@ -339,10 +339,10 @@
 			</div>
 			<!--container-->
 			<div class="footer">
-				<span>Copyright © 2017 FDA</span><span><a
-					href="https://www.fda.gov/AboutFDA/AboutThisWebsite/WebsitePolicies/"
+				<span>Copyright Placeholder</span><span><a
+					href="/studybuilder/terms.do"
 					id="" target="_blank">Terms</a></span><span><a
-					href="https://www.fda.gov/AboutFDA/AboutThisWebsite/WebsitePolicies/#privacy"
+					href="/studybuilder/privacyPolicy.do"
 					id="" target="_blank">Privacy Policy</a></span>
 			</div>
 		</div>

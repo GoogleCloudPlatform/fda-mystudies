@@ -102,8 +102,7 @@
 			<!--phase2a sp1-->
 
 			<div class="col-md-12 p-none">
-				<div class="gray-xs-f mb-xs">
-					Study full name <small>(150 characters max)</small><span
+				<div class="gray-xs-f mb-xs">Descriptive Study Name<small>(150 characters max)</small><span
 						class="requiredStar"> *</span>
 				</div>
 				<div class="form-group">
@@ -225,8 +224,7 @@
 			</div>
 			<div class="col-md-12 p-none">
 				<div class="col-md-6 pl-none">
-					<div class="gray-xs-f mb-xs">
-						Study website <span>(e.g: http://www.google.com) </span> <small>(100
+					<div class="gray-xs-f mb-xs">Study Website<span>(e.g: http://www.google.com) </span> <small>(100
 							characters max)</small>
 					</div>
 					<div class="form-group">
@@ -239,8 +237,7 @@
 					</div>
 				</div>
 				<div class="col-md-6 pr-none">
-					<div class="gray-xs-f mb-xs">
-						Study feedback destination inbox email address <small>(100
+					<div class="gray-xs-f mb-xs">Email Address (for participant feedback)<small>(100
 							characters max) </small><span class="requiredStar"> *</span>
 					</div>
 					<div class="form-group">
@@ -255,8 +252,7 @@
 
 			<div class="col-md-12 p-none mb-xxlg">
 				<div class="col-md-6 pl-none">
-					<div class="gray-xs-f mb-xs">
-						Study type<span class="requiredStar"> *</span>
+					<div class="gray-xs-f mb-xs">Study Type<span class="requiredStar"> *</span>
 					</div>
 					<div class="form-group">
 						<span class="radio radio-info radio-inline p-45"> <input

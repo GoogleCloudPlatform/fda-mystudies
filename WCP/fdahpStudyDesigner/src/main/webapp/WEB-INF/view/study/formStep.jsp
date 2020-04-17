@@ -773,7 +773,7 @@ function validateRepeatableQuestion(item,callback){
                 
                 if('SUCCESS' == message){
                     callback(true);
-                    showErrMsg("The following properties for questions cannot be used if the form is of Repeatable type:  Anchor Date, Charts/Statistics for Dashboard.");
+                    showErrMsg("The following attributes/properties cannot be used with questions that are added to a 'repeatable' type of form:  anchor date, chart for app dashboard, statistic for app dashboard.");
                 }else{
                     callback(false);
                 }
