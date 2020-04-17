@@ -26,6 +26,9 @@ dependency "apps" {
 
   mock_outputs = {
     service_account = "mock-gke-service-account"
+    apps_service_accounts = {
+      mock-app = "mock-app-gke@mock-project.iam.gserviceaccount.com"
+    }
   }
 }
 
@@ -38,8 +41,10 @@ dependency "networks" {
 }
 
 inputs = {
-  sql_client_service_accounts = [
-    dependency.apps.outputs.service_account,
-    dependency.networks.outputs.bastion_service_account,
-  ]
+  sql_client_service_accounts = concat(
+    [
+      dependency.apps.outputs.service_account,
+      dependency.networks.outputs.bastion_service_account,
+    ],
+  values(dependency.apps.outputs.apps_service_accounts)[*].email)
 }

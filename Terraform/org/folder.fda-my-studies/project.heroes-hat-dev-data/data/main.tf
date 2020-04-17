@@ -82,3 +82,4 @@ module "my_studies_cloudsql" {
     verify_server_certificate = null
   }
 }
+
