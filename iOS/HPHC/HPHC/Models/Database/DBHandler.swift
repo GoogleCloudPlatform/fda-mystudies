@@ -29,7 +29,7 @@ class DBHandler: NSObject {
     return try! Realm(configuration: encryptionConfig)
   }()
 
-  fileprivate class func getRealmObject() -> Realm? {
+  class func getRealmObject() -> Realm? {
     return DBHandler.realm
   }
 
