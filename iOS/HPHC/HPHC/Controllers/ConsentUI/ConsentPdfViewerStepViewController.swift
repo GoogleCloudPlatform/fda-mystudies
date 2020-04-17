@@ -70,11 +70,16 @@ class ConsentPdfViewerStepViewController: ORKStepViewController {
     super.viewDidLoad()
     webView.navigationDelegate = self
     webView.contentScaleFactor = 1.0
+  }
+  
+  override func viewDidAppear(_ animated: Bool) {
+    super.viewDidAppear(animated)
     loadPDF()
   }
 
   /// Load PDF from the Data on WebView.
   private func loadPDF() {
+    self.title = kConsent.uppercased()
     if let pdfData = self.pdfData {
       self.webView.load(
         pdfData,
@@ -119,6 +124,7 @@ class ConsentPdfViewerStepViewController: ORKStepViewController {
           }
         )
       )
+      self.present(alert, animated: true, completion: nil)
     }
   }
 
