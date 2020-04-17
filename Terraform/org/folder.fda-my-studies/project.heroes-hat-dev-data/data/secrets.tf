@@ -59,7 +59,6 @@ resource "google_secret_manager_secret_version" "db_passwords_secrets_values" {
 
   secret      = google_secret_manager_secret.db_passwords_secrets[each.key].id
   secret_data = random_password.db_passwords[each.key].result
-  project     = var.secrets_project_id
 }
 
 resource "google_secret_manager_secret_version" "db_users_secrets_values" {
@@ -69,5 +68,4 @@ resource "google_secret_manager_secret_version" "db_users_secrets_values" {
 
   secret      = google_secret_manager_secret.db_users_secrets[each.key].id
   secret_data = google_sql_user.db_users[each.key].name
-  project     = var.secrets_project_id
 }
