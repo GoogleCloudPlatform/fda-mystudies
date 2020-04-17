@@ -464,7 +464,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
       let center = UNUserNotificationCenter.current()
       center.getPendingNotificationRequests(
         completionHandler: { requests in
-           if requests.count < 50 {
+          if requests.count < 50 {
             DispatchQueue.main.async {
               // This should get called on main thread to avoid crash.
               LocalNotification.refreshAllLocalNotification()

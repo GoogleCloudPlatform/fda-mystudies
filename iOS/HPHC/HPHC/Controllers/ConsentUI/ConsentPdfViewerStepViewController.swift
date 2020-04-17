@@ -19,6 +19,7 @@
 import MessageUI
 import ResearchKit
 import UIKit
+import WebKit
 
 let kPdfMimeType = "application/pdf"
 let kUTF8Encoding = "UTF-8"
@@ -39,9 +40,8 @@ class ConsentPdfViewerStep: ORKStep {
 class ConsentPdfViewerStepViewController: ORKStepViewController {
 
   // MARK: - Outlets
-  @IBOutlet var webView: UIWebView?  //TBD: Update this
+  @IBOutlet weak var webView: WKWebView!
   @IBOutlet weak var buttonEmailPdf: UIBarButtonItem?
-
   @IBOutlet weak var buttonNext: UIButton?
 
   var pdfData: Data?
@@ -68,15 +68,21 @@ class ConsentPdfViewerStepViewController: ORKStepViewController {
 
   override func viewDidLoad() {
     super.viewDidLoad()
+    webView.navigationDelegate = self
+    webView.contentScaleFactor = 1.0
+    loadPDF()
+  }
 
-    self.webView?.load(
-      pdfData!,
-      mimeType: "application/pdf",
-      textEncodingName: "UTF-8",
-      baseURL: URL.init(fileURLWithPath: "")
-    )
-    webView?.delegate = self
-    webView?.scalesPageToFit = true
+  /// Load PDF from the Data on WebView.
+  private func loadPDF() {
+    if let pdfData = self.pdfData {
+      self.webView.load(
+        pdfData,
+        mimeType: "application/pdf",
+        characterEncodingName: "UTF-8",
+        baseURL: URL(fileURLWithPath: "")
+      )
+    }
   }
 
   /// SendConsentByMail used for sharing the Consent.
@@ -142,14 +148,13 @@ extension ConsentPdfViewerStepViewController: MFMailComposeViewControllerDelegat
 }
 
 // MARK: - WebView Delegate
-extension ConsentPdfViewerStepViewController: UIWebViewDelegate {
+extension ConsentPdfViewerStepViewController: WKNavigationDelegate {
 
-  func webViewDidFinishLoad(_ webView: UIWebView) {
+  func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
     self.removeProgressIndicator()
   }
 
-  func webView(_ webView: UIWebView, didFailLoadWithError error: Error) {
-
+  func webView(_ webView: WKWebView, didFail navigation: WKNavigation!, withError error: Error) {
     self.removeProgressIndicator()
 
     let buttonTitleOK = NSLocalizedString("OK", comment: "")
@@ -172,4 +177,5 @@ extension ConsentPdfViewerStepViewController: UIWebViewDelegate {
 
     self.present(alert, animated: true, completion: nil)
   }
+
 }
