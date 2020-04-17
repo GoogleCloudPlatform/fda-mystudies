@@ -31,7 +31,6 @@ data "google_secret_manager_secret_version" "secrets" {
 
   for_each = toset(concat(
     [
-      "my-studies-sql-default-user-password",
       "my-studies-registration-client-id",
       "my-studies-registration-client-secret",
       "my-studies-wcp-user",
@@ -45,18 +44,6 @@ data "google_secret_manager_secret_version" "secrets" {
 }
 
 # Secrets from Secret Manager.
-resource "kubernetes_secret" "cloudsql_db_credentials" {
-  metadata {
-    name = "cloudsql-db-credentials"
-  }
-
-  data = {
-    username = var.sql_instance_user
-    password = data.google_secret_manager_secret_version.secrets["my-studies-sql-default-user-password"].secret_data
-    dbname   = var.sql_instance_name
-  }
-}
-
 resource "kubernetes_secret" "apps_db_credentials" {
   for_each = toset(local.apps)
 
@@ -92,20 +79,6 @@ resource "kubernetes_secret" "email_credentials" {
   data = {
     email_address  = data.google_secret_manager_secret_version.secrets["my-studies-email-address"].secret_data
     email_password = data.google_secret_manager_secret_version.secrets["my-studies-email-password"].secret_data
-  }
-}
-
-# Secrets from service accounts.
-resource "google_service_account_key" "gke_cluster_service_account_key" {
-  service_account_id = var.my_studies_cluster.service_account
-}
-
-resource "kubernetes_secret" "cloudsql_instance_credentials" {
-  metadata {
-    name = "cloudsql-instance-credentials"
-  }
-  data = {
-    "sql_credentials.json" = base64decode(google_service_account_key.gke_cluster_service_account_key.private_key)
   }
 }
 

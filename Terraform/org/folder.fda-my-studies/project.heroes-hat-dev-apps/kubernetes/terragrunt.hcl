@@ -20,13 +20,11 @@ dependency "data" {
 
   mock_outputs = {
     instance_name = "mock-db"
-    instance_user = "mock-db-user"
   }
 }
 
 inputs = {
   sql_instance_name = dependency.data.outputs.instance_name
-  sql_instance_user = dependency.data.outputs.instance_user
   my_studies_cluster = {
     name            = dependency.apps.outputs.gke_cluster.name
     location        = dependency.apps.outputs.gke_cluster.location
