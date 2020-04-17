@@ -4,12 +4,17 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: auth-server-lb
+  name: auth-server-np
+  # Add Container Native Load Balancing.
+  # See https://cloud.google.com/kubernetes-engine/docs/how-to/container-native-load-balancing#create_service
+  annotations:
+    cloud.google.com/neg: '{"ingress": true}' # Creates a NEG after an Ingress is created
 spec:
-  type: LoadBalancer
+  type: NodePort
   selector:
     app: auth-server
   ports:
     - protocol: TCP
       port: 50000
       targetPort: 8080
+      name: http
