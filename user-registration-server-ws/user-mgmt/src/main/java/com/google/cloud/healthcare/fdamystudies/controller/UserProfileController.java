@@ -8,14 +8,12 @@
 
 package com.google.cloud.healthcare.fdamystudies.controller;
 
-import java.time.LocalDateTime;
 import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.core.Context;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -52,9 +50,6 @@ public class UserProfileController {
   @Autowired CommonService commonService;
 
   @Autowired ApplicationPropertyConfiguration appConfig;
-
-  @Value("${email.code.expire_time}")
-  private long expireTime;
 
   @RequestMapping(value = "/ping")
   public String ping() {
@@ -192,7 +187,6 @@ public class UserProfileController {
             if (participantDetails.getStatus() == 2) {
               code = RandomStringUtils.randomAlphanumeric(6);
               participantDetails.setEmailCode(code);
-              participantDetails.setCodeExpireDate(LocalDateTime.now().plusMinutes(expireTime));
               participantDetails.setVerificationDate(MyStudiesUserRegUtil.getCurrentUtilDateTime());
               updParticipantDetails = userManagementProfService.saveParticipant(participantDetails);
               if (updParticipantDetails != null) {

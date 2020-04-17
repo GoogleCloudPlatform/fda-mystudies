@@ -33,7 +33,7 @@ public class UserAppDetailsBO implements Serializable {
   private Integer userAppDetailsId;
 
   @Column(name = "app_info_id")
-  private Integer appInfoId;
+  private int appInfoId;
 
   @Column(name = "user_details_id")
   private Integer userDetailsId;
