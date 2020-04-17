@@ -1,10 +1,10 @@
-# Copyright 2018 Google LLC
+# Copyright 2020 Google Inc.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
 # You may obtain a copy of the License at
 #
-#     https://www.apache.org/licenses/LICENSE-2.0
+#      http://www.apache.org/licenses/LICENSE-2.0
 #
 # Unless required by applicable law or agreed to in writing, software
 # distributed under the License is distributed on an "AS IS" BASIS,
@@ -36,17 +36,6 @@ steps:
     entrypoint: terragrunt
     args: ["apply-all", "--terragrunt-non-interactive"]
     dir: "Terraform/org/org_policies"
-
-  # project.heroes-hat-dev-devops
-  - name: "gcr.io/cloud-foundation-cicd/cft/developer-tools@sha256:a09ad46f513847d31e2cfe20f818c2d64809e7d12695e2e6098900296f6527bf"
-    entrypoint: terragrunt
-    args: ["plan-all", "--terragrunt-non-interactive"]
-    dir: "Terraform/org/project.heroes-hat-dev-devops"
-
-  - name: "gcr.io/cloud-foundation-cicd/cft/developer-tools@sha256:a09ad46f513847d31e2cfe20f818c2d64809e7d12695e2e6098900296f6527bf"
-    entrypoint: terragrunt
-    args: ["apply-all", "--terragrunt-non-interactive"]
-    dir: "Terraform/org/project.heroes-hat-dev-devops"
 
   # project.heroes-hat-dev-audit
   - name: "gcr.io/cloud-foundation-cicd/cft/developer-tools@sha256:a09ad46f513847d31e2cfe20f818c2d64809e7d12695e2e6098900296f6527bf"
