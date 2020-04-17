@@ -1,3 +1,22 @@
+# Copyright 2020 Google Inc.
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#      http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+# This file contains Terraform resources to setup a VPC network with two subnets, one subnet is
+# dedicated to be used by the GKE Clusters, and the other subnet is dedicated to be used by the
+# bastion host VM. Private service access (https://cloud.google.com/vpc/docs/private-access-options#service-networking)
+# is also enabled in this network for the private CloudSQL instance.
+
 terraform {
   backend "gcs" {}
 }
@@ -7,6 +26,7 @@ locals {
   bastion_subnet_name      = "bastion-subnet"
 }
 
+# VPC network and subnets.
 module "private" {
   source  = "terraform-google-modules/network/google"
   version = "~> 2.2"
@@ -57,6 +77,7 @@ module "private" {
   }
 }
 
+# Enable CloudSQL private service access.
 module "cloudsql_private_service_access" {
   source  = "GoogleCloudPlatform/sql-db/google//modules/private_service_access"
   version = "~> 3.0"

@@ -57,3 +57,7 @@ Postsubmit Cloud Build job will automatically start when a Pull Ruquest is
 submitted to a configured branch. To view the result of the Cloud Build run, go
 to https://console.cloud.google.com/cloud-build/builds and look for your commit
 to view the Cloud Build job triggered by your merged commit.
+
+The Postsubmit Cloud Build Trigger monitors and deploys changes made to `org/`
+folder only. Other changes made to `bootstrap`, `cicd` and `secrets` folders
+should be deployed manually if needed.

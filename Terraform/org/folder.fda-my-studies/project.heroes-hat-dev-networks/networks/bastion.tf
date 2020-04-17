@@ -12,9 +12,21 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+# This file contains Terraform resources to setup a bastion host VM to connect to the private
+# CloudSQL, which includes:
+# - A dedicated service account for the bastion host, with scope limited to CloudSQL service only,
+# - A private compute instance with its compute instance template,
+# - A firewall rule to allow TCP:22 SSH access from the IAP to the bastion,
+# - Necessary IAM permissions to allow IAP and OS Logins from specified members,
+# - A Cloud Router and Cloud NAT to allow bastion host talk to the internet to download necessary
+#   tools during instance startup in order to connect to the private CloudSQL instance.
+
+# To connect to the CloudSQL instance:
 # $ gcloud compute ssh bastion-vm --zone=<var.zone> --project=<var.project_id>
 # $ cloud_sql_proxy -instances=example-data-project:us-east1:my-studies=tcp:3306
 # $ mysql -u default -p --host 127.0.0.1
+#
+# The bastion compute instance, service account, firewall rule, and IAM permissions setups.
 module "bastion" {
   source = "terraform-google-modules/bastion-host/google"
 
@@ -39,7 +51,7 @@ sudo chmod +x /usr/local/bin/cloud_sql_proxy
 EOF
 }
 
-# NAT to allow bastion-VM to connect to the Internet to install `mysql-client-core-5.7`.
+# Cloud Router and NAT to allow bastion-VM to connect to the Internet to install necessary tools.
 module "bastion_router" {
   source  = "terraform-google-modules/cloud-router/google"
   name    = "bastion-router"

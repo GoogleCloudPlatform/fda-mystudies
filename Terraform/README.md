@@ -84,6 +84,9 @@ A deployment typically contains the following files:
     deployments, the remote state, and input values from other dependent
     deployments.
 
+To see what resources each deployment provisions, check out the comments in each
+**main.tf** file.
+
 ## Layout
 
 ```
@@ -92,7 +95,6 @@ A deployment typically contains the following files:
 |- secrets: Definitions of secrets used in the org (secret values are not set in configs).
 |- org: org level resources. Resources within this directory should be managed by CICD pipeline.
   |- terragrunt.hcl: root Terragrunt config which defines remote state for all deployments.
-  |- project.{PREFIX}-devops: additional resources that will go in the devops project.
   |- project.{PREFIX}-audit: the project to hold all audit logs for the org.
   |- audit: deployment to setup auditing for the org.
   |- iam: org level iam definitions such as org admins.
@@ -118,7 +120,7 @@ A deployment typically contains the following files:
     $ ROOT=$PWD
     ```
 
-1.  The bootstrap config must be deployed first in order to create the devops
+1.  The bootstrap config must be deployed first in order to create the `devops`
     project which will host your Terraform state and CICD pipelines.
 
     ```
@@ -128,17 +130,17 @@ A deployment typically contains the following files:
     $ terraform apply
     ```
 
-    Your devops project should now be ready.
+    Your `devops` project should now be ready.
 
-1.  Backup the state of the devops project to the newly created state bucket by
-    uncommenting out the `terraform` block in `$ROOT/bootstrap/main.tf` and
+1.  Backup the state of the `devops` project to the newly created state bucket
+    by uncommenting out the `terraform` block in `$ROOT/bootstrap/main.tf` and
     running:
 
     ```
     $ terraform init
     ```
 
-1.  Deploy secrets used in the org in the devops project.
+1.  Deploy secrets used in the org in the `devops` project.
 
     ```
     $ cd $ROOT/secrets
@@ -147,8 +149,8 @@ A deployment typically contains the following files:
     $ terraform apply
     ```
 
-    After the secrets have been created you must go in Console and open the
-    secrets manager and fill in their values.
+    After the secrets have been created, you must go to the Google Cloud
+    Console, open `Security` --> `Secret Manager` and fill in their values.
 
 1.  Follow `$ROOT/cicd/README.md` to set up CICD pipelines for Terraform
     configs.
