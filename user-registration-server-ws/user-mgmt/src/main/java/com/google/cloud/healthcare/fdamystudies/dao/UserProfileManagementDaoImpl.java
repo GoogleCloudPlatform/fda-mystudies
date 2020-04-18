@@ -146,17 +146,23 @@ public class UserProfileManagementDaoImpl implements UserProfileManagementDao {
     CriteriaBuilder criteriaBuilder = null;
     CriteriaQuery<UserDetailsBO> criteriaQuery = null;
     Root<UserDetailsBO> userDetailsBoRoot = null;
-    Predicate[] predicates = new Predicate[3];
+    List<Predicate> userDetailsPredicates = new ArrayList<>();
     List<UserDetailsBO> userDetailsBoList = null;
 
     try (Session session = entityManagerFactory.unwrap(SessionFactory.class).openSession()) {
       criteriaBuilder = session.getCriteriaBuilder();
       criteriaQuery = criteriaBuilder.createQuery(UserDetailsBO.class);
       userDetailsBoRoot = criteriaQuery.from(UserDetailsBO.class);
-      predicates[0] = criteriaBuilder.equal(userDetailsBoRoot.get(AppConstants.EMAIL), email);
-      predicates[1] = criteriaBuilder.equal(userDetailsBoRoot.get("appInfoId"), appInfoId);
-      predicates[2] = criteriaBuilder.notEqual(userDetailsBoRoot.get("emailCode"), "Null");
-      criteriaQuery.select(userDetailsBoRoot).where(predicates);
+
+      userDetailsPredicates.add(
+          criteriaBuilder.equal(userDetailsBoRoot.get(AppConstants.EMAIL), email));
+      userDetailsPredicates.add(
+          criteriaBuilder.equal(userDetailsBoRoot.get("appInfoId"), appInfoId));
+      userDetailsPredicates.add(
+          criteriaBuilder.notEqual(userDetailsBoRoot.get("emailCode"), "Null"));
+      criteriaQuery
+          .select(userDetailsBoRoot)
+          .where(userDetailsPredicates.toArray(new Predicate[userDetailsPredicates.size()]));
       userDetailsBoList = session.createQuery(criteriaQuery).getResultList();
       if (!userDetailsBoList.isEmpty()) {
         userDetailsBO = userDetailsBoList.get(0);
