@@ -76,25 +76,52 @@ Now upload the files to the bucket:
 ```
 $ gsutil cp \
   ./auth-server-ws/auth_server_db_script.sql \
-  ./WCP/sqlscript/HPHC_My_Studies_DB_Create_Script.sql \
+  ./WCP/sqlscript/* \
   ./response-server-ws/mystudies_response_server_db_script.sql \
   ./user-registration-server-ws/sqlscript/mystudies_app_info_update_db_script.sql \
   ./user-registration-server-ws/sqlscript/mystudies_user_registration_db_script.sql \
 gs://<data-project-id>-sql-import
 ```
 
-Find the name of your Cloud SQL DB instance and use it for importing the
-scripts, in this order:
+Find the name of your Cloud SQL DB instance. If looking at the GCP Console, this
+is just the instance name, is **not** the "Instance connection name". Example:
+if the connection name is "myproject-data:us-east1:my-studies-2", you should use
+just "my-studies-2".
+
+Import the scripts, in this order:
 
 ```
 $ gcloud sql import sql --project=<data-project-id> <db-name> gs://<data-project-id>-sql-import/auth_server_db_script.sql
+$ gcloud sql import sql --project=<data-project-id> <db-name> gs://<data-project-id>-sql-import/version_info_script.sql
+$ gcloud sql import sql --project=<data-project-id> <db-name> gs://<data-project-id>-sql-import/procedures.sql
 $ gcloud sql import sql --project=<data-project-id> <db-name> gs://<data-project-id>-sql-import/HPHC_My_Studies_DB_Create_Script.sql
 $ gcloud sql import sql --project=<data-project-id> <db-name> gs://<data-project-id>-sql-import/mystudies_response_server_db_script.sql
 $ gcloud sql import sql --project=<data-project-id> <db-name> gs://<data-project-id>-sql-import/mystudies_app_info_update_db_script.sql
 $ gcloud sql import sql --project=<data-project-id> <db-name> gs://<data-project-id>-sql-import/mystudies_user_registration_db_script.sql
 ```
 
-Not that this is just the instance name, **not** the "connection name".
+### Kubernetes Config Values
+
+You may need to make some changes to the Kubernetes configs to match your
+organization and deployment.
+
+In each deployment.yaml file:
+
+*   For all images except `gcr.io/cloudsql-docker/gce-proxy`, replace the
+    `gcr.io/<project>` part with `gcr.io/<apps-project-id>`
+*   For the cloudsql-proxy container, set the `-instances` flag with
+    `-instances=<cloudsq-instance-connection-name>=tcp:3306`
+
+In the ./kubernetes/cert.yaml file:
+
+*   Change the name and domain to match your organization.
+
+In the ./kubernetes/ingress.yaml file:
+
+*   Change the `networking.gke.io/managed-certificates` annotation to match the
+    name in ./kubernetes/cert.yaml.
+*   Change the name and the `kubernetes.io/ingress.global-static-ip-name`
+    annotation to match your organization.
 
 ### GKE Cluster
 
