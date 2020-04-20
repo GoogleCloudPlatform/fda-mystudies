@@ -49,9 +49,6 @@ locals {
   ]
   cloudbuild_sa_viewer_roles = [
     "roles/browser",
-    # Consider using viewer roles for individual services. But it is hard to know beforehand what
-    # services are used in each project.
-    "roles/viewer",
     "roles/iam.securityReviewer",
   ]
   cloudbuild_sa_editor_roles = [
@@ -87,7 +84,7 @@ resource "google_project_service" "devops_apis" {
 resource "google_storage_bucket_iam_member" "cloudbuild_state_iam" {
   bucket = var.state_bucket
   role   = "roles/storage.objectViewer"
-  member = "serviceAccount:${data.google_project.devops.number}@cloudbuild.gserviceaccount.com"
+  member = local.cloud_build_sa
   depends_on = [
     google_project_service.devops_apis,
   ]
@@ -98,7 +95,7 @@ resource "google_organization_iam_member" "cloudbuild_sa_org_iam" {
   for_each = toset(var.continuous_deployment_enabled ? local.cloudbuild_sa_editor_roles : local.cloudbuild_sa_viewer_roles)
   org_id   = var.org_id
   role     = each.value
-  member   = "serviceAccount:${data.google_project.devops.number}@cloudbuild.gserviceaccount.com"
+  member   = local.cloud_build_sa
   depends_on = [
     google_project_service.devops_apis,
   ]
@@ -109,7 +106,7 @@ resource "google_project_iam_member" "cloudbuild_sa_project_iam" {
   for_each = toset(local.cloudbuild_devops_roles)
   project  = var.devops_project_id
   role     = each.key
-  member   = "serviceAccount:${data.google_project.devops.number}@cloudbuild.gserviceaccount.com"
+  member   = local.cloud_build_sa
 }
 
 # Cloud Build Triggers for CI.
