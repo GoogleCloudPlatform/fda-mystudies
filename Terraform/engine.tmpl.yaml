@@ -33,29 +33,28 @@ templates:
       PROJECT_ID: "heroes-hat-dev-audit"
       DATASET_NAME: "1yr_org_audit_logs"
       BUCKET_NAME: "7yr-org-audit-logs-08679" # suffix is sha256("heroes-hat-dev")[:5]
-      AUDITORS: "group:heroes-hat-auditors@example.com"
+      AUDITORS: "group:rocketturtle-gcp-admin@rocketturtle.net"
     ORG_POLICIES:
       ALLOWED_SHARED_VPC_HOST_PROJECTS:
-      - "projects/heroes-hat-dev-network"
+      - "projects/heroes-hat-dev-networks"
       # ALLOWED_POLICY_MEMBER_DOMAINS:
       # - Add G Suite Customer IDs for the domains
-
 
 # Folder
 - name: "folder-heroes-hat"
   recipe_path: "{{$BASE}}/org/folder.yaml"
   output_ref: "foundation.org_dir"
   data:
-    DISPLAY_NAME: "heroes-hat"
+    DISPLAY_NAME: "fda-my-studies"
 
 # Projects
-- name: "project-network"
+- name: "project-networks"
   recipe_path: "{{$BASE}}/folder/project.yaml"
   output_ref: "folder-heroes-hat.dir"
   data:
-    PROJECT_ID: "heroes-hat-dev-network"
+    PROJECT_ID: "heroes-hat-dev-networks"
     PROJECT_OWNERS:
-    - "group:heroes-hat-dev-network-owners@example.com"
+    - "group:rocketturtle-gcp-admin@rocketturtle.net"
 
 - name: "project-apps"
   recipe_path: "{{$BASE}}/folder/project.yaml"
@@ -63,7 +62,7 @@ templates:
   data:
     PROJECT_ID: "heroes-hat-dev-apps"
     PROJECT_OWNERS:
-    - "group:heroes-hat-dev-apps-owners@example.com"
+    - "group:rocketturtle-gcp-admin@rocketturtle.net"
 
 - name: "project-data"
   recipe_path: "{{$BASE}}/folder/project.yaml"
@@ -71,5 +70,13 @@ templates:
   data:
     PROJECT_ID: "heroes-hat-dev-data"
     PROJECT_OWNERS:
-    - "group:heroes-hat-dev-data-owners@example.com"
+    - "group:rocketturtle-gcp-admin@rocketturtle.net"
+
+- name: "project-firebase"
+  recipe_path: "{{$BASE}}/folder/project.yaml"
+  output_ref: "folder-heroes-hat.dir"
+  data:
+    PROJECT_ID: "heroes-hat-dev-resp-firebase"
+    PROJECT_OWNERS:
+    - "group:rocketturtle-gcp-admin@rocketturtle.net"
 
