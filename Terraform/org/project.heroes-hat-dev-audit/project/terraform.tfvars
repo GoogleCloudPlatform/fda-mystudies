@@ -19,6 +19,3 @@ apis = [
   "bigquery.googleapis.com",
   "logging.googleapis.com",
 ]
-owners = [
-  "group:rocketturtle-gcp-admin@rocketturtle.net",
-]

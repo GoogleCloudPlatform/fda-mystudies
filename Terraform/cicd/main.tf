@@ -57,7 +57,6 @@ locals {
   cloudbuild_sa_editor_roles = concat(local.cloudbuild_sa_viewer_roles, [
     "roles/billing.user",
     "roles/orgpolicy.policyAdmin",
-    "roles/owner",
     "roles/resourcemanager.organizationAdmin",
     "roles/resourcemanager.folderCreator",
     "roles/resourcemanager.projectCreator",
