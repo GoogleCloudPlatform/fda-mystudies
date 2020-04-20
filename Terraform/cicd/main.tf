@@ -60,6 +60,7 @@ locals {
   ]
   cloudbuild_devops_roles = [
     "roles/secretmanager.secretAccessor",
+    "roles/secretmanager.viewer",
   ]
 }
 
