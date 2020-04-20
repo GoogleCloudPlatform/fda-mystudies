@@ -117,7 +117,7 @@ resource "google_cloudbuild_trigger" "validate" {
     }
   }
 
-  filename = "${path.module}/configs/tf-validate.yaml"
+  filename = local.terraform_root == "." ? "cicd/configs/tf-validate.yaml" : "${local.terraform_root}/cicd/configs/tf-validate.yaml"
 
   substitutions = {
     _TERRAFORM_ROOT = local.terraform_root
@@ -146,7 +146,7 @@ resource "google_cloudbuild_trigger" "plan" {
     }
   }
 
-  filename = "${path.module}/configs/tf-plan.yaml"
+  filename = local.terraform_root == "." ? "cicd/configs/tf-plan.yaml" : "${local.terraform_root}/cicd/configs/tf-plan.yaml"
 
   substitutions = {
     _TERRAFORM_ROOT = local.terraform_root
@@ -167,7 +167,7 @@ resource "google_cloudbuild_trigger" "apply" {
 
   included_files = [
     local.terraform_root == "." ? "org/**" : "${local.terraform_root}/org/**",
-    "${path.module}/configs/tf-apply.yaml"
+    local.terraform_root == "." ? "cicd/configs/tf-apply.yaml" : "${local.terraform_root}/cicd/configs/tf-apply.yaml"
   ]
 
   github {
@@ -178,7 +178,7 @@ resource "google_cloudbuild_trigger" "apply" {
     }
   }
 
-  filename = "${path.module}/configs/tf-apply.yaml"
+  filename = local.terraform_root == "." ? "cicd/configs/tf-apply.yaml" : "${local.terraform_root}/cicd/configs/tf-apply.yaml"
 
   substitutions = {
     _TERRAFORM_ROOT = local.terraform_root
