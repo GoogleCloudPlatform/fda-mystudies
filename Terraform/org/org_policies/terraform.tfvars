@@ -13,8 +13,6 @@
 # limitations under the License.
 
 org_id = "707577601068"
-
-
 allowed_shared_vpc_host_projects = [
   "projects/heroes-hat-dev-networks",
 ]

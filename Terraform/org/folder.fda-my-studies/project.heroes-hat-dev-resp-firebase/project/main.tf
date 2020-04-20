@@ -12,16 +12,17 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# This folder contains Terraform resources to setup the basis of the firebase project, which includes:
+# This folder contains Terraform resources to setup the basis of the project, which includes:
 # - The project itself,
 # - APIs to enable,
 # - Deletion lien, if enabled,
-# - Project level IAM permissions for the project owners.
+# - Project level IAM permissions for the project owners, if any.
 
 terraform {
   backend "gcs" {}
 }
 
+# Project, with APIs to enable and deletion lien created.
 module "project" {
   source  = "terraform-google-modules/project-factory/google"
   version = "~> 7.0"
@@ -36,6 +37,7 @@ module "project" {
   skip_gcloud_download    = true
 }
 
+# Project level IAM permissions for project owners.
 resource "google_project_iam_binding" "owners" {
   project = module.project.project_id
   role    = "roles/owner"
