@@ -271,39 +271,6 @@ class ResourceDetailViewController: UIViewController {
 
 }
 
-extension ResourceDetailViewController: UIWebViewDelegate {
-
-  func webViewDidFinishLoad(_ webView: UIWebView) {
-    self.activityIndicator.stopAnimating()
-  }
-
-  func webView(_ webView: UIWebView, didFailLoadWithError error: Error) {
-    self.activityIndicator.stopAnimating()
-
-    let buttonTitleOK = NSLocalizedString("OK", comment: "")
-    let alert = UIAlertController(
-      title: NSLocalizedString(kTitleError, comment: ""),
-      message: error.localizedDescription,
-      preferredStyle: UIAlertController.Style.alert
-    )
-
-    alert.addAction(
-      UIAlertAction.init(
-        title: buttonTitleOK,
-        style: .default,
-        handler: { (_) in
-
-          self.dismiss(animated: true, completion: nil)
-
-        }
-      )
-    )
-
-    self.present(alert, animated: true, completion: nil)
-
-  }
-}
-
 extension ResourceDetailViewController: WKUIDelegate, WKNavigationDelegate {
 
   func webView(_ webView: WKWebView, didStartProvisionalNavigation navigation: WKNavigation) {
