@@ -1,11 +1,10 @@
-# LoadBalancer service for Response server.
-# See https://cloud.google.com/kubernetes-engine/docs/how-to/exposing-apps#creating_a_service_of_type_loadbalancer
+# NodePort service for study designer server.
 apiVersion: v1
 kind: Service
 metadata:
-  name: study-designer-lb
+  name: study-designer-np
 spec:
-  type: LoadBalancer
+  type: NodePort
   selector:
     app: study-designer
   ports:
