@@ -60,6 +60,7 @@ locals {
     "roles/resourcemanager.organizationAdmin",
     "roles/resourcemanager.folderCreator",
     "roles/resourcemanager.projectCreator",
+    "roles/secretmanager.secretAccessor",
   ])
 }
 
