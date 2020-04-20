@@ -3,7 +3,7 @@
 These directories define the entire GCP infrastructure app to run the FDA
 MyStudies application.
 
-## Pre-Requisites
+## Prerequisites
 
 1.  Install the following dependencies and add them to your PATH:
 
@@ -154,6 +154,9 @@ To see what resources each deployment provisions, check out the comments in each
 
 1.  Follow `$ROOT/cicd/README.md` to set up CICD pipelines for Terraform
     configs.
+
+1.  Follow `$ROOT/kubernetes/README.md` to deploy the Kubernetes resources in
+    the GKE cluster.
 
 1.  Revoke your super admin access by running `gcloud auth revoke` and
     authenticate as a normal user for daily activities.
