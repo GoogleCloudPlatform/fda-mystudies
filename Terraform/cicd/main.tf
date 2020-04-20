@@ -64,6 +64,10 @@ locals {
   ])
 }
 
+locals {
+  terraform_root = trim((var.terraform_root == "" || var.terraform_root == "/") ? "." : var.terraform_root, "/")
+}
+
 # Cloud Build - API
 resource "google_project_service" "devops_apis" {
   for_each           = toset(local.devops_apis)
@@ -102,18 +106,22 @@ resource "google_cloudbuild_trigger" "validate" {
   name     = "tf-validate"
 
   included_files = [
-    "Terraform/**"
+    local.terraform_root == "." ? "**" : "${local.terraform_root}/**",
   ]
 
   github {
     owner = var.repo_owner
     name  = var.repo_name
     pull_request {
-      branch = var.cloudbuild_trigger_branch
+      branch = var.branch_regex
     }
   }
 
-  filename = "Terraform/cicd/configs/tf-validate.yaml"
+  filename = "${path.module}/configs/tf-validate.yaml"
+
+  substitutions = {
+    _TERRAFORM_ROOT = local.terraform_root
+  }
 
   depends_on = [
     google_project_service.devops_apis,
@@ -127,18 +135,22 @@ resource "google_cloudbuild_trigger" "plan" {
   name     = "tf-plan"
 
   included_files = [
-    "Terraform/**"
+    local.terraform_root == "." ? "**" : "${local.terraform_root}/**",
   ]
 
   github {
     owner = var.repo_owner
     name  = var.repo_name
     pull_request {
-      branch = var.cloudbuild_trigger_branch
+      branch = var.branch_regex
     }
   }
 
-  filename = "Terraform/cicd/configs/tf-plan.yaml"
+  filename = "${path.module}/configs/tf-plan.yaml"
+
+  substitutions = {
+    _TERRAFORM_ROOT = local.terraform_root
+  }
 
   depends_on = [
     google_project_service.devops_apis,
@@ -154,19 +166,23 @@ resource "google_cloudbuild_trigger" "apply" {
   name     = "tf-apply"
 
   included_files = [
-    "Terraform/org/**",
-    "Terraform/cicd/configs/tf-apply.yaml",
+    local.terraform_root == "." ? "org/**" : "${local.terraform_root}/org/**",
+    "${path.module}/configs/tf-apply.yaml"
   ]
 
   github {
     owner = var.repo_owner
     name  = var.repo_name
     push {
-      branch = var.cloudbuild_trigger_branch
+      branch = var.branch_regex
     }
   }
 
-  filename = "Terraform/cicd/configs/tf-apply.yaml"
+  filename = "${path.module}/configs/tf-apply.yaml"
+
+  substitutions = {
+    _TERRAFORM_ROOT = local.terraform_root
+  }
 
   depends_on = [
     google_project_service.devops_apis,

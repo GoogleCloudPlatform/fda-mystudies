@@ -37,8 +37,8 @@ variable "repo_name" {
   type        = string
 }
 
-variable "cloudbuild_trigger_branch" {
-  description = "Name of the branch to set the Cloud Build Triggers to watch for"
+variable "branch_regex" {
+  description = "Regex of the branches to set the Cloud Build Triggers to monitor"
   type        = string
 }
 
@@ -52,4 +52,9 @@ variable "trigger_enabled" {
   description = "Whether or not to enable all Cloud Build Triggers"
   type        = bool
   default     = true
+}
+
+variable "terraform_root" {
+  description = "Path of the directory relative to the repo root containing the Terraform configs"
+  default     = "."
 }

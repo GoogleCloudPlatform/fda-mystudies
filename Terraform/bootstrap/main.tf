@@ -20,6 +20,8 @@
 # - A Cloud Storage bucket to store Terraform states for all deployments,
 # - Org level IAM permissions for org admins.
 
+// TODO(umairidris): replace with https://github.com/terraform-google-modules/terraform-google-bootstrap
+
 # ==============================================================================
 # TODO(user): Uncomment after initial deployment and run `terraform init`.
 terraform {
@@ -30,7 +32,7 @@ terraform {
 }
 # ==============================================================================
 
-# Devops project, with APIs to enable and deletion lien created.
+# Create the project, enable APIs, and create the deletion lien, if specified.
 module "project" {
   source  = "terraform-google-modules/project-factory/google"
   version = "~> 7.0"
@@ -43,7 +45,6 @@ module "project" {
   skip_gcloud_download    = true
   activate_apis = [
     "cloudbuild.googleapis.com",
-    "secretmanager.googleapis.com",
   ]
 }
 
