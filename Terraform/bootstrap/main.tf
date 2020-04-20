@@ -20,7 +20,7 @@
 # - A Cloud Storage bucket to store Terraform states for all deployments,
 # - Org level IAM permissions for org admins.
 
-# ====================================================================================
+# ==============================================================================
 # TODO(user): Uncomment after initial deployment and run `terraform init`.
 terraform {
   backend "gcs" {
@@ -28,7 +28,7 @@ terraform {
     prefix = "bootstrap"
   }
 }
-# ======================================================================================
+# ==============================================================================
 
 # Devops project, with APIs to enable and deletion lien created.
 module "project" {

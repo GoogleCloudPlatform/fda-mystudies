@@ -29,11 +29,16 @@ templates:
       PROJECT_ID: "heroes-hat-dev-devops"
       STATE_BUCKET: "heroes-hat-dev-terraform-state-08679"
       ENABLE_BOOTSTRAP_GCS_BACKEND: true
+      ORG_ADMIN: "group:rocketturtle-gcp-admin@rocketturtle.net"
+      PROJECT_OWNERS:
+      - "group:rocketturtle-gcp-admin@rocketturtle.net"
     AUDIT:
       PROJECT_ID: "heroes-hat-dev-audit"
       DATASET_NAME: "1yr_org_audit_logs"
       BUCKET_NAME: "7yr-org-audit-logs-08679" # suffix is sha256("heroes-hat-dev")[:5]
       AUDITORS: "group:rocketturtle-gcp-admin@rocketturtle.net"
+      PROJECT_OWNERS:
+      - "group:rocketturtle-gcp-admin@rocketturtle.net"
     ORG_POLICIES:
       ALLOWED_SHARED_VPC_HOST_PROJECTS:
       - "projects/heroes-hat-dev-networks"
@@ -55,6 +60,12 @@ templates:
     PROJECT_ID: "heroes-hat-dev-networks"
     PROJECT_OWNERS:
     - "group:rocketturtle-gcp-admin@rocketturtle.net"
+    APIS:
+    - "compute.googleapis.com"
+    - "container.googleapis.com"
+    - "iap.googleapis.com"
+    - "servicenetworking.googleapis.com"
+    - "sqladmin.googleapis.com"
 
 - name: "project-apps"
   recipe_path: "{{$BASE}}/folder/project.yaml"
@@ -63,6 +74,12 @@ templates:
     PROJECT_ID: "heroes-hat-dev-apps"
     PROJECT_OWNERS:
     - "group:rocketturtle-gcp-admin@rocketturtle.net"
+    APIS:
+    - "cloudbuild.googleapis.com"
+    - "compute.googleapis.com"
+    - "container.googleapis.com"
+    - "servicenetworking.googleapis.com"
+    - "sqladmin.googleapis.com"
 
 - name: "project-data"
   recipe_path: "{{$BASE}}/folder/project.yaml"
@@ -71,6 +88,9 @@ templates:
     PROJECT_ID: "heroes-hat-dev-data"
     PROJECT_OWNERS:
     - "group:rocketturtle-gcp-admin@rocketturtle.net"
+    APIS:
+    - "compute.googleapis.com"
+    - "servicenetworking.googleapis.com"
 
 - name: "project-firebase"
   recipe_path: "{{$BASE}}/folder/project.yaml"
@@ -79,4 +99,5 @@ templates:
     PROJECT_ID: "heroes-hat-dev-resp-firebase"
     PROJECT_OWNERS:
     - "group:rocketturtle-gcp-admin@rocketturtle.net"
-
+    APIS:
+    - "firebase.googleapis.com"
