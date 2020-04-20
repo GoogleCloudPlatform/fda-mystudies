@@ -22,19 +22,22 @@ steps:
   - name: "gcr.io/cloud-foundation-cicd/cft/developer-tools@sha256:a09ad46f513847d31e2cfe20f818c2d64809e7d12695e2e6098900296f6527bf"
     entrypoint: terraform
     args: ["init"]
-    dir: "Terraform"
+    dir: "${_TERRAFORM_ROOT}"
 
   - name: "gcr.io/cloud-foundation-cicd/cft/developer-tools@sha256:a09ad46f513847d31e2cfe20f818c2d64809e7d12695e2e6098900296f6527bf"
     entrypoint: terraform
     args: ["fmt", "-recursive", "-check"]
-    dir: "Terraform"
+    dir: "${_TERRAFORM_ROOT}"
 
   - name: "gcr.io/cloud-foundation-cicd/cft/developer-tools@sha256:a09ad46f513847d31e2cfe20f818c2d64809e7d12695e2e6098900296f6527bf"
     entrypoint: terragrunt
     args: ["hclfmt", "--terragrunt-check"]
-    dir: "Terraform"
+    dir: "${_TERRAFORM_ROOT}"
 
   - name: "gcr.io/cloud-foundation-cicd/cft/developer-tools@sha256:a09ad46f513847d31e2cfe20f818c2d64809e7d12695e2e6098900296f6527bf"
     entrypoint: terraform
     args: ["validate"]
-    dir: "Terraform"
+    dir: "${_TERRAFORM_ROOT}"
+
+substitutions:
+    _TERRAFORM_ROOT: "."

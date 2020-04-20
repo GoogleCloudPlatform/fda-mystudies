@@ -44,6 +44,15 @@ templates:
       - "projects/heroes-hat-dev-networks"
       # ALLOWED_POLICY_MEMBER_DOMAINS:
       # - Add G Suite Customer IDs for the domains
+    CICD:
+      PROJECT_ID: "heroes-hat-dev-devops"
+      STATE_BUCKET: "heroes-hat-dev-terraform-state-08679"
+      REPO_OWNER: "GoogleCloudPlatform"
+      REPO_NAME: "fda-mystudies"
+      BRANCH_REGEX: "terraform"
+      CONTINUOUS_DEPLOYMENT_ENABLED: true
+      TRIGGER_ENABLED: true
+      TERRAFORM_ROOT: "Terraform"
 
 # Folder
 - name: "folder-heroes-hat"

@@ -64,6 +64,13 @@ locals {
   ])
 }
 
+locals {
+  # Covert "" and "/" to "." in case users use them to indicate root of the git repo.
+  terraform_root = trim((var.terraform_root == "" || var.terraform_root == "/") ? "." : var.terraform_root, "/")
+  # ./ to indicate root is not recognized by Cloud Build Trigger.
+  terraform_root_prefix = local.terraform_root == "." ? "" : "${local.terraform_root}/"
+}
+
 # Cloud Build - API
 resource "google_project_service" "devops_apis" {
   for_each           = toset(local.devops_apis)
@@ -102,18 +109,22 @@ resource "google_cloudbuild_trigger" "validate" {
   name     = "tf-validate"
 
   included_files = [
-    "Terraform/**"
+    "${local.terraform_root_prefix}**",
   ]
 
   github {
     owner = var.repo_owner
     name  = var.repo_name
     pull_request {
-      branch = var.cloudbuild_trigger_branch
+      branch = var.branch_regex
     }
   }
 
-  filename = "Terraform/cicd/configs/tf-validate.yaml"
+  filename = "${local.terraform_root_prefix}cicd/configs/tf-validate.yaml"
+
+  substitutions = {
+    _TERRAFORM_ROOT = local.terraform_root
+  }
 
   depends_on = [
     google_project_service.devops_apis,
@@ -127,18 +138,22 @@ resource "google_cloudbuild_trigger" "plan" {
   name     = "tf-plan"
 
   included_files = [
-    "Terraform/**"
+    "${local.terraform_root_prefix}**",
   ]
 
   github {
     owner = var.repo_owner
     name  = var.repo_name
     pull_request {
-      branch = var.cloudbuild_trigger_branch
+      branch = var.branch_regex
     }
   }
 
-  filename = "Terraform/cicd/configs/tf-plan.yaml"
+  filename = "${local.terraform_root_prefix}cicd/configs/tf-plan.yaml"
+
+  substitutions = {
+    _TERRAFORM_ROOT = local.terraform_root
+  }
 
   depends_on = [
     google_project_service.devops_apis,
@@ -154,19 +169,23 @@ resource "google_cloudbuild_trigger" "apply" {
   name     = "tf-apply"
 
   included_files = [
-    "Terraform/org/**",
-    "Terraform/cicd/configs/tf-apply.yaml",
+    "${local.terraform_root_prefix}org/**",
+    "${local.terraform_root_prefix}cicd/configs/tf-apply.yaml"
   ]
 
   github {
     owner = var.repo_owner
     name  = var.repo_name
     push {
-      branch = var.cloudbuild_trigger_branch
+      branch = var.branch_regex
     }
   }
 
-  filename = "Terraform/cicd/configs/tf-apply.yaml"
+  filename = "${local.terraform_root_prefix}cicd/configs/tf-apply.yaml"
+
+  substitutions = {
+    _TERRAFORM_ROOT = local.terraform_root
+  }
 
   depends_on = [
     google_project_service.devops_apis,
