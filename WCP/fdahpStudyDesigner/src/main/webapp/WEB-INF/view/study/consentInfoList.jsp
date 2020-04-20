@@ -111,6 +111,9 @@ $(document).ready(function(){
 	    "info": false,
 	    "filter": false,
 	     rowReorder: reorder,
+	     language: {
+         	"zeroRecords": "You haven't created any content yet.",
+	    },
          "columnDefs": [ { orderable: false, targets: [0,1,2] } ],
 	     "fnRowCallback": function( nRow, aData, iDisplayIndex, iDisplayIndexFull ) {
 	    	 if(viewPermission != 'view'){

@@ -274,7 +274,11 @@ $(document).ready(function(){
         
 	 $("#doneResourceId").on('click', function(){
 		 $('#doneResourceId').prop('disabled',true);
-          if( chkDaysValid(true) && isFromValid('#resourceForm')){
+		 var isValid = true;
+		 if($('#inlineRadio1').is(':checked')){
+			 isValid = maxLenValEditor();
+		 }
+          if( chkDaysValid(true) && isFromValid('#resourceForm') && isValid){
         	  if($('#inlineRadio5').is(':checked')){
         		  var text = "You have chosen to use a period of visibility based on an anchor date. Please ensure that the Source Questionnaire providing the anchor date response is scheduled appropriately.";
               	  bootbox.confirm({
@@ -411,29 +415,58 @@ $(document).ready(function(){
        $("#uploadImg").click();
     });
 	 
-    if($("#richText").length > 0){
-    tinymce.init({
-        selector: "#richText",
-        theme: "modern",
-        skin: "lightgray",
-        height:150,
-        plugins: [
-            "advlist autolink link image lists charmap hr anchor pagebreak spellchecker",
-            "save contextmenu directionality paste"
-        ],
-        toolbar: "anchor bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | underline link | hr removeformat | cut undo redo | fontsizeselect fontselect",
-        menubar: false,
-        toolbar_items_size: 'small',
-        content_style: "div, p { font-size: 13px;letter-spacing: 1px;}",
-        setup : function(ed) {
-            ed.on('keypress change', function(ed) {
-            	resetValidation('.resetContentType');
-            	resetValidation($('#'+ed.target.id).val(tinyMCE.get(ed.target.id).getContent()).parents('form #richText'));
-            });
-     	  },
-     	 <c:if test="${actionOn eq 'view'}">readonly:1</c:if>
-    });
-	}
+//     if($("#richText").length > 0){
+//     tinymce.init({
+//         selector: "#richText",
+//         theme: "modern",
+//         skin: "lightgray",
+//         height:150,
+//         plugins: [
+//             "advlist autolink link image lists charmap hr anchor pagebreak spellchecker",
+//             "save contextmenu directionality paste"
+//         ],
+//         toolbar: "anchor bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | underline link | hr removeformat | cut undo redo | fontsizeselect fontselect",
+//         menubar: false,
+//         toolbar_items_size: 'small',
+//         content_style: "div, p { font-size: 13px;letter-spacing: 1px;}",
+//         setup : function(ed) {
+//             ed.on('keypress change', function(ed) {
+//             	resetValidation('.resetContentType');
+//             	resetValidation($('#'+ed.target.id).val(tinyMCE.get(ed.target.id).getContent()).parents('form #richText'));
+//             });
+//      	  },
+//      	 <c:if test="${actionOn eq 'view'}">readonly:1</c:if>
+//     });
+// 	}
+
+if($("#richText").length > 0){
+   $('#richText').summernote({
+        
+        placeholder: '',
+        tabsize: 2,
+        height: 200,
+        toolbar: [
+        	['font', ['bold','italic']],
+        	['para', ['paragraph','ul','ol']],
+        	['font',['underline']],
+        	['insert', ['link']],
+        	['hr'],
+        	['clear'],
+        	['cut'],
+        	//['copy'],
+        	['undo'],
+        	['redo'],
+        	['fontname', ['fontname']],
+        	['fontsize', ['fontsize']],
+        	]
+         
+  	 
+      });
+}
+   <c:if test="${actionOn eq 'view'}">$('#richText').summernote('disable');readonly:1,</c:if> 
+
+
+
   
     //Toggling Rich richText and Upload Button    
     $(".addResource").click(function(){
@@ -873,4 +906,14 @@ function toJSDate( dateTime ) {
     return new Date(date[2], (date[0]-1), date[1]);
 }
 </c:if>
+
+function maxLenValEditor() {
+	var isValid = true; 
+	var value = $('#richText').summernote('code');
+	if(value == '<p><br></p>' || value == '' ){
+		isValid = false; 
+		$('#richText').parent().addClass('has-error-cust').find(".help-block").empty().append('<ul class="list-unstyled"><li>Please fill out this field.</li></ul>');
+	}
+	return isValid;
+}
 </script>

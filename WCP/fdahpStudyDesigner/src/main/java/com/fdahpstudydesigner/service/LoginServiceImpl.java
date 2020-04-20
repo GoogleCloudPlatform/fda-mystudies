@@ -1,24 +1,23 @@
 /*
  * Copyright © 2017-2018 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors.
+ * Copyright 2020 Google LLC
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
- * associated documentation files (the "Software"), to deal in the Software without restriction, including
- * without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies
- * of the Software, and to permit persons to whom the Software is furnished to do so, subject to the
- * following conditions:
+ * associated documentation files (the "Software"), to deal in the Software without restriction,
+ * including without limitation the rights to use, copy, modify, merge, publish, distribute,
+ * sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
  *
- * The above copyright notice and this permission notice shall be included in all copies or substantial
- * portions of the Software.
+ * The above copyright notice and this permission notice shall be included in all copies or
+ * substantial portions of the Software.
  *
- * Funding Source: Food and Drug Administration ("Funding Agency") effective 18 September 2014 as Contract no.
- * HHSF22320140030I/HHSF22301006T (the "Prime Contract").
+ * Funding Source: Food and Drug Administration ("Funding Agency") effective 18 September 2014 as
+ * Contract no. HHSF22320140030I/HHSF22301006T (the "Prime Contract").
  *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT. IN NO EVENT SHALL
- * THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR
- * OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
- * ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
- * OTHER DEALINGS IN THE SOFTWARE.
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT
+ * NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+ * NON-INFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
+ * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
 package com.fdahpstudydesigner.service;
@@ -280,7 +279,7 @@ public class LoginServiceImpl implements LoginService, UserDetailsService {
                 .parse(
                     FdahpStudyDesignerUtil.addMinutes(
                         userAttempts.getLastModified(), USER_LOCK_DURATION))
-                .before(
+                .after(
                     new SimpleDateFormat(FdahpStudyDesignerConstants.DB_SDF_DATE_TIME)
                         .parse(FdahpStudyDesignerUtil.getCurrentDateTime()))) {
           securityTokenExpiredDate =
@@ -569,5 +568,89 @@ public class LoginServiceImpl implements LoginService, UserDetailsService {
     }
     logger.info("LoginServiceImpl - checkSecurityToken() - Ends");
     return result;
+  }
+
+  @Override
+  public String sendLockedAccountPasswordResetLinkToMail(
+      String email, String oldEmail, String type) {
+
+    logger.info("LoginServiceImpl - sendLockedAccountPasswordResetLinkToMail - Starts");
+    Map<String, String> propMap = FdahpStudyDesignerUtil.getAppProperties();
+    String passwordResetToken = null;
+    String message = propMap.get("user.forgot.error.msg");
+    boolean flag = false;
+    UserBO userdetails = null;
+    String accessCode = "";
+    Map<String, String> keyValueForSubject = null;
+    Map<String, String> keyValueForSubject2 = null;
+    String dynamicContent = "";
+    String acceptLinkMail = "";
+    int passwordResetLinkExpirationInHour =
+        Integer.parseInt(propMap.get("accountlocked.resetLink.expiration.in.hour"));
+    String customerCareMail = "";
+    String contact = "";
+    try {
+      passwordResetToken = RandomStringUtils.randomAlphanumeric(10);
+      accessCode = RandomStringUtils.randomAlphanumeric(6);
+      if (!StringUtils.isEmpty(passwordResetToken)) {
+        userdetails = loginDAO.getValidUserByEmail(email);
+        if ("".equals(type) && userdetails.getEmailChanged()) {
+          userdetails = null;
+        }
+        if (null != userdetails) {
+          userdetails.setSecurityToken(passwordResetToken);
+          userdetails.setAccessCode(accessCode);
+          userdetails.setTokenUsed(false);
+          userdetails.setTokenExpiryDate(
+              FdahpStudyDesignerUtil.addHours(
+                  FdahpStudyDesignerUtil.getCurrentDateTime(), passwordResetLinkExpirationInHour));
+
+          if (!"USER_UPDATE".equals(type)) {
+            message = loginDAO.updateUserForResetPassword(userdetails);
+          } else {
+            message = FdahpStudyDesignerConstants.SUCCESS;
+          }
+          if (FdahpStudyDesignerConstants.SUCCESS.equals(message)) {
+            if ("USER_EMAIL_UPDATE".equalsIgnoreCase(type)) {
+              acceptLinkMail = propMap.get("emailChangeLink").trim();
+            } else {
+              acceptLinkMail = propMap.get("acceptLinkMail").trim();
+            }
+            keyValueForSubject = new HashMap<String, String>();
+            keyValueForSubject2 = new HashMap<String, String>();
+            keyValueForSubject.put("$firstName", userdetails.getFirstName());
+            keyValueForSubject2.put("$firstName", userdetails.getFirstName());
+            keyValueForSubject.put("$lastName", userdetails.getLastName());
+            keyValueForSubject.put("$accessCode", accessCode);
+            keyValueForSubject.put("$passwordResetLink", acceptLinkMail + passwordResetToken);
+            customerCareMail = propMap.get("email.address.customer.service");
+            keyValueForSubject.put("$customerCareMail", customerCareMail);
+            keyValueForSubject2.put("$customerCareMail", customerCareMail);
+            keyValueForSubject.put("$newUpdatedMail", userdetails.getUserEmail());
+            keyValueForSubject2.put("$newUpdatedMail", userdetails.getUserEmail());
+            keyValueForSubject.put("$oldMail", oldEmail);
+            contact = propMap.get("phone.number.to");
+            keyValueForSubject.put("$contact", contact);
+
+            dynamicContent =
+                FdahpStudyDesignerUtil.genarateEmailContent(
+                    "accountLockedContent", keyValueForSubject);
+            flag =
+                EmailNotification.sendEmailNotification(
+                    "accountLockedSubject", dynamicContent, email, null, null);
+            if (flag) {
+              message = FdahpStudyDesignerConstants.SUCCESS;
+            }
+            if ("".equals(type) && (!userdetails.isEnabled())) {
+              message = propMap.get("user.forgot.error.msg");
+            }
+          }
+        }
+      }
+    } catch (Exception e) {
+      logger.error("LoginServiceImpl - sendLockedAccountPasswordResetLinkToMail - ERROR ", e);
+    }
+    logger.info("LoginServiceImpl - sendLockedAccountPasswordResetLinkToMail - Ends");
+    return message;
   }
 }

@@ -111,6 +111,9 @@
               "info" : false, 
               "lengthChange": false, 
               "searching": false,
+              language: {
+              	"zeroRecords": "You haven't created any content yet.",
+			    },
            });
             
      });
