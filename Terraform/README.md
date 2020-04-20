@@ -29,25 +29,12 @@ MyStudies application.
     in the G Suite Domain:
 
     -   {PREFIX}-org-admins@{DOMAIN}.com: This group has administrative access
-        to the entire org.
+        to the entire org. This group can be used in break-glass situations to
+        give humans access to the org to make changes.
 
     -   {PREFIX}-devops-owners@{DOMAIN}.com: This group has owners access to the
-        devops project.
-
-    -   {PREFIX}-audit-owners@{DOMAIN}.com: This group has owners access to the
-        audit project.
-
-    -   {PREFIX}-apps-owners@{DOMAIN}.com: This group has owners access to the
-        apps project.
-
-    -   {PREFIX}-data-owners@{DOMAIN}.com: This group has owners access to the
-        data project.
-
-    -   {PREFIX}-networks-owners@{DOMAIN}.com: This group has owners access to
-        the networks project.
-
-    -   {PREFIX}-firebase-owners@{DOMAIN}.com: This group has owners access to
-        the firebase project.
+        devops project to make changes to the CICD project or make changes to
+        the Terraform state.
 
     -   {PREFIX}-auditors@{DOMAIN}.com: This group has security reviewer
         (metadata viewer) access to the entire org, as well as viewer access to
@@ -55,10 +42,7 @@ MyStudies application.
 
     WARNING: It is always recommended to use CICD to deploy changes to the
     infrastructure. The groups above should remain empty and only have humans
-    added for emergency break-glass situations or when debugging is required.
-    Always join the group that grants you access to the fewest number of
-    resources to do the job through a standardized approval process and revoke
-    access as soon as possible.
+    added for emergency situations or when investigation is required.
 
 ## Directory Structure
 
