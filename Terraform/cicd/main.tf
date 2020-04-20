@@ -36,7 +36,7 @@ data "google_project" "devops" {
 
 locals {
   devops_apis = [
-    # TODO(xingao): Figure out how to use user_project_override and disable APIs in devops project
+    # TODO: Figure out how to use user_project_override and disable APIs in devops project
     # that are needed to obtain resource information in other projects.
     "bigquery.googleapis.com",
     "cloudbuild.googleapis.com",
