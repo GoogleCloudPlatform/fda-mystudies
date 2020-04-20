@@ -68,7 +68,7 @@ locals {
   terraform_root = trim((var.terraform_root == "" || var.terraform_root == "/") ? "." : var.terraform_root, "/")
   # ./ to indicate root is not recognized by Cloud Build Trigger.
   terraform_root_prefix = local.terraform_root == "." ? "" : "${local.terraform_root}/"
-  cloud_build_sa = "serviceAccount:${data.google_project.devops.number}@cloudbuild.gserviceaccount.com"
+  cloud_build_sa        = "serviceAccount:${data.google_project.devops.number}@cloudbuild.gserviceaccount.com"
 }
 
 # Cloud Build - API
