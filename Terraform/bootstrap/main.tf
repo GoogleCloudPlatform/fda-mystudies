@@ -20,10 +20,10 @@
 # - A Cloud Storage bucket to store Terraform states for all deployments,
 # - Org level IAM permissions for org admins.
 
-// TODO(umairidris): replace with https://github.com/terraform-google-modules/terraform-google-bootstrap
+// TODO: replace with https://github.com/terraform-google-modules/terraform-google-bootstrap
 
 # ==============================================================================
-# TODO(user): Uncomment after initial deployment and run `terraform init`.
+# TODO: Uncomment after initial deployment and run `terraform init`.
 terraform {
   backend "gcs" {
     bucket = "heroes-hat-dev-terraform-state-08679"
@@ -45,6 +45,7 @@ module "project" {
   skip_gcloud_download    = true
   activate_apis = [
     "cloudbuild.googleapis.com",
+    "secretmanager.googleapis.com",
   ]
 }
 
