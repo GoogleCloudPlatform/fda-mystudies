@@ -54,14 +54,16 @@ locals {
     "roles/viewer",
     "roles/iam.securityReviewer",
   ]
-  cloudbuild_sa_editor_roles = concat(local.cloudbuild_sa_viewer_roles, [
+  cloudbuild_sa_editor_roles = [
     "roles/billing.user",
     "roles/orgpolicy.policyAdmin",
     "roles/resourcemanager.organizationAdmin",
     "roles/resourcemanager.folderCreator",
     "roles/resourcemanager.projectCreator",
+  ]
+  cloudbuild_devops_roles = [
     "roles/secretmanager.secretAccessor",
-  ])
+  ]
 }
 
 locals {
@@ -69,6 +71,7 @@ locals {
   terraform_root = trim((var.terraform_root == "" || var.terraform_root == "/") ? "." : var.terraform_root, "/")
   # ./ to indicate root is not recognized by Cloud Build Trigger.
   terraform_root_prefix = local.terraform_root == "." ? "" : "${local.terraform_root}/"
+  cloud_build_sa = "serviceAccount:${data.google_project.devops.number}@cloudbuild.gserviceaccount.com"
 }
 
 # Cloud Build - API
@@ -91,7 +94,7 @@ resource "google_storage_bucket_iam_member" "cloudbuild_state_iam" {
 }
 
 # Grant Cloud Build Service Account access to the organization.
-resource "google_organization_iam_member" "cloudbuild_sa_iam" {
+resource "google_organization_iam_member" "cloudbuild_sa_org_iam" {
   for_each = toset(var.continuous_deployment_enabled ? local.cloudbuild_sa_editor_roles : local.cloudbuild_sa_viewer_roles)
   org_id   = var.org_id
   role     = each.value
@@ -99,6 +102,14 @@ resource "google_organization_iam_member" "cloudbuild_sa_iam" {
   depends_on = [
     google_project_service.devops_apis,
   ]
+}
+
+# Grant Cloud Build Service Account access to the devops project.
+resource "google_project_iam_member" "cloudbuild_sa_project_iam" {
+  for_each = toset(local.cloudbuild_devops_roles)
+  project  = var.devops_project_id
+  role     = each.key
+  member   = "serviceAccount:${data.google_project.devops.number}@cloudbuild.gserviceaccount.com"
 }
 
 # Cloud Build Triggers for CI.
