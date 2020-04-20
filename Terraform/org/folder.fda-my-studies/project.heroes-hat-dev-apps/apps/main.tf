@@ -25,8 +25,7 @@ module "heroes_hat_cluster" {
 
   # Required
   name = "heroes-hat-cluster"
-  # TODO: Replace kubernetes_version with release_channel when https://github.com/terraform-google-modules/terraform-google-kubernetes-engine/pull/487 is merged.
-  kubernetes_version     = "1.14.10-gke.27"
+  # TODO: Set release_channel to "regular" when https://github.com/terraform-google-modules/terraform-google-kubernetes-engine/pull/487 is merged.
   project_id             = var.project_id
   region                 = var.gke_region
   regional               = true
