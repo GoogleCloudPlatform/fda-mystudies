@@ -1,3 +1,5 @@
+data "google_client_config" "default" {}
+
 data "google_container_cluster" "gke_cluster" {
   name     = var.my_studies_cluster.name
   location = var.my_studies_cluster.location
@@ -6,6 +8,8 @@ data "google_container_cluster" "gke_cluster" {
 
 
 provider "kubernetes" {
+  load_config_file       = false
+  token                  = data.google_client_config.default.access_token
   host                   = data.google_container_cluster.gke_cluster.endpoint
   client_certificate     = base64decode(data.google_container_cluster.gke_cluster.master_auth.0.client_certificate)
   client_key             = base64decode(data.google_container_cluster.gke_cluster.master_auth.0.client_key)
@@ -88,7 +92,7 @@ resource "google_service_account_key" "apps_service_account_keys" {
 
   # Expected format:
   # {auth-server="<auth_server_service_account@<project>.iam.gserverviceaccount.com", ...}
-  service_account_id = var.apps_service_accounts[each.key].unique_id
+  service_account_id = "projects/${var.project_id}/serviceAccounts/${var.apps_service_accounts[each.key].unique_id}"
 }
 
 resource "kubernetes_secret" "apps_gcloud_keys" {
