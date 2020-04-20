@@ -1834,25 +1834,28 @@
                         <rect key="frame" x="0.0" y="0.0" width="375" height="812"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <progressView opaque="NO" contentMode="scaleToFill" verticalHuggingPriority="750" fixedFrame="YES" progressViewStyle="bar" translatesAutoresizingMaskIntoConstraints="NO" id="Opj-CP-tJy">
-                                <rect key="frame" x="0.0" y="1" width="375" height="3"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            <progressView opaque="NO" contentMode="scaleToFill" verticalHuggingPriority="750" progressViewStyle="bar" translatesAutoresizingMaskIntoConstraints="NO" id="Opj-CP-tJy">
+                                <rect key="frame" x="0.0" y="44" width="375" height="2.6666666666666643"/>
                                 <color key="progressTintColor" red="0.28627450980000002" green="0.71372549019999998" blue="0.8980392157" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                             </progressView>
-                            <webView contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="51q-E2-3o9">
-                                <rect key="frame" x="0.0" y="47" width="375" height="765"/>
-                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
-                                <connections>
-                                    <outlet property="delegate" destination="0YV-mj-82E" id="eai-DC-l0D"/>
-                                </connections>
-                            </webView>
+                            <wkWebView contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="tp6-2r-Hiw">
+                                <rect key="frame" x="0.0" y="45.666666666666686" width="375" height="732.33333333333326"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <wkWebViewConfiguration key="configuration">
+                                    <audiovisualMediaTypes key="mediaTypesRequiringUserActionForPlayback" none="YES"/>
+                                    <wkPreferences key="preferences"/>
+                                </wkWebViewConfiguration>
+                            </wkWebView>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
-                            <constraint firstItem="51q-E2-3o9" firstAttribute="top" secondItem="i4g-Zk-UnV" secondAttribute="top" constant="3" id="MsJ-i4-ONd"/>
-                            <constraint firstItem="i4g-Zk-UnV" firstAttribute="trailing" secondItem="51q-E2-3o9" secondAttribute="trailing" id="QS9-Vi-9DD"/>
-                            <constraint firstAttribute="bottom" secondItem="51q-E2-3o9" secondAttribute="bottom" id="X7Z-vi-Rc6"/>
-                            <constraint firstItem="51q-E2-3o9" firstAttribute="leading" secondItem="i4g-Zk-UnV" secondAttribute="leading" id="hLI-wg-lwP"/>
+                            <constraint firstItem="tp6-2r-Hiw" firstAttribute="leading" secondItem="i4g-Zk-UnV" secondAttribute="leading" id="21F-W7-LnM"/>
+                            <constraint firstItem="i4g-Zk-UnV" firstAttribute="bottom" secondItem="tp6-2r-Hiw" secondAttribute="bottom" id="5FB-BS-Pgc"/>
+                            <constraint firstItem="i4g-Zk-UnV" firstAttribute="trailing" secondItem="tp6-2r-Hiw" secondAttribute="trailing" id="LfC-5m-lhR"/>
+                            <constraint firstItem="Opj-CP-tJy" firstAttribute="top" secondItem="i4g-Zk-UnV" secondAttribute="top" id="Mud-en-1VW"/>
+                            <constraint firstAttribute="trailing" secondItem="Opj-CP-tJy" secondAttribute="trailing" id="YSm-8L-wZ5"/>
+                            <constraint firstItem="tp6-2r-Hiw" firstAttribute="top" secondItem="Opj-CP-tJy" secondAttribute="bottom" id="bZb-nW-Ec1"/>
+                            <constraint firstItem="Opj-CP-tJy" firstAttribute="leading" secondItem="MYK-RY-Tbr" secondAttribute="leading" id="z7b-We-Z5u"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="i4g-Zk-UnV"/>
                     </view>
@@ -1867,7 +1870,7 @@
                     </navigationItem>
                     <connections>
                         <outlet property="progressBar" destination="Opj-CP-tJy" id="zav-j2-6pd"/>
-                        <outlet property="webView" destination="51q-E2-3o9" id="Dah-ge-0h2"/>
+                        <outlet property="webView" destination="tp6-2r-Hiw" id="A7N-4D-1Hy"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="tce-5G-MZF" userLabel="First Responder" sceneMemberID="firstResponder"/>

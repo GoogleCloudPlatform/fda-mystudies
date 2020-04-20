@@ -199,16 +199,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     UIApplication.shared.applicationIconBadgeNumber = 0
 
-    SyncUpdate.currentSyncUpdate = SyncUpdate()
-
-    // Register observer for Network change
-    NotificationCenter.default.addObserver(
-      SyncUpdate.currentSyncUpdate as Any,
-      selector: #selector(SyncUpdate.currentSyncUpdate?.updateData),
-      name: ReachabilityChangedNotification,
-      object: nil
-    )
-
     let ud1 = UserDefaults.standard
 
     // Check if App is launched because of Notification Received
@@ -474,7 +464,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
       let center = UNUserNotificationCenter.current()
       center.getPendingNotificationRequests(
         completionHandler: { requests in
-           if requests.count < 50 {
+          if requests.count < 50 {
             DispatchQueue.main.async {
               // This should get called on main thread to avoid crash.
               LocalNotification.refreshAllLocalNotification()

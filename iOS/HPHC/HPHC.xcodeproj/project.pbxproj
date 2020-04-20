@@ -336,7 +336,7 @@
 		6E91D6811ECD662E0012F49F /* JailbrokeBlocker.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = JailbrokeBlocker.xib; sourceTree = "<group>"; };
 		6E93C7E01EE2EC26006788B1 /* ConsentLatest.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = ConsentLatest.json; sourceTree = "<group>"; };
 		6E9B39BF1E55DFF10037D09D /* ActivityBuilder.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ActivityBuilder.swift; sourceTree = "<group>"; };
-		6E9E81D51ECEDA770007B492 /* SyncUpdate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SyncUpdate.swift; sourceTree = "<group>"; };
+		6E9E81D51ECEDA770007B492 /* SyncUpdate.swift */ = {isa = PBXFileReference; fileEncoding = 4; indentWidth = 2; lastKnownFileType = sourcecode.swift; path = SyncUpdate.swift; sourceTree = "<group>"; tabWidth = 2; };
 		6EA889BB1E6FD16B00F160A1 /* ConfirmationViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ConfirmationViewController.swift; sourceTree = "<group>"; };
 		6EA889BD1E6FD20000F160A1 /* ConfirmationTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ConfirmationTableViewCell.swift; sourceTree = "<group>"; };
 		6EA889BF1E6FD22800F160A1 /* ConfirmationOptionalTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ConfirmationOptionalTableViewCell.swift; sourceTree = "<group>"; };
@@ -506,7 +506,7 @@
 		94B3DD3E1E6ED8E500327AE5 /* StudyOverviewPageViewControllerFirst.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StudyOverviewPageViewControllerFirst.swift; sourceTree = "<group>"; };
 		94B3DD3F1E6ED8E500327AE5 /* StudyOverviewViewControllerSecond.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StudyOverviewViewControllerSecond.swift; sourceTree = "<group>"; };
 		94B5F2F31ECA354800BC0336 /* LocalNotification.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LocalNotification.swift; sourceTree = "<group>"; };
-		94C13DBB1EC1988600E3AEBF /* ChartsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChartsViewController.swift; sourceTree = "<group>"; };
+		94C13DBB1EC1988600E3AEBF /* ChartsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; indentWidth = 2; lastKnownFileType = sourcecode.swift; path = ChartsViewController.swift; sourceTree = "<group>"; tabWidth = 2; };
 		94C13DBD1EC19E4700E3AEBF /* LineChartCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LineChartCell.swift; sourceTree = "<group>"; };
 		94C5504F1EBA153F007740D0 /* StudyDashboard.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StudyDashboard.swift; sourceTree = "<group>"; };
 		94C602301E51C7D500CB72F7 /* WCPServices.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WCPServices.swift; sourceTree = "<group>"; };
@@ -2429,7 +2429,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 10;
+				CURRENT_PROJECT_VERSION = 13;
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				DEVELOPMENT_TEAM = 3485DDCN2M;
 				ENABLE_BITCODE = NO;
@@ -2463,7 +2463,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 10;
+				CURRENT_PROJECT_VERSION = 13;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = 3485DDCN2M;
 				ENABLE_BITCODE = NO;

@@ -30,7 +30,6 @@ class StudyListCell: UITableViewCell {
   @IBOutlet var labelStudyTitle: UILabel?
   @IBOutlet var labelStudyShortDescription: UILabel?
   @IBOutlet var labelStudySponserName: UILabel?
-  @IBOutlet var labelStudyCategoryType: UILabel?
   @IBOutlet var labelCompletionValue: UILabel?
   @IBOutlet var labelAdherenceValue: UILabel?
   @IBOutlet var labelStudyStatus: UILabel?
@@ -40,37 +39,35 @@ class StudyListCell: UITableViewCell {
   @IBOutlet var studyLogoImage: UIImageView?
   @IBOutlet var studyUserStatusIcon: UIImageView?
   @IBOutlet var studyStatusIndicator: UIView?
-  @IBOutlet var categoryBG: UIView?
 
   var selectedStudy: Study!
   weak var delegate: StudyListDelegates?
-
+  
+  private var placeholderImage: UIImage? {
+    return UIImage(named: "placeholder")
+  }
   /// Cell cleanup.
   override func prepareForReuse() {
     super.prepareForReuse()
-    studyLogoImage?.image = UIImage(named: "placeholder")
+    studyLogoImage?.image = placeholderImage
   }
 
   /// Used to change the cell background color.
   override func setSelected(_ selected: Bool, animated: Bool) {
     let color = studyStatusIndicator?.backgroundColor
-    let color2 = categoryBG?.backgroundColor
     super.setSelected(selected, animated: animated)
     // Configure the view for the selected state
     if selected {
       studyStatusIndicator?.backgroundColor = color
-      categoryBG?.backgroundColor = color2
     }
   }
 
   ///  Used to set the cell state ie Highlighted.
   override func setHighlighted(_ highlighted: Bool, animated: Bool) {
     let color = studyStatusIndicator?.backgroundColor
-    let color2 = categoryBG?.backgroundColor
     super.setHighlighted(highlighted, animated: animated)
     if highlighted {
       studyStatusIndicator?.backgroundColor = color
-      categoryBG?.backgroundColor = color2
     }
   }
 
@@ -86,8 +83,6 @@ class StudyListCell: UITableViewCell {
     if study.sponserName != nil {
       labelStudySponserName?.text = study.sponserName!
     }
-
-    labelStudyCategoryType?.text = study.category!.uppercased()
 
     progressBarCompletion?.layer.cornerRadius = 2
     progressBarCompletion?.layer.masksToBounds = true
@@ -194,7 +189,7 @@ class StudyListCell: UITableViewCell {
     {
       studyLogoImage?.sd_setImage(
         with: url,
-        placeholderImage: nil,
+        placeholderImage: placeholderImage,
         options: .progressiveLoad,
         completed: { [weak self] (image, _, _, _) in
           if let image = image {
