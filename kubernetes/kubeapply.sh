@@ -3,11 +3,12 @@
 # Short helper script to run repetitive commands for Kubernetes deployments.
 # Args:
 # kubeapply.sh <project> <region> <cluster>
-# 
+#
 # It does the following:
-#  * Activate sthe cluster for kubectl via `gcloud container clusters get-credentials`.
+#  * Activates the cluster for kubectl via `gcloud container clusters get-credentials`.
 #  * Applies the pod security policies.
-#  * Applies the heroes-hat cert configuration.
+#  * Applies the cert configuration.
+#  * Applies all deployments from children of the parent folder.
 #  * Applies all services from children of the parent folder.
 #  * Applies the ingress configuration
 #
@@ -29,8 +30,6 @@ shift 1
 
 set -e
 
-serviceaccount="$(gcloud container clusters describe "${cluster}" --region="us-east1" --project="heroes-hat-dev-apps" --format='value(nodeConfig.serviceAccount)')"
-
 echo "=== Switching kubectl to cluster ${cluster} ==="
 read -p "Press enter to continue"
 gcloud container clusters get-credentials "${cluster}" --region="us-east1" --project="heroes-hat-dev-apps"
@@ -41,9 +40,15 @@ for policy in $(find . -name "pod_security_policy*.yaml"); do
   kubectl apply -f ${policy}
 done
 
-echo '=== Applying heroes-hat-cert.yaml ==='
+echo '=== Applying cert.yaml ==='
 read -p "Press enter to continue"
-kubectl apply -f ./heroes-hat-cert.yaml
+kubectl apply -f ./cert.yaml
+
+for deployment in $(find .. -name "deployment.yaml"); do
+  echo "=== Applying deployment ${deployment} ==="
+  read -p "Press enter to continue"
+  kubectl apply -f ${deployment}
+done
 
 for service in $(find .. -name "service.yaml"); do
   echo "=== Applying service ${service} ==="
