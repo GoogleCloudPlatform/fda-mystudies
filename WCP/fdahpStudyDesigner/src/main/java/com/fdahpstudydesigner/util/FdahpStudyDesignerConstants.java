@@ -239,9 +239,9 @@ public class FdahpStudyDesignerConstants {
   public static final String NO = "No";
   public static final String NOTIFICATION = "notification";
   public static final String NOTIFICATION_ACTIVETASK_TEXT =
-      "A new activity $shortTitle has been added for the study: $customId. Check it out now.";
+      "A new activity $shortTitle has been added for the study: $customId.";
   public static final String NOTIFICATION_ACTIVETASK_TEXT_PUBLISH =
-      "1 or more activities have been added for the study: $customId. Check it out now.";
+      "1 or more activities have been added for the study: $customId.";
   public static final String NOTIFICATION_DEACTIVATE_TEXT =
       "The study $customId has been closed. We thank you for your participation.";
   public static final String NOTIFICATION_ERROR_MSG =
@@ -260,8 +260,7 @@ public class FdahpStudyDesignerConstants {
   public static final String NOTIFICATION_SUBTYPE_ANNOUNCEMENT = "Announcement";
   public static final String NOTIFICATION_SUBTYPE_RESOURCE = "Resource";
 
-  public static final String NOTIFICATION_UPCOMING_OR_ACTIVE_TEXT =
-      "A new study is available. Check it out now.";
+  public static final String NOTIFICATION_UPCOMING_OR_ACTIVE_TEXT = "A new study is available.";
   public static final String NOTIFICATION_VIEWED = "Y";
   // Notification flags
   public static final String NOTIFICATIONID = "notificationId";

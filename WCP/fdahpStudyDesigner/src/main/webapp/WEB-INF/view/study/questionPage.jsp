@@ -1,4 +1,3 @@
-<%@ page language="java" contentType="text/html; charset=ISO-8859-1" pageEncoding="ISO-8859-1"%>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
@@ -176,12 +175,12 @@ function isNumberKey(evt)
             	    <span class="tool-tip" data-toggle="tooltip" data-html="true" data-placement="top"  title="The date supplied by a participant in response to this question can be used to dictate the schedule for other questionnaires or active tasks in the study, or to determine the Period of Visibility of study resources."  >
             		<span class="checkbox checkbox-inline">
 			               <input type="checkbox" id="useAnchorDateId" name="useAnchorDate" value="true" ${questionsBo.useAnchorDate ? 'checked':''} <c:if test="${questionnairesStepsBo.repeatable eq'Yes'}">disabled</c:if> <c:if test="${not empty questionsBo.isShorTitleDuplicate && (questionsBo.isShorTitleDuplicate gt 0)}"> disabled</c:if>>
-			               <label for="useAnchorDateId"> Use response as Anchor Date </label>
+			               <label for="useAnchorDateId"> Use response as anchor date </label>
 		             </span>
 		             </span>
 		             <div class="clearfix"></div>
 	            	<div class="col-md-6 p-none useAnchorDateName mt-md" style="display: none">
-		                <div class="gray-xs-f mb-xs">Define name for Anchor date<span class="requiredStar">*</span></div>
+		                <div class="gray-xs-f mb-xs">Define name for anchor date<span class="requiredStar">*</span></div>
 		                <div class="form-group">
 		                  <input type="text" class="form-control" name="anchorDateName" id="anchorTextId" value="${questionsBo.anchorDateName}" maxlength="50" <c:if test="${not empty questionsBo.isShorTitleDuplicate && (questionsBo.isShorTitleDuplicate gt 0)}"> disabled</c:if>/>
 		                  <div class="help-block with-errors red-txt"></div>
@@ -196,12 +195,12 @@ function isNumberKey(evt)
 		               <span class="checkbox checkbox-inline">
 			               <input type="checkbox" id="useAnchorDateId" name="useAnchorDate" value="true" ${questionsBo.useAnchorDate ? 'checked':''} <c:if test="${questionnairesStepsBo.repeatable eq'Yes'}"> disabled </c:if> 
 			                     <c:if test="${questionnaireBo.frequency ne 'One time' || questionnaireBo.scheduleType ne 'Regular'}"> disabled </c:if> <c:if test="${not empty questionsBo.isShorTitleDuplicate && (questionsBo.isShorTitleDuplicate gt 0)}"> disabled</c:if>>
-			               <label for="useAnchorDateId"> Use response as Anchor Date </label>
+			               <label for="useAnchorDateId"> Use response as anchor date </label>
 		               </span>
 	               </span>
 	               <div class="clearfix"></div>
 	            	<div class="col-md-6 p-none useAnchorDateName mt-md" style="display: none">
-		                <div class="gray-xs-f mb-xs">Define name for Anchor date<span class="requiredStar">*</span></div>
+		                <div class="gray-xs-f mb-xs">Define name for anchor date<span class="requiredStar">*</span></div>
 		                <div class="form-group">
 		                  <input type="text" class="form-control" name="anchorDateName" id="anchorTextId" value="${fn:escapeXml(questionsBo.anchorDateName)}" maxlength="50" <c:if test="${not empty questionsBo.isShorTitleDuplicate && (questionsBo.isShorTitleDuplicate gt 0)}"> disabled</c:if>/>
 		                  <div class="help-block with-errors red-txt"></div>
@@ -1724,7 +1723,7 @@ $(document).ready(function(){
 		    					 $("#doneId").attr("disabled",false);
 		    					 bootbox.confirm({
 		    							closeButton: false,
-		    							message : "This question provides an Anchor Date response element, but has been marked Skippable. Are you sure you wish to proceed?",	
+		    							message : "This question provides an anchor date response element, but has been marked Skippable. Are you sure you wish to proceed?",	
 		    						    buttons: {
 		    						        'cancel': {
 		    						            label: 'Cancel',

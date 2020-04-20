@@ -403,7 +403,7 @@ public class StandaloneStudyInfoActivity extends AppCompatActivity
           } else if (studyList.getStatus().equalsIgnoreCase(StudyFragment.PAUSED)) {
             Toast.makeText(getApplication(), R.string.study_paused, Toast.LENGTH_SHORT).show();
           } else if (!studyList.getSetting().getRejoin()
-              && studyList.getStatus().equalsIgnoreCase(StudyFragment.WITHDRAWN)) {
+              && studyList.getStudyStatus().equalsIgnoreCase(StudyFragment.WITHDRAWN)) {
             Toast.makeText(getApplication(), R.string.cannot_rejoin_study, Toast.LENGTH_SHORT)
                 .show();
           } else {

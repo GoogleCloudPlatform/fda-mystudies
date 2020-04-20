@@ -27,6 +27,7 @@ public class ApplicationPropertyConfiguration {
 
   @Value("${from.email.password}")
   private String fromEmailPassword;
+
   @Value("${factory.value}")
   private String sslFactoryValue;
 
@@ -35,12 +36,6 @@ public class ApplicationPropertyConfiguration {
 
   @Value("${host.name}")
   private String smtpHostName;
-
-  @Value("${passwd.reset.link.subject}")
-  private String passwdResetLinkSubject;
-
-  @Value("${passwd.reset.link.content}")
-  private String passwdResetLinkContent;
 
   @Value("${resend.confirmation.mail.subject}")
   private String resendConfirmationMailSubject;

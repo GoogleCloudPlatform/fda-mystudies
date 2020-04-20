@@ -62,7 +62,7 @@
 					name="eligibilityMechanism" required
 					<c:if test="${eligibility.eligibilityMechanism eq 1}" >checked</c:if>
 					<%-- <c:if test="${liveStatus}"> disabled</c:if> --%> disabled>
-					<label for="inlineRadio1">Token Validation Only</label>
+					<label for="inlineRadio1">Token Validation</label>
 				</span> <span class="radio radio-inline p-45"> <input type="radio"
 					id="inlineRadio2" value="2" class="eligibilityOptCls"
 					name="eligibilityMechanism" required
@@ -75,7 +75,7 @@
 					name="eligibilityMechanism" required
 					<c:if test="${eligibility.eligibilityMechanism eq 3}">checked</c:if>
 					<c:if test="${liveStatus}"> disabled</c:if>> <label
-					for="inlineRadio3">Eligibility Test Only</label>
+					for="inlineRadio3">Eligibility Test</label>
 				</span>
 				<div class="help-block with-errors red-txt"></div>
 			</div>

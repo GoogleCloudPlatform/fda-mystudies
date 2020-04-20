@@ -71,11 +71,11 @@ class NetworkManager {
   /// Default Initializer
   init() {
 
-    reachability = Reachability.init()
+    reachability = try? Reachability()
     NotificationCenter.default.addObserver(
       self,
       selector: #selector(reachabilityChanged(_:)),
-      name: ReachabilityChangedNotification,
+      name: Notification.Name.reachabilityChanged,
       object: nil
     )
 
@@ -99,11 +99,12 @@ class NetworkManager {
   /// - Parameter notification: insance of Notification
   @objc func reachabilityChanged(_ notification: Notification) {
 
-    if self.reachability!.isReachable {
+    if self.reachability!.connection != .unavailable {
       networkAvailability = true
     } else {
       networkAvailability = false
     }
+    SyncUpdate.sharedInstance.updateData(isReachable: networkAvailability)
   }
 
   /// Compose request

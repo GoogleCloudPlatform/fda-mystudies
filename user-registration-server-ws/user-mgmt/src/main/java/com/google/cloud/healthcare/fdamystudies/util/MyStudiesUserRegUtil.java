@@ -115,6 +115,7 @@ public class MyStudiesUserRegUtil {
     CONSENT_VERSION_REQUIRED("Consent version is required"),
     WITHDRAWN_STUDY("You are already Withdrawn from study"),
     EMAIL_NOT_EXISTS("Email Doesn't Exists"),
+    DOMAIN_NOT_WHITELISTED("Email does not belong to a whitelisted domain."),
     RESEND_EMAIL_NOT_EXISTS("Email Doesn't Exists OR Email Already Verified"),
     USER_NOT_EXISTS("User Doesn't Exists"),
     FAILURE_TO_SENT_MAIL("Oops, something went wrong. Failed to send Email"),
