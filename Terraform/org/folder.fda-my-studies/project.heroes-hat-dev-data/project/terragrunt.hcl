@@ -18,7 +18,6 @@ include {
 
 dependency "parent_folder" {
   config_path = "../../folder"
-
   mock_outputs = {
     name = "mock-folder"
   }

@@ -12,35 +12,32 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# This folder contains Terraform resources to setup the audit project, which includes:
+# This folder contains Terraform resources to setup the basis of the project, which includes:
 # - The project itself,
 # - APIs to enable,
-# - Deletion lien,
-# - Project level IAM permissions for the project owners,
+# - Deletion lien, if enabled,
+# - Project level IAM permissions for the project owners, if any.
 
 terraform {
   backend "gcs" {}
 }
 
-# Devops project, with APIs to enable and deletion lien created.
+# Project, with APIs to enable and deletion lien created.
 module "project" {
   source  = "terraform-google-modules/project-factory/google"
   version = "~> 7.0"
 
-  name            = var.name
-  org_id          = var.org_id
-  folder_id       = var.folder_id
-  billing_account = var.billing_account
-  lien            = true
-  activate_apis = [
-    "bigquery.googleapis.com",
-    "logging.googleapis.com",
-  ]
+  name                    = var.name
+  org_id                  = var.org_id
+  folder_id               = var.folder_id
+  billing_account         = var.billing_account
+  lien                    = var.enable_lien
+  activate_apis           = var.apis
   default_service_account = "keep"
   skip_gcloud_download    = true
 }
 
-# Project level IAM permissions for audit project owners.
+# Project level IAM permissions for project owners.
 resource "google_project_iam_binding" "owners" {
   project = module.project.project_id
   role    = "roles/owner"
