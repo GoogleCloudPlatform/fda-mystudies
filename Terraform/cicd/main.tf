@@ -49,10 +49,12 @@ locals {
   ]
   cloudbuild_sa_viewer_roles = [
     "roles/browser",
+    "roles/logging.viewer",
     "roles/iam.securityReviewer",
   ]
   cloudbuild_sa_editor_roles = [
     "roles/billing.user",
+    "roles/logging.configWriter",
     "roles/orgpolicy.policyAdmin",
     "roles/resourcemanager.organizationAdmin",
     "roles/resourcemanager.folderCreator",
