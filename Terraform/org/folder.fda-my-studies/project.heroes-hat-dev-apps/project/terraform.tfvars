@@ -22,6 +22,3 @@ apis = [
   "servicenetworking.googleapis.com",
   "sqladmin.googleapis.com",
 ]
-owners = [
-  "group:rocketturtle-gcp-admin@rocketturtle.net",
-]
