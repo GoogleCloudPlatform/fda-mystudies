@@ -19,6 +19,7 @@
 
 import SlideMenuControllerSwift
 import UIKit
+import Toast_Swift
 
 let kLeftMenuSubtitle = "subTitle"
 let kLeftMenuTitle = "menuTitle"
