@@ -3,11 +3,6 @@ variable "project_id" {
   type        = string
 }
 
-variable "sql_instance_name" {
-  description = "The name of the SQL instance"
-  type        = string
-}
-
 variable "secrets_project_id" {
   type = string
 }
