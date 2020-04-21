@@ -30,12 +30,10 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
-
 @Entity
 @Table(name = "active_task_steps")
 public class ActiveTaskStepsDto implements Serializable {
 
-  
   private static final long serialVersionUID = 8677367389857232011L;
 
   @Id

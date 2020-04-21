@@ -1,3 +1,2 @@
-# fda-mystudies-response-server
-
-Response Server web service components for the FDA MyStudies Open Implementation
+# FDA MyStudies Response Datastore
+Response datastore is the back-end component that stores and manage participant response data.

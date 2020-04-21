@@ -1,7 +1,7 @@
 // Copyright (c) 2016, Arpad Goretity https://github.com/H2CO3/HCDownload.git
 // Copyright (c) 2016, Muhammad Zeeshan https://github.com/mzeeshanid/MZDownloadManager.git
 // All rights reserved.
-// License Agreement for FDA My Studies
+// License Agreement for FDA MyStudies
 // Copyright © 2017-2019 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors.
 // Copyright 2020 Google LLC
 // Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated
@@ -94,7 +94,8 @@ class FileDownloadManager: NSObject, URLSessionDelegate, URLSessionDownloadDeleg
     for (_, downloadModel) in downloadingArray.enumerated() {
       if downloadTask.isEqual(downloadModel.task) {
         let fileName = downloadModel.fileName as NSString
-        let basePath = downloadModel.destinationPath == ""
+        let basePath =
+          downloadModel.destinationPath == ""
           ? AKUtility.baseFilePath : downloadModel.destinationPath
         let destinationPath = (basePath as NSString).appendingPathComponent(
           fileName as String
@@ -170,7 +171,8 @@ class FileDownloadManager: NSObject, URLSessionDelegate, URLSessionDownloadDeleg
   /// encrypts file at the URL specified using the random generated Key & IV, AES256 encryption is used
   class func encyptFile(pathURL: URL) {
 
-    let pathString = pathURL.absoluteString.contains("file://")
+    let pathString =
+      pathURL.absoluteString.contains("file://")
       ? pathURL.absoluteString
       : "file://" + pathURL.absoluteString
     guard let updatedPathURL = URL(string: pathString)

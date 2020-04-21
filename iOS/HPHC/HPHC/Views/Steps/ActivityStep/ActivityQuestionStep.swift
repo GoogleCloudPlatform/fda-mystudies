@@ -1,4 +1,4 @@
-// License Agreement for FDA My Studies
+// License Agreement for FDA MyStudies
 // Copyright © 2017-2019 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors. Permission is
 // hereby granted, free of charge, to any person obtaining a copy of this software and associated
 // documentation files (the &quot;Software&quot;), to deal in the Software without restriction, including without
@@ -308,9 +308,8 @@ class ActivityQuestionStep: ActivityStep {
           let minDesc = formatDict?[kStepQuestionScaleMinDesc] as? String
 
           // Checking if difference is divisible
-          let difference = (formatDict?[kStepQuestionScaleMaxValue] as? Int)! - (
-            formatDict?[kStepQuestionScaleMinValue] as? Int
-          )!
+          let difference =
+            (formatDict?[kStepQuestionScaleMaxValue] as? Int)! - (formatDict?[kStepQuestionScaleMinValue] as? Int)!
           let divisibleValue = difference % (formatDict?[kStepQuestionScaleStep] as? Int)!
           let stepsValue = difference / (formatDict?[kStepQuestionScaleStep] as? Int)!
           let defaultPosition = (formatDict?[kStepQuestionScaleDefaultValue] as? Int)!
@@ -321,11 +320,9 @@ class ActivityQuestionStep: ActivityStep {
             defaultValue = (formatDict?[kStepQuestionScaleMaxValue] as? Int)!
           }
 
-          if (
-            (formatDict?[kStepQuestionScaleMaxValue] as? Int)! != (
-              formatDict?[kStepQuestionScaleMinValue] as? Int
-            )!
-          ) && divisibleValue == 0 && (stepsValue >= 1 && stepsValue <= 13) {
+          if ((formatDict?[kStepQuestionScaleMaxValue] as? Int)! != (formatDict?[kStepQuestionScaleMinValue] as? Int)!)
+            && divisibleValue == 0 && (stepsValue >= 1 && stepsValue <= 13)
+          {
 
             questionStepAnswerFormat = ORKAnswerFormat.scale(
               withMaximumValue: (formatDict?[kStepQuestionScaleMaxValue] as? Int)!,
@@ -338,20 +335,14 @@ class ActivityQuestionStep: ActivityStep {
             )
             // Setting the Max & Min Images if exist
             if Utilities.isValidValue(
-              someObject: (
-                formatDict?[kStepQuestionScaleMaxImage] as? String as AnyObject
-              )
+              someObject: (formatDict?[kStepQuestionScaleMaxImage] as? String as AnyObject)
             )
               && Utilities.isValidValue(
-                someObject: (
-                  formatDict?[kStepQuestionScaleMinImage] as? String as AnyObject
-                )
+                someObject: (formatDict?[kStepQuestionScaleMinImage] as? String as AnyObject)
               )
             {
 
-              let minImageBase64String = (
-                formatDict![kStepQuestionScaleMinImage] as? String
-              )!
+              let minImageBase64String = (formatDict![kStepQuestionScaleMinImage] as? String)!
               let minNormalImageData = NSData(
                 base64Encoded: minImageBase64String,
                 options: .ignoreUnknownCharacters
@@ -360,9 +351,7 @@ class ActivityQuestionStep: ActivityStep {
                 data: minNormalImageData! as Data
               )!
 
-              let maxImageBase64String = (
-                formatDict![kStepQuestionScaleMaxImage] as? String
-              )!
+              let maxImageBase64String = (formatDict![kStepQuestionScaleMaxImage] as? String)!
               let maxNormalImageData = NSData(
                 base64Encoded: maxImageBase64String,
                 options: .ignoreUnknownCharacters
@@ -403,9 +392,7 @@ class ActivityQuestionStep: ActivityStep {
             if let value = (formatDict?[kStepQuestionContinuosScaleMaxValue] as? Double) {
 
               if value > 0 {
-                minValue = (
-                  formatDict?[kStepQuestionContinuosScaleMaxValue] as? Double
-                )!
+                minValue = (formatDict?[kStepQuestionContinuosScaleMaxValue] as? Double)!
               }
             }
           }
@@ -418,9 +405,7 @@ class ActivityQuestionStep: ActivityStep {
             if let value = (formatDict?[kStepQuestionContinuosScaleMinValue] as? Double) {
 
               if value > 0 {
-                minValue = (
-                  formatDict?[kStepQuestionContinuosScaleMinValue] as? Double
-                )!
+                minValue = (formatDict?[kStepQuestionContinuosScaleMinValue] as? Double)!
               }
             }
           }
@@ -429,34 +414,26 @@ class ActivityQuestionStep: ActivityStep {
             someObject: formatDict?[kStepQuestionContinuosScaleDefaultValue]
               as AnyObject?
           ) {
-            defaultValue = (
-              formatDict?[kStepQuestionContinuosScaleDefaultValue] as? Double
-            )!
+            defaultValue = (formatDict?[kStepQuestionContinuosScaleDefaultValue] as? Double)!
 
           } else {
-            if let value = (
-              formatDict?[kStepQuestionContinuosScaleDefaultValue] as? Double
-            ) {
+            if let value = (formatDict?[kStepQuestionContinuosScaleDefaultValue] as? Double) {
 
               if value > 0 {
-                defaultValue = (
-                  formatDict?[kStepQuestionContinuosScaleDefaultValue] as? Double
-                )!
+                defaultValue = (formatDict?[kStepQuestionContinuosScaleDefaultValue] as? Double)!
               }
             }
           }
 
-          if (formatDict?[kStepQuestionContinuosScaleMinValue] as? Double)! != (
-            formatDict?[kStepQuestionContinuosScaleMaxValue] as? Double
-          )! {
+          if (formatDict?[kStepQuestionContinuosScaleMinValue] as? Double)!
+            != (formatDict?[kStepQuestionContinuosScaleMaxValue] as? Double)!
+          {
 
             questionStepAnswerFormat = ORKAnswerFormat.continuousScale(
               withMaximumValue: maxValue,
               minimumValue: minValue,
               defaultValue: defaultValue,
-              maximumFractionDigits: (
-                formatDict?[kStepQuestionContinuosScaleMaxFractionDigits] as? Int
-              )!,
+              maximumFractionDigits: (formatDict?[kStepQuestionContinuosScaleMaxFractionDigits] as? Int)!,
               vertical: (formatDict?[kStepQuestionContinuosScaleVertical] as? Bool)!,
               maximumValueDescription: maxDesc,
               minimumValueDescription: minDesc
@@ -464,20 +441,14 @@ class ActivityQuestionStep: ActivityStep {
 
             // setting the min & max images if exists
             if Utilities.isValidValue(
-              someObject: (
-                formatDict?[kStepQuestionContinuosScaleMaxImage] as? String as AnyObject
-              )
+              someObject: (formatDict?[kStepQuestionContinuosScaleMaxImage] as? String as AnyObject)
             )
               && Utilities.isValidValue(
-                someObject: (
-                  formatDict?[kStepQuestionContinuosScaleMinImage] as? String as AnyObject
-                )
+                someObject: (formatDict?[kStepQuestionContinuosScaleMinImage] as? String as AnyObject)
               )
             {
 
-              let minImageBase64String = (
-                formatDict![kStepQuestionContinuosScaleMinImage] as? String
-              )!
+              let minImageBase64String = (formatDict![kStepQuestionContinuosScaleMinImage] as? String)!
               let minNormalImageData = NSData(
                 base64Encoded: minImageBase64String,
                 options: .ignoreUnknownCharacters
@@ -486,9 +457,7 @@ class ActivityQuestionStep: ActivityStep {
                 data: minNormalImageData! as Data
               )!
 
-              let maxImageBase64String = (
-                formatDict![kStepQuestionContinuosScaleMaxImage] as? String
-              )!
+              let maxImageBase64String = (formatDict![kStepQuestionContinuosScaleMaxImage] as? String)!
               let maxNormalImageData = NSData(
                 base64Encoded: maxImageBase64String,
                 options: .ignoreUnknownCharacters
@@ -526,7 +495,8 @@ class ActivityQuestionStep: ActivityStep {
           let defaultValue = (formatDict?[kStepQuestionTextScaleDefault] as? Int)!
           self.textScaleDefaultValue = "\(defaultValue)"
 
-          let textChoiceDict = formatDict?[kStepQuestionTextScaleTextChoices] as? [Any]
+          let textChoiceDict =
+            formatDict?[kStepQuestionTextScaleTextChoices] as? [Any]
             ?? []
           textChoiceArray = self.getTextChoices(dataArray: textChoiceDict).0
 
@@ -546,7 +516,8 @@ class ActivityQuestionStep: ActivityStep {
 
           let textChoiceArray: [ORKTextChoice]?
 
-          let textChoiceDict = formatDict?[kStepQuestionTextScaleTextChoices] as? [Any]
+          let textChoiceDict =
+            formatDict?[kStepQuestionTextScaleTextChoices] as? [Any]
             ?? []
           textChoiceArray = self.getTextChoices(dataArray: textChoiceDict).0
 
@@ -585,7 +556,8 @@ class ActivityQuestionStep: ActivityStep {
           )
         {
 
-          let textChoiceDict = formatDict?[kStepQuestionTextChoiceTextChoices] as? [Any]
+          let textChoiceDict =
+            formatDict?[kStepQuestionTextChoiceTextChoices] as? [Any]
             ?? []
 
           let choiceResult = self.getTextChoices(dataArray: textChoiceDict)
@@ -669,7 +641,8 @@ class ActivityQuestionStep: ActivityStep {
             comment: ""
           )
 
-          let style = ((formatDict?[kStepQuestionNumericStyle] as? String)! == "Decimal")
+          let style =
+            ((formatDict?[kStepQuestionNumericStyle] as? String)! == "Decimal")
             ? 0 : 1
 
           switch ORKNumericAnswerStyle(rawValue: style)! as ORKNumericAnswerStyle {
@@ -679,9 +652,9 @@ class ActivityQuestionStep: ActivityStep {
 
               let quantityTypeId: HKQuantityTypeIdentifier =
                 HKQuantityTypeIdentifier
-                  .init(
-                    rawValue: self.healthDataKey!
-                  )
+                .init(
+                  rawValue: self.healthDataKey!
+                )
 
               let quantityType = HKQuantityType.quantityType(
                 forIdentifier: quantityTypeId
@@ -784,15 +757,18 @@ class ActivityQuestionStep: ActivityStep {
             )
           }
 
-          let defaultDate: NSDate? = dateFormatter.date(
-            from: (formatDict?[kStepQuestionDateDefault] as? String)!
-          ) as NSDate?
-          var minimumDate: NSDate? = dateFormatter.date(
-            from: (formatDict?[kStepQuestionDateMinDate] as? String)!
-          ) as NSDate?
-          var maximumDate: NSDate? = dateFormatter.date(
-            from: (formatDict?[kStepQuestionDateMaxDate] as? String)!
-          ) as NSDate?
+          let defaultDate: NSDate? =
+            dateFormatter.date(
+              from: (formatDict?[kStepQuestionDateDefault] as? String)!
+            ) as NSDate?
+          var minimumDate: NSDate? =
+            dateFormatter.date(
+              from: (formatDict?[kStepQuestionDateMinDate] as? String)!
+            ) as NSDate?
+          var maximumDate: NSDate? =
+            dateFormatter.date(
+              from: (formatDict?[kStepQuestionDateMaxDate] as? String)!
+            ) as NSDate?
 
           // Setting the date Range
           switch dateRange! {
@@ -855,18 +831,14 @@ class ActivityQuestionStep: ActivityStep {
             var regex: NSRegularExpression?
 
             regex = try? NSRegularExpression(
-              pattern: (
-                formatDict?[kStepQuestionTextValidationRegex] as? String
-              )!,
+              pattern: (formatDict?[kStepQuestionTextValidationRegex] as? String)!,
               options: []
             )
 
             if regex != nil {
               answerFormat = ORKAnswerFormat.textAnswerFormat(
                 withValidationRegularExpression: regex!,
-                invalidMessage: (
-                  formatDict?[kStepQuestionTextInvalidMessage] as? String
-                )!
+                invalidMessage: (formatDict?[kStepQuestionTextInvalidMessage] as? String)!
               )
             }
           } else {
@@ -876,16 +848,12 @@ class ActivityQuestionStep: ActivityStep {
           if Utilities.isValidValue(
             someObject: formatDict?[kStepQuestionTextMaxLength] as AnyObject?
           ) {
-            answerFormat.maximumLength = (
-              formatDict?[kStepQuestionTextMaxLength] as? Int
-            )!
+            answerFormat.maximumLength = (formatDict?[kStepQuestionTextMaxLength] as? Int)!
           } else {
             answerFormat.maximumLength = 0
           }
 
-          answerFormat.multipleLines = (
-            formatDict?[kStepQuestionTextMultipleLines] as? Bool
-          )!
+          answerFormat.multipleLines = (formatDict?[kStepQuestionTextMultipleLines] as? Bool)!
           questionStepAnswerFormat = answerFormat
 
         } else {
@@ -918,9 +886,7 @@ class ActivityQuestionStep: ActivityStep {
           }
 
           if (formatDict?[kStepQuestionTimeIntervalStep] as? Int)! >= 1
-            && (
-              formatDict?[kStepQuestionTimeIntervalStep] as? Int
-            )! <= 30
+            && (formatDict?[kStepQuestionTimeIntervalStep] as? Int)! <= 30
           {
 
             questionStepAnswerFormat = ORKAnswerFormat.timeIntervalAnswerFormat(
@@ -967,9 +933,7 @@ class ActivityQuestionStep: ActivityStep {
           someObject: formatDict?[kStepQuestionLocationUseCurrentLocation] as AnyObject?
         ) {
           let answerFormat = ORKAnswerFormat.locationAnswerFormat()
-          answerFormat.useCurrentLocation = (
-            formatDict?[kStepQuestionLocationUseCurrentLocation] as? Bool
-          )!
+          answerFormat.useCurrentLocation = (formatDict?[kStepQuestionLocationUseCurrentLocation] as? Bool)!
 
           questionStepAnswerFormat = answerFormat
         } else {
@@ -1115,9 +1079,7 @@ class ActivityQuestionStep: ActivityStep {
 
             // generate SelectedImageData from base64String
             let selectedImageData = NSData(
-              base64Encoded: (
-                (dict[kStepQuestionImageChoiceSelectedImage] as? String)!
-              ),
+              base64Encoded: ((dict[kStepQuestionImageChoiceSelectedImage] as? String)!),
               options: .ignoreUnknownCharacters
             )
 
@@ -1155,7 +1117,8 @@ class ActivityQuestionStep: ActivityStep {
     var resultDict: [String: Any]?
     let data = NSData(contentsOfFile: filePath!)
     do {
-      resultDict = try JSONSerialization.jsonObject(with: data! as Data, options: [])
+      resultDict =
+        try JSONSerialization.jsonObject(with: data! as Data, options: [])
         as? [String: Any]
 
     } catch let error as NSError {

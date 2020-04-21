@@ -34,8 +34,12 @@ public class ParticipantRegistrySite implements Serializable {
   private Integer id;
 
   @ManyToOne
-  @JoinColumn(name = "site_id", insertable = false, updatable = false)
+  @JoinColumn(name = "site_id", insertable = true, updatable = false)
   private SiteBo sites;
+
+  @ManyToOne
+  @JoinColumn(name = "study_info_id", insertable = true, updatable = true)
+  private StudyInfoBO studyInfo;
 
   @Column(name = "email", columnDefinition = "VARCHAR(255)")
   private String email = "";
@@ -46,10 +50,16 @@ public class ParticipantRegistrySite implements Serializable {
   @Column(name = "invitation_date", columnDefinition = "TIMESTAMP")
   private Date invitationDate;
 
+  @Column(name = "invitation_count", nullable = false, columnDefinition = "bigint(20) default 0")
+  private Long invitationCount = 0L;
+
+  @Column(name = "disabled_date", columnDefinition = "TIMESTAMP default NULL")
+  private Date disabledDate;
+
   @Column(name = "enrollment_token_expiry", columnDefinition = "TIMESTAMP")
   private Date enrollmentTokenExpiry;
 
-  @Column(name = "onboarding_status", columnDefinition = "CHAR(8)")
+  @Column(name = "onboarding_status", columnDefinition = "CHAR(1)")
   private String onboardingStatus = "";
 
   @Column(name = "enrollment_token", columnDefinition = "VARCHAR(50)")

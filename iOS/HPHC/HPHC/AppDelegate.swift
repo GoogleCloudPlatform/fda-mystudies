@@ -1,4 +1,4 @@
-// License Agreement for FDA My Studies
+// License Agreement for FDA MyStudies
 // Copyright © 2017-2019 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors.
 // Copyright 2020 Google LLC
 // Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated
@@ -89,15 +89,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
   /// Updates Key & InitializationVector for Encryption
   func updateKeyAndInitializationVector() {
 
-    let currentDate = "\(Date(timeIntervalSinceNow: 0))"
-    let currentIndex = currentDate.index(currentDate.endIndex, offsetBy: -13)
-    let subStringFromDate = String(currentDate[..<currentIndex])
-
-    if User.currentUser.userType == .FDAUser {  // Registered/LogedIn User
+    if User.currentUser.userType == .FDAUser {  // Registered/LoggedIn User
       // Key byte size shouldn't exceed more than 16.
-      let index = User.currentUser.userId.index(User.currentUser.userId.endIndex, offsetBy: -43)
-      let subKey = String(User.currentUser.userId[..<index])
-      FDAKeychain.shared[kEncryptionKey] = subKey + subStringFromDate
+      FDAKeychain.shared[kEncryptionKey] = String.randomString(length: 16)
     } else {  // Anonymous User
       FDAKeychain.shared[kEncryptionKey] = kEncryptionKey
     }
@@ -166,7 +160,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     self.generateRealmKeys()
 
     let key = FDAKeychain.shared[kRealmEncryptionKeychainKey]
-    let keyData = Data.init(base64Encoded: key!)
+    let keyData = Data(base64Encoded: key!)
 
     let config = Realm.Configuration(
       encryptionKey: keyData,
@@ -204,16 +198,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     self.checkForAppUpdate()
 
     UIApplication.shared.applicationIconBadgeNumber = 0
-
-    SyncUpdate.currentSyncUpdate = SyncUpdate()
-
-    // Register observer for Network change
-    NotificationCenter.default.addObserver(
-      SyncUpdate.currentSyncUpdate as Any,
-      selector: #selector(SyncUpdate.currentSyncUpdate?.updateData),
-      name: ReachabilityChangedNotification,
-      object: nil
-    )
 
     let ud1 = UserDefaults.standard
 
@@ -292,10 +276,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         .visibleViewController?.isKind(of: ORKTaskViewController.self)
 
       let navigationTitle =
-        (
-          (navController as? UINavigationController)?.visibleViewController
-            as? ORKTaskViewController
-        )?.title ?? ""
+        ((navController as? UINavigationController)?.visibleViewController
+        as? ORKTaskViewController)?.title ?? ""
 
       if (navController as? UINavigationController) != nil
         && isTaskViewControllerVisible
@@ -537,7 +519,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     let taskViewController: ORKTaskViewController?
 
     //create orderedTask
-    let consentTask: ORKOrderedTask? = ConsentBuilder.currentConsent?.createConsentTask()
+    let consentTask: ORKOrderedTask? =
+      ConsentBuilder.currentConsent?.createConsentTask()
       as! ORKOrderedTask?
 
     taskViewController = ORKTaskViewController(task: consentTask, taskRun: nil)
@@ -591,10 +574,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
       // push tabbar and switch to activty tab
       if !(initialVC is StudyListViewController) {
 
-        let leftController = (
-          (menuVC as? FDASlideMenuViewController)!.leftViewController
-            as? LeftMenuViewController
-        )!
+        let leftController =
+          ((menuVC as? FDASlideMenuViewController)!.leftViewController
+          as? LeftMenuViewController)!
         leftController.changeViewController(.studyList)
         leftController.createLeftmenuItems()
       }
@@ -642,9 +624,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             Study.updateCurrentStudy(study: study!)
           }
           // fetch the visible view controller
-          let navigationController = (
-            self.window?.rootViewController as? UINavigationController
-          )!
+          let navigationController = (self.window?.rootViewController as? UINavigationController)!
           let menuVC = navigationController.viewControllers.last
           if menuVC is FDASlideMenuViewController {
             let mainController = (menuVC as? FDASlideMenuViewController)!
@@ -663,26 +643,22 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
               self.pushToTabbar(
                 viewController: initialVC!,
-                selectedTab: (
-                  notificationSubType! as AppNotification.NotificationSubType
-                    == .Activity
-                ) ? 0 : 2
+                selectedTab: (notificationSubType! as AppNotification.NotificationSubType
+                  == .Activity) ? 0 : 2
               )
 
             } else {
               // switch to activity tab
-              (initialVC as? UITabBarController)!.selectedIndex = (
-                notificationSubType! as AppNotification.NotificationSubType
-                  == .Activity
-              ) ? 0 : 2
+              (initialVC as? UITabBarController)!.selectedIndex =
+                (notificationSubType! as AppNotification.NotificationSubType
+                  == .Activity) ? 0 : 2
             }
 
           case .Study, .studyEvent:  // Study Notifications
 
-            let leftController = (
-              (menuVC as? FDASlideMenuViewController)!.leftViewController
-                as? LeftMenuViewController
-            )!
+            let leftController =
+              ((menuVC as? FDASlideMenuViewController)!.leftViewController
+              as? LeftMenuViewController)!
 
             if !(initialVC is StudyListViewController) {
 
@@ -725,12 +701,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     let studyStoryBoard = UIStoryboard.init(name: kStudyStoryboard, bundle: Bundle.main)
 
-    let studyDashboard = (
-      studyStoryBoard.instantiateViewController(
+    let studyDashboard =
+      (studyStoryBoard.instantiateViewController(
         withIdentifier: kStudyDashboardTabbarControllerIdentifier
       )
-        as? StudyDashboardTabbarViewController
-    )!
+      as? StudyDashboardTabbarViewController)!
 
     studyDashboard.selectedIndex = selectedTab
     viewController.navigationController?.navigationBar.isHidden = true
@@ -749,17 +724,19 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
           let passcodeStep = ORKPasscodeStep(identifier: kPasscodeStepIdentifier)
           passcodeStep.passcodeType = .type4Digit
+          passcodeStep.text = kSetPasscodeDescription
           let task = ORKOrderedTask(
             identifier: kPasscodeTaskIdentifier,
             steps: [passcodeStep]
           )
-          let taskViewController = ORKTaskViewController.init(task: task, taskRun: nil)
+          let taskViewController = ORKTaskViewController(task: task, taskRun: nil)
 
           if viewController.isKind(of: UINavigationController.self) {
             taskViewController.delegate = self
 
           } else {
-            taskViewController.delegate = viewController
+            taskViewController.delegate =
+              viewController
               as? ORKTaskViewControllerDelegate
           }
           taskViewController.isNavigationBarHidden = true
@@ -773,16 +750,14 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         } else {
           guard
             ORKPasscodeViewController.isPasscodeStoredInKeychain()
-              && !(
-                containerViewController?.presentedViewController
-                  is ORKPasscodeViewController
-              )
+              && !(containerViewController?.presentedViewController
+                is ORKPasscodeViewController)
           else { return }
           window?.makeKeyAndVisible()
 
           let passcodeViewController =
             ORKPasscodeViewController
-              .passcodeAuthenticationViewController(withText: "", delegate: self)
+            .passcodeAuthenticationViewController(withText: "", delegate: self)
           var topVC = UIApplication.shared.keyWindow?.rootViewController
           var parentController: UIViewController?
 
@@ -803,18 +778,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
           passcodeParentControllerWhileSetup = nil
 
           // PasscodeController or TaskViewController is not presented
-          if (
-            topVC?.presentedViewController?.isKind(of: ORKPasscodeViewController.self)
-              == false
-              && (
-                topVC?.presentedViewController?.isKind(
-                  of: ORKTaskViewController.self
-                )
-              )!
-          )
-            || (
-              topVC != nil && topVC?.isKind(of: ORKPasscodeViewController.self) == false
-            )
+          if (topVC?.presentedViewController?.isKind(of: ORKPasscodeViewController.self)
+            == false
+            && (topVC?.presentedViewController?.isKind(
+              of: ORKTaskViewController.self
+            ))!)
+            || (topVC != nil && topVC?.isKind(of: ORKPasscodeViewController.self) == false)
           {
 
             isPasscodePresented = true
@@ -890,7 +859,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     let navigationController = (self.window?.rootViewController as? UINavigationController)!
 
     if navigationController.viewControllers.count > 0 {
-      let slideMenuController = navigationController.viewControllers.last
+      let slideMenuController =
+        navigationController.viewControllers.last
         as? FDASlideMenuViewController
 
       // Remove progress
@@ -923,14 +893,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     // fetch the visible view controller
     if navigationController.viewControllers.count > 0 {
-      let slideMenuController = (
-        navigationController.viewControllers.last as? FDASlideMenuViewController
-      )!
+      let slideMenuController =
+        (navigationController.viewControllers.last as? FDASlideMenuViewController)!
 
       if !Utilities.isStandaloneApp() {
-        let leftController = (
-          slideMenuController.leftViewController as? LeftMenuViewController
-        )!
+        let leftController = (slideMenuController.leftViewController as? LeftMenuViewController)!
         leftController.changeViewController(.reachOut_signIn)
         leftController.createLeftmenuItems()
         self.addAndRemoveProgress(add: false)
@@ -986,9 +953,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
         // fetch the visible view controller
         var nav: UINavigationController?
-        let navigationController = (
-          self.window?.rootViewController as? UINavigationController
-        )!
+        let navigationController = (self.window?.rootViewController as? UINavigationController)!
         let menuVC = navigationController.viewControllers.last
 
         if menuVC is FDASlideMenuViewController {
@@ -1002,10 +967,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
               let studyTabBar = (tabbarVC as? StudyDashboardTabbarViewController)!
               // Storing selected tabbar controller
               selectedController =
-                (
-                  (studyTabBar.viewControllers?[studyTabBar.selectedIndex])
-                    as? UINavigationController
-                )!.viewControllers.last
+                ((studyTabBar.viewControllers?[studyTabBar.selectedIndex])
+                as? UINavigationController)!.viewControllers.last
             }
           }
         }
@@ -1386,12 +1349,13 @@ extension AppDelegate: ORKTaskViewControllerDelegate {
 
         let orkStepResult: ORKStepResult? =
           taskViewController.result.results?[
-            (taskViewController.result.results?.count)! - 2] as! ORKStepResult?
+            (taskViewController.result.results?.count)! - 2
+          ] as! ORKStepResult?
 
         let consentSignatureResult: ConsentCompletionTaskResult? =
           orkStepResult?.results?
-            .first
-            as? ConsentCompletionTaskResult
+          .first
+          as? ConsentCompletionTaskResult
 
         // Checking if Signature is consented after Review Step
         if consentSignatureResult?.didTapOnViewPdf == false {
@@ -1447,12 +1411,11 @@ extension AppDelegate: ORKTaskViewControllerDelegate {
 
         let gatewayStoryboard = UIStoryboard(name: kFetalKickCounterStep, bundle: nil)
 
-        let ttController = (
-          gatewayStoryboard.instantiateViewController(
+        let ttController =
+          (gatewayStoryboard.instantiateViewController(
             withIdentifier: kEligibilityStepViewControllerIdentifier
           )
-            as? EligibilityStepViewController
-        )!
+          as? EligibilityStepViewController)!
         ttController.descriptionText = step.text
         ttController.step = step
 
@@ -1470,8 +1433,8 @@ extension AppDelegate: ORKTaskViewControllerDelegate {
         if (reviewStep?.identifier)! == kReviewTitle && (reviewStep?.results?.count)! > 0 {
           let consentSignatureResult: ORKConsentSignatureResult? =
             reviewStep?.results?
-              .first
-              as? ORKConsentSignatureResult
+            .first
+            as? ORKConsentSignatureResult
 
           if consentSignatureResult?.consented == false {  // Disgreed
             taskViewController.dismiss(animated: true, completion: nil)
@@ -1482,10 +1445,9 @@ extension AppDelegate: ORKTaskViewControllerDelegate {
           } else {  // Consented
 
             // Copying consent document
-            let documentCopy: ORKConsentDocument = (
-              (ConsentBuilder.currentConsent?.consentDocument)!.copy()
-                as? ORKConsentDocument
-            )!
+            let documentCopy: ORKConsentDocument =
+              ((ConsentBuilder.currentConsent?.consentDocument)!.copy()
+              as? ORKConsentDocument)!
 
             consentSignatureResult?.apply(to: documentCopy)
             // instantiating ConsentSharePdfStep
@@ -1493,12 +1455,11 @@ extension AppDelegate: ORKTaskViewControllerDelegate {
               name: kFetalKickCounterStep,
               bundle: nil
             )
-            let ttController = (
-              gatewayStoryboard.instantiateViewController(
+            let ttController =
+              (gatewayStoryboard.instantiateViewController(
                 withIdentifier: kConsentSharePdfStoryboardId
               )
-                as? ConsentSharePdfStepViewController
-            )!
+              as? ConsentSharePdfStepViewController)!
             ttController.step = step
             ttController.consentDocument = documentCopy
 
@@ -1517,7 +1478,8 @@ extension AppDelegate: ORKTaskViewControllerDelegate {
       } else if step.identifier == kConsentViewPdfCompletionStep {  // For PDFViewerStep
 
         // fetching reviewStep
-        let reviewSharePdfStep: ORKStepResult? = taskViewController.result.results?.last
+        let reviewSharePdfStep: ORKStepResult? =
+          taskViewController.result.results?.last
           as! ORKStepResult?
 
         let result = (reviewSharePdfStep?.results?.first as? ConsentCompletionTaskResult)
@@ -1525,12 +1487,11 @@ extension AppDelegate: ORKTaskViewControllerDelegate {
         if (result?.didTapOnViewPdf)! {
           let gatewayStoryboard = UIStoryboard(name: kFetalKickCounterStep, bundle: nil)
 
-          let ttController = (
-            gatewayStoryboard.instantiateViewController(
+          let ttController =
+            (gatewayStoryboard.instantiateViewController(
               withIdentifier: kConsentViewPdfStoryboardId
             )
-              as? ConsentPdfViewerStepViewController
-          )!
+            as? ConsentPdfViewerStepViewController)!
           ttController.step = step
           // Pdf data is passed to Viewer for display
           ttController.pdfData = result?.pdfData
@@ -1558,24 +1519,18 @@ extension AppDelegate: ORKTaskViewControllerDelegate {
             // Pass score Calculation
             while i < (taskViewController.result.results?.count)! {
 
-              let textChoiceResult: ORKChoiceQuestionResult = (
-                (
-                  (taskViewController.result.results?[i] as? ORKStepResult)!
-                    .results?.first
-                )
-                  as? ORKChoiceQuestionResult
-              )!
+              let textChoiceResult: ORKChoiceQuestionResult =
+                (((taskViewController.result.results?[i] as? ORKStepResult)!
+                .results?.first)
+                as? ORKChoiceQuestionResult)!
 
               let correctAnswerDict: [String: Any]? = ConsentBuilder.currentConsent?
                 .comprehension?
                 .correctAnswers?[j]
-              let answerArray: [String] = (
-                correctAnswerDict?[kConsentComprehensionAnswer] as? [String]
-              )!
+              let answerArray: [String] =
+                (correctAnswerDict?[kConsentComprehensionAnswer] as? [String])!
               let evaluationType: Evaluation? = Evaluation(
-                rawValue: (
-                  correctAnswerDict?[kConsentComprehensionEvaluation] as? String
-                )!
+                rawValue: (correctAnswerDict?[kConsentComprehensionEvaluation] as? String)!
               )
               let answeredSet = Set((textChoiceResult.choiceAnswers! as? [String])!)
 
@@ -1622,7 +1577,8 @@ extension AppDelegate: ORKTaskViewControllerDelegate {
       } else if step.identifier == kReviewTitle {
         // if sharing step exists && allowWithoutSharing is set
 
-        let shareStep: ORKStepResult? = taskViewController.result.results?.last
+        let shareStep: ORKStepResult? =
+          taskViewController.result.results?.last
           as! ORKStepResult?
 
         ConsentBuilder.currentConsent?.sharingConsent?.allowWithoutSharing = true
@@ -1812,9 +1768,7 @@ extension AppDelegate: UNUserNotificationCenterDelegate {
     UIApplication.shared.applicationIconBadgeNumber = 0
 
     if UIApplication.shared.applicationState == UIApplication.State.background
-      || (
-        UIApplication.shared.applicationState == UIApplication.State.inactive
-      )
+      || (UIApplication.shared.applicationState == UIApplication.State.inactive)
     {
 
       self.handleLocalAndRemoteNotification(userInfoDetails: (userInfo as? [String: Any])!)
@@ -1826,9 +1780,7 @@ extension AppDelegate: UNUserNotificationCenterDelegate {
 
     } else {
       if UIApplication.shared.applicationState == UIApplication.State.background
-        || (
-          UIApplication.shared.applicationState == UIApplication.State.inactive
-        )
+        || (UIApplication.shared.applicationState == UIApplication.State.inactive)
       {
         self.handleLocalNotification(userInfoDetails: (userInfo as? [String: Any])!)
       }

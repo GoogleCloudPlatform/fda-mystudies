@@ -10,6 +10,7 @@ package com.google.cloud.healthcare.fdamystudies.service;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.ByteBuffer;
+import java.util.Base64;
 import java.util.List;
 import java.util.UUID;
 import javax.annotation.PostConstruct;
@@ -53,7 +54,8 @@ public class CloudStorageService implements FileStorageService {
       byte[] bytes = null;
 
       try (WriteChannel writer = storageService.writer(blobInfo)) {
-        bytes = content.getBytes();
+        bytes = Base64.getDecoder().decode(content.replaceAll("\n", ""));
+
         writer.write(ByteBuffer.wrap(bytes, 0, bytes.length));
       } catch (IOException e) {
         throw new RuntimeException(e);

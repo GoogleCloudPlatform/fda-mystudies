@@ -15,7 +15,7 @@ table.dataTable thead th:last-child {
 </style>
 <div class="col-sm-10 col-rc white-bg p-none" id="settingId">
 	<form:form
-		action="/fdahpStudyDesigner/adminStudies/saveOrUpdateSettingAndAdmins.do?_S=${param._S}"
+		action="/studybuilder/adminStudies/saveOrUpdateSettingAndAdmins.do?_S=${param._S}"
 		data-toggle="validator" role="form" id="settingfoFormId" method="post"
 		autocomplete="off">
 		<input type="hidden" name="buttonText" id="buttonText">
@@ -107,7 +107,7 @@ table.dataTable thead th:last-child {
 			<!-- Start Section-->
 			<div class="col-md-12 p-none">
 				<div class="gray-xs-f mb-sm">
-					Use Enrollment Date as Anchor Date in study activity scheduling?<span
+					Use participant enrollment date as anchor date?<span
 						class="requiredStar"> *</span><span><span
 						data-toggle="tooltip" data-placement="top"
 						title="Select this option to distribute a questionnaire, active task or resource, N number of days after participant enrollment. N is configured in the schedule settings of that study activity or resource."
@@ -162,7 +162,7 @@ table.dataTable thead th:last-child {
 			<!-- Start Section-->
 			<div class="col-md-12 p-none">
 				<div class="gray-xs-f mb-sm">
-					Allow users to rejoin a Study once they leave it? <span
+					Allow app user to rejoin a study after withdrawing from it? <span
 						class="requiredStar">*</span>
 				</div>
 
@@ -299,7 +299,7 @@ table.dataTable thead th:last-child {
 				<div class="black-md-f dis-line pull-left line34">
 					<span class="pr-sm"><a href="javascript:void(0)"
 						onclick="cancelAddAdmin();"><img
-							src="/fdahpStudyDesigner/images/icons/back-b.png" alt="" /></a></span>Add
+							src="/studybuilder/images/icons/back-b.png" alt="" /></a></span>Add
 					Admins
 				</div>
 
@@ -401,7 +401,7 @@ $(document).ready(function(){
 				message : 'Your user account details have been updated. Please sign in again to continue using the portal.',	
 			    callback: function(result) {
 			    	var a = document.createElement('a');
-			    	a.href = "/fdahpStudyDesigner/sessionOut.do";
+			    	a.href = "/studybuilder/sessionOut.do";
 					document.body.appendChild(a).click();
 			    }
 		    });
@@ -556,7 +556,7 @@ function platformTypeValidation(buttonText){
 		$('.actBut').prop('disabled',true);
 		$("body").addClass("loading");
 		$.ajax({
-            url: "/fdahpStudyDesigner/adminStudies/studyPlatformValidationforActiveTask.do?_S=${param._S}",		
+            url: "/studybuilder/adminStudies/studyPlatformValidationforActiveTask.do?_S=${param._S}",		
             type: "POST",
             datatype: "json",
             data: {
@@ -759,7 +759,7 @@ function admins(){
 	</c:if>
 	function showWarningForAnchor(isAnchorForEnrollmentDraft, enrollmentdateAsAnchordate){
 		if(isAnchorForEnrollmentDraft == 'true' && enrollmentdateAsAnchordate=='No'){
-        	var text = "You have chosen not to use Enrollment Date as an Anchor Date.You will need to revise the schedules of Target Activities or Resources,if any, that were set based on the Enrollment Date.Buttons: OK, Cancel.";
+        	var text = "You have chosen not to use enrollment date as an anchor date . You will need to revise the schedules of 'target' activities or resources, if any, that were set up based on the enrollment date.";
         	bootbox.confirm({
         		closeButton: false,
         		message: text,

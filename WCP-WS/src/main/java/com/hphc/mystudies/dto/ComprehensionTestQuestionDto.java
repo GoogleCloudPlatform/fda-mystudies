@@ -32,7 +32,6 @@ import javax.persistence.Table;
 import org.hibernate.annotations.NamedQueries;
 import org.hibernate.annotations.NamedQuery;
 
-
 @Entity
 @Table(name = "comprehension_test_question")
 @NamedQueries({
@@ -45,7 +44,6 @@ import org.hibernate.annotations.NamedQuery;
 })
 public class ComprehensionTestQuestionDto implements Serializable {
 
- 
   private static final long serialVersionUID = 6056127394260427728L;
 
   @Id

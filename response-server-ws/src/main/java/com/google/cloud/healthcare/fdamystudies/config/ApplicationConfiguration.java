@@ -65,11 +65,11 @@ public class ApplicationConfiguration {
   @Value("${saveRawResponseData}")
   private String saveRawResponseData;
 
-  @Value("${wcpAuthUsername}")
-  private String wcpAuthUsername;
+  @Value("${wcpBundleId}")
+  private String wcpBundleId;
 
-  @Value("${wcpAuthPassword}")
-  private String wcpAuthPassword;
+  @Value("${wcpAppToken}")
+  private String wcpAppToken;
 
   @Value("${regServerClientId}")
   private String regServerClientId;

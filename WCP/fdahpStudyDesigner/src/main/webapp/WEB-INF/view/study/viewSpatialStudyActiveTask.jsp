@@ -4,7 +4,7 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 <div class="changeContent">
 	<form:form
-		action="/fdahpStudyDesigner/adminStudies/saveOrUpdateActiveTaskContent.do?_S=${param._S}"
+		action="/studybuilder/adminStudies/saveOrUpdateActiveTaskContent.do?_S=${param._S}"
 		name="activeContentFormId" id="activeContentFormId" method="post"
 		role="form">
 		<input type="hidden" name="id" id="taskContentId"
@@ -1918,7 +1918,7 @@ function validateShortTitleId(item,callback){
 		    $('.shortTitleClass').parent().find(".help-block").empty();
 		     if(existedKey !=shortTitle){
 	 			$.ajax({
-	 				url: "/fdahpStudyDesigner/adminStudies/validateActiveTaskShortTitleId.do?_S=${param._S}",
+	 				url: "/studybuilder/adminStudies/validateActiveTaskShortTitleId.do?_S=${param._S}",
 	                type: "POST",
 	                datatype: "json",
 	                data: {
@@ -2003,7 +2003,7 @@ function validateShortTitleStatId(event, thisAttr, callback){
 				  // alert("static data");
 				   activeTaskAttIdName = 'static'; 
 			    	 $.ajax({
-			               url: "/fdahpStudyDesigner/adminStudies/validateActiveTaskShortTitleId.do?_S=${param._S}",
+			               url: "/studybuilder/adminStudies/validateActiveTaskShortTitleId.do?_S=${param._S}",
 			               type: "POST",
 			               datatype: "json",
 			               data: {
@@ -2057,7 +2057,7 @@ function validateShortTitleStatId(event, thisAttr, callback){
 				    	 }
 			    		 //alert("ajax");
 			    		  $.ajax({
-				               url: "/fdahpStudyDesigner/adminStudies/validateActiveTaskShortTitleId.do?_S=${param._S}",
+				               url: "/studybuilder/adminStudies/validateActiveTaskShortTitleId.do?_S=${param._S}",
 				               type: "POST",
 				               datatype: "json",
 				               data: {
@@ -2155,7 +2155,7 @@ function validateStatisticsIds(jsonDatas, callback){
 		 //do ajax call and check the db validation
 		 var data = JSON.stringify(jsonDatas);
 		 $.ajax({
-			      url: "/fdahpStudyDesigner/adminStudies/validateActiveTaskStatShortTitleIds.do?_S=${param._S}",
+			      url: "/studybuilder/adminStudies/validateActiveTaskStatShortTitleIds.do?_S=${param._S}",
 			      type: "POST",
 			      datatype: "json",
 		          data: {activeStatisticsBean:data},
@@ -2249,7 +2249,7 @@ function saveValidateStatisticsIds(jsonDatas, callback){
 		 if(jsonArrayLength >0){
 			 var data = JSON.stringify(jsonArray);
 			 $.ajax({
-				      url: "/fdahpStudyDesigner/adminStudies/validateActiveTaskStatShortTitleIds.do?_S=${param._S}",
+				      url: "/studybuilder/adminStudies/validateActiveTaskStatShortTitleIds.do?_S=${param._S}",
 				      type: "POST",
 				      datatype: "json",
 			          data: {activeStatisticsBean:data},

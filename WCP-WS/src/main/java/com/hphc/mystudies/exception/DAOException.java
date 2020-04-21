@@ -22,10 +22,8 @@
  */
 package com.hphc.mystudies.exception;
 
-
 public class DAOException extends CommonException {
 
-  
   public DAOException(String pErrorCode, Throwable arg1) {
     super(pErrorCode, arg1);
   }

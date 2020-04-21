@@ -90,12 +90,12 @@
             
         </div>
         <!-- End right Content here -->
-<form:form action="/fdahpStudyDesigner/adminStudies/viewActiveTask.do?_S=${param._S}" name="activeTaskInfoForm" id="activeTaskInfoForm" method="post">
+<form:form action="/studybuilder/adminStudies/viewActiveTask.do?_S=${param._S}" name="activeTaskInfoForm" id="activeTaskInfoForm" method="post">
 <input type="hidden" name="activeTaskInfoId" id="activeTaskInfoId" value="">
 <input type="hidden" name="actionType" id="actionType">
 <input type="hidden" name="studyId" id="studyId" value="${studyBo.id}" />
 </form:form> 
-<form:form action="/fdahpStudyDesigner/adminStudies/activeTAskMarkAsCompleted.do?_S=${param._S}" name="completeInfoForm" id="completeInfoForm" method="post">
+<form:form action="/studybuilder/adminStudies/activeTAskMarkAsCompleted.do?_S=${param._S}" name="completeInfoForm" id="completeInfoForm" method="post">
 <input type="hidden" name="studyId" id="studyId" value="${studyBo.id}" />
 </form:form>    
 <c:set var="studyId">${_S}studyId</c:set>   
@@ -160,7 +160,7 @@ function deleteTaskInfo(activeTaskInfoId){
 			if(result){
 		    	if(activeTaskInfoId != '' && activeTaskInfoId != null && typeof activeTaskInfoId != 'undefined'){
 		    		$.ajax({
-		    			url: "/fdahpStudyDesigner/adminStudies/deleteActiveTask.do?_S=${param._S}",
+		    			url: "/studybuilder/adminStudies/deleteActiveTask.do?_S=${param._S}",
 		    			type: "POST",
 		    			datatype: "json",
 		    			data:{

@@ -22,7 +22,6 @@
  */
 package com.hphc.mystudies.bean;
 
-
 public class SharingBean {
 
   private String title = "";

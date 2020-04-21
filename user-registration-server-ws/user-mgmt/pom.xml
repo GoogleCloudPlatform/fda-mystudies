@@ -35,11 +35,6 @@
 			</exclusions>
 		</dependency>
 		<dependency>
-                   <groupId>org.springframework.boot</groupId>
-                   <artifactId>spring-boot-starter-web</artifactId>
-                   <scope>provided</scope>
-        </dependency>
-		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-data-jpa</artifactId>
 		</dependency>
@@ -156,6 +151,16 @@
 			<artifactId>javax.ws.rs-api</artifactId>
 			<version>2.0-m01</version>
 		</dependency>
+		<dependency>
+	    <groupId>com.notnoop.apns</groupId>
+	    <artifactId>apns</artifactId>
+	    <version>1.0.0.Beta6</version>
+		</dependency>
+                <dependency>
+                        <groupId>com.h2database</groupId>
+                        <artifactId>h2</artifactId>
+                        <scope>runtime</scope>
+                </dependency>
 	</dependencies>
 
 	<build>

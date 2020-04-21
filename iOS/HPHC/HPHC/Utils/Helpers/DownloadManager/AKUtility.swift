@@ -1,7 +1,7 @@
 // Copyright (c) 2016, Arpad Goretity https://github.com/H2CO3/HCDownload.git
 // Copyright (c) 2016, Muhammad Zeeshan https://github.com/mzeeshanid/MZDownloadManager.git
 // All rights reserved.
-// License Agreement for FDA My Studies
+// License Agreement for FDA MyStudies
 // Copyright © 2017-2019 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors. Permission is
 // hereby granted, free of charge, to any person obtaining a copy of this software and associated
 // documentation files (the &quot;Software&quot;), to deal in the Software without restriction, including without
@@ -50,7 +50,8 @@ open class AKUtility: NSObject {
           "\(filePath.deletingLastPathComponent)/\(suggestedFileName).\(fileExtension)"
           as NSString?
       } else {
-        fileDocDirectoryPath = "\(filePath.deletingLastPathComponent)/\(suggestedFileName)"
+        fileDocDirectoryPath =
+          "\(filePath.deletingLastPathComponent)/\(suggestedFileName)"
           as NSString?
       }
 
@@ -127,9 +128,10 @@ open class AKUtility: NSObject {
     )
     let systemAttributes: AnyObject?
     do {
-      systemAttributes = try FileManager.default.attributesOfFileSystem(
-        forPath: documentDirectoryPath.last!
-      ) as AnyObject?
+      systemAttributes =
+        try FileManager.default.attributesOfFileSystem(
+          forPath: documentDirectoryPath.last!
+        ) as AnyObject?
       let freeSize = systemAttributes?[FileAttributeKey.systemFreeSize] as? NSNumber
       return freeSize?.int64Value
     } catch let error as NSError {

@@ -25,12 +25,10 @@ package com.hphc.mystudies.exception;
 import java.io.PrintStream;
 import java.io.PrintWriter;
 
-
 public abstract class CommonException extends Exception {
 
   private String errorCode;
 
-  
   public CommonException(String pErrorCode, Throwable arg1) {
     super(pErrorCode, arg1);
     errorCode = pErrorCode;

@@ -1,5 +1,5 @@
 /*
- * Copyright Â© 2017-2018 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors.
+ * Copyright © 2017-2018 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors.
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction, including
  * without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies
@@ -40,6 +40,10 @@ public class EscapeUtils {
     map.put(34, "&quot;"); // < - less-than
     map.put(60, "&lt;"); // < - less-than
     map.put(62, "&gt;"); // > - greater-than
+    // User needs to map all html entities with their corresponding decimal
+    // values.
+    // Please refer to below table for mapping of entities and integer value
+    // of a char
   }
 
   public static void escape(Writer writer, String str) throws IOException {

@@ -1,4 +1,4 @@
-// License Agreement for FDA My Studies
+// License Agreement for FDA MyStudies
 // Copyright © 2017-2019 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors.
 // Copyright 2020 Google LLC
 // Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated
@@ -122,7 +122,8 @@ class StudyDashboardViewController: UIViewController {
 
     let taskViewController: ORKTaskViewController?
 
-    let consentTask: ORKOrderedTask? = ConsentBuilder.currentConsent?.createConsentTask()
+    let consentTask: ORKOrderedTask? =
+      ConsentBuilder.currentConsent?.createConsentTask()
       as! ORKOrderedTask?
 
     taskViewController = ORKTaskViewController(task: consentTask, taskRun: nil)
@@ -344,10 +345,9 @@ extension StudyDashboardViewController: UITableViewDataSource {
 
     // Used to display the last cell trends
     if indexPath.section == tableViewRowDetails.count {
-      cell = (
-        tableView.dequeueReusableCell(withIdentifier: kTrendTableViewCell, for: indexPath)
-          as? StudyDashboardTrendsTableViewCell
-      )!
+      cell =
+        (tableView.dequeueReusableCell(withIdentifier: kTrendTableViewCell, for: indexPath)
+        as? StudyDashboardTrendsTableViewCell)!
       return cell!
     }
 
@@ -358,25 +358,23 @@ extension StudyDashboardViewController: UITableViewDataSource {
       // Used for Table view Cell
       switch indexPath.section {
       case TableViewCells.welcomeCell.rawValue:
-        cell = (
-          tableView.dequeueReusableCell(
+        cell =
+          (tableView.dequeueReusableCell(
             withIdentifier: kWelcomeTableViewCell,
             for: indexPath
           )
-            as? StudyDashboardWelcomeTableViewCell
-        )!
+          as? StudyDashboardWelcomeTableViewCell)!
         (cell as? StudyDashboardWelcomeTableViewCell)!.displayFirstCelldata(
           data: tableViewData
         )
 
       case TableViewCells.percentageCell.rawValue:
-        cell = (
-          tableView.dequeueReusableCell(
+        cell =
+          (tableView.dequeueReusableCell(
             withIdentifier: kPercentageTableViewCell,
             for: indexPath
           )
-            as? StudyDashboardStudyPercentageTableViewCell
-        )!
+          as? StudyDashboardStudyPercentageTableViewCell)!
         (cell as? StudyDashboardStudyPercentageTableViewCell)!.displayThirdCellData(
           data: tableViewData
         )
@@ -386,13 +384,12 @@ extension StudyDashboardViewController: UITableViewDataSource {
       }
 
     } else {
-      cell = (
-        tableView.dequeueReusableCell(
+      cell =
+        (tableView.dequeueReusableCell(
           withIdentifier: kStatisticsTableViewCell,
           for: indexPath
         )
-          as? StudyDashboardStatisticsTableViewCell
-      )!
+        as? StudyDashboardStatisticsTableViewCell)!
       (cell as? StudyDashboardStatisticsTableViewCell)!.displayData()
       (cell as? StudyDashboardStatisticsTableViewCell)!.buttonDay?.setTitle(
         "  DAY  ",
@@ -514,9 +511,11 @@ extension StudyDashboardViewController: ORKTaskViewControllerDelegate {
 
       let orkStepResult: ORKStepResult? =
         taskViewController.result.results?[
-          (taskViewController.result.results?.count)! - 2] as! ORKStepResult?
+          (taskViewController.result.results?.count)! - 2
+        ] as! ORKStepResult?
 
-      let consentSignatureResult: ConsentCompletionTaskResult? = orkStepResult?.results?.first
+      let consentSignatureResult: ConsentCompletionTaskResult? =
+        orkStepResult?.results?.first
         as? ConsentCompletionTaskResult
 
       // Checking if Signature is consented after Review Step
@@ -555,12 +554,11 @@ extension StudyDashboardViewController: ORKTaskViewControllerDelegate {
     // CurrentStep is TokenStep
     if step.identifier == kEligibilityTokenStep {  // For EligibilityToken Step
       let gatewayStoryboard = UIStoryboard(name: kFetalKickCounterStep, bundle: nil)
-      let ttController = (
-        gatewayStoryboard.instantiateViewController(
+      let ttController =
+        (gatewayStoryboard.instantiateViewController(
           withIdentifier: kEligibilityStepViewControllerIdentifier
         )
-          as? EligibilityStepViewController
-      )!
+        as? EligibilityStepViewController)!
       ttController.descriptionText = step.text
       ttController.step = step
 
@@ -573,7 +571,8 @@ extension StudyDashboardViewController: ORKTaskViewControllerDelegate {
       reviewStep = totalResults?.first as! ORKStepResult?
 
       if (reviewStep?.identifier)! == kReviewTitle && (reviewStep?.results?.count)! > 0 {
-        let consentSignatureResult: ORKConsentSignatureResult? = reviewStep?.results?.first
+        let consentSignatureResult: ORKConsentSignatureResult? =
+          reviewStep?.results?.first
           as? ORKConsentSignatureResult
 
         if consentSignatureResult?.consented == false {  //User disagreed on Consent
@@ -583,19 +582,17 @@ extension StudyDashboardViewController: ORKTaskViewControllerDelegate {
 
         } else {  // User consented
 
-          let documentCopy: ORKConsentDocument = (
-            (ConsentBuilder.currentConsent?.consentDocument)!.copy()
-              as? ORKConsentDocument
-          )!
+          let documentCopy: ORKConsentDocument =
+            ((ConsentBuilder.currentConsent?.consentDocument)!.copy()
+            as? ORKConsentDocument)!
 
           consentSignatureResult?.apply(to: documentCopy)
           let gatewayStoryboard = UIStoryboard(name: kFetalKickCounterStep, bundle: nil)
-          let ttController = (
-            gatewayStoryboard.instantiateViewController(
+          let ttController =
+            (gatewayStoryboard.instantiateViewController(
               withIdentifier: kConsentSharePdfStoryboardId
             )
-              as? ConsentSharePdfStepViewController
-          )!
+            as? ConsentSharePdfStepViewController)!
           ttController.step = step
           ttController.consentDocument = documentCopy
           return ttController
@@ -605,7 +602,8 @@ extension StudyDashboardViewController: ORKTaskViewControllerDelegate {
       }
     } else if step.identifier == kConsentViewPdfCompletionStep {  // For Pdf Completion Step
 
-      let reviewSharePdfStep: ORKStepResult? = taskViewController.result.results?.last
+      let reviewSharePdfStep: ORKStepResult? =
+        taskViewController.result.results?.last
         as! ORKStepResult?
 
       let result = (reviewSharePdfStep?.results?.first as? ConsentCompletionTaskResult)
@@ -613,12 +611,11 @@ extension StudyDashboardViewController: ORKTaskViewControllerDelegate {
       if (result?.didTapOnViewPdf)! {
         let gatewayStoryboard = UIStoryboard(name: kFetalKickCounterStep, bundle: nil)
 
-        let ttController = (
-          gatewayStoryboard.instantiateViewController(
+        let ttController =
+          (gatewayStoryboard.instantiateViewController(
             withIdentifier: kConsentViewPdfStoryboardId
           )
-            as? ConsentPdfViewerStepViewController
-        )!
+          as? ConsentPdfViewerStepViewController)!
         ttController.step = step
         ttController.pdfData = result?.pdfData
         return ttController

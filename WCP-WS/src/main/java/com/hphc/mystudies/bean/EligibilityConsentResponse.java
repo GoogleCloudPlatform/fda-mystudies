@@ -24,7 +24,6 @@ package com.hphc.mystudies.bean;
 
 import com.hphc.mystudies.util.StudyMetaDataConstants;
 
-
 public class EligibilityConsentResponse {
 
   private String message = StudyMetaDataConstants.FAILURE;

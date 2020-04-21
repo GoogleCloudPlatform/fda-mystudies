@@ -1,4 +1,4 @@
-// License Agreement for FDA My Studies
+// License Agreement for FDA MyStudies
 // Copyright © 2017-2019 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors.
 // Copyright 2020 Google LLC
 // Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated
@@ -23,8 +23,8 @@ import Foundation
 
 let kTermsAndConditionLink = "http://www.google.com"
 let kPrivacyPolicyLink = "http://www.facebook.com"
-let kNavigationTitleTerms = "TERMS"
-let kNavigationTitlePrivacyPolicy = "PRIVACY POLICY"
+let kNavigationTitleTerms = "Terms"
+let kNavigationTitlePrivacyPolicy = "Privacy Policy"
 
 let kAlertPleaseEnterValidValue = "Please Enter Valid Value"
 
@@ -68,25 +68,27 @@ let kDeleteAccountConfirmationMessage =
 let kMessageAccountDeletedSuccess = "Account has been deleted"
 let kMessageAppNotificationOffRemainder =
   "Stay up-to-date! Turn ON notifications and reminders in app and phone settings to get notified about study activity in a timely manner."
+let kSetPasscodeDescription =
+  "A passcode helps with quick and secure access to the app. You can turn off the passcode at any time by using a setting provided in the app."
 
 // MARK: - Signin Constants
-let kSignInTitleText = "SIGN IN"
+let kSignInTitleText = "Sign In"
 let kSignInTableViewCellIdentifier = "DetailsCell"
 
 // MARK: - ForgotPassword Constants
-let kForgotPasswordTitleText = "PASSWORD HELP"
+let kForgotPasswordTitleText = "Password Help"
 let kForgotPasswordResponseMessage =
   "We have sent a temporary password to your registered email. Please login with temporary password and change your password."
 
 // MARK: - SignUp Constants
-let kSignUpTitleText = "SIGN UP"
+let kSignUpTitleText = "Sign Up"
 let kAgreeToTermsAndConditionsText = "I Agree to the Terms and Privacy Policy"
 let kTermsText = "Terms"
 let kPrivacyPolicyText = "Privacy Policy"
 let kSignUpTableViewCellIdentifier = "CommonDetailsCell"
 
 // MARK: - NOTIFICATIONS Constants
-let kNotificationsTitleText = "NOTIFICATIONS"
+let kNotificationsTitleText = "Notifications"
 let kNotificationTableViewCellIdentifier = "NotificationCell"
 
 // MARK: - Validations Message during signup and sign in process
@@ -117,8 +119,8 @@ let kMessageNewPasswordBlank = "Please enter your new password."
 let kMessageValidateChangePassword = "New password and old password are same."
 
 // MARK: - ChangePassword Constants
-let kChangePasswordTitleText = "CHANGE PASSWORD"
-let kCreatePasswordTitleText = "CREATE PASSWORD"
+let kChangePasswordTitleText = "Change Password"
+let kCreatePasswordTitleText = "Create Password"
 let kChangePawwordCellIdentifer = "changePasswordCell"
 let kChangePasswordResponseMessage = "Your password has been changed successfully"
 
@@ -144,7 +146,7 @@ let kContactUsTableViewCellIdentifier = "ContactUsCell"
 let kMessageSubjectBlankCheck = "Please enter subject"
 let kMessageMessageBlankCheck = "Please enter message"
 let kMessageContactedSuccessfuly =
-  "Thank you for contacting us. We will get back to you on your email address at the earliest."
+  "Thank you for contacting us. We will get back to you as soon as possible."
 let kMessageTextViewPlaceHolder = ""
 
 // MARK: - ActivitiesViewController constants
@@ -231,7 +233,8 @@ let kConsentUpdatedTitle = "Consent Updated"
 let kMessageConsentUpdatedPartTwo =
   " Please review the revised Consent terms and provide your Informed Consent, to continue participating in the study."
 
-let kMessageConsentUpdated = "The Consent Document for this study has been updated."
+let kMessageConsentUpdated =
+  "The Consent Document for this study has been updated."
   + kMessageConsentUpdatedPartTwo
 
 let kReviewTitle = "Review"
@@ -262,7 +265,7 @@ let kCurrentVersion = "currentVersion"
 let kForceUpdate = "forceUpdate"
 let kMessage = "message"
 let kVisualStepId = "visual"
-let kMessageString = "Message"
+let kConfirmation = "Confirmation"
 
 // MARK: - Branding constants
 enum BrandingConstant {

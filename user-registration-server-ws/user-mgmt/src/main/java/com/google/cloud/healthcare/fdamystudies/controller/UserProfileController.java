@@ -8,12 +8,14 @@
 
 package com.google.cloud.healthcare.fdamystudies.controller;
 
+import java.time.LocalDateTime;
 import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.core.Context;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -50,6 +52,9 @@ public class UserProfileController {
   @Autowired CommonService commonService;
 
   @Autowired ApplicationPropertyConfiguration appConfig;
+
+  @Value("${email.code.expire_time}")
+  private long expireTime;
 
   @RequestMapping(value = "/ping")
   public String ping() {
@@ -126,32 +131,20 @@ public class UserProfileController {
     String message = MyStudiesUserRegUtil.ErrorCodes.FAILURE.getValue();
     ResponseBean responseBean = new ResponseBean();
     try {
-      if (deactivateAcctBean != null
-          && deactivateAcctBean.getDeleteData() != null
-          && !deactivateAcctBean.getDeleteData().isEmpty()) {
-        message =
-            userManagementProfService.deActivateAcct(
-                userId, deactivateAcctBean, accessToken, clientToken);
-        if (message.equalsIgnoreCase(MyStudiesUserRegUtil.ErrorCodes.SUCCESS.getValue())) {
-          commonService.createActivityLog(
-              userId,
-              "ACCOUNT DELETE(Deactivation of an user)",
-              "Account deactivated for user " + userId + ".");
-          responseBean.setMessage(MyStudiesUserRegUtil.ErrorCodes.SUCCESS.getValue().toLowerCase());
-
-        } else {
-          MyStudiesUserRegUtil.getFailureResponse(
-              MyStudiesUserRegUtil.ErrorCodes.STATUS_104.getValue(),
-              MyStudiesUserRegUtil.ErrorCodes.UNKNOWN.getValue(),
-              MyStudiesUserRegUtil.ErrorCodes.FAILURE.getValue(),
-              response);
-          return null;
-        }
+      message =
+          userManagementProfService.deActivateAcct(
+              userId, deactivateAcctBean, accessToken, clientToken);
+      if (message.equalsIgnoreCase(MyStudiesUserRegUtil.ErrorCodes.SUCCESS.getValue())) {
+        commonService.createActivityLog(
+            userId,
+            "ACCOUNT DELETE(Deactivation of an user)",
+            "Account deactivated for user " + userId + ".");
+        responseBean.setMessage(MyStudiesUserRegUtil.ErrorCodes.SUCCESS.getValue().toLowerCase());
       } else {
         MyStudiesUserRegUtil.getFailureResponse(
-            MyStudiesUserRegUtil.ErrorCodes.STATUS_102.getValue(),
-            MyStudiesUserRegUtil.ErrorCodes.INVALID_INPUT.getValue(),
-            MyStudiesUserRegUtil.ErrorCodes.INVALID_INPUT_ERROR_MSG.getValue(),
+            MyStudiesUserRegUtil.ErrorCodes.STATUS_104.getValue(),
+            MyStudiesUserRegUtil.ErrorCodes.UNKNOWN.getValue(),
+            MyStudiesUserRegUtil.ErrorCodes.FAILURE.getValue(),
             response);
         return null;
       }
@@ -199,6 +192,7 @@ public class UserProfileController {
             if (participantDetails.getStatus() == 2) {
               code = RandomStringUtils.randomAlphanumeric(6);
               participantDetails.setEmailCode(code);
+              participantDetails.setCodeExpireDate(LocalDateTime.now().plusMinutes(expireTime));
               participantDetails.setVerificationDate(MyStudiesUserRegUtil.getCurrentUtilDateTime());
               updParticipantDetails = userManagementProfService.saveParticipant(participantDetails);
               if (updParticipantDetails != null) {

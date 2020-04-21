@@ -25,7 +25,6 @@ package com.hphc.mystudies.bean;
 import java.util.HashMap;
 import java.util.Map;
 
-
 public class ChartsBean {
 
   private String title = "";

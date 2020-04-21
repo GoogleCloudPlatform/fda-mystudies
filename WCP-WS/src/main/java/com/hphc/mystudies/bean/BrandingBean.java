@@ -22,7 +22,6 @@
  */
 package com.hphc.mystudies.bean;
 
-
 public class BrandingBean {
 
   private String titleFont = "";

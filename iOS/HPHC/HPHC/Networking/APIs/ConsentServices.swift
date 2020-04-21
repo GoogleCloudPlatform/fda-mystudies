@@ -36,28 +36,40 @@ class ConsentServices: NSObject {
       kUserAuthToken: user.authToken! as String,
     ]
 
-    let consentVersion: String?
-    if (ConsentBuilder.currentConsent?.version?.count)! > 0 {
-      consentVersion = ConsentBuilder.currentConsent?.version!
+    let currentConsent = ConsentBuilder.currentConsent
+    let consentResult = currentConsent?.consentResult
+
+    var consentVersion: String
+    if let version = currentConsent?.version, !version.isEmpty {
+      consentVersion = version
     } else {
       consentVersion = "1"
     }
 
-    let base64data = ConsentBuilder.currentConsent?.consentResult?.consentPdfData!
-      .base64EncodedString()
+    var userDataSharing: String
+    if let isShareData = consentResult?.isShareDataWithPublic {
+      userDataSharing = "\(isShareData)"
+    } else {
+      userDataSharing = "n/a"
+    }
+    let base64data =
+      consentResult?.consentPdfData?
+      .base64EncodedString() ?? ""
 
-    let consent = [
-      kConsentDocumentVersion: consentVersion! as String,
-      kStatus: consentStatus.rawValue,
-      kConsentpdf: "\(base64data!)" as Any,
-    ] as [String: Any]
+    let consent =
+      [
+        kConsentDocumentVersion: consentVersion,
+        kStatus: consentStatus.rawValue,
+        kConsentpdf: base64data,
+      ] as [String: Any]
 
-    let params = [
-      kStudyId: Study.currentStudy?.studyId ?? "",
-      kEligibility: eligibilityStatus,
-      kConsent: consent,
-      kConsentSharing: "",
-    ] as [String: Any]
+    let params =
+      [
+        kStudyId: Study.currentStudy?.studyId ?? "",
+        kEligibility: eligibilityStatus,
+        kConsent: consent,
+        kConsentSharing: userDataSharing,
+      ] as [String: Any]
     let method = ConsentServerMethods.updateEligibilityConsentStatus.method
 
     self.sendRequestWith(method: method, params: params, headers: headerParams)
@@ -90,7 +102,8 @@ class ConsentServices: NSObject {
   // MARK: Parsers
   func handleUpdateTokenResponse(response: [String: Any]) {
 
-    let headerParams = self.failedRequestServices.headerParams == nil
+    let headerParams =
+      self.failedRequestServices.headerParams == nil
       ? [:] : self.failedRequestServices.headerParams
     self.sendRequestWith(
       method: self.failedRequestServices.method,
@@ -140,8 +153,7 @@ extension ConsentServices: NMWebServiceDelegate {
 
   func failedRequest(_ manager: NetworkManager, requestName: NSString, error: NSError) {
 
-    if requestName as String == AuthServerMethods.getRefreshedToken.description && error.code == 401
-    {  // Session expired.
+    if requestName as String == AuthServerMethods.getRefreshedToken.description && error.code == 401 {  // Session expired.
       delegate?.failedRequest(manager, requestName: requestName, error: error)
     } else if error.code == 401 {
 

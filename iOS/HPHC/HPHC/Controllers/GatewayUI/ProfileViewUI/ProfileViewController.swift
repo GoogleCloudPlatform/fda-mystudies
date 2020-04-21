@@ -1,4 +1,4 @@
-// License Agreement for FDA My Studies
+// License Agreement for FDA MyStudies
 // Copyright © 2017-2019 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors.
 // Copyright 2020 Google LLC
 // Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated
@@ -133,7 +133,7 @@ class ProfileViewController: UIViewController, SlideMenuControllerDelegate {
   @IBAction func buttonActionChangePassCode(_ sender: UIButton) {
 
     let passcodeViewController = ORKPasscodeViewController.passcodeEditingViewController(
-      withText: "",
+      withText: kSetPasscodeDescription,
       delegate: self,
       passcodeType: .type4Digit
     )
@@ -199,17 +199,14 @@ class ProfileViewController: UIViewController, SlideMenuControllerDelegate {
             from: (self.datePickerView?.date)!
           )
 
-          let title: String! = (
-            ((dateComponent?.hour)! as Int) < 10
+          let title: String! =
+            (((dateComponent?.hour)! as Int) < 10
               ? "0\((dateComponent?.hour)! as Int)"
-              : "\((dateComponent?.hour)! as Int)"
-          ) + ":"
+              : "\((dateComponent?.hour)! as Int)") + ":"
 
-            + (
-              ((dateComponent?.minute)! as Int) < 10
-                ? "0\((dateComponent?.minute)! as Int)"
-                : "\((dateComponent?.minute)! as Int)"
-            )
+            + (((dateComponent?.minute)! as Int) < 10
+              ? "0\((dateComponent?.minute)! as Int)"
+              : "\((dateComponent?.minute)! as Int)")
 
           self.buttonLeadTime?.setTitle(title!, for: .normal)
           self.user.settings?.leadTime = title
@@ -261,33 +258,29 @@ class ProfileViewController: UIViewController, SlideMenuControllerDelegate {
       var joinedStudies: [Study] = []
       if Utilities.isStandaloneApp() {
         let standaloneStudyId = Utilities.standaloneStudyId()
-        joinedStudies = studies?.filter({
-          (
+        joinedStudies =
+          studies?.filter({
+            ($0.userParticipateState.status == .inProgress
+              || $0.userParticipateState
+                .status
+                == .completed)
+              && ($0.studyId == standaloneStudyId)
+          }) ?? []
+      } else {
+        joinedStudies =
+          studies?.filter({
             $0.userParticipateState.status == .inProgress
               || $0.userParticipateState
                 .status
                 == .completed
-          ) && ($0.studyId == standaloneStudyId)
-        }) ?? []
-      } else {
-        joinedStudies = studies?.filter({
-          $0.userParticipateState.status == .inProgress
-            || $0.userParticipateState
-              .status
-              == .completed
-        }) ?? []
+          }) ?? []
       }
 
       if joinedStudies.count != 0 {
         self.performSegue(withIdentifier: "confirmationSegue", sender: joinedStudies)
       } else {
 
-        var infoDict: NSDictionary?
-        if let path = Bundle.main.path(forResource: "Info", ofType: "plist") {
-          infoDict = NSDictionary(contentsOfFile: path)
-        }
-        let navTitle = infoDict!["ProductTitleName"] as! String
-
+        let navTitle = Branding.productTitle
         var descriptionText = kDeleteAccountConfirmationMessage
         descriptionText = descriptionText.replacingOccurrences(
           of: "#APPNAME#",
@@ -327,8 +320,8 @@ class ProfileViewController: UIViewController, SlideMenuControllerDelegate {
 
   /// Api call to delete account.
   func sendRequestToDeleteAccount() {
-    let studies: [String] = []
-    UserServices().deActivateAccount(listOfStudyIds: studies, delegate: self)
+    let studies: [StudyToDelete] = []
+    UserServices().deActivateAccount(studiesToDelete: studies, delegate: self)
   }
 
   /// SignOut Response handler for slider menu setup.
@@ -377,9 +370,7 @@ class ProfileViewController: UIViewController, SlideMenuControllerDelegate {
           UIApplication.shared.keyWindow?.removeProgressIndicatorFromWindow()
         }
       } else {
-        let leftController = (
-          self.slideMenuController()?.leftViewController as? LeftMenuViewController
-        )!
+        let leftController = (self.slideMenuController()?.leftViewController as? LeftMenuViewController)!
         leftController.changeViewController(.studyList)
         leftController.createLeftmenuItems()
       }
@@ -545,6 +536,7 @@ class ProfileViewController: UIViewController, SlideMenuControllerDelegate {
       if ORKPasscodeViewController.isPasscodeStoredInKeychain() == false {
         let passcodeStep = ORKPasscodeStep(identifier: kPasscodeStepIdentifier)
         passcodeStep.passcodeType = .type4Digit
+        passcodeStep.text = kSetPasscodeDescription
         let task = ORKOrderedTask(
           identifier: kPasscodeTaskIdentifier,
           steps: [passcodeStep]
@@ -562,10 +554,10 @@ class ProfileViewController: UIViewController, SlideMenuControllerDelegate {
       } else {
         let passcodeViewController =
           ORKPasscodeViewController
-            .passcodeAuthenticationViewController(
-              withText: "",
-              delegate: self
-            )
+          .passcodeAuthenticationViewController(
+            withText: "",
+            delegate: self
+          )
 
         self.navigationController?.present(
           passcodeViewController,
@@ -605,10 +597,9 @@ extension ProfileViewController: UITableViewDataSource {
     if indexPath.row <= signupCellLastIndex {
       // for SignUp Cell data
 
-      let cell = (
-        tableView.dequeueReusableCell(withIdentifier: "CommonDetailsCell", for: indexPath)
-          as? SignUpTableViewCell
-      )!
+      let cell =
+        (tableView.dequeueReusableCell(withIdentifier: "CommonDetailsCell", for: indexPath)
+        as? SignUpTableViewCell)!
       cell.textFieldValue?.text = ""
 
       var isSecuredEntry: Bool = false
@@ -690,13 +681,12 @@ extension ProfileViewController: UITableViewDataSource {
       return cell
     } else {
       // for ProfileTableViewCell data
-      let cell = (
-        tableView.dequeueReusableCell(
+      let cell =
+        (tableView.dequeueReusableCell(
           withIdentifier: kProfileTableViewCellIdentifier,
           for: indexPath
         )
-          as? ProfileTableViewCell
-      )!
+        as? ProfileTableViewCell)!
       cell.setCellData(dict: tableViewData)
 
       if user.settings != nil {
@@ -809,8 +799,7 @@ extension ProfileViewController: NMWebServiceDelegate {
   func failedRequest(_ manager: NetworkManager, requestName: NSString, error: NSError) {
     self.removeProgressIndicator()
 
-    if requestName as String == AuthServerMethods.getRefreshedToken.description && error.code == 401
-    {  //unauthorized
+    if requestName as String == AuthServerMethods.getRefreshedToken.description && error.code == 401 {  //unauthorized
 
       UIUtilities.showAlertMessageWithActionHandler(
         kErrorTitle,

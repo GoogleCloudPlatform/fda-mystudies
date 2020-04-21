@@ -124,9 +124,9 @@
             	loadActiveSchedule(changeTabSchedule);
             }
 			function loadSelectedATask(typeOfActiveTask, activeTaskInfoId, actionType){
-				 $( ".changeContent" ).load( "/fdahpStudyDesigner/adminStudies/navigateContentActiveTask.do?${_csrf.parameterName}=${_csrf.token}&_S=${param._S}", {noncache: new Date().getTime(), typeOfActiveTask : typeOfActiveTask, activeTaskInfoId : activeTaskInfoId, actionType: actionType},
+				 $( ".changeContent" ).load( "/studybuilder/adminStudies/navigateContentActiveTask.do?${_csrf.parameterName}=${_csrf.token}&_S=${param._S}", {noncache: new Date().getTime(), typeOfActiveTask : typeOfActiveTask, activeTaskInfoId : activeTaskInfoId, actionType: actionType},
 						 function() {
-		       			$(this).parents('form').attr('action','/fdahpStudyDesigner/adminStudies/saveOrUpdateActiveTaskContent.do?_S=${param._S}');
+		       			$(this).parents('form').attr('action','/studybuilder/adminStudies/saveOrUpdateActiveTaskContent.do?_S=${param._S}');
 		       			resetValidation($(this).parents('form'));
 		       			var dt = new Date();
 						$('#inputClockId').datetimepicker({format: 'HH:mm',
@@ -140,7 +140,7 @@
 			 }
 			 function loadActiveSchedule(changeTabSchedule){
 				 if(changeTabSchedule){
-	          			$( "#schedule" ).load( "/fdahpStudyDesigner/adminStudies/viewScheduledActiveTask.do?${_csrf.parameterName}=${_csrf.token}&_S=${param._S}", {noncache: new Date().getTime(), activeTaskId : activeTaskInfoId}, function() {
+	          			$( "#schedule" ).load( "/studybuilder/adminStudies/viewScheduledActiveTask.do?${_csrf.parameterName}=${_csrf.token}&_S=${param._S}", {noncache: new Date().getTime(), activeTaskId : activeTaskInfoId}, function() {
 		          			resetValidation($('form'));
 		          			actionPageView();
 						});
@@ -192,7 +192,7 @@
 					    callback: function(result) {
 					        if (result) {
 					        	var a = document.createElement('a');
-					        	a.href = "/fdahpStudyDesigner/adminStudies/viewStudyActiveTasks.do?_S=${param._S}";
+					        	a.href = "/studybuilder/adminStudies/viewStudyActiveTasks.do?_S=${param._S}";
 					        	document.body.appendChild(a).click();
 					        }else{
 					        	$(item).prop('disabled', false);
@@ -202,7 +202,7 @@
 			</c:if>
 			<c:if test="${actionPage eq 'view'}">
 				var a = document.createElement('a');
-				a.href = "/fdahpStudyDesigner/adminStudies/viewStudyActiveTasks.do?_S=${param._S}";
+				a.href = "/studybuilder/adminStudies/viewStudyActiveTasks.do?_S=${param._S}";
 				document.body.appendChild(a).click();
 			</c:if>
        }

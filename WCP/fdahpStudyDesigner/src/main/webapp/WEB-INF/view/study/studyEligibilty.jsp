@@ -19,7 +19,7 @@
 <div class="col-sm-10 col-rc white-bg p-none">
 	<!--  Start top tab section-->
 	<form:form data-toggle="validator"
-		action="/fdahpStudyDesigner/adminStudies/saveOrUpdateStudyEligibilty.do?_S=${param._S}"
+		action="/studybuilder/adminStudies/saveOrUpdateStudyEligibilty.do?_S=${param._S}"
 		id="eleFormId">
 		<div class="right-content-head">
 			<div class="text-right">
@@ -61,20 +61,21 @@
 					type="radio" id="inlineRadio1" value="1" class="eligibilityOptCls"
 					name="eligibilityMechanism" required
 					<c:if test="${eligibility.eligibilityMechanism eq 1}" >checked</c:if>
-					<c:if test="${liveStatus}"> disabled</c:if>> <label
-					for="inlineRadio1">Token Validation Only</label>
+					<%-- <c:if test="${liveStatus}"> disabled</c:if> --%> disabled>
+					<label for="inlineRadio1">Token Validation</label>
 				</span> <span class="radio radio-inline p-45"> <input type="radio"
 					id="inlineRadio2" value="2" class="eligibilityOptCls"
 					name="eligibilityMechanism" required
 					<c:if test="${eligibility.eligibilityMechanism eq 2}">checked</c:if>
-					<c:if test="${liveStatus}"> disabled</c:if>> <label
-					for="inlineRadio2">Token Validation and Eligibility Test</label>
+					<%-- <c:if test="${liveStatus}"> disabled</c:if> --%> disabled>
+					<label for="inlineRadio2">Token Validation and Eligibility
+						Test</label>
 				</span> <span class="radio radio-inline"> <input type="radio"
 					id="inlineRadio3" value="3" class="eligibilityOptCls"
 					name="eligibilityMechanism" required
 					<c:if test="${eligibility.eligibilityMechanism eq 3}">checked</c:if>
 					<c:if test="${liveStatus}"> disabled</c:if>> <label
-					for="inlineRadio3">Eligibility Test Only</label>
+					for="inlineRadio3">Eligibility Test</label>
 				</span>
 				<div class="help-block with-errors red-txt"></div>
 			</div>
@@ -150,7 +151,7 @@
 	</form:form>
 </div>
 <form:form
-	action="/fdahpStudyDesigner/adminStudies/viewStudyEligibiltyTestQusAns.do?_S=${param._S}"
+	action="/studybuilder/adminStudies/viewStudyEligibiltyTestQusAns.do?_S=${param._S}"
 	id="viewQAFormId"></form:form>
 <script type="text/javascript">
 	var viewPermission = "${permission}";
@@ -164,18 +165,33 @@
 	console.log("viewPermission:" + viewPermission);
 	var reorder = true;
 	var table1;
+	var emVal=$("input[name='eligibilityMechanism']:checked"). val();
+	var eligibilityTestSize=${eligibilityTestList.size()};
+	//var eId=${eligibility.id};
 	$(document)
 			.ready(
 					function() {
 						$(".menuNav li.active").removeClass('active');
 						$(".menuNav li.fourth").addClass('active');
-
 						<c:if test="${not empty permission}">
 						$('#eleFormId input,textarea,select').prop('disabled',
 								true);
 						$('#eleFormId').find('.elaborateClass').addClass(
 								'linkDis');
 						</c:if>
+
+						<c:if test="${empty eligibility.id}">
+							$('#addQaId').prop('disabled',true);
+							$('.viewIcon, .editIcon, .deleteIcon').addClass('cursor-none');
+						</c:if>
+						
+						if(emVal != "1"){
+							if (eligibilityTestSize === 0){
+								$("#doneBut").attr("disabled",true);
+								$('#spancomId').attr('data-original-title','Please ensure you add one or more Eligibility Test before attempting to mark this section as Complete.');
+							}
+						}
+						
 						if ((!chkDone) && eligibilityMechanism != "1") {
 							$('#doneBut').prop('disabled', true);
 							$('#spancomId')
@@ -285,7 +301,7 @@
 													&& newOrderNumber) {
 												$
 														.ajax({
-															url : "/fdahpStudyDesigner/adminStudies/reOrderStudyEligibiltyTestQusAns.do?_S=${param._S}",
+															url : "/studybuilder/adminStudies/reOrderStudyEligibiltyTestQusAns.do?_S=${param._S}",
 															type : "POST",
 															datatype : "json",
 															data : {
@@ -425,10 +441,33 @@
 													$('#doneBut').prop(
 															'disabled', true);
 											}
+
+											emVal=$("input[name='eligibilityMechanism']:checked"). val();
+											eligibilityTestSize=${eligibilityTestList.size()};
+											if(emVal != "1"){
+												if (eligibilityTestSize === 0){
+													$("#doneBut").attr("disabled",true);
+													$('#spancomId').attr('data-original-title','Please ensure you add one or more Eligibility Test before attempting to mark this section as Complete.');
+												}
+											}
+											
 										})
 						// 		if(lastEligibilityOpt)
 						// 			$('#eligibilityOptDivId input[type=radio]').trigger('change');
 					});
+
+
+	/* $(".eligibilityOptCls").change(function() {
+		emVal=$("input[name='eligibilityMechanism']:checked"). val();
+		eligibilityTestSize=${eligibilityTestList.size()};
+		$("#doneBut").attr("disabled",false);
+		if(emVal != "1"){
+			if (eligibilityTestSize === 0){
+				$("#doneBut").attr("disabled",true);
+				$('#spancomId').attr('data-original-title','Please ensure you add one or more Eligibility Test before attempting to mark this section as Complete.');
+			}
+		}
+	}); */
 
 	function addOrEditOrViewQA(actionTypeForQuestionPage, eligibilityTestId) {
 		var form = $('#viewQAFormId');
@@ -468,7 +507,7 @@
 								if (eligibilityTestId) {
 									$
 											.ajax({
-												url : "/fdahpStudyDesigner/adminStudies/deleteEligibiltyTestQusAns.do?_S=${param._S}",
+												url : "/studybuilder/adminStudies/deleteEligibiltyTestQusAns.do?_S=${param._S}",
 												type : "POST",
 												datatype : "json",
 												data : {
@@ -538,7 +577,7 @@
 	}
 	function reloadEligibiltyTestDataTable(eligibiltyTestList) {
 		$('#consent_list').DataTable().clear();
-		if (eligibiltyTestList && eligibiltyTestList.length > 0) {
+		if (eligibiltyTestList != null && eligibiltyTestList.length > 0) {
 			$
 					.each(
 							eligibiltyTestList,
@@ -579,10 +618,8 @@
 			initActions();
 		} else {
 			$('#consent_list').DataTable().draw();
-			$('#helpNote')
-					.attr(
-							'data-original-title',
-							'Please ensure you add one or more Consent Sections before attempting to mark this section as Complete.');
+			$("#doneBut").attr("disabled",true);
+			$('#spancomId').attr('data-original-title','Please ensure you add one or more Eligibility Test before attempting to mark this section as Complete.');
 		}
 	}
 	function initActions() {

@@ -47,7 +47,7 @@
                             <tr>
                             	<th style="display: none;" id=""></th>
                                 <th id="">TITLE<span class="sort" ></span></th>
-                                <th id="">FREQUENCY<span class="sort" ></span></th>                                
+                                <th id="">Schedule Type<span class="sort" ></span></th>                                
                                 <th id="">
                                 <c:if test="${empty permission}">
                                     <div class="dis-line form-group mb-none">
@@ -82,7 +82,7 @@
             
         </div>
         <!-- End right Content here -->
-        <form:form action="/fdahpStudyDesigner/adminStudies/viewQuestionnaire.do?_S=${param._S}" name="questionnaireInfoForm" id="questionnaireInfoForm" method="post">
+        <form:form action="/studybuilder/adminStudies/viewQuestionnaire.do?_S=${param._S}" name="questionnaireInfoForm" id="questionnaireInfoForm" method="post">
 			<input type="hidden" name="questionnaireId" id="questionnaireId" value="">
 			<input type="hidden" name="actionType" id="actionType"> 
 			<input type="hidden" name="studyId" id="studyId" value="${studyId}" />
@@ -136,7 +136,7 @@ $(document).ready(function(){
 		if(questionnaryId != null && questionnaryId != '' && typeof questionnaryId !='undefined'){
 			$("#questionnaireId").val(questionnaryId);
 			$("#actionType").val('edit');
-			document.questionnaireInfoForm.action="/fdahpStudyDesigner/adminStudies/copyQuestionnaire.do?_S=${param._S}";	 
+			document.questionnaireInfoForm.action="/studybuilder/adminStudies/copyQuestionnaire.do?_S=${param._S}";	 
 			document.questionnaireInfoForm.submit();
 	    }
   }
@@ -161,7 +161,7 @@ $(document).ready(function(){
 		    	if(result){
 					if(questionnaireId != null && questionnaireId != '' && typeof questionnaireId !='undefined'){
 						$.ajax({
-			    			url: "/fdahpStudyDesigner/adminStudies/deleteQuestionnaire.do?_S=${param._S}",
+			    			url: "/studybuilder/adminStudies/deleteQuestionnaire.do?_S=${param._S}",
 			    			type: "POST",
 			    			datatype: "json",
 			    			data:{
@@ -252,7 +252,7 @@ $(document).ready(function(){
 	  $('[data-toggle="tooltip"]').tooltip();
   }
   function markAsCompleted(){
-		document.questionnaireInfoForm.action="/fdahpStudyDesigner/adminStudies/questionnaireMarkAsCompleted.do?_S=${param._S}";	 
+		document.questionnaireInfoForm.action="/studybuilder/adminStudies/questionnaireMarkAsCompleted.do?_S=${param._S}";	 
 		document.questionnaireInfoForm.submit();
 	}
 </script>     

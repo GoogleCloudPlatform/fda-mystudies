@@ -36,7 +36,7 @@
              <div class="dis-line pull-right" style="margin-top: 10px;height: auto;">
               	<div class="mb-none mt-xs">
                   <select class="selectpicker btn-md" id="filterRole">
-                    <option value="" selected>Filter by Role</option>
+                    <option value="" selected>Filter by role</option>
                     <c:forEach items="${roleList}" var="role">
                         <option value="${role.roleName}">${role.roleName}</option>
                      </c:forEach>
@@ -98,12 +98,12 @@
   </div>
 </div>
 
-<form:form action="/fdahpStudyDesigner/adminUsersEdit/addOrEditUserDetails.do" id="addOrEditUserForm" name="addOrEditUserForm" method="post">
+<form:form action="/studybuilder/adminUsersEdit/addOrEditUserDetails.do" id="addOrEditUserForm" name="addOrEditUserForm" method="post">
 	<input type="hidden" id="userId" name="userId" value="">
 	<input type="hidden" id="checkRefreshFlag" name="checkRefreshFlag">
 </form:form>
 
-<form:form action="/fdahpStudyDesigner/adminUsersView/viewUserDetails.do" id="viewUserForm" name="viewUserForm" method="post">
+<form:form action="/studybuilder/adminUsersView/viewUserDetails.do" id="viewUserForm" name="viewUserForm" method="post">
 	<input type="hidden" id="usrId" name="userId" value="">
 	<input type="hidden" id="checkViewRefreshFlag" name="checkViewRefreshFlag">
 </form:form>
@@ -122,7 +122,7 @@ $(document).ready(function(){
 			message : 'Your user account details have been updated. Please sign in again to continue using the portal.',	
 		    callback: function(result) {
 		    	var a = document.createElement('a');
-		    	a.href = "/fdahpStudyDesigner/sessionOut.do";
+		    	a.href = "/studybuilder/sessionOut.do";
 				document.body.appendChild(a).click();
 // 		        $('#logoutForm').submit();
 		    }
@@ -175,7 +175,7 @@ $(document).ready(function(){
 			        		input.value= '${_csrf.token}';
 			        		form.appendChild(input);
 			        		
-			            	form.action= '/fdahpStudyDesigner/adminUsersEdit/enforcePasswordChange.do';
+			            	form.action= '/studybuilder/adminUsersEdit/enforcePasswordChange.do';
 			            	document.body.appendChild(form);
 			            	form.submit();
 				             }	
@@ -224,7 +224,7 @@ function activateOrDeactivateUser(userId){
   	 bootbox.confirm("Are you sure you want to " + msgPart + " this user?", function(result){
 		 if(result){
 			$.ajax({
-				url : "/fdahpStudyDesigner/adminUsersEdit/activateOrDeactivateUser.do",
+				url : "/studybuilder/adminUsersEdit/activateOrDeactivateUser.do",
 				type : "POST",
 				datatype : "json",
 				data : {

@@ -1,4 +1,4 @@
-// License Agreement for FDA My Studies
+// License Agreement for FDA MyStudies
 // Copyright © 2017-2019 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors. Permission is
 // hereby granted, free of charge, to any person obtaining a copy of this software and associated
 // documentation files (the &quot;Software&quot;), to deal in the Software without restriction, including without
@@ -212,9 +212,10 @@ class NotificationViewController: UIViewController {
 
       self.navigationController?.setNavigationBarHidden(true, animated: true)
 
-      viewController = storyboard.instantiateViewController(
-        withIdentifier: kStudyDashboardTabbarControllerIdentifier
-      )
+      viewController =
+        storyboard.instantiateViewController(
+          withIdentifier: kStudyDashboardTabbarControllerIdentifier
+        )
         as? StudyDashboardTabbarViewController
 
       switch type! as AppNotification.NotificationSubType {
@@ -247,10 +248,11 @@ extension NotificationViewController: UITableViewDataSource {
   func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
     var cell: NotificationTableViewCell?
 
-    cell = tableView.dequeueReusableCell(
-      withIdentifier: kNotificationTableViewCellIdentifier,
-      for: indexPath
-    )
+    cell =
+      tableView.dequeueReusableCell(
+        withIdentifier: kNotificationTableViewCellIdentifier,
+        for: indexPath
+      )
       as? NotificationTableViewCell
 
     cell?.populateCellWith(notification: (notificationArray[indexPath.row]))

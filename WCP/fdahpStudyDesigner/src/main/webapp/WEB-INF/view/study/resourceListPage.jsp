@@ -92,14 +92,14 @@
 </div>
 <!-- End right Content here -->
 <form:form
-	action="/fdahpStudyDesigner/adminStudies/addOrEditResource.do?_S=${param._S}"
+	action="/studybuilder/adminStudies/addOrEditResource.do?_S=${param._S}"
 	name="resourceInfoForm" id="resourceInfoForm" method="post">
 	<input type="hidden" name="resourceInfoId" id="resourceInfoId" value="">
 	<input type="hidden" name="isstudyProtocol" id="isstudyProtocol" value="">
 	<input type="hidden" name="actionOn" id="actionOn" value="">
 </form:form>
 <form:form
-	action="/fdahpStudyDesigner/adminStudies/resourceMarkAsCompleted.do?_S=${param._S}"
+	action="/studybuilder/adminStudies/resourceMarkAsCompleted.do?_S=${param._S}"
 	name="resourceMarkAsCompletedForm" id="resourceMarkAsCompletedForm"
 	method="post">
 	<input type="hidden" name="studyId" id="studyId" value="${studyBo.id}" />
@@ -175,7 +175,7 @@ $(document).ready(function(){
 	    if(oldOrderNumber !== undefined && oldOrderNumber != null && oldOrderNumber != "" 
 			&& newOrderNumber !== undefined && newOrderNumber != null && newOrderNumber != ""){
 	    	$.ajax({
-				url: "/fdahpStudyDesigner/adminStudies/reOrderResourceList.do?_S=${param._S}",
+				url: "/studybuilder/adminStudies/reOrderResourceList.do?_S=${param._S}",
 				type: "POST",
 				datatype: "json",
 				data:{
@@ -219,7 +219,7 @@ function deleteResourceInfo(resourceInfoId){
 		console.log("delete:"+studyId);
 	    	if(resourceInfoId != '' && resourceInfoId != null && typeof resourceInfoId != 'undefined'){
 	    		$.ajax({
-	    			url: "/fdahpStudyDesigner/adminStudies/deleteResourceInfo.do?_S=${param._S}",
+	    			url: "/studybuilder/adminStudies/deleteResourceInfo.do?_S=${param._S}",
 	    			type: "POST",
 	    			datatype: "json",
 	    			data:{
@@ -265,7 +265,7 @@ function deleteResourceInfo(resourceInfoId){
 
 function reloadData(studyId){
 	$.ajax({
-		url: "/fdahpStudyDesigner/adminStudies/reloadResourceListPage.do?_S=${param._S}",
+		url: "/studybuilder/adminStudies/reloadResourceListPage.do?_S=${param._S}",
 	    type: "POST",
 	    datatype: "json",
 	    data: {

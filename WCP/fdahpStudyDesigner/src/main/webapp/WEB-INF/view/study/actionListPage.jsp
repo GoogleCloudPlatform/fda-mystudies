@@ -134,13 +134,13 @@
 	</div>
 </div>
 <form:form
-	action="/fdahpStudyDesigner/adminStudies/updateStudyAction.do?_S=${param._S}"
+	action="/studybuilder/adminStudies/updateStudyAction.do?_S=${param._S}"
 	name="actionInfoForm" id="actionInfoForm" method="post">
 	<input type="hidden" name="studyId" id="studyId" value="${studyBo.id}" />
 	<input type="hidden" name="buttonText" id="buttonText" value="" />
 </form:form>
 <form:form
-	action="/fdahpStudyDesigner/adminStudies/studyList.do?_S=${param._S}"
+	action="/studybuilder/adminStudies/studyList.do?_S=${param._S}"
 	name="studyListInfoForm" id="studyListInfoForm" method="post">
 </form:form>
 <script type="text/javascript">
@@ -183,7 +183,7 @@
 			} else {
 				$
 						.ajax({
-							url : "/fdahpStudyDesigner/adminStudies/validateStudyAction.do?_S=${param._S}",
+							url : "/studybuilder/adminStudies/validateStudyAction.do?_S=${param._S}",
 							type : "POST",
 							datatype : "json",
 							data : {
@@ -284,7 +284,7 @@
 			var studyId = "${studyBo.id}";
 			$
 					.ajax({
-						url : "/fdahpStudyDesigner/adminStudies/updateStudyAction.do?_S=${param._S}",
+						url : "/studybuilder/adminStudies/updateStudyAction.do?_S=${param._S}",
 						type : "POST",
 						datatype : "json",
 						data : {
@@ -301,7 +301,7 @@
 										|| buttonText == 'updatesId') {
 									$('#studyListInfoForm').submit();
 								} else {
-									document.studyListInfoForm.action = "/fdahpStudyDesigner/adminStudies/actionList.do?_S=${param._S}";
+									document.studyListInfoForm.action = "/studybuilder/adminStudies/actionList.do?_S=${param._S}";
 									document.studyListInfoForm.submit();
 								}
 							} else {

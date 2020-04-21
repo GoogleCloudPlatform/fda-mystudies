@@ -1,4 +1,4 @@
-// License Agreement for FDA My Studies
+// License Agreement for FDA MyStudies
 // Copyright © 2017-2019 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors.
 // Copyright 2020 Google LLC
 // Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated
@@ -97,16 +97,11 @@ class SignInViewController: UIViewController {
       buttonSignUp?.setAttributedTitle(mutableAttributedTitle, for: .normal)
     }
 
-    let brandingDetail = Utilities.getBrandingDetails()
     TermsAndPolicy.currentTermsAndPolicy = TermsAndPolicy()
-    guard let policyURL = brandingDetail?[BrandingConstant.PrivacyPolicyURL] as? String,
-      let terms = brandingDetail?[BrandingConstant.TermsAndConditionURL] as? String
-    else {
-      return
-    }
+    let policyURL = Branding.privacyPolicyURL
+    let terms = Branding.termsAndConditionURL
     TermsAndPolicy.currentTermsAndPolicy?.initWith(terms: terms, policy: policyURL)
     self.agreeToTermsAndConditions()
-
   }
 
   override func viewWillAppear(_ animated: Bool) {
@@ -186,14 +181,11 @@ class SignInViewController: UIViewController {
 
     // if textfield have data then we are updating same to model object
 
-    var selectedCell: SignInTableViewCell = (
-      tableView!.cellForRow(at: IndexPath(row: 0, section: 0)) as? SignInTableViewCell
-    )!
+    var selectedCell: SignInTableViewCell =
+      (tableView!.cellForRow(at: IndexPath(row: 0, section: 0)) as? SignInTableViewCell)!
 
     let emailTextFieldValue = selectedCell.textFieldValue?.text
-    selectedCell = (
-      tableView!.cellForRow(at: IndexPath(row: 1, section: 0)) as? SignInTableViewCell
-    )!
+    selectedCell = (tableView!.cellForRow(at: IndexPath(row: 1, section: 0)) as? SignInTableViewCell)!
 
     let passwordTextFieldValue = selectedCell.textFieldValue?.text
 
@@ -231,10 +223,9 @@ class SignInViewController: UIViewController {
 
     let storyboard = UIStoryboard(name: kStoryboardIdentifierGateway, bundle: nil)
 
-    let changePassword = (
-      storyboard.instantiateViewController(withIdentifier: "ChangePasswordViewController")
-        as? ChangePasswordViewController
-    )!
+    let changePassword =
+      (storyboard.instantiateViewController(withIdentifier: "ChangePasswordViewController")
+      as? ChangePasswordViewController)!
     if viewLoadFrom == .menu {
       changePassword.viewLoadFrom = .menu_login
     } else if viewLoadFrom == .joinStudy {
@@ -256,10 +247,9 @@ class SignInViewController: UIViewController {
 
     let storyboard = UIStoryboard(name: kStoryboardIdentifierGateway, bundle: nil)
 
-    let fda = (
-      storyboard.instantiateViewController(withIdentifier: kStoryboardIdentifierSlideMenuVC)
-        as? FDASlideMenuViewController
-    )!
+    let fda =
+      (storyboard.instantiateViewController(withIdentifier: kStoryboardIdentifierSlideMenuVC)
+      as? FDASlideMenuViewController)!
 
     self.navigationController?.pushViewController(fda, animated: true)
   }
@@ -268,9 +258,7 @@ class SignInViewController: UIViewController {
   func agreeToTermsAndConditions() {
 
     self.termsAndCondition?.delegate = self
-    let attributedString = (
-      termsAndCondition?.attributedText.mutableCopy() as? NSMutableAttributedString
-    )!
+    let attributedString = (termsAndCondition?.attributedText.mutableCopy() as? NSMutableAttributedString)!
 
     var foundRange = attributedString.mutableString.range(of: "Terms")
     attributedString.addAttribute(
@@ -339,13 +327,12 @@ extension SignInViewController: UITableViewDataSource {
   func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
     let tableViewData = (tableViewRowDetails?.object(at: indexPath.row) as? NSDictionary)!
 
-    let cell = (
-      tableView.dequeueReusableCell(
+    let cell =
+      (tableView.dequeueReusableCell(
         withIdentifier: kSignInTableViewCellIdentifier,
         for: indexPath
       )
-        as? SignInTableViewCell
-    )!
+      as? SignInTableViewCell)!
 
     cell.textFieldValue?.text = ""
     var isSecuredEntry: Bool = false
@@ -430,22 +417,21 @@ extension SignInViewController: UITextViewDelegate {
   func textView(_ textView: UITextView, shouldInteractWith URL: URL, in characterRange: NSRange)
     -> Bool
   {
-    var link: String = (TermsAndPolicy.currentTermsAndPolicy?.termsURL)!
+    var link: String = TermsAndPolicy.currentTermsAndPolicy?.termsURL ?? ""
     var title: String = kNavigationTitleTerms
     if URL.absoluteString == TermsAndPolicy.currentTermsAndPolicy?.policyURL
       && characterRange
         .length == String("Privacy Policy").count
     {
-
-      link = (TermsAndPolicy.currentTermsAndPolicy?.policyURL)!
+      link = TermsAndPolicy.currentTermsAndPolicy?.policyURL ?? ""
       title = kNavigationTitlePrivacyPolicy
-
     }
+    guard !link.isEmpty else { return false }
+
     let loginStoryboard = UIStoryboard.init(name: "Main", bundle: Bundle.main)
-    let webViewController = (
-      loginStoryboard.instantiateViewController(withIdentifier: "WebViewController")
-        as? UINavigationController
-    )!
+    let webViewController =
+      (loginStoryboard.instantiateViewController(withIdentifier: "WebViewController")
+      as? UINavigationController)!
     let webview = (webViewController.viewControllers[0] as? WebViewController)!
     webview.requestLink = link
     webview.title = title
@@ -501,17 +487,13 @@ extension SignInViewController: NMWebServiceDelegate {
 
           } else if viewLoadFrom == .joinStudy {
 
-            let leftController = (
-              slideMenuController()?.leftViewController as? LeftMenuViewController
-            )!
+            let leftController = (slideMenuController()?.leftViewController as? LeftMenuViewController)!
             leftController.createLeftmenuItems()
             self.performSegue(withIdentifier: "unwindStudyHomeSegue", sender: self)
 
           } else {
 
-            let leftController = (
-              slideMenuController()?.leftViewController as? LeftMenuViewController
-            )!
+            let leftController = (slideMenuController()?.leftViewController as? LeftMenuViewController)!
             leftController.createLeftmenuItems()
             leftController.changeViewController(.studyList)
           }

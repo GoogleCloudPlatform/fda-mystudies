@@ -12,7 +12,7 @@
 		<div class="black-lg-f">
 			<span class="mr-xs"><a href="javascript:void(0)"
 				class="backOrCancelBttn"><img
-					src="/fdahpStudyDesigner/images/icons/back-b.png" alt=""/></a> </span>
+					src="/studybuilder/images/icons/back-b.png" alt=""/></a> </span>
 			<c:if test="${actionPage eq 'ADD_PAGE'}">
               	Add New User
               </c:if>
@@ -65,7 +65,7 @@
 </div>
 
 <form:form
-	action="/fdahpStudyDesigner/adminUsersEdit/addOrUpdateUserDetails.do"
+	action="/studybuilder/adminUsersEdit/addOrUpdateUserDetails.do"
 	data-toggle="validator" id="userForm" role="form" method="post"
 	autocomplete="off">
 	<input type="hidden" name="userId" value="${userBO.userId}">
@@ -210,8 +210,8 @@
 				<!-- Assign Permissions -->
 				<div class="blue-md-f text-uppercase mt-lg">Assign Permissions</div>
 				<div class="pull-right mb-xs">
-					<span class="gray-xs-f">View Only</span> <span
-						class="gray-xs-f ml-lg">View & Edit</span>
+					<span class="gray-xs-f">View only</span> <span
+						class="gray-xs-f ml-lg">View and edit</span>
 				</div>
 				<div class="clearfix"></div>
 
@@ -221,7 +221,7 @@
 						type="checkbox" class="chk" id="inlineCheckbox1" value="option1"
 						<c:if test="${fn:contains(permissions,7)}">checked</c:if>
 						<c:if test="${actionPage eq 'VIEW_PAGE'}">disabled</c:if>>
-						<label for="inlineCheckbox1"> Manage Users </label>
+						<label for="inlineCheckbox1"> Users </label>
 					</span> <span class="pull-right"> <span
 						class="radio radio-info radio-inline p-45"> <input
 							type="radio" class="musr" id="inlineRadio1" value="0"
@@ -243,8 +243,7 @@
 						type="checkbox" id="inlineCheckbox3" class="chk" value="option1"
 						<c:if test="${fn:contains(permissions,4)}">checked</c:if>
 						<c:if test="${actionPage eq 'VIEW_PAGE'}">disabled</c:if>>
-						<label for="inlineCheckbox3"> Manage App-Wide
-							Notifications </label>
+						<label for="inlineCheckbox3"> Notifications </label>
 					</span> <span class="pull-right"> <span
 						class="radio radio-info radio-inline p-45"> <input
 							type="radio" id="inlineRadio5" class="mnotf" value="0"
@@ -268,7 +267,7 @@
 						type="checkbox" id="inlineCheckbox4" name="manageStudies"
 						<c:if test="${fn:contains(permissions,2)}">value="1" checked</c:if>
 						<c:if test="${actionPage eq 'VIEW_PAGE'}">disabled</c:if>>
-						<label for="inlineCheckbox4"> Manage Studies </label>
+						<label for="inlineCheckbox4"> Studies </label>
 					</span>
 					<div class="mt-lg pl-lg">
 						<div class="pb-md bor-dashed">
@@ -294,8 +293,8 @@
 							</c:if>
 						</div>
 						<div class="addHide">
-							<span class="mr-lg text-weight-semibold text-uppercase">Existing
-								Studies</span>
+							<span class="mr-lg text-weight-semibold text-uppercase">Existing Study Permissions</span>
+
 							<c:if test="${actionPage ne 'VIEW_PAGE'}">
 								<span class="ablue removeAll changeView">x Remove all</span>
 							</c:if>
@@ -310,7 +309,7 @@
 										<c:if test="${actionPage eq 'VIEW_PAGE'}">disabled</c:if>>
 									<c:if test="${actionPage ne 'VIEW_PAGE'}">
 										<span class="mr-md"><img
-											src="/fdahpStudyDesigner/images/icons/close.png"
+											src="/studybuilder/images/icons/close.png"
 											onclick="del(${study.id});" alt=""/></span>
 									</c:if>
 									<span>${study.name}&nbsp;(${study.customStudyId})</span> <span
@@ -361,7 +360,7 @@
 	</c:if>
 </form:form>
 
-<form:form action="/fdahpStudyDesigner/adminUsersView/getUserList.do"
+<form:form action="/studybuilder/adminUsersView/getUserList.do"
 	id="backOrCancelBtnForm" name="backOrCancelBtnForm" method="post">
 </form:form>
 <script>
@@ -440,7 +439,7 @@
     	       $('#emailId').parent().find(".help-block").html("<ul class='list-unstyled'><li></li></ul>");
     	       if(email !== ''){
     	           $.ajax({
-    	               url: "/fdahpStudyDesigner/isEmailValid.do?"+csrfDetcsrfParamName+"="+csrfToken,
+    	               url: "/studybuilder/isEmailValid.do?"+csrfDetcsrfParamName+"="+csrfToken,
     	               type: "POST",
     	               datatype: "json",
     	               global : false,
@@ -556,7 +555,7 @@
 								    var selTxt = $(sel).text(); 
 								    var existingStudyDiv = "<div class='study-selected-item selStd' id='std"+selVal+"'>"
 									+"<input type='hidden' class='stdCls' id='"+selVal+"' name='' value='"+selVal+"'>"
-						            +"<span class='mr-md cls cur-pointer'><img src='/fdahpStudyDesigner/images/icons/close.png' onclick='del("+selVal+");'/></span>"
+						            +"<span class='mr-md cls cur-pointer'><img src='/studybuilder/images/icons/close.png' onclick='del("+selVal+");'/></span>"
 						            +"<span>"+selTxt+"</span>"
 						            +"<span class='pull-right'>"
 						            +"<span class='radio radio-info radio-inline p-45 mr-xs'>"
@@ -606,7 +605,7 @@
               if(email !== ''){
             	  $("body").addClass("loading");
                   $.ajax({
-                      url: "/fdahpStudyDesigner/isEmailValid.do?"+csrfDetcsrfParamName+"="+csrfToken,
+                      url: "/studybuilder/isEmailValid.do?"+csrfDetcsrfParamName+"="+csrfToken,
                       type: "POST",
                       datatype: "json",
                       global : false,
@@ -654,7 +653,7 @@
 			input.value= '${_csrf.token}';
 			form.appendChild(input);
 			
-	    	form.action= '/fdahpStudyDesigner/adminUsersEdit/resendActivateDetailsLink.do';
+	    	form.action= '/studybuilder/adminUsersEdit/resendActivateDetailsLink.do';
 	    	document.body.appendChild(form);
 	    	form.submit();
      });
@@ -693,7 +692,7 @@
 		        		input.value= '${_csrf.token}';
 		        		form.appendChild(input);
 		        		
-		            	form.action= '/fdahpStudyDesigner/adminUsersEdit/enforcePasswordChange.do';
+		            	form.action= '/studybuilder/adminUsersEdit/enforcePasswordChange.do';
 		            	document.body.appendChild(form);
 		            	form.submit();
 			             }	

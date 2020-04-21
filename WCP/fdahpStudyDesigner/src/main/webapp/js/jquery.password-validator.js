@@ -138,7 +138,7 @@ this["JST"]["row"] = function (obj) {
                     message = validators[requirement].message;
                 }
 
-                var preface = validators[requirement].preface || "Contains a";
+                var preface = validators[requirement].preface || "Contain a";
 
                 var ruleMarkup = JST.row({
                     ruleName : requirement,

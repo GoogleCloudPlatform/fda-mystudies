@@ -30,12 +30,10 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
-
 @Entity
 @Table(name = "enrollment_token")
 public class EnrollmentTokenDto implements Serializable {
 
- 
   private static final long serialVersionUID = 191073853377443228L;
 
   @Id

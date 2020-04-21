@@ -156,15 +156,14 @@ public class SignInActivity extends AppCompatActivity implements ApiCall.OnAsync
         new ClickableSpan() {
           @Override
           public void updateDrawState(TextPaint ds) {
-            ds.setColor(
-                ContextCompat.getColor(
-                    SignInActivity.this, R.color.colorPrimary));
+            ds.setColor(ContextCompat.getColor(SignInActivity.this, R.color.colorPrimary));
             ds.setUnderlineText(false);
           }
 
           @Override
           public void onClick(View widget) {
-            if (mTermsAndConditionData != null) {
+            if (mTermsAndConditionData != null
+                && !mTermsAndConditionData.getTerms().isEmpty()) {
               Intent termsIntent =
                   new Intent(SignInActivity.this, TermsPrivacyPolicyActivity.class);
               termsIntent.putExtra("title", getResources().getString(R.string.terms));
@@ -192,15 +191,14 @@ public class SignInActivity extends AppCompatActivity implements ApiCall.OnAsync
 
           @Override
           public void updateDrawState(TextPaint ds) {
-            ds.setColor(
-                ContextCompat.getColor(
-                    SignInActivity.this, R.color.colorPrimary));
+            ds.setColor(ContextCompat.getColor(SignInActivity.this, R.color.colorPrimary));
             ds.setUnderlineText(false);
           }
 
           @Override
           public void onClick(View widget) {
-            if (mTermsAndConditionData != null) {
+            if (mTermsAndConditionData != null
+                && !mTermsAndConditionData.getPrivacy().isEmpty()) {
               Intent termsIntent =
                   new Intent(SignInActivity.this, TermsPrivacyPolicyActivity.class);
               termsIntent.putExtra("title", getResources().getString(R.string.privacy_policy));
@@ -318,18 +316,18 @@ public class SignInActivity extends AppCompatActivity implements ApiCall.OnAsync
   }
 
   private void callLoginWebService() {
-    if (mEmail.getText().toString().equalsIgnoreCase("")
-        && mPassword.getText().toString().equalsIgnoreCase("")) {
+    if (mEmail.getText().toString().isEmpty()
+        && mPassword.getText().toString().isEmpty()) {
       Toast.makeText(
               this, getResources().getString(R.string.enter_all_field_empty), Toast.LENGTH_SHORT)
           .show();
-    } else if (mEmail.getText().toString().equalsIgnoreCase("")) {
+    } else if (mEmail.getText().toString().isEmpty()) {
       Toast.makeText(this, getResources().getString(R.string.email_empty), Toast.LENGTH_SHORT)
           .show();
     } else if (!AppController.getHelperIsValidEmail(mEmail.getText().toString())) {
       Toast.makeText(this, getResources().getString(R.string.email_validation), Toast.LENGTH_SHORT)
           .show();
-    } else if (mPassword.getText().toString().equalsIgnoreCase("")) {
+    } else if (mPassword.getText().toString().isEmpty()) {
       Toast.makeText(this, getResources().getString(R.string.password_empty), Toast.LENGTH_SHORT)
           .show();
     } else {
@@ -394,41 +392,59 @@ public class SignInActivity extends AppCompatActivity implements ApiCall.OnAsync
     } else if (responseCode == USER_PROFILE_REQUEST) {
       userProfileData = (UserProfileData) response;
       if (userProfileData != null) {
-        if (userProfileData.getSettings().isPasscode()) {
-          AppController.getHelperSharedPreference()
-              .writePreference(SignInActivity.this, getString(R.string.initialpasscodeset), "no");
-          if (loginData.isVerified()) {
-            AppController.getHelperSharedPreference()
-                .writePreference(
-                    SignInActivity.this, getString(R.string.userid), "" + loginData.getUserId());
-            AppController.getHelperSharedPreference()
-                .writePreference(
-                    SignInActivity.this, getString(R.string.auth), "" + loginData.getAuth());
-            AppController.getHelperSharedPreference()
-                .writePreference(
-                    SignInActivity.this, getString(R.string.verified), "" + loginData.isVerified());
-            AppController.getHelperSharedPreference()
-                .writePreference(
-                    SignInActivity.this,
-                    getString(R.string.email),
-                    "" + mEmail.getText().toString());
-
-            Intent intent = new Intent(SignInActivity.this, NewPasscodeSetupActivity.class);
-            intent.putExtra("from", "signin");
-            startActivityForResult(intent, PASSCODE_RESPONSE);
-          } else {
-            Intent intent = new Intent(SignInActivity.this, VerificationStepActivity.class);
-            intent.putExtra("from", "Activity");
-            intent.putExtra("type", "Signin");
-            intent.putExtra("userid", loginData.getUserId());
-            intent.putExtra("auth", loginData.getAuth());
-            intent.putExtra("verified", loginData.isVerified());
-            intent.putExtra("email", mEmail.getText().toString());
-            intent.putExtra("password", mPassword.getText().toString());
-            startActivity(intent);
-          }
+        if (loginData.getResetPassword()) {
+          Intent intent = new Intent(SignInActivity.this, ChangePasswordActivity.class);
+          intent.putExtra("from", "SignInFragment");
+          intent.putExtra("password", mPassword.getText().toString());
+          intent.putExtra("userid", loginData.getUserId());
+          intent.putExtra("auth", loginData.getAuth());
+          intent.putExtra("verified", loginData.isVerified());
+          intent.putExtra("email", mEmail.getText().toString());
+          startActivity(intent);
         } else {
-          login();
+          if (userProfileData.getSettings().isPasscode()) {
+            AppController.getHelperSharedPreference()
+                .writePreference(SignInActivity.this, getString(R.string.initialpasscodeset), "no");
+
+            if (loginData.isVerified()) {
+              {
+                AppController.getHelperSharedPreference()
+                    .writePreference(
+                        SignInActivity.this,
+                        getString(R.string.userid),
+                        "" + loginData.getUserId());
+                AppController.getHelperSharedPreference()
+                    .writePreference(
+                        SignInActivity.this, getString(R.string.auth), "" + loginData.getAuth());
+                AppController.getHelperSharedPreference()
+                    .writePreference(
+                        SignInActivity.this,
+                        getString(R.string.verified),
+                        "" + loginData.isVerified());
+                AppController.getHelperSharedPreference()
+                    .writePreference(
+                        SignInActivity.this,
+                        getString(R.string.email),
+                        "" + mEmail.getText().toString());
+
+                Intent intent = new Intent(SignInActivity.this, NewPasscodeSetupActivity.class);
+                intent.putExtra("from", "signin");
+                startActivityForResult(intent, PASSCODE_RESPONSE);
+              }
+            } else {
+              Intent intent = new Intent(SignInActivity.this, VerificationStepActivity.class);
+              intent.putExtra("from", "Activity");
+              intent.putExtra("type", "Signin");
+              intent.putExtra("userid", loginData.getUserId());
+              intent.putExtra("auth", loginData.getAuth());
+              intent.putExtra("verified", loginData.isVerified());
+              intent.putExtra("email", mEmail.getText().toString());
+              intent.putExtra("password", mPassword.getText().toString());
+              startActivity(intent);
+            }
+          } else {
+            login();
+          }
         }
       } else {
         Toast.makeText(
@@ -446,13 +462,13 @@ public class SignInActivity extends AppCompatActivity implements ApiCall.OnAsync
     protected String doInBackground(String... params) {
       String token = "";
       if (FirebaseInstanceId.getInstance().getToken() == null
-          || FirebaseInstanceId.getInstance().getToken().equalsIgnoreCase("")) {
+          || FirebaseInstanceId.getInstance().getToken().isEmpty()) {
         boolean regIdStatus = false;
         while (!regIdStatus) {
           token =
               AppController.getHelperSharedPreference()
                   .readPreference(SignInActivity.this, "deviceToken", "");
-          if (!token.equalsIgnoreCase("")) regIdStatus = true;
+          if (!token.isEmpty()) regIdStatus = true;
         }
       } else {
         AppController.getHelperSharedPreference()
@@ -477,16 +493,7 @@ public class SignInActivity extends AppCompatActivity implements ApiCall.OnAsync
   }
 
   private void login() {
-    if (loginData.getResetPassword()) {
-      Intent intent = new Intent(SignInActivity.this, ChangePasswordActivity.class);
-      intent.putExtra("from", "SignInFragment");
-      intent.putExtra("password", mPassword.getText().toString());
-      intent.putExtra("userid", loginData.getUserId());
-      intent.putExtra("auth", loginData.getAuth());
-      intent.putExtra("verified", loginData.isVerified());
-      intent.putExtra("email", mEmail.getText().toString());
-      startActivity(intent);
-    } else if (loginData.isVerified()) {
+    if (loginData.isVerified()) {
       AppController.getHelperSharedPreference()
           .writePreference(
               SignInActivity.this, getString(R.string.userid), "" + loginData.getUserId());
@@ -597,7 +604,7 @@ public class SignInActivity extends AppCompatActivity implements ApiCall.OnAsync
     JSONObject infoJson = new JSONObject();
     try {
       infoJson.put("os", "android");
-      infoJson.put("appVersion", BuildConfig.VERSION_NAME);
+      infoJson.put("appVersion", BuildConfig.VERSION_NAME + "." + BuildConfig.VERSION_CODE);
       infoJson.put("deviceToken", deviceToken);
 
       jsonObjBody.put("info", infoJson);

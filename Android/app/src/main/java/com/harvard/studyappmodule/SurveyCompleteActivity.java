@@ -46,7 +46,6 @@ import com.harvard.utils.Logger;
 import com.harvard.utils.SharedPreferenceHelper;
 import com.harvard.utils.URLs;
 import com.harvard.webservicemodule.apihelper.ApiCall;
-import com.harvard.webservicemodule.apihelper.ApiCallResponseServer;
 import com.harvard.webservicemodule.events.RegistrationServerEnrollmentConfigEvent;
 import com.harvard.webservicemodule.events.ResponseServerConfigEvent;
 import org.json.JSONArray;
@@ -803,7 +802,7 @@ public class SurveyCompleteActivity extends AppCompatActivity
             URLs.PROCESS_RESPONSE,
             "",
             getResponseDataJson(activityObj, activities, studies).toString(),
-            "response",
+            "ResponseServer",
             "",
             "",
             "");
@@ -828,7 +827,7 @@ public class SurveyCompleteActivity extends AppCompatActivity
             URLs.UPDATE_ACTIVITY_PREFERENCE,
             "",
             getActivityPreferenceJson().toString(),
-            "registration",
+            "ResponseServer",
             "",
             "",
             "");
@@ -883,7 +882,7 @@ public class SurveyCompleteActivity extends AppCompatActivity
             URLs.UPDATE_STUDY_PREFERENCE,
             "",
             getStudyPreferenceJson("" + (int) completion, "" + (int) adherence).toString(),
-            "registration",
+            "RegistrationServerEnrollment",
             "",
             "",
             "");
@@ -934,7 +933,7 @@ public class SurveyCompleteActivity extends AppCompatActivity
               URLs.UPDATE_ACTIVITY_PREFERENCE,
               "",
               getActivityPreferenceJson().toString(),
-              "registration",
+              "ResponseServer",
               "",
               "",
               "");
@@ -990,7 +989,7 @@ public class SurveyCompleteActivity extends AppCompatActivity
             URLs.UPDATE_STUDY_PREFERENCE,
             "",
             getStudyPreferenceJson("" + (int) completion, "" + (int) adherence).toString(),
-            "registration",
+            "ResponseServer",
             "",
             "",
             "");

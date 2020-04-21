@@ -1,4 +1,4 @@
-// License Agreement for FDA My Studies
+// License Agreement for FDA MyStudies
 // Copyright © 2017-2019 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors. Permission is
 // hereby granted, free of charge, to any person obtaining a copy of this software and associated
 // documentation files (the &quot;Software&quot;), to deal in the Software without restriction, including without
@@ -39,8 +39,12 @@ class OtherTextChoiceCell: UITableViewCell {
   var didSelected: Bool = false {
     didSet {
       if didSelected {
-        self.titleLbl.textColor = #colorLiteral(red: 0.2431372549, green: 0.5411764706,
-        blue: 0.9921568627, alpha: 1)
+        self.titleLbl.textColor = #colorLiteral(
+          red: 0.2431372549,
+          green: 0.5411764706,
+          blue: 0.9921568627,
+          alpha: 1
+        )
         self.checkmarkView.isHidden = false
       } else {
         self.titleLbl.textColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)

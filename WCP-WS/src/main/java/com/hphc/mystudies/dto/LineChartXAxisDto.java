@@ -30,11 +30,9 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
-
 @Entity
 @Table(name = "line_chart_x_axis")
 public class LineChartXAxisDto implements Serializable {
-
 
   private static final long serialVersionUID = 1502788661705421580L;
 

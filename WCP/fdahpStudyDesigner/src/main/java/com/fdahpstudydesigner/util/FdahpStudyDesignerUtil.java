@@ -1,5 +1,5 @@
 /*
- * Copyright � 2017-2018 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors.
+ * Copyright © 2017-2018 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors.
  * Copyright 2020 Google LLC
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction,
@@ -28,6 +28,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -1036,5 +1037,23 @@ public class FdahpStudyDesignerUtil {
       flag = true;
     }
     return flag;
+  }
+
+  public static String getHashedValue(String secretToHash) {
+    logger.info("ResponseServerUtil - getHashedValue() - starts");
+    String generatedHash = null;
+    try {
+      MessageDigest md = MessageDigest.getInstance("SHA-256");
+      byte[] bytes = md.digest(secretToHash.getBytes());
+      StringBuilder sb = new StringBuilder();
+      for (int i = 0; i < bytes.length; i++) {
+        sb.append(Integer.toString((bytes[i] & 0xff) + 0x100, 16).substring(1));
+      }
+      generatedHash = sb.toString();
+    } catch (NoSuchAlgorithmException e) {
+      logger.info("ResponseServerUtil getHashedValue() - error() ", e);
+    }
+    logger.info("ResponseServerUtil - getHashedValue() - ends");
+    return generatedHash;
   }
 }

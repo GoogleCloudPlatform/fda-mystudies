@@ -1,4 +1,4 @@
-// License Agreement for FDA My Studies
+// License Agreement for FDA MyStudies
 // Copyright © 2017-2019 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors. Permission is
 // hereby granted, free of charge, to any person obtaining a copy of this software and associated
 // documentation files (the &quot;Software&quot;), to deal in the Software without restriction, including without
@@ -158,9 +158,7 @@ class ResourceDetailViewController: UIViewController {
             )
             self.loadWebViewWithPath(path: path!)
           } else {
-            let path = resourcesDownloadPath + "/" + (
-              self.resource?.file?.localPath
-            )!
+            let path = resourcesDownloadPath + "/" + (self.resource?.file?.localPath)!
             let pdfData = FileDownloadManager.decrytFile(pathURL: URL(string: path))
             self.loadWebViewWithData(data: pdfData!)
 
@@ -183,7 +181,7 @@ class ResourceDetailViewController: UIViewController {
   func loadWebViewWithPath(path: String) {
 
     guard
-      let url:URL = URL(
+      let url: URL = URL(
         string: path.addingPercentEncoding(withAllowedCharacters: .urlPathAllowed)!
       )
     else { return }
@@ -271,39 +269,6 @@ class ResourceDetailViewController: UIViewController {
     }
   }
 
-}
-
-extension ResourceDetailViewController: UIWebViewDelegate {
-
-  func webViewDidFinishLoad(_ webView: UIWebView) {
-    self.activityIndicator.stopAnimating()
-  }
-
-  func webView(_ webView: UIWebView, didFailLoadWithError error: Error) {
-    self.activityIndicator.stopAnimating()
-
-    let buttonTitleOK = NSLocalizedString("OK", comment: "")
-    let alert = UIAlertController(
-      title: NSLocalizedString(kTitleError, comment: ""),
-      message: error.localizedDescription,
-      preferredStyle: UIAlertController.Style.alert
-    )
-
-    alert.addAction(
-      UIAlertAction.init(
-        title: buttonTitleOK,
-        style: .default,
-        handler: { (_) in
-
-          self.dismiss(animated: true, completion: nil)
-
-        }
-      )
-    )
-
-    self.present(alert, animated: true, completion: nil)
-
-  }
 }
 
 extension ResourceDetailViewController: WKUIDelegate, WKNavigationDelegate {

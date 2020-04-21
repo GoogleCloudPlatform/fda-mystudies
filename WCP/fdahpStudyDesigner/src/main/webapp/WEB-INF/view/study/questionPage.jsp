@@ -1,4 +1,3 @@
-<%@ page language="java" contentType="text/html; charset=ISO-8859-1" pageEncoding="ISO-8859-1"%>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
@@ -73,7 +72,7 @@ function isNumberKey(evt)
    </div>
    <!--  End  top tab section-->
    <!--  Start body tab section -->
-   <form:form action="/fdahpStudyDesigner/adminStudies/saveOrUpdateFromQuestion.do?_S=${param._S}&${_csrf.parameterName}=${_csrf.token}" name="questionStepId" id="questionStepId" method="post" data-toggle="validator" role="form" enctype="multipart/form-data" >
+   <form:form action="/studybuilder/adminStudies/saveOrUpdateFromQuestion.do?_S=${param._S}&${_csrf.parameterName}=${_csrf.token}" name="questionStepId" id="questionStepId" method="post" data-toggle="validator" role="form" enctype="multipart/form-data" >
    <div class="right-content-body pt-none pl-none pr-none">
       <ul class="nav nav-tabs review-tabs gray-bg">
          <li class="questionLevel active"><a data-toggle="tab" href="#qla">Question-level Attributes</a></li>
@@ -176,12 +175,12 @@ function isNumberKey(evt)
             	    <span class="tool-tip" data-toggle="tooltip" data-html="true" data-placement="top"  title="The date supplied by a participant in response to this question can be used to dictate the schedule for other questionnaires or active tasks in the study, or to determine the Period of Visibility of study resources."  >
             		<span class="checkbox checkbox-inline">
 			               <input type="checkbox" id="useAnchorDateId" name="useAnchorDate" value="true" ${questionsBo.useAnchorDate ? 'checked':''} <c:if test="${questionnairesStepsBo.repeatable eq'Yes'}">disabled</c:if> <c:if test="${not empty questionsBo.isShorTitleDuplicate && (questionsBo.isShorTitleDuplicate gt 0)}"> disabled</c:if>>
-			               <label for="useAnchorDateId"> Use response as Anchor Date </label>
+			               <label for="useAnchorDateId"> Use response as anchor date </label>
 		             </span>
 		             </span>
 		             <div class="clearfix"></div>
 	            	<div class="col-md-6 p-none useAnchorDateName mt-md" style="display: none">
-		                <div class="gray-xs-f mb-xs">Define name for Anchor date<span class="requiredStar">*</span></div>
+		                <div class="gray-xs-f mb-xs">Define name for anchor date<span class="requiredStar">*</span></div>
 		                <div class="form-group">
 		                  <input type="text" class="form-control" name="anchorDateName" id="anchorTextId" value="${questionsBo.anchorDateName}" maxlength="50" <c:if test="${not empty questionsBo.isShorTitleDuplicate && (questionsBo.isShorTitleDuplicate gt 0)}"> disabled</c:if>/>
 		                  <div class="help-block with-errors red-txt"></div>
@@ -196,12 +195,12 @@ function isNumberKey(evt)
 		               <span class="checkbox checkbox-inline">
 			               <input type="checkbox" id="useAnchorDateId" name="useAnchorDate" value="true" ${questionsBo.useAnchorDate ? 'checked':''} <c:if test="${questionnairesStepsBo.repeatable eq'Yes'}"> disabled </c:if> 
 			                     <c:if test="${questionnaireBo.frequency ne 'One time' || questionnaireBo.scheduleType ne 'Regular'}"> disabled </c:if> <c:if test="${not empty questionsBo.isShorTitleDuplicate && (questionsBo.isShorTitleDuplicate gt 0)}"> disabled</c:if>>
-			               <label for="useAnchorDateId"> Use response as Anchor Date </label>
+			               <label for="useAnchorDateId"> Use response as anchor date </label>
 		               </span>
 	               </span>
 	               <div class="clearfix"></div>
 	            	<div class="col-md-6 p-none useAnchorDateName mt-md" style="display: none">
-		                <div class="gray-xs-f mb-xs">Define name for Anchor date<span class="requiredStar">*</span></div>
+		                <div class="gray-xs-f mb-xs">Define name for anchor date<span class="requiredStar">*</span></div>
 		                <div class="form-group">
 		                  <input type="text" class="form-control" name="anchorDateName" id="anchorTextId" value="${fn:escapeXml(questionsBo.anchorDateName)}" maxlength="50" <c:if test="${not empty questionsBo.isShorTitleDuplicate && (questionsBo.isShorTitleDuplicate gt 0)}"> disabled</c:if>/>
 		                  <div class="help-block with-errors red-txt"></div>
@@ -499,7 +498,7 @@ function isNumberKey(evt)
 				   <div class="form-group col-smthumb-2">
 				      <div class="sm-thumb-btn" onclick="openUploadWindow(this);">
 				         <div class="thumb-img">
-				            <img src="<spring:eval expression="@propertyConfigurer.getProperty('fda.imgDisplaydPath')" />questionnaire/${fn:escapeXml(questionsBo.questionReponseTypeBo.minImage)}" onerror="this.src='/fdahpStudyDesigner/images/icons/sm-thumb.jpg';" class="imageChoiceWidth" alt=""/>
+				            <img src="<spring:eval expression="@propertyConfigurer.getProperty('fda.imgDisplaydPath')" />questionnaire/${fn:escapeXml(questionsBo.questionReponseTypeBo.minImage)}" onerror="this.src='/studybuilder/images/icons/sm-thumb.jpg';" class="imageChoiceWidth" alt=""/>
 				         </div>
 				        
 				         <c:if test="${empty questionsBo.questionReponseTypeBo.minImage}"><div class="textLabelscaleMinImagePathId" >Upload</div></c:if>
@@ -518,7 +517,7 @@ function isNumberKey(evt)
 				   <div class="form-group col-smthumb-2">
 				      <div class="sm-thumb-btn" onclick="openUploadWindow(this);">
 				         <div class="thumb-img">
-				            <img src="<spring:eval expression="@propertyConfigurer.getProperty('fda.imgDisplaydPath')" />questionnaire/${fn:escapeXml(questionsBo.questionReponseTypeBo.maxImage)}" onerror="this.src='/fdahpStudyDesigner/images/icons/sm-thumb.jpg';" class="imageChoiceWidth" alt=""/>
+				            <img src="<spring:eval expression="@propertyConfigurer.getProperty('fda.imgDisplaydPath')" />questionnaire/${fn:escapeXml(questionsBo.questionReponseTypeBo.maxImage)}" onerror="this.src='/studybuilder/images/icons/sm-thumb.jpg';" class="imageChoiceWidth" alt=""/>
 				         </div>
 				        
 				         <c:if test="${empty questionsBo.questionReponseTypeBo.maxImage}"><div class="textLabelscaleMaxImagePathId" >Upload</div></c:if>
@@ -606,7 +605,7 @@ function isNumberKey(evt)
 				   <div class="form-group col-smthumb-2">
 				      <div class="sm-thumb-btn" onclick="openUploadWindow(this);">
 				         <div class="thumb-img">
-				            <img src="<spring:eval expression="@propertyConfigurer.getProperty('fda.imgDisplaydPath')" />questionnaire/${fn:escapeXml(questionsBo.questionReponseTypeBo.minImage)}" onerror="this.src='/fdahpStudyDesigner/images/icons/sm-thumb.jpg';" class="imageChoiceWidth" alt=""/>
+				            <img src="<spring:eval expression="@propertyConfigurer.getProperty('fda.imgDisplaydPath')" />questionnaire/${fn:escapeXml(questionsBo.questionReponseTypeBo.minImage)}" onerror="this.src='/studybuilder/images/icons/sm-thumb.jpg';" class="imageChoiceWidth" alt=""/>
 				         </div>
 				       
 				         <c:if test="${empty questionsBo.questionReponseTypeBo.minImage}"><div class="textLabelcontinuesScaleMinImagePathId" >Upload</div></c:if>
@@ -625,7 +624,7 @@ function isNumberKey(evt)
 				   <div class="form-group col-smthumb-2">
 				      <div class="sm-thumb-btn" onclick="openUploadWindow(this);">
 				         <div class="thumb-img">
-				            <img src="<spring:eval expression="@propertyConfigurer.getProperty('fda.imgDisplaydPath')" />questionnaire/${fn:escapeXml(questionsBo.questionReponseTypeBo.maxImage)}" onerror="this.src='/fdahpStudyDesigner/images/icons/sm-thumb.jpg';" class="imageChoiceWidth" alt=""/>
+				            <img src="<spring:eval expression="@propertyConfigurer.getProperty('fda.imgDisplaydPath')" />questionnaire/${fn:escapeXml(questionsBo.questionReponseTypeBo.maxImage)}" onerror="this.src='/studybuilder/images/icons/sm-thumb.jpg';" class="imageChoiceWidth" alt=""/>
 				         </div>
 				       
 				         <c:if test="${empty questionsBo.questionReponseTypeBo.maxImage}"><div class="textLabelcontinuesScaleMaxImagePathId" >Upload</div></c:if>
@@ -1331,7 +1330,7 @@ function isNumberKey(evt)
 						      <div class="form-group">
 						         <div class="sm-thumb-btn" onclick="openUploadWindow(this);">
 						            <div class="thumb-img">
-						            <img src="<spring:eval expression="@propertyConfigurer.getProperty('fda.imgDisplaydPath')" />questionnaire/${fn:escapeXml(questionResponseSubType.image)}" onerror="this.src='/fdahpStudyDesigner/images/icons/sm-thumb.jpg';" class="imageChoiceWidth"/>
+						            <img src="<spring:eval expression="@propertyConfigurer.getProperty('fda.imgDisplaydPath')" />questionnaire/${fn:escapeXml(questionResponseSubType.image)}" onerror="this.src='/studybuilder/images/icons/sm-thumb.jpg';" class="imageChoiceWidth"/>
 						            </div>
 						            <div class="textLabelimagePathId${subtype.index}">Change</div>
 						         </div>
@@ -1344,7 +1343,7 @@ function isNumberKey(evt)
 						      <div class="form-group">
 						         <div class="sm-thumb-btn" onclick="openUploadWindow(this);">
 						            <div class="thumb-img">
-						            <img src="<spring:eval expression="@propertyConfigurer.getProperty('fda.imgDisplaydPath')" />questionnaire/${fn:escapeXml(questionResponseSubType.selectedImage)}" onerror="this.src='/fdahpStudyDesigner/images/icons/sm-thumb.jpg';" class="imageChoiceWidth"/>
+						            <img src="<spring:eval expression="@propertyConfigurer.getProperty('fda.imgDisplaydPath')" />questionnaire/${fn:escapeXml(questionResponseSubType.selectedImage)}" onerror="this.src='/studybuilder/images/icons/sm-thumb.jpg';" class="imageChoiceWidth"/>
 						            </div>
 						            <div class="textLabelselectImagePathId${subtype.index}">Change</div>
 						         </div>
@@ -1379,7 +1378,7 @@ function isNumberKey(evt)
 					      <div class="form-group">
 					         <div class="sm-thumb-btn" onclick="openUploadWindow(this);">
 					            <div class="thumb-img">
-					            <img src="<spring:eval expression="@propertyConfigurer.getProperty('fda.imgDisplaydPath')" />questionnaire/${fn:escapeXml(questionsBo.questionResponseSubTypeList[0].image)}" onerror="this.src='/fdahpStudyDesigner/images/icons/sm-thumb.jpg';" class="imageChoiceWidth"/>
+					            <img src="<spring:eval expression="@propertyConfigurer.getProperty('fda.imgDisplaydPath')" />questionnaire/${fn:escapeXml(questionsBo.questionResponseSubTypeList[0].image)}" onerror="this.src='/studybuilder/images/icons/sm-thumb.jpg';" class="imageChoiceWidth"/>
 					            </div>
 					            <c:if test="${empty questionsBo.questionResponseSubTypeList[0].image}"><div class="textLabelimagePathId0">Upload</div></c:if>
 					            <c:if test="${not empty questionsBo.questionResponseSubTypeList[0].image}"><div class="textLabelimagePathId0">Change</div></c:if>
@@ -1393,7 +1392,7 @@ function isNumberKey(evt)
 					      <div class="form-group">
 					         <div class="sm-thumb-btn" onclick="openUploadWindow(this);">
 					            <div class="thumb-img">
-					            <img src="<spring:eval expression="@propertyConfigurer.getProperty('fda.imgDisplaydPath')" />questionnaire/${fn:escapeXml(questionsBo.questionResponseSubTypeList[0].selectedImage)}" onerror="this.src='/fdahpStudyDesigner/images/icons/sm-thumb.jpg';" class="imageChoiceWidth"/>
+					            <img src="<spring:eval expression="@propertyConfigurer.getProperty('fda.imgDisplaydPath')" />questionnaire/${fn:escapeXml(questionsBo.questionResponseSubTypeList[0].selectedImage)}" onerror="this.src='/studybuilder/images/icons/sm-thumb.jpg';" class="imageChoiceWidth"/>
 					            </div>
 					            <c:if test="${empty questionsBo.questionResponseSubTypeList[0].selectedImage}"><div class="textLabelselectImagePathId0">Upload</div></c:if>
 					            <c:if test="${not empty questionsBo.questionResponseSubTypeList[0].selectedImage}"><div class="textLabelselectImagePathId0">Change</div></c:if>
@@ -1426,7 +1425,7 @@ function isNumberKey(evt)
 					      <div class="form-group">
 					         <div class="sm-thumb-btn" onclick="openUploadWindow(this);">
 					            <div class="thumb-img">
-					             <img src="<spring:eval expression="@propertyConfigurer.getProperty('fda.imgDisplaydPath')" />questionnaire/${fn:escapeXml(questionsBo.questionResponseSubTypeList[1].image)}" onerror="this.src='/fdahpStudyDesigner/images/icons/sm-thumb.jpg';" class="imageChoiceWidth"/>
+					             <img src="<spring:eval expression="@propertyConfigurer.getProperty('fda.imgDisplaydPath')" />questionnaire/${fn:escapeXml(questionsBo.questionResponseSubTypeList[1].image)}" onerror="this.src='/studybuilder/images/icons/sm-thumb.jpg';" class="imageChoiceWidth"/>
 					            </div>
 					            <c:if test="${empty questionsBo.questionResponseSubTypeList[1].image}"><div class="textLabelimagePathId1">Upload</div></c:if>
 					            <c:if test="${not empty questionsBo.questionResponseSubTypeList[1].image}"><div class="textLabelimagePathId1">Change</div></c:if>
@@ -1440,7 +1439,7 @@ function isNumberKey(evt)
 					      <div class="form-group">
 					         <div class="sm-thumb-btn" onclick="openUploadWindow(this);">
 					            <div class="thumb-img">
-					            <img src="<spring:eval expression="@propertyConfigurer.getProperty('fda.imgDisplaydPath')" />questionnaire/${fn:escapeXml(questionsBo.questionResponseSubTypeList[1].selectedImage)}" onerror="this.src='/fdahpStudyDesigner/images/icons/sm-thumb.jpg';" class="imageChoiceWidth"/>
+					            <img src="<spring:eval expression="@propertyConfigurer.getProperty('fda.imgDisplaydPath')" />questionnaire/${fn:escapeXml(questionsBo.questionResponseSubTypeList[1].selectedImage)}" onerror="this.src='/studybuilder/images/icons/sm-thumb.jpg';" class="imageChoiceWidth"/>
 					            </div>
 					            <c:if test="${empty questionsBo.questionResponseSubTypeList[1].selectedImage}"><div class="textLabelselectImagePathId1">Upload</div></c:if>
 					            <c:if test="${not empty questionsBo.questionResponseSubTypeList[1].selectedImage}"><div class="textLabelselectImagePathId1">Change</div></c:if>
@@ -1724,7 +1723,7 @@ $(document).ready(function(){
 		    					 $("#doneId").attr("disabled",false);
 		    					 bootbox.confirm({
 		    							closeButton: false,
-		    							message : "This question provides an Anchor Date response element, but has been marked Skippable. Are you sure you wish to proceed?",	
+		    							message : "This question provides an anchor date response element, but has been marked Skippable. Are you sure you wish to proceed?",	
 		    						    buttons: {
 		    						        'cancel': {
 		    						            label: 'Cancel',
@@ -2991,7 +2990,7 @@ function saveQuestionStepQuestionnaire(item,callback){
 		
 		var data = JSON.stringify(questionsBo);
 		$.ajax({ 
-	         url: "/fdahpStudyDesigner/adminStudies/saveQuestion.do?_S=${param._S}",
+	         url: "/studybuilder/adminStudies/saveQuestion.do?_S=${param._S}",
 	          type: "POST",
 	          datatype: "json",
 	          data: formData,
@@ -3079,7 +3078,7 @@ function goToBackPage(item){
 			    callback: function(result) {
 			        if (result) {
 			        	var a = document.createElement('a');
-			        	a.href = "/fdahpStudyDesigner/adminStudies/formStep.do?_S=${param._S}";
+			        	a.href = "/studybuilder/adminStudies/formStep.do?_S=${param._S}";
 			        	document.body.appendChild(a).click();
 			        }else{
 			        	$(item).prop('disabled', false);
@@ -3089,7 +3088,7 @@ function goToBackPage(item){
 	</c:if>
 	<c:if test="${actionTypeForFormStep eq 'view'}">
 		var a = document.createElement('a');
-		a.href = "/fdahpStudyDesigner/adminStudies/formStep.do?_S=${param._S}";
+		a.href = "/studybuilder/adminStudies/formStep.do?_S=${param._S}";
 		document.body.appendChild(a).click();
 	</c:if>
 }
@@ -3378,7 +3377,7 @@ function validateStatsShorTitle(event,callback){
          $("#statShortNameId").parent().find(".help-block").empty();
  		if(prev_short_title !=short_title){
  			$.ajax({
-                 url: "/fdahpStudyDesigner/adminStudies/validateStatsShortName.do?_S=${param._S}",
+                 url: "/studybuilder/adminStudies/validateStatsShortName.do?_S=${param._S}",
                  type: "POST",
                  datatype: "json",
                  data: {
@@ -3433,7 +3432,7 @@ function validateTheQuestionshortTitle(item,callback){
         $(thisAttr).parent().find(".help-block").empty();
  		if(existedKey !=shortTitle){
  			$.ajax({
-                 url: "/fdahpStudyDesigner/adminStudies/validateQuestionKey.do?_S=${param._S}",
+                 url: "/studybuilder/adminStudies/validateQuestionKey.do?_S=${param._S}",
                  type: "POST",
                  datatype: "json",
                  data: {
@@ -3665,7 +3664,7 @@ function validateAnchorDateText(item,callback){
  			$(thisAttr).parent().removeClass("has-danger").removeClass("has-error");
  	        $(thisAttr).parent().find(".help-block").empty();
  	 			$.ajax({
- 	                 url: "/fdahpStudyDesigner/adminStudies/validateAnchorDateName.do?_S=${param._S}",
+ 	                 url: "/studybuilder/adminStudies/validateAnchorDateName.do?_S=${param._S}",
  	                 type: "POST",
  	                 datatype: "json",
  	                 data: {

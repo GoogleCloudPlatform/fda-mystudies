@@ -1,5 +1,5 @@
 /*
- * Copyright Â© 2017-2018 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors.
+ * Copyright © 2017-2018 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors.
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction, including
  * without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies
@@ -267,6 +267,14 @@ public class LoginController {
     ModelMap map = new ModelMap();
     logger.info("LoginController - privacyPolicy() - Ends");
     return new ModelAndView("privacypolicy", map);
+  }
+
+  @RequestMapping("/terms.do")
+  public ModelAndView termsAndConditions() {
+    logger.info("LoginController - termsAndConditions() - Starts");
+    ModelMap map = new ModelMap();
+    logger.info("LoginController - termsAndConditions() - Ends");
+    return new ModelAndView("termsAndCondition", map);
   }
 
   @RequestMapping("/validateSecurityToken.do")

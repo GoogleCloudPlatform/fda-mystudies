@@ -1,5 +1,5 @@
 /*
- * Copyright Â© 2017-2018 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors.
+ * Copyright © 2017-2018 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors.
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction, including
  * without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies
@@ -41,14 +41,6 @@ public class EmailNotification {
       List<String> bccMailList) {
 
     Map<String, String> propMap = FdahpStudyDesignerUtil.getAppProperties();
-    logger.info(
-        "EmailNotification - Starts: sendLinkToEmail() - Input arg are ServletContext ,  Email = "
-            + toMail
-            + " Subject = "
-            + propMap.get(subjectProprtyName)
-            + " contents ="
-            + content
-            + " : ");
     boolean sentMail = false;
     try {
       Mail mail = new Mail();
@@ -91,14 +83,6 @@ public class EmailNotification {
         for (String mailId : toMailList) {
           mailId = mailId.trim();
           toMailListNew.add(mailId.toLowerCase());
-          logger.info(
-              "EmailNotification - Starts: sendEmailNotificationToMany() - Input arg are ServletContext ,  Email = "
-                  + mailId
-                  + " Subject = "
-                  + propMap.get(subjectProprtyName)
-                  + " contents ="
-                  + content
-                  + " : ");
         }
         mail.setToemail(StringUtils.join(toMailListNew, ','));
       }
@@ -131,14 +115,6 @@ public class EmailNotification {
       List<String> bccMailList,
       String attachmentPath) {
     Map<String, String> propMap = FdahpStudyDesignerUtil.getAppProperties();
-    logger.info(
-        "EmailNotification - Starts: sendLinkToEmail() - Input arg are ServletContext ,  Email = "
-            + toMail
-            + " Subject = "
-            + propMap.get(subjectProprtyName)
-            + " contents ="
-            + content
-            + " : ");
     boolean sentMail = false;
     try {
       Mail mail = new Mail();

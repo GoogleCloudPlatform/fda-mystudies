@@ -11,7 +11,6 @@ import com.google.cloud.healthcare.fdamystudies.bean.ParticipantStudyInformation
 import com.google.cloud.healthcare.fdamystudies.utils.ProcessResponseException;
 
 public interface ParticipantStudyInfoService {
-  public ParticipantStudyInformation getParticipantStudyInfo(
-      String orgId, String applicationId, String studyId, String participantId)
+  ParticipantStudyInformation getParticipantStudyInfo(String studyId, String participantId)
       throws ProcessResponseException;
 }

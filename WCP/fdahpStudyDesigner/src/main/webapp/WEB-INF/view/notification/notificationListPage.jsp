@@ -15,7 +15,7 @@
          <!-- widgets section-->        
          <div class="col-sm-12 col-md-12 col-lg-12 p-none">
             <div class="black-lg-f">
-                Manage Gateway Notifications
+                Manage App-level Notifications
             </div>          
             <div class="dis-line pull-right ml-md">
              	<c:if test="${fn:contains(sessionObject.userPermissions,'ROLE_MANAGE_APP_WIDE_NOTIFICATION_EDIT')}">
@@ -65,13 +65,13 @@
         </div>
   </div>
 </div>
-<form:form action="/fdahpStudyDesigner/adminNotificationEdit/getNotificationToEdit.do" id="getNotificationEditPage" name="getNotificationEditPage" method="post">
+<form:form action="/studybuilder/adminNotificationEdit/getNotificationToEdit.do" id="getNotificationEditPage" name="getNotificationEditPage" method="post">
 		<input type="hidden" id="notificationId" name="notificationId">
 		<input type="hidden" id="notificationText" name="notificationText">
 		<input type="hidden" id="actionType" name="actionType">
 		<input type="hidden" name="chkRefreshflag" value="y">
 </form:form>
-<form:form action="/fdahpStudyDesigner/adminNotificationView/getNotificationToView.do" id="getNotificationViewPage" name="getNotificationViewPage" method="post">
+<form:form action="/studybuilder/adminNotificationView/getNotificationToView.do" id="getNotificationViewPage" name="getNotificationViewPage" method="post">
 		<input type="hidden" id="notificationIdToView" name="notificationId">
 		<input type="hidden" id="actionTypeToView" name="actionType">
 		<input type="hidden" name="chkRefreshflag" value="y">

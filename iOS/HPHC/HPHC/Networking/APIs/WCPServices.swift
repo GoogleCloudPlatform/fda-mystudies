@@ -1,4 +1,4 @@
-// License Agreement for FDA My Studies
+// License Agreement for FDA MyStudies
 // Copyright © 2017-2019 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors.
 // Copyright 2020 Google LLC
 // Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated
@@ -271,10 +271,10 @@ class WCPServices: NSObject {
     self.delegate = delegate
     let method = WCPMethods.contactUs.method
     let params = [
-      kFeedbackBody: ContactUsFeilds.message,
-      kFeedbackSubject: ContactUsFeilds.subject,
-      kContactusEmail: ContactUsFeilds.email,
-      kContactusFirstname: ContactUsFeilds.firstName,
+      kFeedbackBody: ContactUsFields.message,
+      kFeedbackSubject: ContactUsFields.subject,
+      kContactusEmail: ContactUsFields.email,
+      kContactusFirstname: ContactUsFields.firstName,
     ]
     self.sendRequestWith(method: method, params: params, headers: nil)
   }

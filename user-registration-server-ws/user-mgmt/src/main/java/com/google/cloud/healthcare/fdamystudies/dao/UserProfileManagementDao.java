@@ -8,7 +8,7 @@
 
 package com.google.cloud.healthcare.fdamystudies.dao;
 
-import com.google.cloud.healthcare.fdamystudies.beans.DeactivateAcctBean;
+import java.util.List;
 import com.google.cloud.healthcare.fdamystudies.beans.ErrorBean;
 import com.google.cloud.healthcare.fdamystudies.model.AppInfoDetailsBO;
 import com.google.cloud.healthcare.fdamystudies.model.AuthInfoBO;
@@ -36,6 +36,5 @@ public interface UserProfileManagementDao {
 
   public UserDetailsBO getParticipantDetails(String id);
 
-  public boolean deActivateAcct(
-      String userId, DeactivateAcctBean deactivateBean, Integer userDetailsId);
+  public boolean deActivateAcct(String userId, List<String> deleteData, Integer userDetailsId);
 }

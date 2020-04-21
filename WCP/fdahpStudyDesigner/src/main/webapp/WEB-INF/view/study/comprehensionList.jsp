@@ -22,7 +22,7 @@ function isNumber(evt) {
 </script>
 <!-- Start right Content here -->
 <!-- ============================================================== --> 
-<form:form action="/fdahpStudyDesigner/adminStudies/consentReview.do?_S=${param._S}" name="comprehensionInfoForm" id="comprehensionInfoForm" method="post">
+<form:form action="/studybuilder/adminStudies/consentReview.do?_S=${param._S}" name="comprehensionInfoForm" id="comprehensionInfoForm" method="post">
 <div class="col-sm-10 col-rc white-bg p-none">
    <!--  Start top tab section-->
 	<div class="right-content-head">        
@@ -47,7 +47,7 @@ function isNumber(evt) {
 	<!--  End  top tab section-->
 	<div class="right-content-head"> 
 	<div class="mb-xlg" id="displayTitleId">
-         <div class="gray-xs-f mb-xs">Do you need a Comprehension Test for your study? <span class="ct_panel" id="addHelpNote"><small>(Please save to continue)</small></span></div>
+         <div class="gray-xs-f mb-xs">Add a comprehension test? <span class="ct_panel" id="addHelpNote"><small>(Please save to continue)</small></span></div>
          <div class="form-group col-md-5 p-none">
 			   <span class="radio radio-info radio-inline p-45">
 			  	 <input type="radio" id="comprehensionTestYes" value="Yes" name="needComprehensionTest" ${consentBo.needComprehensionTest eq 'Yes' ? 'checked' : ''}>
@@ -113,7 +113,7 @@ function isNumber(evt) {
 	<input type="hidden" id="studyId" name="studyId" value="${studyId}">
 </c:if>
 </form:form>
-<form:form action="/fdahpStudyDesigner/adminStudies/comprehensionQuestionPage.do?_S=${param._S}" name="comprehenstionQuestionForm" id="comprehenstionQuestionForm" method="post">
+<form:form action="/studybuilder/adminStudies/comprehensionQuestionPage.do?_S=${param._S}" name="comprehenstionQuestionForm" id="comprehenstionQuestionForm" method="post">
 	<input type="hidden" name="comprehensionQuestionId" id="comprehensionQuestionId" value="">
 	<input type="hidden" name="actionType" id="actionType">
 	<input type="hidden" name="studyId" id="studyId" value="${studyId}" />
@@ -203,7 +203,7 @@ $(document).ready(function(){
 	    if(oldOrderNumber !== undefined && oldOrderNumber != null && oldOrderNumber != "" 
 			&& newOrderNumber !== undefined && newOrderNumber != null && newOrderNumber != ""){
 	    	$.ajax({
-				url: "/fdahpStudyDesigner/adminStudies/reOrderComprehensionTestQuestion.do?_S=${param._S}",
+				url: "/studybuilder/adminStudies/reOrderComprehensionTestQuestion.do?_S=${param._S}",
 				type: "POST",
 				datatype: "json",
 				data:{
@@ -269,7 +269,7 @@ function deleteComprehensionQuestion(questionId){
 			var studyId = $("#studyId").val();
 	    	if(questionId != '' && questionId != null && typeof questionId!= 'undefined'){
 	    		$.ajax({
-	    			url: "/fdahpStudyDesigner/adminStudies/deleteComprehensionQuestion.do?_S=${param._S}",
+	    			url: "/studybuilder/adminStudies/deleteComprehensionQuestion.do?_S=${param._S}",
 	    			type: "POST",
 	    			datatype: "json",
 	    			data:{
@@ -300,7 +300,7 @@ function deleteComprehensionQuestion(questionId){
 }
 function reloadData(studyId){
 	$.ajax({
-		url: "/fdahpStudyDesigner/adminStudies/reloadComprehensionQuestionListPage.do?_S=${param._S}",
+		url: "/studybuilder/adminStudies/reloadComprehensionQuestionListPage.do?_S=${param._S}",
 	    type: "POST",
 	    datatype: "json",
 	    data: {
@@ -428,7 +428,7 @@ function saveConsent(type){
 		if(minScoreFlag){
 			var data = JSON.stringify(consentInfo);
 			$.ajax({ 
-		          url: "/fdahpStudyDesigner/adminStudies/saveConsentReviewAndEConsentInfo.do?_S=${param._S}",
+		          url: "/studybuilder/adminStudies/saveConsentReviewAndEConsentInfo.do?_S=${param._S}",
 		          type: "POST",
 		          datatype: "json",
 		          data: {consentInfo:data},
@@ -445,7 +445,7 @@ function saveConsent(type){
 						$("#addQuestionId").attr("disabled",false);
 						$("#addHelpNote").hide();
 						if(type != "save"){
-							document.comprehensionInfoForm.action="/fdahpStudyDesigner/adminStudies/comprehensionTestMarkAsCompleted.do?_S=${param._S}";
+							document.comprehensionInfoForm.action="/studybuilder/adminStudies/comprehensionTestMarkAsCompleted.do?_S=${param._S}";
 							document.comprehensionInfoForm.submit();
 						}else{
 							$("body").removeClass("loading");

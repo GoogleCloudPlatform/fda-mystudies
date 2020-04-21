@@ -27,7 +27,6 @@ import com.google.cloud.healthcare.fdamystudies.beans.UpdateAccountInfoResponseB
 import com.google.cloud.healthcare.fdamystudies.beans.VerifyCodeResponse;
 import com.google.cloud.healthcare.fdamystudies.exceptions.InvalidEmailCodeException;
 import com.google.cloud.healthcare.fdamystudies.exceptions.InvalidUserIdException;
-import com.google.cloud.healthcare.fdamystudies.exceptions.SystemException;
 import com.google.cloud.healthcare.fdamystudies.service.CommonService;
 import com.google.cloud.healthcare.fdamystudies.service.FdaEaUserDetailsService;
 import com.google.cloud.healthcare.fdamystudies.util.AppConstants;
@@ -53,15 +52,14 @@ public class VerifyEmailIdController {
       @RequestHeader("clientToken") String clientToken,
       @RequestHeader("accessToken") String accessToken,
       @Context HttpServletResponse response) {
-
     logger.info("VerifyEmailIdController verifyEmailId() - starts");
     VerifyEmailIdResponse verifyEmailIdResponse = null;
+    String verificationCode = "";
 
-    if ((clientToken.length() == 0 || StringUtils.isEmpty(clientToken))
-        || (accessToken.length() == 0 || StringUtils.isEmpty(accessToken))
-        || (userId.length() == 0 || StringUtils.isEmpty(userId))
-        || (verificationForm.getCode() == null
-            && StringUtils.isEmpty(verificationForm.getCode()))) {
+     if (StringUtils.isEmpty(clientToken)
+        || StringUtils.isEmpty(accessToken)
+        || StringUtils.isEmpty(userId)
+        || StringUtils.isEmpty(verificationForm.getCode())) {
 
       MyStudiesUserRegUtil.getFailureResponse(
           400 + "",
@@ -76,148 +74,99 @@ public class VerifyEmailIdController {
       return new ResponseEntity<>(verifyEmailIdResponse, HttpStatus.BAD_REQUEST);
     }
     try {
-      Integer verificationResponse =
-          userManagementUtil.validateAccessToken(userId, accessToken, clientToken);
-      if (verificationResponse != null && verificationResponse == 1) {
-        try {
-          VerifyCodeResponse serviceResult =
-              userDetailsService.verifyCode(verificationForm.getCode(), userId);
+      verificationCode = verificationForm.getCode().trim(); // trim the surrounding whitespace.
+      VerifyCodeResponse serviceResult = userDetailsService.verifyCode(verificationCode, userId);
 
-          if (serviceResult != null && Boolean.TRUE.equals(serviceResult.getIsCodeVerified())) {
-            UpdateAccountInfo accountStatus = new UpdateAccountInfo();
-            accountStatus.setEmailVerified(true);
-            UpdateAccountInfoResponseBean authResponse =
-                userManagementUtil.updateUserInfoInAuthServer(
-                    accountStatus, userId, accessToken, clientToken);
+      if (serviceResult != null && Boolean.TRUE.equals(serviceResult.getIsCodeVerified())) {
+        UpdateAccountInfo accountStatus = new UpdateAccountInfo();
+        accountStatus.setEmailVerified(true);
+        UpdateAccountInfoResponseBean authResponse =
+            userManagementUtil.updateUserInfoInAuthServer(
+                accountStatus, userId, accessToken, clientToken);
 
-            if (authResponse != null && "200".equals(authResponse.getCode())) {
-              MyStudiesUserRegUtil.getFailureResponse(
-                  MyStudiesUserRegUtil.ErrorCodes.STATUS_200.getValue(),
-                  MyStudiesUserRegUtil.ErrorCodes.SUCCESS.getValue(),
-                  MyStudiesUserRegUtil.ErrorCodes.SUCCESS.getValue(),
-                  response);
-              verifyEmailIdResponse = new VerifyEmailIdResponse();
-              verifyEmailIdResponse.setCode(ErrorCode.EC_200.code());
-              verifyEmailIdResponse.setMessage(ErrorCode.EC_200.errorMessage());
-              verifyEmailIdResponse.setVerified(serviceResult.getIsCodeVerified());
-              logger.info(AppConstants.VERIFY_EMAILID_CONTROLLER_ENDS_MESSAGE);
-              commonService.createActivityLog(
-                  userId,
-                  "User Verification",
-                  "User verified for email " + serviceResult.getEmailId() + ".");
-              return new ResponseEntity<>(verifyEmailIdResponse, HttpStatus.OK);
-
-            } else if (authResponse != null && "400".equals(authResponse.getHttpStatusCode())) {
-              if (AppConstants.INVALID_CLIENTID_SECRETKEY.equals(authResponse.getMessage())) {
-                MyStudiesUserRegUtil.getFailureResponse(
-                    authResponse.getCode(),
-                    MyStudiesUserRegUtil.ErrorCodes.INVALID_INPUT.getValue(),
-                    authResponse.getMessage(),
-                    response);
-                verifyEmailIdResponse = new VerifyEmailIdResponse();
-                verifyEmailIdResponse.setCode(HttpStatus.UNAUTHORIZED.value());
-                verifyEmailIdResponse.setMessage(
-                    MyStudiesUserRegUtil.ErrorCodes.INVALID_INPUT.getValue());
-                logger.info(AppConstants.VERIFY_EMAILID_CONTROLLER_ENDS_MESSAGE);
-                return new ResponseEntity<>(authResponse, HttpStatus.UNAUTHORIZED);
-              } else {
-                MyStudiesUserRegUtil.getFailureResponse(
-                    authResponse.getCode(),
-                    MyStudiesUserRegUtil.ErrorCodes.INVALID_INPUT.getValue(),
-                    authResponse.getMessage(),
-                    response);
-                verifyEmailIdResponse = new VerifyEmailIdResponse();
-                verifyEmailIdResponse.setCode(HttpStatus.BAD_REQUEST.value());
-                verifyEmailIdResponse.setMessage(
-                    MyStudiesUserRegUtil.ErrorCodes.CONNECTION_ERROR_MSG.getValue());
-                logger.info(AppConstants.VERIFY_EMAILID_CONTROLLER_ENDS_MESSAGE);
-                return new ResponseEntity<>(authResponse, HttpStatus.BAD_REQUEST);
-              }
-            } else {
-              MyStudiesUserRegUtil.getFailureResponse(
-                  500 + "",
-                  MyStudiesUserRegUtil.ErrorCodes.UNKNOWN.getValue(),
-                  MyStudiesUserRegUtil.ErrorCodes.CONNECTION_ERROR_MSG.getValue(),
-                  response);
-
-              verifyEmailIdResponse = new VerifyEmailIdResponse();
-              verifyEmailIdResponse.setCode(HttpStatus.INTERNAL_SERVER_ERROR.value());
-              verifyEmailIdResponse.setMessage(
-                  MyStudiesUserRegUtil.ErrorCodes.CONNECTION_ERROR_MSG.getValue());
-              logger.info(AppConstants.VERIFY_EMAILID_CONTROLLER_ENDS_MESSAGE);
-              return new ResponseEntity<>(authResponse, HttpStatus.INTERNAL_SERVER_ERROR);
-            }
-          } else throw new InvalidUserIdException(); // InvalidEmailCodeException
-        } catch (InvalidUserIdException e) {
+        if (authResponse != null && "200".equals(authResponse.getCode())) {
           MyStudiesUserRegUtil.getFailureResponse(
-              400 + "",
-              MyStudiesUserRegUtil.ErrorCodes.INVALID_INPUT.getValue(),
-              MyStudiesUserRegUtil.ErrorCodes.INVALID_USER_ID.getValue(),
+              MyStudiesUserRegUtil.ErrorCodes.STATUS_200.getValue(),
+              MyStudiesUserRegUtil.ErrorCodes.SUCCESS.getValue(),
+              MyStudiesUserRegUtil.ErrorCodes.SUCCESS.getValue(),
+              response);
+          verifyEmailIdResponse = new VerifyEmailIdResponse();
+          verifyEmailIdResponse.setCode(ErrorCode.EC_200.code());
+          verifyEmailIdResponse.setMessage(ErrorCode.EC_200.errorMessage());
+          verifyEmailIdResponse.setVerified(serviceResult.getIsCodeVerified());
+          logger.info(AppConstants.VERIFY_EMAILID_CONTROLLER_ENDS_MESSAGE);
+          commonService.createActivityLog(
+              userId,
+              "User Verification",
+              "User verified for email " + serviceResult.getEmailId() + ".");
+          return new ResponseEntity<>(verifyEmailIdResponse, HttpStatus.OK);
+
+        } else if (authResponse != null && "400".equals(authResponse.getHttpStatusCode())) {
+          if (AppConstants.INVALID_CLIENTID_SECRETKEY.equals(authResponse.getMessage())) {
+            MyStudiesUserRegUtil.getFailureResponse(
+                authResponse.getCode(),
+                MyStudiesUserRegUtil.ErrorCodes.INVALID_INPUT.getValue(),
+                authResponse.getMessage(),
+                response);
+            verifyEmailIdResponse = new VerifyEmailIdResponse();
+            verifyEmailIdResponse.setCode(HttpStatus.UNAUTHORIZED.value());
+            verifyEmailIdResponse.setMessage(
+                MyStudiesUserRegUtil.ErrorCodes.INVALID_INPUT.getValue());
+            logger.info(AppConstants.VERIFY_EMAILID_CONTROLLER_ENDS_MESSAGE);
+            return new ResponseEntity<>(authResponse, HttpStatus.UNAUTHORIZED);
+          } else {
+            MyStudiesUserRegUtil.getFailureResponse(
+                authResponse.getCode(),
+                MyStudiesUserRegUtil.ErrorCodes.INVALID_INPUT.getValue(),
+                authResponse.getMessage(),
+                response);
+            verifyEmailIdResponse = new VerifyEmailIdResponse();
+            verifyEmailIdResponse.setCode(HttpStatus.BAD_REQUEST.value());
+            verifyEmailIdResponse.setMessage(
+                MyStudiesUserRegUtil.ErrorCodes.CONNECTION_ERROR_MSG.getValue());
+            logger.info(AppConstants.VERIFY_EMAILID_CONTROLLER_ENDS_MESSAGE);
+            return new ResponseEntity<>(authResponse, HttpStatus.BAD_REQUEST);
+          }
+        } else {
+          MyStudiesUserRegUtil.getFailureResponse(
+              500 + "",
+              MyStudiesUserRegUtil.ErrorCodes.UNKNOWN.getValue(),
+              MyStudiesUserRegUtil.ErrorCodes.CONNECTION_ERROR_MSG.getValue(),
               response);
 
           verifyEmailIdResponse = new VerifyEmailIdResponse();
-          verifyEmailIdResponse.setCode(HttpStatus.BAD_REQUEST.value());
+          verifyEmailIdResponse.setCode(HttpStatus.INTERNAL_SERVER_ERROR.value());
           verifyEmailIdResponse.setMessage(
-              MyStudiesUserRegUtil.ErrorCodes.INVALID_USER_ID.getValue());
-          logger.info(AppConstants.VERIFY_EMAILID_CONTROLLER_ENDS_MESSAGE + ": ", e);
-          return new ResponseEntity<>(verifyEmailIdResponse, HttpStatus.BAD_REQUEST);
-        } catch (InvalidEmailCodeException e) {
-          MyStudiesUserRegUtil.getFailureResponse(
-              400 + "",
-              MyStudiesUserRegUtil.ErrorCodes.INVALID_INPUT.getValue(),
-              MyStudiesUserRegUtil.ErrorCodes.INVALID_EMAIL_CODE.getValue(),
-              response);
-
-          verifyEmailIdResponse = new VerifyEmailIdResponse();
-          verifyEmailIdResponse.setCode(HttpStatus.BAD_REQUEST.value());
-          verifyEmailIdResponse.setMessage(
-              MyStudiesUserRegUtil.ErrorCodes.INVALID_EMAIL_CODE.getValue());
-          logger.info(AppConstants.VERIFY_EMAILID_CONTROLLER_ENDS_MESSAGE + ": ", e);
-          return new ResponseEntity<>(verifyEmailIdResponse, HttpStatus.BAD_REQUEST);
+              MyStudiesUserRegUtil.ErrorCodes.CONNECTION_ERROR_MSG.getValue());
+          logger.info(AppConstants.VERIFY_EMAILID_CONTROLLER_ENDS_MESSAGE);
+          return new ResponseEntity<>(authResponse, HttpStatus.INTERNAL_SERVER_ERROR);
         }
-      } else if (verificationResponse != null && verificationResponse == 0) {
-        // prepare session expired response
-        MyStudiesUserRegUtil.getFailureResponse(
-            401 + "",
-            MyStudiesUserRegUtil.ErrorCodes.UNAUTHORIZED.getValue(),
-            MyStudiesUserRegUtil.ErrorCodes.SESSION_EXPIRED_MSG.getValue(),
-            response);
+      } else throw new InvalidUserIdException(); // InvalidEmailCodeException
+    } catch (InvalidUserIdException e) {
+      MyStudiesUserRegUtil.getFailureResponse(
+          400 + "",
+          MyStudiesUserRegUtil.ErrorCodes.INVALID_INPUT.getValue(),
+          MyStudiesUserRegUtil.ErrorCodes.INVALID_USER_ID.getValue(),
+          response);
 
-        verifyEmailIdResponse = new VerifyEmailIdResponse();
-        verifyEmailIdResponse.setCode(HttpStatus.UNAUTHORIZED.value());
-        verifyEmailIdResponse.setMessage(
-            MyStudiesUserRegUtil.ErrorCodes.SESSION_EXPIRED_MSG.getValue());
-        logger.info(AppConstants.VERIFY_EMAILID_CONTROLLER_ENDS_MESSAGE);
-        return new ResponseEntity<>(verifyEmailIdResponse, HttpStatus.UNAUTHORIZED);
-      } else if (verificationResponse != null && verificationResponse == 2) {
-        // prepare token invalid response
-        MyStudiesUserRegUtil.getFailureResponse(
-            401 + "",
-            MyStudiesUserRegUtil.ErrorCodes.UNAUTHORIZED.getValue(),
-            MyStudiesUserRegUtil.ErrorCodes.INVALID_ACCESS_TOKEN.getValue(),
-            response);
+      verifyEmailIdResponse = new VerifyEmailIdResponse();
+      verifyEmailIdResponse.setCode(HttpStatus.BAD_REQUEST.value());
+      verifyEmailIdResponse.setMessage(MyStudiesUserRegUtil.ErrorCodes.INVALID_USER_ID.getValue());
+      logger.error(AppConstants.VERIFY_EMAILID_CONTROLLER_ENDS_MESSAGE + ": ", e);
+      return new ResponseEntity<>(verifyEmailIdResponse, HttpStatus.BAD_REQUEST);
+    } catch (InvalidEmailCodeException e) {
+      MyStudiesUserRegUtil.getFailureResponse(
+          400 + "",
+          MyStudiesUserRegUtil.ErrorCodes.INVALID_INPUT.getValue(),
+          MyStudiesUserRegUtil.ErrorCodes.INVALID_EMAIL_CODE.getValue(),
+          response);
 
-        verifyEmailIdResponse = new VerifyEmailIdResponse();
-        verifyEmailIdResponse.setCode(HttpStatus.UNAUTHORIZED.value());
-        verifyEmailIdResponse.setMessage(
-            MyStudiesUserRegUtil.ErrorCodes.INVALID_ACCESS_TOKEN.getValue());
-        logger.info(AppConstants.VERIFY_EMAILID_CONTROLLER_ENDS_MESSAGE);
-        return new ResponseEntity<>(verifyEmailIdResponse, HttpStatus.UNAUTHORIZED);
-      } else if (verificationResponse != null && verificationResponse == 3) {
-        // prepare invalid clientId or secretKey
-        MyStudiesUserRegUtil.getFailureResponse(
-            401 + "",
-            MyStudiesUserRegUtil.ErrorCodes.INVALID_INPUT.getValue(),
-            MyStudiesUserRegUtil.ErrorCodes.INVALID_CLIENT_TOKEN.getValue(),
-            response);
-
-        verifyEmailIdResponse = new VerifyEmailIdResponse();
-        verifyEmailIdResponse.setCode(HttpStatus.UNAUTHORIZED.value());
-        verifyEmailIdResponse.setMessage(
-            MyStudiesUserRegUtil.ErrorCodes.INVALID_CLIENT_TOKEN.getValue());
-        logger.info(AppConstants.VERIFY_EMAILID_CONTROLLER_ENDS_MESSAGE);
-        return new ResponseEntity<>(verifyEmailIdResponse, HttpStatus.UNAUTHORIZED);
-      } else throw new SystemException();
+      verifyEmailIdResponse = new VerifyEmailIdResponse();
+      verifyEmailIdResponse.setCode(HttpStatus.BAD_REQUEST.value());
+      verifyEmailIdResponse.setMessage(
+          MyStudiesUserRegUtil.ErrorCodes.INVALID_EMAIL_CODE.getValue());
+      logger.error(AppConstants.VERIFY_EMAILID_CONTROLLER_ENDS_MESSAGE + ": ", e);
+      return new ResponseEntity<>(verifyEmailIdResponse, HttpStatus.BAD_REQUEST);
     } catch (Exception e) {
       // prepare system failure Response
       MyStudiesUserRegUtil.getFailureResponse(
@@ -231,7 +180,7 @@ public class VerifyEmailIdController {
       verifyEmailIdResponse.setMessage(
           MyStudiesUserRegUtil.ErrorCodes.CONNECTION_ERROR_MSG.getValue());
 
-      logger.info(AppConstants.VERIFY_EMAILID_CONTROLLER_ENDS_MESSAGE + ": ", e);
+      logger.error(AppConstants.VERIFY_EMAILID_CONTROLLER_ENDS_MESSAGE + ": ", e);
       return new ResponseEntity<>(verifyEmailIdResponse, HttpStatus.INTERNAL_SERVER_ERROR);
     }
   }

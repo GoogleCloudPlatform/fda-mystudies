@@ -1,6 +1,7 @@
-// License Agreement for FDA My Studies
-// Copyright © 2017-2019 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors. Permission is
-// hereby granted, free of charge, to any person obtaining a copy of this software and associated
+// License Agreement for FDA MyStudies
+// Copyright © 2017-2019 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors.
+// Copyright 2020 Google LLC
+// Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated
 // documentation files (the &quot;Software&quot;), to deal in the Software without restriction, including without
 // limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the
 // Software, and to permit persons to whom the Software is furnished to do so, subject to the following
@@ -77,12 +78,11 @@ enum Frequency: String {
     case .Monthly:
       return "Monthly"
     case .Scheduled:
-      return "As Scheduled"
-
+      return "Aperiodic"
     }
   }
-
 }
+
 enum ActivityState: String {
   case active
   case deleted
@@ -285,9 +285,7 @@ class Activity {
       }
 
       if self.startDate != nil
-        && (
-          self.schedulingType == .regular || self.anchorDate?.sourceType == "EnrollmentDate"
-        )
+        && (self.schedulingType == .regular || self.anchorDate?.sourceType == "EnrollmentDate")
       {
         self.calculateActivityRuns(studyId: self.studyId!)
       }
@@ -359,7 +357,8 @@ class Activity {
       // update start date
       var startDateStringEnrollment = Utilities.formatterShort?.string(from: enrollmentDate!)
       let startTimeEnrollment = "00:00:00"
-      startDateStringEnrollment = (startDateStringEnrollment ?? "") + " "
+      startDateStringEnrollment =
+        (startDateStringEnrollment ?? "") + " "
         + startTimeEnrollment
       enrollmentDate = Utilities.findDateFromString(
         dateString: startDateStringEnrollment ?? ""
@@ -370,14 +369,16 @@ class Activity {
 
       // update start date
       var startDateString = Utilities.formatterShort?.string(from: lifeTime.0!)
-      let startTime = (self.anchorDate?.startTime == nil)
+      let startTime =
+        (self.anchorDate?.startTime == nil)
         ? "00:00:00" : (self.anchorDate?.startTime)!
       startDateString = (startDateString ?? "") + " " + startTime
       let startdate = Utilities.findDateFromString(dateString: startDateString ?? "")
 
       // update end date
       var endDateString = Utilities.formatterShort?.string(from: lifeTime.1!)
-      let endTime = (self.anchorDate?.endTime == nil)
+      let endTime =
+        (self.anchorDate?.endTime == nil)
         ? "00:00:00" : (self.anchorDate?.endTime)!
       endDateString = (endDateString ?? "") + " " + endTime
       let endDate = Utilities.findDateFromString(dateString: endDateString ?? "")

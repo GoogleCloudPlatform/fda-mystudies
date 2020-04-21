@@ -66,8 +66,6 @@ import com.harvard.webservicemodule.apihelper.Responsemodel;
 import com.harvard.webservicemodule.events.RegistrationServerConsentConfigEvent;
 import com.harvard.webservicemodule.events.RegistrationServerEnrollmentConfigEvent;
 import com.harvard.webservicemodule.events.WCPConfigEvent;
-import com.itextpdf.text.Image;
-import com.itextpdf.text.pdf.PdfPCell;
 import org.researchstack.backbone.step.Step;
 import org.researchstack.backbone.task.OrderedTask;
 import org.researchstack.backbone.task.Task;
@@ -1061,20 +1059,6 @@ public class StandaloneActivity extends AppCompatActivity
         finish();
       }
     }
-  }
-
-  public PdfPCell getImage(Image image, int alignment) {
-    PdfPCell cell;
-    if (image != null) {
-      cell = new PdfPCell(image);
-    } else {
-      cell = new PdfPCell();
-    }
-    cell.setPadding(10);
-    cell.setHorizontalAlignment(alignment);
-    cell.setVerticalAlignment(PdfPCell.ALIGN_BOTTOM);
-    cell.setBorder(PdfPCell.NO_BORDER);
-    return cell;
   }
 
   private void setStudyList(boolean offline) {
