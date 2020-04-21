@@ -25,7 +25,9 @@ dependency "network" {
   config_path = "../../project.heroes-hat-dev-networks/networks"
 
   mock_outputs = {
-    private_network = "mock-network"
+    private_network = {
+      id = "projects/mock/global/networks/mock-network"
+    }
   }
 }
 

@@ -26,7 +26,7 @@ dependency "service_project_apps" {
 
   mock_outputs = {
     project_id     = "mock-apps-project"
-    project_number = "mock-apps-123"
+    project_number = "123"
   }
 }
 
@@ -35,7 +35,7 @@ dependency "service_project_data" {
 
   mock_outputs = {
     project_id     = "mock-data-project"
-    project_number = "mock-data-123"
+    project_number = "123"
   }
 }
 
