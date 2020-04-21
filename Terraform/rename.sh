@@ -35,6 +35,8 @@ cp -r ${SRC_BASE}-resp-firebase/firebase ${DST_BASE}-resp-firebase/
 
 # Phase 3
 cp -r ${SRC_BASE}-apps/apps ${DST_BASE}-apps/
+
+# Phase 4
 cp -r ${SRC_BASE}-apps/kubernetes ${DST_BASE}-apps/
 cp -r ${SRC_BASE}-data/iam ${DST_BASE}-data/
 
