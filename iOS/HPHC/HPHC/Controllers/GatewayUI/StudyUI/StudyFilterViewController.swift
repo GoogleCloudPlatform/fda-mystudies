@@ -245,7 +245,7 @@ extension AppDelegate {
   /// setter method to set the default filter options if none are selected.
   func setDefaultFilters(previousCollectionData: [[String]]) {
 
-    let resource = (User.currentUser.userType == .FDAUser) ? "AnonymousFilterData" : "FilterData"
+    let resource = (User.currentUser.userType == .FDAUser) ? "FilterData" : "AnonymousFilterData"
 
     let plistPath = Bundle.main.path(forResource: resource, ofType: ".plist", inDirectory: nil) ?? ""
     guard let filterData = NSMutableArray.init(contentsOfFile: plistPath) else { return }
