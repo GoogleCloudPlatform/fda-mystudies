@@ -16,15 +16,11 @@ dependency "apps" {
 }
 
 dependency "data" {
-  config_path = "../../project.heroes-hat-dev-data/data/"
-
-  mock_outputs = {
-    instance_name = "mock-db"
-  }
+  config_path  = "../../project.heroes-hat-dev-data/data/"
+  skip_outputs = true
 }
 
 inputs = {
-  sql_instance_name = dependency.data.outputs.instance_name
   my_studies_cluster = {
     name            = dependency.apps.outputs.gke_cluster.name
     location        = dependency.apps.outputs.gke_cluster.location
