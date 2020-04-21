@@ -71,7 +71,7 @@ class ConsentPdfViewerStepViewController: ORKStepViewController {
     webView.navigationDelegate = self
     webView.contentScaleFactor = 1.0
   }
-  
+
   override func viewDidAppear(_ animated: Bool) {
     super.viewDidAppear(animated)
     loadPDF()

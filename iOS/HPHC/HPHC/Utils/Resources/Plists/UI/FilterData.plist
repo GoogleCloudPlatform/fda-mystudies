@@ -3,54 +3,8 @@
 <plist version="1.0">
 <array>
 	<dict>
-		<key>isHeaderAvailable</key>
-		<string>YES</string>
-		<key>headerText</key>
-		<string>Study Status</string>
-		<key>studyData</key>
-		<array>
-			<dict>
-				<key>name</key>
-				<string>Active</string>
-				<key>isEnabled</key>
-				<true/>
-			</dict>
-			<dict>
-				<key>name</key>
-				<string>Closed</string>
-				<key>isEnabled</key>
-				<false/>
-			</dict>
-			<dict>
-				<key>name</key>
-				<string>Upcoming</string>
-				<key>isEnabled</key>
-				<true/>
-			</dict>
-			<dict>
-				<key>name</key>
-				<string>Paused</string>
-				<key>isEnabled</key>
-				<false/>
-			</dict>
-		</array>
-	</dict>
-	<dict>
-		<key>isHeaderAvailable</key>
-		<string>NO</string>
-		<key>headerText</key>
-		<string></string>
-		<key>studyData</key>
-		<array>
-			<dict>
-				<key>name</key>
-				<string>Bookmarked</string>
-				<key>isEnabled</key>
-				<false/>
-			</dict>
-		</array>
-	</dict>
-	<dict>
+		<key>type</key>
+		<string>participantStatus</string>
 		<key>isHeaderAvailable</key>
 		<string>YES</string>
 		<key>headerText</key>
@@ -90,6 +44,60 @@
 		</array>
 	</dict>
 	<dict>
+		<key>type</key>
+		<string>studyStatus</string>
+		<key>isHeaderAvailable</key>
+		<string>YES</string>
+		<key>headerText</key>
+		<string>Study Status</string>
+		<key>studyData</key>
+		<array>
+			<dict>
+				<key>name</key>
+				<string>Active</string>
+				<key>isEnabled</key>
+				<true/>
+			</dict>
+			<dict>
+				<key>name</key>
+				<string>Closed</string>
+				<key>isEnabled</key>
+				<false/>
+			</dict>
+			<dict>
+				<key>name</key>
+				<string>Upcoming</string>
+				<key>isEnabled</key>
+				<true/>
+			</dict>
+			<dict>
+				<key>name</key>
+				<string>Paused</string>
+				<key>isEnabled</key>
+				<false/>
+			</dict>
+		</array>
+	</dict>
+	<dict>
+		<key>type</key>
+		<string>bookmark</string>
+		<key>isHeaderAvailable</key>
+		<string>NO</string>
+		<key>headerText</key>
+		<string></string>
+		<key>studyData</key>
+		<array>
+			<dict>
+				<key>name</key>
+				<string>Show bookmarked studies only</string>
+				<key>isEnabled</key>
+				<false/>
+			</dict>
+		</array>
+	</dict>
+	<dict>
+		<key>type</key>
+		<string>category</string>
 		<key>isHeaderAvailable</key>
 		<string>YES</string>
 		<key>headerText</key>
@@ -144,18 +152,18 @@
 				<key>isEnabled</key>
 				<true/>
 			</dict>
-            <dict>
-                <key>name</key>
-                <string>Radiation-Emitting Products</string>
-                <key>isEnabled</key>
-                <true/>
-            </dict>
-            <dict>
-                <key>name</key>
-                <string>Tobacco Use</string>
-                <key>isEnabled</key>
-                <true/>
-            </dict>
+			<dict>
+				<key>name</key>
+				<string>Radiation-Emitting Products</string>
+				<key>isEnabled</key>
+				<true/>
+			</dict>
+			<dict>
+				<key>name</key>
+				<string>Tobacco Use</string>
+				<key>isEnabled</key>
+				<true/>
+			</dict>
 		</array>
 	</dict>
 </array>
