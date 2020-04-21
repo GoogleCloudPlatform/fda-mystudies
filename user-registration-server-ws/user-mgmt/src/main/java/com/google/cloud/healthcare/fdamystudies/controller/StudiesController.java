@@ -73,7 +73,9 @@ public class StudiesController {
           return new ResponseEntity<>(errorBean, HttpStatus.BAD_REQUEST);
         }
       } else {
-        return new ResponseEntity<>(errorBean, HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(
+            new ErrorBean(ErrorCode.EC_400.code(), ErrorCode.EC_400.errorMessage()),
+            HttpStatus.BAD_REQUEST);
       }
     } catch (Exception e) {
       logger.error("StudiesController - SendNotification() : error", e);
