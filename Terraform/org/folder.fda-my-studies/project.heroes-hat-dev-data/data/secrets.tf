@@ -26,38 +26,12 @@ resource "google_sql_user" "db_users" {
   project  = var.project_id
 }
 
-resource "google_secret_manager_secret" "db_passwords_secrets" {
-  provider = google-beta
-
-  for_each = toset(local.apps)
-
-  secret_id = "${each.key}-db-password"
-  project   = var.secrets_project_id
-
-  replication {
-    automatic = true
-  }
-}
-
-resource "google_secret_manager_secret" "db_users_secrets" {
-  provider = google-beta
-
-  for_each = toset(local.apps)
-
-  secret_id = "${each.key}-db-user"
-  project   = var.secrets_project_id
-
-  replication {
-    automatic = true
-  }
-}
-
 resource "google_secret_manager_secret_version" "db_passwords_secrets_values" {
   provider = google-beta
 
   for_each = toset(local.apps)
 
-  secret      = google_secret_manager_secret.db_passwords_secrets[each.key].id
+  secret      = "${each.key}-db-password"
   secret_data = random_password.db_passwords[each.key].result
 }
 
@@ -66,6 +40,6 @@ resource "google_secret_manager_secret_version" "db_users_secrets_values" {
 
   for_each = toset(local.apps)
 
-  secret      = google_secret_manager_secret.db_users_secrets[each.key].id
+  secret      = "${each.key}-db-user"
   secret_data = google_sql_user.db_users[each.key].name
 }

@@ -21,10 +21,20 @@ terraform {
   }
 }
 
+locals {
+  apps = [
+    "auth-server",
+    "response-server",
+    "study-designer",
+    "study-meta-data",
+    "user-registration",
+  ]
+}
+
 resource "google_secret_manager_secret" "secrets" {
   provider = google-beta
 
-  for_each = toset([
+  for_each = toset(concat([
     "my-studies-sql-default-user-password",
     "my-studies-registration-client-id",
     "my-studies-registration-client-secret",
@@ -32,7 +42,10 @@ resource "google_secret_manager_secret" "secrets" {
     "my-studies-wcp-pass",
     "my-studies-email-address",
     "my-studies-email-password",
-  ])
+    ],
+    formatlist("%s-db-user", local.apps),
+    formatlist("%s-db-password", local.apps))
+  )
 
   secret_id = each.key
   project   = var.project_id
