@@ -133,7 +133,7 @@
 		6FD1E15723F18228009DACAE /* ConsentServices.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FD1E15623F18228009DACAE /* ConsentServices.swift */; };
 		6FD1E15A23F18239009DACAE /* ConsentServerConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FD1E15823F18239009DACAE /* ConsentServerConfiguration.swift */; };
 		6FD1E15B23F18239009DACAE /* APIConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FD1E15923F18239009DACAE /* APIConfiguration.swift */; };
-		6FD5CA02244ED39800AFC08B /* AnanomousFilterData.plist in Resources */ = {isa = PBXBuildFile; fileRef = 6FD5CA01244ED39800AFC08B /* AnanomousFilterData.plist */; };
+		6FD5CA02244ED39800AFC08B /* AnonymousFilterData.plist in Resources */ = {isa = PBXBuildFile; fileRef = 6FD5CA01244ED39800AFC08B /* AnonymousFilterData.plist */; };
 		6FE00CF0238FFE9F0067A7B8 /* ActivitySchedules.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FE00CEF238FFE9F0067A7B8 /* ActivitySchedules.swift */; };
 		782AF87C221D247D000025CF /* StudyTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 782AF87B221D247D000025CF /* StudyTest.swift */; };
 		7878B311221574D80052FC23 /* StandaloneStudy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7878B30E221574D80052FC23 /* StandaloneStudy.swift */; };
@@ -427,7 +427,7 @@
 		6FD1E15623F18228009DACAE /* ConsentServices.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ConsentServices.swift; sourceTree = "<group>"; };
 		6FD1E15823F18239009DACAE /* ConsentServerConfiguration.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ConsentServerConfiguration.swift; sourceTree = "<group>"; };
 		6FD1E15923F18239009DACAE /* APIConfiguration.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = APIConfiguration.swift; sourceTree = "<group>"; };
-		6FD5CA01244ED39800AFC08B /* AnanomousFilterData.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = AnanomousFilterData.plist; sourceTree = "<group>"; };
+		6FD5CA01244ED39800AFC08B /* AnonymousFilterData.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = AnonymousFilterData.plist; sourceTree = "<group>"; };
 		6FE00CEF238FFE9F0067A7B8 /* ActivitySchedules.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActivitySchedules.swift; sourceTree = "<group>"; };
 		782AF87B221D247D000025CF /* StudyTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StudyTest.swift; sourceTree = "<group>"; };
 		7878B30E221574D80052FC23 /* StandaloneStudy.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StandaloneStudy.swift; sourceTree = "<group>"; };
@@ -1162,7 +1162,7 @@
 		6FE00CDB238FEEDA0067A7B8 /* UI */ = {
 			isa = PBXGroup;
 			children = (
-				6FD5CA01244ED39800AFC08B /* AnanomousFilterData.plist */,
+				6FD5CA01244ED39800AFC08B /* AnonymousFilterData.plist */,
 				6EE93DB71E93C8850027A5DC /* Activities.plist */,
 				940577AB1E767C8D0043215C /* ChangePasswordData.plist */,
 				484ACBFB1F28A82B00BCC819 /* FilterData.plist */,
@@ -1928,7 +1928,7 @@
 				942591C41EA8A2650010D892 /* ActivitySchedules.xib in Resources */,
 				6EA889C51E701E8200F160A1 /* Confirmation.plist in Resources */,
 				6E14F2031F0224AD00EA8D1E /* Notification.json in Resources */,
-				6FD5CA02244ED39800AFC08B /* AnanomousFilterData.plist in Resources */,
+				6FD5CA02244ED39800AFC08B /* AnonymousFilterData.plist in Resources */,
 				89893F0522B1115300A846CE /* Main.storyboard in Resources */,
 				6F0221792264729E00A2DBC8 /* TextChoiceCell.xib in Resources */,
 				484ACBFC1F28A82B00BCC819 /* FilterData.plist in Resources */,
