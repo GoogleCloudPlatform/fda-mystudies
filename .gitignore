@@ -1,0 +1,5 @@
+**/.terraform
+*.tfstate
+*.tfstate.*
+sql_credentials.json
+key.json
