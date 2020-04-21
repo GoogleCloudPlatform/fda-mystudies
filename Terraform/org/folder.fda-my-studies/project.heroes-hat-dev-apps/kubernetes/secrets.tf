@@ -24,7 +24,7 @@ locals {
     "study-meta-data",
     "user-registration",
   ]
-  apps_dbnames = {
+  apps_db_names = {
     "auth-server"       = "auth_server"
     "response-server"   = "mystudies_response_server"
     "study-designer"    = "fda_hphc"
@@ -65,7 +65,7 @@ resource "kubernetes_secret" "apps_db_credentials" {
   data = {
     username = data.google_secret_manager_secret_version.secrets["${each.key}-db-user"].secret_data
     password = data.google_secret_manager_secret_version.secrets["${each.key}-db-password"].secret_data
-    dbname   = local.apps_dbnames[each.key]
+    dbname   = local.apps_db_names[each.key]
   }
 }
 
