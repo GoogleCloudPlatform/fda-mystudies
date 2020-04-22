@@ -21,3 +21,6 @@ branch_regex                  = "terraform"
 continuous_deployment_enabled = true
 trigger_enabled               = true
 terraform_root                = "Terraform"
+build_viewers = [
+  "group:rocketturtle-gcp-admin@rocketturtle.net",
+]
