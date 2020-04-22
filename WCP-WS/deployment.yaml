@@ -14,6 +14,8 @@ spec:
     metadata:
       labels:
         app: study-meta-data
+      annotations:
+        sidecar.istio.io/inject: "true"
     spec:
       containers:
         - name: study-meta-data
@@ -37,7 +39,7 @@ spec:
             - name: RESPONSE_SERVER
               value: "response-server-np:50000"
             - name: USER_REGISTRATION_SERVER
-              value: "user-registration-server-np:60000"
+              value: "user-registration-server-np:50000"
             - name: STUDY_DESIGNER
               value: "study-designer-np:50000"
             - name: GOOGLE_APPLICATION_CREDENTIALS
