@@ -13,6 +13,8 @@ spec:
     metadata:
       labels:
         app: user-registration-server
+      annotations:
+        sidecar.istio.io/inject: "true"
     spec:
       containers:
         - name: user-registration-ws
