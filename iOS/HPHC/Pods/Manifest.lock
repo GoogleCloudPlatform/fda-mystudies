@@ -21,6 +21,7 @@ PODS:
     - SDWebImage/Core (= 5.6.0)
   - SDWebImage/Core (5.6.0)
   - SlideMenuControllerSwift (5.0.0)
+  - Toast-Swift (5.0.1)
   - URITemplate (3.0.0)
 
 DEPENDENCIES:
@@ -33,6 +34,7 @@ DEPENDENCIES:
   - RealmSwift
   - SDWebImage
   - SlideMenuControllerSwift (from `https://github.com/AtomicSLLC/SlideMenuControllerSwift.git`, branch `swift5`)
+  - Toast-Swift
 
 SPEC REPOS:
   trunk:
@@ -45,6 +47,7 @@ SPEC REPOS:
     - Realm
     - RealmSwift
     - SDWebImage
+    - Toast-Swift
     - URITemplate
 
 EXTERNAL SOURCES:
@@ -68,8 +71,9 @@ SPEC CHECKSUMS:
   RealmSwift: 9a360fc7bae04fc2e308a34fbd899d5faa2d6b22
   SDWebImage: 21b19f56b4226cdfe3aefe4e6848dc43ed129a86
   SlideMenuControllerSwift: d740ea24105a658fe6a8c256f2bf5832fee7c047
+  Toast-Swift: 9b6a70f28b3bf0b96c40d46c0c4b9d6639846711
   URITemplate: 58e0d47f967006c5d59888af5356c4a8ed3b197d
 
-PODFILE CHECKSUM: 67ad9dffe5785f0979963aca3aa40fff7ab1ade6
+PODFILE CHECKSUM: c8e761cf1e7e94156f8583d04388dd5b9e8849c4
 
 COCOAPODS: 1.8.4

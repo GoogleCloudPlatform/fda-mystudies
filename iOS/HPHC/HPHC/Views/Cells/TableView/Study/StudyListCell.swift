@@ -42,7 +42,7 @@ class StudyListCell: UITableViewCell {
 
   var selectedStudy: Study!
   weak var delegate: StudyListDelegates?
-  
+
   private var placeholderImage: UIImage? {
     return UIImage(named: "placeholder")
   }

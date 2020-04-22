@@ -1,6 +1,7 @@
 // License Agreement for FDA MyStudies
-// Copyright © 2017-2019 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors. Permission is
-// hereby granted, free of charge, to any person obtaining a copy of this software and associated
+// Copyright © 2017-2019 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors.
+// Copyright 2020 Google LLC
+// Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated
 // documentation files (the &quot;Software&quot;), to deal in the Software without restriction, including without
 // limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the
 // Software, and to permit persons to whom the Software is furnished to do so, subject to the following
@@ -34,13 +35,11 @@ protocol StudyFilterDelegates: class {
 
 }
 
-enum FilterType: Int {
-
-  case studyStatus = 0
-  case bookMark
+enum FilterType: String {
   case participantStatus
+  case studyStatus
+  case bookmark
   case category
-
 }
 
 class StudyFilterViewController: UIViewController {
@@ -61,6 +60,13 @@ class StudyFilterViewController: UIViewController {
   private lazy var categories: [String] = []
   private lazy var searchText: String = ""
   private lazy var bookmark = true
+  private var filterTypes: [FilterType] {
+    if User.currentUser.userType == .FDAUser {
+      return [.participantStatus, .studyStatus, .bookmark]
+    } else {
+      return [.studyStatus]
+    }
+  }
 
   lazy var previousCollectionData: [[String]] = []
 
@@ -88,15 +94,14 @@ class StudyFilterViewController: UIViewController {
   /// Navigate to Studylist screen on Apply button clicked.
   @IBAction func applyButtonAction(_ sender: AnyObject) {
 
-    var i: Int = 0
     var isbookmarked = false
 
     for filterOptions in StudyFilterHandler.instance.filterOptions {
 
-      let filterType = FilterType.init(rawValue: i)
+      let filterType = filterOptions.type
       let filterValues = (filterOptions.filterValues.filter({ $0.isSelected == true }))
       for value in filterValues {
-        switch filterType! {
+        switch filterType {
 
         case .studyStatus:
           studyStatus.append(value.title)
@@ -104,7 +109,7 @@ class StudyFilterViewController: UIViewController {
         case .participantStatus:
           pariticipationsStatus.append(value.title)
 
-        case .bookMark:
+        case .bookmark:
           if User.currentUser.userType == .FDAUser {
             bookmark = (value.isSelected)
             isbookmarked = true
@@ -117,7 +122,6 @@ class StudyFilterViewController: UIViewController {
 
         }
       }
-      i = i + 1
     }
 
     previousCollectionData = []
@@ -162,7 +166,7 @@ extension StudyFilterViewController: UICollectionViewDataSource {
   func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int)
     -> Int
   {
-    return StudyFilterHandler.instance.filterOptions.count
+    return self.filterTypes.count
   }
 
   func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath)
@@ -221,8 +225,14 @@ class StudyFilterHandler {
 }
 
 class FilterOptions {
-  var title: String!
-  var filterValues: [FilterValues] = []
+  var title: String
+  lazy var filterValues: [FilterValues] = []
+  var type: FilterType
+
+  init(title: String, type: FilterType) {
+    self.title = title
+    self.type = type
+  }
 }
 
 class FilterValues {
@@ -235,62 +245,56 @@ extension AppDelegate {
   /// setter method to set the default filter options if none are selected.
   func setDefaultFilters(previousCollectionData: [[String]]) {
 
-    var filterData: NSMutableArray?
-    var resource = "AnanomousFilterData"
+    let resource = (User.currentUser.userType == .FDAUser) ? "FilterData" : "AnonymousFilterData"
 
-    if User.currentUser.userType == .FDAUser {
-      resource = "FilterData"
-    }
-
-    let plistPath = Bundle.main.path(forResource: resource, ofType: ".plist", inDirectory: nil)
-    filterData = NSMutableArray.init(contentsOfFile: plistPath!)!
+    let plistPath = Bundle.main.path(forResource: resource, ofType: ".plist", inDirectory: nil) ?? ""
+    guard let filterData = NSMutableArray.init(contentsOfFile: plistPath) else { return }
 
     StudyFilterHandler.instance.filterOptions = []
     var filterOptionsList: [FilterOptions] = []
-    var i = 0
 
-    for options in filterData! {
-      let values = ((options as? [String: Any])!["studyData"] as? [[String: Any]])!
-      let filterOptions = FilterOptions()
-      filterOptions.title = ((options as? [String: Any])!["headerText"] as? String)!
+    for (index, options) in filterData.enumerated() {
+
+      guard let dataDict = options as? JSONDictionary,
+        let valuesDict = dataDict["studyData"] as? [JSONDictionary]
+      else { continue }
+
+      let headerTitle = dataDict["headerText"] as? String ?? ""
+      let type = dataDict["type"] as? String ?? ""
+
+      guard let filterType = FilterType(rawValue: type) else { continue }
+
+      let filterOptions = FilterOptions(title: headerTitle, type: filterType)
 
       var selectedValues: [String] = []
       if previousCollectionData.count > 0 {
-        selectedValues = previousCollectionData[i]
+        selectedValues = previousCollectionData[index]
       }
 
       var filterValues: [FilterValues] = []
-      for value in values {
-
-        var isContained = false
+      for value in valuesDict {
 
         let filterValue = FilterValues()
-        filterValue.title = (value["name"] as? String)!
-
-        if selectedValues.count > 0 {
-          isContained = selectedValues.contains((value["name"] as? String)!)
-        }
+        let name = value["name"] as? String ?? ""
+        filterValue.title = name
+        let isContained = selectedValues.contains(name) ? true : false
 
         if isContained == false {
 
           if previousCollectionData.count == 0 {
-            // this means that we are first time accessing the filter screen
-            filterValue.isSelected = (value["isEnabled"] as? Bool)!
-
+            // This means that we are first time accessing the filter screen.
+            filterValue.isSelected = value["isEnabled"] as? Bool ?? false
           } else {
-            // means that filter is already set
+            // Means that filter is already set.
             filterValue.isSelected = false
           }
         } else {
           filterValue.isSelected = true
         }
-
         filterValues.append(filterValue)
       }
       filterOptions.filterValues = filterValues
       filterOptionsList.append(filterOptions)
-
-      i = i + 1
     }
     StudyFilterHandler.instance.filterOptions = filterOptionsList
   }
@@ -307,12 +311,12 @@ extension AppDelegate {
     var bookmark = true
 
     // Parsing the filter options
-    for (index, filterOptions) in StudyFilterHandler.instance.filterOptions.enumerated() {
+    for filterOptions in StudyFilterHandler.instance.filterOptions {
 
-      let filterType = FilterType.init(rawValue: index)
+      let filterType = filterOptions.type
       let filterValues = (filterOptions.filterValues.filter({ $0.isSelected == true }))
       for value in filterValues {
-        switch filterType! {
+        switch filterType {
 
         case .studyStatus:
           studyStatus.append(value.title)
@@ -320,7 +324,7 @@ extension AppDelegate {
         case .participantStatus:
           pariticipationsStatus.append(value.title)
 
-        case .bookMark:
+        case .bookmark:
           if User.currentUser.userType == .FDAUser {
             bookmark = (value.isSelected)
           } else {
