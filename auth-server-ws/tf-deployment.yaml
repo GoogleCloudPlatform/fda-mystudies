@@ -13,10 +13,12 @@ spec:
     metadata:
       labels:
         app: auth-server
+      annotations:
+        sidecar.istio.io/inject: "true"
     spec:
       containers:
         - name: auth-server-ws
-          image: gcr.io/heroes-hat-dev/auth-server-ws:latest
+          image: gcr.io/heroes-hat-dev-apps/auth-server-ws:latest
           env:
             - name: DB_USER
               valueFrom:
@@ -33,20 +35,26 @@ spec:
                 secretKeyRef:
                   name: auth-server-db-credentials
                   key: dbname
+            - name: GOOGLE_APPLICATION_CREDENTIALS
+              value: "/secrets/gcloud_key/key.json"
           ports:
           - containerPort: 8080
           readinessProbe:
             httpGet:
               path: /AuthServer/healthCheck
               port: 8080
+          volumeMounts:
+          - name: gcloud-key-volume
+            mountPath: /secrets/gcloud_key
+            readOnly: true
         - name: cloudsql-proxy
           image: gcr.io/cloudsql-docker/gce-proxy:latest
-          command: ['/cloud_sql_proxy', '-instances=heroes-hat-dev:us-east1:my-studies2=tcp:3306', '-credential_file=/secrets/cloudsql/sql_credentials.json']
+          command: ['/cloud_sql_proxy', '-instances=heroes-hat-dev-data:us-east1:my-studies-2=tcp:3306', '-credential_file=/secrets/gcloud_key/key.json']
           volumeMounts:
-            - name: my-secrets-volume
-              mountPath: /secrets/cloudsql
-              readOnly: true
+          - name: gcloud-key-volume
+            mountPath: /secrets/gcloud_key
+            readOnly: true
       volumes:
-        - name: my-secrets-volume
-          secret:
-            secretName: auth-server-instance-credentials
+      - name: gcloud-key-volume
+        secret:
+          secretName: auth-server-gcloud-key

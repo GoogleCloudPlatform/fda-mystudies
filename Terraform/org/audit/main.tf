@@ -100,7 +100,7 @@ module "storage_destination" {
 
   name          = var.bucket_name
   project_id    = var.project_id
-  location      = "us-central1"
+  location      = "us-east1"
   storage_class = "COLDLINE"
   iam_members = [
     {
