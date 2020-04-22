@@ -104,6 +104,10 @@ To see what resources each deployment provisions, check out the comments in each
     $ ROOT=$PWD
     ```
 
+    If you would like to deploy the same infrastructure based on the Terraform
+    configs in this directory but in a different organization with different
+    resource prefix or namings, use the `rename.sh` script.
+
 1.  The bootstrap config must be deployed first in order to create the `devops`
     project which will host your Terraform state and CICD pipelines.
 
