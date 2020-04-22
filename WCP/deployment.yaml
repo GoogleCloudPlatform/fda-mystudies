@@ -13,6 +13,8 @@ spec:
     metadata:
       labels:
         app: study-designer
+      annotations:
+        sidecar.istio.io/inject: "true"
     spec:
       containers:
         - name: study-designer
@@ -34,7 +36,7 @@ spec:
                   name: study-designer-db-credentials
                   key: dbname
             - name: REGISTRATION_SERVER_URL
-              value: "user-registration-server-np:60000"
+              value: "user-registration-server-np:50000"
             - name: RESPONSE_SERVER_URL
               value: "response-server-np:50000"
             - name: GOOGLE_APPLICATION_CREDENTIALS
