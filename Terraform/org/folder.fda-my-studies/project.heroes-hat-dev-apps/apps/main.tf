@@ -64,3 +64,12 @@ resource "google_service_account" "apps_service_accounts" {
   description = "Terraform-generated service account for use by the ${each.key} GKE app"
   project     = var.project_id
 }
+
+# Reserve a static external IP for the Ingress.
+resource "google_compute_address" "ingress_static_ip" {
+  name         = "my-studies-ingress-ip"
+  description  = "Reserved static external IP for the GKE cluster Ingress and DNS configurations."
+  address_type = "EXTERNAL" # This is the default, but be explicit because it's important.
+  region       = var.gke_region
+  project      = var.project_id
+}
