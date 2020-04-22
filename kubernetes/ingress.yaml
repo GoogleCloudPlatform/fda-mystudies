@@ -3,7 +3,7 @@ kind: Ingress
 metadata:
   name: heroes-hat-dev
   annotations:
-    kubernetes.io/ingress.global-static-ip-name: heroes-hat
+    kubernetes.io/ingress.global-static-ip-name: my-studies-ingress-ip
     networking.gke.io/managed-certificates: heroes-hat-cert
 spec:
   rules:
