@@ -13,6 +13,8 @@ spec:
     metadata:
       labels:
         app: response-server
+      annotations:
+        sidecar.istio.io/inject: "true"
     spec:
       containers:
         - name: response-server-ws
@@ -60,7 +62,7 @@ spec:
             - name: WCP_STUDY_METADATA_SERVER_URL
               value: "study-meta-data-np:50000"
             - name: REGISTRATION_SERVER_URL
-              value: "user-registration-server-np:60000"
+              value: "user-registration-server-np:50000"
             - name: GOOGLE_APPLICATION_CREDENTIALS
               value: "/secrets/gcloud_key/key.json"
           ports:
