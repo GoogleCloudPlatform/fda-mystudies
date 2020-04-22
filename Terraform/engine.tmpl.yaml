@@ -53,6 +53,8 @@ templates:
       CONTINUOUS_DEPLOYMENT_ENABLED: true
       TRIGGER_ENABLED: true
       TERRAFORM_ROOT: "Terraform"
+      BUILD_VIEWERS:
+        - "group:rocketturtle-gcp-admin@rocketturtle.net"
 
 # Folder
 - name: "folder-heroes-hat"
