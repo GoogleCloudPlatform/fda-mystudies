@@ -22,8 +22,10 @@ All files below are relative to the root of the repo.
         *   A helper script that applies all resources to the cluster. Not
             required, the manual steps will be described below.
 *   auth-server-ws/
-    *   deployment.yaml
+    *   tf-deployment.yaml
         *   A Kubernetes Deployment, deploying the app along with its secrets.
+        *   This is forked from deployment.yaml with modifications for the
+            Terraform setup.
     *   service.yaml
         *   A Kubernetes Service, exposing the app to communicate with other
             apps and the Ingress.
@@ -105,7 +107,7 @@ $ gcloud sql import sql --project=<data-project-id> <instance-name> gs://<data-p
 You may need to make some changes to the Kubernetes configs to match your
 organization and deployment.
 
-In each deployment.yaml file:
+In each tf-deployment.yaml file:
 
 *   For all images except `gcr.io/cloudsql-docker/gce-proxy`, replace the
     `gcr.io/<project>` part with `gcr.io/<apps-project-id>`
@@ -145,11 +147,11 @@ Apply all deployments:
 
 ```
 $ kubectl apply \
-  -f ./WCP-WS/deployment.yaml \
-  -f ./response-server-ws/deployment.yaml \
-  -f ./user-registration-server-ws/deployment.yaml \
-  -f ./WCP/deployment.yaml \
-  -f ./auth-server-ws/deployment.yaml
+  -f ./WCP-WS/tf-deployment.yaml \
+  -f ./response-server-ws/tf-deployment.yaml \
+  -f ./user-registration-server-ws/tf-deployment.yaml \
+  -f ./WCP/tf-deployment.yaml \
+  -f ./auth-server-ws/tf-deployment.yaml
 ```
 
 Apply all services:
