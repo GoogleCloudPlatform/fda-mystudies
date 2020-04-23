@@ -146,8 +146,8 @@ public class ActivityResponseProcessorServiceImpl implements ActivityResponsePro
       List<QuestionnaireActivityStepsBean> activityMetadataBeanFromWCP) {
     QuestionnaireActivityStepsBean scoreSumResponseBean = null;
     for (QuestionnaireActivityStepsBean responseBean : questionnaireResponses) {
-      if (responseBean.getKey().equals("_SUM")) {
-        logger.info("processActivityResponses() - Found _SUM question.");
+      if (responseBean.getKey().equals(AppConstants.DUMMY_SUM_QUESTION_KEY)) {
+        logger.debug("processActivityResponses() - Found dummy _SUM question.");
         scoreSumResponseBean = responseBean;
       }
       if (responseBean.getResultType().equalsIgnoreCase(AppConstants.GROUPED_FIELD_KEY)) {
@@ -162,11 +162,13 @@ public class ActivityResponseProcessorServiceImpl implements ActivityResponsePro
       }
     }
     if (scoreSumResponseBean != null) {
+      // Iterate through responses for a second pass to calculate the score sum if the dummy sum question presents.
       calculateScoreSum(questionnaireResponses,scoreSumResponseBean);
     }
   }
 
-  private double parseSingleValue(Object value) {
+  // Converts one response value to double in a best-effort manner. Returns 0 if conversion fails.
+  private double convertResponseValueToDouble(Object value) {
     if (value instanceof Double) {
       return ((Double) value).doubleValue();
     } else if (value instanceof Integer) {
@@ -175,35 +177,38 @@ public class ActivityResponseProcessorServiceImpl implements ActivityResponsePro
       try {
         return Double.parseDouble((String) value);
       } catch (Exception e) {
-        logger.info("Failed to parse value as number. Error: " + e.getMessage());
+        logger.debug("Failed to parse value as number. Error: " + e.getMessage());
       }
     } else {
-      logger.info("parseSingleValue() - Unhandled value type: " + value.getClass().getName());
+      logger.error("convertResponseValueToDouble() - Unhandled value type: " + value.getClass().getName());
     }
     return 0;
   }
 
+  // Calculates score sum in questionnaireResponses and store it to the value of scoreSumRespnoseBean.
   private void calculateScoreSum(
       List<QuestionnaireActivityStepsBean> questionnaireResponses,
       QuestionnaireActivityStepsBean scoreSumResponseBean) {
     double sum = 0;
     for (QuestionnaireActivityStepsBean responseBean : questionnaireResponses) {
       if (responseBean == scoreSumResponseBean) {
-        logger.info("calculateScoreSum() - skip _SUM question.");
+        logger.debug("calculateScoreSum() - skip _SUM question.");
         continue;
       }
-      logger.info("calculateScoreSum() - question key: "
+      logger.debug("calculateScoreSum() - question key: "
          + responseBean.getKey() + " value type: " + responseBean.getValue().getClass().getName());
       Object value = responseBean.getValue();
+      // If the response value type is a list, iterate through all items and add up.
       if (value instanceof List) {
         List<Object> valueList = (ArrayList<Object>) value;
         for (Object o : valueList) {
-          sum = sum + parseSingleValue(o);
-          logger.info("calculateScoreSum() - sum: " + (new Double(sum)).toString());
+          sum = sum + convertResponseValueToDouble(o);
+          logger.debug("calculateScoreSum() - sum: " + (new Double(sum)).toString());
         }
+      // Otherwise, just convert the single response value to double.
       } else {
-        sum = sum + parseSingleValue(value);
-        logger.info("calculateScoreSum() - sum: " + (new Double(sum)).toString());
+        sum = sum + convertResponseValueToDouble(value);
+        logger.debug("calculateScoreSum() - sum: " + (new Double(sum)).toString());
       }
     }
     scoreSumResponseBean.setValue(new Double(sum));

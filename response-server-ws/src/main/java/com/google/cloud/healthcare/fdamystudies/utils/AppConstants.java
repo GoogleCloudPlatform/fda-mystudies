@@ -26,6 +26,7 @@ public class AppConstants {
   public static final String CREATED_RESPONSE = "Created";
   public static final String RESULT_TYPE_KEY = "resultType";
   public static final String QUESTION_ID_KEY = "key";
+  public static final String DUMMY_SUM_QUESTION_KEY = "_SUM";
   public static final String FIELD_PATH_ACTIVITY_ID = "metadata.activityId";
   public static final String PARTICIPANT_TOKEN_IDENTIFIER_KEY = "tokenIdentifier";
   public static final String PARTICIPANT_IDENTIFIER_KEY = "participantIdentifier";
