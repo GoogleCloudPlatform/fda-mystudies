@@ -42,8 +42,11 @@ module "heroes_hat_cluster" {
   istio             = true
   skip_provisioners = true
 
-  # Make the master endpoint private and configure master auth networks.
-  enable_private_endpoint    = true
+  # Configure master auth networks.
+  # Private endpoint must be disabled, otherwise the master is only accessible
+  # via a Cloud Interconnect or Cloud VPN.
+  # This allows access over the internet, but only from certain source ranges.
+  enable_private_endpoint    = false
   master_authorized_networks = var.master_authorized_networks
 }
 
