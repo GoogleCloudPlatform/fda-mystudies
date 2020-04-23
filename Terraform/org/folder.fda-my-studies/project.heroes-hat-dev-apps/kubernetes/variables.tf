@@ -10,9 +10,10 @@ variable "secrets_project_id" {
 variable "my_studies_cluster" {
   description = "The GKE cluster module"
   type = object({
-    name            = string
-    location        = string
-    service_account = string
+    name           = string
+    location       = string
+    endpoint       = string
+    ca_certificate = string
   })
 }
 
