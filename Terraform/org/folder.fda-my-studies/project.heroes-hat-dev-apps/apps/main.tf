@@ -24,8 +24,8 @@ module "heroes_hat_cluster" {
   source = "terraform-google-modules/kubernetes-engine/google//modules/safer-cluster"
 
   # Required
-  name = "heroes-hat-cluster"
-  # TODO: Set release_channel to "regular" when https://github.com/terraform-google-modules/terraform-google-kubernetes-engine/pull/487 is merged.
+  # TODO: Set release_channel to "regular" when https://github.com/terraform-google-modules/terraform-google-kubernetes-engine/pull/487 is released.
+  name                   = var.cluster_name
   project_id             = var.project_id
   region                 = var.gke_region
   regional               = true
@@ -42,8 +42,12 @@ module "heroes_hat_cluster" {
   istio             = true
   skip_provisioners = true
 
-  # Need to either disable private endpoint, or enable master auth networks.
-  enable_private_endpoint = false
+  # Configure master auth networks.
+  # Private endpoint must be disabled, otherwise the master is only accessible
+  # via a Cloud Interconnect or Cloud VPN.
+  # This allows access over the internet, but only from certain source ranges.
+  enable_private_endpoint    = false
+  master_authorized_networks = var.master_authorized_networks
 }
 
 # Create a separate service account for each app.
@@ -71,4 +75,26 @@ resource "google_compute_global_address" "ingress_static_ip" {
   description  = "Reserved static external IP for the GKE cluster Ingress and DNS configurations."
   address_type = "EXTERNAL" # This is the default, but be explicit because it's important.
   project      = var.project_id
+}
+
+# Binary Authorization resources.
+# Simple configuration for now. Future
+# See https://cloud.google.com/binary-authorization/docs/overview
+resource "google_binary_authorization_policy" "policy" {
+  # Whitelist images from this project.
+  # See https://cloud.google.com/binary-authorization/docs/policy-yaml-reference#admissionwhitelistpatterns
+  admission_whitelist_patterns {
+    name_pattern = "gcr.io/${var.project_id}/*"
+  }
+
+  # Allow Google-built images.
+  # See https://cloud.google.com/binary-authorization/docs/policy-yaml-reference#globalpolicyevaluationmode
+  global_policy_evaluation_mode = "ENABLE"
+
+  # Block all non-whitelisted images.
+  # See https://cloud.google.com/binary-authorization/docs/policy-yaml-reference#defaultadmissionrule
+  default_admission_rule {
+    evaluation_mode  = "ALWAYS_DENY"
+    enforcement_mode = "ENFORCED_BLOCK_AND_AUDIT_LOG"
+  }
 }

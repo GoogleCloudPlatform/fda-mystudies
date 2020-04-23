@@ -12,14 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-name            = "heroes-hat-dev-apps"
-org_id          = "707577601068"
-billing_account = "01EA90-3519E1-89CB1F"
-apis = [
-  "binaryauthorization.googleapis.com",
-  "cloudbuild.googleapis.com",
-  "compute.googleapis.com",
-  "container.googleapis.com",
-  "servicenetworking.googleapis.com",
-  "sqladmin.googleapis.com",
-]
+project_id         = "heroes-hat-dev-apps"
+secrets_project_id = "heroes-hat-dev-devops"
+cluster_name       = "heroes-hat-cluster"
+cluster_location   = "us-east1"
