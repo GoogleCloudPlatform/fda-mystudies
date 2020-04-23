@@ -42,8 +42,9 @@ module "heroes_hat_cluster" {
   istio             = true
   skip_provisioners = true
 
-  # Need to either disable private endpoint, or enable master auth networks.
-  enable_private_endpoint = false
+  # Make the master endpoint private and configure master auth networks.
+  enable_private_endpoint    = true
+  master_authorized_networks = var.master_authorized_networks
 }
 
 # Create a separate service account for each app.
