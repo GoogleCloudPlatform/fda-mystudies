@@ -122,8 +122,9 @@ public class StudyStateServiceImpl implements StudyStateService {
         if (!isExists) {
           if (studiesBean.getStudyId() != null
               && StringUtils.isNotEmpty(studiesBean.getStudyId())
-              && studyInfo != null) participantStudyBo.setStudyInfo(studyInfo);
-          participantStudyBo.setStudyInfo(studyInfo);
+              && studyInfo != null) {
+            participantStudyBo.setStudyInfo(studyInfo);
+          }
           if (studiesBean.getStatus() != null && StringUtils.isNotEmpty(studiesBean.getStatus())) {
             participantStudyBo.setStatus(studiesBean.getStatus());
             if (studiesBean
@@ -207,8 +208,9 @@ public class StudyStateServiceImpl implements StudyStateService {
                 studyStateBean.setHashedToken(
                     EnrollmentManagementUtil.getHashedValue(enrolledTokenVal));
               }
-              if (participantStudiesBO.getStudyInfo() != null)
+              if (participantStudiesBO.getStudyInfo() != null) {
                 studyStateBean.setStudyId(participantStudiesBO.getStudyInfo().getCustomId());
+              }
               studyStateBean.setStatus(participantStudiesBO.getStatus());
               if (participantStudiesBO.getParticipantId() != null)
                 studyStateBean.setParticipantId(participantStudiesBO.getParticipantId());

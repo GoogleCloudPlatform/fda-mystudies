@@ -138,8 +138,6 @@
     <script src="/studybuilder/js/jquery.mask.min.js"></script>
     <script src="/studybuilder/js/jquery-scrollto.js" ></script>
     <script src="/studybuilder/js/jquery.nicescroll.min.js"></script>
-<!--     <script src="/studybuilder/js/summernote.min.js"></script > -->
-<!--      <script src="/studybuilder/vendor/tinymce/tinymce.min.js"></script> -->
     <script src="/studybuilder/js/bootbox.min.js"></script>
     
     

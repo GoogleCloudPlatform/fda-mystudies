@@ -14,7 +14,6 @@
 		<input type="hidden" id="studyId" name="studyId" value="${studyId}">
 		<input type="hidden" id="consentId" name="consentId"
 			value="${consentBo.id}">
-	</form:form>
 	<form:form
 		action="/studybuilder/adminStudies/saveConsentReviewAndEConsentInfo.do?_S=${param._S}"
 		name="consentReviewFormId" id="consentReviewFormId" method="post"
@@ -494,8 +493,6 @@ $(document).ready(function(){
 		if($("#typeOfCensent").val() == "New"){
 			valid =  maxLenValEditor();
 		}
-		//tinyMCE.triggerSave();
-		//$('#elaboratedRTE').summernote('code');
 		if(valid){
 			if( id == "saveId"){
 				$("#consentReviewFormId").parents("form").validator("destroy");
@@ -504,9 +501,10 @@ $(document).ready(function(){
 			}else if(id == "doneId"){
 				var isvalid = true;
 				var retainTxt = '${studyBo.retainParticipant}';
-				if($('#shareDataPermissionsYes').is(":checked")){
+ 				   if($('#shareDataPermissionsYes').is(":checked")){
 					isvalid = maxLenLearnMoreEditor();
-					}				
+					}  
+ 				  isFromValid("#consentReviewFormId");  	
 				if(isFromValid("#consentReviewFormId") && isvalid){
 					var message = "";
 					var alertType = "";
@@ -538,38 +536,51 @@ $(document).ready(function(){
 						    	if(consentDocumentType == "Auto"){
 						    		saveConsentReviewAndEConsentInfo("doneId");
 						    	}else{
-						    		//var content = tinymce.get('newDocumentDivId').getContent();
 						    		var content = $('#newDocumentDivId').summernote('code');
 						    		if(content != null && content !='' && typeof content != 'undefined' && content != '<p><br></p>'){
 						    			saveConsentReviewAndEConsentInfo("doneId");
 						    		}else{
 						    			$("#newDocumentDivId").parent().find(".help-block").empty();
-							    		$("#newDocumentDivId").parent().find(".help-block").append('<ul class="list-unstyled"><li>Please fill out this field.</li></ul>');
+							    		$("#newDocumentDivId").parent().addClass('has-danger has-error').find(".help-block").append('<ul class="list-unstyled"><li>Please fill out this field.</li></ul>');
 						    		}
 						    	}
+						    	
 					        }else{
 					        	$("#doneId").prop('disabled', false);
 					        }
 					    }
 		    		});
 				}else{
-					console.log("else....");
-			   		var slaCount = $('#menu1').find('.has-error.has-danger').length;
+					var slaCount = $('#menu1').find('.has-error.has-danger').length;
 					var qlaCount = $('#menu2').find('.has-error.has-danger').length;
 					var rlaCount = $('#menu3').find('.has-error.has-danger').length;
 					console.log("slaCount:"+slaCount);
 					console.log("qlaCount:"+qlaCount);
 					console.log("rlaCount:"+rlaCount);
-					if(parseInt(slaCount) >= 1){
+					if(parseInt(slaCount) >= 1 || $('#learnMoreTextId').parent().find(".help-block").html() !=  ''){
 						 $('.shareData a').tab('show');
-					}else if(parseInt(qlaCount) >= 1){
+					}else if(parseInt(qlaCount) >= 1 || $('#newDocumentDivId').parent().find(".help-block").html() !=  ''){
 						 $('.consentReview a').tab('show');
 					}else if(parseInt(rlaCount) >= 1){
 						 $('.econsentForm a').tab('show');
 					}
 				}
 			}	
-		}
+		}else{
+			var slaCount = $('#menu1').find('.has-error.has-danger').length;
+			var qlaCount = $('#menu2').find('.has-error.has-danger').length;
+			var rlaCount = $('#menu3').find('.has-error.has-danger').length;
+			console.log("slaCount:"+slaCount);
+			console.log("qlaCount:"+qlaCount);
+			console.log("rlaCount:"+rlaCount);
+			if(parseInt(slaCount) >= 1 || $('#learnMoreTextId').parent().find(".help-block").html() !=  ''){
+				 $('.shareData a').tab('show');
+			}else if(parseInt(qlaCount) >= 1 || $('#newDocumentDivId').parent().find(".help-block").html() !=  ''){
+				 $('.consentReview a').tab('show');
+			}else if(parseInt(rlaCount) >= 1){
+				 $('.econsentForm a').tab('show');
+			}
+			}
 	});
 	function resetValues(shareDataPermissions){
 		console.log("shareDataPermissions:"+shareDataPermissions);
@@ -579,13 +590,12 @@ $(document).ready(function(){
 			$('#allowWithoutPermissionYes').val("Yes");
 			$('#allowWithoutPermissionNo').val("No");
 			$('#allowWithoutPermissionYes').prop("checked",true);
-			$('#learnMoreTextId').summernote('');
+			$('#learnMoreTextId').summernote('reset');
+			$('#learnMoreTextId').attr("required",false);
 			$('#longDescriptionId').val('');
-			$('#learnMoreTextId').attr('required',false);
 			$('.requiredClass').attr('required',false);
 			newLearnMoreConsentDocument();
 			$("#rootContainer").hide();
-			//tinymce.get('learnMoreTextId').setContent('');
 		}else{
 			$('.requiredClass').attr('required',true);
 			$('#learnMoreTextId').attr('required',true);
@@ -594,7 +604,6 @@ $(document).ready(function(){
 	}
 	//consent doc type div
 	function consentDocumentDivType(){
-		//fancyToolbar();
 		
 		if($("#inlineRadio1").is(":checked")){
 			console.log("consentDocumentDivType if");
@@ -621,11 +630,6 @@ $(document).ready(function(){
     	}
 	}
 	
-	// Fancy Scroll Bar
-    /* function fancyToolbar(){
-    	$(".left-content").niceScroll({cursorcolor:"#95a2ab",cursorborder:"1px solid #95a2ab"});
-        $(".right-content-body").niceScroll({cursorcolor:"#d5dee3",cursorborder:"1px solid #d5dee3"});
-	} */
     //check the consentinfo list
     function autoCreateConsentDocument(){
     	var consentDocumentDivContent = "";
@@ -639,48 +643,16 @@ $(document).ready(function(){
 						+"<span style='display: block; overflow-wrap: break-word; width: 100%;'>"
 						+"${consentInfo.elaborated}"
 						+"</span><br/>";
-            	</c:forEach>
-            	
+            	</c:forEach>  	
         	}
         }
         $("#autoConsentDocumentDivId").append(consentDocumentDivContent);
         $("#newDocumentDivId").val('');
-        //apply custom scroll bar to the auto consent document type
-       // $("#autoCreateDivId").niceScroll({cursorcolor:"#d5dee3",cursorborder:"1px solid #d5dee3"});
+        
     }
-    //createNewConsentDocument
-//     function createNewConsentDocument(){
-//     	tinymce.init({
-//              selector: "#newDocumentDivId",
-//              theme: "modern",
-//              skin: "lightgray",
-//              height:180,
-//              plugins: [
-//                  "advlist autolink link image lists charmap hr anchor pagebreak spellchecker",
-//                  "save contextmenu directionality paste"
-//              ],
-//              toolbar: "anchor bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | underline link | hr removeformat | cut undo redo | fontsizeselect fontselect",
-//              menubar: false,
-//              toolbar_items_size: 'small',
-//              content_style: "div, p { font-size: 13px;letter-spacing: 1px;}",
-//              entity_encoding : "raw",
-//              setup : function(ed) {
-//                  ed.on('change', function(ed) {
-//                		  if(tinyMCE.get(ed.target.id).getContent() != ''){
-//                			$('#newDocumentDivId').parent().removeClass("has-danger").removeClass("has-error");
-//                	        $('#newDocumentDivId').parent().find(".help-block").html("");
-//                		  }
-//                  });
-//         	  	},
-//              <c:if test="${permission eq 'view'}">readonly:1</c:if>
-//          });
-    	
-//     	/* tinymce.get('newDocumentDivId').setContent('');
-//     	tinymce.get('newDocumentDivId').setContent('${consentBo.consentDocContent}'); */ 
-//     }
+   
      function createNewConsentDocument(){
     	 $('#newDocumentDivId').summernote({
-    	        
     	        placeholder: '',
     	        tabsize: 2,
     	        height: 200,
@@ -692,52 +664,21 @@ $(document).ready(function(){
     	        	['hr'],
     	        	['clear'],
     	        	['cut'],
-    	        	//['copy'],
     	        	['undo'],
     	        	['redo'],
     	        	['fontname', ['fontname']],
     	        	['fontsize', ['fontsize']],
-    	        	]
-    	        	 
+    	        	]      	 
     	      });
-    	 <c:if test="${permission eq 'view'}">readonly:1</c:if>
-    	//    <c:if test="${not empty permission}">$('#newDocumentDivId').summernote('disable');
-    	//	readonly:1,</c:if>
+    	 <c:if test="${permission eq 'view'}">
+    	     $('#newDocumentDivId').summernote('disable');
+    	 </c:if>
       
          }
     
-    
-//     function newLearnMoreConsentDocument(){
-//     	tinymce.init({
-//             selector: "#learnMoreTextId",
-//             theme: "modern",
-//             skin: "lightgray",
-//             height:180,
-//             plugins: [
-//                 "advlist autolink link image lists charmap hr anchor pagebreak spellchecker",
-//                 "save contextmenu directionality paste"
-//             ],
-//             toolbar: "anchor bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | underline link | hr removeformat | cut undo redo | fontsizeselect fontselect",
-//             menubar: false,
-//             toolbar_items_size: 'small',
-//             content_style: "div, p { font-size: 13px;letter-spacing: 1px;}",
-//             entity_encoding : "raw",
-//             setup : function(ed) {
-//                 ed.on('change', function(ed) {
-//               		  if(tinyMCE.get(ed.target.id).getContent() != ''){
-//               			  console.log(tinyMCE.get(ed.target.id).getContent());
-//               			$('#learnMoreTextId').parent().removeClass("has-danger").removeClass("has-error");
-//               	        $('#learnMoreTextId').parent().find(".help-block").html("");
-//               		  }
-//                 });
-//        	  	},
-//             <c:if test="${permission eq 'view'}">readonly:1</c:if>
-//         });
-//     }
 
 function newLearnMoreConsentDocument(){
 	$('#learnMoreTextId').summernote({
-        
         placeholder: '',
         tabsize: 2,
         height: 200,
@@ -749,40 +690,21 @@ function newLearnMoreConsentDocument(){
         	['hr'],
         	['clear'],
         	['cut'],
-        	//['copy'],
         	['undo'],
         	['redo'],
         	['fontname', ['fontname']],
         	['fontsize', ['fontsize']],
-        	],
-        	 
+        	], 		 
       });
-	<c:if test="${permission eq 'view'}">readonly:1</c:if>
-	//    <c:if test="${not empty permission}">$('#learnMoreTextId').summernote('disable');
-	// readonly:1,</c:if>
-}
+	<c:if test="${permission eq 'view'}">
+	      $('#learnMoreTextId').summernote('disable');
+	</c:if>
+   }
 
     
     //save review and E-consent data
     function saveConsentReviewAndEConsentInfo(item){
-	   //	if(item == "doneId"){
-			//$("#consentValidatorDiv").validator('validate');
-	   	 	//var customErrorLength = $("#consentValidatorDiv").find(".has-danger").length;
-	   	 
-		   	/* if(customErrorLength == 1){
-		   		resetValidation($("#consentValidatorDiv"));
-		   	} */
-	   		/* if(isFromValid("#consentReviewFormId")){
-		   		customErrorLength = 0;
-			}else{
-		   		customErrorLength = 1;
-		   	} */
-	   /* 	}else{
-	   		customErrorLength = 0;
-	   	} */
-	   	
-		//console.log("customErrorLength:"+customErrorLength);
-   	 	//if(customErrorLength == 0){
+        
 	   		var consentInfo = new Object();
 	    	var consentId = $("#consentId").val();
 	    	var studyId = $("#studyId").val();
@@ -799,7 +721,6 @@ function newLearnMoreConsentDocument(){
 	    	var tagline_description = $("#taglineDescriptionId").val();
 	    	var short_description = $("#shortDescriptionId").val();
 	    	var long_description = $("#longDescriptionId").val();
-	    	//var learn_more_text = tinymce.get('learnMoreTextId').getContent({ format: 'raw' });
 	    	var learn_more_text = $('#learnMoreTextId').summernote('code');
 	    	learn_more_text = replaceSpecialCharacters(learn_more_text);
 	    	var allow_Permission = $('input[name="allowWithoutPermission"]:checked').val();	
@@ -807,7 +728,6 @@ function newLearnMoreConsentDocument(){
 	    		
 	    		
 	    	if(consentDocType == "New"){
-	    		//consentDocumentContent = tinymce.get('newDocumentDivId').getContent({ format: 'raw' });
 	    		consentDocumentContent = $('#newDocumentDivId').summernote('code');
 	    		consentDocumentContent = replaceSpecialCharacters(consentDocumentContent);
 	    	}
@@ -857,10 +777,8 @@ function newLearnMoreConsentDocument(){
 						$("#newDocumentDivId").val('');
 						if(consentDocumentType == "New"){
 					    	$("#newDocumentDivId").val(consentDocumentContent);
-					    	//tinymce.get('newDocumentDivId').setContent('');
 					    	$('#newDocumentDivId').summernote('');
 					    	$('#newDocumentDivId').summernote('consentDocumentContent');
-					    	//tinymce.get('newDocumentDivId').setContent(consentDocumentContent);
 						}
 						if(item == "doneId"){
 							var a = document.createElement('a');
@@ -934,46 +852,44 @@ function goToBackPage(item){
   </c:if>
 }
 function maxLenValEditor() {
-	var isValid = true; 
-	//var value = tinymce.get('newDocumentDivId').getContent({ format: 'raw' });
-	var value = $('#newDocumentDivId').summernote('code');
-	if(value != '<p><br></p>'){
-	if(value != '' && $.trim(value.replace(/(<([^>]+)>)/ig, "")).length > 70000){
-		if(isValid){
-			isValid = false;
+	var isValideditor = true; 
+	var valueEditor = $('#newDocumentDivId').summernote('code');
+	if(valueEditor !== "<p><br></p>"){
+		 if(valueEditor != '' && $.trim(valueEditor.replace(/(<([^>]+)>)/ig, "")).length > 70000){
+			if(isValideditor){
+				isValideditor = false;
+			}
+			$('#newDocumentDivId').parent().addClass('has-danger has-error').find(".help-block").empty().append('<ul class="list-unstyled"><li>Maximum 70000 characters are allowed.</li></ul>');
+		} else {
+			 $('#newDocumentDivId').parent().removeClass("has-danger").removeClass("has-error");
+		     $('#newDocumentDivId').parent().find(".help-block").html(""); 
 		}
-		$('#newDocumentDivId').parent().addClass('has-danger has-error').find(".help-block").empty().append('<ul class="list-unstyled"><li>Maximum 70000 characters are allowed.</li></ul>');
-	} else {
-		 $('#newDocumentDivId').parent().removeClass("has-danger").removeClass("has-error");
-	     $('#newDocumentDivId').parent().find(".help-block").html(""); 
-	}
 	}else{
-    	isValid = false;
-		//$('#learnMoreTextId').val('');
-			$('#newDocumentDivId').parent().addClass('has-danger has-error').find(".help-block").empty().append('<ul class="list-unstyled"><li>Please fill out this field.</li></ul>');
+		isValideditor = false;
+    	$('#newDocumentDivId').attr('required',true);
+		$('#newDocumentDivId').parent().addClass('has-danger has-error').find(".help-block").empty().append('<ul class="list-unstyled"><li>Please fill out this field.</li></ul>');
 		
 	}
-	 
-	return isValid;
+	
+	return isValideditor;
 }
 function maxLenLearnMoreEditor() {
 	var isValid = true; 
-
 	var value = $('#learnMoreTextId').summernote('code');
     if(value != '<p><br></p>'){
-	if(value != '' && $.trim(value.replace(/(<([^>]+)>)/ig, "")).length > 70000){
-		if(isValid){
-			isValid = false;
+		if(value != '' && $.trim(value.replace(/(<([^>]+)>)/ig, "")).length > 70000){
+			if(isValid){
+				isValid = false;
+			}
+			 $('#learnMoreTextId').parent().addClass('has-danger has-error').find(".help-block").empty().append('<ul class="list-unstyled"><li>Maximum 70000 characters are allowed.</li></ul>');
+		} else {
+			 $('#learnMoreTextId').parent().removeClass("has-danger").removeClass("has-error");
+		     $('#learnMoreTextId').parent().find(".help-block").html(""); 
 		}
-		$('#learnMoreTextId').parent().addClass('has-danger has-error').find(".help-block").empty().append('<ul class="list-unstyled"><li>Maximum 70000 characters are allowed.</li></ul>');
-	} else {
-		 $('#learnMoreTextId').parent().removeClass("has-danger").removeClass("has-error");
-	     $('#learnMoreTextId').parent().find(".help-block").html(""); 
-	}
     }else{
     	isValid = false;
-		//$('#learnMoreTextId').val('');
-			$('#learnMoreTextId').parent().addClass('has-danger has-error').find(".help-block").empty().append('<ul class="list-unstyled"><li>Please fill out this field.</li></ul>');
+    	$('#learnMoreTextId').attr('required',true);
+		$('#learnMoreTextId').parent().addClass('has-danger has-error').find(".help-block").empty().append('<ul class="list-unstyled"><li>Please fill out this field.</li></ul>');
 		
 	}
 	     
@@ -1048,7 +964,6 @@ function previewLearnMore(){
 	$('#cancelButtonId').hide();
 	$('#doneButtonId').show();
 	$('.force-overflow__').html('');
-   // var  learn_more_desc = tinymce.get('learnMoreTextId').getContent({format : 'text'}).trim();
    var  learn_more_desc = $('learnMoreTextId').summernote('code');
     var data = '<div class="pp__title">Learn more</div>'
 	           +'<div class="pp__ul mt-xlg">';

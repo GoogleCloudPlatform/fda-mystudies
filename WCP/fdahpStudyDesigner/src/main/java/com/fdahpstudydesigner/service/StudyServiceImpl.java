@@ -248,33 +248,14 @@ public class StudyServiceImpl implements StudyService {
   @Override
   public List<StudyBo> getAllStudyList() {
     logger.info("StudyServiceImpl - getAllStudyList() - Starts");
-    List<StudyBo> studyBOList = null, sortedStudyBOList = new ArrayList<>();
-    HashMap<String, StudyBo> studyMap = new HashMap<>();
-    ArrayList<String> studyNamelist = null;
-
+    List<StudyBo> studyBOList = null;
     try {
       studyBOList = studyDAO.getAllStudyList();
-
-      for (StudyBo study : studyBOList) {
-        studyMap.put(study.getName(), study);
-      }
-      studyNamelist = new ArrayList<>(studyMap.keySet());
-      Collections.sort(
-          studyNamelist,
-          new Comparator<String>() {
-            @Override
-            public int compare(String s1, String s2) {
-              return s1.compareToIgnoreCase(s2);
-            }
-          });
-      for (String studyName : studyNamelist) {
-        sortedStudyBOList.add(studyMap.get(studyName));
-      }
     } catch (Exception e) {
       logger.error("StudyServiceImpl - getAllStudyList() - ERROR ", e);
     }
     logger.info("StudyServiceImpl - getAllStudyList() - Ends");
-    return sortedStudyBOList;
+    return studyBOList;
   }
 
   @Override

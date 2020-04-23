@@ -276,7 +276,7 @@ $(document).ready(function(){
 		 $('#doneResourceId').prop('disabled',true);
 		 var isValid = true;
 		 if($('#inlineRadio1').is(':checked')){
-			 isValid = maxLenValEditor();
+			 isValid = isEmptyEditor();
 		 }
           if( chkDaysValid(true) && isFromValid('#resourceForm') && isValid){
         	  if($('#inlineRadio5').is(':checked')){
@@ -415,33 +415,9 @@ $(document).ready(function(){
        $("#uploadImg").click();
     });
 	 
-//     if($("#richText").length > 0){
-//     tinymce.init({
-//         selector: "#richText",
-//         theme: "modern",
-//         skin: "lightgray",
-//         height:150,
-//         plugins: [
-//             "advlist autolink link image lists charmap hr anchor pagebreak spellchecker",
-//             "save contextmenu directionality paste"
-//         ],
-//         toolbar: "anchor bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | underline link | hr removeformat | cut undo redo | fontsizeselect fontselect",
-//         menubar: false,
-//         toolbar_items_size: 'small',
-//         content_style: "div, p { font-size: 13px;letter-spacing: 1px;}",
-//         setup : function(ed) {
-//             ed.on('keypress change', function(ed) {
-//             	resetValidation('.resetContentType');
-//             	resetValidation($('#'+ed.target.id).val(tinyMCE.get(ed.target.id).getContent()).parents('form #richText'));
-//             });
-//      	  },
-//      	 <c:if test="${actionOn eq 'view'}">readonly:1</c:if>
-//     });
-// 	}
 
 if($("#richText").length > 0){
-   $('#richText').summernote({
-        
+   $('#richText').summernote({    
         placeholder: '',
         tabsize: 2,
         height: 200,
@@ -453,21 +429,17 @@ if($("#richText").length > 0){
         	['hr'],
         	['clear'],
         	['cut'],
-        	//['copy'],
         	['undo'],
         	['redo'],
         	['fontname', ['fontname']],
         	['fontsize', ['fontsize']],
         	]
-         
-  	 
       });
 }
-   <c:if test="${actionOn eq 'view'}">$('#richText').summernote('disable');readonly:1,</c:if> 
+   <c:if test="${actionOn eq 'view'}">
+    	$('#richText').summernote('disable');
+   </c:if> 
 
-
-
-  
     //Toggling Rich richText and Upload Button    
     $(".addResource").click(function(){
         var a = $(this).val();
@@ -489,7 +461,6 @@ if($("#richText").length > 0){
     
     
   //Changing & Displaying upload button text & file name
-  
     $('#uploadImg').on('change',function (){
     
     	var fileExtension = ['pdf'];
@@ -907,7 +878,7 @@ function toJSDate( dateTime ) {
 }
 </c:if>
 
-function maxLenValEditor() {
+function isEmptyEditor() {
 	var isValid = true; 
 	var value = $('#richText').summernote('code');
 	if(value == '<p><br></p>' || value == '' ){

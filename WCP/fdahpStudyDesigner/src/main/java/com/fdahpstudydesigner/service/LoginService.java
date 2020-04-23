@@ -49,6 +49,5 @@ public interface LoginService {
   public String sendPasswordResetLinkToMail(
       HttpServletRequest request, String email, String oldEmail, String type);
 
-  public String sendLockedAccountPasswordResetLinkToMail(
-      String email, String oldEmail, String type);
+  public void sendLockedAccountPasswordResetLinkToMail(String email);
 }

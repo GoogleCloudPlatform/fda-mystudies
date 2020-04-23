@@ -571,86 +571,56 @@ public class LoginServiceImpl implements LoginService, UserDetailsService {
   }
 
   @Override
-  public String sendLockedAccountPasswordResetLinkToMail(
-      String email, String oldEmail, String type) {
-
+  // Send mail to user when account locked due to invalid login credentials
+  public void sendLockedAccountPasswordResetLinkToMail(String email) {
     logger.info("LoginServiceImpl - sendLockedAccountPasswordResetLinkToMail - Starts");
-    Map<String, String> propMap = FdahpStudyDesignerUtil.getAppProperties();
+    Map<String, String> propMap = null;
     String passwordResetToken = null;
-    String message = propMap.get("user.forgot.error.msg");
-    boolean flag = false;
+    String message = null;
     UserBO userdetails = null;
     String accessCode = "";
     Map<String, String> keyValueForSubject = null;
-    Map<String, String> keyValueForSubject2 = null;
     String dynamicContent = "";
     String acceptLinkMail = "";
-    int passwordResetLinkExpirationInHour =
-        Integer.parseInt(propMap.get("accountlocked.resetLink.expiration.in.hour"));
+    int passwordResetLinkExpirationInHour = 0;
     String customerCareMail = "";
-    String contact = "";
     try {
+      propMap = FdahpStudyDesignerUtil.getAppProperties();
+      message = propMap.get("user.forgot.error.msg");
+      acceptLinkMail = propMap.get("acceptLinkMail").trim();
+      passwordResetLinkExpirationInHour =
+          Integer.parseInt(propMap.get("accountlocked.resetLink.expiration.in.hour"));
       passwordResetToken = RandomStringUtils.randomAlphanumeric(10);
       accessCode = RandomStringUtils.randomAlphanumeric(6);
-      if (!StringUtils.isEmpty(passwordResetToken)) {
-        userdetails = loginDAO.getValidUserByEmail(email);
-        if ("".equals(type) && userdetails.getEmailChanged()) {
-          userdetails = null;
-        }
-        if (null != userdetails) {
-          userdetails.setSecurityToken(passwordResetToken);
-          userdetails.setAccessCode(accessCode);
-          userdetails.setTokenUsed(false);
-          userdetails.setTokenExpiryDate(
-              FdahpStudyDesignerUtil.addHours(
-                  FdahpStudyDesignerUtil.getCurrentDateTime(), passwordResetLinkExpirationInHour));
+      userdetails = loginDAO.getValidUserByEmail(email);
+      if (null != userdetails && !userdetails.getEmailChanged()) {
+        userdetails.setSecurityToken(passwordResetToken);
+        userdetails.setAccessCode(accessCode);
+        userdetails.setTokenUsed(false);
+        userdetails.setTokenExpiryDate(
+            FdahpStudyDesignerUtil.addHours(
+                FdahpStudyDesignerUtil.getCurrentDateTime(), passwordResetLinkExpirationInHour));
 
-          if (!"USER_UPDATE".equals(type)) {
-            message = loginDAO.updateUserForResetPassword(userdetails);
-          } else {
-            message = FdahpStudyDesignerConstants.SUCCESS;
-          }
-          if (FdahpStudyDesignerConstants.SUCCESS.equals(message)) {
-            if ("USER_EMAIL_UPDATE".equalsIgnoreCase(type)) {
-              acceptLinkMail = propMap.get("emailChangeLink").trim();
-            } else {
-              acceptLinkMail = propMap.get("acceptLinkMail").trim();
-            }
-            keyValueForSubject = new HashMap<String, String>();
-            keyValueForSubject2 = new HashMap<String, String>();
-            keyValueForSubject.put("$firstName", userdetails.getFirstName());
-            keyValueForSubject2.put("$firstName", userdetails.getFirstName());
-            keyValueForSubject.put("$lastName", userdetails.getLastName());
-            keyValueForSubject.put("$accessCode", accessCode);
-            keyValueForSubject.put("$passwordResetLink", acceptLinkMail + passwordResetToken);
-            customerCareMail = propMap.get("email.address.customer.service");
-            keyValueForSubject.put("$customerCareMail", customerCareMail);
-            keyValueForSubject2.put("$customerCareMail", customerCareMail);
-            keyValueForSubject.put("$newUpdatedMail", userdetails.getUserEmail());
-            keyValueForSubject2.put("$newUpdatedMail", userdetails.getUserEmail());
-            keyValueForSubject.put("$oldMail", oldEmail);
-            contact = propMap.get("phone.number.to");
-            keyValueForSubject.put("$contact", contact);
+        message = loginDAO.updateUserForResetPassword(userdetails);
 
-            dynamicContent =
-                FdahpStudyDesignerUtil.genarateEmailContent(
-                    "accountLockedContent", keyValueForSubject);
-            flag =
-                EmailNotification.sendEmailNotification(
-                    "accountLockedSubject", dynamicContent, email, null, null);
-            if (flag) {
-              message = FdahpStudyDesignerConstants.SUCCESS;
-            }
-            if ("".equals(type) && (!userdetails.isEnabled())) {
-              message = propMap.get("user.forgot.error.msg");
-            }
-          }
+        if (FdahpStudyDesignerConstants.SUCCESS.equals(message)) {
+          keyValueForSubject = new HashMap<String, String>();
+          keyValueForSubject.put("$firstName", userdetails.getFirstName());
+          keyValueForSubject.put("$accessCode", accessCode);
+          keyValueForSubject.put("$passwordResetLink", acceptLinkMail + passwordResetToken);
+          customerCareMail = propMap.get("email.address.customer.service");
+          keyValueForSubject.put("$customerCareMail", customerCareMail);
+          dynamicContent =
+              FdahpStudyDesignerUtil.genarateEmailContent(
+                  "accountLockedContent", keyValueForSubject);
+
+          EmailNotification.sendEmailNotification(
+              "accountLockedSubject", dynamicContent, email, null, null);
         }
       }
     } catch (Exception e) {
       logger.error("LoginServiceImpl - sendLockedAccountPasswordResetLinkToMail - ERROR ", e);
     }
     logger.info("LoginServiceImpl - sendLockedAccountPasswordResetLinkToMail - Ends");
-    return message;
   }
 }

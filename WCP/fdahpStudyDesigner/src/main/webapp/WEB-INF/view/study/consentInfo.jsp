@@ -132,7 +132,7 @@
 				<div class="gray-xs-f mb-xs">
 					Show as a visual step? <span class="requiredStar">*</span><span
 						class="ml-xs sprites_v3 filled-tooltip" data-toggle="tooltip"
-						title="Choose Yes if you wish this section to appear as a standalone Visual Step in the app prior to the full Consent Document . A Visual Step screen shows the section Title, and the Brief Summary with a link to the elaborated version of the content."></span>
+						title="Choose Yes if you wish this section to appear as a standalone Visual Step in the app prior to the full Consent Document. A Visual Step screen shows the section Title, and the Brief Summary with a link to the elaborated version of the content."></span>
 				</div>
 				<div class="form-group visualStepDiv">
 					<span class="radio radio-info radio-inline p-45"> <input
@@ -156,10 +156,100 @@
 </div>
 <!-- End right Content here -->
 <script type="text/javascript">
-	$(document)
-			.ready(
-					function() {
-						// Fancy Scroll Bar
+$(document).ready(function(){  
+    // Fancy Scroll Bar
+    
+    <c:if test="${actionPage eq 'view'}">
+	    $('#consentInfoFormId input,textarea').prop('disabled', true);
+	    $('#consentInfoFormId .elaborateClass').addClass('linkDis');
+	    $('.ConsentButtonHide').hide();
+    </c:if>
+    
+    if('${consentInfoBo.id}' == ''){
+    	 $("#displayTitleId").hide();
+    }
+    $(".menuNav li").removeClass('active');
+    $(".fifthConsent").addClass('active');
+	$("#createStudyId").show();
+    //load the list of titles when the page loads
+	consentInfoDetails();
+	initSummernoteEditor();
+    //get the selected consent type on change
+    $('input[name="consentItemType"]').change(function(){
+    	$('.visualStepDiv').find(".help-block").empty();
+    	resetValidation($("#consentInfoFormId"));
+    	
+    	if (this.value == 'Custom') {
+    		$("#displayTitleId").show();
+    		$("#titleContainer").hide();
+    		$("#consentItemTitleId").prop('required', false);
+    	}else{
+    		
+    		consentInfoDetails();
+    		$("#consentItemTitleId").prop('required', true);
+    		$("#titleContainer").show();
+    	}
+    	addDefaultData();
+		
+        
+    });
+   
+    $("#consentItemTitleId").change(function(){
+    	var titleText = this.options[this.selectedIndex].text;
+    	resetValidation($("#consentInfoFormId"));
+    	
+    	$(".consentTitle").parent().removeClass('has-error has-danger');
+		$(".consentTitle").parent().find(".help-block").empty();
+		$("#displayTitle").parent().removeClass('has-error has-danger');
+		$("#displayTitle").parent().find(".help-block").empty();
+    	if(titleText != null && titleText != '' && typeof titleText != 'undefined'){
+    		$("#displayTitleId").show();
+    		if(titleText != 'Select'){
+    			$("#displayTitle").val(titleText);
+    		}else{
+    			$("#displayTitle").val('');
+    		}
+    	}
+    });
+    
+    if('${consentInfoBo.consentItemType}' == 'Custom'){
+    	$("#titleContainer").hide();
+    	$("#consentItemTitleId").prop('required',false);
+    }else{
+    	$("#titleContainer").show();
+    	$("#consentItemTitleId").prop('required',true);
+    }
+    //submit the form
+    $("#doneId").on('click', function(){
+    	$("#doneId").prop('disabled', true);
+    	$('#elaboratedRTE').summernote('code');
+    	valid =  maxLenValEditor();
+    	if( isFromValid("#consentInfoFormId") && valid){
+    		var visualStepData = '';
+    		
+    		visualStepData = $('input[name=visualStep]:checked').val();
+    		if(visualStepData != '' && visualStepData!= null && typeof visualStepData != 'undefined'){
+    			
+    			var elaboratedContent = $('#elaboratedRTE').summernote('code');
+            	elaboratedContent = replaceSpecialCharacters(elaboratedContent);
+            	var briefSummaryText = replaceSpecialCharacters($("#briefSummary").val());
+            	$("#elaborated").val(elaboratedContent);
+            	$("#briefSummary").val(briefSummaryText);
+            	var displayTitleText = $("#displayTitle").val();
+            	displayTitleText = replaceSpecialCharacters(displayTitleText);
+            	$("#displayTitle").val(displayTitleText);
+        		$("#consentInfoFormId").submit();
+        		
+    		}else{
+    			$('.visualStepDiv').addClass('has-error has-danger');
+    			$('.visualStepDiv').find(".help-block").empty().html('<ul class="list-unstyled"><li>Please choose one visual step</li></ul>');
+    			$("#doneId").prop('disabled', false);
+    		}
+    	}else{
+    		$("#doneId").prop('disabled', false);
+    	}
+    });
+});
 
 						<c:if test="${actionPage eq 'view'}">
 						$('#consentInfoFormId input,textarea').prop('disabled',
@@ -260,7 +350,6 @@
 														&& visualStepData != null
 														&& typeof visualStepData != 'undefined') {
 
-													//var elaboratedContent = tinymce.get('elaboratedRTE').getContent({ format: 'raw' });
 													var elaboratedContent = $(
 															'#elaboratedRTE')
 															.summernote('code');
@@ -298,8 +387,7 @@
 														false);
 											}
 										});
-					});
-
+					
 	function saveConsentInfo(item) {
 		var consentInfo = new Object();
 		var consentInfoId = $("#id").val();
@@ -310,7 +398,6 @@
 		displayTitleText = replaceSpecialCharacters(displayTitleText);
 		var briefSummaryText = $("#briefSummary").val();
 		briefSummaryText = replaceSpecialCharacters(briefSummaryText);
-		//var elaboratedText = tinymce.get('elaboratedRTE').getContent({ format: 'raw' });$('#elaboratedRTE').summernote('code')
 		var elaboratedText = $('#elaboratedRTE').summernote('code');
 		if (elaboratedText != '<p><br></p>') {
 			elaboratedText = replaceSpecialCharacters(elaboratedText);
@@ -435,13 +522,12 @@
 		</c:if>
 	}
 
-	//remove the default vallues from the fields when the consent type is changed
-	function addDefaultData() {
 
+//remove the default vallues from the fields when the consent type is changed
+function addDefaultData(){
 		var consentInfoId = $("#id").val();
 		$("#displayTitle").val('');
 		$("#briefSummary").val('');
-		//$("#elaboratedRTE").val('');
 		$("#elaborated").val('');
 		$("#elaboratedRTE").summernote('reset');
 		$("#inlineRadio3").prop('checked', false);
@@ -454,7 +540,6 @@
 			if (consentType == actualValue) {
 
 				var elaboratedText = $("#elaboratedTemp").val();
-				//tinymce.get('elaboratedRTE').setContent(elaboratedText);
 				$('#elaboratedRTE').summernote('code', elaboratedText);
 
 				var displayTitle = $("#displayTitleTemp").val();
@@ -467,7 +552,6 @@
 				} else if (visualStep == "No") {
 					$("#inlineRadio4").prop('checked', true);
 				}
-				//initTinyMCEEditor();
 				initSummernoteEditor();
 			}
 		}
@@ -500,32 +584,6 @@
 		}
 	}
 
-	//initialize the tinymce editor
-	// function initTinyMCEEditor(){
-	// 	tinymce.init({
-	//          selector: "#elaboratedRTE",
-	//          theme: "modern",
-	//          skin: "lightgray",
-	//          height:180,
-	//          plugins: [
-	//              "advlist autolink link image lists charmap hr anchor pagebreak spellchecker",
-	//              "save contextmenu directionality paste"
-	//          ],
-	//          toolbar: "anchor bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | underline link | hr removeformat | cut undo redo | fontsizeselect fontselect",
-	//          menubar: false,
-	//          toolbar_items_size: 'small',
-	//          content_style: "div, p { font-size: 13px;letter-spacing: 1px;}",
-	//          setup : function(ed) {
-	//              ed.on('change', function(ed) {
-	//            		  if(tinyMCE.get(ed.target.id).getContent() != ''){
-	//            			$('#elaboratedRTE').parent().removeClass("has-danger").removeClass("has-error");
-	//            	        $('#elaboratedRTE').parent().find(".help-block").html("");
-	//            		  }
-	//              });
-	//     	  	},
-	//     	  	<c:if test="${actionPage eq 'view'}">readonly:1</c:if>
-	//      });
-	// }
 
 	function initSummernoteEditor() {
 		$('#elaboratedRTE').summernote(
@@ -539,52 +597,43 @@
 							[ 'font', [ 'underline' ] ],
 							[ 'insert', [ 'link' ] ], [ 'hr' ], [ 'clear' ],
 							[ 'cut' ],
-							//['copy'],
 							[ 'undo' ], [ 'redo' ],
 							[ 'fontname', [ 'fontname' ] ],
-							[ 'fontsize', [ 'fontsize' ] ], ]
-
+							[ 'fontsize', [ 'fontsize' ] ], 
+							]
 				});
-
 	}
-	<c:if test="${actionPage eq 'view'}">$('#elaboratedRTE').summernote(
-			'disable');
-	readonly: 1, </c:if>
+	<c:if test="${actionPage eq 'view'}">$
+	  ('#elaboratedRTE').summernote('disable');
+	readOnly:1;</c:if>
 
-	function maxLenValEditor() {
-		var isValid = true;
-		//var value = tinymce.get('elaboratedRTE').getContent({ format: 'raw' });
-		var value = $('#elaboratedRTE').summernote('code');
-		if (value != '<p><br></p>') {
-			if (value != ''
-					&& $.trim(value.replace(/(<([^>]+)>)/ig, "")).length > 15000) {
-				if (isValid) {
-					isValid = false;
-				}
-				$('#elaboratedRTE')
-						.parent()
-						.addClass('has-error-cust')
-						.find(".help-block")
-						.empty()
-						.append(
-								'<ul class="list-unstyled"><li>Maximum 15000 characters are allowed.</li></ul>');
-
-			} else {
-				$('#elaboratedRTE').parent().removeClass("has-danger")
-						.removeClass("has-error");
-				$('#elaboratedRTE').parent().find(".help-block").html("");
+	
+function maxLenValEditor() {
+	var isValid = true; 
+	var value = $('#elaboratedRTE').summernote('code');
+	if(value != '<p><br></p>'){
+		if(value != ''  && $.trim(value.replace(/(<([^>]+)>)/ig, "")).length > 15000 ){
+			if(isValid){
+				isValid = false;
 			}
-		} else {
-			isValid = false;
-			$('#elaboratedRTE')
-					.parent()
-					.addClass('has-error has-danger')
-					.find(".help-block")
-					.empty()
-					.append(
-							'<ul class="list-unstyled"><li>Please fill out this field.</li></ul>');
+				$('#elaboratedRTE').parent().addClass('has-error-cust').find(".help-block").empty().append('<ul class="list-unstyled"><li>Maximum 15000 characters are allowed.</li></ul>');
 
+		} else {
+			$('#elaboratedRTE').parent().removeClass("has-danger")
+					.removeClass("has-error");
+			$('#elaboratedRTE').parent().find(".help-block").html("");
 		}
+	} else {
+		isValid = false;
+		$('#elaboratedRTE')
+				.parent()
+				.addClass('has-error has-danger')
+				.find(".help-block")
+				.empty()
+				.append(
+						'<ul class="list-unstyled"><li>Please fill out this field.</li></ul>');
+
+	}				
 		return isValid;
 	}
 </script>

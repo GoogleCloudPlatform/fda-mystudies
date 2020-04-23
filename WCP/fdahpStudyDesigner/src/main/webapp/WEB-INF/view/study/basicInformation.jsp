@@ -355,34 +355,10 @@
 
 						$("[data-toggle=tooltip]").tooltip();
 
-						//             //wysiwyg editor
-						//             if($("#editor").length > 0){
-						//             tinymce.init({
-						//                 selector: "#editor",
-						//                 theme: "modern",
-						//                 skin: "lightgray",
-						//                 height:180,
-						//                 plugins: [
-						//                     "advlist autolink link image lists charmap hr anchor pagebreak spellchecker",
-						//                     "save contextmenu directionality paste"
-						//                 ],
-						//                 toolbar: "anchor bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | underline link | hr removeformat | cut undo redo",
-						//                 menubar: false,
-						//                 toolbar_items_size: 'small',
-						//                 content_style: "div, p { font-size: 13px;letter-spacing: 1px;}",
-						//                 <c:if test="${not empty permission}">readonly:1,</c:if>
-						//                 setup : function(ed) {
-						//                     ed.on('keypress change', function(ed) {
-						//  	          resetValidation($('#editor').val(tinyMCE.get("editor").getContent()).parents('form'));
-						//                     });
-						//            	  	}
-						//             });
-						//         }
-
+                       //summernote editor initialization
 						$('#summernote')
 								.summernote(
 										{
-
 											placeholder : '',
 											tabsize : 2,
 											height : 200,
@@ -399,7 +375,6 @@
 													[ 'hr' ],
 													[ 'clear' ],
 													[ 'cut' ],
-													//['copy'],
 													[ 'undo' ],
 													[ 'redo' ],
 													[ 'fontname',
@@ -408,9 +383,9 @@
 															[ 'fontsize' ] ], ]
 
 										});
-						<c:if test="${not empty permission}">$('#summernote')
-								.summernote('disable');
-						readonly: 1, </c:if>
+						<c:if test="${not empty permission}">
+							 $('#summernote').summernote('disable');
+						</c:if>
 
 						// File Upload    
 						$("#uploadImgbtn").click(function() {
@@ -447,9 +422,6 @@
 											}
 										});
 
-						/*         $( "#summernote" ).keypress(function() {
-						 $('#summernote').parent().removeClass("has-danger").removeClass("has-error");
-						 }); */
 
 						$("#completedId")
 								.on(

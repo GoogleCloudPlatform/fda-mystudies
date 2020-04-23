@@ -23,8 +23,6 @@
 package com.fdahpstudydesigner.service;
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
 import org.apache.log4j.Logger;
@@ -181,15 +179,6 @@ public class NotificationServiceImpl implements NotificationService {
     List<String> gatewayAppList = null;
     try {
       gatewayAppList = new ArrayList<>(new HashSet(notificationDAO.getGatwayAppList()));
-
-      Collections.sort(
-          gatewayAppList,
-          new Comparator<String>() {
-            @Override
-            public int compare(String s1, String s2) {
-              return s1.compareToIgnoreCase(s2);
-            }
-          });
     } catch (Exception e) {
       logger.error("NotificationServiceImpl - saveOrUpdateNotification - ERROR", e);
     }

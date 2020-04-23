@@ -465,7 +465,7 @@ public class LoginDAOImpl implements LoginDAO {
       }
     }
     if (isAcountLocked) {
-      loginService.sendLockedAccountPasswordResetLinkToMail(userEmailId, "", "");
+      loginService.sendLockedAccountPasswordResetLinkToMail(userEmailId);
       throw new LockedException(propMap.get("account.lock.msg"));
     }
     logger.info("LoginDAOImpl - updateUser() - Ends");
@@ -542,6 +542,7 @@ public class LoginDAOImpl implements LoginDAO {
   }
 
   @Override
+  // Reset the user details as part of account locking flow
   public String updateUserForResetPassword(UserBO userBO) {
     logger.info("LoginDAOImpl - updateUserForResetPassword() - Starts");
     Session session = null;
