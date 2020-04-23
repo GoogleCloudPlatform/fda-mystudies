@@ -108,7 +108,7 @@ module "storage_destination" {
       type = "Delete"
     }
     condition = {
-      age        = 7*365 # 7 years
+      age        = 7 * 365 # 7 years
       with_state = "ANY"
     }
   }]
