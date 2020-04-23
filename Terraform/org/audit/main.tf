@@ -94,6 +94,12 @@ module "storage_log_export" {
 
 # TODO: Replace with terraform-google-modules/log-export/google//modules/storage
 # once https://github.com/terraform-google-modules/terraform-google-log-export/pull/52  is fixed.
+# HIPAA recommends storing audit logs in raw format for a minimum of 6 months
+# and compressed format for 6 years.
+# We will use a GCS bucket to retain raw audit logs for 7 years to meet both of
+# these requirements. However, to keep costs low, we will set the storage class
+# to COLDLINE and create a corresponding 1 year BigQuery dataset to be used for
+# regular querying and audit log analysis.
 module "storage_destination" {
   source  = "terraform-google-modules/cloud-storage/google//modules/simple_bucket"
   version = "~> 1.5"
@@ -102,6 +108,7 @@ module "storage_destination" {
   project_id    = var.project_id
   location      = "us-east1"
   storage_class = "COLDLINE"
+
 
   lifecycle_rules = [{
     action = {
