@@ -39,6 +39,11 @@ variable "subnetwork" {
   default     = "default"
 }
 
+variable "master_authorized_networks" {
+  type        = list(object({ cidr_block = string, display_name = string }))
+  description = "List of master authorized networks for accessing the master endpoint. Endpoint is not publically accessible."
+}
+
 variable "repo_owner" {
   description = "Owner of the GitHub repo which contains the definitions of Docker images used by GKE"
   type        = string
