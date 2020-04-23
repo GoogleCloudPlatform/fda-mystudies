@@ -125,6 +125,15 @@ public class SurveyResourcesFragment<T> extends Fragment implements ApiCall.OnAs
     HashMap<String, String> header = new HashMap<>();
     mStudyId = ((SurveyActivity) mContext).getStudyId();
     header.put("studyId", mStudyId);
+    header.put(
+        getString(R.string.clientToken),
+        SharedPreferenceHelper.readPreference(mContext, getString(R.string.clientToken), ""));
+    header.put(
+        "accessToken",
+        SharedPreferenceHelper.readPreference(mContext, getString(R.string.auth), ""));
+    header.put(
+        "userId",
+        SharedPreferenceHelper.readPreference(mContext, getString(R.string.userid), ""));
     String url = URLs.RESOURCE_LIST + "?studyId=" + mStudyId;
     GetResourceListEvent getResourceListEvent = new GetResourceListEvent();
     WCPConfigEvent wcpConfigEvent =

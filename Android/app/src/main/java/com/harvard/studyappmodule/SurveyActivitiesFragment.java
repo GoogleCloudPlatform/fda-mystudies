@@ -1427,6 +1427,15 @@ public class SurveyActivitiesFragment extends Fragment
     HashMap<String, String> header = new HashMap<>();
     String studyId = ((SurveyActivity) mContext).getStudyId();
     header.put("studyId", studyId);
+    header.put(
+        getString(R.string.clientToken),
+        SharedPreferenceHelper.readPreference(mContext, getString(R.string.clientToken), ""));
+    header.put(
+        "accessToken",
+        SharedPreferenceHelper.readPreference(mContext, getString(R.string.auth), ""));
+    header.put(
+        "userId",
+        SharedPreferenceHelper.readPreference(mContext, getString(R.string.userid), ""));
     String url = URLs.RESOURCE_LIST + "?studyId=" + studyId;
     GetResourceListEvent getResourceListEvent = new GetResourceListEvent();
     WCPConfigEvent wcpConfigEvent =
