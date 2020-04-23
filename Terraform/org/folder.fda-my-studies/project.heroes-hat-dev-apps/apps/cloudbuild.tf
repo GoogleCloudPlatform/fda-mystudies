@@ -16,10 +16,11 @@
 # images used by the app GKE Clusters when code changes are made in the GitHub repo at configured
 # branches.
 
-# Run after install the Cloud Build app and connect GitHub repo in Cloud Build by following
-# https://cloud.google.com/cloud-build/docs/automating-builds/create-github-app-triggers#installing_the_cloud_build_app.
-
-# TODO: Uncomment the following after connect the repo in Cloud Build.
+# ***NOTE***: First follow
+# https://cloud.google.com/cloud-build/docs/automating-builds/create-github-app-triggers#installing_the_cloud_build_app
+# to install the Cloud Build app and connect your GitHub repository to your Cloud project.
+#
+# The following content should be initially commented out if the above manual step is not completed.
 
 resource "google_cloudbuild_trigger" "wcp" {
   provider = google-beta
