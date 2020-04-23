@@ -72,3 +72,25 @@ resource "google_compute_global_address" "ingress_static_ip" {
   address_type = "EXTERNAL" # This is the default, but be explicit because it's important.
   project      = var.project_id
 }
+
+# Binary Authorization resources.
+# Simple configuration for now. Future
+# See https://cloud.google.com/binary-authorization/docs/overview
+resource "google_binary_authorization_policy" "policy" {
+  # Whitelist images from this project.
+  # See https://cloud.google.com/binary-authorization/docs/policy-yaml-reference#admissionwhitelistpatterns
+  admission_whitelist_patterns {
+    name_pattern = "gcr.io/${var.project_id}/*"
+  }
+
+  # Allow Google-built images.
+  # See https://cloud.google.com/binary-authorization/docs/policy-yaml-reference#globalpolicyevaluationmode
+  global_policy_evaluation_mode = "ENABLE"
+
+  # Block all non-whitelisted images.
+  # See https://cloud.google.com/binary-authorization/docs/policy-yaml-reference#defaultadmissionrule
+  default_admission_rule {
+    evaluation_mode  = "ALWAYS_DENY"
+    enforcement_mode = "ENFORCED_BLOCK_AND_AUDIT_LOG"
+  }
+}
