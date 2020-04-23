@@ -144,7 +144,12 @@ public class ActivityResponseProcessorServiceImpl implements ActivityResponsePro
   private void processActivityResponses(
       List<QuestionnaireActivityStepsBean> questionnaireResponses,
       List<QuestionnaireActivityStepsBean> activityMetadataBeanFromWCP) {
+    QuestionnaireActivityStepsBean scoreSumResponseBean = null;
     for (QuestionnaireActivityStepsBean responseBean : questionnaireResponses) {
+      if (responseBean.getKey().equals("_SUM")) {
+        logger.info("processActivityResponses() - Found _SUM question.");
+        scoreSumResponseBean = responseBean;
+      }
       if (responseBean.getResultType().equalsIgnoreCase(AppConstants.GROUPED_FIELD_KEY)) {
         ActivityValueGroupBean valueGroupResponse =
             getValueGroupResponses(activityMetadataBeanFromWCP, responseBean);
@@ -156,6 +161,52 @@ public class ActivityResponseProcessorServiceImpl implements ActivityResponsePro
         plugInMetadataToResponses(activityMetadataBeanFromWCP, responseBean, false);
       }
     }
+    if (scoreSumResponseBean != null) {
+      calculateScoreSum(questionnaireResponses,scoreSumResponseBean);
+    }
+  }
+
+  private double parseSingleValue(Object value) {
+    if (value instanceof Double) {
+      return ((Double) value).doubleValue();
+    } else if (value instanceof Integer) {
+      return ((Integer) value).doubleValue();
+    } else if (value instanceof String) {
+      try {
+        return Double.parseDouble((String) value);
+      } catch (Exception e) {
+        logger.info("Failed to parse value as number. Error: " + e.getMessage());
+      }
+    } else {
+      logger.info("parseSingleValue() - Unhandled value type: " + value.getClass().getName());
+    }
+    return 0;
+  }
+
+  private void calculateScoreSum(
+      List<QuestionnaireActivityStepsBean> questionnaireResponses,
+      QuestionnaireActivityStepsBean scoreSumResponseBean) {
+    double sum = 0;
+    for (QuestionnaireActivityStepsBean responseBean : questionnaireResponses) {
+      if (responseBean == scoreSumResponseBean) {
+        logger.info("calculateScoreSum() - skip _SUM question.");
+        continue;
+      }
+      logger.info("calculateScoreSum() - question key: "
+         + responseBean.getKey() + " value type: " + responseBean.getValue().getClass().getName());
+      Object value = responseBean.getValue();
+      if (value instanceof List) {
+        List<Object> valueList = (ArrayList<Object>) value;
+        for (Object o : valueList) {
+          sum = sum + parseSingleValue(o);
+          logger.info("calculateScoreSum() - sum: " + (new Double(sum)).toString());
+        }
+      } else {
+        sum = sum + parseSingleValue(value);
+        logger.info("calculateScoreSum() - sum: " + (new Double(sum)).toString());
+      }
+    }
+    scoreSumResponseBean.setValue(new Double(sum));
   }
 
   private ActivityValueGroupBean getValueGroupResponses(
