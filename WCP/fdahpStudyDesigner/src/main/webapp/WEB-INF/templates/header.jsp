@@ -16,7 +16,7 @@
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>                        
               </button>
-              <a class="navbar-brand pt-none pb-none" href="javascript:void(0)" id="landingScreen"><img src="/fdahpStudyDesigner/images/logo/logo-sm.png"/></a>
+              <a class="navbar-brand pt-none pb-none" href="javascript:void(0)" id="landingScreen"><img src="/studybuilder/images/logo/logo_innerScreens.png"/></a>
             </div>
             <div class="collapse navbar-collapse p-none" id="myNavbar">
               <ul class="nav navbar-nav">
@@ -46,7 +46,7 @@
 		          <a class="dropdown-toggle blue-link" data-toggle="dropdown" href="javascript:void(0)">${sessionObject.firstName} ${sessionObject.lastName} &nbsp;<i class="fa fa-angle-down" aria-hidden="true"></i></a>
 		          <ul class="dropdown-menu pb-none pt-none profileBox">
 		         
-		            <li class="linkProf"><a href="javascript:void(0)" class="blue-link text-weight-normal text-uppercase" id="profileSection">My Account</a><hr align="left" width="100%"><a href="/fdahpStudyDesigner/sessionOut.do" class="blue-link text-weight-normal text-uppercase"><span>sign Out</span> <span class="ml-xs"><img src="/fdahpStudyDesigner/images/icons/logout.png"/></span></a></li>
+		            <li class="linkProf"><a href="javascript:void(0)" class="blue-link text-weight-normal text-uppercase" id="profileSection">My Account</a><hr align="left" width="100%"><a href="/studybuilder/sessionOut.do" class="blue-link text-weight-normal text-uppercase"><span>sign Out</span> <span class="ml-xs"><img src="/studybuilder/images/icons/logout.png"/></span></a></li>
 		          </ul>
 		          </li>
                </ul>
@@ -57,7 +57,7 @@
 		          <a class="dropdown-toggle blue-link" data-toggle="dropdown" href="javascript:void(0)">${sessionObject.firstName} ${sessionObject.lastName} &nbsp;<span class="caret"></span></a>
 		          <ul class="dropdown-menu pb-none profileBox">
 		         
-		            <li class="linkProf"><a href="javascript:void(0)" class="blue-link text-weight-normal text-uppercase" id="profileSection">My Account</a><hr align="left" width="100%"><a href="javascript:formSubmit();" class="blue-link text-weight-normal text-uppercase"><span>sign Out</span> <span class="ml-xs"><img src="/fdahpStudyDesigner/images/icons/logout.png"/></span></a></li>
+		            <li class="linkProf"><a href="javascript:void(0)" class="blue-link text-weight-normal text-uppercase" id="profileSection">My Account</a><hr align="left" width="100%"><a href="javascript:formSubmit();" class="blue-link text-weight-normal text-uppercase"><span>sign Out</span> <span class="ml-xs"><img src="/studybuilder/images/icons/logout.png"/></span></a></li>
 		          </ul>
 		          </li>
                </ul> --%>
@@ -77,46 +77,46 @@
 <form action="${logoutUrl}" method="post" id="logoutForm">
 	<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" id="logoutCsrf"/>
 </form>
-<form:form action="/fdahpStudyDesigner/adminUsersView/getUserList.do" id="userListForm" name="userListForm" method="post">
+<form:form action="/studybuilder/adminUsersView/getUserList.do" id="userListForm" name="userListForm" method="post">
 </form:form>
-<form:form action="/fdahpStudyDesigner/adminNotificationView/viewNotificationList.do" id="manageNotificationForm" name="manageNotificationForm" method="post">
+<form:form action="/studybuilder/adminNotificationView/viewNotificationList.do" id="manageNotificationForm" name="manageNotificationForm" method="post">
 </form:form>
-<form:form action="/fdahpStudyDesigner/adminDashboard/viewUserDetails.do" id="myAccountForm" name="myAccountForm" method="post">
+<form:form action="/studybuilder/adminDashboard/viewUserDetails.do" id="myAccountForm" name="myAccountForm" method="post">
 </form:form>
-<form:form action="/fdahpStudyDesigner/adminStudies/studyList.do" id="adminStudyDashForm" name="adminStudyDashForm" method="post">
+<form:form action="/studybuilder/adminStudies/studyList.do" id="adminStudyDashForm" name="adminStudyDashForm" method="post">
 </form:form>
-<form:form action="/fdahpStudyDesigner/adminDashboard/viewDashBoard.do" id="landingPageForm" name="landingPageForm" method="post">
+<form:form action="/studybuilder/adminDashboard/viewDashBoard.do" id="landingPageForm" name="landingPageForm" method="post">
 </form:form>
  <script type="text/javascript">
  $(document).ready(function(){
  	var a = document.createElement('a');
  	$('#usersSection').on('click',function(){
 //  		$('#userListForm').submit();
-		a.href = "/fdahpStudyDesigner/adminUsersView/getUserList.do";
+		a.href = "/studybuilder/adminUsersView/getUserList.do";
 		document.body.appendChild(a).click();
  	});
  	
  	$('#manageNotificationSection').on('click',function(){
 //  		$('#manageNotificationForm').submit();
-		a.href = "/fdahpStudyDesigner/adminNotificationView/viewNotificationList.do";
+		a.href = "/studybuilder/adminNotificationView/viewNotificationList.do";
 		document.body.appendChild(a).click();
  	});
  	
  	$('#profileSection').on('click',function(){
 //  		$('#myAccountForm').submit();
-		a.href = "/fdahpStudyDesigner/adminDashboard/viewUserDetails.do";
+		a.href = "/studybuilder/adminDashboard/viewUserDetails.do";
 		document.body.appendChild(a).click();
  	});
  	
  	$('#studySection').on('click',function(){
 //  		$('#adminStudyDashForm').submit();
-		a.href = "/fdahpStudyDesigner/adminStudies/studyList.do";
+		a.href = "/studybuilder/adminStudies/studyList.do";
 		document.body.appendChild(a).click();
  	});
  	
  	$('#landingScreen').on('click',function(){
 //  		$('#landingPageForm').submit();
-		a.href = "/fdahpStudyDesigner/adminDashboard/viewDashBoard.do";
+		a.href = "/studybuilder/adminDashboard/viewDashBoard.do";
 		document.body.appendChild(a).click();
  	});
  	

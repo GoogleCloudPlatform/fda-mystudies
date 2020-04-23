@@ -1,4 +1,4 @@
-// License Agreement for FDA My Studies
+// License Agreement for FDA MyStudies
 // Copyright © 2017-2019 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors.
 // Copyright 2020 Google LLC
 // Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated
@@ -19,6 +19,7 @@
 
 import SlideMenuControllerSwift
 import UIKit
+import Toast_Swift
 
 let kLeftMenuSubtitle = "subTitle"
 let kLeftMenuTitle = "menuTitle"
@@ -59,6 +60,7 @@ class LeftMenuViewController: UIViewController, LeftMenuProtocol {
 
   @IBOutlet weak var labelVersion: UILabel!
   @IBOutlet weak var labelProductName: UILabel!
+  @IBOutlet weak var labelPoweredBy: UILabel!
   @IBOutlet weak var tableHeaderView: UIView!
   @IBOutlet weak var tableFooterView: UIView!
   @IBOutlet weak var buttonSignOut: UIButton?
@@ -68,13 +70,13 @@ class LeftMenuViewController: UIViewController, LeftMenuProtocol {
     [
       "menuTitle": "Home",
       "iconName": "home_menu1-1",
-      "menuType": LeftMenu.studyList
+      "menuType": LeftMenu.studyList,
     ],
 
     [
       "menuTitle": "Resources",
       "iconName": "resources_menu1",
-      "menuType": LeftMenu.resources
+      "menuType": LeftMenu.resources,
     ],
   ]
 
@@ -106,16 +108,11 @@ class LeftMenuViewController: UIViewController, LeftMenuProtocol {
 
     self.view.isHidden = true
 
-    let branding = Utilities.getBrandingDetails()
-    shouldAllowToGiveFeedback = branding!["AllowFeedback"] as! Bool
+    shouldAllowToGiveFeedback = Branding.allowFeedback
     self.createLeftmenuItems()
 
-    var infoDict: NSDictionary?
-    if let path = Bundle.main.path(forResource: "Info", ofType: "plist") {
-      infoDict = NSDictionary(contentsOfFile: path)
-    }
-    let navTitle = infoDict!["ProductTitleName"] as! String
-    labelProductName.text = navTitle
+    labelProductName.text = Branding.navigationTitleName
+    labelPoweredBy.text = Branding.poweredByTitleName
 
     self.tableView.separatorColor = UIColor(
       red: 224 / 255,
@@ -142,42 +139,37 @@ class LeftMenuViewController: UIViewController, LeftMenuProtocol {
 
     let storyboard = UIStoryboard(name: kStoryboardIdentifierGateway, bundle: nil)
 
-    self.studyListViewController = (
-      storyboard.instantiateViewController(
+    self.studyListViewController =
+      (storyboard.instantiateViewController(
         withIdentifier: String(describing: StudyListViewController.classForCoder())
       )
-        as? UINavigationController
-    )!
+      as? UINavigationController)!
 
-    self.notificationController = (
-      storyboard.instantiateViewController(
+    self.notificationController =
+      (storyboard.instantiateViewController(
         withIdentifier: String(describing: NotificationViewController.classForCoder())
       )
-        as? UINavigationController
-    )!
+      as? UINavigationController)!
 
-    self.resourcesViewController = (
-      storyboard.instantiateViewController(
+    self.resourcesViewController =
+      (storyboard.instantiateViewController(
         withIdentifier: String(
           describing: GatewayResourcesListViewController.classForCoder()
         )
       )
-        as? UINavigationController
-    )!
+      as? UINavigationController)!
 
-    self.profileviewController = (
-      storyboard.instantiateViewController(
+    self.profileviewController =
+      (storyboard.instantiateViewController(
         withIdentifier: String(describing: ProfileViewController.classForCoder())
       )
-        as? UINavigationController
-    )!
+      as? UINavigationController)!
 
-    self.reachoutViewController = (
-      storyboard.instantiateViewController(
+    self.reachoutViewController =
+      (storyboard.instantiateViewController(
         withIdentifier: String(describing: ReachoutOptionsViewController.classForCoder())
       )
-        as? UINavigationController
-    )!
+      as? UINavigationController)!
 
   }
 
@@ -188,41 +180,48 @@ class LeftMenuViewController: UIViewController, LeftMenuProtocol {
 
     let studyStoryBoard = UIStoryboard.init(name: kStudyStoryboard, bundle: Bundle.main)
     // for standalone
-    self.studyTabBarController = studyStoryBoard.instantiateViewController(
-      withIdentifier: kStudyDashboardTabbarControllerIdentifier
-    )
+    self.studyTabBarController =
+      studyStoryBoard.instantiateViewController(
+        withIdentifier: kStudyDashboardTabbarControllerIdentifier
+      )
       as! StudyDashboardTabbarViewController
 
     let storyboard = UIStoryboard(name: kStoryboardIdentifierGateway, bundle: nil)
 
-    self.studyListViewController = storyboard.instantiateViewController(
-      withIdentifier: String(describing: StudyListViewController.classForCoder())
-    )
+    self.studyListViewController =
+      storyboard.instantiateViewController(
+        withIdentifier: String(describing: StudyListViewController.classForCoder())
+      )
       as? UINavigationController
 
-    self.studyHomeViewController = studyStoryBoard.instantiateViewController(
-      withIdentifier: String(describing: "StudyHomeNavigationController")
-    )
+    self.studyHomeViewController =
+      studyStoryBoard.instantiateViewController(
+        withIdentifier: String(describing: "StudyHomeNavigationController")
+      )
       as? UINavigationController  // for standalone
 
-    self.notificationController = storyboard.instantiateViewController(
-      withIdentifier: String(describing: NotificationViewController.classForCoder())
-    )
+    self.notificationController =
+      storyboard.instantiateViewController(
+        withIdentifier: String(describing: NotificationViewController.classForCoder())
+      )
       as? UINavigationController
 
-    self.resourcesViewController = storyboard.instantiateViewController(
-      withIdentifier: String(describing: GatewayResourcesListViewController.classForCoder())
-    )
+    self.resourcesViewController =
+      storyboard.instantiateViewController(
+        withIdentifier: String(describing: GatewayResourcesListViewController.classForCoder())
+      )
       as? UINavigationController
 
-    self.profileviewController = storyboard.instantiateViewController(
-      withIdentifier: String(describing: ProfileViewController.classForCoder())
-    )
+    self.profileviewController =
+      storyboard.instantiateViewController(
+        withIdentifier: String(describing: ProfileViewController.classForCoder())
+      )
       as? UINavigationController
 
-    self.reachoutViewController = storyboard.instantiateViewController(
-      withIdentifier: String(describing: ReachoutOptionsViewController.classForCoder())
-    )
+    self.reachoutViewController =
+      storyboard.instantiateViewController(
+        withIdentifier: String(describing: ReachoutOptionsViewController.classForCoder())
+      )
       as? UINavigationController
 
   }
@@ -231,22 +230,20 @@ class LeftMenuViewController: UIViewController, LeftMenuProtocol {
   func createControllersForAnonymousUser() {
 
     let loginStoryBoard = UIStoryboard(name: kLoginStoryboardIdentifier, bundle: nil)
-    let signInController = (
-      loginStoryBoard.instantiateViewController(
+    let signInController =
+      (loginStoryBoard.instantiateViewController(
         withIdentifier: String(describing: SignInViewController.classForCoder())
       )
-        as? SignInViewController
-    )!
+      as? SignInViewController)!
     self.signInViewController = UINavigationController(rootViewController: signInController)
     self.signInViewController.navigationBar.barStyle = .default
     self.signInViewController.navigationBar.isTranslucent = false
 
-    let signUpController = (
-      loginStoryBoard.instantiateViewController(
+    let signUpController =
+      (loginStoryBoard.instantiateViewController(
         withIdentifier: String(describing: SignUpViewController.classForCoder())
       )
-        as? SignUpViewController
-    )!
+      as? SignUpViewController)!
     self.signUpViewController = UINavigationController(rootViewController: signUpController)
     self.signUpViewController.navigationBar.barStyle = .default
     self.signUpViewController.navigationBar.isTranslucent = false
@@ -263,7 +260,7 @@ class LeftMenuViewController: UIViewController, LeftMenuProtocol {
       [
         "menuTitle": "Home",
         "iconName": "home_menu1-1",
-        "menuType": LeftMenu.studyList
+        "menuType": LeftMenu.studyList,
       ],
     ]
 
@@ -531,7 +528,16 @@ class LeftMenuViewController: UIViewController, LeftMenuProtocol {
       UIApplication.shared.keyWindow?.removeProgressIndicatorFromWindow()
       self.navigationController?.popToRootViewController(animated: true)
     }
+    if let studiesVC = self.studyListViewController {
+      LeftMenuViewController.showLogoutToast(on: studiesVC)
+    }
 
+  }
+
+  final class func showLogoutToast(on viewController: UIViewController) {
+    DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
+      viewController.view.makeToast(kOnLogoutMessage)
+    }
   }
 }
 
@@ -578,16 +584,18 @@ extension LeftMenuViewController: UITableViewDataSource {
 
     if dict?["subTitle"] != nil {
       var cell: LeftMenuCell?
-      cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath)
+      cell =
+        tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath)
         as? LeftMenuCell
       cell?.populateCellData(data: menus[indexPath.row])
       return cell!
     } else {
       var cell: LeftMenuResourceTableViewCell?
-      cell = tableView.dequeueReusableCell(
-        withIdentifier: "LeftMenuResourceCell",
-        for: indexPath
-      )
+      cell =
+        tableView.dequeueReusableCell(
+          withIdentifier: "LeftMenuResourceCell",
+          for: indexPath
+        )
         as? LeftMenuResourceTableViewCell
       cell?.populateCellData(data: menus[indexPath.row])
       return cell!
@@ -612,8 +620,7 @@ extension LeftMenuViewController: NMWebServiceDelegate {
   func failedRequest(_ manager: NetworkManager, requestName: NSString, error: NSError) {
     UIApplication.shared.keyWindow?.addProgressIndicatorOnWindowFromTop()
 
-    if requestName as String == AuthServerMethods.getRefreshedToken.description && error.code == 401
-    {  // unauthorized
+    if requestName as String == AuthServerMethods.getRefreshedToken.description && error.code == 401 {  // unauthorized
       UIUtilities.showAlertMessageWithActionHandler(
         kErrorTitle,
         message: error.localizedDescription,

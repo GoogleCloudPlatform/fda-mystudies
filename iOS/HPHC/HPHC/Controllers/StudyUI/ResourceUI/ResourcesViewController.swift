@@ -1,4 +1,4 @@
-// License Agreement for FDA My Studies
+// License Agreement for FDA MyStudies
 // Copyright © 2017-2019 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors.
 // Copyright 2020 Google LLC
 // Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated
@@ -54,14 +54,8 @@ class ResourcesViewController: UIViewController {
     }
 
     // Branding
-    let brandingDetail = Utilities.getBrandingDetails()
-    if let leavetitle = brandingDetail?[BrandingConstant.LeaveStudy] as? String {
-      leaveStudy = leavetitle
-    }
-
-    if let consent = brandingDetail?[BrandingConstant.ConsentPDF] as? String {
-      consentPDF = consent
-    }
+    leaveStudy = Branding.leaveStudyTitle
+    consentPDF = Branding.consentPDFTitle
 
   }
 
@@ -83,11 +77,9 @@ class ResourcesViewController: UIViewController {
     self.tabBarController?.tabBar.isHidden = false
 
     if Study.currentStudy?.withdrawalConfigration?.message == nil
-      && (
-        Study.currentStudy?.withdrawalConfigration?.type == nil
-          || Study.currentStudy?
-            .withdrawalConfigration?.type == .notAvailable
-      )
+      && (Study.currentStudy?.withdrawalConfigration?.type == nil
+        || Study.currentStudy?
+          .withdrawalConfigration?.type == .notAvailable)
     {
       WCPServices().getStudyInformation(
         studyId: (Study.currentStudy?.studyId)!,
@@ -133,8 +125,9 @@ class ResourcesViewController: UIViewController {
   }
 
   func updateAnchorDateLifeTime() {
-
-    AnchorDateHandler().fetchActivityAnchorDateForResourceFromLabkey { (status) in
+    guard let currentStudy = Study.currentStudy else { return }
+    AnchorDateHandler(study: currentStudy).fetchActivityAnchorDateForResourceFromLabkey {
+      (status) in
       if status {
         self.loadResourceFromDatabase()
       }
@@ -361,12 +354,11 @@ class ResourcesViewController: UIViewController {
   func navigateToStudyHome() {
 
     let studyStoryBoard = UIStoryboard.init(name: kStudyStoryboard, bundle: Bundle.main)
-    let studyHomeController = (
-      studyStoryBoard.instantiateViewController(
+    let studyHomeController =
+      (studyStoryBoard.instantiateViewController(
         withIdentifier: String(describing: StudyHomeViewController.classForCoder())
       )
-        as? StudyHomeViewController
-    )!
+      as? StudyHomeViewController)!
     studyHomeController.hideViewConsentAfterJoining = true
     studyHomeController.loadViewFrom = .resource
     studyHomeController.hidesBottomBarWhenPushed = true
@@ -377,10 +369,9 @@ class ResourcesViewController: UIViewController {
   func navigateToWebView(link: String?, htmlText: String?, pdfData: Data?) {
 
     let loginStoryboard = UIStoryboard.init(name: "Main", bundle: Bundle.main)
-    let webViewController = (
-      loginStoryboard.instantiateViewController(withIdentifier: "WebViewController")
-        as? UINavigationController
-    )!
+    let webViewController =
+      (loginStoryboard.instantiateViewController(withIdentifier: "WebViewController")
+      as? UINavigationController)!
     let webView = (webViewController.viewControllers[0] as? WebViewController)!
     webView.isEmailAvailable = true
 
@@ -591,10 +582,9 @@ extension ResourcesViewController: UITableViewDataSource {
 
     let resource = (tableViewRowDetails?[indexPath.row])!
 
-    let cell = (
-      tableView.dequeueReusableCell(withIdentifier: kResourcesTableViewCell, for: indexPath)
-        as? ResourcesTableViewCell
-    )!
+    let cell =
+      (tableView.dequeueReusableCell(withIdentifier: kResourcesTableViewCell, for: indexPath)
+      as? ResourcesTableViewCell)!
 
     // Cell Data Setup
 
@@ -674,10 +664,24 @@ extension ResourcesViewController: NMWebServiceDelegate {
           handleResponseForWithdraw(response: response)
         }
       } else {
-        UserServices().deActivateAccount(
-          listOfStudyIds: [Study.currentStudy?.studyId ?? ""],
-          delegate: self
-        )
+        if let currentStudy = Study.currentStudy {
+          let studyID = currentStudy.studyId ?? ""
+          let studyName = currentStudy.name ?? ""
+          let withdrawlInfo = currentStudy.withdrawalConfigration ?? StudyWithdrawalConfigration()
+          let participantID = currentStudy.userParticipateState.participantId ?? ""
+          let studyToDelete = StudyToDelete(
+            studyId: studyID,
+            participantId: participantID,
+            studyName: studyName,
+            withdrawalConfigration: withdrawlInfo
+          )
+          UserServices().deActivateAccount(
+            studiesToDelete: [studyToDelete],
+            delegate: self
+          )
+        } else {
+          handleResponseForWithdraw(response: [:])
+        }
       }
 
     case RegistrationMethods.deactivate.method.methodName:
@@ -695,14 +699,13 @@ extension ResourcesViewController: NMWebServiceDelegate {
 
     case ConsentServerMethods.consentDocument.method.methodName:
       self.removeProgressIndicator()
-      let consentDict: [String: Any] = (
-        (response as? [String: Any])![kConsentPdfKey] as? [String: Any]
-      )!
+      let consentDict: [String: Any] = ((response as? [String: Any])![kConsentPdfKey] as? [String: Any])!
 
       if Utilities.isValidObject(someObject: consentDict as AnyObject?) {
 
         if Utilities.isValidValue(someObject: consentDict[kConsentVersion] as AnyObject?) {
-          Study.currentStudy?.signedConsentVersion = consentDict[kConsentVersion]
+          Study.currentStudy?.signedConsentVersion =
+            consentDict[kConsentVersion]
             as? String
         } else {
           Study.currentStudy?.signedConsentVersion = "No_Version"
@@ -725,8 +728,7 @@ extension ResourcesViewController: NMWebServiceDelegate {
 
   func failedRequest(_ manager: NetworkManager, requestName: NSString, error: NSError) {
 
-    if requestName as String == AuthServerMethods.getRefreshedToken.description && error.code == 401
-    {  //unauthorized  // unauthorized
+    if requestName as String == AuthServerMethods.getRefreshedToken.description && error.code == 401 {  //unauthorized  // unauthorized
       self.removeProgressIndicator()
       UIUtilities.showAlertMessageWithActionHandler(
         kErrorTitle,

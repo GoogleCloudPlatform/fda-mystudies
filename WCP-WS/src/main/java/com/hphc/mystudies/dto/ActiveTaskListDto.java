@@ -30,11 +30,9 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
-
 @Entity
 @Table(name = "active_task_list")
 public class ActiveTaskListDto implements Serializable {
-
 
   private static final long serialVersionUID = -4743834604812647713L;
 

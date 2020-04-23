@@ -9,6 +9,8 @@
 package com.google.cloud.healthcare.fdamystudies.util;
 
 import java.io.IOException;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -39,7 +41,11 @@ import com.google.cloud.healthcare.fdamystudies.beans.ResponseBean;
 import com.google.cloud.healthcare.fdamystudies.beans.UpdateAccountInfo;
 import com.google.cloud.healthcare.fdamystudies.beans.UpdateAccountInfoResponseBean;
 import com.google.cloud.healthcare.fdamystudies.beans.UserRegistrationForm;
+import com.google.cloud.healthcare.fdamystudies.beans.WithdrawFromStudyBodyProvider;
 import com.google.cloud.healthcare.fdamystudies.config.ApplicationPropertyConfiguration;
+import com.google.cloud.healthcare.fdamystudies.exceptions.InvalidRequestException;
+import com.google.cloud.healthcare.fdamystudies.exceptions.SystemException;
+import com.google.cloud.healthcare.fdamystudies.exceptions.UnAuthorizedRequestException;
 
 @Component
 public class UserManagementUtil {
@@ -389,7 +395,7 @@ public class UserManagementUtil {
       headers.set(AppConstants.USER_ID, userId);
       headers.set(AppConstants.ACCESS_TOKEN, accessToken);
 
-      requestBody = new HttpEntity<>(bodyProvider, headers);
+      requestBody = new HttpEntity<>(null, headers);
       responseEntity =
           restTemplate.exchange(
               appConfig.getAuthServerUrl() + "/deactivate",
@@ -418,5 +424,69 @@ public class UserManagementUtil {
       logger.info("URWebAppWSUtil - getCurrentUtilDateTime() :: ERROR ", e);
     }
     return date;
+  }
+
+  public static String getHashedValue(String input) {
+    String generatedHash = null;
+    try {
+      MessageDigest md = MessageDigest.getInstance("SHA-256");
+      byte[] bytes = md.digest(input.getBytes());
+      StringBuilder sb = new StringBuilder();
+      for (int i = 0; i < bytes.length; i++) {
+        sb.append(Integer.toString((bytes[i] & 0xff) + 0x100, 16).substring(1));
+      }
+      generatedHash = sb.toString();
+    } catch (NoSuchAlgorithmException e) {
+      logger.error("No Such Algorithm Exception: ", e);
+    }
+    return generatedHash;
+  }
+
+  public String withdrawParticipantFromStudy(String participantId, String studyId, String delete)
+      throws UnAuthorizedRequestException, InvalidRequestException, SystemException {
+    logger.info("EnrollmentManagementUtil withDrawParticipantFromStudy() - starts ");
+    HttpHeaders headers = null;
+    HttpEntity<WithdrawFromStudyBodyProvider> request = null;
+
+    String message = MyStudiesUserRegUtil.ErrorCodes.FAILURE.getValue();
+    try {
+      headers = new HttpHeaders();
+      headers.setContentType(MediaType.APPLICATION_JSON);
+      headers.set(AppConstants.APPLICATION_ID, null);
+      headers.set(AppConstants.CLIENT_ID, appConfig.getClientId());
+      headers.set(AppConstants.SECRET_KEY, getHashedValue(appConfig.getSecretKey()));
+
+      request = new HttpEntity<>(null, headers);
+
+      String url =
+          appConfig.getWithdrawStudyUrl()
+              + "?studyId="
+              + studyId
+              + "&participantId="
+              + participantId
+              + "&deleteResponses="
+              + String.valueOf(delete);
+
+      ResponseEntity<?> response = restTemplate.postForEntity(url, request, String.class);
+
+      if (response.getStatusCode() == HttpStatus.OK) {
+        message = MyStudiesUserRegUtil.ErrorCodes.SUCCESS.getValue();
+      }
+
+    } catch (RestClientResponseException e) {
+      message = MyStudiesUserRegUtil.ErrorCodes.FAILURE.getValue();
+      if (e.getRawStatusCode() == 401) {
+        logger.error("Invalid client Id or client secret.");
+        throw new UnAuthorizedRequestException();
+      } else if (e.getRawStatusCode() == 400) {
+        logger.error("Client verification ended with Bad Request");
+        throw new InvalidRequestException();
+      } else {
+        logger.error("Client verification ended with Internal Server Error");
+        throw new SystemException();
+      }
+    }
+    logger.info("EnrollmentManagementUtil withDrawParticipantFromStudy() - Ends ");
+    return message;
   }
 }

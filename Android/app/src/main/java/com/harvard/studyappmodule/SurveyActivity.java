@@ -630,7 +630,7 @@ public class SurveyActivity extends AppCompatActivity
   @Override
   public <T> void asyncResponse(T response, int responseCode) {
     if (responseCode == LOGOUT_REPSONSECODE) {
-      Toast.makeText(this, getResources().getString(R.string.signOut), Toast.LENGTH_SHORT).show();
+      Toast.makeText(this, getResources().getString(R.string.signed_out), Toast.LENGTH_SHORT).show();
       SharedPreferences settings = SharedPreferenceHelper.getPreferences(SurveyActivity.this);
       settings.edit().clear().apply();
       // delete passcode from keystore
@@ -677,7 +677,7 @@ public class SurveyActivity extends AppCompatActivity
       NotificationManagerCompat notificationManager =
           NotificationManagerCompat.from(SurveyActivity.this);
       notificationManager.cancelAll();
-
+      Toast.makeText(SurveyActivity.this, R.string.signed_out,Toast.LENGTH_SHORT).show();
       signout();
     }
 

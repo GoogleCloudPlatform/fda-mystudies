@@ -29,7 +29,6 @@ import org.apache.log4j.Logger;
 import com.hphc.mystudies.util.StudyMetaDataUtil;
 import com.sun.jersey.core.util.Base64;
 
-
 public class AuthenticationService {
 
   public static final Logger LOGGER = Logger.getLogger(AuthenticationService.class);
@@ -37,7 +36,6 @@ public class AuthenticationService {
   @SuppressWarnings("unchecked")
   HashMap<String, String> authPropMap = StudyMetaDataUtil.getAuthorizationProperties();
 
-  
   public boolean authenticate(String authCredentials) {
     LOGGER.info("INFO: AuthenticationService - authenticate() - Starts");
     boolean authenticationStatus = false;

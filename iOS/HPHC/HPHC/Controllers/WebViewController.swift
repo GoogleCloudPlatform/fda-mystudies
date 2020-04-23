@@ -1,6 +1,7 @@
-// License Agreement for FDA My Studies
-// Copyright © 2017-2019 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors. Permission is
-// hereby granted, free of charge, to any person obtaining a copy of this software and associated
+// License Agreement for FDA MyStudies
+// Copyright © 2017-2019 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors.
+// Copyright 2020 Google LLC
+// Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated
 // documentation files (the &quot;Software&quot;), to deal in the Software without restriction, including without
 // limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the
 // Software, and to permit persons to whom the Software is furnished to do so, subject to the following
@@ -19,12 +20,12 @@
 import Foundation
 import MessageUI
 import UIKit
+import WebKit
 
 class WebViewController: UIViewController {
 
   // MARK: Outlets
-  @IBOutlet var webView: UIWebView?
-
+  @IBOutlet weak var webView: WKWebView!
   @IBOutlet var barItemShare: UIBarButtonItem?
 
   var activityIndicator: UIActivityIndicatorView!
@@ -55,34 +56,37 @@ class WebViewController: UIViewController {
       self.navigationItem.rightBarButtonItem = nil
       barItemShare = nil
     }
-
-    if self.requestLink != nil && (self.requestLink?.count)! > 0 {
-      let url = URL.init(string: self.requestLink!)
-      let urlRequest = URLRequest.init(url: url!)
-      webView?.loadRequest(urlRequest)
-    } else if self.htmlString != nil {
-      webView?.loadHTMLString(self.htmlString!, baseURL: nil)
-    } else if self.pdfData != nil {
-      self.webView?.load(
-        pdfData!,
-        mimeType: "application/pdf",
-        textEncodingName: "UTF-8",
-        baseURL: URL.init(fileURLWithPath: "")
-      )
-    } else {
-      // VisitWebsite
-      self.activityIndicator.stopAnimating()
-      self.activityIndicator.removeFromSuperview()
-
-    }
-
-    webView?.delegate = self
-    webView?.scalesPageToFit = true
+    webView.navigationDelegate = self
+    webView.contentScaleFactor = 1.0
+    loadContentOnWebView()
     setNeedsStatusBarAppearanceUpdate()
   }
 
   override func viewDidAppear(_ animated: Bool) {
     super.viewDidAppear(animated)
+  }
+
+  final private func loadContentOnWebView() {
+
+    if let requestLink = requestLink,
+      !requestLink.isEmpty,
+      let url = URL(string: requestLink)
+    {
+      let urlRequest = URLRequest(url: url)
+      webView.load(urlRequest)
+    } else if let html = self.htmlString {
+      webView.loadHTMLString(html, baseURL: nil)
+    } else if let pdfData = pdfData {
+      self.webView.load(
+        pdfData,
+        mimeType: "application/pdf",
+        characterEncodingName: "UTF-8",
+        baseURL: URL(fileURLWithPath: "")
+      )
+    } else {
+      self.activityIndicator.stopAnimating()
+      self.activityIndicator.removeFromSuperview()
+    }
   }
 
   /// Dismiss ViewController
@@ -153,14 +157,14 @@ extension WebViewController: MFMailComposeViewControllerDelegate {
     controller.dismiss(animated: true, completion: nil)
   }
 }
-extension WebViewController: UIWebViewDelegate {
+extension WebViewController: WKNavigationDelegate {
 
-  func webViewDidFinishLoad(_ webView: UIWebView) {
+  func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
     self.activityIndicator.stopAnimating()
     self.activityIndicator.removeFromSuperview()
   }
 
-  func webView(_ webView: UIWebView, didFailLoadWithError error: Error) {
+  func webView(_ webView: WKWebView, didFail navigation: WKNavigation!, withError error: Error) {
     self.activityIndicator.stopAnimating()
     self.activityIndicator.removeFromSuperview()
     Logger.sharedInstance.error("\(error.localizedDescription)")

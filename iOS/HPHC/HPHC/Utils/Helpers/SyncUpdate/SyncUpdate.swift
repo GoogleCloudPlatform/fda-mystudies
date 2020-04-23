@@ -1,4 +1,4 @@
-// License Agreement for FDA My Studies
+// License Agreement for FDA MyStudies
 // Copyright © 2017-2019 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors.
 // Copyright 2020 Google LLC
 // Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated
@@ -22,19 +22,13 @@ import RealmSwift
 
 class SyncUpdate {
 
-  private var isReachabilityChanged: Bool
-  static var currentSyncUpdate: SyncUpdate?
-  var selectedRun: DBActivityRun?
+  static var sharedInstance = SyncUpdate()
+  private init() {}
 
-  init() {
-    self.isReachabilityChanged = false
-  }
-
-  @objc func updateData() {
-
-    if (NetworkManager.sharedInstance().reachability?.isReachable)! {
-      // Update Data.
-      DispatchQueue.main.asyncAfter(deadline: .now() + 5.0) {
+  @objc func updateData(isReachable: Bool) {
+    if isReachable {
+      // Start syncing Data.
+      DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) {
         self.syncDataToServer()
       }
     }
@@ -43,153 +37,67 @@ class SyncUpdate {
   /// SyncData to server, called to sync responses stored in offline mode to server.
   func syncDataToServer() {
 
-    let realm = try! Realm()
-    let toBeSyncedData = realm.objects(DBDataOfflineSync.self).sorted(
-      byKeyPath: "date",
-      ascending: true
-    ).first
-    if toBeSyncedData != nil {
+    guard let realm = DBHandler.getRealmObject(),
+      let toBeSyncedData = realm.objects(DBDataOfflineSync.self).sorted(
+        byKeyPath: "date",
+        ascending: true
+      ).first
+    else { return }
 
-      // request params
-      var params: [String: Any]?
+    // Request params
+    var params: [String: Any]?
 
-      if toBeSyncedData?.requestParams != nil {
-
-        params = try? JSONSerialization.jsonObject(
-          with: (toBeSyncedData?.requestParams)!,
+    if let requestParams = toBeSyncedData.requestParams {
+      params =
+        try? JSONSerialization.jsonObject(
+          with: requestParams,
           options: []
-        ) as? [String: Any]
+        ) as? JSONDictionary
+    }
 
-      }
+    // Header params
+    var headers: [String: String]?
 
-      // header params
-      var headers: [String: String]?
-
-      if toBeSyncedData?.headerParams != nil {
-
-        headers = try? JSONSerialization.jsonObject(
-          with: (toBeSyncedData?.headerParams)!,
+    if let requestHeaders = toBeSyncedData.headerParams {
+      headers =
+        try? JSONSerialization.jsonObject(
+          with: requestHeaders,
           options: []
         ) as? [String: String]
-      }
+    }
 
-      let methodString = toBeSyncedData?.method!
-      let server = toBeSyncedData?.server!
+    let methodString = toBeSyncedData.method
+    let server = toBeSyncedData.server
 
-      if server == "registration" {
-
-        let methodName = methodString?.components(separatedBy: ".").first
-        let registrationMethod = RegistrationMethods(rawValue: methodName!)
-        let method = registrationMethod?.method
+    if server == "registration" {
+      let methodName = methodString?.components(separatedBy: ".").first ?? ""
+      let registrationMethod = RegistrationMethods(rawValue: methodName)
+      if let method = registrationMethod?.method {
         UserServices().syncOfflineSavedData(
-          method: method!,
+          method: method,
           params: params,
           headers: headers,
           delegate: self
         )
-
-      } else if server == "wcp" {
-        // Do Nothing
-      } else if server == "response" {
-
-        let methodName = methodString?.components(separatedBy: ".").first
-        let registrationMethod = ResponseMethods(rawValue: methodName!)
-        let method = registrationMethod?.method
+      }
+    } else if server == "response" {
+      let methodName = methodString?.components(separatedBy: "/").last ?? ""
+      let registrationMethod = ResponseMethods(rawValue: methodName)
+      if let method = registrationMethod?.method {
         ResponseServices().syncOfflineSavedData(
-          method: method!,
+          method: method,
           params: params,
           headers: headers,
           delegate: self
         )
       }
+    }
 
-      /// delete current database object
-      try! realm.write {
-        realm.delete(toBeSyncedData!)
-      }
+    // Delete Synced object from DB
+    try! realm.write {
+      realm.delete(toBeSyncedData)
     }
   }
-
-  /// updates run information to server.
-  func updateRunInformationToServer() {
-
-    let realm = try! Realm()
-    let dbRuns = realm.objects(DBActivityRun.self).filter({ $0.toBeSynced == true })
-
-    if dbRuns.count > 0 {
-
-      // get last run
-      let run = dbRuns.last
-      self.selectedRun = run
-      let activity = realm.object(ofType: DBActivity.self, forPrimaryKey: run?.activityId!)
-
-      if activity == nil {
-        self.findNextRunToSync()
-
-      } else if activity != nil && activity?.shortName == nil {
-        self.findNextRunToSync()
-
-      } else {
-
-        let currentUser = User.currentUser
-        if let userStudyStatus = currentUser.participatedStudies.filter({
-          $0.studyId == run?.studyId
-        }).first {
-
-          let studyId = run?.studyId
-          let activiyId = run?.activityId
-          let activityName = activity?.shortName
-          let activityVersion = activity?.version!
-          let currentRunId = run?.runId
-
-          let info = [
-            kStudyId: studyId!,
-            kActivityId: activiyId!,
-            kActivityName: activityName!,
-            "version": activityVersion!,
-            kActivityRunId: "\(currentRunId!)",
-          ] as [String: String]
-
-          let activityType = activity?.type
-          var data: [String: Any] = [:]
-
-          if let runData = run?.responseData,
-            let responseData = try? JSONSerialization.jsonObject(
-              with: runData,
-              options: []
-            ) as? [String: Any]
-          {
-            data = responseData["data"] as? [String: Any] ?? [:]
-          }
-
-          // save to server
-          ResponseServices().processResponse(
-            metaData: info,
-            activityType: activityType ?? "",
-            responseData: data,
-            studyStatus: userStudyStatus,
-            delegate: self
-          )
-        }
-      }
-    } else {
-      self.selectedRun = nil
-    }
-  }
-
-  func findNextRunToSync() {
-    if selectedRun != nil {
-
-      let realm = try! Realm()
-      try! realm.write {
-        self.selectedRun?.toBeSynced = false
-        self.selectedRun?.responseData = nil
-      }
-
-      self.updateRunInformationToServer()
-    }
-  }
-
 }
 
 // MARK: - Webservices Delegates

@@ -30,11 +30,9 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
-
 @Entity
 @Table(name = "questionnaires_custom_frequencies")
 public class QuestionnairesCustomFrequenciesDto implements Serializable {
-
 
   private static final long serialVersionUID = 8169559594640094756L;
 

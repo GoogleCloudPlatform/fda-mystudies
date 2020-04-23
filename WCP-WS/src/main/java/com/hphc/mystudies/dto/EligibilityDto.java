@@ -32,7 +32,6 @@ import javax.persistence.Table;
 import org.hibernate.annotations.NamedQueries;
 import org.hibernate.annotations.NamedQuery;
 
-
 @Entity
 @Table(name = "eligibility")
 @NamedQueries({
@@ -41,7 +40,6 @@ import org.hibernate.annotations.NamedQuery;
       query = "from EligibilityDto EDTO" + " where EDTO.studyId =:studyId "),
 })
 public class EligibilityDto implements Serializable {
-
 
   private static final long serialVersionUID = -4520158278072115802L;
 

@@ -32,12 +32,10 @@ import javax.persistence.Table;
 import javax.persistence.Transient;
 import org.hibernate.annotations.Type;
 
-
 @Entity
 @Table(name = "active_task_attrtibutes_values")
 public class ActiveTaskAttrtibutesValuesDto implements Serializable {
 
- 
   private static final long serialVersionUID = -6725947033876179386L;
 
   @Id

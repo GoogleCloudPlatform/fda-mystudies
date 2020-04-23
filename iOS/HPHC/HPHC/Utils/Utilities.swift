@@ -1,6 +1,7 @@
-// License Agreement for FDA My Studies
-// Copyright © 2017-2019 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors. Permission is
-// hereby granted, free of charge, to any person obtaining a copy of this software and associated
+// License Agreement for FDA MyStudies
+// Copyright © 2017-2019 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors.
+// Copyright 2020 Google LLC
+// Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated
 // documentation files (the &quot;Software&quot;), to deal in the Software without restriction, including without
 // limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the
 // Software, and to permit persons to whom the Software is furnished to do so, subject to the following
@@ -37,27 +38,33 @@ enum ScreenSize {
 
 enum DeviceType {
 
-  static let IS_IPHONE_4_OR_LESS = UIDevice.current.userInterfaceIdiom == .phone
+  static let IS_IPHONE_4_OR_LESS =
+    UIDevice.current.userInterfaceIdiom == .phone
     && ScreenSize
       .SCREEN_MAX_LENGTH < 568.0
 
-  static let IS_IPHONE_5 = UIDevice.current.userInterfaceIdiom == .phone
+  static let IS_IPHONE_5 =
+    UIDevice.current.userInterfaceIdiom == .phone
     && ScreenSize
       .SCREEN_MAX_LENGTH == 568.0
 
-  static let IS_IPHONE_6 = UIDevice.current.userInterfaceIdiom == .phone
+  static let IS_IPHONE_6 =
+    UIDevice.current.userInterfaceIdiom == .phone
     && ScreenSize
       .SCREEN_MAX_LENGTH == 667.0
 
-  static let IS_IPHONE_6P = UIDevice.current.userInterfaceIdiom == .phone
+  static let IS_IPHONE_6P =
+    UIDevice.current.userInterfaceIdiom == .phone
     && ScreenSize
       .SCREEN_MAX_LENGTH == 736.0
 
-  static let IS_IPAD = UIDevice.current.userInterfaceIdiom == .pad
+  static let IS_IPAD =
+    UIDevice.current.userInterfaceIdiom == .pad
     && ScreenSize.SCREEN_MAX_LENGTH
       == 1024.0
 
-  static let IS_IPHONE_X_OR_HIGH = UIDevice.current.userInterfaceIdiom == .phone
+  static let IS_IPHONE_X_OR_HIGH =
+    UIDevice.current.userInterfaceIdiom == .phone
     && ScreenSize
       .SCREEN_MAX_LENGTH >= 812
 }
@@ -71,15 +78,6 @@ enum iOSVersion {
 }
 
 class Utilities: NSObject {
-
-  class func getBrandingDetails() -> NSDictionary? {
-
-    var infoDict: NSDictionary?
-    if let path = Bundle.main.path(forResource: "Branding", ofType: "plist") {
-      infoDict = NSDictionary(contentsOfFile: path)
-    }
-    return infoDict!
-  }
 
   class func isStandaloneApp() -> Bool {
 
@@ -240,16 +238,9 @@ class Utilities: NSObject {
   }
 
   class func isValidEmail(testStr: String) -> Bool {
-
-    let emailRegEx = "[A-Z0-9a-z._-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}"
-
-    let emailTest = NSPredicate(format: "SELF MATCHES %@", emailRegEx)
-
-    if testStr.count > 255 {
-      return false
-    } else {
-      return emailTest.evaluate(with: testStr)
-    }
+    let emailRegEx = "[A-Z0-9a-z._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,64}"
+    let emailPred = NSPredicate(format: "SELF MATCHES %@", emailRegEx)
+    return emailPred.evaluate(with: testStr)
   }
 
   /// checks all the validations for password
@@ -343,30 +334,22 @@ class Utilities: NSObject {
     if (someObject is NSNull) == false {
 
       if someObject as? Int != nil
-        && (
-          (someObject as? Int)! >= 0 || (someObject as? Int)! < 0
-        )
+        && ((someObject as? Int)! >= 0 || (someObject as? Int)! < 0)
       {
         return true
 
       } else if someObject as? String != nil && ((someObject as? String)?.count)! > 0
-        && (
-          someObject as? String
-        ) != ""
+        && (someObject as? String) != ""
       {
         return true
 
       } else if someObject as? Bool != nil
-        && (
-          someObject as! Bool == true || someObject as! Bool == false
-        )
+        && (someObject as! Bool == true || someObject as! Bool == false)
       {
         return true
 
       } else if someObject as? Double != nil && (someObject as? Double)?.isFinite == true
-        && (
-          someObject as? Double
-        )?.isZero == false && (someObject as? Double)! > 0
+        && (someObject as? Double)?.isZero == false && (someObject as? Double)! > 0
       {
         return true
 
@@ -560,7 +543,8 @@ extension FileManager {
   // Method to get documentDirectory of Application
   //     return path of documentDirectory
   class func documentsDir() -> String {
-    let paths = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true)
+    let paths =
+      NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true)
       as [String]
     return paths[0]
   }
@@ -569,7 +553,8 @@ extension FileManager {
   //     return path of CacheDirectory
   class func cachesDir() -> String {
 
-    let paths = NSSearchPathForDirectoriesInDomains(.cachesDirectory, .userDomainMask, true)
+    let paths =
+      NSSearchPathForDirectoriesInDomains(.cachesDirectory, .userDomainMask, true)
       as [String]
     return paths[0]
   }

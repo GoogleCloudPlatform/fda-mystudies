@@ -1,4 +1,4 @@
-// License Agreement for FDA My Studies
+// License Agreement for FDA MyStudies
 // Copyright © 2017-2019 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors.
 // Copyright 2020 Google LLC
 // Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated
@@ -41,12 +41,22 @@ let kConfirmationNavigationTitle = "DELETE ACCOUNT"
 let kPlistFileType = ".plist"
 
 class StudyToDelete {
-
-  var studyId: String!
+  var studyId: String
   var shouldDelete: Bool?
-  var participantId: String!
-
-  init() {}
+  var participantId: String
+  var name: String
+  var withdrawalConfigration: StudyWithdrawalConfigration
+  internal init(
+    studyId: String,
+    participantId: String,
+    studyName: String,
+    withdrawalConfigration: StudyWithdrawalConfigration
+  ) {
+    self.studyId = studyId
+    self.participantId = participantId
+    self.name = studyName
+    self.withdrawalConfigration = withdrawalConfigration
+  }
 }
 
 class ConfirmationViewController: UIViewController {
@@ -66,7 +76,7 @@ class ConfirmationViewController: UIViewController {
   lazy var studiesToDisplay: [Study] = []
   lazy var joinedStudies: [Study]! = []
   var studyWithoutWCData: Study?
-  lazy var studiesToWithdrawn: [StudyToDelete] = []
+  lazy var studiesToWithdraw: [StudyToDelete] = []
 
   // MARK: - View Controller LifeCycle
 
@@ -81,13 +91,9 @@ class ConfirmationViewController: UIViewController {
     )
     tableViewRowDetails = NSMutableArray.init(contentsOfFile: plistPath!)
 
-    var infoDict: NSDictionary?
-    if let path = Bundle.main.path(forResource: "Info", ofType: "plist") {
-      infoDict = NSDictionary(contentsOfFile: path)
-    }
-    let navTitle = infoDict!["ProductTitleName"] as! String
-
-    var descriptionText = Utilities.isStandaloneApp()
+    let navTitle = Branding.productTitle
+    var descriptionText =
+      Utilities.isStandaloneApp()
       ? kHeaderDescriptionStandalone : kHeaderDescription
     descriptionText = descriptionText.replacingOccurrences(of: "#APPNAME#", with: navTitle)
 
@@ -102,7 +108,7 @@ class ConfirmationViewController: UIViewController {
 
     self.title = NSLocalizedString(kConfirmationNavigationTitle, comment: "")
 
-    self.checkWithdrawlConfigurationForNextSuty()
+    self.checkWithdrawlConfigurationForNextStudy()
 
   }
 
@@ -113,27 +119,18 @@ class ConfirmationViewController: UIViewController {
 
   // MARK: - Utils
 
-  private func checkWithdrawlConfigurationForNextSuty() {
+  private func checkWithdrawlConfigurationForNextStudy() {
 
-    if joinedStudies.count != 0 {
-
-      let study = joinedStudies.first
-
-      if study?.withdrawalConfigration?.type == StudyWithdrawalConfigrationType.notAvailable {
-
-        Study.updateCurrentStudy(study: study!)
-        self.sendRequestToGetInfoForStudy(study: study!)
-
+    if let study = joinedStudies.first {
+      if study.withdrawalConfigration?.type == StudyWithdrawalConfigrationType.notAvailable {
+        Study.updateCurrentStudy(study: study)
+        self.sendRequestToGetInfoForStudy(study: study)
       } else {
-        studiesToDisplay.append(study!)
+        studiesToDisplay.append(study)
         joinedStudies.removeFirst()
-
-        _ = studiesToDisplay.map({ $0.studyId! })
-
-        self.checkWithdrawlConfigurationForNextSuty()
+        self.checkWithdrawlConfigurationForNextStudy()
       }
     } else {
-
       self.removeProgressIndicator()
       self.createListOfStudiesToDelete()
     }
@@ -142,19 +139,25 @@ class ConfirmationViewController: UIViewController {
   private func createListOfStudiesToDelete() {
 
     for study in studiesToDisplay {
-      let withdrawnStudy = StudyToDelete()
-      withdrawnStudy.studyId = study.studyId
-      withdrawnStudy.participantId = study.userParticipateState.participantId
+      let studyId = study.studyId ?? ""
+      let participantId = study.userParticipateState.participantId ?? ""
+      let studyName = study.name ?? ""
+      let withdrawalConfigration = study.withdrawalConfigration ?? StudyWithdrawalConfigration()
+      let withdrawnStudy = StudyToDelete(
+        studyId: studyId,
+        participantId: participantId,
+        studyName: studyName,
+        withdrawalConfigration: withdrawalConfigration
+      )
 
       if study.withdrawalConfigration?.type == StudyWithdrawalConfigrationType.deleteData {
         withdrawnStudy.shouldDelete = true
-
       } else if study.withdrawalConfigration?.type == StudyWithdrawalConfigrationType.noAction {
         withdrawnStudy.shouldDelete = false
       }
-
-      studiesToWithdrawn.append(withdrawnStudy)
+      studiesToWithdraw.append(withdrawnStudy)
     }
+    self.tableViewConfirmation?.reloadData()
   }
 
   // MARK: - Webservice Response Handlers
@@ -165,34 +168,45 @@ class ConfirmationViewController: UIViewController {
   /// Handle delete account webservice response.
   private func handleDeleteAccountResponse() {
 
-    if Utilities.isStandaloneApp() {
-      UIApplication.shared.keyWindow?.addProgressIndicatorOnWindowFromTop()
-      Study.currentStudy = nil
-      self.slideMenuController()?.leftViewController?.navigationController?
-        .popToRootViewController(
-          animated: true
-        )
-      DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
-        UIApplication.shared.keyWindow?.removeProgressIndicatorFromWindow()
+    ORKPasscodeViewController.removePasscodeFromKeychain()
+
+    let appDelegate = (UIApplication.shared.delegate as? AppDelegate)!
+    appDelegate.updateKeyAndInitializationVector()
+
+    UIUtilities.showAlertMessageWithActionHandler(
+      NSLocalizedString(kTitleMessage, comment: ""),
+      message: NSLocalizedString(kMessageAccountDeletedSuccess, comment: ""),
+      buttonTitle: NSLocalizedString(kTitleOk, comment: ""),
+      viewControllerUsed: self
+    ) { [weak self] in
+
+      if Utilities.isStandaloneApp() {
+        UIApplication.shared.keyWindow?.addProgressIndicatorOnWindowFromTop()
+        Study.currentStudy = nil
+        self?.slideMenuController()?.leftViewController?.navigationController?
+          .popToRootViewController(
+            animated: true
+          )
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+          UIApplication.shared.keyWindow?.removeProgressIndicatorFromWindow()
+        }
+      } else {
+
+        let leftController =
+          self?.slideMenuController()?.leftViewController
+          as! LeftMenuViewController
+        leftController.changeViewController(.studyList)
+        leftController.createLeftmenuItems()
       }
-    } else {
 
-      let leftController = slideMenuController()?.leftViewController
-        as! LeftMenuViewController
-      leftController.changeViewController(.studyList)
-      leftController.createLeftmenuItems()
     }
-
   }
 
   /// Update the properties with the webservice response.
   private func handleStudyInformationResonse() {
-
     studiesToDisplay.append(Study.currentStudy!)
     joinedStudies.removeFirst()
-
-    self.checkWithdrawlConfigurationForNextSuty()
-    self.tableViewConfirmation?.reloadData()
+    self.checkWithdrawlConfigurationForNextStudy()
   }
 
   // MARK: - Button Actions
@@ -201,7 +215,7 @@ class ConfirmationViewController: UIViewController {
   @IBAction func deleteAccountAction(_ sender: UIButton) {
 
     var found: Bool = false
-    for withdrawnStudy in studiesToWithdrawn {
+    for withdrawnStudy in studiesToWithdraw {
       if withdrawnStudy.shouldDelete == nil {
 
         UIUtilities.showAlertWithMessage(
@@ -220,8 +234,7 @@ class ConfirmationViewController: UIViewController {
   }
 
   func withdrawnFromNextStudy() {
-    let studiesWithdrawnIDs = studiesToWithdrawn.compactMap({ $0.studyId })
-    UserServices().deActivateAccount(listOfStudyIds: studiesWithdrawnIDs, delegate: self)
+    UserServices().deActivateAccount(studiesToDelete: studiesToWithdraw, delegate: self)
   }
 
   /// Don't Delete button action.
@@ -234,36 +247,32 @@ class ConfirmationViewController: UIViewController {
 extension ConfirmationViewController: UITableViewDataSource {
 
   func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-    return studiesToDisplay.count
+    return studiesToWithdraw.count
   }
 
   func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
 
-    let study = studiesToDisplay[indexPath.row]
-    if study.withdrawalConfigration?.type == StudyWithdrawalConfigrationType.askUser {
-
-      let cell = tableView.dequeueReusableCell(
-        withIdentifier: kConfrimationOptionalCellIdentifier,
-        for: indexPath
-      )
+    let study = studiesToWithdraw[indexPath.row]
+    if study.withdrawalConfigration.type == StudyWithdrawalConfigrationType.askUser {
+      let cell =
+        tableView.dequeueReusableCell(
+          withIdentifier: kConfrimationOptionalCellIdentifier,
+          for: indexPath
+        )
         as! ConfirmationOptionalTableViewCell
-      cell.delegate = self
-      cell.study = study
-
-      cell.labelTitle?.text = study.name
-
+      cell.configureCell(with: study)
       return cell
-
     } else {
       // for ConfirmationTableViewCell data
-      let cell = tableView.dequeueReusableCell(
-        withIdentifier: kConfrimationCellIdentifier,
-        for: indexPath
-      )
+      let cell =
+        tableView.dequeueReusableCell(
+          withIdentifier: kConfrimationCellIdentifier,
+          for: indexPath
+        )
         as! ConfirmationTableViewCell
       cell.labelTitle?.text = study.name
 
-      if study.withdrawalConfigration?.type == StudyWithdrawalConfigrationType.deleteData {
+      if study.withdrawalConfigration.type == StudyWithdrawalConfigrationType.deleteData {
         cell.labelTitleDescription?.text = NSLocalizedString(
           kResponseDataDeletedText,
           comment: ""
@@ -284,20 +293,6 @@ extension ConfirmationViewController: UITableViewDelegate {
 
   func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
     tableView.deselectRow(at: indexPath, animated: true)
-  }
-}
-
-extension ConfirmationViewController: ConfirmationOptionalDelegate {
-
-  func confirmationCell(
-    cell: ConfirmationOptionalTableViewCell,
-    forStudy study: Study,
-    deleteData: Bool
-  ) {
-
-    if let withdrawnStudy = self.studiesToWithdrawn.filter({ $0.studyId == study.studyId }).last {
-      withdrawnStudy.shouldDelete = deleteData
-    }
   }
 }
 

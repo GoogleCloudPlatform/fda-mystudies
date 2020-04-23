@@ -29,9 +29,6 @@ public interface UserManagementProfileService {
 
   public void resetLoginAttempts(String email);
 
-  public int sendPasswordResetLinkthroughEmail(
-      String emailId, String tempPassword, UserDetailsBO participantDetails);
-
   public UserDetailsBO getParticipantDetails(String id);
 
   public UserDetailsBO saveParticipant(UserDetailsBO participant);

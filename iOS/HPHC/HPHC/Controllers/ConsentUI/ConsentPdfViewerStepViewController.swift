@@ -1,6 +1,7 @@
-// License Agreement for FDA My Studies
-// Copyright © 2017-2019 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors. Permission is
-// hereby granted, free of charge, to any person obtaining a copy of this software and associated
+// License Agreement for FDA MyStudies
+// Copyright © 2017-2019 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors.
+// Copyright 2020 Google LLC
+// Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated
 // documentation files (the &quot;Software&quot;), to deal in the Software without restriction, including without
 // limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the
 // Software, and to permit persons to whom the Software is furnished to do so, subject to the following
@@ -15,10 +16,10 @@
 // LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT
 // OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 // OTHER DEALINGS IN THE SOFTWARE.
-
 import MessageUI
 import ResearchKit
 import UIKit
+import WebKit
 
 let kPdfMimeType = "application/pdf"
 let kUTF8Encoding = "UTF-8"
@@ -39,9 +40,8 @@ class ConsentPdfViewerStep: ORKStep {
 class ConsentPdfViewerStepViewController: ORKStepViewController {
 
   // MARK: - Outlets
-  @IBOutlet var webView: UIWebView?  //TBD: Update this
+  @IBOutlet weak var webView: WKWebView!
   @IBOutlet weak var buttonEmailPdf: UIBarButtonItem?
-
   @IBOutlet weak var buttonNext: UIButton?
 
   var pdfData: Data?
@@ -68,15 +68,26 @@ class ConsentPdfViewerStepViewController: ORKStepViewController {
 
   override func viewDidLoad() {
     super.viewDidLoad()
+    webView.navigationDelegate = self
+    webView.contentScaleFactor = 1.0
+  }
 
-    self.webView?.load(
-      pdfData!,
-      mimeType: "application/pdf",
-      textEncodingName: "UTF-8",
-      baseURL: URL.init(fileURLWithPath: "")
-    )
-    webView?.delegate = self
-    webView?.scalesPageToFit = true
+  override func viewDidAppear(_ animated: Bool) {
+    super.viewDidAppear(animated)
+    loadPDF()
+  }
+
+  /// Load PDF from the Data on WebView.
+  private func loadPDF() {
+    self.title = kConsent.uppercased()
+    if let pdfData = self.pdfData {
+      self.webView.load(
+        pdfData,
+        mimeType: "application/pdf",
+        characterEncodingName: "UTF-8",
+        baseURL: URL(fileURLWithPath: "")
+      )
+    }
   }
 
   /// SendConsentByMail used for sharing the Consent.
@@ -113,6 +124,7 @@ class ConsentPdfViewerStepViewController: ORKStepViewController {
           }
         )
       )
+      self.present(alert, animated: true, completion: nil)
     }
   }
 
@@ -142,14 +154,13 @@ extension ConsentPdfViewerStepViewController: MFMailComposeViewControllerDelegat
 }
 
 // MARK: - WebView Delegate
-extension ConsentPdfViewerStepViewController: UIWebViewDelegate {
+extension ConsentPdfViewerStepViewController: WKNavigationDelegate {
 
-  func webViewDidFinishLoad(_ webView: UIWebView) {
+  func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
     self.removeProgressIndicator()
   }
 
-  func webView(_ webView: UIWebView, didFailLoadWithError error: Error) {
-
+  func webView(_ webView: WKWebView, didFail navigation: WKNavigation!, withError error: Error) {
     self.removeProgressIndicator()
 
     let buttonTitleOK = NSLocalizedString("OK", comment: "")
@@ -172,4 +183,5 @@ extension ConsentPdfViewerStepViewController: UIWebViewDelegate {
 
     self.present(alert, animated: true, completion: nil)
   }
+
 }

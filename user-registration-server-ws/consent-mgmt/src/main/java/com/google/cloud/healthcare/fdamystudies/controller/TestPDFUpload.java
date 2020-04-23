@@ -40,7 +40,7 @@ public class TestPDFUpload {
             + fileName);
 
     try {
-      logger.info("first try block starts");
+      logger.info("first try block starts in testPDFUpload");
 
       Storage storageService = StorageOptions.getDefaultInstance().getService();
       BlobInfo blobInfo = BlobInfo.newBuilder(bucketName, fileName).build();

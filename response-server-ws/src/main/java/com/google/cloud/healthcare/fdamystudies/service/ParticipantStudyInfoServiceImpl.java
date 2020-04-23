@@ -33,8 +33,7 @@ public class ParticipantStudyInfoServiceImpl implements ParticipantStudyInfoServ
       LoggerFactory.getLogger(ParticipantStudyInfoServiceImpl.class);
 
   @Override
-  public ParticipantStudyInformation getParticipantStudyInfo(
-      String orgId, String applicationId, String studyId, String participantId)
+  public ParticipantStudyInformation getParticipantStudyInfo(String studyId, String participantId)
       throws ProcessResponseException {
     logger.debug("getParticipantStudyInfo() - starts ");
     HttpHeaders headers = null;
@@ -43,19 +42,15 @@ public class ParticipantStudyInfoServiceImpl implements ParticipantStudyInfoServ
     try {
       headers = new HttpHeaders();
       headers.setContentType(MediaType.APPLICATION_JSON);
-      headers.set(AppConstants.ORG_ID_HEADER, orgId);
-      headers.set(AppConstants.APPLICATION_ID_HEADER_WCP, applicationId);
       headers.set(AppConstants.CLIENT_ID_PARAM, appConfig.getRegServerClientId());
       headers.set(
           AppConstants.CLIENT_SECRET_PARAM,
           ResponseServerUtil.getHashedValue(appConfig.getRegServerClientSecret()));
-      headers.set(AppConstants.STUDY_ID_PARAM, studyId);
-      headers.set(AppConstants.PARTICIPANT_ID_KEY, participantId);
 
       UriComponentsBuilder getPartInfoUriBuilder =
-          UriComponentsBuilder.fromHttpUrl(appConfig.getRegServerPartStudyInfoUrl());
-
-      logger.debug(getPartInfoUriBuilder.toUriString());
+          UriComponentsBuilder.fromHttpUrl(appConfig.getRegServerPartStudyInfoUrl())
+              .queryParam(AppConstants.STUDY_ID_PARAM, studyId)
+              .queryParam(AppConstants.PARTICIPANT_ID_KEY, participantId);
       responseEntity =
           restTemplate.exchange(
               getPartInfoUriBuilder.toUriString(),

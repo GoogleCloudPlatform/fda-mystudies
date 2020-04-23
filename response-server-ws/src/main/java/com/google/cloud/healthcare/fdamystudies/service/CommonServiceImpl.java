@@ -77,16 +77,16 @@ public class CommonServiceImpl implements CommonService {
       logger.error("ERROR: ", e);
 
       if (e.getRawStatusCode() == 401) {
-        logger.error("Invalid client Id or client secret. Client id is: " + clientId);
+        logger.error("Invalid client credentials.");
         throw new UnAuthorizedRequestException();
       } else if (e.getRawStatusCode() == 400) {
-        logger.error("Client verification ended with Bad Request");
+        logger.error("Client credentials verification error.");
         throw new InvalidRequestException();
       } else {
         throw new SystemException();
       }
     }
-    logger.error("Invalid client Id or client secret. Client id is: " + clientId);
+    logger.error("Invalid client credentials.");
     throw new SystemException();
   }
 

@@ -8,6 +8,7 @@
 package com.google.cloud.healthcare.fdamystudies.service;
 
 import java.io.ByteArrayOutputStream;
+import java.util.Base64;
 import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -107,7 +108,9 @@ public class UserConsentManagementServiceImpl implements UserConsentManagementSe
 
           ByteArrayOutputStream baos = new ByteArrayOutputStream();
           cloudStorageService.downloadFileTo(path, baos);
-          consentStudyResponseBean.getConsent().setContent(new String(baos.toByteArray()));
+          consentStudyResponseBean
+              .getConsent()
+              .setContent(new String(Base64.getEncoder().encode(baos.toByteArray())));
         }
         consentStudyResponseBean.getConsent().setType("application/pdf");
         participantStudiesBO = userConsentManagementDao.getParticipantStudies(studyId, userId);

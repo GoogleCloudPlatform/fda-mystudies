@@ -37,12 +37,6 @@ public class ApplicationPropertyConfiguration {
   @Value("${host.name}")
   private String smtpHostName;
 
-  @Value("${passwd.reset.link.subject}")
-  private String passwdResetLinkSubject;
-
-  @Value("${passwd.reset.link.content}")
-  private String passwdResetLinkContent;
-
   @Value("${resend.confirmation.mail.subject}")
   private String resendConfirmationMailSubject;
 
@@ -66,4 +60,32 @@ public class ApplicationPropertyConfiguration {
 
   @Value("${interceptor}")
   private String interceptorUrls;
+
+  @Value("${AUTH_KEY_FCM}")
+  private String authKeyFcm;
+
+  @Value("${API_URL_FCM}")
+  private String apiUrlFcm;
+
+  @Value("${serverApiUrls}")
+  private String serverApiUrls;
+
+  @Value("${authServerClientValidationUrl}")
+  private String authServerClientValidationUrl;
+
+  @Value("${clientId}")
+  private String clientId;
+
+  @Value("${secretKey}")
+  private String secretKey;
+
+  @Value("${response.server.url.participant.withdraw}")
+  private String withdrawStudyUrl;
+
+  @Value("${ios.push.notification.type}")
+  private String iosPushNotificationType;
+
+  // Comma separated list of whitelisted domains.
+  @Value("${email.whitelisted_domains}")
+  private String whitelistedUserDomains;
 }

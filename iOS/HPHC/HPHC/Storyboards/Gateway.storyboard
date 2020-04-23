@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="15505" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="ais-Yu-8zr">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="16096" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="ais-Yu-8zr">
     <device id="retina4_7" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="15510"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="16086"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <customFonts key="customFonts">
@@ -15,7 +15,7 @@
         <!--Study List View Controller-->
         <scene sceneID="7ao-vT-gVw">
             <objects>
-                <viewController id="8qc-EF-dit" customClass="StudyListViewController" customModule="HPHC" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController id="8qc-EF-dit" customClass="StudyListViewController" customModule="GCPMyStudies" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="tfZ-LQ-HGJ"/>
                         <viewControllerLayoutGuide type="bottom" id="SMP-pp-kYy"/>
@@ -34,14 +34,14 @@
                                 <rect key="frame" x="0.0" y="0.0" width="375" height="623"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <prototypes>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="studyCell" id="tTo-9t-iz4" customClass="StudyListCell" customModule="HPHC" customModuleProvider="target">
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="studyCell" id="tTo-9t-iz4" customClass="StudyListCell" customModule="GCPMyStudies" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="28" width="375" height="145"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="tTo-9t-iz4" id="SYE-Sc-XoX">
                                             <rect key="frame" x="0.0" y="0.0" width="375" height="145"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
-                                                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="placeholder" translatesAutoresizingMaskIntoConstraints="NO" id="kX2-At-u3e">
+                                                <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="placeholder" translatesAutoresizingMaskIntoConstraints="NO" id="kX2-At-u3e">
                                                     <rect key="frame" x="18" y="24" width="75" height="75"/>
                                                     <constraints>
                                                         <constraint firstAttribute="height" constant="75" id="ELw-U7-6gl"/>
@@ -169,30 +169,8 @@
                                                         <action selector="buttonBookmardAction:" destination="tTo-9t-iz4" eventType="touchUpInside" id="VVU-nc-Lux"/>
                                                     </connections>
                                                 </button>
-                                                <view alpha="0.72999999999999998" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="1be-rE-GDs">
-                                                    <rect key="frame" x="18" y="83" width="75" height="16"/>
-                                                    <subviews>
-                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="HEALTH" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Y5e-Th-t0h">
-                                                            <rect key="frame" x="5" y="0.0" width="70" height="16"/>
-                                                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
-                                                            <fontDescription key="fontDescription" name="HelveticaNeue-Medium" family="Helvetica Neue" pointSize="10"/>
-                                                            <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                                            <nil key="highlightedColor"/>
-                                                        </label>
-                                                    </subviews>
-                                                    <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
-                                                    <constraints>
-                                                        <constraint firstAttribute="height" constant="16" id="2Vc-ST-zqV"/>
-                                                        <constraint firstItem="Y5e-Th-t0h" firstAttribute="leading" secondItem="1be-rE-GDs" secondAttribute="leading" constant="5" id="55h-pm-dhc"/>
-                                                        <constraint firstItem="Y5e-Th-t0h" firstAttribute="top" secondItem="1be-rE-GDs" secondAttribute="top" id="5SZ-yW-kOD"/>
-                                                        <constraint firstAttribute="width" constant="75" id="RAV-Se-nR5"/>
-                                                        <constraint firstAttribute="trailing" secondItem="Y5e-Th-t0h" secondAttribute="trailing" id="pBC-uc-HwG"/>
-                                                        <constraint firstAttribute="bottom" secondItem="Y5e-Th-t0h" secondAttribute="bottom" id="sI9-Ep-tlv"/>
-                                                    </constraints>
-                                                </view>
                                             </subviews>
                                             <constraints>
-                                                <constraint firstItem="aiR-9i-QFj" firstAttribute="top" secondItem="1be-rE-GDs" secondAttribute="bottom" constant="7" id="4oN-Va-QF6"/>
                                                 <constraint firstItem="aiR-9i-QFj" firstAttribute="leading" secondItem="Sqv-oi-gkk" secondAttribute="trailing" constant="4" id="4yy-WB-gGu"/>
                                                 <constraint firstItem="YLI-bb-qxx" firstAttribute="leading" secondItem="CjI-3r-2Rg" secondAttribute="leading" id="5VJ-lO-fTm"/>
                                                 <constraint firstItem="aiR-9i-QFj" firstAttribute="top" secondItem="kX2-At-u3e" secondAttribute="bottom" constant="7" id="5sq-Gs-CKv"/>
@@ -215,7 +193,6 @@
                                                 <constraint firstItem="Sqv-oi-gkk" firstAttribute="leading" secondItem="SYE-Sc-XoX" secondAttribute="leading" constant="18" id="WjP-gi-jx8"/>
                                                 <constraint firstItem="XHP-vP-2PX" firstAttribute="top" secondItem="CjI-3r-2Rg" secondAttribute="top" constant="-18" id="Wv8-Xv-Yvf"/>
                                                 <constraint firstAttribute="bottom" secondItem="n3b-bb-7P1" secondAttribute="bottom" id="ZjQ-At-w8f"/>
-                                                <constraint firstItem="1be-rE-GDs" firstAttribute="leading" secondItem="SYE-Sc-XoX" secondAttribute="leading" constant="18" id="c29-kc-Wke"/>
                                                 <constraint firstItem="KCy-xM-6rO" firstAttribute="leading" secondItem="CjI-3r-2Rg" secondAttribute="leading" id="dF0-8H-M8b"/>
                                                 <constraint firstItem="Otz-hB-kow" firstAttribute="leading" secondItem="CjI-3r-2Rg" secondAttribute="trailing" constant="8" id="jDJ-gL-oN7"/>
                                                 <constraint firstAttribute="trailing" secondItem="n3b-bb-7P1" secondAttribute="trailing" constant="18" id="pXw-02-JNX"/>
@@ -226,9 +203,7 @@
                                         </tableViewCellContentView>
                                         <connections>
                                             <outlet property="buttonBookmark" destination="XHP-vP-2PX" id="kgj-in-pJO"/>
-                                            <outlet property="categoryBG" destination="1be-rE-GDs" id="xFZ-Ko-6Zl"/>
                                             <outlet property="labelCompletionValue" destination="Zic-wt-Oqv" id="0c9-dt-YbA"/>
-                                            <outlet property="labelStudyCategoryType" destination="Y5e-Th-t0h" id="liw-de-Ed2"/>
                                             <outlet property="labelStudyShortDescription" destination="YLI-bb-qxx" id="ayH-pe-hVq"/>
                                             <outlet property="labelStudySponserName" destination="JYg-ZP-14Y" id="V7X-YW-qla"/>
                                             <outlet property="labelStudyStatus" destination="aiR-9i-QFj" id="hSE-IV-7pL"/>
@@ -240,14 +215,14 @@
                                             <outlet property="studyUserStatusIcon" destination="CjI-3r-2Rg" id="H2B-63-UXL"/>
                                         </connections>
                                     </tableViewCell>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="anonymousStudyCell" id="2rT-LK-aIx" customClass="StudyListCell" customModule="HPHC" customModuleProvider="target">
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="anonymousStudyCell" id="2rT-LK-aIx" customClass="StudyListCell" customModule="GCPMyStudies" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="173" width="375" height="145"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="2rT-LK-aIx" id="Dvp-pN-XKm">
                                             <rect key="frame" x="0.0" y="0.0" width="375" height="145"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
-                                                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="OXP-kc-ggg">
+                                                <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="placeholder" translatesAutoresizingMaskIntoConstraints="NO" id="OXP-kc-ggg">
                                                     <rect key="frame" x="18" y="24" width="75" height="75"/>
                                                     <constraints>
                                                         <constraint firstAttribute="width" constant="75" id="QOc-BF-7LV"/>
@@ -322,37 +297,14 @@
                                                         <constraint firstAttribute="height" constant="12" id="7Fi-hg-aON"/>
                                                     </constraints>
                                                 </view>
-                                                <view alpha="0.73000001907348633" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ap4-2T-8a5">
-                                                    <rect key="frame" x="18" y="83" width="75" height="16"/>
-                                                    <subviews>
-                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="HEALTH" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="COw-Ra-frh">
-                                                            <rect key="frame" x="5" y="0.0" width="70" height="16"/>
-                                                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
-                                                            <fontDescription key="fontDescription" name="HelveticaNeue-Medium" family="Helvetica Neue" pointSize="10"/>
-                                                            <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                                            <nil key="highlightedColor"/>
-                                                        </label>
-                                                    </subviews>
-                                                    <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
-                                                    <constraints>
-                                                        <constraint firstAttribute="height" constant="16" id="JBq-JB-EE0"/>
-                                                        <constraint firstAttribute="width" constant="75" id="K8w-tP-7bC"/>
-                                                        <constraint firstItem="COw-Ra-frh" firstAttribute="leading" secondItem="ap4-2T-8a5" secondAttribute="leading" constant="5" id="Nih-Ze-mE8"/>
-                                                        <constraint firstItem="COw-Ra-frh" firstAttribute="top" secondItem="ap4-2T-8a5" secondAttribute="top" id="U8y-V3-4iY"/>
-                                                        <constraint firstAttribute="bottom" secondItem="COw-Ra-frh" secondAttribute="bottom" id="bPY-3U-r9z"/>
-                                                        <constraint firstAttribute="trailing" secondItem="COw-Ra-frh" secondAttribute="trailing" id="iij-iI-AQA"/>
-                                                    </constraints>
-                                                </view>
                                             </subviews>
                                             <constraints>
-                                                <constraint firstItem="uCj-9U-uDm" firstAttribute="top" secondItem="ap4-2T-8a5" secondAttribute="bottom" constant="7" id="1UO-Xj-6nC"/>
                                                 <constraint firstItem="6pR-ur-c4G" firstAttribute="leading" secondItem="OXP-kc-ggg" secondAttribute="trailing" constant="16" id="5jA-p4-SOm"/>
                                                 <constraint firstItem="FDb-f0-pr9" firstAttribute="leading" secondItem="6pR-ur-c4G" secondAttribute="leading" id="6uu-KL-4oL"/>
                                                 <constraint firstItem="Z1L-Ln-Brn" firstAttribute="leading" secondItem="6pR-ur-c4G" secondAttribute="leading" id="BC5-5D-TLw"/>
                                                 <constraint firstAttribute="trailing" secondItem="FDb-f0-pr9" secondAttribute="trailing" constant="18" id="EoT-Qq-XpV"/>
                                                 <constraint firstItem="uCj-9U-uDm" firstAttribute="top" secondItem="OXP-kc-ggg" secondAttribute="bottom" constant="7" id="IIo-27-sxp"/>
                                                 <constraint firstItem="jCR-4W-dtI" firstAttribute="top" secondItem="OXP-kc-ggg" secondAttribute="bottom" constant="9" id="JQs-E9-Xgl"/>
-                                                <constraint firstItem="ap4-2T-8a5" firstAttribute="leading" secondItem="Dvp-pN-XKm" secondAttribute="leading" constant="18" id="KKz-Md-NqW"/>
                                                 <constraint firstItem="jCR-4W-dtI" firstAttribute="leading" secondItem="Dvp-pN-XKm" secondAttribute="leading" constant="18" id="MxZ-fm-I9v"/>
                                                 <constraint firstItem="IZe-Xc-bEx" firstAttribute="top" secondItem="OXP-kc-ggg" secondAttribute="top" id="NJu-Zy-lSo"/>
                                                 <constraint firstItem="6pR-ur-c4G" firstAttribute="top" secondItem="OXP-kc-ggg" secondAttribute="top" id="P7r-aw-iCM"/>
@@ -375,8 +327,6 @@
                                         </tableViewCellContentView>
                                         <connections>
                                             <outlet property="buttonBookmark" destination="IZe-Xc-bEx" id="9bJ-J2-rnl"/>
-                                            <outlet property="categoryBG" destination="ap4-2T-8a5" id="5IL-41-gNf"/>
-                                            <outlet property="labelStudyCategoryType" destination="COw-Ra-frh" id="Utf-W9-ZZ5"/>
                                             <outlet property="labelStudyShortDescription" destination="Z1L-Ln-Brn" id="gF4-6I-hBb"/>
                                             <outlet property="labelStudySponserName" destination="FDb-f0-pr9" id="OYs-cZ-Kx4"/>
                                             <outlet property="labelStudyStatus" destination="uCj-9U-uDm" id="4cP-up-JFo"/>
@@ -419,7 +369,7 @@
         <!--Study Filter View Controller-->
         <scene sceneID="9Mp-g1-82Q">
             <objects>
-                <viewController id="lUx-CG-FkH" customClass="StudyFilterViewController" customModule="HPHC" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController id="lUx-CG-FkH" customClass="StudyFilterViewController" customModule="GCPMyStudies" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="7KD-yM-djx"/>
                         <viewControllerLayoutGuide type="bottom" id="Jld-Wp-LF3"/>
@@ -471,9 +421,9 @@
                             <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="pgd-bA-uNV">
                                 <rect key="frame" x="0.0" y="20" width="375" height="569.5"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
-                                <collectionViewLayout key="collectionViewLayout" id="l8e-d4-YTz" customClass="PinterestLayout" customModule="HPHC" customModuleProvider="target"/>
+                                <collectionViewLayout key="collectionViewLayout" id="l8e-d4-YTz" customClass="PinterestLayout" customModule="GCPMyStudies" customModuleProvider="target"/>
                                 <cells>
-                                    <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="cell" id="Wfx-YU-qiq" customClass="FilterListCollectionViewCell" customModule="HPHC" customModuleProvider="target">
+                                    <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="cell" id="Wfx-YU-qiq" customClass="FilterListCollectionViewCell" customModule="GCPMyStudies" customModuleProvider="target">
                                         <rect key="frame" x="91" y="0.0" width="193" height="255"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
@@ -504,7 +454,7 @@
                                                         </constraints>
                                                     </view>
                                                     <prototypes>
-                                                        <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="none" indentationWidth="10" reuseIdentifier="cell" rowHeight="50" id="zHQ-rv-Y3l" customClass="FilterListTableViewCell" customModule="HPHC" customModuleProvider="target">
+                                                        <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="none" indentationWidth="10" reuseIdentifier="cell" rowHeight="50" id="zHQ-rv-Y3l" customClass="FilterListTableViewCell" customModule="GCPMyStudies" customModuleProvider="target">
                                                             <rect key="frame" x="0.0" y="68" width="193" height="50"/>
                                                             <autoresizingMask key="autoresizingMask"/>
                                                             <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="zHQ-rv-Y3l" id="OMD-a2-GGf">
@@ -512,27 +462,27 @@
                                                                 <autoresizingMask key="autoresizingMask"/>
                                                                 <subviews>
                                                                     <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="v6X-TX-ubk">
-                                                                        <rect key="frame" x="21" y="15" width="20" height="20"/>
+                                                                        <rect key="frame" x="16" y="15" width="20" height="20"/>
                                                                         <constraints>
                                                                             <constraint firstAttribute="width" constant="20" id="08M-Oi-ee8"/>
                                                                             <constraint firstAttribute="width" secondItem="v6X-TX-ubk" secondAttribute="height" multiplier="1:1" id="3tV-Pc-Hzi"/>
                                                                         </constraints>
                                                                     </imageView>
-                                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="wordWrap" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="cN6-2N-vAu">
-                                                                        <rect key="frame" x="49" y="5" width="144" height="40"/>
+                                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" lineBreakMode="wordWrap" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="cN6-2N-vAu">
+                                                                        <rect key="frame" x="44" y="5" width="149" height="40"/>
                                                                         <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="14"/>
-                                                                        <color key="textColor" red="0.43794345855712891" green="0.46189779043197632" blue="0.51261717081069946" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                                        <color key="textColor" red="0.4392156862745098" green="0.46274509803921571" blue="0.51372549019607838" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                                         <nil key="highlightedColor"/>
                                                                     </label>
                                                                 </subviews>
                                                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                                                 <constraints>
+                                                                    <constraint firstAttribute="trailing" secondItem="cN6-2N-vAu" secondAttribute="trailing" id="2eK-Qh-yND"/>
+                                                                    <constraint firstItem="v6X-TX-ubk" firstAttribute="leading" secondItem="OMD-a2-GGf" secondAttribute="leading" constant="16" id="3IG-eW-YK3"/>
                                                                     <constraint firstItem="cN6-2N-vAu" firstAttribute="top" secondItem="OMD-a2-GGf" secondAttribute="top" constant="5" id="ASZ-jp-W7m"/>
                                                                     <constraint firstAttribute="bottom" secondItem="cN6-2N-vAu" secondAttribute="bottom" constant="5" id="CkC-Hd-Afo"/>
                                                                     <constraint firstItem="v6X-TX-ubk" firstAttribute="centerY" secondItem="cN6-2N-vAu" secondAttribute="centerY" id="HDU-d1-i3U"/>
                                                                     <constraint firstItem="cN6-2N-vAu" firstAttribute="leading" secondItem="v6X-TX-ubk" secondAttribute="trailing" constant="8" id="TEv-NU-ySF"/>
-                                                                    <constraint firstItem="v6X-TX-ubk" firstAttribute="leading" secondItem="OMD-a2-GGf" secondAttribute="leadingMargin" constant="6" id="qf2-R1-A20"/>
-                                                                    <constraint firstAttribute="trailing" secondItem="cN6-2N-vAu" secondAttribute="trailing" id="zyR-eN-R7V"/>
                                                                 </constraints>
                                                             </tableViewCellContentView>
                                                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
@@ -624,7 +574,7 @@
         <!--Left Menu View Controller-->
         <scene sceneID="PHW-Hb-oGa">
             <objects>
-                <viewController storyboardIdentifier="LeftMenuViewController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="cb4-N4-R1j" customClass="LeftMenuViewController" customModule="HPHC" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="LeftMenuViewController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="cb4-N4-R1j" customClass="LeftMenuViewController" customModule="GCPMyStudies" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="hZZ-nc-OY0"/>
                         <viewControllerLayoutGuide type="bottom" id="pge-5B-3X3"/>
@@ -647,8 +597,8 @@
                                             <color key="textColor" red="0.0" green="0.48627450979999998" blue="0.72941176470000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                             <nil key="highlightedColor"/>
                                         </label>
-                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Powered by FDA MyStudies" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="gES-c2-7do">
-                                            <rect key="frame" x="34" y="71.5" width="212" height="15"/>
+                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Powered by FDA MyStudies" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="6" translatesAutoresizingMaskIntoConstraints="NO" id="gES-c2-7do">
+                                            <rect key="frame" x="34" y="71.5" width="155.5" height="15"/>
                                             <constraints>
                                                 <constraint firstAttribute="height" constant="15" id="7XJ-rL-MEz"/>
                                             </constraints>
@@ -659,12 +609,12 @@
                                     </subviews>
                                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                     <constraints>
-                                        <constraint firstItem="gES-c2-7do" firstAttribute="width" secondItem="tRN-H1-1nF" secondAttribute="width" id="0if-WP-XwN"/>
                                         <constraint firstItem="tRN-H1-1nF" firstAttribute="leading" secondItem="nRC-BO-z7A" secondAttribute="leading" constant="34" id="3FY-Za-WXJ"/>
                                         <constraint firstItem="tRN-H1-1nF" firstAttribute="top" secondItem="nRC-BO-z7A" secondAttribute="top" constant="34" id="7PZ-wj-fGK"/>
                                         <constraint firstItem="tRN-H1-1nF" firstAttribute="width" secondItem="nRC-BO-z7A" secondAttribute="width" multiplier="212/375" id="FAn-rJ-Czg"/>
                                         <constraint firstItem="gES-c2-7do" firstAttribute="top" secondItem="tRN-H1-1nF" secondAttribute="bottom" constant="1" id="j6h-66-bR7"/>
                                         <constraint firstItem="tRN-H1-1nF" firstAttribute="height" secondItem="nRC-BO-z7A" secondAttribute="height" multiplier="34/166" id="lNn-g0-yUV"/>
+                                        <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="gES-c2-7do" secondAttribute="trailing" constant="34" id="mGH-Oh-jxU"/>
                                         <constraint firstItem="gES-c2-7do" firstAttribute="leading" secondItem="tRN-H1-1nF" secondAttribute="leading" id="x2L-ev-mZU"/>
                                     </constraints>
                                 </view>
@@ -706,7 +656,7 @@
                                     </constraints>
                                 </view>
                                 <prototypes>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="cell" rowHeight="70" id="ViD-n5-s72" customClass="LeftMenuCell" customModule="HPHC" customModuleProvider="target">
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="cell" rowHeight="70" id="ViD-n5-s72" customClass="LeftMenuCell" customModule="GCPMyStudies" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="206" width="375" height="70"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="ViD-n5-s72" id="DBh-0i-6ut">
@@ -754,7 +704,7 @@
                                             <outlet property="menuIcon" destination="F54-LP-vEh" id="Ahu-V6-vtf"/>
                                         </connections>
                                     </tableViewCell>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="LeftMenuResourceCell" rowHeight="70" id="JUy-Rs-fyb" customClass="LeftMenuResourceTableViewCell" customModule="HPHC" customModuleProvider="target">
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="LeftMenuResourceCell" rowHeight="70" id="JUy-Rs-fyb" customClass="LeftMenuResourceTableViewCell" customModule="GCPMyStudies" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="276" width="375" height="70"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="JUy-Rs-fyb" id="9CS-pO-4eT">
@@ -818,6 +768,7 @@
                     </view>
                     <connections>
                         <outlet property="buttonSignOut" destination="0DE-kF-2Xl" id="JGo-wu-dbJ"/>
+                        <outlet property="labelPoweredBy" destination="gES-c2-7do" id="85U-lF-72v"/>
                         <outlet property="labelProductName" destination="tRN-H1-1nF" id="5OA-Ij-LnX"/>
                         <outlet property="labelVersion" destination="ng8-aL-gj9" id="eNU-rE-GE6"/>
                         <outlet property="tableFooterView" destination="u0K-d2-T6j" id="4N9-5B-nCt"/>
@@ -832,7 +783,7 @@
         <!--Slide Menu View Controller-->
         <scene sceneID="fpY-pt-Vpx">
             <objects>
-                <viewController storyboardIdentifier="FDASlideMenuViewController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="ais-Yu-8zr" customClass="FDASlideMenuViewController" customModule="HPHC" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="FDASlideMenuViewController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="ais-Yu-8zr" customClass="FDASlideMenuViewController" customModule="GCPMyStudies" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="v83-Cd-Ebn"/>
                         <viewControllerLayoutGuide type="bottom" id="ony-Ue-YC4"/>
@@ -915,7 +866,7 @@
         <!--Gateway Resources List View Controller-->
         <scene sceneID="GBc-op-J8W">
             <objects>
-                <viewController id="5n6-K7-AGX" customClass="GatewayResourcesListViewController" customModule="HPHC" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController id="5n6-K7-AGX" customClass="GatewayResourcesListViewController" customModule="GCPMyStudies" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="egc-TX-UG0"/>
                         <viewControllerLayoutGuide type="bottom" id="WDC-E8-9AP"/>
@@ -928,7 +879,7 @@
                                 <rect key="frame" x="0.0" y="0.0" width="375" height="623"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <prototypes>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" accessoryType="disclosureIndicator" indentationWidth="10" reuseIdentifier="resourcesCell" rowHeight="61" id="0Ek-4u-P6t" customClass="ResourcesListCell" customModule="HPHC" customModuleProvider="target">
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" accessoryType="disclosureIndicator" indentationWidth="10" reuseIdentifier="resourcesCell" rowHeight="61" id="0Ek-4u-P6t" customClass="ResourcesListCell" customModule="GCPMyStudies" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="28" width="375" height="61"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="0Ek-4u-P6t" id="ZzJ-La-vys">
@@ -1034,7 +985,7 @@
         <!--Notification View Controller-->
         <scene sceneID="NEH-aw-BHc">
             <objects>
-                <viewController storyboardIdentifier="NotificationViewControllerIdentifier" useStoryboardIdentifierAsRestorationIdentifier="YES" id="zmZ-Ff-dEh" customClass="NotificationViewController" customModule="HPHC" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="NotificationViewControllerIdentifier" useStoryboardIdentifierAsRestorationIdentifier="YES" id="zmZ-Ff-dEh" customClass="NotificationViewController" customModule="GCPMyStudies" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="PBW-5g-3tz"/>
                         <viewControllerLayoutGuide type="bottom" id="yLT-4v-XjN"/>
@@ -1050,7 +1001,7 @@
                                 <rect key="frame" x="0.0" y="1" width="375" height="622"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <prototypes>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="NotificationCell" rowHeight="97" id="sSF-1F-BwB" customClass="NotificationTableViewCell" customModule="HPHC" customModuleProvider="target">
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="NotificationCell" rowHeight="97" id="sSF-1F-BwB" customClass="NotificationTableViewCell" customModule="GCPMyStudies" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="28" width="375" height="97"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="sSF-1F-BwB" id="LGL-cP-RSi">
@@ -1125,7 +1076,7 @@
         <!--Profile View Controller-->
         <scene sceneID="wy7-dv-CFM">
             <objects>
-                <viewController id="UWn-lb-vfU" customClass="ProfileViewController" customModule="HPHC" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController id="UWn-lb-vfU" customClass="ProfileViewController" customModule="GCPMyStudies" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="Dh8-Sx-2oB"/>
                         <viewControllerLayoutGuide type="bottom" id="xLx-f5-o1W"/>
@@ -1206,7 +1157,7 @@
                                     </constraints>
                                 </view>
                                 <prototypes>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="CommonDetailsCell" rowHeight="62" id="GgO-iM-gdQ" customClass="SignUpTableViewCell" customModule="HPHC" customModuleProvider="target">
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="CommonDetailsCell" rowHeight="62" id="GgO-iM-gdQ" customClass="SignUpTableViewCell" customModule="GCPMyStudies" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="28" width="375" height="62"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="GgO-iM-gdQ" id="oSF-ho-qdn">
@@ -1268,7 +1219,7 @@
                                             <outlet property="textFieldValue" destination="FHg-Y2-WtR" id="H00-XQ-Y2p"/>
                                         </connections>
                                     </tableViewCell>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="ProfileTableViewCell" rowHeight="62" id="3uv-2m-XeE" customClass="ProfileTableViewCell" customModule="HPHC" customModuleProvider="target">
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="ProfileTableViewCell" rowHeight="62" id="3uv-2m-XeE" customClass="ProfileTableViewCell" customModule="GCPMyStudies" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="90" width="375" height="62"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="3uv-2m-XeE" id="wfh-L8-pIE">
@@ -1334,7 +1285,7 @@
         <!--Confirmation View Controller-->
         <scene sceneID="whI-Tq-Vfl">
             <objects>
-                <viewController id="cV9-St-ahQ" customClass="ConfirmationViewController" customModule="HPHC" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController id="cV9-St-ahQ" customClass="ConfirmationViewController" customModule="GCPMyStudies" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="lKO-kh-Nb3"/>
                         <viewControllerLayoutGuide type="bottom" id="Gw9-js-utt"/>
@@ -1444,7 +1395,7 @@ Below is a list of studies that you are a part of and information on how your re
                                     </constraints>
                                 </view>
                                 <prototypes>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="ConfirmationCell" rowHeight="76" id="EXv-T3-DWR" customClass="ConfirmationTableViewCell" customModule="HPHC" customModuleProvider="target">
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="ConfirmationCell" rowHeight="76" id="EXv-T3-DWR" customClass="ConfirmationTableViewCell" customModule="GCPMyStudies" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="206" width="375" height="76"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="EXv-T3-DWR" id="swK-l1-aRn">
@@ -1484,7 +1435,7 @@ Below is a list of studies that you are a part of and information on how your re
                                             <outlet property="labelTitleDescription" destination="lMv-L4-SqQ" id="5dl-Cc-rRN"/>
                                         </connections>
                                     </tableViewCell>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="ConfirmationOptionalCell" rowHeight="78" id="OPN-7C-Ufb" customClass="ConfirmationOptionalTableViewCell" customModule="HPHC" customModuleProvider="target">
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="ConfirmationOptionalCell" rowHeight="78" id="OPN-7C-Ufb" customClass="ConfirmationOptionalTableViewCell" customModule="GCPMyStudies" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="282" width="375" height="78"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="OPN-7C-Ufb" id="2S6-Uy-1FW">
@@ -1593,7 +1544,7 @@ Below is a list of studies that you are a part of and information on how your re
         <!--Change Password View Controller-->
         <scene sceneID="nLa-qL-V7F">
             <objects>
-                <viewController storyboardIdentifier="ChangePasswordViewController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="8HM-Dc-eDB" customClass="ChangePasswordViewController" customModule="HPHC" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="ChangePasswordViewController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="8HM-Dc-eDB" customClass="ChangePasswordViewController" customModule="GCPMyStudies" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="nGe-9t-XjL"/>
                         <viewControllerLayoutGuide type="bottom" id="oeM-5m-cuo"/>
@@ -1606,7 +1557,7 @@ Below is a list of studies that you are a part of and information on how your re
                                 <rect key="frame" x="0.0" y="0.0" width="375" height="459"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <prototypes>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="DetailsCell" rowHeight="62" id="KQg-N7-qL1" customClass="SignInTableViewCell" customModule="HPHC" customModuleProvider="target">
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="DetailsCell" rowHeight="62" id="KQg-N7-qL1" customClass="SignInTableViewCell" customModule="GCPMyStudies" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="28" width="375" height="62"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="KQg-N7-qL1" id="0Tk-EB-p8c">
@@ -1708,7 +1659,7 @@ Below is a list of studies that you are a part of and information on how your re
         <!--Reachout Options View Controller-->
         <scene sceneID="GFv-MM-z7a">
             <objects>
-                <viewController id="7ri-lu-wzc" customClass="ReachoutOptionsViewController" customModule="HPHC" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController id="7ri-lu-wzc" customClass="ReachoutOptionsViewController" customModule="GCPMyStudies" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="qXM-op-ucC"/>
                         <viewControllerLayoutGuide type="bottom" id="Bjs-ez-PIF"/>
@@ -1721,7 +1672,7 @@ Below is a list of studies that you are a part of and information on how your re
                                 <rect key="frame" x="0.0" y="0.0" width="375" height="623"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <prototypes>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" accessoryType="disclosureIndicator" indentationWidth="10" reuseIdentifier="reachoutCell" rowHeight="50" id="Xd0-FK-Nr1" customClass="ReachoutOptionCell" customModule="HPHC" customModuleProvider="target">
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" accessoryType="disclosureIndicator" indentationWidth="10" reuseIdentifier="reachoutCell" rowHeight="50" id="Xd0-FK-Nr1" customClass="ReachoutOptionCell" customModule="GCPMyStudies" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="28" width="375" height="50"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="Xd0-FK-Nr1" id="5D4-kI-3Uk">
@@ -1807,7 +1758,7 @@ Below is a list of studies that you are a part of and information on how your re
         <!--Feed Back View Controller-->
         <scene sceneID="Ocv-xE-6JN">
             <objects>
-                <viewController id="PxL-Ch-CdE" customClass="FeedBackViewController" customModule="HPHC" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController id="PxL-Ch-CdE" customClass="FeedBackViewController" customModule="GCPMyStudies" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="SFb-33-r5o"/>
                         <viewControllerLayoutGuide type="bottom" id="Ed7-wz-GwB"/>
@@ -1820,7 +1771,7 @@ Below is a list of studies that you are a part of and information on how your re
                                 <rect key="frame" x="0.0" y="0.0" width="375" height="542"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <prototypes>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="FeedbackCellFirst" rowHeight="161" id="HWK-gc-wN7" customClass="FeedBackTableViewCell" customModule="HPHC" customModuleProvider="target">
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="FeedbackCellFirst" rowHeight="161" id="HWK-gc-wN7" customClass="FeedBackTableViewCell" customModule="GCPMyStudies" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="28" width="375" height="161"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="HWK-gc-wN7" id="guX-Tf-2ve">
@@ -1856,7 +1807,7 @@ Below is a list of studies that you are a part of and information on how your re
                                             <outlet property="labelHeadingText" destination="b0d-he-JiD" id="uID-Qb-8HZ"/>
                                         </connections>
                                     </tableViewCell>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="ContactUsCell" rowHeight="62" id="Nbt-3O-47S" customClass="ContactUsTableViewCell" customModule="HPHC" customModuleProvider="target">
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="ContactUsCell" rowHeight="62" id="Nbt-3O-47S" customClass="ContactUsTableViewCell" customModule="GCPMyStudies" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="189" width="375" height="62"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="Nbt-3O-47S" id="w8l-N7-eyq">
@@ -1903,7 +1854,7 @@ Below is a list of studies that you are a part of and information on how your re
                                             <outlet property="textFieldValue" destination="ZAG-q5-tTH" id="Y5J-fq-7Bf"/>
                                         </connections>
                                     </tableViewCell>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="textviewCell" rowHeight="63" id="ZnJ-mt-fH4" customClass="TextviewCell" customModule="HPHC" customModuleProvider="target">
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="textviewCell" rowHeight="63" id="ZnJ-mt-fH4" customClass="TextviewCell" customModule="GCPMyStudies" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="251" width="375" height="63"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="ZnJ-mt-fH4" id="fMu-jC-3yq">
@@ -2003,7 +1954,7 @@ Below is a list of studies that you are a part of and information on how your re
         <!--Contact Us View Controller-->
         <scene sceneID="3SJ-ld-C1f">
             <objects>
-                <viewController id="bsn-SP-kLV" customClass="ContactUsViewController" customModule="HPHC" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController id="bsn-SP-kLV" customClass="ContactUsViewController" customModule="GCPMyStudies" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="0oe-8n-2Si"/>
                         <viewControllerLayoutGuide type="bottom" id="Wg1-td-Usa"/>
@@ -2016,7 +1967,7 @@ Below is a list of studies that you are a part of and information on how your re
                                 <rect key="frame" x="0.0" y="1" width="375" height="542"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <prototypes>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="ContactUsCell" id="iS2-iX-BIO" customClass="ContactUsTableViewCell" customModule="HPHC" customModuleProvider="target">
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="ContactUsCell" id="iS2-iX-BIO" customClass="ContactUsTableViewCell" customModule="GCPMyStudies" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="28" width="375" height="62"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="iS2-iX-BIO" id="QiY-kt-6NB">
@@ -2063,7 +2014,7 @@ Below is a list of studies that you are a part of and information on how your re
                                             <outlet property="textFieldValue" destination="MNt-de-Zxv" id="0XR-TY-GC7"/>
                                         </connections>
                                     </tableViewCell>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="textviewCell" rowHeight="63" id="1mf-UQ-QXu" customClass="TextviewCell" customModule="HPHC" customModuleProvider="target">
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="textviewCell" rowHeight="63" id="1mf-UQ-QXu" customClass="TextviewCell" customModule="GCPMyStudies" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="90" width="375" height="63"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="1mf-UQ-QXu" id="eOQ-QF-AuC">

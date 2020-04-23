@@ -30,7 +30,6 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
-
 @Entity
 @Table(name = "reference_tables")
 public class ReferenceTablesDto implements Serializable {

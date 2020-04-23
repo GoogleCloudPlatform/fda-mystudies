@@ -11,7 +11,7 @@
 	<div class="col-sm-12 col-md-12 col-lg-12 p-none">
 	   <div class="black-lg-f">
 	     <span class="mr-xs"><a href="javascript:void(0)" class="backOrCancelBtnOfNotification">
-	     <img src="/fdahpStudyDesigner/images/icons/back-b.png" alt=""/></a></span> 
+	     <img src="/studybuilder/images/icons/back-b.png" alt=""/></a></span> 
 	     <c:if test="${notificationBO.actionPage eq 'addOrCopy' || notificationBO eq null}">Create Notification</c:if>
 	    <c:if test="${notificationBO.actionPage eq 'edit'}">Edit Notification</c:if>
 	    <c:if test="${notificationBO.actionPage eq 'view'}">View Notification</c:if>
@@ -19,7 +19,7 @@
 	   </div>
 	</div>         
 </div> 
-<form:form action="/fdahpStudyDesigner/adminNotificationEdit/saveOrUpdateNotification.do?${_csrf.parameterName}=${_csrf.token}" 
+<form:form action="/studybuilder/adminNotificationEdit/saveOrUpdateNotification.do?${_csrf.parameterName}=${_csrf.token}" 
      data-toggle="validator" role="form" id="appNotificationFormId"  method="post" autocomplete="off">       
      <input type="hidden" name="buttonType" id="buttonType">
      <input type="hidden" name="notificationId" value="${notificationBO.notificationId}">
@@ -54,7 +54,7 @@
 		                <span class="radio radio-inline">
 		                    <input type="radio" id="inlineRadio2" value="immediate" name="currentDateTime"
 		                    <c:if test="${notificationBO.notificationScheduleType eq 'immediate'}">checked</c:if>>
-		                    <label for="inlineRadio2">Send Immediately</label>
+		                    <label for="inlineRadio2">Send immediately</label>
 		                </span>
 	                	<div class="help-block with-errors red-txt"></div>
 	                	<c:if test="${not empty notificationHistoryNoDateTime}">
@@ -70,7 +70,7 @@
 	            
 	            
 	            <div class="add_notify_option mandatoryForAppNotification">
-	                <div class="gray-xs-f mb-xs">Select Date <span class="requiredStar">*</span></div>
+	                <div class="gray-xs-f mb-xs">Date<span class="requiredStar">*</span></div>
 	                 <div class="form-group date">
 	                     <input id='datetimepicker' type="text" class="form-control calendar datepicker resetVal" 
 	                     name="scheduleDate" value="${notificationBO.scheduleDate}" oldValue="${notificationBO.scheduleDate}" 
@@ -91,7 +91,7 @@
 	            
             <div class=" ">
                   <div class="form-group">
-                  <div class="gray-xs-f mb-xs">Select App ID</div>
+                  <div class="gray-xs-f mb-xs">App to which the notification must be sent</div>
                      <select id="appId" class="selectpicker" name="appId" >
                       <option value='' >Select</option>
                       <c:forEach items="${gatewayAppList}" var="app">
@@ -137,9 +137,9 @@
 	    </div>
 	</div>  
 </form:form>    
-<form:form action="/fdahpStudyDesigner/adminNotificationView/viewNotificationList.do" id="notificationBackOrCancelBtnForm" name="notificationBackOrCancelBtnForm" method="post">
+<form:form action="/studybuilder/adminNotificationView/viewNotificationList.do" id="notificationBackOrCancelBtnForm" name="notificationBackOrCancelBtnForm" method="post">
 </form:form>
-<form:form action="/fdahpStudyDesigner/adminNotificationEdit/deleteNotification.do" id="deleteNotificationForm" name="deleteNotificationForm" method="post">
+<form:form action="/studybuilder/adminNotificationEdit/deleteNotification.do" id="deleteNotificationForm" name="deleteNotificationForm" method="post">
 	<input type="hidden" name="notificationId" value="${notificationBO.notificationId}">
 </form:form>
 <script>  

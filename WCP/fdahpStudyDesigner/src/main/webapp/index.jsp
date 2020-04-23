@@ -5,7 +5,7 @@
 <head>
 <!-- <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1"> -->
  <meta http-equiv="refresh" content="0;URL=login.do"> 
-<title>FDA MSMP</title>
+<title>Study Builder</title>
 </head>
 <body>
 </body>

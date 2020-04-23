@@ -1,6 +1,7 @@
-// License Agreement for FDA My Studies
-// Copyright © 2017-2019 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors. Permission is
-// hereby granted, free of charge, to any person obtaining a copy of this software and associated
+// License Agreement for FDA MyStudies
+// Copyright © 2017-2019 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors.
+// Copyright 2020 Google LLC
+// Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated
 // documentation files (the &quot;Software&quot;), to deal in the Software without restriction, including without
 // limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the
 // Software, and to permit persons to whom the Software is furnished to do so, subject to the following
@@ -18,19 +19,18 @@
 
 import MessageUI
 import UIKit
+import WebKit
 
 let resourcesDownloadPath = AKUtility.baseFilePath + "/Resources"
 
 class GatewayResourceDetailViewController: UIViewController {
 
   // MARK: - Outlets
-  @IBOutlet var webView: UIWebView?
-
-  @IBOutlet var progressBar: UIProgressView?
+  @IBOutlet weak var webView: WKWebView!
+  @IBOutlet weak var progressBar: UIProgressView?
 
   // MARK: - Properties
   var activityIndicator: UIActivityIndicatorView!
-
   var requestLink: String?
   var type: String?
   var htmlString: String?
@@ -79,9 +79,7 @@ class GatewayResourceDetailViewController: UIViewController {
               )
               self.loadWebViewWithPath(path: path!)
             } else {
-              let path = resourcesDownloadPath + "/" + (
-                self.resource?.file?.localPath
-              )!
+              let path = resourcesDownloadPath + "/" + (self.resource?.file?.localPath)!
               let pdfData = FileDownloadManager.decrytFile(pathURL: URL(string: path))
               self.loadWebViewWithData(data: pdfData!)
 
@@ -95,30 +93,25 @@ class GatewayResourceDetailViewController: UIViewController {
       } else {
 
       }
-      webView?.delegate = self
-      self.webView?.scalesPageToFit = true
+      webView.navigationDelegate = self
+      webView.contentScaleFactor = 1.0
     }
 
   }
 
   func loadWebViewWithPath(path: String) {
-
-    let url: URL? = URL.init(
-      string: path.addingPercentEncoding(withAllowedCharacters: .urlPathAllowed)!
-    )
-    let urlRequest = URLRequest(url: url!)
-    webView?.loadRequest(urlRequest)
+    let url = URL(fileURLWithPath: path)
+    let urlRequest = URLRequest(url: url)
+    webView.load(urlRequest)
   }
 
   func loadWebViewWithData(data: Data) {
-
-    self.webView?.load(
+    self.webView.load(
       data,
       mimeType: "application/pdf",
-      textEncodingName: "UTF-8",
-      baseURL: URL.init(fileURLWithPath: "")
+      characterEncodingName: "UTF-8",
+      baseURL: URL(fileURLWithPath: "")
     )
-
   }
 
   func startDownloadingfile() {
@@ -161,24 +154,19 @@ class GatewayResourceDetailViewController: UIViewController {
   }
 
   @IBAction func buttonActionForward(_ sender: UIBarButtonItem) {
-
     self.sendEmail()
   }
 
-  override func didReceiveMemoryWarning() {
-    super.didReceiveMemoryWarning()
-    // Dispose of any resources that can be recreated.
-  }
 }
 
-extension GatewayResourceDetailViewController: UIWebViewDelegate {
+extension GatewayResourceDetailViewController: WKNavigationDelegate {
 
-  func webViewDidFinishLoad(_ webView: UIWebView) {
+  func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
     self.activityIndicator.stopAnimating()
     self.activityIndicator.removeFromSuperview()
   }
 
-  func webView(_ webView: UIWebView, didFailLoadWithError error: Error) {
+  func webView(_ webView: WKWebView, didFail navigation: WKNavigation!, withError error: Error) {
     self.activityIndicator.stopAnimating()
     self.activityIndicator.removeFromSuperview()
 
@@ -297,21 +285,18 @@ extension GatewayResourceDetailViewController: FileDownloadManagerDelegates {
 
     let data = FileDownloadManager.decrytFile(pathURL: URL.init(string: fullPath))
 
-    if data != nil {
+    if let pdfData = data {
       self.resource?.file?.localPath = path
-      let mimeType = "application/" + "\((self.resource?.file?.mimeType?.rawValue)!)"
-      self.webView?.load(
-        data!,
+      let mimeType = "application/" + "\(self.resource?.file?.mimeType?.rawValue ?? "")"
+      self.webView.load(
+        pdfData,
         mimeType: mimeType,
-        textEncodingName: "UTF-8",
-        baseURL: URL.init(fileURLWithPath: "")
+        characterEncodingName: "UTF-8",
+        baseURL: URL(fileURLWithPath: "")
       )
     }
-
   }
 
-  func download(manager: FileDownloadManager, didFailedWithError error: Error) {
-
-  }
+  func download(manager: FileDownloadManager, didFailedWithError error: Error) {}
 
 }

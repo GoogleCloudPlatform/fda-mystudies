@@ -5,7 +5,7 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn"%>
 <div class="changeContent">
 	<form:form
-		action="/fdahpStudyDesigner/adminStudies/saveOrUpdateActiveTaskContent.do?_S=${param._S}"
+		action="/studybuilder/adminStudies/saveOrUpdateActiveTaskContent.do?_S=${param._S}"
 		name="activeContentFormId" id="activeContentFormId" method="post"
 		role="form">
 		<input type="hidden" name="id" id="taskContentId"
@@ -835,7 +835,7 @@ function validateShortTitleId(item,callback){
 		    $('.shortTitleClass').parent().find(".help-block").empty();
 		     if(existedKey !=shortTitle){
 	 			$.ajax({
-	 				url: "/fdahpStudyDesigner/adminStudies/validateActiveTaskShortTitleId.do?_S=${param._S}",
+	 				url: "/studybuilder/adminStudies/validateActiveTaskShortTitleId.do?_S=${param._S}",
 	                type: "POST",
 	                datatype: "json",
 	                data: {
@@ -888,7 +888,7 @@ function validateShortTitleStatId(event, thisAttr, callback){
 	    	 //alert("dbIdentifierVal"+dbIdentifierVal);
 	    	 if(dbIdentifierVal!=activeTaskAttIdVal){
 	    		 $.ajax({
-		               url: "/fdahpStudyDesigner/adminStudies/validateActiveTaskShortTitleId.do?_S=${param._S}",
+		               url: "/studybuilder/adminStudies/validateActiveTaskShortTitleId.do?_S=${param._S}",
 		               type: "POST",
 		               datatype: "json",
 		               data: {
@@ -936,7 +936,7 @@ function validateShortTitleStatId(event, thisAttr, callback){
 		 	}
 	     }else{
 	    	 $.ajax({
-	               url: "/fdahpStudyDesigner/adminStudies/validateActiveTaskShortTitleId.do?_S=${param._S}",
+	               url: "/studybuilder/adminStudies/validateActiveTaskShortTitleId.do?_S=${param._S}",
 	               type: "POST",
 	               datatype: "json",
 	               data: {

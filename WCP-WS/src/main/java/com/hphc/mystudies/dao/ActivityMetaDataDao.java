@@ -88,7 +88,6 @@ import com.hphc.mystudies.util.StudyMetaDataConstants;
 import com.hphc.mystudies.util.StudyMetaDataEnum;
 import com.hphc.mystudies.util.StudyMetaDataUtil;
 
-
 public class ActivityMetaDataDao {
 
   private static final Logger LOGGER = Logger.getLogger(ActivityMetaDataDao.class);
@@ -102,7 +101,6 @@ public class ActivityMetaDataDao {
   SessionFactory sessionFactory = HibernateUtil.getSessionFactory();
   Query query = null;
 
-  
   @SuppressWarnings("unchecked")
   public ActivityResponse studyActivityList(String studyId, String authorization)
       throws DAOException {
@@ -330,7 +328,6 @@ public class ActivityMetaDataDao {
     return activityResponse;
   }
 
-  
   public ActiveTaskActivityMetaDataResponse studyActiveTaskActivityMetadata(
       String studyId, String activityId, String activityVersion) throws DAOException {
     LOGGER.info("INFO: ActivityMetaDataDao - studyActiveTaskActivityMetadata() :: Starts");
@@ -367,7 +364,6 @@ public class ActivityMetaDataDao {
     return activeTaskActivityMetaDataResponse;
   }
 
-  
   public QuestionnaireActivityMetaDataResponse studyQuestionnaireActivityMetadata(
       String studyId, String activityId, String activityVersion) throws DAOException {
     LOGGER.info("INFO: ActivityMetaDataDao - studyQuestionnaireActivityMetadata() :: Starts");
@@ -404,7 +400,6 @@ public class ActivityMetaDataDao {
     return activityMetaDataResponse;
   }
 
-  
   @SuppressWarnings("unchecked")
   public ActiveTaskActivityStructureBean activeTaskMetadata(
       String studyId, String activityId, Session session, String activityVersion)
@@ -605,7 +600,6 @@ public class ActivityMetaDataDao {
     return activeTaskActivityStructureBean;
   }
 
-  
   @SuppressWarnings("unchecked")
   public QuestionnaireActivityStructureBean questionnaireMetadata(
       String studyId, String activityId, Session session, String activityVersion)
@@ -848,7 +842,6 @@ public class ActivityMetaDataDao {
     return activityStructureBean;
   }
 
-  
   public ActivityFrequencyBean getFrequencyRunsDetailsForActiveTasks(
       ActiveTaskDto activeTask, ActivityFrequencyBean frequencyDetails, Session session)
       throws DAOException {
@@ -884,7 +877,6 @@ public class ActivityMetaDataDao {
     return frequencyDetails;
   }
 
-  
   public List<ActivityFrequencyScheduleBean> getActiveTaskFrequencyDetailsForOneTime(
       ActiveTaskDto activeTask, List<ActivityFrequencyScheduleBean> runDetailsBean)
       throws DAOException {
@@ -911,7 +903,6 @@ public class ActivityMetaDataDao {
     return runDetailsBean;
   }
 
-  
   @SuppressWarnings("unchecked")
   public List<ActivityFrequencyScheduleBean> getActiveTaskFrequencyDetailsForDaily(
       ActiveTaskDto activeTask, List<ActivityFrequencyScheduleBean> runDetailsBean, Session session)
@@ -998,7 +989,6 @@ public class ActivityMetaDataDao {
     return runDetailsBean;
   }
 
-  
   public List<ActivityFrequencyScheduleBean> getActiveTaskFrequencyDetailsForWeekly(
       ActiveTaskDto activeTask, List<ActivityFrequencyScheduleBean> runDetailsBean)
       throws DAOException {
@@ -1079,7 +1069,6 @@ public class ActivityMetaDataDao {
     return runDetailsBean;
   }
 
-  
   public List<ActivityFrequencyScheduleBean> getActiveTaskFrequencyDetailsForMonthly(
       ActiveTaskDto activeTask, List<ActivityFrequencyScheduleBean> runDetailsBean)
       throws DAOException {
@@ -1145,7 +1134,6 @@ public class ActivityMetaDataDao {
     return runDetailsBean;
   }
 
-  
   @SuppressWarnings("unchecked")
   public List<ActivityFrequencyScheduleBean> getActiveTaskFrequencyDetailsForManuallySchedule(
       ActiveTaskDto activeTask, List<ActivityFrequencyScheduleBean> runDetailsBean, Session session)
@@ -1193,7 +1181,6 @@ public class ActivityMetaDataDao {
     return runDetailsBean;
   }
 
-  
   public ActivityFrequencyBean getFrequencyRunsDetailsForQuestionaires(
       QuestionnairesDto questionaire, ActivityFrequencyBean frequencyDetails, Session session)
       throws DAOException {
@@ -1228,7 +1215,6 @@ public class ActivityMetaDataDao {
     return frequencyDetails;
   }
 
-  
   public List<ActivityFrequencyScheduleBean> getQuestionnaireFrequencyDetailsForOneTime(
       QuestionnairesDto questionaire, List<ActivityFrequencyScheduleBean> runDetailsBean)
       throws DAOException {
@@ -1257,7 +1243,6 @@ public class ActivityMetaDataDao {
     return runDetailsBean;
   }
 
-  
   @SuppressWarnings("unchecked")
   public List<ActivityFrequencyScheduleBean> getQuestionnaireFrequencyDetailsForDaily(
       QuestionnairesDto questionaire,
@@ -1349,7 +1334,6 @@ public class ActivityMetaDataDao {
     return runDetailsBean;
   }
 
-  
   public List<ActivityFrequencyScheduleBean> getQuestionnaireFrequencyDetailsForWeekly(
       QuestionnairesDto questionaire, List<ActivityFrequencyScheduleBean> runDetailsBean)
       throws DAOException {
@@ -1432,7 +1416,6 @@ public class ActivityMetaDataDao {
     return runDetailsBean;
   }
 
-  
   public List<ActivityFrequencyScheduleBean> getQuestionnaireFrequencyDetailsForMonthly(
       QuestionnairesDto questionaire, List<ActivityFrequencyScheduleBean> runDetailsBean)
       throws DAOException {
@@ -1499,7 +1482,6 @@ public class ActivityMetaDataDao {
     return runDetailsBean;
   }
 
-  
   @SuppressWarnings("unchecked")
   public List<ActivityFrequencyScheduleBean> getQuestionnaireFrequencyDetailsForManuallySchedule(
       QuestionnairesDto questionaire,
@@ -1548,7 +1530,6 @@ public class ActivityMetaDataDao {
     return runDetailsBean;
   }
 
-  
   public SortedMap<Integer, QuestionnaireActivityStepsBean> getStepsInfoForQuestionnaires(
       String type,
       List<InstructionsDto> instructionsDtoList,
@@ -1609,7 +1590,6 @@ public class ActivityMetaDataDao {
     return stepsOrderSequenceTreeMap;
   }
 
-  
   public SortedMap<Integer, QuestionnaireActivityStepsBean> getInstructionDetailsForQuestionnaire(
       List<InstructionsDto> instructionsDtoList,
       Map<String, Integer> sequenceNoMap,
@@ -1682,7 +1662,6 @@ public class ActivityMetaDataDao {
     return stepsSequenceTreeMap;
   }
 
-  
   @SuppressWarnings("unchecked")
   public SortedMap<Integer, QuestionnaireActivityStepsBean> getQuestionDetailsForQuestionnaire(
       List<QuestionsDto> questionsDtoList,
@@ -1954,7 +1933,6 @@ public class ActivityMetaDataDao {
     return stepsSequenceTreeMap;
   }
 
-  
   @SuppressWarnings("unchecked")
   public SortedMap<Integer, QuestionnaireActivityStepsBean> getFormDetailsForQuestionnaire(
       List<FormMappingDto> formsList,
@@ -2106,7 +2084,6 @@ public class ActivityMetaDataDao {
     return stepsSequenceTreeMap;
   }
 
-  
   public Object fetalKickCounterDetails(
       ActiveTaskAttrtibutesValuesDto attributeValues,
       ActiveTaskMasterAttributeDto masterAttributeValue,
@@ -2143,7 +2120,6 @@ public class ActivityMetaDataDao {
     return fetalKickCounterFormat;
   }
 
-  
   public Object spatialSpanMemoryDetails(
       ActiveTaskAttrtibutesValuesDto attributeValues,
       ActiveTaskMasterAttributeDto masterAttributeValue,
@@ -2205,7 +2181,6 @@ public class ActivityMetaDataDao {
     return spatialSpanMemoryFormat;
   }
 
-  
   public String[] activeTaskOptions() {
     LOGGER.info("INFO: ActivityMetaDataDao - activeTaskOptions() :: Starts");
     String[] activeTaskOptionsArray = new String[8];
@@ -2225,7 +2200,6 @@ public class ActivityMetaDataDao {
     return activeTaskOptionsArray;
   }
 
-  
   public Map<String, Object> getQuestionaireQuestionFormatByType(
       QuestionsDto questionDto, String questionResultType, Session session) throws DAOException {
     LOGGER.info("INFO: ActivityMetaDataDao - getQuestionaireQuestionFormatByType() :: Starts");
@@ -2323,7 +2297,6 @@ public class ActivityMetaDataDao {
     return questionFormat;
   }
 
-  
   public Map<String, Object> formatQuestionScaleDetails(QuestionReponseTypeDto reponseType)
       throws DAOException {
     LOGGER.info("INFO: ActivityMetaDataDao - formatQuestionScaleDetails() :: Starts");
@@ -2394,7 +2367,6 @@ public class ActivityMetaDataDao {
     return questionFormat;
   }
 
-  
   public Map<String, Object> formatQuestionContinuousScaleDetails(
       QuestionReponseTypeDto reponseType) throws DAOException {
     LOGGER.info("INFO: ActivityMetaDataDao - formatQuestionContinuousScaleDetails() :: Starts");
@@ -2458,7 +2430,6 @@ public class ActivityMetaDataDao {
     return questionFormat;
   }
 
-  
   @SuppressWarnings("unchecked")
   public Map<String, Object> formatQuestionTextScaleDetails(
       QuestionsDto questionDto, QuestionReponseTypeDto reponseType, Session session)
@@ -2510,7 +2481,6 @@ public class ActivityMetaDataDao {
     return questionFormat;
   }
 
-  
   @SuppressWarnings("unchecked")
   public Map<String, Object> formatQuestionValuePickerDetails(
       QuestionsDto questionDto, Session session) throws DAOException {
@@ -2552,7 +2522,6 @@ public class ActivityMetaDataDao {
     return questionFormat;
   }
 
-  
   @SuppressWarnings("unchecked")
   public Map<String, Object> formatQuestionImageChoiceDetails(
       QuestionsDto questionDto, Session session) throws DAOException {
@@ -2600,7 +2569,6 @@ public class ActivityMetaDataDao {
     return questionFormat;
   }
 
-  
   @SuppressWarnings("unchecked")
   public Map<String, Object> formatQuestionTextChoiceDetails(
       QuestionsDto questionDto, QuestionReponseTypeDto reponseType, Session session)
@@ -2725,7 +2693,6 @@ public class ActivityMetaDataDao {
     return questionFormat;
   }
 
-  
   public Map<String, Object> formatQuestionNumericDetails(QuestionReponseTypeDto reponseType)
       throws DAOException {
     LOGGER.info("INFO: ActivityMetaDataDao - formatQuestionNumericDetails() :: Starts");
@@ -2779,7 +2746,6 @@ public class ActivityMetaDataDao {
     return questionFormat;
   }
 
-  
   public Map<String, Object> formatQuestionDateDetails(QuestionReponseTypeDto reponseType)
       throws DAOException {
     LOGGER.info("INFO: ActivityMetaDataDao - formatQuestionDateDetails() :: Starts");
@@ -2837,7 +2803,6 @@ public class ActivityMetaDataDao {
     return questionFormat;
   }
 
-  
   public Map<String, Object> formatQuestionTextDetails(QuestionReponseTypeDto reponseType)
       throws DAOException {
     LOGGER.info("INFO: ActivityMetaDataDao - formatQuestionTextDetails() :: Starts");
@@ -2877,7 +2842,6 @@ public class ActivityMetaDataDao {
     return questionFormat;
   }
 
-  
   @SuppressWarnings("unchecked")
   public ActivitiesBean getTimeDetailsByActivityIdForActiveTask(
       ActiveTaskDto activeTaskDto, ActivitiesBean activityBean, Session session)
@@ -3040,7 +3004,6 @@ public class ActivityMetaDataDao {
     return activityBean;
   }
 
-  
   @SuppressWarnings("unchecked")
   public ActivitiesBean getTimeDetailsByActivityIdForQuestionnaire(
       QuestionnairesDto questionaire, ActivitiesBean activityBean, Session session)
@@ -3202,7 +3165,6 @@ public class ActivityMetaDataDao {
     return activityBean;
   }
 
-  
   public List<QuestionnairesStepsDto> getDestinationStepType(
       List<QuestionnairesStepsDto> questionaireStepsList) throws DAOException {
     LOGGER.info("INFO: ActivityMetaDataDao - getDestinationStepType() :: Starts");
@@ -3227,7 +3189,6 @@ public class ActivityMetaDataDao {
     return questionnaireStepsTypeList;
   }
 
-  
   public DestinationBean getDestinationStepTypeForResponseSubType(
       DestinationBean destinationBean,
       QuestionResponseSubTypeDto destinationDto,
@@ -3251,7 +3212,6 @@ public class ActivityMetaDataDao {
     return destinationBean;
   }
 
-  
   public String getBase64Image(String imagePath) throws DAOException {
     LOGGER.info("INFO: ActivityMetaDataDao - getBase64Image() :: Starts");
     String base64Image = "";
@@ -3274,7 +3234,6 @@ public class ActivityMetaDataDao {
     return base64Image;
   }
 
-  
   public Integer getScaleStepCount(Integer step, Integer maxValue, Integer minValue)
       throws DAOException {
     LOGGER.info("INFO: ActivityMetaDataDao - getScaleStepCount() :: Starts");
@@ -3301,7 +3260,6 @@ public class ActivityMetaDataDao {
     return scaleStepCount;
   }
 
-  
   public Integer getScaleStepSize(Integer step, Integer maxValue, Integer minValue)
       throws DAOException {
     LOGGER.info("INFO: ActivityMetaDataDao - getScaleStepSize() :: Starts");
@@ -3315,7 +3273,6 @@ public class ActivityMetaDataDao {
     return scaleStepCount;
   }
 
-  
   public Integer getScaleDefaultValue(
       Integer step, Integer maxValue, Integer minValue, Integer defaultValue) throws DAOException {
     LOGGER.info("INFO: ActivityMetaDataDao - getScaleDefaultValue() :: Starts");
@@ -3330,7 +3287,6 @@ public class ActivityMetaDataDao {
     return scaleDefaultValue;
   }
 
-  
   public Integer getContinuousScaleMaxFractionDigits(
       Integer maxValue, Integer minValue, Integer actualFractionDigits) throws DAOException {
     LOGGER.info("INFO: ActivityMetaDataDao - getContinuousScaleMaxFractionDigits() :: Starts");
@@ -3374,7 +3330,6 @@ public class ActivityMetaDataDao {
     return maxFracDigits;
   }
 
-  
   public Integer getContinuousScaleDefaultValue(
       Integer maxValue, Integer minValue, Integer defaultValue) throws DAOException {
     LOGGER.info("INFO: ActivityMetaDataDao - getContinuousScaleDefaultValue() :: Starts");
@@ -3390,7 +3345,6 @@ public class ActivityMetaDataDao {
     return continuousScaleDefaultValue;
   }
 
-  
   public Integer getTimeIntervalStep(Integer stepValue) throws DAOException {
     LOGGER.info("INFO: ActivityMetaDataDao - getTimeIntervalStep() :: Starts");
     Integer step = 1;
@@ -3411,7 +3365,6 @@ public class ActivityMetaDataDao {
     return step;
   }
 
-  
   public Long getTimeInSeconds(String time) throws DAOException {
     LOGGER.info("INFO: ActivityMetaDataDao - getTimeInSeconds() :: Starts");
     Long defaultTime = 0L;
@@ -3426,7 +3379,6 @@ public class ActivityMetaDataDao {
     return defaultTime;
   }
 
-  
   public List<DestinationBean> getConditionalBranchingDestinations(
       QuestionReponseTypeDto reponseType,
       List<DestinationBean> destinationsList,
@@ -3625,7 +3577,6 @@ public class ActivityMetaDataDao {
     return updatedDestinationsList;
   }
 
-  
   public Map<String, Object> conditionalBranchingPrerequisites(
       QuestionnaireActivityStepsBean questionBean) throws DAOException {
     LOGGER.info("INFO: ActivityMetaDataDao - conditionalBranchingPrerequisites() :: Starts");
@@ -3715,7 +3666,6 @@ public class ActivityMetaDataDao {
     return prerequisitesMap;
   }
 
-  
   public String getOperatorFromConditionalFormula(String conditionFormula) throws DAOException {
     LOGGER.info("INFO: ActivityMetaDataDao - getOperatorFromConditionalFormula() :: Starts");
     String operator = "";
@@ -3736,7 +3686,6 @@ public class ActivityMetaDataDao {
     return operator;
   }
 
-  
   public List<DestinationBean> getConditionalBranchingFormat(
       List<DestinationBean> destinationsList,
       String valueOfX,
@@ -3761,7 +3710,6 @@ public class ActivityMetaDataDao {
     return destinationsList;
   }
 
-  
   public List<DestinationBean> formatValueOfX(
       List<DestinationBean> destinationsList, QuestionnaireActivityStepsBean questionBean)
       throws DAOException {
@@ -3823,7 +3771,6 @@ public class ActivityMetaDataDao {
     return updatedDestinationsList;
   }
 
-  
   public List<DestinationBean> formatValueOfXByStringFormat(
       List<DestinationBean> destinationsList,
       String stringFormat,
@@ -3867,7 +3814,6 @@ public class ActivityMetaDataDao {
     return destinationsList;
   }
 
-  
   public String getDateRangeType(String dateRange) {
     LOGGER.info("INFO: ActivityMetaDataDao - getDateRangeType() :: Starts");
     String dateRangeType = "";
@@ -3892,7 +3838,6 @@ public class ActivityMetaDataDao {
     return dateRangeType;
   }
 
-  
   @SuppressWarnings("unchecked")
   public ActivitiesBean getAnchordateDetailsByActivityIdForActivetask(
       ActiveTaskDto activeTaskDto, ActivitiesBean activityBean, Session session)
@@ -4093,7 +4038,6 @@ public class ActivityMetaDataDao {
     return activityBean;
   }
 
-  
   @SuppressWarnings("unchecked")
   public List<ActivityFrequencyAnchorRunsBean>
       getQuestionnaireFrequencyAncorDetailsForManuallySchedule(
@@ -4138,7 +4082,6 @@ public class ActivityMetaDataDao {
     return anchorRunDetailsBean;
   }
 
-  
   @SuppressWarnings("unchecked")
   public ActivitiesBean getAnchordateDetailsByActivityIdForQuestionnaire(
       QuestionnairesDto questionaire, ActivitiesBean activityBean, Session session)

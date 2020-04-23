@@ -26,7 +26,6 @@ import java.util.ArrayList;
 import java.util.List;
 import com.hphc.mystudies.util.StudyMetaDataConstants;
 
-
 public class StudyResponse {
 
   private String message = StudyMetaDataConstants.FAILURE;

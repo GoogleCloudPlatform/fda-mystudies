@@ -7,7 +7,7 @@
          <!-- Start right Content here -->
          <!-- ============================================================== --> 
         <div class="col-sm-10 col-rc white-bg p-none">
-        <form:form action="/fdahpStudyDesigner/adminStudies/saveOrDoneChecklist.do?${_csrf.parameterName}=${_csrf.token}&_S=${param._S}" id="checklistForm" role="form" method="post" autocomplete="off" enctype="multipart/form-data">    
+        <form:form action="/studybuilder/adminStudies/saveOrDoneChecklist.do?${_csrf.parameterName}=${_csrf.token}&_S=${param._S}" id="checklistForm" role="form" method="post" autocomplete="off" enctype="multipart/form-data">    
             <input type="hidden" name="checklistId" value="${checklist.checklistId}">
             <input type="hidden" id="actionBut" name="actionBut">
             <!--  Start top tab section-->

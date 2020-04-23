@@ -32,7 +32,6 @@ import javax.persistence.Table;
 import org.hibernate.annotations.NamedQueries;
 import org.hibernate.annotations.NamedQuery;
 
-
 @Entity
 @Table(name = "gateway_welcome_info")
 @NamedQueries({
@@ -40,7 +39,6 @@ import org.hibernate.annotations.NamedQuery;
 })
 public class GatewayWelcomeInfoDto implements Serializable {
 
-  
   private static final long serialVersionUID = -5468183451984469709L;
 
   @Id

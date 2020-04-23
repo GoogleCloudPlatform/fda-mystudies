@@ -22,10 +22,8 @@
  */
 package com.hphc.mystudies.exception;
 
-
 public class OrchestrationException extends CommonException {
 
-  
   public OrchestrationException(String pErrorCode, Throwable arg1) {
     super(pErrorCode, arg1);
   }

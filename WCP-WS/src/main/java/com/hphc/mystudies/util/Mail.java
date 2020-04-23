@@ -33,7 +33,6 @@ import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 import org.apache.log4j.Logger;
 
-
 public class Mail {
 
   private static final Logger LOGGER = Logger.getLogger(Mail.class.getName());
@@ -41,7 +40,6 @@ public class Mail {
   @SuppressWarnings("unchecked")
   static HashMap<String, String> propMap = StudyMetaDataUtil.configMap;
 
-  
   public static boolean sendemail(String email, String subject, String messageBody)
       throws Exception {
     LOGGER.debug("sendemail()====start");

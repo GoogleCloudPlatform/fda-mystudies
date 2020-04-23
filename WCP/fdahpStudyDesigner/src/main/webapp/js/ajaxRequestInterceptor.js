@@ -4,7 +4,7 @@
  * @see Intercepts the ajax request.
  */
 function ajaxSessionTimeout() {
-	window.location.href = '/fdahpStudyDesigner/errorRedirect.do?error=timeOut';
+	window.location.href = '/studybuilder/errorRedirect.do?error=timeOut';
 }
 
 !function($) {

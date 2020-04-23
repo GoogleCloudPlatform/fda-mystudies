@@ -13,8 +13,8 @@
                 <th style="display: none;" id="">Live Study ID <span class="sort"></span></th>
                 <th id="">Study ID <span class="sort"></span></th>
                 <th id="">Study name <span class="sort"></span></th>
-                <th id="">Study Category <span class="sort"></span></th>
-                <th id="">FDA PROJECT LEAD <span class="sort"></span></th>
+                <th id="">Category <span class="sort"></span></th>
+                <th id="">&lt;Org Name&gt; Project lead <span class="sort"></span></th>
                 <th id="">Research Sponsor <span class="sort"></span></th>
                 <th id="">Status <span class="sort"></span></th>
                 <th id="">Actions</th>
@@ -57,7 +57,7 @@
             </tbody>
           </table>
         </div>  
-<form:form action="/fdahpStudyDesigner/adminStudies/viewBasicInfo.do" id="addEditStudyForm" name="addEditStudyForm" method="post">
+<form:form action="/studybuilder/adminStudies/viewBasicInfo.do" id="addEditStudyForm" name="addEditStudyForm" method="post">
   <input type="hidden" id="studyId" name="studyId">
 </form:form>
 <script>
@@ -80,7 +80,7 @@
 				input.value= '${_csrf.token}';
 				form.appendChild(input);
 				
-		    	form.action= '/fdahpStudyDesigner/adminStudies/viewStudyDetails.do';
+		    	form.action= '/studybuilder/adminStudies/viewStudyDetails.do';
 		    	document.body.appendChild(form);
 		    	form.submit();
 		 });
@@ -112,7 +112,7 @@
 				input.value= '${_csrf.token}';
 				form.appendChild(input);
 				
-		    	form.action= '/fdahpStudyDesigner/adminStudies/viewStudyDetails.do';
+		    	form.action= '/studybuilder/adminStudies/viewStudyDetails.do';
 		    	document.body.appendChild(form);
 		    	form.submit();
  	     });
@@ -151,7 +151,7 @@
 				input.value= '${_csrf.token}';
 				form.appendChild(input);
 				
-		    	form.action= '/fdahpStudyDesigner/adminStudies/crateNewStudy.do';
+		    	form.action= '/studybuilder/adminStudies/crateNewStudy.do';
 		    	document.body.appendChild(form);
 		    	form.submit();
 	     });

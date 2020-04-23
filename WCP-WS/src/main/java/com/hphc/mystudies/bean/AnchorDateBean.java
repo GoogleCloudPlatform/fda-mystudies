@@ -22,7 +22,6 @@
  */
 package com.hphc.mystudies.bean;
 
-
 public class AnchorDateBean {
 
   private String type = "";

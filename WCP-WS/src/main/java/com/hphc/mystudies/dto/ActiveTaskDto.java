@@ -32,7 +32,6 @@ import javax.persistence.Table;
 import org.hibernate.annotations.NamedQueries;
 import org.hibernate.annotations.NamedQuery;
 
-
 @Entity
 @Table(name = "active_task")
 @NamedQueries({
@@ -50,7 +49,6 @@ import org.hibernate.annotations.NamedQuery;
 })
 public class ActiveTaskDto implements Serializable {
 
-  
   private static final long serialVersionUID = -4577109970844567694L;
 
   @Id

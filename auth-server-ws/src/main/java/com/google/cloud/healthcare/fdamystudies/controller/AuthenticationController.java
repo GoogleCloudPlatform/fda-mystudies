@@ -264,7 +264,8 @@ public class AuthenticationController {
       if (AppConstants.MA.equals(appCode)
           || AppConstants.USWS.equals(appCode)
           || AppConstants.URS.equals(appCode)
-          || AppConstants.RS.equals(appCode)) {
+          || AppConstants.RS.equals(appCode)
+          || AppConstants.WCP.equals(appCode)) {
 
         responseEntity = new ValidateClientCredentialsResponse();
         responseEntity.setCode(MyStudiesUserRegUtil.ErrorCodes.STATUS_200.getValue());
@@ -447,17 +448,6 @@ public class AuthenticationController {
         logger.info("AuthenticationController registerUser() - ends with BAD_REQUEST");
         return new ResponseEntity<>(controllerResp, HttpStatus.BAD_REQUEST);
       }
-      if (((user.getPassword() == null) && StringUtils.isBlank(user.getPassword()))
-          || (!MyStudiesUserRegUtil.isPasswordStrong(user.getPassword()))
-          || (MyStudiesUserRegUtil.isPasswordContainsEmailId(user.getPassword()))) {
-        MyStudiesUserRegUtil.getFailureResponse(
-            400 + "",
-            MyStudiesUserRegUtil.ErrorCodes.INVALID_INPUT.getValue(),
-            MyStudiesUserRegUtil.ErrorCodes.NEW_PASSWORD_IS_INVALID.getValue(),
-            response);
-        logger.info("AuthenticationController registerUser() - ends with BAD_REQUEST");
-        return new ResponseEntity<>(controllerResp, HttpStatus.BAD_REQUEST);
-      }
 
       if (((user.getEmailId() == null) && StringUtils.isBlank(user.getEmailId()))
           || (!MyStudiesUserRegUtil.isValidEmailId(user.getEmailId()))) {
@@ -465,6 +455,18 @@ public class AuthenticationController {
             400 + "",
             MyStudiesUserRegUtil.ErrorCodes.INVALID_INPUT.getValue(),
             MyStudiesUserRegUtil.ErrorCodes.INVALID_EMAIL_ID.getValue(),
+            response);
+        logger.info("AuthenticationController registerUser() - ends with BAD_REQUEST");
+        return new ResponseEntity<>(controllerResp, HttpStatus.BAD_REQUEST);
+      }
+
+      if (((user.getPassword() == null) && StringUtils.isBlank(user.getPassword()))
+          || (!MyStudiesUserRegUtil.isPasswordStrong(user.getPassword()))
+          || (user.getEmailId().equalsIgnoreCase(user.getPassword()))) {
+        MyStudiesUserRegUtil.getFailureResponse(
+            400 + "",
+            MyStudiesUserRegUtil.ErrorCodes.INVALID_INPUT.getValue(),
+            MyStudiesUserRegUtil.ErrorCodes.NEW_PASSWORD_IS_INVALID.getValue(),
             response);
         logger.info("AuthenticationController registerUser() - ends with BAD_REQUEST");
         return new ResponseEntity<>(controllerResp, HttpStatus.BAD_REQUEST);
@@ -482,16 +484,17 @@ public class AuthenticationController {
             "AuthenticationController registerUser() - ends with INVALID CLIENTID OR SECRET KEY");
         return new ResponseEntity<>(controllerResp, HttpStatus.UNAUTHORIZED);
       }
-      if ("MA".equals(appCode) && ((appId.length() == 0) || StringUtils.isBlank(appId))
-          || ((orgId.length() == 0) || StringUtils.isBlank(orgId))) {
-
-        MyStudiesUserRegUtil.getFailureResponse(
-            400 + "",
-            MyStudiesUserRegUtil.ErrorCodes.INVALID_INPUT.getValue(),
-            MyStudiesUserRegUtil.ErrorCodes.INVALID_INPUT_ERROR_MSG.getValue(),
-            response);
-        logger.info("AuthenticationController registerUser() - ends");
-        return new ResponseEntity<>(controllerResp, HttpStatus.BAD_REQUEST);
+      if ("MA".equals(appCode)) {
+        if (((appId.length() == 0) || StringUtils.isBlank(appId))
+            || ((orgId.length() == 0) || StringUtils.isBlank(orgId))) {
+          MyStudiesUserRegUtil.getFailureResponse(
+              400 + "",
+              MyStudiesUserRegUtil.ErrorCodes.INVALID_INPUT.getValue(),
+              MyStudiesUserRegUtil.ErrorCodes.INVALID_INPUT_ERROR_MSG.getValue(),
+              response);
+          logger.info("AuthenticationController registerUser() - ends");
+          return new ResponseEntity<>(controllerResp, HttpStatus.BAD_REQUEST);
+        }
       }
 
       ServiceRegistrationSuccessResponse serviceResp = null;
@@ -519,7 +522,7 @@ public class AuthenticationController {
       MyStudiesUserRegUtil.getFailureResponse(
           500 + "",
           MyStudiesUserRegUtil.ErrorCodes.UNKNOWN.getValue(),
-          MyStudiesUserRegUtil.ErrorCodes.CONNECTION_ERROR_MSG.getValue(),
+          MyStudiesUserRegUtil.ErrorCodes.SYSTEM_ERROR_FOUND.getValue(),
           response);
       logger.error(
           "AuthenticationController getRefreshedToken() - error with INTERNAL_SERVER_ERROR: ", e);
@@ -589,15 +592,17 @@ public class AuthenticationController {
         return new ResponseEntity<>(loginResp, HttpStatus.UNAUTHORIZED);
       }
 
-      if ("MA".equals(appCode) && ((appId.length() == 0) || StringUtils.isBlank(appId))
-          || ((orgId.length() == 0) || StringUtils.isBlank(orgId))) {
-        MyStudiesUserRegUtil.getFailureResponse(
-            400 + "",
-            MyStudiesUserRegUtil.ErrorCodes.INVALID_INPUT.getValue(),
-            MyStudiesUserRegUtil.ErrorCodes.INVALID_INPUT_ERROR_MSG.getValue(),
-            response);
-        logger.info("AuthenticationController login() - ends with INVALID_INPUT");
-        return new ResponseEntity<>(loginResp, HttpStatus.BAD_REQUEST);
+      if ("MA".equals(appCode)) {
+        if (((appId.length() == 0) || StringUtils.isBlank(appId))
+            || ((orgId.length() == 0) || StringUtils.isBlank(orgId))) {
+          MyStudiesUserRegUtil.getFailureResponse(
+              400 + "",
+              MyStudiesUserRegUtil.ErrorCodes.INVALID_INPUT.getValue(),
+              MyStudiesUserRegUtil.ErrorCodes.INVALID_INPUT_ERROR_MSG.getValue(),
+              response);
+          logger.info("AuthenticationController login() - ends with INVALID_INPUT");
+          return new ResponseEntity<>(loginResp, HttpStatus.BAD_REQUEST);
+        }
       }
 
       if (!"MA".equals(appCode)) {
@@ -698,7 +703,7 @@ public class AuthenticationController {
           } else if (loginResp.getCode() == ErrorCode.EC_92.code()) {
             MyStudiesUserRegUtil.getFailureResponse(
                 MyStudiesUserRegUtil.ErrorCodes.STATUS_101.getValue(),
-                MyStudiesUserRegUtil.ErrorCodes.INVALID_USERNAME_PASSWORD_MSG.name(),
+                MyStudiesUserRegUtil.ErrorCodes.INVALID_INPUT.name(),
                 MyStudiesUserRegUtil.ErrorCodes.INVALID_USERNAME_PASSWORD_MSG.getValue(),
                 response);
             loginResp.setCode(HttpStatus.UNAUTHORIZED.value());
@@ -728,7 +733,7 @@ public class AuthenticationController {
         MyStudiesUserRegUtil.getFailureResponse(
             MyStudiesUserRegUtil.ErrorCodes.STATUS_102.getValue(),
             MyStudiesUserRegUtil.ErrorCodes.INVALID_INPUT.getValue(),
-            MyStudiesUserRegUtil.ErrorCodes.INVALID_EMAIL_PASSWORD_MSG.getValue(),
+            MyStudiesUserRegUtil.ErrorCodes.INVALID_USERNAME_PASSWORD_MSG.getValue(),
             response);
         activityLogService.createActivityLog(
             loginRequest.getEmailId(),
@@ -736,8 +741,8 @@ public class AuthenticationController {
             String.format(
                 AppConstants.AUDIT_EVENT_FAILED_SIGN_IN_WRONG_EMAIL_DESC,
                 loginRequest.getEmailId()));
-        logger.info("AuthenticationController login() - ends with INVALID_EMAIL_PASSWORD");
-        return new ResponseEntity<>(loginResp, HttpStatus.BAD_REQUEST);
+        logger.info("AuthenticationController login() - ends with account deactivated");
+        return new ResponseEntity<>(loginResp, HttpStatus.UNAUTHORIZED);
       }
     } catch (PasswordExpiredException e) {
       MyStudiesUserRegUtil.getFailureResponse(
@@ -1051,8 +1056,9 @@ public class AuthenticationController {
                 .equals(changePasswordBean.getNewPassword())) {
 
               if (MyStudiesUserRegUtil.isPasswordStrong(changePasswordBean.getNewPassword())
-                  && !(MyStudiesUserRegUtil.isPasswordContainsEmailId(
-                      changePasswordBean.getNewPassword()))) {
+                  && !(userInfo
+                      .getEmailId()
+                      .equalsIgnoreCase(changePasswordBean.getNewPassword()))) {
 
                 isValidPassword =
                     userDetailsService.getPasswordHistory(
@@ -1128,7 +1134,7 @@ public class AuthenticationController {
                 MyStudiesUserRegUtil.getFailureResponse(
                     MyStudiesUserRegUtil.ErrorCodes.STATUS_102.getValue(),
                     MyStudiesUserRegUtil.ErrorCodes.INVALID_INPUT.getValue(),
-                    MyStudiesUserRegUtil.ErrorCodes.INVALID_INPUT.getValue(),
+                    MyStudiesUserRegUtil.ErrorCodes.NEW_PASSWORD_IS_INVALID.getValue(),
                     response);
                 activityLogService.createActivityLog(
                     userId,

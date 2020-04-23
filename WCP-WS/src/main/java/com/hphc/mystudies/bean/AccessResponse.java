@@ -22,7 +22,6 @@
  */
 package com.hphc.mystudies.bean;
 
-
 public class AccessResponse extends SuccessResponse {
 
   private int userId = 0;

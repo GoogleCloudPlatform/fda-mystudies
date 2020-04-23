@@ -32,7 +32,6 @@ import javax.persistence.Table;
 import org.hibernate.annotations.NamedQueries;
 import org.hibernate.annotations.NamedQuery;
 
-
 @Entity
 @Table(name = "study_page")
 @NamedQueries({
@@ -42,7 +41,6 @@ import org.hibernate.annotations.NamedQuery;
 })
 public class StudyPageDto implements Serializable {
 
-  
   private static final long serialVersionUID = 1910738533774432289L;
 
   @Id

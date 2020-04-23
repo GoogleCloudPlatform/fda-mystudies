@@ -7,7 +7,7 @@
 <!-- ============================================================== --> 
  <div class="col-sm-10 col-rc white-bg p-none">
    <!--  Start top tab section-->
-   <form:form action="/fdahpStudyDesigner/adminStudies/saveOrUpdateInstructionStep.do?_S=${param._S}" name="basicInfoFormId" id="basicInfoFormId" method="post" data-toggle="validator" role="form">
+   <form:form action="/studybuilder/adminStudies/saveOrUpdateInstructionStep.do?_S=${param._S}" name="basicInfoFormId" id="basicInfoFormId" method="post" data-toggle="validator" role="form">
    <div class="right-content-head">
       <div class="text-right">
          <div class="black-md-f text-uppercase dis-line pull-left line34"><span class="mr-xs cur-pointer" onclick="goToBackPage(this);"><img src="../images/icons/back-b.png" alt=""/></span> 
@@ -38,7 +38,7 @@
       <input type="hidden" id="type" name="type" value="complete" />
        <input type="hidden" name="questionnairesStepsBo.stepId" id="stepId" value="${instructionsBo.questionnairesStepsBo.stepId}">
 		    <div class="col-md-6 pl-none">
-			   <div class="gray-xs-f mb-xs">Step title or Key (1 to 15 characters)<span class="requiredStar">*</span><span class="ml-xs sprites_v3 filled-tooltip" data-toggle="tooltip" title="A human readable step identifier and must be unique across all steps of the questionnaire.Note that this field cannot be edited once the study is Launched."></span></div>
+			   <div class="gray-xs-f mb-xs">Step Short Title or Key (15 characters max)<span class="requiredStar">*</span><span class="ml-xs sprites_v3 filled-tooltip" data-toggle="tooltip" title="A human readable step identifier and must be unique across all steps of the questionnaire. Note that this field cannot be edited once the study is Launched."></span></div>
 			   <div class="form-group">
 			      <input autofocus="autofocus" type="text" custAttType="cust" class="form-control" name="questionnairesStepsBo.stepShortTitle" id="shortTitleId" value="${fn:escapeXml(instructionsBo.questionnairesStepsBo.stepShortTitle)}" required="required" 
 			      maxlength="15" <c:if test="${not empty instructionsBo.questionnairesStepsBo.isShorTitleDuplicate && (instructionsBo.questionnairesStepsBo.isShorTitleDuplicate gt 0)}"> disabled</c:if>/>
@@ -51,7 +51,7 @@
 			   <div>Instruction Step</div>
 			</div>
 		  <div class="clearfix"></div>
-	      <div class="gray-xs-f mb-xs">Title (1 to 250 characters)<span class="requiredStar">*</span></div>
+	      <div class="gray-xs-f mb-xs">Title (250 characters max)<span class="requiredStar">*</span></div>
 		  <div class="form-group">
 			    <input type="text" class="form-control" required name="instructionTitle" id="instructionTitle" value="${fn:escapeXml(instructionsBo.instructionTitle)}" maxlength="250"/>
 			    <div class="help-block with-errors red-txt"></div>
@@ -137,7 +137,7 @@ function validateShortTitle(item,callback){
 	if(shortTitle != null && shortTitle !='' && typeof shortTitle!= 'undefined'){
 		if( existedKey !=shortTitle){
 			$.ajax({
-                url: "/fdahpStudyDesigner/adminStudies/validateQuestionnaireStepKey.do?_S=${param._S}",
+                url: "/studybuilder/adminStudies/validateQuestionnaireStepKey.do?_S=${param._S}",
                 type: "POST",
                 datatype: "json",
                 data: {
@@ -201,7 +201,7 @@ function saveInstruction(item){
 		
 		var data = JSON.stringify(instruction);
 		$.ajax({ 
-	          url: "/fdahpStudyDesigner/adminStudies/saveInstructionStep.do?_S=${param._S}",
+	          url: "/studybuilder/adminStudies/saveInstructionStep.do?_S=${param._S}",
 	          type: "POST",
 	          datatype: "json",
 	          data: {instructionsInfo:data},
@@ -262,7 +262,7 @@ function goToBackPage(item){
 			    callback: function(result) {
 			        if (result) {
 			        	var a = document.createElement('a');
-			        	a.href = "/fdahpStudyDesigner/adminStudies/viewQuestionnaire.do?_S=${param._S}";
+			        	a.href = "/studybuilder/adminStudies/viewQuestionnaire.do?_S=${param._S}";
 			        	document.body.appendChild(a).click();
 			        }else{
 			        	$(item).prop('disabled', false);
@@ -272,7 +272,7 @@ function goToBackPage(item){
 	</c:if>
 	<c:if test="${actionTypeForQuestionPage eq 'view'}">
 		var a = document.createElement('a');
-		a.href = "/fdahpStudyDesigner/adminStudies/viewQuestionnaire.do?_S=${param._S}";
+		a.href = "/studybuilder/adminStudies/viewQuestionnaire.do?_S=${param._S}";
 		document.body.appendChild(a).click();
 	</c:if>
 }

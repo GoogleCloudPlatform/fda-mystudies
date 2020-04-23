@@ -34,7 +34,6 @@ import com.hphc.mystudies.dao.StudyMetaDataDao;
 import com.hphc.mystudies.exception.OrchestrationException;
 import com.hphc.mystudies.util.StudyMetaDataUtil;
 
-
 public class StudyMetaDataOrchestration {
 
   private static final Logger LOGGER = Logger.getLogger(StudyMetaDataOrchestration.class);
@@ -44,7 +43,6 @@ public class StudyMetaDataOrchestration {
 
   StudyMetaDataDao studyMetaDataDao = new StudyMetaDataDao();
 
-  
   public boolean isValidAuthorizationId(String authorization) throws OrchestrationException {
     LOGGER.info("INFO: StudyMetaDataOrchestration - isValidAuthorizationId() :: Starts");
     boolean hasValidAuthorization = false;
@@ -57,7 +55,6 @@ public class StudyMetaDataOrchestration {
     return hasValidAuthorization;
   }
 
-  
   public GatewayInfoResponse gatewayAppResourcesInfo(String authorization)
       throws OrchestrationException {
     LOGGER.info("INFO: StudyMetaDataOrchestration - gatewayAppResourcesInfo() :: Starts");
@@ -71,7 +68,6 @@ public class StudyMetaDataOrchestration {
     return gatewayInfo;
   }
 
-  
   public StudyResponse studyList(String authorization, String applicationId, String orgId)
       throws OrchestrationException {
     LOGGER.info("INFO: StudyMetaDataOrchestration - studyList() :: Starts");
@@ -85,7 +81,6 @@ public class StudyMetaDataOrchestration {
     return studyResponse;
   }
 
-  
   public EligibilityConsentResponse eligibilityConsentMetadata(String studyId)
       throws OrchestrationException {
     LOGGER.info("INFO: StudyMetaDataOrchestration - eligibilityConsentMetadata() :: Starts");
@@ -99,7 +94,6 @@ public class StudyMetaDataOrchestration {
     return eligibilityConsentResponse;
   }
 
-  
   public ConsentDocumentResponse consentDocument(
       String studyId, String consentVersion, String activityId, String activityVersion)
       throws OrchestrationException {
@@ -115,7 +109,6 @@ public class StudyMetaDataOrchestration {
     return consentDocumentResponse;
   }
 
-  
   public ResourcesResponse resourcesForStudy(String studyId) throws OrchestrationException {
     LOGGER.info("INFO: StudyMetaDataOrchestration - resourcesForStudy() :: Starts");
     ResourcesResponse resourcesResponse = new ResourcesResponse();
@@ -128,7 +121,6 @@ public class StudyMetaDataOrchestration {
     return resourcesResponse;
   }
 
-  
   public StudyInfoResponse studyInfo(String studyId) throws OrchestrationException {
     LOGGER.info("INFO: StudyMetaDataOrchestration - studyInfo() :: Starts");
     StudyInfoResponse studyInfoResponse = new StudyInfoResponse();
@@ -141,7 +133,6 @@ public class StudyMetaDataOrchestration {
     return studyInfoResponse;
   }
 
-  
   public boolean isValidStudy(String studyId) throws OrchestrationException {
     LOGGER.info("INFO: StudyMetaDataOrchestration - isValidStudy() :: Starts");
     boolean flag = false;
@@ -154,7 +145,6 @@ public class StudyMetaDataOrchestration {
     return flag;
   }
 
-  
   public boolean isValidActivity(String activityId, String studyId, String activityVersion)
       throws OrchestrationException {
     LOGGER.info("INFO: StudyMetaDataOrchestration - isValidActivity() :: Starts");
@@ -168,7 +158,6 @@ public class StudyMetaDataOrchestration {
     return flag;
   }
 
-  
   public boolean isActivityTypeQuestionnaire(
       String activityId, String studyId, String activityVersion) throws OrchestrationException {
     LOGGER.info("INFO: StudyMetaDataOrchestration - isActivityTypeQuestionnaire() :: Starts");
@@ -182,7 +171,6 @@ public class StudyMetaDataOrchestration {
     return flag;
   }
 
-  
   public boolean isValidToken(String token) throws OrchestrationException {
     LOGGER.info("INFO: StudyMetaDataOrchestration - isValidToken() :: Starts");
     boolean flag = false;
@@ -195,7 +183,6 @@ public class StudyMetaDataOrchestration {
     return flag;
   }
 
- 
   public StudyResponse study(String studyId) throws OrchestrationException {
     LOGGER.info("INFO: StudyMetaDataOrchestration - study() :: Starts");
     StudyResponse studyResponse = new StudyResponse();

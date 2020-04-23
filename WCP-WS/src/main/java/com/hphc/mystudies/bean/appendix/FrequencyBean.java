@@ -22,7 +22,6 @@
  */
 package com.hphc.mystudies.bean.appendix;
 
-
 public class FrequencyBean {
 
   private String frequency = "";

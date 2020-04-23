@@ -34,7 +34,6 @@ import org.hibernate.annotations.NamedQueries;
 import org.hibernate.annotations.NamedQuery;
 import com.hphc.mystudies.util.StudyMetaDataConstants;
 
-
 @Entity
 @Table(name = "questions")
 @NamedQueries(
@@ -46,7 +45,6 @@ import com.hphc.mystudies.util.StudyMetaDataConstants;
                   + " where QDTO.status=true and QDTO.id IN (:questionIdList)"),
     })
 public class QuestionsDto implements Serializable {
-
 
   private static final long serialVersionUID = 3036839955038582674L;
 

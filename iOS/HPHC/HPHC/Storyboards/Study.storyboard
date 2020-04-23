@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="15505" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="cD3-IQ-4Md">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="16096" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="cD3-IQ-4Md">
     <device id="retina5_9" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="15510"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="16086"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -16,7 +16,7 @@
         <!--Study Home View Controller-->
         <scene sceneID="VzS-PK-Dcj">
             <objects>
-                <viewController storyboardIdentifier="StudyHomeViewController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="N5Y-rW-mwD" customClass="StudyHomeViewController" customModule="HPHC" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="StudyHomeViewController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="N5Y-rW-mwD" customClass="StudyHomeViewController" customModule="GCPMyStudies" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="EmZ-HA-ZIB">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -187,7 +187,7 @@
         <!--Page View Controller-->
         <scene sceneID="oZ7-Yv-fUQ">
             <objects>
-                <pageViewController autoresizesArchivedViewToFullSize="NO" transitionStyle="scroll" navigationOrientation="horizontal" spineLocation="none" id="150-x0-BlR" customClass="PageViewController" customModule="HPHC" customModuleProvider="target" sceneMemberID="viewController"/>
+                <pageViewController autoresizesArchivedViewToFullSize="NO" transitionStyle="scroll" navigationOrientation="horizontal" spineLocation="none" id="150-x0-BlR" customClass="PageViewController" customModule="GCPMyStudies" customModuleProvider="target" sceneMemberID="viewController"/>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="C2E-ei-N0W" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="1258" y="4079"/>
@@ -213,7 +213,7 @@
         <!--Study Overview View Controller First-->
         <scene sceneID="Yb7-14-iTF">
             <objects>
-                <viewController storyboardIdentifier="FirstViewController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="BSo-U7-UDQ" customClass="StudyOverviewViewControllerFirst" customModule="HPHC" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="FirstViewController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="BSo-U7-UDQ" customClass="StudyOverviewViewControllerFirst" customModule="GCPMyStudies" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="TSo-a1-wV3">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="812"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -338,7 +338,7 @@
         <!--Study Overview View Controller Second-->
         <scene sceneID="U4k-B6-hD2">
             <objects>
-                <viewController storyboardIdentifier="SecondViewController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="EBl-T5-UoM" customClass="StudyOverviewViewControllerSecond" customModule="HPHC" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="SecondViewController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="EBl-T5-UoM" customClass="StudyOverviewViewControllerSecond" customModule="GCPMyStudies" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="rXI-xG-apb">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="812"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -498,25 +498,10 @@
             </objects>
             <point key="canvasLocation" x="2908" y="4078.0788177339905"/>
         </scene>
-        <!--Video View Controller-->
-        <scene sceneID="LrT-E6-r6V">
-            <objects>
-                <viewController storyboardIdentifier="VideoViewController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="Jj1-h7-nV0" customClass="VideoViewController" customModule="HPHC" customModuleProvider="target" sceneMemberID="viewController">
-                    <view key="view" contentMode="scaleToFill" id="v6m-Sv-hYG">
-                        <rect key="frame" x="0.0" y="0.0" width="375" height="812"/>
-                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                        <viewLayoutGuide key="safeArea" id="6ie-Fv-taM"/>
-                    </view>
-                </viewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="2pe-bC-CfC" userLabel="First Responder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="3644" y="4078"/>
-        </scene>
         <!--Resources View Controller-->
         <scene sceneID="IkH-KO-QGA">
             <objects>
-                <viewController id="dCa-6u-qt2" customClass="ResourcesViewController" customModule="HPHC" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController id="dCa-6u-qt2" customClass="ResourcesViewController" customModule="GCPMyStudies" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="RNE-GL-dYl">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="812"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -529,7 +514,7 @@
                                 <rect key="frame" x="0.0" y="88" width="375" height="641"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <prototypes>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="ResourcesCell" rowHeight="65" id="ya3-jM-TXA" customClass="ResourcesTableViewCell" customModule="HPHC" customModuleProvider="target">
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="ResourcesCell" rowHeight="65" id="ya3-jM-TXA" customClass="ResourcesTableViewCell" customModule="GCPMyStudies" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="28" width="375" height="65"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="ya3-jM-TXA" id="TiY-86-u9p">
@@ -543,7 +528,7 @@
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                                 <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="rightIconGrey" translatesAutoresizingMaskIntoConstraints="NO" id="QQd-sp-B0v">
-                                                    <rect key="frame" x="329" y="18.666666666666671" width="16" height="28"/>
+                                                    <rect key="frame" x="337" y="25.333333333333332" width="8" height="14.333333333333332"/>
                                                 </imageView>
                                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="daA-4d-B2q">
                                                     <rect key="frame" x="24" y="60" width="326" height="1"/>
@@ -619,7 +604,7 @@
         <!--Study Dashboard View Controller-->
         <scene sceneID="T5g-Dy-bhf">
             <objects>
-                <viewController id="Ivr-tV-60u" customClass="StudyDashboardViewController" customModule="HPHC" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController id="Ivr-tV-60u" customClass="StudyDashboardViewController" customModule="GCPMyStudies" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="blp-fg-T0R">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="812"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -641,7 +626,7 @@
                                 </constraints>
                             </view>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="LYX-5F-scC">
-                                <rect key="frame" x="16" y="59" width="40" height="43"/>
+                                <rect key="frame" x="15.999999999999998" y="59" width="20.333333333333329" height="22"/>
                                 <state key="normal" image="homeIconWhite"/>
                                 <connections>
                                     <action selector="homeButtonAction:" destination="Ivr-tV-60u" eventType="touchUpInside" id="sHp-Gg-E5b"/>
@@ -652,12 +637,12 @@
                                 <constraints>
                                     <constraint firstAttribute="height" constant="50" id="ucN-vG-3S0"/>
                                 </constraints>
-                                <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="18"/>
+                                <fontDescription key="fontDescription" name="HelveticaNeue-Medium" family="Helvetica Neue" pointSize="18"/>
                                 <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="MYG-14-Lp0">
-                                <rect key="frame" x="327" y="59" width="30" height="45"/>
+                                <rect key="frame" x="341.66666666666669" y="58.999999999999993" width="15.333333333333314" height="22.666666666666664"/>
                                 <state key="normal" image="shareIcon"/>
                                 <connections>
                                     <action selector="shareButtonAction:" destination="Ivr-tV-60u" eventType="touchUpInside" id="vxm-JJ-Ii0"/>
@@ -667,7 +652,7 @@
                                 <rect key="frame" x="0.0" y="108" width="375" height="621"/>
                                 <color key="backgroundColor" red="0.84705882349999995" green="0.89019607840000003" blue="0.90196078430000004" alpha="1" colorSpace="calibratedRGB"/>
                                 <prototypes>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="none" indentationWidth="10" reuseIdentifier="welcomeCell" rowHeight="70" id="lRY-T3-IvM" customClass="StudyDashboardWelcomeTableViewCell" customModule="HPHC" customModuleProvider="target">
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="none" indentationWidth="10" reuseIdentifier="welcomeCell" rowHeight="70" id="lRY-T3-IvM" customClass="StudyDashboardWelcomeTableViewCell" customModule="GCPMyStudies" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="55.333332061767578" width="375" height="70"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="lRY-T3-IvM" id="Yu2-RD-Ywx">
@@ -748,14 +733,14 @@
                                             <outlet property="labelName" destination="RTJ-5j-gHp" id="WRh-e4-cQL"/>
                                         </connections>
                                     </tableViewCell>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="none" indentationWidth="10" reuseIdentifier="percentageCell" rowHeight="200" id="xHx-3T-4Ix" customClass="StudyDashboardStudyPercentageTableViewCell" customModule="HPHC" customModuleProvider="target">
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="none" indentationWidth="10" reuseIdentifier="percentageCell" rowHeight="200" id="xHx-3T-4Ix" customClass="StudyDashboardStudyPercentageTableViewCell" customModule="GCPMyStudies" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="125.33333206176758" width="375" height="200"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="xHx-3T-4Ix" id="prx-D2-EIC">
                                             <rect key="frame" x="0.0" y="0.0" width="375" height="200"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
-                                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ujA-js-JkO" customClass="KDCircularProgress" customModule="HPHC" customModuleProvider="target">
+                                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ujA-js-JkO" customClass="KDCircularProgress" customModule="GCPMyStudies" customModuleProvider="target">
                                                     <rect key="frame" x="7" y="3" width="180" height="194"/>
                                                     <subviews>
                                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="THE STUDY IS" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" minimumFontSize="9" translatesAutoresizingMaskIntoConstraints="NO" id="XjP-9a-aCO">
@@ -807,7 +792,7 @@
                                                         <constraint firstAttribute="height" constant="25" id="JYr-Cm-soc"/>
                                                     </constraints>
                                                 </view>
-                                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="jpi-ig-JF9" customClass="KDCircularProgress" customModule="HPHC" customModuleProvider="target">
+                                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="jpi-ig-JF9" customClass="KDCircularProgress" customModule="GCPMyStudies" customModuleProvider="target">
                                                     <rect key="frame" x="188" y="3" width="180" height="194"/>
                                                     <subviews>
                                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="YOU COMPLETED" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" minimumFontSize="9" translatesAutoresizingMaskIntoConstraints="NO" id="mcT-Pq-7B0">
@@ -876,7 +861,7 @@
                                             <outlet property="studyPercentagePie" destination="ujA-js-JkO" id="Y5t-97-5Mn"/>
                                         </connections>
                                     </tableViewCell>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="none" indentationWidth="10" reuseIdentifier="StatisticsCell" rowHeight="210" id="CvQ-Hd-eDc" customClass="StudyDashboardStatisticsTableViewCell" customModule="HPHC" customModuleProvider="target">
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="none" indentationWidth="10" reuseIdentifier="StatisticsCell" rowHeight="210" id="CvQ-Hd-eDc" customClass="StudyDashboardStatisticsTableViewCell" customModule="GCPMyStudies" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="325.33333206176758" width="375" height="210"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="CvQ-Hd-eDc" id="nM8-jf-Yku">
@@ -884,7 +869,7 @@
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <button opaque="NO" tag="11" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Snh-ik-r6y">
-                                                    <rect key="frame" x="188" y="14" width="30" height="20"/>
+                                                    <rect key="frame" x="202.33333333333334" y="14" width="30" height="20"/>
                                                     <color key="backgroundColor" red="0.0" green="0.48627450979999998" blue="0.72941176470000002" alpha="1" colorSpace="calibratedRGB"/>
                                                     <constraints>
                                                         <constraint firstAttribute="height" constant="20" id="eDL-W0-mX6"/>
@@ -905,7 +890,7 @@
                                                     </connections>
                                                 </button>
                                                 <button opaque="NO" tag="12" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="kn0-VV-AHj">
-                                                    <rect key="frame" x="235" y="14" width="35" height="20"/>
+                                                    <rect key="frame" x="249.33333333333337" y="14" width="35" height="20"/>
                                                     <constraints>
                                                         <constraint firstAttribute="height" constant="20" id="k5b-G9-GQf"/>
                                                     </constraints>
@@ -925,7 +910,7 @@
                                                     </connections>
                                                 </button>
                                                 <button opaque="NO" tag="13" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="z17-KH-Jlb">
-                                                    <rect key="frame" x="286" y="14" width="45" height="20"/>
+                                                    <rect key="frame" x="300.33333333333331" y="14" width="45" height="20"/>
                                                     <constraints>
                                                         <constraint firstAttribute="height" constant="20" id="4pe-Jk-1Hu"/>
                                                     </constraints>
@@ -945,7 +930,7 @@
                                                     </connections>
                                                 </button>
                                                 <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="gBF-J9-AJ6">
-                                                    <rect key="frame" x="331" y="14" width="29" height="31"/>
+                                                    <rect key="frame" x="345.33333333333331" y="14" width="14.666666666666686" height="22"/>
                                                     <state key="normal" image="calenderIcon"/>
                                                 </button>
                                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="C6q-cY-e1F">
@@ -1023,7 +1008,7 @@
                                                         <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
                                                     </collectionViewFlowLayout>
                                                     <cells>
-                                                        <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="StatisticsCell" id="MZ5-Pr-Min" customClass="StudyDashboardStatisticsCollectionViewCell" customModule="HPHC" customModuleProvider="target">
+                                                        <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="StatisticsCell" id="MZ5-Pr-Min" customClass="StudyDashboardStatisticsCollectionViewCell" customModule="GCPMyStudies" customModuleProvider="target">
                                                             <rect key="frame" x="0.0" y="10.666666666666666" width="125" height="110"/>
                                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                             <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
@@ -1034,10 +1019,10 @@
                                                                         <rect key="frame" x="0.0" y="0.0" width="125" height="110"/>
                                                                         <subviews>
                                                                             <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="staticIcon1" translatesAutoresizingMaskIntoConstraints="NO" id="uJM-kf-5ax">
-                                                                                <rect key="frame" x="38.666666666666664" y="12" width="47.999999999999993" height="48"/>
+                                                                                <rect key="frame" x="50.666666666666664" y="12" width="23.999999999999993" height="24"/>
                                                                             </imageView>
                                                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="TOTAL HOURS OF SLEEP" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" minimumFontSize="9" translatesAutoresizingMaskIntoConstraints="NO" id="ivQ-Fp-sFD">
-                                                                                <rect key="frame" x="6.6666666666666643" y="63.666666666666657" width="112" height="24"/>
+                                                                                <rect key="frame" x="6.6666666666666643" y="39.666666666666664" width="112" height="24"/>
                                                                                 <constraints>
                                                                                     <constraint firstAttribute="width" constant="112" id="6dT-ep-Wcb"/>
                                                                                     <constraint firstAttribute="height" constant="24" id="Pk2-Mi-miT"/>
@@ -1047,7 +1032,7 @@
                                                                                 <nil key="highlightedColor"/>
                                                                             </label>
                                                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="30" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="9" translatesAutoresizingMaskIntoConstraints="NO" id="nom-xu-54M">
-                                                                                <rect key="frame" x="47" y="89.666666666666671" width="31" height="24"/>
+                                                                                <rect key="frame" x="47" y="65.666666666666671" width="31" height="24"/>
                                                                                 <constraints>
                                                                                     <constraint firstAttribute="height" constant="24" id="WeD-uo-C5I"/>
                                                                                 </constraints>
@@ -1056,7 +1041,7 @@
                                                                                 <nil key="highlightedColor"/>
                                                                             </label>
                                                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="HOURS" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="djj-79-ioD">
-                                                                                <rect key="frame" x="8" y="115.66666666666667" width="109" height="10"/>
+                                                                                <rect key="frame" x="8" y="91.666666666666671" width="109" height="10"/>
                                                                                 <constraints>
                                                                                     <constraint firstAttribute="height" constant="10" id="Ycr-W2-hFk"/>
                                                                                 </constraints>
@@ -1154,7 +1139,7 @@
                                             <outlet property="statisticsCollectionView" destination="I5p-FV-ltq" id="IhR-It-gey"/>
                                         </connections>
                                     </tableViewCell>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="none" indentationWidth="10" reuseIdentifier="trendCell" rowHeight="50" id="C7V-K2-Fb9" customClass="StudyDashboardTrendsTableViewCell" customModule="HPHC" customModuleProvider="target">
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="none" indentationWidth="10" reuseIdentifier="trendCell" rowHeight="50" id="C7V-K2-Fb9" customClass="StudyDashboardTrendsTableViewCell" customModule="GCPMyStudies" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="535.33333206176758" width="375" height="50"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="C7V-K2-Fb9" id="lHu-ZI-fyS">
@@ -1168,7 +1153,7 @@
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                                 <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="rightArrowBlue" translatesAutoresizingMaskIntoConstraints="NO" id="Xm9-8M-Ncd">
-                                                    <rect key="frame" x="303" y="19" width="46" height="36"/>
+                                                    <rect key="frame" x="326" y="19" width="23" height="18"/>
                                                 </imageView>
                                             </subviews>
                                             <constraints>
@@ -1226,7 +1211,7 @@
         <!--Charts View Controller-->
         <scene sceneID="p7B-Ej-abK">
             <objects>
-                <viewController id="RJ6-Ms-tMk" customClass="ChartsViewController" customModule="HPHC" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController id="RJ6-Ms-tMk" customClass="ChartsViewController" customModule="GCPMyStudies" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="Wfj-yu-5v5">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="812"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -1242,9 +1227,9 @@
                                             <action selector="backButtonAction:" destination="RJ6-Ms-tMk" eventType="touchUpInside" id="Xh2-qV-cbi"/>
                                         </connections>
                                     </button>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="TRENDS" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="7PI-ZW-p9g">
-                                        <rect key="frame" x="152" y="31.666666666666671" width="71" height="21"/>
-                                        <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="18"/>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="TRENDS" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="7PI-ZW-p9g">
+                                        <rect key="frame" x="151.33333333333334" y="31.666666666666671" width="72.666666666666657" height="21"/>
+                                        <fontDescription key="fontDescription" name="HelveticaNeue-Medium" family="Helvetica Neue" pointSize="18"/>
                                         <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                         <nil key="highlightedColor"/>
                                     </label>
@@ -1257,7 +1242,7 @@
                                 </constraints>
                             </view>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="54n-s5-XPr">
-                                <rect key="frame" x="327" y="72" width="30" height="45"/>
+                                <rect key="frame" x="341.66666666666669" y="72" width="15.333333333333314" height="22.666666666666671"/>
                                 <state key="normal" image="shareIcon"/>
                                 <connections>
                                     <action selector="shareButtonAction:" destination="RJ6-Ms-tMk" eventType="touchUpInside" id="O4f-va-Eac"/>
@@ -1267,7 +1252,7 @@
                                 <rect key="frame" x="0.0" y="108" width="375" height="670"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <prototypes>
-                                    <tableViewCell contentMode="scaleToFill" selectionStyle="none" indentationWidth="10" reuseIdentifier="lineChart" rowHeight="260" id="efL-BG-Ieh" customClass="LineChartCell" customModule="HPHC" customModuleProvider="target">
+                                    <tableViewCell contentMode="scaleToFill" selectionStyle="none" indentationWidth="10" reuseIdentifier="lineChart" rowHeight="260" id="efL-BG-Ieh" customClass="LineChartCell" customModule="GCPMyStudies" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="28" width="375" height="260"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="efL-BG-Ieh" id="w0g-yn-hEC">
@@ -1409,7 +1394,7 @@
         <!--Activities View Controller-->
         <scene sceneID="wV6-gf-Owr">
             <objects>
-                <viewController id="CH1-xk-4mx" customClass="ActivitiesViewController" customModule="HPHC" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController id="CH1-xk-4mx" customClass="ActivitiesViewController" customModule="GCPMyStudies" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="keI-qG-OBa">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="812"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -1428,7 +1413,7 @@
                                 <rect key="frame" x="0.0" y="88" width="375" height="641"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <prototypes>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="ActivitiesCell" rowHeight="108" id="al1-wO-fEL" customClass="ActivitiesTableViewCell" customModule="HPHC" customModuleProvider="target">
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="ActivitiesCell" rowHeight="108" id="al1-wO-fEL" customClass="ActivitiesTableViewCell" customModule="GCPMyStudies" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="28" width="375" height="108"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="al1-wO-fEL" id="Yc6-Fr-m7h">
@@ -1527,7 +1512,7 @@
                                             <outlet property="labelTime" destination="X8A-Rm-SyQ" id="bPp-hw-giW"/>
                                         </connections>
                                     </tableViewCell>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="ActivitiesCellScheduled" rowHeight="126" id="gvh-TE-MpO" customClass="ActivitiesTableViewCell" customModule="HPHC" customModuleProvider="target">
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="ActivitiesCellScheduled" rowHeight="126" id="gvh-TE-MpO" customClass="ActivitiesTableViewCell" customModule="GCPMyStudies" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="136" width="375" height="126"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="gvh-TE-MpO" id="IB6-5t-b9K">
@@ -1729,7 +1714,7 @@
         <!--Study Dashboard Tabbar View Controller-->
         <scene sceneID="Y8t-2T-Fjd">
             <objects>
-                <tabBarController storyboardIdentifier="StudyDashboardTabbarViewControllerIdentifier" useStoryboardIdentifierAsRestorationIdentifier="YES" id="cD3-IQ-4Md" customClass="StudyDashboardTabbarViewController" customModule="HPHC" customModuleProvider="target" sceneMemberID="viewController">
+                <tabBarController storyboardIdentifier="StudyDashboardTabbarViewControllerIdentifier" useStoryboardIdentifierAsRestorationIdentifier="YES" id="cD3-IQ-4Md" customClass="StudyDashboardTabbarViewController" customModule="GCPMyStudies" customModuleProvider="target" sceneMemberID="viewController">
                     <tabBar key="tabBar" contentMode="scaleToFill" id="26D-F4-tak">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="49"/>
                         <autoresizingMask key="autoresizingMask"/>
@@ -1829,30 +1814,33 @@
         <!--Gateway Resource Detail View Controller-->
         <scene sceneID="SKl-ed-gQZ">
             <objects>
-                <viewController storyboardIdentifier="ResourceDetailViewControllerIdentifier" hidesBottomBarWhenPushed="YES" useStoryboardIdentifierAsRestorationIdentifier="YES" id="0YV-mj-82E" customClass="GatewayResourceDetailViewController" customModule="HPHC" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="ResourceDetailViewControllerIdentifier" hidesBottomBarWhenPushed="YES" useStoryboardIdentifierAsRestorationIdentifier="YES" id="0YV-mj-82E" customClass="GatewayResourceDetailViewController" customModule="GCPMyStudies" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="MYK-RY-Tbr">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="812"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <progressView opaque="NO" contentMode="scaleToFill" verticalHuggingPriority="750" fixedFrame="YES" progressViewStyle="bar" translatesAutoresizingMaskIntoConstraints="NO" id="Opj-CP-tJy">
-                                <rect key="frame" x="0.0" y="1" width="375" height="3"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            <progressView opaque="NO" contentMode="scaleToFill" verticalHuggingPriority="750" progressViewStyle="bar" translatesAutoresizingMaskIntoConstraints="NO" id="Opj-CP-tJy">
+                                <rect key="frame" x="0.0" y="44" width="375" height="2.6666666666666643"/>
                                 <color key="progressTintColor" red="0.28627450980000002" green="0.71372549019999998" blue="0.8980392157" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                             </progressView>
-                            <webView contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="51q-E2-3o9">
-                                <rect key="frame" x="0.0" y="47" width="375" height="765"/>
-                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
-                                <connections>
-                                    <outlet property="delegate" destination="0YV-mj-82E" id="eai-DC-l0D"/>
-                                </connections>
-                            </webView>
+                            <wkWebView contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="tp6-2r-Hiw">
+                                <rect key="frame" x="0.0" y="45.666666666666686" width="375" height="732.33333333333326"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <wkWebViewConfiguration key="configuration">
+                                    <audiovisualMediaTypes key="mediaTypesRequiringUserActionForPlayback" none="YES"/>
+                                    <wkPreferences key="preferences"/>
+                                </wkWebViewConfiguration>
+                            </wkWebView>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
-                            <constraint firstItem="51q-E2-3o9" firstAttribute="top" secondItem="i4g-Zk-UnV" secondAttribute="top" constant="3" id="MsJ-i4-ONd"/>
-                            <constraint firstItem="i4g-Zk-UnV" firstAttribute="trailing" secondItem="51q-E2-3o9" secondAttribute="trailing" id="QS9-Vi-9DD"/>
-                            <constraint firstAttribute="bottom" secondItem="51q-E2-3o9" secondAttribute="bottom" id="X7Z-vi-Rc6"/>
-                            <constraint firstItem="51q-E2-3o9" firstAttribute="leading" secondItem="i4g-Zk-UnV" secondAttribute="leading" id="hLI-wg-lwP"/>
+                            <constraint firstItem="tp6-2r-Hiw" firstAttribute="leading" secondItem="i4g-Zk-UnV" secondAttribute="leading" id="21F-W7-LnM"/>
+                            <constraint firstItem="i4g-Zk-UnV" firstAttribute="bottom" secondItem="tp6-2r-Hiw" secondAttribute="bottom" id="5FB-BS-Pgc"/>
+                            <constraint firstItem="i4g-Zk-UnV" firstAttribute="trailing" secondItem="tp6-2r-Hiw" secondAttribute="trailing" id="LfC-5m-lhR"/>
+                            <constraint firstItem="Opj-CP-tJy" firstAttribute="top" secondItem="i4g-Zk-UnV" secondAttribute="top" id="Mud-en-1VW"/>
+                            <constraint firstAttribute="trailing" secondItem="Opj-CP-tJy" secondAttribute="trailing" id="YSm-8L-wZ5"/>
+                            <constraint firstItem="tp6-2r-Hiw" firstAttribute="top" secondItem="Opj-CP-tJy" secondAttribute="bottom" id="bZb-nW-Ec1"/>
+                            <constraint firstItem="Opj-CP-tJy" firstAttribute="leading" secondItem="MYK-RY-Tbr" secondAttribute="leading" id="z7b-We-Z5u"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="i4g-Zk-UnV"/>
                     </view>
@@ -1867,7 +1855,7 @@
                     </navigationItem>
                     <connections>
                         <outlet property="progressBar" destination="Opj-CP-tJy" id="zav-j2-6pd"/>
-                        <outlet property="webView" destination="51q-E2-3o9" id="Dah-ge-0h2"/>
+                        <outlet property="webView" destination="tp6-2r-Hiw" id="A7N-4D-1Hy"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="tce-5G-MZF" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -1877,7 +1865,7 @@
         <!--Resource Detail View Controller-->
         <scene sceneID="cUw-Lb-m0G">
             <objects>
-                <viewController storyboardIdentifier="ResourceDetailViewControllerCopyIdentifier" hidesBottomBarWhenPushed="YES" useStoryboardIdentifierAsRestorationIdentifier="YES" id="Thx-il-vcR" customClass="ResourceDetailViewController" customModule="HPHC" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="ResourceDetailViewControllerCopyIdentifier" hidesBottomBarWhenPushed="YES" useStoryboardIdentifierAsRestorationIdentifier="YES" id="Thx-il-vcR" customClass="ResourceDetailViewController" customModule="GCPMyStudies" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="JgA-R7-8Iv">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="724"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -1946,6 +1934,7 @@
             <point key="canvasLocation" x="2064.8000000000002" y="6661.3300492610842"/>
         </scene>
     </scenes>
+    <color key="tintColor" red="0.54901960780000003" green="0.58431372550000005" blue="0.63921568630000003" alpha="1" colorSpace="calibratedRGB"/>
     <resources>
         <image name="25-study-activities.png" width="750" height="1519"/>
         <image name="55V2.png" width="750" height="1334"/>
@@ -1970,5 +1959,4 @@
         <image name="surveyIcon" width="21.333333969116211" height="21.333333969116211"/>
         <image name="watchVideo" width="119.66666412353516" height="27"/>
     </resources>
-    <color key="tintColor" red="0.54901960780000003" green="0.58431372550000005" blue="0.63921568630000003" alpha="1" colorSpace="calibratedRGB"/>
 </document>

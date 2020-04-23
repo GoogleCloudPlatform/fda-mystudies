@@ -1,6 +1,7 @@
-// License Agreement for FDA My Studies
-// Copyright © 2017-2019 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors. Permission is
-// hereby granted, free of charge, to any person obtaining a copy of this software and associated
+// License Agreement for FDA MyStudies
+// Copyright © 2017-2019 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors.
+// Copyright 2020 Google LLC
+// Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated
 // documentation files (the &quot;Software&quot;), to deal in the Software without restriction, including without
 // limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the
 // Software, and to permit persons to whom the Software is furnished to do so, subject to the following
@@ -29,6 +30,9 @@ class ConsentResult {
   var consentPdfData: Data?
   var result: [ActivityStepResult]?
 
+  /// A boolean indicating user allows their data to be shared publically.
+  var isShareDataWithPublic: Bool?
+
   var token: String?
   var consentPath: String?
 
@@ -52,31 +56,21 @@ class ConsentResult {
 
       if ((stepResult as? ORKStepResult)!.results?.count)! > 0 {
 
-        if let questionstepResult:ORKChoiceQuestionResult? =
-          (
-            stepResult as? ORKStepResult
-          )!
-          .results?[0] as? ORKChoiceQuestionResult?
+        if stepResult.identifier == kConsentSharing,
+          let stepResult = stepResult as? ORKStepResult,
+          let sharingChoiceResult = stepResult.results?.first as? ORKChoiceQuestionResult?,
+          let userResponse = sharingChoiceResult?.choiceAnswers?.first as? Bool
         {
-
-          if Utilities.isValidValue(
-            someObject: questionstepResult?.choiceAnswers?[0] as AnyObject?
-          ) {
-            // sharing choice result either 1 selected or 2 seleceted
-
-          } else {
-            // Do Nothing
-          }
-        } else if let signatureStepResult:ORKConsentSignatureResult? =
-          (
-            stepResult as? ORKStepResult
-          )!.results?[0] as? ORKConsentSignatureResult?
+          self.isShareDataWithPublic = userResponse
+        } else if let signatureStepResult: ORKConsentSignatureResult? =
+          (stepResult as? ORKStepResult)!.results?[0] as? ORKConsentSignatureResult?
         {
 
           signatureStepResult?.apply(to: self.consentDocument!)
 
           if self.consentPdfData?.count == 0 {
-            self.consentPath = "Consent" + "_" + "\((Study.currentStudy?.studyId)!)"
+            self.consentPath =
+              "Consent" + "_" + "\((Study.currentStudy?.studyId)!)"
               + ".pdf"
 
             self.consentDocument?.makePDF(
@@ -87,7 +81,8 @@ class ConsentResult {
 
                 var fullPath: String!
                 let path = AKUtility.baseFilePath + "/study"
-                let fileName: String = "Consent" + "_"
+                let fileName: String =
+                  "Consent" + "_"
                   + "\((Study.currentStudy?.studyId)!)"
                   + ".pdf"
 
@@ -143,7 +138,8 @@ class ConsentResult {
 
             var fullPath: String!
             let path = AKUtility.baseFilePath + "/study"
-            let fileName: String = "Consent" + "_" + "\((Study.currentStudy?.studyId)!)"
+            let fileName: String =
+              "Consent" + "_" + "\((Study.currentStudy?.studyId)!)"
               + ".pdf"
 
             self.consentPath = fileName
@@ -181,10 +177,8 @@ class ConsentResult {
               Logger.sharedInstance.error(error.localizedDescription)
             }
           }
-        } else if let tokenStepResult:EligibilityTokenTaskResult? =
-          (
-            stepResult as? ORKStepResult
-          )!
+        } else if let tokenStepResult: EligibilityTokenTaskResult? =
+          (stepResult as? ORKStepResult)!
           .results?[0] as? EligibilityTokenTaskResult?
         {
           self.token = tokenStepResult?.enrollmentToken

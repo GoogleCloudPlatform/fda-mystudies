@@ -24,7 +24,6 @@ package com.hphc.mystudies.util;
 
 import java.text.SimpleDateFormat;
 
-
 public interface StudyMetaDataConstants {
 
   public static final String SUCCESS = "SUCCESS";

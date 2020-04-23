@@ -52,7 +52,7 @@
    </div>
    <!--  End  top tab section-->
    <!--  Start body tab section -->
-   <form:form action="/fdahpStudyDesigner/adminStudies/saveOrUpdateFromStepQuestionnaire.do?_S=${param._S}" name="formStepId" id="formStepId" method="post" data-toggle="validator" role="form">
+   <form:form action="/studybuilder/adminStudies/saveOrUpdateFromStepQuestionnaire.do?_S=${param._S}" name="formStepId" id="formStepId" method="post" data-toggle="validator" role="form">
    <div class="right-content-body pt-none pl-none pr-none">
       <ul class="nav nav-tabs review-tabs gray-bg" id="formTabConstiner">
          <li class="stepLevel active"><a data-toggle="tab" href="#sla">Step-level Attributes</a></li>
@@ -385,7 +385,7 @@ $(document).ready(function(){
  	    if(oldOrderNumber !== undefined && oldOrderNumber != null && oldOrderNumber != "" 
  			&& newOrderNumber !== undefined && newOrderNumber != null && newOrderNumber != ""){
  	    	$.ajax({
- 				url: "/fdahpStudyDesigner/adminStudies/reOrderFormQuestions.do?_S=${param._S}",
+ 				url: "/studybuilder/adminStudies/reOrderFormQuestions.do?_S=${param._S}",
  				type: "POST",
  				datatype: "json",
  				data:{
@@ -451,21 +451,21 @@ function saveFormStep(){
 function addNewQuestion(questionId){
 	$("#questionId").val(questionId);
 	$("#actionTypeForFormStep").val('add');
-	document.formStepId.action="/fdahpStudyDesigner/adminStudies/formQuestion.do?_S=${param._S}";	 
+	document.formStepId.action="/studybuilder/adminStudies/formQuestion.do?_S=${param._S}";	 
 	document.formStepId.submit();	 
 }
 
 function viewQuestion(questionId){
 	$("#questionId").val(questionId);
 	$("#actionTypeForFormStep").val('view');
-	document.formStepId.action="/fdahpStudyDesigner/adminStudies/formQuestion.do?_S=${param._S}";	 
+	document.formStepId.action="/studybuilder/adminStudies/formQuestion.do?_S=${param._S}";	 
 	document.formStepId.submit();	 
 }
 
 function editQuestion(questionId){
 	$("#questionId").val(questionId);
 	$("#actionTypeForFormStep").val('edit');
-	document.formStepId.action="/fdahpStudyDesigner/adminStudies/formQuestion.do?_S=${param._S}";	 
+	document.formStepId.action="/studybuilder/adminStudies/formQuestion.do?_S=${param._S}";	 
 	document.formStepId.submit();	 
 }
 
@@ -494,7 +494,7 @@ function saveFormStepQuestionnaire(item,callback){
 			shortTitle != null && shortTitle!= '' && typeof shortTitle !='undefined'){
 		var data = JSON.stringify(questionnaireStep);
 		$.ajax({ 
-	          url: "/fdahpStudyDesigner/adminStudies/saveFromStep.do?_S=${param._S}",
+	          url: "/studybuilder/adminStudies/saveFromStep.do?_S=${param._S}",
 	          type: "POST",
 	          datatype: "json",
 	          data: {questionnaireStepInfo:data},
@@ -578,7 +578,7 @@ function deletQuestion(formId,questionId){
 				if((formId != null && formId != '' && typeof formId != 'undefined') && 
 						(questionId != null && questionId != '' && typeof questionId != 'undefined')){
 					$.ajax({
-		    			url: "/fdahpStudyDesigner/adminStudies/deleteFormQuestion.do?_S=${param._S}",
+		    			url: "/studybuilder/adminStudies/deleteFormQuestion.do?_S=${param._S}",
 		    			type: "POST",
 		    			datatype: "json",
 		    			data:{
@@ -690,7 +690,7 @@ function goToBackPage(item){
 			    callback: function(result) {
 			        if (result) {
 			        	var a = document.createElement('a');
-			        	a.href = "/fdahpStudyDesigner/adminStudies/viewQuestionnaire.do?_S=${param._S}";
+			        	a.href = "/studybuilder/adminStudies/viewQuestionnaire.do?_S=${param._S}";
 			        	document.body.appendChild(a).click();
 			        }else{
 			        	$(item).prop('disabled', false);
@@ -700,7 +700,7 @@ function goToBackPage(item){
 	</c:if>
 	<c:if test="${actionTypeForQuestionPage eq 'view'}">
 		var a = document.createElement('a');
-		a.href = "/fdahpStudyDesigner/adminStudies/viewQuestionnaire.do?_S=${param._S}";
+		a.href = "/studybuilder/adminStudies/viewQuestionnaire.do?_S=${param._S}";
 		document.body.appendChild(a).click();
 	</c:if>
 }
@@ -716,7 +716,7 @@ function validateShortTitle(item,callback){
         $(thisAttr).parent().find(".help-block").html("");
  		if( existedKey !=shortTitle){
  			$.ajax({
-                 url: "/fdahpStudyDesigner/adminStudies/validateQuestionnaireStepKey.do?_S=${param._S}",
+                 url: "/studybuilder/adminStudies/validateQuestionnaireStepKey.do?_S=${param._S}",
                  type: "POST",
                  datatype: "json",
                  data: {
@@ -759,7 +759,7 @@ function validateRepeatableQuestion(item,callback){
 	var formId = $("#formId").val();
 	if(formId != null && formId !='' && typeof formId!= 'undefined'){
 		$.ajax({
-            url: "/fdahpStudyDesigner/adminStudies/validateRepeatableQuestion.do?_S=${param._S}",
+            url: "/studybuilder/adminStudies/validateRepeatableQuestion.do?_S=${param._S}",
             type: "POST",
             datatype: "json",
             data: {
@@ -773,7 +773,7 @@ function validateRepeatableQuestion(item,callback){
                 
                 if('SUCCESS' == message){
                     callback(true);
-                    showErrMsg("The following properties for questions cannot be used if the form is of Repeatable type:  Anchor Date, Charts/Statistics for Dashboard.");
+                    showErrMsg("The following attributes/properties cannot be used with questions that are added to a 'repeatable' type of form:  anchor date, chart for app dashboard, statistic for app dashboard.");
                 }else{
                     callback(false);
                 }

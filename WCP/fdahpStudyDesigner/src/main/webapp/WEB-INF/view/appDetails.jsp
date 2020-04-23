@@ -6,15 +6,15 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
             
-    <title>FDA MSMP</title>	
+    <title>Study Builder</title>	
     
     <meta name="description" content="">
     <meta name="keywords" content="">
     <meta name="author" content="">
 
     <!-- Favicon -->
-    <link rel="shortcut icon" href="/fdahpStudyDesigner/images/icons/fav.png" type="image/x-icon" />
-    <link rel="apple-touch-icon" href="/fdahpStudyDesigner/images/icons/fav.png">
+    <link rel="shortcut icon" href="/studybuilder/images/icons/FAV_Icon.png" type="image/x-icon" />
+    <link rel="apple-touch-icon" href="/studybuilder/images/icons/FAV_Icon.png">
         
     <!-- Mobile Metas -->
     <meta name="viewport" content="width=device-width, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
@@ -81,7 +81,7 @@
 <body class="txt-center grayeef2f5-bg">
 
 	<div class="err_page_container">
-	    <div class="txt-left"><img src="/fdahpStudyDesigner/images/logo/fda-logo.png" alt=""/></div>
+	    <div class="txt-left"><img src="/studybuilder/images/logo/logo_innerScreens.png" alt=""/></div>
 	    <div class="err_page_txt">
 	        <table id="aD__container">
 		        <tr><td>App Name : </td><td>Lorem Epsum</td></tr>
