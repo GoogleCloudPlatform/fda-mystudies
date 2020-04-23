@@ -1,19 +1,10 @@
 data "google_client_config" "default" {}
 
-data "google_container_cluster" "gke_cluster" {
-  name     = var.my_studies_cluster.name
-  location = var.my_studies_cluster.location
-  project  = var.project_id
-}
-
-
 provider "kubernetes" {
   load_config_file       = false
+  host                   = var.my_studies_cluster.endpoint
   token                  = data.google_client_config.default.access_token
-  host                   = data.google_container_cluster.gke_cluster.endpoint
-  client_certificate     = base64decode(data.google_container_cluster.gke_cluster.master_auth.0.client_certificate)
-  client_key             = base64decode(data.google_container_cluster.gke_cluster.master_auth.0.client_key)
-  cluster_ca_certificate = base64decode(data.google_container_cluster.gke_cluster.master_auth.0.cluster_ca_certificate)
+  cluster_ca_certificate = base64decode(var.my_studies_cluster.ca_certificate)
 }
 
 locals {
