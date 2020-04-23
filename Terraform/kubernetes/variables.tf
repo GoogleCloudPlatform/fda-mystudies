@@ -12,11 +12,22 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-project_id                 = "heroes-hat-dev-apps"
-network_project_id         = "heroes-hat-dev-networks"
-gke_region                 = "us-east1"
-cluster_name               = "heroes-hat-cluster"
-master_authorized_networks = [{ cidr_block = "104.132.0.0/14", display_name = "Google Offices/Campuses/CorpDC" }]
-repo_owner                 = "GoogleCloudPlatform"
-repo_name                  = "fda-mystudies"
-cloudbuild_trigger_branch  = "early-access"
+variable "project_id" {
+  description = "The GCP project id of the GKE cluster"
+  type        = string
+}
+
+variable "secrets_project_id" {
+  description = "The GCP project id of the Secret Manager secrets"
+  type        = string
+}
+
+variable "cluster_name" {
+  description = "The GKE cluster name"
+  type        = string
+}
+
+variable "cluster_location" {
+  description = "The GKE cluster location (region if regional, zone otherwise)"
+  type        = string
+}

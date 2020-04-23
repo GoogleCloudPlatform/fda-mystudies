@@ -24,8 +24,8 @@ module "heroes_hat_cluster" {
   source = "terraform-google-modules/kubernetes-engine/google//modules/safer-cluster"
 
   # Required
-  name = "heroes-hat-cluster"
-  # TODO: Set release_channel to "regular" when https://github.com/terraform-google-modules/terraform-google-kubernetes-engine/pull/487 is merged.
+  # TODO: Set release_channel to "regular" when https://github.com/terraform-google-modules/terraform-google-kubernetes-engine/pull/487 is released.
+  name                   = var.cluster_name
   project_id             = var.project_id
   region                 = var.gke_region
   regional               = true
@@ -42,8 +42,11 @@ module "heroes_hat_cluster" {
   istio             = true
   skip_provisioners = true
 
-  # Make the master endpoint private and configure master auth networks.
-  enable_private_endpoint    = true
+  # Configure master auth networks.
+  # Private endpoint must be disabled, otherwise the master is only accessible
+  # via a Cloud Interconnect or Cloud VPN.
+  # This allows access over the internet, but only from certain source ranges.
+  enable_private_endpoint    = false
   master_authorized_networks = var.master_authorized_networks
 }
 

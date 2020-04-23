@@ -22,6 +22,11 @@ variable "network_project_id" {
   type        = string
 }
 
+variable "cluster_name" {
+  description = "The GKE cluster name"
+  type        = string
+}
+
 variable "gke_region" {
   description = "The region to host the clusters in"
   type        = string
