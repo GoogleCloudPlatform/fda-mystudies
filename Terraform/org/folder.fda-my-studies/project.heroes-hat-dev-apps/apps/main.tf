@@ -81,6 +81,8 @@ resource "google_compute_global_address" "ingress_static_ip" {
 # Simple configuration for now. Future
 # See https://cloud.google.com/binary-authorization/docs/overview
 resource "google_binary_authorization_policy" "policy" {
+  project = var.project_id
+
   # Whitelist images from this project.
   # See https://cloud.google.com/binary-authorization/docs/policy-yaml-reference#admissionwhitelistpatterns
   admission_whitelist_patterns {
