@@ -33,6 +33,16 @@ spec:
                 secretKeyRef:
                   name: auth-server-db-credentials
                   key: dbname
+            - name: FROM_EMAIL_ADDRESS
+              valueFrom:
+                secretKeyRef:
+                  name: email-credentials
+                  key: email_address
+            - name: FROM_EMAIL_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: email-credentials
+                  key: email_password
           ports:
           - containerPort: 8080
           readinessProbe:
