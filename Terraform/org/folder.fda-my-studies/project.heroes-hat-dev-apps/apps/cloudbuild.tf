@@ -21,112 +21,102 @@
 
 # TODO: Uncomment the following after connect the repo in Cloud Build.
 
-# resource "google_cloudbuild_trigger" "wcp" {
-#   # Disable for now as don't know when the owners want to generate new images.
-#   disabled = true
-#   provider = google-beta
-#   project  = var.project_id
-#   name     = "wcp"
+resource "google_cloudbuild_trigger" "wcp" {
+  provider = google-beta
+  project  = var.project_id
+  name     = "wcp"
 
-#   included_files = [
-#     "WCP/**"
-#   ]
+  included_files = [
+    "WCP/**"
+  ]
 
-#   github {
-#     owner = var.repo_owner
-#     name  = var.repo_name
-#     push {
-#       branch = var.cloudbuild_trigger_branch
-#     }
-#   }
+  github {
+    owner = var.repo_owner
+    name  = var.repo_name
+    push {
+      branch = var.cloudbuild_trigger_branch
+    }
+  }
 
-#   filename = "WCP/cloudbuild.yaml"
-# }
+  filename = "WCP/cloudbuild.yaml"
+}
 
-# resource "google_cloudbuild_trigger" "auth_server_ws" {
-#   # Disable for now as don't know when the owners want to generate new images.
-#   disabled = true
-#   provider = google-beta
-#   project  = var.project_id
-#   name     = "auth-server-ws"
+resource "google_cloudbuild_trigger" "auth_server_ws" {
+  provider = google-beta
+  project  = var.project_id
+  name     = "auth-server-ws"
 
-#   included_files = [
-#     "auth-server-ws/**"
-#   ]
+  included_files = [
+    "auth-server-ws/**"
+  ]
 
-#   github {
-#     owner = var.repo_owner
-#     name  = var.repo_name
-#     push {
-#       branch = var.cloudbuild_trigger_branch
-#     }
-#   }
+  github {
+    owner = var.repo_owner
+    name  = var.repo_name
+    push {
+      branch = var.cloudbuild_trigger_branch
+    }
+  }
 
-#   filename = "auth-server-ws/cloudbuild.yaml"
-# }
+  filename = "auth-server-ws/cloudbuild.yaml"
+}
 
-# resource "google_cloudbuild_trigger" "wcp_ws" {
-#   # Disable for now as don't know when the owners want to generate new images.
-#   disabled = true
-#   provider = google-beta
-#   project  = var.project_id
-#   name     = "wcp-ws"
+resource "google_cloudbuild_trigger" "wcp_ws" {
+  provider = google-beta
+  project  = var.project_id
+  name     = "wcp-ws"
 
-#   included_files = [
-#     "WCP-WS/**"
-#   ]
+  included_files = [
+    "WCP-WS/**"
+  ]
 
-#   github {
-#     owner = var.repo_owner
-#     name  = var.repo_name
-#     push {
-#       branch = var.cloudbuild_trigger_branch
-#     }
-#   }
+  github {
+    owner = var.repo_owner
+    name  = var.repo_name
+    push {
+      branch = var.cloudbuild_trigger_branch
+    }
+  }
 
-#   filename = "WCP-WS/cloudbuild.yaml"
-# }
+  filename = "WCP-WS/cloudbuild.yaml"
+}
 
-# resource "google_cloudbuild_trigger" "user_registration_server_ws" {
-#   # Disable for now as don't know when the owners want to generate new images.
-#   disabled = true
-#   provider = google-beta
-#   project  = var.project_id
-#   name     = "user-registration-server-ws"
+resource "google_cloudbuild_trigger" "user_registration_server_ws" {
+  provider = google-beta
+  project  = var.project_id
+  name     = "user-registration-server-ws"
 
-#   included_files = [
-#     "user-registration-server-ws/**"
-#   ]
+  included_files = [
+    "user-registration-server-ws/**"
+  ]
 
-#   github {
-#     owner = var.repo_owner
-#     name  = var.repo_name
-#     push {
-#       branch = var.cloudbuild_trigger_branch
-#     }
-#   }
+  github {
+    owner = var.repo_owner
+    name  = var.repo_name
+    push {
+      branch = var.cloudbuild_trigger_branch
+    }
+  }
 
-#   filename = "user-registration-server-ws/cloudbuild.yaml"
-# }
+  filename = "user-registration-server-ws/cloudbuild.yaml"
+}
 
-# resource "google_cloudbuild_trigger" "response_server_ws" {
-#   # Disable for now as don't know when the owners want to generate new images.
-#   disabled = true
-#   provider = google-beta
-#   project  = var.project_id
-#   name     = "response-server-ws"
+resource "google_cloudbuild_trigger" "response_server_ws" {
+  provider = google-beta
+  project  = var.project_id
+  name     = "response-server-ws"
 
-#   included_files = [
-#     "response-server-ws/**"
-#   ]
+  included_files = [
+    "response-server-ws/**"
+  ]
 
-#   github {
-#     owner = var.repo_owner
-#     name  = var.repo_name
-#     push {
-#       branch = var.cloudbuild_trigger_branch
-#     }
-#   }
+  github {
+    owner = var.repo_owner
+    name  = var.repo_name
+    push {
+      branch = var.cloudbuild_trigger_branch
+    }
+  }
 
-#   filename = "response-server-ws/cloudbuild.yaml"
-# }
+  filename = "response-server-ws/cloudbuild.yaml"
+}
