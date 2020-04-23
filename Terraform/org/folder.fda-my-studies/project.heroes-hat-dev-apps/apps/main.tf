@@ -24,8 +24,8 @@ module "heroes_hat_cluster" {
   source = "terraform-google-modules/kubernetes-engine/google//modules/safer-cluster"
 
   # Required
-  name = "heroes-hat-cluster"
-  # TODO: Set release_channel to "regular" when https://github.com/terraform-google-modules/terraform-google-kubernetes-engine/pull/487 is merged.
+  # TODO: Set release_channel to "regular" when https://github.com/terraform-google-modules/terraform-google-kubernetes-engine/pull/487 is released.
+  name                   = var.cluster_name
   project_id             = var.project_id
   region                 = var.gke_region
   regional               = true

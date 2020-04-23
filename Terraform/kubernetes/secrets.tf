@@ -1,21 +1,3 @@
-data "google_client_config" "default" {}
-
-data "google_container_cluster" "gke_cluster" {
-  name     = var.my_studies_cluster.name
-  location = var.my_studies_cluster.location
-  project  = var.project_id
-}
-
-
-provider "kubernetes" {
-  load_config_file       = false
-  token                  = data.google_client_config.default.access_token
-  host                   = data.google_container_cluster.gke_cluster.endpoint
-  client_certificate     = base64decode(data.google_container_cluster.gke_cluster.master_auth.0.client_certificate)
-  client_key             = base64decode(data.google_container_cluster.gke_cluster.master_auth.0.client_key)
-  cluster_ca_certificate = base64decode(data.google_container_cluster.gke_cluster.master_auth.0.cluster_ca_certificate)
-}
-
 locals {
   apps = [
     "auth-server",
@@ -97,9 +79,7 @@ resource "kubernetes_secret" "email_credentials" {
 resource "google_service_account_key" "apps_service_account_keys" {
   for_each = toset(local.apps)
 
-  # Expected format:
-  # {auth-server="<auth_server_service_account@<project>.iam.gserverviceaccount.com", ...}
-  service_account_id = "projects/${var.project_id}/serviceAccounts/${var.apps_service_accounts[each.key].unique_id}"
+  service_account_id = "projects/${var.project_id}/serviceAccounts/${each.key}-gke"
 }
 
 resource "kubernetes_secret" "apps_gcloud_keys" {

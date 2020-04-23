@@ -125,7 +125,46 @@ In the ./kubernetes/ingress.yaml file:
 *   Change the name and the `kubernetes.io/ingress.global-static-ip-name`
     annotation to match your organization.
 
-### GKE Cluster
+### GKE Cluster - Terraform
+
+Some Kubernetes resources are managed through Terraform, due to ease of
+configuration. These need to be applied after the cluster already exists, and
+due to the configuration of
+[Master Authorized Networks](https://cloud.google.com/kubernetes-engine/docs/how-to/authorized-networks),
+they can't be applied by the CI/CD automation.
+
+First, authenticate via gcloud:
+
+```
+$ gcloud auth login
+$ gcloud auth application-default login
+```
+
+Enter the Kubernetes Terraform directory
+
+```
+$ cd Terraform/kubernetes/
+```
+
+**Edit the file `terraform.tfvars`. Make sure the projects and cluster
+information is correct.**
+
+Init, plan, and apply the Terraform configs:
+
+```
+$ terraform init
+$ terraform plan
+$ terraform apply
+```
+
+(Optional) Lastly, revoke gcloud authentication
+
+```
+$ gcloud auth revoke
+$ gcloud auth application-default revoke
+```
+
+### GKE Cluster - kubectl
 
 Run all commands below from the repo root.
 
