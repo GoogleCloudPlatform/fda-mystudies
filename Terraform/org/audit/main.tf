@@ -96,12 +96,23 @@ module "storage_log_export" {
 # once https://github.com/terraform-google-modules/terraform-google-log-export/pull/52  is fixed.
 module "storage_destination" {
   source  = "terraform-google-modules/cloud-storage/google//modules/simple_bucket"
-  version = "~> 1.4"
+  version = "~> 1.5"
 
   name          = var.bucket_name
   project_id    = var.project_id
   location      = "us-east1"
   storage_class = "COLDLINE"
+
+  lifecycle_rules = [{
+    action = {
+      type = "Delete"
+    }
+    condition = {
+      age        = 7*365
+      with_state = "ANY"
+    }
+  }]
+
   iam_members = [
     {
       role   = "roles/storage.objectViewer"
