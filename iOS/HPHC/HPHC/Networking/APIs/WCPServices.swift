@@ -164,7 +164,10 @@ class WCPServices: NSObject {
     self.delegate = delegate
     let method = WCPMethods.resources.method
     let headerParams = [kStudyId: studyId]
-    self.sendRequestWith(method: method, params: headerParams, headers: nil)
+    let headers: [String: String] = [
+      "userId": User.currentUser.userId ?? "",
+    ]
+    self.sendRequestWith(method: method, params: headerParams, headers: headers)
   }
 
   /// Creates a request to receive `Study` information
