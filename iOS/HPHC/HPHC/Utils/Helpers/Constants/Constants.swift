@@ -80,6 +80,9 @@ let kForgotPasswordTitleText = "Password Help"
 let kForgotPasswordResponseMessage =
   "We have sent a temporary password to your registered email. Please login with temporary password and change your password."
 
+// MARK: - Logout
+let kOnLogoutMessage = "You have been signed out of the app."
+
 // MARK: - SignUp Constants
 let kSignUpTitleText = "Sign Up"
 let kAgreeToTermsAndConditionsText = "I Agree to the Terms and Privacy Policy"

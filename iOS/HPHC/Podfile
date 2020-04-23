@@ -12,7 +12,7 @@ def main_pods
   pod 'RealmSwift'
   pod 'CryptoSwift'
   pod 'ActionSheetPicker-3.0'
-  
+  pod 'Toast-Swift'
 end
 
 target 'HPHC' do

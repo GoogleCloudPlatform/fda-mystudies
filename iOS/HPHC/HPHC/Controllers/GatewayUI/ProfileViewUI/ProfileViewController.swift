@@ -774,7 +774,6 @@ extension ProfileViewController: NMWebServiceDelegate {
   func finishedRequest(_ manager: NetworkManager, requestName: NSString, response: AnyObject?) {
     self.removeProgressIndicator()
     if requestName as String == AuthServerMethods.logout.description {
-
       self.handleSignoutResponse()
     } else if requestName as String == RegistrationMethods.userProfile.description {
       self.tableViewProfile?.reloadData()

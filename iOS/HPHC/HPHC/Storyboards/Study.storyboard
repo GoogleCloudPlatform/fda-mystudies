@@ -498,21 +498,6 @@
             </objects>
             <point key="canvasLocation" x="2908" y="4078.0788177339905"/>
         </scene>
-        <!--Video View Controller-->
-        <scene sceneID="LrT-E6-r6V">
-            <objects>
-                <viewController storyboardIdentifier="VideoViewController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="Jj1-h7-nV0" customClass="VideoViewController" customModule="GCPMyStudies" customModuleProvider="target" sceneMemberID="viewController">
-                    <view key="view" contentMode="scaleToFill" id="v6m-Sv-hYG">
-                        <rect key="frame" x="0.0" y="0.0" width="375" height="812"/>
-                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                        <viewLayoutGuide key="safeArea" id="6ie-Fv-taM"/>
-                    </view>
-                </viewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="2pe-bC-CfC" userLabel="First Responder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="3644" y="4078"/>
-        </scene>
         <!--Resources View Controller-->
         <scene sceneID="IkH-KO-QGA">
             <objects>
