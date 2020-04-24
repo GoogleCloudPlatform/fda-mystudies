@@ -42,7 +42,7 @@ data "google_secret_manager_secret_version" "sql_password" {
 
 module "my_studies_cloudsql" {
   source  = "GoogleCloudPlatform/sql-db/google//modules/safer_mysql"
-  version = "~> 3.0"
+  version = "~> 3.1.0"
 
   name             = "my-studies-2"
   project_id       = var.project_id
