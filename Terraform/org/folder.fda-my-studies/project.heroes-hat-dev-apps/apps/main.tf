@@ -95,6 +95,10 @@ resource "google_binary_authorization_policy" "policy" {
   admission_whitelist_patterns {
     name_pattern = "gke.gcr.io/istio/*"
   }
+  admission_whitelist_patterns {
+    # The more generic pattern above does not seem to be enough for all images.
+    name_pattern = "gke.gcr.io/istio/prometheus/*"
+  }
 
   # Allow Google-built images.
   # See https://cloud.google.com/binary-authorization/docs/policy-yaml-reference#globalpolicyevaluationmode
