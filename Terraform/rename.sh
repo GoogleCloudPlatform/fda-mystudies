@@ -30,7 +30,7 @@ export DST_PROJ_BASE=${OUTPUT_TF_BASE}/org/folder.${NEW_FOLDER}/project.${NEW_PR
 rm -rf ${OUTPUT_TF_BASE}/*
 
 # Phase 1
-for d in bootstrap secrets cicd
+for d in bootstrap secrets cicd kubernetes
 do
   cp -r ${INPUT_TF_BASE}/$d ${OUTPUT_TF_BASE}/
 done

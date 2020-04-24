@@ -22,6 +22,11 @@ variable "network_project_id" {
   type        = string
 }
 
+variable "cluster_name" {
+  description = "The GKE cluster name"
+  type        = string
+}
+
 variable "gke_region" {
   description = "The region to host the clusters in"
   type        = string
@@ -37,6 +42,11 @@ variable "subnetwork" {
   description = "The subnetwork to use for the clusters"
   type        = string
   default     = "default"
+}
+
+variable "master_authorized_networks" {
+  type        = list(object({ cidr_block = string, display_name = string }))
+  description = "List of master authorized networks for accessing the master endpoint. Endpoint is not publically accessible."
 }
 
 variable "repo_owner" {
