@@ -19,6 +19,7 @@
 
 import SlideMenuControllerSwift
 import UIKit
+import Toast_Swift
 
 let kLeftMenuSubtitle = "subTitle"
 let kLeftMenuTitle = "menuTitle"
@@ -527,7 +528,16 @@ class LeftMenuViewController: UIViewController, LeftMenuProtocol {
       UIApplication.shared.keyWindow?.removeProgressIndicatorFromWindow()
       self.navigationController?.popToRootViewController(animated: true)
     }
+    if let studiesVC = self.studyListViewController {
+      LeftMenuViewController.showLogoutToast(on: studiesVC)
+    }
 
+  }
+
+  final class func showLogoutToast(on viewController: UIViewController) {
+    DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
+      viewController.view.makeToast(kOnLogoutMessage)
+    }
   }
 }
 

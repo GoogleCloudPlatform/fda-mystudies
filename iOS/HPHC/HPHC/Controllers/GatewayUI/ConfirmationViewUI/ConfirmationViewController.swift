@@ -168,25 +168,38 @@ class ConfirmationViewController: UIViewController {
   /// Handle delete account webservice response.
   private func handleDeleteAccountResponse() {
 
-    if Utilities.isStandaloneApp() {
-      UIApplication.shared.keyWindow?.addProgressIndicatorOnWindowFromTop()
-      Study.currentStudy = nil
-      self.slideMenuController()?.leftViewController?.navigationController?
-        .popToRootViewController(
-          animated: true
-        )
-      DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
-        UIApplication.shared.keyWindow?.removeProgressIndicatorFromWindow()
+    ORKPasscodeViewController.removePasscodeFromKeychain()
+
+    let appDelegate = (UIApplication.shared.delegate as? AppDelegate)!
+    appDelegate.updateKeyAndInitializationVector()
+
+    UIUtilities.showAlertMessageWithActionHandler(
+      NSLocalizedString(kTitleMessage, comment: ""),
+      message: NSLocalizedString(kMessageAccountDeletedSuccess, comment: ""),
+      buttonTitle: NSLocalizedString(kTitleOk, comment: ""),
+      viewControllerUsed: self
+    ) { [weak self] in
+
+      if Utilities.isStandaloneApp() {
+        UIApplication.shared.keyWindow?.addProgressIndicatorOnWindowFromTop()
+        Study.currentStudy = nil
+        self?.slideMenuController()?.leftViewController?.navigationController?
+          .popToRootViewController(
+            animated: true
+          )
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+          UIApplication.shared.keyWindow?.removeProgressIndicatorFromWindow()
+        }
+      } else {
+
+        let leftController =
+          self?.slideMenuController()?.leftViewController
+          as! LeftMenuViewController
+        leftController.changeViewController(.studyList)
+        leftController.createLeftmenuItems()
       }
-    } else {
 
-      let leftController =
-        slideMenuController()?.leftViewController
-        as! LeftMenuViewController
-      leftController.changeViewController(.studyList)
-      leftController.createLeftmenuItems()
     }
-
   }
 
   /// Update the properties with the webservice response.

@@ -39,7 +39,7 @@ spec:
             - name: USER_REGISTRATION_SERVER
               value: "user-registration-server-np:50000"
             - name: STUDY_DESIGNER
-              value: "34.74.173.54:50000"
+              value: "study-designer-np:50000"
           ports:
           - containerPort: 8080
           readinessProbe:
