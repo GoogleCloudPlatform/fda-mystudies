@@ -22,6 +22,9 @@
 
 package com.fdahpstudydesigner.service;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -368,14 +371,35 @@ public class StudyServiceImpl implements StudyService {
   @Override
   public List<ConsentMasterInfoBo> getConsentMasterInfoList() {
     logger.info("StudyServiceImpl - getConsentMasterInfoList() - Starts");
-    List<ConsentMasterInfoBo> consentMasterInfoList = null;
+    List<ConsentMasterInfoBo> consentMasterInfoList = null,
+        sortedConsentMasterInfoList = new ArrayList<>();
+
+    HashMap<String, ConsentMasterInfoBo> consentMap = new HashMap<>();
+    ArrayList<String> consentTitleList = null;
+
     try {
       consentMasterInfoList = studyDAO.getConsentMasterInfoList();
+
+      for (ConsentMasterInfoBo consent : consentMasterInfoList) {
+        consentMap.put(consent.getTitle(), consent);
+      }
+      consentTitleList = new ArrayList<>(consentMap.keySet());
+      Collections.sort(
+          consentTitleList,
+          new Comparator<String>() {
+            @Override
+            public int compare(String s1, String s2) {
+              return s1.compareToIgnoreCase(s2);
+            }
+          });
+      for (String consentTitle : consentTitleList) {
+        sortedConsentMasterInfoList.add(consentMap.get(consentTitle));
+      }
     } catch (Exception e) {
       logger.error("StudyServiceImpl - getConsentMasterInfoList() - ERROR ", e);
     }
     logger.info("StudyServiceImpl - getConsentMasterInfoList() - Ends");
-    return consentMasterInfoList;
+    return sortedConsentMasterInfoList;
   }
 
   @Override

@@ -142,7 +142,7 @@ public class CommonServiceImpl implements CommonService {
       headers.set(AppConstants.CLIENT_ID, clientId);
       headers.set(AppConstants.SECRET_KEY, clientSecret);
       requestBody = new HttpEntity<>(null, headers);
-      logger.debug("CommonServiceImpl validateServerClientCredentials() Begin");
+      logger.debug("CommonServiceImpl validateServerClientCredentials(): starts");
       responseEntity =
           restTemplate.exchange(
               appConfig.getAuthServerClientValidationUrl(),
@@ -164,8 +164,10 @@ public class CommonServiceImpl implements CommonService {
       } else {
         throw new SystemException();
       }
+    } catch (Exception e) {
+      logger.error("CommonServiceImpl validateServerClientCredentials - error ", e);
+      throw new SystemException();
     }
-    logger.error("Invalid client Id or client secret. Client id is: " + clientId);
-    throw new SystemException();
+    return false;
   }
 }
