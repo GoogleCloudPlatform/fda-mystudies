@@ -147,7 +147,6 @@ public class ActivityResponseProcessorServiceImpl implements ActivityResponsePro
     QuestionnaireActivityStepsBean scoreSumResponseBean = null;
     for (QuestionnaireActivityStepsBean responseBean : questionnaireResponses) {
       if (responseBean.getKey().equals(AppConstants.DUMMY_SUM_QUESTION_KEY)) {
-        logger.debug("processActivityResponses() - Found dummy _SUM question.");
         scoreSumResponseBean = responseBean;
       }
       if (responseBean.getResultType().equalsIgnoreCase(AppConstants.GROUPED_FIELD_KEY)) {
@@ -192,23 +191,18 @@ public class ActivityResponseProcessorServiceImpl implements ActivityResponsePro
     double sum = 0;
     for (QuestionnaireActivityStepsBean responseBean : questionnaireResponses) {
       if (responseBean == scoreSumResponseBean) {
-        logger.debug("calculateScoreSum() - skip _SUM question.");
         continue;
       }
-      logger.debug("calculateScoreSum() - question key: "
-         + responseBean.getKey() + " value type: " + responseBean.getValue().getClass().getName());
       Object value = responseBean.getValue();
       // If the response value type is a list, iterate through all items and add up.
       if (value instanceof List) {
         List<Object> valueList = (ArrayList<Object>) value;
         for (Object o : valueList) {
           sum = sum + convertResponseValueToDouble(o);
-          logger.debug("calculateScoreSum() - sum: " + (new Double(sum)).toString());
         }
       // Otherwise, just convert the single response value to double.
       } else {
         sum = sum + convertResponseValueToDouble(value);
-        logger.debug("calculateScoreSum() - sum: " + (new Double(sum)).toString());
       }
     }
     scoreSumResponseBean.setValue(new Double(sum));
