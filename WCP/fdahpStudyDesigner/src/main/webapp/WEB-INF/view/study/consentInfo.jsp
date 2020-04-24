@@ -222,7 +222,6 @@ $(document).ready(function(){
     //submit the form
     $("#doneId").on('click', function(){
     	$("#doneId").prop('disabled', true);
-    	$('#elaboratedRTE').summernote('code');
     	valid =  maxLenValEditor();
     	if( isFromValid("#consentInfoFormId") && valid){
     		var visualStepData = '';
@@ -267,7 +266,6 @@ $(document).ready(function(){
 						$("#createStudyId").show();
 						//load the list of titles when the page loads
 						consentInfoDetails();
-						//initTinyMCEEditor();
 						initSummernoteEditor();
 						//get the selected consent type on change
 						$('input[name="consentItemType"]').change(
@@ -603,9 +601,9 @@ function addDefaultData(){
 							]
 				});
 	}
-	<c:if test="${actionPage eq 'view'}">$
-	  ('#elaboratedRTE').summernote('disable');
-	readOnly:1;</c:if>
+	<c:if test="${actionPage eq 'view'}">
+	    $'#elaboratedRTE').summernote('disable');
+	</c:if>
 
 	
 function maxLenValEditor() {

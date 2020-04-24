@@ -574,25 +574,14 @@ public class LoginServiceImpl implements LoginService, UserDetailsService {
   // Send mail to user when account locked due to invalid login credentials
   public void sendLockedAccountPasswordResetLinkToMail(String email) {
     logger.info("LoginServiceImpl - sendLockedAccountPasswordResetLinkToMail - Starts");
-    Map<String, String> propMap = null;
-    String passwordResetToken = null;
-    String message = null;
-    UserBO userdetails = null;
-    String accessCode = "";
-    Map<String, String> keyValueForSubject = null;
-    String dynamicContent = "";
-    String acceptLinkMail = "";
-    int passwordResetLinkExpirationInHour = 0;
-    String customerCareMail = "";
     try {
-      propMap = FdahpStudyDesignerUtil.getAppProperties();
-      message = propMap.get("user.forgot.error.msg");
-      acceptLinkMail = propMap.get("acceptLinkMail").trim();
-      passwordResetLinkExpirationInHour =
+      Map<String, String> propMap = FdahpStudyDesignerUtil.getAppProperties();
+      String acceptLinkMail = propMap.get("acceptLinkMail").trim();
+      int passwordResetLinkExpirationInHour =
           Integer.parseInt(propMap.get("accountlocked.resetLink.expiration.in.hour"));
-      passwordResetToken = RandomStringUtils.randomAlphanumeric(10);
-      accessCode = RandomStringUtils.randomAlphanumeric(6);
-      userdetails = loginDAO.getValidUserByEmail(email);
+      String passwordResetToken = RandomStringUtils.randomAlphanumeric(10);
+      String accessCode = RandomStringUtils.randomAlphanumeric(6);
+      UserBO userdetails = loginDAO.getValidUserByEmail(email);
       if (null != userdetails && !userdetails.getEmailChanged()) {
         userdetails.setSecurityToken(passwordResetToken);
         userdetails.setAccessCode(accessCode);
@@ -601,16 +590,16 @@ public class LoginServiceImpl implements LoginService, UserDetailsService {
             FdahpStudyDesignerUtil.addHours(
                 FdahpStudyDesignerUtil.getCurrentDateTime(), passwordResetLinkExpirationInHour));
 
-        message = loginDAO.updateUserForResetPassword(userdetails);
+        String message = loginDAO.updateUserForResetPassword(userdetails);
 
         if (FdahpStudyDesignerConstants.SUCCESS.equals(message)) {
-          keyValueForSubject = new HashMap<String, String>();
+          Map<String, String> keyValueForSubject = new HashMap<String, String>();
           keyValueForSubject.put("$firstName", userdetails.getFirstName());
           keyValueForSubject.put("$accessCode", accessCode);
           keyValueForSubject.put("$passwordResetLink", acceptLinkMail + passwordResetToken);
-          customerCareMail = propMap.get("email.address.customer.service");
+          String customerCareMail = propMap.get("email.address.customer.service");
           keyValueForSubject.put("$customerCareMail", customerCareMail);
-          dynamicContent =
+          String dynamicContent =
               FdahpStudyDesignerUtil.genarateEmailContent(
                   "accountLockedContent", keyValueForSubject);
 

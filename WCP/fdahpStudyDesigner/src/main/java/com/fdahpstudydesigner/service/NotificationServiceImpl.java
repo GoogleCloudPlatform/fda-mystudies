@@ -176,12 +176,7 @@ public class NotificationServiceImpl implements NotificationService {
   @Override
   public List<String> getGatwayAppList() {
     logger.info("NotificationServiceImpl - saveOrUpdateNotification - Starts");
-    List<String> gatewayAppList = null;
-    try {
-      gatewayAppList = new ArrayList<>(new HashSet(notificationDAO.getGatwayAppList()));
-    } catch (Exception e) {
-      logger.error("NotificationServiceImpl - saveOrUpdateNotification - ERROR", e);
-    }
+    List<String> gatewayAppList = new ArrayList<>(new HashSet(notificationDAO.getGatwayAppList()));
     logger.info("NotificationServiceImpl - saveOrUpdateNotification - Ends");
     return gatewayAppList;
   }
