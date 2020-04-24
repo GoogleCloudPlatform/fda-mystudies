@@ -1,24 +1,23 @@
 /*
  * Copyright © 2017-2018 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors.
+ * Copyright 2020 Google LLC
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
- * associated documentation files (the "Software"), to deal in the Software without restriction, including
- * without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies
- * of the Software, and to permit persons to whom the Software is furnished to do so, subject to the
- * following conditions:
+ * associated documentation files (the "Software"), to deal in the Software without restriction,
+ * including without limitation the rights to use, copy, modify, merge, publish, distribute,
+ * sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
  *
- * The above copyright notice and this permission notice shall be included in all copies or substantial
- * portions of the Software.
+ * The above copyright notice and this permission notice shall be included in all copies or
+ * substantial portions of the Software.
  *
- * Funding Source: Food and Drug Administration ("Funding Agency") effective 18 September 2014 as Contract no.
- * HHSF22320140030I/HHSF22301006T (the "Prime Contract").
+ * Funding Source: Food and Drug Administration ("Funding Agency") effective 18 September 2014 as
+ * Contract no. HHSF22320140030I/HHSF22301006T (the "Prime Contract").
  *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT. IN NO EVENT SHALL
- * THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR
- * OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
- * ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
- * OTHER DEALINGS IN THE SOFTWARE.
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT
+ * NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+ * NON-INFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
+ * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
 package com.fdahpstudydesigner.util;
@@ -67,7 +66,7 @@ public class LimitLoginAuthenticationProvider extends DaoAuthenticationProvider 
       attributes.getRequest();
       String username = (String) authentication.getPrincipal();
       if (StringUtils.isNotEmpty(username)) {
-        userBO = loginDAO.getValidUserByEmail(username);
+        userBO = loginDAO.getValidUserByEmail(username.toLowerCase());
         if (userBO == null) {
           auditLogDAO.saveToAuditLog(
               null,
@@ -78,7 +77,8 @@ public class LimitLoginAuthenticationProvider extends DaoAuthenticationProvider 
               "LimitLoginAuthenticationProvider - authenticate()");
         }
       }
-      UserAttemptsBo userAttempts = loginDAO.getUserAttempts(authentication.getName());
+      UserAttemptsBo userAttempts =
+          loginDAO.getUserAttempts(authentication.getName().toLowerCase());
 
       // Restricting the user to login for specified minutes if the user
       // has max fails attempts
@@ -108,13 +108,13 @@ public class LimitLoginAuthenticationProvider extends DaoAuthenticationProvider 
       // thrown
       // reset the user_attempts
       Authentication auth = super.authenticate(token);
-      loginDAO.resetFailAttempts(authentication.getName());
+      loginDAO.resetFailAttempts(authentication.getName().toLowerCase());
       return auth;
 
     } catch (BadCredentialsException e) {
 
       // invalid login, update to user_attempts
-      loginDAO.updateFailAttempts(authentication.getName());
+      loginDAO.updateFailAttempts(authentication.getName().toLowerCase());
       throw e;
 
     } catch (LockedException e) {
@@ -122,7 +122,8 @@ public class LimitLoginAuthenticationProvider extends DaoAuthenticationProvider 
       logger.error(
           "LimitLoginAuthenticationProvider - authenticate - ERROR - this user is locked! ", e);
       String error;
-      UserAttemptsBo userAttempts = loginDAO.getUserAttempts(authentication.getName());
+      UserAttemptsBo userAttempts =
+          loginDAO.getUserAttempts(authentication.getName().toLowerCase());
 
       if (userAttempts != null) {
         error = lockMsg;
