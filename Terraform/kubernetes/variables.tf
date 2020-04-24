@@ -12,14 +12,22 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-name            = "heroes-hat-dev-apps"
-org_id          = "707577601068"
-billing_account = "01EA90-3519E1-89CB1F"
-apis = [
-  "binaryauthorization.googleapis.com",
-  "cloudbuild.googleapis.com",
-  "compute.googleapis.com",
-  "container.googleapis.com",
-  "servicenetworking.googleapis.com",
-  "sqladmin.googleapis.com",
-]
+variable "project_id" {
+  description = "The GCP project id of the GKE cluster"
+  type        = string
+}
+
+variable "secrets_project_id" {
+  description = "The GCP project id of the Secret Manager secrets"
+  type        = string
+}
+
+variable "cluster_name" {
+  description = "The GKE cluster name"
+  type        = string
+}
+
+variable "cluster_location" {
+  description = "The GKE cluster location (region if regional, zone otherwise)"
+  type        = string
+}
