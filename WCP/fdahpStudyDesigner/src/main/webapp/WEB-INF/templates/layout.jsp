@@ -29,7 +29,8 @@
    <link href="https://fonts.googleapis.com/css?family=Roboto:300,400" rel="stylesheet">
         
     <!-- Vendor CSS -->
-    <link rel="stylesheet" href="/studybuilder/vendor/boostrap/bootstrap.min.css">
+    
+    <link rel="stylesheet" href="/studybuilder/vendor/boostrap/bootstrap.min.css">    
     <link rel="stylesheet" href="/studybuilder/vendor/datetimepicker/css/bootstrap-timepicker.min.css">
     <link rel="stylesheet" href="/studybuilder/vendor/scrollbar/jquery.mCustomScrollbar.min.css">
     <link rel="stylesheet" href="/studybuilder/vendor/datetimepicker/css/bootstrap-datetimepicker.min.css">
@@ -55,16 +56,22 @@
     <link rel="stylesheet" href="/studybuilder/css/sprites-icons-2.css"> 
     <link rel="stylesheet" href="/studybuilder/css/sprites_v3.css">
     <link rel="stylesheet" href="/studybuilder/css/jquery-password-validator.css">
-   
-   
+    
+     <!-- Summer Note CSS -->
+     <link rel="stylesheet" href="/studybuilder/vendor/summernote/summernote-bs4.min.css"> 
+     
         
     <!-- Head Libs -->
     <script src="/studybuilder/vendor/modernizr/modernizr.js"></script>
     
     
     <!-- Vendor -->
+    
     <script src="/studybuilder/vendor/jquery/jquery-3.1.1.min.js"></script>
+    <script src="/studybuilder/vendor/summernote/popper.min.js"></script>
     <script src="/studybuilder/vendor/boostrap/bootstrap.min.js"></script>
+    <script src="/studybuilder/vendor/summernote/summernote.min.js"></script>
+
     <script src="/studybuilder/vendor/scrollbar/jquery.mCustomScrollbar.concat.min.js"></script>
      <script src="/studybuilder/vendor/datetimepicker/js/moment.min.js"></script>
     <script src="/studybuilder/vendor/datetimepicker/js/bootstrap-timepicker.min.js"></script>
@@ -131,11 +138,12 @@
     <script src="/studybuilder/js/jquery.mask.min.js"></script>
     <script src="/studybuilder/js/jquery-scrollto.js" ></script>
     <script src="/studybuilder/js/jquery.nicescroll.min.js"></script>
-    <script src="/studybuilder/vendor/tinymce/tinymce.min.js"></script>
     <script src="/studybuilder/js/bootbox.min.js"></script>
     
     
     <script src="/studybuilder/js/common.js"></script>
+    
+ 
     
     <script>
     window.history.forward();

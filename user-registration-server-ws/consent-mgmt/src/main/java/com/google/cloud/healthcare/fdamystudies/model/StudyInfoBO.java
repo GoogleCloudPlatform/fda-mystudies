@@ -5,8 +5,10 @@
  * license that can be found in the LICENSE file or at
  * https://opensource.org/licenses/MIT.
  */
+
 package com.google.cloud.healthcare.fdamystudies.model;
 
+import java.io.Serializable;
 import java.util.Date;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -24,7 +26,9 @@ import lombok.Setter;
 @Getter
 @Entity
 @Table(name = "study_info")
-public class StudyInfoBO {
+public class StudyInfoBO implements Serializable {
+
+  private static final long serialVersionUID = 5392367043067145963L;
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -48,13 +52,15 @@ public class StudyInfoBO {
   @Column(name = "type")
   private String type;
 
-  @Column(name = "created_on", columnDefinition = "TIMESTAMP")
+  @Column(name = "created_on", columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
   private Date createdOn;
 
   @Column(name = "created_by", columnDefinition = "INT(20)")
   private Integer createdBy;
 
-  @Column(name = "modified_date", columnDefinition = "TIMESTAMP")
+  @Column(
+      name = "modified_date",
+      columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP")
   private Date modifiedDate;
 
   @Column(name = "modified_by", columnDefinition = "INT(20)")

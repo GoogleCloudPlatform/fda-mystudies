@@ -14,7 +14,7 @@
                 <th id="">Study ID <span class="sort"></span></th>
                 <th id="">Study name <span class="sort"></span></th>
                 <th id="">Category <span class="sort"></span></th>
-                <th id="">&lt;Org Name&gt; Project lead <span class="sort"></span></th>
+                <th id="">Project lead <span class="sort"></span></th>
                 <th id="">Research Sponsor <span class="sort"></span></th>
                 <th id="">Status <span class="sort"></span></th>
                 <th id="">Actions</th>
@@ -130,9 +130,14 @@
                "columnDefs": [ { orderable: false, targets: [8] } ],
                "order": [[ 0, "desc" ]],
              "info" : false, 
+             
              "lengthChange": false, 
+             language: {
+               	"zeroRecords": "You haven't created any content yet.",
+ 			    },
              "searching": false, 
-             "pageLength": 10 
+             "pageLength": 10
+              
          } );
          
         });

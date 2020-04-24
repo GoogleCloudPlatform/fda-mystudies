@@ -107,6 +107,9 @@
 		    "columnDefs": [ { orderable: false, orderable: false, targets: [0] } ],
 		    "info" : false, 
 		    "lengthChange": false, 
+		    language: {
+            	"zeroRecords": "You haven't created any content yet.",
+		    },
 		    "searching": false, 
 		    "pageLength": 15,
 		});

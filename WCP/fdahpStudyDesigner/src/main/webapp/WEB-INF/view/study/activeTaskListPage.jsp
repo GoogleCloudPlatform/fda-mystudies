@@ -119,6 +119,9 @@ $(document).ready(function(){
                                ],
                   "order": [[ 0, "desc" ]],
                  "info" : false, 
+                 language: {
+                 	"zeroRecords": "You haven't created any content yet.",
+			    },
                  "lengthChange": false, 
                  "searching": false, 
                  "pageLength": 10 

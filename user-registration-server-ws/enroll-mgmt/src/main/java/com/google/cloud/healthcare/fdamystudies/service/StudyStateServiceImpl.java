@@ -83,7 +83,7 @@ public class StudyStateServiceImpl implements StudyStateService {
     try {
       for (int i = 0; i < studiesBeenList.size(); i++) {
         StudiesBean studiesBean = studiesBeenList.get(i);
-        studyInfo = commonDao.getStudyDetails(studiesBean.getStudyId());
+        studyInfo = commonDao.getStudyDetails(studiesBean.getStudyId().trim());
         if (existParticipantStudies != null && !existParticipantStudies.isEmpty()) {
           for (ParticipantStudiesBO participantStudies : existParticipantStudies) {
             if (studyInfo != null) {
@@ -120,8 +120,11 @@ public class StudyStateServiceImpl implements StudyStateService {
           }
         }
         if (!isExists) {
-          if (studiesBean.getStudyId() != null && StringUtils.isNotEmpty(studiesBean.getStudyId()))
+          if (studiesBean.getStudyId() != null
+              && StringUtils.isNotEmpty(studiesBean.getStudyId())
+              && studyInfo != null) {
             participantStudyBo.setStudyInfo(studyInfo);
+          }
           if (studiesBean.getStatus() != null && StringUtils.isNotEmpty(studiesBean.getStatus())) {
             participantStudyBo.setStatus(studiesBean.getStatus());
             if (studiesBean
@@ -205,8 +208,9 @@ public class StudyStateServiceImpl implements StudyStateService {
                 studyStateBean.setHashedToken(
                     EnrollmentManagementUtil.getHashedValue(enrolledTokenVal));
               }
-
-              studyStateBean.setStudyId(participantStudiesBO.getStudyInfo().getCustomId());
+              if (participantStudiesBO.getStudyInfo() != null) {
+                studyStateBean.setStudyId(participantStudiesBO.getStudyInfo().getCustomId());
+              }
               studyStateBean.setStatus(participantStudiesBO.getStatus());
               if (participantStudiesBO.getParticipantId() != null)
                 studyStateBean.setParticipantId(participantStudiesBO.getParticipantId());
