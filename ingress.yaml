@@ -37,3 +37,7 @@ spec:
             backend:
               serviceName: study-designer-np
               servicePort: 50000
+          - path: /fdaResources/*
+            backend:
+              serviceName: study-designer-np
+              servicePort: 50000
