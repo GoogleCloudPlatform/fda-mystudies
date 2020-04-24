@@ -759,7 +759,7 @@ function admins(){
 	</c:if>
 	function showWarningForAnchor(isAnchorForEnrollmentDraft, enrollmentdateAsAnchordate){
 		if(isAnchorForEnrollmentDraft == 'true' && enrollmentdateAsAnchordate=='No'){
-        	var text = "You have chosen not to use enrollment date as an anchor date . You will need to revise the schedules of 'target' activities or resources, if any, that were set up based on the enrollment date.";
+        	var text = "You have chosen not to use enrollment date as an anchor date. You will need to revise the schedules of 'target' activities or resources, if any, that were set up based on the enrollment date.";
         	bootbox.confirm({
         		closeButton: false,
         		message: text,

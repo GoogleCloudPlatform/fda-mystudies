@@ -1040,7 +1040,7 @@ public class FdahpStudyDesignerUtil {
   }
 
   public static String getHashedValue(String secretToHash) {
-    logger.info("ResponseServerUtil - getHashedValue() - starts");
+    logger.info("FdahpStudyDesignerUtil - getHashedValue() - starts");
     String generatedHash = null;
     try {
       MessageDigest md = MessageDigest.getInstance("SHA-256");
@@ -1051,9 +1051,9 @@ public class FdahpStudyDesignerUtil {
       }
       generatedHash = sb.toString();
     } catch (NoSuchAlgorithmException e) {
-      logger.info("ResponseServerUtil getHashedValue() - error() ", e);
+      logger.info("FdahpStudyDesignerUtil getHashedValue() - error() ", e);
     }
-    logger.info("ResponseServerUtil - getHashedValue() - ends");
+    logger.info("FdahpStudyDesignerUtil - getHashedValue() - ends");
     return generatedHash;
   }
 }

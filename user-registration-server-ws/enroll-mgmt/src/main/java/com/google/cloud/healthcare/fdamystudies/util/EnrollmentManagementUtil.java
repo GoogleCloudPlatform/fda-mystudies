@@ -202,7 +202,7 @@ public class EnrollmentManagementUtil {
         logger.error("Invalid client credential");
         throw new UnAuthorizedRequestException();
       } else if (e.getRawStatusCode() == 400) {
-        logger.error("Client verification ended with Bad Request");
+        logger.error("Client verification ended with Bad Request. Missing required parameters");
         throw new InvalidRequestException();
       } else {
         throw new SystemException();
