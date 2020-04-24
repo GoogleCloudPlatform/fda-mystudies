@@ -88,4 +88,24 @@ public class ApplicationPropertyConfiguration {
   // Comma separated list of whitelisted domains.
   @Value("${email.whitelisted_domains}")
   private String whitelistedUserDomains;
+  
+  // Feedback & Contactus mail content starts
+  @Value("${feedback.mail.content}")
+  private String feedbackMailBody;
+
+  @Value("${feedback.mail.subject}")
+  private String feedbackMailSuject;
+
+  @Value("${feedback.email}")
+  private String feedabckToEmail;
+
+  @Value("${contactus.mail.content}")
+  private String contactusMailBody;
+
+  @Value("${contactus.mail.subject}")
+  private String contactusMailSubject;
+
+  @Value("${contactus.email}")
+  private String contactusToEmail;
+  // Feedback & Contactus mail content ends
 }
