@@ -68,26 +68,14 @@ public class StudyStateController {
           if (user != null) {
             List<ParticipantStudiesBO> existParticipantStudies =
                 studyStateService.getParticipantStudiesList(user);
-            if (existParticipantStudies != null
-                && !existParticipantStudies.isEmpty()
-                && studiesBeenList != null
-                && !studiesBeenList.isEmpty()) {
-              studyStateRespBean =
-                  studyStateService.saveParticipantStudies(
-                      studiesBeenList, existParticipantStudies, userId);
-              if (studyStateRespBean != null
-                  && studyStateRespBean
-                      .getMessage()
-                      .equalsIgnoreCase(MyStudiesUserRegUtil.ErrorCodes.SUCCESS.getValue())) {
-                studyStateRespBean.setCode(HttpStatus.OK.value());
-              }
-            } else {
-              MyStudiesUserRegUtil.getFailureResponse(
-                  MyStudiesUserRegUtil.ErrorCodes.STATUS_102.getValue(),
-                  MyStudiesUserRegUtil.ErrorCodes.INVALID_INPUT.getValue(),
-                  MyStudiesUserRegUtil.ErrorCodes.INVALID_INPUT_ERROR_MSG.getValue(),
-                  response);
-              return null;
+            studyStateRespBean =
+                studyStateService.saveParticipantStudies(
+                    studiesBeenList, existParticipantStudies, userId);
+            if (studyStateRespBean != null
+                && studyStateRespBean
+                    .getMessage()
+                    .equalsIgnoreCase(MyStudiesUserRegUtil.ErrorCodes.SUCCESS.getValue())) {
+              studyStateRespBean.setCode(HttpStatus.OK.value());
             }
           } else {
             MyStudiesUserRegUtil.getFailureResponse(

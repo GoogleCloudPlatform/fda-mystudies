@@ -26,9 +26,11 @@ All files below are relative to the root of the repo.
         *   A Kubernetes Deployment, deploying the app along with its secrets.
         *   This is forked from deployment.yaml with modifications for the
             Terraform setup.
-    *   service.yaml
+    *   tf-service.yaml
         *   A Kubernetes Service, exposing the app to communicate with other
             apps and the Ingress.
+        *   This is forked from service.yaml with modifications for the
+            Terraform setup.
 *   response-server-ws/
     *   <same as auth-server-ws>
 *   WCP/
@@ -125,7 +127,46 @@ In the ./kubernetes/ingress.yaml file:
 *   Change the name and the `kubernetes.io/ingress.global-static-ip-name`
     annotation to match your organization.
 
-### GKE Cluster
+### GKE Cluster - Terraform
+
+Some Kubernetes resources are managed through Terraform, due to ease of
+configuration. These need to be applied after the cluster already exists, and
+due to the configuration of
+[Master Authorized Networks](https://cloud.google.com/kubernetes-engine/docs/how-to/authorized-networks),
+they can't be applied by the CI/CD automation.
+
+First, authenticate via gcloud:
+
+```
+$ gcloud auth login
+$ gcloud auth application-default login
+```
+
+Enter the Kubernetes Terraform directory
+
+```
+$ cd Terraform/kubernetes/
+```
+
+**Edit the file `terraform.tfvars`. Make sure the projects and cluster
+information is correct.**
+
+Init, plan, and apply the Terraform configs:
+
+```
+$ terraform init
+$ terraform plan
+$ terraform apply
+```
+
+(Optional) Lastly, revoke gcloud authentication
+
+```
+$ gcloud auth revoke
+$ gcloud auth application-default revoke
+```
+
+### GKE Cluster - kubectl
 
 Run all commands below from the repo root.
 
@@ -158,11 +199,11 @@ Apply all services:
 
 ```
 $ kubectl apply \
-  -f ./WCP-WS/service.yaml \
-  -f ./response-server-ws/service.yaml \
-  -f ./user-registration-server-ws/service.yaml \
-  -f ./WCP/service.yaml \
-  -f ./auth-server-ws/service.yaml
+  -f ./WCP-WS/tf-service.yaml \
+  -f ./response-server-ws/tf-service.yaml \
+  -f ./user-registration-server-ws/tf-service.yaml \
+  -f ./WCP/tf-service.yaml \
+  -f ./auth-server-ws/tf-service.yaml
 ```
 
 Apply the certificate and the ingress:

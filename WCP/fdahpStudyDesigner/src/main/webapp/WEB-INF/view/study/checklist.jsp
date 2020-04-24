@@ -60,15 +60,7 @@
                      	<span class="gray-xs-f mb-xs">(If using pre-screened participant group) Verified participants have smartphones corresponding to at least one of the platforms chosen for the study (iOS, Android).</span>
               		</div> 
               </div>
-              <div class="checkbox checkbox-inline p-45 pb-md">
-              	<div>
-                   <input type="checkbox" id="inlineCheckbox4" class="class" name="checkbox4" <c:if test="${checklist.checkbox4}">checked</c:if> required>
-                   <label for="inlineCheckbox4"> Eligibility - Tokens Generated  </label>
-                </div>
-                 <div class=" pl-13">
-                 	<span class="gray-xs-f mb-xs">(If using token validation method of eligibility), tokens generated on the Labkey portal </span>
-           		 </div>
-             </div>
+             
              <div class="checkbox checkbox-inline p-45 pb-md">
               	<div>
                    <input type="checkbox" id="inlineCheckbox5" class="class" name="checkbox5" <c:if test="${checklist.checkbox5}">checked</c:if> required>
@@ -127,19 +119,19 @@
          <div class="checkbox checkbox-inline p-45 pb-md">
          	<div>
               	<input type="checkbox" id="inlineCheckbox11" class="class" name="checkbox11" <c:if test="${checklist.checkbox11}">checked</c:if> required>
-              	<label for="inlineCheckbox11"> Standalone Study App - Tested and Verified  </label>
+              	<label for="inlineCheckbox11"> Mobile App Tested </label>
             </div>
             <div class=" pl-13">
-              	<span class="gray-xs-f mb-xs">(If study created as a Standalone one), all functionality and UI has been tested and verified on the standalone test app provided by BTC.</span>
+              	<span class="gray-xs-f mb-xs">(Mobile app build has been generated, tested and verified for content and functionality.)</span>
         	</div>
         </div>
          <div class="checkbox checkbox-inline p-45 pb-md">
          	<div>
               	<input type="checkbox" id="inlineCheckbox12" class="class" name="checkbox12" <c:if test="${checklist.checkbox12}">checked</c:if> required>
-              	<label for="inlineCheckbox12"> Standalone Study App - Approved and Live on App Store/Play Store</label>
+              	<label for="inlineCheckbox12"> Mobile App submitted to app stores and approved</label>
             </div>
             <div class=" pl-13">
-            	<span class="gray-xs-f mb-xs">(If study created as a Standalone one), standalone app has been submitted to and approved by App Store/Play Store and live for participants to download from there.</span>
+            	<span class="gray-xs-f mb-xs">(Mobile app(s) submitted to and approved by App Store/Play Store and ready for distribution.)</span>
         	</div>
         </div>
       </div>

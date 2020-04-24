@@ -249,6 +249,9 @@
 									"paging" : false,
 									"info" : false,
 									"filter" : false,
+									language: {
+				                    	"zeroRecords": "You haven't created any content yet.",
+				   			    },
 									rowReorder : reorder,
 									"columnDefs" : [ {
 										orderable : false,

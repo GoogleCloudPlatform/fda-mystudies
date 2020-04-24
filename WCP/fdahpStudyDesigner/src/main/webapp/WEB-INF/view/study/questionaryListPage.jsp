@@ -100,6 +100,9 @@ $(document).ready(function(){
                     { "bSortable": true },
                     { "bSortable": true }
                    ],
+                   language: {
+                    	"zeroRecords": "You haven't created any content yet.",
+   			    },
                    "order": [[ 0, "desc" ]],
                  "info" : false, 
                  "lengthChange": false, 
