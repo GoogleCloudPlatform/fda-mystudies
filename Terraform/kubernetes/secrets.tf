@@ -93,7 +93,7 @@ resource "kubernetes_secret" "email_credentials" {
 resource "google_service_account_key" "apps_service_account_keys" {
   for_each = toset(local.apps)
 
-  service_account_id = "projects/${var.project_id}/serviceAccounts/${each.key}-gke"
+  service_account_id = "${each.key}-gke@${var.project_id}.iam.gserviceaccount.com"
 }
 
 resource "kubernetes_secret" "apps_gcloud_keys" {

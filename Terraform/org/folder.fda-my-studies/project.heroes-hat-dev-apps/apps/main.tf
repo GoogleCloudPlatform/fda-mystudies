@@ -81,10 +81,19 @@ resource "google_compute_global_address" "ingress_static_ip" {
 # Simple configuration for now. Future
 # See https://cloud.google.com/binary-authorization/docs/overview
 resource "google_binary_authorization_policy" "policy" {
+  project = var.project_id
+
   # Whitelist images from this project.
   # See https://cloud.google.com/binary-authorization/docs/policy-yaml-reference#admissionwhitelistpatterns
   admission_whitelist_patterns {
     name_pattern = "gcr.io/${var.project_id}/*"
+  }
+  admission_whitelist_patterns {
+    name_pattern = "gcr.io/cloudsql-docker/*"
+  }
+  # Not all istio images are added by default in the "google images" policy.
+  admission_whitelist_patterns {
+    name_pattern = "gke.gcr.io/istio/*"
   }
 
   # Allow Google-built images.
