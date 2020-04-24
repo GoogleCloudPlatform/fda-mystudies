@@ -88,6 +88,13 @@ resource "google_binary_authorization_policy" "policy" {
   admission_whitelist_patterns {
     name_pattern = "gcr.io/${var.project_id}/*"
   }
+  admission_whitelist_patterns {
+    name_pattern = "gcr.io/cloudsql-docker/*"
+  }
+  # Not all istio images are added by default in the "google images" policy.
+  admission_whitelist_patterns {
+    name_pattern = "gke.gcr.io/istio/*"
+  }
 
   # Allow Google-built images.
   # See https://cloud.google.com/binary-authorization/docs/policy-yaml-reference#globalpolicyevaluationmode
