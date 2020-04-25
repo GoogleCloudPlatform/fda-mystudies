@@ -5,7 +5,7 @@ This release of FDA MyStudies contains:
 - mobile applications for study participants (iOS and Android)
 - study builder for researchers and study designers
 - participant and response datastores for managing study data
-- terraform scripts for semi-automated deployment 
+- tools for semi-automated deployment 
 
 ### Quick-start guides can be found in:
 <ul>
