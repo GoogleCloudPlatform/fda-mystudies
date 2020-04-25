@@ -9,17 +9,25 @@
 package com.harvard.studyappmodule.consent;
 
 import android.content.Context;
+import android.content.res.AssetManager;
+import android.graphics.Typeface;
 
 import com.harvard.utils.Logger;
+import com.tom_roush.fontbox.cff.CFFFont;
 import com.tom_roush.pdfbox.pdmodel.PDDocument;
 import com.tom_roush.pdfbox.pdmodel.PDPage;
 import com.tom_roush.pdfbox.pdmodel.PDPageContentStream;
 import com.tom_roush.pdfbox.pdmodel.common.PDRectangle;
 import com.tom_roush.pdfbox.pdmodel.font.PDFont;
+import com.tom_roush.pdfbox.pdmodel.font.PDSimpleFont;
+import com.tom_roush.pdfbox.pdmodel.font.PDTrueTypeFont;
+import com.tom_roush.pdfbox.pdmodel.font.PDType0Font;
 import com.tom_roush.pdfbox.pdmodel.font.PDType1Font;
+import com.tom_roush.pdfbox.pdmodel.font.encoding.Encoding;
 import com.tom_roush.pdfbox.pdmodel.graphics.image.PDImageXObject;
 import com.tom_roush.pdfbox.util.PDFBoxResourceLoader;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -29,6 +37,7 @@ public class PDFWriter {
   private String pdfFileName = "";
   private PDDocument doc = null;
   private PDFont font = null;
+  private AssetManager assetManager;
 
   PDFWriter(String pdfOutputDirectory, String pdfFileName) {
     this.pdfOutputDirectory = pdfOutputDirectory;
@@ -41,18 +50,27 @@ public class PDFWriter {
 
   void createPdfFile(Context context) {
     PDFBoxResourceLoader.init(context);
+    assetManager = context.getAssets();
     doc = new PDDocument();
-    font = PDType1Font.HELVETICA;
+    try {
+      font =
+          PDType0Font.load(
+              doc,
+              assetManager.open("com/tom_roush/pdfbox/resources/ttf/LiberationSans-Regular.ttf"));
+    } catch (Exception e) {
+      font = PDType1Font.HELVETICA;
+      Logger.log(e);
+    }
   }
 
   boolean addPage(String pageHeader, StringBuffer pageText, String path) {
     boolean ok = false;
     // Create and add the page to the document
-    PDPage page = new PDPage();
+    PDPage page = new PDPage(PDRectangle.A4);
     doc.addPage(page);
     PDPageContentStream contents = null;
 
-    float fontSize = 12;
+    float fontSize = 14;
     float leading = 1.5f * fontSize;
     PDRectangle mediabox = page.getMediaBox();
     float margin = 25;
@@ -64,7 +82,7 @@ public class PDFWriter {
     try {
       contents = new PDPageContentStream(doc, page);
       contents.beginText();
-      contents.setFont(font, 14);
+      contents.setFont(font, fontSize);
       contents.newLineAtOffset(startX, startY);
       yOffset -= leading;
       contents.showText(pageHeader);
@@ -74,7 +92,6 @@ public class PDFWriter {
       List<String> lines = new ArrayList<>();
       parseIndividualLines(pageText, lines, fontSize, font, width);
 
-      contents.setFont(font, fontSize);
       for (String line : lines) {
         contents.showText(line);
         contents.newLineAtOffset(0, -leading);
@@ -130,7 +147,6 @@ public class PDFWriter {
         Logger.log(e);
       }
     }
-
     return ok;
   }
 
@@ -149,34 +165,62 @@ public class PDFWriter {
   }
 
   private void parseIndividualLines(
-      StringBuffer wholeLetter, List<String> lines, float fontSize, PDFont pdfFont, float width)
-      throws IOException {
+      StringBuffer wholeLetter, List<String> lines, float fontSize, PDFont pdfFont, float width) {
     String[] paragraphs = wholeLetter.toString().split(System.getProperty("line.separator"));
     for (int i = 0; i < paragraphs.length; i++) {
       int lastSpace = -1;
       lines.add(" ");
-      while (paragraphs[i].length() > 0) {
-        int spaceIndex = paragraphs[i].indexOf(' ', lastSpace + 1);
-        if (spaceIndex < 0) {
-          spaceIndex = paragraphs[i].length();
-        }
-        String subString = paragraphs[i].substring(0, spaceIndex);
-        float size = fontSize * pdfFont.getStringWidth(subString) / 1000;
-        if (size > width) {
-          if (lastSpace < 0) {
+      if (paragraphs[i] != null)
+        while (paragraphs[i].length() > 0) {
+          paragraphs[i] = replaceUnsupportedCharacter(paragraphs[i]).toString();
+          int spaceIndex = paragraphs[i].indexOf(' ', lastSpace + 1);
+          if (spaceIndex < 0) {
+            spaceIndex = paragraphs[i].length();
+          }
+          String subString = paragraphs[i].substring(0, spaceIndex);
+          float size = 10;
+          try {
+            size = fontSize * pdfFont.getStringWidth(subString) / 1000;
+          } catch (Exception e) {
+            Logger.log(e);
+          }
+          if (size > width) {
+            if (lastSpace < 0) {
+              lastSpace = spaceIndex;
+            }
+            subString = paragraphs[i].substring(0, lastSpace);
+            lines.add(subString);
+            paragraphs[i] = paragraphs[i].substring(lastSpace).trim();
+            lastSpace = -1;
+          } else if (spaceIndex == paragraphs[i].length()) {
+            lines.add(paragraphs[i]);
+            paragraphs[i] = "";
+          } else {
             lastSpace = spaceIndex;
           }
-          subString = paragraphs[i].substring(0, lastSpace);
-          lines.add(subString);
-          paragraphs[i] = paragraphs[i].substring(lastSpace).trim();
-          lastSpace = -1;
-        } else if (spaceIndex == paragraphs[i].length()) {
-          lines.add(paragraphs[i]);
-          paragraphs[i] = "";
-        } else {
-          lastSpace = spaceIndex;
         }
+    }
+  }
+
+  private StringBuffer replaceUnsupportedCharacter(String text) {
+    StringBuffer nonSymbolBuffer = new StringBuffer();
+    for (char character : text.toCharArray()) {
+      if (isCharacterEncodeable(character)) {
+        nonSymbolBuffer.append(character);
+      } else {
+        nonSymbolBuffer.append("□");
       }
+    }
+    return nonSymbolBuffer;
+  }
+
+  private boolean isCharacterEncodeable(char character) {
+    try {
+      font.encode(Character.toString(character));
+      return true;
+    } catch (Exception e) {
+      Logger.log(e);
+      return false;
     }
   }
 }

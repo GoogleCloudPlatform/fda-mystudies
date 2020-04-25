@@ -747,27 +747,26 @@ public class CustomConsentViewTaskActivity extends AppCompatActivity
         if (eligibilityConsent.getConsent().getVisualScreens().size() > 0) {
           // Create our HTML to show the user and have them accept or decline.
           docBuilder =
-              new StringBuilder(
-                  "</br><div style=\"padding: 10px 10px 10px 10px;\" class='header'>");
-          String title = "Overview";
+              new StringBuilder("<br><div style=\"padding: 10px 10px 10px 10px;\" class='header'>");
+          String title = studyList.getTitle();
           docBuilder.append(
               String.format(
                   "<h1 style=\"text-align: center; font-family:sans-serif-light;\">%1$s</h1>",
                   title));
 
-          docBuilder.append("</div></br>");
+          docBuilder.append("</div><br>");
           for (int i = 0; i < eligibilityConsent.getConsent().getVisualScreens().size(); i++) {
             docBuilder.append(
                 "<div>  <h4>"
                     + eligibilityConsent.getConsent().getVisualScreens().get(i).getTitle()
                     + "<h4> </div>");
-            docBuilder.append("</br>");
+            docBuilder.append("<br>");
             docBuilder.append(
                 "<div>"
                     + eligibilityConsent.getConsent().getVisualScreens().get(i).getHtml()
                     + "</div>");
-            docBuilder.append("</br>");
-            docBuilder.append("</br>");
+            docBuilder.append("<br>");
+            docBuilder.append("<br>");
           }
         } else {
           docBuilder.append("");
@@ -776,7 +775,7 @@ public class CustomConsentViewTaskActivity extends AppCompatActivity
         docBuilder.append("");
       }
       StringBuilder agreeBuilder =
-          new StringBuilder("</br><div style=\"padding: 10px 10px 10px 10px;\" class='header'>");
+          new StringBuilder("<br><div style=\"padding: 10px 10px 10px 10px;\" class='header'>");
       String participant = getResources().getString(R.string.participant);
       agreeBuilder.append(String.format("<p style=\"text-align: center\">%1$s</p>", participant));
       String detail = getResources().getString(R.string.agree_participate_research_study);
@@ -786,14 +785,14 @@ public class CustomConsentViewTaskActivity extends AppCompatActivity
       pdfWriter.createPdfFile(CustomConsentViewTaskActivity.this);
       String heading = "";
       StringBuffer pageText = new StringBuffer();
-      String[] doc_string = docBuilder.toString().split("</br>");
+      String[] doc_string = docBuilder.toString().split("<br>");
       if (doc_string.length > 0) {
         for (String s : doc_string) {
           pageText.append(Html.fromHtml(s).toString().replace("\n", ""));
           pageText.append(System.getProperty("line.separator"));
         }
       }
-
+      pageText.append(System.getProperty("line.separator"));
       String[] agree_string = agreeBuilder.toString().split("</p>");
       if (agree_string.length > 0) {
         for (String s : agree_string) {
@@ -920,58 +919,63 @@ public class CustomConsentViewTaskActivity extends AppCompatActivity
 
   private void updateEligibilityConsent() {
     pdfPath = genarateConsentPDF();
-    UpdateEligibilityConsentStatusEvent updateEligibilityConsentStatusEvent =
-        new UpdateEligibilityConsentStatusEvent();
-    HashMap headerparams = new HashMap();
-    headerparams.put(
-        "accessToken",
-        AppController.getHelperSharedPreference()
-            .readPreference(CustomConsentViewTaskActivity.this, getString(R.string.auth), ""));
-    headerparams.put(
-        "userId",
-        AppController.getHelperSharedPreference()
-            .readPreference(CustomConsentViewTaskActivity.this, getString(R.string.userid), ""));
+    if (pdfPath != null && !pdfPath.isEmpty()) {
+      UpdateEligibilityConsentStatusEvent updateEligibilityConsentStatusEvent =
+          new UpdateEligibilityConsentStatusEvent();
+      HashMap headerparams = new HashMap();
+      headerparams.put(
+          "accessToken",
+          AppController.getHelperSharedPreference()
+              .readPreference(CustomConsentViewTaskActivity.this, getString(R.string.auth), ""));
+      headerparams.put(
+          "userId",
+          AppController.getHelperSharedPreference()
+              .readPreference(CustomConsentViewTaskActivity.this, getString(R.string.userid), ""));
 
-    EligibilityConsent eligibilityConsent =
-        dbServiceSubscriber.getConsentMetadata(getIntent().getStringExtra(STUDYID), mRealm);
-    JSONObject body = new JSONObject();
-    try {
-      body.put("studyId", getIntent().getStringExtra(STUDYID));
-      body.put("eligibility", true);
-
-      JSONObject consentbody = new JSONObject();
-      consentbody.put("version", eligibilityConsent.getConsent().getVersion());
-      consentbody.put("status", "Completed");
+      EligibilityConsent eligibilityConsent =
+          dbServiceSubscriber.getConsentMetadata(getIntent().getStringExtra(STUDYID), mRealm);
+      JSONObject body = new JSONObject();
       try {
-        consentbody.put("pdf", convertFileToString(pdfPath));
-      } catch (IOException e) {
+        body.put("studyId", getIntent().getStringExtra(STUDYID));
+        body.put("eligibility", true);
+
+        JSONObject consentbody = new JSONObject();
+        consentbody.put("version", eligibilityConsent.getConsent().getVersion());
+        consentbody.put("status", "Completed");
+        try {
+          consentbody.put("pdf", convertFileToString(pdfPath));
+        } catch (IOException e) {
+          Logger.log(e);
+          consentbody.put("pdf", "");
+        }
+
+        body.put("consent", consentbody);
+
+        body.put("sharing", SharingConsent);
+      } catch (JSONException e) {
         Logger.log(e);
-        consentbody.put("pdf", "");
       }
 
-      body.put("consent", consentbody);
-
-      body.put("sharing", SharingConsent);
-    } catch (JSONException e) {
-      Logger.log(e);
+      RegistrationServerConsentConfigEvent registrationServerConsentConfigEvent =
+          new RegistrationServerConsentConfigEvent(
+              "post_object",
+              URLs.UPDATE_ELIGIBILITY_CONSENT,
+              UPDATE_ELIGIBILITY_CONSENT_RESPONSECODE,
+              CustomConsentViewTaskActivity.this,
+              LoginData.class,
+              null,
+              headerparams,
+              body,
+              false,
+              CustomConsentViewTaskActivity.this);
+      updateEligibilityConsentStatusEvent.setRegistrationServerConsentConfigEvent(
+          registrationServerConsentConfigEvent);
+      StudyModulePresenter studyModulePresenter = new StudyModulePresenter();
+      studyModulePresenter.performUpdateEligibilityConsent(updateEligibilityConsentStatusEvent);
+    } else {
+      AppController.getHelperProgressDialog().dismissDialog();
+      Toast.makeText(this, R.string.pdf_consent_error, Toast.LENGTH_SHORT).show();
     }
-
-    RegistrationServerConsentConfigEvent registrationServerConsentConfigEvent =
-        new RegistrationServerConsentConfigEvent(
-            "post_object",
-            URLs.UPDATE_ELIGIBILITY_CONSENT,
-            UPDATE_ELIGIBILITY_CONSENT_RESPONSECODE,
-            CustomConsentViewTaskActivity.this,
-            LoginData.class,
-            null,
-            headerparams,
-            body,
-            false,
-            CustomConsentViewTaskActivity.this);
-    updateEligibilityConsentStatusEvent.setRegistrationServerConsentConfigEvent(
-        registrationServerConsentConfigEvent);
-    StudyModulePresenter studyModulePresenter = new StudyModulePresenter();
-    studyModulePresenter.performUpdateEligibilityConsent(updateEligibilityConsentStatusEvent);
   }
 
   private String convertFileToString(String filepath) throws IOException {
