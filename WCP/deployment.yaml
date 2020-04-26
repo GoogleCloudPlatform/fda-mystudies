@@ -17,6 +17,18 @@ spec:
       containers: 
         - name: study-designer 
           image: gcr.io/heroes-hat-dev/study-designer:latest
+          securityContext:
+            privileged: true
+            capabilities:
+              add:
+                - SYS_ADMIN
+          lifecycle:
+            postStart:
+              exec:
+                command: ["gcsfuse", "-o", "nonempty", "some-bucket", "/mnt/some-bucket"]
+            preStop:
+              exec:
+                command: ["fusermount", "-u", "/mnt/some-bucket"]
           env: 
             - name: DB_USER 
               valueFrom: 
@@ -33,16 +45,6 @@ spec:
                 secretKeyRef: 
                   name: study-designer-db-credentials 
                   key: dbname 
-            - name: FROM_EMAIL_ADDRESS
-              valueFrom:
-                secretKeyRef:
-                  name: email-credentials
-                  key: email_address
-            - name: FROM_EMAIL_PASSWORD
-              valueFrom:
-                secretKeyRef:
-                  name: email-credentials
-                  key: email_password
             - name: REGISTRATION_SERVER_URL
               value: "user-registration-server-np:50000"
             - name: RESPONSE_SERVER_URL
