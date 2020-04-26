@@ -39,7 +39,7 @@ spec:
             - name: USER_REGISTRATION_SERVER
               value: "user-registration-server-np:50000"
             - name: STUDY_DESIGNER
-              value: "study-designer-np:50000"
+              value: "dev.heroes-hat.rocketturtle.net"
           ports:
           - containerPort: 8080
           readinessProbe:
