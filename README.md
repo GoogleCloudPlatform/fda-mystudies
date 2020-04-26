@@ -9,7 +9,7 @@ This release of FDA MyStudies contains:
 
 ### Quick-start guides can be found in:
 <ul>
-  <li>`/Documentation`
+  <li>`/documentation`
 </ul>
 
 ### Deployment tools can be found in:
