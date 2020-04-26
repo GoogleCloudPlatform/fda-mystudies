@@ -17,6 +17,18 @@ spec:
       containers: 
         - name: study-designer 
           image: gcr.io/heroes-hat-dev/study-designer:latest
+          securityContext:
+            privileged: true
+            capabilities:
+              add:
+                - SYS_ADMIN
+          lifecycle:
+            postStart:
+              exec:
+                command: ["gcsfuse", "-o", "nonempty", "some-bucket", "/mnt/some-bucket"]
+            preStop:
+              exec:
+                command: ["fusermount", "-u", "/mnt/some-bucket"]
           env: 
             - name: DB_USER 
               valueFrom: 
