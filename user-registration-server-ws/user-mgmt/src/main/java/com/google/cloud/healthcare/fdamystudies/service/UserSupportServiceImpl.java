@@ -29,27 +29,21 @@ public class UserSupportServiceImpl implements UserSupportService {
   @Autowired EmailNotification emailNotification;
 
   @Override
-  public Integer feedback(String subject, String body) throws OrchestrationException {
+  public Boolean feedback(String subject, String body) throws OrchestrationException {
     logger.info("UserManagementProfileServiceImpl - feedback() :: Starts");
     Map<String, String> emailMap = new HashMap<String, String>();
     String feedbackSubject = "";
     String dynamicContent = "";
     String feedbackBody = "";
-    boolean isSent = false;
-    int isEmailSent = 0;
+    Boolean isEmailSent = false;
     try {
       feedbackSubject = appConfig.getFeedbackMailSuject() + "" + subject;
       feedbackBody = appConfig.getFeedbackMailBody();
       emailMap.put("$body", body);
       dynamicContent = MyStudiesUserRegUtil.generateEmailContent(feedbackBody, emailMap);
-      isSent =
+      isEmailSent =
           emailNotification.sendEmailNotification(
               feedbackSubject, dynamicContent, appConfig.getFeedabckToEmail(), null, null);
-      if (!isSent) {
-        isEmailSent = 1;
-      } else {
-        isEmailSent = 2;
-      }
     } catch (Exception e) {
       logger.error("UserManagementProfileServiceImpl - feedback() - error() ", e);
     }
@@ -58,15 +52,14 @@ public class UserSupportServiceImpl implements UserSupportService {
   }
 
   @Override
-  public Integer contactUsDetails(String subject, String body, String firstName, String email)
+  public Boolean contactUsDetails(String subject, String body, String firstName, String email)
       throws OrchestrationException {
     logger.info("AppMetaDataOrchestration - contactUsDetails() :: Starts");
     Map<String, String> emailMap = new HashMap<String, String>();
     String contactUsSubject = "";
     String contactUsContent = "";
     String dynamicContent = "";
-    boolean isSent = false;
-    int isEmailSent = 0;
+    Boolean isEmailSent = false;
     try {
       contactUsSubject = appConfig.getContactusMailSubject() + "" + subject;
       contactUsContent = appConfig.getContactusMailBody();
@@ -75,15 +68,9 @@ public class UserSupportServiceImpl implements UserSupportService {
       emailMap.put("$subject", subject);
       emailMap.put("$body", body);
       dynamicContent = MyStudiesUserRegUtil.generateEmailContent(contactUsContent, emailMap);
-      System.out.println("Final Email Content:" + dynamicContent);
-      isSent =
+      isEmailSent =
           emailNotification.sendEmailNotification(
               contactUsSubject, dynamicContent, appConfig.getContactusToEmail(), null, null);
-      if (!isSent) {
-        isEmailSent = 1;
-      } else {
-        isEmailSent = 2;
-      }
     } catch (Exception e) {
       logger.error("UserManagementProfileServiceImpl - contactUsDetails() - error() ", e);
     }

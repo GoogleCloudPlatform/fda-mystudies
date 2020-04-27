@@ -41,14 +41,14 @@ public class UserSupportController {
   public ResponseEntity<?> feedbackDetails(
       @RequestBody FeedbackReqBean reqBean, @Context HttpServletResponse response) {
     logger.info("INFO: StudyMetaDataService - feedbackDetails() :: Starts");
-    int isSent = 0;
+    Boolean isEmailSent = false;
     ResponseBean responseBean = new ResponseBean();
     ErrorBean errorBean = null;
     try {
       if (StringUtils.isNotEmpty(reqBean.getSubject())
           && StringUtils.isNotEmpty(reqBean.getBody())) {
-        isSent = supportService.feedback(reqBean.getSubject(), reqBean.getBody());
-        if (isSent == 2) {
+        isEmailSent = supportService.feedback(reqBean.getSubject(), reqBean.getBody());
+        if (isEmailSent) {
           responseBean.setMessage(MyStudiesUserRegUtil.ErrorCodes.SUCCESS.getValue().toLowerCase());
         }
       } else {
@@ -85,7 +85,7 @@ public class UserSupportController {
   public ResponseEntity<?> contactUsDetails(
       @RequestBody ContactUsReqBean reqBean, @Context HttpServletResponse response) {
     logger.info("INFO: StudyMetaDataService - contactUsDetails() :: Starts");
-    int isSent = 0;
+    Boolean isEmailSent = false;
     ResponseBean responseBean = new ResponseBean();
     ErrorBean errorBean = null;
     try {
@@ -93,13 +93,13 @@ public class UserSupportController {
           && StringUtils.isNotEmpty(reqBean.getBody())
           && StringUtils.isNotEmpty(reqBean.getFirstName())
           && StringUtils.isNotEmpty(reqBean.getEmail())) {
-        isSent =
+        isEmailSent =
             supportService.contactUsDetails(
                 reqBean.getSubject(),
                 reqBean.getBody(),
                 reqBean.getFirstName(),
                 reqBean.getEmail());
-        if (isSent == 2) {
+        if (isEmailSent) {
           responseBean.setMessage(MyStudiesUserRegUtil.ErrorCodes.SUCCESS.getValue().toLowerCase());
         }
       } else {
