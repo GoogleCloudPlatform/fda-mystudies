@@ -25,10 +25,10 @@ spec:
           lifecycle:
             postStart:
               exec:
-                command: ["gcsfuse", "-o", "nonempty", "some-bucket", "/mnt/some-bucket"]
+                command: ["gcsfuse", "-o", "nonempty", "fda_resources", "/usr/local/tomcat/webapps/fdaResources"]
             preStop:
               exec:
-                command: ["fusermount", "-u", "/mnt/some-bucket"]
+                command: ["fusermount", "-u", "/usr/local/tomcat/webapps/fdaResources"]
           env: 
             - name: DB_USER 
               valueFrom: 
