@@ -183,7 +183,7 @@ $(document).ready(function(){
 			}) 
 	    	
 	     });
-	
+	    $('#filterRole').prev().prev().find('.pull-left').removeClass('filter-option');
   //User_List page Datatable
     table = $('#user_list').DataTable({
         "paging":   true,
@@ -198,6 +198,9 @@ $(document).ready(function(){
            { "bSortable": false }
           ],  
         "lengthChange": false, 
+        language: {
+        	"zeroRecords": "You haven't created any content yet.",
+	    },
         "pageLength": 15 
     });
   

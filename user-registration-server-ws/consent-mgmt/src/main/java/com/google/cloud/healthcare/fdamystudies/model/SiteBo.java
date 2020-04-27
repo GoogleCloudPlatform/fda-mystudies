@@ -5,6 +5,7 @@
  * license that can be found in the LICENSE file or at
  * https://opensource.org/licenses/MIT.
  */
+
 package com.google.cloud.healthcare.fdamystudies.model;
 
 import java.io.Serializable;
@@ -30,16 +31,16 @@ public class SiteBo implements Serializable {
   private static final long serialVersionUID = 1L;
 
   @Id
-  @GeneratedValue(strategy = GenerationType.AUTO)
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
   @Column(name = "id")
   private Integer id;
 
   @ManyToOne
-  @JoinColumn(name = "location_id", insertable = false, updatable = false)
+  @JoinColumn(name = "location_id", insertable = true, updatable = true)
   private LocationBo locations;
 
   @ManyToOne(cascade = CascadeType.ALL)
-  @JoinColumn(name = "study_id", insertable = false, updatable = false)
+  @JoinColumn(name = "study_id", insertable = true, updatable = true)
   private StudyInfoBO studyInfo;
 
   @Column(name = "status", columnDefinition = "TINYINT(1)")
