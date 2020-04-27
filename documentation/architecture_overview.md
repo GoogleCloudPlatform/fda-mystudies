@@ -15,6 +15,7 @@ This document describes the architecture of the FDA MyStudies on Google Cloud. I
 Some of the terms used in the document and to what they refer:
 
 1.  Participant - A mobile app user is referred to as a participant when he/she enrolls into a study and is associated with a unique participant id. A single mobile app user can be associated with multiple studies and is a unique participant in each study
+1.  Administrator - Users of the Study Builder UI and Participant Manager UI are referred to as administrators. These administrators could be researchers, clinical coordinators or be associated with other non-participant roles
 1.  Study Content – All the content that is required to carry out a study (e.g. study eligibility criteria, consent forms, questionnaires, response types, etc.)
 1.  Response Data – Responses provided by a participant to questionnaires and activities set up as the part of a study
 
@@ -73,13 +74,13 @@ The client applications are:
 1.  Mobile Apps
 1.  Participant Manager (targeted for future release)
 
-The Auth Server provides the following functionality to support mobile app users:
+The Auth Server provides the following functionality to support study participants:
 
-1.  User registration
-1.  User credentials management
-1.  User authentication
+1.  Participant registration
+1.  Participant credentials management
+1.  Participant authentication
 1.  Token management
-1.  User logout
+1.  Participant logout
 
 The Auth Server provides the following functionality to support server to server authentication:
 
@@ -104,7 +105,7 @@ The Response Datastore provides the following functionality:
 
 The Response Datastore platform component provides REST APIs for the functionality above.
 
-The Response Datastore behaves as a resource server that stores participant response data. The Response Datastore requires a valid access token and client token to provide access to the protected resource to the resource owner (the study participant). It does not store user data that may identify the participant.
+The Response Datastore behaves as a resource server that stores participant response data. The Response Datastore requires a valid access token and client token to provide access to the protected resource to the resource owner (the study participant). It does not store data that may identify the participant.
 
 This application is built as a Spring Boot application. The backend database is Cloud Firestore for the response data and a MySQL database for the activity data.
 
@@ -122,16 +123,16 @@ When deploying the application on GCP, the cloud resources that can be used are:
 
 The Participant Datastore provides the following functionality:
 
-1.  Manage mobile app user registration and profile (User Management)
-1.  Manage mobile app user enrollment into studies (Enrollment Management)
-1.  Manage mobile app user study consent status and documents (Consent Management)
-1.  Manage site administrator web app users (targeted for future release)
+1.  Manage participant registration and profile (User Management)
+1.  Manage participant enrollment into studies (Enrollment Management)
+1.  Manage participant consent status and documents (Consent Management)
+1.  Manage users of the Participant Manager UI (targeted for future release)
 
 The Participant Datastore consists of 4 REST-based services, corresponding to the functions above. Each service is deployed separately.
 
-The User Management, Enrollment Management and Consent Management services are consumed by the mobile app client application. These services are resource servers that store mobile app user information and require a valid access token and client token to provide access to the protected resource to the resource owner (the mobile app user).
+The User Management, Enrollment Management and Consent Management services are consumed by the mobile app client application. These services are resource servers that store participant information and require a valid access token and client token to provide access to the protected resource to the resource owner (the study participant).
 
-This platform component does not store any response data provided by the user who is enrolled and participating in a study.
+This platform component does not store any response data provided by the participant who is enrolled and participating in a study.
 
 These services are built as Spring Boot applications. The backend database is a single MySQL database that serves the four applications.
 
@@ -158,7 +159,7 @@ There are two mobile apps:
 1.  iOS - The iOS app uses Apple ResearchKit to provide study workflow features.
 1.  Android - The Android app uses ResearchStack to provide study workflow features.
 
-### User Data, Participant Data and Study Data Access
+### Administrator Data, Participant Data and Study Data Access
 
 The platform application components are designed in such a way that the study content data, participant profile / enrollment data, and the study response data are stored and managed separately.
 
