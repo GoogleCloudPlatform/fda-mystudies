@@ -44,7 +44,7 @@ module "my_studies_cloudsql" {
   source  = "GoogleCloudPlatform/sql-db/google//modules/safer_mysql"
   version = "3.2.0"
 
-  name              = "my-studies-2"
+  name              = "my-studies"
   project_id        = var.project_id
   region            = var.cloudsql_region
   zone              = var.cloudsql_zone
