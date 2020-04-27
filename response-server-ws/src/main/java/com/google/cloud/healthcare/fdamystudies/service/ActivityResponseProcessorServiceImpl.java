@@ -144,7 +144,11 @@ public class ActivityResponseProcessorServiceImpl implements ActivityResponsePro
   private void processActivityResponses(
       List<QuestionnaireActivityStepsBean> questionnaireResponses,
       List<QuestionnaireActivityStepsBean> activityMetadataBeanFromWCP) {
+    QuestionnaireActivityStepsBean scoreSumResponseBean = null;
     for (QuestionnaireActivityStepsBean responseBean : questionnaireResponses) {
+      if (responseBean.getKey().equals(AppConstants.DUMMY_SUM_QUESTION_KEY)) {
+        scoreSumResponseBean = responseBean;
+      }
       if (responseBean.getResultType().equalsIgnoreCase(AppConstants.GROUPED_FIELD_KEY)) {
         ActivityValueGroupBean valueGroupResponse =
             getValueGroupResponses(activityMetadataBeanFromWCP, responseBean);
@@ -156,6 +160,52 @@ public class ActivityResponseProcessorServiceImpl implements ActivityResponsePro
         plugInMetadataToResponses(activityMetadataBeanFromWCP, responseBean, false);
       }
     }
+    if (scoreSumResponseBean != null) {
+      // Iterate through responses for a second pass to calculate the score sum if the dummy sum question presents.
+      calculateScoreSum(questionnaireResponses,scoreSumResponseBean);
+    }
+  }
+
+  // Converts one response value to double in a best-effort manner. Returns 0 if conversion fails.
+  private double convertResponseValueToDouble(Object value) {
+    if (value instanceof Double) {
+      return ((Double) value).doubleValue();
+    } else if (value instanceof Integer) {
+      return ((Integer) value).doubleValue();
+    } else if (value instanceof String) {
+      try {
+        return Double.parseDouble((String) value);
+      } catch (Exception e) {
+        logger.debug("Failed to parse value as number. Error: " + e.getMessage());
+      }
+    } else {
+      logger.error("convertResponseValueToDouble() - Unhandled value type: " + value.getClass().getName());
+    }
+    return 0;
+  }
+
+  // Calculates score sum in questionnaireResponses and store it to the value of scoreSumRespnoseBean.
+  private void calculateScoreSum(
+      List<QuestionnaireActivityStepsBean> questionnaireResponses,
+      QuestionnaireActivityStepsBean scoreSumResponseBean) {
+    double sum = 0;
+    for (QuestionnaireActivityStepsBean responseBean : questionnaireResponses) {
+      if (responseBean == scoreSumResponseBean) {
+        continue;
+      }
+      Object value = responseBean.getValue();
+      // If the response value type is a list, iterate through all items and add up.
+      if (value instanceof List) {
+        List<Object> valueList = (ArrayList<Object>) value;
+        for (Object o : valueList) {
+          sum = sum + convertResponseValueToDouble(o);
+        }
+      // Otherwise, just convert the single response value to double.
+      } else {
+        sum = sum + convertResponseValueToDouble(value);
+      }
+    }
+    scoreSumResponseBean.setValue(new Double(sum));
   }
 
   private ActivityValueGroupBean getValueGroupResponses(
