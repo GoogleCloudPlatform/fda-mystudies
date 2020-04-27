@@ -6,6 +6,11 @@ WORKDIR /app/
 RUN mvn package
 RUN ls /app/target
 
+# For gcsfuse
+COPY gcsfuse.repo /etc/yum.repos.d/
+RUN dnf -y install gcsfuse
+RUN mkdir -p /etc/letsencrypt
+
 FROM tomcat:9.0.33-jdk11-openjdk
 COPY --from=maven_builder /app/target/studybuilder.war /usr/local/tomcat/webapps/
 CMD ["catalina.sh","run"]
