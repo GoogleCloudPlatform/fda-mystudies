@@ -2,7 +2,7 @@
 
 ## Introduction
 
-This article describes the authentication and authorization of the various application components of FDA MyStudies on Google Cloud.
+This article describes the authentication and authorization of the various application components of FDA MyStudies.
 
 *Note: Customers are responsible for setting up users and permissions for both the infrastructural components of the platform (GCP or other infrastructure and/or associated managed services being used in their deployment of the platform) and the application components of the platform for which user management is provided as a feature (this is limited to the Study Builder in the current release).*
 
@@ -10,7 +10,7 @@ The mobile app allows for a self-registration process for its users; however onl
 
 ## Terminology
 
-There are three types of users of FDA MyStudies on Google Cloud:
+There are three types of users in the FDA MyStudies platform:
 
 1.  Study Builder user - A user of the Study Builder, usually a study or site admin, who is responsible for setting up content for a study.
 1.  Study participant - A mobile app user who can use the app to view studies and participate in eligible studies.
