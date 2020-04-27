@@ -2,32 +2,25 @@
 
 ## Introduction
 
-This document describes the architecture of the FDA MyStudies on Google Cloud. It outlines the various platform components and their roles, interdependencies and interactions
+FDA MyStudies consists of several components that work together as a holistic platform. These components include web-based user-interfaces for building studies and enrolling participants, back-end services for managing the flow of data, and mobile applications that participants use to discover, enroll and participate in studies.
 
+This document describes the architecture of the FDA MyStudies on Google Cloud. It outlines the various platform components and their roles, interdependencies and interactions
 
 ## Architecture Diagram
 
-
 ![alt_text](images/architecture.png "Architecture diagram")
-
-
 
 ## Terminology
 
 Some of the terms used in the document and to what they refer:
 
-
-
 1.  Participant - A mobile app user is referred to as a participant when he/she enrolls into a study and is associated with a unique participant id. A single mobile app user can be associated with multiple studies and is a unique participant in each study
 1.  Study Content – All the content that is required to carry out a study (e.g. study eligibility criteria, consent forms, questionnaires, response types, etc.)
 1.  Response Data – Responses provided by a participant to questionnaires and activities set up as the part of a study
 
-
 ## Architecture Components
 
 The platform components are as follows:
-
-
 
 1.  Study Builder (UI)
 1.  Study Datastore
@@ -36,7 +29,6 @@ The platform components are as follows:
 1.  Participant Datastore
 1.  Response Datastore
 1.  Mobile Apps (UI, not a server component)
-
 
 ### Study Builder
 
@@ -52,11 +44,8 @@ The Study Builder can be deployed as a Java web application on servers that have
 
 When deploying the application on GCP, the cloud resources that can be used are:
 
-
-
 1.  Google Kubernetes Engine
 1.  Cloud SQL (MySQL)
-
 
 ### Study Datastore
 
@@ -72,11 +61,8 @@ It can be deployed on servers that have Java, Tomcat and MySQL installed.
 
 When deploying the application on GCP, the cloud resources that can be used are:
 
-
-
 1.  Google Kubernetes Engine
 1.  Cloud SQL (MySQL)
-
 
 ### Auth Server
 
@@ -84,14 +70,10 @@ The Auth Server is the centralized authentication mechanism for the various clie
 
 The client applications are:
 
-
-
 1.  Mobile Apps
 1.  Participant Manager (targeted for future release)
 
 The Auth Server provides the following functionality to support mobile app users:
-
-
 
 1.  User registration
 1.  User credentials management
@@ -113,12 +95,9 @@ When deploying the application on GCP, the cloud resources that can be used are:
 1.  Google Kubernetes Engine
 1.  Cloud SQL (MySQL)
 
-
 ### Response Datastore
 
 The Response Datastore provides the following functionality:
-
-
 
 1.  Stores participant responses to a study
 1.  Stores participant activity state data associated with the study
@@ -135,18 +114,13 @@ The Response Datastore can be deployed on servers that have Java, Tomcat and MyS
 
 When deploying the application on GCP, the cloud resources that can be used are:
 
-
-
 1.  Google Kubernetes Engine
 1.  Cloud SQL (MySQL)
 1.  Cloud Firestore
 
-
 ### Participant Datastore
 
 The Participant Datastore provides the following functionality:
-
-
 
 1.  Manage mobile app user registration and profile (User Management)
 1.  Manage mobile app user enrollment into studies (Enrollment Management)
@@ -167,17 +141,13 @@ The services can be deployed on servers that have Java, Tomcat and MySQL install
 
 When deploying the application on GCP, the cloud resources that can be used are:
 
-
-
 1.  Google Kubernetes Engine
 1.  Cloud SQL (MySQL)
 1.  Google Cloud Storage
 
-
 ### Participant Manager
 
 Targeted for a future release.
-
 
 ### Mobile Apps
 
@@ -185,18 +155,14 @@ The FDA MyStudies platform also includes mobile applications that study particip
 
 There are two mobile apps:
 
-
-
 1.  iOS - The iOS app uses Apple ResearchKit to provide study workflow features.
 1.  Android - The Android app uses ResearchStack to provide study workflow features.
-
 
 ### User Data, Participant Data and Study Data Access
 
 The platform application components are designed in such a way that the study content data, participant profile / enrollment data, and the study response data are stored and managed separately.
 
 The table below shows what type of data the platform components can access:
-
 
 <table>
   <tr>
@@ -271,12 +237,9 @@ The table below shows what type of data the platform components can access:
   </tr>
 </table>
 
-
-
 ### Platform Component Interactions
 
 The various platform component interactions are as shown below:
-
 
 <table>
   <tr>
@@ -392,4 +355,3 @@ The various platform component interactions are as shown below:
    </td>
   </tr>
 </table>
-
