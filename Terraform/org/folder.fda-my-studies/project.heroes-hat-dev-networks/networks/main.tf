@@ -17,6 +17,10 @@
 # bastion host VM. Private service access (https://cloud.google.com/vpc/docs/private-access-options#service-networking)
 # is also enabled in this network for the private CloudSQL instance.
 
+provider "google" {
+  version = "~> 3.0"
+}
+
 terraform {
   backend "gcs" {}
 }

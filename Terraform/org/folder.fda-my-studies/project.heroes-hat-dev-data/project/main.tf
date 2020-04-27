@@ -18,6 +18,10 @@
 # - Deletion lien, if enabled,
 # - Project level IAM permissions for the project owners, if any.
 
+provider "google" {
+  version = "~> 3.0"
+}
+
 terraform {
   backend "gcs" {}
 }

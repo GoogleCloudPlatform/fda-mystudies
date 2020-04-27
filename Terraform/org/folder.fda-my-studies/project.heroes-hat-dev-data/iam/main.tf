@@ -15,6 +15,10 @@
 # This folder contains Terraform resources to setup additional IAM permissions to allow certain
 # IAM members to connect to the private CloudSQL instance.
 
+provider "google" {
+  version = "~> 3.0"
+}
+
 terraform {
   backend "gcs" {}
 }

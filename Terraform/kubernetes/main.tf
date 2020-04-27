@@ -18,6 +18,10 @@
 # At the moment, this includes the following:
 # - Kubernetes secrets, pulled from Secret Manager and SA keys.
 
+provider "google" {
+  version = "~> 3.0"
+}
+
 terraform {
   backend "gcs" {
     bucket = "heroes-hat-dev-terraform-state-08679"

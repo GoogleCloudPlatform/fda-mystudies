@@ -14,6 +14,10 @@
 
 # This folder contains Terraform resources to setup the folder.
 
+provider "google" {
+  version = "~> 3.0"
+}
+
 terraform {
   backend "gcs" {}
 }

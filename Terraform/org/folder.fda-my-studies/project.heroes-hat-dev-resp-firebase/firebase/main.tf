@@ -15,6 +15,10 @@
 # This folder contains Terraform resources to setup a Google Cloud Firebase instance. It enables
 # Firebase resources on the given GCP project.
 
+provider "google" {
+  version = "~> 3.0"
+}
+
 terraform {
   backend "gcs" {}
 }

@@ -16,6 +16,10 @@
 # (https://cloud.google.com/resource-manager/docs/organization-policy/org-policy-constraints)
 # See the following resources for the details of policies enforced.
 
+provider "google" {
+  version = "~> 3.0"
+}
+
 terraform {
   backend "gcs" {}
 }

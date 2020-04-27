@@ -22,6 +22,10 @@
 
 // TODO: replace with https://github.com/terraform-google-modules/terraform-google-bootstrap
 
+provider "google" {
+  version = "~> 3.0"
+}
+
 # ==============================================================================
 # TODO: Uncomment after initial deployment and run `terraform init`.
 terraform {
