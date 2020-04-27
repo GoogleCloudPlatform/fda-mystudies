@@ -89,8 +89,8 @@ gs://<data-project-id>-sql-import
 
 Find the name of your Cloud SQL DB instance. If looking at the GCP Console, this
 is just the instance name, is **not** the "Instance connection name". Example:
-if the connection name is "myproject-data:us-east1:my-studies-2", you should use
-just "my-studies-2".
+if the connection name is "myproject-data:us-east1:my-studies", you should use
+just "my-studies".
 
 Import the scripts, in this order:
 

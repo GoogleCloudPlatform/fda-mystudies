@@ -70,7 +70,7 @@ spec:
         - name: cloudsql-proxy
           image: gcr.io/cloudsql-docker/gce-proxy:latest
           command: ["/cloud_sql_proxy",
-            "-instances=heroes-hat-dev-data:us-east1:my-studies-2=tcp:3306",
+            "-instances=heroes-hat-dev-data:us-east1:my-studies=tcp:3306",
             "-credential_file=/secrets/gcloud_key/key.json"]
           volumeMounts:
           - name: gcloud-key-volume
