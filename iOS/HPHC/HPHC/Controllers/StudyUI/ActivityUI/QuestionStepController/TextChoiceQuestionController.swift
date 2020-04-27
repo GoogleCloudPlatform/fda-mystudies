@@ -173,9 +173,9 @@ class TextChoiceQuestionController: ORKQuestionStepViewController {
 
   var isShowSearchBar: Bool {
     if self.otherChoice.isShowOtherCell {
-      return self.textChoices.count > 5
+      return self.textChoices.count > 9
     } else {
-      return self.textChoices.count > 6
+      return self.textChoices.count > 10
     }
   }
 
@@ -521,11 +521,16 @@ class TextChoiceQuestionController: ORKQuestionStepViewController {
     super.goBackward()
   }
 
-  override func goForward() {
-    //super.delegate?.stepViewControllerResultDidChange(self)
+  override func skipForward() {
+    self.answers = []
+    self.selectedChoices = []
+    self.isOtherCellSelected = false
+    super.skipForward()
+  }
 
-    if self.otherChoice.isMandatory,
-      self.otherChoice.otherChoiceText == "" || self.otherChoice.otherChoiceText == " ",
+  override func goForward() {
+
+    if self.otherChoice.otherChoiceText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty,
       self.isOtherCellSelected
     {
 
@@ -741,7 +746,7 @@ extension TextChoiceQuestionController: OtherTextChoiceCellDelegate {
 
   func didEndEditing(with text: String?) {
     /// Use the text
-    self.otherChoice.otherChoiceText = text ?? ""
+    self.otherChoice.otherChoiceText = (text ?? "").trimmingCharacters(in: .whitespacesAndNewlines)
     self.tableView?.setContentOffset(CGPoint(x: 0, y: -1), animated: true)
   }
 }
