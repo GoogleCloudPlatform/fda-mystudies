@@ -70,6 +70,7 @@ import org.springframework.web.multipart.MultipartFile;
 import com.fdahpstudydesigner.bean.FormulaInfoBean;
 import com.fdahpstudydesigner.bo.UserBO;
 import com.fdahpstudydesigner.bo.UserPermissions;
+import com.fdahpstudydesigner.util.PropertiesUtil;
 import net.objecthunter.exp4j.ExpressionBuilder;
 
 public class FdahpStudyDesignerUtil {
@@ -266,11 +267,7 @@ public class FdahpStudyDesignerUtil {
         hm.put(key, value);
       }
       ServletContext context = ServletContextHolder.getServletContext();
-      Properties prop = new Properties();
-      resource = new ClassPathResource("application_local.properties");
-      //        prop.load(new
-      // FileInputStream(context.getInitParameter("property_file_location_path")));
-      prop.load(resource.getInputStream());
+      Properties prop = PropertiesUtil.makePropertiesWithEnvironmentVariables("application_local.properties");
       objectKeys = prop.keys();
       while (objectKeys.hasMoreElements()) {
         String key = (String) objectKeys.nextElement();
