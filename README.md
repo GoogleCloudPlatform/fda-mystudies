@@ -3,9 +3,9 @@
 
 The FDA’s MyStudies platform enables organizations to quickly build and deploy studies that interact with participants through purpose-built apps on iOS and Android. MyStudies apps can be distributed to participants directly (for example, when collecting patient-reported outcomes in support of a traditional clinical trial), or made available through the App Store and Google Play (for large-scale open-enrollment studies).
 
-This open-source repository contains all of the code necessary to run FDA MyStudies on the infrastructure of choice. Optional open-source [deployment tools](Terraform/README.md) are included for semi-automated deployment to Google Cloud Platform (GCP). These tools  stand up an FDA MyStudies implementation in 1 hour, and are designed with specific compliance guidelines in mind, making the end-to-end compliance journey easier for organizations.
+This open-source repository contains all of the code necessary to run FDA MyStudies on the infrastructure of choice. Optional open-source [deployment tools](Terraform/README.md) are included for semi-automated deployment to Google Cloud Platform (GCP). These tools stand up an FDA MyStudies implementation in 1 hour, and are designed with specific compliance guidelines in mind, making the end-to-end compliance journey easier for organizations.
 
-Upon completing deployment, FDA MyStudies platform components will be available for use. A summary of these components is below – a detailed overview of the platform architecture can be found [here](documentation/architecture_overview.md).
+Upon completing deployment, FDA MyStudies platform components will be available for use. A summary of these components is below.<!-- – a detailed overview of the platform architecture can be found [here](documentation/architecture_overview.md).-->
 
 <table>
   <tr>
@@ -75,6 +75,8 @@ Upon completing deployment, FDA MyStudies platform components will be available 
    </td>
   </tr>
 </table>
+
+<!-- ![Platform Illustration](documentation/images/platform_illustration.png "Platform Illustration") -->
 
 ## Use-cases
 
@@ -152,7 +154,7 @@ Google Cloud can support customer compliance with 21 CFR Part 11 regulations whe
 
 ## What’s changed?
 
-While the overall goals, compliance principles and functionality are unchanged, this release introduces several changes from previous versions of FDA MyStudies:
+While the overall goals, compliance principles and functionality are similar, this release introduces several changes from version 2019.10 of FDA MyStudies:
 
 *   Architecture
     *   Migrated from a VM architecture to a modular container-based architecture
@@ -166,14 +168,14 @@ While the overall goals, compliance principles and functionality are unchanged, 
 *   Security
     *   Improved the existing authentication in place (e.g. removed application secret from being transmitted in all calls, unified the process into a single auth server)
     *   Added HTTPs across codebase
-    *   Fixed potential cross site scripting vulnerabilities
+<!--    *   Fixed potential cross site scripting vulnerabilities -->
     
 *   Usability
     *   Simplified screens within the Mobile Apps and Study Builder
     *   Updated text for clarity throughout Mobile Apps and Study Builder
     *   Removed hard-coded values to enable customization of the platform 
     *   Improved code readability to support 3rd-party adoption
-    *   Added support for unit testing, linter and CI/CD
+<!--    *   Added support for unit testing, linter and CI/CD -->
     
 *   Bug fixes
     *   Fixed minor stability and usability bugs throughout
