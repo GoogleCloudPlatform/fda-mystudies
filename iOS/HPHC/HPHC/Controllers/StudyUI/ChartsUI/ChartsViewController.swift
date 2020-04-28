@@ -118,8 +118,9 @@ extension ChartsViewController: UITableViewDataSource {
 
     let chart = StudyDashboard.instance.charts[indexPath.row]
 
-    if chart.chartType == "line-chart" {
-      let cell = tableView.dequeueReusableCell(withIdentifier: "lineChart", for: indexPath) as! LineChartCell
+    if chart.chartType == "line-chart",
+      let cell = tableView.dequeueReusableCell(withIdentifier: "lineChart", for: indexPath) as? LineChartCell
+    {
       cell.setupLineChart(chart: chart)
       return cell
     } else {

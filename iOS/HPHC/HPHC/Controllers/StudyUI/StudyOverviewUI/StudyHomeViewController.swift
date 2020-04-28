@@ -72,7 +72,7 @@ class StudyHomeViewController: UIViewController {
   var isUpdatingIneligibility: Bool = false
 
   var consentRestorationData: Data?
-  lazy var isStudyActivitiesPresented = false
+  var isStudyActivitiesPresented = false
 
   var pageViewController: PageViewController? {
     didSet {

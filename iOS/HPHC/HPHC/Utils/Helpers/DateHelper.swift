@@ -10,8 +10,6 @@ enum DateHelper {
 
   static private let runDateFormat = "yyyy-MM-dd HH:mm:ss Z"
 
-  enum DateType { case date, time }
-
   static var iso8601DateFormatter: DateFormatter {
     let dateFormatter = DateFormatter()
     let locale = Locale(identifier: "en_US_POSIX")
@@ -26,9 +24,7 @@ enum DateHelper {
     dateFormatter.dateFormat = format
     dateFormatter.timeZone = TimeZone.current
     dateFormatter.locale = Locale(identifier: "en_US_POSIX")
-    let dateString = dateFormatter.string(from: date)
-
-    return dateString
+    return dateFormatter.string(from: date)
   }
 
   static func dateFromString(date: String, format: String) -> Date? {
@@ -36,9 +32,7 @@ enum DateHelper {
     dateFormatter.dateFormat = format
     dateFormatter.timeZone = TimeZone.current
     dateFormatter.locale = Locale(identifier: "en_US_POSIX")
-    let date = dateFormatter.date(from: date)
-
-    return date
+    return dateFormatter.date(from: date)
   }
 
   static func formattedRunDateFromString(date: String) -> Date? {

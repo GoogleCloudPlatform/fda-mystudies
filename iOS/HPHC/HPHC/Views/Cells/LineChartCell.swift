@@ -298,11 +298,11 @@ class LineChartCell: GraphChartTableViewCell {
       self.handleWeeksOfMonthForDate(date: hourOfDayDate)
 
     case .runs:
-     self.buttonForward.isEnabled = true
+      self.buttonForward.isEnabled = true
       self.buttonBackward.isEnabled = true
       pageNumber += 1
       if !plotForRunsType() {
-          pageNumber -= 1
+        pageNumber -= 1
       }
 
     case .hours_of_day:
@@ -395,7 +395,7 @@ class LineChartCell: GraphChartTableViewCell {
       self.buttonBackward.isEnabled = true
       pageNumber -= 1
       if !plotForRunsType() {
-          pageNumber += 1 // Last page.
+        pageNumber += 1  // Last page.
       }
 
     case .hours_of_day:
@@ -436,8 +436,10 @@ class LineChartCell: GraphChartTableViewCell {
     frequencyPageIndex = frequencyPageSize * pageNumber
     let frequencySet = self.getNextSetOfFrequencyRuns()
 
-    if !frequencySet.isEmpty {
-
+    if frequencySet.isEmpty {
+      self.graphView.reloadData()
+      return false
+    } else {
       let sTime = frequencySet.first?["startTime"] as? String ?? ""
       let eTime = frequencySet.last?["endTime"] as? String ?? ""
 
@@ -459,9 +461,6 @@ class LineChartCell: GraphChartTableViewCell {
 
       self.handleRunsForDate(startDate: startDate, endDate: endDate, runs: frequencySet)
       return true
-    } else {
-      self.graphView.reloadData()
-      return false
     }
   }
   // MARK: - Data Calculation
