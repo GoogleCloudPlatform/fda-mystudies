@@ -48,7 +48,11 @@ module "my_studies_sql_import_bucket" {
   location   = var.storage_location
   iam_members = [
     {
-      role   = "roles/storage.viewer"
+      role   = "roles/storage.objectViewer"
+      member = "serviceAccount:${module.my_studies_cloudsql.instance_service_account_email_address}"
+    },
+    {
+      role   = "roles/storage.legacyBucketReader"
       member = "serviceAccount:${module.my_studies_cloudsql.instance_service_account_email_address}"
     }
   ]
