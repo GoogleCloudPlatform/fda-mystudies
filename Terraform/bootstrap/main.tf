@@ -22,13 +22,13 @@
 
 // TODO: replace with https://github.com/terraform-google-modules/terraform-google-bootstrap
 
-provider "google" {
-  version = "~> 3.0"
-}
-
 # ==============================================================================
 # TODO: Uncomment after initial deployment and run `terraform init`.
 terraform {
+  required_version = "~> 0.12.0"
+  required_providers {
+    google = "~> 3.0"
+  }
   backend "gcs" {
     bucket = "heroes-hat-dev-terraform-state-08679"
     prefix = "bootstrap"

@@ -18,11 +18,11 @@
 # - Cloud Storage log sink creation and configuration for long term log storage,
 # - IAM permissions to grant log Auditors iam.securityReviewer role to view the logs.
 
-provider "google" {
-  version = "~> 3.0"
-}
-
 terraform {
+  required_version = "~> 0.12.0"
+  required_providers {
+    google = "~> 3.0"
+  }
   backend "gcs" {}
 }
 

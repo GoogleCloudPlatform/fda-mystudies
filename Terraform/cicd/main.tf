@@ -23,11 +23,11 @@
 # https://cloud.google.com/cloud-build/docs/automating-builds/create-github-app-triggers#installing_the_cloud_build_app
 # to install the Cloud Build app and connect your GitHub repository to your Cloud project.
 
-provider "google" {
-  version = "~> 3.0"
-}
-
 terraform {
+  required_version = "~> 0.12.0"
+  required_providers {
+    google = "~> 3.0"
+  }
   backend "gcs" {
     bucket = "heroes-hat-dev-terraform-state-08679"
     prefix = "cicd"
