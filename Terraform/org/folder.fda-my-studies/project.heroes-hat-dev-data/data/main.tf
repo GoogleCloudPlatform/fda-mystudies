@@ -39,6 +39,21 @@ module "my_studies_consent_documents_bucket" {
   location   = var.storage_location
 }
 
+module "my_studies_sql_import_bucket" {
+  source  = "terraform-google-modules/cloud-storage/google//modules/simple_bucket"
+  version = "~> 1.4"
+
+  name       = "${var.project_id}-sql-import"
+  project_id = var.project_id
+  location   = var.storage_location
+  iam_members = [
+    {
+      role   = "roles/storage.objectViewer"
+      member = "serviceAccount:${module.my_studies_cloudsql.instance_service_account_email_address}"
+    }
+  ]
+}
+
 data "google_secret_manager_secret_version" "sql_password" {
   provider = google-beta
   project  = var.secrets_project_id
