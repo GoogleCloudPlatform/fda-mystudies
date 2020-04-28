@@ -111,26 +111,21 @@ class ChartsViewController: UIViewController {
 extension ChartsViewController: UITableViewDataSource {
 
   func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-    return 1
-  }
-
-  func numberOfSections(in tableView: UITableView) -> Int {
     return StudyDashboard.instance.charts.count
   }
 
   func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
 
-    let chart = StudyDashboard.instance.charts[indexPath.section]
+    let chart = StudyDashboard.instance.charts[indexPath.row]
 
     if chart.chartType == "line-chart" {
-
-      let cell = tableView.dequeueReusableCell(withIdentifier: "lineChart") as! LineChartCell
+      let cell = tableView.dequeueReusableCell(withIdentifier: "lineChart", for: indexPath) as! LineChartCell
       cell.setupLineChart(chart: chart)
       return cell
     } else {
       let cell = UITableViewCell()
       return cell
     }
-
   }
+
 }

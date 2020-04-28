@@ -1,6 +1,7 @@
 // License Agreement for FDA MyStudies
-// Copyright © 2017-2019 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors. Permission is
-// hereby granted, free of charge, to any person obtaining a copy of this software and associated
+// Copyright © 2017-2019 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors.
+// Copyright 2020 Google LLC
+// Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated
 // documentation files (the &quot;Software&quot;), to deal in the Software without restriction, including without
 // limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the
 // Software, and to permit persons to whom the Software is furnished to do so, subject to the following
@@ -49,6 +50,19 @@ class LineChartCell: GraphChartTableViewCell {
 
   var max: Float = 0.0
   var min: Float = 0.0
+
+  /// CleanUp the reused `GraphChartTableViewCell`.
+  override func prepareForReuse() {
+    super.prepareForReuse()
+    self.labelTitle.text = ""
+    self.labelAxisValue.text = ""
+    self.buttonForward.isHidden = true
+    self.buttonBackward.isHidden = true
+    plotPoints = []
+    xAxisTitles = []
+    self.graphView.dataSource = nil
+    self.graphView.reloadData()
+  }
 
   func getWeeklyAttributedText() -> NSAttributedString {
 
@@ -113,10 +127,12 @@ class LineChartCell: GraphChartTableViewCell {
 
   func setupLineChart(chart: DashboardCharts) {
 
-    self.graphView.tintColor = UIColor.gray
     currentChart = chart
-
+    self.graphView.tintColor = UIColor.gray
     labelTitle.text = chart.displayName
+
+    guard !chart.statList.isEmpty else { return }
+
     let array = chart.statList.compactMap { $0.data }
     if array.count != 0 {
       max = array.max()!
@@ -204,21 +220,7 @@ class LineChartCell: GraphChartTableViewCell {
     case .runs:
       labelTitle.text = chart.displayName! + " (per run)"
       self.buttonForward.isEnabled = true
-      let stringStartDate = LineChartCell.formatter.string(from: (charActivity?.startDate!)!)
-      let stringEndDate = LineChartCell.formatter.string(from: (charActivity?.endDate!)!)
-      let attributedText = self.getSchedulesAttributedText(
-        stringStartDate: stringStartDate,
-        stringEndDate: stringEndDate
-      )
-      labelAxisValue.attributedText = attributedText
-
-      let runs = self.getNextSetOfFrequencyRuns()
-
-      self.handleRunsForDate(
-        startDate: (charActivity?.startDate)!,
-        endDate: (charActivity?.endDate)!,
-        runs: runs
-      )
+      plotForRunsType()
 
     case .hours_of_day:
       labelTitle.text = chart.displayName! + " (per run)"
@@ -296,37 +298,11 @@ class LineChartCell: GraphChartTableViewCell {
       self.handleWeeksOfMonthForDate(date: hourOfDayDate)
 
     case .runs:
-      self.buttonForward.isEnabled = true
+     self.buttonForward.isEnabled = true
       self.buttonBackward.isEnabled = true
       pageNumber += 1
-      frequencyPageIndex = frequencyPageSize * pageNumber
-      let frequencySet = self.getNextSetOfFrequencyRuns()
-
-      if frequencySet.count != 0 {
-
-        let firstFrequency = frequencySet.first
-        let lastFrequency = frequencySet.last
-        let sTime = (firstFrequency?["startTime"] as? String)!
-        let eTime = (lastFrequency?["endTime"] as? String)!
-
-        let startDate = Utilities.getDateFromString(dateString: sTime)
-        let endDate = Utilities.getDateFromString(dateString: eTime)
-
-        let stringStartDate = LineChartCell.formatter.string(from: startDate!)
-        let stringEndDate = LineChartCell.formatter.string(from: endDate!)
-        let attributedText = self.getSchedulesAttributedText(
-          stringStartDate: stringStartDate,
-          stringEndDate: stringEndDate
-        )
-
-        labelAxisValue.attributedText = attributedText
-
-        self.handleRunsForDate(startDate: startDate!, endDate: endDate!, runs: frequencySet)
-
-      } else {
-        xAxisTitles = []
-        plotPoints = []
-        self.graphView.reloadData()
+      if !plotForRunsType() {
+          pageNumber -= 1
       }
 
     case .hours_of_day:
@@ -418,33 +394,8 @@ class LineChartCell: GraphChartTableViewCell {
       self.buttonForward.isEnabled = true
       self.buttonBackward.isEnabled = true
       pageNumber -= 1
-      frequencyPageIndex = frequencyPageSize * pageNumber
-      let frequencySet = self.getNextSetOfFrequencyRuns()
-
-      if frequencySet.count != 0 {
-
-        let firstFrequency = frequencySet.first
-        let lastFrequency = frequencySet.last
-        let sTime = (firstFrequency?["startTime"] as? String)!
-        let eTime = (lastFrequency?["endTime"] as? String)!
-
-        let startDate = Utilities.getDateFromString(dateString: sTime)
-        let endDate = Utilities.getDateFromString(dateString: eTime)
-
-        let stringStartDate = LineChartCell.formatter.string(from: startDate!)
-        let stringEndDate = LineChartCell.formatter.string(from: endDate!)
-        let attributedText = self.getSchedulesAttributedText(
-          stringStartDate: stringStartDate,
-          stringEndDate: stringEndDate
-        )
-
-        labelAxisValue.attributedText = attributedText  //stringStartDate + " - " + stringEndDate
-
-        self.handleRunsForDate(startDate: startDate!, endDate: endDate!, runs: frequencySet)
-      } else {
-        xAxisTitles = []
-        plotPoints = []
-        self.graphView.reloadData()
+      if !plotForRunsType() {
+          pageNumber += 1 // Last page.
       }
 
     case .hours_of_day:
@@ -479,6 +430,40 @@ class LineChartCell: GraphChartTableViewCell {
     return frequencyRunsSet
   }
 
+  @discardableResult
+  private func plotForRunsType() -> Bool {
+
+    frequencyPageIndex = frequencyPageSize * pageNumber
+    let frequencySet = self.getNextSetOfFrequencyRuns()
+
+    if !frequencySet.isEmpty {
+
+      let sTime = frequencySet.first?["startTime"] as? String ?? ""
+      let eTime = frequencySet.last?["endTime"] as? String ?? ""
+
+      guard
+        let startDate = Utilities.getDateFromString(dateString: sTime)
+          ?? DateHelper.formattedRunDateFromString(date: sTime),
+        let endDate = Utilities.getDateFromString(dateString: eTime)
+          ?? DateHelper.formattedRunDateFromString(date: eTime)
+      else { return false }
+
+      let stringStartDate = LineChartCell.formatter.string(from: startDate)
+      let stringEndDate = LineChartCell.formatter.string(from: endDate)
+      let attributedText = self.getSchedulesAttributedText(
+        stringStartDate: stringStartDate,
+        stringEndDate: stringEndDate
+      )
+
+      labelAxisValue.attributedText = attributedText
+
+      self.handleRunsForDate(startDate: startDate, endDate: endDate, runs: frequencySet)
+      return true
+    } else {
+      self.graphView.reloadData()
+      return false
+    }
+  }
   // MARK: - Data Calculation
 
   func handleDaysOfMonthForDate(date: Date) {
