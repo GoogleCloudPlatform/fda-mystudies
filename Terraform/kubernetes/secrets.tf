@@ -27,6 +27,13 @@ locals {
     "study-meta-data"   = "fda_hphc"
     "user-registration" = "mystudies_userregistration"
   }
+  # App codes for auth server authentication.
+  auth_server_app_codes = [
+    "ma", # Mobile App
+    "urs", # User Registration Server
+    "rs", # Response Server
+    "wcp", # Web Config Portal
+  ]
 }
 
 
@@ -46,7 +53,9 @@ data "google_secret_manager_secret_version" "secrets" {
       "my-studies-email-password",
     ],
     formatlist("%s-db-user", local.apps),
-    formatlist("%s-db-password", local.apps))
+    formatlist("%s-db-password", local.apps),
+    formatlist("mystudies-%s-client-id", local.auth_server_app_codes),
+    formatlist("mystudies-%s-secret-key", local.auth_server_app_codes))
   )
 }
 
@@ -65,6 +74,7 @@ resource "kubernetes_secret" "apps_db_credentials" {
   }
 }
 
+# TODO: Remove this in favor of response_server_secrets once application code start using response_server_secrets.
 resource "kubernetes_secret" "response_server_credentials" {
   metadata {
     name = "response-server-credentials"
@@ -75,6 +85,43 @@ resource "kubernetes_secret" "response_server_credentials" {
     REGISTRATION_CLIENT_SECRET = data.google_secret_manager_secret_version.secrets["my-studies-registration-client-secret"].secret_data
     WCP_USER                   = data.google_secret_manager_secret_version.secrets["my-studies-wcp-user"].secret_data
     WCP_PASS                   = data.google_secret_manager_secret_version.secrets["my-studies-wcp-pass"].secret_data
+  }
+}
+
+# App-specific secrets.
+resource "kubernetes_secret" "response_server_secrets" {
+  metadata {
+    name = "response-server-secrets"
+  }
+
+  data = {
+    REGISTRATION_CLIENT_ID     = data.google_secret_manager_secret_version.secrets["mystudies-urs-client-id"].secret_data
+    REGISTRATION_CLIENT_SECRET = data.google_secret_manager_secret_version.secrets["mystudies-urs-secret-key"].secret_data
+    WCP_USER                   = data.google_secret_manager_secret_version.secrets["my-studies-wcp-user"].secret_data
+    WCP_PASS                   = data.google_secret_manager_secret_version.secrets["my-studies-wcp-pass"].secret_data
+  }
+}
+
+resource "kubernetes_secret" "user_registration_secrets" {
+  metadata {
+    name = "user-registration-secrets"
+  }
+
+  data = {
+    CLIENT_ID       = data.google_secret_manager_secret_version.secrets["mystudies-urs-client-id"].secret_data
+    SECRET_KEY      = data.google_secret_manager_secret_version.secrets["mystudies-urs-secret-key"].secret_data
+    GCP_BUCKET_NAME = "heroes-hat-dev-data-my-study-consent-documents"
+  }
+}
+
+resource "kubernetes_secret" "study_meta_data_secrets" {
+  metadata {
+    name = "study-meta-data-secrets"
+  }
+
+  data = {
+    CLIENT_ID       = data.google_secret_manager_secret_version.secrets["mystudies-wcp-client-id"].secret_data
+    SECRET_KEY      = data.google_secret_manager_secret_version.secrets["mystudies-wcp-secret-key"].secret_data
   }
 }
 
