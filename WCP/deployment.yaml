@@ -63,7 +63,7 @@ spec:
           - containerPort: 8080
           readinessProbe:
             httpGet:
-              path: /fdahpStudyDesigner/appDetails.do
+              path: /studybuilder/appDetails.do
               port: 8080
         - name: cloudsql-proxy 
           image: gcr.io/cloudsql-docker/gce-proxy:latest 
