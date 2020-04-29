@@ -161,11 +161,11 @@ public class ActivityResponseProcessorServiceImpl implements ActivityResponsePro
       }
     }
     if (scoreSumResponseBean == null) {
-      logger.info("Didn't find scoreSumResponseBean. Try copy from metadata.");
+      // Try to create a response for the dummy sum question by copying from metadata.
       scoreSumResponseBean =
           maybeCreateDummySumResponseFromMetadata(activityMetadataBeanFromWCP);
       if (scoreSumResponseBean != null) {
-        logger.info("Copied from metadata.");
+        // If copying is successful, add it to the list of responses.
         questionnaireResponses.add(scoreSumResponseBean);
       }
     }
@@ -186,7 +186,7 @@ public class ActivityResponseProcessorServiceImpl implements ActivityResponsePro
               .collect(Collectors.<QuestionnaireActivityStepsBean>toList());
     // Return null if dummy sum question is not found from metadata.
     if (metadataMatchList == null || metadataMatchList.isEmpty()) return null;
-    // Otherwise, create a new entry.
+    // Otherwise, create a new entry and copy contents from metadata.
     QuestionnaireActivityStepsBean responseBean = new QuestionnaireActivityStepsBean();
     for (QuestionnaireActivityStepsBean metadataMatchBean : metadataMatchList) {
       responseBean.setResultType(metadataMatchBean.getResultType());
