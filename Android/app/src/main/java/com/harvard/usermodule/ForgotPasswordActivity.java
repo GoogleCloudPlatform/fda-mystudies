@@ -182,6 +182,7 @@ public class ForgotPasswordActivity extends AppCompatActivity
       Toast.makeText(ForgotPasswordActivity.this, errormsg, Toast.LENGTH_SHORT).show();
       AppController.getHelperSessionExpired(ForgotPasswordActivity.this, errormsg);
     } else if (statusCode.equalsIgnoreCase("403")) {
+      Toast.makeText(this, errormsg, Toast.LENGTH_LONG).show();
       Intent intent = new Intent(ForgotPasswordActivity.this, VerificationStepActivity.class);
       intent.putExtra("from", FROM);
       intent.putExtra("type", "ForgotPasswordActivity");
