@@ -1,7 +1,13 @@
-# FDA MyStudies Terraform Infrastructure
+# Deploy FDA MyStudies using Terraform
 
-These directories define the entire GCP infrastructure app to run the FDA
-MyStudies application.
+These directories define the entire infrastructure necessary to run FDA MyStudies on Google Cloud.
+
+This Terraform deployment is an adaptation of Google Cloud's [HIPAA-aligned architecture](https://cloud.google.com/solutions/architecture-hipaa-aligned-project). This approach to project 
+configuration and deployment is explained in the ["Setting up a HIPAA-aligned project"](https://cloud.google.com/solutions/setting-up-a-hipaa-aligned-project) solution guide.
+
+This document provides instructions for deploying FDA MyStudies on Google Cloud in using
+infrastrucutre-as-code in approximately 1 hour. A video tutorial that walks the user through
+these steps is available upon request.
 
 ## Prerequisites
 
