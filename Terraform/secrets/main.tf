@@ -15,6 +15,11 @@
 # This folder contains Terraform resources to for secrets stored in Google Cloud Secret Manager.
 
 terraform {
+  required_version = "~> 0.12.0"
+  required_providers {
+    google      = "~> 3.0"
+    google-beta = "~> 3.0"
+  }
   backend "gcs" {
     bucket = "heroes-hat-dev-terraform-state-08679"
     prefix = "secrets"
