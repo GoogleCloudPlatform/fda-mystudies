@@ -160,10 +160,45 @@ public class ActivityResponseProcessorServiceImpl implements ActivityResponsePro
         plugInMetadataToResponses(activityMetadataBeanFromWCP, responseBean, false);
       }
     }
+    // We might want to hide the dummy sum question from users with conditional branching, which will cause response for it
+    // to be absent.
+    if (scoreSumResponseBean == null) {
+      // Try to create a response for the dummy sum question by copying from metadata.
+      scoreSumResponseBean =
+          maybeCreateDummySumResponseFromMetadata(activityMetadataBeanFromWCP);
+      if (scoreSumResponseBean != null) {
+        // If copying is successful, add it to the list of responses.
+        questionnaireResponses.add(scoreSumResponseBean);
+      }
+    }
     if (scoreSumResponseBean != null) {
       // Iterate through responses for a second pass to calculate the score sum if the dummy sum question presents.
       calculateScoreSum(questionnaireResponses,scoreSumResponseBean);
     }
+  }
+
+  // Returns an empty response with metadata copied from the dummy sum question, or null if the dummy sum question is not found in metadata.
+  private static QuestionnaireActivityStepsBean maybeCreateDummySumResponseFromMetadata(
+      List<QuestionnaireActivityStepsBean> activityMetadataBeanFromWCP) {
+    List<QuestionnaireActivityStepsBean> metadataMatchList = 
+          activityMetadataBeanFromWCP
+              .stream()
+              .filter(QuestionnaireActivityStepsBeanPredicate.questionKeyMatch(
+                  AppConstants.DUMMY_SUM_QUESTION_KEY))
+              .collect(Collectors.<QuestionnaireActivityStepsBean>toList());
+    // Return null if dummy sum question is not found from metadata.
+    if (metadataMatchList == null || metadataMatchList.size() != 1) return null;
+    // Otherwise, create a new entry and copy contents from metadata.
+    QuestionnaireActivityStepsBean responseBean = new QuestionnaireActivityStepsBean();
+    QuestionnaireActivityStepsBean metadataMatchBean = metadataMatchList.get(0);
+    responseBean.setResultType(metadataMatchBean.getResultType());
+    responseBean.setKey(metadataMatchBean.getKey());
+    responseBean.setSkippable(metadataMatchBean.getSkippable());
+    responseBean.setRepeatable(metadataMatchBean.getRepeatable());
+    responseBean.setSkipped(false);
+    responseBean.setText(metadataMatchBean.getText());
+    responseBean.setTitle(metadataMatchBean.getTitle());
+    return responseBean;
   }
 
   // Converts one response value to double in a best-effort manner. Returns 0 if conversion fails.
