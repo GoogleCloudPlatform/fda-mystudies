@@ -29,9 +29,9 @@ locals {
   }
   # App codes for auth server authentication.
   auth_server_app_codes = [
-    "ma", # Mobile App
+    "ma",  # Mobile App
     "urs", # User Registration Server
-    "rs", # Response Server
+    "rs",  # Response Server
     "wcp", # Web Config Portal
   ]
 }
@@ -120,8 +120,8 @@ resource "kubernetes_secret" "study_meta_data_secrets" {
   }
 
   data = {
-    CLIENT_ID       = data.google_secret_manager_secret_version.secrets["mystudies-wcp-client-id"].secret_data
-    SECRET_KEY      = data.google_secret_manager_secret_version.secrets["mystudies-wcp-secret-key"].secret_data
+    CLIENT_ID  = data.google_secret_manager_secret_version.secrets["mystudies-wcp-client-id"].secret_data
+    SECRET_KEY = data.google_secret_manager_secret_version.secrets["mystudies-wcp-secret-key"].secret_data
   }
 }
 

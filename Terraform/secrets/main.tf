@@ -30,10 +30,10 @@ locals {
   # Mapping from app codes to client id for auth server authentication.
   # Related logic is in auth-server-ws/src/main/java/com/google/cloud/healthcare/fdamystudies/controller/AuthenticationController.java.
   auth_server_apps = {
-    "ma" = "test_client_id_ma" # Mobile App
-    "urs" = "urs_client_id" # User Registration Server
-    "rs" = "rs_client_id" # Response Server
-    "wcp" = "wcp_client_id" # Web Config Portal
+    "ma"  = "test_client_id_ma" # Mobile App
+    "urs" = "urs_client_id"     # User Registration Server
+    "rs"  = "rs_client_id"      # Response Server
+    "wcp" = "wcp_client_id"     # Web Config Portal
   }
 }
 
