@@ -94,10 +94,10 @@ public class ApplicationPropertyConfiguration {
   private String feedbackMailBody;
 
   @Value("${feedback.mail.subject}")
-  private String feedbackMailSuject;
+  private String feedbackMailSubject;
 
   @Value("${feedback.email}")
-  private String feedabckToEmail;
+  private String feedbackToEmail;
 
   @Value("${contactus.mail.content}")
   private String contactusMailBody;

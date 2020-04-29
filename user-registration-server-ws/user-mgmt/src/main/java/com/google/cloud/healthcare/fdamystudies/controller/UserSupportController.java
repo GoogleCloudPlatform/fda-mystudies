@@ -41,9 +41,8 @@ public class UserSupportController {
   public ResponseEntity<?> feedbackDetails(
       @RequestBody FeedbackReqBean reqBean, @Context HttpServletResponse response) {
     logger.info("INFO: StudyMetaDataService - feedbackDetails() :: Starts");
-    Boolean isEmailSent = false;
+    boolean isEmailSent = false;
     ResponseBean responseBean = new ResponseBean();
-    ErrorBean errorBean = null;
     try {
       if (StringUtils.isNotEmpty(reqBean.getSubject())
           && StringUtils.isNotEmpty(reqBean.getBody())) {
@@ -56,23 +55,15 @@ public class UserSupportController {
             MyStudiesUserRegUtil.ErrorCodes.STATUS_102.getValue(),
             MyStudiesUserRegUtil.ErrorCodes.UNKNOWN.getValue(),
             MyStudiesUserRegUtil.ErrorCodes.INVALID_INPUT_ERROR_MSG.getValue(),
-            response);
-        errorBean = new ErrorBean();
-        errorBean.setCode(HttpStatus.BAD_REQUEST.value());
-        errorBean.setMessage(MyStudiesUserRegUtil.ErrorCodes.INVALID_INPUT_ERROR_MSG.getValue());
-        return new ResponseEntity<>(errorBean, HttpStatus.BAD_REQUEST);
+            response);        
       }
     } catch (Exception e) {
       logger.error("StudyMetaDataService - feedbackDetails() :: ERROR", e);
       MyStudiesUserRegUtil.getFailureResponse(
-          MyStudiesUserRegUtil.ErrorCodes.STATUS_104.getValue(),
-          MyStudiesUserRegUtil.ErrorCodes.UNKNOWN.getValue(),
+          MyStudiesUserRegUtil.ErrorCodes.EC_500.getValue(),
+          MyStudiesUserRegUtil.ErrorCodes.EC_500.getValue(),
           MyStudiesUserRegUtil.ErrorCodes.FAILURE.getValue(),
-          response);
-      errorBean = new ErrorBean();
-      errorBean.setCode(HttpStatus.INTERNAL_SERVER_ERROR.value());
-      errorBean.setMessage(MyStudiesUserRegUtil.ErrorCodes.FAILURE.getValue());
-      return new ResponseEntity<>(errorBean, HttpStatus.INTERNAL_SERVER_ERROR);
+          response);      
     }
     logger.info("INFO: StudyMetaDataService - feedbackDetails() :: Ends");
     return new ResponseEntity<>(responseBean, HttpStatus.OK);
@@ -85,9 +76,8 @@ public class UserSupportController {
   public ResponseEntity<?> contactUsDetails(
       @RequestBody ContactUsReqBean reqBean, @Context HttpServletResponse response) {
     logger.info("INFO: StudyMetaDataService - contactUsDetails() :: Starts");
-    Boolean isEmailSent = false;
+    boolean isEmailSent = false;
     ResponseBean responseBean = new ResponseBean();
-    ErrorBean errorBean = null;
     try {
       if (StringUtils.isNotEmpty(reqBean.getSubject())
           && StringUtils.isNotEmpty(reqBean.getBody())
@@ -107,23 +97,15 @@ public class UserSupportController {
             MyStudiesUserRegUtil.ErrorCodes.STATUS_102.getValue(),
             MyStudiesUserRegUtil.ErrorCodes.UNKNOWN.getValue(),
             MyStudiesUserRegUtil.ErrorCodes.INVALID_INPUT_ERROR_MSG.getValue(),
-            response);
-        errorBean = new ErrorBean();
-        errorBean.setCode(HttpStatus.BAD_REQUEST.value());
-        errorBean.setMessage(MyStudiesUserRegUtil.ErrorCodes.INVALID_INPUT_ERROR_MSG.getValue());
-        return new ResponseEntity<>(errorBean, HttpStatus.BAD_REQUEST);
+            response);        
       }
     } catch (Exception e) {
       logger.error("StudyMetaDataService - contactUsDetails() :: ERROR", e);
       MyStudiesUserRegUtil.getFailureResponse(
-          MyStudiesUserRegUtil.ErrorCodes.STATUS_104.getValue(),
-          MyStudiesUserRegUtil.ErrorCodes.UNKNOWN.getValue(),
+          MyStudiesUserRegUtil.ErrorCodes.EC_500.getValue(),
+          MyStudiesUserRegUtil.ErrorCodes.EC_500.getValue(),
           MyStudiesUserRegUtil.ErrorCodes.FAILURE.getValue(),
-          response);
-      errorBean = new ErrorBean();
-      errorBean.setCode(HttpStatus.INTERNAL_SERVER_ERROR.value());
-      errorBean.setMessage(MyStudiesUserRegUtil.ErrorCodes.FAILURE.getValue());
-      return new ResponseEntity<>(errorBean, HttpStatus.INTERNAL_SERVER_ERROR);
+          response);      
     }
     logger.info("INFO: StudyMetaDataService - contactUsDetails() :: Ends");
     return new ResponseEntity<>(responseBean, HttpStatus.OK);

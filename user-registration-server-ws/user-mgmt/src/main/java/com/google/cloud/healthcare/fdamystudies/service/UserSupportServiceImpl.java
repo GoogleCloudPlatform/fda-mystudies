@@ -15,7 +15,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.google.cloud.healthcare.fdamystudies.config.ApplicationPropertyConfiguration;
-import com.google.cloud.healthcare.fdamystudies.exceptions.OrchestrationException;
 import com.google.cloud.healthcare.fdamystudies.util.EmailNotification;
 import com.google.cloud.healthcare.fdamystudies.util.MyStudiesUserRegUtil;
 
@@ -29,21 +28,18 @@ public class UserSupportServiceImpl implements UserSupportService {
   @Autowired EmailNotification emailNotification;
 
   @Override
-  public Boolean feedback(String subject, String body) throws OrchestrationException {
+  public boolean feedback(String subject, String body) {
     logger.info("UserManagementProfileServiceImpl - feedback() :: Starts");
-    Map<String, String> emailMap = new HashMap<String, String>();
-    String feedbackSubject = "";
-    String dynamicContent = "";
-    String feedbackBody = "";
-    Boolean isEmailSent = false;
+    boolean isEmailSent = false;
     try {
-      feedbackSubject = appConfig.getFeedbackMailSuject() + "" + subject;
-      feedbackBody = appConfig.getFeedbackMailBody();
+      String feedbackSubject = appConfig.getFeedbackMailSubject() + subject;
+      String feedbackBody = appConfig.getFeedbackMailBody();
+      Map<String, String> emailMap = new HashMap<String, String>();
       emailMap.put("$body", body);
-      dynamicContent = MyStudiesUserRegUtil.generateEmailContent(feedbackBody, emailMap);
+      String dynamicContent = MyStudiesUserRegUtil.generateEmailContent(feedbackBody, emailMap);
       isEmailSent =
           emailNotification.sendEmailNotification(
-              feedbackSubject, dynamicContent, appConfig.getFeedabckToEmail(), null, null);
+              feedbackSubject, dynamicContent, appConfig.getFeedbackToEmail(), null, null);
     } catch (Exception e) {
       logger.error("UserManagementProfileServiceImpl - feedback() - error() ", e);
     }
@@ -52,22 +48,18 @@ public class UserSupportServiceImpl implements UserSupportService {
   }
 
   @Override
-  public Boolean contactUsDetails(String subject, String body, String firstName, String email)
-      throws OrchestrationException {
+  public boolean contactUsDetails(String subject, String body, String firstName, String email) {
     logger.info("AppMetaDataOrchestration - contactUsDetails() :: Starts");
-    Map<String, String> emailMap = new HashMap<String, String>();
-    String contactUsSubject = "";
-    String contactUsContent = "";
-    String dynamicContent = "";
-    Boolean isEmailSent = false;
+    boolean isEmailSent = false;
     try {
-      contactUsSubject = appConfig.getContactusMailSubject() + "" + subject;
-      contactUsContent = appConfig.getContactusMailBody();
+      String contactUsSubject = appConfig.getContactusMailSubject() + subject;
+      String contactUsContent = appConfig.getContactusMailBody();
+      Map<String, String> emailMap = new HashMap<String, String>();
       emailMap.put("$firstName", firstName);
       emailMap.put("$email", email);
       emailMap.put("$subject", subject);
       emailMap.put("$body", body);
-      dynamicContent = MyStudiesUserRegUtil.generateEmailContent(contactUsContent, emailMap);
+      String dynamicContent = MyStudiesUserRegUtil.generateEmailContent(contactUsContent, emailMap);
       isEmailSent =
           emailNotification.sendEmailNotification(
               contactUsSubject, dynamicContent, appConfig.getContactusToEmail(), null, null);
