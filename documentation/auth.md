@@ -89,7 +89,7 @@ _Note: Organization ID is a placeholder for future enhancements and not used for
 
 ### Participant Login
 
-![auth_mobile_login.png](images/auth_mobile_login.png "Mobile login diagram")
+<!-- ![auth_mobile_login.png](images/auth_mobile_login.png "Mobile login diagram") -->
 
 Participants (mobile app users) are authenticated through the login method of the Auth Server web service. The login flow is as follows:
 
@@ -118,13 +118,13 @@ Participants (mobile app users) are authenticated through the login method of th
 
 ### Participant Logout
 
-![auth_mobile_logout.png](images/auth_mobile_logout.png "Mobile logout diagram")
+<!-- ![auth_mobile_logout.png](images/auth_mobile_logout.png "Mobile logout diagram") -->
 
 The mobile app sends a logout request to the Auth Server. The Auth Server then retrieves the access token from the request and clears the row in the sessions table, which has the access token.
 
 ### Validate Access Token
 
-![auth_validate_token.png](images/auth_validate_token.png "Validate access token diagram")
+<!-- ![auth_validate_token.png](images/auth_validate_token.png "Validate access token diagram") -->
 
 1.  When a mobile app requests access to a protected resource, it passes the client token and access token to the resource server.
 1.  The resource server sends the access token and client token to the Auth Server for validation.
