@@ -46,7 +46,7 @@ spec:
             - name: AUTH_SERVER_URL
               value: "auth-server-np:50000"
             - name: RESPONSE_SERVER_URL
-              value: "response-serer-np:50000"
+              value: "response-server-np:50000"
             - name: CLIENT_ID
               value: "test_client_id_urs"
             - name: SECRET_KEY
