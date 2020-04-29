@@ -42,6 +42,8 @@ public class URLs {
   public static String RESEND_CONFIRMATION = "resendConfirmation";
   public static String DELETE_ACCOUNT = "deactivate";
   public static String WITHDRAW = "withdrawfromstudy";
+  public static String CONTACT_US = "contactUs";
+  public static String FEEDBACK = "feedback";
 
   // Registration Enrollment Server
   public static String UPDATE_STUDY_PREFERENCE = "updateStudyState";
@@ -61,8 +63,6 @@ public class URLs {
   public static String SPECIFIC_STUDY = "study";
   public static String STUDY_UPDATES = "studyUpdates";
   public static String ACTIVITY_LIST = "activityList";
-  public static String CONTACT_US = "contactUs";
-  public static String FEEDBACK = "feedback";
   public static String RESOURCE_LIST = "resources";
   public static String NOTIFICATIONS = "notifications";
   public static String DASHBOARD_INFO = "studyDashboard";
