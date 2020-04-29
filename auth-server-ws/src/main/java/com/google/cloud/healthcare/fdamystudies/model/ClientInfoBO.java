@@ -26,12 +26,10 @@ public class ClientInfoBO implements Serializable {
 
   private static final long serialVersionUID = 8438026223131644104L;
 
-  @Id
-  @Column(name = "client_info_id")
-  @GeneratedValue(strategy = GenerationType.AUTO)
-  private Integer clientInfoId;
+  @Id private Integer clientInfoId;
 
   @Column private String clientId;
   @Column private String secretKey;
   @Column private String appCode;
 }
+
