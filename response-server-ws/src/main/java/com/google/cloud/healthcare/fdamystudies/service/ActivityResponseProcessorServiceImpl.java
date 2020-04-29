@@ -160,6 +160,8 @@ public class ActivityResponseProcessorServiceImpl implements ActivityResponsePro
         plugInMetadataToResponses(activityMetadataBeanFromWCP, responseBean, false);
       }
     }
+    // We might want to hide the dummy sum question from users with conditional branching, which will cause response for it
+    // to be absent.
     if (scoreSumResponseBean == null) {
       // Try to create a response for the dummy sum question by copying from metadata.
       scoreSumResponseBean =
@@ -185,18 +187,17 @@ public class ActivityResponseProcessorServiceImpl implements ActivityResponsePro
                   AppConstants.DUMMY_SUM_QUESTION_KEY))
               .collect(Collectors.<QuestionnaireActivityStepsBean>toList());
     // Return null if dummy sum question is not found from metadata.
-    if (metadataMatchList == null || metadataMatchList.isEmpty()) return null;
+    if (metadataMatchList == null || metadataMatchList.size() != 1) return null;
     // Otherwise, create a new entry and copy contents from metadata.
     QuestionnaireActivityStepsBean responseBean = new QuestionnaireActivityStepsBean();
-    for (QuestionnaireActivityStepsBean metadataMatchBean : metadataMatchList) {
-      responseBean.setResultType(metadataMatchBean.getResultType());
-      responseBean.setKey(metadataMatchBean.getKey());
-      responseBean.setSkippable(metadataMatchBean.getSkippable());
-      responseBean.setRepeatable(metadataMatchBean.getRepeatable());
-      responseBean.setSkipped(false);
-      responseBean.setText(metadataMatchBean.getText());
-      responseBean.setTitle(metadataMatchBean.getTitle());
-    }
+    QuestionnaireActivityStepsBean metadataMatchBean = metadataMatchList.get(0);
+    responseBean.setResultType(metadataMatchBean.getResultType());
+    responseBean.setKey(metadataMatchBean.getKey());
+    responseBean.setSkippable(metadataMatchBean.getSkippable());
+    responseBean.setRepeatable(metadataMatchBean.getRepeatable());
+    responseBean.setSkipped(false);
+    responseBean.setText(metadataMatchBean.getText());
+    responseBean.setTitle(metadataMatchBean.getTitle());
     return responseBean;
   }
 
