@@ -1,4 +1,4 @@
-# Platform Architecture
+# FDA MyStudies Architecture
 
 ## Introduction
 
