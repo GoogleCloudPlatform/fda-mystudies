@@ -43,6 +43,7 @@ public class FilterActivity extends AppCompatActivity {
   private AppCompatTextView mClosedLabel;
   private AppCompatTextView mUpcomingLabel;
   private AppCompatTextView mParticipationStatusLabel;
+  private RelativeLayout mParticipationStatusLayout;
   private AppCompatTextView mInProgressLabel;
   private AppCompatTextView mYettoJoinLabel;
   private AppCompatTextView mBookmarkedLabel;
@@ -125,6 +126,7 @@ public class FilterActivity extends AppCompatActivity {
     mClosedLabel = (AppCompatTextView) findViewById(R.id.mClosedLabel);
     mUpcomingLabel = (AppCompatTextView) findViewById(R.id.mUpcomingLabel);
     mParticipationStatusLabel = (AppCompatTextView) findViewById(R.id.mParticipationStatusLabel);
+    mParticipationStatusLayout = findViewById(R.id.mParticipationStatusLayout);
     mInProgressLabel = (AppCompatTextView) findViewById(R.id.mInProgressLabel);
     mYettoJoinLabel = (AppCompatTextView) findViewById(R.id.mYettoJoinLabel);
     mBookmarkedLabel = (AppCompatTextView) findViewById(R.id.mBookmarkedLabel);
@@ -176,6 +178,7 @@ public class FilterActivity extends AppCompatActivity {
 
   private void disableParticipationStatusBtn() {
     mParticipationStatusLabel.setVisibility(View.GONE);
+    mParticipationStatusLayout.setVisibility(View.GONE);
     mInProgressLayout.setVisibility(View.GONE);
     mYettoJoinLayout.setVisibility(View.GONE);
     mCompletedLayout.setVisibility(View.GONE);
@@ -186,6 +189,7 @@ public class FilterActivity extends AppCompatActivity {
 
   private void enableParticipationStatusBtn() {
     mParticipationStatusLabel.setVisibility(View.VISIBLE);
+    mParticipationStatusLayout.setVisibility(View.VISIBLE);
     mInProgressLayout.setVisibility(View.VISIBLE);
     mYettoJoinLayout.setVisibility(View.VISIBLE);
     mCompletedLayout.setVisibility(View.VISIBLE);
