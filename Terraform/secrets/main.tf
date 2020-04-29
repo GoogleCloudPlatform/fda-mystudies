@@ -27,20 +27,6 @@ terraform {
 }
 
 locals {
-  apps = [
-    "auth-server",
-    "response-server",
-    "study-designer",
-    "study-meta-data",
-    "user-registration",
-  ]
-  apps_db_names = {
-    "auth-server"       = "auth_server"
-    "response-server"   = "mystudies_response_server"
-    "study-designer"    = "fda_hphc"
-    "study-meta-data"   = "fda_hphc"
-    "user-registration" = "mystudies_userregistration"
-  }
   # Mapping from app codes to client id for auth server authentication.
   # Related logic is in auth-server-ws/src/main/java/com/google/cloud/healthcare/fdamystudies/controller/AuthenticationController.java.
   auth_server_apps = {
