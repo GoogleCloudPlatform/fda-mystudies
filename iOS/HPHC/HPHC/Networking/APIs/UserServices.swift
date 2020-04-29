@@ -145,6 +145,7 @@ class UserServices: NSObject {
     let header =
       [
         "userId": User.currentUser.userId,
+        "emailId": User.currentUser.emailId ?? "",
       ] as [String: String]
     let method = RegistrationMethods.verifyEmailId.method
     self.sendRequestWith(method: method, params: param, headers: header)
@@ -285,6 +286,33 @@ class UserServices: NSObject {
     let method = RegistrationMethods.userPreferences.method
 
     self.sendRequestWith(method: method, params: nil, headers: headerParams)
+  }
+
+  /// Creates a request to send `User` feedback
+  /// - Parameter delegate: Class object to receive response
+  func sendUserFeedback(delegate: NMWebServiceDelegate) {
+    self.delegate = delegate
+    let method = RegistrationMethods.feedback.method
+    let params = [
+      kFeedbackBody: FeedbackDetail.feedback,
+      kFeedbackSubject: FeedbackDetail.subject,
+    ]
+    self.sendRequestWith(method: method, params: params, headers: nil)
+
+  }
+
+  /// Creates a request to send ContactUs Request
+  /// - Parameter delegate: Class object to receive response
+  func sendUserContactUsRequest(delegate: NMWebServiceDelegate) {
+    self.delegate = delegate
+    let method = RegistrationMethods.contactUs.method
+    let params = [
+      kFeedbackBody: ContactUsFields.message,
+      kFeedbackSubject: ContactUsFields.subject,
+      kContactusEmail: ContactUsFields.email,
+      kContactusFirstname: ContactUsFields.firstName,
+    ]
+    self.sendRequestWith(method: method, params: params, headers: nil)
   }
 
   /// Creates a request to update `Activity` status
