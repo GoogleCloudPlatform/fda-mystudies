@@ -6,7 +6,12 @@ WORKDIR /app/
 RUN mvn package
 RUN ls /app/target
 
-# For gcsfuse
+FROM tomcat:9.0.33-jdk11-openjdk
+
+# Creates mounted path for gcsfuse
+RUN mkdir /usr/local/tomcat/webapps/fdaResources
+
+# Installs gcsfuse
 ENV GCSFUSE_REPO gcsfuse-stretch
 RUN apt-get update && apt-get install --yes --no-install-recommends \
     ca-certificates \
@@ -19,6 +24,5 @@ RUN apt-get update && apt-get install --yes --no-install-recommends \
   && apt-get install --yes gcsfuse \
   && apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
-FROM tomcat:9.0.33-jdk11-openjdk
 COPY --from=maven_builder /app/target/studybuilder.war /usr/local/tomcat/webapps/
 CMD ["catalina.sh","run"]
