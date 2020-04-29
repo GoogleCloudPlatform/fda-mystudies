@@ -33,6 +33,7 @@ import com.google.cloud.healthcare.fdamystudies.model.AppInfoDetailsBO;
 import com.google.cloud.healthcare.fdamystudies.model.AuthInfoBO;
 import com.google.cloud.healthcare.fdamystudies.model.LoginAttemptsBO;
 import com.google.cloud.healthcare.fdamystudies.model.UserDetailsBO;
+import com.google.cloud.healthcare.fdamystudies.util.AppConstants;
 import com.google.cloud.healthcare.fdamystudies.util.EmailNotification;
 import com.google.cloud.healthcare.fdamystudies.util.ErrorCode;
 import com.google.cloud.healthcare.fdamystudies.util.MyStudiesUserRegUtil;
@@ -50,6 +51,7 @@ public class UserManagementProfileServiceImpl implements UserManagementProfileSe
   @Autowired CommonDao commonDao;
 
   @Autowired private UserManagementUtil userManagementUtil;
+  @Autowired CommonService commonService;
 
   private static final Logger logger =
       LoggerFactory.getLogger(UserManagementProfileServiceImpl.class);
@@ -244,6 +246,7 @@ public class UserManagementProfileServiceImpl implements UserManagementProfileSe
         if (deactivateAcctBean != null
             && deactivateAcctBean.getDeleteData() != null
             && !deactivateAcctBean.getDeleteData().isEmpty()) {
+
           for (StudyReqBean studyReqBean : deactivateAcctBean.getDeleteData()) {
             studyBean = new WithdrawFromStudyBean();
             participantId = commonDao.getParticicpantId(userDetailsId, studyReqBean.getStudyId());
@@ -256,6 +259,49 @@ public class UserManagementProfileServiceImpl implements UserManagementProfileSe
             retVal =
                 userManagementUtil.withdrawParticipantFromStudy(
                     studyBean.getParticipantId(), studyBean.getStudyId(), studyBean.getDelete());
+            if (studyReqBean.getDelete().equalsIgnoreCase(AppConstants.FALSE_STR)) {
+              commonService.createAuditLog(
+                  userId,
+                  "Data-retention setting captured on withdrawal.",
+                  "Based on participant choice/study setting, the data retention setting upon withdrawal from study is read as Retain",
+                  AppConstants.AUDIT_LOG_MOBILE_APP_CLIENT_ID,
+                  studyBean.getParticipantId(),
+                  studyBean.getStudyId(),
+                  AppConstants.PARTICIPANT_LEVEL_ACCESS);
+            } else {
+              commonService.createAuditLog(
+                  userId,
+                  "Data-retention setting captured on withdrawal.",
+                  "Based on participant choice/study setting, the data retention setting upon withdrawal from study is read as Delete",
+                  AppConstants.AUDIT_LOG_MOBILE_APP_CLIENT_ID,
+                  studyBean.getParticipantId(),
+                  studyBean.getStudyId(),
+                  AppConstants.PARTICIPANT_LEVEL_ACCESS);
+            }
+
+            if (retVal.equalsIgnoreCase(MyStudiesUserRegUtil.ErrorCodes.SUCCESS.getValue())) {
+              if (studyReqBean.getDelete().equalsIgnoreCase(AppConstants.TRUE_STR)) {
+                commonService.createAuditLog(
+                    userId,
+                    "Data deleted for participant ",
+                    "Based on participant choice/study setting, the data retention setting for participant withdrawing from study is Delete and the participant's study related data was deleted or nullified from the Participant Datastore.",
+                    AppConstants.AUDIT_LOG_MOBILE_APP_CLIENT_ID,
+                    studyBean.getParticipantId(),
+                    studyBean.getStudyId(),
+                    AppConstants.PARTICIPANT_LEVEL_ACCESS);
+              }
+            } else {
+              if (studyReqBean.getDelete().equalsIgnoreCase(AppConstants.TRUE_STR)) {
+                commonService.createAuditLog(
+                    userId,
+                    "Data deletion failed ",
+                    "Based on participant choice/study setting, the data retention setting for participant withdrawing from study is Delete but the participant's study related data could not be completely deleted or nullified from the Participant Datastore.",
+                    AppConstants.AUDIT_LOG_MOBILE_APP_CLIENT_ID,
+                    studyBean.getParticipantId(),
+                    studyBean.getStudyId(),
+                    AppConstants.PARTICIPANT_LEVEL_ACCESS);
+              }
+            }
           }
         } else {
           retVal = MyStudiesUserRegUtil.ErrorCodes.SUCCESS.getValue();

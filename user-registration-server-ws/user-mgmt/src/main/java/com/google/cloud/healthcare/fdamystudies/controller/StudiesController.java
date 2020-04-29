@@ -44,11 +44,15 @@ public class StudiesController {
           || StringUtils.isBlank(studyMetadataBean.getAppId())
           || StringUtils.isBlank(studyMetadataBean.getStudyId())
           || StringUtils.isBlank(studyMetadataBean.getOrgId())) {
-        return new ResponseEntity<>(errorBean, HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(
+            new ErrorBean(ErrorCode.EC_400.code(), ErrorCode.EC_400.errorMessage()),
+            HttpStatus.BAD_REQUEST);
       }
       errorBean = studiesServices.saveStudyMetadata(studyMetadataBean);
       if (errorBean.getCode() != ErrorCode.EC_200.code()) {
-        return new ResponseEntity<>(errorBean, HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(
+            new ErrorBean(ErrorCode.EC_400.code(), ErrorCode.EC_400.errorMessage()),
+            HttpStatus.BAD_REQUEST);
       }
 
     } catch (Exception e) {
@@ -61,7 +65,7 @@ public class StudiesController {
   }
 
   @PostMapping("/sendNotification")
-  public ResponseEntity<?> SendNotification(@RequestBody NotificationForm notificationForm) {
+  public ResponseEntity<?> sendNotification(@RequestBody NotificationForm notificationForm) {
     logger.info("StudiesController - SendNotification() : starts");
     ErrorBean errorBean = null;
     try {

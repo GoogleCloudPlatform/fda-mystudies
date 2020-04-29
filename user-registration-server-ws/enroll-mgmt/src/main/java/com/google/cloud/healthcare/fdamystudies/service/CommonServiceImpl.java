@@ -30,8 +30,9 @@ import com.google.cloud.healthcare.fdamystudies.dao.CommonDao;
 import com.google.cloud.healthcare.fdamystudies.exception.InvalidRequestException;
 import com.google.cloud.healthcare.fdamystudies.exception.SystemException;
 import com.google.cloud.healthcare.fdamystudies.exception.UnAuthorizedRequestException;
-import com.google.cloud.healthcare.fdamystudies.model.ActivityLogBO;
+import com.google.cloud.healthcare.fdamystudies.model.AuditLogBo;
 import com.google.cloud.healthcare.fdamystudies.model.UserDetailsBO;
+import com.google.cloud.healthcare.fdamystudies.repository.AuditLogRepository;
 import com.google.cloud.healthcare.fdamystudies.util.AppConstants;
 
 @Service
@@ -42,6 +43,8 @@ public class CommonServiceImpl implements CommonService {
   @Autowired private ApplicationPropertyConfiguration appConfig;
 
   @Autowired CommonDao commonDao;
+
+  @Autowired private AuditLogRepository auditLogRepository;
 
   private static Logger logger = LoggerFactory.getLogger(CommonServiceImpl.class);
 
@@ -91,10 +94,10 @@ public class CommonServiceImpl implements CommonService {
   }
 
   @Override
-  public List<ActivityLogBO> createActivityLogList(
+  public List<AuditLogBo> createActivityLogList(
       String userId, String activityName, List<String> activityDescList) {
     logger.info("CommonServiceImpl createActivityLogList() - starts ");
-    List<ActivityLogBO> activityLogBOList = new LinkedList<>();
+    List<AuditLogBo> activityLogBOList = new LinkedList<>();
     if (!StringUtils.isBlank(userId)
         && !StringUtils.isBlank(activityName)
         && !CollectionUtils.isEmpty(activityDescList)) {
@@ -109,23 +112,40 @@ public class CommonServiceImpl implements CommonService {
   }
 
   @Override
-  public ActivityLogBO createActivityLog(String userId, String activityName, String activtyDesc) {
-    logger.info("CommonServiceImpl createActivityLog() - starts ");
-    ActivityLogBO activityLog = new ActivityLogBO();
-    if (!StringUtils.isBlank(userId)
-        && !StringUtils.isBlank(activityName)
-        && !StringUtils.isBlank(activtyDesc)) {
-      try {
-        activityLog.setAuthUserId(userId);
-        activityLog.setActivityName(activityName);
-        activityLog.setActivtyDesc(activtyDesc);
-        activityLog.setActivityDateTime(LocalDateTime.now());
-        commonDao.createActivityLog(userId, activityName, activtyDesc);
-      } catch (Exception e) {
-        logger.error("CommonServiceImpl createActivityLog() - error ", e);
-      }
+  public AuditLogBo createAuditLog(
+      String userId,
+      String activityName,
+      String activtyDesc,
+      String clientId,
+      String participantId,
+      String studyId,
+      String accessLevel) {
+    logger.info("CommonServiceImpl createActivityLog() - starts");
+    AuditLogBo activityLog = new AuditLogBo();
+    try {
+      activityLog.setAuthUserId(
+          (userId == null || userId.isEmpty()) ? AppConstants.NOT_APPLICABLE : userId);
+      activityLog.setServerClientId(
+          (clientId == null || clientId.isEmpty()) ? AppConstants.NOT_APPLICABLE : clientId);
+      activityLog.setAccessLevel(
+          (accessLevel == null || accessLevel.isEmpty())
+              ? AppConstants.NOT_APPLICABLE
+              : accessLevel);
+      activityLog.setParticipantId(
+          (participantId == null || participantId.isEmpty())
+              ? AppConstants.NOT_APPLICABLE
+              : participantId);
+      activityLog.setStudyId(
+          (studyId == null || studyId.isEmpty()) ? AppConstants.NOT_APPLICABLE : studyId);
+      activityLog.setActivityName(activityName);
+      activityLog.setActivtyDesc(activtyDesc);
+      activityLog.setActivityDateTime(LocalDateTime.now());
+      auditLogRepository.save(activityLog);
+
+    } catch (Exception e) {
+      logger.error("CommonServiceImpl createActivityLog() - error ", e);
     }
-    logger.info("CommonServiceImpl createActivityLog() - ends ");
+    logger.info("CommonServiceImpl createActivityLog() - ends");
     return activityLog;
   }
 
@@ -169,5 +189,19 @@ public class CommonServiceImpl implements CommonService {
       throw new SystemException();
     }
     return false;
+  }
+
+  @Override
+  public List<AuditLogBo> saveMultipleAuditLogs(List<AuditLogBo> activityLogs) {
+    logger.info("CommonServiceImpl saveMultipleActivityLogs() - starts ");
+    if (activityLogs != null && !CollectionUtils.isEmpty(activityLogs)) {
+      try {
+        auditLogRepository.saveAll(activityLogs);
+      } catch (Exception e) {
+        logger.error("CommonServiceImpl saveMultipleActivityLogs() - error ", e);
+      }
+    }
+    logger.info("CommonServiceImpl saveMultipleActivityLogs() - ends ");
+    return activityLogs;
   }
 }

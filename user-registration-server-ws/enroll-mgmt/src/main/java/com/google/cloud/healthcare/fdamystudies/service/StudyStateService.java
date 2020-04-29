@@ -32,6 +32,6 @@ public interface StudyStateService {
       throws SystemException, InvalidUserIdException /*, NoStudyEnrolledException*/;
 
   public WithDrawFromStudyRespBean withdrawFromStudy(
-      String participantId, String studyId, boolean delete)
+      String participantId, String studyId, boolean delete, String userId)
       throws UnAuthorizedRequestException, InvalidRequestException, SystemException;
 }

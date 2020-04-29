@@ -70,11 +70,11 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
   @Autowired private EmailNotification emailNotification;
 
-  @Autowired private UserRepository userRepository;
-
   @Autowired private LoginAttemptRepository loginAttemptRepo;
 
   @Autowired private PasswordHistoryRepository passHistoryRepo;
+
+  @Autowired private AuditLogService activityLogService;
 
   public DaoUserBO loadUserByEmailIdAndAppIdAndOrgIdAndAppCode(
       String userName, String appId, String orgId, String appCode) throws SystemException {
@@ -217,9 +217,27 @@ public class UserDetailsServiceImpl implements UserDetailsService {
           session.save(sessionDetails);
           value = 1; // valid session
         } else {
+          activityLogService.createAuditLog(
+              "",
+              AppConstants.AUDIT_EVENT_ACCESS_TOKEN_EXPIRED_NAME,
+              String.format(
+                  AppConstants.AUDIT_EVENT_ACCESS_TOKEN_EXPIRED_DESC, authInfo.getUserId()),
+              AppConstants.AUDIT_LOG_PARTICIPANT_DATASTORE_CLIENT_ID,
+              "",
+              "",
+              "");
           value = 0; // session expired
         }
       } else {
+        activityLogService.createAuditLog(
+            "",
+            AppConstants.AUDIT_EVENT_ACCESS_TOKEN_NOT_VALID_NAME,
+            String.format(
+                AppConstants.AUDIT_EVENT_ACCESS_TOKEN_NOT_VALID_DESC, authInfo.getUserId()),
+            AppConstants.AUDIT_LOG_PARTICIPANT_DATASTORE_CLIENT_ID,
+            "",
+            "",
+            "");
         value = 2; // Invalid access token or access token changed
       }
     } catch (Exception e) {
@@ -247,7 +265,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
       if (sessionDetails != null) {
         if (sessionDetails.getUserId().equals(userId)) {
 
-          DaoUserBO userInfo = userRepository.findByUserId(userId);
+          DaoUserBO userInfo = userRepo.findByUserId(userId);
 
           if (userInfo != null) {
             if (appCode.equals(userInfo.getAppCode())) {
@@ -298,12 +316,12 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         DaoUserBO userDetails = null;
         if ("MA".equals(checkCredentialRequest.getAppCode())) {
           userDetails =
-              userRepository.findByEmailIdAndAppIdAndOrgIdAndAppCode(
+              userRepo.findByEmailIdAndAppIdAndOrgIdAndAppCode(
                   checkCredentialRequest.getEmailId(), checkCredentialRequest.getAppId(),
                   checkCredentialRequest.getOrgId(), checkCredentialRequest.getAppCode());
         } else {
           userDetails =
-              userRepository.findByEmailIdAndAppCode(
+              userRepo.findByEmailIdAndAppCode(
                   checkCredentialRequest.getEmailId(), checkCredentialRequest.getAppCode());
         }
 
@@ -641,6 +659,51 @@ public class UserDetailsServiceImpl implements UserDetailsService {
       logger.error("UserDetailsServiceImpl savePasswordHistory() - error() ", e);
     }
     logger.info("UserDetailsServiceImpl savePasswordHistory() - ends");
+    return message;
+  }
+
+  @Override
+  public String sendEmailOnAccountLocking(String emailId, String appCode)
+      throws UserNotFoundException {
+    logger.info("UserDetailsServiceImpl sendEmailOnAccountLocking() - starts");
+    String message = AppConstants.FAILURE;
+
+    if (emailId != null) {
+      DaoUserBO userInfo = userRepo.findByEmailIdAndAppCode(emailId, appCode);
+      if (userInfo != null) {
+
+        String tempPassword = RandomStringUtils.randomAlphanumeric(6);
+        logger.info("tempPassword: " + tempPassword);
+
+        String encryptedPwd =
+            MyStudiesUserRegUtil.getEncryptedString(tempPassword, userInfo.getSalt());
+        userInfo.setLockedAccountTempPassword(encryptedPwd);
+        userInfo.setTempPassword(true);
+        userInfo.setLockedAccountTempPasswordExpiredDate(
+            LocalDateTime.now(ZoneId.systemDefault())
+                .plusMinutes(Long.valueOf(appConfig.getExpirationLoginAttemptsMinute())));
+        userRepo.save(userInfo);
+
+        String subject = appConfig.getLockAccountMailSubject();
+        String content = appConfig.getLockAccountMailContent();
+
+        Map<String, String> genarateEmailContentMap = new HashMap<>();
+        genarateEmailContentMap.put("$Temporary_Password", tempPassword);
+
+        String dynamicContent =
+            MyStudiesUserRegUtil.genarateEmailContent(content, genarateEmailContentMap);
+
+        boolean isSent =
+            emailNotification.sendEmailNotification(subject, dynamicContent, emailId, null, null);
+        if (isSent) {
+          message = AppConstants.SUCCESS;
+        }
+      } else {
+        logger.info("UserDetailsServiceImpl sendEmailOnAccountLocking() - ends");
+        throw new UserNotFoundException();
+      }
+    }
+    logger.info("UserDetailsServiceImpl sendEmailOnAccountLocking() - ends");
     return message;
   }
 }

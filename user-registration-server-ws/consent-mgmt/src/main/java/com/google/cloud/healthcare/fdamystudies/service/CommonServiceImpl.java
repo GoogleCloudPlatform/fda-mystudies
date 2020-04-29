@@ -21,8 +21,9 @@ import org.springframework.web.client.RestTemplate;
 import com.google.cloud.healthcare.fdamystudies.bean.BodyForProvider;
 import com.google.cloud.healthcare.fdamystudies.config.ApplicationPropertyConfiguration;
 import com.google.cloud.healthcare.fdamystudies.dao.CommonDao;
-import com.google.cloud.healthcare.fdamystudies.model.ActivityLogBO;
+import com.google.cloud.healthcare.fdamystudies.model.AuditLogBo;
 import com.google.cloud.healthcare.fdamystudies.repository.ActivityLogRepository;
+import com.google.cloud.healthcare.fdamystudies.utils.AppConstants;
 
 @Service
 public class CommonServiceImpl implements CommonService {
@@ -82,20 +83,65 @@ public class CommonServiceImpl implements CommonService {
   }
 
   @Override
-  public ActivityLogBO createActivityLog(String userId, String activityName, String activtyDesc) {
+  public AuditLogBo createActivityLog(String userId, String activityName, String activtyDesc) {
     logger.info("CommonServiceImpl createActivityLog() - starts ");
-    ActivityLogBO activityLog = new ActivityLogBO();
+    AuditLogBo activityLog = new AuditLogBo();
     try {
       activityLog.setAuthUserId(userId);
       activityLog.setActivityName(activityName);
       activityLog.setActivtyDesc(activtyDesc);
       activityLog.setActivityDateTime(LocalDateTime.now());
+      activityLog.setServerClientId(AppConstants.MOBILE_APP_CLIENT_ID);
       activityLogRepository.save(activityLog);
     } catch (Exception e) {
       logger.error("CommonServiceImpl createActivityLog() - error ", e);
     }
     logger.info("CommonServiceImpl createActivityLog() - ends ");
 
+    return activityLog;
+  }
+
+  @Override
+  public AuditLogBo createActivityLog(
+      String userId,
+      String activityName,
+      String activtyDesc,
+      String accessLevel,
+      String participantId,
+      String studyId) {
+    logger.info("CommonServiceImpl createActivityLog() - starts ");
+    AuditLogBo activityLog = new AuditLogBo();
+    try {
+      activityLog.setAuthUserId(userId);
+      activityLog.setActivityName(activityName);
+      activityLog.setActivtyDesc(activtyDesc);
+      activityLog.setActivityDateTime(LocalDateTime.now());
+      activityLog.setAccessLevel(accessLevel);
+      activityLog.setServerClientId(AppConstants.MOBILE_APP_CLIENT_ID);
+      activityLog.setParticipantId(participantId);
+      activityLog.setStudyId(studyId);
+      activityLogRepository.save(activityLog);
+    } catch (Exception e) {
+      logger.error("CommonServiceImpl createActivityLog() - error ", e);
+    }
+    logger.info("CommonServiceImpl createActivityLog() - ends ");
+
+    return activityLog;
+  }
+
+  @Override
+  public AuditLogBo createActivityLog(
+      String userId, String activityName, String activtyDesc, String accessLevel) {
+    logger.info("CommonServiceImpl createActivityLog() - starts ");
+    AuditLogBo activityLog =
+        createActivityLog(
+            userId,
+            activityName,
+            activtyDesc,
+            accessLevel,
+            AppConstants.NOT_APPLICABLE,
+            AppConstants.NOT_APPLICABLE);
+    logger.info("CommonServiceImpl createActivityLog() - ends ");
     return activityLog;
   }
 }

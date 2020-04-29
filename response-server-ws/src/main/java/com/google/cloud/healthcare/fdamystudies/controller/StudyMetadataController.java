@@ -42,6 +42,14 @@ public class StudyMetadataController {
       if (StringUtils.isBlank(studyIdToUpdate)
           || StringUtils.isBlank(studyMetadataBean.getStudyVersion())
           || StringUtils.isBlank(studyMetadataBean.getAppId())) {
+        commonService.createAuditLog(
+            null,
+            "Study metadata received failure",
+            "Study metadata received failure from Study Builder",
+            AppConstants.CLIENT_ID_STUDY_BLDR_STORE,
+            null,
+            studyIdToUpdate,
+            null);
         ErrorBean errorBean =
             AppUtil.dynamicResponse(
                 ErrorCode.EC_701.code(),
@@ -52,18 +60,25 @@ public class StudyMetadataController {
       }
 
       studyMetadataService.saveStudyMetadata(studyMetadataBean);
-      commonService.createActivityLog(
+
+      commonService.createAuditLog(
           null,
-          "Study metadata updated successfully",
-          "Study metadata successful for study with id: " + studyIdToUpdate + " .",
-          clientId);
+          "Study metadata received",
+          "Study metadata received from Study Builder and saved",
+          AppConstants.CLIENT_ID_STUDY_BLDR_STORE,
+          null,
+          studyIdToUpdate,
+          null);
       return new ResponseEntity<String>(HttpStatus.OK);
     } catch (Exception e) {
-      commonService.createActivityLog(
+      commonService.createAuditLog(
           null,
-          "Study metadata update failed",
-          "Study metadata update failed for study with id: " + studyIdToUpdate + " .",
-          clientId);
+          "Study metadata received failure",
+          "Study metadata received from Study Builder but not saved",
+          AppConstants.CLIENT_ID_STUDY_BLDR_STORE,
+          null,
+          studyIdToUpdate,
+          null);
       ErrorBean errorBean =
           AppUtil.dynamicResponse(
               ErrorCode.EC_702.code(),

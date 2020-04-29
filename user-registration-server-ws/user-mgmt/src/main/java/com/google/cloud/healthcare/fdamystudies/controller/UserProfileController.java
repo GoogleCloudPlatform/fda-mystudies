@@ -38,6 +38,7 @@ import com.google.cloud.healthcare.fdamystudies.config.ApplicationPropertyConfig
 import com.google.cloud.healthcare.fdamystudies.model.UserDetailsBO;
 import com.google.cloud.healthcare.fdamystudies.service.CommonService;
 import com.google.cloud.healthcare.fdamystudies.service.UserManagementProfileService;
+import com.google.cloud.healthcare.fdamystudies.util.AppConstants;
 import com.google.cloud.healthcare.fdamystudies.util.AppUtil;
 import com.google.cloud.healthcare.fdamystudies.util.ErrorCode;
 import com.google.cloud.healthcare.fdamystudies.util.MyStudiesUserRegUtil;
@@ -70,6 +71,16 @@ public class UserProfileController {
     try {
       userPrlofileRespBean = userManagementProfService.getParticipantInfoDetails(userId, 0, 0);
       if (userPrlofileRespBean != null) {
+        commonService.createAuditLog(
+            userId,
+            "Read operation successful for user profile info",
+            "App user's profile information read by Mobile App.  (Web Service name: userProfile) "
+                + userId
+                + " .",
+            AppConstants.AUDIT_LOG_MOBILE_APP_CLIENT_ID,
+            "",
+            "",
+            AppConstants.APP_LEVEL_ACCESS);
         userPrlofileRespBean.setMessage(
             MyStudiesUserRegUtil.ErrorCodes.SUCCESS.getValue().toLowerCase());
 
@@ -101,15 +112,35 @@ public class UserProfileController {
     try {
       errorBean = userManagementProfService.updateUserProfile(userId, user);
       if (errorBean.getCode() == ErrorCode.EC_200.code()) {
-        commonService.createActivityLog(
+        commonService.createAuditLog(
             userId,
-            "PROFILE UPDATE",
-            "User " + userId + " Profile/Preferences updated successfully.");
+            "App user profile update: success",
+            "Profile/Preferences updated successfully for app user with User ID " + userId + " .",
+            AppConstants.AUDIT_LOG_MOBILE_APP_CLIENT_ID,
+            "",
+            "",
+            AppConstants.APP_LEVEL_ACCESS);
         errorBean = new ErrorBean(HttpStatus.OK.value(), ErrorCode.EC_30.errorMessage());
       } else {
+        commonService.createAuditLog(
+            userId,
+            "App user profile update: failed ",
+            "Profile/Preferences failed to update for app user with User ID " + userId + " .",
+            AppConstants.AUDIT_LOG_MOBILE_APP_CLIENT_ID,
+            "",
+            "",
+            AppConstants.APP_LEVEL_ACCESS);
         return new ResponseEntity<>(errorBean, HttpStatus.CONFLICT);
       }
     } catch (Exception e) {
+      commonService.createAuditLog(
+          userId,
+          "App user profile update: failed ",
+          "Profile/Preferences failed to update for app user with User ID " + userId + " .",
+          AppConstants.AUDIT_LOG_MOBILE_APP_CLIENT_ID,
+          "",
+          "",
+          AppConstants.APP_LEVEL_ACCESS);
       logger.error("UserProfileController getUserProfile() - error ", e);
       return AppUtil.httpResponseForInternalServerError();
     }
@@ -135,12 +166,24 @@ public class UserProfileController {
           userManagementProfService.deActivateAcct(
               userId, deactivateAcctBean, accessToken, clientToken);
       if (message.equalsIgnoreCase(MyStudiesUserRegUtil.ErrorCodes.SUCCESS.getValue())) {
-        commonService.createActivityLog(
+        commonService.createAuditLog(
             userId,
-            "ACCOUNT DELETE(Deactivation of an user)",
-            "Account deactivated for user " + userId + ".");
+            "App user account deactivation success",
+            "User account successfully deactivated for User ID " + userId + " .",
+            AppConstants.AUDIT_LOG_MOBILE_APP_CLIENT_ID,
+            "",
+            "",
+            AppConstants.APP_LEVEL_ACCESS);
         responseBean.setMessage(MyStudiesUserRegUtil.ErrorCodes.SUCCESS.getValue().toLowerCase());
       } else {
+        commonService.createAuditLog(
+            userId,
+            "App user account deactivation failure",
+            "User account deactivation failed for User ID " + userId + " .",
+            AppConstants.AUDIT_LOG_MOBILE_APP_CLIENT_ID,
+            "",
+            "",
+            AppConstants.APP_LEVEL_ACCESS);
         MyStudiesUserRegUtil.getFailureResponse(
             MyStudiesUserRegUtil.ErrorCodes.STATUS_104.getValue(),
             MyStudiesUserRegUtil.ErrorCodes.UNKNOWN.getValue(),
@@ -149,6 +192,14 @@ public class UserProfileController {
         return null;
       }
     } catch (Exception e) {
+      commonService.createAuditLog(
+          userId,
+          "App user account deactivation failure",
+          "User account deactivation failed for User ID " + userId + " .",
+          AppConstants.AUDIT_LOG_MOBILE_APP_CLIENT_ID,
+          "",
+          "",
+          AppConstants.APP_LEVEL_ACCESS);
       logger.error("UserProfileController deactivateAccount() - error ", e);
     }
     logger.info("UserProfileController deactivateAccount() - Ends ");
@@ -189,6 +240,16 @@ public class UserProfileController {
                     appOrgInfoBean.getOrgInfoId());
           }
           if (participantDetails != null) {
+            commonService.createAuditLog(
+                participantDetails.getUserId(),
+                "Verification email: resend request received",
+                "Request received for resend of verification email, from app user with email ID "
+                    + loginBean.getEmailId()
+                    + " .",
+                AppConstants.AUDIT_LOG_MOBILE_APP_CLIENT_ID,
+                "",
+                "",
+                AppConstants.APP_LEVEL_ACCESS);
             if (participantDetails.getStatus() == 2) {
               code = RandomStringUtils.randomAlphanumeric(6);
               participantDetails.setEmailCode(code);
@@ -200,10 +261,7 @@ public class UserProfileController {
                     userManagementProfService.resendConfirmationthroughEmail(
                         appId, participantDetails.getEmailCode(), participantDetails.getEmail());
                 if (isSent == 2) {
-                  commonService.createActivityLog(
-                      null,
-                      "Requested Confirmation mail",
-                      "Confirmation mail sent to email " + loginBean.getEmailId() + ".");
+
                   responseBean.setMessage(
                       MyStudiesUserRegUtil.ErrorCodes.SUCCESS.getValue().toLowerCase());
                 }

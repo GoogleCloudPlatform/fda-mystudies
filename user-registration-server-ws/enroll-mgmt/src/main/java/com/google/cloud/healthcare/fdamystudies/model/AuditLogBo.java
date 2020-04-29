@@ -21,13 +21,13 @@ import lombok.Setter;
 @Setter
 @Getter
 @Entity
-@Table(name = "activity_log")
-public class ActivityLogBO implements Serializable {
+@Table(name = "audit_log")
+public class AuditLogBo implements Serializable {
 
   private static final long serialVersionUID = -3019529323339411129L;
 
   @Id
-  @Column(name = "activity_log_id")
+  @Column(name = "id")
   @GeneratedValue(strategy = GenerationType.AUTO)
   private Integer id;
 
@@ -37,9 +37,21 @@ public class ActivityLogBO implements Serializable {
   @Column(name = "actvity_name")
   private String activityName;
 
-  @Column(name = "activity_description")
+  @Column(name = "activity_description", columnDefinition = "VARCHAR(2000)")
   private String activtyDesc;
 
   @Column(name = "activity_date_time")
   private LocalDateTime activityDateTime;
+
+  @Column(name = "participant_id")
+  private String participantId;
+
+  @Column(name = "study_id")
+  private String studyId;
+
+  @Column(name = "access_level")
+  private String accessLevel;
+
+  @Column(name = "server_client_id")
+  private String serverClientId;
 }

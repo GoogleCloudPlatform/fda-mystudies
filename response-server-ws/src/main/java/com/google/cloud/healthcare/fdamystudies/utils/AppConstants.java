@@ -26,9 +26,6 @@ public class AppConstants {
   public static final String CREATED_RESPONSE = "Created";
   public static final String RESULT_TYPE_KEY = "resultType";
   public static final String QUESTION_ID_KEY = "key";
-  // TODO: The score sum feature should be properly implemented. This dummy question
-  // approach is a short-term workaround.
-  public static final String DUMMY_SUM_QUESTION_KEY = "_SUM";
   public static final String FIELD_PATH_ACTIVITY_ID = "metadata.activityId";
   public static final String PARTICIPANT_TOKEN_IDENTIFIER_KEY = "tokenIdentifier";
   public static final String PARTICIPANT_IDENTIFIER_KEY = "participantIdentifier";
@@ -74,4 +71,11 @@ public class AppConstants {
   public static final String DETAIL_MESSAGE = "detailMessage";
   public static final String BASIC_PREFIX = "Basic ";
   public static final String COMMA_STR = ",";
+  public static final String NOT_APPLICABLE = "NA";
+  public static final String PARTICIPANT_LEVEL_ACCESS = "Participant";
+  public static final String APP_LEVEL_ACCESS = "App User";
+  public static final String CLIENT_ID_MOBILEAPP = "FMSGCMOBAPP";
+  public static final String CLIENT_ID_PART_DATA_STORE = "FMSGCPARDTST";
+  public static final String CLIENT_ID_RESP_DATA_STORE = "FMSGCRESDTST";
+  public static final String CLIENT_ID_STUDY_BLDR_STORE = "FMSGCSTUBLDR";
 }

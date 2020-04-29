@@ -22,10 +22,10 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import com.google.cloud.healthcare.fdamystudies.config.ApplicationPropertyConfiguration;
-import com.google.cloud.healthcare.fdamystudies.model.ActivityLogBO;
+import com.google.cloud.healthcare.fdamystudies.model.AuditLogBo;
 import com.google.cloud.healthcare.fdamystudies.model.StudyInfoBO;
 import com.google.cloud.healthcare.fdamystudies.model.UserDetailsBO;
-import com.google.cloud.healthcare.fdamystudies.repository.ActivityLogRepository;
+import com.google.cloud.healthcare.fdamystudies.repository.AuditLogRepository;
 import com.google.cloud.healthcare.fdamystudies.util.AppConstants;
 
 @Repository
@@ -37,7 +37,7 @@ public class CommonDaoImpl implements CommonDao {
 
   @Autowired ApplicationPropertyConfiguration appConfig;
 
-  @Autowired private ActivityLogRepository activityLogRepository;
+  @Autowired private AuditLogRepository activityLogRepository;
 
   @Override
   public UserDetailsBO getUserInfoDetails(String userId) {
@@ -122,13 +122,13 @@ public class CommonDaoImpl implements CommonDao {
   }
 
   @Override
-  public List<ActivityLogBO> createActivityLogList(
+  public List<AuditLogBo> createActivityLogList(
       String userId, String activityName, List<String> activityDescList) {
     logger.info("CommonDaoImpl createActivityLogList() - starts ");
-    List<ActivityLogBO> activityLogList = new LinkedList<>();
+    List<AuditLogBo> activityLogList = new LinkedList<>();
     try {
       for (String activityDesc : activityDescList) {
-        ActivityLogBO activityLog = new ActivityLogBO();
+        AuditLogBo activityLog = new AuditLogBo();
         activityLog.setAuthUserId(userId);
         activityLog.setActivityName(activityName);
         activityLog.setActivtyDesc(activityDesc);
@@ -141,22 +141,5 @@ public class CommonDaoImpl implements CommonDao {
     }
     logger.info("CommonDaoImpl createActivityLogList() - ends ");
     return activityLogList;
-  }
-
-  @Override
-  public ActivityLogBO createActivityLog(String userId, String activityName, String activityDesc) {
-    logger.info("CommonDaoImpl createActivityLog() - starts ");
-    ActivityLogBO activityLog = new ActivityLogBO();
-    try {
-      activityLog.setAuthUserId(userId);
-      activityLog.setActivityName(activityName);
-      activityLog.setActivtyDesc(activityDesc);
-      activityLog.setActivityDateTime(LocalDateTime.now());
-      activityLogRepository.save(activityLog);
-    } catch (Exception e) {
-      logger.error("CommonDaoImpl createActivityLog() - error ", e);
-    }
-    logger.info("CommonDaoImpl createActivityLog() - ends ");
-    return activityLog;
   }
 }

@@ -10,11 +10,12 @@ package com.google.cloud.healthcare.fdamystudies.beans;
 
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
 @Setter
 @Getter
-public class EmailIdVerificationForm {
-
-  private String code;
-  private String emailId;
+@ToString
+public class FeedbackReqBean {
+  private String subject;
+  private String body;
 }

@@ -32,7 +32,25 @@ public class AppConstants {
       "UserRegistrationController registerUser() - ends";
   public static final boolean FALSE = false;
   public static final String USER_REGD_FAILURE = "User Registration Failure";
-  public static final String USER_REGD_FAILURE_DESC = "User Registration failed for email ";
+  public static final String USER_REGD_FAILURE_DESC =
+      "Request for account registration received from user with username ";
+
+  public static final String AUDIT_LOG_APP_USER_CREATION_PART_DATASTORE_FAILURE_NAME =
+      "App user creation failed on Participant Datastore";
+  public static final String AUDIT_LOG_APP_USER_CREATION_PART_DATASTORE_FAILURE_DESC =
+      "User creation failed on Participant Datastore for email %s after successful registration on Auth Server. Auth Server deletes user in such cases.";
+
+  public static final String AUDIT_LOG_APP_USER_CREATION_AUTH_SERVER_FAILURE_NAME =
+      "App user not created after failed registration on Auth Server";
+  public static final String AUDIT_LOG_APP_USER_CREATION_AUTH_SERVER_FAILURE_DESC =
+      "User creation failed on Participant Datastore for email %s after failed user registration on Auth Server. ";
+
+  public static final String AUDIT_LOG_APP_USER_ACTIVATION_FAILURE_NAME =
+      "App user account activation failed";
+  public static final String AUDIT_LOG_APP_USER_ACTIVATION_FAILURE_WITH_USERID_DESC =
+      "Account activation failed for app user account associated with User ID %s .";
+  public static final String AUDIT_LOG_APP_USER_ACTIVATION_FAILURE_WITHOUT_USERID_DESC =
+      "Account activation failed for app user account associated with username: %s from App ID: %s having Org ID: %s .";
   public static final String VERIFY_EMAILID_CONTROLLER_ENDS_MESSAGE =
       "VerifyEmailIdController verifyEmailId() - ends";
   public static final String CLIENT_TOKEN = "clientToken";
@@ -48,6 +66,7 @@ public class AppConstants {
 
   public static final String TRUE_STR = "true";
   public static final String ERROR_STR = "Error";
+  public static final String FALSE_STR = "false";
 
   public static final String CODE = "code";
   public static final String USER_MESSAGE = "userMessage";
@@ -70,4 +89,15 @@ public class AppConstants {
   public static final String GATEWAY = "Gateway";
 
   public static final String WITHDRAWN = "Withdrawn";
+  public static final String PARTICIPANT_LEVEL_ACCESS = "Participant";
+  public static final String APP_LEVEL_ACCESS = "App User";
+  public static final String NOT_APPLICABLE = "NA";
+  public static final String EMAIL_EXIST_ERROR_FROM_AUTH_SERVER =
+      "This email has already been used. Please try with different email address.";
+  public static final String AUDIT_LOG_MOBILE_APP_CLIENT_ID = "FMSGCMOBAPP";
+  public static final String AUDIT_LOG_AUTH_SERVER_CLIENT_ID = "FMSGCAUTHSVR";
+  public static final String AUDIT_LOG_PART_DATASTORE_CLIENT_ID = "FMSGCPARDTST";
+  public static final String USER_NOT_CREATED = "(Not created yet)";
+  public static final String AUDIT_LOG_USER_REG_ATTEMPT_FAIL =
+      "App user registration attempt failure";
 }

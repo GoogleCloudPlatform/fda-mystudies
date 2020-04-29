@@ -115,7 +115,6 @@ public class MyStudiesUserRegUtil {
     CONSENT_VERSION_REQUIRED("Consent version is required"),
     WITHDRAWN_STUDY("You are already Withdrawn from study"),
     EMAIL_NOT_EXISTS("Email Doesn't Exists"),
-    DOMAIN_NOT_WHITELISTED("Email does not belong to a whitelisted domain."),
     RESEND_EMAIL_NOT_EXISTS("Email Doesn't Exists OR Email Already Verified"),
     USER_NOT_EXISTS("User Doesn't Exists"),
     FAILURE_TO_SENT_MAIL("Oops, something went wrong. Failed to send Email"),
@@ -137,7 +136,6 @@ public class MyStudiesUserRegUtil {
         "Thanks, your email has been successfully verified! You can now proceed to completing the sign up process on the mobile app."),
     EMAIL_NOT_VERIFIED(
         "Your account is not verified. Please verify your account by clicking on verification link which has been sent to your registered email. If not received, would you like to resend verification link?"),
-    LABKEY_HOME("http://192.168.0.6:8081"),
     STUDY("Study"),
     GATEWAY("Gateway"),
     DEVICE_ANDROID("android"),
@@ -148,7 +146,13 @@ public class MyStudiesUserRegUtil {
     ORG_NOTEXIST(
         "Sorry, this email is already in use for platform-powered app(s) belonging to another organization. Please use another email to sign up for this app."),
     LOGIN_ORG_NOTEXIST(
-        "Sorry, this account is in use for platform-powered app(s) belonging to another organization. Please sign up with a different email and try again.");
+        "Sorry, this account is in use for platform-powered app(s) belonging to another organization. Please sign up with a different email and try again."),
+    RP_SUBJECT("subject"),
+    RP_BODY("body"),
+    FEEDBACK_ERROR_MESSAGE(
+        "Sorry, an error occurred and your feedback could not be sent to the organization. Please retry in some time"),
+    CONTACTUS_ERROR_MESSAGE(
+        "Sorry, an error occurred and your inquiry could not be sent to the organization. Please retry in some time.");
 
     private final String value;
 

@@ -60,4 +60,10 @@ public class ApplicationPropertyConfiguration implements Serializable {
 
   @Value("${verification.expiration.in.hour}")
   private String verificationExpInHr;
+
+  @Value("${locked.account.mail.subject}")
+  private String lockAccountMailSubject;
+
+  @Value("${locked.account.mail.content}")
+  private String lockAccountMailContent;
 }

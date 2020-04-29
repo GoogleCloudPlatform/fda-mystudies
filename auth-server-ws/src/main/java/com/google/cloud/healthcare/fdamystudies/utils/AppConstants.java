@@ -41,39 +41,136 @@ public class AppConstants {
   public static final String RS = "RS";
   public static final String WCP = "WCP";
 
-  public static final String AUDIT_EVENT_SIGN_IN_NAME = "SIGN IN";
-  public static final String AUDIT_EVENT_SIGN_IN_DESC = "User %s signed in";
+  public static final String AUDIT_EVENT_SIGN_IN_NAME = "Sign-in successful";
+  public static final String AUDIT_EVENT_SIGN_IN_DESC = "User %s signed in successfully";
 
-  public static final String AUDIT_EVENT_FAILED_SIGN_IN_NAME = "FAILED SIGN IN";
-  public static final String AUDIT_EVENT_FAILED_SIGN_IN_DESC = "User %s sign in failed";
+  public static final String AUDIT_EVENT_FAILED_SIGN_IN_NAME = "Sign-in attempt failure";
+  public static final String AUDIT_EVENT_FAILED_SIGN_IN_DESC =
+      "Sign-in attempt failed for username %s.";
+
+  public static final String AUDIT_EVENT_FAILED_SIGN_IN_WRONG_EMAIL_NAME =
+      "Sign-in attempt failure: unregistered username";
   public static final String AUDIT_EVENT_FAILED_SIGN_IN_WRONG_EMAIL_DESC =
-      "Email %s does not exist";
+      "A user attempted to sign-in with an unregistered username %s";
 
-  public static final String AUDIT_EVENT_SIGN_OUT_NAME = "SIGN OUT SUCCESSFULL";
-  public static final String AUDIT_EVENT_SIGN_OUT_DESC = "User %s signed out successfully";
+  public static final String AUDIT_EVENT_ACCOUNT_LOCK_NAME = "Account locked";
+  public static final String AUDIT_EVENT_ACCOUNT_LOCK_DESC =
+      "Account locked for %s for User ID %s  due to %s consecutively failed sign-in attempts with incorrect password.";
 
-  public static final String AUDIT_EVENT_SIGN_OUT_UNSUCCESSFUL_NAME = "SIGN OUT UNSUCCESSFULL";
+  public static final String AUDIT_EVENT_SIGN_OUT_NAME = "App user sign out success";
+  public static final String AUDIT_EVENT_SIGN_OUT_DESC =
+      "User ID %s was successfully signed out of the app.";
+
+  public static final String AUDIT_EVENT_SIGN_OUT_UNSUCCESSFUL_NAME = "App user sign out failure";
   public static final String AUDIT_EVENT_SIGN_OUT_UNSUCCESSFUL_DESC =
-      "User %s signed out unsuccessfull";
+      "User ID %s could not be signed out of the app.";
 
-  public static final String AUDIT_EVENT_CHANGE_PASSWORD_NAME = "CHANGE PASSWORD SUCCESSFUL";
-  public static final String AUDIT_EVENT_CHANGE_PASSWORD_DESC =
-      "Password changed successfully for %s";
+  public static final String AUDIT_EVENT_CHANGE_PASSWORD_SUCCESS_NAME = "Password change success";
+  public static final String AUDIT_EVENT_CHANGE_PASSWORD_SUCCESS_DESC =
+      "Password change for User ID %s was successful.";
 
   public static final String AUDIT_EVENT_CHANGE_PASSWORD_UNSUCCESSFUL_NAME =
-      "CHANGE PASSWORD UNSUCCESSFUl";
+      "Password change failure";
   public static final String AUDIT_EVENT_CHANGE_PASSWORD_UNSUCCESSFUL_DESC =
-      "Password changed unsuccessfull for %s";
+      "Password change failed for User ID %s .";
+
+  public static final String AUDIT_EVENT_RESET_PASSWORD_SUCCESS_NAME = "Password reset success";
+  public static final String AUDIT_EVENT_RESET_PASSWORD_SUCCESS_DESC =
+      "Password reset for User ID %s was successful.";
+
+  public static final String AUDIT_EVENT_RESET_PASSWORD_UNSUCCESSFUL_NAME =
+      "Password reset failure";
+  public static final String AUDIT_EVENT_RESET_PASSWORD_UNSUCCESSFUL_DESC =
+      "Password reset for User ID %s, failed.";
 
   public static final String AUDIT_EVENT_FAILED_REFRESH_TOKEN_NAME = "FAILED RefreshToken";
   public static final String AUDIT_EVENT_FAILED_REFRESH_TOKEN_DESC =
       "Refresh token failed as token does not exist";
 
-  public static final String AUDIT_EVENT_PASSWORD_HELP_NAME = "PASSWORD HELP";
+  public static final String AUDIT_EVENT_PASSWORD_HELP_NAME = "Password help requested";
   public static final String AUDIT_EVENT_PASSWORD_HELP_DESC =
-      "Password Help sent to user. (User ID = %s)";
+      "Password help email requested by email ID %s";
 
-  public static final String AUDIT_EVENT_SIGN_IN_WITH_TMP_PASSD_NAME = "SIGN IN WITH TEMP PASSWORD";
+  public static final String AUDIT_EVENT_PASSWORD_HELP_UNREGISTERED_USER_NAME =
+      "Password help request failure: unregistered username";
+  public static final String AUDIT_EVENT_PASSWORD_HELP_UNREGISTERED_USER_DESC =
+      "A user attempted to request password help with an unregistered username %s";
+
+  public static final String AUDIT_EVENT_SIGN_IN_WITH_TMP_PASSD_NAME =
+      "Sign-in with temporary password: success";
   public static final String AUDIT_EVENT_SIGN_IN_WITH_TMP_PASSD_DESC =
-      "User  %s signed in with temp password";
+      "User  %s  signed in with temporary password.";
+
+  public static final String AUDIT_EVENT_SIGN_IN_WITH_TMP_PASSD_FAILURE_NAME =
+      "Sign-in with temporary password: failure";
+  public static final String AUDIT_EVENT_SIGN_IN_WITH_TMP_PASSD_FAILURE_DESC =
+      "Sign-in attempt for username %s failed with temporary password.";
+
+  public static final String AUDIT_EVENT_USER_REGISTRATION_SUCCESS_NAME =
+      "App user registration success";
+  public static final String AUDIT_EVENT_USER_REGISTRATION_SUCCESS_DESC =
+      "App user registration successful for username %s  and user ID %s returned to Resource Server";
+
+  public static final String AUDIT_EVENT_USER_REGISTRATION_FAILURE_NAME =
+      "App user registration failure";
+  public static final String AUDIT_EVENT_USER_REGISTRATION_FAILURE_DESC =
+      "App user registration failed for username %s, no User ID returned to Resource Server";
+
+  public static final String AUDIT_EVENT_DELETE_USER_AFTER_FAILURE_IN_REG_SERVER_NAME =
+      "App user deleted: Resource Server user creation error";
+  public static final String AUDIT_EVENT_DELETE_USER_AFTER_FAILURE_IN_REG_SERVER_DESC =
+      "User creation failed on the Participant Datastore server and User ID %s record was deleted from Auth Server";
+
+  public static final String AUDIT_EVENT_VALIDATION_OF_TOKEN_SUCCESS_NAME =
+      "Validation of tokens successful";
+  public static final String AUDIT_EVENT_VALIDATION_OF_TOKEN_SUCCESS_DESC =
+      "Access Token, Client Credentials found valid in Validate Token request made by Resource Server for User ID %s.";
+
+  public static final String AUDIT_EVENT_ACCESS_TOKEN_NOT_VALID_NAME = "Access Token not valid";
+  public static final String AUDIT_EVENT_ACCESS_TOKEN_NOT_VALID_DESC =
+      "Access Token found invalid in Validate Token request made by Resource Server for User ID %s.";
+
+  public static final String AUDIT_EVENT_ACCESS_TOKEN_EXPIRED_NAME = "Access Token expired";
+  public static final String AUDIT_EVENT_ACCESS_TOKEN_EXPIRED_DESC =
+      "Access Token found expired in Validate Token request made by Resource Server for User ID %s.";
+
+  public static final String AUDIT_EVENT_INVALID_CLIENT_APPLICATION_CREDENTIALS_NAME =
+      "Invalid client application credentials";
+  public static final String AUDIT_EVENT_INVALID_CLIENT_APPLICATION_CREDENTIALS_DESC =
+      "Client Application credentials found invalid in Validate Token request made by Resource Server for User ID %s.";
+
+  public static final String AUDIT_EVENT_CLIENT_CREDENTIALS_SUCCESS_NAME =
+      "Client credentials validation success";
+  public static final String AUDIT_EVENT_CLIENT_CREDENTIALS_SUCCESS_DESC =
+      "Client credentials found valid in client validation request made by Resource Server for.";
+
+  public static final String AUDIT_EVENT_INVALID_CLIENT_CREDENTIALS_NAME =
+      "Invalid client credentials";
+  public static final String AUDIT_EVENT_INVALID_CLIENT_CREDENTIALS_DESC =
+      "Client credentials found invalid in client validation request made by Resource Server for.";
+
+  public static final String AUDIT_EVENT_ACCESS_TOKEN_GENERATION_SUCCESS_NAME =
+      "New Access Token generated.";
+  public static final String AUDIT_EVENT_ACCESS_TOKEN_GENERATION_SUCCESS_DESC =
+      "New Access Token generated for user ID %s on receipt of Refresh Token request, and sent to mobile app.";
+
+  public static final String AUDIT_EVENT_ACCESS_TOKEN_GENERATION_FAILURE_NAME =
+      "New Access Token generation failure";
+  public static final String AUDIT_EVENT_ACCESS_TOKEN_GENERATION_FAILURE_DESC =
+      "New Access Token generation failed for user ID %s after receipt of Refresh Token request and no new Access Token was sent to the mobile app.";
+
+  public static final String AUDIT_EVENT_DELETE_USER_NAME = "App user deleted";
+  public static final String AUDIT_EVENT_DELETE_USER_DESC =
+      "User account deactivated on the Participant Datastore server and User ID %s record was deleted from Auth Server";
+
+  public static final String AUDIT_EVENT_DELETE_USER_FAILURE_NAME = "App user deletion failed";
+  public static final String AUDIT_EVENT_DELETE_USER_FAILURE_DESC =
+      "User account deactivated on the Participant Datastore server but User ID %s record could not be deleted from Auth Server";
+
+  public static final String PARTICIPANT_LEVEL_ACCESS = "Participant";
+  public static final String APP_LEVEL_ACCESS = "App User";
+  public static final String NOT_APPLICABLE = "NA";
+  public static final String AUDIT_LOG_MOBILE_APP_CLIENT_ID = "FMSGCMOBAPP";
+  public static final String AUDIT_LOG_PARTICIPANT_DATASTORE_CLIENT_ID = "FMSGCPARDTST";
+  public static final String INVALID_USERNAME_PASSWORD_MSG = "INVALID_USERNAME_PASSWORD_MSG";
 }

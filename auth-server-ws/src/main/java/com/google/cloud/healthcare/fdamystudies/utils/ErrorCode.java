@@ -33,6 +33,8 @@ public enum ErrorCode {
 
   EC_140(140, "Code Expired."), // Code Expired
 
+  EC_141(141, "Temporary password expired."),
+
   EC_200(200, "OK"),
 
   EC_400(400, "Bad Request."),

@@ -65,6 +65,8 @@ public class ProcessActivityResponseController {
     String studyId = null;
     String activityId = null;
     String activityVersion = null;
+    String activityType = null;
+    String activityRunId = null;
     String participantId = null;
     String secureEnrollmentToken = null;
     boolean savedResponseData = false;
@@ -74,6 +76,8 @@ public class ProcessActivityResponseController {
       studyId = questionnaireActivityResponseBean.getMetadata().getStudyId();
       activityId = questionnaireActivityResponseBean.getMetadata().getActivityId();
       activityVersion = questionnaireActivityResponseBean.getMetadata().getVersion();
+      activityRunId = questionnaireActivityResponseBean.getMetadata().getActivityRunId();
+      activityType = questionnaireActivityResponseBean.getType();
       participantId = questionnaireActivityResponseBean.getParticipantId();
       secureEnrollmentToken = questionnaireActivityResponseBean.getTokenIdentifier();
       logger.debug(
@@ -89,6 +93,21 @@ public class ProcessActivityResponseController {
           || StringUtils.isBlank(studyId)
           || StringUtils.isBlank(activityId)
           || StringUtils.isBlank(activityVersion)) {
+        commonService.createAuditLog(
+            userId,
+            "Activity response receipt failure",
+            "Activity response receipt from participant, failed for Activity Type "
+                + activityType
+                + ", Activity ID "
+                + activityId
+                + ", Activity Version "
+                + activityVersion
+                + "and Run ID "
+                + activityRunId,
+            AppConstants.CLIENT_ID_MOBILEAPP,
+            participantId,
+            studyId,
+            AppConstants.PARTICIPANT_LEVEL_ACCESS);
         logger.error(
             "Input values are :\n Study Id: "
                 + studyId
@@ -104,6 +123,21 @@ public class ProcessActivityResponseController {
                 ErrorCode.EC_701.errorMessage());
         return new ResponseEntity<>(errorBean, HttpStatus.BAD_REQUEST);
       }
+      commonService.createAuditLog(
+          userId,
+          "Activity response received",
+          "Activity response Activity response successfully received from participant for Activity Type "
+              + activityType
+              + ", Activity ID "
+              + activityId
+              + ", Activity Version "
+              + activityVersion
+              + "and Run ID "
+              + activityRunId,
+          AppConstants.CLIENT_ID_MOBILEAPP,
+          participantId,
+          studyId,
+          AppConstants.PARTICIPANT_LEVEL_ACCESS);
       // Check if participant is valid
       ParticipantBo participantBo = new ParticipantBo();
       participantBo.setTokenIdentifier(secureEnrollmentToken);
@@ -121,6 +155,7 @@ public class ProcessActivityResponseController {
         QuestionnaireActivityStructureBean activityMetadatFromWCP =
             studyMetadataService.getStudyActivityMetadata(
                 orgId, applicationId, studyActivityMetadataRequestBean);
+
         if (activityMetadatFromWCP == null) {
           logger.error(
               "Input values are :\n Study Id: "
@@ -129,13 +164,20 @@ public class ProcessActivityResponseController {
                   + activityId
                   + "\n Activity Version: "
                   + activityVersion);
-          commonService.createActivityLog(
-              userId,
-              "Study response data could not be saved for participant",
-              "Participant Id: "
-                  + participantId
-                  + " - Study Response Metadata Activity Retrieval failed for study with id:  "
-                  + studyId,
+          commonService.createAuditLog(
+              null,
+              "Activity metadata retrieval failure",
+              "Activity metadata could not be retrieved from Study Builder for Activity Type "
+                  + activityType
+                  + ", Activity ID "
+                  + activityId
+                  + ", Activity Version "
+                  + activityVersion
+                  + "and Run ID "
+                  + activityRunId,
+              AppConstants.CLIENT_ID_RESP_DATA_STORE,
+              participantId,
+              studyId,
               null);
           ErrorBean errorBean =
               AppUtil.dynamicResponse(
@@ -145,20 +187,44 @@ public class ProcessActivityResponseController {
                   ErrorCode.EC_705.errorMessage());
           return new ResponseEntity<>(errorBean, HttpStatus.BAD_REQUEST);
         }
-
+        commonService.createAuditLog(
+            null,
+            "Activity metadata retrieved",
+            "Activity metadata retrieved from Study Builder for Activity Type "
+                + activityType
+                + ", Activity ID "
+                + activityId
+                + ", Activity Version "
+                + activityVersion
+                + "and Run ID "
+                + activityRunId,
+            AppConstants.CLIENT_ID_RESP_DATA_STORE,
+            participantId,
+            studyId,
+            null);
         // Get ParticipantStudyInfo from Registration Server
         ParticipantStudyInformation partStudyInfo =
             partStudyInfoService.getParticipantStudyInfo(studyId, participantId);
         if (partStudyInfo == null) {
           logger.error("GetParticipantStudyInfo() - ParticipantInfo is null. Study Id: " + studyId);
-          commonService.createActivityLog(
-              userId,
-              "Study response data could not be saved for participant",
-              "Participant Id: "
-                  + participantId
-                  + " Reason: Participant Study Info Retrieval failed for study with id: "
-                  + studyId,
+          commonService.createAuditLog(
+              null,
+              "Data-sharing consent value retrieval failure",
+              "Latest data-sharing consent value could not be retrieved from Participant Datastore for Participant",
+              AppConstants.CLIENT_ID_RESP_DATA_STORE,
+              participantId,
+              studyId,
               null);
+
+          commonService.createAuditLog(
+              null,
+              "Withdrawal information retrieval failure",
+              "Withdrawal information value could not be retrieved from Participant Datastore for Participant",
+              AppConstants.CLIENT_ID_RESP_DATA_STORE,
+              participantId,
+              studyId,
+              null);
+          logger.error("GetParticipantStudyInfo() - ParticipantInfo is null. Study Id: " + studyId);
           ErrorBean errorBean =
               AppUtil.dynamicResponse(
                   ErrorCode.EC_715.code(),
@@ -167,11 +233,46 @@ public class ProcessActivityResponseController {
                   ErrorCode.EC_715.errorMessage());
           return new ResponseEntity<>(errorBean, HttpStatus.BAD_REQUEST);
         }
-        String sharingConsent = partStudyInfo.getSharing();
 
+        String sharingConsent = partStudyInfo.getSharing();
+        commonService.createAuditLog(
+            null,
+            "Data-sharing consent value retrieved",
+            "Latest data-sharing consent value "
+                + sharingConsent
+                + " successfully retrieved from Participant Datastore for Participant",
+            AppConstants.CLIENT_ID_RESP_DATA_STORE,
+            participantId,
+            studyId,
+            null);
         questionnaireActivityResponseBean.setSharingConsent(sharingConsent);
+        commonService.createAuditLog(
+            null,
+            "Data-sharing consent value successfully conjoined with activity response data",
+            "Latest data-sharing consent value of participant successfully conjoined with response data for Activity Type "
+                + activityType
+                + ", Activity ID "
+                + activityId
+                + ", Activity Version "
+                + activityVersion
+                + "and Run ID "
+                + activityRunId,
+            AppConstants.CLIENT_ID_RESP_DATA_STORE,
+            participantId,
+            studyId,
+            null);
         boolean withdrawalStatus = !StringUtils.isBlank(partStudyInfo.getWithdrawal());
 
+        commonService.createAuditLog(
+            null,
+            "Withdrawal information retrieved",
+            "Participant's withdrawal information (Withdrawn Status:"
+                + withdrawalStatus
+                + " successfully retrieved from Participant Datastore for Participant",
+            AppConstants.CLIENT_ID_RESP_DATA_STORE,
+            participantId,
+            studyId,
+            null);
         if (!withdrawalStatus) {
           activityResponseProcessorService.saveActivityResponseDataForParticipant(
               activityMetadatFromWCP, questionnaireActivityResponseBean);
@@ -193,32 +294,57 @@ public class ProcessActivityResponseController {
               activityStateRequestBean);
           SuccessResponseBean srBean = new SuccessResponseBean();
           srBean.setMessage(AppConstants.SUCCESS_MSG);
-          commonService.createActivityLog(
-              userId,
-              "Participant data sharing consent is: " + sharingConsent,
-              " Participant Id: "
-                  + participantId
-                  + " has not provided data sharing consent for study with id:  "
-                  + studyId,
+
+          commonService.createAuditLog(
+              null,
+              "Activity State saved/updated for participant",
+              "Activity State for Activity ID "
+                  + activityId
+                  + " was saved or updated for participant in Response Datastore"
+                  + "Key details: Activity Type:"
+                  + activityType
+                  + ", Activity ID "
+                  + activityId
+                  + ", Activity Version "
+                  + activityVersion
+                  + "and Run ID "
+                  + activityRunId,
+              AppConstants.CLIENT_ID_RESP_DATA_STORE,
+              participantId,
+              studyId,
               null);
 
-          commonService.createActivityLog(
-              userId,
-              "Study response data successfully saved for participant",
-              "Participant Id: "
-                  + participantId
-                  + " Study Response saved for study with id:  "
-                  + studyId,
+          commonService.createAuditLog(
+              null,
+              "Activity response saved successfully",
+              "Activity response saved successfully for Activity Type "
+                  + activityType
+                  + ", Activity ID "
+                  + activityId
+                  + ", Activity Version "
+                  + activityVersion
+                  + "and Run ID "
+                  + activityRunId,
+              AppConstants.CLIENT_ID_RESP_DATA_STORE,
+              participantId,
+              studyId,
               null);
           return new ResponseEntity<>(srBean, HttpStatus.OK);
         } else {
-          commonService.createActivityLog(
-              userId,
-              "Study response data could not be saved for participant with id: ",
-              "Participant Id: "
-                  + participantId
-                  + " Reason: Participant has withdrawn from study with id:  "
-                  + studyId,
+          commonService.createAuditLog(
+              null,
+              "Activity response save operation failure ",
+              "Activity response save operation failed as participant is withdrawn. Activity Type "
+                  + activityType
+                  + ", Activity ID "
+                  + activityId
+                  + ", Activity Version "
+                  + activityVersion
+                  + "and Run ID "
+                  + activityRunId,
+              AppConstants.CLIENT_ID_RESP_DATA_STORE,
+              participantId,
+              studyId,
               null);
           ErrorBean errorBean =
               AppUtil.dynamicResponse(
@@ -235,7 +361,7 @@ public class ProcessActivityResponseController {
                       + participantId);
 
           logger.error(
-              "Could not save response for participant.\n Study Id: "
+              "Could not save response for withdrawn participant.\n Study Id: "
                   + studyId
                   + "\n Activity Id: "
                   + activityId
@@ -249,7 +375,7 @@ public class ProcessActivityResponseController {
                 ErrorCode.EC_706.code(),
                 ErrorCode.EC_706.errorMessage(),
                 AppConstants.ERROR_STR,
-                "Could not save response for participant.\n Study Id: "
+                "Could not save response as participant is invalid.\n Study Id: "
                     + studyId
                     + "\n Activity Id: "
                     + activityId
@@ -257,17 +383,24 @@ public class ProcessActivityResponseController {
                     + activityVersion
                     + "\n Particpant Id: "
                     + participantId);
-        commonService.createActivityLog(
+        commonService.createAuditLog(
             userId,
-            "Study response data could not be saved for participant with id: ",
-            "Participant Id: "
-                + participantId
-                + " Reason: Could not validate the participant id for study with id:  "
-                + studyId,
-            null);
+            "Participant ID found invalid",
+            "Participant ID found invalid in the response submitted by the participant. Activity Type "
+                + activityType
+                + ", Activity ID "
+                + activityId
+                + ", Activity Version "
+                + activityVersion
+                + "and Run ID "
+                + activityRunId,
+            AppConstants.CLIENT_ID_MOBILEAPP,
+            participantId,
+            studyId,
+            AppConstants.PARTICIPANT_LEVEL_ACCESS);
 
         logger.error(
-            "Could not save response for participant.\n Study Id: "
+            "Could not save response as participant is invalid.\n Study Id: "
                 + studyId
                 + "\n Activity Id: "
                 + activityId
@@ -279,13 +412,20 @@ public class ProcessActivityResponseController {
     } catch (Exception e) {
 
       if (!savedResponseData) {
-        commonService.createActivityLog(
-            userId,
-            "Study response data could not be saved for participant with id: ",
-            "Participant Id: "
-                + participantId
-                + " Study response could not be saved for participant for study with id: "
-                + studyId,
+        commonService.createAuditLog(
+            null,
+            "Activity response not saved ",
+            "Activity response save operation failed for Activity Type "
+                + activityType
+                + ", Activity ID "
+                + activityId
+                + ", Activity Version "
+                + activityVersion
+                + "and Run ID "
+                + activityRunId,
+            AppConstants.CLIENT_ID_RESP_DATA_STORE,
+            participantId,
+            studyId,
             null);
         ErrorBean errorBean =
             AppUtil.dynamicResponse(
@@ -302,14 +442,17 @@ public class ProcessActivityResponseController {
                 + activityVersion);
         return new ResponseEntity<>(errorBean, HttpStatus.BAD_REQUEST);
       } else {
-        commonService.createActivityLog(
-            userId,
-            "Participant update activity state for save response failed",
-            "Participant Id: "
-                + participantId
-                + " activity state could not be saved for participant for study with id: "
-                + studyId,
+        commonService.createAuditLog(
+            null,
+            "Activity State save/update operation failure",
+            "Activity State for Activity ID "
+                + activityId
+                + " could not be saved or updated for participant in Response Datastore",
+            AppConstants.CLIENT_ID_RESP_DATA_STORE,
+            participantId,
+            studyId,
             null);
+
         ErrorBean errorBean =
             AppUtil.dynamicResponse(
                 ErrorCode.EC_714.code(),
@@ -373,14 +516,15 @@ public class ProcessActivityResponseController {
         StoredResponseBean storedResponseBean =
             activityResponseProcessorService.getActivityResponseDataForParticipant(
                 studyId, siteId, participantId, activityId, questionKey);
-        commonService.createActivityLog(
+        commonService.createAuditLog(
             userId,
-            "Response data successfully accessed by participant with id: ",
-            "Participant Id: "
-                + participantId
-                + " Response data accessed for study with id: "
-                + studyId,
-            null);
+            "Read operation successful for response data",
+            "Participant's response data for 1 or more runs of 1 or more activities, read by Mobile App. "
+                + activityId,
+            AppConstants.CLIENT_ID_MOBILEAPP,
+            participantId,
+            studyId,
+            AppConstants.PARTICIPANT_LEVEL_ACCESS);
         return new ResponseEntity<>(storedResponseBean, HttpStatus.OK);
       } else {
         ErrorBean errorBean =
@@ -388,7 +532,7 @@ public class ProcessActivityResponseController {
                 ErrorCode.EC_706.code(),
                 ErrorCode.EC_706.errorMessage(),
                 AppConstants.ERROR_STR,
-                "Could not get response data for participant.\n Study Id: "
+                "Could not get response data as participant is invalid.\n Study Id: "
                     + studyId
                     + "\n Site Id: "
                     + siteId
@@ -404,14 +548,15 @@ public class ProcessActivityResponseController {
                 + siteId
                 + "\n Activity Id: "
                 + activityId);
-        commonService.createActivityLog(
+        commonService.createAuditLog(
             userId,
-            "Response data could not be retrieved by participant with id: ",
-            "Participant Id: "
-                + participantId
-                + " Response data requested for study with id: "
-                + studyId,
-            null);
+            "Read operation failed for response data",
+            "Participant's response data for 1 or more runs of 1 or more activities, could not be read by Mobile App as participant is invalid. "
+                + activityId,
+            AppConstants.CLIENT_ID_MOBILEAPP,
+            participantId,
+            studyId,
+            AppConstants.PARTICIPANT_LEVEL_ACCESS);
         return new ResponseEntity<>(errorBean, HttpStatus.BAD_REQUEST);
       }
     } catch (Exception e) {
@@ -428,14 +573,15 @@ public class ProcessActivityResponseController {
               + siteId
               + "\n Activity Id: "
               + activityId);
-      commonService.createActivityLog(
+      commonService.createAuditLog(
           userId,
-          "Response data could not be retrieved by participant with id: ",
-          "Participant Id: "
-              + participantId
-              + " Response data requested for study with id: "
-              + studyId,
-          null);
+          "Read operation failed for response data",
+          "Participant's response data for 1 or more runs of 1 or more activities, could not be read by Mobile App"
+              + activityId,
+          AppConstants.CLIENT_ID_MOBILEAPP,
+          participantId,
+          studyId,
+          AppConstants.PARTICIPANT_LEVEL_ACCESS);
       return new ResponseEntity<>(errorBean, HttpStatus.BAD_REQUEST);
     }
   }
@@ -457,68 +603,72 @@ public class ProcessActivityResponseController {
       return new ResponseEntity<>(errorBean, HttpStatus.BAD_REQUEST);
     } else {
       boolean responseDataUpdate = false;
+      boolean dataRetentionSettings = false;
+      if (!StringUtils.isBlank(deleteResponses)
+          && deleteResponses.equalsIgnoreCase(AppConstants.TRUE_STR)) {
+        dataRetentionSettings = true;
+      }
+      commonService.createAuditLog(
+          null,
+          "Participant withdrawal intimation from Participant Datastore",
+          "Information about participant's withdrawal from study received from Participant Datastore as withdrawal timestamp "
+              + System.currentTimeMillis()
+              + " and Data Retention Setting: "
+              + dataRetentionSettings,
+          AppConstants.CLIENT_ID_RESP_DATA_STORE,
+          participantId,
+          studyId,
+          null);
       try {
         if (!StringUtils.isBlank(deleteResponses)
             && deleteResponses.equalsIgnoreCase(AppConstants.TRUE_STR)) {
           activityResponseProcessorService.deleteActivityResponseDataForParticipant(
               studyId, participantId);
           responseDataUpdate = true;
-
-          commonService.createActivityLog(
+          commonService.createAuditLog(
               null,
-              "Participant response deleted from study on withdrawal",
-              "Participant id: "
-                  + participantId
-                  + " responses deleted for study with id: "
-                  + studyId,
-              clientId);
-          commonService.createActivityLog(
-              null,
-              "Participant withdrawn from study",
-              "Participant id: " + participantId + " withdrawn from study with id: " + studyId,
-              clientId);
+              "Response data deleted for participant",
+              "All response data belonging to participant was deleted from the Response Datastore",
+              AppConstants.CLIENT_ID_RESP_DATA_STORE,
+              participantId,
+              studyId,
+              null);
         } else {
           activityResponseProcessorService.updateWithdrawalStatusForParticipant(
               studyId, participantId);
-          responseDataUpdate = true;
-
-          commonService.createActivityLog(
+          commonService.createAuditLog(
               null,
-              "Participant withdrawal status updated for study",
-              "Participant id: "
-                  + participantId
-                  + " withdrawal status updated for study with id: "
-                  + studyId,
-              clientId);
-          commonService.createActivityLog(
-              null,
-              "Participant withdrawn from study",
-              "Participant id: " + participantId + " withdrawn from study with id: " + studyId,
-              clientId);
+              "Withdrawal information successfully updated",
+              "Withdrawal information of participant successfully updated into all activity responses belonging to participant",
+              AppConstants.CLIENT_ID_RESP_DATA_STORE,
+              participantId,
+              studyId,
+              null);
         }
         // Delete all participant activity state from the table
         participantActivityStateResponseService.deleteParticipantActivites(studyId, participantId);
         SuccessResponseBean srBean = new SuccessResponseBean();
-        commonService.createActivityLog(
+
+        srBean.setMessage(AppConstants.SUCCESS_MSG);
+        commonService.createAuditLog(
             null,
             "Participant activity state data deleted on withdrawal",
-            "Participant id: "
-                + participantId
-                + " activity state data deletion successful for study with id: "
-                + studyId,
-            clientId);
-        srBean.setMessage(AppConstants.SUCCESS_MSG);
+            "Participant activity state data deleted on withdrawal for all activities",
+            AppConstants.CLIENT_ID_RESP_DATA_STORE,
+            participantId,
+            studyId,
+            null);
         return new ResponseEntity<>(srBean, HttpStatus.OK);
       } catch (Exception e) {
         if (responseDataUpdate) {
-          commonService.createActivityLog(
+          commonService.createAuditLog(
               null,
-              "Participant activity state data deletion failed on withdrawal",
-              "Participant id: "
-                  + participantId
-                  + " activity state data deletion failed for study with id: "
-                  + studyId,
-              clientId);
+              "Participant response data: delete operation failure",
+              "1 or more of the participant's response datasets failed to get deleted from the Response Datastore.",
+              AppConstants.CLIENT_ID_RESP_DATA_STORE,
+              participantId,
+              studyId,
+              null);
           ErrorBean errorBean =
               AppUtil.dynamicResponse(
                   ErrorCode.EC_717.code(),
@@ -526,21 +676,22 @@ public class ProcessActivityResponseController {
                   AppConstants.ERROR_STR,
                   e.getMessage());
           logger.error(
-              "Could not successfully withdraw for participant.\n Study Id: "
+              "Could not successfully delete data for participant on withdrawal.\n Study Id: "
                   + studyId
                   + "\n Particpant Id: "
                   + " Withdrawal Action "
                   + deleteResponses);
           return new ResponseEntity<>(errorBean, HttpStatus.BAD_REQUEST);
         } else {
-          commonService.createActivityLog(
+
+          commonService.createAuditLog(
               null,
-              "Participant withdrawal from study failed",
-              "Participant id: "
-                  + participantId
-                  + " withdrawal failed for study with id: "
-                  + studyId,
-              clientId);
+              "Withdrawal information value failed to get updated",
+              "Withdrawal information of participant failed to get updated  into 1 or more activity responses belonging to participant",
+              AppConstants.CLIENT_ID_RESP_DATA_STORE,
+              participantId,
+              studyId,
+              null);
           ErrorBean errorBean =
               AppUtil.dynamicResponse(
                   ErrorCode.EC_712.code(),

@@ -19,11 +19,14 @@ import com.google.cloud.healthcare.fdamystudies.bean.StudyInfoBean;
 import com.google.cloud.healthcare.fdamystudies.dao.UserConsentManagementDao;
 import com.google.cloud.healthcare.fdamystudies.model.ParticipantStudiesBO;
 import com.google.cloud.healthcare.fdamystudies.model.StudyConsentBO;
+import com.google.cloud.healthcare.fdamystudies.utils.AppConstants;
 import com.google.cloud.healthcare.fdamystudies.utils.MyStudiesUserRegUtil;
 
 @Service
 public class UserConsentManagementServiceImpl implements UserConsentManagementService {
   @Autowired UserConsentManagementDao userConsentManagementDao;
+
+  @Autowired CommonService commonService;
 
   @Autowired FileStorageService cloudStorageService;
 
@@ -116,6 +119,19 @@ public class UserConsentManagementServiceImpl implements UserConsentManagementSe
         participantStudiesBO = userConsentManagementDao.getParticipantStudies(studyId, userId);
         if (participantStudiesBO != null) {
           consentStudyResponseBean.setSharing(participantStudiesBO.getSharing());
+
+          String description =
+              String.format(
+                  AppConstants.AUDIT_EVNT_INFORM_CONSNT_PROVIDED_DESC,
+                  consentVersion,
+                  participantStudiesBO.getSharing());
+          commonService.createActivityLog(
+              userId,
+              AppConstants.AUDIT_EVNT_INFORM_CONSNT_PROVIDED_NAME,
+              description,
+              AppConstants.APP_LEVEL_ACCESS,
+              participantStudiesBO.getParticipantId(),
+              participantStudiesBO.getStudyInfo().getCustomId());
         }
       }
 

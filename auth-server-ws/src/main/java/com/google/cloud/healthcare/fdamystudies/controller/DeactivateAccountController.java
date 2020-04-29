@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.google.cloud.healthcare.fdamystudies.config.ApplicationPropertyConfiguration;
 import com.google.cloud.healthcare.fdamystudies.controller.bean.ResponseBean;
 import com.google.cloud.healthcare.fdamystudies.model.DaoUserBO;
+import com.google.cloud.healthcare.fdamystudies.service.AuditLogService;
 import com.google.cloud.healthcare.fdamystudies.service.UserDetailsService;
 import com.google.cloud.healthcare.fdamystudies.utils.AppConstants;
 
@@ -32,6 +33,8 @@ public class DeactivateAccountController {
   @Autowired private UserDetailsService userDetailsService;
 
   @Autowired ApplicationPropertyConfiguration appConfig;
+
+  @Autowired private AuditLogService auditLogService;
 
   @GetMapping("/healthCheck")
   public ResponseEntity<?> healthCheck() {
@@ -50,11 +53,35 @@ public class DeactivateAccountController {
         responseBean = userDetailsService.deactivateAcct(userInfo);
         if (responseBean.getMessage().equalsIgnoreCase(AppConstants.SUCCESS)) {
           value = 1;
+          auditLogService.createAuditLog(
+              "",
+              AppConstants.AUDIT_EVENT_DELETE_USER_NAME,
+              String.format(AppConstants.AUDIT_EVENT_DELETE_USER_DESC, userId),
+              AppConstants.AUDIT_LOG_PARTICIPANT_DATASTORE_CLIENT_ID,
+              "",
+              "",
+              "");
         } else {
           value = 3; // status update failed
+          auditLogService.createAuditLog(
+              "",
+              AppConstants.AUDIT_EVENT_DELETE_USER_FAILURE_NAME,
+              String.format(AppConstants.AUDIT_EVENT_DELETE_USER_FAILURE_DESC, userId),
+              AppConstants.AUDIT_LOG_PARTICIPANT_DATASTORE_CLIENT_ID,
+              "",
+              "",
+              "");
         }
       }
     } catch (Exception e) {
+      auditLogService.createAuditLog(
+          "",
+          AppConstants.AUDIT_EVENT_DELETE_USER_FAILURE_NAME,
+          String.format(AppConstants.AUDIT_EVENT_DELETE_USER_FAILURE_DESC, userId),
+          AppConstants.AUDIT_LOG_PARTICIPANT_DATASTORE_CLIENT_ID,
+          "",
+          "",
+          "");
       logger.error("DeactivateAccountController deactivate() - error ", e);
     }
     logger.info("DeactivateAccountController deactivate() - Ends ");

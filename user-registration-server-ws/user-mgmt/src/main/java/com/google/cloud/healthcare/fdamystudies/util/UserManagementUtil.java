@@ -15,8 +15,10 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -421,7 +423,7 @@ public class UserManagementUtil {
     try {
       date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(dateNow);
     } catch (Exception e) {
-      logger.info("URWebAppWSUtil - getCurrentUtilDateTime() :: ERROR ", e);
+      logger.info("UserManagementUtil - getCurrentUtilDateTime() :: ERROR ", e);
     }
     return date;
   }
@@ -444,7 +446,7 @@ public class UserManagementUtil {
 
   public String withdrawParticipantFromStudy(String participantId, String studyId, String delete)
       throws UnAuthorizedRequestException, InvalidRequestException, SystemException {
-    logger.info("EnrollmentManagementUtil withDrawParticipantFromStudy() - starts ");
+    logger.info("UserManagementUtil withDrawParticipantFromStudy() - starts ");
     HttpHeaders headers = null;
     HttpEntity<WithdrawFromStudyBodyProvider> request = null;
 
@@ -486,7 +488,32 @@ public class UserManagementUtil {
         throw new SystemException();
       }
     }
-    logger.info("EnrollmentManagementUtil withDrawParticipantFromStudy() - Ends ");
+    logger.info("UserManagementUtil withDrawParticipantFromStudy() - Ends ");
     return message;
+  }
+
+  public static String genarateEmailContent(String emailContentName, Map<String, String> keyValue) {
+
+    logger.info("UserManagementUtil - genarateEmailContent() :: Starts");
+
+    if (UserManagementUtil.isNotEmpty(emailContentName)) {
+      for (Map.Entry<String, String> entry : keyValue.entrySet()) {
+        emailContentName =
+            emailContentName.replace(
+                entry.getKey(), StringUtils.isBlank(entry.getValue()) ? "" : entry.getValue());
+      }
+    }
+    logger.info("UserManagementUtil - genarateEmailContent() :: Ends");
+    return emailContentName;
+  }
+
+  public static boolean isNotEmpty(String str) {
+    logger.info("UserManagementUtil - isNotEmpty() :: Starts");
+    boolean flag = false;
+    if ((null != str) && !"".equals(str.trim())) {
+      flag = true;
+    }
+    logger.info("UserManagementUtil - isNotEmpty() :: Ends");
+    return flag;
   }
 }

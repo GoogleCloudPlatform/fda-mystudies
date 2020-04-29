@@ -12,7 +12,7 @@ import com.google.cloud.healthcare.fdamystudies.beans.AppOrgInfoBean;
 import com.google.cloud.healthcare.fdamystudies.exceptions.InvalidRequestException;
 import com.google.cloud.healthcare.fdamystudies.exceptions.SystemException;
 import com.google.cloud.healthcare.fdamystudies.exceptions.UnAuthorizedRequestException;
-import com.google.cloud.healthcare.fdamystudies.model.ActivityLog;
+import com.google.cloud.healthcare.fdamystudies.model.AuditLogBo;
 
 public interface CommonService {
 
@@ -24,7 +24,14 @@ public interface CommonService {
   public AppOrgInfoBean getUserAppDetailsByAllApi(
       String userId, String emailId, String appId, String orgId);
 
-  public ActivityLog createActivityLog(String userId, String activityName, String activtyDesc);
+  public AuditLogBo createAuditLog(
+      String userId,
+      String activityName,
+      String activtyDesc,
+      String clientId,
+      String participantId,
+      String studyId,
+      String accessLevel);
 
   public boolean validateServerClientCredentials(String clientId, String clientSecret)
       throws SystemException, UnAuthorizedRequestException, InvalidRequestException;

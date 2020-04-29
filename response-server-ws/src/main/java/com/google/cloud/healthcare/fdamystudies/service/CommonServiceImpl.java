@@ -26,9 +26,9 @@ import com.google.cloud.healthcare.fdamystudies.dao.CommonDao;
 import com.google.cloud.healthcare.fdamystudies.exception.InvalidRequestException;
 import com.google.cloud.healthcare.fdamystudies.exception.SystemException;
 import com.google.cloud.healthcare.fdamystudies.exception.UnAuthorizedRequestException;
-import com.google.cloud.healthcare.fdamystudies.model.ActivityLog;
+import com.google.cloud.healthcare.fdamystudies.model.AuditLogBo;
 import com.google.cloud.healthcare.fdamystudies.model.ParticipantBo;
-import com.google.cloud.healthcare.fdamystudies.repository.ActivityLogRepository;
+import com.google.cloud.healthcare.fdamystudies.repository.AuditLogRepository;
 import com.google.cloud.healthcare.fdamystudies.utils.AppConstants;
 
 @Service
@@ -40,7 +40,7 @@ public class CommonServiceImpl implements CommonService {
 
   @Autowired private ApplicationConfiguration appConfig;
 
-  @Autowired private ActivityLogRepository activityLogRepository;
+  @Autowired private AuditLogRepository activityLogRepository;
 
   private static Logger logger = LoggerFactory.getLogger(CommonServiceImpl.class);
 
@@ -85,9 +85,11 @@ public class CommonServiceImpl implements CommonService {
       } else {
         throw new SystemException();
       }
+    } catch (Exception e) {
+      logger.error("CommonServiceImpl validateServerClientCredentials - error ", e);
+      throw new SystemException();
     }
-    logger.error("Invalid client credentials.");
-    throw new SystemException();
+    return false;
   }
 
   @Override
@@ -135,23 +137,39 @@ public class CommonServiceImpl implements CommonService {
   }
 
   @Override
-  public ActivityLog createActivityLog(
-      String userId, String activityName, String activtyDesc, String clientId) {
-    logger.info("CommonServiceImpl createActivityLog() - starts ");
-    ActivityLog activityLog = new ActivityLog();
+  public AuditLogBo createAuditLog(
+      String userId,
+      String activityName,
+      String activtyDesc,
+      String clientId,
+      String participantId,
+      String studyId,
+      String accessLevel) {
+    logger.info("CommonServiceImpl createActivityLog() - starts");
+    AuditLogBo activityLog = new AuditLogBo();
     try {
-      activityLog.setAuthUserId(userId);
+      activityLog.setAuthUserId(
+          (userId == null || userId.isEmpty()) ? AppConstants.NOT_APPLICABLE : userId);
+      activityLog.setServerClientId(
+          (clientId == null || clientId.isEmpty()) ? AppConstants.NOT_APPLICABLE : clientId);
+      activityLog.setAccessLevel(
+          (accessLevel == null || accessLevel.isEmpty())
+              ? AppConstants.NOT_APPLICABLE
+              : accessLevel);
+      activityLog.setParticipantId(
+          (participantId == null || participantId.isEmpty())
+              ? AppConstants.NOT_APPLICABLE
+              : participantId);
+      activityLog.setStudyId(
+          (studyId == null || studyId.isEmpty()) ? AppConstants.NOT_APPLICABLE : studyId);
       activityLog.setActivityName(activityName);
       activityLog.setActivtyDesc(activtyDesc);
       activityLog.setActivityDateTime(LocalDateTime.now());
-      activityLog.setServerClientId(clientId);
       activityLogRepository.save(activityLog);
-
     } catch (Exception e) {
       logger.error("CommonServiceImpl createActivityLog() - error ", e);
     }
-    logger.info("CommonServiceImpl createActivityLog() - ends ");
-
+    logger.info("CommonServiceImpl createActivityLog() - ends");
     return activityLog;
   }
 }

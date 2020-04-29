@@ -47,7 +47,7 @@ public class SitePermission {
   private AppInfoDetailsBO appInfo;
 
   @Column(name = "edit", columnDefinition = "TINYINT(1) default 0")
-  private Integer edit = 0;
+  private Integer canEdit = 0;
 
   @Column(name = "created", columnDefinition = "TIMESTAMP")
   private LocalDateTime created;
@@ -64,14 +64,14 @@ public class SitePermission {
       StudyInfoBO studyInfo,
       SiteBo siteBo,
       AppInfoDetailsBO appInfo,
-      Integer edit,
+      Integer canEdit,
       Integer createdBy) {
     super();
     this.urAdminUser = urAdminUser;
     this.studyInfo = studyInfo;
     this.siteBo = siteBo;
     this.appInfo = appInfo;
-    this.edit = edit;
+    this.canEdit = canEdit;
     this.createdBy = createdBy;
   }
 }

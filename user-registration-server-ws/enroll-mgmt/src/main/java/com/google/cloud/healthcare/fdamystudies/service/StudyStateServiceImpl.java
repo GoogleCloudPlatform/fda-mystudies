@@ -7,10 +7,10 @@
  */
 package com.google.cloud.healthcare.fdamystudies.service;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.stream.Collectors;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -29,6 +29,7 @@ import com.google.cloud.healthcare.fdamystudies.exception.InvalidRequestExceptio
 import com.google.cloud.healthcare.fdamystudies.exception.InvalidUserIdException;
 import com.google.cloud.healthcare.fdamystudies.exception.SystemException;
 import com.google.cloud.healthcare.fdamystudies.exception.UnAuthorizedRequestException;
+import com.google.cloud.healthcare.fdamystudies.model.AuditLogBo;
 import com.google.cloud.healthcare.fdamystudies.model.ParticipantStudiesBO;
 import com.google.cloud.healthcare.fdamystudies.model.StudyInfoBO;
 import com.google.cloud.healthcare.fdamystudies.model.UserDetailsBO;
@@ -78,7 +79,7 @@ public class StudyStateServiceImpl implements StudyStateService {
     boolean isExists = false;
     StudyInfoBO studyInfo = null;
     List<ParticipantStudiesBO> addParticipantStudiesList = new ArrayList<ParticipantStudiesBO>();
-    List<String> customStudyIdList = new LinkedList<>();
+    List<String> dataNeededForAuditLogging = new LinkedList<>();
     ParticipantStudiesBO participantStudyBo = new ParticipantStudiesBO();
     try {
       for (int i = 0; i < studiesBeenList.size(); i++) {
@@ -115,6 +116,19 @@ public class StudyStateServiceImpl implements StudyStateService {
                     && StringUtils.isNotEmpty(studiesBean.getParticipantId()))
                   participantStudies.setParticipantId(studiesBean.getParticipantId());
                 addParticipantStudiesList.add(participantStudies);
+                String dataNeeded =
+                    (new StringBuilder())
+                        .append(studiesBean.getStudyId())
+                        .append("_")
+                        .append(participantStudies.getStatus())
+                        .append("_")
+                        .append(
+                            studiesBean.getParticipantId() != null
+                                    && !studiesBean.getParticipantId().isEmpty()
+                                ? studiesBean.getParticipantId()
+                                : AppConstants.NOT_APPLICABLE)
+                        .toString();
+                dataNeededForAuditLogging.add(dataNeeded);
               }
             }
           }
@@ -147,7 +161,19 @@ public class StudyStateServiceImpl implements StudyStateService {
               && StringUtils.isNotEmpty(studiesBean.getParticipantId()))
             participantStudyBo.setParticipantId(studiesBean.getParticipantId());
           addParticipantStudiesList.add(participantStudyBo);
-          customStudyIdList.add(studiesBean.getStudyId());
+          String dataNeeded =
+              (new StringBuilder())
+                  .append(studiesBean.getStudyId())
+                  .append("_")
+                  .append(participantStudyBo.getStatus())
+                  .append("_")
+                  .append(
+                      studiesBean.getParticipantId() != null
+                              && !studiesBean.getParticipantId().isEmpty()
+                          ? studiesBean.getParticipantId()
+                          : AppConstants.NOT_APPLICABLE)
+                  .toString();
+          dataNeededForAuditLogging.add(dataNeeded);
         }
       }
       message = studyStateDao.saveParticipantStudies(addParticipantStudiesList);
@@ -155,33 +181,69 @@ public class StudyStateServiceImpl implements StudyStateService {
         studyStateRespBean = new StudyStateRespBean();
         studyStateRespBean.setMessage(
             MyStudiesUserRegUtil.ErrorCodes.SUCCESS.getValue().toLowerCase());
-        List<String> activityDescList =
-            customStudyIdList
-                .stream()
-                .map(
-                    studyId ->
-                        String.format(AppConstants.AUDIT_EVENT_UPDATE_STUDY_STATE_DESC, studyId))
-                .collect(Collectors.toList());
-        commonService.createActivityLogList(
-            userId, AppConstants.AUDIT_EVENT_UPDATE_STUDY_STATE_NAME, activityDescList);
+
+        List<AuditLogBo> activityLogs =
+            prepareActivityListForStudyStateUpdate(userId, dataNeededForAuditLogging, "sucess");
+
+        commonService.saveMultipleAuditLogs(activityLogs);
+
       } else {
-        List<String> activityDescList =
-            customStudyIdList
-                .stream()
-                .map(
-                    studyId ->
-                        String.format(
-                            AppConstants.AUDIT_EVENT_UPDATE_STUDY_STATE_FAILED_DESC, studyId))
-                .collect(Collectors.toList());
-        commonService.createActivityLogList(
-            userId, AppConstants.AUDIT_EVENT_UPDATE_STUDY_STATE_FAILED_NAME, activityDescList);
+        List<AuditLogBo> activityLogs =
+            prepareActivityListForStudyStateUpdate(userId, dataNeededForAuditLogging, "failure");
+        commonService.saveMultipleAuditLogs(activityLogs);
       }
     } catch (Exception e) {
+      List<AuditLogBo> activityLogs =
+          prepareActivityListForStudyStateUpdate(userId, dataNeededForAuditLogging, "failure");
+      commonService.saveMultipleAuditLogs(activityLogs);
       logger.error("StudyStateServiceImpl saveParticipantStudies() - error ", e);
     }
 
     logger.info("StudyStateServiceImpl saveParticipantStudies() - Ends ");
     return studyStateRespBean;
+  }
+
+  private List<AuditLogBo> prepareActivityListForStudyStateUpdate(
+      String userId, List<String> dataNeededForAuditLogging, String type) {
+    List<AuditLogBo> activityLogs = new ArrayList<>();
+    String eventName = "";
+    String eventDesc = "";
+    if (type.equals("sucess")) {
+      eventName = AppConstants.AUDIT_EVENT_UPDATE_STUDY_STATE_NAME;
+      eventDesc = AppConstants.AUDIT_EVENT_UPDATE_STUDY_STATE_DESC;
+    } else {
+      eventName = AppConstants.AUDIT_EVENT_UPDATE_STUDY_STATE_FAILED_NAME;
+      eventDesc = AppConstants.AUDIT_EVENT_UPDATE_STUDY_STATE_FAILED_DESC;
+    }
+
+    for (int i = 0; i < dataNeededForAuditLogging.size(); i++) {
+      AuditLogBo auditLogBO = new AuditLogBo();
+      String dataNeeded = dataNeededForAuditLogging.get(i);
+      String[] data = dataNeeded.split("_");
+      auditLogBO.setAccessLevel(AppConstants.APP_LEVEL_ACCESS);
+      auditLogBO.setActivityName(eventName);
+      auditLogBO.setActivityDateTime(LocalDateTime.now());
+      auditLogBO.setActivtyDesc(String.format(eventDesc, data[1]));
+      auditLogBO.setAuthUserId(userId);
+      auditLogBO.setParticipantId(data[2]);
+      auditLogBO.setServerClientId(AppConstants.AUDIT_LOG_MOBILE_APP_CLIENT_ID);
+      auditLogBO.setStudyId(data[0]);
+      activityLogs.add(auditLogBO);
+
+      if (data[1].equals(AppConstants.NOT_ELIGIBLE)) {
+        auditLogBO = new AuditLogBo();
+        auditLogBO.setAccessLevel(AppConstants.APP_LEVEL_ACCESS);
+        auditLogBO.setActivityName(AppConstants.AUDIT_EVENT_APP_USER_INELIGIBLE_NAME);
+        auditLogBO.setActivityDateTime(LocalDateTime.now());
+        auditLogBO.setActivtyDesc(AppConstants.AUDIT_EVENT_APP_USER_INELIGIBLE_DESC);
+        auditLogBO.setAuthUserId(userId);
+        auditLogBO.setParticipantId("");
+        auditLogBO.setServerClientId(AppConstants.AUDIT_LOG_MOBILE_APP_CLIENT_ID);
+        auditLogBO.setStudyId(data[0]);
+        activityLogs.add(auditLogBO);
+      }
+    }
+    return activityLogs;
   }
 
   @Override
@@ -244,15 +306,59 @@ public class StudyStateServiceImpl implements StudyStateService {
 
   @Override
   public WithDrawFromStudyRespBean withdrawFromStudy(
-      String participantId, String studyId, boolean delete)
+      String participantId, String studyId, boolean delete, String userId)
       throws UnAuthorizedRequestException, InvalidRequestException, SystemException {
     logger.info("StudyStateServiceImpl withdrawFromStudy() - Starts ");
     WithDrawFromStudyRespBean respBean = null;
     String message = MyStudiesUserRegUtil.ErrorCodes.FAILURE.getValue();
+    String retVal = MyStudiesUserRegUtil.ErrorCodes.FAILURE.getValue();
     try {
       message = studyStateDao.withdrawFromStudy(participantId, studyId, delete);
       if (message.equalsIgnoreCase(MyStudiesUserRegUtil.ErrorCodes.SUCCESS.getValue())) {
-        enrollUtil.withDrawParticipantFromStudy(participantId, studyId, delete);
+        retVal = enrollUtil.withDrawParticipantFromStudy(participantId, studyId, delete);
+        if (!delete) {
+          commonService.createAuditLog(
+              userId,
+              "Data-retention setting captured on withdrawal.",
+              "Based on participant choice/study setting, the data retention setting upon withdrawal from study is read as Retain",
+              AppConstants.AUDIT_LOG_MOBILE_APP_CLIENT_ID,
+              participantId,
+              studyId,
+              AppConstants.PARTICIPANT_LEVEL_ACCESS);
+        } else {
+          commonService.createAuditLog(
+              userId,
+              "Data-retention setting captured on withdrawal.",
+              "Based on participant choice/study setting, the data retention setting upon withdrawal from study is read as Delete",
+              AppConstants.AUDIT_LOG_MOBILE_APP_CLIENT_ID,
+              participantId,
+              studyId,
+              AppConstants.PARTICIPANT_LEVEL_ACCESS);
+        }
+
+        if (retVal.equalsIgnoreCase(MyStudiesUserRegUtil.ErrorCodes.SUCCESS.getValue())) {
+          if (delete) {
+            commonService.createAuditLog(
+                userId,
+                "Data deleted for participant ",
+                "Based on participant choice/study setting, the data retention setting for participant withdrawing from study is Delete and the participant's study related data was deleted or nullified from the Participant Datastore.",
+                AppConstants.AUDIT_LOG_MOBILE_APP_CLIENT_ID,
+                participantId,
+                studyId,
+                AppConstants.PARTICIPANT_LEVEL_ACCESS);
+          }
+        } else {
+          if (delete) {
+            commonService.createAuditLog(
+                userId,
+                "Data deletion failed ",
+                "Based on participant choice/study setting, the data retention setting for participant withdrawing from study is Delete but the participant's study related data could not be completely deleted or nullified from the Participant Datastore.",
+                AppConstants.AUDIT_LOG_MOBILE_APP_CLIENT_ID,
+                participantId,
+                studyId,
+                AppConstants.PARTICIPANT_LEVEL_ACCESS);
+          }
+        }
         respBean = new WithDrawFromStudyRespBean();
         respBean.setCode(HttpStatus.OK.value());
         respBean.setMessage(MyStudiesUserRegUtil.ErrorCodes.SUCCESS.getValue().toLowerCase());
