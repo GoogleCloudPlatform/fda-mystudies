@@ -26,6 +26,31 @@ terraform {
   }
 }
 
+locals {
+  apps = [
+    "auth-server",
+    "response-server",
+    "study-designer",
+    "study-meta-data",
+    "user-registration",
+  ]
+  apps_db_names = {
+    "auth-server"       = "auth_server"
+    "response-server"   = "mystudies_response_server"
+    "study-designer"    = "fda_hphc"
+    "study-meta-data"   = "fda_hphc"
+    "user-registration" = "mystudies_userregistration"
+  }
+  # Mapping from app codes to client id for auth server authentication.
+  # Related logic is in auth-server-ws/src/main/java/com/google/cloud/healthcare/fdamystudies/controller/AuthenticationController.java.
+  auth_server_apps = {
+    "ma" = "test_client_id_ma" # Mobile App
+    "urs" = "urs_client_id" # User Registration Server
+    "rs" = "rs_client_id" # Response Server
+    "wcp" = "wcp_client_id" # Web Config Portal
+  }
+}
+
 resource "google_secret_manager_secret" "secrets" {
   provider = google-beta
 
@@ -45,4 +70,55 @@ resource "google_secret_manager_secret" "secrets" {
   replication {
     automatic = true
   }
+}
+
+resource "google_secret_manager_secret" "app_client_id_secrets" {
+  provider = google-beta
+
+  for_each = toset(keys(local.auth_server_apps))
+
+  secret_id = "mystudies-${each.key}-client-id"
+  project   = var.project_id
+
+  replication {
+    automatic = true
+  }
+}
+
+resource "google_secret_manager_secret_version" "app_client_id_secrets_values" {
+  provider = google-beta
+
+  for_each = toset(keys(local.auth_server_apps))
+
+  secret      = google_secret_manager_secret.app_client_id_secrets[each.key].id
+  secret_data = local.auth_server_apps[each.key]
+}
+
+resource "random_password" "random_secret_keys" {
+  for_each = toset(keys(local.auth_server_apps))
+
+  length  = 16
+  special = true
+}
+
+resource "google_secret_manager_secret" "app_secret_key_secrets" {
+  provider = google-beta
+
+  for_each = toset(keys(local.auth_server_apps))
+
+  secret_id = "mystudies-${each.key}-secret-key"
+  project   = var.project_id
+
+  replication {
+    automatic = true
+  }
+}
+
+resource "google_secret_manager_secret_version" "app_secret_key_secrets_values" {
+  provider = google-beta
+
+  for_each = toset(keys(local.auth_server_apps))
+
+  secret      = google_secret_manager_secret.app_secret_key_secrets[each.key].id
+  secret_data = random_password.random_secret_keys[each.key].result
 }
