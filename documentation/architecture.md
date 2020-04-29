@@ -1,10 +1,10 @@
-# FDA MyStudies Architecture
+# Architecture Overview
 
 ## Introduction
 
 FDA MyStudies consists of several components that work together as a platform. These components include web-based UIs for building studies and enrolling participants, back-end services for managing the flow of data, and mobile applications that participants use to discover, enroll and participate in studies.
 
-This document describes the architecture of the FDA MyStudies on Google Cloud. It outlines the various platform components and their roles, interdependencies and interactions
+This document describes the architecture of FDA MyStudies. It outlines the various platform components and their roles, interdependencies and interactions
 
 ## Architecture Diagram
 
