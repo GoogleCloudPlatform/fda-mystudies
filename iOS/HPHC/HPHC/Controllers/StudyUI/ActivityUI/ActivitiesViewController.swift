@@ -55,6 +55,8 @@ class ActivitiesViewController: UIViewController {
 
   private lazy var allActivityList: [[String: Any]]! = []
 
+  private var lastActivityResponse: JSONDictionary?
+
   /// Holds the applied FilterTypes.
   var selectedFilter: ActivityFilterType?
 
@@ -699,15 +701,28 @@ class ActivitiesViewController: UIViewController {
 
   /// Save completed staus in database.
   func updateRunStatusToComplete() {
+    guard let currentActivity = Study.currentActivity,
+      let activityID = currentActivity.actvityId,
+      let studyID = currentActivity.studyId
+    else { return }
 
-    let activity = Study.currentActivity!
-    activity.compeltedRuns += 1
+    currentActivity.compeltedRuns += 1
     DBHandler.updateRunToComplete(
-      runId: activity.currentRunId,
-      activityId: activity.actvityId!,
-      studyId: activity.studyId!
+      runId: currentActivity.currentRunId,
+      activityId: activityID,
+      studyId: studyID
     )
     self.updateActivityStatusToComplete()
+    let lifeTimeUpdated = DBHandler.updateTargetActivityAnchorDateDetail(
+      studyId: studyID,
+      activityId: activityID,
+      response: self.lastActivityResponse ?? [:]
+    )
+    if lifeTimeUpdated {
+      self.loadActivitiesFromDatabase()
+    } else {
+      self.tableView?.reloadData()
+    }
   }
 
   /// Update Run Status based on Run Id.
@@ -1081,7 +1096,9 @@ extension ActivitiesViewController: NMWebServiceDelegate {
       self.removeProgressIndicator()
 
     } else if requestName as String == ResponseMethods.processResponse.method.methodName {
+      self.lastActivityResponse = nil
       self.removeProgressIndicator()
+      self.updateRunStatusToComplete()
       self.checkForActivitiesUpdates()
 
     } else if requestName as String == WCPMethods.studyUpdates.method.methodName {
@@ -1114,38 +1131,45 @@ extension ActivitiesViewController: NMWebServiceDelegate {
     if self.refreshControl != nil && (self.refreshControl?.isRefreshing)! {
       self.refreshControl?.endRefreshing()
     }
-    if requestName as String == AuthServerMethods.getRefreshedToken.description && error.code == 401 {  //unauthorized  // unauthorized
-      UIUtilities.showAlertMessageWithActionHandler(
-        kErrorTitle,
-        message: error.localizedDescription,
-        buttonTitle: kTitleOk,
-        viewControllerUsed: self,
-        action: {
-          self.fdaSlideMenuController()?.navigateToHomeAfterUnauthorizedAccess()
-        }
-      )
-    } else {
-      if requestName as String == ResponseMethods.activityState.method.methodName {
-        if error.code != NoNetworkErrorCode {
-          self.loadActivitiesFromDatabase()
-        } else {
+    let requestName = requestName as String
 
-          self.tableView?.isHidden = true
-          self.labelNoNetworkAvailable?.isHidden = false
+    switch requestName {
 
-          UIUtilities.showAlertWithTitleAndMessage(
-            title: NSLocalizedString(kErrorTitle, comment: "") as NSString,
-            message: error.localizedDescription as NSString
-          )
-        }
-      } else if error.code != 300 {
+    case AuthServerMethods.getRefreshedToken.description:
+      if error.code == 401 {
+        UIUtilities.showAlertMessageWithActionHandler(
+          kErrorTitle,
+          message: error.localizedDescription,
+          buttonTitle: kTitleOk,
+          viewControllerUsed: self,
+          action: {
+            self.fdaSlideMenuController()?.navigateToHomeAfterUnauthorizedAccess()
+          }
+        )
+      }
+    case ResponseMethods.activityState.method.methodName:
+      if error.code != NoNetworkErrorCode {
+        self.loadActivitiesFromDatabase()
+      } else {
+
+        self.tableView?.isHidden = true
+        self.labelNoNetworkAvailable?.isHidden = false
+
         UIUtilities.showAlertWithTitleAndMessage(
           title: NSLocalizedString(kErrorTitle, comment: "") as NSString,
           message: error.localizedDescription as NSString
         )
       }
+    case ResponseMethods.processResponse.method.methodName:
+      if error.code == NoNetworkErrorCode {
+        self.updateRunStatusToComplete()
+      }
+      self.lastActivityResponse = nil
+
+    default: break
     }
   }
+
 }
 
 // MARK: - ORKTaskViewController Delegate
@@ -1243,8 +1267,6 @@ extension ActivitiesViewController: ORKTaskViewControllerDelegate {
       break
     }
 
-    let activityId = Study.currentActivity?.actvityId
-    let studyId = Study.currentStudy?.studyId
     var response: [String: Any]?
 
     if taskViewController.task?.identifier == "ConsentTask" {
@@ -1397,9 +1419,10 @@ extension ActivitiesViewController: ORKTaskViewControllerDelegate {
             }
           }
         }
+        self.lastActivityResponse = response
+        // Save response to server.
+        ResponseServices().processResponse(responseData: response ?? [:], delegate: self)
 
-        // send response to labkey
-        ResponseServices().processResponse(responseData: response!, delegate: self)
       }
     }
     taskViewController.dismiss(
@@ -1419,20 +1442,8 @@ extension ActivitiesViewController: ORKTaskViewControllerDelegate {
             } else {
               self.updateRunStatusToComplete()
             }
-          } else {
-            self.updateRunStatusToComplete()
           }
 
-          let lifeTimeUpdated = DBHandler.updateTargetActivityAnchorDateDetail(
-            studyId: studyId!,
-            activityId: activityId!,
-            response: response!
-          )
-          if lifeTimeUpdated {
-            self.loadActivitiesFromDatabase()
-          } else {
-            self.tableView?.reloadData()
-          }
         } else {
           self.tableView?.reloadData()
         }
