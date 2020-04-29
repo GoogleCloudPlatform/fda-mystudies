@@ -941,10 +941,10 @@ public class AuthenticationController {
                         MyStudiesUserRegUtil.ErrorCodes.EMAIL_NOT_VERIFIED.getValue(),
                         response);
                     responseBean = new ResponseBean();
-                    responseBean.setCode(HttpStatus.BAD_REQUEST.value());
+                    responseBean.setCode(HttpStatus.FORBIDDEN.value());
                     responseBean.setMessage(
                         MyStudiesUserRegUtil.ErrorCodes.EMAIL_NOT_VERIFIED.getValue());
-                    return new ResponseEntity<>(responseBean, HttpStatus.BAD_REQUEST);
+                    return new ResponseEntity<>(responseBean, HttpStatus.FORBIDDEN);
                   }
                 }
               } else {
@@ -954,9 +954,9 @@ public class AuthenticationController {
                     MyStudiesUserRegUtil.ErrorCodes.EMAIL_NOT_VERIFIED.getValue(),
                     response);
                 responseBean = new ResponseBean();
-                responseBean.setCode(HttpStatus.BAD_REQUEST.value());
+                responseBean.setCode(HttpStatus.FORBIDDEN.value());
                 responseBean.setMessage(ErrorCode.EC_139.errorMessage());
-                return new ResponseEntity<>(responseBean, HttpStatus.BAD_REQUEST);
+                return new ResponseEntity<>(responseBean, HttpStatus.FORBIDDEN);
               }
             } else {
               MyStudiesUserRegUtil.getFailureResponse(
