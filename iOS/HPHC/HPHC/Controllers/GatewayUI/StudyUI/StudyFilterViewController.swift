@@ -277,7 +277,7 @@ extension AppDelegate {
         let filterValue = FilterValues()
         let name = value["name"] as? String ?? ""
         filterValue.title = name
-        let isContained = selectedValues.contains(name) ? true : false
+        let isContained = selectedValues.contains(name)
 
         if isContained == false {
 
