@@ -332,8 +332,8 @@ class ResourcesViewController: UIViewController {
             errorAlertActionTitle2: NSLocalizedString("Cancel", comment: ""),
             viewControllerUsed: self,
             action1: {
-              self.shouldDeleteData = true
-              self.withdrawalFromStudy(deleteResponse: true)
+              self.shouldDeleteData = false
+              self.withdrawalFromStudy(deleteResponse: false)
             },
             action2: {
 
