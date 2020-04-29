@@ -114,6 +114,17 @@ resource "kubernetes_secret" "user_registration_secrets" {
   }
 }
 
+resource "kubernetes_secret" "study_designer_secrets" {
+  metadata {
+    name = "study-designer-secrets"
+  }
+
+  data = {
+    CLIENT_ID  = data.google_secret_manager_secret_version.secrets["mystudies-wcp-client-id"].secret_data
+    SECRET_KEY = data.google_secret_manager_secret_version.secrets["mystudies-wcp-secret-key"].secret_data
+  }
+}
+
 resource "kubernetes_secret" "study_meta_data_secrets" {
   metadata {
     name = "study-meta-data-secrets"
