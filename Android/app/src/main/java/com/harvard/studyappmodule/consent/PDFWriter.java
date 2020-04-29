@@ -10,24 +10,18 @@ package com.harvard.studyappmodule.consent;
 
 import android.content.Context;
 import android.content.res.AssetManager;
-import android.graphics.Typeface;
 
 import com.harvard.utils.Logger;
-import com.tom_roush.fontbox.cff.CFFFont;
 import com.tom_roush.pdfbox.pdmodel.PDDocument;
 import com.tom_roush.pdfbox.pdmodel.PDPage;
 import com.tom_roush.pdfbox.pdmodel.PDPageContentStream;
 import com.tom_roush.pdfbox.pdmodel.common.PDRectangle;
 import com.tom_roush.pdfbox.pdmodel.font.PDFont;
-import com.tom_roush.pdfbox.pdmodel.font.PDSimpleFont;
-import com.tom_roush.pdfbox.pdmodel.font.PDTrueTypeFont;
 import com.tom_roush.pdfbox.pdmodel.font.PDType0Font;
 import com.tom_roush.pdfbox.pdmodel.font.PDType1Font;
-import com.tom_roush.pdfbox.pdmodel.font.encoding.Encoding;
 import com.tom_roush.pdfbox.pdmodel.graphics.image.PDImageXObject;
 import com.tom_roush.pdfbox.util.PDFBoxResourceLoader;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -36,8 +30,7 @@ public class PDFWriter {
   private String pdfOutputDirectory = "";
   private String pdfFileName = "";
   private PDDocument doc = null;
-  private PDFont font = null;
-  private AssetManager assetManager;
+  private PDFont font = PDType1Font.HELVETICA;
 
   PDFWriter(String pdfOutputDirectory, String pdfFileName) {
     this.pdfOutputDirectory = pdfOutputDirectory;
@@ -50,7 +43,7 @@ public class PDFWriter {
 
   void createPdfFile(Context context) {
     PDFBoxResourceLoader.init(context);
-    assetManager = context.getAssets();
+    AssetManager assetManager = context.getAssets();
     doc = new PDDocument();
     try {
       font =
@@ -58,7 +51,6 @@ public class PDFWriter {
               doc,
               assetManager.open("com/tom_roush/pdfbox/resources/ttf/LiberationSans-Regular.ttf"));
     } catch (Exception e) {
-      font = PDType1Font.HELVETICA;
       Logger.log(e);
     }
   }
@@ -172,7 +164,7 @@ public class PDFWriter {
       lines.add(" ");
       if (paragraphs[i] != null)
         while (paragraphs[i].length() > 0) {
-          paragraphs[i] = replaceUnsupportedCharacter(paragraphs[i]).toString();
+          paragraphs[i] = sanitizeCharacter(paragraphs[i]).toString();
           int spaceIndex = paragraphs[i].indexOf(' ', lastSpace + 1);
           if (spaceIndex < 0) {
             spaceIndex = paragraphs[i].length();
@@ -202,7 +194,7 @@ public class PDFWriter {
     }
   }
 
-  private StringBuffer replaceUnsupportedCharacter(String text) {
+  private StringBuffer sanitizeCharacter(String text) {
     StringBuffer nonSymbolBuffer = new StringBuffer();
     for (char character : text.toCharArray()) {
       if (isCharacterEncodeable(character)) {
