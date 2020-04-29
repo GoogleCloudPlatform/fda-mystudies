@@ -13,6 +13,11 @@
 # limitations under the License.
 
 terraform {
+  required_version = "~> 0.12.0"
+  required_providers {
+    google      = "~> 3.0"
+    google-beta = "~> 3.0"
+  }
   backend "gcs" {}
 }
 
@@ -34,6 +39,21 @@ module "my_studies_consent_documents_bucket" {
   location   = var.storage_location
 }
 
+module "my_studies_sql_import_bucket" {
+  source  = "terraform-google-modules/cloud-storage/google//modules/simple_bucket"
+  version = "~> 1.4"
+
+  name       = "${var.project_id}-sql-import"
+  project_id = var.project_id
+  location   = var.storage_location
+  iam_members = [
+    {
+      role   = "roles/storage.objectViewer"
+      member = "serviceAccount:${module.my_studies_cloudsql.instance_service_account_email_address}"
+    }
+  ]
+}
+
 data "google_secret_manager_secret_version" "sql_password" {
   provider = google-beta
   project  = var.secrets_project_id
@@ -44,7 +64,7 @@ module "my_studies_cloudsql" {
   source  = "GoogleCloudPlatform/sql-db/google//modules/safer_mysql"
   version = "3.2.0"
 
-  name              = "my-studies-2"
+  name              = "my-studies"
   project_id        = var.project_id
   region            = var.cloudsql_region
   zone              = var.cloudsql_zone

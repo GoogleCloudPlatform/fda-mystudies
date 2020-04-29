@@ -68,14 +68,12 @@ instance.
 There are some SQL dump files in this repo that need to be imported before
 deploying the apps.
 
-The gcloud import command only imports from GCS buckets, so first create a
-bucket:
+The gcloud import command only imports from GCS buckets. The Terraform setup
+creates a bucket and gives the SQL instance permission to read files from it.
+The bucket is named "<data-project>-sql-import"; for example,
+"heroes-hat-dev-data-sql-import"
 
-```
-$ gsutil mb gs://<data-project-id>-sql-import
-```
-
-Now upload the files to the bucket:
+Upload the SQL files to the bucket:
 
 ```
 $ gsutil cp \
@@ -89,8 +87,8 @@ gs://<data-project-id>-sql-import
 
 Find the name of your Cloud SQL DB instance. If looking at the GCP Console, this
 is just the instance name, is **not** the "Instance connection name". Example:
-if the connection name is "myproject-data:us-east1:my-studies-2", you should use
-just "my-studies-2".
+if the connection name is "myproject-data:us-east1:my-studies", you should use
+just "my-studies".
 
 Import the scripts, in this order:
 
