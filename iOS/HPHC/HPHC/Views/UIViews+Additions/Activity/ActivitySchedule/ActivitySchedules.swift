@@ -107,7 +107,7 @@ class ResponseDataFetch: NMWebServiceDelegate {
     let locale = Locale(identifier: "en_US_POSIX")
     dateFormatter.timeZone = TimeZone.current
     dateFormatter.locale = locale
-    dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSSZ"
+    dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss:SSSZ"
     return dateFormatter
   }()
 
