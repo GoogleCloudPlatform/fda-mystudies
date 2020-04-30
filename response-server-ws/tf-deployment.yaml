@@ -43,22 +43,22 @@ spec:
               valueFrom:
                 secretKeyRef:
                   key: REGISTRATION_CLIENT_ID
-                  name: response-server-credentials
+                  name: response-server-secrets
             - name: REGISTRATION_CLIENT_SECRET
               valueFrom:
                 secretKeyRef:
                   key: REGISTRATION_CLIENT_SECRET
-                  name: response-server-credentials
+                  name: response-server-secrets
             - name: WCP_USER
               valueFrom:
                 secretKeyRef:
                   key: WCP_USER
-                  name: response-server-credentials
+                  name: response-server-secrets
             - name: WCP_PASS
               valueFrom:
                 secretKeyRef:
                   key: WCP_PASS
-                  name: response-server-credentials
+                  name: response-server-secrets
             - name: WCP_STUDY_METADATA_SERVER_URL
               value: "study-meta-data-np:50000"
             - name: REGISTRATION_SERVER_URL
