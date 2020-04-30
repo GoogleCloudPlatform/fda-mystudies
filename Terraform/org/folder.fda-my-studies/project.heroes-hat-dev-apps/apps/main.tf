@@ -13,6 +13,11 @@
 # limitations under the License.
 
 terraform {
+  required_version = "~> 0.12.0"
+  required_providers {
+    google      = "~> 3.0"
+    google-beta = "~> 3.0"
+  }
   backend "gcs" {}
 }
 
@@ -21,7 +26,8 @@ terraform {
 # From
 # https://github.com/terraform-google-modules/terraform-google-kubernetes-engine/tree/master/modules/safer-cluster-update-variant
 module "heroes_hat_cluster" {
-  source = "terraform-google-modules/kubernetes-engine/google//modules/safer-cluster"
+  source  = "terraform-google-modules/kubernetes-engine/google//modules/safer-cluster"
+  version = "8.1.0"
 
   # Required
   # TODO: Set release_channel to "regular" when https://github.com/terraform-google-modules/terraform-google-kubernetes-engine/pull/487 is released.

@@ -36,6 +36,16 @@ spec:
                 secretKeyRef:
                   name: study-meta-data-db-credentials
                   key: dbname
+            - name: CLIENT_ID 
+              valueFrom: 
+                secretKeyRef: 
+                  name: study-meta-data-secrets
+                  key: CLIENT_ID
+            - name: SECRET_KEY 
+              valueFrom: 
+                secretKeyRef: 
+                  name: study-meta-data-secrets
+                  key: SECRET_KEY
             - name: RESPONSE_SERVER
               value: "response-server-np:50000"
             - name: USER_REGISTRATION_SERVER
@@ -57,7 +67,7 @@ spec:
         - name: cloudsql-proxy
           image: gcr.io/cloudsql-docker/gce-proxy:latest
           command: ["/cloud_sql_proxy",
-            "-instances=heroes-hat-dev-data:us-east1:my-studies-2=tcp:3306",
+            "-instances=heroes-hat-dev-data:us-east1:my-studies=tcp:3306",
             "-credential_file=/secrets/gcloud_key/key.json"]
           volumeMounts:
           - name: gcloud-key-volume

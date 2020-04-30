@@ -41,7 +41,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import com.hphc.mystudies.bean.ActiveTaskActivityMetaDataResponse;
 import com.hphc.mystudies.bean.ActivityResponse;
-import com.hphc.mystudies.bean.AppResponse;
 import com.hphc.mystudies.bean.AppUpdatesResponse;
 import com.hphc.mystudies.bean.AppVersionInfoBean;
 import com.hphc.mystudies.bean.ConsentDocumentResponse;
@@ -664,82 +663,6 @@ public class StudyMetaDataService {
     }
     LOGGER.info("INFO: StudyMetaDataService - notifications() :: Ends");
     return notificationsResponse;
-  }
-
-  @POST
-  @Produces(MediaType.APPLICATION_JSON)
-  @Consumes(MediaType.APPLICATION_JSON)
-  @Path("feedback")
-  public Object feedbackDetails(
-      String params, @Context ServletContext context, @Context HttpServletResponse response) {
-    LOGGER.info("INFO: StudyMetaDataService - feedbackDetails() :: Starts");
-    AppResponse appResponse = new AppResponse();
-    try {
-      JSONObject serviceJson = new JSONObject(params);
-      String subject = serviceJson.getString(StudyMetaDataEnum.RP_SUBJECT.value());
-      String body = serviceJson.getString(StudyMetaDataEnum.RP_BODY.value());
-      if (StringUtils.isNotEmpty(subject) && StringUtils.isNotEmpty(body)) {
-        appResponse = appMetaDataOrchestration.feedback(subject, body);
-      } else {
-        StudyMetaDataUtil.getFailureResponse(
-            ErrorCodes.STATUS_102,
-            ErrorCodes.UNKNOWN,
-            StudyMetaDataConstants.INVALID_INPUT_ERROR_MSG,
-            response);
-        return Response.status(Response.Status.BAD_REQUEST)
-            .entity(StudyMetaDataConstants.INVALID_INPUT)
-            .build();
-      }
-    } catch (Exception e) {
-      LOGGER.error("StudyMetaDataService - feedbackDetails() :: ERROR", e);
-      StudyMetaDataUtil.getFailureResponse(
-          ErrorCodes.STATUS_104, ErrorCodes.UNKNOWN, StudyMetaDataConstants.FAILURE, response);
-      return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
-          .entity(StudyMetaDataConstants.FAILURE)
-          .build();
-    }
-    LOGGER.info("INFO: StudyMetaDataService - feedbackDetails() :: Ends");
-    return appResponse;
-  }
-
-  @POST
-  @Produces(MediaType.APPLICATION_JSON)
-  @Consumes(MediaType.APPLICATION_JSON)
-  @Path("contactUs")
-  public Object contactUsDetails(
-      String params, @Context ServletContext context, @Context HttpServletResponse response) {
-    LOGGER.info("INFO: StudyMetaDataService - contactUsDetails() :: Starts");
-    AppResponse appResponse = new AppResponse();
-    try {
-      JSONObject serviceJson = new JSONObject(params);
-      String subject = serviceJson.getString(StudyMetaDataEnum.RP_SUBJECT.value());
-      String body = serviceJson.getString(StudyMetaDataEnum.RP_BODY.value());
-      String firstName = serviceJson.getString(StudyMetaDataEnum.RP_FIRST_NAME.value());
-      String email = serviceJson.getString(StudyMetaDataEnum.RP_EMAIL.value());
-      boolean inputFlag1 = StringUtils.isNotEmpty(subject) && StringUtils.isNotEmpty(body);
-      boolean inputFlag2 = StringUtils.isNotEmpty(firstName) && StringUtils.isNotEmpty(email);
-      if (inputFlag1 && inputFlag2) {
-        appResponse = appMetaDataOrchestration.contactUsDetails(subject, body, firstName, email);
-      } else {
-        StudyMetaDataUtil.getFailureResponse(
-            ErrorCodes.STATUS_102,
-            ErrorCodes.UNKNOWN,
-            StudyMetaDataConstants.INVALID_INPUT_ERROR_MSG,
-            response);
-        return Response.status(Response.Status.BAD_REQUEST)
-            .entity(StudyMetaDataConstants.INVALID_INPUT)
-            .build();
-      }
-    } catch (Exception e) {
-      LOGGER.error("StudyMetaDataService - contactUsDetails() :: ERROR", e);
-      StudyMetaDataUtil.getFailureResponse(
-          ErrorCodes.STATUS_104, ErrorCodes.UNKNOWN, StudyMetaDataConstants.FAILURE, response);
-      return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
-          .entity(StudyMetaDataConstants.FAILURE)
-          .build();
-    }
-    LOGGER.info("INFO: StudyMetaDataService - contactUsDetails() :: Ends");
-    return appResponse;
   }
 
   @GET
