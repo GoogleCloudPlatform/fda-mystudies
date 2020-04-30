@@ -55,6 +55,16 @@ spec:
                 secretKeyRef:
                   name: email-credentials
                   key: email_password
+            - name: CLIENT_ID
+              valueFrom:
+                secretKeyRef:
+                  name: study-designer-secrets
+                  key: CLIENT_ID
+            - name: SECRET_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: study-designer-secrets
+                  key: SECRET_KEY
             - name: REGISTRATION_SERVER_URL
               value: "user-registration-server-np:50000"
             - name: RESPONSE_SERVER_URL

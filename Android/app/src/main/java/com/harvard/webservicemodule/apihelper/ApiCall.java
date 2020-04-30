@@ -404,13 +404,15 @@ public class ApiCall<T, V> extends AsyncTask<T, String, String> {
                   refreshTokenUrl, refreshTokenJsonData, refreshTokenHeader, "");
           String s = checkResponse(true, mResponseModel, HttpURLConnection.HTTP_FORBIDDEN);
           if (s.equalsIgnoreCase("success")) {
-            if (mHeadersData.containsKey("accessToken") || mHeadersData.containsKey("auth")) {
+            if (mHeadersData != null
+                && (mHeadersData.containsKey("accessToken") || mHeadersData.containsKey("auth"))) {
               String s1 =
                   AppController.getHelperSharedPreference()
                       .readPreference(mContext, mContext.getString(R.string.auth), "");
               mHeadersData.put("accessToken", "" + s1);
             }
-            if (mHeadersData.containsKey("accessToken") || mHeadersData.containsKey("auth")) {
+            if (mHeadersData != null
+                && (mHeadersData.containsKey("accessToken") || mHeadersData.containsKey("auth"))) {
               mHeadersData.put(
                   AppConfig.CLIENT_TOKEN,
                   AppController.getHelperSharedPreference()

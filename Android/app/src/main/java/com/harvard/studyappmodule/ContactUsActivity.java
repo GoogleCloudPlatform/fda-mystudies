@@ -30,6 +30,7 @@ import com.harvard.utils.AppController;
 import com.harvard.utils.Logger;
 import com.harvard.utils.URLs;
 import com.harvard.webservicemodule.apihelper.ApiCall;
+import com.harvard.webservicemodule.events.RegistrationServerConfigEvent;
 import com.harvard.webservicemodule.events.WCPConfigEvent;
 import java.util.HashMap;
 
@@ -169,8 +170,8 @@ public class ContactUsActivity extends AppCompatActivity implements ApiCall.OnAs
     params.put("body", mMessage.getText().toString());
     params.put("firstName", mFirstName.getText().toString());
     params.put("email", mEmail.getText().toString());
-    WCPConfigEvent wcpConfigEvent =
-        new WCPConfigEvent(
+    RegistrationServerConfigEvent registrationServerConfigEvent =
+        new RegistrationServerConfigEvent(
             "post",
             URLs.CONTACT_US,
             CONTACT_US,
@@ -182,7 +183,7 @@ public class ContactUsActivity extends AppCompatActivity implements ApiCall.OnAs
             false,
             this);
 
-    contactUsEvent.setWcpConfigEvent(wcpConfigEvent);
+    contactUsEvent.setRegistrationServerConfigEvent(registrationServerConfigEvent);
     StudyModulePresenter studyModulePresenter = new StudyModulePresenter();
     studyModulePresenter.performContactUsEvent(contactUsEvent);
   }
