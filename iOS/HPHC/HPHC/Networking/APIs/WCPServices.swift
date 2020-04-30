@@ -252,33 +252,6 @@ class WCPServices: NSObject {
     self.sendRequestWith(method: method, params: headerParams, headers: nil)
   }
 
-  /// Creates a request to send `User` feedback
-  /// - Parameter delegate: Class object to receive response
-  func sendUserFeedback(delegate: NMWebServiceDelegate) {
-    self.delegate = delegate
-    let method = WCPMethods.feedback.method
-    let params = [
-      kFeedbackBody: FeedbackDetail.feedback,
-      kFeedbackSubject: FeedbackDetail.subject,
-    ]
-    self.sendRequestWith(method: method, params: params, headers: nil)
-
-  }
-
-  /// Creates a request to send ContactUs Request
-  /// - Parameter delegate: Class object to receive response
-  func sendUserContactUsRequest(delegate: NMWebServiceDelegate) {
-    self.delegate = delegate
-    let method = WCPMethods.contactUs.method
-    let params = [
-      kFeedbackBody: ContactUsFields.message,
-      kFeedbackSubject: ContactUsFields.subject,
-      kContactusEmail: ContactUsFields.email,
-      kContactusFirstname: ContactUsFields.firstName,
-    ]
-    self.sendRequestWith(method: method, params: params, headers: nil)
-  }
-
   /// Creates a request to receive `Study` updates
   /// - Parameters:
   ///   - study: ID of `Study`
@@ -587,9 +560,6 @@ class WCPServices: NSObject {
 
   }
 
-  func handleContactUsAndFeedback(response: [String: Any]) {
-  }
-
   func handleStudyUpdates(response: [String: Any]) {
 
     if Utilities.isValidObject(someObject: response as AnyObject?) {
@@ -649,8 +619,6 @@ extension WCPServices: NMWebServiceDelegate {
       self.handleTermsAndPolicy(response: response as! [String: Any])
     case .notifications:
       self.handleGetNotification(response: response as! [String: Any])
-    case .contactUs, .feedback:
-      self.handleContactUsAndFeedback(response: response as! [String: Any])
     case .studyUpdates:
       self.handleStudyUpdates(response: response as! [String: Any])
     case .appUpdates: break
