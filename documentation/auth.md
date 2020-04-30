@@ -121,16 +121,24 @@ Participants (mobile app users) are authenticated through the login method of th
 The mobile app sends a logout request to the Auth Server. The Auth Server then retrieves the access token from the request and clears the row in the sessions table, which has the access token.
 
 ### Validate Access Token
+
 ![alt_text](images/auth_validate_token.png "Validate access token diagram")
 
 1.  When a mobile app requests access to a protected resource, it passes the client token and access token to the resource server.
-1.  The resource server sends the access token and client token to the Auth Server for validation.
-1.  The Auth Server validates that the token is valid and has not expired.
-1.  If the access token has expired, a message indicating expiry is passed to the resource server.
-1.  The resource server passes this message to the mobile app.
-1.  The mobile app sends the client token and the refresh token to the Auth Server.
-1.  The Auth Server validates the client token and the refresh token .
-1.  The Auth Server generates a new access token and returns it to the mobile app.
+2.  The resource server sends the client token and the access token to the Auth Server for validation.
+3.  The Auth Server validates that the client token and access token are valid and the access token has not expired.
+4.  If the tokens are valid, the resource server returns the requested resource.
+5.  If the clien token or the access token are not valid, the resource server returns an "Access Denied" message.
+
+### Refresh Access Token
+![alt_text](images/auth_refresh_token.png "Refresh access token diagram")
+1.  When a mobile app requests access to a protected resource, it passes the client token and access token to the resource server.
+2.  If the access token has expired, a message indicating expiry is passed to the resource server.
+3.  The resource server passes this message to the mobile app.
+4.  The mobile app sends the client token and the refresh token to the Auth Server.
+5.  The Auth Server validates the client token and the refresh token.
+6.  The Auth Server generates a new access token and returns it to the mobile app.
+
 
 ### Server to Server Authorization
 
@@ -140,3 +148,4 @@ The mobile app sends a logout request to the Auth Server. The Auth Server then r
 1.  The recipient server calls the Auth Server to validate the client credentials and process the call if the credentials are valid.
 1.  The client ID and secret for all Auth Server clients are created before deployment and stored in both the Auth Server database and the client application property file. 
 1.  If the client ID and/or secret are changed, it will require a redeployment of the client application.
+
