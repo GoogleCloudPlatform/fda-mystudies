@@ -88,7 +88,7 @@ The app ID and organization ID represent the mobile apps managed by an organizat
 _Note: Organization ID is a placeholder for future enhancements and not used for validation_
 
 ### Participant Login
-![alt_text](images/auth_mobile_login.png "Mobile login diagram")
+![Mobile login diagram](images/auth_mobile_login.png)
 
 Participants (mobile app users) are authenticated through the login method of the Auth Server web service. The login flow is as follows:
 
@@ -116,14 +116,14 @@ Password handling and rules:
 1.  A mobile app user is locked out of an account for 15 minutes after 5 incorrect password attempts  
 
 ### Participant Logout
-![alt_text](images/auth_mobile_logout.png "Mobile logout diagram")
+
+![Mobile logout diagram](images/auth_mobile_logout.png)
 
 The mobile app sends a logout request to the Auth Server. The Auth Server then retrieves the access token from the request and clears the row in the sessions table, which has the access token.
 
 ### Validate Access Token
 
-![alt_text](images/auth_validate_token.png "Validate access token diagram")
-
+![Validate access token diagram](images/auth_validate_token.png)
 1.  When a mobile app requests access to a protected resource, it passes the client token and access token to the resource server.
 2.  The resource server sends the client token and the access token to the Auth Server for validation.
 3.  The Auth Server validates that the client token and access token are valid and the access token has not expired.
@@ -131,7 +131,8 @@ The mobile app sends a logout request to the Auth Server. The Auth Server then r
 5.  If the clien token or the access token are not valid, the resource server returns an "Access Denied" message.
 
 ### Refresh Access Token
-![alt_text](images/auth_refresh_token.png "Refresh access token diagram")
+
+![Refresh access token diagram](images/auth_refresh_token.png)
 1.  When a mobile app requests access to a protected resource, it passes the client token and access token to the resource server.
 2.  If the access token has expired, a message indicating expiry is passed to the resource server.
 3.  The resource server passes this message to the mobile app.
@@ -148,4 +149,5 @@ The mobile app sends a logout request to the Auth Server. The Auth Server then r
 1.  The recipient server calls the Auth Server to validate the client credentials and process the call if the credentials are valid.
 1.  The client ID and secret for all Auth Server clients are created before deployment and stored in both the Auth Server database and the client application property file. 
 1.  If the client ID and/or secret are changed, it will require a redeployment of the client application.
+
 
