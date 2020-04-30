@@ -57,6 +57,8 @@ spec:
               value: "user-registration-server-np:50000"
             - name: RESPONSE_SERVER_URL
               value: "response-server-np:50000"
+            - name: GOOGLE_APPLICATION_CREDENTIALS
+              value: "/secrets/gcloud_key/key.json"
           ports:
           - containerPort: 8080
           readinessProbe:
