@@ -57,12 +57,18 @@ spec:
               value: "user-registration-server-np:50000"
             - name: RESPONSE_SERVER_URL
               value: "response-server-np:50000"
+            - name: GOOGLE_APPLICATION_CREDENTIALS
+              value: "/secrets/gcloud_key/key.json"
           ports:
           - containerPort: 8080
           readinessProbe:
             httpGet:
               path: /studybuilder/appDetails.do
               port: 8080
+          volumeMounts:
+          - name: gcloud-key-volume
+            mountPath: /secrets/gcloud_key
+            readOnly: true
         - name: cloudsql-proxy 
           image: gcr.io/cloudsql-docker/gce-proxy:latest 
           command: ["/cloud_sql_proxy", 
@@ -75,4 +81,4 @@ spec:
       volumes: 
         - name: gcloud-key-volume
           secret: 
-            secretName: study-meta-data-gcloud-key
+            secretName: study-designer-gcloud-key
