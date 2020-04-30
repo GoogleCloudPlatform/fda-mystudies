@@ -129,7 +129,7 @@ class ContactUsViewController: UIViewController {
         alertMessage: NSLocalizedString(kMessageValidEmail, comment: "")
       )
     } else {
-      WCPServices().sendUserContactUsRequest(delegate: self)
+      UserServices().sendUserContactUsRequest(delegate: self)
     }
   }
 }

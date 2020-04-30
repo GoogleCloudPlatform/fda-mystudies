@@ -31,6 +31,8 @@ enum RegistrationMethods: String {
   case deactivate
   case verifyEmailId
   case versionInfo
+  case feedback
+  case contactUs
 
   var description: String {
     switch self {
@@ -113,6 +115,8 @@ class RegistrationServerConfiguration: NetworkConfiguration {
     if User.currentUser.authToken != nil {
       header[kUserAuthToken] = User.currentUser.authToken
       header["clientToken"] = User.currentUser.clientToken
+      header["clientId"] = clientId
+      header["secretKey"] = seceretKey
     } else {
       header["clientId"] = clientId
       header["secretKey"] = seceretKey
