@@ -5,10 +5,11 @@
  * license that can be found in the LICENSE file or at
  * https://opensource.org/licenses/MIT.
  */
+
 package com.google.cloud.healthcare.fdamystudies.model;
 
 import java.io.Serializable;
-import java.util.Date;
+import java.time.LocalDateTime;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -38,5 +39,5 @@ public class UserAppDetailsBO implements Serializable {
   private Integer userDetailsId;
 
   @Column(name = "created_on")
-  private Date createdOn;
+  private LocalDateTime createdOn;
 }

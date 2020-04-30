@@ -5,6 +5,7 @@
  * license that can be found in the LICENSE file or at
  * https://opensource.org/licenses/MIT.
  */
+
 package com.google.cloud.healthcare.fdamystudies.model;
 
 import java.io.Serializable;
@@ -21,25 +22,37 @@ import lombok.Setter;
 @Setter
 @Getter
 @Entity
-@Table(name = "activity_log")
-public class ActivityLogBO implements Serializable {
+@Table(name = "audit_log")
+public class AuditLogBo implements Serializable {
 
   private static final long serialVersionUID = -3019529323339411129L;
 
   @Id
-  @Column(name = "activity_log_id")
+  @Column(name = "id")
   @GeneratedValue(strategy = GenerationType.AUTO)
   private Integer id;
 
   @Column(name = "auth_user_id")
   private String authUserId;
 
+  @Column(name = "server_client_id")
+  private String serverClientId;
+
   @Column(name = "actvity_name")
   private String activityName;
 
-  @Column(name = "activity_description")
+  @Column(name = "activity_description", columnDefinition = "VARCHAR(2000)")
   private String activtyDesc;
 
   @Column(name = "activity_date_time")
   private LocalDateTime activityDateTime;
+
+  @Column(name = "participant_id")
+  private String participantId;
+
+  @Column(name = "study_id")
+  private String studyId;
+
+  @Column(name = "access_level")
+  private String accessLevel;
 }

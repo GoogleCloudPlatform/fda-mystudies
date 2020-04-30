@@ -115,6 +115,7 @@ public class UserConsentManagementController {
                       studyInfoBean.getStudyInfoId(),
                       consentStatusBean.getConsent().getVersion());
               userDetailId = userConsentManagementService.getUserDetailsId(userId);
+              String fileName = null;
               if (studyConsent != null) {
                 if ((consentStatusBean.getConsent().getVersion() != null)
                     && !StringUtils.isEmpty(consentStatusBean.getConsent().getVersion())) {
@@ -127,7 +128,7 @@ public class UserConsentManagementController {
                 if ((consentStatusBean.getConsent().getPdf() != null)
                     && !StringUtils.isEmpty(consentStatusBean.getConsent().getPdf())) {
                   String underDirectory = userId + "/" + consentStatusBean.getStudyId();
-                  String fileName =
+                  fileName =
                       userId
                           + "_"
                           + consentStatusBean.getStudyId()
@@ -152,7 +153,7 @@ public class UserConsentManagementController {
                 if ((consentStatusBean.getConsent().getPdf() != null)
                     && !StringUtils.isEmpty(consentStatusBean.getConsent().getPdf())) {
                   String underDirectory = userId + "/" + consentStatusBean.getStudyId();
-                  String fileName =
+                  fileName =
                       userId
                           + "_"
                           + consentStatusBean.getStudyId()
@@ -176,14 +177,62 @@ public class UserConsentManagementController {
                       MyStudiesUserRegUtil.ErrorCodes.SUCCESS.getValue()))) {
                 errorBean = new ErrorBean(ErrorCode.EC_200.code(), ErrorCode.EC_110.errorMessage());
 
+                String description =
+                    String.format(
+                        AppConstants.AUDIT_EVENT_UPDATE_ELIGIBILITY_CONSENT_DESC,
+                        fileName,
+                        participantStudies.getStatus(),
+                        consentStatusBean.getConsent().getVersion(),
+                        consentStatusBean.getSharing());
                 commonService.createActivityLog(
                     userId,
                     AppConstants.AUDIT_EVENT_UPDATE_ELIGIBILITY_CONSENT_NAME,
+                    description,
+                    AppConstants.PARTICIPANT_LEVEL_ACCESS,
+                    participantStudies.getParticipantId(),
+                    consentStatusBean.getStudyId());
+                description =
                     String.format(
-                        AppConstants.AUDIT_EVENT_UPDATE_ELIGIBILITY_CONSENT_DESC,
-                        consentStatusBean.getStudyId()));
+                        AppConstants.AUDIT_EVENT_ENROLL_INTO_STUDY_SUCCESS_DESC,
+                        participantStudies.getStatus(),
+                        participantStudies.getParticipantId());
+                commonService.createActivityLog(
+                    userId,
+                    AppConstants.AUDIT_EVENT_ENROLL_INTO_STUDY_SUCCESS_NAME,
+                    description,
+                    AppConstants.PARTICIPANT_LEVEL_ACCESS,
+                    participantStudies.getParticipantId(),
+                    consentStatusBean.getStudyId());
+
               } else {
                 errorBean = new ErrorBean(ErrorCode.EC_111.code(), ErrorCode.EC_111.errorMessage());
+                String description =
+                    String.format(
+                        AppConstants.AUDIT_EVENT_UPDATE_ELIGIBILITY_CONSENT_FAIL_DESC,
+                        fileName,
+                        participantStudies.getStatus(),
+                        consentStatusBean.getConsent().getVersion(),
+                        consentStatusBean.getSharing());
+                commonService.createActivityLog(
+                    userId,
+                    AppConstants.AUDIT_EVENT_UPDATE_ELIGIBILITY_CONSENT_FAIL_NAME,
+                    description,
+                    AppConstants.PARTICIPANT_LEVEL_ACCESS,
+                    participantStudies.getParticipantId(),
+                    consentStatusBean.getStudyId());
+
+                description =
+                    String.format(
+                        AppConstants.AUDIT_EVENT_ENROLL_INTO_STUDY_FAILED_DESC,
+                        participantStudies.getStatus(),
+                        participantStudies.getParticipantId());
+                commonService.createActivityLog(
+                    userId,
+                    AppConstants.AUDIT_EVENT_ENROLL_INTO_STUDY_FAILED_NAME,
+                    description,
+                    AppConstants.PARTICIPANT_LEVEL_ACCESS,
+                    participantStudies.getParticipantId(),
+                    consentStatusBean.getStudyId());
               }
             } else {
               MyStudiesUserRegUtil.getFailureResponse(

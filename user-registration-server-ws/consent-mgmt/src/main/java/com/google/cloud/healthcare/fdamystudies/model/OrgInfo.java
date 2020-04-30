@@ -5,6 +5,7 @@
  * license that can be found in the LICENSE file or at
  * https://opensource.org/licenses/MIT.
  */
+
 package com.google.cloud.healthcare.fdamystudies.model;
 
 import java.util.Date;
@@ -33,7 +34,7 @@ public class OrgInfo {
   @Column(name = "org_id")
   private String orgId;
 
-  @Column(name = "created_on")
+  @Column(name = "created_on", columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
   private Date createdOn;
 
   @Column(name = "created_by", columnDefinition = "INT(20) default 0")
@@ -42,6 +43,8 @@ public class OrgInfo {
   @Column(name = "modified_by", columnDefinition = "INT(20)")
   private Integer modifiedBy;
 
-  @Column(name = "modified_date")
+  @Column(
+      name = "modified_date",
+      columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP")
   private Date modifiedDate;
 }

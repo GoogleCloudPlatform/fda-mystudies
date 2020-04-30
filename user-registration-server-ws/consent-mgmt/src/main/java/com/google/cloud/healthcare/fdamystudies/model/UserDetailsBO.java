@@ -26,7 +26,7 @@ import lombok.Setter;
 @Table(name = "user_details")
 public class UserDetailsBO implements Serializable {
 
-  private static final long serialVersionUID = 4985607753888575491L;
+  private static final long serialVersionUID = 3298208288501854383L;
 
   @Id
   @Column(name = "user_details_id")
