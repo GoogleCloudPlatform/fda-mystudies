@@ -75,4 +75,4 @@ spec:
       volumes: 
         - name: gcloud-key-volume
           secret: 
-            secretName: study-meta-data-gcloud-key
+            secretName: study-designer-gcloud-key
