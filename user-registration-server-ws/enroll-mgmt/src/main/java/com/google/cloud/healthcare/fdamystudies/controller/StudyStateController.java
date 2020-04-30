@@ -119,6 +119,7 @@ public class StudyStateController {
         List<StudyStateBean> studies = studyStateService.getStudiesState(userId);
         studyStateResponse.setStudies(studies);
         studyStateResponse.setMessage(AppConstants.SUCCESS);
+
         return new ResponseEntity<>(studyStateResponse, HttpStatus.OK);
       } catch (InvalidUserIdException e) {
         MyStudiesUserRegUtil.getFailureResponse(
@@ -155,6 +156,7 @@ public class StudyStateController {
       produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<?> withdrawFromStudy(
       @RequestBody WithdrawFromStudyBean withdrawFromStudyBean,
+      @RequestHeader("userId") String userId,
       @Context HttpServletResponse response) {
     logger.info("StudyStateController withdrawFromStudy() - Starts ");
     WithDrawFromStudyRespBean respBean = null;
@@ -168,11 +170,21 @@ public class StudyStateController {
               studyStateService.withdrawFromStudy(
                   withdrawFromStudyBean.getParticipantId(),
                   withdrawFromStudyBean.getStudyId(),
-                  withdrawFromStudyBean.isDelete());
+                  withdrawFromStudyBean.isDelete(),
+                  userId);
           if (respBean != null) {
             logger.info("StudyStateController withdrawFromStudy() - Ends ");
             respBean.setCode(ErrorCode.EC_200.code());
             respBean.setMessage(MyStudiesUserRegUtil.ErrorCodes.SUCCESS.getValue());
+            commonService.createAuditLog(
+                userId,
+                AppConstants.AUDIT_EVENT_WITHDRAW_SUCCESS_NAME,
+                String.format(
+                    AppConstants.AUDIT_EVENT_WITHDRAW_SUCCESS_DESC, AppConstants.WITHDRAWN),
+                AppConstants.AUDIT_LOG_MOBILE_APP_CLIENT_ID,
+                withdrawFromStudyBean.getParticipantId(),
+                withdrawFromStudyBean.getStudyId(),
+                AppConstants.APP_LEVEL_ACCESS);
 
             return new ResponseEntity<>(respBean, HttpStatus.OK);
           } else {
@@ -181,6 +193,14 @@ public class StudyStateController {
                 MyStudiesUserRegUtil.ErrorCodes.UNKNOWN.getValue(),
                 MyStudiesUserRegUtil.ErrorCodes.FAILURE.getValue(),
                 response);
+            commonService.createAuditLog(
+                userId,
+                AppConstants.AUDIT_EVENT_WITHDRAW_FAIL_NAME,
+                AppConstants.AUDIT_EVENT_WITHDRAW_FAIL_DESC,
+                AppConstants.AUDIT_LOG_MOBILE_APP_CLIENT_ID,
+                withdrawFromStudyBean.getParticipantId(),
+                withdrawFromStudyBean.getStudyId(),
+                AppConstants.APP_LEVEL_ACCESS);
             return null;
           }
         } else {
@@ -189,6 +209,14 @@ public class StudyStateController {
               MyStudiesUserRegUtil.ErrorCodes.INVALID_INPUT.getValue(),
               MyStudiesUserRegUtil.ErrorCodes.INVALID_INPUT_ERROR_MSG.getValue(),
               response);
+          commonService.createAuditLog(
+              userId,
+              AppConstants.AUDIT_EVENT_WITHDRAW_FAIL_NAME,
+              AppConstants.AUDIT_EVENT_WITHDRAW_FAIL_DESC,
+              AppConstants.AUDIT_LOG_MOBILE_APP_CLIENT_ID,
+              "",
+              "",
+              AppConstants.APP_LEVEL_ACCESS);
           return null;
         }
       } else {
@@ -197,6 +225,14 @@ public class StudyStateController {
             MyStudiesUserRegUtil.ErrorCodes.INVALID_INPUT.getValue(),
             MyStudiesUserRegUtil.ErrorCodes.INVALID_INPUT_ERROR_MSG.getValue(),
             response);
+        commonService.createAuditLog(
+            userId,
+            AppConstants.AUDIT_EVENT_WITHDRAW_FAIL_NAME,
+            AppConstants.AUDIT_EVENT_WITHDRAW_FAIL_DESC,
+            AppConstants.AUDIT_LOG_MOBILE_APP_CLIENT_ID,
+            "",
+            "",
+            AppConstants.APP_LEVEL_ACCESS);
         return null;
       }
     } catch (UnAuthorizedRequestException e) {
@@ -206,6 +242,14 @@ public class StudyStateController {
           MyStudiesUserRegUtil.ErrorCodes.UNAUTHORIZED.getValue(),
           MyStudiesUserRegUtil.ErrorCodes.INVALID_CLIENTID_OR_SECRET_KEY.getValue(),
           response);
+      commonService.createAuditLog(
+          userId,
+          AppConstants.AUDIT_EVENT_WITHDRAW_FAIL_NAME,
+          AppConstants.AUDIT_EVENT_WITHDRAW_FAIL_DESC,
+          AppConstants.AUDIT_LOG_MOBILE_APP_CLIENT_ID,
+          "",
+          "",
+          AppConstants.APP_LEVEL_ACCESS);
       return null;
     } catch (InvalidRequestException e) {
       logger.error("StudyStateController withdrawFromStudy() - error ", e);
@@ -214,6 +258,14 @@ public class StudyStateController {
           MyStudiesUserRegUtil.ErrorCodes.INVALID_INPUT.getValue(),
           MyStudiesUserRegUtil.ErrorCodes.INVALID_INPUT_ERROR_MSG.getValue(),
           response);
+      commonService.createAuditLog(
+          userId,
+          AppConstants.AUDIT_EVENT_WITHDRAW_FAIL_NAME,
+          AppConstants.AUDIT_EVENT_WITHDRAW_FAIL_DESC,
+          AppConstants.AUDIT_LOG_MOBILE_APP_CLIENT_ID,
+          "",
+          "",
+          AppConstants.APP_LEVEL_ACCESS);
       return null;
     } catch (Exception e) {
       logger.error("StudyStateController withdrawFromStudy() - error ", e);
@@ -222,6 +274,14 @@ public class StudyStateController {
           MyStudiesUserRegUtil.ErrorCodes.UNKNOWN.getValue(),
           MyStudiesUserRegUtil.ErrorCodes.CONNECTION_ERROR_MSG.getValue(),
           response);
+      commonService.createAuditLog(
+          userId,
+          AppConstants.AUDIT_EVENT_WITHDRAW_FAIL_NAME,
+          AppConstants.AUDIT_EVENT_WITHDRAW_FAIL_DESC,
+          AppConstants.AUDIT_LOG_MOBILE_APP_CLIENT_ID,
+          "",
+          "",
+          AppConstants.APP_LEVEL_ACCESS);
       return null;
     }
   }

@@ -9,7 +9,7 @@ package com.google.cloud.healthcare.fdamystudies.dao;
 
 import java.util.List;
 import org.springframework.stereotype.Repository;
-import com.google.cloud.healthcare.fdamystudies.model.ActivityLogBO;
+import com.google.cloud.healthcare.fdamystudies.model.AuditLogBo;
 import com.google.cloud.healthcare.fdamystudies.model.StudyInfoBO;
 import com.google.cloud.healthcare.fdamystudies.model.UserDetailsBO;
 
@@ -22,8 +22,6 @@ public interface CommonDao {
 
   public StudyInfoBO getStudyDetails(String customStudyId);
 
-  public List<ActivityLogBO> createActivityLogList(
+  public List<AuditLogBo> createActivityLogList(
       String userId, String activityName, List<String> activityDescList);
-
-  public ActivityLogBO createActivityLog(String userId, String activityName, String activtyDesc);
 }

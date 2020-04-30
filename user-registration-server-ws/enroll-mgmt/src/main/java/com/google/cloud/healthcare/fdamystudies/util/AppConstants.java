@@ -28,14 +28,14 @@ public class AppConstants {
   public static final String CLOSE_STUDY = "CLOSE";
 
   public static final String AUDIT_EVENT_UPDATE_STUDY_STATE_NAME =
-      "Save or update of an user study info";
+      "Study State saved/updated for participant";
   public static final String AUDIT_EVENT_UPDATE_STUDY_STATE_DESC =
-      "Study state has been updated for custom study id :%s";
+      "Study State \"%s\" saved or updated for participant in Participant Datastore. ";
 
   public static final String AUDIT_EVENT_UPDATE_STUDY_STATE_FAILED_NAME =
-      "Save or update of an user study info failed";
+      "Study State save/update operation failure";
   public static final String AUDIT_EVENT_UPDATE_STUDY_STATE_FAILED_DESC =
-      "Study state has been unscuccessful for custom study id :%s";
+      "Study State \"%s\" failed to get saved/updated for participant in Participant Datastore. ";
 
   public static final String CLIENT_ID = "clientId";
   public static final String SECRET_KEY = "secretKey";
@@ -51,6 +51,7 @@ public class AppConstants {
   public static final String OPTIONS_METHOD = "OPTIONS";
   public static final String TRUE_STR = "true";
   public static final String ERROR_STR = "Error";
+  public static final String FALSE_STR = "false";
 
   public static final String CODE = "code";
   public static final String USER_MESSAGE = "userMessage";
@@ -61,4 +62,41 @@ public class AppConstants {
   public static final String RESP_SERVER_APPLICATION_ID = "applicationId";
   public static final String RESP_SERVER_CLIENT_ID = "clientId";
   public static final String RESP_SERVER_CLIENT_SECRET_KEY = "clientSecret";
+
+  public static final String PARTICIPANT_LEVEL_ACCESS = "Participant";
+  public static final String APP_LEVEL_ACCESS = "App User";
+  public static final String NOT_APPLICABLE = "NA";
+  public static final String AUDIT_LOG_MOBILE_APP_CLIENT_ID = "FMSGCMOBAPP";
+  public static final String AUDIT_LOG_PARTICIPANT_DATASTORE_CLIENT_ID = "FMSGCPARDTST";
+
+  public static final String AUDIT_EVENT_ENROLL_SUCCESS_NAME = "Enrolment into study successful";
+  public static final String AUDIT_EVENT_ENROLL_SUCCESS_DESC =
+      "App user was enrolled into study successfully as a Participant. Enrolment Status updated to \"%s\", Participant ID: %s";
+
+  public static final String AUDIT_EVENT_APP_USER_ELIGIBLE_NAME =
+      "App user found eligible for study";
+  public static final String AUDIT_EVENT_APP_USER_ELIGIBLE_DESC =
+      "App user found eligible for study.  Study Type: %s, Token used/generated: %s";
+
+  public static final String AUDIT_EVENT_APP_USER_INELIGIBLE_NAME =
+      "App user found ineligible for study";
+  public static final String AUDIT_EVENT_APP_USER_INELIGIBLE_DESC =
+      "App user found in-eligible for study.";
+  public static final String AUDIT_EVENT_INVALID_ENROLLMENT_TOKEN_NAME =
+      "Enrollment Token found invalid";
+  public static final String AUDIT_EVENT_INVALID_ENROLLMENT_TOKEN_DESC =
+      "Enrolment Token entered by app user found invalid. Study Type: Closed, Token used: %s.";
+
+  public static final String AUDIT_EVENT_ENROLL_FAIL_NAME = "Enrolment into study failed";
+  public static final String AUDIT_EVENT_ENROLL_FAIL_DESC =
+      "App user could not be enrolled into study as a Participant.";
+
+  public static final String AUDIT_EVENT_WITHDRAW_SUCCESS_NAME = "Withdrawal from study successful";
+  public static final String AUDIT_EVENT_WITHDRAW_SUCCESS_DESC =
+      "Participant withdrawn from study. Enrolment Status: \"%s\"";
+
+  public static final String AUDIT_EVENT_WITHDRAW_FAIL_NAME = "Withdrawal from study: failure";
+  public static final String AUDIT_EVENT_WITHDRAW_FAIL_DESC =
+      "Participant withdrawal from study failed.";
+  public static final String NOT_ELIGIBLE = "notEligible";
 }

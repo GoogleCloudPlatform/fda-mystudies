@@ -11,7 +11,7 @@ import java.util.List;
 import com.google.cloud.healthcare.fdamystudies.exception.InvalidRequestException;
 import com.google.cloud.healthcare.fdamystudies.exception.SystemException;
 import com.google.cloud.healthcare.fdamystudies.exception.UnAuthorizedRequestException;
-import com.google.cloud.healthcare.fdamystudies.model.ActivityLogBO;
+import com.google.cloud.healthcare.fdamystudies.model.AuditLogBo;
 import com.google.cloud.healthcare.fdamystudies.model.UserDetailsBO;
 
 public interface CommonService {
@@ -20,11 +20,20 @@ public interface CommonService {
 
   public UserDetailsBO getUserInfoDetails(String userId);
 
-  public List<ActivityLogBO> createActivityLogList(
+  public List<AuditLogBo> createActivityLogList(
       String userId, String activityName, List<String> activityDescList);
 
-  public ActivityLogBO createActivityLog(String userId, String activityName, String activtyDesc);
+  public AuditLogBo createAuditLog(
+      String userId,
+      String activityName,
+      String activtyDesc,
+      String clientId,
+      String participantId,
+      String studyId,
+      String accessLevel);
 
   boolean validateServerClientCredentials(String clientId, String clientSecret)
       throws SystemException, UnAuthorizedRequestException, InvalidRequestException;
+
+  public List<AuditLogBo> saveMultipleAuditLogs(List<AuditLogBo> activityLogs);
 }

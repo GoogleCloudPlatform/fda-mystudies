@@ -29,6 +29,7 @@ import com.google.cloud.healthcare.fdamystudies.exception.InvalidRequestExceptio
 import com.google.cloud.healthcare.fdamystudies.exception.UnAuthorizedRequestException;
 import com.google.cloud.healthcare.fdamystudies.service.CommonService;
 import com.google.cloud.healthcare.fdamystudies.service.EnrollmentTokenService;
+import com.google.cloud.healthcare.fdamystudies.util.AppConstants;
 import com.google.cloud.healthcare.fdamystudies.util.AppUtil;
 import com.google.cloud.healthcare.fdamystudies.util.EnrollmentManagementUtil;
 import com.google.cloud.healthcare.fdamystudies.util.ErrorCode;
@@ -70,6 +71,14 @@ public class EnrollmentTokenController {
               ErrorResponseUtil.ErrorCodes.INVALID_INPUT.getValue(),
               ErrorResponseUtil.ErrorCodes.ERROR_REQUIRED.getValue(),
               response);
+          commonService.createAuditLog(
+              userId,
+              AppConstants.AUDIT_EVENT_ENROLL_FAIL_NAME,
+              AppConstants.AUDIT_EVENT_ENROLL_FAIL_DESC,
+              AppConstants.AUDIT_LOG_MOBILE_APP_CLIENT_ID,
+              "",
+              "",
+              AppConstants.APP_LEVEL_ACCESS);
           return null;
         } else if (!enrollmentTokenfService.studyExists(enrollmentBean.getStudyId())) {
           ErrorResponseUtil.getFailureResponse(
@@ -77,6 +86,14 @@ public class EnrollmentTokenController {
               ErrorResponseUtil.ErrorCodes.INVALID_INPUT.getValue(),
               ErrorResponseUtil.ErrorCodes.STUDYID_NOT_EXIST.getValue(),
               response);
+          commonService.createAuditLog(
+              userId,
+              AppConstants.AUDIT_EVENT_ENROLL_FAIL_NAME,
+              AppConstants.AUDIT_EVENT_ENROLL_FAIL_DESC,
+              AppConstants.AUDIT_LOG_MOBILE_APP_CLIENT_ID,
+              "",
+              "",
+              AppConstants.APP_LEVEL_ACCESS);
           return null;
         } else if (!StringUtils.isEmpty(enrollmentBean.getToken())) {
           if (enrollmentTokenfService.hasParticipant(
@@ -86,6 +103,14 @@ public class EnrollmentTokenController {
                 ErrorResponseUtil.ErrorCodes.INVALID_INPUT.getValue(),
                 ErrorResponseUtil.ErrorCodes.TOKEN_ALREADY_USE.getValue(),
                 response);
+            commonService.createAuditLog(
+                userId,
+                AppConstants.AUDIT_EVENT_ENROLL_FAIL_NAME,
+                AppConstants.AUDIT_EVENT_ENROLL_FAIL_DESC,
+                AppConstants.AUDIT_LOG_MOBILE_APP_CLIENT_ID,
+                "",
+                enrollmentBean.getStudyId(),
+                AppConstants.APP_LEVEL_ACCESS);
             return null;
           } else if (!enrollManagementUtil.isChecksumValid(enrollmentBean.getToken())) {
             ErrorResponseUtil.getFailureResponse(
@@ -93,6 +118,16 @@ public class EnrollmentTokenController {
                 ErrorResponseUtil.ErrorCodes.INVALID_INPUT.getValue(),
                 ErrorResponseUtil.ErrorCodes.INVALID_TOKEN.getValue(),
                 response);
+            commonService.createAuditLog(
+                userId,
+                AppConstants.AUDIT_EVENT_INVALID_ENROLLMENT_TOKEN_NAME,
+                String.format(
+                    AppConstants.AUDIT_EVENT_INVALID_ENROLLMENT_TOKEN_DESC,
+                    enrollmentBean.getToken()),
+                AppConstants.AUDIT_LOG_MOBILE_APP_CLIENT_ID,
+                "",
+                enrollmentBean.getStudyId(),
+                AppConstants.APP_LEVEL_ACCESS);
             return null;
           } else if (!enrollmentTokenfService.isValidStudyToken(
               enrollmentBean.getToken(), enrollmentBean.getStudyId())) {
@@ -101,6 +136,16 @@ public class EnrollmentTokenController {
                 ErrorResponseUtil.ErrorCodes.INVALID_INPUT.getValue(),
                 ErrorResponseUtil.ErrorCodes.UNKNOWN_TOKEN.getValue(),
                 response);
+            commonService.createAuditLog(
+                userId,
+                AppConstants.AUDIT_EVENT_INVALID_ENROLLMENT_TOKEN_NAME,
+                String.format(
+                    AppConstants.AUDIT_EVENT_INVALID_ENROLLMENT_TOKEN_DESC,
+                    enrollmentBean.getToken()),
+                AppConstants.AUDIT_LOG_MOBILE_APP_CLIENT_ID,
+                "",
+                enrollmentBean.getStudyId(),
+                AppConstants.APP_LEVEL_ACCESS);
             return null;
           }
         }
@@ -112,6 +157,14 @@ public class EnrollmentTokenController {
               ErrorResponseUtil.ErrorCodes.INVALID_INPUT.getValue(),
               ErrorResponseUtil.ErrorCodes.TOKEN_REQUIRED.getValue(),
               response);
+          commonService.createAuditLog(
+              userId,
+              AppConstants.AUDIT_EVENT_ENROLL_FAIL_NAME,
+              AppConstants.AUDIT_EVENT_ENROLL_FAIL_DESC,
+              AppConstants.AUDIT_LOG_MOBILE_APP_CLIENT_ID,
+              "",
+              enrollmentBean.getStudyId(),
+              AppConstants.APP_LEVEL_ACCESS);
           return null;
         }
       } else {
@@ -120,6 +173,14 @@ public class EnrollmentTokenController {
             ErrorResponseUtil.ErrorCodes.INVALID_INPUT.getValue(),
             ErrorResponseUtil.ErrorCodes.INVALID_INPUT_ERROR_MSG.getValue(),
             response);
+        commonService.createAuditLog(
+            userId,
+            AppConstants.AUDIT_EVENT_ENROLL_FAIL_NAME,
+            AppConstants.AUDIT_EVENT_ENROLL_FAIL_DESC,
+            AppConstants.AUDIT_LOG_MOBILE_APP_CLIENT_ID,
+            "",
+            "",
+            AppConstants.APP_LEVEL_ACCESS);
         return null;
       }
       errorBean = new ErrorBean();
@@ -128,6 +189,14 @@ public class EnrollmentTokenController {
 
     } catch (Exception e) {
       logger.error("EnrollmentTokenController validateEnrollmentToken() - error ", e);
+      commonService.createAuditLog(
+          userId,
+          AppConstants.AUDIT_EVENT_ENROLL_FAIL_NAME,
+          AppConstants.AUDIT_EVENT_ENROLL_FAIL_DESC,
+          AppConstants.AUDIT_LOG_MOBILE_APP_CLIENT_ID,
+          "",
+          "",
+          AppConstants.APP_LEVEL_ACCESS);
       return AppUtil.httpResponseForInternalServerError();
     }
 
@@ -166,6 +235,17 @@ public class EnrollmentTokenController {
                         respBean.setCode(ErrorCode.EC_200.code());
                         respBean.setMessage(
                             MyStudiesUserRegUtil.ErrorCodes.SUCCESS.getValue().toLowerCase());
+                        commonService.createAuditLog(
+                            userId,
+                            AppConstants.AUDIT_EVENT_APP_USER_ELIGIBLE_NAME,
+                            String.format(
+                                AppConstants.AUDIT_EVENT_APP_USER_ELIGIBLE_DESC,
+                                AppConstants.CLOSE_STUDY,
+                                enrollmentBean.getToken()),
+                            AppConstants.AUDIT_LOG_MOBILE_APP_CLIENT_ID,
+                            respBean.getParticipantId(),
+                            enrollmentBean.getStudyId(),
+                            AppConstants.APP_LEVEL_ACCESS);
                       }
                     } else {
                       ErrorResponseUtil.getFailureResponse(
@@ -176,6 +256,14 @@ public class EnrollmentTokenController {
                       errorBean = new ErrorBean();
                       errorBean.setCode(HttpStatus.BAD_REQUEST.value());
                       errorBean.setMessage(ErrorResponseUtil.ErrorCodes.UNKNOWN_TOKEN.getValue());
+                      commonService.createAuditLog(
+                          userId,
+                          AppConstants.AUDIT_EVENT_ENROLL_FAIL_NAME,
+                          AppConstants.AUDIT_EVENT_ENROLL_FAIL_DESC,
+                          AppConstants.AUDIT_LOG_MOBILE_APP_CLIENT_ID,
+                          "",
+                          enrollmentBean.getStudyId(),
+                          AppConstants.APP_LEVEL_ACCESS);
                       return new ResponseEntity<>(errorBean, HttpStatus.BAD_REQUEST);
                     }
                   } else {
@@ -188,6 +276,14 @@ public class EnrollmentTokenController {
                     errorBean = new ErrorBean();
                     errorBean.setCode(HttpStatus.BAD_REQUEST.value());
                     errorBean.setMessage(ErrorResponseUtil.ErrorCodes.INVALID_TOKEN.getValue());
+                    commonService.createAuditLog(
+                        userId,
+                        AppConstants.AUDIT_EVENT_ENROLL_FAIL_NAME,
+                        AppConstants.AUDIT_EVENT_ENROLL_FAIL_DESC,
+                        AppConstants.AUDIT_LOG_MOBILE_APP_CLIENT_ID,
+                        "",
+                        enrollmentBean.getStudyId(),
+                        AppConstants.APP_LEVEL_ACCESS);
                     return new ResponseEntity<>(errorBean, HttpStatus.BAD_REQUEST);
                   }
                 } else {
@@ -199,6 +295,14 @@ public class EnrollmentTokenController {
                   errorBean = new ErrorBean();
                   errorBean.setCode(HttpStatus.FORBIDDEN.value());
                   errorBean.setMessage(ErrorResponseUtil.ErrorCodes.TOKEN_ALREADY_USE.getValue());
+                  commonService.createAuditLog(
+                      userId,
+                      AppConstants.AUDIT_EVENT_ENROLL_FAIL_NAME,
+                      AppConstants.AUDIT_EVENT_ENROLL_FAIL_DESC,
+                      AppConstants.AUDIT_LOG_MOBILE_APP_CLIENT_ID,
+                      "",
+                      enrollmentBean.getStudyId(),
+                      AppConstants.APP_LEVEL_ACCESS);
                   return new ResponseEntity<>(errorBean, HttpStatus.FORBIDDEN);
                 }
               } else {
@@ -210,6 +314,14 @@ public class EnrollmentTokenController {
                     ErrorResponseUtil.ErrorCodes.INVALID_INPUT.getValue(),
                     ErrorResponseUtil.ErrorCodes.TOKEN_REQUIRED.getValue(),
                     response);
+                commonService.createAuditLog(
+                    userId,
+                    AppConstants.AUDIT_EVENT_ENROLL_FAIL_NAME,
+                    AppConstants.AUDIT_EVENT_ENROLL_FAIL_DESC,
+                    AppConstants.AUDIT_LOG_MOBILE_APP_CLIENT_ID,
+                    "",
+                    enrollmentBean.getStudyId(),
+                    AppConstants.APP_LEVEL_ACCESS);
                 return null;
               }
             } else {
@@ -223,6 +335,17 @@ public class EnrollmentTokenController {
                 respBean.setCode(ErrorCode.EC_200.code());
                 respBean.setMessage(
                     MyStudiesUserRegUtil.ErrorCodes.SUCCESS.getValue().toLowerCase());
+                commonService.createAuditLog(
+                    userId,
+                    AppConstants.AUDIT_EVENT_APP_USER_ELIGIBLE_NAME,
+                    String.format(
+                        AppConstants.AUDIT_EVENT_APP_USER_ELIGIBLE_DESC,
+                        AppConstants.OPEN_STUDY,
+                        tokenValue),
+                    AppConstants.AUDIT_LOG_MOBILE_APP_CLIENT_ID,
+                    respBean.getParticipantId(),
+                    enrollmentBean.getStudyId(),
+                    AppConstants.APP_LEVEL_ACCESS);
               }
             }
           } else {
@@ -234,6 +357,14 @@ public class EnrollmentTokenController {
                 ErrorResponseUtil.ErrorCodes.INVALID_INPUT.getValue(),
                 ErrorResponseUtil.ErrorCodes.STUDYID_NOT_EXIST.getValue(),
                 response);
+            commonService.createAuditLog(
+                userId,
+                AppConstants.AUDIT_EVENT_ENROLL_FAIL_NAME,
+                AppConstants.AUDIT_EVENT_ENROLL_FAIL_DESC,
+                AppConstants.AUDIT_LOG_MOBILE_APP_CLIENT_ID,
+                "",
+                "",
+                AppConstants.APP_LEVEL_ACCESS);
             return null;
           }
         } else {
@@ -245,6 +376,14 @@ public class EnrollmentTokenController {
               ErrorResponseUtil.ErrorCodes.INVALID_INPUT.getValue(),
               ErrorResponseUtil.ErrorCodes.ERROR_REQUIRED.getValue(),
               response);
+          commonService.createAuditLog(
+              userId,
+              AppConstants.AUDIT_EVENT_ENROLL_FAIL_NAME,
+              AppConstants.AUDIT_EVENT_ENROLL_FAIL_DESC,
+              AppConstants.AUDIT_LOG_MOBILE_APP_CLIENT_ID,
+              "",
+              "",
+              AppConstants.APP_LEVEL_ACCESS);
           return null;
         }
       } else {
@@ -257,6 +396,14 @@ public class EnrollmentTokenController {
             ErrorResponseUtil.ErrorCodes.INVALID_INPUT.getValue(),
             ErrorResponseUtil.ErrorCodes.INVALID_INPUT_ERROR_MSG.getValue(),
             response);
+        commonService.createAuditLog(
+            userId,
+            AppConstants.AUDIT_EVENT_ENROLL_FAIL_NAME,
+            AppConstants.AUDIT_EVENT_ENROLL_FAIL_DESC,
+            AppConstants.AUDIT_LOG_MOBILE_APP_CLIENT_ID,
+            "",
+            "",
+            AppConstants.APP_LEVEL_ACCESS);
         return null;
       }
     } catch (InvalidRequestException e) {
@@ -270,6 +417,14 @@ public class EnrollmentTokenController {
           ErrorResponseUtil.ErrorCodes.INVALID_INPUT.getValue(),
           ErrorResponseUtil.ErrorCodes.INVALID_INPUT_ERROR_MSG.getValue(),
           response);
+      commonService.createAuditLog(
+          userId,
+          AppConstants.AUDIT_EVENT_ENROLL_FAIL_NAME,
+          AppConstants.AUDIT_EVENT_ENROLL_FAIL_DESC,
+          AppConstants.AUDIT_LOG_MOBILE_APP_CLIENT_ID,
+          "",
+          "",
+          AppConstants.APP_LEVEL_ACCESS);
       return null;
     } catch (UnAuthorizedRequestException e) {
       logger.error("EnrollmentTokenController enrollParticipant() - error ", e);
@@ -282,6 +437,14 @@ public class EnrollmentTokenController {
           ErrorResponseUtil.ErrorCodes.UNAUTHORIZED.getValue(),
           ErrorResponseUtil.ErrorCodes.UNAUTHORIZED_CLIENT.getValue(),
           response);
+      commonService.createAuditLog(
+          userId,
+          AppConstants.AUDIT_EVENT_ENROLL_FAIL_NAME,
+          AppConstants.AUDIT_EVENT_ENROLL_FAIL_DESC,
+          AppConstants.AUDIT_LOG_MOBILE_APP_CLIENT_ID,
+          "",
+          "",
+          AppConstants.APP_LEVEL_ACCESS);
       return null;
     } catch (Exception e) {
       logger.error("EnrollmentTokenController enrollParticipant() - error ", e);
@@ -294,6 +457,14 @@ public class EnrollmentTokenController {
           ErrorResponseUtil.ErrorCodes.UNKNOWN.getValue(),
           ErrorResponseUtil.ErrorCodes.INTERNAL_SERER_ERROR.getValue(),
           response);
+      commonService.createAuditLog(
+          userId,
+          AppConstants.AUDIT_EVENT_ENROLL_FAIL_NAME,
+          AppConstants.AUDIT_EVENT_ENROLL_FAIL_DESC,
+          AppConstants.AUDIT_LOG_MOBILE_APP_CLIENT_ID,
+          "",
+          "",
+          AppConstants.APP_LEVEL_ACCESS);
       return null;
     }
     logger.info("EnrollmentTokenController enrollParticipant() - Ends ");

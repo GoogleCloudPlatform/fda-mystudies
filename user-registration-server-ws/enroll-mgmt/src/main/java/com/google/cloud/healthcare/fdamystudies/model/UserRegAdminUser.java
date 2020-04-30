@@ -5,6 +5,7 @@
  * license that can be found in the LICENSE file or at
  * https://opensource.org/licenses/MIT.
  */
+
 package com.google.cloud.healthcare.fdamystudies.model;
 
 import java.io.Serializable;
@@ -24,7 +25,7 @@ import lombok.Setter;
 @Table(name = "ur_admin_user")
 public class UserRegAdminUser implements Serializable {
 
-  private static final long serialVersionUID = 1L;
+  private static final long serialVersionUID = -8807472639054757047L;
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -63,4 +64,10 @@ public class UserRegAdminUser implements Serializable {
 
   @Column(name = "created_by", columnDefinition = "INT(20) default 0")
   private Integer createdBy;
+
+  @Column(name = "code_expire_date")
+  private LocalDateTime codeExpireDate;
+
+  @Column(name = "email_code")
+  private String emailCode;
 }
