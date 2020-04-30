@@ -33,7 +33,7 @@ The permissions set defined for the Study Builder web application are as follows
 *   Manage Studies (Create Studies, View Studies, Edit Studies)
 *   Manage App-Wide Notifications (View Notifications, Edit Notifications)
 
-Password rules:
+**Password rules:**
 
 *   Password Strength: Passwords have restrictions that require a minimum size and complexity for the password. 
 *   Password Expiry: The application will force the user to change the password every 90 days. The number of days until expiry is a configurable value that is managed in a configuration file.
@@ -103,7 +103,7 @@ Participants (mobile app users) are authenticated through the login method of th
 1.  The mobile app is responsible for storing and managing the tokens for subsequent calls.
 1.  The Auth Server updates the login attempts table for failed logins, with the participant email and app ID information.
 
-Password handling and rules:
+**Password handling and rules:**
 
 1.  Passwords are stored and encrypted in a [non-reversible format](https://en.wikipedia.org/wiki/Bcrypt), using a secure [cryptographic one-way hash function](https://en.wikipedia.org/wiki/Cryptographic_hash_function) (SHA-512) of a [salt](https://en.wikipedia.org/wiki/Salt_(cryptography)) and the password.
 1.  A random salt is generated for each password, using Cryptographic Pseudo-Random Number Generator (CPRNG)
