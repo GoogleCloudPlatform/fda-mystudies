@@ -1,5 +1,6 @@
 #!/bin/bash
 # Script to copy client id and secret keys from gcloud secret to CloudSQL.
+set -e
 
 SECRET_PROJECT=heroes-hat-dev-devops
 DATA_PROJECT=heroes-hat-dev-data
@@ -28,3 +29,4 @@ gsutil mv ${TMPFILE} ${GCS_FILE}
 # Import the GCS file to CloudSQL.
 echo "Importing ${GCS_FILE} to CloudSQL."
 gcloud sql import sql --project=${DATA_PROJECT} my-studies ${GCS_FILE}
+gsutil rm ${GCS_FILE}
