@@ -45,6 +45,8 @@ public class ActivityResponseProcessorServiceImpl implements ActivityResponsePro
   @Qualifier("cloudFirestoreResponsesDaoImpl")
   private ResponsesDao responsesDao;
 
+  @Autowired private CommonService commonService;
+
   @Autowired private ApplicationConfiguration appConfig;
 
   private static final Logger logger =
@@ -63,6 +65,21 @@ public class ActivityResponseProcessorServiceImpl implements ActivityResponsePro
     }
     ActivityMetadataBean activityMetadataResponse = questionnaireActivityResponseBean.getMetadata();
     if (activityMetadataResponse == null) {
+      commonService.createAuditLog(
+          null,
+          "Activity metadata-response data conjoining failure",
+          "Activity metadata-response data conjoining failed for Activity Type "
+              + questionnaireActivityResponseBean.getType()
+              + ", Activity ID "
+              + questionnaireActivityResponseBean.getMetadata().getActivityId()
+              + " and Activity Version "
+              + questionnaireActivityResponseBean.getMetadata().getVersion()
+              + ", Run ID "
+              + questionnaireActivityResponseBean.getMetadata().getActivityRunId(),
+          AppConstants.CLIENT_ID_RESP_DATA_STORE,
+          questionnaireActivityResponseBean.getParticipantId(),
+          questionnaireActivityResponseBean.getMetadata().getStudyId(),
+          null);
       throw new ProcessResponseException("ActivityMetadataBean is null ");
     }
     List<QuestionnaireActivityStepsBean> questionnaireResponses =
@@ -76,6 +93,21 @@ public class ActivityResponseProcessorServiceImpl implements ActivityResponsePro
     List<QuestionnaireActivityStepsBean> questionnaireMetadata =
         activityMetadataBeanFromWCP.getSteps();
     if (questionnaireMetadata == null) {
+      commonService.createAuditLog(
+          null,
+          "Activity metadata-response data conjoining failure",
+          "Activity metadata-response data conjoining failed for Activity Type "
+              + questionnaireActivityResponseBean.getType()
+              + ", Activity ID "
+              + questionnaireActivityResponseBean.getMetadata().getActivityId()
+              + " and Activity Version "
+              + questionnaireActivityResponseBean.getMetadata().getVersion()
+              + ", Run ID "
+              + questionnaireActivityResponseBean.getMetadata().getActivityRunId(),
+          AppConstants.CLIENT_ID_RESP_DATA_STORE,
+          questionnaireActivityResponseBean.getParticipantId(),
+          questionnaireActivityResponseBean.getMetadata().getStudyId(),
+          null);
       throw new ProcessResponseException(
           "QuestionnaireActivityStructureBean is null for activity Id: "
               + activityMetadataResponse.getActivityId());
@@ -84,12 +116,44 @@ public class ActivityResponseProcessorServiceImpl implements ActivityResponsePro
         .getActivityId()
         .equalsIgnoreCase(activityMetadataBeanFromWCP.getMetadata().getActivityId())) {
       processActivityResponses(questionnaireResponses, questionnaireMetadata);
+
+      commonService.createAuditLog(
+          null,
+          "Activity metadata successfully conjoined with response data ",
+          "Activity metadata successfully conjoined with response data , Activity Type "
+              + questionnaireActivityResponseBean.getType()
+              + ", Activity ID "
+              + questionnaireActivityResponseBean.getMetadata().getActivityId()
+              + " and Activity Version "
+              + questionnaireActivityResponseBean.getMetadata().getVersion()
+              + ", Run ID "
+              + questionnaireActivityResponseBean.getMetadata().getActivityRunId(),
+          AppConstants.CLIENT_ID_RESP_DATA_STORE,
+          questionnaireActivityResponseBean.getParticipantId(),
+          questionnaireActivityResponseBean.getMetadata().getStudyId(),
+          null);
+
       String rawResponseData = null;
       if (appConfig.getSaveRawResponseData().equalsIgnoreCase(AppConstants.TRUE_STR)) {
         rawResponseData = getRawJsonInputData(questionnaireActivityResponseBean);
       }
       this.saveActivityResponseData(questionnaireActivityResponseBean, rawResponseData);
     } else {
+      commonService.createAuditLog(
+          null,
+          "Activity metadata-response data conjoining failure",
+          "Activity metadata-response data conjoining failed for Activity Type "
+              + questionnaireActivityResponseBean.getType()
+              + ", Activity ID "
+              + questionnaireActivityResponseBean.getMetadata().getActivityId()
+              + " and Activity Version "
+              + questionnaireActivityResponseBean.getMetadata().getVersion()
+              + ", Run ID "
+              + questionnaireActivityResponseBean.getMetadata().getActivityRunId(),
+          AppConstants.CLIENT_ID_RESP_DATA_STORE,
+          questionnaireActivityResponseBean.getParticipantId(),
+          questionnaireActivityResponseBean.getMetadata().getStudyId(),
+          null);
       logger.error(
           "saveActivityResponseDataForParticipant() - The activity ID in the response does not match activity ID in the metadata provided.\n"
               + "Activity Id in response: "

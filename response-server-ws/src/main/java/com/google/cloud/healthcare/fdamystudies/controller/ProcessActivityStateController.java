@@ -89,6 +89,15 @@ public class ProcessActivityStateController {
     if (activityStateRequestBean == null
         || Strings.isBlank(activityStateRequestBean.getParticipantId())
         || Strings.isBlank(activityStateRequestBean.getStudyId())) {
+      commonService.createAuditLog(
+          userId,
+          "Activity State save/update operation failure",
+          "Activity State could not be saved or updated for participant in Response Datastore. No activity information passed",
+          AppConstants.CLIENT_ID_MOBILEAPP,
+          null, // Sending null as study Id may not be available
+          null, // Sending null as study Id may not be available
+          AppConstants.PARTICIPANT_LEVEL_ACCESS);
+      // if activityStateRequestBean is null
       ErrorBean errorBean =
           AppUtil.dynamicResponse(
               ErrorCode.EC_701.code(),
@@ -97,44 +106,42 @@ public class ProcessActivityStateController {
               ErrorCode.EC_701.errorMessage());
       return new ResponseEntity<>(errorBean, HttpStatus.BAD_REQUEST);
     } else {
+      String activityIds =
+          activityStateRequestBean
+              .getActivity()
+              .stream()
+              .map(s -> s.getActivityId())
+              .collect(Collectors.joining(", "));
       try {
         participantActivityStateResponseService.saveParticipantActivities(activityStateRequestBean);
         SuccessResponseBean srBean = new SuccessResponseBean();
         srBean.setMessage(AppConstants.SUCCESS_MSG);
-        String activityIds =
-            activityStateRequestBean
-                .getActivity()
-                .stream()
-                .map(s -> s.getActivityId())
-                .collect(Collectors.joining(", "));
-        commonService.createActivityLog(
+
+        commonService.createAuditLog(
             userId,
-            "Activity State Update -success",
-            "Activity state update successful for partcipant "
-                + activityStateRequestBean.getParticipantId()
-                + " and activityIds "
+            "Activity State saved/updated for participant ",
+            "Activity State for Activity ID "
                 + activityIds
-                + " .",
-            null);
+                + " was saved or updated for participant in Response Datastore",
+            AppConstants.CLIENT_ID_MOBILEAPP,
+            activityStateRequestBean.getParticipantId(),
+            activityStateRequestBean.getStudyId(),
+            AppConstants.PARTICIPANT_LEVEL_ACCESS);
 
         return new ResponseEntity<>(srBean, HttpStatus.OK);
 
       } catch (Exception e) {
-        String activityIds =
-            activityStateRequestBean
-                .getActivity()
-                .stream()
-                .map(s -> s.getActivityId())
-                .collect(Collectors.joining(", "));
-        commonService.createActivityLog(
+        commonService.createAuditLog(
             userId,
-            "Activity State Update -failure",
-            "Activity state update unsuccessful for partcipant "
-                + activityStateRequestBean.getParticipantId()
-                + " and activityIds "
+            "Activity State save/update operation failure ",
+            "Activity State for Activity ID "
                 + activityIds
-                + " .",
-            null);
+                + " could not be saved or updated for participant in Response Datastore",
+            AppConstants.CLIENT_ID_MOBILEAPP,
+            activityStateRequestBean.getParticipantId(),
+            activityStateRequestBean.getStudyId(),
+            AppConstants.PARTICIPANT_LEVEL_ACCESS);
+
         ErrorBean errorBean =
             AppUtil.dynamicResponse(
                 ErrorCode.EC_714.code(),

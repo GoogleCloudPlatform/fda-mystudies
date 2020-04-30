@@ -10,7 +10,7 @@ package com.google.cloud.healthcare.fdamystudies.service;
 import com.google.cloud.healthcare.fdamystudies.exception.InvalidRequestException;
 import com.google.cloud.healthcare.fdamystudies.exception.SystemException;
 import com.google.cloud.healthcare.fdamystudies.exception.UnAuthorizedRequestException;
-import com.google.cloud.healthcare.fdamystudies.model.ActivityLog;
+import com.google.cloud.healthcare.fdamystudies.model.AuditLogBo;
 import com.google.cloud.healthcare.fdamystudies.model.ParticipantBo;
 
 public interface CommonService {
@@ -21,6 +21,12 @@ public interface CommonService {
   boolean validateServerClientCredentials(String clientId, String clientSecret)
       throws SystemException, UnAuthorizedRequestException, InvalidRequestException;
 
-  public ActivityLog createActivityLog(
-      String userId, String activityName, String activtyDesc, String clientId);
+  AuditLogBo createAuditLog(
+      String userId,
+      String activityName,
+      String activtyDesc,
+      String clientId,
+      String participantId,
+      String studyId,
+      String accessLevel);
 }

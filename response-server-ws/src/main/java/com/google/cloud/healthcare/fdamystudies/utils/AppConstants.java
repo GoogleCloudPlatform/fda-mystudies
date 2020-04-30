@@ -74,4 +74,11 @@ public class AppConstants {
   public static final String DETAIL_MESSAGE = "detailMessage";
   public static final String BASIC_PREFIX = "Basic ";
   public static final String COMMA_STR = ",";
+  public static final String NOT_APPLICABLE = "NA";
+  public static final String PARTICIPANT_LEVEL_ACCESS = "Participant";
+  public static final String APP_LEVEL_ACCESS = "App User";
+  public static final String CLIENT_ID_MOBILEAPP = "FMSGCMOBAPP";
+  public static final String CLIENT_ID_PART_DATA_STORE = "FMSGCPARDTST";
+  public static final String CLIENT_ID_RESP_DATA_STORE = "FMSGCRESDTST";
+  public static final String CLIENT_ID_STUDY_BLDR_STORE = "FMSGCSTUBLDR";
 }

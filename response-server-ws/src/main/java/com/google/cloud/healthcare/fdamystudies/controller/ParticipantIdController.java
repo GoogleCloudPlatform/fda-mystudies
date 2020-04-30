@@ -45,6 +45,14 @@ public class ParticipantIdController {
         || StringUtils.isBlank(enrollmentTokenIdentifierBean.getTokenIdentifier())
         || StringUtils.isBlank(enrollmentTokenIdentifierBean.getCustomStudyId())) {
       logger.info("ParticipantIdController addParticipantIdentifier() Inside Error");
+      commonService.createAuditLog(
+          null,
+          "Participant ID generation failure",
+          "Participant ID could not be generated",
+          AppConstants.CLIENT_ID_PART_DATA_STORE,
+          null,
+          null,
+          null);
       ErrorBean errorBean =
           AppUtil.dynamicResponse(
               ErrorCode.EC_701.code(),
@@ -59,16 +67,25 @@ public class ParticipantIdController {
       participantBo.setStudyId(enrollmentTokenIdentifierBean.getCustomStudyId());
       participantBo.setCreatedBy(applicationId);
       String particpantUniqueIdentifier = participantService.saveParticipant(participantBo);
-      commonService.createActivityLog(
+      commonService.createAuditLog(
           null,
-          "Participant Id generated successfully",
-          "Participant Id generated successfully for partcipant "
-              + particpantUniqueIdentifier
-              + " .",
-          clientId);
+          "Participant ID generated",
+          "Participant ID " + particpantUniqueIdentifier + " generated",
+          AppConstants.CLIENT_ID_PART_DATA_STORE,
+          particpantUniqueIdentifier,
+          enrollmentTokenIdentifierBean.getCustomStudyId(),
+          null);
       logger.info("ParticipantIdController addParticipantIdentifier() - Ends ");
       return new ResponseEntity<>(particpantUniqueIdentifier, HttpStatus.OK);
     } catch (Exception e) {
+      commonService.createAuditLog(
+          null,
+          "Participant ID generation failure",
+          "Participant ID could not be generated",
+          AppConstants.CLIENT_ID_PART_DATA_STORE,
+          null,
+          enrollmentTokenIdentifierBean.getCustomStudyId(),
+          null);
       ErrorBean errorBean =
           AppUtil.dynamicResponse(
               ErrorCode.EC_703.code(),
