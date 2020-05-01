@@ -33,7 +33,7 @@ The permissions set defined for the Study Builder web application are as follows
 *   Manage Studies (Create Studies, View Studies, Edit Studies)
 *   Manage App-Wide Notifications (View Notifications, Edit Notifications)
 
-Password rules:
+**Password rules:**
 
 *   Password Strength: Passwords have restrictions that require a minimum size and complexity for the password. 
 *   Password Expiry: The application will force the user to change the password every 90 days. The number of days until expiry is a configurable value that is managed in a configuration file.

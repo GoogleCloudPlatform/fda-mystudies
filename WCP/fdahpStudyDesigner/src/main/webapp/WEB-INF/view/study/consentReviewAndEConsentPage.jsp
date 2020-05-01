@@ -14,6 +14,7 @@
 		<input type="hidden" id="studyId" name="studyId" value="${studyId}">
 		<input type="hidden" id="consentId" name="consentId"
 			value="${consentBo.id}">
+        </form:form>
 	<form:form
 		action="/studybuilder/adminStudies/saveConsentReviewAndEConsentInfo.do?_S=${param._S}"
 		name="consentReviewFormId" id="consentReviewFormId" method="post"
