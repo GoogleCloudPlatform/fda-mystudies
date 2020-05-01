@@ -146,6 +146,9 @@ To see what resources each deployment provisions, check out the comments in each
     After the secrets have been created, you must go to the Google Cloud
     Console, open `Security` --> `Secret Manager` and fill in their values.
 
+1.  Run `copy_client_info_to_sql.sh` script to copy client into from secrets
+    into CloudSQL.
+
 1.  Follow `$ROOT/cicd/README.md` to set up CICD pipelines for Terraform
     configs.
 
