@@ -8,7 +8,7 @@ This document describes the architecture of FDA MyStudies. It outlines the vario
 
 ## Architecture Diagram
 
-![alt_text](images/architecture.png "Architecture diagram")
+![Architecture diagram](images/architecture.png)
 
 ## Terminology
 
@@ -41,11 +41,9 @@ The Study Builder is the source of study information for all downstream applicat
 
 The Study Builder is a Java application built on the Spring framework. The backend database is a MySQL database, which is shared with the Study Datastore. The application has a built-in authentication and authorization functionality.
 
-The Study Builder can be deployed as a Java web application on servers that have Java, Tomcat and MySQL installed. 
+When deploying the application on GCP, the cloud resources used are:
 
-When deploying the application on GCP, the cloud resources that can be used are:
-
-1.  Google Kubernetes Engine
+1.  Google Kubernetes Engine (GKE)
 1.  Cloud SQL (MySQL)
 
 ### Study Datastore
@@ -58,11 +56,9 @@ The Study Datastore does not handle or expose any user/participant information. 
 
 It is a Java application built on the Spring framework. The backend database is a MySQL database (the same database used by the Study Builder, which is used to configure the data that is exposed through the Study Datastore APIs).
 
-It can be deployed on servers that have Java, Tomcat and MySQL installed. 
+When deploying the application on GCP, the cloud resources used are:
 
-When deploying the application on GCP, the cloud resources that can be used are:
-
-1.  Google Kubernetes Engine
+1.  Google Kubernetes Engine (GKE)
 1.  Cloud SQL (MySQL)
 
 ### Auth Server
@@ -89,11 +85,9 @@ The Auth Server provides the following functionality to support server to server
 
 This application is built as a Spring Boot application. The backend datastore is a MySQL database.
 
-The web services can be deployed on servers that have Java, Tomcat and MySQL installed. 
+When deploying the application on GCP, the cloud resources used are:
 
-When deploying the application on GCP, the cloud resources that can be used are:
-
-1.  Google Kubernetes Engine
+1.  Google Kubernetes Engine (GKE)
 1.  Cloud SQL (MySQL)
 
 ### Response Datastore
@@ -111,11 +105,9 @@ This application is built as a Spring Boot application. The backend database is 
 
 The implementation to store the response data on Cloud Firestore can be swapped out to store the response data in a different location or service. 
 
-The Response Datastore can be deployed on servers that have Java, Tomcat and MySQL installed.
+When deploying the application on GCP, the cloud resources used are:
 
-When deploying the application on GCP, the cloud resources that can be used are:
-
-1.  Google Kubernetes Engine
+1.  Google Kubernetes Engine (GKE)
 1.  Cloud SQL (MySQL)
 1.  Cloud Firestore
 
@@ -138,11 +130,9 @@ These services are built as Spring Boot applications. The backend database is a 
 
 The Enrollment Management is implemented to store the consent documents on Google Cloud Storage with an option to swap out this implementation to store the documents in a different location or service.
 
-The services can be deployed on servers that have Java, Tomcat and MySQL installed. 
+When deploying the application on GCP, the cloud resources used are:
 
-When deploying the application on GCP, the cloud resources that can be used are:
-
-1.  Google Kubernetes Engine
+1.  Google Kubernetes Engine (GKE)
 1.  Cloud SQL (MySQL)
 1.  Google Cloud Storage
 
@@ -158,6 +148,15 @@ There are two mobile apps:
 
 1.  iOS - The iOS app uses Apple ResearchKit to provide study workflow features.
 1.  Android - The Android app uses ResearchStack to provide study workflow features.
+
+### Deployment
+The various platform components run in their own containers (private GKE cluster) and their deployment is automated.
+Cloud Build  automates the build of the platform components and the release of the containers to the respective locations
+Cloud Build runs the CI/CD jobs on code commit where the containers are auto-rebuilt, tagged and pushed. 
+
+Detailed deployment information can be found here:
+kubernetes/README.md
+Terraform/README.md
 
 ### Administrator Data, Participant Data and Study Data Access
 
@@ -238,6 +237,18 @@ The table below shows what type of data the platform components can access:
   </tr>
 </table>
 
+### Study Builder and Study Datastore Interaction
+
+![Study Builder flow diagram](images/studybuilder_flow.png)
+
+The study content and configuration that is set up as a part of the Study Builder is stored in the database.
+
+The Study Datastore gets the study content and study configuration from this database and provides this information to other components as ReST APIs. 
+
+The database serves as a common repository for the Study Builder and the Study datastore.
+There is no direct interaction between the Study Builder component and the Study Datastore or any other platfom components. 
+
+
 ### Platform Component Interactions
 
 The various platform component interactions are as shown below:
@@ -264,7 +275,7 @@ The various platform component interactions are as shown below:
    </td>
    <td>N/A
    </td>
-   <td>NO
+   <td>See section above
    </td>
    <td>NO
    </td>
@@ -278,7 +289,7 @@ The various platform component interactions are as shown below:
   <tr>
    <td><strong>Study Datastore</strong>
    </td>
-   <td>NO
+   <td>See section above
    </td>
    <td>N/A
    </td>
@@ -356,3 +367,4 @@ The various platform component interactions are as shown below:
    </td>
   </tr>
 </table>
+
