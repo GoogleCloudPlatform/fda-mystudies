@@ -155,8 +155,8 @@ Cloud Build  automates the build of the platform components and the release of t
 Cloud Build runs the CI/CD jobs on code commit where the containers are auto-rebuilt, tagged and pushed. 
 
 Detailed deployment information can be found here:
-kubernetes/README.md
-Terraform/README.md
+[Kubernetes setup](https://github.com/GoogleCloudPlatform/fda-mystudies/blob/early-access/kubernetes/README.md)
+[Terraform setup](https://github.com/GoogleCloudPlatform/fda-mystudies/blob/early-access/Terraform/README.md)
 
 ### Administrator Data, Participant Data and Study Data Access
 
