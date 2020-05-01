@@ -11,6 +11,8 @@ package com.google.cloud.healthcare.fdamystudies.model;
 import java.io.Serializable;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import lombok.Getter;
@@ -30,3 +32,4 @@ public class ClientInfoBO implements Serializable {
   @Column private String secretKey;
   @Column private String appCode;
 }
+
