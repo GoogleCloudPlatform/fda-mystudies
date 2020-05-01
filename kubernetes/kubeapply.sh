@@ -44,13 +44,13 @@ echo '=== Applying cert.yaml ==='
 read -p "Press enter to continue"
 kubectl apply -f ./cert.yaml
 
-for deployment in $(find .. -name "deployment.yaml"); do
+for deployment in $(find .. -name "tf-deployment.yaml"); do
   echo "=== Applying deployment ${deployment} ==="
   read -p "Press enter to continue"
   kubectl apply -f ${deployment}
 done
 
-for service in $(find .. -name "service.yaml"); do
+for service in $(find .. -name "tf-service.yaml"); do
   echo "=== Applying service ${service} ==="
   read -p "Press enter to continue"
   kubectl apply -f ${service}
