@@ -151,11 +151,13 @@ There are two mobile apps:
 
 ### Deployment
 The various platform components run in their own containers (private GKE cluster) and their deployment is automated.
-Cloud Build  automates the build of the platform components and the release of the containers to the respective locations
+Cloud Build  automates the build of the platform components and the release of the containers to the respective locations.
 Cloud Build runs the CI/CD jobs on code commit where the containers are auto-rebuilt, tagged and pushed. 
 
 Detailed deployment information can be found here:
+
 [Kubernetes setup](https://github.com/GoogleCloudPlatform/fda-mystudies/blob/early-access/kubernetes/README.md)
+
 [Terraform setup](https://github.com/GoogleCloudPlatform/fda-mystudies/blob/early-access/Terraform/README.md)
 
 ### Administrator Data, Participant Data and Study Data Access
@@ -245,7 +247,7 @@ The study content and configuration that is set up as a part of the Study Builde
 
 The Study Datastore gets the study content and study configuration from this database and provides this information to other components as ReST APIs. 
 
-The database serves as a common repository for the Study Builder and the Study datastore.
+The database serves as a common repository for the Study Builder and the Study Datastore.
 There is no direct interaction between the Study Builder component and the Study Datastore or any other platfom components. 
 
 
