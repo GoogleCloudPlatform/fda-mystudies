@@ -3,6 +3,8 @@ apiVersion: v1
 kind: Service
 metadata:
   name: study-designer-np
+  annotations:
+    beta.cloud.google.com/backend-config: '{"ports": {"50000": "study-designer-config"}}'
 spec:
   type: NodePort
   selector:
