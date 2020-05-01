@@ -74,20 +74,6 @@ resource "kubernetes_secret" "apps_db_credentials" {
   }
 }
 
-# TODO: Remove this in favor of response_server_secrets once application code start using response_server_secrets.
-resource "kubernetes_secret" "response_server_credentials" {
-  metadata {
-    name = "response-server-credentials"
-  }
-
-  data = {
-    REGISTRATION_CLIENT_ID     = data.google_secret_manager_secret_version.secrets["my-studies-registration-client-id"].secret_data
-    REGISTRATION_CLIENT_SECRET = data.google_secret_manager_secret_version.secrets["my-studies-registration-client-secret"].secret_data
-    WCP_USER                   = data.google_secret_manager_secret_version.secrets["my-studies-wcp-user"].secret_data
-    WCP_PASS                   = data.google_secret_manager_secret_version.secrets["my-studies-wcp-pass"].secret_data
-  }
-}
-
 # App-specific secrets.
 resource "kubernetes_secret" "response_server_secrets" {
   metadata {
