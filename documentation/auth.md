@@ -103,7 +103,7 @@ Participants (mobile app users) are authenticated through the login method of th
 1.  The mobile app is responsible for storing and managing the tokens for subsequent calls.
 1.  The Auth Server updates the login attempts table for failed logins, with the participant email and app ID information.
 
-Password handling and rules:
+**Password handling and rules:**
 
 1.  Passwords are stored and encrypted in a [non-reversible format](https://en.wikipedia.org/wiki/Bcrypt), using a secure [cryptographic one-way hash function](https://en.wikipedia.org/wiki/Cryptographic_hash_function) (SHA-512) of a [salt](https://en.wikipedia.org/wiki/Salt_(cryptography)) and the password.
 1.  A random salt is generated for each password, using Cryptographic Pseudo-Random Number Generator (CPRNG)
