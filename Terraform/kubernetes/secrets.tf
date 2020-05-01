@@ -97,7 +97,7 @@ resource "kubernetes_secret" "user_registration_secrets" {
     CLIENT_ID       = data.google_secret_manager_secret_version.secrets["mystudies-urs-client-id"].secret_data
     SECRET_KEY      = data.google_secret_manager_secret_version.secrets["mystudies-urs-secret-key"].secret_data
     # TODO: This value should come from the name of my_studies_consent_documents_bucket in the data project.
-    GCP_BUCKET_NAME = "heroes-hat-dev-data-my-studies-consent-documents"
+    GCP_BUCKET_NAME = "heroes-hat-dev-my-studies-consent-documents"
   }
 }
 
