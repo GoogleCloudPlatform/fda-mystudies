@@ -21,16 +21,6 @@ dependency "project" {
   skip_outputs = true
 }
 
-dependency "network" {
-  config_path = "../../project.heroes-hat-dev-networks/networks"
-
-  mock_outputs = {
-    private_network = {
-      id = "projects/mock/global/networks/mock-network"
-    }
-  }
-}
-
 dependency "apps" {
   config_path = "../../project.heroes-hat-dev-apps/apps"
 
@@ -44,11 +34,6 @@ dependency "apps" {
   }
 }
 
-
 inputs = {
-  network = dependency.network.outputs.private_network.id
-  consent_documents_iam_members = [{
-    role   = "roles/storage.objectCreator"
-    member = "serviceAccount:${dependency.apps.outputs.apps_service_accounts["response-server"].email}"
-  }]
+  datastore_user_service_accounts = [dependency.apps.outputs.apps_service_accounts["response-server"].email]
 }

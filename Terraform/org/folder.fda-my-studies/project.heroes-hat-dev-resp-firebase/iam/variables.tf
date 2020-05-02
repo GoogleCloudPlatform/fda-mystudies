@@ -12,29 +12,11 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-include {
-  path = find_in_parent_folders()
+variable "project_id" {
+  type = string
 }
 
-dependency "project" {
-  config_path  = "../project"
-  skip_outputs = true
-}
-
-dependency "network" {
-  config_path = "../../project.heroes-hat-dev-networks/networks/"
-
-  mock_outputs = {
-    private_network = {
-      name = "mock-network"
-    }
-    gke_subnetwork = {
-      name = "mock-subnetwork"
-    }
-  }
-}
-
-inputs = {
-  network    = dependency.network.outputs.private_network.name
-  subnetwork = dependency.network.outputs.gke_subnetwork.name
+variable "datastore_user_service_accounts" {
+  description = "Clients who have access to the firestore in this project"
+  type        = list(string)
 }

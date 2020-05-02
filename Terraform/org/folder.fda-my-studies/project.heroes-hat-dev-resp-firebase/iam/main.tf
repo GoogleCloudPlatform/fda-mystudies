@@ -12,29 +12,18 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-include {
-  path = find_in_parent_folders()
-}
-
-dependency "project" {
-  config_path  = "../project"
-  skip_outputs = true
-}
-
-dependency "network" {
-  config_path = "../../project.heroes-hat-dev-networks/networks/"
-
-  mock_outputs = {
-    private_network = {
-      name = "mock-network"
-    }
-    gke_subnetwork = {
-      name = "mock-subnetwork"
-    }
+terraform {
+  required_version = "~> 0.12.0"
+  required_providers {
+    google      = "~> 3.0"
+    google-beta = "~> 3.0"
   }
+  backend "gcs" {}
 }
 
-inputs = {
-  network    = dependency.network.outputs.private_network.name
-  subnetwork = dependency.network.outputs.gke_subnetwork.name
+resource "google_project_iam_member" "datastore_user_service_accounts" {
+  for_each = toset(var.datastore_user_service_accounts)
+  project  = var.project_id
+  role     = "roles/datastore.user"
+  member   = each.key
 }
