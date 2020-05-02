@@ -37,7 +37,7 @@ dependency "apps" {
   mock_outputs = {
     service_account = "mock-gke-service-account"
     apps_service_accounts = {
-      response-server = {
+      user-registration = {
         email = "mock-app-gke@mock-project.iam.gserviceaccount.com"
       }
     }
@@ -49,6 +49,6 @@ inputs = {
   network = dependency.network.outputs.private_network.id
   consent_documents_iam_members = [{
     role   = "roles/storage.objectCreator"
-    member = "serviceAccount:${dependency.apps.outputs.apps_service_accounts["response-server"].email}"
+    member = "serviceAccount:${dependency.apps.outputs.apps_service_accounts["user-registration"].email}"
   }]
 }
