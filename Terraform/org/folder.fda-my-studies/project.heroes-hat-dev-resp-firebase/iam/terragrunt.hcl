@@ -21,34 +21,19 @@ dependency "project" {
   skip_outputs = true
 }
 
-dependency "network" {
-  config_path = "../../project.heroes-hat-dev-networks/networks"
-
-  mock_outputs = {
-    private_network = {
-      id = "projects/mock/global/networks/mock-network"
-    }
-  }
-}
-
 dependency "apps" {
   config_path = "../../project.heroes-hat-dev-apps/apps"
 
   mock_outputs = {
     service_account = "mock-gke-service-account"
     apps_service_accounts = {
-      user-registration = {
+      response-server = {
         email = "mock-app-gke@mock-project.iam.gserviceaccount.com"
       }
     }
   }
 }
 
-
 inputs = {
-  network = dependency.network.outputs.private_network.id
-  consent_documents_iam_members = [{
-    role   = "roles/storage.objectAdmin"
-    member = "serviceAccount:${dependency.apps.outputs.apps_service_accounts["user-registration"].email}"
-  }]
+  datastore_user_service_accounts = [dependency.apps.outputs.apps_service_accounts["response-server"].email]
 }
