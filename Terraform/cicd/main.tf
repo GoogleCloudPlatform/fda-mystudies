@@ -24,6 +24,11 @@
 # to install the Cloud Build app and connect your GitHub repository to your Cloud project.
 
 terraform {
+  required_version = "~> 0.12.0"
+  required_providers {
+    google      = "~> 3.0"
+    google-beta = "~> 3.0"
+  }
   backend "gcs" {
     bucket = "heroes-hat-dev-terraform-state-08679"
     prefix = "cicd"
@@ -99,7 +104,7 @@ resource "google_project_iam_member" "cloudbuild_viewers" {
 # IAM permissions to allow Cloud Build SA to access state.
 resource "google_storage_bucket_iam_member" "cloudbuild_state_iam" {
   bucket = var.state_bucket
-  role   = "roles/storage.objectViewer"
+  role   = var.continuous_deployment_enabled ? "roles/storage.admin" : "roles/storage.objectViewer"
   member = local.cloud_build_sa
   depends_on = [
     google_project_service.devops_apis,

@@ -35,7 +35,3 @@ variable "cloudsql_region" {
 variable "cloudsql_zone" {
   type = string
 }
-
-variable "cloudsql_failover_zone" {
-  type = string
-}

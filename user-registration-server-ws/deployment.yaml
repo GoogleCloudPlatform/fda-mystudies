@@ -43,16 +43,25 @@ spec:
                 secretKeyRef:
                   name: email-credentials
                   key: email_password
+            - name: CLIENT_ID
+              valueFrom:
+                secretKeyRef:
+                  name: user-registration-secrets
+                  key: CLIENT_ID
+            - name: SECRET_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: user-registration-secrets
+                  key: SECRET_KEY
+            - name: GCP_BUCKET_NAME
+              valueFrom:
+                secretKeyRef:
+                  name: user-registration-secrets
+                  key: GCP_BUCKET_NAME
             - name: AUTH_SERVER_URL
               value: "auth-server-np:50000"
             - name: RESPONSE_SERVER_URL
-              value: "response-serer-np:50000"
-            - name: CLIENT_ID
-              value: "test_client_id_urs"
-            - name: SECRET_KEY
-              value: "test_secret_key"
-            - name: GCP_BUCKET_NAME
-              value: "heroes-hat-dev-my-study-consent-documents"
+              value: "response-server-np:50000"
             - name: GOOGLE_APPLICATION_CREDENTIALS
               value: "/secrets/gcloud_key/key.json"
           ports:

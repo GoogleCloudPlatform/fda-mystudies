@@ -72,6 +72,7 @@ class StudyHomeViewController: UIViewController {
   var isUpdatingIneligibility: Bool = false
 
   var consentRestorationData: Data?
+  var isStudyActivitiesPresented = false
 
   var pageViewController: PageViewController? {
     didSet {
@@ -539,6 +540,8 @@ class StudyHomeViewController: UIViewController {
 
   /// Push screen back to Studydashboard tabbar controller.
   func pushToStudyDashboard() {
+    guard !isStudyActivitiesPresented else { return }
+    isStudyActivitiesPresented = true
     let studyDashboard =
       (storyboard?.instantiateViewController(
         withIdentifier: kStudyDashboardTabbarControllerIdentifier

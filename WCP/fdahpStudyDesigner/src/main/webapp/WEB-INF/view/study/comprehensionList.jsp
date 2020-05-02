@@ -167,6 +167,9 @@ $(document).ready(function(){
 	    "paging":false,
 	    "info":     false,
 	    "filter": false,
+	    language: {
+          	"zeroRecords": "You haven't created any content yet.",
+		    },
 	     rowReorder: reorder,
 	     "columnDefs": [ { orderable: false, targets: [0,1] } ],
 	     "fnRowCallback": function( nRow, aData, iDisplayIndex, iDisplayIndexFull ) {

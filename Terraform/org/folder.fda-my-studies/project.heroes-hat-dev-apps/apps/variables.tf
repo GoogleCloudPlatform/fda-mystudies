@@ -22,6 +22,11 @@ variable "network_project_id" {
   type        = string
 }
 
+variable "cluster_name" {
+  description = "The GKE cluster name"
+  type        = string
+}
+
 variable "gke_region" {
   description = "The region to host the clusters in"
   type        = string
@@ -39,6 +44,11 @@ variable "subnetwork" {
   default     = "default"
 }
 
+variable "master_authorized_networks" {
+  type        = list(object({ cidr_block = string, display_name = string }))
+  description = "List of master authorized networks for accessing the master endpoint. Endpoint is not publically accessible."
+}
+
 variable "repo_owner" {
   description = "Owner of the GitHub repo which contains the definitions of Docker images used by GKE"
   type        = string
@@ -52,4 +62,65 @@ variable "repo_name" {
 variable "cloudbuild_trigger_branch" {
   type    = string
   default = "master"
+}
+
+variable "node_pools" {
+  type        = list(map(string))
+  description = "List of maps containing node pools"
+
+  default = [
+    {
+      name = "default-node-pool"
+    },
+  ]
+}
+
+variable "node_pools_labels" {
+  type        = map(map(string))
+  description = "Map of maps containing node labels by node-pool name"
+
+  default = {
+    all               = {}
+    default-node-pool = {}
+  }
+}
+
+variable "node_pools_metadata" {
+  type        = map(map(string))
+  description = "Map of maps containing node metadata by node-pool name"
+
+  default = {
+    all               = {}
+    default-node-pool = {}
+  }
+}
+
+variable "node_pools_taints" {
+  type        = map(list(object({ key = string, value = string, effect = string })))
+  description = "Map of lists containing node taints by node-pool name"
+
+  default = {
+    all               = []
+    default-node-pool = []
+  }
+}
+
+variable "node_pools_tags" {
+  type        = map(list(string))
+  description = "Map of lists containing node network tags by node-pool name"
+
+  default = {
+    all               = []
+    default-node-pool = []
+  }
+}
+
+variable "node_pools_oauth_scopes" {
+  type        = map(list(string))
+  description = "Map of lists containing node oauth scopes by node-pool name"
+
+  default = {
+    all               = ["https://www.googleapis.com/auth/cloud-platform"]
+    default-node-pool = []
+  }
 }

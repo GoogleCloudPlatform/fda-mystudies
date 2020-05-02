@@ -43,22 +43,22 @@ spec:
               valueFrom:
                 secretKeyRef:
                   key: REGISTRATION_CLIENT_ID
-                  name: response-server-credentials
+                  name: response-server-secrets
             - name: REGISTRATION_CLIENT_SECRET
               valueFrom:
                 secretKeyRef:
                   key: REGISTRATION_CLIENT_SECRET
-                  name: response-server-credentials
+                  name: response-server-secrets
             - name: WCP_USER
               valueFrom:
                 secretKeyRef:
                   key: WCP_USER
-                  name: response-server-credentials
+                  name: response-server-secrets
             - name: WCP_PASS
               valueFrom:
                 secretKeyRef:
                   key: WCP_PASS
-                  name: response-server-credentials
+                  name: response-server-secrets
             - name: WCP_STUDY_METADATA_SERVER_URL
               value: "study-meta-data-np:50000"
             - name: REGISTRATION_SERVER_URL
@@ -78,7 +78,7 @@ spec:
         - name: cloudsql-proxy
           image: gcr.io/cloudsql-docker/gce-proxy:latest
           command: ["/cloud_sql_proxy",
-            "-instances=heroes-hat-dev-data:us-east1:my-studies-2=tcp:3306",
+            "-instances=heroes-hat-dev-data:us-east1:my-studies=tcp:3306",
             "-credential_file=/secrets/gcloud_key/key.json"]
           volumeMounts:
           - name: gcloud-key-volume

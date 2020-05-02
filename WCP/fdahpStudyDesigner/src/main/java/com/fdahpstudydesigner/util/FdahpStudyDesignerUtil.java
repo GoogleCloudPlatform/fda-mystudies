@@ -70,6 +70,7 @@ import org.springframework.web.multipart.MultipartFile;
 import com.fdahpstudydesigner.bean.FormulaInfoBean;
 import com.fdahpstudydesigner.bo.UserBO;
 import com.fdahpstudydesigner.bo.UserPermissions;
+import com.fdahpstudydesigner.util.PropertiesUtil;
 import net.objecthunter.exp4j.ExpressionBuilder;
 
 public class FdahpStudyDesignerUtil {
@@ -266,11 +267,7 @@ public class FdahpStudyDesignerUtil {
         hm.put(key, value);
       }
       ServletContext context = ServletContextHolder.getServletContext();
-      Properties prop = new Properties();
-      resource = new ClassPathResource("application_local.properties");
-      //        prop.load(new
-      // FileInputStream(context.getInitParameter("property_file_location_path")));
-      prop.load(resource.getInputStream());
+      Properties prop = PropertiesUtil.makePropertiesWithEnvironmentVariables("application_local.properties");
       objectKeys = prop.keys();
       while (objectKeys.hasMoreElements()) {
         String key = (String) objectKeys.nextElement();
@@ -1040,7 +1037,7 @@ public class FdahpStudyDesignerUtil {
   }
 
   public static String getHashedValue(String secretToHash) {
-    logger.info("ResponseServerUtil - getHashedValue() - starts");
+    logger.info("FdahpStudyDesignerUtil - getHashedValue() - starts");
     String generatedHash = null;
     try {
       MessageDigest md = MessageDigest.getInstance("SHA-256");
@@ -1051,9 +1048,9 @@ public class FdahpStudyDesignerUtil {
       }
       generatedHash = sb.toString();
     } catch (NoSuchAlgorithmException e) {
-      logger.info("ResponseServerUtil getHashedValue() - error() ", e);
+      logger.info("FdahpStudyDesignerUtil getHashedValue() - error() ", e);
     }
-    logger.info("ResponseServerUtil - getHashedValue() - ends");
+    logger.info("FdahpStudyDesignerUtil - getHashedValue() - ends");
     return generatedHash;
   }
 }

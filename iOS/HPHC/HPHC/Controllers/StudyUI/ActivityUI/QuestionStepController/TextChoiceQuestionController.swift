@@ -1,6 +1,7 @@
 // License Agreement for FDA MyStudies
-// Copyright © 2017-2019 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors. Permission is
-// hereby granted, free of charge, to any person obtaining a copy of this software and associated
+// Copyright © 2017-2019 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors.
+// Copyright 2020 Google LLC
+// Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated
 // documentation files (the &quot;Software&quot;), to deal in the Software without restriction, including without
 // limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the
 // Software, and to permit persons to whom the Software is furnished to do so, subject to the following
@@ -173,9 +174,9 @@ class TextChoiceQuestionController: ORKQuestionStepViewController {
 
   var isShowSearchBar: Bool {
     if self.otherChoice.isShowOtherCell {
-      return self.textChoices.count > 5
+      return self.textChoices.count > 9
     } else {
-      return self.textChoices.count > 6
+      return self.textChoices.count > 10
     }
   }
 
@@ -521,11 +522,16 @@ class TextChoiceQuestionController: ORKQuestionStepViewController {
     super.goBackward()
   }
 
-  override func goForward() {
-    //super.delegate?.stepViewControllerResultDidChange(self)
+  override func skipForward() {
+    self.answers = []
+    self.selectedChoices = []
+    self.isOtherCellSelected = false
+    super.skipForward()
+  }
 
-    if self.otherChoice.isMandatory,
-      self.otherChoice.otherChoiceText == "" || self.otherChoice.otherChoiceText == " ",
+  override func goForward() {
+
+    if self.otherChoice.otherChoiceText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty,
       self.isOtherCellSelected
     {
 
@@ -741,7 +747,7 @@ extension TextChoiceQuestionController: OtherTextChoiceCellDelegate {
 
   func didEndEditing(with text: String?) {
     /// Use the text
-    self.otherChoice.otherChoiceText = text ?? ""
+    self.otherChoice.otherChoiceText = (text ?? "").trimmingCharacters(in: .whitespacesAndNewlines)
     self.tableView?.setContentOffset(CGPoint(x: 0, y: -1), animated: true)
   }
 }

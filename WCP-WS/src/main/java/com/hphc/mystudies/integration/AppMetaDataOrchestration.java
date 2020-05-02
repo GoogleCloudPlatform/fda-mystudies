@@ -26,7 +26,6 @@ import java.util.HashMap;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.json.JSONObject;
-import com.hphc.mystudies.bean.AppResponse;
 import com.hphc.mystudies.bean.AppUpdatesResponse;
 import com.hphc.mystudies.bean.AppVersionInfoBean;
 import com.hphc.mystudies.bean.DeviceVersion;
@@ -38,7 +37,6 @@ import com.hphc.mystudies.bean.TermsPolicyResponse;
 import com.hphc.mystudies.dao.AppMetaDataDao;
 import com.hphc.mystudies.dto.AppVersionInfo;
 import com.hphc.mystudies.exception.OrchestrationException;
-import com.hphc.mystudies.util.Mail;
 import com.hphc.mystudies.util.StudyMetaDataConstants;
 import com.hphc.mystudies.util.StudyMetaDataUtil;
 
@@ -74,89 +72,6 @@ public class AppMetaDataOrchestration {
     }
     LOGGER.info("INFO: AppMetaDataOrchestration - notifications() :: Ends");
     return notificationsResponse;
-  }
-
-  public AppResponse feedback(String subject, String body) throws OrchestrationException {
-    LOGGER.info("INFO: AppMetaDataOrchestration - feedback() :: Starts");
-    AppResponse response = new AppResponse();
-    Boolean flag = false;
-    try {
-      String feedbackSubject = "My Studies App Feedback: " + subject;
-      String feedbackBody =
-          "<div>"
-              + "<div><span>Hi</span></div><br>"
-              + "<div><span>A user of the FDA My Studies mobile app has provided feedback via the app. Here&#39;s the content of the feedback:</span></div><br>"
-              + "<div><span><i>"
-              + body
-              + "</i></span></div><br>"
-              + "<div>"
-              + "<span>Thanks,</span><br><span>"
-              + propMap.get("fda.smd.email.title")
-              + "</span><br>"
-              + "<span>---------------------------------------------------------</span><br>"
-              + "<span style='font-size:9px;'>PS - This is an auto-generated email. Please do not reply.</span>"
-              + "</div>"
-              + "</div>";
-      flag = Mail.sendemail(propMap.get("fda.smd.feedback"), feedbackSubject, feedbackBody);
-      if (flag) {
-        response.setMessage(StudyMetaDataConstants.SUCCESS);
-      }
-    } catch (Exception e) {
-      LOGGER.error("AppMetaDataOrchestration - feedback() :: ERROR", e);
-    }
-    LOGGER.info("INFO: AppMetaDataOrchestration - feedback() :: Ends");
-    return response;
-  }
-
-  public AppResponse contactUsDetails(String subject, String body, String firstName, String email)
-      throws OrchestrationException {
-    LOGGER.info("INFO: AppMetaDataOrchestration - contactUsDetails() :: Starts");
-    AppResponse response = new AppResponse();
-    Boolean flag = false;
-    try {
-      String contactUsSubject = "My Studies App HelpDesk: '" + subject + "'";
-      String contactUsContent =
-          "<div>"
-              + "<div><span>Hi</span></div><br>"
-              + "<div style='padding-bottom:10px;'><span>A user of the FDA My Studies mobile app has reached out to the Helpdesk."
-              + " Below are the contact form details:</span></div>"
-              + "<div>"
-              + "<div>___________________________________________</div>"
-              + "<div style='padding-top:20px;'>First Name: "
-              + firstName
-              + "</div>"
-              + "<div style='padding-top:10px;'>Email: <a href='mailto:"
-              + email
-              + "'>"
-              + email
-              + "</a></div>"
-              + "<div style='padding-top:10px;'>Subject: "
-              + subject
-              + "</div>"
-              + "<div style='padding-top:10px;padding-bottom:10px'>Message: "
-              + body
-              + "</div>"
-              + "</div>"
-              + "<div>___________________________________________</div><br>"
-              + "<div style='padding-top:10px;'><span>Please respond to the app user at the email he/she has provided.</span></div><br>"
-              + "<div>"
-              + "<span>Thanks,</span><br><span>"
-              + propMap.get("fda.smd.email.title")
-              + "</span><br>"
-              + "<span>---------------------------------------------------------</span><br>"
-              + "<span style='font-size:9px;'>PS - This is an auto-generated email. Please do not reply.</span>"
-              + "</div>"
-              + "</div>";
-      flag = Mail.sendemail(propMap.get("fda.smd.contactus"), contactUsSubject, contactUsContent);
-
-      if (flag) {
-        response.setMessage(StudyMetaDataConstants.SUCCESS);
-      }
-    } catch (Exception e) {
-      LOGGER.error("AppMetaDataOrchestration - contactUsDetails() :: ERROR", e);
-    }
-    LOGGER.info("INFO: AppMetaDataOrchestration - contactUsDetails() :: Ends");
-    return response;
   }
 
   public AppUpdatesResponse appUpdates(String appVersion, String app)

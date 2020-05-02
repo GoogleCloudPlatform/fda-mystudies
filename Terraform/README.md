@@ -1,7 +1,13 @@
-# FDA MyStudies Terraform Infrastructure
+# Deploy FDA MyStudies using Terraform
 
-These directories define the entire GCP infrastructure app to run the FDA
-MyStudies application.
+These directories define the entire infrastructure necessary to run FDA MyStudies on Google Cloud.
+
+This Terraform deployment is an adaptation of Google Cloud's [HIPAA-aligned architecture](https://cloud.google.com/solutions/architecture-hipaa-aligned-project). This approach to project 
+configuration and deployment is explained in the ["Setting up a HIPAA-aligned project"](https://cloud.google.com/solutions/setting-up-a-hipaa-aligned-project) solution guide.
+
+This document provides instructions for deploying FDA MyStudies on Google Cloud in using
+infrastrucutre-as-code in approximately 1 hour. A video tutorial that walks the user through
+these steps is available upon request.
 
 ## Prerequisites
 
@@ -139,6 +145,18 @@ To see what resources each deployment provisions, check out the comments in each
 
     After the secrets have been created, you must go to the Google Cloud
     Console, open `Security` --> `Secret Manager` and fill in their values.
+
+1.  Run `copy_client_info_to_sql.sh` script to copy client into from secrets
+    into CloudSQL.
+
+1.  Setup Firestore database. This needs to be done on Google Cloud Console web
+    UI. Steps:
+    1.  Navigate to {PREFIX}-firebase on https://console.cloud.google.com/.
+    1.  Select "Firestore" > "Data" from the top-left dropdown.
+    1.  Click "SELECT NATIVE MODE" button.
+    1.  Select a location from the dropdown. Ideally this should be close to
+        where the apps will be running.
+    1.  Click "CREATE DATABASE" button.
 
 1.  Follow `$ROOT/cicd/README.md` to set up CICD pipelines for Terraform
     configs.

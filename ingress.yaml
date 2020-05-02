@@ -33,7 +33,11 @@ spec:
             backend:
               serviceName: study-meta-data-np
               servicePort: 50000
-          - path: /fdahpStudyDesigner/*
+          - path: /studybuilder/*
+            backend:
+              serviceName: study-designer-np
+              servicePort: 50000
+          - path: /fdaResources/*
             backend:
               serviceName: study-designer-np
               servicePort: 50000
