@@ -90,7 +90,7 @@ module "heroes_hat_cluster" {
 
   // We need to enforce a minimum Kubernetes Version to ensure
   // that the necessary security features are enabled.
-  kubernetes_version = "1.14.10-gke.27"
+  kubernetes_version = "latest"
 
   // Nodes are created with a default version. The nodepool enables
   // auto_upgrade so that the node versions can be kept up to date with
