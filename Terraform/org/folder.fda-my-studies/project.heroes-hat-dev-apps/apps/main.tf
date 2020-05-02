@@ -25,6 +25,8 @@ terraform {
 
 # From
 # https://github.com/terraform-google-modules/terraform-google-kubernetes-engine/tree/master/modules/safer-cluster-update-variant
+# Note: safer-cluster enables network_policy, which causes some issue on pod initiailzation for now.
+# TODO: Re-enable safer-cluster once the issue is resolved.
 #module "heroes_hat_cluster" {
 #  source  = "terraform-google-modules/kubernetes-engine/google//modules/safer-cluster"
 #  version = "8.1.0"
@@ -56,8 +58,9 @@ terraform {
 #  master_authorized_networks = var.master_authorized_networks
 #}
 
+# Using beta-private-cluster for now until network policy issue is resolved.
 module "heroes_hat_cluster" {
-  source             = "terraform-google-modules/kubernetes-engine/google//modules/beta-private-cluster-update-variant"
+  source  = "terraform-google-modules/kubernetes-engine/google//modules/beta-private-cluster-update-variant"
   version = "8.1.0"
 
 
@@ -85,7 +88,7 @@ module "heroes_hat_cluster" {
   enable_private_endpoint    = false
   master_authorized_networks = var.master_authorized_networks
 
-  zones              = []
+  zones = []
 
 
   // We need to enforce a minimum Kubernetes Version to ensure
