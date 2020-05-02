@@ -37,6 +37,12 @@ module "my_studies_consent_documents_bucket" {
   name       = "heroes-hat-dev-my-studies-consent-documents"
   project_id = var.project_id
   location   = var.storage_location
+  iam_members = [
+    {
+      role   = "roles/storage.objectAdmin"
+      member = "serviceAccount:user-registration-gke@heroes-hat-dev-apps.iam.gserviceaccount.com"
+    }
+  ]
 }
 
 module "my_studies_sql_import_bucket" {
