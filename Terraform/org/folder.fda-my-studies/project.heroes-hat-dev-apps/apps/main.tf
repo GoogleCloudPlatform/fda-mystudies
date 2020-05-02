@@ -258,6 +258,11 @@ resource "google_binary_authorization_policy" "policy" {
     name_pattern = "gke.gcr.io/istio/prometheus/*"
   }
 
+  # Calico images in a new registry.
+  admission_whitelist_patterns {
+    name_pattern = "gcr.io/projectcalico-org/*"
+  }
+
   # Recommendations from https://cloud.google.com/binary-authorization/docs/policy-yaml-reference#admissionwhitelistpatterns
   admission_whitelist_patterns {
     name_pattern = "gcr.io/google_containers/*"
