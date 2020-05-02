@@ -52,6 +52,8 @@ EOF
 }
 
 # Cloud Router and NAT to allow bastion-VM to connect to the Internet to install necessary tools.
+# TODO: Move this to main.tf.
+# TODO: Rename the module to "router" and nats to "nat" now that it's not bastion-specific.
 module "bastion_router" {
   source  = "terraform-google-modules/cloud-router/google"
   name    = "bastion-router"
