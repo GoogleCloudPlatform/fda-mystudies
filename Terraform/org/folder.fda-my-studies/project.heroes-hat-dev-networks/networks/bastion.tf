@@ -52,6 +52,8 @@ EOF
 }
 
 # Cloud Router and NAT to allow bastion-VM to connect to the Internet to install necessary tools.
+# TODO: Move this to main.tf.
+# TODO: Rename the module to "router" and nats to "nat" now that it's not bastion-specific.
 module "bastion_router" {
   source  = "terraform-google-modules/cloud-router/google"
   name    = "bastion-router"
@@ -65,6 +67,11 @@ module "bastion_router" {
       name                     = module.private.subnets["${var.region}/${local.bastion_subnet_name}"].self_link
       source_ip_ranges_to_nat  = ["PRIMARY_IP_RANGE"]
       secondary_ip_range_names = []
+      },
+      {
+        name                     = module.private.subnets["${var.region}/${local.gke_clusters_subnet_name}"].self_link
+        source_ip_ranges_to_nat  = ["ALL_IP_RANGES"]
+        secondary_ip_range_names = []
     }]
   }]
 }
