@@ -48,7 +48,7 @@ dependency "apps" {
 inputs = {
   network = dependency.network.outputs.private_network.id
   consent_documents_iam_members = [{
-    role   = "roles/storage.objectCreator"
+    role   = "roles/storage.objectAdmin"
     member = "serviceAccount:${dependency.apps.outputs.apps_service_accounts["user-registration"].email}"
   }]
 }
