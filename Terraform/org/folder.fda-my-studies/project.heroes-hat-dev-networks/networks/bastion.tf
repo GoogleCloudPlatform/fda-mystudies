@@ -65,11 +65,11 @@ module "bastion_router" {
       name                     = module.private.subnets["${var.region}/${local.bastion_subnet_name}"].self_link
       source_ip_ranges_to_nat  = ["PRIMARY_IP_RANGE"]
       secondary_ip_range_names = []
-    },
-    {
-      name                     = module.private.subnets["${var.region}/${local.gke_clusters_subnet_name}"].self_link
-      source_ip_ranges_to_nat  = ["ALL_IP_RANGES"]
-      secondary_ip_range_names = []
+      },
+      {
+        name                     = module.private.subnets["${var.region}/${local.gke_clusters_subnet_name}"].self_link
+        source_ip_ranges_to_nat  = ["ALL_IP_RANGES"]
+        secondary_ip_range_names = []
     }]
   }]
 }
