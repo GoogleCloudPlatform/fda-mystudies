@@ -149,6 +149,15 @@ To see what resources each deployment provisions, check out the comments in each
 1.  Run `copy_client_info_to_sql.sh` script to copy client into from secrets
     into CloudSQL.
 
+1.  Setup Firestore database. This needs to be done on Google Cloud Console web
+    UI. Steps:
+    1.  Navigate to {PREFIX}-firebase on https://console.cloud.google.com/.
+    1.  Select "Firestore" > "Data" from the top-left dropdown.
+    1.  Click "SELECT NATIVE MODE" button.
+    1.  Select a location from the dropdown. Ideally this should be close to
+        where the apps will be running.
+    1.  Click "CREATE DATABASE" button.
+
 1.  Follow `$ROOT/cicd/README.md` to set up CICD pipelines for Terraform
     configs.
 
