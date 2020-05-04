@@ -20,9 +20,6 @@ public interface CommonService {
 
   public UserDetailsBO getUserInfoDetails(String userId);
 
-  public List<AuditLogBo> createActivityLogList(
-      String userId, String activityName, List<String> activityDescList);
-
   public AuditLogBo createAuditLog(
       String userId,
       String activityName,
@@ -35,5 +32,5 @@ public interface CommonService {
   boolean validateServerClientCredentials(String clientId, String clientSecret)
       throws SystemException, UnAuthorizedRequestException, InvalidRequestException;
 
-  public List<AuditLogBo> saveMultipleAuditLogs(List<AuditLogBo> activityLogs);
+  public List<AuditLogBo> saveAuditLogs(List<AuditLogBo> activityLogs);
 }

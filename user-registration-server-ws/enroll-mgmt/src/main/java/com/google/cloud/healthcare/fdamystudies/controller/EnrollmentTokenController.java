@@ -243,9 +243,22 @@ public class EnrollmentTokenController {
                                 AppConstants.CLOSE_STUDY,
                                 enrollmentBean.getToken()),
                             AppConstants.AUDIT_LOG_MOBILE_APP_CLIENT_ID,
-                            respBean.getParticipantId(),
+                            "",
                             enrollmentBean.getStudyId(),
                             AppConstants.APP_LEVEL_ACCESS);
+                      } else {
+                        commonService.createAuditLog(
+                            userId,
+                            AppConstants.AUDIT_EVENT_ENROLL_FAIL_NAME,
+                            AppConstants.AUDIT_EVENT_ENROLL_FAIL_DESC,
+                            AppConstants.AUDIT_LOG_MOBILE_APP_CLIENT_ID,
+                            "",
+                            enrollmentBean.getStudyId(),
+                            AppConstants.APP_LEVEL_ACCESS);
+                        errorBean = new ErrorBean();
+                        errorBean.setCode(ErrorCode.EC_500.code());
+                        errorBean.setMessage(ErrorCode.EC_500.errorMessage());
+                        return new ResponseEntity<>(errorBean, HttpStatus.INTERNAL_SERVER_ERROR);
                       }
                     } else {
                       ErrorResponseUtil.getFailureResponse(
@@ -343,9 +356,23 @@ public class EnrollmentTokenController {
                         AppConstants.OPEN_STUDY,
                         tokenValue),
                     AppConstants.AUDIT_LOG_MOBILE_APP_CLIENT_ID,
-                    respBean.getParticipantId(),
+                    "",
                     enrollmentBean.getStudyId(),
                     AppConstants.APP_LEVEL_ACCESS);
+              } else {
+                commonService.createAuditLog(
+                    userId,
+                    AppConstants.AUDIT_EVENT_ENROLL_FAIL_NAME,
+                    AppConstants.AUDIT_EVENT_ENROLL_FAIL_DESC,
+                    AppConstants.AUDIT_LOG_MOBILE_APP_CLIENT_ID,
+                    "",
+                    enrollmentBean.getStudyId(),
+                    AppConstants.APP_LEVEL_ACCESS);
+
+                errorBean = new ErrorBean();
+                errorBean.setCode(ErrorCode.EC_500.code());
+                errorBean.setMessage(ErrorCode.EC_500.errorMessage());
+                return new ResponseEntity<>(errorBean, HttpStatus.INTERNAL_SERVER_ERROR);
               }
             }
           } else {

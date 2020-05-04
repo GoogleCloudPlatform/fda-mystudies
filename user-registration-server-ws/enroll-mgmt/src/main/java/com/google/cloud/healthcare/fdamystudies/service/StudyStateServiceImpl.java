@@ -116,19 +116,18 @@ public class StudyStateServiceImpl implements StudyStateService {
                     && StringUtils.isNotEmpty(studiesBean.getParticipantId()))
                   participantStudies.setParticipantId(studiesBean.getParticipantId());
                 addParticipantStudiesList.add(participantStudies);
-                String dataNeeded =
-                    (new StringBuilder())
+                String dataNeededForAuditLog =
+                    new StringBuilder()
                         .append(studiesBean.getStudyId())
                         .append("_")
                         .append(participantStudies.getStatus())
                         .append("_")
                         .append(
-                            studiesBean.getParticipantId() != null
-                                    && !studiesBean.getParticipantId().isEmpty()
-                                ? studiesBean.getParticipantId()
-                                : AppConstants.NOT_APPLICABLE)
+                            StringUtils.isEmpty(studiesBean.getParticipantId())
+                                ? AppConstants.NOT_APPLICABLE
+                                : studiesBean.getParticipantId())
                         .toString();
-                dataNeededForAuditLogging.add(dataNeeded);
+                dataNeededForAuditLogging.add(dataNeededForAuditLog);
               }
             }
           }
@@ -161,8 +160,8 @@ public class StudyStateServiceImpl implements StudyStateService {
               && StringUtils.isNotEmpty(studiesBean.getParticipantId()))
             participantStudyBo.setParticipantId(studiesBean.getParticipantId());
           addParticipantStudiesList.add(participantStudyBo);
-          String dataNeeded =
-              (new StringBuilder())
+          String dataNeededForAuditLog =
+              new StringBuilder()
                   .append(studiesBean.getStudyId())
                   .append("_")
                   .append(participantStudyBo.getStatus())
@@ -173,7 +172,7 @@ public class StudyStateServiceImpl implements StudyStateService {
                           ? studiesBean.getParticipantId()
                           : AppConstants.NOT_APPLICABLE)
                   .toString();
-          dataNeededForAuditLogging.add(dataNeeded);
+          dataNeededForAuditLogging.add(dataNeededForAuditLog);
         }
       }
       message = studyStateDao.saveParticipantStudies(addParticipantStudiesList);
@@ -182,20 +181,20 @@ public class StudyStateServiceImpl implements StudyStateService {
         studyStateRespBean.setMessage(
             MyStudiesUserRegUtil.ErrorCodes.SUCCESS.getValue().toLowerCase());
 
-        List<AuditLogBo> activityLogs =
-            prepareActivityListForStudyStateUpdate(userId, dataNeededForAuditLogging, "sucess");
+        List<AuditLogBo> auditLogs =
+            prepareAuditLogListForStudyStateUpdate(userId, dataNeededForAuditLogging, "sucess");
 
-        commonService.saveMultipleAuditLogs(activityLogs);
+        commonService.saveAuditLogs(auditLogs);
 
       } else {
-        List<AuditLogBo> activityLogs =
-            prepareActivityListForStudyStateUpdate(userId, dataNeededForAuditLogging, "failure");
-        commonService.saveMultipleAuditLogs(activityLogs);
+        List<AuditLogBo> auditLogs =
+            prepareAuditLogListForStudyStateUpdate(userId, dataNeededForAuditLogging, "failure");
+        commonService.saveAuditLogs(auditLogs);
       }
     } catch (Exception e) {
-      List<AuditLogBo> activityLogs =
-          prepareActivityListForStudyStateUpdate(userId, dataNeededForAuditLogging, "failure");
-      commonService.saveMultipleAuditLogs(activityLogs);
+      List<AuditLogBo> auditLogs =
+          prepareAuditLogListForStudyStateUpdate(userId, dataNeededForAuditLogging, "failure");
+      commonService.saveAuditLogs(auditLogs);
       logger.error("StudyStateServiceImpl saveParticipantStudies() - error ", e);
     }
 
@@ -203,9 +202,9 @@ public class StudyStateServiceImpl implements StudyStateService {
     return studyStateRespBean;
   }
 
-  private List<AuditLogBo> prepareActivityListForStudyStateUpdate(
+  private List<AuditLogBo> prepareAuditLogListForStudyStateUpdate(
       String userId, List<String> dataNeededForAuditLogging, String type) {
-    List<AuditLogBo> activityLogs = new ArrayList<>();
+    List<AuditLogBo> auditLogs = new ArrayList<>();
     String eventName = "";
     String eventDesc = "";
     if (type.equals("sucess")) {
@@ -215,22 +214,21 @@ public class StudyStateServiceImpl implements StudyStateService {
       eventName = AppConstants.AUDIT_EVENT_UPDATE_STUDY_STATE_FAILED_NAME;
       eventDesc = AppConstants.AUDIT_EVENT_UPDATE_STUDY_STATE_FAILED_DESC;
     }
+    for (String dataNeededForAuditLog : dataNeededForAuditLogging) {
 
-    for (int i = 0; i < dataNeededForAuditLogging.size(); i++) {
       AuditLogBo auditLogBO = new AuditLogBo();
-      String dataNeeded = dataNeededForAuditLogging.get(i);
-      String[] data = dataNeeded.split("_");
+      String[] studyIdStausAndparticipantId = dataNeededForAuditLog.split("_");
       auditLogBO.setAccessLevel(AppConstants.APP_LEVEL_ACCESS);
       auditLogBO.setActivityName(eventName);
       auditLogBO.setActivityDateTime(LocalDateTime.now());
-      auditLogBO.setActivtyDesc(String.format(eventDesc, data[1]));
+      auditLogBO.setActivtyDesc(String.format(eventDesc, studyIdStausAndparticipantId[1]));
       auditLogBO.setAuthUserId(userId);
-      auditLogBO.setParticipantId(data[2]);
+      auditLogBO.setParticipantId(studyIdStausAndparticipantId[2]);
       auditLogBO.setServerClientId(AppConstants.AUDIT_LOG_MOBILE_APP_CLIENT_ID);
-      auditLogBO.setStudyId(data[0]);
-      activityLogs.add(auditLogBO);
+      auditLogBO.setStudyId(studyIdStausAndparticipantId[0]);
+      auditLogs.add(auditLogBO);
 
-      if (data[1].equals(AppConstants.NOT_ELIGIBLE)) {
+      if (studyIdStausAndparticipantId[1].equals(AppConstants.NOT_ELIGIBLE)) {
         auditLogBO = new AuditLogBo();
         auditLogBO.setAccessLevel(AppConstants.APP_LEVEL_ACCESS);
         auditLogBO.setActivityName(AppConstants.AUDIT_EVENT_APP_USER_INELIGIBLE_NAME);
@@ -239,11 +237,11 @@ public class StudyStateServiceImpl implements StudyStateService {
         auditLogBO.setAuthUserId(userId);
         auditLogBO.setParticipantId("");
         auditLogBO.setServerClientId(AppConstants.AUDIT_LOG_MOBILE_APP_CLIENT_ID);
-        auditLogBO.setStudyId(data[0]);
-        activityLogs.add(auditLogBO);
+        auditLogBO.setStudyId(studyIdStausAndparticipantId[0]);
+        auditLogs.add(auditLogBO);
       }
     }
-    return activityLogs;
+    return auditLogs;
   }
 
   @Override
@@ -311,7 +309,7 @@ public class StudyStateServiceImpl implements StudyStateService {
     logger.info("StudyStateServiceImpl withdrawFromStudy() - Starts ");
     WithDrawFromStudyRespBean respBean = null;
     String message = MyStudiesUserRegUtil.ErrorCodes.FAILURE.getValue();
-    String retVal = MyStudiesUserRegUtil.ErrorCodes.FAILURE.getValue();
+    String retVal = "";
     try {
       message = studyStateDao.withdrawFromStudy(participantId, studyId, delete);
       if (message.equalsIgnoreCase(MyStudiesUserRegUtil.ErrorCodes.SUCCESS.getValue())) {
