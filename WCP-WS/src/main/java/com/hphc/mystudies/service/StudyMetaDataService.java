@@ -280,7 +280,7 @@ public class StudyMetaDataService {
   @GET
   @Produces(MediaType.APPLICATION_JSON)
   @Consumes(MediaType.APPLICATION_JSON)
-  @Path("getUserResources")
+  @Path("userResources")
   public Object getUserResources(
       @QueryParam("studyId") String studyId,
       @Context ServletContext context,
