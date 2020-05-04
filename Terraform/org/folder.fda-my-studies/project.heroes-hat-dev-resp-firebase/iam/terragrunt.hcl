@@ -12,15 +12,28 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-org_id                        = "707577601068"
-devops_project_id             = "heroes-hat-dev-devops"
-state_bucket                  = "heroes-hat-dev-terraform-state-08679"
-repo_owner                    = "GoogleCloudPlatform"
-repo_name                     = "fda-mystudies"
-branch_regex                  = "^early-access$"
-continuous_deployment_enabled = true
-trigger_enabled               = true
-terraform_root                = "Terraform"
-build_viewers = [
-  "group:rocketturtle-gcp-admin@rocketturtle.net",
-]
+include {
+  path = find_in_parent_folders()
+}
+
+dependency "project" {
+  config_path  = "../project"
+  skip_outputs = true
+}
+
+dependency "apps" {
+  config_path = "../../project.heroes-hat-dev-apps/apps"
+
+  mock_outputs = {
+    service_account = "mock-gke-service-account"
+    apps_service_accounts = {
+      response-server = {
+        email = "mock-app-gke@mock-project.iam.gserviceaccount.com"
+      }
+    }
+  }
+}
+
+inputs = {
+  datastore_user_service_accounts = [dependency.apps.outputs.apps_service_accounts["response-server"].email]
+}

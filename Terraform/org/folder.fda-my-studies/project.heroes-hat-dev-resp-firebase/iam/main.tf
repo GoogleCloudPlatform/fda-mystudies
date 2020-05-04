@@ -12,15 +12,18 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-org_id                        = "707577601068"
-devops_project_id             = "heroes-hat-dev-devops"
-state_bucket                  = "heroes-hat-dev-terraform-state-08679"
-repo_owner                    = "GoogleCloudPlatform"
-repo_name                     = "fda-mystudies"
-branch_regex                  = "^early-access$"
-continuous_deployment_enabled = true
-trigger_enabled               = true
-terraform_root                = "Terraform"
-build_viewers = [
-  "group:rocketturtle-gcp-admin@rocketturtle.net",
-]
+terraform {
+  required_version = "~> 0.12.0"
+  required_providers {
+    google      = "~> 3.0"
+    google-beta = "~> 3.0"
+  }
+  backend "gcs" {}
+}
+
+resource "google_project_iam_member" "datastore_user_service_accounts" {
+  for_each = toset(var.datastore_user_service_accounts)
+  project  = var.project_id
+  role     = "roles/datastore.user"
+  member   = each.key
+}
