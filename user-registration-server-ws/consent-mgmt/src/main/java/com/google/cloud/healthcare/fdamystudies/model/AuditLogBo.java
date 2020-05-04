@@ -5,7 +5,6 @@
  * license that can be found in the LICENSE file or at
  * https://opensource.org/licenses/MIT.
  */
-
 package com.google.cloud.healthcare.fdamystudies.model;
 
 import java.io.Serializable;
@@ -16,6 +15,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import com.google.cloud.healthcare.fdamystudies.utils.AppConstants;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -48,11 +48,11 @@ public class AuditLogBo implements Serializable {
   private LocalDateTime activityDateTime;
 
   @Column(name = "participant_id")
-  private String participantId;
+  private String participantId = AppConstants.NOT_APPLICABLE;
 
   @Column(name = "study_id")
-  private String studyId;
+  private String studyId = AppConstants.NOT_APPLICABLE;
 
   @Column(name = "access_level")
-  private String accessLevel;
+  private String accessLevel = AppConstants.NOT_APPLICABLE;
 }

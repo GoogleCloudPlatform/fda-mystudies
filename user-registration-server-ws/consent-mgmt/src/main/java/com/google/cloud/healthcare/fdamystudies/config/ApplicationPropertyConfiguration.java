@@ -10,11 +10,15 @@ package com.google.cloud.healthcare.fdamystudies.config;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
+import lombok.Getter;
+import lombok.Setter;
 import lombok.ToString;
 
 @Configuration
 @PropertySource("classpath:messageResource.properties")
 @ToString
+@Getter
+@Setter
 public class ApplicationPropertyConfiguration {
 
   @Value("${authServerAccessTokenValidationUrl}")
@@ -31,6 +35,39 @@ public class ApplicationPropertyConfiguration {
 
   @Value("${bucketName}")
   private String bucketName;
+
+  @Value("${auditEventConsentSignName}")
+  private String auditEventConsentSignName;
+
+  @Value("${auditEventConsentSignDesc}")
+  private String auditEventConsentSignDesc;
+
+  @Value("${auditEventConsentSignFailName}")
+  private String auditEventConsentSignFailName;
+
+  @Value("${auditEventConsentSignFailDesc}")
+  private String auditEventConsentSignFailDesc;
+
+  @Value("${auditEventEnrollIntoStudyName}")
+  private String auditEventEnrollIntoStudyName;
+
+  @Value("${auditEventEnrollIntoStudyDesc}")
+  private String auditEventEnrollIntoStudyDesc;
+
+  @Value("${auditEventEnrollIntoStudyFailName}")
+  private String auditEventEnrollIntoStudyFailName;
+
+  @Value("${auditEventEnrollIntoStudyFailDesc}")
+  private String auditEventEnrollIntoStudyFailDesc;
+
+  @Value("${auditEventConsentProvidedName}")
+  private String auditEventConsentProvidedName;
+
+  @Value("${auditEventConsentProvidedDesc}")
+  private String auditEventConsentProvidedDesc;
+
+  @Value("${mobileAppClientId}")
+  private String mobileAppClientId;
 
   public String getAuthServerAccessTokenValidationUrl() {
     return authServerAccessTokenValidationUrl;

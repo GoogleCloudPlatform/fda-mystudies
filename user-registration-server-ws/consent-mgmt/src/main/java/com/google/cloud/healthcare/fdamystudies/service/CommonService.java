@@ -15,16 +15,16 @@ public interface CommonService {
 
   public Integer getUserDetailsId(String userId);
 
-  public AuditLogBo createActivityLog(String userId, String activityName, String activtyDesc);
+  public AuditLogBo createAuditLog(String userId, String event, String description);
 
-  AuditLogBo createActivityLog(
+  AuditLogBo createAuditLog(
       String userId,
-      String activityName,
-      String activtyDesc,
+      String event,
+      String description,
       String accessLevel,
       String participantId,
       String studyId);
 
-  AuditLogBo createActivityLog(
-      String userId, String activityName, String activtyDesc, String accessLevel);
+  AuditLogBo createAuditLog(
+      String userId, String event, String description, String accessLevel);
 }

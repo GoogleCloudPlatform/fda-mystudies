@@ -17,12 +17,13 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 import org.springframework.web.client.RestTemplate;
 import com.google.cloud.healthcare.fdamystudies.bean.BodyForProvider;
 import com.google.cloud.healthcare.fdamystudies.config.ApplicationPropertyConfiguration;
 import com.google.cloud.healthcare.fdamystudies.dao.CommonDao;
 import com.google.cloud.healthcare.fdamystudies.model.AuditLogBo;
-import com.google.cloud.healthcare.fdamystudies.repository.ActivityLogRepository;
+import com.google.cloud.healthcare.fdamystudies.repository.AuditLogRepository;
 import com.google.cloud.healthcare.fdamystudies.utils.AppConstants;
 
 @Service
@@ -34,7 +35,7 @@ public class CommonServiceImpl implements CommonService {
 
   @Autowired CommonDao commonDao;
 
-  @Autowired private ActivityLogRepository activityLogRepository;
+  @Autowired private AuditLogRepository auditLogRepository;
 
   private static Logger logger = LoggerFactory.getLogger(CommonServiceImpl.class);
 
@@ -83,65 +84,72 @@ public class CommonServiceImpl implements CommonService {
   }
 
   @Override
-  public AuditLogBo createActivityLog(String userId, String activityName, String activtyDesc) {
-    logger.info("CommonServiceImpl createActivityLog() - starts ");
-    AuditLogBo activityLog = new AuditLogBo();
+  public AuditLogBo createAuditLog(String userId, String event, String description) {
+    logger.info("CommonServiceImpl createAuditLog() - starts ");
+    AuditLogBo auditLog = new AuditLogBo();
+    auditLog.setAuthUserId(StringUtils.isEmpty(userId) ? AppConstants.NOT_APPLICABLE : userId);
+    auditLog.setActivityName(event);
+    auditLog.setActivtyDesc(description);
+    auditLog.setActivityDateTime(LocalDateTime.now());
+    auditLog.setServerClientId(appConfig.getMobileAppClientId());
     try {
-      activityLog.setAuthUserId(userId);
-      activityLog.setActivityName(activityName);
-      activityLog.setActivtyDesc(activtyDesc);
-      activityLog.setActivityDateTime(LocalDateTime.now());
-      activityLog.setServerClientId(AppConstants.MOBILE_APP_CLIENT_ID);
-      activityLogRepository.save(activityLog);
+      auditLogRepository.save(auditLog);
     } catch (Exception e) {
-      logger.error("CommonServiceImpl createActivityLog() - error ", e);
+      logger.error("CommonServiceImpl createAuditLog() - error ", e);
+      return null;
     }
-    logger.info("CommonServiceImpl createActivityLog() - ends ");
+    logger.info("CommonServiceImpl createAuditLog() - ends ");
 
-    return activityLog;
+    return auditLog;
   }
 
   @Override
-  public AuditLogBo createActivityLog(
+  public AuditLogBo createAuditLog(
       String userId,
-      String activityName,
-      String activtyDesc,
+      String event,
+      String description,
       String accessLevel,
       String participantId,
       String studyId) {
-    logger.info("CommonServiceImpl createActivityLog() - starts ");
-    AuditLogBo activityLog = new AuditLogBo();
+    logger.info("CommonServiceImpl createAuditLog() - starts ");
+    AuditLogBo auditLog = new AuditLogBo();
+    auditLog.setAuthUserId(StringUtils.isEmpty(userId) ? AppConstants.NOT_APPLICABLE : userId);
+    auditLog.setActivityName(event);
+    auditLog.setActivtyDesc(description);
+    auditLog.setActivityDateTime(LocalDateTime.now());
+    auditLog.setAccessLevel(
+        StringUtils.isEmpty(accessLevel) ? AppConstants.NOT_APPLICABLE : accessLevel);
+    auditLog.setServerClientId(
+        StringUtils.isEmpty(appConfig.getMobileAppClientId())
+            ? AppConstants.NOT_APPLICABLE
+            : appConfig.getMobileAppClientId());
+    auditLog.setParticipantId(
+        StringUtils.isEmpty(participantId) ? AppConstants.NOT_APPLICABLE : participantId);
+    auditLog.setStudyId(StringUtils.isEmpty(studyId) ? AppConstants.NOT_APPLICABLE : studyId);
     try {
-      activityLog.setAuthUserId(userId);
-      activityLog.setActivityName(activityName);
-      activityLog.setActivtyDesc(activtyDesc);
-      activityLog.setActivityDateTime(LocalDateTime.now());
-      activityLog.setAccessLevel(accessLevel);
-      activityLog.setServerClientId(AppConstants.MOBILE_APP_CLIENT_ID);
-      activityLog.setParticipantId(participantId);
-      activityLog.setStudyId(studyId);
-      activityLogRepository.save(activityLog);
+      auditLogRepository.save(auditLog);
     } catch (Exception e) {
-      logger.error("CommonServiceImpl createActivityLog() - error ", e);
+      logger.error("CommonServiceImpl createAuditLog() - error ", e);
+      return null;
     }
-    logger.info("CommonServiceImpl createActivityLog() - ends ");
+    logger.info("CommonServiceImpl createAuditLog() - ends ");
 
-    return activityLog;
+    return auditLog;
   }
 
   @Override
-  public AuditLogBo createActivityLog(
-      String userId, String activityName, String activtyDesc, String accessLevel) {
-    logger.info("CommonServiceImpl createActivityLog() - starts ");
-    AuditLogBo activityLog =
-        createActivityLog(
+  public AuditLogBo createAuditLog(
+      String userId, String event, String description, String accessLevel) {
+    logger.info("CommonServiceImpl createAuditLog() - starts ");
+    AuditLogBo auditLog =
+        createAuditLog(
             userId,
-            activityName,
-            activtyDesc,
+            event,
+            description,
             accessLevel,
             AppConstants.NOT_APPLICABLE,
             AppConstants.NOT_APPLICABLE);
-    logger.info("CommonServiceImpl createActivityLog() - ends ");
-    return activityLog;
+    logger.info("CommonServiceImpl createAuditLog() - ends ");
+    return auditLog;
   }
 }

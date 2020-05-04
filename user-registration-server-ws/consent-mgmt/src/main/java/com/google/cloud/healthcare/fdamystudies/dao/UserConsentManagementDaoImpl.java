@@ -192,7 +192,7 @@ public class UserConsentManagementDaoImpl implements UserConsentManagementDao {
       }
       criteriaQuery = criteriaBuilder.createQuery(StudyConsentBO.class);
       studyConsentBoRoot = criteriaQuery.from(StudyConsentBO.class);
-      if ((consentVersion != null) && !StringUtils.isEmpty(consentVersion)) {
+      if (!StringUtils.isEmpty(consentVersion)) {
         predicates = new Predicate[3];
         predicates[0] =
             criteriaBuilder.equal(studyConsentBoRoot.get(AppConstants.KEY_USERID), userDetailsId);
@@ -207,7 +207,7 @@ public class UserConsentManagementDaoImpl implements UserConsentManagementDao {
             criteriaBuilder.equal(studyConsentBoRoot.get(AppConstants.STUDY_INFO_ID), studyId);
       }
       criteriaQuery.select(studyConsentBoRoot).where(predicates);
-      if ((consentVersion != null) && !StringUtils.isEmpty(consentVersion)) {
+      if (!StringUtils.isEmpty(consentVersion)) {
         studyConsentBoList = session.createQuery(criteriaQuery).getResultList();
       } else {
         criteriaQuery.orderBy(criteriaBuilder.desc(studyConsentBoRoot.get("ts")));

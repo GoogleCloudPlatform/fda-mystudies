@@ -83,10 +83,7 @@ public class UserConsentManagementController {
           && ((consentStatusBean.getConsent().getVersion() != null)
               && (consentStatusBean.getConsent().getPdf() != null))
           && (consentStatusBean.getConsent().getStatus() != null)) {
-        if ((consentStatusBean.getStudyId() != null)
-            && !StringUtils.isEmpty(consentStatusBean.getStudyId())
-            && (userId != null)
-            && !StringUtils.isEmpty(userId)) {
+        if (!StringUtils.isEmpty(consentStatusBean.getStudyId()) && !StringUtils.isEmpty(userId)) {
           studyInfoBean =
               userConsentManagementService.getStudyInfoId(consentStatusBean.getStudyId());
           ParticipantStudiesBO participantStudies =
@@ -96,8 +93,7 @@ public class UserConsentManagementController {
             if (consentStatusBean.getEligibility() != null) {
               participantStudies.setEligibility(consentStatusBean.getEligibility());
             }
-            if ((consentStatusBean.getSharing() != null)
-                && !StringUtils.isEmpty(consentStatusBean.getSharing())) {
+            if (!StringUtils.isEmpty(consentStatusBean.getSharing())) {
               participantStudies.setSharing(consentStatusBean.getSharing());
             }
             List<ParticipantStudiesBO> participantStudiesList =
@@ -107,8 +103,7 @@ public class UserConsentManagementController {
                 userConsentManagementService.saveParticipantStudies(participantStudiesList);
 
             StudyConsentBO studyConsent = null;
-            if ((consentStatusBean.getConsent().getVersion() != null)
-                && !StringUtils.isEmpty(consentStatusBean.getConsent().getVersion())) {
+            if (!StringUtils.isEmpty(consentStatusBean.getConsent().getVersion())) {
               studyConsent =
                   userConsentManagementService.getStudyConsent(
                       userId,
@@ -117,16 +112,13 @@ public class UserConsentManagementController {
               userDetailId = userConsentManagementService.getUserDetailsId(userId);
               String fileName = null;
               if (studyConsent != null) {
-                if ((consentStatusBean.getConsent().getVersion() != null)
-                    && !StringUtils.isEmpty(consentStatusBean.getConsent().getVersion())) {
+                if (!StringUtils.isEmpty(consentStatusBean.getConsent().getVersion())) {
                   studyConsent.setVersion(consentStatusBean.getConsent().getVersion());
                 }
-                if ((consentStatusBean.getConsent().getStatus() != null)
-                    && !StringUtils.isEmpty(consentStatusBean.getConsent().getStatus())) {
+                if (!StringUtils.isEmpty(consentStatusBean.getConsent().getStatus())) {
                   studyConsent.setStatus(consentStatusBean.getConsent().getStatus());
                 }
-                if ((consentStatusBean.getConsent().getPdf() != null)
-                    && !StringUtils.isEmpty(consentStatusBean.getConsent().getPdf())) {
+                if (!StringUtils.isEmpty(consentStatusBean.getConsent().getPdf())) {
                   String underDirectory = userId + "/" + consentStatusBean.getStudyId();
                   fileName =
                       userId
@@ -150,8 +142,7 @@ public class UserConsentManagementController {
                 studyConsent.setStudyInfoId(studyInfoBean.getStudyInfoId());
                 studyConsent.setStatus(consentStatusBean.getConsent().getStatus());
                 studyConsent.setVersion(consentStatusBean.getConsent().getVersion());
-                if ((consentStatusBean.getConsent().getPdf() != null)
-                    && !StringUtils.isEmpty(consentStatusBean.getConsent().getPdf())) {
+                if (!StringUtils.isEmpty(consentStatusBean.getConsent().getPdf())) {
                   String underDirectory = userId + "/" + consentStatusBean.getStudyId();
                   fileName =
                       userId
@@ -179,26 +170,26 @@ public class UserConsentManagementController {
 
                 String description =
                     String.format(
-                        AppConstants.AUDIT_EVENT_UPDATE_ELIGIBILITY_CONSENT_DESC,
+                        appConfig.getAuditEventConsentSignDesc(),
                         fileName,
                         participantStudies.getStatus(),
                         consentStatusBean.getConsent().getVersion(),
                         consentStatusBean.getSharing());
-                commonService.createActivityLog(
+                commonService.createAuditLog(
                     userId,
-                    AppConstants.AUDIT_EVENT_UPDATE_ELIGIBILITY_CONSENT_NAME,
+                    appConfig.getAuditEventConsentSignName(),
                     description,
                     AppConstants.PARTICIPANT_LEVEL_ACCESS,
                     participantStudies.getParticipantId(),
                     consentStatusBean.getStudyId());
                 description =
                     String.format(
-                        AppConstants.AUDIT_EVENT_ENROLL_INTO_STUDY_SUCCESS_DESC,
+                        appConfig.getAuditEventEnrollIntoStudyDesc(),
                         participantStudies.getStatus(),
                         participantStudies.getParticipantId());
-                commonService.createActivityLog(
+                commonService.createAuditLog(
                     userId,
-                    AppConstants.AUDIT_EVENT_ENROLL_INTO_STUDY_SUCCESS_NAME,
+                    appConfig.getAuditEventEnrollIntoStudyName(),
                     description,
                     AppConstants.PARTICIPANT_LEVEL_ACCESS,
                     participantStudies.getParticipantId(),
@@ -208,14 +199,14 @@ public class UserConsentManagementController {
                 errorBean = new ErrorBean(ErrorCode.EC_111.code(), ErrorCode.EC_111.errorMessage());
                 String description =
                     String.format(
-                        AppConstants.AUDIT_EVENT_UPDATE_ELIGIBILITY_CONSENT_FAIL_DESC,
+                        appConfig.getAuditEventConsentSignFailDesc(),
                         fileName,
                         participantStudies.getStatus(),
                         consentStatusBean.getConsent().getVersion(),
                         consentStatusBean.getSharing());
-                commonService.createActivityLog(
+                commonService.createAuditLog(
                     userId,
-                    AppConstants.AUDIT_EVENT_UPDATE_ELIGIBILITY_CONSENT_FAIL_NAME,
+                    appConfig.getAuditEventConsentSignFailName(),
                     description,
                     AppConstants.PARTICIPANT_LEVEL_ACCESS,
                     participantStudies.getParticipantId(),
@@ -223,12 +214,12 @@ public class UserConsentManagementController {
 
                 description =
                     String.format(
-                        AppConstants.AUDIT_EVENT_ENROLL_INTO_STUDY_FAILED_DESC,
+                        appConfig.getAuditEventEnrollIntoStudyFailDesc(),
                         participantStudies.getStatus(),
                         participantStudies.getParticipantId());
-                commonService.createActivityLog(
+                commonService.createAuditLog(
                     userId,
-                    AppConstants.AUDIT_EVENT_ENROLL_INTO_STUDY_FAILED_NAME,
+                    appConfig.getAuditEventEnrollIntoStudyFailName(),
                     description,
                     AppConstants.PARTICIPANT_LEVEL_ACCESS,
                     participantStudies.getParticipantId(),
@@ -324,10 +315,7 @@ public class UserConsentManagementController {
     ConsentStudyResponseBean consentStudyResponseBean = null;
     StudyInfoBean studyInfoBean = null;
     try {
-      if ((studyId != null)
-          && !StringUtils.isEmpty(studyId)
-          && (userId != null)
-          && !StringUtils.isEmpty(userId)) {
+      if (!StringUtils.isEmpty(studyId) && !StringUtils.isEmpty(userId)) {
         studyInfoBean = userConsentManagementService.getStudyInfoId(studyId);
         consentStudyResponseBean =
             userConsentManagementService.getStudyConsentDetails(

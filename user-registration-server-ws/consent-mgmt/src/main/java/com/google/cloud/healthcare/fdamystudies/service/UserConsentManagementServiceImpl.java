@@ -16,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.google.cloud.healthcare.fdamystudies.bean.ConsentStudyResponseBean;
 import com.google.cloud.healthcare.fdamystudies.bean.StudyInfoBean;
+import com.google.cloud.healthcare.fdamystudies.config.ApplicationPropertyConfiguration;
 import com.google.cloud.healthcare.fdamystudies.dao.UserConsentManagementDao;
 import com.google.cloud.healthcare.fdamystudies.model.ParticipantStudiesBO;
 import com.google.cloud.healthcare.fdamystudies.model.StudyConsentBO;
@@ -29,6 +30,8 @@ public class UserConsentManagementServiceImpl implements UserConsentManagementSe
   @Autowired CommonService commonService;
 
   @Autowired FileStorageService cloudStorageService;
+
+  @Autowired private ApplicationPropertyConfiguration appConfig;
 
   private static final Logger logger =
       LoggerFactory.getLogger(UserConsentManagementServiceImpl.class);
@@ -122,12 +125,12 @@ public class UserConsentManagementServiceImpl implements UserConsentManagementSe
 
           String description =
               String.format(
-                  AppConstants.AUDIT_EVNT_INFORM_CONSNT_PROVIDED_DESC,
+                  appConfig.getAuditEventConsentProvidedDesc(),
                   consentVersion,
                   participantStudiesBO.getSharing());
-          commonService.createActivityLog(
+          commonService.createAuditLog(
               userId,
-              AppConstants.AUDIT_EVNT_INFORM_CONSNT_PROVIDED_NAME,
+              appConfig.getAuditEventConsentProvidedName(),
               description,
               AppConstants.APP_LEVEL_ACCESS,
               participantStudiesBO.getParticipantId(),
