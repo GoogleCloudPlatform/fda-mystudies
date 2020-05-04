@@ -43,6 +43,7 @@ locals {
   devops_apis = [
     # TODO: Figure out how to use user_project_override and disable APIs in devops project
     # that are needed to obtain resource information in other projects.
+    "admin.googleapis.com",
     "bigquery.googleapis.com",
     "cloudbilling.googleapis.com",
     "cloudbuild.googleapis.com",
@@ -70,6 +71,7 @@ locals {
   cloudbuild_devops_roles = [
     "roles/secretmanager.secretAccessor",
     "roles/secretmanager.viewer",
+    "roles/serviceusage.serviceUsageViewer",
   ]
 }
 
@@ -104,7 +106,7 @@ resource "google_project_iam_member" "cloudbuild_viewers" {
 # IAM permissions to allow Cloud Build SA to access state.
 resource "google_storage_bucket_iam_member" "cloudbuild_state_iam" {
   bucket = var.state_bucket
-  role   = "roles/storage.objectViewer"
+  role   = var.continuous_deployment_enabled ? "roles/storage.admin" : "roles/storage.objectViewer"
   member = local.cloud_build_sa
   depends_on = [
     google_project_service.devops_apis,
@@ -128,6 +130,9 @@ resource "google_project_iam_member" "cloudbuild_sa_project_iam" {
   project  = var.devops_project_id
   role     = each.key
   member   = local.cloud_build_sa
+  depends_on = [
+    google_project_service.devops_apis,
+  ]
 }
 
 # Cloud Build Triggers for CI.
