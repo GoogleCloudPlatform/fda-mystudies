@@ -274,6 +274,26 @@ public class StudyMetaDataService {
       @QueryParam("studyId") String studyId,
       @Context ServletContext context,
       @Context HttpServletResponse response) {
+    return resourcesForStudyImpl(studyId, context, response);
+  }
+
+  @GET
+  @Produces(MediaType.APPLICATION_JSON)
+  @Consumes(MediaType.APPLICATION_JSON)
+  @Path("userResources")
+  public Object getUserResources(
+      @QueryParam("studyId") String studyId,
+      @Context ServletContext context,
+      @Context HttpServletResponse response) {
+    // TODO: this endpoint should first try to get personalized user resource before falling back to
+    // generic resources for this study.
+    return resourcesForStudyImpl(studyId, context, response);
+  }
+
+  public Object resourcesForStudyImpl(
+      String studyId,
+      ServletContext context,
+      HttpServletResponse response) {
     LOGGER.info("INFO: StudyMetaDataService - resourcesForStudy() :: Starts");
     ResourcesResponse resourcesResponse = new ResourcesResponse();
     Boolean isValidFlag = false;
