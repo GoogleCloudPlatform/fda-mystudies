@@ -49,6 +49,7 @@ locals {
     "cloudbuild.googleapis.com",
     "cloudresourcemanager.googleapis.com",
     "container.googleapis.com",
+    "dns.googleapis.com",
     "firebase.googleapis.com",
     "iam.googleapis.com",
     "servicenetworking.googleapis.com",
