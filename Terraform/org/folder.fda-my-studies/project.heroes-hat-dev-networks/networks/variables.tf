@@ -44,8 +44,3 @@ variable "bastion_users" {
   type        = list(string)
   default     = []
 }
-
-variable "dns_domain" {
-  description = "Domain for the dns."
-  type        = string
-}

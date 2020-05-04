@@ -19,4 +19,3 @@ gke_network_name = "heroes-hat-dev-apps-network"
 bastion_users = [
   "group:rocketturtle-gcp-admin@rocketturtle.net",
 ]
-dns_domain = "heroes-hat.rocketturtle.net."
