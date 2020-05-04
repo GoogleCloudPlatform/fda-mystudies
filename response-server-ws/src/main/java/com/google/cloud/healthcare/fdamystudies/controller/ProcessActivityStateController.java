@@ -85,17 +85,20 @@ public class ProcessActivityStateController {
       @RequestBody ActivityStateRequestBean activityStateRequestBean,
       @Context HttpServletResponse response,
       @RequestHeader String userId) {
-
-    if (activityStateRequestBean == null
-        || Strings.isBlank(activityStateRequestBean.getParticipantId())
-        || Strings.isBlank(activityStateRequestBean.getStudyId())) {
+    String participantId = null;
+    String studyId = null;
+    if (activityStateRequestBean != null) {
+      participantId = activityStateRequestBean.getParticipantId();
+      studyId = activityStateRequestBean.getStudyId();
+    }
+    if (Strings.isBlank(participantId) || Strings.isBlank(studyId)) {
       commonService.createAuditLog(
           userId,
           "Activity State save/update operation failure",
           "Activity State could not be saved or updated for participant in Response Datastore. No activity information passed",
           AppConstants.CLIENT_ID_MOBILEAPP,
-          null, // Sending null as study Id may not be available
-          null, // Sending null as study Id may not be available
+          participantId,
+          studyId,
           AppConstants.PARTICIPANT_LEVEL_ACCESS);
       // if activityStateRequestBean is null
       ErrorBean errorBean =

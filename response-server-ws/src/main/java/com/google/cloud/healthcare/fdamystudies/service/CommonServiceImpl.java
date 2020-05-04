@@ -8,6 +8,7 @@
 package com.google.cloud.healthcare.fdamystudies.service;
 
 import java.time.LocalDateTime;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -147,27 +148,22 @@ public class CommonServiceImpl implements CommonService {
       String accessLevel) {
     logger.info("CommonServiceImpl createActivityLog() - starts");
     AuditLogBo activityLog = new AuditLogBo();
+    activityLog.setAuthUserId(StringUtils.isEmpty(userId) ? AppConstants.NOT_APPLICABLE : userId);
+    activityLog.setServerClientId(
+        StringUtils.isEmpty(clientId) ? AppConstants.NOT_APPLICABLE : clientId);
+    activityLog.setAccessLevel(
+        StringUtils.isEmpty(accessLevel) ? AppConstants.NOT_APPLICABLE : accessLevel);
+    activityLog.setParticipantId(
+        StringUtils.isEmpty(participantId) ? AppConstants.NOT_APPLICABLE : participantId);
+    activityLog.setStudyId(StringUtils.isEmpty(studyId) ? AppConstants.NOT_APPLICABLE : studyId);
+    activityLog.setActivityName(activityName);
+    activityLog.setActivtyDesc(activtyDesc);
+    activityLog.setActivityDateTime(LocalDateTime.now());
     try {
-      activityLog.setAuthUserId(
-          (userId == null || userId.isEmpty()) ? AppConstants.NOT_APPLICABLE : userId);
-      activityLog.setServerClientId(
-          (clientId == null || clientId.isEmpty()) ? AppConstants.NOT_APPLICABLE : clientId);
-      activityLog.setAccessLevel(
-          (accessLevel == null || accessLevel.isEmpty())
-              ? AppConstants.NOT_APPLICABLE
-              : accessLevel);
-      activityLog.setParticipantId(
-          (participantId == null || participantId.isEmpty())
-              ? AppConstants.NOT_APPLICABLE
-              : participantId);
-      activityLog.setStudyId(
-          (studyId == null || studyId.isEmpty()) ? AppConstants.NOT_APPLICABLE : studyId);
-      activityLog.setActivityName(activityName);
-      activityLog.setActivtyDesc(activtyDesc);
-      activityLog.setActivityDateTime(LocalDateTime.now());
       activityLogRepository.save(activityLog);
     } catch (Exception e) {
       logger.error("CommonServiceImpl createActivityLog() - error ", e);
+      return null;
     }
     logger.info("CommonServiceImpl createActivityLog() - ends");
     return activityLog;

@@ -69,7 +69,8 @@ public class ProcessActivityResponseController {
     String activityRunId = null;
     String participantId = null;
     String secureEnrollmentToken = null;
-    boolean savedResponseData = false;
+    boolean isResponseDataSaved = false;
+    long timestampResponseSave = System.currentTimeMillis();
     try {
       orgId = questionnaireActivityResponseBean.getOrgId();
       applicationId = questionnaireActivityResponseBean.getApplicationId();
@@ -80,6 +81,7 @@ public class ProcessActivityResponseController {
       activityType = questionnaireActivityResponseBean.getType();
       participantId = questionnaireActivityResponseBean.getParticipantId();
       secureEnrollmentToken = questionnaireActivityResponseBean.getTokenIdentifier();
+
       logger.debug(
           "Input values are :\n Study Id: "
               + studyId
@@ -276,7 +278,7 @@ public class ProcessActivityResponseController {
         if (!withdrawalStatus) {
           activityResponseProcessorService.saveActivityResponseDataForParticipant(
               activityMetadatFromWCP, questionnaireActivityResponseBean);
-          savedResponseData = true;
+          isResponseDataSaved = true;
 
           // Update Participant Activity State
           ActivityStateRequestBean activityStateRequestBean = new ActivityStateRequestBean();
@@ -297,10 +299,10 @@ public class ProcessActivityResponseController {
 
           commonService.createAuditLog(
               null,
-              "Activity State saved/updated for participant",
+              "Activity State saved/updated for participant, after response submission.",
               "Activity State for Activity ID "
                   + activityId
-                  + " was saved or updated for participant in Response Datastore"
+                  + " was saved or updated for participant in Response Datastore, after response submission."
                   + "Key details: Activity Type:"
                   + activityType
                   + ", Activity ID "
@@ -411,7 +413,7 @@ public class ProcessActivityResponseController {
       }
     } catch (Exception e) {
 
-      if (!savedResponseData) {
+      if (!isResponseDataSaved) {
         commonService.createAuditLog(
             null,
             "Activity response not saved ",
@@ -421,8 +423,10 @@ public class ProcessActivityResponseController {
                 + activityId
                 + ", Activity Version "
                 + activityVersion
-                + "and Run ID "
-                + activityRunId,
+                + ", Run ID "
+                + activityRunId
+                + ", Timestamp of response submission from mobile app: "
+                + timestampResponseSave,
             AppConstants.CLIENT_ID_RESP_DATA_STORE,
             participantId,
             studyId,
@@ -444,10 +448,10 @@ public class ProcessActivityResponseController {
       } else {
         commonService.createAuditLog(
             null,
-            "Activity State save/update operation failure",
+            "Activity State save/update operation failure, after response submission.",
             "Activity State for Activity ID "
                 + activityId
-                + " could not be saved or updated for participant in Response Datastore",
+                + " could not be saved or updated for participant in Response Datastore, after response submission.",
             AppConstants.CLIENT_ID_RESP_DATA_STORE,
             participantId,
             studyId,
@@ -602,11 +606,11 @@ public class ProcessActivityResponseController {
               ErrorCode.EC_701.errorMessage());
       return new ResponseEntity<>(errorBean, HttpStatus.BAD_REQUEST);
     } else {
-      boolean responseDataUpdate = false;
-      boolean dataRetentionSettings = false;
+      boolean isResponseDataDeleted = false;
+      boolean isDataDeleteSettings = false;
       if (!StringUtils.isBlank(deleteResponses)
           && deleteResponses.equalsIgnoreCase(AppConstants.TRUE_STR)) {
-        dataRetentionSettings = true;
+        isDataDeleteSettings = true;
       }
       commonService.createAuditLog(
           null,
@@ -614,17 +618,16 @@ public class ProcessActivityResponseController {
           "Information about participant's withdrawal from study received from Participant Datastore as withdrawal timestamp "
               + System.currentTimeMillis()
               + " and Data Retention Setting: "
-              + dataRetentionSettings,
+              + isDataDeleteSettings,
           AppConstants.CLIENT_ID_RESP_DATA_STORE,
           participantId,
           studyId,
           null);
       try {
-        if (!StringUtils.isBlank(deleteResponses)
-            && deleteResponses.equalsIgnoreCase(AppConstants.TRUE_STR)) {
+        if (isDataDeleteSettings) {
           activityResponseProcessorService.deleteActivityResponseDataForParticipant(
               studyId, participantId);
-          responseDataUpdate = true;
+          isResponseDataDeleted = true;
           commonService.createAuditLog(
               null,
               "Response data deleted for participant",
@@ -652,19 +655,19 @@ public class ProcessActivityResponseController {
         srBean.setMessage(AppConstants.SUCCESS_MSG);
         commonService.createAuditLog(
             null,
-            "Participant activity state data deleted on withdrawal",
-            "Participant activity state data deleted on withdrawal for all activities",
+            "Activity data deleted for Participant.",
+            "All activity-state data for the participant was deleted from the Response Datastore.",
             AppConstants.CLIENT_ID_RESP_DATA_STORE,
             participantId,
             studyId,
             null);
         return new ResponseEntity<>(srBean, HttpStatus.OK);
       } catch (Exception e) {
-        if (responseDataUpdate) {
+        if (!isResponseDataDeleted) {
           commonService.createAuditLog(
               null,
-              "Participant response data: delete operation failure",
-              "1 or more of the participant's response datasets failed to get deleted from the Response Datastore.",
+              "Participant activity data: delete operation failure.",
+              "Activity-state data of the participant, failed to get deleted from Response Datastore.",
               AppConstants.CLIENT_ID_RESP_DATA_STORE,
               participantId,
               studyId,

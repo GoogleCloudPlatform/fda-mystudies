@@ -41,17 +41,21 @@ public class ParticipantIdController {
       @RequestBody EnrollmentTokenIdentifierBean enrollmentTokenIdentifierBean,
       @RequestHeader String clientId) {
     logger.info("ParticipantIdController addParticipantIdentifier() - starts ");
-    if (enrollmentTokenIdentifierBean == null
-        || StringUtils.isBlank(enrollmentTokenIdentifierBean.getTokenIdentifier())
-        || StringUtils.isBlank(enrollmentTokenIdentifierBean.getCustomStudyId())) {
-      logger.info("ParticipantIdController addParticipantIdentifier() Inside Error");
+    String tokenIdentifier = null;
+    String customStudyId = null;
+    if (enrollmentTokenIdentifierBean != null) {
+      tokenIdentifier = enrollmentTokenIdentifierBean.getTokenIdentifier();
+      customStudyId = enrollmentTokenIdentifierBean.getCustomStudyId();
+    }
+    if (StringUtils.isBlank(tokenIdentifier) || StringUtils.isBlank(customStudyId)) {
+      logger.error("ParticipantIdController addParticipantIdentifier() - Error");
       commonService.createAuditLog(
           null,
           "Participant ID generation failure",
           "Participant ID could not be generated",
           AppConstants.CLIENT_ID_PART_DATA_STORE,
           null,
-          null,
+          customStudyId,
           null);
       ErrorBean errorBean =
           AppUtil.dynamicResponse(
