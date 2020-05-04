@@ -12,15 +12,22 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-name            = "heroes-hat-dev-apps"
-org_id          = "707577601068"
-billing_account = "01EA90-3519E1-89CB1F"
-apis = [
-  "binaryauthorization.googleapis.com",
-  "cloudbuild.googleapis.com",
-  "compute.googleapis.com",
-  "container.googleapis.com",
-  "dns.googleapis.com",
-  "servicenetworking.googleapis.com",
-  "sqladmin.googleapis.com",
-]
+# DNS sets up nameservers to connect to the GKE clusters.
+module "dns" {
+  source  = "terraform-google-modules/cloud-dns/google"
+  version = "3.0.1"
+
+  name       = var.dns_name
+  project_id = var.project_id
+  type       = "public"
+  domain     = var.dns_domain
+
+  recordsets = [{
+    name = ""
+    type = "A"
+    ttl  = 30
+    records = [
+      module.heroes_hat_cluster.endpoint,
+    ]
+  }]
+}
