@@ -99,6 +99,18 @@ module "my_studies_firestore_data_bucket" {
   name       = "heroes-hat-dev-my-studies-firestore-data"
   project_id = var.project_id
   location   = var.storage_location
+
+  # TTL 7 days.
+  lifecycle_rules = [{
+    action = {
+      type = "Delete"
+    }
+    condition = {
+      age        = 7 # 7 days
+      with_state = "ANY"
+    }
+  }]
+
 }
 
 module "my_studies_firestore_data_bigquery" {
@@ -108,4 +120,5 @@ module "my_studies_firestore_data_bigquery" {
   dataset_id = "heroes_hat_dev_my_studies_firestore_data"
   project_id = var.project_id
   location   = var.storage_location
+  default_table_expiration_ms = 7 * 8.64 * pow(10, 7) # 7 days
 }
