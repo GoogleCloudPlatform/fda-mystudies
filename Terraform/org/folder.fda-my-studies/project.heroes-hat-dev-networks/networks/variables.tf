@@ -47,5 +47,5 @@ variable "bastion_users" {
 
 variable "dns_domain" {
   description = "Domain for the dns."
-  type = string
+  type        = string
 }
