@@ -28,3 +28,11 @@ resource "google_firebase_project" "firebase" {
   provider = google-beta
   project  = var.project_id
 }
+
+module "pubsub" {
+  source  = "terraform-google-modules/pubsub/google"
+  version = "~> 1.0"
+
+  topic              = "heroes-hat-dev-my-studies-survey-write-trigger"
+  project_id         = var.project_id
+}
