@@ -29,10 +29,16 @@ resource "google_firebase_project" "firebase" {
   project  = var.project_id
 }
 
-module "pubsub" {
+module "survey_pubsub" {
   source  = "terraform-google-modules/pubsub/google"
   version = "~> 1.0"
 
-  topic      = "heroes-hat-dev-my-studies-survey-write-trigger"
+  topic      = "surveyWriteTrigger"
   project_id = var.project_id
+  pull_subscriptions = [
+    {
+      name                 = "surveyPHQDep"
+      ack_deadline_seconds = 10
+    }
+  ]
 }
