@@ -35,5 +35,5 @@ dependency "apps" {
 }
 
 inputs = {
-  datastore_user_service_accounts = [dependency.apps.outputs.apps_service_accounts["response-server"].email]
+  datastore_user_service_accounts = ["serviceAccount:${dependency.apps.outputs.apps_service_accounts["response-server"].email}"]
 }
