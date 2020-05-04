@@ -26,7 +26,7 @@ terraform {
 # From
 # https://github.com/terraform-google-modules/terraform-google-kubernetes-engine/tree/master/modules/safer-cluster-update-variant
 module "heroes_hat_cluster" {
-  source  = "terraform-google-modules/kubernetes-engine/google//modules/safer-cluster"
+  source  = "terraform-google-modules/kubernetes-engine/google//modules/safer-cluster-update-variant"
   version = "8.1.0"
 
   # Required
