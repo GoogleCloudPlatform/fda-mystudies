@@ -43,10 +43,10 @@ dependency "networks" {
 }
 
 inputs = {
-  sql_client_service_accounts = concat(
+  sql_clients = [for sa in concat(
     [
       dependency.apps.outputs.service_account,
       dependency.networks.outputs.bastion_service_account,
     ],
-  values(dependency.apps.outputs.apps_service_accounts)[*].email)
+  values(dependency.apps.outputs.apps_service_accounts)[*].email): "serviceAccount:${sa}"]
 }
