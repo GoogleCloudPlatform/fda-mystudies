@@ -51,4 +51,8 @@ inputs = {
     role   = "roles/storage.objectAdmin"
     member = "serviceAccount:${dependency.apps.outputs.apps_service_accounts["user-registration"].email}"
   }]
+  fda_resources_iam_members = [{
+    role   = "roles/storage.objectAdmin"
+    member = "serviceAccount:${dependency.apps.outputs.apps_service_accounts["study-designer"].email}"
+  }]
 }
