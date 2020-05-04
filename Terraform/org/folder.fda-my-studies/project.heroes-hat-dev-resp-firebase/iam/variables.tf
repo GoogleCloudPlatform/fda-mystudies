@@ -12,15 +12,11 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-org_id                        = "707577601068"
-devops_project_id             = "heroes-hat-dev-devops"
-state_bucket                  = "heroes-hat-dev-terraform-state-08679"
-repo_owner                    = "GoogleCloudPlatform"
-repo_name                     = "fda-mystudies"
-branch_regex                  = "^early-access$"
-continuous_deployment_enabled = true
-trigger_enabled               = true
-terraform_root                = "Terraform"
-build_viewers = [
-  "group:rocketturtle-gcp-admin@rocketturtle.net",
-]
+variable "project_id" {
+  type = string
+}
+
+variable "datastore_user_service_accounts" {
+  description = "Clients who have access to the firestore in this project"
+  type        = list(string)
+}

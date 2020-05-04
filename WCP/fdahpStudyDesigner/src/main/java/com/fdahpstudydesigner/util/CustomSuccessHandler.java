@@ -50,15 +50,11 @@ public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
   protected String determineTargetUrl(Authentication authentication) {
     logger.info("CustomSuccessHandler - determineTargetUrl - Starts");
     String url = "";
-    try {
 
-      if (authentication != null) {
-        url = "/adminDashboard/viewDashBoard.do?action=landing";
-      } else {
-        url = "/unauthorized.do";
-      }
-    } catch (Exception e) {
-      logger.error("CustomSuccessHandler - determineTargetUrl - ERROR", e);
+    if (authentication != null) {
+      url = "/adminDashboard/viewDashBoard.do?action=landing";
+    } else {
+      url = "/unauthorized.do";
     }
     logger.info("CustomSuccessHandler - determineTargetUrl - Ends");
     return url;
