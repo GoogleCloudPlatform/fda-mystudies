@@ -4,24 +4,24 @@
 
 export PWD=$(pwd)
 
-export INPUT_TF_BASE=/usr/local/google/home/xingao/gitrepos/fda-mystudies/Terraform
-export OUTPUT_TF_BASE=/usr/local/google/home/xingao/gitrepos/demo
+export INPUT_TF_BASE=/usr/local/google/home/yuchikuo/fda-my-studies/fda-mystudies/Terraform
+export OUTPUT_TF_BASE=/usr/local/google/home/yuchikuo/teamfood-terraform
 
 export OLD_STATE="heroes-hat-dev-terraform-state-08679"
-export NEW_STATE="dpt-demo-terraform-state"
+export NEW_STATE="amber-mystudies-dev-terraform-state"
 export OLD_PREFIX="heroes-hat-dev"
-export NEW_PREFIX="dpt-demo"
+export NEW_PREFIX="amber-mystudies-dev"
 export OLD_GKE_PREFIX="heroes-hat"
-export NEW_GKE_PREFIX="dpt-demo"
+export NEW_GKE_PREFIX="my-studies"
 export OLD_FOLDER="fda-my-studies"
-export NEW_FOLDER="dpt-demo"
+export NEW_FOLDER="fda-my-studies"
 
 export OLD_ORG_ID="707577601068"
-export NEW_ORG_ID="18510592047"
+export NEW_ORG_ID="707577601068"
 export OLD_BILLING_ACCOUNT="01EA90-3519E1-89CB1F"
-export NEW_BILLING_ACCOUNT="01B494-31B256-17B2A6"
+export NEW_BILLING_ACCOUNT="01EA90-3519E1-89CB1F"
 export OLD_ADMIN_GROUP="rocketturtle-gcp-admin@rocketturtle.net"
-export NEW_ADMIN_GROUP="dpt-dev@hcls.joonix.net"
+export NEW_ADMIN_GROUP="rocketturtle-gcp-admin@rocketturtle.net"
 
 export SRC_PROJ_BASE=${INPUT_TF_BASE}/org/folder.${OLD_FOLDER}/project.${OLD_PREFIX}
 export DST_PROJ_BASE=${OUTPUT_TF_BASE}/org/folder.${NEW_FOLDER}/project.${NEW_PREFIX}
@@ -81,9 +81,9 @@ find . -type f -name *.tfvars -o -name *.tf | xargs sed -i "s|${OLD_ADMIN_GROUP}
 find . -type f -name *.tfvars -o -name *.tf | xargs sed -i "s|${OLD_FOLDER}|${NEW_FOLDER}|"
 
 # Repo
-find . -type f -name *.tfvars -o -name *.tf | xargs sed -i 's|"GoogleCloudPlatform"|"xingao267"|'
-find . -type f -name *.tfvars -o -name *.tf | xargs sed -i 's|"fda-mystudies"|"demo"|'
-find . -type f -name *.tfvars -o -name *.tf | xargs sed -i 's|"terraform"|"master"|'
-find . -type f -name *.tfvars -o -name *.tf | xargs sed -i 's|"early-access"|"master"|'
+#find . -type f -name *.tfvars -o -name *.tf | xargs sed -i 's|"GoogleCloudPlatform"|"xingao267"|'
+#find . -type f -name *.tfvars -o -name *.tf | xargs sed -i 's|"fda-mystudies"|"demo"|'
+#find . -type f -name *.tfvars -o -name *.tf | xargs sed -i 's|"terraform"|"master"|'
+#find . -type f -name *.tfvars -o -name *.tf | xargs sed -i 's|"early-access"|"master"|'
 
 cd ${PWD}
