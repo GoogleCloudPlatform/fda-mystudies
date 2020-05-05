@@ -11,6 +11,16 @@
 /*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
 /*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
 
+/*
+Note:
+1. Data Partner Name must be updated with deployment-specific value as required.
+2. Sponsor Name must be updated with deployment-specific value as required.
+*/
+
+
+SET @dataPartner :='Data Partner Name';
+SET @researchSponsor :='Sponsor Name';
+
 -- Dumping database structure for fda_hphc
 DROP DATABASE IF EXISTS `fda_hphc`;
 CREATE DATABASE IF NOT EXISTS `fda_hphc` /*!40100 DEFAULT CHARACTER SET utf8 */;
@@ -1737,8 +1747,8 @@ INSERT INTO `reference_tables` (`id`, `str_value`, `category`, `type`) VALUES
 	(8, 'Public Health', 'Categories', 'Pre-defined'),
 	(9, 'Radiation-Emitting Products', 'Categories', 'Pre-defined'),
 	(10, 'Tobacco Use', 'Categories', 'Pre-defined'),
-	(11, 'Kaiser Permanente Washington Health Research Institute', 'Data Partner', 'Pre-defined'),
-	(12, 'FDA', 'Research Sponsors', 'Pre-defined');
+	(11, @dataPartner, 'Data Partner', 'Pre-defined'),
+	(12, @researchSponsor, 'Research Sponsors', 'Pre-defined');
 /*!40000 ALTER TABLE `reference_tables` ENABLE KEYS */;
 
 -- Dumping data for table fda_hphc.roles: ~3 rows (approximately)
