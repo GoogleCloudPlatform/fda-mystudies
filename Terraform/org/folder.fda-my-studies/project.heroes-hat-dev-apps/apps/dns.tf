@@ -12,22 +12,22 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# This folder contains Terraform resources to setup additional IAM permissions to allow certain
-# IAM members to connect to the private CloudSQL instance.
+# DNS sets up nameservers to connect to the GKE clusters.
+module "dns" {
+  source  = "terraform-google-modules/cloud-dns/google"
+  version = "3.0.1"
 
-terraform {
-  required_version = "~> 0.12.0"
-  required_providers {
-    google      = "~> 3.0"
-    google-beta = "~> 3.0"
-  }
-  backend "gcs" {}
-}
+  name       = var.dns_name
+  project_id = var.project_id
+  type       = "public"
+  domain     = var.dns_domain
 
-resource "google_project_iam_member" "sql_clients" {
-  for_each = toset(var.sql_clients)
-
-  project = var.project_id
-  role    = "roles/cloudsql.client"
-  member  = each.key
+  recordsets = [{
+    name = ""
+    type = "A"
+    ttl  = 30
+    records = [
+      module.heroes_hat_cluster.endpoint,
+    ]
+  }]
 }
