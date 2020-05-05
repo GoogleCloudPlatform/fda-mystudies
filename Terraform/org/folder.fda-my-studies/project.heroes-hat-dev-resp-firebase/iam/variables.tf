@@ -12,22 +12,11 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# This folder contains Terraform resources to setup additional IAM permissions to allow certain
-# IAM members to connect to the private CloudSQL instance.
-
-terraform {
-  required_version = "~> 0.12.0"
-  required_providers {
-    google      = "~> 3.0"
-    google-beta = "~> 3.0"
-  }
-  backend "gcs" {}
+variable "project_id" {
+  type = string
 }
 
-resource "google_project_iam_member" "sql_clients" {
-  for_each = toset(var.sql_clients)
-
-  project = var.project_id
-  role    = "roles/cloudsql.client"
-  member  = each.key
+variable "datastore_users" {
+  description = "Clients who have access to the firestore in this project"
+  type        = list(string)
 }
