@@ -94,7 +94,7 @@ public class Mail {
         } catch (MessagingException e) {
             logger.error("sendemail() MessagingException- error", e);
         } catch (Exception e) {
-            logger.error("ERROR:  sendemail() - error( ) " + e.getMessage() + " : ");
+            logger.error("ERROR:  sendemail() - error( ) " + e + " : ");
         }
         logger.info("Mail.sendemail() :: Ends");
         return sentMail;
@@ -106,9 +106,21 @@ public class Mail {
         try {
             final String username = this.getFromEmailAddress();
             final String password = this.getFromEmailPass();
-            Properties props = makeProperties(useIpWhitelist);
-            Session session = useIpWhitelist ? makeSession(props) :
-                    makeSession(props, username, password);
+            Properties props = new Properties();
+            props.put("mail.smtp.auth", "true");
+            props.put("mail.smtp.host", this.getSmtp_Hostname());
+            props.put("mail.smtp.socketFactory.port", this.getSmtp_portvalue());
+            props.put("mail.smtp.socketFactory.class", this.getSslFactory());
+            props.put("mail.smtp.port", this.getSmtp_portvalue());
+            Session session =
+                    Session.getInstance(
+                            props,
+                            new javax.mail.Authenticator() {
+                                @Override
+                                protected PasswordAuthentication getPasswordAuthentication() {
+                                    return new PasswordAuthentication(username, password);
+                                }
+                            });
             Message message = new MimeMessage(session);
             if (StringUtils.isNotBlank(this.getToemail())) {
                 if (this.getToemail().indexOf(",") != -1) {
