@@ -23,7 +23,7 @@ module "dns" {
   domain     = var.dns_domain
 
   recordsets = [{
-    name = ""
+    name = "tf-dev"
     type = "A"
     ttl  = 30
     records = [
