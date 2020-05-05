@@ -16,7 +16,7 @@ variable "project_id" {
   type = string
 }
 
-variable "datastore_user_service_accounts" {
+variable "datastore_users" {
   description = "Clients who have access to the firestore in this project"
   type        = list(string)
 }
