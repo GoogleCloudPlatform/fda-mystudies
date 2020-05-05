@@ -26,7 +26,8 @@ terraform {
 # From
 # https://github.com/terraform-google-modules/terraform-google-kubernetes-engine/tree/master/modules/safer-cluster-update-variant
 module "heroes_hat_cluster" {
-  source = "terraform-google-modules/kubernetes-engine/google//modules/safer-cluster"
+  source  = "terraform-google-modules/kubernetes-engine/google//modules/safer-cluster-update-variant"
+  version = "8.1.0"
 
   # Required
   # TODO: Set release_channel to "regular" when https://github.com/terraform-google-modules/terraform-google-kubernetes-engine/pull/487 is released.
@@ -103,6 +104,11 @@ resource "google_binary_authorization_policy" "policy" {
   admission_whitelist_patterns {
     # The more generic pattern above does not seem to be enough for all images.
     name_pattern = "gke.gcr.io/istio/prometheus/*"
+  }
+
+  # Calico images in a new registry.
+  admission_whitelist_patterns {
+    name_pattern = "gcr.io/projectcalico-org/*"
   }
 
   # Recommendations from https://cloud.google.com/binary-authorization/docs/policy-yaml-reference#admissionwhitelistpatterns

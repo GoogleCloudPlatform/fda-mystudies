@@ -35,3 +35,19 @@ variable "cloudsql_region" {
 variable "cloudsql_zone" {
   type = string
 }
+
+variable "consent_documents_iam_members" {
+  type = list(object({
+    role   = string
+    member = string
+  }))
+  default = []
+}
+
+variable "fda_resources_iam_members" {
+  type = list(object({
+    role   = string
+    member = string
+  }))
+  default = []
+}

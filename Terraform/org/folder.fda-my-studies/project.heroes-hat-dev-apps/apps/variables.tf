@@ -63,3 +63,13 @@ variable "cloudbuild_trigger_branch" {
   type    = string
   default = "master"
 }
+
+variable "dns_name" {
+  description = "Name for the dns."
+  type        = string
+}
+
+variable "dns_domain" {
+  description = "Domain for the dns."
+  type        = string
+}

@@ -12,22 +12,28 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# This folder contains Terraform resources to setup additional IAM permissions to allow certain
-# IAM members to connect to the private CloudSQL instance.
-
-terraform {
-  required_version = "~> 0.12.0"
-  required_providers {
-    google      = "~> 3.0"
-    google-beta = "~> 3.0"
-  }
-  backend "gcs" {}
+include {
+  path = find_in_parent_folders()
 }
 
-resource "google_project_iam_member" "sql_clients" {
-  for_each = toset(var.sql_clients)
+dependency "project" {
+  config_path  = "../project"
+  skip_outputs = true
+}
 
-  project = var.project_id
-  role    = "roles/cloudsql.client"
-  member  = each.key
+dependency "apps" {
+  config_path = "../../project.heroes-hat-dev-apps/apps"
+
+  mock_outputs = {
+    service_account = "mock-gke-service-account"
+    apps_service_accounts = {
+      response-server = {
+        email = "mock-app-gke@mock-project.iam.gserviceaccount.com"
+      }
+    }
+  }
+}
+
+inputs = {
+  datastore_users = ["serviceAccount:${dependency.apps.outputs.apps_service_accounts["response-server"].email}"]
 }
