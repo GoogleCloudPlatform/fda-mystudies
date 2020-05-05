@@ -173,6 +173,7 @@ let kInCompletedSpaces = "  Incompleted  "
 
 // MARK: - ResourcesViewController constants
 let kResourcesTableViewCell = "ResourcesCell"
+let kResourceShareError = "Unable to share Resource."
 
 // MARK: - StudyDashboardViewController constants
 let kWelcomeTableViewCell = "welcomeCell"
@@ -235,7 +236,7 @@ let kConsentUpdatedTitle = "Consent Updated"
 
 let kMessageConsentUpdatedPartTwo =
   " Please review the revised Consent terms and provide your Informed Consent, to continue participating in the study."
-
+let kConsentShareError = "Unable to share the Consent."
 let kMessageConsentUpdated =
   "The Consent Document for this study has been updated."
   + kMessageConsentUpdatedPartTwo

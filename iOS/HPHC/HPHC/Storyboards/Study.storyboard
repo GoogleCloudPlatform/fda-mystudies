@@ -3,7 +3,7 @@
     <device id="retina5_9" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="16086"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="16087"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -1399,10 +1399,6 @@
                         <rect key="frame" x="0.0" y="0.0" width="375" height="812"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <imageView hidden="YES" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="25-study-activities.png" translatesAutoresizingMaskIntoConstraints="NO" id="Rv3-2R-NrH">
-                                <rect key="frame" x="0.0" y="0.0" width="375" height="730"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                            </imageView>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Sorry, no activities available right now." textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="5ht-xH-lbp">
                                 <rect key="frame" x="20" y="397.33333333333331" width="335" height="17.666666666666686"/>
                                 <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="15"/>
@@ -1870,13 +1866,6 @@
                         <rect key="frame" x="0.0" y="0.0" width="375" height="724"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <progressView hidden="YES" opaque="NO" contentMode="scaleToFill" verticalHuggingPriority="750" progressViewStyle="bar" translatesAutoresizingMaskIntoConstraints="NO" id="Glz-Q1-dVe">
-                                <rect key="frame" x="0.0" y="1" width="375" height="2.666666666666667"/>
-                                <color key="progressTintColor" red="0.28627450980000002" green="0.71372549019999998" blue="0.8980392157" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                            </progressView>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="xWp-Pd-g7z">
-                                <rect key="frame" x="0.0" y="3" width="375" height="687"/>
-                            </view>
                             <toolbar opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="woR-0K-eTs">
                                 <rect key="frame" x="0.0" y="640" width="375" height="50"/>
                                 <constraints>
@@ -1898,19 +1887,29 @@
                                     </barButtonItem>
                                 </items>
                             </toolbar>
+                            <wkWebView contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="6Ew-kY-7eH">
+                                <rect key="frame" x="0.0" y="0.0" width="375" height="640"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <wkWebViewConfiguration key="configuration">
+                                    <audiovisualMediaTypes key="mediaTypesRequiringUserActionForPlayback" none="YES"/>
+                                    <wkPreferences key="preferences"/>
+                                </wkWebViewConfiguration>
+                            </wkWebView>
+                            <activityIndicatorView hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" hidesWhenStopped="YES" animating="YES" style="medium" translatesAutoresizingMaskIntoConstraints="NO" id="hlc-4z-PM3">
+                                <rect key="frame" x="177.66666666666666" y="310" width="20" height="20"/>
+                            </activityIndicatorView>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
-                            <constraint firstItem="Glz-Q1-dVe" firstAttribute="leading" secondItem="tbM-0U-Kl4" secondAttribute="leading" id="FdN-WA-zvR"/>
+                            <constraint firstItem="woR-0K-eTs" firstAttribute="top" secondItem="6Ew-kY-7eH" secondAttribute="bottom" id="AfY-hU-W06"/>
+                            <constraint firstItem="6Ew-kY-7eH" firstAttribute="leading" secondItem="tbM-0U-Kl4" secondAttribute="leading" id="GYm-2q-kjK"/>
                             <constraint firstItem="tbM-0U-Kl4" firstAttribute="bottom" secondItem="woR-0K-eTs" secondAttribute="bottom" id="Ipb-pd-nT0"/>
-                            <constraint firstItem="Glz-Q1-dVe" firstAttribute="top" secondItem="tbM-0U-Kl4" secondAttribute="top" constant="1" id="Lft-OE-d9n"/>
-                            <constraint firstItem="tbM-0U-Kl4" firstAttribute="trailing" secondItem="xWp-Pd-g7z" secondAttribute="trailing" id="SWI-No-wL7"/>
-                            <constraint firstItem="tbM-0U-Kl4" firstAttribute="trailing" secondItem="Glz-Q1-dVe" secondAttribute="trailing" id="TYq-zh-a0M"/>
-                            <constraint firstItem="xWp-Pd-g7z" firstAttribute="top" secondItem="JgA-R7-8Iv" secondAttribute="top" constant="3" id="Xe3-dD-nLF"/>
-                            <constraint firstItem="xWp-Pd-g7z" firstAttribute="leading" secondItem="tbM-0U-Kl4" secondAttribute="leading" id="aff-aI-wjj"/>
+                            <constraint firstItem="hlc-4z-PM3" firstAttribute="centerX" secondItem="6Ew-kY-7eH" secondAttribute="centerX" id="Kr3-p7-BGK"/>
+                            <constraint firstItem="tbM-0U-Kl4" firstAttribute="trailing" secondItem="6Ew-kY-7eH" secondAttribute="trailing" id="YE4-Qc-1Kd"/>
                             <constraint firstItem="woR-0K-eTs" firstAttribute="trailing" secondItem="tbM-0U-Kl4" secondAttribute="trailing" id="c9Z-IW-3lP"/>
-                            <constraint firstItem="tbM-0U-Kl4" firstAttribute="bottom" secondItem="xWp-Pd-g7z" secondAttribute="bottom" id="dbB-Wi-jUI"/>
                             <constraint firstItem="woR-0K-eTs" firstAttribute="leading" secondItem="tbM-0U-Kl4" secondAttribute="leading" id="osz-vr-MGz"/>
+                            <constraint firstItem="6Ew-kY-7eH" firstAttribute="top" secondItem="tbM-0U-Kl4" secondAttribute="top" id="wfN-gv-tQN"/>
+                            <constraint firstItem="hlc-4z-PM3" firstAttribute="centerY" secondItem="6Ew-kY-7eH" secondAttribute="centerY" id="zkP-5v-rTq"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="tbM-0U-Kl4"/>
                     </view>
@@ -1924,9 +1923,9 @@
                         </barButtonItem>
                     </navigationItem>
                     <connections>
+                        <outlet property="activityIndicator" destination="hlc-4z-PM3" id="sOV-4m-MVC"/>
                         <outlet property="bottomToolBar" destination="woR-0K-eTs" id="UMD-HW-mnE"/>
-                        <outlet property="progressBar" destination="Glz-Q1-dVe" id="sjP-10-4h0"/>
-                        <outlet property="webViewContainer" destination="xWp-Pd-g7z" id="EeY-Ix-xEj"/>
+                        <outlet property="webView" destination="6Ew-kY-7eH" id="l3c-OQ-YMK"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="0Bq-iC-c4c" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -1936,7 +1935,6 @@
     </scenes>
     <color key="tintColor" red="0.54901960780000003" green="0.58431372550000005" blue="0.63921568630000003" alpha="1" colorSpace="calibratedRGB"/>
     <resources>
-        <image name="25-study-activities.png" width="750" height="1519"/>
         <image name="55V2.png" width="750" height="1334"/>
         <image name="OverViewBg" width="750" height="1334"/>
         <image name="activities_blue_active" width="26" height="26"/>
