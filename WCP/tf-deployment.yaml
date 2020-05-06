@@ -64,7 +64,7 @@ spec:
             - name: SMTP_HOSTNAME
               value: "smtp.gmail.com"
             - name: SMTP_USE_EMAIL_WHITELIST
-              value: false
+              value: "false"
             - name: FROM_EMAIL_DOMAIN
               value: ""
           ports:
