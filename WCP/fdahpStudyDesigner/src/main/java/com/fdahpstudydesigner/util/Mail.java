@@ -48,13 +48,15 @@ public class Mail {
 
   private static Logger logger = Logger.getLogger(Mail.class.getName());
 
-  private static final String SMTP_HOST_NAME = "smtp.gmail.com";
+  // Fallback hostname if we are authenticating.
+  private static final String SMTP_HOSTNAME = "smtp.gmail.com";
+  // Fallback hostname if we are not authenticating.
+  private static final String SMTP_RELAY_HOSTNAME = "smtp-relay.gmail.com";
   private static final String SMTP_PORT = "465";
   private static final String SSL_FACTORY = "javax.net.ssl.SSLSocketFactory";
   private String attachmentPath;
   private String bccEmail;
   private String ccEmail;
-  private Map<?, ?> configMap = FdahpStudyDesignerUtil.getAppProperties();
   private String fromEmailAddress = "";
   private String fromEmailName = "";
   private String fromEmailPassword;
@@ -67,6 +69,15 @@ public class Mail {
   private String subject;
 
   private String toemail;
+
+  // Domain that we send in the EHLO request if we are not authenticating
+  // with the SMTP server.
+  private String fromEmailDomain = "";
+  // If set to true, we will not authenticate with the SMTP service and
+  // rather rely on the SMTP service's configured IP whitelist. If false we
+  // will authenticate with the provided fromEmailAddress and fromEmailPass.
+  private Boolean useIpWhitelist = false;
+
 
   public String getAttachmentPath() {
     return attachmentPath;
@@ -97,13 +108,15 @@ public class Mail {
   }
 
   public String getSmtpHostname() {
-    String hostname;
     if ("".equals(this.smtpHostname)) {
-      hostname = Mail.SMTP_HOST_NAME;
+      if (useIpWhitelist) {
+        return Mail.SMTP_RELAY_HOSTNAME;
+      } else {
+        return Mail.SMTP_HOSTNAME;
+      }
     } else {
-      hostname = this.smtpHostname;
+      return this.smtpHostname;
     }
-    return hostname;
   }
 
   public String getSmtpPortvalue() {
@@ -140,32 +153,12 @@ public class Mail {
   public boolean sendemail() {
     logger.warn("sendemail()====start");
     boolean sentMail = false;
-    Session session = null;
     try {
       final String username = this.getFromEmailAddress();
       final String password = this.getFromEmailPassword();
-      Properties props = new Properties();
-      props.put("mail.smtp.host", this.getSmtpHostname());
-      props.put("mail.smtp.port", this.getSmtpPortvalue());
-
-      if ((configMap.get("fda.env") != null)
-          && FdahpStudyDesignerConstants.FDA_ENV_LOCAL.equals(configMap.get("fda.env"))) {
-        props.put("mail.smtp.auth", "true");
-        props.put("mail.smtp.socketFactory.port", this.getSmtpPortvalue());
-        props.put("mail.smtp.socketFactory.class", this.getSslFactory());
-        session =
-            Session.getInstance(
-                props,
-                new javax.mail.Authenticator() {
-                  @Override
-                  protected PasswordAuthentication getPasswordAuthentication() {
-                    return new PasswordAuthentication(username, password);
-                  }
-                });
-      } else {
-        props.put("mail.smtp.auth", "false");
-        session = Session.getInstance(props);
-      }
+      Properties props = makeProperties(useIpWhitelist);
+      Session session =
+          useIpWhitelist ? makeSession(props) : makeSession(props, username, password);
 
       Message message = new MimeMessage(session);
       message.setFrom(new InternetAddress(username));
@@ -207,34 +200,15 @@ public class Mail {
   public boolean sendMailWithAttachment() {
     logger.debug("sendemail()====start");
     boolean sentMail = false;
-    Session session = null;
     BodyPart messageBodyPart = null;
     Multipart multipart = null;
 
     try {
       final String username = this.getFromEmailAddress();
       final String password = this.getFromEmailPassword();
-      Properties props = new Properties();
-      props.put("mail.smtp.auth", "false");
-      props.put("mail.smtp.host", this.getSmtpHostname());
-      props.put("mail.smtp.port", this.getSmtpPortvalue());
-
-      if ((configMap.get("fda.env") != null)
-          && FdahpStudyDesignerConstants.FDA_ENV_LOCAL.equals(configMap.get("fda.env"))) {
-        props.put("mail.smtp.socketFactory.port", this.getSmtpPortvalue());
-        props.put("mail.smtp.socketFactory.class", this.getSslFactory());
-        session =
-            Session.getInstance(
-                props,
-                new javax.mail.Authenticator() {
-                  @Override
-                  protected PasswordAuthentication getPasswordAuthentication() {
-                    return new PasswordAuthentication(username, password);
-                  }
-                });
-      } else {
-        session = Session.getInstance(props);
-      }
+      Properties props = makeProperties(useIpWhitelist);
+      Session session =
+          useIpWhitelist ? makeSession(props) : makeSession(props, username, password);
 
       Message message = new MimeMessage(session);
       if (StringUtils.isNotBlank(this.getToemail())) {
@@ -284,6 +258,40 @@ public class Mail {
     return sentMail;
   }
 
+  // Constructs a Propterties either relying on IP Whitelist on the SMTP
+  // service or on authentication with email and password.
+  private Properties makeProperties(Boolean useIpWhitelist) {
+    Properties props = new Properties();
+    props.put("mail.smtp.host", this.getSmtpHostname());
+    props.put("mail.smtp.port", this.getSmtpPortvalue());
+    props.put("mail.smtp.socketFactory.class", this.getSslFactory());
+    props.put("mail.smtp.socketFactory.port", this.getSmtpPortvalue());
+    if (useIpWhitelist) {
+      props.put("mail.smtp.auth", "false");
+      props.put("mail.smtp.ssl.enable", "true");
+      props.put("mail.smtp.localhost", fromEmailDomain);
+    } else {
+      props.put("mail.smtp.auth", "true");
+    }
+    return props;
+  }
+
+  private Session makeSession(Properties props) {
+    return Session.getInstance(props, null);
+  }
+
+  private Session makeSession(Properties props, final String username,
+      final String password) {
+    return Session.getInstance(
+        props,
+        new javax.mail.Authenticator() {
+          @Override
+          protected PasswordAuthentication getPasswordAuthentication() {
+            return new PasswordAuthentication(username, password);
+          }
+        });
+  }
+
   public void setAttachmentPath(String attachmentPath) {
     this.attachmentPath = attachmentPath;
   }
@@ -330,5 +338,13 @@ public class Mail {
 
   public void setToemail(String toemail) {
     this.toemail = toemail;
+  }
+
+  public void setUseIpWhitelist(Boolean useIpWhitelist) {
+    this.useIpWhitelist = useIpWhitelist;
+  }
+
+  public void setFromEmailDomain(String fromEmailDomain) {
+    this.fromEmailDomain = fromEmailDomain;
   }
 }
