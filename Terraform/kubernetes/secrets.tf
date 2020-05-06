@@ -45,8 +45,6 @@ data "google_secret_manager_secret_version" "secrets" {
 
   for_each = toset(concat(
     [
-      "my-studies-registration-client-id",
-      "my-studies-registration-client-secret",
       "my-studies-wcp-user",
       "my-studies-wcp-pass",
       "my-studies-email-address",
