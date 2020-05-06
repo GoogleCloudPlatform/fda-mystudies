@@ -42,6 +42,8 @@ public class EmailNotification {
       mail.setSmtp_Hostname(appConfig.getSmtpHostName());
       mail.setSmtp_portvalue(appConfig.getSmtpPortValue());
       mail.setSslFactory(appConfig.getSslFactoryValue());
+      mail.setUseIpWhitelist(appConfig.getUseIpWhitelist());
+      mail.setFromDomain(appConfig.getFromDomain());
       mail.setCcEmail(StringUtils.join(ccMailList, ','));
       mail.setBccEmail(StringUtils.join(bccMailList, ','));
       mail.setSubject(subject);
