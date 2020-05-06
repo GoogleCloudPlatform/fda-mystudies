@@ -55,6 +55,11 @@ spec:
                 secretKeyRef:
                   name: study-designer-secrets
                   key: SECRET_KEY
+            - name: BASE_URL
+              valueFrom:
+                secretKeyRef:
+                  name: study-designer-secrets
+                  key: BASE_URL
             - name: REGISTRATION_SERVER_URL
               value: "user-registration-server-np:50000"
             - name: RESPONSE_SERVER_URL
