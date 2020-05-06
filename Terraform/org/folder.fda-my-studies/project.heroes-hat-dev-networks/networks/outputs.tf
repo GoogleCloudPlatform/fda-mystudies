@@ -13,7 +13,7 @@
 # limitations under the License.
 
 output "private_network" {
-  value = module.private.network.network
+  value = module.private.network
 }
 
 output "gke_subnetwork" {
