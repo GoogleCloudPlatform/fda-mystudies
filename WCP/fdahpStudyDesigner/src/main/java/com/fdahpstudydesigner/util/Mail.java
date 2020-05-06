@@ -48,7 +48,9 @@ public class Mail {
 
   private static Logger logger = Logger.getLogger(Mail.class.getName());
 
+  // Fallback hostname if we are authenticating.
   private static final String SMTP_HOSTNAME = "smtp.gmail.com";
+  // Fallback hostname if we are not authenticating.
   private static final String SMTP_RELAY_HOSTNAME = "smtp-relay.gmail.com";
   private static final String SMTP_PORT = "465";
   private static final String SSL_FACTORY = "javax.net.ssl.SSLSocketFactory";
