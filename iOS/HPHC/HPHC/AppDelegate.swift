@@ -757,10 +757,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
           let passcodeViewController =
             ORKPasscodeViewController
-            .passcodeAuthenticationViewController(withText: "", delegate: self)
+            .passcodeAuthenticationViewController(withText: "\n", delegate: self)
           var topVC = UIApplication.shared.keyWindow?.rootViewController
           var parentController: UIViewController?
-
+          passcodeViewController.setNavigationBarHidden(true, animated: false)
           while topVC?.presentedViewController != nil {
             parentController = topVC
             topVC = topVC?.presentedViewController
