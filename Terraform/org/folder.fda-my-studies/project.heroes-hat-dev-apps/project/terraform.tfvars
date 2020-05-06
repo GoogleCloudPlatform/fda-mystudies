@@ -20,6 +20,7 @@ apis = [
   "cloudbuild.googleapis.com",
   "compute.googleapis.com",
   "container.googleapis.com",
+  "dns.googleapis.com",
   "servicenetworking.googleapis.com",
   "sqladmin.googleapis.com",
 ]

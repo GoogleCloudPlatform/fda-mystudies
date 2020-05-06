@@ -31,6 +31,28 @@ dependency "network" {
   }
 }
 
+dependency "apps" {
+  config_path = "../../project.heroes-hat-dev-apps/apps"
+
+  mock_outputs = {
+    service_account = "mock-gke-service-account"
+    apps_service_accounts = {
+      user-registration = {
+        email = "mock-app-gke@mock-project.iam.gserviceaccount.com"
+      }
+    }
+  }
+}
+
+
 inputs = {
   network = dependency.network.outputs.private_network.id
+  consent_documents_iam_members = [{
+    role   = "roles/storage.objectAdmin"
+    member = "serviceAccount:${dependency.apps.outputs.apps_service_accounts["user-registration"].email}"
+  }]
+  fda_resources_iam_members = [{
+    role   = "roles/storage.objectAdmin"
+    member = "serviceAccount:${dependency.apps.outputs.apps_service_accounts["study-designer"].email}"
+  }]
 }

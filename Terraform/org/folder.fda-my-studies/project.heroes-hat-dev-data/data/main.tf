@@ -34,9 +34,20 @@ module "my_studies_consent_documents_bucket" {
   source  = "terraform-google-modules/cloud-storage/google//modules/simple_bucket"
   version = "~> 1.4"
 
-  name       = "heroes-hat-dev-my-studies-consent-documents"
-  project_id = var.project_id
-  location   = var.storage_location
+  name        = "heroes-hat-dev-my-studies-consent-documents"
+  project_id  = var.project_id
+  location    = var.storage_location
+  iam_members = var.consent_documents_iam_members
+}
+
+module "my_studies_fda_resources_bucket" {
+  source  = "terraform-google-modules/cloud-storage/google//modules/simple_bucket"
+  version = "~> 1.4"
+
+  name        = "heroes-hat-dev-my-studies-fda-resources"
+  project_id  = var.project_id
+  location    = var.storage_location
+  iam_members = var.fda_resources_iam_members
 }
 
 module "my_studies_sql_import_bucket" {
