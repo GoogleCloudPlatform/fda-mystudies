@@ -23,6 +23,7 @@ import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMultipart;
+import lombok.Setter;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -34,7 +35,10 @@ public class Mail {
   private String toemail;
   private String subject;
   private String messageBody;
-  private static final String SMTP_HOST_NAME = "smtp.gmail.com";
+  // Fallback hostname if we are authenticating.
+  private static final String SMTP_HOSTNAME = "smtp.gmail.com";
+  // Fallback hostname if we are not authenticating.
+  private static final String SMTP_RELAY_HOSTNAME = "smtp-relay.gmail.com";
   private static final String SMTP_PORT = "465";
   private String smtp_Hostname = "";
   private String smtp_portvalue = "";
@@ -46,6 +50,15 @@ public class Mail {
   private String ccEmail;
   private String bccEmail;
   private String attachmentPath;
+  // Domain that we send in the EHLO request if we are not authenticating
+  // with the SMTP server.
+  @Setter
+  private String fromDomain = "";
+  // If set to true, we will not authenticate with the SMTP service and
+  // rather rely on the SMTP service's configured IP whitelist. If false we
+  // will authenticate with the provided fromEmailAddress and fromEmailPass.
+  @Setter
+  private Boolean useIpWhitelist = false;
 
   public boolean sendemail() throws Exception {
     logger.warn(" sendemail() ====start");
@@ -53,21 +66,9 @@ public class Mail {
     try {
       final String username = this.getFromEmailAddress();
       final String password = this.getFromEmailPass();
-      Properties props = new Properties();
-      props.put("mail.smtp.auth", "true");
-      props.put("mail.smtp.host", this.getSmtp_Hostname());
-      props.put("mail.smtp.socketFactory.port", this.getSmtp_portvalue());
-      props.put("mail.smtp.socketFactory.class", this.getSslFactory());
-      props.put("mail.smtp.port", this.getSmtp_portvalue());
+      Properties props = makeProperties(useIpWhitelist);
       Session session =
-          Session.getInstance(
-              props,
-              new javax.mail.Authenticator() {
-                @Override
-                protected PasswordAuthentication getPasswordAuthentication() {
-                  return new PasswordAuthentication(username, password);
-                }
-              });
+          useIpWhitelist ? makeSession(props) : makeSession(props, username, password);
       Message message = new MimeMessage(session);
       message.setFrom(new InternetAddress(username));
       if (StringUtils.isNotBlank(this.getToemail())) {
@@ -104,21 +105,9 @@ public class Mail {
     try {
       final String username = this.getFromEmailAddress();
       final String password = this.getFromEmailPass();
-      Properties props = new Properties();
-      props.put("mail.smtp.auth", "true");
-      props.put("mail.smtp.host", this.getSmtp_Hostname());
-      props.put("mail.smtp.socketFactory.port", this.getSmtp_portvalue());
-      props.put("mail.smtp.socketFactory.class", this.getSslFactory());
-      props.put("mail.smtp.port", this.getSmtp_portvalue());
+      Properties props = makeProperties(useIpWhitelist);
       Session session =
-          Session.getInstance(
-              props,
-              new javax.mail.Authenticator() {
-                @Override
-                protected PasswordAuthentication getPasswordAuthentication() {
-                  return new PasswordAuthentication(username, password);
-                }
-              });
+          useIpWhitelist ? makeSession(props) : makeSession(props, username, password);
       Message message = new MimeMessage(session);
       if (StringUtils.isNotBlank(this.getToemail())) {
         if (this.getToemail().indexOf(",") != -1) {
@@ -172,6 +161,40 @@ public class Mail {
     return sentMail;
   }
 
+  // Constructs a Propterties either relying on IP Whitelist on the SMTP
+  // service or on authentication with email and password.
+  private Properties makeProperties(Boolean useIpWhitelist) {
+    Properties props = new Properties();
+    props.put("mail.smtp.host", getSmtp_Hostname());
+    props.put("mail.smtp.port", getSmtp_portvalue());
+    props.put("mail.smtp.socketFactory.class", this.getSslFactory());
+    props.put("mail.smtp.socketFactory.port", this.getSmtp_portvalue());
+    if (useIpWhitelist) {
+      props.put("mail.smtp.auth", "false");
+      props.put("mail.smtp.ssl.enable", "true");
+      props.put("mail.smtp.localhost", fromDomain);
+    } else {
+      props.put("mail.smtp.auth", "true");
+    }
+    return props;
+  }
+
+  private Session makeSession(Properties props) {
+    return Session.getInstance(props, null);
+  }
+
+  private Session makeSession(Properties props, String username,
+      String password) {
+    return Session.getInstance(
+        props,
+        new javax.mail.Authenticator() {
+          @Override
+          protected PasswordAuthentication getPasswordAuthentication() {
+            return new PasswordAuthentication(username, password);
+          }
+        });
+  }
+
   public String getToemail() {
     return toemail;
   }
@@ -197,13 +220,15 @@ public class Mail {
   }
 
   public String getSmtp_Hostname() {
-    String hostname = "";
     if (this.smtp_Hostname.equals("")) {
-      hostname = Mail.SMTP_HOST_NAME;
+      if (useIpWhitelist) {
+        return Mail.SMTP_RELAY_HOSTNAME;
+      } else {
+        return Mail.SMTP_HOSTNAME;
+      }
     } else {
-      hostname = this.smtp_Hostname;
+      return this.smtp_Hostname;
     }
-    return hostname;
   }
 
   public void setSmtp_Hostname(String smtp_Hostname) {
@@ -263,10 +288,6 @@ public class Mail {
 
   public void setFromEmailPass(String fromEmailPassword) {
     this.fromEmailPass = fromEmailPassword;
-  }
-
-  public static String getSmtpHostName() {
-    return SMTP_HOST_NAME;
   }
 
   public static String getSmtpPort() {
