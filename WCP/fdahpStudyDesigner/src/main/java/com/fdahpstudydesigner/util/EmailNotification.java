@@ -53,6 +53,8 @@ public class EmailNotification {
       mail.setSmtpHostname(propMap.get("smtp.hostname"));
       mail.setSmtpPortvalue(propMap.get("smtp.portvalue"));
       mail.setSslFactory(propMap.get("sslfactory.value"));
+      mail.setUseIpWhitelist(Boolean.parseBoolean(propMap.get("from.email.use_ip_whitelist")));
+      mail.setFromEmailDomain(propMap.get("from.email.domain"));
       mail.setCcEmail(StringUtils.join(ccMailList, ','));
       mail.setBccEmail(StringUtils.join(bccMailList, ','));
       mail.setSubject(propMap.get(subjectProprtyName));
@@ -91,6 +93,8 @@ public class EmailNotification {
       mail.setSmtpHostname(propMap.get("smtp.hostname"));
       mail.setSmtpPortvalue(propMap.get("smtp.portvalue"));
       mail.setSslFactory(propMap.get("sslfactory.value"));
+      mail.setUseIpWhitelist(Boolean.parseBoolean(propMap.get("from.email.use_ip_whitelist")));
+      mail.setFromEmailDomain(propMap.get("from.email.domain"));
       mail.setCcEmail(StringUtils.join(ccMailList, ','));
       mail.setBccEmail(StringUtils.join(bccMailList, ','));
       mail.setSubject(propMap.get(subjectProprtyName));
@@ -127,6 +131,8 @@ public class EmailNotification {
       mail.setSmtpHostname(propMap.get("smtp.hostname"));
       mail.setSmtpPortvalue(propMap.get("smtp.portvalue"));
       mail.setSslFactory(propMap.get("sslfactory.value"));
+      mail.setUseIpWhitelist(Boolean.parseBoolean(propMap.get("from.email.use_ip_whitelist")));
+      mail.setFromEmailDomain(propMap.get("from.email.domain"));
       mail.setCcEmail(StringUtils.join(ccMailList, ','));
       mail.setBccEmail(StringUtils.join(bccMailList, ','));
       mail.setSubject(propMap.get(subjectProprtyName));
