@@ -41,5 +41,6 @@ variable "service_projects" {
 
 variable "bastion_users" {
   description = "List of IAM resources to allow access to the bastion VM instance"
+  type        = list(string)
   default     = []
 }

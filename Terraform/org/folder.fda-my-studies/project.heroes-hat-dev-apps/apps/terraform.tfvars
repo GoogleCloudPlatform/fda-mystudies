@@ -20,3 +20,5 @@ master_authorized_networks = [{ cidr_block = "104.132.0.0/14", display_name = "G
 repo_owner                 = "GoogleCloudPlatform"
 repo_name                  = "fda-mystudies"
 cloudbuild_trigger_branch  = "early-access"
+dns_name                   = "heroes-hat"
+dns_domain                 = "heroes-hat.rocketturtle.net."

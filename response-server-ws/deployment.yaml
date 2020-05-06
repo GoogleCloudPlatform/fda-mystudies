@@ -58,9 +58,9 @@ spec:
                   key: WCP_PASS
                   name: response-server-secrets
             - name: WCP_STUDY_METADATA_SERVER_URL
-              value: "34.74.32.124:50000"
+              value: "study-meta-data-np:50000"
             - name: REGISTRATION_SERVER_URL
-              value: "35.196.79.108:60000"
+              value: "user-registration-server-np:50000"
             - name: GOOGLE_APPLICATION_CREDENTIALS
               value: "/secrets/gcloud_key/key.json"
           ports:

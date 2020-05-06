@@ -64,63 +64,12 @@ variable "cloudbuild_trigger_branch" {
   default = "master"
 }
 
-variable "node_pools" {
-  type        = list(map(string))
-  description = "List of maps containing node pools"
-
-  default = [
-    {
-      name = "default-node-pool"
-    },
-  ]
+variable "dns_name" {
+  description = "Name for the dns."
+  type        = string
 }
 
-variable "node_pools_labels" {
-  type        = map(map(string))
-  description = "Map of maps containing node labels by node-pool name"
-
-  default = {
-    all               = {}
-    default-node-pool = {}
-  }
-}
-
-variable "node_pools_metadata" {
-  type        = map(map(string))
-  description = "Map of maps containing node metadata by node-pool name"
-
-  default = {
-    all               = {}
-    default-node-pool = {}
-  }
-}
-
-variable "node_pools_taints" {
-  type        = map(list(object({ key = string, value = string, effect = string })))
-  description = "Map of lists containing node taints by node-pool name"
-
-  default = {
-    all               = []
-    default-node-pool = []
-  }
-}
-
-variable "node_pools_tags" {
-  type        = map(list(string))
-  description = "Map of lists containing node network tags by node-pool name"
-
-  default = {
-    all               = []
-    default-node-pool = []
-  }
-}
-
-variable "node_pools_oauth_scopes" {
-  type        = map(list(string))
-  description = "Map of lists containing node oauth scopes by node-pool name"
-
-  default = {
-    all               = ["https://www.googleapis.com/auth/cloud-platform"]
-    default-node-pool = []
-  }
+variable "dns_domain" {
+  description = "Domain for the dns."
+  type        = string
 }
