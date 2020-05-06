@@ -52,7 +52,7 @@
 #import <AudioToolbox/AudioToolbox.h>
 #import <LocalAuthentication/LocalAuthentication.h>
 
-static CGFloat const kForgotPasscodeVerticalPadding     = 50.0f;
+static CGFloat const kForgotPasscodeVerticalPadding     = 60.0f;
 static CGFloat const kForgotPasscodeHorizontalPadding   = 30.0f;
 static CGFloat const kForgotPasscodeHeight              = 100.0f;
 

@@ -118,7 +118,7 @@ To see what resources each deployment provisions, check out the comments in each
     project which will host your Terraform state and CICD pipelines.
 
     ```
-    $ cd $ROOT/boootstrap
+    $ cd $ROOT/bootstrap
     $ terraform init
     $ terraform plan
     $ terraform apply
