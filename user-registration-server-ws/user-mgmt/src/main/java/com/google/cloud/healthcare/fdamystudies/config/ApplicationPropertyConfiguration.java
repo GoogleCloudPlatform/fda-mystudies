@@ -33,18 +33,20 @@ public class ApplicationPropertyConfiguration {
   @Value("${factory.value}")
   private String sslFactoryValue;
 
-  @Value("${port}")
+  @Value("${smtp.port}")
   private String smtpPortValue;
 
-  @Value("${host.name}")
+  @Value("${smtp.hostname}")
   private String smtpHostName;
 
   // If true, we do not authenticate with the SMTP server but rather rely on
   // an IP whitelist for the domain `fromDomain`.
-  @Value("${from.email.ip_whitelist}")
+  @Value("${from.email.use_ip_whitelist}")
   private Boolean useIpWhitelist;
 
   // Domain to use with the IP whitelist relay.
+  // Must be in the form rocketturtle rather than rocketturtle.net.
+
   @Value("${from.email.domain}")
   private String fromDomain;
 

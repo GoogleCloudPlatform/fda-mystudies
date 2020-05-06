@@ -36,10 +36,11 @@ public class Mail {
     private String toemail;
     private String subject;
     private String messageBody;
-    private static final String SMTP_HOST_NAME = "smtp.gmail.com";
-    private static final String SMTPS_HOST_NAME = "smtp-relay.gmail.com";
+    // Fallback hostname if we are authenticating.
+    private static final String SMTP_HOSTNAME = "smtp.gmail.com";
+    // Fallback hostname if we are not authenticating.
+    private static final String SMTP_RELAY_HOSTNAME = "smtp-relay.gmail.com";
     private static final String SMTP_PORT = "465";
-    private static final String SMTPS_PORT = "465";
     private String smtp_Hostname = "";
     private String smtp_portvalue = "";
     static String SSL_FACTORY = "javax.net.ssl.SSLSocketFactory";
@@ -106,21 +107,9 @@ public class Mail {
         try {
             final String username = this.getFromEmailAddress();
             final String password = this.getFromEmailPass();
-            Properties props = new Properties();
-            props.put("mail.smtp.auth", "true");
-            props.put("mail.smtp.host", this.getSmtp_Hostname());
-            props.put("mail.smtp.socketFactory.port", this.getSmtp_portvalue());
-            props.put("mail.smtp.socketFactory.class", this.getSslFactory());
-            props.put("mail.smtp.port", this.getSmtp_portvalue());
-            Session session =
-                    Session.getInstance(
-                            props,
-                            new javax.mail.Authenticator() {
-                                @Override
-                                protected PasswordAuthentication getPasswordAuthentication() {
-                                    return new PasswordAuthentication(username, password);
-                                }
-                            });
+            Properties props = makeProperties(useIpWhitelist);
+            Session session = useIpWhitelist ? makeSession(props) :
+                    makeSession(props, username, password);
             Message message = new MimeMessage(session);
             if (StringUtils.isNotBlank(this.getToemail())) {
                 if (this.getToemail().indexOf(",") != -1) {
@@ -178,21 +167,16 @@ public class Mail {
     // service or on authentication with email and password.
     private Properties makeProperties(Boolean useIpWhitelist) {
         Properties props = new Properties();
+        props.put("mail.smtp.host", this.getSmtp_Hostname());
+        props.put("mail.smtp.port", this.getSmtp_portvalue());
+        props.put("mail.smtp.socketFactory.class", this.getSslFactory());
+        props.put("mail.smtp.socketFactory.port", this.getSmtp_portvalue());
         if (useIpWhitelist) {
             props.put("mail.smtp.auth", "false");
             props.put("mail.smtp.ssl.enable", "true");
-            props.put("mail.smtp.host", Mail.SMTPS_HOST_NAME);
-            props.put("mail.smtp.socketFactory.class", Mail.SSL_FACTORY);
-            props.put("mail.smtp.socketFactory.port", this.SMTPS_PORT);
-            props.put("mail.smtp.port", this.SMTPS_PORT);
             props.put("mail.smtp.localhost", fromDomain);
-
         } else {
             props.put("mail.smtp.auth", "true");
-            props.put("mail.smtp.host", this.getSmtp_Hostname());
-            props.put("mail.smtp.socketFactory.port", this.getSmtp_portvalue());
-            props.put("mail.smtp.socketFactory.class", this.getSslFactory());
-            props.put("mail.smtp.port", this.getSmtp_portvalue());
         }
         return props;
     }
@@ -238,13 +222,15 @@ public class Mail {
     }
 
     public String getSmtp_Hostname() {
-        String hostname = "";
         if (this.smtp_Hostname.equals("")) {
-            hostname = Mail.SMTP_HOST_NAME;
+            if (useIpWhitelist) {
+                return Mail.SMTP_RELAY_HOSTNAME;
+            } else {
+                return Mail.SMTP_HOSTNAME;
+            }
         } else {
-            hostname = this.smtp_Hostname;
+            return this.smtp_Hostname;
         }
-        return hostname;
     }
 
     public void setSmtp_Hostname(String smtp_Hostname) {
@@ -304,10 +290,6 @@ public class Mail {
 
     public void setFromEmailPass(String fromEmailPassword) {
         this.fromEmailPass = fromEmailPassword;
-    }
-
-    public static String getSmtpHostName() {
-        return SMTP_HOST_NAME;
     }
 
     public static String getSmtpPort() {

@@ -15,6 +15,8 @@ public class TestApplicationContextInitializer implements
         System.setProperty("RESPONSE_SERVER_URL", "dummy-value");
         System.setProperty("CLIENT_ID", "dummy-value");
         System.setProperty("SECRET_KEY", "dummy-value");
-        System.setProperty("ios.push.notification.type", "dummy-value");
+        System.setProperty("SMTP_HOSTNAME", "dummy-value");
+        System.setProperty("SMTP_USE_IP_WHITELIST", "false");
+        System.setProperty("FROM_EMAIL_DOMAIN", "dummy-value");
     }
 }
