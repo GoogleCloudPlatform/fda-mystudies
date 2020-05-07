@@ -155,6 +155,17 @@ class VerificationViewController: UIViewController {
     self.performSegue(withIdentifier: kSignupCompletionSegue, sender: nil)
   }
 
+  fileprivate func resetPasswordOnVerification() {
+    UIUtilities.showAlertMessageWithActionHandler(
+      NSLocalizedString(kSuccessfulVerification, comment: ""),
+      message: NSLocalizedString(kResetAfterVerificationMessage, comment: ""),
+      buttonTitle: NSLocalizedString(kTitleOk, comment: ""),
+      viewControllerUsed: self
+    ) {
+      self.navigationController?.popViewController(animated: true)
+    }
+  }
+
   /// Navigate to change password screen.
   func navigateToChangePasswordViewController() {
 
@@ -219,9 +230,7 @@ extension VerificationViewController: NMWebServiceDelegate {
       ud.synchronize()
 
       if viewLoadFrom == .forgotPassword {
-        // pop to login
-
-        self.performSegue(withIdentifier: "signInUnwindSegue", sender: self)
+        resetPasswordOnVerification()
       } else if viewLoadFrom == .joinStudy {
 
         let appDelegate = (UIApplication.shared.delegate as? AppDelegate)!
