@@ -46,6 +46,9 @@ resource "google_secret_manager_secret" "secrets" {
     "my-studies-wcp-pass",
     "my-studies-email-address",
     "my-studies-email-password",
+    # AppId and OrgId for the mobile app. This needs to be in the app_info and org_info table in user registration database.
+    "mobile-app-appid",
+    "mobile-app-orgid",
   ])
 
   secret_id = each.key
