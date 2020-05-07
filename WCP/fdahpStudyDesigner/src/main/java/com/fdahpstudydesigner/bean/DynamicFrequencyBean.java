@@ -29,7 +29,6 @@ public class DynamicFrequencyBean {
   String time;
 
   public DynamicFrequencyBean(String startDate, String time) {
-    super();
     this.startDate = startDate;
     this.time = time;
   }
