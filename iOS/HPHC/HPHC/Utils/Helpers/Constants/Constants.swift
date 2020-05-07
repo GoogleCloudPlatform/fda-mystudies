@@ -190,7 +190,7 @@ let kDarkBlueColor = UIColor.init(red: 0 / 255.0, green: 124 / 255.0, blue: 186 
 let kGreyColor = UIColor.init(red: 140 / 255.0, green: 149 / 255.0, blue: 163 / 255.0, alpha: 1.0)
 
 let kDaySpaces = "  DAY  "
-let kDay = "Day"
+let kDay = "DAY"
 let kMonthSpaces = "  MONTH  "
 let kMonth = "MONTH"
 let kWeekSpaces = "  WEEK  "

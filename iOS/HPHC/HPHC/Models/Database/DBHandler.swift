@@ -1463,42 +1463,36 @@ class DBHandler: NSObject {
     let dbStatisticsArray = realm.objects(DBStatistics.self)
       .filter { $0.studyId == studyId }
 
-    var dbStatisticsList: [DBStatistics] = []
-    for stats in statistics {
+    var oldStatsDict = dbStatisticsArray.reduce(into: [DBStatistics: Bool]()) {
+      $0[$1] = false  // Consider them not active here.
+    }
 
-      var dbStatistics: DBStatistics?
-      if dbStatisticsArray.count != 0 {
-        dbStatistics = dbStatisticsArray.filter { $0.activityId == stats.activityId! }.last
-
-        if dbStatistics == nil {
-          dbStatistics = DBHandler.getDBStatistics(stats: stats)
-          dbStatisticsList.append(dbStatistics!)
-        } else {
-
-          try? realm.write {
-            dbStatistics?.activityId = stats.activityId
-            dbStatistics?.activityVersion = stats.activityVersion
-            dbStatistics?.calculation = stats.calculation
-            dbStatistics?.dataSourceKey = stats.dataSourceKey
-            dbStatistics?.dataSourceType = stats.dataSourceType
-            dbStatistics?.displayName = stats.displayName
-            dbStatistics?.title = stats.title
-            dbStatistics?.statType = stats.statType
-            dbStatistics?.studyId = stats.studyId
-            dbStatistics?.unit = stats.unit
-          }
+    for stat in statistics {
+      if let dbStat = dbStatisticsArray.first(where: { $0.statisticsId == stat.statisticsId }) {
+        let updatedStat = DBHandler.getDBStatistics(stats: stat)
+        oldStatsDict[dbStat] = true  // Stat is still active.
+        let statData = dbStat.statisticsData
+        try? realm.write {
+          updatedStat.statisticsData = statData
+          realm.add(updatedStat, update: .modified)
         }
       } else {
-        dbStatistics = DBHandler.getDBStatistics(stats: stats)
-        dbStatisticsList.append(dbStatistics!)
+        let newDbStat = DBHandler.getDBStatistics(stats: stat)
+        try? realm.write {
+          realm.add(newDbStat, update: .all)
+        }
       }
     }
 
-    if dbStatisticsList.count > 0 {
+    // Remove the deleted stats from database.
+    let inactiveStats = oldStatsDict.filter({ $0.value == false }).compactMap({ $0.key })
+    inactiveStats.forEach { (dbStat) in
       try? realm.write {
-        realm.add(dbStatisticsList, update: .all)
+        realm.delete(dbStat.statisticsData)
+        realm.delete(dbStat)
       }
     }
+
   }
 
   /// Creates an managed instance of DBStatistics from DashboardStatistics.
@@ -1549,35 +1543,36 @@ class DBHandler: NSObject {
   class func saveDashBoardCharts(studyId: String, charts: [DashboardCharts]) {
 
     let realm = DBHandler.getRealmObject()!
-    let dbChartsArray = realm.objects(DBCharts.self).filter({ $0.studyId == studyId })
+    let dbChartsArray = realm.objects(DBCharts.self).filter { $0.studyId == studyId }
 
-    var dbChartsList: [DBCharts] = []
+    var oldChartsDict = dbChartsArray.reduce(into: [DBCharts: Bool]()) {
+      $0[$1] = false  // Consider them not active here.
+    }
+
     for chart in charts {
-
-      var dbChart: DBCharts?
-      if let dbChart = dbChartsArray.filter({ $0.activityId == chart.activityId! }).last {
-
+      if let dbChart = dbChartsArray.first(where: { $0.chartId == chart.chartId }) {
+        let chartData = dbChart.statisticsData
+        let updatedChart = DBHandler.getDBChart(chart: chart)
+        oldChartsDict[dbChart] = true  // Chart is still active.
         try? realm.write {
-          dbChart.activityId = chart.activityId
-          dbChart.activityVersion = chart.activityVersion
-          dbChart.chartType = chart.chartType
-          dbChart.chartSubType = chart.chartSubType
-          dbChart.dataSourceTimeRange = chart.dataSourceTimeRange
-          dbChart.dataSourceKey = chart.dataSourceKey
-          dbChart.dataSourceType = chart.dataSourceType
-          dbChart.displayName = chart.displayName
-          dbChart.title = chart.title
-          dbChart.scrollable = chart.scrollable
-          dbChart.studyId = chart.studyId
+          updatedChart.statisticsData = chartData
+          realm.add(updatedChart, update: .modified)
         }
       } else {
-        dbChart = DBHandler.getDBChart(chart: chart)
-        dbChartsList.append(dbChart!)
+        let newDbChart = DBHandler.getDBChart(chart: chart)
+        try? realm.write {
+          realm.add(newDbChart, update: .all)
+        }
       }
     }
 
-    try? realm.write {
-      realm.add(dbChartsList, update: .all)
+    // Remove the deleted charts from database.
+    let inactiveCharts = oldChartsDict.filter({ $0.value == false }).compactMap({ $0.key })
+    inactiveCharts.forEach { (dbChart) in
+      try? realm.write {
+        realm.delete(dbChart.statisticsData)
+        realm.delete(dbChart)
+      }
     }
   }
 
