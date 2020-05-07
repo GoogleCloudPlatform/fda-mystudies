@@ -25,21 +25,24 @@ import WebKit
 class ResourceDetailViewController: UIViewController {
 
   // MARK: - Outles
-  @IBOutlet var webViewContainer: UIView?
-
-  @IBOutlet var progressBar: UIProgressView?
-  @IBOutlet var bottomToolBar: UIToolbar?
+  @IBOutlet var webView: WKWebView!
+  @IBOutlet var bottomToolBar: UIToolbar!
+  @IBOutlet var activityIndicator: UIActivityIndicatorView!
 
   // MARK: - Properties
-  var webView: WKWebView?
-
-  var activityIndicator: UIActivityIndicatorView!
   var requestLink: String?
   var type: String?
   var htmlString: String?
   var resource: Resource?
-  var isEmailComposerPresented: Bool?
-  lazy var fdm: FileDownloadManager = FileDownloadManager()
+
+  /// Resource converted from HTML string and saved in Cache directory.
+  var tempResourceFilePath: URL?
+
+  private var isFileAvailable = false
+
+  static var resouceDirectory: String {
+    return "Resources" + "/" + (Study.currentStudy?.studyId ?? "")
+  }
 
   override var preferredStatusBarStyle: UIStatusBarStyle {
     return .default
@@ -47,136 +50,68 @@ class ResourceDetailViewController: UIViewController {
 
   override func viewDidLoad() {
     super.viewDidLoad()
-
     self.hidesBottomBarWhenPushed = true
     self.addBackBarButton()
-    self.isEmailComposerPresented = false
     self.title = resource?.title
-
-    _ = WKWebViewConfiguration()
-
-    let jscript =
-      "var meta = document.createElement('meta'); meta.setAttribute('name', 'viewport'); meta.setAttribute('content', 'width=device-width'); document.getElementsByTagName('head')[0].appendChild(meta);"
-
-    let userScript = WKUserScript(
-      source: jscript,
-      injectionTime: .atDocumentEnd,
-      forMainFrameOnly: true
-    )
-
-    let wkUController = WKUserContentController()
-    wkUController.addUserScript(userScript)
-
-    let wkWebConfig = WKWebViewConfiguration()
-    wkWebConfig.userContentController = wkUController
-
-    let bottomBarHeight: CGFloat = 44.0
-
-    let webViewFrame = CGRect(
-      x: 0,
-      y: 0,
-      width: (webViewContainer?.frame.width)!,
-      height: (webViewContainer?.frame.height)! - bottomBarHeight
-    )
-
-    webView = WKWebView.init(frame: webViewFrame, configuration: wkWebConfig)
-    webViewContainer?.addSubview(webView!)
-
-  }
-
-  override func viewDidLayoutSubviews() {
-    super.viewDidLayoutSubviews()
-    NSLayoutConstraint(
-      item: webView!,
-      attribute: .left,
-      relatedBy: .equal,
-      toItem: webViewContainer,
-      attribute: .left,
-      multiplier: 1.0,
-      constant: 0.0
-    ).isActive = true
-
-    NSLayoutConstraint(
-      item: webView!,
-      attribute: .right,
-      relatedBy: .equal,
-      toItem: webViewContainer,
-      attribute: .right,
-      multiplier: 1.0,
-      constant: 0.0
-    ).isActive = true
-
-    NSLayoutConstraint(
-      item: webView!,
-      attribute: .top,
-      relatedBy: .equal,
-      toItem: webViewContainer,
-      attribute: .top,
-      multiplier: 1.0,
-      constant: 0.0
-    ).isActive = true
-
-    NSLayoutConstraint(
-      item: webView!,
-      attribute: .bottom,
-      relatedBy: .equal,
-      toItem: webViewContainer,
-      attribute: .bottom,
-      multiplier: 1.0,
-      constant: -44.0
-    ).isActive = true
-
-    webView?.translatesAutoresizingMaskIntoConstraints = false
-
   }
 
   override func viewWillAppear(_ animated: Bool) {
     super.viewWillAppear(animated)
+    // webView.uiDelegate = self
+    webView.navigationDelegate = self
+    webView.contentScaleFactor = 1.0
+    loadWebView()
+  }
 
-    if self.isEmailComposerPresented == false,
-      self.resource?.file?.link != nil
-    {
-
-      activityIndicator = UIActivityIndicatorView(style: .gray)
-      activityIndicator.center = CGPoint(
-        x: self.view.frame.midX,
-        y: self.view.frame.midY - 100
-      )
-
-      self.view.addSubview(activityIndicator)
-
-      activityIndicator.startAnimating()
-      self.activityIndicator.hidesWhenStopped = true
-      if self.resource?.file?.mimeType == .pdf {
-
-        if self.resource?.file?.localPath != nil {
-
-          if self.resource?.file?.localPath == "BundlePath" {
-
-            let path = Bundle.main.path(
-              forResource: self.resource?.file?.link!,
-              ofType: ".pdf"
-            )
-            self.loadWebViewWithPath(path: path!)
-          } else {
-            let path = resourcesDownloadPath + "/" + (self.resource?.file?.localPath)!
-            let pdfData = FileDownloadManager.decrytFile(pathURL: URL(string: path))
-            self.loadWebViewWithData(data: pdfData!)
-
-          }
-        } else {
-          self.startDownloadingfile()
-        }
-      } else {
-        webView?.allowsBackForwardNavigationGestures = true
-        _ = webView?.loadHTMLString(self.requestLink!, baseURL: nil)
+  override func viewWillDisappear(_ animated: Bool) {
+    super.viewWillDisappear(animated)
+    DispatchQueue.main.async {
+      if let tempResource = self.tempResourceFilePath {
+        AKUtility.deleteFile(from: tempResource)
       }
-
-      webView?.uiDelegate = self
-      webView?.navigationDelegate = self
     }
   }
 
+  // MARK: - UI
+  fileprivate func loadWebView() {
+
+    if let resourceLink = self.resource?.file?.link {
+      if self.resource?.file?.mimeType == .pdf {
+        if self.resource?.file?.localPath == "BundlePath" {
+          if let path = Bundle.main.path(
+            forResource: resourceLink,
+            ofType: ".pdf"
+          ) {
+            isFileAvailable = true
+            self.loadWebViewWithPath(path: path)
+          }
+        } else if let resourceLink = self.resource?.file?.link,
+          let resourceURL = URL(string: resourceLink)
+        {
+          activityIndicator.startAnimating()
+          activityIndicator.isHidden.toggle()
+          if let url = checkIfFileExists(pdfNameFromUrl: resourceURL.lastPathComponent) {
+            webView.loadFileURL(url, allowingReadAccessTo: url)
+            self.isFileAvailable = true
+          } else {
+            self.webView.load(URLRequest(url: resourceURL))
+          }
+        }
+      } else if let htmlString = self.htmlString {
+        webView.allowsBackForwardNavigationGestures = false
+        webView.loadHTMLString(WebViewController.headerString + htmlString, baseURL: nil)
+      } else if let requestLink = self.requestLink,
+        let url = URL(string: requestLink)
+      {
+        self.webView.load(URLRequest(url: url))
+      } else if let resourceHtmlString = self.resource?.file?.link {
+        webView.allowsBackForwardNavigationGestures = false
+        webView.loadHTMLString(WebViewController.headerString + resourceHtmlString, baseURL: nil)
+      }
+    }
+  }
+
+  // MARK: - UI Utils.
   /// To Load web page with `URL` string path.
   /// - Parameter path: Path of the url.
   func loadWebViewWithPath(path: String) {
@@ -195,50 +130,12 @@ class ResourceDetailViewController: UIViewController {
 
   func loadWebViewWithData(data: Data) {
 
-    webView?.allowsBackForwardNavigationGestures = true
-
-    _ = self.webView?.load(
+    webView.allowsBackForwardNavigationGestures = true
+    self.webView.load(
       data,
       mimeType: "application/pdf",
       characterEncodingName: "UTF-8",
-      baseURL: URL.init(fileURLWithPath: "")
-    )
-
-  }
-
-  func startDownloadingfile() {
-
-    if !FileManager.default.fileExists(atPath: resourcesDownloadPath) {
-      try! FileManager.default.createDirectory(
-        atPath: resourcesDownloadPath,
-        withIntermediateDirectories: true,
-        attributes: nil
-      )
-    }
-
-    let fileURL = (self.resource?.file?.link)!
-
-    let url = URL(string: fileURL)
-
-    var fileName: NSString = url!.lastPathComponent as NSString
-
-    fileName = AKUtility.getUniqueFileNameWithPath(
-      (resourcesDownloadPath as NSString).appendingPathComponent(fileName as String)
-        as NSString
-    )
-
-    fdm = FileDownloadManager()
-    fdm.delegate = self
-
-    guard
-      let encodedURL = fileURL.addingPercentEncoding(
-        withAllowedCharacters: CharacterSet.urlQueryAllowed
-      )
-    else { return }
-    fdm.downloadFile(
-      fileName as String,
-      fileURL: encodedURL,
-      destinationPath: resourcesDownloadPath
+      baseURL: URL(fileURLWithPath: "")
     )
   }
 
@@ -249,35 +146,45 @@ class ResourceDetailViewController: UIViewController {
   }
 
   @IBAction func buttonActionForward(_ sender: UIBarButtonItem) {
-    self.sendEmail()
+    self.shareResource { [weak self] (status) in
+      if !status {
+        self?.view.makeToast(kResourceShareError)
+      }
+    }
   }
 
   @IBAction func buttonActionBack(_ sender: UIBarButtonItem) {
 
-    if (webView?.canGoBack)! {
-      _ = webView?.goBack()
-    } else if webView?.backForwardList.backList.count == 0 {
-      if self.resource?.file?.mimeType != .pdf {
-        _ = webView?.loadHTMLString(self.requestLink!, baseURL: nil)
-
+    if webView.canGoBack {
+      webView.goBack()
+    } else if webView.backForwardList.backList.count == 0 {
+      if self.resource?.file?.mimeType != .pdf,
+        let htmlString = self.requestLink
+      {
+        webView.loadHTMLString(WebViewController.headerString + htmlString, baseURL: nil)
       }
     }
   }
 
   @IBAction func buttonActionGoForward(_ sender: UIBarButtonItem) {
-    if (webView?.canGoForward)! {
-      _ = webView?.goForward()
+    if webView.canGoForward {
+      webView.goForward()
     }
   }
 
 }
 
-extension ResourceDetailViewController: WKUIDelegate, WKNavigationDelegate {
+extension ResourceDetailViewController: WKNavigationDelegate {
 
-  func webView(_ webView: WKWebView, didStartProvisionalNavigation navigation: WKNavigation) {
+  func webView(_ webView: WKWebView, didFinish navigation: WKNavigation) {
+    self.activityIndicator.stopAnimating()
+    if self.resource?.file?.mimeType == .pdf, let url = webView.url, !isFileAvailable {
+      savePdf(for: url)
+    }
   }
 
-  func webView(_ webView: WKWebView, didCommit navigation: WKNavigation) {
+  func webView(_ webView: WKWebView, didFail navigation: WKNavigation, withError error: Error) {
+    self.view.makeToast(error.localizedDescription)
   }
 
   func webView(
@@ -297,304 +204,128 @@ extension ResourceDetailViewController: WKUIDelegate, WKNavigationDelegate {
     decisionHandler(.allow)
   }
 
-  func webView(
-    _ webView: WKWebView,
-    decidePolicyFor navigationResponse: WKNavigationResponse,
-    decisionHandler: (@escaping (WKNavigationResponsePolicy) -> Void)
-  ) {
-    decisionHandler(.allow)
-  }
-
-  func webView(
-    _ webView: WKWebView,
-    didReceive challenge: URLAuthenticationChallenge,
-    completionHandler: @escaping (URLSession.AuthChallengeDisposition, URLCredential?) -> Void
-  ) {
-
-    switch challenge.protectionSpace.authenticationMethod {
-    case NSURLAuthenticationMethodHTTPBasic:
-      let alertController = UIAlertController(
-        title: "Authentication Required",
-        message: webView.url?.host,
-        preferredStyle: .alert
-      )
-      weak var usernameTextField: UITextField!
-      alertController.addTextField { textField in
-        textField.placeholder = "Username"
-        usernameTextField = textField
-      }
-      weak var passwordTextField: UITextField!
-      alertController.addTextField { textField in
-        textField.placeholder = "Password"
-        textField.isSecureTextEntry = true
-        passwordTextField = textField
-      }
-      alertController.addAction(
-        UIAlertAction(
-          title: "Cancel",
-          style: .cancel,
-          handler: { _ in
-            completionHandler(.cancelAuthenticationChallenge, nil)
-          }
-        )
-      )
-      alertController.addAction(
-        UIAlertAction(
-          title: "Log In",
-          style: .default,
-          handler: { _ in
-            guard let username = usernameTextField.text,
-              let password = passwordTextField.text
-            else {
-              completionHandler(.rejectProtectionSpace, nil)
-              return
-            }
-            let credential = URLCredential(
-              user: username,
-              password: password,
-              persistence: URLCredential.Persistence.forSession
-            )
-            completionHandler(.useCredential, credential)
-          }
-        )
-      )
-      present(alertController, animated: true, completion: nil)
-    default:
-      completionHandler(.rejectProtectionSpace, nil)
-    }
-  }
-
-  func webView(
-    _ webView: WKWebView,
-    didReceiveServerRedirectForProvisionalNavigation navigation: WKNavigation
-  ) {
-  }
-
-  func webView(_ webView: WKWebView, didFinish navigation: WKNavigation) {
-    self.activityIndicator.stopAnimating()
-  }
-
-  func webView(_ webView: WKWebView, didFail navigation: WKNavigation, withError error: Error) {
-    let alert = UIAlertController(
-      title: "Error",
-      message: error.localizedDescription,
-      preferredStyle: .alert
-    )
-    alert.addAction(UIAlertAction(title: "Ok", style: .default, handler: nil))
-    present(alert, animated: true, completion: nil)
-  }
-
-  func webView(
-    _ webView: WKWebView,
-    didFailProvisionalNavigation navigation: WKNavigation,
-    withError error: Error
-  ) {
-  }
-
-  // MARK: WKUIDelegate methods
-
-  func webView(
-    _ webView: WKWebView,
-    runJavaScriptAlertPanelWithMessage message: String,
-    initiatedByFrame frame: WKFrameInfo,
-    completionHandler: (@escaping () -> Void)
-  ) {
-    let alertController = UIAlertController(
-      title: frame.request.url?.host,
-      message: message,
-      preferredStyle: .alert
-    )
-    alertController.addAction(
-      UIAlertAction(
-        title: "OK",
-        style: .default,
-        handler: { _ in
-          completionHandler()
-        }
-      )
-    )
-    present(alertController, animated: true, completion: nil)
-  }
-
-  func webView(
-    _ webView: WKWebView,
-    runJavaScriptConfirmPanelWithMessage message: String,
-    initiatedByFrame frame: WKFrameInfo,
-    completionHandler: (@escaping (Bool) -> Void)
-  ) {
-    let alertController = UIAlertController(
-      title: frame.request.url?.host,
-      message: message,
-      preferredStyle: .alert
-    )
-    alertController.addAction(
-      UIAlertAction(
-        title: "Cancel",
-        style: .cancel,
-        handler: { _ in
-          completionHandler(false)
-        }
-      )
-    )
-    alertController.addAction(
-      UIAlertAction(
-        title: "OK",
-        style: .default,
-        handler: { _ in
-          completionHandler(true)
-        }
-      )
-    )
-    present(alertController, animated: true, completion: nil)
-  }
-
-  func webView(
-    _ webView: WKWebView,
-    runJavaScriptTextInputPanelWithPrompt prompt: String,
-    defaultText: String?,
-    initiatedByFrame frame: WKFrameInfo,
-    completionHandler: @escaping (String?) -> Void
-  ) {
-
-    let alertController = UIAlertController(
-      title: frame.request.url?.host,
-      message: prompt,
-      preferredStyle: .alert
-    )
-    weak var alertTextField: UITextField!
-    alertController.addTextField { textField in
-      textField.text = defaultText
-      alertTextField = textField
-    }
-    alertController.addAction(
-      UIAlertAction(
-        title: "Cancel",
-        style: .cancel,
-        handler: { _ in
-          completionHandler(nil)
-        }
-      )
-    )
-    alertController.addAction(
-      UIAlertAction(
-        title: "OK",
-        style: .default,
-        handler: { _ in
-          completionHandler(alertTextField.text)
-        }
-      )
-    )
-    present(alertController, animated: true, completion: nil)
-  }
-
 }
 
 // MARK: - Mail Compose Delegate
-extension ResourceDetailViewController: MFMailComposeViewControllerDelegate {
+extension ResourceDetailViewController {
 
-  func sendEmail() {
-    let composeVC = MFMailComposeViewController()
-    composeVC.mailComposeDelegate = self
-    // Configure the fields of the interface.
+  func shareResource(completion: @escaping (_ status: Bool) -> Void) {
+    let resourceLink = self.resource?.file?.link
 
-    composeVC.setSubject("Resources")
-
-    if resource?.file?.localPath != nil {
-
-      if self.resource?.file?.localPath == "BundlePath" {
-        if let file = Bundle.main.url(
-          forResource: self.resource?.file?.link!,
-          withExtension: "pdf"
-        ),
-          let data = try? Data(contentsOf: file)
-        {
-          composeVC.addAttachmentData(
-            data,
-            mimeType: "application/pdf",
-            fileName: (resource?.file?.name)!
-          )
-        }
+    if let pathType = self.resource?.file?.localPath,
+      pathType == "BundlePath",
+      let path = resourceLink
+    {
+      if let fileURL = Bundle.main.url(
+        forResource: path,
+        withExtension: "pdf"
+      ) {
+        attachResource(from: fileURL)
+        completion(true)
+      }
+    } else if self.resource?.file?.mimeType == .pdf,
+      isFileAvailable,
+      let path = resourceLink,
+      let fileName = URL(string: path)?.lastPathComponent,
+      let documentURL = checkIfFileExists(pdfNameFromUrl: fileName)
+    {
+      attachResource(from: documentURL)
+      completion(true)
+    } else if let resourceHTML = resourceLink,
+      self.resource?.file?.mimeType != .pdf
+    {
+      let pdfData = webView.renderSelfToPdfData(htmlString: resourceHTML)
+      if let tempPath = tempResourceFilePath {
+        attachResource(from: tempPath)
+        completion(true)
       } else {
-        let fullPath = resourcesDownloadPath + "/" + (self.resource?.file?.localPath)!
-
-        let data = FileDownloadManager.decrytFile(pathURL: URL(string: fullPath))
-
-        composeVC.addAttachmentData(
-          data!,
-          mimeType: "application/pdf",
-          fileName: (resource?.file?.name)!
-        )
+        ResourceDetailViewController.saveTempPdf(from: pdfData, name: self.resource?.file?.name ?? "Resource") {
+          [weak self] (url) in
+          self?.tempResourceFilePath = url
+          if let tempPath = url {
+            self?.attachResource(from: tempPath)
+            completion(true)
+          } else {
+            completion(false)
+          }
+        }
       }
     } else {
-      composeVC.setMessageBody((resource?.file?.link)!, isHTML: true)
+      completion(false)
     }
 
-    if MFMailComposeViewController.canSendMail() {
-      self.present(composeVC, animated: true, completion: nil)
-
-    } else {
-      let alert = UIAlertController(
-        title: NSLocalizedString(kTitleError, comment: ""),
-        message: "",
-        preferredStyle: UIAlertController.Style.alert
-      )
-
-      alert.addAction(
-        UIAlertAction.init(
-          title: NSLocalizedString("OK", comment: ""),
-          style: .default,
-          handler: { (_) in
-
-            self.dismiss(animated: true, completion: nil)
-
-          }
-        )
-      )
-    }
   }
 
-  func mailComposeController(
-    _ controller: MFMailComposeViewController,
-    didFinishWith result: MFMailComposeResult,
-    error: Error?
-  ) {
-    self.isEmailComposerPresented = true
-    controller.dismiss(animated: true, completion: nil)
+  func attachResource(from url: URL) {
+
+    var items: [Any] = [url]
+    let fileTitle = self.resource?.title ?? ""
+    items.insert(fileTitle, at: 0)
+    let activityController = UIActivityViewController(
+      activityItems: items,
+      applicationActivities: nil
+    )
+    present(activityController, animated: true)
   }
 
 }
 
-// MARK: - File Download Manager Delegates
-extension ResourceDetailViewController: FileDownloadManagerDelegates {
+extension ResourceDetailViewController {
 
-  func download(manager: FileDownloadManager, didUpdateProgress progress: Float) {
-    self.progressBar?.progress = progress
-  }
+  func savePdf(for url: URL) {
 
-  func download(manager: FileDownloadManager, didFinishDownloadingAtPath path: String) {
+    DispatchQueue.global(qos: .background).async { [weak self] in
 
-    let fullPath = resourcesDownloadPath + "/" + path
+      let pdfData = try? Data(contentsOf: url)
+      let pdfNameFromUrl = url.lastPathComponent
+      let actualPath = AKUtility.cacheDirectoryPath.appendingPathComponent(pdfNameFromUrl)
 
-    let data = FileDownloadManager.decrytFile(pathURL: URL.init(string: fullPath))
-
-    if data != nil {
-      self.resource?.file?.localPath = path
-      let mimeType = "application/" + "\((self.resource?.file?.mimeType?.rawValue)!)"
-
-      DispatchQueue.main.async {
-        self.webView?.load(
-          data!,
-          mimeType: mimeType,
-          characterEncodingName: mimeType,
-          baseURL: URL.init(fileURLWithPath: "")
+      do {
+        try pdfData?.write(to: actualPath, options: .atomic)
+        AKUtility.moveFileToDocuments(
+          fromUrl: actualPath,
+          toDirectory: ResourceDetailViewController.resouceDirectory,
+          withName: pdfNameFromUrl
         )
+        self?.isFileAvailable = true
+      } catch {
+        Logger.sharedInstance.error(error)
       }
     }
-
   }
 
-  func download(manager: FileDownloadManager, didFailedWithError error: Error) {
-    Logger.sharedInstance.error(error)
+  static func saveTempPdf(
+    from data: Data,
+    name: String,
+    completion: @escaping (_ url: URL?) -> Void
+  ) {
+    DispatchQueue.global(qos: .background).async {
+      let pdfNameFromUrl = name + ".pdf"
+      let tempPath = AKUtility.cacheDirectoryPath.appendingPathComponent(pdfNameFromUrl)
+      do {
+        try data.write(to: tempPath, options: .atomic)
+        DispatchQueue.main.async {
+          completion(tempPath)
+        }
+      } catch {
+        Logger.sharedInstance.error(error)
+        DispatchQueue.main.async {
+          completion(nil)
+        }
+      }
+    }
+  }
+
+  func checkIfFileExists(pdfNameFromUrl: String) -> URL? {
+    let fileExist = AKUtility.checkFileExistAt(
+      directory: ResourceDetailViewController.resouceDirectory,
+      filename: pdfNameFromUrl
+    )
+    if fileExist.exist {
+      return fileExist.filepath
+    } else {
+      return nil
+    }
   }
 
 }

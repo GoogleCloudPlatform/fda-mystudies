@@ -33,7 +33,12 @@ class LineChartCell: GraphChartTableViewCell {
   @IBOutlet weak var buttonBackward: UIButton!
 
   // MARK: - Properties
-  var currentChart: DashboardCharts!
+  var currentChart: DashboardCharts! {
+    didSet {
+      self.graphView.dataSource = self
+      self.graphView.reloadData()
+    }
+  }
 
   lazy var frequencyPageIndex = 0
   lazy var frequencyPageSize = 5
@@ -58,6 +63,8 @@ class LineChartCell: GraphChartTableViewCell {
     self.labelAxisValue.text = ""
     self.buttonForward.isHidden = true
     self.buttonBackward.isHidden = true
+    max = 0.0
+    min = 0.0
     plotPoints = []
     xAxisTitles = []
     self.graphView.dataSource = nil
@@ -231,8 +238,6 @@ class LineChartCell: GraphChartTableViewCell {
       self.handleHoursOfDayForDate(date: Date())
 
     }
-
-    (self.graphView as? ORKLineGraphChartView)!.dataSource = self
   }
 
   // MARK: - Actions
@@ -444,9 +449,9 @@ class LineChartCell: GraphChartTableViewCell {
       let eTime = frequencySet.last?["endTime"] as? String ?? ""
 
       guard
-        let startDate = Utilities.getDateFromString(dateString: sTime)
+        let startDate = Utilities.getDateFromStringWithOutTimezone(dateString: sTime)
           ?? DateHelper.formattedRunDateFromString(date: sTime),
-        let endDate = Utilities.getDateFromString(dateString: eTime)
+        let endDate = Utilities.getDateFromStringWithOutTimezone(dateString: eTime)
           ?? DateHelper.formattedRunDateFromString(date: eTime)
       else { return false }
 
@@ -670,9 +675,15 @@ class LineChartCell: GraphChartTableViewCell {
 
   func handleRunsForDate(startDate: Date, endDate: Date, runs: [[String: Any]]) {
 
-    let dataList: [DBStatisticsData] = currentChart.statList.filter({
+    var dataList: [DBStatisticsData] = currentChart.statList.filter({
       $0.startDate! >= startDate && $0.startDate! <= endDate
     })
+
+    if !currentChart.scrollable, dataList.count > frequencyPageSize {
+      // If the chart is not scrollable, only show the latest responses based on the page size.
+      let frequencyPageSizeData = dataList.suffix(from: dataList.count - frequencyPageSize)
+      dataList = Array(frequencyPageSizeData)
+    }
 
     let array = dataList.map { $0.data }
     var points: [ORKValueRange] = []
