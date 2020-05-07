@@ -79,7 +79,8 @@ let kSignInTableViewCellIdentifier = "DetailsCell"
 let kForgotPasswordTitleText = "Password Help"
 let kForgotPasswordResponseMessage =
   "We have sent a temporary password to your registered email. Please login with temporary password and change your password."
-
+let kSuccessfulVerification = "Verification Successful"
+let kResetAfterVerificationMessage = "Your account has been verified, please try resetting your password again."
 // MARK: - Logout
 let kOnLogoutMessage = "You have been signed out of the app."
 
