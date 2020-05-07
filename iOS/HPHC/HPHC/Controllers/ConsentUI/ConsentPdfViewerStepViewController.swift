@@ -45,6 +45,7 @@ class ConsentPdfViewerStepViewController: ORKStepViewController {
   @IBOutlet weak var buttonNext: UIButton?
 
   var pdfData: Data?
+  var consentTempURL: URL?
 
   // MARK: - ORKstepView Controller Init methods
   override init(step: ORKStep?) {
@@ -77,6 +78,13 @@ class ConsentPdfViewerStepViewController: ORKStepViewController {
     loadPDF()
   }
 
+  override func viewWillDisappear(_ animated: Bool) {
+    super.viewWillDisappear(animated)
+    if let consentTempURL = self.consentTempURL {
+      AKUtility.deleteFile(from: consentTempURL)
+    }
+  }
+
   /// Load PDF from the Data on WebView.
   private func loadPDF() {
     self.title = kConsent.uppercased()
@@ -92,39 +100,24 @@ class ConsentPdfViewerStepViewController: ORKStepViewController {
 
   /// SendConsentByMail used for sharing the Consent.
   func sendConsentByMail() {
-
-    let mailComposerVC = MFMailComposeViewController()
-    mailComposerVC.mailComposeDelegate = self
-
-    mailComposerVC.setSubject(kEmailSubject)
-    mailComposerVC.setMessageBody("", isHTML: false)
-
-    let Filename = "\((Study.currentStudy?.name)!)" + "_SignedConsent" + ".pdf"
-
-    mailComposerVC.addAttachmentData(pdfData!, mimeType: "application/pdf", fileName: Filename)
-
-    if MFMailComposeViewController.canSendMail() {
-      self.present(mailComposerVC, animated: true, completion: nil)
-
-    } else {
-
-      let alert = UIAlertController(
-        title: NSLocalizedString(kTitleError, comment: ""),
-        message: "",
-        preferredStyle: UIAlertController.Style.alert
-      )
-
-      alert.addAction(
-        UIAlertAction.init(
-          title: NSLocalizedString(kTitleOk, comment: ""),
-          style: .default,
-          handler: { (_) in
-
-            self.dismiss(animated: true, completion: nil)
+    if let pdfData = self.pdfData {
+      func attach(url: URL) {
+        let items: [Any] = [kConsent.capitalized, url]
+        let activityController = UIActivityViewController(activityItems: items, applicationActivities: nil)
+        self.present(activityController, animated: true)
+      }
+      if let tempURL = self.consentTempURL {
+        attach(url: tempURL)
+      } else {
+        let consentName = (Study.currentStudy?.name ?? "") + "-consent"
+        ResourceDetailViewController.saveTempPdf(from: pdfData, name: consentName) { [weak self] (url) in
+          if let url = url {
+            attach(url: url)
+          } else {
+            self?.view.makeToast(kConsentShareError)
           }
-        )
-      )
-      self.present(alert, animated: true, completion: nil)
+        }
+      }
     }
   }
 
@@ -136,19 +129,6 @@ class ConsentPdfViewerStepViewController: ORKStepViewController {
 
   @IBAction func buttonActionEmailPdf(sender: UIBarButtonItem?) {
     self.sendConsentByMail()
-  }
-
-}
-
-// MARK: MailComposer Delegates
-extension ConsentPdfViewerStepViewController: MFMailComposeViewControllerDelegate {
-
-  func mailComposeController(
-    _ controller: MFMailComposeViewController,
-    didFinishWith result: MFMailComposeResult,
-    error: Error?
-  ) {
-    controller.dismiss(animated: true, completion: nil)
   }
 
 }
