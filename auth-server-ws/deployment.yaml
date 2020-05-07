@@ -43,6 +43,12 @@ spec:
                 secretKeyRef:
                   name: email-credentials
                   key: email_password
+            - name: SMTP_HOSTNAME
+              value: "smtp.gmail.com"
+            - name: SMTP_USE_IP_WHITELIST
+              value: "false"
+            - name: FROM_EMAIL_DOMAIN
+              value: ""
           ports:
           - containerPort: 8080
           readinessProbe:
