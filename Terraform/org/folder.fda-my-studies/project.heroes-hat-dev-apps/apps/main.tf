@@ -30,7 +30,6 @@ module "heroes_hat_cluster" {
   version = "9.0.0"
 
   # Required
-  # TODO: Set release_channel to "regular" when https://github.com/terraform-google-modules/terraform-google-kubernetes-engine/pull/487 is released.
   name                   = var.cluster_name
   project_id             = var.project_id
   region                 = var.gke_region
@@ -43,8 +42,6 @@ module "heroes_hat_cluster" {
   master_ipv4_cidr_block = "192.168.0.0/28"
 
   # Optional
-  # Some of these were taken from the example config at
-  # https://github.com/terraform-google-modules/terraform-google-kubernetes-engine/tree/master/examples/safer_cluster
   istio             = true
   skip_provisioners = true
   release_channel   = "STABLE"
