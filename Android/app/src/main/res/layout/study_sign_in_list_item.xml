@@ -74,6 +74,7 @@
                 android:layout_marginTop="7dp"
                 android:maxLines="1"
                 android:text=""
+                android:visibility="gone"
                 android:textColor="@color/colorSecondary" />
 
         </RelativeLayout>

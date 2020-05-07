@@ -144,7 +144,7 @@ public class SingleChoiceTextQuestionBody<T>
     radioGroup.setDividerDrawable(
         ContextCompat.getDrawable(parent.getContext(), R.drawable.rsb_divider_empty_8dp));
 
-    if (choices.length > 6) {
+    if (choices.length >= 10) {
       SearchView editText = new SearchView(inflater.getContext());
       editText.setIconifiedByDefault(false);
       editText.setIconified(false);
