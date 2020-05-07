@@ -90,3 +90,34 @@ module "my_studies_cloudsql" {
     start_time         = "20:55"
   }
 }
+
+# Firestore data export
+module "my_studies_firestore_data_bucket" {
+  source  = "terraform-google-modules/cloud-storage/google//modules/simple_bucket"
+  version = "~> 1.4"
+
+  name       = "heroes-hat-dev-my-studies-firestore-data"
+  project_id = var.project_id
+  location   = var.storage_location
+
+  # TTL 7 days.
+  lifecycle_rules = [{
+    action = {
+      type = "Delete"
+    }
+    condition = {
+      age        = 7 # 7 days
+      with_state = "ANY"
+    }
+  }]
+
+}
+
+module "my_studies_firestore_data_bigquery" {
+  source  = "terraform-google-modules/bigquery/google"
+  version = "~> 4.1.0"
+
+  dataset_id = "heroes_hat_dev_my_studies_firestore_data"
+  project_id = var.project_id
+  location   = var.storage_location
+}
