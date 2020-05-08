@@ -156,19 +156,7 @@ class ResourcesViewController: UIViewController {
   }
 
   override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-    if segue.identifier == "ResourceDetailViewControllerIdentifier" {
-
-      let resourceDetail = (segue.destination as? GatewayResourceDetailViewController)!
-      resourceDetail.resource = (sender as? Resource)!
-      if self.resourceLink != nil {
-        resourceDetail.requestLink = self.resourceLink!
-      }
-      if self.fileType != nil {
-        resourceDetail.type = self.fileType!
-      }
-      resourceDetail.hidesBottomBarWhenPushed = true
-
-    } else if segue.identifier == "ResourceDetailViewSegueIdentifier" {
+    if segue.identifier == "ResourceDetailViewSegueIdentifier" {
 
       let resourceDetail = (segue.destination as? ResourceDetailViewController)!
       resourceDetail.resource = (sender as? Resource)!
@@ -179,7 +167,6 @@ class ResourcesViewController: UIViewController {
         resourceDetail.type = self.fileType!
       }
       resourceDetail.hidesBottomBarWhenPushed = true
-
     }
   }
 
@@ -499,7 +486,11 @@ class ResourcesViewController: UIViewController {
   }
 
   private func handleResponseForWithdraw(response: JSONDictionary) {
-    // clear all local data storage
+    // Clear all local data storage.
+
+    // Delete the resources documents.
+    AKUtility.deleteDirectoryFromDocuments(name: ResourceDetailViewController.resouceDirectory)
+
     let currentUser = User.currentUser
     let userActivityStatusList: [UserActivityStatus] = currentUser.participatedActivites.filter({
       $0.studyId == (Study.currentStudy?.studyId)!

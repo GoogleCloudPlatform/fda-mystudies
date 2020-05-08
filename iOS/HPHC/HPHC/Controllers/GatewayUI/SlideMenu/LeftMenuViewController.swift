@@ -18,8 +18,8 @@
 // OTHER DEALINGS IN THE SOFTWARE.
 
 import SlideMenuControllerSwift
-import UIKit
 import Toast_Swift
+import UIKit
 
 let kLeftMenuSubtitle = "subTitle"
 let kLeftMenuTitle = "menuTitle"

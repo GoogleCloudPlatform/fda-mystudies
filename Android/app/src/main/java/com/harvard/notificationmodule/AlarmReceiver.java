@@ -32,6 +32,7 @@ import com.harvard.storagemodule.DBServiceSubscriber;
 import com.harvard.studyappmodule.NotificationActivity;
 import com.harvard.studyappmodule.StandaloneActivity;
 import com.harvard.studyappmodule.StudyActivity;
+import com.harvard.studyappmodule.studymodel.StudyList;
 import com.harvard.usermodule.webservicemodel.UserProfileData;
 import com.harvard.utils.AppController;
 import com.harvard.utils.Logger;
@@ -176,13 +177,15 @@ public class AlarmReceiver extends BroadcastReceiver {
       Realm mRealm = AppController.getRealmobj(context);
       DBServiceSubscriber dbServiceSubscriber = new DBServiceSubscriber();
       UserProfileData mUserProfileData = dbServiceSubscriber.getUserProfileData(mRealm);
+      StudyList studyList = dbServiceSubscriber.getStudiesDetails(studyId, mRealm);
       boolean isNotification = true;
       if (mUserProfileData != null) {
         isNotification = mUserProfileData.getSettings().isLocalNotifications();
       }
-      if (isNotification
-          || type.equalsIgnoreCase(
-              NotificationModuleSubscriber.NOTIFICATION_TURN_OFF_NOTIFICATION)) {
+      if (!studyList.getStatus().equalsIgnoreCase("paused")
+          && (isNotification
+              || type.equalsIgnoreCase(
+                  NotificationModuleSubscriber.NOTIFICATION_TURN_OFF_NOTIFICATION))) {
         notificationManager.notify(count, notification);
         if (type.equalsIgnoreCase(
             NotificationModuleSubscriber.NOTIFICATION_TURN_OFF_NOTIFICATION)) {

@@ -13,6 +13,8 @@ export OLD_PREFIX="heroes-hat-dev"
 export NEW_PREFIX="dpt-demo"
 export OLD_GKE_PREFIX="heroes-hat"
 export NEW_GKE_PREFIX="dpt-demo"
+export OLD_BIGQUERY_PREFIX="heroes_hat_dev"
+export NEW_BIGQUERY_PREFIX="dpt_demo"
 export OLD_FOLDER="fda-my-studies"
 export NEW_FOLDER="dpt-demo"
 
@@ -69,6 +71,7 @@ cd ${OUTPUT_TF_BASE}
 find . -type f -name *.tfvars -o -name *.tf -o -name *.hcl | xargs sed -i "s|${OLD_STATE}|${NEW_STATE}|"
 find . -type f -name *.tfvars -o -name *.tf -o -name *.hcl | xargs sed -i "s|${OLD_PREFIX}|${NEW_PREFIX}|"
 find . -type f -name *.tfvars -o -name *.tf -o -name *.hcl | xargs sed -i "s|${OLD_GKE_PREFIX}|${NEW_GKE_PREFIX}|"
+find . -type f -name *.tfvars -o -name *.tf -o -name *.hcl | xargs sed -i "s|${OLD_BIGQUERY_PREFIX}|${NEW_BIGQUERY_PREFIX}|"
 
 # Org info
 find . -type f -name *.tfvars -o -name *.tf | xargs sed -i "s|${OLD_ORG_ID}|${NEW_ORG_ID}|"

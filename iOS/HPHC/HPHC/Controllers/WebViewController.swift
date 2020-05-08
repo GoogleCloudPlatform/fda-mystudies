@@ -28,11 +28,15 @@ class WebViewController: UIViewController {
   @IBOutlet weak var webView: WKWebView!
   @IBOutlet var barItemShare: UIBarButtonItem?
 
+  static let headerString =
+    "<header><meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no'></header>"
   var activityIndicator: UIActivityIndicatorView!
   var requestLink: String?
   var pdfData: Data?
   var isEmailAvailable: Bool? = false
   var htmlString: String?
+
+  var tempfileURL: URL?
 
   override var preferredStatusBarStyle: UIStatusBarStyle {
     return .default
@@ -62,8 +66,11 @@ class WebViewController: UIViewController {
     setNeedsStatusBarAppearanceUpdate()
   }
 
-  override func viewDidAppear(_ animated: Bool) {
-    super.viewDidAppear(animated)
+  override func viewWillDisappear(_ animated: Bool) {
+    super.viewWillDisappear(animated)
+    if let tempURL = self.tempfileURL {
+      AKUtility.deleteFile(from: tempURL)
+    }
   }
 
   final private func loadContentOnWebView() {
@@ -74,8 +81,9 @@ class WebViewController: UIViewController {
     {
       let urlRequest = URLRequest(url: url)
       webView.load(urlRequest)
+      self.navigationItem.rightBarButtonItems = []
     } else if let html = self.htmlString {
-      webView.loadHTMLString(html, baseURL: nil)
+      webView.loadHTMLString(WebViewController.headerString + html, baseURL: nil)
     } else if let pdfData = pdfData {
       self.webView.load(
         pdfData,
@@ -95,68 +103,48 @@ class WebViewController: UIViewController {
   }
 
   @IBAction func buttonActionShare(_ sender: UIBarButtonItem) {
-    self.sendConsentByMail()
+    self.shareDocument { [weak self] (status) in
+      if !status {
+        self?.view.makeToast(kResourceShareError)
+      }
+    }
   }
 
   /// Sends Consent Document by Email in pdf format
-  func sendConsentByMail() {
-    let mailComposerVC = MFMailComposeViewController()
-    mailComposerVC.mailComposeDelegate = self
+  func shareDocument(completion: @escaping (_ status: Bool) -> Void) {
 
-    mailComposerVC.setSubject("Consent")
-
-    if self.pdfData != nil {
-
-      let consentName: String! = (Study.currentStudy?.name!)! + "_SignedConsent"
-
-      mailComposerVC.addAttachmentData(
-        self.pdfData!,
-        mimeType: "application/pdf",
-        fileName: consentName
-      )
-
-      mailComposerVC.setMessageBody("", isHTML: false)
-    } else if self.htmlString != nil {
-      mailComposerVC.setMessageBody(self.htmlString!, isHTML: true)
-
-    } else {
+    func attach(url: URL) {
+      let items: [Any] = ["Document", url]
+      let activityController = UIActivityViewController(activityItems: items, applicationActivities: nil)
+      self.present(activityController, animated: true)
+      completion(true)
     }
 
-    if MFMailComposeViewController.canSendMail() {
-      self.present(mailComposerVC, animated: true, completion: nil)
+    func convertToTempPDF(data: Data) {
+      ResourceDetailViewController.saveTempPdf(from: data, name: "Document") { (url) in
+        if let url = url {
+          attach(url: url)
+        } else {
+          completion(false)
+        }
+      }
+    }
+
+    if let tempURL = self.tempfileURL {
+      attach(url: tempURL)
+    } else if let pdfData = self.pdfData {
+      convertToTempPDF(data: pdfData)
+    } else if let resourceHTML = self.htmlString {
+      let pdfData = self.webView.renderSelfToPdfData(htmlString: resourceHTML)
+      convertToTempPDF(data: pdfData)
     } else {
-      let alert = UIAlertController(
-        title: NSLocalizedString(kTitleError, comment: ""),
-        message: "",
-        preferredStyle: UIAlertController.Style.alert
-      )
-
-      alert.addAction(
-        UIAlertAction.init(
-          title: NSLocalizedString("OK", comment: ""),
-          style: .default,
-          handler: { (_) in
-
-            self.dismiss(animated: true, completion: nil)
-
-          }
-        )
-      )
+      completion(false)
     }
 
   }
 
 }
 
-extension WebViewController: MFMailComposeViewControllerDelegate {
-  func mailComposeController(
-    _ controller: MFMailComposeViewController,
-    didFinishWith result: MFMailComposeResult,
-    error: Error?
-  ) {
-    controller.dismiss(animated: true, completion: nil)
-  }
-}
 extension WebViewController: WKNavigationDelegate {
 
   func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {

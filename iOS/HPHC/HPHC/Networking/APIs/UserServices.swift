@@ -138,18 +138,13 @@ class UserServices: NSObject {
   func verifyEmail(emailId: String, verificationCode: String, delegate: NMWebServiceDelegate) {
 
     self.delegate = delegate
-
     let param = [
       kVerifyCode: verificationCode,
+      "emailId": emailId,
     ]
-    let email = User.currentUser.emailId ?? ""
-    let header =
-      [
-        "userId": User.currentUser.userId,
-        "emailId": email,
-      ] as [String: String]
+
     let method = RegistrationMethods.verifyEmailId.method
-    self.sendRequestWith(method: method, params: param, headers: header)
+    self.sendRequestWith(method: method, params: param, headers: nil)
 
   }
 

@@ -140,6 +140,7 @@
                         android:layout_below="@id/study_title_latin"
                         android:layout_marginTop="7dp"
                         android:text=""
+                        android:visibility="gone"
                         android:textColor="@color/colorSecondary" />
                 </RelativeLayout>
 

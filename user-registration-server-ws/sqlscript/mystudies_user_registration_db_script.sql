@@ -438,6 +438,12 @@ CREATE TABLE IF NOT EXISTS `user_details` (
   PRIMARY KEY (`user_details_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
+CREATE TABLE personalized_user_report (id integer NOT NULL, activity_date_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP, report_content varchar(255), report_title varchar(255), study_info_id INTEGER, user_id INTEGER, primary key (id));
+
+ALTER TABLE personalized_user_report ADD FOREIGN KEY (study_info_id) REFERENCES study_info(id);
+
+ALTER TABLE personalized_user_report ADD FOREIGN KEY (user_id) REFERENCES user_details(user_details_id);
+
 -- Data exporting was unselected.
 
 /*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;

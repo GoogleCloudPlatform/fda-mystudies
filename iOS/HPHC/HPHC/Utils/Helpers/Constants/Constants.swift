@@ -79,7 +79,8 @@ let kSignInTableViewCellIdentifier = "DetailsCell"
 let kForgotPasswordTitleText = "Password Help"
 let kForgotPasswordResponseMessage =
   "We have sent a temporary password to your registered email. Please login with temporary password and change your password."
-
+let kSuccessfulVerification = "Verification Successful"
+let kResetAfterVerificationMessage = "Your account has been verified, please try resetting your password again."
 // MARK: - Logout
 let kOnLogoutMessage = "You have been signed out of the app."
 
@@ -173,6 +174,7 @@ let kInCompletedSpaces = "  Incompleted  "
 
 // MARK: - ResourcesViewController constants
 let kResourcesTableViewCell = "ResourcesCell"
+let kResourceShareError = "Unable to share Resource."
 
 // MARK: - StudyDashboardViewController constants
 let kWelcomeTableViewCell = "welcomeCell"
@@ -189,7 +191,7 @@ let kDarkBlueColor = UIColor.init(red: 0 / 255.0, green: 124 / 255.0, blue: 186 
 let kGreyColor = UIColor.init(red: 140 / 255.0, green: 149 / 255.0, blue: 163 / 255.0, alpha: 1.0)
 
 let kDaySpaces = "  DAY  "
-let kDay = "Day"
+let kDay = "DAY"
 let kMonthSpaces = "  MONTH  "
 let kMonth = "MONTH"
 let kWeekSpaces = "  WEEK  "
@@ -235,7 +237,7 @@ let kConsentUpdatedTitle = "Consent Updated"
 
 let kMessageConsentUpdatedPartTwo =
   " Please review the revised Consent terms and provide your Informed Consent, to continue participating in the study."
-
+let kConsentShareError = "Unable to share the Consent."
 let kMessageConsentUpdated =
   "The Consent Document for this study has been updated."
   + kMessageConsentUpdatedPartTwo
