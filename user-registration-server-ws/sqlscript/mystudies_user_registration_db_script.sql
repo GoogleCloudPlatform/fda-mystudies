@@ -448,8 +448,8 @@ ALTER TABLE personalized_user_report ADD FOREIGN KEY (user_id) REFERENCES user_d
 
 -- Dumping structure for table mystudies_userregistration.user_institution
 CREATE TABLE IF NOT EXISTS `user_institution` (
-  `user_institution_id ` BIGINT NOT NULL,
-  'user_id' int(11) NOT NULL,
+  `user_institution_id` BIGINT NOT NULL,
+  `user_details_id` int(11) NOT NULL,
   `institution_id` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`user_institution_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;

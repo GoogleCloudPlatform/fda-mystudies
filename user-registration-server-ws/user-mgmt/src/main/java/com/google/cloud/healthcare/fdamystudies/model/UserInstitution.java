@@ -35,7 +35,7 @@ public class UserInstitution {
 
     @NotNull
     @OneToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "user_id")
+    @JoinColumn(name = "user_details_id")
     @OnDelete(action = OnDeleteAction.CASCADE)
     private UserDetailsBO user;
 
