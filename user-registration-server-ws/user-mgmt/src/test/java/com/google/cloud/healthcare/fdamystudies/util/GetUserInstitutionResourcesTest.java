@@ -1,7 +1,7 @@
 package com.google.cloud.healthcare.fdamystudies.util;
 
 import com.google.cloud.healthcare.fdamystudies.TestApplicationContextInitializer;
-import com.google.cloud.healthcare.fdamystudies.beans.UserInstitutionResources;
+import com.google.cloud.healthcare.fdamystudies.beans.UserResourceBean;
 import com.google.cloud.healthcare.fdamystudies.model.UserInstitution;
 import com.google.cloud.healthcare.fdamystudies.repository.UserInstitutionRepository;
 import com.google.cloud.healthcare.fdamystudies.service.CloudStorageService;
@@ -21,11 +21,12 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
-import static junit.framework.TestCase.assertTrue;
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.Assert.assertFalse;
+import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.hasSize;
+import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.verify;
 import static org.mockito.internal.verification.VerificationModeFactory.times;
 
@@ -45,8 +46,8 @@ public class GetUserInstitutionResourcesTest {
 
     @Test
     public void noUserFound() {
-        assertFalse(getUserInstitutionResources.getInstitutionResourcesForUser(
-                "missing_id").isPresent());
+        assertThat(getUserInstitutionResources.getInstitutionResourcesForUser(
+                "missing_id"), hasSize(0));
         verify(userInstitutionRepository, times(1)).findByUserUserId("missing_id");
     }
 
@@ -57,37 +58,40 @@ public class GetUserInstitutionResourcesTest {
                 .institutionId(fakeInstitution)
                 .build()));
         Mockito.when(cloudStorageService.getAllInstitutionResources(
-                "fake_institution")).thenReturn(new ArrayList<ByteArrayOutputStream>());
+                "fake_institution")).thenReturn(new ArrayList<>());
 
-        assertFalse(getUserInstitutionResources.getInstitutionResourcesForUser(
-                "fake_user_id").isPresent());
+        assertThat(getUserInstitutionResources.getInstitutionResourcesForUser(
+                "fake_user_id"), hasSize(0));
         verify(cloudStorageService, times(1)).getAllInstitutionResources(fakeInstitution);
 
     }
 
     @Test
     public void returnsInstitution() throws IOException {
-        URL path = ClassLoader.getSystemResource("fake_html.html");
-        File f = new File(path.getFile());
-        byte[] bytes = FileUtils.readFileToByteArray(f);
         String fakeInstitution = "fake_institution";
         Mockito.when(userInstitutionRepository.findByUserUserId("fake_user_id"))
                 .thenReturn(Optional.of(UserInstitution.builder()
                         .institutionId(fakeInstitution)
                         .build()));
-        String html = "<p>fake html</p>";
+        String html = "<p>fake html</p>\n";
+        URL path = ClassLoader.getSystemResource("fake_html.html");
+        File f = new File(path.getFile());
         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-        byteArrayOutputStream.write(bytes);
-        ArrayList<ByteArrayOutputStream> streams = new ArrayList<>();
-        streams.add(byteArrayOutputStream);
+        byteArrayOutputStream.write(FileUtils.readFileToByteArray(f));
+        ArrayList<CloudStorageService.InstitutionResource> resources =
+                new ArrayList<>();
+        resources.add(new CloudStorageService.InstitutionResource(
+                "fake_title.html",
+                byteArrayOutputStream));
         Mockito.when(cloudStorageService.getAllInstitutionResources(
-                fakeInstitution)).thenReturn(streams);
-        Optional<UserInstitutionResources> resources =
+                fakeInstitution)).thenReturn(resources);
+        List<UserResourceBean> userResourceBeans =
                 getUserInstitutionResources.getInstitutionResourcesForUser(
                         "fake_user_id");
-        assertTrue(resources.isPresent());
-        assertTrue(resources.get().resources.size() == 1);
-        assertThat(resources.get().resources.get(0).equals(html));
+        assertThat(userResourceBeans, hasSize(1));
+        assertThat(userResourceBeans.get(0).getTitle(),
+                equalTo("fake_title.html"));
+        assertThat(userResourceBeans.get(0).getContent(), equalTo(html));
 
     }
 }

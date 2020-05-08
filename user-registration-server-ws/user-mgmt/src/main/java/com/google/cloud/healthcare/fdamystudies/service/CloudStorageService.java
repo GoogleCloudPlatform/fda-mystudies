@@ -18,6 +18,8 @@ import com.google.cloud.storage.Bucket;
 import com.google.cloud.storage.Storage;
 import com.google.cloud.storage.StorageException;
 import com.google.cloud.storage.StorageOptions;
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,7 +40,14 @@ public class CloudStorageService {
         storageService = StorageOptions.getDefaultInstance().getService();
     }
 
-    public List<ByteArrayOutputStream> getAllInstitutionResources(String institutionId) {
+    @AllArgsConstructor
+    @NoArgsConstructor
+    public static class InstitutionResource {
+        public String title;
+        public ByteArrayOutputStream stream = new ByteArrayOutputStream();
+    }
+
+    public List<InstitutionResource> getAllInstitutionResources(String institutionId) {
         Bucket bucket = null;
         try {
             bucket = storageService.get(appConfig.getInstitutionBucketName());
@@ -49,13 +58,14 @@ public class CloudStorageService {
         }
         Page<Blob> blobs = bucket.list(Storage.BlobListOption.prefix(institutionId));
 
-        ArrayList<ByteArrayOutputStream> streams = new ArrayList<>();
+        ArrayList<InstitutionResource> resources = new ArrayList<>();
         for (Blob blob : blobs.iterateAll()) {
-            ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-            blob.downloadTo(outputStream);
-            streams.add(outputStream);
+            InstitutionResource resource = new InstitutionResource();
+            resource.title = blob.getName();
+            blob.downloadTo(resource.stream);
+            resources.add(resource);
         }
-        return streams;
+        return resources;
     }
 
 }
