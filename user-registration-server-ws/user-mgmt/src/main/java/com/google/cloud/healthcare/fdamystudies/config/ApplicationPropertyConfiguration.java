@@ -121,4 +121,6 @@ public class ApplicationPropertyConfiguration {
   @Value("${contactus.email}")
   private String contactusToEmail;
   // Feedback & Contactus mail content ends
+
+  private String institutionBucketName;
 }
