@@ -53,8 +53,8 @@ public class UserInstitutionRepositoryTest {
                 .build());
         assertThat(institutionRepository.findAll(), hasSize(1));
         userRepository.delete(user);
-        // FIXME: Deletion doesn't work for @OneToOne relations.
-        // assertThat(institutionRepository.findAll(), hasSize(0));
+        userRepository.flush();
+        assertThat(institutionRepository.findAll(), hasSize(0));
     }
 }
 

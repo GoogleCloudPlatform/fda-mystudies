@@ -98,8 +98,7 @@ public class UserDetailsBO implements Serializable {
   @Getter(AccessLevel.NONE)
   @OneToOne(
           mappedBy = "user",
-          fetch = FetchType.LAZY,
-          orphanRemoval = true
+          fetch = FetchType.LAZY
   )
   private UserInstitution userInstitution;
 }

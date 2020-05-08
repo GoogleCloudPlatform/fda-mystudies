@@ -1,6 +1,8 @@
 package com.google.cloud.healthcare.fdamystudies.model;
 
 import lombok.*;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -18,8 +20,9 @@ public class UserInstitution {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long userInstitutionId;
 
-    @NotNull
     @OneToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "user_id", referencedColumnName = "user_details_id")
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private UserDetailsBO user;
 
     @Column(name = "institution_id")
