@@ -391,8 +391,8 @@ public class LoginController {
   public ModelAndView validateSecurityToken(HttpServletRequest request) {
     ModelMap map = new ModelMap();
     logger.info("LoginController - createPassword() - Starts");
-    String securityToken = null;
-    boolean checkSecurityToken = false;
+    String securityToken = null, message = "";
+    boolean checkSecurityToken = false, isDeactivateUser = false;
     UserBO userBO = null;
     ModelAndView mv = new ModelAndView("redirect:login.do");
     MasterDataBO masterDataBO = null;
@@ -415,7 +415,12 @@ public class LoginController {
       if (userBO != null) {
         checkSecurityToken = true;
       }
+      message = loginService.isActiveUser(securityToken);
+      if (message.equalsIgnoreCase(FdahpStudyDesignerConstants.USER_STATUS)) {
+        isDeactivateUser = true;
+      }
       map.addAttribute("isValidToken", checkSecurityToken);
+      map.addAttribute("isDeactivateUser", isDeactivateUser);
       map.addAttribute("masterDataBO", masterDataBO);
       if ((userBO != null) && (StringUtils.isEmpty(userBO.getUserPassword()))) {
         map.addAttribute("userBO", userBO);

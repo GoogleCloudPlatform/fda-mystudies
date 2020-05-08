@@ -89,7 +89,7 @@
               </div> -->
 
 
-              <div class="logo__ll">
+              <div class="logo__space">
             <img src="images/logo/logo_innerScreens.png" alt=""/>
         </div>
         
@@ -99,7 +99,7 @@
              <form:form id="passwordResetForm" data-toggle="validator" role="form" action="addPassword.do" method="post" autocomplete="off">
                     <div id="errMsg" class="error_msg">${errMsg}</div>
                     <div id="sucMsg" class="suceess_msg">${sucMsg}</div>
-                    <c:if test="${isValidToken}">
+                    <c:if test="${not isDeactivateUser && isValidToken}">
                     <div>
                     <p class="white__text">Please set up your new password using this form. You would be required to enter the access code provided to you over email for the same.</p>
                         <div class="mb-lg form-group">
@@ -123,7 +123,8 @@
                             <button type="button" class="btn lg-btn" id="resetPasswordBut">Submit</button>
                         </div>
                         </c:if>
-                        <c:if test="${not isValidToken}"><p class="passwordExp"><i class="fa fa-exclamation-circle" aria-hidden="true"></i>The Password Reset Link is either expired or invalid.</p></c:if>
+                         <c:if test="${isDeactivateUser}"><p class="passwordExp"><i class="fa fa-exclamation-circle" aria-hidden="true"></i>Your account has been deactivated.</p></c:if>
+                        <c:if test="${not isDeactivateUser && not isValidToken}"><p class="passwordExp"><i class="fa fa-exclamation-circle" aria-hidden="true"></i>The Password Reset Link is either expired or invalid.</p></c:if>
                         <div>
                             <a id="login" class="gray-link backToLogin white__text" href="javascript:void(0)">Back to Sign in</a>
                         </div>

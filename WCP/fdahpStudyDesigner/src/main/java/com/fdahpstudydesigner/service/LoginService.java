@@ -50,4 +50,6 @@ public interface LoginService {
       HttpServletRequest request, String email, String oldEmail, String type);
 
   public void sendLockedAccountPasswordResetLinkToMail(String email);
+
+  public String isActiveUser(String securityToken);
 }
