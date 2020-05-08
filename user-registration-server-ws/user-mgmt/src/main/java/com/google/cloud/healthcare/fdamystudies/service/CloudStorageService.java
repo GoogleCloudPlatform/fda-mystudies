@@ -10,6 +10,7 @@ package com.google.cloud.healthcare.fdamystudies.service;
 import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Pattern;
 import javax.annotation.PostConstruct;
 
 import com.google.api.gax.paging.Page;
@@ -61,7 +62,12 @@ public class CloudStorageService {
         ArrayList<InstitutionResource> resources = new ArrayList<>();
         for (Blob blob : blobs.iterateAll()) {
             InstitutionResource resource = new InstitutionResource();
-            resource.title = blob.getName();
+            // Remove institutionId directory path from title.
+            resource.title = blob.getName().replaceFirst(Pattern.quote(institutionId),
+                    "");
+            // There are placeholder files in GCS that match the directory
+            // but do not have a file name. Skip these.
+            if (resource.title.isEmpty()) continue;
             blob.downloadTo(resource.stream);
             resources.add(resource);
         }
