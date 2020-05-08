@@ -88,7 +88,7 @@ public class FdaEaUserDetailsServiceImpl implements FdaEaUserDetailsService {
 
       if (daoResopnse != null) {
         if (code.equals(daoResopnse.getEmailCode())
-            && !LocalDateTime.now().isAfter(daoResopnse.getCodeExpireDate())) {
+            && LocalDateTime.now().isBefore(daoResopnse.getCodeExpireDate())) {
           logger.info("(S)......OTP CODE VERIFIED as true");
 
           daoResopnse.setStatus(1);

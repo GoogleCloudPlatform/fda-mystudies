@@ -16,4 +16,5 @@ import lombok.Setter;
 public class EmailIdVerificationForm {
 
   private String code;
+  private String emailId;
 }
