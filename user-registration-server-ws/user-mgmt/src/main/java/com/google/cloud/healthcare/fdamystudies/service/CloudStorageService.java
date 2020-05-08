@@ -41,14 +41,13 @@ public class CloudStorageService {
     public List<ByteArrayOutputStream> getAllInstitutionResources(String institutionId) {
         Bucket bucket = null;
         try {
-            bucket =
-                    storageService.get(appConfig.getInstitutionBucketName() + "/" + institutionId);
+            bucket = storageService.get(appConfig.getInstitutionBucketName());
         } catch (StorageException e) {
             logger.error(e.getMessage());
         } finally {
             if (bucket == null) return new ArrayList<>();
         }
-        Page<Blob> blobs = bucket.list();
+        Page<Blob> blobs = bucket.list(Storage.BlobListOption.prefix(institutionId));
 
         ArrayList<ByteArrayOutputStream> streams = new ArrayList<>();
         for (Blob blob : blobs.iterateAll()) {
