@@ -19,11 +19,17 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import org.hibernate.annotations.Type;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+@AllArgsConstructor
+@Builder
 @Setter
 @Getter
+@NoArgsConstructor
 @Entity
 @Table(name = "study_info")
 public class StudyInfoBO implements Serializable {
