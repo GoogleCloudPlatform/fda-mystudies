@@ -122,5 +122,6 @@ public class ApplicationPropertyConfiguration {
   private String contactusToEmail;
   // Feedback & Contactus mail content ends
 
+  @Value("${cloud.institution.bucket}")
   private String institutionBucketName;
 }

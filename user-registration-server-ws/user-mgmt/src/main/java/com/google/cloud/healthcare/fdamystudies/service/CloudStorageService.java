@@ -8,25 +8,25 @@
 package com.google.cloud.healthcare.fdamystudies.service;
 
 import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.OutputStream;
-import java.nio.ByteBuffer;
 import java.util.ArrayList;
-import java.util.Base64;
 import java.util.List;
-import java.util.UUID;
 import javax.annotation.PostConstruct;
 
 import com.google.api.gax.paging.Page;
-import com.google.cloud.storage.*;
-import org.apache.commons.lang3.StringUtils;
+import com.google.cloud.storage.Blob;
+import com.google.cloud.storage.Bucket;
+import com.google.cloud.storage.Storage;
+import com.google.cloud.storage.StorageException;
+import com.google.cloud.storage.StorageOptions;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import com.google.cloud.WriteChannel;
 import com.google.cloud.healthcare.fdamystudies.config.ApplicationPropertyConfiguration;
 
 @Service
 public class CloudStorageService {
+    private static Logger logger = LoggerFactory.getLogger(CloudStorageService.class);
 
     private Storage storageService;
 
@@ -39,7 +39,15 @@ public class CloudStorageService {
     }
 
     public List<ByteArrayOutputStream> getAllInstitutionResources(String institutionId) {
-        Bucket bucket = storageService.get(appConfig.getInstitutionBucketName());
+        Bucket bucket = null;
+        try {
+            bucket =
+                    storageService.get(appConfig.getInstitutionBucketName() + "/" + institutionId);
+        } catch (StorageException e) {
+            logger.error(e.getMessage());
+        } finally {
+            if (bucket == null) return new ArrayList<>();
+        }
         Page<Blob> blobs = bucket.list();
 
         ArrayList<ByteArrayOutputStream> streams = new ArrayList<>();
