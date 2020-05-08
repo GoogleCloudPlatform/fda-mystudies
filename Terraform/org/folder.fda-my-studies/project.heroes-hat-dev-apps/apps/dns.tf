@@ -23,11 +23,11 @@ module "dns" {
   domain     = var.dns_domain
 
   recordsets = [{
-    name = ""
+    name = "tf-dev"
     type = "A"
     ttl  = 30
     records = [
-      module.heroes_hat_cluster.endpoint,
+      google_compute_global_address.ingress_static_ip.address,
     ]
   }]
 }

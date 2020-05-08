@@ -19,6 +19,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.AppCompatTextView;
 import android.view.View;
 import android.webkit.WebView;
+import android.webkit.WebViewClient;
 import android.widget.RelativeLayout;
 import com.harvard.R;
 import com.harvard.utils.AppController;
@@ -51,6 +52,7 @@ public class TermsPrivacyPolicyActivity extends AppCompatActivity {
       mTitle.setText(title);
       mWebView.getSettings().setLoadsImagesAutomatically(true);
       mWebView.getSettings().setJavaScriptEnabled(true);
+      mWebView.setWebViewClient(new WebViewClient());
       mWebView.setScrollBarStyle(View.SCROLLBARS_INSIDE_OVERLAY);
       mWebView.loadUrl(getIntent().getStringExtra("url"));
     } catch (Exception e) {

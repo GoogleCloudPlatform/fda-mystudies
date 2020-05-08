@@ -45,8 +45,6 @@ data "google_secret_manager_secret_version" "secrets" {
 
   for_each = toset(concat(
     [
-      "my-studies-registration-client-id",
-      "my-studies-registration-client-secret",
       "my-studies-wcp-user",
       "my-studies-wcp-pass",
       "my-studies-email-address",
@@ -109,6 +107,7 @@ resource "kubernetes_secret" "study_designer_secrets" {
   data = {
     CLIENT_ID  = data.google_secret_manager_secret_version.secrets["mystudies-wcp-client-id"].secret_data
     SECRET_KEY = data.google_secret_manager_secret_version.secrets["mystudies-wcp-secret-key"].secret_data
+    BASE_URL   = "tf-dev.heroes-hat.rocketturtle.net"
   }
 }
 

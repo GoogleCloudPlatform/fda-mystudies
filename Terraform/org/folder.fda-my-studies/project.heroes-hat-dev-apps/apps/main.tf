@@ -27,10 +27,9 @@ terraform {
 # https://github.com/terraform-google-modules/terraform-google-kubernetes-engine/tree/master/modules/safer-cluster-update-variant
 module "heroes_hat_cluster" {
   source  = "terraform-google-modules/kubernetes-engine/google//modules/safer-cluster-update-variant"
-  version = "8.1.0"
+  version = "9.0.0"
 
   # Required
-  # TODO: Set release_channel to "regular" when https://github.com/terraform-google-modules/terraform-google-kubernetes-engine/pull/487 is released.
   name                   = var.cluster_name
   project_id             = var.project_id
   region                 = var.gke_region
@@ -43,10 +42,9 @@ module "heroes_hat_cluster" {
   master_ipv4_cidr_block = "192.168.0.0/28"
 
   # Optional
-  # Some of these were taken from the example config at
-  # https://github.com/terraform-google-modules/terraform-google-kubernetes-engine/tree/master/examples/safer_cluster
   istio             = true
   skip_provisioners = true
+  release_channel   = "STABLE"
 
   # Configure master auth networks.
   # Private endpoint must be disabled, otherwise the master is only accessible

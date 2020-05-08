@@ -154,7 +154,7 @@ class GatewayResourceDetailViewController: UIViewController {
   }
 
   @IBAction func buttonActionForward(_ sender: UIBarButtonItem) {
-    self.sendEmail()
+    self.shareResource()
   }
 
 }
@@ -194,83 +194,49 @@ extension GatewayResourceDetailViewController: WKNavigationDelegate {
   }
 }
 
-extension GatewayResourceDetailViewController: MFMailComposeViewControllerDelegate {
+extension GatewayResourceDetailViewController {
 
-  func sendEmail() {
-    let composeVC = MFMailComposeViewController()
-    composeVC.mailComposeDelegate = self
-    // Configure the fields of the interface.
+  func shareResource() {
 
-    composeVC.setSubject("Resources")
+    var resourcePdfData: Data?
+    let resourceLink = self.resource?.file?.link
+    var resourcesPath: URL?
 
-    if resource?.file?.localPath != nil {
-
-      if self.resource?.file?.localPath == "BundlePath" {
-
-        do {
-          let file = Bundle.main.url(
-            forResource: self.resource?.file?.link!,
-            withExtension: "pdf"
-          )
-          let data = try Data(contentsOf: file!)
-          composeVC.addAttachmentData(
-            data,
-            mimeType: "application/pdf",
-            fileName: (resource?.file?.name)!
-          )
-        } catch {
-          Logger.sharedInstance.error("Resource file content error: ", error.localizedDescription)
-        }
-      } else {
-
-        let fullPath = resourcesDownloadPath + "/" + (self.resource?.file?.localPath)!
-
-        let data = FileDownloadManager.decrytFile(pathURL: URL.init(string: fullPath))
-
-        composeVC.addAttachmentData(
-          data!,
-          mimeType: "application/pdf",
-          fileName: (resource?.file?.name)!
-        )
+    if let pathType = self.resource?.file?.localPath,
+      pathType == "BundlePath",
+      let path = resourceLink
+    {
+      if let fileURL = Bundle.main.url(
+        forResource: path,
+        withExtension: "pdf"
+      ) {
+        resourcesPath = fileURL
       }
-
-    } else {
-      composeVC.setMessageBody((resource?.file?.link)!, isHTML: true)
+    } else if let path = resourceLink {
+      let fullPath = resourcesDownloadPath + "/" + path
+      if let url = URL(string: fullPath) {
+        resourcePdfData = FileDownloadManager.decrytFile(pathURL: url)
+      }
     }
 
-    if MFMailComposeViewController.canSendMail() {
-      self.present(composeVC, animated: true, completion: nil)
-
-    } else {
-      let alert = UIAlertController(
-        title: NSLocalizedString(kTitleError, comment: ""),
-        message: "",
-        preferredStyle: UIAlertController.Style.alert
-      )
-
-      alert.addAction(
-        UIAlertAction.init(
-          title: NSLocalizedString("OK", comment: ""),
-          style: .default,
-          handler: { (_) in
-
-            self.dismiss(animated: true, completion: nil)
-
-          }
-        )
-      )
+    var items: [Any] = []
+    if let pdfData = resourcePdfData {
+      items = [pdfData]
+    } else if let localPath = resourcesPath {
+      items = [localPath]
+    } else if let resourceHTML = resourceLink {
+      items = [self.webView.renderSelfToPdfData(htmlString: resourceHTML)]
     }
-  }
 
-  func mailComposeController(
-    _ controller: MFMailComposeViewController,
-    didFinishWith result: MFMailComposeResult,
-    error: Error?
-  ) {
-    self.isEmailComposerPresented = true
-    controller.dismiss(animated: true, completion: nil)
+    guard !items.isEmpty else {
+      self.view.makeToast(kResourceShareError)
+      return
+    }
+    let fileTitle = self.resource?.title ?? ""  // TODO: Update the name of PDF to title.
+    items.insert(fileTitle, at: 0)
+    let activityController = UIActivityViewController(activityItems: items, applicationActivities: nil)
+    present(activityController, animated: true)
   }
-
 }
 
 extension GatewayResourceDetailViewController: FileDownloadManagerDelegates {

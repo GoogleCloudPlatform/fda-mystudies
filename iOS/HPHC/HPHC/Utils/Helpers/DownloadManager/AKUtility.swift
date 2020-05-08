@@ -2,8 +2,9 @@
 // Copyright (c) 2016, Muhammad Zeeshan https://github.com/mzeeshanid/MZDownloadManager.git
 // All rights reserved.
 // License Agreement for FDA MyStudies
-// Copyright © 2017-2019 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors. Permission is
-// hereby granted, free of charge, to any person obtaining a copy of this software and associated
+// Copyright © 2017-2019 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors.
+// Copyright 2020 Google LLC
+// Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated
 // documentation files (the &quot;Software&quot;), to deal in the Software without restriction, including without
 // limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the
 // Software, and to permit persons to whom the Software is furnished to do so, subject to the following
@@ -140,5 +141,81 @@ open class AKUtility: NSObject {
       )
       return nil
     }
+  }
+
+  @discardableResult
+  static func moveFileToDocuments(
+    fromUrl url: URL,
+    toDirectory directory: String?,
+    withName name: String
+  ) -> (Bool, Error?, URL?) {
+    var newUrl: URL
+    if let directory = directory {
+      let directoryCreationResult = self.createDocumentsDirectoryIfNotExists(withName: directory)
+      guard directoryCreationResult.0 else {
+        return (false, directoryCreationResult.1, nil)
+      }
+      newUrl = self.documentsDirectoryPath.appendingPathComponent(directory).appendingPathComponent(name)
+    } else {
+      newUrl = self.documentsDirectoryPath.appendingPathComponent(name)
+    }
+    do {
+      try FileManager.default.moveItem(at: url, to: newUrl)
+      return (true, nil, newUrl)
+    } catch {
+      return (false, error, nil)
+    }
+  }
+
+  static var cacheDirectoryPath: URL {
+    let cachePath = NSSearchPathForDirectoriesInDomains(.cachesDirectory, .userDomainMask, true)[0]
+    return URL(fileURLWithPath: cachePath)
+  }
+
+  static var documentsDirectoryPath: URL {
+    let documentPath = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true)[0]
+    return URL(fileURLWithPath: documentPath)
+  }
+
+  /// Creates a new directory.
+  /// - Parameter name: Name for the directory.
+  /// - Returns: A `Boolean` indicating the status of directory and an Optional `Error`.
+  static func createDocumentsDirectoryIfNotExists(withName name: String) -> (Bool, Error?) {
+    let directoryUrl = self.documentsDirectoryPath.appendingPathComponent(name)
+    if FileManager.default.fileExists(atPath: directoryUrl.path) {
+      return (true, nil)
+    }
+    do {
+      try FileManager.default.createDirectory(at: directoryUrl, withIntermediateDirectories: true, attributes: nil)
+      return (true, nil)
+    } catch {
+      return (false, error)
+    }
+  }
+
+  /// Verifies the file available in the directory.
+  /// - Parameters:
+  ///   - directory: Directory link.
+  ///   - filename: Name of the file.
+  /// - Returns: A `Boolean` indicating the availablity of the file and an Optional file `URL`.
+  static func checkFileExistAt(directory: String, filename: String) -> (exist: Bool, filepath: URL?) {
+    let directoryUrl = self.documentsDirectoryPath.appendingPathComponent(directory).appendingPathComponent(filename)
+    if FileManager.default.fileExists(atPath: directoryUrl.path) {
+      return (true, directoryUrl)
+    } else {
+      return (false, nil)
+    }
+  }
+
+  /// Deletes the directory under Documents.
+  /// - Parameters:
+  ///   - directory: Directory name.
+  static func deleteDirectoryFromDocuments(name: String) {
+    let directoryUrl = self.documentsDirectoryPath.appendingPathComponent(name)
+    try? FileManager.default.removeItem(at: directoryUrl)
+  }
+
+  static func deleteFile(from path: URL) {
+    try? FileManager.default.removeItem(at: path)
   }
 }
