@@ -15,9 +15,9 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.Map;
 import javax.servlet.http.HttpServletResponse;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.util.StringUtils;
 import com.google.cloud.healthcare.fdamystudies.exception.SystemException;
 
 public class MyStudiesUserRegUtil {
@@ -68,8 +68,9 @@ public class MyStudiesUserRegUtil {
         "Your password does not meet the required criteria. Please refer to the password requirements provided on-screen."),
     CODE_EXPIRED("Code Expired"),
     INVALID_CREDENTIALS("Invalid credentials"),
-    ACCOUNT_LOCKED("As a security measure, this account has been locked."),
-    ACCOUNT_TEMP_LOCKED("As a security measure, this account has been locked for 15 minutes."),
+    ACCOUNT_LOCKED(
+        "Due to consecutive failed sign-in attempts with incorrect password, your account has been locked for a period of 15 minutes. Please check your registered email inbox for assistance to reset your password in this period or wait until the lock period is over to sign in again."),
+    ACCOUNT_TEMP_LOCKED("Your account has been temporarily locked. Please try after some time."),
     EMAIL_NOT_VERIFIED(
         "Your account is not verified. Please verify your account by clicking on verification link which has been sent to your registered email. If not received, would you like to resend verification link?"),
 
@@ -77,7 +78,9 @@ public class MyStudiesUserRegUtil {
 
     PASSWORD_EXPIRED("Password has expired"),
 
-    INVALID_EMAIL_ID("Invalid email id");
+    INVALID_EMAIL_ID("Invalid email id"),
+
+    UNAUTHORIZED_CLIENT_FOR_REGISTER("This client is not authorized to register User");
 
     private final String value;
 
@@ -299,5 +302,31 @@ public class MyStudiesUserRegUtil {
       logger.info(" addHours : ", e);
     }
     return futureDate;
+  }
+
+  public static String genarateEmailContent(String emailContentName, Map<String, String> keyValue) {
+
+    //    String dynamicContent = appConfig.get(emailContentName);
+    logger.info("MyStudiesUserRegUtil - genarateEmailContent() :: Starts");
+
+    if (MyStudiesUserRegUtil.isNotEmpty(emailContentName)) {
+      for (Map.Entry<String, String> entry : keyValue.entrySet()) {
+        emailContentName =
+            emailContentName.replace(
+                entry.getKey(), StringUtils.isBlank(entry.getValue()) ? "" : entry.getValue());
+      }
+    }
+    logger.info("MyStudiesUserRegUtil - genarateEmailContent() :: Ends");
+    return emailContentName;
+  }
+
+  public static boolean isNotEmpty(String str) {
+    logger.info("MyStudiesUserRegUtil - isNotEmpty() :: Starts");
+    boolean flag = false;
+    if ((null != str) && !"".equals(str.trim())) {
+      flag = true;
+    }
+    logger.info("MyStudiesUserRegUtil - isNotEmpty() :: Ends");
+    return flag;
   }
 }

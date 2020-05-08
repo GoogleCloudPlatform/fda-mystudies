@@ -28,8 +28,14 @@ public class EmailNotification {
       String content,
       String toMail,
       List<String> ccMailList,
-      List<String> bccMailList)
-      throws Exception {
+      List<String> bccMailList) {
+    logger.info(
+        "EmailNotification - sendEmailNotification() ,Email = "
+            + toMail
+            + ", Subject = "
+            + subject
+            + ", contents ="
+            + content);
     boolean sentMail = false;
     try {
       Mail mail = new Mail();

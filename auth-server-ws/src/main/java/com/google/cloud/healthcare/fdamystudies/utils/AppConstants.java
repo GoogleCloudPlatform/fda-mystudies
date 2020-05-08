@@ -76,4 +76,5 @@ public class AppConstants {
   public static final String AUDIT_EVENT_SIGN_IN_WITH_TMP_PASSD_NAME = "SIGN IN WITH TEMP PASSWORD";
   public static final String AUDIT_EVENT_SIGN_IN_WITH_TMP_PASSD_DESC =
       "User  %s signed in with temp password";
+  public static final String INVALID_USERNAME_PASSWORD_MSG = "INVALID_USERNAME_PASSWORD_MSG";
 }

@@ -70,4 +70,7 @@ public interface UserDetailsService {
   public Boolean getPasswordHistory(String userId, String newPassword);
 
   public String savePasswordHistory(String userId, String password, String salt);
+
+  public String sendEmailOnAccountLocking(String emailId, String appCode)
+      throws UserNotFoundException;
 }

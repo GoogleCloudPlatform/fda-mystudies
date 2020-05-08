@@ -643,4 +643,49 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     logger.info("UserDetailsServiceImpl savePasswordHistory() - ends");
     return message;
   }
+
+  @Override
+  public String sendEmailOnAccountLocking(String emailId, String appCode)
+      throws UserNotFoundException {
+    logger.info("UserDetailsServiceImpl sendEmailOnAccountLocking() - starts");
+    String message = AppConstants.FAILURE;
+
+    if (emailId != null) {
+      DaoUserBO userInfo = userRepo.findByEmailIdAndAppCode(emailId, appCode);
+      if (userInfo != null) {
+
+        String tempPassword = RandomStringUtils.randomAlphanumeric(6);
+        logger.info("tempPassword: " + tempPassword);
+
+        String encryptedPwd =
+            MyStudiesUserRegUtil.getEncryptedString(tempPassword, userInfo.getSalt());
+        userInfo.setLockedAccountTempPassword(encryptedPwd);
+        userInfo.setTempPassword(true);
+        userInfo.setLockedAccountTempPasswordExpiredDate(
+            LocalDateTime.now(ZoneId.systemDefault())
+                .plusMinutes(Long.valueOf(appConfig.getExpirationLoginAttemptsMinute())));
+        userRepo.save(userInfo);
+
+        String subject = appConfig.getLockAccountMailSubject();
+        String content = appConfig.getLockAccountMailContent();
+
+        Map<String, String> genarateEmailContentMap = new HashMap<>();
+        genarateEmailContentMap.put("$Temporary_Password", tempPassword);
+
+        String dynamicContent =
+            MyStudiesUserRegUtil.genarateEmailContent(content, genarateEmailContentMap);
+
+        boolean isSent =
+            emailNotification.sendEmailNotification(subject, dynamicContent, emailId, null, null);
+        if (isSent) {
+          message = AppConstants.SUCCESS;
+        }
+      } else {
+        logger.info("UserDetailsServiceImpl sendEmailOnAccountLocking() - ends");
+        throw new UserNotFoundException();
+      }
+    }
+    logger.info("UserDetailsServiceImpl sendEmailOnAccountLocking() - ends");
+    return message;
+  }
 }
