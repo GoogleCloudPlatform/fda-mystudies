@@ -27,17 +27,20 @@ public class UserInstitutionRepositoryTest {
     private UserInstitutionRepository institutionRepository;
     @Test
     public void saveUserInstitution() {
-        UserDetailsBO user = new UserDetailsBO();
-        user.setUserId("user_id");
-        user = userRepository.save(user);
+        UserDetailsBO user1 = new UserDetailsBO();
+        user1.setUserId("user_id");
+        user1 = userRepository.save(user1);
         institutionRepository.save(UserInstitution.builder()
-                .user(user)
+                .user(user1)
                 .institutionId("fake_institution")
                 .build());
+        UserDetailsBO user2 = new UserDetailsBO();
+        user2.setUserId("user_id2");
+        user2 = userRepository.save(user2);
         Optional<UserInstitution> institution =
                 institutionRepository.findByUserUserId("user_id");
         assertTrue(institution.isPresent());
-        assertThat(institution.get().getUser(), equalTo(user));
+        assertThat(institution.get().getUser(), equalTo(user1));
         assertThat(institution.get().getInstitutionId(), equalTo(
                 "fake_institution"));
     }
