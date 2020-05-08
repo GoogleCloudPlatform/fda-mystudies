@@ -441,6 +441,12 @@ function isNumber(evt, thisAttr) {
 					<div class="oneTime all mt-lg">
 						<div class="gray-xs-f mb-sm">
 							Date/Time of launch (pick one) <span class="requiredStar">*</span>
+							<span 
+	class="ml-xs sprites_v3 filled-tooltip" 
+	data-toggle="tooltip"
+	data-placement="bottom" 
+	title="All date/time selections are based on server timezone.">
+</span>
 						</div>
 						<div class="mt-sm">
 							<span class="checkbox checkbox-inline"> <input
@@ -642,59 +648,18 @@ function isNumber(evt, thisAttr) {
 						value="${not empty questionnaireBo.studyId ? questionnaireBo.studyId : studyBo.id}">
 					<input type="hidden" name="type" id="type" value="schedule">
 					<div class="daily all mt-lg dis-none">
-						<div class="gray-xs-f mb-sm">
-							Time(s) of the day for daily occurrence <span
-								class="requiredStar">*</span>
-						</div>
-						<div class="dailyContainer">
-							<c:if
-								test="${fn:length(questionnaireBo.questionnairesFrequenciesList) eq 0}">
-								<div class="time-opts mt-md dailyTimeDiv" id="0">
-									<span
-										class="form-group m-none dis-inline vertical-align-middle pr-md">
-										<input id="time0" type="text"
-										name="questionnairesFrequenciesList[0].frequencyTime" required
-										class="form-control clock dailyClock" placeholder="Time"
-										onclick='timep(this.id);' /> <span
-										class='help-block with-errors red-txt'></span>
-									</span> <span class="addBtnDis addbtn mr-sm align-span-center"
-										onclick='addTime();'>+</span>
-								</div>
-							</c:if>
-							<c:if
-								test="${fn:length(questionnaireBo.questionnairesFrequenciesList) gt 0}">
-								<c:forEach
-									items="${questionnaireBo.questionnairesFrequenciesList}"
-									var="questionnairesFrequencies" varStatus="frequeincesVar">
-									<div class="time-opts mt-md dailyTimeDiv"
-										id="${frequeincesVar.index}">
-										<input type="hidden"
-											name="questionnairesFrequenciesList[${frequeincesVar.index}].id"
-											value="${questionnairesFrequencies.id}"> <span
-											class="form-group m-none dis-inline vertical-align-middle pr-md">
-											<input id="time${frequeincesVar.index}" type="text"
-											name="questionnairesFrequenciesList[${frequeincesVar.index}].frequencyTime"
-											required
-											class="form-control clock dailyClock ${(questionnaireBo.shortTitleDuplicate > 0)?'cursor-none' : ''}"
-											placeholder="Time" onclick='timep(this.id);'
-											value="${questionnairesFrequencies.frequencyTime}"
-											${(questionnaireBo.shortTitleDuplicate > 0)?'disabled' : ''} />
-											<span class='help-block with-errors red-txt'></span>
-										</span> <span
-											class="addBtnDis addbtn mr-sm align-span-center ${(questionnaireBo.shortTitleDuplicate > 0)?'cursor-none' : ''}"
-											onclick='addTime();'>+</span> <span
-											class="delete vertical-align-middle remBtnDis hide pl-md align-span-center ${(questionnaireBo.shortTitleDuplicate > 0)?'cursor-none' : ''}"
-											onclick='removeTime(this);'></span>
-									</div>
-								</c:forEach>
-							</c:if>
-						</div>
+						
 						<div class="mt-md">
 							<div class="dailyStartCls col-md-3 pl-none">
 								<span
 									class="form-group m-none dis-inline vertical-align-middle pr-md">
 									<span class="gray-xs-f">Start date <span
-										class="requiredStar">*</span></span><br /> <input id="startDate"
+										class="requiredStar">*</span></span>
+										<span class="ml-xs sprites_v3 filled-tooltip" data-toggle="tooltip"
+									data-placement="bottom" id="helpNote"
+									title="All date/time selections are based on server timezone.">
+								</span>
+										<br /> <input id="startDate"
 									type="text"
 									class="form-control mt-sm calendar ${(questionnaireBo.shortTitleDuplicate > 0)?'cursor-none' : ''}"
 									placeholder="Choose Date" name="studyLifetimeStart"
@@ -710,7 +675,12 @@ function isNumber(evt, thisAttr) {
 										<span
 											class="form-group m-none dis-inline vertical-align-middle pr-md">
 											<span class="gray-xs-f">Start date <span
-												class="requiredStar">*</span></span><br /> <span class="pr-md">Anchor
+												class="requiredStar">*</span></span>
+												<span class="ml-xs sprites_v3 filled-tooltip" data-toggle="tooltip"
+									data-placement="bottom" id="helpNote"
+									title="All date/time selections are based on server timezone."></span>
+												
+												<br /> <span class="pr-md">Anchor
 												Date</span> <span> <select
 												class="signDropDown selectpicker sign-box ${(questionnaireBo.shortTitleDuplicate > 0)?'cursor-none' : ''}"
 												title="Select"
@@ -744,6 +714,7 @@ function isNumber(evt, thisAttr) {
 									class="form-group m-none dis-inline vertical-align-middle pr-md">
 									<span class="gray-xs-f">No. of times to repeat the
 										questionnaire <span class="requiredStar">*</span>
+										
 								</span><br /> <input id="days" type="text"
 									class="form-control mt-sm numChk ${(questionnaireBo.shortTitleDuplicate > 0)?'cursor-none' : ''}"
 									name="repeatQuestionnaire" placeholder="No of Times" required
@@ -756,13 +727,74 @@ function isNumber(evt, thisAttr) {
 							</div>
 							<div class="clearfix"></div>
 						</div>
+						
 						<div class="mt-md">
-							<div class="gray-xs-f mb-xs">End Date</div>
+							<div class="gray-xs-f mb-xs">End Date <span class="ml-xs sprites_v3 filled-tooltip" data-toggle="tooltip"
+									data-placement="bottom" id="helpNote"
+									title="All date/time selections are based on server timezone.">
+								</span></div>
 							<div class="black-xs-f" id="endDateId">${not empty questionnaireBo.studyLifetimeEnd ? questionnaireBo.studyLifetimeEnd :'NA'}</div>
 							<input type="hidden" name="studyLifetimeEnd"
 								id="studyDailyLifetimeEnd"
 								value="${questionnaireBo.studyLifetimeEnd}">
+								
 						</div>
+						
+						<div class="mt-md">
+							<div class="gray-xs-f mb-sm">
+							Time(s) of the day for daily occurrence <span
+								class="requiredStar">*</span>
+								<span class="ml-xs sprites_v3 filled-tooltip" data-toggle="tooltip"
+									data-placement="bottom" id="helpNote"
+									title="All date/time selections are based on server timezone.">
+								</span>
+						</div>
+						<div class="dailyContainer">
+							<c:if
+							test="${fn:length(questionnaireBo.questionnairesFrequenciesList) eq 0}">
+								<div class="time-opts mt-md dailyTimeDiv" id="0">
+									<span
+										class="form-group m-none dis-inline vertical-align-middle pr-md">
+										<input disabled id="time0" type="text" 
+										name="questionnairesFrequenciesList[0].frequencyTime" required
+										class="form-control clock dailyClock" placeholder="Time"
+										onclick='timep(this.id);' /> <span
+										class='help-block with-errors red-txt'></span>
+									</span> <span id="dailyAddTimeButton" class="hide addBtnDis addbtn mr-sm align-span-center"
+										onclick='addTime();'>+</span>
+								</div>
+							</c:if>
+							<c:if
+								test="${fn:length(questionnaireBo.questionnairesFrequenciesList) gt 0}">
+								<c:forEach
+									items="${questionnaireBo.questionnairesFrequenciesList}"
+									var="questionnairesFrequencies" varStatus="frequeincesVar">
+									<div class="time-opts mt-md dailyTimeDiv"
+										id="${frequeincesVar.index}">
+										<input type="hidden"
+											name="questionnairesFrequenciesList[${frequeincesVar.index}].id"
+											value="${questionnairesFrequencies.id}"> <span
+											class="form-group m-none dis-inline vertical-align-middle pr-md">
+											<input id="time${frequeincesVar.index}" type="text"
+											name="questionnairesFrequenciesList[${frequeincesVar.index}].frequencyTime"
+											required
+											class="form-control clock dailyClock ${(questionnaireBo.shortTitleDuplicate > 0)?'cursor-none' : ''}"
+											placeholder="Time" onclick='timep(this.id);'
+											value="${questionnairesFrequencies.frequencyTime}"
+											${(questionnaireBo.shortTitleDuplicate > 0)?'disabled' : ''} />
+											<span class='help-block with-errors red-txt'></span>
+										</span> <span
+											class="addBtnDis addbtn mr-sm align-span-center ${(questionnaireBo.shortTitleDuplicate > 0)?'cursor-none' : ''}"
+											onclick='addTime();'>+</span> <span
+											class="delete vertical-align-middle remBtnDis hide pl-md align-span-center ${(questionnaireBo.shortTitleDuplicate > 0)?'cursor-none' : ''}"
+											onclick='removeTime(this);'></span>
+									</div>
+								</c:forEach>
+							</c:if>
+						</div>
+						</div>
+						
+						
 						<div class="mt-lg">
 							<div class="gray-xs-f mb-xs">Lifetime of each run</div>
 							<div class="black-xs-f">Until the next run comes up</div>
@@ -794,7 +826,14 @@ function isNumber(evt, thisAttr) {
 					<div class="week all mt-lg dis-none">
 						<div id="weekDaysId" class="weeklyCls">
 							<span class="gray-xs-f">Day/Time (of the week) <span
-								class="requiredStar">*</span><br /> <span
+								class="requiredStar">*</span>
+								<span 
+	class="ml-xs sprites_v3 filled-tooltip" 
+	data-toggle="tooltip"
+	data-placement="bottom" 
+	title="All date/time selections are based on server timezone.">
+</span>
+								<br /> <span
 								class=" form-group m-none dis-inline vertical-align-middle pr-md">
 									<span class=""> <select id="startDateWeekly"
 										class="form-control mt-sm ${(questionnaireBo.shortTitleDuplicate > 0)?'cursor-none' : ''} weeklyCls"
@@ -833,7 +872,14 @@ function isNumber(evt, thisAttr) {
 								<span
 									class="form-group m-none dis-inline vertical-align-middle pr-md">
 									<span class="gray-xs-f">Start date <span
-										class="requiredStar">*</span></span><br /> <input
+										class="requiredStar">*</span>
+										<span 
+	class="ml-xs sprites_v3 filled-tooltip" 
+	data-toggle="tooltip"
+	data-placement="bottom" 
+	title="All date/time selections are based on server timezone.">
+</span>
+										</span><br /> <input
 									id="startWeeklyDate" type="text"
 									class="form-control mt-sm calendar ${(questionnaireBo.shortTitleDuplicate > 0)?'cursor-none' : ''}"
 									required name="studyLifetimeStart" placeholder="Choose Date"
@@ -850,7 +896,14 @@ function isNumber(evt, thisAttr) {
 										<span
 											class="form-group m-none dis-inline vertical-align-middle pr-md">
 											<span class="gray-xs-f">Start date <span
-												class="requiredStar">*</span></span><br /> <span class="pr-md">Anchor
+												class="requiredStar">*</span>
+												<span 
+	class="ml-xs sprites_v3 filled-tooltip" 
+	data-toggle="tooltip"
+	data-placement="bottom" 
+	title="All date/time selections are based on server timezone.">
+</span>
+												</span><br /> <span class="pr-md">Anchor
 												Date</span> <span> <select
 												class="signDropDown selectpicker sign-box ${(questionnaireBo.shortTitleDuplicate > 0)?'cursor-none' : ''}"
 												title="Select" name="questionnairesFrequenciesBo.xDaysSign"
@@ -877,7 +930,14 @@ function isNumber(evt, thisAttr) {
 									</div>
 								</div>
 								<div class="dis_inlinetop p-none">
-									<span class="gray-xs-f">Time <span class="requiredStar">*</span><br /></span>
+									<span class="gray-xs-f">Time <span class="requiredStar">*</span>
+									<span 
+	class="ml-xs sprites_v3 filled-tooltip" 
+	data-toggle="tooltip"
+	data-placement="bottom" 
+	title="All date/time selections are based on server timezone.">
+</span>
+									<br /></span>
 									<span
 										class="form-group m-none dis-inline vertical-align-middle pr-md">
 										<input id="selectWeeklyTimeAnchor" type="text"
@@ -926,7 +986,12 @@ function isNumber(evt, thisAttr) {
 							<div class="clearfix"></div>
 						</div>
 						<div class="mt-md">
-							<div class="gray-xs-f mb-xs">End Date</div>
+							<div class="gray-xs-f mb-xs">End Date <span 
+	class="ml-xs sprites_v3 filled-tooltip" 
+	data-toggle="tooltip"
+	data-placement="bottom" 
+	title="All date/time selections are based on server timezone.">
+</span></div>
 							<div class="black-xs-f" id="weekEndDate">${not empty questionnaireBo.studyLifetimeEnd ? questionnaireBo.studyLifetimeEnd :'NA'}</div>
 							<input type="hidden" name="studyLifetimeEnd"
 								id="studyWeeklyLifetimeEnd"
@@ -964,7 +1029,14 @@ function isNumber(evt, thisAttr) {
 					<div class="month all mt-lg dis-none">
 						<div id="monthlyDateId">
 							<span class="gray-xs-f">Select Date/Time (of the month) <span
-								class="requiredStar">*</span></span><br /> <span
+								class="requiredStar">*</span>
+								<span 
+	class="ml-xs sprites_v3 filled-tooltip" 
+	data-toggle="tooltip"
+	data-placement="bottom" 
+	title="All date/time selections are based on server timezone.">
+</span>
+								</span><br /> <span
 								class="monthlyStartCls form-group m-none dis-inline vertical-align-middle pr-md">
 								<span class=""> <input id="startDateMonthly" type="text"
 									class="form-control mt-sm calendar ${(questionnaireBo.shortTitleDuplicate > 0)?'cursor-none' : ''}"
@@ -990,7 +1062,14 @@ function isNumber(evt, thisAttr) {
 								<span
 									class="form-group m-none dis-inline vertical-align-middle pr-md">
 									<span class="gray-xs-f">Start date <span
-										class="requiredStar">*</span></span><br /> <input id="pickStartDate"
+										class="requiredStar">*</span>
+										<span 
+	class="ml-xs sprites_v3 filled-tooltip" 
+	data-toggle="tooltip"
+	data-placement="bottom" 
+	title="All date/time selections are based on server timezone.">
+</span>
+										</span><br /> <input id="pickStartDate"
 									type="text"
 									class="form-control mt-sm calendar ${(questionnaireBo.shortTitleDuplicate > 0)?'cursor-none' : ''}"
 									placeholder="Choose Start Date" required
@@ -1038,7 +1117,13 @@ function isNumber(evt, thisAttr) {
 										<span
 											class="form-group m-none dis-inline vertical-align-middle pr-md">
 											<span class="gray-xs-f">Start date <span
-												class="requiredStar">*</span></span><br /> <span class="pr-md">Anchor
+												class="requiredStar">*</span>
+												<span 
+	class="ml-xs sprites_v3 filled-tooltip" 
+	data-toggle="tooltip"
+	data-placement="bottom" 
+	title="All date/time selections are based on server timezone.">
+</span></span><br /> <span class="pr-md">Anchor
 												Date</span> <span> <select
 												class="signDropDown selectpicker sign-box ${(questionnaireBo.shortTitleDuplicate > 0)?'cursor-none' : ''}"
 												title="Select" name="questionnairesFrequenciesBo.xDaysSign"
@@ -1068,7 +1153,14 @@ function isNumber(evt, thisAttr) {
 
 
 							<div class="dis_inlinetop p-none">
-								<span class="gray-xs-f">Time <span class="requiredStar">*</span></span><br />
+								<span class="gray-xs-f">Time <span class="requiredStar">*</span>
+								<span 
+	class="ml-xs sprites_v3 filled-tooltip" 
+	data-toggle="tooltip"
+	data-placement="bottom" 
+	title="All date/time selections are based on server timezone.">
+</span>
+								</span><br />
 								<span
 									class="form-group m-none dis-inline vertical-align-middle pr-md">
 									<input id="selectMonthlyTimeAnchor" type="text"
@@ -1098,7 +1190,12 @@ function isNumber(evt, thisAttr) {
 						<!-- Anchordate End -->
 
 						<div class="mt-md col-md-12 p-none">
-							<div class="gray-xs-f mb-xs">End Date</div>
+							<div class="gray-xs-f mb-xs">End Date <span 
+	class="ml-xs sprites_v3 filled-tooltip" 
+	data-toggle="tooltip"
+	data-placement="bottom" 
+	title="All date/time selections are based on server timezone.">
+</span></div>
 							<div class="black-xs-f" id="monthEndDate">${not empty questionnaireBo.studyLifetimeEnd ? questionnaireBo.studyLifetimeEnd :'NA'}</div>
 							<input type="hidden" name="studyLifetimeEnd"
 								id="studyMonthlyLifetimeEnd"
@@ -1133,6 +1230,12 @@ function isNumber(evt, thisAttr) {
 					<div class="manually all mt-lg dis-none">
 						<div class="gray-xs-f mb-sm">
 							Select time period <span class="requiredStar">*</span>
+							<span 
+	class="ml-xs sprites_v3 filled-tooltip" 
+	data-toggle="tooltip"
+	data-placement="bottom" 
+	title="All date/time selections are based on server timezone.">
+</span>
 						</div>
 						<div class="manuallyContainer">
 							<c:if
@@ -1506,7 +1609,12 @@ if(scheduletype != '' && scheduletype != null && typeof scheduletype != 'undefin
 	scheduletype = $('input[name="scheduleType"]:checked').val();
 }
 $(document).ready(function() {
-	
+	$("#startDate").keydown(function (event) {
+        event.preventDefault();
+    });
+	$("#time0").keydown(function (event) {
+        event.preventDefault();
+    });
 	$('[data-toggle="tooltip"]').tooltip();
 	$(".menuNav li.active").removeClass('active');
 	$(".sixthQuestionnaires").addClass('active');
@@ -1700,28 +1808,29 @@ $(document).ready(function() {
         reorder = false;
     }else{
     	reorder = true;
-    } 
-   table1 = $('#content').DataTable( {
-	    "paging":false,
-	    "info": false,
-	    "filter": false,
-	     rowReorder: reorder,
-	     language: {
-         	"zeroRecords": "You haven't created any content yet.",
-	    },
-         "columnDefs": [ 
-          { orderable: false, targets: [0,1,2,3] },
-          ],
-	     "fnRowCallback": function( nRow, aData, iDisplayIndex, iDisplayIndexFull ) {
-	    	 if(actionPage != 'view'){
-	    		$('td:eq(0)', nRow).addClass("cursonMove dd_icon");
-	    	 } 
-	    	 $('td:eq(0)', nRow).addClass("qs-items");
-	    	 $('td:eq(1)', nRow).addClass("qs-items");
-	    	 $('td:eq(2)', nRow).addClass("qs-items");
-	    	 $('td:eq(3)', nRow).addClass("qs-items");
-	      }
-	});  
+    }
+    table1 = $('#content').DataTable( {
+				"paging":false,
+				"info": false,
+				"filter": false,
+				 rowReorder: reorder,
+				 language: {
+				    	"zeroRecords": "You haven't created any content yet.",
+				 },
+			     "columnDefs": [ 
+			     	{ orderable: false, targets: [0,1,2,3] },
+			     ],
+				 "fnRowCallback": function( nRow, aData, iDisplayIndex, iDisplayIndexFull ) {
+					 if(actionPage != 'view'){
+						$('td:eq(0)', nRow).addClass("cursonMove dd_icon");
+					 } 
+					 $('td:eq(0)', nRow).addClass("qs-items");
+					 $('td:eq(1)', nRow).addClass("qs-items");
+					 $('td:eq(2)', nRow).addClass("qs-items");
+					 $('td:eq(3)', nRow).addClass("qs-items");
+				 }
+	}); 
+	 
    table1.on( 'row-reorder', function ( e, diff, edit ) {
 		var oldOrderNumber = '', newOrderNumber = '';
 		var oldClass='',newclass='';
@@ -2080,7 +2189,7 @@ $(document).ready(function() {
 				}
 			});
 			if(!chkVal) {
-			thisAttr.parents('.dailyTimeDiv').find('.dailyClock').parent().find(".help-block").html('<ul class="list-unstyled"><li>Please select a time that has not yet added.</li></ul>');
+			thisAttr.parents('.dailyTimeDiv').find('.dailyClock').parent().find(".help-block").html('<ul class="list-unstyled"><li>Duplicate times cannot be set.</li></ul>');
 			} else {
 				thisAttr.parents('.dailyTimeDiv').find('.dailyClock').parent().find(".help-block").html('');
 			}
@@ -2109,6 +2218,10 @@ $(document).ready(function() {
     	var startDate = $("#startDate").val();
     	var days = $("#days").val();
     	var endDate = ''
+    	if(startDate){
+             $('#time0').prop("disabled", false);
+             $("#dailyAddTimeButton").removeClass('hide');
+    	}
     	if(startDate && days && days > 0){
     		var dt = new Date(startDate);
             dt.setDate(dt.getDate() + Number(days) - 1);	
@@ -2533,19 +2646,27 @@ $(document).ready(function() {
 	   	var day = date.getDate() >= 10 ? date.getDate() : ('0' + date.getDate());
 	   	var month = (date.getMonth()+1) >= 10 ? (date.getMonth()+1) : ('0' + (date.getMonth()+1));
 	   	var today = moment(serverDate()).format("MM/DD/YYYY"); // month + '/' +  day + '/' + date.getFullYear();
-
-		$('.time-opts').each(function(){
+	   	$('#startDate').parent().removeClass("has-danger").removeClass("has-error");
+        $('#startDate').parent().find(".help-block").html("");		
+	   	$('.time-opts').each(function(){
+		
 			var id = $(this).attr("id");
 			var timeId = '#time'+id;
 			$(timeId).data("DateTimePicker").minDate(false);
+			$(timeId).keydown(function (event) {
+		        event.preventDefault();
+		    });
 			if(dt){
 				if(dt != today){
 		    		$(timeId).data("DateTimePicker").minDate(false); 
 			   	}  else{
-			    	$(timeId).data("DateTimePicker").minDate(serverDateTime());
-			   }
+		    	$(timeId).data("DateTimePicker").minDate(serverDateTime());
+ 			    }
 				if($(timeId).val() && dt == today && moment($(timeId).val(), 'h:mm a').toDate() < serverDateTime()) {
-					$(timeId).val('');
+					 $(timeId).data("DateTimePicker").date(null);
+                    $(timeId).data("DateTimePicker").date(serverDateTime());
+                	$(timeId).parent().addClass("has-danger").addClass("has-error");
+			       	$(timeId).parent().find(".help-block").html('<ul class="list-unstyled"><li>Time reset to current time. </li></ul>');
 				}
 			} else {
 		   		$(timeId).data("DateTimePicker").minDate(false); 
@@ -2599,6 +2720,9 @@ function addTime(){
 	$('#time'+count).val("");
 	$(document).find('.dailyClock').trigger('dp.change');
 	$('#'+count).find('input:first').focus();
+	$('#time'+count).keydown(function (event) {
+        event.preventDefault();
+    });
 }
 function removeTime(param){
     $(param).parents(".time-opts").remove();
@@ -2658,6 +2782,7 @@ function removeDate(param){
 		$(document).find('.cusTime').trigger('dp.change');
 }
 function timep(item) {
+
     $('#'+item).not('.cursor-none').datetimepicker({
     	 format: 'h:mm a',
     	 useCurrent :false,
@@ -3719,23 +3844,38 @@ var valid = true;
 		  if(dt) {
 			  dt = moment(dt, "MM/DD/YYYY").toDate();
 			  if(dt < serverDate()) {
-				  $(this).data("DateTimePicker").clear();
-				  $(this).parent().addClass('has-error has-danger');
-
-			  } else {
-
+			      if(dateRef.attr('id') == "startDate"){
+			    	  $(this).data("DateTimePicker").date(serverDateTime());
+			    	  dt = dateRef.val();
+					  $(this).parent().addClass('has-error has-danger');
+				      $(this).parent().find(".help-block").html('<ul class="list-unstyled"><li>Date reset to current date. </li></ul>');
+			      }else{
+			    	  $(this).data("DateTimePicker").clear();
+					  $(this).parent().addClass('has-error has-danger');
+				      $(this).parent().find(".help-block").html('<ul class="list-unstyled"><li>Please select a valid date.</li></ul>');
+			      }
+			  }else{
+					$(this).parent().removeClass('has-error has-danger').find(".help-block").html("");
 			  }
 			  timeRef.each(function() {
 				  if($(this).val()){
 					  thisDate = moment($(this).val(), "h:mm a").toDate();
 					  dt.setHours(thisDate.getHours());
 					  dt.setMinutes(thisDate.getMinutes());
+					  if(timeRef.hasClass("dailyClock")){
+						  if(dt < serverDateTime()) {
+							$(this).data("DateTimePicker").date(serverDateTime());
+			                $(this).parent().addClass("has-danger").addClass("has-error");
+						    $(this).parent().find(".help-block").html('<ul class="list-unstyled"><li>Time reset to current time. </li></ul>'); 
+						  }
+					  }else{
 					  if(dt < serverDateTime()) {
 					   $(this).data("DateTimePicker").clear();
 					   $(this).parent().addClass('has-error has-danger');
+					   
 					   if(valid)
 						   valid = false;
-					  } else {
+					  }
 					  }
 				  }
 			  });  

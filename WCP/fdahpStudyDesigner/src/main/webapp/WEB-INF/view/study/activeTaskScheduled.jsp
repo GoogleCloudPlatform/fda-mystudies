@@ -104,7 +104,13 @@
 	 <input type="hidden" name="type" id="type" value="schedule">
 	 <input type="hidden" name="studyId" id="studyId" value="${not empty activeTaskBo.studyId ? activeTaskBo.studyId : studyBo.id}">
 	 <div class="oneTime all mt-lg">
-	    <div class="gray-xs-f mb-sm">Date/Time of launch (pick one)<span class="requiredStar"> * </span></div>
+	    <div class="gray-xs-f mb-sm">Date/Time of launch (pick one)<span class="requiredStar"> * </span>
+	    <span 
+	class="ml-xs sprites_v3 filled-tooltip" 
+	data-toggle="tooltip"
+	data-placement="bottom" 
+	title="All date/time selections are based on server timezone.">
+</span></div>
 	    <div class="mt-sm">
 	       <span class="checkbox checkbox-inline">
 	       <input type="hidden" name="activeTaskFrequenciesBo.id" id="oneTimeFreId" value="${activeTaskBo.activeTaskFrequenciesBo.id}">
@@ -229,35 +235,15 @@
 	  <input type="hidden" name="fetalCickDuration" value=""> 
 	  <input type="hidden" name="id" class="activeTaskIdClass" value="${activeTaskBo.id}">
 	 <div class="daily all mt-lg dis-none">
-	    <div class="gray-xs-f mb-sm">Time(s) of the day for daily occurrence<span class="requiredStar"> *</span></div>
-	    <div class="dailyContainer">
-	    <c:if test="${fn:length(activeTaskBo.activeTaskFrequenciesList) eq 0}">
-	     <div class="time-opts mt-md dailyTimeDiv" id="0">
-	        <span class="form-group m-none dis-inline vertical-align-middle pr-md">
-	        <input id="time0" type="text" name="activeTaskFrequenciesList[0].frequencyTime" required class="form-control clock dailyClock ${(activeTaskBo.isDuplicate > 0)?'cursor-none' : ''}" placeholder="Time" onclick ='timep(this.id);'/>
-	        <span class='help-block with-errors red-txt'></span>
-	        </span> 
-	        <span class="addBtnDis addbtn mr-sm align-span-center ${(activeTaskBo.isDuplicate > 0)?'cursor-none' : ''}" onclick='addTime();'>+</span>
-	     </div>
-	    </c:if>
-	    <c:if test="${fn:length(activeTaskBo.activeTaskFrequenciesList) gt 0}">
-	      <c:forEach items="${activeTaskBo.activeTaskFrequenciesList}" var="activeTasksFrequencies" varStatus="frequeincesVar">
-	       <div class="time-opts mt-md dailyTimeDiv" id="${frequeincesVar.index}">
-	       <input type="hidden" name="activeTaskFrequenciesList[${frequeincesVar.index}].id" value="${activeTasksFrequencies.id}">
-	         <span class="form-group m-none dis-inline vertical-align-middle pr-md">
-	         <input id="time${frequeincesVar.index}" type="text" name="activeTaskFrequenciesList[${frequeincesVar.index}].frequencyTime" required class="form-control clock dailyClock ${(activeTaskBo.isDuplicate > 0)?'cursor-none' : ''}" placeholder="Time" onclick ='timep(this.id);' value="${activeTasksFrequencies.frequencyTime}"/>
-	         <span class='help-block with-errors red-txt'></span>
-	         </span> 
-	         <span class="addBtnDis addbtn mr-sm align-span-center ${(activeTaskBo.isDuplicate > 0)?'cursor-none' : ''}" onclick='addTime();'>+</span>
-	         <span class="delete vertical-align-middle remBtnDis hide pl-md align-span-center ${(activeTaskBo.isDuplicate > 0)?'cursor-none' : ''}" onclick='removeTime(this);'></span>
-	      </div>
-	      </c:forEach>
-	    </c:if>
-	    </div>
+	    
 	    <div class="mt-md"> 
 	       <div class="dailyStartCls col-md-3 pl-none">                       
 	       <span class="form-group m-none dis-inline vertical-align-middle pr-md">
-	       <span class="gray-xs-f">Start date <span class="requiredStar"> * </span></span><br/>                          
+	       <span class="gray-xs-f">Start date <span class="requiredStar"> * </span>
+	       	<span class="ml-xs sprites_v3 filled-tooltip" data-toggle="tooltip"
+									data-placement="bottom" 
+									title="All date/time selections are based on server timezone."></span>
+			</span><br/>                          
 	       <input id="startDate" type="text" class="form-control mt-sm calendar ${(activeTaskBo.isDuplicate > 0)?'cursor-none' : ''}" placeholder="Choose Date" required name="activeTaskLifetimeStart" value="${activeTaskBo.activeTaskLifetimeStart}"/>
 	       <span class='help-block with-errors red-txt'></span>
 	       </span>
@@ -267,7 +253,11 @@
              <div class=" resetDate">
                <div>
                     <span class="form-group m-none dis-inline vertical-align-middle pr-md">
-                              <span class="gray-xs-f">Start date <span class="requiredStar">*</span></span><br/>
+                              <span class="gray-xs-f">Start date <span class="requiredStar">*</span>
+                              <span class="ml-xs sprites_v3 filled-tooltip" data-toggle="tooltip"
+									data-placement="bottom" 
+									title="All date/time selections are based on server timezone."></span></span>
+                              <br/>
 	                <span class="pr-md">Anchor Date</span>
 	                <span>
 		                 <select class="signDropDown selectpicker sign-box ${(activeTaskBo.isDuplicate > 0)?'cursor-none' : ''}" title="Select" name="activeTaskFrequenciesList[0].xDaysSign" id="dailyXSign">
@@ -291,7 +281,8 @@
 	               <!-- Anchordate End -->
 	               <div class="col-md-6 pr-none">
 	       <span class="form-group m-none dis-inline vertical-align-middle pr-md">
-	       <span class="gray-xs-f">Number of times to repeat the task<span class="requiredStar"> * </span></span><br/>
+	       <span class="gray-xs-f">Number of times to repeat the task<span class="requiredStar"> * </span>
+	      </span><br/>
 	       <input id="days" type="text" class="form-control mt-sm numChk ${(activeTaskBo.isDuplicate > 0)?'cursor-none' : ''}" name="repeatActiveTask" placeholder="No of Times"required value="${activeTaskBo.repeatActiveTask}" onkeypress="return isNumber(event, this)" pattern="^(0{0,2}[1-9]|0?[1-9][0-9]|[1-9][0-9][0-9])$" data-pattern-error="Please enter valid number." maxlength="3"/>
 	        <span class='help-block with-errors red-txt'></span>
 	       </span>
@@ -299,10 +290,47 @@
 	       <div class="clearfix"></div>
 	    </div>
 	    <div class="mt-md">
-	       <div class="gray-xs-f mb-xs">End Date </div>
+	       <div class="gray-xs-f mb-xs">End Date <span class="ml-xs sprites_v3 filled-tooltip" data-toggle="tooltip"
+									data-placement="bottom" 
+									title="All date/time selections are based on server timezone.">
+								</span></div>
 	       <div class="black-xs-f" id="endDateId">${not empty activeTaskBo.activeTaskLifetimeEnd ? activeTaskBo.activeTaskLifetimeEnd :'NA'}</div>
 	       <input type="hidden" name="activeTaskLifetimeEnd" id="studyDailyLifetimeEnd" value="${activeTaskBo.activeTaskLifetimeEnd}">
 	    </div>
+	    
+	    <div class="mt-md">
+	    	<div class="gray-xs-f mb-sm">Time(s) of the day for daily occurrence
+	    		<span class="requiredStar"> *</span>
+	    		<span class="ml-xs sprites_v3 filled-tooltip" data-toggle="tooltip"
+									data-placement="bottom" id="helpNote"
+									title="All date/time selections are based on server timezone."></span>
+	    	</div>
+		    <div class="dailyContainer">
+		    <c:if test="${fn:length(activeTaskBo.activeTaskFrequenciesList) eq 0}">
+		     <div class="time-opts mt-md dailyTimeDiv" id="0">
+		        <span class="form-group m-none dis-inline vertical-align-middle pr-md">
+		        <input id="time0" type="text" name="activeTaskFrequenciesList[0].frequencyTime" required class="form-control clock dailyClock ${(activeTaskBo.isDuplicate > 0)?'cursor-none' : ''}" placeholder="Time" onclick ='timep(this.id);'/>
+		        <span class='help-block with-errors red-txt'></span>
+		        </span> 
+		        <span class="addBtnDis addbtn mr-sm align-span-center ${(activeTaskBo.isDuplicate > 0)?'cursor-none' : ''}" onclick='addTime();'>+</span>
+		     </div>
+		    </c:if>
+		    <c:if test="${fn:length(activeTaskBo.activeTaskFrequenciesList) gt 0}">
+		      <c:forEach items="${activeTaskBo.activeTaskFrequenciesList}" var="activeTasksFrequencies" varStatus="frequeincesVar">
+		       <div class="time-opts mt-md dailyTimeDiv" id="${frequeincesVar.index}">
+		       <input type="hidden" name="activeTaskFrequenciesList[${frequeincesVar.index}].id" value="${activeTasksFrequencies.id}">
+		         <span class="form-group m-none dis-inline vertical-align-middle pr-md">
+		         <input id="time${frequeincesVar.index}" type="text" name="activeTaskFrequenciesList[${frequeincesVar.index}].frequencyTime" required class="form-control clock dailyClock ${(activeTaskBo.isDuplicate > 0)?'cursor-none' : ''}" placeholder="Time" onclick ='timep(this.id);' value="${activeTasksFrequencies.frequencyTime}"/>
+		         <span class='help-block with-errors red-txt'></span>
+		         </span> 
+		         <span class="addBtnDis addbtn mr-sm align-span-center ${(activeTaskBo.isDuplicate > 0)?'cursor-none' : ''}" onclick='addTime();'>+</span>
+		         <span class="delete vertical-align-middle remBtnDis hide pl-md align-span-center ${(activeTaskBo.isDuplicate > 0)?'cursor-none' : ''}" onclick='removeTime(this);'></span>
+		      </div>
+		      </c:forEach>
+		    </c:if>
+		    </div>
+	    </div>
+	    
 	    <div class="mt-lg">
 	       <div class="gray-xs-f mb-xs">Lifetime of each run</div>
 	       <div class="black-xs-f">Until the next run comes up</div>
@@ -323,7 +351,13 @@
 	  <input type="hidden" name="type" id="type" value="schedule">
 	 <div class="week all mt-lg dis-none">
 	    <div id="weekDaysId"> 
-	       <span class="gray-xs-f">Day/Time (of the week)<span class="requiredStar"> * </span></span><br/>
+	       <span class="gray-xs-f">Day/Time (of the week)<span class="requiredStar"> * </span>
+	       <span 
+	class="ml-xs sprites_v3 filled-tooltip" 
+	data-toggle="tooltip"
+	data-placement="bottom" 
+	title="All date/time selections are based on server timezone.">
+</span></span><br/>
 	       <div class=" form-group m-none dis-inline vertical-align-middle pr-md">                       
 	       <span class="">
 	       <select id="startDateWeekly" class="form-control mt-sm ${(activeTaskBo.isDuplicate > 0)?'cursor-none' : ''}" name="dayOfTheWeek" required>
@@ -347,7 +381,13 @@
 	    <div class="mt-md">
 	       <span class="weeklyStartCls  col-md-3 pl-none">                         
 	       <span class="form-group m-none dis-inline vertical-align-middle pr-md">
-	       <span class="gray-xs-f">Start date <span class="requiredStar"> * </span></span><br/>                           
+	       <span class="gray-xs-f">Start date <span class="requiredStar"> * </span>
+	       <span 
+	class="ml-xs sprites_v3 filled-tooltip" 
+	data-toggle="tooltip"
+	data-placement="bottom" 
+	title="All date/time selections are based on server timezone.">
+</span></span><br/>                           
 	       <input id="startWeeklyDate" type="text" class="form-control mt-sm calendar ${(activeTaskBo.isDuplicate > 0)?'cursor-none' : ''}" required name="activeTaskLifetimeStart"  placeholder="Choose Date" value="${activeTaskBo.activeTaskLifetimeStart}" readonly="readonly"/>
 	       <span class='help-block with-errors red-txt'></span>
 	       </span>
@@ -357,7 +397,13 @@
              <div class=" resetDate dis_inlinetop p-none">
                <div>
                    <span class="form-group m-none dis-inline vertical-align-middle pr-md">
-                             <span class="gray-xs-f">Start date <span class="requiredStar">*</span></span><br/>
+                             <span class="gray-xs-f">Start date <span class="requiredStar">*</span>
+                             <span 
+	class="ml-xs sprites_v3 filled-tooltip" 
+	data-toggle="tooltip"
+	data-placement="bottom" 
+	title="All date/time selections are based on server timezone.">
+</span></span><br/>
                 <span class="pr-md">Anchor Date</span>
                 <span>
 	                 <select class="signDropDown selectpicker sign-box ${(activeTaskBo.isDuplicate > 0)?'cursor-none' : ''}" title="Select" name="activeTaskFrequenciesBo.xDaysSign" id="weeklyXSign">
@@ -378,7 +424,13 @@
                 </div>
                </div>
                <div class="dis_inlinetop p-none">      
-	               <span class="gray-xs-f">Time <span class="requiredStar">*</span><br/></span>
+	               <span class="gray-xs-f">Time <span class="requiredStar">*</span>
+	               <span 
+	class="ml-xs sprites_v3 filled-tooltip" 
+	data-toggle="tooltip"
+	data-placement="bottom" 
+	title="All date/time selections are based on server timezone.">
+</span><br/></span>
 	               <span class="form-group m-none dis-inline vertical-align-middle pr-md">
 	                  <input id="selectWeeklyTimeAnchor" type="text" class="form-control mt-sm clock ${(activeTaskBo.isDuplicate > 0)?'cursor-none' : ''}" required onclick="timep(this.id)" placeholder="Time" name="activeTaskFrequenciesBo.frequencyTime" value="${activeTaskBo.activeTaskFrequenciesBo.frequencyTime}"/>
 	                  <span class='help-block with-errors red-txt'></span>
@@ -404,7 +456,12 @@
 	       <div class="clearfix"></div>
 	    </div>
 	    <div class="mt-md">
-	       <div class="gray-xs-f mb-xs">End Date </div>
+	       <div class="gray-xs-f mb-xs">End Date <span 
+	class="ml-xs sprites_v3 filled-tooltip" 
+	data-toggle="tooltip"
+	data-placement="bottom" 
+	title="All date/time selections are based on server timezone.">
+</span></div>
 	       <div class="black-xs-f" id="weekEndDate">${not empty activeTaskBo.activeTaskLifetimeEnd ? activeTaskBo.activeTaskLifetimeEnd :'NA'}</div>
 	       <input type="hidden" name="activeTaskLifetimeEnd" id="studyWeeklyLifetimeEnd" value="${activeTaskBo.activeTaskLifetimeEnd}">
 	    </div>
@@ -428,7 +485,13 @@
 	  <input type="hidden" name="type" id="type" value="schedule">
 	 <div class="month all mt-lg dis-none">
 	    <div id="monthlyDateId">
-	       <span class="gray-xs-f">Select Date/Time (of the month)<span class="requiredStar"> * </span></span><br/>
+	       <span class="gray-xs-f">Select Date/Time (of the month)<span class="requiredStar"> * </span>
+	       <span 
+	class="ml-xs sprites_v3 filled-tooltip" 
+	data-toggle="tooltip"
+	data-placement="bottom" 
+	title="All date/time selections are based on server timezone.">
+</span></span><br/>
 	       <span class="monthlyStartCls form-group m-none dis-inline vertical-align-middle pr-md">
 	       <span class="">
 	       <input id="startDateMonthly" type="text" class="form-control mt-sm calendar ${(activeTaskBo.isDuplicate > 0)?'cursor-none' : ''}" required  placeholder="Choose Date" name="activeTaskFrequenciesBo.frequencyDate" value="${activeTaskBo.activeTaskFrequenciesBo.frequencyDate}"/>
@@ -444,7 +507,13 @@
 	    <div class="mt-xs"> 
 	       <div class="monthlyStartCls  col-md-3 pl-none">                       
 	       <span class="form-group m-none dis-inline vertical-align-middle pr-md">
-	       <span class="gray-xs-f">Start date <span class="requiredStar"> * </span></span><br/>      
+	       <span class="gray-xs-f">Start date <span class="requiredStar"> * </span>
+	       <span 
+	class="ml-xs sprites_v3 filled-tooltip" 
+	data-toggle="tooltip"
+	data-placement="bottom" 
+	title="All date/time selections are based on server timezone.">
+</span></span><br/>      
 	       <input id="pickStartDate" type="text" class="form-control mt-sm calendar ${(activeTaskBo.isDuplicate > 0)?'cursor-none' : ''}"  placeholder="Choose Start Date" required name="activeTaskLifetimeStart" value="${activeTaskBo.activeTaskLifetimeStart}" readonly="readonly"/>
 	       <span class='help-block with-errors red-txt'></span>
 	       </span>
@@ -454,7 +523,13 @@
 		          <div class="dis_inlinetop resetDate">
 		              <div>
 		                   <span class="form-group m-none dis-inline vertical-align-middle pr-md">
-		                             <span class="gray-xs-f">Start date <span class="requiredStar">*</span></span><br/>
+		                             <span class="gray-xs-f">Start date <span class="requiredStar">*</span>
+		                             <span 
+	class="ml-xs sprites_v3 filled-tooltip" 
+	data-toggle="tooltip"
+	data-placement="bottom" 
+	title="All date/time selections are based on server timezone.">
+</span></span><br/>
 		                <span class="pr-md">Anchor Date</span>
 		                <span>
 			                 <select class="signDropDown selectpicker sign-box ${(activeTaskBo.isDuplicate > 0)?'cursor-none' : ''}" title="Select" name="activeTaskFrequenciesBo.xDaysSign" id="monthlyXSign">
@@ -476,7 +551,13 @@
 		              </div>
 		              
 		           <div class="dis_inlinetop">
-		                <span class="gray-xs-f">Time <span class="requiredStar">*</span></span><br/> 
+		                <span class="gray-xs-f">Time <span class="requiredStar">*</span>
+		                <span 
+	class="ml-xs sprites_v3 filled-tooltip" 
+	data-toggle="tooltip"
+	data-placement="bottom" 
+	title="All date/time selections are based on server timezone.">
+</span></span><br/> 
 		                <span class="form-group m-none dis-inline vertical-align-middle pr-md">
 		                   <input id="selectMonthlyTimeAnchor" type="text" class="form-control mt-sm clock ${(activeTaskBo.isDuplicate > 0)?'cursor-none' : ''}" required onclick="timep(this.id)"  placeholder="Time" name="activeTaskFrequenciesBo.frequencyTime" value="${activeTaskBo.activeTaskFrequenciesBo.frequencyTime}"/>
 		                   <span class='help-block with-errors red-txt'></span>
@@ -503,7 +584,12 @@
 	       <div class="clearfix"></div>
 	    </div>
 	    <div class="mt-md col-md-12 p-none">
-	       <div class="gray-xs-f mb-xs">End Date </div>
+	       <div class="gray-xs-f mb-xs">End Date <span 
+	class="ml-xs sprites_v3 filled-tooltip" 
+	data-toggle="tooltip"
+	data-placement="bottom" 
+	title="All date/time selections are based on server timezone.">
+</span></div>
 	       <div class="black-xs-f" id="monthEndDate">${not empty activeTaskBo.activeTaskLifetimeEnd ? activeTaskBo.activeTaskLifetimeEnd :'NA'}</div>
 	       <input type="hidden" name="activeTaskLifetimeEnd" id="studyMonthlyLifetimeEnd" value="${activeTaskBo.activeTaskLifetimeEnd}">
 	    </div>
@@ -525,7 +611,13 @@
 	   <input type="hidden" name="previousFrequency" id="previousFrequency" value="${activeTaskBo.frequency}">
 	    <input type="hidden" name="type" id="type" value="schedule">
 	<div class="manually all mt-lg dis-none">
-	    <div class="gray-xs-f mb-sm">Select time period<span class="requiredStar"> * </span></div>
+	    <div class="gray-xs-f mb-sm">Select time period<span class="requiredStar"> * </span>
+	    <span 
+	class="ml-xs sprites_v3 filled-tooltip" 
+	data-toggle="tooltip"
+	data-placement="bottom" 
+	title="All date/time selections are based on server timezone.">
+</span></div>
 	    <div class="manuallyContainer">
 	      <c:if test="${fn:length(activeTaskBo.activeTaskCustomScheduleBo) eq 0}">
 	      	<div class="manually-option mb-md form-group" id="0" >
