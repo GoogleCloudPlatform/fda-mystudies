@@ -595,7 +595,6 @@ public class AuthenticationController {
         return new ResponseEntity<>(loginResp, HttpStatus.BAD_REQUEST);
       }
       appCode = clientInfoService.checkClientInfo(clientId, secretKey);
-      logger.info("appCode: " + appCode);
 
       if (appCode == null || StringUtils.isBlank(appCode)) {
         MyStudiesUserRegUtil.getFailureResponse(
@@ -777,7 +776,11 @@ public class AuthenticationController {
                     MyStudiesUserRegUtil.ErrorCodes.ACCOUNT_LOCKED.getValue(),
                     response);
                 loginResp.setMessage(MyStudiesUserRegUtil.ErrorCodes.ACCOUNT_LOCKED.getValue());
-
+            activityLogService.createActivityLog(
+                participantDetails.getUserId(),
+                AppConstants.AUDIT_EVENT_FAILED_SIGN_IN_NAME,
+                String.format(
+                    AppConstants.AUDIT_EVENT_FAILED_SIGN_IN_DESC, participantDetails.getUserId()));
                 logger.info("AuthenticationController login() - ends with ACCOUNT_LOCKED");
                 return new ResponseEntity<>(loginResp, HttpStatus.BAD_REQUEST);
               } else throw new Exception();
