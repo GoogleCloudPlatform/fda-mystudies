@@ -30,7 +30,7 @@ import javax.validation.constraints.NotNull;
 public class UserInstitution {
     @Id
     @Column(name = "user_institution_id")
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long userInstitutionId;
 
     @NotNull
