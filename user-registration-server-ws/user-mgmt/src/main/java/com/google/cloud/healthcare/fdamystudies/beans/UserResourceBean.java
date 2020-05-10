@@ -16,6 +16,7 @@ import lombok.ToString;
 @EqualsAndHashCode
 @Getter
 @ToString
+@Getter
 public class UserResourceBean {
   private String title;
   private String content;
