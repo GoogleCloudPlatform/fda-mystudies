@@ -7,16 +7,12 @@
  */
 package com.google.cloud.healthcare.fdamystudies.beans;
 
+import java.util.List;
 import lombok.AllArgsConstructor;
-import lombok.EqualsAndHashCode;
 import lombok.Getter;
-import lombok.ToString;
 
 @AllArgsConstructor
-@EqualsAndHashCode
 @Getter
-@ToString
-public class UserResourceBean {
-  private String title;
-  private String content;
+public class UserResourcesBean {
+  private List<UserResourceBean> resources;
 }
