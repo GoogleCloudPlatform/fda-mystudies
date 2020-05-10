@@ -45,6 +45,8 @@ public class PersonalizedResourcesControllerTest {
 
   @Autowired private MockMvc mvc;
 
+  private static final UserResourceBean.Type resourceType = UserResourceBean.Type.PERSONALIZED_REPORT;
+
   @Test
   public void ReturnsUserResources() throws Exception {
     Mockito.when(
@@ -56,8 +58,8 @@ public class PersonalizedResourcesControllerTest {
                 "test_user_id", "test_study_id"))
         .thenReturn(
             Arrays.asList(
-                new UserResourceBean("Report", "content"),
-                new UserResourceBean("Report 2", "content 2")));
+                new UserResourceBean("Report", "content", resourceType),
+                new UserResourceBean("Report 2", "content 2", resourceType)));
     mvc.perform(
             get("/getPersonalizedResources")
                 .accept(MediaType.ALL)
@@ -68,9 +70,9 @@ public class PersonalizedResourcesControllerTest {
                 .contentType(MediaType.APPLICATION_JSON_VALUE))
         .andExpect(status().isOk())
         .andExpect(
-            jsonPath("$.resources.[?(@.title == \"Report\" && @.content == \"content\")]").exists())
+            jsonPath("$.resources.[?(@.title == \"Report\" && @.content == \"content\" && @.resourceType == \"report\")]").exists())
         .andExpect(
-            jsonPath("$.resources.[?(@.title == \"Report 2\" && @.content == \"content 2\")]")
+            jsonPath("$.resources.[?(@.title == \"Report 2\" && @.content == \"content 2\" && @.resourceType == \"report\")]")
                 .exists());
   }
 
