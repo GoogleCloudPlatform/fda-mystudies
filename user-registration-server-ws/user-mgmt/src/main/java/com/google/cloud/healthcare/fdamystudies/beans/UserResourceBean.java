@@ -14,7 +14,6 @@ import lombok.ToString;
 
 @AllArgsConstructor
 @EqualsAndHashCode
-@Getter
 @ToString
 @Getter
 public class UserResourceBean {
