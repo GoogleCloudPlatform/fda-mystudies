@@ -64,6 +64,9 @@ import com.hphc.mystudies.integration.StudyMetaDataOrchestration;
 import com.hphc.mystudies.util.StudyMetaDataConstants;
 import com.hphc.mystudies.util.StudyMetaDataEnum;
 import com.hphc.mystudies.util.StudyMetaDataUtil;
+import com.sun.jersey.api.client.Client;
+import com.sun.jersey.api.client.ClientResponse;
+import com.sun.jersey.api.client.WebResource;
 
 @Path("/")
 public class StudyMetaDataService {
@@ -282,11 +285,27 @@ public class StudyMetaDataService {
   @Consumes(MediaType.APPLICATION_JSON)
   @Path("userResources")
   public Object getUserResources(
+      @HeaderParam("userId") String userId,
+      @HeaderParam("clientToken") String clientToken,
+      @HeaderParam("accessToken") String accessToken,
       @QueryParam("studyId") String studyId,
       @Context ServletContext context,
       @Context HttpServletResponse response) {
-    // TODO: this endpoint should first try to get personalized user resource before falling back to
-    // generic resources for this study.
+    Client client = Client.create();
+    LOGGER.info(propMap.get("userRegistrationServerPersonalizedResourcesUrl"));
+    WebResource webResource = client.resource(propMap.get("userRegistrationServerPersonalizedResourcesUrl"));
+    ClientResponse ursResponse = webResource
+        .queryParam("studyId", studyId)
+        .header("userId", userId)
+        .header("clientToken", clientToken)
+        .header("accessToken", accessToken)
+        .get(ClientResponse.class);
+		if (ursResponse.getStatus() != 200) {
+		  LOGGER.error("Failed : HTTP error code : " + ursResponse.getStatus());
+      return resourcesForStudyImpl(studyId, context, response);
+		}
+		String output = ursResponse.getEntity(String.class);
+    LOGGER.info(output);
     return resourcesForStudyImpl(studyId, context, response);
   }
 
