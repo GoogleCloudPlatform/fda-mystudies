@@ -292,7 +292,6 @@ public class StudyMetaDataService {
       @Context ServletContext context,
       @Context HttpServletResponse response) {
     Client client = Client.create();
-    LOGGER.info(propMap.get("userRegistrationServerPersonalizedResourcesUrl"));
     WebResource webResource = client.resource(propMap.get("userRegistrationServerPersonalizedResourcesUrl"));
     ClientResponse ursResponse = webResource
         .queryParam("studyId", studyId)
@@ -307,7 +306,6 @@ public class StudyMetaDataService {
 		}
     // TODO: Actually convert ursResponse to the response of this REST call.
 		String ursOutput = ursResponse.getEntity(String.class);
-    LOGGER.info(ursOutput);
     return resourcesForStudyImpl(studyId, context, response);
   }
 
