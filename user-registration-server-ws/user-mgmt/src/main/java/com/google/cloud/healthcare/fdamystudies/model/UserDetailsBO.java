@@ -13,15 +13,25 @@ import java.time.LocalDateTime;
 import java.util.Date;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+
+import lombok.AccessLevel;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Setter
 @Getter
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 @Entity
 @Table(name = "user_details")
 public class UserDetailsBO implements Serializable {
@@ -83,4 +93,12 @@ public class UserDetailsBO implements Serializable {
 
   @Column(name = "email_code")
   private String emailCode;
+
+  // Use UserInstitution class to access institution.
+  @Getter(AccessLevel.NONE)
+  @OneToOne(
+          mappedBy = "user",
+          fetch = FetchType.LAZY
+  )
+  private UserInstitution userInstitution;
 }

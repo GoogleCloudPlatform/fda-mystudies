@@ -28,7 +28,7 @@ let kDeleteResponses = "delete"
 class ResponseServices: NSObject {
 
   let networkManager = NetworkManager.sharedInstance()
-  var delegate: NMWebServiceDelegate?
+  weak var delegate: NMWebServiceDelegate?
   var activityId: String!
   var keys: String!
   var requestParams: [String: Any]? = [:]

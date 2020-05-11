@@ -94,8 +94,8 @@ let kStudyAnchorDateQuestionInfo = "questionInfo"
 
 class WCPServices: NSObject {
   let networkManager = NetworkManager.sharedInstance()
-  var delegate: NMWebServiceDelegate?
-  var delegateSource: NMWebServiceDelegate?
+  weak var delegate: NMWebServiceDelegate?
+  weak var delegateSource: NMWebServiceDelegate?
 
   // MARK: Requests
 
