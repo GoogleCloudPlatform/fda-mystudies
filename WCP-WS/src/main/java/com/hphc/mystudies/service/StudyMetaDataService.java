@@ -291,22 +291,22 @@ public class StudyMetaDataService {
       @QueryParam("studyId") String studyId,
       @Context ServletContext context,
       @Context HttpServletResponse response) {
-		Client client = Client.create();
-		WebResource webResource = client.resource(propMap.get("userRegistrationServerPersonalizedResourcesUrl"));
-		ClientResponse ursResponse = webResource
-			.queryParam("studyId", studyId)
-			.header("userId", userId)
-			.header("clientToken", clientToken)
-			.header("accessToken", accessToken)
-			.get(ClientResponse.class);
-		if (ursResponse.getStatus() != 200) {
-			LOGGER.error("Failed : HTTP error code : " + ursResponse.getStatus());
-			// Fall back to generic resources for this user.
-			return resourcesForStudyImpl(studyId, context, response);
-		}
-		// TODO: Actually convert ursResponse to the response of this REST call.
-		String ursOutput = ursResponse.getEntity(String.class);
-		return resourcesForStudyImpl(studyId, context, response);
+    Client client = Client.create();
+    WebResource webResource = client.resource(propMap.get("userRegistrationServerPersonalizedResourcesUrl"));
+    ClientResponse ursResponse = webResource
+      .queryParam("studyId", studyId)
+      .header("userId", userId)
+      .header("clientToken", clientToken)
+      .header("accessToken", accessToken)
+      .get(ClientResponse.class);
+    if (ursResponse.getStatus() != 200) {
+      LOGGER.error("Failed : HTTP error code : " + ursResponse.getStatus());
+      // Fall back to generic resources for this user.
+      return resourcesForStudyImpl(studyId, context, response);
+    }
+    // TODO: Actually convert ursResponse to the response of this REST call.
+    String ursOutput = ursResponse.getEntity(String.class);
+    return resourcesForStudyImpl(studyId, context, response);
   }
 
   public Object resourcesForStudyImpl(
