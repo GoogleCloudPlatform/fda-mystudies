@@ -19,6 +19,8 @@ public class GetUserInstitutionResources {
     @Autowired
     CloudStorageService cloudStorageService;
 
+	private static final UserResourceBean.Type resourceType = UserResourceBean.Type.INSTITUTION_RESOURCE;
+
     // Returns UserResourceBeans for the institution that `userId` belongs to.
     // Can be an empty list.
     public List<UserResourceBean> getInstitutionResourcesForUser(String userId) {
@@ -34,7 +36,7 @@ public class GetUserInstitutionResources {
         List<UserResourceBean> resources = new ArrayList<>();
         for (CloudStorageService.InstitutionResource institutionResource : streams) {
             String content = new String(institutionResource.stream.toByteArray());
-            resources.add(new UserResourceBean(institutionResource.title, content));
+            resources.add(new UserResourceBean(institutionResource.title, content, resourceType));
         }
         return resources;
     }

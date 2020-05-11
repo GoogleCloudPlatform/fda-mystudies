@@ -50,6 +50,8 @@ public class PersonalizedUserReportServiceTest {
   @Autowired private PersonalizedUserReportService personalizedUserReportService;
   @Autowired private ApplicationContext ctx;
 
+  private static final UserResourceBean.Type resourceType = UserResourceBean.Type.PERSONALIZED_REPORT;
+
   @Test
   public void GetsMostRecentReportsForUserAndStudy() {
     UserDetailsBO user1 =
@@ -134,7 +136,7 @@ public class PersonalizedUserReportServiceTest {
     assertThat(
         personalizedUserReportService.getLatestPersonalizedUserReports("user_id1", "study 1"),
         containsInAnyOrder(
-            equalTo(new UserResourceBean("Report 2", "Report 2 content for user 1")),
-            equalTo(new UserResourceBean("Report 1", "Report 1 content 3 for user 1"))));
+            equalTo(new UserResourceBean("Report 2", "Report 2 content for user 1", resourceType)),
+            equalTo(new UserResourceBean("Report 1", "Report 1 content 3 for user 1", resourceType))));
   }
 }
