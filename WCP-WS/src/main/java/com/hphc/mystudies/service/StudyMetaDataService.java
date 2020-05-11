@@ -304,7 +304,7 @@ public class StudyMetaDataService {
       // Fall back to generic resources for this user.
       return resourcesForStudyImpl(studyId, context, response);
     }
-    // TODO: Actually convert ursResponse to the response of this REST call.
+    // TODO: Forward the ursResponse as response of this call.
     String ursOutput = ursResponse.getEntity(String.class);
     return resourcesForStudyImpl(studyId, context, response);
   }
