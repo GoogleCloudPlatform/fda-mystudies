@@ -302,10 +302,12 @@ public class StudyMetaDataService {
         .get(ClientResponse.class);
 		if (ursResponse.getStatus() != 200) {
 		  LOGGER.error("Failed : HTTP error code : " + ursResponse.getStatus());
+      // Fall back to generic resources for this user.
       return resourcesForStudyImpl(studyId, context, response);
 		}
-		String output = ursResponse.getEntity(String.class);
-    LOGGER.info(output);
+    // TODO: Actually convert ursResponse to the response of this REST call.
+		String ursOutput = ursResponse.getEntity(String.class);
+    LOGGER.info(ursOutput);
     return resourcesForStudyImpl(studyId, context, response);
   }
 
