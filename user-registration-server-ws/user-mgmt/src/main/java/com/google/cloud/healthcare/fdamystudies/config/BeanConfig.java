@@ -24,7 +24,7 @@ import com.google.cloud.healthcare.fdamystudies.util.AuthenticationFilter;
 @EnableWebMvc
 public class BeanConfig implements WebMvcConfigurer {
 
-  @Autowired ApplicationPropertyConfiguration appConfig;
+  @Autowired AuthenticationFilter authenticationFilter;
 
   @Bean
   public WebMvcConfigurer corsConfigurer() {
@@ -40,7 +40,7 @@ public class BeanConfig implements WebMvcConfigurer {
   public FilterRegistrationBean<AuthenticationFilter> loggingFilter() {
     FilterRegistrationBean<AuthenticationFilter> authenticationBean =
         new FilterRegistrationBean<>();
-    authenticationBean.setFilter(new AuthenticationFilter());
+    authenticationBean.setFilter(authenticationFilter);
     authenticationBean.addUrlPatterns("/*");
 
     return authenticationBean;
