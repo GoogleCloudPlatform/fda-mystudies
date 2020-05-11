@@ -90,7 +90,7 @@ struct FailedUserServices {
 class UserServices: NSObject {
 
   let networkManager = NetworkManager.sharedInstance()
-  var delegate: NMWebServiceDelegate?
+  weak var delegate: NMWebServiceDelegate?
   var requestParams: [String: Any]? = [:]
   var headerParams: [String: String]? = [:]
   var method: Method!
