@@ -142,13 +142,14 @@ class LocalNotification: NSObject {
           } else {
             let date = run.startDate!  // 24 hours before
             let message1 = "A new run of the daily activity " + activity.name!
+            let runEndDate = run.endDate.addingTimeInterval(1)  // Round off.
             let message2 =
               ", is now available and is valid until "
               + LocalNotification
-              .timeFormatter.string(from: run.endDate!)
-            let messgge3 =
+              .timeFormatter.string(from: runEndDate)
+            let message3 =
               ". Your participation is important. Please visit the study to complete it now."
-            let message = message1 + message2 + messgge3
+            let message = message1 + message2 + message3
             LocalNotification.composeRunNotification(
               startDate: date,
               endDate: run.endDate,
@@ -363,11 +364,11 @@ class LocalNotification: NSObject {
     // Fetch top 50 notifications
     DBHandler.getRecentLocalNotification { (localNotifications) in
 
-      if localNotifications.count > 0 {
-        // Cancel All Local Notifications
-        LocalNotification.cancelAllLocalNotification()
+      // Cancel Old scheduled Local Notifications.
+      LocalNotification.cancelAllLocalNotification()
 
-        LocalNotification.scheduledNotificaiton()
+      if localNotifications.count > 0 {
+
         for notification in localNotifications {
 
           // Generate User Info
@@ -376,16 +377,14 @@ class LocalNotification: NSObject {
             kActivityId: notification.activityId!,
           ]
 
-          // Reschedule top 50 Local Notifications
+          // Reschedule top 50 Local Notifications.
           LocalNotification.scheduleNotificationOn(
             date: notification.startDate!,
             message: notification.message!,
             userInfo: userInfo,
             id: notification.id
           )
-
         }
-        LocalNotification.scheduledNotificaiton()
       }
     }
   }
