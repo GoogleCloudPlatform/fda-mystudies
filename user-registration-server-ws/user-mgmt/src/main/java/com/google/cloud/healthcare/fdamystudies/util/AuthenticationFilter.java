@@ -21,6 +21,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
+import org.springframework.beans.factory.annotation.Autowired;
 import com.google.cloud.healthcare.fdamystudies.config.ApplicationPropertyConfiguration;
 import com.google.cloud.healthcare.fdamystudies.exceptions.InvalidRequestException;
 import com.google.cloud.healthcare.fdamystudies.exceptions.UnAuthorizedRequestException;
@@ -31,6 +32,9 @@ import com.google.cloud.healthcare.fdamystudies.service.CommonServiceImpl;
 public class AuthenticationFilter implements Filter {
 
   private static Logger logger = LoggerFactory.getLogger(AuthenticationFilter.class);
+
+  @Autowired private ApplicationPropertyConfiguration applicationConfiguration;
+  @Autowired private CommonServiceImpl commonService;
 
   @Override
   public void init(final FilterConfig filterConfig) throws ServletException {
@@ -51,8 +55,6 @@ public class AuthenticationFilter implements Filter {
         boolean isValid = false;
         boolean isInterceptorURL = false;
         boolean isServerApiUrl = false;
-        ApplicationPropertyConfiguration applicationConfiguration =
-            BeanUtil.getBean(ApplicationPropertyConfiguration.class);
         String interceptorURL = applicationConfiguration.getInterceptorUrls();
         String serverApiUrls = applicationConfiguration.getServerApiUrls();
         String uri = ((HttpServletRequest) request).getRequestURI();
@@ -79,7 +81,6 @@ public class AuthenticationFilter implements Filter {
         } else if (isServerApiUrl) {
           String clientId = httpServletRequest.getHeader(AppConstants.CLIENT_ID);
           String clientSecret = httpServletRequest.getHeader(AppConstants.SECRET_KEY);
-          CommonServiceImpl commonService = BeanUtil.getBean(CommonServiceImpl.class);
           boolean isAllowed = false;
           try {
             isAllowed = commonService.validateServerClientCredentials(clientId, clientSecret);
@@ -151,7 +152,6 @@ public class AuthenticationFilter implements Filter {
               && !StringUtils.isBlank(userId)
               && (null != clientToken)
               && !StringUtils.isBlank(clientToken)) {
-            CommonService commonService = BeanUtil.getBean(CommonService.class);
             value = commonService.validateAccessToken(userId, accessToken, clientToken);
             if (value != null && value.intValue() == 1) {
               setCommonHeaders(httpServletResponse);
