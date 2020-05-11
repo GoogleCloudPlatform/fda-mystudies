@@ -446,6 +446,17 @@ ALTER TABLE personalized_user_report ADD FOREIGN KEY (user_id) REFERENCES user_d
 
 -- Data exporting was unselected.
 
+-- Dumping structure for table mystudies_userregistration.user_institution
+CREATE TABLE IF NOT EXISTS `user_institution` (
+  `user_institution_id` BIGINT NOT NULL AUTO_INCREMENT,
+  `user_details_id` int(11) NOT NULL,
+  `institution_id` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`user_institution_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- Data exporting was unselected.
+
+
 /*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;
 /*!40014 SET FOREIGN_KEY_CHECKS=IF(@OLD_FOREIGN_KEY_CHECKS IS NULL, 1, @OLD_FOREIGN_KEY_CHECKS) */;
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
