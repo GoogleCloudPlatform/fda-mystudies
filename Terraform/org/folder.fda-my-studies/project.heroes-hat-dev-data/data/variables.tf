@@ -51,3 +51,12 @@ variable "fda_resources_iam_members" {
   }))
   default = []
 }
+
+variable "institution_resources_iam_members" {
+  type = list(object({
+    role   = string
+    member = string
+  }))
+  default = []
+}
+
