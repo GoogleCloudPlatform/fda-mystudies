@@ -11,7 +11,10 @@ package com.google.cloud.healthcare.fdamystudies.controller;
 import com.google.cloud.healthcare.fdamystudies.beans.UserResourceBean;
 import com.google.cloud.healthcare.fdamystudies.beans.UserResourcesBean;
 import com.google.cloud.healthcare.fdamystudies.service.PersonalizedUserReportService;
+import com.google.cloud.healthcare.fdamystudies.util.GetUserInstitutionResources;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,6 +29,7 @@ public class PersonalizedResourcesController {
       LoggerFactory.getLogger(PersonalizedResourcesController.class);
 
   @Autowired PersonalizedUserReportService personalizedUserReportService;
+  @Autowired GetUserInstitutionResources institutionResourcesService;
 
   @GetMapping(value = "/getPersonalizedResources")
   public UserResourcesBean getPersonalizedResources(
@@ -36,7 +40,11 @@ public class PersonalizedResourcesController {
     logger.info("UserResourcesController getPersonalizedResources() - starts");
     List<UserResourceBean> personalizedUserReports =
         personalizedUserReportService.getLatestPersonalizedUserReports(userId, studyId);
+    List<UserResourceBean> institutionResources =
+        institutionResourcesService.getInstitutionResourcesForUser(userId);
     logger.info("UserResourcesController getPersonalizedResources() - Ends");
-    return new UserResourcesBean(personalizedUserReports);
+    return new UserResourcesBean(
+        Stream.concat(personalizedUserReports.stream(), institutionResources.stream())
+            .collect(Collectors.toList()));
   }
 }
