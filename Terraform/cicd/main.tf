@@ -178,7 +178,8 @@ resource "google_cloudbuild_trigger" "plan" {
   name     = "tf-plan"
 
   included_files = [
-    "${local.terraform_root_prefix}**",
+    "${local.terraform_root_prefix}org/**",
+    "${local.terraform_root_prefix}cicd/configs/tf-plan.yaml"
   ]
 
   github {
