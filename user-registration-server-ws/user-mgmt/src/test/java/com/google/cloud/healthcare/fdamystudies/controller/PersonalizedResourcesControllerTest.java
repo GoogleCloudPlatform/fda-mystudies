@@ -17,6 +17,7 @@ import com.google.cloud.healthcare.fdamystudies.beans.UserResourceBean;
 import com.google.cloud.healthcare.fdamystudies.config.ApplicationPropertyConfiguration;
 import com.google.cloud.healthcare.fdamystudies.service.CommonServiceImpl;
 import com.google.cloud.healthcare.fdamystudies.service.PersonalizedUserReportService;
+import com.google.cloud.healthcare.fdamystudies.util.GetUserInstitutionResources;
 import java.util.Arrays;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -41,11 +42,14 @@ import org.springframework.test.web.servlet.MockMvc;
 public class PersonalizedResourcesControllerTest {
 
   @MockBean private PersonalizedUserReportService personalizedUserReportService;
+  @MockBean private GetUserInstitutionResources institutionResourcesService;
   @MockBean private CommonServiceImpl commonService;
 
   @Autowired private MockMvc mvc;
 
-  private static final UserResourceBean.Type resourceType = UserResourceBean.Type.PERSONALIZED_REPORT;
+  private static final UserResourceBean.Type reportType = UserResourceBean.Type.PERSONALIZED_REPORT;
+  private static final UserResourceBean.Type resourceType =
+      UserResourceBean.Type.INSTITUTION_RESOURCE;
 
   @Test
   public void ReturnsUserResources() throws Exception {
@@ -58,8 +62,13 @@ public class PersonalizedResourcesControllerTest {
                 "test_user_id", "test_study_id"))
         .thenReturn(
             Arrays.asList(
-                new UserResourceBean("Report", "content", resourceType),
-                new UserResourceBean("Report 2", "content 2", resourceType)));
+                new UserResourceBean("Report", "content", reportType),
+                new UserResourceBean("Report 2", "content 2", reportType)));
+    Mockito.when(institutionResourcesService.getInstitutionResourcesForUser("test_user_id"))
+        .thenReturn(
+            Arrays.asList(
+                new UserResourceBean("Resource 1", "content 1", resourceType),
+                new UserResourceBean("Resource 2", "content 2", resourceType)));
     mvc.perform(
             get("/getPersonalizedResources")
                 .accept(MediaType.ALL)
@@ -70,9 +79,24 @@ public class PersonalizedResourcesControllerTest {
                 .contentType(MediaType.APPLICATION_JSON_VALUE))
         .andExpect(status().isOk())
         .andExpect(
-            jsonPath("$.resources.[?(@.title == \"Report\" && @.content == \"content\" && @.resourceType == \"report\")]").exists())
+            jsonPath(
+                    "$.resources.[?(@.title == \"Report\" && @.content == \"content\" &&"
+                        + " @.resourceType == \"report\")]")
+                .exists())
         .andExpect(
-            jsonPath("$.resources.[?(@.title == \"Report 2\" && @.content == \"content 2\" && @.resourceType == \"report\")]")
+            jsonPath(
+                    "$.resources.[?(@.title == \"Report 2\" && @.content == \"content 2\" &&"
+                        + " @.resourceType == \"report\")]")
+                .exists())
+        .andExpect(
+            jsonPath(
+                    "$.resources.[?(@.title == \"Resource 1\" && @.content == \"content 1\" &&"
+                        + " @.resourceType == \"resource\")]")
+                .exists())
+        .andExpect(
+            jsonPath(
+                    "$.resources.[?(@.title == \"Resource 2\" && @.content == \"content 2\" &&"
+                        + " @.resourceType == \"resource\")]")
                 .exists());
   }
 

@@ -18,5 +18,6 @@ public class TestApplicationContextInitializer implements
         System.setProperty("SMTP_HOSTNAME", "dummy-value");
         System.setProperty("SMTP_USE_IP_WHITELIST", "false");
         System.setProperty("FROM_EMAIL_DOMAIN", "dummy-value");
+        System.setProperty("INSTITUTION_RESOURCES_BUCKET_NAME", "dummy-value");
     }
 }
