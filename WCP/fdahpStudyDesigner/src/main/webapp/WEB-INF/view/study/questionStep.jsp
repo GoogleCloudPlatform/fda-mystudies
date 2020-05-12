@@ -284,7 +284,7 @@ function isNumberKey(evt)
             </div>
             <div class="clearfix"></div>
             <div>
-               <div class="gray-xs-f mb-xs">Allow rollback of chart? <span class="sprites_icon info" data-toggle="tooltip" title="If you select Yes, the chart will be allowed for rollback until the date of enrollment into the study."></span></div>
+               <div class="gray-xs-f mb-xs">Allow rollback of chart? <span class="ml-xs sprites_v3 filled-tooltip" data-toggle="tooltip" title="If you select Yes, the chart will be allowed for rollback until the date of enrollment into the study."></span></div>
                <div>
                   <span class="radio radio-info radio-inline p-45">
                   <input type="radio" id="allowRollbackChartYes" value="Yes" name="questionsBo.allowRollbackChart" ${questionnairesStepsBo.questionsBo.allowRollbackChart eq 'Yes' ? 'checked': ''}>
