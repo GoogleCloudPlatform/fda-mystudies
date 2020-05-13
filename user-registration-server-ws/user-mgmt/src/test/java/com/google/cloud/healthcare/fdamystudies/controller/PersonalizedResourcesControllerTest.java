@@ -82,28 +82,28 @@ public class PersonalizedResourcesControllerTest {
             jsonPath(
                     "$.resources.[?(@.title == \"Report\" && @.content == \"content\" &&"
                         + " @.type == \"report\" && @.resourcesId == \"\" &&"
-                        + " @.audience == \"\" && @.notificationText == \"\" &&"
+                        + " @.audience == \"All\" && @.notificationText == \"\" &&"
                         + " @.availability.length() == 0)]")
                 .exists())
         .andExpect(
             jsonPath(
                     "$.resources.[?(@.title == \"Report 2\" && @.content == \"content 2\" &&"
                         + " @.type == \"report\" && @.resourcesId == \"\" &&"
-                        + " @.audience == \"\" && @.notificationText == \"\" &&"
+                        + " @.audience == \"All\" && @.notificationText == \"\" &&"
                         + " @.availability.length() == 0)]")
                 .exists())
         .andExpect(
             jsonPath(
                     "$.resources.[?(@.title == \"Resource 1\" && @.content == \"content 1\" &&"
                         + " @.type == \"resources\" && @.resourcesId == \"\" &&"
-                        + " @.audience == \"\" && @.notificationText == \"\" &&"
+                        + " @.audience == \"All\" && @.notificationText == \"\" &&"
                         + " @.availability.length() == 0)]")
                 .exists())
         .andExpect(
             jsonPath(
                     "$.resources.[?(@.title == \"Resource 2\" && @.content == \"content 2\" &&"
                         + " @.type == \"resources\" && @.resourcesId == \"\" &&"
-                        + " @.audience == \"\" && @.notificationText == \"\" &&"
+                        + " @.audience == \"All\" && @.notificationText == \"\" &&"
                         + " @.availability.length() == 0)]")
                 .exists());
   }

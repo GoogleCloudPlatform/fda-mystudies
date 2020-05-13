@@ -39,7 +39,7 @@ public class UserResourceBean {
   private Type type;
 
   private String resourcesId = "";
-  private String audience = "";
+  private String audience = "All";
   private String notificationText = "";
   private Map<String, Object> availability = new LinkedHashMap<>();
 }
