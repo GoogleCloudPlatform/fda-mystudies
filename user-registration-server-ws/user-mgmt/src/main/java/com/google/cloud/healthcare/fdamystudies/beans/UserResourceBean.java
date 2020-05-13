@@ -20,17 +20,35 @@ import lombok.ToString;
 @ToString
 @Getter
 public class UserResourceBean {
+  private static final String serializedReportName = "report";
+  private static final String serializedResourceName = "resources";
+
   public enum Type {
-    @JsonProperty("report")
+    @JsonProperty(serializedReportName)
     PERSONALIZED_REPORT,
-    @JsonProperty("resources")
-    INSTITUTION_RESOURCE
+    @JsonProperty(serializedResourceName)
+    INSTITUTION_RESOURCE;
+
+    @Override
+    public String toString() {
+      switch (this) {
+        case PERSONALIZED_REPORT:
+          return serializedReportName;
+        case INSTITUTION_RESOURCE:
+          return serializedResourceName;
+        default:
+          throw new IllegalArgumentException();
+      }
+    }
   };
 
-  public UserResourceBean(String title, String content, Type type) {
+  public UserResourceBean(String title, String content, Type type, String id) {
     this.title = title;
     this.content = content;
     this.type = type;
+    // Prepend the resource type to the ID to ensure personalized report and
+    // institution resource IDs don't collide.
+    this.resourcesId = type + ":" + id;
   }
 
   // Fields match ResourcesBean in Study MetaData server (WCP-WS).

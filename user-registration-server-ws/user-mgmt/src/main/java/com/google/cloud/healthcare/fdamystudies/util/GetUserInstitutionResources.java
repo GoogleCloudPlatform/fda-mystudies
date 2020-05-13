@@ -36,7 +36,7 @@ public class GetUserInstitutionResources {
         List<UserResourceBean> resources = new ArrayList<>();
         for (CloudStorageService.InstitutionResource institutionResource : streams) {
             String content = new String(institutionResource.stream.toByteArray());
-            resources.add(new UserResourceBean(institutionResource.title, content, resourceType));
+            resources.add(new UserResourceBean(institutionResource.title, content, resourceType, institutionResource.hash));
         }
         return resources;
     }
