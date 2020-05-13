@@ -9,6 +9,7 @@ package com.google.cloud.healthcare.fdamystudies.service;
 
 import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.hasSize;
 import static org.junit.Assert.assertThat;
 
 import com.google.cloud.healthcare.fdamystudies.TestApplicationContextInitializer;
@@ -22,6 +23,7 @@ import com.google.cloud.healthcare.fdamystudies.repository.UserDetailsRepository
 import java.time.LocalDateTime;
 import java.time.Month;
 import java.util.GregorianCalendar;
+import java.util.List;
 import javax.annotation.Resource;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -50,7 +52,8 @@ public class PersonalizedUserReportServiceTest {
   @Autowired private PersonalizedUserReportService personalizedUserReportService;
   @Autowired private ApplicationContext ctx;
 
-  private static final UserResourceBean.Type resourceType = UserResourceBean.Type.PERSONALIZED_REPORT;
+  private static final UserResourceBean.Type resourceType =
+      UserResourceBean.Type.PERSONALIZED_REPORT;
 
   @Test
   public void GetsMostRecentReportsForUserAndStudy() {
@@ -86,6 +89,7 @@ public class PersonalizedUserReportServiceTest {
     // This is the report that should be retrieved.
     PersonalizedUserReportBO report1 =
         PersonalizedUserReportBO.builder()
+            .id(1)
             .userDetails(user1)
             .studyInfo(study1)
             .reportTitle("Report 1")
@@ -93,6 +97,7 @@ public class PersonalizedUserReportServiceTest {
             .build();
     PersonalizedUserReportBO report2 =
         PersonalizedUserReportBO.builder()
+            .id(2)
             .userDetails(user1)
             .studyInfo(study1)
             .reportTitle("Report 1")
@@ -100,6 +105,7 @@ public class PersonalizedUserReportServiceTest {
             .build();
     PersonalizedUserReportBO report3 =
         PersonalizedUserReportBO.builder()
+            .id(3)
             .userDetails(user1)
             .studyInfo(study1)
             .reportTitle("Report 1")
@@ -107,6 +113,7 @@ public class PersonalizedUserReportServiceTest {
             .build();
     PersonalizedUserReportBO report4 =
         PersonalizedUserReportBO.builder()
+            .id(4)
             .userDetails(user1)
             .studyInfo(study1)
             .reportTitle("Report 2")
@@ -114,6 +121,7 @@ public class PersonalizedUserReportServiceTest {
             .build();
     PersonalizedUserReportBO report5 =
         PersonalizedUserReportBO.builder()
+            .id(5)
             .userDetails(user2)
             .studyInfo(study1)
             .reportTitle("Report 1")
@@ -121,6 +129,7 @@ public class PersonalizedUserReportServiceTest {
             .build();
     PersonalizedUserReportBO report6 =
         PersonalizedUserReportBO.builder()
+            .id(6)
             .userDetails(user1)
             .studyInfo(study2)
             .reportTitle("Report 2")
@@ -133,10 +142,16 @@ public class PersonalizedUserReportServiceTest {
     personalizedUserReportRepository.save(report5);
     personalizedUserReportRepository.save(report6);
 
+    List<UserResourceBean> userReports =
+        personalizedUserReportService.getLatestPersonalizedUserReports("user_id1", "study 1");
+    assertThat(userReports, hasSize(2));
     assertThat(
-        personalizedUserReportService.getLatestPersonalizedUserReports("user_id1", "study 1"),
+        userReports,
         containsInAnyOrder(
-            equalTo(new UserResourceBean("Report 2", "Report 2 content for user 1", resourceType)),
-            equalTo(new UserResourceBean("Report 1", "Report 1 content 3 for user 1", resourceType))));
+            equalTo(
+                new UserResourceBean("Report 2", "Report 2 content for user 1", resourceType, "4")),
+            equalTo(
+                new UserResourceBean(
+                    "Report 1", "Report 1 content 3 for user 1", resourceType, "3"))));
   }
 }

@@ -429,7 +429,8 @@
 										function(e) {
 											e.preventDefault();
 											if ($('#summernote').summernote(
-													'code') === '<p><br></p>') {
+													'code') === '<br>' || $('#summernote').summernote(
+													'code') === '') {
 												$('#summernote').attr(
 														'required', true);
 												$('#summernote')
