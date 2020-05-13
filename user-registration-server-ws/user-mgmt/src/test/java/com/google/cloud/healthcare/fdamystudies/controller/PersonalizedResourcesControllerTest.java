@@ -47,9 +47,10 @@ public class PersonalizedResourcesControllerTest {
 
   @Autowired private MockMvc mvc;
 
-  private static final UserResourceBean.Type reportType = UserResourceBean.Type.PERSONALIZED_REPORT;
-  private static final UserResourceBean.Type resourceType =
-      UserResourceBean.Type.INSTITUTION_RESOURCE;
+  private static final UserResourceBean.ResourceType reportType =
+      UserResourceBean.ResourceType.PERSONALIZED_REPORT;
+  private static final UserResourceBean.ResourceType resourceType =
+      UserResourceBean.ResourceType.INSTITUTION_RESOURCE;
 
   @Test
   public void ReturnsUserResources() throws Exception {
@@ -81,28 +82,28 @@ public class PersonalizedResourcesControllerTest {
         .andExpect(
             jsonPath(
                     "$.resources.[?(@.title == \"Report\" && @.content == \"content\" &&"
-                        + " @.type == \"report\" && @.resourcesId == \"report:0\" &&"
+                        + " @.resourceType == \"report\" && @.resourcesId == \"report:0\" &&"
                         + " @.audience == \"All\" && @.notificationText == \"\" &&"
                         + " @.availability.length() == 0)]")
                 .exists())
         .andExpect(
             jsonPath(
                     "$.resources.[?(@.title == \"Report 2\" && @.content == \"content 2\" &&"
-                        + " @.type == \"report\" && @.resourcesId == \"report:1\" &&"
+                        + " @.resourceType == \"report\" && @.resourcesId == \"report:1\" &&"
                         + " @.audience == \"All\" && @.notificationText == \"\" &&"
                         + " @.availability.length() == 0)]")
                 .exists())
         .andExpect(
             jsonPath(
                     "$.resources.[?(@.title == \"Resource 1\" && @.content == \"content 1\" &&"
-                        + " @.type == \"resources\" && @.resourcesId == \"resources:2\" &&"
+                        + " @.resourceType == \"resources\" && @.resourcesId == \"resources:2\" &&"
                         + " @.audience == \"All\" && @.notificationText == \"\" &&"
                         + " @.availability.length() == 0)]")
                 .exists())
         .andExpect(
             jsonPath(
                     "$.resources.[?(@.title == \"Resource 2\" && @.content == \"content 2\" &&"
-                        + " @.type == \"resources\" && @.resourcesId == \"resources:3\" &&"
+                        + " @.resourceType == \"resources\" && @.resourcesId == \"resources:3\" &&"
                         + " @.audience == \"All\" && @.notificationText == \"\" &&"
                         + " @.availability.length() == 0)]")
                 .exists());

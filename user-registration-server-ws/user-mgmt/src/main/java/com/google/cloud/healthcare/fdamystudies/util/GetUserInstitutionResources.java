@@ -19,7 +19,7 @@ public class GetUserInstitutionResources {
     @Autowired
     CloudStorageService cloudStorageService;
 
-	private static final UserResourceBean.Type resourceType = UserResourceBean.Type.INSTITUTION_RESOURCE;
+	private static final UserResourceBean.ResourceType resourceType = UserResourceBean.ResourceType.INSTITUTION_RESOURCE;
 
     // Returns UserResourceBeans for the institution that `userId` belongs to.
     // Can be an empty list.

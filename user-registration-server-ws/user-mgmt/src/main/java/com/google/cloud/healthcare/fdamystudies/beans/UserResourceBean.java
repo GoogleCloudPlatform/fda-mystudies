@@ -23,7 +23,7 @@ public class UserResourceBean {
   private static final String serializedReportName = "report";
   private static final String serializedResourceName = "resources";
 
-  public enum Type {
+  public enum ResourceType {
     @JsonProperty(serializedReportName)
     PERSONALIZED_REPORT,
     @JsonProperty(serializedResourceName)
@@ -42,21 +42,22 @@ public class UserResourceBean {
     }
   };
 
-  public UserResourceBean(String title, String content, Type type, String id) {
+  public UserResourceBean(String title, String content, ResourceType resourceType, String id) {
     this.title = title;
     this.content = content;
-    this.type = type;
+    this.resourceType = resourceType;
     // Prepend the resource type to the ID to ensure personalized report and
     // institution resource IDs don't collide.
-    this.resourcesId = type + ":" + id;
+    this.resourcesId = resourceType + ":" + id;
   }
 
   // Fields match ResourcesBean in Study MetaData server (WCP-WS).
   private String title;
   private String content;
-  private Type type;
-
+  private ResourceType resourceType;
   private String resourcesId = "";
+
+  private String type = "text";
   private String audience = "All";
   private String notificationText = "";
   private Map<String, Object> availability = new LinkedHashMap<>();

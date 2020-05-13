@@ -24,8 +24,8 @@ public class PersonalizedUserReportService {
 
   @Autowired PersonalizedUserReportRepository repository;
 
-  private static final UserResourceBean.Type resourceType =
-      UserResourceBean.Type.PERSONALIZED_REPORT;
+  private static final UserResourceBean.ResourceType resourceType =
+      UserResourceBean.ResourceType.PERSONALIZED_REPORT;
 
   public List<UserResourceBean> getLatestPersonalizedUserReports(String userId, String studyId) {
     return repository.findByUserDetailsUserIdAndStudyInfoCustomId(userId, studyId).stream()
