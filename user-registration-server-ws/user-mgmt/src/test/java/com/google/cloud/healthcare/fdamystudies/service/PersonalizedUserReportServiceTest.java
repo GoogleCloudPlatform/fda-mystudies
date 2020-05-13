@@ -52,8 +52,8 @@ public class PersonalizedUserReportServiceTest {
   @Autowired private PersonalizedUserReportService personalizedUserReportService;
   @Autowired private ApplicationContext ctx;
 
-  private static final UserResourceBean.Type resourceType =
-      UserResourceBean.Type.PERSONALIZED_REPORT;
+  private static final UserResourceBean.ResourceType resourceType =
+      UserResourceBean.ResourceType.PERSONALIZED_REPORT;
 
   @Test
   public void GetsMostRecentReportsForUserAndStudy() {
