@@ -40,6 +40,10 @@ resource "google_firestore_index" "activities_index" {
     field_path = "createdTimestamp"
     order      = "ASCENDING"
   }
+  fields {
+    field_path = "__name__"
+    order      = "ASCENDING"
+  }
 }
 
 module "survey_pubsub" {
