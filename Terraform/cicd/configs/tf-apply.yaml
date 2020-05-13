@@ -18,22 +18,45 @@ steps:
   - name: "gcr.io/cloud-foundation-cicd/cft/developer-tools@sha256:a09ad46f513847d31e2cfe20f818c2d64809e7d12695e2e6098900296f6527bf"
     entrypoint: terraform
     args: ["version"]
+    id: Terraform version
+
+  # org/cicd
+  - name: "gcr.io/cloud-foundation-cicd/cft/developer-tools@sha256:a09ad46f513847d31e2cfe20f818c2d64809e7d12695e2e6098900296f6527bf"
+    entrypoint: terraform
+    args: ["init"]
+    dir: "${_TERRAFORM_ROOT}/org/cicd"
+    id: Init (CICD)
 
   - name: "gcr.io/cloud-foundation-cicd/cft/developer-tools@sha256:a09ad46f513847d31e2cfe20f818c2d64809e7d12695e2e6098900296f6527bf"
-    entrypoint: terragrunt
-    args: ["init"]
-    dir: "${_TERRAFORM_ROOT}/org"
+    entrypoint: terraform
+    args: ["plan"]
+    dir: "${_TERRAFORM_ROOT}/org/cicd"
+    id: Speculative plan (CICD)
+
+  - name: "gcr.io/cloud-foundation-cicd/cft/developer-tools@sha256:a09ad46f513847d31e2cfe20f818c2d64809e7d12695e2e6098900296f6527bf"
+    entrypoint: terraform
+    args: ["apply", "-auto-approve"]
+    dir: "${_TERRAFORM_ROOT}/org/cicd"
+    id: Deployment (CICD)
 
   # org/
   - name: "gcr.io/cloud-foundation-cicd/cft/developer-tools@sha256:a09ad46f513847d31e2cfe20f818c2d64809e7d12695e2e6098900296f6527bf"
     entrypoint: terragrunt
-    args: ["plan-all", "--terragrunt-non-interactive"]
+    args: ["init"]
     dir: "${_TERRAFORM_ROOT}/org"
+    id: Init (org)
 
   - name: "gcr.io/cloud-foundation-cicd/cft/developer-tools@sha256:a09ad46f513847d31e2cfe20f818c2d64809e7d12695e2e6098900296f6527bf"
-    entrypoint: terragrunt
-    args: ["apply-all", "--terragrunt-non-interactive"]
+    entrypoint: bash
+    args: ["../cicd/configs/terragrunt.sh", "plan-all"]
     dir: "${_TERRAFORM_ROOT}/org"
+    id: Speculative plan (org)
+
+  - name: "gcr.io/cloud-foundation-cicd/cft/developer-tools@sha256:a09ad46f513847d31e2cfe20f818c2d64809e7d12695e2e6098900296f6527bf"
+    entrypoint: bash
+    args: ["../cicd/configs/terragrunt.sh", "apply-all"]
+    dir: "${_TERRAFORM_ROOT}/org"
+    id: Deployment (org)
 
 substitutions:
     _TERRAFORM_ROOT: "."
