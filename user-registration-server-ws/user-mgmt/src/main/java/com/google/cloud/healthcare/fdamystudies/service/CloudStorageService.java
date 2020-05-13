@@ -19,6 +19,7 @@ import com.google.cloud.storage.Bucket;
 import com.google.cloud.storage.Storage;
 import com.google.cloud.storage.StorageException;
 import com.google.cloud.storage.StorageOptions;
+import java.net.URL;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 import org.slf4j.Logger;
@@ -46,6 +47,7 @@ public class CloudStorageService {
     public static class InstitutionResource {
         public String title;
         public ByteArrayOutputStream stream = new ByteArrayOutputStream();
+        public String hash;
     }
 
     public List<InstitutionResource> getAllInstitutionResources(String institutionId) {
@@ -65,6 +67,7 @@ public class CloudStorageService {
             // Remove institutionId directory path from title.
             resource.title = blob.getName().replaceFirst(Pattern.quote(institutionId + "/"),
                     "");
+            resource.hash = blob.getMd5();
             // There are placeholder files in GCS that match the directory
             // but do not have a file name. Skip these.
             if (resource.title.isEmpty()) continue;
