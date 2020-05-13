@@ -63,7 +63,7 @@ public class CloudStorageService {
         for (Blob blob : blobs.iterateAll()) {
             InstitutionResource resource = new InstitutionResource();
             // Remove institutionId directory path from title.
-            resource.title = blob.getName().replaceFirst(Pattern.quote(institutionId),
+            resource.title = blob.getName().replaceFirst(Pattern.quote(institutionId + "/"),
                     "");
             // There are placeholder files in GCS that match the directory
             // but do not have a file name. Skip these.
