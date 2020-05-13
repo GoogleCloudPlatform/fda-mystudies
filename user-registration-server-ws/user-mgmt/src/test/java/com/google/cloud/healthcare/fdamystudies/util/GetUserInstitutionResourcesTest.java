@@ -82,7 +82,8 @@ public class GetUserInstitutionResourcesTest {
                 new ArrayList<>();
         resources.add(new CloudStorageService.InstitutionResource(
                 "fake_title.html",
-                byteArrayOutputStream));
+                byteArrayOutputStream,
+                "id"));
         Mockito.when(cloudStorageService.getAllInstitutionResources(
                 fakeInstitution)).thenReturn(resources);
         List<UserResourceBean> userResourceBeans =
@@ -92,6 +93,7 @@ public class GetUserInstitutionResourcesTest {
         assertThat(userResourceBeans.get(0).getTitle(),
                 equalTo("fake_title.html"));
         assertThat(userResourceBeans.get(0).getContent(), equalTo(html));
+        assertThat(userResourceBeans.get(0).getResourcesId(), equalTo("resources:id"));
 
     }
 }

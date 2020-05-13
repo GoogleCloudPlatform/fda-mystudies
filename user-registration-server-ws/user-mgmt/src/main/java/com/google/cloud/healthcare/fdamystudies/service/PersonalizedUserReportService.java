@@ -24,7 +24,8 @@ public class PersonalizedUserReportService {
 
   @Autowired PersonalizedUserReportRepository repository;
 
-  private static final UserResourceBean.Type resourceType = UserResourceBean.Type.PERSONALIZED_REPORT;
+  private static final UserResourceBean.Type resourceType =
+      UserResourceBean.Type.PERSONALIZED_REPORT;
 
   public List<UserResourceBean> getLatestPersonalizedUserReports(String userId, String studyId) {
     return repository.findByUserDetailsUserIdAndStudyInfoCustomId(userId, studyId).stream()
@@ -36,7 +37,13 @@ public class PersonalizedUserReportService {
                     Comparator.comparing(PersonalizedUserReportBO::getCreationTime))))
         .entrySet()
         .stream()
-        .map(e -> new UserResourceBean(e.getKey(), e.getValue().getReportContent(), resourceType))
+        .map(
+            e ->
+                new UserResourceBean(
+                    e.getKey(),
+                    e.getValue().getReportContent(),
+                    resourceType,
+                    e.getValue().getId().toString()))
         .collect(Collectors.toList());
   }
 }
