@@ -79,7 +79,7 @@ public class UserConsentManagementControllerIntegrationTest extends BaseMockit {
   public static final String FIELD_TYPE = "type";
   public static final String FIELD_CONTENT = "content";
 
-  public static final String WIREMOCK_URL = "http://localhost:8080/AuthServer/tokenAuthentication";
+  public static final String WIREMOCK_URL = "http://localhost:8001/AuthServer/tokenAuthentication";
 
   @BeforeEach
   public void setWireMockUrl() {

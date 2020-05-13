@@ -1,3 +1,14 @@
 **/.terraform
 *.tfstate
 *.tfstate.*
+WCP-WS/target/
+WCP-WS/
+user-registration-server-ws/consent-mgmt/.settings/
+user-registration-server-ws/consent-mgmt/target/
+user-registration-server-ws/consent-mgmt/.classpath
+user-registration-server-ws/consent-mgmt/.factorypath
+user-registration-server-ws/consent-mgmt/userregws_20200424.log.gz
+WCP/fdahpStudyDesigner/.settings/
+user-registration-server-ws/consent-mgmt/.idea/
+user-registration-server-ws/consent-mgmt/ConsentMgmtServicesWs.iml
+user-registration-server-ws/consent-mgmt/userregws_20200430.log.gz
