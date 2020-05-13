@@ -23,7 +23,7 @@ public class UserResourceBean {
   public enum Type {
     @JsonProperty("report")
     PERSONALIZED_REPORT,
-    @JsonProperty("resource")
+    @JsonProperty("resources")
     INSTITUTION_RESOURCE
   };
 

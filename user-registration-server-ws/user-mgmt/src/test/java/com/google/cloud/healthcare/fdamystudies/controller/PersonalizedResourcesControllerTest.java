@@ -95,14 +95,14 @@ public class PersonalizedResourcesControllerTest {
         .andExpect(
             jsonPath(
                     "$.resources.[?(@.title == \"Resource 1\" && @.content == \"content 1\" &&"
-                        + " @.type == \"resource\" && @.resourcesId == \"\" &&"
+                        + " @.type == \"resources\" && @.resourcesId == \"\" &&"
                         + " @.audience == \"\" && @.notificationText == \"\" &&"
                         + " @.availability.length() == 0)]")
                 .exists())
         .andExpect(
             jsonPath(
                     "$.resources.[?(@.title == \"Resource 2\" && @.content == \"content 2\" &&"
-                        + " @.type == \"resource\" && @.resourcesId == \"\" &&"
+                        + " @.type == \"resources\" && @.resourcesId == \"\" &&"
                         + " @.audience == \"\" && @.notificationText == \"\" &&"
                         + " @.availability.length() == 0)]")
                 .exists());
