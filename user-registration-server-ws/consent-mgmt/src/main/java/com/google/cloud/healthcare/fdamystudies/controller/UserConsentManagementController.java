@@ -228,42 +228,6 @@ public class UserConsentManagementController {
     return new ResponseEntity<>(errorBean, HttpStatus.OK);
   }
 
-  /**
-   * saving the consent documents into particular study folder
-   *
-   * @param studyConsent
-   * @return
-   */
-  public String saveStudyConsentDocument(StudyConsentBO studyConsent) {
-    String fileName = "";
-    String catalinaHome = "";
-    byte pdfFileInByte[] = null;
-    FileOutputStream fop = null;
-    File file = null;
-    try {
-      catalinaHome = System.getProperty("catalina.home");
-      if (!StringUtils.isEmpty(studyConsent.getPdf()) || (studyConsent.getPdf().length() != 0)) {
-        try {
-          pdfFileInByte = Base64.decodeBase64(studyConsent.getPdf());
-          fileName = "user_" + studyConsent.getUserId() + ".pdf";
-          file = new File("src/main/webapp/consentDucmentPdfFiles/" + fileName);
-          fop = new FileOutputStream(file);
-          fop.write(pdfFileInByte);
-          fop.flush();
-        } catch (Exception e) {
-          logger.error("SafepassageLoginDAOImpl - updateUserProfile()- error ", e);
-        } finally {
-          if (fop != null) {
-            fop.close();
-          }
-        }
-      }
-    } catch (Exception e) {
-      logger.error("FdahpUserRegWSController saveStudyConsentDocument:", e);
-    }
-    return fileName;
-  }
-
   @GetMapping(value = "/consentDocument", produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<?> getStudyConsentPDF(
       @RequestHeader("userId") String userId,
