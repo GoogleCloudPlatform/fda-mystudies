@@ -19,6 +19,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.github.tomakehurst.wiremock.WireMockServer;
 import com.google.cloud.healthcare.fdamystudies.config.WireMockInitializer;
+import static com.github.tomakehurst.wiremock.client.WireMock.aResponse;
+import static com.github.tomakehurst.wiremock.client.WireMock.get;
+import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
 
 @ContextConfiguration(initializers = {WireMockInitializer.class})
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
@@ -38,8 +41,6 @@ public class BaseMockit {
 
   @Autowired private ObjectMapper objectMapper;
 
-  private boolean wireMockInitialized = false;
-
   protected TestRestTemplate getRestTemplate() {
     return restTemplate;
   }
@@ -57,12 +58,9 @@ public class BaseMockit {
   }
 
   protected void setUpHydraMockResponse() {
-    if (!wireMockInitialized) {
-      //      getWireMockServer()
-      //          .stubFor(
-      //              get(urlEqualTo("http://localhost:8080/AuthServer/tokenAuthentication"))
-      //
-      // .willReturn(aResponse().withBodyFile("hydra/auth-server-token-validation.json")));
-    }
+	  getWireMockServer()
+      .stubFor(
+          get(urlEqualTo("auth-server-token-validation.json"))
+              .willReturn(aResponse().withBodyFile("auth-server-token-validation-response.json")));
   }
 }

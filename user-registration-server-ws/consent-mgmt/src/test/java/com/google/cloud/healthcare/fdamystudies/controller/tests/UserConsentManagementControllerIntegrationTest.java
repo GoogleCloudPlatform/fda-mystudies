@@ -37,9 +37,7 @@ import com.google.cloud.healthcare.fdamystudies.controller.UserConsentManagement
 import com.google.cloud.healthcare.fdamystudies.service.FileStorageService;
 import com.google.cloud.healthcare.fdamystudies.service.UserConsentManagementServiceImpl;
 
-@ActiveProfiles("mockit")
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @ExtendWith(MockitoExtension.class)
 public class UserConsentManagementControllerIntegrationTest extends BaseMockit {
 
@@ -79,12 +77,6 @@ public class UserConsentManagementControllerIntegrationTest extends BaseMockit {
   public static final String FIELD_TYPE = "type";
   public static final String FIELD_CONTENT = "content";
 
-  public static final String WIREMOCK_URL = "http://localhost:8001/AuthServer/tokenAuthentication";
-
-  @BeforeEach
-  public void setWireMockUrl() {
-    appConfig.setAuthServerAccessTokenValidationUrl(WIREMOCK_URL);
-  }
 
   @Test
   @Order(1)
@@ -139,7 +131,7 @@ public class UserConsentManagementControllerIntegrationTest extends BaseMockit {
     consent.put(FIELD_VERSION, VERSION_1_0);
     consent.put(FIELD_STATUS, "");
     consent.put(FIELD_PDF, pdfValue);
-    consentRequest.put(FIELD_CONSENT, consent);
+    consentRequest.set(FIELD_CONSENT, consent);
 
     HttpEntity<JsonNode> requestEntity = new HttpEntity<>(consentRequest, headers);
     ResponseEntity<JsonNode> responseEntity =
@@ -219,7 +211,7 @@ public class UserConsentManagementControllerIntegrationTest extends BaseMockit {
     consent.put(FIELD_VERSION, VERSION_1_0);
     consent.put(FIELD_STATUS, "complete");
     consent.put(FIELD_PDF, pdfValue);
-    consentRequest.put(FIELD_CONSENT, consent);
+    consentRequest.set(FIELD_CONSENT, consent);
 
     HttpEntity<JsonNode> requestEntity = new HttpEntity<>(consentRequest, headers);
     ResponseEntity<JsonNode> responseEntity =
@@ -303,7 +295,7 @@ public class UserConsentManagementControllerIntegrationTest extends BaseMockit {
     consent.put(FIELD_VERSION, VERSION_1_2);
     consent.put(FIELD_STATUS, "complete");
     consent.put(FIELD_PDF, pdfValue);
-    consentRequest.put(FIELD_CONSENT, consent);
+    consentRequest.set(FIELD_CONSENT, consent);
 
     HttpEntity<JsonNode> requestEntity = new HttpEntity<>(consentRequest, headers);
     ResponseEntity<JsonNode> responseEntity =
@@ -451,7 +443,7 @@ public class UserConsentManagementControllerIntegrationTest extends BaseMockit {
 
     // without consent version
     ObjectNode consent = new ObjectMapper().createObjectNode();
-    consentRequest.put(FIELD_CONSENT, consent);
+    consentRequest.set(FIELD_CONSENT, consent);
 
     requestEntity = new HttpEntity<>(consentRequest, headers);
     responseEntity =
@@ -551,7 +543,7 @@ public class UserConsentManagementControllerIntegrationTest extends BaseMockit {
     consent.put(FIELD_VERSION, VERSION_1_2);
     consent.put(FIELD_STATUS, "complete");
     consent.put(FIELD_PDF, ""); // empty pdf
-    consentRequest.put(FIELD_CONSENT, consent);
+    consentRequest.set(FIELD_CONSENT, consent);
 
     HttpEntity<JsonNode> requestEntity = new HttpEntity<>(consentRequest, headers);
     ResponseEntity<JsonNode> responseEntity =
@@ -578,7 +570,7 @@ public class UserConsentManagementControllerIntegrationTest extends BaseMockit {
     consent.put(FIELD_VERSION, VERSION_1_3);
     consent.put(FIELD_STATUS, "complete");
     consent.put(FIELD_PDF, ""); // empty pdf
-    consentRequest.put(FIELD_CONSENT, consent);
+    consentRequest.set(FIELD_CONSENT, consent);
 
     requestEntity = new HttpEntity<>(consentRequest, headers);
     responseEntity =
@@ -627,7 +619,7 @@ public class UserConsentManagementControllerIntegrationTest extends BaseMockit {
     consent.put(FIELD_VERSION, VERSION_1_2);
     consent.put(FIELD_STATUS, "complete");
     consent.put(FIELD_PDF, pdfValue);
-    consentRequest.put(FIELD_CONSENT, consent);
+    consentRequest.set(FIELD_CONSENT, consent);
 
     HttpEntity<JsonNode> requestEntity = new HttpEntity<>(consentRequest, headers);
     ResponseEntity<JsonNode> responseEntity =

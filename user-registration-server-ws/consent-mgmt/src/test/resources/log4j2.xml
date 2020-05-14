@@ -22,8 +22,8 @@
 	</Appenders>
 	<Loggers>
 
-		<Logger name="com.fda-mystudies-consent-management-server" level="info"
-			additivity="false">
+		<Logger name="com.fda-mystudies-consent-management-server"
+			level="info" additivity="false">
 			<AppenderRef ref="appLog" />
 		</Logger>
 
