@@ -214,8 +214,8 @@ class StudyDashboardStatisticsTableViewCell: UITableViewCell {
         endDateOfWeek = calendar.date(byAdding: .day, value: 7, to: currentEndDateOfWeek)
         let attributedText = self.getWeeklyAttributedText()
         labelDateValue?.attributedText = attributedText
-        if let currentWeekEndDate = startDateOfWeek {
-          todaysDate = currentWeekEndDate
+        if let currentWeekStartDate = startDateOfWeek {
+          todaysDate = currentWeekStartDate
           self.updateForwardBtnState()
         }
       }
@@ -250,8 +250,8 @@ class StudyDashboardStatisticsTableViewCell: UITableViewCell {
         endDateOfWeek = calendar.date(byAdding: .day, value: -7, to: currentEndDateOfWeek)
         labelDateValue?.attributedText = getWeeklyAttributedText()
      
-        if let currentWeekEndDate = startDateOfWeek {
-          todaysDate = currentWeekEndDate
+        if let currentWeekStartDate = startDateOfWeek {
+          todaysDate = currentWeekStartDate
           self.updateForwardBtnState()
         }
       }
@@ -282,7 +282,7 @@ class StudyDashboardStatisticsTableViewCell: UITableViewCell {
       
     case .Week:
       if let currentEndOfWeekDate = Date().endOfWeek,
-        let todaysEndOfWeek = todaysDate.endOfWeek {
+        let todaysEndOfWeek = endDateOfWeek {
         let result = todaysEndOfWeek.compare(currentEndOfWeekDate)
         if result == .orderedSame || result == .orderedDescending {
           self.buttonForward?.isEnabled = false
