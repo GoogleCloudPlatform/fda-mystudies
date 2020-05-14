@@ -919,7 +919,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     ud.synchronize()
     var nav: UINavigationController?
     // fetch the visible view controller
-    let navigationController = (self.window?.rootViewController as? UINavigationController)!
+    guard let navigationController = self.window?.rootViewController as? UINavigationController else {
+      return
+    }
+
     let menuVC = navigationController.viewControllers.last
 
     if menuVC is FDASlideMenuViewController {
@@ -932,6 +935,15 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
           (studyListVC as? StudyListViewController)!.addRightNavigationItem()
 
         }
+      }
+    }
+  }
+
+  private func refreshStudyActivitiesState(with userInfo: JSONDictionary) {
+    guard let currentStudyID = Study.currentStudy?.studyId else { return }
+    if let studyID = userInfo["studyId"] as? String, currentStudyID == studyID {
+      DispatchQueue.main.async {
+        NotificationCenter.default.post(name: kRefreshActivities, object: nil)
       }
     }
   }
@@ -1754,7 +1766,9 @@ extension AppDelegate: UNUserNotificationCenterDelegate {
     if userInfo.count > 0 && userInfo.keys.contains(kType) {
       self.updateNotification()
     }
-
+    if let userInfo = userInfo as? JSONDictionary {
+      refreshStudyActivitiesState(with: userInfo)
+    }
     completionHandler([UNNotificationPresentationOptions.alert, .sound, .badge])
   }
 
