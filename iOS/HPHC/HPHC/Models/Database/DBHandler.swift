@@ -2287,7 +2287,7 @@ class DBHandler: NSObject {
 
     let realm = DBHandler.getRealmObject()!
 
-    let dbNotifications = realm.objects(DBNotification.self).filter(
+    let dbNotifications = realm.objects(DBLocalNotification.self).filter(
       "activityId == %@ && studyId == %@",
       activityId,
       studyId
@@ -2297,6 +2297,23 @@ class DBHandler: NSObject {
       try? realm.write {
         realm.delete(dbNotifications)
       }
+    }
+  }
+
+  /// This method will delete the objects of `DBLocalNotification` from DB associate with study.
+  /// - Parameters:
+  ///   - studyId: StudyID associated with the Notification in DB.
+  class func deleteStudyDBLocalNotifications(for studyId: String) {
+
+    let realm = DBHandler.getRealmObject()!
+
+    let dbNotifications = realm.objects(DBLocalNotification.self).filter(
+      "studyId == %@",
+      studyId
+    )
+
+    try? realm.write {
+      realm.delete(dbNotifications)
     }
   }
 
