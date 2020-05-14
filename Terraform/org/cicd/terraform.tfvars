@@ -12,16 +12,9 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-org_id                        = "707577601068"
-billing_account               = "01EA90-3519E1-89CB1F"
-project_id                    = "heroes-hat-dev-devops"
-state_bucket                  = "heroes-hat-dev-terraform-state-08679"
-repo_owner                    = "GoogleCloudPlatform"
-repo_name                     = "fda-mystudies"
-branch_regex                  = "^early-access$"
-continuous_deployment_enabled = true
-trigger_enabled               = true
-terraform_root                = "Terraform"
-build_viewers = [
-  "group:rocketturtle-gcp-admin@rocketturtle.net",
+project_id = "heroes-hat-dev-devops"
+managed_services = [
+  "container.googleapis.com",
+  "dns.googleapis.com",
+  "firebase.googleapis.com",
 ]
