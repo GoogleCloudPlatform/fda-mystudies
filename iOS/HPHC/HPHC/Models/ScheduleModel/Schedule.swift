@@ -95,7 +95,7 @@ class Schedule {
       handler([])
       return
     }
-    let start = joiningDate.utcDate()
+    let start = activity.startDate?.utcDate()
 
     self.completionHandler = handler
     var endDateResult: ComparisonResult?
@@ -103,7 +103,7 @@ class Schedule {
       let end = activity.endDate?.utcDate()
       endDateResult = (end?.compare(joiningDate))! as ComparisonResult
     }
-    let startDateResult = (start.compare(joiningDate)) as ComparisonResult
+    let startDateResult = (start?.compare(joiningDate)) ?? .orderedAscending
 
     // check if user joined after activity is ended
     if endDateResult != nil && endDateResult == .orderedAscending {
