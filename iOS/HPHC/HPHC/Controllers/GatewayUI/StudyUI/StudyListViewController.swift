@@ -615,6 +615,18 @@ class StudyListViewController: UIViewController {
       labelHelperText.text = kHelperTextForOffline
       labelHelperText.isHidden = false
     }
+    DispatchQueue.main.async {
+      // Remove paused studies local notifications.
+      if let updatedStudies = Gateway.instance.studies {
+        let pausedStudies = updatedStudies.filter { $0.status == .Closed || $0.status == .Paused }
+        for study in pausedStudies {
+          DBHandler.deleteStudyDBLocalNotifications(for: study.studyId)
+        }
+        if pausedStudies.count > 0 {
+          LocalNotification.refreshAllLocalNotification()
+        }
+      }
+    }
   }
 
   /// Save information for study which feilds need to be updated.
