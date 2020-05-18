@@ -14,7 +14,7 @@
 		<input type="hidden" id="studyId" name="studyId" value="${studyId}">
 		<input type="hidden" id="consentId" name="consentId"
 			value="${consentBo.id}">
-        </form:form>
+	</form:form>
 	<form:form
 		action="/studybuilder/adminStudies/saveConsentReviewAndEConsentInfo.do?_S=${param._S}"
 		name="consentReviewFormId" id="consentReviewFormId" method="post"
@@ -67,7 +67,7 @@
 								step for this study? (This will let participants choose whether
 								they want to allow their data to be shared with 3rd parties)</div>
 							<div class="col-md-12 pl-none">
-								<div class="form-group">
+								<div class="form-group custom-form">
 									<span class="radio radio-info radio-inline p-45"> <input
 										type="radio" id="shareDataPermissionsYes" value="Yes"
 										name="shareDataPermissions"
@@ -89,7 +89,7 @@
 										Screen Title <small>(250 characters max)</small><span
 											class="requiredStar">*</span> E.g. Sharing Options
 									</div>
-									<div class="form-group">
+									<div class="form-group custom-form">
 										<input type="text" class="form-control requiredClass"
 											placeholde="" id="titleId" name="title"
 											value="${consentBo.title}" maxlength="250" />
@@ -104,7 +104,7 @@
 										participation in the study. Please indicate if you permit to
 										share your data more broadly to other parties for research.
 									</div>
-									<div class="form-group">
+									<div class="form-group custom-form">
 										<input type="text" class="form-control requiredClass"
 											placeholder="" maxlength="250" name="taglineDescription"
 											id="taglineDescriptionId"
@@ -118,7 +118,7 @@
 										researchers worldwide. <small>(250 characters max)</small><span
 											class="requiredStar">*</span>
 									</div>
-									<div class="form-group">
+									<div class="form-group custom-form">
 										<input type="text" class="form-control requiredClass"
 											placeholder="" maxlength="250" name="shortDescription"
 											id="shortDescriptionId" value="${consentBo.shortDescription}" />
@@ -131,7 +131,7 @@
 										partners&gt; <small>(500 characters max)</small><span
 											class="requiredStar">*</span>
 									</div>
-									<div class="form-group">
+									<div class="form-group custom-form">
 										<textarea class="form-control requiredClass" rows="5"
 											maxlength="500" placeholder="" name="longDescription"
 											id="longDescriptionId">${consentBo.longDescription}</textarea>
@@ -416,6 +416,7 @@
 <script type="text/javascript">
 $(document).ready(function(){  
 	//check the type of page action(view/edit)
+	newLearnMoreConsentDocument();
 	if('${permission}' == 'view'){
 		$('input[name="consentDocType"]').attr('disabled', 'disabled');
 		$('#consentReviewFormId input').prop('disabled', true);
@@ -428,7 +429,6 @@ $(document).ready(function(){
 	//var consentId = "${consentBo.id}";
 	
 	var consentId = "${consentBo.consentDocType}";
-	console.log(consentId);
 	if( consentId == null || consentId == '' || typeof consentId === 'undefined'){
 		if( null != "${consentInfoList}" && "${consentInfoList}" != '' && "${consentInfoList}" !== undefined){
 			$("#inlineRadio1").attr('checked', true);
@@ -452,7 +452,6 @@ $(document).ready(function(){
 	$('input[name="shareDataPermissions"]').change(function(){
 		var shareDataPermissions = '${consentBo.shareDataPermissions}';
 		var value= $(this).val();
-		console.log("value:"+value);
 		if(value == 'Yes'){
 			$('#rootContainer input').attr('required',true);
 			$('#learnMoreTextId').attr('required',true);
@@ -465,28 +464,9 @@ $(document).ready(function(){
 			$('#longDescriptionId').attr('required',false);
 			$('.requiredClass').attr('required',false);
 			$('#learnMoreTextId').attr('required',false);
-			newLearnMoreConsentDocument();
 			$("#rootContainer").hide();
 		}
 	});
-	/* var isChek = "${consentBo.consentDocType}";
-	if(isChek != null && isChek !='' && typeof isChek !=undefined){
-		if(isChek == 'New'){
-			$("#newDivId").show();
-			$("#autoCreateDivId").hide();
-			$("#autoCreateDivId01").hide();
-			$("#inlineRadio2").prop("checked", true);
-			$("#typeOfCensent").val("New");
-			createNewConsentDocument();
-		}else{
-			$("#autoCreateDivId").show();
-			$("#autoCreateDivId01").show();
-	        $("#newDivId").hide();
-	        $("#inlineRadio1").prop("checked", true);
-	        $("#typeOfCensent").val("Auto");
-	        autoCreateConsentDocument();
-		}
-	} */
 	//go back to consentList page
 	$("#saveId,#doneId").on('click', function(){
 		var id = this.id;
@@ -506,7 +486,7 @@ $(document).ready(function(){
 					isvalid = maxLenLearnMoreEditor();
 					}  
  				  isFromValid("#consentReviewFormId");  	
-				if(isFromValid("#consentReviewFormId") && isvalid){
+				if($('.custom-form').find('.has-error.has-danger').length < 1 && isvalid){
 					var message = "";
 					var alertType = "";
 					if(retainTxt != null && retainTxt != '' && typeof retainTxt != 'undefined'){
@@ -519,7 +499,6 @@ $(document).ready(function(){
 						}
 						message = "You have a setting that needs study data to be "+alertType+" if the participant withdraws from the study. Please ensure you have worded Consent Terms in accordance with this. Click OK to proceed with completing this section or Cancel if you wish to make changes.";
 					}
-					console.log(message);
 					bootbox.confirm({
 						closeButton: false,
 						message : message,
@@ -552,12 +531,9 @@ $(document).ready(function(){
 					    }
 		    		});
 				}else{
-					var slaCount = $('#menu1').find('.has-error.has-danger').length;
+					var slaCount = $('.custom-form').find('.has-error.has-danger').length;
 					var qlaCount = $('#menu2').find('.has-error.has-danger').length;
 					var rlaCount = $('#menu3').find('.has-error.has-danger').length;
-					console.log("slaCount:"+slaCount);
-					console.log("qlaCount:"+qlaCount);
-					console.log("rlaCount:"+rlaCount);
 					if(parseInt(slaCount) >= 1 || $('#learnMoreTextId').parent().find(".help-block").html() !=  ''){
 						 $('.shareData a').tab('show');
 					}else if(parseInt(qlaCount) >= 1 || $('#newDocumentDivId').parent().find(".help-block").html() !=  ''){
@@ -568,13 +544,10 @@ $(document).ready(function(){
 				}
 			}	
 		}else{
-			var slaCount = $('#menu1').find('.has-error.has-danger').length;
+			var slaCount = $('.custom-form').find('.has-error.has-danger').length;
 			var qlaCount = $('#menu2').find('.has-error.has-danger').length;
 			var rlaCount = $('#menu3').find('.has-error.has-danger').length;
-			console.log("slaCount:"+slaCount);
-			console.log("qlaCount:"+qlaCount);
-			console.log("rlaCount:"+rlaCount);
-			if(parseInt(slaCount) >= 1 || $('#learnMoreTextId').parent().find(".help-block").html() !=  ''){
+			if(parseInt(slaCount) >= 1 ){
 				 $('.shareData a').tab('show');
 			}else if(parseInt(qlaCount) >= 1 || $('#newDocumentDivId').parent().find(".help-block").html() !=  ''){
 				 $('.consentReview a').tab('show');
@@ -584,9 +557,7 @@ $(document).ready(function(){
 			}
 	});
 	function resetValues(shareDataPermissions){
-		console.log("shareDataPermissions:"+shareDataPermissions);
 		if(shareDataPermissions == '' || shareDataPermissions == 'No'){
-			console.log("ifff");
 			$('#rootContainer input').val('');
 			$('#allowWithoutPermissionYes').val("Yes");
 			$('#allowWithoutPermissionNo').val("No");
@@ -595,19 +566,16 @@ $(document).ready(function(){
 			$('#learnMoreTextId').attr("required",false);
 			$('#longDescriptionId').val('');
 			$('.requiredClass').attr('required',false);
-			newLearnMoreConsentDocument();
 			$("#rootContainer").hide();
 		}else{
 			$('.requiredClass').attr('required',true);
 			$('#learnMoreTextId').attr('required',true);
-			newLearnMoreConsentDocument();
 		} 
 	}
 	//consent doc type div
 	function consentDocumentDivType(){
 		
 		if($("#inlineRadio1").is(":checked")){
-			console.log("consentDocumentDivType if");
     		$("#autoCreateDivId").show();
     		$("#autoCreateDivId01").show();
     		$('#newDocumentDivId').attr("required",false);
@@ -618,7 +586,6 @@ $(document).ready(function(){
 	        $('#requiredStarId').hide();
 	        autoCreateConsentDocument();
     	}else{
-    		console.log("consentDocumentDivType else");
     		$("#newDivId").show();
     		$("#autoCreateDivId").hide();
     		$("#autoCreateDivId01").hide();
@@ -705,7 +672,6 @@ function newLearnMoreConsentDocument(){
     
     //save review and E-consent data
     function saveConsentReviewAndEConsentInfo(item){
-        
 	   		var consentInfo = new Object();
 	    	var consentId = $("#consentId").val();
 	    	var studyId = $("#studyId").val();
@@ -801,27 +767,10 @@ function newLearnMoreConsentDocument(){
 		          },
 		          global : false
 		   });
-	   	 /* }else{
-	   		console.log("else....");
-	   		var slaCount = $('#menu1').find('.has-error.has-danger').length;
-			var qlaCount = $('#menu2').find('.has-error.has-danger').length;
-			var rlaCount = $('#menu3').find('.has-error.has-danger').length;
-			console.log("slaCount:"+slaCount);
-			console.log("qlaCount:"+qlaCount);
-			console.log("rlaCount:"+rlaCount);
-			if(parseInt(slaCount) >= 1){
-				 $('.shareData a').tab('show');
-			}else if(parseInt(qlaCount) >= 1){
-				 $('.consentReview a').tab('show');
-			}else if(parseInt(rlaCount) >= 1){
-				 $('.econsentForm a').tab('show');
-			}
-	   	 } */
     }
 });
 
 function goToBackPage(item){
-	//window.history.back();
 	<c:if test="${permission ne 'view'}">
 	$(item).prop('disabled', true);
 	bootbox.confirm({
@@ -997,10 +946,8 @@ $(document).on('show.bs.collapse','.collapse', function(){
 
 function colapseUpAndDown(){
 	$('.collapse').on('shown.bs.collapse', function(){ 
-	    console.log("shown");   
 	    $(this).parent().find(".glyphicon-chevron-right").removeClass("glyphicon-chevron-right").addClass("glyphicon-chevron-down");
 	   }).on('hidden.bs.collapse', function(){
-	    console.log("hidden");
 	    $(this).parent().find(".glyphicon-chevron-down").removeClass("glyphicon-chevron-down").addClass("glyphicon-chevron-right");
 	  });
 }

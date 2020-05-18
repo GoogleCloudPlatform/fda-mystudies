@@ -438,24 +438,30 @@ CREATE TABLE IF NOT EXISTS `user_details` (
   PRIMARY KEY (`user_details_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
-CREATE TABLE personalized_user_report (id integer NOT NULL, activity_date_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP, report_content TEXT, report_title varchar(255), study_info_id INTEGER, user_id INTEGER, primary key (id));
-
-ALTER TABLE personalized_user_report ADD FOREIGN KEY (study_info_id) REFERENCES study_info(id);
-
-ALTER TABLE personalized_user_report ADD FOREIGN KEY (user_id) REFERENCES user_details(user_details_id);
+CREATE TABLE IF NOT EXISTS `personalized_user_report` (
+  `id` INT NOT NULL AUTO_INCREMENT, 
+  `activity_date_time` TIMESTAMP DEFAULT CURRENT_TIMESTAMP, 
+  `report_content` TEXT, 
+  `report_title` varchar(255), 
+  `study_info_id` INT, 
+  `user_id` INTEGER, 
+  PRIMARY KEY (`id`),
+  FOREIGN KEY (study_info_id) REFERENCES study_info(id),
+  FOREIGN KEY (user_id) REFERENCES user_details(user_details_id)
+);
 
 -- Data exporting was unselected.
 
 -- Dumping structure for table mystudies_userregistration.user_institution
 CREATE TABLE IF NOT EXISTS `user_institution` (
   `user_institution_id` BIGINT NOT NULL AUTO_INCREMENT,
-  `user_details_id` int(11) NOT NULL,
+  `user_details_id` int(11) NOT NULL UNIQUE,
   `institution_id` varchar(255) DEFAULT NULL,
-  PRIMARY KEY (`user_institution_id`)
+  PRIMARY KEY (`user_institution_id`),
+  FOREIGN KEY (user_details_id) REFERENCES user_details(user_details_id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- Data exporting was unselected.
-
 
 /*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;
 /*!40014 SET FOREIGN_KEY_CHECKS=IF(@OLD_FOREIGN_KEY_CHECKS IS NULL, 1, @OLD_FOREIGN_KEY_CHECKS) */;

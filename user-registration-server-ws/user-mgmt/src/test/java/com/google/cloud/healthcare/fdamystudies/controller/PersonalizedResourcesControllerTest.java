@@ -47,9 +47,10 @@ public class PersonalizedResourcesControllerTest {
 
   @Autowired private MockMvc mvc;
 
-  private static final UserResourceBean.Type reportType = UserResourceBean.Type.PERSONALIZED_REPORT;
-  private static final UserResourceBean.Type resourceType =
-      UserResourceBean.Type.INSTITUTION_RESOURCE;
+  private static final UserResourceBean.ResourceType reportType =
+      UserResourceBean.ResourceType.PERSONALIZED_REPORT;
+  private static final UserResourceBean.ResourceType resourceType =
+      UserResourceBean.ResourceType.INSTITUTION_RESOURCE;
 
   @Test
   public void ReturnsUserResources() throws Exception {
@@ -62,13 +63,13 @@ public class PersonalizedResourcesControllerTest {
                 "test_user_id", "test_study_id"))
         .thenReturn(
             Arrays.asList(
-                new UserResourceBean("Report", "content", reportType),
-                new UserResourceBean("Report 2", "content 2", reportType)));
+                new UserResourceBean("Report", "content", reportType, "0"),
+                new UserResourceBean("Report 2", "content 2", reportType, "1")));
     Mockito.when(institutionResourcesService.getInstitutionResourcesForUser("test_user_id"))
         .thenReturn(
             Arrays.asList(
-                new UserResourceBean("Resource 1", "content 1", resourceType),
-                new UserResourceBean("Resource 2", "content 2", resourceType)));
+                new UserResourceBean("Resource 1", "content 1", resourceType, "2"),
+                new UserResourceBean("Resource 2", "content 2", resourceType, "3")));
     mvc.perform(
             get("/getPersonalizedResources")
                 .accept(MediaType.ALL)
@@ -81,22 +82,30 @@ public class PersonalizedResourcesControllerTest {
         .andExpect(
             jsonPath(
                     "$.resources.[?(@.title == \"Report\" && @.content == \"content\" &&"
-                        + " @.resourceType == \"report\")]")
+                        + " @.resourceType == \"report\" && @.resourcesId == \"report:0\" &&"
+                        + " @.audience == \"All\" && @.notificationText == \"\" &&"
+                        + " @.availability.length() == 0)]")
                 .exists())
         .andExpect(
             jsonPath(
                     "$.resources.[?(@.title == \"Report 2\" && @.content == \"content 2\" &&"
-                        + " @.resourceType == \"report\")]")
+                        + " @.resourceType == \"report\" && @.resourcesId == \"report:1\" &&"
+                        + " @.audience == \"All\" && @.notificationText == \"\" &&"
+                        + " @.availability.length() == 0)]")
                 .exists())
         .andExpect(
             jsonPath(
                     "$.resources.[?(@.title == \"Resource 1\" && @.content == \"content 1\" &&"
-                        + " @.resourceType == \"resource\")]")
+                        + " @.resourceType == \"resources\" && @.resourcesId == \"resources:2\" &&"
+                        + " @.audience == \"All\" && @.notificationText == \"\" &&"
+                        + " @.availability.length() == 0)]")
                 .exists())
         .andExpect(
             jsonPath(
                     "$.resources.[?(@.title == \"Resource 2\" && @.content == \"content 2\" &&"
-                        + " @.resourceType == \"resource\")]")
+                        + " @.resourceType == \"resources\" && @.resourcesId == \"resources:3\" &&"
+                        + " @.audience == \"All\" && @.notificationText == \"\" &&"
+                        + " @.availability.length() == 0)]")
                 .exists());
   }
 

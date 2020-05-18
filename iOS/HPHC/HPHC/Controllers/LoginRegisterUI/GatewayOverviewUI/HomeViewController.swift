@@ -94,6 +94,10 @@ class HomeViewController: UIViewController {
 
     // Assign to Gateway
     Gateway.instance.overview = overview
+
+    if overview.sections.count <= 1 {
+      self.pageControlView?.isHidden = true
+    }
   }
 
   // MARK: - Segue Methods
