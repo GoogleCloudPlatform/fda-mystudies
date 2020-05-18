@@ -1,6 +1,7 @@
 // License Agreement for FDA MyStudies
-// Copyright © 2017-2019 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors. Permission is
-// hereby granted, free of charge, to any person obtaining a copy of this software and associated
+// Copyright © 2017-2019 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors.
+// Copyright 2020 Google LLC
+// Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated
 // documentation files (the &quot;Software&quot;), to deal in the Software without restriction, including without
 // limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the
 // Software, and to permit persons to whom the Software is furnished to do so, subject to the following
@@ -45,37 +46,34 @@ class StudyDashboardStatisticsTableViewCell: UITableViewCell {
 
   func displayData() {
 
-    let stringDate = StudyDashboardStatisticsTableViewCell.formatter.string(from: todaysDate)
-    let color = Utilities.getUIColorFromHex(0x007CBA)
-
-    let attributedStartDate: NSMutableAttributedString = NSMutableAttributedString(
-      string: stringDate
-    )
-    attributedStartDate.addAttribute(
-      NSAttributedString.Key.foregroundColor,
-      value: color,
-      range: NSRange(location: 0, length: 2)
-    )
-    labelDateValue?.attributedText = attributedStartDate
-    self.buttonForward?.isEnabled = false
+    switch selectedTab {
+    case .Day:
+      labelDateValue?.attributedText = getDayAttributedString()
+    case .Week:
+      labelDateValue?.attributedText = getWeeklyAttributedText()
+    case .Month:
+      labelDateValue?.text = getMonthString()
+    }
 
     if StudyDashboard.instance.statistics.count == 0 {
       labelNoData?.isHidden = false
       self.statisticsCollectionView?.isHidden = true
     }
+    self.updateForwardBtnState()
   }
 
-  func getWeeklyAttributedText() -> NSAttributedString {
+  func getWeeklyAttributedText() -> NSAttributedString? {
 
-    var startDate = startDateOfWeek
-    startDate = startDate?.addingTimeInterval(24 * 3600)
+    guard let startDate = startDateOfWeek,
+      let endDate = endDateOfWeek else { return nil }
+
     let stringStartDate =
       StudyDashboardStatisticsTableViewCell.formatter.string(
-        from: startDate!
+        from: startDate
       )
       + " - "
     let stringEndDate = StudyDashboardStatisticsTableViewCell.formatter.string(
-      from: endDateOfWeek!
+      from: endDate
     )
 
     let color = Utilities.getUIColorFromHex(0x007CBA)
@@ -102,6 +100,27 @@ class StudyDashboardStatisticsTableViewCell: UITableViewCell {
 
     return attributedStartDate
   }
+  
+  private func getDayAttributedString() -> NSAttributedString {
+    let stringDate = StudyDashboardStatisticsTableViewCell.formatter.string(from: todaysDate)
+    let color = Utilities.getUIColorFromHex(0x007CBA)
+
+    let attributedStartDate: NSMutableAttributedString = NSMutableAttributedString(
+      string: stringDate
+    )
+    attributedStartDate.addAttribute(
+      NSAttributedString.Key.foregroundColor,
+      value: color,
+      range: NSRange(location: 0, length: 2)
+    )
+    return attributedStartDate
+  }
+  
+  private func getMonthString() -> String {
+    return StudyDashboardStatisticsTableViewCell.monthFormatter.string(
+      from: todaysDate
+    )
+  }
 
   // MARK: - Button action
 
@@ -123,21 +142,10 @@ class StudyDashboardStatisticsTableViewCell: UITableViewCell {
       buttonMonth?.backgroundColor = UIColor.white
 
       self.selectedTab = .Day
-      todaysDate = Date()
-
-      let stringDate = StudyDashboardStatisticsTableViewCell.formatter.string(from: Date())
-      let color = Utilities.getUIColorFromHex(0x007CBA)
-
-      let attributedStartDate: NSMutableAttributedString = NSMutableAttributedString(
-        string: stringDate
-      )
-      attributedStartDate.addAttribute(
-        NSAttributedString.Key.foregroundColor,
-        value: color,
-        range: NSRange(location: 0, length: 2)
-      )
-      labelDateValue?.attributedText = attributedStartDate
-      self.buttonForward?.isEnabled = false
+      
+      todaysDate = todaysDate > Date() ? Date() : todaysDate
+      labelDateValue?.attributedText = getDayAttributedString()
+      self.updateForwardBtnState()
 
     } else if sender.tag == 12 {
       // Week clicked
@@ -154,14 +162,14 @@ class StudyDashboardStatisticsTableViewCell: UITableViewCell {
       buttonMonth?.backgroundColor = UIColor.white
 
       self.selectedTab = .Week
-      todaysDate = Date()
-
+      
+      todaysDate = todaysDate > Date() ? Date() : todaysDate
       startDateOfWeek = todaysDate.startOfWeek
       endDateOfWeek = todaysDate.endOfWeek
 
       let attributedText = self.getWeeklyAttributedText()
       labelDateValue?.attributedText = attributedText
-      self.buttonForward?.isEnabled = false
+      self.updateForwardBtnState()
 
     } else if sender.tag == 13 {
 
@@ -179,13 +187,8 @@ class StudyDashboardStatisticsTableViewCell: UITableViewCell {
       buttonWeek?.backgroundColor = UIColor.white
 
       self.selectedTab = .Month
-      todaysDate = Date()
-
-      let stringDate = StudyDashboardStatisticsTableViewCell.monthFormatter.string(
-        from: todaysDate
-      )
-      self.labelDateValue?.text = stringDate
-      self.buttonForward?.isEnabled = false
+      self.labelDateValue?.text = getMonthString()
+      self.updateForwardBtnState()
     }
 
     self.statisticsCollectionView?.reloadData()
@@ -198,59 +201,30 @@ class StudyDashboardStatisticsTableViewCell: UITableViewCell {
     switch self.selectedTab {
 
     case .Day:
-
-      self.buttonForward?.isEnabled = true
-      self.buttonBackward?.isEnabled = true
-      todaysDate = calendar.date(byAdding: .day, value: 1, to: todaysDate)!
-      let stringDate = StudyDashboardStatisticsTableViewCell.formatter.string(
-        from: todaysDate
-      )
-      let color = Utilities.getUIColorFromHex(0x007CBA)
-
-      let attributedStartDate: NSMutableAttributedString = NSMutableAttributedString(
-        string: stringDate
-      )
-      attributedStartDate.addAttribute(
-        NSAttributedString.Key.foregroundColor,
-        value: color,
-        range: NSRange(location: 0, length: 2)
-      )
-      labelDateValue?.attributedText = attributedStartDate
-
-      let result = todaysDate.compare(Date())
-      if result == .orderedSame || result == .orderedDescending {
-        self.buttonForward?.isEnabled = false
+      if let nextDayDate = calendar.date(byAdding: .day, value: 1, to: todaysDate) {
+        todaysDate = nextDayDate
+        labelDateValue?.attributedText = getDayAttributedString()
+        self.updateForwardBtnState()
       }
 
     case .Week:
-
-      self.buttonForward?.isEnabled = true
-      self.buttonBackward?.isEnabled = true
-
-      startDateOfWeek = calendar.date(byAdding: .day, value: 7, to: startDateOfWeek!)
-      endDateOfWeek = calendar.date(byAdding: .day, value: 7, to: endDateOfWeek!)
-
-      let attributedText = self.getWeeklyAttributedText()
-      labelDateValue?.attributedText = attributedText
-
-      let result = todaysDate.compare(Date())
-      if result == .orderedSame || result == .orderedDescending {
-        self.buttonForward?.isEnabled = false
+      if let currentStartDateOfWeek = startDateOfWeek,
+        let currentEndDateOfWeek = endDateOfWeek {
+        startDateOfWeek = calendar.date(byAdding: .day, value: 7, to: currentStartDateOfWeek)
+        endDateOfWeek = calendar.date(byAdding: .day, value: 7, to: currentEndDateOfWeek)
+        let attributedText = self.getWeeklyAttributedText()
+        labelDateValue?.attributedText = attributedText
+        if let currentWeekStartDate = startDateOfWeek {
+          todaysDate = currentWeekStartDate
+          self.updateForwardBtnState()
+        }
       }
 
     case .Month:
-
-      self.buttonForward?.isEnabled = true
-      self.buttonBackward?.isEnabled = true
-      todaysDate = calendar.date(byAdding: .month, value: 1, to: todaysDate)!
-      let stringDate = StudyDashboardStatisticsTableViewCell.monthFormatter.string(
-        from: todaysDate
-      )
-      labelDateValue?.text = stringDate
-
-      let result = todaysDate.compare(Date())
-      if result == .orderedSame || result == .orderedDescending {
-        self.buttonForward?.isEnabled = false
+      if let nextMonth = calendar.date(byAdding: .month, value: 1, to: todaysDate) {
+        todaysDate = nextMonth
+        labelDateValue?.text = getMonthString()
+        self.updateForwardBtnState()
       }
 
     }
@@ -263,94 +237,85 @@ class StudyDashboardStatisticsTableViewCell: UITableViewCell {
 
     switch self.selectedTab {
     case .Day:
-      self.buttonForward?.isEnabled = true
-      self.buttonBackward?.isEnabled = true
-      todaysDate = calendar.date(byAdding: .day, value: -1, to: todaysDate)!
-      let stringDate = StudyDashboardStatisticsTableViewCell.formatter.string(
-        from: todaysDate
-      )
-      let color = Utilities.getUIColorFromHex(0x007CBA)
-
-      let attributedStartDate: NSMutableAttributedString = NSMutableAttributedString(
-        string: stringDate
-      )
-      attributedStartDate.addAttribute(
-        NSAttributedString.Key.foregroundColor,
-        value: color,
-        range: NSRange(location: 0, length: 2)
-      )
-      labelDateValue?.attributedText = attributedStartDate
+      if let previousDay = calendar.date(byAdding: .day, value: -1, to: todaysDate) {
+        todaysDate = previousDay
+        labelDateValue?.attributedText = getDayAttributedString()
+        self.updateForwardBtnState()
+      }
 
     case .Week:
-      self.buttonForward?.isEnabled = true
-      self.buttonBackward?.isEnabled = true
-
-      startDateOfWeek = calendar.date(byAdding: .day, value: -7, to: startDateOfWeek!)
-      endDateOfWeek = calendar.date(byAdding: .day, value: -7, to: endDateOfWeek!)
-      let stringStartDate =
-        StudyDashboardStatisticsTableViewCell.formatter.string(
-          from: startDateOfWeek!
-        ) + " - "
-      let stringEndDate = StudyDashboardStatisticsTableViewCell.formatter.string(
-        from: endDateOfWeek!
-      )
-
-      let color = Utilities.getUIColorFromHex(0x007CBA)
-
-      let attributedStartDate: NSMutableAttributedString = NSMutableAttributedString(
-        string: stringStartDate
-      )
-      attributedStartDate.addAttribute(
-        NSAttributedString.Key.foregroundColor,
-        value: color,
-        range: NSRange(location: 0, length: 2)
-      )
-
-      let attributedEndDate: NSMutableAttributedString = NSMutableAttributedString(
-        string: stringEndDate
-      )
-      attributedEndDate.addAttribute(
-        NSAttributedString.Key.foregroundColor,
-        value: color,
-        range: NSRange(location: 0, length: 2)
-      )
-      attributedStartDate.append(attributedEndDate)
-
-      labelDateValue?.attributedText = attributedStartDate
-
+      if let currentStartDateOfWeek = startDateOfWeek,
+        let currentEndDateOfWeek = endDateOfWeek {
+        startDateOfWeek = calendar.date(byAdding: .day, value: -7, to: currentStartDateOfWeek)
+        endDateOfWeek = calendar.date(byAdding: .day, value: -7, to: currentEndDateOfWeek)
+        labelDateValue?.attributedText = getWeeklyAttributedText()
+     
+        if let currentWeekStartDate = startDateOfWeek {
+          todaysDate = currentWeekStartDate
+          self.updateForwardBtnState()
+        }
+      }
+      
     case .Month:
-      self.buttonForward?.isEnabled = true
-      self.buttonBackward?.isEnabled = true
-      todaysDate = calendar.date(byAdding: .month, value: -1, to: todaysDate)!
-      let stringDate = StudyDashboardStatisticsTableViewCell.monthFormatter.string(
-        from: todaysDate
-      )
-      labelDateValue?.text = stringDate
-
+      if let previousMonthDate = calendar.date(byAdding: .month, value: -1, to: todaysDate) {
+        todaysDate = previousMonthDate
+        labelDateValue?.text = getMonthString()
+        self.updateForwardBtnState()
+      }
+      
     }
 
     self.statisticsCollectionView?.reloadData()
   }
 
+  private func updateForwardBtnState() {
+    self.buttonForward?.isEnabled = true
+    switch self.selectedTab {
+    case .Day:
+      if let currentEndOfDayDate = Date().endOfDay,
+        let todaysEndOfDate = todaysDate.endOfDay{
+        let result = todaysEndOfDate.compare(currentEndOfDayDate)
+        if result == .orderedSame || result == .orderedDescending {
+          self.buttonForward?.isEnabled = false
+        }
+      }
+      
+    case .Week:
+      if let currentEndOfWeekDate = Date().endOfWeek,
+        let todaysEndOfWeek = endDateOfWeek {
+        let result = todaysEndOfWeek.compare(currentEndOfWeekDate)
+        if result == .orderedSame || result == .orderedDescending {
+          self.buttonForward?.isEnabled = false
+        }
+      }
+      
+    case .Month:
+      let result = todaysDate.endOfMonth().compare(Date().endOfMonth())
+      if result == .orderedSame || result == .orderedDescending {
+        self.buttonForward?.isEnabled = false
+      }
+    }
+  }
+  
   // MARK: - FORMATERS
   private static let formatter: DateFormatter = {
     let formatter = DateFormatter()
     formatter.dateFormat = "dd, MMM YYYY"
-    formatter.timeZone = TimeZone.init(abbreviation: "GMT")
+    formatter.timeZone = TimeZone.current
     return formatter
   }()
 
   private static let yearFormatter: DateFormatter = {
     let formatter = DateFormatter()
     formatter.dateFormat = "YYYY"
-    formatter.timeZone = TimeZone.init(abbreviation: "GMT")
+    formatter.timeZone = TimeZone.current
     return formatter
   }()
 
   private static let monthFormatter: DateFormatter = {
     let formatter = DateFormatter()
     formatter.dateFormat = "MMM YYYY"
-    formatter.timeZone = TimeZone.init(abbreviation: "GMT")
+    formatter.timeZone = TimeZone.current
     return formatter
   }()
 }
