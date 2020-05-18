@@ -940,11 +940,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
   }
 
   private func refreshStudyActivitiesState(with userInfo: JSONDictionary) {
-    guard let currentStudyID = Study.currentStudy?.studyId else { return }
-    if let studyID = userInfo["studyId"] as? String, currentStudyID == studyID {
-      DispatchQueue.main.async {
-        NotificationCenter.default.post(name: kRefreshActivities, object: nil)
-      }
+    guard let currentStudyID = Study.currentStudy?.studyId,
+      let studyID = userInfo["studyId"] as? String,
+      currentStudyID == studyID else { return }
+    DispatchQueue.main.async {
+      NotificationCenter.default.post(name: kRefreshActivities, object: nil)
     }
   }
 
