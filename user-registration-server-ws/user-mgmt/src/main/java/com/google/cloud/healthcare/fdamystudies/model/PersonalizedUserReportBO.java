@@ -51,10 +51,10 @@ public class PersonalizedUserReportBO implements Serializable {
   @Column(name = "report_title")
   private String reportTitle;
 
-  // Length is an arbitrary multiple of 100 > 2^15 and < 2^16 to guarantee we
+  // Length is an arbitrary multiple of 100 > 2^24 and < 2^31 to guarantee we
   // get the `TEXT` data type. Marking `columnDefinition = Text` is not
   // portable and doesn't work in tests.
-  @Column(name = "report_content", length = 65500)
+  @Column(name = "report_content", length = 2147483600)
   private String reportContent;
 
   @Column(name = "activity_date_time")
