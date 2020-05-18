@@ -330,31 +330,7 @@
     	  	$(this).parent().parent().find(".imagePathCls").val('');
        	});
       
-      //wysiwyg editor
-          if($(".editor").length > 0){
-          tinymce.init({
-              selector: ".editor",
-              theme: "modern",
-              skin: "lightgray",
-              height:180,
-              plugins: [
-                  "advlist autolink link image lists charmap hr anchor pagebreak spellchecker",
-                  "save contextmenu directionality paste"
-              ],
-              toolbar: "anchor bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | underline link | hr removeformat | cut undo redo | fontsizeselect fontselect",
-              menubar: false,
-              toolbar_items_size: 'small',
-              content_style: "div, p { font-size: 13px;letter-spacing: 1px;}",
-              setup : function(ed) {
-                  ed.on('change', function(ed) {
-                		  resetValidation($('#'+ed.target.id).val(tinyMCE.get(ed.target.id).getContent()).parents('form'));
-                		  $('#'+ed.target.id).trigger('change');
-                  });
-           	  },
-           	<c:if test="${not empty permission}">readonly:1</c:if>
-          });
-      }
-                 
+                     
       //deleting panel 
 	      var b = $("#accordion").find(".panel-default").length; 
 	      if(b==1){            
@@ -444,27 +420,7 @@
               $("#addpage").hide();
           }
 
-          tinymce.init({
-              selector: ".editor",
-              theme: "modern",
-              skin: "lightgray",
-              height:180,
-              plugins: [
-                  "advlist autolink link image lists charmap hr anchor pagebreak spellchecker",
-                  "save contextmenu directionality paste"
-              ],
-              toolbar: "anchor bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | underline link | hr removeformat | cut undo redo | fontsizeselect fontselect",
-              menubar: false,
-              toolbar_items_size: 'small',
-              content_style: "div, p { font-size: 13px;letter-spacing: 1px;}",
-              charLimit : 1000,
-              setup : function(ed) {
-                  ed.on('change', function(ed) {
-                		  resetValidation($('#'+ed.target.id).val(tinyMCE.get(ed.target.id).getContent()).parents('form'));
-                		  $('#'+ed.target.id).trigger('change');
-                  });
-           	  }
-          });
+
           resetValidation($("#accordion").parents('form'));
           countId++;
           $("[data-toggle=tooltip]").tooltip();

@@ -12,16 +12,13 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-org_id                        = "707577601068"
-billing_account               = "01EA90-3519E1-89CB1F"
-project_id                    = "heroes-hat-dev-devops"
-state_bucket                  = "heroes-hat-dev-terraform-state-08679"
-repo_owner                    = "GoogleCloudPlatform"
-repo_name                     = "fda-mystudies"
-branch_regex                  = "^early-access$"
-continuous_deployment_enabled = true
-trigger_enabled               = true
-terraform_root                = "Terraform"
-build_viewers = [
-  "group:rocketturtle-gcp-admin@rocketturtle.net",
-]
+variable "project_id" {
+  description = "Project ID of the devops project to host CI/CD resources"
+  type        = string
+}
+
+variable "managed_services" {
+  type        = list(string)
+  description = "List of APIs to enable in the devops project so CI/CD pipeline can manage those services in other projects"
+  default     = []
+}
