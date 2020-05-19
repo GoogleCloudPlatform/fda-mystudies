@@ -180,7 +180,6 @@
       if (errMsg.length > 0) {
         $("#errMsg").html(errMsg);
         $("#errMsg").show("fast");
-        //$("#sucMsg").hide("fast");
         setTimeout(hideDisplayMessage, 4000);
       }
     }
@@ -194,9 +193,7 @@
       }
     }
     $("#password").passwordValidator({
-      // list of qualities to require
       require: ['length', 'lower', 'upper', 'digit', 'spacial'],
-      // minimum length requirement
       length: 8
     });
 

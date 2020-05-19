@@ -49,11 +49,6 @@
 
     #aD__container {
       width: 320px;
-      /* position: absolute;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      top: 0; */
       margin: auto;
       display: table;
       background: #fff;
@@ -85,24 +80,24 @@
   <div class="err_page_txt">
     <table id="aD__container">
       <tr>
-        <td>App Name :</td>
-        <td>Lorem Epsum</td>
+        <td>App Name:</td>
+        <td></td>
       </tr>
       <tr>
-        <td>App Version :</td>
+        <td>App Version:</td>
         <td>V1.1.2</td>
       </tr>
       <tr>
-        <td>Number of Studies :</td>
+        <td>Number of Studies:</td>
         <td>5</td>
       </tr>
       <tr>
-        <td>Deplyoment Sttus :</td>
+        <td>Deployment Status:</td>
         <td>Active</td>
       </tr>
       <tr>
-        <td>App Name :</td>
-        <td>Lorem Epsum</td>
+        <td>App Name:</td>
+        <td></td>
       </tr>
     </table>
   </div>

@@ -228,21 +228,6 @@
 <script src="/studybuilder/js/common.js"></script>
 
 <script>
-  (function (i, s, o, g, r, a, m) {
-    i['GoogleAnalyticsObject'] = r;
-    i[r] = i[r] || function () {
-      (i[r].q = i[r].q || []).push(arguments)
-    }, i[r].l = 1 * new Date();
-    a = s.createElement(o),
-        m = s.getElementsByTagName(o)[0];
-    a.async = 1;
-    a.src = g;
-    m.parentNode.insertBefore(a, m)
-  })(window, document, 'script', '//www.google-analytics.com/analytics.js', 'ga');
-
-  ga('create', 'UA-71064806-1', 'auto');
-  ga('send', 'pageview');
-
   function formSubmit() {
     document.getElementById("logoutForm").submit();
   }
@@ -296,38 +281,6 @@
     }
   });
   <c:if test="${param.action eq 'landing'}">
-  /* function noBack() {
-      history.pushState(null, null, 'login.do');
-       window.addEventListener('popstate', function(event) {
-         history.pushState(null, null, 'login.do');
-      });
-  } */
-  //     window.onload = function () {
-  //       if (typeof history.pushState === "function") {
-  //           history.pushState("jibberish", null, null);
-  //           window.onpopstate = function () {
-  //               history.pushState('newjibberish', null, null);
-  //               // Handle the back (or forward) buttons here
-  //               // Will NOT handle refresh, use onbeforeunload for this.
-  //           };
-  //       }
-  //       else {
-  //           var ignoreHashChange = true;
-  //           window.onhashchange = function () {
-  //               if (!ignoreHashChange) {
-  //                   ignoreHashChange = true;
-  //                   window.location.hash = Math.random();
-  //                   // Detect and redirect change here
-  //                   // Works in older FF and IE9
-  //                   // * it does mess with your hash symbol (anchor?) pound sign
-  //                   // delimiter on the end of the URL
-  //               }
-  //               else {
-  //                   ignoreHashChange = false;
-  //               }
-  //           };
-  //       }
-  //   	}
   </c:if>
   window.history.forward();
 
