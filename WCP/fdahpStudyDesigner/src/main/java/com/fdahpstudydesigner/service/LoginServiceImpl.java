@@ -614,18 +614,14 @@ public class LoginServiceImpl implements LoginService, UserDetailsService {
   }
 
   @Override
-  public String isActiveUser(String securityToken) {
+  public Boolean isActiveUser(String securityToken) {
     logger.info("LoginServiceImpl - isActiveUser() - Starts");
-    String message = "";
-    try {
-      UserBO user = loginDAO.getUserBySecurityToken(securityToken);
-      if (user != null && !user.isEnabled()) {
-        message = FdahpStudyDesignerConstants.USER_STATUS;
-      }
-    } catch (Exception e) {
-      logger.error("LoginServiceImpl - isActiveUser() - ERROR ", e);
+    Boolean isInactiveUser = false;
+    UserBO user = loginDAO.getUserBySecurityToken(securityToken);
+    if (user != null && !user.isEnabled()) {
+      isInactiveUser = true;
     }
     logger.info("LoginServiceImpl - isActiveUser() - Ends");
-    return message;
+    return isInactiveUser;
   }
 }
