@@ -29,7 +29,7 @@ import javax.validation.constraints.NotNull;
 @Table(name = "user_institution")
 public class UserInstitution {
     @Id
-    @Column(name = "user_institution_id")
+    @Column(name = "user_institution_id", unique = true)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long userInstitutionId;
 

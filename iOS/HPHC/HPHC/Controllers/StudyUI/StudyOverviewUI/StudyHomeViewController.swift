@@ -815,6 +815,9 @@ class StudyHomeViewController: UIViewController {
     if let pageViewController = segue.destination as? PageViewController {
       pageViewController.pageViewDelegate = self
       pageViewController.overview = Study.currentStudy?.overview
+      if let totalSections = Study.currentStudy?.overview.sections.count, totalSections <= 1 {
+        self.pageControlView?.isHidden = true
+      }
     }
   }
 
