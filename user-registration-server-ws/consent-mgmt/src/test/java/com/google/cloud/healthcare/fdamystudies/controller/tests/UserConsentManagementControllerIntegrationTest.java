@@ -417,6 +417,6 @@ public class UserConsentManagementControllerIntegrationTest extends BaseMockit {
         getRestTemplate()
             .exchange(
                 "/updateEligibilityConsentStatus", HttpMethod.POST, requestEntity, JsonNode.class);
-    assertEquals(HttpStatus.BAD_REQUEST, responseEntity.getStatusCode());
+    assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
   }
 }

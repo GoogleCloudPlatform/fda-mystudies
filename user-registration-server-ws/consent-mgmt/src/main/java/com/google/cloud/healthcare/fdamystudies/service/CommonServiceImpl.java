@@ -8,7 +8,6 @@
 package com.google.cloud.healthcare.fdamystudies.service;
 
 import java.time.LocalDateTime;
-import java.util.Arrays;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,7 +16,6 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import com.google.cloud.healthcare.fdamystudies.bean.BodyForProvider;
@@ -46,18 +44,8 @@ public class CommonServiceImpl implements CommonService {
     HttpHeaders headers = null;
     BodyForProvider providerBody = null;
     HttpEntity<BodyForProvider> requestBody = null;
-    ResponseEntity<?> responseEntity = null;
+    ResponseEntity<Integer> responseEntity = null;
     try {
-
-      MappingJackson2HttpMessageConverter mappingJackson2HttpMessageConverter =
-          new MappingJackson2HttpMessageConverter();
-      mappingJackson2HttpMessageConverter.setSupportedMediaTypes(
-          Arrays.asList(
-              MediaType.APPLICATION_JSON,
-              MediaType.APPLICATION_OCTET_STREAM,
-              MediaType.TEXT_PLAIN));
-      restTemplate.getMessageConverters().add(mappingJackson2HttpMessageConverter);
-
       headers = new HttpHeaders();
       headers.setContentType(MediaType.APPLICATION_JSON);
       headers.set("clientToken", clientToken);
@@ -71,7 +59,7 @@ public class CommonServiceImpl implements CommonService {
               HttpMethod.POST,
               requestBody,
               Integer.class);
-      value = (Integer) responseEntity.getBody();
+      value = responseEntity.getBody();
     } catch (Exception e) {
       logger.error("CommonServiceImpl validateAccessToken() - error ", e);
     }

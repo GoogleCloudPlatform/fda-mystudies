@@ -59,8 +59,8 @@ public class CommonServiceImplTests {
     String accessTokenUrl = "http://example.com";
     String clientToken = "clientToken";
     when(appConfig.getAuthServerAccessTokenValidationUrl()).thenReturn(accessTokenUrl);
-    when(restTemplate.exchange(eq(accessTokenUrl), eq(HttpMethod.POST), any(), eq(String.class)))
-        .thenReturn(new ResponseEntity<String>("1", HttpStatus.OK));
+    when(restTemplate.exchange(eq(accessTokenUrl), eq(HttpMethod.POST), any(), eq(Integer.class)))
+        .thenReturn(new ResponseEntity<Integer>(1, HttpStatus.OK));
 
     Integer result = commonServiceImpl.validateAccessToken(userId, accessToken, clientToken);
     assertEquals(Integer.valueOf(1), result);

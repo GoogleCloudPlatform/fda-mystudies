@@ -6,7 +6,7 @@
 	"response": {
 		"status": 200,
 		"headers": {
-			"Content-Type": "text/plain"
+			"Content-Type": "application/json;charset=UTF-8"
 		},
 		"bodyFileName": "auth-server-token-validation-response.json"
 	}
