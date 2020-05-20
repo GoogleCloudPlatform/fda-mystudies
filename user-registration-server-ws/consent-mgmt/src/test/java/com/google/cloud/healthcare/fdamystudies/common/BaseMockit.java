@@ -19,9 +19,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.github.tomakehurst.wiremock.WireMockServer;
 import com.google.cloud.healthcare.fdamystudies.config.WireMockInitializer;
-import static com.github.tomakehurst.wiremock.client.WireMock.aResponse;
-import static com.github.tomakehurst.wiremock.client.WireMock.get;
-import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
 
 @ContextConfiguration(initializers = {WireMockInitializer.class})
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
@@ -55,12 +52,5 @@ public class BaseMockit {
 
   protected ObjectMapper getObjectMapper() {
     return objectMapper;
-  }
-
-  protected void setUpHydraMockResponse() {
-	  getWireMockServer()
-      .stubFor(
-          get(urlEqualTo("auth-server-token-validation.json"))
-              .willReturn(aResponse().withBodyFile("auth-server-token-validation-response.json")));
   }
 }

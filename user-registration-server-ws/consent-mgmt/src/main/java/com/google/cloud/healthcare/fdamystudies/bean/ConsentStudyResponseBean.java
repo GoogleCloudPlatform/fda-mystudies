@@ -7,6 +7,7 @@
  */
 package com.google.cloud.healthcare.fdamystudies.bean;
 
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -14,10 +15,17 @@ import lombok.ToString;
 @Setter
 @Getter
 @ToString
+@EqualsAndHashCode
 public class ConsentStudyResponseBean {
   private String message;
   private ConsentResponseBean consent = new ConsentResponseBean();
   private String sharing;
+
+  public ConsentStudyResponseBean() {}
+
+  public ConsentStudyResponseBean(String message) {
+    this.message = message;
+  }
 
   public String getMessage() {
     return message;

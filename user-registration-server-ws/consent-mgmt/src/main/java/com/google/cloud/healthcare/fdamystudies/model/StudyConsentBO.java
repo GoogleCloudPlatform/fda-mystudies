@@ -5,9 +5,10 @@
  * license that can be found in the LICENSE file or at
  * https://opensource.org/licenses/MIT.
  */
- 
+
 package com.google.cloud.healthcare.fdamystudies.model;
 
+import java.time.LocalDateTime;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -53,7 +54,20 @@ public class StudyConsentBO {
   private int pdfStorage;
 
   @Column(name = "_ts")
-  private String ts;
+  private LocalDateTime ts;
+
+  public StudyConsentBO() {}
+
+  public StudyConsentBO(String version, String pdf, String pdfPath, int pdfStorage) {
+    this.version = version;
+    this.pdf = pdf;
+    this.pdfPath = pdfPath;
+    this.pdfStorage = pdfStorage;
+  }
+
+  public StudyConsentBO(Integer studyInfoId) {
+    this.studyInfoId = studyInfoId;
+  }
 
   public Integer getId() {
     return id;
@@ -103,11 +117,11 @@ public class StudyConsentBO {
     this.pdfStorage = pdfStorage;
   }
 
-  public String getTs() {
+  public LocalDateTime getTs() {
     return ts;
   }
 
-  public void setTs(String ts) {
+  public void setTs(LocalDateTime ts) {
     this.ts = ts;
   }
 

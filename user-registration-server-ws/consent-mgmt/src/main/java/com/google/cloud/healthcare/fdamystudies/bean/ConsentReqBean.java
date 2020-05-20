@@ -7,13 +7,17 @@
  */
 package com.google.cloud.healthcare.fdamystudies.bean;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
 @Setter
 @Getter
 @ToString
+@NoArgsConstructor
+@AllArgsConstructor
 public class ConsentReqBean {
   private String version;
   private String status;
