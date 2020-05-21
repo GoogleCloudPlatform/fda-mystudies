@@ -123,9 +123,9 @@ To see what resources each deployment provisions, check out the comments in each
     and documentations in the [rename.sh](./rename.sh) together do complete the
     deployment.
 
-    [rename.sh](./rename.sh) script uses configs in this directory and copy them
-    over with value substitutions to a target local directory to host your new
-    final Terraform configs.
+    The [rename.sh](./rename.sh) script uses configs in this directory and copy
+    them over with value substitutions to a target local directory to host your
+    new final Terraform configs.
 
 1. Run [rename.sh](./rename.sh) in this directory (later referenced as the
     original directory) to copy the Deployment Phase 1 configs to your target
@@ -211,14 +211,14 @@ To see what resources each deployment provisions, check out the comments in each
 1. Go to the target diretory.
 
 1. Comment out
-    [iam_members](./org/folder.fda-my-studies/project.heroes-hat-dev-data/data/main.tf#L74-79).
+    [iam_members](./org/folder.fda-my-studies/project.heroes-hat-dev-data/data/main.tf#L74-L79).
 
 1. Commit your current local git working dir and send a Pull Request to merge
     these configs. Make sure the presubmit tests pass and get code review
     approvals. The CD job will then deploy the Phase 4 resources for you.
 
 1. Uncomment
-    [iam_members](./org/folder.fda-my-studies/project.heroes-hat-dev-data/data/main.tf#L74-79).
+    [iam_members](./org/folder.fda-my-studies/project.heroes-hat-dev-data/data/main.tf#L74-L79).
 
 1. Commit your current local git working dir and send a Pull Request to merge
     these configs. Make sure the presubmit tests pass and get code review
