@@ -86,25 +86,25 @@ done
 cd ${OUTPUT_TF_BASE}
 
 # Globally unique resources or resources that cannot reuse the same name right after destroying.
-find . -type f -name *.tfvars -o -name *.tf -o -name *.hcl | xargs sed -i "s|${OLD_STATE}|${NEW_STATE}|"
-find . -type f -name *.tfvars -o -name *.tf -o -name *.hcl | xargs sed -i "s|${OLD_PREFIX}|${NEW_PREFIX}|"
-find . -type f -name *.tfvars -o -name *.tf -o -name *.hcl | xargs sed -i "s|${OLD_GKE_PREFIX}|${NEW_GKE_PREFIX}|"
-find . -type f -name *.tfvars -o -name *.tf -o -name *.hcl | xargs sed -i "s|${OLD_BIGQUERY_PREFIX}|${NEW_BIGQUERY_PREFIX}|"
+find . -type f -name *.tfvars -o -name *.tf -o -name *.hcl -o -name README.md | xargs sed -i "s|${OLD_STATE}|${NEW_STATE}|"
+find . -type f -name *.tfvars -o -name *.tf -o -name *.hcl -o -name README.md | xargs sed -i "s|${OLD_PREFIX}|${NEW_PREFIX}|"
+find . -type f -name *.tfvars -o -name *.tf -o -name *.hcl -o -name README.md | xargs sed -i "s|${OLD_GKE_PREFIX}|${NEW_GKE_PREFIX}|"
+find . -type f -name *.tfvars -o -name *.tf -o -name *.hcl -o -name README.md | xargs sed -i "s|${OLD_BIGQUERY_PREFIX}|${NEW_BIGQUERY_PREFIX}|"
 
 # Org info
-find . -type f -name *.tfvars -o -name *.tf | xargs sed -i "s|${OLD_ORG_ID}|${NEW_ORG_ID}|"
-find . -type f -name *.tfvars -o -name *.tf | xargs sed -i "s|${OLD_BILLING_ACCOUNT}|${NEW_BILLING_ACCOUNT}|"
+find . -type f -name *.tfvars -o -name *.tf -o -name *.hcl -o -name README.md | xargs sed -i "s|${OLD_ORG_ID}|${NEW_ORG_ID}|"
+find . -type f -name *.tfvars -o -name *.tf -o -name *.hcl -o -name README.md | xargs sed -i "s|${OLD_BILLING_ACCOUNT}|${NEW_BILLING_ACCOUNT}|"
 
 # Org group
-find . -type f -name *.tfvars -o -name *.tf | xargs sed -i "s|${OLD_ADMIN_GROUP}|${NEW_ADMIN_GROUP}|"
+find . -type f -name *.tfvars -o -name *.tf -o -name *.hcl -o -name README.md | xargs sed -i "s|${OLD_ADMIN_GROUP}|${NEW_ADMIN_GROUP}|"
 
 # Folder
-find . -type f -name *.tfvars -o -name *.tf | xargs sed -i "s|${OLD_FOLDER}|${NEW_FOLDER}|"
+find . -type f -name *.tfvars -o -name *.tf -o -name *.hcl -o -name README.md | xargs sed -i "s|${OLD_FOLDER}|${NEW_FOLDER}|"
 
 # Repo
-find . -type f -name *.tfvars -o -name *.tf | xargs sed -i "s|"${OLD_GITHUB_ORG}"|"${NEW_GITHUB_ORG}"|"
-find . -type f -name *.tfvars -o -name *.tf | xargs sed -i "s|"${OLD_GITHUB_REPO}"|"${NEW_GITHUB_REPO}"|"
-find . -type f -name *.tfvars -o -name *.tf | xargs sed -i "s|"${OLD_GITHUB_BRANCH}"|"${NEW_GITHUB_BRANCH}"|"
+find . -type f -name *.tfvars -o -name *.tf -o -name *.hcl -o -name README.md | xargs sed -i "s|"${OLD_GITHUB_ORG}"|"${NEW_GITHUB_ORG}"|"
+find . -type f -name *.tfvars -o -name *.tf -o -name *.hcl -o -name README.md | xargs sed -i "s|"${OLD_GITHUB_REPO}"|"${NEW_GITHUB_REPO}"|"
+find . -type f -name *.tfvars -o -name *.tf -o -name *.hcl -o -name README.md | xargs sed -i "s|"${OLD_GITHUB_BRANCH}"|"${NEW_GITHUB_BRANCH}"|"
 
 # Cleanup
 find . -name ".terraform" | xargs rm -rf

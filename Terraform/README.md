@@ -1,13 +1,17 @@
 # Deploy FDA MyStudies using Terraform
 
-These directories define the entire infrastructure necessary to run FDA MyStudies on Google Cloud.
+These directories define the entire infrastructure necessary to run FDA
+MyStudies on Google Cloud.
 
-This Terraform deployment is an adaptation of Google Cloud's [HIPAA-aligned architecture](https://cloud.google.com/solutions/architecture-hipaa-aligned-project). This approach to project
-configuration and deployment is explained in the ["Setting up a HIPAA-aligned project"](https://cloud.google.com/solutions/setting-up-a-hipaa-aligned-project) solution guide.
+This Terraform deployment is an adaptation of Google Cloud's
+[HIPAA-aligned architecture](https://cloud.google.com/solutions/architecture-hipaa-aligned-project).
+This approach to project configuration and deployment is explained in the
+["Setting up a HIPAA-aligned project"](https://cloud.google.com/solutions/setting-up-a-hipaa-aligned-project)
+solution guide.
 
-This document provides instructions for deploying FDA MyStudies on Google Cloud in using
-infrastrucutre-as-code in approximately 1 hour. A video tutorial that walks the user through
-these steps is available upon request.
+This document provides instructions for deploying FDA MyStudies on Google Cloud
+in using infrastrucutre-as-code in approximately 1 hour. A video tutorial that
+walks the user through these steps is available upon request.
 
 ## Prerequisites
 
@@ -112,25 +116,28 @@ To see what resources each deployment provisions, check out the comments in each
 
     If you would like to deploy the same infrastructure based on the Terraform
     configs in this directory but in a different organization with different
-    resource prefix or namings, use the `rename.sh` script with your environment
-    specific values filled in. Note that `rename.sh` should be run several times
-    with corresponding deployment phase block uncommented. Cross reference this
-    `README.md` file and documentations in the `rename.sh` together do complete
-    the deployment.
+    resource prefix or namings, use the [rename.sh](./rename.sh) script with
+    your environment specific values filled in. Note that
+    [rename.sh](./rename.sh) should be run several times with corresponding
+    deployment phase block uncommented. Cross reference this `README.md` file
+    and documentations in the [rename.sh](./rename.sh) together do complete the
+    deployment.
 
-    `rename.sh` script uses configs in this directory and copy them over with value
-    substitutions to a target local directory to host your new final Terraform configs.
+    [rename.sh](./rename.sh) script uses configs in this directory and copy them
+    over with value substitutions to a target local directory to host your new
+    final Terraform configs.
 
-1. Run `rename.sh` in this directory (later referenced as the original directory) to
-    copy the Deployment Phase 1 configs to your target directory.
+1. Run [rename.sh](./rename.sh) in this directory (later referenced as the
+    original directory) to copy the Deployment Phase 1 configs to your target
+    directory.
 
 1. Go to the target directory.
 
-1. Deploy the `$ROOT/bootstrap/` folder first to create the `devops` project and
-    Terraform state bucket.
+1. Deploy the [bootstrap/](./bootstrap/) folder first to create the `devops`
+    project and Terraform state bucket.
 
-    Make sure in your first deployment in a new organization, Comment out the `backend`
-    block (L32-35) in `$ROOT/bootstrap/main.tf` first.
+    Make sure in your first deployment in a new organization, comment out
+    [GCS backend](./bootstrap/main.tf#L32-L35) first.
 
     ```bash
     cd $ROOT/bootstrap
@@ -141,8 +148,8 @@ To see what resources each deployment provisions, check out the comments in each
     Your `devops` project should now be ready.
 
 1. Backup the state of the `devops` project to the newly created state bucket
-    by uncommenting out the `backend` block (L32-35) in `$ROOT/bootstrap/main.tf`,
-    running the following and answer `yes` when prompted.
+    by uncommenting [GCS backend](./bootstrap/main.tf#L32-L35), running the
+    following commands and answer `yes` when prompted.
 
     ```bash
     terraform init
@@ -159,72 +166,74 @@ To see what resources each deployment provisions, check out the comments in each
     After the secrets have been created, you must go to the Google Cloud
     Console, open `Security` --> `Secret Manager` and fill in their values.
 
-1. Follow `$ROOT/cicd/README.md` to set up CICD pipelines for Terraform
-    configs.
+1. Follow [CICD README.md](./cicd/README.md) to set up CICD pipelines for
+    Terraform configs.
 
-1. Commit your current local git working dir and send a Pull Request to
-    merge these configs. Make sure the presubmit tests pass and get code
-    review approvals. The CD job will then deploy the rest of Phase 1
-    resources for you.
-
-1. Go to the original directory.
-
-1. Uncomment Deployment Phase 2 in `rename.sh` and run `rename.sh`.
-
-1. Go to the target diretory.
-
-1. Commit your current local git working dir and send a Pull Request to
-    merge these configs. Make sure the presubmit tests pass and get code
-    review approvals. The CD job will then deploy the Phase 2 resources
-    for you.
+1. Commit your current local git working dir and send a Pull Request to merge
+    these configs. Make sure the presubmit tests pass and get code review
+    approvals. The CD job will then deploy the rest of Phase 1 resources for
+    you.
 
 1. Go to the original directory.
 
-1. Uncomment Deployment Phase 3 in `rename.sh` and run `rename.sh`.
+1. Uncomment Deployment Phase 2 in [rename.sh](./rename.sh) and run
+    [rename.sh](./rename.sh).
 
 1. Go to the target diretory.
 
-1. In `$ROOT/org/folder.{FOLDER_NAME}/project.{PROJECT_PREFIX}-apps/apps/cloudbuild.tf`,
-    comment out the entire file. This file contains Cloud Build Triggers
-    to auto generate Docker containers when new commits are merged to certain branches.
-    Uncomment later if you would like to use this feature and follow documentation
-    in that file to deploy those triggers.
-
-1. Commit your current local git working dir and send a Pull Request to
-    merge these configs. Make sure the presubmit tests pass and get code
-    review approvals. The CD job will then deploy the Phase 3 resources
-    for you.
+1. Commit your current local git working dir and send a Pull Request to merge
+    these configs. Make sure the presubmit tests pass and get code review
+    approvals. The CD job will then deploy the Phase 2 resources for you.
 
 1. Go to the original directory.
 
-1. Uncomment Deployment Phase 4 in `rename.sh` and run `rename.sh`.
+1. Uncomment Deployment Phase 3 in [rename.sh](./rename.sh) and run
+    [rename.sh](./rename.sh).
 
 1. Go to the target diretory.
 
-1. In `$ROOT/org/folder.{FOLDER_NAME}/project.{PROJECT_PREFIX}-data/data/main.tf`,
-    comment out block between L74-79.
+1. Comment out the entire file
+    [cloudbuild.tf](./org/folder.fda-my-studies/project.heroes-hat-dev-apps/apps/cloudbuild.tf).
+    This file contains Cloud Build Triggers to auto generate Docker containers
+    when new commits are merged to certain branches. Uncomment later if you
+    would like to use this feature and follow documentation in that file to
+    deploy those triggers.
 
-1. Commit your current local git working dir and send a Pull Request to
-    merge these configs. Make sure the presubmit tests pass and get code
-    review approvals. The CD job will then deploy the Phase 4 resources
-    for you.
+1. Commit your current local git working dir and send a Pull Request to merge
+    these configs. Make sure the presubmit tests pass and get code review
+    approvals. The CD job will then deploy the Phase 3 resources for you.
 
-1. In `$ROOT/org/folder.{FOLDER_NAME}/project.{PROJECT_PREFIX}-data/data/main.tf`,
-    Uncomment block between L74-79.
+1. Go to the original directory.
 
-1. Commit your current local git working dir and send a Pull Request to
-    merge these configs. Make sure the presubmit tests pass and get code
-    review approvals. The CD job will then deploy this additional IAM
-    permission for you.
+1. Uncomment Deployment Phase 4 in [rename.sh](./rename.sh) and run
+    [rename.sh](./rename.sh).
 
-1. Follow `$ROOT/kubernetes/README.md` to deploy the Kubernetes resources in
-    the GKE cluster.
+1. Go to the target diretory.
 
-1. Run `copy_client_info_to_sql.sh` script to copy client into from secrets
-    into CloudSQL.
+1. Comment out
+    [iam_members](./org/folder.fda-my-studies/project.heroes-hat-dev-data/data/main.tf#L74-79).
+
+1. Commit your current local git working dir and send a Pull Request to merge
+    these configs. Make sure the presubmit tests pass and get code review
+    approvals. The CD job will then deploy the Phase 4 resources for you.
+
+1. Uncomment
+    [iam_members](./org/folder.fda-my-studies/project.heroes-hat-dev-data/data/main.tf#L74-79).
+
+1. Commit your current local git working dir and send a Pull Request to merge
+    these configs. Make sure the presubmit tests pass and get code review
+    approvals. The CD job will then deploy this additional IAM permission for
+    you.
+
+1. Follow [Kubernetes README.md](../kubernetes/README.md) to deploy the
+    Kubernetes resources in the GKE cluster.
+
+1. Run [copy_client_info_to_sql.sh](./copy_client_info_to_sql.sh) script to
+    copy client into from secrets into CloudSQL.
 
 1. Setup Firestore database. This needs to be done on Google Cloud Console web
     UI. Steps:
+
     1. Navigate to {PREFIX}-firebase on <https://console.cloud.google.com/.>
     1. Select "Firestore" > "Data" from the top-left dropdown.
     1. Click "SELECT NATIVE MODE" button.
