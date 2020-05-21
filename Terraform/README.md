@@ -223,7 +223,8 @@ To see what resources each deployment provisions, check out the comments in each
     you.
 
 1. Follow [Kubernetes README.md](../kubernetes/README.md) to deploy the
-    Kubernetes resources in the GKE cluster.
+    Kubernetes resources in the GKE cluster. Note that the `rename.sh` script
+    didn't copy or handle the Kubernetes deployment artifacts.
 
 1. Run [copy_client_info_to_sql.sh](./copy_client_info_to_sql.sh) script to
     copy client into from secrets into CloudSQL.
