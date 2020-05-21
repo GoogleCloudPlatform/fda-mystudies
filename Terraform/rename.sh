@@ -5,25 +5,40 @@
 export PWD=$(pwd)
 
 export INPUT_TF_BASE=/usr/local/google/home/xingao/gitrepos/fda-mystudies/Terraform
-export OUTPUT_TF_BASE=/usr/local/google/home/xingao/gitrepos/demo
+export OUTPUT_TF_BASE=/usr/local/google/home/xingao/gitrepos/fda-mystudies-test/Terraform
 
 export OLD_STATE="heroes-hat-dev-terraform-state-08679"
-export NEW_STATE="dpt-demo-terraform-state"
+export NEW_STATE=
+
 export OLD_PREFIX="heroes-hat-dev"
-export NEW_PREFIX="dpt-demo"
+export NEW_PREFIX=
+
 export OLD_GKE_PREFIX="heroes-hat"
-export NEW_GKE_PREFIX="dpt-demo"
+export NEW_GKE_PREFIX=
+
 export OLD_BIGQUERY_PREFIX="heroes_hat_dev"
-export NEW_BIGQUERY_PREFIX="dpt_demo"
+export NEW_BIGQUERY_PREFIX=
+
 export OLD_FOLDER="fda-my-studies"
-export NEW_FOLDER="dpt-demo"
+export NEW_FOLDER=
 
 export OLD_ORG_ID="707577601068"
-export NEW_ORG_ID="18510592047"
+export NEW_ORG_ID=
+
 export OLD_BILLING_ACCOUNT="01EA90-3519E1-89CB1F"
-export NEW_BILLING_ACCOUNT="01B494-31B256-17B2A6"
+export NEW_BILLING_ACCOUNT=
+
 export OLD_ADMIN_GROUP="rocketturtle-gcp-admin@rocketturtle.net"
-export NEW_ADMIN_GROUP="dpt-dev@hcls.joonix.net"
+export NEW_ADMIN_GROUP=
+
+export OLD_GITHUB_ORG="GoogleCloudPlatform"
+export NEW_GITHUB_ORG=
+
+export OLD_GITHUB_REPO="fda-mystudies"
+export NEW_GITHUB_REPO=
+
+export OLD_GITHUB_BRANCH="early-access"
+export NEW_GITHUB_BRANCH=
 
 export SRC_PROJ_BASE=${INPUT_TF_BASE}/org/folder.${OLD_FOLDER}/project.${OLD_PREFIX}
 export DST_PROJ_BASE=${OUTPUT_TF_BASE}/org/folder.${NEW_FOLDER}/project.${NEW_PREFIX}
@@ -31,8 +46,12 @@ export DST_PROJ_BASE=${OUTPUT_TF_BASE}/org/folder.${NEW_FOLDER}/project.${NEW_PR
 # Cleanup output directory.
 rm -rf ${OUTPUT_TF_BASE}/*
 
-# Phase 1
-for d in bootstrap secrets cicd kubernetes
+mkdir -p ${OUTPUT_TF_BASE}
+
+# Deployment Phase 1
+# 1.1 Deploy bootstrap/, cicd/ and secrets/ folder manually first.
+# 1.2 Create PR to check in the Phase 1 configs, and let CICD deploys the rest of Phase 1
+for d in bootstrap cicd secrets kubernetes copy_client_info_to_sql.sh copy_mobile_app_info_to_sql.sh README.md
 do
   cp -r ${INPUT_TF_BASE}/$d ${OUTPUT_TF_BASE}/
 done
@@ -53,17 +72,16 @@ do
   cp -r ${SRC_PROJ_BASE}-$d/project ${DST_PROJ_BASE}-$d/
 done
 
-# Phase 2
-cp -r ${SRC_PROJ_BASE}-networks/networks ${DST_PROJ_BASE}-networks/
-cp -r ${SRC_PROJ_BASE}-data/data ${DST_PROJ_BASE}-data/
-cp -r ${SRC_PROJ_BASE}-resp-firebase/firebase ${DST_PROJ_BASE}-resp-firebase/
+# Deployment Phase 2 - Uncomment after Phase 1 is deployed
+# cp -r ${SRC_PROJ_BASE}-networks/networks ${DST_PROJ_BASE}-networks/
+# cp -r ${SRC_PROJ_BASE}-resp-firebase/firebase ${DST_PROJ_BASE}-resp-firebase/
 
-# Phase 3
-cp -r ${SRC_PROJ_BASE}-apps/apps ${DST_PROJ_BASE}-apps/
+# Deployment Phase 3 - Uncomment after Phase 1, 2 are deployed
+# cp -r ${SRC_PROJ_BASE}-apps/apps ${DST_PROJ_BASE}-apps/
 
-# Phase 4
-cp -r ${SRC_PROJ_BASE}-apps/kubernetes ${DST_PROJ_BASE}-apps/
-cp -r ${SRC_PROJ_BASE}-data/iam ${DST_PROJ_BASE}-data/
+# Deployment Phase 4 - Uncomment after Phase 1, 2, 3 are deployed
+# cp -r ${SRC_PROJ_BASE}-data/data ${DST_PROJ_BASE}-data/
+# cp -r ${SRC_PROJ_BASE}-data/iam ${DST_PROJ_BASE}-data/
 
 cd ${OUTPUT_TF_BASE}
 
@@ -84,9 +102,11 @@ find . -type f -name *.tfvars -o -name *.tf | xargs sed -i "s|${OLD_ADMIN_GROUP}
 find . -type f -name *.tfvars -o -name *.tf | xargs sed -i "s|${OLD_FOLDER}|${NEW_FOLDER}|"
 
 # Repo
-find . -type f -name *.tfvars -o -name *.tf | xargs sed -i 's|"GoogleCloudPlatform"|"xingao267"|'
-find . -type f -name *.tfvars -o -name *.tf | xargs sed -i 's|"fda-mystudies"|"demo"|'
-find . -type f -name *.tfvars -o -name *.tf | xargs sed -i 's|"terraform"|"master"|'
-find . -type f -name *.tfvars -o -name *.tf | xargs sed -i 's|"early-access"|"master"|'
+find . -type f -name *.tfvars -o -name *.tf | xargs sed -i "s|"${OLD_GITHUB_ORG}"|"${NEW_GITHUB_ORG}"|"
+find . -type f -name *.tfvars -o -name *.tf | xargs sed -i "s|"${OLD_GITHUB_REPO}"|"${NEW_GITHUB_REPO}"|"
+find . -type f -name *.tfvars -o -name *.tf | xargs sed -i "s|"${OLD_GITHUB_BRANCH}"|"${NEW_GITHUB_BRANCH}"|"
+
+# Cleanup
+find . -name ".terraform" | xargs rm -rf
 
 cd ${PWD}
