@@ -51,5 +51,7 @@ public interface LoginService {
 
   public void sendLockedAccountPasswordResetLinkToMail(String email);
 
-  public Boolean isActiveUser(String securityToken);
+  public boolean isInactiveUser(String securityToken);
+
+  public boolean isIntialPasswordSetUp(String securityToken);
 }

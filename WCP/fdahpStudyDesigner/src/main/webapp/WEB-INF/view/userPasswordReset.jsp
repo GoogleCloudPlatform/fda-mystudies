@@ -19,18 +19,23 @@
   <meta name="author" content="">
 
   <!-- Favicon -->
-  <link rel="shortcut icon" href="/studybuilder/images/icons/FAV_Icon.png" type="image/x-icon"/>
-  <link rel="apple-touch-icon" href="/studybuilder/images/icons/FAV_Icon.png">
+  <link rel="shortcut icon" href="/studybuilder/images/icons/FAV_Icon.png"
+        type="image/x-icon"/>
+  <link rel="apple-touch-icon"
+        href="/studybuilder/images/icons/FAV_Icon.png">
 
   <!-- Mobile Metas -->
-  <meta name="viewport" content="width=device-width, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="viewport"
+        content="width=device-width, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
 
   <!-- Web Fonts  -->
-  <link href="https://fonts.googleapis.com/css?family=Roboto:300,400" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css?family=Roboto:300,400"
+        rel="stylesheet">
 
   <!-- Vendor CSS -->
   <link rel="stylesheet" href="vendor/boostrap/bootstrap.min.css">
-  <link rel="stylesheet" href="vendor/datatable/css/dataTables.bootstrap.min.css">
+  <link rel="stylesheet"
+        href="vendor/datatable/css/dataTables.bootstrap.min.css">
 
   <!-- Your custom styles (optional) -->
   <link href="/studybuilder/css/loader.css" rel="stylesheet">
@@ -53,7 +58,9 @@
 
 </head>
 <body class="loading background__img">
-<div id="loader"><span></span></div>
+<div id="loader">
+  <span></span>
+</div>
 <div id="lg-container" class="lg-container">
 
   <div class="logo__space">
@@ -61,25 +68,30 @@
   </div>
 
   <div class="login__container">
-    <input type="hidden" id="csrfDet" csrfParamName="${_csrf.parameterName}" csrfToken="${_csrf.token}"/>
+    <input type="hidden" id="csrfDet"
+           csrfParamName="${_csrf.parameterName}" csrfToken="${_csrf.token}"/>
     <div>
-      <form:form id="passwordResetForm" data-toggle="validator" role="form" action="addPassword.do" method="post"
+      <form:form id="passwordResetForm" data-toggle="validator"
+                 role="form" action="addPassword.do" method="post"
                  autocomplete="off">
         <div id="errMsg" class="error_msg">${errMsg}</div>
         <div id="sucMsg" class="suceess_msg">${sucMsg}</div>
         <c:if test="${not isInactiveUser && isValidToken}">
           <div>
-          <p class="white__text">Please set up your new password using this form. You would be required to
-            enter the access code provided to you over email for the same.</p>
+          <p class="white__text">Please set up your new password using
+            this form. You would be required to enter the access code
+            provided to you over email for the same.</p>
           <div class="mb-lg form-group">
-            <input autofocus="autofocus" type="text" class="input-field wow_input" id="" tabindex="1"
+            <input autofocus="autofocus" type="text"
+                   class="input-field wow_input" id="" tabindex="1"
                    name="accessCode" maxlength="6" placeholder="Access Code"
                    data-error="Access Code is invalid" required autocomplete="off"/>
             <div class="help-block with-errors red-txt"></div>
           </div>
           <div class="mb-lg form-group">
-            <input type="password" class="input-field wow_input" id="password" tabindex="2" maxlength="64"
-                   data-minlength="8" placeholder="Password" required
+            <input type="password" class="input-field wow_input"
+                   id="password" tabindex="2" maxlength="64" data-minlength="8"
+                   placeholder="Password" required
                    pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!&quot;#$%&amp;'()*+,-.:;&lt;=&gt;?@[\]^_`{|}~])[A-Za-z\d!&quot;#$%&amp;'()*+,-.:;&lt;=&gt;?@[\]^_`{|}~]{8,64}"
                    data-error="Password is invalid" autocomplete="off"/>
             <div class="help-block with-errors red-txt"></div>
@@ -88,29 +100,38 @@
           </div>
 
           <div class="mb-lg form-group">
-            <input type="password" class="input-field wow_input" id="cfnPassword" tabindex="3" name=""
-                   maxlength="64" data-match="#password" data-match-error="Whoops, these don't match"
-                   placeholder="Confirm password"
-                   required autocomplete="off"/>
+            <input type="password" class="input-field wow_input"
+                   id="cfnPassword" tabindex="3" name="" maxlength="64"
+                   data-match="#password"
+                   data-match-error="Whoops, these don't match"
+                   placeholder="Confirm password" required autocomplete="off"/>
             <div class="help-block with-errors red-txt"></div>
           </div>
           <div class="mb-lg form-group">
-            <button type="button" class="btn lg-btn" id="resetPasswordBut">Submit</button>
+            <button type="button" class="btn lg-btn" id="resetPasswordBut">Submit
+            </button>
           </div>
         </c:if>
-        <c:if test="${isInactiveUser}"><p class="passwordExp"><i class="fa fa-exclamation-circle"
-                                                                 aria-hidden="true"></i>Your account has been
-          deactivated.</p></c:if>
-        <c:if test="${not isInactiveUser && not isValidToken}"><p class="passwordExp"><i
-                class="fa fa-exclamation-circle" aria-hidden="true"></i>The Password Reset Link is either
-          expired or invalid.</p></c:if>
+        <c:if test="${isInactiveUser}">
+          <p class="passwordExp">
+            <i class="fa fa-exclamation-circle" aria-hidden="true"></i>Your account has been
+            deactivated.
+          </p>
+        </c:if>
+        <c:if test="${not isInactiveUser && not isValidToken}">
+          <p class="passwordExp">
+            <i class="fa fa-exclamation-circle" aria-hidden="true"></i>The
+            Password Reset Link is either expired or invalid.
+          </p>
+        </c:if>
         <div>
-          <a id="login" class="gray-link backToLogin white__text" href="javascript:void(0)">Back to Sign
-            in</a>
+          <a id="login" class="gray-link backToLogin white__text"
+             href="javascript:void(0)">Back to Sign in</a>
         </div>
         </div>
         <input type="hidden" name="securityToken" value="${securityToken}"/>
-        <input type="password" name="password" id="hidePass" style="display: none;"/>
+        <input type="password" name="password" id="hidePass"
+               style="display: none;"/>
       </form:form>
     </div>
 
@@ -118,9 +139,13 @@
     <div class="clearfix"></div>
 
     <div class="footer">
-      <span>Copyright Placeholder</span><span><a href="/studybuilder/terms.do" id=""
-                                                 target="_blank">Terms</a></span><span><a
-            href="/studybuilder/privacyPolicy.do" id="" target="_blank">Privacy Policy</a></span>
+      <span>Copyright Placeholder</span>
+      <span>
+        <a href="/studybuilder/terms.do" id="" target="_blank">Terms</a>
+      </span>
+      <span>
+        <a href="/studybuilder/privacyPolicy.do" id="" target="_blank">Privacy Policy</a>
+      </span>
     </div>
 
   </div>
@@ -132,11 +157,14 @@
       <div class="modal-content">
 
         <div class="modal-header cust-hdr">
-          <button type="button" class="close pull-right" data-dismiss="modal">&times;</button>
+          <button type="button" class="close pull-right" data-dismiss="modal">&times;
+          </button>
         </div>
         <div class="modal-body pt-xs pb-lg pl-xlg pr-xlg">
           <div>
-            <div class="mt-md mb-md"><u><strong>Terms</strong></u></div>
+            <div class="mt-md mb-md">
+              <u><strong>Terms</strong></u>
+            </div>
             <span>${masterDataBO.termsText}</span>
           </div>
         </div>
@@ -150,12 +178,15 @@
       <div class="modal-content">
 
         <div class="modal-header cust-hdr">
-          <button type="button" class="close pull-right" data-dismiss="modal">&times;</button>
+          <button type="button" class="close pull-right" data-dismiss="modal">&times;
+          </button>
         </div>
 
         <div class="modal-body pt-xs pb-lg pl-xlg pr-xlg">
           <div>
-            <div class="mt-md mb-md"><u><strong>Privacy Policy</strong></u></div>
+            <div class="mt-md mb-md">
+              <u><strong>Privacy Policy</strong></u>
+            </div>
             <span>${masterDataBO.privacyPolicyText}</span>
           </div>
         </div>
@@ -164,7 +195,8 @@
   </div>
 
 </div>
-<form:form action="/studybuilder/login.do" id="backToLoginForm" name="backToLoginForm" method="post">
+<form:form action="/studybuilder/login.do" id="backToLoginForm"
+           name="backToLoginForm" method="post">
 </form:form>
 
 <!-- Vendor -->
@@ -179,7 +211,8 @@
 <script src="/studybuilder/js/jquery.mask.min.js"></script>
 <script src="/studybuilder/js/jquery.password-validator.js"></script>
 <script type="text/javascript" src="/studybuilder/js/loader.js"></script>
-<script type="text/javascript" src="/studybuilder/js/jquery.password-validator.js"></script>
+<script type="text/javascript"
+        src="/studybuilder/js/jquery.password-validator.js"></script>
 <script src="/studybuilder/js/underscore-min.js"></script>
 
 <!-- Theme Custom JS-->
@@ -260,8 +293,8 @@
         }
       };
     }
-    $(document).find('.md-container.white-bg ')
-        .removeClass('md-container');
+    $(document).find('.md-container.white-bg ').removeClass(
+        'md-container');
   }
 
   var addPasswordPopup = function () {

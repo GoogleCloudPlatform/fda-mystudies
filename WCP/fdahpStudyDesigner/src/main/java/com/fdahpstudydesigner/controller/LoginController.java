@@ -80,9 +80,10 @@ public class LoginController {
               ? request.getParameter("securityToken")
               : "";
 
-      Boolean isInactiveUser = loginService.isActiveUser(securityToken);
-      String errorMsg = FdahpStudyDesignerConstants.FAILURE;
-      if (!isInactiveUser) {
+      boolean isInactiveUser = loginService.isInactiveUser(securityToken);
+      boolean isIntialPasswordSetUp = loginService.isIntialPasswordSetUp(securityToken);
+      String errorMsg = "";
+      if (!isInactiveUser || isIntialPasswordSetUp) {
         errorMsg =
             loginService.authAndAddPassword(securityToken, accessCode, password, userBO, sesObj);
       } else {
@@ -409,17 +410,14 @@ public class LoginController {
               ? request.getParameter("securityToken")
               : "";
       UserBO userBO = loginService.checkSecurityToken(securityToken);
+      boolean isValidToken = userBO != null;
+
       map.addAttribute("securityToken", securityToken);
       MasterDataBO masterDataBO = dashBoardAndProfileService.getMasterData("terms");
 
-      boolean checkSecurityToken = false;
-      if (userBO != null) {
-        checkSecurityToken = true;
-      }
+      boolean isInactiveUser = loginService.isInactiveUser(securityToken);
 
-      Boolean isInactiveUser = loginService.isActiveUser(securityToken);
-
-      map.addAttribute("isValidToken", checkSecurityToken);
+      map.addAttribute("isValidToken", isValidToken);
       map.addAttribute("isInactiveUser", isInactiveUser);
       map.addAttribute("masterDataBO", masterDataBO);
       if ((userBO != null) && (StringUtils.isEmpty(userBO.getUserPassword()))) {
