@@ -18,15 +18,17 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Setter
 @Getter
 @Entity
 @Table(name = "user_details")
+@NoArgsConstructor
 public class UserDetailsBO implements Serializable {
 
-  private static final long serialVersionUID = 4985607753888575491L;
+  private static final long serialVersionUID = 3298208288501854383L;
 
   @Id
   @Column(name = "user_details_id")
@@ -83,4 +85,8 @@ public class UserDetailsBO implements Serializable {
 
   @Column(name = "email_code")
   private String emailCode;
+
+  public UserDetailsBO(String userId) {
+    this.userId = userId;
+  }
 }

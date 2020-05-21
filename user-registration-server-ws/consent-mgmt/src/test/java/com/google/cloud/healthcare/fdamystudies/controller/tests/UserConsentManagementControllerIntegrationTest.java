@@ -407,7 +407,7 @@ public class UserConsentManagementControllerIntegrationTest extends BaseMockit {
 
     String pdfValue = Base64.getEncoder().encodeToString(Constants.CONTENT_1_2.getBytes());
     ObjectNode consent = new ObjectMapper().createObjectNode();
-    consent.put(Constants.FIELD_VERSION, Constants.VERSION_BAD);
+    consent.put(Constants.FIELD_VERSION, Constants.VERSION_VERY_LONG);
     consent.put(Constants.FIELD_STATUS, "complete");
     consent.put(Constants.FIELD_PDF, pdfValue);
     consentRequest.set(Constants.FIELD_CONSENT, consent);

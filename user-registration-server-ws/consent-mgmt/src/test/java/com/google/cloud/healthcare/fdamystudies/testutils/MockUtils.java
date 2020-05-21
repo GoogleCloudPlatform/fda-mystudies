@@ -25,15 +25,15 @@ public class MockUtils {
   }
 
   public static void setCloudStorageDownloadExpectations(
-      final FileStorageService cloudStorageSerice, final String content) {
+      final FileStorageService cloudStorageService, final String content) {
     doAnswer(
             (invocation) -> {
               OutputStream os = invocation.getArgument(1);
-              // This is expected to rerun the actual decoded value
+              // This is expected to return the actual decoded value
               os.write(content.getBytes());
               return null;
             })
-        .when(cloudStorageSerice)
+        .when(cloudStorageService)
         .downloadFileTo(anyString(), any(OutputStream.class));
   }
 

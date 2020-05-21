@@ -153,13 +153,9 @@ public class MyStudiesUserRegUtil {
 
   public static LocalDateTime getCurrentDateTime() {
     logger.info("INFO: MyStudiesUserRegUtil - getCurrentDateTime() :: starts");
-    try {
-      return LocalDateTime.now(ZoneId.of(AppConstants.SERVER_TIMEZONE));
-    } catch (Exception e) {
-      logger.error("ERROR: MyStudiesUserRegUtil - getCurrentDateTime()", e);
-    }
+    LocalDateTime currentDateTime = LocalDateTime.now(ZoneId.of(AppConstants.SERVER_TIMEZONE));
     logger.info("INFO: MyStudiesUserRegUtil - getCurrentDateTime() :: ends");
-    return null;
+    return currentDateTime;
   }
 
   public static String getCurrentDateTime(String pattern) {

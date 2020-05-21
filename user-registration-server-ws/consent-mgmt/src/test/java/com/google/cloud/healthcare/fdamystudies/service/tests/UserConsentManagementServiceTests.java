@@ -22,6 +22,7 @@ import com.google.cloud.healthcare.fdamystudies.model.StudyInfoBO;
 import com.google.cloud.healthcare.fdamystudies.model.UserDetailsBO;
 import com.google.cloud.healthcare.fdamystudies.service.FileStorageService;
 import com.google.cloud.healthcare.fdamystudies.service.UserConsentManagementServiceImpl;
+import com.google.cloud.healthcare.fdamystudies.testutils.Constants;
 import com.google.cloud.healthcare.fdamystudies.testutils.MockUtils;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -35,17 +36,12 @@ public class UserConsentManagementServiceTests {
 
   @Test
   public void testGetParticipantStudies() {
-
     Integer studyId = 1;
     String userId = "userId";
-    ParticipantStudiesBO bo = new ParticipantStudiesBO();
 
-    StudyInfoBO sBO = new StudyInfoBO();
-    sBO.setId(studyId);
-    bo.setStudyInfo(sBO);
-    UserDetailsBO uBO = new UserDetailsBO();
-    uBO.setUserId(userId);
-    bo.setUserDetails(uBO);
+    StudyInfoBO sBO = new StudyInfoBO(studyId);
+    UserDetailsBO uBO = new UserDetailsBO(userId);
+    ParticipantStudiesBO bo = new ParticipantStudiesBO(uBO, sBO);
 
     when(userConsentManagementDao.getParticipantStudies(studyId, userId)).thenReturn(bo);
     ParticipantStudiesBO result =
@@ -69,23 +65,21 @@ public class UserConsentManagementServiceTests {
   @Test
   public void testSaveParticipantStudies() {
     List<ParticipantStudiesBO> participantStudiesList = new LinkedList<>();
-    ParticipantStudiesBO participantStudiesBO = new ParticipantStudiesBO();
-    participantStudiesBO.setParticipantId("");
+    ParticipantStudiesBO participantStudiesBO = new ParticipantStudiesBO("", null);
     participantStudiesList.add(participantStudiesBO);
 
     when(userConsentManagementDao.saveParticipantStudies(participantStudiesList))
-        .thenReturn("SUCCESS");
+        .thenReturn(Constants.SUCCESS_MESSAGE);
     String result = userConsentManagementService.saveParticipantStudies(participantStudiesList);
 
-    assertEquals("SUCCESS", result);
+    assertEquals(Constants.SUCCESS_MESSAGE, result);
   }
 
   @SuppressWarnings("unchecked")
   @Test
   public void testSaveParticipantStudiesExceptionCase() {
     List<ParticipantStudiesBO> participantStudiesList = new LinkedList<>();
-    ParticipantStudiesBO participantStudiesBO = new ParticipantStudiesBO();
-    participantStudiesBO.setParticipantId("");
+    ParticipantStudiesBO participantStudiesBO = new ParticipantStudiesBO("", null);
     participantStudiesList.add(participantStudiesBO);
 
     when(userConsentManagementDao.saveParticipantStudies(participantStudiesList))
@@ -125,10 +119,11 @@ public class UserConsentManagementServiceTests {
   @Test
   public void testSaveStudyConsent() {
     StudyConsentBO studyConsentBO = new StudyConsentBO();
-    when(userConsentManagementDao.saveStudyConsent(studyConsentBO)).thenReturn("SUCCESS");
+    when(userConsentManagementDao.saveStudyConsent(studyConsentBO))
+        .thenReturn(Constants.SUCCESS_MESSAGE);
 
     String result = userConsentManagementService.saveStudyConsent(studyConsentBO);
-    assertEquals("SUCCESS", result);
+    assertEquals(Constants.SUCCESS_MESSAGE, result);
   }
 
   @Test
@@ -188,8 +183,7 @@ public class UserConsentManagementServiceTests {
 
     when(userConsentManagementDao.getStudyConsent(userId, studyId, consentVersion))
         .thenReturn(studyConsent);
-    ParticipantStudiesBO participantStudies = new ParticipantStudiesBO();
-    participantStudies.setSharing("sharing");
+    ParticipantStudiesBO participantStudies = new ParticipantStudiesBO(null, "sharing");
     when(userConsentManagementDao.getParticipantStudies(studyId, userId))
         .thenReturn(participantStudies);
     MockUtils.setCloudStorageDownloadExpectations(cloudStorageService, "pdf content");
@@ -228,8 +222,7 @@ public class UserConsentManagementServiceTests {
 
     when(userConsentManagementDao.getStudyConsent(userId, studyId, consentVersion))
         .thenReturn(studyConsent);
-    ParticipantStudiesBO participantStudies = new ParticipantStudiesBO();
-    participantStudies.setSharing("sharing");
+    ParticipantStudiesBO participantStudies = new ParticipantStudiesBO(null, "sharing");
     when(userConsentManagementDao.getParticipantStudies(studyId, userId))
         .thenReturn(participantStudies);
     ConsentStudyResponseBean bean =
@@ -249,8 +242,7 @@ public class UserConsentManagementServiceTests {
 
     when(userConsentManagementDao.getStudyConsent(userId, studyId, consentVersion))
         .thenReturn(studyConsent);
-    ParticipantStudiesBO participantStudies = new ParticipantStudiesBO();
-    participantStudies.setSharing("sharing");
+    ParticipantStudiesBO participantStudies = new ParticipantStudiesBO(null, "sharing");
     MockUtils.setCloudStorageDownloadExceptionExpectations(cloudStorageService);
     ConsentStudyResponseBean bean =
         userConsentManagementService.getStudyConsentDetails(userId, studyId, consentVersion);

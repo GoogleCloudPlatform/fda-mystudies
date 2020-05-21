@@ -17,9 +17,11 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import lombok.NoArgsConstructor;
 
 @Entity
 @Table(name = "study_consent")
+@NoArgsConstructor
 public class StudyConsentBO {
 
   @Id
@@ -55,8 +57,6 @@ public class StudyConsentBO {
 
   @Column(name = "_ts")
   private LocalDateTime ts;
-
-  public StudyConsentBO() {}
 
   public StudyConsentBO(String version, String pdf, String pdfPath, int pdfStorage) {
     this.version = version;

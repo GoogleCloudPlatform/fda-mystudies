@@ -29,8 +29,8 @@ public class TestUtils {
     if (headers == null) {
       headers = new HttpHeaders();
     }
-    headers.add(Constants.CONTENT_TYPE_HEADER, MediaType.APPLICATION_JSON);
-    headers.add(Constants.ACCEPT_HEADER, MediaType.APPLICATION_JSON);
+    headers.add(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON);
+    headers.add(HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON);
   }
 
   public static void assertUpdateEligibility(ResponseEntity<JsonNode> responseEntity) {
@@ -44,7 +44,8 @@ public class TestUtils {
       ResponseEntity<JsonNode> responseEntity, String pdfValue, String version) {
     assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
     JsonNode responseBody = responseEntity.getBody();
-    assertEquals("success", responseBody.get(Constants.FIELD_MESSAGE).asText());
+    assertEquals(
+        Constants.SUCCESS_MESSAGE_LOWERCASE, responseBody.get(Constants.FIELD_MESSAGE).asText());
     JsonNode consent = (ObjectNode) responseBody.get(Constants.FIELD_CONSENT);
     assertEquals(version, consent.get(Constants.FIELD_VERSION).asText());
     assertEquals("application/pdf", consent.get(Constants.FIELD_TYPE).asText());
