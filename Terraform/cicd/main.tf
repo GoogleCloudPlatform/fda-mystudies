@@ -88,14 +88,14 @@ resource "google_project_service" "services" {
 
 # Need someone who has billing admin permission to deploy this.
 # IAM permissions to allow Cloud Build Service Account use the billing account.
-# resource "google_billing_account_iam_member" "binding" {
-#   billing_account_id = var.billing_account
-#   role               = "roles/billing.user"
-#   member             = local.cloud_build_sa
-#   depends_on = [
-#     google_project_service.services,
-#   ]
-# }
+resource "google_billing_account_iam_member" "binding" {
+  billing_account_id = var.billing_account
+  role               = "roles/billing.user"
+  member             = local.cloud_build_sa
+  depends_on = [
+    google_project_service.services,
+  ]
+}
 
 # IAM permissions to allow approvers and contributors to view the build results.
 resource "google_project_iam_member" "cloudbuild_viewers" {
