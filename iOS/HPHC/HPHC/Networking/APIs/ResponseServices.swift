@@ -271,18 +271,6 @@ class ResponseServices: NSObject {
 
     guard !response.isEmpty else { return }
     var dashBoardResponse: [DashboardResponse] = []
-    let keysArray = self.keys.components(separatedBy: ",")
-    for key in keysArray {
-
-      let newkey = key.replacingOccurrences(of: "\"", with: "")
-      let responseData = DashboardResponse()
-      responseData.activityId = activityId
-      responseData.key = newkey
-      responseData.type = "int"
-      responseData.isPHI = "true"
-
-      dashBoardResponse.append(responseData)
-    }
 
     if let rows = response["rows"] as? [JSONDictionary] {
 
@@ -371,28 +359,28 @@ class ResponseServices: NSObject {
             }
 
           } else {
-            for responseData in dashBoardResponse {
-
-              if let keyValue = data[responseData.key!] as? [String: Any] {
-
-                if Utilities.isValidValue(
-                  someObject: keyValue["value"] as AnyObject?
-                ) {
-                  var value: Float = 0.0
-                  if let n = keyValue["value"] as? NSNumber {
-                    value = n.floatValue
-                  }
-                  let valueDetail =
-                    [
-                      "value": value,
-                      "count": Float(0.0),
-                      "date": date,
-                    ] as [String: Any]
-
-                  responseData.values.append(valueDetail)
-                }
+            for (index, dict) in dataDictArr.enumerated() {
+              guard index > 1 else { continue }
+              let responseData = DashboardResponse()
+              responseData.activityId = activityId
+              responseData.type = "int"
+              responseData.isPHI = "true"
+              let key = dict.keys.first ?? ""
+              responseData.key = key
+              if let valueDict = dict[key] as? JSONDictionary,
+                let value = valueDict["value"] as? Float
+              {
+                let valueDetail =
+                  [
+                    "value": value,
+                    "count": Float(0.0),
+                    "date": date,
+                  ] as [String: Any]
+                responseData.values.append(valueDetail)
+                dashBoardResponse.append(responseData)
               }
             }
+
           }
         }
       }
