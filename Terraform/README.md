@@ -176,8 +176,7 @@ To see what resources each deployment provisions, check out the comments in each
 
 1. Go to the original directory.
 
-1. Uncomment Deployment Phase 2 in [rename.sh](./rename.sh) and run
-    [rename.sh](./rename.sh).
+1. Uncomment [Deployment Phase 2](./rename.sh#L76-L77) and run [rename.sh](./rename.sh).
 
 1. Go to the target diretory.
 
@@ -187,8 +186,7 @@ To see what resources each deployment provisions, check out the comments in each
 
 1. Go to the original directory.
 
-1. Uncomment Deployment Phase 3 in [rename.sh](./rename.sh) and run
-    [rename.sh](./rename.sh).
+1. Uncomment [Deployment Phase 3](./rename.sh#L80) and run [rename.sh](./rename.sh).
 
 1. Go to the target diretory.
 
@@ -205,8 +203,7 @@ To see what resources each deployment provisions, check out the comments in each
 
 1. Go to the original directory.
 
-1. Uncomment Deployment Phase 4 in [rename.sh](./rename.sh) and run
-    [rename.sh](./rename.sh).
+1. Uncomment [Deployment Phase 4](./rename.sh#L83-L84) and run [rename.sh](./rename.sh).
 
 1. Go to the target diretory.
 
