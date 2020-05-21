@@ -616,11 +616,8 @@ public class LoginServiceImpl implements LoginService, UserDetailsService {
   @Override
   public boolean isInactiveUser(String securityToken) {
     logger.info("LoginServiceImpl - isActiveUser() - Starts");
-    boolean isInactiveUser = false;
     UserBO user = loginDAO.getUserBySecurityToken(securityToken);
-    if (user != null && !user.isEnabled()) {
-      isInactiveUser = true;
-    }
+    boolean isInactiveUser = user != null && !user.isEnabled();
     logger.info("LoginServiceImpl - isActiveUser() - Ends");
     return isInactiveUser;
   }
@@ -628,11 +625,8 @@ public class LoginServiceImpl implements LoginService, UserDetailsService {
   @Override
   public boolean isIntialPasswordSetUp(String securityToken) {
     logger.info("LoginServiceImpl - isIntialPasswordSetUp() - Starts");
-    boolean isIntialPasswordSetUp = false;
     UserBO user = loginDAO.getUserBySecurityToken(securityToken);
-    if (StringUtils.isBlank(user.getUserPassword())) {
-      isIntialPasswordSetUp = true;
-    }
+    boolean isIntialPasswordSetUp = StringUtils.isBlank(user.getUserPassword());
     logger.info("LoginServiceImpl - isIntialPasswordSetUp() - Ends");
     return isIntialPasswordSetUp;
   }
