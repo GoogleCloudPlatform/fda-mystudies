@@ -222,12 +222,15 @@ To see what resources each deployment provisions, check out the comments in each
     approvals. The CD job will then deploy this additional IAM permission for
     you.
 
+1. Run [copy_client_info_to_sql.sh](./copy_client_info_to_sql.sh) script to
+    copy client info from secrets into CloudSQL.
+
+1. Run [copy_mobile_app_info_to_sql.sh](./copy_mobile_app_info_to_sql.sh)
+    script to copy mobile app info from secrets into CloudSQL.
+
 1. Follow [Kubernetes README.md](../kubernetes/README.md) to deploy the
     Kubernetes resources in the GKE cluster. Note that the `rename.sh` script
     didn't copy or handle the Kubernetes deployment artifacts.
-
-1. Run [copy_client_info_to_sql.sh](./copy_client_info_to_sql.sh) script to
-    copy client into from secrets into CloudSQL.
 
 1. Setup Firestore database. This needs to be done on Google Cloud Console web
     UI. Steps:
