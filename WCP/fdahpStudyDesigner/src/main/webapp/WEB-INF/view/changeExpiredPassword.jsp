@@ -21,7 +21,8 @@
   <link rel="apple-touch-icon" href="/studybuilder/images/icons/FAV_Icon.png">
 
   <!-- Mobile Metas -->
-  <meta name="viewport" content="width=device-width, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="viewport"
+        content="width=device-width, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
 
   <!-- Web Fonts  -->
   <link href="https://fonts.googleapis.com/css?family=Roboto:300,400" rel="stylesheet">
@@ -63,7 +64,8 @@
     }
   </style>
 </head>
-<body class="loading background__img" onload="noBack();" onpageshow="if (event.persisted) noBack();" onunload="">
+<body class="loading background__img" onload="noBack();" onpageshow="if (event.persisted) noBack();"
+      onunload="">
 <div id="loader"><span></span></div>
 <form:form action="" name="studyListForm" id="studyListForm" method="post">
 </form:form>
@@ -73,47 +75,12 @@
 </form>
 
 <div id="lg-container" class="lg-container">
-
-  <!-- Login Left Section-->
-  <!-- <div class="lg-space-right">
-			<div>
-			    <input type="hidden" id="csrfDet" csrfParamName="${_csrf.parameterName}" csrfToken="${_csrf.token}" />
-				<form:form id="passwordResetForm" data-toggle="validator" role="form" action="/studybuilder/changePassword.do" method="post" autocomplete="off">
-					<div>
-						<p>Your password has expired. You need to reset your password to proceed further.</p>
-			        	<div class="mb-lg form-group">
-			                <input type="password" class="form-control input-field wow_input" id="oldPassword" name="" maxlength="14"  data-minlength="8" placeholder="Old Password" data-error="Invalid old password." required
-			                autocomplete="off"/>
-			                <div class="help-block with-errors"></div>
-			                <input type="hidden" name="oldPassword" id="hideOldPass" />
-			            </div>
-			            <div class="mb-lg form-group">
-			                <input type="password" class="form-control input-field wow_input" id="password" name="" maxlength="14"  data-minlength="8" placeholder="Password" data-error="Password is invalid" required
-			                pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!&quot;#$%&amp;'()*+,-.:;&lt;=&gt;?@[\]^_`{|}~])[A-Za-z\d!&quot;#$%&amp;'()*+,-.:;&lt;=&gt;?@[\]^_`{|}~]{8,14}" autocomplete="off"/>
-			                <div class="help-block with-errors"></div>
-			                <span class="arrowLeftSugg"></span>
-			            </div>
-						<div class="mb-lg form-group">
-			                <input type="password" class="form-control input-field wow_input" id="cfnPassword" name="" maxlength="14" data-match="#password" data-match-error="Whoops, these don't match" placeholder="Confirm password" 
-			                 required  autocomplete="off"/>
-			                <div class="help-block with-errors"></div>
-			            </div>
-			            <div class="mb-lg form-group">
-			  				<button type="button" class="btn lg-btn" id="resetPasswordBut">Submit</button>
-			            </div>
-					</div>
-					<input type="password" name="newPassword" id="hidePass" style="display: none;"/>
-				</form:form>
-	  		</div>
-	  		<div class="clearfix"></div>
-            <div class="footer">
-                <div><span>Copyright � 2017 FDA</span><span><a href="https://www.fda.gov/AboutFDA/AboutThisWebsite/WebsitePolicies/" class="" target="_blank">Terms</a></span><span><a href="https://www.fda.gov/AboutFDA/AboutThisWebsite/WebsitePolicies/#privacy" class="" target="_blank">Privacy Policy</a></span></div>
-          	</div>
-	  	</div> -->
   <div class="logout">
     <div class="dis-line pull-right ml-md line34">
-      <a href="/studybuilder/sessionOut.do" class="blue-link text-weight-normal text-uppercase"><span
-              class="white__text">sign Out</span> </a>
+      <a href="/studybuilder/sessionOut.do"
+         class="blue-link text-weight-normal text-uppercase">
+        <span class="white__text">sign Out</span>
+      </a>
     </div>
   </div>
   <div class="logo__space">
@@ -123,16 +90,19 @@
     <!--container-->
     <div>
       <!-- change password box-->
-      <input type="hidden" id="csrfDet" csrfParamName="${_csrf.parameterName}" csrfToken="${_csrf.token}"/>
+      <input type="hidden" id="csrfDet" csrfParamName="${_csrf.parameterName}"
+             csrfToken="${_csrf.token}"/>
       <form:form id="passwordResetForm" data-toggle="validator" role="form"
                  action="/studybuilder/changePassword.do" method="post" autocomplete="off">
         <div>
           <div id="errMsg" class="error_msg">${errMsg}</div>
           <div id="sucMsg" class="suceess_msg">${sucMsg}</div>
-          <p class="white__text">Your password has expired. You need to reset your password to proceed
+          <p class="white__text">Your password has expired. You need to reset your password to
+            proceed
             further.</p>
           <div class="mb-lg form-group">
-            <input type="password" class="form-control input-field wow_input" id="oldPassword" name=""
+            <input type="password" class="form-control input-field wow_input" id="oldPassword"
+                   name=""
                    maxlength="14" data-minlength="8" placeholder="Old Password"
                    data-error="Invalid old password." required
                    autocomplete="off"/>
@@ -141,7 +111,8 @@
           </div>
           <div class="mb-lg form-group">
             <input type="password" class="form-control input-field wow_input" id="password" name=""
-                   maxlength="14" data-minlength="8" placeholder="Password" data-error="Password is invalid"
+                   maxlength="14" data-minlength="8" placeholder="Password"
+                   data-error="Password is invalid"
                    required
                    pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!&quot;#$%&amp;'()*+,-.:;&lt;=&gt;?@[\]^_`{|}~])[A-Za-z\d!&quot;#$%&amp;'()*+,-.:;&lt;=&gt;?@[\]^_`{|}~]{8,14}"
                    autocomplete="off"/>
@@ -149,8 +120,10 @@
             <span class="arrowLeftSugg"></span>
           </div>
           <div class="mb-lg form-group">
-            <input type="password" class="form-control input-field wow_input" id="cfnPassword" name=""
-                   maxlength="14" data-match="#password" data-match-error="Whoops, these don't match"
+            <input type="password" class="form-control input-field wow_input" id="cfnPassword"
+                   name=""
+                   maxlength="14" data-match="#password"
+                   data-match-error="Whoops, these don't match"
                    placeholder="Confirm password"
                    required autocomplete="off"/>
             <div class="help-block with-errors"></div>
@@ -165,9 +138,13 @@
     </div>
     <!--container-->
     <div class="footer">
-      <span>Copyright Placeholder</span><span><a href="/studybuilder/terms.do" id=""
-                                                 target="_blank">Terms</a></span><span><a
-            href="/studybuilder/privacyPolicy.do" id="" target="_blank">Privacy Policy</a></span>
+      <span>Copyright Placeholder</span>
+      <span>
+        <a href="/studybuilder/terms.do" id="" target="_blank">Terms</a>
+      </span>
+      <span>
+        <a href="/studybuilder/privacyPolicy.do" id="" target="_blank">Privacy Policy</a>
+      </span>
     </div>
   </div>
 </div>
