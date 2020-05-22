@@ -45,7 +45,7 @@ public class VersionChecker extends AsyncTask<String, String, String> {
     newVersion = currentVersion();
     VersionModel versionModel;
     try {
-      Responsemodel responsemodel = HttpRequest.getRequest(versionUrl, null, "");
+      Responsemodel responsemodel = HttpRequest.getRequest(versionUrl, null, "WCP");
 
       if (responsemodel.getResponseCode().equalsIgnoreCase("" + HttpURLConnection.HTTP_OK)) {
         versionModel = parseJson(responsemodel, VersionModel.class);
