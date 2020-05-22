@@ -1,6 +1,8 @@
 on:
   pull_request:
-    branches: [ early-access ]
+    paths:
+    - 'auth-server-ws/**'
+    - '.github/workflows/build-auth-server.yml'
 name: Build-auth-server-ws
 jobs:
   build:
