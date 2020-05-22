@@ -1,0 +1,38 @@
+.centered__div {
+  background: #fff;
+  position: absolute;
+  top: 0;
+  bottom: 11%;
+  left: 0;
+  right: 0;
+  margin: auto;
+  width: 470px;
+  height: 500px;
+  padding: 40px 0;
+  border-radius: 7px;
+  box-shadow: 1px 1px 5px 0px rgba(204, 215, 226, 1);
+}
+
+.login-logo {
+  text-align: center;
+  padding-bottom: 20px;
+}
+.login-logo__text {
+  text-align: center;
+  padding-bottom: 50px;
+  color: #353a3e;
+  font-size: 24px;
+  line-height: 26px;
+}
+
+/* media queries scss */
+@media (min-width: 320px) {
+  .centered__div {
+    width: 92%;
+  }
+}
+@media (min-width: 768px) {
+  .centered__div {
+    width: 467px;
+  }
+}
