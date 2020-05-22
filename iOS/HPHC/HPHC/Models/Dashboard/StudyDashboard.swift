@@ -63,6 +63,24 @@ class DashboardResponse {
   var date: String?
   var isPHI: String?
 
+  init(with activityID: String, and key: String) {
+    self.key = key
+    self.activityId = activityId
+    self.isPHI = "true"
+    self.type = "int"
+  }
+  
+  func appendValues(from dict: JSONDictionary, of responseDate: String){
+    if let value = dict["value"] as? Float {
+      let valueDetail =
+        [
+          "value": value,
+          "count": Float(0.0),
+          "date": responseDate,
+          ] as [String: Any]
+      self.values.append(valueDetail)
+    }
+  }
 }
 
 class DashboardStatistics {

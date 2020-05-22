@@ -360,23 +360,11 @@ class ResponseServices: NSObject {
 
           } else {
             for (index, dict) in dataDictArr.enumerated() {
-              guard index > 1 else { continue }
-              let responseData = DashboardResponse()
-              responseData.activityId = activityId
-              responseData.type = "int"
-              responseData.isPHI = "true"
-              let key = dict.keys.first ?? ""
-              responseData.key = key
-              if let valueDict = dict[key] as? JSONDictionary,
-                let value = valueDict["value"] as? Float
-              {
-                let valueDetail =
-                  [
-                    "value": value,
-                    "count": Float(0.0),
-                    "date": date,
-                  ] as [String: Any]
-                responseData.values.append(valueDetail)
+              guard index > 1,
+              let key = dict.keys.first else { continue }
+              let responseData = DashboardResponse(with: activityId, and: key)
+              if let valueDict = dict[key] as? JSONDictionary {
+                responseData.appendValues(from: valueDict, of: date)
                 dashBoardResponse.append(responseData)
               }
             }
