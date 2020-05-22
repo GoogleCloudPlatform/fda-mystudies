@@ -1,13 +1,8 @@
-name: Build iOS
+name: Build-iOS
 on:
-  push:
-    paths:
-      - .github/workflows/build-iOS.yml
   pull_request:
     paths:
-      - iOS/HPHC/**/*
-      - .github/workflows/build-iOS.yml
-
+    - 'iOS/**'
 jobs:
   test:
     name: Build

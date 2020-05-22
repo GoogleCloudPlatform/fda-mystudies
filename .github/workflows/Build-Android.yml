@@ -1,12 +1,11 @@
 name: Build-Android
-
-on: [pull_request]
-
+on:
+  pull_request:
+    paths:
+    - 'Android/**'
 jobs:
   build:
-
     runs-on: ubuntu-latest
-
     steps:
     - uses: actions/checkout@v2
     - name: set up JDK 1.8
