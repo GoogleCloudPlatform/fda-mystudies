@@ -28,9 +28,8 @@ public class Constants {
   public static final String FIELD_TYPE = "type";
   public static final String FIELD_CONTENT = "content";
 
-  public static final String SUCCESS_MESSAGE = "SUCCESS";
-  public static final String SUCCESS_MESSAGE_LOWERCASE = "success";
-
   public static final String UPDATE_CONSENT_SUCCESS_MSG =
       "Eligibility consent has been updated successfully";
+  public static final String STUDYOF_HEALTH = "StudyofHealth";
+  public static final String STATUS_COMPLETE = "complete";
 }

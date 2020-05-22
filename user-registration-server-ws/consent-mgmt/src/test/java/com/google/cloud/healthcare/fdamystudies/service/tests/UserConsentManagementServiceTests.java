@@ -1,5 +1,6 @@
 package com.google.cloud.healthcare.fdamystudies.service.tests;
 
+import static com.google.cloud.healthcare.fdamystudies.utils.MyStudiesUserRegUtil.ErrorCodes.SUCCESS;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 import static org.mockito.Mockito.when;
@@ -22,7 +23,6 @@ import com.google.cloud.healthcare.fdamystudies.model.StudyInfoBO;
 import com.google.cloud.healthcare.fdamystudies.model.UserDetailsBO;
 import com.google.cloud.healthcare.fdamystudies.service.FileStorageService;
 import com.google.cloud.healthcare.fdamystudies.service.UserConsentManagementServiceImpl;
-import com.google.cloud.healthcare.fdamystudies.testutils.Constants;
 import com.google.cloud.healthcare.fdamystudies.testutils.MockUtils;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -69,10 +69,10 @@ public class UserConsentManagementServiceTests {
     participantStudiesList.add(participantStudiesBO);
 
     when(userConsentManagementDao.saveParticipantStudies(participantStudiesList))
-        .thenReturn(Constants.SUCCESS_MESSAGE);
+        .thenReturn(SUCCESS.getValue());
     String result = userConsentManagementService.saveParticipantStudies(participantStudiesList);
 
-    assertEquals(Constants.SUCCESS_MESSAGE, result);
+    assertEquals(SUCCESS.getValue(), result);
   }
 
   @SuppressWarnings("unchecked")
@@ -119,11 +119,10 @@ public class UserConsentManagementServiceTests {
   @Test
   public void testSaveStudyConsent() {
     StudyConsentBO studyConsentBO = new StudyConsentBO();
-    when(userConsentManagementDao.saveStudyConsent(studyConsentBO))
-        .thenReturn(Constants.SUCCESS_MESSAGE);
+    when(userConsentManagementDao.saveStudyConsent(studyConsentBO)).thenReturn(SUCCESS.getValue());
 
     String result = userConsentManagementService.saveStudyConsent(studyConsentBO);
-    assertEquals(Constants.SUCCESS_MESSAGE, result);
+    assertEquals(SUCCESS.getValue(), result);
   }
 
   @Test

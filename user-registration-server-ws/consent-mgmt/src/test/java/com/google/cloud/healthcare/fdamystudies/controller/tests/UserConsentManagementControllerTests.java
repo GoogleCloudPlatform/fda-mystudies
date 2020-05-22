@@ -6,7 +6,6 @@ import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import java.util.Base64;
-import java.util.Collections;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -18,9 +17,12 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.google.cloud.healthcare.fdamystudies.bean.ConsentReqBean;
+import com.google.cloud.healthcare.fdamystudies.bean.ConsentStatusBean;
 import com.google.cloud.healthcare.fdamystudies.common.BaseMockit;
 import com.google.cloud.healthcare.fdamystudies.controller.UserConsentManagementController;
 import com.google.cloud.healthcare.fdamystudies.service.FileStorageService;
@@ -30,7 +32,7 @@ import com.google.cloud.healthcare.fdamystudies.testutils.MockUtils;
 import com.google.cloud.healthcare.fdamystudies.testutils.TestUtils;
 
 @ExtendWith(MockitoExtension.class)
-public class UserConsentManagementControllerIntegrationTest extends BaseMockit {
+public class UserConsentManagementControllerTests extends BaseMockit {
 
   @Mock private FileStorageService cloudStorageService;
 
@@ -57,9 +59,10 @@ public class UserConsentManagementControllerIntegrationTest extends BaseMockit {
   }
 
   @Test
-  public void updateEligibilityConsentStatus() {
+  public void updateEligibilityConsentStatus() throws JsonProcessingException {
     HttpHeaders headers = new HttpHeaders();
     TestUtils.addTokenHeaders(headers);
+    TestUtils.addJsonHeaders(headers);
     TestUtils.addUserIdHeader(headers);
 
     // Invoke http api endpoint to save study consent first time
@@ -67,18 +70,13 @@ public class UserConsentManagementControllerIntegrationTest extends BaseMockit {
 
     MockUtils.setCloudStorageSaveFileExpectations(cloudStorageService);
 
-    ObjectNode consentRequest = new ObjectMapper().createObjectNode();
-    consentRequest.put(Constants.FIELD_STUDY_ID, "StudyofHealth");
-    consentRequest.put(Constants.FIELD_ELIGIBILITY, true);
-
     String pdfValue = Base64.getEncoder().encodeToString(Constants.CONTENT_1_0.getBytes());
-    ObjectNode consent = new ObjectMapper().createObjectNode();
-    consent.put(Constants.FIELD_VERSION, Constants.VERSION_1_0);
-    consent.put(Constants.FIELD_STATUS, "");
-    consent.put(Constants.FIELD_PDF, pdfValue);
-    consentRequest.set(Constants.FIELD_CONSENT, consent);
+    ConsentReqBean consent = new ConsentReqBean(Constants.VERSION_1_0, "", pdfValue);
+    ConsentStatusBean consentStatus =
+        new ConsentStatusBean(Constants.STUDYOF_HEALTH, true, consent, null);
+    String requestJson = new ObjectMapper().writeValueAsString(consentStatus);
 
-    HttpEntity<JsonNode> requestEntity = new HttpEntity<>(consentRequest, headers);
+    HttpEntity<String> requestEntity = new HttpEntity<>(requestJson, headers);
     ResponseEntity<JsonNode> responseEntity =
         getRestTemplate()
             .exchange(
@@ -94,7 +92,10 @@ public class UserConsentManagementControllerIntegrationTest extends BaseMockit {
     responseEntity =
         getRestTemplate()
             .exchange(
-                "/consentDocument?studyId=StudyofHealth&consentVersion=" + Constants.VERSION_1_0,
+                "/consentDocument?studyId="
+                    + Constants.STUDYOF_HEALTH
+                    + "&consentVersion="
+                    + Constants.VERSION_1_0,
                 HttpMethod.GET,
                 requestEntity,
                 JsonNode.class);
@@ -103,27 +104,24 @@ public class UserConsentManagementControllerIntegrationTest extends BaseMockit {
   }
 
   @Test
-  public void updateEligibilityConsentStatusUpdateExisting() {
+  public void updateEligibilityConsentStatusUpdateExisting() throws JsonProcessingException {
     HttpHeaders headers = new HttpHeaders();
     TestUtils.addTokenHeaders(headers);
+    TestUtils.addJsonHeaders(headers);
     TestUtils.addUserIdHeader(headers);
 
     // Invoke http api endpoint to Update study consent pdf content value
     // Set mockito expectations for saving file into cloudStorageService
     MockUtils.setCloudStorageSaveFileExpectations(cloudStorageService);
 
-    ObjectNode consentRequest = new ObjectMapper().createObjectNode();
-    consentRequest.put(Constants.FIELD_STUDY_ID, "StudyofHealth");
-    consentRequest.put(Constants.FIELD_ELIGIBILITY, true);
-
     String pdfValue = Base64.getEncoder().encodeToString(Constants.CONTENT_1_0_UPDATED.getBytes());
-    ObjectNode consent = new ObjectMapper().createObjectNode();
-    consent.put(Constants.FIELD_VERSION, Constants.VERSION_1_0);
-    consent.put(Constants.FIELD_STATUS, "complete");
-    consent.put(Constants.FIELD_PDF, pdfValue);
-    consentRequest.set(Constants.FIELD_CONSENT, consent);
+    ConsentReqBean consent =
+        new ConsentReqBean(Constants.VERSION_1_0, Constants.STATUS_COMPLETE, pdfValue);
+    ConsentStatusBean consentStatus =
+        new ConsentStatusBean(Constants.STUDYOF_HEALTH, true, consent, null);
+    String requestJson = new ObjectMapper().writeValueAsString(consentStatus);
 
-    HttpEntity<JsonNode> requestEntity = new HttpEntity<>(consentRequest, headers);
+    HttpEntity<String> requestEntity = new HttpEntity<>(requestJson, headers);
     ResponseEntity<JsonNode> responseEntity =
         getRestTemplate()
             .exchange(
@@ -140,7 +138,10 @@ public class UserConsentManagementControllerIntegrationTest extends BaseMockit {
     responseEntity =
         getRestTemplate()
             .exchange(
-                "/consentDocument?studyId=StudyofHealth&consentVersion=" + Constants.VERSION_1_0,
+                "/consentDocument?studyId="
+                    + Constants.STUDYOF_HEALTH
+                    + "&consentVersion="
+                    + Constants.VERSION_1_0,
                 HttpMethod.GET,
                 requestEntity,
                 JsonNode.class);
@@ -149,27 +150,24 @@ public class UserConsentManagementControllerIntegrationTest extends BaseMockit {
   }
 
   @Test
-  public void updateEligibilityConsentStatusAddNewVersion() {
+  public void updateEligibilityConsentStatusAddNewVersion() throws JsonProcessingException {
     HttpHeaders headers = new HttpHeaders();
     TestUtils.addTokenHeaders(headers);
     TestUtils.addUserIdHeader(headers);
+    TestUtils.addJsonHeaders(headers);
 
     // Invoke http api endpoint to Add new study consent pdf version
     // Set mockito expectations for saving file into cloudStorageService
     MockUtils.setCloudStorageSaveFileExpectations(cloudStorageService);
 
-    ObjectNode consentRequest = new ObjectMapper().createObjectNode();
-    consentRequest.put(Constants.FIELD_STUDY_ID, "StudyofHealth");
-    consentRequest.put(Constants.FIELD_ELIGIBILITY, true);
-
     String pdfValue = Base64.getEncoder().encodeToString(Constants.CONTENT_1_2.getBytes());
-    ObjectNode consent = new ObjectMapper().createObjectNode();
-    consent.put(Constants.FIELD_VERSION, Constants.VERSION_1_2);
-    consent.put(Constants.FIELD_STATUS, "complete");
-    consent.put(Constants.FIELD_PDF, pdfValue);
-    consentRequest.set(Constants.FIELD_CONSENT, consent);
+    ConsentReqBean consent =
+        new ConsentReqBean(Constants.VERSION_1_2, Constants.STATUS_COMPLETE, pdfValue);
+    ConsentStatusBean consentStatus =
+        new ConsentStatusBean(Constants.STUDYOF_HEALTH, true, consent, null);
+    String requestJson = new ObjectMapper().writeValueAsString(consentStatus);
 
-    HttpEntity<JsonNode> requestEntity = new HttpEntity<>(consentRequest, headers);
+    HttpEntity<String> requestEntity = new HttpEntity<>(requestJson, headers);
     ResponseEntity<JsonNode> responseEntity =
         getRestTemplate()
             .exchange(
@@ -186,7 +184,10 @@ public class UserConsentManagementControllerIntegrationTest extends BaseMockit {
     responseEntity =
         getRestTemplate()
             .exchange(
-                "/consentDocument?studyId=StudyofHealth&consentVersion=" + Constants.VERSION_1_2,
+                "/consentDocument?studyId="
+                    + Constants.STUDYOF_HEALTH
+                    + "&consentVersion="
+                    + Constants.VERSION_1_2,
                 HttpMethod.GET,
                 requestEntity,
                 JsonNode.class);
@@ -203,7 +204,10 @@ public class UserConsentManagementControllerIntegrationTest extends BaseMockit {
     responseEntity =
         getRestTemplate()
             .exchange(
-                "/consentDocument?studyId=StudyofHealth&consentVersion=" + Constants.VERSION_1_0,
+                "/consentDocument?studyId="
+                    + Constants.STUDYOF_HEALTH
+                    + "&consentVersion="
+                    + Constants.VERSION_1_0,
                 HttpMethod.GET,
                 requestEntity,
                 JsonNode.class);
@@ -226,7 +230,7 @@ public class UserConsentManagementControllerIntegrationTest extends BaseMockit {
   }
 
   @Test
-  public void updateEligibilityConsentStatusInvalidInput() {
+  public void updateEligibilityConsentStatusInvalidInput() throws JsonProcessingException {
     HttpHeaders headers = new HttpHeaders();
     TestUtils.addTokenHeaders(headers);
     TestUtils.addUserIdHeader(headers);
@@ -236,8 +240,7 @@ public class UserConsentManagementControllerIntegrationTest extends BaseMockit {
     // Set mockito expectations for saving file into cloudStorageService
 
     // without consent request
-    ObjectNode consentRequest = null;
-    HttpEntity<JsonNode> requestEntity = new HttpEntity<>(consentRequest, headers);
+    HttpEntity<String> requestEntity = new HttpEntity<>(null, headers);
     ResponseEntity<JsonNode> responseEntity =
         getRestTemplate()
             .exchange(
@@ -245,8 +248,9 @@ public class UserConsentManagementControllerIntegrationTest extends BaseMockit {
     assertEquals(HttpStatus.BAD_REQUEST, responseEntity.getStatusCode());
 
     // without consent
-    consentRequest = new ObjectMapper().createObjectNode();
-    requestEntity = new HttpEntity<>(consentRequest, headers);
+    ConsentStatusBean consentRequest = new ConsentStatusBean();
+    String requestJson = new ObjectMapper().writeValueAsString(consentRequest);
+    requestEntity = new HttpEntity<>(requestJson, headers);
     responseEntity =
         getRestTemplate()
             .exchange(
@@ -254,10 +258,11 @@ public class UserConsentManagementControllerIntegrationTest extends BaseMockit {
     assertEquals(HttpStatus.BAD_REQUEST, responseEntity.getStatusCode());
 
     // without consent version
-    ObjectNode consent = new ObjectMapper().createObjectNode();
-    consentRequest.set(Constants.FIELD_CONSENT, consent);
+    ConsentReqBean consent = new ConsentReqBean(null, Constants.STATUS_COMPLETE, "");
+    consentRequest = new ConsentStatusBean(Constants.STUDYOF_HEALTH, true, consent, "sharing");
+    requestJson = new ObjectMapper().writeValueAsString(consentRequest);
 
-    requestEntity = new HttpEntity<>(consentRequest, headers);
+    requestEntity = new HttpEntity<>(requestJson, headers);
     responseEntity =
         getRestTemplate()
             .exchange(
@@ -265,8 +270,11 @@ public class UserConsentManagementControllerIntegrationTest extends BaseMockit {
     assertEquals(HttpStatus.BAD_REQUEST, responseEntity.getStatusCode());
 
     // without consent pdf content
-    consent.put(Constants.FIELD_VERSION, Constants.VERSION_1_0);
-    requestEntity = new HttpEntity<>(consentRequest, headers);
+    consent = new ConsentReqBean(Constants.VERSION_1_0, Constants.STATUS_COMPLETE, null);
+    consentRequest = new ConsentStatusBean(Constants.STUDYOF_HEALTH, true, consent, null);
+    requestJson = new ObjectMapper().writeValueAsString(consentRequest);
+
+    requestEntity = new HttpEntity<>(requestJson, headers);
     responseEntity =
         getRestTemplate()
             .exchange(
@@ -274,10 +282,15 @@ public class UserConsentManagementControllerIntegrationTest extends BaseMockit {
     assertEquals(HttpStatus.BAD_REQUEST, responseEntity.getStatusCode());
 
     // without consent status
-    consent.put(Constants.FIELD_VERSION, Constants.VERSION_1_0);
-    consent.put(
-        Constants.FIELD_PDF, Base64.getEncoder().encodeToString(Constants.CONTENT_1_0.getBytes()));
-    requestEntity = new HttpEntity<>(consentRequest, headers);
+    consent =
+        new ConsentReqBean(
+            Constants.VERSION_1_0,
+            null,
+            Base64.getEncoder().encodeToString(Constants.CONTENT_1_0.getBytes()));
+    consentRequest = new ConsentStatusBean(Constants.STUDYOF_HEALTH, true, consent, "sharing");
+    requestJson = new ObjectMapper().writeValueAsString(consentRequest);
+
+    requestEntity = new HttpEntity<>(requestJson, headers);
     responseEntity =
         getRestTemplate()
             .exchange(
@@ -285,13 +298,15 @@ public class UserConsentManagementControllerIntegrationTest extends BaseMockit {
     assertEquals(HttpStatus.BAD_REQUEST, responseEntity.getStatusCode());
 
     // without studyId
-    consent.put(Constants.FIELD_VERSION, Constants.VERSION_1_0);
-    consent.put(
-        Constants.FIELD_PDF, Base64.getEncoder().encodeToString(Constants.CONTENT_1_0.getBytes()));
-    consent.put(Constants.FIELD_STATUS, "complete");
-    consentRequest.put(Constants.FIELD_STUDY_ID, "");
+    consent =
+        new ConsentReqBean(
+            Constants.VERSION_1_0,
+            Constants.STATUS_COMPLETE,
+            Base64.getEncoder().encodeToString(Constants.CONTENT_1_0.getBytes()));
+    consentRequest = new ConsentStatusBean(null, true, consent, "sharing");
+    requestJson = new ObjectMapper().writeValueAsString(consentRequest);
 
-    requestEntity = new HttpEntity<>(consentRequest, headers);
+    requestEntity = new HttpEntity<>(requestJson, headers);
     responseEntity =
         getRestTemplate()
             .exchange(
@@ -299,14 +314,16 @@ public class UserConsentManagementControllerIntegrationTest extends BaseMockit {
     assertEquals(HttpStatus.BAD_REQUEST, responseEntity.getStatusCode());
 
     // without userId header
-    consent.put(Constants.FIELD_VERSION, Constants.VERSION_1_0);
-    consent.put(
-        Constants.FIELD_PDF, Base64.getEncoder().encodeToString(Constants.CONTENT_1_0.getBytes()));
-    consent.put(Constants.FIELD_STATUS, "complete");
-    consentRequest.put(Constants.FIELD_STUDY_ID, "StudyofHealth");
+    consent =
+        new ConsentReqBean(
+            Constants.VERSION_1_0,
+            Constants.STATUS_COMPLETE,
+            Base64.getEncoder().encodeToString(Constants.CONTENT_1_0.getBytes()));
+    consentRequest = new ConsentStatusBean(Constants.STUDYOF_HEALTH, true, consent, "sharing");
+    requestJson = new ObjectMapper().writeValueAsString(consentRequest);
 
-    headers.put(Constants.USER_ID_HEADER, Collections.singletonList(""));
-    requestEntity = new HttpEntity<>(consentRequest, headers);
+    headers.remove(Constants.USER_ID_HEADER);
+    requestEntity = new HttpEntity<>(requestJson, headers);
     responseEntity =
         getRestTemplate()
             .exchange(
@@ -314,14 +331,18 @@ public class UserConsentManagementControllerIntegrationTest extends BaseMockit {
     assertEquals(HttpStatus.UNAUTHORIZED, responseEntity.getStatusCode());
 
     // without a matching entry for userId and studyId in participantStudies
-    consent.put(Constants.FIELD_VERSION, Constants.VERSION_1_0);
-    consent.put(
-        Constants.FIELD_PDF, Base64.getEncoder().encodeToString(Constants.CONTENT_1_0.getBytes()));
-    consent.put(Constants.FIELD_STATUS, "complete");
-    consentRequest.put(Constants.FIELD_STUDY_ID, "StudyofHealth");
+    consent =
+        new ConsentReqBean(
+            Constants.VERSION_1_0,
+            Constants.STATUS_COMPLETE,
+            Base64.getEncoder().encodeToString(Constants.CONTENT_1_0.getBytes()));
+    consentRequest = new ConsentStatusBean(Constants.STUDYOF_HEALTH, true, consent, null);
+    requestJson = new ObjectMapper().writeValueAsString(consentRequest);
 
-    headers.put(Constants.USER_ID_HEADER, Collections.singletonList("BhGsYUyd"));
-    requestEntity = new HttpEntity<>(consentRequest, headers);
+    headers.remove(Constants.USER_ID_HEADER);
+    headers.add(Constants.USER_ID_HEADER, "invalid userId");
+
+    requestEntity = new HttpEntity<>(requestJson, headers);
     responseEntity =
         getRestTemplate()
             .exchange(
@@ -329,14 +350,17 @@ public class UserConsentManagementControllerIntegrationTest extends BaseMockit {
     assertEquals(HttpStatus.BAD_REQUEST, responseEntity.getStatusCode());
 
     // with empty version
-    consent.put(Constants.FIELD_VERSION, "");
-    consent.put(
-        Constants.FIELD_PDF, Base64.getEncoder().encodeToString(Constants.CONTENT_1_0.getBytes()));
-    consent.put(Constants.FIELD_STATUS, "complete");
-    consentRequest.put(Constants.FIELD_STUDY_ID, "StudyofHealth");
+    consent =
+        new ConsentReqBean(
+            "",
+            Constants.STATUS_COMPLETE,
+            Base64.getEncoder().encodeToString(Constants.CONTENT_1_0.getBytes()));
+    consentRequest = new ConsentStatusBean(Constants.STUDYOF_HEALTH, false, consent, null);
+    requestJson = new ObjectMapper().writeValueAsString(consentRequest);
 
-    headers.put(Constants.USER_ID_HEADER, Collections.singletonList(Constants.VALID_USER_ID));
-    requestEntity = new HttpEntity<>(consentRequest, headers);
+    headers.remove(Constants.USER_ID_HEADER);
+    TestUtils.addUserIdHeader(headers);
+    requestEntity = new HttpEntity<>(requestJson, headers);
     responseEntity =
         getRestTemplate()
             .exchange(
@@ -345,22 +369,20 @@ public class UserConsentManagementControllerIntegrationTest extends BaseMockit {
   }
 
   @Test
-  public void testUpdateEligibilityConsentStatusEmptyPdf() {
+  public void testUpdateEligibilityConsentStatusEmptyPdf() throws JsonProcessingException {
     HttpHeaders headers = new HttpHeaders();
     TestUtils.addTokenHeaders(headers);
     TestUtils.addUserIdHeader(headers);
+    TestUtils.addJsonHeaders(headers);
 
     // Invoke http api endpoint to Add new study consent pdf version
-    ObjectNode consentRequest = new ObjectMapper().createObjectNode();
-    consentRequest.put(Constants.FIELD_STUDY_ID, "StudyofHealth");
+    ConsentReqBean consent =
+        new ConsentReqBean(Constants.VERSION_1_2, Constants.STATUS_COMPLETE, "");
+    ConsentStatusBean consentRequest =
+        new ConsentStatusBean(Constants.STUDYOF_HEALTH, true, consent, "sharing");
+    String requestJson = new ObjectMapper().writeValueAsString(consentRequest);
 
-    ObjectNode consent = new ObjectMapper().createObjectNode();
-    consent.put(Constants.FIELD_VERSION, Constants.VERSION_1_2);
-    consent.put(Constants.FIELD_STATUS, "complete");
-    consent.put(Constants.FIELD_PDF, ""); // empty pdf
-    consentRequest.set(Constants.FIELD_CONSENT, consent);
-
-    HttpEntity<JsonNode> requestEntity = new HttpEntity<>(consentRequest, headers);
+    HttpEntity<String> requestEntity = new HttpEntity<>(requestJson, headers);
     ResponseEntity<JsonNode> responseEntity =
         getRestTemplate()
             .exchange(
@@ -372,16 +394,11 @@ public class UserConsentManagementControllerIntegrationTest extends BaseMockit {
     verify(cloudStorageService, times(0)).saveFile(anyString(), anyString(), anyString());
 
     // Invoke http api endpoint to Add new study consent pdf version
-    consentRequest = new ObjectMapper().createObjectNode();
-    consentRequest.put(Constants.FIELD_STUDY_ID, "StudyofHealth");
+    consent = new ConsentReqBean(Constants.VERSION_1_3, Constants.STATUS_COMPLETE, "");
+    consentRequest = new ConsentStatusBean(Constants.STUDYOF_HEALTH, true, consent, null);
+    requestJson = new ObjectMapper().writeValueAsString(consentRequest);
 
-    consent = new ObjectMapper().createObjectNode();
-    consent.put(Constants.FIELD_VERSION, Constants.VERSION_1_3);
-    consent.put(Constants.FIELD_STATUS, "complete");
-    consent.put(Constants.FIELD_PDF, ""); // empty pdf
-    consentRequest.set(Constants.FIELD_CONSENT, consent);
-
-    requestEntity = new HttpEntity<>(consentRequest, headers);
+    requestEntity = new HttpEntity<>(requestJson, headers);
     responseEntity =
         getRestTemplate()
             .exchange(
@@ -403,12 +420,12 @@ public class UserConsentManagementControllerIntegrationTest extends BaseMockit {
     MockUtils.setCloudStorageSaveFileExpectations(cloudStorageService);
 
     ObjectNode consentRequest = new ObjectMapper().createObjectNode();
-    consentRequest.put(Constants.FIELD_STUDY_ID, "StudyofHealth");
+    consentRequest.put(Constants.FIELD_STUDY_ID, Constants.STUDYOF_HEALTH);
 
     String pdfValue = Base64.getEncoder().encodeToString(Constants.CONTENT_1_2.getBytes());
     ObjectNode consent = new ObjectMapper().createObjectNode();
     consent.put(Constants.FIELD_VERSION, Constants.VERSION_VERY_LONG);
-    consent.put(Constants.FIELD_STATUS, "complete");
+    consent.put(Constants.FIELD_STATUS, Constants.STATUS_COMPLETE);
     consent.put(Constants.FIELD_PDF, pdfValue);
     consentRequest.set(Constants.FIELD_CONSENT, consent);
 
