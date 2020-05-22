@@ -3,6 +3,7 @@ on:
   pull_request:
     paths:
     - 'Android/**'
+    - '.github/workflows/build-android.yml'
 jobs:
   build:
     runs-on: ubuntu-latest
