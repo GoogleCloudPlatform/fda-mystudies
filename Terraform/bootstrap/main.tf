@@ -20,22 +20,21 @@
 # - A Cloud Storage bucket to store Terraform states for all deployments,
 # - Org level IAM permissions for org admins.
 
-// TODO: replace with https://github.com/terraform-google-modules/terraform-google-bootstrap
-
-# ==============================================================================
-# TODO: Uncomment after initial deployment and run `terraform init`.
 terraform {
   required_version = "~> 0.12.0"
   required_providers {
     google      = "~> 3.0"
     google-beta = "~> 3.0"
   }
+  # Comment out this block first, do a deployment (`terraform init` + `terraform apply`).
+  # Then uncomment after initial deployment and run `terraform init`.
+  # ==============================================================================
   backend "gcs" {
     bucket = "heroes-hat-dev-terraform-state-08679"
     prefix = "bootstrap"
   }
+  # ==============================================================================
 }
-# ==============================================================================
 
 # Create the project, enable APIs, and create the deletion lien, if specified.
 module "project" {

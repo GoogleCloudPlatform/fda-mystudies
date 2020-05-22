@@ -7,7 +7,7 @@
  */
 package com.google.cloud.healthcare.fdamystudies.service;
 
-import static org.hamcrest.Matchers.containsInAnyOrder;
+import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.hasSize;
 import static org.junit.Assert.assertThat;
@@ -20,6 +20,7 @@ import com.google.cloud.healthcare.fdamystudies.model.UserDetailsBO;
 import com.google.cloud.healthcare.fdamystudies.repository.PersonalizedUserReportRepository;
 import com.google.cloud.healthcare.fdamystudies.repository.StudyInfoRepository;
 import com.google.cloud.healthcare.fdamystudies.repository.UserDetailsRepository;
+import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.time.Month;
 import java.util.GregorianCalendar;
@@ -94,6 +95,7 @@ public class PersonalizedUserReportServiceTest {
             .studyInfo(study1)
             .reportTitle("Report 1")
             .reportContent("Report 1 content 1 for user 1")
+            .creationTime(new Timestamp(1590031332001L))
             .build();
     PersonalizedUserReportBO report2 =
         PersonalizedUserReportBO.builder()
@@ -102,6 +104,7 @@ public class PersonalizedUserReportServiceTest {
             .studyInfo(study1)
             .reportTitle("Report 1")
             .reportContent("Report 1 content 2 for user 1")
+            .creationTime(new Timestamp(1590031332002L))
             .build();
     PersonalizedUserReportBO report3 =
         PersonalizedUserReportBO.builder()
@@ -110,14 +113,16 @@ public class PersonalizedUserReportServiceTest {
             .studyInfo(study1)
             .reportTitle("Report 1")
             .reportContent("Report 1 content 3 for user 1")
+            .creationTime(new Timestamp(1590031332003L))
             .build();
     PersonalizedUserReportBO report4 =
         PersonalizedUserReportBO.builder()
             .id(4)
             .userDetails(user1)
             .studyInfo(study1)
-            .reportTitle("Report 2")
-            .reportContent("Report 2 content for user 1")
+            .reportTitle("Report 3")
+            .reportContent("Report 3 content for user 1")
+            .creationTime(new Timestamp(1590031332004L))
             .build();
     PersonalizedUserReportBO report5 =
         PersonalizedUserReportBO.builder()
@@ -126,14 +131,25 @@ public class PersonalizedUserReportServiceTest {
             .studyInfo(study1)
             .reportTitle("Report 1")
             .reportContent("Report 1 content for user 2")
+            .creationTime(new Timestamp(1590031332005L))
             .build();
     PersonalizedUserReportBO report6 =
         PersonalizedUserReportBO.builder()
             .id(6)
             .userDetails(user1)
             .studyInfo(study2)
+            .reportTitle("Report 3")
+            .reportContent("Report 3 content for user 1")
+            .creationTime(new Timestamp(1590031332006L))
+            .build();
+    PersonalizedUserReportBO report7 =
+        PersonalizedUserReportBO.builder()
+            .id(7)
+            .userDetails(user1)
+            .studyInfo(study1)
             .reportTitle("Report 2")
             .reportContent("Report 2 content for user 1")
+            .creationTime(new Timestamp(1590031332007L))
             .build();
     personalizedUserReportRepository.save(report1);
     personalizedUserReportRepository.save(report2);
@@ -141,15 +157,19 @@ public class PersonalizedUserReportServiceTest {
     personalizedUserReportRepository.save(report4);
     personalizedUserReportRepository.save(report5);
     personalizedUserReportRepository.save(report6);
+    personalizedUserReportRepository.save(report7);
 
     List<UserResourceBean> userReports =
         personalizedUserReportService.getLatestPersonalizedUserReports("user_id1", "study 1");
-    assertThat(userReports, hasSize(2));
+    assertThat(userReports, hasSize(3));
+    // Reports are sorted in descending order by creation timestamp (newest first).
     assertThat(
         userReports,
-        containsInAnyOrder(
+        contains(
             equalTo(
-                new UserResourceBean("Report 2", "Report 2 content for user 1", resourceType, "4")),
+                new UserResourceBean("Report 2", "Report 2 content for user 1", resourceType, "7")),
+            equalTo(
+                new UserResourceBean("Report 3", "Report 3 content for user 1", resourceType, "4")),
             equalTo(
                 new UserResourceBean(
                     "Report 1", "Report 1 content 3 for user 1", resourceType, "3"))));

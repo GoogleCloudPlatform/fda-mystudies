@@ -19,6 +19,10 @@
 
 import Foundation
 
+// MARK: - Notifications
+
+let kRefreshActivities = Notification.Name(rawValue: "refreshActivities")
+
 // MARK: - Alert Constants
 
 let kTermsAndConditionLink = "http://www.google.com"

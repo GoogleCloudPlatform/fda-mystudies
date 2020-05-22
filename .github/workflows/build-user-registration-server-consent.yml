@@ -1,6 +1,8 @@
 on:
   pull_request:
-    branches: [ early-access ]
+    paths:
+    - 'user-registration-server-ws/consent-mgmt/**'
+    - '.github/workflows/build-user-registration-server-consent.yml'
 name: Build user-registration-server-ws-consent
 jobs:
   build:

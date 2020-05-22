@@ -13,6 +13,7 @@ import com.google.cloud.healthcare.fdamystudies.model.PersonalizedUserReportBO;
 import com.google.cloud.healthcare.fdamystudies.repository.PersonalizedUserReportRepository;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Map;
 import java.util.function.BinaryOperator;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -37,6 +38,8 @@ public class PersonalizedUserReportService {
                     Comparator.comparing(PersonalizedUserReportBO::getCreationTime))))
         .entrySet()
         .stream()
+        .filter(e -> e.getValue().getCreationTime()!=null)
+        .sorted(Comparator.comparing(e -> ((Map.Entry<String, PersonalizedUserReportBO>) e).getValue().getCreationTime()).reversed())
         .map(
             e ->
                 new UserResourceBean(
