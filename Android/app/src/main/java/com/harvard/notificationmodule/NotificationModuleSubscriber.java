@@ -168,8 +168,6 @@ public class NotificationModuleSubscriber {
 
       int notificationId;
 
-      AlarmManager alarmManager = null;
-      int notificationNumber = 1;
       if (time.getTime().after(new Date())) {
         notificationId = new Random().nextInt();
         NotificationDb notificationDb = new NotificationDb();
@@ -184,54 +182,17 @@ public class NotificationModuleSubscriber {
         notificationDb.setEndDateTime(removeOffset(activityRun.getEndDate(), offset));
         dbServiceSubscriber.updateNotificationToDb(context, notificationDb);
 
-        alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
-
-        Intent notificationIntent = new Intent(context, AlarmReceiver.class);
-        notificationIntent.setAction("android.media.action.DISPLAY_NOTIFICATION");
-        notificationIntent.addCategory("android.intent.category.DEFAULT");
-        notificationIntent.putExtra("title", title);
-        notificationIntent.putExtra("description", description);
-        notificationIntent.putExtra("type", ACTIVITY);
-        notificationIntent.putExtra("notificationId", notificationId);
-        notificationIntent.putExtra("studyId", activityRun.getStudyId());
-        notificationIntent.putExtra("activityId", activityRun.getActivityId());
-        notificationIntent.putExtra("date", AppController.getDateFormat().format(time.getTime()));
-        notificationIntent.putExtra("notificationNumber", notificationNumber);
-        try {
-          int pendingIntentId =
-              Integer.parseInt(
-                      AppController.getHelperSharedPreference()
-                          .readPreference(
-                              context,
-                              context.getResources().getString(R.string.pendingCount),
-                              "0"))
-                  + 1;
-          AppController.getHelperSharedPreference()
-              .writePreference(
-                  context,
-                  context.getResources().getString(R.string.pendingCount),
-                  "" + pendingIntentId);
-          PendingIntent broadcast =
-              PendingIntent.getBroadcast(
-                  context, pendingIntentId, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
-          PendingIntents pendingIntents = new PendingIntents();
-          pendingIntents.setActivityId(activityRun.getActivityId());
-          pendingIntents.setStudyId(activityRun.getStudyId());
-          pendingIntents.setPendingIntentId(pendingIntentId);
-          pendingIntents.setDescription(description);
-          pendingIntents.setTitle(title);
-          pendingIntents.setType(ACTIVITY);
-          pendingIntents.setNotificationId(notificationId);
-
-          dbServiceSubscriber.savePendingIntentId(context, pendingIntents);
-          if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            alarmManager.setExactAndAllowWhileIdle(
-                AlarmManager.RTC_WAKEUP, time.getTimeInMillis(), broadcast);
-          } else {
-            alarmManager.setExact(AlarmManager.RTC_WAKEUP, time.getTimeInMillis(), broadcast);
-          }
-        } catch (Exception e) {
-          Logger.log(e);
+        if (isSameDay(new Date(), time.getTime())) {
+          set24hourScheduler(context);
+          setAlarm(
+              context,
+              title,
+              description,
+              ACTIVITY,
+              notificationId,
+              activityRun.getStudyId(),
+              activityRun.getActivityId(),
+              time);
         }
       }
 
@@ -252,61 +213,141 @@ public class NotificationModuleSubscriber {
           notificationDb.setId(1);
           notificationDb.setEndDateTime(removeOffset(activityRun.getEndDate(), offset));
           dbServiceSubscriber.updateNotificationToDb(context, notificationDb);
+          if (isSameDay(new Date(), time1.getTime())) {
 
-          Intent notificationIntent1 = new Intent(context, AlarmReceiver.class);
-          notificationIntent1.setAction("android.media.action.DISPLAY_NOTIFICATION");
-          notificationIntent1.addCategory("android.intent.category.DEFAULT");
-          notificationIntent1.putExtra("title", title);
-          notificationIntent1.putExtra("description", description1);
-          notificationIntent1.putExtra("type", ACTIVITY);
-          notificationIntent1.putExtra("studyId", activityRun.getStudyId());
-          notificationIntent1.putExtra("activityId", activityRun.getActivityId());
-          notificationIntent1.putExtra("notificationId", notificationId);
-          notificationIntent1.putExtra(
-              "date", AppController.getDateFormat().format(time1.getTime()));
-          notificationIntent1.putExtra("notificationNumber", notificationNumber);
-          try {
-            int pendingIntentId =
-                Integer.parseInt(
-                        AppController.getHelperSharedPreference()
-                            .readPreference(
-                                context,
-                                context.getResources().getString(R.string.pendingCount),
-                                "0"))
-                    + 1;
-            AppController.getHelperSharedPreference()
-                .writePreference(
-                    context,
-                    context.getResources().getString(R.string.pendingCount),
-                    "" + pendingIntentId);
-            PendingIntent broadcast =
-                PendingIntent.getBroadcast(
-                    context,
-                    pendingIntentId,
-                    notificationIntent1,
-                    PendingIntent.FLAG_UPDATE_CURRENT);
-            PendingIntents pendingIntents = new PendingIntents();
-            pendingIntents.setActivityId(activityRun.getActivityId());
-            pendingIntents.setStudyId(activityRun.getStudyId());
-            pendingIntents.setPendingIntentId(pendingIntentId);
-            pendingIntents.setDescription(description1);
-            pendingIntents.setTitle(title);
-            pendingIntents.setType(ACTIVITY);
-            pendingIntents.setNotificationId(notificationId);
-
-            dbServiceSubscriber.savePendingIntentId(context, pendingIntents);
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-              alarmManager.setExactAndAllowWhileIdle(
-                  AlarmManager.RTC_WAKEUP, time1.getTimeInMillis(), broadcast);
-            } else {
-              alarmManager.setExact(AlarmManager.RTC_WAKEUP, time1.getTimeInMillis(), broadcast);
-            }
-          } catch (Exception e) {
-            Logger.log(e);
+            set24hourScheduler(context);
+            setAlarm(
+                context,
+                title,
+                description1,
+                ACTIVITY,
+                notificationId,
+                activityRun.getStudyId(),
+                activityRun.getActivityId(),
+                time1);
           }
         }
       }
 
+    } catch (Exception e) {
+      Logger.log(e);
+    }
+  }
+
+  private void set24hourScheduler(Context context) {
+    // checking if alram is working with pendingIntent
+    boolean isWorking = false;
+    try {
+      Intent notificationIntent1 = new Intent(context, AlarmReceiver.class);
+      notificationIntent1.setAction("android.media.action.DISPLAY_NOTIFICATION");
+      notificationIntent1.addCategory("android.intent.category.DEFAULT");
+      notificationIntent1.putExtra("pendingIntentId", 1);
+      isWorking =
+          (PendingIntent.getBroadcast(context, 1, notificationIntent1, PendingIntent.FLAG_NO_CREATE)
+              != null); // just changed the flag
+    } catch (Exception e) {
+      Logger.log(e);
+    }
+
+    if (!isWorking) {
+      Calendar calendar = Calendar.getInstance();
+      calendar.set(Calendar.HOUR_OF_DAY, 0);
+      calendar.set(Calendar.MINUTE, 0);
+      calendar.set(Calendar.SECOND, 0);
+      calendar.set(Calendar.MILLISECOND, 0);
+      calendar.add(Calendar.DATE, 1);
+
+      try {
+        Intent notificationIntent = new Intent(context, AlarmReceiver.class);
+        notificationIntent.setAction("android.media.action.DISPLAY_NOTIFICATION");
+        notificationIntent.addCategory("android.intent.category.DEFAULT");
+        notificationIntent.putExtra("pendingIntentId", 1);
+        AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+        PendingIntent broadcast =
+            PendingIntent.getBroadcast(
+                context, 1, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+        try {
+          if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            alarmManager.setExactAndAllowWhileIdle(
+                AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), broadcast);
+          } else {
+            alarmManager.setExact(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), broadcast);
+          }
+        } catch (NullPointerException e) {
+          Logger.log(e);
+        }
+      } catch (Exception e) {
+        Logger.log(e);
+      }
+    }
+  }
+
+  private boolean isSameDay(Date date1, Date date2) {
+    Calendar calendar1 = Calendar.getInstance();
+    calendar1.setTime(date1);
+    Calendar calendar2 = Calendar.getInstance();
+    calendar2.setTime(date2);
+    return calendar1.get(Calendar.YEAR) == calendar2.get(Calendar.YEAR)
+        && calendar1.get(Calendar.MONTH) == calendar2.get(Calendar.MONTH)
+        && calendar1.get(Calendar.DAY_OF_MONTH) == calendar2.get(Calendar.DAY_OF_MONTH);
+  }
+
+  public void setAlarm(
+      Context context,
+      String title,
+      String description,
+      String type,
+      int notificationId,
+      String studyId,
+      String activityId,
+      Calendar time) {
+    AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+    int notificationNumber = 1;
+    Intent notificationIntent = new Intent(context, AlarmReceiver.class);
+    notificationIntent.setAction("android.media.action.DISPLAY_NOTIFICATION");
+    notificationIntent.addCategory("android.intent.category.DEFAULT");
+    notificationIntent.putExtra("title", title);
+    notificationIntent.putExtra("description", description);
+    notificationIntent.putExtra("type", type);
+    notificationIntent.putExtra("notificationId", notificationId);
+    notificationIntent.putExtra("studyId", studyId);
+    notificationIntent.putExtra("activityId", activityId);
+    notificationIntent.putExtra("date", AppController.getDateFormat().format(time.getTime()));
+    notificationIntent.putExtra("notificationNumber", notificationNumber);
+    try {
+      int pendingIntentId =
+          Integer.parseInt(
+                  AppController.getHelperSharedPreference()
+                      .readPreference(
+                          context, context.getResources().getString(R.string.pendingCount), "5"))
+              + 1;
+      AppController.getHelperSharedPreference()
+          .writePreference(
+              context,
+              context.getResources().getString(R.string.pendingCount),
+              "" + pendingIntentId);
+
+      notificationIntent.putExtra("pendingIntentId", pendingIntentId);
+
+      PendingIntent broadcast =
+          PendingIntent.getBroadcast(
+              context, pendingIntentId, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+      PendingIntents pendingIntents = new PendingIntents();
+      pendingIntents.setActivityId(activityId);
+      pendingIntents.setStudyId(studyId);
+      pendingIntents.setPendingIntentId(pendingIntentId);
+      pendingIntents.setDescription(description);
+      pendingIntents.setTitle(title);
+      pendingIntents.setType(type);
+      pendingIntents.setNotificationId(notificationId);
+
+      dbServiceSubscriber.savePendingIntentId(context, pendingIntents);
+      if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+        alarmManager.setExactAndAllowWhileIdle(
+            AlarmManager.RTC_WAKEUP, time.getTimeInMillis(), broadcast);
+      } else {
+        alarmManager.setExact(AlarmManager.RTC_WAKEUP, time.getTimeInMillis(), broadcast);
+      }
     } catch (Exception e) {
       Logger.log(e);
     }
