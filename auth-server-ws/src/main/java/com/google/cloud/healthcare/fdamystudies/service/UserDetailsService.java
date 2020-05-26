@@ -45,7 +45,7 @@ public interface UserDetailsService {
   public String updateStatus(UpdateInfo userInfo, String userId)
       throws SystemException, UserNotFoundException, EmailIdAlreadyVerifiedException;
 
-  public String deleteUserDetails(String userId) throws UserNotFoundException, SystemException;
+  public boolean deleteUserDetails(String userId) throws UserNotFoundException;
 
   public int sendPasswordResetLinkthroughEmail(
       String emailId, String tempPassword, DaoUserBO participantDetails);
@@ -71,6 +71,6 @@ public interface UserDetailsService {
 
   public String savePasswordHistory(String userId, String password, String salt);
 
-  public String sendEmailOnAccountLocking(String emailId, String appCode)
+  public boolean sendEmailOnAccountLocking(String emailId, String appCode)
       throws UserNotFoundException;
 }

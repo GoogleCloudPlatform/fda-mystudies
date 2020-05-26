@@ -17,7 +17,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.stream.Collectors;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -48,7 +47,6 @@ import com.google.cloud.healthcare.fdamystudies.repository.LoginAttemptRepositor
 import com.google.cloud.healthcare.fdamystudies.repository.PasswordHistoryRepository;
 import com.google.cloud.healthcare.fdamystudies.repository.SessionRepository;
 import com.google.cloud.healthcare.fdamystudies.repository.UserRepository;
-import com.google.cloud.healthcare.fdamystudies.repository.UserRepository.MyView;
 import com.google.cloud.healthcare.fdamystudies.service.bean.RefreshTokenServiceResponse;
 import com.google.cloud.healthcare.fdamystudies.service.bean.ServiceRegistrationSuccessResponse;
 import com.google.cloud.healthcare.fdamystudies.utils.AppConstants;
@@ -76,6 +74,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
   @Autowired private PasswordHistoryRepository passHistoryRepo;
 
+  @Override
   public DaoUserBO loadUserByEmailIdAndAppIdAndOrgIdAndAppCode(
       String userName, String appId, String orgId, String appCode) throws SystemException {
     logger.info("UserDetailsServiceImpl loadUserByEmailIdAndAppIdAndOrgIdAndAppCode() - starts");
@@ -93,6 +92,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     }
   }
 
+  @Override
   @Transactional
   public ServiceRegistrationSuccessResponse save(
       RegisterUser user, String appId, String orgId, String appCode)
@@ -100,85 +100,64 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
     logger.info("UserDetailsServiceImpl save() - starts");
     ServiceRegistrationSuccessResponse successResp = null;
-    try {
-      String emailId = getEmailId(user.getEmailId(), appId, orgId, appCode);
-      DaoUserBO newUser = null;
-      if (emailId == null) {
-        newUser = new DaoUserBO();
-        newUser.setEmailId(user.getEmailId());
-        String userId =
-            RandomStringUtils.randomAlphanumeric(15)
-                + "-"
-                + RandomStringUtils.randomAlphanumeric(15)
-                + "-"
-                + RandomStringUtils.randomAlphanumeric(15);
-        newUser.setUserId(userId);
+    String emailId = getEmailId(user.getEmailId(), appId, orgId, appCode);
+    DaoUserBO newUser = null;
+    if (emailId == null) {
+      newUser = new DaoUserBO();
+      newUser.setEmailId(user.getEmailId());
+      String userId =
+          RandomStringUtils.randomAlphanumeric(15)
+              + "-"
+              + RandomStringUtils.randomAlphanumeric(15)
+              + "-"
+              + RandomStringUtils.randomAlphanumeric(15);
+      newUser.setUserId(userId);
 
-        String salt =
-            RandomStringUtils.randomAlphanumeric(15)
-                + "-"
-                + RandomStringUtils.randomAlphanumeric(15)
-                + "-"
-                + RandomStringUtils.randomAlphanumeric(15);
-        newUser.setSalt(salt);
-        String encryptedPwd = MyStudiesUserRegUtil.getEncryptedString(user.getPassword(), salt);
-        newUser.setPassword(encryptedPwd);
-        newUser.setAppId(appId);
-        newUser.setOrgId(orgId);
-        newUser.setEmailVerificationStatus(AppConstants.PENDING);
-        newUser.setCreatedOn(LocalDateTime.now(ZoneId.systemDefault()));
+      String salt =
+          RandomStringUtils.randomAlphanumeric(15)
+              + "-"
+              + RandomStringUtils.randomAlphanumeric(15)
+              + "-"
+              + RandomStringUtils.randomAlphanumeric(15);
+      newUser.setSalt(salt);
+      String encryptedPwd = MyStudiesUserRegUtil.getEncryptedString(user.getPassword(), salt);
+      newUser.setPassword(encryptedPwd);
+      newUser.setAppId(appId);
+      newUser.setOrgId(orgId);
+      newUser.setEmailVerificationStatus(AppConstants.PENDING);
+      newUser.setCreatedOn(LocalDateTime.now(ZoneId.systemDefault()));
 
-        logger.info("Password Expire time: " + appConfig.getPasswdExpiryInDay());
-        /*newUser.setPasswordExpireDate(
-        LocalDateTime.now(ZoneId.systemDefault())
-            .plusDays(Long.valueOf(appConfig.getPasswdExpiryInDay())));*/
+      newUser.setPasswordExpireDate(
+          LocalDateTime.now(ZoneId.systemDefault())
+              .plusMinutes(Long.valueOf(appConfig.getPasswdExpiryInMin())));
 
-        newUser.setPasswordExpireDate(
-            LocalDateTime.now(ZoneId.systemDefault())
-                .plusMinutes(Long.valueOf(appConfig.getPasswdExpiryInMin())));
+      newUser.setAppCode(appCode);
+      newUser.setAccountStatus(AppConstants.ACTIVE);
 
-        newUser.setAppCode(appCode);
-        newUser.setAccountStatus(AppConstants.ACTIVE);
-        DaoUserBO savedUser = userRepo.save(newUser);
+      PasswordHistoryBO passwordHistoryBO = new PasswordHistoryBO();
+      passwordHistoryBO.set_ts(new Date());
+      passwordHistoryBO.setCreated(new Date());
+      passwordHistoryBO.setPassword(encryptedPwd);
+      passwordHistoryBO.setSalt(salt);
+      passwordHistoryBO.setUserId(userId);
+      passHistoryRepo.save(passwordHistoryBO);
+      DaoUserBO savedUser = userRepo.save(newUser);
+      Set<GrantedAuthority> roles = new HashSet<>();
+      UserDetails userDetails = new User(savedUser.getEmailId(), savedUser.getPassword(), roles);
+      AuthInfoBO userTokenDetails =
+          jwtTokenUtil.generateToken(
+              userDetails, savedUser.getAppId(), savedUser.getOrgId(), savedUser.getAppCode());
 
-        PasswordHistoryBO passwordHistoryBO = new PasswordHistoryBO();
-        passwordHistoryBO.set_ts(new Date());
-        passwordHistoryBO.setCreated(new Date());
-        passwordHistoryBO.setPassword(encryptedPwd);
-        passwordHistoryBO.setSalt(salt);
-        passwordHistoryBO.setUserId(userId);
-        passHistoryRepo.save(passwordHistoryBO);
-
-        // if (savedUser != null && savedPwdHistory != null) {
-        Set<GrantedAuthority> roles = new HashSet<>();
-        UserDetails userDetails = new User(savedUser.getEmailId(), savedUser.getPassword(), roles);
-        AuthInfoBO userTokenDetails =
-            jwtTokenUtil.generateToken(
-                userDetails, savedUser.getAppId(), savedUser.getOrgId(), savedUser.getAppCode());
-
-        successResp =
-            new ServiceRegistrationSuccessResponse(
-                savedUser,
-                userTokenDetails.getAccessToken(),
-                userTokenDetails.getRefreshToken(),
-                userTokenDetails.getClientToken());
-
-        logger.info("UserDetailsServiceImpl save() - ends");
-        return successResp;
-        /*} else {
-          logger.error("UserDetailsServiceImpl save() ends With SystemException");
-          throw new SystemException();
-        }*/
-      } else {
-        throw new DuplicateUserRegistrationException();
-      }
-    } catch (DuplicateUserRegistrationException e) {
-      logger.error(
-          "UserDetailsServiceImpl save() - ends With DuplicateUserRegistrationException: ", e);
+      successResp =
+          new ServiceRegistrationSuccessResponse(
+              savedUser,
+              userTokenDetails.getAccessToken(),
+              userTokenDetails.getRefreshToken(),
+              userTokenDetails.getClientToken());
+      logger.info("UserDetailsServiceImpl save() - ends");
+      return successResp;
+    } else {
       throw new DuplicateUserRegistrationException();
-    } catch (Exception e) {
-      logger.error(" UserDetailsServiceImpl save() ends With SystemException");
-      throw new SystemException();
     }
   }
 
@@ -200,6 +179,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     return emailId;
   }
 
+  @Override
   public Integer validateAccessToken(AuthInfoBean authInfo) throws SystemException {
     logger.info("UserDetailsServiceImpl validateAccessToken() - starts");
     long sessionMinutes = 0;
@@ -230,6 +210,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     return value;
   }
 
+  @Override
   public RefreshTokenServiceResponse generateNewTokens(
       RefreshTokenBean refreshToken, String userId, String appCode)
       throws SystemException, UserNotFoundException, InvalidUserIdException,
@@ -269,7 +250,9 @@ public class UserDetailsServiceImpl implements UserDetailsService {
               } else {
                 return response;
               }
-            } else throw new InvalidClientException();
+            } else {
+              throw new InvalidClientException();
+            }
           } else {
             throw new UserNotFoundException();
           }
@@ -289,6 +272,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     }
   }
 
+  @Override
   public boolean verify(CheckCredentialRequest checkCredentialRequest) throws SystemException {
 
     logger.info("UserDetailsServiceImpl verify() - starts");
@@ -335,6 +319,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     }
   }
 
+  @Override
   public String updateStatus(UpdateInfo userInfo, String userId)
       throws SystemException, UserNotFoundException, EmailIdAlreadyVerifiedException {
 
@@ -374,46 +359,19 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     }
   }
 
-  public String deleteUserDetails(String userId) throws UserNotFoundException, SystemException {
+  @Override
+  public boolean deleteUserDetails(String userId) throws UserNotFoundException {
 
     logger.info("UserDetailsServiceImpl deleteUserDetails() - starts");
-    String message = AppConstants.FAILURE;
+    boolean message = false;
 
     if (userId != null) {
-      List<Integer> idList = null;
-      AuthInfoBO sessionDetails = null;
-
-      try {
-        idList =
-            userRepo
-                .findByUserId(userId, MyView.class)
-                .stream()
-                .map(
-                    (ob) -> {
-                      if (ob != null) {
-                        return ob.getId();
-                      }
-                      return null;
-                    })
-                .collect(Collectors.toList());
-
-        sessionDetails = session.findByUserId(userId);
-      } catch (Exception e) {
-        logger.error("UserDetailsServiceImpl deleteUserDetails() - error ", e);
-        throw new SystemException();
-      }
-      if (!idList.isEmpty() && (sessionDetails != null)) {
-        Integer id = idList.get(0);
-
-        try {
-          userRepo.deleteById(id);
-          session.deleteById(sessionDetails.getId());
-          message = AppConstants.SUCCESS;
-          return message;
-        } catch (Exception e) {
-          logger.error("UserDetailsServiceImpl deleteUserDetails() - error ", e);
-          throw new SystemException();
-        }
+      DaoUserBO userDetails = userRepo.findByUserId(userId);
+      if (userDetails != null) {
+        userRepo.deleteByUserId(userId);
+        session.deleteByUserId(userId);
+        passHistoryRepo.deleteByUserId(userId);
+        return true;
       } else {
         throw new UserNotFoundException();
       }
@@ -423,6 +381,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     }
   }
 
+  @Override
   public int sendPasswordResetLinkthroughEmail(
       String emailId, String tempPassword, DaoUserBO participantDetails) {
     logger.info("UserDetailsServiceImpl - sendPasswordResetLinkthroughEmail() - starts");
@@ -458,6 +417,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     return isEmailSent;
   }
 
+  @Override
   public DaoUserBO loadUserByEmailIdAndAppCode(String emailId, String appCode)
       throws SystemException {
     logger.info("UserDetailsServiceImpl loadUserByEmailIdAndAppCode() - starts ");
@@ -473,6 +433,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     }
   }
 
+  @Override
   public LoginAttemptsBO getLoginAttempts(String email) {
     logger.info("UserDetailsServiceImpl getLoginAttempts() - starts ");
     LoginAttemptsBO loginAttempts = null;
@@ -486,12 +447,15 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     return loginAttempts;
   }
 
+  @Override
   public void resetLoginAttempts(String email) {
     logger.info("UserDetailsServiceImpl resetLoginAttempts() - starts ");
     LoginAttemptsBO loginAttempts = null;
     try {
       loginAttempts = loginAttemptRepo.findByEmail(email);
-      if (loginAttempts != null) loginAttemptRepo.delete(loginAttempts);
+      if (loginAttempts != null) {
+        loginAttemptRepo.delete(loginAttempts);
+      }
     } catch (Exception e) {
       logger.error("UserDetailsServiceImpl - resetLoginAttempts() - Error", e);
     }
@@ -499,8 +463,8 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     logger.info("UserDetailsServiceImpl resetLoginAttempts() - ends ");
   }
 
+  @Override
   public DaoUserBO loadUserByUserId(String userId) throws SystemException {
-
     logger.info("UserDetailsServiceImpl loadUserByUserId() - starts");
     DaoUserBO dbResponse = null;
     if (userId != null) {
@@ -512,9 +476,12 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         logger.error("UserDetailsServiceImpl loadUserByUserId() - error ", e);
         throw new SystemException();
       }
-    } else return dbResponse;
+    } else {
+      return dbResponse;
+    }
   }
 
+  @Override
   public ResponseBean changePassword(DaoUserBO userInfo) {
     logger.info("UserDetailsServiceImpl changePassword() - starts");
     ResponseBean responseBean = new ResponseBean();
@@ -533,6 +500,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     return responseBean;
   }
 
+  @Override
   public ResponseBean deactivateAcct(DaoUserBO userInfo) {
     logger.info("UserDetailsServiceImpl deactivateAcct() - starts");
     ResponseBean responseBean = new ResponseBean();
@@ -550,6 +518,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     return responseBean;
   }
 
+  @Override
   public LoginAttemptsBO updateLoginFailureAttempts(String email) {
     logger.info("UserDetailsServiceImpl updateLoginFailureAttempts() - starts");
     LoginAttemptsBO loginAttempts = null;
@@ -579,6 +548,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     return loginAttempts;
   }
 
+  @Override
   public DaoUserBO saveUserDetails(DaoUserBO participant) {
     logger.info("UserDetailsServiceImpl saveUserDetails() - Starts");
     DaoUserBO addParticipant = null;
@@ -591,6 +561,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     return addParticipant;
   }
 
+  @Override
   public Boolean getPasswordHistory(String userId, String newPassword) {
     logger.info("UserDetailsServiceImpl getPasswordHistory() - starts");
     List<PasswordHistoryBO> passwordHistoryList = null;
@@ -614,6 +585,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     return isValidPassword;
   }
 
+  @Override
   public String savePasswordHistory(String userId, String password, String salt) {
     logger.info("UserDetailsServiceImpl savePasswordHistory() - starts");
     String message = MyStudiesUserRegUtil.ErrorCodes.FAILURE.getValue();
@@ -645,47 +617,48 @@ public class UserDetailsServiceImpl implements UserDetailsService {
   }
 
   @Override
-  public String sendEmailOnAccountLocking(String emailId, String appCode)
+  public boolean sendEmailOnAccountLocking(String emailId, String appCode)
       throws UserNotFoundException {
     logger.info("UserDetailsServiceImpl sendEmailOnAccountLocking() - starts");
-    String message = AppConstants.FAILURE;
+    boolean result = false;
 
-    if (emailId != null) {
-      DaoUserBO userInfo = userRepo.findByEmailIdAndAppCode(emailId, appCode);
-      if (userInfo != null) {
+    if (emailId == null && appCode == null) {
+      logger.info("UserDetailsServiceImpl sendEmailOnAccountLocking() - ends");
+      return result;
+    }
 
-        String tempPassword = RandomStringUtils.randomAlphanumeric(6);
-        logger.info("tempPassword: " + tempPassword);
+    DaoUserBO userInfo = userRepo.findByEmailIdAndAppCode(emailId, appCode);
 
-        String encryptedPwd =
-            MyStudiesUserRegUtil.getEncryptedString(tempPassword, userInfo.getSalt());
-        userInfo.setLockedAccountTempPassword(encryptedPwd);
-        userInfo.setTempPassword(true);
-        userInfo.setLockedAccountTempPasswordExpiredDate(
-            LocalDateTime.now(ZoneId.systemDefault())
-                .plusMinutes(Long.valueOf(appConfig.getExpirationLoginAttemptsMinute())));
-        userRepo.save(userInfo);
+    if (userInfo != null) {
+      String tempPassword = RandomStringUtils.randomAlphanumeric(6);
+      String encryptedPwd =
+          MyStudiesUserRegUtil.getEncryptedString(tempPassword, userInfo.getSalt());
+      userInfo.setLockedAccountTempPassword(encryptedPwd);
+      userInfo.setTempPassword(true);
+      userInfo.setLockedAccountTempPasswordExpiredDate(
+          LocalDateTime.now(ZoneId.systemDefault())
+              .plusMinutes(Long.valueOf(appConfig.getExpirationLoginAttemptsMinute())));
+      userRepo.save(userInfo);
 
-        String subject = appConfig.getLockAccountMailSubject();
-        String content = appConfig.getLockAccountMailContent();
+      String subject = appConfig.getLockAccountMailSubject();
+      String content = appConfig.getLockAccountMailContent();
 
-        Map<String, String> genarateEmailContentMap = new HashMap<>();
-        genarateEmailContentMap.put("$Temporary_Password", tempPassword);
+      Map<String, String> genarateEmailContentMap = new HashMap<>();
+      genarateEmailContentMap.put("$Temporary_Password", tempPassword);
 
-        String dynamicContent =
-            MyStudiesUserRegUtil.genarateEmailContent(content, genarateEmailContentMap);
+      String dynamicContent =
+          MyStudiesUserRegUtil.genarateEmailContent(content, genarateEmailContentMap);
 
-        boolean isSent =
-            emailNotification.sendEmailNotification(subject, dynamicContent, emailId, null, null);
-        if (isSent) {
-          message = AppConstants.SUCCESS;
-        }
-      } else {
-        logger.info("UserDetailsServiceImpl sendEmailOnAccountLocking() - ends");
-        throw new UserNotFoundException();
+      boolean isSent =
+          emailNotification.sendEmailNotification(subject, dynamicContent, emailId, null, null);
+      if (isSent) {
+        result = true;
       }
+    } else {
+      logger.info("UserDetailsServiceImpl sendEmailOnAccountLocking() - ends");
+      throw new UserNotFoundException();
     }
     logger.info("UserDetailsServiceImpl sendEmailOnAccountLocking() - ends");
-    return message;
+    return result;
   }
 }
