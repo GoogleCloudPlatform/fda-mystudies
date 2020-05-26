@@ -37,7 +37,7 @@ import io.realm.Realm;
 
 public class FDAApplication extends Application {
   private static FDAApplication sInstance;
-  private FDAEventBusRegistry mRegistry;
+  private FDAEventBusRegistry registry;
 
   public static final String NOTIFICATION_CHANNEL_ID_SERVICE = AppConfig.PackageName + ".service";
   public static final String NOTIFICATION_CHANNEL_ID_INFO = AppConfig.PackageName + ".general";
@@ -99,19 +99,19 @@ public class FDAApplication extends Application {
   }
 
   private void startEventProcessing() {
-    mRegistry = new FDAEventBusRegistry();
-    mRegistry.registerDefaultSubscribers();
-    mRegistry.registerSubscriber(new StudyModuleSubscriber());
-    mRegistry.registerSubscriber(new UserModuleSubscriber());
-    mRegistry.registerSubscriber(new WebserviceSubscriber());
+    registry = new FDAEventBusRegistry();
+    registry.registerDefaultSubscribers();
+    registry.registerSubscriber(new StudyModuleSubscriber());
+    registry.registerSubscriber(new UserModuleSubscriber());
+    registry.registerSubscriber(new WebserviceSubscriber());
   }
 
   @Override
   public void onTerminate() {
     super.onTerminate();
     sInstance = null;
-    mRegistry.unregisterAllSubscribers();
-    mRegistry = null;
+    registry.unregisterAllSubscribers();
+    registry = null;
   }
 
   @Override

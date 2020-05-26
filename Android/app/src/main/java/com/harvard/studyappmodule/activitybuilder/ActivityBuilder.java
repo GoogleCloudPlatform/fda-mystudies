@@ -22,14 +22,14 @@ import com.harvard.studyappmodule.activitybuilder.model.servicemodel.Steps;
 import com.harvard.studyappmodule.custom.result.StepRecordCustom;
 import com.harvard.utils.AppController;
 import com.harvard.utils.Logger;
+import io.realm.Realm;
+import io.realm.RealmList;
+import java.util.List;
+import java.util.Map;
 import org.researchstack.backbone.result.StepResult;
 import org.researchstack.backbone.result.TaskResult;
 import org.researchstack.backbone.step.Step;
 import org.researchstack.backbone.task.OrderedTask;
-import java.util.List;
-import java.util.Map;
-import io.realm.Realm;
-import io.realm.RealmList;
 
 public class ActivityBuilder extends OrderedTask {
 
@@ -318,7 +318,7 @@ public class ActivityBuilder extends OrderedTask {
   }
 
   /**
-   * This is to get answer for result type set1 and part of the answer for result type set2
+   * This is to get answer for result type set1 and part of the answer for result type set2.
    *
    * @param map
    * @param stepsData

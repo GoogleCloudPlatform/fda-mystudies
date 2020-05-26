@@ -14,8 +14,8 @@
 
 package com.harvard.studyappmodule.custom.question;
 
-        import com.harvard.studyappmodule.custom.ChoiceAnswerFormatCustom;
-        import org.researchstack.backbone.utils.TextUtils;
+import com.harvard.studyappmodule.custom.ChoiceAnswerFormatCustom;
+import org.researchstack.backbone.utils.TextUtils;
 
 public class EmailAnswerFormatCustom extends ChoiceAnswerFormatCustom {
   private int maxEmailLength;

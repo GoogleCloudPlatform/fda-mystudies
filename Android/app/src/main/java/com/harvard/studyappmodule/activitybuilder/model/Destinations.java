@@ -16,22 +16,22 @@
 package com.harvard.studyappmodule.activitybuilder.model;
 
 public class Destinations {
-  private String mEvaluation;
-  private String mDestination;
+  private String evaluation;
+  private String destination;
 
   public String getmEvaluation() {
-    return mEvaluation;
+    return evaluation;
   }
 
-  public void setmEvaluation(String mEvaluation) {
-    this.mEvaluation = mEvaluation;
+  public void setmEvaluation(String evaluation) {
+    this.evaluation = evaluation;
   }
 
   public String getmDestination() {
-    return mDestination;
+    return destination;
   }
 
-  public void setmDestination(String mDestination) {
-    this.mDestination = mDestination;
+  public void setmDestination(String destination) {
+    this.destination = destination;
   }
 }

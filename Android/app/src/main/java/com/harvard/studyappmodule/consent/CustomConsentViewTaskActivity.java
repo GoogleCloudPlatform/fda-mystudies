@@ -39,17 +39,17 @@ import android.view.MenuItem;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Toast;
 import com.google.gson.Gson;
+import com.harvard.R;
 import com.harvard.eligibilitymodule.ComprehensionFailureActivity;
 import com.harvard.eligibilitymodule.ComprehensionSuccessActivity;
-import com.harvard.R;
 import com.harvard.storagemodule.DBServiceSubscriber;
-import com.harvard.studyappmodule.enroll.EnrollData;
 import com.harvard.studyappmodule.StudyFragment;
 import com.harvard.studyappmodule.StudyModulePresenter;
 import com.harvard.studyappmodule.consent.model.ComprehensionCorrectAnswers;
 import com.harvard.studyappmodule.consent.model.Consent;
 import com.harvard.studyappmodule.consent.model.EligibilityConsent;
 import com.harvard.studyappmodule.custom.StepSwitcherCustom;
+import com.harvard.studyappmodule.enroll.EnrollData;
 import com.harvard.studyappmodule.events.EnrollIdEvent;
 import com.harvard.studyappmodule.events.GetUserStudyListEvent;
 import com.harvard.studyappmodule.events.UpdateEligibilityConsentStatusEvent;
@@ -75,17 +75,8 @@ import com.tom_roush.pdfbox.pdmodel.PDPage;
 import com.tom_roush.pdfbox.pdmodel.PDPageContentStream;
 import com.tom_roush.pdfbox.pdmodel.graphics.image.LosslessFactory;
 import com.tom_roush.pdfbox.pdmodel.graphics.image.PDImageXObject;
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-import org.researchstack.backbone.result.StepResult;
-import org.researchstack.backbone.result.TaskResult;
-import org.researchstack.backbone.step.Step;
-import org.researchstack.backbone.task.OrderedTask;
-import org.researchstack.backbone.task.Task;
-import org.researchstack.backbone.ui.callbacks.StepCallbacks;
-import org.researchstack.backbone.ui.step.layout.ConsentSignatureStepLayout;
-import org.researchstack.backbone.ui.step.layout.StepLayout;
+import io.realm.Realm;
+import io.realm.RealmList;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -97,8 +88,17 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import javax.crypto.CipherInputStream;
-import io.realm.Realm;
-import io.realm.RealmList;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+import org.researchstack.backbone.result.StepResult;
+import org.researchstack.backbone.result.TaskResult;
+import org.researchstack.backbone.step.Step;
+import org.researchstack.backbone.task.OrderedTask;
+import org.researchstack.backbone.task.Task;
+import org.researchstack.backbone.ui.callbacks.StepCallbacks;
+import org.researchstack.backbone.ui.step.layout.ConsentSignatureStepLayout;
+import org.researchstack.backbone.ui.step.layout.StepLayout;
 
 public class CustomConsentViewTaskActivity extends AppCompatActivity
     implements StepCallbacks, ApiCall.OnAsyncRequestComplete {
@@ -830,7 +830,7 @@ public class CustomConsentViewTaskActivity extends AppCompatActivity
 
       // encrypt the genarated pdf
       File encryptFile =
-          AppController.genarateEncryptedConsentPDF(
+          AppController.genarateEncryptedConsentPdf(
               "/data/data/" + getPackageName() + "/files/", timeStamp);
       filepath = encryptFile.getAbsolutePath();
       // After encryption delete the pdf file
@@ -968,7 +968,7 @@ public class CustomConsentViewTaskActivity extends AppCompatActivity
               false,
               CustomConsentViewTaskActivity.this);
       UpdateEligibilityConsentStatusEvent updateEligibilityConsentStatusEvent =
-              new UpdateEligibilityConsentStatusEvent();
+          new UpdateEligibilityConsentStatusEvent();
       updateEligibilityConsentStatusEvent.setRegistrationServerConsentConfigEvent(
           registrationServerConsentConfigEvent);
       StudyModulePresenter studyModulePresenter = new StudyModulePresenter();
@@ -980,7 +980,7 @@ public class CustomConsentViewTaskActivity extends AppCompatActivity
   }
 
   private String convertFileToString(String filepath) throws IOException {
-    CipherInputStream cis = AppController.genarateDecryptedConsentPDF(filepath);
+    CipherInputStream cis = AppController.genarateDecryptedConsentPdf(filepath);
     byte[] byteArray = AppController.cipherInputStreamConvertToByte(cis);
     return Base64.encodeToString(byteArray, Base64.DEFAULT);
   }

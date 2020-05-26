@@ -89,12 +89,6 @@
           android:theme="@style/passcodeTheme"
           android:windowSoftInputMode="stateHidden"/>
         <activity
-          android:name=".usermodule.ChooseTouchIDSignInActivity"
-          android:configChanges="screenLayout|orientation"
-          android:screenOrientation="portrait"
-          android:theme="@style/AppThemeNoActionBar"
-          android:windowSoftInputMode="stateHidden"/>
-        <activity
           android:name=".usermodule.SignInActivity"
           android:configChanges="screenLayout|orientation"
           android:screenOrientation="portrait"
@@ -106,12 +100,6 @@
           android:screenOrientation="portrait"
           android:theme="@style/AppThemeNoActionBar"
           android:windowSoftInputMode="adjustResize|stateHidden"/>
-        <activity
-          android:name=".usermodule.UseTouchIDPasscodeActivity"
-          android:configChanges="screenLayout|orientation"
-          android:screenOrientation="portrait"
-          android:theme="@style/AppThemeNoActionBar"
-          android:windowSoftInputMode="stateHidden"/>
         <activity
           android:name=".studyappmodule.StudyActivity"
           android:configChanges="screenLayout|orientation"

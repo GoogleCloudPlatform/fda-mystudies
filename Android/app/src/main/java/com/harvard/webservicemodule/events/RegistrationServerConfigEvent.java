@@ -1,5 +1,6 @@
 /*
  * Copyright © 2017-2019 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors.
+ * Copyright 2020 Google LLC
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction, including
  * without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
@@ -24,8 +25,8 @@ public class RegistrationServerConfigEvent<V> extends WebserviceConfigEvent {
 
   /**
    * @param method
-   * @param Url
-   * @param RequestCode
+   * @param url
+   * @param requestCode
    * @param context
    * @param modelclass
    * @param params
@@ -35,8 +36,8 @@ public class RegistrationServerConfigEvent<V> extends WebserviceConfigEvent {
    */
   public RegistrationServerConfigEvent(
       String method,
-      String Url,
-      int RequestCode,
+      String url,
+      int requestCode,
       Context context,
       Class modelclass,
       HashMap<String, String> params,
@@ -44,20 +45,20 @@ public class RegistrationServerConfigEvent<V> extends WebserviceConfigEvent {
       JSONObject jsonobj,
       boolean showAlert,
       V v) {
-    super(method, Url, RequestCode, context, modelclass, params, headers, jsonobj, showAlert, v);
+    super(method, url, requestCode, context, modelclass, params, headers, jsonobj, showAlert, v);
   }
 
   public RegistrationServerConfigEvent(
       String method,
-      String Url,
-      int RequestCode,
+      String url,
+      int requestCode,
       Context context,
       Class modelclass,
       HashMap<String, String> headers,
       JSONArray jsonArray,
       boolean showAlert,
       V v) {
-    super(method, Url, RequestCode, context, modelclass, headers, jsonArray, showAlert, v);
+    super(method, url, requestCode, context, modelclass, headers, jsonArray, showAlert, v);
   }
 
   @Override

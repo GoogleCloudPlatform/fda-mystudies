@@ -60,10 +60,10 @@ public class VersionChecker extends AsyncTask<String, String, String> {
     return newVersion;
   }
 
-  private VersionModel parseJson(Responsemodel mResponseModel, Class genericClass) {
+  private VersionModel parseJson(Responsemodel responseModel, Class genericClass) {
     Gson gson = new Gson();
     try {
-      JsonReader reader = new JsonReader(new StringReader(mResponseModel.getResponse()));
+      JsonReader reader = new JsonReader(new StringReader(responseModel.getResponse()));
       reader.setLenient(true);
       return gson.fromJson(reader, genericClass);
     } catch (Exception e) {
@@ -74,9 +74,9 @@ public class VersionChecker extends AsyncTask<String, String, String> {
   @Override
   protected void onPostExecute(String s) {
     super.onPostExecute(s);
-    Version curr_ver = new Version(currentVersion());
-    Version new_ver = new Version(newVersion);
-    if (curr_ver.equals(new_ver) || curr_ver.compareTo(new_ver) > 0) {
+    Version currVer = new Version(currentVersion());
+    Version newVer = new Version(newVersion);
+    if (currVer.equals(newVer) || currVer.compareTo(newVer) > 0) {
       upgrade.isUpgrade(false, newVersion, force);
     } else {
       upgrade.isUpgrade(true, newVersion, force);

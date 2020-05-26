@@ -138,53 +138,49 @@ public class Tappingactivity implements StepBody {
           public void onClick(View v) {
             final String[] duration = timer.getText().toString().split(":");
             if (timeup) {
-              MyTimePickerDialog timePicker =
-                  new MyTimePickerDialog(
-                      context,
-                      new MyTimePickerDialog.OnTimeSetListener() {
-
-                        @Override
-                        public void onTimeSet(
-                            TimePicker view, int hourOfDay, int minute, int seconds) {
-                          String hrs;
-                          String min;
-                          String sec;
-                          if (hourOfDay < 10) {
-                            hrs = "0" + hourOfDay;
-                          } else {
-                            hrs = "" + hourOfDay;
-                          }
-                          if (minute < 10) {
-                            min = "0" + minute;
-                          } else {
-                            min = "" + minute;
-                          }
-                          if (seconds < 10) {
-                            sec = "0" + seconds;
-                          } else {
-                            sec = "" + seconds;
-                          }
-                          finalSecond = (hourOfDay * 60 * 60) + (minute * 60) + (seconds);
-                          if (finalSecond <= maxTime) {
-                            timer.setText(hrs + ":" + min + ":" + sec);
-                          } else {
-                            Toast.makeText(
-                                    inflater.getContext(),
-                                    "Max duration you can enter is " + formathrs(maxTime),
-                                    Toast.LENGTH_SHORT)
-                                .show();
-                            finalSecond =
-                                (Integer.parseInt(duration[0]) * 60 * 60)
-                                    + (Integer.parseInt(duration[1]) * 60)
-                                    + (Integer.parseInt(duration[2]));
-                          }
-                        }
-                      },
-                      Integer.parseInt(duration[0]),
-                      Integer.parseInt(duration[1]),
-                      Integer.parseInt(duration[2]),
-                      true);
-              timePicker.show();
+              new MyTimePickerDialog(
+                  context,
+                  new MyTimePickerDialog.OnTimeSetListener() {
+                    @Override
+                    public void onTimeSet(TimePicker view, int hourOfDay, int minute, int seconds) {
+                      String hrs;
+                      String min;
+                      String sec;
+                      if (hourOfDay < 10) {
+                        hrs = "0" + hourOfDay;
+                      } else {
+                        hrs = "" + hourOfDay;
+                      }
+                      if (minute < 10) {
+                        min = "0" + minute;
+                      } else {
+                        min = "" + minute;
+                      }
+                      if (seconds < 10) {
+                        sec = "0" + seconds;
+                      } else {
+                        sec = "" + seconds;
+                      }
+                      finalSecond = (hourOfDay * 60 * 60) + (minute * 60) + (seconds);
+                      if (finalSecond <= maxTime) {
+                        timer.setText(hrs + ":" + min + ":" + sec);
+                      } else {
+                        Toast.makeText(
+                                inflater.getContext(),
+                                "Max duration you can enter is " + formathrs(maxTime),
+                                Toast.LENGTH_SHORT)
+                            .show();
+                        finalSecond =
+                            (Integer.parseInt(duration[0]) * 60 * 60)
+                                + (Integer.parseInt(duration[1]) * 60)
+                                + (Integer.parseInt(duration[2]));
+                      }
+                    }
+                  },
+                  Integer.parseInt(duration[0]),
+                  Integer.parseInt(duration[1]),
+                  Integer.parseInt(duration[2]),
+                  true).show();
             }
           }
         });

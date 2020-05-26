@@ -1,5 +1,6 @@
 /*
  * Copyright © 2017-2019 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors.
+ * Copyright 2020 Google LLC
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction, including
  * without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
@@ -29,13 +30,13 @@ import com.harvard.utils.Logger;
 public class NewPasscodeSetupActivity extends AppCompatActivity {
 
   private static final int SIGNIN_RESPONSE = 102;
-  private RelativeLayout mBackBtn;
-  private AppCompatTextView mTitle;
-  private RelativeLayout mCancelBtn;
-  private PasscodeView mPasscodeView;
-  private int JOIN_STUDY_RESPONSE = 100;
-  private int PROFILE_RESPONSE = 101;
-  private TextView mPasscodetitle;
+  private RelativeLayout backBtn;
+  private AppCompatTextView title;
+  private RelativeLayout cancelBtn;
+  private PasscodeView passcodeView;
+  private static final int JOIN_STUDY_RESPONSE = 100;
+  private static final int PROFILE_RESPONSE = 101;
+  private TextView passcodetitle;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -46,28 +47,28 @@ public class NewPasscodeSetupActivity extends AppCompatActivity {
     setTextForView();
     setFont();
     bindEvent();
-    mBackBtn.setVisibility(View.GONE);
+    backBtn.setVisibility(View.GONE);
   }
 
   private void initializeXmlId() {
-    mBackBtn = (RelativeLayout) findViewById(R.id.backBtn);
-    mTitle = (AppCompatTextView) findViewById(R.id.title);
-    mCancelBtn = (RelativeLayout) findViewById(R.id.cancelBtn);
-    mPasscodeView = (PasscodeView) findViewById(R.id.passcode_view);
-    mPasscodetitle = (TextView) findViewById(R.id.passcodetitle);
+    backBtn = (RelativeLayout) findViewById(R.id.backBtn);
+    title = (AppCompatTextView) findViewById(R.id.title);
+    cancelBtn = (RelativeLayout) findViewById(R.id.cancelBtn);
+    passcodeView = (PasscodeView) findViewById(R.id.passcode_view);
+    passcodetitle = (TextView) findViewById(R.id.passcodetitle);
     TextView forgot = (TextView) findViewById(R.id.forgot);
     forgot.setVisibility(View.GONE);
   }
 
   private void setTextForView() {
-    mCancelBtn.setVisibility(View.GONE);
-    mTitle.setText(getResources().getString(R.string.setup_passcode));
+    cancelBtn.setVisibility(View.GONE);
+    title.setText(getResources().getString(R.string.setup_passcode));
   }
 
   private void setFont() {
     try {
-      mTitle.setTypeface(AppController.getTypeface(NewPasscodeSetupActivity.this, "medium"));
-      mPasscodetitle.setTypeface(
+      title.setTypeface(AppController.getTypeface(NewPasscodeSetupActivity.this, "medium"));
+      passcodetitle.setTypeface(
           AppController.getTypeface(NewPasscodeSetupActivity.this, "regular"));
     } catch (Exception e) {
       Logger.log(e);
@@ -75,49 +76,49 @@ public class NewPasscodeSetupActivity extends AppCompatActivity {
   }
 
   private void bindEvent() {
-    mPasscodeView.postDelayed(
+    passcodeView.postDelayed(
         new Runnable() {
           @Override
           public void run() {
-            mPasscodeView.requestToShowKeyboard();
+            passcodeView.requestToShowKeyboard();
           }
         },
         400);
 
-    mPasscodeView.setPasscodeEntryListener(
+    passcodeView.setPasscodeEntryListener(
         new PasscodeView.PasscodeEntryListener() {
           @Override
           public void onPasscodeEntered(String passcode) {
             if (getIntent().getStringExtra("from") != null
                 && getIntent().getStringExtra("from").equalsIgnoreCase("StudyInfo")) {
-              mPasscodeView.clearText();
+              passcodeView.clearText();
               Intent intent = new Intent(NewPasscodeSetupActivity.this, ConfirmPasscodeSetup.class);
               intent.putExtra("from", "StudyInfo");
               intent.putExtra("passcode", "" + passcode);
               startActivityForResult(intent, JOIN_STUDY_RESPONSE);
             } else if (getIntent().getStringExtra("from") != null
                 && getIntent().getStringExtra("from").equalsIgnoreCase("profile")) {
-              mPasscodeView.clearText();
+              passcodeView.clearText();
               Intent intent = new Intent(NewPasscodeSetupActivity.this, ConfirmPasscodeSetup.class);
               intent.putExtra("from", "profile");
               intent.putExtra("passcode", "" + passcode);
               startActivityForResult(intent, PROFILE_RESPONSE);
             } else if (getIntent().getStringExtra("from") != null
                 && getIntent().getStringExtra("from").equalsIgnoreCase("profile_change")) {
-              mPasscodeView.clearText();
+              passcodeView.clearText();
               Intent intent = new Intent(NewPasscodeSetupActivity.this, ConfirmPasscodeSetup.class);
               intent.putExtra("from", "profile");
               intent.putExtra("passcode", "" + passcode);
               startActivityForResult(intent, PROFILE_RESPONSE);
             } else if (getIntent().getStringExtra("from") != null
                 && getIntent().getStringExtra("from").equalsIgnoreCase("signin")) {
-              mPasscodeView.clearText();
+              passcodeView.clearText();
               Intent intent = new Intent(NewPasscodeSetupActivity.this, ConfirmPasscodeSetup.class);
               intent.putExtra("from", "signin");
               intent.putExtra("passcode", "" + passcode);
               startActivityForResult(intent, SIGNIN_RESPONSE);
             } else {
-              mPasscodeView.clearText();
+              passcodeView.clearText();
               Intent intent = new Intent(NewPasscodeSetupActivity.this, ConfirmPasscodeSetup.class);
               intent.putExtra("passcode", "" + passcode);
               startActivity(intent);
@@ -135,7 +136,7 @@ public class NewPasscodeSetupActivity extends AppCompatActivity {
         setResult(RESULT_OK, intent);
         finish();
       } else {
-        mPasscodeView.clearText();
+        passcodeView.clearText();
       }
     } else if (requestCode == PROFILE_RESPONSE) {
       if (resultCode == RESULT_OK) {
@@ -143,7 +144,7 @@ public class NewPasscodeSetupActivity extends AppCompatActivity {
         setResult(RESULT_OK, intent);
         finish();
       } else {
-        mPasscodeView.clearText();
+        passcodeView.clearText();
       }
     } else if (requestCode == SIGNIN_RESPONSE) {
       if (resultCode == RESULT_OK) {
@@ -151,7 +152,7 @@ public class NewPasscodeSetupActivity extends AppCompatActivity {
         setResult(RESULT_OK, intent);
         finish();
       } else {
-        mPasscodeView.clearText();
+        passcodeView.clearText();
       }
     }
   }

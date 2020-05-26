@@ -38,13 +38,13 @@ public class TextAnswerFormatRegex extends ChoiceAnswerFormatCustom {
     return inValidMsg;
   }
 
-  /** Creates a TextAnswerFormat with no maximum length */
+  /** Creates a TextAnswerFormat with no maximum length. */
   public TextAnswerFormatRegex() {
     this(UNLIMITED_LENGTH);
   }
 
   /**
-   * Creates a TextAnswerFormat with a specified maximum length
+   * Creates a TextAnswerFormat with a specified maximum length.
    *
    * @param maximumLength the maximum text length allowed
    */
@@ -53,7 +53,7 @@ public class TextAnswerFormatRegex extends ChoiceAnswerFormatCustom {
   }
 
   /**
-   * Returns the maximum length for the answer, <code>UNLIMITED_LENGTH</code> (0) if no maximum
+   * Returns the maximum length for the answer, <code>UNLIMITED_LENGTH</code> (0) if no maximum.
    *
    * @return the maximum length, <code>UNLIMITED_LENGTH</code> (0) if no maximum
    */

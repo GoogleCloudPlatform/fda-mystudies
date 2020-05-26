@@ -84,7 +84,7 @@ public class UserModulePresenter {
     FDAEventBus.postEvent(resendEmailEvent);
   }
 
-  public void performConsentPDF(ConsentPDFEvent consentPDFEvent) {
-    FDAEventBus.postEvent(consentPDFEvent);
+  public void performConsentPdf(ConsentPDFEvent consentPdfEvent) {
+    FDAEventBus.postEvent(consentPdfEvent);
   }
 }

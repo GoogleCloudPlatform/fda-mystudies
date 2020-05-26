@@ -20,18 +20,6 @@ import android.util.Base64;
 import com.google.gson.Gson;
 import com.harvard.AppConfig;
 import com.harvard.utils.Logger;
-import org.apache.http.HttpEntity;
-import org.apache.http.HttpResponse;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.conn.ConnectTimeoutException;
-import org.apache.http.entity.StringEntity;
-import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.params.BasicHttpParams;
-import org.apache.http.params.HttpConnectionParams;
-import org.apache.http.params.HttpParams;
-import org.json.JSONArray;
-import org.json.JSONObject;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
@@ -53,20 +41,32 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 import javax.net.ssl.HttpsURLConnection;
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpResponse;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.conn.ConnectTimeoutException;
+import org.apache.http.entity.StringEntity;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.params.BasicHttpParams;
+import org.apache.http.params.HttpConnectionParams;
+import org.apache.http.params.HttpParams;
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 public class HttpRequest {
 
   private static String basicAuth = AppConfig.API_TOKEN;
 
   /**
-   * To make a Get request
+   * To make a Get request.
    *
    * @param url --> url path
-   * @param mHeadersData --> null if no header
+   * @param headersData --> null if no header
    * @return Responsemodel
    */
   public static Responsemodel getRequest(
-      String url, HashMap<String, String> mHeadersData, String serverType) {
+      String url, HashMap<String, String> headersData, String serverType) {
     StringBuffer response = new StringBuffer();
     Responsemodel responseModel = new Responsemodel();
     String responsee;
@@ -91,8 +91,8 @@ public class HttpRequest {
         urlConnection.setRequestProperty(AppConfig.ORG_ID_KEY, "OrgName");
       }
 
-      if (mHeadersData != null) {
-        Set mapSet = (Set) mHeadersData.entrySet();
+      if (headersData != null) {
+        Set mapSet = (Set) headersData.entrySet();
         Iterator mapIterator = mapSet.iterator();
         while (mapIterator.hasNext()) {
           Map.Entry mapEntry = (Map.Entry) mapIterator.next();
@@ -174,17 +174,17 @@ public class HttpRequest {
   }
 
   /**
-   * To make post request using hashmap
+   * To make post request using hashmap.
    *
    * @param url --> url path
    * @param params --> Hashmap params
-   * @param mHeadersData --> null if no header
+   * @param headersData --> null if no header
    * @return Responsemodel
    */
   static Responsemodel postRequestsWithHashmap(
       String url,
       HashMap<String, String> params,
-      HashMap<String, String> mHeadersData,
+      HashMap<String, String> headersData,
       String serverType) {
     Responsemodel responseModel = new Responsemodel();
     String response = "";
@@ -212,8 +212,8 @@ public class HttpRequest {
         conn.setRequestProperty(AppConfig.ORG_ID_KEY, "OrgName");
       }
 
-      if (mHeadersData != null) {
-        Set mapSet = (Set) mHeadersData.entrySet();
+      if (headersData != null) {
+        Set mapSet = (Set) headersData.entrySet();
         Iterator mapIterator = mapSet.iterator();
         while (mapIterator.hasNext()) {
           Map.Entry mapEntry = (Map.Entry) mapIterator.next();
@@ -297,17 +297,17 @@ public class HttpRequest {
   }
 
   /**
-   * To make post request using json object
+   * To make post request using json object.
    *
    * @param urlpath -->url path
    * @param jsonObject -->json object
-   * @param mHeadersData --> null if no header
+   * @param headersData --> null if no header
    * @return Responsemodel
    */
   static Responsemodel makePostRequestWithJson(
       String urlpath,
       JSONObject jsonObject,
-      HashMap<String, String> mHeadersData,
+      HashMap<String, String> headersData,
       String serverType) {
     Responsemodel responseModel = new Responsemodel();
     String response = "";
@@ -335,8 +335,8 @@ public class HttpRequest {
         conn.setRequestProperty(AppConfig.ORG_ID_KEY, "OrgName");
       }
 
-      if (mHeadersData != null) {
-        Set mapSet = (Set) mHeadersData.entrySet();
+      if (headersData != null) {
+        Set mapSet = (Set) headersData.entrySet();
         Iterator mapIterator = mapSet.iterator();
         while (mapIterator.hasNext()) {
           Map.Entry mapEntry = (Map.Entry) mapIterator.next();
@@ -420,17 +420,17 @@ public class HttpRequest {
   }
 
   /**
-   * To make post request using json object
+   * To make post request using json object.
    *
    * @param urlpath -->url path
    * @param jsonObject -->json object
-   * @param mHeadersData --> null if no header
+   * @param headersData --> null if no header
    * @return Responsemodel
    */
   static Responsemodel makePostRequestWithJsonRefreshToken(
       String urlpath,
       JSONObject jsonObject,
-      HashMap<String, String> mHeadersData,
+      HashMap<String, String> headersData,
       String serverType) {
     Responsemodel responseModel = new Responsemodel();
     String response = "";
@@ -458,8 +458,8 @@ public class HttpRequest {
         conn.setRequestProperty(AppConfig.ORG_ID_KEY, "OrgName");
       }
 
-      if (mHeadersData != null) {
-        Set mapSet = (Set) mHeadersData.entrySet();
+      if (headersData != null) {
+        Set mapSet = (Set) headersData.entrySet();
         Iterator mapIterator = mapSet.iterator();
         while (mapIterator.hasNext()) {
           Map.Entry mapEntry = (Map.Entry) mapIterator.next();
@@ -543,7 +543,7 @@ public class HttpRequest {
   }
 
   /**
-   * method to parse hashmap to json
+   * method to parse hashmap to json.
    *
    * @param params --> params of hash map
    * @return String
@@ -553,7 +553,7 @@ public class HttpRequest {
   }
 
   /**
-   * To make post request for form data and files upload
+   * To make post request for form data and files upload.
    *
    * @param urlPath --> url path
    * @param headers --> null if no header
@@ -571,7 +571,7 @@ public class HttpRequest {
     HttpURLConnection httpConn;
     String response = "";
     String responseData = "";
-    String LINE_FEED = "\r\n";
+    String lineFeed = "\r\n";
     int responseCode = 0;
     try {
       URL url = new URL(urlPath);
@@ -602,20 +602,20 @@ public class HttpRequest {
       if (headers != null) {
         Set keys = headers.keySet();
         for (Iterator i = keys.iterator(); i.hasNext(); ) {
-          writer.append(i.next() + ": " + headers.get(i.next())).append(LINE_FEED);
+          writer.append(i.next() + ": " + headers.get(i.next())).append(lineFeed);
           writer.flush();
         }
       }
       if (formData != null) {
         Set keys = formData.keySet();
         for (Iterator i = keys.iterator(); i.hasNext(); ) {
-          writer.append(LINE_FEED);
+          writer.append(lineFeed);
           writer
               .append("Content-Disposition: form-data; name=\"" + i.next() + "\"")
-              .append(LINE_FEED);
-          writer.append("Content-Type: text/plain; charset=UTF-8").append(LINE_FEED);
-          writer.append(LINE_FEED);
-          writer.append(formData.get(i.next())).append(LINE_FEED);
+              .append(lineFeed);
+          writer.append("Content-Type: text/plain; charset=UTF-8").append(lineFeed);
+          writer.append(lineFeed);
+          writer.append(formData.get(i.next())).append(lineFeed);
           writer.flush();
         }
       }
@@ -630,12 +630,12 @@ public class HttpRequest {
                       + "\"; filename=\""
                       + fileName
                       + "\"")
-              .append(LINE_FEED);
+              .append(lineFeed);
           writer
               .append("Content-Type: " + URLConnection.guessContentTypeFromName(fileName))
-              .append(LINE_FEED);
-          writer.append("Content-Transfer-Encoding: binary").append(LINE_FEED);
-          writer.append(LINE_FEED);
+              .append(lineFeed);
+          writer.append("Content-Transfer-Encoding: binary").append(lineFeed);
+          writer.append(lineFeed);
           writer.flush();
 
           FileInputStream inputStream = new FileInputStream(files.get(i.next()));
@@ -646,7 +646,7 @@ public class HttpRequest {
           }
           outputStream.flush();
           inputStream.close();
-          writer.append(LINE_FEED);
+          writer.append(lineFeed);
           writer.flush();
         }
       }
@@ -713,18 +713,18 @@ public class HttpRequest {
   }
 
   /**
-   * To make DELETE request using hashmap
+   * To make DELETE request using hashmap.
    *
    * @param url --> url path
    * @param params --> Hashmap params
-   * @param mHeadersData --> null if no header
+   * @param headersData --> null if no header
    * @param serverType
    * @return Responsemodel
    */
   static Responsemodel deleteRequestsWithHashmap(
       String url,
       HashMap<String, String> params,
-      HashMap<String, String> mHeadersData,
+      HashMap<String, String> headersData,
       String serverType) {
     Responsemodel responseModel = new Responsemodel();
     String response = "";
@@ -746,8 +746,8 @@ public class HttpRequest {
         conn.setRequestProperty(AppConfig.CLIENT_ID_KEY, AppConfig.CLIENT_ID_VALUE);
         conn.setRequestProperty(AppConfig.SECRET_KEY, AppConfig.SECRET_KEY_VALUE);
 
-        if (mHeadersData != null) {
-          Set mapSet = (Set) mHeadersData.entrySet();
+        if (headersData != null) {
+          Set mapSet = (Set) headersData.entrySet();
           Iterator mapIterator = mapSet.iterator();
           while (mapIterator.hasNext()) {
             Map.Entry mapEntry = (Map.Entry) mapIterator.next();
@@ -831,14 +831,13 @@ public class HttpRequest {
       }
     } else {
       try {
-        HttpParams my_httpParams = new BasicHttpParams();
-        HttpConnectionParams.setConnectionTimeout(my_httpParams, 180000);
-        HttpConnectionParams.setSoTimeout(my_httpParams, 180000);
-        HttpClient httpclient = new DefaultHttpClient(my_httpParams);
+        HttpParams myHttpParams = new BasicHttpParams();
+        HttpConnectionParams.setConnectionTimeout(myHttpParams, 180000);
+        HttpConnectionParams.setSoTimeout(myHttpParams, 180000);
         OwnHttpDelete httppost = new OwnHttpDelete(url);
 
-        if (mHeadersData != null) {
-          Set mapSet = (Set) mHeadersData.entrySet();
+        if (headersData != null) {
+          Set mapSet = (Set) headersData.entrySet();
           Iterator mapIterator = mapSet.iterator();
           while (mapIterator.hasNext()) {
             Map.Entry mapEntry = (Map.Entry) mapIterator.next();
@@ -857,6 +856,7 @@ public class HttpRequest {
         httppost.setEntity(params1);
 
         // Execute and get the response.
+        HttpClient httpclient = new DefaultHttpClient(myHttpParams);
         HttpResponse response1 = httpclient.execute(httppost);
         responseCode = response1.getStatusLine().getStatusCode();
 
@@ -930,7 +930,7 @@ public class HttpRequest {
   static Responsemodel makeDeleteRequestWithJson(
       String urlpath,
       JSONObject jsonObject,
-      HashMap<String, String> mHeadersData,
+      HashMap<String, String> headersData,
       String serverType) {
     Responsemodel responseModel = new Responsemodel();
     String response = "";
@@ -959,8 +959,8 @@ public class HttpRequest {
           conn.setRequestProperty(AppConfig.ORG_ID_KEY, "OrgName");
         }
 
-        if (mHeadersData != null) {
-          Set mapSet = (Set) mHeadersData.entrySet();
+        if (headersData != null) {
+          Set mapSet = (Set) headersData.entrySet();
           Iterator mapIterator = mapSet.iterator();
           while (mapIterator.hasNext()) {
             Map.Entry mapEntry = (Map.Entry) mapIterator.next();
@@ -1037,14 +1037,13 @@ public class HttpRequest {
       }
     } else {
       try {
-        HttpParams my_httpParams = new BasicHttpParams();
-        HttpConnectionParams.setConnectionTimeout(my_httpParams, 180000);
-        HttpConnectionParams.setSoTimeout(my_httpParams, 180000);
-        HttpClient httpclient = new DefaultHttpClient(my_httpParams);
+        HttpParams myHttpParams = new BasicHttpParams();
+        HttpConnectionParams.setConnectionTimeout(myHttpParams, 180000);
+        HttpConnectionParams.setSoTimeout(myHttpParams, 180000);
         OwnHttpDelete httppost = new OwnHttpDelete(urlpath);
 
-        if (mHeadersData != null) {
-          Set mapSet = (Set) mHeadersData.entrySet();
+        if (headersData != null) {
+          Set mapSet = (Set) headersData.entrySet();
           Iterator mapIterator = mapSet.iterator();
           while (mapIterator.hasNext()) {
             Map.Entry mapEntry = (Map.Entry) mapIterator.next();
@@ -1063,6 +1062,7 @@ public class HttpRequest {
         httppost.setEntity(params1);
 
         // Execute and get the response.
+        HttpClient httpclient = new DefaultHttpClient(myHttpParams);
         HttpResponse response1 = httpclient.execute(httppost);
         responseCode = response1.getStatusLine().getStatusCode();
 
@@ -1135,7 +1135,7 @@ public class HttpRequest {
   static Responsemodel makeDeleteRequestWithJsonArray(
       String urlpath,
       JSONArray jsonArray,
-      HashMap<String, String> mHeadersData,
+      HashMap<String, String> headersData,
       String serverType) {
     Responsemodel responseModel = new Responsemodel();
     String response = "";
@@ -1164,8 +1164,8 @@ public class HttpRequest {
           conn.setRequestProperty(AppConfig.ORG_ID_KEY, "OrgName");
         }
 
-        if (mHeadersData != null) {
-          Set mapSet = (Set) mHeadersData.entrySet();
+        if (headersData != null) {
+          Set mapSet = (Set) headersData.entrySet();
           Iterator mapIterator = mapSet.iterator();
           while (mapIterator.hasNext()) {
             Map.Entry mapEntry = (Map.Entry) mapIterator.next();
@@ -1242,14 +1242,13 @@ public class HttpRequest {
       }
     } else {
       try {
-        HttpParams my_httpParams = new BasicHttpParams();
-        HttpConnectionParams.setConnectionTimeout(my_httpParams, 180000);
-        HttpConnectionParams.setSoTimeout(my_httpParams, 180000);
-        HttpClient httpclient = new DefaultHttpClient(my_httpParams);
+        HttpParams myHttpParams = new BasicHttpParams();
+        HttpConnectionParams.setConnectionTimeout(myHttpParams, 180000);
+        HttpConnectionParams.setSoTimeout(myHttpParams, 180000);
         OwnHttpDelete httppost = new OwnHttpDelete(urlpath);
 
-        if (mHeadersData != null) {
-          Set mapSet = (Set) mHeadersData.entrySet();
+        if (headersData != null) {
+          Set mapSet = (Set) headersData.entrySet();
           Iterator mapIterator = mapSet.iterator();
           while (mapIterator.hasNext()) {
             Map.Entry mapEntry = (Map.Entry) mapIterator.next();
@@ -1268,6 +1267,7 @@ public class HttpRequest {
         httppost.setEntity(params1);
 
         // Execute and get the response.
+        HttpClient httpclient = new DefaultHttpClient(myHttpParams);
         HttpResponse response1 = httpclient.execute(httppost);
         responseCode = response1.getStatusLine().getStatusCode();
 

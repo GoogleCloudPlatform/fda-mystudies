@@ -57,75 +57,75 @@ import org.json.JSONObject;
 
 public class SignupActivity extends AppCompatActivity implements ApiCall.OnAsyncRequestComplete {
   private static final int UPDATE_USER_PROFILE = 101;
-  private RelativeLayout mBackBtn;
-  private AppCompatTextView mTitle;
-  private RelativeLayout mCancelBtn;
-  private RelativeLayout mInfoIcon;
-  private AppCompatTextView mCancelTxt;
-  private AppCompatEditText mFirstName;
-  private AppCompatEditText mLastName;
-  private AppCompatEditText mEmail;
-  private AppCompatEditText mPassword;
-  private AppCompatEditText mConfirmPassword;
-  private AppCompatTextView mFirstNameLabel;
-  private AppCompatTextView mLastNameLabel;
-  private AppCompatTextView mEmailLabel;
-  private AppCompatTextView mPasswordLabel;
-  private AppCompatTextView mConfirmPasswordLabel;
-  private AppCompatTextView mTouchIdLabel;
-  private AppCompatTextView mAgreeLabel;
-  private AppCompatCheckBox mAgree;
-  private AppCompatTextView mSubmitBtn;
-  private int REGISTRATION_REQUEST = 2;
-  private int GET_TERMS_AND_CONDITION = 3;
-  private int STUDYINFO_REQUEST = 100;
-  private boolean mClicked;
-  private TermsAndConditionData mTermsAndConditionData;
-  private RegistrationData mRegistrationData;
-  private String mUserAuth;
-  private String mUserID;
+  private RelativeLayout backBtn;
+  private AppCompatTextView title;
+  private RelativeLayout cancelBtn;
+  private RelativeLayout infoIcon;
+  private AppCompatTextView cancelTxt;
+  private AppCompatEditText firstName;
+  private AppCompatEditText lastName;
+  private AppCompatEditText email;
+  private AppCompatEditText password;
+  private AppCompatEditText confirmPassword;
+  private AppCompatTextView firstNameLabel;
+  private AppCompatTextView lastNameLabel;
+  private AppCompatTextView emailLabel;
+  private AppCompatTextView passwordLabel;
+  private AppCompatTextView confirmPasswordLabel;
+  private AppCompatTextView touchIdLabel;
+  private AppCompatTextView agreeLabel;
+  private AppCompatCheckBox agree;
+  private AppCompatTextView submitBtn;
+  private static final int REGISTRATION_REQUEST = 2;
+  private static final int GET_TERMS_AND_CONDITION = 3;
+  private static final int STUDYINFO_REQUEST = 100;
+  private boolean clicked;
+  private TermsAndConditionData termsAndConditionData;
+  private RegistrationData registrationData;
+  private String userAuth;
+  private String userID;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_signup);
-    mClicked = false;
+    clicked = false;
     initializeXmlId();
     setTextForView();
-    customTextView(mAgreeLabel);
+    customTextView(agreeLabel);
     setFont();
     bindEvents();
-    mTermsAndConditionData = new TermsAndConditionData();
-    mTermsAndConditionData.setPrivacy(getString(R.string.privacyurl));
-    mTermsAndConditionData.setTerms(getString(R.string.termsurl));
+    termsAndConditionData = new TermsAndConditionData();
+    termsAndConditionData.setPrivacy(getString(R.string.privacyurl));
+    termsAndConditionData.setTerms(getString(R.string.termsurl));
   }
 
   private void initializeXmlId() {
-    mBackBtn = (RelativeLayout) findViewById(R.id.backBtn);
-    mInfoIcon = (RelativeLayout) findViewById(R.id.mInfoIcon);
-    mTitle = (AppCompatTextView) findViewById(R.id.title);
-    mCancelBtn = (RelativeLayout) findViewById(R.id.cancelBtn);
-    mCancelTxt = (AppCompatTextView) findViewById(R.id.cancelTxt);
-    mFirstNameLabel = (AppCompatTextView) findViewById(R.id.first_name_label);
-    mFirstName = (AppCompatEditText) findViewById(R.id.edittxt_first_name);
-    mLastNameLabel = (AppCompatTextView) findViewById(R.id.last_name_label);
-    mLastName = (AppCompatEditText) findViewById(R.id.edittxt_last_name);
-    mEmailLabel = (AppCompatTextView) findViewById(R.id.email_label);
-    mEmail = (AppCompatEditText) findViewById(R.id.edittxt_email);
-    mPasswordLabel = (AppCompatTextView) findViewById(R.id.password_label);
-    mPassword = (AppCompatEditText) findViewById(R.id.edittxt_password);
-    mConfirmPasswordLabel = (AppCompatTextView) findViewById(R.id.confirm_password_label);
-    mConfirmPassword = (AppCompatEditText) findViewById(R.id.edittxt_confirm_password);
-    mTouchIdLabel = (AppCompatTextView) findViewById(R.id.touch_id_label);
-    mAgreeLabel = (AppCompatTextView) findViewById(R.id.agree_label);
-    mAgree = (AppCompatCheckBox) findViewById(R.id.agreeButton);
-    mSubmitBtn = (AppCompatTextView) findViewById(R.id.submitButton);
+    backBtn = (RelativeLayout) findViewById(R.id.backBtn);
+    infoIcon = (RelativeLayout) findViewById(R.id.mInfoIcon);
+    title = (AppCompatTextView) findViewById(R.id.title);
+    cancelBtn = (RelativeLayout) findViewById(R.id.cancelBtn);
+    cancelTxt = (AppCompatTextView) findViewById(R.id.cancelTxt);
+    firstNameLabel = (AppCompatTextView) findViewById(R.id.first_name_label);
+    firstName = (AppCompatEditText) findViewById(R.id.edittxt_first_name);
+    lastNameLabel = (AppCompatTextView) findViewById(R.id.last_name_label);
+    lastName = (AppCompatEditText) findViewById(R.id.edittxt_last_name);
+    emailLabel = (AppCompatTextView) findViewById(R.id.email_label);
+    email = (AppCompatEditText) findViewById(R.id.edittxt_email);
+    passwordLabel = (AppCompatTextView) findViewById(R.id.password_label);
+    password = (AppCompatEditText) findViewById(R.id.edittxt_password);
+    confirmPasswordLabel = (AppCompatTextView) findViewById(R.id.confirm_password_label);
+    confirmPassword = (AppCompatEditText) findViewById(R.id.edittxt_confirm_password);
+    touchIdLabel = (AppCompatTextView) findViewById(R.id.touch_id_label);
+    agreeLabel = (AppCompatTextView) findViewById(R.id.agree_label);
+    agree = (AppCompatCheckBox) findViewById(R.id.agreeButton);
+    submitBtn = (AppCompatTextView) findViewById(R.id.submitButton);
   }
 
   private void setTextForView() {
-    mCancelBtn.setVisibility(View.GONE);
-    mInfoIcon.setVisibility(View.VISIBLE);
-    mTitle.setText(getResources().getString(R.string.signup));
+    cancelBtn.setVisibility(View.GONE);
+    infoIcon.setVisibility(View.VISIBLE);
+    title.setText(getResources().getString(R.string.signup));
   }
 
   // set link for privacy and policy
@@ -149,12 +149,11 @@ public class SignupActivity extends AppCompatActivity implements ApiCall.OnAsync
 
           @Override
           public void onClick(View widget) {
-            if (mTermsAndConditionData != null
-                && !mTermsAndConditionData.getTerms().isEmpty()) {
+            if (termsAndConditionData != null && !termsAndConditionData.getTerms().isEmpty()) {
               Intent termsIntent =
                   new Intent(SignupActivity.this, TermsPrivacyPolicyActivity.class);
               termsIntent.putExtra("title", getResources().getString(R.string.terms));
-              termsIntent.putExtra("url", mTermsAndConditionData.getTerms());
+              termsIntent.putExtra("url", termsAndConditionData.getTerms());
               startActivity(termsIntent);
             }
           }
@@ -184,12 +183,11 @@ public class SignupActivity extends AppCompatActivity implements ApiCall.OnAsync
 
           @Override
           public void onClick(View widget) {
-            if (mTermsAndConditionData != null
-                && !mTermsAndConditionData.getPrivacy().isEmpty()) {
+            if (termsAndConditionData != null && !termsAndConditionData.getPrivacy().isEmpty()) {
               Intent termsIntent =
                   new Intent(SignupActivity.this, TermsPrivacyPolicyActivity.class);
               termsIntent.putExtra("title", getResources().getString(R.string.privacy_policy));
-              termsIntent.putExtra("url", mTermsAndConditionData.getPrivacy());
+              termsIntent.putExtra("url", termsAndConditionData.getPrivacy());
               startActivity(termsIntent);
             }
           }
@@ -200,34 +198,34 @@ public class SignupActivity extends AppCompatActivity implements ApiCall.OnAsync
 
     view.setMovementMethod(LinkMovementMethod.getInstance());
     view.setText(spanTxt, TextView.BufferType.SPANNABLE);
-    mEmail.requestFocus();
+    email.requestFocus();
   }
 
   private void setFont() {
     try {
-      mTitle.setTypeface(AppController.getTypeface(SignupActivity.this, "medium"));
-      mCancelTxt.setTypeface(AppController.getTypeface(SignupActivity.this, "medium"));
-      mFirstNameLabel.setTypeface(AppController.getTypeface(SignupActivity.this, "regular"));
-      mFirstName.setTypeface(AppController.getTypeface(SignupActivity.this, "regular"));
-      mLastNameLabel.setTypeface(AppController.getTypeface(SignupActivity.this, "regular"));
-      mLastName.setTypeface(AppController.getTypeface(SignupActivity.this, "regular"));
-      mEmailLabel.setTypeface(AppController.getTypeface(SignupActivity.this, "regular"));
-      mEmail.setTypeface(AppController.getTypeface(SignupActivity.this, "regular"));
-      mPasswordLabel.setTypeface(AppController.getTypeface(SignupActivity.this, "regular"));
-      mPassword.setTypeface(AppController.getTypeface(SignupActivity.this, "regular"));
-      mConfirmPasswordLabel.setTypeface(AppController.getTypeface(SignupActivity.this, "regular"));
-      mConfirmPassword.setTypeface(AppController.getTypeface(SignupActivity.this, "regular"));
-      mTouchIdLabel.setTypeface(AppController.getTypeface(SignupActivity.this, "regular"));
-      mAgreeLabel.setTypeface(AppController.getTypeface(SignupActivity.this, "regular"));
-      mAgree.setTypeface(AppController.getTypeface(SignupActivity.this, "regular"));
-      mSubmitBtn.setTypeface(AppController.getTypeface(SignupActivity.this, "regular"));
+      title.setTypeface(AppController.getTypeface(SignupActivity.this, "medium"));
+      cancelTxt.setTypeface(AppController.getTypeface(SignupActivity.this, "medium"));
+      firstNameLabel.setTypeface(AppController.getTypeface(SignupActivity.this, "regular"));
+      firstName.setTypeface(AppController.getTypeface(SignupActivity.this, "regular"));
+      lastNameLabel.setTypeface(AppController.getTypeface(SignupActivity.this, "regular"));
+      lastName.setTypeface(AppController.getTypeface(SignupActivity.this, "regular"));
+      emailLabel.setTypeface(AppController.getTypeface(SignupActivity.this, "regular"));
+      email.setTypeface(AppController.getTypeface(SignupActivity.this, "regular"));
+      passwordLabel.setTypeface(AppController.getTypeface(SignupActivity.this, "regular"));
+      password.setTypeface(AppController.getTypeface(SignupActivity.this, "regular"));
+      confirmPasswordLabel.setTypeface(AppController.getTypeface(SignupActivity.this, "regular"));
+      confirmPassword.setTypeface(AppController.getTypeface(SignupActivity.this, "regular"));
+      touchIdLabel.setTypeface(AppController.getTypeface(SignupActivity.this, "regular"));
+      agreeLabel.setTypeface(AppController.getTypeface(SignupActivity.this, "regular"));
+      agree.setTypeface(AppController.getTypeface(SignupActivity.this, "regular"));
+      submitBtn.setTypeface(AppController.getTypeface(SignupActivity.this, "regular"));
     } catch (Exception e) {
       Logger.log(e);
     }
   }
 
   private void bindEvents() {
-    mBackBtn.setOnClickListener(
+    backBtn.setOnClickListener(
         new View.OnClickListener() {
           @Override
           public void onClick(View view) {
@@ -240,7 +238,7 @@ public class SignupActivity extends AppCompatActivity implements ApiCall.OnAsync
           }
         });
 
-    mCancelBtn.setOnClickListener(
+    cancelBtn.setOnClickListener(
         new View.OnClickListener() {
           @Override
           public void onClick(View view) {
@@ -248,26 +246,26 @@ public class SignupActivity extends AppCompatActivity implements ApiCall.OnAsync
           }
         });
 
-    mSubmitBtn.setOnClickListener(
+    submitBtn.setOnClickListener(
         new View.OnClickListener() {
           @Override
           public void onClick(View view) {
-            if (mClicked == false) {
-              mClicked = true;
+            if (clicked == false) {
+              clicked = true;
               callRegisterUserWebService();
               new Handler()
                   .postDelayed(
                       new Runnable() {
                         @Override
                         public void run() {
-                          mClicked = false;
+                          clicked = false;
                         }
                       },
                       2000);
             }
           }
         });
-    mInfoIcon.setOnClickListener(
+    infoIcon.setOnClickListener(
         new View.OnClickListener() {
           @Override
           public void onClick(View view) {
@@ -282,24 +280,24 @@ public class SignupActivity extends AppCompatActivity implements ApiCall.OnAsync
   }
 
   private void callRegisterUserWebService() {
-    String PASSWORD_PATTERN =
+    String passwordPattern =
         "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[!\"#$%&'()*+,-.:;<=>?@\\[\\]^_`{|}~])(?=\\S+$).{8,64}$";
-    if (mPassword.getText().toString().isEmpty()
-        && mEmail.getText().toString().isEmpty()
-        && mConfirmPassword.getText().toString().isEmpty()) {
+    if (password.getText().toString().isEmpty()
+        && email.getText().toString().isEmpty()
+        && confirmPassword.getText().toString().isEmpty()) {
       Toast.makeText(
               this, getResources().getString(R.string.enter_all_field_empty), Toast.LENGTH_SHORT)
           .show();
-    } else if (mEmail.getText().toString().isEmpty()) {
+    } else if (email.getText().toString().isEmpty()) {
       Toast.makeText(this, getResources().getString(R.string.email_empty), Toast.LENGTH_SHORT)
           .show();
-    } else if (!AppController.getHelperIsValidEmail(mEmail.getText().toString())) {
+    } else if (!AppController.getHelperIsValidEmail(email.getText().toString())) {
       Toast.makeText(this, getResources().getString(R.string.email_validation), Toast.LENGTH_SHORT)
           .show();
-    } else if (mPassword.getText().toString().isEmpty()) {
+    } else if (password.getText().toString().isEmpty()) {
       Toast.makeText(this, getResources().getString(R.string.password_empty), Toast.LENGTH_SHORT)
           .show();
-    } else if (!mPassword.getText().toString().matches(PASSWORD_PATTERN)) {
+    } else if (!password.getText().toString().matches(passwordPattern)) {
       SetDialogHelper.setNeutralDialog(
           SignupActivity.this,
           getResources().getString(R.string.password_validation),
@@ -307,19 +305,19 @@ public class SignupActivity extends AppCompatActivity implements ApiCall.OnAsync
           getResources().getString(R.string.ok),
           getResources().getString(R.string.app_name));
     } else if (checkPasswordContainsEmailID(
-        mEmail.getText().toString(), mPassword.getText().toString())) {
+        email.getText().toString(), password.getText().toString())) {
       Toast.makeText(
               this, getResources().getString(R.string.password_contain_email), Toast.LENGTH_SHORT)
           .show();
-    } else if (mConfirmPassword.getText().toString().isEmpty()) {
+    } else if (confirmPassword.getText().toString().isEmpty()) {
       Toast.makeText(
               this, getResources().getString(R.string.confirm_password_empty), Toast.LENGTH_SHORT)
           .show();
-    } else if (!mPassword.getText().toString().equals(mConfirmPassword.getText().toString())) {
+    } else if (!password.getText().toString().equals(confirmPassword.getText().toString())) {
       Toast.makeText(
               this, getResources().getString(R.string.password_mismatch_error), Toast.LENGTH_SHORT)
           .show();
-    } else if (!mAgree.isChecked()) {
+    } else if (!agree.isChecked()) {
       Toast.makeText(
               this,
               getResources().getString(R.string.terms_and_condition_validation),
@@ -327,10 +325,9 @@ public class SignupActivity extends AppCompatActivity implements ApiCall.OnAsync
           .show();
     } else {
       AppController.getHelperProgressDialog().showProgress(SignupActivity.this, "", "", false);
-      RegisterUserEvent registerUserEvent = new RegisterUserEvent();
       HashMap<String, String> params = new HashMap<>();
-      params.put("emailId", mEmail.getText().toString());
-      params.put("password", mPassword.getText().toString());
+      params.put("emailId", email.getText().toString());
+      params.put("password", password.getText().toString());
       params.put("appId", BuildConfig.APPLICATION_ID);
       RegistrationServerConfigEvent registrationServerConfigEvent =
           new RegistrationServerConfigEvent(
@@ -344,6 +341,7 @@ public class SignupActivity extends AppCompatActivity implements ApiCall.OnAsync
               null,
               false,
               this);
+      RegisterUserEvent registerUserEvent = new RegisterUserEvent();
       registerUserEvent.setmRegistrationServerConfigEvent(registrationServerConfigEvent);
       UserModulePresenter userModulePresenter = new UserModulePresenter();
       userModulePresenter.performRegistration(registerUserEvent);
@@ -362,22 +360,22 @@ public class SignupActivity extends AppCompatActivity implements ApiCall.OnAsync
   public <T> void asyncResponse(T response, int responseCode) {
     AppController.getHelperProgressDialog().dismissDialog();
     if (GET_TERMS_AND_CONDITION == responseCode) {
-      mTermsAndConditionData = (TermsAndConditionData) response;
+      termsAndConditionData = (TermsAndConditionData) response;
     } else if (responseCode == REGISTRATION_REQUEST) {
-      mRegistrationData = (RegistrationData) response;
-      if (mRegistrationData != null) {
-        mUserID = mRegistrationData.getUserId();
-        mUserAuth = mRegistrationData.getAuth();
+      registrationData = (RegistrationData) response;
+      if (registrationData != null) {
+        userID = registrationData.getUserId();
+        userAuth = registrationData.getAuth();
         AppController.getHelperSharedPreference()
             .writePreference(
                 SignupActivity.this,
                 getString(R.string.refreshToken),
-                mRegistrationData.getRefreshToken());
+                registrationData.getRefreshToken());
         AppController.getHelperSharedPreference()
             .writePreference(
                 SignupActivity.this,
                 getString(R.string.clientToken),
-                mRegistrationData.getClientToken());
+                registrationData.getClientToken());
         new GetFcmRefreshToken().execute();
       } else {
         Toast.makeText(
@@ -388,7 +386,7 @@ public class SignupActivity extends AppCompatActivity implements ApiCall.OnAsync
       UpdateUserProfileData updateUserProfileData = (UpdateUserProfileData) response;
       if (updateUserProfileData != null) {
         if (updateUserProfileData.getMessage().equalsIgnoreCase("Profile Updated successfully")) {
-          signup(mRegistrationData);
+          signup(registrationData);
         } else {
           Toast.makeText(
                   this, getResources().getString(R.string.unable_to_signup), Toast.LENGTH_SHORT)
@@ -428,7 +426,7 @@ public class SignupActivity extends AppCompatActivity implements ApiCall.OnAsync
                 "" + registrationData.isVerified());
         AppController.getHelperSharedPreference()
             .writePreference(
-                SignupActivity.this, getString(R.string.email), "" + mEmail.getText().toString());
+                SignupActivity.this, getString(R.string.email), "" + email.getText().toString());
         if (getIntent().getStringExtra("from") != null
             && getIntent().getStringExtra("from").equalsIgnoreCase("StudyInfo")) {
           Intent intent = new Intent();
@@ -458,7 +456,7 @@ public class SignupActivity extends AppCompatActivity implements ApiCall.OnAsync
           intent.putExtra("userid", registrationData.getUserId());
           intent.putExtra("auth", registrationData.getAuth());
           intent.putExtra("verified", registrationData.isVerified());
-          intent.putExtra("email", mEmail.getText().toString());
+          intent.putExtra("email", email.getText().toString());
           startActivityForResult(intent, STUDYINFO_REQUEST);
         } else {
           Intent intent = new Intent(SignupActivity.this, VerificationStepActivity.class);
@@ -467,7 +465,7 @@ public class SignupActivity extends AppCompatActivity implements ApiCall.OnAsync
           intent.putExtra("userid", registrationData.getUserId());
           intent.putExtra("auth", registrationData.getAuth());
           intent.putExtra("verified", registrationData.isVerified());
-          intent.putExtra("email", mEmail.getText().toString());
+          intent.putExtra("email", email.getText().toString());
           startActivity(intent);
         }
       }
@@ -510,10 +508,9 @@ public class SignupActivity extends AppCompatActivity implements ApiCall.OnAsync
 
   private void callUpdateProfileWebService(String deviceToken) {
     AppController.getHelperProgressDialog().showProgress(SignupActivity.this, "", "", false);
-    UpdateUserProfileEvent updateUserProfileEvent = new UpdateUserProfileEvent();
     HashMap<String, String> params = new HashMap<>();
-    params.put("accessToken", mUserAuth);
-    params.put("userId", mUserID);
+    params.put("accessToken", userAuth);
+    params.put("userId", userID);
 
     JSONObject jsonObjBody = new JSONObject();
     JSONObject infoJson = new JSONObject();
@@ -549,6 +546,7 @@ public class SignupActivity extends AppCompatActivity implements ApiCall.OnAsync
             jsonObjBody,
             false,
             this);
+    UpdateUserProfileEvent updateUserProfileEvent = new UpdateUserProfileEvent();
     updateUserProfileEvent.setmRegistrationServerConfigEvent(registrationServerConfigEvent);
     UserModulePresenter userModulePresenter = new UserModulePresenter();
     userModulePresenter.performUpdateUserProfile(updateUserProfileEvent);
@@ -566,7 +564,9 @@ public class SignupActivity extends AppCompatActivity implements ApiCall.OnAsync
           token =
               AppController.getHelperSharedPreference()
                   .readPreference(SignupActivity.this, "deviceToken", "");
-          if (!token.isEmpty()) regIdStatus = true;
+          if (!token.isEmpty()) {
+            regIdStatus = true;
+          }
         }
       } else {
         AppController.getHelperSharedPreference()

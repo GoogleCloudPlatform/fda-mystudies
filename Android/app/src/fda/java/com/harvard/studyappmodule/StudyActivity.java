@@ -65,10 +65,10 @@ import com.harvard.utils.SharedPreferenceHelper;
 import com.harvard.utils.URLs;
 import com.harvard.webservicemodule.apihelper.ApiCall;
 import com.harvard.webservicemodule.events.AuthServerConfigEvent;
-import java.util.HashMap;
 import io.realm.Realm;
 import io.realm.RealmList;
 import io.realm.RealmResults;
+import java.util.HashMap;
 
 public class StudyActivity extends AppCompatActivity
     implements View.OnClickListener, ApiCall.OnAsyncRequestComplete {

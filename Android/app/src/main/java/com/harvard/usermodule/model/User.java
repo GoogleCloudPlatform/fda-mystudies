@@ -1,5 +1,6 @@
 /*
  * Copyright © 2017-2019 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors.
+ * Copyright 2020 Google LLC
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction, including
  * without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
@@ -17,94 +18,94 @@ package com.harvard.usermodule.model;
 import java.util.ArrayList;
 
 public class User {
-  private String mFirstName;
-  private String mLastName;
-  private String mEmailId;
-  private String mUserId;
-  private boolean mVerified;
-  private String mAuthToken;
-  private String mUserType;
-  private Settings mSettings;
-  private ArrayList<UserStudyStatus> mUserStudyStatuses = new ArrayList<>();
-  private ArrayList<UserActivityStatus> mUserActivityStatuses = new ArrayList<>();
+  private String firstName;
+  private String lastName;
+  private String emailId;
+  private String userId;
+  private boolean verified;
+  private String authToken;
+  private String userType;
+  private Settings settings;
+  private ArrayList<UserStudyStatus> userStudyStatuses = new ArrayList<>();
+  private ArrayList<UserActivityStatus> userActivityStatuses = new ArrayList<>();
 
   public String getmFirstName() {
-    return mFirstName;
+    return firstName;
   }
 
-  public void setmFirstName(String mFirstName) {
-    this.mFirstName = mFirstName;
+  public void setmFirstName(String firstName) {
+    this.firstName = firstName;
   }
 
   public String getmLastName() {
-    return mLastName;
+    return lastName;
   }
 
-  public void setmLastName(String mLastName) {
-    this.mLastName = mLastName;
+  public void setmLastName(String lastName) {
+    this.lastName = lastName;
   }
 
   public String getmEmailId() {
-    return mEmailId;
+    return emailId;
   }
 
-  public void setmEmailId(String mEmailId) {
-    this.mEmailId = mEmailId;
+  public void setmEmailId(String emailId) {
+    this.emailId = emailId;
   }
 
   public String getmUserId() {
-    return mUserId;
+    return userId;
   }
 
-  public void setmUserId(String mUserId) {
-    this.mUserId = mUserId;
+  public void setmUserId(String userId) {
+    this.userId = userId;
   }
 
   public boolean ismVerified() {
-    return mVerified;
+    return verified;
   }
 
-  public void setmVerified(boolean mVerified) {
-    this.mVerified = mVerified;
+  public void setmVerified(boolean verified) {
+    this.verified = verified;
   }
 
   public String getmAuthToken() {
-    return mAuthToken;
+    return authToken;
   }
 
-  public void setmAuthToken(String mAuthToken) {
-    this.mAuthToken = mAuthToken;
+  public void setmAuthToken(String authToken) {
+    this.authToken = authToken;
   }
 
   public String getmUserType() {
-    return mUserType;
+    return userType;
   }
 
-  public void setmUserType(String mUserType) {
-    this.mUserType = mUserType;
+  public void setmUserType(String userType) {
+    this.userType = userType;
   }
 
   public Settings getmSettings() {
-    return mSettings;
+    return settings;
   }
 
-  public void setmSettings(Settings mSettings) {
-    this.mSettings = mSettings;
+  public void setmSettings(Settings settings) {
+    this.settings = settings;
   }
 
   public ArrayList<UserStudyStatus> getmUserStudyStatuses() {
-    return mUserStudyStatuses;
+    return userStudyStatuses;
   }
 
-  public void setmUserStudyStatuses(ArrayList<UserStudyStatus> mUserStudyStatuses) {
-    this.mUserStudyStatuses = mUserStudyStatuses;
+  public void setmUserStudyStatuses(ArrayList<UserStudyStatus> userStudyStatuses) {
+    this.userStudyStatuses = userStudyStatuses;
   }
 
   public ArrayList<UserActivityStatus> getmUserActivityStatuses() {
-    return mUserActivityStatuses;
+    return userActivityStatuses;
   }
 
-  public void setmUserActivityStatuses(ArrayList<UserActivityStatus> mUserActivityStatuses) {
-    this.mUserActivityStatuses = mUserActivityStatuses;
+  public void setmUserActivityStatuses(ArrayList<UserActivityStatus> userActivityStatuses) {
+    this.userActivityStatuses = userActivityStatuses;
   }
 }

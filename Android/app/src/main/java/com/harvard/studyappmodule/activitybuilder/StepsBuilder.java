@@ -45,18 +45,18 @@ import com.harvard.studyappmodule.custom.question.TextAnswerFormatRegex;
 import com.harvard.studyappmodule.custom.question.TimeIntervalAnswerFormat;
 import com.harvard.utils.AppController;
 import com.harvard.utils.Logger;
-import org.researchstack.backbone.answerformat.BooleanAnswerFormat;
-import org.researchstack.backbone.model.Choice;
-import org.researchstack.backbone.step.InstructionStep;
-import org.researchstack.backbone.step.QuestionStep;
-import org.researchstack.backbone.step.Step;
+import io.realm.Realm;
+import io.realm.RealmList;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
-import io.realm.Realm;
-import io.realm.RealmList;
+import org.researchstack.backbone.answerformat.BooleanAnswerFormat;
+import org.researchstack.backbone.model.Choice;
+import org.researchstack.backbone.step.InstructionStep;
+import org.researchstack.backbone.step.QuestionStep;
+import org.researchstack.backbone.step.Step;
 
 public class StepsBuilder {
   private List<Step> steps;

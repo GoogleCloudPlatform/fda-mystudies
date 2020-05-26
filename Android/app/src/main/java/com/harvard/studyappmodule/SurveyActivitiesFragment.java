@@ -1329,7 +1329,7 @@ public class SurveyActivitiesFragment extends Fragment
                 .equalsIgnoreCase(activityListData.getActivities().get(j).getActivityVersion())) {
               activityUpdated = true;
               // update ActivityWS DB with new version
-              dbServiceSubscriber.UpdateActivitiesWSVersion(
+              dbServiceSubscriber.updateActivitiesWsVersion(
                   activityListData.getActivities().get(j).getActivityId(),
                   activityListData.getStudyId(),
                   realm,
@@ -1367,7 +1367,7 @@ public class SurveyActivitiesFragment extends Fragment
                   .equalsIgnoreCase(activityListData.getActivities().get(j).getActivityVersion())) {
             activityUpdated = true;
             // update ActivityWS DB with new version
-            dbServiceSubscriber.UpdateActivitiesWSVersion(
+            dbServiceSubscriber.updateActivitiesWsVersion(
                 activityListData.getActivities().get(j).getActivityId(),
                 activityListData.getStudyId(),
                 realm,
@@ -1394,7 +1394,7 @@ public class SurveyActivitiesFragment extends Fragment
                 .equalsIgnoreCase(activityListData.getActivities().get(j).getActivityVersion())) {
           activityUpdated = true;
           // update ActivityWS DB with new version
-          dbServiceSubscriber.UpdateActivitiesWSVersion(
+          dbServiceSubscriber.updateActivitiesWsVersion(
               activityListData.getActivities().get(j).getActivityId(),
               activityListData.getStudyId(),
               realm,
@@ -1735,12 +1735,12 @@ public class SurveyActivitiesFragment extends Fragment
           // insert to activitylist db
           // activityListDataDB
           for (int k = 0; k < newlyAdded.size(); k++) {
-            dbServiceSubscriber.addActivityWSList(context, activityListDataDB, newlyAdded.get(k));
+            dbServiceSubscriber.addActivityWsList(context, activityListDataDB, newlyAdded.get(k));
           }
         }
 
         for (int i = 0; i < activitiesArrayList.size(); i++) {
-          SimpleDateFormat simpleDateFormat = AppController.getDateFormatUTC1();
+          SimpleDateFormat simpleDateFormat = AppController.getDateFormatUtc1();
           Date starttime = null;
           Date endtime = null;
           if (activitiesArrayList.get(i) != null
@@ -1873,9 +1873,9 @@ public class SurveyActivitiesFragment extends Fragment
             }
           }
 
-          String currentDateString = AppController.getDateFormatUTC().format(currentDate);
+          String currentDateString = AppController.getDateFormatUtc().format(currentDate);
           try {
-            currentDate = AppController.getDateFormatUTC().parse(currentDateString);
+            currentDate = AppController.getDateFormatUtc().parse(currentDateString);
           } catch (ParseException e) {
             Logger.log(e);
           }
@@ -1958,7 +1958,7 @@ public class SurveyActivitiesFragment extends Fragment
             }
 
             // delete from activity list db
-            dbServiceSubscriber.deleteActivityWSList(
+            dbServiceSubscriber.deleteActivityWsList(
                 context, activityListDataDB, activitiesArrayList.get(i).getActivityId());
           }
         }

@@ -63,9 +63,9 @@ import com.harvard.webservicemodule.apihelper.Responsemodel;
 import com.harvard.webservicemodule.events.RegistrationServerConfigEvent;
 import com.harvard.webservicemodule.events.RegistrationServerEnrollmentConfigEvent;
 import com.harvard.webservicemodule.events.WCPConfigEvent;
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
+import io.realm.Realm;
+import io.realm.RealmList;
+import io.realm.RealmResults;
 import java.lang.reflect.Type;
 import java.net.HttpURLConnection;
 import java.text.ParseException;
@@ -74,9 +74,9 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
-import io.realm.Realm;
-import io.realm.RealmList;
-import io.realm.RealmResults;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 public class SurveyResourcesFragment<T> extends Fragment implements ApiCall.OnAsyncRequestComplete {
 
@@ -233,7 +233,7 @@ public class SurveyResourcesFragment<T> extends Fragment implements ApiCall.OnAs
 
       dbServiceSubscriber.updateStudyWithddrawnDB(context, studyId, StudyFragment.WITHDRAWN);
       dbServiceSubscriber.deleteActivityDataRow(context, studyId);
-      dbServiceSubscriber.deleteActivityWSData(context, studyId);
+      dbServiceSubscriber.deleteActivityWsData(context, studyId);
 
       if (AppConfig.AppType.equalsIgnoreCase(getString(R.string.app_gateway))) {
         Intent intent = new Intent(context, StudyActivity.class);
@@ -660,10 +660,10 @@ public class SurveyResourcesFragment<T> extends Fragment implements ApiCall.OnAs
             "userId",
             SharedPreferenceHelper.readPreference(context, getString(R.string.userid), ""));
         Studies studies =
-                realm
-                        .where(Studies.class)
-                        .equalTo("studyId", anchorDateSchedulingDetails.getStudyId())
-                        .findFirst();
+            realm
+                .where(Studies.class)
+                .equalTo("studyId", anchorDateSchedulingDetails.getStudyId())
+                .findFirst();
         responseModel =
             HttpRequest.getRequest(
                 URLs.PROCESSRESPONSEDATA
@@ -739,8 +739,7 @@ public class SurveyResourcesFragment<T> extends Fragment implements ApiCall.OnAs
               .show();
         } else if (Integer.parseInt(responseCode) == 500) {
           try {
-            JSONObject jsonObject =
-                new JSONObject(String.valueOf(responseModel.getResponseData()));
+            JSONObject jsonObject = new JSONObject(String.valueOf(responseModel.getResponseData()));
             String exception = String.valueOf(jsonObject.get("exception"));
             if (exception.contains("Query or table not found")) {
               // call remaining service

@@ -48,14 +48,14 @@ import com.harvard.utils.URLs;
 import com.harvard.webservicemodule.apihelper.ApiCall;
 import com.harvard.webservicemodule.events.RegistrationServerEnrollmentConfigEvent;
 import com.harvard.webservicemodule.events.ResponseServerConfigEvent;
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
+import io.realm.Realm;
+import io.realm.RealmResults;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
-import io.realm.Realm;
-import io.realm.RealmResults;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 public class SurveyCompleteActivity extends AppCompatActivity
     implements ApiCall.OnAsyncRequestComplete {

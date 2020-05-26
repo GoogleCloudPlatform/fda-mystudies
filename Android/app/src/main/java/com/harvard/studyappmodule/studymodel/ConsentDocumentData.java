@@ -27,8 +27,8 @@ public class ConsentDocumentData extends RealmObject {
     return mStudyId;
   }
 
-  public void setmStudyId(String mStudyId) {
-    this.mStudyId = mStudyId;
+  public void setmStudyId(String studyId) {
+    this.mStudyId = studyId;
   }
 
   public String getMessage() {

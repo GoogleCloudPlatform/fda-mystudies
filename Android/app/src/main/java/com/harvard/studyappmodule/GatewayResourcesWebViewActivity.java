@@ -1,5 +1,6 @@
 /*
  * Copyright © 2017-2019 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors.
+ * Copyright 2020 Google LLC
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction, including
  * without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
@@ -63,7 +64,7 @@ public class GatewayResourcesWebViewActivity extends AppCompatActivity {
     intentTitle = getIntent().getStringExtra("title");
     intentType = getIntent().getStringExtra("type");
 
-    defaultPDFShow();
+    defaultPdfShow();
 
     setFont();
 
@@ -104,7 +105,7 @@ public class GatewayResourcesWebViewActivity extends AppCompatActivity {
         });
   }
 
-  private void defaultPDFShow() {
+  private void defaultPdfShow() {
     if (intentType.equalsIgnoreCase("pdf")) {
       webView.setVisibility(View.GONE);
       title.setText(intentTitle);
@@ -124,11 +125,11 @@ public class GatewayResourcesWebViewActivity extends AppCompatActivity {
               (Activity) GatewayResourcesWebViewActivity.this, permission, PERMISSION_REQUEST_CODE);
         } else {
           finalSharingFile = getAssetsPdfPath();
-          DisplayPDFView(finalSharingFile.getAbsolutePath());
+          DisplayPdfView(finalSharingFile.getAbsolutePath());
         }
       } else {
         finalSharingFile = getAssetsPdfPath();
-        DisplayPDFView(finalSharingFile.getAbsolutePath());
+        DisplayPdfView(finalSharingFile.getAbsolutePath());
       }
     }
   }
@@ -149,7 +150,7 @@ public class GatewayResourcesWebViewActivity extends AppCompatActivity {
 
           ///////// default pdf show
           finalSharingFile = getAssetsPdfPath();
-          DisplayPDFView(finalSharingFile.getAbsolutePath());
+          DisplayPdfView(finalSharingFile.getAbsolutePath());
           /////////
         }
         break;
@@ -184,7 +185,9 @@ public class GatewayResourcesWebViewActivity extends AppCompatActivity {
     String primaryStoragePath =
         Environment.getExternalStorageDirectory().getAbsolutePath() + "/" + intentTitle + ".pdf";
     File file = new File(primaryStoragePath);
-    if (!file.exists()) file.createNewFile();
+    if (!file.exists()) {
+      file.createNewFile();
+    }
 
     InputStream in = new FileInputStream(src);
     OutputStream out = new FileOutputStream(file);
@@ -213,7 +216,7 @@ public class GatewayResourcesWebViewActivity extends AppCompatActivity {
     }
   }
 
-  private void DisplayPDFView(String filePath) {
+  private void DisplayPdfView(String filePath) {
     pdfView.setVisibility(View.VISIBLE);
     try {
       pdfView

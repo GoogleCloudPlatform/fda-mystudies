@@ -35,8 +35,8 @@ import com.harvard.studyappmodule.studymodel.StudyList;
 import com.harvard.studyappmodule.surveyscheduler.model.CompletionAdeherenceCalc;
 import com.harvard.utils.AppController;
 import com.harvard.utils.Logger;
-import java.util.ArrayList;
 import io.realm.RealmList;
+import java.util.ArrayList;
 
 public class StudyListAdapter extends RecyclerView.Adapter<StudyListAdapter.Holder> {
   private final Context context;

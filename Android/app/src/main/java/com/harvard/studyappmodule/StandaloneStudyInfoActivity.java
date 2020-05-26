@@ -37,10 +37,10 @@ import com.google.gson.reflect.TypeToken;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
 import com.harvard.AppConfig;
-import com.harvard.eligibilitymodule.CustomViewTaskActivity;
-import com.harvard.eligibilitymodule.StepsBuilder;
 import com.harvard.R;
 import com.harvard.WebViewActivity;
+import com.harvard.eligibilitymodule.CustomViewTaskActivity;
+import com.harvard.eligibilitymodule.StepsBuilder;
 import com.harvard.gatewaymodule.CircleIndicator;
 import com.harvard.storagemodule.DBServiceSubscriber;
 import com.harvard.studyappmodule.activitybuilder.model.servicemodel.Steps;
@@ -66,13 +66,13 @@ import com.harvard.webservicemodule.apihelper.HttpRequest;
 import com.harvard.webservicemodule.apihelper.Responsemodel;
 import com.harvard.webservicemodule.events.RegistrationServerEnrollmentConfigEvent;
 import com.harvard.webservicemodule.events.WCPConfigEvent;
-import org.researchstack.backbone.task.OrderedTask;
-import java.io.IOException;
-import java.net.HttpURLConnection;
-import java.util.HashMap;
 import io.realm.Realm;
 import io.realm.RealmList;
 import io.realm.RealmObject;
+import java.io.IOException;
+import java.net.HttpURLConnection;
+import java.util.HashMap;
+import org.researchstack.backbone.task.OrderedTask;
 
 public class StandaloneStudyInfoActivity extends AppCompatActivity
     implements ApiCall.OnAsyncRequestComplete {

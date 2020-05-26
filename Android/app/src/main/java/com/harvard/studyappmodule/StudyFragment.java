@@ -72,20 +72,20 @@ import com.harvard.webservicemodule.apihelper.Responsemodel;
 import com.harvard.webservicemodule.events.RegistrationServerConsentConfigEvent;
 import com.harvard.webservicemodule.events.RegistrationServerEnrollmentConfigEvent;
 import com.harvard.webservicemodule.events.WCPConfigEvent;
+import io.realm.Realm;
+import io.realm.RealmList;
+import io.realm.RealmObject;
+import java.io.IOException;
+import java.net.HttpURLConnection;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.researchstack.backbone.step.Step;
 import org.researchstack.backbone.task.OrderedTask;
 import org.researchstack.backbone.task.Task;
-import java.io.IOException;
-import java.net.HttpURLConnection;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import io.realm.Realm;
-import io.realm.RealmList;
-import io.realm.RealmObject;
 
 public class StudyFragment extends Fragment implements ApiCall.OnAsyncRequestComplete {
   private static final int STUDY_UPDATES = 201;
@@ -1055,7 +1055,7 @@ public class StudyFragment extends Fragment implements ApiCall.OnAsyncRequestCom
             StudyFragment.this);
     consentPdfEvent.setRegistrationServerConsentConfigEvent(registrationServerConsentConfigEvent);
     UserModulePresenter userModulePresenter = new UserModulePresenter();
-    userModulePresenter.performConsentPDF(consentPdfEvent);
+    userModulePresenter.performConsentPdf(consentPdfEvent);
   }
 
   private void saveConsentToDB(Context context, EligibilityConsent eligibilityConsent) {

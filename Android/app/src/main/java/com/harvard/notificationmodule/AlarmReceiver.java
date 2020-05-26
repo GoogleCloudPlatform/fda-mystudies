@@ -1,5 +1,6 @@
 /*
  * Copyright © 2017-2019 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors.
+ * Copyright 2020 Google LLC
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction, including
  * without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
@@ -65,12 +66,12 @@ public class AlarmReceiver extends BroadcastReceiver {
       Logger.log(e);
     }
     if (pendingIntentId == 1) {
-      Realm mRealm = AppController.getRealmobj(context);
+      Realm realm = AppController.getRealmobj(context);
       DBServiceSubscriber dbServiceSubscriber = new DBServiceSubscriber();
       RealmResults<NotificationDb> notificationDbs =
-          dbServiceSubscriber.getNotificationDbByCurrentDate(mRealm);
+          dbServiceSubscriber.getNotificationDbByCurrentDate(realm);
       NotificationModuleSubscriber notificationModuleSubscriber =
-          new NotificationModuleSubscriber(dbServiceSubscriber, mRealm);
+          new NotificationModuleSubscriber(dbServiceSubscriber, realm);
       if (notificationDbs != null && notificationDbs.size() > 0) {
         for (int i = 0; i < notificationDbs.size(); i++) {
           Calendar time = Calendar.getInstance();
@@ -117,7 +118,7 @@ public class AlarmReceiver extends BroadcastReceiver {
       }
 
       try {
-        dbServiceSubscriber.closeRealmObj(mRealm);
+        dbServiceSubscriber.closeRealmObj(realm);
       } catch (Exception e) {
         Logger.log(e);
       }
@@ -131,7 +132,6 @@ public class AlarmReceiver extends BroadcastReceiver {
 
       String title = intent.getStringExtra("title");
       String description = intent.getStringExtra("description");
-      String type = intent.getStringExtra("type");
       String studyId = null;
       if (intent.getStringExtra("studyId") != null) {
         studyId = intent.getStringExtra("studyId");
@@ -150,6 +150,7 @@ public class AlarmReceiver extends BroadcastReceiver {
       } else {
         notificationIntent = new Intent(context, StandaloneActivity.class);
       }
+      String type = intent.getStringExtra("type");
       PendingIntent contentIntent = null;
       if (!type.equalsIgnoreCase(NotificationModuleSubscriber.NO_USE_NOTIFICATION)) {
         notificationIntent.putExtra(StudyActivity.FROM, NOTIFICATION_INTENT);
@@ -245,13 +246,13 @@ public class AlarmReceiver extends BroadcastReceiver {
                 context, context.getResources().getString(R.string.notificationCount), "" + count);
         NotificationManagerCompat notificationManager = NotificationManagerCompat.from(context);
 
-        Realm mRealm = AppController.getRealmobj(context);
+        Realm realm = AppController.getRealmobj(context);
         DBServiceSubscriber dbServiceSubscriber = new DBServiceSubscriber();
-        UserProfileData mUserProfileData = dbServiceSubscriber.getUserProfileData(mRealm);
-        StudyList studyList = dbServiceSubscriber.getStudiesDetails(studyId, mRealm);
+        UserProfileData userProfileData = dbServiceSubscriber.getUserProfileData(realm);
+        StudyList studyList = dbServiceSubscriber.getStudiesDetails(studyId, realm);
         boolean isNotification = true;
-        if (mUserProfileData != null) {
-          isNotification = mUserProfileData.getSettings().isLocalNotifications();
+        if (userProfileData != null) {
+          isNotification = userProfileData.getSettings().isLocalNotifications();
         }
         if (!studyList.getStatus().equalsIgnoreCase("paused")
             && (isNotification
@@ -261,13 +262,13 @@ public class AlarmReceiver extends BroadcastReceiver {
           if (type.equalsIgnoreCase(
               NotificationModuleSubscriber.NOTIFICATION_TURN_OFF_NOTIFICATION)) {
             NotificationModuleSubscriber notificationModuleSubscriber =
-                new NotificationModuleSubscriber(dbServiceSubscriber, mRealm);
+                new NotificationModuleSubscriber(dbServiceSubscriber, realm);
             notificationModuleSubscriber.generateNotificationTurnOffNotification(
                 Calendar.getInstance().getTime(), context);
           }
         }
 
-        dbServiceSubscriber.closeRealmObj(mRealm);
+        dbServiceSubscriber.closeRealmObj(realm);
       } catch (NumberFormatException | Resources.NotFoundException e) {
         Logger.log(e);
       } catch (Exception e) {

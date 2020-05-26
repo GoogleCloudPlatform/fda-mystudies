@@ -16,6 +16,7 @@
 package com.harvard.eligibilitymodule;
 
 import static com.harvard.studyappmodule.StudyFragment.CONSENT;
+
 import android.content.ComponentName;
 import android.content.Intent;
 import android.os.Bundle;

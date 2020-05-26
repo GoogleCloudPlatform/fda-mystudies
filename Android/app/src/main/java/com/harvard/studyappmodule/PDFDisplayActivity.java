@@ -78,7 +78,7 @@ public class PDFDisplayActivity extends AppCompatActivity
 
     studyId = getIntent().getStringExtra("studyId");
     title = getIntent().getStringExtra("title");
-    ConsentPdfData studies = db.getPDFPath(studyId, realm);
+    ConsentPdfData studies = db.getPdfPath(studyId, realm);
     try {
       if (studies == null) {
         callGetConsentPdfWebservice();
@@ -86,7 +86,7 @@ public class PDFDisplayActivity extends AppCompatActivity
         File file = new File(studies.getPdfPath().toString());
         if (file.exists()) {
           CipherInputStream cis =
-              AppController.genarateDecryptedConsentPDF(studies.getPdfPath().toString());
+              AppController.genarateDecryptedConsentPdf(studies.getPdfPath().toString());
           // we will get byte array pass to pdf view
           bytesArray = AppController.cipherInputStreamConvertToByte(cis);
           setPdfView();
@@ -187,7 +187,7 @@ public class PDFDisplayActivity extends AppCompatActivity
     ConsentPDFEvent consentPdfEvent = new ConsentPDFEvent();
     consentPdfEvent.setRegistrationServerConsentConfigEvent(registrationServerConsentConfigEvent);
     UserModulePresenter userModulePresenter = new UserModulePresenter();
-    userModulePresenter.performConsentPDF(consentPdfEvent);
+    userModulePresenter.performConsentPdf(consentPdfEvent);
   }
 
   private void setPdfView() {
@@ -294,7 +294,7 @@ public class PDFDisplayActivity extends AppCompatActivity
         try {
 
           consentPdfData.setStudyId(studyId);
-          db.saveConsentPDF(this, consentPdfData);
+          db.saveConsentPdf(this, consentPdfData);
         } catch (Exception e) {
           Logger.log(e);
         }
@@ -312,7 +312,7 @@ public class PDFDisplayActivity extends AppCompatActivity
       AppController.getHelperSessionExpired(PDFDisplayActivity.this, errormsg);
     } else {
       try {
-        ConsentPDF consentPdfData = db.getConsentPDF(studyId, realm);
+        ConsentPDF consentPdfData = db.getConsentPdf(studyId, realm);
         if (consentPdfData != null) {
 
           try {

@@ -107,7 +107,7 @@ public class ChoiceAnswerFormatCustom extends AnswerFormatCustom {
   }
 
   /**
-   * Returns a copy of the choice array
+   * Returns a copy of the choice array.
    *
    * @return a copy of the choices for this question
    */

@@ -30,41 +30,41 @@ import com.harvard.utils.AppController;
 import com.harvard.utils.Logger;
 import com.harvard.utils.SharedPreferenceHelper;
 import com.harvard.utils.URLs;
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.StringReader;
 import java.net.HttpURLConnection;
 import java.util.HashMap;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 public class ApiCall<T, V> extends AsyncTask<T, String, String> {
 
-  private String mUrlPassed;
-  private HashMap<String, String> mHashmapData;
-  private JSONObject mJsonData;
-  private JSONArray mJsonArray;
-  private String mWebserviceType;
-  private Class<T> mGenericClass;
-  private Context mContext;
-  private HashMap<String, String> mHeadersData;
-  private HashMap<String, String> mFormData;
-  private HashMap<String, File> mFilesData;
-  private T t;
-  private OnAsyncRequestComplete mOnAsyncRequestComplete;
-  private int mResultCode;
-  private Responsemodel mResponseModel;
-  private boolean mShowAlert;
+  private String urlPassed;
+  private HashMap<String, String> hashmapData;
+  private JSONObject jsonData;
+  private JSONArray jsonArray;
+  private String webserviceType;
+  private Class<T> genericClass;
+  private Context context;
+  private HashMap<String, String> headersData;
+  private HashMap<String, String> formData;
+  private HashMap<String, File> filesData;
+  private T obj;
+  private OnAsyncRequestComplete onAsyncRequestComplete;
+  private int resultCode;
+  private Responsemodel responseModel;
+  private boolean showAlert;
   private String serverType;
 
-  public ApiCall(Context mContext) {
-    this.mContext = mContext;
+  public ApiCall(Context context) {
+    this.context = context;
   }
 
   /**
-   * To make a POST Hashmap request
+   * To make a POST Hashmap request.
    *
    * @param url url path
    * @param genericClass model class to parse
@@ -72,7 +72,7 @@ public class ApiCall<T, V> extends AsyncTask<T, String, String> {
    * @param hashMap params
    * @param resultCode call back code
    * @param v Activity context
-   * @param ShowAlert wherever to show alert
+   * @param showAlert wherever to show alert
    */
   public void apiCallPostHashmap(
       String url,
@@ -81,22 +81,22 @@ public class ApiCall<T, V> extends AsyncTask<T, String, String> {
       HashMap<String, String> hashMap,
       int resultCode,
       V v,
-      boolean ShowAlert,
+      boolean showAlert,
       String serverType) {
-    this.mUrlPassed = url;
-    this.mGenericClass = genericClass;
-    this.mHeadersData = headers;
-    this.mHashmapData = hashMap;
-    this.mWebserviceType = "post_hashmap";
-    this.mResultCode = resultCode;
-    this.mOnAsyncRequestComplete = (OnAsyncRequestComplete) v;
+    this.urlPassed = url;
+    this.genericClass = genericClass;
+    this.headersData = headers;
+    this.hashmapData = hashMap;
+    this.webserviceType = "post_hashmap";
+    this.resultCode = resultCode;
+    this.onAsyncRequestComplete = (OnAsyncRequestComplete) v;
     this.serverType = serverType;
-    this.mShowAlert = ShowAlert;
+    this.showAlert = showAlert;
     execute();
   }
 
   /**
-   * To make a POST Json request
+   * To make a POST Json request.
    *
    * @param url url path
    * @param genericClass model class to parse
@@ -104,7 +104,7 @@ public class ApiCall<T, V> extends AsyncTask<T, String, String> {
    * @param jsonData json object params
    * @param resultCode call back code
    * @param v activity context
-   * @param ShowAlert wherever to show alert
+   * @param showAlert wherever to show alert
    */
   public void apiCallPostJson(
       String url,
@@ -113,22 +113,22 @@ public class ApiCall<T, V> extends AsyncTask<T, String, String> {
       JSONObject jsonData,
       int resultCode,
       V v,
-      boolean ShowAlert,
+      boolean showAlert,
       String serverType) {
-    this.mUrlPassed = url;
-    this.mGenericClass = genericClass;
-    this.mHeadersData = headers;
-    this.mJsonData = jsonData;
-    this.mWebserviceType = "post_json";
-    this.mResultCode = resultCode;
-    this.mOnAsyncRequestComplete = (OnAsyncRequestComplete) v;
-    this.mShowAlert = ShowAlert;
+    this.urlPassed = url;
+    this.genericClass = genericClass;
+    this.headersData = headers;
+    this.jsonData = jsonData;
+    this.webserviceType = "post_json";
+    this.resultCode = resultCode;
+    this.onAsyncRequestComplete = (OnAsyncRequestComplete) v;
+    this.showAlert = showAlert;
     this.serverType = serverType;
     execute();
   }
 
   /**
-   * To make a DELETE Json request
+   * To make a DELETE Json request.
    *
    * @param url url path
    * @param genericClass model class to parse
@@ -136,7 +136,7 @@ public class ApiCall<T, V> extends AsyncTask<T, String, String> {
    * @param jsonData json object params
    * @param resultCode call back code
    * @param v activity context
-   * @param ShowAlert wherever to show alert
+   * @param showAlert wherever to show alert
    */
   public void apiCallDeleteJson(
       String url,
@@ -145,16 +145,16 @@ public class ApiCall<T, V> extends AsyncTask<T, String, String> {
       JSONObject jsonData,
       int resultCode,
       V v,
-      boolean ShowAlert,
+      boolean showAlert,
       String serverType) {
-    this.mUrlPassed = url;
-    this.mGenericClass = genericClass;
-    this.mHeadersData = headers;
-    this.mJsonData = jsonData;
-    this.mWebserviceType = "delete_json";
-    this.mResultCode = resultCode;
-    this.mOnAsyncRequestComplete = (OnAsyncRequestComplete) v;
-    this.mShowAlert = ShowAlert;
+    this.urlPassed = url;
+    this.genericClass = genericClass;
+    this.headersData = headers;
+    this.jsonData = jsonData;
+    this.webserviceType = "delete_json";
+    this.resultCode = resultCode;
+    this.onAsyncRequestComplete = (OnAsyncRequestComplete) v;
+    this.showAlert = showAlert;
     this.serverType = serverType;
     execute();
   }
@@ -166,64 +166,64 @@ public class ApiCall<T, V> extends AsyncTask<T, String, String> {
       JSONArray jsonArray,
       int resultCode,
       V v,
-      boolean ShowAlert,
+      boolean showAlert,
       String serverType) {
-    this.mUrlPassed = url;
-    this.mGenericClass = genericClass;
-    this.mHeadersData = headers;
-    this.mJsonArray = jsonArray;
-    this.mWebserviceType = "delete_jsonArray";
-    this.mResultCode = resultCode;
-    this.mOnAsyncRequestComplete = (OnAsyncRequestComplete) v;
-    this.mShowAlert = ShowAlert;
+    this.urlPassed = url;
+    this.genericClass = genericClass;
+    this.headersData = headers;
+    this.jsonArray = jsonArray;
+    this.webserviceType = "delete_jsonArray";
+    this.resultCode = resultCode;
+    this.onAsyncRequestComplete = (OnAsyncRequestComplete) v;
+    this.showAlert = showAlert;
     this.serverType = serverType;
     execute();
   }
 
   /**
-   * To make a POST Multi-part request
+   * To make a POST Multi-part request.
    *
    * @param url url path
    * @param genericClass model class to parse
    * @param headers null if no header to pass
-   * @param mFormData null if no form data
+   * @param formData null if no form data
    * @param files null if no files to upload
    * @param resultCode call back code
    * @param v activity context
-   * @param ShowAlert wherever to show alert
+   * @param showAlert wherever to show alert
    */
   public void apiCallMultipart(
       String url,
       Class<T> genericClass,
       HashMap<String, String> headers,
-      HashMap<String, String> mFormData,
+      HashMap<String, String> formData,
       HashMap<String, File> files,
       int resultCode,
       V v,
-      boolean ShowAlert,
+      boolean showAlert,
       String serverType) {
-    this.mUrlPassed = url;
-    this.mGenericClass = genericClass;
-    this.mHeadersData = headers;
-    this.mFormData = mFormData;
-    this.mFilesData = files;
-    this.mWebserviceType = "post_multi";
-    this.mResultCode = resultCode;
-    this.mOnAsyncRequestComplete = (OnAsyncRequestComplete) v;
+    this.urlPassed = url;
+    this.genericClass = genericClass;
+    this.headersData = headers;
+    this.formData = formData;
+    this.filesData = files;
+    this.webserviceType = "post_multi";
+    this.resultCode = resultCode;
+    this.onAsyncRequestComplete = (OnAsyncRequestComplete) v;
     this.serverType = serverType;
-    this.mShowAlert = ShowAlert;
+    this.showAlert = showAlert;
     execute();
   }
 
   /**
-   * To make a GET request
+   * To make a GET request.
    *
    * @param url url path
    * @param headers null if no header to pass
    * @param genericClass model class to parse
    * @param resultCode call back code
    * @param v activity context
-   * @param ShowAlert wherever to show alert
+   * @param showAlert wherever to show alert
    */
   public void apiCallGet(
       String url,
@@ -231,21 +231,21 @@ public class ApiCall<T, V> extends AsyncTask<T, String, String> {
       Class<T> genericClass,
       int resultCode,
       V v,
-      boolean ShowAlert,
+      boolean showAlert,
       String serverType) {
-    this.mUrlPassed = url;
-    this.mHeadersData = headers;
-    this.mGenericClass = genericClass;
-    this.mWebserviceType = "get";
-    this.mResultCode = resultCode;
-    this.mOnAsyncRequestComplete = (OnAsyncRequestComplete) v;
-    this.mShowAlert = ShowAlert;
+    this.urlPassed = url;
+    this.headersData = headers;
+    this.genericClass = genericClass;
+    this.webserviceType = "get";
+    this.resultCode = resultCode;
+    this.onAsyncRequestComplete = (OnAsyncRequestComplete) v;
+    this.showAlert = showAlert;
     this.serverType = serverType;
     execute();
   }
 
   /**
-   * To make a DELETE Hashmap request
+   * To make a DELETE Hashmap request.
    *
    * @param url url path
    * @param genericClass model class to parse
@@ -253,7 +253,7 @@ public class ApiCall<T, V> extends AsyncTask<T, String, String> {
    * @param hashMap params
    * @param resultCode call back code
    * @param v Activity context
-   * @param ShowAlert wherever to show alert
+   * @param showAlert wherever to show alert
    */
   public void apiCallDeleteHashmap(
       String url,
@@ -262,16 +262,16 @@ public class ApiCall<T, V> extends AsyncTask<T, String, String> {
       HashMap<String, String> hashMap,
       int resultCode,
       V v,
-      boolean ShowAlert,
+      boolean showAlert,
       String serverType) {
-    this.mUrlPassed = url;
-    this.mGenericClass = genericClass;
-    this.mHeadersData = headers;
-    this.mHashmapData = hashMap;
-    this.mWebserviceType = "delete_hashmap";
-    this.mResultCode = resultCode;
-    this.mOnAsyncRequestComplete = (OnAsyncRequestComplete) v;
-    this.mShowAlert = ShowAlert;
+    this.urlPassed = url;
+    this.genericClass = genericClass;
+    this.headersData = headers;
+    this.hashmapData = hashMap;
+    this.webserviceType = "delete_hashmap";
+    this.resultCode = resultCode;
+    this.onAsyncRequestComplete = (OnAsyncRequestComplete) v;
+    this.showAlert = showAlert;
     this.serverType = serverType;
     execute();
   }
@@ -297,69 +297,69 @@ public class ApiCall<T, V> extends AsyncTask<T, String, String> {
   protected final String doInBackground(T... params) {
 
     String responseCode;
-    ConnectionDetector connectionDetector = new ConnectionDetector(mContext);
+    ConnectionDetector connectionDetector = new ConnectionDetector(context);
     String response;
     if (connectionDetector.isConnectingToInternet()) {
-      if (mHeadersData != null
-          && (mHeadersData.containsKey("accessToken") || mHeadersData.containsKey("auth"))) {
-        mHeadersData.put(
+      if (headersData != null
+          && (headersData.containsKey("accessToken") || headersData.containsKey("auth"))) {
+        headersData.put(
             AppConfig.CLIENT_TOKEN,
             AppController.getHelperSharedPreference()
-                .readPreference(mContext, mContext.getString(R.string.clientToken), ""));
+                .readPreference(context, context.getString(R.string.clientToken), ""));
       }
 
-      switch (mWebserviceType) {
+      switch (webserviceType) {
         case "get":
-          mResponseModel = HttpRequest.getRequest(mUrlPassed, mHeadersData, serverType);
+          responseModel = HttpRequest.getRequest(urlPassed, headersData, serverType);
           break;
         case "post_hashmap":
-          mResponseModel =
+          responseModel =
               HttpRequest.postRequestsWithHashmap(
-                  mUrlPassed, mHashmapData, mHeadersData, serverType);
+                  urlPassed, hashmapData, headersData, serverType);
           break;
         case "post_json":
-          mResponseModel =
-              HttpRequest.makePostRequestWithJson(mUrlPassed, mJsonData, mHeadersData, serverType);
+          responseModel =
+              HttpRequest.makePostRequestWithJson(urlPassed, jsonData, headersData, serverType);
           break;
         case "post_multi":
-          mResponseModel =
+          responseModel =
               HttpRequest.postRequestMultipart(
-                  mUrlPassed, mHeadersData, mFormData, mFilesData, serverType);
+                  urlPassed, headersData, formData, filesData, serverType);
           break;
         case "delete_hashmap":
-          mResponseModel =
+          responseModel =
               HttpRequest.deleteRequestsWithHashmap(
-                  mUrlPassed, mHashmapData, mHeadersData, serverType);
+                  urlPassed, hashmapData, headersData, serverType);
           break;
         case "delete_json":
-          mResponseModel =
+          responseModel =
               HttpRequest.makeDeleteRequestWithJson(
-                  mUrlPassed, mJsonData, mHeadersData, serverType);
+                  urlPassed, jsonData, headersData, serverType);
           break;
         case "delete_jsonArray":
-          mResponseModel =
+          responseModel =
               HttpRequest.makeDeleteRequestWithJsonArray(
-                  mUrlPassed, mJsonArray, mHeadersData, serverType);
+                  urlPassed, jsonArray, headersData, serverType);
           break;
       }
       String url = "";
-      if (url.equalsIgnoreCase(mUrlPassed)) {
+      if (url.equalsIgnoreCase(urlPassed)) {
         responseCode = "200";
         response = "";
         try {
-          JSONObject jsonObject = new JSONObject(loadJSONFromAsset());
+          JSONObject jsonObject = new JSONObject(loadJsonFromAsset());
           response = jsonObject.toString();
-          mResponseModel = new Responsemodel();
-          mResponseModel.setResponse(response);
-          mResponseModel.setResponseCode(responseCode);
-          mResponseModel.setResponseData(response);
-          mResponseModel.setServermsg("success");
+          responseModel = new Responsemodel();
+          responseModel.setResponse(response);
+          responseModel.setResponseCode(responseCode);
+          responseModel.setResponseData(response);
+          responseModel.setServermsg("success");
         } catch (JSONException e) {
           Logger.log(e);
         }
       } else {
-        responseCode = mResponseModel.getResponseCode();
-        response = mResponseModel.getResponse();
+        responseCode = responseModel.getResponseCode();
+        response = responseModel.getResponse();
       }
       if (responseCode.equalsIgnoreCase("0") && response.equalsIgnoreCase("timeout")) {
         response = "timeout";
@@ -382,14 +382,14 @@ public class ApiCall<T, V> extends AsyncTask<T, String, String> {
       } else if (Integer.parseInt(responseCode) == HttpURLConnection.HTTP_UNAUTHORIZED) {
         response = "session expired";
 
-        if (!this.mUrlPassed.contains(URLs.LOGIN)) {
+        if (!this.urlPassed.contains(URLs.LOGIN)) {
           String refreshTokenUrl = URLs.REFRESH_TOKEN;
           JSONObject refreshTokenJsonData = new JSONObject();
           try {
             refreshTokenJsonData.put(
                 "refreshToken",
                 AppController.getHelperSharedPreference()
-                    .readPreference(mContext, mContext.getString(R.string.refreshToken), ""));
+                    .readPreference(context, context.getString(R.string.refreshToken), ""));
           } catch (JSONException e) {
             Logger.log(e);
           }
@@ -397,81 +397,81 @@ public class ApiCall<T, V> extends AsyncTask<T, String, String> {
           refreshTokenHeader.put(
               "userId",
               SharedPreferenceHelper.readPreference(
-                  mContext, mContext.getString(R.string.userid), ""));
+                  context, context.getString(R.string.userid), ""));
 
-          mResponseModel =
+          responseModel =
               HttpRequest.makePostRequestWithJsonRefreshToken(
                   refreshTokenUrl, refreshTokenJsonData, refreshTokenHeader, "");
-          String s = checkResponse(true, mResponseModel, HttpURLConnection.HTTP_FORBIDDEN);
+          String s = checkResponse(true, responseModel, HttpURLConnection.HTTP_FORBIDDEN);
           if (s.equalsIgnoreCase("success")) {
-            if (mHeadersData != null
-                && (mHeadersData.containsKey("accessToken") || mHeadersData.containsKey("auth"))) {
+            if (headersData != null
+                && (headersData.containsKey("accessToken") || headersData.containsKey("auth"))) {
               String s1 =
                   AppController.getHelperSharedPreference()
-                      .readPreference(mContext, mContext.getString(R.string.auth), "");
-              mHeadersData.put("accessToken", "" + s1);
+                      .readPreference(context, context.getString(R.string.auth), "");
+              headersData.put("accessToken", "" + s1);
             }
-            if (mHeadersData != null
-                && (mHeadersData.containsKey("accessToken") || mHeadersData.containsKey("auth"))) {
-              mHeadersData.put(
+            if (headersData != null
+                && (headersData.containsKey("accessToken") || headersData.containsKey("auth"))) {
+              headersData.put(
                   AppConfig.CLIENT_TOKEN,
                   AppController.getHelperSharedPreference()
-                      .readPreference(mContext, mContext.getString(R.string.clientToken), ""));
+                      .readPreference(context, context.getString(R.string.clientToken), ""));
             }
-            switch (mWebserviceType) {
+            switch (webserviceType) {
               case "get":
-                mResponseModel = HttpRequest.getRequest(mUrlPassed, mHeadersData, serverType);
+                responseModel = HttpRequest.getRequest(urlPassed, headersData, serverType);
                 break;
               case "post_hashmap":
-                mResponseModel =
+                responseModel =
                     HttpRequest.postRequestsWithHashmap(
-                        mUrlPassed, mHashmapData, mHeadersData, serverType);
+                        urlPassed, hashmapData, headersData, serverType);
                 break;
               case "post_json":
-                mResponseModel =
+                responseModel =
                     HttpRequest.makePostRequestWithJson(
-                        mUrlPassed, mJsonData, mHeadersData, serverType);
+                        urlPassed, jsonData, headersData, serverType);
                 break;
               case "post_multi":
-                mResponseModel =
+                responseModel =
                     HttpRequest.postRequestMultipart(
-                        mUrlPassed, mHeadersData, mFormData, mFilesData, serverType);
+                        urlPassed, headersData, formData, filesData, serverType);
                 break;
               case "delete_hashmap":
-                mResponseModel =
+                responseModel =
                     HttpRequest.deleteRequestsWithHashmap(
-                        mUrlPassed, mHashmapData, mHeadersData, serverType);
+                        urlPassed, hashmapData, headersData, serverType);
                 break;
               case "delete_json":
-                mResponseModel =
+                responseModel =
                     HttpRequest.makeDeleteRequestWithJson(
-                        mUrlPassed, mJsonData, mHeadersData, serverType);
+                        urlPassed, jsonData, headersData, serverType);
                 break;
               case "delete_jsonArray":
-                mResponseModel =
+                responseModel =
                     HttpRequest.makeDeleteRequestWithJsonArray(
-                        mUrlPassed, mJsonArray, mHeadersData, serverType);
+                        urlPassed, jsonArray, headersData, serverType);
                 break;
             }
-            response = checkResponse(false, mResponseModel, HttpURLConnection.HTTP_UNAUTHORIZED);
+            response = checkResponse(false, responseModel, HttpURLConnection.HTTP_UNAUTHORIZED);
           } else if (s.equalsIgnoreCase("session expired")
               || s.equalsIgnoreCase("Unknown error")
               || s.equalsIgnoreCase("server error")
               || s.equalsIgnoreCase("client error")
               || s.equalsIgnoreCase("No data")) {
-            mResponseModel.setResponseCode("401");
-            mResponseModel.setServermsg("session expired");
+            responseModel.setResponseCode("401");
+            responseModel.setServermsg("session expired");
           }
         }
       } else if (Integer.parseInt(responseCode) == HttpURLConnection.HTTP_OK
           && !response.equalsIgnoreCase("")) {
         response = "success";
 
-        t = parseJson(mResponseModel, mGenericClass);
-        if (mUrlPassed.contains(URLs.BASE_URL_WCP_SERVER + "activity")) {
+        obj = parseJson(responseModel, genericClass);
+        if (urlPassed.contains(URLs.BASE_URL_WCP_SERVER + "activity")) {
           try {
-            ActivityInfoData activityInfoData = (ActivityInfoData) t;
-            JSONObject jsonObject = new JSONObject(mResponseModel.getResponse());
+            ActivityInfoData activityInfoData = (ActivityInfoData) obj;
+            JSONObject jsonObject = new JSONObject(responseModel.getResponse());
             JSONObject jsonObjectActivity = jsonObject.getJSONObject("activity");
             JSONArray jsonArray = jsonObjectActivity.getJSONArray("steps");
             for (int i = 0; i < jsonArray.length(); i++) {
@@ -513,7 +513,7 @@ public class ApiCall<T, V> extends AsyncTask<T, String, String> {
                 }
               }
             }
-            t = (T) activityInfoData;
+            obj = (T) activityInfoData;
 
           } catch (Exception e) {
             Logger.log(e);
@@ -530,10 +530,10 @@ public class ApiCall<T, V> extends AsyncTask<T, String, String> {
 
   public void onPreExecute() {}
 
-  private String loadJSONFromAsset() {
+  private String loadJsonFromAsset() {
     String json = null;
     try {
-      InputStream is = mContext.getAssets().open("Activity_Question.json");
+      InputStream is = context.getAssets().open("Activity_Question.json");
       int size = is.available();
       byte[] buffer = new byte[size];
       is.read(buffer);
@@ -550,67 +550,67 @@ public class ApiCall<T, V> extends AsyncTask<T, String, String> {
     String msg;
     switch (response) {
       case "timeout":
-        msg = mResponseModel.getServermsg();
+        msg = responseModel.getServermsg();
         setShowalert(msg);
-        mOnAsyncRequestComplete.asyncResponseFailure(
-            mResultCode, msg, mResponseModel.getResponseCode());
+        onAsyncRequestComplete.asyncResponseFailure(
+            resultCode, msg, responseModel.getResponseCode());
         break;
       case "No network":
-        msg = mContext.getResources().getString(R.string.check_internet);
+        msg = context.getResources().getString(R.string.check_internet);
         setShowalert(msg);
-        mOnAsyncRequestComplete.asyncResponseFailure(mResultCode, msg, "");
+        onAsyncRequestComplete.asyncResponseFailure(resultCode, msg, "");
         break;
       case "error":
-        msg = mResponseModel.getServermsg();
+        msg = responseModel.getServermsg();
         setShowalert(msg);
-        mOnAsyncRequestComplete.asyncResponseFailure(
-            mResultCode, msg, mResponseModel.getResponseCode());
+        onAsyncRequestComplete.asyncResponseFailure(
+            resultCode, msg, responseModel.getResponseCode());
         break;
       case "":
-        msg = mContext.getResources().getString(R.string.unknown_error);
+        msg = context.getResources().getString(R.string.unknown_error);
         setShowalert(msg);
-        mOnAsyncRequestComplete.asyncResponseFailure(
-            mResultCode, msg, mResponseModel.getResponseCode());
+        onAsyncRequestComplete.asyncResponseFailure(
+            resultCode, msg, responseModel.getResponseCode());
         break;
       case "client error":
-        msg = mResponseModel.getServermsg();
+        msg = responseModel.getServermsg();
         setShowalert(msg);
-        mOnAsyncRequestComplete.asyncResponseFailure(
-            mResultCode, msg, mResponseModel.getResponseCode());
+        onAsyncRequestComplete.asyncResponseFailure(
+            resultCode, msg, responseModel.getResponseCode());
         break;
       case "server error":
-        msg = mResponseModel.getServermsg();
+        msg = responseModel.getServermsg();
         setShowalert(msg);
-        mOnAsyncRequestComplete.asyncResponseFailure(
-            mResultCode, msg, mResponseModel.getResponseCode());
+        onAsyncRequestComplete.asyncResponseFailure(
+            resultCode, msg, responseModel.getResponseCode());
         break;
       case "Unknown error":
-        msg = mResponseModel.getServermsg();
+        msg = responseModel.getServermsg();
         setShowalert(msg);
-        mOnAsyncRequestComplete.asyncResponseFailure(
-            mResultCode, msg, mResponseModel.getResponseCode());
+        onAsyncRequestComplete.asyncResponseFailure(
+            resultCode, msg, responseModel.getResponseCode());
         break;
       case "No data":
-        msg = mResponseModel.getServermsg();
+        msg = responseModel.getServermsg();
         setShowalert(msg);
-        mOnAsyncRequestComplete.asyncResponseFailure(
-            mResultCode, msg, mResponseModel.getResponseCode());
+        onAsyncRequestComplete.asyncResponseFailure(
+            resultCode, msg, responseModel.getResponseCode());
         break;
       case "session expired":
-        msg = mResponseModel.getServermsg();
-        mOnAsyncRequestComplete.asyncResponseFailure(
-            mResultCode, msg, mResponseModel.getResponseCode());
+        msg = responseModel.getServermsg();
+        onAsyncRequestComplete.asyncResponseFailure(
+            resultCode, msg, responseModel.getResponseCode());
         break;
       case "success":
-        mOnAsyncRequestComplete.asyncResponse(t, mResultCode);
+        onAsyncRequestComplete.asyncResponse(obj, resultCode);
         break;
     }
   }
 
   private String checkResponse(
-      boolean forRefreshToken, Responsemodel mResponseModel, int httpUnauthorized) {
-    String responseCode = mResponseModel.getResponseCode();
-    String response = mResponseModel.getResponse();
+      boolean forRefreshToken, Responsemodel responseModel, int httpUnauthorized) {
+    String responseCode = responseModel.getResponseCode();
+    String response = responseModel.getResponse();
 
     if (responseCode.equalsIgnoreCase("0") && response.equalsIgnoreCase("timeout")) {
       response = "timeout";
@@ -637,30 +637,30 @@ public class ApiCall<T, V> extends AsyncTask<T, String, String> {
       response = "success";
 
       if (forRefreshToken) {
-        t = parseJson(mResponseModel, RefreshToken.class);
-        RefreshToken refreshToken = (RefreshToken) t;
+        obj = parseJson(responseModel, RefreshToken.class);
+        RefreshToken refreshToken = (RefreshToken) obj;
         if (refreshToken != null) {
           AppController.getHelperSharedPreference()
-              .writePreference(mContext, mContext.getString(R.string.auth), refreshToken.getAuth());
+              .writePreference(context, context.getString(R.string.auth), refreshToken.getAuth());
           AppController.getHelperSharedPreference()
               .writePreference(
-                  mContext,
-                  mContext.getString(R.string.refreshToken),
+                  context,
+                  context.getString(R.string.refreshToken),
                   refreshToken.getRefreshToken());
           AppController.getHelperSharedPreference()
               .writePreference(
-                  mContext,
-                  mContext.getString(R.string.clientToken),
+                  context,
+                  context.getString(R.string.clientToken),
                   refreshToken.getClientToken());
         } else {
           response = "error";
         }
       } else {
-        t = parseJson(mResponseModel, mGenericClass);
-        if (mUrlPassed.contains(URLs.BASE_URL_WCP_SERVER + "activity")) {
+        obj = parseJson(responseModel, genericClass);
+        if (urlPassed.contains(URLs.BASE_URL_WCP_SERVER + "activity")) {
           try {
-            ActivityInfoData activityInfoData = (ActivityInfoData) t;
-            JSONObject jsonObject = new JSONObject(mResponseModel.getResponse());
+            ActivityInfoData activityInfoData = (ActivityInfoData) obj;
+            JSONObject jsonObject = new JSONObject(responseModel.getResponse());
             JSONObject jsonObjectActivity = jsonObject.getJSONObject("activity");
             JSONArray jsonArray = jsonObjectActivity.getJSONArray("steps");
             for (int i = 0; i < jsonArray.length(); i++) {
@@ -702,7 +702,7 @@ public class ApiCall<T, V> extends AsyncTask<T, String, String> {
                 }
               }
             }
-            t = (T) activityInfoData;
+            obj = (T) activityInfoData;
 
           } catch (Exception e) {
             Logger.log(e);
@@ -714,17 +714,17 @@ public class ApiCall<T, V> extends AsyncTask<T, String, String> {
   }
 
   private void setShowalert(String msg) {
-    if (mShowAlert) {
+    if (showAlert) {
       AlertDialog.Builder alertDialogBuilder =
-          new AlertDialog.Builder(mContext, R.style.MyAlertDialogStyle);
+          new AlertDialog.Builder(context, R.style.MyAlertDialogStyle);
       alertDialogBuilder.setTitle(
-          mContext.getApplicationInfo().loadLabel(mContext.getPackageManager()).toString());
+          context.getApplicationInfo().loadLabel(context.getPackageManager()).toString());
 
       alertDialogBuilder
           .setMessage(msg)
           .setCancelable(false)
           .setPositiveButton(
-              mContext.getResources().getString(R.string.ok),
+              context.getResources().getString(R.string.ok),
               new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog, int id) {
                   dialog.dismiss();
@@ -735,12 +735,12 @@ public class ApiCall<T, V> extends AsyncTask<T, String, String> {
     }
   }
 
-  private T parseJson(Responsemodel mResponseModel, Class mGenericClass) {
+  private T parseJson(Responsemodel responseModel, Class genericClass) {
     Gson gson = new Gson();
     try {
-      JsonReader reader = new JsonReader(new StringReader(mResponseModel.getResponse()));
+      JsonReader reader = new JsonReader(new StringReader(responseModel.getResponse()));
       reader.setLenient(true);
-      return gson.fromJson(reader, mGenericClass);
+      return gson.fromJson(reader, genericClass);
     } catch (Exception e) {
       Logger.log(e);
       return null;

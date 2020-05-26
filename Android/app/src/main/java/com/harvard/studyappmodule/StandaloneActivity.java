@@ -66,17 +66,17 @@ import com.harvard.webservicemodule.apihelper.Responsemodel;
 import com.harvard.webservicemodule.events.RegistrationServerConsentConfigEvent;
 import com.harvard.webservicemodule.events.RegistrationServerEnrollmentConfigEvent;
 import com.harvard.webservicemodule.events.WCPConfigEvent;
-import org.researchstack.backbone.step.Step;
-import org.researchstack.backbone.task.OrderedTask;
-import org.researchstack.backbone.task.Task;
+import io.realm.Realm;
+import io.realm.RealmList;
+import io.realm.RealmObject;
 import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import io.realm.Realm;
-import io.realm.RealmList;
-import io.realm.RealmObject;
+import org.researchstack.backbone.step.Step;
+import org.researchstack.backbone.task.OrderedTask;
+import org.researchstack.backbone.task.Task;
 
 public class StandaloneActivity extends AppCompatActivity
     implements ApiCall.OnAsyncRequestComplete {
@@ -867,7 +867,7 @@ public class StandaloneActivity extends AppCompatActivity
             StandaloneActivity.this);
     consentPdfEvent.setRegistrationServerConsentConfigEvent(registrationServerConsentConfigEvent);
     UserModulePresenter userModulePresenter = new UserModulePresenter();
-    userModulePresenter.performConsentPDF(consentPdfEvent);
+    userModulePresenter.performConsentPdf(consentPdfEvent);
   }
 
   private void callConsentMetaDataWebservice() {

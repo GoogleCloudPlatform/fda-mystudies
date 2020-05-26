@@ -277,7 +277,7 @@ public class SurveyActivitiesListAdapter
       SimpleDateFormat simpleDateFormat = AppController.getDateFormat();
       SimpleDateFormat simpleDateFormat1 = AppController.getDateFormatType12();
       SimpleDateFormat simpleDateFormat2 = AppController.getDateFormatType9();
-      SimpleDateFormat simpleDateFormat5 = AppController.getDateFormatUTC1();
+      SimpleDateFormat simpleDateFormat5 = AppController.getDateFormatUtc1();
       try {
         if (!items.get(position).getStartTime().equalsIgnoreCase("")) {
           startDate = simpleDateFormat5.parse(items.get(position).getStartTime().split("\\.")[0]);
@@ -305,7 +305,7 @@ public class SurveyActivitiesListAdapter
                     items.get(position).getFrequency().getRuns().get(i).getStartTime().toString();
                 SimpleDateFormat sdf = AppController.getHourMinuteSecondFormat();
                 Date date = sdf.parse(myDateString);
-                SimpleDateFormat dateFormat = AppController.getHourAMPMFormat1();
+                SimpleDateFormat dateFormat = AppController.getHourAmPmFormat1();
                 String formattedDate = dateFormat.format(date).toString();
                 if (i == 0) {
                   abc = formattedDate;
@@ -339,9 +339,9 @@ public class SurveyActivitiesListAdapter
         try {
           String myDateString = items.get(position).getStartTime().toString();
           Date date = simpleDateFormat5.parse(myDateString.split("\\.")[0]);
-          SimpleDateFormat dateFormat1 = AppController.getHourAMPMFormat1();
+          SimpleDateFormat dateFormat1 = AppController.getHourAmPmFormat1();
           String formattedDate1 = dateFormat1.format(date).toString();
-          SimpleDateFormat dateFormat2 = AppController.getDDFormat();
+          SimpleDateFormat dateFormat2 = AppController.getDdFormat();
           String formattedDate2 = dateFormat2.format(date).toString();
           String text =
               formattedDate1
@@ -372,9 +372,9 @@ public class SurveyActivitiesListAdapter
         try {
           String myDateString = items.get(position).getStartTime().toString();
           Date date = simpleDateFormat5.parse(myDateString.split("\\.")[0]);
-          SimpleDateFormat dateFormat1 = AppController.getHourAMPMFormat1();
+          SimpleDateFormat dateFormat1 = AppController.getHourAmPmFormat1();
           String formattedDate1 = dateFormat1.format(date).toString();
-          SimpleDateFormat dateFormat2 = AppController.getEEFormat();
+          SimpleDateFormat dateFormat2 = AppController.getEeFormat();
           String formattedDate2 = dateFormat2.format(date).toString();
           String text = formattedDate1 + TEXT_EVERY + formattedDate2;
           holder.time.setText(text);
@@ -694,9 +694,9 @@ public class SurveyActivitiesListAdapter
 
   private String getDateFormatedString(String startTime) {
     try {
-      SimpleDateFormat sdf = AppController.getDateFormatUTC1();
+      SimpleDateFormat sdf = AppController.getDateFormatUtc1();
       Date date = sdf.parse(startTime);
-      SimpleDateFormat dateFormat1 = AppController.getHourAMPMMonthDayYearFormat();
+      SimpleDateFormat dateFormat1 = AppController.getHourAmPmMonthDayYearFormat();
       String formattedDate = dateFormat1.format(date).toString();
       return formattedDate;
     } catch (ParseException e) {
@@ -709,11 +709,11 @@ public class SurveyActivitiesListAdapter
     int pos = 0;
     try {
       if (!date1.isEmpty() && !date2.isEmpty()) {
-        Date time1 = AppController.getDateFormatUTC1().parse(date1);
+        Date time1 = AppController.getDateFormatUtc1().parse(date1);
         Calendar calendar1 = Calendar.getInstance();
         calendar1.setTime(time1);
 
-        Date time2 = AppController.getDateFormatUTC1().parse(date2);
+        Date time2 = AppController.getDateFormatUtc1().parse(date2);
         Calendar calendar2 = Calendar.getInstance();
         calendar2.setTime(time2);
 

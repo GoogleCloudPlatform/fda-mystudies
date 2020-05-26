@@ -53,9 +53,9 @@ import com.harvard.utils.SharedPreferenceHelper;
 import com.harvard.utils.URLs;
 import com.harvard.webservicemodule.apihelper.ApiCall;
 import com.harvard.webservicemodule.events.AuthServerConfigEvent;
-import java.util.HashMap;
 import io.realm.Realm;
 import io.realm.RealmResults;
+import java.util.HashMap;
 
 public class SurveyActivity extends AppCompatActivity
     implements View.OnClickListener,

@@ -1,5 +1,6 @@
 /*
  * Copyright © 2017-2019 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors.
+ * Copyright 2020 Google LLC
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction, including
  * without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
@@ -279,7 +280,7 @@ public class ResourcesWebViewActivity extends AppCompatActivity {
 
   class DownloadFileFromUrl extends AsyncTask<String, String, String> {
 
-    /** Before starting background thread Show Progress Bar Dialog */
+    /** Before starting background thread Show Progress Bar Dialog. */
     String downloadUrl = "";
 
     String filePath = "";
@@ -298,7 +299,7 @@ public class ResourcesWebViewActivity extends AppCompatActivity {
           .showProgress(ResourcesWebViewActivity.this, "", "", false);
     }
 
-    /** Downloading file in background thread */
+    /** Downloading file in background thread. */
     @Override
     protected String doInBackground(String... url1) {
       int count;
@@ -347,14 +348,14 @@ public class ResourcesWebViewActivity extends AppCompatActivity {
       return null;
     }
 
-    /** After completing background task Dismiss the progress dialog */
+    /** After completing background task Dismiss the progress dialog. */
     @Override
     protected void onPostExecute(String url) {
       try {
         // downlaod success mean file exist else check offline file
         File file = new File(filePath + fileName + ".pdf");
         if (file.exists()) {
-          AppController.genarateEncryptedConsentPDF(filePath, fileName);
+          AppController.genarateEncryptedConsentPdf(filePath, fileName);
           displayPdfView(filePath + fileName + ".pdf");
         } else {
           // offline functionality
@@ -395,7 +396,7 @@ public class ResourcesWebViewActivity extends AppCompatActivity {
 
   private File getEncryptedFilePath(String filePath) {
     try {
-      CipherInputStream cis = AppController.genarateDecryptedConsentPDF(filePath);
+      CipherInputStream cis = AppController.genarateDecryptedConsentPdf(filePath);
       byte[] byteArray = AppController.cipherInputStreamConvertToByte(cis);
       File file = new File(downloadedFilePath + fileName + ".pdf");
       if (!file.exists() && file == null) {

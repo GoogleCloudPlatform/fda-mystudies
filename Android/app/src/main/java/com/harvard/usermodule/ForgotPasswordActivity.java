@@ -37,15 +37,15 @@ public class ForgotPasswordActivity extends AppCompatActivity
     implements ApiCall.OnAsyncRequestComplete {
 
   private static final int FORGOT_PASSWORD_REQUEST = 10;
-  private RelativeLayout mBackBtn;
-  private AppCompatTextView mTitle;
-  private RelativeLayout mCancelBtn;
-  private AppCompatTextView mCancelTxt;
-  private AppCompatEditText mEmail;
-  private AppCompatTextView mSubmitButton;
-  private final int RESEND_CONFIRMATION = 101;
+  private RelativeLayout backBtn;
+  private AppCompatTextView title;
+  private RelativeLayout cancelBtn;
+  private AppCompatTextView cancelTxt;
+  private AppCompatEditText email;
+  private AppCompatTextView submitButton;
+  private static final int RESEND_CONFIRMATION = 101;
   public static String FROM = "ForgotPasswordActivity";
-  private int GO_TO_SIGNIN = 111;
+  private static final int GO_TO_SIGNIN = 111;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -58,32 +58,32 @@ public class ForgotPasswordActivity extends AppCompatActivity
   }
 
   private void initializeXmlId() {
-    mBackBtn = (RelativeLayout) findViewById(R.id.backBtn);
-    mTitle = (AppCompatTextView) findViewById(R.id.title);
-    mCancelBtn = (RelativeLayout) findViewById(R.id.cancelBtn);
-    mCancelTxt = (AppCompatTextView) findViewById(R.id.cancelTxt);
-    mEmail = (AppCompatEditText) findViewById(R.id.edittxt_email);
-    mSubmitButton = (AppCompatTextView) findViewById(R.id.submitButton);
+    backBtn = (RelativeLayout) findViewById(R.id.backBtn);
+    title = (AppCompatTextView) findViewById(R.id.title);
+    cancelBtn = (RelativeLayout) findViewById(R.id.cancelBtn);
+    cancelTxt = (AppCompatTextView) findViewById(R.id.cancelTxt);
+    email = (AppCompatEditText) findViewById(R.id.edittxt_email);
+    submitButton = (AppCompatTextView) findViewById(R.id.submitButton);
   }
 
   private void setTextForView() {
-    mCancelBtn.setVisibility(View.GONE);
-    mTitle.setText(getResources().getString(R.string.forgot_password_heading));
+    cancelBtn.setVisibility(View.GONE);
+    title.setText(getResources().getString(R.string.forgot_password_heading));
   }
 
   private void setFont() {
     try {
-      mTitle.setTypeface(AppController.getTypeface(ForgotPasswordActivity.this, "medium"));
-      mCancelTxt.setTypeface(AppController.getTypeface(ForgotPasswordActivity.this, "medium"));
-      mEmail.setTypeface(AppController.getTypeface(ForgotPasswordActivity.this, "regular"));
-      mSubmitButton.setTypeface(AppController.getTypeface(ForgotPasswordActivity.this, "regular"));
+      title.setTypeface(AppController.getTypeface(ForgotPasswordActivity.this, "medium"));
+      cancelTxt.setTypeface(AppController.getTypeface(ForgotPasswordActivity.this, "medium"));
+      email.setTypeface(AppController.getTypeface(ForgotPasswordActivity.this, "regular"));
+      submitButton.setTypeface(AppController.getTypeface(ForgotPasswordActivity.this, "regular"));
     } catch (Exception e) {
       Logger.log(e);
     }
   }
 
   private void bindEvents() {
-    mBackBtn.setOnClickListener(
+    backBtn.setOnClickListener(
         new View.OnClickListener() {
           @Override
           public void onClick(View view) {
@@ -96,7 +96,7 @@ public class ForgotPasswordActivity extends AppCompatActivity
           }
         });
 
-    mCancelBtn.setOnClickListener(
+    cancelBtn.setOnClickListener(
         new View.OnClickListener() {
           @Override
           public void onClick(View view) {
@@ -109,17 +109,17 @@ public class ForgotPasswordActivity extends AppCompatActivity
           }
         });
 
-    mSubmitButton.setOnClickListener(
+    submitButton.setOnClickListener(
         new View.OnClickListener() {
           @Override
           public void onClick(View view) {
-            if (mEmail.getText().toString().equalsIgnoreCase("")) {
+            if (email.getText().toString().equalsIgnoreCase("")) {
               Toast.makeText(
                       ForgotPasswordActivity.this,
                       getResources().getString(R.string.email_empty),
                       Toast.LENGTH_SHORT)
                   .show();
-            } else if (!AppController.getHelperIsValidEmail(mEmail.getText().toString())) {
+            } else if (!AppController.getHelperIsValidEmail(email.getText().toString())) {
               Toast.makeText(
                       ForgotPasswordActivity.this,
                       getResources().getString(R.string.email_validation),
@@ -137,7 +137,7 @@ public class ForgotPasswordActivity extends AppCompatActivity
   private void callForgotPasswordWebService() {
 
     HashMap<String, String> params = new HashMap<>();
-    params.put("emailId", mEmail.getText().toString());
+    params.put("emailId", email.getText().toString());
 
     ForgotPasswordEvent forgotPasswordEvent = new ForgotPasswordEvent();
     AuthServerConfigEvent authServerConfigEvent =
@@ -161,7 +161,7 @@ public class ForgotPasswordActivity extends AppCompatActivity
   public <T> void asyncResponse(T response, int responseCode) {
     AppController.getHelperProgressDialog().dismissDialog();
     if (responseCode == RESEND_CONFIRMATION) {
-
+      // for resend confirmation block
     } else {
       try {
         AppController.getHelperHideKeyboard(ForgotPasswordActivity.this);
@@ -189,7 +189,7 @@ public class ForgotPasswordActivity extends AppCompatActivity
       intent.putExtra("userid", "");
       intent.putExtra("auth", "");
       intent.putExtra("verified", false);
-      intent.putExtra("email", mEmail.getText().toString());
+      intent.putExtra("email", email.getText().toString());
       startActivityForResult(intent, GO_TO_SIGNIN);
     } else {
       Toast.makeText(this, errormsg, Toast.LENGTH_SHORT).show();

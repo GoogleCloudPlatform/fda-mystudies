@@ -46,15 +46,22 @@ import com.harvard.studyappmodule.activitybuilder.model.servicemodel.ActivityObj
 import com.harvard.studyappmodule.activitybuilder.model.servicemodel.Steps;
 import com.harvard.studyappmodule.custom.ChoiceAnswerFormatCustom;
 import com.harvard.studyappmodule.custom.QuestionStepCustom;
+import com.harvard.studyappmodule.custom.StepSwitcherCustom;
 import com.harvard.studyappmodule.custom.result.StepRecordCustom;
 import com.harvard.studyappmodule.custom.result.TaskRecordCustom;
-import com.harvard.studyappmodule.custom.StepSwitcherCustom;
 import com.harvard.studyappmodule.studymodel.NotificationDbResources;
 import com.harvard.studyappmodule.studymodel.Resource;
 import com.harvard.studyappmodule.studymodel.StudyHome;
 import com.harvard.utils.ActiveTaskService;
 import com.harvard.utils.AppController;
 import com.harvard.utils.Logger;
+import io.realm.Realm;
+import io.realm.RealmList;
+import io.realm.RealmResults;
+import java.lang.reflect.Constructor;
+import java.text.ParseException;
+import java.util.Calendar;
+import java.util.Date;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.researchstack.backbone.answerformat.ChoiceAnswerFormat;
@@ -67,13 +74,6 @@ import org.researchstack.backbone.task.Task;
 import org.researchstack.backbone.ui.callbacks.StepCallbacks;
 import org.researchstack.backbone.ui.step.layout.StepLayout;
 import org.researchstack.backbone.utils.FormatHelper;
-import java.lang.reflect.Constructor;
-import java.text.ParseException;
-import java.util.Calendar;
-import java.util.Date;
-import io.realm.Realm;
-import io.realm.RealmList;
-import io.realm.RealmResults;
 
 public class CustomSurveyViewTaskActivity<T> extends AppCompatActivity implements StepCallbacks {
   public static final String EXTRA_STUDYID = "ViewTaskActivity.ExtraStudyId";

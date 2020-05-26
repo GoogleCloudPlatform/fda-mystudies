@@ -237,7 +237,7 @@ public class ConsentCompletedActivity extends AppCompatActivity {
 
   private File getEncryptedFilePath(String filePath) {
     try {
-      CipherInputStream cis = AppController.genarateDecryptedConsentPDF(filePath);
+      CipherInputStream cis = AppController.genarateDecryptedConsentPdf(filePath);
       byte[] byteArray = AppController.cipherInputStreamConvertToByte(cis);
       File file = new File("/data/data/" + getPackageName() + "/files/" + "temp" + ".pdf");
       if (!file.exists() && file == null) {

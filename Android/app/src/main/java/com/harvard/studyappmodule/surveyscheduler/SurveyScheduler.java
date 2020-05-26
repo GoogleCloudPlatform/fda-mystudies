@@ -67,7 +67,7 @@ public class SurveyScheduler {
       if (userPreferences.getStudies().get(i).getStudyId().equalsIgnoreCase(studyId)) {
         try {
           joiningTime =
-              AppController.getDateFormatUTC()
+              AppController.getDateFormatUtc()
                   .parse(userPreferences.getStudies().get(i).getEnrolledDate());
         } catch (ParseException e) {
           Logger.log(e);
@@ -257,7 +257,7 @@ public class SurveyScheduler {
 
   private void setOneTimeRun(ActivitiesWS activity, int offset) {
     if (startTime != null) {
-      SimpleDateFormat simpleDateFormat = AppController.getDateFormatUTC1();
+      SimpleDateFormat simpleDateFormat = AppController.getDateFormatUtc1();
       ActivityRun activityRun = null;
       Calendar calendarStart = Calendar.getInstance();
       try {
@@ -382,7 +382,7 @@ public class SurveyScheduler {
 
       int run = 1;
       for (int j = 0; j < activity.getFrequency().getRuns().size(); j++) {
-        SimpleDateFormat simpleDateFormat = AppController.getDateFormatUTC1();
+        SimpleDateFormat simpleDateFormat = AppController.getDateFormatUtc1();
         ActivityRun activityRun = null;
         try {
           if (joiningTime.after(
@@ -520,7 +520,7 @@ public class SurveyScheduler {
     }
   }
 
-  /** get activity run for insert */
+  /** get activity run for insert. */
   private ActivityRun getActivityRun(
       String activityId,
       String studyId,
@@ -563,7 +563,7 @@ public class SurveyScheduler {
     Date currentRunEndDate = null;
     boolean runAvailable = false;
     Activities activitiesForStatus = null;
-    SimpleDateFormat simpleDateFormat = AppController.getDateFormatUTC();
+    SimpleDateFormat simpleDateFormat = AppController.getDateFormatUtc();
 
     ActivityRun activityRun = null;
     ActivityRun activityPreviousRun = null;
@@ -695,7 +695,7 @@ public class SurveyScheduler {
     int missed = 0;
     int total = 0;
 
-    SimpleDateFormat simpleDateFormat = AppController.getDateFormatUTC1();
+    SimpleDateFormat simpleDateFormat = AppController.getDateFormatUtc1();
     ActivityData activityData = dbServiceSubscriber.getActivityPreference(studyId, realm);
     ActivityListData activityListDataDB = dbServiceSubscriber.getActivities(studyId, realm);
     Date currentDate = new Date();

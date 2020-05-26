@@ -10,7 +10,6 @@ package com.harvard.studyappmodule.consent;
 
 import android.content.Context;
 import android.content.res.AssetManager;
-
 import com.harvard.utils.Logger;
 import com.tom_roush.pdfbox.pdmodel.PDDocument;
 import com.tom_roush.pdfbox.pdmodel.PDPage;
@@ -21,7 +20,6 @@ import com.tom_roush.pdfbox.pdmodel.font.PDType0Font;
 import com.tom_roush.pdfbox.pdmodel.font.PDType1Font;
 import com.tom_roush.pdfbox.pdmodel.graphics.image.PDImageXObject;
 import com.tom_roush.pdfbox.util.PDFBoxResourceLoader;
-
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;

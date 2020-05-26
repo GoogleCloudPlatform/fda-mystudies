@@ -1,5 +1,6 @@
 /*
  * Copyright © 2017-2019 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors.
+ * Copyright 2020 Google LLC
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction, including
  * without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
@@ -249,7 +250,7 @@ public class PasscodeView extends ViewGroup {
   }
 
   /**
-   * Get the {@link Editable} from the EditText
+   * Get the {@link Editable} from the EditText.
    *
    * @return
    */
@@ -258,7 +259,7 @@ public class PasscodeView extends ViewGroup {
   }
 
   /**
-   * Set text to the EditText
+   * Set text to the EditText.
    *
    * @param text
    */
@@ -270,7 +271,7 @@ public class PasscodeView extends ViewGroup {
     invalidateChildViews();
   }
 
-  /** Clear passcode input */
+  /** Clear passcode input. */
   public void clearText() {
     editText.setText("");
     invalidateChildViews();
@@ -295,7 +296,7 @@ public class PasscodeView extends ViewGroup {
     return super.onTouchEvent(event);
   }
 
-  /** Requests the view to be focused and the keyboard to be popped-up */
+  /** Requests the view to be focused and the keyboard to be popped-up. */
   public void requestToShowKeyboard() {
     // Make sure this view is focused
     editText.requestFocus();
@@ -435,10 +436,10 @@ public class PasscodeView extends ViewGroup {
     }
   }
 
-  /** Listener that gets notified when the complete passcode has been entered */
+  /** Listener that gets notified when the complete passcode has been entered. */
   public interface PasscodeEntryListener {
     /**
-     * Called when all the digits of the passcode has been entered
+     * Called when all the digits of the passcode has been entered.
      *
      * @param passcode - The entered passcode
      */

@@ -41,19 +41,19 @@ import com.harvard.usermodule.webservicemodel.LoginData;
 import com.harvard.webservicemodule.apihelper.ApiCall;
 import com.harvard.webservicemodule.events.RegistrationServerEnrollmentConfigEvent;
 import com.harvard.webservicemodule.events.ResponseServerConfigEvent;
-import org.json.JSONException;
-import org.json.JSONObject;
-import java.util.Calendar;
-import java.util.HashMap;
 import io.realm.Realm;
 import io.realm.RealmResults;
+import java.util.Calendar;
+import java.util.HashMap;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 public class ActiveTaskService extends Service implements ApiCall.OnAsyncRequestComplete {
   private int sec;
-  private Thread t;
-  private int UPDATE_USERPREFERENCE_RESPONSECODE = 102;
+  private Thread obj;
+  private static final int UPDATE_USERPREFERENCE_RESPONSECODE = 102;
   private DBServiceSubscriber dbServiceSubscriber;
-  private Realm mRealm;
+  private Realm realm;
 
   @Override
   public void onCreate() {
@@ -65,12 +65,12 @@ public class ActiveTaskService extends Service implements ApiCall.OnAsyncRequest
 
   @Override
   public int onStartCommand(final Intent intent, int flags, int startId) {
-    if (intent != null)
+    if (intent != null) {
       if (intent.getStringExtra("broadcast") != null
           && intent.getStringExtra("broadcast").equalsIgnoreCase("yes")) {
         startAlarm();
       } else if (intent.getStringExtra("SyncAdapter") != null) {
-        mRealm = AppController.getRealmobj(this);
+        realm = AppController.getRealmobj(this);
         Bitmap icon = BitmapFactory.decodeResource(getResources(), R.mipmap.ic_launcher);
         Notification notification =
             new NotificationCompat.Builder(this)
@@ -108,7 +108,7 @@ public class ActiveTaskService extends Service implements ApiCall.OnAsyncRequest
               new Runnable() {
                 public void run() {
                   try {
-                    while (!t.isInterrupted()) {
+                    while (!obj.isInterrupted()) {
                       sec = sec + 1;
                       Intent i = new Intent("com.harvard.ActiveTask");
                       i.putExtra("sec", "" + sec);
@@ -124,16 +124,16 @@ public class ActiveTaskService extends Service implements ApiCall.OnAsyncRequest
                             .setContentText(getString(R.string.activetaskremindertxt))
                             .setChannelId(FDAApplication.NOTIFICATION_CHANNEL_ID_SERVICE);
 
-                        NotificationManager mNotificationManager =
+                        NotificationManager notificationManager =
                             (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-                        mNotificationManager.notify(sec, builder.build());
+                        notificationManager.notify(sec, builder.build());
                       }
 
                       if (sec >= Integer.parseInt(intent.getStringExtra("remaining_sec"))) {
-                        t.interrupt();
+                        obj.interrupt();
                         stopSelf();
                       }
-                      t.sleep(1000);
+                      obj.sleep(1000);
                     }
                   } catch (Exception e) {
                     Logger.log(e);
@@ -141,12 +141,13 @@ public class ActiveTaskService extends Service implements ApiCall.OnAsyncRequest
                 }
               };
 
-          t = new Thread(r);
-          t.start();
+          obj = new Thread(r);
+          obj.start();
         } catch (Exception e) {
           Logger.log(e);
         }
       }
+    }
     return Service.START_NOT_STICKY;
   }
 
@@ -160,7 +161,9 @@ public class ActiveTaskService extends Service implements ApiCall.OnAsyncRequest
   public void onDestroy() {
     super.onDestroy();
     try {
-      if (t != null) t.interrupt();
+      if (obj != null) {
+        obj.interrupt();
+      }
     } catch (Exception e) {
       Logger.log(e);
     }
@@ -186,7 +189,7 @@ public class ActiveTaskService extends Service implements ApiCall.OnAsyncRequest
     try {
       dbServiceSubscriber = new DBServiceSubscriber();
 
-      RealmResults<OfflineData> results = dbServiceSubscriber.getOfflineData(mRealm);
+      RealmResults<OfflineData> results = dbServiceSubscriber.getOfflineData(realm);
       if (!results.isEmpty()) {
         for (int i = 0; i < results.size(); i++) {
           String httpMethod = results.get(i).getHttpMethod();
@@ -198,7 +201,7 @@ public class ActiveTaskService extends Service implements ApiCall.OnAsyncRequest
           break;
         }
       } else {
-        dbServiceSubscriber.closeRealmObj(mRealm);
+        dbServiceSubscriber.closeRealmObj(realm);
         stopSelf();
       }
     } catch (Exception e) {
@@ -233,7 +236,7 @@ public class ActiveTaskService extends Service implements ApiCall.OnAsyncRequest
               .readPreference(this, getResources().getString(R.string.userid), ""));
 
       UpdatePreferenceEvent updatePreferenceEvent = new UpdatePreferenceEvent();
-      RegistrationServerEnrollmentConfigEvent RegistrationServerEnrollmentConfigEvent =
+      RegistrationServerEnrollmentConfigEvent registrationServerEnrollmentConfigEvent =
           new RegistrationServerEnrollmentConfigEvent(
               httpMethod,
               url,
@@ -246,7 +249,7 @@ public class ActiveTaskService extends Service implements ApiCall.OnAsyncRequest
               false,
               this);
       updatePreferenceEvent.setRegistrationServerEnrollmentConfigEvent(
-          RegistrationServerEnrollmentConfigEvent);
+          registrationServerEnrollmentConfigEvent);
       UserModulePresenter userModulePresenter = new UserModulePresenter();
       userModulePresenter.performUpdateUserPreference(updatePreferenceEvent);
     } else if (serverType.equalsIgnoreCase("ResponseServer")) {

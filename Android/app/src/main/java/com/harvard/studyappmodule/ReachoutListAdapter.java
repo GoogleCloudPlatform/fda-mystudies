@@ -1,5 +1,6 @@
 /*
  * Copyright © 2017-2019 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors.
+ * Copyright 2020 Google LLC
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction, including
  * without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
@@ -47,25 +48,27 @@ public class ReachoutListAdapter extends RecyclerView.Adapter<ReachoutListAdapte
 
   @Override
   public int getItemCount() {
-    if (items == null) return 0;
+    if (items == null) {
+      return 0;
+    }
     return items.size();
   }
 
   class Holder extends RecyclerView.ViewHolder {
 
-    final RelativeLayout mContainer;
-    final AppCompatTextView mReachoutTitle;
+    final RelativeLayout container;
+    final AppCompatTextView reachoutTitle;
 
     Holder(View itemView) {
       super(itemView);
-      mContainer = (RelativeLayout) itemView.findViewById(R.id.container);
-      mReachoutTitle = (AppCompatTextView) itemView.findViewById(R.id.reachoutTitle);
+      container = (RelativeLayout) itemView.findViewById(R.id.container);
+      reachoutTitle = (AppCompatTextView) itemView.findViewById(R.id.reachoutTitle);
       setFont();
     }
 
     private void setFont() {
       try {
-        mReachoutTitle.setTypeface(AppController.getTypeface(context, "regular"));
+        reachoutTitle.setTypeface(AppController.getTypeface(context, "regular"));
 
       } catch (Exception e) {
         Logger.log(e);
@@ -77,9 +80,9 @@ public class ReachoutListAdapter extends RecyclerView.Adapter<ReachoutListAdapte
   public void onBindViewHolder(final Holder holder, final int position) {
     final int i = holder.getAdapterPosition();
     try {
-      holder.mReachoutTitle.setText(items.get(position));
+      holder.reachoutTitle.setText(items.get(position));
 
-      holder.mContainer.setOnClickListener(
+      holder.container.setOnClickListener(
           new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -90,7 +93,7 @@ public class ReachoutListAdapter extends RecyclerView.Adapter<ReachoutListAdapte
     } catch (Exception e) {
       Logger.log(e);
     }
-    holder.mContainer.setOnClickListener(
+    holder.container.setOnClickListener(
         new View.OnClickListener() {
           @Override
           public void onClick(View view) {

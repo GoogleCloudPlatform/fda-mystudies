@@ -44,13 +44,13 @@ import com.harvard.utils.URLs;
 import com.harvard.webservicemodule.apihelper.ApiCall;
 import com.harvard.webservicemodule.events.RegistrationServerConfigEvent;
 import com.harvard.webservicemodule.events.WCPConfigEvent;
+import io.realm.Realm;
+import io.realm.RealmResults;
+import java.util.ArrayList;
+import java.util.HashMap;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import java.util.ArrayList;
-import java.util.HashMap;
-import io.realm.Realm;
-import io.realm.RealmResults;
 
 public class DeleteAccountActivity extends AppCompatActivity
     implements ApiCall.OnAsyncRequestComplete {
@@ -215,7 +215,9 @@ public class DeleteAccountActivity extends AppCompatActivity
         callGetStudyInfoWebservice();
         break;
       }
-      if (i == (withdrawalTypeList.size() - 1)) {noDataFlag = true;}
+      if (i == (withdrawalTypeList.size() - 1)) {
+        noDataFlag = true;
+      }
     }
   }
 
@@ -330,7 +332,9 @@ public class DeleteAccountActivity extends AppCompatActivity
 
   @Override
   public <T> void asyncResponse(T response, int responseCode) {
-    if (responseCode != STUDY_INFO){ AppController.getHelperProgressDialog().dismissDialog();}
+    if (responseCode != STUDY_INFO) {
+      AppController.getHelperProgressDialog().dismissDialog();
+    }
     if (responseCode == DELETE_ACCOUNT_REPSONSECODE) {
       LoginData loginData = (LoginData) response;
       if (loginData != null) {
@@ -351,7 +355,9 @@ public class DeleteAccountActivity extends AppCompatActivity
         settings.edit().clear().apply();
         // delete passcode from keystore
         String pass = AppController.refreshKeys("passcode");
-        if (pass != null) {AppController.deleteKey("passcode_" + pass);}
+        if (pass != null) {
+          AppController.deleteKey("passcode_" + pass);
+        }
         Intent intent = new Intent();
         setResult(RESULT_OK, intent);
         finish();

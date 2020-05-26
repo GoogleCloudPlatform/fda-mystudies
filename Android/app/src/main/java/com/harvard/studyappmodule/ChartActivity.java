@@ -1,5 +1,6 @@
 /*
  * Copyright © 2017-2019 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors.
+ * Copyright 2020 Google LLC
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction, including
  * without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
@@ -78,20 +79,21 @@ public class ChartActivity extends AppCompatActivity {
   private LinearLayout.LayoutParams layoutParams;
 
   private String dateType = "day";
-  private String MONTH = "month";
-  private String DAY = "day";
-  private String WEEK = "week";
-  private String YEAR = "year";
-  private String RUN = "run";
+  private static final String MONTH = "month";
+  private static final String DAY = "day";
+  private static final String WEEK = "week";
+  private static final String YEAR = "year";
+  private static final String RUN = "run";
 
   private DashboardData dashboardData;
-  private ArrayList<String> mFromDayVals = new ArrayList<>();
+  private ArrayList<String> fromDayVals = new ArrayList<>();
   private ArrayList<String> dateTypeArray = new ArrayList<>();
-  private ArrayList<String> mToDayVals = new ArrayList<>();
+  private ArrayList<String> toDayVals = new ArrayList<>();
 
-  private Date starttime, endtime;
+  private Date starttime;
+  private Date endtime;
   private DBServiceSubscriber dbServiceSubscriber;
-  private Realm mRealm;
+  private Realm realm;
   private static final int PERMISSION_REQUEST_CODE = 2000;
 
   @Override
@@ -100,13 +102,13 @@ public class ChartActivity extends AppCompatActivity {
     setContentView(R.layout.activity_chart);
 
     dbServiceSubscriber = new DBServiceSubscriber();
-    mRealm = AppController.getRealmobj(this);
+    realm = AppController.getRealmobj(this);
     dashboardData =
-        dbServiceSubscriber.getDashboardDataFromDB(getIntent().getStringExtra("studyId"), mRealm);
+        dbServiceSubscriber.getDashboardDataFromDB(getIntent().getStringExtra("studyId"), realm);
     chartlayout = (LinearLayout) findViewById(R.id.chartlayout);
     RelativeLayout backBtn = (RelativeLayout) findViewById(R.id.backBtn);
-    RelativeLayout mShareBtn = (RelativeLayout) findViewById(R.id.mShareBtn);
-    mShareBtn.setOnClickListener(
+    RelativeLayout shareBtn = (RelativeLayout) findViewById(R.id.mShareBtn);
+    shareBtn.setOnClickListener(
         new View.OnClickListener() {
           @Override
           public void onClick(View v) {
@@ -166,7 +168,7 @@ public class ChartActivity extends AppCompatActivity {
                 chartDataSource.getKey(),
                 null,
                 null,
-                mRealm);
+                realm);
 
         // Offset each xPosition by one to compensate for
         if (!chartDataSource.getTimeRangeType().equalsIgnoreCase("runs")
@@ -209,8 +211,8 @@ public class ChartActivity extends AppCompatActivity {
               try {
                 jsonObject = new JSONObject(stepRecordCustomList.get(j).result);
 
-                String Id[] = stepRecordCustomList.get(j).activityID.split("_STUDYID_");
-                ActivitiesWS activityObj = dbServiceSubscriber.getActivityObj(Id[1], Id[0], mRealm);
+                String[] id = stepRecordCustomList.get(j).activityID.split("_STUDYID_");
+                ActivitiesWS activityObj = dbServiceSubscriber.getActivityObj(id[1], id[0], realm);
                 if (activityObj.getType().equalsIgnoreCase("task")) {
                   JSONObject answerjson = new JSONObject(jsonObject.getString("answer"));
                   answer = answerjson.getString("duration");
@@ -242,7 +244,8 @@ public class ChartActivity extends AppCompatActivity {
                 }
               } else if (chartDataSource.getTimeRangeType().equalsIgnoreCase("days_of_month")) {
                 SimpleDateFormat simpleDateFormat = new SimpleDateFormat("d");
-                int month = starttime.getMonth(), year = starttime.getYear();
+                int month = starttime.getMonth();
+                int year = starttime.getYear();
                 filteredXValues.clear();
                 for (int k = 1; k <= numberOfDaysInMonth(month, year); k++) {
                   String s = simpleDateFormat.format(stepRecordCustomList.get(j).getCompleted());
@@ -283,20 +286,20 @@ public class ChartActivity extends AppCompatActivity {
             }
           }
         } else if (chartDataSource.getTimeRangeType().equalsIgnoreCase("runs")) {
-          RealmResults<ActivityRun> activityRuns =
-              dbServiceSubscriber.getAllActivityRunFromDB(
-                  getIntent().getStringExtra("studyId"),
-                  chartDataSource.getActivity().getActivityId(),
-                  mRealm);
           linearLayout1 = new LinearLayout(ChartActivity.this);
           SimpleDateFormat simpleDateFormat = AppController.getDateFormat();
           dateType = RUN;
           dateTypeArray.add(RUN);
-          mFromDayVals.add(simpleDateFormat.format(new Date()));
-          mToDayVals.add(simpleDateFormat.format(new Date()));
+          fromDayVals.add(simpleDateFormat.format(new Date()));
+          toDayVals.add(simpleDateFormat.format(new Date()));
           filteredXValues.clear();
           ArrayList<RunChart> runCharts = new ArrayList<>();
           List<List<RunChart>> lists = new ArrayList<>();
+          RealmResults<ActivityRun> activityRuns =
+              dbServiceSubscriber.getAllActivityRunFromDB(
+                  getIntent().getStringExtra("studyId"),
+                  chartDataSource.getActivity().getActivityId(),
+                  realm);
           for (int k = 0; k < activityRuns.size(); k++) {
             lists.clear();
             Date runCompletedDate = null;
@@ -304,7 +307,7 @@ public class ChartActivity extends AppCompatActivity {
             String runAnswerData = null;
             for (int l = 0; l < stepRecordCustomList.size(); l++) {
               if (stepRecordCustomList.get(l).taskId.contains("_")) {
-                String taskId[] = stepRecordCustomList.get(l).taskId.split("_STUDYID_");
+                String[] taskId = stepRecordCustomList.get(l).taskId.split("_STUDYID_");
                 String runId =
                     taskId[1].substring(taskId[1].lastIndexOf("_") + 1, taskId[1].length());
                 JSONObject jsonObject;
@@ -312,9 +315,9 @@ public class ChartActivity extends AppCompatActivity {
                 String data = "";
                 try {
                   jsonObject = new JSONObject(stepRecordCustomList.get(l).result);
-                  String Id[] = stepRecordCustomList.get(l).activityID.split("_STUDYID_");
+                  String[] id = stepRecordCustomList.get(l).activityID.split("_STUDYID_");
                   ActivitiesWS activityObj =
-                      dbServiceSubscriber.getActivityObj(Id[1], Id[0], mRealm);
+                      dbServiceSubscriber.getActivityObj(id[1], id[0], realm);
                   if (activityObj.getType().equalsIgnoreCase("task")) {
                     JSONObject answerjson = new JSONObject(jsonObject.getString("answer"));
                     answer = answerjson.getString("duration");
@@ -358,18 +361,18 @@ public class ChartActivity extends AppCompatActivity {
           entryList.clear();
           if (lists.size() > 0) {
             for (int l = 0; l < lists.get(0).size(); l++) {
-              if (lists.get(0).get(l).getResult() != null)
+              if (lists.get(0).get(l).getResult() != null) {
                 entryList.add(
                     new Entry(
                         Float.parseFloat(lists.get(0).get(l).getResult()),
                         Integer.parseInt(lists.get(0).get(l).getRunId()) - 1,
                         lists.get(0).get(l).getResultData()));
+              }
               filteredXValues.add("" + (Integer.parseInt(lists.get(0).get(l).getRunId())));
             }
           }
           addTimeLayoutRuns(
               lists,
-              RUN,
               chartDataSource.getTimeRangeType(),
               chart,
               stepRecordCustomList,
@@ -393,7 +396,7 @@ public class ChartActivity extends AppCompatActivity {
                   chartDataSource.getActivity().getActivityId(),
                   getIntent().getStringExtra("studyId"),
                   new Date(),
-                  mRealm);
+                  realm);
           addTimeLayout(
               DAY,
               chartDataSource.getTimeRangeType(),
@@ -418,7 +421,7 @@ public class ChartActivity extends AppCompatActivity {
               if (stepRecordCustomList.get(l).getCompleted().before(endtime)
                   && stepRecordCustomList.get(l).getCompleted().after(starttime)) {
                 if (stepRecordCustomList.get(l).taskId.contains("_")) {
-                  String taskId[] = stepRecordCustomList.get(l).taskId.split("_STUDYID_");
+                  String[] taskId = stepRecordCustomList.get(l).taskId.split("_STUDYID_");
                   String runId =
                       taskId[1].substring(taskId[1].lastIndexOf("_") + 1, taskId[1].length());
 
@@ -427,9 +430,9 @@ public class ChartActivity extends AppCompatActivity {
                   String data = "";
                   try {
                     jsonObject = new JSONObject(stepRecordCustomList.get(l).result);
-                    String Id[] = stepRecordCustomList.get(l).activityID.split("_STUDYID_");
+                    String[] id = stepRecordCustomList.get(l).activityID.split("_STUDYID_");
                     ActivitiesWS activityObj =
-                        dbServiceSubscriber.getActivityObj(Id[1], Id[0], mRealm);
+                        dbServiceSubscriber.getActivityObj(id[1], id[0], realm);
                     if (activityObj.getType().equalsIgnoreCase("task")) {
                       JSONObject answerjson = new JSONObject(jsonObject.getString("answer"));
                       answer = answerjson.getString("duration");
@@ -475,7 +478,9 @@ public class ChartActivity extends AppCompatActivity {
 
         // Move to "end" of chart
         linearLayout.addView(textView);
-        if (linearLayout1 != null) linearLayout.addView(linearLayout1);
+        if (linearLayout1 != null) {
+          linearLayout.addView(linearLayout1);
+        }
         linearLayout.addView(chart);
         chartlayout.addView(linearLayout);
       }
@@ -544,8 +549,11 @@ public class ChartActivity extends AppCompatActivity {
             chartlayout.getWidth(), chartlayout.getHeight(), Bitmap.Config.ARGB_8888);
     Canvas canvas = new Canvas(returnedBitmap);
     Drawable bgDrawable = chartlayout.getBackground();
-    if (bgDrawable != null) bgDrawable.draw(canvas);
-    else canvas.drawColor(Color.WHITE);
+    if (bgDrawable != null) {
+      bgDrawable.draw(canvas);
+    } else {
+      canvas.drawColor(Color.WHITE);
+    }
     chartlayout.draw(canvas);
 
     saveBitmap(returnedBitmap);
@@ -557,7 +565,9 @@ public class ChartActivity extends AppCompatActivity {
     myDir.mkdirs();
     String fname = getIntent().getStringExtra("studyName") + "_Chart.png";
     File file = new File(myDir, fname);
-    if (file.exists()) file.delete();
+    if (file.exists()) {
+      file.delete();
+    }
     try {
       FileOutputStream out = new FileOutputStream(file);
       bitmap.compress(Bitmap.CompressFormat.JPEG, 90, out);
@@ -616,7 +626,6 @@ public class ChartActivity extends AppCompatActivity {
 
   private void addTimeLayoutRuns(
       final List<List<RunChart>> lists,
-      String RUN,
       String charttype,
       final LineChart chart,
       final RealmResults<StepRecordCustom> stepRecordCustomList,
@@ -730,13 +739,14 @@ public class ChartActivity extends AppCompatActivity {
     filteredXValues.clear();
     entryList.clear();
     for (int l = 0; l < lists.get(index).size(); l++) {
-      if (lists.get(index).get(l).getResult() != null)
+      if (lists.get(index).get(l).getResult() != null) {
         entryList.add(
             new Entry(
                 Float.parseFloat(lists.get(index).get(l).getResult()),
                 Integer.parseInt(lists.get(index).get(l).getRunId())
                     - Integer.parseInt(lists.get(index).get(0).getRunId()),
                 lists.get(index).get(0).getResultData()));
+      }
       filteredXValues.add("" + (Integer.parseInt(lists.get(index).get(l).getRunId())));
     }
     TempGraphHelper.updateLineChart(chart, 0, entryList, filteredXValues, barColor);
@@ -766,10 +776,15 @@ public class ChartActivity extends AppCompatActivity {
     textView1.setPadding(10, 10, 10, 10);
     textView1.setTextColor(Color.BLACK);
     textView1.setGravity(View.TEXT_ALIGNMENT_CENTER);
-    if (time.equalsIgnoreCase(DAY)) setDay(textView1);
-    else if (time.equalsIgnoreCase(WEEK)) setWeek(textView1);
-    else if (time.equalsIgnoreCase(MONTH)) setMonth(textView1);
-    else setYear(textView1);
+    if (time.equalsIgnoreCase(DAY)) {
+      setDay(textView1);
+    } else if (time.equalsIgnoreCase(WEEK)) {
+      setWeek(textView1);
+    } else if (time.equalsIgnoreCase(MONTH)) {
+      setMonth(textView1);
+    } else {
+      setYear(textView1);
+    }
 
     textView1.setTag(charttype);
     textView1.setTag(R.string.charttag, activityId);
@@ -801,22 +816,22 @@ public class ChartActivity extends AppCompatActivity {
             if (dateTypeArray.get((int) leftArrow.getTag()).equalsIgnoreCase(DAY)) {
               try {
                 SimpleDateFormat simpleDateFormat = AppController.getDateFormat();
-                SimpleDateFormat simpleDateFormat1 = AppController.getDateFormatFormatOutType1();
+
                 Date selectedStartDAte =
-                    simpleDateFormat.parse(mFromDayVals.get((int) leftArrow.getTag()));
+                    simpleDateFormat.parse(fromDayVals.get((int) leftArrow.getTag()));
                 Date selectedEndDate =
-                    simpleDateFormat.parse(mToDayVals.get((int) leftArrow.getTag()));
+                    simpleDateFormat.parse(toDayVals.get((int) leftArrow.getTag()));
                 Calendar calendarStart = Calendar.getInstance();
                 calendarStart.setTime(selectedStartDAte);
                 calendarStart.add(Calendar.DATE, -1);
                 Calendar calendarEnd = Calendar.getInstance();
                 calendarEnd.setTime(selectedEndDate);
                 calendarEnd.add(Calendar.DATE, -1);
-                mFromDayVals.set(
+                fromDayVals.set(
                     (int) leftArrow.getTag(), simpleDateFormat.format(calendarStart.getTime()));
-                mToDayVals.set(
+                toDayVals.set(
                     (int) leftArrow.getTag(), simpleDateFormat.format(calendarEnd.getTime()));
-
+                SimpleDateFormat simpleDateFormat1 = AppController.getDateFormatFormatOutType1();
                 textView1.setText(simpleDateFormat1.format(calendarStart.getTime()));
                 refreshchartdata(
                     "" + textView1.getTag(),
@@ -834,23 +849,22 @@ public class ChartActivity extends AppCompatActivity {
               }
             } else if (dateTypeArray.get((int) leftArrow.getTag()).equalsIgnoreCase(WEEK)) {
               try {
-                SimpleDateFormat simpleDateFormat = AppController.getDateFormatFormatOutType1();
                 SimpleDateFormat simpleDateFormat1 = AppController.getDateFormat();
                 Date selectedStartDAte =
-                    simpleDateFormat1.parse(mFromDayVals.get((int) leftArrow.getTag()));
+                    simpleDateFormat1.parse(fromDayVals.get((int) leftArrow.getTag()));
                 Date selectedEndDate =
-                    simpleDateFormat1.parse(mToDayVals.get((int) leftArrow.getTag()));
+                    simpleDateFormat1.parse(toDayVals.get((int) leftArrow.getTag()));
                 Calendar calendarStart = Calendar.getInstance();
                 calendarStart.setTime(selectedStartDAte);
                 calendarStart.add(Calendar.DATE, -7);
                 Calendar calendarEnd = Calendar.getInstance();
                 calendarEnd.setTime(selectedEndDate);
                 calendarEnd.add(Calendar.DATE, -7);
-                mFromDayVals.set(
+                fromDayVals.set(
                     (int) leftArrow.getTag(), simpleDateFormat1.format(calendarStart.getTime()));
-                mToDayVals.set(
+                toDayVals.set(
                     (int) leftArrow.getTag(), simpleDateFormat1.format(calendarEnd.getTime()));
-
+                SimpleDateFormat simpleDateFormat = AppController.getDateFormatFormatOutType1();
                 textView1.setText(
                     simpleDateFormat.format(calendarStart.getTime())
                         + " - "
@@ -871,23 +885,22 @@ public class ChartActivity extends AppCompatActivity {
               }
             } else if (dateTypeArray.get((int) leftArrow.getTag()).equalsIgnoreCase(MONTH)) {
               try {
-                SimpleDateFormat simpleDateFormat = AppController.getDateFormatFormatOut();
                 SimpleDateFormat simpleDateFormat1 = AppController.getDateFormat();
                 Date selectedStartDAte =
-                    simpleDateFormat1.parse(mFromDayVals.get((int) leftArrow.getTag()));
+                    simpleDateFormat1.parse(fromDayVals.get((int) leftArrow.getTag()));
                 Date selectedEndDate =
-                    simpleDateFormat1.parse(mToDayVals.get((int) leftArrow.getTag()));
+                    simpleDateFormat1.parse(toDayVals.get((int) leftArrow.getTag()));
                 Calendar calendarStart = Calendar.getInstance();
                 calendarStart.setTime(selectedStartDAte);
                 calendarStart.add(Calendar.MONTH, -1);
                 Calendar calendarEnd = Calendar.getInstance();
                 calendarEnd.setTime(selectedEndDate);
                 calendarEnd.add(Calendar.MONTH, -1);
-                mFromDayVals.set(
+                fromDayVals.set(
                     (int) leftArrow.getTag(), simpleDateFormat1.format(calendarStart.getTime()));
-                mToDayVals.set(
+                toDayVals.set(
                     (int) leftArrow.getTag(), simpleDateFormat1.format(calendarEnd.getTime()));
-
+                SimpleDateFormat simpleDateFormat = AppController.getDateFormatFormatOut();
                 textView1.setText(simpleDateFormat.format(calendarStart.getTime()));
                 refreshchartdata(
                     "" + textView1.getTag(),
@@ -905,23 +918,22 @@ public class ChartActivity extends AppCompatActivity {
               }
             } else if (dateTypeArray.get((int) leftArrow.getTag()).equalsIgnoreCase(YEAR)) {
               try {
-                SimpleDateFormat simpleDateFormat = AppController.getDateFormatYearFormat();
                 SimpleDateFormat simpleDateFormat1 = AppController.getDateFormat();
                 Date selectedStartDAte =
-                    simpleDateFormat1.parse(mFromDayVals.get((int) leftArrow.getTag()));
+                    simpleDateFormat1.parse(fromDayVals.get((int) leftArrow.getTag()));
                 Date selectedEndDate =
-                    simpleDateFormat1.parse(mToDayVals.get((int) leftArrow.getTag()));
+                    simpleDateFormat1.parse(toDayVals.get((int) leftArrow.getTag()));
                 Calendar calendarStart = Calendar.getInstance();
                 calendarStart.setTime(selectedStartDAte);
                 calendarStart.add(Calendar.YEAR, -1);
                 Calendar calendarEnd = Calendar.getInstance();
                 calendarEnd.setTime(selectedEndDate);
                 calendarEnd.add(Calendar.YEAR, -1);
-                mFromDayVals.set(
+                fromDayVals.set(
                     (int) leftArrow.getTag(), simpleDateFormat1.format(calendarStart.getTime()));
-                mToDayVals.set(
+                toDayVals.set(
                     (int) leftArrow.getTag(), simpleDateFormat1.format(calendarEnd.getTime()));
-
+                SimpleDateFormat simpleDateFormat = AppController.getDateFormatYearFormat();
                 textView1.setText(simpleDateFormat.format(calendarStart.getTime()));
                 refreshchartdata(
                     "" + textView1.getTag(),
@@ -951,9 +963,9 @@ public class ChartActivity extends AppCompatActivity {
                 SimpleDateFormat simpleDateFormat = AppController.getDateFormatFormatOutType1();
                 SimpleDateFormat simpleDateFormat1 = AppController.getDateFormat();
                 Date selectedStartDAte =
-                    simpleDateFormat1.parse(mFromDayVals.get((int) rightArrow.getTag()));
+                    simpleDateFormat1.parse(fromDayVals.get((int) rightArrow.getTag()));
                 Date selectedEndDate =
-                    simpleDateFormat1.parse(mToDayVals.get((int) rightArrow.getTag()));
+                    simpleDateFormat1.parse(toDayVals.get((int) rightArrow.getTag()));
                 Calendar calendarStart = Calendar.getInstance();
                 calendarStart.setTime(selectedStartDAte);
                 calendarStart.add(Calendar.DATE, 1);
@@ -961,9 +973,9 @@ public class ChartActivity extends AppCompatActivity {
                 calendarEnd.setTime(selectedEndDate);
                 calendarEnd.add(Calendar.DATE, 1);
                 if (!calendarStart.getTime().after(new Date())) {
-                  mFromDayVals.set(
+                  fromDayVals.set(
                       (int) rightArrow.getTag(), simpleDateFormat1.format(calendarStart.getTime()));
-                  mToDayVals.set(
+                  toDayVals.set(
                       (int) rightArrow.getTag(), simpleDateFormat1.format(calendarEnd.getTime()));
 
                   textView1.setText(simpleDateFormat.format(calendarStart.getTime()));
@@ -987,9 +999,9 @@ public class ChartActivity extends AppCompatActivity {
                 SimpleDateFormat simpleDateFormat = AppController.getDateFormatFormatOutType1();
                 SimpleDateFormat simpleDateFormat1 = AppController.getDateFormat();
                 Date selectedStartDAte =
-                    simpleDateFormat1.parse(mFromDayVals.get((int) rightArrow.getTag()));
+                    simpleDateFormat1.parse(fromDayVals.get((int) rightArrow.getTag()));
                 Date selectedEndDate =
-                    simpleDateFormat1.parse(mToDayVals.get((int) rightArrow.getTag()));
+                    simpleDateFormat1.parse(toDayVals.get((int) rightArrow.getTag()));
                 Calendar calendarStart = Calendar.getInstance();
                 calendarStart.setTime(selectedStartDAte);
                 calendarStart.add(Calendar.DATE, 7);
@@ -997,9 +1009,9 @@ public class ChartActivity extends AppCompatActivity {
                 calendarEnd.setTime(selectedEndDate);
                 calendarEnd.add(Calendar.DATE, 7);
                 if (!calendarStart.getTime().after(new Date())) {
-                  mFromDayVals.set(
+                  fromDayVals.set(
                       (int) rightArrow.getTag(), simpleDateFormat1.format(calendarStart.getTime()));
-                  mToDayVals.set(
+                  toDayVals.set(
                       (int) rightArrow.getTag(), simpleDateFormat1.format(calendarEnd.getTime()));
 
                   if (calendarEnd.getTime().after(new Date())) {
@@ -1044,9 +1056,9 @@ public class ChartActivity extends AppCompatActivity {
                 SimpleDateFormat simpleDateFormat = AppController.getDateFormat();
                 SimpleDateFormat simpleDateFormat1 = AppController.getDateFormatFormatOut();
                 Date selectedStartDAte =
-                    simpleDateFormat.parse(mFromDayVals.get((int) rightArrow.getTag()));
+                    simpleDateFormat.parse(fromDayVals.get((int) rightArrow.getTag()));
                 Date selectedEndDate =
-                    simpleDateFormat.parse(mToDayVals.get((int) rightArrow.getTag()));
+                    simpleDateFormat.parse(toDayVals.get((int) rightArrow.getTag()));
                 Calendar calendarStart = Calendar.getInstance();
                 calendarStart.setTime(selectedStartDAte);
                 calendarStart.add(Calendar.MONTH, 1);
@@ -1054,9 +1066,9 @@ public class ChartActivity extends AppCompatActivity {
                 calendarEnd.setTime(selectedEndDate);
                 calendarEnd.add(Calendar.MONTH, 1);
                 if (!calendarStart.getTime().after(new Date())) {
-                  mFromDayVals.set(
+                  fromDayVals.set(
                       (int) rightArrow.getTag(), simpleDateFormat.format(calendarStart.getTime()));
-                  mToDayVals.set(
+                  toDayVals.set(
                       (int) rightArrow.getTag(), simpleDateFormat.format(calendarEnd.getTime()));
 
                   textView1.setText(simpleDateFormat1.format(calendarStart.getTime()));
@@ -1080,9 +1092,9 @@ public class ChartActivity extends AppCompatActivity {
                 SimpleDateFormat simpleDateFormat = AppController.getDateFormat();
                 SimpleDateFormat simpleDateFormat1 = AppController.getDateFormatYearFormat();
                 Date selectedStartDAte =
-                    simpleDateFormat.parse(mFromDayVals.get((int) rightArrow.getTag()));
+                    simpleDateFormat.parse(fromDayVals.get((int) rightArrow.getTag()));
                 Date selectedEndDate =
-                    simpleDateFormat.parse(mToDayVals.get((int) rightArrow.getTag()));
+                    simpleDateFormat.parse(toDayVals.get((int) rightArrow.getTag()));
                 Calendar calendarStart = Calendar.getInstance();
                 calendarStart.setTime(selectedStartDAte);
                 calendarStart.add(Calendar.YEAR, 1);
@@ -1090,9 +1102,9 @@ public class ChartActivity extends AppCompatActivity {
                 calendarEnd.setTime(selectedEndDate);
                 calendarEnd.add(Calendar.YEAR, 1);
                 if (!calendarStart.getTime().after(new Date())) {
-                  mFromDayVals.set(
+                  fromDayVals.set(
                       (int) rightArrow.getTag(), simpleDateFormat.format(calendarStart.getTime()));
-                  mToDayVals.set(
+                  toDayVals.set(
                       (int) rightArrow.getTag(), simpleDateFormat.format(calendarEnd.getTime()));
 
                   textView1.setText(simpleDateFormat1.format(calendarStart.getTime()));
@@ -1146,8 +1158,8 @@ public class ChartActivity extends AppCompatActivity {
               String data = "";
               try {
                 jsonObject = new JSONObject(stepRecordCustomList.get(j).result);
-                String Id[] = stepRecordCustomList.get(j).activityID.split("_STUDYID_");
-                ActivitiesWS activityObj = dbServiceSubscriber.getActivityObj(Id[1], Id[0], mRealm);
+                String[] id = stepRecordCustomList.get(j).activityID.split("_STUDYID_");
+                ActivitiesWS activityObj = dbServiceSubscriber.getActivityObj(id[1], id[0], realm);
                 if (activityObj.getType().equalsIgnoreCase("task")) {
                   JSONObject answerjson = new JSONObject(jsonObject.getString("answer"));
                   answer = answerjson.getString("duration");
@@ -1171,7 +1183,8 @@ public class ChartActivity extends AppCompatActivity {
         }
       } else if (tag.equalsIgnoreCase("days_of_month")) {
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("d");
-        int month = startTime.getMonth(), year = startTime.getYear();
+        int month = startTime.getMonth();
+        int year = startTime.getYear();
         for (int k = 1; k <= numberOfDaysInMonth(month, year); k++) {
           for (int j = 0, size = stepRecordCustomList.size(); j < size; j++) {
             if (stepRecordCustomList.get(j).getCompleted().before(endtime)
@@ -1181,8 +1194,8 @@ public class ChartActivity extends AppCompatActivity {
               String data = "";
               try {
                 jsonObject = new JSONObject(stepRecordCustomList.get(j).result);
-                String Id[] = stepRecordCustomList.get(j).activityID.split("_STUDYID_");
-                ActivitiesWS activityObj = dbServiceSubscriber.getActivityObj(Id[1], Id[0], mRealm);
+                String[] id = stepRecordCustomList.get(j).activityID.split("_STUDYID_");
+                ActivitiesWS activityObj = dbServiceSubscriber.getActivityObj(id[1], id[0], realm);
                 if (activityObj.getType().equalsIgnoreCase("task")) {
                   JSONObject answerjson = new JSONObject(jsonObject.getString("answer"));
                   answer = answerjson.getString("duration");
@@ -1221,8 +1234,8 @@ public class ChartActivity extends AppCompatActivity {
               String data = "";
               try {
                 jsonObject = new JSONObject(stepRecordCustomList.get(j).result);
-                String Id[] = stepRecordCustomList.get(j).activityID.split("_STUDYID_");
-                ActivitiesWS activityObj = dbServiceSubscriber.getActivityObj(Id[1], Id[0], mRealm);
+                String[] id = stepRecordCustomList.get(j).activityID.split("_STUDYID_");
+                ActivitiesWS activityObj = dbServiceSubscriber.getActivityObj(id[1], id[0], realm);
                 if (activityObj.getType().equalsIgnoreCase("task")) {
                   JSONObject answerjson = new JSONObject(jsonObject.getString("answer"));
                   answer = answerjson.getString("duration");
@@ -1255,8 +1268,8 @@ public class ChartActivity extends AppCompatActivity {
               String data = "";
               try {
                 jsonObject = new JSONObject(stepRecordCustomList.get(j).result);
-                String Id[] = stepRecordCustomList.get(j).activityID.split("_STUDYID_");
-                ActivitiesWS activityObj = dbServiceSubscriber.getActivityObj(Id[1], Id[0], mRealm);
+                String[] id = stepRecordCustomList.get(j).activityID.split("_STUDYID_");
+                ActivitiesWS activityObj = dbServiceSubscriber.getActivityObj(id[1], id[0], realm);
                 if (activityObj.getType().equalsIgnoreCase("task")) {
                   JSONObject answerjson = new JSONObject(jsonObject.getString("answer"));
                   answer = answerjson.getString("duration");
@@ -1281,13 +1294,13 @@ public class ChartActivity extends AppCompatActivity {
     } else if (tag.equalsIgnoreCase("hours_of_day")) {
       activityRuns =
           dbServiceSubscriber.getAllActivityRunforDate(
-              activityId, getIntent().getStringExtra("studyId"), startTime, mRealm);
+              activityId, getIntent().getStringExtra("studyId"), startTime, realm);
       for (int k = 0; k < activityRuns.size(); k++) {
         for (int l = 0; l < stepRecordCustomList.size(); l++) {
           if (stepRecordCustomList.get(l).getCompleted().before(endtime)
               && stepRecordCustomList.get(l).getCompleted().after(startTime)) {
             if (stepRecordCustomList.get(l).taskId.contains("_")) {
-              String taskId[] = stepRecordCustomList.get(l).taskId.split("_STUDYID_");
+              String[] taskId = stepRecordCustomList.get(l).taskId.split("_STUDYID_");
               String runId =
                   taskId[1].substring(taskId[1].lastIndexOf("_") + 1, taskId[1].length());
 
@@ -1296,8 +1309,8 @@ public class ChartActivity extends AppCompatActivity {
               String data = "";
               try {
                 jsonObject = new JSONObject(stepRecordCustomList.get(l).result);
-                String Id[] = stepRecordCustomList.get(l).activityID.split("_STUDYID_");
-                ActivitiesWS activityObj = dbServiceSubscriber.getActivityObj(Id[1], Id[0], mRealm);
+                String[] id = stepRecordCustomList.get(l).activityID.split("_STUDYID_");
+                ActivitiesWS activityObj = dbServiceSubscriber.getActivityObj(id[1], id[0], realm);
                 if (activityObj.getType().equalsIgnoreCase("task")) {
                   JSONObject answerjson = new JSONObject(jsonObject.getString("answer"));
                   answer = answerjson.getString("duration");
@@ -1328,13 +1341,13 @@ public class ChartActivity extends AppCompatActivity {
     } else {
       activityRuns =
           dbServiceSubscriber.getAllActivityRunFromDB(
-              getIntent().getStringExtra("studyId"), activityId, mRealm);
+              getIntent().getStringExtra("studyId"), activityId, realm);
       for (int k = 0; k < activityRuns.size(); k++) {
         for (int l = 0; l < stepRecordCustomList.size(); l++) {
           if (stepRecordCustomList.get(l).getCompleted().before(endtime)
               && stepRecordCustomList.get(l).getCompleted().after(startTime)) {
             if (stepRecordCustomList.get(l).taskId.contains("_")) {
-              String taskId[] = stepRecordCustomList.get(l).taskId.split("_STUDYID_");
+              String[] taskId = stepRecordCustomList.get(l).taskId.split("_STUDYID_");
               String runId =
                   taskId[1].substring(taskId[1].lastIndexOf("_") + 1, taskId[1].length());
 
@@ -1343,8 +1356,8 @@ public class ChartActivity extends AppCompatActivity {
               String data = "";
               try {
                 jsonObject = new JSONObject(stepRecordCustomList.get(l).result);
-                String Id[] = stepRecordCustomList.get(l).activityID.split("_STUDYID_");
-                ActivitiesWS activityObj = dbServiceSubscriber.getActivityObj(Id[1], Id[0], mRealm);
+                String[] id = stepRecordCustomList.get(l).activityID.split("_STUDYID_");
+                ActivitiesWS activityObj = dbServiceSubscriber.getActivityObj(id[1], id[0], realm);
                 if (activityObj.getType().equalsIgnoreCase("task")) {
                   JSONObject answerjson = new JSONObject(jsonObject.getString("answer"));
                   answer = answerjson.getString("duration");
@@ -1373,15 +1386,14 @@ public class ChartActivity extends AppCompatActivity {
   }
 
   private void setDay(TextView textView1) {
-    SimpleDateFormat simpleDateFormat = AppController.getDateFormatFormatOutType1();
     SimpleDateFormat simpleDateFormat1 = AppController.getDateFormat();
     Calendar calendar = Calendar.getInstance();
     calendar.set(Calendar.HOUR_OF_DAY, 0);
     calendar.set(Calendar.MINUTE, 0);
     calendar.set(Calendar.SECOND, 0);
     calendar.set(Calendar.MILLISECOND, 0);
-    String mFromDayVal = simpleDateFormat1.format(calendar.getTime());
-    mFromDayVals.add(mFromDayVal);
+    String fromDayVal = simpleDateFormat1.format(calendar.getTime());
+    fromDayVals.add(fromDayVal);
     starttime = calendar.getTime();
 
     Calendar calendar1 = Calendar.getInstance();
@@ -1389,17 +1401,16 @@ public class ChartActivity extends AppCompatActivity {
     calendar1.set(Calendar.MINUTE, 59);
     calendar1.set(Calendar.SECOND, 59);
     calendar1.set(Calendar.MILLISECOND, 999);
-    String mToDayVal = simpleDateFormat1.format(calendar1.getTime());
-    mToDayVals.add(mToDayVal);
+    String toDayVal = simpleDateFormat1.format(calendar1.getTime());
+    toDayVals.add(toDayVal);
     endtime = calendar1.getTime();
-
+    SimpleDateFormat simpleDateFormat = AppController.getDateFormatFormatOutType1();
     textView1.setText(simpleDateFormat.format(calendar.getTime()));
     dateType = DAY;
     dateTypeArray.add(DAY);
   }
 
   private void setWeek(TextView textView1) {
-    SimpleDateFormat simpleDateFormat = AppController.getDateFormatFormatOutType1();
     SimpleDateFormat simpleDateFormat1 = AppController.getDateFormat();
     Calendar calendar = Calendar.getInstance();
     calendar.set(Calendar.DAY_OF_WEEK, Calendar.SUNDAY);
@@ -1407,10 +1418,10 @@ public class ChartActivity extends AppCompatActivity {
     calendar.set(Calendar.MINUTE, 0);
     calendar.set(Calendar.SECOND, 0);
     calendar.set(Calendar.MILLISECOND, 0);
-    String mFromDayVal = simpleDateFormat1.format(calendar.getTime());
+    String fromDayVal = simpleDateFormat1.format(calendar.getTime());
     starttime = calendar.getTime();
-    mFromDayVals.add(mFromDayVal);
-
+    fromDayVals.add(fromDayVal);
+    SimpleDateFormat simpleDateFormat = AppController.getDateFormatFormatOutType1();
     textView1.setText(
         simpleDateFormat.format(calendar.getTime()) + " - " + simpleDateFormat.format(new Date()));
     calendar.add(Calendar.DATE, 6);
@@ -1418,9 +1429,9 @@ public class ChartActivity extends AppCompatActivity {
     calendar.set(Calendar.MINUTE, 59);
     calendar.set(Calendar.SECOND, 59);
     calendar.set(Calendar.MILLISECOND, 999);
-    String mToDayVal = simpleDateFormat1.format(calendar.getTime());
+    String toDayVal = simpleDateFormat1.format(calendar.getTime());
     endtime = calendar.getTime();
-    mToDayVals.add(mToDayVal);
+    toDayVals.add(toDayVal);
 
     dateType = WEEK;
     dateTypeArray.add(WEEK);
@@ -1428,7 +1439,6 @@ public class ChartActivity extends AppCompatActivity {
 
   private void setMonth(TextView textView1) {
     SimpleDateFormat simpleDateFormat = AppController.getDateFormat();
-    SimpleDateFormat simpleDateFormat1 = AppController.getDateFormatFormatOut();
     Calendar calendar = Calendar.getInstance(); // this takes current date
     calendar.set(Calendar.DAY_OF_MONTH, 1);
     calendar.set(Calendar.HOUR_OF_DAY, 0);
@@ -1436,11 +1446,10 @@ public class ChartActivity extends AppCompatActivity {
     calendar.set(Calendar.SECOND, 0);
     calendar.set(Calendar.MILLISECOND, 0);
 
-    String mFromDayVal = simpleDateFormat.format(calendar.getTime());
+    String fromDayVal = simpleDateFormat.format(calendar.getTime());
     starttime = calendar.getTime();
-    mFromDayVals.add(mFromDayVal);
-
-    String mToDayVal = simpleDateFormat.format(new Date());
+    fromDayVals.add(fromDayVal);
+    SimpleDateFormat simpleDateFormat1 = AppController.getDateFormatFormatOut();
     textView1.setText(simpleDateFormat1.format(calendar.getTime()));
 
     calendar.add(Calendar.MONTH, 1);
@@ -1449,9 +1458,10 @@ public class ChartActivity extends AppCompatActivity {
     calendar.set(Calendar.MINUTE, 59);
     calendar.set(Calendar.SECOND, 59);
     calendar.set(Calendar.MILLISECOND, 999);
-    mToDayVal = simpleDateFormat.format(calendar.getTime());
+    String toDayVal = simpleDateFormat.format(new Date());
+    toDayVal = simpleDateFormat.format(calendar.getTime());
     endtime = calendar.getTime();
-    mToDayVals.add(mToDayVal);
+    toDayVals.add(toDayVal);
 
     dateType = MONTH;
     dateTypeArray.add(MONTH);
@@ -1459,7 +1469,6 @@ public class ChartActivity extends AppCompatActivity {
 
   private void setYear(TextView textView1) {
     SimpleDateFormat simpleDateFormat = AppController.getDateFormat();
-    SimpleDateFormat simpleDateFormat1 = AppController.getDateFormatYearFormat();
     Calendar calendar = Calendar.getInstance();
     calendar.set(Calendar.MONTH, 1); // this takes current date
     calendar.set(Calendar.DAY_OF_MONTH, 1);
@@ -1468,11 +1477,11 @@ public class ChartActivity extends AppCompatActivity {
     calendar.set(Calendar.SECOND, 0);
     calendar.set(Calendar.MILLISECOND, 0);
 
-    String mFromDayVal = simpleDateFormat.format(calendar.getTime());
+    String fromDayVal = simpleDateFormat.format(calendar.getTime());
     starttime = calendar.getTime();
-    mFromDayVals.add(mFromDayVal);
+    fromDayVals.add(fromDayVal);
 
-    String mToDayVal = simpleDateFormat.format(new Date());
+    SimpleDateFormat simpleDateFormat1 = AppController.getDateFormatYearFormat();
     textView1.setText(simpleDateFormat1.format(calendar.getTime()));
 
     calendar.add(Calendar.YEAR, 1);
@@ -1481,16 +1490,17 @@ public class ChartActivity extends AppCompatActivity {
     calendar.set(Calendar.MINUTE, 59);
     calendar.set(Calendar.SECOND, 59);
     calendar.set(Calendar.MILLISECOND, 999);
-    mToDayVal = simpleDateFormat.format(calendar.getTime());
+    String toDayVal = simpleDateFormat.format(new Date());
+    toDayVal = simpleDateFormat.format(calendar.getTime());
     endtime = calendar.getTime();
-    mToDayVals.add(mToDayVal);
+    toDayVals.add(toDayVal);
     dateType = YEAR;
     dateTypeArray.add(YEAR);
   }
 
   @Override
   protected void onDestroy() {
-    dbServiceSubscriber.closeRealmObj(mRealm);
+    dbServiceSubscriber.closeRealmObj(realm);
     super.onDestroy();
   }
 }

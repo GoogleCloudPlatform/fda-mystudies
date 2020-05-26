@@ -50,15 +50,15 @@ import com.harvard.usermodule.webservicemodel.StudyData;
 import com.harvard.usermodule.webservicemodel.UserProfileData;
 import com.harvard.utils.AppController;
 import com.harvard.utils.Logger;
-import org.researchstack.backbone.task.Task;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
 import io.realm.Realm;
 import io.realm.RealmList;
 import io.realm.RealmObject;
 import io.realm.RealmResults;
 import io.realm.Sort;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import org.researchstack.backbone.task.Task;
 
 public class DBServiceSubscriber {
 
@@ -126,7 +126,7 @@ public class DBServiceSubscriber {
     closeRealmObj(realm);
   }
 
-  public void deleteActivityWSList(
+  public void deleteActivityWsList(
       Context context, ActivityListData activityListData, String activityId) {
     realm = AppController.getRealmobj(context);
     realm.beginTransaction();
@@ -140,7 +140,7 @@ public class DBServiceSubscriber {
     closeRealmObj(realm);
   }
 
-  public void addActivityWSList(
+  public void addActivityWsList(
       Context context, ActivityListData activityListData, ActivitiesWS activitiesWS) {
     realm = AppController.getRealmobj(context);
     realm.beginTransaction();
@@ -228,7 +228,7 @@ public class DBServiceSubscriber {
   public Activities getActivityPreferenceBySurveyId(String studyId, String surveyId, Realm realm) {
     ActivityData activityData = getActivityPreference(studyId, realm);
     Activities activities = null;
-    if (activityData != null && activityData.getActivities() != null)
+    if (activityData != null && activityData.getActivities() != null) {
       for (int i = 0; i < activityData.getActivities().size(); i++) {
         if (activityData.getActivities().get(i).getStudyId().equalsIgnoreCase(studyId)
             && activityData.getActivities().get(i).getActivityId().equalsIgnoreCase(surveyId)) {
@@ -236,6 +236,7 @@ public class DBServiceSubscriber {
           break;
         }
       }
+    }
     return activities;
   }
 
@@ -291,7 +292,9 @@ public class DBServiceSubscriber {
         available = true;
       }
       if (date.before(activityRuns.get(i).getEndDate())) {
-        if (!available) run = run - 1;
+        if (!available) {
+          run = run - 1;
+        }
         break;
       }
     }
@@ -650,20 +653,22 @@ public class DBServiceSubscriber {
                       rows.get(i).getSteps().get(j).getSteps().deleteAllFromRealm();
                     }
                     if (rows.get(i).getSteps().get(j).getFormat() != null) {
-                      if (rows.get(i).getSteps().get(j).getFormat().getImageChoices() != null)
+                      if (rows.get(i).getSteps().get(j).getFormat().getImageChoices() != null) {
                         rows.get(i)
                             .getSteps()
                             .get(j)
                             .getFormat()
                             .getImageChoices()
                             .deleteAllFromRealm();
-                      if (rows.get(i).getSteps().get(j).getFormat().getTextChoices() != null)
+                      }
+                      if (rows.get(i).getSteps().get(j).getFormat().getTextChoices() != null) {
                         rows.get(i)
                             .getSteps()
                             .get(j)
                             .getFormat()
                             .getTextChoices()
                             .deleteAllFromRealm();
+                      }
                       rows.get(i).getSteps().get(j).getFormat().deleteFromRealm();
                     }
                   }
@@ -720,8 +725,8 @@ public class DBServiceSubscriber {
     closeRealmObj(realm);
   }
 
-  public StudyHome getStudyInfoListFromDB(String mStudyId, Realm realm) {
-    return realm.where(StudyHome.class).equalTo("mStudyId", mStudyId).findFirst();
+  public StudyHome getStudyInfoListFromDB(String studyId, Realm realm) {
+    return realm.where(StudyHome.class).equalTo("mStudyId", studyId).findFirst();
   }
 
   public StepRecordCustom getResultFromDB(String taskStepID, Realm realm) {
@@ -744,10 +749,10 @@ public class DBServiceSubscriber {
     return realm.where(NotificationData.class).findFirst();
   }
 
-  public void saveConsentDocumentToDB(Context context, ConsentDocumentData mConsentDocumentData) {
+  public void saveConsentDocumentToDB(Context context, ConsentDocumentData consentDocumentData) {
     realm = AppController.getRealmobj(context);
     realm.beginTransaction();
-    realm.copyToRealmOrUpdate(mConsentDocumentData);
+    realm.copyToRealmOrUpdate(consentDocumentData);
     realm.commitTransaction();
     closeRealmObj(realm);
   }
@@ -883,12 +888,12 @@ public class DBServiceSubscriber {
     return notificationsDb;
   }
 
-  public StudyUpdate getStudyUpdatedataFromDB(String mStudyId, Realm realm) {
-    return realm.where(StudyUpdate.class).equalTo("studyId", mStudyId).findFirst();
+  public StudyUpdate getStudyUpdatedataFromDB(String studyId, Realm realm) {
+    return realm.where(StudyUpdate.class).equalTo("studyId", studyId).findFirst();
   }
 
-  public ConsentDocumentData getConsentDocumentFromDB(String mStudyId, Realm realm) {
-    return realm.where(ConsentDocumentData.class).equalTo("mStudyId", mStudyId).findFirst();
+  public ConsentDocumentData getConsentDocumentFromDB(String studyId, Realm realm) {
+    return realm.where(ConsentDocumentData.class).equalTo("mStudyId", studyId).findFirst();
   }
 
   // UpdateUserPreferenceDB
@@ -912,7 +917,6 @@ public class DBServiceSubscriber {
       studies.setSiteId(siteId);
       studies.setHashedToken(hashToken);
     } else {
-      StudyData studyData = getStudyPreferencesListFromDB(realm);
       Studies studies1 = new Studies();
       studies1.setStudyId(studyId);
       studies1.setBookmarked(false);
@@ -923,6 +927,7 @@ public class DBServiceSubscriber {
       studies1.setParticipantId(participantId);
       studies1.setSiteId(siteId);
       studies1.setHashedToken(hashToken);
+      StudyData studyData = getStudyPreferencesListFromDB(realm);
       studyData.getStudies().add(studies1);
     }
     realm.commitTransaction();
@@ -936,11 +941,11 @@ public class DBServiceSubscriber {
     if (studies != null) {
       studies.setVersion(version);
     } else {
-      StudyData studyData = getStudyPreferencesListFromDB(realm);
       Studies studies1 = new Studies();
       studies1.setStudyId(studyId);
       studies1.setBookmarked(false);
       studies1.setVersion(version);
+      StudyData studyData = getStudyPreferencesListFromDB(realm);
       studyData.getStudies().add(studies1);
     }
     realm.commitTransaction();
@@ -1011,7 +1016,6 @@ public class DBServiceSubscriber {
       activities.getActivityRun().setTotal(totalRun);
       activities.setActivityVersion(activityVersion);
     } else {
-      ActivityData activityData = getActivityPreferencesListFromDB(studyId, realm);
       Activities activities1 = new Activities();
       activities1.setStatus(status);
       activities1.setStudyId(studyId);
@@ -1023,6 +1027,7 @@ public class DBServiceSubscriber {
       activityRunPreference.setCompleted(completedRun);
       activityRunPreference.setMissed(missedRun);
       activities1.setActivityRun(activityRunPreference);
+      ActivityData activityData = getActivityPreferencesListFromDB(studyId, realm);
       if (activityData != null && activityData.getActivities() != null) {
         activityData.getActivities().add(activities1);
       } else if (activityData != null) {
@@ -1136,10 +1141,10 @@ public class DBServiceSubscriber {
     closeRealmObj(realm);
   }
 
-  public void saveNotification(NotificationData notificationData, Realm mRealm) {
-    mRealm.beginTransaction();
-    mRealm.copyToRealmOrUpdate(notificationData);
-    mRealm.commitTransaction();
+  public void saveNotification(NotificationData notificationData, Realm realm) {
+    realm.beginTransaction();
+    realm.copyToRealmOrUpdate(notificationData);
+    realm.commitTransaction();
   }
 
   public RealmList<StudyList> saveStudyStatusToStudyList(
@@ -1181,15 +1186,18 @@ public class DBServiceSubscriber {
     return studyListArrayList;
   }
 
-  public ConsentPdfData getPDFPath(String studyId, Realm realm) {
+  public ConsentPdfData getPdfPath(String studyId, Realm realm) {
     return realm.where(ConsentPdfData.class).equalTo("StudyId", studyId).findFirst();
   }
 
   public RealmResults<StepRecordCustom> getResult(
       String activityId, String key, Date startDate, Date endDate, Realm realm) {
     Calendar calendar = Calendar.getInstance();
-    if (startDate != null) calendar.setTime(startDate);
-    else calendar.setTime(new Date());
+    if (startDate != null) {
+      calendar.setTime(startDate);
+    } else {
+      calendar.setTime(new Date());
+    }
     calendar.set(Calendar.HOUR, 0);
     calendar.set(Calendar.MINUTE, 0);
     calendar.set(Calendar.SECOND, 0);
@@ -1197,8 +1205,11 @@ public class DBServiceSubscriber {
     calendar.set(Calendar.AM_PM, Calendar.AM);
 
     Calendar calendar1 = Calendar.getInstance();
-    if (endDate != null) calendar1.setTime(endDate);
-    else calendar1.setTime(new Date());
+    if (endDate != null) {
+      calendar1.setTime(endDate);
+    } else {
+      calendar1.setTime(new Date());
+    }
     calendar1.set(Calendar.HOUR, 11);
     calendar1.set(Calendar.MINUTE, 59);
     calendar1.set(Calendar.SECOND, 59);
@@ -1216,8 +1227,11 @@ public class DBServiceSubscriber {
   public RealmResults<StepRecordCustom> getResultForStat(
       String activityId, String key, Date startDate, Date endDate, Realm realm) {
     Calendar calendar = Calendar.getInstance();
-    if (startDate != null) calendar.setTime(startDate);
-    else calendar.setTime(new Date());
+    if (startDate != null) {
+      calendar.setTime(startDate);
+    } else {
+      calendar.setTime(new Date());
+    }
     calendar.set(Calendar.HOUR, 0);
     calendar.set(Calendar.MINUTE, 0);
     calendar.set(Calendar.SECOND, 0);
@@ -1225,8 +1239,11 @@ public class DBServiceSubscriber {
     calendar.set(Calendar.AM_PM, Calendar.AM);
 
     Calendar calendar1 = Calendar.getInstance();
-    if (endDate != null) calendar1.setTime(endDate);
-    else calendar1.setTime(new Date());
+    if (endDate != null) {
+      calendar1.setTime(endDate);
+    } else {
+      calendar1.setTime(new Date());
+    }
     calendar1.set(Calendar.HOUR, 11);
     calendar1.set(Calendar.MINUTE, 59);
     calendar1.set(Calendar.SECOND, 59);
@@ -1313,15 +1330,15 @@ public class DBServiceSubscriber {
     return realm.where(StudyResource.class).equalTo("mStudyId", studyId).findFirst();
   }
 
-  public void saveConsentPDF(Context context, ConsentPDF consentPDF) {
+  public void saveConsentPdf(Context context, ConsentPDF consentPdf) {
     realm = AppController.getRealmobj(context);
     realm.beginTransaction();
-    realm.copyToRealmOrUpdate(consentPDF);
+    realm.copyToRealmOrUpdate(consentPdf);
     realm.commitTransaction();
     closeRealmObj(realm);
   }
 
-  public ConsentPDF getConsentPDF(String studyId, Realm realm) {
+  public ConsentPDF getConsentPdf(String studyId, Realm realm) {
     return realm.where(ConsentPDF.class).equalTo("studyId", studyId).findFirst();
   }
 
@@ -1362,7 +1379,9 @@ public class DBServiceSubscriber {
           public void execute(Realm realm) {
             OfflineData offlineData =
                 realm.where(OfflineData.class).equalTo("number", index).findFirst();
-            if (offlineData != null) offlineData.deleteFromRealm();
+            if (offlineData != null) {
+              offlineData.deleteFromRealm();
+            }
           }
         });
     closeRealmObj(realm);
@@ -1395,7 +1414,7 @@ public class DBServiceSubscriber {
     closeRealmObj(realm);
   }
 
-  public void deleteActivityWSData(Context context, final String studyId) {
+  public void deleteActivityWsData(Context context, final String studyId) {
     realm = AppController.getRealmobj(context);
 
     realm.executeTransaction(
@@ -1501,19 +1520,23 @@ public class DBServiceSubscriber {
   public ActivitiesWS getActivityObj(String activityId, String studyId, Realm realm) {
     ActivityListData activityListData =
         realm.where(ActivityListData.class).equalTo("studyId", studyId).findFirst();
-    if (activityListData != null)
+    if (activityListData != null) {
       return activityListData.getActivities().where().equalTo("activityId", activityId).findFirst();
-    else return null;
+    } else {
+      return null;
+    }
   }
 
-  public void UpdateActivitiesWSVersion(
+  public void updateActivitiesWsVersion(
       String activityId, String studyId, Realm realm, final String version) {
     final ActivitiesWS activitiesWS = getActivityObj(activityId, studyId, realm);
     realm.executeTransaction(
         new Realm.Transaction() {
           @Override
           public void execute(Realm realm) {
-            if (activitiesWS != null) activitiesWS.setActivityVersion(version);
+            if (activitiesWS != null) {
+              activitiesWS.setActivityVersion(version);
+            }
           }
         });
   }

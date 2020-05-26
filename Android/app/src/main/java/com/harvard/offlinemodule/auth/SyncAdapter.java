@@ -38,11 +38,11 @@ import com.harvard.utils.Logger;
 import com.harvard.webservicemodule.apihelper.ApiCall;
 import com.harvard.webservicemodule.events.RegistrationServerEnrollmentConfigEvent;
 import com.harvard.webservicemodule.events.ResponseServerConfigEvent;
-import org.json.JSONException;
-import org.json.JSONObject;
-import java.util.HashMap;
 import io.realm.Realm;
 import io.realm.RealmResults;
+import java.util.HashMap;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 public class SyncAdapter extends AbstractThreadedSyncAdapter
     implements ApiCall.OnAsyncRequestComplete {
