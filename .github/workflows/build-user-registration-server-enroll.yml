@@ -1,6 +1,8 @@
 on:
   pull_request:
-    branches: [ early-access ]
+    paths:
+    - 'user-registration-server-ws/enroll-mgmt/**'
+    - '.github/workflows/build-user-registration-server-enroll.yml'
 name: Build user-registration-server-ws-enroll
 jobs:
   build:
