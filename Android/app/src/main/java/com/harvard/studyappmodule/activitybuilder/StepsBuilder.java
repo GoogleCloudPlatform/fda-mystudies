@@ -16,6 +16,7 @@
 package com.harvard.studyappmodule.activitybuilder;
 
 import android.content.Context;
+import android.text.Html;
 import com.harvard.R;
 import com.harvard.studyappmodule.activitybuilder.model.servicemodel.ActivityObj;
 import com.harvard.studyappmodule.activitybuilder.model.servicemodel.Steps;
@@ -588,7 +589,8 @@ public class StepsBuilder {
               new InstructionStep(
                   activityQuestionStep.get(i).getKey(),
                   activityQuestionStep.get(i).getTitle(),
-                  activityQuestionStep.get(i).getText().replaceAll("(\r\n|\n)", "<br />"));
+                  Html.escapeHtml(
+                      activityQuestionStep.get(i).getText().replaceAll("(\r\n|\n)", "<br />")));
           instructionStep.setOptional(activityQuestionStep.get(i).isSkippable());
           if (branching) instructionStep.setStepTitle(R.string.notxt);
           steps.add(instructionStep);

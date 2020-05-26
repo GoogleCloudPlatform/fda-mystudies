@@ -73,11 +73,16 @@ class ActivitiesViewController: UIViewController {
     appDelegate.checkConsentStatus(controller: self)
   }
 
+  deinit {
+    NotificationCenter.default.removeObserver(self)
+  }
+
   // MARK: - Viewcontroller Lifecycle
 
   override func viewDidLoad() {
     super.viewDidLoad()
 
+    addObservers()
     selectedFilter = ActivityFilterType.all
 
     self.tableView?.estimatedRowHeight = 126
@@ -141,6 +146,20 @@ class ActivitiesViewController: UIViewController {
     if !(ud.bool(forKey: key)) {
       labkeyResponseFetch.checkUpdates()
     }
+  }
+
+  private func addObservers() {
+    // Add activity refresh notification observer.
+    NotificationCenter.default.addObserver(
+      self,
+      selector: #selector(refreshActivities),
+      name: kRefreshActivities,
+      object: nil
+    )
+  }
+
+  @objc private func refreshActivities() {
+    loadActivitiesFromDatabase()
   }
 
   /// Checks for Activity updates from WCP.
@@ -520,8 +539,8 @@ class ActivitiesViewController: UIViewController {
       self.updateSectionArray(activityType: filterType)
     }
 
-    DispatchQueue.main.async {
-
+    DispatchQueue.main.async { [weak self] in
+      guard let self = self else { return }
       self.tableView?.reloadData()
       self.tableView?.isHidden = false
       self.labelNoNetworkAvailable?.isHidden = true
