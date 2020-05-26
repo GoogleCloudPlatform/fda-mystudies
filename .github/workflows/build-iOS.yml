@@ -1,5 +1,9 @@
-on: [pull_request]
 name: Build-iOS
+on:
+  pull_request:
+    paths:
+    - 'iOS/**'
+    - '.github/workflows/build-iOS.yml'
 jobs:
   test:
     name: Build
