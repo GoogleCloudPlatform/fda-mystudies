@@ -68,12 +68,16 @@ module "my_studies_sql_import_bucket" {
   name       = "${var.project_id}-sql-import"
   project_id = var.project_id
   location   = var.storage_location
+  # Comment out this block before the rest of this file is deployed, and then uncomment and do
+  # another deployment for this iam permission.
+  # ==============================================================================
   iam_members = [
     {
       role   = "roles/storage.objectViewer"
       member = "serviceAccount:${module.my_studies_cloudsql.instance_service_account_email_address}"
     }
   ]
+  # ==============================================================================
 }
 
 data "google_secret_manager_secret_version" "sql_password" {
