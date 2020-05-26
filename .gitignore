@@ -1,7 +1,6 @@
 **/.terraform
 *.tfstate
 *.tfstate.*
-WCP-WS/
 **/.settings
 **/*.log.gz
 **/.idea
