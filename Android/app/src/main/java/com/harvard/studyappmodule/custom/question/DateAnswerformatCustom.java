@@ -48,7 +48,9 @@ public class DateAnswerformatCustom extends AnswerFormatCustom {
     this.defaultDate = defaultDate;
     this.minimumDate = minimumDate;
     this.maximumDate = maximumDate;
-    if (dateRange != null) this.dateRange = dateRange;
+    if (dateRange != null) {
+      this.dateRange = dateRange;
+    }
   }
 
   /**
@@ -96,9 +98,15 @@ public class DateAnswerformatCustom extends AnswerFormatCustom {
 
   @Override
   public QuestionType getQuestionType() {
-    if (style == DateAnswerStyle.Date) return Type.Date;
-    if (style == DateAnswerStyle.DateAndTime) return Type.DateAndTime;
-    if (style == DateAnswerStyle.TimeOfDay) return Type.TimeOfDay;
+    if (style == DateAnswerStyle.Date) {
+      return Type.Date;
+    }
+    if (style == DateAnswerStyle.DateAndTime) {
+      return Type.DateAndTime;
+    }
+    if (style == DateAnswerStyle.TimeOfDay) {
+      return Type.TimeOfDay;
+    }
 
     return Type.None;
   }
@@ -106,8 +114,11 @@ public class DateAnswerformatCustom extends AnswerFormatCustom {
   // Before used FormatHelper.SIMPLE_FORMAT_DATE Now FormatHelper.DEFAULT_FORMAT
   public BodyAnswer validateAnswer(Date resultDate) {
     SimpleDateFormat simpleDateFormat;
-    if (style == DateAnswerStyle.Date) simpleDateFormat = FormatHelper.SIMPLE_FORMAT_DATE;
-    else simpleDateFormat = FormatHelper.DEFAULT_FORMAT;
+    if (style == DateAnswerStyle.Date) {
+      simpleDateFormat = FormatHelper.SIMPLE_FORMAT_DATE;
+    } else {
+      simpleDateFormat = FormatHelper.DEFAULT_FORMAT;
+    }
 
     if (dateRange.equalsIgnoreCase("") || dateRange.equalsIgnoreCase("custom")) {
       if (minimumDate != null && resultDate.getTime() < minimumDate.getTime()) {

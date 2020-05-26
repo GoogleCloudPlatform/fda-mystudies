@@ -90,7 +90,7 @@ public class SignupActivity extends AppCompatActivity implements ApiCall.OnAsync
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_signup);
     mClicked = false;
-    initializeXMLId();
+    initializeXmlId();
     setTextForView();
     customTextView(mAgreeLabel);
     setFont();
@@ -100,7 +100,7 @@ public class SignupActivity extends AppCompatActivity implements ApiCall.OnAsync
     mTermsAndConditionData.setTerms(getString(R.string.termsurl));
   }
 
-  private void initializeXMLId() {
+  private void initializeXmlId() {
     mBackBtn = (RelativeLayout) findViewById(R.id.backBtn);
     mInfoIcon = (RelativeLayout) findViewById(R.id.mInfoIcon);
     mTitle = (AppCompatTextView) findViewById(R.id.title);
@@ -378,7 +378,7 @@ public class SignupActivity extends AppCompatActivity implements ApiCall.OnAsync
                 SignupActivity.this,
                 getString(R.string.clientToken),
                 mRegistrationData.getClientToken());
-        new GetFCMRefreshToken().execute();
+        new GetFcmRefreshToken().execute();
       } else {
         Toast.makeText(
                 this, getResources().getString(R.string.unable_to_signup), Toast.LENGTH_SHORT)
@@ -554,7 +554,7 @@ public class SignupActivity extends AppCompatActivity implements ApiCall.OnAsync
     userModulePresenter.performUpdateUserProfile(updateUserProfileEvent);
   }
 
-  private class GetFCMRefreshToken extends AsyncTask<String, String, String> {
+  private class GetFcmRefreshToken extends AsyncTask<String, String, String> {
 
     @Override
     protected String doInBackground(String... params) {

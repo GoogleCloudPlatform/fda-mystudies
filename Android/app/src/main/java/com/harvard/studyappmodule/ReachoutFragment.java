@@ -27,13 +27,13 @@ import java.util.ArrayList;
 
 public class ReachoutFragment<T> extends Fragment {
 
-  private RecyclerView mReachoutRecyclerView;
-  private Context mContext;
+  private RecyclerView reachoutRecyclerView;
+  private Context context;
 
   @Override
   public void onAttach(Context context) {
     super.onAttach(context);
-    this.mContext = context;
+    this.context = context;
   }
 
   @Override
@@ -41,22 +41,22 @@ public class ReachoutFragment<T> extends Fragment {
       LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
     // Inflate the layout for this fragment
     View view = inflater.inflate(R.layout.fragment_reachout, container, false);
-    initializeXMLId(view);
+    initializeXmlId(view);
     setRecyclearView();
     return view;
   }
 
-  private void initializeXMLId(View view) {
-    mReachoutRecyclerView = (RecyclerView) view.findViewById(R.id.reachoutRecyclerView);
+  private void initializeXmlId(View view) {
+    reachoutRecyclerView = (RecyclerView) view.findViewById(R.id.reachoutRecyclerView);
   }
 
   private void setRecyclearView() {
-    mReachoutRecyclerView.setLayoutManager(new LinearLayoutManager(mContext));
-    mReachoutRecyclerView.setNestedScrollingEnabled(false);
+    reachoutRecyclerView.setLayoutManager(new LinearLayoutManager(context));
+    reachoutRecyclerView.setNestedScrollingEnabled(false);
     ArrayList<String> reachoutList = new ArrayList<>();
     reachoutList.add(getString(R.string.anonymous_feedback));
     reachoutList.add(getString(R.string.need_help));
     ReachoutListAdapter reachoutListAdapter = new ReachoutListAdapter(getActivity(), reachoutList);
-    mReachoutRecyclerView.setAdapter(reachoutListAdapter);
+    reachoutRecyclerView.setAdapter(reachoutListAdapter);
   }
 }

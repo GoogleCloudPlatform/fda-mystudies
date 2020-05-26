@@ -29,12 +29,12 @@ import com.harvard.utils.Logger;
 import java.util.ArrayList;
 
 public class ReachoutListAdapter extends RecyclerView.Adapter<ReachoutListAdapter.Holder> {
-  private final Context mContext;
-  private final ArrayList<String> mItems = new ArrayList<>();
+  private final Context context;
+  private final ArrayList<String> items = new ArrayList<>();
 
   ReachoutListAdapter(Context context, ArrayList<String> items) {
-    this.mContext = context;
-    this.mItems.addAll(items);
+    this.context = context;
+    this.items.addAll(items);
   }
 
   @Override
@@ -47,8 +47,8 @@ public class ReachoutListAdapter extends RecyclerView.Adapter<ReachoutListAdapte
 
   @Override
   public int getItemCount() {
-    if (mItems == null) return 0;
-    return mItems.size();
+    if (items == null) return 0;
+    return items.size();
   }
 
   class Holder extends RecyclerView.ViewHolder {
@@ -65,7 +65,7 @@ public class ReachoutListAdapter extends RecyclerView.Adapter<ReachoutListAdapte
 
     private void setFont() {
       try {
-        mReachoutTitle.setTypeface(AppController.getTypeface(mContext, "regular"));
+        mReachoutTitle.setTypeface(AppController.getTypeface(context, "regular"));
 
       } catch (Exception e) {
         Logger.log(e);
@@ -77,13 +77,13 @@ public class ReachoutListAdapter extends RecyclerView.Adapter<ReachoutListAdapte
   public void onBindViewHolder(final Holder holder, final int position) {
     final int i = holder.getAdapterPosition();
     try {
-      holder.mReachoutTitle.setText(mItems.get(position));
+      holder.mReachoutTitle.setText(items.get(position));
 
       holder.mContainer.setOnClickListener(
           new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-              Toast.makeText(mContext, "GOTO Resources Details Screen " + i, Toast.LENGTH_LONG)
+              Toast.makeText(context, "GOTO Resources Details Screen " + i, Toast.LENGTH_LONG)
                   .show();
             }
           });
@@ -95,11 +95,11 @@ public class ReachoutListAdapter extends RecyclerView.Adapter<ReachoutListAdapte
           @Override
           public void onClick(View view) {
             if (position == 0) {
-              Intent intent = new Intent(mContext, FeedbackActivity.class);
-              mContext.startActivity(intent);
+              Intent intent = new Intent(context, FeedbackActivity.class);
+              context.startActivity(intent);
             } else {
-              Intent intent = new Intent(mContext, ContactUsActivity.class);
-              mContext.startActivity(intent);
+              Intent intent = new Intent(context, ContactUsActivity.class);
+              context.startActivity(intent);
             }
           }
         });

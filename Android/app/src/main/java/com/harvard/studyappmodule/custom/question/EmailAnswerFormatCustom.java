@@ -14,14 +14,14 @@
 
 package com.harvard.studyappmodule.custom.question;
 
-import com.harvard.studyappmodule.custom.ChoiceAnswerFormatCustom;
-import org.researchstack.backbone.utils.TextUtils;
+        import com.harvard.studyappmodule.custom.ChoiceAnswerFormatCustom;
+        import org.researchstack.backbone.utils.TextUtils;
 
 public class EmailAnswerFormatCustom extends ChoiceAnswerFormatCustom {
-  private int MAX_EMAIL_LENGTH;
+  private int maxEmailLength;
 
   public EmailAnswerFormatCustom(int maxEmailLength) {
-    this.MAX_EMAIL_LENGTH = maxEmailLength;
+    this.maxEmailLength = maxEmailLength;
   }
 
   public boolean isAnswerValid(String text) {
@@ -34,6 +34,6 @@ public class EmailAnswerFormatCustom extends ChoiceAnswerFormatCustom {
   }
 
   public int getMaxEmailLength() {
-    return MAX_EMAIL_LENGTH;
+    return maxEmailLength;
   }
 }

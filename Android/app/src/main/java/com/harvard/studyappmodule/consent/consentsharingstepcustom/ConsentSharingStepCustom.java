@@ -18,11 +18,11 @@ import org.researchstack.backbone.step.QuestionStep;
 
 public class ConsentSharingStepCustom extends QuestionStep {
 
-  private String mLoadmoretxt;
+  private String loadmoretxt;
 
   public ConsentSharingStepCustom(String identifier, String loadmoretxt) {
     super(identifier);
-    mLoadmoretxt = loadmoretxt;
+    this.loadmoretxt = loadmoretxt;
     setOptional(false);
   }
 
@@ -32,6 +32,6 @@ public class ConsentSharingStepCustom extends QuestionStep {
   }
 
   public String getLoadmoretxt() {
-    return mLoadmoretxt;
+    return loadmoretxt;
   }
 }

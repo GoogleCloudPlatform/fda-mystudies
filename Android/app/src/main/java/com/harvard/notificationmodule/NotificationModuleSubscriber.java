@@ -42,13 +42,13 @@ public class NotificationModuleSubscriber {
   static final String NOTIFICATION_TURN_OFF_NOTIFICATION = "notificationTurnOffNotification";
   private static final String RESOURCES = "resources";
   private DBServiceSubscriber dbServiceSubscriber;
-  private Realm mRealm;
+  private Realm realm;
   private int pendingId = 214747;
   private int pendingId1 = 214746;
 
-  public NotificationModuleSubscriber(DBServiceSubscriber dbServiceSubscriber, Realm realm) {
+  public NotificationModuleSubscriber(DBServiceSubscriber dbServiceSubscriber, Realm realmobj) {
     this.dbServiceSubscriber = dbServiceSubscriber;
-    mRealm = realm;
+    realm = realmobj;
   }
 
   private Date removeOffset(Date date, int offset) {
@@ -68,7 +68,7 @@ public class NotificationModuleSubscriber {
     Calendar time1 = Calendar.getInstance();
     ActivitiesWS activitiesWS =
         dbServiceSubscriber.getActivityItem(
-            activityRun.getStudyId(), activityRun.getActivityId(), mRealm);
+            activityRun.getStudyId(), activityRun.getActivityId(), realm);
 
     try {
       if (type.equalsIgnoreCase(SurveyScheduler.FREQUENCY_TYPE_ONE_TIME)) {
@@ -355,11 +355,12 @@ public class NotificationModuleSubscriber {
 
   public void generateTwoWeekNotification(Date date, Context context) {
     try {
-      String title = context.getResources().getString(R.string.app_name);
+
       Calendar calendar = Calendar.getInstance();
       calendar.setTime(date);
       AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
 
+      String title = context.getResources().getString(R.string.app_name);
       Intent notificationIntent = new Intent(context, AlarmReceiver.class);
       notificationIntent.setAction("android.media.action.DISPLAY_NOTIFICATION");
       notificationIntent.addCategory("android.intent.category.DEFAULT");
@@ -385,7 +386,7 @@ public class NotificationModuleSubscriber {
 
   public void cancelTwoWeekNotification(Context context) {
     try {
-      AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+
       String title = context.getResources().getString(R.string.app_name);
       Intent notificationIntent = new Intent(context, AlarmReceiver.class);
       notificationIntent.setAction("android.media.action.DISPLAY_NOTIFICATION");
@@ -398,6 +399,7 @@ public class NotificationModuleSubscriber {
           PendingIntent.getBroadcast(
               context, pendingId, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
       broadcast.cancel();
+      AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
       alarmManager.cancel(broadcast);
     } catch (Exception e) {
       Logger.log(e);
@@ -406,12 +408,12 @@ public class NotificationModuleSubscriber {
 
   public void generateNotificationTurnOffNotification(Date date, Context context) {
     try {
-      String title = context.getResources().getString(R.string.app_name);
+
       Calendar calendar = Calendar.getInstance();
       calendar.setTime(date);
       calendar.add(Calendar.DAY_OF_MONTH, 7);
       AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
-
+      String title = context.getResources().getString(R.string.app_name);
       Intent notificationIntent = new Intent(context, AlarmReceiver.class);
       notificationIntent.setAction("android.media.action.DISPLAY_NOTIFICATION");
       notificationIntent.addCategory("android.intent.category.DEFAULT");
@@ -437,7 +439,7 @@ public class NotificationModuleSubscriber {
 
   public void cancelNotificationTurnOffNotification(Context context) {
     try {
-      AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+
       String title = context.getResources().getString(R.string.app_name);
       Intent notificationIntent = new Intent(context, AlarmReceiver.class);
       notificationIntent.setAction("android.media.action.DISPLAY_NOTIFICATION");
@@ -450,6 +452,7 @@ public class NotificationModuleSubscriber {
           PendingIntent.getBroadcast(
               context, pendingId1, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
       broadcast.cancel();
+      AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
       alarmManager.cancel(broadcast);
     } catch (Exception e) {
       Logger.log(e);
@@ -463,12 +466,12 @@ public class NotificationModuleSubscriber {
       Context context,
       String notificationTest,
       String resourceId) {
-    String title = "MyStudies";
+
     String description = "";
-    Calendar time = Calendar.getInstance();
+
     NotificationDbResources notificationsDb = null;
     RealmResults<NotificationDbResources> notificationsDbs =
-        dbServiceSubscriber.getNotificationDbResources(activityId, studyId, RESOURCES, mRealm);
+        dbServiceSubscriber.getNotificationDbResources(activityId, studyId, RESOURCES, realm);
     int id = 0;
     if (notificationsDbs != null && notificationsDbs.size() > 0) {
       for (int i = 0; i < notificationsDbs.size(); i++) {
@@ -480,8 +483,9 @@ public class NotificationModuleSubscriber {
     }
     id++;
     description = notificationTest;
+    Calendar time = Calendar.getInstance();
     time.setTime(date);
-
+    String title = "MyStudies";
     int notificationId = new Random().nextInt(10000);
     NotificationDbResources notificationDb = new NotificationDbResources();
     notificationDb.setStudyId(studyId);
@@ -553,7 +557,7 @@ public class NotificationModuleSubscriber {
     AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
 
     RealmResults<PendingIntentsResources> pendingIntentses =
-        dbServiceSubscriber.getPendingIntentIdResources(mRealm);
+        dbServiceSubscriber.getPendingIntentIdResources(realm);
     if (pendingIntentses != null) {
       for (int i = 0; i < pendingIntentses.size(); i++) {
         try {
@@ -587,7 +591,7 @@ public class NotificationModuleSubscriber {
     AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
 
     RealmResults<PendingIntentsResources> pendingIntentses =
-        dbServiceSubscriber.getPendingIntentIdResourcesByIds(mRealm, activityId, studyId);
+        dbServiceSubscriber.getPendingIntentIdResourcesByIds(realm, activityId, studyId);
     if (pendingIntentses != null) {
       for (int i = 0; i < pendingIntentses.size(); i++) {
         try {
@@ -623,7 +627,7 @@ public class NotificationModuleSubscriber {
       AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
 
       RealmResults<PendingIntents> pendingIntentses =
-          dbServiceSubscriber.getPendingIntentIdByIds(mRealm, activityId, studyId);
+          dbServiceSubscriber.getPendingIntentIdByIds(realm, activityId, studyId);
       if (pendingIntentses != null) {
         for (int i = 0; i < pendingIntentses.size(); i++) {
           Intent notificationIntent = new Intent(context, AlarmReceiver.class);
@@ -654,7 +658,7 @@ public class NotificationModuleSubscriber {
   public void cancleActivityLocalNotification(Context context) {
     AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
 
-    RealmResults<PendingIntents> pendingIntentses = dbServiceSubscriber.getPendingIntentId(mRealm);
+    RealmResults<PendingIntents> pendingIntentses = dbServiceSubscriber.getPendingIntentId(realm);
     if (pendingIntentses != null) {
       for (int i = 0; i < pendingIntentses.size(); i++) {
         Intent notificationIntent = new Intent(context, AlarmReceiver.class);

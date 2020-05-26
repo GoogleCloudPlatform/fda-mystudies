@@ -50,14 +50,14 @@ public class Tappingactivity implements StepBody {
   private QuestionStepCustom step;
   private StepResult<TappingResultFormat> result;
   private int tappingcount = 0;
-  private Context mContext;
-  private TappingAnswerFormat mTappingAnswerFormat;
+  private Context context;
+  private TappingAnswerFormat tappingAnswerFormat;
   private boolean timeup = false;
   private EditText kickcounter;
   private Intent serviceintent;
   private ImageView tapButton;
   private ImageView editButton;
-  private TextView mTimer;
+  private TextView timer;
   private int maxTime;
   private RelativeLayout timereditlayout;
   private int finalSecond;
@@ -65,17 +65,17 @@ public class Tappingactivity implements StepBody {
   public Tappingactivity(Step step, StepResult result) {
     this.step = (QuestionStepCustom) step;
     this.result = result == null ? new StepResult<>(this.step) : result;
-    mTappingAnswerFormat = (TappingAnswerFormat) ((QuestionStepCustom) step).getAnswerFormat1();
+    tappingAnswerFormat = (TappingAnswerFormat) ((QuestionStepCustom) step).getAnswerFormat1();
   }
 
   @Override
   public View getBodyView(int viewType, final LayoutInflater inflater, ViewGroup parent) {
     View view = inflater.inflate(R.layout.content_fetal_kick_counter, null);
-    mContext = inflater.getContext();
+    context = inflater.getContext();
     tapButton = (ImageView) view.findViewById(R.id.tapbutton);
     editButton = (ImageView) view.findViewById(R.id.editButton);
     final ImageView startTimer = (ImageView) view.findViewById(R.id.startTimer);
-    mTimer = (TextView) view.findViewById(R.id.mTimer);
+    timer = (TextView) view.findViewById(R.id.mTimer);
     final TextView starttxt = (TextView) view.findViewById(R.id.starttxt);
     final TextView mTapStart = (TextView) view.findViewById(R.id.mTapStart);
     kickcounter = (EditText) view.findViewById(R.id.kickcounter);
@@ -85,13 +85,13 @@ public class Tappingactivity implements StepBody {
     kickcounter.setEnabled(false);
     final int[] second = {0};
 
-    maxTime = mTappingAnswerFormat.getDuration();
+    maxTime = tappingAnswerFormat.getDuration();
 
-    final int maxcount = mTappingAnswerFormat.getKickCount();
+    final int maxcount = tappingAnswerFormat.getKickCount();
 
-    mTimer.setText(formathrs(second[0]));
+    timer.setText(formathrs(second[0]));
 
-    mTimer.addTextChangedListener(
+    timer.addTextChangedListener(
         new TextWatcher() {
           @Override
           public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
@@ -101,8 +101,9 @@ public class Tappingactivity implements StepBody {
 
           @Override
           public void afterTextChanged(Editable s) {
-            if (!timeup) tapButton.setEnabled(true);
-            else {
+            if (!timeup) {
+              tapButton.setEnabled(true);
+            } else {
               tapButton.setEnabled(false);
               timereditlayout.setVisibility(View.GONE);
             }
@@ -117,7 +118,7 @@ public class Tappingactivity implements StepBody {
             activateservice(maxTime);
             IntentFilter filter = new IntentFilter();
             filter.addAction("com.harvard.ActiveTask");
-            mContext.registerReceiver(receiver, filter);
+            context.registerReceiver(receiver, filter);
 
             if (!kickcounter.isEnabled()) {
               kickcounter.setEnabled(true);
@@ -131,15 +132,15 @@ public class Tappingactivity implements StepBody {
             editButton.setVisibility(View.VISIBLE);
           }
         });
-    mTimer.setOnClickListener(
+    timer.setOnClickListener(
         new View.OnClickListener() {
           @Override
           public void onClick(View v) {
-            final String[] duration = mTimer.getText().toString().split(":");
+            final String[] duration = timer.getText().toString().split(":");
             if (timeup) {
-              MyTimePickerDialog mTimePicker =
+              MyTimePickerDialog timePicker =
                   new MyTimePickerDialog(
-                      mContext,
+                      context,
                       new MyTimePickerDialog.OnTimeSetListener() {
 
                         @Override
@@ -165,7 +166,7 @@ public class Tappingactivity implements StepBody {
                           }
                           finalSecond = (hourOfDay * 60 * 60) + (minute * 60) + (seconds);
                           if (finalSecond <= maxTime) {
-                            mTimer.setText(hrs + ":" + min + ":" + sec);
+                            timer.setText(hrs + ":" + min + ":" + sec);
                           } else {
                             Toast.makeText(
                                     inflater.getContext(),
@@ -183,7 +184,7 @@ public class Tappingactivity implements StepBody {
                       Integer.parseInt(duration[1]),
                       Integer.parseInt(duration[2]),
                       true);
-              mTimePicker.show();
+              timePicker.show();
             }
           }
         });
@@ -211,16 +212,16 @@ public class Tappingactivity implements StepBody {
                     "You have recorded "
                         + kickcounter.getText().toString()
                         + " kicks in "
-                        + mTimer.getText().toString()
+                        + timer.getText().toString()
                         + ". Proceed to submitting count and time?");
                 timereditlayout.setVisibility(View.GONE);
                 try {
-                  mContext.stopService(serviceintent);
+                  context.stopService(serviceintent);
                 } catch (Exception e) {
                   Logger.log(e);
                 }
                 try {
-                  mContext.unregisterReceiver(receiver);
+                  context.unregisterReceiver(receiver);
                 } catch (Exception e) {
                   Logger.log(e);
                 }
@@ -318,26 +319,26 @@ public class Tappingactivity implements StepBody {
   }
 
   private void activateservice(long sec) {
-    serviceintent = new Intent(mContext, ActiveTaskService.class);
+    serviceintent = new Intent(context, ActiveTaskService.class);
     if (!isMyServiceRunning(ActiveTaskService.class)) {
       serviceintent.putExtra("remaining_sec", "" + sec);
-      mContext.startService(serviceintent);
+      context.startService(serviceintent);
     } else {
       try {
-        mContext.stopService(serviceintent);
+        context.stopService(serviceintent);
       } catch (Exception e) {
         Logger.log(e);
       }
       try {
-        mContext.unregisterReceiver(receiver);
+        context.unregisterReceiver(receiver);
       } catch (Exception e) {
         Logger.log(e);
       }
       serviceintent.putExtra("remaining_sec", "" + sec);
-      mContext.startService(serviceintent);
+      context.startService(serviceintent);
     }
 
-    ((CustomSurveyViewTaskActivity) mContext).serviceStarted(receiver, serviceintent);
+    ((CustomSurveyViewTaskActivity) context).serviceStarted(receiver, serviceintent);
   }
 
   private final BroadcastReceiver receiver =
@@ -346,12 +347,12 @@ public class Tappingactivity implements StepBody {
         public void onReceive(Context context, Intent intent) {
           if (Integer.parseInt(intent.getStringExtra("sec")) >= maxTime) {
             try {
-              mContext.stopService(serviceintent);
+              context.stopService(serviceintent);
             } catch (Exception e) {
               Logger.log(e);
             }
             try {
-              mContext.unregisterReceiver(receiver);
+              context.unregisterReceiver(receiver);
             } catch (Exception e) {
               Logger.log(e);
             }
@@ -362,17 +363,19 @@ public class Tappingactivity implements StepBody {
                 "You have recorded "
                     + kickcounter.getText().toString()
                     + " kicks in "
-                    + mTimer.getText().toString()
+                    + timer.getText().toString()
                     + ". Proceed to submitting count and time?");
-            mTimer.setText(formathrs(Integer.parseInt(intent.getStringExtra("sec"))));
+            timer.setText(formathrs(Integer.parseInt(intent.getStringExtra("sec"))));
           }
           finalSecond = Integer.parseInt(intent.getStringExtra("sec"));
-          if (!timeup) mTimer.setText(formathrs(Integer.parseInt(intent.getStringExtra("sec"))));
+          if (!timeup) {
+            timer.setText(formathrs(Integer.parseInt(intent.getStringExtra("sec"))));
+          }
         }
       };
 
   private boolean isMyServiceRunning(Class<?> serviceClass) {
-    ActivityManager manager = (ActivityManager) mContext.getSystemService(Context.ACTIVITY_SERVICE);
+    ActivityManager manager = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
     for (ActivityManager.RunningServiceInfo service :
         manager.getRunningServices(Integer.MAX_VALUE)) {
       if (serviceClass.getName().equals(service.service.getClassName())) {
@@ -384,7 +387,7 @@ public class Tappingactivity implements StepBody {
 
   private void endAlert(String message) {
     AlertDialog.Builder alertDialogBuilder =
-        new AlertDialog.Builder(mContext, R.style.MyAlertDialogStyle);
+        new AlertDialog.Builder(context, R.style.MyAlertDialogStyle);
     alertDialogBuilder.setTitle("Confirmation");
     alertDialogBuilder
         .setMessage(message)
@@ -393,7 +396,7 @@ public class Tappingactivity implements StepBody {
             "Proceed",
             new DialogInterface.OnClickListener() {
               public void onClick(DialogInterface dialog, int which) {
-                ((CustomSurveyViewTaskActivity) mContext)
+                ((CustomSurveyViewTaskActivity) context)
                     .onSaveStep(StepCallbacks.ACTION_NEXT, step, getStepResult(false));
               }
             })

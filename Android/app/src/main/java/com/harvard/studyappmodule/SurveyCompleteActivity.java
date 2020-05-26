@@ -63,9 +63,9 @@ public class SurveyCompleteActivity extends AppCompatActivity
   private static final int UPDATE_USERPREFERENCE_RESPONSECODE = 100;
   private static final int PROCESS_RESPONSE_RESPONSECODE = 101;
   private static final int UPDATE_STUDY_PREFERENCE = 102;
-  private TextView mSurveyCompleted;
-  private TextView mNext;
-  private TextView mSurveyCompletedThankyou;
+  private TextView surveyCompleted;
+  private TextView next;
+  private TextView surveyCompletedThankyou;
   private static final String EXTRA_STUDYID = "ViewTaskActivity.ExtraStudyId";
   private static final String STUDYID = "ViewTaskActivity.StudyId";
   private Realm realm;
@@ -79,14 +79,14 @@ public class SurveyCompleteActivity extends AppCompatActivity
     setContentView(R.layout.activity_survey_complete);
     dbServiceSubscriber = new DBServiceSubscriber();
     realm = AppController.getRealmobj(this);
-    initializeXMLId();
+    initializeXmlId();
     setFont();
-    mNext.setOnClickListener(
+    next.setOnClickListener(
         new View.OnClickListener() {
           @Override
           public void onClick(View v) {
-            mNext.setClickable(false);
-            mNext.setEnabled(false);
+            next.setClickable(false);
+            next.setEnabled(false);
             updateProcessResponse();
           }
         });
@@ -99,7 +99,7 @@ public class SurveyCompleteActivity extends AppCompatActivity
 
     String surveyId = getIntent().getStringExtra(CustomSurveyViewTaskActivity.EXTRA_STUDYID);
     surveyId = surveyId.substring(0, surveyId.lastIndexOf("_"));
-    String activityId[] = surveyId.split("_STUDYID_");
+    String[] activityId = surveyId.split("_STUDYID_");
     ActivityObj activityObj =
         dbServiceSubscriber.getActivityBySurveyId(
             getIntent().getStringExtra(STUDYID), activityId[1], realm);
@@ -111,8 +111,9 @@ public class SurveyCompleteActivity extends AppCompatActivity
             .findAll();
     Activities activities = null;
     for (int i = 0; i < activitiesRealmResults.size(); i++) {
-      if (activitiesRealmResults.get(i).getActivityId().equalsIgnoreCase(activityId[1]))
+      if (activitiesRealmResults.get(i).getActivityId().equalsIgnoreCase(activityId[1])) {
         activities = activitiesRealmResults.get(i);
+      }
     }
 
     Studies studies =
@@ -163,31 +164,31 @@ public class SurveyCompleteActivity extends AppCompatActivity
 
   private JSONObject getResponseDataJson(
       ActivityObj activityObj, Activities activities, Studies studies) {
-    JSONObject ProcessResponsejson = new JSONObject();
+    JSONObject processResponsejson = new JSONObject();
     try {
-      ProcessResponsejson.put("type", activityObj.getType());
-      ProcessResponsejson.put("participantId", studies.getParticipantId());
-      ProcessResponsejson.put("tokenIdentifier", studies.getHashedToken());
-      ProcessResponsejson.put("applicationId", AppConfig.APP_ID_VALUE);
-      ProcessResponsejson.put("orgId", AppConfig.ORG_ID_VALUE);
-      ProcessResponsejson.put("siteId", studies.getSiteId());
+      processResponsejson.put("type", activityObj.getType());
+      processResponsejson.put("participantId", studies.getParticipantId());
+      processResponsejson.put("tokenIdentifier", studies.getHashedToken());
+      processResponsejson.put("applicationId", AppConfig.APP_ID_VALUE);
+      processResponsejson.put("orgId", AppConfig.ORG_ID_VALUE);
+      processResponsejson.put("siteId", studies.getSiteId());
 
-      JSONObject InfoJson = new JSONObject();
-      InfoJson.put("studyId", studies.getStudyId());
-      InfoJson.put("studyVersion", studies.getVersion());
-      InfoJson.put("activityId", activities.getActivityId());
-      InfoJson.put("name", activityObj.getMetadata().getName());
-      InfoJson.put("version", activities.getActivityVersion());
-      InfoJson.put("activityRunId", activities.getActivityRunId());
+      JSONObject infoJson = new JSONObject();
+      infoJson.put("studyId", studies.getStudyId());
+      infoJson.put("studyVersion", studies.getVersion());
+      infoJson.put("activityId", activities.getActivityId());
+      infoJson.put("name", activityObj.getMetadata().getName());
+      infoJson.put("version", activities.getActivityVersion());
+      infoJson.put("activityRunId", activities.getActivityRunId());
 
-      ProcessResponsejson.put("metadata", InfoJson);
-      ProcessResponsejson.put(
+      processResponsejson.put("metadata", infoJson);
+      processResponsejson.put(
           "data", generateresult(activityObj, getIntent().getStringExtra(EXTRA_STUDYID)));
     } catch (JSONException e) {
       Logger.log(e);
     }
 
-    return ProcessResponsejson;
+    return processResponsejson;
   }
 
   private JSONObject generateresult(ActivityObj activityObj, String stringExtra) {
@@ -200,12 +201,13 @@ public class SurveyCompleteActivity extends AppCompatActivity
 
       JSONArray resultarray = new JSONArray();
       JsonParser jsonParser = new JsonParser();
-      RealmResults<StepRecordCustom> StepRecord =
+      RealmResults<StepRecordCustom> stepRecord =
           realm.where(StepRecordCustom.class).equalTo("taskId", stringExtra).findAll();
       boolean formskipped = true;
       for (int i = 0; i < activityObj.getSteps().size(); i++) {
-        for (int j = 0; j < StepRecord.size(); j++) {
-          if (StepRecord.get(j)
+        for (int j = 0; j < stepRecord.size(); j++) {
+          if (stepRecord
+              .get(j)
               .getStepId()
               .equalsIgnoreCase(activityObj.getSteps().get(i).getKey())) {
 
@@ -216,16 +218,16 @@ public class SurveyCompleteActivity extends AppCompatActivity
 
               resultarrobj.put(
                   "startTime",
-                  AppController.getDateFormat().format(StepRecord.get(j).getStarted()));
+                  AppController.getDateFormat().format(stepRecord.get(j).getStarted()));
               resultarrobj.put(
                   "endTime",
-                  AppController.getDateFormat().format(StepRecord.get(j).getCompleted()));
+                  AppController.getDateFormat().format(stepRecord.get(j).getCompleted()));
               if (!activityObj.getSteps().get(i).getResultType().equalsIgnoreCase("grouped")) {
-                if (StepRecord.get(j).getResult().equalsIgnoreCase("{}")) {
+                if (stepRecord.get(j).getResult().equalsIgnoreCase("{}")) {
                   resultarrobj.put("skipped", true);
                   resultarrobj.put("value", "");
                 } else {
-                  if (StepRecord.get(j).getResult().equalsIgnoreCase("{\"answer\":[]}")) {
+                  if (stepRecord.get(j).getResult().equalsIgnoreCase("{\"answer\":[]}")) {
                     resultarrobj.put("skipped", true);
                   } else {
                     resultarrobj.put("skipped", false);
@@ -233,12 +235,12 @@ public class SurveyCompleteActivity extends AppCompatActivity
                   resultarrobj.put(
                       "value",
                       findPrimitiveData(
-                          jsonParser.parse(StepRecord.get(j).getResult()), activityObj, i));
+                          jsonParser.parse(stepRecord.get(j).getResult()), activityObj, i));
                 }
               } else {
                 Map<String, Object> map =
                     (Map<String, Object>)
-                        parseData(jsonParser.parse(StepRecord.get(j).getResult()));
+                        parseData(jsonParser.parse(stepRecord.get(j).getResult()));
                 JSONArray jsonArrayMain = new JSONArray();
 
                 int k = 0;
@@ -487,12 +489,12 @@ public class SurveyCompleteActivity extends AppCompatActivity
               durationobj.put("key", "duration");
               durationobj.put("startTime", null);
               durationobj.put("endTime", null);
-              if (StepRecord.get(j).getResult().equalsIgnoreCase("{}")) {
+              if (stepRecord.get(j).getResult().equalsIgnoreCase("{}")) {
                 durationobj.put("skipped", true);
               } else {
                 durationobj.put("skipped", false);
               }
-              JSONObject activejsonObject = new JSONObject(StepRecord.get(j).getResult());
+              JSONObject activejsonObject = new JSONObject(stepRecord.get(j).getResult());
               JSONObject answerjsonobj = activejsonObject.getJSONObject("answer");
               durationobj.put("value", answerjsonobj.getString("duration"));
 
@@ -501,7 +503,7 @@ public class SurveyCompleteActivity extends AppCompatActivity
               valueobj.put("key", "count");
               valueobj.put("startTime", null);
               valueobj.put("endTime", null);
-              if (StepRecord.get(j).getResult().equalsIgnoreCase("{}")) {
+              if (stepRecord.get(j).getResult().equalsIgnoreCase("{}")) {
                 valueobj.put("skipped", true);
               } else {
                 valueobj.put("skipped", false);
@@ -515,13 +517,13 @@ public class SurveyCompleteActivity extends AppCompatActivity
               jsonObject.put("value", resultarray);
               jsonObject.put(
                   "startTime",
-                  AppController.getDateFormat().format(StepRecord.get(j).getStarted()));
+                  AppController.getDateFormat().format(stepRecord.get(j).getStarted()));
               jsonObject.put(
                   "endTime",
-                  AppController.getDateFormat().format(StepRecord.get(j).getCompleted()));
+                  AppController.getDateFormat().format(stepRecord.get(j).getCompleted()));
               jsonObject.put("resultType", "grouped");
               jsonObject.put("key", activityObj.getSteps().get(i).getKey());
-              if (StepRecord.get(j).getResult().equalsIgnoreCase("{}")) {
+              if (stepRecord.get(j).getResult().equalsIgnoreCase("{}")) {
                 jsonObject.put("skipped", true);
               } else {
                 jsonObject.put("skipped", false);
@@ -541,17 +543,17 @@ public class SurveyCompleteActivity extends AppCompatActivity
     return new JSONObject();
   }
 
-  private void initializeXMLId() {
-    mSurveyCompleted = (TextView) findViewById(R.id.surveyCompleted);
-    mSurveyCompletedThankyou = (TextView) findViewById(R.id.surveyCompletedThankyou);
-    mNext = (TextView) findViewById(R.id.nextButton);
+  private void initializeXmlId() {
+    surveyCompleted = (TextView) findViewById(R.id.surveyCompleted);
+    surveyCompletedThankyou = (TextView) findViewById(R.id.surveyCompletedThankyou);
+    next = (TextView) findViewById(R.id.nextButton);
   }
 
   private void setFont() {
     try {
-      mSurveyCompleted.setTypeface(
+      surveyCompleted.setTypeface(
           AppController.getTypeface(SurveyCompleteActivity.this, "regular"));
-      mSurveyCompletedThankyou.setTypeface(
+      surveyCompletedThankyou.setTypeface(
           AppController.getTypeface(SurveyCompleteActivity.this, "regular"));
     } catch (Exception e) {
       Logger.log(e);
@@ -559,10 +561,9 @@ public class SurveyCompleteActivity extends AppCompatActivity
   }
 
   public void updateUserPreference() {
-    ActivityStateEvent activityStateEvent = new ActivityStateEvent();
     HashMap<String, String> header = new HashMap();
     Realm realm = AppController.getRealmobj(SurveyCompleteActivity.this);
-    Studies mStudies =
+    Studies studies =
         dbServiceSubscriber.getStudies(
             getIntent().getStringExtra(CustomSurveyViewTaskActivity.STUDYID), realm);
     header.put(
@@ -577,7 +578,7 @@ public class SurveyCompleteActivity extends AppCompatActivity
         "clientToken",
         AppController.getHelperSharedPreference()
             .readPreference(this, getResources().getString(R.string.clientToken), ""));
-    header.put("participantId", mStudies.getParticipantId());
+    header.put("participantId", studies.getParticipantId());
 
     ResponseServerConfigEvent responseServerConfigEvent =
         new ResponseServerConfigEvent(
@@ -593,7 +594,7 @@ public class SurveyCompleteActivity extends AppCompatActivity
             this);
 
     dbServiceSubscriber.closeRealmObj(realm);
-
+    ActivityStateEvent activityStateEvent = new ActivityStateEvent();
     activityStateEvent.setResponseServerConfigEvent(responseServerConfigEvent);
     UserModulePresenter userModulePresenter = new UserModulePresenter();
     userModulePresenter.performActivityState(activityStateEvent);
@@ -602,7 +603,7 @@ public class SurveyCompleteActivity extends AppCompatActivity
   private JSONObject getActivityPreferenceJson() {
     String surveyId = getIntent().getStringExtra(CustomSurveyViewTaskActivity.EXTRA_STUDYID);
     surveyId = surveyId.substring(0, surveyId.lastIndexOf("_"));
-    String activityId[] = surveyId.split("_STUDYID_");
+    String[] activityId = surveyId.split("_STUDYID_");
 
     JSONObject jsonObject = new JSONObject();
 
@@ -639,13 +640,13 @@ public class SurveyCompleteActivity extends AppCompatActivity
     activitylist.put(activityStatus);
 
     Realm realm = AppController.getRealmobj(SurveyCompleteActivity.this);
-    Studies mStudies =
+    Studies studies =
         dbServiceSubscriber.getStudies(
             getIntent().getStringExtra(CustomSurveyViewTaskActivity.STUDYID), realm);
 
     try {
       jsonObject.put("studyId", getIntent().getStringExtra(STUDYID));
-      jsonObject.put("participantId", mStudies.getParticipantId());
+      jsonObject.put("participantId", studies.getParticipantId());
       jsonObject.put("activity", activitylist);
     } catch (JSONException e) {
       Logger.log(e);
@@ -689,15 +690,14 @@ public class SurveyCompleteActivity extends AppCompatActivity
                         getResources().getString(R.string.totalRuns),
                         ""));
 
-        if ((double) total > 0)
+        if ((double) total > 0) {
           completion = (((double) completed + (double) missed + 1d) / (double) total) * 100d;
-
-        if (((double) completed + (double) missed + 1d) > 0)
+        }
+        if (((double) completed + (double) missed + 1d) > 0) {
           adherence =
               (((double) completed + 1d) / ((double) completed + (double) missed + 1d)) * 100d;
-
+        }
         updateStudyState("" + (int) completion, "" + (int) adherence);
-
       } else {
         AppController.getHelperProgressDialog().dismissDialog();
         Toast.makeText(this, R.string.unable_to_parse, Toast.LENGTH_SHORT).show();
@@ -706,7 +706,7 @@ public class SurveyCompleteActivity extends AppCompatActivity
       AppController.getHelperProgressDialog().dismissDialog();
       String surveyId = getIntent().getStringExtra(CustomSurveyViewTaskActivity.EXTRA_STUDYID);
       surveyId = surveyId.substring(0, surveyId.lastIndexOf("_"));
-      String activityId[] = surveyId.split("_STUDYID_");
+      String[] activityId = surveyId.split("_STUDYID_");
       int completedRun = getIntent().getIntExtra(CustomSurveyViewTaskActivity.COMPLETED_RUN, 0);
       completedRun = completedRun + 1;
       int currentRun = getIntent().getIntExtra(CustomSurveyViewTaskActivity.RUNID, 0);
@@ -766,7 +766,7 @@ public class SurveyCompleteActivity extends AppCompatActivity
     } else if (responseCode == PROCESS_RESPONSE_RESPONSECODE) {
       String surveyId = getIntent().getStringExtra(CustomSurveyViewTaskActivity.EXTRA_STUDYID);
       surveyId = surveyId.substring(0, surveyId.lastIndexOf("_"));
-      String activityId[] = surveyId.split("_STUDYID_");
+      String[] activityId = surveyId.split("_STUDYID_");
       ActivityObj activityObj =
           dbServiceSubscriber.getActivityBySurveyId(
               getIntent().getStringExtra(STUDYID), activityId[1], realm);
@@ -778,8 +778,9 @@ public class SurveyCompleteActivity extends AppCompatActivity
               .findAll();
       Activities activities = null;
       for (int i = 0; i < activitiesRealmResults.size(); i++) {
-        if (activitiesRealmResults.get(i).getActivityId().equalsIgnoreCase(activityId[1]))
+        if (activitiesRealmResults.get(i).getActivityId().equalsIgnoreCase(activityId[1])) {
           activities = activitiesRealmResults.get(i);
+        }
       }
 
       Studies studies =
@@ -868,12 +869,14 @@ public class SurveyCompleteActivity extends AppCompatActivity
                         getResources().getString(R.string.totalRuns),
                         ""));
 
-        if ((double) total > 0)
+        if ((double) total > 0) {
           completion = (((double) completed + (double) missed + 1d) / (double) total) * 100d;
+        }
 
-        if (((double) completed + (double) missed + 1d) > 0)
+        if (((double) completed + (double) missed + 1d) > 0) {
           adherence =
               (((double) completed + 1d) / ((double) completed + (double) missed + 1d)) * 100d;
+        }
 
         AppController.pendingService(
             this,
@@ -975,12 +978,14 @@ public class SurveyCompleteActivity extends AppCompatActivity
                         getResources().getString(R.string.totalRuns),
                         ""));
 
-        if ((double) total > 0)
+        if ((double) total > 0) {
           completion = (((double) completed + (double) missed + 1d) / (double) total) * 100d;
+        }
 
-        if (((double) completed + (double) missed + 1d) > 0)
+        if (((double) completed + (double) missed + 1d) > 0) {
           adherence =
               (((double) completed + 1d) / ((double) completed + (double) missed + 1d)) * 100d;
+        }
 
         AppController.pendingService(
             this,
@@ -1005,7 +1010,7 @@ public class SurveyCompleteActivity extends AppCompatActivity
         completedRun = completedRun + 1;
         int currentRun = getIntent().getIntExtra(CustomSurveyViewTaskActivity.RUNID, 0);
         int missedRun = currentRun - completedRun;
-        String activityId[] = surveyId.split("_STUDYID_");
+        String[] activityId = surveyId.split("_STUDYID_");
         dbServiceSubscriber.updateActivityPreferenceDB(
             this,
             activityId[1],
@@ -1078,8 +1083,11 @@ public class SurveyCompleteActivity extends AppCompatActivity
         }
         return jsonArray;
       } else {
-        if (entry.getValue().isJsonPrimitive()) prim = entry.getValue().getAsJsonPrimitive();
-        else return entry.getValue().getAsJsonObject();
+        if (entry.getValue().isJsonPrimitive()) {
+          prim = entry.getValue().getAsJsonPrimitive();
+        } else {
+          return entry.getValue().getAsJsonObject();
+        }
       }
     }
     if (prim.isBoolean()) {
@@ -1101,30 +1109,6 @@ public class SurveyCompleteActivity extends AppCompatActivity
       }
     }
     return null;
-  }
-
-  public static Object parseData(JsonElement jsonElement) {
-    Map<String, Object> map = new LinkedTreeMap<String, Object>();
-    if (jsonElement.isJsonArray()) {
-      JsonArray arr = jsonElement.getAsJsonArray();
-      Object list[] = new Object[arr.size()];
-      int i = 0;
-      for (JsonElement anArr : arr) {
-        list[i] = parseData(anArr);
-        i++;
-      }
-      return list;
-    } else if (jsonElement.isJsonPrimitive()) {
-      return findPrimitiveData(jsonElement);
-    } else {
-      JsonObject objStep = jsonElement.getAsJsonObject();
-      Set<Map.Entry<String, JsonElement>> entitySetStep = objStep.entrySet();
-      for (Map.Entry<String, JsonElement> entryStep : entitySetStep) {
-        map.put(entryStep.getKey(), parseData(entryStep.getValue()));
-      }
-    }
-
-    return map;
   }
 
   private static Object findPrimitiveData(JsonElement jsonElement) {
@@ -1150,6 +1134,30 @@ public class SurveyCompleteActivity extends AppCompatActivity
     return null;
   }
 
+  public static Object parseData(JsonElement jsonElement) {
+    Map<String, Object> map = new LinkedTreeMap<String, Object>();
+    if (jsonElement.isJsonArray()) {
+      JsonArray arr = jsonElement.getAsJsonArray();
+      Object[] list = new Object[arr.size()];
+      int i = 0;
+      for (JsonElement anArr : arr) {
+        list[i] = parseData(anArr);
+        i++;
+      }
+      return list;
+    } else if (jsonElement.isJsonPrimitive()) {
+      return findPrimitiveData(jsonElement);
+    } else {
+      JsonObject objStep = jsonElement.getAsJsonObject();
+      Set<Map.Entry<String, JsonElement>> entitySetStep = objStep.entrySet();
+      for (Map.Entry<String, JsonElement> entryStep : entitySetStep) {
+        map.put(entryStep.getKey(), parseData(entryStep.getValue()));
+      }
+    }
+
+    return map;
+  }
+
   @Override
   protected void onDestroy() {
     dbServiceSubscriber.closeRealmObj(realm);
@@ -1157,8 +1165,6 @@ public class SurveyCompleteActivity extends AppCompatActivity
   }
 
   public void updateStudyState(String completion, String adherence) {
-    UpdatePreferenceEvent updatePreferenceEvent = new UpdatePreferenceEvent();
-
     HashMap<String, String> header = new HashMap();
     header.put(
         "accessToken",
@@ -1185,7 +1191,7 @@ public class SurveyCompleteActivity extends AppCompatActivity
             getStudyPreferenceJson(completion, adherence),
             false,
             this);
-
+    UpdatePreferenceEvent updatePreferenceEvent = new UpdatePreferenceEvent();
     updatePreferenceEvent.setRegistrationServerEnrollmentConfigEvent(
         registrationServerEnrollmentConfigEvent);
     UserModulePresenter userModulePresenter = new UserModulePresenter();

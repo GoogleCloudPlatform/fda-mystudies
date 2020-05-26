@@ -97,14 +97,14 @@ public class CustomSurveyViewTaskActivity<T> extends AppCompatActivity implement
   private Task task;
   private String studyId;
   private TaskResult taskResult;
-  ActivityObj mActivityObject;
+  ActivityObj activityObject;
   private Date currentRunStartDate;
   private Date currentRunEndDate;
   int currentStepPosition;
   Intent serviceintent;
   BroadcastReceiver receiver;
   DBServiceSubscriber dbServiceSubscriber;
-  String mActivityId;
+  String activityId;
   Realm realm;
   public static String RESOURCES = "resources";
 
@@ -112,12 +112,12 @@ public class CustomSurveyViewTaskActivity<T> extends AppCompatActivity implement
       Context context,
       String surveyId,
       String studyId,
-      int mCurrentRunId,
-      String mActivityStatus,
+      int currentRunId,
+      String activityStatus,
       int missedRun,
       int completedRun,
       int totalRun,
-      String mActivityVersion,
+      String activityVersion,
       Date currentRunStartDate,
       Date currentRunEndDate,
       String activityId,
@@ -125,16 +125,16 @@ public class CustomSurveyViewTaskActivity<T> extends AppCompatActivity implement
     Intent intent = new Intent(context, CustomSurveyViewTaskActivity.class);
     intent.putExtra(EXTRA_STUDYID, surveyId);
     intent.putExtra(STUDYID, studyId);
-    intent.putExtra(RUNID, mCurrentRunId);
-    intent.putExtra(ACTIVITY_STATUS, mActivityStatus);
+    intent.putExtra(RUNID, currentRunId);
+    intent.putExtra(ACTIVITY_STATUS, activityStatus);
     intent.putExtra(MISSED_RUN, missedRun);
     intent.putExtra(COMPLETED_RUN, completedRun);
     intent.putExtra(TOTAL_RUN, totalRun);
     intent.putExtra(TOTAL_RUN, totalRun);
-    intent.putExtra(ACTIVITY_VERSION, mActivityVersion);
+    intent.putExtra(ACTIVITY_VERSION, activityVersion);
     intent.putExtra(RUN_START_DATE, currentRunStartDate);
     intent.putExtra(RUN_END_DATE, currentRunEndDate);
-    intent.putExtra(ACTIVITY_VERSION, mActivityVersion);
+    intent.putExtra(ACTIVITY_VERSION, activityVersion);
     intent.putExtra(ACTIVITYID, activityId);
     intent.putExtra(BRANCHING, branching);
     return intent;
@@ -151,18 +151,18 @@ public class CustomSurveyViewTaskActivity<T> extends AppCompatActivity implement
     getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     dbServiceSubscriber = new DBServiceSubscriber();
     realm = AppController.getRealmobj(this);
-    mActivityId = getIntent().getStringExtra(ACTIVITYID);
+    activityId = getIntent().getStringExtra(ACTIVITYID);
     currentRunStartDate = (Date) getIntent().getSerializableExtra(RUN_START_DATE);
     currentRunEndDate = (Date) getIntent().getSerializableExtra(RUN_END_DATE);
     root = (StepSwitcherCustom) findViewById(R.id.container);
 
-    mActivityObject =
+    activityObject =
         dbServiceSubscriber.getActivityBySurveyId(
-            (String) getIntent().getSerializableExtra(STUDYID), mActivityId, realm);
+            (String) getIntent().getSerializableExtra(STUDYID), activityId, realm);
     StepsBuilder stepsBuilder =
         new StepsBuilder(
             CustomSurveyViewTaskActivity.this,
-            mActivityObject,
+            activityObject,
             getIntent().getBooleanExtra(BRANCHING, false),
             realm);
     task =
@@ -170,7 +170,7 @@ public class CustomSurveyViewTaskActivity<T> extends AppCompatActivity implement
             this,
             ((String) getIntent().getSerializableExtra(EXTRA_STUDYID)),
             stepsBuilder.getsteps(),
-            mActivityObject,
+            activityObject,
             getIntent().getBooleanExtra(BRANCHING, false),
             dbServiceSubscriber);
 
@@ -314,35 +314,35 @@ public class CustomSurveyViewTaskActivity<T> extends AppCompatActivity implement
                 .getResources()
             == null) {
         } else {
-          StudyHome mStudyHome = null;
+          StudyHome studyHome = null;
           try {
-            mStudyHome =
+            studyHome =
                 dbServiceSubscriber.getWithdrawalType(getIntent().getStringExtra(STUDYID), realm);
           } catch (Exception e) {
             Logger.log(e);
           }
-          RealmList<Resource> mResourceArrayList =
+          RealmList<Resource> resourceArrayList =
               dbServiceSubscriber
                   .getStudyResource(getIntent().getStringExtra(STUDYID), realm)
                   .getResources();
 
-          if (mStudyHome != null && mResourceArrayList != null)
-            getResourceNotification(mResourceArrayList, mStudyHome);
+          if (studyHome != null && resourceArrayList != null) {
+            getResourceNotification(resourceArrayList, studyHome);
+          }
         }
       }
     }
   }
 
-  private void getResourceNotification(
-      RealmList<Resource> mResourceArrayList, StudyHome mStudyHome) {
-    for (int i = 0; i < mResourceArrayList.size(); i++) {
-      if (mResourceArrayList.get(i).getAudience() != null
-          && mResourceArrayList.get(i).getAudience().equalsIgnoreCase("Limited")) {
-        if (mResourceArrayList.get(i).getAvailability().getAvailableDate().equalsIgnoreCase("")) {
+  private void getResourceNotification(RealmList<Resource> resourceArrayList, StudyHome studyHome) {
+    for (int i = 0; i < resourceArrayList.size(); i++) {
+      if (resourceArrayList.get(i).getAudience() != null
+          && resourceArrayList.get(i).getAudience().equalsIgnoreCase("Limited")) {
+        if (resourceArrayList.get(i).getAvailability().getAvailableDate().equalsIgnoreCase("")) {
           StepRecordCustom stepRecordCustom =
               dbServiceSubscriber.getSurveyResponseFromDB(
-                  getIntent().getStringExtra(STUDYID) + "_STUDYID_" + mActivityId,
-                  mStudyHome.getAnchorDate().getQuestionInfo().getKey(),
+                  getIntent().getStringExtra(STUDYID) + "_STUDYID_" + activityId,
+                  studyHome.getAnchorDate().getQuestionInfo().getKey(),
                   realm);
           if (stepRecordCustom != null) {
             Calendar startCalender = Calendar.getInstance();
@@ -355,7 +355,7 @@ public class CustomSurveyViewTaskActivity<T> extends AppCompatActivity implement
               startCalender.setTime(
                   AppController.getDateFormat().parse("" + jsonObject.get("answer")));
               startCalender.add(
-                  Calendar.DATE, mResourceArrayList.get(i).getAvailability().getStartDays());
+                  Calendar.DATE, resourceArrayList.get(i).getAvailability().getStartDays());
               startCalender.set(Calendar.HOUR, 0);
               startCalender.set(Calendar.MINUTE, 0);
               startCalender.set(Calendar.SECOND, 0);
@@ -363,13 +363,13 @@ public class CustomSurveyViewTaskActivity<T> extends AppCompatActivity implement
               NotificationDbResources notificationsDb = null;
               RealmResults<NotificationDbResources> notificationsDbs =
                   dbServiceSubscriber.getNotificationDbResources(
-                      mActivityId, getIntent().getStringExtra(STUDYID), RESOURCES, realm);
+                      activityId, getIntent().getStringExtra(STUDYID), RESOURCES, realm);
               if (notificationsDbs != null && notificationsDbs.size() > 0) {
                 for (int j = 0; j < notificationsDbs.size(); j++) {
                   if (notificationsDbs
                       .get(j)
                       .getResourceId()
-                      .equalsIgnoreCase(mResourceArrayList.get(i).getResourcesId())) {
+                      .equalsIgnoreCase(resourceArrayList.get(i).getResourcesId())) {
                     notificationsDb = notificationsDbs.get(j);
                     break;
                   }
@@ -378,16 +378,16 @@ public class CustomSurveyViewTaskActivity<T> extends AppCompatActivity implement
               if (notificationsDb == null) {
                 setRemainder(
                     startCalender,
-                    mActivityId,
+                    activityId,
                     getIntent().getStringExtra(STUDYID),
-                    mResourceArrayList.get(i).getNotificationText(),
-                    mResourceArrayList.get(i).getResourcesId());
+                    resourceArrayList.get(i).getNotificationText(),
+                    resourceArrayList.get(i).getResourcesId());
               }
 
               endCalender.setTime(
                   AppController.getDateFormat().parse("" + jsonObject.get("answer")));
               endCalender.add(
-                  Calendar.DATE, mResourceArrayList.get(i).getAvailability().getEndDays());
+                  Calendar.DATE, resourceArrayList.get(i).getAvailability().getEndDays());
               endCalender.set(Calendar.HOUR, 11);
               endCalender.set(Calendar.MINUTE, 59);
               endCalender.set(Calendar.SECOND, 59);
@@ -653,7 +653,7 @@ public class CustomSurveyViewTaskActivity<T> extends AppCompatActivity implement
   }
 
   public void addformquestion(QuestionStep questionStep, String identifier, String stepIdentifier) {
-    String survayId[] = studyId.split("_STUDYID_");
+    String[] survayId = studyId.split("_STUDYID_");
     ActivityObj surveyObject =
         dbServiceSubscriber.getActivityBySurveyId(
             getIntent().getStringExtra(STUDYID),

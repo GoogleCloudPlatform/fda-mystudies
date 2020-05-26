@@ -17,12 +17,12 @@ package com.harvard.storagemodule.events;
 import java.util.HashMap;
 
 public class DatabaseEvent<E> {
-  private String mTableName;
-  private String mOperation; // insert, select, delete
-  private String mType; // for inserting, copy or copy and update
-  private E e;
+  private String tableName;
+  private String operation; // insert, select, delete
+  private String type; // for inserting, copy or copy and update
+  private E obj;
   private HashMap<String, String> whereParams = new HashMap<>(); //  for select where conditions
-  private Class aClass;
+  private Class classObj;
 
   public HashMap<String, String> getWhereParams() {
     return whereParams;
@@ -33,42 +33,42 @@ public class DatabaseEvent<E> {
   }
 
   public String getmType() {
-    return mType;
+    return type;
   }
 
-  public void setmType(String mType) {
-    this.mType = mType;
+  public void setmType(String type) {
+    this.type = type;
   }
 
   public E getE() {
-    return e;
+    return obj;
   }
 
-  public void setE(E e) {
-    this.e = e;
+  public void setE(E obj) {
+    this.obj = obj;
   }
 
   public Class getaClass() {
-    return aClass;
+    return classObj;
   }
 
-  public void setaClass(Class aClass) {
-    this.aClass = aClass;
+  public void setaClass(Class classObj) {
+    this.classObj = classObj;
   }
 
   public String getmOperation() {
-    return mOperation;
+    return operation;
   }
 
-  public void setmOperation(String mOperation) {
-    this.mOperation = mOperation;
+  public void setmOperation(String operation) {
+    this.operation = operation;
   }
 
   public String getmTableName() {
-    return mTableName;
+    return tableName;
   }
 
-  public void setmTableName(String mTableName) {
-    this.mTableName = mTableName;
+  public void setmTableName(String tableName) {
+    this.tableName = tableName;
   }
 }

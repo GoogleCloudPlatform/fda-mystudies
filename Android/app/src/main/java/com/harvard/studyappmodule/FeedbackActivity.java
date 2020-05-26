@@ -35,38 +35,38 @@ import com.harvard.webservicemodule.events.WCPConfigEvent;
 import java.util.HashMap;
 
 public class FeedbackActivity extends AppCompatActivity implements ApiCall.OnAsyncRequestComplete {
-  private AppCompatTextView mTitle;
-  private AppCompatTextView mFeedbackText;
-  private AppCompatEditText mFeedbackEdittext;
-  private AppCompatEditText mSubject;
-  private RelativeLayout mBackBtn;
-  private AppCompatTextView mSubmitButton;
-  private final int FEEDBACK = 16;
+  private AppCompatTextView title;
+  private AppCompatTextView feedbackText;
+  private AppCompatEditText feedbackEdittext;
+  private AppCompatEditText subject;
+  private RelativeLayout backBtn;
+  private AppCompatTextView submitButton;
+  private static final int FEEDBACK = 16;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_feedback);
-    initializeXMLId();
+    initializeXmlId();
     setFont();
     bindEvents();
   }
 
-  private void initializeXMLId() {
-    mBackBtn = (RelativeLayout) findViewById(R.id.backBtn);
-    mTitle = (AppCompatTextView) findViewById(R.id.title);
-    mFeedbackText = (AppCompatTextView) findViewById(R.id.feedback_label);
-    mFeedbackEdittext = (AppCompatEditText) findViewById(R.id.edittxt_feedback);
-    mSubject = (AppCompatEditText) findViewById(R.id.subject);
-    mSubmitButton = (AppCompatTextView) findViewById(R.id.submitButton);
+  private void initializeXmlId() {
+    backBtn = (RelativeLayout) findViewById(R.id.backBtn);
+    title = (AppCompatTextView) findViewById(R.id.title);
+    feedbackText = (AppCompatTextView) findViewById(R.id.feedback_label);
+    feedbackEdittext = (AppCompatEditText) findViewById(R.id.edittxt_feedback);
+    subject = (AppCompatEditText) findViewById(R.id.subject);
+    submitButton = (AppCompatTextView) findViewById(R.id.submitButton);
   }
 
   private void setFont() {
     try {
-      mTitle.setTypeface(AppController.getTypeface(FeedbackActivity.this, "medium"));
-      mFeedbackText.setTypeface(AppController.getTypeface(FeedbackActivity.this, "regular"));
+      title.setTypeface(AppController.getTypeface(FeedbackActivity.this, "medium"));
+      feedbackText.setTypeface(AppController.getTypeface(FeedbackActivity.this, "regular"));
 
-      mFeedbackEdittext.setTypeface(AppController.getTypeface(FeedbackActivity.this, "regular"));
+      feedbackEdittext.setTypeface(AppController.getTypeface(FeedbackActivity.this, "regular"));
 
     } catch (Exception e) {
       Logger.log(e);
@@ -74,7 +74,7 @@ public class FeedbackActivity extends AppCompatActivity implements ApiCall.OnAsy
   }
 
   private void bindEvents() {
-    mBackBtn.setOnClickListener(
+    backBtn.setOnClickListener(
         new View.OnClickListener() {
           @Override
           public void onClick(View v) {
@@ -88,17 +88,17 @@ public class FeedbackActivity extends AppCompatActivity implements ApiCall.OnAsy
             finish();
           }
         });
-    mSubmitButton.setOnClickListener(
+    submitButton.setOnClickListener(
         new View.OnClickListener() {
           @Override
           public void onClick(View v) {
-            if (mSubject.getText().toString().equalsIgnoreCase("")) {
+            if (subject.getText().toString().equalsIgnoreCase("")) {
               Toast.makeText(
                       FeedbackActivity.this,
                       getResources().getString(R.string.subject_empty),
                       Toast.LENGTH_SHORT)
                   .show();
-            } else if (mFeedbackEdittext.getText().toString().equalsIgnoreCase("")) {
+            } else if (feedbackEdittext.getText().toString().equalsIgnoreCase("")) {
               Toast.makeText(
                       FeedbackActivity.this,
                       getResources().getString(R.string.feedback_empty),
@@ -115,8 +115,8 @@ public class FeedbackActivity extends AppCompatActivity implements ApiCall.OnAsy
     AppController.getHelperProgressDialog().showProgress(FeedbackActivity.this, "", "", false);
     ContactUsEvent contactUsEvent = new ContactUsEvent();
     HashMap<String, String> params = new HashMap<>();
-    params.put("subject", mSubject.getText().toString());
-    params.put("body", mFeedbackEdittext.getText().toString());
+    params.put("subject", subject.getText().toString());
+    params.put("body", feedbackEdittext.getText().toString());
     RegistrationServerConfigEvent registrationServerConfigEvent =
         new RegistrationServerConfigEvent(
             "post",

@@ -92,21 +92,21 @@ public class StudyFragment extends Fragment implements ApiCall.OnAsyncRequestCom
   private static final int CONSENT_METADATA = 202;
   private static final int CONSENT_RESPONSECODE = 203;
   private static final int CONSENTPDF = 206;
-  private RecyclerView mStudyRecyclerView;
-  private Context mContext;
-  private AppCompatTextView mEmptyListMessage;
+  private RecyclerView studyRecyclerView;
+  private Context context;
+  private AppCompatTextView emptyListMessage;
   public static final String CONSENT = "consent";
-  private final int STUDY_LIST = 10;
-  private final int GET_PREFERENCES = 11;
-  private final int UPDATE_PREFERENCES = 12;
+  private static final int STUDY_LIST = 10;
+  private static final int GET_PREFERENCES = 11;
+  private static final int UPDATE_PREFERENCES = 12;
   private RealmList<StudyList> studyListArrayList;
   private StudyListAdapter studyListAdapter;
   private int lastUpdatedPosition = 0;
   private boolean lastUpdatedBookMark = false;
   private String lastUpdatedStudyId;
   private String lastUpdatedStatusStatus;
-  private Study mStudy;
-  private String mtitle;
+  private Study study;
+  private String title;
   public static final String YET_TO_JOIN = "yetToJoin";
   public static final String IN_PROGRESS = "inProgress";
   public static final String COMPLETED = "completed";
@@ -120,39 +120,38 @@ public class StudyFragment extends Fragment implements ApiCall.OnAsyncRequestCom
 
   private static final int GET_CONSENT_DOC = 204;
 
-  private String mStudyId;
-  private String mActivityId;
-  private String mLocalNotification;
+  private String studyId;
+  private String activityId;
+  private String localNotification;
   private String eligibilityType;
   private EligibilityConsent eligibilityConsent;
 
-  private int mDeleteIndexNumberDB;
-  private String mLatestConsentVersion = "0";
+  private int deleteIndexNumberDb;
+  private String latestConsentVersion = "0";
   private DBServiceSubscriber dbServiceSubscriber;
   private Realm realm;
   private boolean webserviceCall = false;
-  private RealmList<StudyList> mFilteredStudyList = new RealmList<>();
-  private String mCalledFor = "";
-  private String mFrom = "";
-  private RealmList<StudyList> mSearchResultList = new RealmList<>();
+  private RealmList<StudyList> filteredStudyList = new RealmList<>();
+  private String calledFor = "";
+  private String from = "";
+  private RealmList<StudyList> searchResultList = new RealmList<>();
   // if u click bookmark then that study(selected bookmark/ removed bookmark) should retain the list
   // until the screen refresh
-  private RealmList<StudyList> mTempStudyList = new RealmList<>();
-  private SwipeRefreshLayout mSwipeRefreshLayout;
-  private boolean mSwipeRefresh = false;
-  private boolean mSwipeRefreshBookmarked = false;
+  private RealmList<StudyList> tempStudyList = new RealmList<>();
+  private SwipeRefreshLayout swipeRefreshLayout;
+  private boolean swipeRefresh = false;
+  private boolean swipeRefreshBookmarked = false;
   private ArrayList<CompletionAdeherenceCalc> completionAdeherenceCalcs = new ArrayList<>();
   // while filtering
-  private ArrayList<CompletionAdeherenceCalc> mFilteredCompletionAdeherenceCalcs =
-      new ArrayList<>();
+  private ArrayList<CompletionAdeherenceCalc> filteredCompletionAdeherenceCalcs = new ArrayList<>();
   // while searching
-  private ArrayList<CompletionAdeherenceCalc> mSearchFilteredCompletionAdeherenceCalcs =
+  private ArrayList<CompletionAdeherenceCalc> searchFilteredCompletionAdeherenceCalcs =
       new ArrayList<>();
 
   @Override
   public void onAttach(Context context) {
     super.onAttach(context);
-    this.mContext = context;
+    this.context = context;
   }
 
   @Override
@@ -160,10 +159,10 @@ public class StudyFragment extends Fragment implements ApiCall.OnAsyncRequestCom
       LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
     // Inflate the layout for this fragment
     View view = inflater.inflate(R.layout.fragment_study, container, false);
+    initializeXmlId(view);
     dbServiceSubscriber = new DBServiceSubscriber();
-    realm = AppController.getRealmobj(mContext);
+    realm = AppController.getRealmobj(context);
     studyListArrayList = new RealmList<>();
-    initializeXMLId(view);
     bindEvents();
 
     return view;
@@ -178,15 +177,15 @@ public class StudyFragment extends Fragment implements ApiCall.OnAsyncRequestCom
     }
   }
 
-  private void initializeXMLId(View view) {
-    mStudyRecyclerView = (RecyclerView) view.findViewById(R.id.studyRecyclerView);
-    mEmptyListMessage = (AppCompatTextView) view.findViewById(R.id.emptyListMessage);
-    mSwipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipeRefreshLayout);
+  private void initializeXmlId(View view) {
+    studyRecyclerView = (RecyclerView) view.findViewById(R.id.studyRecyclerView);
+    emptyListMessage = (AppCompatTextView) view.findViewById(R.id.emptyListMessage);
+    swipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipeRefreshLayout);
   }
 
   private void bindEvents() {
 
-    mSwipeRefreshLayout.setOnRefreshListener(
+    swipeRefreshLayout.setOnRefreshListener(
         new SwipeRefreshLayout.OnRefreshListener() {
           @Override
           public void onRefresh() {
@@ -194,8 +193,8 @@ public class StudyFragment extends Fragment implements ApiCall.OnAsyncRequestCom
             if (!webserviceCall) {
               webserviceCall = true;
               // to identify callGetStudyListWebservice() called from swipe to refresh
-              mSwipeRefresh = true;
-              mSwipeRefreshBookmarked = true;
+              swipeRefresh = true;
+              swipeRefreshBookmarked = true;
               callGetStudyListWebservice();
             }
           }
@@ -205,12 +204,12 @@ public class StudyFragment extends Fragment implements ApiCall.OnAsyncRequestCom
   void onItemsLoadComplete() {
     // Update the adapter and notify data set changed
     // Stop refresh animation
-    mSwipeRefreshLayout.setRefreshing(false);
+    swipeRefreshLayout.setRefreshing(false);
   }
 
   private void setStudyList(boolean offline) {
     if (!offline) {
-      dbServiceSubscriber.saveStudyListToDB(mContext, mStudy);
+      dbServiceSubscriber.saveStudyListToDB(context, study);
     }
 
     ArrayList<StudyList> activeInprogress = new ArrayList<>();
@@ -236,11 +235,11 @@ public class StudyFragment extends Fragment implements ApiCall.OnAsyncRequestCom
     SurveyScheduler survayScheduler = new SurveyScheduler(dbServiceSubscriber, realm);
     for (int i = 0; i < studyListArrayList.size(); i++) {
       if (!AppController.getHelperSharedPreference()
-          .readPreference(mContext, mContext.getResources().getString(R.string.userid), "")
+          .readPreference(context, context.getResources().getString(R.string.userid), "")
           .equalsIgnoreCase("")) {
         completionAdeherenceCalc =
             survayScheduler.completionAndAdherenceCalculation(
-                studyListArrayList.get(i).getStudyId(), mContext);
+                studyListArrayList.get(i).getStudyId(), context);
         if (completionAdeherenceCalc.isActivityAvailable()) {
           completionAdeherenceCalcSort = completionAdeherenceCalc;
         } else {
@@ -510,12 +509,12 @@ public class StudyFragment extends Fragment implements ApiCall.OnAsyncRequestCom
     othersCompletionAdeherenceCalc.clear();
     othersCompletionAdeherenceCalc = null;
 
-    mStudyRecyclerView.setLayoutManager(new LinearLayoutManager(mContext));
-    mStudyRecyclerView.setNestedScrollingEnabled(false);
+    studyRecyclerView.setLayoutManager(new LinearLayoutManager(context));
+    studyRecyclerView.setNestedScrollingEnabled(false);
 
     String jsonObjectString =
         AppController.getHelperSharedPreference()
-            .readPreference(mContext, getString(R.string.json_object_filter), "");
+            .readPreference(context, getString(R.string.json_object_filter), "");
     // cheking filtered conditin is ther ; if "" means no filtered condition
     if (jsonObjectString.equalsIgnoreCase("")) {
       // chkng for showing search list (scenario search--->go details screen----> return back; )
@@ -525,33 +524,33 @@ public class StudyFragment extends Fragment implements ApiCall.OnAsyncRequestCom
 
         studyListAdapter =
             new StudyListAdapter(
-                mContext,
+                context,
                 searchResult(searchKey),
                 StudyFragment.this,
-                mFilteredCompletionAdeherenceCalcs);
+                filteredCompletionAdeherenceCalcs);
       } else {
         studyListAdapter =
             new StudyListAdapter(
-                mContext,
+                context,
                 copyOfFilteredStudyList(),
                 StudyFragment.this,
-                mFilteredCompletionAdeherenceCalcs);
+                filteredCompletionAdeherenceCalcs);
       }
     } else {
       addFilterCriteria(jsonObjectString, completionAdeherenceCalcs);
     }
 
-    mStudyRecyclerView.setAdapter(studyListAdapter);
+    studyRecyclerView.setAdapter(studyListAdapter);
 
     if (!AppController.getHelperSharedPreference()
-            .readPreference(mContext, mContext.getResources().getString(R.string.userid), "")
+            .readPreference(context, context.getResources().getString(R.string.userid), "")
             .equalsIgnoreCase("")
         && AppController.getHelperSharedPreference()
-            .readPreference(mContext, "firstStudyState", "")
+            .readPreference(context, "firstStudyState", "")
             .equalsIgnoreCase("")) {
-      mStudyRecyclerView.setVisibility(View.GONE);
+      studyRecyclerView.setVisibility(View.GONE);
     } else {
-      mStudyRecyclerView.setVisibility(View.VISIBLE);
+      studyRecyclerView.setVisibility(View.VISIBLE);
     }
   }
 
@@ -560,14 +559,12 @@ public class StudyFragment extends Fragment implements ApiCall.OnAsyncRequestCom
     ArrayList<String> temp1 = new ArrayList<>();
     try {
       JSONObject jsonObj = new JSONObject(jsonObjectString);
-      JSONObject studyStatus = jsonObj.getJSONObject("studyStatus");
-      JSONObject participationStatus = jsonObj.getJSONObject("participationStatus");
-      JSONObject categories = jsonObj.getJSONObject("categories");
+
       boolean bookmarked = false;
       if (jsonObj.getBoolean("bookmarked")) {
         bookmarked = true;
       }
-
+      JSONObject studyStatus = jsonObj.getJSONObject("studyStatus");
       if (studyStatus.getBoolean("active")) {
         temp1.add("active");
       }
@@ -580,7 +577,7 @@ public class StudyFragment extends Fragment implements ApiCall.OnAsyncRequestCom
       if (studyStatus.getBoolean("closed")) {
         temp1.add("closed");
       }
-
+      JSONObject participationStatus = jsonObj.getJSONObject("participationStatus");
       ArrayList<String> temp2 = new ArrayList<>();
       if (participationStatus.getBoolean("inProgress")) {
         temp2.add(StudyFragment.IN_PROGRESS);
@@ -597,7 +594,7 @@ public class StudyFragment extends Fragment implements ApiCall.OnAsyncRequestCom
       if (participationStatus.getBoolean("notEligible")) {
         temp2.add(StudyFragment.NOT_ELIGIBLE);
       }
-
+      JSONObject categories = jsonObj.getJSONObject("categories");
       ArrayList<String> temp3 = new ArrayList<>();
       if (categories.getBoolean("biologicsSafety")) {
         temp3.add("Biologics Safety");
@@ -630,32 +627,35 @@ public class StudyFragment extends Fragment implements ApiCall.OnAsyncRequestCom
         temp3.add("Tobacco Use");
       }
       // to avoid duplicate list
-      if (mFilteredStudyList.size() > 0) mFilteredStudyList.clear();
-      mFilteredStudyList =
-          fiterMatchingStudyList(mFilteredStudyList, temp1, temp2, temp3, bookmarked);
-      if (mFilteredStudyList.size() == 0)
+      if (filteredStudyList.size() > 0) {
+        filteredStudyList.clear();
+      }
+      filteredStudyList =
+          fiterMatchingStudyList(filteredStudyList, temp1, temp2, temp3, bookmarked);
+      if (filteredStudyList.size() == 0) {
         Toast.makeText(
-                mContext,
-                mContext.getResources().getString(R.string.search_data_empty),
+                context,
+                context.getResources().getString(R.string.search_data_empty),
                 Toast.LENGTH_SHORT)
             .show();
+      }
       // chking that-----> currently is it working search functionality,
       String searchKey = ((StudyActivity) getActivity()).getSearchKey();
       if (searchKey != null) {
         // search list retain
         studyListAdapter =
             new StudyListAdapter(
-                mContext,
+                context,
                 searchResult(searchKey),
                 StudyFragment.this,
-                mFilteredCompletionAdeherenceCalcs);
+                filteredCompletionAdeherenceCalcs);
       } else {
         studyListAdapter =
             new StudyListAdapter(
-                mContext,
+                context,
                 copyOfFilteredStudyList(),
                 StudyFragment.this,
-                mFilteredCompletionAdeherenceCalcs);
+                filteredCompletionAdeherenceCalcs);
       }
 
     } catch (JSONException e) {
@@ -667,25 +667,25 @@ public class StudyFragment extends Fragment implements ApiCall.OnAsyncRequestCom
   private RealmList<StudyList> copyOfFilteredStudyList() {
     String jsonObjectString =
         AppController.getHelperSharedPreference()
-            .readPreference(mContext, getString(R.string.json_object_filter), "");
+            .readPreference(context, getString(R.string.json_object_filter), "");
     RealmList<StudyList> filteredStudyList = new RealmList<>();
     if (jsonObjectString.equalsIgnoreCase("")) {
-      if (mTempStudyList.size() > 0) {
+      if (tempStudyList.size() > 0) {
         // while using swipe to refresh it should refresh whole data (scenario: after updating
         // bookmark then swipe to refresh)
-        if (mSwipeRefreshBookmarked) {
-          mSwipeRefreshBookmarked = false;
+        if (swipeRefreshBookmarked) {
+          swipeRefreshBookmarked = false;
           filteredStudyList = defaultSelectedFilterOption(filteredStudyList);
-          mTempStudyList = filteredStudyList;
+          tempStudyList = filteredStudyList;
         } else {
-          filteredStudyList = mTempStudyList;
+          filteredStudyList = tempStudyList;
         }
       } else {
         filteredStudyList = defaultSelectedFilterOption(filteredStudyList);
-        mTempStudyList = filteredStudyList;
+        tempStudyList = filteredStudyList;
       }
     } else {
-      filteredStudyList.addAll(mFilteredStudyList);
+      filteredStudyList.addAll(filteredStudyList);
     }
     return filteredStudyList;
   }
@@ -695,7 +695,6 @@ public class StudyFragment extends Fragment implements ApiCall.OnAsyncRequestCom
   private RealmList<StudyList> defaultSelectedFilterOption(RealmList<StudyList> filteredStudyList) {
 
     ArrayList<String> temp1 = new ArrayList<>();
-    boolean bookmarked = false;
     temp1.add("active");
     temp1.add("upcoming");
 
@@ -714,6 +713,7 @@ public class StudyFragment extends Fragment implements ApiCall.OnAsyncRequestCom
     temp3.add("Public Health");
     temp3.add("Radiation-Emitting Products");
     temp3.add("Tobacco Use");
+    boolean bookmarked = false;
     return fiterMatchingStudyList(filteredStudyList, temp1, temp2, temp3, bookmarked);
   }
 
@@ -725,14 +725,15 @@ public class StudyFragment extends Fragment implements ApiCall.OnAsyncRequestCom
       boolean bookmarked) {
     try {
       try {
-        if (mFilteredCompletionAdeherenceCalcs.size() > 0)
-          mFilteredCompletionAdeherenceCalcs.clear();
+        if (filteredCompletionAdeherenceCalcs.size() > 0) {
+          filteredCompletionAdeherenceCalcs.clear();
+        }
       } catch (Exception e) {
         Logger.log(e);
       }
       String userId =
           AppController.getHelperSharedPreference()
-              .readPreference(mContext, getResources().getString(R.string.userid), "");
+              .readPreference(context, getResources().getString(R.string.userid), "");
       // list2(Participation status disabled) is disabled // before login
       if (userId.equalsIgnoreCase("")) {
         if (studyListArrayList.size() > 0) {
@@ -742,7 +743,7 @@ public class StudyFragment extends Fragment implements ApiCall.OnAsyncRequestCom
                 for (int l = 0; list3.size() > l; l++) {
                   if (studyListArrayList.get(i).getCategory().equalsIgnoreCase(list3.get(l))) {
                     studyList.add(studyListArrayList.get(i));
-                    mFilteredCompletionAdeherenceCalcs.add(completionAdeherenceCalcs.get(i));
+                    filteredCompletionAdeherenceCalcs.add(completionAdeherenceCalcs.get(i));
                     break;
                   }
                 }
@@ -770,8 +771,7 @@ public class StudyFragment extends Fragment implements ApiCall.OnAsyncRequestCom
                               .getCategory()
                               .equalsIgnoreCase(list3.get(l))) {
                             studyList.add(studyListArrayList.get(i));
-                            mFilteredCompletionAdeherenceCalcs.add(
-                                completionAdeherenceCalcs.get(i));
+                            filteredCompletionAdeherenceCalcs.add(completionAdeherenceCalcs.get(i));
                             break;
                           }
                         }
@@ -792,7 +792,7 @@ public class StudyFragment extends Fragment implements ApiCall.OnAsyncRequestCom
                             .getCategory()
                             .equalsIgnoreCase(list3.get(l))) {
                           studyList.add(studyListArrayList.get(i));
-                          mFilteredCompletionAdeherenceCalcs.add(completionAdeherenceCalcs.get(i));
+                          filteredCompletionAdeherenceCalcs.add(completionAdeherenceCalcs.get(i));
                           break;
                         }
                       }
@@ -811,8 +811,8 @@ public class StudyFragment extends Fragment implements ApiCall.OnAsyncRequestCom
   }
 
   private void callGetStudyListWebservice() {
-    if (mSwipeRefresh) {
-      mSwipeRefresh = false;
+    if (swipeRefresh) {
+      swipeRefresh = false;
       AppController.getHelperProgressDialog()
           .showSwipeListCustomProgress(getActivity(), R.drawable.transparent, false);
     } else {
@@ -825,7 +825,7 @@ public class StudyFragment extends Fragment implements ApiCall.OnAsyncRequestCom
             "get",
             URLs.STUDY_LIST,
             STUDY_LIST,
-            mContext,
+            context,
             Study.class,
             null,
             header,
@@ -843,44 +843,43 @@ public class StudyFragment extends Fragment implements ApiCall.OnAsyncRequestCom
 
     if (responseCode == STUDY_LIST) {
       if (response != null) {
-        mStudy = (Study) response;
-        studyListArrayList = mStudy.getStudies();
+        study = (Study) response;
+        studyListArrayList = study.getStudies();
         if (AppController.getHelperSharedPreference()
-            .readPreference(mContext, mContext.getString(R.string.userid), "")
+            .readPreference(context, context.getString(R.string.userid), "")
             .equalsIgnoreCase("")) {
           AppController.getHelperProgressDialog().dismissDialog();
           onItemsLoadComplete();
           webserviceCall = false;
           setStudyList(false);
         } else {
-          GetPreferenceEvent getPreferenceEvent = new GetPreferenceEvent();
           HashMap<String, String> header = new HashMap();
           header.put(
               "accessToken",
               AppController.getHelperSharedPreference()
-                  .readPreference(mContext, getResources().getString(R.string.auth), ""));
+                  .readPreference(context, getResources().getString(R.string.auth), ""));
           header.put(
               "userId",
               AppController.getHelperSharedPreference()
-                  .readPreference(mContext, getResources().getString(R.string.userid), ""));
+                  .readPreference(context, getResources().getString(R.string.userid), ""));
           header.put(
               "clientToken",
               AppController.getHelperSharedPreference()
-                  .readPreference(mContext, getResources().getString(R.string.clientToken), ""));
+                  .readPreference(context, getResources().getString(R.string.clientToken), ""));
 
           RegistrationServerEnrollmentConfigEvent registrationServerEnrollmentConfigEvent =
               new RegistrationServerEnrollmentConfigEvent(
                   "get",
                   URLs.STUDY_STATE,
                   GET_PREFERENCES,
-                  mContext,
+                  context,
                   StudyData.class,
                   null,
                   header,
                   null,
                   false,
                   this);
-
+          GetPreferenceEvent getPreferenceEvent = new GetPreferenceEvent();
           getPreferenceEvent.setRegistrationServerEnrollmentConfigEvent(
               registrationServerEnrollmentConfigEvent);
           UserModulePresenter userModulePresenter = new UserModulePresenter();
@@ -890,22 +889,21 @@ public class StudyFragment extends Fragment implements ApiCall.OnAsyncRequestCom
         webserviceCall = false;
         AppController.getHelperProgressDialog().dismissDialog();
         onItemsLoadComplete();
-        Toast.makeText(mContext, R.string.unable_to_parse, Toast.LENGTH_SHORT).show();
+        Toast.makeText(context, R.string.unable_to_parse, Toast.LENGTH_SHORT).show();
       }
     } else if (responseCode == CONSENT_METADATA) {
       AppController.getHelperProgressDialog().dismissDialog();
       eligibilityConsent = (EligibilityConsent) response;
       if (eligibilityConsent != null) {
-        eligibilityConsent.setStudyId(mStudyId);
-        saveConsentToDB(mContext, eligibilityConsent);
+        eligibilityConsent.setStudyId(studyId);
+        saveConsentToDB(context, eligibilityConsent);
         startConsent(
             eligibilityConsent.getConsent(), eligibilityConsent.getEligibility().getType());
       } else {
-        Toast.makeText(mContext, R.string.unable_to_parse, Toast.LENGTH_SHORT).show();
+        Toast.makeText(context, R.string.unable_to_parse, Toast.LENGTH_SHORT).show();
       }
     } else if (responseCode == GET_PREFERENCES) {
-      AppController.getHelperSharedPreference()
-          .writePreference(mContext, "firstStudyState", "Done");
+      AppController.getHelperSharedPreference().writePreference(context, "firstStudyState", "Done");
       AppController.getHelperProgressDialog().dismissDialog();
       onItemsLoadComplete();
       webserviceCall = false;
@@ -913,11 +911,11 @@ public class StudyFragment extends Fragment implements ApiCall.OnAsyncRequestCom
       if (studies != null) {
         studies.setUserId(
             AppController.getHelperSharedPreference()
-                .readPreference(mContext, getString(R.string.userid), ""));
+                .readPreference(context, getString(R.string.userid), ""));
 
         StudyData studyData = dbServiceSubscriber.getStudyPreferencesListFromDB(realm);
         if (studyData == null) {
-          dbServiceSubscriber.saveStudyPreferencesToDB(mContext, studies);
+          dbServiceSubscriber.saveStudyPreferencesToDB(context, studies);
         } else {
           studies = studyData;
         }
@@ -939,22 +937,22 @@ public class StudyFragment extends Fragment implements ApiCall.OnAsyncRequestCom
             }
           }
         } else {
-          Toast.makeText(mContext, R.string.error_retriving_data, Toast.LENGTH_SHORT).show();
+          Toast.makeText(context, R.string.error_retriving_data, Toast.LENGTH_SHORT).show();
         }
         setStudyList(false);
         ((StudyActivity) getContext())
             .checkForNotification(((StudyActivity) getContext()).getIntent());
       } else {
-        Toast.makeText(mContext, R.string.unable_to_parse, Toast.LENGTH_SHORT).show();
+        Toast.makeText(context, R.string.unable_to_parse, Toast.LENGTH_SHORT).show();
       }
     } else if (responseCode == UPDATE_PREFERENCES) {
       LoginData loginData = (LoginData) response;
       AppController.getHelperProgressDialog().dismissDialog();
       if (loginData != null && loginData.getMessage().equalsIgnoreCase("success")) {
-        Toast.makeText(mContext, R.string.update_success, Toast.LENGTH_SHORT).show();
+        Toast.makeText(context, R.string.update_success, Toast.LENGTH_SHORT).show();
 
         realm.beginTransaction();
-        if (mSearchResultList.size() > 0) {
+        if (searchResultList.size() > 0) {
           // searchlist
           int pos = getFilterdArrayListPosition(lastUpdatedStudyId);
           copyOfFilteredStudyList().get(pos).setBookmarked(lastUpdatedBookMark);
@@ -964,102 +962,100 @@ public class StudyFragment extends Fragment implements ApiCall.OnAsyncRequestCom
         }
         realm.commitTransaction();
         dbServiceSubscriber.updateStudyPreferenceToDb(
-            mContext, lastUpdatedStudyId, lastUpdatedBookMark, lastUpdatedStatusStatus);
+            context, lastUpdatedStudyId, lastUpdatedBookMark, lastUpdatedStatusStatus);
         studyListAdapter.notifyItemChanged(lastUpdatedPosition);
         /// delete offline row
-        dbServiceSubscriber.deleteOfflineDataRow(mContext, mDeleteIndexNumberDB);
+        dbServiceSubscriber.deleteOfflineDataRow(context, deleteIndexNumberDb);
       }
     } else if (responseCode == STUDY_UPDATES) {
       StudyUpdate studyUpdate = (StudyUpdate) response;
-      studyUpdate.setStudyId(mStudyId);
+      studyUpdate.setStudyId(studyId);
       StudyUpdateListdata studyUpdateListdata = new StudyUpdateListdata();
       RealmList<StudyUpdate> studyUpdates = new RealmList<>();
       studyUpdates.add(studyUpdate);
       studyUpdateListdata.setStudyUpdates(studyUpdates);
-      dbServiceSubscriber.saveStudyUpdateListdataToDB(mContext, studyUpdateListdata);
+      dbServiceSubscriber.saveStudyUpdateListdataToDB(context, studyUpdateListdata);
 
       if (studyUpdate.getStudyUpdateData().isResources()) {
-        dbServiceSubscriber.deleteResourcesFromDb(mContext, mStudyId);
+        dbServiceSubscriber.deleteResourcesFromDb(context, studyId);
       }
       if (studyUpdate.getStudyUpdateData().isInfo()) {
-        dbServiceSubscriber.deleteStudyInfoFromDb(mContext, mStudyId);
+        dbServiceSubscriber.deleteStudyInfoFromDb(context, studyId);
       }
       if (studyUpdate.getStudyUpdateData().isConsent()) {
         callConsentMetaDataWebservice();
       } else {
         AppController.getHelperProgressDialog().dismissDialog();
-        Intent intent = new Intent(mContext, SurveyActivity.class);
-        intent.putExtra("studyId", mStudyId);
-        intent.putExtra("to", mCalledFor);
-        intent.putExtra("from", mFrom);
-        intent.putExtra("activityId", mActivityId);
-        intent.putExtra("localNotification", mLocalNotification);
-        mContext.startActivity(intent);
+        Intent intent = new Intent(context, SurveyActivity.class);
+        intent.putExtra("studyId", studyId);
+        intent.putExtra("to", calledFor);
+        intent.putExtra("from", from);
+        intent.putExtra("activityId", activityId);
+        intent.putExtra("localNotification", localNotification);
+        context.startActivity(intent);
       }
     } else if (responseCode == GET_CONSENT_DOC) {
-      ConsentDocumentData mConsentDocumentData = (ConsentDocumentData) response;
-      mLatestConsentVersion = mConsentDocumentData.getConsent().getVersion();
-
-      callGetConsentPDFWebservice();
-
+      ConsentDocumentData consentDocumentData = (ConsentDocumentData) response;
+      latestConsentVersion = consentDocumentData.getConsent().getVersion();
+      callGetConsentPdfWebservice();
     } else if (responseCode == CONSENTPDF) {
-      ConsentPDF consentPDFData = (ConsentPDF) response;
-      if (mLatestConsentVersion != null
-          && consentPDFData != null
-          && consentPDFData.getConsent() != null
-          && consentPDFData.getConsent().getVersion() != null) {
-        if (!consentPDFData.getConsent().getVersion().equalsIgnoreCase(mLatestConsentVersion)) {
+      ConsentPDF consentPdfData = (ConsentPDF) response;
+      if (latestConsentVersion != null
+          && consentPdfData != null
+          && consentPdfData.getConsent() != null
+          && consentPdfData.getConsent().getVersion() != null) {
+        if (!consentPdfData.getConsent().getVersion().equalsIgnoreCase(latestConsentVersion)) {
           callConsentMetaDataWebservice();
         } else {
           AppController.getHelperProgressDialog().dismissDialog();
-          Intent intent = new Intent(mContext, SurveyActivity.class);
-          intent.putExtra("studyId", mStudyId);
-          intent.putExtra("to", mCalledFor);
-          intent.putExtra("from", mFrom);
-          intent.putExtra("activityId", mActivityId);
-          intent.putExtra("localNotification", mLocalNotification);
-          mContext.startActivity(intent);
+          Intent intent = new Intent(context, SurveyActivity.class);
+          intent.putExtra("studyId", studyId);
+          intent.putExtra("to", calledFor);
+          intent.putExtra("from", from);
+          intent.putExtra("activityId", activityId);
+          intent.putExtra("localNotification", localNotification);
+          context.startActivity(intent);
         }
       } else {
         AppController.getHelperProgressDialog().dismissDialog();
-        Intent intent = new Intent(mContext, SurveyActivity.class);
-        intent.putExtra("studyId", mStudyId);
-        intent.putExtra("to", mCalledFor);
-        intent.putExtra("from", mFrom);
-        intent.putExtra("activityId", mActivityId);
-        intent.putExtra("localNotification", mLocalNotification);
-        mContext.startActivity(intent);
+        Intent intent = new Intent(context, SurveyActivity.class);
+        intent.putExtra("studyId", studyId);
+        intent.putExtra("to", calledFor);
+        intent.putExtra("from", from);
+        intent.putExtra("activityId", activityId);
+        intent.putExtra("localNotification", localNotification);
+        context.startActivity(intent);
       }
     }
   }
 
-  private void callGetConsentPDFWebservice() {
-    ConsentPDFEvent consentPDFEvent = new ConsentPDFEvent();
+  private void callGetConsentPdfWebservice() {
+    ConsentPDFEvent consentPdfEvent = new ConsentPDFEvent();
     HashMap<String, String> header = new HashMap<>();
     header.put(
         "accessToken",
         AppController.getHelperSharedPreference()
-            .readPreference(mContext, getResources().getString(R.string.auth), ""));
+            .readPreference(context, getResources().getString(R.string.auth), ""));
     header.put(
         "userId",
         AppController.getHelperSharedPreference()
-            .readPreference(mContext, getResources().getString(R.string.userid), ""));
-    String url = URLs.CONSENTPDF + "?studyId=" + mStudyId + "&consentVersion=";
+            .readPreference(context, getResources().getString(R.string.userid), ""));
+    String url = URLs.CONSENTPDF + "?studyId=" + studyId + "&consentVersion=";
     RegistrationServerConsentConfigEvent registrationServerConsentConfigEvent =
         new RegistrationServerConsentConfigEvent(
             "get",
             url,
             CONSENTPDF,
-            mContext,
+            context,
             ConsentPDF.class,
             null,
             header,
             null,
             false,
             StudyFragment.this);
-    consentPDFEvent.setRegistrationServerConsentConfigEvent(registrationServerConsentConfigEvent);
+    consentPdfEvent.setRegistrationServerConsentConfigEvent(registrationServerConsentConfigEvent);
     UserModulePresenter userModulePresenter = new UserModulePresenter();
-    userModulePresenter.performConsentPDF(consentPDFEvent);
+    userModulePresenter.performConsentPDF(consentPdfEvent);
   }
 
   private void saveConsentToDB(Context context, EligibilityConsent eligibilityConsent) {
@@ -1074,38 +1070,38 @@ public class StudyFragment extends Fragment implements ApiCall.OnAsyncRequestCom
   private void startConsent(Consent consent, String type) {
     eligibilityType = type;
     Toast.makeText(
-            mContext,
-            mContext.getResources().getString(R.string.please_review_the_updated_consent),
+            context,
+            context.getResources().getString(R.string.please_review_the_updated_consent),
             Toast.LENGTH_SHORT)
         .show();
     ConsentBuilder consentBuilder = new ConsentBuilder();
-    List<Step> consentstep = consentBuilder.createsurveyquestion(mContext, consent, mtitle);
+    List<Step> consentstep = consentBuilder.createsurveyquestion(context, consent, title);
     Task consentTask = new OrderedTask(CONSENT, consentstep);
     Intent intent =
         CustomConsentViewTaskActivity.newIntent(
-            mContext, consentTask, mStudyId, "", mtitle, eligibilityType, "update");
+            context, consentTask, studyId, "", title, eligibilityType, "update");
     startActivityForResult(intent, CONSENT_RESPONSECODE);
   }
 
   private void callConsentMetaDataWebservice() {
 
-    new callConsentMetaData().execute();
+    new CallConsentMetaData().execute();
   }
 
-  private class callConsentMetaData extends AsyncTask<String, Void, String> {
+  private class CallConsentMetaData extends AsyncTask<String, Void, String> {
     String response = null;
     String responseCode = null;
-    Responsemodel mResponseModel;
+    Responsemodel responseModel;
 
     @Override
     protected String doInBackground(String... params) {
-      ConnectionDetector connectionDetector = new ConnectionDetector(mContext);
+      ConnectionDetector connectionDetector = new ConnectionDetector(context);
 
-      String url = URLs.BASE_URL_WCP_SERVER + URLs.CONSENT_METADATA + "?studyId=" + mStudyId;
+      String url = URLs.BASE_URL_WCP_SERVER + URLs.CONSENT_METADATA + "?studyId=" + studyId;
       if (connectionDetector.isConnectingToInternet()) {
-        mResponseModel = HttpRequest.getRequest(url, new HashMap<String, String>(), "WCP");
-        responseCode = mResponseModel.getResponseCode();
-        response = mResponseModel.getResponseData();
+        responseModel = HttpRequest.getRequest(url, new HashMap<String, String>(), "WCP");
+        responseCode = responseModel.getResponseCode();
+        response = responseModel.getResponseData();
         if (responseCode.equalsIgnoreCase("0") && response.equalsIgnoreCase("timeout")) {
           response = "timeout";
         } else if (responseCode.equalsIgnoreCase("0") && response.equalsIgnoreCase("")) {
@@ -1143,11 +1139,11 @@ public class StudyFragment extends Fragment implements ApiCall.OnAsyncRequestCom
       if (response != null) {
         if (response.equalsIgnoreCase("session expired")) {
           AppController.getHelperProgressDialog().dismissDialog();
-          AppController.getHelperSessionExpired(mContext, "session expired");
+          AppController.getHelperSessionExpired(context, "session expired");
         } else if (response.equalsIgnoreCase("timeout")) {
           AppController.getHelperProgressDialog().dismissDialog();
           Toast.makeText(
-                  mContext,
+                  context,
                   getResources().getString(R.string.connection_timeout),
                   Toast.LENGTH_SHORT)
               .show();
@@ -1195,30 +1191,30 @@ public class StudyFragment extends Fragment implements ApiCall.OnAsyncRequestCom
                   .create();
           eligibilityConsent = gson.fromJson(response, EligibilityConsent.class);
           if (eligibilityConsent != null) {
-            eligibilityConsent.setStudyId(mStudyId);
-            saveConsentToDB(mContext, eligibilityConsent);
+            eligibilityConsent.setStudyId(studyId);
+            saveConsentToDB(context, eligibilityConsent);
             startConsent(
                 eligibilityConsent.getConsent(), eligibilityConsent.getEligibility().getType());
           } else {
-            Toast.makeText(mContext, R.string.unable_to_parse, Toast.LENGTH_SHORT).show();
+            Toast.makeText(context, R.string.unable_to_parse, Toast.LENGTH_SHORT).show();
           }
         } else {
           AppController.getHelperProgressDialog().dismissDialog();
           Toast.makeText(
-                  mContext,
+                  context,
                   getResources().getString(R.string.unable_to_retrieve_data),
                   Toast.LENGTH_SHORT)
               .show();
         }
       } else {
         AppController.getHelperProgressDialog().dismissDialog();
-        Toast.makeText(mContext, getString(R.string.unknown_error), Toast.LENGTH_SHORT).show();
+        Toast.makeText(context, getString(R.string.unknown_error), Toast.LENGTH_SHORT).show();
       }
     }
 
     @Override
     protected void onPreExecute() {
-      AppController.getHelperProgressDialog().showProgress(mContext, "", "", false);
+      AppController.getHelperProgressDialog().showProgress(context, "", "", false);
     }
   }
 
@@ -1230,12 +1226,12 @@ public class StudyFragment extends Fragment implements ApiCall.OnAsyncRequestCom
       String from,
       String activityId,
       String localNotification) {
-    mFrom = from;
-    mtitle = title;
-    mStudyId = studyId;
-    mActivityId = activityId;
-    mLocalNotification = localNotification;
-    mCalledFor = calledFor;
+    this.from = from;
+    this.title = title;
+    this.studyId = studyId;
+    this.activityId = activityId;
+    this.localNotification = localNotification;
+    this.calledFor = calledFor;
     StudyData studyData = dbServiceSubscriber.getStudyPreferences(realm);
     Studies studies = null;
     if (studyData != null && studyData.getStudies() != null) {
@@ -1288,16 +1284,7 @@ public class StudyFragment extends Fragment implements ApiCall.OnAsyncRequestCom
     String url = URLs.STUDY_UPDATES + "?studyId=" + studyId + "&studyVersion=" + studyVersion;
     WCPConfigEvent wcpConfigEvent =
         new WCPConfigEvent(
-            "get",
-            url,
-            STUDY_UPDATES,
-            mContext,
-            StudyUpdate.class,
-            null,
-            header,
-            null,
-            false,
-            this);
+            "get", url, STUDY_UPDATES, context, StudyUpdate.class, null, header, null, false, this);
 
     getUserStudyListEvent.setWcpConfigEvent(wcpConfigEvent);
     StudyModulePresenter studyModulePresenter = new StudyModulePresenter();
@@ -1310,25 +1297,25 @@ public class StudyFragment extends Fragment implements ApiCall.OnAsyncRequestCom
     onItemsLoadComplete();
     webserviceCall = false;
     if (statusCode.equalsIgnoreCase("401")) {
-      Toast.makeText(mContext, errormsg, Toast.LENGTH_SHORT).show();
-      AppController.getHelperSessionExpired(mContext, errormsg);
+      Toast.makeText(context, errormsg, Toast.LENGTH_SHORT).show();
+      AppController.getHelperSessionExpired(context, errormsg);
     } else if (responseCode == CONSENT_METADATA) {
       Toast.makeText(getActivity(), errormsg, Toast.LENGTH_LONG).show();
     } else if (responseCode == STUDY_UPDATES
         || responseCode == GET_CONSENT_DOC
         || responseCode == CONSENTPDF) {
-      Intent intent = new Intent(mContext, SurveyActivity.class);
-      intent.putExtra("studyId", mStudyId);
-      intent.putExtra("to", mCalledFor);
-      intent.putExtra("from", mFrom);
-      intent.putExtra("activityId", mActivityId);
-      intent.putExtra("localNotification", mLocalNotification);
-      mContext.startActivity(intent);
+      Intent intent = new Intent(context, SurveyActivity.class);
+      intent.putExtra("studyId", studyId);
+      intent.putExtra("to", calledFor);
+      intent.putExtra("from", from);
+      intent.putExtra("activityId", activityId);
+      intent.putExtra("localNotification", localNotification);
+      context.startActivity(intent);
     } else {
       // offline handling
       if (responseCode == UPDATE_PREFERENCES) {
         realm.beginTransaction();
-        if (mSearchResultList.size() > 0) {
+        if (searchResultList.size() > 0) {
           // searchlist
           int pos = getFilterdArrayListPosition(lastUpdatedStudyId);
           copyOfFilteredStudyList().get(pos).setBookmarked(lastUpdatedBookMark);
@@ -1339,14 +1326,14 @@ public class StudyFragment extends Fragment implements ApiCall.OnAsyncRequestCom
 
         realm.commitTransaction();
         dbServiceSubscriber.updateStudyPreferenceToDb(
-            mContext, lastUpdatedStudyId, lastUpdatedBookMark, lastUpdatedStatusStatus);
+            context, lastUpdatedStudyId, lastUpdatedBookMark, lastUpdatedStatusStatus);
         studyListAdapter.notifyItemChanged(lastUpdatedPosition);
       } else {
-        mEmptyListMessage.setVisibility(View.GONE);
+        emptyListMessage.setVisibility(View.GONE);
 
-        mStudy = dbServiceSubscriber.getStudyListFromDB(realm);
-        if (mStudy != null) {
-          studyListArrayList = mStudy.getStudies();
+        study = dbServiceSubscriber.getStudyListFromDB(realm);
+        if (study != null) {
+          studyListArrayList = study.getStudies();
           studyListArrayList =
               dbServiceSubscriber.saveStudyStatusToStudyList(studyListArrayList, realm);
           setStudyList(true);
@@ -1358,8 +1345,8 @@ public class StudyFragment extends Fragment implements ApiCall.OnAsyncRequestCom
   }
 
   public void updatebookmark(boolean b, int position, String studyId, String studyStatus) {
-    AppController.getHelperProgressDialog().showProgress(mContext, "", "", false);
-    UpdatePreferenceEvent updatePreferenceEvent = new UpdatePreferenceEvent();
+    AppController.getHelperProgressDialog().showProgress(context, "", "", false);
+
     lastUpdatedPosition = position;
     lastUpdatedBookMark = b;
     lastUpdatedStudyId = studyId;
@@ -1368,15 +1355,15 @@ public class StudyFragment extends Fragment implements ApiCall.OnAsyncRequestCom
     header.put(
         "accessToken",
         AppController.getHelperSharedPreference()
-            .readPreference(mContext, getResources().getString(R.string.auth), ""));
+            .readPreference(context, getResources().getString(R.string.auth), ""));
     header.put(
         "userId",
         AppController.getHelperSharedPreference()
-            .readPreference(mContext, getResources().getString(R.string.userid), ""));
+            .readPreference(context, getResources().getString(R.string.userid), ""));
     header.put(
         "clientToken",
         AppController.getHelperSharedPreference()
-            .readPreference(mContext, getResources().getString(R.string.clientToken), ""));
+            .readPreference(context, getResources().getString(R.string.clientToken), ""));
 
     JSONObject jsonObject = new JSONObject();
 
@@ -1407,9 +1394,9 @@ public class StudyFragment extends Fragment implements ApiCall.OnAsyncRequestCom
       if (offlineData != null) {
         number = offlineData.getNumber();
       }
-      mDeleteIndexNumberDB = number;
+      deleteIndexNumberDb = number;
       AppController.pendingService(
-          mContext,
+          context,
           number,
           "post_object",
           URLs.UPDATE_STUDY_PREFERENCE,
@@ -1429,14 +1416,14 @@ public class StudyFragment extends Fragment implements ApiCall.OnAsyncRequestCom
             "post_object",
             URLs.UPDATE_STUDY_PREFERENCE,
             UPDATE_PREFERENCES,
-            mContext,
+            context,
             LoginData.class,
             null,
             header,
             jsonObject,
             false,
             this);
-
+    UpdatePreferenceEvent updatePreferenceEvent = new UpdatePreferenceEvent();
     updatePreferenceEvent.setRegistrationServerEnrollmentConfigEvent(
         registrationServerEnrollmentConfigEvent);
     UserModulePresenter userModulePresenter = new UserModulePresenter();
@@ -1449,8 +1436,8 @@ public class StudyFragment extends Fragment implements ApiCall.OnAsyncRequestCom
     if (requestCode == CONSENT_RESPONSECODE) {
       if (resultCode == getActivity().RESULT_OK) {
         Intent intent = new Intent(getActivity(), ConsentCompletedActivity.class);
-        intent.putExtra("studyId", mStudyId);
-        intent.putExtra("title", mtitle);
+        intent.putExtra("studyId", studyId);
+        intent.putExtra("title", title);
         intent.putExtra("eligibility", eligibilityType);
         intent.putExtra("type", data.getStringExtra(CustomConsentViewTaskActivity.TYPE));
         // get the encrypted file path
@@ -1469,14 +1456,14 @@ public class StudyFragment extends Fragment implements ApiCall.OnAsyncRequestCom
   public void searchFromFilteredStudyList(String searchKey) {
     try {
       searchResult(searchKey);
-      if (mSearchResultList.size() == 0) {
+      if (searchResultList.size() == 0) {
         Toast.makeText(
-                mContext,
-                mContext.getResources().getString(R.string.search_data_not_available),
+                context,
+                context.getResources().getString(R.string.search_data_not_available),
                 Toast.LENGTH_LONG)
             .show();
       }
-      studyListAdapter.modifyAdapter(mSearchResultList, mSearchFilteredCompletionAdeherenceCalcs);
+      studyListAdapter.modifyAdapter(searchResultList, searchFilteredCompletionAdeherenceCalcs);
       studyListAdapter.notifyDataSetChanged();
     } catch (Exception e) {
       Logger.log(e);
@@ -1487,38 +1474,41 @@ public class StudyFragment extends Fragment implements ApiCall.OnAsyncRequestCom
     try {
       RealmList<StudyList> tempStudyOrFilteredList = copyOfFilteredStudyList();
       if (tempStudyOrFilteredList.size() > 0) {
-        if (mSearchResultList.size() > 0) mSearchResultList.clear();
-        if (mSearchFilteredCompletionAdeherenceCalcs.size() > 0)
-          mSearchFilteredCompletionAdeherenceCalcs.clear();
+        if (searchResultList.size() > 0) {
+          searchResultList.clear();
+        }
+        if (searchFilteredCompletionAdeherenceCalcs.size() > 0) {
+          searchFilteredCompletionAdeherenceCalcs.clear();
+        }
         for (int i = 0; tempStudyOrFilteredList.size() > i; i++) {
           if (tempStudyOrFilteredList
               .get(i)
               .getSponsorName()
               .toLowerCase()
               .contains(searchKey.toLowerCase())) {
-            mSearchResultList.add(tempStudyOrFilteredList.get(i));
-            mSearchFilteredCompletionAdeherenceCalcs.add(mFilteredCompletionAdeherenceCalcs.get(i));
+            searchResultList.add(tempStudyOrFilteredList.get(i));
+            searchFilteredCompletionAdeherenceCalcs.add(filteredCompletionAdeherenceCalcs.get(i));
           } else if (tempStudyOrFilteredList
               .get(i)
               .getCategory()
               .toLowerCase()
               .contains(searchKey.toLowerCase())) {
-            mSearchResultList.add(tempStudyOrFilteredList.get(i));
-            mSearchFilteredCompletionAdeherenceCalcs.add(mFilteredCompletionAdeherenceCalcs.get(i));
+            searchResultList.add(tempStudyOrFilteredList.get(i));
+            searchFilteredCompletionAdeherenceCalcs.add(filteredCompletionAdeherenceCalcs.get(i));
           } else if (tempStudyOrFilteredList
               .get(i)
               .getTitle()
               .toLowerCase()
               .contains(searchKey.toLowerCase())) {
-            mSearchResultList.add(tempStudyOrFilteredList.get(i));
-            mSearchFilteredCompletionAdeherenceCalcs.add(mFilteredCompletionAdeherenceCalcs.get(i));
+            searchResultList.add(tempStudyOrFilteredList.get(i));
+            searchFilteredCompletionAdeherenceCalcs.add(filteredCompletionAdeherenceCalcs.get(i));
           } else if (tempStudyOrFilteredList
               .get(i)
               .getTagline()
               .toLowerCase()
               .contains(searchKey.toLowerCase())) {
-            mSearchResultList.add(tempStudyOrFilteredList.get(i));
-            mSearchFilteredCompletionAdeherenceCalcs.add(mFilteredCompletionAdeherenceCalcs.get(i));
+            searchResultList.add(tempStudyOrFilteredList.get(i));
+            searchFilteredCompletionAdeherenceCalcs.add(filteredCompletionAdeherenceCalcs.get(i));
           }
         }
       }
@@ -1526,13 +1516,15 @@ public class StudyFragment extends Fragment implements ApiCall.OnAsyncRequestCom
     } catch (Exception e) {
       Logger.log(e);
     }
-    return mSearchResultList;
+    return searchResultList;
   }
 
   public void setStudyFilteredStudyList() {
-    if (mSearchResultList.size() > 0) mSearchResultList.clear();
+    if (searchResultList.size() > 0) {
+      searchResultList.clear();
+    }
     if (studyListAdapter != null) {
-      studyListAdapter.modifyAdapter(copyOfFilteredStudyList(), mFilteredCompletionAdeherenceCalcs);
+      studyListAdapter.modifyAdapter(copyOfFilteredStudyList(), filteredCompletionAdeherenceCalcs);
       studyListAdapter.notifyDataSetChanged();
     }
   }
@@ -1540,7 +1532,7 @@ public class StudyFragment extends Fragment implements ApiCall.OnAsyncRequestCom
   private int getFilterdArrayListPosition(String studyId) {
     int position = 0;
     try {
-      if (mSearchResultList.size() > 0) {
+      if (searchResultList.size() > 0) {
         RealmList<StudyList> tempStudyOrFilteredList = copyOfFilteredStudyList();
         for (int i = 0; tempStudyOrFilteredList.size() > i; i++) {
           if (tempStudyOrFilteredList.get(i).getStudyId().equalsIgnoreCase(studyId)) {

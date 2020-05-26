@@ -146,9 +146,6 @@ public class DonutProgress extends View {
   }
 
   protected void initByAttributes(TypedArray attributes) {
-    int defaultInnerBackgroundColor = Color.TRANSPARENT;
-    int defaultMax = 100;
-    int defaultStartingDegree = 0;
     finishedStrokeColor =
         attributes.getColor(R.styleable.DonutProgress_donut_finished_color, defaultFinishedColor);
     unfinishedStrokeColor =
@@ -158,6 +155,7 @@ public class DonutProgress extends View {
     attributeResourceId =
         attributes.getResourceId(R.styleable.DonutProgress_donut_inner_drawable, 0);
 
+    int defaultMax = 100;
     setMax(attributes.getInt(R.styleable.DonutProgress_donut_max, defaultMax));
     setProgress(attributes.getFloat(R.styleable.DonutProgress_donut_progress, 0));
     finishedStrokeWidth =
@@ -198,6 +196,8 @@ public class DonutProgress extends View {
             R.styleable.DonutProgress_donut_inner_bottom_text_color, defaultInnerBottomTextColor);
     innerBottomText = attributes.getString(R.styleable.DonutProgress_donut_inner_bottom_text);
 
+    int defaultInnerBackgroundColor = Color.TRANSPARENT;
+    int defaultStartingDegree = 0;
     startingDegree =
         attributes.getInt(
             R.styleable.DonutProgress_donut_circle_starting_degree, defaultStartingDegree);

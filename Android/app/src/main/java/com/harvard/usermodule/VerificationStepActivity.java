@@ -70,7 +70,7 @@ public class VerificationStepActivity extends AppCompatActivity
     mFrom = getIntent().getStringExtra("from");
     mType = getIntent().getStringExtra("type");
 
-    initializeXMLId();
+    initializeXmlId();
     mHrLine1.setVisibility(View.GONE);
     mEmailField.setVisibility(View.GONE);
     setTextForView();
@@ -79,7 +79,7 @@ public class VerificationStepActivity extends AppCompatActivity
     bindEvents();
   }
 
-  private void initializeXMLId() {
+  private void initializeXmlId() {
     mBackBtn = (RelativeLayout) findViewById(R.id.backBtn);
     mCancelTxt = (AppCompatTextView) findViewById(R.id.cancelTxt);
     mResend = (AppCompatTextView) findViewById(R.id.resend);

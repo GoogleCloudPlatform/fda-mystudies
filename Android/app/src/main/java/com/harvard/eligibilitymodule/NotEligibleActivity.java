@@ -58,7 +58,6 @@ public class NotEligibleActivity extends AppCompatActivity
 
   public void updateuserpreference() {
     AppController.getHelperProgressDialog().showProgress(NotEligibleActivity.this, "", "", false);
-    UpdatePreferenceEvent updatePreferenceEvent = new UpdatePreferenceEvent();
 
     HashMap<String, String> header = new HashMap();
     header.put(
@@ -103,7 +102,7 @@ public class NotEligibleActivity extends AppCompatActivity
             jsonObject,
             false,
             this);
-
+    UpdatePreferenceEvent updatePreferenceEvent = new UpdatePreferenceEvent();
     updatePreferenceEvent.setRegistrationServerEnrollmentConfigEvent(
         registrationServerEnrollmentConfigEvent);
     UserModulePresenter userModulePresenter = new UserModulePresenter();

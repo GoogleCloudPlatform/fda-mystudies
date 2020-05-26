@@ -20,7 +20,7 @@ public class ScaleTextAnswerFormat extends ChoiceAnswerFormatCustom {
 
   private final String defaultval;
   private final boolean vertical;
-  private final ChoiceTextExclusive[] mChoiceTextExclusive;
+  private final ChoiceTextExclusive[] choiceTextExclusive;
 
   public ScaleTextAnswerFormat(
       CustomAnswerStyle style,
@@ -29,7 +29,7 @@ public class ScaleTextAnswerFormat extends ChoiceAnswerFormatCustom {
       boolean vertical) {
     this.defaultval = defaultval;
     this.vertical = vertical;
-    this.mChoiceTextExclusive = choiceTextExclusive;
+    this.choiceTextExclusive = choiceTextExclusive;
   }
 
   String getDefaultval() {
@@ -41,7 +41,7 @@ public class ScaleTextAnswerFormat extends ChoiceAnswerFormatCustom {
   }
 
   ChoiceTextExclusive[] getChoiceTextExclusive() {
-    return mChoiceTextExclusive;
+    return choiceTextExclusive;
   }
 
   @Override

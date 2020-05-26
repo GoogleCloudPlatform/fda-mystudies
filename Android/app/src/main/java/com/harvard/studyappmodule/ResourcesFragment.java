@@ -32,15 +32,15 @@ import io.realm.RealmList;
 
 public class ResourcesFragment<T> extends Fragment implements ApiCall.OnAsyncRequestComplete {
 
-  private RecyclerView mStudyRecyclerView;
-  private Context mContext;
-  private RealmList<Resource> mResourceArrayList;
-  private int RESOURCE_REQUEST_CODE = 213;
+  private RecyclerView studyRecyclerView;
+  private Context context;
+  private RealmList<Resource> resourceArrayList;
+  private static final int RESOURCE_REQUEST_CODE = 213;
 
   @Override
   public void onAttach(Context context) {
     super.onAttach(context);
-    this.mContext = context;
+    this.context = context;
   }
 
   @Override
@@ -48,22 +48,22 @@ public class ResourcesFragment<T> extends Fragment implements ApiCall.OnAsyncReq
       LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
     // Inflate the layout for this fragment
     View view = inflater.inflate(R.layout.fragment_resources, container, false);
-    initializeXMLId(view);
+    initializeXmlId(view);
     // currently hide this and create temp block then pass to adapter
     // temp block(later u can remove)
     Resource r = new Resource();
-    r.setTitle(mContext.getResources().getString(R.string.app_glossary));
+    r.setTitle(context.getResources().getString(R.string.app_glossary));
     r.setType("pdf");
     r.setContent("");
-    mResourceArrayList = new RealmList<>();
-    mResourceArrayList.add(r);
-    mSetResourceAdapter();
+    resourceArrayList = new RealmList<>();
+    resourceArrayList.add(r);
+    setResourceAdapter();
     /// till here/////
     return view;
   }
 
-  private void initializeXMLId(View view) {
-    mStudyRecyclerView = (RecyclerView) view.findViewById(R.id.studyRecyclerView);
+  private void initializeXmlId(View view) {
+    studyRecyclerView = (RecyclerView) view.findViewById(R.id.studyRecyclerView);
   }
 
   @Override
@@ -72,27 +72,27 @@ public class ResourcesFragment<T> extends Fragment implements ApiCall.OnAsyncReq
     if (responseCode == RESOURCE_REQUEST_CODE) {
       if (response != null) {
         StudyResource studyResource = (StudyResource) response;
-        mResourceArrayList = studyResource.getResources();
-        if (mResourceArrayList != null && mResourceArrayList.size() != 0) {
-          mSetResourceAdapter();
+        resourceArrayList = studyResource.getResources();
+        if (resourceArrayList != null && resourceArrayList.size() != 0) {
+          setResourceAdapter();
         }
       }
     }
   }
 
-  private void mSetResourceAdapter() {
-    mStudyRecyclerView.setLayoutManager(new LinearLayoutManager(mContext));
+  private void setResourceAdapter() {
+    studyRecyclerView.setLayoutManager(new LinearLayoutManager(context));
     GatewayResourcesListAdapter gatewayResourcesListAdapter =
-        new GatewayResourcesListAdapter(getActivity(), mResourceArrayList);
-    mStudyRecyclerView.setAdapter(gatewayResourcesListAdapter);
+        new GatewayResourcesListAdapter(getActivity(), resourceArrayList);
+    studyRecyclerView.setAdapter(gatewayResourcesListAdapter);
   }
 
   @Override
   public void asyncResponseFailure(int responseCode, String errormsg, String statusCode) {
     AppController.getHelperProgressDialog().dismissDialog();
     if (statusCode.equalsIgnoreCase("401")) {
-      Toast.makeText(mContext, errormsg, Toast.LENGTH_SHORT).show();
-      AppController.getHelperSessionExpired(mContext, errormsg);
+      Toast.makeText(context, errormsg, Toast.LENGTH_SHORT).show();
+      AppController.getHelperSessionExpired(context, errormsg);
     } else if (responseCode == RESOURCE_REQUEST_CODE) {
       Toast.makeText(getContext(), errormsg, Toast.LENGTH_SHORT).show();
     }

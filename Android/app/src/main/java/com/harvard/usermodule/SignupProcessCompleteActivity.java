@@ -37,12 +37,12 @@ public class SignupProcessCompleteActivity extends AppCompatActivity {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_signup_process_complete);
 
-    initializeXMLId();
+    initializeXmlId();
     setFont();
     bindEvents();
   }
 
-  private void initializeXMLId() {
+  private void initializeXmlId() {
     mCongratsLabel = (AppCompatTextView) findViewById(R.id.congrats_label);
     mSignupCompleteLabel = (AppCompatTextView) findViewById(R.id.signup_complete_txt_label);
     mNextButton = (AppCompatTextView) findViewById(R.id.nextButton);

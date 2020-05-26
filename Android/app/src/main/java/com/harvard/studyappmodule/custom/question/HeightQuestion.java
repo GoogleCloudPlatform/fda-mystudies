@@ -32,7 +32,8 @@ public class HeightQuestion implements StepBody {
   private QuestionStepCustom step;
   private StepResult<Double> result;
   private HeightAnswerFormat format;
-  private NumberPicker feet, inches;
+  private NumberPicker feet;
+  private NumberPicker inches;
   private Double currentSelected;
 
   public HeightQuestion(Step step, StepResult result) {
@@ -100,7 +101,7 @@ public class HeightQuestion implements StepBody {
     if (format.getMeasurementSystem().equalsIgnoreCase("Metric")) {
       heightquestionlayout = inflater.inflate(R.layout.heightquestionlayout, parent, false);
       NumberPicker cmPicker = (NumberPicker) heightquestionlayout.findViewById(R.id.height);
-      TextView unit = (TextView) heightquestionlayout.findViewById(R.id.unit);
+
 
       String[] numberpickervalue = new String[300];
       for (int i = 0; i < numberpickervalue.length; i++) {
@@ -118,6 +119,7 @@ public class HeightQuestion implements StepBody {
               currentSelected = Double.parseDouble("" + picker.getValue());
             }
           });
+      TextView unit = (TextView) heightquestionlayout.findViewById(R.id.unit);
       unit.setText(inflater.getContext().getResources().getString(R.string.cm));
 
       if (currentSelected != null) {

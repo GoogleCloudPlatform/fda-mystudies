@@ -34,7 +34,8 @@ public class TimeIntervalQuestion implements StepBody {
   private QuestionStepCustom step;
   private StepResult<Double> result;
   private TimeIntervalAnswerFormat format;
-  private NumberPicker minpicker, hourpicker;
+  private NumberPicker minpicker;
+  private NumberPicker hourpicker;
   private Double currentSelected;
   private ArrayList<String> minlist;
 

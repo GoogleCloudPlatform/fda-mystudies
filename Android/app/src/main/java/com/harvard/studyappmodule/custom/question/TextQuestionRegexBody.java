@@ -51,7 +51,7 @@ public class TextQuestionRegexBody implements StepBody {
     View body =
         inflater.inflate(
             org.researchstack.backbone.R.layout.rsb_item_edit_text_compact, parent, false);
-    TextAnswerFormatRegex format = (TextAnswerFormatRegex) (step).getAnswerFormat1();
+
     editText = (EditText) body.findViewById(org.researchstack.backbone.R.id.value);
     editText.setImeOptions(EditorInfo.IME_ACTION_DONE);
     if (step.getPlaceholder() != null) {
@@ -85,7 +85,7 @@ public class TextQuestionRegexBody implements StepBody {
             });
 
     // Format EditText from TextAnswerFormat
-
+    TextAnswerFormatRegex format = (TextAnswerFormatRegex) (step).getAnswerFormat1();
     editText.setSingleLine(!format.isMultipleLines());
 
     if (format.getMaximumLength() > TextAnswerFormat.UNLIMITED_LENGTH) {
@@ -123,7 +123,9 @@ public class TextQuestionRegexBody implements StepBody {
     if (!format.isAnswerValid(editText.getText().toString())) {
       if (!format.getInValidMsg().equalsIgnoreCase("")) {
         return new BodyAnswerCustom(false, format.getInValidMsg());
-      } else return BodyAnswer.INVALID;
+      } else {
+        return BodyAnswer.INVALID;
+      }
     }
 
     return BodyAnswer.VALID;

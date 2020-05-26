@@ -42,14 +42,14 @@ public class NewPasscodeSetupActivity extends AppCompatActivity {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_passcode_setup);
 
-    initializeXMLId();
+    initializeXmlId();
     setTextForView();
     setFont();
     bindEvent();
     mBackBtn.setVisibility(View.GONE);
   }
 
-  private void initializeXMLId() {
+  private void initializeXmlId() {
     mBackBtn = (RelativeLayout) findViewById(R.id.backBtn);
     mTitle = (AppCompatTextView) findViewById(R.id.title);
     mCancelBtn = (RelativeLayout) findViewById(R.id.cancelBtn);

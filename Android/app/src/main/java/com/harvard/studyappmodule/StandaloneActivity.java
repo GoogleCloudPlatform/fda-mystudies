@@ -91,37 +91,33 @@ public class StandaloneActivity extends AppCompatActivity
   private DBServiceSubscriber dbServiceSubscriber;
   private Realm realm;
   private RealmList<StudyList> studyListArrayList;
-
   private static final String YET_TO_JOIN = "yetToJoin";
   private static final String IN_PROGRESS = "inProgress";
-
   private static final String ACTIVE = "active";
   private static final String UPCOMING = "upcoming";
   private static final String PAUSED = "paused";
   private static final String CLOSED = "closed";
-
   private String eligibilityType = "";
-  private String mCalledFor = "";
-  private String mFrom = "";
-  private String mActivityId;
-  private String mLocalNotification;
-  private String mLatestConsentVersion = "0";
+  private String calledFor = "";
+  private String from = "";
+  private String activityId;
+  private String localNotification;
+  private String latestConsentVersion = "0";
 
   private ArrayList<CompletionAdeherenceCalc> completionAdeherenceCalcs = new ArrayList<>();
 
   private static final String FROM = "from";
 
-  private String mtitle;
-  private String mStudyId;
-  private Study mStudy;
-  private EligibilityConsent eligibilityConsent;
+  private String title;
+  private String studyId;
+  private Study study;
   private String intentFrom = "";
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_standalone);
-    mStudyId = AppConfig.StudyId;
+    studyId = AppConfig.StudyId;
 
     if (getIntent().getStringExtra(FROM) != null) {
       intentFrom = getIntent().getStringExtra(FROM);
@@ -180,11 +176,11 @@ public class StandaloneActivity extends AppCompatActivity
   public <T> void asyncResponse(T response, int responseCode) {
     if (responseCode == SPECIFIC_STUDY) {
       if (response != null) {
-        mStudy = (Study) response;
-        for (int i = 0; i < mStudy.getStudies().size(); i++) {
-          if (mStudy.getStudies().get(i).getStudyId().equalsIgnoreCase(AppConfig.StudyId)) {
-            studyListArrayList.add(mStudy.getStudies().get(i));
-            mStudy.setStudies(studyListArrayList);
+        study = (Study) response;
+        for (int i = 0; i < study.getStudies().size(); i++) {
+          if (study.getStudies().get(i).getStudyId().equalsIgnoreCase(AppConfig.StudyId)) {
+            studyListArrayList.add(study.getStudies().get(i));
+            study.setStudies(studyListArrayList);
           }
         }
         AppController.getHelperProgressDialog().dismissDialog();
@@ -193,8 +189,8 @@ public class StandaloneActivity extends AppCompatActivity
             AppController.getHelperProgressDialog()
                 .showProgress(StandaloneActivity.this, "", "", false);
 
-            dbServiceSubscriber.saveStudyListToDB(this, mStudy);
-            GetPreferenceEvent getPreferenceEvent = new GetPreferenceEvent();
+            dbServiceSubscriber.saveStudyListToDB(this, study);
+
             HashMap<String, String> header = new HashMap();
             header.put(
                 "accessToken",
@@ -226,7 +222,7 @@ public class StandaloneActivity extends AppCompatActivity
                     null,
                     false,
                     this);
-
+            GetPreferenceEvent getPreferenceEvent = new GetPreferenceEvent();
             getPreferenceEvent.setRegistrationServerEnrollmentConfigEvent(
                 registrationServerEnrollmentConfigEvent);
             UserModulePresenter userModulePresenter = new UserModulePresenter();
@@ -287,16 +283,17 @@ public class StandaloneActivity extends AppCompatActivity
                 StandaloneActivity.this,
                 getString(R.string.status),
                 "" + studyListArrayList.get(0).getStatus());
-        if (!studies.getStudies().isEmpty())
+        if (!studies.getStudies().isEmpty()) {
           AppController.getHelperSharedPreference()
               .writePreference(
                   StandaloneActivity.this,
                   getString(R.string.studyStatus),
                   "" + studies.getStudies().get(0).getStatus());
-        else
+        } else {
           AppController.getHelperSharedPreference()
               .writePreference(
                   StandaloneActivity.this, getString(R.string.studyStatus), YET_TO_JOIN);
+        }
         AppController.getHelperSharedPreference()
             .writePreference(StandaloneActivity.this, getString(R.string.position), "" + 0);
         AppController.getHelperSharedPreference()
@@ -391,7 +388,7 @@ public class StandaloneActivity extends AppCompatActivity
       }
     } else if (responseCode == STUDY_UPDATES) {
       StudyUpdate studyUpdate = (StudyUpdate) response;
-      studyUpdate.setStudyId(mStudyId);
+      studyUpdate.setStudyId(studyId);
       StudyUpdateListdata studyUpdateListdata = new StudyUpdateListdata();
       RealmList<StudyUpdate> studyUpdates = new RealmList<>();
       studyUpdates.add(studyUpdate);
@@ -399,57 +396,57 @@ public class StandaloneActivity extends AppCompatActivity
       dbServiceSubscriber.saveStudyUpdateListdataToDB(this, studyUpdateListdata);
 
       if (studyUpdate.getStudyUpdateData().isResources()) {
-        dbServiceSubscriber.deleteResourcesFromDb(this, mStudyId);
+        dbServiceSubscriber.deleteResourcesFromDb(this, studyId);
       }
       if (studyUpdate.getStudyUpdateData().isInfo()) {
-        dbServiceSubscriber.deleteStudyInfoFromDb(this, mStudyId);
+        dbServiceSubscriber.deleteStudyInfoFromDb(this, studyId);
       }
       if (studyUpdate.getStudyUpdateData().isConsent()) {
         callConsentMetaDataWebservice();
       } else {
         AppController.getHelperProgressDialog().dismissDialog();
         Intent intent = new Intent(StandaloneActivity.this, SurveyActivity.class);
-        intent.putExtra("studyId", mStudyId);
-        intent.putExtra("to", mCalledFor);
-        intent.putExtra("from", mFrom);
-        intent.putExtra("activityId", mActivityId);
-        intent.putExtra("localNotification", mLocalNotification);
+        intent.putExtra("studyId", studyId);
+        intent.putExtra("to", calledFor);
+        intent.putExtra("from", from);
+        intent.putExtra("activityId", activityId);
+        intent.putExtra("localNotification", localNotification);
         startActivity(intent);
         finish();
       }
     } else if (responseCode == GET_CONSENT_DOC) {
-      ConsentDocumentData mConsentDocumentData = (ConsentDocumentData) response;
-      mLatestConsentVersion = mConsentDocumentData.getConsent().getVersion();
+      ConsentDocumentData consentDocumentData = (ConsentDocumentData) response;
+      latestConsentVersion = consentDocumentData.getConsent().getVersion();
 
-      callGetConsentPDFWebservice();
+      callGetConsentPdfWebservice();
 
     } else if (responseCode == CONSENTPDF) {
-      ConsentPDF consentPDFData = (ConsentPDF) response;
-      if (mLatestConsentVersion != null
-          && consentPDFData != null
-          && consentPDFData.getConsent() != null
-          && consentPDFData.getConsent().getVersion() != null) {
-        if (!consentPDFData.getConsent().getVersion().equalsIgnoreCase(mLatestConsentVersion)) {
+      ConsentPDF consentPdfData = (ConsentPDF) response;
+      if (latestConsentVersion != null
+          && consentPdfData != null
+          && consentPdfData.getConsent() != null
+          && consentPdfData.getConsent().getVersion() != null) {
+        if (!consentPdfData.getConsent().getVersion().equalsIgnoreCase(latestConsentVersion)) {
           callConsentMetaDataWebservice();
         } else {
           AppController.getHelperProgressDialog().dismissDialog();
           Intent intent = new Intent(StandaloneActivity.this, SurveyActivity.class);
-          intent.putExtra("studyId", mStudyId);
-          intent.putExtra("to", mCalledFor);
-          intent.putExtra("from", mFrom);
-          intent.putExtra("activityId", mActivityId);
-          intent.putExtra("localNotification", mLocalNotification);
+          intent.putExtra("studyId", studyId);
+          intent.putExtra("to", calledFor);
+          intent.putExtra("from", from);
+          intent.putExtra("activityId", activityId);
+          intent.putExtra("localNotification", localNotification);
           startActivity(intent);
           finish();
         }
       } else {
         AppController.getHelperProgressDialog().dismissDialog();
         Intent intent = new Intent(StandaloneActivity.this, SurveyActivity.class);
-        intent.putExtra("studyId", mStudyId);
-        intent.putExtra("to", mCalledFor);
-        intent.putExtra("from", mFrom);
-        intent.putExtra("activityId", mActivityId);
-        intent.putExtra("localNotification", mLocalNotification);
+        intent.putExtra("studyId", studyId);
+        intent.putExtra("to", calledFor);
+        intent.putExtra("from", from);
+        intent.putExtra("activityId", activityId);
+        intent.putExtra("localNotification", localNotification);
         startActivity(intent);
         finish();
       }
@@ -466,19 +463,19 @@ public class StandaloneActivity extends AppCompatActivity
         || responseCode == GET_CONSENT_DOC
         || responseCode == CONSENTPDF) {
       Intent intent = new Intent(StandaloneActivity.this, SurveyActivity.class);
-      intent.putExtra("studyId", mStudyId);
-      intent.putExtra("to", mCalledFor);
-      intent.putExtra("from", mFrom);
-      intent.putExtra("activityId", mActivityId);
-      intent.putExtra("localNotification", mLocalNotification);
+      intent.putExtra("studyId", studyId);
+      intent.putExtra("to", calledFor);
+      intent.putExtra("from", from);
+      intent.putExtra("activityId", activityId);
+      intent.putExtra("localNotification", localNotification);
       startActivity(intent);
       finish();
     } else {
 
       // offline handling
-      mStudy = dbServiceSubscriber.getStudyListFromDB(realm);
-      if (mStudy != null && mStudy.getStudies() != null && !mStudy.getStudies().isEmpty()) {
-        studyListArrayList = mStudy.getStudies();
+      study = dbServiceSubscriber.getStudyListFromDB(realm);
+      if (study != null && study.getStudies() != null && !study.getStudies().isEmpty()) {
+        studyListArrayList = study.getStudies();
         studyListArrayList =
             dbServiceSubscriber.saveStudyStatusToStudyList(studyListArrayList, realm);
         setStudyList(true);
@@ -536,9 +533,9 @@ public class StandaloneActivity extends AppCompatActivity
         if (type != null) {
           if (type.equalsIgnoreCase("Gateway")) {
             if (subType.equalsIgnoreCase("Study")) {
-              Study mStudy = dbServiceSubscriber.getStudyListFromDB(realm);
-              if (mStudy != null) {
-                RealmList<StudyList> studyListArrayList = mStudy.getStudies();
+              Study study = dbServiceSubscriber.getStudyListFromDB(realm);
+              if (study != null) {
+                RealmList<StudyList> studyListArrayList = study.getStudies();
                 studyListArrayList =
                     dbServiceSubscriber.saveStudyStatusToStudyList(studyListArrayList, realm);
                 boolean isStudyAvailable = false;
@@ -649,9 +646,9 @@ public class StandaloneActivity extends AppCompatActivity
             }
           } else if (type.equalsIgnoreCase("Study")) {
             if (subType.equalsIgnoreCase("Activity") || subType.equalsIgnoreCase("Resource")) {
-              Study mStudy = dbServiceSubscriber.getStudyListFromDB(realm);
-              if (mStudy != null) {
-                RealmList<StudyList> studyListArrayList = mStudy.getStudies();
+              Study study = dbServiceSubscriber.getStudyListFromDB(realm);
+              if (study != null) {
+                RealmList<StudyList> studyListArrayList = study.getStudies();
                 studyListArrayList =
                     dbServiceSubscriber.saveStudyStatusToStudyList(studyListArrayList, realm);
                 boolean isStudyAvailable = false;
@@ -768,12 +765,12 @@ public class StandaloneActivity extends AppCompatActivity
       String activityId,
       String localNotification) {
 
-    mFrom = from;
-    mtitle = title;
-    mStudyId = studyId;
-    mActivityId = activityId;
-    mLocalNotification = localNotification;
-    mCalledFor = calledFor;
+    this.from = from;
+    this.title = title;
+    this.studyId = studyId;
+    this.activityId = activityId;
+    this.localNotification = localNotification;
+    this.calledFor = calledFor;
 
     StudyData studyData = dbServiceSubscriber.getStudyPreferences(realm);
     Studies studies = null;
@@ -843,8 +840,8 @@ public class StandaloneActivity extends AppCompatActivity
     studyModulePresenter.performGetGateWayStudyInfo(getUserStudyInfoEvent);
   }
 
-  private void callGetConsentPDFWebservice() {
-    ConsentPDFEvent consentPDFEvent = new ConsentPDFEvent();
+  private void callGetConsentPdfWebservice() {
+    ConsentPDFEvent consentPdfEvent = new ConsentPDFEvent();
     HashMap<String, String> header = new HashMap<>();
     header.put(
         "accessToken",
@@ -855,7 +852,7 @@ public class StandaloneActivity extends AppCompatActivity
         AppController.getHelperSharedPreference()
             .readPreference(
                 StandaloneActivity.this, getResources().getString(R.string.userid), ""));
-    String url = URLs.CONSENTPDF + "?studyId=" + mStudyId + "&consentVersion=";
+    String url = URLs.CONSENTPDF + "?studyId=" + studyId + "&consentVersion=";
     RegistrationServerConsentConfigEvent registrationServerConsentConfigEvent =
         new RegistrationServerConsentConfigEvent(
             "get",
@@ -868,30 +865,30 @@ public class StandaloneActivity extends AppCompatActivity
             null,
             false,
             StandaloneActivity.this);
-    consentPDFEvent.setRegistrationServerConsentConfigEvent(registrationServerConsentConfigEvent);
+    consentPdfEvent.setRegistrationServerConsentConfigEvent(registrationServerConsentConfigEvent);
     UserModulePresenter userModulePresenter = new UserModulePresenter();
-    userModulePresenter.performConsentPDF(consentPDFEvent);
+    userModulePresenter.performConsentPDF(consentPdfEvent);
   }
 
   private void callConsentMetaDataWebservice() {
 
-    new callConsentMetaData().execute();
+    new CallConsentMetaData().execute();
   }
 
-  private class callConsentMetaData extends AsyncTask<String, Void, String> {
+  private class CallConsentMetaData extends AsyncTask<String, Void, String> {
     String response = null;
     String responseCode = null;
-    Responsemodel mResponseModel;
+    Responsemodel responseModel;
 
     @Override
     protected String doInBackground(String... params) {
       ConnectionDetector connectionDetector = new ConnectionDetector(StandaloneActivity.this);
 
-      String url = URLs.BASE_URL_WCP_SERVER + URLs.CONSENT_METADATA + "?studyId=" + mStudyId;
+      String url = URLs.BASE_URL_WCP_SERVER + URLs.CONSENT_METADATA + "?studyId=" + studyId;
       if (connectionDetector.isConnectingToInternet()) {
-        mResponseModel = HttpRequest.getRequest(url, new HashMap<String, String>(), "WCP");
-        responseCode = mResponseModel.getResponseCode();
-        response = mResponseModel.getResponseData();
+        responseModel = HttpRequest.getRequest(url, new HashMap<String, String>(), "WCP");
+        responseCode = responseModel.getResponseCode();
+        response = responseModel.getResponseData();
         if (responseCode.equalsIgnoreCase("0") && response.equalsIgnoreCase("timeout")) {
           response = "timeout";
         } else if (responseCode.equalsIgnoreCase("0") && response.equalsIgnoreCase("")) {
@@ -979,9 +976,9 @@ public class StandaloneActivity extends AppCompatActivity
                         }
                       })
                   .create();
-          eligibilityConsent = gson.fromJson(response, EligibilityConsent.class);
+          EligibilityConsent eligibilityConsent = gson.fromJson(response, EligibilityConsent.class);
           if (eligibilityConsent != null) {
-            eligibilityConsent.setStudyId(mStudyId);
+            eligibilityConsent.setStudyId(studyId);
             saveConsentToDB(StandaloneActivity.this, eligibilityConsent);
             startConsent(
                 eligibilityConsent.getConsent(), eligibilityConsent.getEligibility().getType());
@@ -1032,11 +1029,11 @@ public class StandaloneActivity extends AppCompatActivity
         .show();
     ConsentBuilder consentBuilder = new ConsentBuilder();
     List<Step> consentstep =
-        consentBuilder.createsurveyquestion(StandaloneActivity.this, consent, mtitle);
+        consentBuilder.createsurveyquestion(StandaloneActivity.this, consent, title);
     Task consentTask = new OrderedTask(CONSENT, consentstep);
     Intent intent =
         CustomConsentViewTaskActivity.newIntent(
-            StandaloneActivity.this, consentTask, mStudyId, "", mtitle, eligibilityType, "update");
+            StandaloneActivity.this, consentTask, studyId, "", title, eligibilityType, "update");
     startActivityForResult(intent, CONSENT_RESPONSECODE);
   }
 
@@ -1046,8 +1043,8 @@ public class StandaloneActivity extends AppCompatActivity
     if (requestCode == CONSENT_RESPONSECODE) {
       if (resultCode == RESULT_OK) {
         Intent intent = new Intent(StandaloneActivity.this, ConsentCompletedActivity.class);
-        intent.putExtra("studyId", mStudyId);
-        intent.putExtra("title", mtitle);
+        intent.putExtra("studyId", studyId);
+        intent.putExtra("title", title);
         intent.putExtra("eligibility", eligibilityType);
         intent.putExtra("type", data.getStringExtra(CustomConsentViewTaskActivity.TYPE));
         // get the encrypted file path
@@ -1063,7 +1060,7 @@ public class StandaloneActivity extends AppCompatActivity
 
   private void setStudyList(boolean offline) {
     if (!offline) {
-      dbServiceSubscriber.saveStudyListToDB(this, mStudy);
+      dbServiceSubscriber.saveStudyListToDB(this, study);
     }
 
     ArrayList<StudyList> activeInprogress = new ArrayList<>();
@@ -1366,7 +1363,9 @@ public class StandaloneActivity extends AppCompatActivity
 
   @Override
   protected void onDestroy() {
-    if (dbServiceSubscriber != null && realm != null) dbServiceSubscriber.closeRealmObj(realm);
+    if (dbServiceSubscriber != null && realm != null) {
+      dbServiceSubscriber.closeRealmObj(realm);
+    }
     super.onDestroy();
   }
 }

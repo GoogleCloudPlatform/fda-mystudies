@@ -17,14 +17,14 @@ package com.harvard.studyappmodule.events;
 import com.harvard.webservicemodule.events.RegistrationServerConfigEvent;
 
 public class DeleteAccountEvent {
-  private RegistrationServerConfigEvent mRegistrationServerConfigEvent;
+  private RegistrationServerConfigEvent registrationServerConfigEvent;
 
   public RegistrationServerConfigEvent getmRegistrationServerConfigEvent() {
-    return mRegistrationServerConfigEvent;
+    return registrationServerConfigEvent;
   }
 
   public void setmRegistrationServerConfigEvent(
-      RegistrationServerConfigEvent mRegistrationServerConfigEvent) {
-    this.mRegistrationServerConfigEvent = mRegistrationServerConfigEvent;
+      RegistrationServerConfigEvent registrationServerConfigEvent) {
+    this.registrationServerConfigEvent = registrationServerConfigEvent;
   }
 }

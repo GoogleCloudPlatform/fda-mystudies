@@ -184,7 +184,7 @@ public class StepRecordCustom extends RealmObject {
     for (Map.Entry<String, JsonElement> entry : entitySet) {
       if (entry.getValue().isJsonArray()) {
         JsonArray arr = entry.getValue().getAsJsonArray();
-        Object list[] = new Object[arr.size()];
+        Object[] list = new Object[arr.size()];
         int i = 0;
         for (JsonElement anArr : arr) {
           list[i] = findPrimitiveData(anArr);
@@ -206,7 +206,7 @@ public class StepRecordCustom extends RealmObject {
             for (Map.Entry<String, JsonElement> entryStepVal : entitySetStepResult) {
               if (entryStepVal.getValue().isJsonArray()) {
                 JsonArray arr = entryStepVal.getValue().getAsJsonArray();
-                Object list[] = new Object[arr.size()];
+                Object[] list = new Object[arr.size()];
                 int i = 0;
                 for (JsonElement anArr : arr) {
                   if (anArr.isJsonObject()) {
@@ -233,7 +233,7 @@ public class StepRecordCustom extends RealmObject {
   private static Object findPrimitiveData(JsonElement jsonElement) {
     if (jsonElement.isJsonPrimitive()) {
       JsonPrimitive prim = jsonElement.getAsJsonPrimitive();
-      if (prim.isJsonPrimitive())
+      if (prim.isJsonPrimitive()) {
         if (prim.isBoolean()) {
           return prim.getAsBoolean();
         } else if (prim.isString()) {
@@ -251,6 +251,7 @@ public class StepRecordCustom extends RealmObject {
             }
           }
         }
+      }
     }
     return jsonElement;
   }

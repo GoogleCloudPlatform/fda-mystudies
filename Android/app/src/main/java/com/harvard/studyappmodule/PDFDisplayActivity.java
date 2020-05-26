@@ -54,35 +54,34 @@ import javax.crypto.CipherInputStream;
 
 public class PDFDisplayActivity extends AppCompatActivity
     implements ApiCall.OnAsyncRequestComplete {
-  private final int CONSENTPDF = 7;
-  private PDFView mPdfView;
-  private String mStudyId;
-  private String mSharePDFFilePath;
+  private static final int CONSENTPDF = 7;
+  private PDFView pdfView;
+  private String studyId;
+  private String sharePdfFilePath;
   private static final int PERMISSION_REQUEST_CODE = 1000;
   private byte[] bytesArray = null;
   private DBServiceSubscriber db;
-  private Realm mRealm;
-  private String mTitle;
+  private Realm realm;
+  private String title;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_pdfdisplay);
     db = new DBServiceSubscriber();
-    mRealm = AppController.getRealmobj(this);
-    mPdfView = (PDFView) findViewById(R.id.pdfView);
-    RelativeLayout mBackBtn = (RelativeLayout) findViewById(R.id.backBtn);
-    RelativeLayout mShareBtn = (RelativeLayout) findViewById(R.id.shareBtn);
-    AppCompatTextView title = (AppCompatTextView) findViewById(R.id.title);
-    title.setText(getResources().getString(R.string.consent_pdf1));
-    title.setTypeface(AppController.getTypeface(this, "bold"));
+    realm = AppController.getRealmobj(this);
+    pdfView = (PDFView) findViewById(R.id.pdfView);
 
-    mStudyId = getIntent().getStringExtra("studyId");
-    mTitle = getIntent().getStringExtra("title");
-    ConsentPdfData studies = db.getPDFPath(mStudyId, mRealm);
+    AppCompatTextView titletxt = (AppCompatTextView) findViewById(R.id.title);
+    titletxt.setText(getResources().getString(R.string.consent_pdf1));
+    titletxt.setTypeface(AppController.getTypeface(this, "bold"));
+
+    studyId = getIntent().getStringExtra("studyId");
+    title = getIntent().getStringExtra("title");
+    ConsentPdfData studies = db.getPDFPath(studyId, realm);
     try {
       if (studies == null) {
-        callGetConsentPDFWebservice();
+        callGetConsentPdfWebservice();
       } else {
         File file = new File(studies.getPdfPath().toString());
         if (file.exists()) {
@@ -90,23 +89,24 @@ public class PDFDisplayActivity extends AppCompatActivity
               AppController.genarateDecryptedConsentPDF(studies.getPdfPath().toString());
           // we will get byte array pass to pdf view
           bytesArray = AppController.cipherInputStreamConvertToByte(cis);
-          setPDFView();
+          setPdfView();
         } else {
-          callGetConsentPDFWebservice();
+          callGetConsentPdfWebservice();
         }
       }
     } catch (Exception e) {
       Logger.log(e);
     }
-
-    mBackBtn.setOnClickListener(
+    RelativeLayout backBtn = (RelativeLayout) findViewById(R.id.backBtn);
+    RelativeLayout shareBtn = (RelativeLayout) findViewById(R.id.shareBtn);
+    backBtn.setOnClickListener(
         new View.OnClickListener() {
           @Override
           public void onClick(View view) {
             finish();
           }
         });
-    mShareBtn.setOnClickListener(
+    shareBtn.setOnClickListener(
         new View.OnClickListener() {
           @Override
           public void onClick(View v) {
@@ -130,27 +130,27 @@ public class PDFDisplayActivity extends AppCompatActivity
                         Toast.LENGTH_LONG)
                     .show();
               } else {
-                sharePDF();
+                sharePdf();
               }
             } else {
-              sharePDF();
+              sharePdf();
             }
           }
         });
   }
 
-  private void sharePDF() {
+  private void sharePdf() {
     try {
       Intent shareIntent = new Intent(Intent.ACTION_SEND);
       shareIntent.setData(Uri.parse("mailto:"));
       shareIntent.setType("application/pdf");
       shareIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
       shareIntent.putExtra(Intent.EXTRA_SUBJECT, getResources().getString(R.string.signed_consent));
-      File mShareFile = new File(mSharePDFFilePath);
-      if (mShareFile.exists()) {
+      File shareFile = new File(sharePdfFilePath);
+      if (shareFile.exists()) {
         Uri fileUri =
             FileProvider.getUriForFile(
-                PDFDisplayActivity.this, getString(R.string.FileProvider_authorities), mShareFile);
+                PDFDisplayActivity.this, getString(R.string.FileProvider_authorities), shareFile);
         shareIntent.putExtra(Intent.EXTRA_STREAM, fileUri);
         startActivity(shareIntent);
       }
@@ -159,9 +159,9 @@ public class PDFDisplayActivity extends AppCompatActivity
     }
   }
 
-  private void callGetConsentPDFWebservice() {
+  private void callGetConsentPdfWebservice() {
     AppController.getHelperProgressDialog().showProgress(PDFDisplayActivity.this, "", "", false);
-    ConsentPDFEvent consentPDFEvent = new ConsentPDFEvent();
+
     HashMap<String, String> header = new HashMap<>();
     header.put(
         "accessToken",
@@ -171,7 +171,7 @@ public class PDFDisplayActivity extends AppCompatActivity
         "userId",
         AppController.getHelperSharedPreference()
             .readPreference(this, getResources().getString(R.string.userid), ""));
-    String url = URLs.CONSENTPDF + "?studyId=" + mStudyId + "&consentVersion=";
+    String url = URLs.CONSENTPDF + "?studyId=" + studyId + "&consentVersion=";
     RegistrationServerConsentConfigEvent registrationServerConsentConfigEvent =
         new RegistrationServerConsentConfigEvent(
             "get",
@@ -184,15 +184,16 @@ public class PDFDisplayActivity extends AppCompatActivity
             null,
             false,
             PDFDisplayActivity.this);
-    consentPDFEvent.setRegistrationServerConsentConfigEvent(registrationServerConsentConfigEvent);
+    ConsentPDFEvent consentPdfEvent = new ConsentPDFEvent();
+    consentPdfEvent.setRegistrationServerConsentConfigEvent(registrationServerConsentConfigEvent);
     UserModulePresenter userModulePresenter = new UserModulePresenter();
-    userModulePresenter.performConsentPDF(consentPDFEvent);
+    userModulePresenter.performConsentPDF(consentPdfEvent);
   }
 
-  private void setPDFView() {
+  private void setPdfView() {
     // before writing pdf check permission
     pdfWritingPermission();
-    mPdfView
+    pdfView
         .fromBytes(bytesArray)
         .defaultPage(0)
         .enableAnnotationRendering(true)
@@ -217,11 +218,11 @@ public class PDFDisplayActivity extends AppCompatActivity
             (Activity) PDFDisplayActivity.this, permission, PERMISSION_REQUEST_CODE);
       } else {
         // sharing pdf creating
-        sharePDFCreation();
+        sharePdfCreation();
       }
     } else {
       // sharing pdf creating
-      sharePDFCreation();
+      sharePdfCreation();
     }
   }
 
@@ -249,27 +250,29 @@ public class PDFDisplayActivity extends AppCompatActivity
                   Toast.LENGTH_LONG)
               .show();
         } else {
-          sharePDFCreation();
+          sharePdfCreation();
         }
         break;
     }
   }
 
-  public void sharePDFCreation() {
+  public void sharePdfCreation() {
     try {
-      String temPDFPath =
+      String temPdfPath =
           Environment.getExternalStorageDirectory().getAbsolutePath()
               + "/"
-              + mTitle
+              + title
               + "_"
               + getString(R.string.signed_consent)
               + ".pdf";
-      File file = new File(temPDFPath);
-      if (!file.exists()) file.createNewFile();
+      File file = new File(temPdfPath);
+      if (!file.exists()) {
+        file.createNewFile();
+      }
       FileOutputStream fos = new FileOutputStream(file);
       fos.write(bytesArray);
       fos.close();
-      mSharePDFFilePath = file.getAbsolutePath();
+      sharePdfFilePath = file.getAbsolutePath();
     } catch (IOException e) {
       Logger.log(e);
     }
@@ -279,19 +282,19 @@ public class PDFDisplayActivity extends AppCompatActivity
   public <T> void asyncResponse(T response, int responseCode) {
     try {
       AppController.getHelperProgressDialog().dismissDialog();
-      ConsentPDF consentPDFData = (ConsentPDF) response;
-      if (consentPDFData != null) {
+      ConsentPDF consentPdfData = (ConsentPDF) response;
+      if (consentPdfData != null) {
 
         try {
-          bytesArray = Base64.decode(consentPDFData.getConsent().getContent(), Base64.DEFAULT);
+          bytesArray = Base64.decode(consentPdfData.getConsent().getContent(), Base64.DEFAULT);
         } catch (Exception e) {
           Logger.log(e);
         }
-        setPDFView();
+        setPdfView();
         try {
 
-          consentPDFData.setStudyId(mStudyId);
-          db.saveConsentPDF(this, consentPDFData);
+          consentPdfData.setStudyId(studyId);
+          db.saveConsentPDF(this, consentPdfData);
         } catch (Exception e) {
           Logger.log(e);
         }
@@ -309,15 +312,15 @@ public class PDFDisplayActivity extends AppCompatActivity
       AppController.getHelperSessionExpired(PDFDisplayActivity.this, errormsg);
     } else {
       try {
-        ConsentPDF consentPDFData = db.getConsentPDF(mStudyId, mRealm);
-        if (consentPDFData != null) {
+        ConsentPDF consentPdfData = db.getConsentPDF(studyId, realm);
+        if (consentPdfData != null) {
 
           try {
-            bytesArray = Base64.decode(consentPDFData.getConsent().getContent(), Base64.DEFAULT);
+            bytesArray = Base64.decode(consentPdfData.getConsent().getContent(), Base64.DEFAULT);
           } catch (Exception e) {
             Logger.log(e);
           }
-          setPDFView();
+          setPdfView();
         } else {
           Toast.makeText(PDFDisplayActivity.this, errormsg, Toast.LENGTH_SHORT).show();
         }
@@ -330,9 +333,9 @@ public class PDFDisplayActivity extends AppCompatActivity
 
   @Override
   protected void onDestroy() {
-    db.closeRealmObj(mRealm);
+    db.closeRealmObj(realm);
     try {
-      File file = new File(mSharePDFFilePath);
+      File file = new File(sharePdfFilePath);
       if (file.exists()) {
         file.delete();
       }

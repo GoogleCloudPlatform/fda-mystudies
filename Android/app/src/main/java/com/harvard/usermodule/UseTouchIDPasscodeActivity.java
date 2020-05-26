@@ -40,7 +40,7 @@ public class UseTouchIDPasscodeActivity extends AppCompatActivity {
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_use_touch_idpasscode);
-    initializeXMLId();
+    initializeXmlId();
     setTextForView();
     setFont();
     bindEvents();
@@ -53,7 +53,7 @@ public class UseTouchIDPasscodeActivity extends AppCompatActivity {
     }
   }
 
-  private void initializeXMLId() {
+  private void initializeXmlId() {
     mBackBtn = (RelativeLayout) findViewById(R.id.backBtn);
     mTitle = (AppCompatTextView) findViewById(R.id.title);
     mCancelBtn = (RelativeLayout) findViewById(R.id.cancelBtn);

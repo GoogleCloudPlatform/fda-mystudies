@@ -21,21 +21,21 @@ import java.util.regex.Pattern;
 
 public class TextAnswerFormatRegex extends ChoiceAnswerFormatCustom {
 
-  private String mRegex;
+  private String regex;
   private static final int UNLIMITED_LENGTH = 0;
 
   private boolean isMultipleLines = false;
-  private int mMaximumLength;
-  private String mInValidMsg;
+  private int maximumLength;
+  private String inValidMsg;
 
-  public TextAnswerFormatRegex(int maximumLength, String Regex, String InValidMsg) {
-    this.mRegex = Regex;
-    this.mMaximumLength = maximumLength;
-    this.mInValidMsg = InValidMsg;
+  public TextAnswerFormatRegex(int maximumLength, String regex, String inValidMsg) {
+    this.regex = regex;
+    this.maximumLength = maximumLength;
+    this.inValidMsg = inValidMsg;
   }
 
   String getInValidMsg() {
-    return mInValidMsg;
+    return inValidMsg;
   }
 
   /** Creates a TextAnswerFormat with no maximum length */
@@ -49,7 +49,7 @@ public class TextAnswerFormatRegex extends ChoiceAnswerFormatCustom {
    * @param maximumLength the maximum text length allowed
    */
   private TextAnswerFormatRegex(int maximumLength) {
-    this.mMaximumLength = maximumLength;
+    this.maximumLength = maximumLength;
   }
 
   /**
@@ -58,7 +58,7 @@ public class TextAnswerFormatRegex extends ChoiceAnswerFormatCustom {
    * @return the maximum length, <code>UNLIMITED_LENGTH</code> (0) if no maximum
    */
   int getMaximumLength() {
-    return mMaximumLength;
+    return maximumLength;
   }
 
   /**
@@ -82,7 +82,7 @@ public class TextAnswerFormatRegex extends ChoiceAnswerFormatCustom {
   boolean isAnswerValid(String text) {
     if (text != null
         && text.length() > 0
-        && (mMaximumLength == UNLIMITED_LENGTH || text.length() <= mMaximumLength)
+        && (maximumLength == UNLIMITED_LENGTH || text.length() <= maximumLength)
         && validate(text)) {
       return true;
     }
@@ -90,9 +90,9 @@ public class TextAnswerFormatRegex extends ChoiceAnswerFormatCustom {
   }
 
   private boolean validate(final String hex) {
-    if (mRegex != null && !mRegex.equalsIgnoreCase("")) {
+    if (regex != null && !regex.equalsIgnoreCase("")) {
       try {
-        Pattern pattern = Pattern.compile(mRegex);
+        Pattern pattern = Pattern.compile(regex);
         Matcher matcher = pattern.matcher(hex);
         return matcher.matches();
       } catch (Exception e) {

@@ -74,48 +74,48 @@ public class StudyActivity extends AppCompatActivity
     implements View.OnClickListener, ApiCall.OnAsyncRequestComplete {
 
   private static final int NOTIFICATION_RESULT = 112;
-  private RelativeLayout mNotificationBtn;
-  private RelativeLayout mInfoIcon;
-  private RelativeLayout mFilter;
-  private RelativeLayout mSearchBtn;
-  private RelativeLayout mEditBtnLayout;
-  private DrawerLayout mDrawer;
-  private AppCompatTextView mTitleFDAListens;
-  private AppCompatTextView mTitle;
-  private AppCompatTextView mSidebarTitle;
-  private LinearLayout mHomeLayout;
-  private AppCompatTextView mHomeLabel;
-  private LinearLayout mResourcesLayout;
-  private AppCompatTextView mResourceLabel;
-  private LinearLayout mReachoutLayout;
-  private AppCompatTextView mReachoutLabel;
-  private LinearLayout mSignInProfileLayout;
-  private AppCompatImageView mSigninImg;
-  private AppCompatTextView mSigninLabel;
-  private LinearLayout mNewUsrReachoutLayout;
-  private AppCompatImageView mNewUsrReachoutImg;
-  private AppCompatImageView mNotificationIcon;
-  private AppCompatImageView mNotificatioStatus;
-  private AppCompatTextView mNewUsrReachoutLabel;
-  private AppCompatTextView mSignUpLabel;
-  private RelativeLayout mSignOutLayout;
-  private AppCompatTextView mSignOutLabel;
-  private int mPreviousValue = 0; // 0 means signup 1 means signout
-  private final int LOGOUT_REPSONSECODE = 100;
-  private AppCompatTextView mEditTxt;
-  private ProfileFragment mProfileFragment;
+  private RelativeLayout notificationBtn;
+  private RelativeLayout infoIcon;
+  private RelativeLayout filter;
+  private RelativeLayout searchBtn;
+  private RelativeLayout editBtnLayout;
+  private DrawerLayout drawer;
+  private AppCompatTextView titleFdaListens;
+  private AppCompatTextView title;
+  private AppCompatTextView sidebarTitle;
+  private LinearLayout homeLayout;
+  private AppCompatTextView homeLabel;
+  private LinearLayout resourcesLayout;
+  private AppCompatTextView resourceLabel;
+  private LinearLayout reachoutLayout;
+  private AppCompatTextView reachoutLabel;
+  private LinearLayout signInProfileLayout;
+  private AppCompatImageView signinImg;
+  private AppCompatTextView signinLabel;
+  private LinearLayout newUsrReachoutLayout;
+  private AppCompatImageView newUsrReachoutImg;
+  private AppCompatImageView notificationIcon;
+  private AppCompatImageView notificatioStatus;
+  private AppCompatTextView newUsrReachoutLabel;
+  private AppCompatTextView signUpLabel;
+  private RelativeLayout signOutLayout;
+  private AppCompatTextView signOutLabel;
+  private int previousValue = 0; // 0 means signup 1 means signout
+  private static final int LOGOUT_REPSONSE_CODE = 100;
+  private AppCompatTextView editTxt;
+  private ProfileFragment profileFragment;
   private boolean isExit = false;
-  private StudyFragment mStudyFragment;
+  private StudyFragment studyFragment;
   public static String FROM = "from";
   private DBServiceSubscriber dbServiceSubscriber;
-  private Realm mRealm;
-  private RelativeLayout mSearchToolBarLayout;
-  private RelativeLayout mToolBarLayout;
-  private AppCompatTextView mCancel;
-  private AppCompatEditText mSearchEditText;
-  private RelativeLayout mClearLayout;
+  private Realm realm;
+  private RelativeLayout searchToolBarLayout;
+  private RelativeLayout toolBarLayout;
+  private AppCompatTextView cancel;
+  private AppCompatEditText searchEditText;
+  private RelativeLayout clearLayout;
   private String intentFrom = "";
-  private BroadcastReceiver mReceiver;
+  private BroadcastReceiver receiver;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -129,8 +129,8 @@ public class StudyActivity extends AppCompatActivity
         intentFrom = "";
       }
       dbServiceSubscriber = new DBServiceSubscriber();
-      mRealm = AppController.getRealmobj(this);
-      initializeXMLId();
+      realm = AppController.getRealmobj(this);
+      initializeXmlId();
       bindEvents();
       setFont();
       // default settings
@@ -152,24 +152,24 @@ public class StudyActivity extends AppCompatActivity
         if (AppController.getHelperSharedPreference()
             .readPreference(this, getString(R.string.notification), "")
             .equalsIgnoreCase("true")) {
-          mNotificationIcon.setImageResource(R.drawable.notification_white_active);
-          mNotificatioStatus.setVisibility(View.VISIBLE);
+          notificationIcon.setImageResource(R.drawable.notification_white_active);
+          notificatioStatus.setVisibility(View.VISIBLE);
         } else {
-          mNotificationIcon.setImageResource(R.drawable.notification_white_active);
-          mNotificatioStatus.setVisibility(View.GONE);
+          notificationIcon.setImageResource(R.drawable.notification_white_active);
+          notificatioStatus.setVisibility(View.GONE);
         }
 
         IntentFilter intentFilter = new IntentFilter("com.fda.notificationReceived");
-        mReceiver =
+        receiver =
             new BroadcastReceiver() {
               @Override
               public void onReceive(Context context, Intent intent) {
-                mNotificationIcon.setImageResource(R.drawable.notification_white_active);
-                mNotificatioStatus.setVisibility(View.VISIBLE);
+                notificationIcon.setImageResource(R.drawable.notification_white_active);
+                notificatioStatus.setVisibility(View.VISIBLE);
               }
             };
         // registering our receiver
-        this.registerReceiver(mReceiver, intentFilter);
+        this.registerReceiver(receiver, intentFilter);
 
       } catch (Exception e) {
         Logger.log(e);
@@ -181,7 +181,7 @@ public class StudyActivity extends AppCompatActivity
   protected void onPause() {
     super.onPause();
     try {
-      this.unregisterReceiver(this.mReceiver);
+      this.unregisterReceiver(this.receiver);
     } catch (Exception e) {
       Logger.log(e);
     }
@@ -220,11 +220,11 @@ public class StudyActivity extends AppCompatActivity
         if (type != null) {
           if (type.equalsIgnoreCase("Gateway")) {
             if (subType.equalsIgnoreCase("Study")) {
-              Study mStudy = dbServiceSubscriber.getStudyListFromDB(mRealm);
-              if (mStudy != null) {
-                RealmList<StudyList> studyListArrayList = mStudy.getStudies();
+              Study study = dbServiceSubscriber.getStudyListFromDB(realm);
+              if (study != null) {
+                RealmList<StudyList> studyListArrayList = study.getStudies();
                 studyListArrayList =
-                    dbServiceSubscriber.saveStudyStatusToStudyList(studyListArrayList, mRealm);
+                    dbServiceSubscriber.saveStudyStatusToStudyList(studyListArrayList, realm);
                 boolean isStudyAvailable = false;
                 for (int i = 0; i < studyListArrayList.size(); i++) {
                   if (studyId.equalsIgnoreCase(studyListArrayList.get(i).getStudyId())) {
@@ -320,13 +320,13 @@ public class StudyActivity extends AppCompatActivity
                     .show();
               }
             } else if (subType.equalsIgnoreCase("Resource")) {
-              mPreviousValue = R.id.mResourcesLayout;
-              mTitleFDAListens.setText("");
-              mTitle.setText(getResources().getString(R.string.resources));
-              mEditBtnLayout.setVisibility(View.GONE);
-              mNotificationBtn.setVisibility(View.GONE);
-              mFilter.setVisibility(View.GONE);
-              mSearchBtn.setVisibility(View.GONE);
+              previousValue = R.id.mResourcesLayout;
+              titleFdaListens.setText("");
+              title.setText(getResources().getString(R.string.resources));
+              editBtnLayout.setVisibility(View.GONE);
+              notificationBtn.setVisibility(View.GONE);
+              filter.setVisibility(View.GONE);
+              searchBtn.setVisibility(View.GONE);
               closeDrawer();
               getSupportFragmentManager()
                   .beginTransaction()
@@ -335,11 +335,11 @@ public class StudyActivity extends AppCompatActivity
             }
           } else if (type.equalsIgnoreCase("Study")) {
             if (subType.equalsIgnoreCase("Activity") || subType.equalsIgnoreCase("Resource")) {
-              Study mStudy = dbServiceSubscriber.getStudyListFromDB(mRealm);
-              if (mStudy != null) {
-                RealmList<StudyList> studyListArrayList = mStudy.getStudies();
+              Study study = dbServiceSubscriber.getStudyListFromDB(realm);
+              if (study != null) {
+                RealmList<StudyList> studyListArrayList = study.getStudies();
                 studyListArrayList =
-                    dbServiceSubscriber.saveStudyStatusToStudyList(studyListArrayList, mRealm);
+                    dbServiceSubscriber.saveStudyStatusToStudyList(studyListArrayList, realm);
                 boolean isStudyAvailable = false;
                 boolean isStudyJoined = false;
                 for (int i = 0; i < studyListArrayList.size(); i++) {
@@ -391,7 +391,7 @@ public class StudyActivity extends AppCompatActivity
                             .getStudyStatus()
                             .equalsIgnoreCase(StudyFragment.IN_PROGRESS)) {
                       if (subType.equalsIgnoreCase("Resource")) {
-                        mStudyFragment.getStudyUpdate(
+                        studyFragment.getStudyUpdate(
                             studyListArrayList.get(i).getStudyId(),
                             studyListArrayList.get(i).getStudyVersion(),
                             studyListArrayList.get(i).getTitle(),
@@ -400,7 +400,7 @@ public class StudyActivity extends AppCompatActivity
                             activityIdNotification,
                             localNotification);
                       } else {
-                        mStudyFragment.getStudyUpdate(
+                        studyFragment.getStudyUpdate(
                             studyListArrayList.get(i).getStudyId(),
                             studyListArrayList.get(i).getStudyVersion(),
                             studyListArrayList.get(i).getTitle(),
@@ -437,47 +437,46 @@ public class StudyActivity extends AppCompatActivity
     }
   }
 
-  private void initializeXMLId() {
-    mInfoIcon = (RelativeLayout) findViewById(R.id.mInfoIcon);
-    mEditTxt = (AppCompatTextView) findViewById(R.id.editBtnLabel);
-    mEditTxt.setVisibility(View.GONE);
-    RelativeLayout mBackBtn = (RelativeLayout) findViewById(R.id.backBtn);
-    mTitleFDAListens = (AppCompatTextView) findViewById(R.id.mTitleFDAListens);
-    mTitle = (AppCompatTextView) findViewById(R.id.mTitle);
-    mSidebarTitle = (AppCompatTextView) findViewById(R.id.mSidebarTitle);
-    mNotificationBtn = (RelativeLayout) findViewById(R.id.mNotificationBtn);
-    mInfoIcon = (RelativeLayout) findViewById(R.id.mInfoIcon);
-    mEditBtnLayout = (RelativeLayout) findViewById(R.id.editBtnLayout);
-    mDrawer = (DrawerLayout) findViewById(R.id.activity_study);
-    mHomeLayout = (LinearLayout) findViewById(R.id.mHomeLayout);
-    mHomeLabel = (AppCompatTextView) findViewById(R.id.mHomeLabel);
-    mResourcesLayout = (LinearLayout) findViewById(R.id.mResourcesLayout);
-    mResourceLabel = (AppCompatTextView) findViewById(R.id.mResourceLabel);
-    mReachoutLayout = (LinearLayout) findViewById(R.id.mReachoutLayout);
-    mReachoutLabel = (AppCompatTextView) findViewById(R.id.mReachoutLabel);
-    mSignInProfileLayout = (LinearLayout) findViewById(R.id.mSignInProfileLayout);
-    mSigninImg = (AppCompatImageView) findViewById(R.id.signinImg);
-    mSigninLabel = (AppCompatTextView) findViewById(R.id.mSigninLabel);
-    mNewUsrReachoutLayout = (LinearLayout) findViewById(R.id.mNewUsrReachoutLayout);
-    mNewUsrReachoutImg = (AppCompatImageView) findViewById(R.id.mNewUsrReachoutImg);
-    mNotificationIcon = (AppCompatImageView) findViewById(R.id.mNotificationIcon);
-    mNotificatioStatus = (AppCompatImageView) findViewById(R.id.notificatioStatus);
-    mNewUsrReachoutLabel = (AppCompatTextView) findViewById(R.id.mNewUsrReachoutLabel);
-    mSignUpLabel = (AppCompatTextView) findViewById(R.id.mSignUpLabel);
-    mSignOutLayout = (RelativeLayout) findViewById(R.id.mSignOutLayout);
-    mSignOutLabel = (AppCompatTextView) findViewById(R.id.mSignOutLabel);
-    mFilter = (RelativeLayout) findViewById(R.id.mFilter);
-    mSearchBtn = (RelativeLayout) findViewById(R.id.mSearchBtn);
-    mSearchToolBarLayout = (RelativeLayout) findViewById(R.id.mSearchToolBarLayout);
-    mToolBarLayout = (RelativeLayout) findViewById(R.id.mToolBarLayout);
-    mCancel = (AppCompatTextView) findViewById(R.id.mCancel);
-    mClearLayout = (RelativeLayout) findViewById(R.id.mClearLayout);
-    mSearchEditText = (AppCompatEditText) findViewById(R.id.mSearchEditText);
+  private void initializeXmlId() {
+    infoIcon = (RelativeLayout) findViewById(R.id.mInfoIcon);
+    editTxt = (AppCompatTextView) findViewById(R.id.editBtnLabel);
+    editTxt.setVisibility(View.GONE);
+
+    titleFdaListens = (AppCompatTextView) findViewById(R.id.mTitleFDAListens);
+    title = (AppCompatTextView) findViewById(R.id.mTitle);
+    sidebarTitle = (AppCompatTextView) findViewById(R.id.mSidebarTitle);
+    notificationBtn = (RelativeLayout) findViewById(R.id.mNotificationBtn);
+    editBtnLayout = (RelativeLayout) findViewById(R.id.editBtnLayout);
+    drawer = (DrawerLayout) findViewById(R.id.activity_study);
+    homeLayout = (LinearLayout) findViewById(R.id.mHomeLayout);
+    homeLabel = (AppCompatTextView) findViewById(R.id.mHomeLabel);
+    resourcesLayout = (LinearLayout) findViewById(R.id.mResourcesLayout);
+    resourceLabel = (AppCompatTextView) findViewById(R.id.mResourceLabel);
+    reachoutLayout = (LinearLayout) findViewById(R.id.mReachoutLayout);
+    reachoutLabel = (AppCompatTextView) findViewById(R.id.mReachoutLabel);
+    signInProfileLayout = (LinearLayout) findViewById(R.id.mSignInProfileLayout);
+    signinImg = (AppCompatImageView) findViewById(R.id.signinImg);
+    signinLabel = (AppCompatTextView) findViewById(R.id.mSigninLabel);
+    newUsrReachoutLayout = (LinearLayout) findViewById(R.id.mNewUsrReachoutLayout);
+    newUsrReachoutImg = (AppCompatImageView) findViewById(R.id.mNewUsrReachoutImg);
+    notificationIcon = (AppCompatImageView) findViewById(R.id.mNotificationIcon);
+    notificatioStatus = (AppCompatImageView) findViewById(R.id.notificatioStatus);
+    newUsrReachoutLabel = (AppCompatTextView) findViewById(R.id.mNewUsrReachoutLabel);
+    signUpLabel = (AppCompatTextView) findViewById(R.id.mSignUpLabel);
+    signOutLayout = (RelativeLayout) findViewById(R.id.mSignOutLayout);
+    signOutLabel = (AppCompatTextView) findViewById(R.id.mSignOutLabel);
+    filter = (RelativeLayout) findViewById(R.id.mFilter);
+    searchBtn = (RelativeLayout) findViewById(R.id.mSearchBtn);
+    searchToolBarLayout = (RelativeLayout) findViewById(R.id.mSearchToolBarLayout);
+    toolBarLayout = (RelativeLayout) findViewById(R.id.mToolBarLayout);
+    cancel = (AppCompatTextView) findViewById(R.id.mCancel);
+    clearLayout = (RelativeLayout) findViewById(R.id.mClearLayout);
+    searchEditText = (AppCompatEditText) findViewById(R.id.mSearchEditText);
 
     TextView version = (TextView) findViewById(R.id.version);
     setVersion(version);
-
-    mBackBtn.setOnClickListener(
+    RelativeLayout backBtn = (RelativeLayout) findViewById(R.id.backBtn);
+    backBtn.setOnClickListener(
         new View.OnClickListener() {
           @Override
           public void onClick(View view) {
@@ -490,7 +489,7 @@ public class StudyActivity extends AppCompatActivity
             }
           }
         });
-    mFilter.setOnClickListener(
+    filter.setOnClickListener(
         new View.OnClickListener() {
           @Override
           public void onClick(View view) {
@@ -498,20 +497,20 @@ public class StudyActivity extends AppCompatActivity
             startActivityForResult(intent, 999);
           }
         });
-    mSearchBtn.setOnClickListener(
+    searchBtn.setOnClickListener(
         new View.OnClickListener() {
           @Override
           public void onClick(View view) {
-            mToolBarLayout.setVisibility(View.GONE);
-            mSearchToolBarLayout.setVisibility(View.VISIBLE);
-            mDrawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
-            mSearchEditText.setText("");
+            toolBarLayout.setVisibility(View.GONE);
+            searchToolBarLayout.setVisibility(View.VISIBLE);
+            drawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
+            searchEditText.setText("");
             // forcecfully set focus
-            mSearchEditText.post(
+            searchEditText.post(
                 new Runnable() {
                   @Override
                   public void run() {
-                    mSearchEditText.requestFocus();
+                    searchEditText.requestFocus();
                     try {
                       InputMethodManager imm =
                           (InputMethodManager)
@@ -526,7 +525,7 @@ public class StudyActivity extends AppCompatActivity
           }
         });
 
-    mSearchEditText.addTextChangedListener(
+    searchEditText.addTextChangedListener(
         new TextWatcher() {
 
           public void afterTextChanged(Editable s) {}
@@ -535,22 +534,22 @@ public class StudyActivity extends AppCompatActivity
 
           public void onTextChanged(CharSequence s, int start, int before, int count) {
             if (s.length() > 0) {
-              mClearLayout.setVisibility(View.VISIBLE);
+              clearLayout.setVisibility(View.VISIBLE);
             } else {
-              mClearLayout.setVisibility(View.INVISIBLE);
-              mStudyFragment.setStudyFilteredStudyList();
+              clearLayout.setVisibility(View.INVISIBLE);
+              studyFragment.setStudyFilteredStudyList();
             }
           }
         });
 
-    mSearchEditText.setOnEditorActionListener(
+    searchEditText.setOnEditorActionListener(
         new TextView.OnEditorActionListener() {
           @Override
           public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
             if (actionId == EditorInfo.IME_ACTION_SEARCH) {
-              if (mSearchEditText.getText().length() > 0) {
-                mStudyFragment.searchFromFilteredStudyList(
-                    mSearchEditText.getText().toString().trim());
+              if (searchEditText.getText().length() > 0) {
+                studyFragment.searchFromFilteredStudyList(
+                    searchEditText.getText().toString().trim());
                 hideKeyboard();
               } else {
                 Toast.makeText(
@@ -565,28 +564,28 @@ public class StudyActivity extends AppCompatActivity
           }
         });
 
-    mClearLayout.setOnClickListener(
+    clearLayout.setOnClickListener(
         new View.OnClickListener() {
           @Override
           public void onClick(View view) {
-            mSearchEditText.setText("");
-            mClearLayout.setVisibility(View.INVISIBLE);
-            mStudyFragment.setStudyFilteredStudyList();
+            searchEditText.setText("");
+            clearLayout.setVisibility(View.INVISIBLE);
+            studyFragment.setStudyFilteredStudyList();
           }
         });
 
-    mCancel.setOnClickListener(
+    cancel.setOnClickListener(
         new View.OnClickListener() {
           @Override
           public void onClick(View view) {
-            mSearchEditText.setText("");
+            searchEditText.setText("");
             setToolBarEnable();
             hideKeyboard();
-            mStudyFragment.setStudyFilteredStudyList();
+            studyFragment.setStudyFilteredStudyList();
           }
         });
 
-    mNotificationBtn.setOnClickListener(
+    notificationBtn.setOnClickListener(
         new View.OnClickListener() {
           @Override
           public void onClick(View view) {
@@ -594,7 +593,7 @@ public class StudyActivity extends AppCompatActivity
             startActivityForResult(intent, NOTIFICATION_RESULT);
           }
         });
-    mDrawer.addDrawerListener(
+    drawer.addDrawerListener(
         new DrawerLayout.DrawerListener() {
           @Override
           public void onDrawerSlide(View drawerView, float slideOffset) {}
@@ -611,7 +610,7 @@ public class StudyActivity extends AppCompatActivity
           public void onDrawerStateChanged(int newState) {}
         });
 
-    mInfoIcon.setOnClickListener(
+    infoIcon.setOnClickListener(
         new View.OnClickListener() {
           @Override
           public void onClick(View view) {
@@ -627,9 +626,9 @@ public class StudyActivity extends AppCompatActivity
 
   public void setVersion(TextView version) {
     try {
-      PackageInfo pInfo =
+      PackageInfo info =
           getPackageManager().getPackageInfo(getPackageName(), PackageManager.GET_META_DATA);
-      version.append("" + pInfo.versionName);
+      version.append("" + info.versionName);
     } catch (PackageManager.NameNotFoundException e) {
       Logger.log(e);
       version.setText("");
@@ -647,38 +646,38 @@ public class StudyActivity extends AppCompatActivity
   }
 
   private void setToolBarEnable() {
-    mSearchToolBarLayout.setVisibility(View.GONE);
-    mToolBarLayout.setVisibility(View.VISIBLE);
-    mDrawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
+    searchToolBarLayout.setVisibility(View.GONE);
+    toolBarLayout.setVisibility(View.VISIBLE);
+    drawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
   }
 
   private void setFont() {
     try {
-      mEditTxt.setTypeface(AppController.getTypeface(this, "medium"));
-      mTitleFDAListens.setTypeface(AppController.getTypeface(this, "bold"));
-      mTitle.setTypeface(AppController.getTypeface(this, "bold"));
-      mSidebarTitle.setTypeface(AppController.getTypeface(this, "medium"));
-      mHomeLabel.setTypeface(AppController.getTypeface(this, "medium"));
-      mResourceLabel.setTypeface(AppController.getTypeface(this, "medium"));
-      mReachoutLabel.setTypeface(AppController.getTypeface(this, "medium"));
-      mSigninLabel.setTypeface(AppController.getTypeface(this, "medium"));
-      mNewUsrReachoutLabel.setTypeface(AppController.getTypeface(this, "medium"));
-      mSignUpLabel.setTypeface(AppController.getTypeface(this, "medium"));
-      mSignOutLabel.setTypeface(AppController.getTypeface(this, "medium"));
-      mSearchEditText.setTypeface(AppController.getTypeface(this, "regular"));
-      mCancel.setTypeface(AppController.getTypeface(this, "medium"));
+      editTxt.setTypeface(AppController.getTypeface(this, "medium"));
+      titleFdaListens.setTypeface(AppController.getTypeface(this, "bold"));
+      title.setTypeface(AppController.getTypeface(this, "bold"));
+      sidebarTitle.setTypeface(AppController.getTypeface(this, "medium"));
+      homeLabel.setTypeface(AppController.getTypeface(this, "medium"));
+      resourceLabel.setTypeface(AppController.getTypeface(this, "medium"));
+      reachoutLabel.setTypeface(AppController.getTypeface(this, "medium"));
+      signinLabel.setTypeface(AppController.getTypeface(this, "medium"));
+      newUsrReachoutLabel.setTypeface(AppController.getTypeface(this, "medium"));
+      signUpLabel.setTypeface(AppController.getTypeface(this, "medium"));
+      signOutLabel.setTypeface(AppController.getTypeface(this, "medium"));
+      searchEditText.setTypeface(AppController.getTypeface(this, "regular"));
+      cancel.setTypeface(AppController.getTypeface(this, "medium"));
     } catch (Exception e) {
       Logger.log(e);
     }
   }
 
   private void bindEvents() {
-    mHomeLayout.setOnClickListener(this);
-    mResourcesLayout.setOnClickListener(this);
-    mReachoutLayout.setOnClickListener(this);
-    mSignInProfileLayout.setOnClickListener(this);
-    mNewUsrReachoutLayout.setOnClickListener(this);
-    mSignOutLayout.setOnClickListener(this);
+    homeLayout.setOnClickListener(this);
+    resourcesLayout.setOnClickListener(this);
+    reachoutLayout.setOnClickListener(this);
+    signInProfileLayout.setOnClickListener(this);
+    newUsrReachoutLayout.setOnClickListener(this);
+    signOutLayout.setOnClickListener(this);
   }
 
   private void checkSignOrSignOutScenario() {
@@ -686,26 +685,26 @@ public class StudyActivity extends AppCompatActivity
     if (AppController.getHelperSharedPreference()
         .readPreference(StudyActivity.this, getString(R.string.userid), "")
         .equalsIgnoreCase("")) {
-      mSigninImg.setBackground(getResources().getDrawable(R.drawable.signin_menu1));
-      mSigninLabel.setText(getResources().getString(R.string.sign_in_btn));
-      mSignOutLayout.setVisibility(View.GONE);
-      mReachoutLayout.setVisibility(View.VISIBLE);
+      signinImg.setBackground(getResources().getDrawable(R.drawable.signin_menu1));
+      signinLabel.setText(getResources().getString(R.string.sign_in_btn));
+      signOutLayout.setVisibility(View.GONE);
+      reachoutLayout.setVisibility(View.VISIBLE);
       // set Reach out details to new user,
-      mNewUsrReachoutImg.setBackground(getResources().getDrawable(R.drawable.newuser_menu1));
-      mNewUsrReachoutLabel.setText(getResources().getString(R.string.side_menu_new_user));
-      mSignUpLabel.setVisibility(View.VISIBLE);
-      mNotificationIcon.setImageResource(R.drawable.notification_white_active);
-      mNotificatioStatus.setVisibility(View.GONE);
+      newUsrReachoutImg.setBackground(getResources().getDrawable(R.drawable.newuser_menu1));
+      newUsrReachoutLabel.setText(getResources().getString(R.string.side_menu_new_user));
+      signUpLabel.setVisibility(View.VISIBLE);
+      notificationIcon.setImageResource(R.drawable.notification_white_active);
+      notificatioStatus.setVisibility(View.GONE);
     } else {
       // Sign out
-      mSigninImg.setBackground(getResources().getDrawable(R.drawable.profile_menu1));
-      mSigninLabel.setText(getResources().getString(R.string.profile_small));
-      mSignOutLayout.setVisibility(View.VISIBLE);
-      mReachoutLayout.setVisibility(View.GONE);
+      signinImg.setBackground(getResources().getDrawable(R.drawable.profile_menu1));
+      signinLabel.setText(getResources().getString(R.string.profile_small));
+      signOutLayout.setVisibility(View.VISIBLE);
+      reachoutLayout.setVisibility(View.GONE);
       // set Reach out details to new user,
-      mNewUsrReachoutImg.setBackground(getResources().getDrawable(R.drawable.reachout_menu1));
-      mNewUsrReachoutLabel.setText(getResources().getString(R.string.side_menu_reach_out));
-      mSignUpLabel.setVisibility(View.GONE);
+      newUsrReachoutImg.setBackground(getResources().getDrawable(R.drawable.reachout_menu1));
+      newUsrReachoutLabel.setText(getResources().getString(R.string.side_menu_reach_out));
+      signUpLabel.setVisibility(View.GONE);
     }
   }
 
@@ -713,24 +712,24 @@ public class StudyActivity extends AppCompatActivity
   public void onClick(View view) {
     switch (view.getId()) {
       case R.id.mHomeLayout:
-        mPreviousValue = R.id.mHomeLayout;
-        mTitleFDAListens.setText(getResources().getString(R.string.app_name));
-        mTitle.setText("");
-        mEditBtnLayout.setVisibility(View.GONE);
-        mNotificationBtn.setVisibility(View.VISIBLE);
-        mFilter.setVisibility(View.VISIBLE);
-        mSearchBtn.setVisibility(View.VISIBLE);
-        mInfoIcon.setVisibility(View.GONE);
+        previousValue = R.id.mHomeLayout;
+        titleFdaListens.setText(getResources().getString(R.string.app_name));
+        title.setText("");
+        editBtnLayout.setVisibility(View.GONE);
+        notificationBtn.setVisibility(View.VISIBLE);
+        filter.setVisibility(View.VISIBLE);
+        searchBtn.setVisibility(View.VISIBLE);
+        infoIcon.setVisibility(View.GONE);
 
         try {
           if (AppController.getHelperSharedPreference()
               .readPreference(this, getString(R.string.notification), "")
               .equalsIgnoreCase("true")) {
-            mNotificationIcon.setImageResource(R.drawable.notification_white_active);
-            mNotificatioStatus.setVisibility(View.VISIBLE);
+            notificationIcon.setImageResource(R.drawable.notification_white_active);
+            notificatioStatus.setVisibility(View.VISIBLE);
           } else {
-            mNotificationIcon.setImageResource(R.drawable.notification_white_active);
-            mNotificatioStatus.setVisibility(View.GONE);
+            notificationIcon.setImageResource(R.drawable.notification_white_active);
+            notificatioStatus.setVisibility(View.GONE);
           }
 
         } catch (Exception e) {
@@ -738,24 +737,24 @@ public class StudyActivity extends AppCompatActivity
         }
 
         closeDrawer();
-        mStudyFragment = new StudyFragment();
+        studyFragment = new StudyFragment();
         getSupportFragmentManager()
             .beginTransaction()
-            .replace(R.id.frameLayoutContainer, mStudyFragment, "fragment")
+            .replace(R.id.frameLayoutContainer, studyFragment, "fragment")
             .commit();
         break;
 
       case R.id.mResourcesLayout:
-        if (mPreviousValue == R.id.mResourcesLayout) {
+        if (previousValue == R.id.mResourcesLayout) {
           closeDrawer();
         } else {
-          mPreviousValue = R.id.mResourcesLayout;
-          mTitleFDAListens.setText("");
-          mTitle.setText(getResources().getString(R.string.resources));
-          mEditBtnLayout.setVisibility(View.GONE);
-          mNotificationBtn.setVisibility(View.GONE);
-          mFilter.setVisibility(View.GONE);
-          mSearchBtn.setVisibility(View.GONE);
+          previousValue = R.id.mResourcesLayout;
+          titleFdaListens.setText("");
+          title.setText(getResources().getString(R.string.resources));
+          editBtnLayout.setVisibility(View.GONE);
+          notificationBtn.setVisibility(View.GONE);
+          filter.setVisibility(View.GONE);
+          searchBtn.setVisibility(View.GONE);
           closeDrawer();
           getSupportFragmentManager()
               .beginTransaction()
@@ -772,17 +771,17 @@ public class StudyActivity extends AppCompatActivity
         if (AppController.getHelperSharedPreference()
             .readPreference(StudyActivity.this, getString(R.string.userid), "")
             .equalsIgnoreCase("")) {
-          if (mPreviousValue == R.id.mSignInProfileLayout) {
+          if (previousValue == R.id.mSignInProfileLayout) {
             closeDrawer();
           } else {
-            mPreviousValue = R.id.mSignInProfileLayout;
-            mTitleFDAListens.setText("");
-            mTitle.setText(getResources().getString(R.string.sign_in));
-            mEditBtnLayout.setVisibility(View.GONE);
-            mNotificationBtn.setVisibility(View.GONE);
-            mFilter.setVisibility(View.GONE);
-            mSearchBtn.setVisibility(View.GONE);
-            mInfoIcon.setVisibility(View.VISIBLE);
+            previousValue = R.id.mSignInProfileLayout;
+            titleFdaListens.setText("");
+            title.setText(getResources().getString(R.string.sign_in));
+            editBtnLayout.setVisibility(View.GONE);
+            notificationBtn.setVisibility(View.GONE);
+            filter.setVisibility(View.GONE);
+            searchBtn.setVisibility(View.GONE);
+            infoIcon.setVisibility(View.VISIBLE);
             closeDrawer();
             getSupportFragmentManager()
                 .beginTransaction()
@@ -790,57 +789,58 @@ public class StudyActivity extends AppCompatActivity
                 .commit();
           }
         } else {
-          if (mPreviousValue == R.id.mSignInProfileLayout) {
+          if (previousValue == R.id.mSignInProfileLayout) {
             closeDrawer();
           } else {
-            mPreviousValue = R.id.mSignInProfileLayout;
-            mTitleFDAListens.setText("");
-            mTitle.setText(getResources().getString(R.string.profile));
-            mEditBtnLayout.setVisibility(View.VISIBLE);
-            mNotificationBtn.setVisibility(View.GONE);
-            mFilter.setVisibility(View.GONE);
-            mSearchBtn.setVisibility(View.GONE);
-            mInfoIcon.setVisibility(View.GONE);
-            mProfileFragment = new ProfileFragment();
+            previousValue = R.id.mSignInProfileLayout;
+            titleFdaListens.setText("");
+            title.setText(getResources().getString(R.string.profile));
+            editBtnLayout.setVisibility(View.VISIBLE);
+            notificationBtn.setVisibility(View.GONE);
+            filter.setVisibility(View.GONE);
+            searchBtn.setVisibility(View.GONE);
+            infoIcon.setVisibility(View.GONE);
+            profileFragment = new ProfileFragment();
 
-            mEditBtnLayout.setOnClickListener(
+            editBtnLayout.setOnClickListener(
                 new View.OnClickListener() {
                   @Override
                   public void onClick(View view) {
-                    if (mEditTxt
+                    if (editTxt
                         .getText()
                         .toString()
-                        .equalsIgnoreCase(getResources().getString(R.string.edit)))
+                        .equalsIgnoreCase(getResources().getString(R.string.edit))) {
                       enableEditText();
-                    else if (mEditTxt
+                    } else if (editTxt
                         .getText()
                         .toString()
-                        .equalsIgnoreCase(getResources().getString(R.string.cancel)))
+                        .equalsIgnoreCase(getResources().getString(R.string.cancel))) {
                       disableEditText();
+                    }
                   }
                 });
             closeDrawer();
-            mProfileFragment = new ProfileFragment();
+            profileFragment = new ProfileFragment();
             getSupportFragmentManager()
                 .beginTransaction()
-                .replace(R.id.frameLayoutContainer, mProfileFragment, "fragment")
+                .replace(R.id.frameLayoutContainer, profileFragment, "fragment")
                 .commit();
           }
         }
         break;
 
       case R.id.mNewUsrReachoutLayout:
-        mPreviousValue = R.id.mNewUsrReachoutLayout;
+        previousValue = R.id.mNewUsrReachoutLayout;
         if (AppController.getHelperSharedPreference()
             .readPreference(StudyActivity.this, getString(R.string.userid), "")
             .equalsIgnoreCase("")) {
-          mTitleFDAListens.setText("");
-          mTitle.setText(getResources().getString(R.string.signup));
-          mEditBtnLayout.setVisibility(View.GONE);
-          mNotificationBtn.setVisibility(View.GONE);
-          mFilter.setVisibility(View.GONE);
-          mSearchBtn.setVisibility(View.GONE);
-          mInfoIcon.setVisibility(View.VISIBLE);
+          titleFdaListens.setText("");
+          title.setText(getResources().getString(R.string.signup));
+          editBtnLayout.setVisibility(View.GONE);
+          notificationBtn.setVisibility(View.GONE);
+          filter.setVisibility(View.GONE);
+          searchBtn.setVisibility(View.GONE);
+          infoIcon.setVisibility(View.VISIBLE);
           closeDrawer();
           getSupportFragmentManager()
               .beginTransaction()
@@ -859,7 +859,7 @@ public class StudyActivity extends AppCompatActivity
   }
 
   private boolean checkOfflineDataEmpty() {
-    RealmResults<OfflineData> results = dbServiceSubscriber.getOfflineData(mRealm);
+    RealmResults<OfflineData> results = dbServiceSubscriber.getOfflineData(realm);
     if (results == null || results.size() == 0) {
       return true;
     } else {
@@ -868,16 +868,16 @@ public class StudyActivity extends AppCompatActivity
   }
 
   private void reachoutMenuClicked() {
-    if (mPreviousValue == R.id.mReachoutLayout) {
+    if (previousValue == R.id.mReachoutLayout) {
       closeDrawer();
     } else {
-      mPreviousValue = R.id.mReachoutLayout;
-      mTitleFDAListens.setText("");
-      mTitle.setText(getResources().getString(R.string.reachout));
-      mEditBtnLayout.setVisibility(View.GONE);
-      mNotificationBtn.setVisibility(View.GONE);
-      mFilter.setVisibility(View.GONE);
-      mSearchBtn.setVisibility(View.GONE);
+      previousValue = R.id.mReachoutLayout;
+      titleFdaListens.setText("");
+      title.setText(getResources().getString(R.string.reachout));
+      editBtnLayout.setVisibility(View.GONE);
+      notificationBtn.setVisibility(View.GONE);
+      filter.setVisibility(View.GONE);
+      searchBtn.setVisibility(View.GONE);
       closeDrawer();
       getSupportFragmentManager()
           .beginTransaction()
@@ -887,17 +887,17 @@ public class StudyActivity extends AppCompatActivity
   }
 
   private void enableEditText() {
-    mEditTxt.setText(getResources().getString(R.string.cancel));
-    mProfileFragment.enableEditText();
+    editTxt.setText(getResources().getString(R.string.cancel));
+    profileFragment.enableEditText();
   }
 
   private void disableEditText() {
-    mEditTxt.setText(getResources().getString(R.string.edit));
-    mProfileFragment.disableEditText();
+    editTxt.setText(getResources().getString(R.string.edit));
+    profileFragment.disableEditText();
   }
 
   public void disableEditTextFromFragment() {
-    mEditTxt.setText(getResources().getString(R.string.edit));
+    editTxt.setText(getResources().getString(R.string.edit));
   }
 
   private void logout() {
@@ -922,7 +922,6 @@ public class StudyActivity extends AppCompatActivity
 
                 AppController.getHelperProgressDialog()
                     .showProgress(StudyActivity.this, "", "", false);
-                LogoutEvent logoutEvent = new LogoutEvent();
                 HashMap<String, String> params = new HashMap<>();
                 params.put("reason", "user_action");
                 HashMap<String, String> header = new HashMap<String, String>();
@@ -938,7 +937,7 @@ public class StudyActivity extends AppCompatActivity
                     new AuthServerConfigEvent(
                         "delete",
                         URLs.LOGOUT,
-                        LOGOUT_REPSONSECODE,
+                        LOGOUT_REPSONSE_CODE,
                         StudyActivity.this,
                         LoginData.class,
                         params,
@@ -946,6 +945,7 @@ public class StudyActivity extends AppCompatActivity
                         null,
                         false,
                         StudyActivity.this);
+                LogoutEvent logoutEvent = new LogoutEvent();
                 logoutEvent.setAuthServerConfigEvent(authServerConfigEvent);
                 UserModulePresenter userModulePresenter = new UserModulePresenter();
                 userModulePresenter.performLogout(logoutEvent);
@@ -964,17 +964,17 @@ public class StudyActivity extends AppCompatActivity
   }
 
   private void openDrawer() {
-    mDrawer.openDrawer(GravityCompat.START);
+    drawer.openDrawer(GravityCompat.START);
   }
 
   private void closeDrawer() {
-    mDrawer.closeDrawer(GravityCompat.START);
+    drawer.closeDrawer(GravityCompat.START);
   }
 
   @Override
   public void onBackPressed() {
-    if (mDrawer.isDrawerOpen(GravityCompat.START)) {
-      mDrawer.closeDrawer(GravityCompat.START);
+    if (drawer.isDrawerOpen(GravityCompat.START)) {
+      drawer.closeDrawer(GravityCompat.START);
     } else {
       if (isExit) {
         finish();
@@ -996,17 +996,20 @@ public class StudyActivity extends AppCompatActivity
 
   @Override
   public <T> void asyncResponse(T response, int responseCode) {
-    if (responseCode == LOGOUT_REPSONSECODE) {
-      Toast.makeText(this, getResources().getString(R.string.signed_out), Toast.LENGTH_SHORT).show();
+    if (responseCode == LOGOUT_REPSONSE_CODE) {
+      Toast.makeText(this, getResources().getString(R.string.signed_out), Toast.LENGTH_SHORT)
+          .show();
       SharedPreferences settings = SharedPreferenceHelper.getPreferences(StudyActivity.this);
       settings.edit().clear().apply();
       // delete passcode from keystore
       String pass = AppController.refreshKeys("passcode");
-      if (pass != null) AppController.deleteKey("passcode_" + pass);
+      if (pass != null) {
+        AppController.deleteKey("passcode_" + pass);
+      }
 
       try {
         NotificationModuleSubscriber notificationModuleSubscriber =
-            new NotificationModuleSubscriber(dbServiceSubscriber, mRealm);
+            new NotificationModuleSubscriber(dbServiceSubscriber, realm);
         notificationModuleSubscriber.cancleActivityLocalNotification(StudyActivity.this);
         notificationModuleSubscriber.cancleResourcesLocalNotification(StudyActivity.this);
       } catch (Exception e) {
@@ -1033,31 +1036,31 @@ public class StudyActivity extends AppCompatActivity
 
   public void loadstudylist() {
     checkSignOrSignOutScenario();
-    mPreviousValue = R.id.mHomeLayout;
-    mTitleFDAListens.setText(getResources().getString(R.string.app_name));
-    mTitle.setText("");
-    mEditBtnLayout.setVisibility(View.GONE);
-    mNotificationBtn.setVisibility(View.VISIBLE);
-    mFilter.setVisibility(View.VISIBLE);
-    mSearchBtn.setVisibility(View.VISIBLE);
-    mInfoIcon.setVisibility(View.GONE);
+    previousValue = R.id.mHomeLayout;
+    titleFdaListens.setText(getResources().getString(R.string.app_name));
+    title.setText("");
+    editBtnLayout.setVisibility(View.GONE);
+    notificationBtn.setVisibility(View.VISIBLE);
+    filter.setVisibility(View.VISIBLE);
+    searchBtn.setVisibility(View.VISIBLE);
+    infoIcon.setVisibility(View.GONE);
     closeDrawer();
-    mStudyFragment = new StudyFragment();
+    studyFragment = new StudyFragment();
     getSupportFragmentManager()
         .beginTransaction()
-        .replace(R.id.frameLayoutContainer, mStudyFragment, "fragment")
+        .replace(R.id.frameLayoutContainer, studyFragment, "fragment")
         .commit();
   }
 
   public void loadsignup() {
     checkSignOrSignOutScenario();
-    mPreviousValue = R.id.mNewUsrReachoutLayout;
-    mTitleFDAListens.setText("");
-    mTitle.setText(getResources().getString(R.string.signup));
-    mEditBtnLayout.setVisibility(View.GONE);
-    mNotificationBtn.setVisibility(View.GONE);
-    mFilter.setVisibility(View.GONE);
-    mSearchBtn.setVisibility(View.GONE);
+    previousValue = R.id.mNewUsrReachoutLayout;
+    titleFdaListens.setText("");
+    title.setText(getResources().getString(R.string.signup));
+    editBtnLayout.setVisibility(View.GONE);
+    notificationBtn.setVisibility(View.GONE);
+    filter.setVisibility(View.GONE);
+    searchBtn.setVisibility(View.GONE);
     closeDrawer();
     getSupportFragmentManager()
         .beginTransaction()
@@ -1078,13 +1081,13 @@ public class StudyActivity extends AppCompatActivity
       }
     } else if (requestCode == NOTIFICATION_RESULT) {
       if (resultCode == RESULT_OK) {
-        mPreviousValue = R.id.mResourcesLayout;
-        mTitleFDAListens.setText("");
-        mTitle.setText(getResources().getString(R.string.resources));
-        mEditBtnLayout.setVisibility(View.GONE);
-        mNotificationBtn.setVisibility(View.GONE);
-        mFilter.setVisibility(View.GONE);
-        mSearchBtn.setVisibility(View.GONE);
+        previousValue = R.id.mResourcesLayout;
+        titleFdaListens.setText("");
+        title.setText(getResources().getString(R.string.resources));
+        editBtnLayout.setVisibility(View.GONE);
+        notificationBtn.setVisibility(View.GONE);
+        filter.setVisibility(View.GONE);
+        searchBtn.setVisibility(View.GONE);
         closeDrawer();
         getSupportFragmentManager()
             .beginTransaction()
@@ -1109,14 +1112,14 @@ public class StudyActivity extends AppCompatActivity
     @Override
     protected void onPostExecute(String result) {
       AppController.getHelperProgressDialog().dismissDialog();
-      mPreviousValue = R.id.mSignInProfileLayout;
-      mTitleFDAListens.setText("");
-      mTitle.setText(getResources().getString(R.string.sign_in));
-      mEditBtnLayout.setVisibility(View.GONE);
-      mNotificationBtn.setVisibility(View.GONE);
-      mFilter.setVisibility(View.GONE);
-      mSearchBtn.setVisibility(View.GONE);
-      mInfoIcon.setVisibility(View.VISIBLE);
+      previousValue = R.id.mSignInProfileLayout;
+      titleFdaListens.setText("");
+      title.setText(getResources().getString(R.string.sign_in));
+      editBtnLayout.setVisibility(View.GONE);
+      notificationBtn.setVisibility(View.GONE);
+      filter.setVisibility(View.GONE);
+      searchBtn.setVisibility(View.GONE);
+      infoIcon.setVisibility(View.VISIBLE);
       closeDrawer();
       getSupportFragmentManager()
           .beginTransaction()
@@ -1136,7 +1139,7 @@ public class StudyActivity extends AppCompatActivity
     protected String doInBackground(String... params) {
       try {
         NotificationModuleSubscriber notificationModuleSubscriber =
-            new NotificationModuleSubscriber(dbServiceSubscriber, mRealm);
+            new NotificationModuleSubscriber(dbServiceSubscriber, realm);
         notificationModuleSubscriber.cancleActivityLocalNotification(StudyActivity.this);
         notificationModuleSubscriber.cancleResourcesLocalNotification(StudyActivity.this);
       } catch (Exception e) {
@@ -1154,7 +1157,7 @@ public class StudyActivity extends AppCompatActivity
       NotificationManagerCompat notificationManager =
           NotificationManagerCompat.from(StudyActivity.this);
       notificationManager.cancelAll();
-      Toast.makeText(StudyActivity.this, R.string.signed_out,Toast.LENGTH_SHORT).show();
+      Toast.makeText(StudyActivity.this, R.string.signed_out, Toast.LENGTH_SHORT).show();
       loadstudylist();
     }
 
@@ -1166,15 +1169,17 @@ public class StudyActivity extends AppCompatActivity
 
   @Override
   protected void onDestroy() {
-    if (dbServiceSubscriber != null && mRealm != null) dbServiceSubscriber.closeRealmObj(mRealm);
+    if (dbServiceSubscriber != null && realm != null) {
+      dbServiceSubscriber.closeRealmObj(realm);
+    }
     super.onDestroy();
   }
 
   public String getSearchKey() {
     String key = null;
     try {
-      if (mSearchEditText != null && mSearchEditText.getText().length() > 0) {
-        key = mSearchEditText.getText().toString();
+      if (searchEditText != null && searchEditText.getText().length() > 0) {
+        key = searchEditText.getText().toString();
       }
     } catch (Exception e) {
       Logger.log(e);

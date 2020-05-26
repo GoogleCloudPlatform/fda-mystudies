@@ -53,18 +53,18 @@ import org.researchstack.backbone.task.Task;
 
 public class EligibleActivity extends AppCompatActivity implements ApiCall.OnAsyncRequestComplete {
 
-  private static final int CONSENT_RESPONSECODE = 100;
+  private static final int CONSENT_RESPONSE_CODE = 100;
   private EligibilityConsent eligibilityConsent;
   private DBServiceSubscriber dbServiceSubscriber;
-  private static final int UPDATE_USERPREFERENCE_RESPONSECODE = 200;
-  private Realm mRealm;
+  private static final int UPDATE_USER_PREFERENCE_RESPONSE_CODE = 200;
+  private Realm realm;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_eligible);
     dbServiceSubscriber = new DBServiceSubscriber();
-    mRealm = AppController.getRealmobj(this);
+    realm = AppController.getRealmobj(this);
 
     TextView button = (TextView) findViewById(R.id.continueButton);
     button.setOnClickListener(
@@ -73,7 +73,7 @@ public class EligibleActivity extends AppCompatActivity implements ApiCall.OnAsy
           public void onClick(View v) {
             eligibilityConsent =
                 dbServiceSubscriber.getConsentMetadata(
-                    getIntent().getStringExtra("studyId"), mRealm);
+                    getIntent().getStringExtra("studyId"), realm);
             startconsent(eligibilityConsent.getConsent());
           }
         });
@@ -82,7 +82,7 @@ public class EligibleActivity extends AppCompatActivity implements ApiCall.OnAsy
 
   @Override
   protected void onDestroy() {
-    dbServiceSubscriber.closeRealmObj(mRealm);
+    dbServiceSubscriber.closeRealmObj(realm);
     super.onDestroy();
   }
 
@@ -100,13 +100,13 @@ public class EligibleActivity extends AppCompatActivity implements ApiCall.OnAsy
             getIntent().getStringExtra("title"),
             getIntent().getStringExtra("eligibility"),
             getIntent().getStringExtra("type"));
-    startActivityForResult(intent, CONSENT_RESPONSECODE);
+    startActivityForResult(intent, CONSENT_RESPONSE_CODE);
   }
 
   @Override
   protected void onActivityResult(int requestCode, int resultCode, Intent data) {
     super.onActivityResult(requestCode, resultCode, data);
-    if (requestCode == CONSENT_RESPONSECODE) {
+    if (requestCode == CONSENT_RESPONSE_CODE) {
       if (resultCode == RESULT_OK) {
         Intent intent = new Intent(this, ConsentCompletedActivity.class);
         intent.putExtra("enrollId", getIntent().getStringExtra("enrollId"));
@@ -140,7 +140,6 @@ public class EligibleActivity extends AppCompatActivity implements ApiCall.OnAsy
 
   public void updateuserpreference() {
     AppController.getHelperProgressDialog().showProgress(EligibleActivity.this, "", "", false);
-    UpdatePreferenceEvent updatePreferenceEvent = new UpdatePreferenceEvent();
 
     HashMap<String, String> header = new HashMap();
     header.put(
@@ -177,7 +176,7 @@ public class EligibleActivity extends AppCompatActivity implements ApiCall.OnAsy
         new RegistrationServerEnrollmentConfigEvent(
             "post_object",
             URLs.UPDATE_STUDY_PREFERENCE,
-            UPDATE_USERPREFERENCE_RESPONSECODE,
+            UPDATE_USER_PREFERENCE_RESPONSE_CODE,
             this,
             LoginData.class,
             null,
@@ -185,7 +184,7 @@ public class EligibleActivity extends AppCompatActivity implements ApiCall.OnAsy
             jsonObject,
             false,
             this);
-
+    UpdatePreferenceEvent updatePreferenceEvent = new UpdatePreferenceEvent();
     updatePreferenceEvent.setRegistrationServerEnrollmentConfigEvent(
         registrationServerEnrollmentConfigEvent);
     UserModulePresenter userModulePresenter = new UserModulePresenter();

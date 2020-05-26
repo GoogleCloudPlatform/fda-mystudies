@@ -34,13 +34,13 @@ public class TermsPrivacyPolicyActivity extends AppCompatActivity {
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_terms_privacy_policy);
-    initializeXMLId();
+    initializeXmlId();
     setTextForView();
     setFont();
     bindEvents();
   }
 
-  private void initializeXMLId() {
+  private void initializeXmlId() {
     mBackBtn = (RelativeLayout) findViewById(R.id.backBtn);
     mTitle = (AppCompatTextView) findViewById(R.id.title);
     mWebView = (WebView) findViewById(R.id.webView);

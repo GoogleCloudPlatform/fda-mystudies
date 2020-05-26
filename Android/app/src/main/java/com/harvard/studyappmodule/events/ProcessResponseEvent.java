@@ -17,13 +17,13 @@ package com.harvard.studyappmodule.events;
 import com.harvard.webservicemodule.events.ResponseServerConfigEvent;
 
 public class ProcessResponseEvent {
-  private ResponseServerConfigEvent mResponseServerConfigEvent;
+  private ResponseServerConfigEvent responseServerConfigEvent;
 
   public ResponseServerConfigEvent getResponseServerConfigEvent() {
-    return mResponseServerConfigEvent;
+    return responseServerConfigEvent;
   }
 
   public void setResponseServerConfigEvent(ResponseServerConfigEvent responseServerConfigEvent) {
-    mResponseServerConfigEvent = responseServerConfigEvent;
+    this.responseServerConfigEvent = responseServerConfigEvent;
   }
 }

@@ -30,12 +30,12 @@ import com.harvard.utils.Logger;
 import java.util.ArrayList;
 
 public class StudySignInListAdapter extends RecyclerView.Adapter<StudySignInListAdapter.Holder> {
-  private final Context mContext;
-  private ArrayList<String> mItems = new ArrayList<>();
+  private final Context context;
+  private ArrayList<String> items = new ArrayList<>();
 
   StudySignInListAdapter(Context context, ArrayList<String> items) {
-    this.mContext = context;
-    this.mItems.addAll(items);
+    this.context = context;
+    this.items.addAll(items);
   }
 
   @Override
@@ -48,36 +48,38 @@ public class StudySignInListAdapter extends RecyclerView.Adapter<StudySignInList
 
   @Override
   public int getItemCount() {
-    if (mItems == null) return 0;
-    return mItems.size();
+    if (items == null) {
+      return 0;
+    }
+    return items.size();
   }
 
   class Holder extends RecyclerView.ViewHolder {
 
-    RelativeLayout mContainer;
-    AppCompatImageView mStateIcon;
-    AppCompatTextView mState;
-    AppCompatTextView mStudyTitle;
-    AppCompatTextView mStudyTitleLatin;
-    AppCompatTextView mSponser;
+    RelativeLayout container;
+    AppCompatImageView stateIcon;
+    AppCompatTextView state;
+    AppCompatTextView studyTitle;
+    AppCompatTextView studyTitleLatin;
+    AppCompatTextView sponser;
 
     Holder(View itemView) {
       super(itemView);
-      mContainer = (RelativeLayout) itemView.findViewById(R.id.container);
-      mStateIcon = (AppCompatImageView) itemView.findViewById(R.id.stateIcon);
-      mState = (AppCompatTextView) itemView.findViewById(R.id.state);
-      mStudyTitle = (AppCompatTextView) itemView.findViewById(R.id.study_title);
-      mStudyTitleLatin = (AppCompatTextView) itemView.findViewById(R.id.study_title_latin);
-      mSponser = (AppCompatTextView) itemView.findViewById(R.id.sponser);
+      container = (RelativeLayout) itemView.findViewById(R.id.container);
+      stateIcon = (AppCompatImageView) itemView.findViewById(R.id.stateIcon);
+      state = (AppCompatTextView) itemView.findViewById(R.id.state);
+      studyTitle = (AppCompatTextView) itemView.findViewById(R.id.study_title);
+      studyTitleLatin = (AppCompatTextView) itemView.findViewById(R.id.study_title_latin);
+      sponser = (AppCompatTextView) itemView.findViewById(R.id.sponser);
       setFont();
     }
 
     private void setFont() {
       try {
-        mState.setTypeface(AppController.getTypeface(mContext, "medium"));
-        mStudyTitle.setTypeface(AppController.getTypeface(mContext, "medium"));
-        mStudyTitleLatin.setTypeface(AppController.getTypeface(mContext, "regular"));
-        mSponser.setTypeface(AppController.getTypeface(mContext, "regular"));
+        state.setTypeface(AppController.getTypeface(context, "medium"));
+        studyTitle.setTypeface(AppController.getTypeface(context, "medium"));
+        studyTitleLatin.setTypeface(AppController.getTypeface(context, "regular"));
+        sponser.setTypeface(AppController.getTypeface(context, "regular"));
       } catch (Exception e) {
         Logger.log(e);
       }
@@ -89,32 +91,41 @@ public class StudySignInListAdapter extends RecyclerView.Adapter<StudySignInList
     final int i = holder.getAdapterPosition();
     try {
       // changing the bg color of the round shape
-      GradientDrawable bgShape = (GradientDrawable) holder.mStateIcon.getBackground();
-      if (i == 3) bgShape.setColor(mContext.getResources().getColor(R.color.colorPrimary));
-      else bgShape.setColor(mContext.getResources().getColor(R.color.bullet_green_color));
+      GradientDrawable bgShape = (GradientDrawable) holder.stateIcon.getBackground();
+      if (i == 3) {
+        bgShape.setColor(context.getResources().getColor(R.color.colorPrimary));
+      } else {
+        bgShape.setColor(context.getResources().getColor(R.color.bullet_green_color));
+      }
 
-      if (i == 3) holder.mState.setText(mContext.getResources().getString(R.string.upcoming_caps));
-      else holder.mState.setText(mContext.getResources().getString(R.string.active1));
+      if (i == 3) {
+        holder.state.setText(context.getResources().getString(R.string.upcoming_caps));
+      } else {
+        holder.state.setText(context.getResources().getString(R.string.active1));
+      }
 
-      holder.mStateIcon.setImageResource(R.drawable.bullet);
+      holder.stateIcon.setImageResource(R.drawable.bullet);
 
-      if (i == 1)
-        holder.mStudyTitle.setText(
-            mContext.getResources().getString(R.string.study_for_fitness) + " ");
-      else
-        holder.mStudyTitle.setText(
-            mContext.getResources().getString(R.string.study_pregnant_women) + " ");
-      holder.mStudyTitleLatin.setText("Lorem ipsum dolor sit amet ");
-      String category = mContext.getResources().getString(R.string.pregnancy);
-      if (i == 1) category = mContext.getResources().getString(R.string.fitness);
-      holder.mSponser.setText(
-          mContext.getResources().getString(R.string.sponsor_name) + "  |  " + category);
+      if (i == 1) {
+        holder.studyTitle.setText(
+            context.getResources().getString(R.string.study_for_fitness) + " ");
+      } else {
+        holder.studyTitle.setText(
+            context.getResources().getString(R.string.study_pregnant_women) + " ");
+      }
+      holder.studyTitleLatin.setText("Lorem ipsum dolor sit amet ");
+      String category = context.getResources().getString(R.string.pregnancy);
+      if (i == 1) {
+        category = context.getResources().getString(R.string.fitness);
+      }
+      holder.sponser.setText(
+          context.getResources().getString(R.string.sponsor_name) + "  |  " + category);
 
-      holder.mContainer.setOnClickListener(
+      holder.container.setOnClickListener(
           new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-              Toast.makeText(mContext, "GOTO Details Screen", Toast.LENGTH_LONG).show();
+              Toast.makeText(context, "GOTO Details Screen", Toast.LENGTH_LONG).show();
             }
           });
 

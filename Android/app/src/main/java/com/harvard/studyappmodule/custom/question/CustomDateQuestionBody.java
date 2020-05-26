@@ -74,15 +74,9 @@ public class CustomDateQuestionBody implements StepBody {
         Logger.log(e);
       }
       hasChosenDate = true;
-    }
-
-    // If no result, use default date if available
-    else if (format.getDefaultDate() != null) {
+    } else if (format.getDefaultDate() != null) {
       calendar.setTime(format.getDefaultDate());
-    }
-
-    // otherwise, make sure user has made a selection before moving on
-    else {
+    } else {
       hasChosenDate = false;
     }
   }
@@ -152,8 +146,11 @@ public class CustomDateQuestionBody implements StepBody {
     if (skipped) {
       result.setResult(null);
     } else {
-      if (hasChosenDate) result.setResult(AppController.getDateFormat().format(calendar.getTime()));
-      else result.setResult(null);
+      if (hasChosenDate) {
+        result.setResult(AppController.getDateFormat().format(calendar.getTime()));
+      } else {
+        result.setResult(null);
+      }
     }
 
     return result;

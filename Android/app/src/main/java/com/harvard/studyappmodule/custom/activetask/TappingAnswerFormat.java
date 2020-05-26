@@ -20,16 +20,16 @@ public class TappingAnswerFormat extends ChoiceAnswerFormatCustom {
 
   private final CustomAnswerStyle style;
   private final int duration;
-  private int mKickCount;
+  private int kickCount;
 
   public TappingAnswerFormat(CustomAnswerStyle style, int duration, int kickCount) {
     this.style = style;
     this.duration = duration;
-    mKickCount = kickCount;
+    this.kickCount = kickCount;
   }
 
   public int getKickCount() {
-    return mKickCount;
+    return kickCount;
   }
 
   public CustomAnswerStyle getStyle() {

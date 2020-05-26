@@ -33,13 +33,13 @@ import io.realm.RealmList;
 import java.util.ArrayList;
 
 public class ResourcesListAdapter extends RecyclerView.Adapter<ResourcesListAdapter.Holder> {
-  private final Context mContext;
-  private final ArrayList<Resource> mItems = new ArrayList<>();
-  Fragment fragment;
+  private final Context context;
+  private final ArrayList<Resource> items = new ArrayList<>();
+  private Fragment fragment;
 
   ResourcesListAdapter(Context context, RealmList<Resource> items, Fragment fragment) {
-    this.mContext = context;
-    this.mItems.addAll(items);
+    this.context = context;
+    this.items.addAll(items);
     this.fragment = fragment;
   }
 
@@ -53,27 +53,29 @@ public class ResourcesListAdapter extends RecyclerView.Adapter<ResourcesListAdap
 
   @Override
   public int getItemCount() {
-    if (mItems == null) return 0;
-    return mItems.size();
+    if (items == null) {
+      return 0;
+    }
+    return items.size();
   }
 
   class Holder extends RecyclerView.ViewHolder {
 
-    final RelativeLayout mContainer;
-    final AppCompatTextView mResourcesTitle;
+    final RelativeLayout container;
+    final AppCompatTextView resourcesTitle;
 
     Holder(View itemView) {
       super(itemView);
-      mContainer = (RelativeLayout) itemView.findViewById(R.id.container);
-      mResourcesTitle = (AppCompatTextView) itemView.findViewById(R.id.resourcesTitle);
+      container = (RelativeLayout) itemView.findViewById(R.id.container);
+      resourcesTitle = (AppCompatTextView) itemView.findViewById(R.id.resourcesTitle);
       setFont();
     }
 
     private void setFont() {
       try {
-        mResourcesTitle.setTypeface(AppController.getTypeface(mContext, "regular"));
+        resourcesTitle.setTypeface(AppController.getTypeface(context, "regular"));
       } catch (Exception e) {
-          Logger.log(e);
+        Logger.log(e);
       }
     }
   }
@@ -82,59 +84,59 @@ public class ResourcesListAdapter extends RecyclerView.Adapter<ResourcesListAdap
   public void onBindViewHolder(final Holder holder, final int position) {
     final int i = holder.getAdapterPosition();
     try {
-      holder.mResourcesTitle.setText(mItems.get(i).getTitle());
+      holder.resourcesTitle.setText(items.get(i).getTitle());
 
-      holder.mContainer.setOnClickListener(
+      holder.container.setOnClickListener(
           new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-              if (mItems.get(i).getType() != null) {
-                Intent intent = new Intent(mContext, ResourcesWebViewActivity.class);
-                intent.putExtra("studyId", ((SurveyActivity) mContext).getStudyId());
-                intent.putExtra("title", "" + mItems.get(i).getTitle().toString());
-                intent.putExtra("type", "" + mItems.get(i).getType().toString());
-                intent.putExtra("content", "" + mItems.get(i).getContent().toString());
-                mContext.startActivity(intent);
-              } else if (mItems
+              if (items.get(i).getType() != null) {
+                Intent intent = new Intent(context, ResourcesWebViewActivity.class);
+                intent.putExtra("studyId", ((SurveyActivity) context).getStudyId());
+                intent.putExtra("title", "" + items.get(i).getTitle().toString());
+                intent.putExtra("type", "" + items.get(i).getType().toString());
+                intent.putExtra("content", "" + items.get(i).getContent().toString());
+                context.startActivity(intent);
+              } else if (items
                   .get(i)
                   .getTitle()
                   .equalsIgnoreCase(view.getResources().getString(R.string.about_study1))) {
-                Intent intent = new Intent(mContext, StudyInfoActivity.class);
-                intent.putExtra("studyId", ((SurveyActivity) mContext).getStudyId());
-                intent.putExtra("title", ((SurveyActivity) mContext).getTitle1());
-                intent.putExtra("bookmark", ((SurveyActivity) mContext).getBookmark());
-                intent.putExtra("status", ((SurveyActivity) mContext).getStatus());
-                intent.putExtra("studyStatus", ((SurveyActivity) mContext).getStudyStatus());
-                intent.putExtra("position", "" + ((SurveyActivity) mContext).getPosition());
-                intent.putExtra("enroll", "" + ((SurveyActivity) mContext).getTitle1());
-                intent.putExtra("rejoin", "" + ((SurveyActivity) mContext).getTitle1());
+                Intent intent = new Intent(context, StudyInfoActivity.class);
+                intent.putExtra("studyId", ((SurveyActivity) context).getStudyId());
+                intent.putExtra("title", ((SurveyActivity) context).getTitle1());
+                intent.putExtra("bookmark", ((SurveyActivity) context).getBookmark());
+                intent.putExtra("status", ((SurveyActivity) context).getStatus());
+                intent.putExtra("studyStatus", ((SurveyActivity) context).getStudyStatus());
+                intent.putExtra("position", "" + ((SurveyActivity) context).getPosition());
+                intent.putExtra("enroll", "" + ((SurveyActivity) context).getTitle1());
+                intent.putExtra("rejoin", "" + ((SurveyActivity) context).getTitle1());
                 intent.putExtra("about_this_study", true);
-                (mContext).startActivity(intent);
+                (context).startActivity(intent);
 
-              } else if (mItems
+              } else if (items
                   .get(i)
                   .getTitle()
                   .equalsIgnoreCase(view.getResources().getString(R.string.consent_pdf))) {
                 try {
-                  Intent intent = new Intent(mContext, PDFDisplayActivity.class);
-                  intent.putExtra("studyId", ((SurveyActivity) mContext).getStudyId());
-                  intent.putExtra("title", ((SurveyActivity) mContext).getTitle1());
-                  (mContext).startActivity(intent);
+                  Intent intent = new Intent(context, PDFDisplayActivity.class);
+                  intent.putExtra("studyId", ((SurveyActivity) context).getStudyId());
+                  intent.putExtra("title", ((SurveyActivity) context).getTitle1());
+                  (context).startActivity(intent);
                 } catch (Exception e) {
-                    Logger.log(e);
+                  Logger.log(e);
                 }
-              } else if (mItems
+              } else if (items
                   .get(i)
                   .getTitle()
                   .equalsIgnoreCase(view.getResources().getString(R.string.leave_study))) {
 
                 String message = ((SurveyResourcesFragment) fragment).getLeaveStudyMessage();
                 AlertDialog.Builder builder =
-                    new AlertDialog.Builder(mContext, R.style.MyAlertDialogStyle);
-                builder.setTitle(mContext.getResources().getString(R.string.leave_study) + "?");
+                    new AlertDialog.Builder(context, R.style.MyAlertDialogStyle);
+                builder.setTitle(context.getResources().getString(R.string.leave_study) + "?");
                 builder.setMessage(message);
                 builder.setPositiveButton(
-                    mContext.getResources().getString(R.string.proceed_caps),
+                    context.getResources().getString(R.string.proceed_caps),
                     new DialogInterface.OnClickListener() {
                       @Override
                       public void onClick(DialogInterface dialog, int which) {
@@ -143,7 +145,7 @@ public class ResourcesListAdapter extends RecyclerView.Adapter<ResourcesListAdap
                     });
 
                 builder.setNegativeButton(
-                    mContext.getResources().getString(R.string.cancel_caps),
+                    context.getResources().getString(R.string.cancel_caps),
                     new DialogInterface.OnClickListener() {
                       @Override
                       public void onClick(DialogInterface dialog, int which) {
@@ -156,7 +158,7 @@ public class ResourcesListAdapter extends RecyclerView.Adapter<ResourcesListAdap
             }
           });
     } catch (Exception e) {
-        Logger.log(e);
+      Logger.log(e);
     }
   }
 
@@ -176,19 +178,19 @@ public class ResourcesListAdapter extends RecyclerView.Adapter<ResourcesListAdap
           break;
       }
     } catch (Exception e) {
-        Logger.log(e);
+      Logger.log(e);
     }
   }
 
   private void showDialog(int count) {
-    AlertDialog.Builder builder = new AlertDialog.Builder(mContext, R.style.MyAlertDialogStyle);
+    AlertDialog.Builder builder = new AlertDialog.Builder(context, R.style.MyAlertDialogStyle);
     // withdrawalType ask_user
     if (count == 3) {
       builder.setMessage(
-          mContext.getResources().getString(R.string.leave_study_retained_or_deleted_message));
+          context.getResources().getString(R.string.leave_study_retained_or_deleted_message));
 
       builder.setPositiveButton(
-          mContext.getResources().getString(R.string.retain_my_data_caps),
+          context.getResources().getString(R.string.retain_my_data_caps),
           new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
@@ -197,7 +199,7 @@ public class ResourcesListAdapter extends RecyclerView.Adapter<ResourcesListAdap
           });
 
       builder.setNeutralButton(
-          mContext.getResources().getString(R.string.cancel_caps),
+          context.getResources().getString(R.string.cancel_caps),
           new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
@@ -206,7 +208,7 @@ public class ResourcesListAdapter extends RecyclerView.Adapter<ResourcesListAdap
           });
 
       builder.setNegativeButton(
-          mContext.getResources().getString(R.string.delete_my_data_caps),
+          context.getResources().getString(R.string.delete_my_data_caps),
           new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
@@ -219,9 +221,9 @@ public class ResourcesListAdapter extends RecyclerView.Adapter<ResourcesListAdap
       diag.show();
     } else if (count == 2) {
       // withdrawalType delete_data
-      builder.setMessage(mContext.getResources().getString(R.string.leave_study_deleted_message));
+      builder.setMessage(context.getResources().getString(R.string.leave_study_deleted_message));
       builder.setPositiveButton(
-          mContext.getResources().getString(R.string.ok),
+          context.getResources().getString(R.string.ok),
           new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
@@ -230,7 +232,7 @@ public class ResourcesListAdapter extends RecyclerView.Adapter<ResourcesListAdap
           });
 
       builder.setNegativeButton(
-          mContext.getResources().getString(R.string.cancel_caps),
+          context.getResources().getString(R.string.cancel_caps),
           new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
@@ -241,9 +243,9 @@ public class ResourcesListAdapter extends RecyclerView.Adapter<ResourcesListAdap
       diag.show();
     } else if (count == 1) {
       // withdrawalType no_action
-      builder.setMessage(mContext.getResources().getString(R.string.leave_study_retained_message));
+      builder.setMessage(context.getResources().getString(R.string.leave_study_retained_message));
       builder.setPositiveButton(
-          mContext.getResources().getString(R.string.ok),
+          context.getResources().getString(R.string.ok),
           new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
@@ -252,7 +254,7 @@ public class ResourcesListAdapter extends RecyclerView.Adapter<ResourcesListAdap
           });
 
       builder.setNegativeButton(
-          mContext.getResources().getString(R.string.cancel_caps),
+          context.getResources().getString(R.string.cancel_caps),
           new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {

@@ -40,7 +40,7 @@ public class ChooseTouchIDSignInActivity extends AppCompatActivity {
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_choose_touchid_sign_in);
-    initializeXMLId();
+    initializeXmlId();
     setTextForView();
     customTextView(mSignInLabel);
     setFont();
@@ -49,7 +49,7 @@ public class ChooseTouchIDSignInActivity extends AppCompatActivity {
     startActivity(intent);
   }
 
-  private void initializeXMLId() {
+  private void initializeXmlId() {
     mBackBtn = (RelativeLayout) findViewById(R.id.backBtn);
     mTitle = (AppCompatTextView) findViewById(R.id.title);
     mCancelBtn = (RelativeLayout) findViewById(R.id.cancelBtn);

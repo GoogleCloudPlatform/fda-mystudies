@@ -51,13 +51,13 @@ public class ForgotPasswordActivity extends AppCompatActivity
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_forgot_password);
-    initializeXMLId();
+    initializeXmlId();
     setTextForView();
     setFont();
     bindEvents();
   }
 
-  private void initializeXMLId() {
+  private void initializeXmlId() {
     mBackBtn = (RelativeLayout) findViewById(R.id.backBtn);
     mTitle = (AppCompatTextView) findViewById(R.id.title);
     mCancelBtn = (RelativeLayout) findViewById(R.id.cancelBtn);

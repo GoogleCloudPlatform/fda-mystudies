@@ -39,47 +39,46 @@ public class EligibilityEnrollmentActivity extends AppCompatActivity
     implements ApiCall.OnAsyncRequestComplete {
 
   private static final int VERIFY_ENROLLMENT_ID = 101;
-
-  private RelativeLayout mBackBtn;
-  private RelativeLayout mCancelBtn;
-  private AppCompatTextView mTitle;
-  private TextView mEnrollmentdesc;
-  private EditText mEnrollmentID;
-  private TextView mSubmit;
-  private String mEnteredId;
+  private RelativeLayout backBtn;
+  private RelativeLayout cancelBtn;
+  private AppCompatTextView title;
+  private TextView enrollmentdesc;
+  private EditText enrollmentID;
+  private TextView submit;
+  private String enteredId;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_eligibility_enrollment);
-    initializeXMLId();
+    initializeXmlId();
     setTextForView();
     setFont();
     bindEvents();
-    mEnrollmentdesc.setText(getIntent().getStringExtra("enrollmentDesc"));
+    enrollmentdesc.setText(getIntent().getStringExtra("enrollmentDesc"));
   }
 
-  private void initializeXMLId() {
-    mBackBtn = (RelativeLayout) findViewById(R.id.backBtn);
-    mTitle = (AppCompatTextView) findViewById(R.id.title);
-    mCancelBtn = (RelativeLayout) findViewById(R.id.cancelBtn);
-    mEnrollmentdesc = (TextView) findViewById(R.id.enrollmentdesc);
-    mEnrollmentID = (EditText) findViewById(R.id.enrollmentidtxt);
-    mSubmit = (TextView) findViewById(R.id.submitbutton);
+  private void initializeXmlId() {
+    backBtn = (RelativeLayout) findViewById(R.id.backBtn);
+    title = (AppCompatTextView) findViewById(R.id.title);
+    cancelBtn = (RelativeLayout) findViewById(R.id.cancelBtn);
+    enrollmentdesc = (TextView) findViewById(R.id.enrollmentdesc);
+    enrollmentID = (EditText) findViewById(R.id.enrollmentidtxt);
+    submit = (TextView) findViewById(R.id.submitbutton);
   }
 
   private void setTextForView() {
-    mTitle.setText(getResources().getString(R.string.eligibility));
-    mCancelBtn.setVisibility(View.GONE);
-    mEnrollmentID.setText("");
+    title.setText(getResources().getString(R.string.eligibility));
+    cancelBtn.setVisibility(View.GONE);
+    enrollmentID.setText("");
   }
 
   private void setFont() {
     try {
-      mTitle.setTypeface(AppController.getTypeface(EligibilityEnrollmentActivity.this, "medium"));
-      mEnrollmentdesc.setTypeface(
+      title.setTypeface(AppController.getTypeface(EligibilityEnrollmentActivity.this, "medium"));
+      enrollmentdesc.setTypeface(
           AppController.getTypeface(EligibilityEnrollmentActivity.this, "regular"));
-      mEnrollmentID.setTypeface(
+      enrollmentID.setTypeface(
           AppController.getTypeface(EligibilityEnrollmentActivity.this, "regular"));
     } catch (Exception e) {
       Logger.log(e);
@@ -93,18 +92,18 @@ public class EligibilityEnrollmentActivity extends AppCompatActivity
   }
 
   private void bindEvents() {
-    mBackBtn.setOnClickListener(
+    backBtn.setOnClickListener(
         new View.OnClickListener() {
           @Override
           public void onClick(View v) {
             finish();
           }
         });
-    mSubmit.setOnClickListener(
+    submit.setOnClickListener(
         new View.OnClickListener() {
           @Override
           public void onClick(View v) {
-            if (!mEnrollmentID.getText().toString().equalsIgnoreCase("")) {
+            if (!enrollmentID.getText().toString().equalsIgnoreCase("")) {
               callValidateEnrollmentId();
             } else {
               Toast.makeText(
@@ -121,11 +120,9 @@ public class EligibilityEnrollmentActivity extends AppCompatActivity
     AppController.getHelperProgressDialog()
         .showProgress(EligibilityEnrollmentActivity.this, "", "", false);
 
-    VerifyEnrollmentIdEvent verifyEnrollmentIdEvent = new VerifyEnrollmentIdEvent();
-
     HashMap<String, String> params = new HashMap<>();
     params.put("studyId", "" + getIntent().getStringExtra("studyId"));
-    params.put("token", mEnrollmentID.getText().toString());
+    params.put("token", enrollmentID.getText().toString());
 
     HashMap<String, String> header = new HashMap<>();
     header.put(
@@ -153,7 +150,7 @@ public class EligibilityEnrollmentActivity extends AppCompatActivity
             null,
             false,
             EligibilityEnrollmentActivity.this);
-
+    VerifyEnrollmentIdEvent verifyEnrollmentIdEvent = new VerifyEnrollmentIdEvent();
     verifyEnrollmentIdEvent.setRegistrationServerEnrollmentConfigEvent(
         registrationServerEnrollmentConfigEvent);
     StudyModulePresenter studyModulePresenter = new StudyModulePresenter();
@@ -166,7 +163,7 @@ public class EligibilityEnrollmentActivity extends AppCompatActivity
     if (requestCode == 12345) {
       if (resultCode == RESULT_OK) {
         Intent intent = new Intent();
-        intent.putExtra("enrollId", "" + mEnteredId);
+        intent.putExtra("enrollId", "" + enteredId);
         setResult(RESULT_OK, intent);
         finish();
       }
@@ -181,16 +178,16 @@ public class EligibilityEnrollmentActivity extends AppCompatActivity
       if (enrollData != null) {
 
         Intent intent = new Intent(this, EnrollmentValidatedActivity.class);
-        intent.putExtra("enrollId", mEnrollmentID.getText().toString());
+        intent.putExtra("enrollId", enrollmentID.getText().toString());
         intent.putExtra("studyId", getIntent().getStringExtra("studyId"));
         intent.putExtra("title", getIntent().getStringExtra("title"));
         intent.putExtra("eligibility", getIntent().getStringExtra("eligibility"));
         intent.putExtra("type", getIntent().getStringExtra("type"));
-        mEnteredId = mEnrollmentID.getText().toString();
-        mEnrollmentID.setText("");
+        enteredId = enrollmentID.getText().toString();
+        enrollmentID.setText("");
         if (getIntent().getStringExtra("eligibility").equalsIgnoreCase("combined")) {
           Intent intent1 = new Intent();
-          intent1.putExtra("enrollId", "" + mEnteredId);
+          intent1.putExtra("enrollId", "" + enteredId);
           setResult(RESULT_OK, intent1);
           finish();
         } else {

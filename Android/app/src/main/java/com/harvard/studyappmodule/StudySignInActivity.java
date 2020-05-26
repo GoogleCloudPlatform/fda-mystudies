@@ -31,17 +31,17 @@ import java.util.ArrayList;
 
 public class StudySignInActivity extends AppCompatActivity {
 
-  private RecyclerView mStudyRecyclerView;
-  private AppCompatTextView mFDAListenTitle;
-  private RelativeLayout mFilterBtn;
-  private RelativeLayout mResourceBtn;
-  private AppCompatTextView mSignInButton;
+  private RecyclerView studyRecyclerView;
+  private AppCompatTextView fdaListenTitle;
+  private RelativeLayout filterBtn;
+  private RelativeLayout resourceBtn;
+  private AppCompatTextView signInButton;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_sign_in_study);
-    initializeXMLId();
+    initializeXmlId();
     setTextForView();
     setFont();
     bindEvents();
@@ -50,30 +50,30 @@ public class StudySignInActivity extends AppCompatActivity {
     startActivity(intent);
   }
 
-  private void initializeXMLId() {
+  private void initializeXmlId() {
 
-    mFDAListenTitle = (AppCompatTextView) findViewById(R.id.fda_listen);
-    mFilterBtn = (RelativeLayout) findViewById(R.id.filterBtn);
-    mResourceBtn = (RelativeLayout) findViewById(R.id.resourceBtn);
-    mStudyRecyclerView = (RecyclerView) findViewById(R.id.studyRecyclerView);
-    mSignInButton = (AppCompatTextView) findViewById(R.id.signInButton);
+    fdaListenTitle = (AppCompatTextView) findViewById(R.id.fda_listen);
+    filterBtn = (RelativeLayout) findViewById(R.id.filterBtn);
+    resourceBtn = (RelativeLayout) findViewById(R.id.resourceBtn);
+    studyRecyclerView = (RecyclerView) findViewById(R.id.studyRecyclerView);
+    signInButton = (AppCompatTextView) findViewById(R.id.signInButton);
   }
 
   private void setTextForView() {
-    mFDAListenTitle.setText(getResources().getString(R.string.app_name));
+    fdaListenTitle.setText(getResources().getString(R.string.app_name));
   }
 
   private void setFont() {
     try {
-      mFDAListenTitle.setTypeface(AppController.getTypeface(StudySignInActivity.this, "bold"));
-      mSignInButton.setTypeface(AppController.getTypeface(StudySignInActivity.this, "regular"));
+      fdaListenTitle.setTypeface(AppController.getTypeface(StudySignInActivity.this, "bold"));
+      signInButton.setTypeface(AppController.getTypeface(StudySignInActivity.this, "regular"));
     } catch (Exception e) {
       Logger.log(e);
     }
   }
 
   private void bindEvents() {
-    mFilterBtn.setOnClickListener(
+    filterBtn.setOnClickListener(
         new View.OnClickListener() {
           @Override
           public void onClick(View view) {
@@ -84,7 +84,7 @@ public class StudySignInActivity extends AppCompatActivity {
                 .show();
           }
         });
-    mResourceBtn.setOnClickListener(
+    resourceBtn.setOnClickListener(
         new View.OnClickListener() {
           @Override
           public void onClick(View view) {
@@ -95,7 +95,7 @@ public class StudySignInActivity extends AppCompatActivity {
                 .show();
           }
         });
-    mSignInButton.setOnClickListener(
+    signInButton.setOnClickListener(
         new View.OnClickListener() {
           @Override
           public void onClick(View view) {
@@ -109,15 +109,15 @@ public class StudySignInActivity extends AppCompatActivity {
   }
 
   private void setRecyclerView() {
-    mStudyRecyclerView.setLayoutManager(new LinearLayoutManager(StudySignInActivity.this));
-    mStudyRecyclerView.setNestedScrollingEnabled(false);
-    ArrayList<String> mVideoList = new ArrayList<>();
-    mVideoList.add("abc");
-    mVideoList.add("abc");
-    mVideoList.add("abc");
-    mVideoList.add("abc");
+    studyRecyclerView.setLayoutManager(new LinearLayoutManager(StudySignInActivity.this));
+    studyRecyclerView.setNestedScrollingEnabled(false);
+    ArrayList<String> videoList = new ArrayList<>();
+    videoList.add("abc");
+    videoList.add("abc");
+    videoList.add("abc");
+    videoList.add("abc");
     StudySignInListAdapter studyVideoAdapter =
-        new StudySignInListAdapter(StudySignInActivity.this, mVideoList);
-    mStudyRecyclerView.setAdapter(studyVideoAdapter);
+        new StudySignInListAdapter(StudySignInActivity.this, videoList);
+    studyRecyclerView.setAdapter(studyVideoAdapter);
   }
 }

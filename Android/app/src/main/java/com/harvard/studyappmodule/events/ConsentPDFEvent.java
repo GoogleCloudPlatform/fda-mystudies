@@ -25,7 +25,7 @@ public class ConsentPDFEvent {
   }
 
   public void setRegistrationServerConsentConfigEvent(
-      RegistrationServerConsentConfigEvent mRegistrationServerConsentConfigEvent) {
-    this.registrationServerConsentConfigEvent = mRegistrationServerConsentConfigEvent;
+      RegistrationServerConsentConfigEvent registrationServerConsentConfigEvent) {
+    this.registrationServerConsentConfigEvent = registrationServerConsentConfigEvent;
   }
 }

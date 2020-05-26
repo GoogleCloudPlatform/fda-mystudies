@@ -36,61 +36,61 @@ import java.util.HashMap;
 
 public class ContactUsActivity extends AppCompatActivity implements ApiCall.OnAsyncRequestComplete {
 
-  private RelativeLayout mBackBtn;
-  private AppCompatTextView mTitle;
-  private AppCompatTextView mFirstNameText;
-  private AppCompatTextView mEmailText;
-  private AppCompatTextView mSubjectText;
-  private AppCompatTextView mMessageText;
-  private AppCompatEditText mEmail;
-  private AppCompatEditText mSubject;
-  private AppCompatEditText mMessage;
-  private AppCompatEditText mFirstName;
-  private final int CONTACT_US = 15;
-  private AppCompatTextView mSubmitButton;
+  private RelativeLayout backBtn;
+  private AppCompatTextView title;
+  private AppCompatTextView firstNameText;
+  private AppCompatTextView emailText;
+  private AppCompatTextView subjectText;
+  private AppCompatTextView messageText;
+  private AppCompatEditText email;
+  private AppCompatEditText subject;
+  private AppCompatEditText message;
+  private AppCompatEditText firstName;
+  private static final int CONTACT_US = 15;
+  private AppCompatTextView submitButton;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_contact_us);
-    initializeXMLId();
+    initializeXmlId();
     setFont();
     bindEvents();
-    mEmail.setText(
+    email.setText(
         ""
             + AppController.getHelperSharedPreference()
                 .readPreference(this, getString(R.string.email), ""));
   }
 
-  private void initializeXMLId() {
-    mBackBtn = (RelativeLayout) findViewById(R.id.backBtn);
+  private void initializeXmlId() {
+    backBtn = (RelativeLayout) findViewById(R.id.backBtn);
 
-    mTitle = (AppCompatTextView) findViewById(R.id.title);
-    mFirstNameText = (AppCompatTextView) findViewById(R.id.firstName);
-    mEmailText = (AppCompatTextView) findViewById(R.id.email_label);
-    mSubjectText = (AppCompatTextView) findViewById(R.id.subject_label);
-    mMessageText = (AppCompatTextView) findViewById(R.id.message_label);
+    title = (AppCompatTextView) findViewById(R.id.title);
+    firstNameText = (AppCompatTextView) findViewById(R.id.firstName);
+    emailText = (AppCompatTextView) findViewById(R.id.email_label);
+    subjectText = (AppCompatTextView) findViewById(R.id.subject_label);
+    messageText = (AppCompatTextView) findViewById(R.id.message_label);
 
-    mFirstName = (AppCompatEditText) findViewById(R.id.edittxt_firstName);
-    mEmail = (AppCompatEditText) findViewById(R.id.edittxt_email);
-    mSubject = (AppCompatEditText) findViewById(R.id.edittxt_subject);
-    mMessage = (AppCompatEditText) findViewById(R.id.edittxt_message);
+    firstName = (AppCompatEditText) findViewById(R.id.edittxt_firstName);
+    email = (AppCompatEditText) findViewById(R.id.edittxt_email);
+    subject = (AppCompatEditText) findViewById(R.id.edittxt_subject);
+    message = (AppCompatEditText) findViewById(R.id.edittxt_message);
 
-    mSubmitButton = (AppCompatTextView) findViewById(R.id.submitButton);
+    submitButton = (AppCompatTextView) findViewById(R.id.submitButton);
   }
 
   private void setFont() {
     try {
-      mTitle.setTypeface(AppController.getTypeface(ContactUsActivity.this, "medium"));
-      mFirstNameText.setTypeface(AppController.getTypeface(ContactUsActivity.this, "regular"));
-      mEmailText.setTypeface(AppController.getTypeface(ContactUsActivity.this, "regular"));
-      mSubjectText.setTypeface(AppController.getTypeface(ContactUsActivity.this, "regular"));
-      mMessageText.setTypeface(AppController.getTypeface(ContactUsActivity.this, "regular"));
+      title.setTypeface(AppController.getTypeface(ContactUsActivity.this, "medium"));
+      firstNameText.setTypeface(AppController.getTypeface(ContactUsActivity.this, "regular"));
+      emailText.setTypeface(AppController.getTypeface(ContactUsActivity.this, "regular"));
+      subjectText.setTypeface(AppController.getTypeface(ContactUsActivity.this, "regular"));
+      messageText.setTypeface(AppController.getTypeface(ContactUsActivity.this, "regular"));
 
-      mFirstName.setTypeface(AppController.getTypeface(ContactUsActivity.this, "regular"));
-      mEmail.setTypeface(AppController.getTypeface(ContactUsActivity.this, "regular"));
-      mSubject.setTypeface(AppController.getTypeface(ContactUsActivity.this, "regular"));
-      mMessage.setTypeface(AppController.getTypeface(ContactUsActivity.this, "regular"));
+      firstName.setTypeface(AppController.getTypeface(ContactUsActivity.this, "regular"));
+      email.setTypeface(AppController.getTypeface(ContactUsActivity.this, "regular"));
+      subject.setTypeface(AppController.getTypeface(ContactUsActivity.this, "regular"));
+      message.setTypeface(AppController.getTypeface(ContactUsActivity.this, "regular"));
 
     } catch (Exception e) {
       Logger.log(e);
@@ -98,7 +98,7 @@ public class ContactUsActivity extends AppCompatActivity implements ApiCall.OnAs
   }
 
   private void bindEvents() {
-    mBackBtn.setOnClickListener(
+    backBtn.setOnClickListener(
         new View.OnClickListener() {
           @Override
           public void onClick(View v) {
@@ -112,44 +112,44 @@ public class ContactUsActivity extends AppCompatActivity implements ApiCall.OnAs
             finish();
           }
         });
-    mSubmitButton.setOnClickListener(
+    submitButton.setOnClickListener(
         new View.OnClickListener() {
           @Override
           public void onClick(View v) {
-            if (mFirstName.getText().toString().equalsIgnoreCase("")
-                && mEmail.getText().toString().equalsIgnoreCase("")
-                && mSubject.getText().toString().equalsIgnoreCase("")
-                && mMessage.getText().toString().equalsIgnoreCase("")) {
+            if (firstName.getText().toString().equalsIgnoreCase("")
+                && email.getText().toString().equalsIgnoreCase("")
+                && subject.getText().toString().equalsIgnoreCase("")
+                && message.getText().toString().equalsIgnoreCase("")) {
               Toast.makeText(
                       ContactUsActivity.this,
                       getResources().getString(R.string.enter_all_field_empty),
                       Toast.LENGTH_SHORT)
                   .show();
-            } else if (mFirstName.getText().toString().equalsIgnoreCase("")) {
+            } else if (firstName.getText().toString().equalsIgnoreCase("")) {
               Toast.makeText(
                       ContactUsActivity.this,
                       getResources().getString(R.string.first_name_empty),
                       Toast.LENGTH_SHORT)
                   .show();
-            } else if (mEmail.getText().toString().equalsIgnoreCase("")) {
+            } else if (email.getText().toString().equalsIgnoreCase("")) {
               Toast.makeText(
                       ContactUsActivity.this,
                       getResources().getString(R.string.email_empty),
                       Toast.LENGTH_SHORT)
                   .show();
-            } else if (!AppController.getHelperIsValidEmail(mEmail.getText().toString())) {
+            } else if (!AppController.getHelperIsValidEmail(email.getText().toString())) {
               Toast.makeText(
                       ContactUsActivity.this,
                       getResources().getString(R.string.email_validation),
                       Toast.LENGTH_SHORT)
                   .show();
-            } else if (mSubject.getText().toString().equalsIgnoreCase("")) {
+            } else if (subject.getText().toString().equalsIgnoreCase("")) {
               Toast.makeText(
                       ContactUsActivity.this,
                       getResources().getString(R.string.subject_empty),
                       Toast.LENGTH_SHORT)
                   .show();
-            } else if (mMessage.getText().toString().equalsIgnoreCase("")) {
+            } else if (message.getText().toString().equalsIgnoreCase("")) {
               Toast.makeText(
                       ContactUsActivity.this,
                       getResources().getString(R.string.message_empty),
@@ -164,12 +164,12 @@ public class ContactUsActivity extends AppCompatActivity implements ApiCall.OnAs
 
   private void callContactUsWebservice() {
     AppController.getHelperProgressDialog().showProgress(ContactUsActivity.this, "", "", false);
-    ContactUsEvent contactUsEvent = new ContactUsEvent();
+
     HashMap<String, String> params = new HashMap<>();
-    params.put("subject", mSubject.getText().toString());
-    params.put("body", mMessage.getText().toString());
-    params.put("firstName", mFirstName.getText().toString());
-    params.put("email", mEmail.getText().toString());
+    params.put("subject", subject.getText().toString());
+    params.put("body", message.getText().toString());
+    params.put("firstName", firstName.getText().toString());
+    params.put("email", email.getText().toString());
     RegistrationServerConfigEvent registrationServerConfigEvent =
         new RegistrationServerConfigEvent(
             "post",
@@ -182,7 +182,7 @@ public class ContactUsActivity extends AppCompatActivity implements ApiCall.OnAs
             null,
             false,
             this);
-
+    ContactUsEvent contactUsEvent = new ContactUsEvent();
     contactUsEvent.setRegistrationServerConfigEvent(registrationServerConfigEvent);
     StudyModulePresenter studyModulePresenter = new StudyModulePresenter();
     studyModulePresenter.performContactUsEvent(contactUsEvent);

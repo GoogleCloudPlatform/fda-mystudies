@@ -34,7 +34,9 @@ public class PDFWriter {
 
   PDFWriter(String pdfOutputDirectory, String pdfFileName) {
     this.pdfOutputDirectory = pdfOutputDirectory;
-    if (!this.pdfOutputDirectory.endsWith("/")) this.pdfOutputDirectory += "/";
+    if (!this.pdfOutputDirectory.endsWith("/")) {
+      this.pdfOutputDirectory += "/";
+    }
     if (!pdfFileName.endsWith(".pdf")) {
       pdfFileName = pdfFileName + ".pdf";
     }
@@ -69,17 +71,17 @@ public class PDFWriter {
     float width = mediabox.getWidth() - 2 * margin;
     float startX = mediabox.getLowerLeftX() + margin;
     float startY = mediabox.getUpperRightY() - margin;
-    float yOffset = startY;
+    float offsetY = startY;
 
     try {
       contents = new PDPageContentStream(doc, page);
       contents.beginText();
       contents.setFont(font, fontSize);
       contents.newLineAtOffset(startX, startY);
-      yOffset -= leading;
+      offsetY -= leading;
       contents.showText(pageHeader);
       contents.newLineAtOffset(0, -leading);
-      yOffset -= leading;
+      offsetY -= leading;
 
       List<String> lines = new ArrayList<>();
       parseIndividualLines(pageText, lines, fontSize, font, width);
@@ -87,12 +89,14 @@ public class PDFWriter {
       for (String line : lines) {
         contents.showText(line);
         contents.newLineAtOffset(0, -leading);
-        yOffset -= leading;
+        offsetY -= leading;
 
-        if (yOffset <= 0) {
+        if (offsetY <= 0) {
           contents.endText();
           try {
-            if (contents != null) contents.close();
+            if (contents != null) {
+              contents.close();
+            }
           } catch (IOException e) {
             ok = false;
             Logger.log(e);
@@ -102,7 +106,7 @@ public class PDFWriter {
           contents = new PDPageContentStream(doc, page);
           contents.beginText();
           contents.setFont(font, fontSize);
-          yOffset = startY;
+          offsetY = startY;
           contents.newLineAtOffset(startX, startY);
         }
       }
@@ -113,10 +117,12 @@ public class PDFWriter {
       pdImage.setWidth(200);
       pdImage.setHeight(100);
       scale = 1;
-      yOffset -= (pdImage.getHeight() * scale);
-      if (yOffset <= 0) {
+      offsetY -= (pdImage.getHeight() * scale);
+      if (offsetY <= 0) {
         try {
-          if (contents != null) contents.close();
+          if (contents != null) {
+            contents.close();
+          }
         } catch (IOException e) {
           ok = false;
           Logger.log(e);
@@ -124,16 +130,18 @@ public class PDFWriter {
         page = new PDPage();
         doc.addPage(page);
         contents = new PDPageContentStream(doc, page);
-        yOffset = startY - (pdImage.getHeight() * scale);
+        offsetY = startY - (pdImage.getHeight() * scale);
       }
-      contents.drawImage(pdImage, startX, yOffset);
+      contents.drawImage(pdImage, startX, offsetY);
       ok = true;
     } catch (IOException e) {
       Logger.log(e);
       ok = false;
     } finally {
       try {
-        if (contents != null) contents.close();
+        if (contents != null) {
+          contents.close();
+        }
       } catch (IOException e) {
         ok = false;
         Logger.log(e);
@@ -162,7 +170,7 @@ public class PDFWriter {
     for (int i = 0; i < paragraphs.length; i++) {
       int lastSpace = -1;
       lines.add(" ");
-      if (paragraphs[i] != null)
+      if (paragraphs[i] != null) {
         while (paragraphs[i].length() > 0) {
           paragraphs[i] = sanitizeCharacter(paragraphs[i]).toString();
           int spaceIndex = paragraphs[i].indexOf(' ', lastSpace + 1);
@@ -191,6 +199,7 @@ public class PDFWriter {
             lastSpace = spaceIndex;
           }
         }
+      }
     }
   }
 

@@ -22,8 +22,8 @@ import org.researchstack.backbone.step.QuestionStep;
 public class ChoiceAnswerFormatCustom extends AnswerFormatCustom {
   private CustomAnswerStyle answerStyle;
   private Choice[] choices;
-  private QuestionStep mQuestionStep;
-  private ArrayList<QuestionStep> mQuestionSteps;
+  private QuestionStep questionStep;
+  private ArrayList<QuestionStep> questionSteps;
   private boolean repeatable;
   private String repeattxt;
 
@@ -38,7 +38,7 @@ public class ChoiceAnswerFormatCustom extends AnswerFormatCustom {
       CustomAnswerStyle answerStyle, QuestionStep questionStep, Choice... choices) {
     this.answerStyle = answerStyle;
     this.choices = choices.clone();
-    mQuestionStep = questionStep;
+    this.questionStep = questionStep;
   }
 
   public ChoiceAnswerFormatCustom() {}
@@ -52,8 +52,8 @@ public class ChoiceAnswerFormatCustom extends AnswerFormatCustom {
     this.answerStyle = form;
     this.repeatable = repeatable;
     this.repeattxt = repeattxt;
-    mQuestionStep = questionStep;
-    mQuestionSteps = questionSteps;
+    this.questionStep = questionStep;
+    this.questionSteps = questionSteps;
   }
 
   /**
@@ -64,25 +64,45 @@ public class ChoiceAnswerFormatCustom extends AnswerFormatCustom {
    */
   @Override
   public QuestionType getQuestionType() {
-    if (answerStyle == CustomAnswerStyle.MultipleImageChoice) return Type.MultipleImageChoice;
-    else if (answerStyle == CustomAnswerStyle.MultipleTextChoice) return Type.MultipleTextChoice;
-    else if (answerStyle == CustomAnswerStyle.SingleTextChoice) return Type.SingleTextChoice;
-    else if (answerStyle == CustomAnswerStyle.Audio) return Type.Audio;
-    else if (answerStyle == CustomAnswerStyle.Tapping) return Type.Tapping;
-    else if (answerStyle == CustomAnswerStyle.stepcount) return Type.stepcount;
-    else if (answerStyle == CustomAnswerStyle.valuePicker) return Type.valuePicker;
-    else if (answerStyle == CustomAnswerStyle.Scale) return Type.Scale;
-    else if (answerStyle == CustomAnswerStyle.TimeofDay) return Type.TimeOfDay;
-    else if (answerStyle == CustomAnswerStyle.Location) return Type.Location;
-    else if (answerStyle == CustomAnswerStyle.Form) return Type.Form;
-    else if (answerStyle == CustomAnswerStyle.ContinousScale) return Type.ContinousScale;
-    else if (answerStyle == CustomAnswerStyle.TimeInterval) return Type.TimeInterval;
-    else if (answerStyle == CustomAnswerStyle.Height) return Type.Height;
-    else if (answerStyle == CustomAnswerStyle.TextRegex) return Type.TextRegex;
-    else if (answerStyle == CustomAnswerStyle.TaskIntroStep) return Type.TaskIntroStep;
-    else if (answerStyle == CustomAnswerStyle.TaskinstructionStep) return Type.TaskinstructionStep;
-    else if (answerStyle == CustomAnswerStyle.Integer) return Type.Integer;
-    else if (answerStyle == CustomAnswerStyle.Decimal) return Type.Decimal;
+    if (answerStyle == CustomAnswerStyle.MultipleImageChoice) {
+      return Type.MultipleImageChoice;
+    } else if (answerStyle == CustomAnswerStyle.MultipleTextChoice) {
+      return Type.MultipleTextChoice;
+    } else if (answerStyle == CustomAnswerStyle.SingleTextChoice) {
+      return Type.SingleTextChoice;
+    } else if (answerStyle == CustomAnswerStyle.Audio) {
+      return Type.Audio;
+    } else if (answerStyle == CustomAnswerStyle.Tapping) {
+      return Type.Tapping;
+    } else if (answerStyle == CustomAnswerStyle.stepcount) {
+      return Type.stepcount;
+    } else if (answerStyle == CustomAnswerStyle.valuePicker) {
+      return Type.valuePicker;
+    } else if (answerStyle == CustomAnswerStyle.Scale) {
+      return Type.Scale;
+    } else if (answerStyle == CustomAnswerStyle.TimeofDay) {
+      return Type.TimeOfDay;
+    } else if (answerStyle == CustomAnswerStyle.Location) {
+      return Type.Location;
+    } else if (answerStyle == CustomAnswerStyle.Form) {
+      return Type.Form;
+    } else if (answerStyle == CustomAnswerStyle.ContinousScale) {
+      return Type.ContinousScale;
+    } else if (answerStyle == CustomAnswerStyle.TimeInterval) {
+      return Type.TimeInterval;
+    } else if (answerStyle == CustomAnswerStyle.Height) {
+      return Type.Height;
+    } else if (answerStyle == CustomAnswerStyle.TextRegex) {
+      return Type.TextRegex;
+    } else if (answerStyle == CustomAnswerStyle.TaskIntroStep) {
+      return Type.TaskIntroStep;
+    } else if (answerStyle == CustomAnswerStyle.TaskinstructionStep) {
+      return Type.TaskinstructionStep;
+    } else if (answerStyle == CustomAnswerStyle.Integer) {
+      return Type.Integer;
+    } else if (answerStyle == CustomAnswerStyle.Decimal) {
+      return Type.Decimal;
+    }
     return Type.None;
   }
 
@@ -96,15 +116,15 @@ public class ChoiceAnswerFormatCustom extends AnswerFormatCustom {
   }
 
   public QuestionStep getquestiontype() {
-    return mQuestionStep;
+    return questionStep;
   }
 
   public ArrayList<QuestionStep> getformquestions() {
-    return mQuestionSteps;
+    return questionSteps;
   }
 
   public void savetempformlist(ArrayList<QuestionStep> questionSteps) {
-    mQuestionSteps = questionSteps;
+    questionSteps = questionSteps;
   }
 
   public boolean isRepeatable() {

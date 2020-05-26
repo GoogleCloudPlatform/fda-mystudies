@@ -49,11 +49,11 @@ import java.util.HashMap;
 public class NotificationActivity extends AppCompatActivity
     implements ApiCall.OnAsyncRequestComplete {
   private static final int NOTIFICATIONS = 100;
-  private RelativeLayout mBackBtn;
-  private RecyclerView mStudyRecyclerView;
-  private AppCompatTextView mTitle;
+  private RelativeLayout backBtn;
+  private RecyclerView studyRecyclerView;
+  private AppCompatTextView title;
   private DBServiceSubscriber dbServiceSubscriber;
-  private Realm mRealm;
+  private Realm realm;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -61,36 +61,36 @@ public class NotificationActivity extends AppCompatActivity
 
     setContentView(R.layout.activity_notification);
     dbServiceSubscriber = new DBServiceSubscriber();
-    mRealm = AppController.getRealmobj(this);
+    realm = AppController.getRealmobj(this);
     AppController.getHelperSharedPreference()
         .writePreference(this, getString(R.string.notification), "false");
-    initializeXMLId();
+    initializeXmlId();
     setTextForView();
     setFont();
     bindEvent();
     getNotification();
   }
 
-  private void initializeXMLId() {
-    mBackBtn = (RelativeLayout) findViewById(R.id.backBtn);
-    mTitle = (AppCompatTextView) findViewById(R.id.title);
-    mStudyRecyclerView = (RecyclerView) findViewById(R.id.studyRecyclerView);
+  private void initializeXmlId() {
+    backBtn = (RelativeLayout) findViewById(R.id.backBtn);
+    title = (AppCompatTextView) findViewById(R.id.title);
+    studyRecyclerView = (RecyclerView) findViewById(R.id.studyRecyclerView);
   }
 
   private void setTextForView() {
-    mTitle.setText(getResources().getString(R.string.notifictions));
+    title.setText(getResources().getString(R.string.notifictions));
   }
 
   private void setFont() {
     try {
-      mTitle.setTypeface(AppController.getTypeface(this, "bold"));
+      title.setTypeface(AppController.getTypeface(this, "bold"));
     } catch (Exception e) {
       Logger.log(e);
     }
   }
 
   private void bindEvent() {
-    mBackBtn.setOnClickListener(
+    backBtn.setOnClickListener(
         new View.OnClickListener() {
           @Override
           public void onClick(View view) {
@@ -101,11 +101,11 @@ public class NotificationActivity extends AppCompatActivity
 
   private void setRecyclearView(RealmList<Notification> notifications) {
 
-    mStudyRecyclerView.setLayoutManager(new LinearLayoutManager(this));
-    mStudyRecyclerView.setNestedScrollingEnabled(false);
+    studyRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+    studyRecyclerView.setNestedScrollingEnabled(false);
     NotificationListAdapter notificationListAdapter =
-        new NotificationListAdapter(this, notifications, mRealm);
-    mStudyRecyclerView.setAdapter(notificationListAdapter);
+        new NotificationListAdapter(this, notifications, realm);
+    studyRecyclerView.setAdapter(notificationListAdapter);
   }
 
   private void getNotification() {
@@ -135,16 +135,15 @@ public class NotificationActivity extends AppCompatActivity
   public <T> void asyncResponse(T response, int responseCode) {
     AppController.getHelperProgressDialog().dismissDialog();
     if (response != null) {
-      NotificationData notification = (NotificationData) response;
       Calendar calendar = Calendar.getInstance();
       calendar.set(Calendar.MILLISECOND, 0);
       calendar.set(Calendar.SECOND, 0);
       calendar.set(Calendar.MINUTE, 0);
       calendar.set(Calendar.HOUR, 0);
       RealmResults<NotificationDb> notificationsDb =
-          dbServiceSubscriber.getNotificationDbByDate(new Date(), mRealm);
+          dbServiceSubscriber.getNotificationDbByDate(new Date(), realm);
       RealmResults<NotificationDbResources> notificationsDbResources =
-          dbServiceSubscriber.getNotificationDbResourcesByDate(new Date(), mRealm);
+          dbServiceSubscriber.getNotificationDbResourcesByDate(new Date(), realm);
       RealmList<Notification> notifications = new RealmList<>();
       if (notificationsDb != null) {
         for (int i = 0; i < notificationsDb.size(); i++) {
@@ -182,12 +181,13 @@ public class NotificationActivity extends AppCompatActivity
           notifications.add(notification1);
         }
       }
+      NotificationData notification = (NotificationData) response;
       for (int i = 0; i < notification.getNotifications().size(); i++) {
         if (notification.getNotifications().get(i).getType().equalsIgnoreCase("Study")) {
 
-          Study mStudy = dbServiceSubscriber.getStudyListFromDB(mRealm);
-          if (mStudy != null) {
-            RealmList<StudyList> studyListArrayList = mStudy.getStudies();
+          Study study = dbServiceSubscriber.getStudyListFromDB(realm);
+          if (study != null) {
+            RealmList<StudyList> studyListArrayList = study.getStudies();
             for (int j = 0; j < studyListArrayList.size(); j++) {
               if (notification
                   .getNotifications()
@@ -222,7 +222,7 @@ public class NotificationActivity extends AppCompatActivity
             }
           });
       setRecyclearView(notifications);
-      dbServiceSubscriber.saveNotification(notification, mRealm);
+      dbServiceSubscriber.saveNotification(notification, realm);
     } else {
       Toast.makeText(this, R.string.unable_to_parse, Toast.LENGTH_SHORT).show();
     }
@@ -235,16 +235,15 @@ public class NotificationActivity extends AppCompatActivity
       Toast.makeText(NotificationActivity.this, errormsg, Toast.LENGTH_SHORT).show();
       AppController.getHelperSessionExpired(NotificationActivity.this, errormsg);
     } else {
-      NotificationData notification = dbServiceSubscriber.getNotificationFromDB(mRealm);
       Calendar calendar = Calendar.getInstance();
       calendar.set(Calendar.MILLISECOND, 0);
       calendar.set(Calendar.SECOND, 0);
       calendar.set(Calendar.MINUTE, 0);
       calendar.set(Calendar.HOUR, 0);
       RealmResults<NotificationDb> notificationsDb =
-          dbServiceSubscriber.getNotificationDbByDate(new Date(), mRealm);
+          dbServiceSubscriber.getNotificationDbByDate(new Date(), realm);
       RealmResults<NotificationDbResources> notificationsDbResources =
-          dbServiceSubscriber.getNotificationDbResourcesByDate(new Date(), mRealm);
+          dbServiceSubscriber.getNotificationDbResourcesByDate(new Date(), realm);
       RealmList<Notification> notifications = new RealmList<>();
       if (notificationsDb != null) {
         for (int i = 0; i < notificationsDb.size(); i++) {
@@ -282,12 +281,13 @@ public class NotificationActivity extends AppCompatActivity
           notifications.add(notification1);
         }
       }
+      NotificationData notification = dbServiceSubscriber.getNotificationFromDB(realm);
       if (notification != null) {
         for (int i = 0; i < notification.getNotifications().size(); i++) {
           if (notification.getNotifications().get(i).getType().equalsIgnoreCase("Study")) {
-            Study mStudy = dbServiceSubscriber.getStudyListFromDB(mRealm);
-            if (mStudy != null) {
-              RealmList<StudyList> studyListArrayList = mStudy.getStudies();
+            Study study = dbServiceSubscriber.getStudyListFromDB(realm);
+            if (study != null) {
+              RealmList<StudyList> studyListArrayList = study.getStudies();
               for (int j = 0; j < studyListArrayList.size(); j++) {
                 if (notification
                     .getNotifications()
@@ -330,7 +330,7 @@ public class NotificationActivity extends AppCompatActivity
 
   @Override
   protected void onDestroy() {
-    dbServiceSubscriber.closeRealmObj(mRealm);
+    dbServiceSubscriber.closeRealmObj(realm);
     super.onDestroy();
   }
 }

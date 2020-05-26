@@ -47,14 +47,13 @@ import io.realm.RealmResults;
 public class SyncAdapter extends AbstractThreadedSyncAdapter
     implements ApiCall.OnAsyncRequestComplete {
 
-  private Context mContext;
-  private int UPDATE_USERPREFERENCE_RESPONSECODE = 102;
+  private Context context;
+  private static final int UPDATE_USERPREFERENCE_RESPONSECODE = 102;
   private DBServiceSubscriber dbServiceSubscriber;
-  private Realm mRealm;
 
   public SyncAdapter(Context context, boolean autoInitialize) {
     super(context, autoInitialize);
-    this.mContext = context;
+    this.context = context;
     dbServiceSubscriber = new DBServiceSubscriber();
   }
 
@@ -67,18 +66,18 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter
       SyncResult syncResult) {
 
     if (!isMyServiceRunning(ActiveTaskService.class)) {
-      Intent myIntent = new Intent(mContext, ActiveTaskService.class);
+      Intent myIntent = new Intent(context, ActiveTaskService.class);
       myIntent.putExtra("SyncAdapter", "yes");
       if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-        mContext.startForegroundService(myIntent);
+        context.startForegroundService(myIntent);
       } else {
-        mContext.startService(myIntent);
+        context.startService(myIntent);
       }
     }
   }
 
   private boolean isMyServiceRunning(Class<?> serviceClass) {
-    ActivityManager manager = (ActivityManager) mContext.getSystemService(Context.ACTIVITY_SERVICE);
+    ActivityManager manager = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
     for (ActivityManager.RunningServiceInfo service :
         manager.getRunningServices(Integer.MAX_VALUE)) {
       if (serviceClass.getName().equals(service.service.getClassName())) {
@@ -91,8 +90,8 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter
   private void getPendingData() {
     try {
       dbServiceSubscriber = new DBServiceSubscriber();
-
-      RealmResults<OfflineData> results = dbServiceSubscriber.getOfflineData(mRealm);
+      Realm realm = AppController.getRealmobj(context);
+      RealmResults<OfflineData> results = dbServiceSubscriber.getOfflineData(realm);
       if (!results.isEmpty()) {
         for (int i = 0; i < results.size(); i++) {
           String httpMethod = results.get(i).getHttpMethod();
@@ -103,7 +102,7 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter
           break;
         }
       } else {
-        dbServiceSubscriber.closeRealmObj(mRealm);
+        dbServiceSubscriber.closeRealmObj(realm);
       }
     } catch (Exception e) {
       Logger.log(e);
@@ -125,11 +124,11 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter
       header.put(
           "auth",
           AppController.getHelperSharedPreference()
-              .readPreference(mContext, mContext.getResources().getString(R.string.auth), ""));
+              .readPreference(context, context.getResources().getString(R.string.auth), ""));
       header.put(
           "userId",
           AppController.getHelperSharedPreference()
-              .readPreference(mContext, mContext.getResources().getString(R.string.userid), ""));
+              .readPreference(context, context.getResources().getString(R.string.userid), ""));
 
       UpdatePreferenceEvent updatePreferenceEvent = new UpdatePreferenceEvent();
       RegistrationServerEnrollmentConfigEvent registrationServerEnrollmentConfigEvent =
@@ -137,7 +136,7 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter
               httpMethod,
               url,
               UPDATE_USERPREFERENCE_RESPONSECODE,
-              mContext,
+              context,
               LoginData.class,
               null,
               header,
@@ -153,18 +152,18 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter
       header.put(
           "auth",
           AppController.getHelperSharedPreference()
-              .readPreference(mContext, mContext.getResources().getString(R.string.auth), ""));
+              .readPreference(context, context.getResources().getString(R.string.auth), ""));
       header.put(
           "userId",
           AppController.getHelperSharedPreference()
-              .readPreference(mContext, mContext.getResources().getString(R.string.userid), ""));
+              .readPreference(context, context.getResources().getString(R.string.userid), ""));
       ProcessResponseEvent processResponseEvent = new ProcessResponseEvent();
       ResponseServerConfigEvent responseServerConfigEvent =
           new ResponseServerConfigEvent(
               httpMethod,
               url,
               UPDATE_USERPREFERENCE_RESPONSECODE,
-              mContext,
+              context,
               LoginData.class,
               null,
               header,
@@ -181,7 +180,7 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter
   @Override
   public <T> void asyncResponse(T response, int responseCode) {
     if (responseCode == UPDATE_USERPREFERENCE_RESPONSECODE) {
-      dbServiceSubscriber.removeOfflineData(mContext);
+      dbServiceSubscriber.removeOfflineData(context);
       getPendingData();
     }
   }

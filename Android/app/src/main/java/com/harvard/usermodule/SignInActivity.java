@@ -94,7 +94,7 @@ public class SignInActivity extends AppCompatActivity implements ApiCall.OnAsync
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_sign_in);
     mClicked = false;
-    initializeXMLId();
+    initializeXmlId();
     setTextForView();
     customTextViewAgree(mAgreeLabel);
     setFont();
@@ -105,7 +105,7 @@ public class SignInActivity extends AppCompatActivity implements ApiCall.OnAsync
     mTermsAndConditionData.setTerms(getString(R.string.termsurl));
   }
 
-  private void initializeXMLId() {
+  private void initializeXmlId() {
     mBackBtn = (RelativeLayout) findViewById(R.id.backBtn);
     mInfoIcon = (RelativeLayout) findViewById(R.id.mInfoIcon);
     mTitle = (AppCompatTextView) findViewById(R.id.title);
@@ -372,7 +372,7 @@ public class SignInActivity extends AppCompatActivity implements ApiCall.OnAsync
         AppController.getHelperSharedPreference()
             .writePreference(
                 SignInActivity.this, getString(R.string.clientToken), loginData.getClientToken());
-        new GetFCMRefreshToken().execute();
+        new GetFcmRefreshToken().execute();
       }
     } else if (responseCode == UPDATE_USER_PROFILE) {
       UpdateUserProfileData updateUserProfileData = (UpdateUserProfileData) response;
@@ -456,7 +456,7 @@ public class SignInActivity extends AppCompatActivity implements ApiCall.OnAsync
     }
   }
 
-  private class GetFCMRefreshToken extends AsyncTask<String, String, String> {
+  private class GetFcmRefreshToken extends AsyncTask<String, String, String> {
 
     @Override
     protected String doInBackground(String... params) {

@@ -42,10 +42,10 @@ import org.researchstack.backbone.task.Task;
 
 public class ComprehensionFailureActivity extends AppCompatActivity {
 
-  private static final int CONSENT_RESPONSECODE = 100;
+  private static final int CONSENT_RESPONSE_CODE = 100;
   private DBServiceSubscriber dbServiceSubscriber;
   private EligibilityConsent eligibilityConsent;
-  private Realm mRealm;
+  private Realm realm;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -54,14 +54,14 @@ public class ComprehensionFailureActivity extends AppCompatActivity {
 
     TextView retrybutton = findViewById(R.id.retrybutton);
     dbServiceSubscriber = new DBServiceSubscriber();
-    mRealm = AppController.getRealmobj(this);
+    realm = AppController.getRealmobj(this);
     retrybutton.setOnClickListener(
         new View.OnClickListener() {
           @Override
           public void onClick(View v) {
             eligibilityConsent =
                 dbServiceSubscriber.getConsentMetadata(
-                    getIntent().getStringExtra("studyId"), mRealm);
+                    getIntent().getStringExtra("studyId"), realm);
             startconsent(eligibilityConsent.getConsent());
           }
         });
@@ -69,7 +69,7 @@ public class ComprehensionFailureActivity extends AppCompatActivity {
 
   @Override
   protected void onDestroy() {
-    dbServiceSubscriber.closeRealmObj(mRealm);
+    dbServiceSubscriber.closeRealmObj(realm);
     super.onDestroy();
   }
 
@@ -87,13 +87,13 @@ public class ComprehensionFailureActivity extends AppCompatActivity {
             getIntent().getStringExtra("title"),
             getIntent().getStringExtra("eligibility"),
             getIntent().getStringExtra("type"));
-    startActivityForResult(intent, CONSENT_RESPONSECODE);
+    startActivityForResult(intent, CONSENT_RESPONSE_CODE);
   }
 
   @Override
   protected void onActivityResult(int requestCode, int resultCode, Intent data) {
     super.onActivityResult(requestCode, resultCode, data);
-    if (requestCode == CONSENT_RESPONSECODE) {
+    if (requestCode == CONSENT_RESPONSE_CODE) {
       if (resultCode == RESULT_OK) {
         Intent intent = new Intent(this, ConsentCompletedActivity.class);
         intent.putExtra("enrollId", getIntent().getStringExtra("enrollId"));

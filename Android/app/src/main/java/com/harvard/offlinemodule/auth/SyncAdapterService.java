@@ -24,7 +24,7 @@ public class SyncAdapterService extends Service {
   private static SyncAdapter syncAdapter = null;
   // Object to use as a thread-safe lock
   private static final Object syncAdapterLock = new Object();
-  DBServiceSubscriber mDBServiceSubscriber;
+  DBServiceSubscriber dbServiceSubscriber;
 
   @Override
   public void onCreate() {
@@ -34,7 +34,7 @@ public class SyncAdapterService extends Service {
      * Set the sync adapter as syncable
      * Disallow parallel syncs
      */
-    mDBServiceSubscriber = new DBServiceSubscriber();
+    dbServiceSubscriber = new DBServiceSubscriber();
     synchronized (syncAdapterLock) {
       if (syncAdapter == null) {
         syncAdapter = new SyncAdapter(this, true);
