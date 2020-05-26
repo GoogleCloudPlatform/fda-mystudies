@@ -66,7 +66,7 @@ class DashboardResponse {
 
   init(with activityID: String, and key: String) {
     self.key = key
-    self.activityId = activityId
+    self.activityId = activityID
     self.isPHI = "true"
     self.type = "int"
   }
