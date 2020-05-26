@@ -12,6 +12,10 @@ public class Constants {
   public static final String CONTENT_1_0 = "text pdf content";
   public static final String CONTENT_1_0_UPDATED = CONTENT_1_0 + " updated";
   public static final String CONTENT_1_2 = "text pdf content 1.2";
+  public static final String ENCODED_CONTENT_1_0 = "dGV4dCBwZGYgY29udGVudA==";
+  public static final String ENCODED_CONTENT_1_0_UPDATED = "dGV4dCBwZGYgY29udGVudCB1cGRhdGVk";
+  public static final String ENCODED_CONTENT_1_2 = "dGV4dCBwZGYgY29udGVudCAxLjI=";
+
   public static final String ACCESS_TOKEN_VALUE = "access Token value";
   public static final String CLIENT_TOKEN_VALUE = "client token value";
   public static final String ACCESS_TOKEN_HEADER = "accessToken";
@@ -32,4 +36,6 @@ public class Constants {
       "Eligibility consent has been updated successfully";
   public static final String STUDYOF_HEALTH = "StudyofHealth";
   public static final String STATUS_COMPLETE = "complete";
+  public static final String SHARING_VALUE = "sharing";
+  public static final String INVALID_USER_ID = "invalid userId";
 }

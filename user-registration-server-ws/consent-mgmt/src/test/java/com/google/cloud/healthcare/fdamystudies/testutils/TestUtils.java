@@ -1,13 +1,7 @@
 package com.google.cloud.healthcare.fdamystudies.testutils;
 
-import static com.google.cloud.healthcare.fdamystudies.utils.MyStudiesUserRegUtil.ErrorCodes.SUCCESS;
-import static org.junit.Assert.assertEquals;
 import javax.ws.rs.core.MediaType;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.node.ObjectNode;
 
 public class TestUtils {
 
@@ -15,32 +9,20 @@ public class TestUtils {
     headers.add(Constants.USER_ID_HEADER, Constants.VALID_USER_ID);
   }
 
-  public static void addTokenHeaders(HttpHeaders headers) {
+  public static HttpHeaders getCommonHeaders() {
+    HttpHeaders headers = new HttpHeaders();
     headers.add(Constants.CLIENT_TOKEN_HEADER, Constants.CLIENT_TOKEN_VALUE);
     headers.add(Constants.ACCESS_TOKEN_HEADER, Constants.ACCESS_TOKEN_VALUE);
+    headers.add(Constants.USER_ID_HEADER, Constants.VALID_USER_ID);
+    return headers;
   }
 
-  public static void addJsonHeaders(HttpHeaders headers) {
-    headers.add(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON);
-    headers.add(HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON);
+  public static void addHeader(HttpHeaders headers, String headerName, String headerValue) {
+    headers.add(headerName, headerValue);
   }
 
-  public static void assertUpdateEligibility(ResponseEntity<JsonNode> responseEntity) {
-    assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
-    JsonNode responseBody = responseEntity.getBody();
-    assertEquals(
-        Constants.UPDATE_CONSENT_SUCCESS_MSG, responseBody.get(Constants.FIELD_MESSAGE).asText());
-  }
-
-  public static void assertGetConsentResponse(
-      ResponseEntity<JsonNode> responseEntity, String pdfValue, String version) {
-    assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
-    JsonNode responseBody = responseEntity.getBody();
-    assertEquals(
-        SUCCESS.getValue().toLowerCase(), responseBody.get(Constants.FIELD_MESSAGE).asText());
-    JsonNode consent = (ObjectNode) responseBody.get(Constants.FIELD_CONSENT);
-    assertEquals(version, consent.get(Constants.FIELD_VERSION).asText());
-    assertEquals("application/pdf", consent.get(Constants.FIELD_TYPE).asText());
-    assertEquals(pdfValue, consent.get(Constants.FIELD_CONTENT).asText());
+  public static void addContentTypeAcceptHeaders(HttpHeaders headers) {
+    addHeader(headers, HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON);
+    addHeader(headers, HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON);
   }
 }

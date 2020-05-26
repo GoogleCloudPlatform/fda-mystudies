@@ -9,12 +9,13 @@
 package com.google.cloud.healthcare.fdamystudies.common;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
-import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.web.servlet.MockMvc;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.github.tomakehurst.wiremock.WireMockServer;
@@ -23,7 +24,8 @@ import com.google.cloud.healthcare.fdamystudies.config.WireMockInitializer;
 @ContextConfiguration(initializers = {WireMockInitializer.class})
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
 @ActiveProfiles("mockit")
-public class BaseMockit {
+@AutoConfigureMockMvc
+public class BaseMockIT {
 
   protected static final String VALID_BEARER_TOKEN = "Bearer 7fd50c2c-d618-493c-89d6-f1887e3e4bb8";
 
@@ -34,13 +36,9 @@ public class BaseMockit {
 
   @LocalServerPort protected int randomServerPort;
 
-  @Autowired private TestRestTemplate restTemplate;
-
   @Autowired private ObjectMapper objectMapper;
 
-  protected TestRestTemplate getRestTemplate() {
-    return restTemplate;
-  }
+  @Autowired protected MockMvc mockMvc;
 
   protected WireMockServer getWireMockServer() {
     return wireMockServer;
