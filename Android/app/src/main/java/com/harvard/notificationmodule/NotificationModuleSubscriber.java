@@ -182,8 +182,8 @@ public class NotificationModuleSubscriber {
         notificationDb.setEndDateTime(removeOffset(activityRun.getEndDate(), offset));
         dbServiceSubscriber.updateNotificationToDb(context, notificationDb);
 
+        set24hourScheduler(context);
         if (isSameDay(new Date(), time.getTime())) {
-          set24hourScheduler(context);
           setAlarm(
               context,
               title,
@@ -213,9 +213,8 @@ public class NotificationModuleSubscriber {
           notificationDb.setId(1);
           notificationDb.setEndDateTime(removeOffset(activityRun.getEndDate(), offset));
           dbServiceSubscriber.updateNotificationToDb(context, notificationDb);
+          set24hourScheduler(context);
           if (isSameDay(new Date(), time1.getTime())) {
-
-            set24hourScheduler(context);
             setAlarm(
                 context,
                 title,
