@@ -1,5 +1,6 @@
 /*
  * Copyright © 2017-2019 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors.
+ * Copyright 2020 Google LLC
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction, including
  * without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
@@ -182,8 +183,8 @@ public class NotificationModuleSubscriber {
         notificationDb.setEndDateTime(removeOffset(activityRun.getEndDate(), offset));
         dbServiceSubscriber.updateNotificationToDb(context, notificationDb);
 
+        set24hourScheduler(context);
         if (isSameDay(new Date(), time.getTime())) {
-          set24hourScheduler(context);
           setAlarm(
               context,
               title,
@@ -213,9 +214,8 @@ public class NotificationModuleSubscriber {
           notificationDb.setId(1);
           notificationDb.setEndDateTime(removeOffset(activityRun.getEndDate(), offset));
           dbServiceSubscriber.updateNotificationToDb(context, notificationDb);
+          set24hourScheduler(context);
           if (isSameDay(new Date(), time1.getTime())) {
-
-            set24hourScheduler(context);
             setAlarm(
                 context,
                 title,
