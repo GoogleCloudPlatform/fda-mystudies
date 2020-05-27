@@ -3,7 +3,7 @@ on:
     paths:
     - 'WCP-WS/**'
     - '.github/workflows/build-studymetadata.yml'
-name: Build studybuilder
+name: Build studymetadata
 jobs:
   build:
     runs-on: ubuntu-latest
