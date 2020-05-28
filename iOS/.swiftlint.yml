@@ -1,5 +1,0 @@
-disabled_rules: # rule identifiers to exclude from running
-  - trailing_whitespace
-  - vertical_whitespace
-# implicitly
-line_length: 165
