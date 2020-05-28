@@ -252,8 +252,7 @@ public class UserConsentManagementDaoImpl implements UserConsentManagementDao {
               criteriaBuilder.equal(studyConsentBoRoot.get("id"), studyConsent.getId()));
           isUpdated = session.createQuery(criteriaUpdate).executeUpdate();
         } else {
-          studyConsent.setTs(
-              MyStudiesUserRegUtil.getCurrentDateTime(AppConstants.SDF_DATE_TIME_FORMAT));
+          studyConsent.setTs(MyStudiesUserRegUtil.getCurrentDateTime());
           isSaved = (Integer) session.save(studyConsent);
         }
       }
