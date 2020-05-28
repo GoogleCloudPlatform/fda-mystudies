@@ -23,5 +23,5 @@ continuous_deployment_enabled = true
 trigger_enabled               = true
 terraform_root                = "Terraform"
 build_viewers = [
-  "group:dpt.dev@rocketturtle.net",
+  "group:dpt-dev@rocketturtle.net",
 ]
