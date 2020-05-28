@@ -127,10 +127,6 @@ To see what resources each deployment provisions, check out the comments in each
     them over with value substitutions to a target local directory to host your
     new final Terraform configs.
 
-1. Make sure the GCS bucket referred to in new_state has been manually created
-    before running `terraform init`; this is where terraform will store its deployment
-    state.
-
 1. Run [rename.sh](./rename.sh) in this directory (later referenced as the
     original directory) to copy the Deployment Phase 1 configs to your target
     directory.
