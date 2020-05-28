@@ -60,7 +60,7 @@ public class SiteBo implements Serializable {
 
   @Column(
       name = "modified_date",
-      columnDefinition = "TIMESTAMP CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP")
+      columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP")
   private Date modifiedDate;
 
   @Column(name = "modified_by", columnDefinition = "INT(20)")
