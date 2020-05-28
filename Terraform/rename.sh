@@ -39,10 +39,10 @@ export OLD_GITHUB_ORG="GoogleCloudPlatform"
 export NEW_GITHUB_ORG="zohrehj"
 
 export OLD_GITHUB_REPO="fda-mystudies"
-export NEW_GITHUB_REPO="fda-mystudies"
+export NEW_GITHUB_REPO=
 
 export OLD_GITHUB_BRANCH="early-access"
-export NEW_GITHUB_BRANCH="early-access"
+export NEW_GITHUB_BRANCH=
 
 export SRC_PROJ_BASE=${INPUT_TF_BASE}/org/folder.${OLD_FOLDER}/project.${OLD_PREFIX}
 export DST_PROJ_BASE=${OUTPUT_TF_BASE}/org/folder.${NEW_FOLDER}/project.${NEW_PREFIX}
