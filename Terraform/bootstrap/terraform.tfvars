@@ -14,7 +14,7 @@
 
 devops_project_id = "heroes-hat-dev-devops"
 org_id            = "707577601068"
-folder_id         = "440087619763" 
+folder_id         = "440087619763"
 billing_account   = "01EA90-3519E1-89CB1F"
 state_bucket      = "heroes-hat-dev-terraform-state-08679"
 storage_location  = "us-east1"
