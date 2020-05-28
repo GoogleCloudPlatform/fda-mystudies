@@ -20,5 +20,5 @@ state_bucket      = "heroes-hat-dev-terraform-state-08679"
 storage_location  = "us-east1"
 // org_admin         = "group:rocketturtle-gcp-admin@rocketturtle.net"
 devops_owners = [
-  "group:dpt-dev@rocketturtle.net",
+  "group:rocketturtle-gcp-admin@rocketturtle.net",
 ]

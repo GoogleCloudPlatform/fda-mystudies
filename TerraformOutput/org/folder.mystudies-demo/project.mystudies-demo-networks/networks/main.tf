@@ -67,7 +67,7 @@ module "private" {
   # See https://cloud.google.com/kubernetes-engine/docs/how-to/alias-ips#cluster_sizing_secondary_range_pods for how many nodes the /20 ranges get.
   secondary_ranges = {
     "${local.gke_clusters_subnet_name}" = [
-      # Apps GKE cluster.
+      # The Heroes Hat GKE cluster.
       # /14 is the default size for the subnet's secondary IP range for Pods when the secondary range assignment method is managed by GKE, so imitate that.
       # Calculated using http://www.davidc.net/sites/default/subnets/subnets.html
       {

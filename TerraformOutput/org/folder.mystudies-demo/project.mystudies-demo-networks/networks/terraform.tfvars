@@ -17,5 +17,5 @@ region           = "us-east1"
 zone             = "us-east1-b"
 gke_network_name = "mystudies-demo-apps-network"
 bastion_users = [
-  "group:rocketturtle-gcp-admin@hcls.joonix.net",
+  "group:dpt-dev@hcls.joonix.net",
 ]
