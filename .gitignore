@@ -1,3 +1,11 @@
 **/.terraform
 *.tfstate
 *.tfstate.*
+**/.settings
+**/*.log.gz
+**/.idea
+**/target
+**/.classpath
+**/.factorypath
+**/*.log
+user-registration-server-ws/consent-mgmt/ConsentMgmtServicesWs.iml
