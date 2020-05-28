@@ -12,13 +12,13 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-devops_project_id = "heroes-hat-dev-devops"
-org_id            = "707577601068"
+devops_project_id = "mystudies-demo-devops"
+org_id            = "18510592047"
 folder_id         = "440087619763"
-billing_account   = "01EA90-3519E1-89CB1F"
-state_bucket      = "heroes-hat-dev-terraform-state-08679"
+billing_account   = "01B494-31B256-17B2A6"
+state_bucket      = "mystudies-terraform-state-19763"
 storage_location  = "us-east1"
-// org_admin         = "group:rocketturtle-gcp-admin@rocketturtle.net"
+// org_admin         = "group:rocketturtle-gcp-admin@hcls.joonix.net"
 devops_owners = [
-  "group:dpt-dev@rocketturtle.net",
+  "group:dpt-dev@hcls.joonix.net",
 ]
