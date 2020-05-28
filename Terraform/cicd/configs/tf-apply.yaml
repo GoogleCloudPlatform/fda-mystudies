@@ -46,7 +46,7 @@ steps:
     dir: "${_TERRAFORM_ROOT}/org"
     id: Init (org)
 
-  - name: "gcr.io/cloud-foundation-cicd/cft/developer-tools@sha256:c1686b158401945d4c8f37347c4ae7fd657d3010417aae9986e166c373617a"
+  - name: "gcr.io/cloud-foundation-cicd/cft/developer-tools@sha256:c1686b158401945d4c8f37347c4ae7fd657d3010417aae9986e166c373617a63"
     entrypoint: bash
     args: ["../cicd/configs/terragrunt.sh", "plan-all"]
     dir: "${_TERRAFORM_ROOT}/org"
