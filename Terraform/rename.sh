@@ -39,7 +39,7 @@ export OLD_GITHUB_ORG="GoogleCloudPlatform"
 export NEW_GITHUB_ORG="zohrehj"
 
 export OLD_GITHUB_REPO="fda-mystudies"
-export NEW_GITHUB_REPO="fda_mystudies"
+export NEW_GITHUB_REPO="fda-mystudies"
 
 export OLD_GITHUB_BRANCH="early-access"
 export NEW_GITHUB_BRANCH="early-access"
