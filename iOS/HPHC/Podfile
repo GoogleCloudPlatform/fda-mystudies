@@ -13,6 +13,7 @@ def main_pods
   pod 'CryptoSwift'
   pod 'ActionSheetPicker-3.0'
   pod 'Toast-Swift'
+  pod 'ReachabilitySwift'
 end
 
 target 'HPHC' do
