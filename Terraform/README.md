@@ -164,7 +164,15 @@ To see what resources each deployment provisions, check out the comments in each
     ```
 
     After the secrets have been created, you must go to the Google Cloud
-    Console, open `Security` --> `Secret Manager` and fill in their values.
+    Console, open `Security` --> `Secret Manager` and fill in the values
+    for the following secrets:
+    - my-studies-sql-default-user-password
+    - my-studies-wcp-user
+    - my-studies-wcp-pass
+    - my-studies-email-address
+    - my-studies-email-password
+    - mobile-app-appid
+    - mobile-app-orgid
 
 1. Follow [CICD README.md](./cicd/README.md) to set up CICD pipelines for
     Terraform configs.
