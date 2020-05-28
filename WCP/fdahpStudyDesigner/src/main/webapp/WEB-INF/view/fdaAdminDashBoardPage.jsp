@@ -58,54 +58,6 @@
 </form>
 <div id="lg-container" class="lg-container">
 
-  <!-- Login Right Section-->
-  <!-- <div class="lg-space-right">
-        	<div class="logout">
-               <div class="dis-line pull-right ml-md line34">
-                 <a href="/studybuilder/sessionOut.do" class="blue-link text-weight-normal text-uppercase"><span>sign Out</span> <span class="ml-xs"><img src="/studybuilder/images/icons/logout.png"/></span></a>  
-               </div>
-           	</div>
-            <div class="lg-space-container wd">
-                <div class="lg-space-center">
-	                <div class="lg-space-title">
-	                    <span>Welcome,</span><span>${sessionObject.firstName}</span>
-	                </div>
-	                <div class='lg-icons'> 
-	                   <ul class="lg-icons-list"> 
-	                    <li class="studyListId">
-	                        <a class='studies-g' href='javascript:void(0)'></a>
-	                        <div class='studyList'>Studies<br><span>&nbsp;</span></div>
-	                    </li>
-	                    <li class="linkDis hide">
-	                        <a class='repository-g' href='javascript:void(0)'></a>
-	                        <div>Repository</div>
-	                    </li> 
-	                    <li class="notificationListId">
-	                        <a class='notifications-g' href='javascript:void(0)'></a>
-	                        <div>Notifications<br><span>&nbsp;</span></div>
-	                    </li> 
-	                   <li class="userListId">
-	                        <a class='user-g' href='javascript:void(0)'></a>
-	                        <div>Users<br><span>&nbsp;</span></div>
-	                    </li> 
-	                    <li class="myAccountId">
-	                        <a class='account-g' href='javascript:void(0)'></a>
-	                        <div>My Account<br><span>&nbsp;</span></div>
-	                    </li>
-	                 </ul> 
-	                </div>
-                </div>
-               <div class="clearfix"></div>
-               <div class="footer">
-                    <span>Copyright � 2017 FDA</span><span><a href="https://www.fda.gov/AboutFDA/AboutThisWebsite/WebsitePolicies/" id="" target="_blank">Terms</a></span><span><a href="https://www.fda.gov/AboutFDA/AboutThisWebsite/WebsitePolicies/#privacy" id="" target="_blank">Privacy Policy</a></span>
-              </div>
-            </div>
-            
-             
-            
-             
-        </div> -->
-  <!-- End Login Right Section-->
   <div class="logout">
     <div class="dis-line pull-right ml-md line34">
       <a href="/studybuilder/sessionOut.do" class="blue-link text-weight-normal text-uppercase"><span
