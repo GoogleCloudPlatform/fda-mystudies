@@ -15,8 +15,10 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -129,20 +131,16 @@ public class UserManagementUtil {
   }
 
   public UpdateAccountInfoResponseBean updateUserInfoInAuthServer(
-      UpdateAccountInfo accountInfo, String userId, String accessToken, String clientToken) {
+      UpdateAccountInfo accountInfo, String userId)
+      throws SystemException, InvalidRequestException {
     logger.info("(Util)....UserManagementUtil.updateUserInfoInAuthServer()......STARTED");
-
     UpdateAccountInfoResponseBean authResponse = null;
 
     HttpHeaders headers = new HttpHeaders();
     headers.setContentType(MediaType.APPLICATION_JSON);
-
-    headers.set(AppConstants.CLIENT_TOKEN, clientToken);
     headers.set(AppConstants.USER_ID, userId);
-    headers.set(AppConstants.ACCESS_TOKEN, accessToken);
 
     HttpEntity<UpdateAccountInfo> request = new HttpEntity<>(accountInfo, headers);
-
     ObjectMapper objectMapper = null;
     try {
 
@@ -151,10 +149,7 @@ public class UserManagementUtil {
               appConfig.getAuthServerUpdateStatusUrl(), HttpMethod.POST, request, String.class);
 
       if (responseEntity.getStatusCode() == HttpStatus.OK) {
-
         String body = (String) responseEntity.getBody();
-        logger.info(body);
-
         objectMapper = new ObjectMapper();
 
         try {
@@ -173,40 +168,13 @@ public class UserManagementUtil {
 
     } catch (RestClientResponseException e) {
 
-      if (e.getRawStatusCode() == 401) {
-        Set<Entry<String, List<String>>> headerSet = e.getResponseHeaders().entrySet();
-        authResponse = new UpdateAccountInfoResponseBean();
-        for (Entry<String, List<String>> entry : headerSet) {
-
-          if (AppConstants.STATUS.equals(entry.getKey())) {
-            authResponse.setCode(entry.getValue().get(0));
-          }
-          if (AppConstants.STATUS_MESSAGE.equals(entry.getKey())) {
-            authResponse.setMessage(entry.getValue().get(0));
-          }
-        }
-        authResponse.setHttpStatusCode(401 + "");
-
-      } else if (e.getRawStatusCode() == 500) {
-        authResponse = new UpdateAccountInfoResponseBean();
-        authResponse.setHttpStatusCode(500 + "");
-
+      if (e.getRawStatusCode() == 400) {
+        logger.info("(Util)....UserRegistrationController.updateUserInfoInAuthServer()......ENDED");
+        throw new InvalidRequestException();
       } else {
-        Set<Entry<String, List<String>>> headerSet = e.getResponseHeaders().entrySet();
-        authResponse = new UpdateAccountInfoResponseBean();
-        for (Entry<String, List<String>> entry : headerSet) {
-
-          if (AppConstants.STATUS.equals(entry.getKey())) {
-            authResponse.setCode(entry.getValue().get(0));
-          }
-          if (AppConstants.STATUS_MESSAGE.equals(entry.getKey())) {
-            authResponse.setMessage(entry.getValue().get(0));
-          }
-        }
-        authResponse.setHttpStatusCode(400 + "");
+        logger.info("(Util)....UserRegistrationController.updateUserInfoInAuthServer()......ENDED");
+        throw new SystemException();
       }
-      logger.error("update user information authResponse: " + authResponse);
-      return authResponse;
     }
   }
 
@@ -231,11 +199,8 @@ public class UserManagementUtil {
               appConfig.getAuthServerDeleteStatusUrl(), HttpMethod.DELETE, request, String.class);
 
       if (responseEntity.getStatusCode() == HttpStatus.OK) {
-
         String body = (String) responseEntity.getBody();
-
         objectMapper = new ObjectMapper();
-
         try {
           authResponse = objectMapper.readValue(body, DeleteAccountInfoResponseBean.class);
           logger.info("authResponse: " + authResponse);
@@ -421,7 +386,7 @@ public class UserManagementUtil {
     try {
       date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(dateNow);
     } catch (Exception e) {
-      logger.info("URWebAppWSUtil - getCurrentUtilDateTime() :: ERROR ", e);
+      logger.info("UserManagementUtil - getCurrentUtilDateTime() :: ERROR ", e);
     }
     return date;
   }
@@ -444,7 +409,7 @@ public class UserManagementUtil {
 
   public String withdrawParticipantFromStudy(String participantId, String studyId, String delete)
       throws UnAuthorizedRequestException, InvalidRequestException, SystemException {
-    logger.info("EnrollmentManagementUtil withDrawParticipantFromStudy() - starts ");
+    logger.info("UserManagementUtil withDrawParticipantFromStudy() - starts ");
     HttpHeaders headers = null;
     HttpEntity<WithdrawFromStudyBodyProvider> request = null;
 
@@ -486,7 +451,20 @@ public class UserManagementUtil {
         throw new SystemException();
       }
     }
-    logger.info("EnrollmentManagementUtil withDrawParticipantFromStudy() - Ends ");
+    logger.info("UserManagementUtil withDrawParticipantFromStudy() - Ends ");
     return message;
+  }
+
+  public static String genarateEmailContent(String emailContentName, Map<String, String> keyValue) {
+    logger.info("UserManagementUtil - genarateEmailContent() :: Starts");
+    if (StringUtils.isNotEmpty(emailContentName)) {
+      for (Map.Entry<String, String> entry : keyValue.entrySet()) {
+        emailContentName =
+            emailContentName.replace(
+                entry.getKey(), StringUtils.isBlank(entry.getValue()) ? "" : entry.getValue());
+      }
+    }
+    logger.info("UserManagementUtil - genarateEmailContent() :: Ends");
+    return emailContentName;
   }
 }

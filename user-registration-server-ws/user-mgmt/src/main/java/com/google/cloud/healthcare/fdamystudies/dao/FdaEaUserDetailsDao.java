@@ -8,7 +8,10 @@
 
 package com.google.cloud.healthcare.fdamystudies.dao;
 
+import com.google.cloud.healthcare.fdamystudies.exceptions.InvalidRequestException;
 import com.google.cloud.healthcare.fdamystudies.exceptions.SystemException;
+import com.google.cloud.healthcare.fdamystudies.model.AuthInfoBO;
+import com.google.cloud.healthcare.fdamystudies.model.UserAppDetailsBO;
 import com.google.cloud.healthcare.fdamystudies.model.UserDetailsBO;
 
 public interface FdaEaUserDetailsDao {
@@ -18,4 +21,11 @@ public interface FdaEaUserDetailsDao {
   UserDetailsBO loadUserDetailsByUserId(String userId) throws SystemException;
 
   UserDetailsBO loadEmailCodeByUserId(String userId) throws SystemException;
+
+  boolean updateStatus(UserDetailsBO participantDetails)
+      throws InvalidRequestException, SystemException;
+
+  boolean saveAllRecords(
+      UserDetailsBO userDetailsBO, AuthInfoBO authInfo, UserAppDetailsBO userAppDetails)
+      throws SystemException;
 }

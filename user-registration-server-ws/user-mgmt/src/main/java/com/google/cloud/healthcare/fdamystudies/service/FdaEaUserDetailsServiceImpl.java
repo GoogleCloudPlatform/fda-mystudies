@@ -10,14 +10,14 @@ package com.google.cloud.healthcare.fdamystudies.service;
 
 import java.time.LocalDateTime;
 import java.time.ZoneId;
-import javax.transaction.Transactional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import com.google.cloud.healthcare.fdamystudies.beans.VerifyCodeResponse;
+import org.springframework.transaction.annotation.Transactional;
 import com.google.cloud.healthcare.fdamystudies.dao.FdaEaUserDetailsDao;
 import com.google.cloud.healthcare.fdamystudies.exceptions.InvalidEmailCodeException;
+import com.google.cloud.healthcare.fdamystudies.exceptions.InvalidRequestException;
 import com.google.cloud.healthcare.fdamystudies.exceptions.InvalidUserIdException;
 import com.google.cloud.healthcare.fdamystudies.exceptions.SystemException;
 import com.google.cloud.healthcare.fdamystudies.model.AuthInfoBO;
@@ -48,7 +48,7 @@ public class FdaEaUserDetailsServiceImpl implements FdaEaUserDetailsService {
         authInfo.setAppId(daoResp.getAppInfoId());
         authInfo.setUserId(daoResp.getUserDetailsId());
         authInfo.setCreatedOn(LocalDateTime.now(ZoneId.systemDefault()));
-        authInfo = authInfoService.save(authInfo);
+        authInfoService.save(authInfo);
 
         UserAppDetailsBO userAppDetails = new UserAppDetailsBO();
         userAppDetails.setAppInfoId(daoResp.getAppInfoId());
@@ -77,11 +77,11 @@ public class FdaEaUserDetailsServiceImpl implements FdaEaUserDetailsService {
   }
 
   @Override
-  public VerifyCodeResponse verifyCode(String code, String userId)
-      throws SystemException, InvalidUserIdException, InvalidEmailCodeException {
+  public boolean verifyCode(String code, String userId)
+      throws InvalidUserIdException, InvalidEmailCodeException, SystemException {
 
-    logger.info("FdaEaUserDetailsServiceImpl verifyCode() - calls");
-    VerifyCodeResponse response = null;
+    logger.info("FdaEaUserDetailsServiceImpl verifyCode() - startes");
+    boolean response = false;
     UserDetailsBO daoResopnse = null;
     if (userId != null) {
       daoResopnse = userDetailsDao.loadEmailCodeByUserId(userId);
@@ -90,26 +90,28 @@ public class FdaEaUserDetailsServiceImpl implements FdaEaUserDetailsService {
         if (code.equals(daoResopnse.getEmailCode())
             && LocalDateTime.now().isBefore(daoResopnse.getCodeExpireDate())) {
           logger.info("(S)......OTP CODE VERIFIED as true");
-
-          daoResopnse.setStatus(1);
-          daoResopnse.setEmailCode(null);
-          daoResopnse.setCodeExpireDate(null);
-          UserDetailsBO updatedUserDetails = userDetailsDao.saveUser(daoResopnse);
-
-          if (updatedUserDetails != null) {
-            if (updatedUserDetails.getStatus() == 1) {
-              response = new VerifyCodeResponse();
-              response.setEmailId(updatedUserDetails.getEmail());
-              response.setIsCodeVerified(true);
-              return response;
-            } else return response;
-          } else throw new SystemException();
-        } else throw new InvalidEmailCodeException();
+          return true;
+        } else {
+          logger.info("FdaEaUserDetailsServiceImpl verifyCode() - ends");
+          throw new InvalidEmailCodeException();
+        }
       } else {
-        logger.info("No User Found Exception");
+        logger.info("FdaEaUserDetailsServiceImpl verifyCode() - ends");
         throw new InvalidUserIdException();
       }
     }
     return response;
+  }
+
+  @Override
+  public boolean updateStatus(UserDetailsBO participantDetails)
+      throws InvalidRequestException, SystemException {
+    logger.info("FdaEaUserDetailsServiceImpl updateStatus() - starts");
+    if (participantDetails != null) {
+      return userDetailsDao.updateStatus(participantDetails);
+    } else {
+      logger.info("FdaEaUserDetailsServiceImpl updateStatus() - ends");
+      return false;
+    }
   }
 }
