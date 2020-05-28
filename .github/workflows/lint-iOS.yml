@@ -1,0 +1,17 @@
+name: SwiftLint
+
+on:
+  pull_request:
+    paths:
+      - 'iOS/**'
+      - '.github/workflows/swiftlint.yml'
+
+jobs:
+  SwiftLint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v1
+      - name: GitHub Action for SwiftLint
+        uses: norio-nomura/action-swiftlint@3.1.0
+        with:
+          args: --path iOS/HPHC --config .swiftlint.yml
