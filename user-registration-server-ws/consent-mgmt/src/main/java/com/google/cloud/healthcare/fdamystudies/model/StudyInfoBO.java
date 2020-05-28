@@ -20,12 +20,14 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import org.hibernate.annotations.Type;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Setter
 @Getter
 @Entity
 @Table(name = "study_info")
+@NoArgsConstructor
 public class StudyInfoBO implements Serializable {
 
   private static final long serialVersionUID = 5392367043067145963L;
@@ -83,4 +85,8 @@ public class StudyInfoBO implements Serializable {
 
   @Column(name = "enrolling")
   private String enrolling;
+
+  public StudyInfoBO(Integer id) {
+    this.id = id;
+  }
 }

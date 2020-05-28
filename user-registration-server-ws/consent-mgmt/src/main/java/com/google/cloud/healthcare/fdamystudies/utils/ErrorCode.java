@@ -157,21 +157,4 @@ public enum ErrorCode {
     return this.errorMessage;
   }
 
-  public static ErrorCode fromCode(int code) {
-    for (ErrorCode ec : ErrorCode.values()) {
-      if (ec.code == code) {
-        return ec;
-      }
-    }
-    throw new IllegalArgumentException("No matching constant for [" + code + "]");
-  }
-
-  public static ErrorCode fromErrorMessage(String errorMessage) {
-    for (ErrorCode ec : ErrorCode.values()) {
-      if (ec.errorMessage == errorMessage) {
-        return ec;
-      }
-    }
-    throw new IllegalArgumentException("No matching constant for [" + errorMessage + "]");
-  }
 }
