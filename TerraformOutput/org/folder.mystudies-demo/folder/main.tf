@@ -12,34 +12,18 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-variable "devops_project_id" {
-  type = string
+# This folder contains Terraform resources to setup the folder.
+
+terraform {
+  required_version = "~> 0.12.0"
+  required_providers {
+    google      = "~> 3.0"
+    google-beta = "~> 3.0"
+  }
+  backend "gcs" {}
 }
 
-variable "devops_owners" {
-  type = list(string)
+resource "google_folder" "folder" {
+  display_name = var.display_name
+  parent       = var.parent
 }
-
-variable "org_id" {
-  type = string
-}
-
-variable "folder_id" {
-  type = string
-}
-
-variable "billing_account" {
-  type = string
-}
-
-variable "state_bucket" {
-  type = string
-}
-
-variable "storage_location" {
-  type = string
-}
-
-// variable "org_admin" {
-//   type = string
-// }

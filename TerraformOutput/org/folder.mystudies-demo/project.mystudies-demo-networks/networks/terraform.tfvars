@@ -12,34 +12,10 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-variable "devops_project_id" {
-  type = string
-}
-
-variable "devops_owners" {
-  type = list(string)
-}
-
-variable "org_id" {
-  type = string
-}
-
-variable "folder_id" {
-  type = string
-}
-
-variable "billing_account" {
-  type = string
-}
-
-variable "state_bucket" {
-  type = string
-}
-
-variable "storage_location" {
-  type = string
-}
-
-// variable "org_admin" {
-//   type = string
-// }
+project_id       = "mystudies-demo-networks"
+region           = "us-east1"
+zone             = "us-east1-b"
+gke_network_name = "mystudies-demo-apps-network"
+bastion_users = [
+  "group:rocketturtle-gcp-admin@hcls.joonix.net",
+]

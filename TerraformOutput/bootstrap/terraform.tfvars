@@ -12,34 +12,13 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-variable "devops_project_id" {
-  type = string
-}
-
-variable "devops_owners" {
-  type = list(string)
-}
-
-variable "org_id" {
-  type = string
-}
-
-variable "folder_id" {
-  type = string
-}
-
-variable "billing_account" {
-  type = string
-}
-
-variable "state_bucket" {
-  type = string
-}
-
-variable "storage_location" {
-  type = string
-}
-
-// variable "org_admin" {
-//   type = string
-// }
+devops_project_id = "mystudies-demo-devops"
+org_id            = "18510592047"
+folder_id         = "440087619763" 
+billing_account   = "01B494-31B256-17B2A6"
+state_bucket      = "mystudies-terraform-state-19763"
+storage_location  = "us-east1"
+// org_admin         = "group:rocketturtle-gcp-admin@hcls.joonix.net"
+devops_owners = [
+  "group:dpt-dev@hcls.joonix.net",
+]

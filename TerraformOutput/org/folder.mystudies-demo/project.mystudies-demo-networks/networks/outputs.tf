@@ -12,34 +12,14 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-variable "devops_project_id" {
-  type = string
+output "private_network" {
+  value = module.private.network.network
 }
 
-variable "devops_owners" {
-  type = list(string)
+output "gke_subnetwork" {
+  value = local.gke_subnet
 }
 
-variable "org_id" {
-  type = string
+output "bastion_service_account" {
+  value = module.bastion.service_account
 }
-
-variable "folder_id" {
-  type = string
-}
-
-variable "billing_account" {
-  type = string
-}
-
-variable "state_bucket" {
-  type = string
-}
-
-variable "storage_location" {
-  type = string
-}
-
-// variable "org_admin" {
-//   type = string
-// }

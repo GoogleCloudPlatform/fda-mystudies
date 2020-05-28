@@ -12,34 +12,13 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-variable "devops_project_id" {
-  type = string
-}
-
-variable "devops_owners" {
-  type = list(string)
-}
-
-variable "org_id" {
-  type = string
-}
-
-variable "folder_id" {
-  type = string
-}
-
-variable "billing_account" {
-  type = string
-}
-
-variable "state_bucket" {
-  type = string
-}
-
-variable "storage_location" {
-  type = string
-}
-
-// variable "org_admin" {
-//   type = string
-// }
+name            = "mystudies-demo-networks"
+org_id          = "18510592047"
+billing_account = "01B494-31B256-17B2A6"
+apis = [
+  "compute.googleapis.com",
+  "container.googleapis.com",
+  "iap.googleapis.com",
+  "servicenetworking.googleapis.com",
+  "sqladmin.googleapis.com",
+]

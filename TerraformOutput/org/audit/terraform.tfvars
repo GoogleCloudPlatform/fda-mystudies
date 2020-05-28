@@ -12,34 +12,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-variable "devops_project_id" {
-  type = string
-}
-
-variable "devops_owners" {
-  type = list(string)
-}
-
-variable "org_id" {
-  type = string
-}
-
-variable "folder_id" {
-  type = string
-}
-
-variable "billing_account" {
-  type = string
-}
-
-variable "state_bucket" {
-  type = string
-}
-
-variable "storage_location" {
-  type = string
-}
-
-// variable "org_admin" {
-//   type = string
-// }
+org_id       = "18510592047"
+project_id   = "mystudies-demo-audit"
+dataset_name = "1yr_org_audit_logs"
+bucket_name  = "7yr-org-audit-logs-08679"
+auditors     = "group:rocketturtle-gcp-admin@hcls.joonix.net"

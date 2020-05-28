@@ -12,34 +12,16 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-variable "devops_project_id" {
-  type = string
-}
-
-variable "devops_owners" {
-  type = list(string)
-}
-
-variable "org_id" {
-  type = string
-}
-
-variable "folder_id" {
-  type = string
-}
-
-variable "billing_account" {
-  type = string
-}
-
-variable "state_bucket" {
-  type = string
-}
-
-variable "storage_location" {
-  type = string
-}
-
-// variable "org_admin" {
-//   type = string
-// }
+org_id                        = "18510592047"
+billing_account               = "01B494-31B256-17B2A6"
+project_id                    = "mystudies-demo-devops"
+state_bucket                  = "mystudies-terraform-state-19763"
+repo_owner                    = "zohrehj"
+repo_name                     = "fda-mystudies"
+branch_regex                  = "^early-access$"
+continuous_deployment_enabled = true
+trigger_enabled               = true
+terraform_root                = "Terraform"
+build_viewers = [
+  "group:dpt.dev@hcls.joonix.net",
+]

@@ -12,34 +12,22 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-variable "devops_project_id" {
-  type = string
+variable "project_id" {
+  description = "The GCP project id of the GKE cluster"
+  type        = string
 }
 
-variable "devops_owners" {
-  type = list(string)
+variable "secrets_project_id" {
+  description = "The GCP project id of the Secret Manager secrets"
+  type        = string
 }
 
-variable "org_id" {
-  type = string
+variable "cluster_name" {
+  description = "The GKE cluster name"
+  type        = string
 }
 
-variable "folder_id" {
-  type = string
+variable "cluster_location" {
+  description = "The GKE cluster location (region if regional, zone otherwise)"
+  type        = string
 }
-
-variable "billing_account" {
-  type = string
-}
-
-variable "state_bucket" {
-  type = string
-}
-
-variable "storage_location" {
-  type = string
-}
-
-// variable "org_admin" {
-//   type = string
-// }

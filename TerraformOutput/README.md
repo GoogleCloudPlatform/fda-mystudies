@@ -195,7 +195,7 @@ To see what resources each deployment provisions, check out the comments in each
 1. Go to the target diretory.
 
 1. Comment out the entire file
-    [cloudbuild.tf](./org/folder.fda-my-studies/project.heroes-hat-dev-apps/apps/cloudbuild.tf).
+    [cloudbuild.tf](./org/folder.mystudies-demo/project.mystudies-demo-apps/apps/cloudbuild.tf).
     This file contains Cloud Build Triggers to auto generate Docker containers
     when new commits are merged to certain branches. Uncomment later if you
     would like to use this feature and follow documentation in that file to
@@ -212,14 +212,14 @@ To see what resources each deployment provisions, check out the comments in each
 1. Go to the target diretory.
 
 1. Comment out
-    [iam_members](./org/folder.fda-my-studies/project.heroes-hat-dev-data/data/main.tf#L74-L79).
+    [iam_members](./org/folder.mystudies-demo/project.mystudies-demo-data/data/main.tf#L74-L79).
 
 1. Commit your current local git working dir and send a Pull Request to merge
     these configs. Make sure the presubmit tests pass and get code review
     approvals. The CD job will then deploy the Phase 4 resources for you.
 
 1. Uncomment
-    [iam_members](./org/folder.fda-my-studies/project.heroes-hat-dev-data/data/main.tf#L74-L79).
+    [iam_members](./org/folder.mystudies-demo/project.mystudies-demo-data/data/main.tf#L74-L79).
 
 1. Commit your current local git working dir and send a Pull Request to merge
     these configs. Make sure the presubmit tests pass and get code review

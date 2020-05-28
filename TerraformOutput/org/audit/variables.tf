@@ -12,34 +12,22 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-variable "devops_project_id" {
-  type = string
-}
-
-variable "devops_owners" {
-  type = list(string)
-}
-
 variable "org_id" {
   type = string
 }
 
-variable "folder_id" {
+variable "project_id" {
   type = string
 }
 
-variable "billing_account" {
+variable "dataset_name" {
   type = string
 }
 
-variable "state_bucket" {
+variable "bucket_name" {
   type = string
 }
 
-variable "storage_location" {
+variable "auditors" {
   type = string
 }
-
-// variable "org_admin" {
-//   type = string
-// }
