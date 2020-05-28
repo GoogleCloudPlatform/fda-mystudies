@@ -21,7 +21,7 @@ repo_name                     = "fda-mystudies"
 branch_regex                  = "^early-access$"
 continuous_deployment_enabled = true
 trigger_enabled               = true
-terraform_root                = "Terraform"
+terraform_root                = "TerraformOutput"
 build_viewers = [
   "group:dpt-dev@hcls.joonix.net",
 ]
