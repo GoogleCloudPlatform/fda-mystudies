@@ -1718,6 +1718,7 @@
 				6E7D2D541E433E8700763D4C /* Resources */,
 				4F7E7DB7672068C53C399511 /* [CP] Embed Pods Frameworks */,
 				89EDB4702271EFE00070F16C /* Embed Frameworks */,
+				6F0E0142247D084E00932619 /* ShellScript */,
 			);
 			buildRules = (
 			);
@@ -2017,6 +2018,23 @@
 			shellPath = /bin/sh;
 			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-HPHC/Pods-HPHC-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
+		};
+		6F0E0142247D084E00932619 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "# Type a script or drag a script file from your workspace to insert its path.\nif [ \"${CONFIGURATION}\" = \"Debug\" ]; then\nif which swiftlint >/dev/null; then\nswiftlint\nelse\necho \"warning: SwiftLint not installed, download from https://github.com/realm/SwiftLint\"\nfi\nfi\n";
 		};
 		8D2C5B3AD544C453A00EC3BB /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
