@@ -36,6 +36,7 @@ import org.springframework.web.servlet.ModelAndView;
 import com.fdahpstudydesigner.bo.NotificationBO;
 import com.fdahpstudydesigner.bo.NotificationHistoryBO;
 import com.fdahpstudydesigner.service.NotificationService;
+import com.fdahpstudydesigner.util.CrossScriptingUtil;
 import com.fdahpstudydesigner.util.FdahpStudyDesignerConstants;
 import com.fdahpstudydesigner.util.FdahpStudyDesignerUtil;
 import com.fdahpstudydesigner.util.SessionObject;
@@ -224,6 +225,7 @@ public class NotificationController {
     ModelAndView mav = new ModelAndView();
     Map<String, String> propMap = FdahpStudyDesignerUtil.getAppProperties();
     try {
+    	CrossScriptingUtil.replaceAll(notificationBO);
       HttpSession session = request.getSession();
       SessionObject sessionObject =
           (SessionObject) session.getAttribute(FdahpStudyDesignerConstants.SESSION_OBJECT);

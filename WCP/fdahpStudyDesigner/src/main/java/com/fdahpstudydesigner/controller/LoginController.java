@@ -45,6 +45,7 @@ import com.fdahpstudydesigner.bo.MasterDataBO;
 import com.fdahpstudydesigner.bo.UserBO;
 import com.fdahpstudydesigner.service.DashBoardAndProfileService;
 import com.fdahpstudydesigner.service.LoginServiceImpl;
+import com.fdahpstudydesigner.util.CrossScriptingUtil;
 import com.fdahpstudydesigner.util.FdahpStudyDesignerConstants;
 import com.fdahpstudydesigner.util.FdahpStudyDesignerUtil;
 import com.fdahpstudydesigner.util.SessionObject;
@@ -64,6 +65,7 @@ public class LoginController {
     ModelAndView mv = new ModelAndView("redirect:login.do");
     try {
       Map<String, String> propMap = FdahpStudyDesignerUtil.getAppProperties();
+      CrossScriptingUtil.replaceAll(userBO, userBO.getUserPassword());
       HttpSession session = request.getSession(false);
       SessionObject sesObj =
           (SessionObject) session.getAttribute(FdahpStudyDesignerConstants.SESSION_OBJECT);

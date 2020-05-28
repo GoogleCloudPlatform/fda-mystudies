@@ -55,6 +55,7 @@ import com.fdahpstudydesigner.bo.StudyBo;
 import com.fdahpstudydesigner.service.StudyActiveTasksService;
 import com.fdahpstudydesigner.service.StudyQuestionnaireService;
 import com.fdahpstudydesigner.service.StudyService;
+import com.fdahpstudydesigner.util.CrossScriptingUtil;
 import com.fdahpstudydesigner.util.FdahpStudyDesignerConstants;
 import com.fdahpstudydesigner.util.FdahpStudyDesignerUtil;
 import com.fdahpstudydesigner.util.SessionObject;
@@ -379,6 +380,7 @@ public class StudyActiveTasksController {
         String activeTaskScheduleInfo = request.getParameter("activeTaskScheduleInfo");
         if ((activeTaskScheduleInfo != null) && !activeTaskScheduleInfo.isEmpty()) {
           activeTaskBo = mapper.readValue(activeTaskScheduleInfo, ActiveTaskBo.class);
+          CrossScriptingUtil.replaceAll(activeTaskBo);
           if (activeTaskBo != null) {
             studyBo =
                 studyService.getStudyById(activeTaskBo.getStudyId().toString(), sesObj.getUserId());
@@ -437,6 +439,7 @@ public class StudyActiveTasksController {
     String customStudyId = "";
     ModelMap map = new ModelMap();
     try {
+    	CrossScriptingUtil.replaceAll(activeTaskBo);
       SessionObject sesObj =
           (SessionObject)
               request.getSession().getAttribute(FdahpStudyDesignerConstants.SESSION_OBJECT);
@@ -531,6 +534,7 @@ public class StudyActiveTasksController {
     new ArrayList<>();
     StudyBo studyBo = null;
     try {
+    	CrossScriptingUtil.replaceAll(activeTaskBo);
       SessionObject sesObj =
           (SessionObject)
               request.getSession().getAttribute(FdahpStudyDesignerConstants.SESSION_OBJECT);

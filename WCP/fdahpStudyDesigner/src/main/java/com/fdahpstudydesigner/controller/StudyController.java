@@ -80,6 +80,7 @@ import com.fdahpstudydesigner.service.NotificationService;
 import com.fdahpstudydesigner.service.StudyQuestionnaireService;
 import com.fdahpstudydesigner.service.StudyService;
 import com.fdahpstudydesigner.service.UsersService;
+import com.fdahpstudydesigner.util.CrossScriptingUtil;
 import com.fdahpstudydesigner.util.FdahpStudyDesignerConstants;
 import com.fdahpstudydesigner.util.FdahpStudyDesignerUtil;
 import com.fdahpstudydesigner.util.SessionObject;
@@ -2751,6 +2752,8 @@ public class StudyController {
         if (null != comprehensionQuestion) {
           comprehensionTestQuestionBo =
               mapper.readValue(comprehensionQuestion, ComprehensionTestQuestionBo.class);
+          CrossScriptingUtil.replaceAll(comprehensionTestQuestionBo);
+          
           if (comprehensionTestQuestionBo != null) {
             if (comprehensionTestQuestionBo.getId() != null) {
               comprehensionTestQuestionBo.setModifiedBy(sesObj.getUserId());
@@ -2813,6 +2816,8 @@ public class StudyController {
       if (null != conInfo) {
         consentInfoBo = mapper.readValue(conInfo, ConsentInfoBo.class);
       }
+      
+      CrossScriptingUtil.replaceAll(consentInfoBo);
       Integer sessionStudyCount =
           StringUtils.isNumeric(request.getParameter("_S"))
               ? Integer.parseInt(request.getParameter("_S"))
@@ -2877,6 +2882,7 @@ public class StudyController {
         consentInfoParamName = request.getParameter("consentInfo");
         if (StringUtils.isNotEmpty(consentInfoParamName)) {
           consentBo = mapper.readValue(consentInfoParamName, ConsentBo.class);
+          CrossScriptingUtil.replaceAll(consentBo);
           if (consentBo != null) {
             customStudyId =
                 (String)
@@ -2939,6 +2945,7 @@ public class StudyController {
     String customStudyId = "";
     ModelMap map = new ModelMap();
     try {
+      CrossScriptingUtil.replaceAll(checklist);
       SessionObject sesObj =
           (SessionObject)
               request.getSession().getAttribute(FdahpStudyDesignerConstants.SESSION_OBJECT);
@@ -3040,6 +3047,7 @@ public class StudyController {
     String message = FdahpStudyDesignerConstants.FAILURE;
     ModelMap map = new ModelMap();
     try {
+      CrossScriptingUtil.replaceAll(studyBo);
       SessionObject sesObj =
           (SessionObject)
               request.getSession().getAttribute(FdahpStudyDesignerConstants.SESSION_OBJECT);
@@ -3137,6 +3145,7 @@ public class StudyController {
     Map<String, String> propMap = FdahpStudyDesignerUtil.getAppProperties();
     ModelMap map = new ModelMap();
     try {
+      CrossScriptingUtil.replaceAll(comprehensionTestQuestionBo);
       SessionObject sesObj =
           (SessionObject)
               request.getSession().getAttribute(FdahpStudyDesignerConstants.SESSION_OBJECT);
@@ -3206,6 +3215,7 @@ public class StudyController {
     Map<String, String> propMap = FdahpStudyDesignerUtil.getAppProperties();
     String customStudyId = "";
     try {
+      CrossScriptingUtil.replaceAll(consentInfoBo);
       SessionObject sesObj =
           (SessionObject)
               request.getSession().getAttribute(FdahpStudyDesignerConstants.SESSION_OBJECT);
@@ -3268,6 +3278,7 @@ public class StudyController {
     Map<String, String> propMap = FdahpStudyDesignerUtil.getAppProperties();
     ModelMap map = new ModelMap();
     try {
+      CrossScriptingUtil.replaceAll(resourceBO);
       SessionObject sesObj =
           (SessionObject)
               request.getSession().getAttribute(FdahpStudyDesignerConstants.SESSION_OBJECT);
@@ -3420,6 +3431,7 @@ public class StudyController {
     String message = FdahpStudyDesignerConstants.FAILURE;
     ModelMap map = new ModelMap();
     try {
+      CrossScriptingUtil.replaceAll(studyBo);
       SessionObject sesObj =
           (SessionObject)
               request.getSession().getAttribute(FdahpStudyDesignerConstants.SESSION_OBJECT);
@@ -3507,6 +3519,7 @@ public class StudyController {
     Map<String, String> propMap = FdahpStudyDesignerUtil.getAppProperties();
     String customStudyId = "";
     try {
+      CrossScriptingUtil.replaceAll(eligibilityBo);
       SessionObject sesObj =
           (SessionObject)
               request.getSession().getAttribute(FdahpStudyDesignerConstants.SESSION_OBJECT);
@@ -3581,6 +3594,7 @@ public class StudyController {
     Map<String, String> propMap = FdahpStudyDesignerUtil.getAppProperties();
     String customStudyId = "";
     try {
+      CrossScriptingUtil.replaceAll(eligibilityTestBo);
       SessionObject sesObj =
           (SessionObject)
               request.getSession().getAttribute(FdahpStudyDesignerConstants.SESSION_OBJECT);
@@ -3668,6 +3682,7 @@ public class StudyController {
     String customStudyId = "";
 
     try {
+      CrossScriptingUtil.replaceAll(notificationBO);
       HttpSession session = request.getSession();
       Integer sessionStudyCount =
           StringUtils.isNumeric(request.getParameter("_S"))
@@ -3886,6 +3901,7 @@ public class StudyController {
     ModelAndView mav = new ModelAndView("redirect:/adminStudies/studyList.do");
     ModelMap map = new ModelMap();
     try {
+      CrossScriptingUtil.replaceAll(studyPageBean);
       SessionObject sesObj =
           (SessionObject)
               request.getSession().getAttribute(FdahpStudyDesignerConstants.SESSION_OBJECT);
