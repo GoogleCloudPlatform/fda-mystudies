@@ -1,0 +1,32 @@
+included:
+  - HPHC 
+disabled_rules:
+  - type_name
+  - identifier_name
+  - large_tuple
+  - line_length
+  - force_try
+  - shorthand_operator
+  - type_body_length
+  - function_body_length
+  - trailing_whitespace
+  - force_cast
+  - trailing_comma
+  - nesting
+  - cyclomatic_complexity
+  - file_length
+  - todo
+  - function_parameter_count
+line_length:
+  ignores_interpolated_strings: true
+  ignores_comments: true
+  warning: 140
+  error: 150
+identifier_name:
+  min_length:
+    error: 1
+    warning: 1
+type_name:
+  min_length:
+    error: 1
+    warning: 1
