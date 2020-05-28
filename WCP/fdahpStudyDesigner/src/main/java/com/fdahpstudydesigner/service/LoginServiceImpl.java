@@ -528,7 +528,7 @@ public class LoginServiceImpl implements LoginService, UserDetailsService {
                 message = FdahpStudyDesignerConstants.SUCCESS;
               }
               if ("".equals(type) && (!userdetails.isEnabled())) {
-                message = propMap.get("user.forgot.error.msg");
+                message = propMap.get("user.inactive.msg");
               }
             }
           }
@@ -611,5 +611,23 @@ public class LoginServiceImpl implements LoginService, UserDetailsService {
       logger.error("LoginServiceImpl - sendLockedAccountPasswordResetLinkToMail - ERROR ", e);
     }
     logger.info("LoginServiceImpl - sendLockedAccountPasswordResetLinkToMail - Ends");
+  }
+
+  @Override
+  public boolean isInactiveUser(String securityToken) {
+    logger.info("LoginServiceImpl - isActiveUser() - Starts");
+    UserBO user = loginDAO.getUserBySecurityToken(securityToken);
+    boolean isInactiveUser = user != null && !user.isEnabled();
+    logger.info("LoginServiceImpl - isActiveUser() - Ends");
+    return isInactiveUser;
+  }
+
+  @Override
+  public boolean isIntialPasswordSetUp(String securityToken) {
+    logger.info("LoginServiceImpl - isIntialPasswordSetUp() - Starts");
+    UserBO user = loginDAO.getUserBySecurityToken(securityToken);
+    boolean isIntialPasswordSetUp = StringUtils.isBlank(user.getUserPassword());
+    logger.info("LoginServiceImpl - isIntialPasswordSetUp() - Ends");
+    return isIntialPasswordSetUp;
   }
 }
