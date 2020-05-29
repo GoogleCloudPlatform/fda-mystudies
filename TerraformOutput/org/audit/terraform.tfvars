@@ -15,5 +15,5 @@
 org_id       = "18510592047"
 project_id   = "mystudies-demo-audit"
 dataset_name = "1yr_org_audit_logs"
-bucket_name  = "7yr-org-audit-logs-08679"
+bucket_name  = "7yr-org-audit-logs-19763"
 auditors     = "group:dpt-dev@hcls.joonix.net"

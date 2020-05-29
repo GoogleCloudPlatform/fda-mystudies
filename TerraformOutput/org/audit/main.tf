@@ -48,7 +48,7 @@ module "bigquery_log_export" {
   source  = "terraform-google-modules/log-export/google"
   version = "~> 4.0"
 
-  log_sink_name        = "bigquery-org-sink"
+  log_sink_name        = "bigquery-org-sink-${random_string.suffix.result}"
   parent_resource_type = "organization"
   parent_resource_id   = var.org_id
   include_children     = true
