@@ -89,7 +89,7 @@ module "storage_log_export" {
   source  = "terraform-google-modules/log-export/google"
   version = "~> 4.0"
 
-  log_sink_name        = "storage-org-sink"
+  log_sink_name        = "mystudies-demo-audit-storage-sink"
   parent_resource_type = "organization"
   parent_resource_id   = var.org_id
   include_children     = true

@@ -56,6 +56,9 @@ export NEW_DOMAIN="hcls.joonix.net"
 export OLD_AUDIT_BUCKET="7yr-org-audit-logs-08679"
 export NEW_AUDIT_BUCKET="7yr-org-audit-logs-19763"
 
+export OLD_SINK_NAME="storage-org-sink"
+export NEW_SINK_NAME="mystudies-demo-audit-storage-sink"
+
 # Cleanup output directory.
 rm -rf ${OUTPUT_TF_BASE}/*
 
@@ -125,6 +128,7 @@ find . -type f -name *.tfvars -o -name *.tf -o -name *.hcl -o -name README.md | 
 
 # Audit
 find . -type f -name *.tfvars -o -name *.tf -o -name *.hcl -o -name README.md | xargs sed -i "s|${OLD_AUDIT_BUCKET}|${NEW_AUDIT_BUCKET}|"
+find . -type f -name *.tfvars -o -name *.tf -o -name *.hcl -o -name README.md | xargs sed -i "s|${OLD_SINK_NAME}|${NEW_SINK_NAME}|"
 
 # Cleanup
 find . -name ".terraform" | xargs rm -rf
