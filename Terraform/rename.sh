@@ -79,7 +79,7 @@ mkdir -p ${OUTPUT_TF_BASE}/org
 cp -r ${INPUT_TF_BASE}/org/README.md ${OUTPUT_TF_BASE}/org/
 cp -r ${INPUT_TF_BASE}/org/terragrunt.hcl ${OUTPUT_TF_BASE}/org/
 cp -r ${INPUT_TF_BASE}/org/audit ${OUTPUT_TF_BASE}/org/
-cp -r ${INPUT_TF_BASE}/org/org_policies ${OUTPUT_TF_BASE}/org/
+# cp -r ${INPUT_TF_BASE}/org/org_policies ${OUTPUT_TF_BASE}/org/
 cp -r ${INPUT_TF_BASE}/org/project.${OLD_PREFIX}-audit ${OUTPUT_TF_BASE}/org/project.${NEW_PREFIX}-audit
 cp -r ${INPUT_TF_BASE}/org/cicd ${OUTPUT_TF_BASE}/org/
 
