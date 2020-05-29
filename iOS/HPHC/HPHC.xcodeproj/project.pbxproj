@@ -223,7 +223,6 @@
 		94CD96E81E4AF61800946477 /* NetworkConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94CD96E41E4AF61800946477 /* NetworkConstants.swift */; };
 		94CD96E91E4AF61800946477 /* NetworkManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94CD96E51E4AF61800946477 /* NetworkManager.swift */; };
 		94CD96EA1E4AF61800946477 /* NetworkWebServiceHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94CD96E61E4AF61800946477 /* NetworkWebServiceHandler.swift */; };
-		94CD96EB1E4AF61800946477 /* Reachability.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94CD96E71E4AF61800946477 /* Reachability.swift */; };
 		94CD96ED1E4AFAFF00946477 /* NetworkConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94CD96EC1E4AFAFF00946477 /* NetworkConfiguration.swift */; };
 		94CD96EF1E4B16D900946477 /* WCPConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94CD96EE1E4B16D900946477 /* WCPConfiguration.swift */; };
 		94D20E9F1E9DFFE7005C3531 /* DBActivity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94D20E9E1E9DFFE7005C3531 /* DBActivity.swift */; };
@@ -519,7 +518,6 @@
 		94CD96E41E4AF61800946477 /* NetworkConstants.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NetworkConstants.swift; sourceTree = "<group>"; };
 		94CD96E51E4AF61800946477 /* NetworkManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NetworkManager.swift; sourceTree = "<group>"; };
 		94CD96E61E4AF61800946477 /* NetworkWebServiceHandler.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NetworkWebServiceHandler.swift; sourceTree = "<group>"; };
-		94CD96E71E4AF61800946477 /* Reachability.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Reachability.swift; sourceTree = "<group>"; };
 		94CD96EC1E4AFAFF00946477 /* NetworkConfiguration.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NetworkConfiguration.swift; sourceTree = "<group>"; };
 		94CD96EE1E4B16D900946477 /* WCPConfiguration.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WCPConfiguration.swift; sourceTree = "<group>"; };
 		94D20E9E1E9DFFE7005C3531 /* DBActivity.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DBActivity.swift; sourceTree = "<group>"; };
@@ -1017,7 +1015,6 @@
 				94CD96EC1E4AFAFF00946477 /* NetworkConfiguration.swift */,
 				94CD96E51E4AF61800946477 /* NetworkManager.swift */,
 				94CD96E61E4AF61800946477 /* NetworkWebServiceHandler.swift */,
-				94CD96E71E4AF61800946477 /* Reachability.swift */,
 			);
 			path = "Network setup";
 			sourceTree = "<group>";
@@ -1998,6 +1995,7 @@
 				"${BUILT_PRODUCTS_DIR}/ActionSheetPicker-3.0/ActionSheetPicker_3_0.framework",
 				"${BUILT_PRODUCTS_DIR}/CryptoSwift/CryptoSwift.framework",
 				"${BUILT_PRODUCTS_DIR}/IQKeyboardManagerSwift/IQKeyboardManagerSwift.framework",
+				"${BUILT_PRODUCTS_DIR}/ReachabilitySwift/Reachability.framework",
 				"${BUILT_PRODUCTS_DIR}/Realm/Realm.framework",
 				"${BUILT_PRODUCTS_DIR}/RealmSwift/RealmSwift.framework",
 				"${BUILT_PRODUCTS_DIR}/SDWebImage/SDWebImage.framework",
@@ -2009,6 +2007,7 @@
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/ActionSheetPicker_3_0.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/CryptoSwift.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/IQKeyboardManagerSwift.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Reachability.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Realm.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/RealmSwift.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SDWebImage.framework",
@@ -2262,7 +2261,6 @@
 				94B3DD551E6ED8E500327AE5 /* SignInTableViewCell.swift in Sources */,
 				6ECA92821E49B3BB00DA6287 /* Resource.swift in Sources */,
 				4884E3581E827E5B002DA0B9 /* ContactUsViewController.swift in Sources */,
-				94CD96EB1E4AF61800946477 /* Reachability.swift in Sources */,
 				6EBC2E8A1E94FB5300828CA1 /* StudyDashboardWelcomeTableViewCell.swift in Sources */,
 				94B3DD4B1E6ED8E500327AE5 /* StudyListViewController.swift in Sources */,
 				6EED7B3B1E65751D002C1FA3 /* FetalKickCounterStepViewController.swift in Sources */,
