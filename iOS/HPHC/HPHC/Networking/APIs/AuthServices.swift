@@ -93,7 +93,7 @@ class AuthServices: NSObject {
     if user.verified! && !user.isLoginWithTempPassword {
 
       // Set user type & save current user to DB
-      user.userType = UserType.FDAUser
+      user.userType = UserType.loggedUser
       DBHandler().saveCurrentUser(user: user)
 
       // Updating Key & Vector
@@ -117,7 +117,7 @@ class AuthServices: NSObject {
 
     let user = User.currentUser
     if user.verified! {
-      user.userType = UserType.FDAUser
+      user.userType = UserType.loggedUser
       DBHandler().saveCurrentUser(user: user)
       let ud = UserDefaults.standard
       ud.set(user.userId!, forKey: kUserId)

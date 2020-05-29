@@ -2,7 +2,6 @@ included:
   - HPHC 
 disabled_rules:
   - type_name
-  - identifier_name
   - large_tuple
   - line_length
   - force_try

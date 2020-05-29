@@ -61,7 +61,7 @@ class StudyFilterViewController: UIViewController {
   private lazy var searchText: String = ""
   private lazy var bookmark = true
   private var filterTypes: [FilterType] {
-    if User.currentUser.userType == .FDAUser {
+    if User.currentUser.userType == .loggedUser {
       return [.participantStatus, .studyStatus, .bookmark]
     } else {
       return [.studyStatus]
@@ -110,7 +110,7 @@ class StudyFilterViewController: UIViewController {
           pariticipationsStatus.append(value.title)
 
         case .bookmark:
-          if User.currentUser.userType == .FDAUser {
+          if User.currentUser.userType == .loggedUser {
             bookmark = (value.isSelected)
             isbookmarked = true
           } else {
@@ -127,7 +127,7 @@ class StudyFilterViewController: UIViewController {
     previousCollectionData = []
     previousCollectionData.append(studyStatus)
 
-    if User.currentUser.userType == .FDAUser {
+    if User.currentUser.userType == .loggedUser {
       if isbookmarked {
         previousCollectionData.append((bookmark == true ? ["Bookmarked"] : []))
       } else {
@@ -245,7 +245,7 @@ extension AppDelegate {
   /// setter method to set the default filter options if none are selected.
   func setDefaultFilters(previousCollectionData: [[String]]) {
 
-    let resource = (User.currentUser.userType == .FDAUser) ? "FilterData" : "AnonymousFilterData"
+    let resource = (User.currentUser.userType == .loggedUser) ? "FilterData" : "AnonymousFilterData"
 
     let plistPath = Bundle.main.path(forResource: resource, ofType: ".plist", inDirectory: nil) ?? ""
     guard let filterData = NSMutableArray.init(contentsOfFile: plistPath) else { return }
@@ -325,7 +325,7 @@ extension AppDelegate {
           pariticipationsStatus.append(value.title)
 
         case .bookmark:
-          if User.currentUser.userType == .FDAUser {
+          if User.currentUser.userType == .loggedUser {
             bookmark = (value.isSelected)
           } else {
             categories.append(value.title)
@@ -337,7 +337,7 @@ extension AppDelegate {
       }
     }
 
-    if User.currentUser.userType == .FDAUser {
+    if User.currentUser.userType == .loggedUser {
       bookmark = false
     } else {
       bookmark = false

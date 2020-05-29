@@ -20,8 +20,8 @@
 import Foundation
 import UIKit
 
-let MAX_WIDTH = 1000
-let MAX_HEIGHT = 100
+let maxWidth = 1000
+let maxHeight = 100
 
 enum DirectoryType: String {
   case study = "Study"
@@ -30,51 +30,51 @@ enum DirectoryType: String {
 
 enum ScreenSize {
 
-  static let SCREEN_WIDTH = UIScreen.main.bounds.size.width
-  static let SCREEN_HEIGHT = UIScreen.main.bounds.size.height
-  static let SCREEN_MAX_LENGTH = max(ScreenSize.SCREEN_WIDTH, ScreenSize.SCREEN_HEIGHT)
-  static let SCREEN_MIN_LENGTH = min(ScreenSize.SCREEN_WIDTH, ScreenSize.SCREEN_HEIGHT)
+  static let screenWidth = UIScreen.main.bounds.size.width
+  static let screenHeight = UIScreen.main.bounds.size.height
+  static let screenMaxLength = max(ScreenSize.screenWidth, ScreenSize.screenHeight)
+  static let screenMinLength = min(ScreenSize.screenWidth, ScreenSize.screenHeight)
 }
 
 enum DeviceType {
 
-  static let IS_IPHONE_4_OR_LESS =
+  static let isIPhone4OrLess =
     UIDevice.current.userInterfaceIdiom == .phone
     && ScreenSize
-      .SCREEN_MAX_LENGTH < 568.0
+      .screenMaxLength < 568.0
 
-  static let IS_IPHONE_5 =
+  static let isIPhone5 =
     UIDevice.current.userInterfaceIdiom == .phone
     && ScreenSize
-      .SCREEN_MAX_LENGTH == 568.0
+      .screenMaxLength == 568.0
 
-  static let IS_IPHONE_6 =
+  static let isIPhoneSE2 =
     UIDevice.current.userInterfaceIdiom == .phone
     && ScreenSize
-      .SCREEN_MAX_LENGTH == 667.0
+      .screenMaxLength == 667.0
 
-  static let IS_IPHONE_6P =
+  static let isIPhone8P =
     UIDevice.current.userInterfaceIdiom == .phone
     && ScreenSize
-      .SCREEN_MAX_LENGTH == 736.0
+      .screenMaxLength == 736.0
 
-  static let IS_IPAD =
+  static let isIPad =
     UIDevice.current.userInterfaceIdiom == .pad
-    && ScreenSize.SCREEN_MAX_LENGTH
+    && ScreenSize.screenMaxLength
       == 1024.0
 
-  static let IS_IPHONE_X_OR_HIGH =
+  static let isIPhoneXOrHigh =
     UIDevice.current.userInterfaceIdiom == .phone
     && ScreenSize
-      .SCREEN_MAX_LENGTH >= 812
+      .screenMaxLength >= 812
 }
 
 enum iOSVersion {
 
-  static let SYS_VERSION_FLOAT = (UIDevice.current.systemVersion as NSString).floatValue
-  static let iOS7 = (iOSVersion.SYS_VERSION_FLOAT < 8.0 && iOSVersion.SYS_VERSION_FLOAT >= 7.0)
-  static let iOS8 = (iOSVersion.SYS_VERSION_FLOAT >= 8.0 && iOSVersion.SYS_VERSION_FLOAT < 9.0)
-  static let iOS9 = (iOSVersion.SYS_VERSION_FLOAT >= 9.0 && iOSVersion.SYS_VERSION_FLOAT < 10.0)
+  static let systemVersion = (UIDevice.current.systemVersion as NSString).floatValue
+  static let iOS7 = (iOSVersion.systemVersion < 8.0 && iOSVersion.systemVersion >= 7.0)
+  static let iOS8 = (iOSVersion.systemVersion >= 8.0 && iOSVersion.systemVersion < 9.0)
+  static let iOS9 = (iOSVersion.systemVersion >= 9.0 && iOSVersion.systemVersion < 10.0)
 }
 
 class Utilities: NSObject {
@@ -198,7 +198,7 @@ class Utilities: NSObject {
       attributes: [NSAttributedString.Key.font: font]
     )
     let rect = attrString.boundingRect(
-      with: CGSize(width: MAX_WIDTH, height: MAX_HEIGHT),
+      with: CGSize(width: maxWidth, height: maxHeight),
       options: NSStringDrawingOptions.usesLineFragmentOrigin,
       context: nil
     )
@@ -416,25 +416,25 @@ class Utilities: NSObject {
     }
   }
 
-  public static var _formatterShort: DateFormatter?
+  public static var shortFormatter: DateFormatter?
 
   public static var formatterShort: DateFormatter! {
 
     get {
 
-      if let f = _formatterShort {
+      if let f = shortFormatter {
         return f
       } else {
         let formatter = DateFormatter()
         formatter.dateFormat = "yyyy-MM-dd"
         //formatter.dateStyle = .short
         formatter.timeZone = TimeZone.current
-        _formatterShort = formatter
+        shortFormatter = formatter
         return formatter
       }
     }
     set(newValue) {
-      _formatterShort = newValue
+      shortFormatter = newValue
     }
   }
 

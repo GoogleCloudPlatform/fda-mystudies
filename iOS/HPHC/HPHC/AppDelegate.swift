@@ -89,7 +89,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
   /// Updates Key & InitializationVector for Encryption
   func updateKeyAndInitializationVector() {
 
-    if User.currentUser.userType == .FDAUser {  // Registered/LoggedIn User
+    if User.currentUser.userType == .loggedUser {  // Registered/LoggedIn User
       // Key byte size shouldn't exceed more than 16.
       FDAKeychain.shared[kEncryptionKey] = String.randomString(length: 16)
     } else {  // Anonymous User
@@ -130,8 +130,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // Do Nothing
       } else {
 
-        Schedule._formatter = nil
-        Schedule._formatter2 = nil
+        Schedule.utcFormatter = nil
+        Schedule.currentZoneFormatter = nil
       }
     }
     ud.synchronize()
@@ -341,7 +341,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data
   ) {
     let deviceTokenString = deviceToken.reduce("", { $0 + String(format: "%02X", $1) })
-    if User.currentUser.userType == .FDAUser {
+    if User.currentUser.userType == .loggedUser {
       User.currentUser.settings?.remoteNotifications = true
       User.currentUser.settings?.localNotifications = true
       // Update device Token to Local server
@@ -459,7 +459,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
   /// Registers pending notifications based on UserType
   func checkForRegisteredNotifications() {
 
-    if User.currentUser.userType == .FDAUser {
+    if User.currentUser.userType == .loggedUser {
 
       let center = UNUserNotificationCenter.current()
       center.getPendingNotificationRequests(
@@ -591,7 +591,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
   func handleLocalAndRemoteNotification(userInfoDetails: [String: Any]) {
 
     var notificationType: String? = ""
-    var notificationSubType: AppNotification.NotificationSubType? = .Announcement
+    var notificationSubType: AppNotification.NotificationSubType? = .announcement
     // User info is valid
     if (userInfoDetails.count) > 0 {
 
@@ -606,7 +606,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         )
       }
 
-      if notificationType == AppNotification.NotificationType.Study.rawValue {  // Study Level Notification
+      if notificationType == AppNotification.NotificationType.study.rawValue {  // Study Level Notification
 
         var studyId: String? = ""
 
@@ -636,7 +636,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
           }
           // Handling Notifications based on SubType
           switch notificationSubType! as AppNotification.NotificationSubType {
-          case .Activity, .Resource:  // Activity & Resource  Notifications
+          case .activity, .resource:  // Activity & Resource  Notifications
 
             if !(initialVC is UITabBarController) {
               // push tabbar and switch to activty tab
@@ -644,17 +644,17 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
               self.pushToTabbar(
                 viewController: initialVC!,
                 selectedTab: (notificationSubType! as AppNotification.NotificationSubType
-                  == .Activity) ? 0 : 2
+                  == .activity) ? 0 : 2
               )
 
             } else {
               // switch to activity tab
               (initialVC as? UITabBarController)!.selectedIndex =
                 (notificationSubType! as AppNotification.NotificationSubType
-                  == .Activity) ? 0 : 2
+                  == .activity) ? 0 : 2
             }
 
-          case .Study, .studyEvent:  // Study Notifications
+          case .study, .studyEvent:  // Study Notifications
 
             let leftController =
               ((menuVC as? FDASlideMenuViewController)!.leftViewController
@@ -684,7 +684,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
               leftController.createLeftmenuItems()
             }
 
-          case .Announcement:
+          case .announcement:
             break
           }
         }
@@ -716,7 +716,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
   /// - Parameter viewController: Instance of `UIViewController`
   func checkPasscode(viewController: UIViewController) {
 
-    if User.currentUser.userType == .FDAUser {  // FDA user
+    if User.currentUser.userType == .loggedUser {  // FDA user
 
       if User.currentUser.settings?.passcode! == true {
         // Passcode already exist
@@ -898,7 +898,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
       if !Utilities.isStandaloneApp() {
         let leftController = (slideMenuController.leftViewController as? LeftMenuViewController)!
-        leftController.changeViewController(.reachOut_signIn)
+        leftController.changeViewController(.reachOutSignIn)
         leftController.createLeftmenuItems()
         self.addAndRemoveProgress(add: false)
       } else {
@@ -987,18 +987,18 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
         let studyStatus = StudyStatus(rawValue: StudyUpdates.studyStatus!)!
 
-        if studyStatus != .Active {  // Study is Active
+        if studyStatus != .active {  // Study is Active
           _ = nav?.popToRootViewController(animated: true)
           var message = ""
           switch studyStatus {
 
-          case .Upcoming:
+          case .upcoming:
             message = NSLocalizedString(kMessageForStudyUpcomingState, comment: "")
 
-          case .Paused:
+          case .paused:
             message = NSLocalizedString(kMessageForStudyPausedState, comment: "")
 
-          case .Closed:
+          case .closed:
             message = NSLocalizedString(kMessageForStudyClosedState, comment: "")
 
           default: break
@@ -1147,11 +1147,11 @@ extension AppDelegate {
 
     if let iosDict = response["ios"] as? JSONDictionary,
       let latestVersion = iosDict["latestVersion"] as? String,
-      let ForceUpdate = iosDict["forceUpdate"] as? String
+      let isForceUpdate = iosDict["forceUpdate"] as? String
     {
 
       let appVersion = Utilities.getAppVersion()
-      guard let isForceUpdate = Bool(ForceUpdate) else { return }
+      guard let isForceUpdate = Bool(isForceUpdate) else { return }
 
       // latestVersion = "2.0" make it mutable to test and uncomment
       if appVersion != latestVersion,
@@ -1167,7 +1167,7 @@ extension AppDelegate {
         self.blockerScreen?.labelVersionNumber.text = "V- " + latestVersion
         self.blockerScreen?.labelMessage.text = kBlockerScreenLabelText
 
-        if User.currentUser.userType == .FDAUser {
+        if User.currentUser.userType == .loggedUser {
           // FDA user
           if User.currentUser.settings?.passcode! == false {
             UIApplication.shared.keyWindow?.addSubview(self.blockerScreen!)

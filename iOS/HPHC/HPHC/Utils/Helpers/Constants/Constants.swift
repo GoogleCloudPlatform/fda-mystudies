@@ -54,8 +54,8 @@ let kUIColorForSubmitButtonBackground = UIColor.init(
   alpha: 1.0
 )
 
-let NoNetworkErrorCode = -101
-let CouldNotConnectToServerCode = -1001
+let kNoNetworkErrorCode = -101
+let kCouldNotConnectToServerCode = -1001
 
 //Display Constants
 let kTitleError = "Error"
@@ -276,22 +276,7 @@ let kMessage = "message"
 let kVisualStepId = "visual"
 let kConfirmation = "Confirmation"
 
-// MARK: - Branding constants
-enum BrandingConstant {
-  static let JoinStudyButtonTitle = "JoinStudyButtonTitle"
-  static let ViewConsentButtonTitle = "ViewConsentButtonTitle"
-  static let VisitWebsiteButtonTitle = "VisitWebsiteButtonTitle"
-  static let ConsentPDF = "ConsentPDF"
-  static let LeaveStudy = "LeaveStudy"
-  static let LeaveStudyConfirmationText = "LeaveStudyConfirmationText"
-  static let WebsiteLink = "WebsiteLink"
-  static let WebsiteButtonTitle = "WebsiteButtonTitle"
-  static let TermsAndConditionURL = "TermsAndConditionURL"
-  static let PrivacyPolicyURL = "PrivacyPolicyURL"
-  static let ValidatedTitle = "ValidatedTitle"
-}
-
-public func Log<T>(
+public func log<T>(
   _ object: T?,
   filename: String = #file,
   line: Int = #line,

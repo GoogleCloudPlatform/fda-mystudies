@@ -531,7 +531,7 @@ class ProfileViewController: UIViewController, SlideMenuControllerDelegate {
 
   /// Used to check weather the user id FDA user or not.
   func checkPasscode() {
-    if User.currentUser.userType == .FDAUser {
+    if User.currentUser.userType == .loggedUser {
       // FDA user
       if ORKPasscodeViewController.isPasscodeStoredInKeychain() == false {
         let passcodeStep = ORKPasscodeStep(identifier: kPasscodeStepIdentifier)
@@ -613,7 +613,7 @@ extension ProfileViewController: UITableViewDataSource {
 
       // TextField properties set up according to index
       switch textFieldTag {
-      case .Password:
+      case .password:
 
         cell.buttonChangePassword?.isUserInteractionEnabled = true
         cell.buttonChangePassword?.isHidden = false
@@ -630,11 +630,11 @@ extension ProfileViewController: UITableViewDataSource {
         cell.isUserInteractionEnabled = true
 
         isSecuredEntry = true
-      case .EmailId:
+      case .emailId:
         keyBoardType = .emailAddress
         isSecuredEntry = false
 
-      case .ConfirmPassword:  //  ChangePasscode
+      case .confirmPassword:  //  ChangePasscode
 
         cell.textFieldValue?.isHidden = true
         cell.buttonChangePassword?.isHidden = false
@@ -674,7 +674,7 @@ extension ProfileViewController: UITableViewDataSource {
 
       cell.setCellData(tag: TextFieldTags(rawValue: indexPath.row)!)
 
-      if TextFieldTags(rawValue: indexPath.row) == .EmailId {
+      if TextFieldTags(rawValue: indexPath.row) == .emailId {
         cell.textFieldValue?.isUserInteractionEnabled = false
       }
 
@@ -731,7 +731,7 @@ extension ProfileViewController: UITextFieldDelegate {
 
     let finalString = textField.text! + string
 
-    if tag == .EmailId {
+    if tag == .emailId {
       if string == " " || finalString.count > 255 {
         return false
       } else {
@@ -749,10 +749,10 @@ extension ProfileViewController: UITextFieldDelegate {
 
     switch textField.tag {
 
-    case TextFieldTags.EmailId.rawValue:
+    case TextFieldTags.emailId.rawValue:
       user.emailId! = textField.text!
 
-    case TextFieldTags.Password.rawValue:
+    case TextFieldTags.password.rawValue:
       user.password! = textField.text!
 
     default:
