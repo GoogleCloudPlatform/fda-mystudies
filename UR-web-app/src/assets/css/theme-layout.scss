@@ -1,5 +1,3 @@
-/* media queries scss */
-
 @media (min-width: 375px) {
   #mobile-menu {
     display: block;
@@ -78,7 +76,7 @@
   form .bg__white .form-group {
     padding: 10px 15px;
   }
-  .text__b6c5db__50 {
+  .progress-bar-next__title {
     color: #b6c5db;
     font-size: 40px;
     line-height: 40px;
@@ -118,7 +116,6 @@
   header {
     padding: 20px 15px;
   }
-  /*table css */
   .table td {
     display: flex;
   }
@@ -182,7 +179,6 @@
     background: #fff !important;
     display: block;
     margin-bottom: 12px;
-    /* border-radius */
     -webkit-border-radius: 10px;
     -moz-border-radius: 10px;
     border-radius: 10px;
@@ -206,7 +202,6 @@
   .one__column__td .table tbody tr td {
     border-radius: 7px !important;
   }
-  /*table css */
   .mb__padding__lg {
     padding: 20px !important;
   }
@@ -293,7 +288,7 @@
   form .bg__white .form-group {
     padding: 25px 30px;
   }
-  .text__b6c5db__50 {
+  .progress-bar-next__title {
     color: #b6c5db;
     font-size: 50px;
     line-height: 50px;
@@ -338,7 +333,6 @@
   header {
     padding: 8px 40px;
   }
-  /*table css */
   .table td {
     display: table-cell;
   }
@@ -410,7 +404,6 @@
   .site__table .table {
     margin-top: 0;
   }
-  /* table css */
   .mb__padding__lg {
     padding: 30px !important;
   }
@@ -459,8 +452,3 @@
     width: 600px;
   }
 }
-
-@media (min-width: 1400px) {
-}
-
-/* media queries scss */
