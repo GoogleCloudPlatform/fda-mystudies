@@ -53,6 +53,9 @@ export NEW_ADMIN_EMAIL="group:dpt-dev@hcls.joonix.net"
 export OLD_DOMAIN="rocketturtle.net"
 export NEW_DOMAIN="hcls.joonix.net"
 
+export OLD_AUDIT_BUCKET="7yr-org-audit-logs-08679"
+export NEW_AUDIT_BUCKET="7yr-org-audit-logs-19763"
+
 # Cleanup output directory.
 rm -rf ${OUTPUT_TF_BASE}/*
 
@@ -119,6 +122,9 @@ find . -type f -name *.tfvars -o -name *.tf -o -name *.hcl -o -name README.md | 
 find . -type f -name *.tfvars -o -name *.tf -o -name *.hcl -o -name README.md | xargs sed -i "s|"${OLD_GITHUB_ORG}"|"${NEW_GITHUB_ORG}"|"
 # find . -type f -name *.tfvars -o -name *.tf -o -name *.hcl -o -name README.md | xargs sed -i "s|"${OLD_GITHUB_REPO}"|"${NEW_GITHUB_REPO}"|"
 # find . -type f -name *.tfvars -o -name *.tf -o -name *.hcl -o -name README.md | xargs sed -i "s|"${OLD_GITHUB_BRANCH}"|"${NEW_GITHUB_BRANCH}"|"
+
+# Audit
+find . -type f -name *.tfvars -o -name *.tf -o -name *.hcl -o -name README.md | xargs sed -i "s|${OLD_AUDIT_BUCKET}|${NEW_AUDIT_BUCKET}|"
 
 # Cleanup
 find . -name ".terraform" | xargs rm -rf
