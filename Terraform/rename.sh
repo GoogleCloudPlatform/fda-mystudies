@@ -25,6 +25,9 @@ export NEW_FOLDER=
 export OLD_ORG_ID="707577601068"
 export NEW_ORG_ID=
 
+export OLD_FOLDER_ID="440087619763"
+export NEW_FOLDER_ID=""
+
 export OLD_BILLING_ACCOUNT="01EA90-3519E1-89CB1F"
 export NEW_BILLING_ACCOUNT=
 
@@ -42,6 +45,12 @@ export NEW_GITHUB_BRANCH=
 
 export SRC_PROJ_BASE=${INPUT_TF_BASE}/org/folder.${OLD_FOLDER}/project.${OLD_PREFIX}
 export DST_PROJ_BASE=${OUTPUT_TF_BASE}/org/folder.${NEW_FOLDER}/project.${NEW_PREFIX}
+
+export OLD_ADMIN_EMAIL="group:rocketturtle-gcp-admin@rocketturtle.net"
+export NEW_ADMIN_EMAIL=
+
+export OLD_DOMAIN="rocketturtle.net"
+export NEW_DOMAIN=
 
 # Cleanup output directory.
 rm -rf ${OUTPUT_TF_BASE}/*
@@ -94,6 +103,9 @@ find . -type f -name *.tfvars -o -name *.tf -o -name *.hcl -o -name README.md | 
 # Org info
 find . -type f -name *.tfvars -o -name *.tf -o -name *.hcl -o -name README.md | xargs sed -i "s|${OLD_ORG_ID}|${NEW_ORG_ID}|"
 find . -type f -name *.tfvars -o -name *.tf -o -name *.hcl -o -name README.md | xargs sed -i "s|${OLD_BILLING_ACCOUNT}|${NEW_BILLING_ACCOUNT}|"
+find . -type f -name *.tfvars -o -name *.tf -o -name *.hcl -o -name README.md | xargs sed -i "s|${OLD_FOLDER_ID}|${NEW_FOLDER_ID}|"
+find . -type f -name *.tfvars -o -name *.tf -o -name *.hcl -o -name README.md | xargs sed -i "s|${OLD_ADMIN_EMAIL}|${NEW_ADMIN_EMAIL}|"
+find . -type f -name *.tfvars -o -name *.tf -o -name *.hcl -o -name README.md | xargs sed -i "s|${OLD_DOMAIN}|${NEW_DOMAIN}|"
 
 # Org group
 find . -type f -name *.tfvars -o -name *.tf -o -name *.hcl -o -name README.md | xargs sed -i "s|${OLD_ADMIN_GROUP}|${NEW_ADMIN_GROUP}|"

@@ -43,6 +43,8 @@ module "project" {
 
   name                    = var.devops_project_id
   org_id                  = var.org_id
+  // uncomment if you want to limit changes to folder.
+  // folder_id               = var.folder_id
   billing_account         = var.billing_account
   lien                    = true
   default_service_account = "keep"
