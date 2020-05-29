@@ -61,7 +61,7 @@ public class NotificationModuleSubscriber {
   }
 
   public void generateActivityLocalNotification(
-          ActivityRun activityRun, Context context, String type, int offset) {
+      ActivityRun activityRun, Context context, String type, int offset) {
     String title = context.getResources().getString(R.string.app_name);
     String description = "";
     String description1 = "";
@@ -69,8 +69,8 @@ public class NotificationModuleSubscriber {
     Calendar time = Calendar.getInstance();
     Calendar time1 = Calendar.getInstance();
     ActivitiesWS activitiesWS =
-            dbServiceSubscriber.getActivityItem(
-                    activityRun.getStudyId(), activityRun.getActivityId(), mRealm);
+        dbServiceSubscriber.getActivityItem(
+            activityRun.getStudyId(), activityRun.getActivityId(), mRealm);
 
     if (type.equalsIgnoreCase(SurveyScheduler.FREQUENCY_TYPE_ONE_TIME)) {
       Date date = removeOffset(activityRun.getEndDate(), offset);
@@ -81,29 +81,29 @@ public class NotificationModuleSubscriber {
       time1.setTime(date1);
 
       description =
-              context.getResources().getString(R.string.the_activity)
-                      + " "
-                      + activitiesWS.getTitle()
-                      + " "
-                      + context.getResources().getString(R.string.participation_is_important);
+          context.getResources().getString(R.string.the_activity)
+              + " "
+              + activitiesWS.getTitle()
+              + " "
+              + context.getResources().getString(R.string.participation_is_important);
       description1 =
-              context.getResources().getString(R.string.the_activity)
-                      + " "
-                      + activitiesWS.getTitle()
-                      + ", "
-                      + context.getResources().getString(R.string.now_available_to_take);
+          context.getResources().getString(R.string.the_activity)
+              + " "
+              + activitiesWS.getTitle()
+              + ", "
+              + context.getResources().getString(R.string.now_available_to_take);
     } else if (type.equalsIgnoreCase(SurveyScheduler.FREQUENCY_TYPE_MANUALLY_SCHEDULE)) {
       Date date = removeOffset(activityRun.getStartDate(), offset);
       time.setTime(date);
       description =
-              context.getResources().getString(R.string.scheduled_activity)
-                      + " "
-                      + activitiesWS.getTitle()
-                      + ", "
-                      + context.getResources().getString(R.string.valid_until)
-                      + " "
-                      + notificationFormat.format(activityRun.getEndDate())
-                      + context.getResources().getString(R.string.participation_is_important2);
+          context.getResources().getString(R.string.scheduled_activity)
+              + " "
+              + activitiesWS.getTitle()
+              + ", "
+              + context.getResources().getString(R.string.valid_until)
+              + " "
+              + notificationFormat.format(activityRun.getEndDate())
+              + context.getResources().getString(R.string.participation_is_important2);
     } else if (type.equalsIgnoreCase(SurveyScheduler.FREQUENCY_TYPE_WEEKLY)) {
       Date date = removeOffset(activityRun.getEndDate(), offset);
       time.setTime(date);
@@ -113,17 +113,17 @@ public class NotificationModuleSubscriber {
       time1.setTime(date1);
 
       description =
-              context.getResources().getString(R.string.weekly_activity)
-                      + " "
-                      + activitiesWS.getTitle()
-                      + ", "
-                      + context.getResources().getString(R.string.participation_is_important);
+          context.getResources().getString(R.string.weekly_activity)
+              + " "
+              + activitiesWS.getTitle()
+              + ", "
+              + context.getResources().getString(R.string.participation_is_important);
       description1 =
-              context.getResources().getString(R.string.new_run)
-                      + " "
-                      + activitiesWS.getTitle()
-                      + ", "
-                      + context.getResources().getString(R.string.study_complete);
+          context.getResources().getString(R.string.new_run)
+              + " "
+              + activitiesWS.getTitle()
+              + ", "
+              + context.getResources().getString(R.string.study_complete);
     } else if (type.equalsIgnoreCase(SurveyScheduler.FREQUENCY_TYPE_MONTHLY)) {
       Date date = removeOffset(activityRun.getEndDate(), offset);
       time.setTime(date);
@@ -133,44 +133,44 @@ public class NotificationModuleSubscriber {
       time1.setTime(date1);
 
       description =
-              context.getResources().getString(R.string.monthly_activity)
-                      + " "
-                      + activitiesWS.getTitle()
-                      + ", "
-                      + context.getResources().getString(R.string.expire_in_three_days);
+          context.getResources().getString(R.string.monthly_activity)
+              + " "
+              + activitiesWS.getTitle()
+              + ", "
+              + context.getResources().getString(R.string.expire_in_three_days);
       description1 =
-              context.getResources().getString(R.string.new_run_monthly_activity)
-                      + " "
-                      + activitiesWS.getTitle()
-                      + ", "
-                      + context.getResources().getString(R.string.study_complete);
+          context.getResources().getString(R.string.new_run_monthly_activity)
+              + " "
+              + activitiesWS.getTitle()
+              + ", "
+              + context.getResources().getString(R.string.study_complete);
     } else if (type.equalsIgnoreCase(SurveyScheduler.FREQUENCY_TYPE_DAILY)) {
       Date date = removeOffset(activityRun.getStartDate(), offset);
       time.setTime(date);
       description =
-              context.getResources().getString(R.string.new_run_daily_activity)
-                      + " "
-                      + activitiesWS.getTitle()
-                      + ", "
-                      + context.getResources().getString(R.string.your_participation_important);
+          context.getResources().getString(R.string.new_run_daily_activity)
+              + " "
+              + activitiesWS.getTitle()
+              + ", "
+              + context.getResources().getString(R.string.your_participation_important);
     } else if (type.equalsIgnoreCase(SurveyScheduler.FREQUENCY_TYPE_WITHIN_A_DAY)) {
       Date date = removeOffset(activityRun.getStartDate(), offset);
       time.setTime(date);
       description =
-              context.getResources().getString(R.string.new_run_daily_activity)
-                      + " "
-                      + activitiesWS.getTitle()
-                      + ", "
-                      + context.getResources().getString(R.string.valid_until)
-                      + " "
-                      + notificationFormat.format(activityRun.getEndDate())
-                      + context.getResources().getString(R.string.participation_is_important2);
+          context.getResources().getString(R.string.new_run_daily_activity)
+              + " "
+              + activitiesWS.getTitle()
+              + ", "
+              + context.getResources().getString(R.string.valid_until)
+              + " "
+              + notificationFormat.format(activityRun.getEndDate())
+              + context.getResources().getString(R.string.participation_is_important2);
     }
     updateNotificationToDbAndSetAlarm(context, activityRun, time, title, description, offset);
     // Notification availability for monthly, weekly, One time
     if ((type.equalsIgnoreCase(SurveyScheduler.FREQUENCY_TYPE_MONTHLY)
-            || type.equalsIgnoreCase(SurveyScheduler.FREQUENCY_TYPE_WEEKLY)
-            || type.equalsIgnoreCase(SurveyScheduler.FREQUENCY_TYPE_ONE_TIME))) {
+        || type.equalsIgnoreCase(SurveyScheduler.FREQUENCY_TYPE_WEEKLY)
+        || type.equalsIgnoreCase(SurveyScheduler.FREQUENCY_TYPE_ONE_TIME))) {
       updateNotificationToDbAndSetAlarm(context, activityRun, time1, title, description1, offset);
     }
   }
@@ -178,17 +178,17 @@ public class NotificationModuleSubscriber {
   private void set24hourScheduler(Context context) {
     Calendar calendar = getCalenderNextDay();
     Intent notificationIntent =
-            new Intent(context, AlarmReceiver.class)
-                    .setAction("android.media.action.DISPLAY_NOTIFICATION")
-                    .addCategory("android.intent.category.DEFAULT")
-                    .putExtra("pendingIntentId", 1);
+        new Intent(context, AlarmReceiver.class)
+            .setAction("android.media.action.DISPLAY_NOTIFICATION")
+            .addCategory("android.intent.category.DEFAULT")
+            .putExtra("pendingIntentId", 1);
     AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
     PendingIntent broadcast =
-            PendingIntent.getBroadcast(
-                    context, 1, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+        PendingIntent.getBroadcast(
+            context, 1, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
       alarmManager.setExactAndAllowWhileIdle(
-              AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), broadcast);
+          AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), broadcast);
     } else {
       alarmManager.setExact(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), broadcast);
     }
@@ -200,49 +200,49 @@ public class NotificationModuleSubscriber {
     Calendar calendar2 = Calendar.getInstance();
     calendar2.setTime(date2);
     return calendar1.get(Calendar.YEAR) == calendar2.get(Calendar.YEAR)
-            && calendar1.get(Calendar.MONTH) == calendar2.get(Calendar.MONTH)
-            && calendar1.get(Calendar.DAY_OF_MONTH) == calendar2.get(Calendar.DAY_OF_MONTH);
+        && calendar1.get(Calendar.MONTH) == calendar2.get(Calendar.MONTH)
+        && calendar1.get(Calendar.DAY_OF_MONTH) == calendar2.get(Calendar.DAY_OF_MONTH);
   }
 
   public void setAlarm(
-          Context context,
-          String title,
-          String description,
-          String type,
-          int notificationId,
-          String studyId,
-          String activityId,
-          Calendar time) {
+      Context context,
+      String title,
+      String description,
+      String type,
+      int notificationId,
+      String studyId,
+      String activityId,
+      Calendar time) {
     AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
     int notificationNumber = 1;
     Intent notificationIntent =
-            new Intent(context, AlarmReceiver.class)
-                    .setAction("android.media.action.DISPLAY_NOTIFICATION")
-                    .addCategory("android.intent.category.DEFAULT")
-                    .putExtra("title", title)
-                    .putExtra("description", description)
-                    .putExtra("type", type)
-                    .putExtra("notificationId", notificationId)
-                    .putExtra("studyId", studyId)
-                    .putExtra("activityId", activityId)
-                    .putExtra("date", AppController.getDateFormat().format(time.getTime()))
-                    .putExtra("notificationNumber", notificationNumber);
+        new Intent(context, AlarmReceiver.class)
+            .setAction("android.media.action.DISPLAY_NOTIFICATION")
+            .addCategory("android.intent.category.DEFAULT")
+            .putExtra("title", title)
+            .putExtra("description", description)
+            .putExtra("type", type)
+            .putExtra("notificationId", notificationId)
+            .putExtra("studyId", studyId)
+            .putExtra("activityId", activityId)
+            .putExtra("date", AppController.getDateFormat().format(time.getTime()))
+            .putExtra("notificationNumber", notificationNumber);
 
     int pendingIntentId =
-            Integer.parseInt(
-                    AppController.getHelperSharedPreference()
-                            .readPreference(
-                                    context, context.getResources().getString(R.string.pendingCount), "5"))
-                    + 1;
+        Integer.parseInt(
+                AppController.getHelperSharedPreference()
+                    .readPreference(
+                        context, context.getResources().getString(R.string.pendingCount), "5"))
+            + 1;
     AppController.getHelperSharedPreference()
-            .writePreference(
-                    context, context.getResources().getString(R.string.pendingCount), "" + pendingIntentId);
+        .writePreference(
+            context, context.getResources().getString(R.string.pendingCount), "" + pendingIntentId);
 
     notificationIntent.putExtra("pendingIntentId", pendingIntentId);
 
     PendingIntent broadcast =
-            PendingIntent.getBroadcast(
-                    context, pendingIntentId, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+        PendingIntent.getBroadcast(
+            context, pendingIntentId, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
     PendingIntents pendingIntents = new PendingIntents();
     pendingIntents.setActivityId(activityId);
     pendingIntents.setStudyId(studyId);
@@ -255,7 +255,7 @@ public class NotificationModuleSubscriber {
     dbServiceSubscriber.savePendingIntentId(context, pendingIntents);
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
       alarmManager.setExactAndAllowWhileIdle(
-              AlarmManager.RTC_WAKEUP, time.getTimeInMillis(), broadcast);
+          AlarmManager.RTC_WAKEUP, time.getTimeInMillis(), broadcast);
     } else {
       alarmManager.setExact(AlarmManager.RTC_WAKEUP, time.getTimeInMillis(), broadcast);
     }
@@ -269,21 +269,21 @@ public class NotificationModuleSubscriber {
     AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
 
     Intent notificationIntent =
-            new Intent(context, AlarmReceiver.class)
-                    .setAction("android.media.action.DISPLAY_NOTIFICATION")
-                    .addCategory("android.intent.category.DEFAULT")
-                    .putExtra("title", title)
-                    .putExtra(
-                            "description", context.getResources().getString(R.string.studie_your_enrolled))
-                    .putExtra("type", NO_USE_NOTIFICATION)
-                    .putExtra("date", AppController.getDateFormat().format(calendar.getTime()));
+        new Intent(context, AlarmReceiver.class)
+            .setAction("android.media.action.DISPLAY_NOTIFICATION")
+            .addCategory("android.intent.category.DEFAULT")
+            .putExtra("title", title)
+            .putExtra(
+                "description", context.getResources().getString(R.string.studie_your_enrolled))
+            .putExtra("type", NO_USE_NOTIFICATION)
+            .putExtra("date", AppController.getDateFormat().format(calendar.getTime()));
 
     PendingIntent broadcast =
-            PendingIntent.getBroadcast(
-                    context, pendingId, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+        PendingIntent.getBroadcast(
+            context, pendingId, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
       alarmManager.setExactAndAllowWhileIdle(
-              AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), broadcast);
+          AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), broadcast);
     } else {
       alarmManager.setExact(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), broadcast);
     }
@@ -294,16 +294,16 @@ public class NotificationModuleSubscriber {
     AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
     String title = context.getResources().getString(R.string.app_name);
     Intent notificationIntent =
-            new Intent(context, AlarmReceiver.class)
-                    .setAction("android.media.action.DISPLAY_NOTIFICATION")
-                    .addCategory("android.intent.category.DEFAULT")
-                    .putExtra("title", title)
-                    .putExtra(
-                            "description", context.getResources().getString(R.string.studie_your_enrolled))
-                    .putExtra("type", NO_USE_NOTIFICATION);
+        new Intent(context, AlarmReceiver.class)
+            .setAction("android.media.action.DISPLAY_NOTIFICATION")
+            .addCategory("android.intent.category.DEFAULT")
+            .putExtra("title", title)
+            .putExtra(
+                "description", context.getResources().getString(R.string.studie_your_enrolled))
+            .putExtra("type", NO_USE_NOTIFICATION);
     PendingIntent broadcast =
-            PendingIntent.getBroadcast(
-                    context, pendingId, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+        PendingIntent.getBroadcast(
+            context, pendingId, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
     broadcast.cancel();
     alarmManager.cancel(broadcast);
   }
@@ -317,22 +317,22 @@ public class NotificationModuleSubscriber {
     AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
 
     Intent notificationIntent =
-            new Intent(context, AlarmReceiver.class)
-                    .setAction("android.media.action.DISPLAY_NOTIFICATION")
-                    .addCategory("android.intent.category.DEFAULT")
-                    .putExtra("title", title)
-                    .putExtra(
-                            "description",
-                            context.getResources().getString(R.string.notificatinturnoffnotification))
-                    .putExtra("type", NOTIFICATION_TURN_OFF_NOTIFICATION)
-                    .putExtra("date", AppController.getDateFormat().format(calendar.getTime()));
+        new Intent(context, AlarmReceiver.class)
+            .setAction("android.media.action.DISPLAY_NOTIFICATION")
+            .addCategory("android.intent.category.DEFAULT")
+            .putExtra("title", title)
+            .putExtra(
+                "description",
+                context.getResources().getString(R.string.notificatinturnoffnotification))
+            .putExtra("type", NOTIFICATION_TURN_OFF_NOTIFICATION)
+            .putExtra("date", AppController.getDateFormat().format(calendar.getTime()));
 
     PendingIntent broadcast =
-            PendingIntent.getBroadcast(
-                    context, pendingId1, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+        PendingIntent.getBroadcast(
+            context, pendingId1, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
       alarmManager.setExactAndAllowWhileIdle(
-              AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), broadcast);
+          AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), broadcast);
     } else {
       alarmManager.setExact(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), broadcast);
     }
@@ -343,41 +343,43 @@ public class NotificationModuleSubscriber {
     AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
     String title = context.getResources().getString(R.string.app_name);
     Intent notificationIntent =
-            new Intent(context, AlarmReceiver.class)
-                    .setAction("android.media.action.DISPLAY_NOTIFICATION")
-                    .addCategory("android.intent.category.DEFAULT")
-                    .putExtra("title", title)
-                    .putExtra(
-                            "description",
-                            context.getResources().getString(R.string.notificatinturnoffnotification))
-                    .putExtra("type", NOTIFICATION_TURN_OFF_NOTIFICATION);
+        new Intent(context, AlarmReceiver.class)
+            .setAction("android.media.action.DISPLAY_NOTIFICATION")
+            .addCategory("android.intent.category.DEFAULT")
+            .putExtra("title", title)
+            .putExtra(
+                "description",
+                context.getResources().getString(R.string.notificatinturnoffnotification))
+            .putExtra("type", NOTIFICATION_TURN_OFF_NOTIFICATION);
     PendingIntent broadcast =
-            PendingIntent.getBroadcast(
-                    context, pendingId1, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+        PendingIntent.getBroadcast(
+            context, pendingId1, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
     broadcast.cancel();
     alarmManager.cancel(broadcast);
   }
 
   public void generateAnchorDateLocalNotification(
-          Date date,
-          String activityId,
-          String studyId,
-          Context context,
-          String notificationTest,
-          String resourceId) {
+      Date date,
+      String activityId,
+      String studyId,
+      Context context,
+      String notificationTest,
+      String resourceId) {
     String title = "MyStudies";
     String description = "";
     Calendar time = Calendar.getInstance();
     NotificationDbResources notificationsDb = null;
     RealmResults<NotificationDbResources> notificationsDbs =
-            dbServiceSubscriber.getNotificationDbResources(activityId, studyId, RESOURCES, mRealm);
+        dbServiceSubscriber.getNotificationDbResources(activityId, studyId, RESOURCES, mRealm);
     int id = 0;
     if (notificationsDbs != null) {
       for (NotificationDbResources notificationDbResources : notificationsDbs) {
         if (notificationDbResources.getResourceId().equalsIgnoreCase(resourceId)) {
           notificationsDb = notificationDbResources;
         }
-        id = notificationDbResources.getId();
+      }
+      if (!notificationsDbs.isEmpty()) {
+        id = notificationsDbs.last().getId();
       }
     }
     id++;
@@ -395,56 +397,57 @@ public class NotificationModuleSubscriber {
     notificationDb.setTitle(title);
     notificationDb.setDescription(description);
     notificationDb.setId(id);
-    if (notificationsDb == null) {
-      dbServiceSubscriber.updateNotificationToDb(context, notificationDb);
-      AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+    if (notificationsDb != null) {
+      return;
+    }
+    dbServiceSubscriber.updateNotificationToDb(context, notificationDb);
+    AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
 
-      Intent notificationIntent = new Intent(context, AlarmReceiver.class);
-      notificationIntent
-              .setAction("android.media.action.DISPLAY_NOTIFICATION")
-              .addCategory("android.intent.category.DEFAULT")
-              .putExtra("title", title)
-              .putExtra("description", description)
-              .putExtra("type", RESOURCES)
-              .putExtra("studyId", studyId)
-              .putExtra("notificationId", notificationId)
-              .putExtra("activityId", activityId)
-              .putExtra("date", AppController.getDateFormat().format(time.getTime()));
-      int notificationNumber = 1;
-      notificationIntent.putExtra("notificationNumber", notificationNumber);
+    Intent notificationIntent = new Intent(context, AlarmReceiver.class);
+    notificationIntent
+        .setAction("android.media.action.DISPLAY_NOTIFICATION")
+        .addCategory("android.intent.category.DEFAULT")
+        .putExtra("title", title)
+        .putExtra("description", description)
+        .putExtra("type", RESOURCES)
+        .putExtra("studyId", studyId)
+        .putExtra("notificationId", notificationId)
+        .putExtra("activityId", activityId)
+        .putExtra("date", AppController.getDateFormat().format(time.getTime()));
+    int notificationNumber = 1;
+    notificationIntent.putExtra("notificationNumber", notificationNumber);
 
-      int pendingIntentId =
-              Integer.parseInt(
-                      AppController.getHelperSharedPreference()
-                              .readPreference(
-                                      context,
-                                      context.getResources().getString(R.string.pendingCountResources),
-                                      "0"))
-                      + 1;
-      AppController.getHelperSharedPreference()
-              .writePreference(
-                      context,
-                      context.getResources().getString(R.string.pendingCountResources),
-                      "" + pendingIntentId);
-      PendingIntent broadcast =
-              PendingIntent.getBroadcast(
-                      context, pendingIntentId, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
-      PendingIntentsResources pendingIntents = new PendingIntentsResources();
-      pendingIntents.setActivityId(activityId);
-      pendingIntents.setStudyId(studyId);
-      pendingIntents.setPendingIntentId(pendingIntentId);
-      pendingIntents.setTitle(title);
-      pendingIntents.setType(description);
-      pendingIntents.setDescription(RESOURCES);
-      pendingIntents.setNotificationId(notificationId);
+    int pendingIntentId =
+        Integer.parseInt(
+                AppController.getHelperSharedPreference()
+                    .readPreference(
+                        context,
+                        context.getResources().getString(R.string.pendingCountResources),
+                        "0"))
+            + 1;
+    AppController.getHelperSharedPreference()
+        .writePreference(
+            context,
+            context.getResources().getString(R.string.pendingCountResources),
+            "" + pendingIntentId);
+    PendingIntent broadcast =
+        PendingIntent.getBroadcast(
+            context, pendingIntentId, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+    PendingIntentsResources pendingIntents = new PendingIntentsResources();
+    pendingIntents.setActivityId(activityId);
+    pendingIntents.setStudyId(studyId);
+    pendingIntents.setPendingIntentId(pendingIntentId);
+    pendingIntents.setTitle(title);
+    pendingIntents.setType(description);
+    pendingIntents.setDescription(RESOURCES);
+    pendingIntents.setNotificationId(notificationId);
 
-      dbServiceSubscriber.savePendingIntentIdResources(context, pendingIntents);
-      if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-        alarmManager.setExactAndAllowWhileIdle(
-                AlarmManager.RTC_WAKEUP, time.getTimeInMillis(), broadcast);
-      } else {
-        alarmManager.setExact(AlarmManager.RTC_WAKEUP, time.getTimeInMillis(), broadcast);
-      }
+    dbServiceSubscriber.savePendingIntentIdResources(context, pendingIntents);
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+      alarmManager.setExactAndAllowWhileIdle(
+          AlarmManager.RTC_WAKEUP, time.getTimeInMillis(), broadcast);
+    } else {
+      alarmManager.setExact(AlarmManager.RTC_WAKEUP, time.getTimeInMillis(), broadcast);
     }
   }
 
@@ -452,101 +455,91 @@ public class NotificationModuleSubscriber {
     AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
 
     RealmResults<PendingIntentsResources> pendingIntentses =
-            dbServiceSubscriber.getPendingIntentIdResources(mRealm);
-    if (pendingIntentses != null) {
-      for (PendingIntentsResources pendingIntentsResources : pendingIntentses) {
-        try {
-          Intent notificationIntent = new Intent(context, AlarmReceiver.class);
-          notificationIntent
-                  .setAction("android.media.action.DISPLAY_NOTIFICATION")
-                  .addCategory("android.intent.category.DEFAULT")
-                  .putExtra("title", pendingIntentsResources.getTitle())
-                  .putExtra("description", pendingIntentsResources.getDescription())
-                  .putExtra("type", pendingIntentsResources.getType())
-                  .putExtra("studyId", pendingIntentsResources.getStudyId())
-                  .putExtra("activityId", pendingIntentsResources.getActivityId())
-                  .putExtra("notificationId", pendingIntentsResources.getNotificationId());
-          PendingIntent broadcast =
-                  PendingIntent.getBroadcast(
-                          context,
-                          pendingIntentsResources.getPendingIntentId(),
-                          notificationIntent,
-                          PendingIntent.FLAG_UPDATE_CURRENT);
-          broadcast.cancel();
-          alarmManager.cancel(broadcast);
-        } catch (Exception e) {
-          Logger.log(e);
-        }
-      }
+        dbServiceSubscriber.getPendingIntentIdResources(mRealm);
+    if (pendingIntentses == null) {
+      return;
+    }
+    for (PendingIntentsResources pendingIntentsResources : pendingIntentses) {
+      Intent notificationIntent = new Intent(context, AlarmReceiver.class);
+      notificationIntent
+          .setAction("android.media.action.DISPLAY_NOTIFICATION")
+          .addCategory("android.intent.category.DEFAULT")
+          .putExtra("title", pendingIntentsResources.getTitle())
+          .putExtra("description", pendingIntentsResources.getDescription())
+          .putExtra("type", pendingIntentsResources.getType())
+          .putExtra("studyId", pendingIntentsResources.getStudyId())
+          .putExtra("activityId", pendingIntentsResources.getActivityId())
+          .putExtra("notificationId", pendingIntentsResources.getNotificationId());
+      PendingIntent broadcast =
+          PendingIntent.getBroadcast(
+              context,
+              pendingIntentsResources.getPendingIntentId(),
+              notificationIntent,
+              PendingIntent.FLAG_UPDATE_CURRENT);
+      broadcast.cancel();
+      alarmManager.cancel(broadcast);
     }
   }
 
   public void cancleResourcesLocalNotificationByIds(
-          Context context, String activityId, String studyId) {
+      Context context, String activityId, String studyId) {
     AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
 
     RealmResults<PendingIntentsResources> pendingIntentses =
-            dbServiceSubscriber.getPendingIntentIdResourcesByIds(mRealm, activityId, studyId);
-    if (pendingIntentses != null) {
-      for (PendingIntentsResources pendingIntentsResources : pendingIntentses) {
-        try {
-          Intent notificationIntent = new Intent(context, AlarmReceiver.class);
-          notificationIntent
-                  .setAction("android.media.action.DISPLAY_NOTIFICATION")
-                  .addCategory("android.intent.category.DEFAULT")
-                  .putExtra("title", pendingIntentsResources.getTitle())
-                  .putExtra("description", pendingIntentsResources.getDescription())
-                  .putExtra("type", pendingIntentsResources.getType())
-                  .putExtra("studyId", pendingIntentsResources.getStudyId())
-                  .putExtra("activityId", pendingIntentsResources.getActivityId())
-                  .putExtra("notificationId", pendingIntentsResources.getNotificationId());
-          PendingIntent broadcast =
-                  PendingIntent.getBroadcast(
-                          context,
-                          pendingIntentsResources.getPendingIntentId(),
-                          notificationIntent,
-                          PendingIntent.FLAG_UPDATE_CURRENT);
-          broadcast.cancel();
-          alarmManager.cancel(broadcast);
-        } catch (Exception e) {
-          Logger.log(e);
-        }
-      }
+        dbServiceSubscriber.getPendingIntentIdResourcesByIds(mRealm, activityId, studyId);
+    if (pendingIntentses == null) {
+      return;
+    }
+    for (PendingIntentsResources pendingIntentsResources : pendingIntentses) {
+      Intent notificationIntent = new Intent(context, AlarmReceiver.class);
+      notificationIntent
+          .setAction("android.media.action.DISPLAY_NOTIFICATION")
+          .addCategory("android.intent.category.DEFAULT")
+          .putExtra("title", pendingIntentsResources.getTitle())
+          .putExtra("description", pendingIntentsResources.getDescription())
+          .putExtra("type", pendingIntentsResources.getType())
+          .putExtra("studyId", pendingIntentsResources.getStudyId())
+          .putExtra("activityId", pendingIntentsResources.getActivityId())
+          .putExtra("notificationId", pendingIntentsResources.getNotificationId());
+      PendingIntent broadcast =
+          PendingIntent.getBroadcast(
+              context,
+              pendingIntentsResources.getPendingIntentId(),
+              notificationIntent,
+              PendingIntent.FLAG_UPDATE_CURRENT);
+      broadcast.cancel();
+      alarmManager.cancel(broadcast);
     }
   }
 
   public void cancleActivityLocalNotificationByIds(
-          Context context, String activityId, String studyId) {
-    try {
+      Context context, String activityId, String studyId) {
+    AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
 
-      AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
-
-      RealmResults<PendingIntents> pendingIntentses =
-              dbServiceSubscriber.getPendingIntentIdByIds(mRealm, activityId, studyId);
-      if (pendingIntentses != null) {
-        for (PendingIntents pendingIntents : pendingIntentses) {
-          Intent notificationIntent = new Intent(context, AlarmReceiver.class);
-          notificationIntent
-                  .setAction("android.media.action.DISPLAY_NOTIFICATION")
-                  .addCategory("android.intent.category.DEFAULT")
-                  .putExtra("title", pendingIntents.getTitle())
-                  .putExtra("description", pendingIntents.getDescription())
-                  .putExtra("type", pendingIntents.getType())
-                  .putExtra("studyId", pendingIntents.getStudyId())
-                  .putExtra("activityId", pendingIntents.getActivityId())
-                  .putExtra("notificationId", pendingIntents.getNotificationId());
-          PendingIntent broadcast =
-                  PendingIntent.getBroadcast(
-                          context,
-                          pendingIntents.getPendingIntentId(),
-                          notificationIntent,
-                          PendingIntent.FLAG_UPDATE_CURRENT);
-          broadcast.cancel();
-          alarmManager.cancel(broadcast);
-        }
-      }
-    } catch (Exception e) {
-      Logger.log(e);
+    RealmResults<PendingIntents> pendingIntentses =
+        dbServiceSubscriber.getPendingIntentIdByIds(mRealm, activityId, studyId);
+    if (pendingIntentses == null) {
+      return;
+    }
+    for (PendingIntents pendingIntents : pendingIntentses) {
+      Intent notificationIntent = new Intent(context, AlarmReceiver.class);
+      notificationIntent
+          .setAction("android.media.action.DISPLAY_NOTIFICATION")
+          .addCategory("android.intent.category.DEFAULT")
+          .putExtra("title", pendingIntents.getTitle())
+          .putExtra("description", pendingIntents.getDescription())
+          .putExtra("type", pendingIntents.getType())
+          .putExtra("studyId", pendingIntents.getStudyId())
+          .putExtra("activityId", pendingIntents.getActivityId())
+          .putExtra("notificationId", pendingIntents.getNotificationId());
+      PendingIntent broadcast =
+          PendingIntent.getBroadcast(
+              context,
+              pendingIntents.getPendingIntentId(),
+              notificationIntent,
+              PendingIntent.FLAG_UPDATE_CURRENT);
+      broadcast.cancel();
+      alarmManager.cancel(broadcast);
     }
   }
 
@@ -558,20 +551,20 @@ public class NotificationModuleSubscriber {
       for (PendingIntents pendingIntents : pendingIntentses) {
         Intent notificationIntent = new Intent(context, AlarmReceiver.class);
         notificationIntent
-                .setAction("android.media.action.DISPLAY_NOTIFICATION")
-                .addCategory("android.intent.category.DEFAULT")
-                .putExtra("title", pendingIntents.getTitle())
-                .putExtra("description", pendingIntents.getDescription())
-                .putExtra("type", pendingIntents.getType())
-                .putExtra("studyId", pendingIntents.getStudyId())
-                .putExtra("activityId", pendingIntents.getActivityId())
-                .putExtra("notificationId", pendingIntents.getNotificationId());
+            .setAction("android.media.action.DISPLAY_NOTIFICATION")
+            .addCategory("android.intent.category.DEFAULT")
+            .putExtra("title", pendingIntents.getTitle())
+            .putExtra("description", pendingIntents.getDescription())
+            .putExtra("type", pendingIntents.getType())
+            .putExtra("studyId", pendingIntents.getStudyId())
+            .putExtra("activityId", pendingIntents.getActivityId())
+            .putExtra("notificationId", pendingIntents.getNotificationId());
         PendingIntent broadcast =
-                PendingIntent.getBroadcast(
-                        context,
-                        pendingIntents.getPendingIntentId(),
-                        notificationIntent,
-                        PendingIntent.FLAG_UPDATE_CURRENT);
+            PendingIntent.getBroadcast(
+                context,
+                pendingIntents.getPendingIntentId(),
+                notificationIntent,
+                PendingIntent.FLAG_UPDATE_CURRENT);
         broadcast.cancel();
         alarmManager.cancel(broadcast);
       }
@@ -579,39 +572,40 @@ public class NotificationModuleSubscriber {
   }
 
   private void updateNotificationToDbAndSetAlarm(
-          Context context,
-          ActivityRun activityRun,
-          Calendar time,
-          String title,
-          String description,
-          int offset) {
-    if (time.getTime().after(new Date())) {
-      int notificationId;
-      notificationId = new Random().nextInt();
-      NotificationDb notificationDb = new NotificationDb();
-      notificationDb.setStudyId(activityRun.getStudyId());
-      notificationDb.setActivityId(activityRun.getActivityId());
-      notificationDb.setNotificationId(notificationId);
-      notificationDb.setDateTime(time.getTime());
-      notificationDb.setType(ACTIVITY);
-      notificationDb.setId(1);
-      notificationDb.setTitle(title);
-      notificationDb.setDescription(description);
-      notificationDb.setEndDateTime(removeOffset(activityRun.getEndDate(), offset));
-      dbServiceSubscriber.updateNotificationToDb(context, notificationDb);
+      Context context,
+      ActivityRun activityRun,
+      Calendar time,
+      String title,
+      String description,
+      int offset) {
+    if (!time.getTime().after(new Date())) {
+      return;
+    }
+    int notificationId;
+    notificationId = new Random().nextInt();
+    NotificationDb notificationDb = new NotificationDb();
+    notificationDb.setStudyId(activityRun.getStudyId());
+    notificationDb.setActivityId(activityRun.getActivityId());
+    notificationDb.setNotificationId(notificationId);
+    notificationDb.setDateTime(time.getTime());
+    notificationDb.setType(ACTIVITY);
+    notificationDb.setId(1);
+    notificationDb.setTitle(title);
+    notificationDb.setDescription(description);
+    notificationDb.setEndDateTime(removeOffset(activityRun.getEndDate(), offset));
+    dbServiceSubscriber.updateNotificationToDb(context, notificationDb);
 
-      set24hourScheduler(context);
-      if (isSameDay(new Date(), time.getTime())) {
-        setAlarm(
-                context,
-                title,
-                description,
-                ACTIVITY,
-                notificationId,
-                activityRun.getStudyId(),
-                activityRun.getActivityId(),
-                time);
-      }
+    set24hourScheduler(context);
+    if (isSameDay(new Date(), time.getTime())) {
+      setAlarm(
+          context,
+          title,
+          description,
+          ACTIVITY,
+          notificationId,
+          activityRun.getStudyId(),
+          activityRun.getActivityId(),
+          time);
     }
   }
 
