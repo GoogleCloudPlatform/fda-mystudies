@@ -1,6 +1,7 @@
 // License Agreement for FDA MyStudies
-// Copyright © 2017-2019 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors. Permission is
-// hereby granted, free of charge, to any person obtaining a copy of this software and associated
+// Copyright © 2017-2019 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors.
+// Copyright 2020 Google LLC
+// Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated
 // documentation files (the &quot;Software&quot;), to deal in the Software without restriction, including without
 // limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the
 // Software, and to permit persons to whom the Software is furnished to do so, subject to the following
@@ -63,6 +64,24 @@ class DashboardResponse {
   var date: String?
   var isPHI: String?
 
+  init(with activityID: String, and key: String) {
+    self.key = key
+    self.activityId = activityID
+    self.isPHI = "true"
+    self.type = "int"
+  }
+  
+  func appendValues(from dict: JSONDictionary, of responseDate: String){
+    if let value = dict["value"] as? Float {
+      let valueDetail =
+        [
+          "value": value,
+          "count": Float(0.0),
+          "date": responseDate,
+          ] as [String: Any]
+      self.values.append(valueDetail)
+    }
+  }
 }
 
 class DashboardStatistics {
