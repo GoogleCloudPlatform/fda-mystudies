@@ -1,5 +1,3 @@
-/* Spacements */
-/* spacement top & bottom */
 .m-none {
   margin: 0 !important;
 }
@@ -32,7 +30,6 @@
   margin: 30px !important;
 }
 
-/* spacement top	*/
 .mt-none {
   margin-top: 0 !important;
 }
@@ -65,7 +62,6 @@
   margin-top: 40px !important;
 }
 
-/* spacement bottom	*/
 .mb-none {
   margin-bottom: 0 !important;
 }
@@ -98,7 +94,6 @@
   margin-bottom: 40px !important;
 }
 
-/* spacement left	*/
 .ml-none {
   margin-left: 0 !important;
 }
@@ -127,7 +122,6 @@
   margin-left: 30px !important;
 }
 
-/* spacement right	*/
 .mr-none {
   margin-right: 0 !important;
 }
@@ -156,7 +150,6 @@
   margin-right: 30px !important;
 }
 
-/* Spacement Padding */
 .p-none {
   padding: 0 !important;
 }
@@ -185,7 +178,6 @@
   padding: 30px !important;
 }
 
-/* spacement top	*/
 .pt-none {
   padding-top: 0 !important;
 }
@@ -222,7 +214,6 @@
   padding-top: 50px !important;
 }
 
-/* spacement bottom	*/
 .pb-none {
   padding-bottom: 0 !important;
 }
@@ -259,7 +250,6 @@
   padding-bottom: 50px !important;
 }
 
-/* spacement left	*/
 .pl-none {
   padding-left: 0 !important;
 }
@@ -287,11 +277,11 @@
 .pl-xlg {
   padding-left: 30px !important;
 }
+
 .pl-xxlg {
   padding-left: 40px !important;
 }
 
-/* spacement right	*/
 .pr-none {
   padding-right: 0 !important;
 }
@@ -319,8 +309,6 @@
 .pr-xlg {
   padding-right: 30px !important;
 }
-
-/* End Spacements */
 
 .text-weight-light {
   font-weight: 200 !important;
@@ -385,54 +373,69 @@ a.w-link:hover {
 .vis__hidden {
   visibility: hidden !important;
 }
+
 .cursor__pointer {
   cursor: pointer !important;
 }
+
 .cursor__none {
   cursor: default !important;
 }
+
 .float__right {
   float: right;
 }
+
 .float__left {
   float: left;
 }
+
 .position__relative {
   position: relative;
 }
+
 .display-inline-block {
   display: inline-block !important;
 }
+
 .display-flex-center {
   display: flex !important;
   align-items: center !important;
 }
+
 .display-webkit-box {
   display: -webkit-box;
 }
+
 .flex__row {
   display: flex;
   flex-flow: row;
 }
+
 .flex__row__reverse {
   display: flex;
   flex-flow: row-reverse;
 }
+
 .error__msg {
   color: #ff2525;
   font-size: 12px;
   text-align: right;
   visibility: visible;
 }
+
 .overflow__auto {
   overflow: auto;
 }
+
 .font12 {
   font-size: 12px;
 }
+
 .font11 {
   font-size: 11px;
 }
+
 .font13 {
   font-size: 13px;
 }
@@ -440,4 +443,3 @@ a.w-link:hover {
 .width__auto {
   width: auto !important;
 }
-/************theme.css******************/
