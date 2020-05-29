@@ -55,6 +55,8 @@ locals {
     "roles/browser",
     "roles/iam.securityReviewer",
   ]
+  # For folder level deployment replace `roles/resourcemanager.organizationAdmin`
+  # with `roles/resourcemanager.folderIamAdmin`  below.
   cloudbuild_sa_editor_roles = [
     "roles/compute.xpnAdmin",
     "roles/logging.configWriter",
@@ -130,7 +132,8 @@ resource "google_organization_iam_member" "cloudbuild_sa_org_iam" {
   ]
 }
 
-// Uncomment to keep changes limited to folder 
+// For Folder level changes, comment out the `google_organization_iam_member`
+// above and uncomment this block instead.
 // resource "google_folder_iam_member" "cloudbuild_sa_folder_iam" {
 //   for_each = toset(var.continuous_deployment_enabled ? local.cloudbuild_sa_editor_roles : local.cloudbuild_sa_viewer_roles)
 //   folder   = var.folder_id
