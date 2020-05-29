@@ -29,6 +29,13 @@ resource "google_firebase_project" "firebase" {
   project  = var.project_id
 }
 
+resource "google_firebase_project_location" "basic" {
+  provider = google-beta
+  project  = google_firebase_project.firebase.project
+
+  location_id = "us-east1"
+}
+
 resource "google_firestore_index" "activities_index" {
   project    = var.project_id
   collection = "Activities"
