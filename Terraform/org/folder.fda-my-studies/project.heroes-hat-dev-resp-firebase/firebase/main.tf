@@ -29,29 +29,29 @@ resource "google_firebase_project" "firebase" {
   project  = var.project_id
 }
 
-resource "google_firebase_project_location" "basic" {
-  provider = google-beta
-  project  = google_firebase_project.firebase.project
+// resource "google_firebase_project_location" "basic" {
+//   provider = google-beta
+//   project  = google_firebase_project.firebase.project
 
-  location_id = "us-east1"
-}
+//   location_id = "us-east1"
+// }
 
-resource "google_firestore_index" "activities_index" {
-  project    = var.project_id
-  collection = "Activities"
-  fields {
-    field_path = "participantId"
-    order      = "ASCENDING"
-  }
-  fields {
-    field_path = "createdTimestamp"
-    order      = "ASCENDING"
-  }
-  fields {
-    field_path = "__name__"
-    order      = "ASCENDING"
-  }
-}
+// resource "google_firestore_index" "activities_index" {
+//   project    = var.project_id
+//   collection = "Activities"
+//   fields {
+//     field_path = "participantId"
+//     order      = "ASCENDING"
+//   }
+//   fields {
+//     field_path = "createdTimestamp"
+//     order      = "ASCENDING"
+//   }
+//   fields {
+//     field_path = "__name__"
+//     order      = "ASCENDING"
+//   }
+// }
 
 module "survey_pubsub" {
   source  = "terraform-google-modules/pubsub/google"
