@@ -18,7 +18,7 @@ folder_id         = "440087619763"
 billing_account   = "01B494-31B256-17B2A6"
 state_bucket      = "mystudies-terraform-state-19763"
 storage_location  = "us-east1"
-// org_admin         = "group:dpt-dev@hcls.joonix.net"
+org_admin         = "group:dpt-dev@hcls.joonix.net"
 devops_owners = [
   "group:dpt-dev@hcls.joonix.net",
 ]
