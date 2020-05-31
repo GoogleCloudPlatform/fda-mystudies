@@ -16,7 +16,7 @@ project_id         = "mystudies-demo-apps"
 network_project_id = "mystudies-demo-networks"
 gke_region         = "us-east1"
 cluster_name       = "mystudies-cluster"
-// master_authorized_networks = [{ cidr_block = "104.132.0.0/14", display_name = "Google Offices/Campuses/CorpDC" }]
+# master_authorized_networks = [{ cidr_block = "104.132.0.0/14", display_name = "Google Offices/Campuses/CorpDC" }]
 repo_owner                = "zohrehj"
 repo_name                 = "fda-mystudies"
 cloudbuild_trigger_branch = "early-access"
