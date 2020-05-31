@@ -25,7 +25,7 @@ terraform {
 
 # From
 # https://github.com/terraform-google-modules/terraform-google-kubernetes-engine/tree/master/modules/safer-cluster-update-variant
-module "heroes_hat_cluster" {
+module "mystudies_cluster" {
   source  = "terraform-google-modules/kubernetes-engine/google//modules/safer-cluster-update-variant"
   version = "9.0.0"
 
@@ -37,8 +37,8 @@ module "heroes_hat_cluster" {
   network_project_id     = var.network_project_id
   network                = var.network
   subnetwork             = var.subnetwork
-  ip_range_pods          = "heroes-hat-cluster-ip-range-pods"
-  ip_range_services      = "heroes-hat-cluster-ip-range-svc"
+  ip_range_pods          = "mystudies-cluster-ip-range-pods"
+  ip_range_services      = "mystudies-cluster-ip-range-svc"
   master_ipv4_cidr_block = "192.168.0.0/28"
 
   # Optional

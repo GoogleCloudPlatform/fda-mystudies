@@ -12,13 +12,22 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-project_id         = "heroes-hat-dev-apps"
-network_project_id = "heroes-hat-dev-networks"
-gke_region         = "us-east1"
-cluster_name       = "heroes-hat-cluster"
-# master_authorized_networks = [{ cidr_block = "104.132.0.0/14", display_name = "Google Offices/Campuses/CorpDC" }]
-repo_owner                = "GoogleCloudPlatform"
-repo_name                 = "fda-mystudies"
-cloudbuild_trigger_branch = "early-access"
-dns_name                  = "heroes-hat"
-dns_domain                = "heroes-hat.rocketturtle.net."
+# DNS sets up nameservers to connect to the GKE clusters.
+module "dns" {
+  source  = "terraform-google-modules/cloud-dns/google"
+  version = "3.0.1"
+
+  name       = var.dns_name
+  project_id = var.project_id
+  type       = "public"
+  domain     = var.dns_domain
+
+  recordsets = [{
+    name = "tf-dev"
+    type = "A"
+    ttl  = 30
+    records = [
+      google_compute_global_address.ingress_static_ip.address,
+    ]
+  }]
+}

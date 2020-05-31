@@ -62,6 +62,9 @@ export NEW_AUDIT_ST_SINK="mystudies-demo-audit-storage-sink"
 export OLD_AUDIT_BQ_SINK="bigquery-org-sink"
 export NEW_AUDIT_BQ_SINK="mystudies-demo-bigquery-sink"
 
+export OLD_CLUSTER="heroes_hat_cluster"
+export NEW_CLUSTER="mystudies_cluster"
+
 # Cleanup output directory.
 rm -rf ${OUTPUT_TF_BASE}/*
 
@@ -97,7 +100,7 @@ cp -r ${SRC_PROJ_BASE}-networks/networks ${DST_PROJ_BASE}-networks/
 cp -r ${SRC_PROJ_BASE}-resp-firebase/firebase ${DST_PROJ_BASE}-resp-firebase/
 
 # Deployment Phase 3 - Uncomment after Phase 1, 2 are deployed
-# cp -r ${SRC_PROJ_BASE}-apps/apps ${DST_PROJ_BASE}-apps/
+cp -r ${SRC_PROJ_BASE}-apps/apps ${DST_PROJ_BASE}-apps/
 
 # Deployment Phase 4 - Uncomment after Phase 1, 2, 3 are deployed
 # cp -r ${SRC_PROJ_BASE}-data/data ${DST_PROJ_BASE}-data/
@@ -133,6 +136,9 @@ find . -type f -name *.tfvars -o -name *.tf -o -name *.hcl -o -name README.md | 
 find . -type f -name *.tfvars -o -name *.tf -o -name *.hcl -o -name README.md | xargs sed -i "s|${OLD_AUDIT_BUCKET}|${NEW_AUDIT_BUCKET}|"
 find . -type f -name *.tfvars -o -name *.tf -o -name *.hcl -o -name README.md | xargs sed -i "s|${OLD_AUDIT_ST_SINK}|${NEW_AUDIT_ST_SINK}|"
 find . -type f -name *.tfvars -o -name *.tf -o -name *.hcl -o -name README.md | xargs sed -i "s|${OLD_AUDIT_BQ_SINK}|${NEW_AUDIT_BQ_SINK}|"
+
+# Apps
+find . -type f -name *.tfvars -o -name *.tf -o -name *.hcl -o -name README.md | xargs sed -i "s|${OLD_CLUSTER}|${NEW_CLUSTER}|"
 
 # Cleanup
 find . -name ".terraform" | xargs rm -rf
