@@ -132,7 +132,7 @@ module "my_studies_firestore_data_bigquery" {
   source  = "terraform-google-modules/bigquery/google"
   version = "~> 4.1.0"
 
-  dataset_id = "mystudies-demo_my_studies_firestore_data"
+  dataset_id = "mystudies_firestore_data"
   project_id = var.project_id
   location   = var.storage_location
 }
