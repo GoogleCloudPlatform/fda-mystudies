@@ -117,10 +117,15 @@ class StudyOverviewViewControllerFirst: UIViewController {
     if let imageURLString = overviewSectionDetail.imageURL {
       let url = URL(string: imageURLString)
       imageViewStudy?.sd_imageIndicator = SDWebImageActivityIndicator.whiteLarge
-      imageViewStudy?.sd_setImage(with: url, placeholderImage: nil, options: .highPriority, completed: { [weak self] (image, _, _, _) in
-        self?.imageViewStudy?.sd_imageIndicator?.stopAnimatingIndicator()
-        self?.imageViewStudy?.image = image
-      })
+      imageViewStudy?.sd_setImage(
+        with: url,
+        placeholderImage: nil,
+        options: .highPriority,
+        completed: { [weak self] (image, _, _, _) in
+          self?.imageViewStudy?.sd_imageIndicator?.stopAnimatingIndicator()
+          self?.imageViewStudy?.image = image
+        }
+      )
     }
   }
 
