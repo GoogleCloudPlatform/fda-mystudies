@@ -25,7 +25,7 @@ module "images_bucket" {
   source  = "terraform-google-modules/cloud-storage/google//modules/simple_bucket"
   version = "~> 1.4"
 
-  name       = "heroes-hat-dev-images"
+  name       = "mystudies-demo-images"
   project_id = var.project_id
   location   = var.storage_location
 }
@@ -34,7 +34,7 @@ module "my_studies_consent_documents_bucket" {
   source  = "terraform-google-modules/cloud-storage/google//modules/simple_bucket"
   version = "~> 1.4"
 
-  name        = "heroes-hat-dev-my-studies-consent-documents"
+  name        = "mystudies-demo-my-studies-consent-documents"
   project_id  = var.project_id
   location    = var.storage_location
   iam_members = var.consent_documents_iam_members
@@ -44,7 +44,7 @@ module "my_studies_fda_resources_bucket" {
   source  = "terraform-google-modules/cloud-storage/google//modules/simple_bucket"
   version = "~> 1.4"
 
-  name        = "heroes-hat-dev-my-studies-fda-resources"
+  name        = "mystudies-demo-my-studies-fda-resources"
   project_id  = var.project_id
   location    = var.storage_location
   iam_members = var.fda_resources_iam_members
@@ -54,7 +54,7 @@ module "my_studies_institution_resources_bucket" {
   source  = "terraform-google-modules/cloud-storage/google//modules/simple_bucket"
   version = "~> 1.4"
 
-  name        = "heroes-hat-dev-my-studies-institution-resources"
+  name        = "mystudies-demo-my-studies-institution-resources"
   project_id  = var.project_id
   location    = var.storage_location
   iam_members = var.institution_resources_iam_members
@@ -111,7 +111,7 @@ module "my_studies_firestore_data_bucket" {
   source  = "terraform-google-modules/cloud-storage/google//modules/simple_bucket"
   version = "~> 1.4"
 
-  name       = "heroes-hat-dev-my-studies-firestore-data"
+  name       = "mystudies-demo-my-studies-firestore-data"
   project_id = var.project_id
   location   = var.storage_location
 
@@ -132,7 +132,7 @@ module "my_studies_firestore_data_bigquery" {
   source  = "terraform-google-modules/bigquery/google"
   version = "~> 4.1.0"
 
-  dataset_id = "heroes_hat_dev_my_studies_firestore_data"
+  dataset_id = "mystudies-demo_my_studies_firestore_data"
   project_id = var.project_id
   location   = var.storage_location
 }
