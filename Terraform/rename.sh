@@ -61,6 +61,9 @@ export NEW_AUDIT_ST_SINK=
 export OLD_AUDIT_BQ_SINK="bigquery-org-sink"
 export NEW_AUDIT_BQ_SINK=
 
+export OLD_CLUSTER="heroes_hat_cluster"
+export NEW_CLUSTER=
+
 # Cleanup output directory.
 rm -rf ${OUTPUT_TF_BASE}/*
 
@@ -124,14 +127,17 @@ find . -type f -name *.tfvars -o -name *.tf -o -name *.hcl -o -name README.md | 
 find . -type f -name *.tfvars -o -name *.tf -o -name *.hcl -o -name README.md | xargs sed -i "s|${OLD_FOLDER}|${NEW_FOLDER}|"
 
 # Repo
-find . -type f -name *.tfvars -o -name *.tf -o -name *.hcl -o -name README.md | xargs sed -i "s|"${OLD_GITHUB_ORG}"|"${NEW_GITHUB_ORG}"|"
-find . -type f -name *.tfvars -o -name *.tf -o -name *.hcl -o -name README.md | xargs sed -i "s|"${OLD_GITHUB_REPO}"|"${NEW_GITHUB_REPO}"|"
-find . -type f -name *.tfvars -o -name *.tf -o -name *.hcl -o -name README.md | xargs sed -i "s|"${OLD_GITHUB_BRANCH}"|"${NEW_GITHUB_BRANCH}"|"
+find . -type f -name *.tfvars -o -name *.tf -o -name *.hcl -o -name README.md | xargs sed -i "s|\"${OLD_GITHUB_ORG}\"|"${NEW_GITHUB_ORG}"|"
+find . -type f -name *.tfvars -o -name *.tf -o -name *.hcl -o -name README.md | xargs sed -i "s|\"${OLD_GITHUB_REPO}\"|"${NEW_GITHUB_REPO}"|"
+find . -type f -name *.tfvars -o -name *.tf -o -name *.hcl -o -name README.md | xargs sed -i "s|\"${OLD_GITHUB_BRANCH}\"|"${NEW_GITHUB_BRANCH}"|"
 
 # Audit
 find . -type f -name *.tfvars -o -name *.tf -o -name *.hcl -o -name README.md | xargs sed -i "s|${OLD_AUDIT_BUCKET}|${NEW_AUDIT_BUCKET}|"
 find . -type f -name *.tfvars -o -name *.tf -o -name *.hcl -o -name README.md | xargs sed -i "s|${OLD_AUDIT_ST_SINK}|${NEW_AUDIT_ST_SINK}|"
 find . -type f -name *.tfvars -o -name *.tf -o -name *.hcl -o -name README.md | xargs sed -i "s|${OLD_AUDIT_BQ_SINK}|${NEW_AUDIT_BQ_SINK}|"
+
+# Apps
+find . -type f -name *.tfvars -o -name *.tf -o -name *.hcl -o -name README.md | xargs sed -i "s|${OLD_CLUSTER}|${NEW_CLUSTER}|"
 
 # Cleanup
 find . -name ".terraform" | xargs rm -rf
