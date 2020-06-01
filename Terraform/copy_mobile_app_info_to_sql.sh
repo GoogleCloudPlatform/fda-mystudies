@@ -7,7 +7,7 @@ SECRET_PROJECT=heroes-hat-dev-devops
 DATA_PROJECT=heroes-hat-dev-data
 SQL_IMPORT_BUCKET=heroes-hat-dev-data-sql-import
 TMPFILE=$(mktemp)
-ORG_NAME=DummyOrgName
+ORG_NAME="Test Org"
 
 # Write user registration server db name to TMPFILE.
 echo "USE \`mystudies_userregistration\`;" >> ${TMPFILE}
