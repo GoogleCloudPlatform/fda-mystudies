@@ -174,8 +174,8 @@ class StudyHomeViewController: UIViewController {
     // Standalone App Settings
     if Utilities.isStandaloneApp() {
       buttonStar.isHidden = true
-      buttonBack.isHidden = true
       if loadViewFrom == .home {
+        buttonBack.isHidden = true
         buttonBack.setImage(UIImage(named: "menu_icn"), for: .normal)
         buttonBack.tag = 200
         slideMenuController()?.leftPanGesture?.isEnabled = false
