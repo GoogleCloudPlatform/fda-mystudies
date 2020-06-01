@@ -47,6 +47,8 @@ public class NotificationModuleSubscriber {
   private Realm mRealm;
   private int pendingId = 214747;
   private int pendingId1 = 214746;
+  public static final int REQUEST_CODE_24HR_NOTIFICATION = 1;
+  public static final int RECURRING_ALARM_START_ID = 5;
 
   public NotificationModuleSubscriber(DBServiceSubscriber dbServiceSubscriber, Realm realm) {
     this.dbServiceSubscriber = dbServiceSubscriber;
@@ -181,11 +183,14 @@ public class NotificationModuleSubscriber {
         new Intent(context, AlarmReceiver.class)
             .setAction("android.media.action.DISPLAY_NOTIFICATION")
             .addCategory("android.intent.category.DEFAULT")
-            .putExtra("pendingIntentId", 1);
+            .putExtra("pendingIntentId", REQUEST_CODE_24HR_NOTIFICATION);
     AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
     PendingIntent broadcast =
         PendingIntent.getBroadcast(
-            context, 1, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+            context,
+            REQUEST_CODE_24HR_NOTIFICATION,
+            notificationIntent,
+            PendingIntent.FLAG_UPDATE_CURRENT);
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
       alarmManager.setExactAndAllowWhileIdle(
           AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), broadcast);
@@ -232,7 +237,9 @@ public class NotificationModuleSubscriber {
         Integer.parseInt(
                 AppController.getHelperSharedPreference()
                     .readPreference(
-                        context, context.getResources().getString(R.string.pendingCount), "5"))
+                        context,
+                        context.getResources().getString(R.string.pendingCount),
+                        String.valueOf(RECURRING_ALARM_START_ID)))
             + 1;
     AppController.getHelperSharedPreference()
         .writePreference(
