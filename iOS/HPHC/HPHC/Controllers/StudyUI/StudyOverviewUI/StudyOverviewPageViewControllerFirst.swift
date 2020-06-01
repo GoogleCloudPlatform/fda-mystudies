@@ -1,6 +1,7 @@
 // License Agreement for FDA MyStudies
-// Copyright © 2017-2019 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors. Permission is
-// hereby granted, free of charge, to any person obtaining a copy of this software and associated
+// Copyright © 2017-2019 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors.
+// Copyright 2020 Google LLC
+// Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated
 // documentation files (the &quot;Software&quot;), to deal in the Software without restriction, including without
 // limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the
 // Software, and to permit persons to whom the Software is furnished to do so, subject to the following
@@ -69,9 +70,9 @@ class StudyOverviewViewControllerFirst: UIViewController {
     labelTitle?.text = overviewSectionDetail.title
 
     var fontSize = 18.0
-    if DeviceType.IS_IPAD || DeviceType.IS_IPHONE_4_OR_LESS {
+    if DeviceType.isIPad || DeviceType.isIPhone4OrLess {
       fontSize = 13.0
-    } else if DeviceType.IS_IPHONE_5 {
+    } else if DeviceType.isIPhone5 {
       fontSize = 14.0
     }
 
@@ -157,11 +158,11 @@ class StudyOverviewViewControllerFirst: UIViewController {
 
   @IBAction func buttonActionJoinStudy(_ sender: Any) {
 
-    if User.currentUser.userType == UserType.AnonymousUser {
+    if User.currentUser.userType == UserType.anonymousUser {
       let leftController =
         slideMenuController()?.leftViewController
         as! LeftMenuViewController
-      leftController.changeViewController(.reachOut_signIn)
+      leftController.changeViewController(.reachOutSignIn)
     }
   }
 

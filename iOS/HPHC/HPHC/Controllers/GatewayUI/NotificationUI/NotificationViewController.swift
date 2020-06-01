@@ -1,6 +1,7 @@
 // License Agreement for FDA MyStudies
-// Copyright © 2017-2019 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors. Permission is
-// hereby granted, free of charge, to any person obtaining a copy of this software and associated
+// Copyright © 2017-2019 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors.
+// Copyright 2020 Google LLC
+// Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated
 // documentation files (the &quot;Software&quot;), to deal in the Software without restriction, including without
 // limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the
 // Software, and to permit persons to whom the Software is furnished to do so, subject to the following
@@ -69,7 +70,7 @@ class NotificationViewController: UIViewController {
           for notification in notificationList {
 
             // filter notification
-            if notification.type == AppNotification.NotificationType.Study {
+            if notification.type == AppNotification.NotificationType.study {
 
               let study = Gateway.instance.studies?.filter({ $0.studyId == notification.studyId })
                 .last
@@ -134,7 +135,7 @@ class NotificationViewController: UIViewController {
     let participatedStatus = (currentStudy.userParticipateState.status)
 
     switch currentStudy.status {
-    case .Active:
+    case .active:
       if participatedStatus == .inProgress {
         return true
       } else {
@@ -144,19 +145,19 @@ class NotificationViewController: UIViewController {
             as NSString
         )
       }
-    case .Upcoming:
+    case .upcoming:
       UIUtilities.showAlertWithTitleAndMessage(
         title: "",
         message: NSLocalizedString(kMessageForStudyUpcomingState, comment: "") as NSString
       )
 
-    case .Paused:
+    case .paused:
       UIUtilities.showAlertWithTitleAndMessage(
         title: "",
         message: NSLocalizedString(kMessageForStudyPausedState, comment: "") as NSString
       )
 
-    case .Closed:
+    case .closed:
       UIUtilities.showAlertWithTitleAndMessage(
         title: "",
         message: NSLocalizedString(kMessageForStudyClosedState, comment: "") as NSString
@@ -185,17 +186,17 @@ class NotificationViewController: UIViewController {
     let participatedStatus = (currentStudy.userParticipateState.status)
 
     switch currentStudy.status {
-    case .Active:
+    case .active:
       if participatedStatus == .inProgress {
         return true
       } else {
         return false
       }
-    case .Upcoming:
+    case .upcoming:
       return false
-    case .Paused:
+    case .paused:
       return false
-    case .Closed:
+    case .closed:
       return false
 
     }
@@ -219,15 +220,15 @@ class NotificationViewController: UIViewController {
         as? StudyDashboardTabbarViewController
 
       switch type! as AppNotification.NotificationSubType {
-      case .Study:
+      case .study:
 
         viewController?.selectedIndex = 0
         self.navigationController?.pushViewController(viewController!, animated: true)
-      case .Resource:
+      case .resource:
 
         viewController?.selectedIndex = 2
         self.navigationController?.pushViewController(viewController!, animated: true)
-      case .Activity:
+      case .activity:
 
         viewController?.selectedIndex = 0
         self.navigationController?.pushViewController(viewController!, animated: true)
@@ -269,14 +270,14 @@ extension NotificationViewController: UITableViewDelegate {
 
     let appNotification = notificationArray[indexPath.row]
     let appNotif = appNotification as! AppNotification
-    if appNotif.type == AppNotification.NotificationType.Study {
+    if appNotif.type == AppNotification.NotificationType.study {
 
       if Utilities.isValidValue(someObject: appNotif.studyId as AnyObject?) {
 
         let study = Gateway.instance.studies?.filter({ $0.studyId == appNotif.studyId })
           .last
 
-        if self.isUserJoined(study: study!) && study?.status == .Active {
+        if self.isUserJoined(study: study!) && study?.status == .active {
 
           Study.updateCurrentStudy(study: study!)
           self.pushToStudyDashboard(type: appNotif.subType)

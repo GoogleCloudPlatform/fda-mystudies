@@ -42,7 +42,7 @@ class LocalNotification: NSObject {
         $0.userParticipateState.status == UserStudyStatus.StudyStatus.inProgress
           && $0
             .status
-            == .Active
+            == .active
       }))!
 
     handler = completionHandler
@@ -104,7 +104,7 @@ class LocalNotification: NSObject {
     for activity in activities {
 
       var runsBeforeToday: [ActivityRun] = []
-      if activity.frequencyType == Frequency.One_Time && activity.endDate == nil {
+      if activity.frequencyType == Frequency.oneTime && activity.endDate == nil {
         runsBeforeToday = activity.activityRuns
       } else {
         runsBeforeToday = activity.activityRuns.filter({ $0.endDate >= date })
@@ -114,7 +114,7 @@ class LocalNotification: NSObject {
 
         switch activity.frequencyType {
 
-        case .One_Time:
+        case .oneTime:
           if run.endDate != nil {
             let date = run.endDate.addingTimeInterval(-24 * 3600)  // 24 hours before
             let message =
@@ -128,7 +128,7 @@ class LocalNotification: NSObject {
             )
           }
 
-        case .Daily:
+        case .daily:
           if activity.frequencyRuns?.count == 1 {
             let date = run.startDate!  // 24 hours before
             let message =
@@ -159,7 +159,7 @@ class LocalNotification: NSObject {
             )
           }
 
-        case .Weekly:
+        case .weekly:
           // expiry notificaiton
           let date = run.endDate.addingTimeInterval(-24 * 3600)
           let message =
@@ -182,7 +182,7 @@ class LocalNotification: NSObject {
             run: run
           )
 
-        case .Monthly:
+        case .monthly:
           let date = run.endDate.addingTimeInterval(-72 * 3600)
           let message =
             "The current run of the monthly activity " + activity.name!
@@ -204,7 +204,7 @@ class LocalNotification: NSObject {
             run: run
           )
 
-        case .Scheduled:
+        case .scheduled:
           let date = run.startDate!  // 24 hours before
           let endDate = LocalNotification.oneTimeFormatter.string(from: run.endDate!)
           let message1 = "A new run of the scheduled activity " + activity.name!
@@ -250,9 +250,9 @@ class LocalNotification: NSObject {
     notification.title = ""
     notification.startDate = startDate
     notification.endDate = endDate
-    notification.type = AppNotification.NotificationType.Study
-    notification.subType = AppNotification.NotificationSubType.Activity
-    notification.audience = Audience.Limited
+    notification.type = AppNotification.NotificationType.study
+    notification.subType = AppNotification.NotificationSubType.activity
+    notification.audience = Audience.limited
     notification.studyId = run.studyId  //(Study.currentStudy?.studyId)!
 
     LocalNotification.notificationList.append(notification)

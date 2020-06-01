@@ -1,6 +1,7 @@
 // License Agreement for FDA MyStudies
-// Copyright © 2017-2019 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors. Permission is
-// hereby granted, free of charge, to any person obtaining a copy of this software and associated
+// Copyright © 2017-2019 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors.
+// Copyright 2020 Google LLC
+// Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated
 // documentation files (the &quot;Software&quot;), to deal in the Software without restriction, including without
 // limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the
 // Software, and to permit persons to whom the Software is furnished to do so, subject to the following
@@ -15,13 +16,12 @@
 // LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT
 // OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 // OTHER DEALINGS IN THE SOFTWARE.
-
 import UIKit
 
 enum Audience: String {
-  case All
-  case Participants
-  case Limited
+  case all = "All"
+  case participants = "Participants"
+  case limited = "Limited"
 }
 
 class AppLocalNotification: AppNotification {
@@ -32,20 +32,20 @@ class AppLocalNotification: AppNotification {
 class AppNotification {
 
   enum NotificationType: String {
-    case Gateway
-    case Study
+    case gateway = "Gateway"
+    case study = "Study"
   }
 
   enum NotificationSubType: String {
-    case Announcement
-    case Study
-    case Resource
-    case Activity
+    case announcement = "Announcement"
+    case study = "Study"
+    case resource = "Resource"
+    case activity = "Activity"
     case studyEvent
   }
 
   var id: String?
-  var type: NotificationType = .Gateway
+  var type: NotificationType = .gateway
   var subType: NotificationSubType!
   var audience: Audience!
   var title: String?
