@@ -28,7 +28,7 @@ enum DirectoryType: String {
   case gateway = "Gateway"
 }
 
-enum ScreenSize {
+struct ScreenSize {
 
   static let screenWidth = UIScreen.main.bounds.size.width
   static let screenHeight = UIScreen.main.bounds.size.height
@@ -36,7 +36,7 @@ enum ScreenSize {
   static let screenMinLength = min(ScreenSize.screenWidth, ScreenSize.screenHeight)
 }
 
-enum DeviceType {
+struct DeviceType {
 
   static let isIPhone4OrLess =
     UIDevice.current.userInterfaceIdiom == .phone
