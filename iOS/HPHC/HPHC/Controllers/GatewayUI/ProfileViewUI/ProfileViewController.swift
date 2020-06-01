@@ -531,7 +531,7 @@ class ProfileViewController: UIViewController, SlideMenuControllerDelegate {
 
   /// Used to check weather the user id FDA user or not.
   func checkPasscode() {
-    if User.currentUser.userType == .loggedUser {
+    if User.currentUser.userType == .loggedInUser {
       // FDA user
       if ORKPasscodeViewController.isPasscodeStoredInKeychain() == false {
         let passcodeStep = ORKPasscodeStep(identifier: kPasscodeStepIdentifier)

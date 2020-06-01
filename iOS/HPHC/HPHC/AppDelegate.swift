@@ -89,7 +89,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
   /// Updates Key & InitializationVector for Encryption
   func updateKeyAndInitializationVector() {
 
-    if User.currentUser.userType == .loggedUser {  // Registered/LoggedIn User
+    if User.currentUser.userType == .loggedInUser {  // Registered/LoggedIn User
       // Key byte size shouldn't exceed more than 16.
       FDAKeychain.shared[kEncryptionKey] = String.randomString(length: 16)
     } else {  // Anonymous User
@@ -341,7 +341,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data
   ) {
     let deviceTokenString = deviceToken.reduce("", { $0 + String(format: "%02X", $1) })
-    if User.currentUser.userType == .loggedUser {
+    if User.currentUser.userType == .loggedInUser {
       User.currentUser.settings?.remoteNotifications = true
       User.currentUser.settings?.localNotifications = true
       // Update device Token to Local server
@@ -459,7 +459,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
   /// Registers pending notifications based on UserType
   func checkForRegisteredNotifications() {
 
-    if User.currentUser.userType == .loggedUser {
+    if User.currentUser.userType == .loggedInUser {
 
       let center = UNUserNotificationCenter.current()
       center.getPendingNotificationRequests(
@@ -716,7 +716,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
   /// - Parameter viewController: Instance of `UIViewController`
   func checkPasscode(viewController: UIViewController) {
 
-    if User.currentUser.userType == .loggedUser {  // FDA user
+    if User.currentUser.userType == .loggedInUser {  // FDA user
 
       if User.currentUser.settings?.passcode! == true {
         // Passcode already exist
@@ -1167,7 +1167,7 @@ extension AppDelegate {
         self.blockerScreen?.labelVersionNumber.text = "V- " + latestVersion
         self.blockerScreen?.labelMessage.text = kBlockerScreenLabelText
 
-        if User.currentUser.userType == .loggedUser {
+        if User.currentUser.userType == .loggedInUser {
           // FDA user
           if User.currentUser.settings?.passcode! == false {
             UIApplication.shared.keyWindow?.addSubview(self.blockerScreen!)

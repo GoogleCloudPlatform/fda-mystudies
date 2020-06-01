@@ -274,7 +274,7 @@ class LeftMenuViewController: UIViewController, LeftMenuProtocol {
         ])
     }
 
-    if user.userType == .loggedUser {
+    if user.userType == .loggedInUser {
       menus.append(
         [
           "menuTitle": "My Account",
@@ -344,7 +344,7 @@ class LeftMenuViewController: UIViewController, LeftMenuProtocol {
   func setInitialData() {
 
     let user = User.currentUser
-    if user.userType == .loggedUser {
+    if user.userType == .loggedInUser {
       menus.append(
         [
           "menuTitle": "My Account",
@@ -421,7 +421,7 @@ class LeftMenuViewController: UIViewController, LeftMenuProtocol {
 
     case .profileReachOut:
 
-      if User.currentUser.userType == .loggedUser {
+      if User.currentUser.userType == .loggedInUser {
         self.slideMenuController()?.changeMainViewController(
           self.profileviewController,
           close: true
@@ -436,7 +436,7 @@ class LeftMenuViewController: UIViewController, LeftMenuProtocol {
       }
 
     case .reachOutSignIn:
-      if User.currentUser.userType == .loggedUser {
+      if User.currentUser.userType == .loggedInUser {
         // go to reach out
         self.slideMenuController()?.changeMainViewController(
           self.reachoutViewController,

@@ -361,7 +361,7 @@ class UserServices: NSObject {
       user.verified = varified
       if user.verified! {
 
-        user.userType = UserType.loggedUser
+        user.userType = UserType.loggedInUser
 
         FDAKeychain.shared[kUserAuthTokenKeychainKey] = user.authToken
         FDAKeychain.shared[kUserRefreshTokenKeychainKey] = user.refreshToken
@@ -384,7 +384,7 @@ class UserServices: NSObject {
 
       if user.authToken != nil {
 
-        user.userType = UserType.loggedUser
+        user.userType = UserType.loggedInUser
 
         FDAKeychain.shared[kUserAuthTokenKeychainKey] = user.authToken
         FDAKeychain.shared[kUserRefreshTokenKeychainKey] = user.refreshToken

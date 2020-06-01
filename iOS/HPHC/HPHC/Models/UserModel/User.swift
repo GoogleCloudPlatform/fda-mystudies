@@ -20,7 +20,7 @@ import Foundation
 
 enum UserType: Int {
   case anonymousUser = 0
-  case loggedUser
+  case loggedInUser
 }
 
 enum LogoutReason: String {
@@ -196,7 +196,7 @@ class User {
   func getUserProfileDict() -> NSMutableDictionary {
     let dataDict = NSMutableDictionary()
 
-    if self.userType == .loggedUser {
+    if self.userType == .loggedInUser {
 
       if self.userId != nil {
         dataDict.setValue(self.userId, forKey: ((kUserId as NSCopying) as? String)!)
