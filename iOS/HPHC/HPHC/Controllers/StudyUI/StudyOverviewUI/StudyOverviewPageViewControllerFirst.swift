@@ -1,6 +1,7 @@
 // License Agreement for FDA MyStudies
-// Copyright © 2017-2019 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors. Permission is
-// hereby granted, free of charge, to any person obtaining a copy of this software and associated
+// Copyright © 2017-2019 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors.
+// Copyright 2020 Google LLC
+// Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated
 // documentation files (the &quot;Software&quot;), to deal in the Software without restriction, including without
 // limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the
 // Software, and to permit persons to whom the Software is furnished to do so, subject to the following
@@ -51,11 +52,7 @@ class StudyOverviewViewControllerFirst: UIViewController {
 
     // Used to set border color for bottom view
     buttonJoinStudy?.layer.borderColor = kUicolorForButtonBackground
-    if overviewSectionDetail.imageURL != nil {
-      let url = URL.init(string: overviewSectionDetail.imageURL!)
-      imageViewStudy?.sd_setImage(with: url, placeholderImage: nil)
-    }
-
+    loadOverviewImage()
     if overviewSectionDetail.link != nil {
       buttonWatchVideo?.isHidden = false
     } else {
@@ -114,6 +111,17 @@ class StudyOverviewViewControllerFirst: UIViewController {
     self.labelDescription?.textAlignment = .center
 
     setNeedsStatusBarAppearanceUpdate()
+  }
+
+  private func loadOverviewImage() {
+    if let imageURLString = overviewSectionDetail.imageURL {
+      let url = URL(string: imageURLString)
+      imageViewStudy?.sd_imageIndicator = SDWebImageActivityIndicator.whiteLarge
+      imageViewStudy?.sd_setImage(with: url, placeholderImage: nil, options: .highPriority, completed: { [weak self] (image, _, _, _) in
+        self?.imageViewStudy?.sd_imageIndicator?.stopAnimatingIndicator()
+        self?.imageViewStudy?.image = image
+      })
+    }
   }
 
   @objc func playerDidFinishPlaying(note: NSNotification) {
