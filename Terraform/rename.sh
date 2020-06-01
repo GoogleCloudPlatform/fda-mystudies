@@ -18,7 +18,7 @@ export OLD_GKE_PREFIX="heroes-hat"
 export NEW_GKE_PREFIX="mystudies"
 
 export OLD_BIGQUERY_PREFIX="heroes_hat_dev"
-export NEW_BIGQUERY_PREFIX="mystudies-demo"
+export NEW_BIGQUERY_PREFIX="mystudies_demo"
 
 export OLD_FOLDER="fda-my-studies"
 export NEW_FOLDER="mystudies-demo"

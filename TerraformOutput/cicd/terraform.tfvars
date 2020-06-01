@@ -12,7 +12,9 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-org_id                        = "18510592047"
+org_id = "18510592047"
+// Uncomment in order to limit changes to folder.
+// folder_id         = "440087619763"
 billing_account               = "01B494-31B256-17B2A6"
 project_id                    = "mystudies-demo-devops"
 state_bucket                  = "mystudies-terraform-state-19763"
