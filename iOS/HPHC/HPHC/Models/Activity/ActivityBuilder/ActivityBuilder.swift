@@ -95,7 +95,7 @@ class ActivityBuilder {
       switch (activity?.type!)! as ActivityType {
 
       // MARK: Questionnaire
-      case .Questionnaire:
+      case .questionnaire:
         // creating step array
         for stepDict in (activity?.steps!)! {
 

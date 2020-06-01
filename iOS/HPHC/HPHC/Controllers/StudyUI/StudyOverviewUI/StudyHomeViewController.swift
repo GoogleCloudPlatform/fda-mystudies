@@ -98,7 +98,7 @@ class StudyHomeViewController: UIViewController {
 
     navigationController?.setNavigationBarHidden(true, animated: true)
 
-    if User.currentUser.userType == UserType.AnonymousUser {
+    if User.currentUser.userType == UserType.anonymousUser {
       buttonStar.isHidden = true
     } else {
       if User.currentUser.isStudyBookmarked(studyId: (Study.currentStudy?.studyId)!) {
@@ -586,7 +586,7 @@ class StudyHomeViewController: UIViewController {
 
   @IBAction func buttonActionJoinStudy(_: UIButton) {
 
-    if User.currentUser.userType == .AnonymousUser {
+    if User.currentUser.userType == .anonymousUser {
       /// User not logged in yet.
 
       let loginStoryBoard = UIStoryboard(name: kLoginStoryboardIdentifier, bundle: nil)
@@ -603,7 +603,7 @@ class StudyHomeViewController: UIViewController {
       let participatedStatus = currentStudy.userParticipateState.status
 
       switch currentStudy.status {
-      case .Active:
+      case .active:
 
         if Utilities.isStandaloneApp() {
           logout()
@@ -626,7 +626,7 @@ class StudyHomeViewController: UIViewController {
                 as NSString
             )
           }
-        } else if participatedStatus == .Withdrawn {
+        } else if participatedStatus == .withdrawn {
           // check if rejoining is allowed after withrdrawn from study
           if currentStudy.studySettings.rejoinStudyAfterWithdrawn {
             WCPServices().getEligibilityConsentMetadata(
@@ -641,18 +641,18 @@ class StudyHomeViewController: UIViewController {
             )
           }
         }
-      case .Upcoming:
+      case .upcoming:
         UIUtilities.showAlertWithTitleAndMessage(
           title: "",
           message: NSLocalizedString(kMessageForStudyUpcomingState, comment: "")
             as NSString
         )
-      case .Paused:
+      case .paused:
         UIUtilities.showAlertWithTitleAndMessage(
           title: "",
           message: NSLocalizedString(kMessageForStudyPausedState, comment: "") as NSString
         )
-      case .Closed:
+      case .closed:
         UIUtilities.showAlertWithTitleAndMessage(
           title: "",
           message: NSLocalizedString(kMessageForStudyClosedState, comment: "") as NSString
@@ -731,7 +731,7 @@ class StudyHomeViewController: UIViewController {
     }).last {
       Study.currentStudy?.userParticipateState = studyStatus
 
-      if study.status == .Active {
+      if study.status == .active {
         if studyStatus.status == .inProgress {
           // go to study dashboard
           removeProgressIndicator()
@@ -765,7 +765,7 @@ class StudyHomeViewController: UIViewController {
       }
 
     } else {
-      if study.status == .Active {
+      if study.status == .active {
         if study.studySettings.enrollingAllowed {
           WCPServices().getEligibilityConsentMetadata(
             studyId: (Study.currentStudy?.studyId)!,
@@ -1298,7 +1298,7 @@ extension StudyHomeViewController: ORKTaskViewControllerDelegate {
           let currentStatus = Study.currentStudy?.userParticipateState.status
           if currentStatus == .yetToJoin
             || currentStatus == .notEligible
-            || (currentStatus == .Withdrawn
+            || (currentStatus == .withdrawn
               && Study.currentStudy?.studySettings
                 .rejoinStudyAfterWithdrawn ?? false)
           {

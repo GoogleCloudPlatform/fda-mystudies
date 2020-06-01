@@ -56,28 +56,28 @@ let kActivityLastModified = "lastModified"
 let kActivityTaskSubType = "taskSubType"
 
 enum ActivityType: String {
-  case Questionnaire = "questionnaire"
+  case questionnaire = "questionnaire"
   case activeTask = "task"
 }
 
 enum Frequency: String {
-  case One_Time = "One time"
-  case Daily = "Daily"
-  case Weekly = "Weekly"
-  case Monthly = "Monthly"
-  case Scheduled = "Manually Schedule"
+  case oneTime = "One time"
+  case daily = "Daily"
+  case weekly = "Weekly"
+  case monthly = "Monthly"
+  case scheduled = "Manually Schedule"
 
   var description: String {
     switch self {
-    case .One_Time:
+    case .oneTime:
       return "One Time"
-    case .Daily:
+    case .daily:
       return "Daily"
-    case .Weekly:
+    case .weekly:
       return "Weekly"
-    case .Monthly:
+    case .monthly:
       return "Monthly"
-    case .Scheduled:
+    case .scheduled:
       return "Aperiodic"
     }
   }
@@ -137,7 +137,7 @@ class Activity {
   /// scheduled mannuly for anchor date
   var anchorRuns: [[String: Any]]? = []
 
-  var frequencyType: Frequency = .One_Time
+  var frequencyType: Frequency = .oneTime
 
   var result: ActivityResult?
 
@@ -163,7 +163,7 @@ class Activity {
   /// Default Initializer
   init() {
 
-    self.type = .Questionnaire
+    self.type = .questionnaire
     self.actvityId = ""
     self.studyId = ""
     self.name = ""
@@ -190,7 +190,7 @@ class Activity {
     self.activitySteps = [ActivityStep]()
     // contains the runs of Activity
     self.frequencyRuns = [[String: Any]]()
-    self.frequencyType = .One_Time
+    self.frequencyType = .oneTime
   }
 
   /// Initializer method which initializes all params
@@ -463,7 +463,7 @@ class Activity {
     var endDate: Date!
 
     switch frequency {
-    case .One_Time:
+    case .oneTime:
 
       let startDateInterval = TimeInterval(60 * 60 * 24 * (self.anchorDate?.startDays)!)
       let endDateInterval = TimeInterval(60 * 60 * 24 * (self.anchorDate?.endDays)!)
@@ -471,20 +471,20 @@ class Activity {
       startDate = date.addingTimeInterval(startDateInterval)
       endDate = date.addingTimeInterval(endDateInterval)
 
-    case .Daily:
+    case .daily:
 
       let startDateInterval = TimeInterval(60 * 60 * 24 * (self.anchorDate?.startDays)!)
       let endDateInterval = TimeInterval(60 * 60 * 24 * (self.anchorDate?.repeatInterval)!)
       startDate = date.addingTimeInterval(startDateInterval)
       endDate = startDate.addingTimeInterval(endDateInterval)
 
-    case .Weekly:
+    case .weekly:
 
       let startDateInterval = TimeInterval(60 * 60 * 24 * (self.anchorDate?.startDays)!)
       let endDateInterval = TimeInterval(60 * 60 * 24 * 7 * (self.anchorDate?.repeatInterval)!)
       startDate = date.addingTimeInterval(startDateInterval)
       endDate = startDate.addingTimeInterval(endDateInterval)
-    case .Monthly:
+    case .monthly:
 
       let startDateInterval = TimeInterval(60 * 60 * 24 * (self.anchorDate?.startDays)!)
       startDate = date.addingTimeInterval(startDateInterval)
@@ -494,7 +494,7 @@ class Activity {
         value: (self.anchorDate?.repeatInterval)!,
         to: startDate
       )
-    case .Scheduled:
+    case .scheduled:
 
       let startDateInterval = TimeInterval(60 * 60 * 24 * (self.anchorDate?.startDays)!)
       let endDateInterval = TimeInterval(60 * 60 * 24 * (self.anchorDate?.endDays)!)

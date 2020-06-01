@@ -117,11 +117,11 @@ class ResponseServices: NSObject {
           JSONKey.studyVersion: studyVersion,
         ] as [String: String]
 
-      let ActivityType = Study.currentActivity?.type?.rawValue
+      let activityType = Study.currentActivity?.type?.rawValue
 
       let params =
         [
-          kActivityType: ActivityType!,
+          kActivityType: activityType!,
           kActivityInfoMetaData: info,
           kParticipantId: userStudyStatus.participantId ?? "",
           JSONKey.tokenIdentifier: userStudyStatus.tokenIdentifier ?? "",
@@ -361,7 +361,8 @@ class ResponseServices: NSObject {
           } else {
             for (index, dict) in dataDictArr.enumerated() {
               guard index > 1,
-              let key = dict.keys.first else { continue }
+                let key = dict.keys.first
+              else { continue }
               let responseData = DashboardResponse(with: activityId, and: key)
               if let valueDict = dict[key] as? JSONDictionary {
                 responseData.appendValues(from: valueDict, of: date)
@@ -445,7 +446,7 @@ extension ResponseServices: NMWebServiceDelegate {
       || requestName as String == ResponseMethods.updateActivityState.description
     {
 
-      if error.code == NoNetworkErrorCode {
+      if error.code == kNoNetworkErrorCode {
         // save in database
         DBHandler.saveRequestInformation(
           params: self.requestParams,

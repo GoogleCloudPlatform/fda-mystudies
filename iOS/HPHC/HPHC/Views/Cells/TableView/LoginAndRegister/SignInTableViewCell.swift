@@ -20,8 +20,8 @@ import Foundation
 import UIKit
 
 enum SignInTableViewTags: Int {
-  case EmailId = 0
-  case Password
+  case emailId = 0
+  case password
 }
 
 class SignInTableViewCell: UITableViewCell {
