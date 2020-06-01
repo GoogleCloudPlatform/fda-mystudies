@@ -103,8 +103,8 @@ cp -r ${SRC_PROJ_BASE}-resp-firebase/firebase ${DST_PROJ_BASE}-resp-firebase/
 cp -r ${SRC_PROJ_BASE}-apps/apps ${DST_PROJ_BASE}-apps/
 
 # Deployment Phase 4 - Uncomment after Phase 1, 2, 3 are deployed
-# cp -r ${SRC_PROJ_BASE}-data/data ${DST_PROJ_BASE}-data/
-# cp -r ${SRC_PROJ_BASE}-data/iam ${DST_PROJ_BASE}-data/
+cp -r ${SRC_PROJ_BASE}-data/data ${DST_PROJ_BASE}-data/
+cp -r ${SRC_PROJ_BASE}-data/iam ${DST_PROJ_BASE}-data/
 
 cd ${OUTPUT_TF_BASE}
 
@@ -128,7 +128,7 @@ find . -type f -name *.tfvars -o -name *.tf -o -name *.hcl -o -name README.md | 
 find . -type f -name *.tfvars -o -name *.tf -o -name *.hcl -o -name README.md | xargs sed -i "s|${OLD_FOLDER}|${NEW_FOLDER}|"
 
 # Repo
-find . -type f -name *.tfvars -o -name *.tf -o -name *.hcl -o -name README.md | xargs sed -i "s|"${OLD_GITHUB_ORG}"|"${NEW_GITHUB_ORG}"|"
+find . -type f -name *.tfvars -o -name *.tf -o -name *.hcl -o -name README.md | xargs sed -i "s|\"${OLD_GITHUB_ORG}\"|\"${NEW_GITHUB_ORG}\"|"
 # find . -type f -name *.tfvars -o -name *.tf -o -name *.hcl -o -name README.md | xargs sed -i "s|"${OLD_GITHUB_REPO}"|"${NEW_GITHUB_REPO}"|"
 # find . -type f -name *.tfvars -o -name *.tf -o -name *.hcl -o -name README.md | xargs sed -i "s|"${OLD_GITHUB_BRANCH}"|"${NEW_GITHUB_BRANCH}"|"
 
