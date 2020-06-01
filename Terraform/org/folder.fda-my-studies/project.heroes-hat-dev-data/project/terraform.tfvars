@@ -18,5 +18,5 @@ billing_account = "01EA90-3519E1-89CB1F"
 apis = [
   "compute.googleapis.com",
   "servicenetworking.googleapis.com",
-  "bigquery-json.googleapis.com",
+  "bigquery.googleapis.com",
 ]
