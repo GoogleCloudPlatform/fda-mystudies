@@ -227,7 +227,7 @@ class SignInViewController: UIViewController {
       (storyboard.instantiateViewController(withIdentifier: "ChangePasswordViewController")
       as? ChangePasswordViewController)!
     if viewLoadFrom == .menu {
-      changePassword.viewLoadFrom = .menu_login
+      changePassword.viewLoadFrom = .menuLogin
     } else if viewLoadFrom == .joinStudy {
       changePassword.viewLoadFrom = .joinStudy
     } else {
@@ -290,9 +290,9 @@ class SignInViewController: UIViewController {
 
     if let signUpController = segue.destination as? SignUpViewController {
       if viewLoadFrom == .menu {
-        signUpController.viewLoadFrom = .menu_login
+        signUpController.viewLoadFrom = .menuLogin
       } else if viewLoadFrom == .joinStudy {
-        signUpController.viewLoadFrom = .joinStudy_login
+        signUpController.viewLoadFrom = .joinStudyLogin
       } else {
         signUpController.viewLoadFrom = .login
       }
@@ -336,7 +336,7 @@ extension SignInViewController: UITableViewDataSource {
 
     cell.textFieldValue?.text = ""
     var isSecuredEntry: Bool = false
-    if indexPath.row == SignInTableViewTags.Password.rawValue {
+    if indexPath.row == SignInTableViewTags.password.rawValue {
       isSecuredEntry = true
     } else {
       cell.textFieldValue?.keyboardType = .emailAddress
@@ -369,7 +369,7 @@ extension SignInViewController: UITextFieldDelegate {
 
     let tag: SignInTableViewTags = SignInTableViewTags(rawValue: textField.tag)!
 
-    if tag == .EmailId {
+    if tag == .emailId {
       if string == " " {
         return false
       } else {
@@ -387,11 +387,11 @@ extension SignInViewController: UITextFieldDelegate {
 
   func textFieldDidEndEditing(_ textField: UITextField) {
     switch textField.tag {
-    case SignInTableViewTags.EmailId.rawValue:
+    case SignInTableViewTags.emailId.rawValue:
       user.emailId = textField.text
       break
 
-    case SignInTableViewTags.Password.rawValue:
+    case SignInTableViewTags.password.rawValue:
       user.password = textField.text
       break
 

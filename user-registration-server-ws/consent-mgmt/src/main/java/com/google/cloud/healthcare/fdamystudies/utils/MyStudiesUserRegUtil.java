@@ -85,7 +85,6 @@ public class MyStudiesUserRegUtil {
         "Thanks, your email has been successfully verified! You can now proceed to completing the sign up process on the mobile app."),
     EMAIL_NOT_VERIFIED(
         "Your account is not verified. Please verify your account by clicking on verification link which has been sent to your registered email. If not received, would you like to resend verification link?"),
-    LABKEY_HOME("http://192.168.0.6:8081"),
     STUDY("Study"),
     GATEWAY("Gateway"),
     DEVICE_ANDROID("android"),
@@ -150,6 +149,13 @@ public class MyStudiesUserRegUtil {
       logger.info("MyStudiesUserRegUtil - getCurrentUtilDateTime() :: ERROR ", e);
     }
     return date;
+  }
+
+  public static LocalDateTime getCurrentDateTime() {
+    logger.info("INFO: MyStudiesUserRegUtil - getCurrentDateTime() :: starts");
+    LocalDateTime currentDateTime = LocalDateTime.now(ZoneId.of(AppConstants.SERVER_TIMEZONE));
+    logger.info("INFO: MyStudiesUserRegUtil - getCurrentDateTime() :: ends");
+    return currentDateTime;
   }
 
   public static String getCurrentDateTime(String pattern) {

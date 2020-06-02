@@ -403,7 +403,7 @@ class NetworkWebServiceHandler: NSObject, URLSessionDelegate {
 
         let error1 = NSError(
           domain: NSURLErrorDomain,
-          code: NoNetworkErrorCode,
+          code: kNoNetworkErrorCode,
           userInfo: [
             NSLocalizedDescriptionKey:
               "You seem to be offline. Please connect to a network to proceed with this action.",

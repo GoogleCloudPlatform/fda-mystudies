@@ -78,7 +78,7 @@ class StudyListViewController: UIViewController {
     let isPasscodePending = ud.value(forKey: kPasscodeIsPending) as? Bool ?? false
 
     if isPasscodePending == true {
-      if User.currentUser.userType == .FDAUser {
+      if User.currentUser.userType == .loggedInUser {
         tableView?.isHidden = true
         // Fetch the User Profile
         UserServices().getUserProfile(self as NMWebServiceDelegate)
@@ -88,7 +88,7 @@ class StudyListViewController: UIViewController {
     labelHelperText.isHidden = true
     setNavigationBarItem()
 
-    if User.currentUser.userType == .FDAUser {  // For LoggedIn User
+    if User.currentUser.userType == .loggedInUser {  // For LoggedIn User
       tableView?.estimatedRowHeight = 145
       tableView?.rowHeight = UITableView.automaticDimension
 
@@ -319,7 +319,7 @@ class StudyListViewController: UIViewController {
       let studyId = (ud.object(forKey: kFetalkickStudyId) as? String)!
       let study = Gateway.instance.studies?.filter { $0.studyId == studyId }.last
 
-      if study?.userParticipateState.status == .inProgress, study?.status == .Active {
+      if study?.userParticipateState.status == .inProgress, study?.status == .active {
         Study.updateCurrentStudy(study: study!)
         pushToStudyDashboard(animated: false)
       }
@@ -417,7 +417,7 @@ class StudyListViewController: UIViewController {
         let previousStudyFilters = StudyFilterHandler.instance.previousAppliedFilters
         if previousStudyFilters.count > 0 {
 
-          if User.currentUser.userType == .FDAUser {
+          if User.currentUser.userType == .loggedInUser {
             self.appliedFilter(
               studyStatus: previousStudyFilters.first!,
               pariticipationsStatus: previousStudyFilters[safe: 2] ?? [],
@@ -516,7 +516,7 @@ class StudyListViewController: UIViewController {
       options: UIView.AnimationOptions.preferredFramesPerSecond60,
       animations: { () -> Void in
 
-        let y: CGFloat = DeviceType.IS_IPHONE_X_OR_HIGH ? 20.0 : 0.0
+        let y: CGFloat = DeviceType.isIPhoneXOrHigh ? 20.0 : 0.0
         self.searchView?.frame = CGRect(
           x: 0,
           y: y,
@@ -605,7 +605,7 @@ class StudyListViewController: UIViewController {
       loadStudiesFromDatabase()
       let appDelegate = (UIApplication.shared.delegate as? AppDelegate)!
 
-      if appDelegate.notificationDetails != nil, User.currentUser.userType == .FDAUser {
+      if appDelegate.notificationDetails != nil, User.currentUser.userType == .loggedInUser {
         appDelegate.handleLocalAndRemoteNotification(
           userInfoDetails: appDelegate.notificationDetails!
         )
@@ -618,7 +618,7 @@ class StudyListViewController: UIViewController {
     DispatchQueue.main.async {
       // Remove paused studies local notifications.
       if let updatedStudies = Gateway.instance.studies {
-        let pausedStudies = updatedStudies.filter { $0.status == .Closed || $0.status == .Paused }
+        let pausedStudies = updatedStudies.filter { $0.status == .closed || $0.status == .paused }
         for study in pausedStudies {
           DBHandler.deleteStudyDBLocalNotifications(for: study.studyId)
         }
@@ -651,8 +651,8 @@ class StudyListViewController: UIViewController {
 
   /// navigateBasedOnUserStatus method navigates to StudyDashBoard or StudyHome based on UserParticipationStatus.
   func navigateBasedOnUserStatus() {
-    if User.currentUser.userType == UserType.FDAUser {
-      if Study.currentStudy?.status == .Active {
+    if User.currentUser.userType == UserType.loggedInUser {
+      if Study.currentStudy?.status == .active {
         // handle accoring to UserStatus
         let userStudyStatus = (Study.currentStudy?.userParticipateState.status)!
 
@@ -673,8 +673,8 @@ class StudyListViewController: UIViewController {
   func performTaskBasedOnStudyStatus() {
     let study = Study.currentStudy
 
-    if User.currentUser.userType == UserType.FDAUser {
-      if Study.currentStudy?.status == .Active {
+    if User.currentUser.userType == UserType.loggedInUser {
+      if Study.currentStudy?.status == .active {
         let userStudyStatus = (Study.currentStudy?.userParticipateState.status)!
 
         if userStudyStatus == .completed || userStudyStatus == .inProgress {
@@ -688,7 +688,7 @@ class StudyListViewController: UIViewController {
         } else {
           checkForStudyUpdate(study: study)
         }
-      } else if Study.currentStudy?.status == .Paused {
+      } else if Study.currentStudy?.status == .paused {
         let userStudyStatus = (Study.currentStudy?.userParticipateState.status)!
 
         if userStudyStatus == .completed || userStudyStatus == .inProgress {
@@ -747,8 +747,8 @@ extension StudyListViewController: StudyFilterDelegates {
     var previousCollectionData: [[String]] = []
 
     previousCollectionData.append(studyStatus)
-    let currentUser = User.currentUser.userType ?? .AnonymousUser
-    if currentUser == .FDAUser {
+    let currentUser = User.currentUser.userType ?? .anonymousUser
+    if currentUser == .loggedInUser {
       previousCollectionData.append(bookmarked == true ? ["Bookmarked"] : [])
       previousCollectionData.append(pariticipationsStatus)
     }
@@ -759,7 +759,7 @@ extension StudyListViewController: StudyFilterDelegates {
     StudyFilterHandler.instance.searchText = ""
 
     if studyStatus.isEmpty
-      || (pariticipationsStatus.isEmpty && currentUser != .AnonymousUser)
+      || (pariticipationsStatus.isEmpty && currentUser != .anonymousUser)
       || categories.isEmpty
         && searchText.isEmpty
         && !bookmarked
@@ -816,7 +816,7 @@ extension StudyListViewController: StudyFilterDelegates {
 
     var statusFilteredSet = Set<Study>()
 
-    if currentUser == .FDAUser {
+    if currentUser == .loggedInUser {
       statusFilteredSet = statusFilteredStudiesSet.intersection(pariticipationStatusFilteredSet)
     } else {
       statusFilteredSet = statusFilteredStudiesSet
@@ -873,7 +873,7 @@ extension StudyListViewController: UITableViewDataSource {
 
     // check if current user is anonymous
     let user = User.currentUser
-    if user.userType == .AnonymousUser {
+    if user.userType == .anonymousUser {
       cellIdentifier = "anonymousStudyCell"
     }
 
@@ -934,7 +934,7 @@ extension StudyListViewController: searchBarDelegate {
         let previousCollectionData = StudyFilterHandler.instance.previousAppliedFilters
 
         // Apply Filters
-        if User.currentUser.userType == .FDAUser {
+        if User.currentUser.userType == .loggedInUser {
           appliedFilter(
             studyStatus: previousCollectionData.first!,
             pariticipationsStatus: previousCollectionData[2],
@@ -1126,7 +1126,7 @@ extension StudyListViewController: StudyHomeViewDontrollerDelegate {
       appdelegate.window?.removeProgressIndicatorFromWindow()
 
       let leftController = (self.slideMenuController()?.leftViewController as? LeftMenuViewController)!
-      leftController.changeViewController(.reachOut_signIn)
+      leftController.changeViewController(.reachOutSignIn)
     }
   }
 }

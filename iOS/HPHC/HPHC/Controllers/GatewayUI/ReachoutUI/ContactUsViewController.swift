@@ -168,15 +168,15 @@ extension ContactUsViewController: UITableViewDataSource {
 
       // Cell ContactTextField data setup
       switch textFieldTag {
-      case .FirstName:
+      case .firstName:
         keyBoardType = .default
         cell.textFieldValue?.text = ContactUsFields.firstName
 
-      case .Subject:
+      case .subject:
         keyBoardType = .default
         cell.textFieldValue?.text = ContactUsFields.subject
 
-      case .Email:
+      case .email:
         cell.textFieldValue?.text = User.currentUser.emailId!
         ContactUsFields.email = User.currentUser.emailId!
         keyBoardType = .emailAddress
@@ -246,7 +246,7 @@ extension ContactUsViewController: UITextFieldDelegate {
       return false
     }
 
-    if tag == .Email {
+    if tag == .email {
       if string == " " || finalString.count > 255 {
         return false
       } else {
@@ -264,15 +264,15 @@ extension ContactUsViewController: UITextFieldDelegate {
 
     switch tag {
 
-    case .Email:
+    case .email:
       ContactUsFields.email = textField.text!
       break
 
-    case .FirstName:
+    case .firstName:
       ContactUsFields.firstName = textField.text!
       break
 
-    case .Subject:
+    case .subject:
       ContactUsFields.subject = textField.text!
       break
     }
