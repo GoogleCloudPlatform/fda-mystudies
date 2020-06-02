@@ -180,6 +180,18 @@ public class DBServiceSubscriber {
         .findAll();
   }
 
+  public RealmResults<NotificationDb> getNotificationDbByCurrentDate(Realm realm) {
+    Calendar calendar = Calendar.getInstance();
+    calendar.set(Calendar.HOUR_OF_DAY, 23);
+    calendar.set(Calendar.MINUTE, 59);
+    calendar.set(Calendar.SECOND, 59);
+    return realm
+        .where(NotificationDb.class)
+        .greaterThanOrEqualTo("dateTime", new Date())
+        .lessThanOrEqualTo("dateTime", calendar.getTime())
+        .findAll();
+  }
+
   public RealmResults<NotificationDbResources> getNotificationDbResourcesByDate(
       Date startDate, Realm realm) {
     return realm
