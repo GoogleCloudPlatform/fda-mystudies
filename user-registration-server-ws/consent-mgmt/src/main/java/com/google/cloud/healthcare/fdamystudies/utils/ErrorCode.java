@@ -5,6 +5,7 @@
  * license that can be found in the LICENSE file or at
  * https://opensource.org/licenses/MIT.
  */
+
 package com.google.cloud.healthcare.fdamystudies.utils;
 
 public enum ErrorCode {
@@ -156,5 +157,4 @@ public enum ErrorCode {
   public String errorMessage() {
     return this.errorMessage;
   }
-
 }
