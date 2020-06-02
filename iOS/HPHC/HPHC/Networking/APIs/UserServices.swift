@@ -361,7 +361,7 @@ class UserServices: NSObject {
       user.verified = varified
       if user.verified! {
 
-        user.userType = UserType.FDAUser
+        user.userType = UserType.loggedInUser
 
         FDAKeychain.shared[kUserAuthTokenKeychainKey] = user.authToken
         FDAKeychain.shared[kUserRefreshTokenKeychainKey] = user.refreshToken
@@ -384,7 +384,7 @@ class UserServices: NSObject {
 
       if user.authToken != nil {
 
-        user.userType = UserType.FDAUser
+        user.userType = UserType.loggedInUser
 
         FDAKeychain.shared[kUserAuthTokenKeychainKey] = user.authToken
         FDAKeychain.shared[kUserRefreshTokenKeychainKey] = user.refreshToken
@@ -591,7 +591,7 @@ extension UserServices: NMWebServiceDelegate {
         as String == ResponseMethods.updateActivityState.description
       {
 
-        if error.code == NoNetworkErrorCode {
+        if error.code == kNoNetworkErrorCode {
           // save in database
           DBHandler.saveRequestInformation(
             params: self.requestParams,
