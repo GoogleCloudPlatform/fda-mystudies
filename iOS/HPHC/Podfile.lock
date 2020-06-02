@@ -12,6 +12,7 @@ PODS:
     - URITemplate (~> 3.0)
   - Mockingjay/XCTest (3.0.0-alpha.1):
     - Mockingjay/Core
+  - ReachabilitySwift (5.0.0)
   - Realm (4.3.2):
     - Realm/Headers (= 4.3.2)
   - Realm/Headers (4.3.2)
@@ -31,6 +32,7 @@ DEPENDENCIES:
   - EnvoyAmbassador
   - IQKeyboardManagerSwift
   - Mockingjay (= 3.0.0-alpha.1)
+  - ReachabilitySwift
   - RealmSwift
   - SDWebImage
   - SlideMenuControllerSwift (from `https://github.com/AtomicSLLC/SlideMenuControllerSwift.git`, branch `swift5`)
@@ -44,6 +46,7 @@ SPEC REPOS:
     - EnvoyAmbassador
     - IQKeyboardManagerSwift
     - Mockingjay
+    - ReachabilitySwift
     - Realm
     - RealmSwift
     - SDWebImage
@@ -67,6 +70,7 @@ SPEC CHECKSUMS:
   EnvoyAmbassador: 21cef10e70d003801c68ba5281948684a4e25486
   IQKeyboardManagerSwift: 0fb93310284665245591f50f7a5e38de615960b7
   Mockingjay: 0f7c5aa49c7f1b95621cee3c79b557141f5a225c
+  ReachabilitySwift: 985039c6f7b23a1da463388634119492ff86c825
   Realm: 5e92902e2875dff4bb0fd02f67bb737c3d5db2bc
   RealmSwift: 9a360fc7bae04fc2e308a34fbd899d5faa2d6b22
   SDWebImage: 21b19f56b4226cdfe3aefe4e6848dc43ed129a86
@@ -74,6 +78,6 @@ SPEC CHECKSUMS:
   Toast-Swift: 9b6a70f28b3bf0b96c40d46c0c4b9d6639846711
   URITemplate: 58e0d47f967006c5d59888af5356c4a8ed3b197d
 
-PODFILE CHECKSUM: c8e761cf1e7e94156f8583d04388dd5b9e8849c4
+PODFILE CHECKSUM: 2dc0b4ec9bd27956cea5255e3388f437fa61298e
 
-COCOAPODS: 1.8.4
+COCOAPODS: 1.9.2

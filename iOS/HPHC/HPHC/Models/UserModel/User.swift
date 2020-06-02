@@ -19,39 +19,39 @@
 import Foundation
 
 enum UserType: Int {
-  case AnonymousUser = 0
-  case FDAUser
+  case anonymousUser = 0
+  case loggedInUser
 }
 
 enum LogoutReason: String {
-  case user_action
-  case error
-  case security_jailbroken
+  case userAction = "user_action"
+  case error = "error"
+  case securityJailbroken = "security_jailbroken"
 }
 enum DayValue: String {
-  case Sun
-  case Mon
-  case Tue
-  case Wed
-  case Thu
-  case Fri
-  case Sat
+  case sun = "Sun"
+  case mon = "Mon"
+  case tue = "Tue"
+  case wed = "Wed"
+  case thu = "Thu"
+  case fri = "Fri"
+  case sat = "Sat"
 
   var dayIndex: Int {
     switch self {
-    case .Sun:
+    case .sun:
       return 1
-    case .Mon:
+    case .mon:
       return 2
-    case .Tue:
+    case .tue:
       return 3
-    case .Wed:
+    case .wed:
       return 4
-    case .Thu:
+    case .thu:
       return 5
-    case .Fri:
+    case .fri:
       return 6
-    case .Sat:
+    case .sat:
       return 7
 
     }
@@ -81,7 +81,7 @@ class User {
   var clientToken: String!
   var participatedStudies: [UserStudyStatus]! = []
   var participatedActivites: [UserActivityStatus]! = []
-  var logoutReason: LogoutReason = .user_action
+  var logoutReason: LogoutReason = .userAction
   var isLoginWithTempPassword: Bool = false
 
   /// sharedInstance
@@ -102,7 +102,7 @@ class User {
     self.lastName = ""
     self.emailId = ""
     self.settings = Settings()
-    self.userType = UserType.AnonymousUser
+    self.userType = UserType.anonymousUser
     self.userId = ""
     self.verified = false
     self.refreshToken = ""
@@ -196,7 +196,7 @@ class User {
   func getUserProfileDict() -> NSMutableDictionary {
     let dataDict = NSMutableDictionary()
 
-    if self.userType == .FDAUser {
+    if self.userType == .loggedInUser {
 
       if self.userId != nil {
         dataDict.setValue(self.userId, forKey: ((kUserId as NSCopying) as? String)!)
@@ -571,7 +571,7 @@ class UserStudyStatus {
     case notEligible
     case inProgress
     case completed
-    case Withdrawn
+    case withdrawn
 
     var sortIndex: Int {
       switch self {
@@ -581,7 +581,7 @@ class UserStudyStatus {
         return 1
       case .completed:
         return 2
-      case .Withdrawn:
+      case .withdrawn:
         return 3
       case .notEligible:
         return 4
@@ -598,7 +598,7 @@ class UserStudyStatus {
         return "Completed"
       case .notEligible:
         return "Not Eligible"
-      case .Withdrawn:
+      case .withdrawn:
         return "Withdrawn"
 
       }
@@ -614,7 +614,7 @@ class UserStudyStatus {
         return "Completed"
       case .notEligible:
         return "Not Eligible"
-      case .Withdrawn:
+      case .withdrawn:
         return "Withdrawn"
 
       }
@@ -634,7 +634,7 @@ class UserStudyStatus {
         return "completed"
       case .notEligible:
         return "notEligible"
-      case .Withdrawn:
+      case .withdrawn:
         return "Withdrawn"
 
       }
@@ -700,11 +700,11 @@ class UserStudyStatus {
         } else if StudyStatus.completed.paramValue == statusValue {
           self.status = .completed
 
-        } else if StudyStatus.Withdrawn.paramValue == statusValue {
-          self.status = .Withdrawn
+        } else if StudyStatus.withdrawn.paramValue == statusValue {
+          self.status = .withdrawn
         }
       }
-      if self.status == .yetToJoin || self.status == .Withdrawn || self.status == .notEligible {
+      if self.status == .yetToJoin || self.status == .withdrawn || self.status == .notEligible {
         self.participantId = nil
         self.tokenIdentifier = ""
         self.siteID = ""

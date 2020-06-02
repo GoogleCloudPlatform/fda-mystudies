@@ -101,7 +101,7 @@ class StudyListCell: UITableViewCell {
     // study status
     self.setStudyStatus(study: study)
 
-    if User.currentUser.userType == .AnonymousUser {
+    if User.currentUser.userType == .anonymousUser {
       // do nothing
     } else {
       // set participatedStudies
@@ -116,13 +116,13 @@ class StudyListCell: UITableViewCell {
     labelStudyStatus?.text = study.status.rawValue.uppercased()
 
     switch study.status {
-    case .Active:
+    case .active:
       studyStatusIndicator?.backgroundColor = Utilities.getUIColorFromHex(0x4caf50)  //green
-    case .Upcoming:
+    case .upcoming:
       studyStatusIndicator?.backgroundColor = Utilities.getUIColorFromHex(0x007cba)  //app color
-    case .Closed:
+    case .closed:
       studyStatusIndicator?.backgroundColor = Utilities.getUIColorFromHex(0xFF0000)  //red color
-    case .Paused:
+    case .paused:
       studyStatusIndicator?.backgroundColor = Utilities.getUIColorFromHex(0xf5af37)  //orange color
     }
   }
@@ -140,11 +140,11 @@ class StudyListCell: UITableViewCell {
 
       // user study status
       switch study.status {
-      case .Active:
+      case .active:
         labelStudyUserStatus?.text = userStudyStatus.status.description
-      case .Closed:
+      case .closed:
         labelStudyUserStatus?.text = userStudyStatus.status.closedStudyDescription
-      case .Upcoming:
+      case .upcoming:
         labelStudyUserStatus?.text = userStudyStatus.status.upcomingStudyDescription
       default:
         labelStudyUserStatus?.text = userStudyStatus.status.description
@@ -163,7 +163,7 @@ class StudyListCell: UITableViewCell {
         studyUserStatusIcon?.image = #imageLiteral(resourceName: "yet_to_join_icn")
       case .notEligible:
         studyUserStatusIcon?.image = #imageLiteral(resourceName: "not_eligible_icn")
-      case .Withdrawn:
+      case .withdrawn:
         studyUserStatusIcon?.image = #imageLiteral(resourceName: "withdrawn_icn1")
       case .completed:
         studyUserStatusIcon?.image = #imageLiteral(resourceName: "completed_icn")

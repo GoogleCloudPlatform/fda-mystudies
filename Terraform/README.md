@@ -101,6 +101,8 @@ To see what resources each deployment provisions, check out the comments in each
 
 ## Deployment Steps
 
+### Phase1: Devops Project, Secrets and CICD
+
 1. Authenticate as a super admin using `gcloud auth login [ACCOUNT]`.
 
     WARNING: remember to run `gcloud auth revoke` to logout as a super admin.
@@ -126,6 +128,8 @@ To see what resources each deployment provisions, check out the comments in each
     The [rename.sh](./rename.sh) script uses configs in this directory and copy
     them over with value substitutions to a target local directory to host your
     new final Terraform configs.
+
+#### Devops Project
 
 1. Run [rename.sh](./rename.sh) in this directory (later referenced as the
     original directory) to copy the Deployment Phase 1 configs to your target
@@ -155,6 +159,8 @@ To see what resources each deployment provisions, check out the comments in each
     terraform init
     ```
 
+#### Secrets
+
 1. Deploy secrets used in the org in the `devops` project.
 
     ```bash
@@ -164,7 +170,17 @@ To see what resources each deployment provisions, check out the comments in each
     ```
 
     After the secrets have been created, you must go to the Google Cloud
-    Console, open `Security` --> `Secret Manager` and fill in their values.
+    Console, open `Security` --> `Secret Manager` and fill in the values
+    for the following secrets:
+    - my-studies-sql-default-user-password
+    - my-studies-wcp-user
+    - my-studies-wcp-pass
+    - my-studies-email-address
+    - my-studies-email-password
+    - mobile-app-appid
+    - mobile-app-orgid
+
+#### CICD
 
 1. Follow [CICD README.md](./cicd/README.md) to set up CICD pipelines for
     Terraform configs.
@@ -173,6 +189,8 @@ To see what resources each deployment provisions, check out the comments in each
     these configs. Make sure the presubmit tests pass and get code review
     approvals. The CD job will then deploy the rest of Phase 1 resources for
     you.
+
+### Phase2: Networks and Firebase Projects
 
 1. Go to the original directory.
 
@@ -221,6 +239,8 @@ To see what resources each deployment provisions, check out the comments in each
 1. Commit your current local git working dir and send a Pull Request to merge
     these configs. Make sure the presubmit tests pass and get code review
     approvals. The CD job will then deploy the Phase 3 resources for you.
+
+### Phase4: Data Project
 
 1. Go to the original directory.
 

@@ -284,11 +284,11 @@ class ActivitiesViewController: UIViewController {
                         notification.endDate = endAnchorDate
                         notification.type =
                           AppNotification.NotificationType
-                          .Study
+                          .study
                         notification.subType =
                           AppNotification
-                          .NotificationSubType.Resource
-                        notification.audience = Audience.Limited
+                          .NotificationSubType.resource
+                        notification.audience = Audience.limited
                         notification.studyId = (Study.currentStudy?.studyId)!
                         // Save Notification to Database
                         DBHandler.saveLocalNotification(
@@ -535,7 +535,7 @@ class ActivitiesViewController: UIViewController {
 
     if self.selectedFilter == .tasks || self.selectedFilter == .surveys {
 
-      let filterType: ActivityType! = (selectedFilter == .surveys ? .Questionnaire : .activeTask)
+      let filterType: ActivityType! = (selectedFilter == .surveys ? .questionnaire : .activeTask)
       self.updateSectionArray(activityType: filterType)
     }
 
@@ -929,7 +929,7 @@ extension ActivitiesViewController: UITableViewDataSource {
       let activity = activities[indexPath.row]
 
       // check for scheduled frequency
-      if activity.frequencyType == .Scheduled {
+      if activity.frequencyType == .scheduled {
 
         cell =
           (tableView.dequeueReusableCell(
@@ -1031,7 +1031,7 @@ extension ActivitiesViewController: ActivityFilterViewDelegate {
       // currently filter type is all so no need to fetch all activities
       if self.selectedFilter == .all {
 
-        let filterType: ActivityType! = (selectedIndex == .surveys ? .Questionnaire : .activeTask)
+        let filterType: ActivityType! = (selectedIndex == .surveys ? .questionnaire : .activeTask)
         self.updateSectionArray(activityType: filterType)
 
       } else {  // existing filterType is either Task or Surveys
@@ -1042,7 +1042,7 @@ extension ActivitiesViewController: ActivityFilterViewDelegate {
 
         // applying the new filter Type
         if selectedIndex == .surveys || selectedIndex == .tasks {
-          let filterType: ActivityType! = (selectedIndex == .surveys ? .Questionnaire : .activeTask)
+          let filterType: ActivityType! = (selectedIndex == .surveys ? .questionnaire : .activeTask)
           self.updateSectionArray(activityType: filterType)
         }
       }
@@ -1167,7 +1167,7 @@ extension ActivitiesViewController: NMWebServiceDelegate {
         )
       }
     case ResponseMethods.activityState.method.methodName:
-      if error.code != NoNetworkErrorCode {
+      if error.code != kNoNetworkErrorCode {
         self.loadActivitiesFromDatabase()
       } else {
 
@@ -1180,7 +1180,7 @@ extension ActivitiesViewController: NMWebServiceDelegate {
         )
       }
     case ResponseMethods.processResponse.method.methodName:
-      if error.code == NoNetworkErrorCode {
+      if error.code == kNoNetworkErrorCode {
         self.updateRunStatusToComplete()
       }
       self.lastActivityResponse = nil
@@ -1534,7 +1534,7 @@ extension ActivitiesViewController: ORKTaskViewControllerDelegate {
         }
 
         /// save data for stats.
-        if ActivityBuilder.currentActivityBuilder.actvityResult?.type == .Questionnaire {
+        if ActivityBuilder.currentActivityBuilder.actvityResult?.type == .questionnaire {
 
           if let value1 = activityStepResult?.value as? NSNumber {
             let value = value1.floatValue

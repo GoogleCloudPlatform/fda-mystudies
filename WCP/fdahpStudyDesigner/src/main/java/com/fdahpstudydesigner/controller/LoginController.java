@@ -61,31 +61,35 @@ public class LoginController {
   @RequestMapping("/addPassword.do")
   public ModelAndView addPassword(HttpServletRequest request, UserBO userBO) {
     logger.info("LoginController - addPassword() - Starts");
-    String securityToken = null;
-    String accessCode = null;
-    String password = null;
-    String errorMsg = FdahpStudyDesignerConstants.FAILURE;
     ModelAndView mv = new ModelAndView("redirect:login.do");
-    Map<String, String> propMap = FdahpStudyDesignerUtil.getAppProperties();
-    SessionObject sesObj = null;
-    HttpSession session = null;
     try {
-      session = request.getSession(false);
-      sesObj = (SessionObject) session.getAttribute(FdahpStudyDesignerConstants.SESSION_OBJECT);
-      accessCode =
+      Map<String, String> propMap = FdahpStudyDesignerUtil.getAppProperties();
+      HttpSession session = request.getSession(false);
+      SessionObject sesObj =
+          (SessionObject) session.getAttribute(FdahpStudyDesignerConstants.SESSION_OBJECT);
+      String accessCode =
           FdahpStudyDesignerUtil.isNotEmpty(request.getParameter("accessCode"))
               ? request.getParameter("accessCode")
               : "";
-      password =
+      String password =
           FdahpStudyDesignerUtil.isNotEmpty(request.getParameter("password"))
               ? request.getParameter("password").replaceAll(request.getParameter("_csrf"), "")
               : "";
-      securityToken =
+      String securityToken =
           FdahpStudyDesignerUtil.isNotEmpty(request.getParameter("securityToken"))
               ? request.getParameter("securityToken")
               : "";
-      errorMsg =
-          loginService.authAndAddPassword(securityToken, accessCode, password, userBO, sesObj);
+
+      boolean isInactiveUser = loginService.isInactiveUser(securityToken);
+      boolean isIntialPasswordSetUp = loginService.isIntialPasswordSetUp(securityToken);
+      String errorMsg = "";
+      if (!isInactiveUser || isIntialPasswordSetUp) {
+        errorMsg =
+            loginService.authAndAddPassword(securityToken, accessCode, password, userBO, sesObj);
+      } else {
+        errorMsg = propMap.get("user.inactive.msg");
+      }
+
       if (!errorMsg.equals(FdahpStudyDesignerConstants.SUCCESS)) {
         request.getSession(false).setAttribute("errMsg", errorMsg);
         mv = new ModelAndView("redirect:createPassword.do?securityToken=" + securityToken);
@@ -389,14 +393,10 @@ public class LoginController {
 
   @RequestMapping("/createPassword.do")
   public ModelAndView validateSecurityToken(HttpServletRequest request) {
-    ModelMap map = new ModelMap();
     logger.info("LoginController - createPassword() - Starts");
-    String securityToken = null;
-    boolean checkSecurityToken = false;
-    UserBO userBO = null;
     ModelAndView mv = new ModelAndView("redirect:login.do");
-    MasterDataBO masterDataBO = null;
     try {
+      ModelMap map = new ModelMap();
       if (null != request.getSession(false).getAttribute("sucMsg")) {
         map.addAttribute("sucMsg", request.getSession(false).getAttribute("sucMsg"));
         request.getSession(false).removeAttribute("sucMsg");
@@ -405,17 +405,20 @@ public class LoginController {
         map.addAttribute("errMsg", request.getSession(false).getAttribute("errMsg"));
         request.getSession(false).removeAttribute("errMsg");
       }
-      securityToken =
+      String securityToken =
           FdahpStudyDesignerUtil.isNotEmpty(request.getParameter("securityToken"))
               ? request.getParameter("securityToken")
               : "";
-      userBO = loginService.checkSecurityToken(securityToken);
+      UserBO userBO = loginService.checkSecurityToken(securityToken);
+      boolean isValidToken = userBO != null;
+
       map.addAttribute("securityToken", securityToken);
-      masterDataBO = dashBoardAndProfileService.getMasterData("terms");
-      if (userBO != null) {
-        checkSecurityToken = true;
-      }
-      map.addAttribute("isValidToken", checkSecurityToken);
+      MasterDataBO masterDataBO = dashBoardAndProfileService.getMasterData("terms");
+
+      boolean isInactiveUser = loginService.isInactiveUser(securityToken);
+
+      map.addAttribute("isValidToken", isValidToken);
+      map.addAttribute("isInactiveUser", isInactiveUser);
       map.addAttribute("masterDataBO", masterDataBO);
       if ((userBO != null) && (StringUtils.isEmpty(userBO.getUserPassword()))) {
         map.addAttribute("userBO", userBO);
