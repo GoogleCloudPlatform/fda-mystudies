@@ -26,10 +26,13 @@ let kVerifyMessageFromSignUp =
 
 enum SignUpLoadFrom: Int {
   case gatewayOverview
-  case login  // from gateway login-> signup
-  case menu  // from menu
-  case menu_login  //from menu->Login->Signup
-  case joinStudy_login  //from joinStudy->Login->Signup
+  case login
+  case menu
+  /// From menu->Login->Signup
+  case menuLogin
+
+  /// From joinStudy->Login->Signup.
+  case joinStudyLogin
 }
 
 class SignUpViewController: UIViewController {
@@ -253,10 +256,10 @@ class SignUpViewController: UIViewController {
       case .menu:
         verificationController.shouldCreateMenu = false
         verificationController.viewLoadFrom = .signup
-      case .menu_login:
+      case .menuLogin:
         verificationController.shouldCreateMenu = false
         verificationController.viewLoadFrom = .login
-      case .joinStudy_login:
+      case .joinStudyLogin:
         verificationController.shouldCreateMenu = false
         verificationController.viewLoadFrom = .joinStudy
       case .login:
@@ -374,13 +377,13 @@ extension SignUpViewController: UITableViewDataSource {
 
     // Cell TextField data setup
     switch textFieldTag {
-    case .Password:
+    case .password:
       isSecuredEntry = true
       cell.textFieldValue?.text = self.user.password
-    case .ConfirmPassword:
+    case .confirmPassword:
       isSecuredEntry = true
       cell.textFieldValue?.text = confirmPassword
-    case .EmailId:
+    case .emailId:
       keyBoardType = .emailAddress
       isSecuredEntry = false
       cell.textFieldValue?.text = self.user.emailId
@@ -409,7 +412,7 @@ extension SignUpViewController: UITableViewDelegate {
 extension SignUpViewController: UITextFieldDelegate {
 
   func textFieldDidBeginEditing(_ textField: UITextField) {
-    if textField.tag == TextFieldTags.EmailId.rawValue {
+    if textField.tag == TextFieldTags.emailId.rawValue {
       textField.keyboardType = .emailAddress
     }
   }
@@ -427,13 +430,13 @@ extension SignUpViewController: UITextFieldDelegate {
       return false
     }
 
-    if tag == .EmailId {
+    if tag == .emailId {
       if string == " " || finalString.count > 255 {
         return false
       } else {
         return true
       }
-    } else if tag == .Password || tag == .ConfirmPassword {
+    } else if tag == .password || tag == .confirmPassword {
       if finalString.count > 64 {
         return false
       } else {
@@ -456,15 +459,15 @@ extension SignUpViewController: UITextFieldDelegate {
     let tag: TextFieldTags = TextFieldTags(rawValue: textField.tag)!
 
     switch tag {
-    case .EmailId:
+    case .emailId:
       self.user.emailId = textField.text!
       break
 
-    case .Password:
+    case .password:
       self.user.password = textField.text!
       break
 
-    case .ConfirmPassword:
+    case .confirmPassword:
       confirmPassword = textField.text!
       break
     }
