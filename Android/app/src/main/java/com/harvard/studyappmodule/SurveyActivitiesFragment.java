@@ -2613,7 +2613,7 @@ public class SurveyActivitiesFragment extends Fragment
       String activityVersion,
       ActivityStatus activityStatus,
       ActivitiesWS activitiesWS) {
-    currentRunId = currentRunId;
+    this.currentRunId = currentRunId;
     activityStatusStr = status;
     this.activityStatusData = activityStatus;
     this.activityId = activityId;
