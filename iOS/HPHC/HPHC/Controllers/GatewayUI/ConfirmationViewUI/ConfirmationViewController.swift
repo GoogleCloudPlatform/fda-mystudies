@@ -68,7 +68,7 @@ class ConfirmationViewController: UIViewController {
   @IBOutlet var tableViewFooterViewConfirmation: UIView?
   @IBOutlet var buttonDeleteAccount: UIButton?
   @IBOutlet var buttonDoNotDeleteAccount: UIButton?
-  @IBOutlet var LabelHeaderDescription: UILabel?
+  @IBOutlet var headerDescriptionLbl: UILabel?
 
   // MARK: - Properties
   var tableViewRowDetails: NSMutableArray?
@@ -98,7 +98,7 @@ class ConfirmationViewController: UIViewController {
     descriptionText = descriptionText.replacingOccurrences(of: "#APPNAME#", with: navTitle)
 
     // setting the headerdescription
-    self.LabelHeaderDescription?.text = descriptionText
+    self.headerDescriptionLbl?.text = descriptionText
 
     // setting border color for footer buttons
     self.buttonDeleteAccount?.layer.borderColor = kUicolorForButtonBackground

@@ -1,6 +1,7 @@
 // License Agreement for FDA MyStudies
-// Copyright © 2017-2019 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors. Permission is
-// hereby granted, free of charge, to any person obtaining a copy of this software and associated
+// Copyright © 2017-2019 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors.
+// Copyright 2020 Google LLC
+// Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated
 // documentation files (the &quot;Software&quot;), to deal in the Software without restriction, including without
 // limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the
 // Software, and to permit persons to whom the Software is furnished to do so, subject to the following
@@ -19,38 +20,38 @@
 import UIKit
 
 enum StatisticsType: String {
-  case Activity
-  case Sleep
-  case Weight
-  case Nutrition
-  case HeartRate
-  case BloodGlucose
-  case ActiveTask
-  case BabyKicks
-  case Mood
-  case Other
+  case activity = "Activity"
+  case sleep = "Sleep"
+  case weight = "Weight"
+  case nutrition = "Nutrition"
+  case heartRate = "HeartRate"
+  case bloodGlucose = "BloodGlucose"
+  case activeTask = "ActiveTask"
+  case babyKicks = "BabyKicks"
+  case mood = "Mood"
+  case other = "Other"
 
   var description: String {
     switch self {
-    case .Activity:
+    case .activity:
       return "Activity"
-    case .Sleep:
+    case .sleep:
       return "Sleep"
-    case .Weight:
+    case .weight:
       return "Weight"
-    case .Nutrition:
+    case .nutrition:
       return "Nutrition"
-    case .HeartRate:
+    case .heartRate:
       return "Heart Rate"
-    case .BloodGlucose:
+    case .bloodGlucose:
       return "Blood Glucose"
-    case .ActiveTask:
+    case .activeTask:
       return "Active Task"
-    case .BabyKicks:
+    case .babyKicks:
       return "Baby Kicks"
-    case .Mood:
+    case .mood:
       return "Mood"
-    case .Other:
+    case .other:
       return "Other"
     }
   }
@@ -81,11 +82,11 @@ class StudyDashboardStatisticsCollectionViewCell: UICollectionViewCell {
     self.displayStateTypeImage()
 
     switch tab {
-    case .Day:
+    case .day:
       self.handleForDay(date: startDate)
-    case .Week:
+    case .week:
       self.handleForWeek(startDate: startDate, endDate: endDate!)
-    case .Month:
+    case .month:
       self.handleForMonth(date: startDate)
     }
   }
@@ -98,25 +99,25 @@ class StudyDashboardStatisticsCollectionViewCell: UICollectionViewCell {
     } else {
 
       switch stats.statType! {
-      case StatisticsType.Activity.description:
+      case StatisticsType.activity.description:
         statisticsImage?.image = UIImage(named: "stat_icn_active_task")
-      case StatisticsType.Sleep.description:
+      case StatisticsType.sleep.description:
         statisticsImage?.image = UIImage(named: "stat_icn_sleep")
-      case StatisticsType.Weight.description:
+      case StatisticsType.weight.description:
         statisticsImage?.image = UIImage(named: "stat_icn_weight")
-      case StatisticsType.Nutrition.description:
+      case StatisticsType.nutrition.description:
         statisticsImage?.image = UIImage(named: "stat_icn_nutrition")
-      case StatisticsType.HeartRate.description:
+      case StatisticsType.heartRate.description:
         statisticsImage?.image = UIImage(named: "stat_icn_heart_rate")
-      case StatisticsType.BloodGlucose.description:
+      case StatisticsType.bloodGlucose.description:
         statisticsImage?.image = UIImage(named: "stat_icn_glucose")
-      case StatisticsType.ActiveTask.description:
+      case StatisticsType.activeTask.description:
         statisticsImage?.image = UIImage(named: "stat_icn_active_task")
-      case StatisticsType.BabyKicks.description:
+      case StatisticsType.babyKicks.description:
         statisticsImage?.image = UIImage(named: "stat_icn_baby_kicks")
-      case StatisticsType.Mood.description:
+      case StatisticsType.mood.description:
         statisticsImage?.image = UIImage(named: "stat_icn_mood")
-      case StatisticsType.Other.description:
+      case StatisticsType.other.description:
         statisticsImage?.image = UIImage(named: "stat_icn_other")
       default:
         statisticsImage?.image = UIImage(named: "stat_icn_other")
@@ -131,20 +132,20 @@ class StudyDashboardStatisticsCollectionViewCell: UICollectionViewCell {
     labelStatisticsText?.text = data.displayName
     let array = data.statList.map { $0.data }
 
-    if data.calculation! == StatisticsFormula.Maximum.rawValue {
+    if data.calculation! == StatisticsFormula.maximum.rawValue {
       let max = array.max()
       labelStatisticsCount?.text = String(describing: max)
     }
-    if data.calculation! == StatisticsFormula.Minimum.rawValue {
+    if data.calculation! == StatisticsFormula.minimum.rawValue {
       let min = array.min()
       labelStatisticsCount?.text = String(describing: min)
     }
-    if data.calculation! == StatisticsFormula.Average.rawValue {
+    if data.calculation! == StatisticsFormula.average.rawValue {
       let sumArray = array.reduce(0, +)
       let avgArrayValue = sumArray / Float(array.count)
       labelStatisticsCount?.text = String(describing: avgArrayValue)
     }
-    if data.calculation! == StatisticsFormula.Summation.rawValue {
+    if data.calculation! == StatisticsFormula.summation.rawValue {
       let sumArray = array.reduce(0, +)
       labelStatisticsCount?.text = String(describing: sumArray)
     }
@@ -203,23 +204,23 @@ class StudyDashboardStatisticsCollectionViewCell: UICollectionViewCell {
 
     let data = self.stats!
 
-    if data.calculation! == StatisticsFormula.Maximum.rawValue {
+    if data.calculation! == StatisticsFormula.maximum.rawValue {
       let max = array.max()
       let maxValue: String! = String(format: "%.2f", max!)
       labelStatisticsCount?.text = maxValue
     }
-    if data.calculation! == StatisticsFormula.Minimum.rawValue {
+    if data.calculation! == StatisticsFormula.minimum.rawValue {
       let min = array.min()
       let minValue = String(format: "%.2f", min!)
       labelStatisticsCount?.text = minValue
     }
-    if data.calculation! == StatisticsFormula.Average.rawValue {
+    if data.calculation! == StatisticsFormula.average.rawValue {
       let sumArray = array.reduce(0, +)
       let avgArrayValue = sumArray / Float(array.count)
       let avgValue = String(format: "%.2f", avgArrayValue)
       labelStatisticsCount?.text = avgValue
     }
-    if data.calculation! == StatisticsFormula.Summation.rawValue {
+    if data.calculation! == StatisticsFormula.summation.rawValue {
       let sumArray = array.reduce(0, +)
       let sumValue = String(format: "%.2f", sumArray)
       labelStatisticsCount?.text = sumValue

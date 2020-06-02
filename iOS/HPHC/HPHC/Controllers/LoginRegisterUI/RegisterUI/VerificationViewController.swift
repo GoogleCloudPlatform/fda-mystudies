@@ -180,7 +180,7 @@ class VerificationViewController: UIViewController {
     if shouldCreateMenu {
       fda.viewLoadFrom = .login
     } else {
-      fda.viewLoadFrom = .menu_login
+      fda.viewLoadFrom = .menuLogin
     }
 
     self.navigationController?.pushViewController(fda, animated: true)

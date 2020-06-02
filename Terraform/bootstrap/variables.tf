@@ -24,6 +24,11 @@ variable "org_id" {
   type = string
 }
 
+// Uncomment in order to limit changes to folder.
+// variable "folder_id" {
+//   type = string
+// }
+
 variable "billing_account" {
   type = string
 }

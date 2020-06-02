@@ -22,21 +22,32 @@ import UIKit
 
 enum StatisticsFormula: String {
 
-  case Summation
-  case Average
-  case Maximum
-  case Minimum
+  case summation = "Summation"
+  case average = "Average"
+  case maximum = "Maximum"
+  case minimum = "Minimum"
 
 }
 
 enum ChartTimeRange: String {
 
-  case days_of_week  //s,m,t..s   f = daily
-  case days_of_month  // 1,2,3,4..31   f = daily
-  case weeks_of_month  // w1,w2,w3,w4.. w5   f = weekly
-  case months_of_year  //j,f,m..d  f = monthly
-  case runs  //   f = sheduled
-  case hours_of_day  // f = withInADay
+  /// s,m,t..s   f = daily
+  case daysOfWeek = "days_of_week"
+
+  /// 1,2,3,4..31   f = daily
+  case daysOfMonth = "days_of_month"
+
+  /// w1,w2,w3,w4.. w5   f = weekly
+  case weeksOfMonth = "weeks_of_month"
+
+  /// j,f,m..d  f = monthly
+  case monthsOfYear = "months_of_year"
+
+  /// f = sheduled
+  case runs = "runs"
+
+  /// f = withInADay
+  case hoursOfDay = "hours_of_day"
 
 }
 
@@ -70,15 +81,15 @@ class DashboardResponse {
     self.isPHI = "true"
     self.type = "int"
   }
-  
-  func appendValues(from dict: JSONDictionary, of responseDate: String){
+
+  func appendValues(from dict: JSONDictionary, of responseDate: String) {
     if let value = dict["value"] as? Float {
       let valueDetail =
         [
           "value": value,
           "count": Float(0.0),
           "date": responseDate,
-          ] as [String: Any]
+        ] as [String: Any]
       self.values.append(valueDetail)
     }
   }

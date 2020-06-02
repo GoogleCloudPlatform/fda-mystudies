@@ -122,7 +122,7 @@ class DBHandler: NSObject {
 
     try? realm.write {
       dbUser?.authToken = ""
-      dbUser?.userType = UserType.AnonymousUser.rawValue
+      dbUser?.userType = UserType.anonymousUser.rawValue
     }
   }
 
@@ -875,31 +875,31 @@ class DBHandler: NSObject {
     var endDate: Date!
 
     switch frequency {
-    case .One_Time:
+    case .oneTime:
       let startDateInterval = TimeInterval(60 * 60 * 24 * (startDays))
       let endDateInterval = TimeInterval(60 * 60 * 24 * (endDays))
       startDate = date.addingTimeInterval(startDateInterval)
       endDate = date.addingTimeInterval(endDateInterval)
 
-    case .Daily:
+    case .daily:
       let startDateInterval = TimeInterval(60 * 60 * 24 * (startDays))
       let endDateInterval = TimeInterval(60 * 60 * 24 * (repeatInterval))
       startDate = date.addingTimeInterval(startDateInterval)
       endDate = startDate.addingTimeInterval(endDateInterval)
 
-    case .Weekly:
+    case .weekly:
       let startDateInterval = TimeInterval(60 * 60 * 24 * (startDays))
       let endDateInterval = TimeInterval(60 * 60 * 24 * 7 * (repeatInterval))
       startDate = date.addingTimeInterval(startDateInterval)
       endDate = startDate.addingTimeInterval(endDateInterval)
 
-    case .Monthly:
+    case .monthly:
       let startDateInterval = TimeInterval(60 * 60 * 24 * (startDays))
       startDate = date.addingTimeInterval(startDateInterval)
       let calender = Calendar.current
       endDate = calender.date(byAdding: .month, value: (repeatInterval), to: startDate)
 
-    case .Scheduled:
+    case .scheduled:
       let startDateInterval = TimeInterval(60 * 60 * 24 * (startDays))
       let endDateInterval = TimeInterval(60 * 60 * 24 * (endDays))
       startDate = date.addingTimeInterval(startDateInterval)
@@ -1032,7 +1032,7 @@ class DBHandler: NSObject {
       var runsBeforeToday: [ActivityRun]! = []
       var run: ActivityRun!
 
-      if activity.frequencyType == Frequency.One_Time && activity.endDate == nil {
+      if activity.frequencyType == Frequency.oneTime && activity.endDate == nil {
         run = runs.last
       } else {
         runsBeforeToday = runs.filter({ $0.endDate <= date })
