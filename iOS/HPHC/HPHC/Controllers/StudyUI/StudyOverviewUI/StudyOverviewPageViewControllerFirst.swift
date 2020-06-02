@@ -66,9 +66,9 @@ class StudyOverviewViewControllerFirst: UIViewController {
     labelTitle?.text = overviewSectionDetail.title
 
     var fontSize = 18.0
-    if DeviceType.IS_IPAD || DeviceType.IS_IPHONE_4_OR_LESS {
+    if DeviceType.isIPad || DeviceType.isIPhone4OrLess {
       fontSize = 13.0
-    } else if DeviceType.IS_IPHONE_5 {
+    } else if DeviceType.isIPhone5 {
       fontSize = 14.0
     }
 
@@ -170,11 +170,11 @@ class StudyOverviewViewControllerFirst: UIViewController {
 
   @IBAction func buttonActionJoinStudy(_ sender: Any) {
 
-    if User.currentUser.userType == UserType.AnonymousUser {
+    if User.currentUser.userType == UserType.anonymousUser {
       let leftController =
         slideMenuController()?.leftViewController
         as! LeftMenuViewController
-      leftController.changeViewController(.reachOut_signIn)
+      leftController.changeViewController(.reachOutSignIn)
     }
   }
 

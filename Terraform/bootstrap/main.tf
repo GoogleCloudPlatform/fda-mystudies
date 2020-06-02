@@ -41,8 +41,10 @@ module "project" {
   source  = "terraform-google-modules/project-factory/google"
   version = "~> 7.0"
 
-  name                    = var.devops_project_id
-  org_id                  = var.org_id
+  name   = var.devops_project_id
+  org_id = var.org_id
+  // uncomment if you want to limit changes to folder.
+  // folder_id               = var.folder_id
   billing_account         = var.billing_account
   lien                    = true
   default_service_account = "keep"
@@ -71,6 +73,7 @@ resource "google_project_iam_binding" "devops_owners" {
 }
 
 # Org level IAM permissions for org admins.
+# For folder level deployment, comment this block out.
 resource "google_organization_iam_member" "org_admin" {
   org_id = var.org_id
   role   = "roles/resourcemanager.organizationAdmin"
