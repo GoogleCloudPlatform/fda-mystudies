@@ -14,9 +14,10 @@ echo "USE \`auth_server\`;" >> ${TMPFILE}
 i=0
 for APP_CODE in MA URS RS WCP
 do
+  APP_CODE_LOWER=`echo "${APP_CODE}" | tr '[:upper:]' '[:lower:]'`
   echo "Reading client id and secret key for: ${APP_CODE}"
-  CLIENT_ID=`gcloud --project=${SECRET_PROJECT} secrets versions access latest --secret=mystudies-${APP_CODE}-client-id`
-  SECRET_KEY=`gcloud --project=${SECRET_PROJECT} secrets versions access latest --secret=mystudies-${APP_CODE}-secret-key`
+  CLIENT_ID=`gcloud --project=${SECRET_PROJECT} secrets versions access latest --secret=mystudies-${APP_CODE_LOWER}-client-id`
+  SECRET_KEY=`gcloud --project=${SECRET_PROJECT} secrets versions access latest --secret=mystudies-${APP_CAPP_CODE_LOWERODE}-secret-key`
   echo "REPLACE INTO client_info (client_info_id,app_code,client_id,secret_key) VALUES(${i},\"${APP_CODE}\",\"${CLIENT_ID}\",\"${SECRET_KEY}\");" >> ${TMPFILE}
   ((i=i+1))
 done
