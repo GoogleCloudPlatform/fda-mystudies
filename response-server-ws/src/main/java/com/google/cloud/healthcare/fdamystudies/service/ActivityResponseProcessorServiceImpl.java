@@ -52,10 +52,10 @@ public class ActivityResponseProcessorServiceImpl implements ActivityResponsePro
 
   @Override
   public void saveActivityResponseDataForParticipant(
-      QuestionnaireActivityStructureBean activityMetadataBeanFromWCP,
+      QuestionnaireActivityStructureBean activityMetadataBeanFromWcp,
       ActivityResponseBean questionnaireActivityResponseBean)
       throws ProcessResponseException {
-    if (activityMetadataBeanFromWCP == null) {
+    if (activityMetadataBeanFromWcp == null) {
       throw new ProcessResponseException("QuestionnaireActivityStructureBean is null.");
     }
     if (questionnaireActivityResponseBean == null) {
@@ -74,7 +74,7 @@ public class ActivityResponseProcessorServiceImpl implements ActivityResponsePro
     }
 
     List<QuestionnaireActivityStepsBean> questionnaireMetadata =
-        activityMetadataBeanFromWCP.getSteps();
+        activityMetadataBeanFromWcp.getSteps();
     if (questionnaireMetadata == null) {
       throw new ProcessResponseException(
           "QuestionnaireActivityStructureBean is null for activity Id: "
@@ -82,7 +82,7 @@ public class ActivityResponseProcessorServiceImpl implements ActivityResponsePro
     }
     if (activityMetadataResponse
         .getActivityId()
-        .equalsIgnoreCase(activityMetadataBeanFromWCP.getMetadata().getActivityId())) {
+        .equalsIgnoreCase(activityMetadataBeanFromWcp.getMetadata().getActivityId())) {
       processActivityResponses(questionnaireResponses, questionnaireMetadata);
       String rawResponseData = null;
       if (appConfig.getSaveRawResponseData().equalsIgnoreCase(AppConstants.TRUE_STR)) {
@@ -91,12 +91,14 @@ public class ActivityResponseProcessorServiceImpl implements ActivityResponsePro
       this.saveActivityResponseData(questionnaireActivityResponseBean, rawResponseData);
     } else {
       logger.error(
-          "saveActivityResponseDataForParticipant() - The activity ID in the response does not match activity ID in the metadata provided.\n"
+          "saveActivityResponseDataForParticipant() - "
+              + "The activity ID in the response does not match"
+              + " activity ID in the metadata provided.\n"
               + "Activity Id in response: "
               + activityMetadataResponse.getActivityId()
               + "\n"
               + "Activity Id in metadata: "
-              + activityMetadataBeanFromWCP.getMetadata().getActivityId());
+              + activityMetadataBeanFromWcp.getMetadata().getActivityId());
       throw new ProcessResponseException(
           "The activity ID in the response does not match activity ID in the metadata provided.");
     }
@@ -135,7 +137,8 @@ public class ActivityResponseProcessorServiceImpl implements ActivityResponsePro
       throws ProcessResponseException {
     if (StringUtils.isBlank(studyId) || StringUtils.isBlank(participantId)) {
       throw new ProcessResponseException(
-          "updateWithdrawalStatusForParticipant() method: Study Id argument or Participant Id argument is null or empty.");
+          "updateWithdrawalStatusForParticipant() method: "
+              + "Study Id argument or Participant Id argument is null or empty.");
     }
     String studyCollectionName = AppUtil.makeStudyCollectionName(studyId);
     responsesDao.updateWithdrawalStatusForParticipant(studyCollectionName, studyId, participantId);
@@ -143,7 +146,7 @@ public class ActivityResponseProcessorServiceImpl implements ActivityResponsePro
 
   private void processActivityResponses(
       List<QuestionnaireActivityStepsBean> questionnaireResponses,
-      List<QuestionnaireActivityStepsBean> activityMetadataBeanFromWCP) {
+      List<QuestionnaireActivityStepsBean> activityMetadataBeanFromWcp) {
     QuestionnaireActivityStepsBean scoreSumResponseBean = null;
     for (QuestionnaireActivityStepsBean responseBean : questionnaireResponses) {
       if (responseBean.getKey().equals(AppConstants.DUMMY_SUM_QUESTION_KEY)) {
@@ -151,43 +154,48 @@ public class ActivityResponseProcessorServiceImpl implements ActivityResponsePro
       }
       if (responseBean.getResultType().equalsIgnoreCase(AppConstants.GROUPED_FIELD_KEY)) {
         ActivityValueGroupBean valueGroupResponse =
-            getValueGroupResponses(activityMetadataBeanFromWCP, responseBean);
+            getValueGroupResponses(activityMetadataBeanFromWcp, responseBean);
         responseBean.setActvityValueGroup(valueGroupResponse);
         // Remove the value object, as we have plugged in the metadata and added to the
         // ActivityValueGroupBean
         responseBean.setValue(AppConstants.EMPTY_STR);
       } else {
-        plugInMetadataToResponses(activityMetadataBeanFromWCP, responseBean, false);
+        plugInMetadataToResponses(activityMetadataBeanFromWcp, responseBean, false);
       }
     }
-    // We might want to hide the dummy sum question from users with conditional branching, which will cause response for it
+    // We might want to hide the dummy sum question from users with conditional branching,
+    // which will cause response for it
     // to be absent.
     if (scoreSumResponseBean == null) {
       // Try to create a response for the dummy sum question by copying from metadata.
-      scoreSumResponseBean =
-          maybeCreateDummySumResponseFromMetadata(activityMetadataBeanFromWCP);
+      scoreSumResponseBean = maybeCreateDummySumResponseFromMetadata(activityMetadataBeanFromWcp);
       if (scoreSumResponseBean != null) {
         // If copying is successful, add it to the list of responses.
         questionnaireResponses.add(scoreSumResponseBean);
       }
     }
     if (scoreSumResponseBean != null) {
-      // Iterate through responses for a second pass to calculate the score sum if the dummy sum question presents.
-      calculateScoreSum(questionnaireResponses,scoreSumResponseBean);
+      // Iterate through responses for a second pass to calculate the score sum
+      // if the dummy sum question presents.
+      calculateScoreSum(questionnaireResponses, scoreSumResponseBean);
     }
   }
 
-  // Returns an empty response with metadata copied from the dummy sum question, or null if the dummy sum question is not found in metadata.
+  // Returns an empty response with metadata copied from the dummy sum question, or
+  // null if the dummy sum question is not found in metadata.
   private static QuestionnaireActivityStepsBean maybeCreateDummySumResponseFromMetadata(
-      List<QuestionnaireActivityStepsBean> activityMetadataBeanFromWCP) {
-    List<QuestionnaireActivityStepsBean> metadataMatchList = 
-          activityMetadataBeanFromWCP
-              .stream()
-              .filter(QuestionnaireActivityStepsBeanPredicate.questionKeyMatch(
-                  AppConstants.DUMMY_SUM_QUESTION_KEY))
-              .collect(Collectors.<QuestionnaireActivityStepsBean>toList());
+      List<QuestionnaireActivityStepsBean> activityMetadataBeanFromWcp) {
+    List<QuestionnaireActivityStepsBean> metadataMatchList =
+        activityMetadataBeanFromWcp
+            .stream()
+            .filter(
+                QuestionnaireActivityStepsBeanPredicate.questionKeyMatch(
+                    AppConstants.DUMMY_SUM_QUESTION_KEY))
+            .collect(Collectors.<QuestionnaireActivityStepsBean>toList());
     // Return null if dummy sum question is not found from metadata.
-    if (metadataMatchList == null || metadataMatchList.size() != 1) return null;
+    if (metadataMatchList == null || metadataMatchList.size() != 1) {
+      return null;
+    }
     // Otherwise, create a new entry and copy contents from metadata.
     QuestionnaireActivityStepsBean responseBean = new QuestionnaireActivityStepsBean();
     QuestionnaireActivityStepsBean metadataMatchBean = metadataMatchList.get(0);
@@ -214,12 +222,16 @@ public class ActivityResponseProcessorServiceImpl implements ActivityResponsePro
         logger.debug("Failed to parse value as number. Error: " + e.getMessage());
       }
     } else {
-      logger.error("convertResponseValueToDouble() - Unhandled value type: " + value.getClass().getName());
+      logger.error(
+          "convertResponseValueToDouble() - "
+              + "Unhandled value type: "
+              + value.getClass().getName());
     }
     return 0;
   }
 
-  // Calculates score sum in questionnaireResponses and store it to the value of scoreSumRespnoseBean.
+  // Calculates score sum in questionnaireResponses and store it
+  // to the value of scoreSumRespnoseBean.
   private void calculateScoreSum(
       List<QuestionnaireActivityStepsBean> questionnaireResponses,
       QuestionnaireActivityStepsBean scoreSumResponseBean) {
@@ -235,7 +247,7 @@ public class ActivityResponseProcessorServiceImpl implements ActivityResponsePro
         for (Object o : valueList) {
           sum = sum + convertResponseValueToDouble(o);
         }
-      // Otherwise, just convert the single response value to double.
+        // Otherwise, just convert the single response value to double.
       } else {
         sum = sum + convertResponseValueToDouble(value);
       }
@@ -244,7 +256,7 @@ public class ActivityResponseProcessorServiceImpl implements ActivityResponsePro
   }
 
   private ActivityValueGroupBean getValueGroupResponses(
-      List<QuestionnaireActivityStepsBean> activityMetadataBeanFromWCP,
+      List<QuestionnaireActivityStepsBean> activityMetadataBeanFromWcp,
       QuestionnaireActivityStepsBean responseBean) {
     ActivityValueGroupBean activityValueGroupBeanRet = new ActivityValueGroupBean();
     List<QuestionnaireActivityStepsBean> valueResponseBeanList =
@@ -261,7 +273,7 @@ public class ActivityResponseProcessorServiceImpl implements ActivityResponsePro
             String json = gson.toJson(valueObjMap, Map.class);
             QuestionnaireActivityStepsBean valueBean =
                 gson.fromJson(json, QuestionnaireActivityStepsBean.class);
-            plugInMetadataToResponses(activityMetadataBeanFromWCP, valueBean, true);
+            plugInMetadataToResponses(activityMetadataBeanFromWcp, valueBean, true);
             valueResponseBeanList.add(valueBean);
           }
         } else {
@@ -271,7 +283,7 @@ public class ActivityResponseProcessorServiceImpl implements ActivityResponsePro
             String json = gson.toJson(valueObjMap, Map.class);
             QuestionnaireActivityStepsBean valueBean =
                 gson.fromJson(json, QuestionnaireActivityStepsBean.class);
-            plugInMetadataToResponses(activityMetadataBeanFromWCP, valueBean, true);
+            plugInMetadataToResponses(activityMetadataBeanFromWcp, valueBean, true);
             valueResponseBeanList.add(valueBean);
           }
         }
@@ -282,14 +294,14 @@ public class ActivityResponseProcessorServiceImpl implements ActivityResponsePro
   }
 
   private void plugInMetadataToResponses(
-      List<QuestionnaireActivityStepsBean> activityMetadataBeanFromWCP,
+      List<QuestionnaireActivityStepsBean> activityMetadataBeanFromWcp,
       QuestionnaireActivityStepsBean responseBean,
       boolean fromGrouped) {
     List<QuestionnaireActivityStepsBean> metadataMatchList = null;
 
     String questionKey = responseBean.getKey();
     if (fromGrouped) {
-      for (QuestionnaireActivityStepsBean stepBean : activityMetadataBeanFromWCP) {
+      for (QuestionnaireActivityStepsBean stepBean : activityMetadataBeanFromWcp) {
         List<QuestionnaireActivityStepsBean> stepsBean = stepBean.getSteps();
         metadataMatchList =
             stepsBean
@@ -302,7 +314,7 @@ public class ActivityResponseProcessorServiceImpl implements ActivityResponsePro
       }
     } else {
       metadataMatchList =
-          activityMetadataBeanFromWCP
+          activityMetadataBeanFromWcp
               .stream()
               .filter(QuestionnaireActivityStepsBeanPredicate.questionKeyMatch(questionKey))
               .collect(Collectors.<QuestionnaireActivityStepsBean>toList());
@@ -420,8 +432,8 @@ public class ActivityResponseProcessorServiceImpl implements ActivityResponsePro
               dataToStore.put(propertyName, getHashMapForBean(propertyValue));
             } else if (propertyValue instanceof List) {
               try {
-                ArrayList<Object> pValueList = (ArrayList<Object>) propertyValue;
-                for (Object valueObj : pValueList) {
+                ArrayList<Object> pvalueList = (ArrayList<Object>) propertyValue;
+                for (Object valueObj : pvalueList) {
                   if (valueObj instanceof QuestionnaireActivityStepsBean) {
                     Map<String, Object> tempMap = getHashMapForBean(valueObj);
                     stepsList.add(tempMap);
