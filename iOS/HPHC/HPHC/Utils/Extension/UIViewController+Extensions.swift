@@ -201,3 +201,39 @@ extension UIViewController {
     _ = self.navigationController?.popViewController(animated: true)
   }
 }
+
+extension UIViewController {
+
+  /// Creates and presents a new toast view.
+  /// - Parameter error: Instance of `ApiError`.
+  func makeToast(with error: ApiError) {
+    self.view.makeToast(error.message ?? error.code?.description, title: error.title)
+  }
+
+  func presentDefaultAlertWithError(
+    error: ErrorPresentable,
+    animated: Bool,
+    action: (() -> Void)?,
+    completion: (() -> Void)?
+  ) {
+
+    let alert = UIAlertController(
+      title: error.title,
+      message: error.message,
+      preferredStyle: .alert
+    )
+
+    let okAction = UIAlertAction(
+      title: LocalizableString.ok.localizedString,
+      style: .default
+    ) { (_) in
+      action?()
+    }
+    alert.addAction(okAction)
+    present(alert, animated: animated) { [weak self] in
+      self?.view.endEditing(true)
+      completion?()
+    }
+  }
+
+}
