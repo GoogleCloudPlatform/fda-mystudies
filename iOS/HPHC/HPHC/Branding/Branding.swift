@@ -24,6 +24,8 @@ enum Branding {
     static let navigationTitleName = "NavigationTitleName"
     static let poweredByTitleName = "PoweredByTitleName"
     static let productTitleNAme = "ProductTitleName"
+    static let isStandaloneStudyApp = "IsStandaloneStudyApp"
+    static let standaloneStudyID = "StandaloneStudyId"
   }
 
   private static var brandConfig: JSONDictionary {
@@ -94,4 +96,15 @@ enum Branding {
   static var productTitle: String {
     return brandConfig[JSONKey.productTitleNAme] as? String ?? ""
   }
+
+  /// Boolean indicates wheather the current App is build as standalone App.
+  static var isStandaloneStudyApp: Bool {
+    return brandConfig[JSONKey.isStandaloneStudyApp] as? Bool ?? false
+  }
+
+  /// Study ID for standalone App.
+  static var standaloneStudyID: String {
+    return brandConfig[JSONKey.standaloneStudyID] as? String ?? ""
+  }
+
 }
