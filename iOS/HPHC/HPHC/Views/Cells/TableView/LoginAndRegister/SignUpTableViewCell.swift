@@ -1,6 +1,7 @@
 // License Agreement for FDA MyStudies
-// Copyright © 2017-2019 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors. Permission is
-// hereby granted, free of charge, to any person obtaining a copy of this software and associated
+// Copyright © 2017-2019 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors.
+// Copyright 2020 Google LLC
+// Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated
 // documentation files (the &quot;Software&quot;), to deal in the Software without restriction, including without
 // limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the
 // Software, and to permit persons to whom the Software is furnished to do so, subject to the following
@@ -20,12 +21,9 @@ import Foundation
 import UIKit
 
 enum TextFieldTags: Int {
-  // case FirstNameTag = 0
-  // case LastName
-  case EmailId = 0
-
-  case Password
-  case ConfirmPassword
+  case emailId = 0
+  case password
+  case confirmPassword
 }
 
 class SignUpTableViewCell: UITableViewCell {
@@ -66,14 +64,14 @@ class SignUpTableViewCell: UITableViewCell {
     let user = User.currentUser
     switch tag {
 
-    case .EmailId:
+    case .emailId:
       if Utilities.isValidValue(someObject: user.emailId as AnyObject?) {
         self.textFieldValue?.text = user.emailId
       } else {
         self.textFieldValue?.text = ""
       }
 
-    case .Password:
+    case .password:
       if Utilities.isValidValue(someObject: user.password as AnyObject?) {
         self.textFieldValue?.text = user.password
       } else {

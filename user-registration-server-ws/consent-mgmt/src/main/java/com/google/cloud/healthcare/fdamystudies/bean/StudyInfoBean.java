@@ -7,13 +7,19 @@
  */
 package com.google.cloud.healthcare.fdamystudies.bean;
 
+import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
 @Setter
 @Getter
 @ToString
+@EqualsAndHashCode
+@AllArgsConstructor
+@NoArgsConstructor
 public class StudyInfoBean {
 
   private int studyInfoId;

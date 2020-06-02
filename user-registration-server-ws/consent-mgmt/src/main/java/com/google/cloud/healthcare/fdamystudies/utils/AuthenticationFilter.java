@@ -72,7 +72,6 @@ public class AuthenticationFilter implements Filter {
               && !StringUtils.isEmpty(clientToken)) {
             CommonServiceImpl commonService = BeanUtil.getBean(CommonServiceImpl.class);
             value = commonService.validateAccessToken(userId, accessToken, clientToken);
-            value = 1;
             if (value == 1) {
               setCommonHeaders(httpServletResponse);
               chain.doFilter(request, response);

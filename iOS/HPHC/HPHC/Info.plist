@@ -34,8 +34,6 @@
 	<string>$(ENROLLMENT_URL)</string>
 	<key>ITSAppUsesNonExemptEncryption</key>
 	<false/>
-	<key>IsStandaloneStudyApp</key>
-	<string>$(IS_STANDALONE_STUDY)</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>NSAppTransportSecurity</key>
@@ -75,8 +73,6 @@
 	<string>$(REGISTRATION_URL)</string>
 	<key>RESPONSE_URL</key>
 	<string>$(RESPONSE_URL)</string>
-	<key>StandaloneStudyId</key>
-	<string>Standalone01</string>
 	<key>UIAppFonts</key>
 	<array>
 		<string>Verdana Italic.ttf</string>

@@ -28,7 +28,7 @@ enum CPTextFeildTags: Int {
 
 enum ChangePasswordLoadFrom: Int {
   case login
-  case menu_login
+  case menuLogin
   case profile
   case joinStudy
 }
@@ -277,7 +277,7 @@ extension ChangePasswordViewController: NMWebServiceDelegate {
         _ = self.navigationController?.popViewController(animated: true)
 
       }
-    } else if viewLoadFrom == .menu_login {
+    } else if viewLoadFrom == .menuLogin {
 
       // Updating Key & Vector
       let appDelegate = (UIApplication.shared.delegate as? AppDelegate)!

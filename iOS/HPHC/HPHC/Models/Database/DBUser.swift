@@ -30,7 +30,7 @@ class DBUser: Object {
   @objc dynamic var verified: Bool = false
   @objc dynamic var authToken: String = ""
   @objc dynamic var clientToken: String = ""
-  @objc dynamic var userType: Int = UserType.AnonymousUser.rawValue
+  @objc dynamic var userType: Int = UserType.anonymousUser.rawValue
 
   @objc dynamic var passcodeEnabled: Bool = true
   @objc dynamic var remoteNotificationEnabled: Bool = false
