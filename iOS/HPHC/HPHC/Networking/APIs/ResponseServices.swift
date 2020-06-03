@@ -117,11 +117,11 @@ class ResponseServices: NSObject {
           JSONKey.studyVersion: studyVersion,
         ] as [String: String]
 
-      let ActivityType = Study.currentActivity?.type?.rawValue
+      let activityType = Study.currentActivity?.type?.rawValue
 
       let params =
         [
-          kActivityType: ActivityType!,
+          kActivityType: activityType!,
           kActivityInfoMetaData: info,
           kParticipantId: userStudyStatus.participantId ?? "",
           JSONKey.tokenIdentifier: userStudyStatus.tokenIdentifier ?? "",
@@ -271,18 +271,6 @@ class ResponseServices: NSObject {
 
     guard !response.isEmpty else { return }
     var dashBoardResponse: [DashboardResponse] = []
-    let keysArray = self.keys.components(separatedBy: ",")
-    for key in keysArray {
-
-      let newkey = key.replacingOccurrences(of: "\"", with: "")
-      let responseData = DashboardResponse()
-      responseData.activityId = activityId
-      responseData.key = newkey
-      responseData.type = "int"
-      responseData.isPHI = "true"
-
-      dashBoardResponse.append(responseData)
-    }
 
     if let rows = response["rows"] as? [JSONDictionary] {
 
@@ -371,28 +359,17 @@ class ResponseServices: NSObject {
             }
 
           } else {
-            for responseData in dashBoardResponse {
-
-              if let keyValue = data[responseData.key!] as? [String: Any] {
-
-                if Utilities.isValidValue(
-                  someObject: keyValue["value"] as AnyObject?
-                ) {
-                  var value: Float = 0.0
-                  if let n = keyValue["value"] as? NSNumber {
-                    value = n.floatValue
-                  }
-                  let valueDetail =
-                    [
-                      "value": value,
-                      "count": Float(0.0),
-                      "date": date,
-                    ] as [String: Any]
-
-                  responseData.values.append(valueDetail)
-                }
+            for (index, dict) in dataDictArr.enumerated() {
+              guard index > 1,
+                let key = dict.keys.first
+              else { continue }
+              let responseData = DashboardResponse(with: activityId, and: key)
+              if let valueDict = dict[key] as? JSONDictionary {
+                responseData.appendValues(from: valueDict, of: date)
+                dashBoardResponse.append(responseData)
               }
             }
+
           }
         }
       }
@@ -469,7 +446,7 @@ extension ResponseServices: NMWebServiceDelegate {
       || requestName as String == ResponseMethods.updateActivityState.description
     {
 
-      if error.code == NoNetworkErrorCode {
+      if error.code == kNoNetworkErrorCode {
         // save in database
         DBHandler.saveRequestInformation(
           params: self.requestParams,

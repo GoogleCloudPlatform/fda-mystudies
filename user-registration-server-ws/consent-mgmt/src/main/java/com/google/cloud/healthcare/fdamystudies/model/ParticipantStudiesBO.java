@@ -19,12 +19,14 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Setter
 @Getter
 @Entity
 @Table(name = "participant_study_info")
+@NoArgsConstructor
 public class ParticipantStudiesBO {
 
   @Id
@@ -77,4 +79,14 @@ public class ParticipantStudiesBO {
 
   @Column(name = "withdrawal_date")
   private LocalDateTime withdrawalDate;
+
+  public ParticipantStudiesBO(UserDetailsBO userDetails, StudyInfoBO studyInfo) {
+    this.userDetails = userDetails;
+    this.studyInfo = studyInfo;
+  }
+
+  public ParticipantStudiesBO(String participantId, String sharing) {
+    this.participantId = participantId;
+    this.sharing = sharing;
+  }
 }

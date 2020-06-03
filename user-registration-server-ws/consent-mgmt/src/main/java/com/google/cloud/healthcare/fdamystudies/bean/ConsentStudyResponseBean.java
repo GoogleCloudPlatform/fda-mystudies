@@ -7,17 +7,25 @@
  */
 package com.google.cloud.healthcare.fdamystudies.bean;
 
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
 @Setter
 @Getter
 @ToString
+@EqualsAndHashCode
+@NoArgsConstructor
 public class ConsentStudyResponseBean {
   private String message;
   private ConsentResponseBean consent = new ConsentResponseBean();
   private String sharing;
+
+  public ConsentStudyResponseBean(String message) {
+    this.message = message;
+  }
 
   public String getMessage() {
     return message;

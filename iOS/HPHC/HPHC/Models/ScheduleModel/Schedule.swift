@@ -25,7 +25,7 @@ let kScheduleEndTime = "endTime"
 /// Schedule model schedules all the runs for the activities based on the frequency type and calculates the run for each activity
 class Schedule {
 
-  var frequency: Frequency = .One_Time
+  var frequency: Frequency = .oneTime
   var startTime: Date!
   var endTime: Date?
   var lastRunTime: Date?
@@ -129,15 +129,15 @@ class Schedule {
   func setActivityRun() {
 
     switch self.frequency {
-    case Frequency.One_Time:
+    case Frequency.oneTime:
       self.setOneTimeRun()
-    case Frequency.Daily:
+    case Frequency.daily:
       self.setDailyFrequenyRuns()
-    case Frequency.Weekly:
+    case Frequency.weekly:
       self.setWeeklyRuns()
-    case Frequency.Monthly:
+    case Frequency.monthly:
       self.setMonthlyRuns()
-    case Frequency.Scheduled:
+    case Frequency.scheduled:
       self.setScheduledRuns()
     }
 
@@ -425,45 +425,45 @@ class Schedule {
 
   // MARK: Utility Methods
 
-  public static var _formatter: DateFormatter?
+  public static var utcFormatter: DateFormatter?
 
   public static var formatter: DateFormatter! {
     get {
-      if let f = _formatter {
+      if let f = utcFormatter {
         return f
       } else {
         let formatter = DateFormatter()
         formatter.dateFormat = "YYYY-mm-dd"
         formatter.dateStyle = .short
         formatter.timeZone = TimeZone.init(abbreviation: "UTC")
-        _formatter = formatter
+        utcFormatter = formatter
         return formatter
       }
     }
     set(newValue) {
-      _formatter = newValue
+      utcFormatter = newValue
     }
   }
 
-  public static var _formatter2: DateFormatter?
+  public static var currentZoneFormatter: DateFormatter?
 
   public static var formatter2: DateFormatter! {
 
     get {
 
-      if let f = _formatter2 {
+      if let f = currentZoneFormatter {
         return f
       } else {
         let formatter = DateFormatter()
         formatter.dateFormat = "YYYY-mm-dd"
         formatter.dateStyle = .short
         formatter.timeZone = TimeZone.current  // TimeZone.init(abbreviation:"IST")
-        _formatter2 = formatter
+        currentZoneFormatter = formatter
         return formatter
       }
     }
     set(newValue) {
-      _formatter2 = newValue
+      currentZoneFormatter = newValue
     }
   }
 
