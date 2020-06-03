@@ -5,6 +5,7 @@
  * license that can be found in the LICENSE file or at
  * https://opensource.org/licenses/MIT.
  */
+
 package com.google.cloud.healthcare.fdamystudies.utils;
 
 import java.io.IOException;
@@ -46,21 +47,21 @@ public class AuthenticationFilter implements Filter {
         String clientToken = httpServletRequest.getHeader("clientToken");
 
         Integer value = null;
-        boolean isInterceptorURL = false;
-        boolean isInvalidURL = false;
+        boolean isInterceptorUrl = false;
+        boolean isInvalidUrl = false;
         ApplicationPropertyConfiguration applicationConfiguratation =
             BeanUtil.getBean(ApplicationPropertyConfiguration.class);
-        String interceptorURL = applicationConfiguratation.getInterceptorUrls();
+        String interceptorUrl = applicationConfiguratation.getInterceptorUrls();
         String uri = ((HttpServletRequest) request).getRequestURI();
-        String[] list = interceptorURL.split(",");
+        String[] list = interceptorUrl.split(",");
         for (int i = 0; i < list.length; i++) {
           logger.info(list[i]);
           if (uri.endsWith(list[i].trim())) {
-            isInterceptorURL = true;
+            isInterceptorUrl = true;
           }
         }
 
-        if (isInterceptorURL) {
+        if (isInterceptorUrl) {
           setCommonHeaders(httpServletResponse);
           chain.doFilter(request, response);
         } else {
