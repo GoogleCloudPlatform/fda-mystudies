@@ -240,3 +240,6 @@ If the cluster has issues, there are a few things you can check:
 *   Follow a troubleshooting guide. Examples are
     [this](https://learnk8s.io/troubleshooting-deployments) and
     [this](https://kubernetes.io/docs/tasks/debug-application-cluster/debug-cluster/).
+*   As of now there is a known issue with Firewalls in ingress-gce. If you notice this issue showing up in 
+    ingress logs, follow the steps provided in https://github.com/kubernetes/ingress-gce/issues/584, and give 
+    Kubernetes Engine Service Agent (service account) `roles/compute.securityAdmin` and `roles/compute.networkAdmin`.
