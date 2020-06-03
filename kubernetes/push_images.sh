@@ -21,7 +21,7 @@ src="${1}"
 dst="${2}"
 
 
-for image in $(gcloud container images list --repository=gcr.io/heroes-hat-dev | tail -n +2); do
+for image in $(gcloud container images list --repository=gcr.io/mystudies-demo-app | tail -n +2); do
   new="$(echo "${image}" | sed "s|${src}|${dst}|")"
   echo "Migrating image ${image} -> ${new}"
   docker pull "${image}"
