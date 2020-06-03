@@ -8,7 +8,14 @@ public class Constants {
 
   // A very long version to cause db exception while saving study_consent
   public static final String VERSION_VERY_LONG =
-      "very-long-content-very-long-content-very-long-content-very-long-content-very-long-content-very-long-content-very-long-content-very-long-content-very-long-content-very-long-content-very-long-content-very-long-content-very-long-content-very-long-content-very-long-content-very-long-content-very-long-content-very-long-content-very-long-content-very-long-content-very-long-content-very-long-content-very-long-content-very-long-content-very-long-content-very-long-content-very-long-content-very-long-content-";
+      "very-long-content-very-long-content-very-long-content-very-long-"
+          + "content-very-long-content-very-long-content-very-long-content-"
+          + "very-long-content-very-long-content-very-long-content-very-long-"
+          + "content-very-long-content-very-long-content-very-long-content-"
+          + "very-long-content-very-long-content-very-long-content-very-long-"
+          + "content-very-long-content-very-long-content-very-long-content-very-"
+          + "long-content-very-long-content-very-long-content-very-long-content-"
+          + "very-long-content-very-long-content-very-long-content-";
   public static final String CONTENT_1_0 = "text pdf content";
   public static final String CONTENT_1_0_UPDATED = CONTENT_1_0 + " updated";
   public static final String CONTENT_1_2 = "text pdf content 1.2";
