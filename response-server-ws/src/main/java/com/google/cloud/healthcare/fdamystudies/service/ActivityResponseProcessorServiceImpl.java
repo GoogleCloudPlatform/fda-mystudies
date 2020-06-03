@@ -247,8 +247,8 @@ public class ActivityResponseProcessorServiceImpl implements ActivityResponsePro
         for (Object o : valueList) {
           sum = sum + convertResponseValueToDouble(o);
         }
-        // Otherwise, just convert the single response value to double.
       } else {
+        // Otherwise, just convert the single response value to double.
         sum = sum + convertResponseValueToDouble(value);
       }
     }

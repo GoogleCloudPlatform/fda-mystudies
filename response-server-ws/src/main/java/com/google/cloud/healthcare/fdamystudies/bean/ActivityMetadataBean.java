@@ -16,7 +16,7 @@ import lombok.ToString;
  * Provides activity metadata information like activity identifier, name of activity, version of
  * activity etc
  *
- * <p>This.
+ * <p>This
  */
 @Setter
 @Getter
