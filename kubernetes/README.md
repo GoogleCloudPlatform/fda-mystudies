@@ -92,14 +92,27 @@ just "my-studies".
 
 Import the scripts, in this order:
 
+#### Auth server
 ```
 $ gcloud sql import sql --project=<data-project-id> <instance-name> gs://<data-project-id>-sql-import/auth_server_db_script.sql
+```
+
+#### Study builder
+```
+$ gcloud sql import sql --project=<data-project-id> <instance-name> gs://<data-project-id>-sql-import/HPHC_My_Studies_DB_Create_Script.sql
 $ gcloud sql import sql --project=<data-project-id> <instance-name> gs://<data-project-id>-sql-import/procedures.sql
 $ gcloud sql import sql --project=<data-project-id> <instance-name> gs://<data-project-id>-sql-import/version_info_script.sql
-$ gcloud sql import sql --project=<data-project-id> <instance-name> gs://<data-project-id>-sql-import/HPHC_My_Studies_DB_Create_Script.sql
+```
+
+#### Response datastore
+```
 $ gcloud sql import sql --project=<data-project-id> <instance-name> gs://<data-project-id>-sql-import/mystudies_response_server_db_script.sql
-$ gcloud sql import sql --project=<data-project-id> <instance-name> gs://<data-project-id>-sql-import/mystudies_app_info_update_db_script.sql
+```
+
+#### User registration datastore
+```
 $ gcloud sql import sql --project=<data-project-id> <instance-name> gs://<data-project-id>-sql-import/mystudies_user_registration_db_script.sql
+$ gcloud sql import sql --project=<data-project-id> <instance-name> gs://<data-project-id>-sql-import/mystudies_app_info_update_db_script.sql
 ```
 
 ### Kubernetes Config Values
