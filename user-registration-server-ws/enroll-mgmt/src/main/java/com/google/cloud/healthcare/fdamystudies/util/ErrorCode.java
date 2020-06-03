@@ -5,6 +5,7 @@
  * license that can be found in the LICENSE file or at
  * https://opensource.org/licenses/MIT.
  */
+
 package com.google.cloud.healthcare.fdamystudies.util;
 
 public enum ErrorCode {
@@ -153,7 +154,10 @@ public enum ErrorCode {
   EC_1005(1005, "Invalid AccessToken or AccessToken changed"),
   EC_1041(
       104,
-      "Your account is not verified. Please verify your account by clicking on verification link which has been sent to your registered email. If not received, would you like to resend verification link?") // Unknown Error
+      "Your account is not verified."
+          + " Please verify your account by clicking on verification link "
+          + "which has been sent to your registered email."
+          + " If not received, would you like to resend verification link?") // Unknown Error
 ;
 
   private final int code;
