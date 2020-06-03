@@ -5,6 +5,7 @@
  * license that can be found in the LICENSE file or at
  * https://opensource.org/licenses/MIT.
  */
+
 package com.google.cloud.healthcare.fdamystudies.dao;
 
 import java.util.ArrayList;
@@ -87,7 +88,8 @@ public class EnrollmentTokenDaoImpl implements EnrollmentTokenDao {
       participantRegistrySite =
           session
               .createQuery(
-                  "from ParticipantRegistrySite PS where studyInfo.customId =:studyId and enrollmentToken=:token")
+                  "from ParticipantRegistrySite PS where studyInfo.customId =:studyId and"
+                      + " enrollmentToken=:token")
               .setParameter("studyId", studyId)
               .setParameter("token", token)
               .getResultList();
@@ -116,7 +118,9 @@ public class EnrollmentTokenDaoImpl implements EnrollmentTokenDao {
       participantList =
           session
               .createQuery(
-                  "from ParticipantStudiesBO PS,StudyInfoBO SB, ParticipantRegistrySite PR where SB.id =PS.studyInfo.id and PS.participantRegistrySite.id=PR.id and PR.enrollmentToken=:token and SB.customId=:studyId")
+                  "from ParticipantStudiesBO PS,StudyInfoBO SB, ParticipantRegistrySite PR"
+                      + " where SB.id =PS.studyInfo.id and PS.participantRegistrySite.id=PR.id"
+                      + " and PR.enrollmentToken=:token and SB.customId=:studyId")
               .setParameter("token", tokenValue)
               .setParameter("studyId", studyId)
               .getResultList();

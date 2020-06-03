@@ -5,6 +5,7 @@
  * license that can be found in the LICENSE file or at
  * https://opensource.org/licenses/MIT.
  */
+
 package com.google.cloud.healthcare.fdamystudies.util;
 
 import java.io.IOException;
@@ -48,21 +49,21 @@ public class AuthenticationFilter implements Filter {
         String clientToken = httpServletRequest.getHeader(AppConstants.CLIENT_TOKEN_KEY);
         Integer value = null;
         boolean isValid = false;
-        boolean isInterceptorURL = false;
+        boolean isInterceptorUrl = false;
         boolean isServerApiUrl = false;
         ApplicationPropertyConfiguration applicationConfiguration =
             BeanUtil.getBean(ApplicationPropertyConfiguration.class);
-        String interceptorURL = applicationConfiguration.getInterceptorUrls();
+        String interceptorUrl = applicationConfiguration.getInterceptorUrls();
         String serverApiUrls = applicationConfiguration.getServerApiUrls();
         String uri = ((HttpServletRequest) request).getRequestURI();
-        String[] list = interceptorURL.split(",");
+        String[] list = interceptorUrl.split(",");
         for (int i = 0; i < list.length; i++) {
           if (uri.endsWith(list[i].trim())) {
-            isInterceptorURL = true;
+            isInterceptorUrl = true;
             break;
           }
         }
-        if (!isInterceptorURL) {
+        if (!isInterceptorUrl) {
           String[] listServerApiUrls = serverApiUrls.split(",");
           for (int i = 0; i < listServerApiUrls.length; i++) {
             if (uri.endsWith(listServerApiUrls[i].trim())) {
@@ -72,7 +73,7 @@ public class AuthenticationFilter implements Filter {
           }
         }
 
-        if (isInterceptorURL) {
+        if (isInterceptorUrl) {
           setCommonHeaders(httpServletResponse);
           chain.doFilter(request, response);
 

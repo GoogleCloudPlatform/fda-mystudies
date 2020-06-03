@@ -5,6 +5,7 @@
  * license that can be found in the LICENSE file or at
  * https://opensource.org/licenses/MIT.
  */
+
 package com.google.cloud.healthcare.fdamystudies.util;
 
 import java.security.MessageDigest;
@@ -40,7 +41,7 @@ public class EnrollmentManagementUtil {
   static final String SOURCE = "0123456789abcdefghijklmnopqrstuvwxyz";
   static SecureRandom secureRnd = new SecureRandom();
   private static final String validInputChars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-  private Integer n = validInputChars.length();
+  private Integer charLength = validInputChars.length();
   private static final Logger logger = LoggerFactory.getLogger(EnrollmentManagementUtil.class);
 
   @Autowired private RestTemplate restTemplate;
@@ -57,7 +58,7 @@ public class EnrollmentManagementUtil {
   }
 
   public boolean isValid(String input) {
-    return (!input.isEmpty() && ((codePointTotal(input, true) % n) == 0));
+    return (!input.isEmpty() && ((codePointTotal(input, true) % charLength) == 0));
   }
 
   private int codePointTotal(String input, boolean withChecksum) {
@@ -82,7 +83,7 @@ public class EnrollmentManagementUtil {
       factor = (factor == 2) ? 1 : 2;
 
       // Sum the digits of the "addend" as expressed in base "n"
-      addend = (addend / n) + (addend % n);
+      addend = (addend / charLength) + (addend % charLength);
       sum += addend;
     }
     return sum;
@@ -95,7 +96,9 @@ public class EnrollmentManagementUtil {
 
   public static String randomString(int length) {
     StringBuilder sb = new StringBuilder(length);
-    for (int i = 0; i < length; i++) sb.append(SOURCE.charAt(secureRnd.nextInt(SOURCE.length())));
+    for (int i = 0; i < length; i++) {
+      sb.append(SOURCE.charAt(secureRnd.nextInt(SOURCE.length())));
+    }
     return sb.toString();
   }
 
