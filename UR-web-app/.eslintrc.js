@@ -1,21 +1,20 @@
 module.exports = {
-  'env': {
+  env: {
     browser: true,
     es6: true,
   },
-  'extends': ['google'],
-  'globals': {
+  extends: ['google'],
+  globals: {
     Atomics: 'readonly',
     SharedArrayBuffer: 'readonly',
   },
-  'parser': '@typescript-eslint/parser',
-  'parserOptions': {
+  parser: '@typescript-eslint/parser',
+  parserOptions: {
     ecmaVersion: 11,
     sourceType: 'module',
   },
-  'plugins': ['@typescript-eslint'],
-
-  'rules': {
+  plugins: ['@typescript-eslint'],
+  rules: {
     'linebreak-style': 0,
     'require-jsdoc': 0,
     'no-unused-vars': 'off',
