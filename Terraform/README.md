@@ -194,7 +194,11 @@ To see what resources each deployment provisions, check out the comments in each
 
 1. Go to the original directory.
 
-1. Uncomment [Deployment Phase 2](./rename.sh#L95-L96) and run [rename.sh](./rename.sh).
+1. Uncomment [Deployment Phase 2](./rename.sh#L101-L102)
+
+1. Comment out [Firestore location and Index](./org/folder.fda-my-studies/project.heroes-hat-dev-resp-firebase/firebase/main.tf#L27-L61).
+
+1. run [rename.sh](./rename.sh).
 
 1. Go to the target diretory.
 
@@ -202,11 +206,26 @@ To see what resources each deployment provisions, check out the comments in each
     these configs. Make sure the presubmit tests pass and get code review
     approvals. The CD job will then deploy the Phase 2 resources for you.
 
+1. Setup Firestore database. This needs to be done on Google Cloud Console web
+    UI. Steps:
+
+    1. Navigate to {PREFIX}-firebase on <https://console.cloud.google.com/.>
+    1. Select "Firestore" > "Data" from the top-left dropdown.
+    1. Click "SELECT NATIVE MODE" button.
+    1. Select a location from the dropdown. Ideally this should be close to
+        where the apps will be running.
+    1. Click "CREATE DATABASE" button.
+
+1. Uncomment [Firestore location and Index](./org/folder.fda-my-studies/project.heroes-hat-dev-resp-firebase/firebase/main.tf#L27-L61) and run [rename.sh](./rename.sh).
+
+1. Commit your current local git working dir and send a Pull Request to merge
+    these configs.
+
 ### Phase3: Apps Project
 
 1. Go to the original directory.
 
-1. Uncomment [Deployment Phase 3](./rename.sh#L99) and run [rename.sh](./rename.sh).
+1. Uncomment [Deployment Phase 3](./rename.sh#L105) and run [rename.sh](./rename.sh).
 
 1. Go to the target diretory.
 
@@ -225,7 +244,7 @@ To see what resources each deployment provisions, check out the comments in each
 
 1. Go to the original directory.
 
-1. Uncomment [Deployment Phase 4](./rename.sh#L102-L103) and run [rename.sh](./rename.sh).
+1. Uncomment [Deployment Phase 4](./rename.sh#L108-L109) and run [rename.sh](./rename.sh).
 
 1. Go to the target diretory.
 
@@ -244,25 +263,15 @@ To see what resources each deployment provisions, check out the comments in each
     approvals. The CD job will then deploy this additional IAM permission for
     you.
 
+1. Follow [Kubernetes README.md](../kubernetes/README.md) to deploy the
+    Kubernetes resources in the GKE cluster. Note that the `rename.sh` script
+    didn't copy or handle the Kubernetes deployment artifacts.
+
 1. Run [copy_client_info_to_sql.sh](./copy_client_info_to_sql.sh) script to
     copy client info from secrets into CloudSQL.
 
 1. Run [copy_mobile_app_info_to_sql.sh](./copy_mobile_app_info_to_sql.sh)
     script to copy mobile app info from secrets into CloudSQL.
-
-1. Follow [Kubernetes README.md](../kubernetes/README.md) to deploy the
-    Kubernetes resources in the GKE cluster. Note that the `rename.sh` script
-    didn't copy or handle the Kubernetes deployment artifacts.
-
-1. Setup Firestore database. This needs to be done on Google Cloud Console web
-    UI. Steps:
-
-    1. Navigate to {PREFIX}-firebase on <https://console.cloud.google.com/.>
-    1. Select "Firestore" > "Data" from the top-left dropdown.
-    1. Click "SELECT NATIVE MODE" button.
-    1. Select a location from the dropdown. Ideally this should be close to
-        where the apps will be running.
-    1. Click "CREATE DATABASE" button.
 
 1. Revoke your super admin access by running `gcloud auth revoke` and
     authenticate as a normal user for daily activities.
