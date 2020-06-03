@@ -19,6 +19,7 @@ spec:
       containers:
         - name: user-registration-ws
           image: gcr.io/mystudies-demo-apps/user-registration-server-ws:latest
+          imagePullPolicy: Always
           env:
             - name: DB_USER
               valueFrom:

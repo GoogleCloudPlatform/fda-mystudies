@@ -20,6 +20,7 @@ spec:
       containers:
         - name: study-meta-data
           image: gcr.io/mystudies-demo-apps/study-meta-data:latest
+          imagePullPolicy: Always
           env:
             - name: DB_USER
               valueFrom:

@@ -19,6 +19,7 @@ spec:
       containers:
         - name: auth-server-ws
           image: gcr.io/mystudies-demo-apps/auth-server-ws:latest
+          imagePullPolicy: Always
           env:
             - name: DB_USER
               valueFrom:
