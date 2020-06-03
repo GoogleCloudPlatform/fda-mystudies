@@ -27,6 +27,10 @@ public class MyStudiesUserRegUtil {
 
   static String email = "";
 
+  static final String passwordRegex =
+      "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[!\\\"#$%&'()*+,"
+          + "-.:;<=>?@\\\\[\\\\]^_`{|}~]).{8,64}$";
+
   public enum ErrorCodes {
     INVALID_INPUT("INVALID_INPUT"),
     UNKNOWN("UNKNOWN"),
@@ -318,9 +322,7 @@ public class MyStudiesUserRegUtil {
 
   public static boolean isPasswordStrong(String password) {
     if (password != null) {
-      return password.matches(
-          "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[!\\\"#$%&'()*+,"
-              + "-.:;<=>?@\\\\[\\\\]^_`{|}~]).{8,64}$");
+      return password.matches(passwordRegex);
     } else {
       return false;
     }

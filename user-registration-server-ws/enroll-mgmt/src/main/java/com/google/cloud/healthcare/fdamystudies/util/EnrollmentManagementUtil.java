@@ -41,7 +41,7 @@ public class EnrollmentManagementUtil {
   static final String SOURCE = "0123456789abcdefghijklmnopqrstuvwxyz";
   static SecureRandom secureRnd = new SecureRandom();
   private static final String validInputChars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-  private Integer nlength = validInputChars.length();
+  private Integer charLength = validInputChars.length();
   private static final Logger logger = LoggerFactory.getLogger(EnrollmentManagementUtil.class);
 
   @Autowired private RestTemplate restTemplate;
@@ -58,7 +58,7 @@ public class EnrollmentManagementUtil {
   }
 
   public boolean isValid(String input) {
-    return (!input.isEmpty() && ((codePointTotal(input, true) % nlength) == 0));
+    return (!input.isEmpty() && ((codePointTotal(input, true) % charLength) == 0));
   }
 
   private int codePointTotal(String input, boolean withChecksum) {
@@ -83,7 +83,7 @@ public class EnrollmentManagementUtil {
       factor = (factor == 2) ? 1 : 2;
 
       // Sum the digits of the "addend" as expressed in base "n"
-      addend = (addend / nlength) + (addend % nlength);
+      addend = (addend / charLength) + (addend % charLength);
       sum += addend;
     }
     return sum;
