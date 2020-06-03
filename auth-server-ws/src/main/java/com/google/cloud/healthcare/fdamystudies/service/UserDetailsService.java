@@ -16,6 +16,7 @@ import com.google.cloud.healthcare.fdamystudies.controller.bean.ResponseBean;
 import com.google.cloud.healthcare.fdamystudies.controller.bean.UpdateInfo;
 import com.google.cloud.healthcare.fdamystudies.exception.DuplicateUserRegistrationException;
 import com.google.cloud.healthcare.fdamystudies.exception.EmailIdAlreadyVerifiedException;
+import com.google.cloud.healthcare.fdamystudies.exception.InvalidArgumentException;
 import com.google.cloud.healthcare.fdamystudies.exception.InvalidClientException;
 import com.google.cloud.healthcare.fdamystudies.exception.InvalidUserIdException;
 import com.google.cloud.healthcare.fdamystudies.exception.SystemException;
@@ -72,5 +73,5 @@ public interface UserDetailsService {
   public String savePasswordHistory(String userId, String password, String salt);
 
   public boolean sendEmailOnAccountLocking(String emailId, String appCode)
-      throws UserNotFoundException;
+      throws UserNotFoundException, InvalidArgumentException;
 }

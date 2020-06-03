@@ -68,7 +68,7 @@ public class DaoUserBO implements Serializable {
   private String resetPassword;
 
   @Column(name = "temp_password", columnDefinition = "TINYINT(1)")
-  private Boolean tempPassword = false;
+  private boolean tempPassword = false;
 
   @Column(name = "temp_password_date")
   private Date tempPasswordDate;

@@ -35,6 +35,7 @@ import com.google.cloud.healthcare.fdamystudies.controller.bean.ResponseBean;
 import com.google.cloud.healthcare.fdamystudies.controller.bean.UpdateInfo;
 import com.google.cloud.healthcare.fdamystudies.exception.DuplicateUserRegistrationException;
 import com.google.cloud.healthcare.fdamystudies.exception.EmailIdAlreadyVerifiedException;
+import com.google.cloud.healthcare.fdamystudies.exception.InvalidArgumentException;
 import com.google.cloud.healthcare.fdamystudies.exception.InvalidClientException;
 import com.google.cloud.healthcare.fdamystudies.exception.InvalidUserIdException;
 import com.google.cloud.healthcare.fdamystudies.exception.SystemException;
@@ -360,25 +361,27 @@ public class UserDetailsServiceImpl implements UserDetailsService {
   }
 
   @Override
+  @Transactional
   public boolean deleteUserDetails(String userId) throws UserNotFoundException {
 
     logger.info("UserDetailsServiceImpl deleteUserDetails() - starts");
     boolean message = false;
 
-    if (userId != null) {
-      DaoUserBO userDetails = userRepo.findByUserId(userId);
-      if (userDetails != null) {
-        userRepo.deleteByUserId(userId);
-        session.deleteByUserId(userId);
-        passHistoryRepo.deleteByUserId(userId);
-        return true;
-      } else {
-        throw new UserNotFoundException();
-      }
-    } else {
+    if (userId == null) {
       logger.info("UserDetailsServiceImpl deleteUserDetails() - ends");
       return message;
     }
+
+    DaoUserBO userDetails = userRepo.findByUserId(userId);
+    if (userDetails == null) {
+      logger.info("UserDetailsServiceImpl deleteUserDetails() - ends With UserNotFoundException");
+      throw new UserNotFoundException();
+    }
+    userRepo.deleteByUserId(userId);
+    session.deleteByUserId(userId);
+    passHistoryRepo.deleteByUserId(userId);
+    logger.info("UserDetailsServiceImpl deleteUserDetails() - ends");
+    return true;
   }
 
   @Override
@@ -618,46 +621,40 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
   @Override
   public boolean sendEmailOnAccountLocking(String emailId, String appCode)
-      throws UserNotFoundException {
+      throws UserNotFoundException, InvalidArgumentException {
     logger.info("UserDetailsServiceImpl sendEmailOnAccountLocking() - starts");
     boolean result = false;
 
-    if (emailId == null && appCode == null) {
+    if (emailId == null || appCode == null) {
       logger.info("UserDetailsServiceImpl sendEmailOnAccountLocking() - ends");
-      return result;
+      throw new InvalidArgumentException();
     }
 
     DaoUserBO userInfo = userRepo.findByEmailIdAndAppCode(emailId, appCode);
-
-    if (userInfo != null) {
-      String tempPassword = RandomStringUtils.randomAlphanumeric(6);
-      String encryptedPwd =
-          MyStudiesUserRegUtil.getEncryptedString(tempPassword, userInfo.getSalt());
-      userInfo.setLockedAccountTempPassword(encryptedPwd);
-      userInfo.setTempPassword(true);
-      userInfo.setLockedAccountTempPasswordExpiredDate(
-          LocalDateTime.now(ZoneId.systemDefault())
-              .plusMinutes(Long.valueOf(appConfig.getExpirationLoginAttemptsMinute())));
-      userRepo.save(userInfo);
-
-      String subject = appConfig.getLockAccountMailSubject();
-      String content = appConfig.getLockAccountMailContent();
-
-      Map<String, String> genarateEmailContentMap = new HashMap<>();
-      genarateEmailContentMap.put("$Temporary_Password", tempPassword);
-
-      String dynamicContent =
-          MyStudiesUserRegUtil.genarateEmailContent(content, genarateEmailContentMap);
-
-      boolean isSent =
-          emailNotification.sendEmailNotification(subject, dynamicContent, emailId, null, null);
-      if (isSent) {
-        result = true;
-      }
-    } else {
+    if (userInfo == null) {
       logger.info("UserDetailsServiceImpl sendEmailOnAccountLocking() - ends");
       throw new UserNotFoundException();
     }
+    String tempPassword = RandomStringUtils.randomAlphanumeric(6);
+    String encryptedPwd = MyStudiesUserRegUtil.getEncryptedString(tempPassword, userInfo.getSalt());
+    userInfo.setLockedAccountTempPassword(encryptedPwd);
+    userInfo.setTempPassword(true);
+    userInfo.setLockedAccountTempPasswordExpiredDate(
+        LocalDateTime.now(ZoneId.systemDefault())
+            .plusMinutes(Long.valueOf(appConfig.getExpirationLoginAttemptsMinute())));
+    userRepo.save(userInfo);
+
+    String subject = appConfig.getLockAccountMailSubject();
+    String content = appConfig.getLockAccountMailContent();
+
+    Map<String, String> genarateEmailContentMap = new HashMap<>();
+    genarateEmailContentMap.put("$Temporary_Password", tempPassword);
+
+    String dynamicContent =
+        MyStudiesUserRegUtil.genarateEmailContent(content, genarateEmailContentMap);
+
+    result = emailNotification.sendEmailNotification(subject, dynamicContent, emailId, null, null);
+
     logger.info("UserDetailsServiceImpl sendEmailOnAccountLocking() - ends");
     return result;
   }

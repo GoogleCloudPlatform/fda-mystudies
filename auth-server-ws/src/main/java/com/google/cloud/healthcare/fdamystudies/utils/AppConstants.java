@@ -90,4 +90,5 @@ public class AppConstants {
   public static final String ACCOUNT_LOCKED = "ACCOUNT_LOCKED";
   public static final String PASSWORD_EXPIRED = "PASSWORD_EXPIRED";
   public static final String CODE_EXPIRED = "CODE_EXPIRED";
+  public static final String INVALID_ARGUMENT = "INVALID_ARGUMENT";
 }

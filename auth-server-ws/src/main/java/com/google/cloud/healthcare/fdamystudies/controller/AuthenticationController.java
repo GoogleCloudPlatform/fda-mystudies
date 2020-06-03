@@ -49,6 +49,7 @@ import com.google.cloud.healthcare.fdamystudies.controller.bean.UpdateInfo;
 import com.google.cloud.healthcare.fdamystudies.controller.bean.UpdateUserAccountStatusResponse;
 import com.google.cloud.healthcare.fdamystudies.exception.DuplicateUserRegistrationException;
 import com.google.cloud.healthcare.fdamystudies.exception.EmailIdAlreadyVerifiedException;
+import com.google.cloud.healthcare.fdamystudies.exception.InvalidArgumentException;
 import com.google.cloud.healthcare.fdamystudies.exception.InvalidClientException;
 import com.google.cloud.healthcare.fdamystudies.exception.InvalidUserIdException;
 import com.google.cloud.healthcare.fdamystudies.exception.PasswordExpiredException;
@@ -246,7 +247,7 @@ public class AuthenticationController {
 
     ValidateClientCredentialsResponse responseEntity = null;
 
-    if (StringUtils.isBlank(clientId) || StringUtils.isBlank(secretKey)) {
+    if (isValidInput(clientId, secretKey)) {
 
       MyStudiesUserRegUtil.getFailureResponse(
           MyStudiesUserRegUtil.ErrorCodes.STATUS_400.getValue(),
@@ -427,27 +428,13 @@ public class AuthenticationController {
     logger.info("AuthenticationController registerUser() - starts");
     AuthServerRegistrationResponse controllerResp = null;
     try {
-      if (StringUtils.isBlank(clientId) || StringUtils.isBlank(secretKey)) {
-        MyStudiesUserRegUtil.registrationResponse(
-            response, AppConstants.MISSING_REQUIRED_PARAMETER);
-        logger.info("AuthenticationController registerUser() - ends with BAD_REQUEST");
+      boolean retVal = verifyUserRegistrationRequest(clientId, secretKey, user, response);
+
+      if (retVal) {
+        logger.info("AuthenticationController registerUser() - ends");
         return new ResponseEntity<>(controllerResp, HttpStatus.BAD_REQUEST);
       }
 
-      if (StringUtils.isBlank(user.getEmailId())
-          || !MyStudiesUserRegUtil.isValidEmailId(user.getEmailId())) {
-        MyStudiesUserRegUtil.registrationResponse(response, AppConstants.INVALID_EMAIL_ID);
-        logger.info("AuthenticationController registerUser() - ends with BAD_REQUEST");
-        return new ResponseEntity<>(controllerResp, HttpStatus.BAD_REQUEST);
-      }
-
-      if (StringUtils.isBlank(user.getPassword())
-          || !MyStudiesUserRegUtil.isPasswordStrong(user.getPassword())
-          || user.getEmailId().equalsIgnoreCase(user.getPassword())) {
-        MyStudiesUserRegUtil.registrationResponse(response, AppConstants.PASSWORD_IS_INVALID);
-        logger.info("AuthenticationController registerUser() - ends with BAD_REQUEST");
-        return new ResponseEntity<>(controllerResp, HttpStatus.BAD_REQUEST);
-      }
       // verifying client (valid client will return respective appCode)
       String appCode = clientInfoService.checkClientInfo(clientId, secretKey);
       if (appCode == null || StringUtils.isEmpty(appCode)) {
@@ -457,12 +444,10 @@ public class AuthenticationController {
             "AuthenticationController registerUser() - ends with INVALID CLIENTID OR SECRET KEY");
         return new ResponseEntity<>(controllerResp, HttpStatus.UNAUTHORIZED);
       }
-      if (AppConstants.MA.equals(appCode)) {
-        if (StringUtils.isBlank(appId) || StringUtils.isBlank(orgId)) {
-          MyStudiesUserRegUtil.registrationResponse(response, AppConstants.INVALID_INPUT_ERROR_MSG);
-          logger.info("AuthenticationController registerUser() - ends");
-          return new ResponseEntity<>(controllerResp, HttpStatus.BAD_REQUEST);
-        }
+      if (AppConstants.MA.equals(appCode) && isValidInput(appId, orgId)) {
+        MyStudiesUserRegUtil.commonErrorResponse(response, AppConstants.MISSING_REQUIRED_PARAMETER);
+        logger.info("AuthenticationController registerUser() - ends");
+        return new ResponseEntity<>(controllerResp, HttpStatus.BAD_REQUEST);
       }
 
       ServiceRegistrationSuccessResponse serviceResp = null;
@@ -473,8 +458,7 @@ public class AuthenticationController {
       } else {
         MyStudiesUserRegUtil.registrationResponse(
             response, AppConstants.UNAUTHORIZED_CLIENT_FOR_REGISTER);
-        logger.info(
-            "AuthenticationController getRefreshedToken() - error with UNAUTHORIZED Request");
+        logger.info("AuthenticationController registerUser() - error with UNAUTHORIZED Request");
         return new ResponseEntity<>(controllerResp, HttpStatus.UNAUTHORIZED);
       }
 
@@ -488,11 +472,10 @@ public class AuthenticationController {
     } catch (DuplicateUserRegistrationException e) {
       MyStudiesUserRegUtil.registrationResponse(response, AppConstants.EMAIL_EXISTS);
       logger.error(
-          "AuthenticationController getRefreshedToken() - error with DUPLICATE REGISTRATION: ", e);
+          "AuthenticationController registerUser() - error with DUPLICATE REGISTRATION: ", e);
       return new ResponseEntity<>(controllerResp, HttpStatus.BAD_REQUEST);
-
     } catch (Exception e) {
-      MyStudiesUserRegUtil.registrationResponse(response, AppConstants.SYSTEM_EXCEPTION);
+      MyStudiesUserRegUtil.commonErrorResponse(response, AppConstants.SYSTEM_EXCEPTION);
       logger.error(
           "AuthenticationController getRefreshedToken() - error with INTERNAL_SERVER_ERROR: ", e);
       return new ResponseEntity<>(controllerResp, HttpStatus.INTERNAL_SERVER_ERROR);
@@ -533,26 +516,24 @@ public class AuthenticationController {
           || StringUtils.isBlank(secretKey)
           || StringUtils.isBlank(loginRequest.getEmailId())
           || StringUtils.isBlank(loginRequest.getPassword())) {
-        MyStudiesUserRegUtil.loginResponse(response, AppConstants.MISSING_REQUIRED_PARAMETER);
+        MyStudiesUserRegUtil.commonErrorResponse(response, AppConstants.MISSING_REQUIRED_PARAMETER);
         logger.info("AuthenticationController login() - ends with BAD_REQUEST");
         return new ResponseEntity<>(loginResp, HttpStatus.BAD_REQUEST);
       }
 
       appCode = clientInfoService.checkClientInfo(clientId, secretKey);
-      logger.info("appCode: " + appCode);
 
       if (appCode == null || StringUtils.isBlank(appCode)) {
-        MyStudiesUserRegUtil.loginResponse(response, AppConstants.INVALID_CLIENTID_OR_SECRET_KEY);
+        MyStudiesUserRegUtil.commonErrorResponse(
+            response, AppConstants.INVALID_CLIENTID_OR_SECRET_KEY);
         logger.info("AuthenticationController login() - ends with INVALID CLIENTID OR SECRET KEY");
         return new ResponseEntity<>(loginResp, HttpStatus.UNAUTHORIZED);
       }
 
-      if (AppConstants.MA.equals(appCode)) {
-        if (StringUtils.isBlank(appId) || StringUtils.isBlank(orgId)) {
-          MyStudiesUserRegUtil.loginResponse(response, AppConstants.MISSING_REQUIRED_PARAMETER);
-          logger.info("AuthenticationController login() - ends with INVALID_INPUT");
-          return new ResponseEntity<>(loginResp, HttpStatus.BAD_REQUEST);
-        }
+      if (AppConstants.MA.equals(appCode) && isValidInput(appId, orgId)) {
+        MyStudiesUserRegUtil.commonErrorResponse(response, AppConstants.MISSING_REQUIRED_PARAMETER);
+        logger.info("AuthenticationController login() - ends with INVALID_INPUT");
+        return new ResponseEntity<>(loginResp, HttpStatus.BAD_REQUEST);
       }
 
       if (!AppConstants.MA.equals(appCode)) {
@@ -581,19 +562,16 @@ public class AuthenticationController {
       UserDetails userDetails =
           new User(participantDetails.getEmailId(), participantDetails.getPassword(), roles);
 
-      if (lockedAccountTempPasswordCheck(loginRequest.getPassword(), participantDetails)) {
-        if (participantDetails.getLockedAccountTempPasswordExpiredDate() != null
-            && LocalDateTime.now(ZoneId.systemDefault())
-                .isAfter(participantDetails.getLockedAccountTempPasswordExpiredDate())) {
-          throw new PasswordExpiredException();
-        }
+      if (lockedAccountTempPasswordCheck(loginRequest.getPassword(), participantDetails)
+          && checkTempPasswordExpireForLockedAccount(participantDetails)) {
+        logger.info("AuthenticationController login() - ends with Temp Password Expired");
+        throw new PasswordExpiredException();
       }
-      if (lockedAccountPassword(loginRequest.getPassword(), participantDetails)) {
-        if (isInLockPeriod(participantDetails)) {
-          loginResp = MyStudiesUserRegUtil.loginResponse(response, AppConstants.ACCOUNT_LOCKED);
-          logger.info("AuthenticationController login() - ends with ACCOUNT_LOCKED");
-          return new ResponseEntity<>(loginResp, HttpStatus.BAD_REQUEST);
-        }
+      if (lockedAccountPasswordMatches(loginRequest.getPassword(), participantDetails)
+          && isInLockPeriod(participantDetails)) {
+        loginResp = MyStudiesUserRegUtil.loginResponse(response, AppConstants.ACCOUNT_LOCKED);
+        logger.info("AuthenticationController login() - ends with ACCOUNT_LOCKED");
+        return new ResponseEntity<>(loginResp, HttpStatus.BAD_REQUEST);
       }
 
       if (loginAttempts != null
@@ -656,9 +634,9 @@ public class AuthenticationController {
           return new ResponseEntity<>(loginResp, HttpStatus.BAD_REQUEST);
 
         } else if (loginResp.getCode() == ErrorCode.EC_102.code()) {
-          boolean message =
+          boolean sentMessage =
               userDetailsService.sendEmailOnAccountLocking(loginRequest.getEmailId(), appCode);
-          if (message) {
+          if (sentMessage) {
             loginResp = MyStudiesUserRegUtil.loginResponse(response, AppConstants.ACCOUNT_LOCKED);
             logger.info("AuthenticationController login() - ends with ACCOUNT_LOCKED");
             return new ResponseEntity<>(loginResp, HttpStatus.BAD_REQUEST);
@@ -677,14 +655,16 @@ public class AuthenticationController {
       MyStudiesUserRegUtil.loginResponse(response, AppConstants.PASSWORD_EXPIRED);
       logger.error("AuthenticationController login() - error with UNAUTHORIZED request: ", e);
       return new ResponseEntity<>(loginResp, HttpStatus.UNAUTHORIZED);
-
     } catch (UserNotFoundException e) {
       MyStudiesUserRegUtil.loginResponse(response, AppConstants.INVALID_USERNAME_PASSWORD);
       logger.info("AuthenticationController login() - ends with UNAUTHORIZED Request");
       return new ResponseEntity<>(loginResp, HttpStatus.UNAUTHORIZED);
-
+    } catch (InvalidArgumentException e) {
+      MyStudiesUserRegUtil.loginResponse(response, AppConstants.MISSING_REQUIRED_PARAMETER);
+      logger.info("AuthenticationController login() - ends with INVALID_INPUT");
+      return new ResponseEntity<>(loginResp, HttpStatus.BAD_REQUEST);
     } catch (Exception e) {
-      MyStudiesUserRegUtil.loginResponse(response, AppConstants.SYSTEM_EXCEPTION);
+      MyStudiesUserRegUtil.commonErrorResponse(response, AppConstants.SYSTEM_EXCEPTION);
       logger.error("AuthenticationController login() - error with INTERNAL_SERVER_ERROR: ", e);
       return new ResponseEntity<>(loginResp, HttpStatus.INTERNAL_SERVER_ERROR);
     }
@@ -950,17 +930,9 @@ public class AuthenticationController {
         if (userInfo != null) {
           if (checkOldPassword(changePasswordBean, userInfo)) {
 
-            if (userInfo.getLockedAccountTempPassword() != null
-                && userInfo
-                    .getLockedAccountTempPassword()
-                    .equals(
-                        MyStudiesUserRegUtil.getEncryptedString(
-                            changePasswordBean.getCurrentPassword(), userInfo.getSalt()))) {
-              if (userInfo.getLockedAccountTempPasswordExpiredDate() != null
-                  && LocalDateTime.now(ZoneId.systemDefault())
-                      .isAfter(userInfo.getLockedAccountTempPasswordExpiredDate())) {
-                throw new PasswordExpiredException();
-              }
+            if (isLockedAccountTempPassword(changePasswordBean, userInfo)
+                && checkTempPasswordExpireForLockedAccount(userInfo)) {
+              throw new PasswordExpiredException();
             }
 
             if (!changePasswordBean
@@ -986,25 +958,14 @@ public class AuthenticationController {
                   userInfo.setPassword(
                       MyStudiesUserRegUtil.getEncryptedString(
                           changePasswordBean.getNewPassword(), salt));
-                  if (userInfo.getTempPassword()) {
+                  if (userInfo.isTempPassword()) {
                     userInfo.setTempPassword(false);
                   }
                   userInfo.setResetPassword(null);
                   userInfo.setTempPasswordDate(MyStudiesUserRegUtil.getCurrentUtilDateTime());
                   userInfo.setPasswordUpdatedDate(MyStudiesUserRegUtil.getCurrentUtilDateTime());
 
-                  logger.info("msg: " + userInfo.getLockedAccountTempPassword());
-                  logger.info(
-                      "msg: "
-                          + MyStudiesUserRegUtil.getEncryptedString(
-                              changePasswordBean.getCurrentPassword(), userInfo.getSalt()));
-                  if (userInfo.getLockedAccountTempPassword() != null
-                      && userInfo
-                          .getLockedAccountTempPassword()
-                          .equals(
-                              MyStudiesUserRegUtil.getEncryptedString(
-                                  changePasswordBean.getCurrentPassword(), userInfo.getSalt()))) {
-
+                  if (isLockedAccountTempPassword(changePasswordBean, userInfo)) {
                     userInfo.setLockedAccountTempPassword(null);
                     userInfo.setLockedAccountTempPasswordExpiredDate(null);
                   }
@@ -1013,7 +974,7 @@ public class AuthenticationController {
                   if (responseBean
                           .getMessage()
                           .equalsIgnoreCase(MyStudiesUserRegUtil.ErrorCodes.SUCCESS.getValue())
-                      && !userInfo.getTempPassword()) {
+                      && !userInfo.isTempPassword()) {
                     String password =
                         MyStudiesUserRegUtil.getEncryptedString(
                             changePasswordBean.getNewPassword(), salt);
@@ -1133,6 +1094,16 @@ public class AuthenticationController {
     return new ResponseEntity<>(responseBean, HttpStatus.OK);
   }
 
+  private boolean isLockedAccountTempPassword(
+      ChangePasswordBean changePasswordBean, DaoUserBO userInfo) {
+    return userInfo.getLockedAccountTempPassword() != null
+        && userInfo
+            .getLockedAccountTempPassword()
+            .equals(
+                MyStudiesUserRegUtil.getEncryptedString(
+                    changePasswordBean.getCurrentPassword(), userInfo.getSalt()));
+  }
+
   private LoginResponse getLoginInformation(
       DaoUserBO participantDetails,
       String email,
@@ -1149,19 +1120,14 @@ public class AuthenticationController {
     AuthInfoBO authInfo = null;
 
     try {
-      if (participantDetails != null
-          && LocalDateTime.now(ZoneId.systemDefault())
-              .isBefore(participantDetails.getPasswordExpireDate())) {
-        logger.info("TRUE");
-      } else {
+      if (isUserActualPasswordExpired(participantDetails)) {
+        logger.info("User Actual Password is Expired");
         throw new PasswordExpiredException();
       }
 
       String tempPassword = null;
-      if (lockedAccountPassword(password, participantDetails)
-          || lockedAccountTempPasswordCheck(password, participantDetails)) {
-
-        if (Boolean.TRUE.equals(participantDetails.getTempPassword())) {
+      if (accountPasswordCheck(participantDetails, password)) {
+        if (participantDetails.isTempPassword()) {
           if (lockedAccountTempPasswordCheck(password, participantDetails)) {
             tempPassword = participantDetails.getLockedAccountTempPassword();
           } else {
@@ -1174,47 +1140,21 @@ public class AuthenticationController {
 
         authInfo = jwtTokenUtil.generateToken(userDetails, appId, orgId, appCode);
         if (authInfo != null) {
-          responseBean = prepareLoginResponse(participantDetails, authInfo);
-          if (participantDetails.getPasswordUpdatedDate() != null) {
-            String days = appConfig.getPasswdExpiryInDay();
-            Date expiredDate =
-                MyStudiesUserRegUtil.addDays(
-                    MyStudiesUserRegUtil.getCurrentDateTime(), Integer.parseInt(days));
-            if (expiredDate.before(participantDetails.getPasswordUpdatedDate())
-                || expiredDate.equals(participantDetails.getPasswordUpdatedDate())) {
-              responseBean.setResetPassword(true);
-            } else if (tempPassword != null
-                && tempPassword.equals(
-                    MyStudiesUserRegUtil.getEncryptedString(
-                        password, participantDetails.getSalt()))) {
-              responseBean.setResetPassword(true);
-            }
-          } else if (tempPassword != null
-              && tempPassword.equals(
-                  MyStudiesUserRegUtil.getEncryptedString(
-                      password, participantDetails.getSalt()))) {
-            responseBean.setResetPassword(true);
-          }
-
-          if (lockedAccountPassword(password, participantDetails)) {
-            logger.info("Log in successful with original password");
-          }
-
+          responseBean = prepareLoginResponse(participantDetails, password, authInfo, tempPassword);
           userDetailsService.resetLoginAttempts(email);
         } else {
           responseBean = new LoginResponse();
           responseBean.setCode(ErrorCode.EC_140.code());
         }
-      } else if (resetPasswordCheck(participantDetails, password)) {
 
-        if (Boolean.TRUE.equals(participantDetails.getTempPassword())) {
+      } else if (resetTempPasswordCheck(participantDetails, password)) {
+        if (participantDetails.isTempPassword()) {
           String hours = appConfig.getVerificationExpInHr();
           Date validateDate =
               MyStudiesUserRegUtil.addHours(
                   MyStudiesUserRegUtil.getCurrentDateTime(), Integer.parseInt(hours));
 
-          if (participantDetails.getTempPasswordDate().before(validateDate)
-              || participantDetails.getTempPasswordDate().equals(validateDate)) {
+          if (isResetTempPasswordExpiredCheck(participantDetails, validateDate)) {
             authInfo = jwtTokenUtil.generateToken(userDetails, appId, orgId, appCode);
             if (authInfo != null) {
               responseBean = prepareResetPasswordLoginResponse(participantDetails, authInfo);
@@ -1239,22 +1179,23 @@ public class AuthenticationController {
           responseBean.setCode(ErrorCode.EC_92.code());
         }
       }
-    } catch (PasswordExpiredException e) {
-      logger.error("AuthenticationController getLoginInformation() - error ", e);
-      throw e;
     } catch (Exception e) {
       logger.error("AuthenticationController getLoginInformation() - error ", e);
+      throw new PasswordExpiredException();
     }
     logger.info("AuthenticationController getLoginInformation() - ends ");
     return responseBean;
   }
 
-  /*
-   * Prepare Login response
-   */
-  private LoginResponse prepareLoginResponse(DaoUserBO participantDetails, AuthInfoBO authInfo) {
-    LoginResponse responseBean;
-    responseBean = new LoginResponse();
+  private boolean isResetTempPasswordExpiredCheck(DaoUserBO participantDetails, Date validateDate) {
+    return participantDetails.getTempPasswordDate().before(validateDate)
+        || participantDetails.getTempPasswordDate().equals(validateDate);
+  }
+
+  private LoginResponse prepareLoginResponse(
+      DaoUserBO participantDetails, String password, AuthInfoBO authInfo, String tempPassword) {
+
+    LoginResponse responseBean = new LoginResponse();
     responseBean.setCode(ErrorCode.EC_200.code());
     responseBean.setMessage(MyStudiesUserRegUtil.ErrorCodes.SUCCESS.getValue().toLowerCase());
     responseBean.setUserId(authInfo.getUserId());
@@ -1268,23 +1209,48 @@ public class AuthenticationController {
     responseBean.setRefreshToken(authInfo.getRefreshToken());
     responseBean.setAccessToken(authInfo.getAccessToken());
     responseBean.setClientToken(authInfo.getClientToken());
+
+    if (participantDetails.getPasswordUpdatedDate() != null) {
+      String days = appConfig.getPasswdExpiryInDay();
+      Date expiredDate =
+          MyStudiesUserRegUtil.addDays(
+              MyStudiesUserRegUtil.getCurrentDateTime(), Integer.parseInt(days));
+
+      if (expiredDate.before(participantDetails.getPasswordUpdatedDate())
+          || expiredDate.equals(participantDetails.getPasswordUpdatedDate())) {
+        responseBean.setResetPassword(true);
+      } else if (tempPassword != null
+          && tempPassword.equals(
+              MyStudiesUserRegUtil.getEncryptedString(password, participantDetails.getSalt()))) {
+        responseBean.setResetPassword(true);
+      }
+    } else if (tempPassword != null
+        && tempPassword.equals(
+            MyStudiesUserRegUtil.getEncryptedString(password, participantDetails.getSalt()))) {
+      responseBean.setResetPassword(true);
+    }
     return responseBean;
   }
 
-  /*
-   * Reset password check
-   */
-  private boolean resetPasswordCheck(DaoUserBO participantDetails, String password) {
+  private boolean isUserActualPasswordExpired(DaoUserBO participantDetails) {
+    return participantDetails != null
+        && LocalDateTime.now(ZoneId.systemDefault())
+            .isAfter(participantDetails.getPasswordExpireDate());
+  }
+
+  private boolean accountPasswordCheck(DaoUserBO participantDetails, String password) {
+    return lockedAccountPasswordMatches(password, participantDetails)
+        || lockedAccountTempPasswordCheck(password, participantDetails);
+  }
+
+  private boolean resetTempPasswordCheck(DaoUserBO participantDetails, String password) {
     return participantDetails.getResetPassword() != null
         && participantDetails
             .getResetPassword()
-            .equalsIgnoreCase(
+            .equals(
                 MyStudiesUserRegUtil.getEncryptedString(password, participantDetails.getSalt()));
   }
 
-  /*
-   * Preparing Login response
-   */
   private LoginResponse prepareResetPasswordLoginResponse(
       DaoUserBO participantDetails, AuthInfoBO authInfo) {
     LoginResponse responseBean = new LoginResponse();
@@ -1310,13 +1276,10 @@ public class AuthenticationController {
     responseBean.setRefreshToken(authInfo.getRefreshToken());
     responseBean.setAccessToken(authInfo.getAccessToken());
     responseBean.setClientToken(authInfo.getClientToken());
-    responseBean.setResetPassword(participantDetails.getTempPassword());
+    responseBean.setResetPassword(participantDetails.isTempPassword());
     return responseBean;
   }
 
-  /*
-   * Locked Account Temporary Password Check
-   */
   private boolean lockedAccountTempPasswordCheck(String password, DaoUserBO participantDetails) {
     return participantDetails.getLockedAccountTempPassword() != null
         && participantDetails
@@ -1325,10 +1288,7 @@ public class AuthenticationController {
                 MyStudiesUserRegUtil.getEncryptedString(password, participantDetails.getSalt()));
   }
 
-  /*
-   * Locked Account Password check
-   */
-  private boolean lockedAccountPassword(String password, DaoUserBO participantDetails) {
+  private boolean lockedAccountPasswordMatches(String password, DaoUserBO participantDetails) {
     return participantDetails.getPassword() != null
         && participantDetails
             .getPassword()
@@ -1336,36 +1296,74 @@ public class AuthenticationController {
                 MyStudiesUserRegUtil.getEncryptedString(password, participantDetails.getSalt()));
   }
 
-  /*
-   * Check old password
-   */
   private boolean checkOldPassword(ChangePasswordBean changePasswordBean, DaoUserBO userInfo) {
-    return (userInfo.getPassword() != null
-            && userInfo
-                .getPassword()
-                .equalsIgnoreCase(
-                    MyStudiesUserRegUtil.getEncryptedString(
-                        changePasswordBean.getCurrentPassword(), userInfo.getSalt())))
-        || (userInfo.getResetPassword() != null
-            && userInfo
-                .getResetPassword()
-                .equalsIgnoreCase(
-                    MyStudiesUserRegUtil.getEncryptedString(
-                        changePasswordBean.getCurrentPassword(), userInfo.getSalt())))
-        || (userInfo.getLockedAccountTempPassword() != null
-            && userInfo
-                .getLockedAccountTempPassword()
-                .equalsIgnoreCase(
-                    MyStudiesUserRegUtil.getEncryptedString(
-                        changePasswordBean.getCurrentPassword(), userInfo.getSalt())));
+    return isActualPassword(changePasswordBean, userInfo)
+        || isForgotPasswordTempPassword(changePasswordBean, userInfo)
+        || isLockedAccountTempPassword(changePasswordBean, userInfo);
   }
 
-  /*
-   * Is in LockPeriod check
-   */
+  private boolean isActualPassword(ChangePasswordBean changePasswordBean, DaoUserBO userInfo) {
+    return userInfo.getPassword() != null
+        && userInfo
+            .getPassword()
+            .equals(
+                MyStudiesUserRegUtil.getEncryptedString(
+                    changePasswordBean.getCurrentPassword(), userInfo.getSalt()));
+  }
+
+  private boolean isForgotPasswordTempPassword(
+      ChangePasswordBean changePasswordBean, DaoUserBO userInfo) {
+    return userInfo.getResetPassword() != null
+        && userInfo
+            .getResetPassword()
+            .equals(
+                MyStudiesUserRegUtil.getEncryptedString(
+                    changePasswordBean.getCurrentPassword(), userInfo.getSalt()));
+  }
+
   private boolean isInLockPeriod(DaoUserBO participantDetails) {
     return participantDetails.getLockedAccountTempPasswordExpiredDate() != null
         && LocalDateTime.now(ZoneId.systemDefault())
             .isBefore(participantDetails.getLockedAccountTempPasswordExpiredDate());
+  }
+
+  private boolean checkTempPasswordExpireForLockedAccount(DaoUserBO participantDetails) {
+    return participantDetails.getLockedAccountTempPasswordExpiredDate() != null
+        && LocalDateTime.now(ZoneId.systemDefault())
+            .isAfter(participantDetails.getLockedAccountTempPasswordExpiredDate());
+  }
+
+  private boolean verifyUserRegistrationRequest(
+      String clientId, String secretKey, RegisterUser user, HttpServletResponse response) {
+    boolean httpStatusBadRequest = false;
+    try {
+      if (StringUtils.isBlank(clientId)
+          || StringUtils.isBlank(secretKey)
+          || StringUtils.isBlank(user.getEmailId())
+          || StringUtils.isBlank(user.getPassword())) {
+        if (!MyStudiesUserRegUtil.isValidEmailId(user.getEmailId())) {
+          MyStudiesUserRegUtil.registrationResponse(response, AppConstants.INVALID_EMAIL_ID);
+          httpStatusBadRequest = true;
+        } else if (!MyStudiesUserRegUtil.isPasswordStrong(user.getPassword())
+            || user.getEmailId().equalsIgnoreCase(user.getPassword())) {
+          MyStudiesUserRegUtil.registrationResponse(response, AppConstants.PASSWORD_IS_INVALID);
+          httpStatusBadRequest = true;
+        } else {
+          MyStudiesUserRegUtil.commonErrorResponse(
+              response, AppConstants.MISSING_REQUIRED_PARAMETER);
+          httpStatusBadRequest = true;
+        }
+      }
+    } catch (Exception e) {
+      MyStudiesUserRegUtil.registrationResponse(response, AppConstants.SYSTEM_EXCEPTION);
+      logger.error(
+          "AuthenticationController verifyUserRegistrationRequest() - error with INTERNAL_SERVER_ERROR: ",
+          e);
+    }
+    return httpStatusBadRequest;
+  }
+
+  private static boolean isValidInput(String appId, String orgId) {
+    return StringUtils.isBlank(appId) || StringUtils.isBlank(orgId);
   }
 }

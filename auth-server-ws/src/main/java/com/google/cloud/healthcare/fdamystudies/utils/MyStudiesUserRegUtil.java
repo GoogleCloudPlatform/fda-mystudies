@@ -339,13 +339,6 @@ public class MyStudiesUserRegUtil {
   public static void registrationResponse(HttpServletResponse response, String flag) {
     logger.info("MyStudiesUserRegUtil - registrationResponse() :: Starts");
     switch (flag) {
-      case AppConstants.MISSING_REQUIRED_PARAMETER:
-        MyStudiesUserRegUtil.getFailureResponse(
-            MyStudiesUserRegUtil.ErrorCodes.STATUS_400.getValue(),
-            MyStudiesUserRegUtil.ErrorCodes.INVALID_INPUT.getValue(),
-            MyStudiesUserRegUtil.ErrorCodes.INVALID_INPUT_ERROR_MSG.getValue(),
-            response);
-        break;
       case AppConstants.INVALID_EMAIL_ID:
         MyStudiesUserRegUtil.getFailureResponse(
             MyStudiesUserRegUtil.ErrorCodes.STATUS_400.getValue(),
@@ -358,20 +351,6 @@ public class MyStudiesUserRegUtil {
             MyStudiesUserRegUtil.ErrorCodes.STATUS_400.getValue(),
             MyStudiesUserRegUtil.ErrorCodes.INVALID_INPUT.getValue(),
             MyStudiesUserRegUtil.ErrorCodes.NEW_PASSWORD_IS_INVALID.getValue(),
-            response);
-        break;
-      case AppConstants.INVALID_CLIENTID_OR_SECRET_KEY:
-        MyStudiesUserRegUtil.getFailureResponse(
-            MyStudiesUserRegUtil.ErrorCodes.STATUS_401.getValue(),
-            MyStudiesUserRegUtil.ErrorCodes.INVALID_INPUT.getValue(),
-            MyStudiesUserRegUtil.ErrorCodes.INVALID_CLIENTID_OR_SECRET_KEY.getValue(),
-            response);
-        break;
-      case AppConstants.INVALID_INPUT_ERROR_MSG:
-        MyStudiesUserRegUtil.getFailureResponse(
-            MyStudiesUserRegUtil.ErrorCodes.STATUS_400.getValue(),
-            MyStudiesUserRegUtil.ErrorCodes.INVALID_INPUT.getValue(),
-            MyStudiesUserRegUtil.ErrorCodes.INVALID_INPUT_ERROR_MSG.getValue(),
             response);
         break;
       case AppConstants.UNAUTHORIZED_CLIENT_FOR_REGISTER:
@@ -388,14 +367,10 @@ public class MyStudiesUserRegUtil {
             MyStudiesUserRegUtil.ErrorCodes.EMAIL_EXISTS.getValue(),
             response);
         break;
-      case AppConstants.SYSTEM_EXCEPTION:
-        MyStudiesUserRegUtil.getFailureResponse(
-            MyStudiesUserRegUtil.ErrorCodes.STATUS_500.getValue(),
-            MyStudiesUserRegUtil.ErrorCodes.UNKNOWN.getValue(),
-            MyStudiesUserRegUtil.ErrorCodes.SYSTEM_ERROR_FOUND.getValue(),
-            response);
-        break;
+
       default:
+        logger.info(
+            "MyStudiesUserRegUtil - registrationResponse() :: No matches found for the given flag!!");
         break;
     }
   }
@@ -404,20 +379,6 @@ public class MyStudiesUserRegUtil {
     logger.info("MyStudiesUserRegUtil - loginResponse() :: Starts");
     LoginResponse loginResp = new LoginResponse();
     switch (flag) {
-      case AppConstants.MISSING_REQUIRED_PARAMETER:
-        MyStudiesUserRegUtil.getFailureResponse(
-            MyStudiesUserRegUtil.ErrorCodes.STATUS_400.getValue(),
-            MyStudiesUserRegUtil.ErrorCodes.INVALID_INPUT.getValue(),
-            MyStudiesUserRegUtil.ErrorCodes.INVALID_INPUT_ERROR_MSG.getValue(),
-            response);
-        return null;
-      case AppConstants.INVALID_CLIENTID_OR_SECRET_KEY:
-        MyStudiesUserRegUtil.getFailureResponse(
-            MyStudiesUserRegUtil.ErrorCodes.STATUS_401.getValue(),
-            MyStudiesUserRegUtil.ErrorCodes.INVALID_INPUT.getValue(),
-            MyStudiesUserRegUtil.ErrorCodes.INVALID_CLIENTID_OR_SECRET_KEY.getValue(),
-            response);
-        return null;
       case AppConstants.INVALID_USERNAME_PASSWORD:
         MyStudiesUserRegUtil.getFailureResponse(
             MyStudiesUserRegUtil.ErrorCodes.STATUS_102.getValue(),
@@ -451,16 +412,42 @@ public class MyStudiesUserRegUtil {
             MyStudiesUserRegUtil.ErrorCodes.CODE_EXPIRED.getValue(),
             response);
         return null;
+
+      default:
+        logger.info(
+            "MyStudiesUserRegUtil - loginResponse() :: No matches found for the given flag!!");
+        return null;
+    }
+  }
+
+  public static void commonErrorResponse(HttpServletResponse response, String flag) {
+    logger.info("MyStudiesUserRegUtil - commonErrorResponse() :: Starts");
+    switch (flag) {
+      case AppConstants.MISSING_REQUIRED_PARAMETER:
+        MyStudiesUserRegUtil.getFailureResponse(
+            MyStudiesUserRegUtil.ErrorCodes.STATUS_400.getValue(),
+            MyStudiesUserRegUtil.ErrorCodes.INVALID_INPUT.getValue(),
+            MyStudiesUserRegUtil.ErrorCodes.INVALID_INPUT_ERROR_MSG.getValue(),
+            response);
+        break;
+      case AppConstants.INVALID_CLIENTID_OR_SECRET_KEY:
+        MyStudiesUserRegUtil.getFailureResponse(
+            MyStudiesUserRegUtil.ErrorCodes.STATUS_401.getValue(),
+            MyStudiesUserRegUtil.ErrorCodes.INVALID_INPUT.getValue(),
+            MyStudiesUserRegUtil.ErrorCodes.INVALID_CLIENTID_OR_SECRET_KEY.getValue(),
+            response);
+        break;
       case AppConstants.SYSTEM_EXCEPTION:
         MyStudiesUserRegUtil.getFailureResponse(
             MyStudiesUserRegUtil.ErrorCodes.STATUS_500.getValue(),
             MyStudiesUserRegUtil.ErrorCodes.UNKNOWN.getValue(),
             MyStudiesUserRegUtil.ErrorCodes.SYSTEM_ERROR_FOUND.getValue(),
             response);
-        return null;
-
+        break;
       default:
-        return null;
+        logger.info(
+            "MyStudiesUserRegUtil - commonErrorResponse() :: No matches found for the given flag!!");
+        break;
     }
   }
 }
