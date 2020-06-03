@@ -52,8 +52,8 @@ Install the following dependencies and add them to your PATH:
 
 Find the following project IDs:
 
-*   `mystudies-demo-apps`
-*   `mystudies-demo-data`
+*   `<apps-project-id>`
+*   `<data-project-id>`
 
 Substitute these in the following instructions.
 
@@ -112,7 +112,7 @@ In each tf-deployment.yaml file:
 *   For all images except `gcr.io/cloudsql-docker/gce-proxy`, replace the
     `gcr.io/<project>` part with `gcr.io/mystudies-demo-apps`
 *   For the cloudsql-proxy container, set the `-instances` flag with
-    `-instances=my-studies=tcp:3306`
+    `-instances=mystudies-demo-data:us-east1:my-studies=tcp:3306`
 
 In the ./kubernetes/cert.yaml file:
 

@@ -17,9 +17,9 @@ APP_ID=`gcloud --project=${SECRET_PROJECT} secrets versions access latest --secr
 ORG_ID=`gcloud --project=${SECRET_PROJECT} secrets versions access latest --secret=mobile-app-orgid`
 
 # Write corresponding SQL commands to TMPFILE.
-echo "INSERT INTO org_info (id, name, org_id) VALUES(1, \"${ORG_NAME}\", \"${ORG_ID}\");" >> ${TMPFILE}
-echo "INSERT INTO app_info (app_info_id, custom_app_id, org_info_id) VALUES(1, \"${APP_ID}\", 1);" >> ${TMPFILE}
-echo "INSERT INTO locations (id, is_default) VALUES(1, \"Y\");" >> ${TMPFILE}
+echo "REPLACE INTO org_info (id, name, org_id) VALUES(1, \"${ORG_NAME}\", \"${ORG_ID}\");" >> ${TMPFILE}
+echo "REPLACE INTO app_info (app_info_id, custom_app_id, org_info_id) VALUES(1, \"${APP_ID}\", 1);" >> ${TMPFILE}
+echo "REPLACE INTO locations (id, is_default) VALUES(1, \"Y\");" >> ${TMPFILE}
 
 # Upload TMPFILE to GCS.
 GCS_FILE=gs://${SQL_IMPORT_BUCKET}/mobile_app_info.sql
