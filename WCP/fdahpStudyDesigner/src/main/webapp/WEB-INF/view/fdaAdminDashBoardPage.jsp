@@ -21,7 +21,8 @@
   <link rel="apple-touch-icon" href="/studybuilder/images/icons/FAV_Icon.png">
 
   <!-- Mobile Metas -->
-  <meta name="viewport" content="width=device-width, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="viewport"
+        content="width=device-width, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
 
   <!-- Web Fonts  -->
   <link href="https://fonts.googleapis.com/css?family=Roboto:300,400" rel="stylesheet">
@@ -48,7 +49,8 @@
   <!-- Head Libs -->
   <script src="/studybuilder/vendor/modernizr/modernizr.js"></script>
 </head>
-<body class="loading background__img" onload="noBack();" onpageshow="if (event.persisted) noBack();" onunload="">
+<body class="loading background__img" onload="noBack();" onpageshow="if (event.persisted) noBack();"
+      onunload="">
 <div id="loader"><span></span></div>
 <form:form action="" name="studyListForm" id="studyListForm" method="post">
 </form:form>
@@ -60,8 +62,10 @@
 
   <div class="logout">
     <div class="dis-line pull-right ml-md line34">
-      <a href="/studybuilder/sessionOut.do" class="blue-link text-weight-normal text-uppercase"><span
-              class="white__text">sign Out</span> </a>
+      <a href="/studybuilder/sessionOut.do"
+         class="blue-link text-weight-normal text-uppercase">
+        <span class="white__text">sign Out</span>
+      </a>
     </div>
   </div>
   <div class="logo__space">
@@ -116,9 +120,13 @@
       </div>
     </div>
     <div class="footer">
-      <span>Copyright Placeholder</span><span><a href="/studybuilder/terms.do" id=""
-                                                 target="_blank">Terms</a></span><span><a
-            href="/studybuilder/privacyPolicy.do" id="" target="_blank">Privacy Policy</a></span>
+      <span>Copyright Placeholder</span>
+      <span>
+      	<a href="/studybuilder/terms.do" id="" target="_blank">Terms</a>
+      </span>
+      <span>
+      	<a href="/studybuilder/privacyPolicy.do" id="" target="_blank">Privacy Policy</a>
+      </span>
     </div>
     <!--container-->
   </div>
@@ -206,7 +214,6 @@
     $(".notificationListId").addClass('cursor-none');
     $(".notificationListId").unbind();
     </c:if>
-
 
     $(".studyListId").click(function () {
       document.studyListForm.action = "/studybuilder/adminStudies/studyList.do";
