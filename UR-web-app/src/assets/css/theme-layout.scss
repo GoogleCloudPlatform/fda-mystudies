@@ -1,9 +1,4 @@
-:root {
-  --athens-gray: #dfe3e8;
-  --shuttle-gray: #555d67;
-  --blue: #1a73e8;
-}
-
+@import url("./colors.scss");
 @media (min-width: 375px) {
   #mobile-menu {
     display: block;
@@ -83,7 +78,7 @@
     padding: 10px 15px;
   }
   .progress-bar-next__title {
-    color: var(--pigeon-post);
+    color: var(--pigeon-gray);
     font-size: 312.5%;
     line-height: 312.5%;
   }
