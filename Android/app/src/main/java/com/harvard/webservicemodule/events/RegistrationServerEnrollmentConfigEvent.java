@@ -9,7 +9,7 @@
 package com.harvard.webservicemodule.events;
 
 import android.content.Context;
-import com.harvard.utils.URLs;
+import com.harvard.utils.Urls;
 import java.util.HashMap;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -56,11 +56,11 @@ public class RegistrationServerEnrollmentConfigEvent<V> extends WebserviceConfig
 
   @Override
   public String getProductionUrl() {
-    return URLs.BASE_URL_REGISTRATION_ENROLLMENT_SERVER;
+    return Urls.BASE_URL_REGISTRATION_ENROLLMENT_SERVER;
   }
 
   @Override
   public String getDevelopmentUrl() {
-    return URLs.BASE_URL_REGISTRATION_ENROLLMENT_SERVER;
+    return Urls.BASE_URL_REGISTRATION_ENROLLMENT_SERVER;
   }
 }

@@ -26,7 +26,7 @@ import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 import com.harvard.R;
-import com.harvard.storagemodule.DBServiceSubscriber;
+import com.harvard.storagemodule.DbServiceSubscriber;
 import com.harvard.studyappmodule.studymodel.Notification;
 import com.harvard.studyappmodule.studymodel.Study;
 import com.harvard.studyappmodule.studymodel.StudyList;
@@ -38,13 +38,13 @@ import io.realm.RealmList;
 public class NotificationListAdapter extends RecyclerView.Adapter<NotificationListAdapter.Holder> {
   private final Context context;
   private RealmList<Notification> items;
-  private DBServiceSubscriber dbServiceSubscriber;
+  private DbServiceSubscriber dbServiceSubscriber;
   private Realm realm;
 
   NotificationListAdapter(Context context, RealmList<Notification> notifications, Realm realm) {
     this.context = context;
     this.items = notifications;
-    dbServiceSubscriber = new DBServiceSubscriber();
+    dbServiceSubscriber = new DbServiceSubscriber();
     this.realm = realm;
   }
 

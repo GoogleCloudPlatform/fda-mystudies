@@ -24,13 +24,13 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class PDFWriter {
+public class PdfWriter {
   private String pdfOutputDirectory = "";
   private String pdfFileName = "";
   private PDDocument doc = null;
   private PDFont font = PDType1Font.HELVETICA;
 
-  PDFWriter(String pdfOutputDirectory, String pdfFileName) {
+  PdfWriter(String pdfOutputDirectory, String pdfFileName) {
     this.pdfOutputDirectory = pdfOutputDirectory;
     if (!this.pdfOutputDirectory.endsWith("/")) {
       this.pdfOutputDirectory += "/";

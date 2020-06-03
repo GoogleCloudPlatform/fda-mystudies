@@ -21,7 +21,7 @@ import com.google.gson.stream.JsonReader;
 import com.harvard.AppConfig;
 import com.harvard.BuildConfig;
 import com.harvard.utils.Logger;
-import com.harvard.utils.URLs;
+import com.harvard.utils.Urls;
 import com.harvard.webservicemodule.apihelper.HttpRequest;
 import com.harvard.webservicemodule.apihelper.Responsemodel;
 import java.io.StringReader;
@@ -32,7 +32,7 @@ public class VersionChecker extends AsyncTask<String, String, String> {
   private String newVersion;
   private boolean force = false;
   private Upgrade upgrade;
-  private String versionUrl = URLs.BASE_URL_WCP_SERVER + URLs.VERSION_INFO;
+  private String versionUrl = Urls.BASE_URL_WCP_SERVER + Urls.VERSION_INFO;
   public static String PLAY_STORE_URL =
       "https://play.google.com/store/apps/details?id=" + AppConfig.PackageName;
 

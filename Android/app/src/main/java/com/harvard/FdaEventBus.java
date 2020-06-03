@@ -22,11 +22,11 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 
-public class FDAEventBus extends EventBus {
-  private static volatile FDAEventBus defaultInstance;
+public class FdaEventBus extends EventBus {
+  private static volatile FdaEventBus defaultInstance;
   private final ScheduledExecutorService executorService;
 
-  private FDAEventBus() {
+  private FdaEventBus() {
     super();
     executorService = Executors.newSingleThreadScheduledExecutor();
   }
@@ -37,10 +37,10 @@ public class FDAEventBus extends EventBus {
   }
 
   private class PostEventCallable implements Callable<Object> {
-    private final FDAEventBus eventBus;
+    private final FdaEventBus eventBus;
     private final Object event;
 
-    public PostEventCallable(FDAEventBus eventBus, Object event) {
+    public PostEventCallable(FdaEventBus eventBus, Object event) {
       this.eventBus = eventBus;
       this.event = event;
     }
@@ -52,11 +52,11 @@ public class FDAEventBus extends EventBus {
     }
   }
 
-  public static FDAEventBus getInstance() {
+  public static FdaEventBus getInstance() {
     if (defaultInstance == null) {
-      synchronized (FDAEventBus.class) {
+      synchronized (FdaEventBus.class) {
         if (defaultInstance == null) {
-          defaultInstance = new FDAEventBus();
+          defaultInstance = new FdaEventBus();
         }
       }
     }

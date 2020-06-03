@@ -52,7 +52,7 @@ import com.harvard.R;
 import com.harvard.notificationmodule.AlarmReceiver;
 import com.harvard.notificationmodule.NotificationModuleSubscriber;
 import com.harvard.offlinemodule.model.OfflineData;
-import com.harvard.storagemodule.DBServiceSubscriber;
+import com.harvard.storagemodule.DbServiceSubscriber;
 import com.harvard.studyappmodule.studymodel.Study;
 import com.harvard.studyappmodule.studymodel.StudyList;
 import com.harvard.usermodule.UserModulePresenter;
@@ -62,7 +62,7 @@ import com.harvard.utils.AppController;
 import com.harvard.utils.Logger;
 import com.harvard.utils.SetDialogHelper;
 import com.harvard.utils.SharedPreferenceHelper;
-import com.harvard.utils.URLs;
+import com.harvard.utils.Urls;
 import com.harvard.webservicemodule.apihelper.ApiCall;
 import com.harvard.webservicemodule.events.AuthServerConfigEvent;
 import io.realm.Realm;
@@ -107,7 +107,7 @@ public class StudyActivity extends AppCompatActivity
   private boolean isExit = false;
   private StudyFragment studyFragment;
   public static String FROM = "from";
-  private DBServiceSubscriber dbServiceSubscriber;
+  private DbServiceSubscriber dbServiceSubscriber;
   private Realm realm;
   private RelativeLayout searchToolBarLayout;
   private RelativeLayout toolBarLayout;
@@ -128,7 +128,7 @@ public class StudyActivity extends AppCompatActivity
       } else {
         intentFrom = "";
       }
-      dbServiceSubscriber = new DBServiceSubscriber();
+      dbServiceSubscriber = new DbServiceSubscriber();
       realm = AppController.getRealmobj(this);
       initializeXmlId();
       bindEvents();
@@ -936,7 +936,7 @@ public class StudyActivity extends AppCompatActivity
                 AuthServerConfigEvent authServerConfigEvent =
                     new AuthServerConfigEvent(
                         "delete",
-                        URLs.LOGOUT,
+                        Urls.LOGOUT,
                         LOGOUT_REPSONSE_CODE,
                         StudyActivity.this,
                         LoginData.class,

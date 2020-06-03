@@ -42,7 +42,7 @@ import com.harvard.WebViewActivity;
 import com.harvard.eligibilitymodule.CustomViewTaskActivity;
 import com.harvard.eligibilitymodule.StepsBuilder;
 import com.harvard.gatewaymodule.CircleIndicator;
-import com.harvard.storagemodule.DBServiceSubscriber;
+import com.harvard.storagemodule.DbServiceSubscriber;
 import com.harvard.studyappmodule.activitybuilder.model.servicemodel.Steps;
 import com.harvard.studyappmodule.consent.model.CorrectAnswerString;
 import com.harvard.studyappmodule.consent.model.EligibilityConsent;
@@ -59,13 +59,13 @@ import com.harvard.usermodule.webservicemodel.Studies;
 import com.harvard.usermodule.webservicemodel.StudyData;
 import com.harvard.utils.AppController;
 import com.harvard.utils.Logger;
-import com.harvard.utils.URLs;
+import com.harvard.utils.Urls;
 import com.harvard.webservicemodule.apihelper.ApiCall;
 import com.harvard.webservicemodule.apihelper.ConnectionDetector;
 import com.harvard.webservicemodule.apihelper.HttpRequest;
 import com.harvard.webservicemodule.apihelper.Responsemodel;
 import com.harvard.webservicemodule.events.RegistrationServerEnrollmentConfigEvent;
-import com.harvard.webservicemodule.events.WCPConfigEvent;
+import com.harvard.webservicemodule.events.WcpConfigEvent;
 import io.realm.Realm;
 import io.realm.RealmList;
 import io.realm.RealmObject;
@@ -95,7 +95,7 @@ public class StandaloneStudyInfoActivity extends AppCompatActivity
   private ConsentDocumentData consentDocumentData;
   private Study study;
   private StudyHome studyHome;
-  private DBServiceSubscriber dbServiceSubscriber;
+  private DbServiceSubscriber dbServiceSubscriber;
   private Realm realm;
   private RealmList<Studies> userPreferenceStudies;
   private EligibilityConsent eligibilityConsent;
@@ -105,7 +105,7 @@ public class StandaloneStudyInfoActivity extends AppCompatActivity
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_standalone_study_info);
 
-    dbServiceSubscriber = new DBServiceSubscriber();
+    dbServiceSubscriber = new DbServiceSubscriber();
     realm = AppController.getRealmobj(this);
     initializeXmlId();
     setFont();
@@ -117,10 +117,10 @@ public class StandaloneStudyInfoActivity extends AppCompatActivity
     HashMap<String, String> header = new HashMap();
     HashMap<String, String> params = new HashMap();
     params.put("studyId", AppConfig.StudyId);
-    WCPConfigEvent wcpConfigEvent =
-        new WCPConfigEvent(
+    WcpConfigEvent wcpConfigEvent =
+        new WcpConfigEvent(
             "get",
-            URLs.SPECIFIC_STUDY + "?studyId=" + AppConfig.StudyId,
+            Urls.SPECIFIC_STUDY + "?studyId=" + AppConfig.StudyId,
             SPECIFIC_STUDY,
             StandaloneStudyInfoActivity.this,
             Study.class,
@@ -211,10 +211,10 @@ public class StandaloneStudyInfoActivity extends AppCompatActivity
     AppController.getHelperProgressDialog()
         .showProgress(StandaloneStudyInfoActivity.this, "", "", false);
     HashMap<String, String> header = new HashMap<>();
-    String url = URLs.STUDY_INFO + "?studyId=" + AppConfig.StudyId;
+    String url = Urls.STUDY_INFO + "?studyId=" + AppConfig.StudyId;
     GetUserStudyInfoEvent getUserStudyInfoEvent = new GetUserStudyInfoEvent();
-    WCPConfigEvent wcpConfigEvent =
-        new WCPConfigEvent(
+    WcpConfigEvent wcpConfigEvent =
+        new WcpConfigEvent(
             "get",
             url,
             STUDY_INFO,
@@ -281,13 +281,13 @@ public class StandaloneStudyInfoActivity extends AppCompatActivity
 
         HashMap<String, String> header = new HashMap<>();
         String url =
-            URLs.GET_CONSENT_DOC
+            Urls.GET_CONSENT_DOC
                 + "?studyId="
                 + AppConfig.StudyId
                 + "&consentVersion=&activityId=&activityVersion=";
         GetUserStudyInfoEvent getUserStudyInfoEvent = new GetUserStudyInfoEvent();
-        WCPConfigEvent wcpConfigEvent =
-            new WCPConfigEvent(
+        WcpConfigEvent wcpConfigEvent =
+            new WcpConfigEvent(
                 "get",
                 url,
                 GET_CONSENT_DOC,
@@ -433,7 +433,7 @@ public class StandaloneStudyInfoActivity extends AppCompatActivity
           new ConnectionDetector(StandaloneStudyInfoActivity.this);
 
       String url =
-          URLs.BASE_URL_WCP_SERVER + URLs.CONSENT_METADATA + "?studyId=" + AppConfig.StudyId;
+          Urls.BASE_URL_WCP_SERVER + Urls.CONSENT_METADATA + "?studyId=" + AppConfig.StudyId;
       if (connectionDetector.isConnectingToInternet()) {
         responseModel = HttpRequest.getRequest(url, new HashMap<String, String>(), "WCP");
         responseCode = responseModel.getResponseCode();
@@ -693,7 +693,7 @@ public class StandaloneStudyInfoActivity extends AppCompatActivity
         RegistrationServerEnrollmentConfigEvent registrationServerConfigEvent =
             new RegistrationServerEnrollmentConfigEvent(
                 "get",
-                URLs.STUDY_STATE,
+                Urls.STUDY_STATE,
                 GET_PREFERENCES,
                 StandaloneStudyInfoActivity.this,
                 StudyData.class,

@@ -19,7 +19,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.os.AsyncTask;
 import android.support.v7.app.AlertDialog;
-import android.util.Log;
 import com.google.gson.Gson;
 import com.google.gson.stream.JsonReader;
 import com.harvard.AppConfig;
@@ -29,7 +28,7 @@ import com.harvard.usermodule.webservicemodel.RefreshToken;
 import com.harvard.utils.AppController;
 import com.harvard.utils.Logger;
 import com.harvard.utils.SharedPreferenceHelper;
-import com.harvard.utils.URLs;
+import com.harvard.utils.Urls;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -382,8 +381,8 @@ public class ApiCall<T, V> extends AsyncTask<T, String, String> {
       } else if (Integer.parseInt(responseCode) == HttpURLConnection.HTTP_UNAUTHORIZED) {
         response = "session expired";
 
-        if (!this.urlPassed.contains(URLs.LOGIN)) {
-          String refreshTokenUrl = URLs.REFRESH_TOKEN;
+        if (!this.urlPassed.contains(Urls.LOGIN)) {
+          String refreshTokenUrl = Urls.REFRESH_TOKEN;
           JSONObject refreshTokenJsonData = new JSONObject();
           try {
             refreshTokenJsonData.put(
@@ -468,7 +467,7 @@ public class ApiCall<T, V> extends AsyncTask<T, String, String> {
         response = "success";
 
         obj = parseJson(responseModel, genericClass);
-        if (urlPassed.contains(URLs.BASE_URL_WCP_SERVER + "activity")) {
+        if (urlPassed.contains(Urls.BASE_URL_WCP_SERVER + "activity")) {
           try {
             ActivityInfoData activityInfoData = (ActivityInfoData) obj;
             JSONObject jsonObject = new JSONObject(responseModel.getResponse());
@@ -657,7 +656,7 @@ public class ApiCall<T, V> extends AsyncTask<T, String, String> {
         }
       } else {
         obj = parseJson(responseModel, genericClass);
-        if (urlPassed.contains(URLs.BASE_URL_WCP_SERVER + "activity")) {
+        if (urlPassed.contains(Urls.BASE_URL_WCP_SERVER + "activity")) {
           try {
             ActivityInfoData activityInfoData = (ActivityInfoData) obj;
             JSONObject jsonObject = new JSONObject(responseModel.getResponse());

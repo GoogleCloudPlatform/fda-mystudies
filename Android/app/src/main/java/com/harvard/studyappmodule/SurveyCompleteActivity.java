@@ -29,7 +29,7 @@ import com.google.gson.JsonPrimitive;
 import com.google.gson.internal.LinkedTreeMap;
 import com.harvard.AppConfig;
 import com.harvard.R;
-import com.harvard.storagemodule.DBServiceSubscriber;
+import com.harvard.storagemodule.DbServiceSubscriber;
 import com.harvard.studyappmodule.activitybuilder.CustomSurveyViewTaskActivity;
 import com.harvard.studyappmodule.activitybuilder.model.servicemodel.ActivityObj;
 import com.harvard.studyappmodule.custom.result.StepRecordCustom;
@@ -44,7 +44,7 @@ import com.harvard.usermodule.webservicemodel.StudyData;
 import com.harvard.utils.AppController;
 import com.harvard.utils.Logger;
 import com.harvard.utils.SharedPreferenceHelper;
-import com.harvard.utils.URLs;
+import com.harvard.utils.Urls;
 import com.harvard.webservicemodule.apihelper.ApiCall;
 import com.harvard.webservicemodule.events.RegistrationServerEnrollmentConfigEvent;
 import com.harvard.webservicemodule.events.ResponseServerConfigEvent;
@@ -69,7 +69,7 @@ public class SurveyCompleteActivity extends AppCompatActivity
   private static final String EXTRA_STUDYID = "ViewTaskActivity.ExtraStudyId";
   private static final String STUDYID = "ViewTaskActivity.StudyId";
   private Realm realm;
-  private DBServiceSubscriber dbServiceSubscriber;
+  private DbServiceSubscriber dbServiceSubscriber;
   private double completion = 0;
   private double adherence = 0;
 
@@ -77,7 +77,7 @@ public class SurveyCompleteActivity extends AppCompatActivity
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_survey_complete);
-    dbServiceSubscriber = new DBServiceSubscriber();
+    dbServiceSubscriber = new DbServiceSubscriber();
     realm = AppController.getRealmobj(this);
     initializeXmlId();
     setFont();
@@ -141,7 +141,7 @@ public class SurveyCompleteActivity extends AppCompatActivity
       ResponseServerConfigEvent responseServerConfigEvent =
           new ResponseServerConfigEvent(
               "post_object",
-              URLs.PROCESS_RESPONSE,
+              Urls.PROCESS_RESPONSE,
               PROCESS_RESPONSE_RESPONSECODE,
               this,
               LoginData.class,
@@ -583,7 +583,7 @@ public class SurveyCompleteActivity extends AppCompatActivity
     ResponseServerConfigEvent responseServerConfigEvent =
         new ResponseServerConfigEvent(
             "post_object",
-            URLs.UPDATE_ACTIVITY_PREFERENCE,
+            Urls.UPDATE_ACTIVITY_PREFERENCE,
             UPDATE_USERPREFERENCE_RESPONSECODE,
             this,
             LoginData.class,
@@ -800,7 +800,7 @@ public class SurveyCompleteActivity extends AppCompatActivity
             this,
             number,
             "post_object",
-            URLs.PROCESS_RESPONSE,
+            Urls.PROCESS_RESPONSE,
             "",
             getResponseDataJson(activityObj, activities, studies).toString(),
             "ResponseServer",
@@ -825,7 +825,7 @@ public class SurveyCompleteActivity extends AppCompatActivity
             this,
             number,
             "post_object",
-            URLs.UPDATE_ACTIVITY_PREFERENCE,
+            Urls.UPDATE_ACTIVITY_PREFERENCE,
             "",
             getActivityPreferenceJson().toString(),
             "ResponseServer",
@@ -882,7 +882,7 @@ public class SurveyCompleteActivity extends AppCompatActivity
             this,
             number,
             "post_object",
-            URLs.UPDATE_STUDY_PREFERENCE,
+            Urls.UPDATE_STUDY_PREFERENCE,
             "",
             getStudyPreferenceJson("" + (int) completion, "" + (int) adherence).toString(),
             "RegistrationServerEnrollment",
@@ -933,7 +933,7 @@ public class SurveyCompleteActivity extends AppCompatActivity
               this,
               number,
               "post_object",
-              URLs.UPDATE_ACTIVITY_PREFERENCE,
+              Urls.UPDATE_ACTIVITY_PREFERENCE,
               "",
               getActivityPreferenceJson().toString(),
               "ResponseServer",
@@ -991,7 +991,7 @@ public class SurveyCompleteActivity extends AppCompatActivity
             this,
             number,
             "post_object",
-            URLs.UPDATE_STUDY_PREFERENCE,
+            Urls.UPDATE_STUDY_PREFERENCE,
             "",
             getStudyPreferenceJson("" + (int) completion, "" + (int) adherence).toString(),
             "ResponseServer",
@@ -1182,7 +1182,7 @@ public class SurveyCompleteActivity extends AppCompatActivity
     RegistrationServerEnrollmentConfigEvent registrationServerEnrollmentConfigEvent =
         new RegistrationServerEnrollmentConfigEvent(
             "post_object",
-            URLs.UPDATE_STUDY_PREFERENCE,
+            Urls.UPDATE_STUDY_PREFERENCE,
             UPDATE_STUDY_PREFERENCE,
             this,
             LoginData.class,

@@ -30,7 +30,7 @@ import com.harvard.studyappmodule.events.VerifyEnrollmentIdEvent;
 import com.harvard.utils.AppController;
 import com.harvard.utils.Logger;
 import com.harvard.utils.SharedPreferenceHelper;
-import com.harvard.utils.URLs;
+import com.harvard.utils.Urls;
 import com.harvard.webservicemodule.apihelper.ApiCall;
 import com.harvard.webservicemodule.events.RegistrationServerEnrollmentConfigEvent;
 import java.util.HashMap;
@@ -141,7 +141,7 @@ public class EligibilityEnrollmentActivity extends AppCompatActivity
     RegistrationServerEnrollmentConfigEvent registrationServerEnrollmentConfigEvent =
         new RegistrationServerEnrollmentConfigEvent(
             "post_json",
-            URLs.VALIDATE_ENROLLMENT_ID,
+            Urls.VALIDATE_ENROLLMENT_ID,
             VERIFY_ENROLLMENT_ID,
             EligibilityEnrollmentActivity.this,
             EnrollData.class,

@@ -36,7 +36,7 @@ import android.widget.Toast;
 import com.github.barteksc.pdfviewer.PDFView;
 import com.github.barteksc.pdfviewer.scroll.DefaultScrollHandle;
 import com.harvard.R;
-import com.harvard.storagemodule.DBServiceSubscriber;
+import com.harvard.storagemodule.DbServiceSubscriber;
 import com.harvard.utils.AppController;
 import com.harvard.utils.Logger;
 import io.realm.Realm;
@@ -60,14 +60,14 @@ public class ConsentCompletedActivity extends AppCompatActivity {
   private boolean click = true;
   private File sharingFile = null;
   private String comingFrom = "";
-  private DBServiceSubscriber dbServiceSubscriber;
+  private DbServiceSubscriber dbServiceSubscriber;
   private Realm realm;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_consent_completed);
-    dbServiceSubscriber = new DBServiceSubscriber();
+    dbServiceSubscriber = new DbServiceSubscriber();
     realm = AppController.getRealmobj(this);
 
     initializeXmlId();

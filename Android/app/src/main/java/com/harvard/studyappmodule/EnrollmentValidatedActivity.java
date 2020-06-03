@@ -23,7 +23,7 @@ import android.support.v7.widget.AppCompatTextView;
 import android.view.View;
 import com.harvard.AppConfig;
 import com.harvard.R;
-import com.harvard.storagemodule.DBServiceSubscriber;
+import com.harvard.storagemodule.DbServiceSubscriber;
 import com.harvard.studyappmodule.consent.ConsentBuilder;
 import com.harvard.studyappmodule.consent.CustomConsentViewTaskActivity;
 import com.harvard.studyappmodule.consent.model.Consent;
@@ -45,14 +45,14 @@ public class EnrollmentValidatedActivity extends AppCompatActivity
   private EligibilityConsent eligibilityConsent;
   private static final String CONSENT = "consent";
   private static final int CONSENT_RESPONSECODE = 100;
-  private DBServiceSubscriber dbServiceSubscriber;
+  private DbServiceSubscriber dbServiceSubscriber;
   private Realm realm;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_enrollment_validated);
-    dbServiceSubscriber = new DBServiceSubscriber();
+    dbServiceSubscriber = new DbServiceSubscriber();
     realm = AppController.getRealmobj(this);
     initializeXmlId();
     setFont();

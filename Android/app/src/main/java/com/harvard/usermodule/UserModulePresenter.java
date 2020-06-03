@@ -15,8 +15,8 @@
 
 package com.harvard.usermodule;
 
-import com.harvard.FDAEventBus;
-import com.harvard.studyappmodule.events.ConsentPDFEvent;
+import com.harvard.FdaEventBus;
+import com.harvard.studyappmodule.events.ConsentPdfEvent;
 import com.harvard.studyappmodule.events.DeleteAccountEvent;
 import com.harvard.usermodule.event.ActivityStateEvent;
 import com.harvard.usermodule.event.ChangePasswordEvent;
@@ -33,58 +33,58 @@ import com.harvard.usermodule.event.VerifyUserEvent;
 
 public class UserModulePresenter {
   public void performLogin(LoginEvent loginEvent) {
-    FDAEventBus.postEvent(loginEvent);
+    FdaEventBus.postEvent(loginEvent);
   }
 
   public void performRegistration(RegisterUserEvent registerUserEvent) {
-    FDAEventBus.postEvent(registerUserEvent);
+    FdaEventBus.postEvent(registerUserEvent);
   }
 
   void performVerifyRegistration(VerifyUserEvent verifyUserEvent) {
-    FDAEventBus.postEvent(verifyUserEvent);
+    FdaEventBus.postEvent(verifyUserEvent);
   }
 
   void performForgotPassword(ForgotPasswordEvent forgotPasswordEvent) {
-    FDAEventBus.postEvent(forgotPasswordEvent);
+    FdaEventBus.postEvent(forgotPasswordEvent);
   }
 
   public void performChangePassword(ChangePasswordEvent changePasswordEvent) {
-    FDAEventBus.postEvent(changePasswordEvent);
+    FdaEventBus.postEvent(changePasswordEvent);
   }
 
   public void performGetUserProfile(GetUserProfileEvent getUserProfileEvent) {
-    FDAEventBus.postEvent(getUserProfileEvent);
+    FdaEventBus.postEvent(getUserProfileEvent);
   }
 
   public void performUpdateUserProfile(UpdateUserProfileEvent updateUserProfileEvent) {
-    FDAEventBus.postEvent(updateUserProfileEvent);
+    FdaEventBus.postEvent(updateUserProfileEvent);
   }
 
   public void performUpdateUserPreference(UpdatePreferenceEvent updatePreferenceEvent) {
-    FDAEventBus.postEvent(updatePreferenceEvent);
+    FdaEventBus.postEvent(updatePreferenceEvent);
   }
 
   public void performGetUserPreference(GetPreferenceEvent getPreferenceEvent) {
-    FDAEventBus.postEvent(getPreferenceEvent);
+    FdaEventBus.postEvent(getPreferenceEvent);
   }
 
   public void performActivityState(ActivityStateEvent activityStateEvent) {
-    FDAEventBus.postEvent(activityStateEvent);
+    FdaEventBus.postEvent(activityStateEvent);
   }
 
   public void performLogout(LogoutEvent logoutEvent) {
-    FDAEventBus.postEvent(logoutEvent);
+    FdaEventBus.postEvent(logoutEvent);
   }
 
   public void performDeleteAccount(DeleteAccountEvent deleteAccountEvent) {
-    FDAEventBus.postEvent(deleteAccountEvent);
+    FdaEventBus.postEvent(deleteAccountEvent);
   }
 
   void performResendEmail(ResendEmailEvent resendEmailEvent) {
-    FDAEventBus.postEvent(resendEmailEvent);
+    FdaEventBus.postEvent(resendEmailEvent);
   }
 
-  public void performConsentPdf(ConsentPDFEvent consentPdfEvent) {
-    FDAEventBus.postEvent(consentPdfEvent);
+  public void performConsentPdf(ConsentPdfEvent consentPdfEvent) {
+    FdaEventBus.postEvent(consentPdfEvent);
   }
 }

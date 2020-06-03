@@ -22,7 +22,7 @@ import android.content.Intent;
 import android.os.Build;
 import com.harvard.R;
 import com.harvard.notificationmodule.model.NotificationDb;
-import com.harvard.storagemodule.DBServiceSubscriber;
+import com.harvard.storagemodule.DbServiceSubscriber;
 import com.harvard.studyappmodule.activitybuilder.model.ActivityRun;
 import com.harvard.studyappmodule.activitylistmodel.ActivitiesWS;
 import com.harvard.studyappmodule.studymodel.NotificationDbResources;
@@ -42,12 +42,12 @@ public class NotificationModuleSubscriber {
   static final String NO_USE_NOTIFICATION = "noUseNotification";
   static final String NOTIFICATION_TURN_OFF_NOTIFICATION = "notificationTurnOffNotification";
   private static final String RESOURCES = "resources";
-  private DBServiceSubscriber dbServiceSubscriber;
+  private DbServiceSubscriber dbServiceSubscriber;
   private Realm realm;
   private int pendingId = 214747;
   private int pendingId1 = 214746;
 
-  public NotificationModuleSubscriber(DBServiceSubscriber dbServiceSubscriber, Realm realmobj) {
+  public NotificationModuleSubscriber(DbServiceSubscriber dbServiceSubscriber, Realm realmobj) {
     this.dbServiceSubscriber = dbServiceSubscriber;
     realm = realmobj;
   }

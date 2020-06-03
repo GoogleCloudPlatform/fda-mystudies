@@ -13,19 +13,20 @@
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package com.harvard.studyappmodule.events;
+package com.harvard;
 
-import com.harvard.webservicemodule.events.RegistrationServerConsentConfigEvent;
+import com.google.firebase.iid.FirebaseInstanceId;
+import com.google.firebase.iid.FirebaseInstanceIdService;
+import com.harvard.utils.AppController;
 
-public class ConsentPDFEvent {
-  private RegistrationServerConsentConfigEvent registrationServerConsentConfigEvent;
+public class MyFirebaseInstanceIdService extends FirebaseInstanceIdService {
 
-  public RegistrationServerConsentConfigEvent getmRegistrationServerConsentConfigEvent() {
-    return registrationServerConsentConfigEvent;
+  @Override
+  public void onTokenRefresh() {
+    String token = FirebaseInstanceId.getInstance().getToken();
+    AppController.getHelperSharedPreference().writePreference(this, "deviceToken", token);
+    sendRegistrationToServer();
   }
 
-  public void setRegistrationServerConsentConfigEvent(
-      RegistrationServerConsentConfigEvent registrationServerConsentConfigEvent) {
-    this.registrationServerConsentConfigEvent = registrationServerConsentConfigEvent;
-  }
+  private void sendRegistrationToServer() {}
 }

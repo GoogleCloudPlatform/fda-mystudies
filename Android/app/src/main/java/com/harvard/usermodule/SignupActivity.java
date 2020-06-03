@@ -48,7 +48,7 @@ import com.harvard.usermodule.webservicemodel.UpdateUserProfileData;
 import com.harvard.utils.AppController;
 import com.harvard.utils.Logger;
 import com.harvard.utils.SetDialogHelper;
-import com.harvard.utils.URLs;
+import com.harvard.utils.Urls;
 import com.harvard.webservicemodule.apihelper.ApiCall;
 import com.harvard.webservicemodule.events.RegistrationServerConfigEvent;
 import java.util.HashMap;
@@ -332,7 +332,7 @@ public class SignupActivity extends AppCompatActivity implements ApiCall.OnAsync
       RegistrationServerConfigEvent registrationServerConfigEvent =
           new RegistrationServerConfigEvent(
               "post",
-              URLs.REGISTER_USER,
+              Urls.REGISTER_USER,
               REGISTRATION_REQUEST,
               this,
               RegistrationData.class,
@@ -537,7 +537,7 @@ public class SignupActivity extends AppCompatActivity implements ApiCall.OnAsync
     RegistrationServerConfigEvent registrationServerConfigEvent =
         new RegistrationServerConfigEvent(
             "post_object",
-            URLs.UPDATE_USER_PROFILE,
+            Urls.UPDATE_USER_PROFILE,
             UPDATE_USER_PROFILE,
             this,
             UpdateUserProfileData.class,

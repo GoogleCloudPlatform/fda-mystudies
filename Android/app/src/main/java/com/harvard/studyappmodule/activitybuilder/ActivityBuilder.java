@@ -16,7 +16,7 @@
 package com.harvard.studyappmodule.activitybuilder;
 
 import android.content.Context;
-import com.harvard.storagemodule.DBServiceSubscriber;
+import com.harvard.storagemodule.DbServiceSubscriber;
 import com.harvard.studyappmodule.activitybuilder.model.servicemodel.ActivityObj;
 import com.harvard.studyappmodule.activitybuilder.model.servicemodel.Steps;
 import com.harvard.studyappmodule.custom.result.StepRecordCustom;
@@ -34,7 +34,7 @@ import org.researchstack.backbone.task.OrderedTask;
 public class ActivityBuilder extends OrderedTask {
 
   private static boolean mBranching;
-  private static DBServiceSubscriber mDBServiceSubscriber;
+  private static DbServiceSubscriber mDBServiceSubscriber;
   private static String mIdentifier;
   private static RealmList<Steps> activityQuestionStep;
   private static Context mcontext;
@@ -49,7 +49,7 @@ public class ActivityBuilder extends OrderedTask {
       List<Step> steps,
       ActivityObj activityObj,
       boolean branching,
-      DBServiceSubscriber dbServiceSubscriber) {
+      DbServiceSubscriber dbServiceSubscriber) {
     mIdentifier = identifier;
     activityQuestionStep = activityObj.getSteps();
     mBranching = branching;

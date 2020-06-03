@@ -55,7 +55,7 @@ import com.harvard.usermodule.webservicemodel.UpdateUserProfileData;
 import com.harvard.usermodule.webservicemodel.UserProfileData;
 import com.harvard.utils.AppController;
 import com.harvard.utils.Logger;
-import com.harvard.utils.URLs;
+import com.harvard.utils.Urls;
 import com.harvard.webservicemodule.apihelper.ApiCall;
 import com.harvard.webservicemodule.events.AuthServerConfigEvent;
 import com.harvard.webservicemodule.events.RegistrationServerConfigEvent;
@@ -290,7 +290,7 @@ public class SignInFragment extends Fragment implements ApiCall.OnAsyncRequestCo
       AuthServerConfigEvent authServerConfigEvent =
           new AuthServerConfigEvent(
               "post",
-              URLs.LOGIN,
+              Urls.LOGIN,
               LOGIN_REQUEST,
               context,
               LoginData.class,
@@ -419,7 +419,7 @@ public class SignInFragment extends Fragment implements ApiCall.OnAsyncRequestCo
     RegistrationServerConfigEvent registrationServerConfigEvent =
         new RegistrationServerConfigEvent(
             "get",
-            URLs.GET_USER_PROFILE,
+            Urls.GET_USER_PROFILE,
             USER_PROFILE_REQUEST,
             context,
             UserProfileData.class,
@@ -504,7 +504,7 @@ public class SignInFragment extends Fragment implements ApiCall.OnAsyncRequestCo
     RegistrationServerConfigEvent registrationServerConfigEvent =
         new RegistrationServerConfigEvent(
             "post_object",
-            URLs.UPDATE_USER_PROFILE,
+            Urls.UPDATE_USER_PROFILE,
             UPDATE_USER_PROFILE,
             context,
             UpdateUserProfileData.class,

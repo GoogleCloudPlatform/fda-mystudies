@@ -26,7 +26,7 @@ import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.NotificationManagerCompat;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
-import com.harvard.storagemodule.DBServiceSubscriber;
+import com.harvard.storagemodule.DbServiceSubscriber;
 import com.harvard.studyappmodule.StandaloneActivity;
 import com.harvard.studyappmodule.StudyActivity;
 import com.harvard.studyappmodule.StudyFragment;
@@ -50,12 +50,12 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
   private static String MESSAGE = "message";
   private static String NOTIFICATION_INTENT = "notificationIntent";
   private static String LOCAL_NOTIFICATION = "localNotification";
-  private DBServiceSubscriber dbServiceSubscriber;
+  private DbServiceSubscriber dbServiceSubscriber;
   private Realm realm;
 
   @Override
   public void onMessageReceived(RemoteMessage remoteMessage) {
-    dbServiceSubscriber = new DBServiceSubscriber();
+    dbServiceSubscriber = new DbServiceSubscriber();
     realm = AppController.getRealmobj(this);
     handleNotification(remoteMessage);
     dbServiceSubscriber.closeRealmObj(realm);
@@ -190,7 +190,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
             .setAutoCancel(true)
             .setSound(defaultSoundUri)
             .setContentIntent(pendingIntent)
-            .setChannelId(FDAApplication.NOTIFICATION_CHANNEL_ID_INFO)
+            .setChannelId(FdaApplication.NOTIFICATION_CHANNEL_ID_INFO)
             .setStyle(new NotificationCompat.BigTextStyle().bigText(messageBody))
             .setGroup("group");
 

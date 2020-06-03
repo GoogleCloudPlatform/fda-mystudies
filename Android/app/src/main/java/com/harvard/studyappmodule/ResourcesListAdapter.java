@@ -119,7 +119,7 @@ public class ResourcesListAdapter extends RecyclerView.Adapter<ResourcesListAdap
                   .getTitle()
                   .equalsIgnoreCase(view.getResources().getString(R.string.consent_pdf))) {
                 try {
-                  Intent intent = new Intent(context, PDFDisplayActivity.class);
+                  Intent intent = new Intent(context, PdfDisplayActivity.class);
                   intent.putExtra("studyId", ((SurveyActivity) context).getStudyId());
                   intent.putExtra("title", ((SurveyActivity) context).getTitle1());
                   (context).startActivity(intent);

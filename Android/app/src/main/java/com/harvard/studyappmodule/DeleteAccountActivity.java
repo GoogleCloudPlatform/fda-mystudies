@@ -28,7 +28,7 @@ import android.widget.RelativeLayout;
 import android.widget.Toast;
 import com.google.gson.Gson;
 import com.harvard.R;
-import com.harvard.storagemodule.DBServiceSubscriber;
+import com.harvard.storagemodule.DbServiceSubscriber;
 import com.harvard.studyappmodule.events.DeleteAccountEvent;
 import com.harvard.studyappmodule.events.GetUserStudyInfoEvent;
 import com.harvard.studyappmodule.studymodel.DeleteAccountData;
@@ -40,10 +40,10 @@ import com.harvard.usermodule.webservicemodel.Studies;
 import com.harvard.utils.AppController;
 import com.harvard.utils.Logger;
 import com.harvard.utils.SharedPreferenceHelper;
-import com.harvard.utils.URLs;
+import com.harvard.utils.Urls;
 import com.harvard.webservicemodule.apihelper.ApiCall;
 import com.harvard.webservicemodule.events.RegistrationServerConfigEvent;
-import com.harvard.webservicemodule.events.WCPConfigEvent;
+import com.harvard.webservicemodule.events.WcpConfigEvent;
 import io.realm.Realm;
 import io.realm.RealmResults;
 import java.util.ArrayList;
@@ -70,14 +70,14 @@ public class DeleteAccountActivity extends AppCompatActivity
   private boolean noDataFlag = false;
   private int tempPos;
   private static final int STUDY_INFO = 10;
-  private DBServiceSubscriber dbServiceSubscriber;
+  private DbServiceSubscriber dbServiceSubscriber;
   private Realm realm;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_delete_account);
-    dbServiceSubscriber = new DBServiceSubscriber();
+    dbServiceSubscriber = new DbServiceSubscriber();
     realm = AppController.getRealmobj(this);
     initializeXmlId();
     setTextForView();
@@ -224,10 +224,10 @@ public class DeleteAccountActivity extends AppCompatActivity
   private void callGetStudyInfoWebservice() {
     AppController.getHelperProgressDialog().showProgress(DeleteAccountActivity.this, "", "", false);
     HashMap<String, String> header = new HashMap<>();
-    String url = URLs.STUDY_INFO + "?studyId=" + studyIdList.get(tempPos);
+    String url = Urls.STUDY_INFO + "?studyId=" + studyIdList.get(tempPos);
     GetUserStudyInfoEvent getUserStudyInfoEvent = new GetUserStudyInfoEvent();
-    WCPConfigEvent wcpConfigEvent =
-        new WCPConfigEvent(
+    WcpConfigEvent wcpConfigEvent =
+        new WcpConfigEvent(
             "get",
             url,
             STUDY_INFO,
@@ -421,7 +421,7 @@ public class DeleteAccountActivity extends AppCompatActivity
       RegistrationServerConfigEvent registrationServerConfigEvent =
           new RegistrationServerConfigEvent(
               "delete_object",
-              URLs.DELETE_ACCOUNT,
+              Urls.DELETE_ACCOUNT,
               DELETE_ACCOUNT_REPSONSECODE,
               DeleteAccountActivity.this,
               LoginData.class,

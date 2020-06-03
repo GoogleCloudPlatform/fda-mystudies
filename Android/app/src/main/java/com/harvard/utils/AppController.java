@@ -39,7 +39,7 @@ import com.harvard.R;
 import com.harvard.SplashActivity;
 import com.harvard.notificationmodule.NotificationModuleSubscriber;
 import com.harvard.offlinemodule.model.OfflineData;
-import com.harvard.storagemodule.DBServiceSubscriber;
+import com.harvard.storagemodule.DbServiceSubscriber;
 import com.harvard.studyappmodule.StandaloneActivity;
 import com.harvard.studyappmodule.StudyActivity;
 import com.harvard.usermodule.SignInActivity;
@@ -136,7 +136,7 @@ public class AppController {
     if (pass != null) {
       AppController.deleteKey("passcode_" + pass);
     }
-    DBServiceSubscriber dbServiceSubscriber = new DBServiceSubscriber();
+    DbServiceSubscriber dbServiceSubscriber = new DbServiceSubscriber();
     Realm realm = getRealmobj(context);
     dbServiceSubscriber.deleteDb(context);
     try {
@@ -841,7 +841,7 @@ public class AppController {
       offlineData.setStudyId(studyId);
       offlineData.setActivityId(activityId);
       offlineData.setStatus(false);
-      DBServiceSubscriber db = new DBServiceSubscriber();
+      DbServiceSubscriber db = new DbServiceSubscriber();
       db.saveOfflineData(context, offlineData);
     } catch (Exception e) {
       Logger.log(e);
@@ -856,7 +856,7 @@ public class AppController {
     if (pass != null) {
       AppController.deleteKey("passcode_" + pass);
     }
-    DBServiceSubscriber dbServiceSubscriber = new DBServiceSubscriber();
+    DbServiceSubscriber dbServiceSubscriber = new DbServiceSubscriber();
     Realm realm = getRealmobj(context);
     dbServiceSubscriber.deleteDb(context);
     try {

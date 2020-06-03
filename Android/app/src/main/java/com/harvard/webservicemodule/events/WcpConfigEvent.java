@@ -13,25 +13,35 @@
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package com.harvard.usermodule.event;
+package com.harvard.webservicemodule.events;
 
-public class SetTouchIDEvent {
-  private String userId;
-  private String authToken;
+import android.content.Context;
+import com.harvard.utils.Urls;
+import java.util.HashMap;
+import org.json.JSONObject;
 
-  public String getUserID() {
-    return userId;
+public class WcpConfigEvent<V> extends WebserviceConfigEvent {
+  public WcpConfigEvent(
+      String method,
+      String url,
+      int requestCode,
+      Context context,
+      Class modelclass,
+      HashMap params,
+      HashMap header,
+      JSONObject jsonobj,
+      boolean showAlert,
+      V v) {
+    super(method, url, requestCode, context, modelclass, params, header, jsonobj, showAlert, v);
   }
 
-  public void setUserID(String userId) {
-    this.userId = userId;
+  @Override
+  public String getProductionUrl() {
+    return Urls.BASE_URL_WCP_SERVER;
   }
 
-  public String getAuthToken() {
-    return authToken;
-  }
-
-  public void setAuthToken(String authToken) {
-    this.authToken = authToken;
+  @Override
+  public String getDevelopmentUrl() {
+    return Urls.BASE_URL_WCP_SERVER;
   }
 }

@@ -33,7 +33,7 @@ import com.harvard.usermodule.webservicemodel.LoginData;
 import com.harvard.utils.AppController;
 import com.harvard.utils.Logger;
 import com.harvard.utils.SharedPreferenceHelper;
-import com.harvard.utils.URLs;
+import com.harvard.utils.Urls;
 import com.harvard.webservicemodule.apihelper.ApiCall;
 import com.harvard.webservicemodule.events.RegistrationServerConfigEvent;
 import java.util.HashMap;
@@ -191,7 +191,7 @@ public class VerificationStepActivity extends AppCompatActivity
               RegistrationServerConfigEvent registrationServerConfigEvent =
                   new RegistrationServerConfigEvent(
                       "post",
-                      URLs.CONFIRM_REGISTER_USER,
+                      Urls.CONFIRM_REGISTER_USER,
                       CONFIRM_REGISTER_USER_RESPONSE,
                       VerificationStepActivity.this,
                       LoginData.class,
@@ -221,7 +221,7 @@ public class VerificationStepActivity extends AppCompatActivity
             RegistrationServerConfigEvent registrationServerConfigEvent =
                 new RegistrationServerConfigEvent(
                     "post",
-                    URLs.RESEND_CONFIRMATION,
+                    Urls.RESEND_CONFIRMATION,
                     RESEND_CONFIRMATION,
                     VerificationStepActivity.this,
                     LoginData.class,

@@ -18,7 +18,7 @@ package com.harvard.studyappmodule.surveyscheduler;
 import android.content.Context;
 import com.harvard.R;
 import com.harvard.notificationmodule.NotificationModuleSubscriber;
-import com.harvard.storagemodule.DBServiceSubscriber;
+import com.harvard.storagemodule.DbServiceSubscriber;
 import com.harvard.storagemodule.events.DatabaseEvent;
 import com.harvard.studyappmodule.SurveyActivitiesFragment;
 import com.harvard.studyappmodule.activitybuilder.model.ActivityRun;
@@ -53,10 +53,10 @@ public class SurveyScheduler {
   private Date joiningTime;
   private String studyId;
   private Context context;
-  private DBServiceSubscriber dbServiceSubscriber;
+  private DbServiceSubscriber dbServiceSubscriber;
   private Realm realm;
 
-  public SurveyScheduler(DBServiceSubscriber dbServiceSubscriber, Realm realm) {
+  public SurveyScheduler(DbServiceSubscriber dbServiceSubscriber, Realm realm) {
     this.dbServiceSubscriber = dbServiceSubscriber;
     this.realm = realm;
   }
@@ -541,9 +541,9 @@ public class SurveyScheduler {
   private <E> void insertAndUpdateToDB(Context context, E e) {
     DatabaseEvent databaseEvent = new DatabaseEvent();
     databaseEvent.setE(e);
-    databaseEvent.setmType(DBServiceSubscriber.TYPE_COPY);
+    databaseEvent.setmType(DbServiceSubscriber.TYPE_COPY);
     databaseEvent.setaClass(ActivityRun.class);
-    databaseEvent.setmOperation(DBServiceSubscriber.INSERT_AND_UPDATE_OPERATION);
+    databaseEvent.setmOperation(DbServiceSubscriber.INSERT_AND_UPDATE_OPERATION);
     dbServiceSubscriber.insert(context, databaseEvent);
   }
 

@@ -28,7 +28,7 @@ import com.harvard.usermodule.event.ForgotPasswordEvent;
 import com.harvard.usermodule.webservicemodel.ForgotPasswordData;
 import com.harvard.utils.AppController;
 import com.harvard.utils.Logger;
-import com.harvard.utils.URLs;
+import com.harvard.utils.Urls;
 import com.harvard.webservicemodule.apihelper.ApiCall;
 import com.harvard.webservicemodule.events.AuthServerConfigEvent;
 import java.util.HashMap;
@@ -143,7 +143,7 @@ public class ForgotPasswordActivity extends AppCompatActivity
     AuthServerConfigEvent authServerConfigEvent =
         new AuthServerConfigEvent(
             "post",
-            URLs.FORGOT_PASSWORD,
+            Urls.FORGOT_PASSWORD,
             FORGOT_PASSWORD_REQUEST,
             ForgotPasswordActivity.this,
             ForgotPasswordData.class,

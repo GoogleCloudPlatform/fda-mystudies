@@ -29,10 +29,10 @@ import android.os.Build;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.NotificationManagerCompat;
 import com.harvard.AppConfig;
-import com.harvard.FDAApplication;
+import com.harvard.FdaApplication;
 import com.harvard.R;
 import com.harvard.notificationmodule.model.NotificationDb;
-import com.harvard.storagemodule.DBServiceSubscriber;
+import com.harvard.storagemodule.DbServiceSubscriber;
 import com.harvard.studyappmodule.NotificationActivity;
 import com.harvard.studyappmodule.StandaloneActivity;
 import com.harvard.studyappmodule.StudyActivity;
@@ -67,7 +67,7 @@ public class AlarmReceiver extends BroadcastReceiver {
     }
     if (pendingIntentId == 1) {
       Realm realm = AppController.getRealmobj(context);
-      DBServiceSubscriber dbServiceSubscriber = new DBServiceSubscriber();
+      DbServiceSubscriber dbServiceSubscriber = new DbServiceSubscriber();
       RealmResults<NotificationDb> notificationDbs =
           dbServiceSubscriber.getNotificationDbByCurrentDate(realm);
       NotificationModuleSubscriber notificationModuleSubscriber =
@@ -185,7 +185,7 @@ public class AlarmReceiver extends BroadcastReceiver {
                   .setContentTitle(title)
                   .setLargeIcon(Bitmap.createScaledBitmap(icon, 128, 128, false))
                   .setContentText(description)
-                  .setChannelId(FDAApplication.NOTIFICATION_CHANNEL_ID_INFO)
+                  .setChannelId(FdaApplication.NOTIFICATION_CHANNEL_ID_INFO)
                   .setStyle(new NotificationCompat.BigTextStyle().bigText(description))
                   .setSmallIcon(R.mipmap.ic_launcher)
                   .setAutoCancel(true)
@@ -197,7 +197,7 @@ public class AlarmReceiver extends BroadcastReceiver {
                   .setContentTitle(title)
                   .setLargeIcon(Bitmap.createScaledBitmap(icon, 128, 128, false))
                   .setContentText(description)
-                  .setChannelId(FDAApplication.NOTIFICATION_CHANNEL_ID_INFO)
+                  .setChannelId(FdaApplication.NOTIFICATION_CHANNEL_ID_INFO)
                   .setStyle(new NotificationCompat.BigTextStyle().bigText(description))
                   .setSmallIcon(R.mipmap.ic_launcher)
                   .setAutoCancel(true)
@@ -211,7 +211,7 @@ public class AlarmReceiver extends BroadcastReceiver {
               builder
                   .setContentTitle(title)
                   .setContentText(description)
-                  .setChannelId(FDAApplication.NOTIFICATION_CHANNEL_ID_INFO)
+                  .setChannelId(FdaApplication.NOTIFICATION_CHANNEL_ID_INFO)
                   .setStyle(new NotificationCompat.BigTextStyle().bigText(description))
                   .setSmallIcon(R.mipmap.ic_launcher)
                   .setAutoCancel(true)
@@ -222,7 +222,7 @@ public class AlarmReceiver extends BroadcastReceiver {
               builder
                   .setContentTitle(title)
                   .setContentText(description)
-                  .setChannelId(FDAApplication.NOTIFICATION_CHANNEL_ID_INFO)
+                  .setChannelId(FdaApplication.NOTIFICATION_CHANNEL_ID_INFO)
                   .setStyle(new NotificationCompat.BigTextStyle().bigText(description))
                   .setSmallIcon(R.mipmap.ic_launcher)
                   .setAutoCancel(true)
@@ -247,7 +247,7 @@ public class AlarmReceiver extends BroadcastReceiver {
         NotificationManagerCompat notificationManager = NotificationManagerCompat.from(context);
 
         Realm realm = AppController.getRealmobj(context);
-        DBServiceSubscriber dbServiceSubscriber = new DBServiceSubscriber();
+        DbServiceSubscriber dbServiceSubscriber = new DbServiceSubscriber();
         UserProfileData userProfileData = dbServiceSubscriber.getUserProfileData(realm);
         StudyList studyList = dbServiceSubscriber.getStudiesDetails(studyId, realm);
         boolean isNotification = true;

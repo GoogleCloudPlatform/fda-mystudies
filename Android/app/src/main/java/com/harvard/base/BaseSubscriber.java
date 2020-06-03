@@ -15,22 +15,22 @@
 
 package com.harvard.base;
 
-import com.harvard.FDAEventBus;
+import com.harvard.FdaEventBus;
 
 public abstract class BaseSubscriber implements BaseEventBusRegistry.EventBusSubscriber {
 
-  private FDAEventBus eventBus;
+  private FdaEventBus eventBus;
   private static final String EXCEPTION_MESSAGE =
       "PluginController.register() was not called. Is the controller registered in the EventBusRegistry?";
 
   @Override
-  public final Object register(FDAEventBus eventBus) {
+  public final Object register(FdaEventBus eventBus) {
     eventBus = eventBus;
     eventBus.register(this);
     return this;
   }
 
-  public final void unregister(FDAEventBus eventBus) {
+  public final void unregister(FdaEventBus eventBus) {
     eventBus.unregister(this);
     eventBus = null;
   }

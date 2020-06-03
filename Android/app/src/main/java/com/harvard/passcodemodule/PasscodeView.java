@@ -373,7 +373,7 @@ public class PasscodeView extends ViewGroup {
 
     public DigitView(Context context, int position) {
       this(context);
-      position = position;
+      this.position = position;
     }
 
     public DigitView(Context context) {

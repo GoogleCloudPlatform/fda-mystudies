@@ -30,7 +30,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 import com.harvard.R;
 import com.harvard.gatewaymodule.GatewayActivity;
-import com.harvard.storagemodule.DBServiceSubscriber;
+import com.harvard.storagemodule.DbServiceSubscriber;
 import com.harvard.utils.AppController;
 import com.harvard.utils.Logger;
 import com.harvard.utils.SharedPreferenceHelper;
@@ -45,14 +45,14 @@ public class PasscodeSetupActivity extends AppCompatActivity {
   private TextView forgot;
   private TextView passcodeTitle;
   private TextView passcodeDesc;
-  private DBServiceSubscriber dbServiceSubscriber;
+  private DbServiceSubscriber dbServiceSubscriber;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_passcode_setup);
     getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
-    dbServiceSubscriber = new DBServiceSubscriber();
+    dbServiceSubscriber = new DbServiceSubscriber();
     initializeXmlId();
     setTextForView();
     setFont();

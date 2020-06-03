@@ -42,7 +42,7 @@ import android.widget.Toast;
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.data.Entry;
 import com.harvard.R;
-import com.harvard.storagemodule.DBServiceSubscriber;
+import com.harvard.storagemodule.DbServiceSubscriber;
 import com.harvard.studyappmodule.activitybuilder.model.ActivityRun;
 import com.harvard.studyappmodule.activitylistmodel.ActivitiesWS;
 import com.harvard.studyappmodule.custom.result.StepRecordCustom;
@@ -92,7 +92,7 @@ public class ChartActivity extends AppCompatActivity {
 
   private Date starttime;
   private Date endtime;
-  private DBServiceSubscriber dbServiceSubscriber;
+  private DbServiceSubscriber dbServiceSubscriber;
   private Realm realm;
   private static final int PERMISSION_REQUEST_CODE = 2000;
 
@@ -101,7 +101,7 @@ public class ChartActivity extends AppCompatActivity {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_chart);
 
-    dbServiceSubscriber = new DBServiceSubscriber();
+    dbServiceSubscriber = new DbServiceSubscriber();
     realm = AppController.getRealmobj(this);
     dashboardData =
         dbServiceSubscriber.getDashboardDataFromDB(getIntent().getStringExtra("studyId"), realm);

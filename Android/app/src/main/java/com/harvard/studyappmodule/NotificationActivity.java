@@ -25,7 +25,7 @@ import android.widget.RelativeLayout;
 import android.widget.Toast;
 import com.harvard.R;
 import com.harvard.notificationmodule.model.NotificationDb;
-import com.harvard.storagemodule.DBServiceSubscriber;
+import com.harvard.storagemodule.DbServiceSubscriber;
 import com.harvard.studyappmodule.events.GetUserStudyListEvent;
 import com.harvard.studyappmodule.studymodel.Notification;
 import com.harvard.studyappmodule.studymodel.NotificationData;
@@ -34,9 +34,9 @@ import com.harvard.studyappmodule.studymodel.Study;
 import com.harvard.studyappmodule.studymodel.StudyList;
 import com.harvard.utils.AppController;
 import com.harvard.utils.Logger;
-import com.harvard.utils.URLs;
+import com.harvard.utils.Urls;
 import com.harvard.webservicemodule.apihelper.ApiCall;
-import com.harvard.webservicemodule.events.WCPConfigEvent;
+import com.harvard.webservicemodule.events.WcpConfigEvent;
 import io.realm.Realm;
 import io.realm.RealmList;
 import io.realm.RealmResults;
@@ -53,7 +53,7 @@ public class NotificationActivity extends AppCompatActivity
   private RelativeLayout backBtn;
   private RecyclerView studyRecyclerView;
   private AppCompatTextView title;
-  private DBServiceSubscriber dbServiceSubscriber;
+  private DbServiceSubscriber dbServiceSubscriber;
   private Realm realm;
 
   @Override
@@ -61,7 +61,7 @@ public class NotificationActivity extends AppCompatActivity
     super.onCreate(savedInstanceState);
 
     setContentView(R.layout.activity_notification);
-    dbServiceSubscriber = new DBServiceSubscriber();
+    dbServiceSubscriber = new DbServiceSubscriber();
     realm = AppController.getRealmobj(this);
     AppController.getHelperSharedPreference()
         .writePreference(this, getString(R.string.notification), "false");
@@ -113,9 +113,9 @@ public class NotificationActivity extends AppCompatActivity
     AppController.getHelperProgressDialog().showProgress(NotificationActivity.this, "", "", false);
     GetUserStudyListEvent getUserStudyListEvent = new GetUserStudyListEvent();
     HashMap<String, String> header = new HashMap();
-    String url = URLs.NOTIFICATIONS + "?skip=0";
-    WCPConfigEvent wcpConfigEvent =
-        new WCPConfigEvent(
+    String url = Urls.NOTIFICATIONS + "?skip=0";
+    WcpConfigEvent wcpConfigEvent =
+        new WcpConfigEvent(
             "get",
             url,
             NOTIFICATIONS,

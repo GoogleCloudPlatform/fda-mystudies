@@ -37,7 +37,7 @@ import com.harvard.R;
 import com.harvard.notificationmodule.NotificationModuleSubscriber;
 import com.harvard.offlinemodule.model.OfflineData;
 import com.harvard.passcodemodule.PasscodeSetupActivity;
-import com.harvard.storagemodule.DBServiceSubscriber;
+import com.harvard.storagemodule.DbServiceSubscriber;
 import com.harvard.usermodule.NewPasscodeSetupActivity;
 import com.harvard.usermodule.UserModulePresenter;
 import com.harvard.usermodule.event.GetUserProfileEvent;
@@ -51,7 +51,7 @@ import com.harvard.usermodule.webservicemodel.UserProfileData;
 import com.harvard.utils.AppController;
 import com.harvard.utils.Logger;
 import com.harvard.utils.SharedPreferenceHelper;
-import com.harvard.utils.URLs;
+import com.harvard.utils.Urls;
 import com.harvard.webservicemodule.apihelper.ApiCall;
 import com.harvard.webservicemodule.events.AuthServerConfigEvent;
 import com.harvard.webservicemodule.events.RegistrationServerConfigEvent;
@@ -98,7 +98,7 @@ public class ProfileFragment extends Fragment
   private UpdateProfileRequestData updateProfileRequestData = null;
   private static final int DELETE_ACCOUNT = 5;
   private int deleteIndexNumberDB;
-  private DBServiceSubscriber dbServiceSubscriber;
+  private DbServiceSubscriber dbServiceSubscriber;
   private Realm realm;
 
   @Override
@@ -111,7 +111,7 @@ public class ProfileFragment extends Fragment
   public View onCreateView(
       LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
     View view = inflater.inflate(R.layout.fragment_profile, container, false);
-    dbServiceSubscriber = new DBServiceSubscriber();
+    dbServiceSubscriber = new DbServiceSubscriber();
     realm = AppController.getRealmobj(context);
     initializeXmlId(view);
     setFont();
@@ -135,7 +135,7 @@ public class ProfileFragment extends Fragment
     RegistrationServerConfigEvent registrationServerConfigEvent =
         new RegistrationServerConfigEvent(
             "get",
-            URLs.GET_USER_PROFILE,
+            Urls.GET_USER_PROFILE,
             USER_PROFILE_REQUEST,
             context,
             UserProfileData.class,
@@ -337,7 +337,7 @@ public class ProfileFragment extends Fragment
     AuthServerConfigEvent authServerConfigEvent =
         new AuthServerConfigEvent(
             "delete",
-            URLs.LOGOUT,
+            Urls.LOGOUT,
             LOGOUT_REPSONSECODE,
             context,
             LoginData.class,
@@ -652,7 +652,7 @@ public class ProfileFragment extends Fragment
             context,
             number,
             "post_object",
-            URLs.UPDATE_USER_PROFILE,
+            Urls.UPDATE_USER_PROFILE,
             "",
             obj.toString(),
             "RegistrationServer",
@@ -666,7 +666,7 @@ public class ProfileFragment extends Fragment
       RegistrationServerConfigEvent registrationServerConfigEvent =
           new RegistrationServerConfigEvent(
               "post_object",
-              URLs.UPDATE_USER_PROFILE,
+              Urls.UPDATE_USER_PROFILE,
               UPDATE_USER_PROFILE_REQUEST,
               context,
               UpdateUserProfileData.class,

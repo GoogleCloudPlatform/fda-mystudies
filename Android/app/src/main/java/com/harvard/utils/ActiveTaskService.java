@@ -29,10 +29,10 @@ import android.os.IBinder;
 import android.os.PowerManager;
 import android.support.annotation.Nullable;
 import android.support.v4.app.NotificationCompat;
-import com.harvard.FDAApplication;
+import com.harvard.FdaApplication;
 import com.harvard.R;
 import com.harvard.offlinemodule.model.OfflineData;
-import com.harvard.storagemodule.DBServiceSubscriber;
+import com.harvard.storagemodule.DbServiceSubscriber;
 import com.harvard.studyappmodule.StudyModulePresenter;
 import com.harvard.studyappmodule.events.ProcessResponseEvent;
 import com.harvard.usermodule.UserModulePresenter;
@@ -52,7 +52,7 @@ public class ActiveTaskService extends Service implements ApiCall.OnAsyncRequest
   private int sec;
   private Thread obj;
   private static final int UPDATE_USERPREFERENCE_RESPONSECODE = 102;
-  private DBServiceSubscriber dbServiceSubscriber;
+  private DbServiceSubscriber dbServiceSubscriber;
   private Realm realm;
 
   @Override
@@ -77,7 +77,7 @@ public class ActiveTaskService extends Service implements ApiCall.OnAsyncRequest
                 .setContentTitle(getResources().getString(R.string.app_name))
                 .setTicker("Sync adapter")
                 .setContentText("Syncing offline data")
-                .setChannelId(FDAApplication.NOTIFICATION_CHANNEL_ID_SERVICE)
+                .setChannelId(FdaApplication.NOTIFICATION_CHANNEL_ID_SERVICE)
                 .setSmallIcon(R.mipmap.ic_launcher)
                 .setLargeIcon(Bitmap.createScaledBitmap(icon, 128, 128, false))
                 .setOngoing(true)
@@ -96,7 +96,7 @@ public class ActiveTaskService extends Service implements ApiCall.OnAsyncRequest
                   .setTicker(getResources().getString(R.string.fetal_kick_recorder_activity))
                   .setContentText(
                       getResources().getString(R.string.fetal_kick_recorder_activity_in_progress))
-                  .setChannelId(FDAApplication.NOTIFICATION_CHANNEL_ID_SERVICE)
+                  .setChannelId(FdaApplication.NOTIFICATION_CHANNEL_ID_SERVICE)
                   .setSmallIcon(R.mipmap.ic_launcher)
                   .setLargeIcon(Bitmap.createScaledBitmap(icon, 128, 128, false))
                   .setOngoing(true)
@@ -122,7 +122,7 @@ public class ActiveTaskService extends Service implements ApiCall.OnAsyncRequest
                                 BitmapFactory.decodeResource(getResources(), R.mipmap.ic_launcher))
                             .setContentTitle(getResources().getString(R.string.app_name))
                             .setContentText(getString(R.string.activetaskremindertxt))
-                            .setChannelId(FDAApplication.NOTIFICATION_CHANNEL_ID_SERVICE);
+                            .setChannelId(FdaApplication.NOTIFICATION_CHANNEL_ID_SERVICE);
 
                         NotificationManager notificationManager =
                             (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
@@ -187,7 +187,7 @@ public class ActiveTaskService extends Service implements ApiCall.OnAsyncRequest
 
   private void getPendingData() {
     try {
-      dbServiceSubscriber = new DBServiceSubscriber();
+      dbServiceSubscriber = new DbServiceSubscriber();
 
       RealmResults<OfflineData> results = dbServiceSubscriber.getOfflineData(realm);
       if (!results.isEmpty()) {

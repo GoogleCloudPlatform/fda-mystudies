@@ -25,7 +25,7 @@ import android.view.View;
 import android.widget.TextView;
 import com.harvard.AppConfig;
 import com.harvard.R;
-import com.harvard.storagemodule.DBServiceSubscriber;
+import com.harvard.storagemodule.DbServiceSubscriber;
 import com.harvard.studyappmodule.ConsentCompletedActivity;
 import com.harvard.studyappmodule.StandaloneActivity;
 import com.harvard.studyappmodule.StudyActivity;
@@ -43,7 +43,7 @@ import org.researchstack.backbone.task.Task;
 public class ComprehensionFailureActivity extends AppCompatActivity {
 
   private static final int CONSENT_RESPONSE_CODE = 100;
-  private DBServiceSubscriber dbServiceSubscriber;
+  private DbServiceSubscriber dbServiceSubscriber;
   private EligibilityConsent eligibilityConsent;
   private Realm realm;
 
@@ -53,7 +53,7 @@ public class ComprehensionFailureActivity extends AppCompatActivity {
     setContentView(R.layout.activity_comprehension_failure);
 
     TextView retrybutton = findViewById(R.id.retrybutton);
-    dbServiceSubscriber = new DBServiceSubscriber();
+    dbServiceSubscriber = new DbServiceSubscriber();
     realm = AppController.getRealmobj(this);
     retrybutton.setOnClickListener(
         new View.OnClickListener() {

@@ -43,14 +43,14 @@ import com.harvard.AppConfig;
 import com.harvard.R;
 import com.harvard.notificationmodule.NotificationModuleSubscriber;
 import com.harvard.offlinemodule.model.OfflineData;
-import com.harvard.storagemodule.DBServiceSubscriber;
+import com.harvard.storagemodule.DbServiceSubscriber;
 import com.harvard.usermodule.UserModulePresenter;
 import com.harvard.usermodule.event.LogoutEvent;
 import com.harvard.usermodule.webservicemodel.LoginData;
 import com.harvard.utils.AppController;
 import com.harvard.utils.Logger;
 import com.harvard.utils.SharedPreferenceHelper;
-import com.harvard.utils.URLs;
+import com.harvard.utils.Urls;
 import com.harvard.webservicemodule.apihelper.ApiCall;
 import com.harvard.webservicemodule.events.AuthServerConfigEvent;
 import io.realm.Realm;
@@ -96,7 +96,7 @@ public class SurveyActivity extends AppCompatActivity
   private RelativeLayout signOutLayout;
   private AppCompatTextView newUsrReachoutLabel;
   private int previousValue = 0;
-  private DBServiceSubscriber dbServiceSubscriber;
+  private DbServiceSubscriber dbServiceSubscriber;
   private Realm realm;
   private Toolbar toolbar;
   private boolean isExit = false;
@@ -121,7 +121,7 @@ public class SurveyActivity extends AppCompatActivity
     from = "";
     to = "";
 
-    dbServiceSubscriber = new DBServiceSubscriber();
+    dbServiceSubscriber = new DbServiceSubscriber();
     realm = AppController.getRealmobj(this);
     checkSignOrSignOutScenario();
 
@@ -417,7 +417,7 @@ public class SurveyActivity extends AppCompatActivity
                 AuthServerConfigEvent authServerConfigEvent =
                     new AuthServerConfigEvent(
                         "delete",
-                        URLs.LOGOUT,
+                        Urls.LOGOUT,
                         LOGOUT_REPSONSECODE,
                         SurveyActivity.this,
                         LoginData.class,

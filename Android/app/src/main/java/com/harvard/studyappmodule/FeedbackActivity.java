@@ -29,10 +29,9 @@ import com.harvard.studyappmodule.events.ContactUsEvent;
 import com.harvard.studyappmodule.studymodel.ReachOut;
 import com.harvard.utils.AppController;
 import com.harvard.utils.Logger;
-import com.harvard.utils.URLs;
+import com.harvard.utils.Urls;
 import com.harvard.webservicemodule.apihelper.ApiCall;
 import com.harvard.webservicemodule.events.RegistrationServerConfigEvent;
-import com.harvard.webservicemodule.events.WCPConfigEvent;
 import java.util.HashMap;
 
 public class FeedbackActivity extends AppCompatActivity implements ApiCall.OnAsyncRequestComplete {
@@ -121,7 +120,7 @@ public class FeedbackActivity extends AppCompatActivity implements ApiCall.OnAsy
     RegistrationServerConfigEvent registrationServerConfigEvent =
         new RegistrationServerConfigEvent(
             "post",
-            URLs.FEEDBACK,
+            Urls.FEEDBACK,
             FEEDBACK,
             FeedbackActivity.this,
             ReachOut.class,

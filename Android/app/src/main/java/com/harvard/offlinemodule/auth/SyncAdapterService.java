@@ -18,14 +18,14 @@ package com.harvard.offlinemodule.auth;
 import android.app.Service;
 import android.content.Intent;
 import android.os.IBinder;
-import com.harvard.storagemodule.DBServiceSubscriber;
+import com.harvard.storagemodule.DbServiceSubscriber;
 
 /** Service that keeps running SyncAdapter in background. */
 public class SyncAdapterService extends Service {
   private static SyncAdapter syncAdapter = null;
   // Object to use as a thread-safe lock
   private static final Object syncAdapterLock = new Object();
-  DBServiceSubscriber dbServiceSubscriber;
+  DbServiceSubscriber dbServiceSubscriber;
 
   @Override
   public void onCreate() {
@@ -35,7 +35,7 @@ public class SyncAdapterService extends Service {
      * Set the sync adapter as syncable
      * Disallow parallel syncs
      */
-    dbServiceSubscriber = new DBServiceSubscriber();
+    dbServiceSubscriber = new DbServiceSubscriber();
     synchronized (syncAdapterLock) {
       if (syncAdapter == null) {
         syncAdapter = new SyncAdapter(this, true);

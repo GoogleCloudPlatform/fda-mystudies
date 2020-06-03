@@ -125,11 +125,11 @@ public class GatewayResourcesWebViewActivity extends AppCompatActivity {
               (Activity) GatewayResourcesWebViewActivity.this, permission, PERMISSION_REQUEST_CODE);
         } else {
           finalSharingFile = getAssetsPdfPath();
-          DisplayPdfView(finalSharingFile.getAbsolutePath());
+          displayPdfView(finalSharingFile.getAbsolutePath());
         }
       } else {
         finalSharingFile = getAssetsPdfPath();
-        DisplayPdfView(finalSharingFile.getAbsolutePath());
+        displayPdfView(finalSharingFile.getAbsolutePath());
       }
     }
   }
@@ -150,7 +150,7 @@ public class GatewayResourcesWebViewActivity extends AppCompatActivity {
 
           ///////// default pdf show
           finalSharingFile = getAssetsPdfPath();
-          DisplayPdfView(finalSharingFile.getAbsolutePath());
+          displayPdfView(finalSharingFile.getAbsolutePath());
           /////////
         }
         break;
@@ -216,7 +216,7 @@ public class GatewayResourcesWebViewActivity extends AppCompatActivity {
     }
   }
 
-  private void DisplayPdfView(String filePath) {
+  private void displayPdfView(String filePath) {
     pdfView.setVisibility(View.VISIBLE);
     try {
       pdfView
@@ -247,6 +247,7 @@ public class GatewayResourcesWebViewActivity extends AppCompatActivity {
       outputStream.close();
       inputStream.close();
     } catch (IOException e) {
+      Logger.log(e);
     }
 
     return destinationFile;

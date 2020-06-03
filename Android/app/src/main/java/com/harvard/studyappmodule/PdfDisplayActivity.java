@@ -35,14 +35,14 @@ import android.widget.Toast;
 import com.github.barteksc.pdfviewer.PDFView;
 import com.github.barteksc.pdfviewer.scroll.DefaultScrollHandle;
 import com.harvard.R;
-import com.harvard.storagemodule.DBServiceSubscriber;
-import com.harvard.studyappmodule.events.ConsentPDFEvent;
+import com.harvard.storagemodule.DbServiceSubscriber;
+import com.harvard.studyappmodule.events.ConsentPdfEvent;
 import com.harvard.studyappmodule.studymodel.ConsentPDF;
 import com.harvard.studyappmodule.studymodel.ConsentPdfData;
 import com.harvard.usermodule.UserModulePresenter;
 import com.harvard.utils.AppController;
 import com.harvard.utils.Logger;
-import com.harvard.utils.URLs;
+import com.harvard.utils.Urls;
 import com.harvard.webservicemodule.apihelper.ApiCall;
 import com.harvard.webservicemodule.events.RegistrationServerConsentConfigEvent;
 import io.realm.Realm;
@@ -52,7 +52,7 @@ import java.io.IOException;
 import java.util.HashMap;
 import javax.crypto.CipherInputStream;
 
-public class PDFDisplayActivity extends AppCompatActivity
+public class PdfDisplayActivity extends AppCompatActivity
     implements ApiCall.OnAsyncRequestComplete {
   private static final int CONSENTPDF = 7;
   private PDFView pdfView;
@@ -60,7 +60,7 @@ public class PDFDisplayActivity extends AppCompatActivity
   private String sharePdfFilePath;
   private static final int PERMISSION_REQUEST_CODE = 1000;
   private byte[] bytesArray = null;
-  private DBServiceSubscriber db;
+  private DbServiceSubscriber db;
   private Realm realm;
   private String title;
 
@@ -68,7 +68,7 @@ public class PDFDisplayActivity extends AppCompatActivity
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_pdfdisplay);
-    db = new DBServiceSubscriber();
+    db = new DbServiceSubscriber();
     realm = AppController.getRealmobj(this);
     pdfView = (PDFView) findViewById(R.id.pdfView);
 
@@ -112,10 +112,10 @@ public class PDFDisplayActivity extends AppCompatActivity
           public void onClick(View v) {
             // checking the permissions
             if ((ActivityCompat.checkSelfPermission(
-                        PDFDisplayActivity.this, Manifest.permission.READ_EXTERNAL_STORAGE)
+                        PdfDisplayActivity.this, Manifest.permission.READ_EXTERNAL_STORAGE)
                     != PackageManager.PERMISSION_GRANTED)
                 || (ActivityCompat.checkSelfPermission(
-                        PDFDisplayActivity.this, Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                        PdfDisplayActivity.this, Manifest.permission.WRITE_EXTERNAL_STORAGE)
                     != PackageManager.PERMISSION_GRANTED)) {
               String[] permission =
                   new String[] {
@@ -125,7 +125,7 @@ public class PDFDisplayActivity extends AppCompatActivity
               if (!hasPermissions(permission)) {
                 // just checking is it already denied?
                 Toast.makeText(
-                        PDFDisplayActivity.this,
+                        PdfDisplayActivity.this,
                         getResources().getString(R.string.permission_enable_message),
                         Toast.LENGTH_LONG)
                     .show();
@@ -150,7 +150,7 @@ public class PDFDisplayActivity extends AppCompatActivity
       if (shareFile.exists()) {
         Uri fileUri =
             FileProvider.getUriForFile(
-                PDFDisplayActivity.this, getString(R.string.FileProvider_authorities), shareFile);
+                PdfDisplayActivity.this, getString(R.string.FileProvider_authorities), shareFile);
         shareIntent.putExtra(Intent.EXTRA_STREAM, fileUri);
         startActivity(shareIntent);
       }
@@ -160,7 +160,7 @@ public class PDFDisplayActivity extends AppCompatActivity
   }
 
   private void callGetConsentPdfWebservice() {
-    AppController.getHelperProgressDialog().showProgress(PDFDisplayActivity.this, "", "", false);
+    AppController.getHelperProgressDialog().showProgress(PdfDisplayActivity.this, "", "", false);
 
     HashMap<String, String> header = new HashMap<>();
     header.put(
@@ -171,20 +171,20 @@ public class PDFDisplayActivity extends AppCompatActivity
         "userId",
         AppController.getHelperSharedPreference()
             .readPreference(this, getResources().getString(R.string.userid), ""));
-    String url = URLs.CONSENTPDF + "?studyId=" + studyId + "&consentVersion=";
+    String url = Urls.CONSENTPDF + "?studyId=" + studyId + "&consentVersion=";
     RegistrationServerConsentConfigEvent registrationServerConsentConfigEvent =
         new RegistrationServerConsentConfigEvent(
             "get",
             url,
             CONSENTPDF,
-            PDFDisplayActivity.this,
+            PdfDisplayActivity.this,
             ConsentPDF.class,
             null,
             header,
             null,
             false,
-            PDFDisplayActivity.this);
-    ConsentPDFEvent consentPdfEvent = new ConsentPDFEvent();
+            PdfDisplayActivity.this);
+    ConsentPdfEvent consentPdfEvent = new ConsentPdfEvent();
     consentPdfEvent.setRegistrationServerConsentConfigEvent(registrationServerConsentConfigEvent);
     UserModulePresenter userModulePresenter = new UserModulePresenter();
     userModulePresenter.performConsentPdf(consentPdfEvent);
@@ -204,10 +204,10 @@ public class PDFDisplayActivity extends AppCompatActivity
   private void pdfWritingPermission() {
     // checking the permissions
     if ((ActivityCompat.checkSelfPermission(
-                PDFDisplayActivity.this, Manifest.permission.READ_EXTERNAL_STORAGE)
+                PdfDisplayActivity.this, Manifest.permission.READ_EXTERNAL_STORAGE)
             != PackageManager.PERMISSION_GRANTED)
         || (ActivityCompat.checkSelfPermission(
-                PDFDisplayActivity.this, Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                PdfDisplayActivity.this, Manifest.permission.WRITE_EXTERNAL_STORAGE)
             != PackageManager.PERMISSION_GRANTED)) {
       String[] permission =
           new String[] {
@@ -215,7 +215,7 @@ public class PDFDisplayActivity extends AppCompatActivity
           };
       if (!hasPermissions(permission)) {
         ActivityCompat.requestPermissions(
-            (Activity) PDFDisplayActivity.this, permission, PERMISSION_REQUEST_CODE);
+            (Activity) PdfDisplayActivity.this, permission, PERMISSION_REQUEST_CODE);
       } else {
         // sharing pdf creating
         sharePdfCreation();
@@ -229,7 +229,7 @@ public class PDFDisplayActivity extends AppCompatActivity
   public boolean hasPermissions(String[] permissions) {
     if (android.os.Build.VERSION.SDK_INT >= VERSION_CODES.M && permissions != null) {
       for (String permission : permissions) {
-        if (ActivityCompat.checkSelfPermission(PDFDisplayActivity.this, permission)
+        if (ActivityCompat.checkSelfPermission(PdfDisplayActivity.this, permission)
             != PackageManager.PERMISSION_GRANTED) {
           return false;
         }
@@ -245,7 +245,7 @@ public class PDFDisplayActivity extends AppCompatActivity
       case PERMISSION_REQUEST_CODE:
         if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_DENIED) {
           Toast.makeText(
-                  PDFDisplayActivity.this,
+                  PdfDisplayActivity.this,
                   getResources().getString(R.string.permission_enable_message),
                   Toast.LENGTH_LONG)
               .show();
@@ -308,8 +308,8 @@ public class PDFDisplayActivity extends AppCompatActivity
   public void asyncResponseFailure(int responseCode, String errormsg, String statusCode) {
     AppController.getHelperProgressDialog().dismissDialog();
     if (statusCode.equalsIgnoreCase("401")) {
-      Toast.makeText(PDFDisplayActivity.this, errormsg, Toast.LENGTH_SHORT).show();
-      AppController.getHelperSessionExpired(PDFDisplayActivity.this, errormsg);
+      Toast.makeText(PdfDisplayActivity.this, errormsg, Toast.LENGTH_SHORT).show();
+      AppController.getHelperSessionExpired(PdfDisplayActivity.this, errormsg);
     } else {
       try {
         ConsentPDF consentPdfData = db.getConsentPdf(studyId, realm);
@@ -322,10 +322,10 @@ public class PDFDisplayActivity extends AppCompatActivity
           }
           setPdfView();
         } else {
-          Toast.makeText(PDFDisplayActivity.this, errormsg, Toast.LENGTH_SHORT).show();
+          Toast.makeText(PdfDisplayActivity.this, errormsg, Toast.LENGTH_SHORT).show();
         }
       } catch (Exception e) {
-        Toast.makeText(PDFDisplayActivity.this, errormsg, Toast.LENGTH_SHORT).show();
+        Toast.makeText(PdfDisplayActivity.this, errormsg, Toast.LENGTH_SHORT).show();
         Logger.log(e);
       }
     }

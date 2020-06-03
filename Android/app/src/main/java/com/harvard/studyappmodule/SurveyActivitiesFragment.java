@@ -49,7 +49,7 @@ import com.harvard.AppConfig;
 import com.harvard.R;
 import com.harvard.notificationmodule.NotificationModuleSubscriber;
 import com.harvard.offlinemodule.model.OfflineData;
-import com.harvard.storagemodule.DBServiceSubscriber;
+import com.harvard.storagemodule.DbServiceSubscriber;
 import com.harvard.storagemodule.events.DatabaseEvent;
 import com.harvard.studyappmodule.activitybuilder.ActivityBuilder;
 import com.harvard.studyappmodule.activitybuilder.CustomSurveyViewTaskActivity;
@@ -93,14 +93,14 @@ import com.harvard.utils.AppController;
 import com.harvard.utils.Logger;
 import com.harvard.utils.SetDialogHelper;
 import com.harvard.utils.SharedPreferenceHelper;
-import com.harvard.utils.URLs;
+import com.harvard.utils.Urls;
 import com.harvard.webservicemodule.apihelper.ApiCall;
 import com.harvard.webservicemodule.apihelper.ConnectionDetector;
 import com.harvard.webservicemodule.apihelper.HttpRequest;
 import com.harvard.webservicemodule.apihelper.Responsemodel;
 import com.harvard.webservicemodule.events.RegistrationServerEnrollmentConfigEvent;
 import com.harvard.webservicemodule.events.ResponseServerConfigEvent;
-import com.harvard.webservicemodule.events.WCPConfigEvent;
+import com.harvard.webservicemodule.events.WcpConfigEvent;
 import io.realm.Realm;
 import io.realm.RealmList;
 import io.realm.RealmObject;
@@ -172,7 +172,7 @@ public class SurveyActivitiesFragment extends Fragment
   private int deleteIndexNumberDb;
   private EligibilityConsent eligibilityConsent;
   private String titl;
-  private DBServiceSubscriber dbServiceSubscriber;
+  private DbServiceSubscriber dbServiceSubscriber;
   private Realm realm;
   private boolean activityUpdated = false;
   public static String DELETE = "deleted";
@@ -199,7 +199,7 @@ public class SurveyActivitiesFragment extends Fragment
     // Inflate the layout for this fragment
     View view = inflater.inflate(R.layout.fragment_survey_activities, container, false);
     initializeXmlId(view);
-    dbServiceSubscriber = new DBServiceSubscriber();
+    dbServiceSubscriber = new DbServiceSubscriber();
     realm = AppController.getRealmobj(context);
     try {
       AppController.getHelperHideKeyboard((Activity) context);
@@ -314,13 +314,13 @@ public class SurveyActivitiesFragment extends Fragment
     StudyList studyList =
         dbServiceSubscriber.getStudiesDetails(((SurveyActivity) context).getStudyId(), realm);
     String url =
-        URLs.STUDY_UPDATES
+        Urls.STUDY_UPDATES
             + "?studyId="
             + ((SurveyActivity) context).getStudyId()
             + "&studyVersion="
             + studyList.getStudyVersion();
-    WCPConfigEvent wcpConfigEvent =
-        new WCPConfigEvent(
+    WcpConfigEvent wcpConfigEvent =
+        new WcpConfigEvent(
             "get", url, STUDY_UPDATES, context, StudyUpdate.class, null, header, null, false, this);
 
     getUserStudyListEvent.setWcpConfigEvent(wcpConfigEvent);
@@ -335,9 +335,9 @@ public class SurveyActivitiesFragment extends Fragment
     AppController.getHelperProgressDialog().showProgress(context, "", "", false);
     GetActivityListEvent getActivityListEvent = new GetActivityListEvent();
     HashMap<String, String> header = new HashMap();
-    String url = URLs.ACTIVITY_LIST + "?studyId=" + ((SurveyActivity) context).getStudyId();
-    WCPConfigEvent wcpConfigEvent =
-        new WCPConfigEvent(
+    String url = Urls.ACTIVITY_LIST + "?studyId=" + ((SurveyActivity) context).getStudyId();
+    WcpConfigEvent wcpConfigEvent =
+        new WcpConfigEvent(
             "get",
             url,
             ACTIVTTYLIST_RESPONSECODE,
@@ -369,8 +369,8 @@ public class SurveyActivitiesFragment extends Fragment
       ConnectionDetector connectionDetector = new ConnectionDetector(context);
 
       String url =
-          URLs.BASE_URL_WCP_SERVER
-              + URLs.CONSENT_METADATA
+          Urls.BASE_URL_WCP_SERVER
+              + Urls.CONSENT_METADATA
               + "?studyId="
               + ((SurveyActivity) context).getStudyId();
       if (connectionDetector.isConnectingToInternet()) {
@@ -496,9 +496,9 @@ public class SurveyActivitiesFragment extends Fragment
   private void saveConsentToDB(Context context, EligibilityConsent eligibilityConsent) {
     DatabaseEvent databaseEvent = new DatabaseEvent();
     databaseEvent.setE(eligibilityConsent);
-    databaseEvent.setmType(DBServiceSubscriber.TYPE_COPY_UPDATE);
+    databaseEvent.setmType(DbServiceSubscriber.TYPE_COPY_UPDATE);
     databaseEvent.setaClass(EligibilityConsent.class);
-    databaseEvent.setmOperation(DBServiceSubscriber.INSERT_AND_UPDATE_OPERATION);
+    databaseEvent.setmOperation(DbServiceSubscriber.INSERT_AND_UPDATE_OPERATION);
     dbServiceSubscriber.insert(context, databaseEvent);
   }
 
@@ -649,7 +649,7 @@ public class SurveyActivitiesFragment extends Fragment
           dbServiceSubscriber.getStudies(((SurveyActivity) context).getStudyId(), realm);
 
       String url =
-          URLs.ACTIVITY_STATE
+          Urls.ACTIVITY_STATE
               + "?studyId="
               + ((SurveyActivity) context).getStudyId()
               + "&participantId="
@@ -1417,10 +1417,10 @@ public class SurveyActivitiesFragment extends Fragment
     HashMap<String, String> header = new HashMap<>();
     String studyId = ((SurveyActivity) context).getStudyId();
     header.put("studyId", studyId);
-    String url = URLs.RESOURCE_LIST + "?studyId=" + studyId;
+    String url = Urls.RESOURCE_LIST + "?studyId=" + studyId;
     GetResourceListEvent getResourceListEvent = new GetResourceListEvent();
-    WCPConfigEvent wcpConfigEvent =
-        new WCPConfigEvent(
+    WcpConfigEvent wcpConfigEvent =
+        new WcpConfigEvent(
             "get",
             url,
             RESOURCE_REQUEST_CODE,
@@ -1440,10 +1440,10 @@ public class SurveyActivitiesFragment extends Fragment
   private void callGetStudyInfoWebservice() {
     String studyId = ((SurveyActivity) context).getStudyId();
     HashMap<String, String> header = new HashMap<>();
-    String url = URLs.STUDY_INFO + "?studyId=" + studyId;
+    String url = Urls.STUDY_INFO + "?studyId=" + studyId;
     GetUserStudyInfoEvent getUserStudyInfoEvent = new GetUserStudyInfoEvent();
-    WCPConfigEvent wcpConfigEvent =
-        new WCPConfigEvent(
+    WcpConfigEvent wcpConfigEvent =
+        new WcpConfigEvent(
             "get",
             url,
             STUDY_INFO,
@@ -2390,7 +2390,7 @@ public class SurveyActivitiesFragment extends Fragment
     RegistrationServerEnrollmentConfigEvent registrationServerEnrollmentConfigEvent =
         new RegistrationServerEnrollmentConfigEvent(
             "post_object",
-            URLs.UPDATE_STUDY_PREFERENCE,
+            Urls.UPDATE_STUDY_PREFERENCE,
             UPDATE_STUDY_PREFERENCE,
             context,
             LoginData.class,
@@ -2539,9 +2539,9 @@ public class SurveyActivitiesFragment extends Fragment
   private <E> void insertAndUpdateToDB(Context context, E e) {
     DatabaseEvent databaseEvent = new DatabaseEvent();
     databaseEvent.setE(e);
-    databaseEvent.setmType(DBServiceSubscriber.TYPE_COPY_UPDATE);
+    databaseEvent.setmType(DbServiceSubscriber.TYPE_COPY_UPDATE);
     databaseEvent.setaClass(EligibilityConsent.class);
-    databaseEvent.setmOperation(DBServiceSubscriber.INSERT_AND_UPDATE_OPERATION);
+    databaseEvent.setmOperation(DbServiceSubscriber.INSERT_AND_UPDATE_OPERATION);
     dbServiceSubscriber.insert(context, databaseEvent);
   }
 
@@ -2633,15 +2633,15 @@ public class SurveyActivitiesFragment extends Fragment
     GetActivityInfoEvent getActivityInfoEvent = new GetActivityInfoEvent();
     HashMap<String, String> header = new HashMap();
     String url =
-        URLs.ACTIVITY
+        Urls.ACTIVITY
             + "?studyId="
             + ((SurveyActivity) context).getStudyId()
             + "&activityId="
             + activityId
             + "&activityVersion="
             + activityVersion;
-    WCPConfigEvent wcpConfigEvent =
-        new WCPConfigEvent(
+    WcpConfigEvent wcpConfigEvent =
+        new WcpConfigEvent(
             "get",
             url,
             ACTIVTTYINFO_RESPONSECODE,
@@ -2844,7 +2844,7 @@ public class SurveyActivitiesFragment extends Fragment
           context,
           number,
           "post_object",
-          URLs.UPDATE_ACTIVITY_PREFERENCE,
+          Urls.UPDATE_ACTIVITY_PREFERENCE,
           "",
           jsonObject.toString(),
           "ResponseServer",
@@ -2858,7 +2858,7 @@ public class SurveyActivitiesFragment extends Fragment
     ResponseServerConfigEvent responseServerConfigEvent =
         new ResponseServerConfigEvent(
             "post_object",
-            URLs.UPDATE_ACTIVITY_PREFERENCE,
+            Urls.UPDATE_ACTIVITY_PREFERENCE,
             UPDATE_USERPREFERENCE_RESPONSECODE,
             context,
             LoginData.class,
@@ -2934,7 +2934,7 @@ public class SurveyActivitiesFragment extends Fragment
                 .findFirst();
         responseModel =
             HttpRequest.getRequest(
-                URLs.PROCESSRESPONSEDATA
+                Urls.PROCESSRESPONSEDATA
                     + AppConfig.ORG_ID_KEY
                     + "="
                     + AppConfig.ORG_ID_VALUE

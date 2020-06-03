@@ -38,14 +38,14 @@ import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
 import com.harvard.R;
 import com.harvard.offlinemodule.model.OfflineData;
-import com.harvard.storagemodule.DBServiceSubscriber;
+import com.harvard.storagemodule.DbServiceSubscriber;
 import com.harvard.storagemodule.events.DatabaseEvent;
 import com.harvard.studyappmodule.consent.ConsentBuilder;
 import com.harvard.studyappmodule.consent.CustomConsentViewTaskActivity;
 import com.harvard.studyappmodule.consent.model.Consent;
 import com.harvard.studyappmodule.consent.model.CorrectAnswerString;
 import com.harvard.studyappmodule.consent.model.EligibilityConsent;
-import com.harvard.studyappmodule.events.ConsentPDFEvent;
+import com.harvard.studyappmodule.events.ConsentPdfEvent;
 import com.harvard.studyappmodule.events.GetUserStudyInfoEvent;
 import com.harvard.studyappmodule.events.GetUserStudyListEvent;
 import com.harvard.studyappmodule.studymodel.ConsentDocumentData;
@@ -64,14 +64,14 @@ import com.harvard.usermodule.webservicemodel.Studies;
 import com.harvard.usermodule.webservicemodel.StudyData;
 import com.harvard.utils.AppController;
 import com.harvard.utils.Logger;
-import com.harvard.utils.URLs;
+import com.harvard.utils.Urls;
 import com.harvard.webservicemodule.apihelper.ApiCall;
 import com.harvard.webservicemodule.apihelper.ConnectionDetector;
 import com.harvard.webservicemodule.apihelper.HttpRequest;
 import com.harvard.webservicemodule.apihelper.Responsemodel;
 import com.harvard.webservicemodule.events.RegistrationServerConsentConfigEvent;
 import com.harvard.webservicemodule.events.RegistrationServerEnrollmentConfigEvent;
-import com.harvard.webservicemodule.events.WCPConfigEvent;
+import com.harvard.webservicemodule.events.WcpConfigEvent;
 import io.realm.Realm;
 import io.realm.RealmList;
 import io.realm.RealmObject;
@@ -128,7 +128,7 @@ public class StudyFragment extends Fragment implements ApiCall.OnAsyncRequestCom
 
   private int deleteIndexNumberDb;
   private String latestConsentVersion = "0";
-  private DBServiceSubscriber dbServiceSubscriber;
+  private DbServiceSubscriber dbServiceSubscriber;
   private Realm realm;
   private boolean webserviceCall = false;
   private RealmList<StudyList> filteredStudyList = new RealmList<>();
@@ -160,7 +160,7 @@ public class StudyFragment extends Fragment implements ApiCall.OnAsyncRequestCom
     // Inflate the layout for this fragment
     View view = inflater.inflate(R.layout.fragment_study, container, false);
     initializeXmlId(view);
-    dbServiceSubscriber = new DBServiceSubscriber();
+    dbServiceSubscriber = new DbServiceSubscriber();
     realm = AppController.getRealmobj(context);
     studyListArrayList = new RealmList<>();
     bindEvents();
@@ -685,7 +685,7 @@ public class StudyFragment extends Fragment implements ApiCall.OnAsyncRequestCom
         tempStudyList = filteredStudyList;
       }
     } else {
-      filteredStudyList.addAll(filteredStudyList);
+      filteredStudyList.addAll(this.filteredStudyList);
     }
     return filteredStudyList;
   }
@@ -820,10 +820,10 @@ public class StudyFragment extends Fragment implements ApiCall.OnAsyncRequestCom
     }
     GetUserStudyListEvent getUserStudyListEvent = new GetUserStudyListEvent();
     HashMap<String, String> header = new HashMap();
-    WCPConfigEvent wcpConfigEvent =
-        new WCPConfigEvent(
+    WcpConfigEvent wcpConfigEvent =
+        new WcpConfigEvent(
             "get",
-            URLs.STUDY_LIST,
+            Urls.STUDY_LIST,
             STUDY_LIST,
             context,
             Study.class,
@@ -870,7 +870,7 @@ public class StudyFragment extends Fragment implements ApiCall.OnAsyncRequestCom
           RegistrationServerEnrollmentConfigEvent registrationServerEnrollmentConfigEvent =
               new RegistrationServerEnrollmentConfigEvent(
                   "get",
-                  URLs.STUDY_STATE,
+                  Urls.STUDY_STATE,
                   GET_PREFERENCES,
                   context,
                   StudyData.class,
@@ -1030,7 +1030,7 @@ public class StudyFragment extends Fragment implements ApiCall.OnAsyncRequestCom
   }
 
   private void callGetConsentPdfWebservice() {
-    ConsentPDFEvent consentPdfEvent = new ConsentPDFEvent();
+    ConsentPdfEvent consentPdfEvent = new ConsentPdfEvent();
     HashMap<String, String> header = new HashMap<>();
     header.put(
         "accessToken",
@@ -1040,7 +1040,7 @@ public class StudyFragment extends Fragment implements ApiCall.OnAsyncRequestCom
         "userId",
         AppController.getHelperSharedPreference()
             .readPreference(context, getResources().getString(R.string.userid), ""));
-    String url = URLs.CONSENTPDF + "?studyId=" + studyId + "&consentVersion=";
+    String url = Urls.CONSENTPDF + "?studyId=" + studyId + "&consentVersion=";
     RegistrationServerConsentConfigEvent registrationServerConsentConfigEvent =
         new RegistrationServerConsentConfigEvent(
             "get",
@@ -1061,9 +1061,9 @@ public class StudyFragment extends Fragment implements ApiCall.OnAsyncRequestCom
   private void saveConsentToDB(Context context, EligibilityConsent eligibilityConsent) {
     DatabaseEvent databaseEvent = new DatabaseEvent();
     databaseEvent.setE(eligibilityConsent);
-    databaseEvent.setmType(DBServiceSubscriber.TYPE_COPY_UPDATE);
+    databaseEvent.setmType(DbServiceSubscriber.TYPE_COPY_UPDATE);
     databaseEvent.setaClass(EligibilityConsent.class);
-    databaseEvent.setmOperation(DBServiceSubscriber.INSERT_AND_UPDATE_OPERATION);
+    databaseEvent.setmOperation(DbServiceSubscriber.INSERT_AND_UPDATE_OPERATION);
     dbServiceSubscriber.insert(context, databaseEvent);
   }
 
@@ -1097,7 +1097,7 @@ public class StudyFragment extends Fragment implements ApiCall.OnAsyncRequestCom
     protected String doInBackground(String... params) {
       ConnectionDetector connectionDetector = new ConnectionDetector(context);
 
-      String url = URLs.BASE_URL_WCP_SERVER + URLs.CONSENT_METADATA + "?studyId=" + studyId;
+      String url = Urls.BASE_URL_WCP_SERVER + Urls.CONSENT_METADATA + "?studyId=" + studyId;
       if (connectionDetector.isConnectingToInternet()) {
         responseModel = HttpRequest.getRequest(url, new HashMap<String, String>(), "WCP");
         responseCode = responseModel.getResponseCode();
@@ -1253,14 +1253,14 @@ public class StudyFragment extends Fragment implements ApiCall.OnAsyncRequestCom
   private void getCurrentConsentDocument(String studyId) {
     HashMap<String, String> header = new HashMap<>();
     String url =
-        URLs.GET_CONSENT_DOC
+        Urls.GET_CONSENT_DOC
             + "?studyId="
             + studyId
             + "&consentVersion=&activityId=&activityVersion=";
     AppController.getHelperProgressDialog().showProgress(getActivity(), "", "", false);
     GetUserStudyInfoEvent getUserStudyInfoEvent = new GetUserStudyInfoEvent();
-    WCPConfigEvent wcpConfigEvent =
-        new WCPConfigEvent(
+    WcpConfigEvent wcpConfigEvent =
+        new WcpConfigEvent(
             "get",
             url,
             GET_CONSENT_DOC,
@@ -1281,9 +1281,9 @@ public class StudyFragment extends Fragment implements ApiCall.OnAsyncRequestCom
     AppController.getHelperProgressDialog().showProgress(getActivity(), "", "", false);
     GetUserStudyListEvent getUserStudyListEvent = new GetUserStudyListEvent();
     HashMap<String, String> header = new HashMap();
-    String url = URLs.STUDY_UPDATES + "?studyId=" + studyId + "&studyVersion=" + studyVersion;
-    WCPConfigEvent wcpConfigEvent =
-        new WCPConfigEvent(
+    String url = Urls.STUDY_UPDATES + "?studyId=" + studyId + "&studyVersion=" + studyVersion;
+    WcpConfigEvent wcpConfigEvent =
+        new WcpConfigEvent(
             "get", url, STUDY_UPDATES, context, StudyUpdate.class, null, header, null, false, this);
 
     getUserStudyListEvent.setWcpConfigEvent(wcpConfigEvent);
@@ -1399,7 +1399,7 @@ public class StudyFragment extends Fragment implements ApiCall.OnAsyncRequestCom
           context,
           number,
           "post_object",
-          URLs.UPDATE_STUDY_PREFERENCE,
+          Urls.UPDATE_STUDY_PREFERENCE,
           "",
           jsonObject.toString(),
           "RegistrationServerEnrollment",
@@ -1414,7 +1414,7 @@ public class StudyFragment extends Fragment implements ApiCall.OnAsyncRequestCom
     RegistrationServerEnrollmentConfigEvent registrationServerEnrollmentConfigEvent =
         new RegistrationServerEnrollmentConfigEvent(
             "post_object",
-            URLs.UPDATE_STUDY_PREFERENCE,
+            Urls.UPDATE_STUDY_PREFERENCE,
             UPDATE_PREFERENCES,
             context,
             LoginData.class,

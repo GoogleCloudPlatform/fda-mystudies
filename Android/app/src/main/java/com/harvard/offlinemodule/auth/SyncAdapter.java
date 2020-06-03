@@ -26,7 +26,7 @@ import android.os.Build;
 import android.os.Bundle;
 import com.harvard.R;
 import com.harvard.offlinemodule.model.OfflineData;
-import com.harvard.storagemodule.DBServiceSubscriber;
+import com.harvard.storagemodule.DbServiceSubscriber;
 import com.harvard.studyappmodule.StudyModulePresenter;
 import com.harvard.studyappmodule.events.ProcessResponseEvent;
 import com.harvard.usermodule.UserModulePresenter;
@@ -49,12 +49,12 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter
 
   private Context context;
   private static final int UPDATE_USERPREFERENCE_RESPONSECODE = 102;
-  private DBServiceSubscriber dbServiceSubscriber;
+  private DbServiceSubscriber dbServiceSubscriber;
 
   public SyncAdapter(Context context, boolean autoInitialize) {
     super(context, autoInitialize);
     this.context = context;
-    dbServiceSubscriber = new DBServiceSubscriber();
+    dbServiceSubscriber = new DbServiceSubscriber();
   }
 
   @Override
@@ -89,7 +89,7 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter
 
   private void getPendingData() {
     try {
-      dbServiceSubscriber = new DBServiceSubscriber();
+      dbServiceSubscriber = new DbServiceSubscriber();
       Realm realm = AppController.getRealmobj(context);
       RealmResults<OfflineData> results = dbServiceSubscriber.getOfflineData(realm);
       if (!results.isEmpty()) {

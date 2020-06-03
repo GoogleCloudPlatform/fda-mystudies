@@ -25,7 +25,7 @@ import android.view.View;
 import android.widget.TextView;
 import com.harvard.AppConfig;
 import com.harvard.R;
-import com.harvard.storagemodule.DBServiceSubscriber;
+import com.harvard.storagemodule.DbServiceSubscriber;
 import com.harvard.studyappmodule.ConsentCompletedActivity;
 import com.harvard.studyappmodule.StandaloneActivity;
 import com.harvard.studyappmodule.StudyActivity;
@@ -39,7 +39,7 @@ import com.harvard.usermodule.event.UpdatePreferenceEvent;
 import com.harvard.usermodule.webservicemodel.LoginData;
 import com.harvard.utils.AppController;
 import com.harvard.utils.Logger;
-import com.harvard.utils.URLs;
+import com.harvard.utils.Urls;
 import com.harvard.webservicemodule.apihelper.ApiCall;
 import com.harvard.webservicemodule.events.RegistrationServerEnrollmentConfigEvent;
 import io.realm.Realm;
@@ -56,7 +56,7 @@ public class EligibleActivity extends AppCompatActivity implements ApiCall.OnAsy
 
   private static final int CONSENT_RESPONSE_CODE = 100;
   private EligibilityConsent eligibilityConsent;
-  private DBServiceSubscriber dbServiceSubscriber;
+  private DbServiceSubscriber dbServiceSubscriber;
   private static final int UPDATE_USER_PREFERENCE_RESPONSE_CODE = 200;
   private Realm realm;
 
@@ -64,7 +64,7 @@ public class EligibleActivity extends AppCompatActivity implements ApiCall.OnAsy
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_eligible);
-    dbServiceSubscriber = new DBServiceSubscriber();
+    dbServiceSubscriber = new DbServiceSubscriber();
     realm = AppController.getRealmobj(this);
 
     TextView button = (TextView) findViewById(R.id.continueButton);
@@ -176,7 +176,7 @@ public class EligibleActivity extends AppCompatActivity implements ApiCall.OnAsy
     RegistrationServerEnrollmentConfigEvent registrationServerEnrollmentConfigEvent =
         new RegistrationServerEnrollmentConfigEvent(
             "post_object",
-            URLs.UPDATE_STUDY_PREFERENCE,
+            Urls.UPDATE_STUDY_PREFERENCE,
             UPDATE_USER_PREFERENCE_RESPONSE_CODE,
             this,
             LoginData.class,

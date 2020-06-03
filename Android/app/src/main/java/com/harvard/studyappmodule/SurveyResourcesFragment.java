@@ -36,7 +36,7 @@ import com.google.gson.reflect.TypeToken;
 import com.harvard.AppConfig;
 import com.harvard.R;
 import com.harvard.notificationmodule.NotificationModuleSubscriber;
-import com.harvard.storagemodule.DBServiceSubscriber;
+import com.harvard.storagemodule.DbServiceSubscriber;
 import com.harvard.studyappmodule.activitylistmodel.AnchorDateSchedulingDetails;
 import com.harvard.studyappmodule.custom.result.StepRecordCustom;
 import com.harvard.studyappmodule.events.DeleteAccountEvent;
@@ -55,14 +55,14 @@ import com.harvard.usermodule.webservicemodel.Studies;
 import com.harvard.utils.AppController;
 import com.harvard.utils.Logger;
 import com.harvard.utils.SharedPreferenceHelper;
-import com.harvard.utils.URLs;
+import com.harvard.utils.Urls;
 import com.harvard.webservicemodule.apihelper.ApiCall;
 import com.harvard.webservicemodule.apihelper.ConnectionDetector;
 import com.harvard.webservicemodule.apihelper.HttpRequest;
 import com.harvard.webservicemodule.apihelper.Responsemodel;
 import com.harvard.webservicemodule.events.RegistrationServerConfigEvent;
 import com.harvard.webservicemodule.events.RegistrationServerEnrollmentConfigEvent;
-import com.harvard.webservicemodule.events.WCPConfigEvent;
+import com.harvard.webservicemodule.events.WcpConfigEvent;
 import io.realm.Realm;
 import io.realm.RealmList;
 import io.realm.RealmResults;
@@ -92,7 +92,7 @@ public class SurveyResourcesFragment<T> extends Fragment implements ApiCall.OnAs
   private String studyId;
   private StudyHome studyHome;
   private StudyResource studyResource;
-  private DBServiceSubscriber dbServiceSubscriber;
+  private DbServiceSubscriber dbServiceSubscriber;
   private static String RESOURCES = "resources";
   private Realm realm;
   private String registrationServer = "false";
@@ -109,7 +109,7 @@ public class SurveyResourcesFragment<T> extends Fragment implements ApiCall.OnAs
       LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
     // Inflate the layout for this fragment
     View view = inflater.inflate(R.layout.fragment_survey_resources, container, false);
-    dbServiceSubscriber = new DBServiceSubscriber();
+    dbServiceSubscriber = new DbServiceSubscriber();
     realm = AppController.getRealmobj(context);
     initializeXmlId(view);
     setTextForView();
@@ -124,10 +124,10 @@ public class SurveyResourcesFragment<T> extends Fragment implements ApiCall.OnAs
     HashMap<String, String> header = new HashMap<>();
     studyId = ((SurveyActivity) context).getStudyId();
     header.put("studyId", studyId);
-    String url = URLs.RESOURCE_LIST + "?studyId=" + studyId;
+    String url = Urls.RESOURCE_LIST + "?studyId=" + studyId;
     GetResourceListEvent getResourceListEvent = new GetResourceListEvent();
-    WCPConfigEvent wcpConfigEvent =
-        new WCPConfigEvent(
+    WcpConfigEvent wcpConfigEvent =
+        new WcpConfigEvent(
             "get",
             url,
             RESOURCE_REQUEST_CODE,
@@ -147,10 +147,10 @@ public class SurveyResourcesFragment<T> extends Fragment implements ApiCall.OnAs
   private void callGetStudyInfoWebservice() {
     AppController.getHelperProgressDialog().showProgress(getActivity(), "", "", false);
     HashMap<String, String> header = new HashMap<>();
-    String url = URLs.STUDY_INFO + "?studyId=" + studyId;
+    String url = Urls.STUDY_INFO + "?studyId=" + studyId;
     GetUserStudyInfoEvent getUserStudyInfoEvent = new GetUserStudyInfoEvent();
-    WCPConfigEvent wcpConfigEvent =
-        new WCPConfigEvent(
+    WcpConfigEvent wcpConfigEvent =
+        new WcpConfigEvent(
             "get",
             url,
             STUDY_INFO,
@@ -666,7 +666,7 @@ public class SurveyResourcesFragment<T> extends Fragment implements ApiCall.OnAs
                 .findFirst();
         responseModel =
             HttpRequest.getRequest(
-                URLs.PROCESSRESPONSEDATA
+                Urls.PROCESSRESPONSEDATA
                     + AppConfig.ORG_ID_KEY
                     + "="
                     + AppConfig.ORG_ID_VALUE
@@ -917,7 +917,7 @@ public class SurveyResourcesFragment<T> extends Fragment implements ApiCall.OnAs
     RegistrationServerEnrollmentConfigEvent registrationServerEnrollmentConfigEvent =
         new RegistrationServerEnrollmentConfigEvent(
             "post_object",
-            URLs.WITHDRAW,
+            Urls.WITHDRAW,
             UPDATE_USERPREFERENCE_RESPONSECODE,
             context,
             LoginData.class,
@@ -1013,7 +1013,7 @@ public class SurveyResourcesFragment<T> extends Fragment implements ApiCall.OnAs
     RegistrationServerConfigEvent registrationServerConfigEvent =
         new RegistrationServerConfigEvent(
             "delete_object",
-            URLs.DELETE_ACCOUNT,
+            Urls.DELETE_ACCOUNT,
             DELETE_ACCOUNT_REPSONSECODE,
             context,
             LoginData.class,

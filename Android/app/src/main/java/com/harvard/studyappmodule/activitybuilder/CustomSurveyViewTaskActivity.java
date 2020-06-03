@@ -39,7 +39,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.harvard.R;
 import com.harvard.notificationmodule.NotificationModuleSubscriber;
-import com.harvard.storagemodule.DBServiceSubscriber;
+import com.harvard.storagemodule.DbServiceSubscriber;
 import com.harvard.studyappmodule.SurveyCompleteActivity;
 import com.harvard.studyappmodule.activitybuilder.model.Choices;
 import com.harvard.studyappmodule.activitybuilder.model.servicemodel.ActivityObj;
@@ -103,7 +103,7 @@ public class CustomSurveyViewTaskActivity<T> extends AppCompatActivity implement
   int currentStepPosition;
   Intent serviceintent;
   BroadcastReceiver receiver;
-  DBServiceSubscriber dbServiceSubscriber;
+  DbServiceSubscriber dbServiceSubscriber;
   String activityId;
   Realm realm;
   public static String RESOURCES = "resources";
@@ -149,7 +149,7 @@ public class CustomSurveyViewTaskActivity<T> extends AppCompatActivity implement
     Toolbar toolbar = (Toolbar) findViewById(org.researchstack.backbone.R.id.toolbar);
     setSupportActionBar(toolbar);
     getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-    dbServiceSubscriber = new DBServiceSubscriber();
+    dbServiceSubscriber = new DbServiceSubscriber();
     realm = AppController.getRealmobj(this);
     activityId = getIntent().getStringExtra(ACTIVITYID);
     currentRunStartDate = (Date) getIntent().getSerializableExtra(RUN_START_DATE);

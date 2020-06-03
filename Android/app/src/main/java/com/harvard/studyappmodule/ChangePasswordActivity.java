@@ -15,8 +15,6 @@
 
 package com.harvard.studyappmodule;
 
-import android.content.ComponentName;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
@@ -26,16 +24,14 @@ import android.support.v7.widget.AppCompatTextView;
 import android.view.View;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
-import com.harvard.AppConfig;
 import com.harvard.R;
 import com.harvard.usermodule.UserModulePresenter;
-import com.harvard.usermodule.VerificationStepActivity;
 import com.harvard.usermodule.event.ChangePasswordEvent;
 import com.harvard.usermodule.webservicemodel.ChangePasswordData;
 import com.harvard.utils.AppController;
 import com.harvard.utils.Logger;
 import com.harvard.utils.SharedPreferenceHelper;
-import com.harvard.utils.URLs;
+import com.harvard.utils.Urls;
 import com.harvard.webservicemodule.apihelper.ApiCall;
 import com.harvard.webservicemodule.events.AuthServerConfigEvent;
 import java.util.HashMap;
@@ -254,7 +250,7 @@ public class ChangePasswordActivity extends AppCompatActivity
     AuthServerConfigEvent authServerConfigEvent =
         new AuthServerConfigEvent(
             "post",
-            URLs.CHANGE_PASSWORD,
+            Urls.CHANGE_PASSWORD,
             CHANGE_PASSWORD_REQUEST,
             ChangePasswordActivity.this,
             ChangePasswordData.class,

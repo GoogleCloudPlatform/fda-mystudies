@@ -23,10 +23,10 @@ import com.harvard.webservicemodule.events.RegistrationServerConfigEvent;
 import com.harvard.webservicemodule.events.RegistrationServerConsentConfigEvent;
 import com.harvard.webservicemodule.events.RegistrationServerEnrollmentConfigEvent;
 import com.harvard.webservicemodule.events.ResponseServerConfigEvent;
-import com.harvard.webservicemodule.events.WCPConfigEvent;
+import com.harvard.webservicemodule.events.WcpConfigEvent;
 
 public class WebserviceSubscriber extends BaseSubscriber {
-  public void onEvent(WCPConfigEvent wcpConfigEvent) {
+  public void onEvent(WcpConfigEvent wcpConfigEvent) {
     String url = "";
     if (wcpConfigEvent
         .getmContext()

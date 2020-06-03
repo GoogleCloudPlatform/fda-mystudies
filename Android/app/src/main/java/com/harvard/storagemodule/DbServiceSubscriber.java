@@ -60,7 +60,7 @@ import java.util.Calendar;
 import java.util.Date;
 import org.researchstack.backbone.task.Task;
 
-public class DBServiceSubscriber {
+public class DbServiceSubscriber {
 
   public static final String INSERT_AND_UPDATE_OPERATION = "insertAndUpdate";
   public static final String TYPE_COPY = "copy";

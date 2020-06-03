@@ -40,7 +40,6 @@ import android.support.v7.widget.AppCompatTextView;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.style.ForegroundColorSpan;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -55,7 +54,7 @@ import com.google.gson.JsonSyntaxException;
 import com.google.gson.reflect.TypeToken;
 import com.harvard.AppConfig;
 import com.harvard.R;
-import com.harvard.storagemodule.DBServiceSubscriber;
+import com.harvard.storagemodule.DbServiceSubscriber;
 import com.harvard.studyappmodule.activitylistmodel.ActivitiesWS;
 import com.harvard.studyappmodule.activitylistmodel.ActivityListData;
 import com.harvard.studyappmodule.circularprogressbar.DonutProgress;
@@ -70,12 +69,12 @@ import com.harvard.usermodule.webservicemodel.Studies;
 import com.harvard.utils.AppController;
 import com.harvard.utils.Logger;
 import com.harvard.utils.SharedPreferenceHelper;
-import com.harvard.utils.URLs;
+import com.harvard.utils.Urls;
 import com.harvard.webservicemodule.apihelper.ApiCall;
 import com.harvard.webservicemodule.apihelper.ConnectionDetector;
 import com.harvard.webservicemodule.apihelper.HttpRequest;
 import com.harvard.webservicemodule.apihelper.Responsemodel;
-import com.harvard.webservicemodule.events.WCPConfigEvent;
+import com.harvard.webservicemodule.events.WcpConfigEvent;
 import io.realm.Realm;
 import io.realm.RealmList;
 import io.realm.RealmResults;
@@ -162,7 +161,7 @@ public class SurveyDashboardFragment extends Fragment implements ApiCall.OnAsync
   //  what we need to dispaly
   //  for handling day, week and month click added flags
   //  Once exact functionalities discussed thn bettr to implement
-  private DBServiceSubscriber dbServiceSubscriber;
+  private DbServiceSubscriber dbServiceSubscriber;
   private Realm realm;
   private static final int PERMISSION_REQUEST_CODE = 2000;
 
@@ -177,7 +176,7 @@ public class SurveyDashboardFragment extends Fragment implements ApiCall.OnAsync
       LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
     // Inflate the layout for this fragment
     view = inflater.inflate(R.layout.fragment_survey_dashboard, container, false);
-    dbServiceSubscriber = new DBServiceSubscriber();
+    dbServiceSubscriber = new DbServiceSubscriber();
     realm = AppController.getRealmobj(context);
     initializeXmlId(view);
     setFont();
@@ -242,9 +241,9 @@ public class SurveyDashboardFragment extends Fragment implements ApiCall.OnAsync
     AppController.getHelperProgressDialog().showProgress(context, "", "", false);
     GetActivityListEvent getActivityListEvent = new GetActivityListEvent();
     HashMap<String, String> header = new HashMap();
-    String url = URLs.DASHBOARD_INFO + "?studyId=" + ((SurveyActivity) context).getStudyId();
-    WCPConfigEvent wcpConfigEvent =
-        new WCPConfigEvent(
+    String url = Urls.DASHBOARD_INFO + "?studyId=" + ((SurveyActivity) context).getStudyId();
+    WcpConfigEvent wcpConfigEvent =
+        new WcpConfigEvent(
             "get",
             url,
             DASHBOARD_INFO,
@@ -1278,7 +1277,7 @@ public class SurveyDashboardFragment extends Fragment implements ApiCall.OnAsync
         Studies studies = realm.where(Studies.class).equalTo("studyId", studyId).findFirst();
         responseModel =
             HttpRequest.getRequest(
-                URLs.PROCESSRESPONSEDATA
+                Urls.PROCESSRESPONSEDATA
                     + AppConfig.ORG_ID_KEY
                     + "="
                     + AppConfig.ORG_ID_VALUE

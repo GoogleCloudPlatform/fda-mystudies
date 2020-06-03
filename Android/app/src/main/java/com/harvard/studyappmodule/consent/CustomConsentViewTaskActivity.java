@@ -42,7 +42,7 @@ import com.google.gson.Gson;
 import com.harvard.R;
 import com.harvard.eligibilitymodule.ComprehensionFailureActivity;
 import com.harvard.eligibilitymodule.ComprehensionSuccessActivity;
-import com.harvard.storagemodule.DBServiceSubscriber;
+import com.harvard.storagemodule.DbServiceSubscriber;
 import com.harvard.studyappmodule.StudyFragment;
 import com.harvard.studyappmodule.StudyModulePresenter;
 import com.harvard.studyappmodule.consent.model.ComprehensionCorrectAnswers;
@@ -65,11 +65,11 @@ import com.harvard.usermodule.webservicemodel.StudyData;
 import com.harvard.utils.AppController;
 import com.harvard.utils.Logger;
 import com.harvard.utils.SharedPreferenceHelper;
-import com.harvard.utils.URLs;
+import com.harvard.utils.Urls;
 import com.harvard.webservicemodule.apihelper.ApiCall;
 import com.harvard.webservicemodule.events.RegistrationServerConsentConfigEvent;
 import com.harvard.webservicemodule.events.RegistrationServerEnrollmentConfigEvent;
-import com.harvard.webservicemodule.events.WCPConfigEvent;
+import com.harvard.webservicemodule.events.WcpConfigEvent;
 import com.tom_roush.pdfbox.pdmodel.PDDocument;
 import com.tom_roush.pdfbox.pdmodel.PDPage;
 import com.tom_roush.pdfbox.pdmodel.PDPageContentStream;
@@ -136,7 +136,7 @@ public class CustomConsentViewTaskActivity extends AppCompatActivity
   private Consent consent;
   private RealmList<ComprehensionCorrectAnswers> comprehensionCorrectAnswerses;
   private Step previousStep;
-  private DBServiceSubscriber dbServiceSubscriber;
+  private DbServiceSubscriber dbServiceSubscriber;
   private Realm realm;
   private static final int UPDATE_USERPREFERENCE_RESPONSECODE = 102;
   private static final int GET_PREFERENCES = 2016;
@@ -176,7 +176,7 @@ public class CustomConsentViewTaskActivity extends AppCompatActivity
     getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
     root = (StepSwitcherCustom) findViewById(R.id.container);
-    dbServiceSubscriber = new DBServiceSubscriber();
+    dbServiceSubscriber = new DbServiceSubscriber();
     realm = AppController.getRealmobj(this);
     studyList = dbServiceSubscriber.getStudiesDetails(getIntent().getStringExtra(STUDYID), realm);
 
@@ -500,7 +500,7 @@ public class CustomConsentViewTaskActivity extends AppCompatActivity
     RegistrationServerEnrollmentConfigEvent registrationServerEnrollmentConfigEvent =
         new RegistrationServerEnrollmentConfigEvent(
             "post_json",
-            URLs.ENROLL_ID,
+            Urls.ENROLL_ID,
             ENROLL_ID_RESPONSECODE,
             CustomConsentViewTaskActivity.this,
             EnrollData.class,
@@ -573,7 +573,7 @@ public class CustomConsentViewTaskActivity extends AppCompatActivity
     RegistrationServerEnrollmentConfigEvent registrationServerEnrollmentConfigEvent =
         new RegistrationServerEnrollmentConfigEvent(
             "post_object",
-            URLs.UPDATE_STUDY_PREFERENCE,
+            Urls.UPDATE_STUDY_PREFERENCE,
             UPDATE_USERPREFERENCE_RESPONSECODE,
             this,
             LoginData.class,
@@ -755,7 +755,7 @@ public class CustomConsentViewTaskActivity extends AppCompatActivity
       agreeBuilder.append(String.format("<p style=\"text-align: center\">%1$s</p>", detail));
 
       String timeStamp = AppController.getDateFormatType3();
-      PDFWriter pdfWriter = new PDFWriter("/data/data/" + getPackageName() + "/files/", timeStamp);
+      PdfWriter pdfWriter = new PdfWriter("/data/data/" + getPackageName() + "/files/", timeStamp);
       pdfWriter.createPdfFile(CustomConsentViewTaskActivity.this);
 
       StringBuffer pageText = new StringBuffer();
@@ -890,17 +890,17 @@ public class CustomConsentViewTaskActivity extends AppCompatActivity
     AppController.getHelperProgressDialog()
         .showProgress(CustomConsentViewTaskActivity.this, "", "", false);
     GetUserStudyListEvent getUserStudyListEvent = new GetUserStudyListEvent();
-    DBServiceSubscriber dbServiceSubscriber = new DBServiceSubscriber();
+    DbServiceSubscriber dbServiceSubscriber = new DbServiceSubscriber();
     HashMap<String, String> header = new HashMap();
 
     String url =
-        URLs.STUDY_UPDATES
+        Urls.STUDY_UPDATES
             + "?studyId="
             + getIntent().getStringExtra(STUDYID)
             + "&studyVersion="
             + studyList.getStudyVersion();
-    WCPConfigEvent wcpConfigEvent =
-        new WCPConfigEvent(
+    WcpConfigEvent wcpConfigEvent =
+        new WcpConfigEvent(
             "get",
             url,
             STUDY_UPDATES,
@@ -958,7 +958,7 @@ public class CustomConsentViewTaskActivity extends AppCompatActivity
       RegistrationServerConsentConfigEvent registrationServerConsentConfigEvent =
           new RegistrationServerConsentConfigEvent(
               "post_object",
-              URLs.UPDATE_ELIGIBILITY_CONSENT,
+              Urls.UPDATE_ELIGIBILITY_CONSENT,
               UPDATE_ELIGIBILITY_CONSENT_RESPONSECODE,
               CustomConsentViewTaskActivity.this,
               LoginData.class,
@@ -1008,7 +1008,7 @@ public class CustomConsentViewTaskActivity extends AppCompatActivity
     RegistrationServerEnrollmentConfigEvent registrationServerEnrollmentConfigEvent =
         new RegistrationServerEnrollmentConfigEvent(
             "get",
-            URLs.STUDY_STATE,
+            Urls.STUDY_STATE,
             GET_PREFERENCES,
             CustomConsentViewTaskActivity.this,
             StudyData.class,
