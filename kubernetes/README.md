@@ -92,14 +92,27 @@ just "my-studies".
 
 Import the scripts, in this order:
 
+#### Auth server
 ```
-$ gcloud sql import sql --project=mystudies-demo-data my-studies gs://mystudies-demo-data-sql-import/auth_server_db_script.sql
-$ gcloud sql import sql --project=mystudies-demo-data my-studies gs://mystudies-demo-data-sql-import/HPHC_My_Studies_DB_Create_Script.sql
-$ gcloud sql import sql --project=mystudies-demo-data my-studies gs://mystudies-demo-data-sql-import/procedures.sql
-$ gcloud sql import sql --project=mystudies-demo-data my-studies gs://mystudies-demo-data-sql-import/version_info_script.sql
-$ gcloud sql import sql --project=mystudies-demo-data my-studies gs://mystudies-demo-data-sql-import/mystudies_response_server_db_script.sql
-$ gcloud sql import sql --project=mystudies-demo-data my-studies gs://mystudies-demo-data-sql-import/mystudies_user_registration_db_script.sql
-$ gcloud sql import sql --project=mystudies-demo-data my-studies gs://mystudies-demo-data-sql-import/mystudies_app_info_update_db_script.sql
+$ gcloud sql import sql --project=<data-project-id> <instance-name> gs://<data-project-id>-sql-import/auth_server_db_script.sql
+```
+
+#### Study builder
+```
+$ gcloud sql import sql --project=<data-project-id> <instance-name> gs://<data-project-id>-sql-import/HPHC_My_Studies_DB_Create_Script.sql
+$ gcloud sql import sql --project=<data-project-id> <instance-name> gs://<data-project-id>-sql-import/procedures.sql
+$ gcloud sql import sql --project=<data-project-id> <instance-name> gs://<data-project-id>-sql-import/version_info_script.sql
+```
+
+#### Response datastore
+```
+$ gcloud sql import sql --project=<data-project-id> <instance-name> gs://<data-project-id>-sql-import/mystudies_response_server_db_script.sql
+```
+
+#### User registration datastore
+```
+$ gcloud sql import sql --project=<data-project-id> <instance-name> gs://<data-project-id>-sql-import/mystudies_user_registration_db_script.sql
+$ gcloud sql import sql --project=<data-project-id> <instance-name> gs://<data-project-id>-sql-import/mystudies_app_info_update_db_script.sql
 ```
 
 ### Kubernetes Config Values
@@ -227,3 +240,8 @@ If the cluster has issues, there are a few things you can check:
 *   Follow a troubleshooting guide. Examples are
     [this](https://learnk8s.io/troubleshooting-deployments) and
     [this](https://kubernetes.io/docs/tasks/debug-application-cluster/debug-cluster/).
+*   As of now there is a known issue with Firewalls in ingress-gce. References [kubernetes/ingress-gce#485](https://github.com/kubernetes/ingress-gce/issues/485) 
+    and/or  [kubernetes/ingress-gce#584](https://github.com/kubernetes/ingress-gce/issues/584)
+    1. Run kubectl describe ingress <ingress-name>
+    1. Look at the suggested commands under "Events", in the form of "Firewall change required by network admin: <gcloud command>". 
+    1. Run each of the suggested commands.

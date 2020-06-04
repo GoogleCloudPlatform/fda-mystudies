@@ -80,28 +80,11 @@ enum iOSVersion {
 class Utilities: NSObject {
 
   class func isStandaloneApp() -> Bool {
-
-    var infoDict: NSDictionary?
-    if let path = Bundle.main.path(forResource: "Info", ofType: "plist") {
-      infoDict = NSDictionary(contentsOfFile: path)
-    }
-
-    guard infoDict != nil else { return false }
-
-    return Bool(infoDict!["IsStandaloneStudyApp"] as? String ?? "") ?? false
-
+    return Branding.isStandaloneStudyApp
   }
 
   class func standaloneStudyId() -> String {
-
-    var infoDict: NSDictionary?
-    if let path = Bundle.main.path(forResource: "Info", ofType: "plist") {
-      infoDict = NSDictionary(contentsOfFile: path)
-    }
-
-    guard infoDict != nil else { return "" }
-
-    return String(infoDict!["StandaloneStudyId"] as? String ?? "")
+    return Branding.standaloneStudyID
   }
 
   class func getAttributedText(

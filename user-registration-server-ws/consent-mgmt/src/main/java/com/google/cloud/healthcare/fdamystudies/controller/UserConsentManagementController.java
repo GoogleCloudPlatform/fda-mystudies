@@ -5,17 +5,16 @@
  * license that can be found in the LICENSE file or at
  * https://opensource.org/licenses/MIT.
  */
+
 package com.google.cloud.healthcare.fdamystudies.controller;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-
 import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Context;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,7 +28,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
 import com.google.cloud.healthcare.fdamystudies.bean.ConsentStatusBean;
 import com.google.cloud.healthcare.fdamystudies.bean.ConsentStudyResponseBean;
 import com.google.cloud.healthcare.fdamystudies.bean.ErrorBean;
@@ -83,10 +81,7 @@ public class UserConsentManagementController {
           && ((consentStatusBean.getConsent().getVersion() != null)
               && (consentStatusBean.getConsent().getPdf() != null))
           && (consentStatusBean.getConsent().getStatus() != null)) {
-        if ((consentStatusBean.getStudyId() != null)
-            && !StringUtils.isEmpty(consentStatusBean.getStudyId())
-            && (userId != null)
-            && !StringUtils.isEmpty(userId)) {
+        if (!StringUtils.isEmpty(consentStatusBean.getStudyId()) && !StringUtils.isEmpty(userId)) {
           studyInfoBean =
               userConsentManagementService.getStudyInfoId(consentStatusBean.getStudyId());
           ParticipantStudiesBO participantStudies =
@@ -96,8 +91,7 @@ public class UserConsentManagementController {
             if (consentStatusBean.getEligibility() != null) {
               participantStudies.setEligibility(consentStatusBean.getEligibility());
             }
-            if ((consentStatusBean.getSharing() != null)
-                && !StringUtils.isEmpty(consentStatusBean.getSharing())) {
+            if (!StringUtils.isEmpty(consentStatusBean.getSharing())) {
               participantStudies.setSharing(consentStatusBean.getSharing());
             }
             List<ParticipantStudiesBO> participantStudiesList =
@@ -107,8 +101,7 @@ public class UserConsentManagementController {
                 userConsentManagementService.saveParticipantStudies(participantStudiesList);
 
             StudyConsentBO studyConsent = null;
-            if ((consentStatusBean.getConsent().getVersion() != null)
-                && !StringUtils.isEmpty(consentStatusBean.getConsent().getVersion())) {
+            if (!StringUtils.isEmpty(consentStatusBean.getConsent().getVersion())) {
               studyConsent =
                   userConsentManagementService.getStudyConsent(
                       userId,
@@ -116,16 +109,13 @@ public class UserConsentManagementController {
                       consentStatusBean.getConsent().getVersion());
               userDetailId = userConsentManagementService.getUserDetailsId(userId);
               if (studyConsent != null) {
-                if ((consentStatusBean.getConsent().getVersion() != null)
-                    && !StringUtils.isEmpty(consentStatusBean.getConsent().getVersion())) {
+                if (!StringUtils.isEmpty(consentStatusBean.getConsent().getVersion())) {
                   studyConsent.setVersion(consentStatusBean.getConsent().getVersion());
                 }
-                if ((consentStatusBean.getConsent().getStatus() != null)
-                    && !StringUtils.isEmpty(consentStatusBean.getConsent().getStatus())) {
+                if (!StringUtils.isEmpty(consentStatusBean.getConsent().getStatus())) {
                   studyConsent.setStatus(consentStatusBean.getConsent().getStatus());
                 }
-                if ((consentStatusBean.getConsent().getPdf() != null)
-                    && !StringUtils.isEmpty(consentStatusBean.getConsent().getPdf())) {
+                if (!StringUtils.isEmpty(consentStatusBean.getConsent().getPdf())) {
                   String underDirectory = userId + "/" + consentStatusBean.getStudyId();
                   String fileName =
                       userId
@@ -149,8 +139,7 @@ public class UserConsentManagementController {
                 studyConsent.setStudyInfoId(studyInfoBean.getStudyInfoId());
                 studyConsent.setStatus(consentStatusBean.getConsent().getStatus());
                 studyConsent.setVersion(consentStatusBean.getConsent().getVersion());
-                if ((consentStatusBean.getConsent().getPdf() != null)
-                    && !StringUtils.isEmpty(consentStatusBean.getConsent().getPdf())) {
+                if (!StringUtils.isEmpty(consentStatusBean.getConsent().getPdf())) {
                   String underDirectory = userId + "/" + consentStatusBean.getStudyId();
                   String fileName =
                       userId
@@ -229,7 +218,7 @@ public class UserConsentManagementController {
   }
 
   @GetMapping(value = "/consentDocument", produces = MediaType.APPLICATION_JSON_VALUE)
-  public ResponseEntity<?> getStudyConsentPDF(
+  public ResponseEntity<?> getStudyConsentPdf(
       @RequestHeader("userId") String userId,
       @QueryParam("studyId") String studyId,
       @QueryParam("consentVersion") String consentVersion,
@@ -239,10 +228,7 @@ public class UserConsentManagementController {
     ConsentStudyResponseBean consentStudyResponseBean = null;
     StudyInfoBean studyInfoBean = null;
     try {
-      if ((studyId != null)
-          && !StringUtils.isEmpty(studyId)
-          && (userId != null)
-          && !StringUtils.isEmpty(userId)) {
+      if (!StringUtils.isEmpty(studyId) && !StringUtils.isEmpty(userId)) {
         studyInfoBean = userConsentManagementService.getStudyInfoId(studyId);
         consentStudyResponseBean =
             userConsentManagementService.getStudyConsentDetails(
