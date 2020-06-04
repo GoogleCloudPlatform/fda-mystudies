@@ -19,6 +19,7 @@ spec:
       containers:
         - name: response-server-ws
           image: gcr.io/mystudies-demo-apps/response-server-ws:latest
+          imagePullPolicy: Always
           env:
             - name: DB_USER
               valueFrom:
