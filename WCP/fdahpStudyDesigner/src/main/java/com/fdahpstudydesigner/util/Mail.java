@@ -78,7 +78,6 @@ public class Mail {
   // will authenticate with the provided fromEmailAddress and fromEmailPass.
   private Boolean useIpWhitelist = false;
 
-
   public String getAttachmentPath() {
     return attachmentPath;
   }
@@ -131,7 +130,6 @@ public class Mail {
   }
 
   public String getSslFactory() {
-
     String sslfactoryvalue;
     if (("").equals(this.sslFactory)) {
       sslfactoryvalue = Mail.SSL_FACTORY;
@@ -151,21 +149,19 @@ public class Mail {
   }
 
   public boolean sendemail() {
-    logger.warn("sendemail()====start");
+    logger.info("Mail.sendemail() :: Starts");
     boolean sentMail = false;
     try {
       final String username = this.getFromEmailAddress();
       final String password = this.getFromEmailPassword();
       Properties props = makeProperties(useIpWhitelist);
-      Session session =
-          useIpWhitelist ? makeSession(props) : makeSession(props, username, password);
+      Session session = useIpWhitelist ? makeSession(props) : makeSession(props, username, password);
 
       Message message = new MimeMessage(session);
       message.setFrom(new InternetAddress(username));
       if (StringUtils.isNotBlank(this.getToemail())) {
         if (this.getToemail().indexOf(',') != -1) {
-          message.setRecipients(
-              Message.RecipientType.BCC, InternetAddress.parse(this.getToemail()));
+          message.setRecipients(Message.RecipientType.BCC, InternetAddress.parse(this.getToemail()));
         } else {
           message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(this.getToemail()));
         }
@@ -193,12 +189,13 @@ public class Mail {
       logger.error("ERROR: sendemail() - ", e);
       sentMail = false;
     }
+    logger.info(" email send is: " + this.subject);
     logger.info("Mail.sendemail() :: Ends");
     return sentMail;
   }
 
   public boolean sendMailWithAttachment() {
-    logger.debug("sendemail()====start");
+    logger.info("Mail.sendMailWithAttachment() :: Starts");
     boolean sentMail = false;
     BodyPart messageBodyPart = null;
     Multipart multipart = null;
@@ -207,14 +204,12 @@ public class Mail {
       final String username = this.getFromEmailAddress();
       final String password = this.getFromEmailPassword();
       Properties props = makeProperties(useIpWhitelist);
-      Session session =
-          useIpWhitelist ? makeSession(props) : makeSession(props, username, password);
+      Session session = useIpWhitelist ? makeSession(props) : makeSession(props, username, password);
 
       Message message = new MimeMessage(session);
       if (StringUtils.isNotBlank(this.getToemail())) {
         if (this.getToemail().indexOf(',') != -1) {
-          message.setRecipients(
-              Message.RecipientType.BCC, InternetAddress.parse(this.getToemail()));
+          message.setRecipients(Message.RecipientType.BCC, InternetAddress.parse(this.getToemail()));
         } else {
           message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(this.getToemail()));
         }
@@ -254,7 +249,7 @@ public class Mail {
     } catch (Exception e) {
       logger.error("ERROR:  sendemail() - ", e);
     }
-    logger.info("Mail.sendemail() :: Ends");
+    logger.info("Mail.sendMailWithAttachment() :: Ends");
     return sentMail;
   }
 
@@ -280,16 +275,13 @@ public class Mail {
     return Session.getInstance(props, null);
   }
 
-  private Session makeSession(Properties props, final String username,
-      final String password) {
-    return Session.getInstance(
-        props,
-        new javax.mail.Authenticator() {
-          @Override
-          protected PasswordAuthentication getPasswordAuthentication() {
-            return new PasswordAuthentication(username, password);
-          }
-        });
+  private Session makeSession(Properties props, final String username, final String password) {
+    return Session.getInstance(props, new javax.mail.Authenticator() {
+      @Override
+      protected PasswordAuthentication getPasswordAuthentication() {
+        return new PasswordAuthentication(username, password);
+      }
+    });
   }
 
   public void setAttachmentPath(String attachmentPath) {
