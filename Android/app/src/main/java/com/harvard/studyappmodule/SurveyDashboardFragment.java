@@ -64,7 +64,7 @@ import com.harvard.studyappmodule.studymodel.DashboardData;
 import com.harvard.studyappmodule.studymodel.ResponseInfoActiveTaskModel;
 import com.harvard.studyappmodule.studymodel.Statistics;
 import com.harvard.studyappmodule.surveyscheduler.SurveyScheduler;
-import com.harvard.studyappmodule.surveyscheduler.model.CompletionAdeherenceCalc;
+import com.harvard.studyappmodule.surveyscheduler.model.CompletionAdherence;
 import com.harvard.usermodule.webservicemodel.Studies;
 import com.harvard.utils.AppController;
 import com.harvard.utils.Logger;
@@ -1022,7 +1022,7 @@ public class SurveyDashboardFragment extends Fragment implements ApiCall.OnAsync
   }
 
   private class ProcessData extends AsyncTask<String, Void, String> {
-    CompletionAdeherenceCalc completionAdeherenceCalc;
+    CompletionAdherence completionAdherenceCalc;
 
     @Override
     protected String doInBackground(String... params) {
@@ -1033,19 +1033,19 @@ public class SurveyDashboardFragment extends Fragment implements ApiCall.OnAsync
     @Override
     protected void onPostExecute(String result) {
       SurveyScheduler survayScheduler = new SurveyScheduler(dbServiceSubscriber, realm);
-      completionAdeherenceCalc =
+      completionAdherenceCalc =
           survayScheduler.completionAndAdherenceCalculation(
               ((SurveyActivity) context).getStudyId(), context);
-      if (completionAdeherenceCalc.isNoCompletedAndMissed()) {
+      if (completionAdherenceCalc.isNoCompletedAndMissed()) {
         completionValue.setText("-- ");
         progressBar1.setProgress(0);
         adherenceValue.setText("-- ");
         progressBar2.setProgress(0);
       } else {
-        completionValue.setText("" + (int) completionAdeherenceCalc.getCompletion());
-        progressBar1.setProgress((int) completionAdeherenceCalc.getCompletion());
-        adherenceValue.setText("" + (int) completionAdeherenceCalc.getAdherence());
-        progressBar2.setProgress((int) completionAdeherenceCalc.getAdherence());
+        completionValue.setText("" + (int) completionAdherenceCalc.getCompletion());
+        progressBar1.setProgress((int) completionAdherenceCalc.getCompletion());
+        adherenceValue.setText("" + (int) completionAdherenceCalc.getAdherence());
+        progressBar2.setProgress((int) completionAdherenceCalc.getAdherence());
       }
 
       title1.setText(((SurveyActivity) context).getTitle1());

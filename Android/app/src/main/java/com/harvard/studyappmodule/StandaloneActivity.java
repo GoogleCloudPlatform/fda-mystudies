@@ -51,7 +51,7 @@ import com.harvard.studyappmodule.studymodel.StudyList;
 import com.harvard.studyappmodule.studymodel.StudyUpdate;
 import com.harvard.studyappmodule.studymodel.StudyUpdateListdata;
 import com.harvard.studyappmodule.surveyscheduler.SurveyScheduler;
-import com.harvard.studyappmodule.surveyscheduler.model.CompletionAdeherenceCalc;
+import com.harvard.studyappmodule.surveyscheduler.model.CompletionAdherence;
 import com.harvard.usermodule.UserModulePresenter;
 import com.harvard.usermodule.event.GetPreferenceEvent;
 import com.harvard.usermodule.webservicemodel.Studies;
@@ -104,7 +104,7 @@ public class StandaloneActivity extends AppCompatActivity
   private String localNotification;
   private String latestConsentVersion = "0";
 
-  private ArrayList<CompletionAdeherenceCalc> completionAdeherenceCalcs = new ArrayList<>();
+  private ArrayList<CompletionAdherence> completionAdherenceCalcs = new ArrayList<>();
 
   private static final String FROM = "from";
 
@@ -1071,56 +1071,56 @@ public class StandaloneActivity extends AppCompatActivity
     ArrayList<StudyList> closed = new ArrayList<>();
     ArrayList<StudyList> others = new ArrayList<>();
 
-    ArrayList<CompletionAdeherenceCalc> activeInprogressCompletionAdeherenceCalc =
+    ArrayList<CompletionAdherence> activeInprogressCompletionAdherenceCalc =
         new ArrayList<>();
-    ArrayList<CompletionAdeherenceCalc> activeYetToJoinCompletionAdeherenceCalc = new ArrayList<>();
-    ArrayList<CompletionAdeherenceCalc> activeOthersCompletionAdeherenceCalc = new ArrayList<>();
-    ArrayList<CompletionAdeherenceCalc> upComingCompletionAdeherenceCalc = new ArrayList<>();
-    ArrayList<CompletionAdeherenceCalc> pausedCompletionAdeherenceCalc = new ArrayList<>();
-    ArrayList<CompletionAdeherenceCalc> closedCompletionAdeherenceCalc = new ArrayList<>();
-    ArrayList<CompletionAdeherenceCalc> othersCompletionAdeherenceCalc = new ArrayList<>();
+    ArrayList<CompletionAdherence> activeYetToJoinCompletionAdherenceCalc = new ArrayList<>();
+    ArrayList<CompletionAdherence> activeOthersCompletionAdherenceCalc = new ArrayList<>();
+    ArrayList<CompletionAdherence> upComingCompletionAdherenceCalc = new ArrayList<>();
+    ArrayList<CompletionAdherence> pausedCompletionAdherenceCalc = new ArrayList<>();
+    ArrayList<CompletionAdherence> closedCompletionAdherenceCalc = new ArrayList<>();
+    ArrayList<CompletionAdherence> othersCompletionAdherenceCalc = new ArrayList<>();
 
-    CompletionAdeherenceCalc completionAdeherenceCalc;
-    CompletionAdeherenceCalc completionAdeherenceCalcSort = null;
+    CompletionAdherence completionAdherenceCalc;
+    CompletionAdherence completionAdherenceCalcSort = null;
 
     SurveyScheduler survayScheduler = new SurveyScheduler(dbServiceSubscriber, realm);
     for (int i = 0; i < studyListArrayList.size(); i++) {
       if (!AppController.getHelperSharedPreference()
           .readPreference(StandaloneActivity.this, getResources().getString(R.string.userid), "")
           .equalsIgnoreCase("")) {
-        completionAdeherenceCalc =
+        completionAdherenceCalc =
             survayScheduler.completionAndAdherenceCalculation(
                 studyListArrayList.get(i).getStudyId(), StandaloneActivity.this);
-        if (completionAdeherenceCalc.isActivityAvailable()) {
-          completionAdeherenceCalcSort = completionAdeherenceCalc;
+        if (completionAdherenceCalc.isActivityAvailable()) {
+          completionAdherenceCalcSort = completionAdherenceCalc;
         } else {
           Studies studies =
               dbServiceSubscriber.getStudies(studyListArrayList.get(i).getStudyId(), realm);
           if (studies != null) {
             try {
-              CompletionAdeherenceCalc completionAdeherenceCalculation =
-                  new CompletionAdeherenceCalc();
-              completionAdeherenceCalculation.setCompletion(studies.getCompletion());
-              completionAdeherenceCalculation.setAdherence(studies.getAdherence());
-              completionAdeherenceCalculation.setActivityAvailable(false);
-              completionAdeherenceCalcSort = completionAdeherenceCalculation;
+              CompletionAdherence completionAdherenceCalculation =
+                  new CompletionAdherence();
+              completionAdherenceCalculation.setCompletion(studies.getCompletion());
+              completionAdherenceCalculation.setAdherence(studies.getAdherence());
+              completionAdherenceCalculation.setActivityAvailable(false);
+              completionAdherenceCalcSort = completionAdherenceCalculation;
             } catch (Exception e) {
-              CompletionAdeherenceCalc completionAdeherenceCalculation =
-                  new CompletionAdeherenceCalc();
-              completionAdeherenceCalculation.setAdherence(0);
-              completionAdeherenceCalculation.setCompletion(0);
-              completionAdeherenceCalculation.setActivityAvailable(false);
-              completionAdeherenceCalcSort = completionAdeherenceCalculation;
+              CompletionAdherence completionAdherenceCalculation =
+                  new CompletionAdherence();
+              completionAdherenceCalculation.setAdherence(0);
+              completionAdherenceCalculation.setCompletion(0);
+              completionAdherenceCalculation.setActivityAvailable(false);
+              completionAdherenceCalcSort = completionAdherenceCalculation;
               Logger.log(e);
             }
           } else {
-            CompletionAdeherenceCalc completionAdeherenceCalculation =
-                new CompletionAdeherenceCalc();
-            completionAdeherenceCalculation.setAdherence(0);
-            completionAdeherenceCalculation.setCompletion(0);
-            completionAdeherenceCalculation.setActivityAvailable(false);
-            completionAdeherenceCalcs.add(completionAdeherenceCalculation);
-            completionAdeherenceCalcSort = completionAdeherenceCalculation;
+            CompletionAdherence completionAdherenceCalculation =
+                new CompletionAdherence();
+            completionAdherenceCalculation.setAdherence(0);
+            completionAdherenceCalculation.setCompletion(0);
+            completionAdherenceCalculation.setActivityAvailable(false);
+            completionAdherenceCalcs.add(completionAdherenceCalculation);
+            completionAdherenceCalcSort = completionAdherenceCalculation;
           }
         }
       }
@@ -1128,7 +1128,7 @@ public class StandaloneActivity extends AppCompatActivity
           && studyListArrayList.get(i).getStudyStatus().equalsIgnoreCase(IN_PROGRESS)) {
         activeInprogress.add(studyListArrayList.get(i));
         try {
-          activeInprogressCompletionAdeherenceCalc.add(completionAdeherenceCalcSort);
+          activeInprogressCompletionAdherenceCalc.add(completionAdherenceCalcSort);
         } catch (Exception e) {
           Logger.log(e);
         }
@@ -1136,42 +1136,42 @@ public class StandaloneActivity extends AppCompatActivity
           && studyListArrayList.get(i).getStudyStatus().equalsIgnoreCase(YET_TO_JOIN)) {
         activeYetToJoin.add(studyListArrayList.get(i));
         try {
-          activeYetToJoinCompletionAdeherenceCalc.add(completionAdeherenceCalcSort);
+          activeYetToJoinCompletionAdherenceCalc.add(completionAdherenceCalcSort);
         } catch (Exception e) {
           Logger.log(e);
         }
       } else if (studyListArrayList.get(i).getStatus().equalsIgnoreCase(ACTIVE)) {
         activeOthers.add(studyListArrayList.get(i));
         try {
-          activeOthersCompletionAdeherenceCalc.add(completionAdeherenceCalcSort);
+          activeOthersCompletionAdherenceCalc.add(completionAdherenceCalcSort);
         } catch (Exception e) {
           Logger.log(e);
         }
       } else if (studyListArrayList.get(i).getStatus().equalsIgnoreCase(UPCOMING)) {
         upComing.add(studyListArrayList.get(i));
         try {
-          upComingCompletionAdeherenceCalc.add(completionAdeherenceCalcSort);
+          upComingCompletionAdherenceCalc.add(completionAdherenceCalcSort);
         } catch (Exception e) {
           Logger.log(e);
         }
       } else if (studyListArrayList.get(i).getStatus().equalsIgnoreCase(PAUSED)) {
         paused.add(studyListArrayList.get(i));
         try {
-          pausedCompletionAdeherenceCalc.add(completionAdeherenceCalcSort);
+          pausedCompletionAdherenceCalc.add(completionAdherenceCalcSort);
         } catch (Exception e) {
           Logger.log(e);
         }
       } else if (studyListArrayList.get(i).getStatus().equalsIgnoreCase(CLOSED)) {
         closed.add(studyListArrayList.get(i));
         try {
-          closedCompletionAdeherenceCalc.add(completionAdeherenceCalcSort);
+          closedCompletionAdherenceCalc.add(completionAdherenceCalcSort);
         } catch (Exception e) {
           Logger.log(e);
         }
       } else {
         others.add(studyListArrayList.get(i));
         try {
-          othersCompletionAdeherenceCalc.add(completionAdeherenceCalcSort);
+          othersCompletionAdherenceCalc.add(completionAdherenceCalcSort);
         } catch (Exception e) {
           Logger.log(e);
         }
@@ -1279,86 +1279,86 @@ public class StandaloneActivity extends AppCompatActivity
     }
 
     try {
-      completionAdeherenceCalcs.clear();
+      completionAdherenceCalcs.clear();
     } catch (Exception e) {
       Logger.log(e);
     }
     try {
-      completionAdeherenceCalcs.addAll(activeInprogressCompletionAdeherenceCalc);
-    } catch (Exception e) {
-      Logger.log(e);
-    }
-
-    try {
-      completionAdeherenceCalcs.addAll(activeYetToJoinCompletionAdeherenceCalc);
+      completionAdherenceCalcs.addAll(activeInprogressCompletionAdherenceCalc);
     } catch (Exception e) {
       Logger.log(e);
     }
 
     try {
-      completionAdeherenceCalcs.addAll(activeOthersCompletionAdeherenceCalc);
+      completionAdherenceCalcs.addAll(activeYetToJoinCompletionAdherenceCalc);
     } catch (Exception e) {
       Logger.log(e);
     }
 
     try {
-      completionAdeherenceCalcs.addAll(upComingCompletionAdeherenceCalc);
+      completionAdherenceCalcs.addAll(activeOthersCompletionAdherenceCalc);
     } catch (Exception e) {
       Logger.log(e);
     }
 
     try {
-      completionAdeherenceCalcs.addAll(pausedCompletionAdeherenceCalc);
+      completionAdherenceCalcs.addAll(upComingCompletionAdherenceCalc);
     } catch (Exception e) {
       Logger.log(e);
     }
 
     try {
-      completionAdeherenceCalcs.addAll(closedCompletionAdeherenceCalc);
+      completionAdherenceCalcs.addAll(pausedCompletionAdherenceCalc);
     } catch (Exception e) {
       Logger.log(e);
     }
 
     try {
-      completionAdeherenceCalcs.addAll(othersCompletionAdeherenceCalc);
+      completionAdherenceCalcs.addAll(closedCompletionAdherenceCalc);
+    } catch (Exception e) {
+      Logger.log(e);
+    }
+
+    try {
+      completionAdherenceCalcs.addAll(othersCompletionAdherenceCalc);
     } catch (Exception e) {
       Logger.log(e);
     }
 
     activeInprogress.clear();
     activeInprogress = null;
-    activeInprogressCompletionAdeherenceCalc.clear();
-    activeInprogressCompletionAdeherenceCalc = null;
+    activeInprogressCompletionAdherenceCalc.clear();
+    activeInprogressCompletionAdherenceCalc = null;
 
     activeYetToJoin.clear();
     activeYetToJoin = null;
-    activeYetToJoinCompletionAdeherenceCalc.clear();
-    activeYetToJoinCompletionAdeherenceCalc = null;
+    activeYetToJoinCompletionAdherenceCalc.clear();
+    activeYetToJoinCompletionAdherenceCalc = null;
 
     activeOthers.clear();
     activeOthers = null;
-    activeOthersCompletionAdeherenceCalc.clear();
-    activeOthersCompletionAdeherenceCalc = null;
+    activeOthersCompletionAdherenceCalc.clear();
+    activeOthersCompletionAdherenceCalc = null;
 
     upComing.clear();
     upComing = null;
-    upComingCompletionAdeherenceCalc.clear();
-    upComingCompletionAdeherenceCalc = null;
+    upComingCompletionAdherenceCalc.clear();
+    upComingCompletionAdherenceCalc = null;
 
     paused.clear();
     paused = null;
-    pausedCompletionAdeherenceCalc.clear();
-    pausedCompletionAdeherenceCalc = null;
+    pausedCompletionAdherenceCalc.clear();
+    pausedCompletionAdherenceCalc = null;
 
     closed.clear();
     closed = null;
-    closedCompletionAdeherenceCalc.clear();
-    closedCompletionAdeherenceCalc = null;
+    closedCompletionAdherenceCalc.clear();
+    closedCompletionAdherenceCalc = null;
 
     others.clear();
     others = null;
-    othersCompletionAdeherenceCalc.clear();
-    othersCompletionAdeherenceCalc = null;
+    othersCompletionAdherenceCalc.clear();
+    othersCompletionAdherenceCalc = null;
   }
 
   @Override

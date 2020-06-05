@@ -14,7 +14,7 @@
 
 package com.harvard.studyappmodule.surveyscheduler.model;
 
-public class CompletionAdeherenceCalc {
+public class CompletionAdherence {
   private double completion;
   private double adherence;
   private boolean noCompletedAndMissed;

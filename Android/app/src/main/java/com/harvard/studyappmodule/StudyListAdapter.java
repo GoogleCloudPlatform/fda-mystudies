@@ -32,7 +32,7 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.harvard.R;
 import com.harvard.studyappmodule.studymodel.StudyList;
-import com.harvard.studyappmodule.surveyscheduler.model.CompletionAdeherenceCalc;
+import com.harvard.studyappmodule.surveyscheduler.model.CompletionAdherence;
 import com.harvard.utils.AppController;
 import com.harvard.utils.Logger;
 import io.realm.RealmList;
@@ -42,18 +42,18 @@ public class StudyListAdapter extends RecyclerView.Adapter<StudyListAdapter.Hold
   private final Context context;
   private RealmList<StudyList> items;
   private StudyFragment studyFragment;
-  private ArrayList<CompletionAdeherenceCalc> completionAdeherenceCalcs;
+  private ArrayList<CompletionAdherence> completionAdherenceCalcs;
   private boolean click = true;
 
   StudyListAdapter(
       Context context,
       RealmList<StudyList> items,
       StudyFragment studyFragment,
-      ArrayList<CompletionAdeherenceCalc> completionAdeherenceCalcs) {
+      ArrayList<CompletionAdherence> completionAdherenceCalcs) {
     this.context = context;
     this.items = items;
     this.studyFragment = studyFragment;
-    this.completionAdeherenceCalcs = completionAdeherenceCalcs;
+    this.completionAdherenceCalcs = completionAdherenceCalcs;
   }
 
   @Override
@@ -204,22 +204,22 @@ public class StudyListAdapter extends RecyclerView.Adapter<StudyListAdapter.Hold
         holder.statusImgRight.setVisibility(View.GONE);
       }
 
-      if (completionAdeherenceCalcs.size() > 0) {
+      if (completionAdherenceCalcs.size() > 0) {
         try {
           holder.completionVal.setText(
               ""
                   + ((int)
-                      completionAdeherenceCalcs.get(holder.getAdapterPosition()).getCompletion())
+                      completionAdherenceCalcs.get(holder.getAdapterPosition()).getCompletion())
                   + " %");
           holder.adherenceVal.setText(
               ""
                   + ((int)
-                      completionAdeherenceCalcs.get(holder.getAdapterPosition()).getAdherence())
+                      completionAdherenceCalcs.get(holder.getAdapterPosition()).getAdherence())
                   + " %");
           holder.progressBar1.setProgress(
-              (int) completionAdeherenceCalcs.get(holder.getAdapterPosition()).getCompletion());
+              (int) completionAdherenceCalcs.get(holder.getAdapterPosition()).getCompletion());
           holder.progressBar2.setProgress(
-              (int) completionAdeherenceCalcs.get(holder.getAdapterPosition()).getAdherence());
+              (int) completionAdherenceCalcs.get(holder.getAdapterPosition()).getAdherence());
         } catch (IndexOutOfBoundsException e) {
           Logger.log(e);
         }
@@ -386,8 +386,8 @@ public class StudyListAdapter extends RecyclerView.Adapter<StudyListAdapter.Hold
 
   void modifyAdapter(
       RealmList<StudyList> searchResultList,
-      ArrayList<CompletionAdeherenceCalc> completionAdeherenceCalcs) {
+      ArrayList<CompletionAdherence> completionAdherenceCalcs) {
     items = searchResultList;
-    this.completionAdeherenceCalcs = completionAdeherenceCalcs;
+    this.completionAdherenceCalcs = completionAdherenceCalcs;
   }
 }

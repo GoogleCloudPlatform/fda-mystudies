@@ -25,7 +25,7 @@ import com.harvard.studyappmodule.activitybuilder.model.ActivityRun;
 import com.harvard.studyappmodule.activitylistmodel.ActivitiesWS;
 import com.harvard.studyappmodule.activitylistmodel.ActivityListData;
 import com.harvard.studyappmodule.surveyscheduler.model.ActivityStatus;
-import com.harvard.studyappmodule.surveyscheduler.model.CompletionAdeherenceCalc;
+import com.harvard.studyappmodule.surveyscheduler.model.CompletionAdherence;
 import com.harvard.usermodule.webservicemodel.Activities;
 import com.harvard.usermodule.webservicemodel.ActivityData;
 import com.harvard.usermodule.webservicemodel.StudyData;
@@ -685,7 +685,7 @@ public class SurveyScheduler {
     return null;
   }
 
-  public CompletionAdeherenceCalc completionAndAdherenceCalculation(
+  public CompletionAdherence completionAndAdherenceCalculation(
       String studyId, Context context) {
     double completion = 0;
     double adherence = 0;
@@ -741,16 +741,16 @@ public class SurveyScheduler {
       adherence = ((double) completed / ((double) completed + (double) missed)) * 100;
     }
 
-    CompletionAdeherenceCalc completionAdeherenceCalc = new CompletionAdeherenceCalc();
-    completionAdeherenceCalc.setAdherence(adherence);
-    completionAdeherenceCalc.setCompletion(completion);
-    completionAdeherenceCalc.setActivityAvailable(activityListAvailable);
+    CompletionAdherence completionAdherenceCalc = new CompletionAdherence();
+    completionAdherenceCalc.setAdherence(adherence);
+    completionAdherenceCalc.setCompletion(completion);
+    completionAdherenceCalc.setActivityAvailable(activityListAvailable);
     if (completed == 0 && missed == 0) {
-      completionAdeherenceCalc.setNoCompletedAndMissed(true);
+      completionAdherenceCalc.setNoCompletedAndMissed(true);
     } else {
-      completionAdeherenceCalc.setNoCompletedAndMissed(false);
+      completionAdherenceCalc.setNoCompletedAndMissed(false);
     }
-    return completionAdeherenceCalc;
+    return completionAdherenceCalc;
   }
 
   private boolean checkafter(Date starttime) {
