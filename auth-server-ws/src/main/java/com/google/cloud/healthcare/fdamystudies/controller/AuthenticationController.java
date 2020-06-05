@@ -49,7 +49,6 @@ import com.google.cloud.healthcare.fdamystudies.controller.bean.UpdateInfo;
 import com.google.cloud.healthcare.fdamystudies.controller.bean.UpdateUserAccountStatusResponse;
 import com.google.cloud.healthcare.fdamystudies.exception.DuplicateUserRegistrationException;
 import com.google.cloud.healthcare.fdamystudies.exception.EmailIdAlreadyVerifiedException;
-import com.google.cloud.healthcare.fdamystudies.exception.InvalidArgumentException;
 import com.google.cloud.healthcare.fdamystudies.exception.InvalidClientException;
 import com.google.cloud.healthcare.fdamystudies.exception.InvalidUserIdException;
 import com.google.cloud.healthcare.fdamystudies.exception.PasswordExpiredException;
@@ -246,20 +245,17 @@ public class AuthenticationController {
     logger.info("AuthenticationController validateClientCredentials() - starts");
 
     ValidateClientCredentialsResponse responseEntity = null;
-
-    if (isValidInput(clientId, secretKey)) {
-
+    if (isInvalidInput(clientId, secretKey)) {
       MyStudiesUserRegUtil.getFailureResponse(
           MyStudiesUserRegUtil.ErrorCodes.STATUS_400.getValue(),
           MyStudiesUserRegUtil.ErrorCodes.INVALID_INPUT.getValue(),
           MyStudiesUserRegUtil.ErrorCodes.INVALID_INPUT_ERROR_MSG.getValue(),
           response);
-
       responseEntity = new ValidateClientCredentialsResponse();
       responseEntity.setCode(String.valueOf(HttpStatus.BAD_REQUEST.value()));
       responseEntity.setMessage(MyStudiesUserRegUtil.ErrorCodes.INVALID_INPUT_ERROR_MSG.getValue());
 
-      logger.info("AuthenticationController validateClientCredentials() - ends with BadRequest");
+      logger.info("AuthenticationController validateClientCredentials() - ends with Bad Request");
       return new ResponseEntity<>(responseEntity, HttpStatus.BAD_REQUEST);
     }
     String appCode = null;
@@ -444,7 +440,7 @@ public class AuthenticationController {
             "AuthenticationController registerUser() - ends with INVALID CLIENTID OR SECRET KEY");
         return new ResponseEntity<>(controllerResp, HttpStatus.UNAUTHORIZED);
       }
-      if (AppConstants.MA.equals(appCode) && isValidInput(appId, orgId)) {
+      if (AppConstants.MA.equals(appCode) && isInvalidInput(appId, orgId)) {
         MyStudiesUserRegUtil.commonErrorResponse(response, AppConstants.MISSING_REQUIRED_PARAMETER);
         logger.info("AuthenticationController registerUser() - ends");
         return new ResponseEntity<>(controllerResp, HttpStatus.BAD_REQUEST);
@@ -530,7 +526,7 @@ public class AuthenticationController {
         return new ResponseEntity<>(loginResp, HttpStatus.UNAUTHORIZED);
       }
 
-      if (AppConstants.MA.equals(appCode) && isValidInput(appId, orgId)) {
+      if (AppConstants.MA.equals(appCode) && isInvalidInput(appId, orgId)) {
         MyStudiesUserRegUtil.commonErrorResponse(response, AppConstants.MISSING_REQUIRED_PARAMETER);
         logger.info("AuthenticationController login() - ends with INVALID_INPUT");
         return new ResponseEntity<>(loginResp, HttpStatus.BAD_REQUEST);
@@ -659,7 +655,7 @@ public class AuthenticationController {
       MyStudiesUserRegUtil.loginResponse(response, AppConstants.INVALID_USERNAME_PASSWORD);
       logger.info("AuthenticationController login() - ends with UNAUTHORIZED Request");
       return new ResponseEntity<>(loginResp, HttpStatus.UNAUTHORIZED);
-    } catch (InvalidArgumentException e) {
+    } catch (IllegalArgumentException e) {
       MyStudiesUserRegUtil.loginResponse(response, AppConstants.MISSING_REQUIRED_PARAMETER);
       logger.info("AuthenticationController login() - ends with INVALID_INPUT");
       return new ResponseEntity<>(loginResp, HttpStatus.BAD_REQUEST);
@@ -1363,7 +1359,7 @@ public class AuthenticationController {
     return httpStatusBadRequest;
   }
 
-  private static boolean isValidInput(String appId, String orgId) {
-    return StringUtils.isBlank(appId) || StringUtils.isBlank(orgId);
+  private static boolean isInvalidInput(String param1, String param2) {
+    return StringUtils.isBlank(param1) || StringUtils.isBlank(param2);
   }
 }

@@ -91,4 +91,6 @@ public class AppConstants {
   public static final String PASSWORD_EXPIRED = "PASSWORD_EXPIRED";
   public static final String CODE_EXPIRED = "CODE_EXPIRED";
   public static final String INVALID_ARGUMENT = "INVALID_ARGUMENT";
+  public static final String SEND_EMAIL_ON_ACCOUNT_LOCKING_RESPONSE =
+      "UserDetailsServiceImpl sendEmailOnAccountLocking() - ends";
 }

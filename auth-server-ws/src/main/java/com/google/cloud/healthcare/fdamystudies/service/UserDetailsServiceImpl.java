@@ -35,7 +35,6 @@ import com.google.cloud.healthcare.fdamystudies.controller.bean.ResponseBean;
 import com.google.cloud.healthcare.fdamystudies.controller.bean.UpdateInfo;
 import com.google.cloud.healthcare.fdamystudies.exception.DuplicateUserRegistrationException;
 import com.google.cloud.healthcare.fdamystudies.exception.EmailIdAlreadyVerifiedException;
-import com.google.cloud.healthcare.fdamystudies.exception.InvalidArgumentException;
 import com.google.cloud.healthcare.fdamystudies.exception.InvalidClientException;
 import com.google.cloud.healthcare.fdamystudies.exception.InvalidUserIdException;
 import com.google.cloud.healthcare.fdamystudies.exception.SystemException;
@@ -621,18 +620,19 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
   @Override
   public boolean sendEmailOnAccountLocking(String emailId, String appCode)
-      throws UserNotFoundException, InvalidArgumentException {
+      throws UserNotFoundException, IllegalArgumentException {
     logger.info("UserDetailsServiceImpl sendEmailOnAccountLocking() - starts");
     boolean result = false;
 
     if (emailId == null || appCode == null) {
-      logger.info("UserDetailsServiceImpl sendEmailOnAccountLocking() - ends");
-      throw new InvalidArgumentException();
+
+      logger.info(AppConstants.SEND_EMAIL_ON_ACCOUNT_LOCKING_RESPONSE);
+      throw new IllegalArgumentException();
     }
 
     DaoUserBO userInfo = userRepo.findByEmailIdAndAppCode(emailId, appCode);
     if (userInfo == null) {
-      logger.info("UserDetailsServiceImpl sendEmailOnAccountLocking() - ends");
+      logger.info(AppConstants.SEND_EMAIL_ON_ACCOUNT_LOCKING_RESPONSE);
       throw new UserNotFoundException();
     }
     String tempPassword = RandomStringUtils.randomAlphanumeric(6);
@@ -655,7 +655,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
     result = emailNotification.sendEmailNotification(subject, dynamicContent, emailId, null, null);
 
-    logger.info("UserDetailsServiceImpl sendEmailOnAccountLocking() - ends");
+    logger.info(AppConstants.SEND_EMAIL_ON_ACCOUNT_LOCKING_RESPONSE);
     return result;
   }
 }

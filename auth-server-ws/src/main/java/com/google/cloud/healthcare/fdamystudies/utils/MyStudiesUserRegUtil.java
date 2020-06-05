@@ -369,9 +369,9 @@ public class MyStudiesUserRegUtil {
         break;
 
       default:
-        logger.info(
+        logger.error(
             "MyStudiesUserRegUtil - registrationResponse() :: No matches found for the given flag!!");
-        break;
+        throw new IllegalArgumentException();
     }
   }
 
@@ -414,9 +414,9 @@ public class MyStudiesUserRegUtil {
         return null;
 
       default:
-        logger.info(
+        logger.error(
             "MyStudiesUserRegUtil - loginResponse() :: No matches found for the given flag!!");
-        return null;
+        throw new IllegalArgumentException();
     }
   }
 
@@ -445,9 +445,9 @@ public class MyStudiesUserRegUtil {
             response);
         break;
       default:
-        logger.info(
+        logger.error(
             "MyStudiesUserRegUtil - commonErrorResponse() :: No matches found for the given flag!!");
-        break;
+        throw new IllegalArgumentException();
     }
   }
 }
