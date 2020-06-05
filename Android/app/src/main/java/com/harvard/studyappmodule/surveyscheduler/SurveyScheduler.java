@@ -67,7 +67,7 @@ public class SurveyScheduler {
       if (userPreferences.getStudies().get(i).getStudyId().equalsIgnoreCase(studyId)) {
         try {
           joiningTime =
-              AppController.getDateFormatUtc()
+              AppController.getDateFormatForApi()
                   .parse(userPreferences.getStudies().get(i).getEnrolledDate());
         } catch (ParseException e) {
           Logger.log(e);
@@ -160,10 +160,10 @@ public class SurveyScheduler {
         startCalendar.add(Calendar.DATE, 1);
         for (int j = 0; j < activity.getFrequency().getRuns().size(); j++) {
           try {
-            String date = AppController.getDateFormatType4().format(startDate);
+            String date = AppController.getDateFormatForDailyRun().format(startDate);
             String startDateString =
                 date + " " + activity.getFrequency().getRuns().get(j).getStartTime();
-            Date startDateDate = AppController.getDateFormatType11().parse(startDateString);
+            Date startDateDate = AppController.getDateFormatForDailyRunStartAndEnd().parse(startDateString);
             Calendar calendar1 = Calendar.getInstance();
             calendar1.setTime(startDateDate);
             Calendar calendarStartDate = Calendar.getInstance();
@@ -171,7 +171,7 @@ public class SurveyScheduler {
             String endDateString =
                 date + " " + activity.getFrequency().getRuns().get(j).getEndTime();
 
-            Date endDateDate = AppController.getDateFormatType11().parse(endDateString);
+            Date endDateDate = AppController.getDateFormatForDailyRunStartAndEnd().parse(endDateString);
             Calendar calendar2 = Calendar.getInstance();
             calendar2.setTime(endDateDate);
             Calendar calendarEndDate = Calendar.getInstance();
@@ -257,7 +257,7 @@ public class SurveyScheduler {
 
   private void setOneTimeRun(ActivitiesWS activity, int offset) {
     if (startTime != null) {
-      SimpleDateFormat simpleDateFormat = AppController.getDateFormatUtc1();
+      SimpleDateFormat simpleDateFormat = AppController.getDateFormatUtcNoZone();
       ActivityRun activityRun = null;
       Calendar calendarStart = Calendar.getInstance();
       try {
@@ -382,7 +382,7 @@ public class SurveyScheduler {
 
       int run = 1;
       for (int j = 0; j < activity.getFrequency().getRuns().size(); j++) {
-        SimpleDateFormat simpleDateFormat = AppController.getDateFormatUtc1();
+        SimpleDateFormat simpleDateFormat = AppController.getDateFormatUtcNoZone();
         ActivityRun activityRun = null;
         try {
           if (joiningTime.after(
@@ -541,9 +541,9 @@ public class SurveyScheduler {
   private <E> void insertAndUpdateToDB(Context context, E e) {
     DatabaseEvent databaseEvent = new DatabaseEvent();
     databaseEvent.setE(e);
-    databaseEvent.setmType(DbServiceSubscriber.TYPE_COPY);
+    databaseEvent.setType(DbServiceSubscriber.TYPE_COPY);
     databaseEvent.setaClass(ActivityRun.class);
-    databaseEvent.setmOperation(DbServiceSubscriber.INSERT_AND_UPDATE_OPERATION);
+    databaseEvent.setOperation(DbServiceSubscriber.INSERT_AND_UPDATE_OPERATION);
     dbServiceSubscriber.insert(context, databaseEvent);
   }
 
@@ -563,7 +563,7 @@ public class SurveyScheduler {
     Date currentRunEndDate = null;
     boolean runAvailable = false;
     Activities activitiesForStatus = null;
-    SimpleDateFormat simpleDateFormat = AppController.getDateFormatUtc();
+    SimpleDateFormat simpleDateFormat = AppController.getDateFormatForApi();
 
     ActivityRun activityRun = null;
     ActivityRun activityPreviousRun = null;
@@ -695,7 +695,7 @@ public class SurveyScheduler {
     int missed = 0;
     int total = 0;
 
-    SimpleDateFormat simpleDateFormat = AppController.getDateFormatUtc1();
+    SimpleDateFormat simpleDateFormat = AppController.getDateFormatUtcNoZone();
     ActivityData activityData = dbServiceSubscriber.getActivityPreference(studyId, realm);
     ActivityListData activityListDataDB = dbServiceSubscriber.getActivities(studyId, realm);
     Date currentDate = new Date();

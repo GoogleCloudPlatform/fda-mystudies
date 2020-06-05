@@ -613,12 +613,12 @@ public class StudyInfoActivity extends AppCompatActivity implements ApiCall.OnAs
       AppController.getHelperProgressDialog().dismissDialog();
       consentDocumentData = (ConsentDocumentData) response;
       getStudyWebsiteNull();
-      studyHome.setmStudyId(studyId);
+      studyHome.setStudyId(studyId);
       if (studyHome != null) {
         dbServiceSubscriber.saveStudyInfoToDB(this, studyHome);
       }
       if (consentDocumentData != null) {
-        consentDocumentData.setmStudyId(studyId);
+        consentDocumentData.setStudyId(studyId);
         dbServiceSubscriber.saveConsentDocumentToDB(this, consentDocumentData);
       }
       setViewPagerView(studyHome);

@@ -31,7 +31,7 @@ import com.google.gson.reflect.TypeToken;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
 import com.harvard.AppConfig;
-import com.harvard.MyFirebaseMessagingService;
+import com.harvard.AppFirebaseMessagingService;
 import com.harvard.R;
 import com.harvard.notificationmodule.AlarmReceiver;
 import com.harvard.storagemodule.DbServiceSubscriber;
@@ -513,10 +513,10 @@ public class StandaloneActivity extends AppCompatActivity
   public void checkForNotification(Intent intent1) {
     if (!intentFrom.equalsIgnoreCase("")) {
       intentFrom = "";
-      String type = intent1.getStringExtra(MyFirebaseMessagingService.TYPE);
-      String subType = intent1.getStringExtra(MyFirebaseMessagingService.SUBTYPE);
-      String studyId = intent1.getStringExtra(MyFirebaseMessagingService.STUDYID);
-      String audience = intent1.getStringExtra(MyFirebaseMessagingService.AUDIENCE);
+      String type = intent1.getStringExtra(AppFirebaseMessagingService.TYPE);
+      String subType = intent1.getStringExtra(AppFirebaseMessagingService.SUBTYPE);
+      String studyId = intent1.getStringExtra(AppFirebaseMessagingService.STUDYID);
+      String audience = intent1.getStringExtra(AppFirebaseMessagingService.AUDIENCE);
 
       String localNotification = "";
       if (intent1.getStringExtra(AlarmReceiver.LOCAL_NOTIFICATION) != null) {
@@ -1014,9 +1014,9 @@ public class StandaloneActivity extends AppCompatActivity
   private void saveConsentToDB(Context context, EligibilityConsent eligibilityConsent) {
     DatabaseEvent databaseEvent = new DatabaseEvent();
     databaseEvent.setE(eligibilityConsent);
-    databaseEvent.setmType(DbServiceSubscriber.TYPE_COPY_UPDATE);
+    databaseEvent.setType(DbServiceSubscriber.TYPE_COPY_UPDATE);
     databaseEvent.setaClass(EligibilityConsent.class);
-    databaseEvent.setmOperation(DbServiceSubscriber.INSERT_AND_UPDATE_OPERATION);
+    databaseEvent.setOperation(DbServiceSubscriber.INSERT_AND_UPDATE_OPERATION);
     dbServiceSubscriber.insert(context, databaseEvent);
   }
 

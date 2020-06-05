@@ -33,35 +33,35 @@ import org.researchstack.backbone.task.OrderedTask;
 
 public class ActivityBuilder extends OrderedTask {
 
-  private static boolean mBranching;
-  private static DbServiceSubscriber mDBServiceSubscriber;
-  private static String mIdentifier;
+  private static boolean branching;
+  private static DbServiceSubscriber dbServiceSubscriber;
+  private static String identifier;
   private static RealmList<Steps> activityQuestionStep;
-  private static Context mcontext;
+  private static Context context;
 
   private ActivityBuilder(String identifier, List<Step> steps) {
     super(identifier, steps);
   }
 
   public static ActivityBuilder create(
-      Context context,
-      String identifier,
+      Context contextParam,
+      String identifierParam,
       List<Step> steps,
-      ActivityObj activityObj,
-      boolean branching,
-      DbServiceSubscriber dbServiceSubscriber) {
-    mIdentifier = identifier;
-    activityQuestionStep = activityObj.getSteps();
-    mBranching = branching;
-    mDBServiceSubscriber = dbServiceSubscriber;
-    mcontext = context;
-    return new ActivityBuilder(identifier, steps);
+      ActivityObj activityParam,
+      boolean branchingObj,
+      DbServiceSubscriber dbServiceSubscriberParam) {
+    identifier = identifierParam;
+    activityQuestionStep = activityParam.getSteps();
+    branching = branchingObj;
+    dbServiceSubscriber = dbServiceSubscriberParam;
+    context = contextParam;
+    return new ActivityBuilder(identifierParam, steps);
   }
 
   @Override
   public Step getStepAfterStep(Step previousStep, TaskResult taskResult) {
 
-    if (mBranching) {
+    if (branching) {
       Steps stepsData = null;
       for (int i = 0; i < activityQuestionStep.size(); i++) {
         if (previousStep == null) {
@@ -299,16 +299,16 @@ public class ActivityBuilder extends OrderedTask {
         if (!answer.equalsIgnoreCase("")) {
           if (stepsData.getResultType().equalsIgnoreCase("imageChoice")
               || stepsData.getResultType().equalsIgnoreCase("textChoice")) {
-            Realm realm = AppController.getRealmobj(mcontext);
+            Realm realm = AppController.getRealmobj(context);
             StepRecordCustom stepRecordCustom =
-                mDBServiceSubscriber.getResultFromDB(mIdentifier + "_" + pair.getKey(), realm);
+                dbServiceSubscriber.getResultFromDB(identifier + "_" + pair.getKey(), realm);
             for (int j = 0; j < stepRecordCustom.getTextChoices().size(); j++) {
               if (stepRecordCustom.getTextChoices().get(j).getValue().equalsIgnoreCase(answer)) {
                 answer = stepRecordCustom.getTextChoices().get(j).getText();
                 break;
               }
             }
-            mDBServiceSubscriber.closeRealmObj(realm);
+            dbServiceSubscriber.closeRealmObj(realm);
           }
         }
         break;
@@ -339,7 +339,7 @@ public class ActivityBuilder extends OrderedTask {
   @Override
   public Step getStepBeforeStep(Step step, TaskResult taskResult) {
 
-    if (mBranching) {
+    if (branching) {
       String identifier = "";
       for (int i = 0; i < activityQuestionStep.size(); i++) {
         for (int k = 0; k < activityQuestionStep.get(i).getDestinations().size(); k++) {
@@ -368,10 +368,10 @@ public class ActivityBuilder extends OrderedTask {
                                 .get(i)
                                 .getResultType()
                                 .equalsIgnoreCase("textChoice")) {
-                          Realm realm = AppController.getRealmobj(mcontext);
+                          Realm realm = AppController.getRealmobj(context);
                           StepRecordCustom stepRecordCustom =
-                              mDBServiceSubscriber.getResultFromDB(
-                                  mIdentifier + "_" + activityQuestionStep.get(i).getKey(), realm);
+                              dbServiceSubscriber.getResultFromDB(
+                                  identifier + "_" + activityQuestionStep.get(i).getKey(), realm);
                           for (int j = 0; j < stepRecordCustom.getTextChoices().size(); j++) {
                             if (stepRecordCustom
                                 .getTextChoices()
@@ -382,7 +382,7 @@ public class ActivityBuilder extends OrderedTask {
                               break;
                             }
                           }
-                          mDBServiceSubscriber.closeRealmObj(realm);
+                          dbServiceSubscriber.closeRealmObj(realm);
                         }
                       }
                       if (activityQuestionStep

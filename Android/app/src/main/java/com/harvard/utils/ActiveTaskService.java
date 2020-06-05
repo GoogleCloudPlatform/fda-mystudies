@@ -50,7 +50,7 @@ import org.json.JSONObject;
 
 public class ActiveTaskService extends Service implements ApiCall.OnAsyncRequestComplete {
   private int sec;
-  private Thread obj;
+  private Thread thread;
   private static final int UPDATE_USERPREFERENCE_RESPONSECODE = 102;
   private DbServiceSubscriber dbServiceSubscriber;
   private Realm realm;
@@ -108,7 +108,7 @@ public class ActiveTaskService extends Service implements ApiCall.OnAsyncRequest
               new Runnable() {
                 public void run() {
                   try {
-                    while (!obj.isInterrupted()) {
+                    while (!thread.isInterrupted()) {
                       sec = sec + 1;
                       Intent i = new Intent("com.harvard.ActiveTask");
                       i.putExtra("sec", "" + sec);
@@ -130,10 +130,10 @@ public class ActiveTaskService extends Service implements ApiCall.OnAsyncRequest
                       }
 
                       if (sec >= Integer.parseInt(intent.getStringExtra("remaining_sec"))) {
-                        obj.interrupt();
+                        thread.interrupt();
                         stopSelf();
                       }
-                      obj.sleep(1000);
+                      thread.sleep(1000);
                     }
                   } catch (Exception e) {
                     Logger.log(e);
@@ -141,8 +141,8 @@ public class ActiveTaskService extends Service implements ApiCall.OnAsyncRequest
                 }
               };
 
-          obj = new Thread(r);
-          obj.start();
+          thread = new Thread(r);
+          thread.start();
         } catch (Exception e) {
           Logger.log(e);
         }
@@ -161,8 +161,8 @@ public class ActiveTaskService extends Service implements ApiCall.OnAsyncRequest
   public void onDestroy() {
     super.onDestroy();
     try {
-      if (obj != null) {
-        obj.interrupt();
+      if (thread != null) {
+        thread.interrupt();
       }
     } catch (Exception e) {
       Logger.log(e);

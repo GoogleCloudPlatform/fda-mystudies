@@ -36,19 +36,19 @@ import io.fabric.sdk.android.Fabric;
 import io.realm.Realm;
 
 public class FdaApplication extends Application {
-  private static FdaApplication sInstance;
+  private static FdaApplication instance;
   private FdaEventBusRegistry registry;
 
   public static final String NOTIFICATION_CHANNEL_ID_SERVICE = AppConfig.PackageName + ".service";
   public static final String NOTIFICATION_CHANNEL_ID_INFO = AppConfig.PackageName + ".general";
 
   public static FdaApplication getInstance() {
-    return sInstance;
+    return instance;
   }
 
   @Override
   public void onCreate() {
-    sInstance = this;
+    instance = this;
     super.onCreate();
     Fabric.with(this, new Crashlytics());
     dbInitialize();
@@ -109,7 +109,7 @@ public class FdaApplication extends Application {
   @Override
   public void onTerminate() {
     super.onTerminate();
-    sInstance = null;
+    instance = null;
     registry.unregisterAllSubscribers();
     registry = null;
   }

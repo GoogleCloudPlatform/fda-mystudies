@@ -66,12 +66,12 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter
       SyncResult syncResult) {
 
     if (!isMyServiceRunning(ActiveTaskService.class)) {
-      Intent myIntent = new Intent(context, ActiveTaskService.class);
-      myIntent.putExtra("SyncAdapter", "yes");
+      Intent intent = new Intent(context, ActiveTaskService.class);
+      intent.putExtra("SyncAdapter", "yes");
       if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-        context.startForegroundService(myIntent);
+        context.startForegroundService(intent);
       } else {
-        context.startService(myIntent);
+        context.startService(intent);
       }
     }
   }

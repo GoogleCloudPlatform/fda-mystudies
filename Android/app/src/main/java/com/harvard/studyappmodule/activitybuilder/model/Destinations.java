@@ -19,19 +19,19 @@ public class Destinations {
   private String evaluation;
   private String destination;
 
-  public String getmEvaluation() {
+  public String getEvaluation() {
     return evaluation;
   }
 
-  public void setmEvaluation(String evaluation) {
+  public void setEvaluation(String evaluation) {
     this.evaluation = evaluation;
   }
 
-  public String getmDestination() {
+  public String getDestination() {
     return destination;
   }
 
-  public void setmDestination(String destination) {
+  public void setDestination(String destination) {
     this.destination = destination;
   }
 }

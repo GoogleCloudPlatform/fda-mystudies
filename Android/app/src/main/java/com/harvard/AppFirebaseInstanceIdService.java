@@ -19,7 +19,7 @@ import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.iid.FirebaseInstanceIdService;
 import com.harvard.utils.AppController;
 
-public class MyFirebaseInstanceIdService extends FirebaseInstanceIdService {
+public class AppFirebaseInstanceIdService extends FirebaseInstanceIdService {
 
   @Override
   public void onTokenRefresh() {

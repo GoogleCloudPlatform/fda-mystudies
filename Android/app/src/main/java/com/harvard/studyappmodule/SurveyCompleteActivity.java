@@ -218,10 +218,10 @@ public class SurveyCompleteActivity extends AppCompatActivity
 
               resultarrobj.put(
                   "startTime",
-                  AppController.getDateFormat().format(stepRecord.get(j).getStarted()));
+                  AppController.getDateFormatForApi().format(stepRecord.get(j).getStarted()));
               resultarrobj.put(
                   "endTime",
-                  AppController.getDateFormat().format(stepRecord.get(j).getCompleted()));
+                  AppController.getDateFormatForApi().format(stepRecord.get(j).getCompleted()));
               if (!activityObj.getSteps().get(i).getResultType().equalsIgnoreCase("grouped")) {
                 if (stepRecord.get(j).getResult().equalsIgnoreCase("{}")) {
                   resultarrobj.put("skipped", true);
@@ -517,10 +517,10 @@ public class SurveyCompleteActivity extends AppCompatActivity
               jsonObject.put("value", resultarray);
               jsonObject.put(
                   "startTime",
-                  AppController.getDateFormat().format(stepRecord.get(j).getStarted()));
+                  AppController.getDateFormatForApi().format(stepRecord.get(j).getStarted()));
               jsonObject.put(
                   "endTime",
-                  AppController.getDateFormat().format(stepRecord.get(j).getCompleted()));
+                  AppController.getDateFormatForApi().format(stepRecord.get(j).getCompleted()));
               jsonObject.put("resultType", "grouped");
               jsonObject.put("key", activityObj.getSteps().get(i).getKey());
               if (stepRecord.get(j).getResult().equalsIgnoreCase("{}")) {

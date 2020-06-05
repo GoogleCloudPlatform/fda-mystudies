@@ -134,14 +134,14 @@ public class CustomConsentViewTaskActivity extends AppCompatActivity
   private int score = 0;
   private int passScore = 0;
   private Consent consent;
-  private RealmList<ComprehensionCorrectAnswers> comprehensionCorrectAnswerses;
+  private RealmList<ComprehensionCorrectAnswers> comprehensionCorrectAnswers;
   private Step previousStep;
   private DbServiceSubscriber dbServiceSubscriber;
   private Realm realm;
   private static final int UPDATE_USERPREFERENCE_RESPONSECODE = 102;
   private static final int GET_PREFERENCES = 2016;
   private static final int UPDATE_ELIGIBILITY_CONSENT_RESPONSECODE = 101;
-  private String enrolleddate;
+  private String enrolledDate;
   private EligibilityConsent eligibilityConsent;
   private StudyList studyList;
   private String pdfPath;
@@ -225,7 +225,7 @@ public class CustomConsentViewTaskActivity extends AppCompatActivity
       currentStep = task.getStepAfterStep(null, taskResult);
     }
 
-    comprehensionCorrectAnswerses = consent.getComprehension().getCorrectAnswers();
+    comprehensionCorrectAnswers = consent.getComprehension().getCorrectAnswers();
     passScore = Integer.parseInt(consent.getComprehension().getPassScore());
 
     showStep(currentStep);
@@ -289,8 +289,8 @@ public class CustomConsentViewTaskActivity extends AppCompatActivity
 
   private boolean calcPassScore(Step currentStep, TaskResult taskResult) {
     ArrayList<String> answer = new ArrayList<>();
-    for (int i = 0; i < comprehensionCorrectAnswerses.size(); i++) {
-      if (comprehensionCorrectAnswerses
+    for (int i = 0; i < comprehensionCorrectAnswers.size(); i++) {
+      if (comprehensionCorrectAnswers
           .get(i)
           .getKey()
           .equalsIgnoreCase(currentStep.getIdentifier())) {
@@ -305,11 +305,11 @@ public class CustomConsentViewTaskActivity extends AppCompatActivity
                 for (int j = 0; j < objects.length; j++) {
                   if (objects[j] instanceof String) {
                     for (int k = 0;
-                        k < comprehensionCorrectAnswerses.get(i).getAnswer().size();
+                        k < comprehensionCorrectAnswers.get(i).getAnswer().size();
                         k++) {
                       if (((String) objects[j])
                           .equalsIgnoreCase(
-                              comprehensionCorrectAnswerses
+                              comprehensionCorrectAnswers
                                   .get(i)
                                   .getAnswer()
                                   .get(k)
@@ -319,9 +319,9 @@ public class CustomConsentViewTaskActivity extends AppCompatActivity
                     }
                   }
                 }
-                if (comprehensionCorrectAnswerses.get(i).getEvaluation().equalsIgnoreCase("all")) {
-                  if (objects.length == comprehensionCorrectAnswerses.get(i).getAnswer().size()
-                      && answer.size() >= comprehensionCorrectAnswerses.get(i).getAnswer().size()) {
+                if (comprehensionCorrectAnswers.get(i).getEvaluation().equalsIgnoreCase("all")) {
+                  if (objects.length == comprehensionCorrectAnswers.get(i).getAnswer().size()
+                      && answer.size() >= comprehensionCorrectAnswers.get(i).getAnswer().size()) {
                     return true;
                   }
                 } else {
@@ -329,12 +329,12 @@ public class CustomConsentViewTaskActivity extends AppCompatActivity
                     for (int k = 0; k < answer.size(); k++) {
                       boolean correctAnswer = false;
                       for (int j = 0;
-                          j < comprehensionCorrectAnswerses.get(i).getAnswer().size();
+                          j < comprehensionCorrectAnswers.get(i).getAnswer().size();
                           j++) {
                         if (answer
                             .get(k)
                             .equalsIgnoreCase(
-                                comprehensionCorrectAnswerses
+                                comprehensionCorrectAnswers
                                     .get(i)
                                     .getAnswer()
                                     .get(j)
@@ -620,7 +620,7 @@ public class CustomConsentViewTaskActivity extends AppCompatActivity
           this,
           getIntent().getStringExtra(STUDYID),
           StudyFragment.IN_PROGRESS,
-          enrolleddate,
+              enrolledDate,
           participantId,
           siteId,
           hashToken,
@@ -652,7 +652,7 @@ public class CustomConsentViewTaskActivity extends AppCompatActivity
           if (getIntent()
               .getStringExtra(STUDYID)
               .equalsIgnoreCase(studies.getStudies().get(i).getStudyId())) {
-            enrolleddate = studies.getStudies().get(i).getEnrolledDate();
+            enrolledDate = studies.getStudies().get(i).getEnrolledDate();
           }
         }
         updateEligibilityConsent();
@@ -754,7 +754,7 @@ public class CustomConsentViewTaskActivity extends AppCompatActivity
       String detail = getResources().getString(R.string.agree_participate_research_study);
       agreeBuilder.append(String.format("<p style=\"text-align: center\">%1$s</p>", detail));
 
-      String timeStamp = AppController.getDateFormatType3();
+      String timeStamp = AppController.getDateFormatForConsentPdf();
       PdfWriter pdfWriter = new PdfWriter("/data/data/" + getPackageName() + "/files/", timeStamp);
       pdfWriter.createPdfFile(CustomConsentViewTaskActivity.this);
 
@@ -830,7 +830,7 @@ public class CustomConsentViewTaskActivity extends AppCompatActivity
 
       // encrypt the genarated pdf
       File encryptFile =
-          AppController.genarateEncryptedConsentPdf(
+          AppController.generateEncryptedConsentPdf(
               "/data/data/" + getPackageName() + "/files/", timeStamp);
       filepath = encryptFile.getAbsolutePath();
       // After encryption delete the pdf file
@@ -980,7 +980,7 @@ public class CustomConsentViewTaskActivity extends AppCompatActivity
   }
 
   private String convertFileToString(String filepath) throws IOException {
-    CipherInputStream cis = AppController.genarateDecryptedConsentPdf(filepath);
+    CipherInputStream cis = AppController.generateDecryptedConsentPdf(filepath);
     byte[] byteArray = AppController.cipherInputStreamConvertToByte(cis);
     return Base64.encodeToString(byteArray, Base64.DEFAULT);
   }

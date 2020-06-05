@@ -132,7 +132,7 @@ public class DeleteAccountActivity extends AppCompatActivity
         new View.OnClickListener() {
           @Override
           public void onClick(View view) {
-            boolean noDatabol = false;
+            boolean noDataAvaliable = false;
             if (storeWithdrawalTypeDeleteFlag.size() > 0) {
               for (int i = 0; i < storeWithdrawalTypeDeleteFlag.size(); i++) {
                 if (storeWithdrawalTypeDeleteFlag.get(i).equalsIgnoreCase(noData)) {
@@ -144,13 +144,13 @@ public class DeleteAccountActivity extends AppCompatActivity
                   break;
                 }
                 if (i == (storeWithdrawalTypeDeleteFlag.size() - 1)) {
-                  noDatabol = true;
+                  noDataAvaliable = true;
                 }
               }
             } else {
-              noDatabol = true;
+              noDataAvaliable = true;
             }
-            if (noDatabol) {
+            if (noDataAvaliable) {
               AppController.getHelperProgressDialog()
                   .showProgress(DeleteAccountActivity.this, "", "", false);
               deactivateAccount();
@@ -371,7 +371,7 @@ public class DeleteAccountActivity extends AppCompatActivity
         // adding withdrawal type
         withdrawalTypeList.set(tempPos, studyHome.getWithdrawalConfig().getType());
         // saving to db
-        studyHome.setmStudyId(studyIdList.get(tempPos));
+        studyHome.setStudyId(studyIdList.get(tempPos));
 
         dbServiceSubscriber.saveStudyInfoToDB(this, studyHome);
       }
@@ -430,7 +430,7 @@ public class DeleteAccountActivity extends AppCompatActivity
               obj,
               false,
               this);
-      deleteAccountEvent.setmRegistrationServerConfigEvent(registrationServerConfigEvent);
+      deleteAccountEvent.setRegistrationServerConfigEvent(registrationServerConfigEvent);
       UserModulePresenter userModulePresenter = new UserModulePresenter();
       userModulePresenter.performDeleteAccount(deleteAccountEvent);
     } catch (Exception e) {

@@ -355,7 +355,7 @@ public class ResourcesWebViewActivity extends AppCompatActivity {
         // downlaod success mean file exist else check offline file
         File file = new File(filePath + fileName + ".pdf");
         if (file.exists()) {
-          AppController.genarateEncryptedConsentPdf(filePath, fileName);
+          AppController.generateEncryptedConsentPdf(filePath, fileName);
           displayPdfView(filePath + fileName + ".pdf");
         } else {
           // offline functionality
@@ -396,7 +396,7 @@ public class ResourcesWebViewActivity extends AppCompatActivity {
 
   private File getEncryptedFilePath(String filePath) {
     try {
-      CipherInputStream cis = AppController.genarateDecryptedConsentPdf(filePath);
+      CipherInputStream cis = AppController.generateDecryptedConsentPdf(filePath);
       byte[] byteArray = AppController.cipherInputStreamConvertToByte(cis);
       File file = new File(downloadedFilePath + fileName + ".pdf");
       if (!file.exists() && file == null) {

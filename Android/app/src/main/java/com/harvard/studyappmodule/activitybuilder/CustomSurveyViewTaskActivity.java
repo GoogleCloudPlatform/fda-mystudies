@@ -353,7 +353,7 @@ public class CustomSurveyViewTaskActivity<T> extends AppCompatActivity implement
             try {
               jsonObject = new JSONObject(stepRecordCustom.getResult());
               startCalender.setTime(
-                  AppController.getDateFormat().parse("" + jsonObject.get("answer")));
+                  AppController.getDateFormatForApi().parse("" + jsonObject.get("answer")));
               startCalender.add(
                   Calendar.DATE, resourceArrayList.get(i).getAvailability().getStartDays());
               startCalender.set(Calendar.HOUR, 0);
@@ -385,7 +385,7 @@ public class CustomSurveyViewTaskActivity<T> extends AppCompatActivity implement
               }
 
               endCalender.setTime(
-                  AppController.getDateFormat().parse("" + jsonObject.get("answer")));
+                  AppController.getDateFormatForApi().parse("" + jsonObject.get("answer")));
               endCalender.add(
                   Calendar.DATE, resourceArrayList.get(i).getAvailability().getEndDays());
               endCalender.set(Calendar.HOUR, 11);

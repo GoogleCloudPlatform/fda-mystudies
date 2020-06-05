@@ -200,7 +200,7 @@ public class VerificationStepActivity extends AppCompatActivity
                       null,
                       false,
                       VerificationStepActivity.this);
-              verifyUserEvent.setmRegistrationServerConfigEvent(registrationServerConfigEvent);
+              verifyUserEvent.setRegistrationServerConfigEvent(registrationServerConfigEvent);
               UserModulePresenter userModulePresenter = new UserModulePresenter();
               userModulePresenter.performVerifyRegistration(verifyUserEvent);
             }
@@ -230,7 +230,7 @@ public class VerificationStepActivity extends AppCompatActivity
                     null,
                     false,
                     VerificationStepActivity.this);
-            resendEmailEvent.setmRegistrationServerConfigEvent(registrationServerConfigEvent);
+            resendEmailEvent.setRegistrationServerConfigEvent(registrationServerConfigEvent);
             UserModulePresenter userModulePresenter = new UserModulePresenter();
             userModulePresenter.performResendEmail(resendEmailEvent);
           }

@@ -22,7 +22,7 @@ import android.view.MotionEvent;
 
 @SuppressWarnings("DefaultFileTemplate")
 public class VerticalSeekBar extends android.support.v7.widget.AppCompatSeekBar {
-  private OnSeekBarChangeListener myListener;
+  private OnSeekBarChangeListener seekBarListener;
 
   public VerticalSeekBar(Context context) {
     super(context);
@@ -48,7 +48,7 @@ public class VerticalSeekBar extends android.support.v7.widget.AppCompatSeekBar 
 
   @Override
   public void setOnSeekBarChangeListener(OnSeekBarChangeListener listener) {
-    this.myListener = listener;
+    this.seekBarListener = listener;
   }
 
   protected void onDraw(Canvas c) {
@@ -72,18 +72,18 @@ public class VerticalSeekBar extends android.support.v7.widget.AppCompatSeekBar 
 
     switch (event.getAction()) {
       case MotionEvent.ACTION_DOWN:
-        if (myListener != null) {
-          myListener.onStartTrackingTouch(this);
+        if (seekBarListener != null) {
+          seekBarListener.onStartTrackingTouch(this);
         }
         break;
       case MotionEvent.ACTION_MOVE:
         setProgress(getMax() - (int) (getMax() * event.getY() / getHeight()));
         onSizeChanged(getWidth(), getHeight(), 0, 0);
-        myListener.onProgressChanged(
+        seekBarListener.onProgressChanged(
             this, getMax() - (int) (getMax() * event.getY() / getHeight()), true);
         break;
       case MotionEvent.ACTION_UP:
-        myListener.onStopTrackingTouch(this);
+        seekBarListener.onStopTrackingTouch(this);
         break;
 
       case MotionEvent.ACTION_CANCEL:

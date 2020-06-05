@@ -50,12 +50,12 @@ public class UserModuleSubscriber extends BaseSubscriber {
 
   /** Register user. */
   public void onEvent(RegisterUserEvent registerUserEvent) {
-    FdaEventBus.postEvent(registerUserEvent.getmRegistrationServerConfigEvent());
+    FdaEventBus.postEvent(registerUserEvent.getRegistrationServerConfigEvent());
   }
 
   /** verify account. */
   public void onEvent(VerifyUserEvent verifyUserEvent) {
-    FdaEventBus.postEvent(verifyUserEvent.getmRegistrationServerConfigEvent());
+    FdaEventBus.postEvent(verifyUserEvent.getRegistrationServerConfigEvent());
   }
 
   /** set touchId. */
@@ -74,12 +74,12 @@ public class UserModuleSubscriber extends BaseSubscriber {
 
   /** touchId login. */
   public void onEvent(TouchIdSigninEvent touchIdSigninEvent) {
-    FdaEventBus.postEvent(touchIdSigninEvent.getmRegistrationServerConfigEvent());
+    FdaEventBus.postEvent(touchIdSigninEvent.getRegistrationServerConfigEvent());
   }
 
   /** Participent Enrollment. */
   public void onEvent(ParticipentEnrollmentEvent participentEnrollmentEvent) {
-    FdaEventBus.postEvent(participentEnrollmentEvent.getmResponseServerConfigEvent());
+    FdaEventBus.postEvent(participentEnrollmentEvent.getResponseServerConfigEvent());
   }
 
   /** Forgot password. */
@@ -94,25 +94,25 @@ public class UserModuleSubscriber extends BaseSubscriber {
 
   /** delete account from registration server. */
   public void onEvent(DeleteAccountRegServerEvent deleteAccountRegServerEvent) {
-    FdaEventBus.postEvent(deleteAccountRegServerEvent.getmRegistrationServerConfigEvent());
+    FdaEventBus.postEvent(deleteAccountRegServerEvent.getRegistrationServerConfigEvent());
   }
 
   /** delete account from response server. */
   public void onEvent(DeleteAccountResServerEvent deleteAccountResServerEvent) {
-    FdaEventBus.postEvent(deleteAccountResServerEvent.getmResponseServerConfigEvent());
+    FdaEventBus.postEvent(deleteAccountResServerEvent.getResponseServerConfigEvent());
   }
 
   /** Sign out. */
   public void onEvent(SignOutEvent signOutEvent) {
-    FdaEventBus.postEvent(signOutEvent.getmRegistrationServerConfigEvent());
+    FdaEventBus.postEvent(signOutEvent.getRegistrationServerConfigEvent());
   }
 
   public void onEvent(GetUserProfileEvent getUserProfileEvent) {
-    FdaEventBus.postEvent(getUserProfileEvent.getmRegistrationServerConfigEvent());
+    FdaEventBus.postEvent(getUserProfileEvent.getRegistrationServerConfigEvent());
   }
 
   public void onEvent(UpdateUserProfileEvent updateUserProfileEvent) {
-    FdaEventBus.postEvent(updateUserProfileEvent.getmRegistrationServerConfigEvent());
+    FdaEventBus.postEvent(updateUserProfileEvent.getRegistrationServerConfigEvent());
   }
 
   public void onEvent(UpdatePreferenceEvent updatePreferenceEvent) {
@@ -120,7 +120,7 @@ public class UserModuleSubscriber extends BaseSubscriber {
   }
 
   public void onEvent(ResendEmailEvent resendEmailEvent) {
-    FdaEventBus.postEvent(resendEmailEvent.getmRegistrationServerConfigEvent());
+    FdaEventBus.postEvent(resendEmailEvent.getRegistrationServerConfigEvent());
   }
 
   public void onEvent(LogoutEvent logoutEvent) {
@@ -132,10 +132,10 @@ public class UserModuleSubscriber extends BaseSubscriber {
   }
 
   public void onEvent(DeleteAccountEvent deleteAccountEvent) {
-    FdaEventBus.postEvent(deleteAccountEvent.getmRegistrationServerConfigEvent());
+    FdaEventBus.postEvent(deleteAccountEvent.getRegistrationServerConfigEvent());
   }
 
   public void onEvent(ConsentPdfEvent consentPdfEvent) {
-    FdaEventBus.postEvent(consentPdfEvent.getmRegistrationServerConsentConfigEvent());
+    FdaEventBus.postEvent(consentPdfEvent.getRegistrationServerConsentConfigEvent());
   }
 }

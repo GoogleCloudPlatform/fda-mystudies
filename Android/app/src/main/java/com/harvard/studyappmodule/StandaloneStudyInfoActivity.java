@@ -312,12 +312,12 @@ public class StandaloneStudyInfoActivity extends AppCompatActivity
       AppController.getHelperProgressDialog().dismissDialog();
       consentDocumentData = (ConsentDocumentData) response;
       getStudyWebsiteNull();
-      studyHome.setmStudyId(AppConfig.StudyId);
+      studyHome.setStudyId(AppConfig.StudyId);
       if (studyHome != null) {
         dbServiceSubscriber.saveStudyInfoToDB(this, studyHome);
       }
       if (consentDocumentData != null) {
-        consentDocumentData.setmStudyId(AppConfig.StudyId);
+        consentDocumentData.setStudyId(AppConfig.StudyId);
         dbServiceSubscriber.saveConsentDocumentToDB(this, consentDocumentData);
       }
       setViewPagerView(studyHome);

@@ -428,7 +428,7 @@ public class SignInFragment extends Fragment implements ApiCall.OnAsyncRequestCo
             null,
             false,
             this);
-    getUserProfileEvent.setmRegistrationServerConfigEvent(registrationServerConfigEvent);
+    getUserProfileEvent.setRegistrationServerConfigEvent(registrationServerConfigEvent);
     UserModulePresenter userModulePresenter = new UserModulePresenter();
     userModulePresenter.performGetUserProfile(getUserProfileEvent);
   }
@@ -514,7 +514,7 @@ public class SignInFragment extends Fragment implements ApiCall.OnAsyncRequestCo
             false,
             this);
     UpdateUserProfileEvent updateUserProfileEvent = new UpdateUserProfileEvent();
-    updateUserProfileEvent.setmRegistrationServerConfigEvent(registrationServerConfigEvent);
+    updateUserProfileEvent.setRegistrationServerConfigEvent(registrationServerConfigEvent);
     UserModulePresenter userModulePresenter = new UserModulePresenter();
     userModulePresenter.performUpdateUserProfile(updateUserProfileEvent);
   }

@@ -22,43 +22,43 @@ public class UserActivityStatus {
   private String studyId;
   private String activityVersion;
 
-  public String getmActivityStatus() {
+  public String getActivityStatus() {
     return activityStatus;
   }
 
-  public void setmActivityStatus(String activityStatus) {
+  public void setActivityStatus(String activityStatus) {
     this.activityStatus = activityStatus;
   }
 
-  public boolean ismBookmarked() {
+  public boolean isBookmarked() {
     return bookmarked;
   }
 
-  public void setmBookmarked(boolean bookmarked) {
+  public void setBookmarked(boolean bookmarked) {
     this.bookmarked = bookmarked;
   }
 
-  public String getmActivityId() {
+  public String getActivityId() {
     return activityId;
   }
 
-  public void setmActivityId(String activityId) {
+  public void setActivityId(String activityId) {
     this.activityId = activityId;
   }
 
-  public String getmStudyId() {
+  public String getStudyId() {
     return studyId;
   }
 
-  public void setmStudyId(String studyId) {
+  public void setStudyId(String studyId) {
     this.studyId = studyId;
   }
 
-  public String getmActivityVersion() {
+  public String getActivityVersion() {
     return activityVersion;
   }
 
-  public void setmActivityVersion(String activityVersion) {
+  public void setActivityVersion(String activityVersion) {
     this.activityVersion = activityVersion;
   }
 }

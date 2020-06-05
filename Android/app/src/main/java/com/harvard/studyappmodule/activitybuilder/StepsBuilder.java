@@ -135,9 +135,7 @@ public class StepsBuilder {
               steps.add(continousscaleStep);
               break;
             case "textScale":
-              ChoiceTextExclusive[] textScaleChoices =
-                      new ChoiceTextExclusive
-                              [activityQuestionStep.get(i).getFormat().getTextChoices().size()];
+              ChoiceTextExclusive[] textScaleChoices = new ChoiceTextExclusive[activityQuestionStep.get(i).getFormat().getTextChoices().size()];
               for (int j = 0;
                    j < activityQuestionStep.get(i).getFormat().getTextChoices().size();
                    j++) {
@@ -215,9 +213,7 @@ public class StepsBuilder {
               if (branching) {
                 multichoiceStep.setStepTitle(R.string.notxt);
               }
-              ChoiceCustomImage[] choicechoices =
-                      new ChoiceCustomImage
-                              [activityQuestionStep.get(i).getFormat().getImageChoices().size()];
+              ChoiceCustomImage[] choicechoices = new ChoiceCustomImage[activityQuestionStep.get(i).getFormat().getImageChoices().size()];
               for (int j = 0;
                    j < activityQuestionStep.get(i).getFormat().getImageChoices().size();
                    j++) {
@@ -293,9 +289,7 @@ public class StepsBuilder {
                 multiStep.setOptional(activityQuestionStep.get(i).isSkippable());
                 steps.add(multiStep);
               } else {
-                ChoiceTextExclusive[] choices =
-                        new ChoiceTextExclusive
-                                [activityQuestionStep.get(i).getFormat().getTextChoices().size()];
+                ChoiceTextExclusive[] choices = new ChoiceTextExclusive[activityQuestionStep.get(i).getFormat().getTextChoices().size()];
                 for (int j = 0;
                      j < activityQuestionStep.get(i).getFormat().getTextChoices().size();
                      j++) {
@@ -425,7 +419,7 @@ public class StepsBuilder {
               steps.add(timeOfDayStep);
               break;
             case "date":
-              SimpleDateFormat simpleDateFormat = AppController.getDateFormat();
+              SimpleDateFormat simpleDateFormat = AppController.getDateFormatForApi();
               Date mindate = null;
               Date maxdate = null;
               Date defaultval = null;
@@ -915,7 +909,7 @@ public class StepsBuilder {
             formquesteps.add(timeOfDayStep);
             break;
           case "date":
-            SimpleDateFormat simpleDateFormat = AppController.getDateFormat();
+            SimpleDateFormat simpleDateFormat = AppController.getDateFormatForApi();
             Date mindate = null;
             Date maxdate = null;
             Date defaultval = null;

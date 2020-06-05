@@ -53,7 +53,7 @@ public class ConsentCompletedActivity extends AppCompatActivity {
   private static final int PERMISSION_REQUEST_CODE = 1000;
   private TextView consentCompleteTxt;
   private TextView textSecRow;
-  private TextView viewpdf;
+  private TextView viewPdf;
   private TextView next;
 
   public static String FROM = "from";
@@ -83,7 +83,7 @@ public class ConsentCompletedActivity extends AppCompatActivity {
       Logger.log(e);
     }
     setFont();
-    viewpdf.setOnClickListener(
+    viewPdf.setOnClickListener(
         new View.OnClickListener() {
           @Override
           public void onClick(View v) {
@@ -167,7 +167,7 @@ public class ConsentCompletedActivity extends AppCompatActivity {
   private void initializeXmlId() {
     consentCompleteTxt = (TextView) findViewById(R.id.consentcomplete);
     textSecRow = (TextView) findViewById(R.id.mTextSecRow);
-    viewpdf = (TextView) findViewById(R.id.viewpdf);
+    viewPdf = (TextView) findViewById(R.id.viewpdf);
     next = (TextView) findViewById(R.id.next);
   }
 
@@ -179,7 +179,7 @@ public class ConsentCompletedActivity extends AppCompatActivity {
       consentCompleteTxt.setTypeface(
           AppController.getTypeface(ConsentCompletedActivity.this, "regular"));
       textSecRow.setTypeface(AppController.getTypeface(ConsentCompletedActivity.this, "light"));
-      viewpdf.setTypeface(AppController.getTypeface(ConsentCompletedActivity.this, "regular"));
+      viewPdf.setTypeface(AppController.getTypeface(ConsentCompletedActivity.this, "regular"));
       next.setTypeface(AppController.getTypeface(ConsentCompletedActivity.this, "regular"));
     } catch (Exception e) {
       Logger.log(e);
@@ -237,7 +237,7 @@ public class ConsentCompletedActivity extends AppCompatActivity {
 
   private File getEncryptedFilePath(String filePath) {
     try {
-      CipherInputStream cis = AppController.genarateDecryptedConsentPdf(filePath);
+      CipherInputStream cis = AppController.generateDecryptedConsentPdf(filePath);
       byte[] byteArray = AppController.cipherInputStreamConvertToByte(cis);
       File file = new File("/data/data/" + getPackageName() + "/files/" + "temp" + ".pdf");
       if (!file.exists() && file == null) {

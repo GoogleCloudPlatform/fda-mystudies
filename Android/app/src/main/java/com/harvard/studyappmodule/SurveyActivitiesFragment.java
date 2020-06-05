@@ -138,7 +138,7 @@ public class SurveyActivitiesFragment extends Fragment
   private static final int STUDY_INFO = 10;
   private static final int RESOURCE_REQUEST_CODE = 213;
   private RelativeLayout backBtn;
-  private AppCompatTextView title;
+  private AppCompatTextView titleTv;
   private RelativeLayout filterBtn;
   private RecyclerView surveyActivitiesRecyclerView;
   private SwipeRefreshLayout swipeRefreshLayout;
@@ -171,7 +171,6 @@ public class SurveyActivitiesFragment extends Fragment
   private boolean locationPermission = false;
   private int deleteIndexNumberDb;
   private EligibilityConsent eligibilityConsent;
-  private String titl;
   private DbServiceSubscriber dbServiceSubscriber;
   private Realm realm;
   private boolean activityUpdated = false;
@@ -186,7 +185,7 @@ public class SurveyActivitiesFragment extends Fragment
   private StepsBuilder stepsBuilder;
   private ArrayList<AnchorDateSchedulingDetails> arrayList;
   private ActivityData activityDataDB;
-
+  String title = "";
   @Override
   public void onAttach(Context context) {
     super.onAttach(context);
@@ -226,7 +225,7 @@ public class SurveyActivitiesFragment extends Fragment
 
   private void initializeXmlId(View view) {
     backBtn = (RelativeLayout) view.findViewById(R.id.backBtn);
-    title = (AppCompatTextView) view.findViewById(R.id.title);
+    titleTv = (AppCompatTextView) view.findViewById(R.id.title);
     filterBtn = (RelativeLayout) view.findViewById(R.id.filterBtn);
     surveyActivitiesRecyclerView =
         (RecyclerView) view.findViewById(R.id.mSurveyActivitiesRecyclerView);
@@ -245,12 +244,12 @@ public class SurveyActivitiesFragment extends Fragment
   }
 
   private void setTextForView() {
-    title.setText(context.getResources().getString(R.string.study_activities));
+    titleTv.setText(context.getResources().getString(R.string.study_activities));
   }
 
   private void setFont() {
     try {
-      title.setTypeface(AppController.getTypeface(getActivity(), "bold"));
+      titleTv.setTypeface(AppController.getTypeface(getActivity(), "bold"));
     } catch (Exception e) {
       Logger.log(e);
     }
@@ -496,9 +495,9 @@ public class SurveyActivitiesFragment extends Fragment
   private void saveConsentToDB(Context context, EligibilityConsent eligibilityConsent) {
     DatabaseEvent databaseEvent = new DatabaseEvent();
     databaseEvent.setE(eligibilityConsent);
-    databaseEvent.setmType(DbServiceSubscriber.TYPE_COPY_UPDATE);
+    databaseEvent.setType(DbServiceSubscriber.TYPE_COPY_UPDATE);
     databaseEvent.setaClass(EligibilityConsent.class);
-    databaseEvent.setmOperation(DbServiceSubscriber.INSERT_AND_UPDATE_OPERATION);
+    databaseEvent.setOperation(DbServiceSubscriber.INSERT_AND_UPDATE_OPERATION);
     dbServiceSubscriber.insert(context, databaseEvent);
   }
 
@@ -511,7 +510,7 @@ public class SurveyActivitiesFragment extends Fragment
         .show();
     StudyList studyList =
         dbServiceSubscriber.getStudiesDetails(((SurveyActivity) context).getStudyId(), realm);
-    titl = studyList.getTitle();
+    title = studyList.getTitle();
     ConsentBuilder consentBuilder = new ConsentBuilder();
     List<Step> consentStep =
         consentBuilder.createsurveyquestion(context, consent, studyList.getTitle());
@@ -522,7 +521,7 @@ public class SurveyActivitiesFragment extends Fragment
             consentTask,
             ((SurveyActivity) context).getStudyId(),
             "",
-            titl,
+            title,
             eligibilityType,
             "update");
     startActivityForResult(intent, CONSENT_RESPONSECODE);
@@ -538,7 +537,7 @@ public class SurveyActivitiesFragment extends Fragment
         Intent intent = new Intent(getActivity(), ConsentCompletedActivity.class);
         intent.putExtra(ConsentCompletedActivity.FROM, FROM_SURVAY);
         intent.putExtra("studyId", ((SurveyActivity) context).getStudyId());
-        intent.putExtra("title", titl);
+        intent.putExtra("title", title);
         intent.putExtra("eligibility", eligibilityType);
         intent.putExtra("type", data.getStringExtra(CustomConsentViewTaskActivity.TYPE));
         // get the encrypted file path
@@ -748,7 +747,7 @@ public class SurveyActivitiesFragment extends Fragment
 
         if (studyResource != null) {
           // primary key studyId
-          studyResource.setmStudyId(studyId);
+          studyResource.setStudyId(studyId);
           // remove duplicate and
           dbServiceSubscriber.deleteStudyResourceDuplicateRow(context, studyId);
           dbServiceSubscriber.saveResourceList(context, studyResource);
@@ -1593,7 +1592,6 @@ public class SurveyActivitiesFragment extends Fragment
     RealmList<ActivitiesWS> activitiesArrayList = new RealmList<>();
 
     Realm realm;
-    String title = "";
     String errormsg;
 
     CalculateRuns(
@@ -1740,7 +1738,7 @@ public class SurveyActivitiesFragment extends Fragment
         }
 
         for (int i = 0; i < activitiesArrayList.size(); i++) {
-          SimpleDateFormat simpleDateFormat = AppController.getDateFormatUtc1();
+          SimpleDateFormat simpleDateFormat = AppController.getDateFormatUtcNoZone();
           Date starttime = null;
           Date endtime = null;
           if (activitiesArrayList.get(i) != null
@@ -1873,9 +1871,9 @@ public class SurveyActivitiesFragment extends Fragment
             }
           }
 
-          String currentDateString = AppController.getDateFormatUtc().format(currentDate);
+          String currentDateString = AppController.getDateFormatForApi().format(currentDate);
           try {
-            currentDate = AppController.getDateFormatUtc().parse(currentDateString);
+            currentDate = AppController.getDateFormatForApi().parse(currentDateString);
           } catch (ParseException e) {
             Logger.log(e);
           }
@@ -1974,10 +1972,10 @@ public class SurveyActivitiesFragment extends Fragment
       for (int i = 0; i < currentactivityList.size(); i++) {
         for (int j = i; j < currentactivityList.size(); j++) {
           try {
-            if (AppController.getDateFormat()
+            if (AppController.getDateFormatForApi()
                 .parse(currentactivityList.get(i).getStartTime())
                 .after(
-                    AppController.getDateFormat()
+                    AppController.getDateFormatForApi()
                         .parse(currentactivityList.get(j).getStartTime()))) {
               ActivitiesWS activitiesWS = currentactivityList.get(i);
               currentactivityList.set(i, currentactivityList.get(j));
@@ -2048,10 +2046,10 @@ public class SurveyActivitiesFragment extends Fragment
       for (int i = 0; i < upcomingactivityList.size(); i++) {
         for (int j = i; j < upcomingactivityList.size(); j++) {
           try {
-            if (AppController.getDateFormat()
+            if (AppController.getDateFormatForApi()
                 .parse(upcomingactivityList.get(i).getStartTime())
                 .after(
-                    AppController.getDateFormat()
+                    AppController.getDateFormatForApi()
                         .parse(upcomingactivityList.get(j).getStartTime()))) {
               ActivitiesWS activitiesWS = upcomingactivityList.get(i);
               upcomingactivityList.set(i, upcomingactivityList.get(j));
@@ -2074,10 +2072,10 @@ public class SurveyActivitiesFragment extends Fragment
       for (int i = 0; i < completedactivityList.size(); i++) {
         for (int j = i; j < completedactivityList.size(); j++) {
           try {
-            if (AppController.getDateFormat()
+            if (AppController.getDateFormatForApi()
                 .parse(completedactivityList.get(i).getStartTime())
                 .after(
-                    AppController.getDateFormat()
+                    AppController.getDateFormatForApi()
                         .parse(completedactivityList.get(j).getStartTime()))) {
               ActivitiesWS activitiesWS = completedactivityList.get(i);
               completedactivityList.set(i, completedactivityList.get(j));
@@ -2539,9 +2537,9 @@ public class SurveyActivitiesFragment extends Fragment
   private <E> void insertAndUpdateToDB(Context context, E e) {
     DatabaseEvent databaseEvent = new DatabaseEvent();
     databaseEvent.setE(e);
-    databaseEvent.setmType(DbServiceSubscriber.TYPE_COPY_UPDATE);
+    databaseEvent.setType(DbServiceSubscriber.TYPE_COPY_UPDATE);
     databaseEvent.setaClass(EligibilityConsent.class);
-    databaseEvent.setmOperation(DbServiceSubscriber.INSERT_AND_UPDATE_OPERATION);
+    databaseEvent.setOperation(DbServiceSubscriber.INSERT_AND_UPDATE_OPERATION);
     dbServiceSubscriber.insert(context, databaseEvent);
   }
 
@@ -2839,7 +2837,6 @@ public class SurveyActivitiesFragment extends Fragment
       }
       deleteIndexNumberDb = number;
 
-      deleteIndexNumberDb = number;
       AppController.pendingService(
           context,
           number,
@@ -3030,15 +3027,15 @@ public class SurveyActivitiesFragment extends Fragment
             Object value = null;
             for (int i = 0; i < jsonArray1.length(); i++) {
               Type type = new TypeToken<Map<String, Object>>() {}.getType();
-              Map<String, Object> myMap = gson.fromJson(String.valueOf(jsonArray1.get(i)), type);
-              for (Map.Entry<String, Object> entry : myMap.entrySet()) {
+              Map<String, Object> map = gson.fromJson(String.valueOf(jsonArray1.get(i)), type);
+              for (Map.Entry<String, Object> entry : map.entrySet()) {
                 String key = entry.getKey();
                 String valueobj = gson.toJson(entry.getValue());
                 Map<String, Object> vauleMap = gson.fromJson(String.valueOf(valueobj), type);
                 value = vauleMap.get("value");
                 try {
                   Date anchordate = AppController.getLabkeyDateFormat().parse("" + value);
-                  value = AppController.getDateFormat().format(anchordate);
+                  value = AppController.getDateFormatForApi().format(anchordate);
                 } catch (ParseException e) {
                   Logger.log(e);
                 }

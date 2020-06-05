@@ -21,35 +21,35 @@ public class Settings {
   private boolean touchId;
   private boolean passcode;
 
-  public boolean ismRemoteNotifications() {
+  public boolean isRemoteNotifications() {
     return remoteNotifications;
   }
 
-  public void setmRemoteNotifications(boolean remoteNotifications) {
+  public void setRemoteNotifications(boolean remoteNotifications) {
     this.remoteNotifications = remoteNotifications;
   }
 
-  public boolean ismLocalNotifications() {
+  public boolean isLocalNotifications() {
     return localNotifications;
   }
 
-  public void setmLocalNotifications(boolean localNotifications) {
+  public void setLocalNotifications(boolean localNotifications) {
     this.localNotifications = localNotifications;
   }
 
-  public boolean ismTouchId() {
+  public boolean isTouchId() {
     return touchId;
   }
 
-  public void setmTouchId(boolean touchId) {
+  public void setTouchId(boolean touchId) {
     this.touchId = touchId;
   }
 
-  public boolean ismPasscode() {
+  public boolean isPasscode() {
     return passcode;
   }
 
-  public void setmPasscode(boolean passcode) {
+  public void setPasscode(boolean passcode) {
     this.passcode = passcode;
   }
 }

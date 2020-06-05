@@ -20,11 +20,11 @@ import com.harvard.webservicemodule.events.RegistrationServerConfigEvent;
 public class ResendEmailEvent {
   private RegistrationServerConfigEvent registrationServerConfigEvent;
 
-  public RegistrationServerConfigEvent getmRegistrationServerConfigEvent() {
+  public RegistrationServerConfigEvent getRegistrationServerConfigEvent() {
     return registrationServerConfigEvent;
   }
 
-  public void setmRegistrationServerConfigEvent(
+  public void setRegistrationServerConfigEvent(
       RegistrationServerConfigEvent registrationServerConfigEvent) {
     this.registrationServerConfigEvent = registrationServerConfigEvent;
   }

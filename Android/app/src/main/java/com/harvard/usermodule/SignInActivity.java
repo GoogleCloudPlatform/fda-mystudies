@@ -623,7 +623,7 @@ public class SignInActivity extends AppCompatActivity implements ApiCall.OnAsync
             false,
             this);
     UpdateUserProfileEvent updateUserProfileEvent = new UpdateUserProfileEvent();
-    updateUserProfileEvent.setmRegistrationServerConfigEvent(registrationServerConfigEvent);
+    updateUserProfileEvent.setRegistrationServerConfigEvent(registrationServerConfigEvent);
     UserModulePresenter userModulePresenter = new UserModulePresenter();
     userModulePresenter.performUpdateUserProfile(updateUserProfileEvent);
   }
@@ -645,7 +645,7 @@ public class SignInActivity extends AppCompatActivity implements ApiCall.OnAsync
             null,
             false,
             this);
-    getUserProfileEvent.setmRegistrationServerConfigEvent(registrationServerConfigEvent);
+    getUserProfileEvent.setRegistrationServerConfigEvent(registrationServerConfigEvent);
     UserModulePresenter userModulePresenter = new UserModulePresenter();
     userModulePresenter.performGetUserProfile(getUserProfileEvent);
   }

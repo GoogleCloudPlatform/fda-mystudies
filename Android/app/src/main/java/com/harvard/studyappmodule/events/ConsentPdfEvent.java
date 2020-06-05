@@ -20,7 +20,7 @@ import com.harvard.webservicemodule.events.RegistrationServerConsentConfigEvent;
 public class ConsentPdfEvent {
   private RegistrationServerConsentConfigEvent registrationServerConsentConfigEvent;
 
-  public RegistrationServerConsentConfigEvent getmRegistrationServerConsentConfigEvent() {
+  public RegistrationServerConsentConfigEvent getRegistrationServerConsentConfigEvent() {
     return registrationServerConsentConfigEvent;
   }
 

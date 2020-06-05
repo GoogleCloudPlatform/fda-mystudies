@@ -20,11 +20,11 @@ import com.harvard.webservicemodule.events.ResponseServerConfigEvent;
 public class ParticipentEnrollmentEvent {
   private ResponseServerConfigEvent responseServerConfigEvent;
 
-  public ResponseServerConfigEvent getmResponseServerConfigEvent() {
+  public ResponseServerConfigEvent getResponseServerConfigEvent() {
     return responseServerConfigEvent;
   }
 
-  public void setmResponseServerConfigEvent(ResponseServerConfigEvent responseServerConfigEvent) {
+  public void setResponseServerConfigEvent(ResponseServerConfigEvent responseServerConfigEvent) {
     this.responseServerConfigEvent = responseServerConfigEvent;
   }
 }

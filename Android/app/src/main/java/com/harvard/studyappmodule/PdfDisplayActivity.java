@@ -86,7 +86,7 @@ public class PdfDisplayActivity extends AppCompatActivity
         File file = new File(studies.getPdfPath().toString());
         if (file.exists()) {
           CipherInputStream cis =
-              AppController.genarateDecryptedConsentPdf(studies.getPdfPath().toString());
+              AppController.generateDecryptedConsentPdf(studies.getPdfPath().toString());
           // we will get byte array pass to pdf view
           bytesArray = AppController.cipherInputStreamConvertToByte(cis);
           setPdfView();

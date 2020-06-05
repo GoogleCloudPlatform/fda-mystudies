@@ -94,9 +94,9 @@ public class NotificationListAdapter extends RecyclerView.Adapter<NotificationLi
     try {
       holder.notificationMsg.setText(items.get(holder.getAdapterPosition()).getMessage());
       holder.dayTimeDisplay.setText(
-          AppController.getDateFormatType1()
+          AppController.getDateFormatForNotification()
               .format(
-                  AppController.getDateFormat()
+                  AppController.getDateFormatForApi()
                       .parse(items.get(holder.getAdapterPosition()).getDate())));
 
       holder.container.setOnClickListener(

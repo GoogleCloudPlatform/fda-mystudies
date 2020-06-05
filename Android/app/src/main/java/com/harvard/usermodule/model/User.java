@@ -29,83 +29,83 @@ public class User {
   private ArrayList<UserStudyStatus> userStudyStatuses = new ArrayList<>();
   private ArrayList<UserActivityStatus> userActivityStatuses = new ArrayList<>();
 
-  public String getmFirstName() {
+  public String getFirstName() {
     return firstName;
   }
 
-  public void setmFirstName(String firstName) {
+  public void setFirstName(String firstName) {
     this.firstName = firstName;
   }
 
-  public String getmLastName() {
+  public String getLastName() {
     return lastName;
   }
 
-  public void setmLastName(String lastName) {
+  public void setLastName(String lastName) {
     this.lastName = lastName;
   }
 
-  public String getmEmailId() {
+  public String getEmailId() {
     return emailId;
   }
 
-  public void setmEmailId(String emailId) {
+  public void setEmailId(String emailId) {
     this.emailId = emailId;
   }
 
-  public String getmUserId() {
+  public String getUserId() {
     return userId;
   }
 
-  public void setmUserId(String userId) {
+  public void setUserId(String userId) {
     this.userId = userId;
   }
 
-  public boolean ismVerified() {
+  public boolean isVerified() {
     return verified;
   }
 
-  public void setmVerified(boolean verified) {
+  public void setVerified(boolean verified) {
     this.verified = verified;
   }
 
-  public String getmAuthToken() {
+  public String getAuthToken() {
     return authToken;
   }
 
-  public void setmAuthToken(String authToken) {
+  public void setAuthToken(String authToken) {
     this.authToken = authToken;
   }
 
-  public String getmUserType() {
+  public String getUserType() {
     return userType;
   }
 
-  public void setmUserType(String userType) {
+  public void setUserType(String userType) {
     this.userType = userType;
   }
 
-  public Settings getmSettings() {
+  public Settings getSettings() {
     return settings;
   }
 
-  public void setmSettings(Settings settings) {
+  public void setSettings(Settings settings) {
     this.settings = settings;
   }
 
-  public ArrayList<UserStudyStatus> getmUserStudyStatuses() {
+  public ArrayList<UserStudyStatus> getUserStudyStatuses() {
     return userStudyStatuses;
   }
 
-  public void setmUserStudyStatuses(ArrayList<UserStudyStatus> userStudyStatuses) {
+  public void setUserStudyStatuses(ArrayList<UserStudyStatus> userStudyStatuses) {
     this.userStudyStatuses = userStudyStatuses;
   }
 
-  public ArrayList<UserActivityStatus> getmUserActivityStatuses() {
+  public ArrayList<UserActivityStatus> getUserActivityStatuses() {
     return userActivityStatuses;
   }
 
-  public void setmUserActivityStatuses(ArrayList<UserActivityStatus> userActivityStatuses) {
+  public void setUserActivityStatuses(ArrayList<UserActivityStatus> userActivityStatuses) {
     this.userActivityStatuses = userActivityStatuses;
   }
 }

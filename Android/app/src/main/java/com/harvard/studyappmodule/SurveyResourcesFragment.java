@@ -255,7 +255,7 @@ public class SurveyResourcesFragment<T> extends Fragment implements ApiCall.OnAs
     } else if (responseCode == STUDY_INFO) {
       if (response != null) {
         studyHome = (StudyHome) response;
-        studyHome.setmStudyId(studyId);
+        studyHome.setStudyId(studyId);
         dbServiceSubscriber.saveStudyInfoToDB(context, studyHome);
 
         if (studyResource != null) {
@@ -266,7 +266,7 @@ public class SurveyResourcesFragment<T> extends Fragment implements ApiCall.OnAs
           addStaticVal();
 
           // primary key studyId
-          studyResource.setmStudyId(studyId);
+          studyResource.setStudyId(studyId);
           // remove duplicate and
           dbServiceSubscriber.deleteStudyResourceDuplicateRow(context, studyId);
           dbServiceSubscriber.saveResourceList(context, studyResource);
@@ -368,7 +368,7 @@ public class SurveyResourcesFragment<T> extends Fragment implements ApiCall.OnAs
             try {
               Calendar expiryDate = Calendar.getInstance();
               expiryDate.setTime(
-                  AppController.getDateFormatType10()
+                  AppController.getDateFormatForResourceAvailability()
                       .parse(resourceArrayList.get(i).getAvailability().getExpiryDate()));
               expiryDate.set(Calendar.HOUR, 11);
               expiryDate.set(Calendar.MINUTE, 59);
@@ -377,7 +377,7 @@ public class SurveyResourcesFragment<T> extends Fragment implements ApiCall.OnAs
 
               Calendar availableDate = Calendar.getInstance();
               availableDate.setTime(
-                  AppController.getDateFormatType10()
+                  AppController.getDateFormatForResourceAvailability()
                       .parse(resourceArrayList.get(i).getAvailability().getAvailableDate()));
               availableDate.set(Calendar.HOUR, 0);
               availableDate.set(Calendar.MINUTE, 0);
@@ -431,7 +431,7 @@ public class SurveyResourcesFragment<T> extends Fragment implements ApiCall.OnAs
                   try {
                     jsonObject = new JSONObject(stepRecordCustom.getResult());
                     startCalender.setTime(
-                        AppController.getDateFormat().parse("" + jsonObject.get("answer")));
+                        AppController.getDateFormatForApi().parse("" + jsonObject.get("answer")));
                     startCalender.add(
                         Calendar.DATE, resourceArrayList.get(i).getAvailability().getStartDays());
                     if (resourceArrayList.get(i).getAvailability().getStartTime() == null
@@ -478,7 +478,7 @@ public class SurveyResourcesFragment<T> extends Fragment implements ApiCall.OnAs
                     }
 
                     endCalender.setTime(
-                        AppController.getDateFormat().parse("" + jsonObject.get("answer")));
+                        AppController.getDateFormatForApi().parse("" + jsonObject.get("answer")));
                     endCalender.add(
                         Calendar.DATE, resourceArrayList.get(i).getAvailability().getEndDays());
 
@@ -523,12 +523,12 @@ public class SurveyResourcesFragment<T> extends Fragment implements ApiCall.OnAs
                       .getResourcesId()
                       .equalsIgnoreCase(arrayList.get(j).getTargetActivityId())) {
                     startCalender.setTime(
-                        AppController.getDateFormat().parse(arrayList.get(j).getAnchorDate()));
+                        AppController.getDateFormatForApi().parse(arrayList.get(j).getAnchorDate()));
                     startCalender.add(
                         Calendar.DATE, resourceArrayList.get(i).getAvailability().getStartDays());
 
                     endCalender.setTime(
-                        AppController.getDateFormat().parse(arrayList.get(j).getAnchorDate()));
+                        AppController.getDateFormatForApi().parse(arrayList.get(j).getAnchorDate()));
                     endCalender.add(
                         Calendar.DATE, resourceArrayList.get(i).getAvailability().getEndDays());
                     break;
@@ -762,16 +762,16 @@ public class SurveyResourcesFragment<T> extends Fragment implements ApiCall.OnAs
             for (int j = 0; j < jsonArray1.length(); j++) {
               Type type = new TypeToken<Map<String, Object>>() {}.getType();
               JSONObject jsonObjectData = (JSONObject) jsonArray1.get(j);
-              Map<String, Object> myMap = gson.fromJson(String.valueOf(jsonObjectData), type);
+              Map<String, Object> map = gson.fromJson(String.valueOf(jsonObjectData), type);
 
-              for (Map.Entry<String, Object> entry : myMap.entrySet()) {
+              for (Map.Entry<String, Object> entry : map.entrySet()) {
                 String key = entry.getKey();
                 String valueobj = gson.toJson(entry.getValue());
                 Map<String, Object> vauleMap = gson.fromJson(String.valueOf(valueobj), type);
                 value = vauleMap.get("value");
                 try {
                   Date anchordate = AppController.getLabkeyDateFormat().parse("" + value);
-                  value = AppController.getDateFormat().format(anchordate);
+                  value = AppController.getDateFormatForApi().format(anchordate);
                 } catch (ParseException e) {
                   Logger.log(e);
                 }
@@ -1022,7 +1022,7 @@ public class SurveyResourcesFragment<T> extends Fragment implements ApiCall.OnAs
             obj,
             false,
             this);
-    deleteAccountEvent.setmRegistrationServerConfigEvent(registrationServerConfigEvent);
+    deleteAccountEvent.setRegistrationServerConfigEvent(registrationServerConfigEvent);
     UserModulePresenter userModulePresenter = new UserModulePresenter();
     userModulePresenter.performDeleteAccount(deleteAccountEvent);
   }

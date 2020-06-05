@@ -64,8 +64,8 @@ public class CustomActivitiesDailyDialogClass extends Dialog implements View.OnC
     getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
     getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
 
-    RelativeLayout clossBtnLayout = (RelativeLayout) findViewById(R.id.mClossBtnLayout);
-    clossBtnLayout.setOnClickListener(this);
+    RelativeLayout closeBtnLayout = (RelativeLayout) findViewById(R.id.mCloseBtnLayout);
+    closeBtnLayout.setOnClickListener(this);
     LinearLayout l = (LinearLayout) findViewById(R.id.lin_layout_hours);
     for (int i = 0; i < scheduledTime.size(); i++) {
       TextView textDynamic = new TextView(getContext());

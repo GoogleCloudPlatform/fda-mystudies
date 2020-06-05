@@ -17,6 +17,7 @@ package com.harvard.studyappmodule.studymodel;
 import io.realm.RealmList;
 import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;
+import io.realm.annotations.RealmField;
 
 public class StudyHome extends RealmObject {
   private String message;
@@ -25,14 +26,15 @@ public class StudyHome extends RealmObject {
   private Branding branding;
   private WithdrawalConfig withdrawalConfig;
   private AnchorDateStudyHome anchorDate;
-  @PrimaryKey private String mStudyId;
+  @PrimaryKey
+  private String mStudyId;
 
-  public String getmStudyId() {
+  public String getStudyId() {
     return mStudyId;
   }
 
-  public void setmStudyId(String mStudyId) {
-    this.mStudyId = mStudyId;
+  public void setStudyId(String studyId) {
+    this.mStudyId = studyId;
   }
 
   public String getStudyWebsite() {

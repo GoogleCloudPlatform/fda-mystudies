@@ -20,27 +20,27 @@ public class UserStudyStatus {
   private boolean bookmarked;
   private String studyId;
 
-  public String getmStudyStatus() {
+  public String getStudyStatus() {
     return studyStatus;
   }
 
-  public void setmStudyStatus(String studyStatus) {
+  public void setStudyStatus(String studyStatus) {
     this.studyStatus = studyStatus;
   }
 
-  public boolean ismBookmarked() {
+  public boolean isBookmarked() {
     return bookmarked;
   }
 
-  public void setmBookmarked(boolean bookmarked) {
+  public void setBookmarked(boolean bookmarked) {
     this.bookmarked = bookmarked;
   }
 
-  public String getmStudyId() {
+  public String getStudyId() {
     return studyId;
   }
 
-  public void setmStudyId(String studyId) {
+  public void setStudyId(String studyId) {
     this.studyId = studyId;
   }
 }

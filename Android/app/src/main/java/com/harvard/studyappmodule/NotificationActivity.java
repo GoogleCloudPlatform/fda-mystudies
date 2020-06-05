@@ -158,7 +158,7 @@ public class NotificationActivity extends AppCompatActivity
           notification1.setStudyId(notificationsDb.get(i).getStudyId());
           notification1.setMessage(notificationsDb.get(i).getDescription());
           notification1.setDate(
-              AppController.getDateFormat().format(notificationsDb.get(i).getDateTime()));
+              AppController.getDateFormatForApi().format(notificationsDb.get(i).getDateTime()));
           notification1.setType("Study");
           notification1.setAudience("");
           notifications.add(notification1);
@@ -176,7 +176,7 @@ public class NotificationActivity extends AppCompatActivity
           notification1.setStudyId(notificationsDbResources.get(i).getStudyId());
           notification1.setMessage(notificationsDbResources.get(i).getDescription());
           notification1.setDate(
-              AppController.getDateFormat().format(notificationsDbResources.get(i).getDateTime()));
+              AppController.getDateFormatForApi().format(notificationsDbResources.get(i).getDateTime()));
           notification1.setType("Study");
           notification1.setAudience("");
           notifications.add(notification1);
@@ -213,9 +213,9 @@ public class NotificationActivity extends AppCompatActivity
           new Comparator<Notification>() {
             public int compare(Notification o1, Notification o2) {
               try {
-                return AppController.getDateFormat()
+                return AppController.getDateFormatForApi()
                     .parse(o2.getDate())
-                    .compareTo(AppController.getDateFormat().parse(o1.getDate()));
+                    .compareTo(AppController.getDateFormatForApi().parse(o1.getDate()));
               } catch (ParseException e) {
                 Logger.log(e);
               }
@@ -258,7 +258,7 @@ public class NotificationActivity extends AppCompatActivity
           notification1.setStudyId(notificationsDb.get(i).getStudyId());
           notification1.setMessage(notificationsDb.get(i).getDescription());
           notification1.setDate(
-              AppController.getDateFormat().format(notificationsDb.get(i).getDateTime()));
+              AppController.getDateFormatForApi().format(notificationsDb.get(i).getDateTime()));
           notification1.setType("Study");
           notification1.setAudience("");
           notifications.add(notification1);
@@ -276,7 +276,7 @@ public class NotificationActivity extends AppCompatActivity
           notification1.setStudyId(notificationsDbResources.get(i).getStudyId());
           notification1.setMessage(notificationsDbResources.get(i).getDescription());
           notification1.setDate(
-              AppController.getDateFormat().format(notificationsDbResources.get(i).getDateTime()));
+              AppController.getDateFormatForApi().format(notificationsDbResources.get(i).getDateTime()));
           notification1.setType("Study");
           notification1.setAudience("");
           notifications.add(notification1);
@@ -313,9 +313,9 @@ public class NotificationActivity extends AppCompatActivity
             new Comparator<Notification>() {
               public int compare(Notification o1, Notification o2) {
                 try {
-                  return AppController.getDateFormat()
+                  return AppController.getDateFormatForApi()
                       .parse(o1.getDate())
-                      .compareTo(AppController.getDateFormat().parse(o2.getDate()));
+                      .compareTo(AppController.getDateFormatForApi().parse(o2.getDate()));
                 } catch (ParseException e) {
                   Logger.log(e);
                 }

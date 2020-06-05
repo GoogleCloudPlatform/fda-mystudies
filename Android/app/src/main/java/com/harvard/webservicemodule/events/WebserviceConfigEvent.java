@@ -77,11 +77,11 @@ public abstract class WebserviceConfigEvent<T, V> {
     this.context = context;
   }
 
-  public JSONArray getmRequestParamsJsonArray() {
+  public JSONArray getRequestParamsJsonArray() {
     return requestParamsJsonArray;
   }
 
-  public void setmRequestParamsJsonArray(JSONArray requestParamsJsonArray) {
+  public void setRequestParamsJsonArray(JSONArray requestParamsJsonArray) {
     this.requestParamsJsonArray = requestParamsJsonArray;
   }
 
@@ -89,51 +89,51 @@ public abstract class WebserviceConfigEvent<T, V> {
 
   public abstract String getDevelopmentUrl();
 
-  public JSONObject getmRequestParamsJson() {
+  public JSONObject getRequestParamsJson() {
     return requestParamsJson;
   }
 
-  public void setmRequestParamsJson(JSONObject requestParamsJson) {
+  public void setRequestParamsJson(JSONObject requestParamsJson) {
     this.requestParamsJson = requestParamsJson;
   }
 
-  public Context getmContext() {
+  public Context getContext() {
     return context;
   }
 
-  public void setmContext(Context context) {
+  public void setContext(Context context) {
     this.context = context;
   }
 
-  public int getmResponseCode() {
+  public int getResponseCode() {
     return responseCode;
   }
 
-  public void setmResponseCode(int responseCode) {
+  public void setResponseCode(int responseCode) {
     this.responseCode = responseCode;
   }
 
-  public String getmRequestType() {
+  public String getRequestType() {
     return requestType;
   }
 
-  public void setmRequestType(String requestType) {
+  public void setRequestType(String requestType) {
     this.requestType = requestType;
   }
 
-  public String getmUrl() {
+  public String getUrl() {
     return url;
   }
 
-  public void setmUrl(String url) {
+  public void setUrl(String url) {
     this.url = url;
   }
 
-  public Class<T> gettClass() {
+  public Class<T> getClassT() {
     return objT;
   }
 
-  public void settClass(Class<T> objT) {
+  public void setClassT(Class<T> objT) {
     this.objT = objT;
   }
 
@@ -150,27 +150,27 @@ public abstract class WebserviceConfigEvent<T, V> {
     this.objV = objV;
   }
 
-  public HashMap<String, String> getmRequestParams() {
+  public HashMap<String, String> getRequestParams() {
     return requestParams;
   }
 
-  public void setmRequestParams(HashMap<String, String> requestParams) {
+  public void setRequestParams(HashMap<String, String> requestParams) {
     this.requestParams = requestParams;
   }
 
-  public HashMap<String, String> getmHeaders() {
+  public HashMap<String, String> getHeaders() {
     return headers;
   }
 
-  public void setmHeaders(HashMap<String, String> headers) {
+  public void setHeaders(HashMap<String, String> headers) {
     this.headers = headers;
   }
 
-  public boolean ismShowAlert() {
+  public boolean isShowAlert() {
     return showAlert;
   }
 
-  public void setmShowAlert(boolean showAlert) {
+  public void setShowAlert(boolean showAlert) {
     this.showAlert = showAlert;
   }
 }

@@ -97,7 +97,7 @@ public class ProfileFragment extends Fragment
   private UserProfileData userProfileData = null;
   private UpdateProfileRequestData updateProfileRequestData = null;
   private static final int DELETE_ACCOUNT = 5;
-  private int deleteIndexNumberDB;
+  private int deleteIndexNumberDb;
   private DbServiceSubscriber dbServiceSubscriber;
   private Realm realm;
 
@@ -144,7 +144,7 @@ public class ProfileFragment extends Fragment
             null,
             false,
             this);
-    getUserProfileEvent.setmRegistrationServerConfigEvent(registrationServerConfigEvent);
+    getUserProfileEvent.setRegistrationServerConfigEvent(registrationServerConfigEvent);
     UserModulePresenter userModulePresenter = new UserModulePresenter();
     userModulePresenter.performGetUserProfile(getUserProfileEvent);
   }
@@ -461,7 +461,7 @@ public class ProfileFragment extends Fragment
         // save userProfileData to db
         dbServiceSubscriber.saveUserProfileData(context, userProfileData);
         // delete offline row sync
-        dbServiceSubscriber.deleteOfflineDataRow(context, deleteIndexNumberDB);
+        dbServiceSubscriber.deleteOfflineDataRow(context, deleteIndexNumberDb);
       } catch (Exception e) {
         Logger.log(e);
       }
@@ -647,7 +647,7 @@ public class ProfileFragment extends Fragment
         if (offlineData != null) {
           number = offlineData.getNumber();
         }
-        deleteIndexNumberDB = number;
+        deleteIndexNumberDb = number;
         AppController.pendingService(
             context,
             number,
@@ -675,7 +675,7 @@ public class ProfileFragment extends Fragment
               obj,
               false,
               ProfileFragment.this);
-      updateUserProfileEvent.setmRegistrationServerConfigEvent(registrationServerConfigEvent);
+      updateUserProfileEvent.setRegistrationServerConfigEvent(registrationServerConfigEvent);
       UserModulePresenter userModulePresenter = new UserModulePresenter();
       userModulePresenter.performUpdateUserProfile(updateUserProfileEvent);
     } catch (Exception e) {

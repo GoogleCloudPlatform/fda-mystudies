@@ -47,7 +47,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 import com.harvard.AppConfig;
-import com.harvard.MyFirebaseMessagingService;
+import com.harvard.AppFirebaseMessagingService;
 import com.harvard.R;
 import com.harvard.notificationmodule.AlarmReceiver;
 import com.harvard.notificationmodule.NotificationModuleSubscriber;
@@ -201,9 +201,9 @@ public class StudyActivity extends AppCompatActivity
   public void checkForNotification(Intent intent1) {
     if (!intentFrom.equalsIgnoreCase("")) {
       intentFrom = "";
-      String type = intent1.getStringExtra(MyFirebaseMessagingService.TYPE);
-      String subType = intent1.getStringExtra(MyFirebaseMessagingService.SUBTYPE);
-      String studyId = intent1.getStringExtra(MyFirebaseMessagingService.STUDYID);
+      String type = intent1.getStringExtra(AppFirebaseMessagingService.TYPE);
+      String subType = intent1.getStringExtra(AppFirebaseMessagingService.SUBTYPE);
+      String studyId = intent1.getStringExtra(AppFirebaseMessagingService.STUDYID);
 
       String localNotification = "";
       if (intent1.getStringExtra(AlarmReceiver.LOCAL_NOTIFICATION) != null) {

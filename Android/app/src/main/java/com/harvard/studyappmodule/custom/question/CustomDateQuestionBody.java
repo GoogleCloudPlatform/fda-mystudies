@@ -69,7 +69,7 @@ public class CustomDateQuestionBody implements StepBody {
     String savedTime = this.result.getResult();
     if (savedTime != null) {
       try {
-        calendar.setTime(AppController.getDateFormat().parse(savedTime));
+        calendar.setTime(AppController.getDateFormatForApi().parse(savedTime));
       } catch (ParseException e) {
         Logger.log(e);
       }
@@ -110,30 +110,28 @@ public class CustomDateQuestionBody implements StepBody {
       textView.setText(createFormattedResult());
     }
 
-    textView.setOnFocusChangeListener(
-        new View.OnFocusChangeListener() {
-          @Override
-          public void onFocusChange(View v, boolean hasFocus) {
-            if (hasFocus) {
-              CustomDateQuestionBody.this.showDialog(textView, inflater);
-            }
-          }
-        });
+    textView.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+      @Override
+      public void onFocusChange(View v, boolean hasFocus) {
+        if (hasFocus) {
+          CustomDateQuestionBody.this.showDialog(textView, inflater);
+        }
+      }
+    });
 
-    textView.setOnClickListener(
-        new View.OnClickListener() {
-          @Override
-          public void onClick(View v) {
-            if (v.isFocused()) {
-              CustomDateQuestionBody.this.showDialog(textView, inflater);
-            }
-          }
-        });
+    textView.setOnClickListener(new View.OnClickListener() {
+      @Override
+      public void onClick(View v) {
+        if (v.isFocused()) {
+          CustomDateQuestionBody.this.showDialog(textView, inflater);
+        }
+      }
+    });
 
     Resources res = parent.getResources();
     LinearLayout.MarginLayoutParams layoutParams =
-        new LinearLayout.LayoutParams(
-            ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+            new LinearLayout.LayoutParams(
+                    ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
     layoutParams.leftMargin = res.getDimensionPixelSize(R.dimen.rsb_margin_left);
     layoutParams.rightMargin = res.getDimensionPixelSize(R.dimen.rsb_margin_right);
     view.setLayoutParams(layoutParams);
@@ -147,7 +145,7 @@ public class CustomDateQuestionBody implements StepBody {
       result.setResult(null);
     } else {
       if (hasChosenDate) {
-        result.setResult(AppController.getDateFormat().format(calendar.getTime()));
+        result.setResult(AppController.getDateFormatForApi().format(calendar.getTime()));
       } else {
         result.setResult(null);
       }
@@ -157,8 +155,7 @@ public class CustomDateQuestionBody implements StepBody {
   }
 
   /**
-   * @return {@link BodyAnswer#VALID} if result date is between min and max (inclusive) date set
-   *     within the Step.AnswerFormat
+   * @return {@link BodyAnswer#VALID} if result date is between min and max (inclusive) date set within the Step.AnswerFormat
    */
   @Override
   public BodyAnswer getBodyAnswerState() {
@@ -172,81 +169,68 @@ public class CustomDateQuestionBody implements StepBody {
   private void showDialog(final TextView tv, final LayoutInflater inflater) {
     // need to find a material date picker, since it's not in the support library
     final ContextThemeWrapper contextWrapper =
-        new ContextThemeWrapper(tv.getContext(), R.style.Theme_Backbone);
+            new ContextThemeWrapper(tv.getContext(), R.style.Theme_Backbone);
     if (format.getStyle() == AnswerFormatCustom.DateAnswerStyle.Date) {
-      final DatePickerDialog datePickerDialog =
-          new DatePickerDialog(
-              contextWrapper,
-              new DatePickerDialog.OnDateSetListener() {
-                @Override
-                public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {}
-              },
+      final DatePickerDialog datePickerDialog = new DatePickerDialog(contextWrapper, new DatePickerDialog.OnDateSetListener() {
+        @Override
+        public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
+        }
+      },
               calendar.get(Calendar.YEAR),
               calendar.get(Calendar.MONTH),
               calendar.get(Calendar.DAY_OF_MONTH));
-      datePickerDialog.setButton(
-          DialogInterface.BUTTON_NEGATIVE,
-          inflater.getContext().getString(R.string.cancel),
-          new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int which) {
-              if (which == DialogInterface.BUTTON_NEGATIVE) {
-                dialog.dismiss();
-              }
-            }
-          });
-      datePickerDialog.setButton(
-          DialogInterface.BUTTON_POSITIVE,
-          inflater.getContext().getString(R.string.ok),
-          new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int which) {
-              if (which == DialogInterface.BUTTON_POSITIVE) {
-                dialog.dismiss();
-                Calendar calendar1 = Calendar.getInstance();
-                calendar1.setTime(calendar.getTime());
-                calendar1.set(
+      datePickerDialog.setButton(DialogInterface.BUTTON_NEGATIVE, inflater.getContext().getString(R.string.cancel), new DialogInterface.OnClickListener() {
+        public void onClick(DialogInterface dialog, int which) {
+          if (which == DialogInterface.BUTTON_NEGATIVE) {
+            dialog.dismiss();
+          }
+        }
+      });
+      datePickerDialog.setButton(DialogInterface.BUTTON_POSITIVE, inflater.getContext().getString(R.string.ok), new DialogInterface.OnClickListener() {
+        public void onClick(DialogInterface dialog, int which) {
+          if (which == DialogInterface.BUTTON_POSITIVE) {
+            dialog.dismiss();
+            Calendar calendar1 = Calendar.getInstance();
+            calendar1.setTime(calendar.getTime());
+            calendar1.set(
                     datePickerDialog.getDatePicker().getYear(),
                     datePickerDialog.getDatePicker().getMonth(),
                     datePickerDialog.getDatePicker().getDayOfMonth());
-                if (format.validateAnswer(calendar1.getTime()).isValid()) {
-                  hasChosenDate = true;
+            if (format.validateAnswer(calendar1.getTime()).isValid()) {
+              hasChosenDate = true;
 
-                  calendar.set(
+              calendar.set(
                       datePickerDialog.getDatePicker().getYear(),
                       datePickerDialog.getDatePicker().getMonth(),
                       datePickerDialog.getDatePicker().getDayOfMonth());
-                  // Set result to our edit text
-                  String formattedResult = CustomDateQuestionBody.this.createFormattedResult();
-                  tv.setText(formattedResult);
-                } else {
-                  Toast.makeText(
-                          inflater.getContext(),
-                          format
+              // Set result to our edit text
+              String formattedResult = CustomDateQuestionBody.this.createFormattedResult();
+              tv.setText(formattedResult);
+            } else {
+              Toast.makeText(
+                      inflater.getContext(),
+                      format
                               .validateAnswer(calendar1.getTime())
                               .getString(inflater.getContext()),
-                          Toast.LENGTH_LONG)
+                      Toast.LENGTH_LONG)
                       .show();
-                }
-              }
             }
-          });
-      datePickerDialog.setButton(
-          DialogInterface.BUTTON_NEUTRAL,
-          inflater.getContext().getString(R.string.clear),
-          new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int which) {
-              if (which == DialogInterface.BUTTON_NEUTRAL) {
-                dialog.dismiss();
-                tv.setText("");
-                hasChosenDate = false;
-              }
-            }
-          });
+          }
+        }
+      });
+      datePickerDialog.setButton(DialogInterface.BUTTON_NEUTRAL, inflater.getContext().getString(R.string.clear), new DialogInterface.OnClickListener() {
+        public void onClick(DialogInterface dialog, int which) {
+          if (which == DialogInterface.BUTTON_NEUTRAL) {
+            dialog.dismiss();
+            tv.setText("");
+            hasChosenDate = false;
+          }
+        }
+      });
       datePickerDialog.show();
     } else if (format.getStyle() == AnswerFormatCustom.DateAnswerStyle.TimeOfDay) {
       TimePickerDialog timePickerDialog =
-          new TimePickerDialog(
-              contextWrapper,
-              new TimePickerDialog.OnTimeSetListener() {
+              new TimePickerDialog(contextWrapper, new TimePickerDialog.OnTimeSetListener() {
                 @Override
                 public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
                   Calendar calendar1 = Calendar.getInstance();
@@ -265,147 +249,122 @@ public class CustomDateQuestionBody implements StepBody {
                     Toast.makeText(
                             inflater.getContext(),
                             format
-                                .validateAnswer(calendar1.getTime())
-                                .getString(inflater.getContext()),
+                                    .validateAnswer(calendar1.getTime())
+                                    .getString(inflater.getContext()),
                             Toast.LENGTH_LONG)
-                        .show();
+                            .show();
                   }
                 }
               },
-              calendar.get(Calendar.HOUR_OF_DAY),
-              calendar.get(Calendar.MINUTE),
-              true);
-      timePickerDialog.setButton(
-          DialogInterface.BUTTON_NEGATIVE,
-          inflater.getContext().getString(R.string.cancel),
-          new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int which) {
-              if (which == DialogInterface.BUTTON_NEGATIVE) {
-                dialog.dismiss();
-              }
-            }
-          });
-      timePickerDialog.setButton(
-          DialogInterface.BUTTON_NEUTRAL,
-          inflater.getContext().getString(R.string.clear),
-          new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int which) {
-              if (which == DialogInterface.BUTTON_NEUTRAL) {
-                dialog.dismiss();
-                tv.setText("");
-                hasChosenDate = false;
-              }
-            }
-          });
+                      calendar.get(Calendar.HOUR_OF_DAY),
+                      calendar.get(Calendar.MINUTE),
+                      true);
+      timePickerDialog.setButton(DialogInterface.BUTTON_NEGATIVE, inflater.getContext().getString(R.string.cancel), new DialogInterface.OnClickListener() {
+        public void onClick(DialogInterface dialog, int which) {
+          if (which == DialogInterface.BUTTON_NEGATIVE) {
+            dialog.dismiss();
+          }
+        }
+      });
+      timePickerDialog.setButton(DialogInterface.BUTTON_NEUTRAL, inflater.getContext().getString(R.string.clear), new DialogInterface.OnClickListener() {
+        public void onClick(DialogInterface dialog, int which) {
+          if (which == DialogInterface.BUTTON_NEUTRAL) {
+            dialog.dismiss();
+            tv.setText("");
+            hasChosenDate = false;
+          }
+        }
+      });
 
       timePickerDialog.show();
 
     } else if (format.getStyle() == AnswerFormatCustom.DateAnswerStyle.DateAndTime) {
-      final DatePickerDialog datePickerDialog =
-          new DatePickerDialog(
-              contextWrapper,
-              new DatePickerDialog.OnDateSetListener() {
-                @Override
-                public void onDateSet(
-                    DatePicker dview, int year, int monthOfYear, int dayOfMonth) {}
-              },
+      final DatePickerDialog datePickerDialog = new DatePickerDialog(contextWrapper, new DatePickerDialog.OnDateSetListener() {
+        @Override
+        public void onDateSet(
+                DatePicker dview, int year, int monthOfYear, int dayOfMonth) {
+        }
+      },
               calendar.get(Calendar.YEAR),
               calendar.get(Calendar.MONTH),
               calendar.get(Calendar.DAY_OF_MONTH));
-      datePickerDialog.setButton(
-          DialogInterface.BUTTON_NEGATIVE,
-          inflater.getContext().getString(R.string.cancel),
-          new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int which) {
-              if (which == DialogInterface.BUTTON_NEGATIVE) {
-                dialog.dismiss();
-              }
-            }
-          });
-      datePickerDialog.setButton(
-          DialogInterface.BUTTON_NEUTRAL,
-          inflater.getContext().getString(R.string.clear),
-          new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int which) {
-              if (which == DialogInterface.BUTTON_NEUTRAL) {
-                dialog.dismiss();
-                tv.setText("");
-                hasChosenDate = false;
-              }
-            }
-          });
-      datePickerDialog.setButton(
-          DialogInterface.BUTTON_POSITIVE,
-          inflater.getContext().getString(R.string.ok),
-          new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int which) {
-              if (which == DialogInterface.BUTTON_POSITIVE) {
-                dialog.dismiss();
-                calendar.set(
+      datePickerDialog.setButton(DialogInterface.BUTTON_NEGATIVE, inflater.getContext().getString(R.string.cancel), new DialogInterface.OnClickListener() {
+        public void onClick(DialogInterface dialog, int which) {
+          if (which == DialogInterface.BUTTON_NEGATIVE) {
+            dialog.dismiss();
+          }
+        }
+      });
+      datePickerDialog.setButton(DialogInterface.BUTTON_NEUTRAL, inflater.getContext().getString(R.string.clear), new DialogInterface.OnClickListener() {
+        public void onClick(DialogInterface dialog, int which) {
+          if (which == DialogInterface.BUTTON_NEUTRAL) {
+            dialog.dismiss();
+            tv.setText("");
+            hasChosenDate = false;
+          }
+        }
+      });
+      datePickerDialog.setButton(DialogInterface.BUTTON_POSITIVE, inflater.getContext().getString(R.string.ok), new DialogInterface.OnClickListener() {
+        public void onClick(DialogInterface dialog, int which) {
+          if (which == DialogInterface.BUTTON_POSITIVE) {
+            dialog.dismiss();
+            calendar.set(
                     datePickerDialog.getDatePicker().getYear(),
                     datePickerDialog.getDatePicker().getMonth(),
                     datePickerDialog.getDatePicker().getDayOfMonth());
 
-                TimePickerDialog timePickerDialog =
-                    new TimePickerDialog(
-                        contextWrapper,
-                        new TimePickerDialog.OnTimeSetListener() {
-                          @Override
-                          public void onTimeSet(TimePicker tview, int hourOfDay, int minute) {
+            TimePickerDialog timePickerDialog =
+                    new TimePickerDialog(contextWrapper, new TimePickerDialog.OnTimeSetListener() {
+                      @Override
+                      public void onTimeSet(TimePicker tview, int hourOfDay, int minute) {
 
-                            Calendar calendar1 = Calendar.getInstance();
-                            calendar1.setTime(calendar.getTime());
-                            calendar1.set(Calendar.HOUR_OF_DAY, hourOfDay);
-                            calendar1.set(Calendar.MINUTE, minute);
-                            if (format.validateAnswer(calendar1.getTime()).isValid()) {
-                              calendar.set(Calendar.HOUR_OF_DAY, hourOfDay);
-                              calendar.set(Calendar.MINUTE, minute);
+                        Calendar calendar1 = Calendar.getInstance();
+                        calendar1.setTime(calendar.getTime());
+                        calendar1.set(Calendar.HOUR_OF_DAY, hourOfDay);
+                        calendar1.set(Calendar.MINUTE, minute);
+                        if (format.validateAnswer(calendar1.getTime()).isValid()) {
+                          calendar.set(Calendar.HOUR_OF_DAY, hourOfDay);
+                          calendar.set(Calendar.MINUTE, minute);
 
-                              hasChosenDate = true;
-                              // Set result to our edit text
-                              String formattedResult =
+                          hasChosenDate = true;
+                          // Set result to our edit text
+                          String formattedResult =
                                   CustomDateQuestionBody.this.createFormattedResult();
-                              tv.setText(formattedResult);
-                            } else {
-                              Toast.makeText(
-                                      inflater.getContext(),
-                                      format
+                          tv.setText(formattedResult);
+                        } else {
+                          Toast.makeText(
+                                  inflater.getContext(),
+                                  format
                                           .validateAnswer(calendar1.getTime())
                                           .getString(inflater.getContext()),
-                                      Toast.LENGTH_LONG)
+                                  Toast.LENGTH_LONG)
                                   .show();
-                            }
-                          }
-                        },
-                        calendar.get(Calendar.HOUR_OF_DAY),
-                        calendar.get(Calendar.MINUTE),
-                        true);
-                timePickerDialog.setButton(
-                    DialogInterface.BUTTON_NEGATIVE,
-                    inflater.getContext().getString(R.string.cancel),
-                    new DialogInterface.OnClickListener() {
-                      public void onClick(DialogInterface dialog, int which) {
-                        if (which == DialogInterface.BUTTON_NEGATIVE) {
-                          dialog.dismiss();
                         }
                       }
-                    });
-                timePickerDialog.setButton(
-                    DialogInterface.BUTTON_NEUTRAL,
-                    inflater.getContext().getString(R.string.clear),
-                    new DialogInterface.OnClickListener() {
-                      public void onClick(DialogInterface dialog, int which) {
-                        if (which == DialogInterface.BUTTON_NEUTRAL) {
-                          dialog.dismiss();
-                          tv.setText("");
-                          hasChosenDate = false;
-                        }
-                      }
-                    });
-                timePickerDialog.show();
+                    },
+                            calendar.get(Calendar.HOUR_OF_DAY),
+                            calendar.get(Calendar.MINUTE),
+                            true);
+            timePickerDialog.setButton(DialogInterface.BUTTON_NEGATIVE, inflater.getContext().getString(R.string.cancel), new DialogInterface.OnClickListener() {
+              public void onClick(DialogInterface dialog, int which) {
+                if (which == DialogInterface.BUTTON_NEGATIVE) {
+                  dialog.dismiss();
+                }
               }
-            }
-          });
+            });
+            timePickerDialog.setButton(DialogInterface.BUTTON_NEUTRAL, inflater.getContext().getString(R.string.clear), new DialogInterface.OnClickListener() {
+              public void onClick(DialogInterface dialog, int which) {
+                if (which == DialogInterface.BUTTON_NEUTRAL) {
+                  dialog.dismiss();
+                  tv.setText("");
+                  hasChosenDate = false;
+                }
+              }
+            });
+            timePickerDialog.show();
+          }
+        }
+      });
       datePickerDialog.show();
     } else {
       throw new RuntimeException("DateAnswerStyle " + format.getStyle() + " is not recognised");

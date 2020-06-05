@@ -33,11 +33,11 @@ public class DatabaseEvent<E> {
     this.whereParams = whereParams;
   }
 
-  public String getmType() {
+  public String getType() {
     return type;
   }
 
-  public void setmType(String type) {
+  public void setType(String type) {
     this.type = type;
   }
 
@@ -57,19 +57,19 @@ public class DatabaseEvent<E> {
     this.classObj = classObj;
   }
 
-  public String getmOperation() {
+  public String getOperation() {
     return operation;
   }
 
-  public void setmOperation(String operation) {
+  public void setOperation(String operation) {
     this.operation = operation;
   }
 
-  public String getmTableName() {
+  public String getTableName() {
     return tableName;
   }
 
-  public void setmTableName(String tableName) {
+  public void setTableName(String tableName) {
     this.tableName = tableName;
   }
 }

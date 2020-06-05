@@ -61,9 +61,9 @@ public class SurveyActivity extends AppCompatActivity
     implements View.OnClickListener,
         ActivityCompat.OnRequestPermissionsResultCallback,
         ApiCall.OnAsyncRequestComplete {
-  private RelativeLayout myDashboardButtonLayout;
-  private AppCompatImageView myDashboardButton;
-  private AppCompatTextView myDashboardButtonLabel;
+  private RelativeLayout dashboardButtonLayout;
+  private AppCompatImageView dashboardButton;
+  private AppCompatTextView dashboardButtonLabel;
   private RelativeLayout activitiesButtonLayout;
   private AppCompatImageView activitiesButton;
   private AppCompatTextView activitiesButtonLabel;
@@ -230,9 +230,9 @@ public class SurveyActivity extends AppCompatActivity
   }
 
   private void initializeXmlId() {
-    myDashboardButtonLayout = (RelativeLayout) findViewById(R.id.myDashboardButtonLayout);
-    myDashboardButton = (AppCompatImageView) findViewById(R.id.myDashboardButton);
-    myDashboardButtonLabel = (AppCompatTextView) findViewById(R.id.myDashboardButtonLabel);
+    dashboardButtonLayout = (RelativeLayout) findViewById(R.id.myDashboardButtonLayout);
+    dashboardButton = (AppCompatImageView) findViewById(R.id.myDashboardButton);
+    dashboardButtonLabel = (AppCompatTextView) findViewById(R.id.myDashboardButtonLabel);
     activitiesButtonLayout = (RelativeLayout) findViewById(R.id.mActivitiesButtonLayout);
     activitiesButton = (AppCompatImageView) findViewById(R.id.mActivitiesButton);
     activitiesButtonLabel = (AppCompatTextView) findViewById(R.id.mActivitiesButtonLabel);
@@ -473,7 +473,7 @@ public class SurveyActivity extends AppCompatActivity
   }
 
   private void bindEvents() {
-    myDashboardButtonLayout.setOnClickListener(this);
+    dashboardButtonLayout.setOnClickListener(this);
     activitiesButtonLayout.setOnClickListener(this);
     resourcesButtonLayout.setOnClickListener(this);
   }
@@ -482,10 +482,10 @@ public class SurveyActivity extends AppCompatActivity
     menulayout.setVisibility(View.VISIBLE);
     toolbar.setVisibility(View.GONE);
 
-    myDashboardButton.setBackgroundResource(R.drawable.dashboard_grey);
+    dashboardButton.setBackgroundResource(R.drawable.dashboard_grey);
     activitiesButton.setBackgroundResource(R.drawable.activities_blue_active);
     resourcesButton.setBackgroundResource(R.drawable.resources_grey);
-    myDashboardButtonLabel.setTextColor(getResources().getColor(R.color.colorPrimaryBlack));
+    dashboardButtonLabel.setTextColor(getResources().getColor(R.color.colorPrimaryBlack));
     activitiesButtonLabel.setTextColor(getResources().getColor(R.color.colorPrimary));
     resourcesButtonLabel.setTextColor(getResources().getColor(R.color.colorPrimaryBlack));
     getSupportFragmentManager()
@@ -495,10 +495,10 @@ public class SurveyActivity extends AppCompatActivity
   }
 
   private void openResources() {
-    myDashboardButton.setBackgroundResource(R.drawable.dashboard_grey);
+    dashboardButton.setBackgroundResource(R.drawable.dashboard_grey);
     activitiesButton.setBackgroundResource(R.drawable.activities_grey);
     resourcesButton.setBackgroundResource(R.drawable.resources_blue_active);
-    myDashboardButtonLabel.setTextColor(getResources().getColor(R.color.colorPrimaryBlack));
+    dashboardButtonLabel.setTextColor(getResources().getColor(R.color.colorPrimaryBlack));
     activitiesButtonLabel.setTextColor(getResources().getColor(R.color.colorPrimaryBlack));
     resourcesButtonLabel.setTextColor(getResources().getColor(R.color.colorPrimary));
     getSupportFragmentManager()
@@ -511,10 +511,10 @@ public class SurveyActivity extends AppCompatActivity
   public void onClick(View view) {
     switch (view.getId()) {
       case R.id.myDashboardButtonLayout:
-        myDashboardButton.setBackgroundResource(R.drawable.dashboard_blue_active);
+        dashboardButton.setBackgroundResource(R.drawable.dashboard_blue_active);
         activitiesButton.setBackgroundResource(R.drawable.activities_grey);
         resourcesButton.setBackgroundResource(R.drawable.resources_grey);
-        myDashboardButtonLabel.setTextColor(getResources().getColor(R.color.colorPrimary));
+        dashboardButtonLabel.setTextColor(getResources().getColor(R.color.colorPrimary));
         activitiesButtonLabel.setTextColor(getResources().getColor(R.color.colorPrimaryBlack));
         resourcesButtonLabel.setTextColor(getResources().getColor(R.color.colorPrimaryBlack));
         getSupportFragmentManager()
@@ -524,10 +524,10 @@ public class SurveyActivity extends AppCompatActivity
         break;
 
       case R.id.mActivitiesButtonLayout:
-        myDashboardButton.setBackgroundResource(R.drawable.dashboard_grey);
+        dashboardButton.setBackgroundResource(R.drawable.dashboard_grey);
         activitiesButton.setBackgroundResource(R.drawable.activities_blue_active);
         resourcesButton.setBackgroundResource(R.drawable.resources_grey);
-        myDashboardButtonLabel.setTextColor(getResources().getColor(R.color.colorPrimaryBlack));
+        dashboardButtonLabel.setTextColor(getResources().getColor(R.color.colorPrimaryBlack));
         activitiesButtonLabel.setTextColor(getResources().getColor(R.color.colorPrimary));
         resourcesButtonLabel.setTextColor(getResources().getColor(R.color.colorPrimaryBlack));
         getSupportFragmentManager()
@@ -537,10 +537,10 @@ public class SurveyActivity extends AppCompatActivity
         break;
 
       case R.id.mResourcesButtonLayout:
-        myDashboardButton.setBackgroundResource(R.drawable.dashboard_grey);
+        dashboardButton.setBackgroundResource(R.drawable.dashboard_grey);
         activitiesButton.setBackgroundResource(R.drawable.activities_grey);
         resourcesButton.setBackgroundResource(R.drawable.resources_blue_active);
-        myDashboardButtonLabel.setTextColor(getResources().getColor(R.color.colorPrimaryBlack));
+        dashboardButtonLabel.setTextColor(getResources().getColor(R.color.colorPrimaryBlack));
         activitiesButtonLabel.setTextColor(getResources().getColor(R.color.colorPrimaryBlack));
         resourcesButtonLabel.setTextColor(getResources().getColor(R.color.colorPrimary));
         getSupportFragmentManager()

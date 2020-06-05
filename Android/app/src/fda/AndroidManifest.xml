@@ -257,12 +257,12 @@
           android:theme="@style/AppThemeNoActionBar"
           android:windowSoftInputMode="stateHidden|adjustResize"/>
 
-        <service android:name=".MyFirebaseMessagingService">
+        <service android:name=".AppFirebaseMessagingService">
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT"/>
             </intent-filter>
         </service>
-        <service android:name=".MyFirebaseInstanceIdService">
+        <service android:name=".AppFirebaseInstanceIdService">
             <intent-filter>
                 <action android:name="com.google.firebase.INSTANCE_ID_EVENT"/>
             </intent-filter>

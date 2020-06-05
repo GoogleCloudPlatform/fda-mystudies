@@ -831,9 +831,9 @@ public class HttpRequest {
       }
     } else {
       try {
-        HttpParams myHttpParams = new BasicHttpParams();
-        HttpConnectionParams.setConnectionTimeout(myHttpParams, 180000);
-        HttpConnectionParams.setSoTimeout(myHttpParams, 180000);
+        HttpParams httpParams = new BasicHttpParams();
+        HttpConnectionParams.setConnectionTimeout(httpParams, 180000);
+        HttpConnectionParams.setSoTimeout(httpParams, 180000);
         OwnHttpDelete httppost = new OwnHttpDelete(url);
 
         if (headersData != null) {
@@ -856,7 +856,7 @@ public class HttpRequest {
         httppost.setEntity(params1);
 
         // Execute and get the response.
-        HttpClient httpclient = new DefaultHttpClient(myHttpParams);
+        HttpClient httpclient = new DefaultHttpClient(httpParams);
         HttpResponse response1 = httpclient.execute(httppost);
         responseCode = response1.getStatusLine().getStatusCode();
 
@@ -1037,9 +1037,9 @@ public class HttpRequest {
       }
     } else {
       try {
-        HttpParams myHttpParams = new BasicHttpParams();
-        HttpConnectionParams.setConnectionTimeout(myHttpParams, 180000);
-        HttpConnectionParams.setSoTimeout(myHttpParams, 180000);
+        HttpParams httpParams = new BasicHttpParams();
+        HttpConnectionParams.setConnectionTimeout(httpParams, 180000);
+        HttpConnectionParams.setSoTimeout(httpParams, 180000);
         OwnHttpDelete httppost = new OwnHttpDelete(urlpath);
 
         if (headersData != null) {
@@ -1062,7 +1062,7 @@ public class HttpRequest {
         httppost.setEntity(params1);
 
         // Execute and get the response.
-        HttpClient httpclient = new DefaultHttpClient(myHttpParams);
+        HttpClient httpclient = new DefaultHttpClient(httpParams);
         HttpResponse response1 = httpclient.execute(httppost);
         responseCode = response1.getStatusLine().getStatusCode();
 
@@ -1242,9 +1242,9 @@ public class HttpRequest {
       }
     } else {
       try {
-        HttpParams myHttpParams = new BasicHttpParams();
-        HttpConnectionParams.setConnectionTimeout(myHttpParams, 180000);
-        HttpConnectionParams.setSoTimeout(myHttpParams, 180000);
+        HttpParams httpParams = new BasicHttpParams();
+        HttpConnectionParams.setConnectionTimeout(httpParams, 180000);
+        HttpConnectionParams.setSoTimeout(httpParams, 180000);
         OwnHttpDelete httppost = new OwnHttpDelete(urlpath);
 
         if (headersData != null) {
@@ -1267,7 +1267,7 @@ public class HttpRequest {
         httppost.setEntity(params1);
 
         // Execute and get the response.
-        HttpClient httpclient = new DefaultHttpClient(myHttpParams);
+        HttpClient httpclient = new DefaultHttpClient(httpParams);
         HttpResponse response1 = httpclient.execute(httppost);
         responseCode = response1.getStatusLine().getStatusCode();
 

@@ -83,41 +83,41 @@ import javax.security.auth.x500.X500Principal;
 
 public class AppController {
 
-  private static SharedPreferenceHelper sSharedPreferenceHelper;
-  private static JsonFormatHelper sJsonFormatHelper;
-  private static SetDialogHelper sSetDialogHelper;
-  private static ProgressDialogHelper sProgressDialogHelper;
+  private static SharedPreferenceHelper sharedPreferenceHelper;
+  private static JsonFormatHelper jsonFormatHelper;
+  private static SetDialogHelper setDialogHelper;
+  private static ProgressDialogHelper progressDialogHelper;
   private static RealmConfiguration config;
-  private static KeyStore mKeyStore;
+  private static KeyStore keyStore;
   private static final String TAG = "FDAKeystore";
-  private static String mKeystoreValue = null;
+  private static String keystoreValue = null;
 
   public static SharedPreferenceHelper getHelperSharedPreference() {
-    if (sSharedPreferenceHelper == null) {
-      sSharedPreferenceHelper = new SharedPreferenceHelper();
+    if (sharedPreferenceHelper == null) {
+      sharedPreferenceHelper = new SharedPreferenceHelper();
     }
-    return sSharedPreferenceHelper;
+    return sharedPreferenceHelper;
   }
 
   public static JsonFormatHelper getHelperJsonFormat() {
-    if (sJsonFormatHelper == null) {
-      sJsonFormatHelper = new JsonFormatHelper();
+    if (jsonFormatHelper == null) {
+      jsonFormatHelper = new JsonFormatHelper();
     }
-    return sJsonFormatHelper;
+    return jsonFormatHelper;
   }
 
   public static ProgressDialogHelper getHelperProgressDialog() {
-    if (sProgressDialogHelper == null) {
-      sProgressDialogHelper = new ProgressDialogHelper();
+    if (progressDialogHelper == null) {
+      progressDialogHelper = new ProgressDialogHelper();
     }
-    return sProgressDialogHelper;
+    return progressDialogHelper;
   }
 
   public static SetDialogHelper getHelperSetDialog() {
-    if (sSetDialogHelper == null) {
-      sSetDialogHelper = new SetDialogHelper();
+    if (setDialogHelper == null) {
+      setDialogHelper = new SetDialogHelper();
     }
-    return sSetDialogHelper;
+    return setDialogHelper;
   }
 
   public static boolean getHelperIsValidEmail(String target) {
@@ -243,67 +243,55 @@ public class AppController {
     return new SimpleDateFormat("MM-dd-yyyy hh:mm:ss a");
   }
 
-  public static SimpleDateFormat getDateFormat() {
+  public static SimpleDateFormat getDateFormatForApi() {
     return new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ");
   }
 
-  public static SimpleDateFormat getDateFormatUtc() {
-    SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ");
-    return simpleDateFormat;
-  }
 
-  public static SimpleDateFormat getDateFormatUtc1() {
+  public static SimpleDateFormat getDateFormatUtcNoZone() {
     SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
     return simpleDateFormat;
   }
 
-  public static SimpleDateFormat getDateFormatType1() {
+  public static SimpleDateFormat getDateFormatForNotification() {
     return new SimpleDateFormat("MMM dd yyyy");
   }
 
-  public static SimpleDateFormat getDateFormatType12() {
+  public static SimpleDateFormat getDateFormatForActivityList() {
     return new SimpleDateFormat("MMM dd, yyyy");
   }
 
-  public static SimpleDateFormat getDateFormatType4() {
+  public static SimpleDateFormat getDateFormatForDailyRun() {
     return new SimpleDateFormat("yyyy-MM-dd");
   }
 
-  public static String getDateFormatType3() {
+  public static String getDateFormatForConsentPdf() {
     Date date = new Date();
     return new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(date);
   }
 
-  public static SimpleDateFormat getDateFormatType2() {
-    return new SimpleDateFormat("hha, MMM dd yyyy");
-  }
-
-  public static SimpleDateFormat getDateFormatType9() {
+  public static SimpleDateFormat getDateFormatForOtherFreq() {
     return new SimpleDateFormat("hh:mma, MMM dd, yyyy");
   }
 
-  public static SimpleDateFormat getDateFormatType10() {
+  public static SimpleDateFormat getDateFormatForResourceAvailability() {
     return new SimpleDateFormat("yyyy-MM-dd");
   }
 
-  public static SimpleDateFormat getDateFormatType11() {
+  public static SimpleDateFormat getDateFormatForDailyRunStartAndEnd() {
     SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
     return new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
   }
 
-  public static SimpleDateFormat getDateFormatFormatIn() {
-    return new SimpleDateFormat("MM yyyy");
-  }
-
-  public static SimpleDateFormat getDateFormatFormatOut() {
+  public static SimpleDateFormat getDateFormatForChartAndStat() {
     return new SimpleDateFormat("MMM yyyy");
   }
 
-  public static SimpleDateFormat getDateFormatFormatInType1() {
+  public static SimpleDateFormat getDateFormatForDashboardCurrentDay() {
     return new SimpleDateFormat("dd MM yyyy");
   }
 
-  public static SimpleDateFormat getDateFormatFormatOutType1() {
+  public static SimpleDateFormat getDateFormatForDashboardAndChartCurrentDayOut() {
     return new SimpleDateFormat("dd, MMM yyyy");
   }
 
@@ -514,8 +502,8 @@ public class AppController {
   /** KEYSTORE RELATED CODES HERE. */
   public static void keystoreInitilize(Context context) {
     try {
-      mKeyStore = KeyStore.getInstance("AndroidKeyStore");
-      mKeyStore.load(null);
+      keyStore = KeyStore.getInstance("AndroidKeyStore");
+      keyStore.load(null);
     } catch (Exception e) {
       Logger.log(e);
     }
@@ -541,11 +529,11 @@ public class AppController {
 
     try {
       Enumeration<String> aliases;
-      if (mKeyStore == null) {
-        mKeyStore = KeyStore.getInstance("AndroidKeyStore");
-        mKeyStore.load(null);
+      if (keyStore == null) {
+        keyStore = KeyStore.getInstance("AndroidKeyStore");
+        keyStore.load(null);
       }
-      aliases = mKeyStore.aliases();
+      aliases = keyStore.aliases();
       String val;
       while (aliases.hasMoreElements()) {
         val = aliases.nextElement();
@@ -564,7 +552,7 @@ public class AppController {
   public static void createNewKeys(Context context, String alias) {
     try {
       // Create new key if needed
-      if (!mKeyStore.containsAlias(alias)) {
+      if (!keyStore.containsAlias(alias)) {
         Calendar start = Calendar.getInstance();
         Calendar end = Calendar.getInstance();
         end.add(Calendar.YEAR, 1);
@@ -588,7 +576,7 @@ public class AppController {
   // delete the keystore value
   public static void deleteKey(String key) {
     try {
-      mKeyStore.deleteEntry(key);
+      keyStore.deleteEntry(key);
     } catch (KeyStoreException e) {
       Logger.log(e);
     }
@@ -599,7 +587,7 @@ public class AppController {
     try {
       refreshKeys("key");
       KeyStore.PrivateKeyEntry privateKeyEntry =
-          (KeyStore.PrivateKeyEntry) mKeyStore.getEntry(mKeystoreValue, null);
+          (KeyStore.PrivateKeyEntry) keyStore.getEntry(keystoreValue, null);
       RSAPublicKey publicKey = (RSAPublicKey) privateKeyEntry.getCertificate().getPublicKey();
 
       Cipher inCipher = Cipher.getInstance("RSA/ECB/PKCS1Padding", "AndroidOpenSSL");
@@ -622,7 +610,7 @@ public class AppController {
     try {
       refreshKeys("key");
       KeyStore.PrivateKeyEntry privateKeyEntry =
-          (KeyStore.PrivateKeyEntry) mKeyStore.getEntry(mKeystoreValue, null);
+          (KeyStore.PrivateKeyEntry) keyStore.getEntry(keystoreValue, null);
       RSAPrivateKey privateKey = (RSAPrivateKey) privateKeyEntry.getPrivateKey();
 
       Cipher output = Cipher.getInstance("RSA/ECB/PKCS1Padding", "AndroidOpenSSL");
@@ -715,7 +703,7 @@ public class AppController {
   }
 
   // encrypt the pdf file and return File
-  public static File genarateEncryptedConsentPdf(String filePath, String timeStamp) {
+  public static File generateEncryptedConsentPdf(String filePath, String timeStamp) {
     try {
       FileInputStream fis = new FileInputStream(new File(filePath + timeStamp + ".pdf"));
       File encryptFile = new File(filePath + File.separator + timeStamp + ".txt");
@@ -761,7 +749,7 @@ public class AppController {
   }
 
   // decrypt the pdf file and return CipherInputStream
-  public static CipherInputStream genarateDecryptedConsentPdf(String filePath) {
+  public static CipherInputStream generateDecryptedConsentPdf(String filePath) {
     try {
       FileInputStream fis = new FileInputStream(new File(filePath));
       Cipher encipher = Cipher.getInstance("AES/CBC/PKCS5Padding");

@@ -39,7 +39,7 @@ import io.realm.Realm;
 import io.realm.RealmList;
 import java.util.Random;
 
-public class MyFirebaseMessagingService extends FirebaseMessagingService {
+public class AppFirebaseMessagingService extends FirebaseMessagingService {
 
   private NotificationManagerCompat notificationManager;
   public static String TYPE = "type";
@@ -169,7 +169,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
   // It is same as we did in earlier posts
   private void sendNotification(String messageBody, PendingIntent pendingIntent) {
     if (notificationManager == null) {
-      notificationManager = NotificationManagerCompat.from(MyFirebaseMessagingService.this);
+      notificationManager = NotificationManagerCompat.from(AppFirebaseMessagingService.this);
     }
     realm = AppController.getRealmobj(this);
     UserProfileData userProfileData = dbServiceSubscriber.getUserProfileData(realm);
