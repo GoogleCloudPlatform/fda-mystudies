@@ -55,9 +55,8 @@ class ResourceDetailViewController: UIViewController {
     self.title = resource?.title
   }
 
-  override func viewWillAppear(_ animated: Bool) {
-    super.viewWillAppear(animated)
-    // webView.uiDelegate = self
+  override func viewDidAppear(_ animated: Bool) {
+    super.viewDidAppear(animated)
     webView.navigationDelegate = self
     webView.contentScaleFactor = 1.0
     loadWebView()
@@ -70,6 +69,7 @@ class ResourceDetailViewController: UIViewController {
         AKUtility.deleteFile(from: tempResource)
       }
     }
+    webView.navigationDelegate = nil
   }
 
   // MARK: - UI
@@ -204,6 +204,36 @@ extension ResourceDetailViewController: WKNavigationDelegate {
     decisionHandler(.allow)
   }
 
+  func webView(
+    _ webView: WKWebView,
+    decidePolicyFor navigationResponse: WKNavigationResponse,
+    decisionHandler: @escaping (WKNavigationResponsePolicy) -> Void
+  ) {
+
+    switch navigationResponse.response {
+
+    case let response as HTTPURLResponse:
+      if self.resource?.file?.mimeType == .pdf,
+        response.statusCode == HTTPError.notFound.rawValue
+      {
+        self.presentDefaultAlertWithError(
+          error: ApiError(code: .notFound),
+          animated: true,
+          action: { [weak self] in
+            self?.navigationController?.popViewController(animated: true)
+          },
+          completion: nil
+        )
+        self.activityIndicator.stopAnimating()
+        decisionHandler(.cancel)
+      } else {
+        decisionHandler(.allow)
+      }
+
+    default:
+      decisionHandler(.allow)
+    }
+  }
 }
 
 // MARK: - Mail Compose Delegate

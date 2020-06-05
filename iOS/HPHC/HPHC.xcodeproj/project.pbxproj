@@ -125,6 +125,9 @@
 		6F36467824293ED2008F815A /* RegistrationServerKeys.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FD1E15123F17ACA009DACAE /* RegistrationServerKeys.swift */; };
 		6F4E1B2D24223C210051D3E2 /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = 6F4E1B2A24223C210051D3E2 /* README.md */; };
 		6F4E1B2F24223CA20051D3E2 /* UIImage+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F4E1B2E24223CA20051D3E2 /* UIImage+Extensions.swift */; };
+		6F83039524864431009409A5 /* APIError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F83039424864431009409A5 /* APIError.swift */; };
+		6F83039C24864D6B009409A5 /* LocalizableString.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F83039924864D6B009409A5 /* LocalizableString.swift */; };
+		6F83039D24864D6B009409A5 /* Localizable.strings.txt in Resources */ = {isa = PBXBuildFile; fileRef = 6F83039A24864D6B009409A5 /* Localizable.strings.txt */; };
 		6F99755F242387300044944E /* AppConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F99755E242387300044944E /* AppConfiguration.swift */; };
 		6F9975622423B7EA0044944E /* EnrollmentServerConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F9975612423B7EA0044944E /* EnrollmentServerConfiguration.swift */; };
 		6FA10A1824374DC200932622 /* Branding.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FA10A1724374DC200932622 /* Branding.swift */; };
@@ -418,6 +421,9 @@
 		6F4E1B2A24223C210051D3E2 /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; name = README.md; path = ../README.md; sourceTree = "<group>"; };
 		6F4E1B2E24223CA20051D3E2 /* UIImage+Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIImage+Extensions.swift"; sourceTree = "<group>"; };
 		6F589EAC246185A50014FE20 /* QA.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; name = QA.xcconfig; path = ../../../../../../Desktop/QA.xcconfig; sourceTree = "<group>"; };
+		6F83039424864431009409A5 /* APIError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIError.swift; sourceTree = "<group>"; };
+		6F83039924864D6B009409A5 /* LocalizableString.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LocalizableString.swift; sourceTree = "<group>"; };
+		6F83039A24864D6B009409A5 /* Localizable.strings.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Localizable.strings.txt; sourceTree = "<group>"; };
 		6F99755E242387300044944E /* AppConfiguration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppConfiguration.swift; sourceTree = "<group>"; };
 		6F9975612423B7EA0044944E /* EnrollmentServerConfiguration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EnrollmentServerConfiguration.swift; sourceTree = "<group>"; };
 		6FA10A1724374DC200932622 /* Branding.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Branding.swift; sourceTree = "<group>"; };
@@ -999,11 +1005,21 @@
 			path = Branding;
 			sourceTree = "<group>";
 		};
+		6F83039824864D6B009409A5 /* Localizable */ = {
+			isa = PBXGroup;
+			children = (
+				6F83039924864D6B009409A5 /* LocalizableString.swift */,
+				6F83039A24864D6B009409A5 /* Localizable.strings.txt */,
+			);
+			path = Localizable;
+			sourceTree = "<group>";
+		};
 		6F99755824236E0B0044944E /* Environment */ = {
 			isa = PBXGroup;
 			children = (
 				6FD1E15923F18239009DACAE /* APIConfiguration.swift */,
 				6FD1E15123F17ACA009DACAE /* RegistrationServerKeys.swift */,
+				6F83039424864431009409A5 /* APIError.swift */,
 			);
 			path = Environment;
 			sourceTree = "<group>";
@@ -1072,6 +1088,7 @@
 		6FE00CD3238FEDC50067A7B8 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				6F83039824864D6B009409A5 /* Localizable */,
 				6ED593711F011D5B00AC3636 /* Fonts */,
 				6FE00CE1238FEFCC0067A7B8 /* JSON */,
 				6FE00CDA238FEECE0067A7B8 /* Plists */,
@@ -1905,6 +1922,7 @@
 				6E7D2D8E1E43445600763D4C /* UserPreferences.plist in Resources */,
 				9450598F1F29FA2C007906A7 /* AppGlossary.pdf in Resources */,
 				6ED593731F011D5B00AC3636 /* Verdana Italic.ttf in Resources */,
+				6F83039D24864D6B009409A5 /* Localizable.strings.txt in Resources */,
 				94B3DD581E6ED8E500327AE5 /* SignUpPlist.plist in Resources */,
 				94C6BD461EB8515000D4AA72 /* AppUpdateBlocker.xib in Resources */,
 				6EE5756C1E891440009BAA25 /* Gateway.xcassets in Resources */,
@@ -2118,6 +2136,7 @@
 				4884E35A1E827E6A002DA0B9 /* ContactUsTableViewCell.swift in Sources */,
 				6EE93D901E93B5700027A5DC /* ConsentSharePdfStepViewController.swift in Sources */,
 				6FD1E15A23F18239009DACAE /* ConsentServerConfiguration.swift in Sources */,
+				6F83039524864431009409A5 /* APIError.swift in Sources */,
 				94B3DD4C1E6ED8E500327AE5 /* FRHyperLabel.m in Sources */,
 				6ECA927F1E499F8C00DA6287 /* StepProvider.swift in Sources */,
 				6ED1B2321E54256700BF463F /* ActivityInstructionStep.swift in Sources */,
@@ -2194,6 +2213,7 @@
 				6F9975622423B7EA0044944E /* EnrollmentServerConfiguration.swift in Sources */,
 				9432C2F91E4C4993005984EC /* ResponseServerConfiguration.swift in Sources */,
 				6E183AA91E962AA4005D7A27 /* GatewayResourceDetailViewController.swift in Sources */,
+				6F83039C24864D6B009409A5 /* LocalizableString.swift in Sources */,
 				94CD96EA1E4AF61800946477 /* NetworkWebServiceHandler.swift in Sources */,
 				6ED1B2301E54256700BF463F /* ActivityActiveStep.swift in Sources */,
 				94C13DBE1EC19E4700E3AEBF /* LineChartCell.swift in Sources */,
@@ -2463,7 +2483,6 @@
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = HPHC/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
-				IS_STANDALONE_STUDY = false;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				MARKETING_VERSION = 1.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
@@ -2496,7 +2515,6 @@
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = HPHC/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
-				IS_STANDALONE_STUDY = false;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.btc.mystudiesgcp;
