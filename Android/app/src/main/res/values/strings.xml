@@ -547,9 +547,7 @@
     <string name="visit_website">Visit Website</string>
     <string name="join_study">Join Study</string>
     <string name="clientToken">clientToken</string>
-
-
+    
     <!--must change strings-->
-    <string name="FileProvider_authorities">com.google.cloud</string>
-
+    <string name="FileProvider_authorities">com.myfileprovider</string>
 </resources>
