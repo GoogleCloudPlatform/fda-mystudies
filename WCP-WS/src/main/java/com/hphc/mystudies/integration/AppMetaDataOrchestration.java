@@ -123,49 +123,39 @@ public class AppMetaDataOrchestration {
 
   public AppVersionInfoBean getAppVersionInfo(String appId, String orgId) {
     LOGGER.info("INFO: AppMetaDataOrchestration - getAppVersionInfo() :: Starts");
-
     AppVersionInfoBean aAppVersionInfoBean;
     AppVersionInfo appVersionInfo = null;
     DeviceVersion android = new DeviceVersion();
     DeviceVersion ios = new DeviceVersion();
 
     appVersionInfo = appMetaDataDao.getAppVersionInfo(appId, orgId);
-
-    if (appVersionInfo != null) {
-      android.setLatestVersion(appVersionInfo.getAndroidVersion());
-
-      if (appVersionInfo.getAndroidForceUpdate() != null
-          && appVersionInfo.getAndroidForceUpdate()) {
-        android.setForceUpdate("true");
-      } else {
-        android.setForceUpdate("false");
-      }
-
-      if (appVersionInfo.getIosForceUpdate() != null && appVersionInfo.getIosForceUpdate()) {
-        ios.setForceUpdate("true");
-      } else {
-        ios.setForceUpdate("false");
-      }
-
-      ios.setLatestVersion(appVersionInfo.getIosVersion());
-
-      aAppVersionInfoBean = new AppVersionInfoBean();
-      aAppVersionInfoBean.setAndroid(android);
-      aAppVersionInfoBean.setIos(ios);
-
-      LOGGER.info("INFO: AppMetaDataOrchestration - getAppVersionInfo() :: Ends");
-      return aAppVersionInfoBean;
-    } else {
+    if (appVersionInfo == null) {
       LOGGER.info("INFO: AppMetaDataOrchestration - getAppVersionInfo() :: Ends");
       return null;
     }
+    android.setLatestVersion(appVersionInfo.getAndroidVersion());
+    if (appVersionInfo.getAndroidForceUpdate() != null && appVersionInfo.getAndroidForceUpdate()) {
+      android.setForceUpdate("true");
+    } else {
+      android.setForceUpdate("false");
+    }
+    if (appVersionInfo.getIosForceUpdate() != null && appVersionInfo.getIosForceUpdate()) {
+      ios.setForceUpdate("true");
+    } else {
+      ios.setForceUpdate("false");
+    }
+    ios.setLatestVersion(appVersionInfo.getIosVersion());
+    aAppVersionInfoBean = new AppVersionInfoBean();
+    aAppVersionInfoBean.setAndroid(android);
+    aAppVersionInfoBean.setIos(ios);
+    LOGGER.info("INFO: AppMetaDataOrchestration - getAppVersionInfo() :: Ends");
+    return aAppVersionInfoBean;
   }
 
   public ErrorResponse storeResponseActivitiesTemp(String jsonData) throws Exception {
     LOGGER.info("INFO: AppMetaDataOrchestration - storeResponseActivitiesTemp() :: starts");
     ErrorResponse errorResponse = new ErrorResponse();
     JSONObject json = null, metadataJson = null;
-    // ResponseActivityTempDto responseActivityTempDto = null;
     try {
       json = new JSONObject(jsonData);
 
@@ -181,7 +171,6 @@ public class AppMetaDataOrchestration {
           && StringUtils.isNotEmpty(studyId)
           && StringUtils.isNotEmpty(activityRunId)
           && StringUtils.isNotEmpty(participantId)) {
-        // responseActivityTempDto = new ResponseActivityTempDto();
         String jsonResponseDocName =
             StudyMetaDataUtil.saveResponsesActivityDocument(
                 jsonData, activityId, studyId, activityRunId, participantId, version);
