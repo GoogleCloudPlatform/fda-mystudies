@@ -27,7 +27,7 @@ public class AppConfig {
   // AppId
   public static String APP_ID_KEY = "appId";
   public static String WCP_APP_ID_KEY = "applicationId";
-  public static String APP_ID_VALUE = "com.google.fdaMyStudies";
+  public static String APP_ID_VALUE = "mystudies-demo";
   // OrgId
   public static String ORG_ID_KEY = "orgId";
   public static String ORG_ID_VALUE = "mystudies-demo-org";
