@@ -243,7 +243,6 @@
       if (errMsg.length > 0) {
         $("#errMsg").html(errMsg);
         $("#errMsg").show("fast");
-        //$("#sucMsg").hide("fast");
         setTimeout(hideDisplayMessage, 4000);
       }
     }

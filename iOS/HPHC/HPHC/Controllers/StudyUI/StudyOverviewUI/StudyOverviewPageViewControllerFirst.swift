@@ -52,11 +52,7 @@ class StudyOverviewViewControllerFirst: UIViewController {
 
     // Used to set border color for bottom view
     buttonJoinStudy?.layer.borderColor = kUicolorForButtonBackground
-    if overviewSectionDetail.imageURL != nil {
-      let url = URL.init(string: overviewSectionDetail.imageURL!)
-      imageViewStudy?.sd_setImage(with: url, placeholderImage: nil)
-    }
-
+    loadOverviewImage()
     if overviewSectionDetail.link != nil {
       buttonWatchVideo?.isHidden = false
     } else {
@@ -115,6 +111,22 @@ class StudyOverviewViewControllerFirst: UIViewController {
     self.labelDescription?.textAlignment = .center
 
     setNeedsStatusBarAppearanceUpdate()
+  }
+
+  private func loadOverviewImage() {
+    if let imageURLString = overviewSectionDetail.imageURL {
+      let url = URL(string: imageURLString)
+      imageViewStudy?.sd_imageIndicator = SDWebImageActivityIndicator.whiteLarge
+      imageViewStudy?.sd_setImage(
+        with: url,
+        placeholderImage: nil,
+        options: .highPriority,
+        completed: { [weak self] (image, _, _, _) in
+          self?.imageViewStudy?.sd_imageIndicator?.stopAnimatingIndicator()
+          self?.imageViewStudy?.image = image
+        }
+      )
+    }
   }
 
   @objc func playerDidFinishPlaying(note: NSNotification) {
