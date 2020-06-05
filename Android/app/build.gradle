@@ -4,7 +4,7 @@ buildscript {
     }
 
     dependencies {
-        classpath 'io.fabric.tools:gradle:1.28.0'
+        classpath 'io.fabric.tools:gradle:1.27.1'
     }
 }
 apply plugin: 'com.android.application'
@@ -70,8 +70,8 @@ android {
         fda {
             dimension 'version'
             applicationId "com.google.fdaMyStudies"
-            versionCode 13
-            versionName "1.0.1"
+            versionCode 2
+            versionName "1.0.0"
         }
     }
 }
@@ -101,7 +101,7 @@ dependencies {
     implementation 'com.google.firebase:firebase-messaging:17.4.0'
     implementation 'com.google.firebase:firebase-core:16.0.7'
     implementation 'com.github.barteksc:android-pdf-viewer:2.4.0'
-    //implementation 'org.apache.directory.studio:org.apache.commons.io:2.4'
+//    implementation 'org.apache.directory.studio:org.apache.commons.io:2.4'
     implementation 'commons-io:commons-io:2.4'
     implementation 'com.google.android.gms:play-services-location:16.0.0'
     implementation 'com.google.android.gms:play-services-maps:16.1.0'
