@@ -375,7 +375,7 @@ public class UserManagementUtil {
         }
         authServerResponse.setHttpStatusCode(400 + "");
       }
-      logger.error("authServerResponse: " + authServerResponse);
+      logger.error("authServerResponse: " + authServerResponse.message);
       return authServerResponse;
     }
   }
@@ -421,7 +421,7 @@ public class UserManagementUtil {
     try {
       date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(dateNow);
     } catch (Exception e) {
-      logger.info("URWebAppWSUtil - getCurrentUtilDateTime() :: ERROR ", e);
+      logger.error("URWebAppWSUtil - getCurrentUtilDateTime() :: ERROR ", e);
     }
     return date;
   }
@@ -476,13 +476,13 @@ public class UserManagementUtil {
     } catch (RestClientResponseException e) {
       message = MyStudiesUserRegUtil.ErrorCodes.FAILURE.getValue();
       if (e.getRawStatusCode() == 401) {
-        logger.error("Invalid client Id or client secret.");
+        logger.error("Invalid client Id or client secret.", e);
         throw new UnAuthorizedRequestException();
       } else if (e.getRawStatusCode() == 400) {
-        logger.error("Client verification ended with Bad Request");
+        logger.error("Client verification ended with Bad Request", e);
         throw new InvalidRequestException();
       } else {
-        logger.error("Client verification ended with Internal Server Error");
+        logger.error("Client verification ended with Internal Server Error", e);
         throw new SystemException();
       }
     }
