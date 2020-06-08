@@ -240,3 +240,8 @@ If the cluster has issues, there are a few things you can check:
 *   Follow a troubleshooting guide. Examples are
     [this](https://learnk8s.io/troubleshooting-deployments) and
     [this](https://kubernetes.io/docs/tasks/debug-application-cluster/debug-cluster/).
+*   As of now there is a known issue with Firewalls in ingress-gce. References [kubernetes/ingress-gce#485](https://github.com/kubernetes/ingress-gce/issues/485) 
+    and/or  [kubernetes/ingress-gce#584](https://github.com/kubernetes/ingress-gce/issues/584)
+    1. Run kubectl describe ingress <ingress-name>
+    1. Look at the suggested commands under "Events", in the form of "Firewall change required by network admin: <gcloud command>". 
+    1. Run each of the suggested commands.
