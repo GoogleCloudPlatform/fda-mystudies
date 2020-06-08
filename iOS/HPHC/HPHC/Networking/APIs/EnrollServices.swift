@@ -257,7 +257,7 @@ extension EnrollServices: NMWebServiceDelegate {
 
       // handle failed request due to network connectivity
       if requestName as String == EnrollmentMethods.updateStudyState.description {
-        if error.code == NoNetworkErrorCode {
+        if error.code == kNoNetworkErrorCode {
           // save in database
           DBHandler.saveRequestInformation(
             params: self.requestParams,

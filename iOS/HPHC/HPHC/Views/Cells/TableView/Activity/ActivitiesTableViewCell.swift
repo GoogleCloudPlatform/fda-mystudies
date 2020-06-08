@@ -218,14 +218,14 @@ class ActivitiesTableViewCell: UITableViewCell {
     }
 
     switch frequency {
-    case .One_Time:  // Handle for One Time Frequency
+    case .oneTime:
       if endDate != nil {
         labelTime?.text = startDateString + " to\n" + endDateString
       } else {
         labelTime?.text = startDateString
       }
 
-    case .Daily:  // Handle for Daily Frequency
+    case .daily:
       var runStartTimingsList: [String] = []
       for dict in activity.frequencyRuns! {
         let startTime = dict[kScheduleStartTime] as! String
@@ -244,7 +244,7 @@ class ActivitiesTableViewCell: UITableViewCell {
       let endDate = ActivitiesTableViewCell.dailyActivityFormatter.string(from: endDate!)
       labelTime?.text = runStartTime + "\n" + dailyStartDate + " to " + endDate
 
-    case .Weekly:  // Handle for Weekly Frequency
+    case .weekly:
       var weeklyStartTime = ActivitiesTableViewCell.weeklyformatter.string(from: startDate!)
       weeklyStartTime = weeklyStartTime.replacingOccurrences(of: "+", with: "every")
       weeklyStartTime = weeklyStartTime.replacingOccurrences(of: ";", with: "\n")
@@ -252,14 +252,14 @@ class ActivitiesTableViewCell: UITableViewCell {
 
       labelTime?.text = weeklyStartTime + " to " + endDate
 
-    case .Monthly:  // Handle for Monthly Frequency
+    case .monthly:
       var monthlyStartTime = ActivitiesTableViewCell.monthlyformatter.string(from: startDate!)
       monthlyStartTime = monthlyStartTime.replacingOccurrences(of: "+", with: "on day")
       monthlyStartTime = monthlyStartTime.replacingOccurrences(of: ";", with: "each month\n")
       let endDate = ActivitiesTableViewCell.formatter.string(from: endDate!)
       labelTime?.text = monthlyStartTime + " to " + endDate
 
-    case .Scheduled:  // Handle for Scheduled Frequency
+    case .scheduled:
       var runStartDate: Date?
       var runEndDate: Date?
       if activity.currentRun != nil {

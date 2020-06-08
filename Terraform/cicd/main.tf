@@ -55,6 +55,8 @@ locals {
     "roles/browser",
     "roles/iam.securityReviewer",
   ]
+  # For folder level deployment replace `roles/resourcemanager.organizationAdmin`
+  # with `roles/resourcemanager.folderIamAdmin`  below.
   cloudbuild_sa_editor_roles = [
     "roles/compute.xpnAdmin",
     "roles/logging.configWriter",
@@ -88,14 +90,14 @@ resource "google_project_service" "services" {
 
 # Need someone who has billing admin permission to deploy this.
 # IAM permissions to allow Cloud Build Service Account use the billing account.
-# resource "google_billing_account_iam_member" "binding" {
-#   billing_account_id = var.billing_account
-#   role               = "roles/billing.user"
-#   member             = local.cloud_build_sa
-#   depends_on = [
-#     google_project_service.services,
-#   ]
-# }
+resource "google_billing_account_iam_member" "binding" {
+  billing_account_id = var.billing_account
+  role               = "roles/billing.user"
+  member             = local.cloud_build_sa
+  depends_on = [
+    google_project_service.services,
+  ]
+}
 
 # IAM permissions to allow approvers and contributors to view the build results.
 resource "google_project_iam_member" "cloudbuild_viewers" {
@@ -129,6 +131,18 @@ resource "google_organization_iam_member" "cloudbuild_sa_org_iam" {
     google_project_service.services,
   ]
 }
+
+// For Folder level changes, comment out the `google_organization_iam_member`
+// above and uncomment this block instead.
+// resource "google_folder_iam_member" "cloudbuild_sa_folder_iam" {
+//   for_each = toset(var.continuous_deployment_enabled ? local.cloudbuild_sa_editor_roles : local.cloudbuild_sa_viewer_roles)
+//   folder   = var.folder_id
+//   role     = each.value
+//   member   = local.cloud_build_sa
+//   depends_on = [
+//     google_project_service.services,
+//   ]
+// }
 
 # Grant Cloud Build Service Account access to the devops project.
 resource "google_project_iam_member" "cloudbuild_sa_project_iam" {

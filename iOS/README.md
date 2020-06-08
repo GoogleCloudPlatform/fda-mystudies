@@ -1,4 +1,5 @@
-![Build iOS](https://github.com/GoogleCloudPlatform/fda-mystudies/workflows/Build%20iOS/badge.svg)
+![Build iOS](https://github.com/GoogleCloudPlatform/fda-mystudies/workflows/Build%20iOS/badge.svg) 
+![SwiftLint](https://github.com/GoogleCloudPlatform/fda-mystudies/workflows/SwiftLint/badge.svg)
 
 # Requirements
 FDA MyStudies iOS app requires Xcode 11 or newer and can be run on iOS 11 and above.

@@ -228,29 +228,30 @@ class ResponseDataFetch: NMWebServiceDelegate {
           let count = (value["count"] as? Float)!
           let dateString = value["date"] as? String ?? ""
           // SetData Format
-          if let date = ResponseDataFetch.responseDateFormatter.date(from: dateString) {
-            let localDateAsString = ResponseDataFetch.localDateFormatter.string(from: date)
-            if let localDate = ResponseDataFetch.localDateFormatter.date(
-              from: localDateAsString
-            ) {
-              // Save Stats to DB
-              DBHandler.saveStatisticsDataFor(
-                activityId: activityId!,
-                key: key!,
-                data: responseValue,
-                fkDuration: Int(count),
-                date: localDate
-              )
-            }
+          if let date = ResponseDataFetch.responseDateFormatter.date(from: dateString),
+            let key = key,
+            let activityID = activityId
+          {
+            // Save Stats to DB
+            DBHandler.saveStatisticsDataFor(
+              activityId: activityID,
+              key: key,
+              data: responseValue,
+              fkDuration: Int(count),
+              date: date
+            )
           }
         }
       }
-      let key = "LabKeyResponse" + (Study.currentStudy?.studyId)!
+    }
+
+    if let studyID = Study.currentStudy?.studyId {
+      let key = "LabKeyResponse" + studyID
       UserDefaults.standard.set(true, forKey: key)
+    }
 
-      let appDelegate = (UIApplication.shared.delegate as? AppDelegate)!
+    if let appDelegate = UIApplication.shared.delegate as? AppDelegate {
       appDelegate.addAndRemoveProgress(add: false)
-
     }
   }
 

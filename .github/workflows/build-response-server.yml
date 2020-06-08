@@ -1,6 +1,8 @@
 on:
   pull_request:
-    branches: [ early-access ]
+    paths:
+    - 'response-server-ws/**'
+    - '.github/workflows/build-response-server.yml'
 name: Build-response-server-ws
 jobs:
   build:

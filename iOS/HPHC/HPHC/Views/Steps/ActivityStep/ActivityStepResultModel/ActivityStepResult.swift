@@ -240,7 +240,7 @@ class ActivityStepResult {
 
     if (stepResult.results?.count)! > 0 {
 
-      if activityType == .Questionnaire {
+      if activityType == .questionnaire {
         // for question Step
 
         if stepResult.results?.count == 1 && self.type != .form {
