@@ -5,6 +5,7 @@
  * license that can be found in the LICENSE file or at
  * https://opensource.org/licenses/MIT.
  */
+
 package com.google.cloud.healthcare.fdamystudies.config;
 
 import org.springframework.context.annotation.Bean;
@@ -35,13 +36,13 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         .httpBasic();
   }
 
-  @Bean
-  public BCryptPasswordEncoder passwordEncoder() {
-    return new BCryptPasswordEncoder();
-  }
-
   @Override
   public void configure(WebSecurity web) {
     web.ignoring().antMatchers("/**");
+  }
+
+  @Bean
+  public BCryptPasswordEncoder passwordEncoder() {
+    return new BCryptPasswordEncoder();
   }
 }
