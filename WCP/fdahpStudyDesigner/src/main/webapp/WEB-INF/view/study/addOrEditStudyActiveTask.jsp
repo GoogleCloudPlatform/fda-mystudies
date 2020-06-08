@@ -189,7 +189,6 @@
       $('#currentPageId').val(id);
     });
 
-    //alert()
     // on load of the page: switch to the currently selected tab
     var hash = window.location.hash;
     $('#tabsId a[href="' + hash + '"]').tab('show');

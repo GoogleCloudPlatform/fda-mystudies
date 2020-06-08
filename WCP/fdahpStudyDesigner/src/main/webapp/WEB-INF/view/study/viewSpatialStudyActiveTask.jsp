@@ -391,20 +391,6 @@
                   <div class="help-block with-errors red-txt"></div>
                 </div>
               </div>
-              <!-- <div>
-                  <div class="gray-xs-f mb-sm">Time ranges options available
-                      to the mobile app user</div>
-                  <div>
-                      <span class="mr-lg"><span class="mr-sm"><img
-                              src="../images/icons/tick.png" /></span><span>Current Day</span></span> <span
-                          class="mr-lg"><span class="mr-sm"><img
-                              src="../images/icons/tick.png" /></span><span>Current Week</span></span> <span
-                          class="mr-lg"><span class="mr-sm"><img
-                              src="../images/icons/tick.png" /></span><span>Current Month</span></span> <span
-                          class="txt-gray">(Rollback option provided for these
-                          three options)</span>
-                  </div>
-              </div> -->
             </div>
           </div>
           <div class="clearfix"></div>
@@ -578,20 +564,6 @@
                   <div class="help-block with-errors red-txt"></div>
                 </div>
               </div>
-              <!-- <div>
-                  <div class="gray-xs-f mb-sm">Time ranges options available
-                      to the mobile app user</div>
-                  <div>
-                      <span class="mr-lg"><span class="mr-sm"><img
-                              src="../images/icons/tick.png" /></span><span>Current Day</span></span> <span
-                          class="mr-lg"><span class="mr-sm"><img
-                              src="../images/icons/tick.png" /></span><span>Current Week</span></span> <span
-                          class="mr-lg"><span class="mr-sm"><img
-                              src="../images/icons/tick.png" /></span><span>Current Month</span></span> <span
-                          class="txt-gray">(Rollback option provided for these
-                          three options)</span>
-                  </div>
-              </div> -->
             </div>
           </div>
           <div class="clearfix"></div>
@@ -765,20 +737,6 @@
                   <div class="help-block with-errors red-txt"></div>
                 </div>
               </div>
-              <!-- 	<div>
-                      <div class="gray-xs-f mb-sm">Time ranges options available
-                          to the mobile app user</div>
-                      <div>
-                          <span class="mr-lg"><span class="mr-sm"><img
-                                  src="../images/icons/tick.png" /></span><span>Current Day</span></span> <span
-                              class="mr-lg"><span class="mr-sm"><img
-                                  src="../images/icons/tick.png" /></span><span>Current Week</span></span> <span
-                              class="mr-lg"><span class="mr-sm"><img
-                                  src="../images/icons/tick.png" /></span><span>Current Month</span></span> <span
-                              class="txt-gray">(Rollback option provided for these
-                              three options)</span>
-                      </div>
-                  </div> -->
             </div>
           </div>
           <div class="clearfix"></div>
@@ -1168,15 +1126,6 @@
                         <div class="help-block with-errors red-txt"></div>
                       </div>
                     </div>
-                    <!--  <div>
-                       <div class="gray-xs-f mb-sm">Time ranges options available to the mobile app user</div>
-                       <div>
-                          <span class="mr-lg"><span class="mr-sm"><img src="../images/icons/tick.png"/></span><span>Current Day</span></span>
-                          <span class="mr-lg"><span class="mr-sm"><img src="../images/icons/tick.png"/></span><span>Current Week</span></span>
-                          <span class="mr-lg"><span class="mr-sm"><img src="../images/icons/tick.png"/></span><span>Current Month</span></span>
-                          <span class="txt-gray">(Rollback option provided for these three options)</span>
-                       </div>
-                    </div> -->
                   </div>
 
                 </div>
@@ -1363,15 +1312,6 @@
                       <div class="help-block with-errors red-txt"></div>
                     </div>
                   </div>
-                  <!-- <div>
-                    <div class="gray-xs-f mb-sm">Time ranges options available to the mobile app user</div>
-                    <div>
-                       <span class="mr-lg"><span class="mr-sm"><img src="../images/icons/tick.png"/></span><span>Current Day</span></span>
-                       <span class="mr-lg"><span class="mr-sm"><img src="../images/icons/tick.png"/></span><span>Current Week</span></span>
-                       <span class="mr-lg"><span class="mr-sm"><img src="../images/icons/tick.png"/></span><span>Current Month</span></span>
-                       <span class="txt-gray">(Rollback option provided for these three options)</span>
-                    </div>
-                 </div> -->
                 </div>
 
               </div>
@@ -1556,15 +1496,6 @@
                       <div class="help-block with-errors red-txt"></div>
                     </div>
                   </div>
-                  <!-- <div>
-                    <div class="gray-xs-f mb-sm">Time ranges options available to the mobile app user</div>
-                    <div>
-                       <span class="mr-lg"><span class="mr-sm"><img src="../images/icons/tick.png"/></span><span>Current Day</span></span>
-                       <span class="mr-lg"><span class="mr-sm"><img src="../images/icons/tick.png"/></span><span>Current Week</span></span>
-                       <span class="mr-lg"><span class="mr-sm"><img src="../images/icons/tick.png"/></span><span>Current Month</span></span>
-                       <span class="txt-gray">(Rollback option provided for these three options)</span>
-                    </div>
-                 </div> -->
                 </div>
 
               </div>
@@ -1637,12 +1568,7 @@
           $('#maximumspanId').parent().find(".help-block").append(
               "<ul class='list-unstyled'><li>Maximum Span should be always >= Initial Span</li></ul>");
         }
-      } else {
-        /* $(this).val('');
-           $(this).parent().addClass("has-danger").addClass("has-error");
-        $(this).parent().find(".help-block").empty();
-        $(this).parent().find(".help-block").append("<ul class='list-unstyled'><li>Initial Span must be >= 2</li></ul>"); */
-      }
+      } 
     });
     $("#minimumspanId").blur(function () {
       var value = $(this).val();
@@ -1657,17 +1583,6 @@
           $(this).parent().find(".help-block").append(
               "<ul class='list-unstyled'><li>Minimum Span should be always <= Initial Span  </li></ul>");
         }
-      } else {
-        /* $('#initialspanId').val('');
-           $('#initialspanId').parent().addClass("has-danger").addClass("has-error");
-        $('#initialspanId').parent().find(".help-block").empty();
-        $('#initialspanId').parent().find(".help-block").append("<ul class='list-unstyled'><li>Initial Span must be >= 2</li></ul>");
-
-        $(this).val('');
-           $(this).parent().addClass("has-danger").addClass("has-error");
-        $(this).parent().find(".help-block").empty();
-        $(this).parent().find(".help-block").append("<ul class='list-unstyled'><li>Minimum Span should be always <= Initial Span  </li></ul>"); */
-      }
     });
 
     $("#maximumspanId").blur(function () {
@@ -1689,17 +1604,6 @@
           $(this).parent().find(".help-block").append(
               "<ul class='list-unstyled'><li>Maximum Span should be always >= Initial Span</li></ul>");
         }
-      } else {
-        /* $('#initialspanId').val('');
-           $('#initialspanId').parent().addClass("has-danger").addClass("has-error");
-        $('#initialspanId').parent().find(".help-block").empty();
-        $('#initialspanId').parent().find(".help-block").append("<ul class='list-unstyled'><li>Initial Span must be >= 2</li></ul>");
-
-        $(this).val('');
-           $(this).parent().addClass("has-danger").addClass("has-error");
-        $(this).parent().find(".help-block").empty();
-        $(this).parent().find(".help-block").append("<ul class='list-unstyled'><li>Maximum Span should be always >= Initial Span</li></ul>"); */
-      }
     });
 
     $("#playspeedId").blur(function () {
@@ -1728,12 +1632,6 @@
           $("#playspeedId").parent().find(".help-block").append(
               "<ul class='list-unstyled'><li>Play Speed should be <= 20 seconds</li></ul>");
         }
-      } else {
-        //$("#playspeedId").val('');
-        //$("#playspeedId").parent().addClass("has-danger").addClass("has-error");
-        //$("#playspeedId").parent().find(".help-block").empty();
-        //$("#playspeedId").parent().find(".help-block").append("<ul class='list-unstyled'><li>Play Speed should be >= 0.5 seconds  </li></ul>");
-      }
     });
     $("#maximumtestId").blur(function () {
       var value = $(this).val();
@@ -1797,7 +1695,6 @@
       });
     })
     $('#identifierId3').blur(function () {
-      //alert("1");
       validateShortTitleStatId('', this, function (val) {
       });
     })
@@ -1821,19 +1718,15 @@
     });
     $('#Score_spatial_stat_id').on('click', function () {
       if ($(this).is(":checked")) {
-        //alert("checked ...");
         $('.addLineStaticBlock_Score_spatial').css("display", "");
         $('.addLineStaticBlock_Score_spatial').find('.requireClass').attr('required', true);
         $('#Score_spatial_stat_id').val(true);
         $('.addLineStaticBlock_Score_spatial').find('.shortTitleStatCls').attr('exist', 'Y');
-        //alert("attr value::"+ $('.addLineStaticBlock_Score_spatial').find('.shortTitleStatCls').attr('exist'));
         $('.selectpicker').selectpicker('refresh');
       } else {
-        // alert("Not checked ...");
         $('.addLineStaticBlock_Score_spatial').css("display", "none");
         $('.addLineStaticBlock_Score_spatial').find('.requireClass').attr('required', false);
         $('.addLineStaticBlock_Score_spatial').find('.shortTitleStatCls').attr('exist', 'N');
-        // alert("attr value::"+ $('.addLineStaticBlock_Score_spatial').find('.shortTitleStatCls').attr('exist'));
         $('#Score_spatial_stat_id').val(false);
       }
     });
@@ -1957,7 +1850,6 @@
                   statShortId3 = "identifierId3";
                   dbShortVal3 = $('#dbidentifierId3').val();
                   dbShortId3 = $('#dbidentifierId3').attr("title");
-                  //alert("dbShortId3"+dbShortId3);
                   statShortVal3 = $('#identifierId3').val();
                 }
               } else {
@@ -1970,7 +1862,6 @@
                   statShortVal2 = $('#static2').val();
                 }
                 if (failureStat) {
-                  //alert("1");
                   statShortId3 = "static3";
                   statShortVal3 = $('#static3').val();
                 }
@@ -2016,7 +1907,6 @@
                       }
                     })
                   } else {
-                    //alert("Not");
                     $("#doneId").attr("disabled", false);
                     $("body").removeClass('loading');
                     showErrMsg("Please fill in all mandatory fields.");
@@ -2107,7 +1997,6 @@
                 statShortId3 = "identifierId3";
                 dbShortVal3 = $('#dbidentifierId3').val();
                 dbShortId3 = $('#dbidentifierId3').attr("title");
-                //alert("dbShortId3"+dbShortId3);
                 statShortVal3 = $('#identifierId3').val();
               }
             } else {
@@ -2120,7 +2009,6 @@
                 statShortVal2 = $('#static2').val();
               }
               if (failureStat) {
-                //alert("1");
                 statShortId3 = "static3";
                 statShortVal3 = $('#static3').val();
               }
@@ -2166,7 +2054,6 @@
                     }
                   })
                 } else {
-                  // alert("Not");
                   $("#saveId").attr("disabled", false);
                   $("body").removeClass('loading');
                   showErrMsg("Please fill in all mandatory fields.");
@@ -2272,7 +2159,6 @@
               $(thisAttr).parent().find(".help-block").append(
                   "<ul class='list-unstyled'><li>'" + shortTitle
                   + "' has already been used in the past.</li></ul>");
-              // $('#shortTitleId').focus();
               callback(false);
             }
           },
@@ -2319,7 +2205,6 @@
         }
       });
       if (count > 0) {
-        // alert("count");
         $(thisAttr).val('');
         $(thisAttr).parent().find('.statShortTitleClass').addClass("has-danger").addClass(
             "has-error");
@@ -2332,11 +2217,9 @@
         shortTitleStatFlag = false;
         callback(false);
       } else {
-        // alert("count0");
         var staticShortTitleId = activeTaskAttIdName;
         if (activeTaskAttIdName == 'static1' || activeTaskAttIdName == 'static2'
             || activeTaskAttIdName == 'static3') {
-          // alert("static data");
           activeTaskAttIdName = 'static';
           $.ajax({
             url: "/studybuilder/adminStudies/validateActiveTaskShortTitleId.do?_S=${param._S}",
@@ -2380,7 +2263,6 @@
             global: false
           });
         } else {
-          //alert("not static");
           var dbIdentifierVal = '';
           if (activeTaskAttIdName == 'identifierId1') {
             dbIdentifierVal = $('#dbidentifierId1').val();
@@ -2390,13 +2272,11 @@
             dbIdentifierVal = $('#dbidentifierId3').val();
           }
           if (dbIdentifierVal != activeTaskAttIdVal) {
-            // alert("statIds:::"+statIds);
             if (statIds) {
               activeTaskAttIdName = statIds;
             } else {
               activeTaskAttIdName = 'static';
             }
-            //alert("ajax");
             $.ajax({
               url: "/studybuilder/adminStudies/validateActiveTaskShortTitleId.do?_S=${param._S}",
               type: "POST",
@@ -2457,7 +2337,6 @@
     var arrayLength = jsonDatas.length; //cache the array length
     var shortSatId = '';
     var shortSatIdVal = '';
-    //alert("inside stat");
     if (arrayLength > 1) {
       for (var i = 0; i < arrayLength; i++) {
         var existId = jsonDatas[i].id;
@@ -2479,7 +2358,6 @@
         }
       }
     }
-    //alert(flag);
     if (!flag) {
       if (shortSatId) {
         if (shortSatIdVal === "") {
@@ -2503,11 +2381,6 @@
       }
       callback(false);
     } else {
-      //alert("else..");
-// 		 for(var i=0;i<arrayLength ; i++){
-// 			 var activeStatisticsBean =  new Object();
-
-// 		 }
       //do ajax call and check the db validation
       var data = JSON.stringify(jsonDatas);
       $.ajax({
@@ -2558,7 +2431,6 @@
     var arrayLength = jsonDatas.length; //cache the array length
     var shortSatId = '';
     var shortSatIdVal = '';
-    //alert("inside stat");
     if (arrayLength > 1) {
       for (var i = 0; i < arrayLength; i++) {
         var existId = jsonDatas[i].id;

@@ -330,7 +330,6 @@
 <script type="text/javascript">
   $(document).ready(function () {
 
-    //$('[data-id="anchorDateId"]').prop('disabled', true);
 
     <c:if test="${isstudyProtocol eq 'isstudyProtocol' && empty resourceBO.title}">
     $('#resourceTitle').val('Study Protocol');
@@ -654,17 +653,14 @@
         $('.disBtn2').val('');
         $('.disBtn1').attr('required', 'required');
         $('.disBtn2').removeAttr('required');
-        //$('[data-id="anchorDateId"]').prop('disabled', false);
         if ($('#xdays').attr('oldxDaysVal') != '') {
           $('#inlineRadio5').prop('checked', true);
-          //$('#xdays').val($('#xdays').attr('oldxDaysVal'));
           $('.disBtn1').prop('disabled', false);
           $('.disBtn2').prop('disabled', true);
           $('.disBtn1').selectpicker('refresh');
         }
         if ($('#ydays').attr('oldyDaysVal') != '') {
           $('#inlineRadio5').prop('checked', true);
-          //$('#ydays').val($('#ydays').attr('oldyDaysVal'));
           $('.disBtn1').prop('disabled', false);
           $('.disBtn2').prop('disabled', true);
           $('.disBtn1').selectpicker('refresh');
@@ -681,7 +677,6 @@
         $('.disBtn2').attr('required', 'required');
         $('.disBtn1').removeAttr('required');
         $('.disBtn1').selectpicker('refresh');
-        //$('[data-id="anchorDateId"]').prop('disabled', true);
         $('#ydays').parent().removeClass('has-error has-danger').find(".help-block").html("");
         if ($('#StartDate').attr('oldStartDateVal') != '') {
           $('#inlineRadio6').prop('checked', true);
@@ -734,7 +729,6 @@
           $('.disBtn2').removeAttr('required');
           $('#inlineRadio5').prop('disabled', false);
           $('#inlineRadio5').val('');
-          //$('.disRadBtn1').prop('checked',true);
           $('.disBtn1').val('');
           $('.disBtn1').selectpicker('refresh');
           resetValidation($('.resetDate'));
@@ -749,7 +743,6 @@
           $('.disBtn1').val('');
           $('#inlineRadio5').prop('disabled', false);
           $('#inlineRadio5').val('');
-          //$('.disRadBtn1').prop('checked',true);
           $('.disBtn1').selectpicker('refresh');
           resetValidation($('.resetDate'));
         }
@@ -879,7 +872,6 @@
         $('.disBtn1').removeAttr('required');
         $('.disBtn2').removeAttr('required');
         $('.disBtn1').selectpicker('refresh');
-        //$('[data-id="anchorDateId"]').prop('disabled', true);
         resetValidation($('.resetDate'));
       }
 

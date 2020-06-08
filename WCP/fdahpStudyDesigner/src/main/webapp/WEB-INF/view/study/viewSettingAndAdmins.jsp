@@ -646,9 +646,6 @@
           },
           callback: function (result) {
             if (result) {
-// 			        	$("#inlineCheckbox1,#inlineCheckbox2").prop('disabled', false);
-// 			        	$("#buttonText").val('completed');
-// 	                    $("#settingfoFormId").submit();
               //phase2a anchor
               showWarningForAnchor(isAnchorForEnrollmentDraft, enrollmentdateAsAnchordate);
               //phase 2a anchor

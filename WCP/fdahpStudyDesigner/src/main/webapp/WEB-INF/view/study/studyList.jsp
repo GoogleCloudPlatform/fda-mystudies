@@ -58,11 +58,6 @@
                               studyId="${study.liveStudyId}"
                               permission="view" data-toggle="tooltip" data-placement="top"
                               title="Last Published Version"></span>
-            <!-- Copy study functionality start -->
-            <%-- 					<c:if test="${fn:contains(sessionObject.userPermissions,'ROLE_CREATE_MANAGE_STUDIES')}"> --%>
-            <%-- 					<span class="sprites_icon copy copyStudyClass" customStudyId="${study.customStudyId}" data-toggle="tooltip" data-placement="top" title="Copy"></span> --%>
-            <%-- 					</c:if> --%>
-            <!-- Copy study functionality end-->
           </c:if>
         </td>
       </tr>
@@ -182,10 +177,8 @@
     $(this).siblings().children().removeAttr('class').addClass('sort');
     if ($(this).attr('class') == 'sorting_asc') {
       $(this).children().addClass('asc');
-      //alert('asc');
     } else if ($(this).attr('class') == 'sorting_desc') {
       $(this).children().addClass('desc');
-      //alert('desc');
     } else {
       $(this).children().addClass('sort');
     }

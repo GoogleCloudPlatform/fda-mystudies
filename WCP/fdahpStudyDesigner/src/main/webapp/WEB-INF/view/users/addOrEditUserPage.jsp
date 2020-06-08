@@ -622,7 +622,6 @@
       if (isEmail && ('' === oldEmail || ('' !== oldEmail && oldEmail !== email))) {
         var csrfDetcsrfParamName = $('#csrfDet').attr('csrfParamName');
         var csrfToken = $('#csrfDet').attr('csrfToken');
-        //var thisAttr= this;
         $('#emailId').parent().find(".help-block").html("<ul class='list-unstyled'><li></li></ul>");
         if (email !== '') {
           $("body").addClass("loading");

@@ -59,14 +59,7 @@
     vertical-align: top;
   }
 
-  /* .delete{
-	background-position: -113px -63px ;
-	width: 17px;
-	height: 22px;
-    display: inline-block !important;
-    cursor: pointer;
-    vertical-align:middle;
-} */
+
 
   /* error box css start here  */
   .help-block ul {
@@ -199,7 +192,6 @@
             <div class="help-block with-errors red-txt"></div>
             <input type="hidden" id="preShortTitleId"
                    value="${fn:escapeXml(questionnaireBo.shortTitle)}"/>
-            <!-- ///^[ A-Za-z0-9*()_+|:.-]*$/ -->
           </div>
           <div class="clearfix"></div>
           <div class="gray-xs-f mb-xs">
@@ -1624,26 +1616,7 @@
   $('.addBtnDis, .remBtnDis').addClass('dis-none');
   </c:if>
 
-  /*<c:if test="${questionnaireBo.shortTitleDuplicate <= 0}">
-$('#contentFormId input[type="text"]').prop('disabled', true);
-$('#contentFormId input[type="checkbox"]').prop('disabled', true);
-$('#schedule input[type="radio"]').prop('disabled', true);
-$('#oneTimeFormId input').prop('disabled', true);
-$('#oneTimeFormId input[type="text"]').prop('disabled', true);
-$('#dailyFormId input[type="text"]').prop('disabled', true);
-$('#weeklyFormId input[type="text"]').prop('disabled', true);
-$('#monthlyFormId input[type="text"]').prop('disabled', true);
-$('select').prop('disabled', true);
-$('#inlineRadio1,#inlineRadio2,#inlineRadio3,#inlineRadio4,#inlineRadio5').prop('disabled', true);
-$('.addBtnDis, .remBtnDis').addClass('');
-$('.cursor-display').removeClass('cursor-none');
-</c:if>*/
 
-
-  /* <c:if test="${questionnaireBo.shortTitleDuplicate > 0}">
-  $('span.addBtnDis').remove();
-  $('span.remBtnDis').remove();
-</c:if> */
 
   var count = 0;
   var customCount = 0;
@@ -1654,7 +1627,6 @@ $('.cursor-display').removeClass('cursor-none');
   var multiTimeVal = true;
   var table1;
   var customAnchorCount = 0;
-  //customAnchorCount = '${customCount}';
   var scheduletype = "${questionnaireBo.scheduleType}";
   if (scheduletype != '' && scheduletype != null && typeof scheduletype != 'undefined') {
     scheduletype = $('input[name="scheduleType"]:checked').val();
@@ -1745,8 +1717,7 @@ $('.cursor-display').removeClass('cursor-none');
         if (schedule_opts == 'Monthly') {
           $("#monthEndDate").text('NA');
           $("#monthLifeTimeDate").text('-');
-          /* $("#monthlyDateId").hide();
-				   $("#monthlyDateId").find('input:text').removeAttr('required',true); */
+        
           $(".monthlyanchorDiv").show();
           $(".monthlyanchorDiv").find('input:text').attr('required', true);
         }
@@ -1761,8 +1732,6 @@ $('.cursor-display').removeClass('cursor-none');
         $('.selectpicker').selectpicker('refresh');
         $('.dailyStartCls').hide();
         $('.dailyStartCls').find('input:text').removeAttr('required');
-        //$('.weeklyCls').hide();
-        //$('.weekDaysId').find('input:text,select').removeAttr('required');
         $('.weeklyStartCls').hide();
         $('.weeklyStartCls').find('input:text,select').removeAttr('required');
         $('.monthlyStartCls').hide();
@@ -2075,16 +2044,13 @@ $('.cursor-display').removeClass('cursor-none');
         if (val == 'Weekly') {
           $("#weekEndDate").text('NA');
           $("#weekLifeTimeEnd").text('-');
-          //$("#weekDaysId").hide();
-          //$("#weekDaysId").find('input:text').removeAttr('required',true);
           $(".weeklyanchorDiv").show();
           $(".weeklyanchorDiv").find('input:text').attr('required', true);
         }
         if (val == 'Monthly') {
           $("#monthEndDate").text('NA');
           $("#monthLifeTimeDate").text('-');
-          /* $("#monthlyDateId").hide();
-				 $("#monthlyDateId").find('input:text').removeAttr('required',true); */
+     
           $(".monthlyanchorDiv").show();
           $(".monthlyanchorDiv").find('input:text').attr('required', true);
         }
@@ -2118,15 +2084,11 @@ $('.cursor-display').removeClass('cursor-none');
 
         $('.weeklyStartCls').show();
         $('.weeklyStartCls').find('input:text,select').attr('required', true);
-        //$("#weekDaysId").show();
-        //$("#weekDaysId").find('input:text').attr('required',true);
         $(".weeklyanchorDiv").hide();
         $(".weeklyanchorDiv").find('input:text').removeAttr('required', true);
 
         $('.monthlyStartCls').show();
         $('.monthlyStartCls').find('input:text').attr('required', true);
-        /* $("#monthlyDateId").show();
-			$("#monthlyDateId").find('input:text').attr('required',true); */
         $(".monthlyanchorDiv").hide();
         $(".monthlyanchorDiv").find('input:text').removeAttr('required', true);
 
@@ -2506,18 +2468,8 @@ $('.cursor-display').removeClass('cursor-none');
       });
     });
     $("#saveId").click(function () {
-      /* var anchorList = "
-
-
-
-      ${anchorTypeList}";
-		 var length = anchorList.length; */
+ 
       var table = $('#content').DataTable();
-      /* if(length < 3){
-			 $("#schedule2").attr('disabled', true);
-		 }else{
-			 $("#schedule2").attr('disabled', false);
-		 } */
       validateShortTitle('', function (val) {
         if (val) {
           if (isFromValid("#contentFormId")) {
@@ -2642,7 +2594,6 @@ $('.cursor-display').removeClass('cursor-none');
         }
       }
       resetValidation($(this).parents('form'));
-      //resetValidation($("#oneTimeFormId"));
     });
     $("#isStudyLifeTime").change(function () {
       var scheduletype = $('input[name="scheduleType"]:checked').val();
@@ -2727,7 +2678,7 @@ $('.cursor-display').removeClass('cursor-none');
       var day = date.getDate() >= 10 ? date.getDate() : ('0' + date.getDate());
       var month = (date.getMonth() + 1) >= 10 ? (date.getMonth() + 1) : ('0' + (date.getMonth()
           + 1));
-      var today = moment(serverDate()).format("MM/DD/YYYY"); // month + '/' +  day + '/' + date.getFullYear();
+      var today = moment(serverDate()).format("MM/DD/YYYY"); 
       $('#startDate').parent().removeClass("has-danger").removeClass("has-error");
       $('#startDate').parent().find(".help-block").html("");
       $('.time-opts').each(function () {
@@ -3088,8 +3039,6 @@ $('.cursor-display').removeClass('cursor-none');
           questionnaireFrequencey.yDaysSign = true;
         }
         questionnaireFrequencey.frequencyDate = null;
-        //questionnaire.studyLifetimeStart=null;
-        //questionnaire.studyLifetimeEnd=null;
       } else {
         questionnaire.anchorDateId = null;
         questionnaireFrequencey.timePeriodFromDays = null;
@@ -4114,7 +4063,6 @@ $('.cursor-display').removeClass('cursor-none');
   }
 
   function addDateAnchor() {
-    //customAnchorCount = parseInt(customAnchorCount) +1;
     customAnchorCount = $('.manually-anchor-option').length;
     var newDateCon = "<div class='manually-anchor-option mb-md form-group' id='" + customAnchorCount
         + "'>"
@@ -4169,7 +4117,6 @@ $('.cursor-display').removeClass('cursor-none');
       $('.manuallyAnchorContainer').find(".remBtnDis").addClass("hide");
     }
     timep('manualTime' + customAnchorCount);
-    //$('#manualTime'+customAnchorCount).val("");
     $('#' + customAnchorCount).find('input:first').focus();
     $('.selectpicker').selectpicker('refresh');
   }
@@ -4183,7 +4130,6 @@ $('.cursor-display').removeClass('cursor-none');
     } else {
       $('.manuallyAnchorContainer').find(".remBtnDis").addClass("hide");
     }
-    //$(document).find('.cusTime').trigger('dp.change');
   }
 
   function setAnchorDropdown(frequency_text, anchorType) {
@@ -4267,13 +4213,6 @@ $('.cursor-display').removeClass('cursor-none');
       var ysign = $("#ySign" + parent_id).val() === "0" ? "+" : "-";
       var ydayValue = parseInt(ysign + "" + yday);
 
-      //var siblings_length = $(".manuallyAnchorContainer > div").length;
-      //
-      //for(i= parseInt(parent_id)+1  ; i<= siblings_length; i++){
-//		    $("#"+i).remove();
-      //}
-
-      //$("#"+parent_id).next().remove();
 
       if (parent_id === "0") {
 
@@ -4330,20 +4269,6 @@ $('.cursor-display').removeClass('cursor-none');
           }
         }
 
-        /* if(xdayValue < pydayValue){
-			 $("xdays"+parent_id).addClass("red-border");
-		     $("#ydays"+pre_parent).addClass("red-border");
-		  }else if(ydayValue !== ""){
-		      if(xdayValue > ydayValue){
-		    	  $(this).addClass("red-border");
-				  $("#ydays"+parent_id).addClass("red-border");
-				  $("#addbtn"+parent_id).addClass("not-allowed");
-		       }else{
-		    	   $(this).removeClass("red-border");
-				   $("#ydays"+parent_id).removeClass("red-border");
-				   $("#addbtn"+parent_id).removeClass("not-allowed");
-		       }
-	     } */
 
       }
 
@@ -4445,20 +4370,11 @@ $('.cursor-display').removeClass('cursor-none');
       $(this).parent().parent().parent().siblings().removeClass("current");
       $(this).parent().parent().parent().addClass("current");
 
-      /* $("#"+parent_id).siblings().removeClass("current");
-			$("#"+parent_id).parent().parent().addClass("current"); */
+    
 
       $(".current").nextAll().remove();
 
-      /* var siblings_length = $(".manuallyAnchorContainer > div").length;
-			for(i= 0; i<= siblings_length; i++){
-
-				if(i !== parseInt(parent_id)){
-					$("#"+i).remove();
-				}
-
-		    } */
-
+  
     });
 
   });

@@ -240,7 +240,6 @@
     $('#appNotificationFormId #inlineRadio1,#inlineRadio2').prop('disabled', false);
     $('#appNotificationFormId input').prop('disabled', false);
     $('#appNotificationFormId textarea').prop('disabled', true);
-    //$('#appNotificationFormId textarea').prop('readonly', true);
     if ($('#inlineRadio1').prop('checked')) {
       $('#datetimepicker, #timepicker1').attr('required', 'required');
       $('#immiResendButton').html('Save');

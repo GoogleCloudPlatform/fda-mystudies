@@ -106,7 +106,6 @@
 </form:form>
 
 <script>
-  //notificationTable();
   $(document).ready(function () {
     $('#rowId').parent().removeClass('white-bg');
 

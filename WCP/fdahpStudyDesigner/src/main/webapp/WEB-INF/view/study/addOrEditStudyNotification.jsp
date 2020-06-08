@@ -340,7 +340,6 @@
         } else if ($('#inlineRadio1').prop('checked')) {
           if (validateTime()) {
             $('#doneStudyId').prop('disabled', true);
-            //$('#appId').val(appId);
             $('#studyNotificationFormId').submit();
           }
         }

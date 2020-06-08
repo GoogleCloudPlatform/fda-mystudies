@@ -170,13 +170,11 @@
   }
   ;
   var eligibilityMechanism = '${eligibility.eligibilityMechanism}';
-  //  	var lastEligibilityOpt = ${not empty lastEligibilityOpt && lastEligibilityOpt ne '1'};
   console.log("viewPermission:" + viewPermission);
   var reorder = true;
   var table1;
   var emVal = $("input[name='eligibilityMechanism']:checked").val();
   var eligibilityTestSize =${eligibilityTestList.size()};
-  //var eId=${eligibility.id};
   $(document)
   .ready(
       function () {
@@ -466,21 +464,8 @@
               }
 
             })
-        // 		if(lastEligibilityOpt)
-        // 			$('#eligibilityOptDivId input[type=radio]').trigger('change');
       });
 
-  /* $(".eligibilityOptCls").change(function() {
-      emVal=$("input[name='eligibilityMechanism']:checked"). val();
-      eligibilityTestSize=${eligibilityTestList.size()};
-		$("#doneBut").attr("disabled",false);
-		if(emVal != "1"){
-			if (eligibilityTestSize === 0){
-				$("#doneBut").attr("disabled",true);
-				$('#spancomId').attr('data-original-title','Please ensure you add one or more Eligibility Test before attempting to mark this section as Complete.');
-			}
-		}
-	}); */
 
   function addOrEditOrViewQA(actionTypeForQuestionPage, eligibilityTestId) {
     var form = $('#viewQAFormId');
@@ -502,11 +487,6 @@
     input.setAttribute('value', "${eligibility.id}");
     form.append(input);
 
-    // 		input = document.createElement("input");
-    // 		input.setAttribute('type',"hidden");
-    // 		input.setAttribute('name', 'lastEligibilityOpt');
-    // 		input.setAttribute('value', $('.eligibilityOptCls:checked').val());
-    // 		form.append(input);
 
     form.submit();
   }
@@ -621,12 +601,6 @@
                 + obj.id
                 + '"></span>'
                 + '<span class="sprites_icon copy delete deleteIcon" data-toggle="tooltip" data-placement="top" title="Delete" onclick="deleteEligibiltyTestQusAns('
-                + obj.id + ', this);"></span>';
-            //                  var actions = '<span class="sprites_icon preview-g mr-lg viewIcon" data-toggle="tooltip" data-placement="top" title="" data-original-title="View"></span>'+
-            //                  '<span class="edit-inc mr-lg  editIcon" data-toggle="tooltip" data-placement="top" title="" etid="15" data-original-title="Edit"></span>'+
-            //                  '<span class="sprites_icon copy delete  deleteIcon" data-toggle="tooltip" data-placement="top" title="" onclick="deleteEligibiltyTestQusAns('+15+', this);" data-original-title="Delete"></span>';
-
-            // 				 var actions = "<span class='sprites_icon preview-g mr-lg' onclick='viewConsentInfo("+obj.id+");'></span><span class='sprites_icon edit-g mr-lg' onclick='editConsentInfo("+obj.id+");'></span><span class='sprites_icon copy delete' onclick='deleteConsentInfo("+obj.id+");'></span>";
             datarow.push(actions);
             $('#consent_list').DataTable().row.add(datarow);
           });

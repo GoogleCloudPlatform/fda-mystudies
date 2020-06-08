@@ -125,8 +125,6 @@
     $(".sixthTask").addClass('active');
 
     // Fancy Scroll Bar
-    /*  $(".left-content").niceScroll({cursorcolor:"#95a2ab",cursorborder:"1px solid #95a2ab"});
-     $(".right-content-body").niceScroll({cursorcolor:"#d5dee3",cursorborder:"1px solid #d5dee3"}); */
     $('[data-toggle="tooltip"]').tooltip();
     dataTable = $('#activedatatable_list').DataTable({
       "paging": true,
@@ -205,17 +203,14 @@
                   .draw();
                   if (!markAsComplete) {
                     $('#markAsComp').prop('disabled', true);
-                    //$('[data-toggle="tooltip"]').tooltip();
                     $('#spancomId').attr("data-original-title", activityMsg);
                   } else {
                     $('#markAsComp').prop('disabled', false);
-                    //$('[data-toggle="tooltip"]').tooltip('destroy');
                     $('#spancomId').removeAttr('data-original-title');
                   }
                   $("#alertMsg").removeClass('e-box').addClass('s-box').html(
                       "ActiveTask deleted successfully");
                   $('#alertMsg').show();
-                  /* reloadData(studyId); */
                   if ($('.sixthTask').find('span').hasClass(
                       'sprites-icons-2 tick pull-right mt-xs')) {
                     $('.sixthTask').find('span').removeClass(

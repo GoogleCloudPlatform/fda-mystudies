@@ -136,15 +136,6 @@
     } else {
       reorder = true;
     }
-// 	dataTable = $('#resource_list').DataTable({
-// 	    "paging":   false	,
-// 	    "order": [],
-// 	     rowReorder: reorder,
-// 		"columnDefs": [ { orderable: false, targets: [0] } ],
-// 	    "info" : false, 
-// 	    "lengthChange": false, 
-// 	    "searching": false, 
-// 	});
 
     var dataTable = $('#resource_list').DataTable({
       "paging": false,
@@ -249,10 +240,6 @@
               var status = data.message;
               var resourceSaved = data.resourceSaved;
               if (status == "SUCCESS") {
-// 							dataTable
-// 	    			        .row($('#row'+resourceInfoId))
-// 	    			        .remove()
-// 	    			        .draw();
                 if (resourceSaved) {
                   $('#markAsComp').prop('disabled', true);
                   $('[data-toggle="tooltip"]').tooltip();
@@ -335,13 +322,11 @@
               + ");'></span>";
           datarow.push(actions);
           $('#resource_list').DataTable().row.add(datarow);
-          // $('#resource_list tr').find('td[1]').addClass("wid50");
 
         }
       });
       if (typeof markAsComplete != 'undefined' && markAsComplete != null && markAsComplete) {
         $("#markAsComp").attr("disabled", false);
-        //$('#helpNote').attr('data-original-title', '');
       }
       $('#resource_list').DataTable().draw();
       $('#resource_list tr').each(function () {
@@ -350,7 +335,6 @@
       });
     } else {
       $('#resource_list').DataTable().draw();
-      //$('#helpNote').attr('data-original-title', 'Please ensure you add one or more Resource Sections before attempting to mark this section as Complete.');
     }
   }
 

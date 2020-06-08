@@ -151,7 +151,6 @@
         var a = document.createElement('a');
         a.href = "/studybuilder/sessionOut.do";
         document.body.appendChild(a).click();
-// 		        $('#logoutForm').submit();
       }
     });
     </c:if>

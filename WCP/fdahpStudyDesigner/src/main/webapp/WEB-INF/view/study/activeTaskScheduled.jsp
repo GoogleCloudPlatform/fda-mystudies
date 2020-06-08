@@ -1843,7 +1843,7 @@
       var day = date.getDate() >= 10 ? date.getDate() : ('0' + date.getDate());
       var month = (date.getMonth() + 1) >= 10 ? (date.getMonth() + 1) : ('0' + (date.getMonth()
           + 1));
-      var today = moment(serverDate()).format("MM/DD/YYYY");// month + '/' +  day + '/' + date.getFullYear();
+      var today = moment(serverDate()).format("MM/DD/YYYY");
       $('.time-opts').each(function () {
         var id = $(this).attr("id");
         var timeId = '#time' + id;
@@ -2664,7 +2664,6 @@
     var onetimeForm = true;
     var valForm = false;
     var anchorDateForm = true;
-    //$('.typeofschedule').prop('disabled', false);
     if (actType !== 'save') {
       if (scheduletype == 'AnchorDate') {
         if (!isFromValid("#anchorFormId"))

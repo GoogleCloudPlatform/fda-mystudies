@@ -439,7 +439,6 @@
     }
 
     //auto select if consent Id is empty
-    //var consentId = "${consentBo.id}";
 
     var consentId = "${consentBo.consentDocType}";
     if (consentId == null || consentId == '' || typeof consentId === 'undefined') {
