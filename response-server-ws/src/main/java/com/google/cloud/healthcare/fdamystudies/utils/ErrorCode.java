@@ -5,6 +5,7 @@
  * license that can be found in the LICENSE file or at
  * https://opensource.org/licenses/MIT.
  */
+
 package com.google.cloud.healthcare.fdamystudies.utils;
 
 public enum ErrorCode {
@@ -64,11 +65,13 @@ public enum ErrorCode {
 
   EC_716(
       716,
-      "Could not process and store the response data as the participant has withdrawn from the study."),
+      "Could not process and store the response data as the "
+          + "participant has withdrawn from the study."),
 
   EC_717(
       717,
-      "Deleted/Updated response data for withdrawn participant, but could not delete participant activity state data."),
+      "Deleted/Updated response data for withdrawn participant,"
+          + " but could not delete participant activity state data."),
 
   EC_718(718, "UNAUTHORIZED"),
   EC_719(719, "Invalid clientId or secretKey");

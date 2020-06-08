@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration status="WARN" monitorInterval="30">
+  <Properties>
+    <Property name="LOG_PATTERN">%d{yyyy-MM-dd'T'HH:mm:ss.SSSZ} %p %m%n</Property>
+    <Property name="APP_LOG_ROOT">logs</Property>
+  </Properties>
+  <Appenders>
+    <RollingFile name="appLog"
+      fileName="consent-management-server.log"
+      filePattern="consent-management-server-%d{yyyy-MM-dd}-%i.log">
+      <PatternLayout pattern="${LOG_PATTERN}" />
+      <Policies>
+        <SizeBasedTriggeringPolicy size="1MB" />
+      </Policies>
+      <DefaultRolloverStrategy max="1" />
+    </RollingFile>
+  </Appenders>
+  <Loggers>
+    <Root level="info">
+      <AppenderRef ref="appLog" />
+    </Root>
+  </Loggers>
+</Configuration>

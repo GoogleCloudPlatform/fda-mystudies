@@ -5,15 +5,14 @@
  * license that can be found in the LICENSE file or at
  * https://opensource.org/licenses/MIT.
  */
+
 package com.google.cloud.healthcare.fdamystudies.config;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.PropertySource;
 import lombok.ToString;
 
 @Configuration
-@PropertySource("classpath:messageResource.properties")
 @ToString
 public class ApplicationPropertyConfiguration {
 

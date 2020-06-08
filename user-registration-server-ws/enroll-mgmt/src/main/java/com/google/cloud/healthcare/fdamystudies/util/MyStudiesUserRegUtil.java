@@ -5,6 +5,7 @@
  * license that can be found in the LICENSE file or at
  * https://opensource.org/licenses/MIT.
  */
+
 package com.google.cloud.healthcare.fdamystudies.util;
 
 import java.security.MessageDigest;
@@ -25,6 +26,10 @@ public class MyStudiesUserRegUtil {
   private static final Logger logger = LoggerFactory.getLogger(MyStudiesUserRegUtil.class);
 
   static String email = "";
+
+  static final String passwordRegex =
+      "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[!\\\"#$%&'()*+,"
+          + "-.:;<=>?@\\\\[\\\\]^_`{|}~]).{8,64}$";
 
   public enum ErrorCodes {
     INVALID_INPUT("INVALID_INPUT"),
@@ -158,21 +163,28 @@ public class MyStudiesUserRegUtil {
     ACCOUNT_LOCKED("As a security measure, this account has been locked for 15 minutes."),
     ACCOUNT_TEMP_LOCKED("As a security measure, this account has been locked for 15 minutes."),
     EMAIL_VERIFICATION_SUCCESS_MESSAGE(
-        "Thanks, your email has been successfully verified! You can now proceed to completing the sign up process on the mobile app."),
+        "Thanks, your email has been successfully verified!"
+            + " You can now proceed to completing the sign up process on the mobile app."),
     EMAIL_NOT_VERIFIED(
-        "Your account is not verified. Please verify your account by clicking on verification link which has been sent to your registered email. If not received, would you like to resend verification link?"),
-    LABKEY_HOME("http://192.168.0.6:8081"),
+        "Your account is not verified. Please verify your account by clicking on verification"
+            + " link which has been sent to your registered email."
+            + " If not received, would you like to resend verification link?"),
     STUDY("Study"),
     GATEWAY("Gateway"),
     DEVICE_ANDROID("android"),
     DEVICE_IOS("ios"),
     INVALID_REFRESHTOKEN("Invalid refresh token."),
     APP_EXIST_NOTEXIST(
-        "You already have a valid account for this app. Please directly sign in using the same email and associated password."),
+        "You already have a valid account for this app."
+            + " Please directly sign in using the same email and associated password."),
     ORG_NOTEXIST(
-        "Sorry, this email is already in use for platform-powered app(s) belonging to another organization. Please use another email to sign up for this app."),
+        "Sorry, this email is already in use for platform-powered app(s)"
+            + " belonging to another organization."
+            + " Please use another email to sign up for this app."),
     LOGIN_ORG_NOTEXIST(
-        "Sorry, this account is in use for platform-powered app(s) belonging to another organization. Please sign up with a different email and try again."),
+        "Sorry, this account is in use for platform-powered app(s) "
+            + "belonging to another organization."
+            + " Please sign up with a different email and try again."),
     INTERNAL_SERVER_ERROR("Internal server error");
 
     private final String value;
@@ -310,9 +322,10 @@ public class MyStudiesUserRegUtil {
 
   public static boolean isPasswordStrong(String password) {
     if (password != null) {
-      return password.matches(
-          "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[!\\\"#$%&'()*+,-.:;<=>?@\\\\[\\\\]^_`{|}~]).{8,64}$");
-    } else return false;
+      return password.matches(passwordRegex);
+    } else {
+      return false;
+    }
   }
 
   public static String getHashedValue(String passwordToHash) {

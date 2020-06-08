@@ -5,6 +5,7 @@
  * license that can be found in the LICENSE file or at
  * https://opensource.org/licenses/MIT.
  */
+
 package com.google.cloud.healthcare.fdamystudies.service;
 
 import java.time.LocalDateTime;
@@ -94,18 +95,18 @@ public class CommonServiceImpl implements CommonService {
   public List<ActivityLogBO> createActivityLogList(
       String userId, String activityName, List<String> activityDescList) {
     logger.info("CommonServiceImpl createActivityLogList() - starts ");
-    List<ActivityLogBO> activityLogBOList = new LinkedList<>();
+    List<ActivityLogBO> activityLogBoList = new LinkedList<>();
     if (!StringUtils.isBlank(userId)
         && !StringUtils.isBlank(activityName)
         && !CollectionUtils.isEmpty(activityDescList)) {
       try {
-        activityLogBOList = commonDao.createActivityLogList(userId, activityName, activityDescList);
+        activityLogBoList = commonDao.createActivityLogList(userId, activityName, activityDescList);
       } catch (Exception e) {
         logger.error("CommonServiceImpl createActivityLogList() - error ", e);
       }
     }
     logger.info("CommonServiceImpl createActivityLogList() - ends ");
-    return activityLogBOList;
+    return activityLogBoList;
   }
 
   @Override

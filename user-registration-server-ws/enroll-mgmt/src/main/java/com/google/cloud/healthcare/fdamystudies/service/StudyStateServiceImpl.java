@@ -5,6 +5,7 @@
  * license that can be found in the LICENSE file or at
  * https://opensource.org/licenses/MIT.
  */
+
 package com.google.cloud.healthcare.fdamystudies.service;
 
 import java.util.ArrayList;
@@ -105,15 +106,19 @@ public class StudyStateServiceImpl implements StudyStateService {
                         MyStudiesUserRegUtil.getCurrentUtilDateTime());
                   }
                 }
-                if (studiesBean.getBookmarked() != null)
+                if (studiesBean.getBookmarked() != null) {
                   participantStudies.setBookmark(studiesBean.getBookmarked());
-                if (studiesBean.getCompletion() != null)
+                }
+                if (studiesBean.getCompletion() != null) {
                   participantStudies.setCompletion(studiesBean.getCompletion());
-                if (studiesBean.getAdherence() != null)
+                }
+                if (studiesBean.getAdherence() != null) {
                   participantStudies.setAdherence(studiesBean.getAdherence());
+                }
                 if (studiesBean.getParticipantId() != null
-                    && StringUtils.isNotEmpty(studiesBean.getParticipantId()))
+                    && StringUtils.isNotEmpty(studiesBean.getParticipantId())) {
                   participantStudies.setParticipantId(studiesBean.getParticipantId());
+                }
                 addParticipantStudiesList.add(participantStudies);
               }
             }
@@ -135,17 +140,22 @@ public class StudyStateServiceImpl implements StudyStateService {
           } else {
             participantStudyBo.setStatus(MyStudiesUserRegUtil.ErrorCodes.YET_TO_JOIN.getValue());
           }
-          if (studiesBean.getBookmarked() != null)
+          if (studiesBean.getBookmarked() != null) {
             participantStudyBo.setBookmark(studiesBean.getBookmarked());
-          if (userId != null && StringUtils.isNotEmpty(userId))
+          }
+          if (userId != null && StringUtils.isNotEmpty(userId)) {
             participantStudyBo.setUserDetails(commonDao.getUserInfoDetails(userId));
-          if (studiesBean.getCompletion() != null)
+          }
+          if (studiesBean.getCompletion() != null) {
             participantStudyBo.setCompletion(studiesBean.getCompletion());
-          if (studiesBean.getAdherence() != null)
+          }
+          if (studiesBean.getAdherence() != null) {
             participantStudyBo.setAdherence(studiesBean.getAdherence());
+          }
           if (studiesBean.getParticipantId() != null
-              && StringUtils.isNotEmpty(studiesBean.getParticipantId()))
+              && StringUtils.isNotEmpty(studiesBean.getParticipantId())) {
             participantStudyBo.setParticipantId(studiesBean.getParticipantId());
+          }
           addParticipantStudiesList.add(participantStudyBo);
           customStudyIdList.add(studiesBean.getStudyId());
         }
@@ -212,16 +222,19 @@ public class StudyStateServiceImpl implements StudyStateService {
                 studyStateBean.setStudyId(participantStudiesBO.getStudyInfo().getCustomId());
               }
               studyStateBean.setStatus(participantStudiesBO.getStatus());
-              if (participantStudiesBO.getParticipantId() != null)
+              if (participantStudiesBO.getParticipantId() != null) {
                 studyStateBean.setParticipantId(participantStudiesBO.getParticipantId());
+              }
               studyStateBean.setCompletion(participantStudiesBO.getCompletion());
               studyStateBean.setBookmarked(participantStudiesBO.getBookmark());
               studyStateBean.setAdherence(participantStudiesBO.getAdherence());
-              if (participantStudiesBO.getEnrolledDate() != null)
+              if (participantStudiesBO.getEnrolledDate() != null) {
                 studyStateBean.setEnrolledDate(
                     MyStudiesUserRegUtil.getIsoDateFormat(participantStudiesBO.getEnrolledDate()));
-              if (participantStudiesBO.getSiteBo() != null)
+              }
+              if (participantStudiesBO.getSiteBo() != null) {
                 studyStateBean.setSiteId(participantStudiesBO.getSiteBo().getId().toString());
+              }
               serviceResponseList.add(studyStateBean);
             }
           }

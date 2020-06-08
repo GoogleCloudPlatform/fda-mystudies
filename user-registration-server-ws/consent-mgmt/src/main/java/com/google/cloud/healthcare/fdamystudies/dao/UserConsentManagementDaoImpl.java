@@ -5,6 +5,7 @@
  * license that can be found in the LICENSE file or at
  * https://opensource.org/licenses/MIT.
  */
+
 package com.google.cloud.healthcare.fdamystudies.dao;
 
 import java.util.List;
@@ -172,7 +173,7 @@ public class UserConsentManagementDaoImpl implements UserConsentManagementDao {
     CriteriaQuery<UserDetailsBO> userDetailsBoCriteria = null;
     Root<UserDetailsBO> userDetailsBoRoot = null;
     List<UserDetailsBO> userDetailsBoList = null;
-    Predicate[] UserDetailspredicates = new Predicate[1];
+    Predicate[] userDetailspredicates = new Predicate[1];
     UserDetailsBO userDetailsBO = null;
     Integer userDetailsId = 0;
 
@@ -181,9 +182,9 @@ public class UserConsentManagementDaoImpl implements UserConsentManagementDao {
       if (!StringUtils.isEmpty(userId)) {
         userDetailsBoCriteria = criteriaBuilder.createQuery(UserDetailsBO.class);
         userDetailsBoRoot = userDetailsBoCriteria.from(UserDetailsBO.class);
-        UserDetailspredicates[0] =
+        userDetailspredicates[0] =
             criteriaBuilder.equal(userDetailsBoRoot.get(AppConstants.KEY_USERID), userId);
-        userDetailsBoCriteria.select(userDetailsBoRoot).where(UserDetailspredicates);
+        userDetailsBoCriteria.select(userDetailsBoRoot).where(userDetailspredicates);
         userDetailsBoList = session.createQuery(userDetailsBoCriteria).getResultList();
         if (!userDetailsBoList.isEmpty()) {
           userDetailsBO = userDetailsBoList.get(0);
@@ -252,8 +253,7 @@ public class UserConsentManagementDaoImpl implements UserConsentManagementDao {
               criteriaBuilder.equal(studyConsentBoRoot.get("id"), studyConsent.getId()));
           isUpdated = session.createQuery(criteriaUpdate).executeUpdate();
         } else {
-          studyConsent.setTs(
-              MyStudiesUserRegUtil.getCurrentDateTime(AppConstants.SDF_DATE_TIME_FORMAT));
+          studyConsent.setTs(MyStudiesUserRegUtil.getCurrentDateTime());
           isSaved = (Integer) session.save(studyConsent);
         }
       }

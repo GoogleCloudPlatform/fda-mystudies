@@ -44,8 +44,8 @@ let kLoginStoryboardIdentifier = "Login"
 enum LeftMenu: Int {
   case studyList = 0
   case resources
-  case profile_reachOut
-  case reachOut_signIn
+  case profileReachOut
+  case reachOutSignIn
   case signup
 }
 
@@ -274,12 +274,12 @@ class LeftMenuViewController: UIViewController, LeftMenuProtocol {
         ])
     }
 
-    if user.userType == .FDAUser {
+    if user.userType == .loggedInUser {
       menus.append(
         [
           "menuTitle": "My Account",
           "iconName": "profile_menu1",
-          "menuType": LeftMenu.profile_reachOut,
+          "menuType": LeftMenu.profileReachOut,
         ])
 
       if shouldAllowToGiveFeedback {
@@ -287,7 +287,7 @@ class LeftMenuViewController: UIViewController, LeftMenuProtocol {
           [
             "menuTitle": "Reach Out",
             "iconName": "reachout_menu1",
-            "menuType": LeftMenu.reachOut_signIn,
+            "menuType": LeftMenu.reachOutSignIn,
           ])
       }
 
@@ -298,7 +298,7 @@ class LeftMenuViewController: UIViewController, LeftMenuProtocol {
           [
             "menuTitle": "Reach Out",
             "iconName": "reachout_menu1",
-            "menuType": LeftMenu.profile_reachOut,
+            "menuType": LeftMenu.profileReachOut,
           ])
       }
 
@@ -306,7 +306,7 @@ class LeftMenuViewController: UIViewController, LeftMenuProtocol {
         [
           "menuTitle": "Sign In",
           "iconName": "signin_menu1",
-          "menuType": LeftMenu.reachOut_signIn,
+          "menuType": LeftMenu.reachOutSignIn,
         ])
 
       menus.append(
@@ -344,7 +344,7 @@ class LeftMenuViewController: UIViewController, LeftMenuProtocol {
   func setInitialData() {
 
     let user = User.currentUser
-    if user.userType == .FDAUser {
+    if user.userType == .loggedInUser {
       menus.append(
         [
           "menuTitle": "My Account",
@@ -419,9 +419,9 @@ class LeftMenuViewController: UIViewController, LeftMenuProtocol {
         close: true
       )
 
-    case .profile_reachOut:
+    case .profileReachOut:
 
-      if User.currentUser.userType == .FDAUser {
+      if User.currentUser.userType == .loggedInUser {
         self.slideMenuController()?.changeMainViewController(
           self.profileviewController,
           close: true
@@ -435,8 +435,8 @@ class LeftMenuViewController: UIViewController, LeftMenuProtocol {
         )
       }
 
-    case .reachOut_signIn:
-      if User.currentUser.userType == .FDAUser {
+    case .reachOutSignIn:
+      if User.currentUser.userType == .loggedInUser {
         // go to reach out
         self.slideMenuController()?.changeMainViewController(
           self.reachoutViewController,
@@ -548,7 +548,7 @@ extension LeftMenuViewController: UITableViewDelegate {
 
     if let menu = LeftMenu(rawValue: indexPath.row) {
       switch menu {
-      case .studyList, .resources, .profile_reachOut, .reachOut_signIn, .signup:
+      case .studyList, .resources, .profileReachOut, .reachOutSignIn, .signup:
         return 70.0
       }
     }

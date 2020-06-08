@@ -172,14 +172,14 @@ class LineChartCell: GraphChartTableViewCell {
 
     switch chartTimeRange {
 
-    case .days_of_month:
+    case .daysOfMonth:
       // current date
       let stringDate = LineChartCell.monthFormatter.string(from: Date())
       labelAxisValue.text = stringDate
       self.buttonForward.isEnabled = false
       self.handleDaysOfMonthForDate(date: Date())
 
-    case .days_of_week:
+    case .daysOfWeek:
       startDateOfWeek = Date().startOfWeek
       endDateOfWeek = Date().endOfWeek
 
@@ -197,7 +197,7 @@ class LineChartCell: GraphChartTableViewCell {
 
       self.handleDaysOfWeekForStartDate(startDate: startDateOfWeek!, endDate: endDateOfWeek!)
 
-    case .months_of_year:
+    case .monthsOfYear:
       // Current year
       let stringDate = LineChartCell.yearFormatter.string(from: Date())
       labelAxisValue.text = stringDate
@@ -218,7 +218,7 @@ class LineChartCell: GraphChartTableViewCell {
       }
       self.handleMonthsOfYearForDate(date: Date())
 
-    case .weeks_of_month:
+    case .weeksOfMonth:
       // Current date
       let stringDate = LineChartCell.monthFormatter.string(from: Date())
       labelAxisValue.text = stringDate
@@ -229,7 +229,7 @@ class LineChartCell: GraphChartTableViewCell {
       self.buttonForward.isEnabled = true
       plotForRunsType()
 
-    case .hours_of_day:
+    case .hoursOfDay:
       labelTitle.text = chart.displayName! + " (per run)"
       // current date
       let stringDate = LineChartCell.formatter.string(from: Date())
@@ -248,7 +248,7 @@ class LineChartCell: GraphChartTableViewCell {
     let calendar = Calendar.current
 
     switch chartTimeRange {
-    case .days_of_month:
+    case .daysOfMonth:
       self.buttonForward.isEnabled = true
       self.buttonBackward.isEnabled = true
       hourOfDayDate = calendar.date(byAdding: .month, value: 1, to: hourOfDayDate)!
@@ -262,7 +262,7 @@ class LineChartCell: GraphChartTableViewCell {
         self.buttonForward.isEnabled = false
       }
 
-    case .days_of_week:
+    case .daysOfWeek:
       self.buttonForward.isEnabled = true
       self.buttonBackward.isEnabled = true
 
@@ -280,7 +280,7 @@ class LineChartCell: GraphChartTableViewCell {
         self.buttonForward.isEnabled = false
       }
 
-    case .months_of_year:
+    case .monthsOfYear:
       self.buttonForward.isEnabled = true
       self.buttonBackward.isEnabled = true
       hourOfDayDate = calendar.date(byAdding: .year, value: 1, to: hourOfDayDate)!
@@ -294,7 +294,7 @@ class LineChartCell: GraphChartTableViewCell {
         self.buttonForward.isEnabled = false
       }
 
-    case .weeks_of_month:
+    case .weeksOfMonth:
       self.buttonForward.isEnabled = true
       self.buttonBackward.isEnabled = true
       hourOfDayDate = calendar.date(byAdding: .month, value: 1, to: hourOfDayDate)!
@@ -310,7 +310,7 @@ class LineChartCell: GraphChartTableViewCell {
         pageNumber -= 1
       }
 
-    case .hours_of_day:
+    case .hoursOfDay:
       self.buttonForward.isEnabled = true
       self.buttonBackward.isEnabled = true
       hourOfDayDate = calendar.date(byAdding: .day, value: 1, to: hourOfDayDate)!
@@ -333,7 +333,7 @@ class LineChartCell: GraphChartTableViewCell {
     let chartTimeRange = ChartTimeRange(rawValue: timeRange)!
 
     switch chartTimeRange {
-    case .days_of_month:
+    case .daysOfMonth:
 
       self.buttonBackward.isEnabled = true
       self.buttonForward.isEnabled = true
@@ -350,7 +350,7 @@ class LineChartCell: GraphChartTableViewCell {
         self.buttonBackward.isEnabled = false
       }
 
-    case .days_of_week:
+    case .daysOfWeek:
       let calendar = Calendar.current
       self.buttonBackward.isEnabled = true
       self.buttonForward.isEnabled = true
@@ -368,7 +368,7 @@ class LineChartCell: GraphChartTableViewCell {
         self.buttonBackward.isEnabled = false
       }
 
-    case .months_of_year:
+    case .monthsOfYear:
       self.buttonBackward.isEnabled = true
       self.buttonForward.isEnabled = true
       let calendar = Calendar.current
@@ -384,7 +384,7 @@ class LineChartCell: GraphChartTableViewCell {
         self.buttonBackward.isEnabled = false
       }
 
-    case .weeks_of_month:
+    case .weeksOfMonth:
       self.buttonBackward.isEnabled = true
       self.buttonForward.isEnabled = true
       let calendar = Calendar.current
@@ -403,7 +403,7 @@ class LineChartCell: GraphChartTableViewCell {
         pageNumber += 1  // Last page.
       }
 
-    case .hours_of_day:
+    case .hoursOfDay:
       self.buttonBackward.isEnabled = true
       self.buttonForward.isEnabled = true
       let calendar = Calendar.current

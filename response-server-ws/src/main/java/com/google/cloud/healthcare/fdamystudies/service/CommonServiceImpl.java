@@ -5,6 +5,7 @@
  * license that can be found in the LICENSE file or at
  * https://opensource.org/licenses/MIT.
  */
+
 package com.google.cloud.healthcare.fdamystudies.service;
 
 import java.time.LocalDateTime;
@@ -85,9 +86,11 @@ public class CommonServiceImpl implements CommonService {
       } else {
         throw new SystemException();
       }
+    } catch (Exception e) {
+      logger.error("CommonServiceImpl validateServerClientCredentials - error ", e);
+      throw new SystemException();
     }
-    logger.error("Invalid client credentials.");
-    throw new SystemException();
+    return false;
   }
 
   @Override

@@ -27,7 +27,7 @@ android {
         targetSdkVersion 28
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         multiDexEnabled true
-        buildConfigField("String", "apikey", apikeyProperties['apikey'])
+        buildConfigField("String", "API_KEY", apikeyProperties['API_KEY'])
         buildConfigField("String", "SECRET_KEY_VALUE", apikeyProperties['SECRET_KEY_VALUE'])
         buildConfigField("String", "CLIENT_ID_VALUE", apikeyProperties['CLIENT_ID_VALUE'])
         buildConfigField("String", "BASE_URL_WCP_SERVER", apikeyProperties['BASE_URL_WCP_SERVER'])
@@ -36,6 +36,10 @@ android {
         buildConfigField("String", "BASE_URL_REGISTRATION_ENROLLMENT_SERVER", apikeyProperties['BASE_URL_REGISTRATION_ENROLLMENT_SERVER'])
         buildConfigField("String", "BASE_URL_AUTH_SERVER", apikeyProperties['BASE_URL_AUTH_SERVER'])
         buildConfigField("String", "BASE_URL_RESPONSE_SERVER", apikeyProperties['BASE_URL_RESPONSE_SERVER'])
+        buildConfigField("String", "APP_TYPE", apikeyProperties['APP_TYPE'])
+        buildConfigField("String", "APP_ID", apikeyProperties['APP_ID'])
+        buildConfigField("String", "ORG_ID", apikeyProperties['ORG_ID'])
+        buildConfigField("String", "STUDY_ID", apikeyProperties['STUDY_ID'])
     }
     buildTypes {
         release {
@@ -70,7 +74,7 @@ android {
         fda {
             dimension 'version'
             applicationId "com.harvard.fda"
-            versionCode 11
+            versionCode 12
             versionName "1.0"
         }
     }

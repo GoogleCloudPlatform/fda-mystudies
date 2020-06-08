@@ -5,6 +5,7 @@
  * license that can be found in the LICENSE file or at
  * https://opensource.org/licenses/MIT.
  */
+
 package com.google.cloud.healthcare.fdamystudies.service;
 
 import java.time.LocalDateTime;
@@ -44,7 +45,7 @@ public class CommonServiceImpl implements CommonService {
     HttpHeaders headers = null;
     BodyForProvider providerBody = null;
     HttpEntity<BodyForProvider> requestBody = null;
-    ResponseEntity<?> responseEntity = null;
+    ResponseEntity<Integer> responseEntity = null;
     try {
       headers = new HttpHeaders();
       headers.setContentType(MediaType.APPLICATION_JSON);
@@ -59,7 +60,7 @@ public class CommonServiceImpl implements CommonService {
               HttpMethod.POST,
               requestBody,
               Integer.class);
-      value = (Integer) responseEntity.getBody();
+      value = responseEntity.getBody();
     } catch (Exception e) {
       logger.error("CommonServiceImpl validateAccessToken() - error ", e);
     }
