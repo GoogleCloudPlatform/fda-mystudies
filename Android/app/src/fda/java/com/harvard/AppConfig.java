@@ -18,19 +18,19 @@ package com.harvard;
 public class AppConfig {
 
   public static String PackageName = BuildConfig.APPLICATION_ID;
-  public static String API_TOKEN = BuildConfig.apikey;
+  public static String API_TOKEN = BuildConfig.API_KEY;
   private static String GateWay = "gateway";
   private static String Standalone = "standalone";
-  public static String AppType = GateWay;
-  public static String StudyId = "Demo2";
+  public static String AppType = BuildConfig.APP_TYPE;
+  public static String StudyId = BuildConfig.STUDY_ID;
 
   // AppId
   public static String APP_ID_KEY = "appId";
   public static String WCP_APP_ID_KEY = "applicationId";
-  public static String APP_ID_VALUE = "GCPMS001";
+  public static String APP_ID_VALUE = BuildConfig.APP_ID;
   // OrgId
   public static String ORG_ID_KEY = "orgId";
-  public static String ORG_ID_VALUE = "OrgName";
+  public static String ORG_ID_VALUE = BuildConfig.ORG_ID;
 
   // ClientId
   public static String CLIENT_ID_KEY = "clientId";
