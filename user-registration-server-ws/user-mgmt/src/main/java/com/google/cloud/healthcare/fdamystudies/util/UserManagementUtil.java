@@ -130,7 +130,7 @@ public class UserManagementUtil {
 
   public UpdateAccountInfoResponseBean updateUserInfoInAuthServer(
       UpdateAccountInfo accountInfo, String userId, String accessToken, String clientToken) {
-    logger.info("(Util)....UserManagementUtil.updateUserInfoInAuthServer()......STARTED");
+    logger.info("UserManagementUtil.updateUserInfoInAuthServer() - starts");
 
     UpdateAccountInfoResponseBean authResponse = null;
 
@@ -153,8 +153,6 @@ public class UserManagementUtil {
       if (responseEntity.getStatusCode() == HttpStatus.OK) {
 
         String body = (String) responseEntity.getBody();
-        logger.info(body);
-
         objectMapper = new ObjectMapper();
 
         try {
@@ -212,7 +210,7 @@ public class UserManagementUtil {
 
   public DeleteAccountInfoResponseBean deleteUserInfoInAuthServer(
       String userId, String clientToken, String accessToken) {
-    logger.info("(Util)....UserRegistrationController.deleteUserInfoInAuthServer()......STARTED");
+    logger.info("UserRegistrationController.deleteUserInfoInAuthServer() - starts");
 
     DeleteAccountInfoResponseBean authResponse = null;
 
@@ -252,6 +250,7 @@ public class UserManagementUtil {
       }
 
     } catch (RestClientResponseException e) {
+      log.error("UserRegistrationController.deleteUserInfoInAuthServer() exception: ", e);
       if (e.getRawStatusCode() == 401) {
         Set<Entry<String, List<String>>> headerSet = e.getResponseHeaders().entrySet();
         authResponse = new DeleteAccountInfoResponseBean();
@@ -294,7 +293,7 @@ public class UserManagementUtil {
       String orgId,
       String clientId,
       String secretKey) {
-    logger.info("UserManagementUtil.registerUserInAuthServer......Starts");
+    logger.info("UserManagementUtil.registerUserInAuthServer - starts");
     AuthRegistrationResponseBean authServerResponse = null;
 
     HttpHeaders headers = new HttpHeaders();
@@ -335,11 +334,12 @@ public class UserManagementUtil {
         return authServerResponse;
       }
     } catch (RestClientResponseException e) {
+      logger.error("UserManagementUtil.registerUserInAuthServer exception: ", e);
       if (e.getRawStatusCode() == 401) {
         Set<Entry<String, List<String>>> headerSet = e.getResponseHeaders().entrySet();
         authServerResponse = new AuthRegistrationResponseBean();
+        
         for (Entry<String, List<String>> entry : headerSet) {
-
           if (AppConstants.STATUS.equals(entry.getKey())) {
             authServerResponse.setCode(entry.getValue().get(0));
           }
@@ -421,7 +421,7 @@ public class UserManagementUtil {
     try {
       date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(dateNow);
     } catch (Exception e) {
-      logger.info("URWebAppWSUtil - getCurrentUtilDateTime() :: ERROR ", e);
+      logger.error("URWebAppWSUtil - getCurrentUtilDateTime() :: ERROR ", e);
     }
     return date;
   }
@@ -476,13 +476,13 @@ public class UserManagementUtil {
     } catch (RestClientResponseException e) {
       message = MyStudiesUserRegUtil.ErrorCodes.FAILURE.getValue();
       if (e.getRawStatusCode() == 401) {
-        logger.error("Invalid client Id or client secret.");
+        logger.error("Invalid client Id or client secret.", e);
         throw new UnAuthorizedRequestException();
       } else if (e.getRawStatusCode() == 400) {
-        logger.error("Client verification ended with Bad Request");
+        logger.error("Client verification ended with Bad Request", e);
         throw new InvalidRequestException();
       } else {
-        logger.error("Client verification ended with Internal Server Error");
+        logger.error("Client verification ended with Internal Server Error", e);
         throw new SystemException();
       }
     }
