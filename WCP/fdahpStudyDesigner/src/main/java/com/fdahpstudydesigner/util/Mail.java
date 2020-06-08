@@ -131,7 +131,6 @@ public class Mail {
   }
 
   public String getSslFactory() {
-
     String sslfactoryvalue;
     if (("").equals(this.sslFactory)) {
       sslfactoryvalue = Mail.SSL_FACTORY;
@@ -151,7 +150,7 @@ public class Mail {
   }
 
   public boolean sendemail() {
-    logger.warn("sendemail()====start");
+    logger.info("Mail.sendemail() :: Starts");
     boolean sentMail = false;
     try {
       final String username = this.getFromEmailAddress();
@@ -198,7 +197,7 @@ public class Mail {
   }
 
   public boolean sendMailWithAttachment() {
-    logger.debug("sendemail()====start");
+    logger.info("Mail.sendMailWithAttachment() :: Starts");
     boolean sentMail = false;
     BodyPart messageBodyPart = null;
     Multipart multipart = null;
@@ -254,7 +253,7 @@ public class Mail {
     } catch (Exception e) {
       logger.error("ERROR:  sendemail() - ", e);
     }
-    logger.info("Mail.sendemail() :: Ends");
+    logger.info("Mail.sendMailWithAttachment() :: Ends");
     return sentMail;
   }
 
