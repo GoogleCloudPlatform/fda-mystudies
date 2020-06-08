@@ -170,7 +170,7 @@ public class UserManagementUtil {
       }
 
     } catch (RestClientResponseException e) {
-
+      logger.error("UserManagementUtil.updateUserInfoInAuthServer() - error ", e);
       if (e.getRawStatusCode() == 401) {
         Set<Entry<String, List<String>>> headerSet = e.getResponseHeaders().entrySet();
         authResponse = new UpdateAccountInfoResponseBean();
@@ -228,27 +228,24 @@ public class UserManagementUtil {
           restTemplate.exchange(
               appConfig.getAuthServerDeleteStatusUrl(), HttpMethod.DELETE, request, String.class);
 
-      if (responseEntity.getStatusCode() == HttpStatus.OK) {
-
-        String body = (String) responseEntity.getBody();
-
-        objectMapper = new ObjectMapper();
-
-        try {
-          authResponse = objectMapper.readValue(body, DeleteAccountInfoResponseBean.class);
-          logger.info("authResponse: " + authResponse);
-          return authResponse;
-        } catch (JsonParseException e) {
-          return authResponse;
-        } catch (JsonMappingException e) {
-          return authResponse;
-        } catch (IOException e) {
-          return authResponse;
-        }
-      } else {
+      if (responseEntity.getStatusCode() != HttpStatus.OK) {
         return authResponse;
       }
 
+      String body = (String) responseEntity.getBody();
+      objectMapper = new ObjectMapper();
+
+      try {
+        authResponse = objectMapper.readValue(body, DeleteAccountInfoResponseBean.class);
+        return authResponse;
+      } catch (JsonParseException e) {
+        return authResponse;
+      } catch (JsonMappingException e) {
+        return authResponse;
+      } catch (IOException e) {
+        return authResponse;
+      }
+      
     } catch (RestClientResponseException e) {
       log.error("UserRegistrationController.deleteUserInfoInAuthServer() exception: ", e);
       if (e.getRawStatusCode() == 401) {
@@ -334,7 +331,7 @@ public class UserManagementUtil {
         return authServerResponse;
       }
     } catch (RestClientResponseException e) {
-      logger.error("UserManagementUtil.registerUserInAuthServer exception: ", e);
+      logger.error("UserManagementUtil.registerUserInAuthServer() - error ", e);
       if (e.getRawStatusCode() == 401) {
         Set<Entry<String, List<String>>> headerSet = e.getResponseHeaders().entrySet();
         authServerResponse = new AuthRegistrationResponseBean();
@@ -421,7 +418,7 @@ public class UserManagementUtil {
     try {
       date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(dateNow);
     } catch (Exception e) {
-      logger.error("URWebAppWSUtil - getCurrentUtilDateTime() :: ERROR ", e);
+      logger.error("URWebAppWSUtil - getCurrentUtilDateTime() - error ", e);
     }
     return date;
   }
