@@ -5,6 +5,7 @@
  * license that can be found in the LICENSE file or at
  * https://opensource.org/licenses/MIT.
  */
+
 package com.google.cloud.healthcare.fdamystudies.controller;
 
 import java.util.ArrayList;
@@ -118,10 +119,10 @@ public class ProcessActivityResponseController {
         studyActivityMetadataRequestBean.setStudyId(studyId);
         studyActivityMetadataRequestBean.setActivityId(activityId);
         studyActivityMetadataRequestBean.setActivityVersion(activityVersion);
-        QuestionnaireActivityStructureBean activityMetadatFromWCP =
+        QuestionnaireActivityStructureBean activityMetadatFromWcp =
             studyMetadataService.getStudyActivityMetadata(
                 orgId, applicationId, studyActivityMetadataRequestBean);
-        if (activityMetadatFromWCP == null) {
+        if (activityMetadatFromWcp == null) {
           logger.error(
               "Input values are :\n Study Id: "
                   + studyId
@@ -174,7 +175,7 @@ public class ProcessActivityResponseController {
 
         if (!withdrawalStatus) {
           activityResponseProcessorService.saveActivityResponseDataForParticipant(
-              activityMetadatFromWCP, questionnaireActivityResponseBean);
+              activityMetadatFromWcp, questionnaireActivityResponseBean);
           savedResponseData = true;
 
           // Update Participant Activity State
@@ -182,11 +183,11 @@ public class ProcessActivityResponseController {
           activityStateRequestBean.setParticipantId(participantId);
           activityStateRequestBean.setStudyId(studyId);
 
-          List<ParticipantActivityBean> activity = new ArrayList<>();
           ParticipantActivityBean participantActivityBean = new ParticipantActivityBean();
           participantActivityBean.setActivityId(activityId);
           participantActivityBean.setActivityVersion(activityVersion);
           participantActivityBean.setActivityState(AppConstants.COMPLETED);
+          List<ParticipantActivityBean> activity = new ArrayList<>();
           activity.add(participantActivityBean);
           activityStateRequestBean.setActivity(activity);
           participantActivityStateResponseService.saveParticipantActivities(
