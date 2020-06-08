@@ -247,7 +247,7 @@ public class UserManagementUtil {
       }
       
     } catch (RestClientResponseException e) {
-      log.error("UserRegistrationController.deleteUserInfoInAuthServer() exception: ", e);
+      logger.error("UserRegistrationController.deleteUserInfoInAuthServer() - error ", e);
       if (e.getRawStatusCode() == 401) {
         Set<Entry<String, List<String>>> headerSet = e.getResponseHeaders().entrySet();
         authResponse = new DeleteAccountInfoResponseBean();
