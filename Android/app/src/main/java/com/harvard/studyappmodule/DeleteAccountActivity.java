@@ -132,7 +132,7 @@ public class DeleteAccountActivity extends AppCompatActivity
         new View.OnClickListener() {
           @Override
           public void onClick(View view) {
-            boolean noDataAvaliable = false;
+            boolean noDataAvailable = false;
             if (storeWithdrawalTypeDeleteFlag.size() > 0) {
               for (int i = 0; i < storeWithdrawalTypeDeleteFlag.size(); i++) {
                 if (storeWithdrawalTypeDeleteFlag.get(i).equalsIgnoreCase(noData)) {
@@ -144,13 +144,13 @@ public class DeleteAccountActivity extends AppCompatActivity
                   break;
                 }
                 if (i == (storeWithdrawalTypeDeleteFlag.size() - 1)) {
-                  noDataAvaliable = true;
+                  noDataAvailable = true;
                 }
               }
             } else {
-              noDataAvaliable = true;
+              noDataAvailable = true;
             }
-            if (noDataAvaliable) {
+            if (noDataAvailable) {
               AppController.getHelperProgressDialog()
                   .showProgress(DeleteAccountActivity.this, "", "", false);
               deactivateAccount();
