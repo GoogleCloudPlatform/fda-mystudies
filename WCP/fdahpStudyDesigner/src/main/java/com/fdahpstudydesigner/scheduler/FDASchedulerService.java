@@ -203,7 +203,7 @@ public class FDASchedulerService {
 
         JSONArray arrayToJson =
             new JSONArray(objectMapper.writeValueAsString(finalPushNotificationBeans));
-        logger.warn("FDASchedulerService - sendPushNotification - LABKEY DATA " + arrayToJson);
+        logger.info("FDASchedulerService - sendPushNotification " + arrayToJson);
         JSONObject json = new JSONObject();
         json.put("notifications", arrayToJson);
 
