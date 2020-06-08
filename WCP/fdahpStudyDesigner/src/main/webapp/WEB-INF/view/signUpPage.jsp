@@ -129,6 +129,7 @@
                 <div class="help-block with-errors red-txt"></div>
               </div>
             </div>
+
             <div class="col-xs-6">
               <div class="mb-lg form-group">
                 <input type="text" class="input-field wow_input" id=""
