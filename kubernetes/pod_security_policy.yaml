@@ -15,13 +15,13 @@ metadata:
 spec:
   privileged: true
   allowedCapabilities:
-  - 'CAP_SYS_ADMIN'
+  - 'SYS_ADMIN'
   # Required to prevent escalations to root.
-  allowPrivilegeEscalation: false
+  allowPrivilegeEscalation: true
   # This is redundant with non-root + disallow privilege escalation,
   # but we can provide it for defense in depth.
-  requiredDropCapabilities:
-    - ALL
+  # requiredDropCapabilities:
+  #   - ALL
   # Allow core volume types.
   volumes:
     - 'configMap'
