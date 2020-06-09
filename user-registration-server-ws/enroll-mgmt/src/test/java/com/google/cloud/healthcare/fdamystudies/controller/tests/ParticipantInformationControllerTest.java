@@ -40,17 +40,17 @@ public class ParticipantInformationControllerTest extends BaseMockIT {
     String path =
         String.format(
             "/participantInfo?participantId=%s&studyId=%s",
-            StringUtils.EMPTY, Constants.STUDY_ID_OF_PARTICIPANT);
+            "", Constants.STUDY_ID_OF_PARTICIPANT);
 
-    performGet(path, new HttpHeaders(), StringUtils.EMPTY, BAD_REQUEST);
+    performGet(path, new HttpHeaders(), "", BAD_REQUEST);
 
     // study id null
     path =
         String.format(
             "/participantInfo?participantId=%s&studyId=%s",
-            Constants.PARTICIPANT_ID, StringUtils.EMPTY);
+            Constants.PARTICIPANT_ID, "");
 
-    performGet(path, new HttpHeaders(), StringUtils.EMPTY, BAD_REQUEST);
+    performGet(path, new HttpHeaders(), "", BAD_REQUEST);
 
     // participant id not exists
     path =
@@ -58,6 +58,6 @@ public class ParticipantInformationControllerTest extends BaseMockIT {
             "/participantInfo?participantId=%s&studyId=%s",
             Constants.PARTICIPANT_ID_NOT_EXISTS, Constants.STUDY_ID_OF_PARTICIPANT);
 
-    performGet(path, new HttpHeaders(), StringUtils.EMPTY, BAD_REQUEST);
+    performGet(path, new HttpHeaders(), "", BAD_REQUEST);
   }
 }
