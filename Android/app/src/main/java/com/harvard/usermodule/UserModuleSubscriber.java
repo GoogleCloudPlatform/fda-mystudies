@@ -15,9 +15,9 @@
 
 package com.harvard.usermodule;
 
-import com.harvard.FDAEventBus;
+import com.harvard.FdaEventBus;
 import com.harvard.base.BaseSubscriber;
-import com.harvard.studyappmodule.events.ConsentPDFEvent;
+import com.harvard.studyappmodule.events.ConsentPdfEvent;
 import com.harvard.studyappmodule.events.DeleteAccountEvent;
 import com.harvard.usermodule.event.ChangePasswordEvent;
 import com.harvard.usermodule.event.DeleteAccountRegServerEvent;
@@ -32,114 +32,110 @@ import com.harvard.usermodule.event.ParticipentEnrollmentEvent;
 import com.harvard.usermodule.event.RegisterUserEvent;
 import com.harvard.usermodule.event.ResendEmailEvent;
 import com.harvard.usermodule.event.SetPasscodeEvent;
-import com.harvard.usermodule.event.SetTouchIDEvent;
+import com.harvard.usermodule.event.SetTouchIdEvent;
 import com.harvard.usermodule.event.SetUserEvent;
 import com.harvard.usermodule.event.SignOutEvent;
 import com.harvard.usermodule.event.TouchIdSigninEvent;
 import com.harvard.usermodule.event.UpdatePreferenceEvent;
 import com.harvard.usermodule.event.UpdateUserProfileEvent;
 import com.harvard.usermodule.event.ValidatePasscodeEvent;
-import com.harvard.usermodule.event.ValidateTouchIDEvent;
 import com.harvard.usermodule.event.VerifyUserEvent;
 
 public class UserModuleSubscriber extends BaseSubscriber {
-  /** get User */
+  /** get User. */
   public void onEvent(GetUserEvent event) {}
 
-  /** Set user */
+  /** Set user. */
   public void onEvent(SetUserEvent event) {}
 
-  /** Register user */
+  /** Register user. */
   public void onEvent(RegisterUserEvent registerUserEvent) {
-    FDAEventBus.postEvent(registerUserEvent.getmRegistrationServerConfigEvent());
+    FdaEventBus.postEvent(registerUserEvent.getRegistrationServerConfigEvent());
   }
 
-  /** verify account */
+  /** verify account. */
   public void onEvent(VerifyUserEvent verifyUserEvent) {
-    FDAEventBus.postEvent(verifyUserEvent.getmRegistrationServerConfigEvent());
+    FdaEventBus.postEvent(verifyUserEvent.getRegistrationServerConfigEvent());
   }
 
-  /** set touchId */
-  public void onEvent(SetTouchIDEvent setTouchIDEvent) {}
+  /** set touchId. */
+  public void onEvent(SetTouchIdEvent setTouchIdEvent) {}
 
-  /** validate touchId */
-  public void onEvent(ValidateTouchIDEvent validateTouchIDEvent) {}
-
-  /** set passcode */
+  /** set passcode. */
   public void onEvent(SetPasscodeEvent setPasscodeEvent) {}
 
-  /** validate passcode */
+  /** validate passcode. */
   public void onEvent(ValidatePasscodeEvent validatePasscodeEvent) {}
 
-  /** Login */
+  /** Login. */
   public void onEvent(LoginEvent loginEvent) {
-    FDAEventBus.postEvent(loginEvent.getAuthServerConfigEvent());
+    FdaEventBus.postEvent(loginEvent.getAuthServerConfigEvent());
   }
 
-  /** touchId login */
+  /** touchId login. */
   public void onEvent(TouchIdSigninEvent touchIdSigninEvent) {
-    FDAEventBus.postEvent(touchIdSigninEvent.getmRegistrationServerConfigEvent());
+    FdaEventBus.postEvent(touchIdSigninEvent.getRegistrationServerConfigEvent());
   }
 
-  /** Participent Enrollment */
+  /** Participent Enrollment. */
   public void onEvent(ParticipentEnrollmentEvent participentEnrollmentEvent) {
-    FDAEventBus.postEvent(participentEnrollmentEvent.getmResponseServerConfigEvent());
+    FdaEventBus.postEvent(participentEnrollmentEvent.getResponseServerConfigEvent());
   }
 
-  /** Forgot password */
+  /** Forgot password. */
   public void onEvent(ForgotPasswordEvent forgotPasswordEvent) {
-    FDAEventBus.postEvent(forgotPasswordEvent.getAuthServerConfigEvent());
+    FdaEventBus.postEvent(forgotPasswordEvent.getAuthServerConfigEvent());
   }
 
-  /** change password */
+  /** change password. */
   public void onEvent(ChangePasswordEvent changePasswordEvent) {
-    FDAEventBus.postEvent(changePasswordEvent.getAuthServerConfigEvent());
+    FdaEventBus.postEvent(changePasswordEvent.getAuthServerConfigEvent());
   }
 
-  /** delete account from registration server */
+  /** delete account from registration server. */
   public void onEvent(DeleteAccountRegServerEvent deleteAccountRegServerEvent) {
-    FDAEventBus.postEvent(deleteAccountRegServerEvent.getmRegistrationServerConfigEvent());
+    FdaEventBus.postEvent(deleteAccountRegServerEvent.getRegistrationServerConfigEvent());
   }
 
-  /** delete account from response server */
+  /** delete account from response server. */
   public void onEvent(DeleteAccountResServerEvent deleteAccountResServerEvent) {
-    FDAEventBus.postEvent(deleteAccountResServerEvent.getmResponseServerConfigEvent());
+    FdaEventBus.postEvent(deleteAccountResServerEvent.getResponseServerConfigEvent());
   }
 
-  /** Sign out */
+  /** Sign out. */
   public void onEvent(SignOutEvent signOutEvent) {
-    FDAEventBus.postEvent(signOutEvent.getmRegistrationServerConfigEvent());
+    FdaEventBus.postEvent(signOutEvent.getRegistrationServerConfigEvent());
   }
 
   public void onEvent(GetUserProfileEvent getUserProfileEvent) {
-    FDAEventBus.postEvent(getUserProfileEvent.getmRegistrationServerConfigEvent());
+    FdaEventBus.postEvent(getUserProfileEvent.getRegistrationServerConfigEvent());
   }
 
   public void onEvent(UpdateUserProfileEvent updateUserProfileEvent) {
-    FDAEventBus.postEvent(updateUserProfileEvent.getmRegistrationServerConfigEvent());
+    FdaEventBus.postEvent(updateUserProfileEvent.getRegistrationServerConfigEvent());
   }
 
   public void onEvent(UpdatePreferenceEvent updatePreferenceEvent) {
-    FDAEventBus.postEvent(updatePreferenceEvent.getRegistrationServerEnrollmentConfigEvent());
+    FdaEventBus.postEvent(updatePreferenceEvent.getRegistrationServerEnrollmentConfigEvent());
   }
 
   public void onEvent(ResendEmailEvent resendEmailEvent) {
-    FDAEventBus.postEvent(resendEmailEvent.getmRegistrationServerConfigEvent());
+    FdaEventBus.postEvent(resendEmailEvent.getRegistrationServerConfigEvent());
   }
 
   public void onEvent(LogoutEvent logoutEvent) {
-    FDAEventBus.postEvent(logoutEvent.getAuthServerConfigEvent());
+    FdaEventBus.postEvent(logoutEvent.getAuthServerConfigEvent());
   }
 
   public void onEvent(GetPreferenceEvent getPreferenceEvent) {
-    FDAEventBus.postEvent(getPreferenceEvent.getRegistrationServerEnrollmentConfigEvent());
+    FdaEventBus.postEvent(getPreferenceEvent.getRegistrationServerEnrollmentConfigEvent());
   }
 
   public void onEvent(DeleteAccountEvent deleteAccountEvent) {
-    FDAEventBus.postEvent(deleteAccountEvent.getmRegistrationServerConfigEvent());
+    FdaEventBus.postEvent(deleteAccountEvent.getRegistrationServerConfigEvent());
   }
 
-  public void onEvent(ConsentPDFEvent consentPDFEvent) {
-    FDAEventBus.postEvent(consentPDFEvent.getmRegistrationServerConsentConfigEvent());
+  public void onEvent(ConsentPdfEvent consentPdfEvent) {
+    FdaEventBus.postEvent(consentPdfEvent.getRegistrationServerConsentConfigEvent());
   }
 }

@@ -43,42 +43,40 @@ import com.harvard.AppConfig;
 import com.harvard.R;
 import com.harvard.notificationmodule.NotificationModuleSubscriber;
 import com.harvard.offlinemodule.model.OfflineData;
-import com.harvard.storagemodule.DBServiceSubscriber;
+import com.harvard.storagemodule.DbServiceSubscriber;
 import com.harvard.usermodule.UserModulePresenter;
 import com.harvard.usermodule.event.LogoutEvent;
 import com.harvard.usermodule.webservicemodel.LoginData;
 import com.harvard.utils.AppController;
 import com.harvard.utils.Logger;
 import com.harvard.utils.SharedPreferenceHelper;
-import com.harvard.utils.URLs;
+import com.harvard.utils.Urls;
 import com.harvard.webservicemodule.apihelper.ApiCall;
 import com.harvard.webservicemodule.events.AuthServerConfigEvent;
-import java.util.HashMap;
 import io.realm.Realm;
 import io.realm.RealmResults;
+import java.util.HashMap;
 
 public class SurveyActivity extends AppCompatActivity
     implements View.OnClickListener,
         ActivityCompat.OnRequestPermissionsResultCallback,
         ApiCall.OnAsyncRequestComplete {
-  private RelativeLayout myDashboardButtonLayout;
-  private AppCompatImageView myDashboardButton;
-  private AppCompatTextView myDashboardButtonLabel;
-  private RelativeLayout mActivitiesButtonLayout;
-  private AppCompatImageView mActivitiesButton;
-  private AppCompatTextView mActivitiesButtonLabel;
-  private RelativeLayout mResourcesButtonLayout;
-  private AppCompatImageView mResourcesButton;
-  private AppCompatTextView mResourcesButtonLabel;
+  private RelativeLayout dashboardButtonLayout;
+  private AppCompatImageView dashboardButton;
+  private AppCompatTextView dashboardButtonLabel;
+  private RelativeLayout activitiesButtonLayout;
+  private AppCompatImageView activitiesButton;
+  private AppCompatTextView activitiesButtonLabel;
+  private RelativeLayout resourcesButtonLayout;
+  private AppCompatImageView resourcesButton;
+  private AppCompatTextView resourcesButtonLabel;
   private String studyId;
-  public String mFrom;
-  public String mTo;
-  private SurveyDashboardFragment mSurveyDashboardFragment;
-  private SurveyActivitiesFragment mSurveyActivitiesFragment;
-  private SurveyResourcesFragment mSurveyResourcesFragment;
-
-  private final int LOGOUT_REPSONSECODE = 100;
-
+  public String from;
+  public String to;
+  private SurveyDashboardFragment surveyDashboardFragment;
+  private SurveyActivitiesFragment surveyActivitiesFragment;
+  private SurveyResourcesFragment surveyResourcesFragment;
+  private static final int LOGOUT_REPSONSECODE = 100;
   private String title;
   private boolean bookmark;
   private String status;
@@ -86,21 +84,21 @@ public class SurveyActivity extends AppCompatActivity
   private String position;
   private String enroll;
   private String rejoin;
-  public String mActivityId = "";
-  public String mLocalNotification = "";
+  public String activityId = "";
+  public String localNotification = "";
   private LinearLayout menulayout;
-  private DrawerLayout mDrawer;
-  private LinearLayout mReachoutLayout;
-  private AppCompatImageView mSigninImg;
-  private AppCompatTextView mSigninLabel;
-  private AppCompatImageView mNewUsrReachoutImg;
-  private AppCompatTextView mSignUpLabel;
-  private RelativeLayout mSignOutLayout;
-  private AppCompatTextView mNewUsrReachoutLabel;
-  private int mPreviousValue = 0;
-  private DBServiceSubscriber dbServiceSubscriber;
-  private Realm mRealm;
-  private Toolbar mToolbar;
+  private DrawerLayout drawer;
+  private LinearLayout reachoutLayout;
+  private AppCompatImageView signinImg;
+  private AppCompatTextView signinLabel;
+  private AppCompatImageView newUsrReachoutImg;
+  private AppCompatTextView signUpLabel;
+  private RelativeLayout signOutLayout;
+  private AppCompatTextView newUsrReachoutLabel;
+  private int previousValue = 0;
+  private DbServiceSubscriber dbServiceSubscriber;
+  private Realm realm;
+  private Toolbar toolbar;
   private boolean isExit = false;
   private TextView menutitle;
 
@@ -108,33 +106,33 @@ public class SurveyActivity extends AppCompatActivity
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_survey);
-    initializeXMLId();
+    initializeXmlId();
     bindEvents();
     // default settings
 
     isExit = false;
-    mSurveyDashboardFragment = new SurveyDashboardFragment();
-    mSurveyActivitiesFragment = new SurveyActivitiesFragment();
-    mSurveyResourcesFragment = new SurveyResourcesFragment();
+    surveyDashboardFragment = new SurveyDashboardFragment();
+    surveyActivitiesFragment = new SurveyActivitiesFragment();
+    surveyResourcesFragment = new SurveyResourcesFragment();
 
     studyId = getIntent().getStringExtra("studyId");
-    mActivityId = "";
-    mLocalNotification = "";
-    mFrom = "";
-    mTo = "";
+    activityId = "";
+    localNotification = "";
+    from = "";
+    to = "";
 
-    dbServiceSubscriber = new DBServiceSubscriber();
-    mRealm = AppController.getRealmobj(this);
+    dbServiceSubscriber = new DbServiceSubscriber();
+    realm = AppController.getRealmobj(this);
     checkSignOrSignOutScenario();
 
     if (getIntent().getStringExtra("from") != null
         && getIntent().getStringExtra("from").equalsIgnoreCase("NotificationActivity")) {
-      mFrom = "NotificationActivity";
+      from = "NotificationActivity";
       if (getIntent().getStringExtra("activityId") != null) {
-        mActivityId = getIntent().getStringExtra("activityId");
+        activityId = getIntent().getStringExtra("activityId");
       }
       if (getIntent().getStringExtra("localNotification") != null) {
-        mLocalNotification = getIntent().getStringExtra("localNotification");
+        localNotification = getIntent().getStringExtra("localNotification");
       }
       if (getIntent().getStringExtra("to") != null
           && getIntent().getStringExtra("to").equalsIgnoreCase("Activity")) {
@@ -155,8 +153,11 @@ public class SurveyActivity extends AppCompatActivity
               .readPreference(SurveyActivity.this, getResources().getString(R.string.title), "");
       if (AppController.getHelperSharedPreference()
           .readPreference(SurveyActivity.this, getResources().getString(R.string.bookmark), "")
-          .equalsIgnoreCase("true")) bookmark = true;
-      else bookmark = false;
+          .equalsIgnoreCase("true")) {
+        bookmark = true;
+      } else {
+        bookmark = false;
+      }
       status =
           AppController.getHelperSharedPreference()
               .readPreference(SurveyActivity.this, getResources().getString(R.string.status), "");
@@ -177,14 +178,14 @@ public class SurveyActivity extends AppCompatActivity
       Logger.log(e);
     }
 
-    mDrawer = findViewById(R.id.survey_menu);
+    drawer = findViewById(R.id.survey_menu);
     if (AppConfig.AppType.equalsIgnoreCase(getString(R.string.app_gateway))) {
-      mDrawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
+      drawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
     } else {
-      mDrawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
+      drawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
     }
 
-    mDrawer.addDrawerListener(
+    drawer.addDrawerListener(
         new DrawerLayout.DrawerListener() {
           @Override
           public void onDrawerSlide(View drawerView, float slideOffset) {}
@@ -207,64 +208,61 @@ public class SurveyActivity extends AppCompatActivity
     if (AppController.getHelperSharedPreference()
         .readPreference(SurveyActivity.this, getString(R.string.userid), "")
         .equalsIgnoreCase("")) {
-      mSigninImg.setBackground(getResources().getDrawable(R.drawable.signin_menu1));
-      mSigninLabel.setText(getResources().getString(R.string.sign_in_btn));
-      mSignOutLayout.setVisibility(View.GONE);
-      mReachoutLayout.setVisibility(View.VISIBLE);
+      signinImg.setBackground(getResources().getDrawable(R.drawable.signin_menu1));
+      signinLabel.setText(getResources().getString(R.string.sign_in_btn));
+      signOutLayout.setVisibility(View.GONE);
+      reachoutLayout.setVisibility(View.VISIBLE);
       // set Reach out details to new user,
-      mNewUsrReachoutImg.setBackground(getResources().getDrawable(R.drawable.newuser_menu1));
-      mNewUsrReachoutLabel.setText(getResources().getString(R.string.side_menu_new_user));
-      mSignUpLabel.setVisibility(View.VISIBLE);
+      newUsrReachoutImg.setBackground(getResources().getDrawable(R.drawable.newuser_menu1));
+      newUsrReachoutLabel.setText(getResources().getString(R.string.side_menu_new_user));
+      signUpLabel.setVisibility(View.VISIBLE);
     } else {
       // Sign out
-      mSigninImg.setBackground(getResources().getDrawable(R.drawable.profile_menu1));
-      mSigninLabel.setText(getResources().getString(R.string.profile_small));
-      mSignOutLayout.setVisibility(View.VISIBLE);
-      mReachoutLayout.setVisibility(View.GONE);
+      signinImg.setBackground(getResources().getDrawable(R.drawable.profile_menu1));
+      signinLabel.setText(getResources().getString(R.string.profile_small));
+      signOutLayout.setVisibility(View.VISIBLE);
+      reachoutLayout.setVisibility(View.GONE);
       // set Reach out details to new user,
-      mNewUsrReachoutImg.setBackground(getResources().getDrawable(R.drawable.reachout_menu1));
-      mNewUsrReachoutLabel.setText(getResources().getString(R.string.side_menu_reach_out));
-      mSignUpLabel.setVisibility(View.GONE);
+      newUsrReachoutImg.setBackground(getResources().getDrawable(R.drawable.reachout_menu1));
+      newUsrReachoutLabel.setText(getResources().getString(R.string.side_menu_reach_out));
+      signUpLabel.setVisibility(View.GONE);
     }
   }
 
-  private void initializeXMLId() {
-    myDashboardButtonLayout = (RelativeLayout) findViewById(R.id.myDashboardButtonLayout);
-    myDashboardButton = (AppCompatImageView) findViewById(R.id.myDashboardButton);
-    myDashboardButtonLabel = (AppCompatTextView) findViewById(R.id.myDashboardButtonLabel);
-    mActivitiesButtonLayout = (RelativeLayout) findViewById(R.id.mActivitiesButtonLayout);
-    mActivitiesButton = (AppCompatImageView) findViewById(R.id.mActivitiesButton);
-    mActivitiesButtonLabel = (AppCompatTextView) findViewById(R.id.mActivitiesButtonLabel);
-    mResourcesButtonLayout = (RelativeLayout) findViewById(R.id.mResourcesButtonLayout);
-    mResourcesButton = (AppCompatImageView) findViewById(R.id.mResourcesButton);
-    mResourcesButtonLabel = (AppCompatTextView) findViewById(R.id.mResourcesButtonLabel);
+  private void initializeXmlId() {
+    dashboardButtonLayout = (RelativeLayout) findViewById(R.id.myDashboardButtonLayout);
+    dashboardButton = (AppCompatImageView) findViewById(R.id.myDashboardButton);
+    dashboardButtonLabel = (AppCompatTextView) findViewById(R.id.myDashboardButtonLabel);
+    activitiesButtonLayout = (RelativeLayout) findViewById(R.id.mActivitiesButtonLayout);
+    activitiesButton = (AppCompatImageView) findViewById(R.id.mActivitiesButton);
+    activitiesButtonLabel = (AppCompatTextView) findViewById(R.id.mActivitiesButtonLabel);
+    resourcesButtonLayout = (RelativeLayout) findViewById(R.id.mResourcesButtonLayout);
+    resourcesButton = (AppCompatImageView) findViewById(R.id.mResourcesButton);
+    resourcesButtonLabel = (AppCompatTextView) findViewById(R.id.mResourcesButtonLabel);
 
     menulayout = (LinearLayout) findViewById(R.id.menulayout);
 
-    LinearLayout mHomeLayout = (LinearLayout) findViewById(R.id.mHomeLayout);
-    AppCompatTextView mHomeLabel = (AppCompatTextView) findViewById(R.id.mHomeLabel);
-    LinearLayout mResourcesLayout = (LinearLayout) findViewById(R.id.mResourcesLayout);
-    AppCompatTextView mResourceLabel = (AppCompatTextView) findViewById(R.id.mResourceLabel);
-    mReachoutLayout = (LinearLayout) findViewById(R.id.mReachoutLayout);
-    AppCompatTextView mReachoutLabel = (AppCompatTextView) findViewById(R.id.mReachoutLabel);
-    LinearLayout mSignInProfileLayout = (LinearLayout) findViewById(R.id.mSignInProfileLayout);
-    mSigninImg = (AppCompatImageView) findViewById(R.id.signinImg);
-    mSigninLabel = (AppCompatTextView) findViewById(R.id.mSigninLabel);
-    LinearLayout mNewUsrReachoutLayout = (LinearLayout) findViewById(R.id.mNewUsrReachoutLayout);
-    mNewUsrReachoutImg = (AppCompatImageView) findViewById(R.id.mNewUsrReachoutImg);
-    mNewUsrReachoutLabel = (AppCompatTextView) findViewById(R.id.mNewUsrReachoutLabel);
-    mSignUpLabel = (AppCompatTextView) findViewById(R.id.mSignUpLabel);
-    mSignOutLayout = (RelativeLayout) findViewById(R.id.mSignOutLayout);
-    AppCompatTextView mSignOutLabel = (AppCompatTextView) findViewById(R.id.mSignOutLabel);
+    reachoutLayout = (LinearLayout) findViewById(R.id.mReachoutLayout);
+
+    signinImg = (AppCompatImageView) findViewById(R.id.signinImg);
+    signinLabel = (AppCompatTextView) findViewById(R.id.mSigninLabel);
+    newUsrReachoutImg = (AppCompatImageView) findViewById(R.id.mNewUsrReachoutImg);
+    newUsrReachoutLabel = (AppCompatTextView) findViewById(R.id.mNewUsrReachoutLabel);
+    signUpLabel = (AppCompatTextView) findViewById(R.id.mSignUpLabel);
+    signOutLayout = (RelativeLayout) findViewById(R.id.mSignOutLayout);
     menutitle = findViewById(R.id.menutitle);
 
-    mHomeLabel.setTypeface(AppController.getTypeface(this, "medium"));
-    mResourceLabel.setTypeface(AppController.getTypeface(this, "medium"));
-    mReachoutLabel.setTypeface(AppController.getTypeface(this, "medium"));
-    mSigninLabel.setTypeface(AppController.getTypeface(this, "medium"));
-    mNewUsrReachoutLabel.setTypeface(AppController.getTypeface(this, "medium"));
-    mSignUpLabel.setTypeface(AppController.getTypeface(this, "medium"));
-    mSignOutLabel.setTypeface(AppController.getTypeface(this, "medium"));
+    AppCompatTextView homeLabel = (AppCompatTextView) findViewById(R.id.mHomeLabel);
+    homeLabel.setTypeface(AppController.getTypeface(this, "medium"));
+    AppCompatTextView resourceLabel = (AppCompatTextView) findViewById(R.id.mResourceLabel);
+    resourceLabel.setTypeface(AppController.getTypeface(this, "medium"));
+    AppCompatTextView reachoutLabel = (AppCompatTextView) findViewById(R.id.mReachoutLabel);
+    reachoutLabel.setTypeface(AppController.getTypeface(this, "medium"));
+    AppCompatTextView signOutLabel = (AppCompatTextView) findViewById(R.id.mSignOutLabel);
+    signOutLabel.setTypeface(AppController.getTypeface(this, "medium"));
+    signinLabel.setTypeface(AppController.getTypeface(this, "medium"));
+    newUsrReachoutLabel.setTypeface(AppController.getTypeface(this, "medium"));
+    signUpLabel.setTypeface(AppController.getTypeface(this, "medium"));
 
     RelativeLayout menu = findViewById(R.id.menu);
     menu.setOnClickListener(
@@ -275,32 +273,33 @@ public class SurveyActivity extends AppCompatActivity
           }
         });
 
-    mToolbar = findViewById(R.id.toolbar);
-    mToolbar.setVisibility(View.GONE);
-
-    mHomeLayout.setOnClickListener(
+    toolbar = findViewById(R.id.toolbar);
+    toolbar.setVisibility(View.GONE);
+    LinearLayout homeLayout = (LinearLayout) findViewById(R.id.mHomeLayout);
+    homeLayout.setOnClickListener(
         new View.OnClickListener() {
           @Override
           public void onClick(View view) {
             menulayout.setVisibility(View.VISIBLE);
-            mToolbar.setVisibility(View.GONE);
+            toolbar.setVisibility(View.GONE);
             closeDrawer();
-            if (mPreviousValue != R.id.mHomeLayout) {
-              mPreviousValue = R.id.mHomeLayout;
+            if (previousValue != R.id.mHomeLayout) {
+              previousValue = R.id.mHomeLayout;
               defaultFragementSettings();
             }
           }
         });
-    mResourcesLayout.setOnClickListener(
+    LinearLayout resourcesLayout = (LinearLayout) findViewById(R.id.mResourcesLayout);
+    resourcesLayout.setOnClickListener(
         new View.OnClickListener() {
           @Override
           public void onClick(View view) {
             menulayout.setVisibility(View.GONE);
-            mToolbar.setVisibility(View.VISIBLE);
+            toolbar.setVisibility(View.VISIBLE);
             menutitle.setText(R.string.resources);
             closeDrawer();
-            if (mPreviousValue != R.id.mResourcesLayout) {
-              mPreviousValue = R.id.mResourcesLayout;
+            if (previousValue != R.id.mResourcesLayout) {
+              previousValue = R.id.mResourcesLayout;
               getSupportFragmentManager()
                   .beginTransaction()
                   .replace(R.id.frameLayoutContainer, new ResourcesFragment(), "fragment")
@@ -308,16 +307,17 @@ public class SurveyActivity extends AppCompatActivity
             }
           }
         });
-    mSignInProfileLayout.setOnClickListener(
+    LinearLayout signInProfileLayout = (LinearLayout) findViewById(R.id.mSignInProfileLayout);
+    signInProfileLayout.setOnClickListener(
         new View.OnClickListener() {
           @Override
           public void onClick(View view) {
             menulayout.setVisibility(View.GONE);
-            mToolbar.setVisibility(View.VISIBLE);
+            toolbar.setVisibility(View.VISIBLE);
 
             closeDrawer();
-            if (mPreviousValue != R.id.mSignInProfileLayout) {
-              mPreviousValue = R.id.mSignInProfileLayout;
+            if (previousValue != R.id.mSignInProfileLayout) {
+              previousValue = R.id.mSignInProfileLayout;
               if (AppController.getHelperSharedPreference()
                   .readPreference(SurveyActivity.this, getString(R.string.userid), "")
                   .equalsIgnoreCase("")) {
@@ -336,15 +336,16 @@ public class SurveyActivity extends AppCompatActivity
             }
           }
         });
-    mNewUsrReachoutLayout.setOnClickListener(
+    LinearLayout newUsrReachoutLayout = (LinearLayout) findViewById(R.id.mNewUsrReachoutLayout);
+    newUsrReachoutLayout.setOnClickListener(
         new View.OnClickListener() {
           @Override
           public void onClick(View view) {
             menulayout.setVisibility(View.GONE);
-            mToolbar.setVisibility(View.VISIBLE);
+            toolbar.setVisibility(View.VISIBLE);
             closeDrawer();
-            if (mPreviousValue != R.id.mNewUsrReachoutLayout) {
-              mPreviousValue = R.id.mNewUsrReachoutLayout;
+            if (previousValue != R.id.mNewUsrReachoutLayout) {
+              previousValue = R.id.mNewUsrReachoutLayout;
               if (AppController.getHelperSharedPreference()
                   .readPreference(SurveyActivity.this, getString(R.string.userid), "")
                   .equalsIgnoreCase("")) {
@@ -363,13 +364,13 @@ public class SurveyActivity extends AppCompatActivity
             }
           }
         });
-    mSignOutLayout.setOnClickListener(
+    signOutLayout.setOnClickListener(
         new View.OnClickListener() {
           @Override
           public void onClick(View view) {
             closeDrawer();
-            if (mPreviousValue != R.id.mSignOutLayout) {
-              mPreviousValue = R.id.mSignOutLayout;
+            if (previousValue != R.id.mSignOutLayout) {
+              previousValue = R.id.mSignOutLayout;
               logout();
             }
           }
@@ -401,7 +402,7 @@ public class SurveyActivity extends AppCompatActivity
 
                 AppController.getHelperProgressDialog()
                     .showProgress(SurveyActivity.this, "", "", false);
-                LogoutEvent logoutEvent = new LogoutEvent();
+
                 HashMap<String, String> params = new HashMap<>();
                 params.put("reason", "user_action");
                 HashMap<String, String> header = new HashMap<String, String>();
@@ -416,7 +417,7 @@ public class SurveyActivity extends AppCompatActivity
                 AuthServerConfigEvent authServerConfigEvent =
                     new AuthServerConfigEvent(
                         "delete",
-                        URLs.LOGOUT,
+                        Urls.LOGOUT,
                         LOGOUT_REPSONSECODE,
                         SurveyActivity.this,
                         LoginData.class,
@@ -425,6 +426,7 @@ public class SurveyActivity extends AppCompatActivity
                         null,
                         false,
                         SurveyActivity.this);
+                LogoutEvent logoutEvent = new LogoutEvent();
                 logoutEvent.setAuthServerConfigEvent(authServerConfigEvent);
                 UserModulePresenter userModulePresenter = new UserModulePresenter();
                 userModulePresenter.performLogout(logoutEvent);
@@ -443,7 +445,7 @@ public class SurveyActivity extends AppCompatActivity
   }
 
   private boolean checkOfflineDataEmpty() {
-    RealmResults<OfflineData> results = dbServiceSubscriber.getOfflineData(mRealm);
+    RealmResults<OfflineData> results = dbServiceSubscriber.getOfflineData(realm);
     if (results == null || results.size() == 0) {
       return true;
     } else {
@@ -452,18 +454,18 @@ public class SurveyActivity extends AppCompatActivity
   }
 
   public void openDrawer() {
-    mDrawer.openDrawer(GravityCompat.START);
+    drawer.openDrawer(GravityCompat.START);
   }
 
   private void closeDrawer() {
-    mDrawer.closeDrawer(GravityCompat.START);
+    drawer.closeDrawer(GravityCompat.START);
   }
 
   public void setVersion(TextView version) {
     try {
-      PackageInfo pInfo =
+      PackageInfo info =
           getPackageManager().getPackageInfo(getPackageName(), PackageManager.GET_META_DATA);
-      version.append("" + pInfo.versionName);
+      version.append("" + info.versionName);
     } catch (PackageManager.NameNotFoundException e) {
       Logger.log(e);
       version.setText("");
@@ -471,37 +473,37 @@ public class SurveyActivity extends AppCompatActivity
   }
 
   private void bindEvents() {
-    myDashboardButtonLayout.setOnClickListener(this);
-    mActivitiesButtonLayout.setOnClickListener(this);
-    mResourcesButtonLayout.setOnClickListener(this);
+    dashboardButtonLayout.setOnClickListener(this);
+    activitiesButtonLayout.setOnClickListener(this);
+    resourcesButtonLayout.setOnClickListener(this);
   }
 
   private void defaultFragementSettings() {
     menulayout.setVisibility(View.VISIBLE);
-    mToolbar.setVisibility(View.GONE);
+    toolbar.setVisibility(View.GONE);
 
-    myDashboardButton.setBackgroundResource(R.drawable.dashboard_grey);
-    mActivitiesButton.setBackgroundResource(R.drawable.activities_blue_active);
-    mResourcesButton.setBackgroundResource(R.drawable.resources_grey);
-    myDashboardButtonLabel.setTextColor(getResources().getColor(R.color.colorPrimaryBlack));
-    mActivitiesButtonLabel.setTextColor(getResources().getColor(R.color.colorPrimary));
-    mResourcesButtonLabel.setTextColor(getResources().getColor(R.color.colorPrimaryBlack));
+    dashboardButton.setBackgroundResource(R.drawable.dashboard_grey);
+    activitiesButton.setBackgroundResource(R.drawable.activities_blue_active);
+    resourcesButton.setBackgroundResource(R.drawable.resources_grey);
+    dashboardButtonLabel.setTextColor(getResources().getColor(R.color.colorPrimaryBlack));
+    activitiesButtonLabel.setTextColor(getResources().getColor(R.color.colorPrimary));
+    resourcesButtonLabel.setTextColor(getResources().getColor(R.color.colorPrimaryBlack));
     getSupportFragmentManager()
         .beginTransaction()
-        .replace(R.id.frameLayoutContainer, mSurveyActivitiesFragment, "fragment")
+        .replace(R.id.frameLayoutContainer, surveyActivitiesFragment, "fragment")
         .commit();
   }
 
   private void openResources() {
-    myDashboardButton.setBackgroundResource(R.drawable.dashboard_grey);
-    mActivitiesButton.setBackgroundResource(R.drawable.activities_grey);
-    mResourcesButton.setBackgroundResource(R.drawable.resources_blue_active);
-    myDashboardButtonLabel.setTextColor(getResources().getColor(R.color.colorPrimaryBlack));
-    mActivitiesButtonLabel.setTextColor(getResources().getColor(R.color.colorPrimaryBlack));
-    mResourcesButtonLabel.setTextColor(getResources().getColor(R.color.colorPrimary));
+    dashboardButton.setBackgroundResource(R.drawable.dashboard_grey);
+    activitiesButton.setBackgroundResource(R.drawable.activities_grey);
+    resourcesButton.setBackgroundResource(R.drawable.resources_blue_active);
+    dashboardButtonLabel.setTextColor(getResources().getColor(R.color.colorPrimaryBlack));
+    activitiesButtonLabel.setTextColor(getResources().getColor(R.color.colorPrimaryBlack));
+    resourcesButtonLabel.setTextColor(getResources().getColor(R.color.colorPrimary));
     getSupportFragmentManager()
         .beginTransaction()
-        .replace(R.id.frameLayoutContainer, mSurveyResourcesFragment, "fragment")
+        .replace(R.id.frameLayoutContainer, surveyResourcesFragment, "fragment")
         .commit();
   }
 
@@ -509,41 +511,41 @@ public class SurveyActivity extends AppCompatActivity
   public void onClick(View view) {
     switch (view.getId()) {
       case R.id.myDashboardButtonLayout:
-        myDashboardButton.setBackgroundResource(R.drawable.dashboard_blue_active);
-        mActivitiesButton.setBackgroundResource(R.drawable.activities_grey);
-        mResourcesButton.setBackgroundResource(R.drawable.resources_grey);
-        myDashboardButtonLabel.setTextColor(getResources().getColor(R.color.colorPrimary));
-        mActivitiesButtonLabel.setTextColor(getResources().getColor(R.color.colorPrimaryBlack));
-        mResourcesButtonLabel.setTextColor(getResources().getColor(R.color.colorPrimaryBlack));
+        dashboardButton.setBackgroundResource(R.drawable.dashboard_blue_active);
+        activitiesButton.setBackgroundResource(R.drawable.activities_grey);
+        resourcesButton.setBackgroundResource(R.drawable.resources_grey);
+        dashboardButtonLabel.setTextColor(getResources().getColor(R.color.colorPrimary));
+        activitiesButtonLabel.setTextColor(getResources().getColor(R.color.colorPrimaryBlack));
+        resourcesButtonLabel.setTextColor(getResources().getColor(R.color.colorPrimaryBlack));
         getSupportFragmentManager()
             .beginTransaction()
-            .replace(R.id.frameLayoutContainer, mSurveyDashboardFragment, "fragment")
+            .replace(R.id.frameLayoutContainer, surveyDashboardFragment, "fragment")
             .commit();
         break;
 
       case R.id.mActivitiesButtonLayout:
-        myDashboardButton.setBackgroundResource(R.drawable.dashboard_grey);
-        mActivitiesButton.setBackgroundResource(R.drawable.activities_blue_active);
-        mResourcesButton.setBackgroundResource(R.drawable.resources_grey);
-        myDashboardButtonLabel.setTextColor(getResources().getColor(R.color.colorPrimaryBlack));
-        mActivitiesButtonLabel.setTextColor(getResources().getColor(R.color.colorPrimary));
-        mResourcesButtonLabel.setTextColor(getResources().getColor(R.color.colorPrimaryBlack));
+        dashboardButton.setBackgroundResource(R.drawable.dashboard_grey);
+        activitiesButton.setBackgroundResource(R.drawable.activities_blue_active);
+        resourcesButton.setBackgroundResource(R.drawable.resources_grey);
+        dashboardButtonLabel.setTextColor(getResources().getColor(R.color.colorPrimaryBlack));
+        activitiesButtonLabel.setTextColor(getResources().getColor(R.color.colorPrimary));
+        resourcesButtonLabel.setTextColor(getResources().getColor(R.color.colorPrimaryBlack));
         getSupportFragmentManager()
             .beginTransaction()
-            .replace(R.id.frameLayoutContainer, mSurveyActivitiesFragment, "fragment")
+            .replace(R.id.frameLayoutContainer, surveyActivitiesFragment, "fragment")
             .commit();
         break;
 
       case R.id.mResourcesButtonLayout:
-        myDashboardButton.setBackgroundResource(R.drawable.dashboard_grey);
-        mActivitiesButton.setBackgroundResource(R.drawable.activities_grey);
-        mResourcesButton.setBackgroundResource(R.drawable.resources_blue_active);
-        myDashboardButtonLabel.setTextColor(getResources().getColor(R.color.colorPrimaryBlack));
-        mActivitiesButtonLabel.setTextColor(getResources().getColor(R.color.colorPrimaryBlack));
-        mResourcesButtonLabel.setTextColor(getResources().getColor(R.color.colorPrimary));
+        dashboardButton.setBackgroundResource(R.drawable.dashboard_grey);
+        activitiesButton.setBackgroundResource(R.drawable.activities_grey);
+        resourcesButton.setBackgroundResource(R.drawable.resources_blue_active);
+        dashboardButtonLabel.setTextColor(getResources().getColor(R.color.colorPrimaryBlack));
+        activitiesButtonLabel.setTextColor(getResources().getColor(R.color.colorPrimaryBlack));
+        resourcesButtonLabel.setTextColor(getResources().getColor(R.color.colorPrimary));
         getSupportFragmentManager()
             .beginTransaction()
-            .replace(R.id.frameLayoutContainer, mSurveyResourcesFragment, "fragment")
+            .replace(R.id.frameLayoutContainer, surveyResourcesFragment, "fragment")
             .commit();
         break;
     }
@@ -557,10 +559,10 @@ public class SurveyActivity extends AppCompatActivity
       Intent mainIntent = Intent.makeRestartActivityTask(cn);
       startActivity(mainIntent);
       finish();
-    } else if (mDrawer.isDrawerOpen(GravityCompat.START)) {
-      mDrawer.closeDrawer(GravityCompat.START);
-    } else if (mPreviousValue != R.id.mHomeLayout) {
-      mPreviousValue = R.id.mHomeLayout;
+    } else if (drawer.isDrawerOpen(GravityCompat.START)) {
+      drawer.closeDrawer(GravityCompat.START);
+    } else if (previousValue != R.id.mHomeLayout) {
+      previousValue = R.id.mHomeLayout;
       defaultFragementSettings();
     } else {
       if (isExit) {
@@ -590,12 +592,13 @@ public class SurveyActivity extends AppCompatActivity
       int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
     super.onRequestPermissionsResult(requestCode, permissions, grantResults);
     if (requestCode == 1000) {
-      if (mSurveyActivitiesFragment != null)
-        mSurveyActivitiesFragment.onRequestPermissionsResult(
-            requestCode, permissions, grantResults);
+      if (surveyActivitiesFragment != null) {
+        surveyActivitiesFragment.onRequestPermissionsResult(requestCode, permissions, grantResults);
+      }
     } else if (requestCode == 2000) {
-      if (mSurveyDashboardFragment != null)
-        mSurveyDashboardFragment.onRequestPermissionsResult(requestCode, permissions, grantResults);
+      if (surveyDashboardFragment != null) {
+        surveyDashboardFragment.onRequestPermissionsResult(requestCode, permissions, grantResults);
+      }
     }
   }
 
@@ -630,16 +633,19 @@ public class SurveyActivity extends AppCompatActivity
   @Override
   public <T> void asyncResponse(T response, int responseCode) {
     if (responseCode == LOGOUT_REPSONSECODE) {
-      Toast.makeText(this, getResources().getString(R.string.signed_out), Toast.LENGTH_SHORT).show();
+      Toast.makeText(this, getResources().getString(R.string.signed_out), Toast.LENGTH_SHORT)
+          .show();
       SharedPreferences settings = SharedPreferenceHelper.getPreferences(SurveyActivity.this);
       settings.edit().clear().apply();
       // delete passcode from keystore
       String pass = AppController.refreshKeys("passcode");
-      if (pass != null) AppController.deleteKey("passcode_" + pass);
+      if (pass != null) {
+        AppController.deleteKey("passcode_" + pass);
+      }
 
       try {
         NotificationModuleSubscriber notificationModuleSubscriber =
-            new NotificationModuleSubscriber(dbServiceSubscriber, mRealm);
+            new NotificationModuleSubscriber(dbServiceSubscriber, realm);
         notificationModuleSubscriber.cancleActivityLocalNotification(SurveyActivity.this);
         notificationModuleSubscriber.cancleResourcesLocalNotification(SurveyActivity.this);
       } catch (Exception e) {
@@ -659,7 +665,7 @@ public class SurveyActivity extends AppCompatActivity
     protected String doInBackground(String... params) {
       try {
         NotificationModuleSubscriber notificationModuleSubscriber =
-            new NotificationModuleSubscriber(dbServiceSubscriber, mRealm);
+            new NotificationModuleSubscriber(dbServiceSubscriber, realm);
         notificationModuleSubscriber.cancleActivityLocalNotification(SurveyActivity.this);
         notificationModuleSubscriber.cancleResourcesLocalNotification(SurveyActivity.this);
       } catch (Exception e) {
@@ -677,7 +683,7 @@ public class SurveyActivity extends AppCompatActivity
       NotificationManagerCompat notificationManager =
           NotificationManagerCompat.from(SurveyActivity.this);
       notificationManager.cancelAll();
-      Toast.makeText(SurveyActivity.this, R.string.signed_out,Toast.LENGTH_SHORT).show();
+      Toast.makeText(SurveyActivity.this, R.string.signed_out, Toast.LENGTH_SHORT).show();
       signout();
     }
 

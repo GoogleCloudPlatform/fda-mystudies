@@ -38,7 +38,7 @@ public class ScaleTextQuestion implements StepBody {
   private ScaleTextAnswerFormat format;
   private TextView mcurrentvalue;
   private String currentSelected;
-  private SeekBar mSeekBar;
+  private SeekBar seekBar;
   private int value;
   private ChoiceTextExclusive[] choiceTextExclusives;
   private ArrayList<String> valuelist;
@@ -98,11 +98,11 @@ public class ScaleTextQuestion implements StepBody {
     View seekbarlayout;
     if (!format.isVertical()) {
       seekbarlayout = inflater.inflate(R.layout.seekbar_horizontal_layout, parent, false);
-      mSeekBar = (SeekBar) seekbarlayout.findViewById(R.id.seekbar);
-      mSeekBar.setMax((max - min));
+      seekBar = (SeekBar) seekbarlayout.findViewById(R.id.seekbar);
+      seekBar.setMax((max - min));
     } else {
       seekbarlayout = inflater.inflate(R.layout.seekbar_text_vertical_layout, parent, false);
-      mSeekBar = (SeekBar) seekbarlayout.findViewById(R.id.seekbar);
+      seekBar = (SeekBar) seekbarlayout.findViewById(R.id.seekbar);
       LinearLayout scalevsaluelayout = (LinearLayout) seekbarlayout.findViewById(R.id.scaleValue);
       scalevsaluelayout.setWeightSum(choiceTextExclusives.length);
 
@@ -126,24 +126,23 @@ public class ScaleTextQuestion implements StepBody {
         scalevsaluelayout.addView(linearLayout1);
       }
 
-      mSeekBar.setMax((max - min));
+      seekBar.setMax((max - min));
     }
-
-    TextView mintitle = (TextView) seekbarlayout.findViewById(R.id.mintitle);
-    TextView mindesc = (TextView) seekbarlayout.findViewById(R.id.mindesc);
-    TextView maxtitle = (TextView) seekbarlayout.findViewById(R.id.maxtitle);
-    TextView maxdesc = (TextView) seekbarlayout.findViewById(R.id.maxdesc);
     mcurrentvalue = (TextView) seekbarlayout.findViewById(R.id.currentvalue);
 
+    TextView mintitle = (TextView) seekbarlayout.findViewById(R.id.mintitle);
+    TextView maxtitle = (TextView) seekbarlayout.findViewById(R.id.maxtitle);
     mintitle.setText(String.valueOf(1));
     maxtitle.setText(String.valueOf(choiceTextExclusives.length));
 
+    TextView mindesc = (TextView) seekbarlayout.findViewById(R.id.mindesc);
+    TextView maxdesc = (TextView) seekbarlayout.findViewById(R.id.maxdesc);
     mindesc.setText(choiceTextExclusives[0].getText());
     maxdesc.setText(choiceTextExclusives[max - 1].getText());
 
     mcurrentvalue.setText(String.valueOf(choiceTextExclusives[0].getText()));
 
-    mSeekBar.setOnSeekBarChangeListener(
+    seekBar.setOnSeekBarChangeListener(
         new SeekBar.OnSeekBarChangeListener() {
           @Override
           public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
@@ -158,9 +157,8 @@ public class ScaleTextQuestion implements StepBody {
         });
 
     if (currentSelected != null) {
-      int Selected = valuelist.indexOf("" + currentSelected);
-
-      mSeekBar.setProgress(Selected);
+      int selected = valuelist.indexOf("" + currentSelected);
+      seekBar.setProgress(selected);
     } else {
       int defaultval;
       if (format.getDefaultval() != null && !format.getDefaultval().equalsIgnoreCase("")) {
@@ -174,7 +172,7 @@ public class ScaleTextQuestion implements StepBody {
         defaultval = 0;
       }
 
-      mSeekBar.setProgress(((defaultval - min)));
+      seekBar.setProgress(((defaultval - min)));
     }
     if (format.isVertical()) {
       setvaluetotxt();
@@ -186,7 +184,7 @@ public class ScaleTextQuestion implements StepBody {
   }
 
   private void setvaluetotxt() {
-    value = (mSeekBar.getProgress());
+    value = (seekBar.getProgress());
     mcurrentvalue.setText(String.valueOf(choiceTextExclusives[value].getText()));
   }
 

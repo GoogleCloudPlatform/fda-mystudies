@@ -1,5 +1,6 @@
 /*
  * Copyright © 2017-2019 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors.
+ * Copyright 2020 Google LLC
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction, including
  * without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
@@ -28,33 +29,33 @@ import com.harvard.utils.AppController;
 import com.harvard.utils.Logger;
 
 public class SignupProcessCompleteActivity extends AppCompatActivity {
-  private AppCompatTextView mCongratsLabel;
-  private AppCompatTextView mNextButton;
-  private AppCompatTextView mSignupCompleteLabel;
+  private AppCompatTextView congratsLabel;
+  private AppCompatTextView nextButton;
+  private AppCompatTextView signupCompleteLabel;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_signup_process_complete);
 
-    initializeXMLId();
+    initializeXmlId();
     setFont();
     bindEvents();
   }
 
-  private void initializeXMLId() {
-    mCongratsLabel = (AppCompatTextView) findViewById(R.id.congrats_label);
-    mSignupCompleteLabel = (AppCompatTextView) findViewById(R.id.signup_complete_txt_label);
-    mNextButton = (AppCompatTextView) findViewById(R.id.nextButton);
+  private void initializeXmlId() {
+    congratsLabel = (AppCompatTextView) findViewById(R.id.congrats_label);
+    signupCompleteLabel = (AppCompatTextView) findViewById(R.id.signup_complete_txt_label);
+    nextButton = (AppCompatTextView) findViewById(R.id.nextButton);
   }
 
   private void setFont() {
     try {
-      mCongratsLabel.setTypeface(
+      congratsLabel.setTypeface(
           AppController.getTypeface(SignupProcessCompleteActivity.this, "regular"));
-      mSignupCompleteLabel.setTypeface(
+      signupCompleteLabel.setTypeface(
           AppController.getTypeface(SignupProcessCompleteActivity.this, "regular"));
-      mNextButton.setTypeface(
+      nextButton.setTypeface(
           AppController.getTypeface(SignupProcessCompleteActivity.this, "regular"));
     } catch (Exception e) {
       Logger.log(e);
@@ -63,7 +64,7 @@ public class SignupProcessCompleteActivity extends AppCompatActivity {
 
   private void bindEvents() {
 
-    mNextButton.setOnClickListener(
+    nextButton.setOnClickListener(
         new View.OnClickListener() {
           @Override
           public void onClick(View view) {

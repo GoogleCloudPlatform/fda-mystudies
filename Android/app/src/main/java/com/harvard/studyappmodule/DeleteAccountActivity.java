@@ -28,7 +28,7 @@ import android.widget.RelativeLayout;
 import android.widget.Toast;
 import com.google.gson.Gson;
 import com.harvard.R;
-import com.harvard.storagemodule.DBServiceSubscriber;
+import com.harvard.storagemodule.DbServiceSubscriber;
 import com.harvard.studyappmodule.events.DeleteAccountEvent;
 import com.harvard.studyappmodule.events.GetUserStudyInfoEvent;
 import com.harvard.studyappmodule.studymodel.DeleteAccountData;
@@ -40,80 +40,79 @@ import com.harvard.usermodule.webservicemodel.Studies;
 import com.harvard.utils.AppController;
 import com.harvard.utils.Logger;
 import com.harvard.utils.SharedPreferenceHelper;
-import com.harvard.utils.URLs;
+import com.harvard.utils.Urls;
 import com.harvard.webservicemodule.apihelper.ApiCall;
 import com.harvard.webservicemodule.events.RegistrationServerConfigEvent;
-import com.harvard.webservicemodule.events.WCPConfigEvent;
+import com.harvard.webservicemodule.events.WcpConfigEvent;
+import io.realm.Realm;
+import io.realm.RealmResults;
+import java.util.ArrayList;
+import java.util.HashMap;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import java.util.ArrayList;
-import java.util.HashMap;
-import io.realm.Realm;
-import io.realm.RealmResults;
 
 public class DeleteAccountActivity extends AppCompatActivity
     implements ApiCall.OnAsyncRequestComplete {
-  private RelativeLayout mBackBtn;
-  private AppCompatTextView mTitle;
-  private View mHrLine;
-  private AppCompatTextView mContent;
-  private AppCompatTextView mIAgree;
-  private AppCompatTextView mIDisagree;
+  private RelativeLayout backBtn;
+  private AppCompatTextView title;
+  private View hrLine;
+  private AppCompatTextView content;
+  private AppCompatTextView iagree;
+  private AppCompatTextView idisagree;
   private LinearLayout middleLayaout;
   private static final int DELETE_ACCOUNT_REPSONSECODE = 101;
-  private ArrayList<String> mStoreWithdrawalTypeDeleteFlag = new ArrayList<>();
-  private ArrayList<String> mStudyIdList = new ArrayList<>();
-  private ArrayList<String> mStudyTitleList = new ArrayList<>();
-  private ArrayList<String> mWithdrawalTypeList = new ArrayList<>();
-  private String mNoData = "nodata";
-  private boolean mNoDataFlag = false;
-  private int mTempPos;
+  private ArrayList<String> storeWithdrawalTypeDeleteFlag = new ArrayList<>();
+  private ArrayList<String> studyIdList = new ArrayList<>();
+  private ArrayList<String> studyTitleList = new ArrayList<>();
+  private ArrayList<String> withdrawalTypeList = new ArrayList<>();
+  private String noData = "nodata";
+  private boolean noDataFlag = false;
+  private int tempPos;
   private static final int STUDY_INFO = 10;
-  private RealmResults<Studies> mRealmStudie;
-  private DBServiceSubscriber mDBServiceSubscriber;
-  private Realm mRealm;
+  private DbServiceSubscriber dbServiceSubscriber;
+  private Realm realm;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_delete_account);
-    mDBServiceSubscriber = new DBServiceSubscriber();
-    mRealm = AppController.getRealmobj(this);
-    initializeXMLId();
+    dbServiceSubscriber = new DbServiceSubscriber();
+    realm = AppController.getRealmobj(this);
+    initializeXmlId();
     setTextForView();
     setFont();
     bindEvents();
     checkAndCreateDataList();
   }
 
-  private void initializeXMLId() {
-    mBackBtn = (RelativeLayout) findViewById(R.id.backBtn);
-    mTitle = (AppCompatTextView) findViewById(R.id.title);
-    mHrLine = findViewById(R.id.mHrLine);
-    mContent = (AppCompatTextView) findViewById(R.id.mContent);
-    mIAgree = (AppCompatTextView) findViewById(R.id.mIAgree);
-    mIDisagree = (AppCompatTextView) findViewById(R.id.mIDisagree);
+  private void initializeXmlId() {
+    backBtn = (RelativeLayout) findViewById(R.id.backBtn);
+    title = (AppCompatTextView) findViewById(R.id.title);
+    hrLine = findViewById(R.id.mHrLine);
+    content = (AppCompatTextView) findViewById(R.id.mContent);
+    iagree = (AppCompatTextView) findViewById(R.id.mIAgree);
+    idisagree = (AppCompatTextView) findViewById(R.id.mIDisagree);
     middleLayaout = (LinearLayout) findViewById(R.id.middleLayaout);
   }
 
   private void setTextForView() {
-    mTitle.setText(getResources().getString(R.string.confirmation));
+    title.setText(getResources().getString(R.string.confirmation));
   }
 
   private void setFont() {
     try {
-      mTitle.setTypeface(AppController.getTypeface(DeleteAccountActivity.this, "medium"));
-      mContent.setTypeface(AppController.getTypeface(DeleteAccountActivity.this, "regular"));
-      mIAgree.setTypeface(AppController.getTypeface(DeleteAccountActivity.this, "regular"));
-      mIDisagree.setTypeface(AppController.getTypeface(DeleteAccountActivity.this, "regular"));
+      title.setTypeface(AppController.getTypeface(DeleteAccountActivity.this, "medium"));
+      content.setTypeface(AppController.getTypeface(DeleteAccountActivity.this, "regular"));
+      iagree.setTypeface(AppController.getTypeface(DeleteAccountActivity.this, "regular"));
+      idisagree.setTypeface(AppController.getTypeface(DeleteAccountActivity.this, "regular"));
     } catch (Exception e) {
       Logger.log(e);
     }
   }
 
   private void bindEvents() {
-    mBackBtn.setOnClickListener(
+    backBtn.setOnClickListener(
         new View.OnClickListener() {
           @Override
           public void onClick(View view) {
@@ -121,7 +120,7 @@ public class DeleteAccountActivity extends AppCompatActivity
           }
         });
 
-    mIDisagree.setOnClickListener(
+    idisagree.setOnClickListener(
         new View.OnClickListener() {
           @Override
           public void onClick(View view) {
@@ -129,14 +128,14 @@ public class DeleteAccountActivity extends AppCompatActivity
           }
         });
 
-    mIAgree.setOnClickListener(
+    iagree.setOnClickListener(
         new View.OnClickListener() {
           @Override
           public void onClick(View view) {
-            boolean noData = false;
-            if (mStoreWithdrawalTypeDeleteFlag.size() > 0) {
-              for (int i = 0; i < mStoreWithdrawalTypeDeleteFlag.size(); i++) {
-                if (mStoreWithdrawalTypeDeleteFlag.get(i).equalsIgnoreCase(mNoData)) {
+            boolean noDataAvailable = false;
+            if (storeWithdrawalTypeDeleteFlag.size() > 0) {
+              for (int i = 0; i < storeWithdrawalTypeDeleteFlag.size(); i++) {
+                if (storeWithdrawalTypeDeleteFlag.get(i).equalsIgnoreCase(noData)) {
                   Toast.makeText(
                           DeleteAccountActivity.this,
                           getResources().getString(R.string.select_option),
@@ -144,14 +143,14 @@ public class DeleteAccountActivity extends AppCompatActivity
                       .show();
                   break;
                 }
-                if (i == (mStoreWithdrawalTypeDeleteFlag.size() - 1)) {
-                  noData = true;
+                if (i == (storeWithdrawalTypeDeleteFlag.size() - 1)) {
+                  noDataAvailable = true;
                 }
               }
             } else {
-              noData = true;
+              noDataAvailable = true;
             }
-            if (noData) {
+            if (noDataAvailable) {
               AppController.getHelperProgressDialog()
                   .showProgress(DeleteAccountActivity.this, "", "", false);
               deactivateAccount();
@@ -163,36 +162,43 @@ public class DeleteAccountActivity extends AppCompatActivity
   private void checkAndCreateDataList() {
     try {
       // get all study id []
-      mRealmStudie = mDBServiceSubscriber.getAllStudyIds(mRealm);
-      // study Ids are storing to mStudyIdList
-      for (int i = 0; i < mRealmStudie.size(); i++)
-        mStudyIdList.add(mRealmStudie.get(i).getStudyId());
+      RealmResults<Studies> realmStudies = dbServiceSubscriber.getAllStudyIds(realm);
+      // study Ids are storing to studyIdList
+      for (int i = 0; i < realmStudies.size(); i++) {
+        studyIdList.add(realmStudies.get(i).getStudyId());
+      }
 
-      for (int i = 0; i < mStudyIdList.size(); i++) {
-        // get all study title, mStudyTitleList
-        StudyList studyList = mDBServiceSubscriber.getStudyTitle(mStudyIdList.get(i), mRealm);
+      for (int i = 0; i < studyIdList.size(); i++) {
+        // get all study title, studyTitleList
+        StudyList studyList = dbServiceSubscriber.getStudyTitle(studyIdList.get(i), realm);
         String title = null;
         if (studyList != null) {
           title = studyList.getTitle();
         }
-        if (title == null || title.equalsIgnoreCase("")) mStudyTitleList.add(mNoData);
-        else mStudyTitleList.add(title);
-        // get all withdawalType, mWithdrawalTypeList[]
+        if (title == null || title.equalsIgnoreCase("")) {
+          studyTitleList.add(noData);
+        } else {
+          studyTitleList.add(title);
+        }
+        // get all withdawalType, withdrawalTypeList[]
         try {
-          StudyHome studyHome = mDBServiceSubscriber.getWithdrawalType(mStudyIdList.get(i), mRealm);
+          StudyHome studyHome = dbServiceSubscriber.getWithdrawalType(studyIdList.get(i), realm);
           if (studyHome == null) {
-            mWithdrawalTypeList.add(mNoData);
+            withdrawalTypeList.add(noData);
           } else {
             String type = studyHome.getWithdrawalConfig().getType();
-            if (type == null || type.equalsIgnoreCase("")) mWithdrawalTypeList.add(mNoData);
-            else mWithdrawalTypeList.add(type);
+            if (type == null || type.equalsIgnoreCase("")) {
+              withdrawalTypeList.add(noData);
+            } else {
+              withdrawalTypeList.add(type);
+            }
           }
         } catch (Exception e) {
           Logger.log(e);
         }
       }
       checkWithdrawalTypeListContainsNoData();
-      if (mNoDataFlag) {
+      if (noDataFlag) {
         setListLeaveStudy();
       }
     } catch (Exception e) {
@@ -201,25 +207,27 @@ public class DeleteAccountActivity extends AppCompatActivity
   }
 
   private void checkWithdrawalTypeListContainsNoData() {
-    mNoDataFlag = false;
-    for (int i = 0; i < mWithdrawalTypeList.size(); i++) {
-      if (mWithdrawalTypeList.get(i).equalsIgnoreCase(mNoData)) {
-        mTempPos = i;
+    noDataFlag = false;
+    for (int i = 0; i < withdrawalTypeList.size(); i++) {
+      if (withdrawalTypeList.get(i).equalsIgnoreCase(noData)) {
+        tempPos = i;
         // missing details to get eg: withdrawal type
         callGetStudyInfoWebservice();
         break;
       }
-      if (i == (mWithdrawalTypeList.size() - 1)) mNoDataFlag = true;
+      if (i == (withdrawalTypeList.size() - 1)) {
+        noDataFlag = true;
+      }
     }
   }
 
   private void callGetStudyInfoWebservice() {
     AppController.getHelperProgressDialog().showProgress(DeleteAccountActivity.this, "", "", false);
     HashMap<String, String> header = new HashMap<>();
-    String url = URLs.STUDY_INFO + "?studyId=" + mStudyIdList.get(mTempPos);
+    String url = Urls.STUDY_INFO + "?studyId=" + studyIdList.get(tempPos);
     GetUserStudyInfoEvent getUserStudyInfoEvent = new GetUserStudyInfoEvent();
-    WCPConfigEvent wcpConfigEvent =
-        new WCPConfigEvent(
+    WcpConfigEvent wcpConfigEvent =
+        new WcpConfigEvent(
             "get",
             url,
             STUDY_INFO,
@@ -238,9 +246,9 @@ public class DeleteAccountActivity extends AppCompatActivity
 
   private void setListLeaveStudy() {
     try {
-      for (int i = 0; i < mWithdrawalTypeList.size(); i++) {
+      for (int i = 0; i < withdrawalTypeList.size(); i++) {
         final int pos = i;
-        if (mWithdrawalTypeList.get(i).equalsIgnoreCase("ask_user")) {
+        if (withdrawalTypeList.get(i).equalsIgnoreCase("ask_user")) {
           final View child2 = getLayoutInflater().inflate(R.layout.content_delete_account2, null);
           final AppCompatTextView mentalHealthSurveyTitle =
               (AppCompatTextView) child2.findViewById(R.id.mentalHealthSurveyTitle);
@@ -256,9 +264,9 @@ public class DeleteAccountActivity extends AppCompatActivity
           mRetainButton1.setTypeface(
               AppController.getTypeface(DeleteAccountActivity.this, "regular"));
           // value setting
-          mentalHealthSurveyTitle.setText(mStudyTitleList.get(i));
+          mentalHealthSurveyTitle.setText(studyTitleList.get(i));
           middleLayaout.addView(child2);
-          mStoreWithdrawalTypeDeleteFlag.add(pos, mNoData);
+          storeWithdrawalTypeDeleteFlag.add(pos, noData);
           // click listner
           mDeleteButton1.setOnClickListener(
               new View.OnClickListener() {
@@ -266,7 +274,7 @@ public class DeleteAccountActivity extends AppCompatActivity
                 public void onClick(View v) {
                   mDeleteButton1.setChecked(true);
                   mRetainButton1.setChecked(false);
-                  mStoreWithdrawalTypeDeleteFlag.set(pos, "true");
+                  storeWithdrawalTypeDeleteFlag.set(pos, "true");
                 }
               });
           mRetainButton1.setOnClickListener(
@@ -275,11 +283,11 @@ public class DeleteAccountActivity extends AppCompatActivity
                 public void onClick(View v) {
                   mRetainButton1.setChecked(true);
                   mDeleteButton1.setChecked(false);
-                  mStoreWithdrawalTypeDeleteFlag.set(pos, "false");
+                  storeWithdrawalTypeDeleteFlag.set(pos, "false");
                 }
               });
         }
-        if (mWithdrawalTypeList.get(i).equalsIgnoreCase("delete_data")) {
+        if (withdrawalTypeList.get(i).equalsIgnoreCase("delete_data")) {
           final View child1 = getLayoutInflater().inflate(R.layout.content_delete_account1, null);
           final AppCompatTextView mMedicationSurveyTitle =
               (AppCompatTextView) child1.findViewById(R.id.mMedicationSurveyTitle);
@@ -291,11 +299,11 @@ public class DeleteAccountActivity extends AppCompatActivity
           mMedicationSurveyValue.setTypeface(
               AppController.getTypeface(DeleteAccountActivity.this, "regular"));
           // value settings
-          mMedicationSurveyTitle.setText(mStudyTitleList.get(i));
+          mMedicationSurveyTitle.setText(studyTitleList.get(i));
           mMedicationSurveyValue.setText(getResources().getString(R.string.response_deleted));
           middleLayaout.addView(child1);
-          mStoreWithdrawalTypeDeleteFlag.add(pos, "true");
-        } else if (mWithdrawalTypeList.get(i).equalsIgnoreCase("no_action")) {
+          storeWithdrawalTypeDeleteFlag.add(pos, "true");
+        } else if (withdrawalTypeList.get(i).equalsIgnoreCase("no_action")) {
           final View child1 = getLayoutInflater().inflate(R.layout.content_delete_account1, null);
 
           final AppCompatTextView mMedicationSurveyTitle =
@@ -310,27 +318,29 @@ public class DeleteAccountActivity extends AppCompatActivity
           mMedicationSurveyValue.setTypeface(
               AppController.getTypeface(DeleteAccountActivity.this, "regular"));
           // value setting
-          mMedicationSurveyTitle.setText(mStudyTitleList.get(i));
+          mMedicationSurveyTitle.setText(studyTitleList.get(i));
           mMedicationSurveyValue.setText(getResources().getString(R.string.response_retained));
           middleLayaout.addView(child1);
-          mStoreWithdrawalTypeDeleteFlag.add(pos, "false");
+          storeWithdrawalTypeDeleteFlag.add(pos, "false");
         }
       }
     } catch (Resources.NotFoundException e) {
       Logger.log(e);
     }
-    mHrLine.setVisibility(View.VISIBLE);
+    hrLine.setVisibility(View.VISIBLE);
   }
 
   @Override
   public <T> void asyncResponse(T response, int responseCode) {
-    if (responseCode != STUDY_INFO) AppController.getHelperProgressDialog().dismissDialog();
+    if (responseCode != STUDY_INFO) {
+      AppController.getHelperProgressDialog().dismissDialog();
+    }
     if (responseCode == DELETE_ACCOUNT_REPSONSECODE) {
       LoginData loginData = (LoginData) response;
       if (loginData != null) {
 
         try {
-          mDBServiceSubscriber.deleteDb(this);
+          dbServiceSubscriber.deleteDb(this);
         } catch (Exception e) {
           Logger.log(e);
         }
@@ -345,7 +355,9 @@ public class DeleteAccountActivity extends AppCompatActivity
         settings.edit().clear().apply();
         // delete passcode from keystore
         String pass = AppController.refreshKeys("passcode");
-        if (pass != null) AppController.deleteKey("passcode_" + pass);
+        if (pass != null) {
+          AppController.deleteKey("passcode_" + pass);
+        }
         Intent intent = new Intent();
         setResult(RESULT_OK, intent);
         finish();
@@ -355,16 +367,16 @@ public class DeleteAccountActivity extends AppCompatActivity
       }
     } else if (responseCode == STUDY_INFO) {
       if (response != null) {
-        StudyHome mStudyHome = (StudyHome) response;
+        StudyHome studyHome = (StudyHome) response;
         // adding withdrawal type
-        mWithdrawalTypeList.set(mTempPos, mStudyHome.getWithdrawalConfig().getType());
+        withdrawalTypeList.set(tempPos, studyHome.getWithdrawalConfig().getType());
         // saving to db
-        mStudyHome.setmStudyId(mStudyIdList.get(mTempPos));
+        studyHome.setStudyId(studyIdList.get(tempPos));
 
-        mDBServiceSubscriber.saveStudyInfoToDB(this, mStudyHome);
+        dbServiceSubscriber.saveStudyInfoToDB(this, studyHome);
       }
       checkWithdrawalTypeListContainsNoData();
-      if (mNoDataFlag) {
+      if (noDataFlag) {
         AppController.getHelperProgressDialog().dismissDialog();
         setListLeaveStudy();
       }
@@ -391,12 +403,12 @@ public class DeleteAccountActivity extends AppCompatActivity
     try {
       obj = new JSONObject();
       JSONArray jsonArray1 = new JSONArray();
-      if (mStudyIdList.size() > 0) {
+      if (studyIdList.size() > 0) {
         JSONObject jsonObject;
-        for (int i = 0; i < mStudyIdList.size(); i++) {
+        for (int i = 0; i < studyIdList.size(); i++) {
           jsonObject = new JSONObject();
-          jsonObject.put("studyId", mStudyIdList.get(i));
-          jsonObject.put("delete", mStoreWithdrawalTypeDeleteFlag.get(i));
+          jsonObject.put("studyId", studyIdList.get(i));
+          jsonObject.put("delete", storeWithdrawalTypeDeleteFlag.get(i));
 
           jsonArray1.put(jsonObject);
         }
@@ -409,7 +421,7 @@ public class DeleteAccountActivity extends AppCompatActivity
       RegistrationServerConfigEvent registrationServerConfigEvent =
           new RegistrationServerConfigEvent(
               "delete_object",
-              URLs.DELETE_ACCOUNT,
+              Urls.DELETE_ACCOUNT,
               DELETE_ACCOUNT_REPSONSECODE,
               DeleteAccountActivity.this,
               LoginData.class,
@@ -418,7 +430,7 @@ public class DeleteAccountActivity extends AppCompatActivity
               obj,
               false,
               this);
-      deleteAccountEvent.setmRegistrationServerConfigEvent(registrationServerConfigEvent);
+      deleteAccountEvent.setRegistrationServerConfigEvent(registrationServerConfigEvent);
       UserModulePresenter userModulePresenter = new UserModulePresenter();
       userModulePresenter.performDeleteAccount(deleteAccountEvent);
     } catch (Exception e) {
@@ -442,7 +454,7 @@ public class DeleteAccountActivity extends AppCompatActivity
 
   @Override
   protected void onDestroy() {
-    mDBServiceSubscriber.closeRealmObj(mRealm);
+    dbServiceSubscriber.closeRealmObj(realm);
     super.onDestroy();
   }
 }
