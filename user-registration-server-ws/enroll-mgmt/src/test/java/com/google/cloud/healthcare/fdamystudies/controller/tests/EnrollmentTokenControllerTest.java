@@ -1,9 +1,7 @@
 package com.google.cloud.healthcare.fdamystudies.controller.tests;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import org.apache.commons.lang3.StringUtils;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
@@ -35,7 +33,7 @@ public class EnrollmentTokenControllerTest extends BaseMockIT {
   public void ping() throws Exception {
 
     HttpHeaders headers = TestUtils.getCommonHeaders();
-    mockMvc.perform(get(PING_PATH).headers(headers)).andDo(print()).andExpect(status().isOk());
+    performGet(PING_PATH, headers, StringUtils.EMPTY, OK);
   }
 
   @Test
@@ -44,7 +42,7 @@ public class EnrollmentTokenControllerTest extends BaseMockIT {
     String requestJson = getEnrollmentJson(Constants.TOKEN, Constants.STUDYOF_HEALTH);
 
     HttpHeaders headers = TestUtils.getCommonHeaders();
-    TestUtils.addContentTypeAcceptHeaders(headers);
+    headers.add(Constants.USER_ID_HEADER, Constants.VALID_USER_ID);
 
     performPost(VALIDATE_ENROLLMENT_TOKEN_PATH, requestJson, headers, Constants.SUCCESS, OK);
   }
@@ -53,44 +51,47 @@ public class EnrollmentTokenControllerTest extends BaseMockIT {
   public void validateEnrollmentTokenBadRequests() throws Exception {
 
     HttpHeaders headers = TestUtils.getCommonHeaders();
-    TestUtils.addContentTypeAcceptHeaders(headers);
+    headers.add(Constants.USER_ID_HEADER, Constants.VALID_USER_ID);
 
     // without study id
     String requestJson = getEnrollmentJson(Constants.TOKEN, null);
-    performPost(VALIDATE_ENROLLMENT_TOKEN_PATH, requestJson, headers, "", BAD_REQUEST);
+    performPost(
+        VALIDATE_ENROLLMENT_TOKEN_PATH, requestJson, headers, StringUtils.EMPTY, BAD_REQUEST);
 
     // without token
     requestJson = getEnrollmentJson(null, Constants.STUDYOF_HEALTH_CLOSE);
-    performPost(VALIDATE_ENROLLMENT_TOKEN_PATH, requestJson, headers, "", BAD_REQUEST);
+    performPost(
+        VALIDATE_ENROLLMENT_TOKEN_PATH, requestJson, headers, StringUtils.EMPTY, BAD_REQUEST);
 
-    // unkown token id
+    // unknown token id
     requestJson = getEnrollmentJson(Constants.UNKOWN_TOKEN, Constants.STUDYOF_HEALTH);
-    performPost(VALIDATE_ENROLLMENT_TOKEN_PATH, requestJson, headers, "", BAD_REQUEST);
+    performPost(
+        VALIDATE_ENROLLMENT_TOKEN_PATH, requestJson, headers, StringUtils.EMPTY, BAD_REQUEST);
   }
 
   @Test
   public void validateEnrollmentTokenForbidden() throws Exception {
     HttpHeaders headers = TestUtils.getCommonHeaders();
-    TestUtils.addContentTypeAcceptHeaders(headers);
+    headers.add(Constants.USER_ID_HEADER, Constants.VALID_USER_ID);
 
     // study id not exists
     String requestJson = getEnrollmentJson(Constants.TOKEN, Constants.STUDYID_NOT_EXIST);
-    performPost(VALIDATE_ENROLLMENT_TOKEN_PATH, requestJson, headers, "", FORBIDDEN);
+    performPost(VALIDATE_ENROLLMENT_TOKEN_PATH, requestJson, headers, StringUtils.EMPTY, FORBIDDEN);
 
     // token already use
     requestJson = getEnrollmentJson(Constants.TOKEN_ALREADY_USED, Constants.STUDYOF_HEALTH_1);
-    performPost(VALIDATE_ENROLLMENT_TOKEN_PATH, requestJson, headers, "", FORBIDDEN);
+    performPost(VALIDATE_ENROLLMENT_TOKEN_PATH, requestJson, headers, StringUtils.EMPTY, FORBIDDEN);
   }
 
   @Test
   public void validateEnrollmentTokenUnAuthorised() throws Exception {
     // without userId header
     HttpHeaders headers = TestUtils.getCommonHeaders();
-    TestUtils.addContentTypeAcceptHeaders(headers);
-    headers.remove(Constants.USER_ID_HEADER);
+    headers.add(Constants.USER_ID_HEADER, StringUtils.EMPTY);
 
     String requestJson = getEnrollmentJson(Constants.TOKEN, Constants.STUDYOF_HEALTH);
-    performPost(VALIDATE_ENROLLMENT_TOKEN_PATH, requestJson, headers, "", UNAUTHORIZED);
+    performPost(
+        VALIDATE_ENROLLMENT_TOKEN_PATH, requestJson, headers, StringUtils.EMPTY, UNAUTHORIZED);
   }
 
   @Test
@@ -99,7 +100,7 @@ public class EnrollmentTokenControllerTest extends BaseMockIT {
     // study type close
     String requestJson = getEnrollmentJson(Constants.TOKEN_NEW, Constants.STUDYOF_HEALTH_CLOSE);
     HttpHeaders headers = TestUtils.getCommonHeaders();
-    TestUtils.addContentTypeAcceptHeaders(headers);
+    headers.add(Constants.USER_ID_HEADER, Constants.VALID_USER_ID);
 
     performPost(ENROLL_PATH, requestJson, headers, Constants.SUCCESS, OK);
   }
@@ -109,7 +110,7 @@ public class EnrollmentTokenControllerTest extends BaseMockIT {
     // study type open
     String requestJson = getEnrollmentJson(Constants.TOKEN_NEW, Constants.STUDYOF_HEALTH);
     HttpHeaders headers = TestUtils.getCommonHeaders();
-    TestUtils.addContentTypeAcceptHeaders(headers);
+    headers.add(Constants.USER_ID_HEADER, Constants.VALID_USER_ID);
 
     performPost(ENROLL_PATH, requestJson, headers, Constants.SUCCESS, OK);
   }
@@ -120,11 +121,7 @@ public class EnrollmentTokenControllerTest extends BaseMockIT {
     String requestJson = getEnrollmentJson(Constants.TOKEN_NEW, Constants.STUDYOF_HEALTH);
 
     HttpHeaders headers = TestUtils.getCommonHeaders();
-    TestUtils.addContentTypeAcceptHeaders(headers);
-    headers.remove(Constants.USER_ID_HEADER);
     headers.add(Constants.USER_ID_HEADER, Constants.NEW_USER_ID);
-
-    TestUtils.addContentTypeAcceptHeaders(headers);
 
     performPost(ENROLL_PATH, requestJson, headers, Constants.SUCCESS, OK);
   }
@@ -133,17 +130,17 @@ public class EnrollmentTokenControllerTest extends BaseMockIT {
   public void enrollParticipantBadRequests() throws Exception {
 
     HttpHeaders headers = TestUtils.getCommonHeaders();
-    TestUtils.addContentTypeAcceptHeaders(headers);
+    headers.add(Constants.USER_ID_HEADER, Constants.VALID_USER_ID);
 
     // without study id
     String requestJson = getEnrollmentJson(Constants.TOKEN_NEW, null);
-    performPost(ENROLL_PATH, requestJson, headers, "", BAD_REQUEST);
+    performPost(ENROLL_PATH, requestJson, headers, StringUtils.EMPTY, BAD_REQUEST);
 
     // without token
     requestJson = getEnrollmentJson(null, Constants.STUDYOF_HEALTH_CLOSE);
-    performPost(ENROLL_PATH, requestJson, headers, "", BAD_REQUEST);
+    performPost(ENROLL_PATH, requestJson, headers, StringUtils.EMPTY, BAD_REQUEST);
 
-    // unkown token id
+    // unknown token id
 
     requestJson = getEnrollmentJson(Constants.UNKOWN_TOKEN, Constants.STUDYOF_HEALTH_CLOSE);
     performPost(ENROLL_PATH, requestJson, headers, Constants.UNKOWN_TOKEN_MESSAGE, BAD_REQUEST);
@@ -154,19 +151,17 @@ public class EnrollmentTokenControllerTest extends BaseMockIT {
 
     // without userId header
     HttpHeaders headers = TestUtils.getCommonHeaders();
-    TestUtils.addContentTypeAcceptHeaders(headers);
-
-    headers.remove(Constants.USER_ID_HEADER);
+    headers.add(Constants.USER_ID_HEADER, StringUtils.EMPTY);
 
     String requestJson = getEnrollmentJson(Constants.TOKEN_NEW, Constants.STUDYOF_HEALTH);
-    performPost(ENROLL_PATH, requestJson, headers, "", UNAUTHORIZED);
+    performPost(ENROLL_PATH, requestJson, headers, StringUtils.EMPTY, UNAUTHORIZED);
   }
 
   @Test
   public void enrollParticipantForbidden() throws Exception {
 
     HttpHeaders headers = TestUtils.getCommonHeaders();
-    TestUtils.addContentTypeAcceptHeaders(headers);
+    headers.add(Constants.USER_ID_HEADER, Constants.VALID_USER_ID);
 
     // token already use
     String requestJson =
@@ -175,7 +170,7 @@ public class EnrollmentTokenControllerTest extends BaseMockIT {
 
     // study id not exists
     requestJson = getEnrollmentJson(Constants.TOKEN_NEW, Constants.STUDYID_NOT_EXIST);
-    performPost(ENROLL_PATH, requestJson, headers, "", FORBIDDEN);
+    performPost(ENROLL_PATH, requestJson, headers, StringUtils.EMPTY, FORBIDDEN);
   }
 
   private String getEnrollmentJson(String tokenId, String studyId) throws JsonProcessingException {

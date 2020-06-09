@@ -10,8 +10,8 @@
       <PatternLayout pattern="${LOG_PATTERN}" />
     </Console>
   <RollingFile name="appLog"
-    fileName="consent-management-server.log"
-    filePattern="consent-management-server-%d{yyyy-MM-dd}-%i.log">
+    fileName="enrollment-token-management-server.log"
+    filePattern="enrollment-token-management-server-%d{yyyy-MM-dd}-%i.log">
     <PatternLayout pattern="${LOG_PATTERN}" />
     <Policies>
       <SizeBasedTriggeringPolicy size="1MB" />
