@@ -1,5 +1,6 @@
 /*
  * Copyright © 2017-2019 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors.
+ * Copyright 2020 Google LLC
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction, including
  * without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
@@ -46,15 +47,15 @@ public class StepsBuilder {
   }
 
   private List<Step> createsurveyquestion(
-      Context context, RealmList<Steps> activityQuestionStep, boolean addEligibility) {
+          Context context, RealmList<Steps> activityQuestionStep, boolean addEligibility) {
     ArrayList<Step> steps = new ArrayList<>();
     if (activityQuestionStep != null) {
       if (!addEligibility && activityQuestionStep.size() > 0) {
         InstructionStep instructionStep =
-            new InstructionStep(
-                "Eligibility Test",
-                "Eligibility Test",
-                "Please answer the questions that follow to help ascertain your eligibility for this study.");
+                new InstructionStep(
+                        "Eligibility Test",
+                        "Eligibility Test",
+                        "Please answer the questions that follow to help ascertain your eligibility for this study.");
         instructionStep.setStepTitle(R.string.notxt);
         instructionStep.setOptional(false);
         steps.add(instructionStep);
@@ -65,33 +66,30 @@ public class StepsBuilder {
           switch (activityQuestionStep.get(i).getResultType()) {
             case "imageChoice":
               QuestionStepCustom multichoiceStep =
-                  new QuestionStepCustom(activityQuestionStep.get(i).getKey());
+                      new QuestionStepCustom(activityQuestionStep.get(i).getKey());
 
-              ChoiceCustomImage[] choicechoices =
-                  new ChoiceCustomImage
-                      [activityQuestionStep.get(i).getFormat().getImageChoices().size()];
+              ChoiceCustomImage[] choicechoices = new ChoiceCustomImage[activityQuestionStep.get(i).getFormat().getImageChoices().size()];
               for (int j = 0;
-                  j < activityQuestionStep.get(i).getFormat().getImageChoices().size();
-                  j++) {
-                choicechoices[j] =
-                    new ChoiceCustomImage(
+                   j < activityQuestionStep.get(i).getFormat().getImageChoices().size();
+                   j++) {
+                choicechoices[j] = new ChoiceCustomImage(
                         activityQuestionStep.get(i).getFormat().getImageChoices().get(j).getText(),
                         activityQuestionStep.get(i).getFormat().getImageChoices().get(j).getValue(),
                         activityQuestionStep.get(i).getFormat().getImageChoices().get(j).getImage(),
                         activityQuestionStep
-                            .get(i)
-                            .getFormat()
-                            .getImageChoices()
-                            .get(j)
-                            .getSelectedImage());
+                                .get(i)
+                                .getFormat()
+                                .getImageChoices()
+                                .get(j)
+                                .getSelectedImage());
               }
               MultiChoiceImageAnswerFormat multichoiceFormat =
-                  new MultiChoiceImageAnswerFormat(
-                      ChoiceAnswerFormatCustom.CustomAnswerStyle.MultipleImageChoice,
-                      choicechoices);
+                      new MultiChoiceImageAnswerFormat(
+                              ChoiceAnswerFormatCustom.CustomAnswerStyle.MultipleImageChoice,
+                              choicechoices);
               multichoiceStep.setTitle(activityQuestionStep.get(i).getTitle());
               multichoiceStep.setText(
-                  activityQuestionStep.get(i).getText().replaceAll("(\r\n|\n)", "<br />"));
+                      activityQuestionStep.get(i).getText().replaceAll("(\r\n|\n)", "<br />"));
               multichoiceStep.setAnswerFormat1(multichoiceFormat);
               multichoiceStep.setStepTitle(R.string.notxt);
               multichoiceStep.setOptional(activityQuestionStep.get(i).isSkippable());
@@ -100,84 +98,82 @@ public class StepsBuilder {
 
             case "textChoice":
               if (activityQuestionStep
-                  .get(i)
-                  .getFormat()
-                  .getSelectionStyle()
-                  .equalsIgnoreCase("Single")) {
+                      .get(i)
+                      .getFormat()
+                      .getSelectionStyle()
+                      .equalsIgnoreCase("Single")) {
                 ChoiceText[] choices =
-                    new ChoiceText[activityQuestionStep.get(i).getFormat().getTextChoices().size()];
+                        new ChoiceText[activityQuestionStep.get(i).getFormat().getTextChoices().size()];
                 for (int j = 0;
-                    j < activityQuestionStep.get(i).getFormat().getTextChoices().size();
-                    j++) {
+                     j < activityQuestionStep.get(i).getFormat().getTextChoices().size();
+                     j++) {
                   choices[j] =
-                      new ChoiceText(
-                          activityQuestionStep.get(i).getFormat().getTextChoices().get(j).getText(),
-                          activityQuestionStep
-                              .get(i)
-                              .getFormat()
-                              .getTextChoices()
-                              .get(j)
-                              .getValue(),
-                          activityQuestionStep
-                              .get(i)
-                              .getFormat()
-                              .getTextChoices()
-                              .get(j)
-                              .getDetail(),
-                          null);
+                          new ChoiceText(
+                                  activityQuestionStep.get(i).getFormat().getTextChoices().get(j).getText(),
+                                  activityQuestionStep
+                                          .get(i)
+                                          .getFormat()
+                                          .getTextChoices()
+                                          .get(j)
+                                          .getValue(),
+                                  activityQuestionStep
+                                          .get(i)
+                                          .getFormat()
+                                          .getTextChoices()
+                                          .get(j)
+                                          .getDetail(),
+                                  null);
                 }
                 SingleChoiceTextAnswerFormat choiceAnswerFormat =
-                    new SingleChoiceTextAnswerFormat(
-                        AnswerFormatCustom.CustomAnswerStyle.SingleTextChoice, choices);
+                        new SingleChoiceTextAnswerFormat(
+                                AnswerFormatCustom.CustomAnswerStyle.SingleTextChoice, choices);
                 QuestionStepCustom multiStep =
-                    new QuestionStepCustom(activityQuestionStep.get(i).getKey());
+                        new QuestionStepCustom(activityQuestionStep.get(i).getKey());
 
                 multiStep.setTitle(activityQuestionStep.get(i).getTitle());
                 multiStep.setText(
-                    activityQuestionStep.get(i).getText().replaceAll("(\r\n|\n)", "<br />"));
+                        activityQuestionStep.get(i).getText().replaceAll("(\r\n|\n)", "<br />"));
                 multiStep.setAnswerFormat1(choiceAnswerFormat);
                 multiStep.setStepTitle(R.string.notxt);
                 multiStep.setOptional(activityQuestionStep.get(i).isSkippable());
                 steps.add(multiStep);
               } else {
-                ChoiceTextExclusive[] choices =
-                    new ChoiceTextExclusive
-                        [activityQuestionStep.get(i).getFormat().getTextChoices().size()];
+                ChoiceTextExclusive[] choices = new ChoiceTextExclusive[activityQuestionStep.get(i).getFormat().getTextChoices().size()];
                 for (int j = 0;
-                    j < activityQuestionStep.get(i).getFormat().getTextChoices().size();
-                    j++) {
+                     j < activityQuestionStep.get(i).getFormat().getTextChoices().size();
+                     j++) {
                   choices[j] =
-                      new ChoiceTextExclusive(
-                          activityQuestionStep.get(i).getFormat().getTextChoices().get(j).getText(),
-                          activityQuestionStep
-                              .get(i)
-                              .getFormat()
-                              .getTextChoices()
-                              .get(j)
-                              .getValue(),
-                          activityQuestionStep
-                              .get(i)
-                              .getFormat()
-                              .getTextChoices()
-                              .get(j)
-                              .getDetail(),
-                          activityQuestionStep
-                              .get(i)
-                              .getFormat()
-                              .getTextChoices()
-                              .get(j)
-                              .isExclusive(),
-                          null);
+                          new ChoiceTextExclusive(
+                                  activityQuestionStep.get(i).getFormat().getTextChoices().get(j).getText(),
+                                  activityQuestionStep
+                                          .get(i)
+                                          .getFormat()
+                                          .getTextChoices()
+                                          .get(j)
+                                          .getValue(),
+                                  activityQuestionStep
+                                          .get(i)
+                                          .getFormat()
+                                          .getTextChoices()
+                                          .get(j)
+                                          .getDetail(),
+                                  activityQuestionStep
+                                          .get(i)
+                                          .getFormat()
+                                          .getTextChoices()
+                                          .get(j)
+                                          .isExclusive(),
+                                  null);
                 }
                 MultiChoiceTextAnswerFormat choiceAnswerFormat =
-                    new MultiChoiceTextAnswerFormat(
-                        AnswerFormatCustom.CustomAnswerStyle.MultipleTextChoice, choices);
+                        new MultiChoiceTextAnswerFormat(
+                                AnswerFormatCustom.CustomAnswerStyle.MultipleTextChoice, choices);
                 QuestionStepCustom multiStep =
-                    new QuestionStepCustom(activityQuestionStep.get(i).getKey());
+                        new QuestionStepCustom(activityQuestionStep.get(i).getKey());
 
                 multiStep.setTitle(activityQuestionStep.get(i).getTitle());
                 multiStep.setText(
-                    activityQuestionStep.get(i).getText().replaceAll("(\r\n|\n)", "<br />"));
+                        activityQuestionStep.get(i).getText().replaceAll("(\r\n|\n)", "<br />"));
                 multiStep.setAnswerFormat1(choiceAnswerFormat);
                 multiStep.setStepTitle(R.string.notxt);
                 multiStep.setOptional(activityQuestionStep.get(i).isSkippable());
@@ -190,11 +186,11 @@ public class StepsBuilder {
 
               booleanStep.setTitle(activityQuestionStep.get(i).getTitle());
               booleanStep.setText(
-                  activityQuestionStep.get(i).getText().replaceAll("(\r\n|\n)", "<br />"));
+                      activityQuestionStep.get(i).getText().replaceAll("(\r\n|\n)", "<br />"));
               booleanStep.setAnswerFormat(
-                  new BooleanAnswerFormat(
-                      context.getResources().getString(R.string.yes),
-                      context.getResources().getString(R.string.no)));
+                      new BooleanAnswerFormat(
+                              context.getResources().getString(R.string.yes),
+                              context.getResources().getString(R.string.no)));
               booleanStep.setStepTitle(R.string.notxt);
               booleanStep.setOptional(activityQuestionStep.get(i).isSkippable());
               steps.add(booleanStep);

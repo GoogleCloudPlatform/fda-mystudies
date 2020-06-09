@@ -1,5 +1,6 @@
 /*
  * Copyright © 2017-2019 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors.
+ * Copyright 2020 Google LLC
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction, including
  * without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
@@ -14,6 +15,8 @@
 
 package com.harvard.notificationmodule;
 
+import static com.harvard.notificationmodule.NotificationModuleSubscriber.REQUEST_CODE_24HR_NOTIFICATION;
+
 import android.app.AlarmManager;
 import android.app.Notification;
 import android.app.PendingIntent;
@@ -27,13 +30,11 @@ import android.graphics.BitmapFactory;
 import android.os.Build;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.NotificationManagerCompat;
-import android.util.Log;
-
 import com.harvard.AppConfig;
-import com.harvard.FDAApplication;
+import com.harvard.FdaApplication;
 import com.harvard.R;
 import com.harvard.notificationmodule.model.NotificationDb;
-import com.harvard.storagemodule.DBServiceSubscriber;
+import com.harvard.storagemodule.DbServiceSubscriber;
 import com.harvard.studyappmodule.NotificationActivity;
 import com.harvard.studyappmodule.StandaloneActivity;
 import com.harvard.studyappmodule.StudyActivity;
@@ -44,8 +45,6 @@ import com.harvard.utils.Logger;
 import io.realm.Realm;
 import io.realm.RealmResults;
 import java.util.Calendar;
-
-import static com.harvard.notificationmodule.NotificationModuleSubscriber.REQUEST_CODE_24HR_NOTIFICATION;
 
 public class AlarmReceiver extends BroadcastReceiver {
 
@@ -84,7 +83,6 @@ public class AlarmReceiver extends BroadcastReceiver {
 
     String title = intent.getStringExtra("title");
     String description = intent.getStringExtra("description");
-    String type = intent.getStringExtra("type");
     String studyId = null;
     if (intent.getStringExtra("studyId") != null) {
       studyId = intent.getStringExtra("studyId");
@@ -104,6 +102,7 @@ public class AlarmReceiver extends BroadcastReceiver {
       notificationIntent = new Intent(context, StandaloneActivity.class);
     }
     PendingIntent contentIntent = null;
+    String type = intent.getStringExtra("type");
     if (!type.equalsIgnoreCase(NotificationModuleSubscriber.NO_USE_NOTIFICATION)) {
       notificationIntent.putExtra(StudyActivity.FROM, NOTIFICATION_INTENT);
 
@@ -114,16 +113,16 @@ public class AlarmReceiver extends BroadcastReceiver {
         notificationIntent.putExtra(SUBTYPE, "Activity");
       }
       notificationIntent
-          .putExtra(STUDYID, studyId)
-          .putExtra(ACTIVITYID, activityId)
-          .putExtra(AUDIENCE, "")
-          .putExtra(LOCAL_NOTIFICATION, "true")
-          .putExtra(TITLE, title)
-          .putExtra(MESSAGE, description)
-          .setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+              .putExtra(STUDYID, studyId)
+              .putExtra(ACTIVITYID, activityId)
+              .putExtra(AUDIENCE, "")
+              .putExtra(LOCAL_NOTIFICATION, "true")
+              .putExtra(TITLE, title)
+              .putExtra(MESSAGE, description)
+              .setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
       contentIntent =
-          PendingIntent.getActivity(
-              context, notificationId, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+              PendingIntent.getActivity(
+                      context, notificationId, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
     }
 
     int notifyIcon = R.mipmap.ic_launcher;
@@ -131,50 +130,50 @@ public class AlarmReceiver extends BroadcastReceiver {
     Notification notification = null;
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
       notification =
-          createNotificationForLollipopAndAbove(
-              context, type, title, description, icon, contentIntent);
+              createNotificationForLollipopAndAbove(
+                      context, type, title, description, icon, contentIntent);
     } else {
       notification =
-          createNotificationForBelowLollipop(context, type, title, description, contentIntent);
+              createNotificationForBelowLollipop(context, type, title, description, contentIntent);
     }
 
     try {
       int count =
-          Integer.parseInt(
-                  AppController.getHelperSharedPreference()
-                      .readPreference(
-                          context,
-                          context.getResources().getString(R.string.notificationCount),
-                          "0"))
-              + 1;
+              Integer.parseInt(
+                      AppController.getHelperSharedPreference()
+                              .readPreference(
+                                      context,
+                                      context.getResources().getString(R.string.notificationCount),
+                                      "0"))
+                      + 1;
       AppController.getHelperSharedPreference()
-          .writePreference(
-              context, context.getResources().getString(R.string.notificationCount), "" + count);
+              .writePreference(
+                      context, context.getResources().getString(R.string.notificationCount), "" + count);
       NotificationManagerCompat notificationManager = NotificationManagerCompat.from(context);
 
-      Realm mRealm = AppController.getRealmobj(context);
-      DBServiceSubscriber dbServiceSubscriber = new DBServiceSubscriber();
-      UserProfileData mUserProfileData = dbServiceSubscriber.getUserProfileData(mRealm);
-      StudyList studyList = dbServiceSubscriber.getStudiesDetails(studyId, mRealm);
+      Realm realm = AppController.getRealmobj(context);
+      DbServiceSubscriber dbServiceSubscriber = new DbServiceSubscriber();
+      UserProfileData userProfileData = dbServiceSubscriber.getUserProfileData(realm);
+      StudyList studyList = dbServiceSubscriber.getStudiesDetails(studyId, realm);
       boolean isNotification = true;
-      if (mUserProfileData != null) {
-        isNotification = mUserProfileData.getSettings().isLocalNotifications();
+      if (userProfileData != null) {
+        isNotification = userProfileData.getSettings().isLocalNotifications();
       }
       if (!studyList.getStatus().equalsIgnoreCase("paused")
-          && (isNotification
+              && (isNotification
               || type.equalsIgnoreCase(
-                  NotificationModuleSubscriber.NOTIFICATION_TURN_OFF_NOTIFICATION))) {
+              NotificationModuleSubscriber.NOTIFICATION_TURN_OFF_NOTIFICATION))) {
         notificationManager.notify(count, notification);
         if (type.equalsIgnoreCase(
-            NotificationModuleSubscriber.NOTIFICATION_TURN_OFF_NOTIFICATION)) {
+                NotificationModuleSubscriber.NOTIFICATION_TURN_OFF_NOTIFICATION)) {
           NotificationModuleSubscriber notificationModuleSubscriber =
-              new NotificationModuleSubscriber(dbServiceSubscriber, mRealm);
+                  new NotificationModuleSubscriber(dbServiceSubscriber, realm);
           notificationModuleSubscriber.generateNotificationTurnOffNotification(
-              Calendar.getInstance().getTime(), context);
+                  Calendar.getInstance().getTime(), context);
         }
       }
 
-      dbServiceSubscriber.closeRealmObj(mRealm);
+      dbServiceSubscriber.closeRealmObj(realm);
     } catch (NumberFormatException | Resources.NotFoundException e) {
       Logger.log(e);
     } catch (Exception e) {
@@ -183,116 +182,116 @@ public class AlarmReceiver extends BroadcastReceiver {
   }
 
   private Notification createNotificationForBelowLollipop(
-      Context context, String type, String title, String description, PendingIntent contentIntent) {
+          Context context, String type, String title, String description, PendingIntent contentIntent) {
     NotificationCompat.Builder builder = new NotificationCompat.Builder(context);
     Notification notification;
     if (type.equalsIgnoreCase(NotificationModuleSubscriber.NO_USE_NOTIFICATION)) {
       notification =
-          builder
-              .setContentTitle(title)
-              .setContentText(description)
-              .setChannelId(FDAApplication.NOTIFICATION_CHANNEL_ID_INFO)
-              .setStyle(new NotificationCompat.BigTextStyle().bigText(description))
-              .setSmallIcon(R.mipmap.ic_launcher)
-              .setAutoCancel(true)
-              .setGroup("group")
-              .build();
+              builder
+                      .setContentTitle(title)
+                      .setContentText(description)
+                      .setChannelId(FdaApplication.NOTIFICATION_CHANNEL_ID_INFO)
+                      .setStyle(new NotificationCompat.BigTextStyle().bigText(description))
+                      .setSmallIcon(R.mipmap.ic_launcher)
+                      .setAutoCancel(true)
+                      .setGroup("group")
+                      .build();
     } else {
       notification =
-          builder
-              .setContentTitle(title)
-              .setContentText(description)
-              .setChannelId(FDAApplication.NOTIFICATION_CHANNEL_ID_INFO)
-              .setStyle(new NotificationCompat.BigTextStyle().bigText(description))
-              .setSmallIcon(R.mipmap.ic_launcher)
-              .setAutoCancel(true)
-              .setContentIntent(contentIntent)
-              .setGroup("group")
-              .build();
+              builder
+                      .setContentTitle(title)
+                      .setContentText(description)
+                      .setChannelId(FdaApplication.NOTIFICATION_CHANNEL_ID_INFO)
+                      .setStyle(new NotificationCompat.BigTextStyle().bigText(description))
+                      .setSmallIcon(R.mipmap.ic_launcher)
+                      .setAutoCancel(true)
+                      .setContentIntent(contentIntent)
+                      .setGroup("group")
+                      .build();
     }
     return notification;
   }
 
   private Notification createNotificationForLollipopAndAbove(
-      Context context,
-      String type,
-      String title,
-      String description,
-      Bitmap icon,
-      PendingIntent contentIntent) {
+          Context context,
+          String type,
+          String title,
+          String description,
+          Bitmap icon,
+          PendingIntent contentIntent) {
     NotificationCompat.Builder builder = new NotificationCompat.Builder(context);
     Notification notification;
     if (type.equalsIgnoreCase(NotificationModuleSubscriber.NO_USE_NOTIFICATION)) {
       notification =
-          builder
-              .setContentTitle(title)
-              .setLargeIcon(Bitmap.createScaledBitmap(icon, 128, 128, false))
-              .setContentText(description)
-              .setChannelId(FDAApplication.NOTIFICATION_CHANNEL_ID_INFO)
-              .setStyle(new NotificationCompat.BigTextStyle().bigText(description))
-              .setSmallIcon(R.mipmap.ic_launcher)
-              .setAutoCancel(true)
-              .setGroup("group")
-              .build();
+              builder
+                      .setContentTitle(title)
+                      .setLargeIcon(Bitmap.createScaledBitmap(icon, 128, 128, false))
+                      .setContentText(description)
+                      .setChannelId(FdaApplication.NOTIFICATION_CHANNEL_ID_INFO)
+                      .setStyle(new NotificationCompat.BigTextStyle().bigText(description))
+                      .setSmallIcon(R.mipmap.ic_launcher)
+                      .setAutoCancel(true)
+                      .setGroup("group")
+                      .build();
     } else {
       notification =
-          builder
-              .setContentTitle(title)
-              .setLargeIcon(Bitmap.createScaledBitmap(icon, 128, 128, false))
-              .setContentText(description)
-              .setChannelId(FDAApplication.NOTIFICATION_CHANNEL_ID_INFO)
-              .setStyle(new NotificationCompat.BigTextStyle().bigText(description))
-              .setSmallIcon(R.mipmap.ic_launcher)
-              .setAutoCancel(true)
-              .setContentIntent(contentIntent)
-              .setGroup("group")
-              .build();
+              builder
+                      .setContentTitle(title)
+                      .setLargeIcon(Bitmap.createScaledBitmap(icon, 128, 128, false))
+                      .setContentText(description)
+                      .setChannelId(FdaApplication.NOTIFICATION_CHANNEL_ID_INFO)
+                      .setStyle(new NotificationCompat.BigTextStyle().bigText(description))
+                      .setSmallIcon(R.mipmap.ic_launcher)
+                      .setAutoCancel(true)
+                      .setContentIntent(contentIntent)
+                      .setGroup("group")
+                      .build();
     }
     return notification;
   }
 
   private void notificationForTodayAnd24HrAlarm(Context context) {
-    Realm mRealm = AppController.getRealmobj(context);
-    DBServiceSubscriber dbServiceSubscriber = new DBServiceSubscriber();
+    Realm realm = AppController.getRealmobj(context);
+    DbServiceSubscriber dbServiceSubscriber = new DbServiceSubscriber();
     RealmResults<NotificationDb> notificationDbs =
-        dbServiceSubscriber.getNotificationDbByCurrentDate(mRealm);
+            dbServiceSubscriber.getNotificationDbByCurrentDate(realm);
     NotificationModuleSubscriber notificationModuleSubscriber =
-        new NotificationModuleSubscriber(dbServiceSubscriber, mRealm);
+            new NotificationModuleSubscriber(dbServiceSubscriber, realm);
     if (notificationDbs != null) {
       for (NotificationDb notificationDb : notificationDbs) {
         Calendar time = Calendar.getInstance();
         time.setTime(notificationDb.getDateTime());
         notificationModuleSubscriber.setAlarm(
-            context,
-            notificationDb.getTitle(),
-            notificationDb.getDescription(),
-            notificationDb.getType(),
-            notificationDb.getNotificationId(),
-            notificationDb.getStudyId(),
-            notificationDb.getActivityId(),
-            time);
+                context,
+                notificationDb.getTitle(),
+                notificationDb.getDescription(),
+                notificationDb.getType(),
+                notificationDb.getNotificationId(),
+                notificationDb.getStudyId(),
+                notificationDb.getActivityId(),
+                time);
       }
     }
     Calendar calendar = NotificationModuleSubscriber.getCalenderNextDay();
 
     Intent notificationIntent =
-        new Intent(context, AlarmReceiver.class)
-            .setAction("android.media.action.DISPLAY_NOTIFICATION")
-            .addCategory("android.intent.category.DEFAULT")
-            .putExtra("pendingIntentId", REQUEST_CODE_24HR_NOTIFICATION);
+            new Intent(context, AlarmReceiver.class)
+                    .setAction("android.media.action.DISPLAY_NOTIFICATION")
+                    .addCategory("android.intent.category.DEFAULT")
+                    .putExtra("pendingIntentId", REQUEST_CODE_24HR_NOTIFICATION);
     AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
     PendingIntent broadcast =
-        PendingIntent.getBroadcast(
-            context,
-            REQUEST_CODE_24HR_NOTIFICATION,
-            notificationIntent,
-            PendingIntent.FLAG_UPDATE_CURRENT);
+            PendingIntent.getBroadcast(
+                    context,
+                    REQUEST_CODE_24HR_NOTIFICATION,
+                    notificationIntent,
+                    PendingIntent.FLAG_UPDATE_CURRENT);
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
       alarmManager.setExactAndAllowWhileIdle(
-          AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), broadcast);
+              AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), broadcast);
     } else {
       alarmManager.setExact(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), broadcast);
     }
-    dbServiceSubscriber.closeRealmObj(mRealm);
+    dbServiceSubscriber.closeRealmObj(realm);
   }
 }

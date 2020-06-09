@@ -1,5 +1,6 @@
 /*
  * Copyright © 2017-2019 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors.
+ * Copyright 2020 Google LLC
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction, including
  * without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
@@ -184,7 +185,7 @@ public class StepRecordCustom extends RealmObject {
     for (Map.Entry<String, JsonElement> entry : entitySet) {
       if (entry.getValue().isJsonArray()) {
         JsonArray arr = entry.getValue().getAsJsonArray();
-        Object list[] = new Object[arr.size()];
+        Object[] list = new Object[arr.size()];
         int i = 0;
         for (JsonElement anArr : arr) {
           list[i] = findPrimitiveData(anArr);
@@ -206,7 +207,7 @@ public class StepRecordCustom extends RealmObject {
             for (Map.Entry<String, JsonElement> entryStepVal : entitySetStepResult) {
               if (entryStepVal.getValue().isJsonArray()) {
                 JsonArray arr = entryStepVal.getValue().getAsJsonArray();
-                Object list[] = new Object[arr.size()];
+                Object[] list = new Object[arr.size()];
                 int i = 0;
                 for (JsonElement anArr : arr) {
                   if (anArr.isJsonObject()) {
@@ -233,7 +234,7 @@ public class StepRecordCustom extends RealmObject {
   private static Object findPrimitiveData(JsonElement jsonElement) {
     if (jsonElement.isJsonPrimitive()) {
       JsonPrimitive prim = jsonElement.getAsJsonPrimitive();
-      if (prim.isJsonPrimitive())
+      if (prim.isJsonPrimitive()) {
         if (prim.isBoolean()) {
           return prim.getAsBoolean();
         } else if (prim.isString()) {
@@ -251,6 +252,7 @@ public class StepRecordCustom extends RealmObject {
             }
           }
         }
+      }
     }
     return jsonElement;
   }

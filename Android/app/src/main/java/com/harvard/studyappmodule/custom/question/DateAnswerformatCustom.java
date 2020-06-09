@@ -1,5 +1,6 @@
 /*
  * Copyright © 2017-2019 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors.
+ * Copyright 2020 Google LLC
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction, including
  * without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
@@ -48,7 +49,9 @@ public class DateAnswerformatCustom extends AnswerFormatCustom {
     this.defaultDate = defaultDate;
     this.minimumDate = minimumDate;
     this.maximumDate = maximumDate;
-    if (dateRange != null) this.dateRange = dateRange;
+    if (dateRange != null) {
+      this.dateRange = dateRange;
+    }
   }
 
   /**
@@ -96,9 +99,15 @@ public class DateAnswerformatCustom extends AnswerFormatCustom {
 
   @Override
   public QuestionType getQuestionType() {
-    if (style == DateAnswerStyle.Date) return Type.Date;
-    if (style == DateAnswerStyle.DateAndTime) return Type.DateAndTime;
-    if (style == DateAnswerStyle.TimeOfDay) return Type.TimeOfDay;
+    if (style == DateAnswerStyle.Date) {
+      return Type.Date;
+    }
+    if (style == DateAnswerStyle.DateAndTime) {
+      return Type.DateAndTime;
+    }
+    if (style == DateAnswerStyle.TimeOfDay) {
+      return Type.TimeOfDay;
+    }
 
     return Type.None;
   }
@@ -106,8 +115,11 @@ public class DateAnswerformatCustom extends AnswerFormatCustom {
   // Before used FormatHelper.SIMPLE_FORMAT_DATE Now FormatHelper.DEFAULT_FORMAT
   public BodyAnswer validateAnswer(Date resultDate) {
     SimpleDateFormat simpleDateFormat;
-    if (style == DateAnswerStyle.Date) simpleDateFormat = FormatHelper.SIMPLE_FORMAT_DATE;
-    else simpleDateFormat = FormatHelper.DEFAULT_FORMAT;
+    if (style == DateAnswerStyle.Date) {
+      simpleDateFormat = FormatHelper.SIMPLE_FORMAT_DATE;
+    } else {
+      simpleDateFormat = FormatHelper.DEFAULT_FORMAT;
+    }
 
     if (dateRange.equalsIgnoreCase("") || dateRange.equalsIgnoreCase("custom")) {
       if (minimumDate != null && resultDate.getTime() < minimumDate.getTime()) {
