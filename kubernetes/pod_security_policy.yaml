@@ -13,7 +13,9 @@ metadata:
     seccomp.security.alpha.kubernetes.io/defaultProfileName:  'runtime/default'
     apparmor.security.beta.kubernetes.io/defaultProfileName:  'runtime/default'
 spec:
-  privileged: false
+  privileged: true
+  allowedCapabilities:
+  - 'CAP_SYS_ADMIN'
   # Required to prevent escalations to root.
   allowPrivilegeEscalation: false
   # This is redundant with non-root + disallow privilege escalation,

@@ -28,8 +28,8 @@ spec:
           lifecycle:
             postStart:
               exec:
-                # The "mystudies-demo-apps-resources" should ebe changed to the name os the 
-                # GCS bucket manually set up within the <prefix>-apps project.
+                # The "mystudies-demo-apps-resources" should ebe changed to the name os the GCS bucket
+                # manually set up within the <prefix>-apps project.
                 command: ["gcsfuse", "-o", "nonempty", "mystudies-demo-apps-resources", "/usr/local/tomcat/webapps/fdaResources"]
             preStop:
               exec:
