@@ -1,5 +1,6 @@
 /*
  * Copyright © 2017-2019 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors.
+ * Copyright 2020 Google LLC
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction, including
  * without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
@@ -35,24 +36,24 @@ import io.realm.RealmList;
 
 public class StudyInfoPagerAdapter extends PagerAdapter {
 
-  private int mSize;
-  private AppCompatTextView mTitle;
-  private AppCompatTextView mDesc;
-  private RelativeLayout mWatchVideo;
-  private AppCompatTextView mWatchVideoLabel;
-  private Context mContext;
-  private RealmList<StudyInfo> mInfo;
-  private AppCompatImageView mBgImg;
+  private int size;
+  private AppCompatTextView title;
+  private AppCompatTextView desc;
+  private RelativeLayout watchVideo;
+  private AppCompatTextView watchVideoLabel;
+  private Context context;
+  private RealmList<StudyInfo> info;
+  private AppCompatImageView bgImg;
 
   StudyInfoPagerAdapter(Context context, RealmList<StudyInfo> info, String studyId) {
-    mSize = info.size();
-    this.mContext = context;
-    this.mInfo = info;
+    size = info.size();
+    this.context = context;
+    this.info = info;
   }
 
   @Override
   public int getCount() {
-    return mSize;
+    return size;
   }
 
   @Override
@@ -69,9 +70,9 @@ public class StudyInfoPagerAdapter extends PagerAdapter {
   public Object instantiateItem(ViewGroup collection, int position) {
     LayoutInflater inflater =
         (LayoutInflater) collection.getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-    if (mInfo.get(position).getType().equalsIgnoreCase("video")) {
+    if (info.get(position).getType().equalsIgnoreCase("video")) {
       View view = inflater.inflate(R.layout.study_info_item1, null);
-      initializeXMLId(position, view);
+      initializeXmlId(position, view);
       setFont(position, view);
       bindEvents(position);
       setData(position);
@@ -79,7 +80,7 @@ public class StudyInfoPagerAdapter extends PagerAdapter {
       return view;
     } else {
       View view1 = inflater.inflate(R.layout.study_info_item2, null);
-      initializeXMLId(position, view1);
+      initializeXmlId(position, view1);
       setFont(position, view1);
       bindEvents(position);
       setData(position);
@@ -89,39 +90,39 @@ public class StudyInfoPagerAdapter extends PagerAdapter {
   }
 
   private void setData(int pos) {
-    mTitle.setText(mInfo.get(pos).getTitle());
-    mDesc.setText(Html.fromHtml(mInfo.get(pos).getText()));
-    Glide.with(mContext)
-        .load(mInfo.get(pos).getImage())
+    title.setText(info.get(pos).getTitle());
+    desc.setText(Html.fromHtml(info.get(pos).getText()));
+    Glide.with(context)
+        .load(info.get(pos).getImage())
         .thumbnail(0.5f)
         .crossFade()
         .diskCacheStrategy(DiskCacheStrategy.ALL)
-        .into(mBgImg);
+        .into(bgImg);
   }
 
-  private void initializeXMLId(int pos, View view) {
-    if (mInfo.get(pos).getType().equalsIgnoreCase("video")) {
-      mTitle = (AppCompatTextView) view.findViewById(R.id.title);
-      mDesc = (AppCompatTextView) view.findViewById(R.id.desc);
-      mWatchVideo = (RelativeLayout) view.findViewById(R.id.watch_video);
-      mWatchVideoLabel = (AppCompatTextView) view.findViewById(R.id.watchVideoLabel);
-      mBgImg = (AppCompatImageView) view.findViewById(R.id.bgImg);
+  private void initializeXmlId(int pos, View view) {
+    if (info.get(pos).getType().equalsIgnoreCase("video")) {
+      title = (AppCompatTextView) view.findViewById(R.id.title);
+      desc = (AppCompatTextView) view.findViewById(R.id.desc);
+      watchVideo = (RelativeLayout) view.findViewById(R.id.watch_video);
+      watchVideoLabel = (AppCompatTextView) view.findViewById(R.id.watchVideoLabel);
+      bgImg = (AppCompatImageView) view.findViewById(R.id.bgImg);
     } else {
-      mTitle = (AppCompatTextView) view.findViewById(R.id.title);
-      mDesc = (AppCompatTextView) view.findViewById(R.id.desc);
-      mBgImg = (AppCompatImageView) view.findViewById(R.id.bgImg);
+      title = (AppCompatTextView) view.findViewById(R.id.title);
+      desc = (AppCompatTextView) view.findViewById(R.id.desc);
+      bgImg = (AppCompatImageView) view.findViewById(R.id.bgImg);
     }
   }
 
   private void setFont(int pos, View view) {
     try {
-      if (mInfo.get(pos).getType().equalsIgnoreCase("video")) {
-        mTitle.setTypeface(AppController.getTypeface(view.getContext(), "regular"));
-        mDesc.setTypeface(AppController.getTypeface(view.getContext(), "regular"));
-        mWatchVideoLabel.setTypeface(AppController.getTypeface(view.getContext(), "regular"));
+      if (info.get(pos).getType().equalsIgnoreCase("video")) {
+        title.setTypeface(AppController.getTypeface(view.getContext(), "regular"));
+        desc.setTypeface(AppController.getTypeface(view.getContext(), "regular"));
+        watchVideoLabel.setTypeface(AppController.getTypeface(view.getContext(), "regular"));
       } else {
-        mTitle.setTypeface(AppController.getTypeface(view.getContext(), "thin"));
-        mDesc.setTypeface(AppController.getTypeface(view.getContext(), "regular"));
+        title.setTypeface(AppController.getTypeface(view.getContext(), "thin"));
+        desc.setTypeface(AppController.getTypeface(view.getContext(), "regular"));
       }
     } catch (Exception e) {
       Logger.log(e);
@@ -129,19 +130,19 @@ public class StudyInfoPagerAdapter extends PagerAdapter {
   }
 
   private void bindEvents(final int pos) {
-    if (mInfo.get(pos).getType().equalsIgnoreCase("video")) {
-      if (mInfo.get(pos).getLink().equalsIgnoreCase("")) {
-        mWatchVideo.setVisibility(View.INVISIBLE);
-        mWatchVideo.setClickable(false);
+    if (info.get(pos).getType().equalsIgnoreCase("video")) {
+      if (info.get(pos).getLink().equalsIgnoreCase("")) {
+        watchVideo.setVisibility(View.INVISIBLE);
+        watchVideo.setClickable(false);
       } else {
-        mWatchVideo.setVisibility(View.VISIBLE);
-        mWatchVideo.setClickable(true);
-        mWatchVideo.setOnClickListener(
+        watchVideo.setVisibility(View.VISIBLE);
+        watchVideo.setClickable(true);
+        watchVideo.setOnClickListener(
             new View.OnClickListener() {
               @Override
               public void onClick(View view) {
-                Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(mInfo.get(pos).getLink()));
-                mContext.startActivity(intent);
+                Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(info.get(pos).getLink()));
+                context.startActivity(intent);
               }
             });
       }

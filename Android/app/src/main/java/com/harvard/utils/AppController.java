@@ -39,11 +39,13 @@ import com.harvard.R;
 import com.harvard.SplashActivity;
 import com.harvard.notificationmodule.NotificationModuleSubscriber;
 import com.harvard.offlinemodule.model.OfflineData;
-import com.harvard.storagemodule.DBServiceSubscriber;
+import com.harvard.storagemodule.DbServiceSubscriber;
 import com.harvard.studyappmodule.StandaloneActivity;
 import com.harvard.studyappmodule.StudyActivity;
 import com.harvard.usermodule.SignInActivity;
 import com.harvard.utils.realm.RealmEncryptionHelper;
+import io.realm.Realm;
+import io.realm.RealmConfiguration;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -78,38 +80,44 @@ import javax.crypto.SecretKey;
 import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
 import javax.security.auth.x500.X500Principal;
-import io.realm.Realm;
-import io.realm.RealmConfiguration;
 
 public class AppController {
 
-  private static SharedPreferenceHelper sSharedPreferenceHelper;
-  private static JsonFormatHelper sJsonFormatHelper;
-  private static SetDialogHelper sSetDialogHelper;
-  private static ProgressDialogHelper sProgressDialogHelper;
+  private static SharedPreferenceHelper sharedPreferenceHelper;
+  private static JsonFormatHelper jsonFormatHelper;
+  private static SetDialogHelper setDialogHelper;
+  private static ProgressDialogHelper progressDialogHelper;
   private static RealmConfiguration config;
-  private static KeyStore mKeyStore;
+  private static KeyStore keyStore;
   private static final String TAG = "FDAKeystore";
-  private static String mKeystoreValue = null;
+  private static String keystoreValue = null;
 
   public static SharedPreferenceHelper getHelperSharedPreference() {
-    if (sSharedPreferenceHelper == null) sSharedPreferenceHelper = new SharedPreferenceHelper();
-    return sSharedPreferenceHelper;
+    if (sharedPreferenceHelper == null) {
+      sharedPreferenceHelper = new SharedPreferenceHelper();
+    }
+    return sharedPreferenceHelper;
   }
 
   public static JsonFormatHelper getHelperJsonFormat() {
-    if (sJsonFormatHelper == null) sJsonFormatHelper = new JsonFormatHelper();
-    return sJsonFormatHelper;
+    if (jsonFormatHelper == null) {
+      jsonFormatHelper = new JsonFormatHelper();
+    }
+    return jsonFormatHelper;
   }
 
   public static ProgressDialogHelper getHelperProgressDialog() {
-    if (sProgressDialogHelper == null) sProgressDialogHelper = new ProgressDialogHelper();
-    return sProgressDialogHelper;
+    if (progressDialogHelper == null) {
+      progressDialogHelper = new ProgressDialogHelper();
+    }
+    return progressDialogHelper;
   }
 
   public static SetDialogHelper getHelperSetDialog() {
-    if (sSetDialogHelper == null) sSetDialogHelper = new SetDialogHelper();
-    return sSetDialogHelper;
+    if (setDialogHelper == null) {
+      setDialogHelper = new SetDialogHelper();
+    }
+    return setDialogHelper;
   }
 
   public static boolean getHelperIsValidEmail(String target) {
@@ -125,8 +133,10 @@ public class AppController {
     settings.edit().clear().apply();
     // delete passcode from keystore
     String pass = AppController.refreshKeys("passcode");
-    if (pass != null) AppController.deleteKey("passcode_" + pass);
-    DBServiceSubscriber dbServiceSubscriber = new DBServiceSubscriber();
+    if (pass != null) {
+      AppController.deleteKey("passcode_" + pass);
+    }
+    DbServiceSubscriber dbServiceSubscriber = new DbServiceSubscriber();
     Realm realm = getRealmobj(context);
     dbServiceSubscriber.deleteDb(context);
     try {
@@ -233,67 +243,55 @@ public class AppController {
     return new SimpleDateFormat("MM-dd-yyyy hh:mm:ss a");
   }
 
-  public static SimpleDateFormat getDateFormat() {
+  public static SimpleDateFormat getDateFormatForApi() {
     return new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ");
   }
 
-  public static SimpleDateFormat getDateFormatUTC() {
-    SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ");
-    return simpleDateFormat;
-  }
 
-  public static SimpleDateFormat getDateFormatUTC1() {
+  public static SimpleDateFormat getDateFormatUtcNoZone() {
     SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
     return simpleDateFormat;
   }
 
-  public static SimpleDateFormat getDateFormatType1() {
+  public static SimpleDateFormat getDateFormatForNotification() {
     return new SimpleDateFormat("MMM dd yyyy");
   }
 
-  public static SimpleDateFormat getDateFormatType12() {
+  public static SimpleDateFormat getDateFormatForActivityList() {
     return new SimpleDateFormat("MMM dd, yyyy");
   }
 
-  public static SimpleDateFormat getDateFormatType4() {
+  public static SimpleDateFormat getDateFormatForDailyRun() {
     return new SimpleDateFormat("yyyy-MM-dd");
   }
 
-  public static String getDateFormatType3() {
+  public static String getDateFormatForConsentPdf() {
     Date date = new Date();
     return new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(date);
   }
 
-  public static SimpleDateFormat getDateFormatType2() {
-    return new SimpleDateFormat("hha, MMM dd yyyy");
-  }
-
-  public static SimpleDateFormat getDateFormatType9() {
+  public static SimpleDateFormat getDateFormatForOtherFreq() {
     return new SimpleDateFormat("hh:mma, MMM dd, yyyy");
   }
 
-  public static SimpleDateFormat getDateFormatType10() {
+  public static SimpleDateFormat getDateFormatForResourceAvailability() {
     return new SimpleDateFormat("yyyy-MM-dd");
   }
 
-  public static SimpleDateFormat getDateFormatType11() {
+  public static SimpleDateFormat getDateFormatForDailyRunStartAndEnd() {
     SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
     return new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
   }
 
-  public static SimpleDateFormat getDateFormatFormatIn() {
-    return new SimpleDateFormat("MM yyyy");
-  }
-
-  public static SimpleDateFormat getDateFormatFormatOut() {
+  public static SimpleDateFormat getDateFormatForChartAndStat() {
     return new SimpleDateFormat("MMM yyyy");
   }
 
-  public static SimpleDateFormat getDateFormatFormatInType1() {
+  public static SimpleDateFormat getDateFormatForDashboardCurrentDay() {
     return new SimpleDateFormat("dd MM yyyy");
   }
 
-  public static SimpleDateFormat getDateFormatFormatOutType1() {
+  public static SimpleDateFormat getDateFormatForDashboardAndChartCurrentDayOut() {
     return new SimpleDateFormat("dd, MMM yyyy");
   }
 
@@ -309,23 +307,23 @@ public class AppController {
     return new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss:SSSZ"); // "2017/06/15 08:27:07"
   }
 
-  public static SimpleDateFormat getHourAMPMFormat() {
+  public static SimpleDateFormat getHourAmPmFormat() {
     return new SimpleDateFormat("hhaa");
   }
 
-  public static SimpleDateFormat getHourAMPMFormat1() {
+  public static SimpleDateFormat getHourAmPmFormat1() {
     return new SimpleDateFormat("hh:mmaa");
   }
 
-  public static SimpleDateFormat getDDFormat() {
+  public static SimpleDateFormat getDdFormat() {
     return new SimpleDateFormat("dd");
   }
 
-  public static SimpleDateFormat getEEFormat() {
+  public static SimpleDateFormat getEeFormat() {
     return new SimpleDateFormat("EE");
   }
 
-  public static SimpleDateFormat getHourAMPMMonthDayYearFormat() {
+  public static SimpleDateFormat getHourAmPmMonthDayYearFormat() {
     return new SimpleDateFormat("hh:mmaa, MMM dd, yyyy");
   }
 
@@ -428,7 +426,9 @@ public class AppController {
                   if (finish) {
                     ((Activity) context).finish();
                   }
-                  if (!forceUpgrade) alertDialog.dismiss();
+                  if (!forceUpgrade) {
+                    alertDialog.dismiss();
+                  }
                   // else dialog stays open. Make sure you have an obvious way to close the dialog
                   // especially if you set cancellable to false.
                 }
@@ -451,7 +451,6 @@ public class AppController {
       // ...Irrelevant code for customizing the buttons and title
       LayoutInflater inflater = ((Activity) context).getLayoutInflater();
       View dialogView = inflater.inflate(R.layout.force_upgrade_lay, null);
-      TextView title1 = (TextView) dialogView.findViewById(R.id.title);
       TextView upgrade = (TextView) dialogView.findViewById(R.id.upgrade);
       TextView desc = (TextView) dialogView.findViewById(R.id.desc);
       desc.setText(versionMessage);
@@ -478,6 +477,7 @@ public class AppController {
             }
           });
       dialogBuilder.setView(dialogView);
+      TextView title1 = (TextView) dialogView.findViewById(R.id.title);
       title1.setText(version);
 
       AlertDialog alertDialog = dialogBuilder.create();
@@ -499,11 +499,11 @@ public class AppController {
     return executedSuccesfully;
   }
 
-  /** KEYSTORE RELATED CODES HERE */
+  /** KEYSTORE RELATED CODES HERE. */
   public static void keystoreInitilize(Context context) {
     try {
-      mKeyStore = KeyStore.getInstance("AndroidKeyStore");
-      mKeyStore.load(null);
+      keyStore = KeyStore.getInstance("AndroidKeyStore");
+      keyStore.load(null);
     } catch (Exception e) {
       Logger.log(e);
     }
@@ -529,16 +529,16 @@ public class AppController {
 
     try {
       Enumeration<String> aliases;
-      if (mKeyStore == null) {
-        mKeyStore = KeyStore.getInstance("AndroidKeyStore");
-        mKeyStore.load(null);
+      if (keyStore == null) {
+        keyStore = KeyStore.getInstance("AndroidKeyStore");
+        keyStore.load(null);
       }
-      aliases = mKeyStore.aliases();
+      aliases = keyStore.aliases();
       String val;
       while (aliases.hasMoreElements()) {
         val = aliases.nextElement();
         if (val.contains(concatedString)) {
-          String splitString[] = val.split("_");
+          String[] splitString = val.split("_");
           return splitString[1];
         }
       }
@@ -552,7 +552,7 @@ public class AppController {
   public static void createNewKeys(Context context, String alias) {
     try {
       // Create new key if needed
-      if (!mKeyStore.containsAlias(alias)) {
+      if (!keyStore.containsAlias(alias)) {
         Calendar start = Calendar.getInstance();
         Calendar end = Calendar.getInstance();
         end.add(Calendar.YEAR, 1);
@@ -576,18 +576,18 @@ public class AppController {
   // delete the keystore value
   public static void deleteKey(String key) {
     try {
-      mKeyStore.deleteEntry(key);
+      keyStore.deleteEntry(key);
     } catch (KeyStoreException e) {
       Logger.log(e);
     }
   }
 
   // encrypt the string
-  public static void encryptString(Context context, String mPasswordString) {
+  public static void encryptString(Context context, String passwordString) {
     try {
       refreshKeys("key");
       KeyStore.PrivateKeyEntry privateKeyEntry =
-          (KeyStore.PrivateKeyEntry) mKeyStore.getEntry(mKeystoreValue, null);
+          (KeyStore.PrivateKeyEntry) keyStore.getEntry(keystoreValue, null);
       RSAPublicKey publicKey = (RSAPublicKey) privateKeyEntry.getCertificate().getPublicKey();
 
       Cipher inCipher = Cipher.getInstance("RSA/ECB/PKCS1Padding", "AndroidOpenSSL");
@@ -595,7 +595,7 @@ public class AppController {
 
       ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
       CipherOutputStream cipherOutputStream = new CipherOutputStream(outputStream, inCipher);
-      cipherOutputStream.write(mPasswordString.getBytes("UTF-8"));
+      cipherOutputStream.write(passwordString.getBytes("UTF-8"));
       cipherOutputStream.close();
 
       byte[] vals = outputStream.toByteArray();
@@ -610,7 +610,7 @@ public class AppController {
     try {
       refreshKeys("key");
       KeyStore.PrivateKeyEntry privateKeyEntry =
-          (KeyStore.PrivateKeyEntry) mKeyStore.getEntry(mKeystoreValue, null);
+          (KeyStore.PrivateKeyEntry) keyStore.getEntry(keystoreValue, null);
       RSAPrivateKey privateKey = (RSAPrivateKey) privateKeyEntry.getPrivateKey();
 
       Cipher output = Cipher.getInstance("RSA/ECB/PKCS1Padding", "AndroidOpenSSL");
@@ -703,12 +703,14 @@ public class AppController {
   }
 
   // encrypt the pdf file and return File
-  public static File genarateEncryptedConsentPDF(String filePath, String timeStamp) {
+  public static File generateEncryptedConsentPdf(String filePath, String timeStamp) {
     try {
       FileInputStream fis = new FileInputStream(new File(filePath + timeStamp + ".pdf"));
       File encryptFile = new File(filePath + File.separator + timeStamp + ".txt");
       int read;
-      if (!encryptFile.exists()) encryptFile.createNewFile();
+      if (!encryptFile.exists()) {
+        encryptFile.createNewFile();
+      }
       FileOutputStream fos = new FileOutputStream(encryptFile);
       Cipher encipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
 
@@ -747,7 +749,7 @@ public class AppController {
   }
 
   // decrypt the pdf file and return CipherInputStream
-  public static CipherInputStream genarateDecryptedConsentPDF(String filePath) {
+  public static CipherInputStream generateDecryptedConsentPdf(String filePath) {
     try {
       FileInputStream fis = new FileInputStream(new File(filePath));
       Cipher encipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
@@ -827,7 +829,7 @@ public class AppController {
       offlineData.setStudyId(studyId);
       offlineData.setActivityId(activityId);
       offlineData.setStatus(false);
-      DBServiceSubscriber db = new DBServiceSubscriber();
+      DbServiceSubscriber db = new DbServiceSubscriber();
       db.saveOfflineData(context, offlineData);
     } catch (Exception e) {
       Logger.log(e);
@@ -839,8 +841,10 @@ public class AppController {
     settings.edit().clear().apply();
     // delete passcode from keystore
     String pass = AppController.refreshKeys("passcode");
-    if (pass != null) AppController.deleteKey("passcode_" + pass);
-    DBServiceSubscriber dbServiceSubscriber = new DBServiceSubscriber();
+    if (pass != null) {
+      AppController.deleteKey("passcode_" + pass);
+    }
+    DbServiceSubscriber dbServiceSubscriber = new DbServiceSubscriber();
     Realm realm = getRealmobj(context);
     dbServiceSubscriber.deleteDb(context);
     try {

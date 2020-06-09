@@ -254,7 +254,7 @@ public class FdahpStudyDesignerUtil {
   @SuppressWarnings({"rawtypes", "unchecked"})
   public static Map<String, String> getAppProperties() {
     HashMap hm = new HashMap<String, String>();
-    logger.warn("FdahpStudyDesignerUtil - getAppProperties() :: Properties Initialization");
+    logger.info("FdahpStudyDesignerUtil - getAppProperties() :: Properties Initialization");
     Enumeration<String> keys = null;
     Enumeration<Object> objectKeys = null;
     Resource resource = null;

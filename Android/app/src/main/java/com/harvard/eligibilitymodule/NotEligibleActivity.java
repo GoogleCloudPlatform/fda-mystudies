@@ -20,31 +20,31 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.TextView;
 import com.harvard.R;
-import com.harvard.storagemodule.DBServiceSubscriber;
+import com.harvard.storagemodule.DbServiceSubscriber;
 import com.harvard.studyappmodule.StudyFragment;
 import com.harvard.usermodule.UserModulePresenter;
 import com.harvard.usermodule.event.UpdatePreferenceEvent;
 import com.harvard.usermodule.webservicemodel.LoginData;
 import com.harvard.utils.AppController;
 import com.harvard.utils.Logger;
-import com.harvard.utils.URLs;
+import com.harvard.utils.Urls;
 import com.harvard.webservicemodule.apihelper.ApiCall;
 import com.harvard.webservicemodule.events.RegistrationServerEnrollmentConfigEvent;
+import java.util.HashMap;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import java.util.HashMap;
 
 public class NotEligibleActivity extends AppCompatActivity
     implements ApiCall.OnAsyncRequestComplete {
   private static final int UPDATE_USERPREFERENCE_RESPONSECODE = 200;
-  DBServiceSubscriber dbServiceSubscriber;
+  DbServiceSubscriber dbServiceSubscriber;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_not_eligible);
-    dbServiceSubscriber = new DBServiceSubscriber();
+    dbServiceSubscriber = new DbServiceSubscriber();
     TextView textView = (TextView) findViewById(R.id.notEligibleOK);
     textView.setOnClickListener(
         new View.OnClickListener() {
@@ -58,7 +58,6 @@ public class NotEligibleActivity extends AppCompatActivity
 
   public void updateuserpreference() {
     AppController.getHelperProgressDialog().showProgress(NotEligibleActivity.this, "", "", false);
-    UpdatePreferenceEvent updatePreferenceEvent = new UpdatePreferenceEvent();
 
     HashMap<String, String> header = new HashMap();
     header.put(
@@ -94,7 +93,7 @@ public class NotEligibleActivity extends AppCompatActivity
     RegistrationServerEnrollmentConfigEvent registrationServerEnrollmentConfigEvent =
         new RegistrationServerEnrollmentConfigEvent(
             "post_object",
-            URLs.UPDATE_STUDY_PREFERENCE,
+            Urls.UPDATE_STUDY_PREFERENCE,
             UPDATE_USERPREFERENCE_RESPONSECODE,
             this,
             LoginData.class,
@@ -103,7 +102,7 @@ public class NotEligibleActivity extends AppCompatActivity
             jsonObject,
             false,
             this);
-
+    UpdatePreferenceEvent updatePreferenceEvent = new UpdatePreferenceEvent();
     updatePreferenceEvent.setRegistrationServerEnrollmentConfigEvent(
         registrationServerEnrollmentConfigEvent);
     UserModulePresenter userModulePresenter = new UserModulePresenter();

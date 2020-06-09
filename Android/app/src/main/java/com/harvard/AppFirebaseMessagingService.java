@@ -26,7 +26,7 @@ import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.NotificationManagerCompat;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
-import com.harvard.storagemodule.DBServiceSubscriber;
+import com.harvard.storagemodule.DbServiceSubscriber;
 import com.harvard.studyappmodule.StandaloneActivity;
 import com.harvard.studyappmodule.StudyActivity;
 import com.harvard.studyappmodule.StudyFragment;
@@ -39,7 +39,7 @@ import io.realm.Realm;
 import io.realm.RealmList;
 import java.util.Random;
 
-public class MyFirebaseMessagingService extends FirebaseMessagingService {
+public class AppFirebaseMessagingService extends FirebaseMessagingService {
 
   private NotificationManagerCompat notificationManager;
   public static String TYPE = "type";
@@ -50,15 +50,15 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
   private static String MESSAGE = "message";
   private static String NOTIFICATION_INTENT = "notificationIntent";
   private static String LOCAL_NOTIFICATION = "localNotification";
-  private DBServiceSubscriber dbServiceSubscriber;
-  private Realm mRealm;
+  private DbServiceSubscriber dbServiceSubscriber;
+  private Realm realm;
 
   @Override
   public void onMessageReceived(RemoteMessage remoteMessage) {
-    dbServiceSubscriber = new DBServiceSubscriber();
-    mRealm = AppController.getRealmobj(this);
+    dbServiceSubscriber = new DbServiceSubscriber();
+    realm = AppController.getRealmobj(this);
     handleNotification(remoteMessage);
-    dbServiceSubscriber.closeRealmObj(mRealm);
+    dbServiceSubscriber.closeRealmObj(realm);
   }
 
   private void handleNotification(RemoteMessage remoteMessage) {
@@ -143,11 +143,11 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
       if (type.equalsIgnoreCase("Study")) {
 
-        mRealm = AppController.getRealmobj(this);
-        Study mStudy = dbServiceSubscriber.getStudyListFromDB(mRealm);
-        dbServiceSubscriber.closeRealmObj(mRealm);
-        if (mStudy != null) {
-          RealmList<StudyList> studyListArrayList = mStudy.getStudies();
+        realm = AppController.getRealmobj(this);
+        Study study = dbServiceSubscriber.getStudyListFromDB(realm);
+        dbServiceSubscriber.closeRealmObj(realm);
+        if (study != null) {
+          RealmList<StudyList> studyListArrayList = study.getStudies();
           for (int j = 0; j < studyListArrayList.size(); j++) {
             if (studyId.equalsIgnoreCase(studyListArrayList.get(j).getStudyId())) {
               if (studyListArrayList
@@ -168,18 +168,19 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
   // This method is only generating push notification
   // It is same as we did in earlier posts
   private void sendNotification(String messageBody, PendingIntent pendingIntent) {
-    if (notificationManager == null)
-      notificationManager = NotificationManagerCompat.from(MyFirebaseMessagingService.this);
-    Uri defaultSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+    if (notificationManager == null) {
+      notificationManager = NotificationManagerCompat.from(AppFirebaseMessagingService.this);
+    }
+    realm = AppController.getRealmobj(this);
+    UserProfileData userProfileData = dbServiceSubscriber.getUserProfileData(realm);
+    boolean isNotification = true;
+    if (userProfileData != null) {
+      isNotification = userProfileData.getSettings().isRemoteNotifications();
+    }
+    dbServiceSubscriber.closeRealmObj(realm);
     int notifyIcon = R.mipmap.ic_launcher;
     Bitmap icon = BitmapFactory.decodeResource(getResources(), notifyIcon);
-    mRealm = AppController.getRealmobj(this);
-    UserProfileData mUserProfileData = dbServiceSubscriber.getUserProfileData(mRealm);
-    boolean isNotification = true;
-    if (mUserProfileData != null) {
-      isNotification = mUserProfileData.getSettings().isRemoteNotifications();
-    }
-    dbServiceSubscriber.closeRealmObj(mRealm);
+    Uri defaultSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
     NotificationCompat.Builder notificationBuilder =
         new NotificationCompat.Builder(this)
             .setSmallIcon(R.drawable.icon)
@@ -189,13 +190,15 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
             .setAutoCancel(true)
             .setSound(defaultSoundUri)
             .setContentIntent(pendingIntent)
-            .setChannelId(FDAApplication.NOTIFICATION_CHANNEL_ID_INFO)
+            .setChannelId(FdaApplication.NOTIFICATION_CHANNEL_ID_INFO)
             .setStyle(new NotificationCompat.BigTextStyle().bigText(messageBody))
             .setGroup("group");
 
     Notification notification = notificationBuilder.build();
     Random random = new Random();
     int m = random.nextInt(9999 - 1000) + 1000;
-    if (isNotification) notificationManager.notify(m, notification);
+    if (isNotification) {
+      notificationManager.notify(m, notification);
+    }
   }
 }

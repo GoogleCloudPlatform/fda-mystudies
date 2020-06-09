@@ -1,5 +1,6 @@
 /*
  * Copyright © 2017-2019 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors.
+ * Copyright 2020 Google LLC
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction, including
  * without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
@@ -21,41 +22,41 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 
-public class FDAEventBus extends EventBus {
-  private static volatile FDAEventBus defaultInstance;
-  private final ScheduledExecutorService mExecutorService;
+public class FdaEventBus extends EventBus {
+  private static volatile FdaEventBus defaultInstance;
+  private final ScheduledExecutorService executorService;
 
-  private FDAEventBus() {
+  private FdaEventBus() {
     super();
-    mExecutorService = Executors.newSingleThreadScheduledExecutor();
+    executorService = Executors.newSingleThreadScheduledExecutor();
   }
 
   public ScheduledFuture<Object> postDelayed(Object event, long delay) {
-    return mExecutorService.schedule(
+    return executorService.schedule(
         new PostEventCallable(this, event), delay, TimeUnit.MILLISECONDS);
   }
 
   private class PostEventCallable implements Callable<Object> {
-    private final FDAEventBus mEventBus;
-    private final Object mEvent;
+    private final FdaEventBus eventBus;
+    private final Object event;
 
-    public PostEventCallable(FDAEventBus eventBus, Object event) {
-      mEventBus = eventBus;
-      mEvent = event;
+    public PostEventCallable(FdaEventBus eventBus, Object event) {
+      this.eventBus = eventBus;
+      this.event = event;
     }
 
     @Override
     public Object call() throws Exception {
-      mEventBus.post(mEvent);
+      eventBus.post(event);
       return null;
     }
   }
 
-  public static FDAEventBus getInstance() {
+  public static FdaEventBus getInstance() {
     if (defaultInstance == null) {
-      synchronized (FDAEventBus.class) {
+      synchronized (FdaEventBus.class) {
         if (defaultInstance == null) {
-          defaultInstance = new FDAEventBus();
+          defaultInstance = new FdaEventBus();
         }
       }
     }

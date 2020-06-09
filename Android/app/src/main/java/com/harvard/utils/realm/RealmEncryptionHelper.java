@@ -1,5 +1,6 @@
 /*
  * Copyright © 2017-2019 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors.
+ * Copyright 2020 Google LLC
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction, including
  * without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
@@ -39,7 +40,7 @@ import javax.security.auth.x500.X500Principal;
 
 public class RealmEncryptionHelper {
   private static RealmEncryptionHelper instance;
-  private Context mContext;
+  private Context context;
 
   private static final boolean IS_M = Build.VERSION.SDK_INT >= Build.VERSION_CODES.M;
 
@@ -47,11 +48,11 @@ public class RealmEncryptionHelper {
   private static final String RSA_MODE = "RSA/ECB/PKCS1Padding";
   private static final String ENCRYPTED_KEY = "ENCRYPTED_KEY";
 
-  private String mKeyName;
+  private String keyName;
 
   private KeyStore keyStore;
 
-  private SharedPreferences mPrefsHelper;
+  private SharedPreferences prefsHelper;
 
   public static RealmEncryptionHelper initHelper(Context context, String keyName) {
     if (instance == null) {
@@ -68,9 +69,9 @@ public class RealmEncryptionHelper {
   }
 
   private RealmEncryptionHelper(Context context, String keyName) {
-    this.mContext = context;
-    this.mKeyName = keyName;
-    mPrefsHelper = PreferenceManager.getDefaultSharedPreferences(context);
+    this.context = context;
+    this.keyName = keyName;
+    prefsHelper = PreferenceManager.getDefaultSharedPreferences(context);
   }
 
   @SuppressWarnings("NewApi")
@@ -80,14 +81,14 @@ public class RealmEncryptionHelper {
       keyStore = KeyStore.getInstance(ANDROID_KEY_STORE);
       keyStore.load(null);
 
-      if (!keyStore.containsAlias(mContext.getString(R.string.app_name))) {
+      if (!keyStore.containsAlias(context.getString(R.string.app_name))) {
         // Create new key and save to KeyStore
         KeyPairGenerator kpg =
             KeyPairGenerator.getInstance(KeyProperties.KEY_ALGORITHM_RSA, ANDROID_KEY_STORE);
         if (IS_M) {
           KeyGenParameterSpec spec =
               new KeyGenParameterSpec.Builder(
-                      mContext.getString(R.string.app_name),
+                      context.getString(R.string.app_name),
                       KeyProperties.PURPOSE_ENCRYPT | KeyProperties.PURPOSE_DECRYPT)
                   .setBlockModes(KeyProperties.BLOCK_MODE_GCM)
                   .setEncryptionPaddings(KeyProperties.ENCRYPTION_PADDING_RSA_PKCS1)
@@ -101,9 +102,9 @@ public class RealmEncryptionHelper {
           Calendar end = Calendar.getInstance();
           end.add(Calendar.YEAR, 30);
           KeyPairGeneratorSpec spec =
-              new KeyPairGeneratorSpec.Builder(mContext)
-                  .setAlias(mContext.getString(R.string.app_name))
-                  .setSubject(new X500Principal("CN=" + mContext.getString(R.string.app_name)))
+              new KeyPairGeneratorSpec.Builder(context)
+                  .setAlias(context.getString(R.string.app_name))
+                  .setSubject(new X500Principal("CN=" + context.getString(R.string.app_name)))
                   .setSerialNumber(BigInteger.TEN)
                   .setStartDate(start.getTime())
                   .setEndDate(end.getTime())
@@ -124,7 +125,7 @@ public class RealmEncryptionHelper {
   }
 
   private byte[] getSecretKey() {
-    String encryptedKeyB64 = mPrefsHelper.getString(ENCRYPTED_KEY, null);
+    String encryptedKeyB64 = prefsHelper.getString(ENCRYPTED_KEY, null);
     byte[] key = new byte[64];
     try {
       byte[] encryptedKey = Base64.decode(encryptedKeyB64, Base64.DEFAULT);
@@ -140,13 +141,13 @@ public class RealmEncryptionHelper {
   private byte[] generate64BitSecretKey() {
     byte[] key = new byte[64];
     try {
-      String encryptedKeyB64 = mPrefsHelper.getString(ENCRYPTED_KEY, null);
+      String encryptedKeyB64 = prefsHelper.getString(ENCRYPTED_KEY, null);
       if (encryptedKeyB64 == null) {
         SecureRandom secureRandom = new SecureRandom();
         secureRandom.nextBytes(key);
         byte[] encryptedKey = rsaEncrypt(key);
         encryptedKeyB64 = Base64.encodeToString(encryptedKey, Base64.DEFAULT);
-        mPrefsHelper.edit().putString(ENCRYPTED_KEY, encryptedKeyB64).apply();
+        prefsHelper.edit().putString(ENCRYPTED_KEY, encryptedKeyB64).apply();
       }
     } catch (Exception e) {
       Logger.log(e);
@@ -156,7 +157,7 @@ public class RealmEncryptionHelper {
 
   private byte[] rsaEncrypt(byte[] secret) throws Exception {
     Cipher inputCipher = Cipher.getInstance(RSA_MODE);
-    inputCipher.init(Cipher.ENCRYPT_MODE, keyStore.getCertificate(mKeyName).getPublicKey());
+    inputCipher.init(Cipher.ENCRYPT_MODE, keyStore.getCertificate(keyName).getPublicKey());
 
     ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
     CipherOutputStream cipherOutputStream = new CipherOutputStream(outputStream, inputCipher);
@@ -168,7 +169,7 @@ public class RealmEncryptionHelper {
 
   private byte[] rsaDecrypt(byte[] encrypted) throws Exception {
     Cipher output = Cipher.getInstance(RSA_MODE);
-    output.init(Cipher.DECRYPT_MODE, keyStore.getKey(mKeyName, null));
+    output.init(Cipher.DECRYPT_MODE, keyStore.getKey(keyName, null));
     CipherInputStream cipherInputStream =
         new CipherInputStream(new ByteArrayInputStream(encrypted), output);
     ArrayList<Byte> values = new ArrayList<>();

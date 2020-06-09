@@ -16,6 +16,7 @@
 package com.harvard.eligibilitymodule;
 
 import static com.harvard.studyappmodule.StudyFragment.CONSENT;
+
 import android.content.ComponentName;
 import android.content.Intent;
 import android.os.Bundle;
@@ -24,7 +25,7 @@ import android.view.View;
 import android.widget.TextView;
 import com.harvard.AppConfig;
 import com.harvard.R;
-import com.harvard.storagemodule.DBServiceSubscriber;
+import com.harvard.storagemodule.DbServiceSubscriber;
 import com.harvard.studyappmodule.ConsentCompletedActivity;
 import com.harvard.studyappmodule.StandaloneActivity;
 import com.harvard.studyappmodule.StudyActivity;
@@ -38,7 +39,7 @@ import com.harvard.usermodule.event.UpdatePreferenceEvent;
 import com.harvard.usermodule.webservicemodel.LoginData;
 import com.harvard.utils.AppController;
 import com.harvard.utils.Logger;
-import com.harvard.utils.URLs;
+import com.harvard.utils.Urls;
 import com.harvard.webservicemodule.apihelper.ApiCall;
 import com.harvard.webservicemodule.events.RegistrationServerEnrollmentConfigEvent;
 import io.realm.Realm;
@@ -53,18 +54,18 @@ import org.researchstack.backbone.task.Task;
 
 public class EligibleActivity extends AppCompatActivity implements ApiCall.OnAsyncRequestComplete {
 
-  private static final int CONSENT_RESPONSECODE = 100;
+  private static final int CONSENT_RESPONSE_CODE = 100;
   private EligibilityConsent eligibilityConsent;
-  private DBServiceSubscriber dbServiceSubscriber;
-  private static final int UPDATE_USERPREFERENCE_RESPONSECODE = 200;
-  private Realm mRealm;
+  private DbServiceSubscriber dbServiceSubscriber;
+  private static final int UPDATE_USER_PREFERENCE_RESPONSE_CODE = 200;
+  private Realm realm;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_eligible);
-    dbServiceSubscriber = new DBServiceSubscriber();
-    mRealm = AppController.getRealmobj(this);
+    dbServiceSubscriber = new DbServiceSubscriber();
+    realm = AppController.getRealmobj(this);
 
     TextView button = (TextView) findViewById(R.id.continueButton);
     button.setOnClickListener(
@@ -73,7 +74,7 @@ public class EligibleActivity extends AppCompatActivity implements ApiCall.OnAsy
           public void onClick(View v) {
             eligibilityConsent =
                 dbServiceSubscriber.getConsentMetadata(
-                    getIntent().getStringExtra("studyId"), mRealm);
+                    getIntent().getStringExtra("studyId"), realm);
             startconsent(eligibilityConsent.getConsent());
           }
         });
@@ -82,7 +83,7 @@ public class EligibleActivity extends AppCompatActivity implements ApiCall.OnAsy
 
   @Override
   protected void onDestroy() {
-    dbServiceSubscriber.closeRealmObj(mRealm);
+    dbServiceSubscriber.closeRealmObj(realm);
     super.onDestroy();
   }
 
@@ -100,13 +101,13 @@ public class EligibleActivity extends AppCompatActivity implements ApiCall.OnAsy
             getIntent().getStringExtra("title"),
             getIntent().getStringExtra("eligibility"),
             getIntent().getStringExtra("type"));
-    startActivityForResult(intent, CONSENT_RESPONSECODE);
+    startActivityForResult(intent, CONSENT_RESPONSE_CODE);
   }
 
   @Override
   protected void onActivityResult(int requestCode, int resultCode, Intent data) {
     super.onActivityResult(requestCode, resultCode, data);
-    if (requestCode == CONSENT_RESPONSECODE) {
+    if (requestCode == CONSENT_RESPONSE_CODE) {
       if (resultCode == RESULT_OK) {
         Intent intent = new Intent(this, ConsentCompletedActivity.class);
         intent.putExtra("enrollId", getIntent().getStringExtra("enrollId"));
@@ -140,7 +141,6 @@ public class EligibleActivity extends AppCompatActivity implements ApiCall.OnAsy
 
   public void updateuserpreference() {
     AppController.getHelperProgressDialog().showProgress(EligibleActivity.this, "", "", false);
-    UpdatePreferenceEvent updatePreferenceEvent = new UpdatePreferenceEvent();
 
     HashMap<String, String> header = new HashMap();
     header.put(
@@ -176,8 +176,8 @@ public class EligibleActivity extends AppCompatActivity implements ApiCall.OnAsy
     RegistrationServerEnrollmentConfigEvent registrationServerEnrollmentConfigEvent =
         new RegistrationServerEnrollmentConfigEvent(
             "post_object",
-            URLs.UPDATE_STUDY_PREFERENCE,
-            UPDATE_USERPREFERENCE_RESPONSECODE,
+            Urls.UPDATE_STUDY_PREFERENCE,
+            UPDATE_USER_PREFERENCE_RESPONSE_CODE,
             this,
             LoginData.class,
             null,
@@ -185,7 +185,7 @@ public class EligibleActivity extends AppCompatActivity implements ApiCall.OnAsy
             jsonObject,
             false,
             this);
-
+    UpdatePreferenceEvent updatePreferenceEvent = new UpdatePreferenceEvent();
     updatePreferenceEvent.setRegistrationServerEnrollmentConfigEvent(
         registrationServerEnrollmentConfigEvent);
     UserModulePresenter userModulePresenter = new UserModulePresenter();
