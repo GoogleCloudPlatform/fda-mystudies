@@ -20,6 +20,20 @@ spec:
         - name: study-designer
           image: gcr.io/mystudies-demo-apps/study-designer:latest
           imagePullPolicy: Always
+          securityContext:
+            privileged: true
+            capabilities:
+              add:
+                - SYS_ADMIN
+          lifecycle:
+            postStart:
+              exec:
+                # The "mystudies-demo-apps-resources" should ebe changed to the name os the 
+                # GCS bucket manually set up within the <prefix>-apps project.
+                command: ["gcsfuse", "-o", "nonempty", "mystudies-demo-apps-resources", "/usr/local/tomcat/webapps/fdaResources"]
+            preStop:
+              exec:
+                command: ["fusermount", "-u", "/usr/local/tomcat/webapps/fdaResources"]
           env:
             - name: DB_USER
               valueFrom:
