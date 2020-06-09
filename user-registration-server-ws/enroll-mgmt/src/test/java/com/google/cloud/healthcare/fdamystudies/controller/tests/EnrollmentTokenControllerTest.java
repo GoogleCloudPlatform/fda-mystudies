@@ -170,7 +170,7 @@ public class EnrollmentTokenControllerTest extends BaseMockIT {
 
     // study id not exists
     requestJson = getEnrollmentJson(Constants.TOKEN_NEW, Constants.STUDYID_NOT_EXIST);
-    performPost(ENROLL_PATH, requestJson, headers, StringUtils.EMPTY, FORBIDDEN);
+    performPost(ENROLL_PATH, requestJson, headers, "", FORBIDDEN);
   }
 
   private String getEnrollmentJson(String tokenId, String studyId) throws JsonProcessingException {
