@@ -1,7 +1,6 @@
 package com.google.cloud.healthcare.fdamystudies.controller.tests;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import org.apache.commons.lang3.StringUtils;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
@@ -39,18 +38,15 @@ public class ParticipantInformationControllerTest extends BaseMockIT {
     // participant id null
     String path =
         String.format(
-            "/participantInfo?participantId=%s&studyId=%s",
-            StringUtils.EMPTY, Constants.STUDY_ID_OF_PARTICIPANT);
+            "/participantInfo?participantId=%s&studyId=%s", "", Constants.STUDY_ID_OF_PARTICIPANT);
 
-    performGet(path, new HttpHeaders(), StringUtils.EMPTY, BAD_REQUEST);
+    performGet(path, new HttpHeaders(), "", BAD_REQUEST);
 
     // study id null
     path =
-        String.format(
-            "/participantInfo?participantId=%s&studyId=%s",
-            Constants.PARTICIPANT_ID, StringUtils.EMPTY);
+        String.format("/participantInfo?participantId=%s&studyId=%s", Constants.PARTICIPANT_ID, "");
 
-    performGet(path, new HttpHeaders(), StringUtils.EMPTY, BAD_REQUEST);
+    performGet(path, new HttpHeaders(), "", BAD_REQUEST);
 
     // participant id not exists
     path =
@@ -58,6 +54,6 @@ public class ParticipantInformationControllerTest extends BaseMockIT {
             "/participantInfo?participantId=%s&studyId=%s",
             Constants.PARTICIPANT_ID_NOT_EXISTS, Constants.STUDY_ID_OF_PARTICIPANT);
 
-    performGet(path, new HttpHeaders(), StringUtils.EMPTY, BAD_REQUEST);
+    performGet(path, new HttpHeaders(), "", BAD_REQUEST);
   }
 }

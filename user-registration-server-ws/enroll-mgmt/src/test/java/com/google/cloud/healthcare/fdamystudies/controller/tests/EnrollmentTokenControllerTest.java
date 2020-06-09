@@ -1,7 +1,6 @@
 package com.google.cloud.healthcare.fdamystudies.controller.tests;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import org.apache.commons.lang3.StringUtils;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
@@ -33,7 +32,7 @@ public class EnrollmentTokenControllerTest extends BaseMockIT {
   public void ping() throws Exception {
 
     HttpHeaders headers = TestUtils.getCommonHeaders();
-    performGet(PING_PATH, headers, StringUtils.EMPTY, OK);
+    performGet(PING_PATH, headers, "", OK);
   }
 
   @Test
@@ -55,18 +54,15 @@ public class EnrollmentTokenControllerTest extends BaseMockIT {
 
     // without study id
     String requestJson = getEnrollmentJson(Constants.TOKEN, null);
-    performPost(
-        VALIDATE_ENROLLMENT_TOKEN_PATH, requestJson, headers, StringUtils.EMPTY, BAD_REQUEST);
+    performPost(VALIDATE_ENROLLMENT_TOKEN_PATH, requestJson, headers, "", BAD_REQUEST);
 
     // without token
     requestJson = getEnrollmentJson(null, Constants.STUDYOF_HEALTH_CLOSE);
-    performPost(
-        VALIDATE_ENROLLMENT_TOKEN_PATH, requestJson, headers, StringUtils.EMPTY, BAD_REQUEST);
+    performPost(VALIDATE_ENROLLMENT_TOKEN_PATH, requestJson, headers, "", BAD_REQUEST);
 
     // unknown token id
     requestJson = getEnrollmentJson(Constants.UNKOWN_TOKEN, Constants.STUDYOF_HEALTH);
-    performPost(
-        VALIDATE_ENROLLMENT_TOKEN_PATH, requestJson, headers, StringUtils.EMPTY, BAD_REQUEST);
+    performPost(VALIDATE_ENROLLMENT_TOKEN_PATH, requestJson, headers, "", BAD_REQUEST);
   }
 
   @Test
@@ -76,22 +72,21 @@ public class EnrollmentTokenControllerTest extends BaseMockIT {
 
     // study id not exists
     String requestJson = getEnrollmentJson(Constants.TOKEN, Constants.STUDYID_NOT_EXIST);
-    performPost(VALIDATE_ENROLLMENT_TOKEN_PATH, requestJson, headers, StringUtils.EMPTY, FORBIDDEN);
+    performPost(VALIDATE_ENROLLMENT_TOKEN_PATH, requestJson, headers, "", FORBIDDEN);
 
     // token already use
     requestJson = getEnrollmentJson(Constants.TOKEN_ALREADY_USED, Constants.STUDYOF_HEALTH_1);
-    performPost(VALIDATE_ENROLLMENT_TOKEN_PATH, requestJson, headers, StringUtils.EMPTY, FORBIDDEN);
+    performPost(VALIDATE_ENROLLMENT_TOKEN_PATH, requestJson, headers, "", FORBIDDEN);
   }
 
   @Test
   public void validateEnrollmentTokenUnAuthorised() throws Exception {
     // without userId header
     HttpHeaders headers = TestUtils.getCommonHeaders();
-    headers.add(Constants.USER_ID_HEADER, StringUtils.EMPTY);
+    headers.add(Constants.USER_ID_HEADER, "");
 
     String requestJson = getEnrollmentJson(Constants.TOKEN, Constants.STUDYOF_HEALTH);
-    performPost(
-        VALIDATE_ENROLLMENT_TOKEN_PATH, requestJson, headers, StringUtils.EMPTY, UNAUTHORIZED);
+    performPost(VALIDATE_ENROLLMENT_TOKEN_PATH, requestJson, headers, "", UNAUTHORIZED);
   }
 
   @Test
@@ -134,11 +129,11 @@ public class EnrollmentTokenControllerTest extends BaseMockIT {
 
     // without study id
     String requestJson = getEnrollmentJson(Constants.TOKEN_NEW, null);
-    performPost(ENROLL_PATH, requestJson, headers, StringUtils.EMPTY, BAD_REQUEST);
+    performPost(ENROLL_PATH, requestJson, headers, "", BAD_REQUEST);
 
     // without token
     requestJson = getEnrollmentJson(null, Constants.STUDYOF_HEALTH_CLOSE);
-    performPost(ENROLL_PATH, requestJson, headers, StringUtils.EMPTY, BAD_REQUEST);
+    performPost(ENROLL_PATH, requestJson, headers, "", BAD_REQUEST);
 
     // unknown token id
 
@@ -151,10 +146,10 @@ public class EnrollmentTokenControllerTest extends BaseMockIT {
 
     // without userId header
     HttpHeaders headers = TestUtils.getCommonHeaders();
-    headers.add(Constants.USER_ID_HEADER, StringUtils.EMPTY);
+    headers.add(Constants.USER_ID_HEADER, "");
 
     String requestJson = getEnrollmentJson(Constants.TOKEN_NEW, Constants.STUDYOF_HEALTH);
-    performPost(ENROLL_PATH, requestJson, headers, StringUtils.EMPTY, UNAUTHORIZED);
+    performPost(ENROLL_PATH, requestJson, headers, "", UNAUTHORIZED);
   }
 
   @Test
