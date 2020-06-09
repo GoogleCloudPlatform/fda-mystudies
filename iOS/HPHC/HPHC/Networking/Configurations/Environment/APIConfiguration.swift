@@ -35,9 +35,9 @@ enum API {
     private static let https = "https://"
     static var value: String {
       #if DEBUG
-        return https
+        return http
       #else
-        return https
+        return http
       #endif
     }
   }
