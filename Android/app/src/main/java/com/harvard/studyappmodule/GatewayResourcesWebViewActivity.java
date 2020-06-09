@@ -1,5 +1,6 @@
 /*
  * Copyright © 2017-2019 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors.
+ * Copyright 2020 Google LLC
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction, including
  * without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
@@ -44,37 +45,37 @@ import java.io.InputStream;
 import java.io.OutputStream;
 
 public class GatewayResourcesWebViewActivity extends AppCompatActivity {
-  private AppCompatTextView mTitle;
-  private RelativeLayout mBackBtn;
-  private WebView mWebView;
-  private RelativeLayout mShareBtn;
-  private PDFView mPdfView;
+  private AppCompatTextView title;
+  private RelativeLayout backBtn;
+  private WebView webView;
+  private RelativeLayout shareBtn;
+  private PDFView pdfView;
   private static final int PERMISSION_REQUEST_CODE = 1000;
-  private String mIntentTitle;
-  private String mIntentType;
-  private File mFinalMSharingFile;
+  private String intentTitle;
+  private String intentType;
+  private File finalSharingFile;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_resources_web_view);
 
-    initializeXMLId();
-    mIntentTitle = getIntent().getStringExtra("title");
-    mIntentType = getIntent().getStringExtra("type");
+    initializeXmlId();
+    intentTitle = getIntent().getStringExtra("title");
+    intentType = getIntent().getStringExtra("type");
 
-    defaultPDFShow();
+    defaultPdfShow();
 
     setFont();
 
-    mBackBtn.setOnClickListener(
+    backBtn.setOnClickListener(
         new View.OnClickListener() {
           @Override
           public void onClick(View view) {
             finish();
           }
         });
-    mShareBtn.setOnClickListener(
+    shareBtn.setOnClickListener(
         new View.OnClickListener() {
           @Override
           public void onClick(View v) {
@@ -84,15 +85,15 @@ public class GatewayResourcesWebViewActivity extends AppCompatActivity {
               shareIntent.setData(Uri.parse("mailto:"));
               shareIntent.setType("application/pdf");
               shareIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-              shareIntent.putExtra(Intent.EXTRA_SUBJECT, mIntentTitle);
+              shareIntent.putExtra(Intent.EXTRA_SUBJECT, intentTitle);
 
               ///////// default pdf show
-              if (mFinalMSharingFile.exists()) {
+              if (finalSharingFile.exists()) {
                 Uri fileUri =
                     FileProvider.getUriForFile(
                         GatewayResourcesWebViewActivity.this,
                         getString(R.string.FileProvider_authorities),
-                        mFinalMSharingFile);
+                        finalSharingFile);
                 shareIntent.putExtra(Intent.EXTRA_STREAM, fileUri);
                 startActivity(shareIntent);
               }
@@ -104,10 +105,10 @@ public class GatewayResourcesWebViewActivity extends AppCompatActivity {
         });
   }
 
-  private void defaultPDFShow() {
-    if (mIntentType.equalsIgnoreCase("pdf")) {
-      mWebView.setVisibility(View.GONE);
-      mTitle.setText(mIntentTitle);
+  private void defaultPdfShow() {
+    if (intentType.equalsIgnoreCase("pdf")) {
+      webView.setVisibility(View.GONE);
+      title.setText(intentTitle);
       // checking the permissions
       if ((ActivityCompat.checkSelfPermission(
                   GatewayResourcesWebViewActivity.this, Manifest.permission.READ_EXTERNAL_STORAGE)
@@ -123,12 +124,12 @@ public class GatewayResourcesWebViewActivity extends AppCompatActivity {
           ActivityCompat.requestPermissions(
               (Activity) GatewayResourcesWebViewActivity.this, permission, PERMISSION_REQUEST_CODE);
         } else {
-          mFinalMSharingFile = getAssetsPdfPath();
-          DisplayPDFView(mFinalMSharingFile.getAbsolutePath());
+          finalSharingFile = getAssetsPdfPath();
+          displayPdfView(finalSharingFile.getAbsolutePath());
         }
       } else {
-        mFinalMSharingFile = getAssetsPdfPath();
-        DisplayPDFView(mFinalMSharingFile.getAbsolutePath());
+        finalSharingFile = getAssetsPdfPath();
+        displayPdfView(finalSharingFile.getAbsolutePath());
       }
     }
   }
@@ -148,24 +149,24 @@ public class GatewayResourcesWebViewActivity extends AppCompatActivity {
         } else {
 
           ///////// default pdf show
-          mFinalMSharingFile = getAssetsPdfPath();
-          DisplayPDFView(mFinalMSharingFile.getAbsolutePath());
+          finalSharingFile = getAssetsPdfPath();
+          displayPdfView(finalSharingFile.getAbsolutePath());
           /////////
         }
         break;
     }
   }
 
-  private void initializeXMLId() {
-    mBackBtn = (RelativeLayout) findViewById(R.id.backBtn);
-    mTitle = (AppCompatTextView) findViewById(R.id.title);
-    mWebView = (WebView) findViewById(R.id.webView);
-    mShareBtn = (RelativeLayout) findViewById(R.id.shareBtn);
-    mPdfView = (PDFView) findViewById(R.id.pdfView);
+  private void initializeXmlId() {
+    backBtn = (RelativeLayout) findViewById(R.id.backBtn);
+    title = (AppCompatTextView) findViewById(R.id.title);
+    webView = (WebView) findViewById(R.id.webView);
+    shareBtn = (RelativeLayout) findViewById(R.id.shareBtn);
+    pdfView = (PDFView) findViewById(R.id.pdfView);
   }
 
   private void setFont() {
-    mTitle.setTypeface(AppController.getTypeface(this, "bold"));
+    title.setTypeface(AppController.getTypeface(this, "bold"));
   }
 
   public boolean hasPermissions(String[] permissions) {
@@ -182,9 +183,11 @@ public class GatewayResourcesWebViewActivity extends AppCompatActivity {
 
   public File copy(File src) throws IOException {
     String primaryStoragePath =
-        Environment.getExternalStorageDirectory().getAbsolutePath() + "/" + mIntentTitle + ".pdf";
+        Environment.getExternalStorageDirectory().getAbsolutePath() + "/" + intentTitle + ".pdf";
     File file = new File(primaryStoragePath);
-    if (!file.exists()) file.createNewFile();
+    if (!file.exists()) {
+      file.createNewFile();
+    }
 
     InputStream in = new FileInputStream(src);
     OutputStream out = new FileOutputStream(file);
@@ -204,8 +207,8 @@ public class GatewayResourcesWebViewActivity extends AppCompatActivity {
   protected void onDestroy() {
     super.onDestroy();
     try {
-      if (mFinalMSharingFile.exists()) {
-        mFinalMSharingFile.delete();
+      if (finalSharingFile.exists()) {
+        finalSharingFile.delete();
       }
 
     } catch (Exception e) {
@@ -213,10 +216,10 @@ public class GatewayResourcesWebViewActivity extends AppCompatActivity {
     }
   }
 
-  private void DisplayPDFView(String filePath) {
-    mPdfView.setVisibility(View.VISIBLE);
+  private void displayPdfView(String filePath) {
+    pdfView.setVisibility(View.VISIBLE);
     try {
-      mPdfView
+      pdfView
           .fromFile(new File(filePath))
           .defaultPage(0)
           .enableAnnotationRendering(true)
@@ -229,7 +232,7 @@ public class GatewayResourcesWebViewActivity extends AppCompatActivity {
 
   public File getAssetsPdfPath() {
     String filePath =
-        Environment.getExternalStorageDirectory().getAbsolutePath() + "/" + mIntentTitle + ".pdf";
+        Environment.getExternalStorageDirectory().getAbsolutePath() + "/" + intentTitle + ".pdf";
 
     File destinationFile = new File(filePath);
 
@@ -244,6 +247,7 @@ public class GatewayResourcesWebViewActivity extends AppCompatActivity {
       outputStream.close();
       inputStream.close();
     } catch (IOException e) {
+      Logger.log(e);
     }
 
     return destinationFile;

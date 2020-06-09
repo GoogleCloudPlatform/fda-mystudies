@@ -37,9 +37,9 @@ public class StepCountClass implements StepBody, SensorEventListener {
   private QuestionStepCustom step;
   private StepResult<String> result;
   private SensorManager sensorManager;
-  private int step_count = 0;
+  private int stepCount = 0;
   private boolean next;
-  private Context mContext;
+  private Context context;
   private Handler handler;
 
   public StepCountClass(Step step, StepResult result) {
@@ -50,7 +50,7 @@ public class StepCountClass implements StepBody, SensorEventListener {
   @Override
   public View getBodyView(int viewType, final LayoutInflater inflater, ViewGroup parent) {
     LinearLayout linearLayout = new LinearLayout(inflater.getContext());
-    mContext = inflater.getContext();
+    context = inflater.getContext();
     linearLayout.setOrientation(LinearLayout.VERTICAL);
     Toast.makeText(inflater.getContext(), R.string.start_walking, Toast.LENGTH_SHORT).show();
     next = false;
@@ -82,26 +82,28 @@ public class StepCountClass implements StepBody, SensorEventListener {
   @Override
   public StepResult getStepResult(boolean skipped) {
     if (handler != null) {
-      Toast.makeText(mContext, R.string.stop_in_between, Toast.LENGTH_SHORT).show();
+      Toast.makeText(context, R.string.stop_in_between, Toast.LENGTH_SHORT).show();
       handler.removeCallbacksAndMessages(null);
     }
     if (skipped) {
       result.setResult(null);
     } else {
-      result.setResult("" + step_count);
+      result.setResult("" + stepCount);
     }
     return result;
   }
 
   @Override
   public BodyAnswer getBodyAnswerState() {
-    if (!next) return BodyAnswer.INVALID;
+    if (!next) {
+      return BodyAnswer.INVALID;
+    }
     return BodyAnswer.VALID;
   }
 
   @Override
   public void onSensorChanged(SensorEvent sensorEvent) {
-    step_count = (int) sensorEvent.values[0];
+    stepCount = (int) sensorEvent.values[0];
   }
 
   @Override

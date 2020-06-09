@@ -1,5 +1,6 @@
 /*
  * Copyright © 2017-2019 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors.
+ * Copyright 2020 Google LLC
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction, including
  * without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
@@ -14,7 +15,7 @@
 
 package com.harvard.studyappmodule;
 
-import com.harvard.FDAEventBus;
+import com.harvard.FdaEventBus;
 import com.harvard.studyappmodule.events.ContactUsEvent;
 import com.harvard.studyappmodule.events.EnrollIdEvent;
 import com.harvard.studyappmodule.events.FeedbackEvent;
@@ -33,63 +34,63 @@ import com.harvard.usermodule.event.GetTermsAndConditionEvent;
 
 public class StudyModulePresenter {
   void performGetGateWayStudyInfo(GetUserStudyInfoEvent getUserStudyInfoEvent) {
-    FDAEventBus.postEvent(getUserStudyInfoEvent);
+    FdaEventBus.postEvent(getUserStudyInfoEvent);
   }
 
   public void performGetConsentMetaData(GetConsentMetaDataEvent getConsentMetaDataEvent) {
-    FDAEventBus.postEvent(getConsentMetaDataEvent);
+    FdaEventBus.postEvent(getConsentMetaDataEvent);
   }
 
   void performVerifyEnrollmentId(VerifyEnrollmentIdEvent verifyEnrollmentIdEvent) {
-    FDAEventBus.postEvent(verifyEnrollmentIdEvent);
+    FdaEventBus.postEvent(verifyEnrollmentIdEvent);
   }
 
   public void performEnrollId(EnrollIdEvent enrollIdEvent) {
-    FDAEventBus.postEvent(enrollIdEvent);
+    FdaEventBus.postEvent(enrollIdEvent);
   }
 
   public void performUpdateEligibilityConsent(
       UpdateEligibilityConsentStatusEvent updateEligibilityConsentStatusEvent) {
-    FDAEventBus.postEvent(updateEligibilityConsentStatusEvent);
+    FdaEventBus.postEvent(updateEligibilityConsentStatusEvent);
   }
 
   public void performGetGateWayStudyList(GetUserStudyListEvent userStudyListEvent) {
-    FDAEventBus.postEvent(userStudyListEvent);
+    FdaEventBus.postEvent(userStudyListEvent);
   }
 
   public void performGetTermsAndCondition(GetTermsAndConditionEvent getTermsAndConditionEvent) {
-    FDAEventBus.postEvent(getTermsAndConditionEvent);
+    FdaEventBus.postEvent(getTermsAndConditionEvent);
   }
 
   void performGetActivityList(GetActivityListEvent getActivityListEvent) {
-    FDAEventBus.postEvent(getActivityListEvent);
+    FdaEventBus.postEvent(getActivityListEvent);
   }
 
   void performGetActivityInfo(GetActivityInfoEvent getActivityInfoEvent) {
-    FDAEventBus.postEvent(getActivityInfoEvent);
+    FdaEventBus.postEvent(getActivityInfoEvent);
   }
 
   void performContactUsEvent(ContactUsEvent contactUsEvent) {
-    FDAEventBus.postEvent(contactUsEvent);
+    FdaEventBus.postEvent(contactUsEvent);
   }
 
   public void performContactUsEvent(FeedbackEvent feedbackEvent) {
-    FDAEventBus.postEvent(feedbackEvent);
+    FdaEventBus.postEvent(feedbackEvent);
   }
 
   void performGetResourceListEvent(GetResourceListEvent getResourceListEvent) {
-    FDAEventBus.postEvent(getResourceListEvent);
+    FdaEventBus.postEvent(getResourceListEvent);
   }
 
   public void performProcessResponse(ProcessResponseEvent processResponseEvent) {
-    FDAEventBus.postEvent(processResponseEvent);
+    FdaEventBus.postEvent(processResponseEvent);
   }
 
   void performWithdrawFromStudy(WithdrawFromStudyEvent withdrawFromStudyEvent) {
-    FDAEventBus.postEvent(withdrawFromStudyEvent);
+    FdaEventBus.postEvent(withdrawFromStudyEvent);
   }
 
   public void performProcessData(ProcessResponseDataEvent processResponseDataEvent) {
-    FDAEventBus.postEvent(processResponseDataEvent);
+    FdaEventBus.postEvent(processResponseDataEvent);
   }
 }

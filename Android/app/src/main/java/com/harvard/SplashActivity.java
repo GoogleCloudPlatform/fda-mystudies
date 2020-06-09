@@ -106,7 +106,9 @@ public class SplashActivity extends AppCompatActivity implements VersionChecker.
                   settings.edit().clear().apply();
                   // delete passcode from keystore
                   String pass = AppController.refreshKeys("passcode");
-                  if (pass != null) AppController.deleteKey("passcode_" + pass);
+                  if (pass != null) {
+                    AppController.deleteKey("passcode_" + pass);
+                  }
                   if (AppConfig.AppType.equalsIgnoreCase(getString(R.string.app_gateway))) {
                     Intent intent = new Intent(SplashActivity.this, GatewayActivity.class);
                     startActivity(intent);
@@ -125,9 +127,9 @@ public class SplashActivity extends AppCompatActivity implements VersionChecker.
   protected void onActivityResult(int requestCode, int resultCode, Intent data) {
     super.onActivityResult(requestCode, resultCode, data);
     if (requestCode == RESULT_CODE_UPGRADE) {
-      Version curr_ver = new Version(versionChecker.currentVersion());
-      Version new_ver = new Version(newVersion);
-      if (curr_ver.equals(new_ver) || curr_ver.compareTo(new_ver) > 0) {
+      Version currVer = new Version(versionChecker.currentVersion());
+      Version newVer = new Version(newVersion);
+      if (currVer.equals(newVer) || currVer.compareTo(newVer) > 0) {
         proceedToApp();
       } else {
         if (force) {

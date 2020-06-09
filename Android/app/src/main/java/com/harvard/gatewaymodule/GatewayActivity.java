@@ -1,5 +1,6 @@
 /*
  * Copyright © 2017-2019 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors.
+ * Copyright 2020 Google LLC
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction, including
  * without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
@@ -34,11 +35,11 @@ import com.harvard.utils.Logger;
 
 public class GatewayActivity extends AppCompatActivity {
   private static final int UPGRADE = 100;
-  private AppCompatTextView mGetStarted;
-  private RelativeLayout mNewUserLayout;
-  private AppCompatTextView mNewUserButton;
-  private RelativeLayout mSignInButtonLayout;
-  private AppCompatTextView mSignInButton;
+  private AppCompatTextView getStarted;
+  private RelativeLayout newUserLayout;
+  private AppCompatTextView newUserButton;
+  private RelativeLayout signInButtonLayout;
+  private AppCompatTextView signInButton;
   private static final String COMMING_FROM = "Gateway";
   private static final String FROM = "from";
   private static final String TYPEFACE_REGULAR = "regular";
@@ -48,7 +49,7 @@ public class GatewayActivity extends AppCompatActivity {
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_gateway);
-    initializeXMLId();
+    initializeXmlId();
     setFont();
     bindEvents();
     setViewPagerView();
@@ -67,26 +68,26 @@ public class GatewayActivity extends AppCompatActivity {
         .writePreference(GatewayActivity.this, getString(R.string.join), "false");
   }
 
-  private void initializeXMLId() {
-    mGetStarted = (AppCompatTextView) findViewById(R.id.mGetStarted);
-    mNewUserLayout = (RelativeLayout) findViewById(R.id.mNewUserLayout);
-    mNewUserButton = (AppCompatTextView) findViewById(R.id.mNewUserButton);
-    mSignInButtonLayout = (RelativeLayout) findViewById(R.id.mSignInButtonLayout);
-    mSignInButton = (AppCompatTextView) findViewById(R.id.mSignInButton);
+  private void initializeXmlId() {
+    getStarted = (AppCompatTextView) findViewById(R.id.mGetStarted);
+    newUserLayout = (RelativeLayout) findViewById(R.id.mNewUserLayout);
+    newUserButton = (AppCompatTextView) findViewById(R.id.mNewUserButton);
+    signInButtonLayout = (RelativeLayout) findViewById(R.id.mSignInButtonLayout);
+    signInButton = (AppCompatTextView) findViewById(R.id.mSignInButton);
   }
 
   private void setFont() {
     try {
-      mGetStarted.setTypeface(AppController.getTypeface(this, TYPEFACE_REGULAR));
-      mNewUserButton.setTypeface(AppController.getTypeface(GatewayActivity.this, TYPEFACE_REGULAR));
-      mSignInButton.setTypeface(AppController.getTypeface(GatewayActivity.this, TYPEFACE_REGULAR));
+      getStarted.setTypeface(AppController.getTypeface(this, TYPEFACE_REGULAR));
+      newUserButton.setTypeface(AppController.getTypeface(GatewayActivity.this, TYPEFACE_REGULAR));
+      signInButton.setTypeface(AppController.getTypeface(GatewayActivity.this, TYPEFACE_REGULAR));
     } catch (Exception e) {
       Logger.log(e);
     }
   }
 
   private void bindEvents() {
-    mNewUserLayout.setOnClickListener(
+    newUserLayout.setOnClickListener(
         new View.OnClickListener() {
           @Override
           public void onClick(View view) {
@@ -95,7 +96,7 @@ public class GatewayActivity extends AppCompatActivity {
           }
         });
 
-    mSignInButtonLayout.setOnClickListener(
+    signInButtonLayout.setOnClickListener(
         new View.OnClickListener() {
           @Override
           public void onClick(View view) {
@@ -104,7 +105,7 @@ public class GatewayActivity extends AppCompatActivity {
           }
         });
 
-    mGetStarted.setOnClickListener(
+    getStarted.setOnClickListener(
         new View.OnClickListener() {
           @Override
           public void onClick(View view) {
@@ -131,13 +132,13 @@ public class GatewayActivity extends AppCompatActivity {
           public void onPageSelected(int position) {
             // Check if this is the page you want.
             if (position == 0) {
-              mGetStarted.setBackground(
+              getStarted.setBackground(
                   getResources().getDrawable(R.drawable.rectangle_blue_white));
-              mGetStarted.setTextColor(getResources().getColor(R.color.white));
+              getStarted.setTextColor(getResources().getColor(R.color.white));
             } else {
-              mGetStarted.setBackground(
+              getStarted.setBackground(
                   getResources().getDrawable(R.drawable.rectangle_black_white));
-              mGetStarted.setTextColor(getResources().getColor(R.color.colorPrimary));
+              getStarted.setTextColor(getResources().getColor(R.color.colorPrimary));
             }
           }
         });

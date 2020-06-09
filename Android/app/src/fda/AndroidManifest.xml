@@ -17,7 +17,7 @@
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE"/>
 
     <application
-      android:name=".FDAApplication"
+      android:name=".FdaApplication"
       android:allowBackup="false"
       android:hardwareAccelerated="false"
       android:icon="@mipmap/ic_launcher"
@@ -89,12 +89,6 @@
           android:theme="@style/passcodeTheme"
           android:windowSoftInputMode="stateHidden"/>
         <activity
-          android:name=".usermodule.ChooseTouchIDSignInActivity"
-          android:configChanges="screenLayout|orientation"
-          android:screenOrientation="portrait"
-          android:theme="@style/AppThemeNoActionBar"
-          android:windowSoftInputMode="stateHidden"/>
-        <activity
           android:name=".usermodule.SignInActivity"
           android:configChanges="screenLayout|orientation"
           android:screenOrientation="portrait"
@@ -106,12 +100,6 @@
           android:screenOrientation="portrait"
           android:theme="@style/AppThemeNoActionBar"
           android:windowSoftInputMode="adjustResize|stateHidden"/>
-        <activity
-          android:name=".usermodule.UseTouchIDPasscodeActivity"
-          android:configChanges="screenLayout|orientation"
-          android:screenOrientation="portrait"
-          android:theme="@style/AppThemeNoActionBar"
-          android:windowSoftInputMode="stateHidden"/>
         <activity
           android:name=".studyappmodule.StudyActivity"
           android:configChanges="screenLayout|orientation"
@@ -251,7 +239,7 @@
           android:theme="@style/Theme.BackboneApp"
           android:windowSoftInputMode="stateHidden"/>
         <activity
-          android:name=".studyappmodule.PDFDisplayActivity"
+          android:name=".studyappmodule.PdfDisplayActivity"
           android:configChanges="screenLayout|orientation"
           android:screenOrientation="portrait"
           android:theme="@style/Theme.BackboneApp"
@@ -269,12 +257,12 @@
           android:theme="@style/AppThemeNoActionBar"
           android:windowSoftInputMode="stateHidden|adjustResize"/>
 
-        <service android:name=".MyFirebaseMessagingService">
+        <service android:name=".AppFirebaseMessagingService">
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT"/>
             </intent-filter>
         </service>
-        <service android:name=".MyFirebaseInstanceIDService">
+        <service android:name=".AppFirebaseInstanceIdService">
             <intent-filter>
                 <action android:name="com.google.firebase.INSTANCE_ID_EVENT"/>
             </intent-filter>

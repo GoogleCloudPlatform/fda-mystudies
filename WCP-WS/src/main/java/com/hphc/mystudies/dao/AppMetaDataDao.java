@@ -558,14 +558,19 @@ public class AppMetaDataDao {
     return message;
   }
 
-  public AppVersionInfo getAppVersionInfo() {
+  public AppVersionInfo getAppVersionInfo(String appId, String orgId) {
     LOGGER.info("INFO: AppMetaDataDao - getAppVersionInfo() :: Starts");
     Session session = null;
     AppVersionInfo appVersionInfo = null;
     try {
       session = sessionFactory.openSession();
       appVersionInfo =
-          (AppVersionInfo) session.getNamedQuery("AppVersionInfo.findAll").uniqueResult();
+          (AppVersionInfo)
+              session
+                  .getNamedQuery("AppVersionInfo.findAll")
+                  .setParameter("appId", appId)
+                  .setParameter("orgId", orgId)
+                  .uniqueResult();
     } catch (Exception e) {
       LOGGER.error("ERROR: AppMetaDataDao - getAppVersionInfo()", e);
     }

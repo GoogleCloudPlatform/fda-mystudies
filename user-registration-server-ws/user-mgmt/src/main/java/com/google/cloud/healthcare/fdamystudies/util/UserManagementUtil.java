@@ -121,9 +121,9 @@ public class UserManagementUtil {
     return respMessage;
   }
 
-  public UpdateAccountInfoResponseBean updateUserInfoInAuthServer(UpdateAccountInfo accountInfo, String userId,
-      String accessToken, String clientToken) {
-    logger.info("(Util)....UserManagementUtil.updateUserInfoInAuthServer()......STARTED");
+  public UpdateAccountInfoResponseBean updateUserInfoInAuthServer(
+      UpdateAccountInfo accountInfo, String userId, String accessToken, String clientToken) {
+    logger.info("UserManagementUtil.updateUserInfoInAuthServer() - starts");
 
     UpdateAccountInfoResponseBean authResponse = null;
 
@@ -145,8 +145,6 @@ public class UserManagementUtil {
       if (responseEntity.getStatusCode() == HttpStatus.OK) {
 
         String body = (String) responseEntity.getBody();
-        logger.info(body);
-
         objectMapper = new ObjectMapper();
 
         try {
@@ -164,7 +162,7 @@ public class UserManagementUtil {
       }
 
     } catch (RestClientResponseException e) {
-
+      logger.error("UserManagementUtil.updateUserInfoInAuthServer() - error ", e);
       if (e.getRawStatusCode() == 401) {
         Set<Entry<String, List<String>>> headerSet = e.getResponseHeaders().entrySet();
         authResponse = new UpdateAccountInfoResponseBean();
@@ -202,10 +200,9 @@ public class UserManagementUtil {
     }
   }
 
-  public DeleteAccountInfoResponseBean deleteUserInfoInAuthServer(String userId, String clientToken,
-      String accessToken) {
-    logger.info("(Util)....UserRegistrationController.deleteUserInfoInAuthServer()......STARTED");
-
+  public DeleteAccountInfoResponseBean deleteUserInfoInAuthServer(
+      String userId, String clientToken, String accessToken) {
+    logger.info("UserRegistrationController.deleteUserInfoInAuthServer() - starts");
     DeleteAccountInfoResponseBean authResponse = null;
 
     HttpHeaders headers = new HttpHeaders();
@@ -221,28 +218,26 @@ public class UserManagementUtil {
       ResponseEntity<?> responseEntity = restTemplate.exchange(appConfig.getAuthServerDeleteStatusUrl(),
           HttpMethod.DELETE, request, String.class);
 
-      if (responseEntity.getStatusCode() == HttpStatus.OK) {
-
-        String body = (String) responseEntity.getBody();
-
-        objectMapper = new ObjectMapper();
-
-        try {
-          authResponse = objectMapper.readValue(body, DeleteAccountInfoResponseBean.class);
-          logger.info("authResponse: " + authResponse);
-          return authResponse;
-        } catch (JsonParseException e) {
-          return authResponse;
-        } catch (JsonMappingException e) {
-          return authResponse;
-        } catch (IOException e) {
-          return authResponse;
-        }
-      } else {
+      if (responseEntity.getStatusCode() != HttpStatus.OK) {
         return authResponse;
       }
 
+      String body = (String) responseEntity.getBody();
+      objectMapper = new ObjectMapper();
+
+      try {
+        authResponse = objectMapper.readValue(body, DeleteAccountInfoResponseBean.class);
+        return authResponse;
+      } catch (JsonParseException e) {
+        return authResponse;
+      } catch (JsonMappingException e) {
+        return authResponse;
+      } catch (IOException e) {
+        return authResponse;
+      }
+      
     } catch (RestClientResponseException e) {
+      logger.error("UserRegistrationController.deleteUserInfoInAuthServer() - error ", e);
       if (e.getRawStatusCode() == 401) {
         Set<Entry<String, List<String>>> headerSet = e.getResponseHeaders().entrySet();
         authResponse = new DeleteAccountInfoResponseBean();
@@ -279,9 +274,13 @@ public class UserManagementUtil {
     }
   }
 
-  public AuthRegistrationResponseBean registerUserInAuthServer(UserRegistrationForm userForm, String appId,
-      String orgId, String clientId, String secretKey) {
-    logger.info("UserManagementUtil.registerUserInAuthServer......Starts");
+  public AuthRegistrationResponseBean registerUserInAuthServer(
+      UserRegistrationForm userForm,
+      String appId,
+      String orgId,
+      String clientId,
+      String secretKey) {
+    logger.info("UserManagementUtil.registerUserInAuthServer - starts");
     AuthRegistrationResponseBean authServerResponse = null;
 
     HttpHeaders headers = new HttpHeaders();
@@ -321,12 +320,12 @@ public class UserManagementUtil {
         return authServerResponse;
       }
     } catch (RestClientResponseException e) {
-      logger.error("registerUserInAuthServer got RestClientResponseException: ", e);
+      logger.error("UserManagementUtil.registerUserInAuthServer() - error ", e);
       if (e.getRawStatusCode() == 401) {
         Set<Entry<String, List<String>>> headerSet = e.getResponseHeaders().entrySet();
         authServerResponse = new AuthRegistrationResponseBean();
+        
         for (Entry<String, List<String>> entry : headerSet) {
-
           if (AppConstants.STATUS.equals(entry.getKey())) {
             authServerResponse.setCode(entry.getValue().get(0));
           }
@@ -404,7 +403,7 @@ public class UserManagementUtil {
     try {
       date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(dateNow);
     } catch (Exception e) {
-      logger.error("URWebAppWSUtil - getCurrentUtilDateTime() :: ERROR ", e);
+      logger.error("URWebAppWSUtil - getCurrentUtilDateTime() - error ", e);
     }
     return date;
   }

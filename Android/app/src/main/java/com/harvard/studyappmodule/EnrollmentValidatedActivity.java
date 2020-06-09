@@ -23,7 +23,7 @@ import android.support.v7.widget.AppCompatTextView;
 import android.view.View;
 import com.harvard.AppConfig;
 import com.harvard.R;
-import com.harvard.storagemodule.DBServiceSubscriber;
+import com.harvard.storagemodule.DbServiceSubscriber;
 import com.harvard.studyappmodule.consent.ConsentBuilder;
 import com.harvard.studyappmodule.consent.CustomConsentViewTaskActivity;
 import com.harvard.studyappmodule.consent.model.Consent;
@@ -39,29 +39,31 @@ import org.researchstack.backbone.task.Task;
 public class EnrollmentValidatedActivity extends AppCompatActivity
     implements ApiCall.OnAsyncRequestComplete {
 
-  private AppCompatTextView mValidatedlabel, mCompleteLabel, mContinueButton;
+  private AppCompatTextView validatedlabel;
+  private AppCompatTextView completeLabel;
+  private AppCompatTextView continueButton;
   private EligibilityConsent eligibilityConsent;
   private static final String CONSENT = "consent";
   private static final int CONSENT_RESPONSECODE = 100;
-  private DBServiceSubscriber dbServiceSubscriber;
-  private Realm mRealm;
+  private DbServiceSubscriber dbServiceSubscriber;
+  private Realm realm;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_enrollment_validated);
-    dbServiceSubscriber = new DBServiceSubscriber();
-    mRealm = AppController.getRealmobj(this);
-    initializeXMLId();
+    dbServiceSubscriber = new DbServiceSubscriber();
+    realm = AppController.getRealmobj(this);
+    initializeXmlId();
     setFont();
-    mContinueButton.setOnClickListener(
+    continueButton.setOnClickListener(
         new View.OnClickListener() {
           @Override
           public void onClick(View v) {
 
             eligibilityConsent =
                 dbServiceSubscriber.getConsentMetadata(
-                    getIntent().getStringExtra("studyId"), mRealm);
+                    getIntent().getStringExtra("studyId"), realm);
             if (getIntent().getStringExtra("eligibility").equalsIgnoreCase("token")) {
               startconsent(eligibilityConsent.getConsent());
             } else {
@@ -73,24 +75,24 @@ public class EnrollmentValidatedActivity extends AppCompatActivity
         });
   }
 
-  private void initializeXMLId() {
-    mValidatedlabel = (AppCompatTextView) findViewById(R.id.validatedlabel);
-    mCompleteLabel = (AppCompatTextView) findViewById(R.id.complete_txt_label);
-    mContinueButton = (AppCompatTextView) findViewById(R.id.continueButton);
+  private void initializeXmlId() {
+    validatedlabel = (AppCompatTextView) findViewById(R.id.validatedlabel);
+    completeLabel = (AppCompatTextView) findViewById(R.id.complete_txt_label);
+    continueButton = (AppCompatTextView) findViewById(R.id.continueButton);
   }
 
   @Override
   protected void onDestroy() {
-    dbServiceSubscriber.closeRealmObj(mRealm);
+    dbServiceSubscriber.closeRealmObj(realm);
     super.onDestroy();
   }
 
   private void setFont() {
-    mValidatedlabel.setTypeface(
+    validatedlabel.setTypeface(
         AppController.getTypeface(EnrollmentValidatedActivity.this, "regular"));
-    mCompleteLabel.setTypeface(
+    completeLabel.setTypeface(
         AppController.getTypeface(EnrollmentValidatedActivity.this, "regular"));
-    mContinueButton.setTypeface(
+    continueButton.setTypeface(
         AppController.getTypeface(EnrollmentValidatedActivity.this, "regular"));
   }
 
