@@ -257,10 +257,11 @@ class ResourcesViewController: UIViewController {
     UIUtilities.showAlertMessageWithTwoActionsAndHandler(
       NSLocalizedString((leaveStudy + " ?"), comment: ""),
       errorMessage: NSLocalizedString(withdrawalMessage!, comment: ""),
-      errorAlertActionTitle: NSLocalizedString("Proceed", comment: ""),
-      errorAlertActionTitle2: NSLocalizedString("Cancel", comment: ""),
+      errorAlertActionTitle: NSLocalizedString("Cancel", comment: ""),
+      errorAlertActionTitle2: NSLocalizedString("Proceed", comment: ""),
       viewControllerUsed: self,
-      action1: {
+      action1: {},
+      action2: {
 
         switch withdrawalType! as StudyWithdrawalConfigrationType {
 
@@ -298,15 +299,13 @@ class ResourcesViewController: UIViewController {
           UIUtilities.showAlertMessageWithTwoActionsAndHandler(
             NSLocalizedString("Are you sure? Tap Ok to confirm.", comment: ""),
             errorMessage: NSLocalizedString("", comment: ""),
-            errorAlertActionTitle: NSLocalizedString("Ok", comment: ""),
-            errorAlertActionTitle2: NSLocalizedString("Cancel", comment: ""),
+            errorAlertActionTitle: NSLocalizedString("Cancel", comment: ""),
+            errorAlertActionTitle2: NSLocalizedString("Ok", comment: ""),
             viewControllerUsed: self,
-            action1: {
+            action1: {},
+            action2: {
               self.shouldDeleteData = true
               self.withdrawalFromStudy(deleteResponse: true)
-            },
-            action2: {
-
             }
           )
 
@@ -329,10 +328,6 @@ class ResourcesViewController: UIViewController {
 
         default: break
         }
-
-      },
-      action2: {
-        // Handle cancel action
       }
     )
 
