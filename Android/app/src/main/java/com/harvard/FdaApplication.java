@@ -35,20 +35,20 @@ import com.uphyca.stetho_realm.RealmInspectorModulesProvider;
 import io.fabric.sdk.android.Fabric;
 import io.realm.Realm;
 
-public class FDAApplication extends Application {
-  private static FDAApplication sInstance;
-  private FDAEventBusRegistry mRegistry;
+public class FdaApplication extends Application {
+  private static FdaApplication instance;
+  private FdaEventBusRegistry registry;
 
   public static final String NOTIFICATION_CHANNEL_ID_SERVICE = AppConfig.PackageName + ".service";
   public static final String NOTIFICATION_CHANNEL_ID_INFO = AppConfig.PackageName + ".general";
 
-  public static FDAApplication getInstance() {
-    return sInstance;
+  public static FdaApplication getInstance() {
+    return instance;
   }
 
   @Override
   public void onCreate() {
-    sInstance = this;
+    instance = this;
     super.onCreate();
     Fabric.with(this, new Crashlytics());
     dbInitialize();
@@ -57,7 +57,7 @@ public class FDAApplication extends Application {
     startEventProcessing();
 
     AppVisibilityDetector.init(
-        FDAApplication.this,
+        FdaApplication.this,
         new AppVisibilityDetector.AppVisibilityCallback() {
           @Override
           public void onAppGotoForeground() {
@@ -99,19 +99,19 @@ public class FDAApplication extends Application {
   }
 
   private void startEventProcessing() {
-    mRegistry = new FDAEventBusRegistry();
-    mRegistry.registerDefaultSubscribers();
-    mRegistry.registerSubscriber(new StudyModuleSubscriber());
-    mRegistry.registerSubscriber(new UserModuleSubscriber());
-    mRegistry.registerSubscriber(new WebserviceSubscriber());
+    registry = new FdaEventBusRegistry();
+    registry.registerDefaultSubscribers();
+    registry.registerSubscriber(new StudyModuleSubscriber());
+    registry.registerSubscriber(new UserModuleSubscriber());
+    registry.registerSubscriber(new WebserviceSubscriber());
   }
 
   @Override
   public void onTerminate() {
     super.onTerminate();
-    sInstance = null;
-    mRegistry.unregisterAllSubscribers();
-    mRegistry = null;
+    instance = null;
+    registry.unregisterAllSubscribers();
+    registry = null;
   }
 
   @Override

@@ -15,7 +15,7 @@
 
 package com.harvard.studyappmodule;
 
-import com.harvard.FDAEventBus;
+import com.harvard.FdaEventBus;
 import com.harvard.base.BaseSubscriber;
 import com.harvard.studyappmodule.events.ContactUsEvent;
 import com.harvard.studyappmodule.events.EnrollIdEvent;
@@ -36,67 +36,67 @@ import com.harvard.usermodule.event.GetTermsAndConditionEvent;
 
 public class StudyModuleSubscriber extends BaseSubscriber {
   public void onEvent(GetUserStudyInfoEvent getUserStudyInfoEvent) {
-    FDAEventBus.postEvent(getUserStudyInfoEvent.getWcpConfigEvent());
+    FdaEventBus.postEvent(getUserStudyInfoEvent.getWcpConfigEvent());
   }
 
   public void onEvent(GetConsentMetaDataEvent getConsentMetaDataEvent) {
-    FDAEventBus.postEvent(getConsentMetaDataEvent.getWcpConfigEvent());
+    FdaEventBus.postEvent(getConsentMetaDataEvent.getWcpConfigEvent());
   }
 
   public void onEvent(VerifyEnrollmentIdEvent verifyEnrollmentIdEvent) {
-    FDAEventBus.postEvent(verifyEnrollmentIdEvent.registrationServerEnrollmentConfigEvent());
+    FdaEventBus.postEvent(verifyEnrollmentIdEvent.registrationServerEnrollmentConfigEvent());
   }
 
   public void onEvent(GetUserStudyListEvent getUserStudyListEvent) {
-    FDAEventBus.postEvent(getUserStudyListEvent.getWcpConfigEvent());
+    FdaEventBus.postEvent(getUserStudyListEvent.getWcpConfigEvent());
   }
 
   public void onEvent(GetTermsAndConditionEvent getTermsAndConditionEvent) {
-    FDAEventBus.postEvent(getTermsAndConditionEvent.getWcpConfigEvent());
+    FdaEventBus.postEvent(getTermsAndConditionEvent.getWcpConfigEvent());
   }
 
   public void onEvent(EnrollIdEvent enrollIdEvent) {
-    FDAEventBus.postEvent(enrollIdEvent.getRegistrationServerEnrollmentConfigEvent());
+    FdaEventBus.postEvent(enrollIdEvent.getRegistrationServerEnrollmentConfigEvent());
   }
 
   public void onEvent(GetActivityListEvent getActivityListEvent) {
-    FDAEventBus.postEvent(getActivityListEvent.getWcpConfigEvent());
+    FdaEventBus.postEvent(getActivityListEvent.getWcpConfigEvent());
   }
 
   public void onEvent(GetActivityInfoEvent getActivityInfoEvent) {
-    FDAEventBus.postEvent(getActivityInfoEvent.getWcpConfigEvent());
+    FdaEventBus.postEvent(getActivityInfoEvent.getWcpConfigEvent());
   }
 
   public void onEvent(ContactUsEvent contactUsEvent) {
-    FDAEventBus.postEvent(contactUsEvent.getRegistrationServerConfigEvent());
+    FdaEventBus.postEvent(contactUsEvent.getRegistrationServerConfigEvent());
   }
 
   public void onEvent(FeedbackEvent feedbackEvent) {
-    FDAEventBus.postEvent(feedbackEvent.getWcpConfigEvent());
+    FdaEventBus.postEvent(feedbackEvent.getWcpConfigEvent());
   }
 
   public void onEvent(GetResourceListEvent getResourceListEvent) {
-    FDAEventBus.postEvent(getResourceListEvent.getWcpConfigEvent());
+    FdaEventBus.postEvent(getResourceListEvent.getWcpConfigEvent());
   }
 
   public void onEvent(UpdateEligibilityConsentStatusEvent updateEligibilityConsentStatusEvent) {
-    FDAEventBus.postEvent(
+    FdaEventBus.postEvent(
         updateEligibilityConsentStatusEvent.getRegistrationServerConsentConfigEvent());
   }
 
   public void onEvent(ProcessResponseEvent processResponseEvent) {
-    FDAEventBus.postEvent(processResponseEvent.getResponseServerConfigEvent());
+    FdaEventBus.postEvent(processResponseEvent.getResponseServerConfigEvent());
   }
 
   public void onEvent(WithdrawFromStudyEvent withdrawFromStudyEvent) {
-    FDAEventBus.postEvent(withdrawFromStudyEvent.getResponseServerConfigEvent());
+    FdaEventBus.postEvent(withdrawFromStudyEvent.getResponseServerConfigEvent());
   }
 
   public void onEvent(ProcessResponseDataEvent processResponseDataEvent) {
-    FDAEventBus.postEvent(processResponseDataEvent.getResponseServerConfigEvent());
+    FdaEventBus.postEvent(processResponseDataEvent.getResponseServerConfigEvent());
   }
 
   public void onEvent(ActivityStateEvent activityStateEvent) {
-    FDAEventBus.postEvent(activityStateEvent.getResponseServerConfigEvent());
+    FdaEventBus.postEvent(activityStateEvent.getResponseServerConfigEvent());
   }
 }

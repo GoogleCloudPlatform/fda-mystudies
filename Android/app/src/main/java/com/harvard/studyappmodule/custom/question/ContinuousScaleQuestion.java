@@ -39,10 +39,11 @@ public class ContinuousScaleQuestion<T> implements StepBody {
   private QuestionStepCustom step;
   private StepResult<Double> result;
   private ContinousScaleAnswerFormat format;
-  private TextView mcurrentvalue;
+  private TextView currentvalue;
   private Double currentSelected;
-  private SeekBar mSeekBar;
-  private int stepSection, min;
+  private SeekBar seekBar;
+  private int stepSection;
+  private int min;
   private double value;
 
   public ContinuousScaleQuestion(Step step, StepResult result) {
@@ -98,30 +99,29 @@ public class ContinuousScaleQuestion<T> implements StepBody {
 
     if (!format.isVertical()) {
       seekbarlayout = inflater.inflate(R.layout.seekbar_horizontal_layout, parent, false);
-      mSeekBar = (SeekBar) seekbarlayout.findViewById(R.id.seekbar);
+      seekBar = (SeekBar) seekbarlayout.findViewById(R.id.seekbar);
     } else {
       seekbarlayout = inflater.inflate(R.layout.seekbar_vertical_layout, parent, false);
-      mSeekBar = (VerticalSeekBar) seekbarlayout.findViewById(R.id.seekbar);
+      seekBar = (VerticalSeekBar) seekbarlayout.findViewById(R.id.seekbar);
     }
     if (stepSection != 0) {
-      mSeekBar.setMax((max - min) * (stepSection * 10));
+      seekBar.setMax((max - min) * (stepSection * 10));
     } else {
-      mSeekBar.setMax((max - min));
+      seekBar.setMax((max - min));
     }
 
-    TextView mintitle = (TextView) seekbarlayout.findViewById(R.id.mintitle);
     TextView mindesc = (TextView) seekbarlayout.findViewById(R.id.mindesc);
     ImageView minimage = (ImageView) seekbarlayout.findViewById(R.id.minimage);
-
-    TextView maxtitle = (TextView) seekbarlayout.findViewById(R.id.maxtitle);
     TextView maxdesc = (TextView) seekbarlayout.findViewById(R.id.maxdesc);
     ImageView maximage = (ImageView) seekbarlayout.findViewById(R.id.maximage);
 
-    mcurrentvalue = (TextView) seekbarlayout.findViewById(R.id.currentvalue);
+    currentvalue = (TextView) seekbarlayout.findViewById(R.id.currentvalue);
 
     mindesc.setText(format.getMinDesc());
     maxdesc.setText(format.getMaxDesc());
 
+    TextView mintitle = (TextView) seekbarlayout.findViewById(R.id.mintitle);
+    TextView maxtitle = (TextView) seekbarlayout.findViewById(R.id.maxtitle);
     mintitle.setText(String.valueOf(min));
     maxtitle.setText(String.valueOf(max));
 
@@ -138,8 +138,8 @@ public class ContinuousScaleQuestion<T> implements StepBody {
       maximage.setVisibility(View.INVISIBLE);
     }
 
-    mcurrentvalue.setText(String.valueOf(min));
-    mSeekBar.setOnSeekBarChangeListener(
+    currentvalue.setText(String.valueOf(min));
+    seekBar.setOnSeekBarChangeListener(
         new SeekBar.OnSeekBarChangeListener() {
           @Override
           public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
@@ -154,16 +154,16 @@ public class ContinuousScaleQuestion<T> implements StepBody {
         });
 
     if (currentSelected != null) {
-      double Selected;
+      double selected;
       if (stepSection != 0) {
-        Selected =
+        selected =
             ((currentSelected - Double.parseDouble("" + min))
                 * Double.parseDouble("" + stepSection * 10));
       } else {
-        Selected = ((currentSelected - Double.parseDouble("" + min)));
+        selected = ((currentSelected - Double.parseDouble("" + min)));
       }
 
-      mSeekBar.setProgress((int) Selected);
+      seekBar.setProgress((int) selected);
     } else {
       double defaultval = 0;
       if (format.getDefaultval() != null && !format.getDefaultval().equalsIgnoreCase("")) {
@@ -177,9 +177,9 @@ public class ContinuousScaleQuestion<T> implements StepBody {
         defaultval = 0;
       }
       if (stepSection != 0) {
-        mSeekBar.setProgress((int) ((defaultval - min) * (stepSection * 10)));
+        seekBar.setProgress((int) ((defaultval - min) * (stepSection * 10)));
       } else {
-        mSeekBar.setProgress((int) ((defaultval - min)));
+        seekBar.setProgress((int) ((defaultval - min)));
       }
     }
     if (format.isVertical()) {
@@ -196,15 +196,15 @@ public class ContinuousScaleQuestion<T> implements StepBody {
     if (stepSection != 0) {
       value =
           Double.parseDouble("" + min)
-              + Double.parseDouble("" + mSeekBar.getProgress())
+              + Double.parseDouble("" + seekBar.getProgress())
                   / Double.parseDouble("" + (stepSection * 10));
     } else {
-      value = Double.parseDouble("" + min) + Double.parseDouble("" + mSeekBar.getProgress());
+      value = Double.parseDouble("" + min) + Double.parseDouble("" + seekBar.getProgress());
     }
     NumberFormat nf = NumberFormat.getInstance();
     nf.setMaximumFractionDigits(stepSection);
 
-    mcurrentvalue.setText(String.valueOf(nf.format(value)));
+    currentvalue.setText(String.valueOf(nf.format(value)));
   }
 
   private View initViewCompact(LayoutInflater inflater, ViewGroup parent) {
