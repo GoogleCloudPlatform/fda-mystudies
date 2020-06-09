@@ -22,7 +22,8 @@ public class ConsentPDF extends RealmObject {
 
   private String sharing;
 
-  @PrimaryKey private String studyId;
+  @PrimaryKey
+  private String studyId;
 
   private ConsentData consent;
 
@@ -61,11 +62,11 @@ public class ConsentPDF extends RealmObject {
   @Override
   public String toString() {
     return "ClassPojo [message = "
-        + message
-        + ", sharing = "
-        + sharing
-        + ", consent = "
-        + consent
-        + "]";
+            + message
+            + ", sharing = "
+            + sharing
+            + ", consent = "
+            + consent
+            + "]";
   }
 }

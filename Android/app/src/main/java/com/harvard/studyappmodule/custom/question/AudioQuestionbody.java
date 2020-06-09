@@ -52,9 +52,9 @@ public class AudioQuestionbody implements StepBody {
     audioSavePathInDevice =
         Environment.getExternalStorageDirectory().getAbsolutePath()
             + "/FDA/"
-            + CreateRandomAudioFileName(5)
+            + createRandomAudioFileName()
             + ".3gp";
-    MediaRecorderReady();
+    mediaRecorderReady();
 
     try {
       mediaRecorder.prepare();
@@ -98,7 +98,7 @@ public class AudioQuestionbody implements StepBody {
     return BodyAnswer.INVALID;
   }
 
-  private void MediaRecorderReady() {
+  private void mediaRecorderReady() {
     mediaRecorder = new MediaRecorder();
     mediaRecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
     mediaRecorder.setOutputFormat(MediaRecorder.OutputFormat.THREE_GPP);
@@ -106,14 +106,14 @@ public class AudioQuestionbody implements StepBody {
     mediaRecorder.setOutputFile(audioSavePathInDevice);
   }
 
-  private String CreateRandomAudioFileName(int string) {
+  private String createRandomAudioFileName() {
     Random random = new Random();
-    String RandomAudioFileName = "ABCDEFGHIJKLMNOP";
-    StringBuilder stringBuilder = new StringBuilder(string);
+    String randomAudioFileName = "ABCDEFGHIJKLMNOP";
+    StringBuilder stringBuilder = new StringBuilder(5);
     int i = 0;
-    while (i < string) {
+    while (i < 5) {
       stringBuilder.append(
-          RandomAudioFileName.charAt(random.nextInt(RandomAudioFileName.length())));
+              randomAudioFileName.charAt(random.nextInt(randomAudioFileName.length())));
 
       i++;
     }

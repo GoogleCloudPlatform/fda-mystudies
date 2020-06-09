@@ -39,17 +39,17 @@ import android.view.MenuItem;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Toast;
 import com.google.gson.Gson;
+import com.harvard.R;
 import com.harvard.eligibilitymodule.ComprehensionFailureActivity;
 import com.harvard.eligibilitymodule.ComprehensionSuccessActivity;
-import com.harvard.R;
-import com.harvard.storagemodule.DBServiceSubscriber;
-import com.harvard.studyappmodule.enroll.EnrollData;
+import com.harvard.storagemodule.DbServiceSubscriber;
 import com.harvard.studyappmodule.StudyFragment;
 import com.harvard.studyappmodule.StudyModulePresenter;
 import com.harvard.studyappmodule.consent.model.ComprehensionCorrectAnswers;
 import com.harvard.studyappmodule.consent.model.Consent;
 import com.harvard.studyappmodule.consent.model.EligibilityConsent;
 import com.harvard.studyappmodule.custom.StepSwitcherCustom;
+import com.harvard.studyappmodule.enroll.EnrollData;
 import com.harvard.studyappmodule.events.EnrollIdEvent;
 import com.harvard.studyappmodule.events.GetUserStudyListEvent;
 import com.harvard.studyappmodule.events.UpdateEligibilityConsentStatusEvent;
@@ -65,27 +65,18 @@ import com.harvard.usermodule.webservicemodel.StudyData;
 import com.harvard.utils.AppController;
 import com.harvard.utils.Logger;
 import com.harvard.utils.SharedPreferenceHelper;
-import com.harvard.utils.URLs;
+import com.harvard.utils.Urls;
 import com.harvard.webservicemodule.apihelper.ApiCall;
 import com.harvard.webservicemodule.events.RegistrationServerConsentConfigEvent;
 import com.harvard.webservicemodule.events.RegistrationServerEnrollmentConfigEvent;
-import com.harvard.webservicemodule.events.WCPConfigEvent;
+import com.harvard.webservicemodule.events.WcpConfigEvent;
 import com.tom_roush.pdfbox.pdmodel.PDDocument;
 import com.tom_roush.pdfbox.pdmodel.PDPage;
 import com.tom_roush.pdfbox.pdmodel.PDPageContentStream;
 import com.tom_roush.pdfbox.pdmodel.graphics.image.LosslessFactory;
 import com.tom_roush.pdfbox.pdmodel.graphics.image.PDImageXObject;
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-import org.researchstack.backbone.result.StepResult;
-import org.researchstack.backbone.result.TaskResult;
-import org.researchstack.backbone.step.Step;
-import org.researchstack.backbone.task.OrderedTask;
-import org.researchstack.backbone.task.Task;
-import org.researchstack.backbone.ui.callbacks.StepCallbacks;
-import org.researchstack.backbone.ui.step.layout.ConsentSignatureStepLayout;
-import org.researchstack.backbone.ui.step.layout.StepLayout;
+import io.realm.Realm;
+import io.realm.RealmList;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -97,8 +88,17 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import javax.crypto.CipherInputStream;
-import io.realm.Realm;
-import io.realm.RealmList;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+import org.researchstack.backbone.result.StepResult;
+import org.researchstack.backbone.result.TaskResult;
+import org.researchstack.backbone.step.Step;
+import org.researchstack.backbone.task.OrderedTask;
+import org.researchstack.backbone.task.Task;
+import org.researchstack.backbone.ui.callbacks.StepCallbacks;
+import org.researchstack.backbone.ui.step.layout.ConsentSignatureStepLayout;
+import org.researchstack.backbone.ui.step.layout.StepLayout;
 
 public class CustomConsentViewTaskActivity extends AppCompatActivity
     implements StepCallbacks, ApiCall.OnAsyncRequestComplete {
@@ -114,9 +114,9 @@ public class CustomConsentViewTaskActivity extends AppCompatActivity
   private StepSwitcherCustom root;
   private static final String FILE_FOLDER = "FDA_PDF";
   private static final int STUDY_UPDATES = 205;
-  private boolean mClick = true;
-  private boolean mCompletionAdherenceStatus = true;
-  private final int ENROLL_ID_RESPONSECODE = 100;
+  private boolean click = true;
+  private boolean completionAdherenceStatus = true;
+  private static final int ENROLL_ID_RESPONSECODE = 100;
 
   private Step currentStep;
   private Task task;
@@ -133,19 +133,19 @@ public class CustomConsentViewTaskActivity extends AppCompatActivity
   private String siteId = "";
   private int score = 0;
   private int passScore = 0;
-  private Consent mConsent;
-  private RealmList<ComprehensionCorrectAnswers> comprehensionCorrectAnswerses;
+  private Consent consent;
+  private RealmList<ComprehensionCorrectAnswers> comprehensionCorrectAnswers;
   private Step previousStep;
-  private DBServiceSubscriber dbServiceSubscriber;
-  private Realm mRealm;
-  private final int UPDATE_USERPREFERENCE_RESPONSECODE = 102;
+  private DbServiceSubscriber dbServiceSubscriber;
+  private Realm realm;
+  private static final int UPDATE_USERPREFERENCE_RESPONSECODE = 102;
   private static final int GET_PREFERENCES = 2016;
-  private final int UPDATE_ELIGIBILITY_CONSENT_RESPONSECODE = 101;
-  private String enrolleddate;
+  private static final int UPDATE_ELIGIBILITY_CONSENT_RESPONSECODE = 101;
+  private String enrolledDate;
   private EligibilityConsent eligibilityConsent;
   private StudyList studyList;
   private String pdfPath;
-  String SharingConsent = "n/a";
+  String sharingConsent = "n/a";
 
   public static Intent newIntent(
       Context context,
@@ -176,21 +176,21 @@ public class CustomConsentViewTaskActivity extends AppCompatActivity
     getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
     root = (StepSwitcherCustom) findViewById(R.id.container);
-    dbServiceSubscriber = new DBServiceSubscriber();
-    mRealm = AppController.getRealmobj(this);
-    studyList = dbServiceSubscriber.getStudiesDetails(getIntent().getStringExtra(STUDYID), mRealm);
+    dbServiceSubscriber = new DbServiceSubscriber();
+    realm = AppController.getRealmobj(this);
+    studyList = dbServiceSubscriber.getStudiesDetails(getIntent().getStringExtra(STUDYID), realm);
 
     if (savedInstanceState == null) {
 
       studyId = getIntent().getStringExtra(STUDYID);
       pdfTitle = getIntent().getStringExtra(PDFTITLE);
 
-      eligibilityConsent = dbServiceSubscriber.getConsentMetadata(studyId, mRealm);
-      mConsent = eligibilityConsent.getConsent();
+      eligibilityConsent = dbServiceSubscriber.getConsentMetadata(studyId, realm);
+      consent = eligibilityConsent.getConsent();
       ConsentBuilder consentBuilder = new ConsentBuilder();
       List<Step> consentstep =
           consentBuilder.createsurveyquestion(
-              CustomConsentViewTaskActivity.this, mConsent, pdfTitle);
+              CustomConsentViewTaskActivity.this, consent, pdfTitle);
 
       task = new OrderedTask(CONSENT, consentstep);
       enrollId = getIntent().getStringExtra(ENROLLID);
@@ -203,12 +203,12 @@ public class CustomConsentViewTaskActivity extends AppCompatActivity
       studyId = (String) savedInstanceState.getSerializable(STUDYID);
       pdfTitle = (String) savedInstanceState.getSerializable(PDFTITLE);
 
-      eligibilityConsent = dbServiceSubscriber.getConsentMetadata(studyId, mRealm);
-      mConsent = eligibilityConsent.getConsent();
+      eligibilityConsent = dbServiceSubscriber.getConsentMetadata(studyId, realm);
+      consent = eligibilityConsent.getConsent();
       ConsentBuilder consentBuilder = new ConsentBuilder();
       List<Step> consentstep =
           consentBuilder.createsurveyquestion(
-              CustomConsentViewTaskActivity.this, mConsent, pdfTitle);
+              CustomConsentViewTaskActivity.this, consent, pdfTitle);
       task = new OrderedTask(CONSENT, consentstep);
 
       enrollId = (String) savedInstanceState.getSerializable(ENROLLID);
@@ -225,15 +225,15 @@ public class CustomConsentViewTaskActivity extends AppCompatActivity
       currentStep = task.getStepAfterStep(null, taskResult);
     }
 
-    comprehensionCorrectAnswerses = mConsent.getComprehension().getCorrectAnswers();
-    passScore = Integer.parseInt(mConsent.getComprehension().getPassScore());
+    comprehensionCorrectAnswers = consent.getComprehension().getCorrectAnswers();
+    passScore = Integer.parseInt(consent.getComprehension().getPassScore());
 
     showStep(currentStep);
   }
 
   @Override
   protected void onDestroy() {
-    dbServiceSubscriber.closeRealmObj(mRealm);
+    dbServiceSubscriber.closeRealmObj(realm);
     super.onDestroy();
   }
 
@@ -252,16 +252,16 @@ public class CustomConsentViewTaskActivity extends AppCompatActivity
         saveAndFinish();
       } else {
         String checkIdentifier;
-        if (mConsent.getSharing().getTitle().equalsIgnoreCase("")
-            && mConsent.getSharing().getText().equalsIgnoreCase("")
-            && mConsent.getSharing().getShortDesc().equalsIgnoreCase("")
-            && mConsent.getSharing().getLongDesc().equalsIgnoreCase("")) {
+        if (consent.getSharing().getTitle().equalsIgnoreCase("")
+            && consent.getSharing().getText().equalsIgnoreCase("")
+            && consent.getSharing().getShortDesc().equalsIgnoreCase("")
+            && consent.getSharing().getLongDesc().equalsIgnoreCase("")) {
           checkIdentifier = "review";
         } else {
           checkIdentifier = "sharing";
         }
 
-        if (mConsent.getComprehension().getQuestions().size() > 0
+        if (consent.getComprehension().getQuestions().size() > 0
             && nextStep.getIdentifier().equalsIgnoreCase(checkIdentifier)) {
           if (score >= passScore) {
             Intent intent = new Intent(this, ComprehensionSuccessActivity.class);
@@ -289,8 +289,8 @@ public class CustomConsentViewTaskActivity extends AppCompatActivity
 
   private boolean calcPassScore(Step currentStep, TaskResult taskResult) {
     ArrayList<String> answer = new ArrayList<>();
-    for (int i = 0; i < comprehensionCorrectAnswerses.size(); i++) {
-      if (comprehensionCorrectAnswerses
+    for (int i = 0; i < comprehensionCorrectAnswers.size(); i++) {
+      if (comprehensionCorrectAnswers
           .get(i)
           .getKey()
           .equalsIgnoreCase(currentStep.getIdentifier())) {
@@ -305,11 +305,11 @@ public class CustomConsentViewTaskActivity extends AppCompatActivity
                 for (int j = 0; j < objects.length; j++) {
                   if (objects[j] instanceof String) {
                     for (int k = 0;
-                        k < comprehensionCorrectAnswerses.get(i).getAnswer().size();
+                        k < comprehensionCorrectAnswers.get(i).getAnswer().size();
                         k++) {
                       if (((String) objects[j])
                           .equalsIgnoreCase(
-                              comprehensionCorrectAnswerses
+                              comprehensionCorrectAnswers
                                   .get(i)
                                   .getAnswer()
                                   .get(k)
@@ -319,9 +319,9 @@ public class CustomConsentViewTaskActivity extends AppCompatActivity
                     }
                   }
                 }
-                if (comprehensionCorrectAnswerses.get(i).getEvaluation().equalsIgnoreCase("all")) {
-                  if (objects.length == comprehensionCorrectAnswerses.get(i).getAnswer().size()
-                      && answer.size() >= comprehensionCorrectAnswerses.get(i).getAnswer().size()) {
+                if (comprehensionCorrectAnswers.get(i).getEvaluation().equalsIgnoreCase("all")) {
+                  if (objects.length == comprehensionCorrectAnswers.get(i).getAnswer().size()
+                      && answer.size() >= comprehensionCorrectAnswers.get(i).getAnswer().size()) {
                     return true;
                   }
                 } else {
@@ -329,12 +329,12 @@ public class CustomConsentViewTaskActivity extends AppCompatActivity
                     for (int k = 0; k < answer.size(); k++) {
                       boolean correctAnswer = false;
                       for (int j = 0;
-                          j < comprehensionCorrectAnswerses.get(i).getAnswer().size();
+                          j < comprehensionCorrectAnswers.get(i).getAnswer().size();
                           j++) {
                         if (answer
                             .get(k)
                             .equalsIgnoreCase(
-                                comprehensionCorrectAnswerses
+                                comprehensionCorrectAnswers
                                     .get(i)
                                     .getAnswer()
                                     .get(j)
@@ -446,14 +446,14 @@ public class CustomConsentViewTaskActivity extends AppCompatActivity
   private void saveAndFinish() {
 
     taskResult.setEndDate(new Date());
-    if (mClick) {
-      mClick = false;
+    if (click) {
+      click = false;
       new Handler()
           .postDelayed(
               new Runnable() {
                 @Override
                 public void run() {
-                  mClick = true;
+                  click = true;
                 }
               },
               3000);
@@ -461,14 +461,14 @@ public class CustomConsentViewTaskActivity extends AppCompatActivity
           .showProgress(CustomConsentViewTaskActivity.this, "", "", false);
       if (getIntent().getStringExtra(TYPE) != null
           && getIntent().getStringExtra(TYPE).equalsIgnoreCase("update")) {
-        Studies mStudies =
-            dbServiceSubscriber.getStudies(getIntent().getStringExtra(STUDYID), mRealm);
-        if (mStudies != null) {
-          participantId = mStudies.getParticipantId();
-          hashToken = mStudies.getHashedToken();
-          siteId = mStudies.getSiteId();
+        Studies studies =
+            dbServiceSubscriber.getStudies(getIntent().getStringExtra(STUDYID), realm);
+        if (studies != null) {
+          participantId = studies.getParticipantId();
+          hashToken = studies.getHashedToken();
+          siteId = studies.getSiteId();
         }
-        mCompletionAdherenceStatus = false;
+        completionAdherenceStatus = false;
         getStudySate();
 
       } else {
@@ -478,7 +478,7 @@ public class CustomConsentViewTaskActivity extends AppCompatActivity
   }
 
   private void enrollId() {
-    EnrollIdEvent enrollIdEvent = new EnrollIdEvent();
+
     HashMap<String, String> params = new HashMap<>();
     params.put("studyId", getIntent().getStringExtra(STUDYID));
     params.put("token", getIntent().getStringExtra(ENROLLID));
@@ -500,7 +500,7 @@ public class CustomConsentViewTaskActivity extends AppCompatActivity
     RegistrationServerEnrollmentConfigEvent registrationServerEnrollmentConfigEvent =
         new RegistrationServerEnrollmentConfigEvent(
             "post_json",
-            URLs.ENROLL_ID,
+            Urls.ENROLL_ID,
             ENROLL_ID_RESPONSECODE,
             CustomConsentViewTaskActivity.this,
             EnrollData.class,
@@ -509,7 +509,7 @@ public class CustomConsentViewTaskActivity extends AppCompatActivity
             null,
             false,
             CustomConsentViewTaskActivity.this);
-
+    EnrollIdEvent enrollIdEvent = new EnrollIdEvent();
     enrollIdEvent.setRegistrationServerEnrollmentConfigEvent(
         registrationServerEnrollmentConfigEvent);
     StudyModulePresenter studyModulePresenter = new StudyModulePresenter();
@@ -517,8 +517,7 @@ public class CustomConsentViewTaskActivity extends AppCompatActivity
   }
 
   public void updateuserpreference() {
-    Studies studies = dbServiceSubscriber.getStudies(getIntent().getStringExtra(STUDYID), mRealm);
-    UpdatePreferenceEvent updatePreferenceEvent = new UpdatePreferenceEvent();
+    Studies studies = dbServiceSubscriber.getStudies(getIntent().getStringExtra(STUDYID), realm);
 
     HashMap<String, String> header = new HashMap();
     header.put(
@@ -555,11 +554,11 @@ public class CustomConsentViewTaskActivity extends AppCompatActivity
       if (siteId != null && !siteId.equalsIgnoreCase("")) {
         studiestatus.put("siteId", siteId);
       }
-      if (mCompletionAdherenceStatus) {
+      if (completionAdherenceStatus) {
         studiestatus.put("completion", "0");
         studiestatus.put("adherence", "0");
       } else {
-        mCompletionAdherenceStatus = true;
+        completionAdherenceStatus = true;
       }
     } catch (JSONException e) {
       Logger.log(e);
@@ -574,7 +573,7 @@ public class CustomConsentViewTaskActivity extends AppCompatActivity
     RegistrationServerEnrollmentConfigEvent registrationServerEnrollmentConfigEvent =
         new RegistrationServerEnrollmentConfigEvent(
             "post_object",
-            URLs.UPDATE_STUDY_PREFERENCE,
+            Urls.UPDATE_STUDY_PREFERENCE,
             UPDATE_USERPREFERENCE_RESPONSECODE,
             this,
             LoginData.class,
@@ -583,7 +582,7 @@ public class CustomConsentViewTaskActivity extends AppCompatActivity
             jsonObject,
             false,
             this);
-
+    UpdatePreferenceEvent updatePreferenceEvent = new UpdatePreferenceEvent();
     updatePreferenceEvent.setRegistrationServerEnrollmentConfigEvent(
         registrationServerEnrollmentConfigEvent);
     UserModulePresenter userModulePresenter = new UserModulePresenter();
@@ -611,7 +610,7 @@ public class CustomConsentViewTaskActivity extends AppCompatActivity
               getResources().getString(R.string.studyStatus),
               StudyFragment.IN_PROGRESS);
 
-      Study study = dbServiceSubscriber.getStudyListFromDB(mRealm);
+      Study study = dbServiceSubscriber.getStudyListFromDB(realm);
       dbServiceSubscriber.updateStudyWithStudyId(
           this, getIntent().getStringExtra(STUDYID), study, studyUpdate.getCurrentVersion());
       dbServiceSubscriber.updateStudyPreferenceVersionDB(
@@ -621,7 +620,7 @@ public class CustomConsentViewTaskActivity extends AppCompatActivity
           this,
           getIntent().getStringExtra(STUDYID),
           StudyFragment.IN_PROGRESS,
-          enrolleddate,
+              enrolledDate,
           participantId,
           siteId,
           hashToken,
@@ -652,8 +651,9 @@ public class CustomConsentViewTaskActivity extends AppCompatActivity
         for (int i = 0; i < studies.getStudies().size(); i++) {
           if (getIntent()
               .getStringExtra(STUDYID)
-              .equalsIgnoreCase(studies.getStudies().get(i).getStudyId()))
-            enrolleddate = studies.getStudies().get(i).getEnrolledDate();
+              .equalsIgnoreCase(studies.getStudies().get(i).getStudyId())) {
+            enrolledDate = studies.getStudies().get(i).getEnrolledDate();
+          }
         }
         updateEligibilityConsent();
 
@@ -682,49 +682,22 @@ public class CustomConsentViewTaskActivity extends AppCompatActivity
     }
   }
 
-  private String genarateConsentPDF() {
+  private String genarateConsentPdf() {
 
     String filepath = "";
     try {
-      String signatureBase64 =
-          (String)
-              taskResult
-                  .getStepResult("Signature")
-                  .getResultForIdentifier(ConsentSignatureStepLayout.KEY_SIGNATURE);
-
-      String signatureDate =
-          (String)
-              taskResult
-                  .getStepResult("Signature")
-                  .getResultForIdentifier(ConsentSignatureStepLayout.KEY_SIGNATURE_DATE);
-
-      String formResult =
-          new Gson()
-              .toJson(
-                  taskResult
-                      .getStepResult(getResources().getString(R.string.signature_form_step))
-                      .getResults());
-      JSONObject formResultObj = new JSONObject(formResult);
-      JSONObject fullNameObj = formResultObj.getJSONObject("First Name");
-      JSONObject fullNameResult = fullNameObj.getJSONObject("results");
-      String firstName = fullNameResult.getString("answer");
-
-      JSONObject lastNameObj = formResultObj.getJSONObject("Last Name");
-      JSONObject lastNameResult = lastNameObj.getJSONObject("results");
-      String lastName = lastNameResult.getString("answer");
 
       try {
         StepResult result = taskResult.getStepResult("sharing");
         if (result != null) {
           JSONObject resultObj = new JSONObject(result.getResults().toString());
-          SharingConsent = resultObj.get("answer").toString();
+          sharingConsent = resultObj.get("answer").toString();
         }
       } catch (Exception e) {
         Logger.log(e);
       }
 
       getFile("/data/data/" + getPackageName() + "/files/");
-      String timeStamp = AppController.getDateFormatType3();
 
       StringBuilder docBuilder = null;
       if (eligibilityConsent != null
@@ -781,21 +754,22 @@ public class CustomConsentViewTaskActivity extends AppCompatActivity
       String detail = getResources().getString(R.string.agree_participate_research_study);
       agreeBuilder.append(String.format("<p style=\"text-align: center\">%1$s</p>", detail));
 
-      PDFWriter pdfWriter = new PDFWriter("/data/data/" + getPackageName() + "/files/", timeStamp);
+      String timeStamp = AppController.getDateFormatForConsentPdf();
+      PdfWriter pdfWriter = new PdfWriter("/data/data/" + getPackageName() + "/files/", timeStamp);
       pdfWriter.createPdfFile(CustomConsentViewTaskActivity.this);
-      String heading = "";
+
       StringBuffer pageText = new StringBuffer();
-      String[] doc_string = docBuilder.toString().split("<br>");
-      if (doc_string.length > 0) {
-        for (String s : doc_string) {
+      String[] docString = docBuilder.toString().split("<br>");
+      if (docString.length > 0) {
+        for (String s : docString) {
           pageText.append(Html.fromHtml(s).toString().replace("\n", ""));
           pageText.append(System.getProperty("line.separator"));
         }
       }
       pageText.append(System.getProperty("line.separator"));
-      String[] agree_string = agreeBuilder.toString().split("</p>");
-      if (agree_string.length > 0) {
-        for (String s : agree_string) {
+      String[] agreeString = agreeBuilder.toString().split("</p>");
+      if (agreeString.length > 0) {
+        for (String s : agreeString) {
           pageText.append(Html.fromHtml(s).toString().replace("\n", ""));
           pageText.append(System.getProperty("line.separator"));
         }
@@ -806,6 +780,20 @@ public class CustomConsentViewTaskActivity extends AppCompatActivity
       pageText.append(System.getProperty("line.separator"));
       pageText.append(System.getProperty("line.separator"));
 
+      String formResult =
+          new Gson()
+              .toJson(
+                  taskResult
+                      .getStepResult(getResources().getString(R.string.signature_form_step))
+                      .getResults());
+      JSONObject formResultObj = new JSONObject(formResult);
+      JSONObject fullNameObj = formResultObj.getJSONObject("First Name");
+      JSONObject fullNameResult = fullNameObj.getJSONObject("results");
+
+      JSONObject lastNameObj = formResultObj.getJSONObject("Last Name");
+      JSONObject lastNameResult = lastNameObj.getJSONObject("results");
+      String firstName = fullNameResult.getString("answer");
+      String lastName = lastNameResult.getString("answer");
       pageText
           .append(getResources().getString(R.string.participans_name))
           .append(": ")
@@ -813,9 +801,20 @@ public class CustomConsentViewTaskActivity extends AppCompatActivity
           .append(" ")
           .append(lastName);
       pageText.append(System.getProperty("line.separator"));
+      String signatureDate =
+          (String)
+              taskResult
+                  .getStepResult("Signature")
+                  .getResultForIdentifier(ConsentSignatureStepLayout.KEY_SIGNATURE_DATE);
       pageText.append(getResources().getString(R.string.date)).append(": ").append(signatureDate);
       pageText.append(System.getProperty("line.separator"));
       pageText.append(getResources().getString(R.string.participants_signature));
+
+      String signatureBase64 =
+          (String)
+              taskResult
+                  .getStepResult("Signature")
+                  .getResultForIdentifier(ConsentSignatureStepLayout.KEY_SIGNATURE);
 
       Bitmap bitmap =
           BitmapFactory.decodeByteArray(
@@ -824,13 +823,14 @@ public class CustomConsentViewTaskActivity extends AppCompatActivity
               Base64.decode(signatureBase64, Base64.DEFAULT).length);
       File sign = new File("/data/data/" + getPackageName() + "/files/" + "signature" + ".png");
       saveBitmap(sign, bitmap);
+      String heading = "";
       pdfWriter.addPage(heading, pageText, sign.getPath());
       pdfWriter.saveAndClose();
       sign.delete();
 
       // encrypt the genarated pdf
       File encryptFile =
-          AppController.genarateEncryptedConsentPDF(
+          AppController.generateEncryptedConsentPdf(
               "/data/data/" + getPackageName() + "/files/", timeStamp);
       filepath = encryptFile.getAbsolutePath();
       // After encryption delete the pdf file
@@ -845,22 +845,22 @@ public class CustomConsentViewTaskActivity extends AppCompatActivity
     return filepath;
   }
 
-  public void saveBitmap(File f, Bitmap mBitmap) {
+  public void saveBitmap(File f, Bitmap bitmap) {
 
-    FileOutputStream fOut = null;
+    FileOutputStream fileOut = null;
     try {
-      fOut = new FileOutputStream(f);
+      fileOut = new FileOutputStream(f);
     } catch (FileNotFoundException e) {
       Logger.log(e);
     }
-    mBitmap.compress(Bitmap.CompressFormat.PNG, 100, fOut);
+    bitmap.compress(Bitmap.CompressFormat.PNG, 100, fileOut);
     try {
-      fOut.flush();
+      fileOut.flush();
     } catch (IOException e) {
       Logger.log(e);
     }
     try {
-      fOut.close();
+      fileOut.close();
     } catch (IOException e) {
       Logger.log(e);
     }
@@ -869,8 +869,8 @@ public class CustomConsentViewTaskActivity extends AppCompatActivity
   private void insertSignature(
       PDDocument pdfDocument,
       String signatureBase64,
-      PDPageContentStream sign_Stream,
-      PDPage sign_page)
+      PDPageContentStream signStream,
+      PDPage signPage)
       throws IOException {
     Bitmap bitmap =
         BitmapFactory.decodeByteArray(
@@ -880,27 +880,27 @@ public class CustomConsentViewTaskActivity extends AppCompatActivity
     PDImageXObject pdImage = LosslessFactory.createFromImage(pdfDocument, bitmap);
     pdImage.setWidth(200);
     pdImage.setHeight(100);
-    sign_Stream.drawImage(
+    signStream.drawImage(
         pdImage,
         10 + pdImage.getWidth() - 180,
-        sign_page.getMediaBox().getUpperRightY() - 10 - pdImage.getHeight() - 130);
+        signPage.getMediaBox().getUpperRightY() - 10 - pdImage.getHeight() - 130);
   }
 
   private void getStudyUpdateFomWS() {
     AppController.getHelperProgressDialog()
         .showProgress(CustomConsentViewTaskActivity.this, "", "", false);
     GetUserStudyListEvent getUserStudyListEvent = new GetUserStudyListEvent();
-    DBServiceSubscriber dbServiceSubscriber = new DBServiceSubscriber();
+    DbServiceSubscriber dbServiceSubscriber = new DbServiceSubscriber();
     HashMap<String, String> header = new HashMap();
 
     String url =
-        URLs.STUDY_UPDATES
+        Urls.STUDY_UPDATES
             + "?studyId="
             + getIntent().getStringExtra(STUDYID)
             + "&studyVersion="
             + studyList.getStudyVersion();
-    WCPConfigEvent wcpConfigEvent =
-        new WCPConfigEvent(
+    WcpConfigEvent wcpConfigEvent =
+        new WcpConfigEvent(
             "get",
             url,
             STUDY_UPDATES,
@@ -918,10 +918,9 @@ public class CustomConsentViewTaskActivity extends AppCompatActivity
   }
 
   private void updateEligibilityConsent() {
-    pdfPath = genarateConsentPDF();
+    pdfPath = genarateConsentPdf();
     if (pdfPath != null && !pdfPath.isEmpty()) {
-      UpdateEligibilityConsentStatusEvent updateEligibilityConsentStatusEvent =
-          new UpdateEligibilityConsentStatusEvent();
+
       HashMap headerparams = new HashMap();
       headerparams.put(
           "accessToken",
@@ -933,7 +932,7 @@ public class CustomConsentViewTaskActivity extends AppCompatActivity
               .readPreference(CustomConsentViewTaskActivity.this, getString(R.string.userid), ""));
 
       EligibilityConsent eligibilityConsent =
-          dbServiceSubscriber.getConsentMetadata(getIntent().getStringExtra(STUDYID), mRealm);
+          dbServiceSubscriber.getConsentMetadata(getIntent().getStringExtra(STUDYID), realm);
       JSONObject body = new JSONObject();
       try {
         body.put("studyId", getIntent().getStringExtra(STUDYID));
@@ -951,7 +950,7 @@ public class CustomConsentViewTaskActivity extends AppCompatActivity
 
         body.put("consent", consentbody);
 
-        body.put("sharing", SharingConsent);
+        body.put("sharing", sharingConsent);
       } catch (JSONException e) {
         Logger.log(e);
       }
@@ -959,7 +958,7 @@ public class CustomConsentViewTaskActivity extends AppCompatActivity
       RegistrationServerConsentConfigEvent registrationServerConsentConfigEvent =
           new RegistrationServerConsentConfigEvent(
               "post_object",
-              URLs.UPDATE_ELIGIBILITY_CONSENT,
+              Urls.UPDATE_ELIGIBILITY_CONSENT,
               UPDATE_ELIGIBILITY_CONSENT_RESPONSECODE,
               CustomConsentViewTaskActivity.this,
               LoginData.class,
@@ -968,6 +967,8 @@ public class CustomConsentViewTaskActivity extends AppCompatActivity
               body,
               false,
               CustomConsentViewTaskActivity.this);
+      UpdateEligibilityConsentStatusEvent updateEligibilityConsentStatusEvent =
+          new UpdateEligibilityConsentStatusEvent();
       updateEligibilityConsentStatusEvent.setRegistrationServerConsentConfigEvent(
           registrationServerConsentConfigEvent);
       StudyModulePresenter studyModulePresenter = new StudyModulePresenter();
@@ -979,13 +980,12 @@ public class CustomConsentViewTaskActivity extends AppCompatActivity
   }
 
   private String convertFileToString(String filepath) throws IOException {
-    CipherInputStream cis = AppController.genarateDecryptedConsentPDF(filepath);
+    CipherInputStream cis = AppController.generateDecryptedConsentPdf(filepath);
     byte[] byteArray = AppController.cipherInputStreamConvertToByte(cis);
     return Base64.encodeToString(byteArray, Base64.DEFAULT);
   }
 
   private void getStudySate() {
-    GetPreferenceEvent getPreferenceEvent = new GetPreferenceEvent();
     HashMap<String, String> header = new HashMap();
     header.put(
         "accessToken",
@@ -1008,7 +1008,7 @@ public class CustomConsentViewTaskActivity extends AppCompatActivity
     RegistrationServerEnrollmentConfigEvent registrationServerEnrollmentConfigEvent =
         new RegistrationServerEnrollmentConfigEvent(
             "get",
-            URLs.STUDY_STATE,
+            Urls.STUDY_STATE,
             GET_PREFERENCES,
             CustomConsentViewTaskActivity.this,
             StudyData.class,
@@ -1017,7 +1017,7 @@ public class CustomConsentViewTaskActivity extends AppCompatActivity
             null,
             false,
             this);
-
+    GetPreferenceEvent getPreferenceEvent = new GetPreferenceEvent();
     getPreferenceEvent.setRegistrationServerEnrollmentConfigEvent(
         registrationServerEnrollmentConfigEvent);
     UserModulePresenter userModulePresenter = new UserModulePresenter();

@@ -52,7 +52,7 @@ public class SingleChoiceTextQuestionBody<T>
   private Set<T> currentSelected;
 
   private EditText otherText;
-  private OtherOptionModel mOtherOptionModel;
+  private OtherOptionModel otherOptionModel;
   private String otherOptionValue = "";
   private boolean otherOptionMandatory = false;
   private boolean otherOptionText = false;
@@ -62,7 +62,7 @@ public class SingleChoiceTextQuestionBody<T>
     this.result = result == null ? new StepResult<>(step) : result;
     SingleChoiceTextAnswerFormat format = (SingleChoiceTextAnswerFormat) this.step.getAnswerFormat1();
     this.choices = format.getTextChoices();
-    mOtherOptionModel = new OtherOptionModel();
+    otherOptionModel = new OtherOptionModel();
 
     // Restore results
     currentSelected = new LinkedHashSet<>();
@@ -88,13 +88,13 @@ public class SingleChoiceTextQuestionBody<T>
           try {
             JSONObject jsonObject = new JSONObject(list.get(i).toString());
 
-            mOtherOptionModel.setOther(jsonObject.getString("other"));
+            otherOptionModel.setOther(jsonObject.getString("other"));
             try {
-              mOtherOptionModel.setText(jsonObject.getString("text"));
+              otherOptionModel.setText(jsonObject.getString("text"));
             } catch (JSONException e) {
               Logger.log(e);
             }
-            currentSelected.remove(new Gson().toJson(mOtherOptionModel));
+            currentSelected.remove(new Gson().toJson(otherOptionModel));
           } catch (JSONException e) {
             Logger.log(e);
           }
@@ -213,7 +213,7 @@ public class SingleChoiceTextQuestionBody<T>
 
         if (item.getValue().toString().equalsIgnoreCase(otherOptionValue)) {
           otherText.setVisibility(View.VISIBLE);
-          otherText.setText(mOtherOptionModel.getText());
+          otherText.setText(otherOptionModel.getText());
         }
       }
 
@@ -236,9 +236,9 @@ public class SingleChoiceTextQuestionBody<T>
                 otherText.setText("");
                 selectedcheckbox.clear();
                 currentSelected.clear();
-                currentSelected.remove(new Gson().toJson(mOtherOptionModel));
-                mOtherOptionModel.setOther(null);
-                mOtherOptionModel.setText(null);
+                currentSelected.remove(new Gson().toJson(otherOptionModel));
+                otherOptionModel.setOther(null);
+                otherOptionModel.setText(null);
 
                 selectedcheckbox.add(checkBox);
                 currentSelected.add(item.getValue());
@@ -247,16 +247,16 @@ public class SingleChoiceTextQuestionBody<T>
                   otherText.setVisibility(View.VISIBLE);
                   otherText.requestFocus();
 
-                  mOtherOptionModel.setOther(item.getText().toString());
+                  otherOptionModel.setOther(item.getText().toString());
                 }
               } else {
                 selectedcheckbox.remove(checkBox);
                 currentSelected.remove(item.getValue());
                 if (item.getOther() != null) {
                   AppController.getHelperHideKeyboard((Activity) inflater.getContext());
-                  currentSelected.remove(new Gson().toJson(mOtherOptionModel));
-                  mOtherOptionModel.setOther(null);
-                  mOtherOptionModel.setText(null);
+                  currentSelected.remove(new Gson().toJson(otherOptionModel));
+                  otherOptionModel.setOther(null);
+                  otherOptionModel.setText(null);
                   otherText.setVisibility(View.GONE);
                   otherText.setText("");
                 }
@@ -267,8 +267,8 @@ public class SingleChoiceTextQuestionBody<T>
       checkBox.setOnCheckedChangeListener(onCheckedChangeListener);
     }
 
-    if (mOtherOptionModel != null && mOtherOptionModel.getText() != null) {
-      otherText.setText(mOtherOptionModel.getText());
+    if (otherOptionModel != null && otherOptionModel.getText() != null) {
+      otherText.setText(otherOptionModel.getText());
       otherText.setVisibility(View.VISIBLE);
     }
 
@@ -293,17 +293,17 @@ public class SingleChoiceTextQuestionBody<T>
       currentSelected.clear();
       result.setResult((T[]) currentSelected.toArray());
     } else {
-      if (mOtherOptionModel != null) {
+      if (otherOptionModel != null) {
         if (otherOptionText) {
           if (currentSelected.contains(otherOptionValue)) {
-            mOtherOptionModel.setText(otherText.getText().toString());
-            currentSelected.add((T) new Gson().toJson(mOtherOptionModel));
+            otherOptionModel.setText(otherText.getText().toString());
+            currentSelected.add((T) new Gson().toJson(otherOptionModel));
           } else {
-            mOtherOptionModel.setText(otherText.getText().toString());
-            currentSelected.remove((T) new Gson().toJson(mOtherOptionModel));
+            otherOptionModel.setText(otherText.getText().toString());
+            currentSelected.remove((T) new Gson().toJson(otherOptionModel));
           }
-        } else if (mOtherOptionModel.getOther() != null) {
-          currentSelected.add((T) new Gson().toJson(mOtherOptionModel));
+        } else if (otherOptionModel.getOther() != null) {
+          currentSelected.add((T) new Gson().toJson(otherOptionModel));
         }
       }
 
