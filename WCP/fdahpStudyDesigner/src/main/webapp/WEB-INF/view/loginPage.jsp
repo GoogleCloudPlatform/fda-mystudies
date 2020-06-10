@@ -19,7 +19,8 @@
   <link rel="apple-touch-icon" href="/studybuilder/images/icons/FAV_Icon.png">
 
   <!-- Mobile Metas -->
-  <meta name="viewport" content="width=device-width, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="viewport"
+        content="width=device-width, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
 
   <!-- Web Fonts  -->
   <link href="https://fonts.googleapis.com/css?family=Roboto:300,400" rel="stylesheet">
@@ -63,29 +64,12 @@
   <script src="/studybuilder/vendor/select2/bootstrap-select.min.js"></script>
   <script type="text/javascript" src="/studybuilder/js/loader.js"></script>
 
-
-  <script>
-    (function (i, s, o, g, r, a, m) {
-      i['GoogleAnalyticsObject'] = r;
-      i[r] = i[r] || function () {
-        (i[r].q = i[r].q || []).push(arguments)
-      }, i[r].l = 1 * new Date();
-      a = s.createElement(o),
-          m = s.getElementsByTagName(o)[0];
-      a.async = 1;
-      a.src = g;
-      m.parentNode.insertBefore(a, m)
-    })(window, document, 'script', '//www.google-analytics.com/analytics.js', 'ga');
-
-    ga('create', 'UA-71064806-1', 'auto');
-    ga('send', 'pageview');
-  </script>
-
 </head>
-<body class="loading background__img" onload="noBack();" onpageshow="if (event.persisted) noBack();" onunload="">
+<body class="loading background__img" onload="noBack();" onpageshow="if (event.persisted) noBack();"
+      onunload="">
 <div id="loader"><span></span></div>
 <div id="lg-container" class="lg-container">
- 
+
 
   <!-- new login -->
   <!-- Logo-->
@@ -94,7 +78,7 @@
   </div>
   <div class="clearfix"></div>
   <div class="login__container">
-   
+
 
     <div class="login-box">
       <div class="lg-space-txt">
@@ -103,7 +87,8 @@
       <div class="ll__border__bottom"></div>
       <c:url value='/j_spring_security_check' var="fdaLink"/>
       <input type="hidden" id="fdaLink" value="${fdaLink}">
-      <form:form id="loginForm" data-toggle="validator" role="form" action="#" name="loginForm" method="post"
+      <form:form id="loginForm" data-toggle="validator" role="form" action="#" name="loginForm"
+                 method="post"
                  autocomplete="off">
         <div id="errMsg" class="error_msg">${errMsg}</div>
         <div id="sucMsg" class="suceess_msg">${sucMsg}</div>
@@ -112,12 +97,14 @@
             <input type="text" class="input-field wow_input" id="email" name="username"
                    data-pattern-error="Email address is invalid"
                    placeholder="Email Address" required maxlength="100"
-                   pattern="[a-zA-Z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,3}$" autofocus autocomplete="off">
+                   pattern="[a-zA-Z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,3}$" autofocus
+                   autocomplete="off">
             <div class="help-block with-errors red-txt"></div>
           </div>
           <div class="mb-lg form-group">
             <input type="password" class="input-field wow_input" id="password"
-                   placeholder="Password" required maxlength="64" data-error="This field shouldn't be empty"
+                   placeholder="Password" required maxlength="64"
+                   data-error="This field shouldn't be empty"
                    autocomplete="off" readonly onfocus="$(this).removeAttr('readonly');">
             <div class="help-block with-errors red-txt"></div>
           </div>
@@ -127,21 +114,25 @@
           <div class="pb-md pt-xs">
             <span class="white__text">Forgot Password? </span> <a id="forgot_pwd"
                                                                   class="gray-link white__text"
-                                                                  href="javascript:void(0)">Get Help</a>
+                                                                  href="javascript:void(0)">Get
+            Help</a>
           </div>
         </div>
         <input type="password" name="password" id="hidePass" style="display: none;"/>
       </form:form>
-      <form:form id="forgotForm" data-toggle="validator" role="form" action="forgotPassword.do" method="post"
+      <form:form id="forgotForm" data-toggle="validator" role="form" action="forgotPassword.do"
+                 method="post"
                  autocomplete="off">
         <div class="pwd dis-none">
           <div class="mb-lg">
             <h3 style="    color: #fff; padding-top: 20px;" class="mt-none">Forgot Password?</h3>
-            <div class="mt-md white__text">Enter your Email address to get a link to reset your password
+            <div class="mt-md white__text">Enter your Email address to get a link to reset your
+              password
             </div>
           </div>
           <div class="mb-lg form-group">
-            <input type="text" class="input-field wow_input" id="emailReg" name="email" maxlength="100"
+            <input type="text" class="input-field wow_input" id="emailReg" name="email"
+                   maxlength="100"
                    placeholder="Email Address"
                    data-pattern-error="Email address is invalid" required maxlength="100"
                    pattern="[a-zA-Z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,3}$">
@@ -151,7 +142,8 @@
             <button type="submit" class="btn lg-btn" id="log-btn">SUBMIT</button>
           </div>
           <div class="pt-xs">
-            <a id="login" class="gray-link white__text" href="javascript:void(0)">Back to Sign in</a>
+            <a id="login" class="gray-link white__text" href="javascript:void(0)">Back to Sign
+              in</a>
           </div>
         </div>
       </form:form>
@@ -162,7 +154,8 @@
   <div class="footer">
     <div><span>Copyright Placeholder</span><span><a href="/studybuilder/terms.do" class=""
                                                     target="_blank">Terms</a></span><span><a
-            href="/studybuilder/privacyPolicy.do" class="" target="_blank">Privacy Policy</a></span></div>
+        href="/studybuilder/privacyPolicy.do" class="" target="_blank">Privacy Policy</a></span>
+    </div>
   </div>
   <!-- new login -->
 </div>
@@ -204,7 +197,8 @@
     </div>
   </div>
 </div>
-<input type="hidden" id="csrfDet" csrfParamName="${_csrf.parameterName}" csrfToken="${_csrf.token}"/>
+<input type="hidden" id="csrfDet" csrfParamName="${_csrf.parameterName}"
+       csrfToken="${_csrf.token}"/>
 <script src="/studybuilder/js/theme.js"></script>
 <script src="/studybuilder/js/jquery.mask.min.js"></script>
 <script src="/studybuilder/js/common.js"></script>
@@ -260,7 +254,7 @@
     if (errMsg.length > 0) {
       $("#errMsg").html(errMsg);
       $("#errMsg").show("fast");
-     
+
       setTimeout(hideDisplayMessage, 4000);
     }
     var sucMsg = '${sucMsg}';
@@ -270,7 +264,6 @@
       $("#errMsg").hide("fast");
       setTimeout(hideDisplayMessage, 4000);
     }
-
 
     // Internet Explorer 6-11
     var isIE = /*@cc_on!@*/false || !!document.documentMode;
@@ -286,20 +279,21 @@
         isEmail = regEX.test(emailAdd);
         if (emailAdd == '') {
           if (isIE || isEdge) {
-            $('#email').parent().find(".help-block").html("<ul class='list-unstyled'><li>This is a required field</li></ul>");
+            $('#email').parent().find(".help-block").html(
+                "<ul class='list-unstyled'><li>This is a required field</li></ul>");
           } else {
-            $('#email').parent().find(".help-block").html("<ul class='list-unstyled'><li>Please fill out this field</li></ul>");
+            $('#email').parent().find(".help-block").html(
+                "<ul class='list-unstyled'><li>Please fill out this field</li></ul>");
           }
         } else if (!isEmail) {
-          $('#email').parent().find(".help-block").html("<ul class='list-unstyled'><li>Email address is invalid</li></ul>");
+          $('#email').parent().find(".help-block").html(
+              "<ul class='list-unstyled'><li>Email address is invalid</li></ul>");
         }
       }
     });
 
     var wh = $(window).height();
     $('.cs-model-box>div:first-child').css('height', wh);
-
-
 
   });
 
@@ -308,7 +302,6 @@
     $('#errMsg').hide();
   }
 
-  
   window.history.forward();
 
   function noBack() {

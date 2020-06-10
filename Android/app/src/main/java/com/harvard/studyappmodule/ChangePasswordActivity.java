@@ -15,8 +15,6 @@
 
 package com.harvard.studyappmodule;
 
-import android.content.ComponentName;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
@@ -26,16 +24,14 @@ import android.support.v7.widget.AppCompatTextView;
 import android.view.View;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
-import com.harvard.AppConfig;
 import com.harvard.R;
 import com.harvard.usermodule.UserModulePresenter;
-import com.harvard.usermodule.VerificationStepActivity;
 import com.harvard.usermodule.event.ChangePasswordEvent;
 import com.harvard.usermodule.webservicemodel.ChangePasswordData;
 import com.harvard.utils.AppController;
 import com.harvard.utils.Logger;
 import com.harvard.utils.SharedPreferenceHelper;
-import com.harvard.utils.URLs;
+import com.harvard.utils.Urls;
 import com.harvard.webservicemodule.apihelper.ApiCall;
 import com.harvard.webservicemodule.events.AuthServerConfigEvent;
 import java.util.HashMap;
@@ -44,93 +40,93 @@ public class ChangePasswordActivity extends AppCompatActivity
     implements ApiCall.OnAsyncRequestComplete {
 
   private static final int CHANGE_PASSWORD_REQUEST = 8;
-  private RelativeLayout mBackBtn;
-  private RelativeLayout mRelpassword;
-  private AppCompatTextView mTitle;
-  private AppCompatEditText mOldPassword;
-  private AppCompatEditText mConfirmPassword;
-  private AppCompatEditText mNewPassword;
-  private AppCompatTextView mOldPasswordLabel;
-  private AppCompatTextView mConfirmPasswordLabel;
-  private AppCompatTextView mNewPasswordLabel;
-  private AppCompatTextView mSubmitButton;
-  private String mFrom = null;
-  private String mUserId;
-  private String mAuth;
-  private String mPassword;
+  private RelativeLayout backBtn;
+  private RelativeLayout relpassword;
+  private AppCompatTextView title;
+  private AppCompatEditText oldPassword;
+  private AppCompatEditText confirmPassword;
+  private AppCompatEditText newPassword;
+  private AppCompatTextView oldPasswordLabel;
+  private AppCompatTextView confirmPasswordLabel;
+  private AppCompatTextView newPasswordLabel;
+  private AppCompatTextView submitButton;
+  private String from = null;
+  private String userId;
+  private String auth;
+  private String password;
   private boolean isVerified;
-  private String mEmailId;
-  private boolean mClicked;
+  private String emailId;
+  private boolean clicked;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    mUserId = getIntent().getStringExtra("userid");
-    mAuth = getIntent().getStringExtra("auth");
+    userId = getIntent().getStringExtra("userid");
+    auth = getIntent().getStringExtra("auth");
     isVerified = getIntent().getBooleanExtra("verified", false);
-    mEmailId = getIntent().getStringExtra("email");
+    emailId = getIntent().getStringExtra("email");
     try {
-      mPassword = getIntent().getStringExtra("password");
+      password = getIntent().getStringExtra("password");
     } catch (Exception e) {
-      mPassword = "";
+      password = "";
       Logger.log(e);
     }
     setContentView(R.layout.activity_change_password);
-    mClicked = false;
-    mFrom = getIntent().getStringExtra("from");
-    initializeXMLId();
+    clicked = false;
+    from = getIntent().getStringExtra("from");
+    initializeXmlId();
     setTextForView();
     setFont();
     bindEvents();
   }
 
-  private void initializeXMLId() {
-    mBackBtn = (RelativeLayout) findViewById(R.id.backBtn);
-    mRelpassword = (RelativeLayout) findViewById(R.id.rel_password);
-    mTitle = (AppCompatTextView) findViewById(R.id.title);
-    mOldPasswordLabel = (AppCompatTextView) findViewById(R.id.oldpassword_label);
-    mNewPasswordLabel = (AppCompatTextView) findViewById(R.id.password_label_new);
-    mConfirmPasswordLabel = (AppCompatTextView) findViewById(R.id.password_label_confirm);
-    mOldPassword = (AppCompatEditText) findViewById(R.id.edittxt_oldpassword);
-    mNewPassword = (AppCompatEditText) findViewById(R.id.edittxt_password_new);
-    mConfirmPassword = (AppCompatEditText) findViewById(R.id.edittxt_password_confirm);
-    mSubmitButton = (AppCompatTextView) findViewById(R.id.submitButton);
+  private void initializeXmlId() {
+    backBtn = (RelativeLayout) findViewById(R.id.backBtn);
+    relpassword = (RelativeLayout) findViewById(R.id.rel_password);
+    title = (AppCompatTextView) findViewById(R.id.title);
+    oldPasswordLabel = (AppCompatTextView) findViewById(R.id.oldpassword_label);
+    newPasswordLabel = (AppCompatTextView) findViewById(R.id.password_label_new);
+    confirmPasswordLabel = (AppCompatTextView) findViewById(R.id.password_label_confirm);
+    oldPassword = (AppCompatEditText) findViewById(R.id.edittxt_oldpassword);
+    newPassword = (AppCompatEditText) findViewById(R.id.edittxt_password_new);
+    confirmPassword = (AppCompatEditText) findViewById(R.id.edittxt_password_confirm);
+    submitButton = (AppCompatTextView) findViewById(R.id.submitButton);
   }
 
   private void setTextForView() {
-    if (mPassword != null && !mPassword.equalsIgnoreCase("")) {
-      mOldPassword.setText(mPassword);
-      mOldPassword.setFocusable(false);
-      mOldPassword.setClickable(false);
-      mTitle.setText(getResources().getString(R.string.change_password_heading1));
-      mRelpassword.setVisibility(View.GONE);
+    if (password != null && !password.equalsIgnoreCase("")) {
+      oldPassword.setText(password);
+      oldPassword.setFocusable(false);
+      oldPassword.setClickable(false);
+      title.setText(getResources().getString(R.string.change_password_heading1));
+      relpassword.setVisibility(View.GONE);
     } else {
-      mRelpassword.setVisibility(View.VISIBLE);
-      mTitle.setText(getResources().getString(R.string.change_password_heading));
+      relpassword.setVisibility(View.VISIBLE);
+      title.setText(getResources().getString(R.string.change_password_heading));
     }
   }
 
   private void setFont() {
     try {
-      mTitle.setTypeface(AppController.getTypeface(ChangePasswordActivity.this, "medium"));
-      mOldPasswordLabel.setTypeface(
+      title.setTypeface(AppController.getTypeface(ChangePasswordActivity.this, "medium"));
+      oldPasswordLabel.setTypeface(
           AppController.getTypeface(ChangePasswordActivity.this, "regular"));
-      mNewPasswordLabel.setTypeface(
+      newPasswordLabel.setTypeface(
           AppController.getTypeface(ChangePasswordActivity.this, "regular"));
-      mConfirmPasswordLabel.setTypeface(
+      confirmPasswordLabel.setTypeface(
           AppController.getTypeface(ChangePasswordActivity.this, "regular"));
-      mOldPassword.setTypeface(AppController.getTypeface(ChangePasswordActivity.this, "regular"));
-      mNewPassword.setTypeface(AppController.getTypeface(ChangePasswordActivity.this, "regular"));
-      mConfirmPassword.setTypeface(
+      oldPassword.setTypeface(AppController.getTypeface(ChangePasswordActivity.this, "regular"));
+      newPassword.setTypeface(AppController.getTypeface(ChangePasswordActivity.this, "regular"));
+      confirmPassword.setTypeface(
           AppController.getTypeface(ChangePasswordActivity.this, "regular"));
-      mSubmitButton.setTypeface(AppController.getTypeface(ChangePasswordActivity.this, "regular"));
+      submitButton.setTypeface(AppController.getTypeface(ChangePasswordActivity.this, "regular"));
     } catch (Exception e) {
       Logger.log(e);
     }
   }
 
   private void bindEvents() {
-    mBackBtn.setOnClickListener(
+    backBtn.setOnClickListener(
         new View.OnClickListener() {
           @Override
           public void onClick(View view) {
@@ -139,7 +135,7 @@ public class ChangePasswordActivity extends AppCompatActivity
             } catch (Exception e) {
               Logger.log(e);
             }
-            if (mFrom != null && mFrom.equalsIgnoreCase("ProfileFragment")) {
+            if (from != null && from.equalsIgnoreCase("ProfileFragment")) {
               finish();
             } else {
               SharedPreferences settings =
@@ -147,62 +143,64 @@ public class ChangePasswordActivity extends AppCompatActivity
               settings.edit().clear().apply();
               // delete passcode from keystore
               String pass = AppController.refreshKeys("passcode");
-              if (pass != null) AppController.deleteKey("passcode_" + pass);
+              if (pass != null) {
+                AppController.deleteKey("passcode_" + pass);
+              }
               finish();
             }
           }
         });
 
-    mSubmitButton.setOnClickListener(
+    submitButton.setOnClickListener(
         new View.OnClickListener() {
           @Override
           public void onClick(View view) {
-            if (mClicked == false) {
-              mClicked = true;
-              String PASSWORD_PATTERN =
+            if (clicked == false) {
+              clicked = true;
+              String passwordPattern =
                   "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[!\"#$%&'()*+,-.:;<=>?@\\[\\]^_`{|}~])(?=\\S+$).{8,64}$";
-              if (mNewPassword.getText().toString().equalsIgnoreCase("")
-                  && mOldPassword.getText().toString().equalsIgnoreCase("")
-                  && mConfirmPassword.getText().toString().equalsIgnoreCase("")) {
+              if (newPassword.getText().toString().equalsIgnoreCase("")
+                  && oldPassword.getText().toString().equalsIgnoreCase("")
+                  && confirmPassword.getText().toString().equalsIgnoreCase("")) {
                 Toast.makeText(
                         ChangePasswordActivity.this,
                         getResources().getString(R.string.enter_all_field_empty),
                         Toast.LENGTH_SHORT)
                     .show();
-              } else if (mOldPassword.getText().toString().equalsIgnoreCase("")) {
+              } else if (oldPassword.getText().toString().equalsIgnoreCase("")) {
                 Toast.makeText(
                         ChangePasswordActivity.this,
                         getResources().getString(R.string.password_old_empty),
                         Toast.LENGTH_SHORT)
                     .show();
-              } else if (mNewPassword.getText().toString().equalsIgnoreCase("")) {
+              } else if (newPassword.getText().toString().equalsIgnoreCase("")) {
                 Toast.makeText(
                         ChangePasswordActivity.this,
                         getResources().getString(R.string.password_new_empty),
                         Toast.LENGTH_SHORT)
                     .show();
-              } else if (!mNewPassword.getText().toString().matches(PASSWORD_PATTERN)) {
+              } else if (!newPassword.getText().toString().matches(passwordPattern)) {
                 Toast.makeText(
                         ChangePasswordActivity.this,
                         getResources().getString(R.string.password_validation),
                         Toast.LENGTH_SHORT)
                     .show();
-              } else if (checkPasswordContainsEmailID(mNewPassword.getText().toString())) {
+              } else if (checkPasswordContainsEmailID(newPassword.getText().toString())) {
                 Toast.makeText(
                         ChangePasswordActivity.this,
                         getResources().getString(R.string.password_contain_email),
                         Toast.LENGTH_SHORT)
                     .show();
-              } else if (mConfirmPassword.getText().toString().equalsIgnoreCase("")) {
+              } else if (confirmPassword.getText().toString().equalsIgnoreCase("")) {
                 Toast.makeText(
                         ChangePasswordActivity.this,
                         getResources().getString(R.string.confirm_password_empty),
                         Toast.LENGTH_SHORT)
                     .show();
-              } else if (!mConfirmPassword
+              } else if (!confirmPassword
                   .getText()
                   .toString()
-                  .equals(mNewPassword.getText().toString())) {
+                  .equals(newPassword.getText().toString())) {
                 Toast.makeText(
                         ChangePasswordActivity.this,
                         getResources().getString(R.string.password_mismatch_error1),
@@ -218,7 +216,7 @@ public class ChangePasswordActivity extends AppCompatActivity
                       new Runnable() {
                         @Override
                         public void run() {
-                          mClicked = false;
+                          clicked = false;
                         }
                       },
                       2000);
@@ -228,7 +226,7 @@ public class ChangePasswordActivity extends AppCompatActivity
   }
 
   private boolean checkPasswordContainsEmailID(String password) {
-    if (password.contains(mEmailId)) {
+    if (password.contains(emailId)) {
       return true;
     } else {
       return false;
@@ -236,24 +234,23 @@ public class ChangePasswordActivity extends AppCompatActivity
   }
 
   private void callChangePasswordWebService() {
-    ChangePasswordEvent changePasswordEvent = new ChangePasswordEvent();
 
     HashMap<String, String> header = new HashMap<>();
-    header.put("accessToken", mAuth);
-    header.put("userId", mUserId);
+    header.put("accessToken", auth);
+    header.put("userId", userId);
 
     HashMap<String, String> params = new HashMap<>();
-    if (mPassword != null && mPassword.equalsIgnoreCase("")) {
-      params.put("currentPassword", mPassword);
+    if (password != null && password.equalsIgnoreCase("")) {
+      params.put("currentPassword", password);
     } else {
-      params.put("currentPassword", mOldPassword.getText().toString());
+      params.put("currentPassword", oldPassword.getText().toString());
     }
-    params.put("newPassword", mNewPassword.getText().toString());
+    params.put("newPassword", newPassword.getText().toString());
 
     AuthServerConfigEvent authServerConfigEvent =
         new AuthServerConfigEvent(
             "post",
-            URLs.CHANGE_PASSWORD,
+            Urls.CHANGE_PASSWORD,
             CHANGE_PASSWORD_REQUEST,
             ChangePasswordActivity.this,
             ChangePasswordData.class,
@@ -262,6 +259,7 @@ public class ChangePasswordActivity extends AppCompatActivity
             null,
             false,
             ChangePasswordActivity.this);
+    ChangePasswordEvent changePasswordEvent = new ChangePasswordEvent();
     changePasswordEvent.setAuthServerConfigEvent(authServerConfigEvent);
     UserModulePresenter userModulePresenter = new UserModulePresenter();
     userModulePresenter.performChangePassword(changePasswordEvent);
@@ -275,21 +273,21 @@ public class ChangePasswordActivity extends AppCompatActivity
     } catch (Exception e) {
       Logger.log(e);
     }
-    if (mFrom != null && mFrom.equalsIgnoreCase("ProfileFragment")) {
+    if (from != null && from.equalsIgnoreCase("ProfileFragment")) {
       Toast.makeText(
               this, getResources().getString(R.string.password_change_message), Toast.LENGTH_SHORT)
           .show();
       finish();
     } else {
       AppController.getHelperSharedPreference()
-          .writePreference(ChangePasswordActivity.this, getString(R.string.userid), "" + mUserId);
+          .writePreference(ChangePasswordActivity.this, getString(R.string.userid), "" + userId);
       AppController.getHelperSharedPreference()
-          .writePreference(ChangePasswordActivity.this, getString(R.string.auth), "" + mAuth);
+          .writePreference(ChangePasswordActivity.this, getString(R.string.auth), "" + auth);
       AppController.getHelperSharedPreference()
           .writePreference(
               ChangePasswordActivity.this, getString(R.string.verified), "" + isVerified);
       AppController.getHelperSharedPreference()
-          .writePreference(ChangePasswordActivity.this, getString(R.string.email), "" + mEmailId);
+          .writePreference(ChangePasswordActivity.this, getString(R.string.email), "" + emailId);
       Toast.makeText(
               this,
               getResources().getString(R.string.password_change_message_signin),
@@ -317,7 +315,7 @@ public class ChangePasswordActivity extends AppCompatActivity
     } catch (Exception e) {
       Logger.log(e);
     }
-    if (mFrom != null && mFrom.equalsIgnoreCase("ProfileFragment")) {
+    if (from != null && from.equalsIgnoreCase("ProfileFragment")) {
       finish();
     } else {
       SharedPreferences settings =
@@ -325,7 +323,9 @@ public class ChangePasswordActivity extends AppCompatActivity
       settings.edit().clear().apply();
       // delete passcode from keystore
       String pass = AppController.refreshKeys("passcode");
-      if (pass != null) AppController.deleteKey("passcode_" + pass);
+      if (pass != null) {
+        AppController.deleteKey("passcode_" + pass);
+      }
       finish();
     }
   }

@@ -1,5 +1,6 @@
 /*
  * Copyright © 2017-2019 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors.
+ * Copyright 2020 Google LLC
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction, including
  * without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
@@ -14,7 +15,7 @@
 
 package com.harvard.base;
 
-import com.harvard.FDAEventBus;
+import com.harvard.FdaEventBus;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -24,7 +25,7 @@ public abstract class BaseEventBusRegistry {
   private static BaseEventBusRegistry INSTANCE;
   private static final String EXCEPTION_MESSAGE =
       "No Instance of SxEventBusRegistry found. Create a new Instance through your subclass and set this INSTANCE";
-  private final FDAEventBus eventBus = FDAEventBus.getInstance();
+  private final FdaEventBus eventBus = FdaEventBus.getInstance();
   private final List<EventBusSubscriber> defaultEventSubscribers = new ArrayList<>();
   private final HashMap<Object, EventBusSubscriber> eventSubscribers = new HashMap<>();
 
@@ -33,9 +34,9 @@ public abstract class BaseEventBusRegistry {
   }
 
   public static interface EventBusSubscriber {
-    Object register(FDAEventBus eventBus);
+    Object register(FdaEventBus eventBus);
 
-    void unregister(FDAEventBus eventBus);
+    void unregister(FdaEventBus eventBus);
   }
 
   public static void setInstance(BaseEventBusRegistry instance) {

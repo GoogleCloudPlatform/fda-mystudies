@@ -39,8 +39,9 @@ public class ScaleQuestion implements StepBody {
   private ScaleAnswerFormat format;
   private TextView mcurrentvalue;
   private Double currentSelected;
-  private SeekBar mSeekBar;
-  private int min, stepSection;
+  private SeekBar seekBar;
+  private int min;
+  private int stepSection;
   private double value;
 
   public ScaleQuestion(Step step, StepResult result) {
@@ -95,19 +96,19 @@ public class ScaleQuestion implements StepBody {
     View seekbarlayout;
     if (!format.isVertical()) {
       seekbarlayout = inflater.inflate(R.layout.seekbar_horizontal_layout, parent, false);
-      mSeekBar = (SeekBar) seekbarlayout.findViewById(R.id.seekbar);
-      mSeekBar.setMax((max - min) / stepSection);
+      seekBar = (SeekBar) seekbarlayout.findViewById(R.id.seekbar);
+      seekBar.setMax((max - min) / stepSection);
     } else {
       seekbarlayout = inflater.inflate(R.layout.seekbar_vertical_layout, parent, false);
-      mSeekBar = (SeekBar) seekbarlayout.findViewById(R.id.seekbar);
-      mSeekBar.setMax((max - min) / stepSection);
+      seekBar = (SeekBar) seekbarlayout.findViewById(R.id.seekbar);
+      seekBar.setMax((max - min) / stepSection);
     }
 
-    TextView mintitle = (TextView) seekbarlayout.findViewById(R.id.mintitle);
+
     TextView mindesc = (TextView) seekbarlayout.findViewById(R.id.mindesc);
     ImageView minimage = (ImageView) seekbarlayout.findViewById(R.id.minimage);
 
-    TextView maxtitle = (TextView) seekbarlayout.findViewById(R.id.maxtitle);
+
     TextView maxdesc = (TextView) seekbarlayout.findViewById(R.id.maxdesc);
     ImageView maximage = (ImageView) seekbarlayout.findViewById(R.id.maximage);
 
@@ -128,13 +129,14 @@ public class ScaleQuestion implements StepBody {
     } else {
       maximage.setVisibility(View.INVISIBLE);
     }
-
+    TextView mintitle = (TextView) seekbarlayout.findViewById(R.id.mintitle);
+    TextView maxtitle = (TextView) seekbarlayout.findViewById(R.id.maxtitle);
     mintitle.setText(String.valueOf(min));
     maxtitle.setText(String.valueOf(max));
 
     mcurrentvalue.setText(String.valueOf(min));
 
-    mSeekBar.setOnSeekBarChangeListener(
+    seekBar.setOnSeekBarChangeListener(
         new SeekBar.OnSeekBarChangeListener() {
           @Override
           public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
@@ -149,8 +151,8 @@ public class ScaleQuestion implements StepBody {
         });
 
     if (currentSelected != null) {
-      int Selected = ((currentSelected.intValue() - min) / stepSection);
-      mSeekBar.setProgress(Selected);
+      int selected = ((currentSelected.intValue() - min) / stepSection);
+      seekBar.setProgress(selected);
     } else {
       int defaultval;
       if (format.getDefaultval() != null && !format.getDefaultval().equalsIgnoreCase("")) {
@@ -164,7 +166,7 @@ public class ScaleQuestion implements StepBody {
         defaultval = 0;
       }
 
-      mSeekBar.setProgress((int) ((defaultval - min) / stepSection));
+      seekBar.setProgress((int) ((defaultval - min) / stepSection));
     }
     if (format.isVertical()) {
       setvaluetotxt();
@@ -176,7 +178,7 @@ public class ScaleQuestion implements StepBody {
   }
 
   private void setvaluetotxt() {
-    value = min + (mSeekBar.getProgress() * stepSection);
+    value = min + (seekBar.getProgress() * stepSection);
     mcurrentvalue.setText(String.valueOf(value));
   }
 

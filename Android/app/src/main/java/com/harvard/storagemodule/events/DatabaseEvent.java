@@ -1,5 +1,6 @@
 /*
  * Copyright © 2017-2019 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors.
+ * Copyright 2020 Google LLC
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction, including
  * without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
@@ -17,12 +18,12 @@ package com.harvard.storagemodule.events;
 import java.util.HashMap;
 
 public class DatabaseEvent<E> {
-  private String mTableName;
-  private String mOperation; // insert, select, delete
-  private String mType; // for inserting, copy or copy and update
-  private E e;
+  private String tableName;
+  private String operation; // insert, select, delete
+  private String type; // for inserting, copy or copy and update
+  private E obj;
   private HashMap<String, String> whereParams = new HashMap<>(); //  for select where conditions
-  private Class aClass;
+  private Class classObj;
 
   public HashMap<String, String> getWhereParams() {
     return whereParams;
@@ -32,43 +33,43 @@ public class DatabaseEvent<E> {
     this.whereParams = whereParams;
   }
 
-  public String getmType() {
-    return mType;
+  public String getType() {
+    return type;
   }
 
-  public void setmType(String mType) {
-    this.mType = mType;
+  public void setType(String type) {
+    this.type = type;
   }
 
   public E getE() {
-    return e;
+    return obj;
   }
 
-  public void setE(E e) {
-    this.e = e;
+  public void setE(E obj) {
+    this.obj = obj;
   }
 
   public Class getaClass() {
-    return aClass;
+    return classObj;
   }
 
-  public void setaClass(Class aClass) {
-    this.aClass = aClass;
+  public void setaClass(Class classObj) {
+    this.classObj = classObj;
   }
 
-  public String getmOperation() {
-    return mOperation;
+  public String getOperation() {
+    return operation;
   }
 
-  public void setmOperation(String mOperation) {
-    this.mOperation = mOperation;
+  public void setOperation(String operation) {
+    this.operation = operation;
   }
 
-  public String getmTableName() {
-    return mTableName;
+  public String getTableName() {
+    return tableName;
   }
 
-  public void setmTableName(String mTableName) {
-    this.mTableName = mTableName;
+  public void setTableName(String tableName) {
+    this.tableName = tableName;
   }
 }

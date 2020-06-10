@@ -113,12 +113,12 @@ public class Study {
     this.consent = consent;
   }
 
-  public String getConsentPDF() {
+  public String getConsentPdf() {
     return consentPDF;
   }
 
-  public void setConsentPDF(String consentPDF) {
-    this.consentPDF = consentPDF;
+  public void setConsentPdf(String consentPdf) {
+    this.consentPDF = consentPdf;
   }
 
   public String getDescription() {

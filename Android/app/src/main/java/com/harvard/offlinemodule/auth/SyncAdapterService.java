@@ -1,5 +1,6 @@
 /*
  * Copyright © 2017-2019 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors.
+ * Copyright 2020 Google LLC
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction, including
  * without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
@@ -17,14 +18,14 @@ package com.harvard.offlinemodule.auth;
 import android.app.Service;
 import android.content.Intent;
 import android.os.IBinder;
-import com.harvard.storagemodule.DBServiceSubscriber;
+import com.harvard.storagemodule.DbServiceSubscriber;
 
 /** Service that keeps running SyncAdapter in background. */
 public class SyncAdapterService extends Service {
   private static SyncAdapter syncAdapter = null;
   // Object to use as a thread-safe lock
   private static final Object syncAdapterLock = new Object();
-  DBServiceSubscriber mDBServiceSubscriber;
+  DbServiceSubscriber dbServiceSubscriber;
 
   @Override
   public void onCreate() {
@@ -34,7 +35,7 @@ public class SyncAdapterService extends Service {
      * Set the sync adapter as syncable
      * Disallow parallel syncs
      */
-    mDBServiceSubscriber = new DBServiceSubscriber();
+    dbServiceSubscriber = new DbServiceSubscriber();
     synchronized (syncAdapterLock) {
       if (syncAdapter == null) {
         syncAdapter = new SyncAdapter(this, true);

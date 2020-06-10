@@ -51,7 +51,7 @@ public class FormBodyCustom implements StepBody {
   private List<StepBody> formStepChildren;
   private ArrayList<QuestionStep> questionSteps;
   private ArrayList<QuestionStep> tempquestionSteps;
-  private int j = 0;
+  private int size = 0;
   private int formIncrement = 0;
   private int actionBarHeight = 0;
   private int navigationBarHeight = 0;
@@ -82,7 +82,9 @@ public class FormBodyCustom implements StepBody {
             Logger.log(e);
           }
         }
-        if (b) break;
+        if (b) {
+          break;
+        }
       }
 
       Map<String, StepResult> map = result.getResults();
@@ -122,7 +124,7 @@ public class FormBodyCustom implements StepBody {
       }
       questionSteps.addAll(questionStepsDynamic);
     }
-    j = questionSteps.size();
+    size = questionSteps.size();
   }
 
   @Override
@@ -191,7 +193,7 @@ public class FormBodyCustom implements StepBody {
                 if (questionSteps.get(i) instanceof QuestionStepCustom) {
                   QuestionStepCustom questionStep1 =
                       new QuestionStepCustom(
-                          questionSteps.get(i).getIdentifier() + "-" + j + "_addMoreEnabled",
+                          questionSteps.get(i).getIdentifier() + "-" + size + "_addMoreEnabled",
                           questionSteps.get(i).getTitle());
                   questionStep1.setAnswerFormat1(
                       ((QuestionStepCustom) questionSteps.get(i)).getAnswerFormat1());
@@ -206,7 +208,7 @@ public class FormBodyCustom implements StepBody {
                 } else {
                   QuestionStep questionStep2 =
                       new QuestionStep(
-                          questionSteps.get(i).getIdentifier() + "-" + j + "_addMoreEnabled",
+                          questionSteps.get(i).getIdentifier() + "-" + size + "_addMoreEnabled",
                           questionSteps.get(i).getTitle());
                   questionStep2.setAnswerFormat(questionSteps.get(i).getAnswerFormat());
                   questionStep2.setOptional(questionSteps.get(i).isOptional());
@@ -231,7 +233,7 @@ public class FormBodyCustom implements StepBody {
                 formStepChildren.add(stepBody);
               }
             }
-            j = formIncrement + j;
+            size = formIncrement + size;
             body.addView(addmore);
             body.invalidate();
 

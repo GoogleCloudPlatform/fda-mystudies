@@ -9,20 +9,17 @@
 package com.harvard.webservicemodule.events;
 
 import android.content.Context;
-
-import com.harvard.utils.URLs;
-
+import com.harvard.utils.Urls;
+import java.util.HashMap;
 import org.json.JSONArray;
 import org.json.JSONObject;
-
-import java.util.HashMap;
 
 public class RegistrationServerEnrollmentConfigEvent<V> extends WebserviceConfigEvent {
 
   /**
    * @param method
-   * @param Url
-   * @param RequestCode
+   * @param url
+   * @param requestCode
    * @param context
    * @param modelclass
    * @param params
@@ -32,8 +29,8 @@ public class RegistrationServerEnrollmentConfigEvent<V> extends WebserviceConfig
    */
   public RegistrationServerEnrollmentConfigEvent(
       String method,
-      String Url,
-      int RequestCode,
+      String url,
+      int requestCode,
       Context context,
       Class modelclass,
       HashMap<String, String> params,
@@ -41,29 +38,29 @@ public class RegistrationServerEnrollmentConfigEvent<V> extends WebserviceConfig
       JSONObject jsonobj,
       boolean showAlert,
       V v) {
-    super(method, Url, RequestCode, context, modelclass, params, headers, jsonobj, showAlert, v);
+    super(method, url, requestCode, context, modelclass, params, headers, jsonobj, showAlert, v);
   }
 
   public RegistrationServerEnrollmentConfigEvent(
       String method,
-      String Url,
-      int RequestCode,
+      String url,
+      int requestCode,
       Context context,
       Class modelclass,
       HashMap<String, String> headers,
       JSONArray jsonArray,
       boolean showAlert,
       V v) {
-    super(method, Url, RequestCode, context, modelclass, headers, jsonArray, showAlert, v);
+    super(method, url, requestCode, context, modelclass, headers, jsonArray, showAlert, v);
   }
 
   @Override
   public String getProductionUrl() {
-    return URLs.BASE_URL_REGISTRATION_ENROLLMENT_SERVER;
+    return Urls.BASE_URL_REGISTRATION_ENROLLMENT_SERVER;
   }
 
   @Override
   public String getDevelopmentUrl() {
-    return URLs.BASE_URL_REGISTRATION_ENROLLMENT_SERVER;
+    return Urls.BASE_URL_REGISTRATION_ENROLLMENT_SERVER;
   }
 }

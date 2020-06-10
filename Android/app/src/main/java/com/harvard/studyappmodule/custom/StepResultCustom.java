@@ -24,7 +24,7 @@ import org.researchstack.backbone.step.QuestionStep;
 import org.researchstack.backbone.step.Step;
 
 public class StepResultCustom<T> extends Result {
-  /** When StepResult only has a single value, pair that value with the following key */
+  /** When StepResult only has a single value, pair that value with the following key. */
   public static final String DEFAULT_KEY = "answer";
 
   private LinkedHashMap<String, StepResult> results;

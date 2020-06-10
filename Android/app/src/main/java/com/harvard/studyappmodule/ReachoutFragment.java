@@ -1,5 +1,6 @@
 /*
  * Copyright © 2017-2019 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors.
+ * Copyright 2020 Google LLC
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction, including
  * without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
@@ -27,13 +28,13 @@ import java.util.ArrayList;
 
 public class ReachoutFragment<T> extends Fragment {
 
-  private RecyclerView mReachoutRecyclerView;
-  private Context mContext;
+  private RecyclerView reachoutRecyclerView;
+  private Context context;
 
   @Override
   public void onAttach(Context context) {
     super.onAttach(context);
-    this.mContext = context;
+    this.context = context;
   }
 
   @Override
@@ -41,22 +42,22 @@ public class ReachoutFragment<T> extends Fragment {
       LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
     // Inflate the layout for this fragment
     View view = inflater.inflate(R.layout.fragment_reachout, container, false);
-    initializeXMLId(view);
+    initializeXmlId(view);
     setRecyclearView();
     return view;
   }
 
-  private void initializeXMLId(View view) {
-    mReachoutRecyclerView = (RecyclerView) view.findViewById(R.id.reachoutRecyclerView);
+  private void initializeXmlId(View view) {
+    reachoutRecyclerView = (RecyclerView) view.findViewById(R.id.reachoutRecyclerView);
   }
 
   private void setRecyclearView() {
-    mReachoutRecyclerView.setLayoutManager(new LinearLayoutManager(mContext));
-    mReachoutRecyclerView.setNestedScrollingEnabled(false);
+    reachoutRecyclerView.setLayoutManager(new LinearLayoutManager(context));
+    reachoutRecyclerView.setNestedScrollingEnabled(false);
     ArrayList<String> reachoutList = new ArrayList<>();
     reachoutList.add(getString(R.string.anonymous_feedback));
     reachoutList.add(getString(R.string.need_help));
     ReachoutListAdapter reachoutListAdapter = new ReachoutListAdapter(getActivity(), reachoutList);
-    mReachoutRecyclerView.setAdapter(reachoutListAdapter);
+    reachoutRecyclerView.setAdapter(reachoutListAdapter);
   }
 }

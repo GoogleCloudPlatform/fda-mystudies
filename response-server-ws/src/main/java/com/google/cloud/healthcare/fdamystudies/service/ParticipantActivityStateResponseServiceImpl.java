@@ -5,6 +5,7 @@
  * license that can be found in the LICENSE file or at
  * https://opensource.org/licenses/MIT.
  */
+
 package com.google.cloud.healthcare.fdamystudies.service;
 
 import java.util.ArrayList;
@@ -106,7 +107,8 @@ public class ParticipantActivityStateResponseServiceImpl
         participantActivitiesDao.saveParticipantActivities(participantActivitiesListToUpdate);
       } else {
         throw new ProcessActivityStateException(
-            "saveParticipantActivities() - error. Provided input for studyId or participantId is null ");
+            "saveParticipantActivities() - error. Provided input for"
+                + " studyId or participantId is null ");
       }
 
     } catch (Exception e) {
