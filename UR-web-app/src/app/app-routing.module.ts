@@ -6,23 +6,23 @@ import {SetUpAccountComponent} from
   './auth/set-up-account/set-up-account.component';
 import {ForgotPasswordComponent} from
   './auth/forgot-password/forgot-password.component';
-import {PageNotFoundComponentComponent}
-  from './page-not-found-component/page-not-found-component.component';
+import {PageNotFoundComponent}
+  from './page-not-found/page-not-found.component';
 const routes: Routes = [
   {path: 'login', component: LoginComponent},
   {path: 'forgot-password', component: ForgotPasswordComponent},
   {path: 'set-up-account', component: SetUpAccountComponent},
   {
-    path: 'user',
+    path: 'admin',
     loadChildren:
       () => import('./site-coordinator/site-coordinator.module').
           then((m) => m.SiteCoordinatorModule),
   },
   {path: '', redirectTo: '/login', pathMatch: 'full'},
-  {path: '**', component: PageNotFoundComponentComponent},
+  {path: '**', component: PageNotFoundComponent},
 ];
 @NgModule({
-  imports: [RouterModule.forRoot(routes, {enableTracing: true})],
+  imports: [RouterModule.forRoot(routes)],
   exports: [RouterModule],
 })
 export class AppRoutingModule {}

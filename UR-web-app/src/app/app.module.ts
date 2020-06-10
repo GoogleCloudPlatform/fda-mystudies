@@ -9,12 +9,12 @@ import {SetUpAccountComponent} from
 import {ForgotPasswordComponent} from
   './auth/forgot-password/forgot-password.component';
 import {HashLocationStrategy, LocationStrategy} from '@angular/common';
-import {PageNotFoundComponentComponent} from
-  './page-not-found-component/page-not-found-component.component';
+import {PageNotFoundComponent} from
+  './page-not-found/page-not-found.component';
 
 @NgModule({
   declarations: [LoginComponent, SetUpAccountComponent,
-    ForgotPasswordComponent, AppComponent, PageNotFoundComponentComponent],
+    ForgotPasswordComponent, AppComponent, PageNotFoundComponent],
   imports: [BrowserModule, AppRoutingModule],
   providers: [
     {provide: LocationStrategy, useClass: HashLocationStrategy},
