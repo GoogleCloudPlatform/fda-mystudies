@@ -31,7 +31,7 @@ import com.google.cloud.healthcare.fdamystudies.utils.MyStudiesUserRegUtil;
 @Component
 public class AuthenticationFilter implements Filter {
 
-  private static java.util.logging.Logger logger = LoggerFactory.getLogger(AuthenticationFilter.class);
+  private static Logger logger = LoggerFactory.getLogger(AuthenticationFilter.class);
 
   @Override
   public void init(final FilterConfig filterConfig) throws ServletException {
