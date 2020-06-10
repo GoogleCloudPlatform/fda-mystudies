@@ -102,7 +102,7 @@ public class AuthenticationFilter implements Filter {
                         MyStudiesUserRegUtil.ErrorCodes.INVALID_ACCESS_TOKEN_USER_ID.getValue());
 
                     httpServletResponse.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-                    logger.warning("AuthenticationFilter doFilter(): invalid access token user id");
+                    logger.warn("AuthenticationFilter doFilter(): invalid access token user id");
                   }
                 } else {
                   if (response instanceof HttpServletResponse) {
@@ -117,7 +117,7 @@ public class AuthenticationFilter implements Filter {
                         MyStudiesUserRegUtil.ErrorCodes.SESSION_EXPIRED_MSG.getValue());
 
                     httpServletResponse.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-                    logger.warning("AuthenticationFilter doFilter(): session expired");
+                    logger.warn("AuthenticationFilter doFilter(): session expired");
                   }
                 }
 
@@ -130,7 +130,7 @@ public class AuthenticationFilter implements Filter {
                     MyStudiesUserRegUtil.ErrorCodes.INVALID_CLIENT_TOKEN.getValue());
 
                 httpServletResponse.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-                logger.warning("AuthenticationFilter doFilter(): invalid client token");
+                logger.warn("AuthenticationFilter doFilter(): invalid client token");
               }
 
             } catch (Exception e) {
@@ -146,7 +146,7 @@ public class AuthenticationFilter implements Filter {
               httpServletResponse.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
             }
           } else {
-            logger.warning("AuthenticationFilter doFilter(): Invalid Request");
+            logger.warn("AuthenticationFilter doFilter(): Invalid Request");
             setCommonHeaders(httpServletResponse);
             httpServletResponse.setHeader(AppConstants.STATUS, "400");
             httpServletResponse.setHeader(

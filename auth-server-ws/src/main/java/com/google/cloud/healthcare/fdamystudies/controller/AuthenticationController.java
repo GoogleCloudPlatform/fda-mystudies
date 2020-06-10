@@ -744,7 +744,7 @@ public class AuthenticationController {
             String.format(
                 AppConstants.AUDIT_EVENT_FAILED_SIGN_IN_WRONG_EMAIL_DESC,
                 loginRequest.getEmailId()));
-        logger.warning("AuthenticationController login() - ends with account deactivated.");
+        logger.warn("AuthenticationController login() - ends with account deactivated.");
         return new ResponseEntity<>(loginResp, HttpStatus.UNAUTHORIZED);
       }
     } catch (PasswordExpiredException e) {
@@ -764,7 +764,7 @@ public class AuthenticationController {
       logger.error("AuthenticationController login() - error with INTERNAL_SERVER_ERROR: ", e);
       return new ResponseEntity<>(loginResp, HttpStatus.INTERNAL_SERVER_ERROR);
     }
-    logger.warning("AuthenticationController login() - return OK");
+    logger.warn("AuthenticationController login() - return OK");
     return new ResponseEntity<>(loginResp, HttpStatus.OK);
   }
 
