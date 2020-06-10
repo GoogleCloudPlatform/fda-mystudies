@@ -341,7 +341,7 @@
 	</definition>
 	<!-- Users Section Ends -->
 
-	<definition name="healthCheck"
-		template="/WEB-INF/view/healthCheck.jsp" />
+	<definition name="appDetails"
+		template="/WEB-INF/view/appDetails.jsp" />
 
 </tiles-definitions>
