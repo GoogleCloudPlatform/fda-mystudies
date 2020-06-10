@@ -6,11 +6,13 @@
     "start": "ng serve",
     "build": "ng build",
     "test": "ng test",
-    "lint": "eslint \"**/*.{js,ts}\" --quiet --fix",
+    "lint": "eslint --quiet . --ext .js,.ts",
+    "lint:fix": "npm run lint -- --fix",
     "e2e": "ng e2e",
     "build:prod": "ng build --prod",
     "clean": "rimraf ./dist",
-    "build:ci": "npm run clean && npm run build:prod"
+    "build:ci": "npm run clean && npm run lint && npm run format:check && npm run build:prod",
+    "format:check": "prettier --check --loglevel silent \"**/*.{ts,js,json}\""
   },
   "private": true,
   "dependencies": {
