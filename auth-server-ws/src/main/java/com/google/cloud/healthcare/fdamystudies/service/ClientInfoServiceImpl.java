@@ -50,23 +50,22 @@ public class ClientInfoServiceImpl implements ClientService {
   }
 
   @Override
-  public String checkClientInfo(String clientId, String secretKey) throws SystemException {
+  public String checkClientInfo(String clientId, String secretKey) {
     logger.info("ClientInfoServiceImpl checkClientInfo() - starts");
-    try {
-      if (clientId != null && secretKey != null) {
-        ClientInfoBO clientInfo = clientInfoRepo.findByClientId(clientId);
-        if (clientInfo != null) {
-          String hashedSecretkey = MyStudiesUserRegUtil.getHashedValue(clientInfo.getSecretKey());
+    if (clientId != null && secretKey != null) {
+      ClientInfoBO clientInfo = clientInfoRepo.findByClientId(clientId);
+      if (clientInfo != null) {
+        String hashedSecretkey = MyStudiesUserRegUtil.getHashedValue(clientInfo.getSecretKey());
 
-          if (clientId.equals(clientInfo.getClientId()) && secretKey.equals(hashedSecretkey)) {
-            logger.info("ClientInfoServiceImpl checkClientInfo().....VERIFIED as true");
-            return clientInfo.getAppCode();
-          } else return null;
-        } else return null;
+        if (clientId.equals(clientInfo.getClientId()) && secretKey.equals(hashedSecretkey)) {
+          logger.info("ClientInfoServiceImpl checkClientInfo().....VERIFIED as true");
+          return clientInfo.getAppCode();
+        } else {
+          return null;
+        }
+      } else {
+        return null;
       }
-    } catch (Exception e) {
-      logger.error("ClientInfoServiceImpl checkClientInfo() - error ", e);
-      throw new SystemException();
     }
     logger.info("ClientInfoServiceImpl checkClientInfo() - ends ");
     return null;

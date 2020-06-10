@@ -8,6 +8,8 @@
 
 package com.google.cloud.healthcare.fdamystudies.controller;
 
+import com.google.cloud.healthcare.fdamystudies.exception.SystemException;
+import com.google.cloud.healthcare.fdamystudies.exception.UnauthorizedException;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.Date;
@@ -424,6 +426,25 @@ public class AuthenticationController {
     }
   }
 
+  private void validateRegisterRequest(String clientId, String secretKey, RegisterUser user) {
+    if (StringUtils.isBlank(clientId) || StringUtils.isBlank(secretKey)) {
+      throw new IllegalArgumentException("required header clientId or secretKey is missing");
+    }
+
+    if (StringUtils.isBlank(user.getEmailId())
+        || !MyStudiesUserRegUtil.isValidEmailId(user.getEmailId())) {
+      throw new IllegalArgumentException(
+          MyStudiesUserRegUtil.ErrorCodes.INVALID_EMAIL_ID.getValue());
+    }
+
+    if (StringUtils.isBlank(user.getPassword())
+        || !MyStudiesUserRegUtil.isPasswordStrong(user.getPassword())
+        || user.getEmailId().equalsIgnoreCase(user.getPassword())) {
+      throw new IllegalArgumentException(
+          MyStudiesUserRegUtil.ErrorCodes.NEW_PASSWORD_IS_INVALID.getValue());
+    }
+  }
+
   @PostMapping("/register")
   public ResponseEntity<?> registerUser(
       @RequestBody RegisterUser user,
@@ -431,103 +452,34 @@ public class AuthenticationController {
       @RequestHeader("orgId") String orgId,
       @RequestHeader("clientId") String clientId,
       @RequestHeader("secretKey") String secretKey,
-      @Context HttpServletResponse response) {
-
+      @Context HttpServletResponse response) throws DuplicateUserRegistrationException {
     logger.info("AuthenticationController registerUser() - starts");
-    AuthServerRegistrationResponse controllerResp = null;
-    try {
-      String appCode = null;
-      if (((clientId.length() == 0) || StringUtils.isBlank(clientId))
-          || ((secretKey.length() == 0) || StringUtils.isBlank(secretKey))) {
 
-        MyStudiesUserRegUtil.getFailureResponse(
-            400 + "",
-            MyStudiesUserRegUtil.ErrorCodes.INVALID_INPUT.getValue(),
-            MyStudiesUserRegUtil.ErrorCodes.INVALID_INPUT_ERROR_MSG.getValue(),
-            response);
-        logger.info("AuthenticationController registerUser() - ends with BAD_REQUEST");
-        return new ResponseEntity<>(controllerResp, HttpStatus.BAD_REQUEST);
-      }
+    validateRegisterRequest(clientId, secretKey, user);
 
-      if (((user.getEmailId() == null) && StringUtils.isBlank(user.getEmailId()))
-          || (!MyStudiesUserRegUtil.isValidEmailId(user.getEmailId()))) {
-        MyStudiesUserRegUtil.getFailureResponse(
-            400 + "",
-            MyStudiesUserRegUtil.ErrorCodes.INVALID_INPUT.getValue(),
-            MyStudiesUserRegUtil.ErrorCodes.INVALID_EMAIL_ID.getValue(),
-            response);
-        logger.info("AuthenticationController registerUser() - ends with BAD_REQUEST");
-        return new ResponseEntity<>(controllerResp, HttpStatus.BAD_REQUEST);
-      }
-
-      if (((user.getPassword() == null) && StringUtils.isBlank(user.getPassword()))
-          || (!MyStudiesUserRegUtil.isPasswordStrong(user.getPassword()))
-          || (user.getEmailId().equalsIgnoreCase(user.getPassword()))) {
-        MyStudiesUserRegUtil.getFailureResponse(
-            400 + "",
-            MyStudiesUserRegUtil.ErrorCodes.INVALID_INPUT.getValue(),
-            MyStudiesUserRegUtil.ErrorCodes.NEW_PASSWORD_IS_INVALID.getValue(),
-            response);
-        logger.info("AuthenticationController registerUser() - ends with BAD_REQUEST");
-        return new ResponseEntity<>(controllerResp, HttpStatus.BAD_REQUEST);
-      }
-
-      appCode = clientInfoService.checkClientInfo(clientId, secretKey);
-      logger.info(appCode);
-      if (appCode == null || StringUtils.isEmpty(appCode)) {
-        MyStudiesUserRegUtil.getFailureResponse(
-            401 + "",
-            MyStudiesUserRegUtil.ErrorCodes.INVALID_INPUT.getValue(),
-            MyStudiesUserRegUtil.ErrorCodes.INVALID_CLIENTID_OR_SECRET_KEY.getValue(),
-            response);
-        logger.info(
-            "AuthenticationController registerUser() - ends with INVALID CLIENTID OR SECRET KEY");
-        return new ResponseEntity<>(controllerResp, HttpStatus.UNAUTHORIZED);
-      }
-      if ("MA".equals(appCode)) {
-        if (((appId.length() == 0) || StringUtils.isBlank(appId))
-            || ((orgId.length() == 0) || StringUtils.isBlank(orgId))) {
-          MyStudiesUserRegUtil.getFailureResponse(
-              400 + "",
-              MyStudiesUserRegUtil.ErrorCodes.INVALID_INPUT.getValue(),
-              MyStudiesUserRegUtil.ErrorCodes.INVALID_INPUT_ERROR_MSG.getValue(),
-              response);
-          logger.info("AuthenticationController registerUser() - ends");
-          return new ResponseEntity<>(controllerResp, HttpStatus.BAD_REQUEST);
-        }
-      }
-
-      ServiceRegistrationSuccessResponse serviceResp = null;
-      if (!"MA".equals(appCode)) {
-        serviceResp = userDetailsService.save(user, null, null, appCode);
-      } else {
-        serviceResp = userDetailsService.save(user, appId, orgId, appCode);
-      }
-      if (serviceResp != null && serviceResp.getDaoUser() != null) {
-        controllerResp = prepareSuccessResponse(serviceResp, appCode);
-      }
-      return ResponseEntity.ok().body(controllerResp);
-
-    } catch (DuplicateUserRegistrationException e) {
-      MyStudiesUserRegUtil.getFailureResponse(
-          400 + "",
-          MyStudiesUserRegUtil.ErrorCodes.INVALID_INPUT.getValue(),
-          MyStudiesUserRegUtil.ErrorCodes.EMAIL_EXISTS.getValue(),
-          response);
-      logger.error(
-          "AuthenticationController getRefreshedToken() - error with DUPLICATE REGISTRATION: ", e);
-      return new ResponseEntity<>(controllerResp, HttpStatus.BAD_REQUEST);
-
-    } catch (Exception e) {
-      MyStudiesUserRegUtil.getFailureResponse(
-          500 + "",
-          MyStudiesUserRegUtil.ErrorCodes.UNKNOWN.getValue(),
-          MyStudiesUserRegUtil.ErrorCodes.SYSTEM_ERROR_FOUND.getValue(),
-          response);
-      logger.error(
-          "AuthenticationController getRefreshedToken() - error with INTERNAL_SERVER_ERROR: ", e);
-      return new ResponseEntity<>(controllerResp, HttpStatus.INTERNAL_SERVER_ERROR);
+    String appCode = clientInfoService.checkClientInfo(clientId, secretKey);
+    if (StringUtils.isEmpty(appCode)) {
+      throw new UnauthorizedException(
+          MyStudiesUserRegUtil.ErrorCodes.INVALID_CLIENTID_OR_SECRET_KEY.getValue());
     }
+    if ("MA".equals(appCode)
+        && (StringUtils.isBlank(appId)) || StringUtils.isBlank(orgId)) {
+      throw new IllegalArgumentException(
+          MyStudiesUserRegUtil.ErrorCodes.INVALID_INPUT_ERROR_MSG.getValue());
+    }
+
+    ServiceRegistrationSuccessResponse serviceResp;
+    if (!"MA".equals(appCode)) {
+      serviceResp = userDetailsService.save(user, null, null, appCode);
+    } else {
+      serviceResp = userDetailsService.save(user, appId, orgId, appCode);
+    }
+
+    AuthServerRegistrationResponse controllerResp = null;
+    if (serviceResp != null && serviceResp.getDaoUser() != null) {
+      controllerResp = prepareSuccessResponse(serviceResp, appCode);
+    }
+    return ResponseEntity.ok().body(controllerResp);
   }
 
   private AuthServerRegistrationResponse prepareSuccessResponse(

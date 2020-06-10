@@ -14,5 +14,5 @@ public interface ClientService {
 
   public boolean isValidClient(String clientToken, String userId) throws SystemException;
 
-  public String checkClientInfo(String clientId, String secretKey) throws SystemException;
+  public String checkClientInfo(String clientId, String secretKey);
 }

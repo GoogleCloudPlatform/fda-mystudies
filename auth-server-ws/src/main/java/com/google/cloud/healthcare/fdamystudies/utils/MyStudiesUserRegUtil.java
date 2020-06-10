@@ -180,31 +180,21 @@ public class MyStudiesUserRegUtil {
     return emailContent;
   }
 
-  public static boolean isPasswordStrong(String password) throws SystemException {
+  public static boolean isPasswordStrong(String password) {
     logger.info("MyStudiesUserRegUtil - isPasswordStrong() start");
-    try {
-      if (password != null) {
-        return password.matches(
-            "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[!\\\"#$%&'()*+,-.:;<=>?@\\\\[\\\\]^_`{|}~]).{8,64}$");
-      } else return false;
-    } catch (Exception e) {
-      logger.error("MyStudiesUserRegUtil - isPasswordStrong() - error() ", e);
-      throw new SystemException();
-    }
-  }
-
-  public static boolean isValidEmailId(String emailId) throws SystemException {
-    logger.info("MyStudiesUserRegUtil - isValidEmailId() called");
-    try {
-      if (emailId != null) {
-        return emailId.matches("([A-Za-z0-9-_.+]+@[A-Za-z0-9-_]+(?:\\.[A-Za-z0-9]+)+)");
-      } else {
+      if (password == null) {
         return false;
       }
-    } catch (Exception e) {
-      logger.error("MyStudiesUserRegUtil - isValidEmailId() - error() ", e);
-      throw new SystemException();
+      return password.matches(
+            "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[!\\\"#$%&'()*+,-.:;<=>?@\\\\[\\\\]^_`{|}~]).{8,64}$");
+  }
+
+  public static boolean isValidEmailId(String emailId) {
+    logger.info("MyStudiesUserRegUtil - isValidEmailId() called");
+    if (emailId == null) {
+      return false;
     }
+    return emailId.matches("([A-Za-z0-9-_.+]+@[A-Za-z0-9-_]+(?:\\.[A-Za-z0-9]+)+)");
   }
 
   public static String getEncryptedString(String input, String rawSalt) {
