@@ -24,7 +24,7 @@ let kFetalKickInstructionStepIdentifier = "Instruction"
 let kFetalKickInstructionStepTitle = "Fetal Kick Counter"
 let kFetalKickInstructionStepText =
   """
-  This task needs you to record the number of times you experience fetal kicks in a given duration of time.\
+  This task needs you to record the number of times you experience fetal kicks in a given duration of time. \
   Also called as the Fetal Kick Counter task, this will help assess the activity of the baby within.
   """
 
@@ -32,7 +32,7 @@ let kFetalKickIntroductionStepIdentifier = "FetalKickIntroduction"
 let kFetalKickIntroductionStepTitle = ""
 let kFetalKickIntroductionStepText =
   """
-  This task needs you to record the number of times you experience fetal kicks in a given duration of time.\
+  This task needs you to record the number of times you experience fetal kicks in a given duration of time. \
   Also called as the Fetal Kick Counter task, this will help assess the activity of the baby within.
   """
 
