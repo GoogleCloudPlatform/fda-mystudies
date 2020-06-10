@@ -15,11 +15,17 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.Map;
 import javax.servlet.http.HttpServletResponse;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.util.StringUtils;
+import org.springframework.context.annotation.Scope;
+import org.springframework.http.HttpStatus;
+import org.springframework.stereotype.Component;
+import com.google.cloud.healthcare.fdamystudies.controller.bean.LoginResponse;
 import com.google.cloud.healthcare.fdamystudies.exception.SystemException;
 
+@Component
+@Scope("prototype")
 public class MyStudiesUserRegUtil {
 
   private static final Logger logger = LoggerFactory.getLogger(MyStudiesUserRegUtil.class);
@@ -41,7 +47,9 @@ public class MyStudiesUserRegUtil {
     STATUS_123("123"), // Unauthorized
     STATUS_124("124"), // EmailId is not registered
     STATUS_128("128"), // Access token or User id is invalid
-
+    STATUS_400("400"),
+    STATUS_401("401"),
+    STATUS_403("403"),
     STATUS_500("500"), // Internal Server Error
 
     INVALID_USER_ID("Invalid user id"),
@@ -53,7 +61,8 @@ public class MyStudiesUserRegUtil {
     INVALID_CLIENTID_OR_SECRET_KEY("Invalid Client Id or Secret Key"),
     INVALID_CLIENT_TOKEN("Invalid client token"),
     SYSTEM_ERROR_FOUND(
-        "Sorry, an error has occurred and your request could not be processed. Please try again later."),
+        "Sorry, an error has occurred and your request could not be processed. "
+            + "Please try again later."),
     SESSION_EXPIRED_MSG("Session expired."),
     EMAIL_EXISTS("This email has already been used. Please try with different email address."),
     INVALID_INPUT_ERROR_MSG("Invalid input."),
@@ -65,19 +74,28 @@ public class MyStudiesUserRegUtil {
     NEW_PASSWORD_NOT_SAME_LAST_PASSWORD(
         "New Password should not be the same as the last 10 passwords."),
     NEW_PASSWORD_IS_INVALID(
-        "Your password does not meet the required criteria. Please refer to the password requirements provided on-screen."),
+        "Your password does not meet the required criteria. "
+            + "Please refer to the password requirements provided on-screen."),
     CODE_EXPIRED("Code Expired"),
     INVALID_CREDENTIALS("Invalid credentials"),
-    ACCOUNT_LOCKED("As a security measure, this account has been locked."),
-    ACCOUNT_TEMP_LOCKED("As a security measure, this account has been locked for 15 minutes."),
+    ACCOUNT_LOCKED(
+        "Due to consecutive failed sign-in attempts with incorrect password, your account has been"
+            + " locked for a period of 15 minutes."
+            + " Please check your registered email inbox for assistance to reset your password "
+            + "in this period or wait until the lock period is over to sign in again."),
+    ACCOUNT_TEMP_LOCKED("Your account has been temporarily locked. Please try after some time."),
     EMAIL_NOT_VERIFIED(
-        "Your account is not verified. Please verify your account by clicking on verification link which has been sent to your registered email. If not received, would you like to resend verification link?"),
+        "Your account is not verified. Please verify your account by clicking on verification link"
+            + " which has been sent to your registered email. "
+            + "If not received, would you like to resend verification link?"),
 
     INVALID_USERNAME_PASSWORD_MSG("Invalid username or password"),
 
     PASSWORD_EXPIRED("Password has expired"),
 
-    INVALID_EMAIL_ID("Invalid email id");
+    INVALID_EMAIL_ID("Invalid email id"),
+
+    UNAUTHORIZED_CLIENT_FOR_REGISTER("This client is not authorized to register User");
 
     private final String value;
 
@@ -185,8 +203,11 @@ public class MyStudiesUserRegUtil {
     try {
       if (password != null) {
         return password.matches(
-            "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[!\\\"#$%&'()*+,-.:;<=>?@\\\\[\\\\]^_`{|}~]).{8,64}$");
-      } else return false;
+            "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[!\\\"#$%&'()*+,"
+                + "-.:;<=>?@\\\\[\\\\]^_`{|}~]).{8,64}$");
+      } else {
+        return false;
+      }
     } catch (Exception e) {
       logger.error("MyStudiesUserRegUtil - isPasswordStrong() - error() ", e);
       throw new SystemException();
@@ -299,5 +320,134 @@ public class MyStudiesUserRegUtil {
       logger.info(" addHours : ", e);
     }
     return futureDate;
+  }
+
+  public static String genarateEmailContent(String emailContentName, Map<String, String> keyValue) {
+    logger.info("MyStudiesUserRegUtil - genarateEmailContent() :: Starts");
+
+    if (StringUtils.isNotBlank(emailContentName)) {
+      for (Map.Entry<String, String> entry : keyValue.entrySet()) {
+        emailContentName =
+            emailContentName.replace(
+                entry.getKey(), StringUtils.isBlank(entry.getValue()) ? "" : entry.getValue());
+      }
+    }
+    logger.info("MyStudiesUserRegUtil - genarateEmailContent() :: Ends");
+    return emailContentName;
+  }
+
+  public static void registrationResponse(HttpServletResponse response, String flag) {
+    logger.info("MyStudiesUserRegUtil - registrationResponse() :: Starts");
+    switch (flag) {
+      case AppConstants.INVALID_EMAIL_ID:
+        MyStudiesUserRegUtil.getFailureResponse(
+            MyStudiesUserRegUtil.ErrorCodes.STATUS_400.getValue(),
+            MyStudiesUserRegUtil.ErrorCodes.INVALID_INPUT.getValue(),
+            MyStudiesUserRegUtil.ErrorCodes.INVALID_EMAIL_ID.getValue(),
+            response);
+        break;
+      case AppConstants.PASSWORD_IS_INVALID:
+        MyStudiesUserRegUtil.getFailureResponse(
+            MyStudiesUserRegUtil.ErrorCodes.STATUS_400.getValue(),
+            MyStudiesUserRegUtil.ErrorCodes.INVALID_INPUT.getValue(),
+            MyStudiesUserRegUtil.ErrorCodes.NEW_PASSWORD_IS_INVALID.getValue(),
+            response);
+        break;
+      case AppConstants.UNAUTHORIZED_CLIENT_FOR_REGISTER:
+        MyStudiesUserRegUtil.getFailureResponse(
+            MyStudiesUserRegUtil.ErrorCodes.STATUS_401.getValue(),
+            MyStudiesUserRegUtil.ErrorCodes.UNAUTHORIZED.getValue(),
+            MyStudiesUserRegUtil.ErrorCodes.UNAUTHORIZED_CLIENT_FOR_REGISTER.getValue(),
+            response);
+        break;
+      case AppConstants.EMAIL_EXISTS:
+        MyStudiesUserRegUtil.getFailureResponse(
+            MyStudiesUserRegUtil.ErrorCodes.STATUS_400.getValue(),
+            MyStudiesUserRegUtil.ErrorCodes.INVALID_INPUT.getValue(),
+            MyStudiesUserRegUtil.ErrorCodes.EMAIL_EXISTS.getValue(),
+            response);
+        break;
+
+      default:
+        logger.error(
+            "MyStudiesUserRegUtil - registrationResponse() :: No matches found for the given flag!!");
+        throw new IllegalArgumentException();
+    }
+  }
+
+  public static LoginResponse loginResponse(HttpServletResponse response, String flag) {
+    logger.info("MyStudiesUserRegUtil - loginResponse() :: Starts");
+    LoginResponse loginResp = new LoginResponse();
+    switch (flag) {
+      case AppConstants.INVALID_USERNAME_PASSWORD:
+        MyStudiesUserRegUtil.getFailureResponse(
+            MyStudiesUserRegUtil.ErrorCodes.STATUS_102.getValue(),
+            AppConstants.INVALID_USERNAME_PASSWORD_MSG,
+            MyStudiesUserRegUtil.ErrorCodes.INVALID_USERNAME_PASSWORD_MSG.getValue(),
+            response);
+        loginResp.setCode(HttpStatus.UNAUTHORIZED.value());
+        loginResp.setMessage(
+            MyStudiesUserRegUtil.ErrorCodes.INVALID_USERNAME_PASSWORD_MSG.getValue());
+        return loginResp;
+      case AppConstants.ACCOUNT_LOCKED:
+        MyStudiesUserRegUtil.getFailureResponse(
+            MyStudiesUserRegUtil.ErrorCodes.STATUS_102.getValue(),
+            MyStudiesUserRegUtil.ErrorCodes.ACCOUNT_LOCKED.name(),
+            MyStudiesUserRegUtil.ErrorCodes.ACCOUNT_LOCKED.getValue(),
+            response);
+        loginResp.setCode(ErrorCode.EC_102.code());
+        loginResp.setMessage(MyStudiesUserRegUtil.ErrorCodes.ACCOUNT_LOCKED.getValue());
+        return loginResp;
+      case AppConstants.PASSWORD_EXPIRED:
+        MyStudiesUserRegUtil.getFailureResponse(
+            MyStudiesUserRegUtil.ErrorCodes.STATUS_401.getValue(),
+            MyStudiesUserRegUtil.ErrorCodes.UNAUTHORIZED.getValue(),
+            MyStudiesUserRegUtil.ErrorCodes.PASSWORD_EXPIRED.getValue(),
+            response);
+        return null;
+      case AppConstants.CODE_EXPIRED:
+        MyStudiesUserRegUtil.getFailureResponse(
+            MyStudiesUserRegUtil.ErrorCodes.STATUS_103.getValue(),
+            MyStudiesUserRegUtil.ErrorCodes.CODE_EXPIRED.getValue(),
+            MyStudiesUserRegUtil.ErrorCodes.CODE_EXPIRED.getValue(),
+            response);
+        return null;
+
+      default:
+        logger.error(
+            "MyStudiesUserRegUtil - loginResponse() :: No matches found for the given flag!!");
+        throw new IllegalArgumentException();
+    }
+  }
+
+  public static void commonErrorResponse(HttpServletResponse response, String flag) {
+    logger.info("MyStudiesUserRegUtil - commonErrorResponse() :: Starts");
+    switch (flag) {
+      case AppConstants.MISSING_REQUIRED_PARAMETER:
+        MyStudiesUserRegUtil.getFailureResponse(
+            MyStudiesUserRegUtil.ErrorCodes.STATUS_400.getValue(),
+            MyStudiesUserRegUtil.ErrorCodes.INVALID_INPUT.getValue(),
+            MyStudiesUserRegUtil.ErrorCodes.INVALID_INPUT_ERROR_MSG.getValue(),
+            response);
+        break;
+      case AppConstants.INVALID_CLIENTID_OR_SECRET_KEY:
+        MyStudiesUserRegUtil.getFailureResponse(
+            MyStudiesUserRegUtil.ErrorCodes.STATUS_401.getValue(),
+            MyStudiesUserRegUtil.ErrorCodes.INVALID_INPUT.getValue(),
+            MyStudiesUserRegUtil.ErrorCodes.INVALID_CLIENTID_OR_SECRET_KEY.getValue(),
+            response);
+        break;
+      case AppConstants.SYSTEM_EXCEPTION:
+        MyStudiesUserRegUtil.getFailureResponse(
+            MyStudiesUserRegUtil.ErrorCodes.STATUS_500.getValue(),
+            MyStudiesUserRegUtil.ErrorCodes.UNKNOWN.getValue(),
+            MyStudiesUserRegUtil.ErrorCodes.SYSTEM_ERROR_FOUND.getValue(),
+            response);
+        break;
+      default:
+        logger.error(
+            "MyStudiesUserRegUtil - commonErrorResponse() :: No matches found for the given flag!!");
+        throw new IllegalArgumentException();
+    }
   }
 }
