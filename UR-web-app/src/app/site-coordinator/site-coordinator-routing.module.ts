@@ -9,30 +9,30 @@ const routes: Routes = [
     component: SiteCoordinatorComponent,
     children: [
       {
-        path: 'manage-sites',
+        path: 'participants',
         loadChildren:
-      () => import('./manage-sites/manage-sites.module').
-          then((m) => m.ManageSitesModule),
+      () => import('./participant/participant.module').
+          then((m) => m.ParticipantModule),
       },
       {
-        path: 'manage-account',
+        path: 'accounts',
         loadChildren:
-          () => import('./manage-account/manage-account.module').
-              then((m) => m.ManageAccountModule),
+          () => import('./account/account.module').
+              then((m) => m.AccountModule),
       },
       {
-        path: 'manage-locations',
+        path: 'locations',
         loadChildren:
-          () => import('./manage-location/manage-location.module').
-              then((m) => m.ManageLocationModule),
+          () => import('./location/location.module').
+              then((m) => m.LocationModule),
       },
       {
-        path: 'manage-users',
+        path: 'users',
         loadChildren:
-          () => import('./manage-user/manage-user.module').
-              then((m) => m.ManageUserModule),
+          () => import('./user/user.module').
+              then((m) => m.UserModule),
       },
-      {path: '', redirectTo: 'manage-sites', pathMatch: 'full'},
+      {path: '', redirectTo: 'participants', pathMatch: 'full'},
     ],
 
   },
