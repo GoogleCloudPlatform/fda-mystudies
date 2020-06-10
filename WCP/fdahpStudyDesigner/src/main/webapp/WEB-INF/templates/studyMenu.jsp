@@ -26,7 +26,6 @@
 	                    deactivated_txt
 	                </c:if>
 	                ">${studyBo.status}</span>
-          <%-- 	                <span class="version">${not empty studyBo.studyVersionBo?studyBo.studyVersionBo.studyLVersion:''}</span> --%>
           <c:set var="isLive">${_S}isLive</c:set> <span
             class="version">${not empty  sessionScope[isLive]?studyBo.studyVersionBo.studyLVersion:''}</span>
         </div>
@@ -90,19 +89,6 @@
           <span class="sprites-icons-2 tick pull-right mt-xs"></span>
         </c:if>
       </li>
-      <%--  <li class="seventh commonCls">
-            Study Dashboard
-           <c:if test="${studyBo.studySequenceBo.eConsent}">
-               <span class="sprites-icons-2 tick pull-right mt-xs" ></span>
-           </c:if>
-       </li> --%>
-      <%-- <li class="eight commonCls">
-           Miscellaneous
-          <c:if test="${studyBo.studySequenceBo.miscellaneousResources && studyBo.studySequenceBo.miscellaneousNotification}">
-              <span class="sprites-icons-2 tick pull-right mt-xs" ></span>
-          </c:if>
-      </li> --%>
-
       <li class=" eighthResources commonCls">Resources
         <c:if test="${studyBo.studySequenceBo.miscellaneousResources}">
           <span class="sprites-icons-2 tick pull-right mt-xs"></span>
@@ -115,18 +101,6 @@
           <span class="sprites-icons-2 tick pull-right mt-xs"></span>
         </c:if>
       </li>
-      <%-- <li class="eighthResources commonCls">
-          Resources
-      <c:if test="${studyBo.studySequenceBo.miscellaneousResources}">
-              <span class="sprites-icons-2 tick pull-right mt-xs" ></span>
-      </c:if>
-      </li>
-      <li class="eigthNotification commonCls cursor-none-without-event">
-          Notifications
-          <c:if test="${studyBo.studySequenceBo.miscellaneousNotification}">
-              <span class="sprites-icons-2 tick pull-right mt-xs" ></span>
-          </c:if>
-      </li> --%>
       <li class="nine commonCls <c:set var="isLive">${_S}isLive</c:set>${not empty  sessionScope[isLive]?'cursor-none':''}">
         Checklist
         <c:if test="${studyBo.studySequenceBo.checkList}">
@@ -145,9 +119,6 @@
   $(document).ready(function () {
     $("#rowId").addClass('lc-gray-bg');
     $('#createStudyId').show();
-    // Fancy Scroll Bar
-    // $(".left-content").niceScroll({cursorcolor:"#95a2ab",cursorborder:"1px solid #95a2ab"});
-    // $(".right-content-body").niceScroll({cursorcolor:"#d5dee3",cursorborder:"1px solid #d5dee3"});
     $("#myNavbar li.studyClass").addClass('active');
     $('[data-toggle="tooltip"]').tooltip();
 

@@ -145,17 +145,6 @@
                    value="${studyBo.researchSponsor}" maxlength="100" required/>
             <div class="help-block with-errors red-txt"></div>
           </div>
-            <%-- <div class="form-group">
-                <select
-                    class="selectpicker aq-select aq-select-form elaborateClass"
-                    required title="Select" name="researchSponsor">
-                    <c:forEach items="${researchSponserList}" var="research">
-                        <option value="${research.id}"
-                            ${studyBo.researchSponsor eq research.id ?'selected':''}>${research.value}</option>
-                    </c:forEach>
-                </select>
-                <div class="help-block with-errors red-txt"></div>
-            </div> --%>
         </div>
       </div>
 

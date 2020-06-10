@@ -144,7 +144,6 @@
                      pattern="[a-zA-Z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,3}$"
                      data-pattern-error="Email address is invalid" maxlength="100"
                      required
-                <%-- <c:if test="${actionPage eq 'VIEW_PAGE' || (empty userBO.userPassword && not empty userBO) || not empty userBO}">disabled</c:if>/> --%>
                      <c:if
                          test="${actionPage eq 'VIEW_PAGE' || (empty userBO.userPassword && not empty userBO)}">disabled</c:if> />
               <div class="help-block with-errors red-txt"></div>

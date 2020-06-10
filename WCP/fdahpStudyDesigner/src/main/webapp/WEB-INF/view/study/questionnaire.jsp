@@ -108,7 +108,6 @@
         </button>
       </div>
       <c:if test="${actionType ne 'view'}">
-        <%-- <c:if test="${empty permission}"> --%>
         <div class="dis-line form-group mb-none mr-sm">
           <c:choose>
             <c:when test="${not empty questionnaireBo.id}">
@@ -137,7 +136,6 @@
                         test="${fn:length(qTreeMap) eq 0 || !isDone }">disabled</c:if>>Done</button>
 					</span>
         </div>
-        <%-- /c:if> --%>
       </c:if>
     </div>
   </div>
@@ -247,9 +245,6 @@
                   <c:otherwise>
                     <td><span id="${entry.key}" data="round teal-round"
                               class="round teal-round">${entry.key}</span></td>
-                    <%-- <c:forEach begin="0" end="${fn:length(entry.value.fromMap)-1}">
-								    <div>&nbsp;</div>
-							 </c:forEach> --%>
                   </c:otherwise>
                 </c:choose>
                 <td><c:choose>
@@ -1126,20 +1121,6 @@
               </div>
             </div>
             <!-- Anchordate start-->
-              <%-- <div class="monthlyStartCls dis_inlinetop p-none">
-								<span
-									class="form-group m-none dis-inline vertical-align-middle pr-md">
-									<span class="gray-xs-f">Start date (pick a date) <span
-										class="requiredStar">*</span></span><br /> <input id="pickStartDate"
-									type="text"
-									class="form-control mt-sm calendar ${(questionnaireBo.shortTitleDuplicate > 0)?'cursor-none' : ''}"
-									placeholder="Choose Start Date" required
-									name="studyLifetimeStart"
-									value="${questionnaireBo.studyLifetimeStart}"
-									readonly="readonly" /> <span
-									class='help-block with-errors red-txt'></span>
-								</span>
-							</div> --%>
             <div class="monthlyanchorDiv" style="display: none;">
               <div class="dis_inlinetop p-none">
                 <div class=" resetDate dis_inlinetop p-none">

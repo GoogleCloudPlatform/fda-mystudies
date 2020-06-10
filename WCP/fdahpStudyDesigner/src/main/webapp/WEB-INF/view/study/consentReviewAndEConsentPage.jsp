@@ -154,19 +154,6 @@
                     <div class="help-block with-errors red-txt"></div>
                   </div>
                 </div>
-                  <%-- <div class="col-md-12 pl-none mt-lg">
-              <div class="gray-xs-f mb-sm">Allow user to proceed if permission not provided</div>
-              <div class="form-group">
-                  <span class="radio radio-info radio-inline p-45">
-                      <input type="radio" id="allowWithoutPermissionYes"  name="allowWithoutPermission" ${empty consentBo.allowWithoutPermission || consentBo.allowWithoutPermission eq 'Yes' ? 'checked' : ''} value="Yes">
-                      <label for="allowWithoutPermissionYes">Yes</label>
-                  </span>
-                  <span class="radio radio-inline">
-                      <input type="radio" id="allowWithoutPermissionNo"  name="allowWithoutPermission" ${consentBo.allowWithoutPermission eq 'No' ? 'checked' : ''} value="No">
-                      <label for="allowWithoutPermissionNo">No</label>
-                  </span>
-              </div>
-          </div> --%>
                 <div class="col-md-12 pl-none mt-lg mb-xlg">
                   <a class="preview__text" href="javascript:void()"
                      data-toggle="modal" onclick="previewDataSharing();"> <img
@@ -282,39 +269,6 @@
                 <li>E-signature</li>
                 <li>Date and Time of providing Consent</li>
               </ul>
-                <%-- <div class="mt-lg form-group">
-                <span class="checkbox checkbox-inline">
-                    <input type="checkbox" id="agreementCB" value="No" name="eConsentAgree" ${consentBo.eConsentAgree=='Yes'?'checked':''}>
-                    <label for="agreementCB"> Agreement to the content in the Consent Document</label>
-                </span>
-            </div>
-            <div class="mt-md form-group">
-                <span class="checkbox checkbox-inline">
-                    <input type="checkbox" id="fNameCB" value="Yes" name="eConsentFirstName" checked disabled>
-                    <label for="fNameCB"> First Name</label>
-                </span>
-                 <div class="help-block with-errors red-txt"></div>
-            </div>
-            <div class="mt-md form-group">
-                <span class="checkbox checkbox-inline">
-                    <input type="checkbox" id="lNameCB" value="Yes" name="eConsentLastName" checked disabled>
-                    <label for="lNameCB"> Last Name</label>
-                </span>
-                 <div class="help-block with-errors red-txt"></div>
-            </div>
-            <div class="mt-md form-group">
-                <span class="checkbox checkbox-inline">
-                    <input type="checkbox" id="eSignCB" value="Yes" name="eConsentSignature" checked disabled>
-                    <label for="eSignCB"> E-signature</label>
-                </span>
-                 <div class="help-block with-errors red-txt"></div>
-            </div>
-            <div class="mt-md form-group">
-                <span class="checkbox checkbox-inline">
-                    <input type="checkbox" id="dateTimeCB" value="Yes" name="eConsentDatetime" checked disabled>
-                    <label for="dateTimeCB"> Date and Time of providing Consent</label>
-                </span>
-                 <div class="help-block with-errors red-txt"></div> --%>
             </div>
           </div>
         </div>

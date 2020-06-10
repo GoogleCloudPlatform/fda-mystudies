@@ -50,7 +50,6 @@
     id="passwordEncoder"/>
   <authentication-manager>
     <authentication-provider ref="authenticationProvider">
-      <!-- <password-encoder hash="bcrypt" /> -->
     </authentication-provider>
   </authentication-manager>
   <beans:bean id="customSuccessHandler"

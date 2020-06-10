@@ -25,16 +25,6 @@
             <c:if test="${fn:contains(sessionObject.userPermissions,'ROLE_MANAGE_STUDIES')}">
               <li class="studyClass"><a href="javascript:void(0)" id="studySection">Studies</a></li>
             </c:if>
-            <!-- <li class="dropdown">
-              <a class="dropdown-toggle" data-toggle="dropdown" href="javascript:void(0)">repository <span><i class="fa fa-angle-down" aria-hidden="true"></i></span></a>
-              <ul class="dropdown-menu">
-                <li><a href="javascript:void(0)">Reference Tables</a></li>
-                <li><a href="javascript:void(0)">QA content</a></li>
-                <li><a href="javascript:void(0)">Resources</a></li>
-                <li><a href="javascript:void(0)">Gateway app level content</a></li>
-                <li><a href="javascript:void(0)">Legal Text</a></li>
-              </ul>
-            </li> -->
             <c:if
                 test="${fn:contains(sessionObject.userPermissions,'ROLE_MANAGE_APP_WIDE_NOTIFICATION_VIEW')}">
               <li id="notification" class=""><a href="javascript:void(0)"
@@ -68,23 +58,6 @@
               </ul>
             </li>
           </ul>
-
-
-          <%-- <ul class="nav navbar-nav navbar-right">
-           <li id="myAccount" class="dropdown ml-lg userLi">
-             <a class="dropdown-toggle blue-link" data-toggle="dropdown" href="javascript:void(0)">${sessionObject.firstName} ${sessionObject.lastName} &nbsp;<span class="caret"></span></a>
-             <ul class="dropdown-menu pb-none profileBox">
-
-               <li class="linkProf"><a href="javascript:void(0)" class="blue-link text-weight-normal text-uppercase" id="profileSection">My Account</a><hr align="left" width="100%"><a href="javascript:formSubmit();" class="blue-link text-weight-normal text-uppercase"><span>sign Out</span> <span class="ml-xs"><img src="/studybuilder/images/icons/logout.png"/></span></a></li>
-             </ul>
-             </li>
-          </ul> --%>
-
-
-          <%-- <ul style="float: right;" class="nav navbar-nav">
-            <li id="myAccount">
-            <a href="javascript:void(0)" id="profileSection" class="blue-link">${sessionObject.firstName} ${sessionObject.lastName}&nbsp;&nbsp;<i class="fa fa-angle-down" aria-hidden="true"></i></a></li>
-          </ul> --%>
         </div>
       </div>
     </nav>
@@ -118,31 +91,26 @@
   $(document).ready(function () {
     var a = document.createElement('a');
     $('#usersSection').on('click', function () {
-//  		$('#userListForm').submit();
       a.href = "/studybuilder/adminUsersView/getUserList.do";
       document.body.appendChild(a).click();
     });
 
     $('#manageNotificationSection').on('click', function () {
-//  		$('#manageNotificationForm').submit();
       a.href = "/studybuilder/adminNotificationView/viewNotificationList.do";
       document.body.appendChild(a).click();
     });
 
     $('#profileSection').on('click', function () {
-//  		$('#myAccountForm').submit();
       a.href = "/studybuilder/adminDashboard/viewUserDetails.do";
       document.body.appendChild(a).click();
     });
 
     $('#studySection').on('click', function () {
-//  		$('#adminStudyDashForm').submit();
       a.href = "/studybuilder/adminStudies/studyList.do";
       document.body.appendChild(a).click();
     });
 
     $('#landingScreen').on('click', function () {
-//  		$('#landingPageForm').submit();
       a.href = "/studybuilder/adminDashboard/viewDashBoard.do";
       document.body.appendChild(a).click();
     });
@@ -151,8 +119,5 @@
 
   function formSubmit() {
     document.getElementById("logoutForm").submit();
-// 		var a = document.createElement('a');
-// 		a.href = "fdahpStudyDesigner/${logoutUrl}";
-// 		document.body.appendChild(a).click();
   }
 </script>

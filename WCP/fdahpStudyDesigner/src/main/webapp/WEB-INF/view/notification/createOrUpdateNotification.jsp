@@ -68,10 +68,8 @@
             <div class="help-block with-errors red-txt"></div>
             <c:if test="${not empty notificationHistoryNoDateTime}">
               <c:forEach items="${notificationHistoryNoDateTime}" var="notificationHistory">
-                <%-- <c:if test="${not empty notificationHistory.notificationSentdtTime}"> --%>
                 <span
                     class="lastSendDateTime">${notificationHistory.notificationSentdtTime}</span><br><br>
-                <%--  </c:if> --%>
               </c:forEach>
             </c:if>
             <div class="clearfix"></div>

@@ -6,11 +6,6 @@
 <!-- create Study Section Start -->
 <div id="" class="col-xs-12 col-sm-12 col-md-12 col-lg-12 p-none mt-md tit_con">
   <div class="md-container">
-    <!-- <div class="col-sm-12 col-md-12 col-lg-12 p-none">
-       <div class="black-lg-f">
-         <span class="mr-xs"><a href="javascript:void(0)" class="backOrCancelBtn"><img src="/studybuilder/images/icons/back-b.png"/></a></span> Create Study
-       </div>
-    </div> -->
     <div class="text-center">
       <div class="" id="alertMsg"></div>
     </div>
@@ -62,9 +57,6 @@
     <c:if test="${studyListId eq true}">
     $('#studyListId').show();
     </c:if>
-// 	<c:if test="${createStudyId eq true}">
-// 	$('#createStudyId').show();
-// 	</c:if>
     var sucMsg = '${sucMsg}';
     if (sucMsg.length > 0) {
       showSucMsg(sucMsg);
@@ -81,8 +73,6 @@
 
     var actionSucMsg = '${actionSucMsg}';
     if (actionSucMsg) {
-      //bootbox.alert(actionSucMsg);
-
       bootbox.alert({
         message: actionSucMsg,
         className: 'green-txt',

@@ -75,7 +75,6 @@
   </div>
   <div class="clearfix"></div>
   </c:if>
-    <%-- <c:if test="${taskMasterAttributeBo.orderByTaskType eq 1}"> --%>
   <div class="blue-md-f text-uppercase">Results captured from the task</div>
   <div class="pt-xs">
     <div class="bullets bor-b-2-gray pt-md">
@@ -93,7 +92,6 @@
                value="23:59"/>
       </div>
     </div>
-      <%-- </c:if> --%>
     </c:if>
     <c:if test="${taskMasterAttributeBo.orderByTaskType eq 3}">
     <input type="hidden" name="taskAttributeValueBos[2].attributeValueId" value="">

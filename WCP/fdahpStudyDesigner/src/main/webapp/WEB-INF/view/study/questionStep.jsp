@@ -283,12 +283,6 @@
               </div>
             </c:when>
             <c:otherwise>
-              <%-- <span class="tool-tip" data-toggle="tooltip" data-html="true" data-placement="top" <c:if test="${questionnaireBo.frequency ne 'One time' || isAnchorDate}"> title="This field is disabled for one of the following reasons:<br/>1. Your questionnaire is scheduled for a frequency other than 'one-time'<br/>2. There is already another question in the study that has been marked for anchor date<br/>Please make changes accordingly and try again." </c:if> >
-		               <span class="checkbox checkbox-inline">
-			               <input type="checkbox" id="useAnchorDateId" name="questionsBo.useAnchorDate" value="true" ${questionnairesStepsBo.questionsBo.useAnchorDate ? 'checked':''} <c:if test="${questionnaireBo.frequency ne 'One time' || isAnchorDate}"> disabled </c:if> >
-			               <label for="useAnchorDateId"> Use response as Anchor Date </label>
-		               </span>
-	               </span> --%>
               <span class="tool-tip" data-toggle="tooltip" data-html="true" data-placement="top"
                   <c:if
                       test="${questionnaireBo.scheduleType eq 'AnchorDate'}"> title= "This option has been disabled, since this questionnaire has anchor-date based scheduling already."</c:if>
@@ -2832,8 +2826,6 @@
                                     value="!=" ${questionnairesStepsBo.questionConditionBranchBoList[0].inputTypeValue eq "!=" ? 'selected' :''}>
                                   !=
                                 </option>
-                                  <%-- <option value="&&" ${questionnairesStepsBo.questionConditionBranchBoList[0].inputTypeValue eq "&&" ? 'selected' :''}>AND</option>
-				                           <option value="||" ${questionnairesStepsBo.questionConditionBranchBoList[0].inputTypeValue eq "||" ? 'selected' :''}>OR</option> --%>
                               </select>
                               <div class="help-block with-errors red-txt"></div>
                             </div>
@@ -2847,7 +2839,7 @@
                                    name="questionConditionBranchBoList[0].parentSequenceNo"
                                    id="parentSequenceNoId0" value="0">
                           </div>
-                            <%-- <c:if test="${fn:length(questionnairesStepsBo.questionConditionBranchBoList[0].questionConditionBranchBos) le 2}"> --%>
+
                           <div class="numeric__define_input gray__t">
                             <div class="numeric__row display__flex__base-webkit" id="2">
                               <span>V2 =</span>
@@ -2958,7 +2950,6 @@
                                           onchange='selectFunction(this);'>
                                     <option value="" selected>Select</option>
                                     <c:choose>
-                                      <%-- <c:if test="${status.index lt 2}"></c:if> --%>
                                       <c:when
                                           test="${status.index le 2 && (questionnairesStepsBo.questionConditionBranchBoList[0].inputTypeValue eq '&&' || questionnairesStepsBo.questionConditionBranchBoList[0].inputTypeValue eq '||' )}">
                                         <option

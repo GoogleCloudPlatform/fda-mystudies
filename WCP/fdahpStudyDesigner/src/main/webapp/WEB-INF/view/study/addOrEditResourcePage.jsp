@@ -157,23 +157,6 @@
                            name="resourceTypeParm">
                     <label for="inlineRadio5">Anchor Date-based Period</label><br/>
                 </span>
-              <%-- <c:if test="${fn:length(anchorTypeList) gt 0}">
-                  <div>
-                    <div class="gray-xs-f col-md-3 col-lg-3 p-none mt-sm">Select Anchor Date Type<span class="requiredStar">*</span></div>
-                    <div class="col-md-3 col-lg-3 p-none">
-                        <div class="form-group">
-                           <select id="anchorDateId" class="selectpicker disRadBtn1 disBtn1" required name="anchorDateId">
-                            <option value='' >Select</option>
-                            <c:forEach items="${anchorTypeList}" var="anchorTypeInfo">
-                                <option value="${anchorTypeInfo.id}" ${resourceBO.anchorDateId eq anchorTypeInfo.id ? 'selected' : ''}>${anchorTypeInfo.name}</option>
-                            </c:forEach>
-                           </select>
-                           <div class="help-block with-errors red-txt"></div>
-                        </div>
-                    </div>
-                    <div class="clearfix"></div>
-                   </div>
-              </c:if> --%>
             <div>
               <div class="gray-xs-f col-md-3 col-lg-3 p-none mt-sm">Select Anchor Date Type<span
                   class="requiredStar">*</span></div>

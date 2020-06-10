@@ -48,7 +48,6 @@
       <input type="hidden" name="id" value="${eligibilityTest.id}"/>
       <input type="hidden" id="eligibilityId" name="eligibilityId" value="${eligibilityId}"/>
       <input type="hidden" id="sequenceNo" name="sequenceNo" value="${eligibilityTest.sequenceNo}"/>
-        <%-- <input type="hidden" id="lastEligibilityOptId" name="lastEligibilityOpt" value="${lastEligibilityOpt}" /> --%>
       <div class=" col-lg-4 col-md-5 pl-none">
         <div class="gray-xs-f mb-xs">Short title (1 to 15 characters)<span
             class="requiredStar"> *</span><span
