@@ -1,8 +1,10 @@
-<!DOCTYPE html>	
-<html lang="">
-<head>	
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>Study Builder</title>	
 </head>	
-<body class="txt-center grayeef2f5-bg">	
-  Server is running and healthy!
+<body>	
+  <p>OK!</p>
 </body>	
 </html> 

@@ -112,7 +112,7 @@ public class LoginController {
   }
 
   @RequestMapping("/healthCheck.do")
-  public ModelAndView appDetails() {
+  public ModelAndView healthCheck() {
     logger.info("LoginController - healthCheck() - Starts");
     ModelMap map = new ModelMap();
     logger.info("LoginController - healthCheck() - Ends");
