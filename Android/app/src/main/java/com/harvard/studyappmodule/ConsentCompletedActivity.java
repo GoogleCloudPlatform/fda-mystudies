@@ -36,7 +36,7 @@ import android.widget.Toast;
 import com.github.barteksc.pdfviewer.PDFView;
 import com.github.barteksc.pdfviewer.scroll.DefaultScrollHandle;
 import com.harvard.R;
-import com.harvard.storagemodule.DBServiceSubscriber;
+import com.harvard.storagemodule.DbServiceSubscriber;
 import com.harvard.utils.AppController;
 import com.harvard.utils.Logger;
 import io.realm.Realm;
@@ -51,26 +51,26 @@ import javax.crypto.CipherInputStream;
 public class ConsentCompletedActivity extends AppCompatActivity {
 
   private static final int PERMISSION_REQUEST_CODE = 1000;
-  private TextView mConsentCompleteTxt;
-  private TextView mTextSecRow;
-  private TextView mViewpdf;
-  private TextView mNext;
+  private TextView consentCompleteTxt;
+  private TextView textSecRow;
+  private TextView viewPdf;
+  private TextView next;
 
   public static String FROM = "from";
-  private boolean mClick = true;
-  private File mSharingFile = null;
+  private boolean click = true;
+  private File sharingFile = null;
   private String comingFrom = "";
-  private DBServiceSubscriber dbServiceSubscriber;
-  private Realm mRealm;
+  private DbServiceSubscriber dbServiceSubscriber;
+  private Realm realm;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_consent_completed);
-    dbServiceSubscriber = new DBServiceSubscriber();
-    mRealm = AppController.getRealmobj(this);
+    dbServiceSubscriber = new DbServiceSubscriber();
+    realm = AppController.getRealmobj(this);
 
-    initializeXMLId();
+    initializeXmlId();
     try {
       if (getIntent().getStringExtra(FROM) != null
           && getIntent()
@@ -83,7 +83,7 @@ public class ConsentCompletedActivity extends AppCompatActivity {
       Logger.log(e);
     }
     setFont();
-    mViewpdf.setOnClickListener(
+    viewPdf.setOnClickListener(
         new View.OnClickListener() {
           @Override
           public void onClick(View v) {
@@ -102,25 +102,25 @@ public class ConsentCompletedActivity extends AppCompatActivity {
                 ActivityCompat.requestPermissions(
                     (Activity) ConsentCompletedActivity.this, permission, PERMISSION_REQUEST_CODE);
               } else {
-                displayPDF();
+                displayPdf();
               }
             } else {
-              displayPDF();
+              displayPdf();
             }
           }
         });
-    mNext.setOnClickListener(
+    next.setOnClickListener(
         new View.OnClickListener() {
           @Override
           public void onClick(View v) {
-            if (mClick) {
-              mClick = false;
+            if (click) {
+              click = false;
               new Handler()
                   .postDelayed(
                       new Runnable() {
                         @Override
                         public void run() {
-                          mClick = true;
+                          click = true;
                         }
                       },
                       3000);
@@ -159,16 +159,16 @@ public class ConsentCompletedActivity extends AppCompatActivity {
                 ConsentCompletedActivity.this, R.string.permission_deniedDate, Toast.LENGTH_SHORT)
             .show();
       } else {
-        displayPDF();
+        displayPdf();
       }
     }
   }
 
-  private void initializeXMLId() {
-    mConsentCompleteTxt = (TextView) findViewById(R.id.consentcomplete);
-    mTextSecRow = (TextView) findViewById(R.id.mTextSecRow);
-    mViewpdf = (TextView) findViewById(R.id.viewpdf);
-    mNext = (TextView) findViewById(R.id.next);
+  private void initializeXmlId() {
+    consentCompleteTxt = (TextView) findViewById(R.id.consentcomplete);
+    textSecRow = (TextView) findViewById(R.id.mTextSecRow);
+    viewPdf = (TextView) findViewById(R.id.viewpdf);
+    next = (TextView) findViewById(R.id.next);
   }
 
   @Override
@@ -176,34 +176,34 @@ public class ConsentCompletedActivity extends AppCompatActivity {
 
   private void setFont() {
     try {
-      mConsentCompleteTxt.setTypeface(
+      consentCompleteTxt.setTypeface(
           AppController.getTypeface(ConsentCompletedActivity.this, "regular"));
-      mTextSecRow.setTypeface(AppController.getTypeface(ConsentCompletedActivity.this, "light"));
-      mViewpdf.setTypeface(AppController.getTypeface(ConsentCompletedActivity.this, "regular"));
-      mNext.setTypeface(AppController.getTypeface(ConsentCompletedActivity.this, "regular"));
+      textSecRow.setTypeface(AppController.getTypeface(ConsentCompletedActivity.this, "light"));
+      viewPdf.setTypeface(AppController.getTypeface(ConsentCompletedActivity.this, "regular"));
+      next.setTypeface(AppController.getTypeface(ConsentCompletedActivity.this, "regular"));
     } catch (Exception e) {
       Logger.log(e);
     }
   }
 
-  private void displayPDF() {
+  private void displayPdf() {
 
     File file = getEncryptedFilePath(getIntent().getStringExtra("PdfPath"));
 
     try {
-      mSharingFile = copy(file);
+      sharingFile = copy(file);
     } catch (IOException e) {
       Logger.log(e);
     }
 
-    if (mSharingFile != null && mSharingFile.exists()) {
+    if (sharingFile != null && sharingFile.exists()) {
       LayoutInflater li = LayoutInflater.from(ConsentCompletedActivity.this);
       View promptsView = li.inflate(R.layout.pdfdisplayview, null);
       PDFView pdfView = (PDFView) promptsView.findViewById(R.id.pdf);
       TextView share = (TextView) promptsView.findViewById(R.id.share);
       AlertDialog.Builder db = new AlertDialog.Builder(ConsentCompletedActivity.this);
       db.setView(promptsView);
-      final File finalMSharingFile = mSharingFile;
+      final File finalMSharingFile = sharingFile;
       share.setOnClickListener(
           new View.OnClickListener() {
             @Override
@@ -237,7 +237,7 @@ public class ConsentCompletedActivity extends AppCompatActivity {
 
   private File getEncryptedFilePath(String filePath) {
     try {
-      CipherInputStream cis = AppController.genarateDecryptedConsentPDF(filePath);
+      CipherInputStream cis = AppController.generateDecryptedConsentPdf(filePath);
       byte[] byteArray = AppController.cipherInputStreamConvertToByte(cis);
       File file = new File("/data/data/" + getPackageName() + "/files/" + "temp" + ".pdf");
       if (!file.exists() && file == null) {
@@ -263,7 +263,9 @@ public class ConsentCompletedActivity extends AppCompatActivity {
             + getString(R.string.signed_consent)
             + ".pdf";
     File file = new File(primaryStoragePath);
-    if (!file.exists()) file.createNewFile();
+    if (!file.exists()) {
+      file.createNewFile();
+    }
 
     InputStream in = new FileInputStream(src);
     OutputStream out = new FileOutputStream(file);
@@ -281,9 +283,9 @@ public class ConsentCompletedActivity extends AppCompatActivity {
 
   @Override
   protected void onDestroy() {
-    dbServiceSubscriber.closeRealmObj(mRealm);
-    if (mSharingFile != null && mSharingFile.exists()) {
-      mSharingFile.delete();
+    dbServiceSubscriber.closeRealmObj(realm);
+    if (sharingFile != null && sharingFile.exists()) {
+      sharingFile.delete();
     }
     super.onDestroy();
   }

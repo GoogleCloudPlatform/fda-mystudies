@@ -15,7 +15,6 @@
 
 package com.harvard.studyappmodule.custom.question;
 
-import android.content.Context;
 import android.content.res.Resources;
 import android.util.Base64;
 import android.view.LayoutInflater;
@@ -37,7 +36,6 @@ public class MultiChoiceImageQuestionBody<T> implements StepBody {
   private StepResult<T> result;
   private ChoiceCustomImage<T>[] choices;
   private T currentSelected;
-  Context mContext;
 
   public MultiChoiceImageQuestionBody(Step step, StepResult result) {
     this.step = (QuestionStepCustom) step;

@@ -1,5 +1,6 @@
 /*
  * Copyright © 2017-2019 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors.
+ * Copyright 2020 Google LLC
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction, including
  * without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
@@ -32,26 +33,26 @@ import java.util.ArrayList;
 
 public class CustomActivitiesDailyDialogClass extends Dialog implements View.OnClickListener {
 
-  public Context mContext;
+  public Context context;
   private int limit;
-  private int mSelectedTime;
-  private int mSelectedDateBefore = 0;
-  private ArrayList<String> mScheduledTime;
-  private boolean mIsClickableItem;
-  private DialogClick mDialogClick;
+  private int selectedTime;
+  private int selectedDateBefore = 0;
+  private ArrayList<String> scheduledTime;
+  private boolean isClickableItem;
+  private DialogClick dialogClick;
 
   CustomActivitiesDailyDialogClass(
-          Context mContext,
-          ArrayList<String> mScheduledTime,
-          int mSelectedTime,
+          Context context,
+          ArrayList<String> scheduledTime,
+          int selectedTime,
           boolean isClickableItem,
           DialogClick dialogClick) {
-    super(mContext);
-    this.mContext = mContext;
-    this.mScheduledTime = mScheduledTime;
-    this.mSelectedTime = mSelectedTime;
-    this.mIsClickableItem = isClickableItem;
-    this.mDialogClick = dialogClick;
+    super(context);
+    this.context = context;
+    this.scheduledTime = scheduledTime;
+    this.selectedTime = selectedTime;
+    this.isClickableItem = isClickableItem;
+    this.dialogClick = dialogClick;
   }
 
   @Override
@@ -63,35 +64,35 @@ public class CustomActivitiesDailyDialogClass extends Dialog implements View.OnC
     getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
     getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
 
-    RelativeLayout mClossBtnLayout = (RelativeLayout) findViewById(R.id.mClossBtnLayout);
-    mClossBtnLayout.setOnClickListener(this);
+    RelativeLayout closeBtnLayout = (RelativeLayout) findViewById(R.id.mCloseBtnLayout);
+    closeBtnLayout.setOnClickListener(this);
     LinearLayout l = (LinearLayout) findViewById(R.id.lin_layout_hours);
-    for (int i = 0; i < mScheduledTime.size(); i++) {
+    for (int i = 0; i < scheduledTime.size(); i++) {
       TextView textDynamic = new TextView(getContext());
       textDynamic.setLayoutParams(
           new LinearLayout.LayoutParams(
               LinearLayout.LayoutParams.WRAP_CONTENT,
               LinearLayoutCompat.LayoutParams.WRAP_CONTENT));
-      textDynamic.setText(mScheduledTime.get(i));
+      textDynamic.setText(scheduledTime.get(i));
       textDynamic.setBackgroundColor(Color.WHITE);
-      if (i == mSelectedTime) {
-        mSelectedDateBefore = 1;
-        textDynamic.setTextColor(mContext.getResources().getColor(R.color.colorPrimary));
-      } else if (mSelectedDateBefore == 0) {
-        textDynamic.setTextColor(mContext.getResources().getColor(R.color.colorSecondaryBg));
+      if (i == selectedTime) {
+        selectedDateBefore = 1;
+        textDynamic.setTextColor(context.getResources().getColor(R.color.colorPrimary));
+      } else if (selectedDateBefore == 0) {
+        textDynamic.setTextColor(context.getResources().getColor(R.color.colorSecondaryBg));
       } else {
-        textDynamic.setTextColor(mContext.getResources().getColor(R.color.colorSecondary));
+        textDynamic.setTextColor(context.getResources().getColor(R.color.colorSecondary));
       }
       textDynamic.setTextSize(16);
       textDynamic.setGravity(Gravity.CENTER);
       textDynamic.setPadding(0, 20, 0, 20);
-      if (mIsClickableItem) {
+      if (isClickableItem) {
         final int finalI = i;
         textDynamic.setOnClickListener(
             new View.OnClickListener() {
               @Override
               public void onClick(View v) {
-                mDialogClick.clicked(finalI);
+                dialogClick.clicked(finalI);
                 dismiss();
               }
             });

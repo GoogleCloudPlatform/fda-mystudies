@@ -9,58 +9,58 @@
 package com.harvard.studyappmodule.enroll;
 
 public class EnrollData {
-    private String appToken;
-    private String siteId;
-    private String hashedToken;
-    private String participantId;
-    private int code;
-    private String message;
+  private String appToken;
+  private String siteId;
+  private String hashedToken;
+  private String participantId;
+  private int code;
+  private String message;
 
-    public String getParticipantId() {
-        return participantId;
-    }
+  public String getParticipantId() {
+    return participantId;
+  }
 
-    public void setParticipantId(String participantId) {
-        this.participantId = participantId;
-    }
+  public void setParticipantId(String participantId) {
+    this.participantId = participantId;
+  }
 
-    public String getAppToken() {
-        return appToken;
-    }
+  public String getAppToken() {
+    return appToken;
+  }
 
-    public void setAppToken(String appToken) {
-        this.appToken = appToken;
-    }
+  public void setAppToken(String appToken) {
+    this.appToken = appToken;
+  }
 
-    public String getSiteId() {
-        return siteId;
-    }
+  public String getSiteId() {
+    return siteId;
+  }
 
-    public void setSiteId(String siteId) {
-        this.siteId = siteId;
-    }
+  public void setSiteId(String siteId) {
+    this.siteId = siteId;
+  }
 
-    public String getHashedToken() {
-        return hashedToken;
-    }
+  public String getHashedToken() {
+    return hashedToken;
+  }
 
-    public void setHashedToken(String hashedToken) {
-        this.hashedToken = hashedToken;
-    }
+  public void setHashedToken(String hashedToken) {
+    this.hashedToken = hashedToken;
+  }
 
-    public int getCode() {
-        return code;
-    }
+  public int getCode() {
+    return code;
+  }
 
-    public void setCode(int code) {
-        this.code = code;
-    }
+  public void setCode(int code) {
+    this.code = code;
+  }
 
-    public String getMessage() {
-        return message;
-    }
+  public String getMessage() {
+    return message;
+  }
 
-    public void setMessage(String message) {
-        this.message = message;
-    }
+  public void setMessage(String message) {
+    this.message = message;
+  }
 }

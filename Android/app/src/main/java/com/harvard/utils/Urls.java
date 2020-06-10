@@ -17,7 +17,7 @@ package com.harvard.utils;
 
 import com.harvard.BuildConfig;
 
-public class URLs {
+public class Urls {
   public static String BASE_URL_WCP_SERVER = BuildConfig.BASE_URL_WCP_SERVER;
   public static String BASE_URL_REGISTRATION_SERVER = BuildConfig.BASE_URL_REGISTRATION_SERVER;
   public static String BASE_URL_REGISTRATION_CONSENT_SERVER =

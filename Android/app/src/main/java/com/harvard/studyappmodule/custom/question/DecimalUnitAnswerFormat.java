@@ -25,7 +25,7 @@ public class DecimalUnitAnswerFormat extends ChoiceAnswerFormatCustom {
   private String unit;
 
   /**
-   * Creates an answer format with the specified min and max values
+   * Creates an answer format with the specified min and max values.
    *
    * @param minValue the minimum allowed value
    * @param maxValue the maximum allowed value, or 0f for unlimited
@@ -42,7 +42,7 @@ public class DecimalUnitAnswerFormat extends ChoiceAnswerFormatCustom {
   }
 
   /**
-   * Returns the min value
+   * Returns the min value.
    *
    * @return returns the min value
    */
@@ -51,7 +51,7 @@ public class DecimalUnitAnswerFormat extends ChoiceAnswerFormatCustom {
   }
 
   /**
-   * Returns the max value, or 0f for no maximum
+   * Returns the max value, or 0f for no maximum.
    *
    * @return returns the max value, or 0f for no maximum
    */

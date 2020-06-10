@@ -52,16 +52,16 @@ public class MultiChoiceTextQuestionBody<T>
   private Set<T> currentSelected;
   private T exclusiveValue;
   private EditText otherText;
-  private OtherOptionModel mOtherOptionModel;
-  private String OtherOptionValue = "";
-  private boolean OtherOptionMandatory = false;
-  private boolean OtherOptionText = false;
+  private OtherOptionModel otherOptionModel;
+  private String otherOptionValue = "";
+  private boolean otherOptionMandatory = false;
+  private boolean otherOptionText = false;
 
   public MultiChoiceTextQuestionBody(Step step, StepResult result) {
     this.step = (QuestionStepCustom) step;
     this.result = result == null ? new StepResult<>(step) : result;
     MultiChoiceTextAnswerFormat format = (MultiChoiceTextAnswerFormat) this.step.getAnswerFormat1();
-    mOtherOptionModel = new OtherOptionModel();
+    otherOptionModel = new OtherOptionModel();
     this.choices = format.getTextChoices();
 
     for (int i = 0; i < choices.length; i++) {
@@ -88,13 +88,13 @@ public class MultiChoiceTextQuestionBody<T>
           try {
             JSONObject jsonObject = new JSONObject(list.get(i).toString());
 
-            mOtherOptionModel.setOther(jsonObject.getString("other"));
+            otherOptionModel.setOther(jsonObject.getString("other"));
             try {
-              mOtherOptionModel.setText(jsonObject.getString("text"));
+              otherOptionModel.setText(jsonObject.getString("text"));
             } catch (JSONException e) {
               Logger.log(e);
             }
-            currentSelected.remove(new Gson().toJson(mOtherOptionModel));
+            currentSelected.remove(new Gson().toJson(otherOptionModel));
           } catch (JSONException e) {
             Logger.log(e);
           }
@@ -110,8 +110,8 @@ public class MultiChoiceTextQuestionBody<T>
       }
 
       if (choices[i].getOther() != null) {
-        OtherOptionValue = choices[i].getValue().toString();
-        OtherOptionMandatory = choices[i].getOther().isMandatory();
+        otherOptionValue = choices[i].getValue().toString();
+        otherOptionMandatory = choices[i].getOther().isMandatory();
       }
     }
   }
@@ -169,7 +169,7 @@ public class MultiChoiceTextQuestionBody<T>
             @Override
             public boolean onQueryTextChange(String s) {
               for (int i = 0; i < choices.length; i++) {
-                if (!choices[i].getValue().toString().equalsIgnoreCase(OtherOptionValue)) {
+                if (!choices[i].getValue().toString().equalsIgnoreCase(otherOptionValue)) {
                   if (choices[i].getText().toLowerCase().contains(s.toLowerCase())) {
                     radioGroup.findViewWithTag(i).setVisibility(View.VISIBLE);
                   } else {
@@ -205,7 +205,7 @@ public class MultiChoiceTextQuestionBody<T>
         linearLayout.addView(otherText);
         otherText.setHint(item.getOther().getPlaceholder());
         otherText.setVisibility(View.GONE);
-        OtherOptionText = true;
+        otherOptionText = true;
       }
       linearLayout.setTag(i);
       radioGroup.addView(linearLayout);
@@ -215,9 +215,9 @@ public class MultiChoiceTextQuestionBody<T>
         checkBox.setChecked(true);
         selectedcheckbox.add(checkBox);
 
-        if (item.getValue().toString().equalsIgnoreCase(OtherOptionValue)) {
+        if (item.getValue().toString().equalsIgnoreCase(otherOptionValue)) {
           otherText.setVisibility(View.VISIBLE);
-          otherText.setText(mOtherOptionModel.getText());
+          otherText.setText(otherOptionModel.getText());
         }
       }
 
@@ -242,9 +242,9 @@ public class MultiChoiceTextQuestionBody<T>
 
                   selectedcheckbox.clear();
                   currentSelected.clear();
-                  currentSelected.remove(new Gson().toJson(mOtherOptionModel));
-                  mOtherOptionModel.setOther(null);
-                  mOtherOptionModel.setText(null);
+                  currentSelected.remove(new Gson().toJson(otherOptionModel));
+                  otherOptionModel.setOther(null);
+                  otherOptionModel.setText(null);
                 }
 
                 if (item.isExclusive()) {
@@ -271,7 +271,7 @@ public class MultiChoiceTextQuestionBody<T>
                   otherText.setVisibility(View.VISIBLE);
                   otherText.requestFocus();
 
-                  mOtherOptionModel.setOther(item.getText());
+                  otherOptionModel.setOther(item.getText());
                 }
 
               } else {
@@ -279,9 +279,9 @@ public class MultiChoiceTextQuestionBody<T>
                 currentSelected.remove(item.getValue());
                 if (item.getOther() != null) {
                   AppController.getHelperHideKeyboard((Activity) inflater.getContext());
-                  currentSelected.remove(new Gson().toJson(mOtherOptionModel));
-                  mOtherOptionModel.setOther(null);
-                  mOtherOptionModel.setText(null);
+                  currentSelected.remove(new Gson().toJson(otherOptionModel));
+                  otherOptionModel.setOther(null);
+                  otherOptionModel.setText(null);
                   otherText.setVisibility(View.GONE);
                   otherText.setText("");
                 }
@@ -292,8 +292,8 @@ public class MultiChoiceTextQuestionBody<T>
       checkBox.setOnCheckedChangeListener(onCheckedChangeListener);
     }
 
-    if (mOtherOptionModel != null && mOtherOptionModel.getText() != null) {
-      otherText.setText(mOtherOptionModel.getText());
+    if (otherOptionModel != null && otherOptionModel.getText() != null) {
+      otherText.setText(otherOptionModel.getText());
       otherText.setVisibility(View.VISIBLE);
     }
 
@@ -318,17 +318,17 @@ public class MultiChoiceTextQuestionBody<T>
       currentSelected.clear();
       result.setResult((T[]) currentSelected.toArray());
     } else {
-      if (mOtherOptionModel != null) {
-        if (OtherOptionText) {
-          if (currentSelected.contains(OtherOptionValue)) {
-            mOtherOptionModel.setText(otherText.getText().toString());
-            currentSelected.add((T) new Gson().toJson(mOtherOptionModel));
+      if (otherOptionModel != null) {
+        if (otherOptionText) {
+          if (currentSelected.contains(otherOptionValue)) {
+            otherOptionModel.setText(otherText.getText().toString());
+            currentSelected.add((T) new Gson().toJson(otherOptionModel));
           } else {
-            mOtherOptionModel.setText(otherText.getText().toString());
-            currentSelected.remove((T) new Gson().toJson(mOtherOptionModel));
+            otherOptionModel.setText(otherText.getText().toString());
+            currentSelected.remove((T) new Gson().toJson(otherOptionModel));
           }
-        } else if (mOtherOptionModel.getOther() != null) {
-          currentSelected.add((T) new Gson().toJson(mOtherOptionModel));
+        } else if (otherOptionModel.getOther() != null) {
+          currentSelected.add((T) new Gson().toJson(otherOptionModel));
         }
       }
 
@@ -341,8 +341,8 @@ public class MultiChoiceTextQuestionBody<T>
   public BodyAnswer getBodyAnswerState() {
     if (currentSelected.isEmpty()) {
       return new BodyAnswer(false, R.string.rsb_invalid_answer_choice);
-    } else if (OtherOptionMandatory
-        && currentSelected.contains(OtherOptionValue)
+    } else if (otherOptionMandatory
+        && currentSelected.contains(otherOptionValue)
         && otherText.getText().toString().equalsIgnoreCase("")) {
       return new BodyAnswer(false, R.string.otherValuetxt);
     } else {
