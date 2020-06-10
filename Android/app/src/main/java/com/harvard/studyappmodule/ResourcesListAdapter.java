@@ -26,6 +26,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
+import com.harvard.AppConfig;
 import com.harvard.R;
 import com.harvard.studyappmodule.studymodel.Resource;
 import com.harvard.utils.AppController;
@@ -134,7 +135,11 @@ public class ResourcesListAdapter extends RecyclerView.Adapter<ResourcesListAdap
                 String message = ((SurveyResourcesFragment) fragment).getLeaveStudyMessage();
                 AlertDialog.Builder builder =
                     new AlertDialog.Builder(context, R.style.MyAlertDialogStyle);
-                builder.setTitle(context.getResources().getString(R.string.leave_study) + "?");
+                if (AppConfig.AppType.equalsIgnoreCase(context.getResources().getString(R.string.app_gateway))) {
+                  builder.setTitle(context.getResources().getString(R.string.leave_study) + "?");
+                } else {
+                  builder.setTitle(context.getResources().getString(R.string.leave_study) + " & " + context.getResources().getString(R.string.delete_account) + "?");
+                }
                 builder.setMessage(message);
                 builder.setPositiveButton(
                     context.getResources().getString(R.string.proceed_caps),
