@@ -161,7 +161,7 @@ public class StudyInfoActivity extends AppCompatActivity implements ApiCall.OnAs
 
     if (AppConfig.AppType.equalsIgnoreCase(getString(R.string.app_standalone))) {
       bookmarkimage.setVisibility(View.GONE);
-      backBtn.setVisibility(View.GONE);
+      backBtn.setVisibility(View.VISIBLE);
     }
   }
 
