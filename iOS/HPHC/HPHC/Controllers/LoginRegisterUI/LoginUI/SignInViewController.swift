@@ -23,7 +23,10 @@ import SlideMenuControllerSwift
 import UIKit
 
 let kVerifyMessageFromSignIn =
-  "Your registered email is pending verification. Please type in the Verification Code received in the email to complete this step and proceed to using the app."
+  """
+  Your registered email is pending verification. Please type in the Verification Code received in the email \
+  to complete this step and proceed to using the app.
+  """
 
 enum SignInLoadFrom: Int {
   case gatewayOverview

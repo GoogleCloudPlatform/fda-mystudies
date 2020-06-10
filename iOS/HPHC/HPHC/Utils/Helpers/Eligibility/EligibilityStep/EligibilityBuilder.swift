@@ -30,7 +30,10 @@ let kEligibilityInEligibleDescriptionText = "Sorry, You are Ineligible"
 
 let kEligibilityVerifiedScreen = "VerifiedScreen"
 let kEligibilityCompletionDescriptionText =
-  "Your enrollment token has been successfully validated. You are eligible to join the Study.\nPlease click Continue to proceed to the Consent section."
+  """
+  Your enrollment token has been successfully validated. You are eligible to join the Study.\
+  \nPlease click Continue to proceed to the Consent section.
+  """
 let kEligibilityCompletionTitle = "Eligibility Confirmed"
 
 let kEligibilityStep = "steps"
