@@ -1,5 +1,6 @@
 /*
  * Copyright © 2017-2019 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors.
+ * Copyright 2020 Google LLC
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction, including
  * without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
@@ -28,28 +29,28 @@ import java.util.List;
 
 public class TempGraphHelper {
   public static LineChart updateLineChart(
-      LineChart chart, int max, List<Entry> entries, List<String> xValues, String barColor) {
+      LineChart chart, int max, List<Entry> entries, List<String> valuesX, String barColor) {
     Resources res = chart.getContext().getResources();
 
     chart.setDrawBorders(false);
-    XAxis xAxis = chart.getXAxis();
-    xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
-    xAxis.setDrawAxisLine(true);
-    xAxis.setYOffset(32f);
-    xAxis.setDrawGridLines(false);
-    xAxis.setLabelsToSkip(0);
-    xAxis.setTextSize(14);
-    xAxis.setTextColor(R.color.black_shade);
-    xAxis.setTypeface(Typeface.create("sans-serif-medium", Typeface.NORMAL));
+    XAxis axisX = chart.getXAxis();
+    axisX.setPosition(XAxis.XAxisPosition.BOTTOM);
+    axisX.setDrawAxisLine(true);
+    axisX.setYOffset(32f);
+    axisX.setDrawGridLines(false);
+    axisX.setLabelsToSkip(0);
+    axisX.setTextSize(14);
+    axisX.setTextColor(R.color.black_shade);
+    axisX.setTypeface(Typeface.create("sans-serif-medium", Typeface.NORMAL));
 
-    YAxis yAxis = chart.getAxisLeft();
-    yAxis.setDrawAxisLine(false);
-    yAxis.setDrawGridLines(true);
-    yAxis.setDrawZeroLine(true);
-    yAxis.setShowOnlyMinMax(false);
-    yAxis.setTextSize(14);
-    yAxis.setTextColor(R.color.black_shade);
-    yAxis.setTypeface(Typeface.create("sans-serif-medium", Typeface.NORMAL));
+    YAxis axisY = chart.getAxisLeft();
+    axisY.setDrawAxisLine(false);
+    axisY.setDrawGridLines(true);
+    axisY.setDrawZeroLine(true);
+    axisY.setShowOnlyMinMax(false);
+    axisY.setTextSize(14);
+    axisY.setTextColor(R.color.black_shade);
+    axisY.setTypeface(Typeface.create("sans-serif-medium", Typeface.NORMAL));
 
     chart.getAxisRight().setEnabled(false);
     chart.getLegend().setEnabled(false);
@@ -66,7 +67,7 @@ public class TempGraphHelper {
     set.setFillColor(Color.parseColor(barColor));
     set.setFillAlpha(50);
 
-    LineData data = new LineData(xValues, set);
+    LineData data = new LineData(valuesX, set);
     if (entries.size() > 0) {
       chart.setData(data);
     }

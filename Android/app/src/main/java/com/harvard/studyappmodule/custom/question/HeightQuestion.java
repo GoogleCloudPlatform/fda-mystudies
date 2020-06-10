@@ -1,5 +1,6 @@
 /*
  * Copyright © 2017-2019 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors.
+ * Copyright 2020 Google LLC
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction, including
  * without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
@@ -32,7 +33,8 @@ public class HeightQuestion implements StepBody {
   private QuestionStepCustom step;
   private StepResult<Double> result;
   private HeightAnswerFormat format;
-  private NumberPicker feet, inches;
+  private NumberPicker feet;
+  private NumberPicker inches;
   private Double currentSelected;
 
   public HeightQuestion(Step step, StepResult result) {
@@ -100,7 +102,7 @@ public class HeightQuestion implements StepBody {
     if (format.getMeasurementSystem().equalsIgnoreCase("Metric")) {
       heightquestionlayout = inflater.inflate(R.layout.heightquestionlayout, parent, false);
       NumberPicker cmPicker = (NumberPicker) heightquestionlayout.findViewById(R.id.height);
-      TextView unit = (TextView) heightquestionlayout.findViewById(R.id.unit);
+
 
       String[] numberpickervalue = new String[300];
       for (int i = 0; i < numberpickervalue.length; i++) {
@@ -118,6 +120,7 @@ public class HeightQuestion implements StepBody {
               currentSelected = Double.parseDouble("" + picker.getValue());
             }
           });
+      TextView unit = (TextView) heightquestionlayout.findViewById(R.id.unit);
       unit.setText(inflater.getContext().getResources().getString(R.string.cm));
 
       if (currentSelected != null) {

@@ -17,16 +17,18 @@ package com.harvard.studyappmodule.studymodel;
 import io.realm.RealmList;
 import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;
+import io.realm.annotations.RealmField;
 
 public class StudyResource extends RealmObject {
   private String message;
-  @PrimaryKey private String mStudyId;
+  @PrimaryKey
+  private String mStudyId;
 
-  public String getmStudyId() {
+  public String getStudyId() {
     return mStudyId;
   }
 
-  public void setmStudyId(String mStudyId) {
+  public void setStudyId(String mStudyId) {
     this.mStudyId = mStudyId;
   }
 

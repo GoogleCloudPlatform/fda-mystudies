@@ -1,5 +1,6 @@
 /*
  * Copyright © 2017-2019 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors.
+ * Copyright 2020 Google LLC
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction, including
  * without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
@@ -25,7 +26,7 @@ import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 import com.harvard.R;
-import com.harvard.storagemodule.DBServiceSubscriber;
+import com.harvard.storagemodule.DbServiceSubscriber;
 import com.harvard.studyappmodule.studymodel.Notification;
 import com.harvard.studyappmodule.studymodel.Study;
 import com.harvard.studyappmodule.studymodel.StudyList;
@@ -35,17 +36,16 @@ import io.realm.Realm;
 import io.realm.RealmList;
 
 public class NotificationListAdapter extends RecyclerView.Adapter<NotificationListAdapter.Holder> {
-  private final Context mContext;
-  private RealmList<Notification> mItems;
-  private DBServiceSubscriber dbServiceSubscriber;
-  private Realm mRealm;
+  private final Context context;
+  private RealmList<Notification> items;
+  private DbServiceSubscriber dbServiceSubscriber;
+  private Realm realm;
 
-  NotificationListAdapter(
-          Context context, RealmList<Notification> notifications, Realm realm) {
-    this.mContext = context;
-    this.mItems = notifications;
-    dbServiceSubscriber = new DBServiceSubscriber();
-    mRealm = realm;
+  NotificationListAdapter(Context context, RealmList<Notification> notifications, Realm realm) {
+    this.context = context;
+    this.items = notifications;
+    dbServiceSubscriber = new DbServiceSubscriber();
+    this.realm = realm;
   }
 
   @Override
@@ -58,29 +58,31 @@ public class NotificationListAdapter extends RecyclerView.Adapter<NotificationLi
 
   @Override
   public int getItemCount() {
-    if (mItems == null) return 0;
-    return mItems.size();
+    if (items == null) {
+      return 0;
+    }
+    return items.size();
   }
 
   class Holder extends RecyclerView.ViewHolder {
 
-    RelativeLayout mContainer;
-    AppCompatTextView mNotificationMsg;
-    AppCompatTextView mDayTimeDisplay;
+    RelativeLayout container;
+    AppCompatTextView notificationMsg;
+    AppCompatTextView dayTimeDisplay;
 
     Holder(View itemView) {
       super(itemView);
-      mContainer = (RelativeLayout) itemView.findViewById(R.id.container);
-      mNotificationMsg = (AppCompatTextView) itemView.findViewById(R.id.notification_msg);
-      mDayTimeDisplay = (AppCompatTextView) itemView.findViewById(R.id.dayTimeDisplay);
+      container = (RelativeLayout) itemView.findViewById(R.id.container);
+      notificationMsg = (AppCompatTextView) itemView.findViewById(R.id.notification_msg);
+      dayTimeDisplay = (AppCompatTextView) itemView.findViewById(R.id.dayTimeDisplay);
 
       setFont();
     }
 
     private void setFont() {
       try {
-        mNotificationMsg.setTypeface(AppController.getTypeface(mContext, "regular"));
-        mDayTimeDisplay.setTypeface(AppController.getTypeface(mContext, "medium"));
+        notificationMsg.setTypeface(AppController.getTypeface(context, "regular"));
+        dayTimeDisplay.setTypeface(AppController.getTypeface(context, "medium"));
       } catch (Exception e) {
         Logger.log(e);
       }
@@ -90,76 +92,75 @@ public class NotificationListAdapter extends RecyclerView.Adapter<NotificationLi
   @Override
   public void onBindViewHolder(final Holder holder, final int position) {
     try {
-      holder.mNotificationMsg.setText(mItems.get(holder.getAdapterPosition()).getMessage());
-      holder.mDayTimeDisplay.setText(
-          AppController.getDateFormatType1()
+      holder.notificationMsg.setText(items.get(holder.getAdapterPosition()).getMessage());
+      holder.dayTimeDisplay.setText(
+          AppController.getDateFormatForNotification()
               .format(
-                  AppController.getDateFormat()
-                      .parse(mItems.get(holder.getAdapterPosition()).getDate())));
+                  AppController.getDateFormatForApi()
+                      .parse(items.get(holder.getAdapterPosition()).getDate())));
 
-      holder.mContainer.setOnClickListener(
+      holder.container.setOnClickListener(
           new View.OnClickListener() {
             @Override
             public void onClick(View view) {
               if (!AppController.getHelperSharedPreference()
-                  .readPreference(mContext, mContext.getResources().getString(R.string.userid), "")
+                  .readPreference(context, context.getResources().getString(R.string.userid), "")
                   .equalsIgnoreCase("")) {
-                if (mItems.get(holder.getAdapterPosition()).getType().equalsIgnoreCase("Gateway")) {
-                  if (mItems
+                if (items.get(holder.getAdapterPosition()).getType().equalsIgnoreCase("Gateway")) {
+                  if (items
                       .get(holder.getAdapterPosition())
                       .getSubtype()
                       .equalsIgnoreCase("Study")) {
 
-                    Study mStudy = dbServiceSubscriber.getStudyListFromDB(mRealm);
-                    if (mStudy != null) {
-                      RealmList<StudyList> studyListArrayList = mStudy.getStudies();
+                    Study study = dbServiceSubscriber.getStudyListFromDB(realm);
+                    if (study != null) {
+                      RealmList<StudyList> studyListArrayList = study.getStudies();
                       studyListArrayList =
-                          dbServiceSubscriber.saveStudyStatusToStudyList(
-                              studyListArrayList, mRealm);
+                          dbServiceSubscriber.saveStudyStatusToStudyList(studyListArrayList, realm);
                       boolean isStudyAvailable = false;
                       for (int i = 0; i < studyListArrayList.size(); i++) {
-                        if (mItems
+                        if (items
                             .get(holder.getAdapterPosition())
                             .getStudyId()
                             .equalsIgnoreCase(studyListArrayList.get(i).getStudyId())) {
                           try {
                             AppController.getHelperSharedPreference()
                                 .writePreference(
-                                    mContext,
-                                    mContext.getString(R.string.title),
+                                    context,
+                                    context.getString(R.string.title),
                                     "" + studyListArrayList.get(i).getTitle());
                             AppController.getHelperSharedPreference()
                                 .writePreference(
-                                    mContext,
-                                    mContext.getString(R.string.bookmark),
+                                    context,
+                                    context.getString(R.string.bookmark),
                                     "" + studyListArrayList.get(i).isBookmarked());
                             AppController.getHelperSharedPreference()
                                 .writePreference(
-                                    mContext,
-                                    mContext.getString(R.string.status),
+                                    context,
+                                    context.getString(R.string.status),
                                     "" + studyListArrayList.get(i).getStatus());
                             AppController.getHelperSharedPreference()
                                 .writePreference(
-                                    mContext,
-                                    mContext.getString(R.string.studyStatus),
+                                    context,
+                                    context.getString(R.string.studyStatus),
                                     "" + studyListArrayList.get(i).getStudyStatus());
                             AppController.getHelperSharedPreference()
                                 .writePreference(
-                                    mContext, mContext.getString(R.string.position), "" + i);
+                                    context, context.getString(R.string.position), "" + i);
                             AppController.getHelperSharedPreference()
                                 .writePreference(
-                                    mContext,
-                                    mContext.getString(R.string.enroll),
+                                    context,
+                                    context.getString(R.string.enroll),
                                     "" + studyListArrayList.get(i).getSetting().isEnrolling());
                             AppController.getHelperSharedPreference()
                                 .writePreference(
-                                    mContext,
-                                    mContext.getString(R.string.rejoin),
+                                    context,
+                                    context.getString(R.string.rejoin),
                                     "" + studyListArrayList.get(i).getSetting().getRejoin());
                             AppController.getHelperSharedPreference()
                                 .writePreference(
-                                    mContext,
-                                    mContext.getString(R.string.studyVersion),
+                                    context,
+                                    context.getString(R.string.studyVersion),
                                     "" + studyListArrayList.get(i).getStudyVersion());
                           } catch (Exception e) {
                             Logger.log(e);
@@ -167,31 +168,31 @@ public class NotificationListAdapter extends RecyclerView.Adapter<NotificationLi
                           if (studyListArrayList
                                   .get(i)
                                   .getStatus()
-                                  .equalsIgnoreCase(mContext.getString(R.string.active))
+                                  .equalsIgnoreCase(context.getString(R.string.active))
                               && studyListArrayList
                                   .get(i)
                                   .getStudyStatus()
                                   .equalsIgnoreCase(StudyFragment.IN_PROGRESS)) {
-                            Intent intent = new Intent(mContext, SurveyActivity.class);
+                            Intent intent = new Intent(context, SurveyActivity.class);
                             intent.putExtra(
-                                "studyId", mItems.get(holder.getAdapterPosition()).getStudyId());
-                            mContext.startActivity(intent);
+                                "studyId", items.get(holder.getAdapterPosition()).getStudyId());
+                            context.startActivity(intent);
                           } else if (studyListArrayList
                               .get(i)
                               .getStatus()
-                              .equalsIgnoreCase(mContext.getString(R.string.paused))) {
-                            Toast.makeText(mContext, R.string.study_paused, Toast.LENGTH_SHORT)
+                              .equalsIgnoreCase(context.getString(R.string.paused))) {
+                            Toast.makeText(context, R.string.study_paused, Toast.LENGTH_SHORT)
                                 .show();
                           } else if (studyListArrayList
                               .get(i)
                               .getStatus()
-                              .equalsIgnoreCase(mContext.getString(R.string.closed))) {
-                            Toast.makeText(mContext, R.string.study_resume, Toast.LENGTH_SHORT)
+                              .equalsIgnoreCase(context.getString(R.string.closed))) {
+                            Toast.makeText(context, R.string.study_resume, Toast.LENGTH_SHORT)
                                 .show();
                           } else {
                             Intent intent =
                                 new Intent(
-                                    mContext.getApplicationContext(), StudyInfoActivity.class);
+                                    context.getApplicationContext(), StudyInfoActivity.class);
                             intent.putExtra("studyId", studyListArrayList.get(i).getStudyId());
                             intent.putExtra("title", studyListArrayList.get(i).getTitle());
                             intent.putExtra("bookmark", studyListArrayList.get(i).isBookmarked());
@@ -204,51 +205,50 @@ public class NotificationListAdapter extends RecyclerView.Adapter<NotificationLi
                                 "" + studyListArrayList.get(i).getSetting().isEnrolling());
                             intent.putExtra(
                                 "rejoin", "" + studyListArrayList.get(i).getSetting().getRejoin());
-                            mContext.startActivity(intent);
+                            context.startActivity(intent);
                           }
                           isStudyAvailable = true;
                           break;
                         }
                       }
                       if (!isStudyAvailable) {
-                        Toast.makeText(mContext, R.string.studyNotAvailable, Toast.LENGTH_SHORT)
+                        Toast.makeText(context, R.string.studyNotAvailable, Toast.LENGTH_SHORT)
                             .show();
                       }
                     } else {
-                      Toast.makeText(mContext, R.string.studyNotAvailable, Toast.LENGTH_SHORT)
+                      Toast.makeText(context, R.string.studyNotAvailable, Toast.LENGTH_SHORT)
                           .show();
                     }
-                  } else if (mItems
+                  } else if (items
                       .get(holder.getAdapterPosition())
                       .getSubtype()
                       .equalsIgnoreCase("Resource")) {
                     Intent intent = new Intent();
                     intent.putExtra("action", "refresh");
-                    ((Activity) mContext).setResult(Activity.RESULT_OK, intent);
-                    ((Activity) mContext).finish();
+                    ((Activity) context).setResult(Activity.RESULT_OK, intent);
+                    ((Activity) context).finish();
                   }
-                } else if (mItems
+                } else if (items
                     .get(holder.getAdapterPosition())
                     .getType()
                     .equalsIgnoreCase("Study")) {
-                  if (mItems
+                  if (items
                           .get(holder.getAdapterPosition())
                           .getSubtype()
                           .equalsIgnoreCase("Activity")
-                      || mItems
+                      || items
                           .get(holder.getAdapterPosition())
                           .getSubtype()
                           .equalsIgnoreCase("Resource")) {
-                    Study mStudy = dbServiceSubscriber.getStudyListFromDB(mRealm);
-                    if (mStudy != null) {
-                      RealmList<StudyList> studyListArrayList = mStudy.getStudies();
+                    Study study = dbServiceSubscriber.getStudyListFromDB(realm);
+                    if (study != null) {
+                      RealmList<StudyList> studyListArrayList = study.getStudies();
                       studyListArrayList =
-                          dbServiceSubscriber.saveStudyStatusToStudyList(
-                              studyListArrayList, mRealm);
+                          dbServiceSubscriber.saveStudyStatusToStudyList(studyListArrayList, realm);
                       boolean isStudyAvailable = false;
                       boolean isStudyJoined = false;
                       for (int i = 0; i < studyListArrayList.size(); i++) {
-                        if (mItems
+                        if (items
                             .get(holder.getAdapterPosition())
                             .getStudyId()
                             .equalsIgnoreCase(studyListArrayList.get(i).getStudyId())) {
@@ -256,36 +256,36 @@ public class NotificationListAdapter extends RecyclerView.Adapter<NotificationLi
                           try {
                             AppController.getHelperSharedPreference()
                                 .writePreference(
-                                    mContext,
-                                    mContext.getString(R.string.title),
+                                    context,
+                                    context.getString(R.string.title),
                                     "" + studyListArrayList.get(i).getTitle());
                             AppController.getHelperSharedPreference()
                                 .writePreference(
-                                    mContext,
-                                    mContext.getString(R.string.bookmark),
+                                    context,
+                                    context.getString(R.string.bookmark),
                                     "" + studyListArrayList.get(i).isBookmarked());
                             AppController.getHelperSharedPreference()
                                 .writePreference(
-                                    mContext,
-                                    mContext.getString(R.string.status),
+                                    context,
+                                    context.getString(R.string.status),
                                     "" + studyListArrayList.get(i).getStatus());
                             AppController.getHelperSharedPreference()
                                 .writePreference(
-                                    mContext,
-                                    mContext.getString(R.string.studyStatus),
+                                    context,
+                                    context.getString(R.string.studyStatus),
                                     "" + studyListArrayList.get(i).getStudyStatus());
                             AppController.getHelperSharedPreference()
                                 .writePreference(
-                                    mContext, mContext.getString(R.string.position), "" + i);
+                                    context, context.getString(R.string.position), "" + i);
                             AppController.getHelperSharedPreference()
                                 .writePreference(
-                                    mContext,
-                                    mContext.getString(R.string.enroll),
+                                    context,
+                                    context.getString(R.string.enroll),
                                     "" + studyListArrayList.get(i).getSetting().isEnrolling());
                             AppController.getHelperSharedPreference()
                                 .writePreference(
-                                    mContext,
-                                    mContext.getString(R.string.rejoin),
+                                    context,
+                                    context.getString(R.string.rejoin),
                                     "" + studyListArrayList.get(i).getSetting().getRejoin());
                           } catch (Exception e) {
                             Logger.log(e);
@@ -293,18 +293,18 @@ public class NotificationListAdapter extends RecyclerView.Adapter<NotificationLi
                           if (studyListArrayList
                                   .get(i)
                                   .getStatus()
-                                  .equalsIgnoreCase(mContext.getString(R.string.active))
+                                  .equalsIgnoreCase(context.getString(R.string.active))
                               && studyListArrayList
                                   .get(i)
                                   .getStudyStatus()
                                   .equalsIgnoreCase(StudyFragment.IN_PROGRESS)) {
-                            Intent intent = new Intent(mContext, SurveyActivity.class);
+                            Intent intent = new Intent(context, SurveyActivity.class);
                             intent.putExtra(
-                                "studyId", mItems.get(holder.getAdapterPosition()).getStudyId());
+                                "studyId", items.get(holder.getAdapterPosition()).getStudyId());
                             intent.putExtra("from", "NotificationActivity");
                             intent.putExtra(
-                                "to", mItems.get(holder.getAdapterPosition()).getSubtype());
-                            mContext.startActivity(intent);
+                                "to", items.get(holder.getAdapterPosition()).getSubtype());
+                            context.startActivity(intent);
                             isStudyJoined = true;
                             break;
                           } else {
@@ -314,20 +314,19 @@ public class NotificationListAdapter extends RecyclerView.Adapter<NotificationLi
                         }
                       }
                       if (!isStudyAvailable) {
-                        Toast.makeText(mContext, R.string.studyNotAvailable, Toast.LENGTH_SHORT)
+                        Toast.makeText(context, R.string.studyNotAvailable, Toast.LENGTH_SHORT)
                             .show();
                       } else if (!isStudyJoined) {
-                        Toast.makeText(mContext, R.string.studyNotJoined, Toast.LENGTH_SHORT)
-                            .show();
+                        Toast.makeText(context, R.string.studyNotJoined, Toast.LENGTH_SHORT).show();
                       }
                     } else {
-                      Toast.makeText(mContext, R.string.studyNotAvailable, Toast.LENGTH_SHORT)
+                      Toast.makeText(context, R.string.studyNotAvailable, Toast.LENGTH_SHORT)
                           .show();
                     }
                   }
                 }
               } else {
-                Toast.makeText(mContext, R.string.studyNotAvailable, Toast.LENGTH_SHORT).show();
+                Toast.makeText(context, R.string.studyNotAvailable, Toast.LENGTH_SHORT).show();
               }
             }
           });

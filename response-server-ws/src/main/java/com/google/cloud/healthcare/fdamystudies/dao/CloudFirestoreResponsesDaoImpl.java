@@ -5,6 +5,7 @@
  * license that can be found in the LICENSE file or at
  * https://opensource.org/licenses/MIT.
  */
+
 package com.google.cloud.healthcare.fdamystudies.dao;
 
 import java.text.DateFormat;
@@ -75,7 +76,8 @@ public class CloudFirestoreResponsesDaoImpl implements ResponsesDao {
     } else {
 
       throw new ProcessResponseException(
-          "CloudFirestoreResponsesDaoImpl.saveStudyMetadata() - Study Collection is null or dataToStore is null");
+          "CloudFirestoreResponsesDaoImpl.saveStudyMetadata() "
+              + "- Study Collection is null or dataToStore is null");
     }
   }
 
@@ -360,11 +362,10 @@ public class CloudFirestoreResponsesDaoImpl implements ResponsesDao {
       mapPartIdValue.put(AppConstants.VALUE_KEY_STR, participantId);
       mapPartId.put(AppConstants.PARTICIPANT_ID_RESPONSE, mapPartIdValue);
       responsesRow.getData().add(mapPartId);
-      SavedActivityResponse savedActivityResponse =
-          new Gson().fromJson(new Gson().toJson(activityResponseMap), SavedActivityResponse.class);
+
       // Add Created Timestamp
       Map<Object, Object> mapTS = new HashMap<>();
-      Map<Object, Object> mapTSValue = new HashMap<>();
+      Map<Object, Object> mapTsValue = new HashMap<>();
 
       // Format timestamp to date
       long timestampFromResponse = 0;
@@ -374,18 +375,19 @@ public class CloudFirestoreResponsesDaoImpl implements ResponsesDao {
 
         DateFormat simpleDateFormat = new SimpleDateFormat(AppConstants.ISO_DATE_FORMAT_RESPONSE);
         String formattedDate = simpleDateFormat.format(timestampFromResponse);
-        mapTSValue.put(AppConstants.VALUE_KEY_STR, formattedDate);
+        mapTsValue.put(AppConstants.VALUE_KEY_STR, formattedDate);
 
       } catch (NumberFormatException ne) {
         logger.error(
             "Could not format createdTimestamp field to long. createdTimestamp value is: "
                 + timestampFromResponse);
-        mapTSValue.put(AppConstants.VALUE_KEY_STR, String.valueOf(timestampFromResponse));
+        mapTsValue.put(AppConstants.VALUE_KEY_STR, String.valueOf(timestampFromResponse));
       }
 
-      mapTS.put(AppConstants.CREATED_RESPONSE, mapTSValue);
+      mapTS.put(AppConstants.CREATED_RESPONSE, mapTsValue);
       responsesRow.getData().add(mapTS);
-
+      SavedActivityResponse savedActivityResponse =
+          new Gson().fromJson(new Gson().toJson(activityResponseMap), SavedActivityResponse.class);
       List<Object> results = savedActivityResponse.getResults();
       this.addResponsesToMap(responsesRow, results);
       responsesList.add(responsesRow);

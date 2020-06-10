@@ -1,5 +1,6 @@
 /*
  * Copyright © 2017-2019 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors.
+ * Copyright 2020 Google LLC
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction, including
  * without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
@@ -41,23 +42,17 @@ import com.harvard.R;
 
 public class PasscodeView extends ViewGroup {
 
-  private EditText mEditText;
-  private int mDigitCount;
-
-  private int mDigitWidth;
-  private int mDigitRadius;
-  private int mOuterStrokeWidth;
-  private int mInnerStrokeWidth;
-  private int mDigitSpacing;
-  private int mDigitElevation;
-
-  private int mControlColor;
-  private int mHighlightedColor;
-  private int mInnerColor;
-  private int mInnerBorderColor;
-
-  private OnFocusChangeListener mOnFocusChangeListener;
-  private PasscodeEntryListener mPasscodeEntryListener;
+  private EditText editText;
+  private int digitCount;
+  private int digitWidth;
+  private int digitRadius;
+  private int outerStrokeWidth;
+  private int innerStrokeWidth;
+  private int digitSpacing;
+  private int digitElevation;
+  private int innerColor;
+  private OnFocusChangeListener onFocusChangeListener;
+  private PasscodeEntryListener passcodeEntryListener;
 
   public PasscodeView(Context context) {
     this(context, null);
@@ -72,78 +67,78 @@ public class PasscodeView extends ViewGroup {
 
     // Get style information
     TypedArray array = getContext().obtainStyledAttributes(attrs, R.styleable.PasscodeView);
-    mDigitCount = array.getInt(R.styleable.PasscodeView_numDigits, 4);
+    digitCount = array.getInt(R.styleable.PasscodeView_numDigits, 4);
 
     // Dimensions
     DisplayMetrics metrics = getResources().getDisplayMetrics();
-    mDigitRadius =
+    digitRadius =
         array.getDimensionPixelSize(
             R.styleable.PasscodeView_digitRadius,
             (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 16, metrics));
-    mOuterStrokeWidth = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 2, metrics);
-    mInnerStrokeWidth = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 1, metrics);
-    mDigitWidth = (mDigitRadius + mOuterStrokeWidth) * 2;
+    outerStrokeWidth = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 2, metrics);
+    innerStrokeWidth = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 1, metrics);
+    digitWidth = (digitRadius + outerStrokeWidth) * 2;
 
-    mDigitSpacing = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 16, metrics);
+    digitSpacing = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 16, metrics);
 
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-      mDigitElevation = array.getDimensionPixelSize(R.styleable.PasscodeView_digitElevation, 0);
+      digitElevation = array.getDimensionPixelSize(R.styleable.PasscodeView_digitElevation, 0);
     }
 
     // Get theme to resolve defaults
     Resources.Theme theme = getContext().getTheme();
 
-    mControlColor = Color.DKGRAY;
+    int controlColor = Color.DKGRAY;
     // Text colour, default to android:colorControlNormal from theme
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-      TypedValue controlColor = new TypedValue();
-      theme.resolveAttribute(android.R.attr.colorControlNormal, controlColor, true);
-      mControlColor =
-          controlColor.resourceId > 0
-              ? getResources().getColor(controlColor.resourceId)
-              : controlColor.data;
+      TypedValue controlColor2 = new TypedValue();
+      theme.resolveAttribute(android.R.attr.colorControlNormal, controlColor2, true);
+      controlColor =
+              controlColor2.resourceId > 0
+              ? getResources().getColor(controlColor2.resourceId)
+              : controlColor2.data;
     }
-    mControlColor = array.getColor(R.styleable.PasscodeView_controlColor, mControlColor);
+    controlColor = array.getColor(R.styleable.PasscodeView_controlColor, controlColor);
 
     // Accent colour, default to android:colorAccent from theme
-    mHighlightedColor = Color.LTGRAY;
+    int highlightedColor = Color.LTGRAY;
 
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
       TypedValue accentColor = new TypedValue();
       theme.resolveAttribute(R.attr.colorControlHighlight, accentColor, true);
-      mHighlightedColor =
+      highlightedColor =
           accentColor.resourceId > 0
               ? getResources().getColor(accentColor.resourceId)
               : accentColor.data;
     }
-    mHighlightedColor =
-        array.getColor(R.styleable.PasscodeView_controlColorActivated, mHighlightedColor);
+    highlightedColor =
+        array.getColor(R.styleable.PasscodeView_controlColorActivated, highlightedColor);
 
     // color for the inner circle
-    mInnerColor = Color.CYAN;
+    innerColor = Color.CYAN;
 
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-      TypedValue innerColor = new TypedValue();
-      theme.resolveAttribute(android.R.attr.colorPrimary, innerColor, true);
-      mInnerColor =
-          innerColor.resourceId > 0
-              ? getResources().getColor(innerColor.resourceId)
-              : innerColor.data;
+      TypedValue innerColor2 = new TypedValue();
+      theme.resolveAttribute(android.R.attr.colorPrimary, innerColor2, true);
+      innerColor =
+              innerColor2.resourceId > 0
+              ? getResources().getColor(innerColor2.resourceId)
+              : innerColor2.data;
     }
-    mInnerColor = array.getColor(R.styleable.PasscodeView_digitColorFilled, mInnerColor);
+    innerColor = array.getColor(R.styleable.PasscodeView_digitColorFilled, innerColor);
 
     // color for the inner circle border
-    mInnerBorderColor = Color.GREEN;
+    int innerBorderColor = Color.GREEN;
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-      TypedValue innerBorderColor = new TypedValue();
-      theme.resolveAttribute(android.R.attr.colorPrimaryDark, innerBorderColor, true);
-      mInnerBorderColor =
-          innerBorderColor.resourceId > 0
-              ? getResources().getColor(innerBorderColor.resourceId)
-              : innerBorderColor.data;
+      TypedValue innerBorderColor2 = new TypedValue();
+      theme.resolveAttribute(android.R.attr.colorPrimaryDark, innerBorderColor2, true);
+      innerBorderColor =
+              innerBorderColor2.resourceId > 0
+              ? getResources().getColor(innerBorderColor2.resourceId)
+              : innerBorderColor2.data;
     }
-    mInnerBorderColor =
-        array.getColor(R.styleable.PasscodeView_digitColorBorder, mInnerBorderColor);
+    innerBorderColor =
+        array.getColor(R.styleable.PasscodeView_digitColorBorder, innerBorderColor);
 
     // Recycle the typed array
     array.recycle();
@@ -165,67 +160,67 @@ public class PasscodeView extends ViewGroup {
     }
 
     // Calculate the size of the view
-    int width = (mDigitWidth * mDigitCount) + (mDigitSpacing * (mDigitCount - 1));
+    int width = (digitWidth * digitCount) + (digitSpacing * (digitCount - 1));
     setMeasuredDimension(
-        width + getPaddingLeft() + getPaddingRight() + (mDigitElevation * 2),
-        mDigitWidth + getPaddingTop() + getPaddingBottom() + (mDigitElevation * 2));
+        width + getPaddingLeft() + getPaddingRight() + (digitElevation * 2),
+        digitWidth + getPaddingTop() + getPaddingBottom() + (digitElevation * 2));
   }
 
   @Override
   protected void onLayout(boolean changed, int l, int t, int r, int b) {
     // Position the child views
-    for (int i = 0; i < mDigitCount; i++) {
+    for (int i = 0; i < digitCount; i++) {
       View child = getChildAt(i);
-      int left = i * mDigitWidth + (i > 0 ? i * mDigitSpacing : 0);
+      int left = i * digitWidth + (i > 0 ? i * digitSpacing : 0);
       child.layout(
-          left + getPaddingLeft() + mDigitElevation,
-          getPaddingTop() + (mDigitElevation / 2),
-          left + getPaddingLeft() + mDigitElevation + mDigitWidth,
-          getPaddingTop() + (mDigitElevation / 2) + mDigitWidth);
+          left + getPaddingLeft() + digitElevation,
+          getPaddingTop() + (digitElevation / 2),
+          left + getPaddingLeft() + digitElevation + digitWidth,
+          getPaddingTop() + (digitElevation / 2) + digitWidth);
     }
 
     // Add the edit text as a 1px wide view to allow it to focus
-    getChildAt(mDigitCount).layout(0, 0, 1, getMeasuredHeight());
+    getChildAt(digitCount).layout(0, 0, 1, getMeasuredHeight());
   }
 
   private void setupViews() {
     setWillNotDraw(false);
     // Add a digit view for each digit
-    for (int i = 0; i < mDigitCount; i++) {
+    for (int i = 0; i < digitCount; i++) {
       DigitView digitView = new DigitView(getContext(), i);
       if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-        digitView.setElevation(mDigitElevation);
+        digitView.setElevation(digitElevation);
       }
       addView(digitView);
     }
 
     // Add an "invisible" edit text to handle input
-    mEditText = new EditText(getContext());
-    mEditText.setBackgroundColor(getResources().getColor(android.R.color.transparent));
-    mEditText.setTextColor(getResources().getColor(android.R.color.transparent));
-    mEditText.setCursorVisible(false);
-    mEditText.setFilters(new InputFilter[] {new InputFilter.LengthFilter(mDigitCount)});
-    mEditText.setInputType(InputType.TYPE_CLASS_NUMBER);
-    mEditText.setKeyListener(DigitsKeyListener.getInstance("1234567890"));
-    mEditText.setImeOptions(EditorInfo.IME_FLAG_NO_EXTRACT_UI);
-    mEditText.setOnFocusChangeListener(
+    editText = new EditText(getContext());
+    editText.setBackgroundColor(getResources().getColor(android.R.color.transparent));
+    editText.setTextColor(getResources().getColor(android.R.color.transparent));
+    editText.setCursorVisible(false);
+    editText.setFilters(new InputFilter[] {new InputFilter.LengthFilter(digitCount)});
+    editText.setInputType(InputType.TYPE_CLASS_NUMBER);
+    editText.setKeyListener(DigitsKeyListener.getInstance("1234567890"));
+    editText.setImeOptions(EditorInfo.IME_FLAG_NO_EXTRACT_UI);
+    editText.setOnFocusChangeListener(
         new OnFocusChangeListener() {
           @Override
           public void onFocusChange(View v, boolean hasFocus) {
             // Update the selected state of the views
-            int length = mEditText.getText().length();
+            int length = editText.getText().length();
             updateChilViewSelectionStates(length, hasFocus);
             // Make sure the cursor is at the end
-            mEditText.setSelection(length);
+            editText.setSelection(length);
 
             // Provide focus change events to any listener
-            if (mOnFocusChangeListener != null) {
-              mOnFocusChangeListener.onFocusChange(PasscodeView.this, hasFocus);
+            if (onFocusChangeListener != null) {
+              onFocusChangeListener.onFocusChange(PasscodeView.this, hasFocus);
             }
           }
         });
 
-    mEditText.addTextChangedListener(
+    editText.addTextChangedListener(
         new TextWatcher() {
           @Override
           public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
@@ -236,60 +231,60 @@ public class PasscodeView extends ViewGroup {
           @Override
           public void afterTextChanged(Editable s) {
             int length = s.length();
-            updateChilViewSelectionStates(length, mEditText.hasFocus());
+            updateChilViewSelectionStates(length, editText.hasFocus());
 
-            if (length == mDigitCount && mPasscodeEntryListener != null) {
-              mPasscodeEntryListener.onPasscodeEntered(s.toString());
+            if (length == digitCount && passcodeEntryListener != null) {
+              passcodeEntryListener.onPasscodeEntered(s.toString());
             }
           }
         });
-    addView(mEditText);
+    addView(editText);
 
     invalidate();
   }
 
   private void updateChilViewSelectionStates(int length, boolean hasFocus) {
-    for (int i = 0; i < mDigitCount; i++) {
+    for (int i = 0; i < digitCount; i++) {
       getChildAt(i).setSelected(hasFocus && i == length);
     }
   }
 
   /**
-   * Get the {@link Editable} from the EditText
+   * Get the {@link Editable} from the EditText.
    *
    * @return
    */
   public Editable getText() {
-    return mEditText.getText();
+    return editText.getText();
   }
 
   /**
-   * Set text to the EditText
+   * Set text to the EditText.
    *
    * @param text
    */
   public void setText(CharSequence text) {
-    if (text.length() > mDigitCount) {
-      text = text.subSequence(0, mDigitCount);
+    if (text.length() > digitCount) {
+      text = text.subSequence(0, digitCount);
     }
-    mEditText.setText(text);
+    editText.setText(text);
     invalidateChildViews();
   }
 
-  /** Clear passcode input */
+  /** Clear passcode input. */
   public void clearText() {
-    mEditText.setText("");
+    editText.setText("");
     invalidateChildViews();
   }
 
   private void invalidateChildViews() {
-    for (int i = 0; i < mDigitCount; i++) {
+    for (int i = 0; i < digitCount; i++) {
       getChildAt(i).invalidate();
     }
   }
 
-  public void setPasscodeEntryListener(PasscodeEntryListener mPasscodeEntryListener) {
-    this.mPasscodeEntryListener = mPasscodeEntryListener;
+  public void setPasscodeEntryListener(PasscodeEntryListener passcodeEntryListener) {
+    this.passcodeEntryListener = passcodeEntryListener;
   }
 
   @Override
@@ -301,32 +296,32 @@ public class PasscodeView extends ViewGroup {
     return super.onTouchEvent(event);
   }
 
-  /** Requests the view to be focused and the keyboard to be popped-up */
+  /** Requests the view to be focused and the keyboard to be popped-up. */
   public void requestToShowKeyboard() {
     // Make sure this view is focused
-    mEditText.requestFocus();
+    editText.requestFocus();
 
     // Show keyboard
     InputMethodManager inputMethodManager =
         (InputMethodManager) getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
-    inputMethodManager.showSoftInput(mEditText, 0);
+    inputMethodManager.showSoftInput(editText, 0);
   }
 
   @Override
   public OnFocusChangeListener getOnFocusChangeListener() {
-    return mOnFocusChangeListener;
+    return onFocusChangeListener;
   }
 
   @Override
   public void setOnFocusChangeListener(OnFocusChangeListener l) {
-    mOnFocusChangeListener = l;
+    onFocusChangeListener = l;
   }
 
   @Override
   protected Parcelable onSaveInstanceState() {
     Parcelable parcelable = super.onSaveInstanceState();
     SavedState savedState = new SavedState(parcelable);
-    savedState.editTextValue = mEditText.getText().toString();
+    savedState.editTextValue = editText.getText().toString();
     return savedState;
   }
 
@@ -334,8 +329,8 @@ public class PasscodeView extends ViewGroup {
   protected void onRestoreInstanceState(Parcelable state) {
     SavedState savedState = (SavedState) state;
     super.onRestoreInstanceState(savedState.getSuperState());
-    mEditText.setText(savedState.editTextValue);
-    mEditText.setSelection(savedState.editTextValue.length());
+    editText.setText(savedState.editTextValue);
+    editText.setSelection(savedState.editTextValue.length());
   }
 
   static class SavedState extends BaseSavedState {
@@ -372,12 +367,13 @@ public class PasscodeView extends ViewGroup {
 
   class DigitView extends View {
 
-    private Paint mOuterPaint, mInnerPaint;
-    private int mPosition = 0;
+    private Paint outerPaint;
+    private Paint innerPaint;
+    private int position = 0;
 
     public DigitView(Context context, int position) {
       this(context);
-      mPosition = position;
+      this.position = position;
     }
 
     public DigitView(Context context) {
@@ -399,28 +395,28 @@ public class PasscodeView extends ViewGroup {
       if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
         setLayerType(LAYER_TYPE_SOFTWARE, null);
       }
-      mOuterPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
-      mOuterPaint.setAlpha(255);
-      mOuterPaint.setDither(true);
-      mOuterPaint.setStyle(Paint.Style.STROKE);
-      mOuterPaint.setStrokeWidth(mOuterStrokeWidth);
-      mOuterPaint.setStrokeCap(Paint.Cap.ROUND);
-      mOuterPaint.setStrokeJoin(Paint.Join.ROUND);
+      outerPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+      outerPaint.setAlpha(255);
+      outerPaint.setDither(true);
+      outerPaint.setStyle(Paint.Style.STROKE);
+      outerPaint.setStrokeWidth(outerStrokeWidth);
+      outerPaint.setStrokeCap(Paint.Cap.ROUND);
+      outerPaint.setStrokeJoin(Paint.Join.ROUND);
 
-      mInnerPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
-      mInnerPaint.setAlpha(255);
-      mInnerPaint.setStyle(Paint.Style.FILL_AND_STROKE);
-      mInnerPaint.setStrokeWidth(mInnerStrokeWidth);
-      mInnerPaint.setStrokeCap(Paint.Cap.ROUND);
-      mInnerPaint.setStrokeJoin(Paint.Join.ROUND);
-      mInnerPaint.setColor(mInnerColor);
+      innerPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+      innerPaint.setAlpha(255);
+      innerPaint.setStyle(Paint.Style.FILL_AND_STROKE);
+      innerPaint.setStrokeWidth(innerStrokeWidth);
+      innerPaint.setStrokeCap(Paint.Cap.ROUND);
+      innerPaint.setStrokeJoin(Paint.Join.ROUND);
+      innerPaint.setColor(innerColor);
 
       invalidate();
     }
 
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-      setMeasuredDimension(mDigitWidth, mDigitWidth);
+      setMeasuredDimension(digitWidth, digitWidth);
     }
 
     @Override
@@ -428,22 +424,22 @@ public class PasscodeView extends ViewGroup {
       float center = getWidth() / 2;
 
       if (isSelected()) {
-        mOuterPaint.setColor(getResources().getColor(R.color.colorPrimary));
+        outerPaint.setColor(getResources().getColor(R.color.colorPrimary));
       } else {
-        mOuterPaint.setColor(getResources().getColor(R.color.colorSecondaryBg));
+        outerPaint.setColor(getResources().getColor(R.color.colorSecondaryBg));
       }
       canvas.drawColor(Color.TRANSPARENT);
-      canvas.drawCircle(center, center, mDigitRadius, mOuterPaint);
-      if (mEditText.getText().length() > mPosition) {
-        canvas.drawCircle(center, center, mDigitRadius, mInnerPaint);
+      canvas.drawCircle(center, center, digitRadius, outerPaint);
+      if (editText.getText().length() > position) {
+        canvas.drawCircle(center, center, digitRadius, innerPaint);
       }
     }
   }
 
-  /** Listener that gets notified when the complete passcode has been entered */
+  /** Listener that gets notified when the complete passcode has been entered. */
   public interface PasscodeEntryListener {
     /**
-     * Called when all the digits of the passcode has been entered
+     * Called when all the digits of the passcode has been entered.
      *
      * @param passcode - The entered passcode
      */

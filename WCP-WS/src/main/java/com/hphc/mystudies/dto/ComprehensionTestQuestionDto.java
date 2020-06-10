@@ -73,7 +73,7 @@ public class ComprehensionTestQuestionDto implements Serializable {
   private Integer modifiedBy;
 
   @Column(name = "modified_on")
-  private Integer modifiedOn;
+  private String modifiedOn;
 
   @Column(name = "study_version")
   private Integer studyVersion = 1;
@@ -148,11 +148,11 @@ public class ComprehensionTestQuestionDto implements Serializable {
     this.modifiedBy = modifiedBy;
   }
 
-  public Integer getModifiedOn() {
+  public String getModifiedOn() {
     return modifiedOn;
   }
 
-  public void setModifiedOn(Integer modifiedOn) {
+  public void setModifiedOn(String modifiedOn) {
     this.modifiedOn = modifiedOn;
   }
 
