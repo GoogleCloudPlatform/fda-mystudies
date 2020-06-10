@@ -623,13 +623,14 @@ public class AuthenticationController {
             new User(participantDetails.getEmailId(), participantDetails.getPassword(), roles);
 
         if (loginAttempts != null && loginAttempts.getAttempts() == maxAttemptsCount) {
+          logger.info("AuthenticationController login() - max attempts logged");
           int count = Integer.parseInt(appConfig.getExpirationLoginAttemptsMinute());
           Date attemptsExpireDate =
               MyStudiesUserRegUtil.addMinutes(loginAttempts.getLastModified().toString(), count);
 
           if (attemptsExpireDate.before(MyStudiesUserRegUtil.getCurrentUtilDateTime())
               || attemptsExpireDate.equals(MyStudiesUserRegUtil.getCurrentUtilDateTime())) {
-
+            logger.info("AuthenticationController login() - reset login attempts");
             userDetailsService.resetLoginAttempts(loginRequest.getEmailId());
             loginResp =
                 getLoginInformation(
@@ -668,6 +669,7 @@ public class AuthenticationController {
                   response);
         }
         if (loginResp != null && loginResp.getCode() != ErrorCode.EC_200.code()) {
+          logger.info("AuthenticationController login() - getLoginInformation resp is not ok");
           if (loginResp.getCode() == ErrorCode.EC_113.code()) {
             loginResp.setMessage(MyStudiesUserRegUtil.ErrorCodes.CONNECTION_ERROR_MSG.getValue());
             MyStudiesUserRegUtil.getFailureResponse(
@@ -722,6 +724,7 @@ public class AuthenticationController {
         String eventName = AppConstants.AUDIT_EVENT_SIGN_IN_NAME;
         String eventDesc = AppConstants.AUDIT_EVENT_SIGN_IN_DESC;
         if (loginResp.isResetPassword()) {
+          logger.info("AuthenticationController login() - isResetPassword");
           eventName = AppConstants.AUDIT_EVENT_SIGN_IN_WITH_TMP_PASSD_NAME;
           eventDesc = AppConstants.AUDIT_EVENT_SIGN_IN_WITH_TMP_PASSD_DESC;
         }
@@ -741,7 +744,7 @@ public class AuthenticationController {
             String.format(
                 AppConstants.AUDIT_EVENT_FAILED_SIGN_IN_WRONG_EMAIL_DESC,
                 loginRequest.getEmailId()));
-        logger.info("AuthenticationController login() - ends with account deactivated");
+        logger.warning("AuthenticationController login() - ends with account deactivated.");
         return new ResponseEntity<>(loginResp, HttpStatus.UNAUTHORIZED);
       }
     } catch (PasswordExpiredException e) {
@@ -761,6 +764,7 @@ public class AuthenticationController {
       logger.error("AuthenticationController login() - error with INTERNAL_SERVER_ERROR: ", e);
       return new ResponseEntity<>(loginResp, HttpStatus.INTERNAL_SERVER_ERROR);
     }
+    logger.warning("AuthenticationController login() - return OK");
     return new ResponseEntity<>(loginResp, HttpStatus.OK);
   }
 
@@ -1244,7 +1248,7 @@ public class AuthenticationController {
       if (participantDetails != null
           && LocalDateTime.now(ZoneId.systemDefault())
               .isBefore(participantDetails.getPasswordExpireDate())) {
-        logger.info("TRUE");
+        logger.info("password is valid");
       } else throw new PasswordExpiredException();
 
       if (participantDetails.getPassword() != null

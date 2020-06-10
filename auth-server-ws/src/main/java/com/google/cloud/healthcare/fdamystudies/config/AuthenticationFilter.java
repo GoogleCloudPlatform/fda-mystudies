@@ -31,7 +31,7 @@ import com.google.cloud.healthcare.fdamystudies.utils.MyStudiesUserRegUtil;
 @Component
 public class AuthenticationFilter implements Filter {
 
-  private static Logger logger = LoggerFactory.getLogger(AuthenticationFilter.class);
+  private static java.util.logging.Logger logger = LoggerFactory.getLogger(AuthenticationFilter.class);
 
   @Override
   public void init(final FilterConfig filterConfig) throws ServletException {
@@ -41,8 +41,6 @@ public class AuthenticationFilter implements Filter {
   @Override
   public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
       throws IOException, ServletException {
-
-    logger.info("AuthenticationFilter doFilter() - starts");
 
     HttpServletRequest httpServletRequest = (HttpServletRequest) request;
     HttpServletResponse httpServletResponse = (HttpServletResponse) response;
@@ -70,7 +68,6 @@ public class AuthenticationFilter implements Filter {
           isValid = true;
           setCommonHeaders(httpServletResponse);
           chain.doFilter(request, response);
-          logger.info(AppConstants.AUTHENTICATION_FILTER_ENDS);
         } else {
           if ((accessToken != null)
               && !StringUtils.isEmpty(accessToken)
@@ -92,7 +89,6 @@ public class AuthenticationFilter implements Filter {
                 if (isValidAccessToken == 1) {
                   setCommonHeaders(httpServletResponse);
                   chain.doFilter(request, response);
-                  logger.info(AppConstants.AUTHENTICATION_FILTER_ENDS);
                 } else if (isValidAccessToken == 2) {
                   if (response instanceof HttpServletResponse) {
                     setCommonHeaders(httpServletResponse);
@@ -106,7 +102,7 @@ public class AuthenticationFilter implements Filter {
                         MyStudiesUserRegUtil.ErrorCodes.INVALID_ACCESS_TOKEN_USER_ID.getValue());
 
                     httpServletResponse.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-                    logger.info(AppConstants.AUTHENTICATION_FILTER_ENDS);
+                    logger.warning("AuthenticationFilter doFilter(): invalid access token user id");
                   }
                 } else {
                   if (response instanceof HttpServletResponse) {
@@ -121,7 +117,7 @@ public class AuthenticationFilter implements Filter {
                         MyStudiesUserRegUtil.ErrorCodes.SESSION_EXPIRED_MSG.getValue());
 
                     httpServletResponse.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-                    logger.info(AppConstants.AUTHENTICATION_FILTER_ENDS);
+                    logger.warning("AuthenticationFilter doFilter(): session expired");
                   }
                 }
 
@@ -134,7 +130,7 @@ public class AuthenticationFilter implements Filter {
                     MyStudiesUserRegUtil.ErrorCodes.INVALID_CLIENT_TOKEN.getValue());
 
                 httpServletResponse.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-                logger.info(AppConstants.AUTHENTICATION_FILTER_ENDS);
+                logger.warning("AuthenticationFilter doFilter(): invalid client token");
               }
 
             } catch (Exception e) {
@@ -148,10 +144,9 @@ public class AuthenticationFilter implements Filter {
                   AppConstants.MESSAGE,
                   MyStudiesUserRegUtil.ErrorCodes.CONNECTION_ERROR_MSG.getValue());
               httpServletResponse.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-              logger.info(AppConstants.AUTHENTICATION_FILTER_ENDS);
             }
           } else {
-            logger.info("Invalid Request");
+            logger.warning("AuthenticationFilter doFilter(): Invalid Request");
             setCommonHeaders(httpServletResponse);
             httpServletResponse.setHeader(AppConstants.STATUS, "400");
             httpServletResponse.setHeader(
@@ -160,7 +155,6 @@ public class AuthenticationFilter implements Filter {
                 AppConstants.MESSAGE,
                 MyStudiesUserRegUtil.ErrorCodes.INVALID_INPUT_ERROR_MSG.getValue());
             httpServletResponse.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-            logger.info(AppConstants.AUTHENTICATION_FILTER_ENDS);
           }
         }
       } else {
