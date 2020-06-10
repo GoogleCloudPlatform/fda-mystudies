@@ -6,8 +6,7 @@ import {Location} from '@angular/common';
 @Injectable()
 export class EntityService {
   baseUrl = 'http://<IP>:<port>/urwebapp';
-  headersFromService: {};
-  serviceUrl: string;
+  serviceUrl: string = '';
   constructor(private http: HttpClient) {}
 
   post(bodydata: any, urlpath: string): Observable<any> {
