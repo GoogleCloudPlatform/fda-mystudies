@@ -559,7 +559,7 @@ public class AuthenticationController {
           new User(participantDetails.getEmailId(), participantDetails.getPassword(), roles);
 
       if (lockedAccountTempPasswordCheck(loginRequest.getPassword(), participantDetails)
-          && checkTempPasswordExpireForLockedAccount(participantDetails)) {
+          && !isInLockPeriod(participantDetails)) {
         logger.info("AuthenticationController login() - ends with Temp Password Expired");
         throw new PasswordExpiredException();
       }
@@ -927,7 +927,7 @@ public class AuthenticationController {
           if (checkOldPassword(changePasswordBean, userInfo)) {
 
             if (isLockedAccountTempPassword(changePasswordBean, userInfo)
-                && checkTempPasswordExpireForLockedAccount(userInfo)) {
+                && !isInLockPeriod(userInfo)) {
               throw new PasswordExpiredException();
             }
 
@@ -1199,8 +1199,6 @@ public class AuthenticationController {
         && AppConstants.VERIDIED.equalsIgnoreCase(
             participantDetails.getEmailVerificationStatus())) {
       responseBean.setVerified(true);
-    } else {
-      responseBean.setVerified(false);
     }
     responseBean.setRefreshToken(authInfo.getRefreshToken());
     responseBean.setAccessToken(authInfo.getAccessToken());
@@ -1321,12 +1319,6 @@ public class AuthenticationController {
     return participantDetails.getLockedAccountTempPasswordExpiredDate() != null
         && LocalDateTime.now(ZoneId.systemDefault())
             .isBefore(participantDetails.getLockedAccountTempPasswordExpiredDate());
-  }
-
-  private boolean checkTempPasswordExpireForLockedAccount(DaoUserBO participantDetails) {
-    return participantDetails.getLockedAccountTempPasswordExpiredDate() != null
-        && LocalDateTime.now(ZoneId.systemDefault())
-            .isAfter(participantDetails.getLockedAccountTempPasswordExpiredDate());
   }
 
   private boolean verifyUserRegistrationRequest(
