@@ -88,7 +88,7 @@ public class HttpRequest {
         String encoding = Base64.encodeToString(basicAuth.getBytes(), Base64.DEFAULT);
         urlConnection.setRequestProperty("Authorization", "Basic " + encoding);
         urlConnection.setRequestProperty(AppConfig.WCP_APP_ID_KEY, AppConfig.APP_ID_VALUE);
-        urlConnection.setRequestProperty(AppConfig.ORG_ID_KEY, "OrgName");
+        urlConnection.setRequestProperty(AppConfig.ORG_ID_KEY, AppConfig.ORG_ID_VALUE);
       }
 
       if (headersData != null) {
@@ -209,7 +209,7 @@ public class HttpRequest {
         String encoding = Base64.encodeToString(basicAuth.getBytes(), Base64.DEFAULT);
         conn.setRequestProperty("Authorization", "Basic " + encoding);
         conn.setRequestProperty(AppConfig.WCP_APP_ID_KEY, AppConfig.APP_ID_VALUE);
-        conn.setRequestProperty(AppConfig.ORG_ID_KEY, "OrgName");
+        conn.setRequestProperty(AppConfig.ORG_ID_KEY, AppConfig.ORG_ID_VALUE);
       }
 
       if (headersData != null) {
@@ -332,7 +332,7 @@ public class HttpRequest {
         String encoding = Base64.encodeToString(basicAuth.getBytes(), Base64.DEFAULT);
         conn.setRequestProperty("Authorization", "Basic " + encoding);
         conn.setRequestProperty(AppConfig.WCP_APP_ID_KEY, AppConfig.APP_ID_VALUE);
-        conn.setRequestProperty(AppConfig.ORG_ID_KEY, "OrgName");
+        conn.setRequestProperty(AppConfig.ORG_ID_KEY, AppConfig.ORG_ID_VALUE);
       }
 
       if (headersData != null) {
@@ -455,7 +455,7 @@ public class HttpRequest {
         String encoding = Base64.encodeToString(basicAuth.getBytes(), Base64.DEFAULT);
         conn.setRequestProperty("Authorization", "Basic " + encoding);
         conn.setRequestProperty(AppConfig.WCP_APP_ID_KEY, AppConfig.APP_ID_VALUE);
-        conn.setRequestProperty(AppConfig.ORG_ID_KEY, "OrgName");
+        conn.setRequestProperty(AppConfig.ORG_ID_KEY, AppConfig.ORG_ID_VALUE);
       }
 
       if (headersData != null) {
@@ -593,7 +593,7 @@ public class HttpRequest {
         String encoding = Base64.encodeToString(basicAuth.getBytes(), Base64.DEFAULT);
         httpConn.setRequestProperty("Authorization", "Basic " + encoding);
         httpConn.setRequestProperty(AppConfig.WCP_APP_ID_KEY, AppConfig.APP_ID_VALUE);
-        httpConn.setRequestProperty(AppConfig.ORG_ID_KEY, "OrgName");
+        httpConn.setRequestProperty(AppConfig.ORG_ID_KEY, AppConfig.ORG_ID_VALUE);
       }
 
       OutputStream outputStream = httpConn.getOutputStream();
@@ -956,7 +956,7 @@ public class HttpRequest {
           String encoding = Base64.encodeToString(basicAuth.getBytes(), Base64.DEFAULT);
           conn.setRequestProperty("Authorization", "Basic " + encoding);
           conn.setRequestProperty(AppConfig.WCP_APP_ID_KEY, AppConfig.APP_ID_VALUE);
-          conn.setRequestProperty(AppConfig.ORG_ID_KEY, "OrgName");
+          conn.setRequestProperty(AppConfig.ORG_ID_KEY, AppConfig.ORG_ID_VALUE);
         }
 
         if (headersData != null) {
@@ -1161,7 +1161,7 @@ public class HttpRequest {
           String encoding = Base64.encodeToString(basicAuth.getBytes(), Base64.DEFAULT);
           conn.setRequestProperty("Authorization", "Basic " + encoding);
           conn.setRequestProperty(AppConfig.WCP_APP_ID_KEY, AppConfig.APP_ID_VALUE);
-          conn.setRequestProperty(AppConfig.ORG_ID_KEY, "OrgName");
+          conn.setRequestProperty(AppConfig.ORG_ID_KEY, AppConfig.ORG_ID_VALUE);
         }
 
         if (headersData != null) {
