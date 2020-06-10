@@ -83,7 +83,6 @@ public class EnrollmentTokenControllerTest extends BaseMockIT {
   public void validateEnrollmentTokenUnAuthorised() throws Exception {
     // without userId header
     HttpHeaders headers = TestUtils.getCommonHeaders();
-    headers.add(Constants.USER_ID_HEADER, "");
 
     String requestJson = getEnrollmentJson(Constants.TOKEN, Constants.STUDYOF_HEALTH);
     performPost(VALIDATE_ENROLLMENT_TOKEN_PATH, requestJson, headers, "", UNAUTHORIZED);
@@ -146,7 +145,6 @@ public class EnrollmentTokenControllerTest extends BaseMockIT {
 
     // without userId header
     HttpHeaders headers = TestUtils.getCommonHeaders();
-    headers.add(Constants.USER_ID_HEADER, "");
 
     String requestJson = getEnrollmentJson(Constants.TOKEN_NEW, Constants.STUDYOF_HEALTH);
     performPost(ENROLL_PATH, requestJson, headers, "", UNAUTHORIZED);
