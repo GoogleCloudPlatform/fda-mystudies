@@ -55,7 +55,7 @@ public class EligibilityBo implements Serializable {
   private String createdOn;
 
   @Column(name = "eligibility_mechanism")
-  private Integer eligibilityMechanism = 3;
+  private Integer eligibilityMechanism = 1;
 
   @Column(name = "failure_outcome_text")
   private String failureOutcomeText;
