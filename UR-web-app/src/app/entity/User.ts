@@ -1,33 +1,33 @@
 export class User {
-    id: number;
+    id: number = 0;
 
-    authToken: string;
+    authToken: string = '';
 
-    email: String;
+    email: String = '';
 
-    firstName: String
+    firstName: String = '';
 
-    lastName: String;
+    lastName: String = '';
 
-    phoneNumber: String;
+    phoneNumber: String = '';
 
-    emailChanged: number;
+    emailChanged: number = 0;
 
-    status: number ;
+    status: number = 0;
 
-    manageUsers: number;
+    manageUsers: number = 0;
 
-    manageLocations:number;
+    manageLocations:number = 0;
 
-    urAdminAuthId: string;
+    urAdminAuthId: string = '';
 
-    created:String;
+    created: string = '';
 
-    createdBy: number;
+    createdBy: number = 0;
 
-    newPassword: String;
+    newPassword: string = '';
 
-    password: String;
+    password: string = '';
 
-    confirmPassword: string;
+    confirmPassword: string = '';
 }
