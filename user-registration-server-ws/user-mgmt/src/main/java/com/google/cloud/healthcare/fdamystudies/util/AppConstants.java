@@ -83,4 +83,6 @@ public class AppConstants {
   public static final String SUCCESS_RESPONSE = "SuccessResponse";
   public static final String EMAIL_EXISTS_RESPONSE = "EmailExistsResponse";
   public static final String INVALID_APPID_AND_ORGID = "INVALID_APPID_AND_ORGID";
+  public static final Integer EMAILID_VERIFIED_STATUS = 1;
+  public static final String EMAIL_NOT_EXISTS = "EMAIL_NOT_EXISTS";
 }

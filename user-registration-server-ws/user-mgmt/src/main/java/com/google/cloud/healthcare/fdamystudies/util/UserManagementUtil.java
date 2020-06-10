@@ -131,50 +131,28 @@ public class UserManagementUtil {
   }
 
   public UpdateAccountInfoResponseBean updateUserInfoInAuthServer(
-      UpdateAccountInfo accountInfo, String userId)
-      throws SystemException, InvalidRequestException {
+      UpdateAccountInfo accountInfo, String userId) {
     logger.info("(Util)....UserManagementUtil.updateUserInfoInAuthServer()......STARTED");
-    UpdateAccountInfoResponseBean authResponse = null;
 
     HttpHeaders headers = new HttpHeaders();
     headers.setContentType(MediaType.APPLICATION_JSON);
     headers.set(AppConstants.USER_ID, userId);
 
     HttpEntity<UpdateAccountInfo> request = new HttpEntity<>(accountInfo, headers);
-    ObjectMapper objectMapper = null;
-    try {
+    ResponseEntity<?> responseEntity = null;
 
-      ResponseEntity<?> responseEntity =
+    try {
+      responseEntity =
           restTemplate.exchange(
               appConfig.getAuthServerUpdateStatusUrl(), HttpMethod.POST, request, String.class);
-
-      if (responseEntity.getStatusCode() == HttpStatus.OK) {
-        String body = (String) responseEntity.getBody();
-        objectMapper = new ObjectMapper();
-
-        try {
-          authResponse = objectMapper.readValue(body, UpdateAccountInfoResponseBean.class);
-          return authResponse;
-        } catch (JsonParseException e) {
-          return authResponse;
-        } catch (JsonMappingException e) {
-          return authResponse;
-        } catch (IOException e) {
-          return authResponse;
-        }
-      } else {
-        return authResponse;
-      }
+      return new UpdateAccountInfoResponseBean(
+          responseEntity.getStatusCodeValue(), responseEntity.getStatusCode().getReasonPhrase());
 
     } catch (RestClientResponseException e) {
-
-      if (e.getRawStatusCode() == 400) {
-        logger.info("(Util)....UserRegistrationController.updateUserInfoInAuthServer()......ENDED");
-        throw new InvalidRequestException();
-      } else {
-        logger.info("(Util)....UserRegistrationController.updateUserInfoInAuthServer()......ENDED");
-        throw new SystemException();
-      }
+      logger.info("(Util)....UserRegistrationController.updateUserInfoInAuthServer()......ENDED");
+      return new UpdateAccountInfoResponseBean(
+          HttpStatus.INTERNAL_SERVER_ERROR.value(),
+          HttpStatus.INTERNAL_SERVER_ERROR.getReasonPhrase());
     }
   }
 

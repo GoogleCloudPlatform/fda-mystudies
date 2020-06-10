@@ -50,9 +50,6 @@ public class MyStudiesUserRegUtil {
     STATUS_129("129"), // Client Id is missing
     STATUS_130("130"), // Secret Key is missing
 
-    STATUS_400("400"),
-    STATUS_401("401"),
-
     EC_500("500"), // Internal Server Error
 
     INVALID_EMAILID("Enter a valid emailId"),

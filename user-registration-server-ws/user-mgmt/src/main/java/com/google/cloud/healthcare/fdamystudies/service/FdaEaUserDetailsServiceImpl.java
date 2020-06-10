@@ -10,19 +10,21 @@ package com.google.cloud.healthcare.fdamystudies.service;
 
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import org.apache.commons.lang3.SerializationUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import com.google.cloud.healthcare.fdamystudies.beans.UpdateAccountInfo;
+import com.google.cloud.healthcare.fdamystudies.beans.UpdateAccountInfoResponseBean;
 import com.google.cloud.healthcare.fdamystudies.dao.FdaEaUserDetailsDao;
-import com.google.cloud.healthcare.fdamystudies.exceptions.InvalidEmailCodeException;
-import com.google.cloud.healthcare.fdamystudies.exceptions.InvalidRequestException;
-import com.google.cloud.healthcare.fdamystudies.exceptions.InvalidUserIdException;
 import com.google.cloud.healthcare.fdamystudies.exceptions.SystemException;
 import com.google.cloud.healthcare.fdamystudies.model.AuthInfoBO;
 import com.google.cloud.healthcare.fdamystudies.model.UserAppDetailsBO;
 import com.google.cloud.healthcare.fdamystudies.model.UserDetailsBO;
+import com.google.cloud.healthcare.fdamystudies.util.AppConstants;
+import com.google.cloud.healthcare.fdamystudies.util.UserManagementUtil;
 
 @Service
 public class FdaEaUserDetailsServiceImpl implements FdaEaUserDetailsService {
@@ -34,6 +36,8 @@ public class FdaEaUserDetailsServiceImpl implements FdaEaUserDetailsService {
   @Autowired private UserAppDetailsService userAppDetailsService;
 
   @Autowired private FdaEaUserDetailsDao userDetailsDao;
+
+  @Autowired private UserManagementUtil userManagementUtil;
 
   @Override
   @Transactional
@@ -77,41 +81,46 @@ public class FdaEaUserDetailsServiceImpl implements FdaEaUserDetailsService {
   }
 
   @Override
-  public boolean verifyCode(String code, String userId)
-      throws InvalidUserIdException, InvalidEmailCodeException, SystemException {
-
-    logger.info("FdaEaUserDetailsServiceImpl verifyCode() - startes");
-    boolean response = false;
-    UserDetailsBO daoResopnse = null;
-    if (userId != null) {
-      daoResopnse = userDetailsDao.loadEmailCodeByUserId(userId);
-
-      if (daoResopnse != null) {
-        if (code.equals(daoResopnse.getEmailCode())
-            && LocalDateTime.now().isBefore(daoResopnse.getCodeExpireDate())) {
-          logger.info("(S)......OTP CODE VERIFIED as true");
-          return true;
-        } else {
-          logger.info("FdaEaUserDetailsServiceImpl verifyCode() - ends");
-          throw new InvalidEmailCodeException();
-        }
-      } else {
-        logger.info("FdaEaUserDetailsServiceImpl verifyCode() - ends");
-        throw new InvalidUserIdException();
-      }
+  public boolean verifyCode(String code, UserDetailsBO participantDetails) throws SystemException {
+    logger.info("FdaEaUserDetailsServiceImpl verifyCode() - starts");
+    boolean result = code == null || participantDetails == null;
+    if (result) {
+      throw new IllegalArgumentException();
     }
-    return response;
+    if (code.equals(participantDetails.getEmailCode())
+        && LocalDateTime.now().isBefore(participantDetails.getCodeExpireDate())) {
+      return true;
+    } else {
+      logger.info("FdaEaUserDetailsServiceImpl verifyCode() - ends");
+      return false;
+    }
   }
 
   @Override
-  public boolean updateStatus(UserDetailsBO participantDetails)
-      throws InvalidRequestException, SystemException {
+  public boolean updateStatus(UserDetailsBO participantDetails) {
     logger.info("FdaEaUserDetailsServiceImpl updateStatus() - starts");
-    if (participantDetails != null) {
-      return userDetailsDao.updateStatus(participantDetails);
-    } else {
-      logger.info("FdaEaUserDetailsServiceImpl updateStatus() - ends");
-      return false;
+    UserDetailsBO userDetailsBO = SerializationUtils.clone(participantDetails);
+    userDetailsBO.setUserDetailsId(participantDetails.getUserDetailsId());
+    userDetailsBO.setEmailCode(null);
+    userDetailsBO.setCodeExpireDate(null);
+    userDetailsBO.setStatus(
+        AppConstants.EMAILID_VERIFIED_STATUS); // status 1--->> user's emailId verified
+    boolean status = userDetailsDao.updateStatus(userDetailsBO);
+
+    if (status) {
+      UpdateAccountInfo accountStatus = new UpdateAccountInfo();
+      accountStatus.setEmailVerified(true);
+      UpdateAccountInfoResponseBean value =
+          userManagementUtil.updateUserInfoInAuthServer(
+              accountStatus, participantDetails.getUserId());
+      if (value.getHttpStatusCode() != 200) {
+        status = false; // rolling back in registration server and returning false.
+        boolean rollbackStatus = userDetailsDao.updateStatus(participantDetails);
+        if (!rollbackStatus) {
+          logger.error("Failed to rollback email status.");
+        }
+      }
     }
+    return status;
   }
 }

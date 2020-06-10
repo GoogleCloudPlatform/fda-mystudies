@@ -9,9 +9,6 @@
 package com.google.cloud.healthcare.fdamystudies.service;
 
 import org.springframework.transaction.annotation.Transactional;
-import com.google.cloud.healthcare.fdamystudies.exceptions.InvalidEmailCodeException;
-import com.google.cloud.healthcare.fdamystudies.exceptions.InvalidRequestException;
-import com.google.cloud.healthcare.fdamystudies.exceptions.InvalidUserIdException;
 import com.google.cloud.healthcare.fdamystudies.exceptions.SystemException;
 import com.google.cloud.healthcare.fdamystudies.model.UserDetailsBO;
 
@@ -22,9 +19,7 @@ public interface FdaEaUserDetailsService {
 
   UserDetailsBO loadUserDetailsByUserId(String userId) throws SystemException;
 
-  boolean verifyCode(String code, String userId)
-      throws SystemException, InvalidEmailCodeException, InvalidUserIdException;
+  boolean verifyCode(String code, UserDetailsBO participantDetails) throws SystemException;
 
-  boolean updateStatus(UserDetailsBO participantDetails)
-      throws InvalidRequestException, SystemException;
+  boolean updateStatus(UserDetailsBO participantDetails);
 }

@@ -8,7 +8,9 @@
 
 package com.google.cloud.healthcare.fdamystudies.dao;
 
+import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
+import javax.persistence.PersistenceContext;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
@@ -17,23 +19,20 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
-import com.google.cloud.healthcare.fdamystudies.beans.UpdateAccountInfo;
-import com.google.cloud.healthcare.fdamystudies.exceptions.InvalidRequestException;
 import com.google.cloud.healthcare.fdamystudies.exceptions.SystemException;
 import com.google.cloud.healthcare.fdamystudies.model.AuthInfoBO;
 import com.google.cloud.healthcare.fdamystudies.model.UserAppDetailsBO;
 import com.google.cloud.healthcare.fdamystudies.model.UserDetailsBO;
 import com.google.cloud.healthcare.fdamystudies.repository.UserDetailsBORepository;
-import com.google.cloud.healthcare.fdamystudies.util.UserManagementUtil;
 
 @Repository
 public class FdaEaUserDetailsDaoImpl implements FdaEaUserDetailsDao {
 
   @Autowired private UserDetailsBORepository repository;
 
-  @Autowired private UserManagementUtil userManagementUtil;
-
   @Autowired private EntityManagerFactory entityManagerFactory;
+
+  @PersistenceContext private EntityManager entityManager;
 
   private static final Logger logger = LoggerFactory.getLogger(FdaEaUserDetailsDaoImpl.class);
 
@@ -90,46 +89,15 @@ public class FdaEaUserDetailsDaoImpl implements FdaEaUserDetailsDao {
   }
 
   @Override
-  public boolean updateStatus(UserDetailsBO participantDetails)
-      throws InvalidRequestException, SystemException {
+  @Transactional
+  public boolean updateStatus(UserDetailsBO participantDetails) {
 
     logger.info("FdaEaUserDetailsDaoImpl updateStatus() - starts");
-    if (participantDetails != null) {
-      Transaction transaction = null;
-      try (Session session = entityManagerFactory.unwrap(SessionFactory.class).openSession()) {
-        transaction = session.beginTransaction();
-
-        participantDetails.setEmailCode(null);
-        participantDetails.setCodeExpireDate(null);
-        participantDetails.setStatus(1); // status 1--->> user's emailId verified
-        session.update(participantDetails);
-
-        UpdateAccountInfo accountStatus = new UpdateAccountInfo();
-        accountStatus.setEmailVerified(true);
-        userManagementUtil.updateUserInfoInAuthServer(
-            accountStatus, participantDetails.getUserId());
-
-        transaction.commit();
-        return true;
-      } catch (Exception e) {
-        logger.error("FdaEaUserDetailsDaoImpl updateStatus(): ", e);
-        if (transaction != null) {
-          try {
-            transaction.rollback();
-          } catch (Exception e1) {
-            logger.error("FdaEaUserDetailsDaoImpl updateStatus(): ", e);
-          }
-        }
-        if (e instanceof InvalidRequestException) {
-          throw new InvalidRequestException();
-        } else {
-          throw new SystemException();
-        }
-      }
-    } else {
-      logger.info("FdaEaUserDetailsDaoImpl updateStatus() - ends");
-      return false;
+    if (participantDetails == null) {
+      throw new IllegalArgumentException();
     }
+    entityManager.merge(participantDetails);
+    return true;
   }
 
   @Override
