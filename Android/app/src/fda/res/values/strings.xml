@@ -5,7 +5,7 @@
 
 <resources>
     <string name="app_name">&app_name;</string>
-    <string name="poweredby">Powered by MyStudies on Google Cloud</string>
+    <string name="poweredby">Powered by Google Cloud</string>
     <string name="website"></string>
     <string name="websitetxt">https://cloud.google.com/healthcare</string>
     <string name="gateway_des">MyStudies Demo Application</string>
