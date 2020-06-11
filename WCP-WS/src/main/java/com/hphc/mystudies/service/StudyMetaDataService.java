@@ -890,9 +890,7 @@ public class StudyMetaDataService {
   @Consumes(MediaType.APPLICATION_XML)
   @Path("ping")
   public String ping() {
-    LOGGER.info("INFO: StudyMetaDataService - ping() :: Starts ");
     String response = "It Works!";
-    LOGGER.info("INFO: StudyMetaDataService - ping() :: Ends ");
     return response;
   }
 
