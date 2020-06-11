@@ -11,8 +11,8 @@ package com.google.cloud.healthcare.fdamystudies.controller;
 import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.core.Context;
 import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -37,7 +37,7 @@ import com.google.cloud.healthcare.fdamystudies.util.UserManagementUtil;
 @RestController
 public class VerifyEmailIdController {
 
-  private static final Logger logger = LoggerFactory.getLogger(VerifyEmailIdController.class);
+  private static final Logger logger = LogManager.getLogger(VerifyEmailIdController.class);
 
   @Autowired private FdaEaUserDetailsService userDetailsService;
 
