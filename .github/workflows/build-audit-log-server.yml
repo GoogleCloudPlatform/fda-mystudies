@@ -18,8 +18,8 @@ jobs:
           cd common-tests
           mvn -B package --file pom.xml
 
-          cd common-service
+          cd ../common-service
           mvn -B package --file pom.xml
 
-          cd audit-log-service
+          cd ../audit-log-service
           mvn -B package --file pom.xml          
