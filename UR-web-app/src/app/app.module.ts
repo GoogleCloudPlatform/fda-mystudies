@@ -3,7 +3,7 @@ import {NgModule} from '@angular/core';
 import {AppComponent} from './app.component';
 import {EntityService} from './service/entity.service';
 import {AuthService} from '../app/service/auth.service';
-import {httpInterceptorProviders} from './http-interceptors/index';
+import {httpInterceptorProviders} from './http-interceptors/http-auth';
 
 @NgModule({
   declarations: [AppComponent],
