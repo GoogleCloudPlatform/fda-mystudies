@@ -15,5 +15,11 @@ jobs:
         java-version: 1.8
     - name: Build with Maven
       run: |
-          cd audit-log-service
+          cd common-tests
           mvn -B package --file pom.xml
+
+          cd common-service
+          mvn -B package --file pom.xml
+
+          cd audit-log-service
+          mvn -B package --file pom.xml          
