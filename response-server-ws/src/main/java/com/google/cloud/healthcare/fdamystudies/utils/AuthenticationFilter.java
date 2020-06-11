@@ -56,6 +56,7 @@ public class AuthenticationFilter implements Filter {
         String interceptorUrl = applicationConfiguration.getInterceptorUrls();
         String serverApiUrls = applicationConfiguration.getServerApiUrls();
         String uri = ((HttpServletRequest) request).getRequestURI();
+        logger.info("AuthenticationFilter doFilter : "+ uri);
         String[] list = interceptorUrl.split(",");
         for (int i = 0; i < list.length; i++) {
           if (uri.endsWith(list[i].trim())) {
@@ -173,7 +174,6 @@ public class AuthenticationFilter implements Filter {
             }
           } else {
             logger.warn("AuthenticationFilter doFilter failed : missing userId, accessToken or clientToken");
-              
             setCommonHeaders(httpServletResponse);
             httpServletResponse.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
 
