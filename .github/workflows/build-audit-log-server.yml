@@ -16,10 +16,10 @@ jobs:
     - name: Build with Maven
       run: |
           cd common-tests
-          mvn -B package --file pom.xml
+          mvn -B install --file pom.xml
 
           cd ../common-service
-          mvn -B package --file pom.xml
+          mvn -B install --file pom.xml
 
           cd ../audit-log-service
           mvn -B package --file pom.xml          
