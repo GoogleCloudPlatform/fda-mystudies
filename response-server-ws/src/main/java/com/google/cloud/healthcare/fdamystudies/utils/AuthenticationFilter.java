@@ -88,12 +88,17 @@ public class AuthenticationFilter implements Filter {
               setCommonHeaders(httpServletResponse);
               chain.doFilter(request, response);
             } else {
+              logger.warn("AuthenticationFilter doFilter failed : clientID and Secret don't match");
               if (response instanceof HttpServletResponse) {
                 setCommonHeaders(httpServletResponse);
                 httpServletResponse.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+
+                httpServletResponse.sendError(
+                    HttpServletResponse.SC_UNAUTHORIZED, ErrorCode.EC_718.errorMessage());
               }
             }
           } catch (UnAuthorizedRequestException e) {
+            logger.warn("AuthenticationFilter doFilter failed : ", e);
             setCommonHeaders(httpServletResponse);
 
             httpServletResponse.setHeader(
@@ -105,7 +110,12 @@ public class AuthenticationFilter implements Filter {
                 AppConstants.DETAIL_MESSAGE, ErrorCode.EC_719.errorMessage());
 
             httpServletResponse.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+
+            httpServletResponse.sendError(
+                HttpServletResponse.SC_UNAUTHORIZED, ErrorCode.EC_718.errorMessage());
+
           } catch (InvalidRequestException e) {
+            logger.warn("AuthenticationFilter doFilter failed : ", e);
             setCommonHeaders(httpServletResponse);
 
             httpServletResponse.setHeader(
@@ -117,6 +127,10 @@ public class AuthenticationFilter implements Filter {
                 AppConstants.DETAIL_MESSAGE, ErrorCode.EC_701.errorMessage());
 
             httpServletResponse.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+
+            httpServletResponse.sendError(
+                HttpServletResponse.SC_BAD_REQUEST, ErrorCode.EC_701.errorMessage());
+
           } catch (Exception e) {
             logger.error("AuthenticationFilter doFilter : (error) ", e);
             setCommonHeaders(httpServletResponse);
@@ -130,6 +144,9 @@ public class AuthenticationFilter implements Filter {
                 AppConstants.DETAIL_MESSAGE, ErrorCode.EC_500.errorMessage());
 
             httpServletResponse.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+
+            httpServletResponse.sendError(
+                HttpServletResponse.SC_INTERNAL_SERVER_ERROR, ErrorCode.EC_500.errorMessage());
           }
         } else {
           if ((accessToken != null)
@@ -145,14 +162,23 @@ public class AuthenticationFilter implements Filter {
               chain.doFilter(request, response);
 
             } else {
+              logger.warn("AuthenticationFilter doFilter failed : invalid accessToken");
               if (response instanceof HttpServletResponse) {
                 setCommonHeaders(httpServletResponse);
                 httpServletResponse.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+
+                httpServletResponse.sendError(
+                    HttpServletResponse.SC_UNAUTHORIZED, ErrorCode.EC_718.errorMessage());
               }
             }
           } else {
+            logger.warn("AuthenticationFilter doFilter failed : missing userId, accessToken or clientToken");
+              
             setCommonHeaders(httpServletResponse);
             httpServletResponse.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+
+            httpServletResponse.sendError(
+                HttpServletResponse.SC_UNAUTHORIZED, ErrorCode.EC_718.errorMessage());
           }
         }
       } else {
