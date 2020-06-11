@@ -26,7 +26,10 @@ let kActivities = "activities"
 
 let kActivityUnwindToStudyListIdentifier = "unwindeToStudyListIdentier"
 let kActivityAbondonedAlertMessage =
-  "You missed the previous run of this activity. Please wait till the next run becomes available. Run timings are given on the Activities list screen."
+  """
+  You missed the previous run of this activity. Please wait till the next run becomes available. \
+  Run timings are given on the Activities list screen.
+  """
 
 enum ActivityAvailabilityStatus: Int {
   case current
