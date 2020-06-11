@@ -530,6 +530,7 @@
     <string name="we_will_get_back_to_you_as_soon_as_possible">We will get back to you as soon as possible.</string>
     <string name="signed_out">You have been signed out of the app.</string>
     <string name="pdf_consent_error">Error in processing consent</string>
+    <string name="activity_loading_msg">Please wait as we set up the study for you, this may take a few seconds</string>
 
 
     <string name="app_name">&app_name;</string>
