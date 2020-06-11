@@ -8,21 +8,15 @@
 
 package com.google.cloud.healthcare.fdamystudies.auditlog.common;
 
-import org.apache.commons.lang3.StringUtils;
-
-public enum ApiEndpoints {
+public enum ApiEndpoint {
   HEALTH("http://localhost:8001/audit-log-service/v1/health"),
 
   EVENTS("http://localhost:8001/audit-log-service/v1/events");
 
   private String url;
 
-  private ApiEndpoints(String url) {
+  private ApiEndpoint(String url) {
     this.url = url;
-  }
-
-  public String getUrl(int port) {
-    return StringUtils.replace(url, String.valueOf(8001), String.valueOf(port));
   }
 
   public String getUrl() {

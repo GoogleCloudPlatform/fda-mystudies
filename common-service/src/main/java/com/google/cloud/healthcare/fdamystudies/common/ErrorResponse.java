@@ -6,11 +6,8 @@
  * https://opensource.org/licenses/MIT.
  */
 
-package com.google.cloud.healthcare.fdamystudies.auditlog.common;
+package com.google.cloud.healthcare.fdamystudies.common;
 
-import static com.google.cloud.healthcare.fdamystudies.auditlog.common.FieldNames.ERROR_DESCRIPTION;
-import static com.google.cloud.healthcare.fdamystudies.auditlog.common.FieldNames.PATH;
-import static com.google.cloud.healthcare.fdamystudies.auditlog.common.FieldNames.STATUS;
 import java.time.Instant;
 import org.springframework.web.client.RestClientResponseException;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -19,9 +16,15 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 
 public class ErrorResponse {
 
-  private String requestUri = null;
+  public static final String PATH = "path";
 
-  private RestClientResponseException restClientResponseException = null;
+  public static final String STATUS = "status";
+
+  public static final String ERROR_DESCRIPTION = "error_description";
+
+  private String requestUri;
+
+  private RestClientResponseException restClientResponseException;
 
   public ErrorResponse(String requestUri, RestClientResponseException restClientResponseException) {
     this.requestUri = requestUri;
@@ -31,13 +34,15 @@ public class ErrorResponse {
   public JsonNode toJson() {
     ObjectMapper mapper = new ObjectMapper();
     ObjectNode errorResponse = mapper.createObjectNode();
-    errorResponse.put(PATH, requestUri);
-    errorResponse.put("datetime", Instant.now().toEpochMilli());
+
     if (restClientResponseException != null) {
       errorResponse.put(STATUS, restClientResponseException.getRawStatusCode());
-      String errorMessage = restClientResponseException.getMessage();
-      errorResponse.put(ERROR_DESCRIPTION, errorMessage);
+      errorResponse.put(ERROR_DESCRIPTION, restClientResponseException.getMessage());
     }
+
+    errorResponse.put(PATH, requestUri);
+    errorResponse.put("timestamp", Instant.now().toEpochMilli());
+
     return errorResponse;
   }
 }

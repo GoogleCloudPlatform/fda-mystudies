@@ -8,14 +8,11 @@
 
 package com.google.cloud.healthcare.fdamystudies.auditlog.service;
 
-import java.util.Collections;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import com.fasterxml.jackson.databind.JsonNode;
+import com.google.cloud.healthcare.fdamystudies.service.BaseServiceImpl;
 
 @Service
 class OAuthServiceImpl extends BaseServiceImpl implements OAuthService {
@@ -25,10 +22,6 @@ class OAuthServiceImpl extends BaseServiceImpl implements OAuthService {
 
   @Override
   public ResponseEntity<JsonNode> health() {
-    HttpHeaders headers = new HttpHeaders();
-    headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
-    headers.setContentType(MediaType.APPLICATION_JSON);
-
-    return exchangeForJson(healthEndpoint, headers, null, HttpMethod.GET);
+    return getForJson(healthEndpoint);
   }
 }

@@ -9,8 +9,8 @@
 package com.google.cloud.healthcare.fdamystudies.auditlog.controller;
 
 import javax.servlet.http.HttpServletRequest;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.slf4j.ext.XLogger;
+import org.slf4j.ext.XLoggerFactory;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -22,21 +22,18 @@ import com.fasterxml.jackson.databind.JsonNode;
 @RequestMapping("/v1")
 public class HealthController extends BaseController {
 
-  private static final Logger LOG = LoggerFactory.getLogger(HealthController.class);
+  private XLogger logger = XLoggerFactory.getXLogger(HealthController.class.getName());
 
   @GetMapping(
       value = "/health",
       produces = {MediaType.APPLICATION_JSON_VALUE})
   public ResponseEntity<JsonNode> health(HttpServletRequest request) {
-    if (LOG.isInfoEnabled()) {
-      LOG.info(String.format("--- BEGIN %s request", request.getRequestURL()));
-    }
-
+    logger.entry(String.format("begin %s request with no args", request.getRequestURI()));
     ResponseEntity<JsonNode> healthResponse = getOAuthService().health();
-
-    if (LOG.isInfoEnabled()) {
-      LOG.info(String.format("oauth health response %s", healthResponse.toString()));
-    }
+    logger.exit(
+        String.format(
+            "status=%d and response=%s",
+            healthResponse.getStatusCodeValue(), healthResponse.getBody()));
     return healthResponse;
   }
 }

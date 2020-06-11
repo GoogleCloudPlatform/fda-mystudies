@@ -9,19 +9,12 @@
 package com.google.cloud.healthcare.fdamystudies.auditlog.common;
 
 public final class FieldNames {
-  public static final String STATE = "state";
-
-  public static final String STATUS = "status";
 
   public static final String APP_ID = "app_id";
 
   public static final String TOKEN = "token";
 
   public static final String ACTIVE = "active";
-
-  public static final String TIMESTAMP = "timestamp";
-
-  public static final String ERRORS = "errors";
 
   public static final String ORG_ID = "org_id";
 
@@ -31,15 +24,7 @@ public final class FieldNames {
 
   public static final String EVENT_NAME = "event_name";
 
-  public static final String SOURCE = "source";
-
   public static final String CORRELATION_ID = "correlation_id";
-
-  public static final String ERROR_DESCRIPTION = "error_description";
-
-  public static final String ERROR_TYPE = "error_type";
-
-  public static final String ERROR_CODE = "error_code";
 
   public static final String SCOPE = "scope";
 
@@ -51,15 +36,7 @@ public final class FieldNames {
 
   public static final String NAME = "name";
 
-  public static final String STATUS_PHRASE = "status_phrase";
-
   public static final String PLATFORM_VERSION = "platform_version";
-
-  public static final String PATH = "path";
-
-  public static final String ERROR = "error";
-
-  public static final String MESSAGE = "message";
 
   private FieldNames() {}
 }

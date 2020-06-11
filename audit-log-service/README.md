@@ -1,3 +1,8 @@
+Project Dependencies:
+=============================================
+This project has a dependency on common-tests and common-service modules. 
+Run 'mvn clean install' command from common-tests and common-service modules to resolve any compilation issues in this project.
+
 Test Coverage Report
 =============================================
 Below command generates test reports at /target/site/clover. Open the index.html in a browser to see the coverage details.
