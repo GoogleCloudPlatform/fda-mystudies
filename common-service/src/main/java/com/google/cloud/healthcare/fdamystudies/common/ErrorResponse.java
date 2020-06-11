@@ -8,19 +8,22 @@
 
 package com.google.cloud.healthcare.fdamystudies.common;
 
+import java.io.IOException;
 import java.time.Instant;
 import org.springframework.web.client.RestClientResponseException;
+import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.fasterxml.jackson.databind.SerializerProvider;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.databind.ser.std.StdSerializer;
+import lombok.Getter;
+import lombok.ToString;
 
+@Getter
+@ToString
+@JsonSerialize(using = ErrorResponse.ErrorResponseSerializer.class)
 public class ErrorResponse {
-
-  public static final String PATH = "path";
-
-  public static final String STATUS = "status";
-
-  public static final String ERROR_DESCRIPTION = "error_description";
 
   private String requestUri;
 
@@ -32,17 +35,31 @@ public class ErrorResponse {
   }
 
   public JsonNode toJson() {
-    ObjectMapper mapper = new ObjectMapper();
-    ObjectNode errorResponse = mapper.createObjectNode();
+    return new ObjectMapper().convertValue(this, JsonNode.class);
+  }
 
-    if (restClientResponseException != null) {
-      errorResponse.put(STATUS, restClientResponseException.getRawStatusCode());
-      errorResponse.put(ERROR_DESCRIPTION, restClientResponseException.getMessage());
+  static class ErrorResponseSerializer extends StdSerializer<ErrorResponse> {
+
+    private static final long serialVersionUID = 1L;
+
+    public ErrorResponseSerializer() {
+      super(ErrorResponse.class);
     }
 
-    errorResponse.put(PATH, requestUri);
-    errorResponse.put("timestamp", Instant.now().toEpochMilli());
-
-    return errorResponse;
+    @Override
+    public void serialize(
+        ErrorResponse errorResponse,
+        JsonGenerator jsonGenerator,
+        SerializerProvider serializerProvider)
+        throws IOException {
+      jsonGenerator.writeStartObject();
+      jsonGenerator.writeNumberField(
+          "status", errorResponse.getRestClientResponseException().getRawStatusCode());
+      jsonGenerator.writeStringField(
+          "error_description", errorResponse.getRestClientResponseException().getMessage());
+      jsonGenerator.writeNumberField("timestamp", Instant.now().toEpochMilli());
+      jsonGenerator.writeStringField("path", errorResponse.getRequestUri());
+      jsonGenerator.writeEndObject();
+    }
   }
 }
