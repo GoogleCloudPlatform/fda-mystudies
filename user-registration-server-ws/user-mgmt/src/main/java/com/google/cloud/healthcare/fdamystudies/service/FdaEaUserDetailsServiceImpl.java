@@ -10,12 +10,13 @@ package com.google.cloud.healthcare.fdamystudies.service;
 
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import javax.transaction.Transactional;
 import org.apache.commons.lang3.SerializationUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import com.google.cloud.healthcare.fdamystudies.beans.UpdateAccountInfo;
 import com.google.cloud.healthcare.fdamystudies.beans.UpdateAccountInfoResponseBean;
 import com.google.cloud.healthcare.fdamystudies.dao.FdaEaUserDetailsDao;
@@ -47,13 +48,11 @@ public class FdaEaUserDetailsServiceImpl implements FdaEaUserDetailsService {
     try {
       if (userDetailsBO != null) {
         daoResp = userDetailsDao.saveUser(userDetailsBO);
-
         AuthInfoBO authInfo = new AuthInfoBO();
         authInfo.setAppId(daoResp.getAppInfoId());
         authInfo.setUserId(daoResp.getUserDetailsId());
         authInfo.setCreatedOn(LocalDateTime.now(ZoneId.systemDefault()));
         authInfoService.save(authInfo);
-
         UserAppDetailsBO userAppDetails = new UserAppDetailsBO();
         userAppDetails.setAppInfoId(daoResp.getAppInfoId());
         userAppDetails.setCreatedOn(LocalDateTime.now(ZoneId.systemDefault()));
@@ -81,7 +80,7 @@ public class FdaEaUserDetailsServiceImpl implements FdaEaUserDetailsService {
   }
 
   @Override
-  public boolean verifyCode(String code, UserDetailsBO participantDetails) throws SystemException {
+  public boolean verifyCode(String code, UserDetailsBO participantDetails) {
     logger.info("FdaEaUserDetailsServiceImpl verifyCode() - starts");
     boolean result = code == null || participantDetails == null;
     if (result) {
@@ -103,8 +102,7 @@ public class FdaEaUserDetailsServiceImpl implements FdaEaUserDetailsService {
     userDetailsBO.setUserDetailsId(participantDetails.getUserDetailsId());
     userDetailsBO.setEmailCode(null);
     userDetailsBO.setCodeExpireDate(null);
-    userDetailsBO.setStatus(
-        AppConstants.EMAILID_VERIFIED_STATUS); // status 1--->> user's emailId verified
+    userDetailsBO.setStatus(AppConstants.EMAILID_VERIFIED_STATUS);
     boolean status = userDetailsDao.updateStatus(userDetailsBO);
 
     if (status) {
@@ -113,7 +111,7 @@ public class FdaEaUserDetailsServiceImpl implements FdaEaUserDetailsService {
       UpdateAccountInfoResponseBean value =
           userManagementUtil.updateUserInfoInAuthServer(
               accountStatus, participantDetails.getUserId());
-      if (value.getHttpStatusCode() != 200) {
+      if (value.getHttpStatusCode() != HttpStatus.OK.value()) {
         status = false; // rolling back in registration server and returning false.
         boolean rollbackStatus = userDetailsDao.updateStatus(participantDetails);
         if (!rollbackStatus) {

@@ -8,18 +8,16 @@
 
 package com.google.cloud.healthcare.fdamystudies.service;
 
-import org.springframework.transaction.annotation.Transactional;
 import com.google.cloud.healthcare.fdamystudies.exceptions.SystemException;
 import com.google.cloud.healthcare.fdamystudies.model.UserDetailsBO;
 
 public interface FdaEaUserDetailsService {
 
-  @Transactional
   UserDetailsBO saveUser(UserDetailsBO userDetailsBO) throws SystemException;
 
   UserDetailsBO loadUserDetailsByUserId(String userId) throws SystemException;
 
-  boolean verifyCode(String code, UserDetailsBO participantDetails) throws SystemException;
+  boolean verifyCode(String code, UserDetailsBO participantDetails);
 
   boolean updateStatus(UserDetailsBO participantDetails);
 }

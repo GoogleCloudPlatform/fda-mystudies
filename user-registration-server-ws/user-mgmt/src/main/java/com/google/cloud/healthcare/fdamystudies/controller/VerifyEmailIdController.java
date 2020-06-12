@@ -25,7 +25,6 @@ import com.google.cloud.healthcare.fdamystudies.bean.VerifyEmailIdResponse;
 import com.google.cloud.healthcare.fdamystudies.beans.AppOrgInfoBean;
 import com.google.cloud.healthcare.fdamystudies.beans.EmailIdVerificationForm;
 import com.google.cloud.healthcare.fdamystudies.exceptions.InvalidEmailCodeException;
-import com.google.cloud.healthcare.fdamystudies.exceptions.SystemException;
 import com.google.cloud.healthcare.fdamystudies.model.UserDetailsBO;
 import com.google.cloud.healthcare.fdamystudies.service.CommonService;
 import com.google.cloud.healthcare.fdamystudies.service.FdaEaUserDetailsService;
@@ -90,7 +89,7 @@ public class VerifyEmailIdController {
         return new ResponseEntity<>(responseBean, HttpStatus.BAD_REQUEST);
       }
       boolean verifyEmailCodeResponse =
-          verifyEmailCode(verificationForm.getCode().trim(), participantDetails);
+          userDetailsService.verifyCode(verificationForm.getCode().trim(), participantDetails);
 
       if (!verifyEmailCodeResponse) {
         ResponseBean respBean =
@@ -98,7 +97,7 @@ public class VerifyEmailIdController {
         return new ResponseEntity<>(respBean, HttpStatus.BAD_REQUEST);
       }
 
-      boolean serviceResponse = updateStatus(participantDetails);
+      boolean serviceResponse = userDetailsService.updateStatus(participantDetails);
       if (!serviceResponse) {
         ResponseBean respBean = ResponseUtil.prepareSystemExceptionResponse(response);
         return new ResponseEntity<>(respBean, HttpStatus.INTERNAL_SERVER_ERROR);
@@ -114,7 +113,7 @@ public class VerifyEmailIdController {
       logger.error(AppConstants.VERIFY_EMAILID_CONTROLLER_ENDS_MESSAGE + ": ", e);
       return new ResponseEntity<>(respBean, HttpStatus.BAD_REQUEST);
 
-    } catch (SystemException e) {
+    } catch (Exception e) {
       ResponseBean respBean = ResponseUtil.prepareSystemExceptionResponse(response);
       logger.error(AppConstants.VERIFY_EMAILID_CONTROLLER_ENDS_MESSAGE + ": ", e);
       return new ResponseEntity<>(respBean, HttpStatus.INTERNAL_SERVER_ERROR);
@@ -130,14 +129,5 @@ public class VerifyEmailIdController {
             appOrgInfoBean.getAppInfoId(),
             appOrgInfoBean.getOrgInfoId());
     return participantDetails;
-  }
-
-  private boolean updateStatus(UserDetailsBO participantDetails) {
-    return userDetailsService.updateStatus(participantDetails);
-  }
-
-  private boolean verifyEmailCode(String verificationCode, UserDetailsBO participantDetails)
-      throws SystemException {
-    return userDetailsService.verifyCode(verificationCode, participantDetails);
   }
 }

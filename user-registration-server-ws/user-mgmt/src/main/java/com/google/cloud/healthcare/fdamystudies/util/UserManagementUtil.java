@@ -131,7 +131,6 @@ public class UserManagementUtil {
   }
 
   public UpdateAccountInfoResponseBean updateUserInfoInAuthServer(
-
       UpdateAccountInfo accountInfo, String userId) {
     logger.info("(Util)....UserManagementUtil.updateUserInfoInAuthServer()......STARTED");
 
@@ -159,7 +158,7 @@ public class UserManagementUtil {
 
   public DeleteAccountInfoResponseBean deleteUserInfoInAuthServer(
       String userId, String clientToken, String accessToken) {
-    logger.info("UserRegistrationController.deleteUserInfoInAuthServer() - starts");
+    logger.info("(Util)....UserRegistrationController.deleteUserInfoInAuthServer()......STARTED");
 
     DeleteAccountInfoResponseBean authResponse = null;
 
@@ -182,7 +181,6 @@ public class UserManagementUtil {
         objectMapper = new ObjectMapper();
         try {
           authResponse = objectMapper.readValue(body, DeleteAccountInfoResponseBean.class);
-          logger.info("authResponse: " + authResponse);
           return authResponse;
         } catch (JsonParseException e) {
           return authResponse;
@@ -194,9 +192,8 @@ public class UserManagementUtil {
       } else {
         return authResponse;
       }
-      
+
     } catch (RestClientResponseException e) {
-      logger.error("UserRegistrationController.deleteUserInfoInAuthServer() - error ", e);
       if (e.getRawStatusCode() == 401) {
         Set<Entry<String, List<String>>> headerSet = e.getResponseHeaders().entrySet();
         authResponse = new DeleteAccountInfoResponseBean();
@@ -228,7 +225,6 @@ public class UserManagementUtil {
         authResponse.setHttpStatusCode(400 + "");
       }
 
-      logger.error("authResponse: " + authResponse);
       return authResponse;
     }
   }
@@ -239,7 +235,7 @@ public class UserManagementUtil {
       String orgId,
       String clientId,
       String secretKey) {
-    logger.info("UserManagementUtil.registerUserInAuthServer - starts");
+    logger.info("UserManagementUtil.registerUserInAuthServer......Starts");
     AuthRegistrationResponseBean authServerResponse = null;
 
     HttpHeaders headers = new HttpHeaders();
@@ -267,7 +263,6 @@ public class UserManagementUtil {
         objectMapper = new ObjectMapper();
         try {
           authServerResponse = objectMapper.readValue(body, AuthRegistrationResponseBean.class);
-          logger.info("authResponse: " + authServerResponse);
           return authServerResponse;
         } catch (JsonParseException e) {
           return authServerResponse;
@@ -280,12 +275,11 @@ public class UserManagementUtil {
         return authServerResponse;
       }
     } catch (RestClientResponseException e) {
-      logger.error("UserManagementUtil.registerUserInAuthServer() - error ", e);
       if (e.getRawStatusCode() == 401) {
         Set<Entry<String, List<String>>> headerSet = e.getResponseHeaders().entrySet();
         authServerResponse = new AuthRegistrationResponseBean();
-        
         for (Entry<String, List<String>> entry : headerSet) {
+
           if (AppConstants.STATUS.equals(entry.getKey())) {
             authServerResponse.setCode(entry.getValue().get(0));
           }
@@ -321,7 +315,6 @@ public class UserManagementUtil {
         }
         authServerResponse.setHttpStatusCode(400 + "");
       }
-      logger.error("authServerResponse: " + authServerResponse);
       return authServerResponse;
     }
   }
@@ -422,13 +415,13 @@ public class UserManagementUtil {
     } catch (RestClientResponseException e) {
       message = MyStudiesUserRegUtil.ErrorCodes.FAILURE.getValue();
       if (e.getRawStatusCode() == 401) {
-        logger.error("Invalid client Id or client secret.", e);
+        logger.error("Invalid client Id or client secret.");
         throw new UnAuthorizedRequestException();
       } else if (e.getRawStatusCode() == 400) {
-        logger.error("Client verification ended with Bad Request", e);
+        logger.error("Client verification ended with Bad Request");
         throw new InvalidRequestException();
       } else {
-        logger.error("Client verification ended with Internal Server Error", e);
+        logger.error("Client verification ended with Internal Server Error");
         throw new SystemException();
       }
     }

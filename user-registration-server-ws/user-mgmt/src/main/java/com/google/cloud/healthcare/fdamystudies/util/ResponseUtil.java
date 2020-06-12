@@ -51,9 +51,7 @@ public final class ResponseUtil {
         response);
     responseBean.setCode(HttpStatus.BAD_REQUEST.value());
     responseBean.setMessage(errorMsg.getValue());
-    if (LOG.isDebugEnabled()) {
-      LOG.debug(String.format("Bad Request Response =%s", responseBean));
-    }
+    LOG.info("Bad Request Response: ", responseBean);
     return responseBean;
   }
 
@@ -76,7 +74,7 @@ public final class ResponseUtil {
         MyStudiesUserRegUtil.ErrorCodes.SUCCESS.getValue(),
         response);
     ResponseBean responseBean = new ResponseBean();
-    responseBean.setCode(ErrorCode.EC_200.code());
+    responseBean.setCode(HttpStatus.OK.value());
     responseBean.setMessage(ErrorCode.EC_200.errorMessage());
     return responseBean;
   }
