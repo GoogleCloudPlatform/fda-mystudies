@@ -305,7 +305,7 @@ public class SurveyActivitiesFragment extends Fragment
       AppController.getHelperProgressDialog()
           .showSwipeListCustomProgress(getActivity(), R.drawable.transparent, false);
     } else {
-      AppController.getHelperProgressDialog().showProgress(getActivity(), "", "", false);
+      AppController.getHelperProgressDialog().showProgressWithText(getActivity(), "", getString(R.string.activity_loading_msg), false);
     }
 
     GetUserStudyListEvent getUserStudyListEvent = new GetUserStudyListEvent();
