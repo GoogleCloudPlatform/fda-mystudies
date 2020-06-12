@@ -8,18 +8,20 @@ describe('workspace-project App', () => {
     page = new AppPage();
   });
 
-  it('should display welcome message', () => {
-    page.navigateTo();
-    expect(page.getTitleText()).toEqual('Welcome to userRegistrationWeb!');
+  it('should display welcome message', async () => {
+    await page.navigateTo();
+    await expect(page.getTitleText()).toEqual(
+      'Welcome to userRegistrationWeb!',
+    );
   });
 
   afterEach(async () => {
     // Assert that there are no errors emitted from the browser
     const logs = await browser.manage().logs().get(logging.Type.BROWSER);
     expect(logs).not.toContain(
-        jasmine.objectContaining({
-          level: logging.Level.SEVERE,
-        }),
+      jasmine.objectContaining({
+        level: logging.Level.SEVERE,
+      }),
     );
   });
 });
