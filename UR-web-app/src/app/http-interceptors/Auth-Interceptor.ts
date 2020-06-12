@@ -1,4 +1,3 @@
-import {AuthService} from '../service/auth.service';
 import {Injectable} from '@angular/core';
 import {NgxSpinnerService} from 'ngx-spinner';
 import {
@@ -10,14 +9,17 @@ import {finalize} from 'rxjs/operators';
 import {User} from '../entity/User';
 @Injectable()
 export class AuthInterceptor implements HttpInterceptor {
-  constructor(private auth: AuthService, private spinner: NgxSpinnerService) {}
+  constructor(private spinner: NgxSpinnerService) {}
  user:User | undefined ;
+ getUserDetails():User {
+    return JSON.parse(localStorage.getItem('currentUser')!);
+ }
  intercept(req: HttpRequest<any>, next: HttpHandler) {
    this.spinner.show();
-   this.user = this.auth.getUserDetails();
+   this.user = this.getUserDetails();
    if (this.user != null ) {
      const headers = req.headers
-         .set('Content-Type', 'application/json')
+        .set('Content-Type', 'application/json')
          .set('userId', this.user.id.toString())
          .set('authToken', this.user.authToken)
          .set('authUserId', this.user.urAdminAuthId);
