@@ -73,6 +73,10 @@ public class UserConsentManagementDaoImpl implements UserConsentManagementDao {
       studiesBoPredicates[0] = criteriaBuilder.equal(studiesBoRoot.get("id"), studyId);
       studiesBoCriteria.select(studiesBoRoot).where(studiesBoPredicates);
       studiesBoList = session.createQuery(studiesBoCriteria).getResultList();
+      if (studiesBoList.isEmpty()) {
+        logger.warn("UserConsentManagementDaoImpl getParticipantStudies() unable to find study: "+ studyId);
+      }
+
       participantStudiesBoCriteria = criteriaBuilder.createQuery(ParticipantStudiesBO.class);
       participantStudiesBoRoot = participantStudiesBoCriteria.from(ParticipantStudiesBO.class);
 
@@ -83,6 +87,9 @@ public class UserConsentManagementDaoImpl implements UserConsentManagementDao {
             criteriaBuilder.equal(userDetailsBoRoot.get(AppConstants.KEY_USERID), userId);
         userDetailsBoCriteria.select(userDetailsBoRoot).where(userDetailspredicates);
         userDetailsBoList = session.createQuery(userDetailsBoCriteria).getResultList();
+        if (userDetailsBoList.isEmpty()) {
+          logger.warn("UserConsentManagementDaoImpl getParticipantStudies() unable to find user: "+ userId);
+        }
 
         if (!userDetailsBoList.isEmpty() && !studiesBoList.isEmpty()) {
           userDetailsBO = userDetailsBoList.get(0);
