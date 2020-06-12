@@ -359,11 +359,9 @@ public class UserConsentManagementDaoImpl implements UserConsentManagementDao {
         studyInfoBoCriteria.select(studyInfoBoRoot).where(studyInfoPredicates);
         studyInfoList = session.createQuery(studyInfoBoCriteria).getResultList();
         if (!studyInfoList.isEmpty()) {
-          studyInfoBO = studyInfoList.get(0);
-          studyInfoId = studyInfoBO.getId();
-        }
-        if (studyInfoId != 0) {
-          studyInfoBean.setStudyInfoId(studyInfoId);
+          studyInfoBean.setStudyInfoId(studyInfoList.get(0).getId());
+        } else {
+          logger.warn("UserConsentManagementDaoImpl getStudyInfoId(), unable to find Id for given custom_id : " +customStudyId );
         }
       }
     } catch (Exception e) {
