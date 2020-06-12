@@ -13,7 +13,7 @@ const routes: Routes = [
   {path: 'forgot-password', component: ForgotPasswordComponent},
   {path: 'set-up-account', component: SetUpAccountComponent},
   {
-    path: 'admin',
+    path: 'coordinator',
     loadChildren:
       () => import('./site-coordinator/site-coordinator.module').
           then((m) => m.SiteCoordinatorModule),

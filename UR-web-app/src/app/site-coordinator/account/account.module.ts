@@ -1,9 +1,9 @@
 import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {AccountRoutingModule} from './account-routing.module';
-import {UserProfileComponent} from './user-profile/user-profile.component';
+import {AccountProfileComponent} from './account-profile/account-profile.component';
 @NgModule({
-  declarations: [UserProfileComponent],
+  declarations: [AccountProfileComponent],
   imports: [
     CommonModule,
     AccountRoutingModule,
