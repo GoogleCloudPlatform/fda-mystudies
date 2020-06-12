@@ -1,7 +1,7 @@
 import {BrowserModule} from '@angular/platform-browser';
 import {NgModule} from '@angular/core';
 import {AppComponent} from './app.component';
-import {httpInterceptorProviders} from './http-interceptors';
+import {httpInterceptorProviders} from './http-interceptors/Index';
 import {EntityService} from './service/entity.service';
 
 @NgModule({
