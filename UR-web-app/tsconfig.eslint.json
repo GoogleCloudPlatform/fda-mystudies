@@ -1,0 +1,9 @@
+{
+  "extends": "./tsconfig.json",
+  "include": [
+    "src/karma.conf.js",
+    "e2e/protractor.conf.js",
+    ".eslintrc.js",
+    "src/environments/*"
+  ]
+}

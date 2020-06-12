@@ -11,12 +11,13 @@ import {ForgotPasswordComponent} from
 import {HashLocationStrategy, LocationStrategy} from '@angular/common';
 import {PageNotFoundComponent} from
   './page-not-found/page-not-found.component';
-
+import {EntityService} from './service/entity.service';
+import {httpInterceptorProviders} from './http-interceptors';
 @NgModule({
   declarations: [LoginComponent, SetUpAccountComponent,
     ForgotPasswordComponent, AppComponent, PageNotFoundComponent],
   imports: [BrowserModule, AppRoutingModule],
-  providers: [
+  providers: [EntityService, httpInterceptorProviders
     {provide: LocationStrategy, useClass: HashLocationStrategy},
   ],
   bootstrap: [AppComponent],
