@@ -9,7 +9,7 @@ export class EntityService {
   serviceUrl: string = '';
   constructor(private http: HttpClient) {}
 
-  post(bodydata: any, urlpath: string): Observable<any> {
+  post(bodydata: string, urlpath: string): Observable<any> {
     this.serviceUrl = Location.joinWithSlash(this.baseUrl, urlpath);
     return this.http.post<any>(this.serviceUrl, bodydata).pipe();
   }
@@ -21,7 +21,7 @@ export class EntityService {
     this.serviceUrl = Location.joinWithSlash(this.baseUrl, urlpath);
     return this.http.delete(this.serviceUrl).pipe();
   }
-  put(bodydata: any, urlpath: string): Observable<any> {
+  put(bodydata: string, urlpath: string): Observable<any> {
     this.serviceUrl = Location.joinWithSlash(this.baseUrl, urlpath);
     return this.http.put<any>(this.serviceUrl, bodydata).pipe();
   }
