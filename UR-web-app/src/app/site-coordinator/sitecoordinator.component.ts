@@ -1,7 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 
 @Component({
-  selector: 'sitecoordinator',
+  selector: 'site-coordinator',
   templateUrl: './sitecoordinator.component.html',
   styleUrls: ['./sitecoordinator.component.scss'],
 })
