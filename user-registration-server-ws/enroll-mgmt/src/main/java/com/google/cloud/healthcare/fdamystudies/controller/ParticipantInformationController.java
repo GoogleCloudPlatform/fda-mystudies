@@ -49,6 +49,7 @@ public class ParticipantInformationController {
               MyStudiesUserRegUtil.ErrorCodes.SUCCESS.getValue().toLowerCase());
           participantInfoResp.setCode(HttpStatus.OK.value());
         } else {
+          logger.warn("ParticipantInformationController getParticipantDetails() - participantInfoResp is null");
           MyStudiesUserRegUtil.getFailureResponse(
               MyStudiesUserRegUtil.ErrorCodes.STATUS_102.getValue(),
               MyStudiesUserRegUtil.ErrorCodes.NO_DATA_AVAILABLE.getValue(),

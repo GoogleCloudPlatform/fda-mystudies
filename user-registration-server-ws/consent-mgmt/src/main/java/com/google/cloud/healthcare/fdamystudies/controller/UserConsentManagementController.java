@@ -175,6 +175,7 @@ public class UserConsentManagementController {
                 errorBean = new ErrorBean(ErrorCode.EC_111.code(), ErrorCode.EC_111.errorMessage());
               }
             } else {
+              logger.error("UserConsentManagementController updateEligibilityConsentStatus() version required");
               MyStudiesUserRegUtil.getFailureResponse(
                   MyStudiesUserRegUtil.ErrorCodes.STATUS_102.getValue(),
                   MyStudiesUserRegUtil.ErrorCodes.CONSENT_VERSION_REQUIRED.getValue(),
@@ -184,6 +185,7 @@ public class UserConsentManagementController {
             }
 
           } else {
+            logger.error("UserConsentManagementController updateEligibilityConsentStatus() participantStudies is null");
             MyStudiesUserRegUtil.getFailureResponse(
                 MyStudiesUserRegUtil.ErrorCodes.STATUS_102.getValue(),
                 MyStudiesUserRegUtil.ErrorCodes.NO_DATA_AVAILABLE.getValue(),
@@ -193,6 +195,7 @@ public class UserConsentManagementController {
           }
 
         } else {
+          logger.error("UserConsentManagementController updateEligibilityConsentStatus() studyId or userId is missing");
           MyStudiesUserRegUtil.getFailureResponse(
               MyStudiesUserRegUtil.ErrorCodes.STATUS_102.getValue(),
               MyStudiesUserRegUtil.ErrorCodes.INVALID_INPUT.getValue(),
@@ -201,6 +204,7 @@ public class UserConsentManagementController {
           return null;
         }
       } else {
+        logger.error("UserConsentManagementController updateEligibilityConsentStatus() consent is null or missing information");
         MyStudiesUserRegUtil.getFailureResponse(
             MyStudiesUserRegUtil.ErrorCodes.STATUS_102.getValue(),
             MyStudiesUserRegUtil.ErrorCodes.INVALID_INPUT.getValue(),
@@ -245,6 +249,7 @@ public class UserConsentManagementController {
           return null;
         }
       } else {
+        logger.error("UserConsentManagementController getStudyConsentPDF() - userId or studyId is missing ");
         MyStudiesUserRegUtil.getFailureResponse(
             MyStudiesUserRegUtil.ErrorCodes.STATUS_102.getValue(),
             MyStudiesUserRegUtil.ErrorCodes.INVALID_AUTH_CODE.getValue(),
