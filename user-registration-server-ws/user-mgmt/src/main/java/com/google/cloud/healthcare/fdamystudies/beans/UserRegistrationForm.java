@@ -30,4 +30,11 @@ public class UserRegistrationForm {
   private int status;
   private boolean tempPassword;
   private LocalDateTime tempPasswordDate;
+
+  public UserRegistrationForm(String userId, String emailId, String password) {
+    super();
+    this.userId = userId;
+    this.emailId = emailId;
+    this.password = password;
+  }
 }

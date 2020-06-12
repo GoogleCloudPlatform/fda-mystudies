@@ -9,9 +9,13 @@
 package com.google.cloud.healthcare.fdamystudies.beans;
 
 import java.util.List;
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
 
+@NoArgsConstructor
+@AllArgsConstructor
 public class NotificationForm {
-  public List<NotificationBean> notifications;
+  List<NotificationBean> notifications;
 
   public List<NotificationBean> getNotifications() {
     return notifications;
