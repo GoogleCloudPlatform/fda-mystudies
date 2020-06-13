@@ -8,6 +8,7 @@
 
 package com.google.cloud.healthcare.fdamystudies.bean;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -25,6 +26,16 @@ public class ConsentResponseBean {
   private String version;
   private String type;
   private String content;
+  private String path;
+
+  @JsonIgnore
+  public String getPath() {
+    return path;
+  }
+
+  public void setPath(String path) {
+    this.path = path;
+  }
 
   public String getVersion() {
     return version;

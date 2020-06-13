@@ -6,6 +6,7 @@ import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.when;
 import java.io.OutputStream;
+import com.google.cloud.healthcare.fdamystudies.exceptions.CloudStorageException;
 import com.google.cloud.healthcare.fdamystudies.service.FileStorageService;
 import com.google.cloud.storage.StorageException;
 
@@ -14,7 +15,7 @@ public class MockUtils {
   private MockUtils() {}
 
   public static void setCloudStorageSaveFileExpectations(
-      final FileStorageService cloudStorageService) {
+      final FileStorageService cloudStorageService) throws CloudStorageException {
     when(cloudStorageService.saveFile(anyString(), anyString(), anyString()))
         .thenAnswer(
             (invocation) -> {
@@ -25,7 +26,8 @@ public class MockUtils {
   }
 
   public static void setCloudStorageDownloadExpectations(
-      final FileStorageService cloudStorageService, final String content) {
+      final FileStorageService cloudStorageService, final String content)
+      throws CloudStorageException {
     doAnswer(
             (invocation) -> {
               OutputStream os = invocation.getArgument(1);
@@ -38,7 +40,7 @@ public class MockUtils {
   }
 
   public static void setCloudStorageDownloadExceptionExpectations(
-      final FileStorageService cloudStorageService) {
+      final FileStorageService cloudStorageService) throws CloudStorageException {
     doThrow(StorageException.class).when(cloudStorageService).downloadFileTo(anyString(), any());
   }
 }

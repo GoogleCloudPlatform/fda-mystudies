@@ -18,7 +18,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.StringUtils;
 import com.google.cloud.healthcare.fdamystudies.bean.ErrorBean;
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class AppUtil {
 
   private static final Logger logger = LoggerFactory.getLogger(AppUtil.class);

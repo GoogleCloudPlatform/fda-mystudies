@@ -10,10 +10,14 @@ package com.google.cloud.healthcare.fdamystudies.config;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
+import lombok.Getter;
+import lombok.Setter;
 import lombok.ToString;
 
 @Configuration
 @ToString
+@Getter
+@Setter
 public class ApplicationPropertyConfiguration {
 
   @Value("${authServerAccessTokenValidationUrl}")
@@ -31,43 +35,9 @@ public class ApplicationPropertyConfiguration {
   @Value("${bucketName}")
   private String bucketName;
 
-  public String getAuthServerAccessTokenValidationUrl() {
-    return authServerAccessTokenValidationUrl;
-  }
+  @Value("${applicationComponentName}")
+  private String applicationComponentName;
 
-  public void setAuthServerAccessTokenValidationUrl(String authServerAccessTokenValidationUrl) {
-    this.authServerAccessTokenValidationUrl = authServerAccessTokenValidationUrl;
-  }
-
-  public String getClientId() {
-    return clientId;
-  }
-
-  public void setClientId(String clientId) {
-    this.clientId = clientId;
-  }
-
-  public String getSecretKey() {
-    return secretKey;
-  }
-
-  public void setSecretKey(String secretKey) {
-    this.secretKey = secretKey;
-  }
-
-  public String getInterceptorUrls() {
-    return interceptorUrls;
-  }
-
-  public void setInterceptorUrls(String interceptorUrls) {
-    this.interceptorUrls = interceptorUrls;
-  }
-
-  public String getBucketName() {
-    return bucketName;
-  }
-
-  public void setBucketName(String bucketName) {
-    this.bucketName = bucketName;
-  }
+  @Value("${applicationVersion}")
+  private String applicationVersion;
 }

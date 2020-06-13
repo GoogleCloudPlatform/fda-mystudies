@@ -43,7 +43,6 @@ public class CommonServiceImpl implements CommonService {
     logger.info("CommonServiceImpl validateAccessToken() - starts ");
     Integer value = null;
     HttpHeaders headers = null;
-    BodyForProvider providerBody = null;
     HttpEntity<BodyForProvider> requestBody = null;
     ResponseEntity<Integer> responseEntity = null;
     try {
@@ -53,7 +52,7 @@ public class CommonServiceImpl implements CommonService {
       headers.set("userId", userId);
       headers.set("accessToken", accessToken);
 
-      requestBody = new HttpEntity<BodyForProvider>(null, headers);
+      requestBody = new HttpEntity<>(null, headers);
       responseEntity =
           restTemplate.exchange(
               appConfig.getAuthServerAccessTokenValidationUrl(),

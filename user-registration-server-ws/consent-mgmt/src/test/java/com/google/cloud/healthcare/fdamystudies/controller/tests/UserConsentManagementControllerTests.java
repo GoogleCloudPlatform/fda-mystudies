@@ -357,4 +357,40 @@ public class UserConsentManagementControllerTests extends BaseMockIT {
         .andDo(print())
         .andExpect(status().isOk());
   }
+
+  @Test
+  public void testUpdateEligibilityConsentStatusAuditLogFailure() throws Exception {
+
+    // Set mockito expectations for saving file into cloudStorageService
+    MockUtils.setCloudStorageSaveFileExpectations(cloudStorageService);
+
+    ConsentReqBean consent =
+        new ConsentReqBean(
+            Constants.VERSION_1_2, Constants.STATUS_COMPLETE, Constants.ENCODED_CONTENT_1_2);
+    ConsentStatusBean consentStatus =
+        new ConsentStatusBean(Constants.STUDYOF_HEALTH, true, consent, Constants.SHARING_VALUE);
+    String requestJson = getObjectMapper().writeValueAsString(consentStatus);
+
+    // Invoke http api endpoint with empty correlation_id header for audit log to fail
+    HttpHeaders headers = TestUtils.getCommonHeaders();
+    headers.set(Constants.CORRELATION_ID_HEADER, "");
+
+    TestUtils.addContentTypeAcceptHeaders(headers);
+    mockMvc
+        .perform(post("/updateEligibilityConsentStatus").content(requestJson).headers(headers))
+        .andDo(print())
+        .andExpect(status().isOk())
+        .andExpect(content().string(containsString(Constants.UPDATE_CONSENT_SUCCESS_MSG)));
+
+    // Invoke http api endpoint with empty correlation_id header for audit log to fail
+    headers = TestUtils.getCommonHeaders();
+    headers.add(Constants.APP_ID_HEADER, TestUtils.generateString(Constants.APP_ID_HEADER, 300));
+
+    TestUtils.addContentTypeAcceptHeaders(headers);
+    mockMvc
+        .perform(post("/updateEligibilityConsentStatus").content(requestJson).headers(headers))
+        .andDo(print())
+        .andExpect(status().isOk())
+        .andExpect(content().string(containsString(Constants.UPDATE_CONSENT_SUCCESS_MSG)));
+  }
 }

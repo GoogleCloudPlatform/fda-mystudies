@@ -119,11 +119,13 @@ public enum ErrorCode {
 
   EC_201(201, "No Content."),
 
+  EC_202(202, 202, "Accepted."),
+
   EC_304(304, "Not Modified."),
 
   EC_400(400, "Bad Request."),
 
-  EC_401(401, "You are not authorized to access this information"),
+  EC_401(401, 401, "You are not authorized to access this information"),
 
   EC_403(403, "You are forbidden to access this information."),
 
@@ -131,7 +133,7 @@ public enum ErrorCode {
 
   EC_406(406, "Information which was sent, was not accepted."),
 
-  EC_500(500, "Internal Server Error."),
+  EC_500(500, 500, "Internal Server Error."),
 
   EC_1001(1001, "Your Session has been expired."),
 
@@ -145,8 +147,17 @@ public enum ErrorCode {
 
   private final String errorMessage;
 
+  private final int statusCode;
+
+  private ErrorCode(int code, int statusCode, String errorMessage) {
+    this.code = code;
+    this.statusCode = statusCode;
+    this.errorMessage = errorMessage;
+  }
+
   private ErrorCode(int code, String errorMessage) {
     this.code = code;
+    this.statusCode = code;
     this.errorMessage = errorMessage;
   }
 
@@ -156,5 +167,9 @@ public enum ErrorCode {
 
   public String errorMessage() {
     return this.errorMessage;
+  }
+
+  public int statusCode() {
+    return this.statusCode;
   }
 }

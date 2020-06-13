@@ -38,6 +38,8 @@ public class Constants {
   public static final String FIELD_MESSAGE = "message";
   public static final String FIELD_TYPE = "type";
   public static final String FIELD_CONTENT = "content";
+  public static final String CORRELATION_ID_HEADER = "correlation_id";
+  public static final String APP_ID_HEADER = "app_id";
 
   public static final String UPDATE_CONSENT_SUCCESS_MSG =
       "Eligibility consent has been updated successfully";

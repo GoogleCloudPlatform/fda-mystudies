@@ -91,7 +91,9 @@ public class UserConsentManagementServiceImpl implements UserConsentManagementSe
     logger.info("UserConsentManagementServiceImpl getStudyConsentDetails() - Started ");
     StudyConsentBO studyConsent = null;
     ParticipantStudiesBO participantStudiesBO = null;
-    ConsentStudyResponseBean consentStudyResponseBean = new ConsentStudyResponseBean();
+    ConsentStudyResponseBean consentStudyResponseBean =
+        new ConsentStudyResponseBean(
+            MyStudiesUserRegUtil.ErrorCodes.SUCCESS.getValue().toLowerCase());
     try {
 
       studyConsent = userConsentManagementDao.getStudyConsent(userId, studyId, consentVersion);
@@ -112,6 +114,7 @@ public class UserConsentManagementServiceImpl implements UserConsentManagementSe
           consentStudyResponseBean
               .getConsent()
               .setContent(new String(Base64.getEncoder().encode(baos.toByteArray())));
+          consentStudyResponseBean.getConsent().setPath(path);
         }
         consentStudyResponseBean.getConsent().setType("application/pdf");
         participantStudiesBO = userConsentManagementDao.getParticipantStudies(studyId, userId);
@@ -121,6 +124,8 @@ public class UserConsentManagementServiceImpl implements UserConsentManagementSe
       }
 
     } catch (Exception e) {
+      consentStudyResponseBean.setMessage(
+          MyStudiesUserRegUtil.ErrorCodes.FAILURE.getValue().toLowerCase());
       logger.error("UserConsentManagementServiceImpl getStudyConsentDetails() - error ", e);
     }
 

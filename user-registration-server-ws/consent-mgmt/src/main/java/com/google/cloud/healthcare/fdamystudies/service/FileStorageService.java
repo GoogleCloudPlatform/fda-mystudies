@@ -9,15 +9,12 @@
 package com.google.cloud.healthcare.fdamystudies.service;
 
 import java.io.OutputStream;
-import java.util.List;
+import com.google.cloud.healthcare.fdamystudies.exceptions.CloudStorageException;
 
 public interface FileStorageService {
 
-  List<String> listFiles(String underDirectory, boolean recursive);
+  String saveFile(String fileName, String content, String underDirectory)
+      throws CloudStorageException;
 
-  String saveFile(String fileName, String content, String underDirectory);
-
-  void downloadFileTo(String fileName, OutputStream outputStream);
-
-  void printMetadata();
+  void downloadFileTo(String fileName, OutputStream outputStream) throws CloudStorageException;
 }

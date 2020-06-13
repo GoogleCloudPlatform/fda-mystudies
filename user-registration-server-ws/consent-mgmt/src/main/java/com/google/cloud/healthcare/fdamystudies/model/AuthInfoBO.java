@@ -64,5 +64,5 @@ public class AuthInfoBO implements Serializable {
   private Boolean remoteNotificationFlag = false;
 
   @Column(name = "_ts")
-  private Date _ts;
+  private Date ts;
 }

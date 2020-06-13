@@ -38,64 +38,79 @@ public class AuthenticationFilter implements Filter {
   @Override
   public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
       throws IOException, ServletException {
-    HttpServletRequest httpServletRequest = (HttpServletRequest) request;
-    HttpServletResponse httpServletResponse = (HttpServletResponse) response;
-    if (request instanceof HttpServletRequest) {
+
+    if (request instanceof HttpServletRequest && response instanceof HttpServletResponse) {
+      HttpServletRequest httpServletRequest = (HttpServletRequest) request;
+      HttpServletResponse httpServletResponse = (HttpServletResponse) response;
+
       if (!"OPTIONS".equalsIgnoreCase(httpServletRequest.getMethod())) {
         String userId = httpServletRequest.getHeader("userId");
         String accessToken = httpServletRequest.getHeader("accessToken");
         String clientToken = httpServletRequest.getHeader("clientToken");
 
-        Integer value = null;
-        boolean isInterceptorUrl = false;
-        boolean isInvalidUrl = false;
-        ApplicationPropertyConfiguration applicationConfiguratation =
-            BeanUtil.getBean(ApplicationPropertyConfiguration.class);
-        String interceptorUrl = applicationConfiguratation.getInterceptorUrls();
-        String uri = ((HttpServletRequest) request).getRequestURI();
-        String[] list = interceptorUrl.split(",");
-        for (int i = 0; i < list.length; i++) {
-          logger.info(list[i]);
-          if (uri.endsWith(list[i].trim())) {
-            isInterceptorUrl = true;
-          }
-        }
+        boolean isInterceptorUrl = checkIfInterceptorUrl(httpServletRequest);
 
         if (isInterceptorUrl) {
           setCommonHeaders(httpServletResponse);
-          chain.doFilter(request, response);
+          chain.doFilter(httpServletRequest, httpServletResponse);
         } else {
-          if ((accessToken != null)
-              && !StringUtils.isEmpty(accessToken)
-              && (userId != null)
-              && !StringUtils.isEmpty(userId)
-              && (null != clientToken)
-              && !StringUtils.isEmpty(clientToken)) {
-            CommonServiceImpl commonService = BeanUtil.getBean(CommonServiceImpl.class);
-            value = commonService.validateAccessToken(userId, accessToken, clientToken);
-            if (value == 1) {
-              setCommonHeaders(httpServletResponse);
-              chain.doFilter(request, response);
-            } else {
-              if (response instanceof HttpServletResponse) {
-                setCommonHeaders(httpServletResponse);
-                httpServletResponse.sendError(
-                    HttpServletResponse.SC_UNAUTHORIZED, ErrorCodes.UNAUTHORIZED.getValue());
-                httpServletResponse.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-              }
-            }
-          } else {
-            setCommonHeaders(httpServletResponse);
-            httpServletResponse.sendError(
-                HttpServletResponse.SC_UNAUTHORIZED, ErrorCodes.UNAUTHORIZED.getValue());
-            httpServletResponse.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-          }
+          validateTokenAndSetHeaders(
+              chain, httpServletRequest, httpServletResponse, userId, accessToken, clientToken);
         }
       } else {
         httpServletResponse.setStatus(HttpServletResponse.SC_OK);
-
         chain.doFilter(request, response);
       }
+    }
+  }
+
+  private boolean checkIfInterceptorUrl(HttpServletRequest httpServletRequest) {
+    boolean isInterceptorUrl = false;
+    ApplicationPropertyConfiguration applicationConfiguratation =
+        BeanUtil.getBean(ApplicationPropertyConfiguration.class);
+    String interceptorUrl = applicationConfiguratation.getInterceptorUrls();
+    String uri = httpServletRequest.getRequestURI();
+    String[] list = interceptorUrl.split(",");
+    for (int i = 0; i < list.length; i++) {
+      logger.info(list[i]);
+      if (uri.endsWith(list[i].trim())) {
+        isInterceptorUrl = true;
+      }
+    }
+    return isInterceptorUrl;
+  }
+
+  private void validateTokenAndSetHeaders(
+      FilterChain chain,
+      HttpServletRequest httpServletRequest,
+      HttpServletResponse httpServletResponse,
+      String userId,
+      String accessToken,
+      String clientToken)
+      throws IOException, ServletException {
+    Integer value;
+    if ((accessToken != null)
+        && !StringUtils.isEmpty(accessToken)
+        && (userId != null)
+        && !StringUtils.isEmpty(userId)
+        && (null != clientToken)
+        && !StringUtils.isEmpty(clientToken)) {
+      CommonServiceImpl commonService = BeanUtil.getBean(CommonServiceImpl.class);
+      value = commonService.validateAccessToken(userId, accessToken, clientToken);
+      if (null != value && 1 == value) {
+        setCommonHeaders(httpServletResponse);
+        chain.doFilter(httpServletRequest, httpServletResponse);
+      } else {
+        setCommonHeaders(httpServletResponse);
+        httpServletResponse.sendError(
+            HttpServletResponse.SC_UNAUTHORIZED, ErrorCodes.UNAUTHORIZED.getValue());
+        httpServletResponse.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+      }
+    } else {
+      setCommonHeaders(httpServletResponse);
+      httpServletResponse.sendError(
+          HttpServletResponse.SC_UNAUTHORIZED, ErrorCodes.UNAUTHORIZED.getValue());
+      httpServletResponse.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
     }
   }
 

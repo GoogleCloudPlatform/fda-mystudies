@@ -9,6 +9,7 @@
 package com.google.cloud.healthcare.fdamystudies.utils;
 
 import java.text.SimpleDateFormat;
+import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
@@ -179,5 +180,9 @@ public class MyStudiesUserRegUtil {
     }
     logger.info("INFO: MyStudiesUserRegUtil - getCurrentDateTime() :: ends");
     return currentDateTime;
+  }
+
+  public static long getSystemDateTimestamp() {
+    return Instant.now().toEpochMilli();
   }
 }

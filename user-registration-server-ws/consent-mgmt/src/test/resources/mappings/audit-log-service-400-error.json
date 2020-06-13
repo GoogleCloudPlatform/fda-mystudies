@@ -1,0 +1,18 @@
+{
+	"request": {
+		"method": "POST",
+		"url": "/audit-log-service/v1/events",
+		"bodyPatterns": [
+			{
+				"matchesJsonPath" : "$[?(@.correlation_id == '')]"
+			}
+		]
+	},
+	"response": {
+		"status": 400,
+		"headers": {
+			"Content-Type": "application/json"
+		},
+		"bodyFileName": "audit-log-service-400-error-response.json"
+	}
+}

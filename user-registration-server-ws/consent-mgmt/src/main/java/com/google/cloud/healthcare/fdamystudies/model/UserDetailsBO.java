@@ -69,7 +69,7 @@ public class UserDetailsBO implements Serializable {
   private Boolean touchId = false;
 
   @Column(name = "_ts")
-  private Date _ts;
+  private Date ts;
 
   @Column(name = "use_pass_code", columnDefinition = "TINYINT(1)")
   private Boolean usePassCode = false;

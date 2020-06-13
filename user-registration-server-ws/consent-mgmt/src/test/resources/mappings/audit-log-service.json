@@ -1,0 +1,18 @@
+{
+	"request": {
+		"method": "POST",
+		"url": "/audit-log-service/v1/events",
+		"bodyPatterns": [
+			{
+				"matchesJsonPath" : "$[?(@.correlation_id == 'corr')]"
+			}
+		]
+	},
+	"response": {
+		"status": 201,
+		"headers": {
+			"Content-Type": "application/json;charset=UTF-8"
+		},
+		"bodyFileName": "audit-log-service-response.json"
+	}
+}

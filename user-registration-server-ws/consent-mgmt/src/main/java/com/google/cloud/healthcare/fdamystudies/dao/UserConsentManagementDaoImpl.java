@@ -232,8 +232,6 @@ public class UserConsentManagementDaoImpl implements UserConsentManagementDao {
     CriteriaBuilder criteriaBuilder = null;
     CriteriaUpdate<StudyConsentBO> criteriaUpdate = null;
     Root<StudyConsentBO> studyConsentBoRoot = null;
-    Predicate[] predicates = new Predicate[1];
-    List<StudyConsentBO> studyConsentBoList = null;
     Integer isUpdated = 0;
     Integer isSaved = 0;
 
@@ -291,7 +289,6 @@ public class UserConsentManagementDaoImpl implements UserConsentManagementDao {
     List<OrgInfo> orgDetailsBoList = null;
     OrgInfo orgDetailsBo = null;
     AppOrgInfoBean appOrgInfoBean = new AppOrgInfoBean();
-    String message = "";
     int appInfoId = 0;
     int orgInfoId = 0;
 
