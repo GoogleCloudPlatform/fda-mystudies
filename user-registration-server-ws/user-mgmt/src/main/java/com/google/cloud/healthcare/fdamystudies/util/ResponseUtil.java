@@ -51,7 +51,6 @@ public final class ResponseUtil {
         response);
     responseBean.setCode(HttpStatus.BAD_REQUEST.value());
     responseBean.setMessage(errorMsg.getValue());
-    LOG.info("Bad Request Response: ", responseBean);
     return responseBean;
   }
 
