@@ -44,11 +44,9 @@ public class ParticipantInformationController {
       if (StringUtils.hasText(participantId) && StringUtils.hasText(studyId)) {
         participantInfoResp =
             participantInfoService.getParticipantInfoDetails(participantId, studyId);
-        if (participantInfoResp != null) {
-          participantInfoResp.setMessage(
-              MyStudiesUserRegUtil.ErrorCodes.SUCCESS.getValue().toLowerCase());
-          participantInfoResp.setCode(HttpStatus.OK.value());
-        } else {
+
+        if (participantInfoResp == null) {
+          logger.warn("ParticipantInformationController getParticipantDetails() - participantInfoResp is null");
           MyStudiesUserRegUtil.getFailureResponse(
               MyStudiesUserRegUtil.ErrorCodes.STATUS_102.getValue(),
               MyStudiesUserRegUtil.ErrorCodes.NO_DATA_AVAILABLE.getValue(),
@@ -56,6 +54,10 @@ public class ParticipantInformationController {
               response);
           return null;
         }
+
+        participantInfoResp.setMessage(
+            MyStudiesUserRegUtil.ErrorCodes.SUCCESS.getValue().toLowerCase());
+        participantInfoResp.setCode(HttpStatus.OK.value());
       } else {
         MyStudiesUserRegUtil.getFailureResponse(
             MyStudiesUserRegUtil.ErrorCodes.STATUS_102.getValue(),
