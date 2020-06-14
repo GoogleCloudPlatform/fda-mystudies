@@ -111,10 +111,10 @@ public class LoginController {
     return mv;
   }
 
-  @RequestMapping("/appDetails.do")
-  public ModelAndView appDetails() {
+  @RequestMapping("/healthCheck.do")
+  public ModelAndView healthCheck() {
     ModelMap map = new ModelMap();
-    return new ModelAndView("appDetails", map);
+    return new ModelAndView("healthCheck", map);
   }
 
   @RequestMapping(value = "/profile/changeExpiredPassword.do")
