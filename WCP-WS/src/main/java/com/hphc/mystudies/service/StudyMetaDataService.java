@@ -888,11 +888,9 @@ public class StudyMetaDataService {
   @GET
   @Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
   @Consumes(MediaType.APPLICATION_XML)
-  @Path("ping")
-  public String ping() {
-    LOGGER.info("INFO: StudyMetaDataService - ping() :: Starts ");
-    String response = "It Works!";
-    LOGGER.info("INFO: StudyMetaDataService - ping() :: Ends ");
+  @Path("healthCheck")
+  public String healthCheck() {
+    String response = "OK!";
     return response;
   }
 
