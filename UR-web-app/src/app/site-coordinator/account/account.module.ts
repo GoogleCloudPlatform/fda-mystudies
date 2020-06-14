@@ -4,10 +4,7 @@ import {AccountRoutingModule} from './account-routing.module';
 import {AccountProfileComponent} from './account-profile/account-profile.component';
 @NgModule({
   declarations: [AccountProfileComponent],
-  imports: [
-    CommonModule,
-    AccountRoutingModule,
-  ],
+  imports: [CommonModule, AccountRoutingModule],
   providers: [],
 })
-export class AccountModule { }
+export class AccountModule {}

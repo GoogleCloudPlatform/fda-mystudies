@@ -9,8 +9,7 @@ describe('SiteParticipantListComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       declarations: [SiteParticipantListComponent],
-    })
-        .compileComponents();
+    }).compileComponents();
   }));
 
   beforeEach(() => {

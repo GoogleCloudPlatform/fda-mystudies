@@ -9,8 +9,7 @@ describe('AddLocationComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       declarations: [AddLocationComponent],
-    })
-        .compileComponents();
+    }).compileComponents();
   }));
 
   beforeEach(() => {

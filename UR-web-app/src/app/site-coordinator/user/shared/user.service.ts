@@ -4,6 +4,4 @@ import {UserModule} from '../user.module';
 @Injectable({
   providedIn: UserModule,
 })
-export class UserService {
-  constructor() { }
-}
+export class UserService {}

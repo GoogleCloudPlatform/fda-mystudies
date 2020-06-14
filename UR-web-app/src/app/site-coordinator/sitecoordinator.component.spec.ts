@@ -9,8 +9,7 @@ describe('SitecoordinatorComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       declarations: [SiteCoordinatorComponent],
-    })
-        .compileComponents();
+    }).compileComponents();
   }));
 
   beforeEach(() => {

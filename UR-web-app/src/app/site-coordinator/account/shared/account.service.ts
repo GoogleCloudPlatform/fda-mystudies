@@ -4,6 +4,4 @@ import {AccountModule} from '../../account/account.module';
 @Injectable({
   providedIn: AccountModule,
 })
-export class AccountService {
-  constructor() { }
-}
+export class AccountService {}

@@ -1,13 +1,8 @@
-import {Component, OnInit} from '@angular/core';
+import {Component} from '@angular/core';
 
 @Component({
   selector: 'location-details',
   templateUrl: './location-details.component.html',
   styleUrls: ['./location-details.component.scss'],
 })
-export class LocationDetailsComponent implements OnInit {
-  constructor() { }
-
-  ngOnInit(): void {
-  }
-}
+export class LocationDetailsComponent {}
