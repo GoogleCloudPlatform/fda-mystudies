@@ -4,6 +4,4 @@ import {ParticipantModule} from '../participant.module';
 @Injectable({
   providedIn: ParticipantModule,
 })
-export class ParticipantService {
-  constructor() { }
-}
+export class ParticipantService {}

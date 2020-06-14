@@ -9,8 +9,7 @@ describe('AddNewUserComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       declarations: [AddNewUserComponent],
-    })
-        .compileComponents();
+    }).compileComponents();
   }));
 
   beforeEach(() => {

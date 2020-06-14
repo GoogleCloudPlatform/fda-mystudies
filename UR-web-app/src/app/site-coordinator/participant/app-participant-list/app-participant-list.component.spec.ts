@@ -9,8 +9,7 @@ describe('AppParticipantListComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       declarations: [AppParticipantListComponent],
-    })
-        .compileComponents();
+    }).compileComponents();
   }));
 
   beforeEach(() => {
