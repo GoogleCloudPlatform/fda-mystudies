@@ -72,10 +72,6 @@
 
 
   <!-- new login -->
-  <!-- Logo-->
-  <div class="logo__space">
-    <img src="images/logo/logo_landing_welcome.png" alt=""/>
-  </div>
   <div class="clearfix"></div>
   <div class="login__container">
 
