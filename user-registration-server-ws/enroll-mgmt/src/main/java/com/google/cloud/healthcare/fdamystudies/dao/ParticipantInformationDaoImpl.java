@@ -5,6 +5,7 @@
  * license that can be found in the LICENSE file or at
  * https://opensource.org/licenses/MIT.
  */
+
 package com.google.cloud.healthcare.fdamystudies.dao;
 
 import java.util.List;
@@ -44,9 +45,9 @@ public class ParticipantInformationDaoImpl implements ParticipantInformationDao 
 
     try (Session session = entityManagerFactory.unwrap(SessionFactory.class).openSession()) {
       criteriaBuilder = session.getCriteriaBuilder();
-      StudyInfoBO studyInfo = session.get(StudyInfoBO.class, studyId);
       participantBoCriteria = criteriaBuilder.createQuery(ParticipantStudiesBO.class);
       participantBoRoot = participantBoCriteria.from(ParticipantStudiesBO.class);
+      StudyInfoBO studyInfo = session.get(StudyInfoBO.class, studyId);
       predicates[0] = criteriaBuilder.equal(participantBoRoot.get("participantId"), particpinatId);
       predicates[1] = criteriaBuilder.equal(participantBoRoot.get("studyInfo"), studyInfo);
       participantBoCriteria.select(participantBoRoot).where(predicates);
@@ -55,13 +56,16 @@ public class ParticipantInformationDaoImpl implements ParticipantInformationDao 
         participantBo = participantBoList.get(0);
         if (participantBo != null) {
           participantRespBean = new ParticipantInfoRespBean();
-          if (participantBo.getSharing() != null)
+          if (participantBo.getSharing() != null) {
             participantRespBean.setSharing(participantBo.getSharing());
-          if (participantBo.getEnrolledDate().toString() != null)
+          }
+          if (participantBo.getEnrolledDate().toString() != null) {
             participantRespBean.setEnrollment(participantBo.getEnrolledDate().toString());
+          }
           if (participantBo.getWithdrawalDate() != null) {
-            if (participantBo.getWithdrawalDate().toString() != null)
+            if (participantBo.getWithdrawalDate().toString() != null) {
               participantRespBean.setWithdrawal(participantBo.getWithdrawalDate().toString());
+            }
           }
         }
       }

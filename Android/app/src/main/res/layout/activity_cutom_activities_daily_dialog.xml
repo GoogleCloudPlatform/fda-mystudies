@@ -19,7 +19,7 @@
         android:paddingTop="15dp">
 
         <RelativeLayout
-            android:id="@+id/mClossBtnLayout"
+            android:id="@+id/mCloseBtnLayout"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="right"

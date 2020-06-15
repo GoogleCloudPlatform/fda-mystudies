@@ -1,5 +1,6 @@
 /*
  * Copyright © 2017-2019 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors.
+ * Copyright 2020 Google LLC
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction, including
  * without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
@@ -26,35 +27,35 @@ import com.harvard.utils.AppController;
 import com.harvard.utils.Logger;
 
 public class TermsPrivacyPolicyActivity extends AppCompatActivity {
-  private RelativeLayout mBackBtn;
-  private AppCompatTextView mTitle;
-  private WebView mWebView;
+  private RelativeLayout backBtn;
+  private AppCompatTextView title;
+  private WebView webView;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_terms_privacy_policy);
-    initializeXMLId();
+    initializeXmlId();
     setTextForView();
     setFont();
     bindEvents();
   }
 
-  private void initializeXMLId() {
-    mBackBtn = (RelativeLayout) findViewById(R.id.backBtn);
-    mTitle = (AppCompatTextView) findViewById(R.id.title);
-    mWebView = (WebView) findViewById(R.id.webView);
+  private void initializeXmlId() {
+    backBtn = (RelativeLayout) findViewById(R.id.backBtn);
+    title = (AppCompatTextView) findViewById(R.id.title);
+    webView = (WebView) findViewById(R.id.webView);
   }
 
   private void setTextForView() {
     try {
-      String title = getIntent().getStringExtra("title");
-      mTitle.setText(title);
-      mWebView.getSettings().setLoadsImagesAutomatically(true);
-      mWebView.getSettings().setJavaScriptEnabled(true);
-      mWebView.setWebViewClient(new WebViewClient());
-      mWebView.setScrollBarStyle(View.SCROLLBARS_INSIDE_OVERLAY);
-      mWebView.loadUrl(getIntent().getStringExtra("url"));
+      String titleTxt = getIntent().getStringExtra("title");
+      title.setText(titleTxt);
+      webView.getSettings().setLoadsImagesAutomatically(true);
+      webView.getSettings().setJavaScriptEnabled(true);
+      webView.setWebViewClient(new WebViewClient());
+      webView.setScrollBarStyle(View.SCROLLBARS_INSIDE_OVERLAY);
+      webView.loadUrl(getIntent().getStringExtra("url"));
     } catch (Exception e) {
       Logger.log(e);
     }
@@ -62,7 +63,7 @@ public class TermsPrivacyPolicyActivity extends AppCompatActivity {
 
   private void setFont() {
     try {
-      mTitle.setTypeface(AppController.getTypeface(TermsPrivacyPolicyActivity.this, "medium"));
+      title.setTypeface(AppController.getTypeface(TermsPrivacyPolicyActivity.this, "medium"));
 
     } catch (Exception e) {
       Logger.log(e);
@@ -70,7 +71,7 @@ public class TermsPrivacyPolicyActivity extends AppCompatActivity {
   }
 
   private void bindEvents() {
-    mBackBtn.setOnClickListener(
+    backBtn.setOnClickListener(
         new View.OnClickListener() {
           @Override
           public void onClick(View view) {

@@ -27,7 +27,7 @@ android {
         targetSdkVersion 28
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         multiDexEnabled true
-        buildConfigField("String", "apikey", apikeyProperties['apikey'])
+        buildConfigField("String", "API_KEY", apikeyProperties['API_KEY'])
         buildConfigField("String", "SECRET_KEY_VALUE", apikeyProperties['SECRET_KEY_VALUE'])
         buildConfigField("String", "CLIENT_ID_VALUE", apikeyProperties['CLIENT_ID_VALUE'])
         buildConfigField("String", "BASE_URL_WCP_SERVER", apikeyProperties['BASE_URL_WCP_SERVER'])
@@ -36,6 +36,10 @@ android {
         buildConfigField("String", "BASE_URL_REGISTRATION_ENROLLMENT_SERVER", apikeyProperties['BASE_URL_REGISTRATION_ENROLLMENT_SERVER'])
         buildConfigField("String", "BASE_URL_AUTH_SERVER", apikeyProperties['BASE_URL_AUTH_SERVER'])
         buildConfigField("String", "BASE_URL_RESPONSE_SERVER", apikeyProperties['BASE_URL_RESPONSE_SERVER'])
+        buildConfigField("String", "APP_TYPE", apikeyProperties['APP_TYPE'])
+        buildConfigField("String", "APP_ID", apikeyProperties['APP_ID'])
+        buildConfigField("String", "ORG_ID", apikeyProperties['ORG_ID'])
+        buildConfigField("String", "STUDY_ID", apikeyProperties['STUDY_ID'])
     }
     buildTypes {
         release {
@@ -59,6 +63,7 @@ android {
         unitTests.returnDefaultValues = true
     }
     android {
+        useLibrary 'org.apache.http.legacy'
         aaptOptions.cruncherEnabled = false
         aaptOptions.useNewCruncher = false
         lintOptions {
@@ -70,45 +75,41 @@ android {
         fda {
             dimension 'version'
             applicationId "com.harvard.fda"
-            versionCode 12
+            versionCode 15
             versionName "1.0"
         }
     }
 }
 
 dependencies {
-    implementation fileTree(dir: 'libs', include: ['*.jar'])
-    implementation files('libs/lombok-api.jar')
     implementation 'com.android.support.constraint:constraint-layout:1.1.3'
-    androidTestImplementation('com.android.support.test.espresso:espresso-core:2.2.2', {
-        exclude group: 'com.android.support', module: 'support-annotations'
-    })
-    implementation('com.crashlytics.sdk.android:crashlytics:2.6.7@aar') {
-        transitive = true
-    }
     implementation 'com.android.support:appcompat-v7:28.0.0'
     implementation 'com.android.support:design:28.0.0'
     implementation 'com.android.support:support-v4:28.0.0'
-    implementation 'de.greenrobot:eventbus:2.4.0'
-    implementation 'com.google.code.gson:gson:2.8.2'
-    implementation 'org.jsoup:jsoup:1.9.2'
-    implementation 'com.facebook.stetho:stetho:1.5.0'
-    implementation 'com.uphyca:stetho_realm:2.3.0'
     implementation 'com.android.support:recyclerview-v7:28.0.0'
-    implementation 'org.researchstack:backbone:1.1.1'
-    implementation 'com.github.bumptech.glide:glide:3.8.0'
     implementation 'com.android.support:multidex:1.0.3'
     implementation 'com.google.firebase:firebase-messaging:17.4.0'
     implementation 'com.google.firebase:firebase-core:16.0.7'
-    implementation 'com.github.barteksc:android-pdf-viewer:2.4.0'
-    implementation 'org.apache.directory.studio:org.apache.commons.io:2.4'
+    implementation 'com.google.code.gson:gson:2.8.2'
     implementation 'com.google.android.gms:play-services-location:16.0.0'
     implementation 'com.google.android.gms:play-services-maps:16.1.0'
+    implementation 'de.greenrobot:eventbus:2.4.0'
+    implementation 'org.researchstack:backbone:1.1.1'
+    implementation 'com.github.bumptech.glide:glide:3.8.0'
+    implementation 'com.github.barteksc:android-pdf-viewer:2.4.0'
     implementation 'com.kovachcode:timePickerWithSeconds:1.0.1'
-    testImplementation 'junit:junit:4.12'
-    annotationProcessor 'org.projectlombok:lombok:1.14.8'
-    testImplementation 'junit:junit:4.12'
-    testImplementation 'org.mockito:mockito-android:2.11.0'
     implementation 'com.tom_roush:pdfbox-android:1.8.10.1'
+    implementation('com.crashlytics.sdk.android:crashlytics:2.6.7@aar') {
+        transitive = true
+    }
+
+    debugImplementation 'com.facebook.stetho:stetho:1.5.0'
+    debugImplementation 'com.uphyca:stetho_realm:2.3.0'
+
+    androidTestImplementation('com.android.support.test.espresso:espresso-core:2.2.2', {
+        exclude group: 'com.android.support', module: 'support-annotations'
+    })
+    testImplementation 'org.mockito:mockito-android:2.11.0'
+    testImplementation 'junit:junit:4.12'
 }
 apply plugin: 'com.google.gms.google-services'

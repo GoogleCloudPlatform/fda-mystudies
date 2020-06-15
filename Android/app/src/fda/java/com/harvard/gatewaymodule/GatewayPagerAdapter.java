@@ -31,25 +31,25 @@ import com.harvard.utils.Logger;
 
 public class GatewayPagerAdapter extends PagerAdapter {
 
-  private int mSize;
-  private AppCompatImageView mBgImg;
-  private AppCompatTextView mWebsite;
-  private AppCompatTextView mWelcome;
-  private AppCompatTextView mDesc;
-  private AppCompatTextView mWatchVideoLabel;
-  private Context mContext;
+  private int size;
+  private AppCompatImageView bgImg;
+  private AppCompatTextView website;
+  private AppCompatTextView welcome;
+  private AppCompatTextView desc;
+  private AppCompatTextView watchVideoLabel;
+  private Context context;
 
   public GatewayPagerAdapter() {
-    mSize = 2;
+    size = 2;
   }
 
   public GatewayPagerAdapter(int count) {
-    mSize = count;
+    size = count;
   }
 
   @Override
   public int getCount() {
-    return mSize;
+    return size;
   }
 
   @Override
@@ -66,36 +66,36 @@ public class GatewayPagerAdapter extends PagerAdapter {
   public Object instantiateItem(ViewGroup collection, int position) {
     final LayoutInflater inflater =
         (LayoutInflater) collection.getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-    mContext = inflater.getContext();
+    context = inflater.getContext();
     switch (position) {
       case 0:
         View view = inflater.inflate(R.layout.gateway_item1, null);
-        initializeXMLId(0, view);
+        initializeXmlId(0, view);
         setFont(0, view);
         collection.addView(view);
         return view;
       case 1:
         View view1 = inflater.inflate(R.layout.gateway_item2, null);
-        initializeXMLId(1, view1);
-        mWelcome.setText(mContext.getResources().getString(R.string.gateway_welcome1));
-        mDesc.setText(mContext.getResources().getString(R.string.gateway_des1));
+        initializeXmlId(1, view1);
+        welcome.setText(context.getResources().getString(R.string.gateway_welcome1));
+        desc.setText(context.getResources().getString(R.string.gateway_des1));
         setFont(1, view1);
         collection.addView(view1);
         return view1;
       case 2:
         View view2 = inflater.inflate(R.layout.gateway_item2, null);
-        initializeXMLId(2, view2);
-        mWelcome.setText(mContext.getResources().getString(R.string.gateway_welcome2));
-        mDesc.setText(mContext.getResources().getString(R.string.gateway_des2));
+        initializeXmlId(2, view2);
+        welcome.setText(context.getResources().getString(R.string.gateway_welcome2));
+        desc.setText(context.getResources().getString(R.string.gateway_des2));
         setFont(2, view2);
         setView(2);
         collection.addView(view2);
         return view2;
       case 3:
         View view3 = inflater.inflate(R.layout.gateway_item2, null);
-        initializeXMLId(2, view3);
-        mWelcome.setText(mContext.getResources().getString(R.string.gateway_welcome3));
-        mDesc.setText(mContext.getResources().getString(R.string.gateway_des3));
+        initializeXmlId(2, view3);
+        welcome.setText(context.getResources().getString(R.string.gateway_welcome3));
+        desc.setText(context.getResources().getString(R.string.gateway_des3));
         setFont(2, view3);
         setView(3);
         collection.addView(view3);
@@ -105,40 +105,40 @@ public class GatewayPagerAdapter extends PagerAdapter {
     }
   }
 
-  private void initializeXMLId(int pos, View view) {
+  private void initializeXmlId(int pos, View view) {
     if (pos == 0) {
-      mWebsite = (AppCompatTextView) view.findViewById(R.id.website);
-      mWelcome = (AppCompatTextView) view.findViewById(R.id.welcome);
-      mDesc = (AppCompatTextView) view.findViewById(R.id.desc);
-      RelativeLayout mWatchVideo = (RelativeLayout) view.findViewById(R.id.watch_video);
-      mWatchVideoLabel = (AppCompatTextView) view.findViewById(R.id.watchVideoLabel);
+      website = (AppCompatTextView) view.findViewById(R.id.website);
+      welcome = (AppCompatTextView) view.findViewById(R.id.welcome);
+      desc = (AppCompatTextView) view.findViewById(R.id.desc);
+      RelativeLayout watchVideo = (RelativeLayout) view.findViewById(R.id.watch_video);
+      watchVideoLabel = (AppCompatTextView) view.findViewById(R.id.watchVideoLabel);
 
-      mWatchVideo.setOnClickListener(
+      watchVideo.setOnClickListener(
           new View.OnClickListener() {
             @Override
             public void onClick(View v) {
               Intent intent =
                   new Intent(
                       Intent.ACTION_VIEW, Uri.parse("https://www.youtube.com/watch?v=6FGGquOrVic"));
-              mContext.startActivity(intent);
+              context.startActivity(intent);
             }
           });
     } else {
-      mBgImg = (AppCompatImageView) view.findViewById(R.id.bgImg);
-      mWebsite = (AppCompatTextView) view.findViewById(R.id.website);
-      mWelcome = (AppCompatTextView) view.findViewById(R.id.welcome);
-      mDesc = (AppCompatTextView) view.findViewById(R.id.desc);
+      bgImg = (AppCompatImageView) view.findViewById(R.id.bgImg);
+      website = (AppCompatTextView) view.findViewById(R.id.website);
+      welcome = (AppCompatTextView) view.findViewById(R.id.welcome);
+      desc = (AppCompatTextView) view.findViewById(R.id.desc);
     }
 
-    mWebsite.setOnClickListener(
+    website.setOnClickListener(
         new View.OnClickListener() {
           @Override
           public void onClick(View v) {
-            if (!mContext.getString(R.string.website).equalsIgnoreCase("")) {
+            if (!context.getString(R.string.website).equalsIgnoreCase("")) {
               Intent browserIntent =
                   new Intent(
-                      Intent.ACTION_VIEW, Uri.parse("" + mContext.getString(R.string.website)));
-              mContext.startActivity(browserIntent);
+                      Intent.ACTION_VIEW, Uri.parse("" + context.getString(R.string.website)));
+              context.startActivity(browserIntent);
             }
           }
         });
@@ -147,14 +147,14 @@ public class GatewayPagerAdapter extends PagerAdapter {
   private void setFont(int pos, View view) {
     try {
       if (pos == 0) {
-        mWebsite.setTypeface(AppController.getTypeface(view.getContext(), "regular"));
-        mWelcome.setTypeface(AppController.getTypeface(view.getContext(), "bold"));
-        mDesc.setTypeface(AppController.getTypeface(view.getContext(), "regular"));
-        mWatchVideoLabel.setTypeface(AppController.getTypeface(view.getContext(), "regular"));
+        website.setTypeface(AppController.getTypeface(view.getContext(), "regular"));
+        welcome.setTypeface(AppController.getTypeface(view.getContext(), "bold"));
+        desc.setTypeface(AppController.getTypeface(view.getContext(), "regular"));
+        watchVideoLabel.setTypeface(AppController.getTypeface(view.getContext(), "regular"));
       } else {
-        mWebsite.setTypeface(AppController.getTypeface(view.getContext(), "regular"));
-        mWelcome.setTypeface(AppController.getTypeface(view.getContext(), "thin"));
-        mDesc.setTypeface(AppController.getTypeface(view.getContext(), "regular"));
+        website.setTypeface(AppController.getTypeface(view.getContext(), "regular"));
+        welcome.setTypeface(AppController.getTypeface(view.getContext(), "thin"));
+        desc.setTypeface(AppController.getTypeface(view.getContext(), "regular"));
       }
 
     } catch (Exception e) {
@@ -165,10 +165,10 @@ public class GatewayPagerAdapter extends PagerAdapter {
   private void setView(int pos) {
 
     if (pos == 2) {
-      mBgImg.setImageResource(R.drawable.img_02);
+      bgImg.setImageResource(R.drawable.img_02);
     }
     if (pos == 3) {
-      mBgImg.setImageResource(R.drawable.img_03);
+      bgImg.setImageResource(R.drawable.img_03);
     }
   }
 }
