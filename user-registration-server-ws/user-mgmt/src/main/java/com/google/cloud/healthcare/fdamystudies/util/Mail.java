@@ -62,7 +62,7 @@ public class Mail {
     private Boolean useIpWhitelist = false;
 
     public boolean sendemail() throws Exception {
-        logger.warn(" sendemail() ==== starts");
+        logger.debug(" sendemail() ==== starts");
         boolean sentMail = false;
         try {
             final String username = this.getFromEmailAddress();
@@ -97,12 +97,12 @@ public class Mail {
         } catch (Exception e) {
             logger.error("ERROR:  sendemail() - error( ) " + e + " : ");
         }
-        logger.info("Mail.sendemail() :: Ends");
+        logger.debug("Mail.sendemail() :: Ends");
         return sentMail;
     }
 
     public boolean sendMailWithAttachment() throws Exception {
-        logger.debug("sendemail()==== start");
+        logger.debug("sendMailWithAttachment()==== start");
         boolean sentMail = false;
         try {
             final String username = this.getFromEmailAddress();
@@ -159,7 +159,7 @@ public class Mail {
         } catch (Exception e) {
             logger.error("ERROR:  sendemail() - " + e + " : ");
         }
-        logger.info("Mail.sendemail() :: Ends");
+        logger.debug("Mail.sendMailWithAttachment() :: Ends");
         return sentMail;
     }
 
