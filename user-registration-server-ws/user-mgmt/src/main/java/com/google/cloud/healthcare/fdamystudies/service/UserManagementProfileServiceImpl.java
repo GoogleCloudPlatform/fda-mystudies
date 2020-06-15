@@ -307,7 +307,7 @@ public class UserManagementProfileServiceImpl implements UserManagementProfileSe
             appPropertiesDetails.getRegEmailBody().replace("<<< TOKEN HERE >>>", securityToken);
         subject = appPropertiesDetails.getRegEmailSub();
       }
-      // TODO: replace with actual study's org name in #496.
+      // TODO(#496): replace with actual study's org name.
       emailMap.put("$orgName", "Test Org");
       dynamicContent = MyStudiesUserRegUtil.generateEmailContent(content, emailMap);
       isSent =

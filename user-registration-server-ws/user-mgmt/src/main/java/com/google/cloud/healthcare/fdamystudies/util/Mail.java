@@ -97,7 +97,7 @@ public class Mail {
         } catch (Exception e) {
             logger.error("ERROR:  sendemail() - error( ) " + e + " : ");
         }
-        logger.info("Mail.sendemail() :: Ends");
+        logger.debug("Mail.sendemail() :: Ends");
         return sentMail;
     }
 
@@ -159,7 +159,7 @@ public class Mail {
         } catch (Exception e) {
             logger.error("ERROR:  sendemail() - " + e + " : ");
         }
-        logger.info("Mail.sendMailWithAttachment() :: Ends");
+        logger.debug("Mail.sendMailWithAttachment() :: Ends");
         return sentMail;
     }
 

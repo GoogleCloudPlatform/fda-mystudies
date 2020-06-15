@@ -70,7 +70,7 @@ public class VerifyEmailIdController {
       verifyEmailIdResponse.setCode(HttpStatus.BAD_REQUEST.value());
       verifyEmailIdResponse.setMessage(
           MyStudiesUserRegUtil.ErrorCodes.INVALID_INPUT_ERROR_MSG.getValue());
-      logger.warn(AppConstants.VERIFY_EMAILID_CONTROLLER_ENDS_MESSAGE + "Bad request");
+      logger.warn(AppConstants.VERIFY_EMAILID_CONTROLLER_ENDS_MESSAGE + " bad request.");
       return new ResponseEntity<>(verifyEmailIdResponse, HttpStatus.BAD_REQUEST);
     }
     try {

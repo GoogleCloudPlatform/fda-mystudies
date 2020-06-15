@@ -252,7 +252,7 @@ public class UserRegistrationController {
       emailContent = new ArrayList<>();
       Map<String, String> emailMap = new HashMap<String, String>();
       emailMap.put("$securitytoken", otp);
-      // TODO: replace with actual study's org name in #496.
+      // TODO(#496): replace with actual study's org name.
       emailMap.put("$orgName", "Test Org");
       String subject = appConfig.getConfirmationMailSubject();
       String message = MyStudiesUserRegUtil.generateEmailContent(appConfig.getConfirmationMail(), emailMap);
