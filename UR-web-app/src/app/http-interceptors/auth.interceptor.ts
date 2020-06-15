@@ -27,7 +27,11 @@ export class AuthInterceptor implements HttpInterceptor {
     void this.spinner.show();
     const user = this.getUserDetails();
     if (user === null) {
-      return next.handle(req);
+      return next.handle(req).pipe(
+        finalize(() => {
+          void this.spinner.hide();
+        }),
+      );
     }
     const headers = req.headers
       .set('Content-Type', 'application/json')

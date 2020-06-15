@@ -5,13 +5,16 @@ import {Location} from '@angular/common';
 
 @Injectable()
 export class EntityService<T> {
-  baseUrl = 'http://<IP>:<port>/urwebapp';
-
+    baseUrl = 'http://<IP>:<port>/urwebapp';
   constructor(private readonly http: HttpClient) {}
 
   post(bodydata: string, urlpath: string): Observable<T> {
     const serviceUrl = Location.joinWithSlash(this.baseUrl, urlpath);
     return this.http.post<T>(serviceUrl, bodydata);
+  }
+  getArray(urlpath: string): Observable<T[]> {
+    const serviceUrl = Location.joinWithSlash(this.baseUrl, urlpath);
+    return this.http.get<T[]>(serviceUrl);
   }
   get(urlpath: string): Observable<T> {
     const serviceUrl = Location.joinWithSlash(this.baseUrl, urlpath);
