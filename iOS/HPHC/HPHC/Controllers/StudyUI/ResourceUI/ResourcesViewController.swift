@@ -126,7 +126,7 @@ class ResourcesViewController: UIViewController {
 
   func updateAnchorDateLifeTime() {
     guard let currentStudy = Study.currentStudy else { return }
-    AnchorDateHandler(study: currentStudy).fetchActivityAnchorDateForResourceFromLabkey {
+    AnchorDateHandler(study: currentStudy).fetchActivityAnchorDateForResource {
       (status) in
       if status {
         self.loadResourceFromDatabase()
