@@ -69,12 +69,11 @@ struct DeviceType {
       .screenMaxLength >= 812
 }
 
-enum iOSVersion {
-
+struct OSVersion {
   static let systemVersion = (UIDevice.current.systemVersion as NSString).floatValue
-  static let iOS7 = (iOSVersion.systemVersion < 8.0 && iOSVersion.systemVersion >= 7.0)
-  static let iOS8 = (iOSVersion.systemVersion >= 8.0 && iOSVersion.systemVersion < 9.0)
-  static let iOS9 = (iOSVersion.systemVersion >= 9.0 && iOSVersion.systemVersion < 10.0)
+  static let iOS7 = (OSVersion.systemVersion < 8.0 && OSVersion.systemVersion >= 7.0)
+  static let iOS8 = (OSVersion.systemVersion >= 8.0 && OSVersion.systemVersion < 9.0)
+  static let iOS9 = (OSVersion.systemVersion >= 9.0 && OSVersion.systemVersion < 10.0)
 }
 
 class Utilities: NSObject {
