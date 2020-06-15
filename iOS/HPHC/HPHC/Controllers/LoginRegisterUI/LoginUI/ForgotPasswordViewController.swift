@@ -22,7 +22,10 @@ import UIKit
 
 let kVerifyViewControllerSegue = "VerifyViewControllerSegue"
 let kVerficationMessageFromForgotPassword =
-  "Your registered email(xyz@gmail.com) is pending verification. Enter the Verification Code received on this email to complete verification and try the Forgot Password action again."
+  """
+  Your registered email(xyz@gmail.com) is pending verification. Enter the Verification Code received \
+  on this email to complete verification and try the Forgot Password action again.
+  """
 
 class ForgotPasswordViewController: UIViewController {
 
