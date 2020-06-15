@@ -35,6 +35,8 @@ import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.WebDataBinder;
+import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 import com.fdahpstudydesigner.bean.StudyListBean;
@@ -44,7 +46,6 @@ import com.fdahpstudydesigner.service.DashBoardAndProfileService;
 import com.fdahpstudydesigner.service.LoginService;
 import com.fdahpstudydesigner.service.StudyService;
 import com.fdahpstudydesigner.service.UsersService;
-import com.fdahpstudydesigner.util.CrossScriptingUtil;
 import com.fdahpstudydesigner.util.FdahpStudyDesignerConstants;
 import com.fdahpstudydesigner.util.FdahpStudyDesignerUtil;
 import com.fdahpstudydesigner.util.SessionObject;
@@ -60,6 +61,11 @@ public class DashBoardAndProfileController {
   @Autowired private StudyService studyService;
 
   @Autowired private UsersService usersService;
+
+  @InitBinder
+  public void initBinder(WebDataBinder binder) {
+    binder.registerCustomEditor(String.class, new CustomPropertyEditor());
+  }
 
   @RequestMapping("/adminDashboard/changePassword.do")
   public void changePassword(HttpServletRequest request, HttpServletResponse response) {
@@ -138,7 +144,6 @@ public class DashBoardAndProfileController {
     String message = FdahpStudyDesignerConstants.FAILURE;
     Map<String, String> propMap = FdahpStudyDesignerUtil.getAppProperties();
     try {
-    	CrossScriptingUtil.replaceAll(userBO);
       HttpSession session = request.getSession();
       SessionObject userSession =
           (SessionObject) session.getAttribute(FdahpStudyDesignerConstants.SESSION_OBJECT);

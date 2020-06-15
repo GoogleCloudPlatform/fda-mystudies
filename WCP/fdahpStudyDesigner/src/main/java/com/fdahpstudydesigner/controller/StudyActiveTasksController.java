@@ -41,6 +41,8 @@ import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.WebDataBinder;
+import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
@@ -55,7 +57,6 @@ import com.fdahpstudydesigner.bo.StudyBo;
 import com.fdahpstudydesigner.service.StudyActiveTasksService;
 import com.fdahpstudydesigner.service.StudyQuestionnaireService;
 import com.fdahpstudydesigner.service.StudyService;
-import com.fdahpstudydesigner.util.CrossScriptingUtil;
 import com.fdahpstudydesigner.util.FdahpStudyDesignerConstants;
 import com.fdahpstudydesigner.util.FdahpStudyDesignerUtil;
 import com.fdahpstudydesigner.util.SessionObject;
@@ -70,6 +71,11 @@ public class StudyActiveTasksController {
   @Autowired private StudyService studyService;
 
   @Autowired private StudyQuestionnaireService studyQuestionnaireService;
+
+  @InitBinder
+  public void initBinder(WebDataBinder binder) {
+    binder.registerCustomEditor(String.class, new CustomPropertyEditor());
+  }
 
   @RequestMapping("/adminStudies/activeTAskMarkAsCompleted.do")
   public ModelAndView activeTAskMarkAsCompleted(HttpServletRequest request) {
@@ -380,7 +386,6 @@ public class StudyActiveTasksController {
         String activeTaskScheduleInfo = request.getParameter("activeTaskScheduleInfo");
         if ((activeTaskScheduleInfo != null) && !activeTaskScheduleInfo.isEmpty()) {
           activeTaskBo = mapper.readValue(activeTaskScheduleInfo, ActiveTaskBo.class);
-          CrossScriptingUtil.replaceAll(activeTaskBo);
           if (activeTaskBo != null) {
             studyBo =
                 studyService.getStudyById(activeTaskBo.getStudyId().toString(), sesObj.getUserId());
@@ -439,7 +444,6 @@ public class StudyActiveTasksController {
     String customStudyId = "";
     ModelMap map = new ModelMap();
     try {
-    	CrossScriptingUtil.replaceAll(activeTaskBo);
       SessionObject sesObj =
           (SessionObject)
               request.getSession().getAttribute(FdahpStudyDesignerConstants.SESSION_OBJECT);
@@ -534,7 +538,6 @@ public class StudyActiveTasksController {
     new ArrayList<>();
     StudyBo studyBo = null;
     try {
-    	CrossScriptingUtil.replaceAll(activeTaskBo);
       SessionObject sesObj =
           (SessionObject)
               request.getSession().getAttribute(FdahpStudyDesignerConstants.SESSION_OBJECT);

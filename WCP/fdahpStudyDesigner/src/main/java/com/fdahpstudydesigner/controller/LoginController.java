@@ -38,6 +38,8 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.WebDataBinder;
+import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
@@ -45,7 +47,6 @@ import com.fdahpstudydesigner.bo.MasterDataBO;
 import com.fdahpstudydesigner.bo.UserBO;
 import com.fdahpstudydesigner.service.DashBoardAndProfileService;
 import com.fdahpstudydesigner.service.LoginServiceImpl;
-import com.fdahpstudydesigner.util.CrossScriptingUtil;
 import com.fdahpstudydesigner.util.FdahpStudyDesignerConstants;
 import com.fdahpstudydesigner.util.FdahpStudyDesignerUtil;
 import com.fdahpstudydesigner.util.SessionObject;
@@ -59,13 +60,17 @@ public class LoginController {
 
   private LoginServiceImpl loginService;
 
+  @InitBinder
+  public void initBinder(WebDataBinder binder) {
+    binder.registerCustomEditor(String.class, new CustomPropertyEditor());
+  }
+
   @RequestMapping("/addPassword.do")
   public ModelAndView addPassword(HttpServletRequest request, UserBO userBO) {
     logger.info("LoginController - addPassword() - Starts");
     ModelAndView mv = new ModelAndView("redirect:login.do");
     try {
       Map<String, String> propMap = FdahpStudyDesignerUtil.getAppProperties();
-      CrossScriptingUtil.replaceAll(userBO, userBO.getUserPassword());
       HttpSession session = request.getSession(false);
       SessionObject sesObj =
           (SessionObject) session.getAttribute(FdahpStudyDesignerConstants.SESSION_OBJECT);

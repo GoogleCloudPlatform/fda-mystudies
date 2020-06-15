@@ -41,6 +41,8 @@ import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.WebDataBinder;
+import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.multipart.MultipartFile;
@@ -63,7 +65,6 @@ import com.fdahpstudydesigner.bo.StudyBo;
 import com.fdahpstudydesigner.service.StudyActiveTasksService;
 import com.fdahpstudydesigner.service.StudyQuestionnaireService;
 import com.fdahpstudydesigner.service.StudyService;
-import com.fdahpstudydesigner.util.CrossScriptingUtil;
 import com.fdahpstudydesigner.util.FdahpStudyDesignerConstants;
 import com.fdahpstudydesigner.util.FdahpStudyDesignerUtil;
 import com.fdahpstudydesigner.util.SessionObject;
@@ -77,6 +78,11 @@ public class StudyQuestionnaireController {
   @Autowired private StudyQuestionnaireService studyQuestionnaireService;
 
   @Autowired private StudyService studyService;
+
+  @InitBinder
+  public void initBinder(WebDataBinder binder) {
+    binder.registerCustomEditor(String.class, new CustomPropertyEditor());
+  }
 
   @RequestMapping("/adminStudies/copyQuestionnaire.do")
   public ModelAndView copyStudyQuestionnaire(
@@ -1659,7 +1665,6 @@ public class StudyQuestionnaireController {
         if (null != questionnaireStepInfo) {
           questionnairesStepsBo =
               mapper.readValue(questionnaireStepInfo, QuestionnairesStepsBo.class);
-          CrossScriptingUtil.replaceAll(questionnairesStepsBo);
           if (questionnairesStepsBo != null) {
             if (questionnairesStepsBo.getStepId() != null) {
               questionnairesStepsBo.setModifiedBy(sesObj.getUserId());
@@ -1731,7 +1736,6 @@ public class StudyQuestionnaireController {
                     .getAttribute(sessionStudyCount + FdahpStudyDesignerConstants.CUSTOM_STUDY_ID);
         if (null != instructionsInfo) {
           instructionsBo = mapper.readValue(instructionsInfo, InstructionsBo.class);
-          CrossScriptingUtil.replaceAll(instructionsBo);
           if (instructionsBo != null) {
             if (instructionsBo.getId() != null) {
               instructionsBo.setModifiedBy(sesObj.getUserId());
@@ -1797,7 +1801,6 @@ public class StudyQuestionnaireController {
     QuestionsBo addQuestionsBo = null;
     String customStudyId = "";
     try {
-      CrossScriptingUtil.replaceAll(questionsBo);
       SessionObject sesObj =
           (SessionObject)
               request.getSession().getAttribute(FdahpStudyDesignerConstants.SESSION_OBJECT);
@@ -1881,7 +1884,6 @@ public class StudyQuestionnaireController {
     QuestionnairesStepsBo addQuestionnairesStepsBo = null;
     String customStudyId = "";
     try {
-      CrossScriptingUtil.replaceAll(questionnairesStepsBo);
       SessionObject sesObj =
           (SessionObject)
               request.getSession().getAttribute(FdahpStudyDesignerConstants.SESSION_OBJECT);
@@ -1964,7 +1966,6 @@ public class StudyQuestionnaireController {
     InstructionsBo addInstructionsBo = null;
     String customStudyId = "";
     try {
-      CrossScriptingUtil.replaceAll(instructionsBo);
       SessionObject sesObj =
           (SessionObject)
               request.getSession().getAttribute(FdahpStudyDesignerConstants.SESSION_OBJECT);
@@ -2062,7 +2063,6 @@ public class StudyQuestionnaireController {
     QuestionnaireBo addQuestionnaireBo = null;
     String customStudyId = "";
     try {
-      CrossScriptingUtil.replaceAll(questionnaireBo);
       SessionObject sesObj =
           (SessionObject)
               request.getSession().getAttribute(FdahpStudyDesignerConstants.SESSION_OBJECT);
@@ -2151,7 +2151,6 @@ public class StudyQuestionnaireController {
     QuestionnairesStepsBo addQuestionnairesStepsBo = null;
     String customStudyId = "";
     try {
-      CrossScriptingUtil.replaceAll(questionnairesStepsBo);
       SessionObject sesObj =
           (SessionObject)
               request.getSession().getAttribute(FdahpStudyDesignerConstants.SESSION_OBJECT);
@@ -2268,13 +2267,6 @@ public class StudyQuestionnaireController {
         }
         if (null != questionnaireStepInfo) {
           questionsBo = mapper.readValue(questionnaireStepInfo, QuestionsBo.class);
-          CrossScriptingUtil.replaceAll(questionsBo);
-          if (null != questionsBo.getQuestionnairesStepsBo()) {
-            CrossScriptingUtil.replaceAll(questionsBo.getQuestionnairesStepsBo());
-          }
-          if (null != questionsBo.getQuestionReponseTypeBo()) {
-            CrossScriptingUtil.replaceAll(questionsBo.getQuestionReponseTypeBo());
-          }
 
           if (questionsBo != null) {
             if (questionsBo.getId() != null) {
@@ -2368,7 +2360,6 @@ public class StudyQuestionnaireController {
         String questionnaireScheduleInfo = request.getParameter("questionnaireScheduleInfo");
         if ((questionnaireScheduleInfo != null) && !questionnaireScheduleInfo.isEmpty()) {
           questionnaireBo = mapper.readValue(questionnaireScheduleInfo, QuestionnaireBo.class);
-          CrossScriptingUtil.replaceAll(questionnaireBo);
           if (questionnaireBo != null) {
             String studyId =
                 (String)
@@ -2474,13 +2465,6 @@ public class StudyQuestionnaireController {
         if (null != questionnaireStepInfo) {
           questionnairesStepsBo =
               mapper.readValue(questionnaireStepInfo, QuestionnairesStepsBo.class);
-          CrossScriptingUtil.replaceAll(questionnairesStepsBo);
-          if (null != questionnairesStepsBo.getQuestionsBo()) {
-            CrossScriptingUtil.replaceAll(questionnairesStepsBo.getQuestionsBo());
-          }
-          if (null != questionnairesStepsBo.getQuestionReponseTypeBo()) {
-            CrossScriptingUtil.replaceAll(questionnairesStepsBo.getQuestionReponseTypeBo());
-          }
           if (questionnairesStepsBo != null) {
             if (questionnairesStepsBo.getStepId() != null) {
               questionnairesStepsBo.setModifiedBy(sesObj.getUserId());

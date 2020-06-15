@@ -50,7 +50,6 @@ import com.fdahpstudydesigner.bo.StatisticImageListBo;
 import com.fdahpstudydesigner.bo.StudyBo;
 import com.fdahpstudydesigner.bo.StudySequenceBo;
 import com.fdahpstudydesigner.bo.StudyVersionBo;
-import com.fdahpstudydesigner.util.CrossScriptingUtil;
 import com.fdahpstudydesigner.util.FdahpStudyDesignerConstants;
 import com.fdahpstudydesigner.util.FdahpStudyDesignerUtil;
 import com.fdahpstudydesigner.util.SessionObject;
@@ -620,7 +619,6 @@ public class StudyActiveTasksDAOImpl implements StudyActiveTasksDAO {
       session.saveOrUpdate(activeTaskBo);
       if ((taskAttributeValueBos != null) && !taskAttributeValueBos.isEmpty()) {
         for (ActiveTaskAtrributeValuesBo activeTaskAtrributeValuesBo : taskAttributeValueBos) {
-          CrossScriptingUtil.replaceAll(activeTaskAtrributeValuesBo);
           if (activeTaskAtrributeValuesBo.isAddToDashboard()) {
             if (!activeTaskAtrributeValuesBo.isAddToLineChart()) {
               activeTaskAtrributeValuesBo.setTimeRangeChart(null);

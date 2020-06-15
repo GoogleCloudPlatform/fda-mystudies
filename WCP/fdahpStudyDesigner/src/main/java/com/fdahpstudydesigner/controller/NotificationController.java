@@ -31,12 +31,13 @@ import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.WebDataBinder;
+import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 import com.fdahpstudydesigner.bo.NotificationBO;
 import com.fdahpstudydesigner.bo.NotificationHistoryBO;
 import com.fdahpstudydesigner.service.NotificationService;
-import com.fdahpstudydesigner.util.CrossScriptingUtil;
 import com.fdahpstudydesigner.util.FdahpStudyDesignerConstants;
 import com.fdahpstudydesigner.util.FdahpStudyDesignerUtil;
 import com.fdahpstudydesigner.util.SessionObject;
@@ -47,6 +48,11 @@ public class NotificationController {
   private static Logger logger = Logger.getLogger(NotificationController.class);
 
   @Autowired private NotificationService notificationService;
+
+  @InitBinder
+  public void initBinder(WebDataBinder binder) {
+    binder.registerCustomEditor(String.class, new CustomPropertyEditor());
+  }
 
   @RequestMapping("/adminNotificationEdit/deleteNotification.do")
   public ModelAndView deleteNotification(HttpServletRequest request) {
@@ -225,7 +231,6 @@ public class NotificationController {
     ModelAndView mav = new ModelAndView();
     Map<String, String> propMap = FdahpStudyDesignerUtil.getAppProperties();
     try {
-    	CrossScriptingUtil.replaceAll(notificationBO);
       HttpSession session = request.getSession();
       SessionObject sessionObject =
           (SessionObject) session.getAttribute(FdahpStudyDesignerConstants.SESSION_OBJECT);
