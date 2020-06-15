@@ -24,20 +24,52 @@ let kConsentPdfKey = "consent"
 
 let kUnwindToStudyListIdentifier = "unwindeToStudyListResourcesIdentifier"
 
+private enum TableRow {
+  case about, consent, leave
+
+  var title: String {
+    switch self {
+    case .about:
+      return LocalizableString.aboutStudy.localizedString
+    case .consent:
+      return Branding.consentPDFTitle
+    case .leave:
+      return Branding.leaveStudyTitle
+    }
+  }
+
+  var subTitle: String {
+    switch self {
+    case .leave:
+      if Utilities.isStandaloneApp() {
+        return LocalizableString.leaveSubtitle.localizedString
+      } else {
+        return ""
+      }
+    default:
+      return ""
+    }
+  }
+}
+
 class ResourcesViewController: UIViewController {
 
-  var tableViewRowDetails: [AnyObject]? = []
-
+  // MARK: - Outlets
   @IBOutlet var tableView: UITableView?
+
+  // MARK: - Properties
   var resourceLink: String?
   var fileType: String?
   var navigateToStudyOverview: Bool? = false
   var withdrawlInformationNotFound = false
   var shouldDeleteData: Bool? = false
 
-  var leaveStudy: String = "Leave Study"
-  var aboutTheStudy: String = "About the Study"
-  var consentPDF: String = "Consent PDF"
+  var leaveStudy: String = TableRow.leave.title
+  var aboutTheStudy: String = TableRow.about.title
+  var consentPDF: String = TableRow.consent.title
+
+  private var staticTableRows: [TableRow] = [.about, .consent, .leave]
+  private var resources: [Resource] = []
 
   override var preferredStatusBarStyle: UIStatusBarStyle {
     return .default
@@ -52,11 +84,6 @@ class ResourcesViewController: UIViewController {
       let appDelegate = (UIApplication.shared.delegate as? AppDelegate)!
       appDelegate.checkConsentStatus(controller: self)
     }
-
-    // Branding
-    leaveStudy = Branding.leaveStudyTitle
-    consentPDF = Branding.consentPDFTitle
-
   }
 
   override func viewWillAppear(_ animated: Bool) {
@@ -176,22 +203,9 @@ class ResourcesViewController: UIViewController {
 
   }
 
-  func addDefaultList() {
-    tableViewRowDetails?.append(aboutTheStudy as AnyObject)
-    tableViewRowDetails?.append(consentPDF as AnyObject)
-  }
-
-  func appendLeaveStudy() {
-    // append Leave Study row
-    tableViewRowDetails?.append(leaveStudy as AnyObject)
-  }
-
   func handleResourcesReponse() {
 
-    tableViewRowDetails = []
-
-    self.addDefaultList()
-    self.appendLeaveStudy()
+    resources = []
 
     let todayDate = Date()
 
@@ -210,7 +224,7 @@ class ResourcesViewController: UIViewController {
           && (endDateResult == .orderedDescending || endDateResult == .orderedSame)
         {
 
-          tableViewRowDetails?.append(resource)
+          resources.append(resource)
 
           // compare for today
           let endOfToday = resource.startDate
@@ -221,7 +235,7 @@ class ResourcesViewController: UIViewController {
 
         }
       } else {
-        tableViewRowDetails?.append(resource)
+        resources.append(resource)
       }
 
     }
@@ -563,37 +577,47 @@ class ResourcesViewController: UIViewController {
 extension ResourcesViewController: UITableViewDataSource {
 
   func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-
-    return tableViewRowDetails!.count
+    return resources.count + staticTableRows.count
   }
 
   func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
 
-    let resource = (tableViewRowDetails?[indexPath.row])!
-
-    let cell =
-      (tableView.dequeueReusableCell(withIdentifier: kResourcesTableViewCell, for: indexPath)
-      as? ResourcesTableViewCell)!
-
-    // Cell Data Setup
-
-    if (resource as? Resource) != nil {
-      // resources cell
-      let res = resource as! Resource
-      if Utilities.isValidValue(someObject: res.title as AnyObject) {
-        cell.populateCellData(data: (res.title)!)
-      } else {
-        cell.labelTitle?.text = ""
+    if let cell = tableView.dequeueReusableCell(withIdentifier: kResourcesTableViewCell, for: indexPath)
+      as? ResourcesTableViewCell
+    {
+      let rowType = staticTableRows[safe: indexPath.row]
+      if let row = rowType {
+        cell.populateCellData(data: row.title, subTitle: row.subTitle)
+      } else if let resource = self.resources[safe: indexPath.row - staticTableRows.count] {
+        // Update UI with resource data
+        cell.populateCellData(data: resource.title ?? "")
+        cell.animateAvailability(for: resource)
       }
-      cell.animateAvailability(for: res)
-
-    } else {
-      // default cells
-      cell.populateCellData(data: (resource as? String)!)
+      return cell
     }
-    cell.backgroundColor = UIColor.clear
-    return cell
+    return UITableViewCell()
   }
+
+  func tableView(
+    _ tableView: UITableView,
+    viewForFooterInSection section: Int
+  ) -> UIView? {
+    let result = UIView()
+
+    // recreate insets from existing ones in the table view
+    let insets = tableView.separatorInset
+    let width = tableView.bounds.width - insets.left - insets.right
+    let sepFrame = CGRect(x: insets.left, y: -0.5, width: width, height: 0.5)
+
+    // create layer with separator, setting color
+    let sep = CALayer()
+    sep.frame = sepFrame
+    sep.backgroundColor = tableView.separatorColor?.cgColor
+    result.layer.addSublayer(sep)
+
+    return result
+  }
+
 }
 
 // MARK: TableView Delegates
@@ -603,21 +627,14 @@ extension ResourcesViewController: UITableViewDelegate {
     tableView.deselectRow(at: indexPath, animated: true)
 
     guard let currentStudy = Study.currentStudy else { return }
-    let resource = tableViewRowDetails?[indexPath.row]
 
-    if (resource as? Resource) != nil {
+    let rowType = staticTableRows[safe: indexPath.row]
 
-      resourceLink = (resource as? Resource)?.file?.getFileLink()
-      fileType = (resource as? Resource)?.file?.getMIMEType()
-      self.performSegue(withIdentifier: "ResourceDetailViewSegueIdentifier", sender: resource)
-
-    } else {
-      if (resource as? String)! == leaveStudy {
-        self.handleLeaveStudy()
-      } else if (resource as? String)! == aboutTheStudy {
+    if let row = rowType {
+      switch row {
+      case .about:
         self.checkDatabaseForStudyInfo(study: currentStudy)
-      } else if (resource as? String)! == consentPDF {
-        // PENDING
+      case .consent:
         if let consentPath = Study.currentStudy?.signedConsentFilePath, !consentPath.isEmpty {
           self.pushToResourceDetails(with: consentPath)
         } else {
@@ -627,7 +644,13 @@ extension ResourcesViewController: UITableViewDelegate {
             delegate: self
           )
         }
+      case .leave:
+        self.handleLeaveStudy()
       }
+    } else if let resource = self.resources[safe: indexPath.row - staticTableRows.count] {
+      resourceLink = resource.file?.getFileLink()
+      fileType = resource.file?.getMIMEType()
+      self.performSegue(withIdentifier: "ResourceDetailViewSegueIdentifier", sender: resource)
     }
 
   }
@@ -709,7 +732,6 @@ extension ResourcesViewController: NMWebServiceDelegate {
 
     default:
       self.removeProgressIndicator()
-      break
 
     }
 
@@ -733,9 +755,7 @@ extension ResourcesViewController: NMWebServiceDelegate {
       if requestName as String == WCPMethods.resources.method.methodName {
 
         self.removeProgressIndicator()
-        tableViewRowDetails = []
-        self.addDefaultList()
-        self.appendLeaveStudy()
+        resources = []
         self.tableView?.isHidden = false
         self.tableView?.reloadData()
 

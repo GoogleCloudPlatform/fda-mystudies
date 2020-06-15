@@ -20,10 +20,26 @@ import UIKit
 
 class ResourcesTableViewCell: UITableViewCell {
 
+  // MARK: - Outlets
   @IBOutlet var labelTitle: UILabel?
+  @IBOutlet var subtextLbl: UILabel!
 
-  func populateCellData(data: String) {
+  override func awakeFromNib() {
+    super.awakeFromNib()
+    self.subtextLbl.isHidden = true
+    self.labelTitle?.text = ""
+  }
+
+  /// Updates the cell UI.
+  /// - Parameters:
+  ///   - data: Title for the cell.
+  ///   - subTitle: SubTitle for the cell.
+  func populateCellData(data: String, subTitle: String = "") {
     labelTitle?.text = data
+    if !subTitle.isEmpty {
+      subtextLbl.isHidden = false
+      subtextLbl.text = subTitle
+    }
   }
 
   func animateAvailability(for resource: Resource) {
