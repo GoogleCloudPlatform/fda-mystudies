@@ -29,7 +29,10 @@ class WebViewController: UIViewController {
   @IBOutlet var barItemShare: UIBarButtonItem?
 
   static let headerString =
-    "<header><meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no'></header>"
+    """
+    <header><meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1.0, \
+    minimum-scale=1.0, user-scalable=no'></header>
+    """
   var activityIndicator: UIActivityIndicatorView!
   var requestLink: String?
   var pdfData: Data?
