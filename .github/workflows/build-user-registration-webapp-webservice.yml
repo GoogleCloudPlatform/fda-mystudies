@@ -3,7 +3,7 @@ on:
     paths:
     - 'user-reg-webapp-ws/**'
     - '.github/workflows/build-user-registration-webapp-webservice.yml'
-name: Build-response-server-ws
+name: Build-user-reg-webapp-ws
 jobs:
   build:
     runs-on: ubuntu-latest
