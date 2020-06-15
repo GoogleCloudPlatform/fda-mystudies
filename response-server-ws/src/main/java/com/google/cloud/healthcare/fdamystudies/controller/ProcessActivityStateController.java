@@ -52,6 +52,7 @@ public class ProcessActivityStateController {
   public ResponseEntity<?> getActivityState(
       @RequestParam(name = "studyId") String studyId,
       @RequestParam("participantId") String participantId) {
+    
     if (StringUtils.isBlank(studyId) || StringUtils.isBlank(participantId)) {
       ErrorBean errorBean =
           AppUtil.dynamicResponse(
@@ -59,6 +60,7 @@ public class ProcessActivityStateController {
               ErrorCode.EC_701.errorMessage(),
               AppConstants.ERROR_STR,
               ErrorCode.EC_701.errorMessage());
+      logger.warn("ProcessActivityStateController getActivityState() failed. studyId or participantId missing.");
       return new ResponseEntity<>(errorBean, HttpStatus.BAD_REQUEST);
     } else {
       try {
@@ -67,15 +69,13 @@ public class ProcessActivityStateController {
                 studyId, participantId);
         return new ResponseEntity<>(activitiesBean, HttpStatus.OK);
       } catch (Exception e) {
+        logger.warn("ProcessActivityStateController getActivityState() failed ", e);
         ErrorBean errorBean =
             AppUtil.dynamicResponse(
                 ErrorCode.EC_713.code(),
                 ErrorCode.EC_713.errorMessage(),
                 AppConstants.ERROR_STR,
                 e.getMessage());
-        logger.error(
-            "(C)...ProcessActivityResponseController.getActivityState()...Exception "
-                + e.getMessage());
         return new ResponseEntity<>(errorBean, HttpStatus.BAD_REQUEST);
       }
     }
@@ -119,8 +119,8 @@ public class ProcessActivityStateController {
             null);
 
         return new ResponseEntity<>(srBean, HttpStatus.OK);
-
       } catch (Exception e) {
+        logger.warn("ProcessActivityStateController updateActivityState() failed ", e);
         String activityIds =
             activityStateRequestBean
                 .getActivity()
@@ -142,9 +142,6 @@ public class ProcessActivityStateController {
                 ErrorCode.EC_714.errorMessage(),
                 AppConstants.ERROR_STR,
                 e.getMessage());
-        logger.error(
-            "ProcessActivityResponseController.updateActivityState()...Exception "
-                + e.getMessage());
         return new ResponseEntity<>(errorBean, HttpStatus.BAD_REQUEST);
       }
     }
