@@ -53,7 +53,11 @@ enum Branding {
   }
 
   static var leaveStudyTitle: String {
-    return brandConfig[JSONKey.leaveStudy] as? String ?? ""
+    var leaveStudyTitle = brandConfig[JSONKey.leaveStudy] as? String ?? ""
+    if Utilities.isStandaloneApp() {
+      leaveStudyTitle += " & Delete Account"
+    }
+    return leaveStudyTitle
   }
 
   static var leaveStudyConfirmationText: String {
