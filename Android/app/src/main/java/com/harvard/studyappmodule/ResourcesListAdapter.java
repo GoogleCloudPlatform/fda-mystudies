@@ -55,9 +55,6 @@ public class ResourcesListAdapter extends RecyclerView.Adapter<ResourcesListAdap
 
   @Override
   public int getItemCount() {
-    if (items == null) {
-      return 0;
-    }
     return items.size();
   }
 
@@ -65,17 +62,20 @@ public class ResourcesListAdapter extends RecyclerView.Adapter<ResourcesListAdap
 
     final RelativeLayout container;
     final AppCompatTextView resourcesTitle;
+    final AppCompatTextView resourcesDesc;
 
     Holder(View itemView) {
       super(itemView);
       container = (RelativeLayout) itemView.findViewById(R.id.container);
       resourcesTitle = (AppCompatTextView) itemView.findViewById(R.id.resourcesTitle);
+      resourcesDesc = (AppCompatTextView) itemView.findViewById(R.id.resourcesDesc);
       setFont();
     }
 
     private void setFont() {
       try {
         resourcesTitle.setTypeface(AppController.getTypeface(context, "regular"));
+        resourcesDesc.setTypeface(AppController.getTypeface(context, "regular"));
       } catch (Exception e) {
         Logger.log(e);
       }
@@ -87,6 +87,12 @@ public class ResourcesListAdapter extends RecyclerView.Adapter<ResourcesListAdap
     final int i = holder.getAdapterPosition();
     try {
       holder.resourcesTitle.setText(items.get(i).getTitle());
+
+      if (items.get(i).getTitle().equalsIgnoreCase(context.getResources().getString(R.string.leave_study))
+              && AppConfig.AppType.equalsIgnoreCase(context.getString(R.string.app_standalone))) {
+        holder.resourcesDesc.setVisibility(View.VISIBLE);
+        holder.resourcesDesc.setText(context.getString(R.string.delete_account_msg));
+      }
 
       holder.container.setOnClickListener(
           new View.OnClickListener() {
@@ -135,11 +141,7 @@ public class ResourcesListAdapter extends RecyclerView.Adapter<ResourcesListAdap
                 String message = ((SurveyResourcesFragment) fragment).getLeaveStudyMessage();
                 AlertDialog.Builder builder =
                     new AlertDialog.Builder(context, R.style.MyAlertDialogStyle);
-                if (AppConfig.AppType.equalsIgnoreCase(context.getResources().getString(R.string.app_gateway))) {
-                  builder.setTitle(context.getResources().getString(R.string.leave_study) + "?");
-                } else {
-                  builder.setTitle(context.getResources().getString(R.string.leave_study) + " & " + context.getResources().getString(R.string.delete_account) + "?");
-                }
+                builder.setTitle(context.getResources().getString(R.string.leave_study) + "?");
                 builder.setMessage(message);
                 builder.setPositiveButton(
                     context.getResources().getString(R.string.proceed_caps),
@@ -227,48 +229,10 @@ public class ResourcesListAdapter extends RecyclerView.Adapter<ResourcesListAdap
       diag.show();
     } else if (count == 2) {
       // withdrawalType delete_data
-      builder.setMessage(context.getResources().getString(R.string.leave_study_deleted_message));
-      builder.setPositiveButton(
-          context.getResources().getString(R.string.ok),
-          new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-              ((SurveyResourcesFragment) fragment).responseServerWithdrawFromStudy("true");
-            }
-          });
-
-      builder.setNegativeButton(
-          context.getResources().getString(R.string.cancel_caps),
-          new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-              dialog.cancel();
-            }
-          });
-      AlertDialog diag = builder.create();
-      diag.show();
+      ((SurveyResourcesFragment) fragment).responseServerWithdrawFromStudy("true");
     } else if (count == 1) {
       // withdrawalType no_action
-      builder.setMessage(context.getResources().getString(R.string.leave_study_retained_message));
-      builder.setPositiveButton(
-          context.getResources().getString(R.string.ok),
-          new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-              ((SurveyResourcesFragment) fragment).responseServerWithdrawFromStudy("false");
-            }
-          });
-
-      builder.setNegativeButton(
-          context.getResources().getString(R.string.cancel_caps),
-          new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-              dialog.cancel();
-            }
-          });
-      AlertDialog diag = builder.create();
-      diag.show();
+      ((SurveyResourcesFragment) fragment).responseServerWithdrawFromStudy("false");
     }
   }
 }
