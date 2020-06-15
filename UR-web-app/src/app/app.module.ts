@@ -9,6 +9,12 @@ import {HashLocationStrategy, LocationStrategy} from '@angular/common';
 import {PageNotFoundComponent} from './page-not-found/page-not-found.component';
 import {EntityService} from './service/entity.service';
 import {httpInterceptorProviders} from './http-interceptors';
+import {ToastrModule} from 'ngx-toastr';
+import {FormsModule} from '@angular/forms';
+import {NgxSpinnerModule} from 'ngx-spinner';
+import {HttpClientModule} from '@angular/common/http';
+import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
+
 @NgModule({
   declarations: [
     LoginComponent,
@@ -17,7 +23,19 @@ import {httpInterceptorProviders} from './http-interceptors';
     AppComponent,
     PageNotFoundComponent,
   ],
-  imports: [BrowserModule, AppRoutingModule],
+  imports: [
+    BrowserModule,
+    AppRoutingModule,
+    FormsModule,
+    NgxSpinnerModule,
+    HttpClientModule,
+    BrowserAnimationsModule,
+    ToastrModule.forRoot({
+      positionClass: 'toast-top-center',
+      preventDuplicates: true,
+      enableHtml: true,
+    }),
+  ],
   providers: [
     EntityService,
     httpInterceptorProviders,

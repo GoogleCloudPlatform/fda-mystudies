@@ -1,2 +1,193 @@
-<p>sitecoordinator works!</p>
+<header (keydown)="handleKeyDown($event)">
+  <div id="desktop-menu">
+    <div class="bs-example bs__example">
+      <nav class="navbar navbar-expand-md p-none">
+        <a routerLink="/user/dashboard" class="navbar-brand"
+          ><img
+            class="mr-sm"
+            src="../../../assets/images/landing-logo.gif"
+          /><span class="header__logo__text">FDA MyStudies </span></a
+        >
+        <div class="collapse navbar-collapse" id="navbarCollapse">
+          <div class="navbar-nav ml-auto">
+            <div class="navbar-nav display-flex-center">
+              <div class="navbar-nav inner-addon right-addon search-icon">
+                <input
+                  type="text"
+                  [attr.placeholder]="searchPlaceholder"
+                  autocomplete="off"
+                  [(ngModel)]="filterQuery"
+                  class="form-control search-box search__"
+                />
+              </div>
+
+              <a
+                routerLink="/coordinator/participants/dashboard"
+                routerLinkActive="active"
+                [routerLinkActiveOptions]="{exact: true}"
+                class="nav-item nav-link"
+                >Dashboard</a
+              >
+              <a
+                routerLink="/coordinator/locations"
+                routerLinkActive="active"
+                [routerLinkActiveOptions]="{exact: true}"
+                class="nav-item nav-link"
+                >Locations</a
+              >
+              <a
+                routerLink="/coordinator/users"
+                routerLinkActive="active"
+                [routerLinkActiveOptions]="{exact: true}"
+                class="nav-item nav-link"
+                >Users</a
+              >
+              <a
+                routerLink="/coordinator/accounts"
+                routerLinkActive="active"
+                [routerLinkActiveOptions]="{exact: true}"
+                class="nav-item nav-link"
+                >My Account <span class="navbar__name">J</span></a
+              >
+            </div>
+          </div>
+        </div>
+      </nav>
+    </div>
+  </div>
+
+  <div id="mobile-menu">
+    <div id="mySidenav__menubar" class="flex__justify__space-between">
+      <div class="">
+        <span
+          class="openNav display-inline-block mr-sm"
+          (click)="opencloseNav()"
+        >
+          <svg
+            height="16px"
+            viewBox="0 -53 384 384"
+            width="20px"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="m368 154.667969h-352c-8.832031 0-16-7.167969-16-16s7.167969-16 16-16h352c8.832031 0 16 7.167969 16 16s-7.167969 16-16 16zm0 0"
+            />
+            <path
+              d="m368 32h-352c-8.832031 0-16-7.167969-16-16s7.167969-16 16-16h352c8.832031 0 16 7.167969 16 16s-7.167969 16-16 16zm0 0"
+            />
+            <path
+              d="m368 277.332031h-352c-8.832031 0-16-7.167969-16-16s7.167969-16 16-16h352c8.832031 0 16 7.167969 16 16s-7.167969 16-16 16zm0 0"
+            />
+          </svg>
+        </span>
+        <a href="#" class="">
+          <img class="mr-sm" src="../../../assets/images/landing-logo.gif" />
+          <span class="header__logo__text">FDA MyStudies </span>
+        </a>
+      </div>
+      <div
+        *ngIf="showSearchBar"
+        class="navbar-nav inner-addon right-addon search-icon"
+      >
+        <div class="position__relative">
+          <input
+            type="text"
+            [attr.placeholder]="searchPlaceholder"
+            autocomplete="off"
+            [(ngModel)]="filterQuery"
+            class="form-control search-box search__"
+          />
+          <i
+            class="fa fa-times-circle cursor__pointer cir__pos"
+            aria-hidden="true"
+          ></i>
+        </div>
+        <div>
+          <i class="fa fa-search cursor__pointer" aria-hidden="true"></i>
+        </div>
+      </div>
+    </div>
+    <div
+      id="mySidenav"
+      class="sidenav"
+      [ngClass]="opencloseNavval ? 'width__268 ' : 'width__0 '"
+    >
+      <div
+        [ngClass]="
+          opencloseNavval ? 'width__268 display__block ' : 'display__none '
+        "
+      >
+        <div class="mob__bo">
+          <a
+            href="javascript:void(0)"
+            class="closebtn"
+            id="closeMobile"
+            (click)="opencloseNav()"
+            >×</a
+          >
+          <a href="#" class="">
+            <img class="mr-sm" src="../../../assets/images/landing-logo.gif" />
+            <span class="header__logo__text">FDA MyStudies </span>
+          </a>
+        </div>
+
+        <ul class="user__profile__ul">
+          <li>
+            <a
+              routerLink="/coordinator/participants/dashboard"
+              routerLinkActive="active"
+              [routerLinkActiveOptions]="{exact: true}"
+              class="nav-item nav-link"
+              >Dashboard</a
+            >
+          </li>
+          <li>
+            <a
+              routerLink="/coordinator/locations"
+              routerLinkActive="active"
+              [routerLinkActiveOptions]="{exact: true}"
+              class="nav-item nav-link"
+              >Locations</a
+            >
+          </li>
+          <li>
+            <a
+              routerLink="/coordinator/users"
+              routerLinkActive="active"
+              [routerLinkActiveOptions]="{exact: true}"
+              class="nav-item nav-link"
+              >Users</a
+            >
+          </li>
+          <li>
+            <a
+              routerLink="/coordinator/accounts"
+              routerLinkActive="active"
+              [routerLinkActiveOptions]="{exact: true}"
+              class="nav-item nav-link"
+              >My Account</a
+            >
+          </li>
+        </ul>
+      </div>
+    </div>
+    <div
+      class="bg__overlay"
+      [ngClass]="opencloseNavval ? 'display__block' : 'display__none'"
+    ></div>
+  </div>
+</header>
+
 <router-outlet></router-outlet>
+
+<footer>
+  <div class="">
+    &copy; 2019 FDA MyStudies. All rights reserved.
+  </div>
+  <div class="">
+    <ul>
+      <li><a href="#">About</a></li>
+      <li><a href="#">Terms of Service</a></li>
+    </ul>
+  </div>
+</footer>

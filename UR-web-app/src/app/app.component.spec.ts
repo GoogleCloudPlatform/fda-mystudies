@@ -16,18 +16,9 @@ describe('AppComponent', () => {
     expect(app).toBeTruthy();
   });
 
-  it(`should have as title 'userRegistrationWeb'`, () => {
+  it(`should have as title 'User Registration Web App'`, () => {
     const fixture = TestBed.createComponent(AppComponent);
     const app = fixture.debugElement.componentInstance as AppComponent;
-    expect(app.title).toEqual('userRegistrationWeb');
-  });
-
-  it('should render title in a h1 tag', () => {
-    const fixture = TestBed.createComponent(AppComponent);
-    fixture.detectChanges();
-    const compiled = fixture.debugElement.nativeElement as HTMLElement;
-    expect(compiled.querySelector('h1')?.textContent).toContain(
-      'Welcome to userRegistrationWeb!',
-    );
+    expect(app.title).toEqual('User Registration Web App');
   });
 });
