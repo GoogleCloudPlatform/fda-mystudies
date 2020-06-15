@@ -269,8 +269,7 @@ class ResourcesViewController: UIViewController {
 
           UIUtilities.showAlertMessageWithThreeActionsAndHandler(
             kImportantNoteMessage,
-            errorMessage:
-              "You are choosing to leave the study. Please choose if your response data can be retained and used for research purposes OR if your response data should be deleted.",
+            errorMessage: kRetainDataOnLeaveStudy,
             errorAlertActionTitle: "Retain my data",
             errorAlertActionTitle2: "Delete my data",
             errorAlertActionTitle3: "Cancel",

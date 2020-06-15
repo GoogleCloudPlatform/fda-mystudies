@@ -1,5 +1,6 @@
 /*
  * Copyright © 2017-2019 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors.
+ * Copyright 2020 Google LLC
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction, including
  * without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
@@ -20,17 +21,17 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 public abstract class WebserviceConfigEvent<T, V> {
-  private String mUrl;
-  private Class<T> tClass;
-  private V v;
-  private HashMap<String, String> mRequestParams = new HashMap<>();
-  private HashMap<String, String> mHeaders = new HashMap<>();
-  private JSONObject mRequestParamsJson;
-  private JSONArray mRequestParamsJsonArray;
-  private boolean mShowAlert;
-  private String mRequestType;
-  private int mResponseCode;
-  private Context mContext;
+  private String url;
+  private Class<T> objT;
+  private V objV;
+  private HashMap<String, String> requestParams = new HashMap<>();
+  private HashMap<String, String> headers = new HashMap<>();
+  private JSONObject requestParamsJson;
+  private JSONArray requestParamsJsonArray;
+  private boolean showAlert;
+  private String requestType;
+  private int responseCode;
+  private Context context;
 
   public WebserviceConfigEvent(
       String method,
@@ -42,17 +43,17 @@ public abstract class WebserviceConfigEvent<T, V> {
       HashMap<String, String> header,
       JSONObject jsonobj,
       boolean showAlert,
-      V v) {
-    mUrl = url;
-    tClass = modelclass;
-    this.v = v;
-    mRequestParams = params;
-    mHeaders = header;
-    mRequestParamsJson = jsonobj;
-    mShowAlert = showAlert;
-    mRequestType = method;
-    mResponseCode = requestCode;
-    mContext = context;
+      V objV) {
+    this.url = url;
+    this.objT = modelclass;
+    this.objV = objV;
+    this.requestParams = params;
+    this.headers = header;
+    this.requestParamsJson = jsonobj;
+    this.showAlert = showAlert;
+    this.requestType = method;
+    this.responseCode = requestCode;
+    this.context = context;
   }
 
   public WebserviceConfigEvent(
@@ -64,112 +65,112 @@ public abstract class WebserviceConfigEvent<T, V> {
       HashMap<String, String> header,
       JSONArray jsonArray,
       boolean showAlert,
-      V v) {
-    mUrl = url;
-    tClass = modelclass;
-    this.v = v;
-    mHeaders = header;
-    mRequestParamsJsonArray = jsonArray;
-    mShowAlert = showAlert;
-    mRequestType = method;
-    mResponseCode = requestCode;
-    mContext = context;
+      V objV) {
+    this.url = url;
+    this.objT = modelclass;
+    this.objV = objV;
+    this.headers = header;
+    this.requestParamsJsonArray = jsonArray;
+    this.showAlert = showAlert;
+    this.requestType = method;
+    this.responseCode = requestCode;
+    this.context = context;
   }
 
-  public JSONArray getmRequestParamsJsonArray() {
-    return mRequestParamsJsonArray;
+  public JSONArray getRequestParamsJsonArray() {
+    return requestParamsJsonArray;
   }
 
-  public void setmRequestParamsJsonArray(JSONArray mRequestParamsJsonArray) {
-    this.mRequestParamsJsonArray = mRequestParamsJsonArray;
+  public void setRequestParamsJsonArray(JSONArray requestParamsJsonArray) {
+    this.requestParamsJsonArray = requestParamsJsonArray;
   }
 
   public abstract String getProductionUrl();
 
   public abstract String getDevelopmentUrl();
 
-  public JSONObject getmRequestParamsJson() {
-    return mRequestParamsJson;
+  public JSONObject getRequestParamsJson() {
+    return requestParamsJson;
   }
 
-  public void setmRequestParamsJson(JSONObject mRequestParamsJson) {
-    this.mRequestParamsJson = mRequestParamsJson;
+  public void setRequestParamsJson(JSONObject requestParamsJson) {
+    this.requestParamsJson = requestParamsJson;
   }
 
-  public Context getmContext() {
-    return mContext;
+  public Context getContext() {
+    return context;
   }
 
-  public void setmContext(Context mContext) {
-    this.mContext = mContext;
+  public void setContext(Context context) {
+    this.context = context;
   }
 
-  public int getmResponseCode() {
-    return mResponseCode;
+  public int getResponseCode() {
+    return responseCode;
   }
 
-  public void setmResponseCode(int mResponseCode) {
-    this.mResponseCode = mResponseCode;
+  public void setResponseCode(int responseCode) {
+    this.responseCode = responseCode;
   }
 
-  public String getmRequestType() {
-    return mRequestType;
+  public String getRequestType() {
+    return requestType;
   }
 
-  public void setmRequestType(String mRequestType) {
-    this.mRequestType = mRequestType;
+  public void setRequestType(String requestType) {
+    this.requestType = requestType;
   }
 
-  public String getmUrl() {
-    return mUrl;
+  public String getUrl() {
+    return url;
   }
 
-  public void setmUrl(String mUrl) {
-    this.mUrl = mUrl;
+  public void setUrl(String url) {
+    this.url = url;
   }
 
-  public Class<T> gettClass() {
-    return tClass;
+  public Class<T> getClassT() {
+    return objT;
   }
 
-  public void settClass(Class<T> tClass) {
-    this.tClass = tClass;
+  public void setClassT(Class<T> objT) {
+    this.objT = objT;
   }
 
   public V getV() {
-    return v;
+    return objV;
   }
 
   /**
-   * setting response interface
+   * setting response interface.
    *
-   * @param v
+   * @param objV
    */
-  public void setV(V v) {
-    this.v = v;
+  public void setV(V objV) {
+    this.objV = objV;
   }
 
-  public HashMap<String, String> getmRequestParams() {
-    return mRequestParams;
+  public HashMap<String, String> getRequestParams() {
+    return requestParams;
   }
 
-  public void setmRequestParams(HashMap<String, String> mRequestParams) {
-    this.mRequestParams = mRequestParams;
+  public void setRequestParams(HashMap<String, String> requestParams) {
+    this.requestParams = requestParams;
   }
 
-  public HashMap<String, String> getmHeaders() {
-    return mHeaders;
+  public HashMap<String, String> getHeaders() {
+    return headers;
   }
 
-  public void setmHeaders(HashMap<String, String> mHeaders) {
-    this.mHeaders = mHeaders;
+  public void setHeaders(HashMap<String, String> headers) {
+    this.headers = headers;
   }
 
-  public boolean ismShowAlert() {
-    return mShowAlert;
+  public boolean isShowAlert() {
+    return showAlert;
   }
 
-  public void setmShowAlert(boolean mShowAlert) {
-    this.mShowAlert = mShowAlert;
+  public void setShowAlert(boolean showAlert) {
+    this.showAlert = showAlert;
   }
 }
