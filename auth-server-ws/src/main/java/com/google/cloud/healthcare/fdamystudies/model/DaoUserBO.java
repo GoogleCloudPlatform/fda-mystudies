@@ -68,7 +68,7 @@ public class DaoUserBO implements Serializable {
   private String resetPassword;
 
   @Column(name = "temp_password", columnDefinition = "TINYINT(1)")
-  private Boolean tempPassword = false;
+  private boolean tempPassword = false;
 
   @Column(name = "temp_password_date")
   private Date tempPasswordDate;
@@ -79,7 +79,12 @@ public class DaoUserBO implements Serializable {
   @Column(name = "reminder_lead_time")
   private String reminderLeadTime;
 
-  // @Column(columnDefinition = "DATETIME")
   @Column(name = "created", columnDefinition = "TIMESTAMP")
   private LocalDateTime createdOn;
+
+  @Column(name = "locked_account_temp_pwd")
+  private String lockedAccountTempPassword;
+
+  @Column(name = "locked_account_temp_pwd_expire_date")
+  private LocalDateTime lockedAccountTempPasswordExpiredDate;
 }

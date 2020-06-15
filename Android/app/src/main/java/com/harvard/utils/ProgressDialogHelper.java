@@ -36,7 +36,6 @@ public class ProgressDialogHelper {
    * @param cancelable True or False
    */
   public void showProgress(Context context, String title, String msg, boolean cancelable) {
-    //        showCustomProgress(context, R.drawable.loader, cancelable);
     showProgressOnly(context, false);
   }
 
@@ -48,14 +47,15 @@ public class ProgressDialogHelper {
    * @param msg msg to display
    * @param cancelable is cancelable or not
    */
-  private void showProgressDefault(Context context, String title, String msg, boolean cancelable) {
-    if (ringProgressDialog == null) {
-      ringProgressDialog = new ProgressDialog(context);
-      ringProgressDialog.setCancelable(cancelable);
-      ringProgressDialog.setTitle(title);
-      ringProgressDialog.setMessage(msg);
-      ringProgressDialog.show();
+  public void showProgressWithText(Context context, String title, String msg, boolean cancelable) {
+    if (ringProgressDialog != null) {
+      return;
     }
+    ringProgressDialog = new ProgressDialog(context);
+    ringProgressDialog.setCancelable(cancelable);
+    ringProgressDialog.setTitle(title);
+    ringProgressDialog.setMessage(msg);
+    ringProgressDialog.show();
   }
 
   /**
@@ -65,15 +65,16 @@ public class ProgressDialogHelper {
    * @param cancelable is cancelable or not
    */
   private void showProgressOnly(Context context, boolean cancelable) {
-    if (ringProgressDialog == null) {
-      ringProgressDialog = new ProgressDialog(context);
-      ringProgressDialog
-          .getWindow()
-          .setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
-      ringProgressDialog.setCancelable(cancelable);
-      ringProgressDialog.show();
-      ringProgressDialog.setContentView(new ProgressBar(context));
+    if (ringProgressDialog != null) {
+      return;
     }
+    ringProgressDialog = new ProgressDialog(context);
+    ringProgressDialog
+            .getWindow()
+            .setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
+    ringProgressDialog.setCancelable(cancelable);
+    ringProgressDialog.show();
+    ringProgressDialog.setContentView(new ProgressBar(context));
   }
 
   /**

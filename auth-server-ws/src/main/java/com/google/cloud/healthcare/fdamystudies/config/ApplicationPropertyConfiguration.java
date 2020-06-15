@@ -1,3 +1,11 @@
+/*
+ * Copyright 2020 Google LLC
+ *
+ * Use of this source code is governed by an MIT-style
+ * license that can be found in the LICENSE file or at
+ * https://opensource.org/licenses/MIT.
+ */
+
 package com.google.cloud.healthcare.fdamystudies.config;
 
 import java.io.Serializable;
@@ -72,4 +80,10 @@ public class ApplicationPropertyConfiguration implements Serializable {
 
   @Value("${verification.expiration.in.hour}")
   private String verificationExpInHr;
+
+  @Value("${locked.account.mail.subject}")
+  private String lockAccountMailSubject;
+
+  @Value("${locked.account.mail.content}")
+  private String lockAccountMailContent;
 }
