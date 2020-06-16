@@ -1,6 +1,7 @@
 package com.google.cloud.healthcare.fdamystudies.controller.tests;
 
 import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import java.util.ArrayList;
 import java.util.List;
@@ -20,6 +21,7 @@ import com.google.cloud.healthcare.fdamystudies.testutils.Constants;
 import com.google.cloud.healthcare.fdamystudies.testutils.TestUtils;
 import com.google.cloud.healthcare.fdamystudies.util.AppConstants;
 import com.jayway.jsonpath.JsonPath;
+import net.minidev.json.JSONArray;
 
 public class StudyStateControllerTest extends BaseMockIT {
 
@@ -36,6 +38,7 @@ public class StudyStateControllerTest extends BaseMockIT {
     assertNotNull(studyStateService);
   }
 
+  @SuppressWarnings("rawtypes")
   @Test
   public void updateStudyStateSuccess() throws Exception {
 
@@ -57,16 +60,14 @@ public class StudyStateControllerTest extends BaseMockIT {
     performPost(UPDATE_STUDY_STATE_PATH, requestJson, headers, Constants.SUCCESS, OK);
 
     MvcResult result = performGet(STUDY_STATE_PATH, headers, Constants.SUCCESS.toUpperCase(), OK);
-    List<Map<String, Object>> studyList =
-        JsonPath.read(result.getResponse().getContentAsString(), "$.studies[*]");
-    for (Map<String, Object> studyMap : studyList) {
-      if (studyMap.get("studyId").equals(Constants.STUDYOF_HEALTH)) {
-        assertTrue((boolean) studyMap.get("bookmarked").equals(Constants.BOOKMARKED));
-        assertTrue((int) studyMap.get("completion") == Constants.COMPLETION);
-        assertTrue((int) studyMap.get("adherence") == Constants.ADHERENCE);
-        break;
-      }
-    }
+    JSONArray array =
+        JsonPath.read(
+            result.getResponse().getContentAsString(), "$.studies[?(@.studyId=='StudyofHealth')]");
+    Map obj = (Map) array.get(0);
+
+    assertTrue((boolean) obj.get("bookmarked"));
+    assertEquals(Constants.COMPLETION, obj.get("completion"));
+    assertEquals(Constants.ADHERENCE, obj.get("adherence"));
   }
 
   @Test
@@ -114,6 +115,7 @@ public class StudyStateControllerTest extends BaseMockIT {
     performGet(STUDY_STATE_PATH, headers, "", UNAUTHORIZED);
   }
 
+  @SuppressWarnings("rawtypes")
   @Test
   public void withdrawFromStudySuccess() throws Exception {
 
@@ -127,14 +129,13 @@ public class StudyStateControllerTest extends BaseMockIT {
         WITHDRAW_FROM_STUDY_PATH, requestJson, headers, Constants.SUCCESS.toUpperCase(), OK);
 
     MvcResult result = performGet(STUDY_STATE_PATH, headers, Constants.SUCCESS.toUpperCase(), OK);
-    List<Map<String, String>> studyList =
-        JsonPath.read(result.getResponse().getContentAsString(), "$.studies[*]");
-    for (Map<String, String> studyMap : studyList) {
-      if (studyMap.get("participantId").equals(Constants.PARTICIPANT_ID)) {
-        assertTrue(studyMap.get("status").equals(AppConstants.WITHDRAWN));
-        break;
-      }
-    }
+
+    JSONArray array =
+        JsonPath.read(
+            result.getResponse().getContentAsString(), "$.studies[?(@.participantId=='4')]");
+    Map obj = (Map) array.get(0);
+
+    assertEquals(AppConstants.WITHDRAWN, obj.get("status"));
   }
 
   @Test
