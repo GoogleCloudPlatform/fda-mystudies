@@ -71,24 +71,17 @@ class StandaloneStudy: NSObject {
   }
 
   func handleStudyListResponse() {
-
-    if (Gateway.instance.studies?.count)! > 0 {
-      DBHandler.loadStudyListFromDatabase { (studies) in
-        if studies.count > 0 {
-
-          let standaloneStudyId = Utilities.standaloneStudyId()
-          let study = studies.filter({ $0.studyId == standaloneStudyId })
-          Gateway.instance.studies = studies
-          Study.updateCurrentStudy(study: study.last!)
-          self.getStudyDashboardInfo()
-        } else {
-          // no study found send controler back from here
-        }
+    DBHandler.loadStudyListFromDatabase { (studies) in
+      let standaloneStudyId = Utilities.standaloneStudyId()
+      let study = studies.filter({ $0.studyId == standaloneStudyId }).last
+      Gateway.instance.studies = studies
+      if let standaloneStudy = study {
+        Study.updateCurrentStudy(study: standaloneStudy)
+        self.getStudyDashboardInfo()
       }
-
     }
-
   }
+
 }
 
 // MARK: - Webservices Delegates
@@ -114,16 +107,21 @@ extension StandaloneStudy: NMWebServiceDelegate {
 
   func failedRequest(_ manager: NetworkManager, requestName: NSString, error: NSError) {
 
-    let appdelegate = UIApplication.shared.delegate as! AppDelegate
-
-    appdelegate.window?.removeProgressIndicatorFromWindow()
-
     if error.code == 403 {  // unauthorized
       self.createStudyForStandalone()
+    } else if error.code < 0 {  // No Network
+      switch requestName as String {
+      case WCPMethods.study.rawValue, EnrollmentMethods.studyState.description:
+        handleStudyListResponse()
+
+      case WCPMethods.studyInfo.rawValue:
+        fetchStudyDashboardInfo()
+
+      default: break
+      }
     } else {
-
       UIUtilities.showAlertWithMessage(alertMessage: error.localizedDescription)
-
     }
   }
+
 }

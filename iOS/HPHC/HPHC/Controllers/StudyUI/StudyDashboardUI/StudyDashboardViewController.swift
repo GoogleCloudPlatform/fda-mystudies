@@ -36,7 +36,7 @@ class StudyDashboardViewController: UIViewController {
   @IBOutlet var labelStudyTitle: UILabel?
   @IBOutlet var buttonHome: UIButton!
 
-  lazy var dataSourceKeysForLabkey: [[String: String]] = []
+  var dataSourceKeysForResponse: [[String: String]] = []
   lazy var tableViewRowDetails = NSMutableArray()
   lazy var todayActivitiesArray = NSMutableArray()
   lazy var statisticsArray = NSMutableArray()
@@ -45,7 +45,7 @@ class StudyDashboardViewController: UIViewController {
     return .lightContent
   }
 
-  private static let labkeyDateFormatter: DateFormatter = {
+  private static let responseDateFormatter: DateFormatter = {
     let formatter = DateFormatter()
     formatter.timeZone = TimeZone.init(identifier: "America/New_York")
     formatter.dateFormat = "YYYY/MM/dd HH:mm:ss"
@@ -149,7 +149,7 @@ class StudyDashboardViewController: UIViewController {
     DBHandler.getDataSourceKeyForActivity(studyId: (Study.currentStudy?.studyId)!) {
       (activityKeys) in
       if activityKeys.count > 0 {
-        self.dataSourceKeysForLabkey = activityKeys
+        self.dataSourceKeysForResponse = activityKeys
         self.sendRequestToGetDashboardResponse()
       }
     }
@@ -163,8 +163,8 @@ class StudyDashboardViewController: UIViewController {
 
   func sendRequestToGetDashboardResponse() {
 
-    if self.dataSourceKeysForLabkey.count != 0 {
-      let details = self.dataSourceKeysForLabkey.first
+    if !self.dataSourceKeysForResponse.isEmpty {
+      let details = self.dataSourceKeysForResponse.first
       let activityId = details?["activityId"]
       let activity = Study.currentStudy?.activities.filter({ $0.actvityId == activityId })
         .first
@@ -215,7 +215,7 @@ class StudyDashboardViewController: UIViewController {
         for value in values {
           let responseValue = (value["value"] as? Float)!
           let count = (value["count"] as? Float)!
-          let date = StudyDashboardViewController.labkeyDateFormatter.date(
+          let date = StudyDashboardViewController.responseDateFormatter.date(
             from: (value["date"] as? String)!
           )
           let localDateAsString = StudyDashboardViewController.localDateFormatter.string(
@@ -235,14 +235,18 @@ class StudyDashboardViewController: UIViewController {
         }
 
       }
-      let key = "LabKeyResponse" + (Study.currentStudy?.studyId)!
-      UserDefaults.standard.set(true, forKey: key)
+      if let studyID = Study.currentStudy?.studyId {
+        let key = "Response" + studyID
+        UserDefaults.standard.set(true, forKey: key)
+      }
     }
   }
 
   func handleExecuteSQLResponse() {
 
-    self.dataSourceKeysForLabkey.removeFirst()
+    if !dataSourceKeysForResponse.isEmpty {
+      self.dataSourceKeysForResponse.removeFirst()
+    }
     self.sendRequestToGetDashboardResponse()
   }
 

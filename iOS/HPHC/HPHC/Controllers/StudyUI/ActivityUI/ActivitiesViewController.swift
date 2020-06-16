@@ -65,7 +65,7 @@ class ActivitiesViewController: UIViewController {
 
   private lazy var managedResult: [String: Any] = [:]
 
-  let labkeyResponseFetch = ResponseDataFetch()
+  let responseDataFetch = ResponseDataFetch()
 
   override var preferredStatusBarStyle: UIStatusBarStyle {
     return .default
@@ -142,12 +142,13 @@ class ActivitiesViewController: UIViewController {
 
   // MARK: - Helper Methods
 
-  func getLabkeyResponse() {
-
+  func getResponse() {
     let ud = UserDefaults.standard
-    let key = "LabKeyResponse" + (Study.currentStudy?.studyId)!
-    if !(ud.bool(forKey: key)) {
-      labkeyResponseFetch.checkUpdates()
+    if let studyID = Study.currentStudy?.studyId {
+      let key = "Response" + studyID
+      if !(ud.bool(forKey: key)) {
+        responseDataFetch.checkUpdates()
+      }
     }
   }
 
@@ -184,7 +185,7 @@ class ActivitiesViewController: UIViewController {
       if self.refreshControl != nil && (self.refreshControl?.isRefreshing)! {
         self.refreshControl?.endRefreshing()
       }
-      self.fetchActivityAnchorDateResponseFromLabkey()
+      self.fetchActivityAnchorDateResponse()
     }
   }
 
@@ -342,9 +343,9 @@ class ActivitiesViewController: UIViewController {
     WCPServices().getStudyUpdates(study: Study.currentStudy!, delegate: self)
   }
 
-  func fetchActivityAnchorDateResponseFromLabkey() {
+  func fetchActivityAnchorDateResponse() {
     guard let currentStudy = Study.currentStudy else { return }
-    AnchorDateHandler(study: currentStudy).fetchActivityAnchorDateResponseFromLabkey { (_) in
+    AnchorDateHandler(study: currentStudy).fetchActivityAnchorDateResponse { (_) in
       self.loadActivitiesFromDatabase()
     }
   }
@@ -1096,7 +1097,7 @@ extension ActivitiesViewController: NMWebServiceDelegate {
 
       // get DashboardInfo
       self.sendRequestToGetDashboardInfo()
-      self.fetchActivityAnchorDateResponseFromLabkey()
+      self.fetchActivityAnchorDateResponse()
 
       if self.refreshControl != nil && (self.refreshControl?.isRefreshing)! {
         self.refreshControl?.endRefreshing()
@@ -1112,7 +1113,7 @@ extension ActivitiesViewController: NMWebServiceDelegate {
 
     } else if requestName as String == WCPMethods.studyDashboard.method.methodName {
       self.sendRequestToGetResourcesInfo()
-      self.getLabkeyResponse()
+      self.getResponse()
 
     } else if requestName as String == WCPMethods.resources.method.methodName {
       self.removeProgressIndicator()

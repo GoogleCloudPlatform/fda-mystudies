@@ -52,7 +52,7 @@ class AnchorDateHandler {
     self.study = study
   }
 
-  func fetchActivityAnchorDateResponseFromLabkey(
+  func fetchActivityAnchorDateResponse(
     _ completionHandler: @escaping AnchordDateFetchCompletionHandler
   ) {
 
@@ -103,7 +103,7 @@ class AnchorDateHandler {
     }
   }
 
-  func fetchActivityAnchorDateForResourceFromLabkey(
+  func fetchActivityAnchorDateForResource(
     _ completionHandler: @escaping AnchordDateFetchCompletionHandler
   ) {
 
