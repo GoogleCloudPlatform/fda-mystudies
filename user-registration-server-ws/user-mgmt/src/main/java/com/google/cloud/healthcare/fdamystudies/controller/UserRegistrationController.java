@@ -10,7 +10,9 @@ package com.google.cloud.healthcare.fdamystudies.controller;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.core.Context;
 import org.apache.commons.lang3.RandomStringUtils;
@@ -31,6 +33,7 @@ import com.google.cloud.healthcare.fdamystudies.beans.AppOrgInfoBean;
 import com.google.cloud.healthcare.fdamystudies.beans.AuthRegistrationResponseBean;
 import com.google.cloud.healthcare.fdamystudies.beans.DeleteAccountInfoResponseBean;
 import com.google.cloud.healthcare.fdamystudies.beans.UserRegistrationForm;
+import com.google.cloud.healthcare.fdamystudies.config.ApplicationPropertyConfiguration;
 import com.google.cloud.healthcare.fdamystudies.dao.CommonDao;
 import com.google.cloud.healthcare.fdamystudies.exceptions.SystemException;
 import com.google.cloud.healthcare.fdamystudies.model.UserDetailsBO;
@@ -59,6 +62,8 @@ public class UserRegistrationController {
   @Autowired private UserManagementUtil userManagementUtil;
 
   @Autowired private CommonService commonService;
+
+  @Autowired private ApplicationPropertyConfiguration appConfig;
 
   @Value("${email.code.expire_time}")
   private long expireTime;
@@ -245,26 +250,12 @@ public class UserRegistrationController {
     List<String> emailContent = null;
     if (otp != null) {
       emailContent = new ArrayList<>();
-      String message =
-          "<html>"
-              + "<body>"
-              + "<div style='margin:20px;padding:10px;font-family: sans-serif;font-size: 14px;'>"
-              + "<span>Hi,</span><br/><br/>"
-              + "<span>Thank you for registering with us! We look forward to having you on board and actively taking part in<br/>research studies conducted by the &lt;Org Name&gt; and its partners.</span><br/><br/>"
-              + "<span>Your sign-up process is almost complete. Please use the verification code provided below to<br/>complete the Verification step in the mobile app. </span><br/><br/>"
-              + "<span><strong>Verification Code: </strong>"
-              + otp
-              + "</span><br/><br/>"
-              + "<span>This code can be used only once and is valid for a period of 48 hours only.</span><br/><br/>"
-              + "<span>Please note that  registration (or sign up) for the app  is requested only to provide you with a <br/>seamless experience of using the app. Your registration information does not become part of <br/>the data collected for any study housed in the app. Each study has its own consent process <br/> and no data for any study will not be collected unless and until you provide an informed consent<br/> prior to joining the study </span><br/><br/>"
-              + "<span>For any questions or assistance, please write to <a> &lt;contact email address&gt; </a> </span><br/><br/>"
-              + "<span style='font-size:15px;'>Thanks,</span><br/><span>The &lt;Org Name&gt; MyStudies Support Team</span>"
-              + "<br/><span>----------------------------------------------------</span><br/>"
-              + "<span style='font-size:10px;'>PS - This is an auto-generated email. Please do not reply.</span>"
-              + "</div>"
-              + "</body>"
-              + "</html>";
-      String subject = "Welcome to the <App Name> App!";
+      Map<String, String> emailMap = new HashMap<String, String>();
+      emailMap.put("$securitytoken", otp);
+      // TODO(#496): replace with actual study's org name.
+      emailMap.put("$orgName", "Test Org");
+      String subject = appConfig.getConfirmationMailSubject();
+      String message = MyStudiesUserRegUtil.generateEmailContent(appConfig.getConfirmationMail(), emailMap);
       emailContent.add(subject);
       emailContent.add(message);
       return emailContent;
