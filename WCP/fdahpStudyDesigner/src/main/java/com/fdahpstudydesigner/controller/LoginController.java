@@ -38,8 +38,6 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
-import org.springframework.web.bind.WebDataBinder;
-import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
@@ -59,11 +57,6 @@ public class LoginController {
   @Autowired private DashBoardAndProfileService dashBoardAndProfileService;
 
   private LoginServiceImpl loginService;
-
-  @InitBinder
-  public void initBinder(WebDataBinder binder) {
-    binder.registerCustomEditor(String.class, new CustomPropertyEditor());
-  }
 
   @RequestMapping("/addPassword.do")
   public ModelAndView addPassword(HttpServletRequest request, UserBO userBO) {

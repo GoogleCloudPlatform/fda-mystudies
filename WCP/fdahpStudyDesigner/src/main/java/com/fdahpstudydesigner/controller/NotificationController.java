@@ -31,8 +31,6 @@ import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
-import org.springframework.web.bind.WebDataBinder;
-import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 import com.fdahpstudydesigner.bo.NotificationBO;
@@ -48,11 +46,6 @@ public class NotificationController {
   private static Logger logger = Logger.getLogger(NotificationController.class);
 
   @Autowired private NotificationService notificationService;
-
-  @InitBinder
-  public void initBinder(WebDataBinder binder) {
-    binder.registerCustomEditor(String.class, new CustomPropertyEditor());
-  }
 
   @RequestMapping("/adminNotificationEdit/deleteNotification.do")
   public ModelAndView deleteNotification(HttpServletRequest request) {

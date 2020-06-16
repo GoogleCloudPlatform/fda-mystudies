@@ -38,8 +38,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.WebDataBinder;
-import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 import com.fdahpstudydesigner.bean.StudyListBean;
@@ -63,11 +61,6 @@ public class UsersController {
   @Autowired private StudyService studyService;
 
   @Autowired private UsersService usersService;
-
-  @InitBinder
-  public void initBinder(WebDataBinder binder) {
-    binder.registerCustomEditor(String.class, new CustomPropertyEditor());
-  }
 
   @RequestMapping("/adminUsersEdit/activateOrDeactivateUser.do")
   public void activateOrDeactivateUser(
