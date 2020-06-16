@@ -73,6 +73,7 @@ resource "google_project_iam_binding" "devops_owners" {
 }
 
 # Org level IAM permissions for org admins.
+# For folder level deployment, comment this block out.
 resource "google_organization_iam_member" "org_admin" {
   org_id = var.org_id
   role   = "roles/resourcemanager.organizationAdmin"

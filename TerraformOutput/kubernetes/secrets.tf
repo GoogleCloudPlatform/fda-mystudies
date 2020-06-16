@@ -109,8 +109,7 @@ resource "kubernetes_secret" "study_designer_secrets" {
   data = {
     CLIENT_ID  = data.google_secret_manager_secret_version.secrets["mystudies-wcp-client-id"].secret_data
     SECRET_KEY = data.google_secret_manager_secret_version.secrets["mystudies-wcp-secret-key"].secret_data
-    # temporary fix until urls are fixed.
-    BASE_URL = "34.120.48.240"
+    BASE_URL   = "34.120.48.240"
   }
 }
 
