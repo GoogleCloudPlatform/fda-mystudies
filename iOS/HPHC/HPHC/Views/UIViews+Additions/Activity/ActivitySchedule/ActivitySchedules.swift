@@ -100,7 +100,7 @@ class ActivitySchedules: UIView, UITableViewDelegate, UITableViewDataSource {
 
 class ResponseDataFetch: NMWebServiceDelegate {
 
-  var dataSourceKeysForLabkey: [[String: String]] = []
+  var dataSourceKeysForResponse: [[String: String]] = []
 
   static let responseDateFormatter: DateFormatter = {
     let dateFormatter = DateFormatter()
@@ -154,8 +154,8 @@ class ResponseDataFetch: NMWebServiceDelegate {
 
   func handleExecuteSQLResponse() {
 
-    if !self.dataSourceKeysForLabkey.isEmpty {
-      self.dataSourceKeysForLabkey.removeFirst()
+    if !self.dataSourceKeysForResponse.isEmpty {
+      self.dataSourceKeysForResponse.removeFirst()
     }
     self.sendRequestToGetDashboardResponse()
   }
@@ -165,7 +165,7 @@ class ResponseDataFetch: NMWebServiceDelegate {
     DBHandler.getDataSourceKeyForActivity(studyId: (Study.currentStudy?.studyId)!) {
       (activityKeys) in
       if activityKeys.count > 0 {
-        self.dataSourceKeysForLabkey = activityKeys
+        self.dataSourceKeysForResponse = activityKeys
         // GetDashboardResponse from server
         self.sendRequestToGetDashboardResponse()
       }
@@ -175,8 +175,8 @@ class ResponseDataFetch: NMWebServiceDelegate {
 
   func sendRequestToGetDashboardResponse() {
 
-    if self.dataSourceKeysForLabkey.count != 0 {
-      let details = self.dataSourceKeysForLabkey.first
+    if !self.dataSourceKeysForResponse.isEmpty {
+      let details = self.dataSourceKeysForResponse.first
       let activityId = details?["activityId"]
       let activity = Study.currentStudy?.activities.filter({ $0.actvityId == activityId })
         .first
@@ -246,7 +246,7 @@ class ResponseDataFetch: NMWebServiceDelegate {
     }
 
     if let studyID = Study.currentStudy?.studyId {
-      let key = "LabKeyResponse" + studyID
+      let key = "Response" + studyID
       UserDefaults.standard.set(true, forKey: key)
     }
 

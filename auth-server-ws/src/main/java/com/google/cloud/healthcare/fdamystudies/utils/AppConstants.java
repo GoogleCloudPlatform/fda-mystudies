@@ -35,7 +35,6 @@ public class AppConstants {
   public static final String USWS = "USWS";
   public static final String FAILURE = "FAILURE";
   public static final String SUCCESS = "SUCCESS";
-  public static final String AUTHENTICATION_FILTER_ENDS = "AuthenticationFilter doFilter() - ends";
   public static final String VERIDIED = "Verified";
   public static final String URS = "URS";
   public static final String RS = "RS";
