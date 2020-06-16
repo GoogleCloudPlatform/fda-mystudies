@@ -5,5 +5,8 @@ steps:
   dir: user-registration-server-ws
 - name: 'gcr.io/cloud-builders/kubectl'
   args: ['set', 'image', 'deployment/user-registration-server-ws', 'my-image=gcr.io/$PROJECT_ID/user-registration-server-ws:latest']
+  env:
+  - 'CLOUDSDK_COMPUTE_REGION=us-east1'
+  - 'CLOUDSDK_CONTAINER_CLUSTER=mystudies-cluster'
 
 images: ['gcr.io/$PROJECT_ID/user-registration-server-ws']
