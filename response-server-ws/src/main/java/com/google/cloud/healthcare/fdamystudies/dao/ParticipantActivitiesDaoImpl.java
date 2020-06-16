@@ -5,6 +5,7 @@
  * license that can be found in the LICENSE file or at
  * https://opensource.org/licenses/MIT.
  */
+
 package com.google.cloud.healthcare.fdamystudies.dao;
 
 import java.util.List;
@@ -38,7 +39,8 @@ public class ParticipantActivitiesDaoImpl implements ParticipantActivitiesDao {
 
         Query<ParticipantActivitiesBo> query =
             session.createQuery(
-                "from ParticipantActivitiesBo where studyId = :studyId and participantId =:participantId");
+                "from ParticipantActivitiesBo "
+                    + "where studyId = :studyId and participantId =:participantId");
 
         query.setParameter("studyId", studyId);
         query.setParameter("participantId", participantId);
@@ -101,7 +103,8 @@ public class ParticipantActivitiesDaoImpl implements ParticipantActivitiesDao {
 
         session
             .createQuery(
-                "delete from ParticipantActivitiesBo where participantId = :participantId and studyId = :studyId")
+                "delete from ParticipantActivitiesBo "
+                    + "where participantId = :participantId and studyId = :studyId")
             .setParameter("participantId", participantId)
             .setParameter("studyId", studyId)
             .executeUpdate();

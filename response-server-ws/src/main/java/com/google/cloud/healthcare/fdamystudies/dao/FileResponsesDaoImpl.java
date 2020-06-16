@@ -5,6 +5,7 @@
  * license that can be found in the LICENSE file or at
  * https://opensource.org/licenses/MIT.
  */
+
 package com.google.cloud.healthcare.fdamystudies.dao;
 
 import java.nio.file.Files;
@@ -75,7 +76,8 @@ public class FileResponsesDaoImpl implements ResponsesDao {
     }
     {
       throw new ProcessResponseException(
-          "FileResponsesDaoImpl.saveStudyMetadata() - Study Collection is null or dataToStore is null");
+          "FileResponsesDaoImpl.saveStudyMetadata() - "
+              + "Study Collection is null or dataToStore is null");
     }
   }
 
@@ -139,12 +141,14 @@ public class FileResponsesDaoImpl implements ResponsesDao {
       } catch (Exception e) {
         logger.error(e.getMessage(), e);
         throw new ProcessResponseException(
-            "FileResponsesDaoImpl.saveActivityResponseData() - Exception when saving data to file storage: "
+            "FileResponsesDaoImpl.saveActivityResponseData() - "
+                + "Exception when saving data to file storage: "
                 + e.getMessage());
       }
     } else {
       throw new ProcessResponseException(
-          "FileResponsesDaoImpl.saveActivityResponseData() - Study Collection is null or dataToStoreResults is null");
+          "FileResponsesDaoImpl.saveActivityResponseData() - "
+              + "Study Collection is null or dataToStoreResults is null");
     }
   }
 

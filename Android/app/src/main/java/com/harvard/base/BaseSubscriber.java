@@ -1,5 +1,6 @@
 /*
  * Copyright © 2017-2019 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors.
+ * Copyright 2020 Google LLC
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction, including
  * without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
@@ -14,58 +15,58 @@
 
 package com.harvard.base;
 
-import com.harvard.FDAEventBus;
+import com.harvard.FdaEventBus;
 
 public abstract class BaseSubscriber implements BaseEventBusRegistry.EventBusSubscriber {
 
-  private FDAEventBus mEventBus;
+  private FdaEventBus eventBus;
   private static final String EXCEPTION_MESSAGE =
       "PluginController.register() was not called. Is the controller registered in the EventBusRegistry?";
 
   @Override
-  public final Object register(FDAEventBus eventBus) {
-    mEventBus = eventBus;
-    mEventBus.register(this);
+  public final Object register(FdaEventBus eventBus) {
+    eventBus = eventBus;
+    eventBus.register(this);
     return this;
   }
 
-  public final void unregister(FDAEventBus eventBus) {
+  public final void unregister(FdaEventBus eventBus) {
     eventBus.unregister(this);
-    mEventBus = null;
+    eventBus = null;
   }
 
   protected void post(Object event) {
-    if (mEventBus == null) {
+    if (eventBus == null) {
       throw new NullPointerException(EXCEPTION_MESSAGE);
     }
-    mEventBus.post(event);
+    eventBus.post(event);
   }
 
   protected void postSticky(Object event) {
-    if (mEventBus == null) {
+    if (eventBus == null) {
       throw new NullPointerException(EXCEPTION_MESSAGE);
     }
-    mEventBus.postSticky(event);
+    eventBus.postSticky(event);
   }
 
   protected <T> T removeStickyEvent(Class<T> eventType) {
-    if (mEventBus == null) {
+    if (eventBus == null) {
       throw new NullPointerException(EXCEPTION_MESSAGE);
     }
-    return mEventBus.removeStickyEvent(eventType);
+    return eventBus.removeStickyEvent(eventType);
   }
 
   protected boolean removeStickyEvent(Object event) {
-    if (mEventBus == null) {
+    if (eventBus == null) {
       throw new NullPointerException(EXCEPTION_MESSAGE);
     }
-    return mEventBus.removeStickyEvent(event);
+    return eventBus.removeStickyEvent(event);
   }
 
   protected <T> T getStickyEvent(Class<T> eventType) {
-    if (mEventBus == null) {
+    if (eventBus == null) {
       throw new NullPointerException(EXCEPTION_MESSAGE);
     }
-    return mEventBus.getStickyEvent(eventType);
+    return eventBus.getStickyEvent(eventType);
   }
 }

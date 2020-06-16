@@ -35,7 +35,6 @@ public class AppConstants {
   public static final String USWS = "USWS";
   public static final String FAILURE = "FAILURE";
   public static final String SUCCESS = "SUCCESS";
-  public static final String AUTHENTICATION_FILTER_ENDS = "AuthenticationFilter doFilter() - ends";
   public static final String VERIDIED = "Verified";
   public static final String URS = "URS";
   public static final String RS = "RS";
@@ -76,4 +75,21 @@ public class AppConstants {
   public static final String AUDIT_EVENT_SIGN_IN_WITH_TMP_PASSD_NAME = "SIGN IN WITH TEMP PASSWORD";
   public static final String AUDIT_EVENT_SIGN_IN_WITH_TMP_PASSD_DESC =
       "User  %s signed in with temp password";
+  public static final String INVALID_USERNAME_PASSWORD_MSG = "INVALID_USERNAME_PASSWORD_MSG";
+
+  public static final String MISSING_REQUIRED_PARAMETER = "MISSING_REQUIRED_PARAMETER";
+  public static final String SYSTEM_EXCEPTION = "SYSTEM_EXCEPTION";
+  public static final String INVALID_EMAIL_ID = "INVALID_EMAIL_ID";
+  public static final String PASSWORD_IS_INVALID = "PASSWORD_IS_INVALID";
+  public static final String INVALID_CLIENTID_OR_SECRET_KEY = "INVALID_CLIENTID_OR_SECRET_KEY";
+  public static final String INVALID_INPUT_ERROR_MSG = "INVALID_INPUT_ERROR_MSG";
+  public static final String UNAUTHORIZED_CLIENT_FOR_REGISTER = "UNAUTHORIZED_CLIENT_FOR_REGISTER";
+  public static final String EMAIL_EXISTS = "EMAIL_EXISTS";
+  public static final String INVALID_USERNAME_PASSWORD = "INVALID_USERNAME_PASSWORD";
+  public static final String ACCOUNT_LOCKED = "ACCOUNT_LOCKED";
+  public static final String PASSWORD_EXPIRED = "PASSWORD_EXPIRED";
+  public static final String CODE_EXPIRED = "CODE_EXPIRED";
+  public static final String INVALID_ARGUMENT = "INVALID_ARGUMENT";
+  public static final String SEND_EMAIL_ON_ACCOUNT_LOCKING_RESPONSE =
+      "UserDetailsServiceImpl sendEmailOnAccountLocking() - ends";
 }
