@@ -60,6 +60,8 @@ spec:
             httpGet:
               path: /AuthServer/healthCheck
               port: 8080
+            initialDelaySeconds: 60
+            periodSeconds: 30
           volumeMounts:
           - name: gcloud-key-volume
             mountPath: /secrets/gcloud_key

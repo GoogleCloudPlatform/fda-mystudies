@@ -55,6 +55,8 @@ spec:
             httpGet:
               path: /AuthServer/healthCheck
               port: 8080
+            initialDelaySeconds: 60
+            periodSeconds: 30
         - name: cloudsql-proxy
           image: gcr.io/cloudsql-docker/gce-proxy:latest
           command: ['/cloud_sql_proxy', '-instances=heroes-hat-dev:us-east1:my-studies2=tcp:3306', '-credential_file=/secrets/cloudsql/sql_credentials.json']
