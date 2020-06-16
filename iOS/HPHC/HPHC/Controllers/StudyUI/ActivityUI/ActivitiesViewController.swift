@@ -140,9 +140,24 @@ class ActivitiesViewController: UIViewController {
 
   }
 
+  override func viewDidAppear(_ animated: Bool) {
+    super.viewDidAppear(animated)
+    setupStandaloneNotifications()
+  }
+
   // MARK: - Helper Methods
 
-  func getResponse() {
+  private func setupStandaloneNotifications() {
+    if Utilities.isStandaloneApp() {
+      // Set notifications for standalone app here.
+      DispatchQueue.main.async {
+        StudyListViewController.configureNotifications()
+      }
+    }
+  }
+
+  func getLabkeyResponse() {
+
     let ud = UserDefaults.standard
     if let studyID = Study.currentStudy?.studyId {
       let key = "Response" + studyID
