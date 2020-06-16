@@ -68,6 +68,11 @@ public class UserRegistrationController {
   @Value("${email.code.expire_time}")
   private long expireTime;
 
+  @GetMapping("/healthCheck")
+  public ResponseEntity<?> healthCheck() {
+    return ResponseEntity.ok("Up and Running");
+  }
+
   @PostMapping("/register")
   public ResponseEntity<?> registerUser(
       @RequestBody UserRegistrationForm userForm,

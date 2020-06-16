@@ -81,9 +81,8 @@ spec:
           - containerPort: 8080
           readinessProbe:
             httpGet:
-              path: /myStudiesUserMgmtWS/health
+              path: /myStudiesUserMgmtWS/healthCheck
               port: 8080
-              initialDelaySeconds: 20
           volumeMounts:
           - name: gcloud-key-volume
             mountPath: /secrets/gcloud_key
