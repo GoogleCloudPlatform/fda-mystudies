@@ -79,7 +79,7 @@ spec:
           - containerPort: 8080
           readinessProbe:
             httpGet:
-              path: /myStudiesUserMgmtWS/healthCheck
+              path: /myStudiesUserMgmtWS/health
               port: 8080
           volumeMounts:
             - name: gcloud-key-volume
