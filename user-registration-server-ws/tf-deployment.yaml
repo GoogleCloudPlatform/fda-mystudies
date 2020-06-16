@@ -19,7 +19,6 @@ spec:
       containers:
         - name: user-registration-ws
           image: gcr.io/mystudies-demo-apps/user-registration-server-ws:latest
-          imagePullPolicy: Always
           env:
             - name: DB_USER
               valueFrom:
@@ -84,6 +83,7 @@ spec:
             httpGet:
               path: /myStudiesUserMgmtWS/health
               port: 8080
+              initialDelaySeconds: 20
           volumeMounts:
           - name: gcloud-key-volume
             mountPath: /secrets/gcloud_key

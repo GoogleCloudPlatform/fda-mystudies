@@ -156,15 +156,19 @@
 	    <artifactId>apns</artifactId>
 	    <version>1.0.0.Beta6</version>
 		</dependency>
-                <dependency>
-                        <groupId>com.h2database</groupId>
-                        <artifactId>h2</artifactId>
-                        <scope>runtime</scope>
-                </dependency>
 		<dependency>
-		<groupId>com.google.cloud</groupId>
-		<artifactId>google-cloud-storage</artifactId>
-		<version>1.96.0</version>
+			<groupId>com.h2database</groupId>
+			<artifactId>h2</artifactId>
+			<scope>runtime</scope>
+		</dependency>
+		<dependency>
+			<groupId>com.google.cloud</groupId>
+			<artifactId>google-cloud-storage</artifactId>
+			<version>1.96.0</version>
+		</dependency>
+		<dependency>
+    	<groupId>org.springframework.boot</groupId>
+    	<artifactId>spring-boot-starter-actuator</artifactId>
 		</dependency>
 	</dependencies>
 
@@ -188,5 +192,4 @@
 			</plugin>
 		</plugins>
 	</build>
-
 </project>

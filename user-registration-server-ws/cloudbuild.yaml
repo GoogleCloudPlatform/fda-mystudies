@@ -3,5 +3,7 @@ steps:
 - name: 'gcr.io/cloud-builders/docker'
   args: ['build', '-t', 'gcr.io/$PROJECT_ID/user-registration-server-ws', '.']
   dir: user-registration-server-ws
+- name: 'gcr.io/cloud-builders/kubectl'
+  args: ['set', 'image', 'deployment/user-registration-server-ws', 'my-image=gcr.io/$PROJECT_ID/user-registration-server-ws:latest']
 
 images: ['gcr.io/$PROJECT_ID/user-registration-server-ws']
