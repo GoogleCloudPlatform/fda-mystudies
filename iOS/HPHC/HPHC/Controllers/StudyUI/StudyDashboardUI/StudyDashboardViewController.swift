@@ -59,6 +59,14 @@ class StudyDashboardViewController: UIViewController {
     return formatter
   }()
 
+  /// Queries the stats and charts data from response server.
+  lazy var responseDataFetch: ResponseDataFetch? = {
+    if let study = Study.currentStudy {
+      return ResponseDataFetch(study: study)
+    }
+    return nil
+  }()
+
   // MARK: - ViewController Lifecycle
   override func viewDidLoad() {
     super.viewDidLoad()
@@ -102,17 +110,35 @@ class StudyDashboardViewController: UIViewController {
 
     // show navigationbar
     self.navigationController?.setNavigationBarHidden(true, animated: true)
-
     self.tableView?.reloadData()
+    getResponse()
+  }
 
-    DBHandler.loadStatisticsForStudy(studyId: (Study.currentStudy?.studyId)!) {
-      (statiticsList) in
-      if statiticsList.count != 0 {
+  // MARK: - Utils
+
+  private func loadStatsFromDB(for study: Study) {
+    DBHandler.loadStatisticsForStudy(studyId: study.studyId) { (statiticsList) in
+      if !statiticsList.isEmpty {
         StudyDashboard.instance.statistics = statiticsList
         self.tableView?.reloadData()
       }
     }
+  }
 
+  /// Get response from Response server.
+  /// If response already fetched, query from DB.
+  func getResponse() {
+    guard let study = Study.currentStudy else { return }
+    let key = "Response" + study.studyId
+    if !(UserDefaults.standard.bool(forKey: key)) {
+      self.addProgressIndicator(with: kDashSetupMessage)
+      responseDataFetch?.checkUpdates { [unowned self] in
+        self.loadStatsFromDB(for: study)
+        self.removeProgressIndicator()
+      }
+    } else {
+      loadStatsFromDB(for: study)
+    }
   }
 
   // MARK: - Helper Methods
@@ -142,112 +168,6 @@ class StudyDashboardViewController: UIViewController {
     taskViewController?.navigationBar.prefersLargeTitles = false
     taskViewController?.modalPresentationStyle = .fullScreen
     present(taskViewController!, animated: true, completion: nil)
-  }
-
-  func getDataKeysForCurrentStudy() {
-
-    DBHandler.getDataSourceKeyForActivity(studyId: (Study.currentStudy?.studyId)!) {
-      (activityKeys) in
-      if activityKeys.count > 0 {
-        self.dataSourceKeysForResponse = activityKeys
-        self.sendRequestToGetDashboardResponse()
-      }
-    }
-
-  }
-
-  /// Used to send Request To Get Dashboard Info.
-  func sendRequestToGetDashboardInfo() {
-    WCPServices().getStudyDashboardInfo(studyId: (Study.currentStudy?.studyId)!, delegate: self)
-  }
-
-  func sendRequestToGetDashboardResponse() {
-
-    if !self.dataSourceKeysForResponse.isEmpty {
-      let details = self.dataSourceKeysForResponse.first
-      let activityId = details?["activityId"]
-      let activity = Study.currentStudy?.activities.filter({ $0.actvityId == activityId })
-        .first
-      var keys = details?["keys"] ?? ""
-
-      if activity?.type == ActivityType.activeTask {
-        if activity?.taskSubType == "fetalKickCounter" {
-          keys = "\"count\",duration"
-
-        } else if activity?.taskSubType == "towerOfHanoi" {
-          keys = "numberOfMoves"
-
-        } else if activity?.taskSubType == "spatialSpanMemory" {
-          keys = "NumberofGames,Score,NumberofFailures"
-        }
-      }
-      let currentStudy = Study.currentStudy
-      // Get stats from Server
-      ResponseServices().getParticipantResponse(
-        activity: activity!,
-        study: currentStudy!,
-        keys: keys,
-        delegate: self
-      )
-    } else {
-      self.removeProgressIndicator()
-
-      // save response in database
-      let responses = StudyDashboard.instance.dashboardResponse
-      for response in responses {
-
-        let activityId = response.activityId
-        let activity = Study.currentStudy?.activities.filter({ $0.actvityId == activityId })
-          .first
-        var key = response.key
-        if activity?.type == ActivityType.activeTask {
-
-          if activity?.taskSubType == "fetalKickCounter"
-            || activity?.taskSubType
-              == "towerOfHanoi"
-          {
-            key = activityId!
-          }
-
-        }
-
-        let values = response.values
-        for value in values {
-          let responseValue = (value["value"] as? Float)!
-          let count = (value["count"] as? Float)!
-          let date = StudyDashboardViewController.responseDateFormatter.date(
-            from: (value["date"] as? String)!
-          )
-          let localDateAsString = StudyDashboardViewController.localDateFormatter.string(
-            from: date!
-          )
-
-          let localDate = StudyDashboardViewController.localDateFormatter.date(
-            from: localDateAsString
-          )
-          DBHandler.saveStatisticsDataFor(
-            activityId: activityId!,
-            key: key!,
-            data: responseValue,
-            fkDuration: Int(count),
-            date: localDate!
-          )
-        }
-
-      }
-      if let studyID = Study.currentStudy?.studyId {
-        let key = "Response" + studyID
-        UserDefaults.standard.set(true, forKey: key)
-      }
-    }
-  }
-
-  func handleExecuteSQLResponse() {
-
-    if !dataSourceKeysForResponse.isEmpty {
-      self.dataSourceKeysForResponse.removeFirst()
-    }
-    self.sendRequestToGetDashboardResponse()
   }
 
   func shareScreenShotByMail() {
@@ -432,16 +352,12 @@ extension StudyDashboardViewController: NMWebServiceDelegate {
     } else if requestName as String == WCPMethods.studyDashboard.method.methodName {
       self.removeProgressIndicator()
       self.tableView?.reloadData()
-    } else if requestName as String == ResponseMethods.getParticipantResponse.description {
-      self.handleExecuteSQLResponse()
     }
   }
 
   func failedRequest(_ manager: NetworkManager, requestName: NSString, error: NSError) {
     if requestName as String == WCPMethods.consentDocument.method.methodName {
       self.removeProgressIndicator()
-    } else if requestName as String == ResponseMethods.getParticipantResponse.description {
-      self.handleExecuteSQLResponse()  // TBD :- Call APIs in the parallel (DispatchQueryGroup)
     } else {
       self.removeProgressIndicator()
     }
