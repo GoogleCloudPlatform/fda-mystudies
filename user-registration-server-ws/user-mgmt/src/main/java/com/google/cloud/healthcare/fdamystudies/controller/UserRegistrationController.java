@@ -14,6 +14,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import javax.servlet.http.HttpServletResponse;
+import javax.validation.Valid;
 import javax.ws.rs.core.Context;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -75,7 +76,7 @@ public class UserRegistrationController {
 
   @PostMapping("/register")
   public ResponseEntity<?> registerUser(
-      @RequestBody UserRegistrationForm userForm,
+      @Valid @RequestBody UserRegistrationForm userForm,
       @RequestHeader("appId") String appId,
       @RequestHeader("orgId") String orgId,
       @RequestHeader("clientId") String clientId,
@@ -84,16 +85,6 @@ public class UserRegistrationController {
 
     logger.info("UserRegistrationController registerUser() - starts");
     AuthRegistrationResponseBean authServerResponse = null;
-
-    if (StringUtils.isEmpty(clientId) ||
-        StringUtils.isEmpty(secretKey) ||
-        StringUtils.isEmpty(userForm.getEmailId()) ||
-        StringUtils.isEmpty(userForm.getPassword())) {
-      return makeServerError(400, 
-                             MyStudiesUserRegUtil.ErrorCodes.INVALID_INPUT.getValue(),
-                             MyStudiesUserRegUtil.ErrorCodes.INVALID_INPUT_ERROR_MSG.getValue(),
-                             response);
-    }
 
     if (!userDomainWhitelist.isValidDomain(userForm.getEmailId())) {
       return makeServerError(401,
