@@ -1068,10 +1068,10 @@ extension ActivitiesViewController: NMWebServiceDelegate {
 
   func startedRequest(_ manager: NetworkManager, requestName: NSString) {
     let requestName = requestName as String
-    if !(requestName == EnrollmentMethods.updateStudyState.method.methodName)
-      || (requestName == ResponseMethods.updateActivityState.method.methodName)
-      || (requestName == WCPMethods.studyDashboard.method.methodName)
-      || (requestName == WCPMethods.resources.method.methodName)
+    if requestName != EnrollmentMethods.updateStudyState.method.methodName
+      && requestName != ResponseMethods.updateActivityState.method.methodName
+      && requestName != WCPMethods.studyDashboard.method.methodName
+      && requestName != WCPMethods.resources.method.methodName
     {
       if requestName == ResponseMethods.activityState.method.methodName {
         self.addProgressIndicator(with: kStudySetupMessage)
