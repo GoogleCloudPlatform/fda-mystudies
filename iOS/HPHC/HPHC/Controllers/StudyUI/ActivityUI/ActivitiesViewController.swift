@@ -112,6 +112,8 @@ class ActivitiesViewController: UIViewController {
       for: UIControl.Event.valueChanged
     )
     tableView?.addSubview(refreshControl!)
+
+    setupStandaloneNotifications()
   }
 
   override func viewWillAppear(_ animated: Bool) {
@@ -140,11 +142,6 @@ class ActivitiesViewController: UIViewController {
 
   }
 
-  override func viewDidAppear(_ animated: Bool) {
-    super.viewDidAppear(animated)
-    setupStandaloneNotifications()
-  }
-
   // MARK: - Helper Methods
 
   private func setupStandaloneNotifications() {
@@ -156,7 +153,7 @@ class ActivitiesViewController: UIViewController {
     }
   }
 
-  func getLabkeyResponse() {
+  func getResponse() {
 
     let ud = UserDefaults.standard
     if let studyID = Study.currentStudy?.studyId {
