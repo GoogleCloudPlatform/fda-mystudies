@@ -9,6 +9,7 @@
 package com.google.cloud.healthcare.fdamystudies.controller;
 
 import javax.servlet.http.HttpServletResponse;
+import javax.validation.Valid;
 import javax.ws.rs.core.Context;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
@@ -47,7 +48,7 @@ public class VerifyEmailIdController {
 
   @PostMapping("/verifyEmailId")
   public ResponseEntity<?> verifyEmailId(
-      @RequestBody EmailIdVerificationForm verificationForm,
+      @Valid @RequestBody EmailIdVerificationForm verificationForm,
       @RequestHeader("userId") String userId,
       @RequestHeader("clientToken") String clientToken,
       @RequestHeader("accessToken") String accessToken,
@@ -56,23 +57,6 @@ public class VerifyEmailIdController {
     VerifyEmailIdResponse verifyEmailIdResponse = null;
     String verificationCode = "";
 
-     if (StringUtils.isEmpty(clientToken)
-        || StringUtils.isEmpty(accessToken)
-        || StringUtils.isEmpty(userId)
-        || StringUtils.isEmpty(verificationForm.getCode())) {
-
-      MyStudiesUserRegUtil.getFailureResponse(
-          400 + "",
-          MyStudiesUserRegUtil.ErrorCodes.INVALID_INPUT.getValue(),
-          MyStudiesUserRegUtil.ErrorCodes.INVALID_INPUT_ERROR_MSG.getValue(),
-          response);
-      verifyEmailIdResponse = new VerifyEmailIdResponse();
-      verifyEmailIdResponse.setCode(HttpStatus.BAD_REQUEST.value());
-      verifyEmailIdResponse.setMessage(
-          MyStudiesUserRegUtil.ErrorCodes.INVALID_INPUT_ERROR_MSG.getValue());
-      logger.warn(AppConstants.VERIFY_EMAILID_CONTROLLER_ENDS_MESSAGE + " bad request.");
-      return new ResponseEntity<>(verifyEmailIdResponse, HttpStatus.BAD_REQUEST);
-    }
     try {
       verificationCode = verificationForm.getCode().trim(); // trim the surrounding whitespace.
       VerifyCodeResponse serviceResult = userDetailsService.verifyCode(verificationCode, userId);
