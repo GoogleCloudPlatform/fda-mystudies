@@ -6,6 +6,7 @@ import java.util.List;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.google.cloud.healthcare.fdamystudies.bean.StudyReqBean;
 import com.google.cloud.healthcare.fdamystudies.beans.DeactivateAcctBean;
 import com.google.cloud.healthcare.fdamystudies.beans.LoginBean;
@@ -36,35 +37,37 @@ public class UserProfileControllerTest extends BaseMockIT {
 
   @Test
   public void ping() throws Exception {
-    performGet(PING_PATH, "", TestUtils.getCommonHeaders(Constants.USER_ID_HEADER), "", OK);
+    performGet(PING_PATH, TestUtils.getCommonHeaders(Constants.USER_ID_HEADER), OK);
   }
 
   @Test
-  public void getUserProfile() throws Exception {
+  public void getUserProfileSuccess() throws Exception {
     HttpHeaders headers = TestUtils.getCommonHeaders(Constants.USER_ID_HEADER);
-    performGet(USER_PROFILE_PATH, "", headers, "", OK);
+    performGet(USER_PROFILE_PATH, headers, OK);
   }
 
   @Test
-  public void getUserProfileInvalid() throws Exception {
-    HttpHeaders headers = TestUtils.getCommonHeaders();
+  public void getUserProfileBadRequest() throws Exception {
+    HttpHeaders headers = TestUtils.getCommonHeaders(Constants.USER_ID_HEADER);
 
     // Invalid userId
     headers.set(Constants.USER_ID_HEADER, Constants.INVALID_USER_ID);
-    performGet(USER_PROFILE_PATH, "", headers, "", BAD_REQUEST);
+    performGet(USER_PROFILE_PATH, headers, BAD_REQUEST);
   }
 
   @Test
-  public void updateUserProfile() throws Exception {
+  public void updateUserProfileSuccess() throws Exception {
     HttpHeaders headers = TestUtils.getCommonHeaders(Constants.USER_ID_HEADER);
 
     UserRequestBean bean = new UserRequestBean();
     String requestJson = getObjectMapper().writeValueAsString(bean);
-    performPost(UPDATE_USER_PROFILE_PATH, requestJson, headers, "", OK);
+    // sample response= {"code":200,"message":"Profile Updated successfully"}
+    // expect actual response contains 200
+    performPost(UPDATE_USER_PROFILE_PATH, requestJson, headers, String.valueOf(200), OK);
   }
 
   @Test
-  public void deactivateAccount() throws Exception {
+  public void deactivateAccountSuccess() throws Exception {
     HttpHeaders headers = TestUtils.getCommonHeaders(Constants.USER_ID_HEADER);
 
     StudyReqBean studyReqBean = new StudyReqBean(Constants.STUDY_ID, Constants.DELETE);
@@ -72,47 +75,61 @@ public class UserProfileControllerTest extends BaseMockIT {
     list.add(studyReqBean);
     DeactivateAcctBean acctBean = new DeactivateAcctBean(list);
     String requestJson = getObjectMapper().writeValueAsString(acctBean);
-    performDelete(DEACTIVATE_PATH, requestJson, headers, "", OK);
+    // sample response={"message":"success"}
+    // expect actual response contains 'success'
+    performDelete(DEACTIVATE_PATH, requestJson, headers, Constants.SUCCESS, OK);
   }
 
   @Test
-  public void resendConfirmationInvalid() throws Exception {
+  public void deactivateAccountBadRequest() throws Exception {
+    HttpHeaders headers = TestUtils.getCommonHeaders(Constants.USER_ID_HEADER);
+
+    // invalid userId
+    headers.set(Constants.USER_ID_HEADER, Constants.INVALID_USER_ID);
+    DeactivateAcctBean acctBean = new DeactivateAcctBean();
+    String requestJson = getObjectMapper().writeValueAsString(acctBean);
+    performDelete(DEACTIVATE_PATH, requestJson, headers, "", BAD_REQUEST);
+  }
+
+  @Test
+  public void resendConfirmationBadRequest() throws Exception {
 
     HttpHeaders headers =
         TestUtils.getCommonHeaders(Constants.APP_ID_HEADER, Constants.ORG_ID_HEADER);
 
     // without email
-    LoginBean loginBean = new LoginBean(null, Constants.PASSWORD);
-    String requestJson = getObjectMapper().writeValueAsString(loginBean);
+    String requestJson = getLoginBean(null, Constants.PASSWORD);
     performPost(RESEND_CONFIRMATION_PATH, requestJson, headers, "", BAD_REQUEST);
 
     // invalid email
-    loginBean = new LoginBean(Constants.INVALID_EMAIL, Constants.PASSWORD);
-    requestJson = getObjectMapper().writeValueAsString(loginBean);
+    requestJson = getLoginBean(Constants.INVALID_EMAIL, Constants.PASSWORD);
     performPost(RESEND_CONFIRMATION_PATH, requestJson, headers, "", BAD_REQUEST);
 
     // without appId
     headers.set(Constants.APP_ID_HEADER, "");
-    loginBean = new LoginBean(Constants.EMAIL_ID, Constants.PASSWORD);
-    requestJson = getObjectMapper().writeValueAsString(loginBean);
+    requestJson = getLoginBean(Constants.EMAIL_ID, Constants.PASSWORD);
     performPost(RESEND_CONFIRMATION_PATH, requestJson, headers, "", BAD_REQUEST);
 
     // without OrgId
     headers.set(Constants.APP_ID_HEADER, Constants.APP_ID_VALUE);
     headers.set(Constants.ORG_ID_HEADER, "");
-    loginBean = new LoginBean(Constants.EMAIL_ID, Constants.PASSWORD);
-    requestJson = getObjectMapper().writeValueAsString(loginBean);
+    requestJson = getLoginBean(Constants.EMAIL_ID, Constants.PASSWORD);
     performPost(RESEND_CONFIRMATION_PATH, requestJson, headers, "", BAD_REQUEST);
   }
 
   @Test
-  public void resendConfirmation() throws Exception {
-
+  public void resendConfirmationSuccess() throws Exception {
     HttpHeaders headers =
         TestUtils.getCommonHeaders(Constants.APP_ID_HEADER, Constants.ORG_ID_HEADER);
 
-    LoginBean bean = new LoginBean(Constants.VALID_EMAIL, Constants.PASSWORD);
-    String requestJson = getObjectMapper().writeValueAsString(bean);
-    performPost(RESEND_CONFIRMATION_PATH, requestJson, headers, "", OK);
+    String requestJson = getLoginBean(Constants.VALID_EMAIL, Constants.PASSWORD);
+    // sample response={"message":"success"}
+    // expect actual response contains 'success'
+    performPost(RESEND_CONFIRMATION_PATH, requestJson, headers, Constants.SUCCESS, OK);
+  }
+
+  private String getLoginBean(String emailId, String password) throws JsonProcessingException {
+    LoginBean bean = new LoginBean(emailId, password);
+    return getObjectMapper().writeValueAsString(bean);
   }
 }

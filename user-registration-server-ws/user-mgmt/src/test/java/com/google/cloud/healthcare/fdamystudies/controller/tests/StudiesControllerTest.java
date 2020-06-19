@@ -15,7 +15,6 @@ import com.google.cloud.healthcare.fdamystudies.controller.StudiesController;
 import com.google.cloud.healthcare.fdamystudies.service.StudiesServices;
 import com.google.cloud.healthcare.fdamystudies.testutils.Constants;
 import com.google.cloud.healthcare.fdamystudies.testutils.TestUtils;
-import com.google.cloud.healthcare.fdamystudies.util.AppConstants;
 
 public class StudiesControllerTest extends BaseMockIT {
 
@@ -32,174 +31,103 @@ public class StudiesControllerTest extends BaseMockIT {
     assertNotNull(studiesServices);
   }
 
-  private String getStudyMetaDataJson(
-      String studyId,
-      String studyTitle,
-      String studyVersion,
-      String studyType,
-      String studyStatus,
-      String studyCategory,
-      String studyTagline,
-      String studySponser,
-      String studyEnrolling,
-      String appId,
-      String appName,
-      String appDescription,
-      String orgId)
-      throws JsonProcessingException {
-    StudyMetadataBean study =
-        new StudyMetadataBean(
-            studyId,
-            studyTitle,
-            studyVersion,
-            studyType,
-            studyStatus,
-            studyCategory,
-            studyTagline,
-            studySponser,
-            studyEnrolling,
-            appId,
-            appName,
-            appDescription,
-            orgId);
-    return getObjectMapper().writeValueAsString(study);
+  public StudyMetadataBean createStudyMetadataBean() {
+    return new StudyMetadataBean(
+        Constants.STUDY_ID,
+        Constants.STUDY_TITLE,
+        Constants.STUDY_VERSION,
+        Constants.STUDY_TYPE,
+        Constants.STUDY_STATUS,
+        Constants.STUDY_CATEGORY,
+        Constants.STUDY_TAGLINE,
+        Constants.STUDY_SPONSOR,
+        Constants.STUDY_ENROLLING,
+        Constants.APP_ID_VALUE,
+        Constants.APP_NAME,
+        Constants.APP_DESCRIPTION,
+        Constants.ORG_ID_VALUE);
   }
 
   @Test
-  public void addUpdateStudyMetadata() throws Exception {
+  public void addUpdateStudyMetadataSuccess() throws Exception {
     HttpHeaders headers = TestUtils.getCommonHeaders();
-
-    String requestJson =
-        getStudyMetaDataJson(
-            Constants.STUDY_ID,
-            Constants.STUDY_TITLE,
-            Constants.STUDY_VERSION,
-            Constants.STUDY_TYPE,
-            Constants.STUDY_STATUS,
-            Constants.STUDY_CATEGORY,
-            Constants.STUDY_TAGLINE,
-            Constants.STUDY_SPONSOR,
-            Constants.STUDY_ENROLLING,
-            Constants.APP_ID_VALUE,
-            Constants.APP_NAME,
-            Constants.APP_DESCRIPTION,
-            Constants.ORG_ID_VALUE);
-    performPost(STUDY_METADATA_PATH, requestJson, headers, Constants.SUCCESS, OK);
+    String requestJson = getObjectMapper().writeValueAsString(createStudyMetadataBean());
+    // sample response={"code":200,"message":"Success"}
+    // expect actual response contains 200
+    performPost(STUDY_METADATA_PATH, requestJson, headers, String.valueOf(200), OK);
   }
 
   @Test
-  public void addUpdateStudyMetadataInvalidInput() throws Exception {
+  public void addUpdateStudyMetadataFailure() throws Exception {
 
     HttpHeaders headers = TestUtils.getCommonHeaders();
 
     // without studyId
-    String requestJson =
-        getStudyMetaDataJson(
-            "",
-            Constants.STUDY_TITLE,
-            Constants.STUDY_VERSION,
-            Constants.STUDY_TYPE,
-            Constants.STUDY_STATUS,
-            Constants.STUDY_CATEGORY,
-            Constants.STUDY_TAGLINE,
-            Constants.STUDY_SPONSOR,
-            Constants.STUDY_ENROLLING,
-            Constants.APP_ID_VALUE,
-            Constants.APP_NAME,
-            Constants.APP_DESCRIPTION,
-            Constants.ORG_ID_VALUE);
+    StudyMetadataBean metadataBean = createStudyMetadataBean();
+    metadataBean.setStudyId("");
+    String requestJson = getObjectMapper().writeValueAsString(metadataBean);
     performPost(STUDY_METADATA_PATH, requestJson, headers, "", BAD_REQUEST);
 
     // without studyVersion
-    requestJson =
-        getStudyMetaDataJson(
-            Constants.STUDY_ID,
-            Constants.STUDY_TITLE,
-            "",
-            Constants.STUDY_TYPE,
-            Constants.STUDY_STATUS,
-            Constants.STUDY_CATEGORY,
-            Constants.STUDY_TAGLINE,
-            Constants.STUDY_SPONSOR,
-            Constants.STUDY_ENROLLING,
-            Constants.APP_ID_VALUE,
-            Constants.APP_NAME,
-            Constants.APP_DESCRIPTION,
-            Constants.ORG_ID_VALUE);
+    metadataBean = createStudyMetadataBean();
+    metadataBean.setStudyVersion("");
+    requestJson = getObjectMapper().writeValueAsString(metadataBean);
     performPost(STUDY_METADATA_PATH, requestJson, headers, "", BAD_REQUEST);
 
     // without appId
-    requestJson =
-        getStudyMetaDataJson(
-            Constants.STUDY_ID,
-            Constants.STUDY_TITLE,
-            Constants.STUDY_VERSION,
-            Constants.STUDY_TYPE,
-            Constants.STUDY_STATUS,
-            Constants.STUDY_CATEGORY,
-            Constants.STUDY_TAGLINE,
-            Constants.STUDY_SPONSOR,
-            Constants.STUDY_ENROLLING,
-            "",
-            Constants.APP_NAME,
-            Constants.APP_DESCRIPTION,
-            Constants.ORG_ID_VALUE);
+    metadataBean = createStudyMetadataBean();
+    metadataBean.setAppId("");
+    requestJson = getObjectMapper().writeValueAsString(metadataBean);
     performPost(STUDY_METADATA_PATH, requestJson, headers, "", BAD_REQUEST);
 
     // without orgId
-    requestJson =
-        getStudyMetaDataJson(
-            Constants.STUDY_ID,
-            Constants.STUDY_TITLE,
-            Constants.STUDY_VERSION,
-            Constants.STUDY_TYPE,
-            Constants.STUDY_STATUS,
-            Constants.STUDY_CATEGORY,
-            Constants.STUDY_TAGLINE,
-            Constants.STUDY_SPONSOR,
-            Constants.STUDY_ENROLLING,
-            Constants.APP_ID_HEADER,
-            Constants.APP_NAME,
-            Constants.APP_DESCRIPTION,
-            "");
+    metadataBean = createStudyMetadataBean();
+    metadataBean.setOrgId("");
+    requestJson = getObjectMapper().writeValueAsString(metadataBean);
     performPost(STUDY_METADATA_PATH, requestJson, headers, "", BAD_REQUEST);
   }
 
   @Test
-  public void sendNotificationInvalidInput() throws Exception {
+  public void sendNotificationFailure() throws Exception {
 
-    HttpHeaders headers = TestUtils.getCommonHeaders(Constants.CLIENT_ID_HEADER, Constants.SECRET_KEY_HEADER);
+    HttpHeaders headers =
+        TestUtils.getCommonHeaders(Constants.CLIENT_ID_HEADER, Constants.SECRET_KEY_HEADER);
 
     // null body
     NotificationForm notificationForm = null;
     String requestJson = getObjectMapper().writeValueAsString(notificationForm);
     performPost(SEND_NOTIFICATION_PATH, requestJson, headers, "", BAD_REQUEST);
 
-    // empty appId and empty notificationType
-    NotificationBean notificationBean =
-        new NotificationBean(Constants.STUDY_ID, Constants.CUSTOM_STUDYID, null, null);
-    List<NotificationBean> list = new ArrayList<NotificationBean>();
-    list.add(notificationBean);
-    notificationForm = new NotificationForm(list);
-    requestJson = getObjectMapper().writeValueAsString(notificationForm);
+    // empty notificationType
+    requestJson =
+        getNotificationForm(
+            Constants.STUDY_ID, Constants.CUSTOM_STUDY_ID, Constants.APP_ID_HEADER, "");
     performPost(SEND_NOTIFICATION_PATH, requestJson, headers, "", BAD_REQUEST);
   }
 
   @Test
-  public void sendNotification() throws Exception {
+  public void sendNotificationSuccess() throws Exception {
+    HttpHeaders headers =
+        TestUtils.getCommonHeaders(Constants.CLIENT_ID_HEADER, Constants.SECRET_KEY_HEADER);
 
-    HttpHeaders headers = TestUtils.getCommonHeaders(Constants.CLIENT_ID_HEADER, Constants.SECRET_KEY_HEADER);
-
-    NotificationBean notificationBean =
-        new NotificationBean(
+    String requestJson =
+        getNotificationForm(
             Constants.STUDY_ID,
-            Constants.CUSTOM_STUDYID,
+            Constants.CUSTOM_STUDY_ID,
             Constants.APP_ID_HEADER,
-            AppConstants.STUDY_LEVEL);
+            Constants.STUDY_LEVEL);
+    // sample response={"code":200,"message":"Success"}
+    // expect actual response contains 200
+    performPost(SEND_NOTIFICATION_PATH, requestJson, headers, String.valueOf(200), OK);
+  }
+
+  private String getNotificationForm(
+      String studyId, String customStudyId, String appId, String notificationType)
+      throws JsonProcessingException {
+    NotificationBean bean = new NotificationBean(studyId, customStudyId, appId, notificationType);
     List<NotificationBean> list = new ArrayList<NotificationBean>();
-    list.add(notificationBean);
+    list.add(bean);
     NotificationForm notificationForm = new NotificationForm(list);
-    String requestJson = getObjectMapper().writeValueAsString(notificationForm);
-    performPost(SEND_NOTIFICATION_PATH, requestJson, headers, "", OK);
+    return getObjectMapper().writeValueAsString(notificationForm);
   }
 }

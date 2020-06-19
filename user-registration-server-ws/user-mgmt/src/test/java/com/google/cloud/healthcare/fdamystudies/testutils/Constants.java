@@ -17,7 +17,7 @@ public final class Constants {
   public static final String STUDY_ENROLLING = "Yes";
   public static final String APP_NAME = "appName";
   public static final String APP_DESCRIPTION = "appDescription";
-  public static final String CUSTOM_STUDYID = "StudyID001";
+  public static final String CUSTOM_STUDY_ID = "StudyID001";
 
   public static final String ACCESS_TOKEN_VALUE = "access Token value";
   public static final String CLIENT_TOKEN_VALUE = "client token value";
@@ -29,7 +29,7 @@ public final class Constants {
   public static final String INVALID_USER_ID = "invalid userId";
   public static final String EMAIL_ID = "abc@gmail.com";
   public static final String PASSWORD = "pass@12";
-  public static final String SUCCESS = "Success";
+  public static final String SUCCESS = "success";
   public static final String CLIENT_ID_HEADER = "clientId";
   public static final String SECRET_KEY_HEADER = "secretkey";
   public static final String CLIENT_ID_VALUE = "3a4e7944-0731-4471-82e0-81b9a28504af";
@@ -39,4 +39,7 @@ public final class Constants {
   public static final String INVALID_EMAIL = "aa";
   public static final String VALID_EMAIL = "abc1234@gmail.com";
   public static final String DELETE = "delete";
+  public static final String INVALID_STUDY_ID = "132";
+  public static final String NOTIFICATION_TYPE = "ST";
+  public static final String STUDY_LEVEL = "ST";
 }

@@ -8,7 +8,8 @@ INSERT INTO `app_info` (`app_info_id`, `custom_app_id`, `org_info_id`, `created_
 INSERT INTO `study_info` (`id`, `custom_id`, `app_info_id`, `name`, `description`, `type`,`created_by`, `created_on`, `modified_date`) VALUES
 	(1, 'StudyID001', 1, 'name', 'description', 'OPEN', 0, '2020-03-12 15:23:41',  '2020-03-12 15:24:42'),
 	(2, 'studyId1', 1, 'name', 'description', 'OPEN', 0, '2020-03-12 15:23:41',  '2020-03-12 15:24:42'),
-	(3, 'custom-id-2', 1, 'name-2', 'description', 'CLOSED', 0, '2020-03-12 15:23:44', '2020-03-12 15:24:45');
+	(3, 'custom-id-2', 1, 'name-2', 'description', 'CLOSED', 0, '2020-03-12 15:23:44', '2020-03-12 15:24:45'),
+	(4, '132', 1, 'name', 'description', 'OPEN', 0, '2020-03-12 15:23:41',  '2020-03-12 15:24:42');
 
 INSERT INTO `locations` (`id`, `created`, `created_by`, `custom_id`, `description`, `is_default`, `name`, `status`) VALUES
 	(2, '2020-03-17 18:59:15', 1, '-customId130.53', 'location-descp-updated', 'N', 'name -1-updated000', '1');
@@ -31,7 +32,8 @@ INSERT INTO `participant_registry_site` (`id`, `site_id`, `study_info_id`, `emai
 
 INSERT INTO `participant_study_info` (`participant_study_info_id`, `participant_id`, `study_info_id`, `participant_registry_site_id`, `site_id`, `user_details_id`, `status`, `bookmark`, `enrolled_date`, `completion`, `adherence`, `withdrawal_date`) VALUES
 	(101, '1', 2, 33, 1, 44, 'Withdrawn', 1, '2020-02-06 14:07:29', 45, 20, '2020-02-10 14:03:14'),
-	(102, '2', 1, 34, 1, 44, 'Enrolled', 0, '2020-02-06 14:07:31', 50, 36, '2020-02-06 14:07:31');
+	(102, '2', 1, 34, 1, 44, 'Enrolled', 0, '2020-02-06 14:07:31', 50, 36, '2020-02-06 14:07:31'),
+	(103, '3', 4, 33, 1, 44, 'Withdrawn', 1, '2020-02-06 14:07:29', 45, 20, '2020-02-10 14:03:14');
 	
 INSERT INTO `auth_info` (`auth_id`, `app_info_id`, `created_on`, `device_token`, `device_type`, `ios_app_version`, `modified_on`, `remote_notification_flag`, `user_details_id`) VALUES 
 	(222, 1, '2020-03-22 17:12:23', '7B3F1433E1157D370EE8A6BA2E612B27EC2C0081771FC8BA1ECFCBB07BBA5A17', 'ios', '1.0.1', '2020-03-27 11:28:58', 1, 44);
