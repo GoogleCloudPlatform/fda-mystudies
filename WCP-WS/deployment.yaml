@@ -57,7 +57,7 @@ spec:
           - containerPort: 8080
           readinessProbe:
             httpGet:
-              path: /StudyMetaData/ping
+              path: /StudyMetaData/healthCheck
               port: 8080
         - name: cloudsql-proxy 
           image: gcr.io/cloudsql-docker/gce-proxy:latest 

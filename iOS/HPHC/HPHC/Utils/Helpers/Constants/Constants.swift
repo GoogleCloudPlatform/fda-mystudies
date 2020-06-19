@@ -57,7 +57,7 @@ let kUIColorForSubmitButtonBackground = UIColor.init(
 let kNoNetworkErrorCode = -101
 let kCouldNotConnectToServerCode = -1001
 
-//Display Constants
+// MARK: - Display Constants
 let kTitleError = "Error"
 let kTitleMessage = "Message"
 let kImportantNoteMessage = "Important Note"
@@ -65,7 +65,12 @@ let kTitleOk = "Ok"
 let kTitleCancel = "Cancel"
 let kTitleDeleteAccount = "Delete Account"
 let kRegistrationInfoMessage =
-  "Registration (or sign up) for the app  is requested only to provide you with a seamless experience of using the app. Your registration information does not become part of the data collected for any study(ies) housed in the app. Each study has its own consent process and your data for the study will not be collected without you providing your informed consent prior to joining the study."
+  """
+  Registration (or sign up) for the app  is requested only to provide you with a seamless experience of using the app. \
+  Your registration information does not become part of the data collected for any study(ies) housed in the app. \
+  Each study has its own consent process and your data for the study will not be collected without you providing \
+  your informed consent prior to joining the study.
+  """
 
 let kDeleteAccountConfirmationMessage =
   "Are you sure you wish to permanently delete your #APPNAME# account? You will need to register again if you wish to join a study."
@@ -73,7 +78,10 @@ let kMessageAccountDeletedSuccess = "Account has been deleted"
 let kMessageAppNotificationOffRemainder =
   "Stay up-to-date! Turn ON notifications and reminders in app and phone settings to get notified about study activity in a timely manner."
 let kSetPasscodeDescription =
-  "A passcode helps with quick and secure access to the app. You can turn off the passcode at any time by using a setting provided in the app."
+  """
+  A passcode helps with quick and secure access to the app. \
+  You can turn off the passcode at any time by using a setting provided in the app.
+  """
 
 // MARK: - Signin Constants
 let kSignInTitleText = "Sign In"
@@ -120,7 +128,10 @@ let kMessageProfileValidatePasswords = "New password and confirm password fields
 
 let kMessageValidatePasswordCharacters = "Password should have minimum of 8 characters."
 let kMessageValidatePasswordComplexity =
-  "Your password must contain: 8 to 64 characters, lower case letter, upper case letter, numeric,  special characters \\!  # $ % & ' () * + , - . : ; < > = ? @ [] ^ _  { } | ~"
+  """
+  Your password must contain: 8 to 64 characters, lower case letter, upper case letter, numeric, \
+  special characters \\!  # $ % & ' () * + , - . : ; < > = ? @ [] ^ _  { } | ~
+  """
 let kMessageAgreeToTermsAndConditions = "Please agree to terms and conditions."
 
 let kMessageNewPasswordBlank = "Please enter your new password."
@@ -175,10 +186,16 @@ let kResumeSpaces = "  Resume  "
 let kStartSpaces = "  Start  "
 let kCompletedSpaces = "  Completed  "
 let kInCompletedSpaces = "  Incompleted  "
+let kStudySetupMessage = "Please wait as we set up the study for you, this may take a few seconds."
 
 // MARK: - ResourcesViewController constants
 let kResourcesTableViewCell = "ResourcesCell"
 let kResourceShareError = "Unable to share Resource."
+let kRetainDataOnLeaveStudy =
+  """
+  You are choosing to leave the study. Please choose if your response data can be retained and used \
+  for research purposes OR if your response data should be deleted.
+  """
 
 // MARK: - StudyDashboardViewController constants
 let kWelcomeTableViewCell = "welcomeCell"
@@ -200,6 +217,7 @@ let kMonthSpaces = "  MONTH  "
 let kMonth = "MONTH"
 let kWeekSpaces = "  WEEK  "
 let kWeek = "WEEK"
+let kDashSetupMessage = "Please wait as we set up the dashboard for you, this may take a few seconds."
 
 // MARK: - Eligibility constants
 
@@ -219,7 +237,10 @@ let kMessageForStudyPausedAfterJoiningState =
   "The study has been temporarily paused. You can participate in activities once it is resumed. Please check back later."
 let kMessageForStudyClosedState = "This study has been closed."
 let kMessageForStudyWithdrawnState =
-  "Sorry, this study currently does not allow previously enrolled participants to rejoin the study after they have withdrawn from the study. Please check back later or explore other studies"
+  """
+  Sorry, this study currently does not allow previously enrolled participants to rejoin the study \
+  after they have withdrawn from the study. Please check back later or explore other studies
+  """
 let kMessageForStudyEnrollingNotAllowed =
   "Sorry, enrollment for this study has been closed for now. Please check back later or explore other studies you could join."
 

@@ -25,6 +25,7 @@ public class UserSessionServiceImpl implements UserSessionService {
 
   @Autowired private SessionRepository session;
 
+  @Override
   public String deleteTokenExpireDateByUserId(String userId)
       throws UserNotFoundException, SystemException {
 
@@ -46,6 +47,7 @@ public class UserSessionServiceImpl implements UserSessionService {
     }
   }
 
+  @Override
   public AuthInfoBO loadSessionByUserId(String userId) throws SystemException {
     logger.info("UserSessionServiceImpl loadSessionByUserId() - starts");
     AuthInfoBO sessionDetails = null;
@@ -59,6 +61,7 @@ public class UserSessionServiceImpl implements UserSessionService {
     }
   }
 
+  @Override
   public AuthInfoBO save(AuthInfoBO authInfo) throws SystemException {
 
     logger.info("UserSessionServiceImpl save() - starts");
