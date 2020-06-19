@@ -110,6 +110,8 @@ class ActivitiesViewController: UIViewController {
       for: UIControl.Event.valueChanged
     )
     tableView?.addSubview(refreshControl!)
+
+    setupStandaloneNotifications()
   }
 
   override func viewWillAppear(_ animated: Bool) {
@@ -139,6 +141,15 @@ class ActivitiesViewController: UIViewController {
   }
 
   // MARK: - Helper Methods
+  
+  private func setupStandaloneNotifications() {
+    if Utilities.isStandaloneApp() {
+      // Set notifications for standalone app here.
+      DispatchQueue.main.async {
+        StudyListViewController.configureNotifications()
+      }
+    }
+  }
 
   private func addObservers() {
     // Add activity refresh notification observer.

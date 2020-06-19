@@ -65,25 +65,15 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
   /// Register for Remote Notification
   func askForNotification() {
-
-    if #available(iOS 10.0, *) {
-      let authOptions: UNAuthorizationOptions = [.alert, .badge, .sound]
-      UNUserNotificationCenter.current().requestAuthorization(
-        options: authOptions,
-        completionHandler: { _, _ in }
-      )
-
-      // For iOS 10 display notification (sent via APNS)
-      UNUserNotificationCenter.current().delegate = self
-
-    } else {
-      let settings: UIUserNotificationSettings = UIUserNotificationSettings(
-        types: [.alert, .badge, .sound],
-        categories: nil
-      )
-      UIApplication.shared.registerUserNotificationSettings(settings)
+    UNUserNotificationCenter.current().delegate = self
+    UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .sound, .badge]) { (granted, _) in
+      // 1. Check if permission granted
+      guard granted else { return }
+      // 2. Attempt registration for remote notifications on the main thread
+      DispatchQueue.main.async {
+        UIApplication.shared.registerForRemoteNotifications()
+      }
     }
-    UIApplication.shared.registerForRemoteNotifications()
   }
 
   /// Updates Key & InitializationVector for Encryption
