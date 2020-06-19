@@ -2,22 +2,21 @@
   <div class="max__w__1280 m-none">
     <div class="flex__justify__space-between">
       <div class="subheader__title">Locations</div>
-      <div class="">
-        <button
-          (click)="addLocation()"
-          class="btn btn-primary width__auto blue__btn font14"
-        >
-          Add Location
-        </button>
-      </div>
+      <button
+        id="addLocation"
+        (click)="addLocation()"
+        class="btn btn-primary width__auto blue__btn font14"
+      >
+        Add Location
+      </button>
     </div>
   </div>
 </div>
 <div class="max__w__1280 m-none">
-  <div *ngIf="locations.length != 0" class="cards1 m-none">
+  <div class="cards1 m-none">
     <table
       class="table table-striped"
-      [mfData]="locations"
+      [mfData]="location$ | async"
       #mf="mfDataTable"
       [mfRowsOnPage]="10"
     >
@@ -61,7 +60,7 @@
           </td>
           <td>
             <span class="tbl__td__label">Status:</span
-            >{{ location.status == 1 ? "Active" : ("Deactivated" | uppercase) }}
+            >{{ location.status == 1 ? "Active" : "DEACTIVATED" }}
           </td>
         </tr>
       </tbody>

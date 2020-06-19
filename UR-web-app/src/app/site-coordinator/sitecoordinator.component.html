@@ -3,10 +3,10 @@
     <div class="bs-example bs__example">
       <nav class="navbar navbar-expand-md p-none">
         <a routerLink="/user/dashboard" class="navbar-brand"
-          ><img
-            class="mr-sm"
-            src="../../../assets/images/landing-logo.gif"
-          /><span class="header__logo__text">FDA MyStudies </span></a
+          ><img class="mr-sm" src="assets/images/landing-logo.gif" /><span
+            class="header__logo__text"
+            >FDA MyStudies
+          </span></a
         >
         <div class="collapse navbar-collapse" id="navbarCollapse">
           <div class="navbar-nav ml-auto">
@@ -58,29 +58,14 @@
 
   <div id="mobile-menu">
     <div id="mySidenav__menubar" class="flex__justify__space-between">
-      <div class="">
-        <span
+      <div>
+        <button
           class="openNav display-inline-block mr-sm"
-          (click)="opencloseNav()"
+          (click)="toggleNav()"
         >
-          <svg
-            height="16px"
-            viewBox="0 -53 384 384"
-            width="20px"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <path
-              d="m368 154.667969h-352c-8.832031 0-16-7.167969-16-16s7.167969-16 16-16h352c8.832031 0 16 7.167969 16 16s-7.167969 16-16 16zm0 0"
-            />
-            <path
-              d="m368 32h-352c-8.832031 0-16-7.167969-16-16s7.167969-16 16-16h352c8.832031 0 16 7.167969 16 16s-7.167969 16-16 16zm0 0"
-            />
-            <path
-              d="m368 277.332031h-352c-8.832031 0-16-7.167969-16-16s7.167969-16 16-16h352c8.832031 0 16 7.167969 16 16s-7.167969 16-16 16zm0 0"
-            />
-          </svg>
-        </span>
-        <a href="#" class="">
+          <img src="../../../assets/svgs/menu-icon.svg" />
+        </button>
+        <a href="#">
           <img class="mr-sm" src="../../../assets/images/landing-logo.gif" />
           <span class="header__logo__text">FDA MyStudies </span>
         </a>
@@ -110,22 +95,20 @@
     <div
       id="mySidenav"
       class="sidenav"
-      [ngClass]="opencloseNavval ? 'width__268 ' : 'width__0 '"
+      [ngClass]="navIsOpen ? 'open__nav' : 'close__nav '"
     >
       <div
-        [ngClass]="
-          opencloseNavval ? 'width__268 display__block ' : 'display__none '
-        "
+        [ngClass]="navIsOpen ? 'open__nav display__block ' : 'display__none '"
       >
         <div class="mob__bo">
           <a
             href="javascript:void(0)"
             class="closebtn"
             id="closeMobile"
-            (click)="opencloseNav()"
+            (click)="toggleNav()"
             >×</a
           >
-          <a href="#" class="">
+          <a href="#">
             <img class="mr-sm" src="../../../assets/images/landing-logo.gif" />
             <span class="header__logo__text">FDA MyStudies </span>
           </a>
@@ -173,7 +156,7 @@
     </div>
     <div
       class="bg__overlay"
-      [ngClass]="opencloseNavval ? 'display__block' : 'display__none'"
+      [ngClass]="navIsOpen ? 'display__block' : 'display__none'"
     ></div>
   </div>
 </header>
@@ -181,10 +164,10 @@
 <router-outlet></router-outlet>
 
 <footer>
-  <div class="">
+  <div>
     &copy; 2019 FDA MyStudies. All rights reserved.
   </div>
-  <div class="">
+  <div>
     <ul>
       <li><a href="#">About</a></li>
       <li><a href="#">Terms of Service</a></li>

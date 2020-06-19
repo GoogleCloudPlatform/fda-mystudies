@@ -8,6 +8,6 @@ import {Location} from '../shared/location.model';
 export class LocationService {
   constructor(private readonly entityService: EntityService<Location>) {}
   getLocations(): Observable<Location[]> {
-    return this.entityService.getArray('locations');
+    return this.entityService.getCollection('locations');
   }
 }

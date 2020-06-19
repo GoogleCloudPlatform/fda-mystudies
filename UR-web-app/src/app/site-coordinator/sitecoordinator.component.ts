@@ -7,16 +7,16 @@ import {Component} from '@angular/core';
 })
 export class SiteCoordinatorComponent {
   searchPlaceholder = 'Search by Site or Study ID or Name';
-  opencloseNavval = false;
+  navIsOpen = false;
   showSearchBar = true;
   filterQuery = '';
 
-  opencloseNav(): void {
-    this.opencloseNavval = !this.opencloseNavval;
+  toggleNav(): void {
+    this.navIsOpen = !this.navIsOpen;
   }
 
   public handleKeyDown(event: KeyboardEvent): void {
-    if (event.keyCode === 13) {
+    if (event.key === 'Enter') {
       // :TO DO child component search method call
     }
   }

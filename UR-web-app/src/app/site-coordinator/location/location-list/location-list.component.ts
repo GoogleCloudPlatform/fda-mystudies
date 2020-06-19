@@ -3,17 +3,21 @@ import {LocationService} from '../shared/location.service';
 import {Location} from '../shared/location.model';
 import {Router} from '@angular/router';
 import {ToastrService} from 'ngx-toastr';
-import {ErrorBean} from 'src/app/entity/error.model';
+import {ApiResponse} from 'src/app/entity/error.model';
+import {throwError, BehaviorSubject, combineLatest} from 'rxjs';
+import {Observable} from 'rxjs/Observable';
+import 'rxjs/add/observable/of';
+import {catchError, map} from 'rxjs/operators';
+
 @Component({
   selector: 'location-list',
   templateUrl: './location-list.component.html',
   styleUrls: ['./location-list.component.scss'],
 })
 export class LocationListComponent implements OnInit {
+  query$ = new BehaviorSubject('');
+  location$: Observable<Location[]> = Observable.of([]);
   locations: Location[] = [];
-  locationBackup: Location[] = [];
-  errorMessage = '';
-
   constructor(
     private readonly locationService: LocationService,
     private readonly router: Router,
@@ -23,41 +27,36 @@ export class LocationListComponent implements OnInit {
   ngOnInit(): void {
     this.getLocation();
   }
+
   getLocation(): void {
-    this.locations = [];
-    this.locationBackup = [];
-    this.locationService.getLocations().subscribe(
-      (data) => {
-        this.locations = data;
-        this.locationBackup = JSON.parse(
-          JSON.stringify(this.locations),
-        ) as Location[];
-      },
-      (error: ErrorBean) => {
-        this.locations = [];
-        this.locationBackup = [];
-        this.errorMessage = error.userMessage;
-        this.toastr.error(this.errorMessage);
-      },
+    this.location$ = combineLatest(
+      this.locationService.getLocations(),
+      this.query$,
+    ).pipe(
+      catchError((error: ApiResponse) => {
+        this.toastr.error(error.error.userMessage);
+        return throwError(error);
+      }),
+      map(([locations, query]) => {
+        this.locations = locations;
+        return locations.filter(
+          (location: Location) =>
+            (location.name &&
+              location.name.toLowerCase().includes(query.toLowerCase())) ||
+            (location.customId &&
+              location.customId.toLowerCase().includes(query.toLowerCase())),
+        );
+      }),
     );
   }
+  search(query: string): void {
+    this.query$.next(query.trim());
+  }
+
   locationDetails(locationId: number): void {
     void this.router.navigate(['/coordinator/locations/', locationId]);
   }
   addLocation(): void {
     void this.router.navigate(['/coordinator/locations/new']);
-  }
-  search(filterQuery: string): void {
-    const query = filterQuery;
-    if (query && query.trim() !== '') {
-      this.locations = this.locationBackup.filter(function (a) {
-        return (
-          (a.name && a.name.toLowerCase().includes(query.toLowerCase())) ||
-          (a.customId && a.customId.toLowerCase().includes(query.toLowerCase()))
-        );
-      });
-    } else {
-      this.locations = this.locationBackup;
-    }
   }
 }

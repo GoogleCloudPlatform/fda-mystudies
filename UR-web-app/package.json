@@ -40,6 +40,7 @@
     "node-sass": "^4.13.0",
     "popper.js": "^1.16.0",
     "rxjs": "~6.5.4",
+    "rxjs-compat": "^6.5.5",
     "tslib": "^1.10.0",
     "web-animations-js": "^2.3.2",
     "zone.js": "~0.10.2"
