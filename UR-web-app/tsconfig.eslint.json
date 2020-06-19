@@ -1,9 +1,11 @@
 {
   "extends": "./tsconfig.json",
   "include": [
-    "src/karma.conf.js",
-    "e2e/protractor.conf.js",
+    "src/**/*.js",
+    "src/**/*.ts",
     ".eslintrc.js",
-    "src/environments/*"
-  ]
+  ],
+  "compilerOptions": {
+    "types": ["jasmine", "node"]
+  },
 }
