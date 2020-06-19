@@ -9,6 +9,7 @@
 package com.google.cloud.healthcare.fdamystudies.controller;
 
 import javax.servlet.http.HttpServletResponse;
+import javax.validation.Valid;
 import javax.ws.rs.core.Context;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -32,35 +33,27 @@ public class UserSupportController {
 
   private static final Logger logger = LoggerFactory.getLogger(UserSupportController.class);
 
-  @Autowired UserSupportService supportService;
+  @Autowired
+  UserSupportService supportService;
 
   @PostMapping(
       value = "/feedback",
       consumes = MediaType.APPLICATION_JSON_VALUE,
       produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<?> feedbackDetails(
-      @RequestBody FeedbackReqBean reqBean, @Context HttpServletResponse response) {
+      @Valid @RequestBody FeedbackReqBean reqBean, @Context HttpServletResponse response) {
     logger.info("INFO: UserSupportController - feedbackDetails() :: Starts");
     boolean isEmailSent = false;
     ResponseBean responseBean = new ResponseBean();
     try {
-      if (StringUtils.isNotEmpty(reqBean.getSubject())
-          && StringUtils.isNotEmpty(reqBean.getBody())) {
-        isEmailSent = supportService.feedback(reqBean.getSubject(), reqBean.getBody());       
-        if (isEmailSent) {
-          responseBean.setMessage(MyStudiesUserRegUtil.ErrorCodes.SUCCESS.getValue().toLowerCase());
-        } else {
-          ErrorBean errorBean = new ErrorBean();
-          errorBean.setCode(HttpStatus.INTERNAL_SERVER_ERROR.value());
-          errorBean.setMessage(MyStudiesUserRegUtil.ErrorCodes.FEEDBACK_ERROR_MESSAGE.getValue());
-          return new ResponseEntity<>(errorBean, HttpStatus.INTERNAL_SERVER_ERROR);
-        }
+      isEmailSent = supportService.feedback(reqBean.getSubject(), reqBean.getBody());
+      if (isEmailSent) {
+        responseBean.setMessage(MyStudiesUserRegUtil.ErrorCodes.SUCCESS.getValue().toLowerCase());
       } else {
-        MyStudiesUserRegUtil.getFailureResponse(
-            MyStudiesUserRegUtil.ErrorCodes.STATUS_102.getValue(),
-            MyStudiesUserRegUtil.ErrorCodes.UNKNOWN.getValue(),
-            MyStudiesUserRegUtil.ErrorCodes.INVALID_INPUT_ERROR_MSG.getValue(),
-            response);
+        ErrorBean errorBean = new ErrorBean();
+        errorBean.setCode(HttpStatus.INTERNAL_SERVER_ERROR.value());
+        errorBean.setMessage(MyStudiesUserRegUtil.ErrorCodes.FEEDBACK_ERROR_MESSAGE.getValue());
+        return new ResponseEntity<>(errorBean, HttpStatus.INTERNAL_SERVER_ERROR);
       }
     } catch (Exception e) {
       logger.error("UserSupportController - feedbackDetails() :: ERROR", e);
@@ -84,30 +77,19 @@ public class UserSupportController {
     boolean isEmailSent = false;
     ResponseBean responseBean = new ResponseBean();
     try {
-      if (StringUtils.isNotEmpty(reqBean.getSubject())
-          && StringUtils.isNotEmpty(reqBean.getBody())
-          && StringUtils.isNotEmpty(reqBean.getFirstName())
-          && StringUtils.isNotEmpty(reqBean.getEmail())) {
-        isEmailSent =
-            supportService.contactUsDetails(
-                reqBean.getSubject(),
-                reqBean.getBody(),
-                reqBean.getFirstName(),
-                reqBean.getEmail());
-        if (isEmailSent) {
-          responseBean.setMessage(MyStudiesUserRegUtil.ErrorCodes.SUCCESS.getValue().toLowerCase());
-        } else {
-          ErrorBean errorBean = new ErrorBean();
-          errorBean.setCode(HttpStatus.INTERNAL_SERVER_ERROR.value());
-          errorBean.setMessage(MyStudiesUserRegUtil.ErrorCodes.CONTACTUS_ERROR_MESSAGE.getValue());
-          return new ResponseEntity<>(errorBean, HttpStatus.INTERNAL_SERVER_ERROR);
-        }
+      isEmailSent =
+          supportService.contactUsDetails(
+              reqBean.getSubject(),
+              reqBean.getBody(),
+              reqBean.getFirstName(),
+              reqBean.getEmail());
+      if (isEmailSent) {
+        responseBean.setMessage(MyStudiesUserRegUtil.ErrorCodes.SUCCESS.getValue().toLowerCase());
       } else {
-        MyStudiesUserRegUtil.getFailureResponse(
-            MyStudiesUserRegUtil.ErrorCodes.STATUS_102.getValue(),
-            MyStudiesUserRegUtil.ErrorCodes.UNKNOWN.getValue(),
-            MyStudiesUserRegUtil.ErrorCodes.INVALID_INPUT_ERROR_MSG.getValue(),
-            response);        
+        ErrorBean errorBean = new ErrorBean();
+        errorBean.setCode(HttpStatus.INTERNAL_SERVER_ERROR.value());
+        errorBean.setMessage(MyStudiesUserRegUtil.ErrorCodes.CONTACTUS_ERROR_MESSAGE.getValue());
+        return new ResponseEntity<>(errorBean, HttpStatus.INTERNAL_SERVER_ERROR);
       }
     } catch (Exception e) {
       logger.error("UserSupportController - contactUsDetails() :: ERROR", e);
@@ -115,7 +97,7 @@ public class UserSupportController {
           MyStudiesUserRegUtil.ErrorCodes.EC_500.getValue(),
           MyStudiesUserRegUtil.ErrorCodes.EC_500.getValue(),
           MyStudiesUserRegUtil.ErrorCodes.FAILURE.getValue(),
-          response);      
+          response);
     }
     logger.info("INFO: UserSupportController - contactUsDetails() :: Ends");
     return new ResponseEntity<>(responseBean, HttpStatus.OK);

@@ -1769,68 +1769,46 @@ extension AppDelegate: UNUserNotificationCenterDelegate {
 extension UIWindow {
 
   /// Adds progress below navigation bar
-  func addProgressIndicatorOnWindow() {
-
-    let view =
-      UINib(nibName: kNewProgressViewNIB, bundle: nil).instantiate(
-        withOwner: nil,
-        options: nil
-      )[0] as? UIView
-
-    let gif = UIImage.gifImageWithName(kResourceName)
-    let imageView = view?.subviews.first as? UIImageView
-    imageView?.image = gif
-
+  func addProgressIndicatorOnWindow(with message: String = "") {
     var frame = UIScreen.main.bounds
     frame.origin.y += 64
-    view?.frame = frame
-    view?.tag = 50000
-    self.addSubview(view!)
-    view?.alpha = 0
-    UIView.animate(withDuration: 0.3) {
-      view?.alpha = 1
-    }
+    addProgressIndicatorOnWindowFromTop(with: message, frame: frame)
   }
 
   /// Adds Progress on complete screen, including navigation bar
-  func addProgressIndicatorOnWindowFromTop() {
-
-    let view = self.viewWithTag(50000)
-    if view == nil {
-
-      let view =
-        UINib(nibName: kNewProgressViewNIB, bundle: nil).instantiate(
-          withOwner: nil,
-          options: nil
-        )[0] as? UIView
-
-      let gif = UIImage.gifImageWithName(kResourceName)
-      let imageView = view?.subviews.first as? UIImageView
-      imageView?.image = gif
-
-      let frame = UIScreen.main.bounds
-
-      view?.frame = frame
-      view?.tag = 50000
-      self.addSubview(view!)
-      view?.alpha = 0
-      UIView.animate(withDuration: 0.3) {
-        view?.alpha = 1
+  func addProgressIndicatorOnWindowFromTop(
+    with message: String = "",
+    frame: CGRect? = nil
+  ) {
+    let isProgressAdded = self.subviews
+      .contains(where: { $0.isKind(of: NewProgressView.self) })
+    if !isProgressAdded {
+      let frame = frame ?? UIScreen.main.bounds
+      if let progressView = NewProgressView.instanceFromNib(frame: frame) {
+        progressView.showLoader(with: message)
+        progressView.alpha = 0
+        self.addSubview(progressView)
+        UIView.animate(withDuration: 0.3) {
+          progressView.alpha = 1
+        }
       }
     }
   }
 
   /// Removes progress from window
   func removeProgressIndicatorFromWindow() {
-
-    let view = self.viewWithTag(50000)
-    UIView.animate(
-      withDuration: 0.2,
-      animations: {
-        view?.alpha = 0
-      }
-    ) { (_) in
-      view?.removeFromSuperview()
+    if let progressView = self.subviews
+      .first(where: { $0.isKind(of: NewProgressView.self) })
+    {
+      UIView.animate(
+        withDuration: 0.2,
+        animations: {
+          progressView.alpha = 0
+        },
+        completion: { (_) in
+          progressView.removeFromSuperview()
+        }
+      )
     }
   }
 }

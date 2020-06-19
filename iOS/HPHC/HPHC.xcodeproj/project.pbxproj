@@ -128,6 +128,7 @@
 		6F83039524864431009409A5 /* APIError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F83039424864431009409A5 /* APIError.swift */; };
 		6F83039C24864D6B009409A5 /* LocalizableString.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F83039924864D6B009409A5 /* LocalizableString.swift */; };
 		6F83039D24864D6B009409A5 /* Localizable.strings.txt in Resources */ = {isa = PBXBuildFile; fileRef = 6F83039A24864D6B009409A5 /* Localizable.strings.txt */; };
+		6F9463F62498B4480085987F /* NewProgressView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F9463F52498B4480085987F /* NewProgressView.swift */; };
 		6F99755F242387300044944E /* AppConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F99755E242387300044944E /* AppConfiguration.swift */; };
 		6F9975622423B7EA0044944E /* EnrollmentServerConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F9975612423B7EA0044944E /* EnrollmentServerConfiguration.swift */; };
 		6FA10A1824374DC200932622 /* Branding.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FA10A1724374DC200932622 /* Branding.swift */; };
@@ -322,7 +323,7 @@
 		6E5287B02237EB820083DF33 /* ActivityTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActivityTest.swift; sourceTree = "<group>"; };
 		6E61BCC31F27262F00C156B9 /* ComprehensionFailure.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ComprehensionFailure.xib; sourceTree = "<group>"; };
 		6E61BCC51F27271000C156B9 /* ComprehensionFailure.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ComprehensionFailure.swift; sourceTree = "<group>"; };
-		6E7D2D561E433E8700763D4C /* GCPMyStudies.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = GCPMyStudies.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		6E7D2D561E433E8700763D4C /* FDA MyStudies.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "FDA MyStudies.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		6E7D2D591E433E8800763D4C /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		6E7D2D5E1E433E8800763D4C /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		6E7D2D601E433E8800763D4C /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -424,6 +425,7 @@
 		6F83039424864431009409A5 /* APIError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIError.swift; sourceTree = "<group>"; };
 		6F83039924864D6B009409A5 /* LocalizableString.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LocalizableString.swift; sourceTree = "<group>"; };
 		6F83039A24864D6B009409A5 /* Localizable.strings.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Localizable.strings.txt; sourceTree = "<group>"; };
+		6F9463F52498B4480085987F /* NewProgressView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewProgressView.swift; sourceTree = "<group>"; };
 		6F99755E242387300044944E /* AppConfiguration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppConfiguration.swift; sourceTree = "<group>"; };
 		6F9975612423B7EA0044944E /* EnrollmentServerConfiguration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EnrollmentServerConfiguration.swift; sourceTree = "<group>"; };
 		6FA10A1724374DC200932622 /* Branding.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Branding.swift; sourceTree = "<group>"; };
@@ -663,7 +665,7 @@
 		6E7D2D571E433E8700763D4C /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				6E7D2D561E433E8700763D4C /* GCPMyStudies.app */,
+				6E7D2D561E433E8700763D4C /* FDA MyStudies.app */,
 				7878B31A2216C6E10052FC23 /* HPHCTests.xctest */,
 				89055918230149AD005FB284 /* HPHCUITests.xctest */,
 			);
@@ -1414,6 +1416,7 @@
 			children = (
 				6EDDB6591EE05E4C00C79337 /* NewProgressView.xib */,
 				946CA5EC1E72DCA300CC8535 /* ProgressView.xib */,
+				6F9463F52498B4480085987F /* NewProgressView.swift */,
 			);
 			path = Progress;
 			sourceTree = "<group>";
@@ -1744,7 +1747,7 @@
 			);
 			name = HPHC;
 			productName = FDA;
-			productReference = 6E7D2D561E433E8700763D4C /* GCPMyStudies.app */;
+			productReference = 6E7D2D561E433E8700763D4C /* FDA MyStudies.app */;
 			productType = "com.apple.product-type.application";
 		};
 		7878B3192216C6E10052FC23 /* HPHCTests */ = {
@@ -2277,6 +2280,7 @@
 				6EE93DCD1E93C8850027A5DC /* ResourcesTableViewCell.swift in Sources */,
 				94B3DD601E6ED8E500327AE5 /* StudyOverviewViewControllerSecond.swift in Sources */,
 				6ED1B2311E54256700BF463F /* ActivityFormStep.swift in Sources */,
+				6F9463F62498B4480085987F /* NewProgressView.swift in Sources */,
 				6EBC2E861E94FB5300828CA1 /* StudyDashboardStudyActivitiesTableViewCell.swift in Sources */,
 				94B3DD551E6ED8E500327AE5 /* SignInTableViewCell.swift in Sources */,
 				6ECA92821E49B3BB00DA6287 /* Resource.swift in Sources */,
@@ -2471,30 +2475,42 @@
 			baseConfigurationReference = 7BDC002620C7855C409516D3 /* Pods-HPHC.debug.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				APP_ID = "mystudies-demo";
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				AUTH_PASSWORD = "";
+				AUTH_URL = "/AuthServer/";
+				AUTH_USERNAME = "";
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = HPHC/FDA.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
+				CONSENTMGMT_URL = dev.heroes-hat.rocketturtle.net/myStudiesConsentMgmtWS/;
 				CURRENT_PROJECT_VERSION = 30;
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				DEVELOPMENT_TEAM = 3485DDCN2M;
 				ENABLE_BITCODE = NO;
+				ENROLLMENT_URL = dev.heroes-hat.rocketturtle.net/myStudiesEnrollmentMgmt/;
 				INFOPLIST_FILE = HPHC/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				MARKETING_VERSION = 1.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
+				ORG_ID = OrgName;
 				PRODUCT_BUNDLE_IDENTIFIER = com.btc.mystudiesgcp;
-				PRODUCT_NAME = GCPMyStudies;
+				PRODUCT_NAME = "FDA MyStudies";
 				PROVISIONING_PROFILE_SPECIFIER = "";
+				REGISTRATIONSERVER_API_KEY = test_client_id_ma;
+				REGISTRATIONSERVER_API_SECERET = "";
+				REGISTRATION_URL = dev.heroes-hat.rocketturtle.net/myStudiesUserMgmtWS/;
+				RESPONSE_URL = "dev.heroes-hat.rocketturtle.net/mystudies-response-server/";
 				SWIFT_OBJC_BRIDGING_HEADER = "HPHC/Utils/Helpers/FDA-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = 1;
 				VERSIONING_SYSTEM = "apple-generic";
 				VERSION_INFO_PREFIX = "";
+				WCP_URL = dev.heroes-hat.rocketturtle.net/StudyMetaData/;
 			};
 			name = Debug;
 		};
@@ -2503,28 +2519,40 @@
 			baseConfigurationReference = 3BCFFA0DAD500A9A04C582CD /* Pods-HPHC.release.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				APP_ID = "mystudies-demo";
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				AUTH_PASSWORD = "";
+				AUTH_URL = dev.heroes-hat.rocketturtle.net/AuthServer/;
+				AUTH_USERNAME = "";
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = HPHC/FDA.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
+				CONSENTMGMT_URL = dev.heroes-hat.rocketturtle.net/myStudiesConsentMgmtWS/;
 				CURRENT_PROJECT_VERSION = 30;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = 3485DDCN2M;
 				ENABLE_BITCODE = NO;
+				ENROLLMENT_URL = dev.heroes-hat.rocketturtle.net/myStudiesEnrollmentMgmt/;
 				INFOPLIST_FILE = HPHC/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				MARKETING_VERSION = 1.0;
+				ORG_ID = OrgName;
 				PRODUCT_BUNDLE_IDENTIFIER = com.btc.mystudiesgcp;
-				PRODUCT_NAME = GCPMyStudies;
+				PRODUCT_NAME = "FDA MyStudies";
 				PROVISIONING_PROFILE_SPECIFIER = "";
+				REGISTRATIONSERVER_API_KEY = test_client_id_ma;
+				REGISTRATIONSERVER_API_SECERET = "";
+				REGISTRATION_URL = dev.heroes-hat.rocketturtle.net/myStudiesUserMgmtWS/;
+				RESPONSE_URL = "dev.heroes-hat.rocketturtle.net/mystudies-response-server/";
 				SWIFT_OBJC_BRIDGING_HEADER = "HPHC/Utils/Helpers/FDA-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = 1;
 				VERSIONING_SYSTEM = "apple-generic";
 				VERSION_INFO_PREFIX = "";
+				WCP_URL = dev.heroes-hat.rocketturtle.net/StudyMetaData/;
 			};
 			name = Release;
 		};
