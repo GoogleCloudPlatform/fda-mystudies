@@ -88,12 +88,14 @@ public class AuthenticationFilter implements Filter {
               setCommonHeaders(httpServletResponse);
               chain.doFilter(request, response);
             } else {
+              logger.warn("AuthenticationFilter doFilter failed : clientID and Secret don't match");
               if (response instanceof HttpServletResponse) {
                 setCommonHeaders(httpServletResponse);
                 httpServletResponse.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
               }
             }
           } catch (UnAuthorizedRequestException e) {
+            logger.warn("AuthenticationFilter doFilter failed : ", e);
             setCommonHeaders(httpServletResponse);
 
             httpServletResponse.setHeader(
@@ -106,6 +108,7 @@ public class AuthenticationFilter implements Filter {
 
             httpServletResponse.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
           } catch (InvalidRequestException e) {
+            logger.warn("AuthenticationFilter doFilter failed : ", e);
             setCommonHeaders(httpServletResponse);
 
             httpServletResponse.setHeader(
@@ -145,12 +148,14 @@ public class AuthenticationFilter implements Filter {
               chain.doFilter(request, response);
 
             } else {
+              logger.warn("AuthenticationFilter doFilter failed : invalid accessToken");
               if (response instanceof HttpServletResponse) {
                 setCommonHeaders(httpServletResponse);
                 httpServletResponse.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
               }
             }
           } else {
+            logger.warn("AuthenticationFilter doFilter failed : missing userId, accessToken or clientToken");
             setCommonHeaders(httpServletResponse);
             httpServletResponse.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
           }

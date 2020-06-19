@@ -9,19 +9,12 @@
 package com.google.cloud.healthcare.fdamystudies.beans;
 
 import java.util.List;
+import javax.validation.constraints.NotEmpty;
 import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
+import lombok.Value;
 
-@NoArgsConstructor
+@Value
 @AllArgsConstructor
 public class NotificationForm {
-  List<NotificationBean> notifications;
-
-  public List<NotificationBean> getNotifications() {
-    return notifications;
-  }
-
-  public void setNotifications(List<NotificationBean> notifications) {
-    this.notifications = notifications;
-  }
+  @NotEmpty public List<NotificationBean> notifications;
 }

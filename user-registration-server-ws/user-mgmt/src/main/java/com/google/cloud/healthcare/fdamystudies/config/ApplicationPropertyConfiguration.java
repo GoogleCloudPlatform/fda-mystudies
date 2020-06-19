@@ -48,11 +48,11 @@ public class ApplicationPropertyConfiguration {
   @Value("${from.email.domain}")
   private String fromDomain;
 
-  @Value("${resend.confirmation.mail.subject}")
-  private String resendConfirmationMailSubject;
+  @Value("${confirmation.mail.subject}")
+  private String confirmationMailSubject;
 
-  @Value("${resend.confirmation.mail.content}")
-  private String resendConfirmationMail;
+  @Value("${confirmation.mail.content}")
+  private String confirmationMail;
 
   @Value("${authServerAccessTokenValidationUrl}")
   private String authServerAccessTokenValidationUrl;

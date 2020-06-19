@@ -10,6 +10,7 @@ package com.google.cloud.healthcare.fdamystudies.controller;
 
 import java.time.LocalDateTime;
 import javax.servlet.http.HttpServletResponse;
+import javax.validation.Valid;
 import javax.ws.rs.core.Context;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.slf4j.Logger;
@@ -20,6 +21,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.StringUtils;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -43,6 +45,7 @@ import com.google.cloud.healthcare.fdamystudies.util.ErrorCode;
 import com.google.cloud.healthcare.fdamystudies.util.MyStudiesUserRegUtil;
 
 @RestController
+@Validated
 public class UserProfileController {
 
   private static final Logger logger = LoggerFactory.getLogger(UserProfileController.class);
@@ -162,21 +165,13 @@ public class UserProfileController {
   public ResponseEntity<?> resendConfirmation(
       @RequestHeader("appId") String appId,
       @RequestHeader("orgId") String orgId,
-      @RequestBody LoginBean loginBean,
+      @Valid @RequestBody LoginBean loginBean,
       @Context HttpServletResponse response) {
     logger.info("UserProfileController resendConfirmation() - Starts ");
-    String isValidAppMsg = "";
     UserDetailsBO participantDetails = null;
-    UserDetailsBO updParticipantDetails = null;
-    int isSent = 0;
-    String code = "";
     ResponseBean responseBean = new ResponseBean();
     try {
-      if ((loginBean != null)
-          && StringUtils.hasText(loginBean.getEmailId())
-          && StringUtils.hasText(appId)
-          && StringUtils.hasText(orgId)) {
-        isValidAppMsg =
+        String isValidAppMsg =
             commonService.validatedUserAppDetailsByAllApi("", loginBean.getEmailId(), appId, orgId);
         if (!StringUtils.isEmpty(isValidAppMsg)) {
           AppOrgInfoBean appOrgInfoBean =
@@ -190,13 +185,13 @@ public class UserProfileController {
           }
           if (participantDetails != null) {
             if (participantDetails.getStatus() == 2) {
-              code = RandomStringUtils.randomAlphanumeric(6);
+              String code = RandomStringUtils.randomAlphanumeric(6);
               participantDetails.setEmailCode(code);
               participantDetails.setCodeExpireDate(LocalDateTime.now().plusMinutes(expireTime));
               participantDetails.setVerificationDate(MyStudiesUserRegUtil.getCurrentUtilDateTime());
-              updParticipantDetails = userManagementProfService.saveParticipant(participantDetails);
+              UserDetailsBO updParticipantDetails = userManagementProfService.saveParticipant(participantDetails);
               if (updParticipantDetails != null) {
-                isSent =
+                int isSent =
                     userManagementProfService.resendConfirmationthroughEmail(
                         appId, participantDetails.getEmailCode(), participantDetails.getEmail());
                 if (isSent == 2) {
@@ -232,14 +227,6 @@ public class UserProfileController {
               response);
           return null;
         }
-      } else {
-        MyStudiesUserRegUtil.getFailureResponse(
-            MyStudiesUserRegUtil.ErrorCodes.STATUS_102.getValue(),
-            MyStudiesUserRegUtil.ErrorCodes.INVALID_INPUT.getValue(),
-            MyStudiesUserRegUtil.ErrorCodes.INVALID_INPUT_ERROR_MSG.getValue(),
-            response);
-        return null;
-      }
     } catch (Exception e) {
       logger.error("UserProfileController resendConfirmation() - error ", e);
     }

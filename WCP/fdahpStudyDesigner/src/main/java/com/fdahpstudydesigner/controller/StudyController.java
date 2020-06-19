@@ -2751,6 +2751,7 @@ public class StudyController {
         if (null != comprehensionQuestion) {
           comprehensionTestQuestionBo =
               mapper.readValue(comprehensionQuestion, ComprehensionTestQuestionBo.class);
+
           if (comprehensionTestQuestionBo != null) {
             if (comprehensionTestQuestionBo.getId() != null) {
               comprehensionTestQuestionBo.setModifiedBy(sesObj.getUserId());
@@ -2813,6 +2814,7 @@ public class StudyController {
       if (null != conInfo) {
         consentInfoBo = mapper.readValue(conInfo, ConsentInfoBo.class);
       }
+
       Integer sessionStudyCount =
           StringUtils.isNumeric(request.getParameter("_S"))
               ? Integer.parseInt(request.getParameter("_S"))

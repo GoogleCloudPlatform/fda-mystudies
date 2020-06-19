@@ -9,10 +9,11 @@
 package com.google.cloud.healthcare.fdamystudies.controller;
 
 import javax.servlet.http.HttpServletResponse;
+import javax.validation.Valid;
 import javax.ws.rs.core.Context;
 import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -37,7 +38,7 @@ import com.google.cloud.healthcare.fdamystudies.util.UserManagementUtil;
 @RestController
 public class VerifyEmailIdController {
 
-  private static final Logger logger = LoggerFactory.getLogger(VerifyEmailIdController.class);
+  private static final Logger logger = LogManager.getLogger(VerifyEmailIdController.class);
 
   @Autowired private FdaEaUserDetailsService userDetailsService;
 
@@ -47,7 +48,7 @@ public class VerifyEmailIdController {
 
   @PostMapping("/verifyEmailId")
   public ResponseEntity<?> verifyEmailId(
-      @RequestBody EmailIdVerificationForm verificationForm,
+      @Valid @RequestBody EmailIdVerificationForm verificationForm,
       @RequestHeader("userId") String userId,
       @RequestHeader("clientToken") String clientToken,
       @RequestHeader("accessToken") String accessToken,
@@ -56,23 +57,6 @@ public class VerifyEmailIdController {
     VerifyEmailIdResponse verifyEmailIdResponse = null;
     String verificationCode = "";
 
-     if (StringUtils.isEmpty(clientToken)
-        || StringUtils.isEmpty(accessToken)
-        || StringUtils.isEmpty(userId)
-        || StringUtils.isEmpty(verificationForm.getCode())) {
-
-      MyStudiesUserRegUtil.getFailureResponse(
-          400 + "",
-          MyStudiesUserRegUtil.ErrorCodes.INVALID_INPUT.getValue(),
-          MyStudiesUserRegUtil.ErrorCodes.INVALID_INPUT_ERROR_MSG.getValue(),
-          response);
-      verifyEmailIdResponse = new VerifyEmailIdResponse();
-      verifyEmailIdResponse.setCode(HttpStatus.BAD_REQUEST.value());
-      verifyEmailIdResponse.setMessage(
-          MyStudiesUserRegUtil.ErrorCodes.INVALID_INPUT_ERROR_MSG.getValue());
-      logger.info(AppConstants.VERIFY_EMAILID_CONTROLLER_ENDS_MESSAGE);
-      return new ResponseEntity<>(verifyEmailIdResponse, HttpStatus.BAD_REQUEST);
-    }
     try {
       verificationCode = verificationForm.getCode().trim(); // trim the surrounding whitespace.
       VerifyCodeResponse serviceResult = userDetailsService.verifyCode(verificationCode, userId);
@@ -83,7 +67,7 @@ public class VerifyEmailIdController {
         UpdateAccountInfoResponseBean authResponse =
             userManagementUtil.updateUserInfoInAuthServer(
                 accountStatus, userId, accessToken, clientToken);
-
+        
         if (authResponse != null && "200".equals(authResponse.getCode())) {
           MyStudiesUserRegUtil.getFailureResponse(
               MyStudiesUserRegUtil.ErrorCodes.STATUS_200.getValue(),
@@ -112,7 +96,7 @@ public class VerifyEmailIdController {
             verifyEmailIdResponse.setCode(HttpStatus.UNAUTHORIZED.value());
             verifyEmailIdResponse.setMessage(
                 MyStudiesUserRegUtil.ErrorCodes.INVALID_INPUT.getValue());
-            logger.info(AppConstants.VERIFY_EMAILID_CONTROLLER_ENDS_MESSAGE);
+            logger.warn(AppConstants.VERIFY_EMAILID_CONTROLLER_ENDS_MESSAGE + " unauthorized.");
             return new ResponseEntity<>(authResponse, HttpStatus.UNAUTHORIZED);
           } else {
             MyStudiesUserRegUtil.getFailureResponse(
@@ -124,7 +108,7 @@ public class VerifyEmailIdController {
             verifyEmailIdResponse.setCode(HttpStatus.BAD_REQUEST.value());
             verifyEmailIdResponse.setMessage(
                 MyStudiesUserRegUtil.ErrorCodes.CONNECTION_ERROR_MSG.getValue());
-            logger.info(AppConstants.VERIFY_EMAILID_CONTROLLER_ENDS_MESSAGE);
+            logger.warn(AppConstants.VERIFY_EMAILID_CONTROLLER_ENDS_MESSAGE + " invalid input.");
             return new ResponseEntity<>(authResponse, HttpStatus.BAD_REQUEST);
           }
         } else {
@@ -138,11 +122,12 @@ public class VerifyEmailIdController {
           verifyEmailIdResponse.setCode(HttpStatus.INTERNAL_SERVER_ERROR.value());
           verifyEmailIdResponse.setMessage(
               MyStudiesUserRegUtil.ErrorCodes.CONNECTION_ERROR_MSG.getValue());
-          logger.info(AppConstants.VERIFY_EMAILID_CONTROLLER_ENDS_MESSAGE);
+          logger.warn(AppConstants.VERIFY_EMAILID_CONTROLLER_ENDS_MESSAGE + " connection error.");
           return new ResponseEntity<>(authResponse, HttpStatus.INTERNAL_SERVER_ERROR);
         }
       } else throw new InvalidUserIdException(); // InvalidEmailCodeException
     } catch (InvalidUserIdException e) {
+      logger.error(AppConstants.VERIFY_EMAILID_CONTROLLER_ENDS_MESSAGE + ": ", e);
       MyStudiesUserRegUtil.getFailureResponse(
           400 + "",
           MyStudiesUserRegUtil.ErrorCodes.INVALID_INPUT.getValue(),
@@ -152,9 +137,9 @@ public class VerifyEmailIdController {
       verifyEmailIdResponse = new VerifyEmailIdResponse();
       verifyEmailIdResponse.setCode(HttpStatus.BAD_REQUEST.value());
       verifyEmailIdResponse.setMessage(MyStudiesUserRegUtil.ErrorCodes.INVALID_USER_ID.getValue());
-      logger.error(AppConstants.VERIFY_EMAILID_CONTROLLER_ENDS_MESSAGE + ": ", e);
       return new ResponseEntity<>(verifyEmailIdResponse, HttpStatus.BAD_REQUEST);
     } catch (InvalidEmailCodeException e) {
+      logger.error(AppConstants.VERIFY_EMAILID_CONTROLLER_ENDS_MESSAGE + ": ", e);
       MyStudiesUserRegUtil.getFailureResponse(
           400 + "",
           MyStudiesUserRegUtil.ErrorCodes.INVALID_INPUT.getValue(),
@@ -169,6 +154,7 @@ public class VerifyEmailIdController {
       return new ResponseEntity<>(verifyEmailIdResponse, HttpStatus.BAD_REQUEST);
     } catch (Exception e) {
       // prepare system failure Response
+      logger.error(AppConstants.VERIFY_EMAILID_CONTROLLER_ENDS_MESSAGE + ": ", e);
       MyStudiesUserRegUtil.getFailureResponse(
           500 + "",
           MyStudiesUserRegUtil.ErrorCodes.UNKNOWN.getValue(),
@@ -180,7 +166,6 @@ public class VerifyEmailIdController {
       verifyEmailIdResponse.setMessage(
           MyStudiesUserRegUtil.ErrorCodes.CONNECTION_ERROR_MSG.getValue());
 
-      logger.error(AppConstants.VERIFY_EMAILID_CONTROLLER_ENDS_MESSAGE + ": ", e);
       return new ResponseEntity<>(verifyEmailIdResponse, HttpStatus.INTERNAL_SERVER_ERROR);
     }
   }

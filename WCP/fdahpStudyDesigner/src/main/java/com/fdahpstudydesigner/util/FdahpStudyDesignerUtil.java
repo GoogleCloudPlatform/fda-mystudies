@@ -278,6 +278,7 @@ public class FdahpStudyDesignerUtil {
     } catch (Exception e) {
       logger.error("FdahpStudyDesignerUtil - getAppProperties() - ERROR ", e);
     }
+    logger.info("FdahpStudyDesignerUtil - getAppProperties() - ends");
     return hm;
   }
 

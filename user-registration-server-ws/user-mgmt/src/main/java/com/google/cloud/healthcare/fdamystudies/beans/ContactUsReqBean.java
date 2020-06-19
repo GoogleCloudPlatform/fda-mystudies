@@ -8,6 +8,7 @@
 
 package com.google.cloud.healthcare.fdamystudies.beans;
 
+import javax.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
@@ -18,8 +19,8 @@ import lombok.ToString;
 @ToString
 @AllArgsConstructor
 public class ContactUsReqBean {
-  private String subject;
-  private String body;
-  private String firstName;
-  private String email;
+  @NotBlank private String subject;
+  @NotBlank private String body;
+  @NotBlank private String firstName;
+  @NotBlank private String email;
 }
