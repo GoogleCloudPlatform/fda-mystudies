@@ -16,6 +16,7 @@ import {EntityService} from '../../../service/entity.service';
 import {asyncError, asyncData} from 'src/testing/async-observable-helpers';
 import {ApiResponse} from 'src/app/entity/error.model';
 import {HttpErrorResponse} from '@angular/common/http';
+
 describe('LocationService', () => {
   let locationService: LocationService;
   let httpMock: HttpTestingController;
