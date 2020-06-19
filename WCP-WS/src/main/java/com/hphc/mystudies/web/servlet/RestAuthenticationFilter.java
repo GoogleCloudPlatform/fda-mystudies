@@ -38,14 +38,13 @@ import com.hphc.mystudies.util.StudyMetaDataConstants;
 
 public class RestAuthenticationFilter implements Filter {
 
-  public static final Logger LOGGER = Logger.getLogger(RestAuthenticationFilter.class);
+  public static final Logger logger = Logger.getLogger(RestAuthenticationFilter.class);
 
   public static final String AUTHENTICATION_HEADER = "Authorization";
 
   @Override
   public void doFilter(ServletRequest request, ServletResponse response, FilterChain filter)
       throws IOException, ServletException {
-    LOGGER.info("INFO: RestAuthenticationFilter - doFilter() - Starts");
     if (request instanceof HttpServletRequest) {
       HttpServletRequest httpServletRequest = (HttpServletRequest) request;
       String authCredentials = httpServletRequest.getHeader(AUTHENTICATION_HEADER);
@@ -53,10 +52,10 @@ public class RestAuthenticationFilter implements Filter {
       if (StringUtils.isNotEmpty(authCredentials)) {
         AuthenticationService authenticationService = new AuthenticationService();
         boolean authenticationStatus = authenticationService.authenticate(authCredentials);
-        // boolean authenticationStatus = true;
         if (authenticationStatus) {
           filter.doFilter(request, response);
         } else {
+          logger.warn("RestAuthenticationFilter - doFilter() - failed to authenticate credentials");
           if (response instanceof HttpServletResponse) {
             HttpServletResponse httpServletResponse = (HttpServletResponse) response;
             httpServletResponse.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
@@ -66,7 +65,7 @@ public class RestAuthenticationFilter implements Filter {
                 "StatusMessage", StudyMetaDataConstants.INVALID_AUTHORIZATION);
           }
         }
-      } else if (StudyMetaDataConstants.INTERCEPTOR_URL_PING.equalsIgnoreCase(
+      } else if (StudyMetaDataConstants.INTERCEPTOR_URL_HEALTH.equalsIgnoreCase(
               httpServletRequest.getPathInfo())
           || StudyMetaDataConstants.INTERCEPTOR_URL_MAIL.equalsIgnoreCase(
               httpServletRequest.getPathInfo())
@@ -76,6 +75,7 @@ public class RestAuthenticationFilter implements Filter {
               httpServletRequest.getPathInfo())) {
         filter.doFilter(request, response);
       } else {
+        logger.warn("RestAuthenticationFilter - doFilter() - failed. authCredentials required");
         HttpServletResponse httpServletResponse = (HttpServletResponse) response;
         httpServletResponse.setStatus(HttpServletResponse.SC_BAD_REQUEST);
         httpServletResponse.setHeader("status", ErrorCodes.STATUS_102);
@@ -84,7 +84,6 @@ public class RestAuthenticationFilter implements Filter {
             "StatusMessage", StudyMetaDataConstants.INVALID_INPUT_ERROR_MSG);
       }
     }
-    LOGGER.info("INFO: RestAuthenticationFilter - doFilter() - Ends");
   }
 
   @Override

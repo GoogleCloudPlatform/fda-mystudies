@@ -88,6 +88,7 @@ public class AuthenticationFilter implements Filter {
               setCommonHeaders(httpServletResponse);
               chain.doFilter(request, response);
             } else {
+              logger.warn("AuthenticationFilter doFilter failed : clientID and Secret don't match");
               if (response instanceof HttpServletResponse) {
                 setCommonHeaders(httpServletResponse);
                 httpServletResponse.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
@@ -97,6 +98,7 @@ public class AuthenticationFilter implements Filter {
               }
             }
           } catch (UnAuthorizedRequestException e) {
+            logger.warn("AuthenticationFilter doFilter failed : ", e);
             setCommonHeaders(httpServletResponse);
 
             httpServletResponse.setHeader(
@@ -113,6 +115,7 @@ public class AuthenticationFilter implements Filter {
                 HttpServletResponse.SC_UNAUTHORIZED, ErrorCode.EC_718.errorMessage());
 
           } catch (InvalidRequestException e) {
+            logger.warn("AuthenticationFilter doFilter failed : ", e);
             setCommonHeaders(httpServletResponse);
 
             httpServletResponse.setHeader(
@@ -158,6 +161,7 @@ public class AuthenticationFilter implements Filter {
               chain.doFilter(request, response);
 
             } else {
+              logger.warn("AuthenticationFilter doFilter failed : invalid accessToken");
               if (response instanceof HttpServletResponse) {
                 setCommonHeaders(httpServletResponse);
                 httpServletResponse.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
@@ -167,6 +171,7 @@ public class AuthenticationFilter implements Filter {
               }
             }
           } else {
+            logger.warn("AuthenticationFilter doFilter failed : missing userId, accessToken or clientToken");
             setCommonHeaders(httpServletResponse);
             httpServletResponse.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
             httpServletResponse.sendError(

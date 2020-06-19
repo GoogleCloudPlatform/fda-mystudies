@@ -105,13 +105,7 @@ class StudyListViewController: UIViewController {
     setNeedsStatusBarAppearanceUpdate()
     self.navigationController?.view.layoutSubviews()
 
-    // Checking if registering notification is pending
-    if ud.value(forKey: kNotificationRegistrationIsPending) != nil,
-      ud.bool(forKey: kNotificationRegistrationIsPending) == true
-    {
-      let appdelegate = (UIApplication.shared.delegate as? AppDelegate)!
-      appdelegate.askForNotification()
-    }
+    StudyListViewController.configureNotifications()
 
     // Handling StudyList Request Failure condition
     if studyListRequestFailed {
@@ -485,6 +479,17 @@ class StudyListViewController: UIViewController {
     return sortedstudies2
   }
 
+  // MARK: - Helpers
+
+  /// Request for notiffications and update to server.
+  static func configureNotifications() {
+    // Checking if registering notification is pending.
+    if UserDefaults.standard.bool(forKey: kNotificationRegistrationIsPending),
+      let appDelegate = UIApplication.shared.delegate as? AppDelegate
+    {
+      appDelegate.askForNotification()
+    }
+  }
   // MARK: - Button Actions
 
   /// Navigate to notification screen on button clicked.

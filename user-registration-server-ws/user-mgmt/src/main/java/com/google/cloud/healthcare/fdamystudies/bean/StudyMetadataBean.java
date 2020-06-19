@@ -9,6 +9,7 @@
 package com.google.cloud.healthcare.fdamystudies.bean;
 
 import java.io.Serializable;
+import javax.validation.constraints.NotBlank;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -17,8 +18,10 @@ import lombok.Setter;
 public class StudyMetadataBean implements Serializable {
 
   private static final long serialVersionUID = 1L;
+  @NotBlank
   private String studyId;
   private String studyTitle;
+  @NotBlank
   private String studyVersion;
   private String studyType;
   private String studyStatus;
@@ -26,8 +29,10 @@ public class StudyMetadataBean implements Serializable {
   private String studyTagline;
   private String studySponsor;
   private String studyEnrolling;
+  @NotBlank
   private String appId;
   private String appName;
   private String appDescription;
+  @NotBlank
   private String orgId;
 }

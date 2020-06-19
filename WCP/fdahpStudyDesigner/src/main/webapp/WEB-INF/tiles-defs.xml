@@ -341,7 +341,4 @@
 	</definition>
 	<!-- Users Section Ends -->
 
-	<definition name="appDetails"
-		template="/WEB-INF/view/appDetails.jsp" />
-
 </tiles-definitions>
