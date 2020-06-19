@@ -65,25 +65,15 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
   /// Register for Remote Notification
   func askForNotification() {
-
-    if #available(iOS 10.0, *) {
-      let authOptions: UNAuthorizationOptions = [.alert, .badge, .sound]
-      UNUserNotificationCenter.current().requestAuthorization(
-        options: authOptions,
-        completionHandler: { _, _ in }
-      )
-
-      // For iOS 10 display notification (sent via APNS)
-      UNUserNotificationCenter.current().delegate = self
-
-    } else {
-      let settings: UIUserNotificationSettings = UIUserNotificationSettings(
-        types: [.alert, .badge, .sound],
-        categories: nil
-      )
-      UIApplication.shared.registerUserNotificationSettings(settings)
+    UNUserNotificationCenter.current().delegate = self
+    UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .sound, .badge]) { (granted, _) in
+      // 1. Check if permission granted
+      guard granted else { return }
+      // 2. Attempt registration for remote notifications on the main thread
+      DispatchQueue.main.async {
+        UIApplication.shared.registerForRemoteNotifications()
+      }
     }
-    UIApplication.shared.registerForRemoteNotifications()
   }
 
   /// Updates Key & InitializationVector for Encryption
@@ -1180,32 +1170,6 @@ extension AppDelegate {
   }
 }
 
-// MARK: - Handling APIs
-
-extension AppDelegate: NMAuthChallengeDelegate {
-
-  func networkCredential(_ manager: NetworkManager, challenge: URLAuthenticationChallenge)
-    -> URLCredential
-  {
-    var urlCredential: URLCredential = URLCredential()
-    if challenge.protectionSpace.authenticationMethod == NSURLAuthenticationMethodServerTrust {
-      if challenge.protectionSpace.host == "hphci-fdama-te-ur-01.labkey.com" {
-        urlCredential = URLCredential.init(trust: challenge.protectionSpace.serverTrust!)
-      }
-    }
-    return urlCredential
-  }
-
-  func networkChallengeDisposition(
-    _ manager: NetworkManager,
-    challenge: URLAuthenticationChallenge
-  )
-    -> URLSession.AuthChallengeDisposition
-  {
-    return URLSession.AuthChallengeDisposition.useCredential
-  }
-}
-
 // MARK: Webservices delegates
 
 extension AppDelegate: NMWebServiceDelegate {
@@ -1805,68 +1769,46 @@ extension AppDelegate: UNUserNotificationCenterDelegate {
 extension UIWindow {
 
   /// Adds progress below navigation bar
-  func addProgressIndicatorOnWindow() {
-
-    let view =
-      UINib(nibName: kNewProgressViewNIB, bundle: nil).instantiate(
-        withOwner: nil,
-        options: nil
-      )[0] as? UIView
-
-    let gif = UIImage.gifImageWithName(kResourceName)
-    let imageView = view?.subviews.first as? UIImageView
-    imageView?.image = gif
-
+  func addProgressIndicatorOnWindow(with message: String = "") {
     var frame = UIScreen.main.bounds
     frame.origin.y += 64
-    view?.frame = frame
-    view?.tag = 50000
-    self.addSubview(view!)
-    view?.alpha = 0
-    UIView.animate(withDuration: 0.3) {
-      view?.alpha = 1
-    }
+    addProgressIndicatorOnWindowFromTop(with: message, frame: frame)
   }
 
   /// Adds Progress on complete screen, including navigation bar
-  func addProgressIndicatorOnWindowFromTop() {
-
-    let view = self.viewWithTag(50000)
-    if view == nil {
-
-      let view =
-        UINib(nibName: kNewProgressViewNIB, bundle: nil).instantiate(
-          withOwner: nil,
-          options: nil
-        )[0] as? UIView
-
-      let gif = UIImage.gifImageWithName(kResourceName)
-      let imageView = view?.subviews.first as? UIImageView
-      imageView?.image = gif
-
-      let frame = UIScreen.main.bounds
-
-      view?.frame = frame
-      view?.tag = 50000
-      self.addSubview(view!)
-      view?.alpha = 0
-      UIView.animate(withDuration: 0.3) {
-        view?.alpha = 1
+  func addProgressIndicatorOnWindowFromTop(
+    with message: String = "",
+    frame: CGRect? = nil
+  ) {
+    let isProgressAdded = self.subviews
+      .contains(where: { $0.isKind(of: NewProgressView.self) })
+    if !isProgressAdded {
+      let frame = frame ?? UIScreen.main.bounds
+      if let progressView = NewProgressView.instanceFromNib(frame: frame) {
+        progressView.showLoader(with: message)
+        progressView.alpha = 0
+        self.addSubview(progressView)
+        UIView.animate(withDuration: 0.3) {
+          progressView.alpha = 1
+        }
       }
     }
   }
 
   /// Removes progress from window
   func removeProgressIndicatorFromWindow() {
-
-    let view = self.viewWithTag(50000)
-    UIView.animate(
-      withDuration: 0.2,
-      animations: {
-        view?.alpha = 0
-      }
-    ) { (_) in
-      view?.removeFromSuperview()
+    if let progressView = self.subviews
+      .first(where: { $0.isKind(of: NewProgressView.self) })
+    {
+      UIView.animate(
+        withDuration: 0.2,
+        animations: {
+          progressView.alpha = 0
+        },
+        completion: { (_) in
+          progressView.removeFromSuperview()
+        }
+      )
     }
   }
 }
