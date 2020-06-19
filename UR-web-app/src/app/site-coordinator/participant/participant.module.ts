@@ -6,7 +6,6 @@ import {SiteParticipantListComponent} from './site-participant-list/site-partici
 import {StudyParticipantListComponent} from './study-participant-list/study-participant-list.component';
 import {ParticipantDetailsComponent} from './participant-details/participant-details.component';
 import {DashboardComponent} from './dashboard/dashboard.component';
-import {ParticipantService} from './shared/participant.service';
 @NgModule({
   declarations: [
     AppParticipantListComponent,
@@ -16,6 +15,5 @@ import {ParticipantService} from './shared/participant.service';
     DashboardComponent,
   ],
   imports: [CommonModule, ParticipantRoutingModule],
-  providers: [ParticipantService],
 })
 export class ParticipantModule {}

@@ -5,7 +5,6 @@ import {AddNewUserComponent} from './new-user/new-user.component';
 import {UserListComponent} from './user-list/user-list.component';
 import {UpdateUserComponent} from './update-user/update-user.component';
 import {UserDetailsComponent} from './user-details/user-details.component';
-import {UserService} from './shared/user.service';
 @NgModule({
   declarations: [
     AddNewUserComponent,
@@ -14,6 +13,5 @@ import {UserService} from './shared/user.service';
     UserDetailsComponent,
   ],
   imports: [CommonModule, UserRoutingModule],
-  providers: [UserService],
 })
 export class UserModule {}

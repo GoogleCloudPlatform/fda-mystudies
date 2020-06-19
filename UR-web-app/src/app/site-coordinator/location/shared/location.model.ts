@@ -9,7 +9,7 @@ export class Location {
 
   status = '';
 
-  studies = '';
+  studies = [];
 
   studiesCount = 0;
 }
