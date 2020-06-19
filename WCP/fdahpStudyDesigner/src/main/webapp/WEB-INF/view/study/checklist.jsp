@@ -15,7 +15,9 @@
     <!-- Start top tab section-->
     <div class="right-content-head">
       <div class="text-right">
-        <div class="black-md-f dis-line pull-left line34"><span class="pr-sm">Checklist</span></div>
+        <div class="black-md-f dis-line pull-left line34">
+          <span class="pr-sm">Checklist</span>
+        </div>
         <div class="dis-line form-group mb-none mr-sm">
           <button type="button" class="btn btn-default gray-btn cancelBut">Cancel</button>
         </div>
@@ -34,7 +36,9 @@
     </div>
     <div class="new-checkbox right-content-body">
       <div>
-        <span>This checklist is meant to serve as a reminder for tasks to be completed before you launch or go-live with a study. Mark tasks as completed as and when you finish them.</span>
+        <span>This checklist is meant to serve as a reminder for tasks to be completed before you launch or go-live with
+          a study. Mark tasks as completed as and when you finish them.
+        </span>
       </div>
       <div class="checkbox__container pt-lg">
         <div class="checkbox checkbox-inline p-45 pb-md">
@@ -54,7 +58,9 @@
             <label for="inlineCheckbox2"> Participant Cohort Identified </label>
           </div>
           <div class=" pl-13">
-            <span class="gray-xs-f mb-xs">(If using pre-screened participant group)Participant cohort defined and identified for the study.</span>
+            <span class="gray-xs-f mb-xs">(If using pre-screened participant group)Participant cohort defined and
+              identified for the study.
+            </span>
           </div>
         </div>
         <div class="checkbox checkbox-inline p-45 pb-md">
@@ -65,7 +71,9 @@
               Verified </label>
           </div>
           <div class=" pl-13">
-            <span class="gray-xs-f mb-xs">(If using pre-screened participant group) Verified participants have smartphones corresponding to at least one of the platforms chosen for the study (iOS, Android).</span>
+            <span class="gray-xs-f mb-xs">(If using pre-screened participant group) Verified participants have
+              smartphones corresponding to at least one of the platforms chosen for the study (iOS, Android).
+            </span>
           </div>
         </div>
 
@@ -76,7 +84,9 @@
             <label for="inlineCheckbox5"> Eligibility - Token Distribution </label>
           </div>
           <div class=" pl-13">
-            <span class="gray-xs-f mb-xs">(If using token validation method of eligibility), tokens distributed to pre-screened participants </span>
+            <span class="gray-xs-f mb-xs">(If using token validation method of eligibility), tokens distributed to
+              pre-screened participants
+            </span>
           </div>
         </div>
 
@@ -87,7 +97,9 @@
             <label for="inlineCheckbox6"> App Install and Study Start Instructions Provided </label>
           </div>
           <div class=" pl-13">
-            <span class="gray-xs-f mb-xs">Instructions provided to participants on downloading and installing the app, intimation about study start date. </span>
+            <span class="gray-xs-f mb-xs">Instructions provided to participants on downloading and installing the app,
+              intimation about study start date.
+            </span>
           </div>
         </div>
         <div class="checkbox checkbox-inline p-45 pb-md">
@@ -98,7 +110,9 @@
               Confirmed </label>
           </div>
           <div class=" pl-13">
-            <span class="gray-xs-f mb-xs">Full consent document reviewed. Confirmed it matches the IRB reviewed consent</span>
+            <span class="gray-xs-f mb-xs">Full consent document reviewed. Confirmed it matches the IRB reviewed
+              consent
+            </span>
           </div>
         </div>
         <div class="checkbox checkbox-inline p-45 pb-md">
@@ -108,7 +122,9 @@
             <label for="inlineCheckbox8"> Questionnaires Added </label>
           </div>
           <div class=" pl-13">
-            <span class="gray-xs-f mb-xs">At a minimum, baseline questionnaires have been filled out and scheduled for desired time period and frequency.</span>
+            <span class="gray-xs-f mb-xs">At a minimum, baseline questionnaires have been filled out and scheduled for
+              desired time period and frequency.
+            </span>
           </div>
         </div>
         <div class="checkbox checkbox-inline p-45 pb-md">
@@ -118,7 +134,9 @@
             <label for="inlineCheckbox9"> Active Tasks Added </label>
           </div>
           <div class=" pl-13">
-            <span class="gray-xs-f mb-xs">If applicable to the study, active task added and scheduled for desired time period and frequency. </span>
+            <span class="gray-xs-f mb-xs">If applicable to the study, active task added and scheduled for desired time
+              period and frequency.
+            </span>
           </div>
         </div>
         <div class="checkbox checkbox-inline p-45 pb-md">
@@ -128,7 +146,9 @@
             <label for="inlineCheckbox10"> Resources Added </label>
           </div>
           <div class=" pl-13">
-            <span class="gray-xs-f mb-xs">Baseline study resources added and reviewed for content and period of visibility.</span>
+            <span class="gray-xs-f mb-xs">Baseline study resources added and reviewed for content and period of
+              visibility.
+            </span>
           </div>
         </div>
         <div class="checkbox checkbox-inline p-45 pb-md">
@@ -138,7 +158,9 @@
             <label for="inlineCheckbox11"> Mobile App Tested </label>
           </div>
           <div class=" pl-13">
-            <span class="gray-xs-f mb-xs">(Mobile app build has been generated, tested and verified for content and functionality.)</span>
+            <span class="gray-xs-f mb-xs">(Mobile app build has been generated, tested and verified for content and
+              functionality.)
+            </span>
           </div>
         </div>
         <div class="checkbox checkbox-inline p-45 pb-md">
@@ -148,7 +170,9 @@
             <label for="inlineCheckbox12"> Mobile App submitted to app stores and approved</label>
           </div>
           <div class=" pl-13">
-            <span class="gray-xs-f mb-xs">(Mobile app(s) submitted to and approved by App Store/Play Store and ready for distribution.)</span>
+            <span class="gray-xs-f mb-xs">(Mobile app(s) submitted to and approved by App Store/Play Store and ready for
+              distribution.)
+            </span>
           </div>
         </div>
       </div>
@@ -160,39 +184,39 @@
 <!-- End right Content here -->
 
 <script type="text/javascript">
-  $(document).ready(function () {
-    $(".menuNav li").removeClass('active');
-    $(".nine").addClass('active');
+    $(document).ready(function () {
+        $(".menuNav li").removeClass('active');
+        $(".nine").addClass('active');
 
-    <c:if test="${not empty permission}">
-    $('.class').prop('disabled', true);
-    </c:if>
+        <c:if test="${not empty permission}">
+        $('.class').prop('disabled', true);
+        </c:if>
 
-    $('#saveChecklistId').click(function () {
-      $('#actionBut').val('save');
-      $('#checklistForm').submit();
-    });
-
-    $("#doneChecklistId").on('click', function () {
-      bootbox.confirm({
-        closeButton: false,
-        message: 'Are you sure you have no more updates to be made in this section? Clicking Done will mark this section as Complete.',
-        buttons: {
-          'cancel': {
-            label: 'Cancel',
-          },
-          'confirm': {
-            label: 'OK',
-          },
-        },
-        callback: function (result) {
-          if (result) {
-            $('#actionBut').val('done');
+        $('#saveChecklistId').click(function () {
+            $('#actionBut').val('save');
             $('#checklistForm').submit();
-          }
-        }
-      });
+        });
+
+        $("#doneChecklistId").on('click', function () {
+            bootbox.confirm({
+                closeButton: false,
+                message: 'Are you sure you have no more updates to be made in this section? Clicking Done will mark this section as Complete.',
+                buttons: {
+                    'cancel': {
+                        label: 'Cancel',
+                    },
+                    'confirm': {
+                        label: 'OK',
+                    },
+                },
+                callback: function (result) {
+                    if (result) {
+                        $('#actionBut').val('done');
+                        $('#checklistForm').submit();
+                    }
+                }
+            });
+        });
     });
-  });
 
 </script>

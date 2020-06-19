@@ -2,9 +2,17 @@
 
 <div class="md-container ft_con">
   <div class="foot">
-    <span>Copyright Placeholder</span><span><a href="/studybuilder/terms.do" id=""
-                                               target="_blank">Terms</a></span><span><a
-      href="/studybuilder/privacyPolicy.do" id="" target="_blank">Privacy Policy</a></span>
+    <span>Copyright Placeholder</span>
+    <span>
+      <a href="/studybuilder/terms.do" id=""
+         target="_blank">Terms
+      </a>
+    </span>
+    <span>
+      <a
+          href="/studybuilder/privacyPolicy.do" id="" target="_blank">Privacy Policy
+      </a>
+    </span>
   </div>
 </div>
 <!-- Modal -->
@@ -44,13 +52,13 @@
   </div>
 </div>
 <script type="text/javascript">
-  $(document).ready(function (e) {
-    $('#termsId').on('click', function () {
-      $('#termsModal').modal('show');
-    });
+    $(document).ready(function (e) {
+        $('#termsId').on('click', function () {
+            $('#termsModal').modal('show');
+        });
 
-    $('#privacyId').on('click', function () {
-      $('#privacyModal').modal('show');
+        $('#privacyId').on('click', function () {
+            $('#privacyModal').modal('show');
+        });
     });
-  });
 </script>

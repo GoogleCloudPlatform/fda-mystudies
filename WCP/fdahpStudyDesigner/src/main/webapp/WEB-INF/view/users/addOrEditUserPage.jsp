@@ -10,9 +10,11 @@
   <!-- widgets section-->
   <div class="col-sm-12 col-md-12 col-lg-12 p-none">
     <div class="black-lg-f">
-			<span class="mr-xs"><a href="javascript:void(0)"
-                             class="backOrCancelBttn"><img
-          src="/studybuilder/images/icons/back-b.png" alt=""/></a> </span>
+      <span class="mr-xs">
+        <a href="javascript:void(0)"
+           class="backOrCancelBttn"><img
+            src="/studybuilder/images/icons/back-b.png" alt=""/></a>
+      </span>
       <c:if test="${actionPage eq 'ADD_PAGE'}">
         Add New User
       </c:if>
@@ -30,30 +32,48 @@
           <c:if
               test="${not empty userBO.userPassword && userBO.enabled && not userBO.emailChanged}">
             <div class="dis-inline mt-sm">
-							<span class="stat"><span class="black-sm-f">Status:<span
-                  class="gray-xs-f mb-xs pl-xs"> Active</span></span></span>
+              <span class="stat">
+                <span class="black-sm-f">Status:
+                  <span
+                      class="gray-xs-f mb-xs pl-xs"> Active
+                  </span>
+                </span>
+              </span>
             </div>
           </c:if>
           <c:if
               test="${not empty userBO.userPassword &&  not userBO.enabled}">
             <div class="dis-inline mt-sm">
-							<span class="black-sm-f">Status:<span
-                  class="gray-xs-f mb-xs pl-xs"> Deactivated</span></span>
+              <span class="black-sm-f">Status:
+                <span
+                    class="gray-xs-f mb-xs pl-xs"> Deactivated
+                </span>
+              </span>
             </div>
           </c:if>
           <c:if test="${empty userBO.userPassword}">
             <div class="dis-inline mt-sm">
-							<span class="black-sm-f">Status:<span
-                  class="gray-xs-f mb-xs pl-xs pr-md"> Invitation Sent,
-									Account Activation Pending</span></span><span class="black-sm-f resend pl-md"><a
-                href="javascript:void(0)" id="resendLinkId">Re-send
-									Activation Link</a></span>
+              <span class="black-sm-f">Status:
+                <span
+                    class="gray-xs-f mb-xs pl-xs pr-md"> Invitation Sent,
+                  Account Activation Pending
+                </span>
+              </span>
+              <span class="black-sm-f resend pl-md">
+                <a
+                    href="javascript:void(0)" id="resendLinkId">Re-send
+                  Activation Link
+                </a>
+              </span>
             </div>
           </c:if>
           <c:if test="${userBO.emailChanged}">
             <div class="dis-inline mt-sm">
-							<span class="black-sm-f">Status:<span
-                  class="gray-xs-f mb-xs pl-xs"> Pending Verification</span></span>
+              <span class="black-sm-f">Status:
+                <span
+                    class="gray-xs-f mb-xs pl-xs"> Pending Verification
+                </span>
+              </span>
             </div>
           </c:if>
         </div>
@@ -152,7 +172,8 @@
           <!-- form- input-->
           <div class="col-md-6 pr-none">
             <div class="gray-xs-f mb-xs">
-              Phone (XXX - XXX - XXXX)<span class="requiredStar"> *</span>
+              Phone (XXX - XXX - XXXX)
+              <span class="requiredStar"> *</span>
             </div>
             <div class="form-group">
               <input type="text" class="form-control phoneMask"
@@ -170,7 +191,8 @@
           <!-- form- input-->
           <div class="col-md-6 pl-none">
             <div class="blue-md-f text-uppercase mt-lg mb-md">
-              Assign Role<span class="requiredStar"> *</span>
+              Assign Role
+              <span class="requiredStar"> *</span>
             </div>
             <div class="form-group">
               <select id="roleId"
@@ -193,7 +215,7 @@
               <div class="form-group mb-none">
                 <c:if
                     test="${actionPage eq 'EDIT_PAGE' || actionPage eq 'VIEW_PAGE'}">
-									<span class="ml-xs">&nbsp; <label
+                  <span class="ml-xs">&nbsp; <label
                       class="switch bg-transparent mt-xs"> <input
                       type="checkbox" class="switch-input"
                       value="${userBO.enabled}" id="change${userBO.userId}"
@@ -201,10 +223,11 @@
                       <c:if
                           test="${empty userBO.userPassword || actionPage eq 'VIEW_PAGE' || userBO.emailChanged}">disabled</c:if>
                       onclick="activateOrDeactivateUser(${userBO.userId});">
-											<span class="switch-label bg-transparent" data-on="On"
-                            data-off="Off"></span> <span class="switch-handle"></span>
-									</label>
-									</span>
+                    <span class="switch-label bg-transparent" data-on="On"
+                          data-off="Off"></span>
+                    <span class="switch-handle"></span>
+                  </label>
+                  </span>
                 </c:if>
               </div>
             </div>
@@ -215,80 +238,88 @@
         <!-- Assign Permissions -->
         <div class="blue-md-f text-uppercase mt-lg">Assign Permissions</div>
         <div class="pull-right mb-xs">
-          <span class="gray-xs-f">View only</span> <span
-            class="gray-xs-f ml-lg">View and edit</span>
+          <span class="gray-xs-f">View only</span>
+          <span
+              class="gray-xs-f ml-lg">View and edit
+          </span>
         </div>
         <div class="clearfix"></div>
 
         <!-- Gray Widget-->
         <div class="edit-user-list-widget">
-					<span class="checkbox checkbox-inline"> <input
+          <span class="checkbox checkbox-inline"><input
               type="checkbox" class="chk" id="inlineCheckbox1" value="option1"
               <c:if test="${fn:contains(permissions,7)}">checked</c:if>
               <c:if test="${actionPage eq 'VIEW_PAGE'}">disabled</c:if>>
-						<label for="inlineCheckbox1"> Users </label>
-					</span> <span class="pull-right"> <span
-            class="radio radio-info radio-inline p-45"> <input
-            type="radio" class="musr" id="inlineRadio1" value="0"
-            name="manageUsers"
-            <c:if test="${fn:contains(permissions,7)}">checked</c:if>
-            <c:if test="${actionPage eq 'VIEW_PAGE'}">disabled</c:if>>
-							<label for="inlineRadio1"></label>
-					</span> <span class="radio radio-inline"> <input type="radio"
-                                                           class="musr" id="inlineRadio2" value="1"
-                                                           name="manageUsers"
-                                                           <c:if
-                                                               test="${fn:contains(permissions,5)}">checked</c:if>
-                                                           <c:if
-                                                               test="${actionPage eq 'VIEW_PAGE'}">disabled</c:if>>
-							<label for="inlineRadio2"></label>
-					</span>
-					</span>
+            <label for="inlineCheckbox1"> Users </label>
+          </span>
+          <span class="pull-right">
+            <span
+                class="radio radio-info radio-inline p-45"><input
+                type="radio" class="musr" id="inlineRadio1" value="0"
+                name="manageUsers"
+                <c:if test="${fn:contains(permissions,7)}">checked</c:if>
+                <c:if test="${actionPage eq 'VIEW_PAGE'}">disabled</c:if>>
+              <label for="inlineRadio1"></label>
+            </span>
+            <span class="radio radio-inline"><input type="radio"
+                                                    class="musr" id="inlineRadio2" value="1"
+                                                    name="manageUsers"
+                                                    <c:if
+                                                        test="${fn:contains(permissions,5)}">checked</c:if>
+                                                    <c:if
+                                                        test="${actionPage eq 'VIEW_PAGE'}">disabled</c:if>>
+              <label for="inlineRadio2"></label>
+            </span>
+          </span>
         </div>
 
         <div class="edit-user-list-widget">
-					<span class="checkbox checkbox-inline"> <input
+          <span class="checkbox checkbox-inline"><input
               type="checkbox" id="inlineCheckbox3" class="chk" value="option1"
               <c:if test="${fn:contains(permissions,4)}">checked</c:if>
               <c:if test="${actionPage eq 'VIEW_PAGE'}">disabled</c:if>>
-						<label for="inlineCheckbox3"> Notifications </label>
-					</span> <span class="pull-right"> <span
-            class="radio radio-info radio-inline p-45"> <input
-            type="radio" id="inlineRadio5" class="mnotf" value="0"
-            name="manageNotifications"
-            <c:if test="${fn:contains(permissions,4)}">checked</c:if>
-            <c:if test="${actionPage eq 'VIEW_PAGE'}">disabled</c:if>>
-							<label for="inlineRadio5"></label>
-					</span> <span class="radio radio-inline"> <input type="radio"
-                                                           id="inlineRadio6" class="mnotf" value="1"
-                                                           name="manageNotifications"
-                                                           <c:if
-                                                               test="${fn:contains(permissions,6)}">checked</c:if>
-                                                           <c:if
-                                                               test="${actionPage eq 'VIEW_PAGE'}">disabled</c:if>>
-							<label for="inlineRadio6"></label>
-					</span>
-					</span>
+            <label for="inlineCheckbox3"> Notifications </label>
+          </span>
+          <span class="pull-right">
+            <span
+                class="radio radio-info radio-inline p-45"><input
+                type="radio" id="inlineRadio5" class="mnotf" value="0"
+                name="manageNotifications"
+                <c:if test="${fn:contains(permissions,4)}">checked</c:if>
+                <c:if test="${actionPage eq 'VIEW_PAGE'}">disabled</c:if>>
+              <label for="inlineRadio5"></label>
+            </span>
+            <span class="radio radio-inline"><input type="radio"
+                                                    id="inlineRadio6" class="mnotf" value="1"
+                                                    name="manageNotifications"
+                                                    <c:if
+                                                        test="${fn:contains(permissions,6)}">checked</c:if>
+                                                    <c:if
+                                                        test="${actionPage eq 'VIEW_PAGE'}">disabled</c:if>>
+              <label for="inlineRadio6"></label>
+            </span>
+          </span>
         </div>
 
         <!-- Gray Widget-->
         <div class="edit-user-list-widget">
-					<span class="checkbox checkbox-inline"> <input
+          <span class="checkbox checkbox-inline"><input
               type="checkbox" id="inlineCheckbox4" name="manageStudies"
               <c:if test="${fn:contains(permissions,2)}">value="1" checked</c:if>
               <c:if test="${actionPage eq 'VIEW_PAGE'}">disabled</c:if>>
-						<label for="inlineCheckbox4"> Studies </label>
-					</span>
+            <label for="inlineCheckbox4"> Studies </label>
+          </span>
           <div class="mt-lg pl-lg">
             <div class="pb-md bor-dashed">
-							<span class="checkbox checkbox-inline"> <input
+              <span class="checkbox checkbox-inline"><input
                   type="checkbox" id="inlineCheckbox5" class="changeView1"
                   name="addingNewStudy"
                   value="${fn:contains(permissions,8)?'1':''}"
               <c:if test="${fn:contains(permissions,8)}"> checked</c:if>
                   <c:if test="${actionPage eq 'VIEW_PAGE'}">disabled</c:if>>
-								<label for="inlineCheckbox5"> Create New Studies </label>
-							</span>
+                <label for="inlineCheckbox5"> Create New Studies </label>
+              </span>
             </div>
             <div class="mt-md study-list mb-md addHide">
               <c:if test="${actionPage ne 'VIEW_PAGE'}">
@@ -306,7 +337,8 @@
             </div>
             <div class="addHide">
               <span
-                  class="mr-lg text-weight-semibold text-uppercase">Existing Study Permissions</span>
+                  class="mr-lg text-weight-semibold text-uppercase">Existing Study Permissions
+              </span>
 
               <c:if test="${actionPage ne 'VIEW_PAGE'}">
                 <span class="ablue removeAll changeView">x Remove all</span>
@@ -321,29 +353,32 @@
                          stdTxt="${study.name}&nbsp;(${study.customStudyId})"
                          <c:if test="${actionPage eq 'VIEW_PAGE'}">disabled</c:if>>
                   <c:if test="${actionPage ne 'VIEW_PAGE'}">
-										<span class="mr-md"><img
+                    <span class="mr-md"><img
                         src="/studybuilder/images/icons/close.png"
                         onclick="del(${study.id});" alt=""/></span>
                   </c:if>
-                  <span>${study.name}&nbsp;(${study.customStudyId})</span> <span
-                    class="pull-right"> <span
-                    class="radio radio-info radio-inline p-45 mr-xs"> <input
-                    type="radio" class="v${study.id} changeView"
-                    id="v1${study.id}" name="radio${study.id}" value="0"
-                    <c:if test="${not study.viewPermission}">checked</c:if>
-                    <c:if test="${actionPage eq 'VIEW_PAGE'}">disabled</c:if>>
-											<label for="v1${study.id}"></label></span> <span
-                    class="radio radio-inline"> <input type="radio"
-                                                       class="v${study.id} changeView"
-                                                       id="v2${study.id}"
-                                                       name="radio${study.id}" value="1"
-                                                       <c:if
-                                                           test="${study.viewPermission}">checked</c:if>
-                                                       <c:if
-                                                           test="${actionPage eq 'VIEW_PAGE'}">disabled</c:if>>
-											<label for="v2${study.id}"></label>
-									</span>
-									</span>
+                  <span>${study.name}&nbsp;(${study.customStudyId})</span>
+                  <span
+                      class="pull-right">
+                    <span
+                        class="radio radio-info radio-inline p-45 mr-xs"><input
+                        type="radio" class="v${study.id} changeView"
+                        id="v1${study.id}" name="radio${study.id}" value="0"
+                        <c:if test="${not study.viewPermission}">checked</c:if>
+                        <c:if test="${actionPage eq 'VIEW_PAGE'}">disabled</c:if>>
+                      <label for="v1${study.id}"></label></span>
+                    <span
+                        class="radio radio-inline"><input type="radio"
+                                                          class="v${study.id} changeView"
+                                                          id="v2${study.id}"
+                                                          name="radio${study.id}" value="1"
+                                                          <c:if
+                                                              test="${study.viewPermission}">checked</c:if>
+                                                          <c:if
+                                                              test="${actionPage eq 'VIEW_PAGE'}">disabled</c:if>>
+                      <label for="v2${study.id}"></label>
+                    </span>
+                  </span>
                 </div>
               </c:forEach>
             </div>
@@ -383,328 +418,289 @@
 <script>
 
 
-  $(document).ready(function () {
-    $('#rowId').parent().removeClass('white-bg');
+    $(document).ready(function () {
+        $('#rowId').parent().removeClass('white-bg');
 
-    <c:if test="${empty studyBOList && empty studyBOs}">
-    $('.addHide').hide();
-    </c:if>
+        <c:if test="${empty studyBOList && empty studyBOs}">
+        $('.addHide').hide();
+        </c:if>
 
-    $('#users').addClass('active');
+        $('#users').addClass('active');
 
-    $('[data-toggle="tooltip"]').tooltip();
+        $('[data-toggle="tooltip"]').tooltip();
 
-    var isManageStudyChecked = $("#inlineCheckbox4").is(":checked");
-    if (isManageStudyChecked) {
+        var isManageStudyChecked = $("#inlineCheckbox4").is(":checked");
+        if (isManageStudyChecked) {
 
-    } else {
-      $('#inlineCheckbox5').val('');
-      $('#inlineCheckbox5').prop('checked', false);
-      $('.changeView').prop('disabled', true);
-      $('.changeView1').prop('disabled', true);
-    }
-    var role = '${userBO.roleName}';
-    if (role) {
-      setStudySettingByRole(role);
-    }
+        } else {
+            $('#inlineCheckbox5').val('');
+            $('#inlineCheckbox5').prop('checked', false);
+            $('.changeView').prop('disabled', true);
+            $('.changeView1').prop('disabled', true);
+        }
+        var role = '${userBO.roleName}';
+        if (role) {
+            setStudySettingByRole(role);
+        }
 
-    $('#roleId').on('change', function () {
-      var element = $(this).find('option:selected').text();
-      setStudySettingByRole(element);
-    });
+        $('#roleId').on('change', function () {
+            var element = $(this).find('option:selected').text();
+            setStudySettingByRole(element);
+        });
 
-    var countCall = 0;
-    $(window).on('load', function () {
-      countCall = 1;
-      $('.selStd').each(function () {
-        var stdTxt = $(this).find('.stdCls').attr('stdTxt');
-        $(".study-list .bootstrap-select .dropdown-menu ul.dropdown-menu li a span:first-child").each(
-            function () {
-              var ltxt = $(this).text();
-              var a = $.trim(ltxt);
-              var b = $.trim(stdTxt);
-              if (a == b) {
-                $(this).parent().parent().hide();
-              }
+        var countCall = 0;
+        $(window).on('load', function () {
+            countCall = 1;
+            $('.selStd').each(function () {
+                var stdTxt = $(this).find('.stdCls').attr('stdTxt');
+                $(".study-list .bootstrap-select .dropdown-menu ul.dropdown-menu li a span:first-child").each(
+                    function () {
+                        var ltxt = $(this).text();
+                        var a = $.trim(ltxt);
+                        var b = $.trim(stdTxt);
+                        if (a == b) {
+                            $(this).parent().parent().hide();
+                        }
+                    });
             });
-      });
-    });
+        });
 
-    if (countCall == 0) {
-      $('.selStd').each(function () {
-        var stdTxt = $(this).find('.stdCls').attr('stdTxt');
-        $(".study-list .bootstrap-select .dropdown-menu ul.dropdown-menu li a span:first-child").each(
-            function () {
-              var ltxt = $(this).text();
-              var a = $.trim(ltxt);
-              var b = $.trim(stdTxt);
-              if (a == b) {
-                $(this).parent().parent().hide();
-              }
+        if (countCall == 0) {
+            $('.selStd').each(function () {
+                var stdTxt = $(this).find('.stdCls').attr('stdTxt');
+                $(".study-list .bootstrap-select .dropdown-menu ul.dropdown-menu li a span:first-child").each(
+                    function () {
+                        var ltxt = $(this).text();
+                        var a = $.trim(ltxt);
+                        var b = $.trim(stdTxt);
+                        if (a == b) {
+                            $(this).parent().parent().hide();
+                        }
+                    });
             });
-      });
-    }
-    $("#emailId").blur(function () {
-      var email = $('#emailId').val().toLowerCase();
-      var emailCopy = $('#emailId').val();
-      var oldEmail = $('#emailId').attr('oldVal');
-      var isEmail;
-      var regEX = /^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,3}$/;
-      isEmail = regEX.test(email);
-      if (isEmail && ('' === oldEmail || ('' !== oldEmail && oldEmail !== email))) {
-        var csrfDetcsrfParamName = $('#csrfDet').attr('csrfParamName');
-        var csrfToken = $('#csrfDet').attr('csrfToken');
-        $('#emailId').parent().find(".help-block").html("<ul class='list-unstyled'><li></li></ul>");
-        if (email !== '') {
-          $.ajax({
-            url: "/studybuilder/isEmailValid.do?" + csrfDetcsrfParamName + "=" + csrfToken,
-            type: "POST",
-            datatype: "json",
-            global: false,
-            data: {
-              email: email,
-            },
-            success: function getResponse(data) {
-              var message = data.message;
-              if ('SUCCESS' !== message) {
+        }
+        $("#emailId").blur(function () {
+            var email = $('#emailId').val().toLowerCase();
+            var emailCopy = $('#emailId').val();
+            var oldEmail = $('#emailId').attr('oldVal');
+            var isEmail;
+            var regEX = /^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,3}$/;
+            isEmail = regEX.test(email);
+            if (isEmail && ('' === oldEmail || ('' !== oldEmail && oldEmail !== email))) {
+                var csrfDetcsrfParamName = $('#csrfDet').attr('csrfParamName');
+                var csrfToken = $('#csrfDet').attr('csrfToken');
+                $('#emailId').parent().find(".help-block").html("<ul class='list-unstyled'><li></li></ul>");
+                if (email !== '') {
+                    $.ajax({
+                        url: "/studybuilder/isEmailValid.do?" + csrfDetcsrfParamName + "=" + csrfToken,
+                        type: "POST",
+                        datatype: "json",
+                        global: false,
+                        data: {
+                            email: email,
+                        },
+                        success: function getResponse(data) {
+                            var message = data.message;
+                            if ('SUCCESS' !== message) {
+                                $('#emailId').validator('validate');
+                                $('#emailId').parent().removeClass("has-danger").removeClass("has-error");
+                                $('#emailId').parent().find(".help-block").html("");
+                            } else {
+                                $("body").removeClass("loading");
+                                $('#emailId').val('');
+                                $('#emailId').parent().addClass("has-danger").addClass("has-error");
+                                $('#emailId').parent().find(".help-block").empty();
+                                $('#emailId').parent().find(".help-block").append(
+                                    "<ul class='list-unstyled'><li>'" + emailCopy + "' already exists.</li></ul>");
+                            }
+                        }
+                    });
+                }
+            } else {
                 $('#emailId').validator('validate');
                 $('#emailId').parent().removeClass("has-danger").removeClass("has-error");
                 $('#emailId').parent().find(".help-block").html("");
-              } else {
-                $("body").removeClass("loading");
-                $('#emailId').val('');
-                $('#emailId').parent().addClass("has-danger").addClass("has-error");
-                $('#emailId').parent().find(".help-block").empty();
-                $('#emailId').parent().find(".help-block").append(
-                    "<ul class='list-unstyled'><li>'" + emailCopy + "' already exists.</li></ul>");
-              }
             }
-          });
+        });
+
+        //cancel or back click
+        $('.backOrCancelBttn').on('click', function () {
+            $('#backOrCancelBtnForm').submit();
+        });
+
+        if ($('#inlineCheckbox1').prop("checked") == false) {
+            $('.musr').prop('checked', false);
+            $('.musr').prop('disabled', true);
         }
-      } else {
-        $('#emailId').validator('validate');
-        $('#emailId').parent().removeClass("has-danger").removeClass("has-error");
-        $('#emailId').parent().find(".help-block").html("");
-      }
-    });
 
-    //cancel or back click
-    $('.backOrCancelBttn').on('click', function () {
-      $('#backOrCancelBtnForm').submit();
-    });
-
-    if ($('#inlineCheckbox1').prop("checked") == false) {
-      $('.musr').prop('checked', false);
-      $('.musr').prop('disabled', true);
-    }
-
-    if ($('#inlineCheckbox3').prop("checked") == false) {
-      $('.mnotf').prop('checked', false);
-      $('.mnotf').prop('disabled', true);
-    }
-
-    if ($('#inlineCheckbox4').prop("checked") == false) {
-      $('#inlineCheckbox5').prop('checked', false);
-      $('#inlineCheckbox5').prop('disabled', true);
-    }
-
-    $('#inlineCheckbox1').on('click', function () {
-      if ($(this).prop("checked") == true) {
-        $('.musr').prop('disabled', false);
-        $('#inlineRadio1').prop('checked', true);
-      } else if ($(this).prop("checked") == false) {
-        $('.musr').prop('checked', false);
-        $('.musr').prop('disabled', true);
-      }
-    });
-
-    $('#inlineCheckbox3').on('click', function () {
-      if ($(this).prop("checked") == true) {
-        $('.mnotf').prop('disabled', false);
-        $('#inlineRadio5').prop('checked', true);
-      } else if ($(this).prop("checked") == false) {
-        $('.mnotf').prop('checked', false);
-        $('.mnotf').prop('disabled', true);
-      }
-    });
-
-    $('#inlineCheckbox4').on('click', function () {
-      if ($(this).prop("checked") == true) {
-        $(this).val(1);
-        $('.changeView').prop('disabled', false);
-        var element = $("#roleId option:selected").text();
-        if (element == 'Org-level Admin') {
-          $('.changeView1').prop('disabled', true);
-        } else {
-          $('.changeView1').prop('disabled', false);
+        if ($('#inlineCheckbox3').prop("checked") == false) {
+            $('.mnotf').prop('checked', false);
+            $('.mnotf').prop('disabled', true);
         }
-      } else if ($(this).prop("checked") == false) {
-        $(this).val('');
-        $('#inlineCheckbox5').val('');
-        $('#inlineCheckbox5').prop('checked', false);
-        $('.changeView').prop('disabled', true);
-        $('.changeView1').prop('disabled', true);
-      }
-    });
 
-    $('#inlineCheckbox5').on('click', function () {
-      if ($(this).prop("checked") == true) {
-        $(this).val(1);
-      } else if ($(this).prop("checked") == false) {
-        $(this).val('');
-      }
-    });
-    // Adding selected study items
-    $(".study-addbtn").click(function () {
-
-      $(".study-list .bootstrap-select .dropdown-menu ul.dropdown-menu li.selected").hide();
-
-      $(".study-list .bootstrap-select .dropdown-menu ul.dropdown-menu li").each(function () {
-        if ($(this).text() == "- All items are already selected -") {
-          $(this).hide();
+        if ($('#inlineCheckbox4').prop("checked") == false) {
+            $('#inlineCheckbox5').prop('checked', false);
+            $('#inlineCheckbox5').prop('disabled', true);
         }
-      });
 
-      $('#multiple :selected').each(function (i, sel) {
-        var selVal = $(sel).val();
-        var selTxt = $(sel).text();
-        var existingStudyDiv = "<div class='study-selected-item selStd' id='std" + selVal + "'>"
-            + "<input type='hidden' class='stdCls' id='" + selVal + "' name='' value='" + selVal
-            + "'>"
-            + "<span class='mr-md cls cur-pointer'><img src='/studybuilder/images/icons/close.png' onclick='del("
-            + selVal + ");'/></span>"
-            + "<span>" + selTxt + "</span>"
-            + "<span class='pull-right'>"
-            + "<span class='radio radio-info radio-inline p-45 mr-xs'>"
-            + " <input type='radio' class='v" + selVal + " changeView' id='v1" + selVal
-            + "' name='radio" + selVal + "' value='0' checked='checked'>"
-            + "<label for='v1" + selVal + "'></label></span>"
-            + "<span class='radio radio-inline'>"
-            + "<input type='radio' class='v" + selVal + " changeView' id='v2" + selVal
-            + "' name='radio" + selVal + "' value='1'>"
-            + " <label for='v2" + selVal + "'></label>"
-            + "</span>"
-            + "</span>"
-            + "</div>";
+        $('#inlineCheckbox1').on('click', function () {
+            if ($(this).prop("checked") == true) {
+                $('.musr').prop('disabled', false);
+                $('#inlineRadio1').prop('checked', true);
+            } else if ($(this).prop("checked") == false) {
+                $('.musr').prop('checked', false);
+                $('.musr').prop('disabled', true);
+            }
+        });
 
-        $('.study-selected').append(existingStudyDiv);
-      });
+        $('#inlineCheckbox3').on('click', function () {
+            if ($(this).prop("checked") == true) {
+                $('.mnotf').prop('disabled', false);
+                $('#inlineRadio5').prop('checked', true);
+            } else if ($(this).prop("checked") == false) {
+                $('.mnotf').prop('checked', false);
+                $('.mnotf').prop('disabled', true);
+            }
+        });
 
-      $(".selectpicker").selectpicker('deselectAll');
-      var tot_items = $(".study-list .bootstrap-select .dropdown-menu ul.dropdown-menu li").length;
-      var count = $(
-          ".study-list .bootstrap-select .dropdown-menu ul.dropdown-menu li[style]").length;
-      if (count == tot_items) {
-        $(".study-list .bootstrap-select .dropdown-menu ul.dropdown-menu").append(
-            '<li class="text-center">- All items are already selected -</li>');
-      }
+        $('#inlineCheckbox4').on('click', function () {
+            if ($(this).prop("checked") == true) {
+                $(this).val(1);
+                $('.changeView').prop('disabled', false);
+                var element = $("#roleId option:selected").text();
+                if (element == 'Org-level Admin') {
+                    $('.changeView1').prop('disabled', true);
+                } else {
+                    $('.changeView1').prop('disabled', false);
+                }
+            } else if ($(this).prop("checked") == false) {
+                $(this).val('');
+                $('#inlineCheckbox5').val('');
+                $('#inlineCheckbox5').prop('checked', false);
+                $('.changeView').prop('disabled', true);
+                $('.changeView1').prop('disabled', true);
+            }
+        });
 
-    });
+        $('#inlineCheckbox5').on('click', function () {
+            if ($(this).prop("checked") == true) {
+                $(this).val(1);
+            } else if ($(this).prop("checked") == false) {
+                $(this).val('');
+            }
+        });
+        // Adding selected study items
+        $(".study-addbtn").click(function () {
+
+            $(".study-list .bootstrap-select .dropdown-menu ul.dropdown-menu li.selected").hide();
+
+            $(".study-list .bootstrap-select .dropdown-menu ul.dropdown-menu li").each(function () {
+                if ($(this).text() == "- All items are already selected -") {
+                    $(this).hide();
+                }
+            });
+
+            $('#multiple :selected').each(function (i, sel) {
+                var selVal = $(sel).val();
+                var selTxt = $(sel).text();
+                var existingStudyDiv = "<div class='study-selected-item selStd' id='std" + selVal + "'>"
+                    + "<input type='hidden' class='stdCls' id='" + selVal + "' name='' value='" + selVal
+                    + "'>"
+                    + "<span class='mr-md cls cur-pointer'><img src='/studybuilder/images/icons/close.png' onclick='del("
+                    + selVal + ");'/></span>"
+                    + "<span>" + selTxt + "</span>"
+                    + "<span class='pull-right'>"
+                    + "<span class='radio radio-info radio-inline p-45 mr-xs'>"
+                    + " <input type='radio' class='v" + selVal + " changeView' id='v1" + selVal
+                    + "' name='radio" + selVal + "' value='0' checked='checked'>"
+                    + "<label for='v1" + selVal + "'></label></span>"
+                    + "<span class='radio radio-inline'>"
+                    + "<input type='radio' class='v" + selVal + " changeView' id='v2" + selVal
+                    + "' name='radio" + selVal + "' value='1'>"
+                    + " <label for='v2" + selVal + "'></label>"
+                    + "</span>"
+                    + "</span>"
+                    + "</div>";
+
+                $('.study-selected').append(existingStudyDiv);
+            });
+
+            $(".selectpicker").selectpicker('deselectAll');
+            var tot_items = $(".study-list .bootstrap-select .dropdown-menu ul.dropdown-menu li").length;
+            var count = $(
+                ".study-list .bootstrap-select .dropdown-menu ul.dropdown-menu li[style]").length;
+            if (count == tot_items) {
+                $(".study-list .bootstrap-select .dropdown-menu ul.dropdown-menu").append(
+                    '<li class="text-center">- All items are already selected -</li>');
+            }
+
+        });
 
 //Removing selected study items
-    $(".removeAll").click(function () {
-      $(".study-list .bootstrap-select .dropdown-menu ul.dropdown-menu li[style],.study-list .bootstrap-select .dropdown-menu ul.dropdown-menu li").show();
-      $(".study-list .bootstrap-select .dropdown-menu ul.dropdown-menu li").each(function () {
-        if ($(this).text() == "- All items are already selected -") {
-          $(this).hide();
-        }
-      });
-      $(".study-selected-item").remove();
-    });
+        $(".removeAll").click(function () {
+            $(".study-list .bootstrap-select .dropdown-menu ul.dropdown-menu li[style],.study-list .bootstrap-select .dropdown-menu ul.dropdown-menu li").show();
+            $(".study-list .bootstrap-select .dropdown-menu ul.dropdown-menu li").each(function () {
+                if ($(this).text() == "- All items are already selected -") {
+                    $(this).hide();
+                }
+            });
+            $(".study-selected-item").remove();
+        });
 
-    $('.addUpdate').on('click', function () {
-      var email = $('#emailId').val();
-      var oldEmail = $('#emailId').attr('oldVal');
-      var isEmail;
-      var regEX = /^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,3}$/;
-      isEmail = regEX.test(email);
-      if (isEmail && ('' === oldEmail || ('' !== oldEmail && oldEmail !== email))) {
-        var csrfDetcsrfParamName = $('#csrfDet').attr('csrfParamName');
-        var csrfToken = $('#csrfDet').attr('csrfToken');
-        $('#emailId').parent().find(".help-block").html("<ul class='list-unstyled'><li></li></ul>");
-        if (email !== '') {
-          $("body").addClass("loading");
-          $.ajax({
-            url: "/studybuilder/isEmailValid.do?" + csrfDetcsrfParamName + "=" + csrfToken,
-            type: "POST",
-            datatype: "json",
-            global: false,
-            data: {
-              email: email,
-            },
-            success: function getResponse(data) {
-              var message = data.message;
-              if ('SUCCESS' !== message) {
+        $('.addUpdate').on('click', function () {
+            var email = $('#emailId').val();
+            var oldEmail = $('#emailId').attr('oldVal');
+            var isEmail;
+            var regEX = /^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,3}$/;
+            isEmail = regEX.test(email);
+            if (isEmail && ('' === oldEmail || ('' !== oldEmail && oldEmail !== email))) {
+                var csrfDetcsrfParamName = $('#csrfDet').attr('csrfParamName');
+                var csrfToken = $('#csrfDet').attr('csrfToken');
+                $('#emailId').parent().find(".help-block").html("<ul class='list-unstyled'><li></li></ul>");
+                if (email !== '') {
+                    $("body").addClass("loading");
+                    $.ajax({
+                        url: "/studybuilder/isEmailValid.do?" + csrfDetcsrfParamName + "=" + csrfToken,
+                        type: "POST",
+                        datatype: "json",
+                        global: false,
+                        data: {
+                            email: email,
+                        },
+                        success: function getResponse(data) {
+                            var message = data.message;
+                            if ('SUCCESS' !== message) {
+                                $('#emailId').validator('validate');
+                                $('#emailId').parent().removeClass("has-danger").removeClass("has-error");
+                                $('#emailId').parent().find(".help-block").html("");
+                                saveUser();
+                            } else {
+                                $("body").removeClass("loading");
+                                isFromValid($('.addUpdate').parents('form'));
+                                $('#emailId').val('');
+                                $('#emailId').parent().addClass("has-danger").addClass("has-error");
+                                $('#emailId').parent().find(".help-block").empty();
+                                $('#emailId').parent().find(".help-block").append(
+                                    "<ul class='list-unstyled'><li>'" + email + "' already exists.</li></ul>");
+                            }
+                        }
+                    });
+                }
+            } else {
                 $('#emailId').validator('validate');
                 $('#emailId').parent().removeClass("has-danger").removeClass("has-error");
                 $('#emailId').parent().find(".help-block").html("");
                 saveUser();
-              } else {
-                $("body").removeClass("loading");
-                isFromValid($('.addUpdate').parents('form'));
-                $('#emailId').val('');
-                $('#emailId').parent().addClass("has-danger").addClass("has-error");
-                $('#emailId').parent().find(".help-block").empty();
-                $('#emailId').parent().find(".help-block").append(
-                    "<ul class='list-unstyled'><li>'" + email + "' already exists.</li></ul>");
-              }
             }
-          });
-        }
-      } else {
-        $('#emailId').validator('validate');
-        $('#emailId').parent().removeClass("has-danger").removeClass("has-error");
-        $('#emailId').parent().find(".help-block").html("");
-        saveUser();
-      }
-    });
+        });
 
-    $('#resendLinkId').on('click', function () {
-      var form = document.createElement('form');
-      form.method = 'post';
-      var input = document.createElement('input');
-      input.type = 'hidden';
-      input.name = 'userId';
-      input.value = '${userBO.userId}';
-      form.appendChild(input);
-
-      input = document.createElement('input');
-      input.type = 'hidden';
-      input.name = '${_csrf.parameterName}';
-      input.value = '${_csrf.token}';
-      form.appendChild(input);
-
-      form.action = '/studybuilder/adminUsersEdit/resendActivateDetailsLink.do';
-      document.body.appendChild(form);
-      form.submit();
-    });
-
-    $('#enforcePasswordId').on('click', function () {
-      bootbox.confirm({
-        closeButton: false,
-        message: "Are you sure you wish to enforce a password change for this user?",
-        buttons: {
-          'cancel': {
-            label: 'No',
-          },
-          'confirm': {
-            label: 'Yes',
-          },
-        },
-        callback: function (result) {
-          if (result) {
+        $('#resendLinkId').on('click', function () {
             var form = document.createElement('form');
             form.method = 'post';
             var input = document.createElement('input');
             input.type = 'hidden';
-            input.name = 'changePassworduserId';
+            input.name = 'userId';
             input.value = '${userBO.userId}';
-            form.appendChild(input);
-
-            var input = document.createElement('input');
-            input.type = 'hidden';
-            input.name = 'emailId';
-            input.value = '${userBO.userEmail}';
             form.appendChild(input);
 
             input = document.createElement('input');
@@ -713,119 +709,158 @@
             input.value = '${_csrf.token}';
             form.appendChild(input);
 
-            form.action = '/studybuilder/adminUsersEdit/enforcePasswordChange.do';
+            form.action = '/studybuilder/adminUsersEdit/resendActivateDetailsLink.do';
             document.body.appendChild(form);
             form.submit();
-          }
-        }
-      })
-
-    });
-
-  });
-
-  function del(id) {
-    var atxt = $('#std' + id).children().text();
-
-    $(".study-list .bootstrap-select .dropdown-menu ul.dropdown-menu li a span:first-child").each(
-        function () {
-          var ltxt = $(this).text();
-          var a = $.trim(ltxt);
-          var b = $.trim(atxt);
-          if (a == b) {
-            $(this).parent().parent().show();
-          }
         });
 
-    $(".study-list .bootstrap-select .dropdown-menu ul.dropdown-menu li").each(function () {
-      if ($(this).text() == "- All items are already selected -") {
-        $(this).hide();
-      }
+        $('#enforcePasswordId').on('click', function () {
+            bootbox.confirm({
+                closeButton: false,
+                message: "Are you sure you wish to enforce a password change for this user?",
+                buttons: {
+                    'cancel': {
+                        label: 'No',
+                    },
+                    'confirm': {
+                        label: 'Yes',
+                    },
+                },
+                callback: function (result) {
+                    if (result) {
+                        var form = document.createElement('form');
+                        form.method = 'post';
+                        var input = document.createElement('input');
+                        input.type = 'hidden';
+                        input.name = 'changePassworduserId';
+                        input.value = '${userBO.userId}';
+                        form.appendChild(input);
+
+                        var input = document.createElement('input');
+                        input.type = 'hidden';
+                        input.name = 'emailId';
+                        input.value = '${userBO.userEmail}';
+                        form.appendChild(input);
+
+                        input = document.createElement('input');
+                        input.type = 'hidden';
+                        input.name = '${_csrf.parameterName}';
+                        input.value = '${_csrf.token}';
+                        form.appendChild(input);
+
+                        form.action = '/studybuilder/adminUsersEdit/enforcePasswordChange.do';
+                        document.body.appendChild(form);
+                        form.submit();
+                    }
+                }
+            })
+
+        });
+
     });
 
-    $('#std' + id).remove();
+    function del(id) {
+        var atxt = $('#std' + id).children().text();
 
-  }
+        $(".study-list .bootstrap-select .dropdown-menu ul.dropdown-menu li a span:first-child").each(
+            function () {
+                var ltxt = $(this).text();
+                var a = $.trim(ltxt);
+                var b = $.trim(atxt);
+                if (a == b) {
+                    $(this).parent().parent().show();
+                }
+            });
 
-  function activateOrDeactivateUser(userId) {
-    var status = $('#change' + userId).val();
-    var msgPart = "";
-    if ('false' == status) {
-      msgPart = "activate";
-    } else {
-      msgPart = "deactivate";
-    }
-    bootbox.confirm("Are you sure you want to " + msgPart + " this user?", function (result) {
-      if (result) {
-        if (status == 'true') {
-          $('#change' + userId).val(false);
-          $('#userStatus').val(false);
-        } else {
-          $('#change' + userId).val(true);
-          $('#userStatus').val(true);
-        }
-      } else {
-        if (status == 'true') {
-          $('#change' + userId).prop('checked', true);
-          $('#userStatus').val(true);
+        $(".study-list .bootstrap-select .dropdown-menu ul.dropdown-menu li").each(function () {
+            if ($(this).text() == "- All items are already selected -") {
+                $(this).hide();
+            }
+        });
 
-        } else if (status == 'false') {
-          $('#change' + userId).prop('checked', false);
-          $('#userStatus').val(false);
-        }
-        return;
-      }
-    });
-  }
+        $('#std' + id).remove();
 
-  function saveUser() {
-    $('#emailId').prop('disabled', false);
-    var selectedStudies = "";
-    var permissionValues = "";
-    if (isFromValid($('.addUpdate').parents('form'))) {
-      $('.selStd').each(function () {
-        var studyId = $(this).find('.stdCls').val();
-        var permissionValue = $('#std' + studyId).find('input[type=radio]:checked').val();
-        if (selectedStudies == "") {
-          selectedStudies = studyId;
-        } else {
-          selectedStudies += "," + studyId;
-        }
-        if (permissionValues == "") {
-          permissionValues = permissionValue;
-        } else {
-          permissionValues += "," + permissionValue;
-        }
-      });
-      $('#selectedStudies').val(selectedStudies);
-      $('#permissionValues').val(permissionValues);
-      <c:if test="${sessionObject.userId eq userBO.userId}">
-      $('#ownUser').val('1');
-      </c:if>
-      $('.addUpdate').parents('form').submit();
-    }
-  }
-
-  function setStudySettingByRole(element) {
-    if (element == 'Org-level Admin') {
-      $('#inlineCheckbox1').prop('checked', false);
-      $('#inlineCheckbox3').prop('checked', false);
-      $('.changeView1').prop('checked', false);
-      $('.musr').prop('checked', false);
-      $('.mnotf').prop('checked', false);
-      $('.musr').prop('disabled', true);
-      $('.mnotf').prop('disabled', true);
-      $('#inlineCheckbox1').attr('disabled', true);
-      $('#inlineCheckbox3').attr('disabled', true);
-      $('.changeView1').prop('disabled', true);
-      $('#inlineCheckbox5').prop('checked', false);
-      $('#inlineCheckbox5').attr('disabled', true);
-    } else {
-      $('#inlineCheckbox1').attr('disabled', false);
-      $('#inlineCheckbox3').attr('disabled', false);
-      $('#inlineCheckbox5').attr('disabled', false);
     }
 
-  }
+    function activateOrDeactivateUser(userId) {
+        var status = $('#change' + userId).val();
+        var msgPart = "";
+        if ('false' == status) {
+            msgPart = "activate";
+        } else {
+            msgPart = "deactivate";
+        }
+        bootbox.confirm("Are you sure you want to " + msgPart + " this user?", function (result) {
+            if (result) {
+                if (status == 'true') {
+                    $('#change' + userId).val(false);
+                    $('#userStatus').val(false);
+                } else {
+                    $('#change' + userId).val(true);
+                    $('#userStatus').val(true);
+                }
+            } else {
+                if (status == 'true') {
+                    $('#change' + userId).prop('checked', true);
+                    $('#userStatus').val(true);
+
+                } else if (status == 'false') {
+                    $('#change' + userId).prop('checked', false);
+                    $('#userStatus').val(false);
+                }
+                return;
+            }
+        });
+    }
+
+    function saveUser() {
+        $('#emailId').prop('disabled', false);
+        var selectedStudies = "";
+        var permissionValues = "";
+        if (isFromValid($('.addUpdate').parents('form'))) {
+            $('.selStd').each(function () {
+                var studyId = $(this).find('.stdCls').val();
+                var permissionValue = $('#std' + studyId).find('input[type=radio]:checked').val();
+                if (selectedStudies == "") {
+                    selectedStudies = studyId;
+                } else {
+                    selectedStudies += "," + studyId;
+                }
+                if (permissionValues == "") {
+                    permissionValues = permissionValue;
+                } else {
+                    permissionValues += "," + permissionValue;
+                }
+            });
+            $('#selectedStudies').val(selectedStudies);
+            $('#permissionValues').val(permissionValues);
+            <c:if test="${sessionObject.userId eq userBO.userId}">
+            $('#ownUser').val('1');
+            </c:if>
+            $('.addUpdate').parents('form').submit();
+        }
+    }
+
+    function setStudySettingByRole(element) {
+        if (element == 'Org-level Admin') {
+            $('#inlineCheckbox1').prop('checked', false);
+            $('#inlineCheckbox3').prop('checked', false);
+            $('.changeView1').prop('checked', false);
+            $('.musr').prop('checked', false);
+            $('.mnotf').prop('checked', false);
+            $('.musr').prop('disabled', true);
+            $('.mnotf').prop('disabled', true);
+            $('#inlineCheckbox1').attr('disabled', true);
+            $('#inlineCheckbox3').attr('disabled', true);
+            $('.changeView1').prop('disabled', true);
+            $('#inlineCheckbox5').prop('checked', false);
+            $('#inlineCheckbox5').attr('disabled', true);
+        } else {
+            $('#inlineCheckbox1').attr('disabled', false);
+            $('#inlineCheckbox3').attr('disabled', false);
+            $('#inlineCheckbox5').attr('disabled', false);
+        }
+
+    }
 </script>
 

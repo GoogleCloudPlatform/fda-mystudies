@@ -39,51 +39,51 @@
     <div>
       <table id="app_Wide_Notification_list" class="table table-right tbl">
         <thead>
-        <tr>
-          <th id="">TITLE</th>
-          <th id="" class="linkDis">Status</th>
-          <th id="" class="linkDis">ACTIONS</th>
-        </tr>
+          <tr>
+            <th id="">TITLE</th>
+            <th id="" class="linkDis">Status</th>
+            <th id="" class="linkDis">ACTIONS</th>
+          </tr>
         </thead>
         <tbody>
-        <c:forEach items="${notificationList}" var="notification" varStatus="status">
-          <tr>
-            <td>
-              <div class="dis-ellipsis lg-ellipsis"
-                   title="${fn:escapeXml(notification.notificationText)}">${fn:escapeXml(notification.notificationText)}</div>
-            </td>
-            <td>${notification.checkNotificationSendingStatus}</td>
-            <td>
-                            <span class="sprites_icon preview-g mr-lg notificationDetailsToView"
-                                  actionType="view"
-                                  notificationId="${notification.notificationId}"
-                                  data-toggle="tooltip"
-                                  data-placement="top" title="View"></span>
-              <c:if
-                  test="${fn:contains(sessionObject.userPermissions,'ROLE_MANAGE_APP_WIDE_NOTIFICATION_EDIT')}">
-                <c:if test="${notification.notificationSent}">
-                                    <span
-                                        class="sprites-icons-2 send mr-lg notificationDetailsToEdit"
-                                        actionType="resend"
-                                        notificationId="${notification.notificationId}"
-                                        data-toggle="tooltip" data-placement="top"
-                                        title="Resend"></span>
+          <c:forEach items="${notificationList}" var="notification" varStatus="status">
+            <tr>
+              <td>
+                <div class="dis-ellipsis lg-ellipsis"
+                     title="${fn:escapeXml(notification.notificationText)}">${fn:escapeXml(notification.notificationText)}</div>
+              </td>
+              <td>${notification.checkNotificationSendingStatus}</td>
+              <td>
+                <span class="sprites_icon preview-g mr-lg notificationDetailsToView"
+                      actionType="view"
+                      notificationId="${notification.notificationId}"
+                      data-toggle="tooltip"
+                      data-placement="top" title="View"></span>
+                <c:if
+                    test="${fn:contains(sessionObject.userPermissions,'ROLE_MANAGE_APP_WIDE_NOTIFICATION_EDIT')}">
+                  <c:if test="${notification.notificationSent}">
+                    <span
+                        class="sprites-icons-2 send mr-lg notificationDetailsToEdit"
+                        actionType="resend"
+                        notificationId="${notification.notificationId}"
+                        data-toggle="tooltip" data-placement="top"
+                        title="Resend"></span>
+                  </c:if>
+                  <c:if test="${not notification.notificationSent}">
+                    <span
+                        class="sprites_icon edit-g mr-lg notificationDetailsToEdit"
+                        actionType="edit"
+                        notificationId="${notification.notificationId}"
+                        data-toggle="tooltip"
+                        data-placement="top" title="Edit"></span>
+                  </c:if>
+                  <span class="sprites_icon copy notificationDetailsToEdit" actionType="add"
+                        notificationText="${fn:escapeXml(notification.notificationText)}"
+                        data-toggle="tooltip" data-placement="top" title="Copy"></span>
                 </c:if>
-                <c:if test="${not notification.notificationSent}">
-                                    <span
-                                        class="sprites_icon edit-g mr-lg notificationDetailsToEdit"
-                                        actionType="edit"
-                                        notificationId="${notification.notificationId}"
-                                        data-toggle="tooltip"
-                                        data-placement="top" title="Edit"></span>
-                </c:if>
-                <span class="sprites_icon copy notificationDetailsToEdit" actionType="add"
-                      notificationText="${fn:escapeXml(notification.notificationText)}"
-                      data-toggle="tooltip" data-placement="top" title="Copy"></span>
-              </c:if>
-            </td>
-          </tr>
-        </c:forEach>
+              </td>
+            </tr>
+          </c:forEach>
         </tbody>
       </table>
     </div>
@@ -106,40 +106,40 @@
 </form:form>
 
 <script>
-  $(document).ready(function () {
-    $('#rowId').parent().removeClass('white-bg');
+    $(document).ready(function () {
+        $('#rowId').parent().removeClass('white-bg');
 
-    $('#notification').addClass('active');
+        $('#notification').addClass('active');
 
-    $('[data-toggle="tooltip"]').tooltip();
+        $('[data-toggle="tooltip"]').tooltip();
 
-    $('.notificationDetailsToEdit').on('click', function () {
-      $('.notificationDetailsToEdit').prop('disabled', true);
-      $('#notificationId').val($(this).attr('notificationId'));
-      $('#notificationText').val($(this).attr('notificationText'));
-      $('#actionType').val($(this).attr('actionType'));
-      $('#getNotificationEditPage').submit();
+        $('.notificationDetailsToEdit').on('click', function () {
+            $('.notificationDetailsToEdit').prop('disabled', true);
+            $('#notificationId').val($(this).attr('notificationId'));
+            $('#notificationText').val($(this).attr('notificationText'));
+            $('#actionType').val($(this).attr('actionType'));
+            $('#getNotificationEditPage').submit();
+        });
+
+        $('.notificationDetailsToView').on('click', function () {
+            $('.notificationDetailsToView').prop('disabled', true);
+            $('#notificationIdToView').val($(this).attr('notificationId'));
+            $('#actionTypeToView').val($(this).attr('actionType'));
+            $('#getNotificationViewPage').submit();
+        });
+
+        $('#app_Wide_Notification_list').DataTable({
+            "paging": true,
+            "order": [],
+            "columnDefs": [{orderable: false, orderable: false, targets: [0]}],
+            "info": false,
+            "lengthChange": false,
+            language: {
+                "zeroRecords": "You haven't created any content yet.",
+            },
+            "searching": false,
+            "pageLength": 15,
+        });
+
     });
-
-    $('.notificationDetailsToView').on('click', function () {
-      $('.notificationDetailsToView').prop('disabled', true);
-      $('#notificationIdToView').val($(this).attr('notificationId'));
-      $('#actionTypeToView').val($(this).attr('actionType'));
-      $('#getNotificationViewPage').submit();
-    });
-
-    $('#app_Wide_Notification_list').DataTable({
-      "paging": true,
-      "order": [],
-      "columnDefs": [{orderable: false, orderable: false, targets: [0]}],
-      "info": false,
-      "lengthChange": false,
-      language: {
-        "zeroRecords": "You haven't created any content yet.",
-      },
-      "searching": false,
-      "pageLength": 15,
-    });
-
-  });
 </script>

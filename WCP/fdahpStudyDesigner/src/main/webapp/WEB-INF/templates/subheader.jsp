@@ -43,58 +43,58 @@
 </form:form>
 
 <script type="text/javascript">
-  $(document).ready(function () {
+    $(document).ready(function () {
 
-    $('.addEditStudy').on('click', function () {
-      $('#addEditStudyForm').submit();
-    });
+        $('.addEditStudy').on('click', function () {
+            $('#addEditStudyForm').submit();
+        });
 
 //cancel or back click
-    $('.backOrCancelBtn').on('click', function () {
-      $('#backOrCancelForm').submit();
+        $('.backOrCancelBtn').on('click', function () {
+            $('#backOrCancelForm').submit();
+        });
+
+        <c:if test="${studyListId eq true}">
+        $('#studyListId').show();
+        </c:if>
+        var sucMsg = '${sucMsg}';
+        if (sucMsg.length > 0) {
+            showSucMsg(sucMsg);
+        }
+        var errMsg = '${errMsg}';
+        if (errMsg.length > 0) {
+            showErrMsg(errMsg);
+        }
+
+        var resourceErrMsg = '${resourceErrMsg}';
+        if (resourceErrMsg) {
+            bootbox.alert(resourceErrMsg);
+        }
+
+        var actionSucMsg = '${actionSucMsg}';
+        if (actionSucMsg) {
+            bootbox.alert({
+                message: actionSucMsg,
+                className: 'green-txt',
+                closeButton: false
+
+            });
+        }
     });
 
-    <c:if test="${studyListId eq true}">
-    $('#studyListId').show();
-    </c:if>
-    var sucMsg = '${sucMsg}';
-    if (sucMsg.length > 0) {
-      showSucMsg(sucMsg);
-    }
-    var errMsg = '${errMsg}';
-    if (errMsg.length > 0) {
-      showErrMsg(errMsg);
+    function showSucMsg(message) {
+        $("#alertMsg").removeClass('e-box').addClass('s-box').html(message);
+        $('#alertMsg').show('5000');
+        setTimeout(hideDisplayMessage, 5000);
     }
 
-    var resourceErrMsg = '${resourceErrMsg}';
-    if (resourceErrMsg) {
-      bootbox.alert(resourceErrMsg);
+    function showErrMsg(message) {
+        $("#alertMsg").removeClass('s-box').addClass('e-box').html(message);
+        $('#alertMsg').show('5000');
+        setTimeout(hideDisplayMessage, 5000);
     }
 
-    var actionSucMsg = '${actionSucMsg}';
-    if (actionSucMsg) {
-      bootbox.alert({
-        message: actionSucMsg,
-        className: 'green-txt',
-        closeButton: false
-
-      });
+    function hideDisplayMessage() {
+        $('#alertMsg').slideUp('5000');
     }
-  });
-
-  function showSucMsg(message) {
-    $("#alertMsg").removeClass('e-box').addClass('s-box').html(message);
-    $('#alertMsg').show('5000');
-    setTimeout(hideDisplayMessage, 5000);
-  }
-
-  function showErrMsg(message) {
-    $("#alertMsg").removeClass('s-box').addClass('e-box').html(message);
-    $('#alertMsg').show('5000');
-    setTimeout(hideDisplayMessage, 5000);
-  }
-
-  function hideDisplayMessage() {
-    $('#alertMsg').slideUp('5000');
-  }
 </script>

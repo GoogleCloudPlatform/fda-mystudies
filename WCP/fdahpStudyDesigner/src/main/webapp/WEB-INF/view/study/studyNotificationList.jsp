@@ -40,59 +40,59 @@
       <table id="notification_list" class="display bor-none tbl_rightalign" cellspacing="0"
              width="100%">
         <thead>
-        <tr>
-          <th id="">Title</th>
-          <th class="linkDis" id="">Status</th>
-          <th class="text-right" id="">
-            <c:if test="${empty permission}">
-              <div class="dis-line form-group mb-none">
-                <button type="button"
-                        class="btn btn-primary blue-btn hideButtonIfPaused studyNotificationDetails">
-                  Add
-                  Notification
-                </button>
-              </div>
-            </c:if>
-          </th>
-        </tr>
+          <tr>
+            <th id="">Title</th>
+            <th class="linkDis" id="">Status</th>
+            <th class="text-right" id="">
+              <c:if test="${empty permission}">
+                <div class="dis-line form-group mb-none">
+                  <button type="button"
+                          class="btn btn-primary blue-btn hideButtonIfPaused studyNotificationDetails">
+                    Add
+                    Notification
+                  </button>
+                </div>
+              </c:if>
+            </th>
+          </tr>
         </thead>
         <tbody>
-        <c:forEach items="${notificationList}" var="studyNotification">
-          <tr id="${studyNotification.notificationId}">
-            <td width="60%">
-              <div class="dis-ellipsis"
-                   title="${fn:escapeXml(studyNotification.notificationText)}">${fn:escapeXml(studyNotification.notificationText)}</div>
-            </td>
-            <td class="wid20">${studyNotification.checkNotificationSendingStatus}</td>
-            <td class="wid20 text-right">
-                            <span class="sprites_icon preview-g mr-lg studyNotificationDetails"
-                                  actionType="view"
-                                  notificationId="${studyNotification.notificationId}"
-                                  data-toggle="tooltip"
-                                  data-placement="top" title="view"></span>
-              <c:if test="${studyNotification.notificationSent}">
-                                <span
-                                    class="sprites-icons-2 send mr-lg hideButtonIfPaused studyNotificationDetails <c:if test="${not empty permission}"> cursor-none </c:if>"
-                                    actionType="resend"
-                                    notificationId="${studyNotification.notificationId}"
-                                    data-toggle="tooltip" data-placement="top"
-                                    title="Resend"></span>
-              </c:if>
-              <c:if test="${not studyNotification.notificationSent}">
-                                <span
-                                    class="${studyNotification.notificationDone?'edit-inc':'edit-inc-draft'} mr-lg hideButtonIfPaused studyNotificationDetails <c:if test="${not empty permission}"> cursor-none </c:if>"
-                                    actionType="edit"
-                                    notificationId="${studyNotification.notificationId}"
-                                    data-toggle="tooltip" data-placement="top" title="Edit"></span>
-              </c:if>
-              <span
-                  class="sprites_icon copy hideButtonIfPaused studyNotificationDetails <c:if test="${not empty permission}"> cursor-none </c:if>"
-                  actionType="addOrEdit"
-                  notificationText="${fn:escapeXml(studyNotification.notificationText)}"
-                  data-toggle="tooltip" data-placement="top" title="Copy"></span>
-            </td>
-          </tr>
-        </c:forEach>
+          <c:forEach items="${notificationList}" var="studyNotification">
+            <tr id="${studyNotification.notificationId}">
+              <td width="60%">
+                <div class="dis-ellipsis"
+                     title="${fn:escapeXml(studyNotification.notificationText)}">${fn:escapeXml(studyNotification.notificationText)}</div>
+              </td>
+              <td class="wid20">${studyNotification.checkNotificationSendingStatus}</td>
+              <td class="wid20 text-right">
+                <span class="sprites_icon preview-g mr-lg studyNotificationDetails"
+                      actionType="view"
+                      notificationId="${studyNotification.notificationId}"
+                      data-toggle="tooltip"
+                      data-placement="top" title="view"></span>
+                <c:if test="${studyNotification.notificationSent}">
+                  <span
+                      class="sprites-icons-2 send mr-lg hideButtonIfPaused studyNotificationDetails <c:if test="${not empty permission}"> cursor-none </c:if>"
+                      actionType="resend"
+                      notificationId="${studyNotification.notificationId}"
+                      data-toggle="tooltip" data-placement="top"
+                      title="Resend"></span>
+                </c:if>
+                <c:if test="${not studyNotification.notificationSent}">
+                  <span
+                      class="${studyNotification.notificationDone?'edit-inc':'edit-inc-draft'} mr-lg hideButtonIfPaused studyNotificationDetails <c:if test="${not empty permission}"> cursor-none </c:if>"
+                      actionType="edit"
+                      notificationId="${studyNotification.notificationId}"
+                      data-toggle="tooltip" data-placement="top" title="Edit"></span>
+                </c:if>
+                <span
+                    class="sprites_icon copy hideButtonIfPaused studyNotificationDetails <c:if test="${not empty permission}"> cursor-none </c:if>"
+                    actionType="addOrEdit"
+                    notificationText="${fn:escapeXml(studyNotification.notificationText)}"
+                    data-toggle="tooltip" data-placement="top" title="Copy"></span>
+              </td>
+            </tr>
+          </c:forEach>
         </tbody>
       </table>
     </div>
@@ -120,44 +120,44 @@
            method="post">
 </form:form>
 <script>
-  $(document).ready(function () {
-    $('[data-toggle="tooltip"]').tooltip();
-    $(".menuNav li").removeClass('active');
-    $(".eigthNotification").addClass('active');
-    $("#createStudyId").show();
-    $('.eigthNotification').removeClass('cursor-none');
+    $(document).ready(function () {
+        $('[data-toggle="tooltip"]').tooltip();
+        $(".menuNav li").removeClass('active');
+        $(".eigthNotification").addClass('active');
+        $("#createStudyId").show();
+        $('.eigthNotification').removeClass('cursor-none');
 
-    <c:if test="${studyLive.status eq 'Paused'}">
-    $('.hideButtonIfPaused').addClass('dis-none');
-    </c:if>
+        <c:if test="${studyLive.status eq 'Paused'}">
+        $('.hideButtonIfPaused').addClass('dis-none');
+        </c:if>
 
-    $('.studyNotificationDetails').on('click', function () {
-      var appId = '${appId}';
-      $('.studyNotificationDetails').addClass('cursor-none');
-      $('#notificationId').val($(this).attr('notificationId'));
-      $('#notificationText').val($(this).attr('notificationText'));
-      $('#actionType').val($(this).attr('actionType'));
-      $('#appId').val(appId);
-      $('#getStudyNotificationEditPage').submit();
+        $('.studyNotificationDetails').on('click', function () {
+            var appId = '${appId}';
+            $('.studyNotificationDetails').addClass('cursor-none');
+            $('#notificationId').val($(this).attr('notificationId'));
+            $('#notificationText').val($(this).attr('notificationText'));
+            $('#actionType').val($(this).attr('actionType'));
+            $('#appId').val(appId);
+            $('#getStudyNotificationEditPage').submit();
+
+        });
+
+        var table = $('#notification_list').DataTable({
+            "paging": false,
+            "order": [],
+            "columnDefs": [{orderable: false, orderable: false, targets: [0]}],
+            "info": false,
+            "lengthChange": false,
+            "searching": false,
+            language: {
+                "zeroRecords": "You haven't created any content yet.",
+            },
+        });
 
     });
 
-    var table = $('#notification_list').DataTable({
-      "paging": false,
-      "order": [],
-      "columnDefs": [{orderable: false, orderable: false, targets: [0]}],
-      "info": false,
-      "lengthChange": false,
-      "searching": false,
-      language: {
-        "zeroRecords": "You haven't created any content yet.",
-      },
-    });
-
-  });
-
-  function markAsCompleted() {
-    $('.markCompleted').prop('disabled', true);
-    $("#notificationMarkAsCompletedForm").submit();
-  }
+    function markAsCompleted() {
+        $('.markCompleted').prop('disabled', true);
+        $("#notificationMarkAsCompletedForm").submit();
+    }
 </script>

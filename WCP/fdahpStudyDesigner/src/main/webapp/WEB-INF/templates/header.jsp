@@ -23,16 +23,22 @@
              id="landingScreen"><img src="/studybuilder/images/logo/logo_innerScreens.png"/></a>
           <ul class="nav navbar-nav ml-none">
             <c:if test="${fn:contains(sessionObject.userPermissions,'ROLE_MANAGE_STUDIES')}">
-              <li class="studyClass"><a href="javascript:void(0)" id="studySection">Studies</a></li>
+              <li class="studyClass">
+                <a href="javascript:void(0)" id="studySection">Studies</a>
+              </li>
             </c:if>
             <c:if
                 test="${fn:contains(sessionObject.userPermissions,'ROLE_MANAGE_APP_WIDE_NOTIFICATION_VIEW')}">
-              <li id="notification" class=""><a href="javascript:void(0)"
-                                                id="manageNotificationSection">Notifications</a>
+              <li id="notification" class="">
+                <a href="javascript:void(0)"
+                   id="manageNotificationSection">Notifications
+                </a>
               </li>
             </c:if>
             <c:if test="${fn:contains(sessionObject.userPermissions,'ROLE_MANAGE_USERS_VIEW')}">
-              <li id="users"><a href="javascript:void(0)" id="usersSection">Users</a></li>
+              <li id="users">
+                <a href="javascript:void(0)" id="usersSection">Users</a>
+              </li>
             </c:if>
           </ul>
         </div>
@@ -44,16 +50,22 @@
               <a class="dropdown-toggle blue-link" data-toggle="dropdown"
                  href="javascript:void(0)">${sessionObject.firstName} ${sessionObject.lastName}
                 &nbsp;<i
-                    class="fa fa-angle-down" aria-hidden="true"></i></a>
+                    class="fa fa-angle-down" aria-hidden="true"></i>
+              </a>
               <ul class="dropdown-menu pb-none pt-none profileBox">
 
-                <li class="linkProf"><a href="javascript:void(0)"
-                                        class="blue-link text-weight-normal text-uppercase"
-                                        id="profileSection">My Account</a>
+                <li class="linkProf">
+                  <a href="javascript:void(0)"
+                     class="blue-link text-weight-normal text-uppercase"
+                     id="profileSection">My Account
+                  </a>
                   <hr align="left" width="100%">
                   <a href="/studybuilder/sessionOut.do"
-                     class="blue-link text-weight-normal text-uppercase"><span>sign Out</span> <span
-                      class="ml-xs"><img src="/studybuilder/images/icons/logout.png"/></span></a>
+                     class="blue-link text-weight-normal text-uppercase">
+                    <span>sign Out</span>
+                    <span
+                        class="ml-xs"><img src="/studybuilder/images/icons/logout.png"/></span>
+                  </a>
                 </li>
               </ul>
             </li>
@@ -88,36 +100,36 @@
            method="post">
 </form:form>
 <script type="text/javascript">
-  $(document).ready(function () {
-    var a = document.createElement('a');
-    $('#usersSection').on('click', function () {
-      a.href = "/studybuilder/adminUsersView/getUserList.do";
-      document.body.appendChild(a).click();
+    $(document).ready(function () {
+        var a = document.createElement('a');
+        $('#usersSection').on('click', function () {
+            a.href = "/studybuilder/adminUsersView/getUserList.do";
+            document.body.appendChild(a).click();
+        });
+
+        $('#manageNotificationSection').on('click', function () {
+            a.href = "/studybuilder/adminNotificationView/viewNotificationList.do";
+            document.body.appendChild(a).click();
+        });
+
+        $('#profileSection').on('click', function () {
+            a.href = "/studybuilder/adminDashboard/viewUserDetails.do";
+            document.body.appendChild(a).click();
+        });
+
+        $('#studySection').on('click', function () {
+            a.href = "/studybuilder/adminStudies/studyList.do";
+            document.body.appendChild(a).click();
+        });
+
+        $('#landingScreen').on('click', function () {
+            a.href = "/studybuilder/adminDashboard/viewDashBoard.do";
+            document.body.appendChild(a).click();
+        });
+
     });
 
-    $('#manageNotificationSection').on('click', function () {
-      a.href = "/studybuilder/adminNotificationView/viewNotificationList.do";
-      document.body.appendChild(a).click();
-    });
-
-    $('#profileSection').on('click', function () {
-      a.href = "/studybuilder/adminDashboard/viewUserDetails.do";
-      document.body.appendChild(a).click();
-    });
-
-    $('#studySection').on('click', function () {
-      a.href = "/studybuilder/adminStudies/studyList.do";
-      document.body.appendChild(a).click();
-    });
-
-    $('#landingScreen').on('click', function () {
-      a.href = "/studybuilder/adminDashboard/viewDashBoard.do";
-      document.body.appendChild(a).click();
-    });
-
-  });
-
-  function formSubmit() {
-    document.getElementById("logoutForm").submit();
-  }
+    function formSubmit() {
+        document.getElementById("logoutForm").submit();
+    }
 </script>
