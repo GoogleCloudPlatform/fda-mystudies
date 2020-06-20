@@ -11,12 +11,12 @@ package com.google.cloud.healthcare.fdamystudies.auditlog;
 import static org.junit.Assert.assertNotNull;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import com.google.cloud.healthcare.fdamystudies.auditlog.controller.HealthController;
+import com.google.cloud.healthcare.fdamystudies.auditlog.controller.AuditLogEventController;
 import com.google.cloud.healthcare.fdamystudies.common.BaseMockIT;
 
 class ApplicationTest extends BaseMockIT {
 
-  @Autowired HealthController controller;
+  @Autowired AuditLogEventController controller;
 
   @Test
   void contextLoads() {

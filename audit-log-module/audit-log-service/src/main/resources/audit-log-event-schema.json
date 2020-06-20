@@ -1,0 +1,103 @@
+{
+	"$schema": "http://json-schema.org/draft-04/schema#",
+	"type": "object",
+	"additionalProperties": false,
+	"required": [
+		"alert",
+		"user_id",
+		"system_id",
+		"event_info",
+		"event_name",
+		"correlation_id",
+		"event_timestamp"
+	],
+	"properties": {
+		"alert": {
+			"type": "boolean"
+		},
+		"app_id": {
+			"type": "string"
+		},
+		"org_id": {
+			"type": "string"
+		},
+		"user_id": {
+			"type": "string"
+		},
+		"system_id": {
+			"type": "string",
+			"minLength":3
+		},
+		"event_name": {
+			"type": "string",
+			"minLength":3
+		},
+		"correlation_id": {
+			"type": "string",
+			"minLength":10
+		},
+		"event_timestamp": {
+			"type": "integer"
+		},
+		"event_info": {
+			"type": "object",
+			"additionalProperties": false,
+			"required": [
+				"system_ip",
+				"description",
+				"event_detail",
+				"application_version",
+				"application_component_name"
+			],
+			"properties": {
+				"email": {
+					"type": "string"
+				},
+				"client_id": {
+					"type": "string"
+				},
+				"system_ip": {
+					"type": "string",
+					"minLength":7
+				},
+				"description": {
+					"type": "string",
+					"minLength":1
+				},
+				"device_type": {
+					"type": "string"
+				},
+				"request_uri": {
+					"type": "string"
+				},
+				"access_level": {
+					"type": "string"
+				},
+				"event_detail": {
+					"type": "string",
+					"minLength":1
+				},
+				"device_platform": {
+					"type": "string"
+				},
+				"resource_server": {
+					"type": "string"
+				},
+				"client_app_version": {
+					"type": "string"
+				},
+				"application_version": {
+					"type": "string",
+					"minLength":1
+				},
+				"client_access_level": {
+					"type": "string"
+				},
+				"application_component_name": {
+					"type": "string",
+					"minLength":1
+				}
+			}
+		}
+	}
+}

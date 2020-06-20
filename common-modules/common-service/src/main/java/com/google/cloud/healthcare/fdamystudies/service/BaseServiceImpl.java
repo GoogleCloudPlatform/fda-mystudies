@@ -8,9 +8,8 @@
 
 package com.google.cloud.healthcare.fdamystudies.service;
 
+import java.util.Base64;
 import java.util.Collections;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -18,27 +17,14 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.MultiValueMap;
-import org.springframework.web.client.HttpClientErrorException;
-import org.springframework.web.client.HttpServerErrorException;
 import org.springframework.web.client.RestTemplate;
 import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.ObjectNode;
-import com.google.cloud.healthcare.fdamystudies.common.ErrorResponse;
 
 public abstract class BaseServiceImpl {
 
-  private static final String REQUEST_FAILED_WITH_AN_EXCEPTION =
-      "%s request failed with an exception";
-
-  private static final Logger LOG = LoggerFactory.getLogger(BaseServiceImpl.class);
-
-  @Autowired private ObjectMapper objectMapper;
-
   @Autowired private RestTemplate restTemplate;
 
-  @SuppressWarnings("rawtypes")
-  protected ResponseEntity exchangeForJson(
+  protected ResponseEntity<JsonNode> exchangeForJson(
       String url,
       HttpHeaders headers,
       JsonNode request,
@@ -46,17 +32,10 @@ public abstract class BaseServiceImpl {
       Object... uriVariables) {
     headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
     HttpEntity<JsonNode> requestEntity = new HttpEntity<>(request, headers);
-    try {
-      return restTemplate.exchange(url, method, requestEntity, JsonNode.class, uriVariables);
-    } catch (HttpClientErrorException | HttpServerErrorException e) {
-      LOG.error(String.format(REQUEST_FAILED_WITH_AN_EXCEPTION, url), e);
-      ErrorResponse err = new ErrorResponse(url, e);
-      return ResponseEntity.status(e.getRawStatusCode()).body(err);
-    }
+    return restTemplate.exchange(url, method, requestEntity, JsonNode.class, uriVariables);
   }
 
-  @SuppressWarnings("rawtypes")
-  protected ResponseEntity exchangeForJson(
+  protected ResponseEntity<JsonNode> exchangeForJson(
       String url,
       HttpHeaders headers,
       MultiValueMap<String, String> request,
@@ -64,31 +43,19 @@ public abstract class BaseServiceImpl {
       Object... uriVariables) {
     headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
     HttpEntity<MultiValueMap<String, String>> requestEntity = new HttpEntity<>(request, headers);
-    try {
-      return restTemplate.exchange(url, method, requestEntity, JsonNode.class, uriVariables);
-    } catch (HttpClientErrorException | HttpServerErrorException e) {
-      LOG.error(String.format(REQUEST_FAILED_WITH_AN_EXCEPTION, url), e);
-      ErrorResponse err = new ErrorResponse(url, e);
-      return ResponseEntity.status(e.getRawStatusCode()).body(err);
-    }
+    return restTemplate.exchange(url, method, requestEntity, JsonNode.class, uriVariables);
   }
 
-  @SuppressWarnings("rawtypes")
-  protected ResponseEntity getForJson(String url, Object... uriVariables) {
-    try {
-      return restTemplate.getForEntity(url, JsonNode.class, uriVariables);
-    } catch (HttpClientErrorException | HttpServerErrorException e) {
-      LOG.error(String.format(REQUEST_FAILED_WITH_AN_EXCEPTION, url), e);
-      ErrorResponse err = new ErrorResponse(url, e);
-      return ResponseEntity.status(e.getRawStatusCode()).body(err);
-    }
-  }
-
-  protected ObjectNode getObjectNode() {
-    return objectMapper.createObjectNode();
+  protected ResponseEntity<JsonNode> getForJson(String url, Object... uriVariables) {
+    return restTemplate.getForEntity(url, JsonNode.class, uriVariables);
   }
 
   protected RestTemplate getRestTemplate() {
     return restTemplate;
+  }
+
+  protected String getEncodedAuthorization(String clientId, String clientSecret) {
+    String credentials = clientId + ":" + clientSecret;
+    return Base64.getEncoder().encodeToString(credentials.getBytes());
   }
 }

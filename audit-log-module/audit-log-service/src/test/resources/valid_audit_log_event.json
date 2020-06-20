@@ -1,0 +1,26 @@
+{
+	"alert": false,
+	"app_id": "MyStudies",
+	"org_id": "FDA",
+	"user_id": "dc526f64-968e-4d41-82ac-6fc4fbffbf11f",
+	"system_id": "FMSGCAUTHSVR",
+	"event_name": "REGISTRATION_SUCCESS",
+	"correlation_id": "145ee4b2-f1d2-44b6-85b9-d7a04f8b7e91",
+	"event_timestamp": 1589961168227,
+	"event_info": {
+		"email": "oauth_scim_user2@grr.la",
+		"client_id": "FMSGCPARDTST",
+		"system_ip": "192.168.0.18",
+		"description": "App user registration successful for username oauth_scim_user2@grr.la and user ID dc526f64-968e-4d41-82ac-6fc4fbffbf11f returned to Resource Server",
+		"device_type": "desktop",
+		"request_uri": "/oauth-scim-service/v1/users",
+		"access_level": "App-User",
+		"event_detail": "App user registration success",
+		"device_platform": "windows",
+		"resource_server": "Participant Datastore",
+		"client_app_version": "v1.0",
+		"application_version": "v1.0",
+		"client_access_level": "System-level",
+		"application_component_name": "Auth Server"
+	}
+}
