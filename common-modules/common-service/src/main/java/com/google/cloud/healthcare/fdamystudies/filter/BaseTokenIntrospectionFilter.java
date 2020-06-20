@@ -11,12 +11,9 @@ package com.google.cloud.healthcare.fdamystudies.filter;
 import static com.google.cloud.healthcare.fdamystudies.common.JsonUtils.getObjectMapper;
 import static com.google.cloud.healthcare.fdamystudies.common.JsonUtils.getObjectNode;
 import java.io.IOException;
-import java.util.HashMap;
 import java.util.Map;
-import javax.annotation.PostConstruct;
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
-import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
@@ -27,12 +24,10 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.ext.XLogger;
 import org.slf4j.ext.XLoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.server.PathContainer;
-import org.springframework.stereotype.Component;
 import org.springframework.web.util.pattern.PathPattern;
 import org.springframework.web.util.pattern.PathPatternParser;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -40,28 +35,15 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.cloud.healthcare.fdamystudies.common.ErrorCode;
 import com.google.cloud.healthcare.fdamystudies.service.OAuthService;
 
-@Component
-@Order(2)
-public class TokenIntrospectionFilter implements Filter {
+public abstract class BaseTokenIntrospectionFilter implements Filter {
 
-  private XLogger logger = XLoggerFactory.getXLogger(TokenIntrospectionFilter.class.getName());
+  private XLogger logger = XLoggerFactory.getXLogger(BaseTokenIntrospectionFilter.class.getName());
 
   public static final String TOKEN = "token";
 
   public static final String ACTIVE = "active";
 
-  @Autowired ServletContext context;
-
   @Autowired private OAuthService oauthService;
-
-  private Map<String, String[]> uriTemplateAndMethods = new HashMap<>();
-
-  @PostConstruct
-  public void init() {
-    // list of paths and methods for token introspection
-    uriTemplateAndMethods.put(
-        String.format("%s/v1/events", context.getContextPath()), new String[] {"POST"});
-  }
 
   @Override
   public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
@@ -87,7 +69,7 @@ public class TokenIntrospectionFilter implements Filter {
 
   private boolean checkPathAndHttpMethodMatches(HttpServletRequest req) {
     String method = req.getMethod().toUpperCase();
-    for (Map.Entry<String, String[]> entry : uriTemplateAndMethods.entrySet()) {
+    for (Map.Entry<String, String[]> entry : getUriTemplateAndHttpMethodsMap().entrySet()) {
       if (ArrayUtils.contains(entry.getValue(), method)
           && checkPathMatches(entry.getKey(), req.getRequestURI())) {
         return true;
@@ -136,4 +118,6 @@ public class TokenIntrospectionFilter implements Filter {
     JsonNode reponse = getObjectMapper().convertValue(ErrorCode.UNAUTHORIZED, JsonNode.class);
     res.getOutputStream().write(reponse.toString().getBytes());
   }
+  /** HashMap where key=uriTemplate, value=array of http method names */
+  protected abstract Map<String, String[]> getUriTemplateAndHttpMethodsMap();
 }
