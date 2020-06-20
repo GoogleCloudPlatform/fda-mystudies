@@ -14,8 +14,6 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
-import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.text.StringEscapeUtils;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -59,12 +57,4 @@ public class AuditLogEventEntity {
 
   @Column(name = "event_info", nullable = false, columnDefinition = "json")
   private String eventInfo;
-
-  public String getEventInfo() {
-    if (StringUtils.startsWith(eventInfo, "\"")) {
-      eventInfo = eventInfo.substring(1, eventInfo.length() - 1);
-    }
-    eventInfo = StringEscapeUtils.unescapeJava(eventInfo);
-    return eventInfo;
-  }
 }
