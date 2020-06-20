@@ -32,7 +32,7 @@ public final class AuditLogEventValidator {
 
   private static final String ERROR_TYPE = "error_type";
 
-  private static final String FILED_NAME = "fieldName";
+  private static final String FILED_PATH = "fieldPath";
 
   private static final String ERRORS = "errors";
 
@@ -60,8 +60,8 @@ public final class AuditLogEventValidator {
       ArrayNode errors = getArrayNode();
       for (String msg : messages) {
         ObjectNode err = getObjectNode();
-        err.put(FILED_NAME, extractFieldName(msg));
-        err.put(ERROR_DESCRIPTION, msg);
+        err.put(FILED_PATH, extractFieldPath(msg));
+        err.put(ERROR_DESCRIPTION, msg.substring(msg.indexOf(':')).trim());
         errors.add(err);
       }
 
@@ -84,15 +84,10 @@ public final class AuditLogEventValidator {
     return result;
   }
 
-  private String extractFieldName(String msg) {
-    String fieldname;
-    if (StringUtils.contains(msg, '[') && StringUtils.contains(msg, ']')) {
-      fieldname = msg.substring(msg.indexOf('[') + 1, msg.indexOf(']'));
-    } else if (StringUtils.contains(msg, '/') && StringUtils.contains(msg, ':')) {
-      fieldname = msg.substring(msg.lastIndexOf('/') + 1, msg.indexOf(':'));
-    } else {
-      fieldname = msg.substring(0, msg.indexOf(':'));
-    }
-    return fieldname;
+  private String extractFieldPath(String msg) {
+    String fieldpath = msg.substring(0, msg.indexOf(':'));
+    fieldpath = StringUtils.replace(fieldpath, "/", ".");
+    fieldpath = StringUtils.replace(fieldpath, "#", "$");
+    return fieldpath;
   }
 }

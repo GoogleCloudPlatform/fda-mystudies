@@ -19,7 +19,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MvcResult;
-import org.springframework.web.client.HttpClientErrorException;
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -94,15 +93,12 @@ public class AuditLogEventControllerTest extends BaseMockIT {
     HttpHeaders headers = getCommonHeaders();
     headers.add("Authorization", VALID_BEARER_TOKEN);
 
-    try {
-      performPost(
-          ApiEndpoint.EVENTS.getPath(),
-          invalidAuditLogEvent,
-          headers,
-          "#: required key [event_name] not found",
-          BAD_REQUEST);
-    } catch (HttpClientErrorException expected) {
-    }
+    performPost(
+        ApiEndpoint.EVENTS.getPath(),
+        invalidAuditLogEvent,
+        headers,
+        "extraneous key [user_id] is not permitted",
+        BAD_REQUEST);
   }
 
   private HttpHeaders getCommonHeaders() {

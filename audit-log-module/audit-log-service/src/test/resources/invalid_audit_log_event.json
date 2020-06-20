@@ -21,7 +21,7 @@
 		"device_platform": null,
 		"resource_server": "Participant Datastore",
 		"client_app_version": null,
-		"application_version": "v1.0",
+		"application_version": null,
 		"client_access_level": "System-level",
 		"application_component_name": "Auth Server"
 	}
