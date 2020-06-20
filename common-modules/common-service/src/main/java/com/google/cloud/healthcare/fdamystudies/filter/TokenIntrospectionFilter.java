@@ -8,6 +8,8 @@
 
 package com.google.cloud.healthcare.fdamystudies.filter;
 
+import static com.google.cloud.healthcare.fdamystudies.common.JsonUtils.getObjectMapper;
+import static com.google.cloud.healthcare.fdamystudies.common.JsonUtils.getObjectNode;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
@@ -36,7 +38,6 @@ import org.springframework.web.util.pattern.PathPatternParser;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.cloud.healthcare.fdamystudies.common.ErrorCode;
-import com.google.cloud.healthcare.fdamystudies.common.JsonUtils;
 import com.google.cloud.healthcare.fdamystudies.service.OAuthService;
 
 @Component
@@ -68,7 +69,7 @@ public class TokenIntrospectionFilter implements Filter {
     logger.entry(
         String.format("begin doFilter() for %s", ((HttpServletRequest) request).getRequestURI()));
     HttpServletRequest req = (HttpServletRequest) request;
-    if (applyFilter(req)) {
+    if (checkPathAndHttpMethodMatches(req)) {
       logger.info(String.format("validate token for %s", req.getRequestURI()));
 
       String auth = req.getHeader("Authorization");
@@ -84,7 +85,7 @@ public class TokenIntrospectionFilter implements Filter {
     }
   }
 
-  private boolean applyFilter(HttpServletRequest req) {
+  private boolean checkPathAndHttpMethodMatches(HttpServletRequest req) {
     String method = req.getMethod().toUpperCase();
     for (Map.Entry<String, String[]> entry : uriTemplateAndMethods.entrySet()) {
       if (ArrayUtils.contains(entry.getValue(), method)
@@ -106,7 +107,7 @@ public class TokenIntrospectionFilter implements Filter {
       ServletRequest request, ServletResponse response, FilterChain chain, String auth)
       throws IOException, ServletException {
     String token = StringUtils.replace(auth, "Bearer", "").trim();
-    ObjectNode params = JsonUtils.getObjectNode();
+    ObjectNode params = getObjectNode();
     params.put(TOKEN, token);
     ResponseEntity<JsonNode> oauthResponse = oauthService.introspectToken(params);
     if (oauthResponse.getStatusCode().is2xxSuccessful()) {
@@ -132,8 +133,7 @@ public class TokenIntrospectionFilter implements Filter {
     HttpServletResponse res = (HttpServletResponse) response;
     res.setStatus(HttpStatus.UNAUTHORIZED.value());
     res.setContentType(MediaType.APPLICATION_JSON_VALUE);
-    JsonNode reponse =
-        JsonUtils.getObjectMapper().convertValue(ErrorCode.UNAUTHORIZED, JsonNode.class);
+    JsonNode reponse = getObjectMapper().convertValue(ErrorCode.UNAUTHORIZED, JsonNode.class);
     res.getOutputStream().write(reponse.toString().getBytes());
   }
 }

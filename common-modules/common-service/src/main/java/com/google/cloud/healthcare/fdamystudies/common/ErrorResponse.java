@@ -59,6 +59,7 @@ public class ErrorResponse {
     logger.entry(String.format("begin extractMessageFromHtml() with html %n%s", html));
     Document doc = Jsoup.parse(html);
     StringBuilder b = new StringBuilder();
+    // select <p> elements and iterate
     doc.select("p")
         .forEach(
             e -> {
