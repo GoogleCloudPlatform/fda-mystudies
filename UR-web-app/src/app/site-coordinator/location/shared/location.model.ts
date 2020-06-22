@@ -1,15 +1,13 @@
-export class Location {
-  id = 0;
+export interface Location {
+  id: number;
 
-  name = '';
+  name: string;
 
-  customId = '';
+  customId: string;
 
-  description = '';
+  description: string;
 
-  status = '';
+  status: string;
 
-  studies = [];
-
-  studiesCount = 0;
+  studiesCount: number;
 }

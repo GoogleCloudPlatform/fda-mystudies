@@ -396,8 +396,12 @@ header {
   background-position: 5% !important;
   text-indent: 25px !important;
   margin-right: 20px !important;
-  padding-right: 20px !important;
+  padding-right: 30px !important;
   padding-left: 10px !important;
+}
+
+#mobile-menu .search-icon {
+  height: 30px;
 }
 
 .bg__white .search__user__details {
@@ -1622,11 +1626,19 @@ div.show + div {
   visibility: visible;
 }
 
+.fa {
+  color: var(--light-blue) !important;
+}
+
 .cir__pos {
   position: absolute;
-  top: 7px;
+  top: 12px;
   right: 10px;
-  font-size: 18px;
+  color: var(--grey-dark) !important;
+}
+
+#mobile-menu .cir__pos {
+  width: 10px;
 }
 
 .ng-dropdown-panel {
@@ -1785,8 +1797,4 @@ div.show + div {
 .tool:hover::after,
 .tool:focus::after {
   transition: all 0.65s cubic-bezier(0.84, -0.18, 0.31, 1.26);
-}
-
-.fa {
-  color: var(--light-blue) !important;
 }
