@@ -1,25 +1,18 @@
-/* eslint-disable @typescript-eslint/no-unsafe-assignment */
-/* eslint-disable @typescript-eslint/no-unsafe-member-access */
-/* eslint-disable @typescript-eslint/no-unsafe-call */
-
-import {TestBed} from '@angular/core/testing';
-import {
-  HttpTestingController,
-  HttpClientTestingModule,
-} from '@angular/common/http/testing';
+import {TestBed, fakeAsync, tick} from '@angular/core/testing';
+import {HttpClientTestingModule} from '@angular/common/http/testing';
 import {LocationService} from './location.service';
 import {SiteCoordinatorModule} from '../../site-coordinator.module';
 import {NO_ERRORS_SCHEMA} from '@angular/core';
 import {RouterTestingModule} from '@angular/router/testing';
 import {BsModalService, BsModalRef} from 'ngx-bootstrap/modal';
 import {EntityService} from '../../../service/entity.service';
-import {asyncError, asyncData} from 'src/testing/async-observable-helpers';
 import {ApiResponse} from 'src/app/entity/error.model';
 import {HttpErrorResponse} from '@angular/common/http';
+import {throwError, of} from 'rxjs';
+import {Location} from '../shared/location.model';
 
 describe('LocationService', () => {
   let locationService: LocationService;
-  let httpMock: HttpTestingController;
   const expectedLocations = [
     {
       id: 2,
@@ -50,13 +43,6 @@ describe('LocationService', () => {
       schemas: [NO_ERRORS_SCHEMA],
       providers: [LocationService, EntityService, BsModalService, BsModalRef],
     });
-    httpMock = TestBed.get(HttpTestingController) as HttpTestingController;
-  });
-  beforeEach(() => {
-    const entityServicespy = jasmine.createSpyObj('EntityService', [
-      'getCollection',
-    ]);
-    locationService = new LocationService(entityServicespy);
   });
 
   it('should be created', () => {
@@ -67,14 +53,13 @@ describe('LocationService', () => {
   });
 
   it('should return expected Locations List', () => {
-    const entityServicespy = jasmine.createSpyObj('EntityService', [
-      'getCollection',
-    ]);
+    const entityServicespy = jasmine.createSpyObj<EntityService<Location>>(
+      'EntityService',
+      ['getCollection'],
+    );
     locationService = new LocationService(entityServicespy);
 
-    entityServicespy.getCollection.and.returnValue(
-      asyncData(expectedLocations),
-    );
+    entityServicespy.getCollection.and.returnValue(of(expectedLocations));
     locationService
       .getLocations()
       .subscribe(
@@ -86,10 +71,11 @@ describe('LocationService', () => {
     expect(entityServicespy.getCollection.calls.count()).toBe(1, 'one call');
   });
 
-  it('should return an error when the server returns a 401', () => {
-    const entityServicespy = jasmine.createSpyObj('EntityService', [
-      'getCollection',
-    ]);
+  it('should return an error when the server returns a 401', fakeAsync(() => {
+    const entityServicespy = jasmine.createSpyObj<EntityService<Location>>(
+      'EntityService',
+      ['getCollection'],
+    );
     locationService = new LocationService(entityServicespy);
     const errorResponse = new HttpErrorResponse({
       error: {
@@ -102,7 +88,7 @@ describe('LocationService', () => {
       statusText: 'Unauthorized',
     });
 
-    entityServicespy.getCollection.and.returnValue(asyncError(errorResponse));
+    entityServicespy.getCollection.and.returnValue(throwError(errorResponse));
 
     locationService.getLocations().subscribe(
       () => fail('expected an error, not locations'),
@@ -110,12 +96,13 @@ describe('LocationService', () => {
         expect(error.error.userMessage).toContain('User does not exist');
       },
     );
-  });
+  }));
 
-  it('should return an error when the server returns a 400', () => {
-    const entityServicespy = jasmine.createSpyObj('EntityService', [
-      'getCollection',
-    ]);
+  it('should return an error when the server returns a 400', fakeAsync(() => {
+    const entityServicespy = jasmine.createSpyObj<EntityService<Location>>(
+      'EntityService',
+      ['getCollection'],
+    );
     locationService = new LocationService(entityServicespy);
 
     const errorResponses = new HttpErrorResponse({
@@ -130,17 +117,13 @@ describe('LocationService', () => {
       statusText: 'Unauthorized',
     });
 
-    entityServicespy.getCollection.and.returnValue(asyncError(errorResponses));
-
+    entityServicespy.getCollection.and.returnValue(throwError(errorResponses));
+    tick(40);
     locationService.getLocations().subscribe(
       () => fail('expected an error, not locations'),
       (error: ApiResponse) => {
-        expect(error.error.userMessage).toContain('Bad Request');
+        expect(error.error.userMessage).toBe('Bad Request');
       },
     );
-  });
-
-  afterEach(() => {
-    httpMock.verify();
-  });
+  }));
 });

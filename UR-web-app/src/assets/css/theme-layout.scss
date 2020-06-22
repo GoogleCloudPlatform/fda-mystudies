@@ -240,6 +240,9 @@
   .bg__white .search__user__details {
     min-width: 100% !important;
   }
+  .search__ {
+    min-width: 265px !important;
+  }
 }
 
 @media (min-width: 768px) {
@@ -304,6 +307,9 @@
   }
   .mb__mb-sm {
     margin-bottom: 20px;
+  }
+  .search__ {
+    min-width: 300px !important;
   }
 }
 

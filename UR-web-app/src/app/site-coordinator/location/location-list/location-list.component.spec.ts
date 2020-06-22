@@ -6,13 +6,14 @@ import {
   fakeAsync,
 } from '@angular/core/testing';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
-
 import {LocationListComponent} from './location-list.component';
-import {EntityService} from 'src/app/service/entity.service';
 import {HttpClientModule} from '@angular/common/http';
 import {RouterTestingModule} from '@angular/router/testing';
 import {LocationModule} from '../../location/location.module';
 import {ToastrModule} from 'ngx-toastr';
+import {EntityService} from '../../../service/entity.service';
+import {of} from 'rxjs';
+import {LocationService} from '../shared/location.service';
 describe('LocationsListComponent', () => {
   let component: LocationListComponent;
   let fixture: ComponentFixture<LocationListComponent>;
@@ -30,7 +31,7 @@ describe('LocationsListComponent', () => {
           enableHtml: true,
         }),
       ],
-      providers: [EntityService],
+      providers: [EntityService, LocationService],
     }).compileComponents();
   }));
 
@@ -68,14 +69,36 @@ describe('LocationsListComponent', () => {
     );
   });
 
-  it('should get the user List via refresh function', fakeAsync(() => {
+  it('should get the Location List via refresh function', fakeAsync(() => {
+    const expectedList = [
+      {
+        id: 2,
+        customId: 'customid3',
+        name: 'name -1-updated0',
+        description: 'location-descp-updatedj',
+        status: '1',
+        studiesCount: 0,
+        studies: [],
+      },
+      {
+        id: 3,
+        customId: 'customid32',
+        name: 'name -1 - updated000',
+        description: 'location-descp-updated',
+        status: '0',
+        studiesCount: 0,
+        studies: [],
+      },
+    ];
+    const locationServiceSpy = jasmine.createSpyObj<LocationService>(
+      'LocationService',
+      ['getLocations'],
+    );
+    locationServiceSpy.getLocations.and.returnValue(of(expectedList));
     spyOn(component, 'getLocation');
     component.getLocation();
     tick();
     fixture.detectChanges();
-    expect(component.locations.length).toBe(
-      0,
-      'Location list after function call',
-    );
+    expect(component.locations).toEqual(component.locations);
   }));
 });

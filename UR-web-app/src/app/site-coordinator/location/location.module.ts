@@ -4,14 +4,13 @@ import {AddLocationComponent} from './add-location/add-location.component';
 import {LocationDetailsComponent} from './location-details/location-details.component';
 import {LocationListComponent} from './location-list/location-list.component';
 import {NgxDataTableModule} from 'angular-9-datatable';
-import {CommonComponentsModule} from '../../shared/commomComponentsModule';
-
+import {CommonModule} from '@angular/common';
 @NgModule({
   declarations: [
     AddLocationComponent,
     LocationDetailsComponent,
     LocationListComponent,
   ],
-  imports: [CommonComponentsModule, LocationRoutingModule, NgxDataTableModule],
+  imports: [CommonModule, LocationRoutingModule, NgxDataTableModule],
 })
 export class LocationModule {}

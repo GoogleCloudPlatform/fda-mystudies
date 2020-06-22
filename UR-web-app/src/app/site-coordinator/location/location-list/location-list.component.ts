@@ -4,10 +4,9 @@ import {Location} from '../shared/location.model';
 import {Router} from '@angular/router';
 import {ToastrService} from 'ngx-toastr';
 import {ApiResponse} from 'src/app/entity/error.model';
-import {throwError, BehaviorSubject, combineLatest} from 'rxjs';
-import {Observable} from 'rxjs/Observable';
-import 'rxjs/add/observable/of';
+import {throwError, BehaviorSubject, combineLatest, Observable} from 'rxjs';
 import {catchError, map} from 'rxjs/operators';
+import {of} from 'rxjs';
 
 @Component({
   selector: 'location-list',
@@ -16,7 +15,7 @@ import {catchError, map} from 'rxjs/operators';
 })
 export class LocationListComponent implements OnInit {
   query$ = new BehaviorSubject('');
-  location$: Observable<Location[]> = Observable.of([]);
+  location$: Observable<Location[]> = of([]);
   locations: Location[] = [];
   constructor(
     private readonly locationService: LocationService,

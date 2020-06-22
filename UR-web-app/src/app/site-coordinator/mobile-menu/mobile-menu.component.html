@@ -1,10 +1,16 @@
 <div (keydown)="mobileHandleKeyDown($event)" id="mobile-menu">
   <div id="mySidenav__menubar" class="flex__justify__space-between">
     <div>
-      <button class="openNav display-inline-block mr-sm" (click)="toggleNav()">
+      <button
+        class="openNav display-inline-block mr-sm btn pl-none"
+        (click)="toggleNav()"
+      >
         <img src="assets/svgs/menu-icon.svg" />
       </button>
-      <a href="#">
+      <a
+        [ngClass]="showSearchOnClick ? ' display__none ' : 'display__block '"
+        routerLink="/user/dashboard"
+      >
         <img class="mr-sm" src="assets/images/landing-logo.gif" />
         <span class="header__logo__text">FDA MyStudies </span>
       </a>
@@ -13,7 +19,10 @@
       *ngIf="showSearchBar"
       class="navbar-nav inner-addon right-addon search-icon"
     >
-      <div class="position__relative">
+      <div
+        class="position__relative searchbar__rightspace"
+        [ngClass]="showSearchOnClick ? ' display__block ' : 'display__none'"
+      >
         <input
           type="text"
           [attr.placeholder]="searchPlaceholder"
@@ -21,12 +30,20 @@
           [(ngModel)]="filterQuery"
           class="form-control search-box search__"
         />
-        <i
-          class="fa fa-times-circle cursor__pointer cir__pos"
-          aria-hidden="true"
-        ></i>
+        <button
+          class="btn p-none cursor__pointer"
+          (click)="hideSearchBarOnClick()"
+        >
+          <img class="cir__pos" src="assets/svgs/close.svg" />
+        </button>
       </div>
-      <div></div>
+      <div
+        [ngClass]="showSearchOnClick ? ' display__none ' : 'display__block '"
+      >
+        <button class="btn p-none" (click)="showSearchBarOnClick()">
+          <img src="assets/svgs/search.svg" />
+        </button>
+      </div>
     </div>
   </div>
   <div
@@ -36,14 +53,10 @@
   >
     <div [ngClass]="navIsOpen ? 'open__nav display__block ' : 'display__none '">
       <div class="mob__bo">
-        <a
-          href="javascript:void(0)"
-          class="closebtn"
-          id="closeMobile"
-          (click)="toggleNav()"
-          >×</a
-        >
-        <a href="#">
+        <button class="closebtn btn" id="closeMobile" (click)="toggleNav()">
+          ×
+        </button>
+        <a routerLink="/user/dashboard">
           <img class="mr-sm" src="assets/images/landing-logo.gif" />
           <span class="header__logo__text">FDA MyStudies </span>
         </a>

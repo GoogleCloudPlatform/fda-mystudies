@@ -3,7 +3,7 @@ import {CommonModule} from '@angular/common';
 import {SiteCoordinatorRoutingModule} from './site-coordinator-routing.module';
 import {SiteCoordinatorComponent} from './sitecoordinator.component';
 import {FormsModule} from '@angular/forms';
-import { MobileMenuComponent } from './mobile-menu/mobile-menu.component';
+import {MobileMenuComponent} from './mobile-menu/mobile-menu.component';
 
 @NgModule({
   declarations: [SiteCoordinatorComponent, MobileMenuComponent],
