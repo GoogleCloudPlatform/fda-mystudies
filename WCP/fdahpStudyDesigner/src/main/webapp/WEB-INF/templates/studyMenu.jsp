@@ -117,162 +117,162 @@
 
 <!-- End left Content here -->
 <script type="text/javascript">
-    $(document).ready(function () {
-        $("#rowId").addClass('lc-gray-bg');
-        $('#createStudyId').show();
-        $("#myNavbar li.studyClass").addClass('active');
-        $('[data-toggle="tooltip"]').tooltip();
+  $(document).ready(function () {
+    $("#rowId").addClass('lc-gray-bg');
+    $('#createStudyId').show();
+    $("#myNavbar li.studyClass").addClass('active');
+    $('[data-toggle="tooltip"]').tooltip();
 
-        $('.cancelBut').click(function () {
-            <c:if test="${empty permission}">
-            $('.cancelBut').prop('disabled', true);
-            bootbox.confirm({
-                closeButton: false,
-                message: 'You are about to leave the page and any unsaved changes will be lost. Are you sure you want to proceed?',
-                buttons: {
-                    'cancel': {
-                        label: 'Cancel',
-                    },
-                    'confirm': {
-                        label: 'OK',
-                    },
-                },
-                callback: function (result) {
-                    if (result) {
-                        var a = document.createElement('a');
-                        a.href = "/studybuilder/adminStudies/studyList.do";
-                        document.body.appendChild(a).click();
-                    } else {
-                        $('.cancelBut').prop('disabled', false);
-                    }
-                }
-            });
-            </c:if>
-            <c:if test="${not empty permission}">
+    $('.cancelBut').click(function () {
+      <c:if test="${empty permission}">
+      $('.cancelBut').prop('disabled', true);
+      bootbox.confirm({
+        closeButton: false,
+        message: 'You are about to leave the page and any unsaved changes will be lost. Are you sure you want to proceed?',
+        buttons: {
+          'cancel': {
+            label: 'Cancel',
+          },
+          'confirm': {
+            label: 'OK',
+          },
+        },
+        callback: function (result) {
+          if (result) {
             var a = document.createElement('a');
             a.href = "/studybuilder/adminStudies/studyList.do";
             document.body.appendChild(a).click();
-            </c:if>
-        });
-
-        var a = document.createElement('a');
-        $('.first').click(function () {
-            a.href = "/studybuilder/adminStudies/viewBasicInfo.do?_S=${param._S}";
-            document.body.appendChild(a).click();
-        });
-
-        <c:if test="${not empty studyBo.studySequenceBo && studyBo.studySequenceBo.basicInfo}">
-        $('.second').click(function () {
-            a.href = "/studybuilder/adminStudies/viewSettingAndAdmins.do?_S=${param._S}";
-            document.body.appendChild(a).click();
-        });
-        <c:if test="${studyBo.studySequenceBo.settingAdmins}">
-        $('.third').click(function () {
-            a.href = "/studybuilder/adminStudies/overviewStudyPages.do?_S=${param._S}";
-            document.body.appendChild(a).click();
-        });
-        $('.fourth').click(function () {
-            a.href = "/studybuilder/adminStudies/viewStudyEligibilty.do?_S=${param._S}";
-            document.body.appendChild(a).click();
-        });
-        $('.fifth').click(function () {
-            a.href = "/studybuilder/adminStudies/consentListPage.do?_S=${param._S}";
-            document.body.appendChild(a).click();
-        });
-        $('.fifthConsent').click(function () {
-            a.href = "/studybuilder/adminStudies/consentListPage.do?_S=${param._S}";
-            document.body.appendChild(a).click();
-        });
-        $('.fifthComre').click(function () {
-            a.href = "/studybuilder/adminStudies/comprehensionQuestionList.do?_S=${param._S}";
-            document.body.appendChild(a).click();
-        });
-        $('.fifthConsentReview').click(function () {
-            a.href = "/studybuilder/adminStudies/consentReview.do?_S=${param._S}";
-            document.body.appendChild(a).click();
-        });
-        $('.sixth , .sixthQuestionnaires').click(function () {
-            a.href = "/studybuilder/adminStudies/viewStudyQuestionnaires.do?_S=${param._S}";
-            document.body.appendChild(a).click();
-
-        });
-        $('.sixthTask').click(function () {
-            a.href = "/studybuilder/adminStudies/viewStudyActiveTasks.do?_S=${param._S}";
-            document.body.appendChild(a).click();
-        });
-
-        $('.eight').click(function () {
-            a.href = "/studybuilder/adminStudies/getResourceList.do?_S=${param._S}";
-            document.body.appendChild(a).click();
-        });
-        $('.eighthResources').click(function () {
-            $('.eighthResources').addClass('cursor-none');
-            a.href = "/studybuilder/adminStudies/getResourceList.do?_S=${param._S}";
-            document.body.appendChild(a).click();
-        });
-        $('.eigthNotification').click(function () {
-            $('.eigthNotification').addClass('cursor-none');
-            a.href = "/studybuilder/adminStudies/viewStudyNotificationList.do?_S=${param._S}";
-            document.body.appendChild(a).click();
-        });
-        $('.nine').click(function () {
-            $('.nine').addClass('cursor-none');
-            a.href = "/studybuilder/adminStudies/getChecklist.do?_S=${param._S}";
-            document.body.appendChild(a).click();
-        });
-        $('.tenth').click(function () {
-            $('.tenth').addClass('cursor-none');
-            a.href = "/studybuilder/adminStudies/actionList.do?_S=${param._S}";
-            document.body.appendChild(a).click();
-        });
-        </c:if>
-        </c:if>
-        <c:if test="${(empty studyBo.studySequenceBo) || not studyBo.studySequenceBo.basicInfo}">
-        $('.commonCls').addClass('cursor-none-without-event');
-        </c:if>
-        <c:if test="${studyBo.studySequenceBo.basicInfo && not studyBo.studySequenceBo.settingAdmins}">
-        $('.commonCls').not('.second').addClass('cursor-none-without-event');
-        </c:if>
-        $(window).on('load resize', function () {
-
-            rtime1 = new Date();
-            if (timeout1 === false) {
-                timeout1 = true;
-                setTimeout(resizeend1, delta1);
-            }
-
-        });
-    });
-    //Internet Explorer 6-11
-    var isIE = /*@cc_on!@*/false || !!document.documentMode;
-
-    // Edge 20+
-    var isEdge = !isIE && !!window.StyleMedia;
-    if (isIE || isEdge) {
-        $(window).on('load resize', function () {
-
-            rtime1 = new Date();
-            if (timeout1 === false) {
-                timeout1 = true;
-                setTimeout(resizeend1, delta1);
-            }
-
-        });
-    }
-    var rtime1;
-    var timeout1 = false;
-    var delta1 = 200;
-
-    function resizeend1() {
-        if (new Date() - rtime1 < delta1) {
-            setTimeout(resizeend1, delta1);
-        } else {
-            timeout1 = false;
-            slideUpStudyMenu();
+          } else {
+            $('.cancelBut').prop('disabled', false);
+          }
         }
-    }
+      });
+      </c:if>
+      <c:if test="${not empty permission}">
+      var a = document.createElement('a');
+      a.href = "/studybuilder/adminStudies/studyList.do";
+      document.body.appendChild(a).click();
+      </c:if>
+    });
 
-    function slideUpStudyMenu() {
-        $(".slideUp.active").ScrollTo();
+    var a = document.createElement('a');
+    $('.first').click(function () {
+      a.href = "/studybuilder/adminStudies/viewBasicInfo.do?_S=${param._S}";
+      document.body.appendChild(a).click();
+    });
+
+    <c:if test="${not empty studyBo.studySequenceBo && studyBo.studySequenceBo.basicInfo}">
+    $('.second').click(function () {
+      a.href = "/studybuilder/adminStudies/viewSettingAndAdmins.do?_S=${param._S}";
+      document.body.appendChild(a).click();
+    });
+    <c:if test="${studyBo.studySequenceBo.settingAdmins}">
+    $('.third').click(function () {
+      a.href = "/studybuilder/adminStudies/overviewStudyPages.do?_S=${param._S}";
+      document.body.appendChild(a).click();
+    });
+    $('.fourth').click(function () {
+      a.href = "/studybuilder/adminStudies/viewStudyEligibilty.do?_S=${param._S}";
+      document.body.appendChild(a).click();
+    });
+    $('.fifth').click(function () {
+      a.href = "/studybuilder/adminStudies/consentListPage.do?_S=${param._S}";
+      document.body.appendChild(a).click();
+    });
+    $('.fifthConsent').click(function () {
+      a.href = "/studybuilder/adminStudies/consentListPage.do?_S=${param._S}";
+      document.body.appendChild(a).click();
+    });
+    $('.fifthComre').click(function () {
+      a.href = "/studybuilder/adminStudies/comprehensionQuestionList.do?_S=${param._S}";
+      document.body.appendChild(a).click();
+    });
+    $('.fifthConsentReview').click(function () {
+      a.href = "/studybuilder/adminStudies/consentReview.do?_S=${param._S}";
+      document.body.appendChild(a).click();
+    });
+    $('.sixth , .sixthQuestionnaires').click(function () {
+      a.href = "/studybuilder/adminStudies/viewStudyQuestionnaires.do?_S=${param._S}";
+      document.body.appendChild(a).click();
+
+    });
+    $('.sixthTask').click(function () {
+      a.href = "/studybuilder/adminStudies/viewStudyActiveTasks.do?_S=${param._S}";
+      document.body.appendChild(a).click();
+    });
+
+    $('.eight').click(function () {
+      a.href = "/studybuilder/adminStudies/getResourceList.do?_S=${param._S}";
+      document.body.appendChild(a).click();
+    });
+    $('.eighthResources').click(function () {
+      $('.eighthResources').addClass('cursor-none');
+      a.href = "/studybuilder/adminStudies/getResourceList.do?_S=${param._S}";
+      document.body.appendChild(a).click();
+    });
+    $('.eigthNotification').click(function () {
+      $('.eigthNotification').addClass('cursor-none');
+      a.href = "/studybuilder/adminStudies/viewStudyNotificationList.do?_S=${param._S}";
+      document.body.appendChild(a).click();
+    });
+    $('.nine').click(function () {
+      $('.nine').addClass('cursor-none');
+      a.href = "/studybuilder/adminStudies/getChecklist.do?_S=${param._S}";
+      document.body.appendChild(a).click();
+    });
+    $('.tenth').click(function () {
+      $('.tenth').addClass('cursor-none');
+      a.href = "/studybuilder/adminStudies/actionList.do?_S=${param._S}";
+      document.body.appendChild(a).click();
+    });
+    </c:if>
+    </c:if>
+    <c:if test="${(empty studyBo.studySequenceBo) || not studyBo.studySequenceBo.basicInfo}">
+    $('.commonCls').addClass('cursor-none-without-event');
+    </c:if>
+    <c:if test="${studyBo.studySequenceBo.basicInfo && not studyBo.studySequenceBo.settingAdmins}">
+    $('.commonCls').not('.second').addClass('cursor-none-without-event');
+    </c:if>
+    $(window).on('load resize', function () {
+
+      rtime1 = new Date();
+      if (timeout1 === false) {
+        timeout1 = true;
+        setTimeout(resizeend1, delta1);
+      }
+
+    });
+  });
+  //Internet Explorer 6-11
+  var isIE = /*@cc_on!@*/false || !!document.documentMode;
+
+  // Edge 20+
+  var isEdge = !isIE && !!window.StyleMedia;
+  if (isIE || isEdge) {
+    $(window).on('load resize', function () {
+
+      rtime1 = new Date();
+      if (timeout1 === false) {
+        timeout1 = true;
+        setTimeout(resizeend1, delta1);
+      }
+
+    });
+  }
+  var rtime1;
+  var timeout1 = false;
+  var delta1 = 200;
+
+  function resizeend1() {
+    if (new Date() - rtime1 < delta1) {
+      setTimeout(resizeend1, delta1);
+    } else {
+      timeout1 = false;
+      slideUpStudyMenu();
     }
+  }
+
+  function slideUpStudyMenu() {
+    $(".slideUp.active").ScrollTo();
+  }
 </script>

@@ -307,79 +307,79 @@
 
 
       <script>
-          $(document).ready(function (e) {
+        $(document).ready(function (e) {
 
-              var w = $(window).height();
-              var b = $("#alignCenter").innerHeight();
-              var a = (w - b) / 2;
-              $("#alignCenter").css("margin-top", a);
+          var w = $(window).height();
+          var b = $("#alignCenter").innerHeight();
+          var a = (w - b) / 2;
+          $("#alignCenter").css("margin-top", a);
 
-              $('.terms').on('click', function () {
-                  $('#termsModal').modal('show');
-              });
-
-              $('.privacy').on('click', function () {
-                  $('#privacyModal').modal('show');
-              });
-
-              addPasswordPopup();
-              $('.backToLogin').on('click', function () {
-                  $('#backToLoginForm').submit();
-              });
-
-              var errMsg = '${errMsg}';
-              if (errMsg.length > 0) {
-                  $("#errMsg").html(errMsg);
-                  $("#errMsg").show("fast");
-                  setTimeout(hideDisplayMessage, 4000);
-              }
-              var sucMsg = '${sucMsg}';
-              if (sucMsg.length > 0) {
-                  $("#sucMsg").html(sucMsg);
-                  $("#sucMsg").show("fast");
-                  $("#errMsg").hide("fast");
-                  setTimeout(hideDisplayMessage, 4000);
-              }
+          $('.terms').on('click', function () {
+            $('#termsModal').modal('show');
           });
 
-          function hideDisplayMessage() {
-              $('#sucMsg').hide();
-              $('#errMsg').hide();
-          }
+          $('.privacy').on('click', function () {
+            $('#privacyModal').modal('show');
+          });
 
-          window.onload = function () {
-              if (typeof history.pushState === "function") {
-                  history.pushState("jibberish", null, null);
-                  window.onpopstate = function () {
-                      history.pushState('newjibberish', null, null);
-                      // Handle the back (or forward) buttons here
-                      // Will NOT handle refresh, use onbeforeunload for this.
-                  };
+          addPasswordPopup();
+          $('.backToLogin').on('click', function () {
+            $('#backToLoginForm').submit();
+          });
+
+          var errMsg = '${errMsg}';
+          if (errMsg.length > 0) {
+            $("#errMsg").html(errMsg);
+            $("#errMsg").show("fast");
+            setTimeout(hideDisplayMessage, 4000);
+          }
+          var sucMsg = '${sucMsg}';
+          if (sucMsg.length > 0) {
+            $("#sucMsg").html(sucMsg);
+            $("#sucMsg").show("fast");
+            $("#errMsg").hide("fast");
+            setTimeout(hideDisplayMessage, 4000);
+          }
+        });
+
+        function hideDisplayMessage() {
+          $('#sucMsg').hide();
+          $('#errMsg').hide();
+        }
+
+        window.onload = function () {
+          if (typeof history.pushState === "function") {
+            history.pushState("jibberish", null, null);
+            window.onpopstate = function () {
+              history.pushState('newjibberish', null, null);
+              // Handle the back (or forward) buttons here
+              // Will NOT handle refresh, use onbeforeunload for this.
+            };
+          } else {
+            var ignoreHashChange = true;
+            window.onhashchange = function () {
+              if (!ignoreHashChange) {
+                ignoreHashChange = true;
+                window.location.hash = Math.random();
+                // Detect and redirect change here
+                // Works in older FF and IE9
+                // * it does mess with your hash symbol (anchor?) pound sign
+                // delimiter on the end of the URL
               } else {
-                  var ignoreHashChange = true;
-                  window.onhashchange = function () {
-                      if (!ignoreHashChange) {
-                          ignoreHashChange = true;
-                          window.location.hash = Math.random();
-                          // Detect and redirect change here
-                          // Works in older FF and IE9
-                          // * it does mess with your hash symbol (anchor?) pound sign
-                          // delimiter on the end of the URL
-                      } else {
-                          ignoreHashChange = false;
-                      }
-                  };
+                ignoreHashChange = false;
               }
+            };
           }
+        }
 
-          var addPasswordPopup = function () {
-              $("#password").passwordValidator({
-                  // list of qualities to require
-                  require: ['length', 'lower', 'upper', 'digit', 'spacial'],
-                  // minimum length requirement
-                  length: 8
-              });
-          }
+        var addPasswordPopup = function () {
+          $("#password").passwordValidator({
+            // list of qualities to require
+            require: ['length', 'lower', 'upper', 'digit', 'spacial'],
+            // minimum length requirement
+            length: 8
+          });
+        }
       </script>
 
   </body>

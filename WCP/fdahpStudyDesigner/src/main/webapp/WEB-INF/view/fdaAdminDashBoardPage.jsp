@@ -199,64 +199,64 @@
     <script src="/studybuilder/js/common.js"></script>
 
     <script>
-        function formSubmit() {
-            document.getElementById("logoutForm").submit();
-        }
+      function formSubmit() {
+        document.getElementById("logoutForm").submit();
+      }
 
-        $(document).ready(function (e) {
+      $(document).ready(function (e) {
 
-            $('#termsId').on('click', function () {
-                $('#termsModal').modal('show');
-            });
-
-            $('#privacyId').on('click', function () {
-                $('#privacyModal').modal('show');
-            });
-
-            <c:if test="${not fn:contains(sessionObject.userPermissions,'ROLE_MANAGE_STUDIES')}">
-            $(".studyListId").addClass('cursor-none');
-            $(".studyListId").unbind();
-            </c:if>
-            <c:if test="${not fn:contains(sessionObject.userPermissions,'ROLE_MANAGE_USERS_VIEW')}">
-            $(".userListId").addClass('cursor-none');
-            $(".userListId").unbind();
-            </c:if>
-            <c:if test="${not fn:contains(sessionObject.userPermissions,'ROLE_MANAGE_APP_WIDE_NOTIFICATION_VIEW')}">
-            $(".notificationListId").addClass('cursor-none');
-            $(".notificationListId").unbind();
-            </c:if>
-
-            $(".studyListId").click(function () {
-                document.studyListForm.action = "/studybuilder/adminStudies/studyList.do";
-                document.studyListForm.submit();
-            });
-
-            $(".userListId").click(function () {
-                document.studyListForm.action = "/studybuilder/adminUsersView/getUserList.do";
-                document.studyListForm.submit();
-            });
-
-            $(".notificationListId").click(function () {
-                document.studyListForm.action = "/studybuilder/adminNotificationView/viewNotificationList.do";
-                document.studyListForm.submit();
-            });
-            $(".myAccountId").click(function () {
-                document.studyListForm.action = "/studybuilder/adminDashboard/viewUserDetails.do";
-                document.studyListForm.submit();
-            });
-            if ('${sessionScope.sessionObject}' != '') {
-                setTimeout(function () {
-                    window.location.href = '/studybuilder/errorRedirect.do?error=timeOut';
-                }, 1000 * 60 * 31);
-            }
+        $('#termsId').on('click', function () {
+          $('#termsModal').modal('show');
         });
-        <c:if test="${param.action eq 'landing'}">
-        </c:if>
-        window.history.forward();
 
-        function noBack() {
-            window.history.forward();
+        $('#privacyId').on('click', function () {
+          $('#privacyModal').modal('show');
+        });
+
+        <c:if test="${not fn:contains(sessionObject.userPermissions,'ROLE_MANAGE_STUDIES')}">
+        $(".studyListId").addClass('cursor-none');
+        $(".studyListId").unbind();
+        </c:if>
+        <c:if test="${not fn:contains(sessionObject.userPermissions,'ROLE_MANAGE_USERS_VIEW')}">
+        $(".userListId").addClass('cursor-none');
+        $(".userListId").unbind();
+        </c:if>
+        <c:if test="${not fn:contains(sessionObject.userPermissions,'ROLE_MANAGE_APP_WIDE_NOTIFICATION_VIEW')}">
+        $(".notificationListId").addClass('cursor-none');
+        $(".notificationListId").unbind();
+        </c:if>
+
+        $(".studyListId").click(function () {
+          document.studyListForm.action = "/studybuilder/adminStudies/studyList.do";
+          document.studyListForm.submit();
+        });
+
+        $(".userListId").click(function () {
+          document.studyListForm.action = "/studybuilder/adminUsersView/getUserList.do";
+          document.studyListForm.submit();
+        });
+
+        $(".notificationListId").click(function () {
+          document.studyListForm.action = "/studybuilder/adminNotificationView/viewNotificationList.do";
+          document.studyListForm.submit();
+        });
+        $(".myAccountId").click(function () {
+          document.studyListForm.action = "/studybuilder/adminDashboard/viewUserDetails.do";
+          document.studyListForm.submit();
+        });
+        if ('${sessionScope.sessionObject}' != '') {
+          setTimeout(function () {
+            window.location.href = '/studybuilder/errorRedirect.do?error=timeOut';
+          }, 1000 * 60 * 31);
         }
+      });
+      <c:if test="${param.action eq 'landing'}">
+      </c:if>
+      window.history.forward();
+
+      function noBack() {
+        window.history.forward();
+      }
     </script>
   </body>
 </html>

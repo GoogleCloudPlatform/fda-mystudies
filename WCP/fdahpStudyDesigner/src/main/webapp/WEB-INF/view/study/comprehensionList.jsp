@@ -12,14 +12,14 @@
   }
 </style>
 <script type="text/javascript">
-    function isNumber(evt) {
-        evt = (evt) ? evt : window.event;
-        var charCode = (evt.which) ? evt.which : evt.keyCode;
-        if (charCode > 31 && (charCode < 48 || charCode > 57)) {
-            return false;
-        }
-        return true;
+  function isNumber(evt) {
+    evt = (evt) ? evt : window.event;
+    var charCode = (evt.which) ? evt.which : evt.keyCode;
+    if (charCode > 31 && (charCode < 48 || charCode > 57)) {
+      return false;
     }
+    return true;
+  }
 </script>
 <!-- Start right Content here -->
 <!-- ============================================================== -->
@@ -155,394 +155,394 @@
 </form:form>
 <!-- End right Content here -->
 <script type="text/javascript">
-    $(document).ready(function () {
-        $(".menuNav li").removeClass('active');
-        $(".fifthComre").addClass('active');
-        $("#createStudyId").show();
-        <c:if test="${permission eq 'view'}">
-        $('#comprehensionInfoForm input,textarea,select').prop('disabled', true);
-        $('.TestQuestionButtonHide').hide();
-        $('.addBtnDis, .remBtnDis').addClass('dis-none');
-        </c:if>
-        $('input[name="needComprehensionTest"]').change(function () {
-            var val = $(this).val();
-            $("#addQuestionId").attr("disabled", true);
-            if (val == "Yes") {
+  $(document).ready(function () {
+    $(".menuNav li").removeClass('active');
+    $(".fifthComre").addClass('active');
+    $("#createStudyId").show();
+    <c:if test="${permission eq 'view'}">
+    $('#comprehensionInfoForm input,textarea,select').prop('disabled', true);
+    $('.TestQuestionButtonHide').hide();
+    $('.addBtnDis, .remBtnDis').addClass('dis-none');
+    </c:if>
+    $('input[name="needComprehensionTest"]').change(function () {
+      var val = $(this).val();
+      $("#addQuestionId").attr("disabled", true);
+      if (val == "Yes") {
 
-                $("#mainContainer").show();
-                var markAsComplete = "${markAsComplete}"
-                if (markAsComplete == "false") {
-                    $("#markAsCompleteBtnId").attr("disabled", true);
-                    $("#helpNote").attr('data-original-title',
-                        'Please ensure individual list items on this page are marked Done before attempting to mark this section as Complete.');
-                    $('[data-toggle="tooltip"]').tooltip();
-                }
-                if (document.getElementById("addQuestionId") != null && document.getElementById(
-                    "addQuestionId").disabled) {
-                    $("#addHelpNote").show();
-                }
-            } else {
-
-                $("#comprehensionTestMinimumScore").val('');
-                $("#mainContainer").hide();
-                $("#addHelpNote").hide();
-                if (document.getElementById("markAsCompleteBtnId") != null && document.getElementById(
-                    "markAsCompleteBtnId").disabled) {
-                    $("#markAsCompleteBtnId").attr("disabled", false);
-                    $("#helpNote").attr('data-original-title', '');
-                }
-            }
-        });
-        var viewPermission = "${permission}";
-
-        var reorder = true;
-        if (viewPermission == 'view') {
-            reorder = false;
-        } else {
-            reorder = true;
+        $("#mainContainer").show();
+        var markAsComplete = "${markAsComplete}"
+        if (markAsComplete == "false") {
+          $("#markAsCompleteBtnId").attr("disabled", true);
+          $("#helpNote").attr('data-original-title',
+              'Please ensure individual list items on this page are marked Done before attempting to mark this section as Complete.');
+          $('[data-toggle="tooltip"]').tooltip();
         }
-        var table1 = $('#comprehension_list').DataTable({
-            "paging": false,
-            "info": false,
-            "filter": false,
-            language: {
-                "zeroRecords": "You haven't created any content yet.",
-            },
-            rowReorder: reorder,
-            "columnDefs": [{orderable: false, targets: [0, 1]}],
-            "fnRowCallback": function (nRow, aData, iDisplayIndex, iDisplayIndexFull) {
-                if (viewPermission != 'view') {
-                    $('td:eq(0)', nRow).addClass("cursonMove dd_icon");
-                }
-            }
-        });
-        table1.on('row-reorder', function (e, diff, edit) {
-            var oldOrderNumber = '', newOrderNumber = '';
-            var result = 'Reorder started on row: ' + edit.triggerRow.data()[1] + '<br>';
-            var studyId = $("#studyId").val();
-            for (var i = 0, ien = diff.length; i < ien; i++) {
-                var rowData = table1.row(diff[i].node).data();
-                var r1;
-                if (i == 0) {
-                    r1 = rowData[0];
-                }
-                if (i == 1) {
-                    if (r1 > rowData[0]) {
-                        oldOrderNumber = diff[0].oldData;
-                        newOrderNumber = diff[0].newData;
-                    } else {
-                        oldOrderNumber = diff[diff.length - 1].oldData;
-                        newOrderNumber = diff[diff.length - 1].newData;
-                    }
+        if (document.getElementById("addQuestionId") != null && document.getElementById(
+            "addQuestionId").disabled) {
+          $("#addHelpNote").show();
+        }
+      } else {
 
-                }
-                result += rowData[1] + ' updated to be in position ' +
-                    diff[i].newData + ' (was ' + diff[i].oldData + ')<br>';
-            }
-
-            if (oldOrderNumber !== undefined && oldOrderNumber != null && oldOrderNumber != ""
-                && newOrderNumber !== undefined && newOrderNumber != null && newOrderNumber != "") {
-                $.ajax({
-                    url: "/studybuilder/adminStudies/reOrderComprehensionTestQuestion.do?_S=${param._S}",
-                    type: "POST",
-                    datatype: "json",
-                    data: {
-                        studyId: studyId,
-                        oldOrderNumber: oldOrderNumber,
-                        newOrderNumber: newOrderNumber,
-                        "${_csrf.parameterName}": "${_csrf.token}",
-                    },
-                    success: function consentInfo(data) {
-                        var status = data.message;
-                        if (status == "SUCCESS") {
-                            $('#alertMsg').show();
-                            $("#alertMsg").removeClass('e-box').addClass('s-box').html(
-                                "Reorder done successfully");
-                            if ($('.fifthComre').find('span').hasClass('sprites-icons-2 tick pull-right mt-xs')) {
-                                $('.fifthComre').find('span').removeClass('sprites-icons-2 tick pull-right mt-xs');
-                            }
-                        } else {
-                            $('#alertMsg').show();
-                            $("#alertMsg").removeClass('s-box').addClass('e-box').html(
-                                "Unable to reorder consent");
-                        }
-                        setTimeout(hideDisplayMessage, 4000);
-                    },
-                    error: function (xhr, status, error) {
-                        $("#alertMsg").removeClass('s-box').addClass('e-box').html(error);
-                        setTimeout(hideDisplayMessage, 4000);
-                    }
-                });
-            }
-        });
-        $("#comprehensionTestMinimumScore").keyup(function () {
-            $("#comprehensionTestMinimumScore").parent().find(".help-block").empty();
-        });
-        $("#comprehensionTestMinimumScore").blur(function () {
-            $("#comprehensionTestMinimumScore").parent().removeClass("has-danger").removeClass(
-                "has-error");
-            $("#comprehensionTestMinimumScore").parent().find(".help-block").empty();
-            var value = $(this).val();
-            var questionCount = $("#comprehension_list").find("tbody").find("tr").length;
-            if (value != '' && value != null && (value == 0 || parseInt(value) > parseInt(
-                questionCount))) {
-
-                $("#comprehensionTestMinimumScore").parent().addClass("has-danger").addClass("has-error");
-                $("#comprehensionTestMinimumScore").parent().find(".help-block").empty();
-                $("#comprehensionTestMinimumScore").parent().find(".help-block").append(
-                    "<ul class='list-unstyled'><li>The value should not be more than no of questions or zero</li></ul>");
-            } else {
-                $("#comprehensionTestMinimumScore").parent().removeClass("has-danger").removeClass(
-                    "has-error");
-                $("#comprehensionTestMinimumScore").parent().find(".help-block").empty();
-            }
-        });
-        $("#saveId").click(function () {
-            $("#comprehensionTestMinimumScore").trigger('blur');
-            $("#comprehensionTestMinimumScore").parents("form").validator("destroy");
-            $("#comprehensionTestMinimumScore").parents("form").validator();
-            $("#comprehensionTestMinimumScore").parent().removeClass("has-danger").removeClass(
-                "has-error");
-            $("#comprehensionTestMinimumScore").parent().find(".help-block").empty();
-            saveConsent('save');
-        });
+        $("#comprehensionTestMinimumScore").val('');
+        $("#mainContainer").hide();
+        $("#addHelpNote").hide();
         if (document.getElementById("markAsCompleteBtnId") != null && document.getElementById(
             "markAsCompleteBtnId").disabled) {
-            $('[data-toggle="tooltip"]').tooltip();
+          $("#markAsCompleteBtnId").attr("disabled", false);
+          $("#helpNote").attr('data-original-title', '');
         }
+      }
     });
+    var viewPermission = "${permission}";
 
-    function deleteComprehensionQuestion(questionId) {
-        bootbox.confirm("Are you sure you want to delete this question?", function (result) {
-            if (result) {
-                var studyId = $("#studyId").val();
-                if (questionId != '' && questionId != null && typeof questionId != 'undefined') {
-                    $.ajax({
-                        url: "/studybuilder/adminStudies/deleteComprehensionQuestion.do?_S=${param._S}",
-                        type: "POST",
-                        datatype: "json",
-                        data: {
-                            comprehensionQuestionId: questionId,
-                            studyId: studyId,
-                            "${_csrf.parameterName}": "${_csrf.token}",
-                        },
-                        success: function deleteConsentInfo(data) {
-                            var status = data.message;
-                            if (status == "SUCCESS") {
-                                $("#alertMsg").removeClass('e-box').addClass('s-box').html(
-                                    "Question deleted successfully");
-                                $('#alertMsg').show();
-                                reloadData(studyId);
-                            } else {
-                                $("#alertMsg").removeClass('s-box').addClass('e-box').html(
-                                    "Unable to delete Question");
-                                $('#alertMsg').show();
-                            }
-                            setTimeout(hideDisplayMessage, 4000);
-                        },
-                        error: function (xhr, status, error) {
-                            $("#alertMsg").removeClass('s-box').addClass('e-box').html(error);
-                            setTimeout(hideDisplayMessage, 4000);
-                        }
-                    });
-                }
-            }
-        });
+    var reorder = true;
+    if (viewPermission == 'view') {
+      reorder = false;
+    } else {
+      reorder = true;
     }
+    var table1 = $('#comprehension_list').DataTable({
+      "paging": false,
+      "info": false,
+      "filter": false,
+      language: {
+        "zeroRecords": "You haven't created any content yet.",
+      },
+      rowReorder: reorder,
+      "columnDefs": [{orderable: false, targets: [0, 1]}],
+      "fnRowCallback": function (nRow, aData, iDisplayIndex, iDisplayIndexFull) {
+        if (viewPermission != 'view') {
+          $('td:eq(0)', nRow).addClass("cursonMove dd_icon");
+        }
+      }
+    });
+    table1.on('row-reorder', function (e, diff, edit) {
+      var oldOrderNumber = '', newOrderNumber = '';
+      var result = 'Reorder started on row: ' + edit.triggerRow.data()[1] + '<br>';
+      var studyId = $("#studyId").val();
+      for (var i = 0, ien = diff.length; i < ien; i++) {
+        var rowData = table1.row(diff[i].node).data();
+        var r1;
+        if (i == 0) {
+          r1 = rowData[0];
+        }
+        if (i == 1) {
+          if (r1 > rowData[0]) {
+            oldOrderNumber = diff[0].oldData;
+            newOrderNumber = diff[0].newData;
+          } else {
+            oldOrderNumber = diff[diff.length - 1].oldData;
+            newOrderNumber = diff[diff.length - 1].newData;
+          }
 
-    function reloadData(studyId) {
+        }
+        result += rowData[1] + ' updated to be in position ' +
+            diff[i].newData + ' (was ' + diff[i].oldData + ')<br>';
+      }
+
+      if (oldOrderNumber !== undefined && oldOrderNumber != null && oldOrderNumber != ""
+          && newOrderNumber !== undefined && newOrderNumber != null && newOrderNumber != "") {
         $.ajax({
-            url: "/studybuilder/adminStudies/reloadComprehensionQuestionListPage.do?_S=${param._S}",
+          url: "/studybuilder/adminStudies/reOrderComprehensionTestQuestion.do?_S=${param._S}",
+          type: "POST",
+          datatype: "json",
+          data: {
+            studyId: studyId,
+            oldOrderNumber: oldOrderNumber,
+            newOrderNumber: newOrderNumber,
+            "${_csrf.parameterName}": "${_csrf.token}",
+          },
+          success: function consentInfo(data) {
+            var status = data.message;
+            if (status == "SUCCESS") {
+              $('#alertMsg').show();
+              $("#alertMsg").removeClass('e-box').addClass('s-box').html(
+                  "Reorder done successfully");
+              if ($('.fifthComre').find('span').hasClass('sprites-icons-2 tick pull-right mt-xs')) {
+                $('.fifthComre').find('span').removeClass('sprites-icons-2 tick pull-right mt-xs');
+              }
+            } else {
+              $('#alertMsg').show();
+              $("#alertMsg").removeClass('s-box').addClass('e-box').html(
+                  "Unable to reorder consent");
+            }
+            setTimeout(hideDisplayMessage, 4000);
+          },
+          error: function (xhr, status, error) {
+            $("#alertMsg").removeClass('s-box').addClass('e-box').html(error);
+            setTimeout(hideDisplayMessage, 4000);
+          }
+        });
+      }
+    });
+    $("#comprehensionTestMinimumScore").keyup(function () {
+      $("#comprehensionTestMinimumScore").parent().find(".help-block").empty();
+    });
+    $("#comprehensionTestMinimumScore").blur(function () {
+      $("#comprehensionTestMinimumScore").parent().removeClass("has-danger").removeClass(
+          "has-error");
+      $("#comprehensionTestMinimumScore").parent().find(".help-block").empty();
+      var value = $(this).val();
+      var questionCount = $("#comprehension_list").find("tbody").find("tr").length;
+      if (value != '' && value != null && (value == 0 || parseInt(value) > parseInt(
+          questionCount))) {
+
+        $("#comprehensionTestMinimumScore").parent().addClass("has-danger").addClass("has-error");
+        $("#comprehensionTestMinimumScore").parent().find(".help-block").empty();
+        $("#comprehensionTestMinimumScore").parent().find(".help-block").append(
+            "<ul class='list-unstyled'><li>The value should not be more than no of questions or zero</li></ul>");
+      } else {
+        $("#comprehensionTestMinimumScore").parent().removeClass("has-danger").removeClass(
+            "has-error");
+        $("#comprehensionTestMinimumScore").parent().find(".help-block").empty();
+      }
+    });
+    $("#saveId").click(function () {
+      $("#comprehensionTestMinimumScore").trigger('blur');
+      $("#comprehensionTestMinimumScore").parents("form").validator("destroy");
+      $("#comprehensionTestMinimumScore").parents("form").validator();
+      $("#comprehensionTestMinimumScore").parent().removeClass("has-danger").removeClass(
+          "has-error");
+      $("#comprehensionTestMinimumScore").parent().find(".help-block").empty();
+      saveConsent('save');
+    });
+    if (document.getElementById("markAsCompleteBtnId") != null && document.getElementById(
+        "markAsCompleteBtnId").disabled) {
+      $('[data-toggle="tooltip"]').tooltip();
+    }
+  });
+
+  function deleteComprehensionQuestion(questionId) {
+    bootbox.confirm("Are you sure you want to delete this question?", function (result) {
+      if (result) {
+        var studyId = $("#studyId").val();
+        if (questionId != '' && questionId != null && typeof questionId != 'undefined') {
+          $.ajax({
+            url: "/studybuilder/adminStudies/deleteComprehensionQuestion.do?_S=${param._S}",
             type: "POST",
             datatype: "json",
             data: {
-                studyId: studyId,
-                "${_csrf.parameterName}": "${_csrf.token}",
+              comprehensionQuestionId: questionId,
+              studyId: studyId,
+              "${_csrf.parameterName}": "${_csrf.token}",
             },
-            success: function status(data, status) {
-                var jsonobject = eval(data);
-                var message = jsonobject.message;
-                if (message == "SUCCESS") {
-                    reloadComprehensionQuestionDataTable(jsonobject.comprehensionTestQuestionList);
-                }
-            },
-            error: function status(data, status) {
-
-            },
-        });
-    }
-
-    function addComphernsionQuestionPage() {
-        $("#comprehensionQuestionId").val('');
-        $("#actionType").val('addEdit');
-        $("#comprehenstionQuestionForm").submit();
-    }
-
-    function editComprehensionQuestion(testQuestionId) {
-        if (testQuestionId != null && testQuestionId != '' && typeof testQuestionId != 'undefined') {
-            $("#comprehensionQuestionId").val(testQuestionId);
-            $("#actionType").val('addEdit');
-            $("#comprehenstionQuestionForm").submit();
-        }
-    }
-
-    function viewComprehensionQuestion(testQuestionId) {
-        if (testQuestionId != null && testQuestionId != '' && typeof testQuestionId != 'undefined') {
-            $("#comprehensionQuestionId").val(testQuestionId);
-            $("#actionType").val('view');
-            $("#comprehenstionQuestionForm").submit();
-        }
-    }
-
-    function reloadComprehensionQuestionDataTable(comprehensionTestQuestionList) {
-        $('#comprehension_list').DataTable().clear();
-        if (typeof comprehensionTestQuestionList != 'undefined' && comprehensionTestQuestionList != null
-            && comprehensionTestQuestionList.length > 0) {
-            $.each(comprehensionTestQuestionList, function (i, obj) {
-                var datarow = [];
-                if (typeof obj.sequenceNo === "undefined" && typeof obj.sequenceNo === "undefined") {
-                    datarow.push(' ');
-                } else {
-                    datarow.push(obj.sequenceNo);
-                }
-                if (typeof obj.questionText === "undefined" && typeof obj.questionText === "undefined") {
-                    datarow.push(' ');
-                } else {
-                    datarow.push("<div class='dis-ellipsis'>" + obj.questionText + "</div>");
-                }
-                var actions = "<span class='sprites_icon preview-g mr-lg' onclick='viewComprehensionQuestion("
-                    + obj.id + ");'></span>"
-                    + "<span class='sprites_icon edit-g mr-lg' onclick='editComprehensionQuestion(" + obj.id
-                    + ");'>"
-                    + "</span><span class='sprites_icon copy delete' onclick='deleteComprehensionQuestion("
-                    + obj.id + ");'>"
-                    + "</span>";
-                datarow.push(actions);
-                $('#comprehension_list').DataTable().row.add(datarow);
-            });
-            $('#comprehension_list').DataTable().draw();
-        } else {
-            $('#comprehension_list').DataTable().draw();
-        }
-        if ($('.fifthComre').find('span').hasClass('sprites-icons-2 tick pull-right mt-xs')) {
-            $('.fifthComre').find('span').removeClass('sprites-icons-2 tick pull-right mt-xs');
-        }
-    }
-
-    function markAsCompleted() {
-        var table = $('#comprehension_list').DataTable();
-        var minimumScore = $("#comprehensionTestMinimumScore").val();
-        var needComprehensionTestTxt = $('input[name="needComprehensionTest"]:checked').val();
-        if (needComprehensionTestTxt == "Yes") {
-
-            if (!table.data().count()) {
+            success: function deleteConsentInfo(data) {
+              var status = data.message;
+              if (status == "SUCCESS") {
+                $("#alertMsg").removeClass('e-box').addClass('s-box').html(
+                    "Question deleted successfully");
                 $('#alertMsg').show();
-                $("#alertMsg").removeClass('s-box').addClass('e-box').html("Add atleast one question !");
-                setTimeout(hideDisplayMessage, 4000);
-            } else if (isFromValid("#comprehensionInfoForm")) {
-                saveConsent("Done");
+                reloadData(studyId);
+              } else {
+                $("#alertMsg").removeClass('s-box').addClass('e-box').html(
+                    "Unable to delete Question");
+                $('#alertMsg').show();
+              }
+              setTimeout(hideDisplayMessage, 4000);
+            },
+            error: function (xhr, status, error) {
+              $("#alertMsg").removeClass('s-box').addClass('e-box').html(error);
+              setTimeout(hideDisplayMessage, 4000);
             }
+          });
+        }
+      }
+    });
+  }
+
+  function reloadData(studyId) {
+    $.ajax({
+      url: "/studybuilder/adminStudies/reloadComprehensionQuestionListPage.do?_S=${param._S}",
+      type: "POST",
+      datatype: "json",
+      data: {
+        studyId: studyId,
+        "${_csrf.parameterName}": "${_csrf.token}",
+      },
+      success: function status(data, status) {
+        var jsonobject = eval(data);
+        var message = jsonobject.message;
+        if (message == "SUCCESS") {
+          reloadComprehensionQuestionDataTable(jsonobject.comprehensionTestQuestionList);
+        }
+      },
+      error: function status(data, status) {
+
+      },
+    });
+  }
+
+  function addComphernsionQuestionPage() {
+    $("#comprehensionQuestionId").val('');
+    $("#actionType").val('addEdit');
+    $("#comprehenstionQuestionForm").submit();
+  }
+
+  function editComprehensionQuestion(testQuestionId) {
+    if (testQuestionId != null && testQuestionId != '' && typeof testQuestionId != 'undefined') {
+      $("#comprehensionQuestionId").val(testQuestionId);
+      $("#actionType").val('addEdit');
+      $("#comprehenstionQuestionForm").submit();
+    }
+  }
+
+  function viewComprehensionQuestion(testQuestionId) {
+    if (testQuestionId != null && testQuestionId != '' && typeof testQuestionId != 'undefined') {
+      $("#comprehensionQuestionId").val(testQuestionId);
+      $("#actionType").val('view');
+      $("#comprehenstionQuestionForm").submit();
+    }
+  }
+
+  function reloadComprehensionQuestionDataTable(comprehensionTestQuestionList) {
+    $('#comprehension_list').DataTable().clear();
+    if (typeof comprehensionTestQuestionList != 'undefined' && comprehensionTestQuestionList != null
+        && comprehensionTestQuestionList.length > 0) {
+      $.each(comprehensionTestQuestionList, function (i, obj) {
+        var datarow = [];
+        if (typeof obj.sequenceNo === "undefined" && typeof obj.sequenceNo === "undefined") {
+          datarow.push(' ');
         } else {
-            if (isFromValid("#comprehensionInfoForm")) {
-                saveConsent("Done");
-            }
+          datarow.push(obj.sequenceNo);
         }
+        if (typeof obj.questionText === "undefined" && typeof obj.questionText === "undefined") {
+          datarow.push(' ');
+        } else {
+          datarow.push("<div class='dis-ellipsis'>" + obj.questionText + "</div>");
+        }
+        var actions = "<span class='sprites_icon preview-g mr-lg' onclick='viewComprehensionQuestion("
+            + obj.id + ");'></span>"
+            + "<span class='sprites_icon edit-g mr-lg' onclick='editComprehensionQuestion(" + obj.id
+            + ");'>"
+            + "</span><span class='sprites_icon copy delete' onclick='deleteComprehensionQuestion("
+            + obj.id + ");'>"
+            + "</span>";
+        datarow.push(actions);
+        $('#comprehension_list').DataTable().row.add(datarow);
+      });
+      $('#comprehension_list').DataTable().draw();
+    } else {
+      $('#comprehension_list').DataTable().draw();
     }
+    if ($('.fifthComre').find('span').hasClass('sprites-icons-2 tick pull-right mt-xs')) {
+      $('.fifthComre').find('span').removeClass('sprites-icons-2 tick pull-right mt-xs');
+    }
+  }
 
-    function saveConsent(type) {
-        var consentId = $("#consentId").val();
-        var minimumScore = $("#comprehensionTestMinimumScore").val();
-        var needComprehensionTestTxt = $('input[name="needComprehensionTest"]:checked').val();
-        var studyId = $("#studyId").val();
-        var minScoreFlag = true;
-        if (studyId != null && studyId != '' && typeof studyId != 'undefined' &&
-            needComprehensionTestTxt != null && needComprehensionTestTxt != ''
-            && typeof needComprehensionTestTxt != 'undefined') {
-            if (type == "save") {
-                $("body").addClass("loading");
-            }
-            var consentInfo = new Object();
-            if (consentId != null && consentId != '' && typeof consentId != 'undefined') {
-                consentInfo.id = consentId;
-            }
-            consentInfo.studyId = studyId;
-            consentInfo.comprehensionTestMinimumScore = minimumScore;
-            consentInfo.needComprehensionTest = needComprehensionTestTxt;
-            if (type == "save") {
-                consentInfo.comprehensionTest = "save";
-            } else {
-                consentInfo.comprehensionTest = "done";
-            }
+  function markAsCompleted() {
+    var table = $('#comprehension_list').DataTable();
+    var minimumScore = $("#comprehensionTestMinimumScore").val();
+    var needComprehensionTestTxt = $('input[name="needComprehensionTest"]:checked').val();
+    if (needComprehensionTestTxt == "Yes") {
 
-            $("#comprehensionTestMinimumScore").parent().removeClass("has-danger").removeClass(
-                "has-error");
-            $("#comprehensionTestMinimumScore").parent().find(".help-block").empty();
-            var value = $('#comprehensionTestMinimumScore').val();
-            var questionCount = $("#comprehension_list").find("tbody").find("tr").length;
-            if (value != '' && value != null && (value == 0 || parseInt(value) > parseInt(
-                questionCount))) {
-                minScoreFlag = false;
+      if (!table.data().count()) {
+        $('#alertMsg').show();
+        $("#alertMsg").removeClass('s-box').addClass('e-box').html("Add atleast one question !");
+        setTimeout(hideDisplayMessage, 4000);
+      } else if (isFromValid("#comprehensionInfoForm")) {
+        saveConsent("Done");
+      }
+    } else {
+      if (isFromValid("#comprehensionInfoForm")) {
+        saveConsent("Done");
+      }
+    }
+  }
 
-                $("#comprehensionTestMinimumScore").parent().addClass("has-danger").addClass("has-error");
-                $("#comprehensionTestMinimumScore").parent().find(".help-block").empty();
-                $("#comprehensionTestMinimumScore").parent().find(".help-block").append(
-                    "<ul class='list-unstyled'><li>The value should not be more than no of questions or zero</li></ul>");
-            } else {
-                $("#comprehensionTestMinimumScore").parent().removeClass("has-danger").removeClass(
-                    "has-error");
-                $("#comprehensionTestMinimumScore").parent().find(".help-block").empty();
-            }
-            if (minScoreFlag) {
-                var data = JSON.stringify(consentInfo);
-                $.ajax({
-                    url: "/studybuilder/adminStudies/saveConsentReviewAndEConsentInfo.do?_S=${param._S}",
-                    type: "POST",
-                    datatype: "json",
-                    data: {consentInfo: data},
-                    beforeSend: function (xhr, settings) {
-                        xhr.setRequestHeader("X-CSRF-TOKEN", "${_csrf.token}");
-                    },
-                    success: function (data) {
-                        var jsonobject = eval(data);
-                        var message = jsonobject.message;
-                        if (message == "SUCCESS") {
-                            var consentId = jsonobject.consentId;
+  function saveConsent(type) {
+    var consentId = $("#consentId").val();
+    var minimumScore = $("#comprehensionTestMinimumScore").val();
+    var needComprehensionTestTxt = $('input[name="needComprehensionTest"]:checked').val();
+    var studyId = $("#studyId").val();
+    var minScoreFlag = true;
+    if (studyId != null && studyId != '' && typeof studyId != 'undefined' &&
+        needComprehensionTestTxt != null && needComprehensionTestTxt != ''
+        && typeof needComprehensionTestTxt != 'undefined') {
+      if (type == "save") {
+        $("body").addClass("loading");
+      }
+      var consentInfo = new Object();
+      if (consentId != null && consentId != '' && typeof consentId != 'undefined') {
+        consentInfo.id = consentId;
+      }
+      consentInfo.studyId = studyId;
+      consentInfo.comprehensionTestMinimumScore = minimumScore;
+      consentInfo.needComprehensionTest = needComprehensionTestTxt;
+      if (type == "save") {
+        consentInfo.comprehensionTest = "save";
+      } else {
+        consentInfo.comprehensionTest = "done";
+      }
 
-                            $("#consentId").val(consentId);
-                            $("#addQuestionId").attr("disabled", false);
-                            $("#addHelpNote").hide();
-                            if (type != "save") {
-                                document.comprehensionInfoForm.action = "/studybuilder/adminStudies/comprehensionTestMarkAsCompleted.do?_S=${param._S}";
-                                document.comprehensionInfoForm.submit();
-                            } else {
-                                $("body").removeClass("loading");
-                                $("#alertMsg").removeClass('e-box').addClass('s-box').html(
-                                    "Content saved as draft");
-                                $('#alertMsg').show();
-                                if ($('.fifthComre').find('span').hasClass(
-                                    'sprites-icons-2 tick pull-right mt-xs')) {
-                                    $('.fifthComre').find('span').removeClass(
-                                        'sprites-icons-2 tick pull-right mt-xs');
-                                }
-                            }
-                        } else {
-                            $("body").removeClass("loading");
-                            $("#alertMsg").removeClass('s-box').addClass('e-box').html("Something went Wrong");
-                            $('#alertMsg').show();
-                        }
-                        setTimeout(hideDisplayMessage, 4000);
-                    },
-                    error: function (xhr, status, error) {
-                        $("body").removeClass("loading");
-                        $('#alertMsg').show();
-                        $("#alertMsg").removeClass('s-box').addClass('e-box').html("Something went Wrong");
-                        setTimeout(hideDisplayMessage, 4000);
-                    },
-                    global: false,
-                });
-            } else {
+      $("#comprehensionTestMinimumScore").parent().removeClass("has-danger").removeClass(
+          "has-error");
+      $("#comprehensionTestMinimumScore").parent().find(".help-block").empty();
+      var value = $('#comprehensionTestMinimumScore').val();
+      var questionCount = $("#comprehension_list").find("tbody").find("tr").length;
+      if (value != '' && value != null && (value == 0 || parseInt(value) > parseInt(
+          questionCount))) {
+        minScoreFlag = false;
+
+        $("#comprehensionTestMinimumScore").parent().addClass("has-danger").addClass("has-error");
+        $("#comprehensionTestMinimumScore").parent().find(".help-block").empty();
+        $("#comprehensionTestMinimumScore").parent().find(".help-block").append(
+            "<ul class='list-unstyled'><li>The value should not be more than no of questions or zero</li></ul>");
+      } else {
+        $("#comprehensionTestMinimumScore").parent().removeClass("has-danger").removeClass(
+            "has-error");
+        $("#comprehensionTestMinimumScore").parent().find(".help-block").empty();
+      }
+      if (minScoreFlag) {
+        var data = JSON.stringify(consentInfo);
+        $.ajax({
+          url: "/studybuilder/adminStudies/saveConsentReviewAndEConsentInfo.do?_S=${param._S}",
+          type: "POST",
+          datatype: "json",
+          data: {consentInfo: data},
+          beforeSend: function (xhr, settings) {
+            xhr.setRequestHeader("X-CSRF-TOKEN", "${_csrf.token}");
+          },
+          success: function (data) {
+            var jsonobject = eval(data);
+            var message = jsonobject.message;
+            if (message == "SUCCESS") {
+              var consentId = jsonobject.consentId;
+
+              $("#consentId").val(consentId);
+              $("#addQuestionId").attr("disabled", false);
+              $("#addHelpNote").hide();
+              if (type != "save") {
+                document.comprehensionInfoForm.action = "/studybuilder/adminStudies/comprehensionTestMarkAsCompleted.do?_S=${param._S}";
+                document.comprehensionInfoForm.submit();
+              } else {
                 $("body").removeClass("loading");
+                $("#alertMsg").removeClass('e-box').addClass('s-box').html(
+                    "Content saved as draft");
+                $('#alertMsg').show();
+                if ($('.fifthComre').find('span').hasClass(
+                    'sprites-icons-2 tick pull-right mt-xs')) {
+                  $('.fifthComre').find('span').removeClass(
+                      'sprites-icons-2 tick pull-right mt-xs');
+                }
+              }
+            } else {
+              $("body").removeClass("loading");
+              $("#alertMsg").removeClass('s-box').addClass('e-box').html("Something went Wrong");
+              $('#alertMsg').show();
             }
-        }
+            setTimeout(hideDisplayMessage, 4000);
+          },
+          error: function (xhr, status, error) {
+            $("body").removeClass("loading");
+            $('#alertMsg').show();
+            $("#alertMsg").removeClass('s-box').addClass('e-box').html("Something went Wrong");
+            setTimeout(hideDisplayMessage, 4000);
+          },
+          global: false,
+        });
+      } else {
+        $("body").removeClass("loading");
+      }
     }
+  }
 </script>

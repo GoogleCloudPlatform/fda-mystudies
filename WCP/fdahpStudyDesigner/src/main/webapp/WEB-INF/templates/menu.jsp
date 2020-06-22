@@ -1,32 +1,32 @@
 <script type="text/javascript">
-    $(document).ready(function () {
-        getAdminNotificationCount();
+  $(document).ready(function () {
+    getAdminNotificationCount();
+  });
+
+  //Refreshing to get the new notifications count
+  window.setInterval('getNotificationCount()', 300000);
+  var getNotificationCount = function () {
+    getAdminNotificationCount();
+  }
+
+  //Get the AdminNotificationCount
+  function getAdminNotificationCount() {
+    var mdiv = document.getElementById("rcount");
+    $.ajax({
+      url: 'getAdminNotificationCount.do',
+      type: "POST",
+      datatype: "json",
+      data: {},
+      success: function test(data) {
+        data = eval(data);
+        var count = data.count;
+        if (parseInt(count) > 0) {
+          $("#notifSpanId").html(
+              'NOTIFICATIONS <B><font color="#42963b">(' + data.count + ')</font></B>');
+        }
+      }
     });
-
-    //Refreshing to get the new notifications count
-    window.setInterval('getNotificationCount()', 300000);
-    var getNotificationCount = function () {
-        getAdminNotificationCount();
-    }
-
-    //Get the AdminNotificationCount
-    function getAdminNotificationCount() {
-        var mdiv = document.getElementById("rcount");
-        $.ajax({
-            url: 'getAdminNotificationCount.do',
-            type: "POST",
-            datatype: "json",
-            data: {},
-            success: function test(data) {
-                data = eval(data);
-                var count = data.count;
-                if (parseInt(count) > 0) {
-                    $("#notifSpanId").html(
-                        'NOTIFICATIONS <B><font color="#42963b">(' + data.count + ')</font></B>');
-                }
-            }
-        });
-    }
+  }
 
 </script>
 

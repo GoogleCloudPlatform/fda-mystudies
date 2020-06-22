@@ -223,104 +223,104 @@
     <script src="/studybuilder/js/ajaxRequestInterceptor.js"></script>
 
     <script>
-        var isChanged = true;
-        $(document).ready(function (e) {
-            // Internet Explorer 6-11
-            var isIE = false || !!document.documentMode;
+      var isChanged = true;
+      $(document).ready(function (e) {
+        // Internet Explorer 6-11
+        var isIE = false || !!document.documentMode;
 
-            // Edge 20+
-            var isEdge = !isIE && !!window.StyleMedia;
-            if (isIE || isEdge) {
-                $('#password').prop('readonly', false);
+        // Edge 20+
+        var isEdge = !isIE && !!window.StyleMedia;
+        if (isIE || isEdge) {
+          $('#password').prop('readonly', false);
+        }
+        $.ajaxSetup({
+          beforeSend: function (xhr, settings) {
+            xhr.setRequestHeader("X-CSRF-TOKEN", "${_csrf.token}");
+          }
+        });
+        $('#siginNoteBtnId').click(function () {
+          $('#password').removeAttr('readonly');
+          if (isFromValid($(this).parents('form'))) {
+            $(".askSignInCls").removeClass('hide');
+          }
+        });
+        $('#loginForm').keypress(function (e) {
+          $('#password').removeAttr('readonly');
+          if (e.which == 13) {
+            if (isFromValid($("#loginForm"))) {
+              e.target.blur();
+              $(".askSignInCls").removeClass('hide');
             }
-            $.ajaxSetup({
-                beforeSend: function (xhr, settings) {
-                    xhr.setRequestHeader("X-CSRF-TOKEN", "${_csrf.token}");
-                }
-            });
-            $('#siginNoteBtnId').click(function () {
-                $('#password').removeAttr('readonly');
-                if (isFromValid($(this).parents('form'))) {
-                    $(".askSignInCls").removeClass('hide');
-                }
-            });
-            $('#loginForm').keypress(function (e) {
-                $('#password').removeAttr('readonly');
-                if (e.which == 13) {
-                    if (isFromValid($("#loginForm"))) {
-                        e.target.blur();
-                        $(".askSignInCls").removeClass('hide');
-                    }
-                }
-            });
-            $("#cancelbtn").click(function () {
-                $(".cs-model-box").addClass('hide');
-            });
-            $('.termsCls').on('click', function () {
-                $('#termsModal').modal('show');
-            });
-
-            $('.privacyCls').on('click', function () {
-                $('#privacyModal').modal('show');
-            });
-
-            var errMsg = '${errMsg}';
-            if (errMsg.length > 0) {
-                $("#errMsg").html(errMsg);
-                $("#errMsg").show("fast");
-
-                setTimeout(hideDisplayMessage, 4000);
-            }
-            var sucMsg = '${sucMsg}';
-            if (sucMsg.length > 0) {
-                $("#sucMsg").html(sucMsg);
-                $("#sucMsg").show("fast");
-                $("#errMsg").hide("fast");
-                setTimeout(hideDisplayMessage, 4000);
-            }
-
-            // Internet Explorer 6-11
-            var isIE = false || !!document.documentMode;
-            // Edge 20+
-            var isEdge = !isIE && !!window.StyleMedia;
-
-            $('#email').keyup(function (event) {
-                event = (event || window.event);
-                if (event.keyCode == 13) {
-                    var isEmail = false;
-                    var emailAdd = $('#email').val();
-                    var regEX = /^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,3}$/;
-                    isEmail = regEX.test(emailAdd);
-                    if (emailAdd == '') {
-                        if (isIE || isEdge) {
-                            $('#email').parent().find(".help-block").html(
-                                "<ul class='list-unstyled'><li>This is a required field</li></ul>");
-                        } else {
-                            $('#email').parent().find(".help-block").html(
-                                "<ul class='list-unstyled'><li>Please fill out this field</li></ul>");
-                        }
-                    } else if (!isEmail) {
-                        $('#email').parent().find(".help-block").html(
-                            "<ul class='list-unstyled'><li>Email address is invalid</li></ul>");
-                    }
-                }
-            });
-
-            var wh = $(window).height();
-            $('.cs-model-box>div:first-child').css('height', wh);
-
+          }
+        });
+        $("#cancelbtn").click(function () {
+          $(".cs-model-box").addClass('hide');
+        });
+        $('.termsCls').on('click', function () {
+          $('#termsModal').modal('show');
         });
 
-        function hideDisplayMessage() {
-            $('#sucMsg').hide();
-            $('#errMsg').hide();
+        $('.privacyCls').on('click', function () {
+          $('#privacyModal').modal('show');
+        });
+
+        var errMsg = '${errMsg}';
+        if (errMsg.length > 0) {
+          $("#errMsg").html(errMsg);
+          $("#errMsg").show("fast");
+
+          setTimeout(hideDisplayMessage, 4000);
+        }
+        var sucMsg = '${sucMsg}';
+        if (sucMsg.length > 0) {
+          $("#sucMsg").html(sucMsg);
+          $("#sucMsg").show("fast");
+          $("#errMsg").hide("fast");
+          setTimeout(hideDisplayMessage, 4000);
         }
 
+        // Internet Explorer 6-11
+        var isIE = false || !!document.documentMode;
+        // Edge 20+
+        var isEdge = !isIE && !!window.StyleMedia;
+
+        $('#email').keyup(function (event) {
+          event = (event || window.event);
+          if (event.keyCode == 13) {
+            var isEmail = false;
+            var emailAdd = $('#email').val();
+            var regEX = /^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,3}$/;
+            isEmail = regEX.test(emailAdd);
+            if (emailAdd == '') {
+              if (isIE || isEdge) {
+                $('#email').parent().find(".help-block").html(
+                    "<ul class='list-unstyled'><li>This is a required field</li></ul>");
+              } else {
+                $('#email').parent().find(".help-block").html(
+                    "<ul class='list-unstyled'><li>Please fill out this field</li></ul>");
+              }
+            } else if (!isEmail) {
+              $('#email').parent().find(".help-block").html(
+                  "<ul class='list-unstyled'><li>Email address is invalid</li></ul>");
+            }
+          }
+        });
+
+        var wh = $(window).height();
+        $('.cs-model-box>div:first-child').css('height', wh);
+
+      });
+
+      function hideDisplayMessage() {
+        $('#sucMsg').hide();
+        $('#errMsg').hide();
+      }
+
+      window.history.forward();
+
+      function noBack() {
         window.history.forward();
-
-        function noBack() {
-            window.history.forward();
-        }
+      }
     </script>
 
   </body>

@@ -23,38 +23,38 @@
   }
 </style>
 <script type="text/javascript">
-    function isNumber(evt) {
-        evt = (evt) ? evt : window.event;
-        var charCode = (evt.which) ? evt.which : evt.keyCode;
-        if (charCode > 31 && (charCode < 48 || charCode > 57)) {
-            return false;
-        }
-        return true;
+  function isNumber(evt) {
+    evt = (evt) ? evt : window.event;
+    var charCode = (evt.which) ? evt.which : evt.keyCode;
+    if (charCode > 31 && (charCode < 48 || charCode > 57)) {
+      return false;
     }
+    return true;
+  }
 
-    function isOnlyNumber(evt) {
-        evt = (evt) ? evt : window.event;
-        var charCode = (evt.which) ? evt.which : evt.keyCode;
-        if (charCode > 31 && (charCode < 48 || charCode > 57)) {
+  function isOnlyNumber(evt) {
+    evt = (evt) ? evt : window.event;
+    var charCode = (evt.which) ? evt.which : evt.keyCode;
+    if (charCode > 31 && (charCode < 48 || charCode > 57)) {
 
-            if (charCode != 45) {
-                return false;
-            }
+      if (charCode != 45) {
+        return false;
+      }
 
-        }
-        return true;
     }
+    return true;
+  }
 
-    function isNumberKey(evt) {
-        var charCode = (evt.which) ? evt.which : evt.keyCode;
-        if (charCode != 46 && charCode > 31
-            && (charCode < 48 || charCode > 57))
-            if (charCode != 45) {
-                return false;
-            }
+  function isNumberKey(evt) {
+    var charCode = (evt.which) ? evt.which : evt.keyCode;
+    if (charCode != 46 && charCode > 31
+        && (charCode < 48 || charCode > 57))
+      if (charCode != 45) {
+        return false;
+      }
 
-        return true;
-    }
+    return true;
+  }
 </script>
 <!-- Start right Content here -->
 <div id="questionStep" class="col-sm-10 col-rc white-bg p-none">
@@ -3408,3474 +3408,3474 @@
 
   <!-- End right Content here -->
   <script type="text/javascript">
-      $(document).ready(function () {
+    $(document).ready(function () {
 
-          if ($('#useAnchorDateId').is(':checked')) {
-              $("#anchorTextId").attr('required', true);
-          } else {
-              $('.useAnchorDateName').hide();
-              $("#anchorTextId").attr('required', false);
-              $("#anchorTextId").parent().removeClass("has-danger").removeClass("has-error");
-              $("#anchorTextId").parent().find(".help-block").html("");
-          }
+      if ($('#useAnchorDateId').is(':checked')) {
+        $("#anchorTextId").attr('required', true);
+      } else {
+        $('.useAnchorDateName').hide();
+        $("#anchorTextId").attr('required', false);
+        $("#anchorTextId").parent().removeClass("has-danger").removeClass("has-error");
+        $("#anchorTextId").parent().find(".help-block").html("");
+      }
 
-          $('#useAnchorDateId').click(function () {
-              if ($(this).is(':checked')) {
-                  $('.useAnchorDateName').show();
-                  $("#anchorTextId").attr('required', true);
-              } else {
-                  $('.useAnchorDateName').hide();
-                  $("#anchorTextId").attr('required', false);
-                  $("#anchorTextId").parent().removeClass("has-danger").removeClass("has-error");
-                  $("#anchorTextId").parent().find(".help-block").html("");
-              }
-          });
-
-          $("#anchorTextId").blur(function () {
-              validateAnchorDateText('', function (val) {
-              });
-          });
-
-          $('#textchoiceOtherId').click(function () {
-              var displayText = $("#displayTextChoiceText0").val().trim();
-              var displayValue = $("#displayTextChoiceValue0").val().trim();
-              var exclusive = $("#exclusiveId0").val().trim();
-              var choiceDescription = $("#displayTextChoiceDescription0").val().trim();
-              if ($(this).is(':checked')) {
-                  if (displayText.length <= 0 && displayValue.length <= 0 && exclusive.length <= 0
-                      && choiceDescription.length <= 0) {
-                      $('.otherOptionChecked').hide();
-                      $('.otherOptionChecked').find('input:text,select').removeAttr('required');
-                  }
-                  $('.textchoiceOtherCls').show();
-                  $('.textchoiceOtherCls').find('input:text,select').attr('required', true);
-                  $('.OtherOptionCls').find('input:text,select').removeAttr('required');
-              } else {
-                  $('.otherOptionChecked').show();
-                  $('.otherOptionChecked').find('input:text,select').attr('required', true);
-                  $('.textchoiceOtherCls').hide();
-                  $('.textchoiceOtherCls').find('input:text,select').removeAttr('required');
-              }
-          });
-
-          $('.otherIncludeTextCls').click(function () {
-              var otherText = $('.otherIncludeTextCls:checked').val();
-              if (otherText == 'Yes') {
-                  $('.OtherOptionCls').show();
-                  $('.OtherOptionCls').find('input:text,select').attr('required', true);
-              } else {
-                  $('.OtherOptionCls').hide();
-                  $('.OtherOptionCls').find('input:text,select').removeAttr('required');
-              }
-          });
-
-          <c:if test="${actionTypeForQuestionPage == 'view'}">
-          $('#questionStepId input,textarea ').prop('disabled', true);
-          $('#questionStepId select').addClass('linkDis');
-          $('.addBtnDis, .remBtnDis,.add_varible').addClass('dis-none');
-          $("#trailId").hide();
-          $(".removeImageId").css("visibility", "hidden");
-          </c:if>
-
-          if ($('.value-picker').length > 2) {
-              $('.ValuePickerContainer').find(".remBtnDis").removeClass("hide");
-          } else {
-              $('.ValuePickerContainer').find(".remBtnDis").addClass("hide");
-          }
-          if ($('.text-scale').length > 2) {
-              $('.TextScaleContainer').find(".remBtnDis").removeClass("hide");
-          } else {
-              $('.TextScaleContainer').find(".remBtnDis").addClass("hide");
-          }
-          if ($('.text-choice').length > 2) {
-              $('.TextChoiceContainer').find(".remBtnDis").removeClass("hide");
-          } else {
-              $('.TextChoiceContainer').find(".remBtnDis").addClass("hide");
-          }
-          if ($('.image-choice').length > 2) {
-              $('.ImageChoiceContainer').find(".remBtnDis").removeClass("hide");
-          } else {
-              $('.ImageChoiceContainer').find(".remBtnDis").addClass("hide");
-          }
-          $(".menuNav li.active").removeClass('active');
-          $(".sixthQuestionnaires").addClass('active');
-          $("#doneId").click(function () {
-              $("#doneId").attr("disabled", true);
-              var isValid = true;
-              var isImageValid = true;
-              var resType = $("#rlaResonseType").val();
-              var anchorDateFlag = true;
-              if (resType == 'Text Scale' || resType == 'Image Choice' || resType == 'Value Picker'
-                  || resType == 'Text Choice') {
-                  validateForUniqueValue('', resType, function (val) {
-                      if (val) {
-                      }
-                  });
-              }
-              if (resType == "Scale") {
-                  $("#displayStepsCount").trigger('blur');
-                  $("#scaleMinValueId").trigger('blur');
-                  $("#scaleMaxValueId").trigger('blur');
-                  $("#scaleDefaultValueId").trigger('blur');
-              } else if (resType == "Continuous Scale") {
-                  $("#continuesScaleMinValueId").trigger('blur');
-                  $("#continuesScaleMaxValueId").trigger('blur');
-                  $("#continuesScaleDefaultValueId").trigger('blur');
-                  validateFractionDigits($("#continuesScaleFractionDigitsId"));
-              } else if (resType == "Numeric") {
-                  $("#numericMinValueId").trigger('blur');
-                  $("#numericMaxValueId").trigger('blur');
-              } else if (resType == "Text Choice") {
-                  if ($('#textchoiceOtherId').is(':checked')) {
-                      $('.textchoiceOtherCls').show();
-                      $('.textchoiceOtherCls').find('input:text,select').attr('required', true);
-                      $('.OtherOptionCls').find('input:text,select').removeAttr('required');
-                  } else {
-                      $('.textchoiceOtherCls').find('input:text,select').removeAttr('required');
-                      $('.OtherOptionCls').find('input:text,select').removeAttr('required');
-                      $('.textchoiceOtherCls').hide();
-                  }
-
-                  var otherText = $('.otherIncludeTextCls:checked').val();
-                  if (otherText == 'Yes') {
-                      $('.OtherOptionCls').show();
-                      $('.OtherOptionCls').find('input:text,select').attr('required', true);
-                  } else {
-                      $('.OtherOptionCls').hide();
-                      $('.OtherOptionCls').find('input:text,select').removeAttr('required');
-                  }
-              }
-              if (isFromValid("#questionStepId")) {
-                  $("body").addClass("loading");
-                  var placeholderText = '';
-                  var stepText = "";
-                  if (resType == "Email") {
-                      placeholderText = $("#placeholderId").val();
-                  } else if (resType == "Text") {
-                      placeholderText = $("#textPlaceholderId").val();
-                  } else if (resType == "Height") {
-                      placeholderText = $("#heightPlaceholderId").val();
-                  } else if (resType == "Numeric") {
-                      placeholderText = $("#numericPlaceholderId").val();
-                      var minValue = $("#numericMinValueId").val();
-                      var maxValue = $("#numericMaxValueId").val();
-                      if ((minValue != '' && maxValue != '') || (minValue == '' && maxValue == '')) {
-                          isValid = true;
-                      } else {
-                          if (maxValue == '') {
-                              $("#numericMaxValueId").parent().addClass("has-danger").addClass("has-error");
-                              $("#numericMaxValueId").parent().find(".help-block").empty();
-                              $("#numericMaxValueId").parent().find(".help-block").append(
-                                  "<ul class='list-unstyled'><li>Please fill out this field</li></ul>");
-                          }
-                          if (minValue == '') {
-                              $("#numericMinValueId").parent().addClass("has-danger").addClass("has-error");
-                              $("#numericMinValueId").parent().find(".help-block").empty();
-                              $("#numericMinValueId").parent().find(".help-block").append(
-                                  "<ul class='list-unstyled'><li>Please fill out this field</li></ul>");
-                          }
-                          isValid = false;
-                          $("#doneId").attr("disabled", false);
-                          $("body").removeClass("loading");
-                      }
-                  } else if (resType == "Time interval") {
-                      stepText = $("#timeIntervalStepId").val();
-                  } else if (resType == "Scale" || resType == "Continuous Scale") {
-                      stepText = $("#scaleStepId").val();
-                      var minValue = ''
-                      var maxValue = ''
-                      if (resType == "Continuous Scale") {
-                          minValue = $("#continuesScaleMinDescriptionId").val();
-                          maxValue = $("#continuesScaleMaxDescriptionId").val();
-                      } else {
-                          minValue = $("#scaleMinDescriptionId").val();
-                          maxValue = $("#scaleMaxDescriptionId").val();
-                      }
-                      if ((minValue != '' && maxValue != '') || (minValue == '' && maxValue == '')) {
-                          isValid = true;
-                      } else {
-                          if (maxValue == '') {
-                              if (resType == "Continuous Scale") {
-                                  $("#continuesScaleMaxDescriptionId").parent().addClass("has-danger").addClass(
-                                      "has-error");
-                                  $("#continuesScaleMaxDescriptionId").parent().find(".help-block").empty();
-                                  $("#continuesScaleMaxDescriptionId").parent().find(".help-block").append(
-                                      "<ul class='list-unstyled'><li>Please fill out this field</li></ul>");
-                              } else {
-                                  $("#scaleMaxDescriptionId").parent().addClass("has-danger").addClass("has-error");
-                                  $("#scaleMaxDescriptionId").parent().find(".help-block").empty();
-                                  $("#scaleMaxDescriptionId").parent().find(".help-block").append(
-                                      "<ul class='list-unstyled'><li>Please fill out this field</li></ul>");
-                              }
-                          }
-                          if (minValue == '') {
-                              if (resType == "Continuous Scale") {
-                                  $("#continuesScaleMinDescriptionId").parent().addClass("has-danger").addClass(
-                                      "has-error");
-                                  $("#continuesScaleMinDescriptionId").parent().find(".help-block").empty();
-                                  $("#continuesScaleMinDescriptionId").parent().find(".help-block").append(
-                                      "<ul class='list-unstyled'><li>Please fill out this field</li></ul>");
-                              } else {
-                                  $("#scaleMinDescriptionId").parent().addClass("has-danger").addClass("has-error");
-                                  $("#scaleMinDescriptionId").parent().find(".help-block").empty();
-                                  $("#scaleMinDescriptionId").parent().find(".help-block").append(
-                                      "<ul class='list-unstyled'><li>Please fill out this field</li></ul>");
-                              }
-                          }
-                          isValid = false;
-                          $("#doneId").attr("disabled", false);
-                          $("body").removeClass("loading");
-                      }
-                      var minImagePath = '';
-                      var maxImagePath = '';
-                      var minImageFile = '';
-                      var maxImageFile = '';
-                      if (resType == "Continuous Scale") {
-                          minImagePath = $("#continuesScaleMinImagePathId").val();
-                          maxImagePath = $("#continuesScaleMaxImagePathId").val();
-                          minImageFile = document.getElementById("continuesScaleMinImageFileId").files[0];
-                          maxImageFile = document.getElementById("continuesScaleMaxImageFileId").files[0];
-                      } else {
-                          minImagePath = $("#scaleMinImagePathId").val();
-                          maxImagePath = $("#scaleMaxImagePathId").val();
-                          minImageFile = document.getElementById("scaleMinImageFileId").files[0];
-                          maxImageFile = document.getElementById("scaleMaxImageFileId").files[0];
-                      }
-
-                      if (minImagePath == '' && maxImagePath == '' && ((typeof minImageFile == 'undefined'
-                          && typeof maxImageFile == 'undefined') || (minImageFile == null && maxImageFile
-                          == null))) {
-                          isImageValid = true;
-                      } else if (((minImageFile != null && typeof minImageFile != 'undefined') || minImagePath
-                          != '') && ((maxImageFile != null && typeof maxImageFile != 'undefined')
-                          || maxImagePath != '')) {
-                          isImageValid = true;
-                      } else {
-                          if (maxImagePath == '' && (maxImageFile == '' || typeof maxImageFile == 'undefined'
-                              || maxImageFile == null)) {
-                              if (resType == "Continuous Scale") {
-                                  $("#continuesScaleMaxImagePathId").parent().addClass("has-danger").addClass(
-                                      "has-error");
-                                  $("#continuesScaleMaxImagePathId").parent().find(".help-block").empty();
-                                  $("#continuesScaleMaxImagePathId").parent().find(".help-block").append(
-                                      "<ul class='list-unstyled'><li>Please fill out this field</li></ul>");
-                              } else {
-                                  $("#scaleMaxImagePathId").parent().addClass("has-danger").addClass("has-error");
-                                  $("#scaleMaxImagePathId").parent().find(".help-block").empty();
-                                  $("#scaleMaxImagePathId").parent().find(".help-block").append(
-                                      "<ul class='list-unstyled'><li>Please fill out this field</li></ul>");
-                              }
-                          }
-                          if (minImagePath == '' && (minImageFile == '' || typeof minImageFile == 'undefined'
-                              || minImageFile == null)) {
-                              if (resType == "Continuous Scale") {
-                                  $("#continuesScaleMinImagePathId").parent().addClass("has-danger").addClass(
-                                      "has-error");
-                                  $("#continuesScaleMinImagePathId").parent().find(".help-block").empty();
-                                  $("#continuesScaleMinImagePathId").parent().find(".help-block").append(
-                                      "<ul class='list-unstyled'><li>Please fill out this field</li></ul>");
-                              } else {
-                                  $("#scaleMinImagePathId").parent().addClass("has-danger").addClass("has-error");
-                                  $("#scaleMinImagePathId").parent().find(".help-block").empty();
-                                  $("#scaleMinImagePathId").parent().find(".help-block").append(
-                                      "<ul class='list-unstyled'><li>Please fill out this field</li></ul>");
-                              }
-                          }
-                          isImageValid = false;
-                          $("#doneId").attr("disabled", false);
-                          $("body").removeClass("loading");
-                      }
-                  } else if (resType == 'Text Scale') {
-                      var count = $('.text-scale').length;
-                      stepText = $("#textScalePositionId").val();
-                      if (stepText != '') {
-                          if (stepText != '' && stepText >= 1 && stepText <= count) {
-                              isValid = true;
-                          } else {
-                              isValid = false;
-                              $("#textScalePositionId").focus();
-                              stepText = "";
-                          }
-                      } else {
-                          isValid = true;
-                      }
-                  } else if (resType == 'Date') {
-                      var skiappable = $('input[name="skiappable"]:checked').val();
-                      var anchorText = $("#anchorTextId").val();
-                      var anchorDateUsed = $('#useAnchorDateId').is(':checked');
-                      if (anchorDateUsed && anchorText != '' && anchorText != null && typeof anchorText
-                          != 'undefined') {
-                          $("#anchorTextId,#useAnchorDateId").attr("disabled", false);
-                          validateAnchorDateText('', function (val) {
-                          });
-                          if (skiappable == 'Yes')
-                              anchorDateFlag = false;
-                      }
-                  }
-                  $("#placeholderTextId").val(placeholderText);
-                  $("#stepValueId").val(stepText);
-                  if (isValid && isImageValid && validateResponseDataElement()
-                      && validateSingleResponseDataElement()) {
-                      validateQuestionShortTitle('', function (val) {
-                          if (val) {
-                              var statShortName = $("#statShortNameId").val();
-                              if (statShortName != '' && statShortName != null && typeof statShortName
-                                  != 'undefined') {
-                                  validateStatsShorTitle('', function (val) {
-                                      if (val) {
-                                          if (resType != '' && resType != null && resType != 'undefined') {
-                                              $("#responseTypeId > option").each(function () {
-                                                  var textVal = this.text.replace(/\s/g, '');
-                                                  if (resType.replace(/\s/g, '') == textVal) {
-                                                  } else {
-                                                      $("#" + textVal).empty();
-                                                  }
-                                              });
-                                              if (!$("#formulaBasedLogicId").is(":checked")) {
-                                                  $("#conditionalFormulaId").empty();
-                                              }
-                                          }
-                                          if (anchorDateFlag) {
-                                              document.questionStepId.submit();
-                                          } else {
-                                              bootbox.confirm({
-                                                  closeButton: false,
-                                                  message: "This question provides an anchor date response element, but has been marked Skippable. Are you sure you wish to proceed?",
-                                                  buttons: {
-                                                      'cancel': {
-                                                          label: 'Cancel',
-                                                      },
-                                                      'confirm': {
-                                                          label: 'OK',
-                                                      },
-                                                  },
-                                                  callback: function (result) {
-                                                      if (result) {
-                                                          document.questionStepId.submit();
-                                                      }
-                                                  }
-                                              })
-                                          }
-                                      } else {
-                                          $("#doneId").attr("disabled", false);
-                                          $("body").removeClass("loading");
-                                      }
-                                  });
-                              } else {
-                                  if (resType != '' && resType != null && resType != 'undefined') {
-                                      $("#responseTypeId > option").each(function () {
-                                          var textVal = this.text.replace(/\s/g, '');
-                                          if (resType.replace(/\s/g, '') == textVal) {
-                                          } else {
-                                              $("#" + textVal).empty();
-                                          }
-                                      });
-                                      if (!$("#formulaBasedLogicId").is(":checked")) {
-                                          $("#conditionalFormulaId").empty();
-                                      }
-                                  }
-                                  if (anchorDateFlag) {
-                                      document.questionStepId.submit();
-                                  } else {
-                                      $("body").removeClass("loading");
-                                      $("#doneId").attr("disabled", false);
-                                      bootbox.confirm({
-                                          closeButton: false,
-                                          message: "This question provides an anchor date response element, but has been marked Skippable. Are you sure you wish to proceed?",
-                                          buttons: {
-                                              'cancel': {
-                                                  label: 'Cancel',
-                                              },
-                                              'confirm': {
-                                                  label: 'OK',
-                                              },
-                                          },
-                                          callback: function (result) {
-                                              if (result) {
-                                                  document.questionStepId.submit();
-                                              }
-                                          }
-                                      })
-                                  }
-
-                              }
-                          } else {
-                              $("body").removeClass("loading");
-                              $("#doneId").attr("disabled", false);
-                          }
-                      });
-                  } else {
-                      $("#doneId").attr("disabled", false);
-                      $("body").removeClass("loading");
-                      var slaCount = $('#sla').find('.has-error.has-danger').length;
-                      var qlaCount = $('#qla').find('.has-error.has-danger').length;
-                      var rlaCount = $('#rla').find('.has-error.has-danger').length;
-
-                      if (parseInt(slaCount) >= 1) {
-                          $('.stepLevel a').tab('show');
-                      } else if (parseInt(qlaCount) >= 1) {
-                          $('.questionLevel a').tab('show');
-                      } else if (parseInt(rlaCount) >= 1) {
-                          $('.responseLevel a').tab('show');
-                          $("#rla").find(".has-error:first").find('input').focus();
-                      }
-
-                  }
-              } else {
-                  $("#doneId").attr("disabled", false);
-                  var slaCount = $('#sla').find('.has-error.has-danger').length;
-                  var qlaCount = $('#qla').find('.has-error.has-danger').length;
-                  var rlaCount = $('#rla').find('.has-error.has-danger').length;
-
-                  if (parseInt(slaCount) >= 1) {
-                      $('.stepLevel a').tab('show');
-                  } else if (parseInt(qlaCount) >= 1) {
-                      $('.questionLevel a').tab('show');
-                  } else if (parseInt(rlaCount) >= 1) {
-                      $('.responseLevel a').tab('show');
-                  }
-              }
-          });
-          $("#saveId").on("click", function () {
-              $("body").addClass("loading");
-              validateQuestionShortTitle('', function (val) {
-                  if (val) {
-                      var statShortName = $("#statShortNameId").val();
-                      if (statShortName != '' && statShortName != null && typeof statShortName
-                          != 'undefined') {
-                          validateStatsShorTitle('', function (val) {
-                              if (val && validateSingleResponseDataElement()) {
-                                  saveQuestionStepQuestionnaire('', '');
-                              } else {
-                                  $("body").removeClass("loading");
-                              }
-                          });
-                      } else {
-                          var resType = $("#rlaResonseType").val();
-                          if (resType == 'Text Scale' || resType == 'Image Choice' || resType == 'Value Picker'
-                              || resType == 'Text Choice') {
-                              validateForUniqueValue('', resType, function (val) {
-                                  if (val) {
-                                      saveQuestionStepQuestionnaire('', '');
-                                  } else {
-                                      $("body").removeClass("loading");
-                                  }
-                              });
-                          } else {
-                              if (validateSingleResponseDataElement()) {
-                                  saveQuestionStepQuestionnaire('', '');
-                              } else {
-                                  $("body").removeClass("loading");
-                              }
-                          }
-                      }
-                  } else {
-                      $("body").removeClass("loading");
-                  }
-              });
-          });
-          $("#statShortNameId").blur(function () {
-              validateStatsShorTitle('', function (val) {
-              });
-          })
-          $(".responseLevel ").on('click', function () {
-              var reponseType = $("#responseTypeId").val();
-              if (reponseType != '' && reponseType != '' && typeof reponseType != 'undefined') {
-                  $("#responseTypeDivId").show();
-              } else {
-                  $("#responseTypeDivId").hide();
-              }
-          });
-          $("#stepShortTitle").blur(function () {
-              validateQuestionShortTitle('', function (val) {
-              });
-          });
-          $("#continuesScaleMaxDescriptionId,#continuesScaleMinDescriptionId,#scaleMinDescriptionId,#scaleMaxDescriptionId").on(
-              "change", function () {
-                  $(this).validator('validate');
-                  $(this).parent().removeClass("has-danger").removeClass("has-error");
-                  $(this).parent().find(".help-block").empty();
-              });
-          $("#scaleMinValueId,#scaleMaxValueId").on("change", function () {
-              if ($(this).val() != '') {
-                  $("#scaleStepId").val('');
-                  $("#scaleDefaultValueId").val('');
-                  $("#displayStepsCount").val('');
-              }
-          });
-          $("#continuesScaleMinValueId,#continuesScaleMaxValueId").on("change", function () {
-              if ($(this).val() != '') {
-                  $("#continuesScaleDefaultValueId").val('');
-                  $("#continuesScaleFractionDigitsId").val('');
-              }
-              $("#continuesScaleDefaultValueId").parent().removeClass("has-danger").removeClass(
-                  "has-error");
-              $("#continuesScaleDefaultValueId").parent().find(".help-block").empty();
-              $("#continuesScaleFractionDigitsId").parent().removeClass("has-danger").removeClass(
-                  "has-error");
-              $("#continuesScaleFractionDigitsId").parent().find(".help-block").empty();
-          });
-          $("#displayStepsCount").on("change", function () {
-              if ($(this).val() != '') {
-                  $("#scaleDefaultValueId").val('');
-              }
-              $("#scaleDefaultValueId").parent().removeClass("has-danger").removeClass("has-error");
-              $("#scaleDefaultValueId").parent().find(".help-block").empty();
-          });
-          $("#addLineChart").on('change', function () {
-              if ($(this).is(":checked")) {
-                  $(this).val("Yes");
-                  $("#chartContainer").show();
-                  $(".chartrequireClass").attr('required', true);
-                  $('.selectpicker').selectpicker('refresh');
-              } else {
-                  $(this).val("No");
-                  $("#chartContainer").hide();
-                  $(".chartrequireClass").attr('required', false);
-                  $("#lineChartTimeRangeId").val('');
-                  $('#chartTitleId').val('');
-                  $('.selectpicker').selectpicker('refresh');
-                  document.getElementById("allowRollbackChartNo").checked = true;
-              }
-          });
-          $("#allowHealthKit").on('change', function () {
-
-              if ($(this).is(":checked")) {
-                  $(this).val("Yes");
-                  $("#healthKitContainerId").show();
-                  $(".healthkitrequireClass").attr('required', true);
-                  $('.selectpicker').selectpicker('refresh');
-              } else {
-                  $(this).val("No");
-                  $("#healthKitContainerId").hide();
-                  $(".healthkitrequireClass").attr('required', false);
-                  $("#healthkitDatatypeId").val('');
-                  $('.selectpicker').selectpicker('refresh');
-              }
-          });
-          $("#formulaBasedLogicId").on('change', function () {
-              if ($(this).is(":checked")) {
-                  $(this).val("Yes");
-                  $("#conditionalFormulaId").show();
-                  $(".conditionalBranchingRequired").attr('required', true);
-              } else {
-                  $(this).val("No");
-                  $("#conditionalFormulaId").hide();
-                  $(".conditionalBranchingRequired").attr('required', false);
-
-                  deleteChildElements(1, "parent");
-                  $("#inputTypeValueId0").val('');
-                  $("#inputTypeId2").val('');
-                  $("#inputTypeId3").val('');
-                  $(".formula").text("-NA-");
-                  $(".tryFormula").text("-NA-");
-                  $("#constantValId2").val('')
-                  $("#constantValId3").val('');
-                  $("#constantValId3").addClass("add_var_hide");
-                  $("#constantValId2").addClass("add_var_hide");
-                  $("#constantValId2").prop("required", false);
-                  $("#constantValId3").prop("required", false);
-                  $("#constantValId2").addClass("add_var_hide");
-                  $("#inputSubTypeValueId2").val('');
-                  $('.selectpicker').selectpicker('refresh');
-              }
-          });
-          $("#useStasticData").on('change', function () {
-              if ($(this).is(":checked")) {
-                  $(this).val("Yes");
-                  $("#statContainer").show();
-                  $(".requireClass").attr('required', true);
-                  $('.selectpicker').selectpicker('refresh');
-
-              } else {
-                  $(this).val("No");
-                  $("#statContainer").hide();
-                  $(".requireClass").attr('required', false);
-                  $("#statShortNameId").val('');
-                  $("#statDisplayNameId").val('');
-                  $("#statDisplayUnitsId").val('');
-                  $("#statTypeId").val('');
-                  $("#statFormula").val('');
-                  $('.selectpicker').selectpicker('refresh');
-              }
-          });
-          $("#scaleMinValueId").blur(function () {
-              var value = $("#scaleMinValueId").val();
-              var maxValue = $("#scaleMaxValueId").val();
-              $("#scaleMinValueId").parent().removeClass("has-danger").removeClass("has-error");
-              $("#scaleMinValueId").parent().find(".help-block").empty();
-              if (maxValue != '') {
-                  if (value != '') {
-                      if (parseInt(value) >= -10000 && parseInt(value) <= 10000) {
-                          if (parseInt(value) + 1 > parseInt(maxValue)) {
-                              $("#scaleMinValueId").val('');
-                              $("#scaleMinValueId").parent().addClass("has-danger").addClass("has-error");
-                              $("#scaleMinValueId").parent().find(".help-block").empty();
-                              $("#scaleMinValueId").parent().find(".help-block").append(
-                                  "<ul class='list-unstyled'><li>Please enter an integer number in the range (Min, 10000)</li></ul>");
-                          } else {
-                              $("#scaleMinValueId").parent().removeClass("has-danger").removeClass("has-error");
-                              $("#scaleMinValueId").parent().find(".help-block").empty();
-                          }
-                      } else {
-                          $("#scaleMinValueId").val('');
-                          $("#scaleMinValueId").parent().addClass("has-danger").addClass("has-error");
-                          $("#scaleMinValueId").parent().find(".help-block").empty();
-                          $("#scaleMinValueId").parent().find(".help-block").append(
-                              "<ul class='list-unstyled'><li>Please enter an integer number in the range (Min, 10000) </li></ul>");
-                      }
-                  }
-              } else {
-                  if (value != '') {
-                      if (parseInt(value) >= -10000 && parseInt(value) <= 10000) {
-                          $("#scaleMinValueId").parent().removeClass("has-danger").removeClass("has-error");
-                          $("#scaleMinValueId").parent().find(".help-block").empty();
-                      } else {
-                          $("#scaleMinValueId").val('');
-                          $("#scaleMinValueId").parent().addClass("has-danger").addClass("has-error");
-                          $("#scaleMinValueId").parent().find(".help-block").empty();
-                          $("#scaleMinValueId").parent().find(".help-block").append(
-                              "<ul class='list-unstyled'><li>Please enter an integer number in the range (Min, 10000) </li></ul>");
-                      }
-                  }
-              }
-          });
-          $("#scaleMaxValueId").blur(function () {
-              var value = $("#scaleMaxValueId").val();
-              var minValue = $("#scaleMinValueId").val();
-              $("#scaleMaxValueId").parent().removeClass("has-danger").removeClass("has-error");
-              $("#scaleMaxValueId").parent().find(".help-block").empty();
-              if (minValue != '') {
-                  if (value != '') {
-                      if (parseInt(value) >= -10000 && parseInt(value) <= 10000) {
-                          if (parseInt(value) >= parseInt(minValue) + 1 && parseInt(value) <= 10000) {
-                              $("#scaleMaxValueId").parent().removeClass("has-danger").removeClass("has-error");
-                              $("#scaleMaxValueId").parent().find(".help-block").empty();
-                          } else if (parseInt(value) < parseInt(minValue) + 1) {
-                              $("#scaleMaxValueId").val('');
-                              $("#scaleMaxValueId").parent().addClass("has-danger").addClass("has-error");
-                              $("#scaleMaxValueId").parent().find(".help-block").empty();
-                              $("#scaleMaxValueId").parent().find(".help-block").append(
-                                  "<ul class='list-unstyled'><li>Please enter an integer number in the range (Min+1, 10000)</li></ul>");
-                          }
-                      } else {
-                          $("#scaleMaxValueId").val('');
-                          $("#scaleMaxValueId").parent().addClass("has-danger").addClass("has-error");
-                          $("#scaleMaxValueId").parent().find(".help-block").empty();
-                          $("#scaleMaxValueId").parent().find(".help-block").append(
-                              "<ul class='list-unstyled'><li>Please enter an integer number in the range (Min+1, 10000) </li></ul>");
-                      }
-                  }
-              } else {
-                  if (value != '') {
-                      if (parseInt(value) >= -10000 && parseInt(value) <= 10000) {
-                          $("#scaleMaxValueId").parent().removeClass("has-danger").removeClass("has-error");
-                          $("#scaleMaxValueId").parent().find(".help-block").empty();
-                      } else {
-                          $("#scaleMaxValueId").val('');
-                          $("#scaleMaxValueId").parent().addClass("has-danger").addClass("has-error");
-                          $("#scaleMaxValueId").parent().find(".help-block").empty();
-                          $("#scaleMaxValueId").parent().find(".help-block").append(
-                              "<ul class='list-unstyled'><li>Please enter an integer number in the range (Min+1, 10000) </li></ul>");
-                      }
-                  }
-              }
-          });
-          $('#scaleMinValueId,#scaleMaxValueId,#scaleDefaultValueId,#textmaxLengthId').bind('input',
-              function (e) {
-                  var id = $(this).attr('id');
-                  var str = $("#" + id).val();
-                  var dec = str.indexOf(".");
-                  var first_char = str.charAt(0);
-                  var isNumber = true;
-                  if (first_char == '-' || !isNaN(first_char)) {
-                      for (i = 1; i < str.length; i++) {
-                          if (isNaN(str.charAt(i)) && str.charAt(i) != '.') {
-                              isNumber = false;
-                              break;
-                          }
-                      }
-                  } else {
-                      isNumber = false;
-                  }
-                  if (dec != -1 && isNumber) {
-                      str = str.substring(0, str.indexOf("."));
-                  }
-                  if (isNumber) {
-                      $("#" + id).val(str);
-                  } else {
-                      $("#" + id).val("");
-                  }
-              });
-          $("#displayStepsCount").blur(function () {
-              var value = $("#displayStepsCount").val();
-              var minValue = $("#scaleMinValueId").val();
-              var maxValue = $("#scaleMaxValueId").val();
-              $("#displayStepsCount").parent().removeClass("has-danger").removeClass("has-error");
-              $("#displayStepsCount").parent().find(".help-block").empty();
-              if (value != '' && minValue != '' && maxValue != '') {
-                  var diff = parseInt(maxValue) - parseInt(minValue);
-                  var displayStepsCount = "";
-                  var stepsCount = (parseInt(diff) / parseInt(value));
-                  if ((parseInt(diff) % parseInt(value)) == 0) {
-                      displayStepsCount = parseInt(stepsCount);
-                      if (parseInt(stepsCount) >= 1 && parseInt(stepsCount) <= 13) {
-                          $("#displayStepsCount").parent().removeClass("has-danger").removeClass("has-error");
-                          $("#displayStepsCount").parent().find(".help-block").empty();
-                          $("#scaleStepId").val(displayStepsCount);
-                      } else {
-                          $("#scaleStepId").val('');
-                          $("#displayStepsCount").val('');
-                          $("#displayStepsCount").parent().addClass("has-danger").addClass("has-error");
-                          $("#displayStepsCount").parent().find(".help-block").empty();
-                          if (parseInt(stepsCount) < 1) {
-                              $("#displayStepsCount").parent().find(".help-block").append(
-                                  "<ul class='list-unstyled'><li>Please enter  a smaller step size.</li></ul>");
-                          } else {
-                              $("#displayStepsCount").parent().find(".help-block").append(
-                                  "<ul class='list-unstyled'><li>Please enter a larger step size.</li></ul>");
-                          }
-
-                      }
-                  } else {
-                      $("#displayStepsCount").val('');
-                      $("#scaleStepId").val('');
-                      $("#displayStepsCount").parent().addClass("has-danger").addClass("has-error");
-                      $("#displayStepsCount").parent().find(".help-block").empty();
-                      $("#displayStepsCount").parent().find(".help-block").append(
-                          "<ul class='list-unstyled'><li>(Max-Min) value should be exactly divisisble by the step size.</li></ul>");
-                  }
-              }
-          });
-          $("#scaleDefaultValueId").blur(function () {
-              var value = $("#scaleDefaultValueId").val();
-              var stepSize = $("#scaleStepId").val();
-              $("#scaleDefaultValueId").parent().removeClass("has-danger").removeClass("has-error");
-              $("#scaleDefaultValueId").parent().find(".help-block").empty();
-              if (value != '' && stepSize != '') {
-                  if (parseInt(value) >= 0 && parseInt(value) <= parseInt(stepSize)) {
-                      $("#scaleDefaultValueId").parent().removeClass("has-danger").removeClass("has-error");
-                      $("#scaleDefaultValueId").parent().find(".help-block").empty();
-                  } else {
-                      $("#scaleDefaultValueId").val('');
-                      $("#scaleDefaultValueId").parent().addClass("has-danger").addClass("has-error");
-                      $("#scaleDefaultValueId").parent().find(".help-block").empty();
-                      $("#scaleDefaultValueId").parent().find(".help-block").append(
-                          "<ul class='list-unstyled'><li>Please enter an integer from 0 to number of steps</li></ul>");
-                  }
-              } else {
-                  if (value != '') {
-                      $("#scaleDefaultValueId").val('');
-                      $("#scaleDefaultValueId").parent().addClass("has-danger").addClass("has-error");
-                      $("#scaleDefaultValueId").parent().find(".help-block").empty();
-                      $("#scaleDefaultValueId").parent().find(".help-block").append(
-                          "<ul class='list-unstyled'><li>Please enter an step size first </li></ul>");
-                  }
-              }
-          });
-
-          $("#continuesScaleMinValueId").blur(function () {
-
-              var value = $("#continuesScaleMinValueId").val();
-              var maxValue = $("#continuesScaleMaxValueId").val();
-              $("#continuesScaleMinValueId").parent().removeClass("has-danger").removeClass("has-error");
-              $("#continuesScaleMinValueId").parent().find(".help-block").empty();
-              if (maxValue != '') {
-                  if (parseInt(value) >= -10000 && parseInt(value) <= 10000) {
-                      if (parseInt(value) + 1 > parseInt(maxValue)) {
-                          $("#continuesScaleMinValueId").val('');
-                          $("#continuesScaleMinValueId").parent().addClass("has-danger").addClass("has-error");
-                          $("#continuesScaleMinValueId").parent().find(".help-block").empty();
-                          $("#continuesScaleMinValueId").parent().find(".help-block").append(
-                              "<ul class='list-unstyled'><li>Please enter an integer number in the range (Min, 10000)</li></ul>");
-                      } else {
-                          $("#continuesScaleMinValueId").parent().removeClass("has-danger").removeClass(
-                              "has-error");
-                          $("#continuesScaleMinValueId").parent().find(".help-block").empty();
-                      }
-                  } else {
-                      $("#continuesScaleMinValueId").val('');
-                      $("#continuesScaleMinValueId").parent().addClass("has-danger").addClass("has-error");
-                      $("#continuesScaleMinValueId").parent().find(".help-block").empty();
-                      $("#continuesScaleMinValueId").parent().find(".help-block").append(
-                          "<ul class='list-unstyled'><li>Please enter an integer number in the range (Min, 10000) </li></ul>");
-                  }
-              } else {
-                  if (value != '') {
-                      if (parseInt(value) >= -10000 && parseInt(value) <= 10000) {
-                          $("#continuesScaleMinValueId").parent().removeClass("has-danger").removeClass(
-                              "has-error");
-                          $("#continuesScaleMinValueId").parent().find(".help-block").empty();
-                      } else {
-                          $("#continuesScaleMinValueId").val('');
-                          $("#continuesScaleMinValueId").parent().addClass("has-danger").addClass("has-error");
-                          $("#continuesScaleMinValueId").parent().find(".help-block").empty();
-                          $("#continuesScaleMinValueId").parent().find(".help-block").append(
-                              "<ul class='list-unstyled'><li>Please enter an integer number in the range (Min, 10000) </li></ul>");
-                      }
-                  }
-              }
-          });
-          $("#continuesScaleMaxValueId").blur(function () {
-              var value = $("#continuesScaleMaxValueId").val();
-              var minValue = $("#continuesScaleMinValueId").val();
-              $("#continuesScaleMaxValueId").parent().removeClass("has-danger").removeClass("has-error");
-              $("#continuesScaleMaxValueId").parent().find(".help-block").empty();
-              if (minValue != '') {
-                  if (parseInt(value) >= -10000 && parseInt(value) <= 10000) {
-                      if (parseInt(value) >= parseInt(minValue) + 1 && parseInt(value) <= 10000) {
-                          $("#continuesScaleMaxValueId").parent().removeClass("has-danger").removeClass(
-                              "has-error");
-                          $("#continuesScaleMaxValueId").parent().find(".help-block").empty();
-                      } else if (parseInt(value) < parseInt(minValue) + 1) {
-                          $("#continuesScaleMaxValueId").val('');
-                          $("#continuesScaleMaxValueId").parent().addClass("has-danger").addClass("has-error");
-                          $("#continuesScaleMaxValueId").parent().find(".help-block").empty();
-                          $("#continuesScaleMaxValueId").parent().find(".help-block").append(
-                              "<ul class='list-unstyled'><li>Please enter an integer number in the range (Min+1, 10000)</li></ul>");
-                      }
-                  } else {
-                      $("#continuesScaleMaxValueId").val('');
-                      $("#continuesScaleMaxValueId").parent().addClass("has-danger").addClass("has-error");
-                      $("#continuesScaleMaxValueId").parent().find(".help-block").empty();
-                      $("#continuesScaleMaxValueId").parent().find(".help-block").append(
-                          "<ul class='list-unstyled'><li>Please enter an integer number in the range (Min+1, 10000) </li></ul>");
-                  }
-              } else {
-                  if (value != '') {
-                      if (parseInt(value) >= -10000 && parseInt(value) <= 10000) {
-                          $("#continuesScaleMaxValueId").parent().removeClass("has-danger").removeClass(
-                              "has-error");
-                          $("#continuesScaleMaxValueId").parent().find(".help-block").empty();
-                      } else {
-                          $("#continuesScaleMaxValueId").val('');
-                          $("#continuesScaleMaxValueId").parent().addClass("has-danger").addClass("has-error");
-                          $("#continuesScaleMaxValueId").parent().find(".help-block").empty();
-                          $("#continuesScaleMaxValueId").parent().find(".help-block").append(
-                              "<ul class='list-unstyled'><li>Please enter an integer number in the range (Min+1, 10000) </li></ul>");
-                      }
-                  }
-              }
-          });
-          $("#continuesScaleDefaultValueId").blur(function () {
-              var value = $(this).val();
-              var minValue = $("#continuesScaleMinValueId").val();
-              var maxValue = $("#continuesScaleMaxValueId").val();
-              $(this).parent().removeClass("has-danger").removeClass("has-error");
-              $(this).parent().find(".help-block").empty();
-              if (value != '') {
-                  if (parseInt(value) >= parseInt(minValue) && parseInt(value) <= parseInt(maxValue)) {
-                      $(this).parent().removeClass("has-danger").removeClass("has-error");
-                      $(this).parent().find(".help-block").empty();
-                  } else {
-                      $(this).val('');
-                      $(this).parent().addClass("has-danger").addClass("has-error");
-                      $(this).parent().find(".help-block").empty();
-                      $(this).parent().find(".help-block").append(
-                          "<ul class='list-unstyled'><li>Please enter an integer between the minimum and maximum  </li></ul>");
-                  }
-              }
-          });
-          $("#numericMinValueId").blur(function () {
-              var value = $(this).val();
-              var maxValue = $("#numericMaxValueId").val();
-              $(this).parent().removeClass("has-danger").removeClass("has-error");
-              $(this).parent().find(".help-block").empty();
-              if (maxValue != '') {
-                  if (parseInt(value) >= parseInt(maxValue)) {
-                      $(this).val('');
-                      $(this).parent().addClass("has-danger").addClass("has-error");
-                      $(this).parent().find(".help-block").empty();
-                      $(this).parent().find(".help-block").append(
-                          "<ul class='list-unstyled'><li>Please enter an value number less than Maximum</li></ul>");
-                  } else {
-                      $(this).parent().removeClass("has-danger").removeClass("has-error");
-                      $(this).parent().find(".help-block").empty();
-                  }
-              }
-          });
-          $("#numericMaxValueId").blur(function () {
-              var value = $(this).val();
-              var minValue = $("#numericMinValueId").val();
-              $(this).parent().removeClass("has-danger").removeClass("has-error");
-              $(this).parent().find(".help-block").empty();
-              if (minValue != '') {
-                  if (parseInt(value) <= parseInt(minValue)) {
-                      $(this).val('');
-                      $(this).parent().addClass("has-danger").addClass("has-error");
-                      $(this).parent().find(".help-block").empty();
-                      $(this).parent().find(".help-block").append(
-                          "<ul class='list-unstyled'><li>Please enter an value number greater than Minimum</li></ul>");
-                  } else {
-                      $(this).parent().removeClass("has-danger").removeClass("has-error");
-                      $(this).parent().find(".help-block").empty();
-                  }
-              }
-          });
-          var responseTypeId = '${questionnairesStepsBo.questionsBo.responseType}';
-          if (responseTypeId != null && responseTypeId != '' && typeof responseTypeId != 'undefined') {
-              getResponseType(responseTypeId);
-          }
-          $("#responseTypeId").on("change", function () {
-              var value = $(this).val();
-              getResponseType(value);
-          });
-          $('.DateStyleRequired').on("change", function () {
-              var value = $(this).val();
-              setResponseDate(value);
-
-          });
-          $('.DateRangeRequired').on("change", function () {
-              var value = $(this).val();
-              if (value == 'Custom') {
-                  $("#customDateContainerId").show();
-              } else {
-                  $("#customDateContainerId").hide();
-                  $("#defaultDate").data("DateTimePicker").clear();
-                  $('#maxDateId').data("DateTimePicker").clear();
-                  $('#minDateId').data("DateTimePicker").clear();
-              }
-          });
-
-          $("#minDateId").on('dp.change', function () {
-              $("#defaultDate").data("DateTimePicker").clear();
-              $('#maxDateId').data("DateTimePicker").clear()
-          });
-          $("#maxDateId").on('dp.change', function () {
-              var minDate = $("#minDateId").val();
-              var maxDate = $('#maxDateId').val();
-              $("#defaultDate").data("DateTimePicker").clear();
-              if (minDate != '' && maxDate != '' && new Date(minDate) >= new Date(maxDate)) {
-                  $('#maxDateId').data("DateTimePicker").clear();
-                  $('#maxDateId').parent().addClass("has-danger").addClass("has-error");
-                  $('#maxDateId').parent().find(".help-block").html(
-                      '<ul class="list-unstyled"><li>Max Date and Time Should not be less than or equal Min Date and Time</li></ul>');
-              } else {
-                  $('#maxDateId').parent().removeClass("has-danger").removeClass("has-error");
-                  $('#maxDateId').parent().find(".help-block").empty();
-                  $("#minDateId").parent().removeClass("has-danger").removeClass("has-error");
-                  $("#minDateId").parent().find(".help-block").empty();
-              }
-          });
-          $("#defaultDate").on('dp.change', function () {
-              var minDate = $("#minDateId").val();
-              var maxDate = $('#maxDateId').val();
-              var defaultDate = $("#defaultDate").val();
-              if (minDate != '' && maxDate != '' && defaultDate != '') {
-                  if (new Date(defaultDate) >= new Date(minDate) && new Date(defaultDate) <= new Date(
-                      maxDate)) {
-                      $('#defaultDate').parent().removeClass("has-danger").removeClass("has-error");
-                      $('#defaultDate').parent().find(".help-block").empty();
-                  } else {
-                      $("#defaultDate").data("DateTimePicker").clear();
-                      $('#defaultDate').parent().addClass("has-danger").addClass("has-error");
-                      $('#defaultDate').parent().find(".help-block").html(
-                          '<ul class="list-unstyled"><li>Enter default date to be shown as selected as per availability of Min and Max</li></ul>');
-                  }
-              }
-          });
-          $("#timeIntervalStepId").blur(function () {
-              var value = $(this).val();
-              var selectedValue = [1, 2, 3, 4, 5, 6, 10, 12, 15, 20, 30];
-              if (selectedValue.indexOf(parseInt(value)) != -1) {
-                  $(this).parent().removeClass("has-danger").removeClass("has-error");
-                  $(this).parent().find(".help-block").empty();
-                  $(this).validator('validate');
-                  $('#timeIntervalDefaultId').val('');
-                  if (parseInt(value) <= 6) {
-                      $('#timeIntervalDefaultId').val('00:0' + value);
-                  } else {
-                      $('#timeIntervalDefaultId').val('00:' + value);
-                  }
-                  $('#timeIntervalDefaultId').data('DateTimePicker').stepping(parseInt(value));
-              } else {
-                  $(this).val('');
-                  $(this).parent().addClass("has-danger").addClass("has-error");
-                  $(this).parent().find(".help-block").empty();
-                  $(this).parent().find(".help-block").append(
-                      "<ul class='list-unstyled'><li>Please select a number from the following set (1,2,3,4,5,6,10,12,15,20 & 30).</li></ul>");
-              }
-          });
-          $("#textScalePositionId").blur(function () {
-              var count = $('.text-scale').length;
-              var value = $(this).val();
-              $("#textScalePositionId").parent().removeClass("has-danger").removeClass("has-error");
-              $("#textScalePositionId").parent().find(".help-block").empty();
-              if (value != '') {
-                  if (value >= 1 && value <= count) {
-                      $("#textScalePositionId").parent().removeClass("has-danger").removeClass("has-error");
-                      $("#textScalePositionId").parent().find(".help-block").empty();
-                  } else {
-
-                      $("#textScalePositionId").parent().addClass("has-danger").addClass("has-error");
-                      $("#textScalePositionId").parent().find(".help-block").empty();
-                      $("#textScalePositionId").parent().find(".help-block").append(
-                          "<ul class='list-unstyled'><li>Please enter choice from 1 to number of choices</li></ul>");
-                  }
-              }
-          });
-          var dt = new Date();
-          $('#timeIntervalDefaultId').datetimepicker({
-              format: 'HH:mm',
-              stepping: 1,
-              useCurrent: false,
-              minDate: new Date(dt.getFullYear(), dt.getMonth(), dt.getDate(), 00, 01),
-              maxDate: new Date(dt.getFullYear(), dt.getMonth(), dt.getDate(), 23, 59)
-          }).on("dp.change", function (e) {
-              var durationTime = $('#timeIntervalDefaultId').val();
-              if (durationTime && durationTime == '00:00') {
-                  durationFlag = false;
-                  $('#timeIntervalDefaultId').parent().addClass('has-error has-danger').find(
-                      ".help-block").empty().append(
-                      '<ul class="list-unstyled"><li>Please select a non-zero Duration value.</li></ul>');
-              } else {
-                  durationFlag = true;
-                  $('#timeIntervalDefaultId').parent().find(".help-block").empty();
-                  var dt = new Date();
-                  $('#timeIntervalDefaultId').datetimepicker({
-                      format: 'HH:mm', stepping: 1,
-                      useCurrent: false,
-                      minDate: new Date(dt.getFullYear(), dt.getMonth(), dt.getDate(), 00, 01),
-                      maxDate: new Date(dt.getFullYear(), dt.getMonth(), dt.getDate(), 23, 59)
-                  });
-              }
-          });
-          // File Upload
-
-          openUploadWindow = function (item) {
-              $(item).siblings('.upload-image').click();
-          }
-          $('[data-toggle="tooltip"]').tooltip();
-          var _URL = window.URL || window.webkitURL;
-
-          $(document).on('change', '.upload-image', function (e) {
-              var file, img;
-              var thisAttr = this;
-              var response_type = $("#rlaResonseType").val();
-              if ((file = this.files[0])) {
-                  img = new Image();
-                  img.onload = function () {
-                      var ht = this.height;
-                      var wds = this.width;
-                      if ((parseInt(ht) == parseInt(wds)) && (parseInt(ht) >= 90 && parseInt(ht) <= 120)
-                          && (parseInt(wds) >= 90 && parseInt(wds) <= 120)) {
-                          $(thisAttr).parent().find('.form-group').removeClass('has-error has-danger');
-                          $(thisAttr).parent().find(".help-block").empty();
-                          var id = $(thisAttr).next().attr("id");
-
-                          if (response_type == "Scale" || response_type == "Continuous Scale") {
-                              $("#" + id).next().removeClass("hide");
-                          }
-
-                          $("#" + id).val('');
-                          $('.textLabel' + id).text("Change");
-                      } else {
-                          $(thisAttr).parent().find('img').attr("src", "../images/icons/sm-thumb.jpg");
-                          $(thisAttr).parent().find('.form-group').addClass('has-error has-danger');
-                          $(thisAttr).parent().find(".help-block").empty().append(
-                              '<ul class="list-unstyled"><li>Failed to upload.</li></ul>');
-                          $(thisAttr).parent().parent().parent().find(".removeUrl").click();
-                          var id = $(thisAttr).next().attr("id");
-
-                          $("#" + id).val('');
-                          $("#" + $(thisAttr).attr("id")).val('');
-                          $('.textLabel' + id).text("Upload");
-                          if (response_type == "Scale" || response_type == "Continuous Scale") {
-                              $("#" + id).next().addClass("hide");
-                          }
-                      }
-                  };
-                  img.onerror = function () {
-                      $(thisAttr).parent().find('img').attr("src", "../images/icons/sm-thumb.jpg");
-                      $(thisAttr).parent().find('.form-group').addClass('has-error has-danger');
-                      $(thisAttr).parent().find(".help-block").empty().append(
-                          '<ul class="list-unstyled"><li>File incorrect.</li></ul>');
-                      $(thisAttr).parent().parent().parent().find(".removeUrl").click();
-                  };
-                  img.src = _URL.createObjectURL(file);
-              }
-          });
-
-          $('.textScaleValue').on('blur', function () {
-              validateForUniqueValue(this, "Text Scale", function () {
-              });
-          });
-          $('.valuePickerVal').on('blur', function () {
-              validateForUniqueValue(this, "Value Picker", function () {
-              });
-          });
-          $('.imageChoiceVal').on('blur', function () {
-              validateForUniqueValue(this, "Image Choice", function () {
-              });
-          });
-          $('.textChoiceVal').on('blur', function () {
-              validateForUniqueValue(this, "Text Choice", function () {
-              });
-          });
-          $('.constant').change(function () {
-              var index = $(this).attr('index');
-              var value = $(this).val();
-              $("#inputSubTypeValueId" + index).val(value);
-              createFormula();
-          });
-          $('#myModal').find('.close').click(function () {
-              $('#trailInputId').val('');
-              $('#lhsValueId').html("");
-              $('#rhsValueId').html("");
-              $('#outputId').html("");
-              $('#myModal').modal('hide');
-          });
-          $('#trailId').click(function () {
-              if (validateResponseDataElement()) {
-                  $('#myModal').modal('show');
-              } else {
-                  bootbox.alert("Please add atleast one response data element in conditional formula.");
-              }
-          });
-          $('#formulaSubmitId').on('click', function () {
-              var left_input = $('#lhsId').val();
-              var right_input = $('#rhsId').val();
-              var oprator_input = $('#operatorId').val();
-              var trialInputVal = $('#trailInputId').val();
-
-              var text = "";
-              if (trialInputVal) {
-                  text = validateMinMaxforX();
-                  if (text == '') {
-                      $.ajax({
-                          url: "/studybuilder/adminStudies/validateconditionalFormula.do?_S=${param._S}",
-                          type: "POST",
-                          datatype: "json",
-                          data: {
-                              left_input: left_input,
-                              right_input: right_input,
-                              oprator_input: oprator_input,
-                              trialInput: trialInputVal,
-                              "${_csrf.parameterName}": "${_csrf.token}",
-                          },
-                          success: function (data) {
-                              var jsonobject = eval(data);
-                              var message = jsonobject.message;
-                              var formulaResponseJsonObject = jsonobject.formulaResponseJsonObject;
-                              if (message == "SUCCESS") {
-                                  $('#lhsValueId').html("<b>" + formulaResponseJsonObject.lhsData + "</b>");
-                                  $('#rhsValueId').html("<b>" + formulaResponseJsonObject.rhsData + "</b>");
-                                  if (formulaResponseJsonObject.outPutData == 'true'
-                                      || formulaResponseJsonObject.outPutData == 'True') {
-                                      $('#outputId').html(
-                                          "<span class='gtxtf'><b>" + formulaResponseJsonObject.outPutData
-                                          + "</b></span>");
-                                  } else {
-                                      $('#outputId').html(
-                                          "<span class='rtxtf'><b>" + formulaResponseJsonObject.outPutData
-                                          + "</b></span>");
-                                  }
-                              } else {
-                                  if (typeof formulaResponseJsonObject != 'undefined'
-                                      && typeof formulaResponseJsonObject.statusMessage != 'undefined') {
-                                      bootbox.alert(formulaResponseJsonObject.statusMessage);
-                                  } else {
-                                      bootbox.alert("Please create a valid formula");
-                                  }
-
-                              }
-
-                          },
-                          error: function (xhr, status, error) {
-                              $(item).prop('disabled', false);
-
-                          }, global: false
-                      });
-                  } else {
-                      bootbox.alert(text);
-                  }
-
-              } else {
-                  bootbox.alert("Please pass input ");
-              }
-
-          });
-          $("#numericUnitId").keypress(function (event) {
-              var inputValue = event.charCode;
-              if (!(inputValue >= 65 && inputValue <= 122) && (inputValue != 32 && inputValue != 0)) {
-                  event.preventDefault();
-              }
-          });
-          $("#validationConditionId").change(function (e) {
-              var value = $(this).val();
-              if (value != '' && value != null && typeof value != 'undefined') {
-                  $("#validationCharactersId").val('');
-                  $("#validationCharactersId").attr("disabled", false);
-                  $("#validationCharactersId").attr("required", true);
-                  $("#validationExceptTextId").val('');
-                  $("#validationExceptTextId").attr("disabled", false);
-                  $('.selectpicker').selectpicker('refresh');
-                  $("#invalidMessageId").attr("required", true);
-                  $("#invalidMessageId").val("Invalid Input. Please try again.");
-              } else {
-                  $("#validationCharactersId").val('');
-                  $("#validationExceptTextId").val('');
-                  $("#validationCharactersId").attr("disabled", true);
-                  $("#validationExceptTextId").attr("disabled", true);
-                  $("#validationCharactersId").attr("required", false);
-                  $('.selectpicker').selectpicker('refresh');
-                  $("#validationCharactersId").validator('validate');
-                  $('#validationCharactersId').parent().removeClass("has-danger").removeClass("has-error");
-                  $('#validationCharactersId').parent().find(".help-block").empty();
-                  $("#invalidMessageId").attr("required", false);
-                  $("#invalidMessageId").val('');
-              }
-          })
-          $("#validationCharactersId").change(function (e) {
-              var value = $(this).val();
-              $("#validationExceptTextId").val('');
-              addRegEx(value);
-          });
-          var valicationCharacterValue = "${questionnairesStepsBo.questionReponseTypeBo.validationCharacters}";
-          if (valicationCharacterValue != '' && valicationCharacterValue != null
-              && typeof valicationCharacterValue != 'undefined') {
-              addRegEx(valicationCharacterValue);
-          }
-
+      $('#useAnchorDateId').click(function () {
+        if ($(this).is(':checked')) {
+          $('.useAnchorDateName').show();
+          $("#anchorTextId").attr('required', true);
+        } else {
+          $('.useAnchorDateName').hide();
+          $("#anchorTextId").attr('required', false);
+          $("#anchorTextId").parent().removeClass("has-danger").removeClass("has-error");
+          $("#anchorTextId").parent().find(".help-block").html("");
+        }
       });
 
-      function addRegEx(value) {
-          $("#validationExceptTextId").unbind("keyup blur");
-          if (value == "alphabets") {
-              $("#validationExceptTextId").bind('keyup blur', function () {
-                  var node = $(this);
-                  node.val(node.val().replace(/[^a-zA-Z|\s]/g, ''));
-              });
-          } else if (value == "numbers") {
-              $("#validationExceptTextId").bind('keyup blur', function () {
-                  var node = $(this);
-                  node.val(node.val().replace(/[^0-9|\s]+$/, ''));
-              });
-          } else if (value == "alphabetsandnumbers") {
-              $("#validationExceptTextId").bind('keyup blur', function () {
-                  var node = $(this);
-                  node.val(node.val().replace(/[^a-zA-Z0-9|\s]/g, ''));
-              });
-          } else if (value == "specialcharacters") {
-              $("#validationExceptTextId").bind('keyup blur', function () {
-                  var node = $(this);
-                  node.val(node.val().replace(/[a-zA-Z0-9\s]/g, ''));
-              });
+      $("#anchorTextId").blur(function () {
+        validateAnchorDateText('', function (val) {
+        });
+      });
+
+      $('#textchoiceOtherId').click(function () {
+        var displayText = $("#displayTextChoiceText0").val().trim();
+        var displayValue = $("#displayTextChoiceValue0").val().trim();
+        var exclusive = $("#exclusiveId0").val().trim();
+        var choiceDescription = $("#displayTextChoiceDescription0").val().trim();
+        if ($(this).is(':checked')) {
+          if (displayText.length <= 0 && displayValue.length <= 0 && exclusive.length <= 0
+              && choiceDescription.length <= 0) {
+            $('.otherOptionChecked').hide();
+            $('.otherOptionChecked').find('input:text,select').removeAttr('required');
           }
+          $('.textchoiceOtherCls').show();
+          $('.textchoiceOtherCls').find('input:text,select').attr('required', true);
+          $('.OtherOptionCls').find('input:text,select').removeAttr('required');
+        } else {
+          $('.otherOptionChecked').show();
+          $('.otherOptionChecked').find('input:text,select').attr('required', true);
+          $('.textchoiceOtherCls').hide();
+          $('.textchoiceOtherCls').find('input:text,select').removeAttr('required');
+        }
+      });
+
+      $('.otherIncludeTextCls').click(function () {
+        var otherText = $('.otherIncludeTextCls:checked').val();
+        if (otherText == 'Yes') {
+          $('.OtherOptionCls').show();
+          $('.OtherOptionCls').find('input:text,select').attr('required', true);
+        } else {
+          $('.OtherOptionCls').hide();
+          $('.OtherOptionCls').find('input:text,select').removeAttr('required');
+        }
+      });
+
+      <c:if test="${actionTypeForQuestionPage == 'view'}">
+      $('#questionStepId input,textarea ').prop('disabled', true);
+      $('#questionStepId select').addClass('linkDis');
+      $('.addBtnDis, .remBtnDis,.add_varible').addClass('dis-none');
+      $("#trailId").hide();
+      $(".removeImageId").css("visibility", "hidden");
+      </c:if>
+
+      if ($('.value-picker').length > 2) {
+        $('.ValuePickerContainer').find(".remBtnDis").removeClass("hide");
+      } else {
+        $('.ValuePickerContainer').find(".remBtnDis").addClass("hide");
       }
-
-      //Displaying images from file upload
-      function readURL(input) {
-
-          if (input.files && input.files[0]) {
-              var reader = new FileReader();
-
-              reader.onload = function (e) {
-                  var a = input.getAttribute("id");
-                  $("#" + a).prev().children().children()
-                      .attr('src', e.target.result)
-                      .width(32)
-                      .height(32);
-                  var sr = $("#" + a).prev().children().children().attr('src');
-              };
-
-              reader.readAsDataURL(input.files[0]);
-          }
+      if ($('.text-scale').length > 2) {
+        $('.TextScaleContainer').find(".remBtnDis").removeClass("hide");
+      } else {
+        $('.TextScaleContainer').find(".remBtnDis").addClass("hide");
       }
-
-      function toJSDate(dateTime) {
-          if (dateTime != null && dateTime != '' && typeof dateTime != 'undefined') {
-              var date = dateTime.split("/");
-              return new Date(date[2], (date[0] - 1), date[1]);
-          }
+      if ($('.text-choice').length > 2) {
+        $('.TextChoiceContainer').find(".remBtnDis").removeClass("hide");
+      } else {
+        $('.TextChoiceContainer').find(".remBtnDis").addClass("hide");
       }
-
-      function setResponseDate(type) {
-
-          if (type == 'Date-Time') {
-
-              $("#minDateId").datetimepicker().data('DateTimePicker').format('MM/DD/YYYY HH:mm');
-              $("#maxDateId").datetimepicker().data('DateTimePicker').format('MM/DD/YYYY HH:mm');
-              $("#defaultDate").datetimepicker().data('DateTimePicker').format('MM/DD/YYYY HH:mm');
-
-          } else {
-
-              $("#minDateId").datetimepicker().data('DateTimePicker').format('MM/DD/YYYY');
-              $("#maxDateId").datetimepicker().data('DateTimePicker').format('MM/DD/YYYY');
-              $("#defaultDate").datetimepicker().data('DateTimePicker').format('MM/DD/YYYY');
-
-          }
+      if ($('.image-choice').length > 2) {
+        $('.ImageChoiceContainer').find(".remBtnDis").removeClass("hide");
+      } else {
+        $('.ImageChoiceContainer').find(".remBtnDis").addClass("hide");
       }
-
-      function resetTheLineStatData() {
-          $("#chartContainer").find('input:text').val('');
-          $("#statContainer").find('input:text').val('');
-          $("#chartContainer").find('input:text').val('');
-          $("#statContainer").find('input:text').val('');
-          $("#addLineChart").prop("checked", false);
-          $("#useStasticData").prop("checked", false);
-          $("#chartContainer").hide();
-          $("#statContainer").hide();
-          $(".chartrequireClass").attr('required', false);
-          $(".requireClass").attr('required', false);
-          var container = document.getElementById('chartContainer');
-          if (container != null) {
-              var children = container.getElementsByTagName('select');
-              for (var i = 0; i < children.length; i++) {
-                  children[i].selectedIndex = 0;
-              }
-          }
-
-          var statcontainer = document.getElementById('statContainer');
-          if (statcontainer != null) {
-              var statchildren = statcontainer.getElementsByTagName('select');
-              for (var i = 0; i < statchildren.length; i++) {
-                  statchildren[i].selectedIndex = 0;
-              }
-          }
-          $("#allowHealthKit").prop("checked", false);
-          $(".healthkitrequireClass").attr('required', false);
-          $("#healthkitDatatypeId").val('');
-          $('.selectpicker').selectpicker('refresh');
-      }
-
-      function getResponseType(id) {
-          if (id != null && id != '' && typeof id != 'undefined') {
-              var previousResponseType = '${questionnairesStepsBo.questionsBo.responseType}';
-              if (Number(id) != Number(previousResponseType)) {
-                  var responseType = $("#responseTypeId>option:selected").html();
-                  resetTheLineStatData();
-                  if (responseType != 'Boolean') {
-
-                      $("#" + responseType.replace(/\s/g, '')).find('input:text').val('');
-                      $("#" + responseType.replace(/\s/g, '')).find('img').attr("src", '');
-                      if (responseType == "Date") {
-                          var datePicker = $("#" + responseType.replace(/\s/g, '')).find('input:text').data(
-                              "DateTimePicker");
-                          if (typeof datePicker != 'undefined') {
-                              $("#minDateId").datetimepicker().data('DateTimePicker').clear();
-                              $("#maxDateId").datetimepicker().data('DateTimePicker').clear();
-                              $("#defaultDate").datetimepicker().data('DateTimePicker').clear();
-                          }
-                      }
-                      if (responseType == 'Image Choice') {
-                          $("#" + responseType.replace(/\s/g, '')).find('input:file').val('');
-                          $("#" + responseType.replace(/\s/g, '')).find('img').attr("src",
-                              "../images/icons/sm-thumb.jpg");
-                          $("#" + responseType.replace(/\s/g, '')).find("input:hidden").each(function () {
-                              $("#" + this.id).val('');
-                          });
-                      }
-                  }
-                  if (responseType == 'Text Scale' && responseType == 'Text Choice' && responseType
-                      == 'Boolean') {
-                      var container = document.getElementById(responseType.replace(/\s/g, ''));
-                      var children = container.getElementsByTagName('select');
-
-                      for (var i = 0; i < children.length; i++) {
-                          children[i].selectedIndex = 0;
-                      }
-                      $('.selectpicker').selectpicker('refresh');
-                  }
-                  $("#timeIntervalStepId").val(1);
-                  $("#timeIntervalDefaultId").val("00:01");
-
-                  $("#textScalePositionId").val(2);
-                  $("#scaleDefaultValueId").val(1);
-                  if (responseType == 'Text Scale') {
-                      $("#scalevertical").attr("checked", true);
-                  } else if (responseType == 'Scale' || responseType == 'Continuous Scale') {
-                      $("#scalehorizontal").attr("checked", true);
-                      if (responseType == 'Scale') {
-                          $("#scaleMinImagePathId").val('');
-                          $("#scaleMaxImagePathId").val('');
-                      } else {
-                          $("#continuesScaleMinImagePathId").val('');
-                          $("#continuesScaleMaxImagePathId").val('');
-                      }
-                  }
-                  if (responseType == 'Numeric') {
-                      $('input[name="questionReponseTypeBo.style"]').attr("checked", false);
-                      $("#styleDecimal").attr("checked", true);
-                  }
-                  if (responseType == 'Date') {
-                      $('input[name="questionReponseTypeBo.style"]').attr("checked", false);
-                      $("#date").attr("checked", true);
-                      $("#customDateId").attr("checked", true);
-                  }
-                  $("#useAnchorDateId").attr("checked", false);
-
-                  deleteChildElements(1, "parent");
-                  $("#inputTypeValueId0").val('');
-                  $("#inputTypeId2").val('');
-                  $("#inputTypeId3").val('');
-                  $(".formula").text("-NA-");
-                  $(".tryFormula").text("-NA-");
-                  $("#constantValId3").val('');
-                  $("#constantValId3").addClass("add_var_hide");
-                  $("#inputSubTypeValueId2").val('');
-                  $('.selectpicker').selectpicker('refresh');
-                  $("#formulaBasedLogicId").prop("checked", false);
-              }
-              <c:forEach items="${questionResponseTypeMasterInfoList}" var="questionResponseTypeMasterInfo">
-              var infoId = Number('${questionResponseTypeMasterInfo.id}');
-              var responseType = '${questionResponseTypeMasterInfo.responseType}';
-
-              $("#" + responseType.replace(/\s/g, '')).hide();
-              if (responseType == 'Date') {
-                  var style = '${questionnairesStepsBo.questionReponseTypeBo.style}';
-
-                  setResponseDate(style);
-              }
-              $("." + responseType.replace(/\s/g, '') + "Required").attr("required", false);
-              if (id == infoId) {
-                  var description = '${questionResponseTypeMasterInfo.description}';
-                  var dataType = "${questionResponseTypeMasterInfo.dataType}";
-                  var dashboard = '${questionResponseTypeMasterInfo.dashBoardAllowed}';
-                  $("#responseTypeDataType").text(dataType);
-                  $("#responseTypeDescrption").text(description);
-                  $("#rlaResonseType").val(responseType)
-                  $("#rlaResonseDataType").text(dataType);
-                  $("#rlaResonseTypeDescription").text(description);
-                  if (dashboard == 'true') {
-                      $("#useStasticDataContainerId").show();
-                      $("#addLineChartContainerId").show();
-                      $("#borderdashId").show();
-                      if ($("#addLineChart").is(":checked")) {
-                          $("#chartContainer").show();
-                          $(".chartrequireClass").attr('required', true);
-                      } else {
-                          $("#lineChartTimeRangeId").val('');
-                          if (document.getElementById("allowRollbackChartNo") != null
-                              && typeof document.getElementById("allowRollbackChartNo") != 'undefined') {
-                              document.getElementById("allowRollbackChartNo").checked = true;
-                          }
-                          $('#chartTitleId').val('');
-                          $('.selectpicker').selectpicker('refresh');
-                      }
-                      if ($("#useStasticData").is(":checked")) {
-                          $("#statContainer").show();
-                          $(".requireClass").attr('required', true);
-                      } else {
-                          $("#statShortNameId").val('');
-                          $("#statDisplayNameId").val('');
-                          $("#statDisplayUnitsId").val('');
-                          $("#statTypeId").val('');
-                          $("#statFormula").val('');
-                          $('.selectpicker').selectpicker('refresh');
-                      }
-                  } else {
-                      $("#useStasticDataContainerId").hide();
-                      $("#addLineChartContainerId").hide();
-                      $("#borderdashId").hide();
-                  }
-                  if (responseType == 'Height' || responseType == 'Numeric') {
-                      $("#borderHealthdashId").show();
-                      $("#allowHealthKitId").show();
-                      if ($("#allowHealthKit").is(":checked")) {
-                          $("#healthKitContainerId").show();
-                          $(".healthkitrequireClass").attr('required', true);
-                      } else {
-                          $("#healthKitContainerId").hide();
-                          $(".healthkitrequireClass").attr('required', false);
-                          $("#healthkitDatatypeId").val('');
-                          $('.selectpicker').selectpicker('refresh');
-                      }
-                  } else {
-                      $("#allowHealthKitId").hide();
-                      $("#healthKitContainerId").hide();
-                      $("#borderHealthdashId").hide();
-                  }
-                  if (responseType == 'Date') {
-                      $("#useAnchorDateContainerId").show();
-                      var anchorDate = "${questionnairesStepsBo.questionsBo.useAnchorDate}";
-                      if (anchorDate == "true") {
-                          $("#useAnchorDateId").attr("checked", true);
-                          $('.useAnchorDateName').show();
-                      }
-                  } else {
-                      $("#useAnchorDateContainerId").hide();
-                  }
-                  if (responseType == 'Scale' || responseType == 'Continuous Scale' || responseType
-                      == 'Text Scale') {
-                      $("#scaleType").show();
-                  } else {
-                      $("#scaleType").hide();
-                  }
-
-                  if (responseType == 'Scale' || responseType == 'Continuous Scale' || responseType
-                      == 'Height'
-                      || responseType == 'Time interval' || responseType == 'Numeric') {
-                      $("#condtionalBranchingId").show();
-                      if ($("#formulaBasedLogicId").is(":checked")) {
-                          $("#conditionalFormulaId").show();
-                          $(".conditionalBranchingRequired").attr('required', true);
-                          createFormula();
-                      } else {
-                          $("#conditionalFormulaId").hide();
-                          $(".conditionalBranchingRequired").attr('required', false);
-                      }
-                  } else {
-                      $("#condtionalBranchingId").hide();
-                  }
-                  $("#" + responseType.replace(/\s/g, '')).show();
-                  $("." + responseType.replace(/\s/g, '') + "Required").attr("required", true);
-              } else {
-
-              }
-              </c:forEach>
-          } else {
-              $("#responseTypeDataType").text("- NA -");
-              $("#responseTypeDescrption").text("- NA -");
-              $("#rlaResonseType").val('');
-              $("#rlaResonseDataType").text("- NA -");
-              $("#rlaResonseTypeDescription").text("- NA -");
-          }
-      }
-
-      function saveQuestionStepQuestionnaire(item, callback) {
-
-          var stepId = $("#stepId").val();
-          var quesstionnaireId = $("#questionnairesId").val();
-          var questionId = $("#instructionFormId").val();
-          var shortTitle = $("#stepShortTitle").val();
-          var skiappable = $('input[name="skiappable"]:checked').val();
-          var destionationStep = $("#destinationStepId").val();
-          var repeatable = $('input[name="repeatable"]:checked').val();
-          var repeatableText = $("#repeatableText").val();
-          var step_type = $("#stepType").val();
-          var instructionFormId = $("#instructionFormId").val();
-
-          var questionnaireStep = new Object();
-          questionnaireStep.stepId = stepId;
-          questionnaireStep.questionnairesId = quesstionnaireId;
-          questionnaireStep.instructionFormId = instructionFormId;
-          questionnaireStep.stepShortTitle = shortTitle;
-          questionnaireStep.skiappable = skiappable;
-          questionnaireStep.destinationStep = destionationStep;
-          questionnaireStep.type = "save";
-          questionnaireStep.stepType = step_type;
-
-          var questionsBo = new Object();
-          var questionText = $("#questionTextId").val();
-          var descriptionText = $("#descriptionId").val();
-          var responseType = $("#responseTypeId").val();
-          var addLinceChart = $('input[name="questionsBo.addLineChart"]:checked').val();
-          var lineChartTimeRange = $("#lineChartTimeRangeId").val();
-          var allowRollbackChart = $('input[name="questionsBo.allowRollbackChart"]:checked').val();
-          var chartTitle = $('#chartTitleId').val();
-          var useStasticData = $('input[name="questionsBo.useStasticData"]:checked').val();
-          var statShortName = $("#statShortNameId").val();
-          var statDisplayName = $("#statDisplayNameId").val();
-          var statDisplayUnits = $("#statDisplayUnitsId").val();
-          var statType = $("#statTypeId").val();
-          var statFormula = $("#statFormula").val();
-          var questionid = $("#questionId").val();
-          var anchor_date = $('input[name="questionsBo.useAnchorDate"]:checked').val();
-          var anchor_date_id = $("#anchorDateId").val();
-          var anchor_text = $('#anchorTextId').val();
-
-          questionsBo.id = questionId;
-          questionsBo.question = questionText;
-          questionsBo.description = descriptionText;
-          questionsBo.responseType = responseType;
-          questionsBo.lineChartTimeRange = lineChartTimeRange;
-          questionsBo.addLineChart = addLinceChart;
-          questionsBo.allowRollbackChart = allowRollbackChart;
-          questionsBo.chartTitle = chartTitle;
-          questionsBo.useStasticData = useStasticData;
-          questionsBo.statShortName = statShortName;
-          questionsBo.statDisplayName = statDisplayName;
-          questionsBo.statDisplayUnits = statDisplayUnits;
-          questionsBo.statType = statType;
-          questionsBo.statFormula = statFormula;
-          questionsBo.useAnchorDate = anchor_date;
-          questionsBo.anchorDateName = anchor_text;
-          questionsBo.anchorDateId = anchor_date_id;
-          questionnaireStep.questionsBo = questionsBo;
-
-          var questionReponseTypeBo = new Object();
-
-          var minValue = '';
-          var maxValue = '';
-          var defaultValue = '';
-          var maxdescription = '';
-          var mindescrption = '';
-          var step = '';
-          var resType = $("#rlaResonseType").val();
-          var verticalText = '';
-          var formula_based_logic = '';
-          var formData = new FormData();
-
-          if (resType == "Scale") {
-              minValue = $("#scaleMinValueId").val();
-              maxValue = $("#scaleMaxValueId").val();
-              defaultValue = $("#scaleDefaultValueId").val();
-              mindescrption = $("#scaleMinDescriptionId").val();
-              maxdescription = $("#scaleMaxDescriptionId").val();
-              step = $("#scaleStepId").val();
-              verticalText = $('input[name="questionReponseTypeBo.vertical"]:checked').val();
-
-              formula_based_logic = $(
-                  'input[name="questionReponseTypeBo.formulaBasedLogic"]:checked').val();
-
-              var minImagePath = $("#scaleMinImagePathId").val();
-              var maxImagePath = $("#scaleMaxImagePathId").val();
-
-              formData.append('minImageFile', document.getElementById("scaleMinImageFileId").files[0]);
-              formData.append('maxImageFile', document.getElementById("scaleMaxImageFileId").files[0]);
-
-              questionReponseTypeBo.vertical = verticalText;
-              questionReponseTypeBo.minValue = minValue;
-              questionReponseTypeBo.maxValue = maxValue;
-              questionReponseTypeBo.defaultValue = defaultValue;
-              questionReponseTypeBo.minDescription = mindescrption;
-              questionReponseTypeBo.maxDescription = maxdescription;
-              questionReponseTypeBo.step = step;
-
-              questionReponseTypeBo.minImage = minImagePath;
-              questionReponseTypeBo.maxImage = maxImagePath;
-              questionReponseTypeBo.formulaBasedLogic = formula_based_logic;
-
-          } else if (resType == "Continuous Scale") {
-
-              minValue = $("#continuesScaleMinValueId").val();
-              maxValue = $("#continuesScaleMaxValueId").val();
-              defaultValue = $("#continuesScaleDefaultValueId").val();
-              mindescrption = $("#continuesScaleMinDescriptionId").val();
-              maxdescription = $("#continuesScaleMaxDescriptionId").val();
-              vertical = $('input[name="questionReponseTypeBo.vertical"]:checked').val();
-              var fractionDigits = $("#continuesScaleFractionDigitsId").val();
-
-              var minImagePath = $("#continuesScaleMinImagePathId").val();
-              var maxImagePath = $("#continuesScaleMaxImagePathId").val();
-              formula_based_logic = $(
-                  'input[name="questionReponseTypeBo.formulaBasedLogic"]:checked').val();
-
-              formData.append('minImageFile',
-                  document.getElementById("continuesScaleMinImageFileId").files[0]);
-              formData.append('maxImageFile',
-                  document.getElementById("continuesScaleMaxImageFileId").files[0]);
-
-              questionReponseTypeBo.vertical = verticalText;
-              questionReponseTypeBo.minValue = minValue;
-              questionReponseTypeBo.maxValue = maxValue;
-              questionReponseTypeBo.defaultValue = defaultValue;
-              questionReponseTypeBo.minDescription = mindescrption;
-              questionReponseTypeBo.maxDescription = maxdescription;
-              questionReponseTypeBo.maxFractionDigits = fractionDigits;
-              questionReponseTypeBo.minImage = minImagePath;
-              questionReponseTypeBo.maxImage = maxImagePath;
-              questionReponseTypeBo.formulaBasedLogic = formula_based_logic;
-
-          } else if (resType == "Location") {
-              var usecurrentlocation = $(
-                  'input[name="questionReponseTypeBo.useCurrentLocation"]:checked').val();
-              questionReponseTypeBo.useCurrentLocation = usecurrentlocation;
-          } else if (resType == "Email") {
-              var placeholderText = $("#placeholderId").val();
-              questionReponseTypeBo.placeholder = placeholderText;
-          } else if (resType == "Text") {
-              var max_length = $("#textmaxLengthId").val();
-              var placeholderText = $("#textPlaceholderId").val();
-              var multiple_lines = $('input[name="questionReponseTypeBo.multipleLines"]:checked').val();
-
-              var validation_condition = $("#validationConditionId").val();
-              var validation_characters = $("#validationCharactersId").val();
-              var validation_except_text = $("#validationExceptTextId").val();
-              var validation_regex = $("#validationRegexId").val();
-              var invalid_message = $("#invalidMessageId").val();
-
-              questionReponseTypeBo.maxLength = max_length;
-              questionReponseTypeBo.placeholder = placeholderText;
-              questionReponseTypeBo.multipleLines = multiple_lines;
-
-              questionReponseTypeBo.validationCondition = validation_condition;
-              questionReponseTypeBo.validationCharacters = validation_characters;
-              questionReponseTypeBo.validationExceptText = validation_except_text;
-              questionReponseTypeBo.validationRegex = validation_regex;
-              questionReponseTypeBo.invalidMessage = invalid_message;
-
-          } else if (resType == "Height") {
-              var measurement_system = $(
-                  'input[name="questionReponseTypeBo.measurementSystem"]:checked').val();
-              var placeholder_text = $("#heightPlaceholderId").val();
-              var healthkitinfo = $('input[name="questionsBo.allowHealthKit"]:checked').val();
-              var healthkitdatatype = $("#healthkitDatatypeId").val();
-
-              formula_based_logic = $(
-                  'input[name="questionReponseTypeBo.formulaBasedLogic"]:checked').val();
-              questionReponseTypeBo.measurementSystem = measurement_system;
-              questionReponseTypeBo.placeholder = placeholder_text;
-              questionsBo.allowHealthKit = healthkitinfo;
-              questionsBo.healthkitDatatype = healthkitdatatype;
-              questionReponseTypeBo.formulaBasedLogic = formula_based_logic;
-
-          } else if (resType == "Time interval") {
-              var stepValue = $("#timeIntervalStepId").val();
-              var default_time = $("#timeIntervalDefaultId").val();
-              formula_based_logic = $(
-                  'input[name="questionReponseTypeBo.formulaBasedLogic"]:checked').val();
-
-              questionReponseTypeBo.step = stepValue;
-              questionReponseTypeBo.defaultTime = default_time;
-              questionReponseTypeBo.formulaBasedLogic = formula_based_logic;
-
-          } else if (resType == "Numeric") {
-              var styletext = $('input[name="questionReponseTypeBo.style"]:checked').val();
-              var unitText = $("#numericUnitId").val();
-              var palceholder_text = $("#numericPlaceholderId").val();
-              var minValue = $("#numericMinValueId").val();
-              var maxValue = $("#numericMaxValueId").val();
-              var healthkitinfo = $('input[name="questionsBo.allowHealthKit"]:checked').val();
-              var healthkitdatatype = $("#healthkitDatatypeId").val();
-              formula_based_logic = $(
-                  'input[name="questionReponseTypeBo.formulaBasedLogic"]:checked').val();
-
-              questionReponseTypeBo.style = styletext;
-              questionReponseTypeBo.placeholder = palceholder_text;
-              questionReponseTypeBo.unit = unitText;
-              questionReponseTypeBo.minValue = minValue;
-              questionReponseTypeBo.maxValue = maxValue;
-
-              questionsBo.allowHealthKit = healthkitinfo;
-              questionsBo.healthkitDatatype = healthkitdatatype;
-              questionReponseTypeBo.formulaBasedLogic = formula_based_logic;
-          } else if (resType == "Date") {
-              var min_date = $("#minDateId").val();
-              var max_date = $("#maxDateId").val();
-              var default_date = $("#defaultDate").val();
-              var style = $('input[name="questionReponseTypeBo.style"]:checked').val();
-
-              var allowedDateRange = $(
-                  'input[name="questionReponseTypeBo.selectionStyle"]:checked').val();
-
-              questionReponseTypeBo.minDate = min_date;
-              questionReponseTypeBo.maxDate = max_date;
-              questionReponseTypeBo.defaultDate = default_date;
-              questionReponseTypeBo.style = style;
-              questionReponseTypeBo.selectionStyle = allowedDateRange;
-          } else if (resType == "Boolean") {
-              var questionSubResponseArray = new Array();
-              $('#Boolean .row').each(function () {
-                  var questionSubResponseType = new Object();
-                  var id = $(this).attr("id");
-                  var response_sub_type_id = $("#responseSubTypeValueId" + id).val();
-                  var diasplay_text = $("#dispalyText" + id).val();
-                  var diaplay_value = $("#displayValue" + id).val();
-                  var destination_step = $("#destinationStepId" + id).val();
-
-                  questionSubResponseType.responseSubTypeValueId = response_sub_type_id;
-                  questionSubResponseType.text = diasplay_text;
-                  questionSubResponseType.value = diaplay_value;
-                  questionSubResponseType.destinationStepId = destination_step;
-
-                  questionSubResponseArray.push(questionSubResponseType);
-              });
-              questionnaireStep.questionResponseSubTypeList = questionSubResponseArray;
-
-          } else if (resType == "Value Picker") {
-              var questionSubResponseArray = new Array();
-              $('.value-picker').each(function () {
-                  var questionSubResponseType = new Object();
-                  var id = $(this).attr("id");
-                  var response_sub_type_id = $("#valPickSubTypeValueId" + id).val();
-                  var diasplay_text = $("#displayValPickText" + id).val();
-                  var diaplay_value = $("#displayValPickValue" + id).val();
-
-                  questionSubResponseType.responseSubTypeValueId = response_sub_type_id;
-                  questionSubResponseType.text = diasplay_text;
-                  questionSubResponseType.value = diaplay_value;
-
-                  questionSubResponseArray.push(questionSubResponseType);
-              });
-              questionnaireStep.questionResponseSubTypeList = questionSubResponseArray;
-          } else if (resType == "Text Scale") {
-              var questionSubResponseArray = new Array();
-              $('.text-scale').each(function () {
-                  var questionSubResponseType = new Object();
-                  var id = $(this).attr("id");
-
-                  var response_sub_type_id = $("#textScaleSubTypeValueId" + id).val();
-                  var diasplay_text = $("#displayTextSclText" + id).val();
-                  var diaplay_value = $("#displayTextSclValue" + id).val();
-                  var destination_step = $("#destinationTextSclStepId" + id).val();
-
-                  questionSubResponseType.responseSubTypeValueId = response_sub_type_id;
-                  questionSubResponseType.text = diasplay_text;
-                  questionSubResponseType.value = diaplay_value;
-                  questionSubResponseType.destinationStepId = destination_step;
-                  questionSubResponseArray.push(questionSubResponseType);
-
-              });
-              questionnaireStep.questionResponseSubTypeList = questionSubResponseArray;
-          } else if (resType == "Text Choice") {
-
-              var questionSubResponseArray = new Array();
-              var selectionStyel = $('input[name="questionReponseTypeBo.selectionStyle"]:checked').val();
-              questionReponseTypeBo.selectionStyle = selectionStyel;
-              $('.text-choice').each(function () {
-                  var questionSubResponseType = new Object();
-
-                  var id = $(this).attr("id");
-                  var response_sub_type_id = $("#textChoiceSubTypeValueId" + id).val();
-                  var diasplay_text = $("#displayTextChoiceText" + id).val();
-                  var diaplay_value = $("#displayTextChoiceValue" + id).val();
-                  var destination_step = $("#destinationTextChoiceStepId" + id).val();
-                  var exclusioveText = $("#exclusiveId" + id).val();
-                  var display_description = $("#displayTextChoiceDescription" + id).val();
-
-                  questionSubResponseType.responseSubTypeValueId = response_sub_type_id;
-                  questionSubResponseType.text = diasplay_text;
-                  questionSubResponseType.value = diaplay_value;
-                  questionSubResponseType.destinationStepId = destination_step;
-                  questionSubResponseType.exclusive = exclusioveText;
-                  questionSubResponseType.description = display_description;
-                  questionSubResponseArray.push(questionSubResponseType);
-
-              });
-              questionnaireStep.questionResponseSubTypeList = questionSubResponseArray;
-          } else if (resType == "Image Choice") {
-              var questionSubResponseArray = new Array();
-              var i = 0;
-
-              $('.image-choice').each(function () {
-                  var questionSubResponseType = new Object();
-                  var id = $(this).attr("id");
-
-                  var response_sub_type_id = $("#imageChoiceSubTypeValueId" + id).val();
-                  var diasplay_text = $("#displayImageChoiceText" + id).val();
-                  var diaplay_value = $("#displayImageChoiceValue" + id).val();
-                  var destination_step = $("#destinationImageChoiceStepId" + id).val();
-
-                  var imagePath = $("#imagePathId" + id).val();
-                  var selectedImagePath = $("#selectImagePathId" + id).val();
-
-                  formData.append('imageFile[' + id + ']',
-                      document.getElementById("imageFileId" + id).files[0]);
-                  formData.append('selectImageFile[' + id + ']',
-                      document.getElementById("selectImageFileId" + id).files[0]);
-
-                  questionSubResponseType.responseSubTypeValueId = response_sub_type_id;
-                  questionSubResponseType.text = diasplay_text;
-                  questionSubResponseType.value = diaplay_value;
-                  questionSubResponseType.destinationStepId = destination_step;
-                  questionSubResponseType.imageId = id;
-                  questionSubResponseType.image = imagePath;
-                  questionSubResponseType.selectedImage = selectedImagePath;
-
-                  questionSubResponseArray.push(questionSubResponseType);
-
-                  i = i + 1;
-              });
-              questionnaireStep.questionResponseSubTypeList = questionSubResponseArray;
-          }
-          if ($("#formulaBasedLogicId").is(":checked")) {
-              var questionConditionBranchBoArray = new Array();
-              $('.numeric__section').each(function (i) {
-
-                  var questionConditionBranchBoList = new Object();
-                  var input_type_value = $("#inputTypeValueId" + i).val();
-                  var input_type = $("#inputTypeId" + i).val();
-                  var sequence_no = $("#sequenceNoId" + i).val();
-                  var parent_sequence_no = $("#parentSequenceNoId" + i).val();
-
-                  questionConditionBranchBoList.inputTypeValue = input_type_value;
-                  questionConditionBranchBoList.inputType = input_type;
-                  questionConditionBranchBoList.sequenceNo = sequence_no;
-                  questionConditionBranchBoList.parentSequenceNo = parent_sequence_no;
-
-                  var questionConditionBranchArray = new Array();
-
-                  var index = $("#inputTypeValueId" + i).attr('index');
-                  var rootId = "rootId" + index;
-
-                  $('#' + rootId + ' .numeric__row').each(function (j) {
-                      var questionConditionBranchBos = new Object();
-                      var id = $(this).attr("id");
-
-                      var input_type_value = $("#inputSubTypeValueId" + id).val();
-                      var input_type = $("#inputTypeId" + id).val();
-                      var sequence_no = $("#sequenceNoId" + id).val();
-                      var parent_sequence_no = $("#parentSequenceNoId" + id).val();
-
-                      questionConditionBranchBos.inputTypeValue = input_type_value;
-                      questionConditionBranchBos.sequenceNo = sequence_no;
-                      questionConditionBranchBos.parentSequenceNo = parent_sequence_no;
-                      questionConditionBranchBos.inputType = input_type;
-
-                      questionConditionBranchArray.push(questionConditionBranchBos);
-                  });
-
-                  questionConditionBranchBoList.questionConditionBranchBos = questionConditionBranchArray;
-                  questionConditionBranchBoArray.push(questionConditionBranchBoList);
-              });
-              questionnaireStep.questionConditionBranchBoList = questionConditionBranchBoArray;
-
-              var condition_formula = $("#conditionFormulaId").val();
-              questionReponseTypeBo.conditionFormula = condition_formula;
-
-              var questionSubResponseArray = new Array();
-
-              var questionSubResponseType = new Object();
-              questionSubResponseType.destinationStepId = $("#conditionDestinationId0").val();
-              questionSubResponseType.value = $("#conditionDestinationValueId0").val();
-              questionSubResponseArray.push(questionSubResponseType);
-
-              var questionSubResponseType = new Object();
-              questionSubResponseType.destinationStepId = $("#conditionDestinationId1").val();
-              questionSubResponseType.value = $("#conditionDestinationValueId1").val();
-              questionSubResponseArray.push(questionSubResponseType);
-              questionnaireStep.questionResponseSubTypeList = questionSubResponseArray;
-
-          }
-
-          var response_type_id = $("#questionResponseTypeId").val();
-          var question_response_type_id = $("#responseQuestionId").val();
-
-          questionReponseTypeBo.responseTypeId = response_type_id;
-          questionReponseTypeBo.questionsResponseTypeId = question_response_type_id;
-
-          questionnaireStep.questionReponseTypeBo = questionReponseTypeBo;
-          if (quesstionnaireId && shortTitle) {
-
-              formData.append("questionnaireStepInfo", JSON.stringify(questionnaireStep));
-              var data = JSON.stringify(questionnaireStep);
-              $.ajax({
-                  url: "/studybuilder/adminStudies/saveQuestionStep.do?_S=${param._S}",
-                  type: "POST",
-                  datatype: "json",
-                  data: formData,
-                  processData: false,
-                  contentType: false,
-                  beforeSend: function (xhr, settings) {
-                      xhr.setRequestHeader("X-CSRF-TOKEN", "${_csrf.token}");
-                  },
-                  success: function (data) {
-                      var jsonobject = eval(data);
-                      var message = jsonobject.message;
-                      if (message == "SUCCESS") {
-                          $("body").removeClass("loading");
-                          $("#preShortTitleId").val(shortTitle);
-                          var stepId = jsonobject.stepId;
-                          var questionId = jsonobject.questionId;
-                          var questionResponseId = jsonobject.questionResponseId;
-                          var questionsResponseTypeId = jsonobject.questionsResponseTypeId;
-
-                          if (statShortName != null && statShortName != '' && typeof statShortName
-                              != 'undefined') {
-                              $("#prevStatShortNameId").val(statShortName);
-                          }
-
-                          $("#stepId").val(stepId);
-                          $("#questionId").val(questionId);
-                          $("#questionResponseTypeId").val(questionResponseId);
-                          $("#responseQuestionId").val(questionId);
-
-                          $("#alertMsg").removeClass('e-box').addClass('s-box').html("Content saved as draft.");
-                          $(item).prop('disabled', false);
-                          $('#alertMsg').show();
-
-                          if ($('.sixthQuestionnaires').find('span').hasClass(
-                              'sprites-icons-2 tick pull-right mt-xs')) {
-                              $('.sixthQuestionnaires').find('span').removeClass(
-                                  'sprites-icons-2 tick pull-right mt-xs');
-                          }
-
-                          if (callback)
-                              callback(true);
-                      } else {
-                          var errMsg = jsonobject.errMsg;
-                          if (errMsg != '' && errMsg != null && typeof errMsg != 'undefined') {
-                              $("#alertMsg").removeClass('s-box').addClass('e-box').html(errMsg);
-                          } else {
-                              $("#alertMsg").removeClass('s-box').addClass('e-box').html("Something went Wrong");
-                          }
-                          $('#alertMsg').show();
-                          if (callback)
-                              callback(false);
-                      }
-                      setTimeout(hideDisplayMessage, 4000);
-                  },
-                  error: function (xhr, status, error) {
-                      $(item).prop('disabled', false);
-                      $('#alertMsg').show();
-                      $("#alertMsg").removeClass('s-box').addClass('e-box').html("Something went Wrong");
-                      setTimeout(hideDisplayMessage, 4000);
-                  }
-              });
-          } else {
-              $('#stepShortTitle').validator('destroy').validator();
-              if (!$('#stepShortTitle')[0].checkValidity()) {
-                  $("#stepShortTitle").parent().addClass('has-error has-danger').find(
-                      ".help-block").empty().append(
-                      '<ul class="list-unstyled"><li>This is a required field.</li></ul>');
-                  $('.stepLevel a').tab('show');
-              }
-          }
-      }
-
-      function goToBackPage(item) {
-
-          $(item).prop('disabled', true);
-          <c:if test="${actionTypeForQuestionPage ne 'view'}">
-          bootbox.confirm({
-              closeButton: false,
-              message: 'You are about to leave the page and any unsaved changes will be lost. Are you sure you want to proceed?',
-              buttons: {
-                  'cancel': {
-                      label: 'Cancel',
-                  },
-                  'confirm': {
-                      label: 'OK',
-                  },
-              },
-              callback: function (result) {
-                  if (result) {
-                      var a = document.createElement('a');
-                      a.href = "/studybuilder/adminStudies/viewQuestionnaire.do?_S=${param._S}";
-                      document.body.appendChild(a).click();
-                  } else {
-                      $(item).prop('disabled', false);
-                  }
-              }
+      $(".menuNav li.active").removeClass('active');
+      $(".sixthQuestionnaires").addClass('active');
+      $("#doneId").click(function () {
+        $("#doneId").attr("disabled", true);
+        var isValid = true;
+        var isImageValid = true;
+        var resType = $("#rlaResonseType").val();
+        var anchorDateFlag = true;
+        if (resType == 'Text Scale' || resType == 'Image Choice' || resType == 'Value Picker'
+            || resType == 'Text Choice') {
+          validateForUniqueValue('', resType, function (val) {
+            if (val) {
+            }
           });
-          </c:if>
-          <c:if test="${actionTypeForQuestionPage eq 'view'}">
-          var a = document.createElement('a');
-          a.href = "/studybuilder/adminStudies/viewQuestionnaire.do?_S=${param._S}";
-          document.body.appendChild(a).click();
-          </c:if>
-      }
-
-      function getSelectionStyle(item) {
-          var value = $(item).val();
-          if (value == 'Single') {
-              $('.textChoiceExclusive').attr("disabled", true);
-              $('.textChoiceExclusive').attr("required", false);
-              $('.textChoiceExclusive').val('');
-              $('.destionationYes').val('');
-              $('.destionationYes').attr("disabled", false);
-              $('.selectpicker').selectpicker('refresh');
-              $(".textChoiceExclusive").validator('validate');
-          } else {
-              $('.textChoiceExclusive').attr("disabled", false);
-              $('.textChoiceExclusive').attr("required", true);
-              $('.selectpicker').selectpicker('refresh');
-          }
-      }
-
-      function setExclusiveData(item) {
-          var index = $(item).attr('index');
-          var value = $(item).val();
-          if (value == "Yes") {
-              $("#destinationTextChoiceStepId" + index).attr("disabled", false);
-              $('.selectpicker').selectpicker('refresh');
-          } else {
-              $("#destinationTextChoiceStepId" + index).val('');
-              $("#destinationTextChoiceStepId" + index).attr("disabled", true);
-              $('.selectpicker').selectpicker('refresh');
-          }
-
-      }
-
-      var count = $('.value-picker').length;
-
-      function addValuePicker() {
-          count = count + 1;
-          var newValuePicker = "<div class='value-picker row form-group mb-xs' id=" + count + ">" +
-              "	<div class='col-md-3 pl-none'>" +
-              "   <div class='form-group'>" +
-              "      <input type='text' class='form-control' name='questionResponseSubTypeList[" + count
-              + "].text' id='displayValPickText" + count + "' required maxlength='20'>" +
-              "      <div class='help-block with-errors red-txt'></div>" +
-              "   </div>" +
-              "</div>" +
-              "<div class='col-md-4 pl-none'>" +
-              "   <div class='form-group'>" +
-              "      <input type='text' class='form-control valuePickerVal' name='questionResponseSubTypeList["
-              + count + "].value' id='displayValPickValue" + count
-              + "' required maxlength='50' onblur='validateForUniqueValue(this,&#34;Value Picker&#34;,function(){})';>"
-              +
-              "      <div class='help-block with-errors red-txt'></div>" +
-              "   </div>" +
-              "</div>" +
-              "<div class='col-md-2 pl-none mt__6'>" +
-              "   <span class='addBtnDis addbtn mr-sm align-span-center' onclick='addValuePicker();'>+</span>"
-              +
-              "<span class='delete vertical-align-middle remBtnDis hide pl-md align-span-center' onclick='removeValuePicker(this);'></span>"
-              +
-              "</div>" +
-              "</div>";
-          $(".value-picker:last").after(newValuePicker);
-          $(".value-picker").parent().removeClass("has-danger").removeClass("has-error");
-          $(".value-picker").parent().find(".help-block").empty();
-          $(".value-picker").parents("form").validator("destroy");
-          $(".value-picker").parents("form").validator();
-          if ($('.value-picker').length > 2) {
-              $(".remBtnDis").removeClass("hide");
-          } else {
-              $(".remBtnDis").addClass("hide");
-          }
-          $('#' + count).find('input:first').focus();
-      }
-
-      function removeValuePicker(param) {
-          if ($('.value-picker').length > 2) {
-
-              $(param).parents(".value-picker").remove();
-              $(".value-picker").parent().removeClass("has-danger").removeClass("has-error");
-              $(".value-picker").parent().find(".help-block").empty();
-              $(".value-picker").parents("form").validator("destroy");
-              $(".value-picker").parents("form").validator();
-              if ($('.value-picker').length > 2) {
-                  $(".remBtnDis").removeClass("hide");
-              } else {
-                  $(".remBtnDis").addClass("hide");
-              }
-          }
-      }
-
-      var scaleCount = $('.text-scale').length;
-
-      function addTextScale() {
-          scaleCount = scaleCount + 1;
-          if ($('.text-scale').length < 8) {
-              var newTextScale = "<div class='text-scale row' id=" + scaleCount + ">" +
-                  "	<div class='col-md-3 pl-none'>" +
-                  "    <div class='form-group'>" +
-                  "      <input type='text' class='form-control TextScaleRequired' name='questionResponseSubTypeList["
-                  + scaleCount + "].text' id='displayTextSclText" + scaleCount
-                  + "'+  maxlength='15' required>" +
-                  "      <div class='help-block with-errors red-txt'></div>" +
-                  "   </div>" +
-                  "</div>" +
-                  " <div class='col-md-4 pl-none'>" +
-                  "    <div class='form-group'>" +
-                  "       <input type='text' class='form-control TextScaleRequired textScaleValue' class='form-control' name='questionResponseSubTypeList["
-                  + scaleCount + "].value' id='displayTextSclValue" + scaleCount
-                  + "' maxlength='50' required onblur='validateForUniqueValue(this,&#34;Text Scale&#34;,function(){});'>"
-                  +
-                  "       <div class='help-block with-errors red-txt'></div>" +
-                  "    </div>" +
-                  " </div>";
-              <c:if test='${questionnaireBo.branching}'>
-              newTextScale += " <div class='col-md-3 pl-none'>" +
-                  "    <div class='form-group'>" +
-                  "       <select class='selectpicker' name='questionResponseSubTypeList[" + scaleCount
-                  + "].destinationStepId' id='destinationTextSclStepId" + scaleCount
-                  + "' title='select' data-error='Please choose one option'><option value='' disabled selected>Select</option>";
-              <c:forEach items="${destinationStepList}" var="destinationStep">
-              newTextScale += "<option value='${destinationStep.stepId}'>Step ${destinationStep.sequenceNo} : ${destinationStep.stepShortTitle}</option>";
-              </c:forEach>
-              newTextScale += "	<option value='0'>Completion Step</option>" +
-                  "	     </select>" +
-                  "      <div class='help-block with-errors red-txt'></div>" +
-                  "   </div>" +
-                  "</div>";
-              </c:if>
-              newTextScale += "<div class='col-md-2 pl-none mt__8'>" +
-                  "	<span class='addBtnDis addbtn mr-sm align-span-center' onclick='addTextScale();'>+</span>"
-                  +
-                  "  <span class='delete vertical-align-middle remBtnDis hide pl-md align-span-center' onclick='removeTextScale(this);'></span>"
-                  +
-                  "	</div>" +
-                  "</div>";
-              $(".text-scale:last").after(newTextScale);
-              $('.selectpicker').selectpicker('refresh');
-              $(".text-scale").parent().removeClass("has-danger").removeClass("has-error");
-              $(".text-scale").parent().find(".help-block").empty();
-              $(".text-scale").parents("form").validator("destroy");
-              $(".text-scale").parents("form").validator();
-              if ($('.text-scale').length > 2) {
-                  $(".remBtnDis").removeClass("hide");
-              } else {
-                  $(".remBtnDis").addClass("hide");
-              }
-              if ($('.text-scale').length == 8) {
-                  $(".text-scale:last").find('span.addBtnDis').remove();
-                  $(".text-scale:last").find('span.delete').before(
-                      "<span class='tool-tip' data-toggle='tooltip' data-placement='top' title='Only a max of 8 rows are allowed'><span class='addBtnDis addbtn mr-sm align-span-center cursor-none' onclick='addTextScale();'>+</span></span>");
-                  $('[data-toggle="tooltip"]').tooltip();
-              } else {
-                  $(".text-scale:last").find('span.addBtnDis').remove();
-                  $(".text-scale:last").find('span.delete').before(
-                      "<span class='addBtnDis addbtn mr-sm align-span-center' onclick='addTextScale();'>+</span>");
-              }
-
-          }
-          $('#' + scaleCount).find('input:first').focus();
-      }
-
-      function removeTextScale(param) {
-          if ($('.text-scale').length > 2) {
-              $(param).parents(".text-scale").remove();
-              $(".text-scale").parent().removeClass("has-danger").removeClass("has-error");
-              $(".text-scale").parent().find(".help-block").empty();
-              $(".text-scale").parents("form").validator("destroy");
-              $(".text-scale").parents("form").validator();
-              if ($('.text-scale').length > 2) {
-                  $(".remBtnDis").removeClass("hide");
-              } else {
-                  $(".remBtnDis").addClass("hide");
-              }
-              $("#textScalePositionId").val($('.text-scale').length);
-              if ($('.text-scale').length == 8) {
-                  $(".text-scale:last").find('span.addBtnDis').remove();
-                  $(".text-scale:last").find('span.delete').before(
-                      "<span class='tool-tip' data-toggle='tooltip' data-placement='top' title='Only a max of 8 rows are allowed'><span class='addBtnDis addbtn mr-sm align-span-center cursor-none' onclick='addTextScale();'>+</span></span>");
-                  $('[data-toggle="tooltip"]').tooltip();
-              } else {
-                  $(".text-scale:last").find('span.addBtnDis').remove();
-                  $(".text-scale:last").find('span.delete').before(
-                      "<span class='addBtnDis addbtn mr-sm align-span-center' onclick='addTextScale();'>+</span>");
-              }
-          }
-      }
-
-      var choiceCount = $('.text-choice').length;
-
-      function addTextChoice() {
-          choiceCount = choiceCount + 1;
-          var selectionStyle = $('input[name="questionReponseTypeBo.selectionStyle"]:checked').val();
-          var newTextChoice = "<div class='mt-xlg text-choice' id='" + choiceCount + "'>" +
-              "<div class='col-md-3 pl-none'>" +
-              "   <div class='gray-xs-f mb-xs'>Display Text (1 to 100 characters)<span class='requiredStar'>*</span> </div>"
-              +
-              "   <div class='form-group mb-none'>" +
-              "   <input type='text' class='form-control TextChoiceRequired' name='questionResponseSubTypeList["
-              + choiceCount + "].text' id='displayTextChoiceText" + choiceCount
-              + "'  maxlength='100' required>" +
-              "      <div class='help-block with-errors red-txt'></div>" +
-              "   </div>" +
-              "</div>" +
-              "<div class='col-md-3 pl-none'>" +
-              "   <div class='gray-xs-f mb-xs'>Value (1 to 100 characters)<span class='requiredStar'>*</span> </div>"
-              +
-              "   <div class='form-group mb-none'>" +
-              "   <input type='text' class='form-control TextChoiceRequired textChoiceVal' name='questionResponseSubTypeList["
-              + choiceCount + "].value' id='displayTextChoiceValue" + choiceCount
-              + "'  maxlength='100' required onblur='validateForUniqueValue(this,&#34;Text Choice&#34;,function(){});'>"
-              +
-              "      <div class='help-block with-errors red-txt'></div>" +
-              "   </div>" +
-              "</div>" +
-              "<div class='col-md-2 pl-none'>" +
-              "   <div class='gray-xs-f mb-xs'>Mark as exclusive ? <span class='requiredStar'>*</span> </div>"
-              +
-              "   <div class='form-group'>";
-          if (selectionStyle == 'Single') {
-              newTextChoice += "<select name='questionResponseSubTypeList[" + choiceCount
-                  + "].exclusive' id='exclusiveId" + choiceCount + "' index=" + choiceCount
-                  + " title='select' data-error='Please choose one option' class='selectpicker TextChoiceRequired textChoiceExclusive' disabled onchange='setExclusiveData(this);'>";
-          } else {
-              newTextChoice += "<select name='questionResponseSubTypeList[" + choiceCount
-                  + "].exclusive' id='exclusiveId" + choiceCount + "' index=" + choiceCount
-                  + " title='select' data-error='Please choose one option' class='selectpicker TextChoiceRequired textChoiceExclusive' required onchange='setExclusiveData(this);'>";
-          }
-          newTextChoice += "<option value='Yes'>Yes</option>" +
-              "<option value='No' >No</option>" +
-              "</select>" +
-              "<div class='help-block with-errors red-txt'></div>" +
-              "</div>" +
-              "</div>";
-          <c:if test='${questionnaireBo.branching}'>
-          newTextChoice += "<div class='col-md-2 pl-none'>" +
-              "   <div class='gray-xs-f mb-xs'>Destination Step  </div>" +
-              "   <div class='form-group'>" +
-              "  <select name='questionResponseSubTypeList[" + choiceCount
-              + "].destinationStepId' id='destinationTextChoiceStepId" + choiceCount
-              + "' title='select' data-error='Please choose one option' class='selectpicker destionationYes'><option value='' disabled selected>Select</option>";
-          <c:forEach items='${destinationStepList}' var='destinationStep'>
-          newTextChoice += " <option value='${destinationStep.stepId}'>Step ${destinationStep.sequenceNo} : ${destinationStep.stepShortTitle}</option>";
-          </c:forEach>
-          newTextChoice += "<option value='0'>Completion Step</option>" +
-              "</select>" +
-              "  <div class='help-block with-errors red-txt'></div>" +
-              " </div>" +
-              "</div>";
-          </c:if>
-          newTextChoice += "<div class='col-md-12 p-none display__flex__'><div class='col-md-10 pl-none'>"
-              +
-              "<div class='gray-xs-f mb-xs'>Description(1 to 150 characters) </div>" +
-              "<div class='form-group'>" +
-              "   <textarea type='text' class='form-control' name='questionResponseSubTypeList["
-              + choiceCount + "].description' id='displayTextChoiceDescription" + choiceCount
-              + "'  maxlength='150'></textarea>" +
-              "</div>" +
-              "</div>" +
-              "<div class='col-md-2 pl-none'>" +
-              "   <span class='addBtnDis addbtn align-span-center' onclick='addTextChoice();'>+</span>"
-              +
-              "	 <span class='delete vertical-align-middle remBtnDis hide pl-md align-span-center' onclick='removeTextChoice(this);'></span>"
-              +
-              "</div></div>" +
-              "</div>";
-          $(".text-choice:last").after(newTextChoice);
-          $('.selectpicker').selectpicker('refresh');
-          $(".text-choice").parent().removeClass("has-danger").removeClass("has-error");
-          $(".text-choice").parent().find(".help-block").empty();
-          $(".text-choice").parents("form").validator("destroy");
-          $(".text-choice").parents("form").validator();
-          if ($('.text-choice').length > 2) {
-              $(".remBtnDis").removeClass("hide");
-          } else {
-              $(".remBtnDis").addClass("hide");
-          }
-          $('#' + choiceCount).find('input:first').focus();
-      }
-
-      function removeTextChoice(param) {
-          if ($('.text-choice').length > 2) {
-              $(param).parents(".text-choice").remove();
-              $(".text-choice").parent().removeClass("has-danger").removeClass("has-error");
-              $(".text-choice").parent().find(".help-block").empty();
-              $(".text-choice").parents("form").validator("destroy");
-              $(".text-choice").parents("form").validator();
-              if ($('.text-choice').length > 2) {
-                  $(".remBtnDis").removeClass("hide");
-              } else {
-                  $(".remBtnDis").addClass("hide");
-              }
-          }
-      }
-
-      var imageCount = $('.image-choice').length;
-
-      function addImageChoice() {
-          imageCount = imageCount + 1;
-          var newImageChoice = "<div class='image-choice row' id='" + imageCount + "'>" +
-              "	   <div class='col-md-2 pl-none col-smthumb-2'>" +
-              "   <div class='form-group'>" +
-              "      <div class='sm-thumb-btn' onclick='openUploadWindow(this);'>" +
-              "         <div class='thumb-img'><img src='../images/icons/sm-thumb.jpg'/></div>" +
-              "         <div class='textLabelimagePathId" + imageCount + "'>Upload</div>" +
-              "      </div>" +
-              "      <input class='dis-none upload-image ImageChoiceRequired' data-imageId='"
-              + imageCount + "' name='questionResponseSubTypeList[" + imageCount
-              + "].imageFile' id='imageFileId" + imageCount
-              + "' type='file'  accept='.png, .jpg, .jpeg' onchange='readURL(this);' required>" +
-              "		<input type='hidden' name='questionResponseSubTypeList[" + imageCount
-              + "].image' id='imagePathId" + imageCount + "' >" +
-              "      <div class='help-block with-errors red-txt'></div>" +
-              "   </div>" +
-              "</div>" +
-              "<div class='col-md-2 pl-none col-smthumb-2'>" +
-              "   <div class='form-group'>" +
-              "      <div class='sm-thumb-btn' onclick='openUploadWindow(this);'>" +
-              "         <div class='thumb-img'><img src='../images/icons/sm-thumb.jpg'/></div>" +
-              "         <div class='textLabelselectImagePathId" + imageCount + "'>Upload</div>" +
-              "      </div>" +
-              "      <input class='dis-none upload-image ImageChoiceRequired' data-imageId='"
-              + imageCount + "' name='questionResponseSubTypeList[" + imageCount
-              + "].selectImageFile' id='selectImageFileId" + imageCount
-              + "' type='file'  accept='.png, .jpg, .jpeg' onchange='readURL(this);' required>" +
-              "		<input type='hidden' name='questionResponseSubTypeList[" + imageCount
-              + "].selectedImage' id='selectImagePathId" + imageCount + "'>" +
-              "      <div class='help-block with-errors red-txt'></div>" +
-              "   </div>" +
-              "</div>" +
-              "<div class='col-md-2 pl-none'>" +
-              "   <div class='form-group'>" +
-              "      <input type='text' class='form-control ImageChoiceRequired' name='questionResponseSubTypeList["
-              + imageCount + "].text' id='displayImageChoiceText" + imageCount
-              + "' required maxlength='100'>" +
-              "      <div class='help-block with-errors red-txt'></div>" +
-              "   </div>" +
-              "</div>" +
-              "<div class='col-md-2 col-lg-2 pl-none'>" +
-              "   <div class='form-group'>" +
-              "      <input type='text' class='form-control ImageChoiceRequired imageChoiceVal' name='questionResponseSubTypeList["
-              + imageCount + "].value' id='displayImageChoiceValue" + imageCount
-              + "' required maxlength='50' onblur='validateForUniqueValue(this,&#34;Image Choice&#34;,function(){});'>"
-              +
-              "      <div class='help-block with-errors red-txt'></div>" +
-              "   </div>" +
-              "</div>";
-          <c:if test='${questionnaireBo.branching}'>
-          newImageChoice += "<div class='col-md-2 col-lg-2 pl-none'>" +
-              "   <div class='form-group'>" +
-              "      <select name='questionResponseSubTypeList[" + imageCount
-              + "].destinationStepId' id='destinationImageChoiceStepId" + imageCount
-              + "' title='select' data-error='Please choose one option' class='selectpicker'><option value=''>Select</option>";
-          <c:forEach items="${destinationStepList}" var="destinationStep">
-          newImageChoice += "<option value='${destinationStep.stepId}'>Step ${destinationStep.sequenceNo} : ${destinationStep.stepShortTitle}</option>";
-          </c:forEach>
-          newImageChoice += "<option value='0'>Completion Step</option>" +
-              "	     </select>" +
-              "   </div>" +
-              "</div>";
-          </c:if>
-          newImageChoice += "<div class='col-md-2 pl-none  mt__8'>" +
-              "   <span class='addBtnDis addbtn mr-sm align-span-center' onclick='addImageChoice();'>+</span>"
-              +
-              "	  <span class='delete vertical-align-middle remBtnDis hide pl-md align-span-center' onclick='removeImageChoice(this);'></span>"
-              +
-              "</div>" +
-              "</div> ";
-          $(".image-choice:last").after(newImageChoice);
-          $('.selectpicker').selectpicker('refresh');
-          $(".image-choice").parent().removeClass("has-danger").removeClass("has-error");
-          $(".image-choice").parent().find(".help-block").empty();
-          $(".image-choice").parents("form").validator("destroy");
-          $(".image-choice").parents("form").validator();
-
-          if ($('.image-choice').length > 2) {
-              $(".remBtnDis").removeClass("hide");
-          } else {
-              $(".remBtnDis").addClass("hide");
-          }
-          $('#' + imageCount).find('input:first').focus();
-      }
-
-      function removeImageChoice(param) {
-          if ($('.image-choice').length > 2) {
-              $(param).parents(".image-choice").remove();
-              $(".image-choice").parent().addClass("has-danger").addClass("has-error");
-              $(".image-choice").parent().find(".help-block").empty();
-              $(".image-choice").parents("form").validator("destroy");
-              $(".image-choice").parents("form").validator();
-              if ($('.image-choice').length > 2) {
-                  $(".remBtnDis").removeClass("hide");
-              } else {
-                  $(".remBtnDis").addClass("hide");
-              }
-          }
-      }
-
-      function validateQuestionShortTitle(item, callback) {
-          var shortTitle = $("#stepShortTitle").val();
-          var questionnaireId = $("#questionnairesId").val();
-          var stepType = "Question";
-          var thisAttr = $("#stepShortTitle");
-          var existedKey = $("#preShortTitleId").val();
-          var questionnaireShortTitle = $("#questionnaireShortId").val();
-          if (shortTitle != null && shortTitle != '' && typeof shortTitle != 'undefined') {
-              $(thisAttr).parent().removeClass("has-danger").removeClass("has-error");
-              $(thisAttr).parent().find(".help-block").empty();
-              if (existedKey != shortTitle) {
-                  $.ajax({
-                      url: "/studybuilder/adminStudies/validateQuestionnaireStepKey.do?_S=${param._S}",
-                      type: "POST",
-                      datatype: "json",
-                      data: {
-                          shortTitle: shortTitle,
-                          questionnaireId: questionnaireId,
-                          stepType: stepType,
-                          questionnaireShortTitle: questionnaireShortTitle
-                      },
-                      beforeSend: function (xhr, settings) {
-                          xhr.setRequestHeader("X-CSRF-TOKEN", "${_csrf.token}");
-                      },
-                      success: function getResponse(data) {
-                          var message = data.message;
-
-                          if ('SUCCESS' != message) {
-                              $(thisAttr).validator('validate');
-                              $(thisAttr).parent().removeClass("has-danger").removeClass("has-error");
-                              $(thisAttr).parent().find(".help-block").empty();
-                              callback(true);
-                          } else {
-                              $(thisAttr).val('');
-                              $(thisAttr).parent().addClass("has-danger").addClass("has-error");
-                              $(thisAttr).parent().find(".help-block").empty();
-                              $(thisAttr).parent().find(".help-block").append(
-                                  "<ul class='list-unstyled'><li>'" + shortTitle
-                                  + "' has already been used in the past.</li></ul>");
-                              callback(false);
-                          }
-                      },
-                      global: false
-                  });
-              } else {
-                  callback(true);
-                  $(thisAttr).parent().removeClass("has-danger").removeClass("has-error");
-                  $(thisAttr).parent().find(".help-block").html("");
-              }
-          } else {
-              callback(false);
-          }
-      }
-
-      function validateStatsShorTitle(event, callback) {
-          var short_title = $("#statShortNameId").val();
-          var prev_short_title = $("#prevStatShortNameId").val();
-          if (short_title != null && short_title != '' && typeof short_title != 'undefined') {
-              $("#statShortNameId").parent().removeClass("has-danger").removeClass("has-error");
-              $("#statShortNameId").parent().find(".help-block").empty();
-              if (prev_short_title != short_title) {
-                  $.ajax({
-                      url: "/studybuilder/adminStudies/validateStatsShortName.do?_S=${param._S}",
-                      type: "POST",
-                      datatype: "json",
-                      data: {
-                          shortTitle: short_title
-                      },
-                      beforeSend: function (xhr, settings) {
-                          xhr.setRequestHeader("X-CSRF-TOKEN", "${_csrf.token}");
-                      },
-                      success: function getResponse(data) {
-                          var message = data.message;
-
-                          if ('SUCCESS' != message) {
-                              $("#statShortNameId").validator('validate');
-                              $("#statShortNameId").parent().removeClass("has-danger").removeClass("has-error");
-                              $("#statShortNameId").parent().find(".help-block").empty();
-                              if (callback)
-                                  callback(true);
-                          } else {
-                              $("#statShortNameId").val('');
-                              $("#statShortNameId").parent().addClass("has-danger").addClass("has-error");
-                              $("#statShortNameId").parent().find(".help-block").empty();
-                              $("#statShortNameId").parent().find(".help-block").append(
-                                  "<ul class='list-unstyled'><li>'" + short_title
-                                  + "' has already been used in the past.</li></ul>");
-                              if (callback)
-                                  callback(false);
-
-                          }
-                      },
-                      global: false
-                  });
-              } else {
-                  if (callback)
-                      callback(true);
-                  $("#statShortNameId").parent().removeClass("has-danger").removeClass("has-error");
-                  $("#statShortNameId").parent().find(".help-block").empty();
-
-              }
-          } else {
-              if (callback)
-                  callback(true);
-
-          }
-      }
-
-      function validateFractionDigits(item) {
-          var value = $(item).val();
-          var minValue = $("#continuesScaleMinValueId").val();
-          var maxValue = $("#continuesScaleMaxValueId").val();
-          var defaultValue = $("#continuesScaleDefaultValueId").val();
-          $(item).parent().addClass("has-danger").addClass("has-error");
-          $(item).parent().find(".help-block").empty();
-          if (value != '') {
-              if (minValue != '' && maxValue != '') {
-                  var maxFracDigits = 0;
-                  var minTemp = 0;
-                  var maxTemp = 0;
-                  //max value check
-                  if (parseFloat(maxValue) > 0 && parseFloat(maxValue) <= 1) {
-                      maxTemp = 4;
-                  } else if (parseFloat(maxValue) > 1 && parseFloat(maxValue) <= 10) {
-                      maxTemp = 3;
-                  } else if (parseFloat(maxValue) > 10 && parseFloat(maxValue) <= 100) {
-                      maxTemp = 2;
-                  } else if (parseFloat(maxValue) > 100 && parseFloat(maxValue) <= 1000) {
-                      maxTemp = 1;
-                  } else if (parseFloat(maxValue) > 1000 && parseFloat(maxValue) <= 10000) {
-                      maxTemp = 0;
-                  }
-
-                  //min value check
-                  if (parseFloat(minValue) >= -10000 && parseFloat(minValue) < -1000) {
-                      minTemp = 0;
-                  } else if (parseFloat(minValue) >= -1000 && parseFloat(minValue) < -100) {
-                      minTemp = 1;
-                  } else if (parseFloat(minValue) >= -100 && parseFloat(minValue) < -10) {
-                      minTemp = 2;
-                  } else if (parseFloat(minValue) >= -10 && parseFloat(minValue) < -1) {
-                      minTemp = 3;
-                  } else if (parseFloat(minValue) >= -1) {
-                      minTemp = 4;
-                  }
-                  maxFracDigits = (parseInt(maxTemp) > parseInt(minTemp)) ? parseInt(minTemp) : parseInt(
-                      maxTemp);
-
-                  if (parseInt(value) <= parseInt(maxFracDigits)) {
-
-                      $(item).validator('validate');
-                      $(item).parent().removeClass("has-danger").removeClass("has-error");
-                      $(item).parent().find(".help-block").empty();
-
-                      $("#continuesScaleMinValueId").val(parseFloat(minValue).toFixed(value));
-                      $("#continuesScaleMaxValueId").val(parseFloat(maxValue).toFixed(value));
-                      if (defaultValue != '') {
-                          $("#continuesScaleDefaultValueId").val(parseFloat(defaultValue).toFixed(value));
-                      }
-                  } else {
-                      $(item).val('');
-                      $(item).parent().addClass("has-danger").addClass("has-error");
-                      $(item).parent().find(".help-block").empty();
-                      $(item).parent().find(".help-block").append(
-                          "<ul class='list-unstyled'><li>Please enter a value in the range (0,x).</li></ul>");
-                  }
-              } else {
-                  $(item).val('');
-                  $(item).parent().addClass("has-danger").addClass("has-error");
-                  $(item).parent().find(".help-block").empty();
-                  $(item).parent().find(".help-block").append(
-                      "<ul class='list-unstyled'><li>Please enter an minimum and maximum values </li></ul>");
-              }
-          }
-      }
-
-      function validateForUniqueValue(item, responsetype, callback) {
-          var id = $(item).attr("id");
-
-          var isValid = true;
-          if (responsetype == 'Text Scale') {
-              var valueArray = new Array();
-              $('.text-scale').each(function () {
-                  var id = $(this).attr("id");
-                  var diaplay_value = $("#displayTextSclValue" + id).val();
-                  $("#displayTextSclValue" + id).parent().removeClass("has-danger").removeClass(
-                      "has-error");
-                  $("#displayTextSclValue" + id).parent().find(".help-block").empty();
-                  if (diaplay_value != '') {
-                      if (valueArray.indexOf(diaplay_value.toLowerCase()) != -1) {
-                          isValid = false;
-                          $("#displayTextSclValue" + id).val('');
-                          $("#displayTextSclValue" + id).parent().addClass("has-danger").addClass("has-error");
-                          $("#displayTextSclValue" + id).parent().find(".help-block").empty();
-                          $("#displayTextSclValue" + id).parent().find(".help-block").append(
-                              "<ul class='list-unstyled'><li>The value should be unique </li></ul>");
-                      } else
-                          valueArray.push(diaplay_value.toLowerCase());
-                  } else {
-
-                  }
-
-              });
-              callback(isValid);
-          } else if (responsetype == "Value Picker") {
-              var valueArray = new Array();
-              $('.value-picker').each(function () {
-                  var id = $(this).attr("id");
-                  var diaplay_value = $("#displayValPickValue" + id).val();
-                  $("#displayValPickValue" + id).parent().removeClass("has-danger").removeClass(
-                      "has-error");
-                  $("#displayValPickValue" + id).parent().find(".help-block").empty();
-                  if (diaplay_value != '') {
-                      if (valueArray.indexOf(diaplay_value.toLowerCase()) != -1) {
-                          isValid = false;
-                          $("#displayValPickValue" + id).val('');
-                          $("#displayValPickValue" + id).parent().addClass("has-danger").addClass("has-error");
-                          $("#displayValPickValue" + id).parent().find(".help-block").empty();
-                          $("#displayValPickValue" + id).parent().find(".help-block").append(
-                              "<ul class='list-unstyled'><li>The value should be unique </li></ul>");
-                      } else
-                          valueArray.push(diaplay_value.toLowerCase());
-                  } else {
-
-                  }
-
-              });
-              callback(isValid);
-          } else if (responsetype == "Image Choice") {
-              var valueArray = new Array();
-              $('.image-choice').each(function () {
-                  var id = $(this).attr("id");
-                  var diaplay_value = $("#displayImageChoiceValue" + id).val();
-                  $("#displayImageChoiceValue" + id).parent().removeClass("has-danger").removeClass(
-                      "has-error");
-                  $("#displayImageChoiceValue" + id).parent().find(".help-block").empty();
-                  if (diaplay_value != '') {
-                      if (valueArray.indexOf(diaplay_value.toLowerCase()) != -1) {
-                          isValid = false;
-                          $("#displayImageChoiceValue" + id).val('');
-                          $("#displayImageChoiceValue" + id).parent().addClass("has-danger").addClass(
-                              "has-error");
-                          $("#displayImageChoiceValue" + id).parent().find(".help-block").empty();
-                          $("#displayImageChoiceValue" + id).parent().find(".help-block").append(
-                              "<ul class='list-unstyled'><li>The value should be unique </li></ul>");
-                      } else
-                          valueArray.push(diaplay_value.toLowerCase());
-                  } else {
-
-                  }
-
-              });
-              callback(isValid);
-          } else if (responsetype == "Text Choice") {
-              var valueArray = new Array();
-              $('.text-choice').each(function () {
-                  var id = $(this).attr("id");
-                  var diaplay_value = $("#displayTextChoiceValue" + id).val();
-                  $("#displayTextChoiceValue" + id).parent().removeClass("has-danger").removeClass(
-                      "has-error");
-                  $("#displayTextChoiceValue" + id).parent().find(".help-block").empty();
-                  if (diaplay_value != '') {
-                      if (valueArray.indexOf(diaplay_value.toLowerCase()) != -1) {
-                          isValid = false;
-                          $("#displayTextChoiceValue" + id).val('');
-                          $("#displayTextChoiceValue" + id).parent().addClass("has-danger").addClass(
-                              "has-error");
-                          $("#displayTextChoiceValue" + id).parent().find(".help-block").empty();
-                          $("#displayTextChoiceValue" + id).parent().find(".help-block").append(
-                              "<ul class='list-unstyled'><li>The value should be unique </li></ul>");
-                      } else
-                          valueArray.push(diaplay_value.toLowerCase());
-                  } else {
-
-                  }
-
-              });
-              callback(isValid);
-          }
-      }
-
-      function addFunctions(item) {
-          var index = $(item).attr('index');
-
-          var value = $(item).val();
-          var isValid = true;
-          $("#inputTypeErrorValueId" + index).hide();
-          var parent_sequence_no = $("#parentSequenceNoId" + index).val();
-          var parent_input = $("#rootId" + parent_sequence_no).find('select').val();
-          deleteChildElements(index, "child");
-
-          var total = maxSquenceValue();
-          var v = total;
-          $(item).find('input').addClass("add_var_hide");
-
-          $("#constantValId" + index).addClass('add_var_hide');
-          $("#constantValId" + index).attr('required', false);
-          $("#constantValId" + index).parent().addClass('add_var_hide');
-
-          var rowCount = parseInt($('.numeric__section').length);
-          $("#inputSubTypeValueId" + index).val('');
-          if (value === "F") {
-              count = parseInt(count) + 1;
-              var addFunction = "<div class='numeric__section' id='rootId" + index + "'>" +
-                  "<div class='numeric__define gray__t'>" +
-                  "   <span>V" + index + "</span>" +
-                  "   <div class='form-group sm-selection'>" +
-                  "      <select class='selectpicker conditionalBranchingRequired' name='questionConditionBranchBoList["
-                  + rowCount + "].inputTypeValue' id='inputTypeValueId" + rowCount + "' index='" + index
-                  + "' count='" + rowCount + "' onchange='selectFunction(this);' required>" +
-                  "         <option value=''  selected>Select</option>";
-              if (parent_input == '&&' || parent_input == '||') {
-                  addFunction += "         <option value='>' >&gt;</option>" +
-                      "         <option value='<' >&lt;</option>" +
-                      "         <option value='=' >&equals;</option>" +
-                      "		 <option value='!='>!=</option>";
-              } else {
-                  addFunction += "         <option value='+' >+</option>" +
-                      "         <option value='&#45;' >&#45;</option>" +
-                      "         <option value='&#42;' >&#42;</option>" +
-                      "         <option value='/' >/</option>" +
-                      "         <option value='%' >%</option>";
-              }
-              addFunction += "      </select>" +
-                  "      <div class='help-block with-errors red-txt'></div>" +
-                  "   </div>" +
-                  "<input type='hidden' id='previousInputTypeValueId" + rowCount + "'  />" +
-                  "</div>" +
-                  "<div class='numeric__define_input gray__t' style='margin-left:4px;'>" +
-                  "   <div class='numeric__row display__flex__base-webkit' id='" + (parseInt(v) + 1)
-                  + "'>" +
-                  "      <span>V" + (parseInt(v) + 1) + " =</span>" +
-                  "      <div class='form-group sm-selection' style=''>" +
-                  "         <select class='selectpicker conditionalBranchingRequired' name='questionConditionBranchBoList["
-                  + rowCount + "].questionConditionBranchBos[0].inputType' id='inputTypeId" + (parseInt(v)
-                      + 1) + "' index='" + (parseInt(v) + 1)
-                  + "' count='0' onchange='addFunctions(this);' required>" +
-                  "            <option value=''  selected>Select</option>" +
-                  "            <option value='C'>Constant</option>" +
-                  "            <option value='F'>Function</option>" +
-                  "            <option value='RDE'>Response Data Element (x)</option>" +
-                  "         </select>" +
-                  "		 <div class='mt-sm black-xs-f italic-txt red-txt' id='inputTypeErrorValueId"
-                  + (parseInt(v) + 1) + "' style='display: none;'></div>" +
-                  "		 <div class='help-block with-errors red-txt'></div>" +
-                  "         <input type='hidden' name='questionConditionBranchBoList[" + rowCount
-                  + "].questionConditionBranchBos[0].inputTypeValue' id='inputSubTypeValueId" + (parseInt(
-                      v) + 1) + "'>" +
-                  "         <input type='hidden' name='questionConditionBranchBoList[" + rowCount
-                  + "].questionConditionBranchBos[0].sequenceNo' id='sequenceNoId" + (parseInt(v) + 1)
-                  + "'  value='" + (parseInt(v) + 1) + "'>" +
-                  "         <input type='hidden' name='questionConditionBranchBoList[" + rowCount
-                  + "].questionConditionBranchBos[0].parentSequenceNo'  id='parentSequenceNoId"
-                  + (parseInt(v) + 1) + "' value='" + parseInt(index) + "'>" +
-                  "      </div>" +
-                  "         <div class='form-group sm__in add_var_hide'>" +
-                  "            <input type='text' id='constantValId" + (parseInt(v) + 1) + "' index='"
-                  + (parseInt(v) + 1)
-                  + "' class='constant form-control add_var_hide' value='' onkeypress='return isNumberKey(event)'/>"
-                  +
-                  "			<div class='help-block with-errors red-txt'></div>" +
-                  "         </div>" +
-                  "		 <div class='form-group sm__in'>" +
-                  "           <span class='delete vertical-align-middle remBtnDis pl-md align-span-center hide' index='"
-                  + (parseInt(v) + 1) + "' count='0' onclick=removeVaraiable(this);></span>" +
-                  "         </div>" +
-                  "   </div>" +
-                  "   <div class='numeric__row display__flex__base-webkit' id='" + (parseInt(v) + 2)
-                  + "'>" +
-                  "      <span>V" + (parseInt(v) + 2) + " =</span>" +
-                  "      <div class='form-group sm-selection' style=''>" +
-                  "         <select class='selectpicker conditionalBranchingRequired' name='questionConditionBranchBoList["
-                  + rowCount + "].questionConditionBranchBos[1].inputType' id='inputTypeId" + (parseInt(v)
-                      + 2) + "' index='" + (parseInt(v) + 2)
-                  + "' count='1' onchange='addFunctions(this);' required>" +
-                  "            <option value=''  selected>Select</option>" +
-                  "            <option value='C'>Constant</option>" +
-                  "            <option value='F'>Function</option>" +
-                  "            <option value='RDE'>Response Data Element (x)</option>" +
-                  "         </select>" +
-                  "		 <div class='mt-sm black-xs-f italic-txt red-txt' id='inputTypeErrorValueId"
-                  + (parseInt(v) + 2) + "' style='display: none;'></div>" +
-                  "	     <div class='help-block with-errors red-txt'></div>" +
-                  "         <input type='hidden' name='questionConditionBranchBoList[" + rowCount
-                  + "].questionConditionBranchBos[1].inputTypeValue' id='inputSubTypeValueId" + (parseInt(
-                      v) + 2) + "' >" +
-                  "         <input type='hidden' name='questionConditionBranchBoList[" + rowCount
-                  + "].questionConditionBranchBos[1].sequenceNo' id='sequenceNoId" + (parseInt(v) + 2)
-                  + "' value='" + (parseInt(v) + 2) + "'>" +
-                  "         <input type='hidden' name='questionConditionBranchBoList[" + rowCount
-                  + "].questionConditionBranchBos[1].parentSequenceNo'id='parentSequenceNoId" + (parseInt(
-                      v) + 2) + "' value='" + parseInt(index) + "' >" +
-                  "         <div class='add_varible add_var_hide' parentIndex=" + parseInt(index)
-                  + " index='" + rowCount
-                  + "' onclick='addVariable(this);' id='addVaraiable1'>+ Add Variable</div>" +
-                  "      </div>" +
-                  "         <div class='form-group sm__in add_var_hide'>" +
-                  "            <input type='text' id='constantValId" + (parseInt(v) + 2) + "' index='"
-                  + (parseInt(v) + 2)
-                  + "' class='constant form-control add_var_hide' value='' onkeypress='return isNumberKey(event)'/>"
-                  +
-                  "			<div class='help-block with-errors red-txt'></div>" +
-                  "         </div>" +
-                  "		 <div class='form-group sm__in'>" +
-                  "           <span class='delete vertical-align-middle remBtnDis pl-md align-span-center hide' index='"
-                  + (parseInt(v) + 2) + "' count='1' onclick=removeVaraiable(this);></span>" +
-                  "         </div>" +
-                  "   </div>" +
-                  "</div>" +
-                  "</div>" +
-                  "<div class='clearfix'></div>";
-              $(".numeric__section:last").after(addFunction);
-              $('.selectpicker').selectpicker('refresh');
-          } else if (value === "C") {
-              $("#constantValId" + index).removeClass('add_var_hide');
-              $("#constantValId" + index).val('');
-              $("#constantValId" + index).attr('required', true);
-              $("#constantValId" + index).parent().removeClass('add_var_hide');
-
-          } else if (value === "RDE") {
-              var id = $(item).attr('id');
-              var noofrows = parseInt($('.numeric__section').length);
-              if (noofrows > 1) {
-                  var fun_count = parseInt(count) + 1;
-                  $('.numeric__section').each(function (i) {
-                      var index = $("#inputTypeValueId" + i).attr('index');
-                      var rootId = "rootId" + index;
-                      if (parent_input != "+" && parent_input != "*") {
-                          $('#' + rootId + ' .numeric__row').each(function (j) {
-                              var id = $(this).attr("id");
-                              var rde_value = $("#inputSubTypeValueId" + id).val();
-                              if (rde_value != '' && rde_value == 'x') {
-                                  isValid = false;
-                              }
-                          });
-                      } else {
-                          if (parent_sequence_no != index) {
-                              $('#' + rootId + ' .numeric__row').each(function (j) {
-                                  var id = $(this).attr("id");
-                                  var rde_value = $("#inputSubTypeValueId" + id).val();
-                                  if (rde_value != '' && rde_value == 'x') {
-                                      isValid = false;
-                                  }
-                              });
-                          }
-                      }
-                  });
-              } else {
-                  if (parent_sequence_no == 1) {
-                      $('#rootId1 .numeric__row').each(function (j) {
-                          var id = $(this).attr("id");
-                          var val = $("#inputSubTypeValueId" + id).val();
-                          if (val != '' && val == 'x') {
-                              isValid = false;
-                          }
-                      });
-                  }
-              }
-              $("#inputSubTypeValueId" + index).val('x');
-              if (!isValid) {
-
-                  $("#inputTypeErrorValueId" + index).show();
-                  $("#inputTypeErrorValueId" + index).html('RDE (x) should be used only once.');
-              } else {
-                  $(".numeric__row").each(function (j) {
-                      var id = $(this).attr("id");
-                      $("#inputTypeErrorValueId" + id).hide();
-                  });
-              }
-          }
-          $(".numeric__loop").parent().removeClass("has-danger").removeClass("has-error");
-          $(".numeric__loop").parent().find(".help-block").empty();
-          $(".numeric__loop").parents("form").validator("destroy");
-          $(".numeric__loop").parents("form").validator();
-          $('.constant').change(function () {
-              var index = $(this).attr('index');
-              var value = $(this).val();
-              $("#inputSubTypeValueId" + index).val(value);
-              createFormula();
-          });
-          createFormula();
-      }
-
-      function selectFunction(item) {
-          var index = $(item).attr('index');
-          var count = parseInt($(item).attr('count'));
-          var value = $(item).val();
-          $("#rootId" + index + " .numeric__row .remBtnDis").addClass("hide");
-          var previousInputTypeValue = $("#previousInputTypeValueId" + count).val();
-
-          if (typeof previousInputTypeValue != 'undefined' && previousInputTypeValue != null
-              && previousInputTypeValue != '') {
-              if (previousInputTypeValue == "+" || previousInputTypeValue == "*") {
-                  bootbox.confirm({
-                      closeButton: false,
-                      message: 'This action will reset the inputs for this function in the right side column. Are you sure you wish to proceed?',
-                      buttons: {
-                          'cancel': {
-                              label: 'Cancel',
-                          },
-                          'confirm': {
-                              label: 'OK',
-                          },
-                      },
-                      callback: function (result) {
-                          if (result) {
-                              $("#inputSubTypeValueId" + index).val(value);
-                              deleteChildElements(index, "parent");
-                              $('#rootId' + index + ' .numeric__row').each(function (j) {
-                                  var id = $(this).attr("id");
-                                  $("#inputTypeId" + id).val("");
-                                  $("#inputSubTypeValueId" + id).val("");
-                                  $("#constantValId" + id).val('');
-                                  $("#constantValId" + id).attr('required', false);
-                                  $("#constantValId" + id).addClass('add_var_hide');
-                                  $("#constantValId" + id).parent().addClass('add_var_hide');
-                                  $('.selectpicker').selectpicker('refresh');
-                                  $("#inputTypeErrorValueId" + id).hide();
-                                  if (j > 1) {
-                                      $("#" + id).remove();
-                                  }
-                              });
-                              $("#previousInputTypeValueId" + count).val(value);
-                              var lastSeqenceNO = parseInt(
-                                  $("#rootId" + index + " .numeric__row").last().find('select').attr("count"));
-                              if (value == '+' || value == '*') {
-                                  $("#rootId" + index + " .numeric__row").last().removeClass(
-                                      'display__flex__base-webkit').addClass('display__flex__base');
-                                  $("#rootId" + index + " .numeric__row #addVaraiable" + lastSeqenceNO).removeClass(
-                                      'add_var_hide');
-                              } else {
-                                  $("#rootId" + index + " .numeric__row #addVaraiable" + lastSeqenceNO).addClass(
-                                      'add_var_hide');
-                                  $("#rootId" + index + " .numeric__row").last().removeClass(
-                                      'display__flex__base').addClass('display__flex__base-webkit');
-                              }
-                              createFormula();
-                          } else {
-                              $(item).val(previousInputTypeValue);
-                              $('.selectpicker').selectpicker('refresh');
-                          }
-                      }
-                  });
-
-              } else {
-                  $("#inputSubTypeValueId" + index).val(value);
-                  $("#previousInputTypeValueId" + count).val(value);
-                  var lastSeqenceNO = parseInt(
-                      $("#rootId" + index + " .numeric__row").last().find('select').attr("count"));
-                  if (value == '+' || value == '*') {
-                      $("#rootId" + index + " .numeric__row #addVaraiable" + lastSeqenceNO).removeClass(
-                          'add_var_hide');
-                      $("#rootId" + index + " .numeric__row").last().removeClass(
-                          'display__flex__base-webkit').addClass('display__flex__base');
-                      $('#rootId' + index + ' .numeric__row').each(function (j) {
-                          var id = $(this).attr("id");
-                          if ($("#inputTypeErrorValueId" + id).is(':visible')) {
-                              $("#inputTypeId" + id).val("");
-                              $("#inputSubTypeValueId" + id).val("");
-                              $('.selectpicker').selectpicker('refresh');
-                              $("#inputTypeErrorValueId" + id).hide();
-                          }
-                      });
-
-                  } else {
-                      $("#rootId" + index + " .numeric__row #addVaraiable" + lastSeqenceNO).addClass(
-                          'add_var_hide');
-                      $("#rootId" + index + " .numeric__row").last().removeClass(
-                          'display__flex__base').addClass('display__flex__base-webkit');
-                  }
-                  createFormula();
-              }
-          } else {
-              $("#inputSubTypeValueId" + index).val(value);
-              $("#previousInputTypeValueId" + count).val(value);
-              var lastSeqenceNO = parseInt(
-                  $("#rootId" + index + " .numeric__row").last().find('select').attr("count"));
-              if (value == '+' || value == '*') {
-                  $("#rootId" + index + " .numeric__row #addVaraiable" + lastSeqenceNO).removeClass(
-                      'add_var_hide');
-                  $("#rootId" + index + " .numeric__row").last().removeClass(
-                      'display__flex__base-webkit').addClass('display__flex__base');
-                  var id = $(this).attr("id");
-                  $('#rootId' + index + ' .numeric__row').each(function (j) {
-                      if ($("#inputTypeErrorValueId" + id).is(':visible')) {
-                          $("#inputTypeId" + id).val("");
-                          $("#inputSubTypeValueId" + id).val("");
-                          $('.selectpicker').selectpicker('refresh');
-                          $("#inputTypeErrorValueId" + id).hide();
-                      }
-                  });
-              } else {
-                  $("#rootId" + index + " .numeric__row #addVaraiable" + lastSeqenceNO).addClass(
-                      'add_var_hide');
-                  $("#rootId" + index + " .numeric__row").last().removeClass(
-                      'display__flex__base').addClass('display__flex__base-webkit');
-              }
-              createFormula();
-          }
-
-      }
-
-      function addVariable(item) {
-          var index = parseInt($(item).attr('index'));
-          var rowCount = parseInt($('.numeric__section').length);
-          var total = maxSquenceValue();
-          var parent_index = parseInt($(item).attr('parentIndex'));
-          var count = parseInt(
-              $("#rootId" + parent_index + " .numeric__row").last().find('select').attr("count"));
-          var v = total + 1;
-          count = count + 1;
-          var addVar = "<div class='numeric__row display__flex__base' id='" + v + "'>" +
-              "   <span>V" + v + " =</span>" +
-              "   <div class='form-group sm-selection' style=''>" +
-              "      <select class='selectpicker conditionalBranchingRequired' name='questionConditionBranchBoList["
-              + index + "].questionConditionBranchBos[" + count + "].inputType' id='inputTypeId"
-              + (parseInt(v)) + "' index='" + (parseInt(v)) + "' count='" + count
-              + "' onchange='addFunctions(this);' required>" +
-              "         <option value='' selected>Select</option>" +
-              "         <option value='C'>Constant</option>" +
-              "         <option value='F'>Function</option>" +
-              "         <option value='RDE'>Response Data Element (x)</option>" +
-              "      </select>" +
-              "		<div class='mt-sm black-xs-f italic-txt red-txt' id='inputTypeErrorValueId" + v
-              + "' style='display: none;'></div>" +
-              "      <div class='help-block with-errors red-txt'></div>" +
-              "      <input type='hidden' name='questionConditionBranchBoList[" + index
-              + "].questionConditionBranchBos[" + count + "].inputTypeValue' id='inputSubTypeValueId"
-              + (parseInt(v)) + "' >" +
-              " 	   <input type='hidden' name='questionConditionBranchBoList[" + index
-              + "].questionConditionBranchBos[" + count + "].sequenceNo' id='sequenceNoId" + (parseInt(
-                  v)) + "' value='" + (parseInt(v)) + "'>" +
-              "	   <input type='hidden' name='questionConditionBranchBoList[" + index
-              + "].questionConditionBranchBos[" + count + "].parentSequenceNo' id='parentSequenceNoId"
-              + (parseInt(v)) + "' value='" + parseInt(parent_index) + "'>" +
-              "     <div class='add_varible' parentIndex=" + parseInt(parent_index) + " index='" + index
-              + "' onclick='addVariable(this);' id='addVaraiable" + count + "'>+ Add Variable</div> " +
-              "   </div>" +
-              "   <div class='form-group sm__in add_var_hide'>" +
-              "      <input type='text' id='constantValId" + v + "' index='" + v
-              + "' class='constant form-control add_var_hide' onkeypress='return isNumberKey(event)'/>"
-              +
-              "   </div>" +
-              "   <div class='form-group sm__in'>" +
-              "           <span class='delete vertical-align-middle remBtnDis pl-md align-span-center' index='"
-              + (parseInt(v)) + "' count='" + count + "' onclick=removeVaraiable(this);></span>" +
-              "   </div>" +
-              "</div>";
-          $(item).parents(".numeric__row").after(addVar);
-          $(item).addClass('add_var_hide');
-          $('.selectpicker').selectpicker('refresh');
-          $(".numeric__loop").parent().removeClass("has-danger").removeClass("has-error");
-          $(".numeric__loop").parent().find(".help-block").empty();
-          $(".numeric__loop").parents("form").validator("destroy");
-          $(".numeric__loop").parents("form").validator();
-          if ($("#rootId" + parent_index + " .numeric__row").length > 2) {
-              $("#rootId" + parent_index + " .numeric__row .remBtnDis").removeClass("hide");
-              $("#rootId" + parent_index + " .numeric__row").removeClass(
-                  'display__flex__base-webkit').addClass('display__flex__base');
-          } else {
-              $("#rootId" + parent_index + " .numeric__row .remBtnDis").addClass("hide");
-              $("#rootId" + parent_index + " .numeric__row").last().removeClass(
-                  'display__flex__base').addClass('display__flex__base-webkit');
-          }
-          createFormula();
-      }
-
-      function removeVaraiable(item) {
-          var index = $(item).attr('index');
-          var count = parseInt($(item).attr('count'));
-          var parent_sequence_no = $("#parentSequenceNoId" + index).val();
-          var siblingCount = $("#rootId" + parent_sequence_no + " .numeric__row").length;
-          var value = $("#inputTypeId" + index).val();
-          if (siblingCount > 2) {
-              if (value == "F") {
-                  deleteChildElements(index, "child");
-              }
-              $("#" + index).remove();
-              var lastSeqenceNO = parseInt(
-                  $("#rootId" + parent_sequence_no + " .numeric__row").last().find('select').attr(
-                      "count"));
-
-              $("#rootId" + parent_sequence_no + " .numeric__row #addVaraiable"
-                  + lastSeqenceNO).removeClass('add_var_hide');
-              createFormula();
-          }
-          if ($("#rootId" + parent_sequence_no + " .numeric__row").length > 2) {
-              $("#rootId" + parent_sequence_no + " .numeric__row .remBtnDis").removeClass("hide");
-              $("#rootId" + parent_sequence_no + " .numeric__row").removeClass(
-                  'display__flex__base-webkit').addClass('display__flex__base');
-          } else {
-              $("#rootId" + parent_sequence_no + " .numeric__row .remBtnDis").addClass("hide");
-              $("#rootId" + parent_sequence_no + " .numeric__row").removeClass(
-                  'display__flex__base').addClass('display__flex__base-webkit');
-          }
-      }
-
-      function validateSingleResponseDataElement() {
-          var responseDataElementArray = new Array();
-          if ($("#formulaBasedLogicId").is(":checked")) {
-              var isSingle = true;
-              var noofrows = parseInt($('.numeric__section').length);
-              $('.numeric__section').each(function (i) {
-                  var index = $("#inputTypeValueId" + i).attr('index');
-                  var rootId = "rootId" + index;
-                  var parent_input = $("#inputTypeValueId" + i).val();
-                  var parent_sequence_no = $("#parentSequenceNoId" + index).val();
-                  $('#' + rootId + ' .numeric__row').each(function (j) {
-                      var id = $(this).attr("id");
-                      if ($("#inputTypeErrorValueId" + id).is(':visible')) {
-                          isSingle = false;
-                      }
-                  });
-                  if (!isSingle) {
-                      $('#alertMsg').show();
-                      $("#alertMsg").removeClass('s-box').addClass('e-box').html(
-                          "RDE (x) should be used only once.");
-                      setTimeout(hideDisplayMessage, 3000);
-                  }
-              });
-              return isSingle;
-          } else {
-              return true;
-          }
-      }
-
-      function validateResponseDataElement() {
-          var responseDataElementArray = new Array();
-          if ($("#formulaBasedLogicId").is(":checked")) {
-              $('.numeric__row').each(function (j) {
-                  var id = $(this).attr("id");
-                  var rde_value = $("#inputSubTypeValueId" + id).val();
-                  responseDataElementArray.push(rde_value);
-              });
-              if (responseDataElementArray.indexOf("x") != -1) {
-                  return true;
-              } else {
-                  $('#alertMsg').show();
-                  $("#alertMsg").removeClass('s-box').addClass('e-box').html(
-                      "Please add atleast one response data element in conditional formula.");
-                  setTimeout(hideDisplayMessage, 3000);
-                  return false;
-              }
-          } else {
-              return true;
-          }
-      }
-
-      function deleteChildElements(index, type) {
-          var rootId = "rootId" + index;
-          $('#' + rootId + ' .numeric__row').each(function (j) {
-              var id = $(this).attr("id");
-              var input_type = $("#inputTypeId" + id).val();
-              if (input_type == 'F') {
-                  deleteChildElements(id, type);
-                  $("#rootId" + id).remove();
-              }
-          });
-          if (type == "child") {
-              $("#rootId" + index).remove();
-          }
-      }
-
-      var f = "";
-
-      function makeAFormula(index, isRecursive) {
-          var rootId = "rootId" + index;
-          var root_value = $("#rootId" + index).find('select').val();
-          if (root_value == null) {
-              root_value = "";
-          }
-          var subroot_length = $('#' + rootId + ' .numeric__row').length - 1;
-          if (subroot_length > 0) {
-              $('#' + rootId + ' .numeric__row').each(function (j) {
-                  var id = $(this).attr("id");
-                  var input_type_value = $("#inputSubTypeValueId" + id).val();
-                  var input_type = $("#inputTypeId" + id).val();
-                  if (input_type != 'F') {
-                      if (!isRecursive) {
-                          if (j == 0) {
-                              f += input_type_value + root_value;
-                          } else if (j == subroot_length) {
-                              f += input_type_value;
-                          } else {
-                              f += input_type_value + root_value;
-                          }
-                          isRecursive = false;
-                      }
-                  } else {
-                      if (j == 0) {
-                          f += validateFunction(makeFunction(id)) + root_value;
-                      } else if (j == subroot_length) {
-                          f += validateFunction(makeFunction(id));
-                      } else {
-                          f += validateFunction(makeFunction(id)) + root_value;
-                      }
-                  }
-              });
-          } else {
-              f = $("#inputSubTypeValueId" + index).val();
-          }
-          return f;
-      }
-
-      function makeFunction(index) {
-          var i = ""
-          var rootId = "rootId" + index;
-          var subroot_length = $('#' + rootId + ' .numeric__row').length - 1;
-          $('#' + rootId + ' .numeric__row').each(function (j) {
-              var root_value = $("#rootId" + index).find('select').val();
-              if (root_value == null) {
-                  root_value = "";
-              }
-              var id = $(this).attr("id");
-              var input_type_value = $("#inputSubTypeValueId" + id).val();
-              var input_type = $("#inputTypeId" + id).val();
-              if (input_type != 'F') {
-                  if (j == 0) {
-                      i += "(" + input_type_value + root_value;
-                  } else if (j == subroot_length) {
-                      i += input_type_value + ")";
-                  } else {
-                      i += input_type_value + root_value;
-                  }
-              } else {
-                  var k = "";
-                  if (j == 0) {
-                      k = validateFunction(makeFunction(id)) + root_value;
-                  } else if (j == subroot_length) {
-                      k = validateFunction(makeFunction(id));
-                  } else {
-                      k = validateFunction(makeFunction(id)) + root_value;
-                  }
-                  i += k;
-              }
-          });
-          return i;
-      }
-
-      function createFormula() {
-          var mf = $("#inputTypeValueId0").val();
-          var formula = "-NA-";
-          if (mf == '==') {
-              mf = "=";
-          }
-          f = "";
-          var lhs = validateFunction(makeAFormula(2, false));
-          f = "";
-          var rhs = validateFunction(makeAFormula(3, false));
-          if (lhs == '' && (mf == '' || mf == null) && rhs == '') {
-              formula = "";
-          } else {
-              formula = lhs + " " + mf + " " + rhs;
-          }
-          if (formula != '') {
-              $(".formula").text(formula);
-              $(".tryFormula").text(formula);
-          } else {
-              $(".formula").text("-NA-");
-              $(".tryFormula").text("-NA-");
-          }
-          $("#lhsId").val(lhs);
-          $("#rhsId").val(rhs);
-          $("#operatorId").val(mf);
-          $("#conditionFormulaId").val(formula);
-      }
-
-      function removeImage(item) {
-          var id = $(item).parent().find('input').attr('id');
-          var id2 = $(item).parent().find('input[type="hidden"]').attr('id')
-          $("#" + id).val('');
-          $("#" + id2).val('');
-          $('.textLabel' + id2).text("Upload");
-          $(item).parent().find('img').attr("src", "../images/icons/sm-thumb.jpg");
-          $(item).addClass("hide");
-      }
-
-      function maxSquenceValue() {
-          var max = 3;
-          $(".numeric__row").each(function () {
-              var id = parseInt(this.id, 10);
-              if (id > max) {
-                  max = id;
-              }
-          });
-          return max;
-      }
-
-      function validateMinMaxforX() {
-          var responseType = $("#rlaResonseType").val();
-          var minValue = "";
-          var maxValue = "";
-          var value = $("#trailInputId").val();
-          if (responseType == 'Scale') {
-              minValue = $("#scaleMinValueId").val();
-              maxValue = $("#scaleMaxValueId").val();
-          } else if (responseType == 'Continuous Scale') {
-              minValue = $("#continuesScaleMinValueId").val();
-              maxValue = $("#continuesScaleMaxValueId").val();
-          } else if (responseType == 'Numeric') {
-              minValue = $("#numericMinValueId").val();
-              maxValue = $("#numericMaxValueId").val();
-          }
-          if (minValue != '' && maxValue != '') {
-              if (Number(value) >= Number(minValue) && Number(value) <= Number(maxValue)) {
-                  return "";
-              } else {
-                  return "x value should be less than maximum value and greater than minimum value";
-              }
-          } else if (minValue == '' && maxValue != '') {
-              if (Number(value) > Number(maxValue)) {
-                  return "x value should be less than maximum value";
-              } else {
-                  return "";
-              }
-          } else if (minValue != '' && maxValue == '') {
-              if (Number(value) < Number(minValue)) {
-                  return "x value should be greater than minimum value";
-              } else {
-                  return "";
-              }
-          } else {
-              return "";
-          }
-      }
-
-      function validateFunction(functionText) {
-          var c1 = 0;
-          var c2 = 0;
-          for (var i = 0; i < functionText.length; i++) {
-              if ('(' == functionText[i]) {
-                  c1++;
-              } else if (')' == functionText[i]) {
-                  c2++;
-              }
-          }
-          if (c1 > c2) {
-              functionText += ")";
-          } else if (c1 < c2) {
-              functionText = "(" + functionText;
-          }
-          return functionText;
-      }
-
-      function validateAnchorDateText(item, callback) {
-          var anchordateText = $("#anchorTextId").val();
-          var thisAttr = $("#anchorTextId");
-          var anchorDateId = '${questionnairesStepsBo.questionsBo.anchorDateId}';
-          if (anchordateText != null && anchordateText != '' && typeof anchordateText != 'undefined') {
-              var staticText = "Enrollment Date";
-              if (anchordateText.toUpperCase() === staticText.toUpperCase()) {
-                  $(thisAttr).val('');
-                  $(thisAttr).parent().addClass("has-danger").addClass("has-error");
-                  $(thisAttr).parent().find(".help-block").empty();
-                  $(thisAttr).parent().find(".help-block").append(
-                      "<ul class='list-unstyled'><li>'" + anchordateText
-                      + "' has already been used in the past.</li></ul>");
-                  callback(false);
-              } else {
-                  $(thisAttr).parent().removeClass("has-danger").removeClass("has-error");
-                  $(thisAttr).parent().find(".help-block").empty();
-                  $.ajax({
-                      url: "/studybuilder/adminStudies/validateAnchorDateName.do?_S=${param._S}",
-                      type: "POST",
-                      datatype: "json",
-                      data: {
-                          anchordateText: anchordateText,
-                          anchorDateId: anchorDateId
-
-                      },
-                      beforeSend: function (xhr, settings) {
-                          xhr.setRequestHeader("X-CSRF-TOKEN", "${_csrf.token}");
-                      },
-                      success: function getResponse(data) {
-                          var message = data.message;
-                          console.log(message);
-                          if ('SUCCESS' != message) {
-                              $(thisAttr).validator('validate');
-                              $(thisAttr).parent().removeClass("has-danger").removeClass("has-error");
-                              $(thisAttr).parent().find(".help-block").empty();
-                              callback(true);
-                          } else {
-                              $(thisAttr).val('');
-                              $(thisAttr).parent().addClass("has-danger").addClass("has-error");
-                              $(thisAttr).parent().find(".help-block").empty();
-                              $(thisAttr).parent().find(".help-block").append(
-                                  "<ul class='list-unstyled'><li>'" + anchordateText
-                                  + "' has already been used in the past.</li></ul>");
-                              callback(false);
-                          }
-                      },
-                      global: false
-                  });
-              }
-          } else {
-              callback(true);
-              $(thisAttr).parent().removeClass("has-danger").removeClass("has-error");
-              $(thisAttr).parent().find(".help-block").html("");
-          }
-      }
-
-      function setOtherExclusiveData(item) {
-          var value = $(item).val();
-          if (value == "Yes") {
-              $("#otherDestinationTextChoiceStepId").attr("disabled", false);
-              $('.selectpicker').selectpicker('refresh');
-          } else {
-              $("#otherDestinationTextChoiceStepId").val('');
-              $("#otherDestinationTextChoiceStepId").attr("disabled", true);
-              $('.selectpicker').selectpicker('refresh');
-          }
-
-      }
-
-      $('[data-toggle="tooltip"]').tooltip({container: 'body'});
-
-      $(window).on('load', function () {
+        }
+        if (resType == "Scale") {
+          $("#displayStepsCount").trigger('blur');
+          $("#scaleMinValueId").trigger('blur');
+          $("#scaleMaxValueId").trigger('blur');
+          $("#scaleDefaultValueId").trigger('blur');
+        } else if (resType == "Continuous Scale") {
+          $("#continuesScaleMinValueId").trigger('blur');
+          $("#continuesScaleMaxValueId").trigger('blur');
+          $("#continuesScaleDefaultValueId").trigger('blur');
+          validateFractionDigits($("#continuesScaleFractionDigitsId"));
+        } else if (resType == "Numeric") {
+          $("#numericMinValueId").trigger('blur');
+          $("#numericMaxValueId").trigger('blur');
+        } else if (resType == "Text Choice") {
           if ($('#textchoiceOtherId').is(':checked')) {
-              $('.textchoiceOtherCls').show();
-              $('.textchoiceOtherCls').find('input:text,select').attr('required', true);
-              $('.OtherOptionCls').find('input:text,select').removeAttr('required');
+            $('.textchoiceOtherCls').show();
+            $('.textchoiceOtherCls').find('input:text,select').attr('required', true);
+            $('.OtherOptionCls').find('input:text,select').removeAttr('required');
           } else {
-              $('.textchoiceOtherCls').find('input:text,select').removeAttr('required');
-              $('.textchoiceOtherCls').hide();
+            $('.textchoiceOtherCls').find('input:text,select').removeAttr('required');
+            $('.OtherOptionCls').find('input:text,select').removeAttr('required');
+            $('.textchoiceOtherCls').hide();
           }
 
           var otherText = $('.otherIncludeTextCls:checked').val();
           if (otherText == 'Yes') {
-              $('.OtherOptionCls').show();
-              $('.OtherOptionCls').find('input:text,select').attr('required', true);
+            $('.OtherOptionCls').show();
+            $('.OtherOptionCls').find('input:text,select').attr('required', true);
           } else {
-              $('.OtherOptionCls').hide();
-              $('.OtherOptionCls').find('input:text,select').removeAttr('required');
+            $('.OtherOptionCls').hide();
+            $('.OtherOptionCls').find('input:text,select').removeAttr('required');
           }
+        }
+        if (isFromValid("#questionStepId")) {
+          $("body").addClass("loading");
+          var placeholderText = '';
+          var stepText = "";
+          if (resType == "Email") {
+            placeholderText = $("#placeholderId").val();
+          } else if (resType == "Text") {
+            placeholderText = $("#textPlaceholderId").val();
+          } else if (resType == "Height") {
+            placeholderText = $("#heightPlaceholderId").val();
+          } else if (resType == "Numeric") {
+            placeholderText = $("#numericPlaceholderId").val();
+            var minValue = $("#numericMinValueId").val();
+            var maxValue = $("#numericMaxValueId").val();
+            if ((minValue != '' && maxValue != '') || (minValue == '' && maxValue == '')) {
+              isValid = true;
+            } else {
+              if (maxValue == '') {
+                $("#numericMaxValueId").parent().addClass("has-danger").addClass("has-error");
+                $("#numericMaxValueId").parent().find(".help-block").empty();
+                $("#numericMaxValueId").parent().find(".help-block").append(
+                    "<ul class='list-unstyled'><li>Please fill out this field</li></ul>");
+              }
+              if (minValue == '') {
+                $("#numericMinValueId").parent().addClass("has-danger").addClass("has-error");
+                $("#numericMinValueId").parent().find(".help-block").empty();
+                $("#numericMinValueId").parent().find(".help-block").append(
+                    "<ul class='list-unstyled'><li>Please fill out this field</li></ul>");
+              }
+              isValid = false;
+              $("#doneId").attr("disabled", false);
+              $("body").removeClass("loading");
+            }
+          } else if (resType == "Time interval") {
+            stepText = $("#timeIntervalStepId").val();
+          } else if (resType == "Scale" || resType == "Continuous Scale") {
+            stepText = $("#scaleStepId").val();
+            var minValue = ''
+            var maxValue = ''
+            if (resType == "Continuous Scale") {
+              minValue = $("#continuesScaleMinDescriptionId").val();
+              maxValue = $("#continuesScaleMaxDescriptionId").val();
+            } else {
+              minValue = $("#scaleMinDescriptionId").val();
+              maxValue = $("#scaleMaxDescriptionId").val();
+            }
+            if ((minValue != '' && maxValue != '') || (minValue == '' && maxValue == '')) {
+              isValid = true;
+            } else {
+              if (maxValue == '') {
+                if (resType == "Continuous Scale") {
+                  $("#continuesScaleMaxDescriptionId").parent().addClass("has-danger").addClass(
+                      "has-error");
+                  $("#continuesScaleMaxDescriptionId").parent().find(".help-block").empty();
+                  $("#continuesScaleMaxDescriptionId").parent().find(".help-block").append(
+                      "<ul class='list-unstyled'><li>Please fill out this field</li></ul>");
+                } else {
+                  $("#scaleMaxDescriptionId").parent().addClass("has-danger").addClass("has-error");
+                  $("#scaleMaxDescriptionId").parent().find(".help-block").empty();
+                  $("#scaleMaxDescriptionId").parent().find(".help-block").append(
+                      "<ul class='list-unstyled'><li>Please fill out this field</li></ul>");
+                }
+              }
+              if (minValue == '') {
+                if (resType == "Continuous Scale") {
+                  $("#continuesScaleMinDescriptionId").parent().addClass("has-danger").addClass(
+                      "has-error");
+                  $("#continuesScaleMinDescriptionId").parent().find(".help-block").empty();
+                  $("#continuesScaleMinDescriptionId").parent().find(".help-block").append(
+                      "<ul class='list-unstyled'><li>Please fill out this field</li></ul>");
+                } else {
+                  $("#scaleMinDescriptionId").parent().addClass("has-danger").addClass("has-error");
+                  $("#scaleMinDescriptionId").parent().find(".help-block").empty();
+                  $("#scaleMinDescriptionId").parent().find(".help-block").append(
+                      "<ul class='list-unstyled'><li>Please fill out this field</li></ul>");
+                }
+              }
+              isValid = false;
+              $("#doneId").attr("disabled", false);
+              $("body").removeClass("loading");
+            }
+            var minImagePath = '';
+            var maxImagePath = '';
+            var minImageFile = '';
+            var maxImageFile = '';
+            if (resType == "Continuous Scale") {
+              minImagePath = $("#continuesScaleMinImagePathId").val();
+              maxImagePath = $("#continuesScaleMaxImagePathId").val();
+              minImageFile = document.getElementById("continuesScaleMinImageFileId").files[0];
+              maxImageFile = document.getElementById("continuesScaleMaxImageFileId").files[0];
+            } else {
+              minImagePath = $("#scaleMinImagePathId").val();
+              maxImagePath = $("#scaleMaxImagePathId").val();
+              minImageFile = document.getElementById("scaleMinImageFileId").files[0];
+              maxImageFile = document.getElementById("scaleMaxImageFileId").files[0];
+            }
+
+            if (minImagePath == '' && maxImagePath == '' && ((typeof minImageFile == 'undefined'
+                && typeof maxImageFile == 'undefined') || (minImageFile == null && maxImageFile
+                == null))) {
+              isImageValid = true;
+            } else if (((minImageFile != null && typeof minImageFile != 'undefined') || minImagePath
+                != '') && ((maxImageFile != null && typeof maxImageFile != 'undefined')
+                || maxImagePath != '')) {
+              isImageValid = true;
+            } else {
+              if (maxImagePath == '' && (maxImageFile == '' || typeof maxImageFile == 'undefined'
+                  || maxImageFile == null)) {
+                if (resType == "Continuous Scale") {
+                  $("#continuesScaleMaxImagePathId").parent().addClass("has-danger").addClass(
+                      "has-error");
+                  $("#continuesScaleMaxImagePathId").parent().find(".help-block").empty();
+                  $("#continuesScaleMaxImagePathId").parent().find(".help-block").append(
+                      "<ul class='list-unstyled'><li>Please fill out this field</li></ul>");
+                } else {
+                  $("#scaleMaxImagePathId").parent().addClass("has-danger").addClass("has-error");
+                  $("#scaleMaxImagePathId").parent().find(".help-block").empty();
+                  $("#scaleMaxImagePathId").parent().find(".help-block").append(
+                      "<ul class='list-unstyled'><li>Please fill out this field</li></ul>");
+                }
+              }
+              if (minImagePath == '' && (minImageFile == '' || typeof minImageFile == 'undefined'
+                  || minImageFile == null)) {
+                if (resType == "Continuous Scale") {
+                  $("#continuesScaleMinImagePathId").parent().addClass("has-danger").addClass(
+                      "has-error");
+                  $("#continuesScaleMinImagePathId").parent().find(".help-block").empty();
+                  $("#continuesScaleMinImagePathId").parent().find(".help-block").append(
+                      "<ul class='list-unstyled'><li>Please fill out this field</li></ul>");
+                } else {
+                  $("#scaleMinImagePathId").parent().addClass("has-danger").addClass("has-error");
+                  $("#scaleMinImagePathId").parent().find(".help-block").empty();
+                  $("#scaleMinImagePathId").parent().find(".help-block").append(
+                      "<ul class='list-unstyled'><li>Please fill out this field</li></ul>");
+                }
+              }
+              isImageValid = false;
+              $("#doneId").attr("disabled", false);
+              $("body").removeClass("loading");
+            }
+          } else if (resType == 'Text Scale') {
+            var count = $('.text-scale').length;
+            stepText = $("#textScalePositionId").val();
+            if (stepText != '') {
+              if (stepText != '' && stepText >= 1 && stepText <= count) {
+                isValid = true;
+              } else {
+                isValid = false;
+                $("#textScalePositionId").focus();
+                stepText = "";
+              }
+            } else {
+              isValid = true;
+            }
+          } else if (resType == 'Date') {
+            var skiappable = $('input[name="skiappable"]:checked').val();
+            var anchorText = $("#anchorTextId").val();
+            var anchorDateUsed = $('#useAnchorDateId').is(':checked');
+            if (anchorDateUsed && anchorText != '' && anchorText != null && typeof anchorText
+                != 'undefined') {
+              $("#anchorTextId,#useAnchorDateId").attr("disabled", false);
+              validateAnchorDateText('', function (val) {
+              });
+              if (skiappable == 'Yes')
+                anchorDateFlag = false;
+            }
+          }
+          $("#placeholderTextId").val(placeholderText);
+          $("#stepValueId").val(stepText);
+          if (isValid && isImageValid && validateResponseDataElement()
+              && validateSingleResponseDataElement()) {
+            validateQuestionShortTitle('', function (val) {
+              if (val) {
+                var statShortName = $("#statShortNameId").val();
+                if (statShortName != '' && statShortName != null && typeof statShortName
+                    != 'undefined') {
+                  validateStatsShorTitle('', function (val) {
+                    if (val) {
+                      if (resType != '' && resType != null && resType != 'undefined') {
+                        $("#responseTypeId > option").each(function () {
+                          var textVal = this.text.replace(/\s/g, '');
+                          if (resType.replace(/\s/g, '') == textVal) {
+                          } else {
+                            $("#" + textVal).empty();
+                          }
+                        });
+                        if (!$("#formulaBasedLogicId").is(":checked")) {
+                          $("#conditionalFormulaId").empty();
+                        }
+                      }
+                      if (anchorDateFlag) {
+                        document.questionStepId.submit();
+                      } else {
+                        bootbox.confirm({
+                          closeButton: false,
+                          message: "This question provides an anchor date response element, but has been marked Skippable. Are you sure you wish to proceed?",
+                          buttons: {
+                            'cancel': {
+                              label: 'Cancel',
+                            },
+                            'confirm': {
+                              label: 'OK',
+                            },
+                          },
+                          callback: function (result) {
+                            if (result) {
+                              document.questionStepId.submit();
+                            }
+                          }
+                        })
+                      }
+                    } else {
+                      $("#doneId").attr("disabled", false);
+                      $("body").removeClass("loading");
+                    }
+                  });
+                } else {
+                  if (resType != '' && resType != null && resType != 'undefined') {
+                    $("#responseTypeId > option").each(function () {
+                      var textVal = this.text.replace(/\s/g, '');
+                      if (resType.replace(/\s/g, '') == textVal) {
+                      } else {
+                        $("#" + textVal).empty();
+                      }
+                    });
+                    if (!$("#formulaBasedLogicId").is(":checked")) {
+                      $("#conditionalFormulaId").empty();
+                    }
+                  }
+                  if (anchorDateFlag) {
+                    document.questionStepId.submit();
+                  } else {
+                    $("body").removeClass("loading");
+                    $("#doneId").attr("disabled", false);
+                    bootbox.confirm({
+                      closeButton: false,
+                      message: "This question provides an anchor date response element, but has been marked Skippable. Are you sure you wish to proceed?",
+                      buttons: {
+                        'cancel': {
+                          label: 'Cancel',
+                        },
+                        'confirm': {
+                          label: 'OK',
+                        },
+                      },
+                      callback: function (result) {
+                        if (result) {
+                          document.questionStepId.submit();
+                        }
+                      }
+                    })
+                  }
+
+                }
+              } else {
+                $("body").removeClass("loading");
+                $("#doneId").attr("disabled", false);
+              }
+            });
+          } else {
+            $("#doneId").attr("disabled", false);
+            $("body").removeClass("loading");
+            var slaCount = $('#sla').find('.has-error.has-danger').length;
+            var qlaCount = $('#qla').find('.has-error.has-danger').length;
+            var rlaCount = $('#rla').find('.has-error.has-danger').length;
+
+            if (parseInt(slaCount) >= 1) {
+              $('.stepLevel a').tab('show');
+            } else if (parseInt(qlaCount) >= 1) {
+              $('.questionLevel a').tab('show');
+            } else if (parseInt(rlaCount) >= 1) {
+              $('.responseLevel a').tab('show');
+              $("#rla").find(".has-error:first").find('input').focus();
+            }
+
+          }
+        } else {
+          $("#doneId").attr("disabled", false);
+          var slaCount = $('#sla').find('.has-error.has-danger').length;
+          var qlaCount = $('#qla').find('.has-error.has-danger').length;
+          var rlaCount = $('#rla').find('.has-error.has-danger').length;
+
+          if (parseInt(slaCount) >= 1) {
+            $('.stepLevel a').tab('show');
+          } else if (parseInt(qlaCount) >= 1) {
+            $('.questionLevel a').tab('show');
+          } else if (parseInt(rlaCount) >= 1) {
+            $('.responseLevel a').tab('show');
+          }
+        }
+      });
+      $("#saveId").on("click", function () {
+        $("body").addClass("loading");
+        validateQuestionShortTitle('', function (val) {
+          if (val) {
+            var statShortName = $("#statShortNameId").val();
+            if (statShortName != '' && statShortName != null && typeof statShortName
+                != 'undefined') {
+              validateStatsShorTitle('', function (val) {
+                if (val && validateSingleResponseDataElement()) {
+                  saveQuestionStepQuestionnaire('', '');
+                } else {
+                  $("body").removeClass("loading");
+                }
+              });
+            } else {
+              var resType = $("#rlaResonseType").val();
+              if (resType == 'Text Scale' || resType == 'Image Choice' || resType == 'Value Picker'
+                  || resType == 'Text Choice') {
+                validateForUniqueValue('', resType, function (val) {
+                  if (val) {
+                    saveQuestionStepQuestionnaire('', '');
+                  } else {
+                    $("body").removeClass("loading");
+                  }
+                });
+              } else {
+                if (validateSingleResponseDataElement()) {
+                  saveQuestionStepQuestionnaire('', '');
+                } else {
+                  $("body").removeClass("loading");
+                }
+              }
+            }
+          } else {
+            $("body").removeClass("loading");
+          }
+        });
+      });
+      $("#statShortNameId").blur(function () {
+        validateStatsShorTitle('', function (val) {
+        });
       })
+      $(".responseLevel ").on('click', function () {
+        var reponseType = $("#responseTypeId").val();
+        if (reponseType != '' && reponseType != '' && typeof reponseType != 'undefined') {
+          $("#responseTypeDivId").show();
+        } else {
+          $("#responseTypeDivId").hide();
+        }
+      });
+      $("#stepShortTitle").blur(function () {
+        validateQuestionShortTitle('', function (val) {
+        });
+      });
+      $("#continuesScaleMaxDescriptionId,#continuesScaleMinDescriptionId,#scaleMinDescriptionId,#scaleMaxDescriptionId").on(
+          "change", function () {
+            $(this).validator('validate');
+            $(this).parent().removeClass("has-danger").removeClass("has-error");
+            $(this).parent().find(".help-block").empty();
+          });
+      $("#scaleMinValueId,#scaleMaxValueId").on("change", function () {
+        if ($(this).val() != '') {
+          $("#scaleStepId").val('');
+          $("#scaleDefaultValueId").val('');
+          $("#displayStepsCount").val('');
+        }
+      });
+      $("#continuesScaleMinValueId,#continuesScaleMaxValueId").on("change", function () {
+        if ($(this).val() != '') {
+          $("#continuesScaleDefaultValueId").val('');
+          $("#continuesScaleFractionDigitsId").val('');
+        }
+        $("#continuesScaleDefaultValueId").parent().removeClass("has-danger").removeClass(
+            "has-error");
+        $("#continuesScaleDefaultValueId").parent().find(".help-block").empty();
+        $("#continuesScaleFractionDigitsId").parent().removeClass("has-danger").removeClass(
+            "has-error");
+        $("#continuesScaleFractionDigitsId").parent().find(".help-block").empty();
+      });
+      $("#displayStepsCount").on("change", function () {
+        if ($(this).val() != '') {
+          $("#scaleDefaultValueId").val('');
+        }
+        $("#scaleDefaultValueId").parent().removeClass("has-danger").removeClass("has-error");
+        $("#scaleDefaultValueId").parent().find(".help-block").empty();
+      });
+      $("#addLineChart").on('change', function () {
+        if ($(this).is(":checked")) {
+          $(this).val("Yes");
+          $("#chartContainer").show();
+          $(".chartrequireClass").attr('required', true);
+          $('.selectpicker').selectpicker('refresh');
+        } else {
+          $(this).val("No");
+          $("#chartContainer").hide();
+          $(".chartrequireClass").attr('required', false);
+          $("#lineChartTimeRangeId").val('');
+          $('#chartTitleId').val('');
+          $('.selectpicker').selectpicker('refresh');
+          document.getElementById("allowRollbackChartNo").checked = true;
+        }
+      });
+      $("#allowHealthKit").on('change', function () {
+
+        if ($(this).is(":checked")) {
+          $(this).val("Yes");
+          $("#healthKitContainerId").show();
+          $(".healthkitrequireClass").attr('required', true);
+          $('.selectpicker').selectpicker('refresh');
+        } else {
+          $(this).val("No");
+          $("#healthKitContainerId").hide();
+          $(".healthkitrequireClass").attr('required', false);
+          $("#healthkitDatatypeId").val('');
+          $('.selectpicker').selectpicker('refresh');
+        }
+      });
+      $("#formulaBasedLogicId").on('change', function () {
+        if ($(this).is(":checked")) {
+          $(this).val("Yes");
+          $("#conditionalFormulaId").show();
+          $(".conditionalBranchingRequired").attr('required', true);
+        } else {
+          $(this).val("No");
+          $("#conditionalFormulaId").hide();
+          $(".conditionalBranchingRequired").attr('required', false);
+
+          deleteChildElements(1, "parent");
+          $("#inputTypeValueId0").val('');
+          $("#inputTypeId2").val('');
+          $("#inputTypeId3").val('');
+          $(".formula").text("-NA-");
+          $(".tryFormula").text("-NA-");
+          $("#constantValId2").val('')
+          $("#constantValId3").val('');
+          $("#constantValId3").addClass("add_var_hide");
+          $("#constantValId2").addClass("add_var_hide");
+          $("#constantValId2").prop("required", false);
+          $("#constantValId3").prop("required", false);
+          $("#constantValId2").addClass("add_var_hide");
+          $("#inputSubTypeValueId2").val('');
+          $('.selectpicker').selectpicker('refresh');
+        }
+      });
+      $("#useStasticData").on('change', function () {
+        if ($(this).is(":checked")) {
+          $(this).val("Yes");
+          $("#statContainer").show();
+          $(".requireClass").attr('required', true);
+          $('.selectpicker').selectpicker('refresh');
+
+        } else {
+          $(this).val("No");
+          $("#statContainer").hide();
+          $(".requireClass").attr('required', false);
+          $("#statShortNameId").val('');
+          $("#statDisplayNameId").val('');
+          $("#statDisplayUnitsId").val('');
+          $("#statTypeId").val('');
+          $("#statFormula").val('');
+          $('.selectpicker').selectpicker('refresh');
+        }
+      });
+      $("#scaleMinValueId").blur(function () {
+        var value = $("#scaleMinValueId").val();
+        var maxValue = $("#scaleMaxValueId").val();
+        $("#scaleMinValueId").parent().removeClass("has-danger").removeClass("has-error");
+        $("#scaleMinValueId").parent().find(".help-block").empty();
+        if (maxValue != '') {
+          if (value != '') {
+            if (parseInt(value) >= -10000 && parseInt(value) <= 10000) {
+              if (parseInt(value) + 1 > parseInt(maxValue)) {
+                $("#scaleMinValueId").val('');
+                $("#scaleMinValueId").parent().addClass("has-danger").addClass("has-error");
+                $("#scaleMinValueId").parent().find(".help-block").empty();
+                $("#scaleMinValueId").parent().find(".help-block").append(
+                    "<ul class='list-unstyled'><li>Please enter an integer number in the range (Min, 10000)</li></ul>");
+              } else {
+                $("#scaleMinValueId").parent().removeClass("has-danger").removeClass("has-error");
+                $("#scaleMinValueId").parent().find(".help-block").empty();
+              }
+            } else {
+              $("#scaleMinValueId").val('');
+              $("#scaleMinValueId").parent().addClass("has-danger").addClass("has-error");
+              $("#scaleMinValueId").parent().find(".help-block").empty();
+              $("#scaleMinValueId").parent().find(".help-block").append(
+                  "<ul class='list-unstyled'><li>Please enter an integer number in the range (Min, 10000) </li></ul>");
+            }
+          }
+        } else {
+          if (value != '') {
+            if (parseInt(value) >= -10000 && parseInt(value) <= 10000) {
+              $("#scaleMinValueId").parent().removeClass("has-danger").removeClass("has-error");
+              $("#scaleMinValueId").parent().find(".help-block").empty();
+            } else {
+              $("#scaleMinValueId").val('');
+              $("#scaleMinValueId").parent().addClass("has-danger").addClass("has-error");
+              $("#scaleMinValueId").parent().find(".help-block").empty();
+              $("#scaleMinValueId").parent().find(".help-block").append(
+                  "<ul class='list-unstyled'><li>Please enter an integer number in the range (Min, 10000) </li></ul>");
+            }
+          }
+        }
+      });
+      $("#scaleMaxValueId").blur(function () {
+        var value = $("#scaleMaxValueId").val();
+        var minValue = $("#scaleMinValueId").val();
+        $("#scaleMaxValueId").parent().removeClass("has-danger").removeClass("has-error");
+        $("#scaleMaxValueId").parent().find(".help-block").empty();
+        if (minValue != '') {
+          if (value != '') {
+            if (parseInt(value) >= -10000 && parseInt(value) <= 10000) {
+              if (parseInt(value) >= parseInt(minValue) + 1 && parseInt(value) <= 10000) {
+                $("#scaleMaxValueId").parent().removeClass("has-danger").removeClass("has-error");
+                $("#scaleMaxValueId").parent().find(".help-block").empty();
+              } else if (parseInt(value) < parseInt(minValue) + 1) {
+                $("#scaleMaxValueId").val('');
+                $("#scaleMaxValueId").parent().addClass("has-danger").addClass("has-error");
+                $("#scaleMaxValueId").parent().find(".help-block").empty();
+                $("#scaleMaxValueId").parent().find(".help-block").append(
+                    "<ul class='list-unstyled'><li>Please enter an integer number in the range (Min+1, 10000)</li></ul>");
+              }
+            } else {
+              $("#scaleMaxValueId").val('');
+              $("#scaleMaxValueId").parent().addClass("has-danger").addClass("has-error");
+              $("#scaleMaxValueId").parent().find(".help-block").empty();
+              $("#scaleMaxValueId").parent().find(".help-block").append(
+                  "<ul class='list-unstyled'><li>Please enter an integer number in the range (Min+1, 10000) </li></ul>");
+            }
+          }
+        } else {
+          if (value != '') {
+            if (parseInt(value) >= -10000 && parseInt(value) <= 10000) {
+              $("#scaleMaxValueId").parent().removeClass("has-danger").removeClass("has-error");
+              $("#scaleMaxValueId").parent().find(".help-block").empty();
+            } else {
+              $("#scaleMaxValueId").val('');
+              $("#scaleMaxValueId").parent().addClass("has-danger").addClass("has-error");
+              $("#scaleMaxValueId").parent().find(".help-block").empty();
+              $("#scaleMaxValueId").parent().find(".help-block").append(
+                  "<ul class='list-unstyled'><li>Please enter an integer number in the range (Min+1, 10000) </li></ul>");
+            }
+          }
+        }
+      });
+      $('#scaleMinValueId,#scaleMaxValueId,#scaleDefaultValueId,#textmaxLengthId').bind('input',
+          function (e) {
+            var id = $(this).attr('id');
+            var str = $("#" + id).val();
+            var dec = str.indexOf(".");
+            var first_char = str.charAt(0);
+            var isNumber = true;
+            if (first_char == '-' || !isNaN(first_char)) {
+              for (i = 1; i < str.length; i++) {
+                if (isNaN(str.charAt(i)) && str.charAt(i) != '.') {
+                  isNumber = false;
+                  break;
+                }
+              }
+            } else {
+              isNumber = false;
+            }
+            if (dec != -1 && isNumber) {
+              str = str.substring(0, str.indexOf("."));
+            }
+            if (isNumber) {
+              $("#" + id).val(str);
+            } else {
+              $("#" + id).val("");
+            }
+          });
+      $("#displayStepsCount").blur(function () {
+        var value = $("#displayStepsCount").val();
+        var minValue = $("#scaleMinValueId").val();
+        var maxValue = $("#scaleMaxValueId").val();
+        $("#displayStepsCount").parent().removeClass("has-danger").removeClass("has-error");
+        $("#displayStepsCount").parent().find(".help-block").empty();
+        if (value != '' && minValue != '' && maxValue != '') {
+          var diff = parseInt(maxValue) - parseInt(minValue);
+          var displayStepsCount = "";
+          var stepsCount = (parseInt(diff) / parseInt(value));
+          if ((parseInt(diff) % parseInt(value)) == 0) {
+            displayStepsCount = parseInt(stepsCount);
+            if (parseInt(stepsCount) >= 1 && parseInt(stepsCount) <= 13) {
+              $("#displayStepsCount").parent().removeClass("has-danger").removeClass("has-error");
+              $("#displayStepsCount").parent().find(".help-block").empty();
+              $("#scaleStepId").val(displayStepsCount);
+            } else {
+              $("#scaleStepId").val('');
+              $("#displayStepsCount").val('');
+              $("#displayStepsCount").parent().addClass("has-danger").addClass("has-error");
+              $("#displayStepsCount").parent().find(".help-block").empty();
+              if (parseInt(stepsCount) < 1) {
+                $("#displayStepsCount").parent().find(".help-block").append(
+                    "<ul class='list-unstyled'><li>Please enter  a smaller step size.</li></ul>");
+              } else {
+                $("#displayStepsCount").parent().find(".help-block").append(
+                    "<ul class='list-unstyled'><li>Please enter a larger step size.</li></ul>");
+              }
+
+            }
+          } else {
+            $("#displayStepsCount").val('');
+            $("#scaleStepId").val('');
+            $("#displayStepsCount").parent().addClass("has-danger").addClass("has-error");
+            $("#displayStepsCount").parent().find(".help-block").empty();
+            $("#displayStepsCount").parent().find(".help-block").append(
+                "<ul class='list-unstyled'><li>(Max-Min) value should be exactly divisisble by the step size.</li></ul>");
+          }
+        }
+      });
+      $("#scaleDefaultValueId").blur(function () {
+        var value = $("#scaleDefaultValueId").val();
+        var stepSize = $("#scaleStepId").val();
+        $("#scaleDefaultValueId").parent().removeClass("has-danger").removeClass("has-error");
+        $("#scaleDefaultValueId").parent().find(".help-block").empty();
+        if (value != '' && stepSize != '') {
+          if (parseInt(value) >= 0 && parseInt(value) <= parseInt(stepSize)) {
+            $("#scaleDefaultValueId").parent().removeClass("has-danger").removeClass("has-error");
+            $("#scaleDefaultValueId").parent().find(".help-block").empty();
+          } else {
+            $("#scaleDefaultValueId").val('');
+            $("#scaleDefaultValueId").parent().addClass("has-danger").addClass("has-error");
+            $("#scaleDefaultValueId").parent().find(".help-block").empty();
+            $("#scaleDefaultValueId").parent().find(".help-block").append(
+                "<ul class='list-unstyled'><li>Please enter an integer from 0 to number of steps</li></ul>");
+          }
+        } else {
+          if (value != '') {
+            $("#scaleDefaultValueId").val('');
+            $("#scaleDefaultValueId").parent().addClass("has-danger").addClass("has-error");
+            $("#scaleDefaultValueId").parent().find(".help-block").empty();
+            $("#scaleDefaultValueId").parent().find(".help-block").append(
+                "<ul class='list-unstyled'><li>Please enter an step size first </li></ul>");
+          }
+        }
+      });
+
+      $("#continuesScaleMinValueId").blur(function () {
+
+        var value = $("#continuesScaleMinValueId").val();
+        var maxValue = $("#continuesScaleMaxValueId").val();
+        $("#continuesScaleMinValueId").parent().removeClass("has-danger").removeClass("has-error");
+        $("#continuesScaleMinValueId").parent().find(".help-block").empty();
+        if (maxValue != '') {
+          if (parseInt(value) >= -10000 && parseInt(value) <= 10000) {
+            if (parseInt(value) + 1 > parseInt(maxValue)) {
+              $("#continuesScaleMinValueId").val('');
+              $("#continuesScaleMinValueId").parent().addClass("has-danger").addClass("has-error");
+              $("#continuesScaleMinValueId").parent().find(".help-block").empty();
+              $("#continuesScaleMinValueId").parent().find(".help-block").append(
+                  "<ul class='list-unstyled'><li>Please enter an integer number in the range (Min, 10000)</li></ul>");
+            } else {
+              $("#continuesScaleMinValueId").parent().removeClass("has-danger").removeClass(
+                  "has-error");
+              $("#continuesScaleMinValueId").parent().find(".help-block").empty();
+            }
+          } else {
+            $("#continuesScaleMinValueId").val('');
+            $("#continuesScaleMinValueId").parent().addClass("has-danger").addClass("has-error");
+            $("#continuesScaleMinValueId").parent().find(".help-block").empty();
+            $("#continuesScaleMinValueId").parent().find(".help-block").append(
+                "<ul class='list-unstyled'><li>Please enter an integer number in the range (Min, 10000) </li></ul>");
+          }
+        } else {
+          if (value != '') {
+            if (parseInt(value) >= -10000 && parseInt(value) <= 10000) {
+              $("#continuesScaleMinValueId").parent().removeClass("has-danger").removeClass(
+                  "has-error");
+              $("#continuesScaleMinValueId").parent().find(".help-block").empty();
+            } else {
+              $("#continuesScaleMinValueId").val('');
+              $("#continuesScaleMinValueId").parent().addClass("has-danger").addClass("has-error");
+              $("#continuesScaleMinValueId").parent().find(".help-block").empty();
+              $("#continuesScaleMinValueId").parent().find(".help-block").append(
+                  "<ul class='list-unstyled'><li>Please enter an integer number in the range (Min, 10000) </li></ul>");
+            }
+          }
+        }
+      });
+      $("#continuesScaleMaxValueId").blur(function () {
+        var value = $("#continuesScaleMaxValueId").val();
+        var minValue = $("#continuesScaleMinValueId").val();
+        $("#continuesScaleMaxValueId").parent().removeClass("has-danger").removeClass("has-error");
+        $("#continuesScaleMaxValueId").parent().find(".help-block").empty();
+        if (minValue != '') {
+          if (parseInt(value) >= -10000 && parseInt(value) <= 10000) {
+            if (parseInt(value) >= parseInt(minValue) + 1 && parseInt(value) <= 10000) {
+              $("#continuesScaleMaxValueId").parent().removeClass("has-danger").removeClass(
+                  "has-error");
+              $("#continuesScaleMaxValueId").parent().find(".help-block").empty();
+            } else if (parseInt(value) < parseInt(minValue) + 1) {
+              $("#continuesScaleMaxValueId").val('');
+              $("#continuesScaleMaxValueId").parent().addClass("has-danger").addClass("has-error");
+              $("#continuesScaleMaxValueId").parent().find(".help-block").empty();
+              $("#continuesScaleMaxValueId").parent().find(".help-block").append(
+                  "<ul class='list-unstyled'><li>Please enter an integer number in the range (Min+1, 10000)</li></ul>");
+            }
+          } else {
+            $("#continuesScaleMaxValueId").val('');
+            $("#continuesScaleMaxValueId").parent().addClass("has-danger").addClass("has-error");
+            $("#continuesScaleMaxValueId").parent().find(".help-block").empty();
+            $("#continuesScaleMaxValueId").parent().find(".help-block").append(
+                "<ul class='list-unstyled'><li>Please enter an integer number in the range (Min+1, 10000) </li></ul>");
+          }
+        } else {
+          if (value != '') {
+            if (parseInt(value) >= -10000 && parseInt(value) <= 10000) {
+              $("#continuesScaleMaxValueId").parent().removeClass("has-danger").removeClass(
+                  "has-error");
+              $("#continuesScaleMaxValueId").parent().find(".help-block").empty();
+            } else {
+              $("#continuesScaleMaxValueId").val('');
+              $("#continuesScaleMaxValueId").parent().addClass("has-danger").addClass("has-error");
+              $("#continuesScaleMaxValueId").parent().find(".help-block").empty();
+              $("#continuesScaleMaxValueId").parent().find(".help-block").append(
+                  "<ul class='list-unstyled'><li>Please enter an integer number in the range (Min+1, 10000) </li></ul>");
+            }
+          }
+        }
+      });
+      $("#continuesScaleDefaultValueId").blur(function () {
+        var value = $(this).val();
+        var minValue = $("#continuesScaleMinValueId").val();
+        var maxValue = $("#continuesScaleMaxValueId").val();
+        $(this).parent().removeClass("has-danger").removeClass("has-error");
+        $(this).parent().find(".help-block").empty();
+        if (value != '') {
+          if (parseInt(value) >= parseInt(minValue) && parseInt(value) <= parseInt(maxValue)) {
+            $(this).parent().removeClass("has-danger").removeClass("has-error");
+            $(this).parent().find(".help-block").empty();
+          } else {
+            $(this).val('');
+            $(this).parent().addClass("has-danger").addClass("has-error");
+            $(this).parent().find(".help-block").empty();
+            $(this).parent().find(".help-block").append(
+                "<ul class='list-unstyled'><li>Please enter an integer between the minimum and maximum  </li></ul>");
+          }
+        }
+      });
+      $("#numericMinValueId").blur(function () {
+        var value = $(this).val();
+        var maxValue = $("#numericMaxValueId").val();
+        $(this).parent().removeClass("has-danger").removeClass("has-error");
+        $(this).parent().find(".help-block").empty();
+        if (maxValue != '') {
+          if (parseInt(value) >= parseInt(maxValue)) {
+            $(this).val('');
+            $(this).parent().addClass("has-danger").addClass("has-error");
+            $(this).parent().find(".help-block").empty();
+            $(this).parent().find(".help-block").append(
+                "<ul class='list-unstyled'><li>Please enter an value number less than Maximum</li></ul>");
+          } else {
+            $(this).parent().removeClass("has-danger").removeClass("has-error");
+            $(this).parent().find(".help-block").empty();
+          }
+        }
+      });
+      $("#numericMaxValueId").blur(function () {
+        var value = $(this).val();
+        var minValue = $("#numericMinValueId").val();
+        $(this).parent().removeClass("has-danger").removeClass("has-error");
+        $(this).parent().find(".help-block").empty();
+        if (minValue != '') {
+          if (parseInt(value) <= parseInt(minValue)) {
+            $(this).val('');
+            $(this).parent().addClass("has-danger").addClass("has-error");
+            $(this).parent().find(".help-block").empty();
+            $(this).parent().find(".help-block").append(
+                "<ul class='list-unstyled'><li>Please enter an value number greater than Minimum</li></ul>");
+          } else {
+            $(this).parent().removeClass("has-danger").removeClass("has-error");
+            $(this).parent().find(".help-block").empty();
+          }
+        }
+      });
+      var responseTypeId = '${questionnairesStepsBo.questionsBo.responseType}';
+      if (responseTypeId != null && responseTypeId != '' && typeof responseTypeId != 'undefined') {
+        getResponseType(responseTypeId);
+      }
+      $("#responseTypeId").on("change", function () {
+        var value = $(this).val();
+        getResponseType(value);
+      });
+      $('.DateStyleRequired').on("change", function () {
+        var value = $(this).val();
+        setResponseDate(value);
+
+      });
+      $('.DateRangeRequired').on("change", function () {
+        var value = $(this).val();
+        if (value == 'Custom') {
+          $("#customDateContainerId").show();
+        } else {
+          $("#customDateContainerId").hide();
+          $("#defaultDate").data("DateTimePicker").clear();
+          $('#maxDateId').data("DateTimePicker").clear();
+          $('#minDateId').data("DateTimePicker").clear();
+        }
+      });
+
+      $("#minDateId").on('dp.change', function () {
+        $("#defaultDate").data("DateTimePicker").clear();
+        $('#maxDateId').data("DateTimePicker").clear()
+      });
+      $("#maxDateId").on('dp.change', function () {
+        var minDate = $("#minDateId").val();
+        var maxDate = $('#maxDateId').val();
+        $("#defaultDate").data("DateTimePicker").clear();
+        if (minDate != '' && maxDate != '' && new Date(minDate) >= new Date(maxDate)) {
+          $('#maxDateId').data("DateTimePicker").clear();
+          $('#maxDateId').parent().addClass("has-danger").addClass("has-error");
+          $('#maxDateId').parent().find(".help-block").html(
+              '<ul class="list-unstyled"><li>Max Date and Time Should not be less than or equal Min Date and Time</li></ul>');
+        } else {
+          $('#maxDateId').parent().removeClass("has-danger").removeClass("has-error");
+          $('#maxDateId').parent().find(".help-block").empty();
+          $("#minDateId").parent().removeClass("has-danger").removeClass("has-error");
+          $("#minDateId").parent().find(".help-block").empty();
+        }
+      });
+      $("#defaultDate").on('dp.change', function () {
+        var minDate = $("#minDateId").val();
+        var maxDate = $('#maxDateId').val();
+        var defaultDate = $("#defaultDate").val();
+        if (minDate != '' && maxDate != '' && defaultDate != '') {
+          if (new Date(defaultDate) >= new Date(minDate) && new Date(defaultDate) <= new Date(
+              maxDate)) {
+            $('#defaultDate').parent().removeClass("has-danger").removeClass("has-error");
+            $('#defaultDate').parent().find(".help-block").empty();
+          } else {
+            $("#defaultDate").data("DateTimePicker").clear();
+            $('#defaultDate').parent().addClass("has-danger").addClass("has-error");
+            $('#defaultDate').parent().find(".help-block").html(
+                '<ul class="list-unstyled"><li>Enter default date to be shown as selected as per availability of Min and Max</li></ul>');
+          }
+        }
+      });
+      $("#timeIntervalStepId").blur(function () {
+        var value = $(this).val();
+        var selectedValue = [1, 2, 3, 4, 5, 6, 10, 12, 15, 20, 30];
+        if (selectedValue.indexOf(parseInt(value)) != -1) {
+          $(this).parent().removeClass("has-danger").removeClass("has-error");
+          $(this).parent().find(".help-block").empty();
+          $(this).validator('validate');
+          $('#timeIntervalDefaultId').val('');
+          if (parseInt(value) <= 6) {
+            $('#timeIntervalDefaultId').val('00:0' + value);
+          } else {
+            $('#timeIntervalDefaultId').val('00:' + value);
+          }
+          $('#timeIntervalDefaultId').data('DateTimePicker').stepping(parseInt(value));
+        } else {
+          $(this).val('');
+          $(this).parent().addClass("has-danger").addClass("has-error");
+          $(this).parent().find(".help-block").empty();
+          $(this).parent().find(".help-block").append(
+              "<ul class='list-unstyled'><li>Please select a number from the following set (1,2,3,4,5,6,10,12,15,20 & 30).</li></ul>");
+        }
+      });
+      $("#textScalePositionId").blur(function () {
+        var count = $('.text-scale').length;
+        var value = $(this).val();
+        $("#textScalePositionId").parent().removeClass("has-danger").removeClass("has-error");
+        $("#textScalePositionId").parent().find(".help-block").empty();
+        if (value != '') {
+          if (value >= 1 && value <= count) {
+            $("#textScalePositionId").parent().removeClass("has-danger").removeClass("has-error");
+            $("#textScalePositionId").parent().find(".help-block").empty();
+          } else {
+
+            $("#textScalePositionId").parent().addClass("has-danger").addClass("has-error");
+            $("#textScalePositionId").parent().find(".help-block").empty();
+            $("#textScalePositionId").parent().find(".help-block").append(
+                "<ul class='list-unstyled'><li>Please enter choice from 1 to number of choices</li></ul>");
+          }
+        }
+      });
+      var dt = new Date();
+      $('#timeIntervalDefaultId').datetimepicker({
+        format: 'HH:mm',
+        stepping: 1,
+        useCurrent: false,
+        minDate: new Date(dt.getFullYear(), dt.getMonth(), dt.getDate(), 00, 01),
+        maxDate: new Date(dt.getFullYear(), dt.getMonth(), dt.getDate(), 23, 59)
+      }).on("dp.change", function (e) {
+        var durationTime = $('#timeIntervalDefaultId').val();
+        if (durationTime && durationTime == '00:00') {
+          durationFlag = false;
+          $('#timeIntervalDefaultId').parent().addClass('has-error has-danger').find(
+              ".help-block").empty().append(
+              '<ul class="list-unstyled"><li>Please select a non-zero Duration value.</li></ul>');
+        } else {
+          durationFlag = true;
+          $('#timeIntervalDefaultId').parent().find(".help-block").empty();
+          var dt = new Date();
+          $('#timeIntervalDefaultId').datetimepicker({
+            format: 'HH:mm', stepping: 1,
+            useCurrent: false,
+            minDate: new Date(dt.getFullYear(), dt.getMonth(), dt.getDate(), 00, 01),
+            maxDate: new Date(dt.getFullYear(), dt.getMonth(), dt.getDate(), 23, 59)
+          });
+        }
+      });
+      // File Upload
+
+      openUploadWindow = function (item) {
+        $(item).siblings('.upload-image').click();
+      }
+      $('[data-toggle="tooltip"]').tooltip();
+      var _URL = window.URL || window.webkitURL;
+
+      $(document).on('change', '.upload-image', function (e) {
+        var file, img;
+        var thisAttr = this;
+        var response_type = $("#rlaResonseType").val();
+        if ((file = this.files[0])) {
+          img = new Image();
+          img.onload = function () {
+            var ht = this.height;
+            var wds = this.width;
+            if ((parseInt(ht) == parseInt(wds)) && (parseInt(ht) >= 90 && parseInt(ht) <= 120)
+                && (parseInt(wds) >= 90 && parseInt(wds) <= 120)) {
+              $(thisAttr).parent().find('.form-group').removeClass('has-error has-danger');
+              $(thisAttr).parent().find(".help-block").empty();
+              var id = $(thisAttr).next().attr("id");
+
+              if (response_type == "Scale" || response_type == "Continuous Scale") {
+                $("#" + id).next().removeClass("hide");
+              }
+
+              $("#" + id).val('');
+              $('.textLabel' + id).text("Change");
+            } else {
+              $(thisAttr).parent().find('img').attr("src", "../images/icons/sm-thumb.jpg");
+              $(thisAttr).parent().find('.form-group').addClass('has-error has-danger');
+              $(thisAttr).parent().find(".help-block").empty().append(
+                  '<ul class="list-unstyled"><li>Failed to upload.</li></ul>');
+              $(thisAttr).parent().parent().parent().find(".removeUrl").click();
+              var id = $(thisAttr).next().attr("id");
+
+              $("#" + id).val('');
+              $("#" + $(thisAttr).attr("id")).val('');
+              $('.textLabel' + id).text("Upload");
+              if (response_type == "Scale" || response_type == "Continuous Scale") {
+                $("#" + id).next().addClass("hide");
+              }
+            }
+          };
+          img.onerror = function () {
+            $(thisAttr).parent().find('img').attr("src", "../images/icons/sm-thumb.jpg");
+            $(thisAttr).parent().find('.form-group').addClass('has-error has-danger');
+            $(thisAttr).parent().find(".help-block").empty().append(
+                '<ul class="list-unstyled"><li>File incorrect.</li></ul>');
+            $(thisAttr).parent().parent().parent().find(".removeUrl").click();
+          };
+          img.src = _URL.createObjectURL(file);
+        }
+      });
+
+      $('.textScaleValue').on('blur', function () {
+        validateForUniqueValue(this, "Text Scale", function () {
+        });
+      });
+      $('.valuePickerVal').on('blur', function () {
+        validateForUniqueValue(this, "Value Picker", function () {
+        });
+      });
+      $('.imageChoiceVal').on('blur', function () {
+        validateForUniqueValue(this, "Image Choice", function () {
+        });
+      });
+      $('.textChoiceVal').on('blur', function () {
+        validateForUniqueValue(this, "Text Choice", function () {
+        });
+      });
+      $('.constant').change(function () {
+        var index = $(this).attr('index');
+        var value = $(this).val();
+        $("#inputSubTypeValueId" + index).val(value);
+        createFormula();
+      });
+      $('#myModal').find('.close').click(function () {
+        $('#trailInputId').val('');
+        $('#lhsValueId').html("");
+        $('#rhsValueId').html("");
+        $('#outputId').html("");
+        $('#myModal').modal('hide');
+      });
+      $('#trailId').click(function () {
+        if (validateResponseDataElement()) {
+          $('#myModal').modal('show');
+        } else {
+          bootbox.alert("Please add atleast one response data element in conditional formula.");
+        }
+      });
+      $('#formulaSubmitId').on('click', function () {
+        var left_input = $('#lhsId').val();
+        var right_input = $('#rhsId').val();
+        var oprator_input = $('#operatorId').val();
+        var trialInputVal = $('#trailInputId').val();
+
+        var text = "";
+        if (trialInputVal) {
+          text = validateMinMaxforX();
+          if (text == '') {
+            $.ajax({
+              url: "/studybuilder/adminStudies/validateconditionalFormula.do?_S=${param._S}",
+              type: "POST",
+              datatype: "json",
+              data: {
+                left_input: left_input,
+                right_input: right_input,
+                oprator_input: oprator_input,
+                trialInput: trialInputVal,
+                "${_csrf.parameterName}": "${_csrf.token}",
+              },
+              success: function (data) {
+                var jsonobject = eval(data);
+                var message = jsonobject.message;
+                var formulaResponseJsonObject = jsonobject.formulaResponseJsonObject;
+                if (message == "SUCCESS") {
+                  $('#lhsValueId').html("<b>" + formulaResponseJsonObject.lhsData + "</b>");
+                  $('#rhsValueId').html("<b>" + formulaResponseJsonObject.rhsData + "</b>");
+                  if (formulaResponseJsonObject.outPutData == 'true'
+                      || formulaResponseJsonObject.outPutData == 'True') {
+                    $('#outputId').html(
+                        "<span class='gtxtf'><b>" + formulaResponseJsonObject.outPutData
+                        + "</b></span>");
+                  } else {
+                    $('#outputId').html(
+                        "<span class='rtxtf'><b>" + formulaResponseJsonObject.outPutData
+                        + "</b></span>");
+                  }
+                } else {
+                  if (typeof formulaResponseJsonObject != 'undefined'
+                      && typeof formulaResponseJsonObject.statusMessage != 'undefined') {
+                    bootbox.alert(formulaResponseJsonObject.statusMessage);
+                  } else {
+                    bootbox.alert("Please create a valid formula");
+                  }
+
+                }
+
+              },
+              error: function (xhr, status, error) {
+                $(item).prop('disabled', false);
+
+              }, global: false
+            });
+          } else {
+            bootbox.alert(text);
+          }
+
+        } else {
+          bootbox.alert("Please pass input ");
+        }
+
+      });
+      $("#numericUnitId").keypress(function (event) {
+        var inputValue = event.charCode;
+        if (!(inputValue >= 65 && inputValue <= 122) && (inputValue != 32 && inputValue != 0)) {
+          event.preventDefault();
+        }
+      });
+      $("#validationConditionId").change(function (e) {
+        var value = $(this).val();
+        if (value != '' && value != null && typeof value != 'undefined') {
+          $("#validationCharactersId").val('');
+          $("#validationCharactersId").attr("disabled", false);
+          $("#validationCharactersId").attr("required", true);
+          $("#validationExceptTextId").val('');
+          $("#validationExceptTextId").attr("disabled", false);
+          $('.selectpicker').selectpicker('refresh');
+          $("#invalidMessageId").attr("required", true);
+          $("#invalidMessageId").val("Invalid Input. Please try again.");
+        } else {
+          $("#validationCharactersId").val('');
+          $("#validationExceptTextId").val('');
+          $("#validationCharactersId").attr("disabled", true);
+          $("#validationExceptTextId").attr("disabled", true);
+          $("#validationCharactersId").attr("required", false);
+          $('.selectpicker').selectpicker('refresh');
+          $("#validationCharactersId").validator('validate');
+          $('#validationCharactersId').parent().removeClass("has-danger").removeClass("has-error");
+          $('#validationCharactersId').parent().find(".help-block").empty();
+          $("#invalidMessageId").attr("required", false);
+          $("#invalidMessageId").val('');
+        }
+      })
+      $("#validationCharactersId").change(function (e) {
+        var value = $(this).val();
+        $("#validationExceptTextId").val('');
+        addRegEx(value);
+      });
+      var valicationCharacterValue = "${questionnairesStepsBo.questionReponseTypeBo.validationCharacters}";
+      if (valicationCharacterValue != '' && valicationCharacterValue != null
+          && typeof valicationCharacterValue != 'undefined') {
+        addRegEx(valicationCharacterValue);
+      }
+
+    });
+
+    function addRegEx(value) {
+      $("#validationExceptTextId").unbind("keyup blur");
+      if (value == "alphabets") {
+        $("#validationExceptTextId").bind('keyup blur', function () {
+          var node = $(this);
+          node.val(node.val().replace(/[^a-zA-Z|\s]/g, ''));
+        });
+      } else if (value == "numbers") {
+        $("#validationExceptTextId").bind('keyup blur', function () {
+          var node = $(this);
+          node.val(node.val().replace(/[^0-9|\s]+$/, ''));
+        });
+      } else if (value == "alphabetsandnumbers") {
+        $("#validationExceptTextId").bind('keyup blur', function () {
+          var node = $(this);
+          node.val(node.val().replace(/[^a-zA-Z0-9|\s]/g, ''));
+        });
+      } else if (value == "specialcharacters") {
+        $("#validationExceptTextId").bind('keyup blur', function () {
+          var node = $(this);
+          node.val(node.val().replace(/[a-zA-Z0-9\s]/g, ''));
+        });
+      }
+    }
+
+    //Displaying images from file upload
+    function readURL(input) {
+
+      if (input.files && input.files[0]) {
+        var reader = new FileReader();
+
+        reader.onload = function (e) {
+          var a = input.getAttribute("id");
+          $("#" + a).prev().children().children()
+              .attr('src', e.target.result)
+              .width(32)
+              .height(32);
+          var sr = $("#" + a).prev().children().children().attr('src');
+        };
+
+        reader.readAsDataURL(input.files[0]);
+      }
+    }
+
+    function toJSDate(dateTime) {
+      if (dateTime != null && dateTime != '' && typeof dateTime != 'undefined') {
+        var date = dateTime.split("/");
+        return new Date(date[2], (date[0] - 1), date[1]);
+      }
+    }
+
+    function setResponseDate(type) {
+
+      if (type == 'Date-Time') {
+
+        $("#minDateId").datetimepicker().data('DateTimePicker').format('MM/DD/YYYY HH:mm');
+        $("#maxDateId").datetimepicker().data('DateTimePicker').format('MM/DD/YYYY HH:mm');
+        $("#defaultDate").datetimepicker().data('DateTimePicker').format('MM/DD/YYYY HH:mm');
+
+      } else {
+
+        $("#minDateId").datetimepicker().data('DateTimePicker').format('MM/DD/YYYY');
+        $("#maxDateId").datetimepicker().data('DateTimePicker').format('MM/DD/YYYY');
+        $("#defaultDate").datetimepicker().data('DateTimePicker').format('MM/DD/YYYY');
+
+      }
+    }
+
+    function resetTheLineStatData() {
+      $("#chartContainer").find('input:text').val('');
+      $("#statContainer").find('input:text').val('');
+      $("#chartContainer").find('input:text').val('');
+      $("#statContainer").find('input:text').val('');
+      $("#addLineChart").prop("checked", false);
+      $("#useStasticData").prop("checked", false);
+      $("#chartContainer").hide();
+      $("#statContainer").hide();
+      $(".chartrequireClass").attr('required', false);
+      $(".requireClass").attr('required', false);
+      var container = document.getElementById('chartContainer');
+      if (container != null) {
+        var children = container.getElementsByTagName('select');
+        for (var i = 0; i < children.length; i++) {
+          children[i].selectedIndex = 0;
+        }
+      }
+
+      var statcontainer = document.getElementById('statContainer');
+      if (statcontainer != null) {
+        var statchildren = statcontainer.getElementsByTagName('select');
+        for (var i = 0; i < statchildren.length; i++) {
+          statchildren[i].selectedIndex = 0;
+        }
+      }
+      $("#allowHealthKit").prop("checked", false);
+      $(".healthkitrequireClass").attr('required', false);
+      $("#healthkitDatatypeId").val('');
+      $('.selectpicker').selectpicker('refresh');
+    }
+
+    function getResponseType(id) {
+      if (id != null && id != '' && typeof id != 'undefined') {
+        var previousResponseType = '${questionnairesStepsBo.questionsBo.responseType}';
+        if (Number(id) != Number(previousResponseType)) {
+          var responseType = $("#responseTypeId>option:selected").html();
+          resetTheLineStatData();
+          if (responseType != 'Boolean') {
+
+            $("#" + responseType.replace(/\s/g, '')).find('input:text').val('');
+            $("#" + responseType.replace(/\s/g, '')).find('img').attr("src", '');
+            if (responseType == "Date") {
+              var datePicker = $("#" + responseType.replace(/\s/g, '')).find('input:text').data(
+                  "DateTimePicker");
+              if (typeof datePicker != 'undefined') {
+                $("#minDateId").datetimepicker().data('DateTimePicker').clear();
+                $("#maxDateId").datetimepicker().data('DateTimePicker').clear();
+                $("#defaultDate").datetimepicker().data('DateTimePicker').clear();
+              }
+            }
+            if (responseType == 'Image Choice') {
+              $("#" + responseType.replace(/\s/g, '')).find('input:file').val('');
+              $("#" + responseType.replace(/\s/g, '')).find('img').attr("src",
+                  "../images/icons/sm-thumb.jpg");
+              $("#" + responseType.replace(/\s/g, '')).find("input:hidden").each(function () {
+                $("#" + this.id).val('');
+              });
+            }
+          }
+          if (responseType == 'Text Scale' && responseType == 'Text Choice' && responseType
+              == 'Boolean') {
+            var container = document.getElementById(responseType.replace(/\s/g, ''));
+            var children = container.getElementsByTagName('select');
+
+            for (var i = 0; i < children.length; i++) {
+              children[i].selectedIndex = 0;
+            }
+            $('.selectpicker').selectpicker('refresh');
+          }
+          $("#timeIntervalStepId").val(1);
+          $("#timeIntervalDefaultId").val("00:01");
+
+          $("#textScalePositionId").val(2);
+          $("#scaleDefaultValueId").val(1);
+          if (responseType == 'Text Scale') {
+            $("#scalevertical").attr("checked", true);
+          } else if (responseType == 'Scale' || responseType == 'Continuous Scale') {
+            $("#scalehorizontal").attr("checked", true);
+            if (responseType == 'Scale') {
+              $("#scaleMinImagePathId").val('');
+              $("#scaleMaxImagePathId").val('');
+            } else {
+              $("#continuesScaleMinImagePathId").val('');
+              $("#continuesScaleMaxImagePathId").val('');
+            }
+          }
+          if (responseType == 'Numeric') {
+            $('input[name="questionReponseTypeBo.style"]').attr("checked", false);
+            $("#styleDecimal").attr("checked", true);
+          }
+          if (responseType == 'Date') {
+            $('input[name="questionReponseTypeBo.style"]').attr("checked", false);
+            $("#date").attr("checked", true);
+            $("#customDateId").attr("checked", true);
+          }
+          $("#useAnchorDateId").attr("checked", false);
+
+          deleteChildElements(1, "parent");
+          $("#inputTypeValueId0").val('');
+          $("#inputTypeId2").val('');
+          $("#inputTypeId3").val('');
+          $(".formula").text("-NA-");
+          $(".tryFormula").text("-NA-");
+          $("#constantValId3").val('');
+          $("#constantValId3").addClass("add_var_hide");
+          $("#inputSubTypeValueId2").val('');
+          $('.selectpicker').selectpicker('refresh');
+          $("#formulaBasedLogicId").prop("checked", false);
+        }
+        <c:forEach items="${questionResponseTypeMasterInfoList}" var="questionResponseTypeMasterInfo">
+        var infoId = Number('${questionResponseTypeMasterInfo.id}');
+        var responseType = '${questionResponseTypeMasterInfo.responseType}';
+
+        $("#" + responseType.replace(/\s/g, '')).hide();
+        if (responseType == 'Date') {
+          var style = '${questionnairesStepsBo.questionReponseTypeBo.style}';
+
+          setResponseDate(style);
+        }
+        $("." + responseType.replace(/\s/g, '') + "Required").attr("required", false);
+        if (id == infoId) {
+          var description = '${questionResponseTypeMasterInfo.description}';
+          var dataType = "${questionResponseTypeMasterInfo.dataType}";
+          var dashboard = '${questionResponseTypeMasterInfo.dashBoardAllowed}';
+          $("#responseTypeDataType").text(dataType);
+          $("#responseTypeDescrption").text(description);
+          $("#rlaResonseType").val(responseType)
+          $("#rlaResonseDataType").text(dataType);
+          $("#rlaResonseTypeDescription").text(description);
+          if (dashboard == 'true') {
+            $("#useStasticDataContainerId").show();
+            $("#addLineChartContainerId").show();
+            $("#borderdashId").show();
+            if ($("#addLineChart").is(":checked")) {
+              $("#chartContainer").show();
+              $(".chartrequireClass").attr('required', true);
+            } else {
+              $("#lineChartTimeRangeId").val('');
+              if (document.getElementById("allowRollbackChartNo") != null
+                  && typeof document.getElementById("allowRollbackChartNo") != 'undefined') {
+                document.getElementById("allowRollbackChartNo").checked = true;
+              }
+              $('#chartTitleId').val('');
+              $('.selectpicker').selectpicker('refresh');
+            }
+            if ($("#useStasticData").is(":checked")) {
+              $("#statContainer").show();
+              $(".requireClass").attr('required', true);
+            } else {
+              $("#statShortNameId").val('');
+              $("#statDisplayNameId").val('');
+              $("#statDisplayUnitsId").val('');
+              $("#statTypeId").val('');
+              $("#statFormula").val('');
+              $('.selectpicker').selectpicker('refresh');
+            }
+          } else {
+            $("#useStasticDataContainerId").hide();
+            $("#addLineChartContainerId").hide();
+            $("#borderdashId").hide();
+          }
+          if (responseType == 'Height' || responseType == 'Numeric') {
+            $("#borderHealthdashId").show();
+            $("#allowHealthKitId").show();
+            if ($("#allowHealthKit").is(":checked")) {
+              $("#healthKitContainerId").show();
+              $(".healthkitrequireClass").attr('required', true);
+            } else {
+              $("#healthKitContainerId").hide();
+              $(".healthkitrequireClass").attr('required', false);
+              $("#healthkitDatatypeId").val('');
+              $('.selectpicker').selectpicker('refresh');
+            }
+          } else {
+            $("#allowHealthKitId").hide();
+            $("#healthKitContainerId").hide();
+            $("#borderHealthdashId").hide();
+          }
+          if (responseType == 'Date') {
+            $("#useAnchorDateContainerId").show();
+            var anchorDate = "${questionnairesStepsBo.questionsBo.useAnchorDate}";
+            if (anchorDate == "true") {
+              $("#useAnchorDateId").attr("checked", true);
+              $('.useAnchorDateName').show();
+            }
+          } else {
+            $("#useAnchorDateContainerId").hide();
+          }
+          if (responseType == 'Scale' || responseType == 'Continuous Scale' || responseType
+              == 'Text Scale') {
+            $("#scaleType").show();
+          } else {
+            $("#scaleType").hide();
+          }
+
+          if (responseType == 'Scale' || responseType == 'Continuous Scale' || responseType
+              == 'Height'
+              || responseType == 'Time interval' || responseType == 'Numeric') {
+            $("#condtionalBranchingId").show();
+            if ($("#formulaBasedLogicId").is(":checked")) {
+              $("#conditionalFormulaId").show();
+              $(".conditionalBranchingRequired").attr('required', true);
+              createFormula();
+            } else {
+              $("#conditionalFormulaId").hide();
+              $(".conditionalBranchingRequired").attr('required', false);
+            }
+          } else {
+            $("#condtionalBranchingId").hide();
+          }
+          $("#" + responseType.replace(/\s/g, '')).show();
+          $("." + responseType.replace(/\s/g, '') + "Required").attr("required", true);
+        } else {
+
+        }
+        </c:forEach>
+      } else {
+        $("#responseTypeDataType").text("- NA -");
+        $("#responseTypeDescrption").text("- NA -");
+        $("#rlaResonseType").val('');
+        $("#rlaResonseDataType").text("- NA -");
+        $("#rlaResonseTypeDescription").text("- NA -");
+      }
+    }
+
+    function saveQuestionStepQuestionnaire(item, callback) {
+
+      var stepId = $("#stepId").val();
+      var quesstionnaireId = $("#questionnairesId").val();
+      var questionId = $("#instructionFormId").val();
+      var shortTitle = $("#stepShortTitle").val();
+      var skiappable = $('input[name="skiappable"]:checked').val();
+      var destionationStep = $("#destinationStepId").val();
+      var repeatable = $('input[name="repeatable"]:checked').val();
+      var repeatableText = $("#repeatableText").val();
+      var step_type = $("#stepType").val();
+      var instructionFormId = $("#instructionFormId").val();
+
+      var questionnaireStep = new Object();
+      questionnaireStep.stepId = stepId;
+      questionnaireStep.questionnairesId = quesstionnaireId;
+      questionnaireStep.instructionFormId = instructionFormId;
+      questionnaireStep.stepShortTitle = shortTitle;
+      questionnaireStep.skiappable = skiappable;
+      questionnaireStep.destinationStep = destionationStep;
+      questionnaireStep.type = "save";
+      questionnaireStep.stepType = step_type;
+
+      var questionsBo = new Object();
+      var questionText = $("#questionTextId").val();
+      var descriptionText = $("#descriptionId").val();
+      var responseType = $("#responseTypeId").val();
+      var addLinceChart = $('input[name="questionsBo.addLineChart"]:checked').val();
+      var lineChartTimeRange = $("#lineChartTimeRangeId").val();
+      var allowRollbackChart = $('input[name="questionsBo.allowRollbackChart"]:checked').val();
+      var chartTitle = $('#chartTitleId').val();
+      var useStasticData = $('input[name="questionsBo.useStasticData"]:checked').val();
+      var statShortName = $("#statShortNameId").val();
+      var statDisplayName = $("#statDisplayNameId").val();
+      var statDisplayUnits = $("#statDisplayUnitsId").val();
+      var statType = $("#statTypeId").val();
+      var statFormula = $("#statFormula").val();
+      var questionid = $("#questionId").val();
+      var anchor_date = $('input[name="questionsBo.useAnchorDate"]:checked').val();
+      var anchor_date_id = $("#anchorDateId").val();
+      var anchor_text = $('#anchorTextId').val();
+
+      questionsBo.id = questionId;
+      questionsBo.question = questionText;
+      questionsBo.description = descriptionText;
+      questionsBo.responseType = responseType;
+      questionsBo.lineChartTimeRange = lineChartTimeRange;
+      questionsBo.addLineChart = addLinceChart;
+      questionsBo.allowRollbackChart = allowRollbackChart;
+      questionsBo.chartTitle = chartTitle;
+      questionsBo.useStasticData = useStasticData;
+      questionsBo.statShortName = statShortName;
+      questionsBo.statDisplayName = statDisplayName;
+      questionsBo.statDisplayUnits = statDisplayUnits;
+      questionsBo.statType = statType;
+      questionsBo.statFormula = statFormula;
+      questionsBo.useAnchorDate = anchor_date;
+      questionsBo.anchorDateName = anchor_text;
+      questionsBo.anchorDateId = anchor_date_id;
+      questionnaireStep.questionsBo = questionsBo;
+
+      var questionReponseTypeBo = new Object();
+
+      var minValue = '';
+      var maxValue = '';
+      var defaultValue = '';
+      var maxdescription = '';
+      var mindescrption = '';
+      var step = '';
+      var resType = $("#rlaResonseType").val();
+      var verticalText = '';
+      var formula_based_logic = '';
+      var formData = new FormData();
+
+      if (resType == "Scale") {
+        minValue = $("#scaleMinValueId").val();
+        maxValue = $("#scaleMaxValueId").val();
+        defaultValue = $("#scaleDefaultValueId").val();
+        mindescrption = $("#scaleMinDescriptionId").val();
+        maxdescription = $("#scaleMaxDescriptionId").val();
+        step = $("#scaleStepId").val();
+        verticalText = $('input[name="questionReponseTypeBo.vertical"]:checked').val();
+
+        formula_based_logic = $(
+            'input[name="questionReponseTypeBo.formulaBasedLogic"]:checked').val();
+
+        var minImagePath = $("#scaleMinImagePathId").val();
+        var maxImagePath = $("#scaleMaxImagePathId").val();
+
+        formData.append('minImageFile', document.getElementById("scaleMinImageFileId").files[0]);
+        formData.append('maxImageFile', document.getElementById("scaleMaxImageFileId").files[0]);
+
+        questionReponseTypeBo.vertical = verticalText;
+        questionReponseTypeBo.minValue = minValue;
+        questionReponseTypeBo.maxValue = maxValue;
+        questionReponseTypeBo.defaultValue = defaultValue;
+        questionReponseTypeBo.minDescription = mindescrption;
+        questionReponseTypeBo.maxDescription = maxdescription;
+        questionReponseTypeBo.step = step;
+
+        questionReponseTypeBo.minImage = minImagePath;
+        questionReponseTypeBo.maxImage = maxImagePath;
+        questionReponseTypeBo.formulaBasedLogic = formula_based_logic;
+
+      } else if (resType == "Continuous Scale") {
+
+        minValue = $("#continuesScaleMinValueId").val();
+        maxValue = $("#continuesScaleMaxValueId").val();
+        defaultValue = $("#continuesScaleDefaultValueId").val();
+        mindescrption = $("#continuesScaleMinDescriptionId").val();
+        maxdescription = $("#continuesScaleMaxDescriptionId").val();
+        vertical = $('input[name="questionReponseTypeBo.vertical"]:checked').val();
+        var fractionDigits = $("#continuesScaleFractionDigitsId").val();
+
+        var minImagePath = $("#continuesScaleMinImagePathId").val();
+        var maxImagePath = $("#continuesScaleMaxImagePathId").val();
+        formula_based_logic = $(
+            'input[name="questionReponseTypeBo.formulaBasedLogic"]:checked').val();
+
+        formData.append('minImageFile',
+            document.getElementById("continuesScaleMinImageFileId").files[0]);
+        formData.append('maxImageFile',
+            document.getElementById("continuesScaleMaxImageFileId").files[0]);
+
+        questionReponseTypeBo.vertical = verticalText;
+        questionReponseTypeBo.minValue = minValue;
+        questionReponseTypeBo.maxValue = maxValue;
+        questionReponseTypeBo.defaultValue = defaultValue;
+        questionReponseTypeBo.minDescription = mindescrption;
+        questionReponseTypeBo.maxDescription = maxdescription;
+        questionReponseTypeBo.maxFractionDigits = fractionDigits;
+        questionReponseTypeBo.minImage = minImagePath;
+        questionReponseTypeBo.maxImage = maxImagePath;
+        questionReponseTypeBo.formulaBasedLogic = formula_based_logic;
+
+      } else if (resType == "Location") {
+        var usecurrentlocation = $(
+            'input[name="questionReponseTypeBo.useCurrentLocation"]:checked').val();
+        questionReponseTypeBo.useCurrentLocation = usecurrentlocation;
+      } else if (resType == "Email") {
+        var placeholderText = $("#placeholderId").val();
+        questionReponseTypeBo.placeholder = placeholderText;
+      } else if (resType == "Text") {
+        var max_length = $("#textmaxLengthId").val();
+        var placeholderText = $("#textPlaceholderId").val();
+        var multiple_lines = $('input[name="questionReponseTypeBo.multipleLines"]:checked').val();
+
+        var validation_condition = $("#validationConditionId").val();
+        var validation_characters = $("#validationCharactersId").val();
+        var validation_except_text = $("#validationExceptTextId").val();
+        var validation_regex = $("#validationRegexId").val();
+        var invalid_message = $("#invalidMessageId").val();
+
+        questionReponseTypeBo.maxLength = max_length;
+        questionReponseTypeBo.placeholder = placeholderText;
+        questionReponseTypeBo.multipleLines = multiple_lines;
+
+        questionReponseTypeBo.validationCondition = validation_condition;
+        questionReponseTypeBo.validationCharacters = validation_characters;
+        questionReponseTypeBo.validationExceptText = validation_except_text;
+        questionReponseTypeBo.validationRegex = validation_regex;
+        questionReponseTypeBo.invalidMessage = invalid_message;
+
+      } else if (resType == "Height") {
+        var measurement_system = $(
+            'input[name="questionReponseTypeBo.measurementSystem"]:checked').val();
+        var placeholder_text = $("#heightPlaceholderId").val();
+        var healthkitinfo = $('input[name="questionsBo.allowHealthKit"]:checked').val();
+        var healthkitdatatype = $("#healthkitDatatypeId").val();
+
+        formula_based_logic = $(
+            'input[name="questionReponseTypeBo.formulaBasedLogic"]:checked').val();
+        questionReponseTypeBo.measurementSystem = measurement_system;
+        questionReponseTypeBo.placeholder = placeholder_text;
+        questionsBo.allowHealthKit = healthkitinfo;
+        questionsBo.healthkitDatatype = healthkitdatatype;
+        questionReponseTypeBo.formulaBasedLogic = formula_based_logic;
+
+      } else if (resType == "Time interval") {
+        var stepValue = $("#timeIntervalStepId").val();
+        var default_time = $("#timeIntervalDefaultId").val();
+        formula_based_logic = $(
+            'input[name="questionReponseTypeBo.formulaBasedLogic"]:checked').val();
+
+        questionReponseTypeBo.step = stepValue;
+        questionReponseTypeBo.defaultTime = default_time;
+        questionReponseTypeBo.formulaBasedLogic = formula_based_logic;
+
+      } else if (resType == "Numeric") {
+        var styletext = $('input[name="questionReponseTypeBo.style"]:checked').val();
+        var unitText = $("#numericUnitId").val();
+        var palceholder_text = $("#numericPlaceholderId").val();
+        var minValue = $("#numericMinValueId").val();
+        var maxValue = $("#numericMaxValueId").val();
+        var healthkitinfo = $('input[name="questionsBo.allowHealthKit"]:checked').val();
+        var healthkitdatatype = $("#healthkitDatatypeId").val();
+        formula_based_logic = $(
+            'input[name="questionReponseTypeBo.formulaBasedLogic"]:checked').val();
+
+        questionReponseTypeBo.style = styletext;
+        questionReponseTypeBo.placeholder = palceholder_text;
+        questionReponseTypeBo.unit = unitText;
+        questionReponseTypeBo.minValue = minValue;
+        questionReponseTypeBo.maxValue = maxValue;
+
+        questionsBo.allowHealthKit = healthkitinfo;
+        questionsBo.healthkitDatatype = healthkitdatatype;
+        questionReponseTypeBo.formulaBasedLogic = formula_based_logic;
+      } else if (resType == "Date") {
+        var min_date = $("#minDateId").val();
+        var max_date = $("#maxDateId").val();
+        var default_date = $("#defaultDate").val();
+        var style = $('input[name="questionReponseTypeBo.style"]:checked').val();
+
+        var allowedDateRange = $(
+            'input[name="questionReponseTypeBo.selectionStyle"]:checked').val();
+
+        questionReponseTypeBo.minDate = min_date;
+        questionReponseTypeBo.maxDate = max_date;
+        questionReponseTypeBo.defaultDate = default_date;
+        questionReponseTypeBo.style = style;
+        questionReponseTypeBo.selectionStyle = allowedDateRange;
+      } else if (resType == "Boolean") {
+        var questionSubResponseArray = new Array();
+        $('#Boolean .row').each(function () {
+          var questionSubResponseType = new Object();
+          var id = $(this).attr("id");
+          var response_sub_type_id = $("#responseSubTypeValueId" + id).val();
+          var diasplay_text = $("#dispalyText" + id).val();
+          var diaplay_value = $("#displayValue" + id).val();
+          var destination_step = $("#destinationStepId" + id).val();
+
+          questionSubResponseType.responseSubTypeValueId = response_sub_type_id;
+          questionSubResponseType.text = diasplay_text;
+          questionSubResponseType.value = diaplay_value;
+          questionSubResponseType.destinationStepId = destination_step;
+
+          questionSubResponseArray.push(questionSubResponseType);
+        });
+        questionnaireStep.questionResponseSubTypeList = questionSubResponseArray;
+
+      } else if (resType == "Value Picker") {
+        var questionSubResponseArray = new Array();
+        $('.value-picker').each(function () {
+          var questionSubResponseType = new Object();
+          var id = $(this).attr("id");
+          var response_sub_type_id = $("#valPickSubTypeValueId" + id).val();
+          var diasplay_text = $("#displayValPickText" + id).val();
+          var diaplay_value = $("#displayValPickValue" + id).val();
+
+          questionSubResponseType.responseSubTypeValueId = response_sub_type_id;
+          questionSubResponseType.text = diasplay_text;
+          questionSubResponseType.value = diaplay_value;
+
+          questionSubResponseArray.push(questionSubResponseType);
+        });
+        questionnaireStep.questionResponseSubTypeList = questionSubResponseArray;
+      } else if (resType == "Text Scale") {
+        var questionSubResponseArray = new Array();
+        $('.text-scale').each(function () {
+          var questionSubResponseType = new Object();
+          var id = $(this).attr("id");
+
+          var response_sub_type_id = $("#textScaleSubTypeValueId" + id).val();
+          var diasplay_text = $("#displayTextSclText" + id).val();
+          var diaplay_value = $("#displayTextSclValue" + id).val();
+          var destination_step = $("#destinationTextSclStepId" + id).val();
+
+          questionSubResponseType.responseSubTypeValueId = response_sub_type_id;
+          questionSubResponseType.text = diasplay_text;
+          questionSubResponseType.value = diaplay_value;
+          questionSubResponseType.destinationStepId = destination_step;
+          questionSubResponseArray.push(questionSubResponseType);
+
+        });
+        questionnaireStep.questionResponseSubTypeList = questionSubResponseArray;
+      } else if (resType == "Text Choice") {
+
+        var questionSubResponseArray = new Array();
+        var selectionStyel = $('input[name="questionReponseTypeBo.selectionStyle"]:checked').val();
+        questionReponseTypeBo.selectionStyle = selectionStyel;
+        $('.text-choice').each(function () {
+          var questionSubResponseType = new Object();
+
+          var id = $(this).attr("id");
+          var response_sub_type_id = $("#textChoiceSubTypeValueId" + id).val();
+          var diasplay_text = $("#displayTextChoiceText" + id).val();
+          var diaplay_value = $("#displayTextChoiceValue" + id).val();
+          var destination_step = $("#destinationTextChoiceStepId" + id).val();
+          var exclusioveText = $("#exclusiveId" + id).val();
+          var display_description = $("#displayTextChoiceDescription" + id).val();
+
+          questionSubResponseType.responseSubTypeValueId = response_sub_type_id;
+          questionSubResponseType.text = diasplay_text;
+          questionSubResponseType.value = diaplay_value;
+          questionSubResponseType.destinationStepId = destination_step;
+          questionSubResponseType.exclusive = exclusioveText;
+          questionSubResponseType.description = display_description;
+          questionSubResponseArray.push(questionSubResponseType);
+
+        });
+        questionnaireStep.questionResponseSubTypeList = questionSubResponseArray;
+      } else if (resType == "Image Choice") {
+        var questionSubResponseArray = new Array();
+        var i = 0;
+
+        $('.image-choice').each(function () {
+          var questionSubResponseType = new Object();
+          var id = $(this).attr("id");
+
+          var response_sub_type_id = $("#imageChoiceSubTypeValueId" + id).val();
+          var diasplay_text = $("#displayImageChoiceText" + id).val();
+          var diaplay_value = $("#displayImageChoiceValue" + id).val();
+          var destination_step = $("#destinationImageChoiceStepId" + id).val();
+
+          var imagePath = $("#imagePathId" + id).val();
+          var selectedImagePath = $("#selectImagePathId" + id).val();
+
+          formData.append('imageFile[' + id + ']',
+              document.getElementById("imageFileId" + id).files[0]);
+          formData.append('selectImageFile[' + id + ']',
+              document.getElementById("selectImageFileId" + id).files[0]);
+
+          questionSubResponseType.responseSubTypeValueId = response_sub_type_id;
+          questionSubResponseType.text = diasplay_text;
+          questionSubResponseType.value = diaplay_value;
+          questionSubResponseType.destinationStepId = destination_step;
+          questionSubResponseType.imageId = id;
+          questionSubResponseType.image = imagePath;
+          questionSubResponseType.selectedImage = selectedImagePath;
+
+          questionSubResponseArray.push(questionSubResponseType);
+
+          i = i + 1;
+        });
+        questionnaireStep.questionResponseSubTypeList = questionSubResponseArray;
+      }
+      if ($("#formulaBasedLogicId").is(":checked")) {
+        var questionConditionBranchBoArray = new Array();
+        $('.numeric__section').each(function (i) {
+
+          var questionConditionBranchBoList = new Object();
+          var input_type_value = $("#inputTypeValueId" + i).val();
+          var input_type = $("#inputTypeId" + i).val();
+          var sequence_no = $("#sequenceNoId" + i).val();
+          var parent_sequence_no = $("#parentSequenceNoId" + i).val();
+
+          questionConditionBranchBoList.inputTypeValue = input_type_value;
+          questionConditionBranchBoList.inputType = input_type;
+          questionConditionBranchBoList.sequenceNo = sequence_no;
+          questionConditionBranchBoList.parentSequenceNo = parent_sequence_no;
+
+          var questionConditionBranchArray = new Array();
+
+          var index = $("#inputTypeValueId" + i).attr('index');
+          var rootId = "rootId" + index;
+
+          $('#' + rootId + ' .numeric__row').each(function (j) {
+            var questionConditionBranchBos = new Object();
+            var id = $(this).attr("id");
+
+            var input_type_value = $("#inputSubTypeValueId" + id).val();
+            var input_type = $("#inputTypeId" + id).val();
+            var sequence_no = $("#sequenceNoId" + id).val();
+            var parent_sequence_no = $("#parentSequenceNoId" + id).val();
+
+            questionConditionBranchBos.inputTypeValue = input_type_value;
+            questionConditionBranchBos.sequenceNo = sequence_no;
+            questionConditionBranchBos.parentSequenceNo = parent_sequence_no;
+            questionConditionBranchBos.inputType = input_type;
+
+            questionConditionBranchArray.push(questionConditionBranchBos);
+          });
+
+          questionConditionBranchBoList.questionConditionBranchBos = questionConditionBranchArray;
+          questionConditionBranchBoArray.push(questionConditionBranchBoList);
+        });
+        questionnaireStep.questionConditionBranchBoList = questionConditionBranchBoArray;
+
+        var condition_formula = $("#conditionFormulaId").val();
+        questionReponseTypeBo.conditionFormula = condition_formula;
+
+        var questionSubResponseArray = new Array();
+
+        var questionSubResponseType = new Object();
+        questionSubResponseType.destinationStepId = $("#conditionDestinationId0").val();
+        questionSubResponseType.value = $("#conditionDestinationValueId0").val();
+        questionSubResponseArray.push(questionSubResponseType);
+
+        var questionSubResponseType = new Object();
+        questionSubResponseType.destinationStepId = $("#conditionDestinationId1").val();
+        questionSubResponseType.value = $("#conditionDestinationValueId1").val();
+        questionSubResponseArray.push(questionSubResponseType);
+        questionnaireStep.questionResponseSubTypeList = questionSubResponseArray;
+
+      }
+
+      var response_type_id = $("#questionResponseTypeId").val();
+      var question_response_type_id = $("#responseQuestionId").val();
+
+      questionReponseTypeBo.responseTypeId = response_type_id;
+      questionReponseTypeBo.questionsResponseTypeId = question_response_type_id;
+
+      questionnaireStep.questionReponseTypeBo = questionReponseTypeBo;
+      if (quesstionnaireId && shortTitle) {
+
+        formData.append("questionnaireStepInfo", JSON.stringify(questionnaireStep));
+        var data = JSON.stringify(questionnaireStep);
+        $.ajax({
+          url: "/studybuilder/adminStudies/saveQuestionStep.do?_S=${param._S}",
+          type: "POST",
+          datatype: "json",
+          data: formData,
+          processData: false,
+          contentType: false,
+          beforeSend: function (xhr, settings) {
+            xhr.setRequestHeader("X-CSRF-TOKEN", "${_csrf.token}");
+          },
+          success: function (data) {
+            var jsonobject = eval(data);
+            var message = jsonobject.message;
+            if (message == "SUCCESS") {
+              $("body").removeClass("loading");
+              $("#preShortTitleId").val(shortTitle);
+              var stepId = jsonobject.stepId;
+              var questionId = jsonobject.questionId;
+              var questionResponseId = jsonobject.questionResponseId;
+              var questionsResponseTypeId = jsonobject.questionsResponseTypeId;
+
+              if (statShortName != null && statShortName != '' && typeof statShortName
+                  != 'undefined') {
+                $("#prevStatShortNameId").val(statShortName);
+              }
+
+              $("#stepId").val(stepId);
+              $("#questionId").val(questionId);
+              $("#questionResponseTypeId").val(questionResponseId);
+              $("#responseQuestionId").val(questionId);
+
+              $("#alertMsg").removeClass('e-box').addClass('s-box').html("Content saved as draft.");
+              $(item).prop('disabled', false);
+              $('#alertMsg').show();
+
+              if ($('.sixthQuestionnaires').find('span').hasClass(
+                  'sprites-icons-2 tick pull-right mt-xs')) {
+                $('.sixthQuestionnaires').find('span').removeClass(
+                    'sprites-icons-2 tick pull-right mt-xs');
+              }
+
+              if (callback)
+                callback(true);
+            } else {
+              var errMsg = jsonobject.errMsg;
+              if (errMsg != '' && errMsg != null && typeof errMsg != 'undefined') {
+                $("#alertMsg").removeClass('s-box').addClass('e-box').html(errMsg);
+              } else {
+                $("#alertMsg").removeClass('s-box').addClass('e-box').html("Something went Wrong");
+              }
+              $('#alertMsg').show();
+              if (callback)
+                callback(false);
+            }
+            setTimeout(hideDisplayMessage, 4000);
+          },
+          error: function (xhr, status, error) {
+            $(item).prop('disabled', false);
+            $('#alertMsg').show();
+            $("#alertMsg").removeClass('s-box').addClass('e-box').html("Something went Wrong");
+            setTimeout(hideDisplayMessage, 4000);
+          }
+        });
+      } else {
+        $('#stepShortTitle').validator('destroy').validator();
+        if (!$('#stepShortTitle')[0].checkValidity()) {
+          $("#stepShortTitle").parent().addClass('has-error has-danger').find(
+              ".help-block").empty().append(
+              '<ul class="list-unstyled"><li>This is a required field.</li></ul>');
+          $('.stepLevel a').tab('show');
+        }
+      }
+    }
+
+    function goToBackPage(item) {
+
+      $(item).prop('disabled', true);
+      <c:if test="${actionTypeForQuestionPage ne 'view'}">
+      bootbox.confirm({
+        closeButton: false,
+        message: 'You are about to leave the page and any unsaved changes will be lost. Are you sure you want to proceed?',
+        buttons: {
+          'cancel': {
+            label: 'Cancel',
+          },
+          'confirm': {
+            label: 'OK',
+          },
+        },
+        callback: function (result) {
+          if (result) {
+            var a = document.createElement('a');
+            a.href = "/studybuilder/adminStudies/viewQuestionnaire.do?_S=${param._S}";
+            document.body.appendChild(a).click();
+          } else {
+            $(item).prop('disabled', false);
+          }
+        }
+      });
+      </c:if>
+      <c:if test="${actionTypeForQuestionPage eq 'view'}">
+      var a = document.createElement('a');
+      a.href = "/studybuilder/adminStudies/viewQuestionnaire.do?_S=${param._S}";
+      document.body.appendChild(a).click();
+      </c:if>
+    }
+
+    function getSelectionStyle(item) {
+      var value = $(item).val();
+      if (value == 'Single') {
+        $('.textChoiceExclusive').attr("disabled", true);
+        $('.textChoiceExclusive').attr("required", false);
+        $('.textChoiceExclusive').val('');
+        $('.destionationYes').val('');
+        $('.destionationYes').attr("disabled", false);
+        $('.selectpicker').selectpicker('refresh');
+        $(".textChoiceExclusive").validator('validate');
+      } else {
+        $('.textChoiceExclusive').attr("disabled", false);
+        $('.textChoiceExclusive').attr("required", true);
+        $('.selectpicker').selectpicker('refresh');
+      }
+    }
+
+    function setExclusiveData(item) {
+      var index = $(item).attr('index');
+      var value = $(item).val();
+      if (value == "Yes") {
+        $("#destinationTextChoiceStepId" + index).attr("disabled", false);
+        $('.selectpicker').selectpicker('refresh');
+      } else {
+        $("#destinationTextChoiceStepId" + index).val('');
+        $("#destinationTextChoiceStepId" + index).attr("disabled", true);
+        $('.selectpicker').selectpicker('refresh');
+      }
+
+    }
+
+    var count = $('.value-picker').length;
+
+    function addValuePicker() {
+      count = count + 1;
+      var newValuePicker = "<div class='value-picker row form-group mb-xs' id=" + count + ">" +
+          "	<div class='col-md-3 pl-none'>" +
+          "   <div class='form-group'>" +
+          "      <input type='text' class='form-control' name='questionResponseSubTypeList[" + count
+          + "].text' id='displayValPickText" + count + "' required maxlength='20'>" +
+          "      <div class='help-block with-errors red-txt'></div>" +
+          "   </div>" +
+          "</div>" +
+          "<div class='col-md-4 pl-none'>" +
+          "   <div class='form-group'>" +
+          "      <input type='text' class='form-control valuePickerVal' name='questionResponseSubTypeList["
+          + count + "].value' id='displayValPickValue" + count
+          + "' required maxlength='50' onblur='validateForUniqueValue(this,&#34;Value Picker&#34;,function(){})';>"
+          +
+          "      <div class='help-block with-errors red-txt'></div>" +
+          "   </div>" +
+          "</div>" +
+          "<div class='col-md-2 pl-none mt__6'>" +
+          "   <span class='addBtnDis addbtn mr-sm align-span-center' onclick='addValuePicker();'>+</span>"
+          +
+          "<span class='delete vertical-align-middle remBtnDis hide pl-md align-span-center' onclick='removeValuePicker(this);'></span>"
+          +
+          "</div>" +
+          "</div>";
+      $(".value-picker:last").after(newValuePicker);
+      $(".value-picker").parent().removeClass("has-danger").removeClass("has-error");
+      $(".value-picker").parent().find(".help-block").empty();
+      $(".value-picker").parents("form").validator("destroy");
+      $(".value-picker").parents("form").validator();
+      if ($('.value-picker').length > 2) {
+        $(".remBtnDis").removeClass("hide");
+      } else {
+        $(".remBtnDis").addClass("hide");
+      }
+      $('#' + count).find('input:first').focus();
+    }
+
+    function removeValuePicker(param) {
+      if ($('.value-picker').length > 2) {
+
+        $(param).parents(".value-picker").remove();
+        $(".value-picker").parent().removeClass("has-danger").removeClass("has-error");
+        $(".value-picker").parent().find(".help-block").empty();
+        $(".value-picker").parents("form").validator("destroy");
+        $(".value-picker").parents("form").validator();
+        if ($('.value-picker').length > 2) {
+          $(".remBtnDis").removeClass("hide");
+        } else {
+          $(".remBtnDis").addClass("hide");
+        }
+      }
+    }
+
+    var scaleCount = $('.text-scale').length;
+
+    function addTextScale() {
+      scaleCount = scaleCount + 1;
+      if ($('.text-scale').length < 8) {
+        var newTextScale = "<div class='text-scale row' id=" + scaleCount + ">" +
+            "	<div class='col-md-3 pl-none'>" +
+            "    <div class='form-group'>" +
+            "      <input type='text' class='form-control TextScaleRequired' name='questionResponseSubTypeList["
+            + scaleCount + "].text' id='displayTextSclText" + scaleCount
+            + "'+  maxlength='15' required>" +
+            "      <div class='help-block with-errors red-txt'></div>" +
+            "   </div>" +
+            "</div>" +
+            " <div class='col-md-4 pl-none'>" +
+            "    <div class='form-group'>" +
+            "       <input type='text' class='form-control TextScaleRequired textScaleValue' class='form-control' name='questionResponseSubTypeList["
+            + scaleCount + "].value' id='displayTextSclValue" + scaleCount
+            + "' maxlength='50' required onblur='validateForUniqueValue(this,&#34;Text Scale&#34;,function(){});'>"
+            +
+            "       <div class='help-block with-errors red-txt'></div>" +
+            "    </div>" +
+            " </div>";
+        <c:if test='${questionnaireBo.branching}'>
+        newTextScale += " <div class='col-md-3 pl-none'>" +
+            "    <div class='form-group'>" +
+            "       <select class='selectpicker' name='questionResponseSubTypeList[" + scaleCount
+            + "].destinationStepId' id='destinationTextSclStepId" + scaleCount
+            + "' title='select' data-error='Please choose one option'><option value='' disabled selected>Select</option>";
+        <c:forEach items="${destinationStepList}" var="destinationStep">
+        newTextScale += "<option value='${destinationStep.stepId}'>Step ${destinationStep.sequenceNo} : ${destinationStep.stepShortTitle}</option>";
+        </c:forEach>
+        newTextScale += "	<option value='0'>Completion Step</option>" +
+            "	     </select>" +
+            "      <div class='help-block with-errors red-txt'></div>" +
+            "   </div>" +
+            "</div>";
+        </c:if>
+        newTextScale += "<div class='col-md-2 pl-none mt__8'>" +
+            "	<span class='addBtnDis addbtn mr-sm align-span-center' onclick='addTextScale();'>+</span>"
+            +
+            "  <span class='delete vertical-align-middle remBtnDis hide pl-md align-span-center' onclick='removeTextScale(this);'></span>"
+            +
+            "	</div>" +
+            "</div>";
+        $(".text-scale:last").after(newTextScale);
+        $('.selectpicker').selectpicker('refresh');
+        $(".text-scale").parent().removeClass("has-danger").removeClass("has-error");
+        $(".text-scale").parent().find(".help-block").empty();
+        $(".text-scale").parents("form").validator("destroy");
+        $(".text-scale").parents("form").validator();
+        if ($('.text-scale').length > 2) {
+          $(".remBtnDis").removeClass("hide");
+        } else {
+          $(".remBtnDis").addClass("hide");
+        }
+        if ($('.text-scale').length == 8) {
+          $(".text-scale:last").find('span.addBtnDis').remove();
+          $(".text-scale:last").find('span.delete').before(
+              "<span class='tool-tip' data-toggle='tooltip' data-placement='top' title='Only a max of 8 rows are allowed'><span class='addBtnDis addbtn mr-sm align-span-center cursor-none' onclick='addTextScale();'>+</span></span>");
+          $('[data-toggle="tooltip"]').tooltip();
+        } else {
+          $(".text-scale:last").find('span.addBtnDis').remove();
+          $(".text-scale:last").find('span.delete').before(
+              "<span class='addBtnDis addbtn mr-sm align-span-center' onclick='addTextScale();'>+</span>");
+        }
+
+      }
+      $('#' + scaleCount).find('input:first').focus();
+    }
+
+    function removeTextScale(param) {
+      if ($('.text-scale').length > 2) {
+        $(param).parents(".text-scale").remove();
+        $(".text-scale").parent().removeClass("has-danger").removeClass("has-error");
+        $(".text-scale").parent().find(".help-block").empty();
+        $(".text-scale").parents("form").validator("destroy");
+        $(".text-scale").parents("form").validator();
+        if ($('.text-scale').length > 2) {
+          $(".remBtnDis").removeClass("hide");
+        } else {
+          $(".remBtnDis").addClass("hide");
+        }
+        $("#textScalePositionId").val($('.text-scale').length);
+        if ($('.text-scale').length == 8) {
+          $(".text-scale:last").find('span.addBtnDis').remove();
+          $(".text-scale:last").find('span.delete').before(
+              "<span class='tool-tip' data-toggle='tooltip' data-placement='top' title='Only a max of 8 rows are allowed'><span class='addBtnDis addbtn mr-sm align-span-center cursor-none' onclick='addTextScale();'>+</span></span>");
+          $('[data-toggle="tooltip"]').tooltip();
+        } else {
+          $(".text-scale:last").find('span.addBtnDis').remove();
+          $(".text-scale:last").find('span.delete').before(
+              "<span class='addBtnDis addbtn mr-sm align-span-center' onclick='addTextScale();'>+</span>");
+        }
+      }
+    }
+
+    var choiceCount = $('.text-choice').length;
+
+    function addTextChoice() {
+      choiceCount = choiceCount + 1;
+      var selectionStyle = $('input[name="questionReponseTypeBo.selectionStyle"]:checked').val();
+      var newTextChoice = "<div class='mt-xlg text-choice' id='" + choiceCount + "'>" +
+          "<div class='col-md-3 pl-none'>" +
+          "   <div class='gray-xs-f mb-xs'>Display Text (1 to 100 characters)<span class='requiredStar'>*</span> </div>"
+          +
+          "   <div class='form-group mb-none'>" +
+          "   <input type='text' class='form-control TextChoiceRequired' name='questionResponseSubTypeList["
+          + choiceCount + "].text' id='displayTextChoiceText" + choiceCount
+          + "'  maxlength='100' required>" +
+          "      <div class='help-block with-errors red-txt'></div>" +
+          "   </div>" +
+          "</div>" +
+          "<div class='col-md-3 pl-none'>" +
+          "   <div class='gray-xs-f mb-xs'>Value (1 to 100 characters)<span class='requiredStar'>*</span> </div>"
+          +
+          "   <div class='form-group mb-none'>" +
+          "   <input type='text' class='form-control TextChoiceRequired textChoiceVal' name='questionResponseSubTypeList["
+          + choiceCount + "].value' id='displayTextChoiceValue" + choiceCount
+          + "'  maxlength='100' required onblur='validateForUniqueValue(this,&#34;Text Choice&#34;,function(){});'>"
+          +
+          "      <div class='help-block with-errors red-txt'></div>" +
+          "   </div>" +
+          "</div>" +
+          "<div class='col-md-2 pl-none'>" +
+          "   <div class='gray-xs-f mb-xs'>Mark as exclusive ? <span class='requiredStar'>*</span> </div>"
+          +
+          "   <div class='form-group'>";
+      if (selectionStyle == 'Single') {
+        newTextChoice += "<select name='questionResponseSubTypeList[" + choiceCount
+            + "].exclusive' id='exclusiveId" + choiceCount + "' index=" + choiceCount
+            + " title='select' data-error='Please choose one option' class='selectpicker TextChoiceRequired textChoiceExclusive' disabled onchange='setExclusiveData(this);'>";
+      } else {
+        newTextChoice += "<select name='questionResponseSubTypeList[" + choiceCount
+            + "].exclusive' id='exclusiveId" + choiceCount + "' index=" + choiceCount
+            + " title='select' data-error='Please choose one option' class='selectpicker TextChoiceRequired textChoiceExclusive' required onchange='setExclusiveData(this);'>";
+      }
+      newTextChoice += "<option value='Yes'>Yes</option>" +
+          "<option value='No' >No</option>" +
+          "</select>" +
+          "<div class='help-block with-errors red-txt'></div>" +
+          "</div>" +
+          "</div>";
+      <c:if test='${questionnaireBo.branching}'>
+      newTextChoice += "<div class='col-md-2 pl-none'>" +
+          "   <div class='gray-xs-f mb-xs'>Destination Step  </div>" +
+          "   <div class='form-group'>" +
+          "  <select name='questionResponseSubTypeList[" + choiceCount
+          + "].destinationStepId' id='destinationTextChoiceStepId" + choiceCount
+          + "' title='select' data-error='Please choose one option' class='selectpicker destionationYes'><option value='' disabled selected>Select</option>";
+      <c:forEach items='${destinationStepList}' var='destinationStep'>
+      newTextChoice += " <option value='${destinationStep.stepId}'>Step ${destinationStep.sequenceNo} : ${destinationStep.stepShortTitle}</option>";
+      </c:forEach>
+      newTextChoice += "<option value='0'>Completion Step</option>" +
+          "</select>" +
+          "  <div class='help-block with-errors red-txt'></div>" +
+          " </div>" +
+          "</div>";
+      </c:if>
+      newTextChoice += "<div class='col-md-12 p-none display__flex__'><div class='col-md-10 pl-none'>"
+          +
+          "<div class='gray-xs-f mb-xs'>Description(1 to 150 characters) </div>" +
+          "<div class='form-group'>" +
+          "   <textarea type='text' class='form-control' name='questionResponseSubTypeList["
+          + choiceCount + "].description' id='displayTextChoiceDescription" + choiceCount
+          + "'  maxlength='150'></textarea>" +
+          "</div>" +
+          "</div>" +
+          "<div class='col-md-2 pl-none'>" +
+          "   <span class='addBtnDis addbtn align-span-center' onclick='addTextChoice();'>+</span>"
+          +
+          "	 <span class='delete vertical-align-middle remBtnDis hide pl-md align-span-center' onclick='removeTextChoice(this);'></span>"
+          +
+          "</div></div>" +
+          "</div>";
+      $(".text-choice:last").after(newTextChoice);
+      $('.selectpicker').selectpicker('refresh');
+      $(".text-choice").parent().removeClass("has-danger").removeClass("has-error");
+      $(".text-choice").parent().find(".help-block").empty();
+      $(".text-choice").parents("form").validator("destroy");
+      $(".text-choice").parents("form").validator();
+      if ($('.text-choice').length > 2) {
+        $(".remBtnDis").removeClass("hide");
+      } else {
+        $(".remBtnDis").addClass("hide");
+      }
+      $('#' + choiceCount).find('input:first').focus();
+    }
+
+    function removeTextChoice(param) {
+      if ($('.text-choice').length > 2) {
+        $(param).parents(".text-choice").remove();
+        $(".text-choice").parent().removeClass("has-danger").removeClass("has-error");
+        $(".text-choice").parent().find(".help-block").empty();
+        $(".text-choice").parents("form").validator("destroy");
+        $(".text-choice").parents("form").validator();
+        if ($('.text-choice').length > 2) {
+          $(".remBtnDis").removeClass("hide");
+        } else {
+          $(".remBtnDis").addClass("hide");
+        }
+      }
+    }
+
+    var imageCount = $('.image-choice').length;
+
+    function addImageChoice() {
+      imageCount = imageCount + 1;
+      var newImageChoice = "<div class='image-choice row' id='" + imageCount + "'>" +
+          "	   <div class='col-md-2 pl-none col-smthumb-2'>" +
+          "   <div class='form-group'>" +
+          "      <div class='sm-thumb-btn' onclick='openUploadWindow(this);'>" +
+          "         <div class='thumb-img'><img src='../images/icons/sm-thumb.jpg'/></div>" +
+          "         <div class='textLabelimagePathId" + imageCount + "'>Upload</div>" +
+          "      </div>" +
+          "      <input class='dis-none upload-image ImageChoiceRequired' data-imageId='"
+          + imageCount + "' name='questionResponseSubTypeList[" + imageCount
+          + "].imageFile' id='imageFileId" + imageCount
+          + "' type='file'  accept='.png, .jpg, .jpeg' onchange='readURL(this);' required>" +
+          "		<input type='hidden' name='questionResponseSubTypeList[" + imageCount
+          + "].image' id='imagePathId" + imageCount + "' >" +
+          "      <div class='help-block with-errors red-txt'></div>" +
+          "   </div>" +
+          "</div>" +
+          "<div class='col-md-2 pl-none col-smthumb-2'>" +
+          "   <div class='form-group'>" +
+          "      <div class='sm-thumb-btn' onclick='openUploadWindow(this);'>" +
+          "         <div class='thumb-img'><img src='../images/icons/sm-thumb.jpg'/></div>" +
+          "         <div class='textLabelselectImagePathId" + imageCount + "'>Upload</div>" +
+          "      </div>" +
+          "      <input class='dis-none upload-image ImageChoiceRequired' data-imageId='"
+          + imageCount + "' name='questionResponseSubTypeList[" + imageCount
+          + "].selectImageFile' id='selectImageFileId" + imageCount
+          + "' type='file'  accept='.png, .jpg, .jpeg' onchange='readURL(this);' required>" +
+          "		<input type='hidden' name='questionResponseSubTypeList[" + imageCount
+          + "].selectedImage' id='selectImagePathId" + imageCount + "'>" +
+          "      <div class='help-block with-errors red-txt'></div>" +
+          "   </div>" +
+          "</div>" +
+          "<div class='col-md-2 pl-none'>" +
+          "   <div class='form-group'>" +
+          "      <input type='text' class='form-control ImageChoiceRequired' name='questionResponseSubTypeList["
+          + imageCount + "].text' id='displayImageChoiceText" + imageCount
+          + "' required maxlength='100'>" +
+          "      <div class='help-block with-errors red-txt'></div>" +
+          "   </div>" +
+          "</div>" +
+          "<div class='col-md-2 col-lg-2 pl-none'>" +
+          "   <div class='form-group'>" +
+          "      <input type='text' class='form-control ImageChoiceRequired imageChoiceVal' name='questionResponseSubTypeList["
+          + imageCount + "].value' id='displayImageChoiceValue" + imageCount
+          + "' required maxlength='50' onblur='validateForUniqueValue(this,&#34;Image Choice&#34;,function(){});'>"
+          +
+          "      <div class='help-block with-errors red-txt'></div>" +
+          "   </div>" +
+          "</div>";
+      <c:if test='${questionnaireBo.branching}'>
+      newImageChoice += "<div class='col-md-2 col-lg-2 pl-none'>" +
+          "   <div class='form-group'>" +
+          "      <select name='questionResponseSubTypeList[" + imageCount
+          + "].destinationStepId' id='destinationImageChoiceStepId" + imageCount
+          + "' title='select' data-error='Please choose one option' class='selectpicker'><option value=''>Select</option>";
+      <c:forEach items="${destinationStepList}" var="destinationStep">
+      newImageChoice += "<option value='${destinationStep.stepId}'>Step ${destinationStep.sequenceNo} : ${destinationStep.stepShortTitle}</option>";
+      </c:forEach>
+      newImageChoice += "<option value='0'>Completion Step</option>" +
+          "	     </select>" +
+          "   </div>" +
+          "</div>";
+      </c:if>
+      newImageChoice += "<div class='col-md-2 pl-none  mt__8'>" +
+          "   <span class='addBtnDis addbtn mr-sm align-span-center' onclick='addImageChoice();'>+</span>"
+          +
+          "	  <span class='delete vertical-align-middle remBtnDis hide pl-md align-span-center' onclick='removeImageChoice(this);'></span>"
+          +
+          "</div>" +
+          "</div> ";
+      $(".image-choice:last").after(newImageChoice);
+      $('.selectpicker').selectpicker('refresh');
+      $(".image-choice").parent().removeClass("has-danger").removeClass("has-error");
+      $(".image-choice").parent().find(".help-block").empty();
+      $(".image-choice").parents("form").validator("destroy");
+      $(".image-choice").parents("form").validator();
+
+      if ($('.image-choice').length > 2) {
+        $(".remBtnDis").removeClass("hide");
+      } else {
+        $(".remBtnDis").addClass("hide");
+      }
+      $('#' + imageCount).find('input:first').focus();
+    }
+
+    function removeImageChoice(param) {
+      if ($('.image-choice').length > 2) {
+        $(param).parents(".image-choice").remove();
+        $(".image-choice").parent().addClass("has-danger").addClass("has-error");
+        $(".image-choice").parent().find(".help-block").empty();
+        $(".image-choice").parents("form").validator("destroy");
+        $(".image-choice").parents("form").validator();
+        if ($('.image-choice').length > 2) {
+          $(".remBtnDis").removeClass("hide");
+        } else {
+          $(".remBtnDis").addClass("hide");
+        }
+      }
+    }
+
+    function validateQuestionShortTitle(item, callback) {
+      var shortTitle = $("#stepShortTitle").val();
+      var questionnaireId = $("#questionnairesId").val();
+      var stepType = "Question";
+      var thisAttr = $("#stepShortTitle");
+      var existedKey = $("#preShortTitleId").val();
+      var questionnaireShortTitle = $("#questionnaireShortId").val();
+      if (shortTitle != null && shortTitle != '' && typeof shortTitle != 'undefined') {
+        $(thisAttr).parent().removeClass("has-danger").removeClass("has-error");
+        $(thisAttr).parent().find(".help-block").empty();
+        if (existedKey != shortTitle) {
+          $.ajax({
+            url: "/studybuilder/adminStudies/validateQuestionnaireStepKey.do?_S=${param._S}",
+            type: "POST",
+            datatype: "json",
+            data: {
+              shortTitle: shortTitle,
+              questionnaireId: questionnaireId,
+              stepType: stepType,
+              questionnaireShortTitle: questionnaireShortTitle
+            },
+            beforeSend: function (xhr, settings) {
+              xhr.setRequestHeader("X-CSRF-TOKEN", "${_csrf.token}");
+            },
+            success: function getResponse(data) {
+              var message = data.message;
+
+              if ('SUCCESS' != message) {
+                $(thisAttr).validator('validate');
+                $(thisAttr).parent().removeClass("has-danger").removeClass("has-error");
+                $(thisAttr).parent().find(".help-block").empty();
+                callback(true);
+              } else {
+                $(thisAttr).val('');
+                $(thisAttr).parent().addClass("has-danger").addClass("has-error");
+                $(thisAttr).parent().find(".help-block").empty();
+                $(thisAttr).parent().find(".help-block").append(
+                    "<ul class='list-unstyled'><li>'" + shortTitle
+                    + "' has already been used in the past.</li></ul>");
+                callback(false);
+              }
+            },
+            global: false
+          });
+        } else {
+          callback(true);
+          $(thisAttr).parent().removeClass("has-danger").removeClass("has-error");
+          $(thisAttr).parent().find(".help-block").html("");
+        }
+      } else {
+        callback(false);
+      }
+    }
+
+    function validateStatsShorTitle(event, callback) {
+      var short_title = $("#statShortNameId").val();
+      var prev_short_title = $("#prevStatShortNameId").val();
+      if (short_title != null && short_title != '' && typeof short_title != 'undefined') {
+        $("#statShortNameId").parent().removeClass("has-danger").removeClass("has-error");
+        $("#statShortNameId").parent().find(".help-block").empty();
+        if (prev_short_title != short_title) {
+          $.ajax({
+            url: "/studybuilder/adminStudies/validateStatsShortName.do?_S=${param._S}",
+            type: "POST",
+            datatype: "json",
+            data: {
+              shortTitle: short_title
+            },
+            beforeSend: function (xhr, settings) {
+              xhr.setRequestHeader("X-CSRF-TOKEN", "${_csrf.token}");
+            },
+            success: function getResponse(data) {
+              var message = data.message;
+
+              if ('SUCCESS' != message) {
+                $("#statShortNameId").validator('validate');
+                $("#statShortNameId").parent().removeClass("has-danger").removeClass("has-error");
+                $("#statShortNameId").parent().find(".help-block").empty();
+                if (callback)
+                  callback(true);
+              } else {
+                $("#statShortNameId").val('');
+                $("#statShortNameId").parent().addClass("has-danger").addClass("has-error");
+                $("#statShortNameId").parent().find(".help-block").empty();
+                $("#statShortNameId").parent().find(".help-block").append(
+                    "<ul class='list-unstyled'><li>'" + short_title
+                    + "' has already been used in the past.</li></ul>");
+                if (callback)
+                  callback(false);
+
+              }
+            },
+            global: false
+          });
+        } else {
+          if (callback)
+            callback(true);
+          $("#statShortNameId").parent().removeClass("has-danger").removeClass("has-error");
+          $("#statShortNameId").parent().find(".help-block").empty();
+
+        }
+      } else {
+        if (callback)
+          callback(true);
+
+      }
+    }
+
+    function validateFractionDigits(item) {
+      var value = $(item).val();
+      var minValue = $("#continuesScaleMinValueId").val();
+      var maxValue = $("#continuesScaleMaxValueId").val();
+      var defaultValue = $("#continuesScaleDefaultValueId").val();
+      $(item).parent().addClass("has-danger").addClass("has-error");
+      $(item).parent().find(".help-block").empty();
+      if (value != '') {
+        if (minValue != '' && maxValue != '') {
+          var maxFracDigits = 0;
+          var minTemp = 0;
+          var maxTemp = 0;
+          //max value check
+          if (parseFloat(maxValue) > 0 && parseFloat(maxValue) <= 1) {
+            maxTemp = 4;
+          } else if (parseFloat(maxValue) > 1 && parseFloat(maxValue) <= 10) {
+            maxTemp = 3;
+          } else if (parseFloat(maxValue) > 10 && parseFloat(maxValue) <= 100) {
+            maxTemp = 2;
+          } else if (parseFloat(maxValue) > 100 && parseFloat(maxValue) <= 1000) {
+            maxTemp = 1;
+          } else if (parseFloat(maxValue) > 1000 && parseFloat(maxValue) <= 10000) {
+            maxTemp = 0;
+          }
+
+          //min value check
+          if (parseFloat(minValue) >= -10000 && parseFloat(minValue) < -1000) {
+            minTemp = 0;
+          } else if (parseFloat(minValue) >= -1000 && parseFloat(minValue) < -100) {
+            minTemp = 1;
+          } else if (parseFloat(minValue) >= -100 && parseFloat(minValue) < -10) {
+            minTemp = 2;
+          } else if (parseFloat(minValue) >= -10 && parseFloat(minValue) < -1) {
+            minTemp = 3;
+          } else if (parseFloat(minValue) >= -1) {
+            minTemp = 4;
+          }
+          maxFracDigits = (parseInt(maxTemp) > parseInt(minTemp)) ? parseInt(minTemp) : parseInt(
+              maxTemp);
+
+          if (parseInt(value) <= parseInt(maxFracDigits)) {
+
+            $(item).validator('validate');
+            $(item).parent().removeClass("has-danger").removeClass("has-error");
+            $(item).parent().find(".help-block").empty();
+
+            $("#continuesScaleMinValueId").val(parseFloat(minValue).toFixed(value));
+            $("#continuesScaleMaxValueId").val(parseFloat(maxValue).toFixed(value));
+            if (defaultValue != '') {
+              $("#continuesScaleDefaultValueId").val(parseFloat(defaultValue).toFixed(value));
+            }
+          } else {
+            $(item).val('');
+            $(item).parent().addClass("has-danger").addClass("has-error");
+            $(item).parent().find(".help-block").empty();
+            $(item).parent().find(".help-block").append(
+                "<ul class='list-unstyled'><li>Please enter a value in the range (0,x).</li></ul>");
+          }
+        } else {
+          $(item).val('');
+          $(item).parent().addClass("has-danger").addClass("has-error");
+          $(item).parent().find(".help-block").empty();
+          $(item).parent().find(".help-block").append(
+              "<ul class='list-unstyled'><li>Please enter an minimum and maximum values </li></ul>");
+        }
+      }
+    }
+
+    function validateForUniqueValue(item, responsetype, callback) {
+      var id = $(item).attr("id");
+
+      var isValid = true;
+      if (responsetype == 'Text Scale') {
+        var valueArray = new Array();
+        $('.text-scale').each(function () {
+          var id = $(this).attr("id");
+          var diaplay_value = $("#displayTextSclValue" + id).val();
+          $("#displayTextSclValue" + id).parent().removeClass("has-danger").removeClass(
+              "has-error");
+          $("#displayTextSclValue" + id).parent().find(".help-block").empty();
+          if (diaplay_value != '') {
+            if (valueArray.indexOf(diaplay_value.toLowerCase()) != -1) {
+              isValid = false;
+              $("#displayTextSclValue" + id).val('');
+              $("#displayTextSclValue" + id).parent().addClass("has-danger").addClass("has-error");
+              $("#displayTextSclValue" + id).parent().find(".help-block").empty();
+              $("#displayTextSclValue" + id).parent().find(".help-block").append(
+                  "<ul class='list-unstyled'><li>The value should be unique </li></ul>");
+            } else
+              valueArray.push(diaplay_value.toLowerCase());
+          } else {
+
+          }
+
+        });
+        callback(isValid);
+      } else if (responsetype == "Value Picker") {
+        var valueArray = new Array();
+        $('.value-picker').each(function () {
+          var id = $(this).attr("id");
+          var diaplay_value = $("#displayValPickValue" + id).val();
+          $("#displayValPickValue" + id).parent().removeClass("has-danger").removeClass(
+              "has-error");
+          $("#displayValPickValue" + id).parent().find(".help-block").empty();
+          if (diaplay_value != '') {
+            if (valueArray.indexOf(diaplay_value.toLowerCase()) != -1) {
+              isValid = false;
+              $("#displayValPickValue" + id).val('');
+              $("#displayValPickValue" + id).parent().addClass("has-danger").addClass("has-error");
+              $("#displayValPickValue" + id).parent().find(".help-block").empty();
+              $("#displayValPickValue" + id).parent().find(".help-block").append(
+                  "<ul class='list-unstyled'><li>The value should be unique </li></ul>");
+            } else
+              valueArray.push(diaplay_value.toLowerCase());
+          } else {
+
+          }
+
+        });
+        callback(isValid);
+      } else if (responsetype == "Image Choice") {
+        var valueArray = new Array();
+        $('.image-choice').each(function () {
+          var id = $(this).attr("id");
+          var diaplay_value = $("#displayImageChoiceValue" + id).val();
+          $("#displayImageChoiceValue" + id).parent().removeClass("has-danger").removeClass(
+              "has-error");
+          $("#displayImageChoiceValue" + id).parent().find(".help-block").empty();
+          if (diaplay_value != '') {
+            if (valueArray.indexOf(diaplay_value.toLowerCase()) != -1) {
+              isValid = false;
+              $("#displayImageChoiceValue" + id).val('');
+              $("#displayImageChoiceValue" + id).parent().addClass("has-danger").addClass(
+                  "has-error");
+              $("#displayImageChoiceValue" + id).parent().find(".help-block").empty();
+              $("#displayImageChoiceValue" + id).parent().find(".help-block").append(
+                  "<ul class='list-unstyled'><li>The value should be unique </li></ul>");
+            } else
+              valueArray.push(diaplay_value.toLowerCase());
+          } else {
+
+          }
+
+        });
+        callback(isValid);
+      } else if (responsetype == "Text Choice") {
+        var valueArray = new Array();
+        $('.text-choice').each(function () {
+          var id = $(this).attr("id");
+          var diaplay_value = $("#displayTextChoiceValue" + id).val();
+          $("#displayTextChoiceValue" + id).parent().removeClass("has-danger").removeClass(
+              "has-error");
+          $("#displayTextChoiceValue" + id).parent().find(".help-block").empty();
+          if (diaplay_value != '') {
+            if (valueArray.indexOf(diaplay_value.toLowerCase()) != -1) {
+              isValid = false;
+              $("#displayTextChoiceValue" + id).val('');
+              $("#displayTextChoiceValue" + id).parent().addClass("has-danger").addClass(
+                  "has-error");
+              $("#displayTextChoiceValue" + id).parent().find(".help-block").empty();
+              $("#displayTextChoiceValue" + id).parent().find(".help-block").append(
+                  "<ul class='list-unstyled'><li>The value should be unique </li></ul>");
+            } else
+              valueArray.push(diaplay_value.toLowerCase());
+          } else {
+
+          }
+
+        });
+        callback(isValid);
+      }
+    }
+
+    function addFunctions(item) {
+      var index = $(item).attr('index');
+
+      var value = $(item).val();
+      var isValid = true;
+      $("#inputTypeErrorValueId" + index).hide();
+      var parent_sequence_no = $("#parentSequenceNoId" + index).val();
+      var parent_input = $("#rootId" + parent_sequence_no).find('select').val();
+      deleteChildElements(index, "child");
+
+      var total = maxSquenceValue();
+      var v = total;
+      $(item).find('input').addClass("add_var_hide");
+
+      $("#constantValId" + index).addClass('add_var_hide');
+      $("#constantValId" + index).attr('required', false);
+      $("#constantValId" + index).parent().addClass('add_var_hide');
+
+      var rowCount = parseInt($('.numeric__section').length);
+      $("#inputSubTypeValueId" + index).val('');
+      if (value === "F") {
+        count = parseInt(count) + 1;
+        var addFunction = "<div class='numeric__section' id='rootId" + index + "'>" +
+            "<div class='numeric__define gray__t'>" +
+            "   <span>V" + index + "</span>" +
+            "   <div class='form-group sm-selection'>" +
+            "      <select class='selectpicker conditionalBranchingRequired' name='questionConditionBranchBoList["
+            + rowCount + "].inputTypeValue' id='inputTypeValueId" + rowCount + "' index='" + index
+            + "' count='" + rowCount + "' onchange='selectFunction(this);' required>" +
+            "         <option value=''  selected>Select</option>";
+        if (parent_input == '&&' || parent_input == '||') {
+          addFunction += "         <option value='>' >&gt;</option>" +
+              "         <option value='<' >&lt;</option>" +
+              "         <option value='=' >&equals;</option>" +
+              "		 <option value='!='>!=</option>";
+        } else {
+          addFunction += "         <option value='+' >+</option>" +
+              "         <option value='&#45;' >&#45;</option>" +
+              "         <option value='&#42;' >&#42;</option>" +
+              "         <option value='/' >/</option>" +
+              "         <option value='%' >%</option>";
+        }
+        addFunction += "      </select>" +
+            "      <div class='help-block with-errors red-txt'></div>" +
+            "   </div>" +
+            "<input type='hidden' id='previousInputTypeValueId" + rowCount + "'  />" +
+            "</div>" +
+            "<div class='numeric__define_input gray__t' style='margin-left:4px;'>" +
+            "   <div class='numeric__row display__flex__base-webkit' id='" + (parseInt(v) + 1)
+            + "'>" +
+            "      <span>V" + (parseInt(v) + 1) + " =</span>" +
+            "      <div class='form-group sm-selection' style=''>" +
+            "         <select class='selectpicker conditionalBranchingRequired' name='questionConditionBranchBoList["
+            + rowCount + "].questionConditionBranchBos[0].inputType' id='inputTypeId" + (parseInt(v)
+                + 1) + "' index='" + (parseInt(v) + 1)
+            + "' count='0' onchange='addFunctions(this);' required>" +
+            "            <option value=''  selected>Select</option>" +
+            "            <option value='C'>Constant</option>" +
+            "            <option value='F'>Function</option>" +
+            "            <option value='RDE'>Response Data Element (x)</option>" +
+            "         </select>" +
+            "		 <div class='mt-sm black-xs-f italic-txt red-txt' id='inputTypeErrorValueId"
+            + (parseInt(v) + 1) + "' style='display: none;'></div>" +
+            "		 <div class='help-block with-errors red-txt'></div>" +
+            "         <input type='hidden' name='questionConditionBranchBoList[" + rowCount
+            + "].questionConditionBranchBos[0].inputTypeValue' id='inputSubTypeValueId" + (parseInt(
+                v) + 1) + "'>" +
+            "         <input type='hidden' name='questionConditionBranchBoList[" + rowCount
+            + "].questionConditionBranchBos[0].sequenceNo' id='sequenceNoId" + (parseInt(v) + 1)
+            + "'  value='" + (parseInt(v) + 1) + "'>" +
+            "         <input type='hidden' name='questionConditionBranchBoList[" + rowCount
+            + "].questionConditionBranchBos[0].parentSequenceNo'  id='parentSequenceNoId"
+            + (parseInt(v) + 1) + "' value='" + parseInt(index) + "'>" +
+            "      </div>" +
+            "         <div class='form-group sm__in add_var_hide'>" +
+            "            <input type='text' id='constantValId" + (parseInt(v) + 1) + "' index='"
+            + (parseInt(v) + 1)
+            + "' class='constant form-control add_var_hide' value='' onkeypress='return isNumberKey(event)'/>"
+            +
+            "			<div class='help-block with-errors red-txt'></div>" +
+            "         </div>" +
+            "		 <div class='form-group sm__in'>" +
+            "           <span class='delete vertical-align-middle remBtnDis pl-md align-span-center hide' index='"
+            + (parseInt(v) + 1) + "' count='0' onclick=removeVaraiable(this);></span>" +
+            "         </div>" +
+            "   </div>" +
+            "   <div class='numeric__row display__flex__base-webkit' id='" + (parseInt(v) + 2)
+            + "'>" +
+            "      <span>V" + (parseInt(v) + 2) + " =</span>" +
+            "      <div class='form-group sm-selection' style=''>" +
+            "         <select class='selectpicker conditionalBranchingRequired' name='questionConditionBranchBoList["
+            + rowCount + "].questionConditionBranchBos[1].inputType' id='inputTypeId" + (parseInt(v)
+                + 2) + "' index='" + (parseInt(v) + 2)
+            + "' count='1' onchange='addFunctions(this);' required>" +
+            "            <option value=''  selected>Select</option>" +
+            "            <option value='C'>Constant</option>" +
+            "            <option value='F'>Function</option>" +
+            "            <option value='RDE'>Response Data Element (x)</option>" +
+            "         </select>" +
+            "		 <div class='mt-sm black-xs-f italic-txt red-txt' id='inputTypeErrorValueId"
+            + (parseInt(v) + 2) + "' style='display: none;'></div>" +
+            "	     <div class='help-block with-errors red-txt'></div>" +
+            "         <input type='hidden' name='questionConditionBranchBoList[" + rowCount
+            + "].questionConditionBranchBos[1].inputTypeValue' id='inputSubTypeValueId" + (parseInt(
+                v) + 2) + "' >" +
+            "         <input type='hidden' name='questionConditionBranchBoList[" + rowCount
+            + "].questionConditionBranchBos[1].sequenceNo' id='sequenceNoId" + (parseInt(v) + 2)
+            + "' value='" + (parseInt(v) + 2) + "'>" +
+            "         <input type='hidden' name='questionConditionBranchBoList[" + rowCount
+            + "].questionConditionBranchBos[1].parentSequenceNo'id='parentSequenceNoId" + (parseInt(
+                v) + 2) + "' value='" + parseInt(index) + "' >" +
+            "         <div class='add_varible add_var_hide' parentIndex=" + parseInt(index)
+            + " index='" + rowCount
+            + "' onclick='addVariable(this);' id='addVaraiable1'>+ Add Variable</div>" +
+            "      </div>" +
+            "         <div class='form-group sm__in add_var_hide'>" +
+            "            <input type='text' id='constantValId" + (parseInt(v) + 2) + "' index='"
+            + (parseInt(v) + 2)
+            + "' class='constant form-control add_var_hide' value='' onkeypress='return isNumberKey(event)'/>"
+            +
+            "			<div class='help-block with-errors red-txt'></div>" +
+            "         </div>" +
+            "		 <div class='form-group sm__in'>" +
+            "           <span class='delete vertical-align-middle remBtnDis pl-md align-span-center hide' index='"
+            + (parseInt(v) + 2) + "' count='1' onclick=removeVaraiable(this);></span>" +
+            "         </div>" +
+            "   </div>" +
+            "</div>" +
+            "</div>" +
+            "<div class='clearfix'></div>";
+        $(".numeric__section:last").after(addFunction);
+        $('.selectpicker').selectpicker('refresh');
+      } else if (value === "C") {
+        $("#constantValId" + index).removeClass('add_var_hide');
+        $("#constantValId" + index).val('');
+        $("#constantValId" + index).attr('required', true);
+        $("#constantValId" + index).parent().removeClass('add_var_hide');
+
+      } else if (value === "RDE") {
+        var id = $(item).attr('id');
+        var noofrows = parseInt($('.numeric__section').length);
+        if (noofrows > 1) {
+          var fun_count = parseInt(count) + 1;
+          $('.numeric__section').each(function (i) {
+            var index = $("#inputTypeValueId" + i).attr('index');
+            var rootId = "rootId" + index;
+            if (parent_input != "+" && parent_input != "*") {
+              $('#' + rootId + ' .numeric__row').each(function (j) {
+                var id = $(this).attr("id");
+                var rde_value = $("#inputSubTypeValueId" + id).val();
+                if (rde_value != '' && rde_value == 'x') {
+                  isValid = false;
+                }
+              });
+            } else {
+              if (parent_sequence_no != index) {
+                $('#' + rootId + ' .numeric__row').each(function (j) {
+                  var id = $(this).attr("id");
+                  var rde_value = $("#inputSubTypeValueId" + id).val();
+                  if (rde_value != '' && rde_value == 'x') {
+                    isValid = false;
+                  }
+                });
+              }
+            }
+          });
+        } else {
+          if (parent_sequence_no == 1) {
+            $('#rootId1 .numeric__row').each(function (j) {
+              var id = $(this).attr("id");
+              var val = $("#inputSubTypeValueId" + id).val();
+              if (val != '' && val == 'x') {
+                isValid = false;
+              }
+            });
+          }
+        }
+        $("#inputSubTypeValueId" + index).val('x');
+        if (!isValid) {
+
+          $("#inputTypeErrorValueId" + index).show();
+          $("#inputTypeErrorValueId" + index).html('RDE (x) should be used only once.');
+        } else {
+          $(".numeric__row").each(function (j) {
+            var id = $(this).attr("id");
+            $("#inputTypeErrorValueId" + id).hide();
+          });
+        }
+      }
+      $(".numeric__loop").parent().removeClass("has-danger").removeClass("has-error");
+      $(".numeric__loop").parent().find(".help-block").empty();
+      $(".numeric__loop").parents("form").validator("destroy");
+      $(".numeric__loop").parents("form").validator();
+      $('.constant').change(function () {
+        var index = $(this).attr('index');
+        var value = $(this).val();
+        $("#inputSubTypeValueId" + index).val(value);
+        createFormula();
+      });
+      createFormula();
+    }
+
+    function selectFunction(item) {
+      var index = $(item).attr('index');
+      var count = parseInt($(item).attr('count'));
+      var value = $(item).val();
+      $("#rootId" + index + " .numeric__row .remBtnDis").addClass("hide");
+      var previousInputTypeValue = $("#previousInputTypeValueId" + count).val();
+
+      if (typeof previousInputTypeValue != 'undefined' && previousInputTypeValue != null
+          && previousInputTypeValue != '') {
+        if (previousInputTypeValue == "+" || previousInputTypeValue == "*") {
+          bootbox.confirm({
+            closeButton: false,
+            message: 'This action will reset the inputs for this function in the right side column. Are you sure you wish to proceed?',
+            buttons: {
+              'cancel': {
+                label: 'Cancel',
+              },
+              'confirm': {
+                label: 'OK',
+              },
+            },
+            callback: function (result) {
+              if (result) {
+                $("#inputSubTypeValueId" + index).val(value);
+                deleteChildElements(index, "parent");
+                $('#rootId' + index + ' .numeric__row').each(function (j) {
+                  var id = $(this).attr("id");
+                  $("#inputTypeId" + id).val("");
+                  $("#inputSubTypeValueId" + id).val("");
+                  $("#constantValId" + id).val('');
+                  $("#constantValId" + id).attr('required', false);
+                  $("#constantValId" + id).addClass('add_var_hide');
+                  $("#constantValId" + id).parent().addClass('add_var_hide');
+                  $('.selectpicker').selectpicker('refresh');
+                  $("#inputTypeErrorValueId" + id).hide();
+                  if (j > 1) {
+                    $("#" + id).remove();
+                  }
+                });
+                $("#previousInputTypeValueId" + count).val(value);
+                var lastSeqenceNO = parseInt(
+                    $("#rootId" + index + " .numeric__row").last().find('select').attr("count"));
+                if (value == '+' || value == '*') {
+                  $("#rootId" + index + " .numeric__row").last().removeClass(
+                      'display__flex__base-webkit').addClass('display__flex__base');
+                  $("#rootId" + index + " .numeric__row #addVaraiable" + lastSeqenceNO).removeClass(
+                      'add_var_hide');
+                } else {
+                  $("#rootId" + index + " .numeric__row #addVaraiable" + lastSeqenceNO).addClass(
+                      'add_var_hide');
+                  $("#rootId" + index + " .numeric__row").last().removeClass(
+                      'display__flex__base').addClass('display__flex__base-webkit');
+                }
+                createFormula();
+              } else {
+                $(item).val(previousInputTypeValue);
+                $('.selectpicker').selectpicker('refresh');
+              }
+            }
+          });
+
+        } else {
+          $("#inputSubTypeValueId" + index).val(value);
+          $("#previousInputTypeValueId" + count).val(value);
+          var lastSeqenceNO = parseInt(
+              $("#rootId" + index + " .numeric__row").last().find('select').attr("count"));
+          if (value == '+' || value == '*') {
+            $("#rootId" + index + " .numeric__row #addVaraiable" + lastSeqenceNO).removeClass(
+                'add_var_hide');
+            $("#rootId" + index + " .numeric__row").last().removeClass(
+                'display__flex__base-webkit').addClass('display__flex__base');
+            $('#rootId' + index + ' .numeric__row').each(function (j) {
+              var id = $(this).attr("id");
+              if ($("#inputTypeErrorValueId" + id).is(':visible')) {
+                $("#inputTypeId" + id).val("");
+                $("#inputSubTypeValueId" + id).val("");
+                $('.selectpicker').selectpicker('refresh');
+                $("#inputTypeErrorValueId" + id).hide();
+              }
+            });
+
+          } else {
+            $("#rootId" + index + " .numeric__row #addVaraiable" + lastSeqenceNO).addClass(
+                'add_var_hide');
+            $("#rootId" + index + " .numeric__row").last().removeClass(
+                'display__flex__base').addClass('display__flex__base-webkit');
+          }
+          createFormula();
+        }
+      } else {
+        $("#inputSubTypeValueId" + index).val(value);
+        $("#previousInputTypeValueId" + count).val(value);
+        var lastSeqenceNO = parseInt(
+            $("#rootId" + index + " .numeric__row").last().find('select').attr("count"));
+        if (value == '+' || value == '*') {
+          $("#rootId" + index + " .numeric__row #addVaraiable" + lastSeqenceNO).removeClass(
+              'add_var_hide');
+          $("#rootId" + index + " .numeric__row").last().removeClass(
+              'display__flex__base-webkit').addClass('display__flex__base');
+          var id = $(this).attr("id");
+          $('#rootId' + index + ' .numeric__row').each(function (j) {
+            if ($("#inputTypeErrorValueId" + id).is(':visible')) {
+              $("#inputTypeId" + id).val("");
+              $("#inputSubTypeValueId" + id).val("");
+              $('.selectpicker').selectpicker('refresh');
+              $("#inputTypeErrorValueId" + id).hide();
+            }
+          });
+        } else {
+          $("#rootId" + index + " .numeric__row #addVaraiable" + lastSeqenceNO).addClass(
+              'add_var_hide');
+          $("#rootId" + index + " .numeric__row").last().removeClass(
+              'display__flex__base').addClass('display__flex__base-webkit');
+        }
+        createFormula();
+      }
+
+    }
+
+    function addVariable(item) {
+      var index = parseInt($(item).attr('index'));
+      var rowCount = parseInt($('.numeric__section').length);
+      var total = maxSquenceValue();
+      var parent_index = parseInt($(item).attr('parentIndex'));
+      var count = parseInt(
+          $("#rootId" + parent_index + " .numeric__row").last().find('select').attr("count"));
+      var v = total + 1;
+      count = count + 1;
+      var addVar = "<div class='numeric__row display__flex__base' id='" + v + "'>" +
+          "   <span>V" + v + " =</span>" +
+          "   <div class='form-group sm-selection' style=''>" +
+          "      <select class='selectpicker conditionalBranchingRequired' name='questionConditionBranchBoList["
+          + index + "].questionConditionBranchBos[" + count + "].inputType' id='inputTypeId"
+          + (parseInt(v)) + "' index='" + (parseInt(v)) + "' count='" + count
+          + "' onchange='addFunctions(this);' required>" +
+          "         <option value='' selected>Select</option>" +
+          "         <option value='C'>Constant</option>" +
+          "         <option value='F'>Function</option>" +
+          "         <option value='RDE'>Response Data Element (x)</option>" +
+          "      </select>" +
+          "		<div class='mt-sm black-xs-f italic-txt red-txt' id='inputTypeErrorValueId" + v
+          + "' style='display: none;'></div>" +
+          "      <div class='help-block with-errors red-txt'></div>" +
+          "      <input type='hidden' name='questionConditionBranchBoList[" + index
+          + "].questionConditionBranchBos[" + count + "].inputTypeValue' id='inputSubTypeValueId"
+          + (parseInt(v)) + "' >" +
+          " 	   <input type='hidden' name='questionConditionBranchBoList[" + index
+          + "].questionConditionBranchBos[" + count + "].sequenceNo' id='sequenceNoId" + (parseInt(
+              v)) + "' value='" + (parseInt(v)) + "'>" +
+          "	   <input type='hidden' name='questionConditionBranchBoList[" + index
+          + "].questionConditionBranchBos[" + count + "].parentSequenceNo' id='parentSequenceNoId"
+          + (parseInt(v)) + "' value='" + parseInt(parent_index) + "'>" +
+          "     <div class='add_varible' parentIndex=" + parseInt(parent_index) + " index='" + index
+          + "' onclick='addVariable(this);' id='addVaraiable" + count + "'>+ Add Variable</div> " +
+          "   </div>" +
+          "   <div class='form-group sm__in add_var_hide'>" +
+          "      <input type='text' id='constantValId" + v + "' index='" + v
+          + "' class='constant form-control add_var_hide' onkeypress='return isNumberKey(event)'/>"
+          +
+          "   </div>" +
+          "   <div class='form-group sm__in'>" +
+          "           <span class='delete vertical-align-middle remBtnDis pl-md align-span-center' index='"
+          + (parseInt(v)) + "' count='" + count + "' onclick=removeVaraiable(this);></span>" +
+          "   </div>" +
+          "</div>";
+      $(item).parents(".numeric__row").after(addVar);
+      $(item).addClass('add_var_hide');
+      $('.selectpicker').selectpicker('refresh');
+      $(".numeric__loop").parent().removeClass("has-danger").removeClass("has-error");
+      $(".numeric__loop").parent().find(".help-block").empty();
+      $(".numeric__loop").parents("form").validator("destroy");
+      $(".numeric__loop").parents("form").validator();
+      if ($("#rootId" + parent_index + " .numeric__row").length > 2) {
+        $("#rootId" + parent_index + " .numeric__row .remBtnDis").removeClass("hide");
+        $("#rootId" + parent_index + " .numeric__row").removeClass(
+            'display__flex__base-webkit').addClass('display__flex__base');
+      } else {
+        $("#rootId" + parent_index + " .numeric__row .remBtnDis").addClass("hide");
+        $("#rootId" + parent_index + " .numeric__row").last().removeClass(
+            'display__flex__base').addClass('display__flex__base-webkit');
+      }
+      createFormula();
+    }
+
+    function removeVaraiable(item) {
+      var index = $(item).attr('index');
+      var count = parseInt($(item).attr('count'));
+      var parent_sequence_no = $("#parentSequenceNoId" + index).val();
+      var siblingCount = $("#rootId" + parent_sequence_no + " .numeric__row").length;
+      var value = $("#inputTypeId" + index).val();
+      if (siblingCount > 2) {
+        if (value == "F") {
+          deleteChildElements(index, "child");
+        }
+        $("#" + index).remove();
+        var lastSeqenceNO = parseInt(
+            $("#rootId" + parent_sequence_no + " .numeric__row").last().find('select').attr(
+                "count"));
+
+        $("#rootId" + parent_sequence_no + " .numeric__row #addVaraiable"
+            + lastSeqenceNO).removeClass('add_var_hide');
+        createFormula();
+      }
+      if ($("#rootId" + parent_sequence_no + " .numeric__row").length > 2) {
+        $("#rootId" + parent_sequence_no + " .numeric__row .remBtnDis").removeClass("hide");
+        $("#rootId" + parent_sequence_no + " .numeric__row").removeClass(
+            'display__flex__base-webkit').addClass('display__flex__base');
+      } else {
+        $("#rootId" + parent_sequence_no + " .numeric__row .remBtnDis").addClass("hide");
+        $("#rootId" + parent_sequence_no + " .numeric__row").removeClass(
+            'display__flex__base').addClass('display__flex__base-webkit');
+      }
+    }
+
+    function validateSingleResponseDataElement() {
+      var responseDataElementArray = new Array();
+      if ($("#formulaBasedLogicId").is(":checked")) {
+        var isSingle = true;
+        var noofrows = parseInt($('.numeric__section').length);
+        $('.numeric__section').each(function (i) {
+          var index = $("#inputTypeValueId" + i).attr('index');
+          var rootId = "rootId" + index;
+          var parent_input = $("#inputTypeValueId" + i).val();
+          var parent_sequence_no = $("#parentSequenceNoId" + index).val();
+          $('#' + rootId + ' .numeric__row').each(function (j) {
+            var id = $(this).attr("id");
+            if ($("#inputTypeErrorValueId" + id).is(':visible')) {
+              isSingle = false;
+            }
+          });
+          if (!isSingle) {
+            $('#alertMsg').show();
+            $("#alertMsg").removeClass('s-box').addClass('e-box').html(
+                "RDE (x) should be used only once.");
+            setTimeout(hideDisplayMessage, 3000);
+          }
+        });
+        return isSingle;
+      } else {
+        return true;
+      }
+    }
+
+    function validateResponseDataElement() {
+      var responseDataElementArray = new Array();
+      if ($("#formulaBasedLogicId").is(":checked")) {
+        $('.numeric__row').each(function (j) {
+          var id = $(this).attr("id");
+          var rde_value = $("#inputSubTypeValueId" + id).val();
+          responseDataElementArray.push(rde_value);
+        });
+        if (responseDataElementArray.indexOf("x") != -1) {
+          return true;
+        } else {
+          $('#alertMsg').show();
+          $("#alertMsg").removeClass('s-box').addClass('e-box').html(
+              "Please add atleast one response data element in conditional formula.");
+          setTimeout(hideDisplayMessage, 3000);
+          return false;
+        }
+      } else {
+        return true;
+      }
+    }
+
+    function deleteChildElements(index, type) {
+      var rootId = "rootId" + index;
+      $('#' + rootId + ' .numeric__row').each(function (j) {
+        var id = $(this).attr("id");
+        var input_type = $("#inputTypeId" + id).val();
+        if (input_type == 'F') {
+          deleteChildElements(id, type);
+          $("#rootId" + id).remove();
+        }
+      });
+      if (type == "child") {
+        $("#rootId" + index).remove();
+      }
+    }
+
+    var f = "";
+
+    function makeAFormula(index, isRecursive) {
+      var rootId = "rootId" + index;
+      var root_value = $("#rootId" + index).find('select').val();
+      if (root_value == null) {
+        root_value = "";
+      }
+      var subroot_length = $('#' + rootId + ' .numeric__row').length - 1;
+      if (subroot_length > 0) {
+        $('#' + rootId + ' .numeric__row').each(function (j) {
+          var id = $(this).attr("id");
+          var input_type_value = $("#inputSubTypeValueId" + id).val();
+          var input_type = $("#inputTypeId" + id).val();
+          if (input_type != 'F') {
+            if (!isRecursive) {
+              if (j == 0) {
+                f += input_type_value + root_value;
+              } else if (j == subroot_length) {
+                f += input_type_value;
+              } else {
+                f += input_type_value + root_value;
+              }
+              isRecursive = false;
+            }
+          } else {
+            if (j == 0) {
+              f += validateFunction(makeFunction(id)) + root_value;
+            } else if (j == subroot_length) {
+              f += validateFunction(makeFunction(id));
+            } else {
+              f += validateFunction(makeFunction(id)) + root_value;
+            }
+          }
+        });
+      } else {
+        f = $("#inputSubTypeValueId" + index).val();
+      }
+      return f;
+    }
+
+    function makeFunction(index) {
+      var i = ""
+      var rootId = "rootId" + index;
+      var subroot_length = $('#' + rootId + ' .numeric__row').length - 1;
+      $('#' + rootId + ' .numeric__row').each(function (j) {
+        var root_value = $("#rootId" + index).find('select').val();
+        if (root_value == null) {
+          root_value = "";
+        }
+        var id = $(this).attr("id");
+        var input_type_value = $("#inputSubTypeValueId" + id).val();
+        var input_type = $("#inputTypeId" + id).val();
+        if (input_type != 'F') {
+          if (j == 0) {
+            i += "(" + input_type_value + root_value;
+          } else if (j == subroot_length) {
+            i += input_type_value + ")";
+          } else {
+            i += input_type_value + root_value;
+          }
+        } else {
+          var k = "";
+          if (j == 0) {
+            k = validateFunction(makeFunction(id)) + root_value;
+          } else if (j == subroot_length) {
+            k = validateFunction(makeFunction(id));
+          } else {
+            k = validateFunction(makeFunction(id)) + root_value;
+          }
+          i += k;
+        }
+      });
+      return i;
+    }
+
+    function createFormula() {
+      var mf = $("#inputTypeValueId0").val();
+      var formula = "-NA-";
+      if (mf == '==') {
+        mf = "=";
+      }
+      f = "";
+      var lhs = validateFunction(makeAFormula(2, false));
+      f = "";
+      var rhs = validateFunction(makeAFormula(3, false));
+      if (lhs == '' && (mf == '' || mf == null) && rhs == '') {
+        formula = "";
+      } else {
+        formula = lhs + " " + mf + " " + rhs;
+      }
+      if (formula != '') {
+        $(".formula").text(formula);
+        $(".tryFormula").text(formula);
+      } else {
+        $(".formula").text("-NA-");
+        $(".tryFormula").text("-NA-");
+      }
+      $("#lhsId").val(lhs);
+      $("#rhsId").val(rhs);
+      $("#operatorId").val(mf);
+      $("#conditionFormulaId").val(formula);
+    }
+
+    function removeImage(item) {
+      var id = $(item).parent().find('input').attr('id');
+      var id2 = $(item).parent().find('input[type="hidden"]').attr('id')
+      $("#" + id).val('');
+      $("#" + id2).val('');
+      $('.textLabel' + id2).text("Upload");
+      $(item).parent().find('img').attr("src", "../images/icons/sm-thumb.jpg");
+      $(item).addClass("hide");
+    }
+
+    function maxSquenceValue() {
+      var max = 3;
+      $(".numeric__row").each(function () {
+        var id = parseInt(this.id, 10);
+        if (id > max) {
+          max = id;
+        }
+      });
+      return max;
+    }
+
+    function validateMinMaxforX() {
+      var responseType = $("#rlaResonseType").val();
+      var minValue = "";
+      var maxValue = "";
+      var value = $("#trailInputId").val();
+      if (responseType == 'Scale') {
+        minValue = $("#scaleMinValueId").val();
+        maxValue = $("#scaleMaxValueId").val();
+      } else if (responseType == 'Continuous Scale') {
+        minValue = $("#continuesScaleMinValueId").val();
+        maxValue = $("#continuesScaleMaxValueId").val();
+      } else if (responseType == 'Numeric') {
+        minValue = $("#numericMinValueId").val();
+        maxValue = $("#numericMaxValueId").val();
+      }
+      if (minValue != '' && maxValue != '') {
+        if (Number(value) >= Number(minValue) && Number(value) <= Number(maxValue)) {
+          return "";
+        } else {
+          return "x value should be less than maximum value and greater than minimum value";
+        }
+      } else if (minValue == '' && maxValue != '') {
+        if (Number(value) > Number(maxValue)) {
+          return "x value should be less than maximum value";
+        } else {
+          return "";
+        }
+      } else if (minValue != '' && maxValue == '') {
+        if (Number(value) < Number(minValue)) {
+          return "x value should be greater than minimum value";
+        } else {
+          return "";
+        }
+      } else {
+        return "";
+      }
+    }
+
+    function validateFunction(functionText) {
+      var c1 = 0;
+      var c2 = 0;
+      for (var i = 0; i < functionText.length; i++) {
+        if ('(' == functionText[i]) {
+          c1++;
+        } else if (')' == functionText[i]) {
+          c2++;
+        }
+      }
+      if (c1 > c2) {
+        functionText += ")";
+      } else if (c1 < c2) {
+        functionText = "(" + functionText;
+      }
+      return functionText;
+    }
+
+    function validateAnchorDateText(item, callback) {
+      var anchordateText = $("#anchorTextId").val();
+      var thisAttr = $("#anchorTextId");
+      var anchorDateId = '${questionnairesStepsBo.questionsBo.anchorDateId}';
+      if (anchordateText != null && anchordateText != '' && typeof anchordateText != 'undefined') {
+        var staticText = "Enrollment Date";
+        if (anchordateText.toUpperCase() === staticText.toUpperCase()) {
+          $(thisAttr).val('');
+          $(thisAttr).parent().addClass("has-danger").addClass("has-error");
+          $(thisAttr).parent().find(".help-block").empty();
+          $(thisAttr).parent().find(".help-block").append(
+              "<ul class='list-unstyled'><li>'" + anchordateText
+              + "' has already been used in the past.</li></ul>");
+          callback(false);
+        } else {
+          $(thisAttr).parent().removeClass("has-danger").removeClass("has-error");
+          $(thisAttr).parent().find(".help-block").empty();
+          $.ajax({
+            url: "/studybuilder/adminStudies/validateAnchorDateName.do?_S=${param._S}",
+            type: "POST",
+            datatype: "json",
+            data: {
+              anchordateText: anchordateText,
+              anchorDateId: anchorDateId
+
+            },
+            beforeSend: function (xhr, settings) {
+              xhr.setRequestHeader("X-CSRF-TOKEN", "${_csrf.token}");
+            },
+            success: function getResponse(data) {
+              var message = data.message;
+              console.log(message);
+              if ('SUCCESS' != message) {
+                $(thisAttr).validator('validate');
+                $(thisAttr).parent().removeClass("has-danger").removeClass("has-error");
+                $(thisAttr).parent().find(".help-block").empty();
+                callback(true);
+              } else {
+                $(thisAttr).val('');
+                $(thisAttr).parent().addClass("has-danger").addClass("has-error");
+                $(thisAttr).parent().find(".help-block").empty();
+                $(thisAttr).parent().find(".help-block").append(
+                    "<ul class='list-unstyled'><li>'" + anchordateText
+                    + "' has already been used in the past.</li></ul>");
+                callback(false);
+              }
+            },
+            global: false
+          });
+        }
+      } else {
+        callback(true);
+        $(thisAttr).parent().removeClass("has-danger").removeClass("has-error");
+        $(thisAttr).parent().find(".help-block").html("");
+      }
+    }
+
+    function setOtherExclusiveData(item) {
+      var value = $(item).val();
+      if (value == "Yes") {
+        $("#otherDestinationTextChoiceStepId").attr("disabled", false);
+        $('.selectpicker').selectpicker('refresh');
+      } else {
+        $("#otherDestinationTextChoiceStepId").val('');
+        $("#otherDestinationTextChoiceStepId").attr("disabled", true);
+        $('.selectpicker').selectpicker('refresh');
+      }
+
+    }
+
+    $('[data-toggle="tooltip"]').tooltip({container: 'body'});
+
+    $(window).on('load', function () {
+      if ($('#textchoiceOtherId').is(':checked')) {
+        $('.textchoiceOtherCls').show();
+        $('.textchoiceOtherCls').find('input:text,select').attr('required', true);
+        $('.OtherOptionCls').find('input:text,select').removeAttr('required');
+      } else {
+        $('.textchoiceOtherCls').find('input:text,select').removeAttr('required');
+        $('.textchoiceOtherCls').hide();
+      }
+
+      var otherText = $('.otherIncludeTextCls:checked').val();
+      if (otherText == 'Yes') {
+        $('.OtherOptionCls').show();
+        $('.OtherOptionCls').find('input:text,select').attr('required', true);
+      } else {
+        $('.OtherOptionCls').hide();
+        $('.OtherOptionCls').find('input:text,select').removeAttr('required');
+      }
+    })
   </script>

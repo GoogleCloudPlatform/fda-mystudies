@@ -87,116 +87,116 @@
   <input type="hidden" id="studyId" name="studyId">
 </form:form>
 <script>
-    $(document).ready(function () {
-        $('.studyClass').addClass('active');
-        $('[data-toggle="tooltip"]').tooltip();
+  $(document).ready(function () {
+    $('.studyClass').addClass('active');
+    $('[data-toggle="tooltip"]').tooltip();
 
-        $('.addEditStudyClass').on('click', function () {
-            var form = document.createElement('form');
-            form.method = 'post';
-            var input = document.createElement('input');
-            input.type = 'hidden';
-            input.name = 'studyId';
-            input.value = $(this).attr('studyId');
-            form.appendChild(input);
+    $('.addEditStudyClass').on('click', function () {
+      var form = document.createElement('form');
+      form.method = 'post';
+      var input = document.createElement('input');
+      input.type = 'hidden';
+      input.name = 'studyId';
+      input.value = $(this).attr('studyId');
+      form.appendChild(input);
 
-            input = document.createElement('input');
-            input.type = 'hidden';
-            input.name = '${_csrf.parameterName}';
-            input.value = '${_csrf.token}';
-            form.appendChild(input);
+      input = document.createElement('input');
+      input.type = 'hidden';
+      input.name = '${_csrf.parameterName}';
+      input.value = '${_csrf.token}';
+      form.appendChild(input);
 
-            form.action = '/studybuilder/adminStudies/viewStudyDetails.do';
-            document.body.appendChild(form);
-            form.submit();
-        });
-
-        $('.viewStudyClass').on('click', function () {
-            var form = document.createElement('form');
-            form.method = 'post';
-            var input = document.createElement('input');
-            input.type = 'hidden';
-            input.name = 'studyId';
-            input.value = $(this).attr('studyId');
-            form.appendChild(input);
-
-            var input1 = document.createElement('input');
-            input1.type = 'hidden';
-            input1.name = 'permission';
-            input1.value = $(this).attr('permission');
-            form.appendChild(input1);
-
-            var input2 = document.createElement('input');
-            input2.type = 'hidden';
-            input2.name = 'isLive';
-            input2.value = $(this).attr('isLive');
-            form.appendChild(input2);
-
-            input = document.createElement('input');
-            input.type = 'hidden';
-            input.name = '${_csrf.parameterName}';
-            input.value = '${_csrf.token}';
-            form.appendChild(input);
-
-            form.action = '/studybuilder/adminStudies/viewStudyDetails.do';
-            document.body.appendChild(form);
-            form.submit();
-        });
-
-        $('#studies_list').DataTable({
-            "paging": true,
-            "abColumns": [
-                {"bSortable": true},
-                {"bSortable": true},
-                {"bSortable": true},
-                {"bSortable": true},
-                {"bSortable": true},
-                {"bSortable": false}
-            ],
-            "columnDefs": [{orderable: false, targets: [8]}],
-            "order": [[0, "desc"]],
-            "info": false,
-
-            "lengthChange": false,
-            language: {
-                "zeroRecords": "You haven't created any content yet.",
-            },
-            "searching": false,
-            "pageLength": 10
-
-        });
-
-    });
-    $('.copyStudyClass').on('click', function () {
-        var form = document.createElement('form');
-        form.method = 'post';
-        var input = document.createElement('input');
-        input.type = 'hidden';
-        input.name = 'customStudyId';
-        input.value = $(this).attr('customStudyId');
-        form.appendChild(input);
-
-        input = document.createElement('input');
-        input.type = 'hidden';
-        input.name = '${_csrf.parameterName}';
-        input.value = '${_csrf.token}';
-        form.appendChild(input);
-
-        form.action = '/studybuilder/adminStudies/crateNewStudy.do';
-        document.body.appendChild(form);
-        form.submit();
+      form.action = '/studybuilder/adminStudies/viewStudyDetails.do';
+      document.body.appendChild(form);
+      form.submit();
     });
 
-    //datatable icon toggle
-    $(".table thead tr th").click(function () {
-        $(this).children().removeAttr('class')
-        $(this).siblings().children().removeAttr('class').addClass('sort');
-        if ($(this).attr('class') == 'sorting_asc') {
-            $(this).children().addClass('asc');
-        } else if ($(this).attr('class') == 'sorting_desc') {
-            $(this).children().addClass('desc');
-        } else {
-            $(this).children().addClass('sort');
-        }
+    $('.viewStudyClass').on('click', function () {
+      var form = document.createElement('form');
+      form.method = 'post';
+      var input = document.createElement('input');
+      input.type = 'hidden';
+      input.name = 'studyId';
+      input.value = $(this).attr('studyId');
+      form.appendChild(input);
+
+      var input1 = document.createElement('input');
+      input1.type = 'hidden';
+      input1.name = 'permission';
+      input1.value = $(this).attr('permission');
+      form.appendChild(input1);
+
+      var input2 = document.createElement('input');
+      input2.type = 'hidden';
+      input2.name = 'isLive';
+      input2.value = $(this).attr('isLive');
+      form.appendChild(input2);
+
+      input = document.createElement('input');
+      input.type = 'hidden';
+      input.name = '${_csrf.parameterName}';
+      input.value = '${_csrf.token}';
+      form.appendChild(input);
+
+      form.action = '/studybuilder/adminStudies/viewStudyDetails.do';
+      document.body.appendChild(form);
+      form.submit();
     });
+
+    $('#studies_list').DataTable({
+      "paging": true,
+      "abColumns": [
+        {"bSortable": true},
+        {"bSortable": true},
+        {"bSortable": true},
+        {"bSortable": true},
+        {"bSortable": true},
+        {"bSortable": false}
+      ],
+      "columnDefs": [{orderable: false, targets: [8]}],
+      "order": [[0, "desc"]],
+      "info": false,
+
+      "lengthChange": false,
+      language: {
+        "zeroRecords": "You haven't created any content yet.",
+      },
+      "searching": false,
+      "pageLength": 10
+
+    });
+
+  });
+  $('.copyStudyClass').on('click', function () {
+    var form = document.createElement('form');
+    form.method = 'post';
+    var input = document.createElement('input');
+    input.type = 'hidden';
+    input.name = 'customStudyId';
+    input.value = $(this).attr('customStudyId');
+    form.appendChild(input);
+
+    input = document.createElement('input');
+    input.type = 'hidden';
+    input.name = '${_csrf.parameterName}';
+    input.value = '${_csrf.token}';
+    form.appendChild(input);
+
+    form.action = '/studybuilder/adminStudies/crateNewStudy.do';
+    document.body.appendChild(form);
+    form.submit();
+  });
+
+  //datatable icon toggle
+  $(".table thead tr th").click(function () {
+    $(this).children().removeAttr('class')
+    $(this).siblings().children().removeAttr('class').addClass('sort');
+    if ($(this).attr('class') == 'sorting_asc') {
+      $(this).children().addClass('asc');
+    } else if ($(this).attr('class') == 'sorting_desc') {
+      $(this).children().addClass('desc');
+    } else {
+      $(this).children().addClass('sort');
+    }
+  });
 </script>

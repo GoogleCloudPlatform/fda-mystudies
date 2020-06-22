@@ -100,36 +100,36 @@
            method="post">
 </form:form>
 <script type="text/javascript">
-    $(document).ready(function () {
-        var a = document.createElement('a');
-        $('#usersSection').on('click', function () {
-            a.href = "/studybuilder/adminUsersView/getUserList.do";
-            document.body.appendChild(a).click();
-        });
-
-        $('#manageNotificationSection').on('click', function () {
-            a.href = "/studybuilder/adminNotificationView/viewNotificationList.do";
-            document.body.appendChild(a).click();
-        });
-
-        $('#profileSection').on('click', function () {
-            a.href = "/studybuilder/adminDashboard/viewUserDetails.do";
-            document.body.appendChild(a).click();
-        });
-
-        $('#studySection').on('click', function () {
-            a.href = "/studybuilder/adminStudies/studyList.do";
-            document.body.appendChild(a).click();
-        });
-
-        $('#landingScreen').on('click', function () {
-            a.href = "/studybuilder/adminDashboard/viewDashBoard.do";
-            document.body.appendChild(a).click();
-        });
-
+  $(document).ready(function () {
+    var a = document.createElement('a');
+    $('#usersSection').on('click', function () {
+      a.href = "/studybuilder/adminUsersView/getUserList.do";
+      document.body.appendChild(a).click();
     });
 
-    function formSubmit() {
-        document.getElementById("logoutForm").submit();
-    }
+    $('#manageNotificationSection').on('click', function () {
+      a.href = "/studybuilder/adminNotificationView/viewNotificationList.do";
+      document.body.appendChild(a).click();
+    });
+
+    $('#profileSection').on('click', function () {
+      a.href = "/studybuilder/adminDashboard/viewUserDetails.do";
+      document.body.appendChild(a).click();
+    });
+
+    $('#studySection').on('click', function () {
+      a.href = "/studybuilder/adminStudies/studyList.do";
+      document.body.appendChild(a).click();
+    });
+
+    $('#landingScreen').on('click', function () {
+      a.href = "/studybuilder/adminDashboard/viewDashBoard.do";
+      document.body.appendChild(a).click();
+    });
+
+  });
+
+  function formSubmit() {
+    document.getElementById("logoutForm").submit();
+  }
 </script>

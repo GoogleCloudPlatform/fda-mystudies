@@ -90,16 +90,16 @@
     <script src="/studybuilder/js/ajaxRequestInterceptor.js"></script>
     <script type="text/javascript" src="/studybuilder/js/loader.js"></script>
     <script>
-        $(window).on('keydown keypress mousedown', function (event) {
-            event = (event || window.event);
-            if (event.keyCode == 13) {
-                if (!(event.target.nodeName == 'TEXTAREA')) {
-                    (event).preventDefault(); // Disable the " Entry " key
-                    return false;
-                }
-                return true;
-            }
-        });
+      $(window).on('keydown keypress mousedown', function (event) {
+        event = (event || window.event);
+        if (event.keyCode == 13) {
+          if (!(event.target.nodeName == 'TEXTAREA')) {
+            (event).preventDefault(); // Disable the " Entry " key
+            return false;
+          }
+          return true;
+        }
+      });
     </script>
 
   </head>
@@ -139,57 +139,57 @@
     <script src="/studybuilder/js/common.js"></script>
 
     <script>
+      window.history.forward();
+
+      function noBack() {
         window.history.forward();
+      }
 
-        function noBack() {
-            window.history.forward();
+      // Fancy Scroll Bar
+      (function ($) {
+        $(window).on("load", function () {
+          $(".scrollbars").mCustomScrollbar({
+            theme: "minimal-dark"
+          });
+        });
+        if ('${sessionScope.sessionObject}' != '') {
+          setTimeout(function () {
+            window.location.href = '/studybuilder/errorRedirect.do?error=timeOut';
+          }, 1000 * 60 * 31);
         }
+        setInterval('clock()', 1000);
+      })(jQuery);
 
-        // Fancy Scroll Bar
-        (function ($) {
-            $(window).on("load", function () {
-                $(".scrollbars").mCustomScrollbar({
-                    theme: "minimal-dark"
-                });
-            });
-            if ('${sessionScope.sessionObject}' != '') {
-                setTimeout(function () {
-                    window.location.href = '/studybuilder/errorRedirect.do?error=timeOut';
-                }, 1000 * 60 * 31);
-            }
-            setInterval('clock()', 1000);
-        })(jQuery);
+      // ===== Scroll to Top ====
+      $(window).scroll(function () {
+        if ($(this).scrollTop() >= 50) {        // If page is scrolled more than 50px
+          $('#return-to-top').fadeIn(200);    // Fade in the arrow
+        } else {
+          $('#return-to-top').fadeOut(200);   // Else fade out the arrow
+        }
+      });
+      $('#return-to-top').click(function () {      // When arrow is clicked
+        $('body,html').animate({
+          scrollTop: 0                       // Scroll to top of body
+        }, 100);
+      });
+      var startDate = new Date();
+      var mytime = moment(
+          '<fmt:formatDate value ="${date}"  type = "both"  pattern="yyyy-MM-dd HH:mm:ss"/>').toDate();
 
-        // ===== Scroll to Top ====
-        $(window).scroll(function () {
-            if ($(this).scrollTop() >= 50) {        // If page is scrolled more than 50px
-                $('#return-to-top').fadeIn(200);    // Fade in the arrow
-            } else {
-                $('#return-to-top').fadeOut(200);   // Else fade out the arrow
-            }
-        });
-        $('#return-to-top').click(function () {      // When arrow is clicked
-            $('body,html').animate({
-                scrollTop: 0                       // Scroll to top of body
-            }, 100);
-        });
-        var startDate = new Date();
-        var mytime = moment(
+      function clock() {
+        var diff = new Date().getTime() - startDate.getTime();
+        mytime = moment(
             '<fmt:formatDate value ="${date}"  type = "both"  pattern="yyyy-MM-dd HH:mm:ss"/>').toDate();
+        mytime.setMilliseconds(mytime.getMilliseconds() + diff);
+      }
 
-        function clock() {
-            var diff = new Date().getTime() - startDate.getTime();
-            mytime = moment(
-                '<fmt:formatDate value ="${date}"  type = "both"  pattern="yyyy-MM-dd HH:mm:ss"/>').toDate();
-            mytime.setMilliseconds(mytime.getMilliseconds() + diff);
-        }
-
-        var serverDateTime = function () {
-            return moment(moment(mytime).format("YYYY-MM-DD HH:mm")).toDate();
-        }
-        var serverDate = function () {
-            return new Date(mytime.getFullYear(), mytime.getMonth(), mytime.getDate());
-        }
+      var serverDateTime = function () {
+        return moment(moment(mytime).format("YYYY-MM-DD HH:mm")).toDate();
+      }
+      var serverDate = function () {
+        return new Date(mytime.getFullYear(), mytime.getMonth(), mytime.getDate());
+      }
     </script>
   </body>
 </html>

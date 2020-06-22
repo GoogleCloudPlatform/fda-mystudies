@@ -321,299 +321,299 @@
 
 <script>
 
-    $(document).ready(function () {
+  $(document).ready(function () {
 
-        <c:if test="${user eq 'logout_login_user'}">
-        bootbox.alert({
-            closeButton: false,
-            message: 'Your user account details have been updated. Please sign in again to continue using the portal.',
-            callback: function (result) {
-                var a = document.createElement('a');
-                a.href = "/studybuilder/sessionOut.do";
-                document.body.appendChild(a).click();
-            }
-        });
-        </c:if>
+    <c:if test="${user eq 'logout_login_user'}">
+    bootbox.alert({
+      closeButton: false,
+      message: 'Your user account details have been updated. Please sign in again to continue using the portal.',
+      callback: function (result) {
+        var a = document.createElement('a');
+        a.href = "/studybuilder/sessionOut.do";
+        document.body.appendChild(a).click();
+      }
+    });
+    </c:if>
 
-        $('body').find('a[aria-expanded=true]').find('.imageBg').html(
-            '<img class="arrow" src="/studybuilder/images/icons/slide-up.png" />');
-        $(".menuNav li.active").removeClass('active');
-        $(".menuNav li.third").addClass('active');
+    $('body').find('a[aria-expanded=true]').find('.imageBg').html(
+        '<img class="arrow" src="/studybuilder/images/icons/slide-up.png" />');
+    $(".menuNav li.active").removeClass('active');
+    $(".menuNav li.third").addClass('active');
 
-        $('.imgCls').each(function () {
-            var imagePathCls = $(this).find('.imagePathCls').val();
-            if (imagePathCls) {
-                $(this).find('.removeUrl').css("visibility", "visible");
-            } else {
-                $(this).find('.removeUrl').css("visibility", "hidden");
-            }
-        });
-
-        <c:if test="${not empty permission}">
-        $('#overViewFormId input,textarea,select').prop('disabled', true);
-        $('.uploadImgbtn').prop('disabled', true);
-        $('.elaborateHide').css('visibility', 'hidden');
-        </c:if>
-        $("[data-toggle=tooltip]").tooltip();
-        var countId = ${fn:length(studyPageBos)+ 2};
-        // File Upload
-        $(document).on("click", ".uploadImgbtn", function () {
-            $(this).parent().find(".uploadImg").click();
-        });
-
-        // Removing selected file upload image
-        $(document).on("click", ".removeUrl", function () {
-            $(this).css("visibility", "hidden");
-            $(this).parent().parent().find(".thumb img").attr("src",
-                "/studybuilder/images/dummy-img.jpg");
-            $(this).parent().parent().find(".uploadImg").val('').attr('required', 'required');
-            $(this).parent().parent().find(".imagePathCls").val('');
-        });
-
-        //deleting panel
-        var b = $("#accordion").find(".panel-default").length;
-        if (b == 1) {
-            $(".delete").hide();
-        } else if (b > 4) {
-            $("#addpage").hide();
-        }
-        $(document).on("click", ".delete", function () {
-            var a = $(".overview-panel > div").length;
-            if (a > 1) {
-                $(".delete").show();
-                $(this).parents(".panel-default").remove();
-            }
-            var b = $(".overview-panel > div").length;
-            if (b == 1) {
-                $(".delete").hide();
-            } else if (b >= 4) {
-                $("#addpage").show();
-            }
-            var a = 1;
-            var b = 1;
-            $('#accordion').find('.pageCount').each(function () {
-                $(this).text('PAGE - ' + a++);
-            });
-            resetValidation($("#accordion").parents('form'));
-            if ($('body').find('.panel-collapse.in').length == 0)
-                $('body').find('.panel-collapse:last').collapse('show');
-        });
-
-        $("#addpage").click(function () {
-
-            $(".panel-collapse").collapse('hide').removeClass('in');
-            $(".delete").show();
-            var count = $("#accordion").find('.panel-default').length + 1;
-            $("#accordion").append("<!-- Start panel-->" +
-                "<div class='panel panel-default'> <input type='hidden' name='pageId'>" +
-                "<div class='panel-heading'>" +
-                "<div class='panel-title'>" +
-                "<a href='#collapse" + count
-                + "' data-parent=#accordion data-toggle=collapse aria-expanded='true'>" +
-                "<div class='dis-inline text-left'>" +
-                "<div class='gray-xs-f mb-xs text-uppercase text-weight-bold pageCount'>PAGE - " + count
-                + "</div>" +
-                "<div class='studyCount'></div>" +
-                "</div>" +
-                "<div class='dis-inline pull-right text-right'>" +
-                "<span class='delete mr-lg sprites_icon'></span> " +
-                "<span class='imageBg'><img src='/studybuilder/images/icons/slide-down.png'></span>" +
-                "</div>" +
-                "</a>" +
-                "</div>" +
-                "</div>" +
-                "<div class='collapse panel-collapse' id='collapse" + count + "'>" +
-                "<div class=panel-body  pt-none>" +
-                "<div>" +
-                "<div class='gray-xs-f mb-sm'>Image <span><span class='filled-tooltip' data-toggle='tooltip' data-placement='top' data-html='true' title='' src='/studybuilder/images/icons/tooltip.png' data-original-title='<span class= font24>.</span></span> JPEG/PNG<br><span class=font24>.</span> Recommended Size: 750x570 pixels'></span><span class='requiredStar'> *</span> </div>"
-                +
-                "<div>" +
-                "<div class=thumb><img src=/studybuilder/images/dummy-img.jpg class=wid100></div>" +
-                "<div class=dis-inline>" +
-                "<span class='blue-link removeUrl elaborateHide' id='hideRemoveUrl" + count
-                + "'>X<a href='javascript:void(0)' class='blue-link pl-xs txt-decoration-underline'>Remove Image</a></span>"
-                +
-                "<div class='form-group mb-none mt-sm'>" +
-                "<button class='btn btn-default gray-btn uploadImgbtn' type=button>Upload Image</button>"
-                +
-                "<input class='dis-none uploadImg' data-imageId='" + count
-                + "' accept='.png, .jpg, .jpeg' name='multipartFiles' onchange=readURL(this) type=file required data-error='Please select an image.'>"
-                +
-                "<input type='hidden' class='imagePathCls' name='imagePath' /><div class='help-block with-errors red-txt wid180'></div>"
-                +
-                "</div>" +
-                "</div>" +
-                "</div>" +
-                "</div>" +
-                "<div class=mt-lg>" +
-                "<div class='gray-xs-f mb-xs'>Title <small>(50 characters max) </small><span class='requiredStar'>*</span></div>"
-                +
-                "<div class=form-group>" +
-                "<input type='text' class='form-control updateInput'  name='title' required maxlength='50'>"
-                +
-                "<div class='help-block with-errors red-txt'></div>" +
-                "</div>" +
-                "</div>" +
-                "<div class=mt-lg>" +
-                "<div class='gray-xs-f mb-xs'>Description <small>(200 characters max) </small><span class='requiredStar'>*</span></div>"
-                +
-                "<div class='form-group elaborateClass'><textarea class='form-control updateInput' name='description' id='editor"
-                + countId
-                + "' rows='5' required data-error='Please enter plain text of up to 200 characters max.' maxlength='200'></textarea>"
-                +
-                "<div class='help-block with-errors red-txt'></div></div>" +
-                "</div>" +
-                "</div>" +
-                "</div>" +
-                "</div>" +
-                "<!-- End panel-->");
-            $('#hideRemoveUrl' + count).css("visibility", "hidden");
-            var c = $(".overview-panel > div").length;
-            if (c > 5) {
-                $("#addpage").hide();
-            }
-
-            resetValidation($("#accordion").parents('form'));
-            countId++;
-            $("[data-toggle=tooltip]").tooltip();
-            $('body').find('.panel-collapse:last').collapse('show').addClass('in');
-        });
-        $(document).on('show.bs.collapse', '.panel-collapse', function () {
-            $('.panel-collapse').not(this).collapse('hide').removeClass('in');
-            $('body').not(this).find('.imageBg').html(
-                '<img class="arrow" src="/studybuilder/images/icons/slide-down.png" />');
-
-        });
-        $(document).on('hide.bs.collapse', '.panel-collapse', function () {
-            $('body').not('a[aria-expanded=true]').find('.imageBg').html(
-                '<img class="arrow" src="/studybuilder/images/icons/slide-down.png" />');
-
-        });
-        $(document).on('shown.bs.collapse', '.panel-collapse', function () {
-            var $panel = $(this).parent().ScrollTo();
-            $('body').find('a[aria-expanded=true]').find('.imageBg').html(
-                '<img class="arrow" src="/studybuilder/images/icons/slide-up.png" />');
-        });
-        $('.submitEle').click(function (e) {
-            $('#actTy').remove();
-            $('<input />').attr('type', 'hidden').attr('name', "actionType").attr('value',
-                $(this).attr('actType')).attr('id', 'actTy').appendTo('#overViewFormId');
-            if ($(this).attr('actType') == 'save') {
-                e.preventDefault();
-                $('#overViewFormId').validator('destroy');
-                $('#overViewFormId').submit();
-            }
-        });
-        $("#completedId").on('click', function (e) {
-            e.preventDefault();
-            var formValid = true;
-            $('#accordion').find('.panel-default').each(function () {
-                var file = $(this).find('input[type=file]').val();
-                var thumbnailImageId = $(this).find('input[type=file]').parent().find(
-                    'input[name="imagePath"]').val();
-                if (file || thumbnailImageId) {
-                    $(this).find('input[type=file]').removeAttr('required');
-                } else {
-                    formValid = false;
-                }
-            });
-            if ((!isFromValid($(this).parents('form')))) {
-                if (!($(this).parents('body').find('.panel-collapse.in').find('.has-error:first').length
-                    > 0)) {
-                    $(this).parents('body').find('.panel-collapse.in').collapse('hide').removeClass('in');
-                }
-                $(this).parents('body').find(".has-error:first").parents('.panel-collapse').not(
-                    '.in').collapse('show');
-            } else {
-                if (!($(this).parents('body').find('.panel-collapse.in').find(
-                    '.has-error-cust:first').length > 0)) {
-                    $(this).parents('body').find('.panel-collapse.in').collapse('hide').removeClass('in');
-                }
-                $(this).parents('body').find(".has-error-cust:first").parents('.panel-collapse').not(
-                    '.in').collapse('show');
-                $(this).parents('body').find(".has-error-cust:first").ScrollTo();
-            }
-            if (isFromValid($(this).parents('form')) && formValid) {
-                $(this).attr('disabled', 'disabled')
-                $(this).parents('form').submit();
-            } else {
-                e.preventDefault();
-            }
-        });
-        var _URL = window.URL || window.webkitURL;
-
-        $(document).on('change', '.uploadImg', function (e) {
-            var file, img;
-            var thisAttr = this;
-            var thisId = $(this).attr("data-imageId");
-            if ((file = this.files[0])) {
-                img = new Image();
-                img.onload = function () {
-                    var ht = this.height;
-                    var wds = this.width;
-                    if (thisId != '' && thisId == 1) {
-                        if (ht == 1334 && wds == 750) {
-                            $(thisAttr).parent().parent().find('.removeUrl').css("visibility", "visible");
-                            $(thisAttr).parent().parent().parent().find(".thumb img")
-                                .attr('src', img.src)
-                                .width(66)
-                                .height(66);
-                            $(thisAttr).parent().find('.form-group').removeClass('has-error has-danger');
-                            $(thisAttr).parent().find(".help-block").empty();
-                        } else {
-                            $(thisAttr).val();
-                            $(thisAttr).parent().find('.form-group').addClass('has-error has-danger');
-                            $(thisAttr).parent().find(".help-block").empty().append(
-                                '<ul class="list-unstyled"><li>Please upload image as per provided guidelines.</li></ul>');
-                            $(thisAttr).parent().parent().parent().find(".removeUrl").click();
-                        }
-                    } else {
-                        if (ht == 570 && wds == 750) {
-                            $(thisAttr).parent().parent().find('.removeUrl').css("visibility", "visible");
-                            $(thisAttr).parent().parent().parent().find(".thumb img")
-                                .attr('src', img.src)
-                                .width(66)
-                                .height(66);
-                            $(thisAttr).parent().find('.form-group').removeClass('has-error has-danger');
-                            $(thisAttr).parent().find(".help-block").empty();
-                        } else {
-                            $(thisAttr).val();
-                            $(thisAttr).parent().find('.form-group').addClass('has-error has-danger');
-                            $(thisAttr).parent().find(".help-block").empty().append(
-                                '<ul class="list-unstyled"><li>Please upload image as per provided guidelines.</li></ul>');
-                            $(thisAttr).parent().parent().parent().find(".removeUrl").click();
-                        }
-                    }
-
-                };
-                img.onerror = function () {
-                    $(thisAttr).val();
-                    $(thisAttr).parent().find('.form-group').addClass('has-error has-danger');
-                    $(thisAttr).parent().find(".help-block").empty().append(
-                        '<ul class="list-unstyled"><li>Please upload image as per provided guidelines.</li></ul>');
-                    $(thisAttr).parent().parent().parent().find(".removeUrl").click();
-                };
-                img.src = _URL.createObjectURL(file);
-
-            }
-            var file = $(this).find('input[type=file]').val();
-            var thumbnailImageId = $(this).find('input[type=file]').parent().find(
-                'input[name="imagePath"]').val();
-            if (file || thumbnailImageId) {
-                $(this).removeAttr('required');
-            } else {
-                $(this).removeAttr('required', 'required');
-            }
-        });
+    $('.imgCls').each(function () {
+      var imagePathCls = $(this).find('.imagePathCls').val();
+      if (imagePathCls) {
+        $(this).find('.removeUrl').css("visibility", "visible");
+      } else {
+        $(this).find('.removeUrl').css("visibility", "hidden");
+      }
     });
 
-    // Displaying images from file upload
-    function readURL(input) {
-        if (input.files && input.files[0]) {
-            var reader = new FileReader();
-            reader.onload = function (e) {
-            };
-            reader.readAsDataURL(input.files[0]);
-        }
+    <c:if test="${not empty permission}">
+    $('#overViewFormId input,textarea,select').prop('disabled', true);
+    $('.uploadImgbtn').prop('disabled', true);
+    $('.elaborateHide').css('visibility', 'hidden');
+    </c:if>
+    $("[data-toggle=tooltip]").tooltip();
+    var countId = ${fn:length(studyPageBos)+ 2};
+    // File Upload
+    $(document).on("click", ".uploadImgbtn", function () {
+      $(this).parent().find(".uploadImg").click();
+    });
+
+    // Removing selected file upload image
+    $(document).on("click", ".removeUrl", function () {
+      $(this).css("visibility", "hidden");
+      $(this).parent().parent().find(".thumb img").attr("src",
+          "/studybuilder/images/dummy-img.jpg");
+      $(this).parent().parent().find(".uploadImg").val('').attr('required', 'required');
+      $(this).parent().parent().find(".imagePathCls").val('');
+    });
+
+    //deleting panel
+    var b = $("#accordion").find(".panel-default").length;
+    if (b == 1) {
+      $(".delete").hide();
+    } else if (b > 4) {
+      $("#addpage").hide();
     }
+    $(document).on("click", ".delete", function () {
+      var a = $(".overview-panel > div").length;
+      if (a > 1) {
+        $(".delete").show();
+        $(this).parents(".panel-default").remove();
+      }
+      var b = $(".overview-panel > div").length;
+      if (b == 1) {
+        $(".delete").hide();
+      } else if (b >= 4) {
+        $("#addpage").show();
+      }
+      var a = 1;
+      var b = 1;
+      $('#accordion').find('.pageCount').each(function () {
+        $(this).text('PAGE - ' + a++);
+      });
+      resetValidation($("#accordion").parents('form'));
+      if ($('body').find('.panel-collapse.in').length == 0)
+        $('body').find('.panel-collapse:last').collapse('show');
+    });
+
+    $("#addpage").click(function () {
+
+      $(".panel-collapse").collapse('hide').removeClass('in');
+      $(".delete").show();
+      var count = $("#accordion").find('.panel-default').length + 1;
+      $("#accordion").append("<!-- Start panel-->" +
+          "<div class='panel panel-default'> <input type='hidden' name='pageId'>" +
+          "<div class='panel-heading'>" +
+          "<div class='panel-title'>" +
+          "<a href='#collapse" + count
+          + "' data-parent=#accordion data-toggle=collapse aria-expanded='true'>" +
+          "<div class='dis-inline text-left'>" +
+          "<div class='gray-xs-f mb-xs text-uppercase text-weight-bold pageCount'>PAGE - " + count
+          + "</div>" +
+          "<div class='studyCount'></div>" +
+          "</div>" +
+          "<div class='dis-inline pull-right text-right'>" +
+          "<span class='delete mr-lg sprites_icon'></span> " +
+          "<span class='imageBg'><img src='/studybuilder/images/icons/slide-down.png'></span>" +
+          "</div>" +
+          "</a>" +
+          "</div>" +
+          "</div>" +
+          "<div class='collapse panel-collapse' id='collapse" + count + "'>" +
+          "<div class=panel-body  pt-none>" +
+          "<div>" +
+          "<div class='gray-xs-f mb-sm'>Image <span><span class='filled-tooltip' data-toggle='tooltip' data-placement='top' data-html='true' title='' src='/studybuilder/images/icons/tooltip.png' data-original-title='<span class= font24>.</span></span> JPEG/PNG<br><span class=font24>.</span> Recommended Size: 750x570 pixels'></span><span class='requiredStar'> *</span> </div>"
+          +
+          "<div>" +
+          "<div class=thumb><img src=/studybuilder/images/dummy-img.jpg class=wid100></div>" +
+          "<div class=dis-inline>" +
+          "<span class='blue-link removeUrl elaborateHide' id='hideRemoveUrl" + count
+          + "'>X<a href='javascript:void(0)' class='blue-link pl-xs txt-decoration-underline'>Remove Image</a></span>"
+          +
+          "<div class='form-group mb-none mt-sm'>" +
+          "<button class='btn btn-default gray-btn uploadImgbtn' type=button>Upload Image</button>"
+          +
+          "<input class='dis-none uploadImg' data-imageId='" + count
+          + "' accept='.png, .jpg, .jpeg' name='multipartFiles' onchange=readURL(this) type=file required data-error='Please select an image.'>"
+          +
+          "<input type='hidden' class='imagePathCls' name='imagePath' /><div class='help-block with-errors red-txt wid180'></div>"
+          +
+          "</div>" +
+          "</div>" +
+          "</div>" +
+          "</div>" +
+          "<div class=mt-lg>" +
+          "<div class='gray-xs-f mb-xs'>Title <small>(50 characters max) </small><span class='requiredStar'>*</span></div>"
+          +
+          "<div class=form-group>" +
+          "<input type='text' class='form-control updateInput'  name='title' required maxlength='50'>"
+          +
+          "<div class='help-block with-errors red-txt'></div>" +
+          "</div>" +
+          "</div>" +
+          "<div class=mt-lg>" +
+          "<div class='gray-xs-f mb-xs'>Description <small>(200 characters max) </small><span class='requiredStar'>*</span></div>"
+          +
+          "<div class='form-group elaborateClass'><textarea class='form-control updateInput' name='description' id='editor"
+          + countId
+          + "' rows='5' required data-error='Please enter plain text of up to 200 characters max.' maxlength='200'></textarea>"
+          +
+          "<div class='help-block with-errors red-txt'></div></div>" +
+          "</div>" +
+          "</div>" +
+          "</div>" +
+          "</div>" +
+          "<!-- End panel-->");
+      $('#hideRemoveUrl' + count).css("visibility", "hidden");
+      var c = $(".overview-panel > div").length;
+      if (c > 5) {
+        $("#addpage").hide();
+      }
+
+      resetValidation($("#accordion").parents('form'));
+      countId++;
+      $("[data-toggle=tooltip]").tooltip();
+      $('body').find('.panel-collapse:last').collapse('show').addClass('in');
+    });
+    $(document).on('show.bs.collapse', '.panel-collapse', function () {
+      $('.panel-collapse').not(this).collapse('hide').removeClass('in');
+      $('body').not(this).find('.imageBg').html(
+          '<img class="arrow" src="/studybuilder/images/icons/slide-down.png" />');
+
+    });
+    $(document).on('hide.bs.collapse', '.panel-collapse', function () {
+      $('body').not('a[aria-expanded=true]').find('.imageBg').html(
+          '<img class="arrow" src="/studybuilder/images/icons/slide-down.png" />');
+
+    });
+    $(document).on('shown.bs.collapse', '.panel-collapse', function () {
+      var $panel = $(this).parent().ScrollTo();
+      $('body').find('a[aria-expanded=true]').find('.imageBg').html(
+          '<img class="arrow" src="/studybuilder/images/icons/slide-up.png" />');
+    });
+    $('.submitEle').click(function (e) {
+      $('#actTy').remove();
+      $('<input />').attr('type', 'hidden').attr('name', "actionType").attr('value',
+          $(this).attr('actType')).attr('id', 'actTy').appendTo('#overViewFormId');
+      if ($(this).attr('actType') == 'save') {
+        e.preventDefault();
+        $('#overViewFormId').validator('destroy');
+        $('#overViewFormId').submit();
+      }
+    });
+    $("#completedId").on('click', function (e) {
+      e.preventDefault();
+      var formValid = true;
+      $('#accordion').find('.panel-default').each(function () {
+        var file = $(this).find('input[type=file]').val();
+        var thumbnailImageId = $(this).find('input[type=file]').parent().find(
+            'input[name="imagePath"]').val();
+        if (file || thumbnailImageId) {
+          $(this).find('input[type=file]').removeAttr('required');
+        } else {
+          formValid = false;
+        }
+      });
+      if ((!isFromValid($(this).parents('form')))) {
+        if (!($(this).parents('body').find('.panel-collapse.in').find('.has-error:first').length
+            > 0)) {
+          $(this).parents('body').find('.panel-collapse.in').collapse('hide').removeClass('in');
+        }
+        $(this).parents('body').find(".has-error:first").parents('.panel-collapse').not(
+            '.in').collapse('show');
+      } else {
+        if (!($(this).parents('body').find('.panel-collapse.in').find(
+            '.has-error-cust:first').length > 0)) {
+          $(this).parents('body').find('.panel-collapse.in').collapse('hide').removeClass('in');
+        }
+        $(this).parents('body').find(".has-error-cust:first").parents('.panel-collapse').not(
+            '.in').collapse('show');
+        $(this).parents('body').find(".has-error-cust:first").ScrollTo();
+      }
+      if (isFromValid($(this).parents('form')) && formValid) {
+        $(this).attr('disabled', 'disabled')
+        $(this).parents('form').submit();
+      } else {
+        e.preventDefault();
+      }
+    });
+    var _URL = window.URL || window.webkitURL;
+
+    $(document).on('change', '.uploadImg', function (e) {
+      var file, img;
+      var thisAttr = this;
+      var thisId = $(this).attr("data-imageId");
+      if ((file = this.files[0])) {
+        img = new Image();
+        img.onload = function () {
+          var ht = this.height;
+          var wds = this.width;
+          if (thisId != '' && thisId == 1) {
+            if (ht == 1334 && wds == 750) {
+              $(thisAttr).parent().parent().find('.removeUrl').css("visibility", "visible");
+              $(thisAttr).parent().parent().parent().find(".thumb img")
+                  .attr('src', img.src)
+                  .width(66)
+                  .height(66);
+              $(thisAttr).parent().find('.form-group').removeClass('has-error has-danger');
+              $(thisAttr).parent().find(".help-block").empty();
+            } else {
+              $(thisAttr).val();
+              $(thisAttr).parent().find('.form-group').addClass('has-error has-danger');
+              $(thisAttr).parent().find(".help-block").empty().append(
+                  '<ul class="list-unstyled"><li>Please upload image as per provided guidelines.</li></ul>');
+              $(thisAttr).parent().parent().parent().find(".removeUrl").click();
+            }
+          } else {
+            if (ht == 570 && wds == 750) {
+              $(thisAttr).parent().parent().find('.removeUrl').css("visibility", "visible");
+              $(thisAttr).parent().parent().parent().find(".thumb img")
+                  .attr('src', img.src)
+                  .width(66)
+                  .height(66);
+              $(thisAttr).parent().find('.form-group').removeClass('has-error has-danger');
+              $(thisAttr).parent().find(".help-block").empty();
+            } else {
+              $(thisAttr).val();
+              $(thisAttr).parent().find('.form-group').addClass('has-error has-danger');
+              $(thisAttr).parent().find(".help-block").empty().append(
+                  '<ul class="list-unstyled"><li>Please upload image as per provided guidelines.</li></ul>');
+              $(thisAttr).parent().parent().parent().find(".removeUrl").click();
+            }
+          }
+
+        };
+        img.onerror = function () {
+          $(thisAttr).val();
+          $(thisAttr).parent().find('.form-group').addClass('has-error has-danger');
+          $(thisAttr).parent().find(".help-block").empty().append(
+              '<ul class="list-unstyled"><li>Please upload image as per provided guidelines.</li></ul>');
+          $(thisAttr).parent().parent().parent().find(".removeUrl").click();
+        };
+        img.src = _URL.createObjectURL(file);
+
+      }
+      var file = $(this).find('input[type=file]').val();
+      var thumbnailImageId = $(this).find('input[type=file]').parent().find(
+          'input[name="imagePath"]').val();
+      if (file || thumbnailImageId) {
+        $(this).removeAttr('required');
+      } else {
+        $(this).removeAttr('required', 'required');
+      }
+    });
+  });
+
+  // Displaying images from file upload
+  function readURL(input) {
+    if (input.files && input.files[0]) {
+      var reader = new FileReader();
+      reader.onload = function (e) {
+      };
+      reader.readAsDataURL(input.files[0]);
+    }
+  }
 </script>

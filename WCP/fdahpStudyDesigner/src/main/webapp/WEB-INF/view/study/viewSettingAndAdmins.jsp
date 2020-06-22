@@ -459,418 +459,418 @@
   </div>
 </div>
 <script>
-    $(document).ready(function () {
-
-        <c:if test="${empty permission && fn:contains(permissions,5)}">
-
-        <c:if test="${user eq 'logout_login_user'}">
-        bootbox.alert({
-            closeButton: false,
-            message: 'Your user account details have been updated. Please sign in again to continue using the portal.',
-            callback: function (result) {
-                var a = document.createElement('a');
-                a.href = "/studybuilder/sessionOut.do";
-                document.body.appendChild(a).click();
-            }
-        });
-        </c:if>
-
-        $('[data-toggle="tooltip"]').tooltip();
-
-        $('#adminsId').hide();
-
-        $('.studyAdminRowCls').each(function () {
-            var userId = $(this).attr('studyUserId');
-            $('#user' + userId).removeClass('checkCount').hide();
-        });
-
-        $('#userListTable').DataTable({
-            "columnDefs": [
-                {"width": "100px", "targets": 3}
-            ],
-            "paging": false,
-            "emptyTable": "No data available",
-            "info": false,
-            "lengthChange": true,
-            "searching": false,
-        });
-
-        $('.addAdminCheckbox').on('click', function () {
-            var count = 0;
-            $('[name=case]:checked').each(function () {
-                count++;
-            });
-            if (count > 0) {
-                $('#addAdminsToStudyId').prop('disabled', false);
-            } else {
-                $('#addAdminsToStudyId').prop('disabled', true);
-            }
-        });
-        </c:if>
-
-        table = $('#studyAdminsTable').DataTable({
-            "paging": false,
-            "aoColumns": [
-                {"width": '40%', "bSortable": false},
-                {"width": '10%', "bSortable": false},
-                {"width": '10%', "bSortable": false},
-                {"width": '10%', "bSortable": false},
-                {"width": '10%', "bSortable": false}
-            ],
-            "info": false,
-            "lengthChange": true,
-            "searching": false,
-        });
-
-        $(".menuNav li.active").removeClass('active');
-        $(".menuNav li.second").addClass('active');
-        checkRadioRequired();
-        $(".rejoin_radio").click(function () {
-            checkRadioRequired();
-        })
-        <c:if test="${(not empty permission) || (sessionObject.role eq 'Org-level Admin')}">
-        $('#settingfoFormId input,textarea,select').prop('disabled', true);
-        $('#settingfoFormId').find('.elaborateClass').addClass('linkDis');
-        </c:if>
-
-        <c:if test="${!fn:contains(permissions,5)}">
-        $('.radcls').prop('disabled', true);
-        </c:if>
-
-        $("#completedId").on('click', function (e) {
-            var rowCount = 0;
-            if (isFromValid("#settingfoFormId")) {
-                rowCount = $('.leadCls').length;
-                if (rowCount != 0) {
-                    if ($("#studyAdminsTable .leadCls:checked").length > 0) {
-                        $('#completedId').prop('disabled', true);
-                        platformTypeValidation('completed');
-                    } else {
-                        bootbox.alert({
-                            closeButton: false,
-                            message: 'Please select one of the admin as a project lead',
-                        });
-                    }
-                } else {
-                    $('#completedId').prop('disabled', true);
-                    platformTypeValidation('completed');
-                }
-            }
-        });
-
-        $("#saveId").click(function () {
-            platformTypeValidation('save');
-        });
-
-        var allowRejoin = '${studyBo.allowRejoin}';
-        if (allowRejoin != "") {
-            if (allowRejoin == 'Yes') {
-                $('.rejointextclassYes').show();
-                $('#rejoin_comment_no').text('');
-                $('.rejointextclassNo').hide();
-            } else {
-                $('.rejointextclassNo').show();
-                $('.rejointextclassYes').hide();
-                $('#rejoin_comment_yes').text('');
-            }
-        }
-        $("[data-toggle=tooltip]").tooltip();
-        $("#infoIconId").hover(function () {
-            $('#myModal').modal('show');
-        });
-    });
-
-    function checkRadioRequired() {
-        var rejoinRadioVal = $('input[name=allowRejoin]:checked').val();
-        if (rejoinRadioVal == 'Yes') {
-            $('.rejointextclassYes').show();
-            $('#rejoin_comment_yes').attr("required", "required");
-            $('#rejoin_comment_no').removeAttr("required");
-            $('.rejointextclassNo').hide();
-        } else {
-            $('.rejointextclassNo').show();
-            $('#rejoin_comment_no').attr("required", "required");
-            $('#rejoin_comment_yes').removeAttr("required");
-            $('.rejointextclassYes').hide();
-        }
-    }
-
-    function setAllowRejoinText() {
-        var allowRejoin = $('input[name=allowRejoin]:checked').val();
-        if (allowRejoin) {
-            if (allowRejoin == 'Yes') {
-                $('#rejoin_comment_yes').attr("name", "allowRejoinText");
-                $('#rejoin_comment_no').removeAttr("name", "allowRejoinText");
-            } else {
-                $('#rejoin_comment_no').attr("name", "allowRejoinText");
-                $('#rejoin_comment_yes').removeAttr("name", "allowRejoinText");
-            }
-        }
-    }
-
-    function platformTypeValidation(buttonText) {
-        var platformNames = '';
-        $("input:checkbox[name=platform]:checked").each(function () {
-            platformNames = platformNames + $(this).val();
-        });
-        var liveStudy = "${studyBo.liveStudyBo}";
-        if (liveStudy) {
-            var platform = "${studyBo.liveStudyBo.platform}";
-            if (platform.includes('A')) {
-                platformNames = '';
-            }
-        }
-        if (platformNames != '' && platformNames.includes('A')) {
-            $('.actBut').prop('disabled', true);
-            $("body").addClass("loading");
-            $.ajax({
-                url: "/studybuilder/adminStudies/studyPlatformValidationforActiveTask.do?_S=${param._S}",
-                type: "POST",
-                datatype: "json",
-                data: {
-                    studyId: $('#settingsstudyId').val(),
-                    "${_csrf.parameterName}": "${_csrf.token}",
-                },
-                success: function platformValid(data, status) {
-                    var jsonobject = eval(data);
-                    var message = jsonobject.message;
-                    var errorMessage = jsonobject.errorMessage;
-                    $("body").removeClass("loading");
-                    if (message == "SUCCESS") {
-                        $('#completedId').removeAttr('disabled');
-                        bootbox.alert(errorMessage);
-                    } else {
-                        submitButton(buttonText);
-                    }
-                },
-                error: function status(data, status) {
-                    $("body").removeClass("loading");
-                },
-                complete: function () {
-                    $('.actBut').removeAttr('disabled');
-                },
-                global: false
-            });
-        } else {
-            submitButton(buttonText);
-        }
-    }
-
-    function submitButton(buttonText) {
-        setAllowRejoinText();
-        admins() //Pradyumn
-        var isAnchorForEnrollmentDraft = '${isAnchorForEnrollmentDraft}';
-        if (buttonText === 'save') {
-            $('#settingfoFormId').validator('destroy');
-            $("#inlineCheckbox1,#inlineCheckbox2").prop('disabled', false);
-            $("#buttonText").val('save');
-            $("#settingfoFormId").submit();
-        } else {
-            var retainParticipant = $('input[name=retainParticipant]:checked').val();
-            var enrollmentdateAsAnchordate = $('input[name=enrollmentdateAsAnchordate]:checked').val();
-            if (retainParticipant) {
-                if (retainParticipant == 'All')
-                    retainParticipant = 'Participant Choice';
-                bootbox.confirm({
-                    closeButton: false,
-                    message: 'You have selected "' + retainParticipant
-                        + '" for the retention of participant response data when they leave a study.'
-                        + ' Your Consent content must be worded to convey the same.'
-                        + ' Click OK to proceed with completing this section or Cancel if you wish to make changes.',
-                    buttons: {
-                        'cancel': {
-                            label: 'Cancel',
-                        },
-                        'confirm': {
-                            label: 'OK',
-                        },
-                    },
-                    callback: function (result) {
-                        if (result) {
-                            //phase2a anchor
-                            showWarningForAnchor(isAnchorForEnrollmentDraft, enrollmentdateAsAnchordate);
-                            //phase 2a anchor
-                        } else {
-                            $('#completedId').removeAttr('disabled');
-                        }
-                    }
-                });
-            } else {
-                $("#inlineCheckbox1,#inlineCheckbox2").prop('disabled', false);
-                $("#buttonText").val('completed');
-                $("#settingfoFormId").submit();
-            }
-        }
-    }
-
-    function admins() {
-        var userIds = "";
-        var permissions = "";
-        var projectLead = "";
-        $('.studyAdminRowCls').each(function () {
-            var userId = $(this).attr('studyUserId');
-            if (userIds == "") {
-                userIds = userId;
-            } else {
-                userIds += "," + userId;
-            }
-            var permission = $(this).find('input[type=radio]:checked').val();
-            if (permissions == "") {
-                permissions = permission;
-            } else {
-                permissions += "," + permission;
-            }
-            if ($(this).find('#inlineRadio3' + userId).prop('checked')) {
-                projectLead = userId;
-            }
-        });
-        $('#userIds').val(userIds);
-        $('#permissions').val(permissions);
-        $('#projectLead').val(projectLead);
-    }
+  $(document).ready(function () {
 
     <c:if test="${empty permission && fn:contains(permissions,5)}">
 
-    function addAdmin() {
-        var userListTableRowCount = $('.checkCount').length;
-        if (userListTableRowCount == 0) {
-            bootbox.alert({
-                closeButton: false,
-                message: 'There are currently no other admin users available to add to this study.',
-            });
-        } else {
-            $('#settingId').hide();
-            $('#adminsId').show();
-            $('#addAdminsToStudyId').prop('disabled', true);
-        }
-    }
-
-    function cancelAddAdmin() {
-        bootbox.confirm({
-            closeButton: false,
-            message: 'You are about to leave the page and any unsaved changes will be lost. Are you sure you want to proceed?',
-            buttons: {
-                'cancel': {
-                    label: 'Cancel',
-                },
-                'confirm': {
-                    label: 'OK',
-                },
-            },
-            callback: function (result) {
-                if (result) {
-                    $('#settingId').show();
-                    $('#adminsId').hide();
-                    $('[name=case]:checked').each(function () {
-                        $(this).prop('checked', false);
-                    });
-                }
-            }
-        });
-    }
-
-    function addAdminsToStudy() {
-        $('#addAdminsToStudyId').attr('disabled', true);
-        $('[name=case]:checked').each(function () {
-            var name = escapeXml($(this).val());
-            var userId = $(this).attr('userId');
-            $('#user' + userId).removeClass('checkCount').hide();
-            $('#settingId').show();
-            $(this).prop('checked', false);
-            $('#adminsId').hide();
-            var domStr = '';
-            domStr = domStr + '<tr id="studyAdminRowId' + userId
-                + '" role="row" class="studyAdminRowCls" studyUserId="' + userId + '">';
-            domStr = domStr + '<td><span class="dis-ellipsis" title="' + name + '">' + name
-                + '</span></td>';
-            domStr = domStr + '<td><span class="radio radio-info radio-inline p-45">' +
-                '<input type="radio" id="inlineRadio1' + userId + '" value="0" name="view' + userId
-                + '" checked>' +
-                '<label for="inlineRadio1' + userId + '"></label>' +
-                '</span></td>';
-            domStr = domStr + '<td align="center"><span class="radio radio-info radio-inline p-45">' +
-                '<input type="radio" id="inlineRadio2' + userId + '" value="1" name="view' + userId + '">'
-                +
-                '<label for="inlineRadio2' + userId + '"></label>' +
-                '</span></td>';
-            domStr = domStr + '<td align="center"><span class="radio radio-info radio-inline p-45">' +
-                '<input type="radio" id="inlineRadio3' + userId + '" class="leadCls" name="projectLead">'
-                +
-                '<label for="inlineRadio3' + userId + '"></label>' +
-                '</span></td>';
-            domStr = domStr
-                + '<td align="center"><span class="sprites_icon copy delete" onclick="removeUser('
-                + userId + ')" data-toggle="tooltip" data-placement="top" title="Delete"></span></td>';
-            domStr = domStr + '</tr>';
-            $('#studyAdminId').append(domStr);
-            $('[data-toggle="tooltip"]').tooltip();
-            $('.dataTables_empty').remove();
-        });
-        $('#addAdminsToStudyId').attr('disabled', false);
-    }
-
-    function removeUser(userId) {
-        var userId = userId;
-        var count = 0;
-        $('.studyAdminRowCls').each(function () {
-            count++;
-        });
-        if (count == 1) {
-            table.clear().draw();
-        }
-        $('#studyAdminRowId' + userId).remove();
-        $('#user' + userId).addClass('checkCount').show();
-    }
-
-    function escapeXml(unsafe) {
-        return unsafe.replace(/[<>&'"]/g, function (c) {
-            switch (c) {
-                case '<':
-                    return '&lt;';
-                case '>':
-                    return '&gt;';
-                case '&':
-                    return '&amp;';
-                case '\'':
-                    return '&apos;';
-                case '"':
-                    return '&quot;';
-            }
-        });
-    }
-
+    <c:if test="${user eq 'logout_login_user'}">
+    bootbox.alert({
+      closeButton: false,
+      message: 'Your user account details have been updated. Please sign in again to continue using the portal.',
+      callback: function (result) {
+        var a = document.createElement('a');
+        a.href = "/studybuilder/sessionOut.do";
+        document.body.appendChild(a).click();
+      }
+    });
     </c:if>
 
-    function showWarningForAnchor(isAnchorForEnrollmentDraft, enrollmentdateAsAnchordate) {
-        if (isAnchorForEnrollmentDraft == 'true' && enrollmentdateAsAnchordate == 'No') {
-            var text = "You have chosen not to use enrollment date as an anchor date. You will need to revise the schedules of 'target' activities or resources, if any, that were set up based on the enrollment date.";
-            bootbox.confirm({
-                closeButton: false,
-                message: text,
-                buttons: {
-                    'cancel': {
-                        label: 'Cancel',
-                    },
-                    'confirm': {
-                        label: 'OK',
-                    },
-                },
-                callback: function (valid) {
-                    if (valid) {
-                        console.log(1);
-                        $("#inlineCheckbox1,#inlineCheckbox2").prop('disabled', false);
-                        $("#buttonText").val('completed');
-                        $("#settingfoFormId").submit();
-                    } else {
-                        console.log(2);
-                        $('#completedId').removeAttr('disabled');
-                    }
-                }
+    $('[data-toggle="tooltip"]').tooltip();
+
+    $('#adminsId').hide();
+
+    $('.studyAdminRowCls').each(function () {
+      var userId = $(this).attr('studyUserId');
+      $('#user' + userId).removeClass('checkCount').hide();
+    });
+
+    $('#userListTable').DataTable({
+      "columnDefs": [
+        {"width": "100px", "targets": 3}
+      ],
+      "paging": false,
+      "emptyTable": "No data available",
+      "info": false,
+      "lengthChange": true,
+      "searching": false,
+    });
+
+    $('.addAdminCheckbox').on('click', function () {
+      var count = 0;
+      $('[name=case]:checked').each(function () {
+        count++;
+      });
+      if (count > 0) {
+        $('#addAdminsToStudyId').prop('disabled', false);
+      } else {
+        $('#addAdminsToStudyId').prop('disabled', true);
+      }
+    });
+    </c:if>
+
+    table = $('#studyAdminsTable').DataTable({
+      "paging": false,
+      "aoColumns": [
+        {"width": '40%', "bSortable": false},
+        {"width": '10%', "bSortable": false},
+        {"width": '10%', "bSortable": false},
+        {"width": '10%', "bSortable": false},
+        {"width": '10%', "bSortable": false}
+      ],
+      "info": false,
+      "lengthChange": true,
+      "searching": false,
+    });
+
+    $(".menuNav li.active").removeClass('active');
+    $(".menuNav li.second").addClass('active');
+    checkRadioRequired();
+    $(".rejoin_radio").click(function () {
+      checkRadioRequired();
+    })
+    <c:if test="${(not empty permission) || (sessionObject.role eq 'Org-level Admin')}">
+    $('#settingfoFormId input,textarea,select').prop('disabled', true);
+    $('#settingfoFormId').find('.elaborateClass').addClass('linkDis');
+    </c:if>
+
+    <c:if test="${!fn:contains(permissions,5)}">
+    $('.radcls').prop('disabled', true);
+    </c:if>
+
+    $("#completedId").on('click', function (e) {
+      var rowCount = 0;
+      if (isFromValid("#settingfoFormId")) {
+        rowCount = $('.leadCls').length;
+        if (rowCount != 0) {
+          if ($("#studyAdminsTable .leadCls:checked").length > 0) {
+            $('#completedId').prop('disabled', true);
+            platformTypeValidation('completed');
+          } else {
+            bootbox.alert({
+              closeButton: false,
+              message: 'Please select one of the admin as a project lead',
             });
+          }
         } else {
+          $('#completedId').prop('disabled', true);
+          platformTypeValidation('completed');
+        }
+      }
+    });
+
+    $("#saveId").click(function () {
+      platformTypeValidation('save');
+    });
+
+    var allowRejoin = '${studyBo.allowRejoin}';
+    if (allowRejoin != "") {
+      if (allowRejoin == 'Yes') {
+        $('.rejointextclassYes').show();
+        $('#rejoin_comment_no').text('');
+        $('.rejointextclassNo').hide();
+      } else {
+        $('.rejointextclassNo').show();
+        $('.rejointextclassYes').hide();
+        $('#rejoin_comment_yes').text('');
+      }
+    }
+    $("[data-toggle=tooltip]").tooltip();
+    $("#infoIconId").hover(function () {
+      $('#myModal').modal('show');
+    });
+  });
+
+  function checkRadioRequired() {
+    var rejoinRadioVal = $('input[name=allowRejoin]:checked').val();
+    if (rejoinRadioVal == 'Yes') {
+      $('.rejointextclassYes').show();
+      $('#rejoin_comment_yes').attr("required", "required");
+      $('#rejoin_comment_no').removeAttr("required");
+      $('.rejointextclassNo').hide();
+    } else {
+      $('.rejointextclassNo').show();
+      $('#rejoin_comment_no').attr("required", "required");
+      $('#rejoin_comment_yes').removeAttr("required");
+      $('.rejointextclassYes').hide();
+    }
+  }
+
+  function setAllowRejoinText() {
+    var allowRejoin = $('input[name=allowRejoin]:checked').val();
+    if (allowRejoin) {
+      if (allowRejoin == 'Yes') {
+        $('#rejoin_comment_yes').attr("name", "allowRejoinText");
+        $('#rejoin_comment_no').removeAttr("name", "allowRejoinText");
+      } else {
+        $('#rejoin_comment_no').attr("name", "allowRejoinText");
+        $('#rejoin_comment_yes').removeAttr("name", "allowRejoinText");
+      }
+    }
+  }
+
+  function platformTypeValidation(buttonText) {
+    var platformNames = '';
+    $("input:checkbox[name=platform]:checked").each(function () {
+      platformNames = platformNames + $(this).val();
+    });
+    var liveStudy = "${studyBo.liveStudyBo}";
+    if (liveStudy) {
+      var platform = "${studyBo.liveStudyBo.platform}";
+      if (platform.includes('A')) {
+        platformNames = '';
+      }
+    }
+    if (platformNames != '' && platformNames.includes('A')) {
+      $('.actBut').prop('disabled', true);
+      $("body").addClass("loading");
+      $.ajax({
+        url: "/studybuilder/adminStudies/studyPlatformValidationforActiveTask.do?_S=${param._S}",
+        type: "POST",
+        datatype: "json",
+        data: {
+          studyId: $('#settingsstudyId').val(),
+          "${_csrf.parameterName}": "${_csrf.token}",
+        },
+        success: function platformValid(data, status) {
+          var jsonobject = eval(data);
+          var message = jsonobject.message;
+          var errorMessage = jsonobject.errorMessage;
+          $("body").removeClass("loading");
+          if (message == "SUCCESS") {
+            $('#completedId').removeAttr('disabled');
+            bootbox.alert(errorMessage);
+          } else {
+            submitButton(buttonText);
+          }
+        },
+        error: function status(data, status) {
+          $("body").removeClass("loading");
+        },
+        complete: function () {
+          $('.actBut').removeAttr('disabled');
+        },
+        global: false
+      });
+    } else {
+      submitButton(buttonText);
+    }
+  }
+
+  function submitButton(buttonText) {
+    setAllowRejoinText();
+    admins() //Pradyumn
+    var isAnchorForEnrollmentDraft = '${isAnchorForEnrollmentDraft}';
+    if (buttonText === 'save') {
+      $('#settingfoFormId').validator('destroy');
+      $("#inlineCheckbox1,#inlineCheckbox2").prop('disabled', false);
+      $("#buttonText").val('save');
+      $("#settingfoFormId").submit();
+    } else {
+      var retainParticipant = $('input[name=retainParticipant]:checked').val();
+      var enrollmentdateAsAnchordate = $('input[name=enrollmentdateAsAnchordate]:checked').val();
+      if (retainParticipant) {
+        if (retainParticipant == 'All')
+          retainParticipant = 'Participant Choice';
+        bootbox.confirm({
+          closeButton: false,
+          message: 'You have selected "' + retainParticipant
+              + '" for the retention of participant response data when they leave a study.'
+              + ' Your Consent content must be worded to convey the same.'
+              + ' Click OK to proceed with completing this section or Cancel if you wish to make changes.',
+          buttons: {
+            'cancel': {
+              label: 'Cancel',
+            },
+            'confirm': {
+              label: 'OK',
+            },
+          },
+          callback: function (result) {
+            if (result) {
+              //phase2a anchor
+              showWarningForAnchor(isAnchorForEnrollmentDraft, enrollmentdateAsAnchordate);
+              //phase 2a anchor
+            } else {
+              $('#completedId').removeAttr('disabled');
+            }
+          }
+        });
+      } else {
+        $("#inlineCheckbox1,#inlineCheckbox2").prop('disabled', false);
+        $("#buttonText").val('completed');
+        $("#settingfoFormId").submit();
+      }
+    }
+  }
+
+  function admins() {
+    var userIds = "";
+    var permissions = "";
+    var projectLead = "";
+    $('.studyAdminRowCls').each(function () {
+      var userId = $(this).attr('studyUserId');
+      if (userIds == "") {
+        userIds = userId;
+      } else {
+        userIds += "," + userId;
+      }
+      var permission = $(this).find('input[type=radio]:checked').val();
+      if (permissions == "") {
+        permissions = permission;
+      } else {
+        permissions += "," + permission;
+      }
+      if ($(this).find('#inlineRadio3' + userId).prop('checked')) {
+        projectLead = userId;
+      }
+    });
+    $('#userIds').val(userIds);
+    $('#permissions').val(permissions);
+    $('#projectLead').val(projectLead);
+  }
+
+  <c:if test="${empty permission && fn:contains(permissions,5)}">
+
+  function addAdmin() {
+    var userListTableRowCount = $('.checkCount').length;
+    if (userListTableRowCount == 0) {
+      bootbox.alert({
+        closeButton: false,
+        message: 'There are currently no other admin users available to add to this study.',
+      });
+    } else {
+      $('#settingId').hide();
+      $('#adminsId').show();
+      $('#addAdminsToStudyId').prop('disabled', true);
+    }
+  }
+
+  function cancelAddAdmin() {
+    bootbox.confirm({
+      closeButton: false,
+      message: 'You are about to leave the page and any unsaved changes will be lost. Are you sure you want to proceed?',
+      buttons: {
+        'cancel': {
+          label: 'Cancel',
+        },
+        'confirm': {
+          label: 'OK',
+        },
+      },
+      callback: function (result) {
+        if (result) {
+          $('#settingId').show();
+          $('#adminsId').hide();
+          $('[name=case]:checked').each(function () {
+            $(this).prop('checked', false);
+          });
+        }
+      }
+    });
+  }
+
+  function addAdminsToStudy() {
+    $('#addAdminsToStudyId').attr('disabled', true);
+    $('[name=case]:checked').each(function () {
+      var name = escapeXml($(this).val());
+      var userId = $(this).attr('userId');
+      $('#user' + userId).removeClass('checkCount').hide();
+      $('#settingId').show();
+      $(this).prop('checked', false);
+      $('#adminsId').hide();
+      var domStr = '';
+      domStr = domStr + '<tr id="studyAdminRowId' + userId
+          + '" role="row" class="studyAdminRowCls" studyUserId="' + userId + '">';
+      domStr = domStr + '<td><span class="dis-ellipsis" title="' + name + '">' + name
+          + '</span></td>';
+      domStr = domStr + '<td><span class="radio radio-info radio-inline p-45">' +
+          '<input type="radio" id="inlineRadio1' + userId + '" value="0" name="view' + userId
+          + '" checked>' +
+          '<label for="inlineRadio1' + userId + '"></label>' +
+          '</span></td>';
+      domStr = domStr + '<td align="center"><span class="radio radio-info radio-inline p-45">' +
+          '<input type="radio" id="inlineRadio2' + userId + '" value="1" name="view' + userId + '">'
+          +
+          '<label for="inlineRadio2' + userId + '"></label>' +
+          '</span></td>';
+      domStr = domStr + '<td align="center"><span class="radio radio-info radio-inline p-45">' +
+          '<input type="radio" id="inlineRadio3' + userId + '" class="leadCls" name="projectLead">'
+          +
+          '<label for="inlineRadio3' + userId + '"></label>' +
+          '</span></td>';
+      domStr = domStr
+          + '<td align="center"><span class="sprites_icon copy delete" onclick="removeUser('
+          + userId + ')" data-toggle="tooltip" data-placement="top" title="Delete"></span></td>';
+      domStr = domStr + '</tr>';
+      $('#studyAdminId').append(domStr);
+      $('[data-toggle="tooltip"]').tooltip();
+      $('.dataTables_empty').remove();
+    });
+    $('#addAdminsToStudyId').attr('disabled', false);
+  }
+
+  function removeUser(userId) {
+    var userId = userId;
+    var count = 0;
+    $('.studyAdminRowCls').each(function () {
+      count++;
+    });
+    if (count == 1) {
+      table.clear().draw();
+    }
+    $('#studyAdminRowId' + userId).remove();
+    $('#user' + userId).addClass('checkCount').show();
+  }
+
+  function escapeXml(unsafe) {
+    return unsafe.replace(/[<>&'"]/g, function (c) {
+      switch (c) {
+        case '<':
+          return '&lt;';
+        case '>':
+          return '&gt;';
+        case '&':
+          return '&amp;';
+        case '\'':
+          return '&apos;';
+        case '"':
+          return '&quot;';
+      }
+    });
+  }
+
+  </c:if>
+
+  function showWarningForAnchor(isAnchorForEnrollmentDraft, enrollmentdateAsAnchordate) {
+    if (isAnchorForEnrollmentDraft == 'true' && enrollmentdateAsAnchordate == 'No') {
+      var text = "You have chosen not to use enrollment date as an anchor date. You will need to revise the schedules of 'target' activities or resources, if any, that were set up based on the enrollment date.";
+      bootbox.confirm({
+        closeButton: false,
+        message: text,
+        buttons: {
+          'cancel': {
+            label: 'Cancel',
+          },
+          'confirm': {
+            label: 'OK',
+          },
+        },
+        callback: function (valid) {
+          if (valid) {
+            console.log(1);
             $("#inlineCheckbox1,#inlineCheckbox2").prop('disabled', false);
             $("#buttonText").val('completed');
             $("#settingfoFormId").submit();
+          } else {
+            console.log(2);
+            $('#completedId').removeAttr('disabled');
+          }
         }
+      });
+    } else {
+      $("#inlineCheckbox1,#inlineCheckbox2").prop('disabled', false);
+      $("#buttonText").val('completed');
+      $("#settingfoFormId").submit();
     }
+  }
 </script>

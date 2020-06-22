@@ -418,289 +418,328 @@
 <script>
 
 
-    $(document).ready(function () {
-        $('#rowId').parent().removeClass('white-bg');
+  $(document).ready(function () {
+    $('#rowId').parent().removeClass('white-bg');
 
-        <c:if test="${empty studyBOList && empty studyBOs}">
-        $('.addHide').hide();
-        </c:if>
+    <c:if test="${empty studyBOList && empty studyBOs}">
+    $('.addHide').hide();
+    </c:if>
 
-        $('#users').addClass('active');
+    $('#users').addClass('active');
 
-        $('[data-toggle="tooltip"]').tooltip();
+    $('[data-toggle="tooltip"]').tooltip();
 
-        var isManageStudyChecked = $("#inlineCheckbox4").is(":checked");
-        if (isManageStudyChecked) {
+    var isManageStudyChecked = $("#inlineCheckbox4").is(":checked");
+    if (isManageStudyChecked) {
 
-        } else {
-            $('#inlineCheckbox5').val('');
-            $('#inlineCheckbox5').prop('checked', false);
-            $('.changeView').prop('disabled', true);
-            $('.changeView1').prop('disabled', true);
-        }
-        var role = '${userBO.roleName}';
-        if (role) {
-            setStudySettingByRole(role);
-        }
+    } else {
+      $('#inlineCheckbox5').val('');
+      $('#inlineCheckbox5').prop('checked', false);
+      $('.changeView').prop('disabled', true);
+      $('.changeView1').prop('disabled', true);
+    }
+    var role = '${userBO.roleName}';
+    if (role) {
+      setStudySettingByRole(role);
+    }
 
-        $('#roleId').on('change', function () {
-            var element = $(this).find('option:selected').text();
-            setStudySettingByRole(element);
-        });
+    $('#roleId').on('change', function () {
+      var element = $(this).find('option:selected').text();
+      setStudySettingByRole(element);
+    });
 
-        var countCall = 0;
-        $(window).on('load', function () {
-            countCall = 1;
-            $('.selStd').each(function () {
-                var stdTxt = $(this).find('.stdCls').attr('stdTxt');
-                $(".study-list .bootstrap-select .dropdown-menu ul.dropdown-menu li a span:first-child").each(
-                    function () {
-                        var ltxt = $(this).text();
-                        var a = $.trim(ltxt);
-                        var b = $.trim(stdTxt);
-                        if (a == b) {
-                            $(this).parent().parent().hide();
-                        }
-                    });
+    var countCall = 0;
+    $(window).on('load', function () {
+      countCall = 1;
+      $('.selStd').each(function () {
+        var stdTxt = $(this).find('.stdCls').attr('stdTxt');
+        $(".study-list .bootstrap-select .dropdown-menu ul.dropdown-menu li a span:first-child").each(
+            function () {
+              var ltxt = $(this).text();
+              var a = $.trim(ltxt);
+              var b = $.trim(stdTxt);
+              if (a == b) {
+                $(this).parent().parent().hide();
+              }
             });
-        });
+      });
+    });
 
-        if (countCall == 0) {
-            $('.selStd').each(function () {
-                var stdTxt = $(this).find('.stdCls').attr('stdTxt');
-                $(".study-list .bootstrap-select .dropdown-menu ul.dropdown-menu li a span:first-child").each(
-                    function () {
-                        var ltxt = $(this).text();
-                        var a = $.trim(ltxt);
-                        var b = $.trim(stdTxt);
-                        if (a == b) {
-                            $(this).parent().parent().hide();
-                        }
-                    });
+    if (countCall == 0) {
+      $('.selStd').each(function () {
+        var stdTxt = $(this).find('.stdCls').attr('stdTxt');
+        $(".study-list .bootstrap-select .dropdown-menu ul.dropdown-menu li a span:first-child").each(
+            function () {
+              var ltxt = $(this).text();
+              var a = $.trim(ltxt);
+              var b = $.trim(stdTxt);
+              if (a == b) {
+                $(this).parent().parent().hide();
+              }
             });
-        }
-        $("#emailId").blur(function () {
-            var email = $('#emailId').val().toLowerCase();
-            var emailCopy = $('#emailId').val();
-            var oldEmail = $('#emailId').attr('oldVal');
-            var isEmail;
-            var regEX = /^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,3}$/;
-            isEmail = regEX.test(email);
-            if (isEmail && ('' === oldEmail || ('' !== oldEmail && oldEmail !== email))) {
-                var csrfDetcsrfParamName = $('#csrfDet').attr('csrfParamName');
-                var csrfToken = $('#csrfDet').attr('csrfToken');
-                $('#emailId').parent().find(".help-block").html("<ul class='list-unstyled'><li></li></ul>");
-                if (email !== '') {
-                    $.ajax({
-                        url: "/studybuilder/isEmailValid.do?" + csrfDetcsrfParamName + "=" + csrfToken,
-                        type: "POST",
-                        datatype: "json",
-                        global: false,
-                        data: {
-                            email: email,
-                        },
-                        success: function getResponse(data) {
-                            var message = data.message;
-                            if ('SUCCESS' !== message) {
-                                $('#emailId').validator('validate');
-                                $('#emailId').parent().removeClass("has-danger").removeClass("has-error");
-                                $('#emailId').parent().find(".help-block").html("");
-                            } else {
-                                $("body").removeClass("loading");
-                                $('#emailId').val('');
-                                $('#emailId').parent().addClass("has-danger").addClass("has-error");
-                                $('#emailId').parent().find(".help-block").empty();
-                                $('#emailId').parent().find(".help-block").append(
-                                    "<ul class='list-unstyled'><li>'" + emailCopy + "' already exists.</li></ul>");
-                            }
-                        }
-                    });
-                }
-            } else {
+      });
+    }
+    $("#emailId").blur(function () {
+      var email = $('#emailId').val().toLowerCase();
+      var emailCopy = $('#emailId').val();
+      var oldEmail = $('#emailId').attr('oldVal');
+      var isEmail;
+      var regEX = /^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,3}$/;
+      isEmail = regEX.test(email);
+      if (isEmail && ('' === oldEmail || ('' !== oldEmail && oldEmail !== email))) {
+        var csrfDetcsrfParamName = $('#csrfDet').attr('csrfParamName');
+        var csrfToken = $('#csrfDet').attr('csrfToken');
+        $('#emailId').parent().find(".help-block").html("<ul class='list-unstyled'><li></li></ul>");
+        if (email !== '') {
+          $.ajax({
+            url: "/studybuilder/isEmailValid.do?" + csrfDetcsrfParamName + "=" + csrfToken,
+            type: "POST",
+            datatype: "json",
+            global: false,
+            data: {
+              email: email,
+            },
+            success: function getResponse(data) {
+              var message = data.message;
+              if ('SUCCESS' !== message) {
                 $('#emailId').validator('validate');
                 $('#emailId').parent().removeClass("has-danger").removeClass("has-error");
                 $('#emailId').parent().find(".help-block").html("");
+              } else {
+                $("body").removeClass("loading");
+                $('#emailId').val('');
+                $('#emailId').parent().addClass("has-danger").addClass("has-error");
+                $('#emailId').parent().find(".help-block").empty();
+                $('#emailId').parent().find(".help-block").append(
+                    "<ul class='list-unstyled'><li>'" + emailCopy + "' already exists.</li></ul>");
+              }
             }
-        });
-
-        //cancel or back click
-        $('.backOrCancelBttn').on('click', function () {
-            $('#backOrCancelBtnForm').submit();
-        });
-
-        if ($('#inlineCheckbox1').prop("checked") == false) {
-            $('.musr').prop('checked', false);
-            $('.musr').prop('disabled', true);
+          });
         }
+      } else {
+        $('#emailId').validator('validate');
+        $('#emailId').parent().removeClass("has-danger").removeClass("has-error");
+        $('#emailId').parent().find(".help-block").html("");
+      }
+    });
 
-        if ($('#inlineCheckbox3').prop("checked") == false) {
-            $('.mnotf').prop('checked', false);
-            $('.mnotf').prop('disabled', true);
+    //cancel or back click
+    $('.backOrCancelBttn').on('click', function () {
+      $('#backOrCancelBtnForm').submit();
+    });
+
+    if ($('#inlineCheckbox1').prop("checked") == false) {
+      $('.musr').prop('checked', false);
+      $('.musr').prop('disabled', true);
+    }
+
+    if ($('#inlineCheckbox3').prop("checked") == false) {
+      $('.mnotf').prop('checked', false);
+      $('.mnotf').prop('disabled', true);
+    }
+
+    if ($('#inlineCheckbox4').prop("checked") == false) {
+      $('#inlineCheckbox5').prop('checked', false);
+      $('#inlineCheckbox5').prop('disabled', true);
+    }
+
+    $('#inlineCheckbox1').on('click', function () {
+      if ($(this).prop("checked") == true) {
+        $('.musr').prop('disabled', false);
+        $('#inlineRadio1').prop('checked', true);
+      } else if ($(this).prop("checked") == false) {
+        $('.musr').prop('checked', false);
+        $('.musr').prop('disabled', true);
+      }
+    });
+
+    $('#inlineCheckbox3').on('click', function () {
+      if ($(this).prop("checked") == true) {
+        $('.mnotf').prop('disabled', false);
+        $('#inlineRadio5').prop('checked', true);
+      } else if ($(this).prop("checked") == false) {
+        $('.mnotf').prop('checked', false);
+        $('.mnotf').prop('disabled', true);
+      }
+    });
+
+    $('#inlineCheckbox4').on('click', function () {
+      if ($(this).prop("checked") == true) {
+        $(this).val(1);
+        $('.changeView').prop('disabled', false);
+        var element = $("#roleId option:selected").text();
+        if (element == 'Org-level Admin') {
+          $('.changeView1').prop('disabled', true);
+        } else {
+          $('.changeView1').prop('disabled', false);
         }
+      } else if ($(this).prop("checked") == false) {
+        $(this).val('');
+        $('#inlineCheckbox5').val('');
+        $('#inlineCheckbox5').prop('checked', false);
+        $('.changeView').prop('disabled', true);
+        $('.changeView1').prop('disabled', true);
+      }
+    });
 
-        if ($('#inlineCheckbox4').prop("checked") == false) {
-            $('#inlineCheckbox5').prop('checked', false);
-            $('#inlineCheckbox5').prop('disabled', true);
+    $('#inlineCheckbox5').on('click', function () {
+      if ($(this).prop("checked") == true) {
+        $(this).val(1);
+      } else if ($(this).prop("checked") == false) {
+        $(this).val('');
+      }
+    });
+    // Adding selected study items
+    $(".study-addbtn").click(function () {
+
+      $(".study-list .bootstrap-select .dropdown-menu ul.dropdown-menu li.selected").hide();
+
+      $(".study-list .bootstrap-select .dropdown-menu ul.dropdown-menu li").each(function () {
+        if ($(this).text() == "- All items are already selected -") {
+          $(this).hide();
         }
+      });
 
-        $('#inlineCheckbox1').on('click', function () {
-            if ($(this).prop("checked") == true) {
-                $('.musr').prop('disabled', false);
-                $('#inlineRadio1').prop('checked', true);
-            } else if ($(this).prop("checked") == false) {
-                $('.musr').prop('checked', false);
-                $('.musr').prop('disabled', true);
-            }
-        });
+      $('#multiple :selected').each(function (i, sel) {
+        var selVal = $(sel).val();
+        var selTxt = $(sel).text();
+        var existingStudyDiv = "<div class='study-selected-item selStd' id='std" + selVal + "'>"
+            + "<input type='hidden' class='stdCls' id='" + selVal + "' name='' value='" + selVal
+            + "'>"
+            + "<span class='mr-md cls cur-pointer'><img src='/studybuilder/images/icons/close.png' onclick='del("
+            + selVal + ");'/></span>"
+            + "<span>" + selTxt + "</span>"
+            + "<span class='pull-right'>"
+            + "<span class='radio radio-info radio-inline p-45 mr-xs'>"
+            + " <input type='radio' class='v" + selVal + " changeView' id='v1" + selVal
+            + "' name='radio" + selVal + "' value='0' checked='checked'>"
+            + "<label for='v1" + selVal + "'></label></span>"
+            + "<span class='radio radio-inline'>"
+            + "<input type='radio' class='v" + selVal + " changeView' id='v2" + selVal
+            + "' name='radio" + selVal + "' value='1'>"
+            + " <label for='v2" + selVal + "'></label>"
+            + "</span>"
+            + "</span>"
+            + "</div>";
 
-        $('#inlineCheckbox3').on('click', function () {
-            if ($(this).prop("checked") == true) {
-                $('.mnotf').prop('disabled', false);
-                $('#inlineRadio5').prop('checked', true);
-            } else if ($(this).prop("checked") == false) {
-                $('.mnotf').prop('checked', false);
-                $('.mnotf').prop('disabled', true);
-            }
-        });
+        $('.study-selected').append(existingStudyDiv);
+      });
 
-        $('#inlineCheckbox4').on('click', function () {
-            if ($(this).prop("checked") == true) {
-                $(this).val(1);
-                $('.changeView').prop('disabled', false);
-                var element = $("#roleId option:selected").text();
-                if (element == 'Org-level Admin') {
-                    $('.changeView1').prop('disabled', true);
-                } else {
-                    $('.changeView1').prop('disabled', false);
-                }
-            } else if ($(this).prop("checked") == false) {
-                $(this).val('');
-                $('#inlineCheckbox5').val('');
-                $('#inlineCheckbox5').prop('checked', false);
-                $('.changeView').prop('disabled', true);
-                $('.changeView1').prop('disabled', true);
-            }
-        });
+      $(".selectpicker").selectpicker('deselectAll');
+      var tot_items = $(".study-list .bootstrap-select .dropdown-menu ul.dropdown-menu li").length;
+      var count = $(
+          ".study-list .bootstrap-select .dropdown-menu ul.dropdown-menu li[style]").length;
+      if (count == tot_items) {
+        $(".study-list .bootstrap-select .dropdown-menu ul.dropdown-menu").append(
+            '<li class="text-center">- All items are already selected -</li>');
+      }
 
-        $('#inlineCheckbox5').on('click', function () {
-            if ($(this).prop("checked") == true) {
-                $(this).val(1);
-            } else if ($(this).prop("checked") == false) {
-                $(this).val('');
-            }
-        });
-        // Adding selected study items
-        $(".study-addbtn").click(function () {
-
-            $(".study-list .bootstrap-select .dropdown-menu ul.dropdown-menu li.selected").hide();
-
-            $(".study-list .bootstrap-select .dropdown-menu ul.dropdown-menu li").each(function () {
-                if ($(this).text() == "- All items are already selected -") {
-                    $(this).hide();
-                }
-            });
-
-            $('#multiple :selected').each(function (i, sel) {
-                var selVal = $(sel).val();
-                var selTxt = $(sel).text();
-                var existingStudyDiv = "<div class='study-selected-item selStd' id='std" + selVal + "'>"
-                    + "<input type='hidden' class='stdCls' id='" + selVal + "' name='' value='" + selVal
-                    + "'>"
-                    + "<span class='mr-md cls cur-pointer'><img src='/studybuilder/images/icons/close.png' onclick='del("
-                    + selVal + ");'/></span>"
-                    + "<span>" + selTxt + "</span>"
-                    + "<span class='pull-right'>"
-                    + "<span class='radio radio-info radio-inline p-45 mr-xs'>"
-                    + " <input type='radio' class='v" + selVal + " changeView' id='v1" + selVal
-                    + "' name='radio" + selVal + "' value='0' checked='checked'>"
-                    + "<label for='v1" + selVal + "'></label></span>"
-                    + "<span class='radio radio-inline'>"
-                    + "<input type='radio' class='v" + selVal + " changeView' id='v2" + selVal
-                    + "' name='radio" + selVal + "' value='1'>"
-                    + " <label for='v2" + selVal + "'></label>"
-                    + "</span>"
-                    + "</span>"
-                    + "</div>";
-
-                $('.study-selected').append(existingStudyDiv);
-            });
-
-            $(".selectpicker").selectpicker('deselectAll');
-            var tot_items = $(".study-list .bootstrap-select .dropdown-menu ul.dropdown-menu li").length;
-            var count = $(
-                ".study-list .bootstrap-select .dropdown-menu ul.dropdown-menu li[style]").length;
-            if (count == tot_items) {
-                $(".study-list .bootstrap-select .dropdown-menu ul.dropdown-menu").append(
-                    '<li class="text-center">- All items are already selected -</li>');
-            }
-
-        });
+    });
 
 //Removing selected study items
-        $(".removeAll").click(function () {
-            $(".study-list .bootstrap-select .dropdown-menu ul.dropdown-menu li[style],.study-list .bootstrap-select .dropdown-menu ul.dropdown-menu li").show();
-            $(".study-list .bootstrap-select .dropdown-menu ul.dropdown-menu li").each(function () {
-                if ($(this).text() == "- All items are already selected -") {
-                    $(this).hide();
-                }
-            });
-            $(".study-selected-item").remove();
-        });
+    $(".removeAll").click(function () {
+      $(".study-list .bootstrap-select .dropdown-menu ul.dropdown-menu li[style],.study-list .bootstrap-select .dropdown-menu ul.dropdown-menu li").show();
+      $(".study-list .bootstrap-select .dropdown-menu ul.dropdown-menu li").each(function () {
+        if ($(this).text() == "- All items are already selected -") {
+          $(this).hide();
+        }
+      });
+      $(".study-selected-item").remove();
+    });
 
-        $('.addUpdate').on('click', function () {
-            var email = $('#emailId').val();
-            var oldEmail = $('#emailId').attr('oldVal');
-            var isEmail;
-            var regEX = /^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,3}$/;
-            isEmail = regEX.test(email);
-            if (isEmail && ('' === oldEmail || ('' !== oldEmail && oldEmail !== email))) {
-                var csrfDetcsrfParamName = $('#csrfDet').attr('csrfParamName');
-                var csrfToken = $('#csrfDet').attr('csrfToken');
-                $('#emailId').parent().find(".help-block").html("<ul class='list-unstyled'><li></li></ul>");
-                if (email !== '') {
-                    $("body").addClass("loading");
-                    $.ajax({
-                        url: "/studybuilder/isEmailValid.do?" + csrfDetcsrfParamName + "=" + csrfToken,
-                        type: "POST",
-                        datatype: "json",
-                        global: false,
-                        data: {
-                            email: email,
-                        },
-                        success: function getResponse(data) {
-                            var message = data.message;
-                            if ('SUCCESS' !== message) {
-                                $('#emailId').validator('validate');
-                                $('#emailId').parent().removeClass("has-danger").removeClass("has-error");
-                                $('#emailId').parent().find(".help-block").html("");
-                                saveUser();
-                            } else {
-                                $("body").removeClass("loading");
-                                isFromValid($('.addUpdate').parents('form'));
-                                $('#emailId').val('');
-                                $('#emailId').parent().addClass("has-danger").addClass("has-error");
-                                $('#emailId').parent().find(".help-block").empty();
-                                $('#emailId').parent().find(".help-block").append(
-                                    "<ul class='list-unstyled'><li>'" + email + "' already exists.</li></ul>");
-                            }
-                        }
-                    });
-                }
-            } else {
+    $('.addUpdate').on('click', function () {
+      var email = $('#emailId').val();
+      var oldEmail = $('#emailId').attr('oldVal');
+      var isEmail;
+      var regEX = /^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,3}$/;
+      isEmail = regEX.test(email);
+      if (isEmail && ('' === oldEmail || ('' !== oldEmail && oldEmail !== email))) {
+        var csrfDetcsrfParamName = $('#csrfDet').attr('csrfParamName');
+        var csrfToken = $('#csrfDet').attr('csrfToken');
+        $('#emailId').parent().find(".help-block").html("<ul class='list-unstyled'><li></li></ul>");
+        if (email !== '') {
+          $("body").addClass("loading");
+          $.ajax({
+            url: "/studybuilder/isEmailValid.do?" + csrfDetcsrfParamName + "=" + csrfToken,
+            type: "POST",
+            datatype: "json",
+            global: false,
+            data: {
+              email: email,
+            },
+            success: function getResponse(data) {
+              var message = data.message;
+              if ('SUCCESS' !== message) {
                 $('#emailId').validator('validate');
                 $('#emailId').parent().removeClass("has-danger").removeClass("has-error");
                 $('#emailId').parent().find(".help-block").html("");
                 saveUser();
+              } else {
+                $("body").removeClass("loading");
+                isFromValid($('.addUpdate').parents('form'));
+                $('#emailId').val('');
+                $('#emailId').parent().addClass("has-danger").addClass("has-error");
+                $('#emailId').parent().find(".help-block").empty();
+                $('#emailId').parent().find(".help-block").append(
+                    "<ul class='list-unstyled'><li>'" + email + "' already exists.</li></ul>");
+              }
             }
-        });
+          });
+        }
+      } else {
+        $('#emailId').validator('validate');
+        $('#emailId').parent().removeClass("has-danger").removeClass("has-error");
+        $('#emailId').parent().find(".help-block").html("");
+        saveUser();
+      }
+    });
 
-        $('#resendLinkId').on('click', function () {
+    $('#resendLinkId').on('click', function () {
+      var form = document.createElement('form');
+      form.method = 'post';
+      var input = document.createElement('input');
+      input.type = 'hidden';
+      input.name = 'userId';
+      input.value = '${userBO.userId}';
+      form.appendChild(input);
+
+      input = document.createElement('input');
+      input.type = 'hidden';
+      input.name = '${_csrf.parameterName}';
+      input.value = '${_csrf.token}';
+      form.appendChild(input);
+
+      form.action = '/studybuilder/adminUsersEdit/resendActivateDetailsLink.do';
+      document.body.appendChild(form);
+      form.submit();
+    });
+
+    $('#enforcePasswordId').on('click', function () {
+      bootbox.confirm({
+        closeButton: false,
+        message: "Are you sure you wish to enforce a password change for this user?",
+        buttons: {
+          'cancel': {
+            label: 'No',
+          },
+          'confirm': {
+            label: 'Yes',
+          },
+        },
+        callback: function (result) {
+          if (result) {
             var form = document.createElement('form');
             form.method = 'post';
             var input = document.createElement('input');
             input.type = 'hidden';
-            input.name = 'userId';
+            input.name = 'changePassworduserId';
             input.value = '${userBO.userId}';
+            form.appendChild(input);
+
+            var input = document.createElement('input');
+            input.type = 'hidden';
+            input.name = 'emailId';
+            input.value = '${userBO.userEmail}';
             form.appendChild(input);
 
             input = document.createElement('input');
@@ -709,158 +748,119 @@
             input.value = '${_csrf.token}';
             form.appendChild(input);
 
-            form.action = '/studybuilder/adminUsersEdit/resendActivateDetailsLink.do';
+            form.action = '/studybuilder/adminUsersEdit/enforcePasswordChange.do';
             document.body.appendChild(form);
             form.submit();
-        });
-
-        $('#enforcePasswordId').on('click', function () {
-            bootbox.confirm({
-                closeButton: false,
-                message: "Are you sure you wish to enforce a password change for this user?",
-                buttons: {
-                    'cancel': {
-                        label: 'No',
-                    },
-                    'confirm': {
-                        label: 'Yes',
-                    },
-                },
-                callback: function (result) {
-                    if (result) {
-                        var form = document.createElement('form');
-                        form.method = 'post';
-                        var input = document.createElement('input');
-                        input.type = 'hidden';
-                        input.name = 'changePassworduserId';
-                        input.value = '${userBO.userId}';
-                        form.appendChild(input);
-
-                        var input = document.createElement('input');
-                        input.type = 'hidden';
-                        input.name = 'emailId';
-                        input.value = '${userBO.userEmail}';
-                        form.appendChild(input);
-
-                        input = document.createElement('input');
-                        input.type = 'hidden';
-                        input.name = '${_csrf.parameterName}';
-                        input.value = '${_csrf.token}';
-                        form.appendChild(input);
-
-                        form.action = '/studybuilder/adminUsersEdit/enforcePasswordChange.do';
-                        document.body.appendChild(form);
-                        form.submit();
-                    }
-                }
-            })
-
-        });
+          }
+        }
+      })
 
     });
 
-    function del(id) {
-        var atxt = $('#std' + id).children().text();
+  });
 
-        $(".study-list .bootstrap-select .dropdown-menu ul.dropdown-menu li a span:first-child").each(
-            function () {
-                var ltxt = $(this).text();
-                var a = $.trim(ltxt);
-                var b = $.trim(atxt);
-                if (a == b) {
-                    $(this).parent().parent().show();
-                }
-            });
+  function del(id) {
+    var atxt = $('#std' + id).children().text();
 
-        $(".study-list .bootstrap-select .dropdown-menu ul.dropdown-menu li").each(function () {
-            if ($(this).text() == "- All items are already selected -") {
-                $(this).hide();
-            }
+    $(".study-list .bootstrap-select .dropdown-menu ul.dropdown-menu li a span:first-child").each(
+        function () {
+          var ltxt = $(this).text();
+          var a = $.trim(ltxt);
+          var b = $.trim(atxt);
+          if (a == b) {
+            $(this).parent().parent().show();
+          }
         });
 
-        $('#std' + id).remove();
+    $(".study-list .bootstrap-select .dropdown-menu ul.dropdown-menu li").each(function () {
+      if ($(this).text() == "- All items are already selected -") {
+        $(this).hide();
+      }
+    });
 
+    $('#std' + id).remove();
+
+  }
+
+  function activateOrDeactivateUser(userId) {
+    var status = $('#change' + userId).val();
+    var msgPart = "";
+    if ('false' == status) {
+      msgPart = "activate";
+    } else {
+      msgPart = "deactivate";
     }
-
-    function activateOrDeactivateUser(userId) {
-        var status = $('#change' + userId).val();
-        var msgPart = "";
-        if ('false' == status) {
-            msgPart = "activate";
+    bootbox.confirm("Are you sure you want to " + msgPart + " this user?", function (result) {
+      if (result) {
+        if (status == 'true') {
+          $('#change' + userId).val(false);
+          $('#userStatus').val(false);
         } else {
-            msgPart = "deactivate";
+          $('#change' + userId).val(true);
+          $('#userStatus').val(true);
         }
-        bootbox.confirm("Are you sure you want to " + msgPart + " this user?", function (result) {
-            if (result) {
-                if (status == 'true') {
-                    $('#change' + userId).val(false);
-                    $('#userStatus').val(false);
-                } else {
-                    $('#change' + userId).val(true);
-                    $('#userStatus').val(true);
-                }
-            } else {
-                if (status == 'true') {
-                    $('#change' + userId).prop('checked', true);
-                    $('#userStatus').val(true);
+      } else {
+        if (status == 'true') {
+          $('#change' + userId).prop('checked', true);
+          $('#userStatus').val(true);
 
-                } else if (status == 'false') {
-                    $('#change' + userId).prop('checked', false);
-                    $('#userStatus').val(false);
-                }
-                return;
-            }
-        });
-    }
-
-    function saveUser() {
-        $('#emailId').prop('disabled', false);
-        var selectedStudies = "";
-        var permissionValues = "";
-        if (isFromValid($('.addUpdate').parents('form'))) {
-            $('.selStd').each(function () {
-                var studyId = $(this).find('.stdCls').val();
-                var permissionValue = $('#std' + studyId).find('input[type=radio]:checked').val();
-                if (selectedStudies == "") {
-                    selectedStudies = studyId;
-                } else {
-                    selectedStudies += "," + studyId;
-                }
-                if (permissionValues == "") {
-                    permissionValues = permissionValue;
-                } else {
-                    permissionValues += "," + permissionValue;
-                }
-            });
-            $('#selectedStudies').val(selectedStudies);
-            $('#permissionValues').val(permissionValues);
-            <c:if test="${sessionObject.userId eq userBO.userId}">
-            $('#ownUser').val('1');
-            </c:if>
-            $('.addUpdate').parents('form').submit();
+        } else if (status == 'false') {
+          $('#change' + userId).prop('checked', false);
+          $('#userStatus').val(false);
         }
-    }
+        return;
+      }
+    });
+  }
 
-    function setStudySettingByRole(element) {
-        if (element == 'Org-level Admin') {
-            $('#inlineCheckbox1').prop('checked', false);
-            $('#inlineCheckbox3').prop('checked', false);
-            $('.changeView1').prop('checked', false);
-            $('.musr').prop('checked', false);
-            $('.mnotf').prop('checked', false);
-            $('.musr').prop('disabled', true);
-            $('.mnotf').prop('disabled', true);
-            $('#inlineCheckbox1').attr('disabled', true);
-            $('#inlineCheckbox3').attr('disabled', true);
-            $('.changeView1').prop('disabled', true);
-            $('#inlineCheckbox5').prop('checked', false);
-            $('#inlineCheckbox5').attr('disabled', true);
+  function saveUser() {
+    $('#emailId').prop('disabled', false);
+    var selectedStudies = "";
+    var permissionValues = "";
+    if (isFromValid($('.addUpdate').parents('form'))) {
+      $('.selStd').each(function () {
+        var studyId = $(this).find('.stdCls').val();
+        var permissionValue = $('#std' + studyId).find('input[type=radio]:checked').val();
+        if (selectedStudies == "") {
+          selectedStudies = studyId;
         } else {
-            $('#inlineCheckbox1').attr('disabled', false);
-            $('#inlineCheckbox3').attr('disabled', false);
-            $('#inlineCheckbox5').attr('disabled', false);
+          selectedStudies += "," + studyId;
         }
-
+        if (permissionValues == "") {
+          permissionValues = permissionValue;
+        } else {
+          permissionValues += "," + permissionValue;
+        }
+      });
+      $('#selectedStudies').val(selectedStudies);
+      $('#permissionValues').val(permissionValues);
+      <c:if test="${sessionObject.userId eq userBO.userId}">
+      $('#ownUser').val('1');
+      </c:if>
+      $('.addUpdate').parents('form').submit();
     }
+  }
+
+  function setStudySettingByRole(element) {
+    if (element == 'Org-level Admin') {
+      $('#inlineCheckbox1').prop('checked', false);
+      $('#inlineCheckbox3').prop('checked', false);
+      $('.changeView1').prop('checked', false);
+      $('.musr').prop('checked', false);
+      $('.mnotf').prop('checked', false);
+      $('.musr').prop('disabled', true);
+      $('.mnotf').prop('disabled', true);
+      $('#inlineCheckbox1').attr('disabled', true);
+      $('#inlineCheckbox3').attr('disabled', true);
+      $('.changeView1').prop('disabled', true);
+      $('#inlineCheckbox5').prop('checked', false);
+      $('#inlineCheckbox5').attr('disabled', true);
+    } else {
+      $('#inlineCheckbox1').attr('disabled', false);
+      $('#inlineCheckbox3').attr('disabled', false);
+      $('#inlineCheckbox5').attr('disabled', false);
+    }
+
+  }
 </script>
 

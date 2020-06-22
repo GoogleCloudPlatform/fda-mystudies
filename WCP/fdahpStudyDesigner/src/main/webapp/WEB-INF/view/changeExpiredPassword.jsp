@@ -153,36 +153,36 @@
     <script src="/studybuilder/js/theme.js"></script>
     <script src="/studybuilder/js/common.js"></script>
     <script>
-        $(document).ready(function (e) {
-            addPasswordPopup();
-            var errMsg = '${errMsg}';
-            if (errMsg.length > 0) {
-                $("#errMsg").html(errMsg);
-                $("#errMsg").show("fast");
-                setTimeout(hideDisplayMessage, 4000);
-            }
+      $(document).ready(function (e) {
+        addPasswordPopup();
+        var errMsg = '${errMsg}';
+        if (errMsg.length > 0) {
+          $("#errMsg").html(errMsg);
+          $("#errMsg").show("fast");
+          setTimeout(hideDisplayMessage, 4000);
+        }
+      });
+
+      var addPasswordPopup = function () {
+        $("#password").passwordValidator({
+          require: ['length', 'lower', 'upper', 'digit', 'spacial'],
+          length: 8
         });
+      }
 
-        var addPasswordPopup = function () {
-            $("#password").passwordValidator({
-                require: ['length', 'lower', 'upper', 'digit', 'spacial'],
-                length: 8
-            });
-        }
+      function formSubmit() {
+        document.getElementById("logoutForm").submit();
+      }
 
-        function formSubmit() {
-            document.getElementById("logoutForm").submit();
-        }
+      window.history.forward();
 
+      function noBack() {
         window.history.forward();
+      }
 
-        function noBack() {
-            window.history.forward();
-        }
-
-        function hideDisplayMessage() {
-            $('#errMsg').hide();
-        }
+      function hideDisplayMessage() {
+        $('#errMsg').hide();
+      }
     </script>
   </body>
 </html>

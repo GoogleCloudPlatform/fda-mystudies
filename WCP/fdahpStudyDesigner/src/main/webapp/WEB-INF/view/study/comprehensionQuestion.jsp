@@ -244,242 +244,242 @@
 </div>
 <!-- End right Content here -->
 <script type="text/javascript">
-    $(document).ready(function () {
-        <c:if test="${actionPage eq 'view'}">
-        $('#comprehensionFormId input,textarea,select').prop('disabled', true);
-        $('.TestQuestionButtonHide').hide();
-        $('.addBtnDis, .remBtnDis').addClass('dis-none');
-        </c:if>
-        $("#doneId").on("click", function () {
-            if (isFromValid("#comprehensionFormId") && validateCorrectAnswers()) {
-                validateForUniqueValue('', function (val) {
-                    if (val) {
-                        $("#comprehensionFormId").submit();
-                    }
-                });
-            }
+  $(document).ready(function () {
+    <c:if test="${actionPage eq 'view'}">
+    $('#comprehensionFormId input,textarea,select').prop('disabled', true);
+    $('.TestQuestionButtonHide').hide();
+    $('.addBtnDis, .remBtnDis').addClass('dis-none');
+    </c:if>
+    $("#doneId").on("click", function () {
+      if (isFromValid("#comprehensionFormId") && validateCorrectAnswers()) {
+        validateForUniqueValue('', function (val) {
+          if (val) {
+            $("#comprehensionFormId").submit();
+          }
         });
-        $("#saveId").on("click", function () {
-            $(".right-content-body").parents("form").validator("destroy");
-            $(".right-content-body").parents("form").validator();
-            saveComrehensionTestQuestion();
-        });
-        if ($('.ans-opts').length > 2) {
-            $(".remBtnDis").removeClass("hide");
-        } else {
-            $(".remBtnDis").addClass("hide");
-        }
+      }
     });
-    var ansCount = $(".ans-opts").length;
+    $("#saveId").on("click", function () {
+      $(".right-content-body").parents("form").validator("destroy");
+      $(".right-content-body").parents("form").validator();
+      saveComrehensionTestQuestion();
+    });
+    if ($('.ans-opts').length > 2) {
+      $(".remBtnDis").removeClass("hide");
+    } else {
+      $(".remBtnDis").addClass("hide");
+    }
+  });
+  var ansCount = $(".ans-opts").length;
 
-    function addAns() {
-        ansCount = ansCount + 1;
-        var newAns = "<div class='ans-opts col-md-12 p-none' id='" + ansCount
-            + "'><div class='col-md-6 pl-none'>"
-            + "<div class='form-group'>"
-            + "<input type='text' class='form-control' required name='responseList[" + ansCount
-            + "].responseOption' id='responseOptionId" + ansCount
-            + "'  maxlength='150' onblur='validateForUniqueValue(this,function(){});' onkeypress='resetValue(this);'/>"
-            + "<div class='help-block with-errors red-txt'></div>"
-            + "</div>"
-            + "</div>"
-            + "<div class='col-md-3'><div class='form-group'>"
-            + "<select class='selectpicker' required data-error='Please choose one option' name='responseList["
-            + ansCount + "].correctAnswer' id='correctAnswerId" + ansCount + "'>"
-            + "<option value=''>Select</option>"
-            + "<option value='true'>Yes</option>"
-            + "<option value='false'>No</option>"
-            + "</select>"
-            + "<div class='help-block with-errors red-txt'></div>"
-            + "</div>"
-            + "</div>"
-            + "<div class='col-md-3 pl-none'>"
-            + "	<div class='clearfix'></div>"
-            + "	<div class='mt-xs form-group'> "
-            + "		<span id='ans-btn' class='addBtnDis addbtn mr-sm align-span-center' onclick='addAns();'>+</span>"
-            + "		<span class='delete vertical-align-middle remBtnDis hide pl-md align-span-center' onclick='removeAns(this);'></span>"
-            + "    </div> "
-            + "</div>"
-            + " </div>"
-            + "</div></div>";
-        $(".ans-opts:last").after(newAns);
-        $(".ans-opts").parents("form").validator("destroy");
-        $(".ans-opts").parents("form").validator();
-        if ($('.ans-opts').length > 1) {
-            $(".remBtnDis").removeClass("hide");
+  function addAns() {
+    ansCount = ansCount + 1;
+    var newAns = "<div class='ans-opts col-md-12 p-none' id='" + ansCount
+        + "'><div class='col-md-6 pl-none'>"
+        + "<div class='form-group'>"
+        + "<input type='text' class='form-control' required name='responseList[" + ansCount
+        + "].responseOption' id='responseOptionId" + ansCount
+        + "'  maxlength='150' onblur='validateForUniqueValue(this,function(){});' onkeypress='resetValue(this);'/>"
+        + "<div class='help-block with-errors red-txt'></div>"
+        + "</div>"
+        + "</div>"
+        + "<div class='col-md-3'><div class='form-group'>"
+        + "<select class='selectpicker' required data-error='Please choose one option' name='responseList["
+        + ansCount + "].correctAnswer' id='correctAnswerId" + ansCount + "'>"
+        + "<option value=''>Select</option>"
+        + "<option value='true'>Yes</option>"
+        + "<option value='false'>No</option>"
+        + "</select>"
+        + "<div class='help-block with-errors red-txt'></div>"
+        + "</div>"
+        + "</div>"
+        + "<div class='col-md-3 pl-none'>"
+        + "	<div class='clearfix'></div>"
+        + "	<div class='mt-xs form-group'> "
+        + "		<span id='ans-btn' class='addBtnDis addbtn mr-sm align-span-center' onclick='addAns();'>+</span>"
+        + "		<span class='delete vertical-align-middle remBtnDis hide pl-md align-span-center' onclick='removeAns(this);'></span>"
+        + "    </div> "
+        + "</div>"
+        + " </div>"
+        + "</div></div>";
+    $(".ans-opts:last").after(newAns);
+    $(".ans-opts").parents("form").validator("destroy");
+    $(".ans-opts").parents("form").validator();
+    if ($('.ans-opts').length > 1) {
+      $(".remBtnDis").removeClass("hide");
 
+    } else {
+      $('.unitDivParent').find(".remBtnDis").addClass("hide");
+
+    }
+    $('.selectpicker').selectpicker('refresh');
+    $('#' + ansCount).find('input:first').focus();
+  }
+
+  function removeAns(param) {
+    $(param).parents(".ans-opts").remove();
+    $(".ans-opts").parents("form").validator("destroy");
+    $(".ans-opts").parents("form").validator();
+    if ($('.ans-opts').length > 2) {
+      $(".remBtnDis").removeClass("hide");
+
+    } else {
+      $(".remBtnDis").addClass("hide");
+
+    }
+  }
+
+  function goToBackPage(item) {
+    <c:if test="${actionPage ne 'view'}">
+    $(item).prop('disabled', true);
+    bootbox.confirm({
+      closeButton: false,
+      message: 'You are about to leave the page and any unsaved changes will be lost. Are you sure you want to proceed?',
+      buttons: {
+        'cancel': {
+          label: 'Cancel',
+        },
+        'confirm': {
+          label: 'OK',
+        },
+      },
+      callback: function (result) {
+        if (result) {
+          var a = document.createElement('a');
+          a.href = "/studybuilder/adminStudies/comprehensionQuestionList.do?_S=${param._S}";
+          document.body.appendChild(a).click();
         } else {
-            $('.unitDivParent').find(".remBtnDis").addClass("hide");
-
+          $(item).prop('disabled', false);
         }
-        $('.selectpicker').selectpicker('refresh');
-        $('#' + ansCount).find('input:first').focus();
-    }
+      }
+    });
+    </c:if>
+    <c:if test="${actionPage eq 'view'}">
+    var a = document.createElement('a');
+    a.href = "/studybuilder/adminStudies/comprehensionQuestionList.do?_S=${param._S}";
+    document.body.appendChild(a).click();
+    </c:if>
+  }
 
-    function removeAns(param) {
-        $(param).parents(".ans-opts").remove();
-        $(".ans-opts").parents("form").validator("destroy");
-        $(".ans-opts").parents("form").validator();
-        if ($('.ans-opts').length > 2) {
-            $(".remBtnDis").removeClass("hide");
+  function saveComrehensionTestQuestion() {
+    var comprehensionTestQuestion = new Object();
+    var testQuestionId = $("#id").val();
+    var studyId = $("#studyId").val();
+    var questiontext = $("#questionText").val();
+    var structureOfCorrectTxt = $('input[name="structureOfCorrectAns"]:checked').val();
+    var questionResponseArray = new Array();
+    $('.ans-opts').each(function () {
+      var testQuestionResponse = new Object();
+      var id = $(this).attr("id");
+      var responseOption = $("#responseOptionId" + id).val();
+      var correctAnswer = $("#correctAnswerId" + id).val();
+      testQuestionResponse.responseOption = responseOption;
+      testQuestionResponse.correctAnswer = correctAnswer;
+      testQuestionResponse.comprehensionTestQuestionId = testQuestionId;
 
-        } else {
-            $(".remBtnDis").addClass("hide");
-
-        }
-    }
-
-    function goToBackPage(item) {
-        <c:if test="${actionPage ne 'view'}">
-        $(item).prop('disabled', true);
-        bootbox.confirm({
-            closeButton: false,
-            message: 'You are about to leave the page and any unsaved changes will be lost. Are you sure you want to proceed?',
-            buttons: {
-                'cancel': {
-                    label: 'Cancel',
-                },
-                'confirm': {
-                    label: 'OK',
-                },
-            },
-            callback: function (result) {
-                if (result) {
-                    var a = document.createElement('a');
-                    a.href = "/studybuilder/adminStudies/comprehensionQuestionList.do?_S=${param._S}";
-                    document.body.appendChild(a).click();
-                } else {
-                    $(item).prop('disabled', false);
-                }
-            }
-        });
-        </c:if>
-        <c:if test="${actionPage eq 'view'}">
-        var a = document.createElement('a');
-        a.href = "/studybuilder/adminStudies/comprehensionQuestionList.do?_S=${param._S}";
-        document.body.appendChild(a).click();
-        </c:if>
-    }
-
-    function saveComrehensionTestQuestion() {
-        var comprehensionTestQuestion = new Object();
-        var testQuestionId = $("#id").val();
-        var studyId = $("#studyId").val();
-        var questiontext = $("#questionText").val();
-        var structureOfCorrectTxt = $('input[name="structureOfCorrectAns"]:checked').val();
-        var questionResponseArray = new Array();
-        $('.ans-opts').each(function () {
-            var testQuestionResponse = new Object();
-            var id = $(this).attr("id");
-            var responseOption = $("#responseOptionId" + id).val();
-            var correctAnswer = $("#correctAnswerId" + id).val();
-            testQuestionResponse.responseOption = responseOption;
-            testQuestionResponse.correctAnswer = correctAnswer;
-            testQuestionResponse.comprehensionTestQuestionId = testQuestionId;
-
-            questionResponseArray.push(testQuestionResponse);
-        });
-        comprehensionTestQuestion.id = testQuestionId;
-        comprehensionTestQuestion.studyId = studyId;
-        comprehensionTestQuestion.questionText = questiontext;
-        comprehensionTestQuestion.structureOfCorrectAns = structureOfCorrectTxt;
-        comprehensionTestQuestion.responseList = questionResponseArray;
-        var formData = new FormData();
-        if (studyId != null && studyId != '' && typeof studyId != 'undefined' &&
-            questiontext != null && questiontext != '' && typeof questiontext != 'undefined') {
-            formData.append("comprehenstionQuestionInfo", JSON.stringify(comprehensionTestQuestion));
-            $.ajax({
-                url: "/studybuilder/adminStudies/saveComprehensionTestQuestion.do?_S=${param._S}",
-                type: "POST",
-                datatype: "json",
-                data: formData,
-                processData: false,
-                contentType: false,
-                beforeSend: function (xhr, settings) {
-                    xhr.setRequestHeader("X-CSRF-TOKEN", "${_csrf.token}");
-                },
-                success: function (data) {
-                    var jsonobject = eval(data);
-                    var message = jsonobject.message;
-                    if (message == "SUCCESS") {
-                        var questionId = jsonobject.questionId;
-                        $("#id").val(questionId);
-                        $("#alertMsg").removeClass('e-box').addClass('s-box').html("Content saved as draft");
-                        $('#alertMsg').show();
-                    } else {
-                        var errMsg = jsonobject.errMsg;
-                        if (errMsg != '' && errMsg != null && typeof errMsg != 'undefined') {
-                            $("#alertMsg").removeClass('s-box').addClass('e-box').html(errMsg);
-                        } else {
-                            $("#alertMsg").removeClass('s-box').addClass('e-box').html("Something went Wrong");
-                        }
-                    }
-                    setTimeout(hideDisplayMessage, 4000);
-                },
-                error: function (xhr, status, error) {
-                    $(item).prop('disabled', false);
-                    $('#alertMsg').show();
-                    $("#alertMsg").removeClass('s-box').addClass('e-box').html("Something went Wrong");
-                    setTimeout(hideDisplayMessage, 4000);
-                }
-            });
-        } else {
-            $('#questionText').validator('destroy').validator();
-            if (!$('#questionText')[0].checkValidity()) {
-                $("#questionText").parent().addClass('has-error has-danger').find(
-                    ".help-block").empty().append(
-                    '<ul class="list-unstyled"><li>This is a required field.</li></ul>');
-            }
-        }
-    }
-
-    function validateCorrectAnswers() {
-        var questionResponseArray = new Array();
-        $('.ans-opts').each(function () {
-            var id = $(this).attr("id");
-            var correctAnswer = $("#correctAnswerId" + id).val();
-            questionResponseArray.push(correctAnswer);
-        });
-        if (questionResponseArray.indexOf("true") != -1) {
-            return true;
-        } else {
+      questionResponseArray.push(testQuestionResponse);
+    });
+    comprehensionTestQuestion.id = testQuestionId;
+    comprehensionTestQuestion.studyId = studyId;
+    comprehensionTestQuestion.questionText = questiontext;
+    comprehensionTestQuestion.structureOfCorrectAns = structureOfCorrectTxt;
+    comprehensionTestQuestion.responseList = questionResponseArray;
+    var formData = new FormData();
+    if (studyId != null && studyId != '' && typeof studyId != 'undefined' &&
+        questiontext != null && questiontext != '' && typeof questiontext != 'undefined') {
+      formData.append("comprehenstionQuestionInfo", JSON.stringify(comprehensionTestQuestion));
+      $.ajax({
+        url: "/studybuilder/adminStudies/saveComprehensionTestQuestion.do?_S=${param._S}",
+        type: "POST",
+        datatype: "json",
+        data: formData,
+        processData: false,
+        contentType: false,
+        beforeSend: function (xhr, settings) {
+          xhr.setRequestHeader("X-CSRF-TOKEN", "${_csrf.token}");
+        },
+        success: function (data) {
+          var jsonobject = eval(data);
+          var message = jsonobject.message;
+          if (message == "SUCCESS") {
+            var questionId = jsonobject.questionId;
+            $("#id").val(questionId);
+            $("#alertMsg").removeClass('e-box').addClass('s-box').html("Content saved as draft");
             $('#alertMsg').show();
-            $("#alertMsg").removeClass('s-box').addClass('e-box').html(
-                "Please select at least one correct answer as yes.");
-            setTimeout(hideDisplayMessage, 3000);
-            return false;
-        }
-    }
-
-    function validateForUniqueValue(item, callback) {
-        var isValid = true;
-        var valueArray = new Array();
-        $('.ans-opts').each(function () {
-            var id = $(this).attr("id");
-            var diaplay_value = $("#responseOptionId" + id).val();
-            $("#responseOptionId" + id).parent().removeClass("has-danger").removeClass("has-error");
-            $("#responseOptionId" + id).parent().find(".help-block").empty();
-            if (diaplay_value != '') {
-                if (valueArray.indexOf(diaplay_value.toLowerCase()) != -1) {
-                    isValid = false;
-
-                    $("#responseOptionId" + id).parent().addClass("has-danger").addClass("has-error");
-                    $("#responseOptionId" + id).parent().find(".help-block").empty();
-                    $("#responseOptionId" + id).parent().find(".help-block").append(
-                        "<ul class='list-unstyled'><li>The value should be unique </li></ul>");
-                } else
-                    valueArray.push(diaplay_value.toLowerCase());
+          } else {
+            var errMsg = jsonobject.errMsg;
+            if (errMsg != '' && errMsg != null && typeof errMsg != 'undefined') {
+              $("#alertMsg").removeClass('s-box').addClass('e-box').html(errMsg);
             } else {
-                $("#responseOptionId" + id).parent().addClass("has-danger").addClass("has-error");
-                $("#responseOptionId" + id).parent().find(".help-block").empty();
+              $("#alertMsg").removeClass('s-box').addClass('e-box').html("Something went Wrong");
             }
-
-        });
-        callback(isValid);
+          }
+          setTimeout(hideDisplayMessage, 4000);
+        },
+        error: function (xhr, status, error) {
+          $(item).prop('disabled', false);
+          $('#alertMsg').show();
+          $("#alertMsg").removeClass('s-box').addClass('e-box').html("Something went Wrong");
+          setTimeout(hideDisplayMessage, 4000);
+        }
+      });
+    } else {
+      $('#questionText').validator('destroy').validator();
+      if (!$('#questionText')[0].checkValidity()) {
+        $("#questionText").parent().addClass('has-error has-danger').find(
+            ".help-block").empty().append(
+            '<ul class="list-unstyled"><li>This is a required field.</li></ul>');
+      }
     }
+  }
 
-    function resetValue(item) {
-        $(item).parent().addClass("has-danger").addClass("has-error");
-        $(item).parent().find(".help-block").empty();
+  function validateCorrectAnswers() {
+    var questionResponseArray = new Array();
+    $('.ans-opts').each(function () {
+      var id = $(this).attr("id");
+      var correctAnswer = $("#correctAnswerId" + id).val();
+      questionResponseArray.push(correctAnswer);
+    });
+    if (questionResponseArray.indexOf("true") != -1) {
+      return true;
+    } else {
+      $('#alertMsg').show();
+      $("#alertMsg").removeClass('s-box').addClass('e-box').html(
+          "Please select at least one correct answer as yes.");
+      setTimeout(hideDisplayMessage, 3000);
+      return false;
     }
+  }
+
+  function validateForUniqueValue(item, callback) {
+    var isValid = true;
+    var valueArray = new Array();
+    $('.ans-opts').each(function () {
+      var id = $(this).attr("id");
+      var diaplay_value = $("#responseOptionId" + id).val();
+      $("#responseOptionId" + id).parent().removeClass("has-danger").removeClass("has-error");
+      $("#responseOptionId" + id).parent().find(".help-block").empty();
+      if (diaplay_value != '') {
+        if (valueArray.indexOf(diaplay_value.toLowerCase()) != -1) {
+          isValid = false;
+
+          $("#responseOptionId" + id).parent().addClass("has-danger").addClass("has-error");
+          $("#responseOptionId" + id).parent().find(".help-block").empty();
+          $("#responseOptionId" + id).parent().find(".help-block").append(
+              "<ul class='list-unstyled'><li>The value should be unique </li></ul>");
+        } else
+          valueArray.push(diaplay_value.toLowerCase());
+      } else {
+        $("#responseOptionId" + id).parent().addClass("has-danger").addClass("has-error");
+        $("#responseOptionId" + id).parent().find(".help-block").empty();
+      }
+
+    });
+    callback(isValid);
+  }
+
+  function resetValue(item) {
+    $(item).parent().addClass("has-danger").addClass("has-error");
+    $(item).parent().find(".help-block").empty();
+  }
 </script>

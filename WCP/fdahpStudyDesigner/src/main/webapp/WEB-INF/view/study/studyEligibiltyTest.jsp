@@ -132,160 +132,160 @@
 </div>
 <!-- End right Content here -->
 <script type="text/javascript">
-    var isValid = false;
-    var oldShortTitle = "${fn:escapeXml(eligibilityTest.shortTitle)}";
-    $(document).ready(function () {
+  var isValid = false;
+  var oldShortTitle = "${fn:escapeXml(eligibilityTest.shortTitle)}";
+  $(document).ready(function () {
 
-        $(".menuNav li.active").removeClass('active');
-        $(".menuNav li.fourth").addClass('active');
+    $(".menuNav li.active").removeClass('active');
+    $(".menuNav li.fourth").addClass('active');
 
-        <c:if test="${actionTypeForQuestionPage eq 'view'}">
-        $('#studyEligibiltyTestFormId input,textarea,select').prop('disabled', true);
-        $('#studyEligibiltyTestFormId').find('.elaborateClass').addClass('linkDis');
-        </c:if>
+    <c:if test="${actionTypeForQuestionPage eq 'view'}">
+    $('#studyEligibiltyTestFormId input,textarea,select').prop('disabled', true);
+    $('#studyEligibiltyTestFormId').find('.elaborateClass').addClass('linkDis');
+    </c:if>
 
-        $("#shortTitleId").blur(function () {
-            if ($(this).val() != oldShortTitle)
-                validateShortTitle(this, function (val) {
+    $("#shortTitleId").blur(function () {
+      if ($(this).val() != oldShortTitle)
+        validateShortTitle(this, function (val) {
 
-                });
-        });
-        $('[data-toggle="tooltip"]').tooltip();
-        $("#doneId").click(function () {
-            $(this).prop("disabled", true);
-            validateShortTitle("#shortTitleId", function (val) {
-                if (val) {
-                    $('#shortTitleId').prop('disabled', false);
-                    if (isFromValid("#studyEligibiltyTestFormId") && chkValidChoosedOption()) {
-                        document.studyEligibiltyTestFormId.submit();
-                    } else {
-                        $("#doneId").prop("disabled", false);
-                    }
-                } else {
-                    $("#doneId").prop("disabled", false);
-                }
-            });
-        });
-        $("#saveId").click(function () {
-            $(this).prop("disabled", true);
-            validateShortTitle("#shortTitleId", function (val) {
-                if (val) {
-                    if (chkValidChoosedOption()) {
-                        $('#studyEligibiltyTestFormId').validator('destroy');
-                        $('#type').val('save');
-                        $('#studyEligibiltyTestFormId').submit();
-                    } else {
-                        $('#saveId').prop("disabled", false);
-                    }
-                } else {
-                    if ($('#shortTitleId').val()) {
-                        $('#shortTitleId').parent().addClass('has-error has-danger').find(
-                            ".help-block").empty().append(
-                            '<ul class="list-unstyled"><li>This is a required field.</li></ul>');
-                    }
-                    $('#saveId').prop("disabled", false);
-                    return false;
-                }
-            });
         });
     });
+    $('[data-toggle="tooltip"]').tooltip();
+    $("#doneId").click(function () {
+      $(this).prop("disabled", true);
+      validateShortTitle("#shortTitleId", function (val) {
+        if (val) {
+          $('#shortTitleId').prop('disabled', false);
+          if (isFromValid("#studyEligibiltyTestFormId") && chkValidChoosedOption()) {
+            document.studyEligibiltyTestFormId.submit();
+          } else {
+            $("#doneId").prop("disabled", false);
+          }
+        } else {
+          $("#doneId").prop("disabled", false);
+        }
+      });
+    });
+    $("#saveId").click(function () {
+      $(this).prop("disabled", true);
+      validateShortTitle("#shortTitleId", function (val) {
+        if (val) {
+          if (chkValidChoosedOption()) {
+            $('#studyEligibiltyTestFormId').validator('destroy');
+            $('#type').val('save');
+            $('#studyEligibiltyTestFormId').submit();
+          } else {
+            $('#saveId').prop("disabled", false);
+          }
+        } else {
+          if ($('#shortTitleId').val()) {
+            $('#shortTitleId').parent().addClass('has-error has-danger').find(
+                ".help-block").empty().append(
+                '<ul class="list-unstyled"><li>This is a required field.</li></ul>');
+          }
+          $('#saveId').prop("disabled", false);
+          return false;
+        }
+      });
+    });
+  });
 
-    function validateShortTitle(item, callback) {
-        var thisAttr = item;
-        var shortTitle = $("#shortTitleId").val();
-        if (!$('#shortTitleId').is('[readonly]')) {
-            if (shortTitle) {
-                $('#shortTitleId').prop('disabled', true);
-                $.ajax({
-                    url: "/studybuilder/adminStudies/validateEligibilityTestKey.do?_S=${param._S}",
-                    type: "POST",
-                    datatype: "json",
-                    data: {
-                        shortTitle: shortTitle,
-                        eligibilityTestId: '${eligibilityTest.id}',
-                        eligibilityId: '${eligibilityId}'
-                    },
-                    beforeSend: function (xhr, settings) {
-                        xhr.setRequestHeader("X-CSRF-TOKEN", "${_csrf.token}");
-                    },
-                    success: function (data) {
-                        var message = data.message;
-                        $('#shortTitleId').prop('disabled', false);
-                        if ('SUCCESS' == message) {
-                            $(thisAttr).validator('validate');
-                            $(thisAttr).parent().removeClass("has-danger").removeClass("has-error");
-                            $(thisAttr).parent().find(".help-block").html("");
-                            oldShortTitle = shortTitle;
-                            callback(true);
-                        } else {
-                            $(thisAttr).val('');
-                            $(thisAttr).parent().addClass("has-danger").addClass("has-error");
-                            $(thisAttr).parent().find(".help-block").empty();
-                            $(thisAttr).parent().find(".help-block").append(
-                                "<ul class='list-unstyled'><li>'" + shortTitle
-                                + "' has already been used in the past.</li></ul>");
-                            callback(false);
-                        }
-                    },
-                    error: function () {
-                        $('#shortTitleId').prop('disabled', false);
-                    },
-                    global: false
-                });
+  function validateShortTitle(item, callback) {
+    var thisAttr = item;
+    var shortTitle = $("#shortTitleId").val();
+    if (!$('#shortTitleId').is('[readonly]')) {
+      if (shortTitle) {
+        $('#shortTitleId').prop('disabled', true);
+        $.ajax({
+          url: "/studybuilder/adminStudies/validateEligibilityTestKey.do?_S=${param._S}",
+          type: "POST",
+          datatype: "json",
+          data: {
+            shortTitle: shortTitle,
+            eligibilityTestId: '${eligibilityTest.id}',
+            eligibilityId: '${eligibilityId}'
+          },
+          beforeSend: function (xhr, settings) {
+            xhr.setRequestHeader("X-CSRF-TOKEN", "${_csrf.token}");
+          },
+          success: function (data) {
+            var message = data.message;
+            $('#shortTitleId').prop('disabled', false);
+            if ('SUCCESS' == message) {
+              $(thisAttr).validator('validate');
+              $(thisAttr).parent().removeClass("has-danger").removeClass("has-error");
+              $(thisAttr).parent().find(".help-block").html("");
+              oldShortTitle = shortTitle;
+              callback(true);
             } else {
-                callback(false);
+              $(thisAttr).val('');
+              $(thisAttr).parent().addClass("has-danger").addClass("has-error");
+              $(thisAttr).parent().find(".help-block").empty();
+              $(thisAttr).parent().find(".help-block").append(
+                  "<ul class='list-unstyled'><li>'" + shortTitle
+                  + "' has already been used in the past.</li></ul>");
+              callback(false);
             }
-        } else {
-            callback(true);
-        }
-    }
-
-    function goToBackPage(item) {
-        $(item).prop('disabled', true);
-        <c:if test="${actionTypeForQuestionPage ne 'view'}">
-        bootbox.confirm({
-            closeButton: false,
-            message: 'You are about to leave the page and any unsaved changes will be lost. Are you sure you want to proceed?',
-            buttons: {
-                'cancel': {
-                    label: 'Cancel',
-                },
-                'confirm': {
-                    label: 'OK',
-                },
-            },
-            callback: function (result) {
-                if (result) {
-                    var a = document.createElement('a');
-                    a.href = "/studybuilder/adminStudies/viewStudyEligibilty.do?_S=${param._S}";
-                    document.body.appendChild(a).click();
-                } else {
-                    $(item).prop('disabled', false);
-                }
-            }
+          },
+          error: function () {
+            $('#shortTitleId').prop('disabled', false);
+          },
+          global: false
         });
-        </c:if>
-        <c:if test="${actionTypeForQuestionPage eq 'view'}">
-        var a = document.createElement('a');
-        a.href = "/studybuilder/adminStudies/viewStudyEligibilty.do?_S=${param._S}";
-        document.body.appendChild(a).click();
-        </c:if>
+      } else {
+        callback(false);
+      }
+    } else {
+      callback(true);
     }
+  }
 
-    var chkValidChoosedOption = function () {
-        let resYesOptVal = $('#resYesOptId').val();
-        let resNoOptVal = $('#resNoOptId').val();
-
-        if (resYesOptVal == 'false' && resNoOptVal == 'false') {
-            showErrMsg("Both answer options cannot have Fail attribute");
-            $("#resYesOptId").parents(".form-group").addClass("has-error has-danger");
-            $("#resNoOptId").parents(".form-group").addClass("has-error has-danger");
-            return false;
+  function goToBackPage(item) {
+    $(item).prop('disabled', true);
+    <c:if test="${actionTypeForQuestionPage ne 'view'}">
+    bootbox.confirm({
+      closeButton: false,
+      message: 'You are about to leave the page and any unsaved changes will be lost. Are you sure you want to proceed?',
+      buttons: {
+        'cancel': {
+          label: 'Cancel',
+        },
+        'confirm': {
+          label: 'OK',
+        },
+      },
+      callback: function (result) {
+        if (result) {
+          var a = document.createElement('a');
+          a.href = "/studybuilder/adminStudies/viewStudyEligibilty.do?_S=${param._S}";
+          document.body.appendChild(a).click();
         } else {
-            $("#resYesOptId").parents(".form-group").removeClass("has-error has-danger");
-            $("#resNoOptId").parents(".form-group").removeClass("has-error has-danger");
-            return true;
+          $(item).prop('disabled', false);
         }
+      }
+    });
+    </c:if>
+    <c:if test="${actionTypeForQuestionPage eq 'view'}">
+    var a = document.createElement('a');
+    a.href = "/studybuilder/adminStudies/viewStudyEligibilty.do?_S=${param._S}";
+    document.body.appendChild(a).click();
+    </c:if>
+  }
 
+  var chkValidChoosedOption = function () {
+    let resYesOptVal = $('#resYesOptId').val();
+    let resNoOptVal = $('#resNoOptId').val();
+
+    if (resYesOptVal == 'false' && resNoOptVal == 'false') {
+      showErrMsg("Both answer options cannot have Fail attribute");
+      $("#resYesOptId").parents(".form-group").addClass("has-error has-danger");
+      $("#resNoOptId").parents(".form-group").addClass("has-error has-danger");
+      return false;
+    } else {
+      $("#resYesOptId").parents(".form-group").removeClass("has-error has-danger");
+      $("#resNoOptId").parents(".form-group").removeClass("has-error has-danger");
+      return true;
     }
+
+  }
 </script>

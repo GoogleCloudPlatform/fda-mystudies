@@ -306,121 +306,121 @@
        csrfToken="${_csrf.token}"/>
 
 <script>
-    $(document).ready(function () {
-        $('#rowId').parent().removeClass('white-bg');
-        addPasswordPopup();
-        $("#myAccount").addClass("active");
+  $(document).ready(function () {
+    $('#rowId').parent().removeClass('white-bg');
+    addPasswordPopup();
+    $("#myAccount").addClass("active");
 
-        var button = $('#ed-update');
-        $('input').each(function () {
-            $(this).data('val', $(this).val());
-        });
-        $('input').bind('keyup change blur', function () {
-            var changed = false;
-            $('input').each(function () {
-                if ($(this).val() != $(this).data('val')) {
-                    changed = true;
-                }
-            });
-            button.prop('disabled', !changed);
-        });
-        /* Profile buttons starts */
+    var button = $('#ed-update');
+    $('input').each(function () {
+      $(this).data('val', $(this).val());
+    });
+    $('input').bind('keyup change blur', function () {
+      var changed = false;
+      $('input').each(function () {
+        if ($(this).val() != $(this).data('val')) {
+          changed = true;
+        }
+      });
+      button.prop('disabled', !changed);
+    });
+    /* Profile buttons starts */
 
-        // Edit & Update button toggling
-        $("#editable").click(function () {
-            $(".edit-field").prop('readonly', false).removeClass("bor-trans");
-            $('.roleDisable input').prop('readonly', true).addClass("bor-trans");
-            $("#ed-cancel,#ed-update").removeClass("dis-none");
-            $("input[type='password']").prop("required", false);
-            $('.cursAllow input').removeClass("linkDis");
-            $("#editable").addClass("dis-none");
-            $(".disChangePassButton").prop('disabled', true);
-            $('#ed-update').addClass('disabled');
-            $('#ed-update').addClass('disClick');
-        });
-
-        //Cancel editing
-        $("#ed-cancel").click(function () {
-            $('#userDetailsForm').find('.resetVal').each(function () {
-                $(this).val($(this).attr('oldVal'));
-            });
-            resetValidation('#userDetailsForm');
-            $('#userEmail').parent().find(".help-block").empty();
-            $(".edit-field").prop('readonly', true).addClass("bor-trans");
-            $("#ed-cancel,#ed-update").addClass("dis-none");
-            $('.cursAllow input').addClass("linkDis");
-            $("#editable").removeClass("dis-none");
-            $(".disChangePassButton").prop('disabled', false);
-        });
-        /* Profile buttons ends */
-
-        $("#pwd-link").click(function () {
-            $("input[type='password']").prop("required", true);
-            $("#editable").prop('disabled', true);
-            $("#hideChangePwd").addClass("dis-none");
-            $(".changepwd").removeClass("dis-none");
-            $("#updateBtn").prop('disabled', false);
-            $("#oldPassword").click();
-        });
-
-        $("#cancelBtn").click(function () {
-            $("#hideChangePwd").removeClass("dis-none");
-            $(".changepwd").addClass("dis-none");
-            $("#editable").prop('disabled', false);
-            $(".emptyField").val("");
-            resetValidation('#userDetailsForm');
-        });
-
-        $("#updateBtn").click(function () {
-            var oldPassword = $('#oldPassword').val();
-            var newPassword = $('#password').val();
-            isFromValid("#userDetailsForm");
-            if ($(".has-danger").length < 1) {
-                var thisAttr = this;
-                if (oldPassword != newPassword) {
-                    $(".changepwd .help-block ul").remove();
-                    $("#updateBtn").prop('disabled', true);
-                    $.ajax({
-                        url: "/studybuilder/adminDashboard/changePassword.do",
-                        type: "POST",
-                        datatype: "json",
-                        data: {
-                            oldPassword: oldPassword,
-                            newPassword: newPassword,
-                            "${_csrf.parameterName}": "${_csrf.token}"
-                        },
-                        success: function getResponse(data, status) {
-                            var jsonObj = eval(data);
-                            var message = jsonObj.message;
-                            if ('SUCCESS' == message) {
-                                showSucMsg('Password updated successfully.');
-                                $("#cancelBtn").click();
-                            } else {
-                                showErrMsg(message);
-                                $("input[type='password']").prop("required", true);
-                            }
-                            $(window).scrollTop(0);
-                            $("#updateBtn").prop('disabled', false);
-                            $(".changepwd .emptyField").val("");
-                        },
-                    });
-                } else {
-                    showErrMsg('New password should not be same as old Password.');
-                    $(window).scrollTop(0);
-                    $(".changepwd .emptyField").val("");
-                    $("#updateBtn").prop('disabled', false);
-                }
-            } else {
-            }
-        });
+    // Edit & Update button toggling
+    $("#editable").click(function () {
+      $(".edit-field").prop('readonly', false).removeClass("bor-trans");
+      $('.roleDisable input').prop('readonly', true).addClass("bor-trans");
+      $("#ed-cancel,#ed-update").removeClass("dis-none");
+      $("input[type='password']").prop("required", false);
+      $('.cursAllow input').removeClass("linkDis");
+      $("#editable").addClass("dis-none");
+      $(".disChangePassButton").prop('disabled', true);
+      $('#ed-update').addClass('disabled');
+      $('#ed-update').addClass('disClick');
     });
 
-    var addPasswordPopup = function () {
-        $("#password").passwordValidator({
-            // list of qualities to require
-            require: ['length', 'lower', 'upper', 'digit', 'spacial'],
-            // minimum length requirement
-            length: 8
-        });
-    }
+    //Cancel editing
+    $("#ed-cancel").click(function () {
+      $('#userDetailsForm').find('.resetVal').each(function () {
+        $(this).val($(this).attr('oldVal'));
+      });
+      resetValidation('#userDetailsForm');
+      $('#userEmail').parent().find(".help-block").empty();
+      $(".edit-field").prop('readonly', true).addClass("bor-trans");
+      $("#ed-cancel,#ed-update").addClass("dis-none");
+      $('.cursAllow input').addClass("linkDis");
+      $("#editable").removeClass("dis-none");
+      $(".disChangePassButton").prop('disabled', false);
+    });
+    /* Profile buttons ends */
+
+    $("#pwd-link").click(function () {
+      $("input[type='password']").prop("required", true);
+      $("#editable").prop('disabled', true);
+      $("#hideChangePwd").addClass("dis-none");
+      $(".changepwd").removeClass("dis-none");
+      $("#updateBtn").prop('disabled', false);
+      $("#oldPassword").click();
+    });
+
+    $("#cancelBtn").click(function () {
+      $("#hideChangePwd").removeClass("dis-none");
+      $(".changepwd").addClass("dis-none");
+      $("#editable").prop('disabled', false);
+      $(".emptyField").val("");
+      resetValidation('#userDetailsForm');
+    });
+
+    $("#updateBtn").click(function () {
+      var oldPassword = $('#oldPassword').val();
+      var newPassword = $('#password').val();
+      isFromValid("#userDetailsForm");
+      if ($(".has-danger").length < 1) {
+        var thisAttr = this;
+        if (oldPassword != newPassword) {
+          $(".changepwd .help-block ul").remove();
+          $("#updateBtn").prop('disabled', true);
+          $.ajax({
+            url: "/studybuilder/adminDashboard/changePassword.do",
+            type: "POST",
+            datatype: "json",
+            data: {
+              oldPassword: oldPassword,
+              newPassword: newPassword,
+              "${_csrf.parameterName}": "${_csrf.token}"
+            },
+            success: function getResponse(data, status) {
+              var jsonObj = eval(data);
+              var message = jsonObj.message;
+              if ('SUCCESS' == message) {
+                showSucMsg('Password updated successfully.');
+                $("#cancelBtn").click();
+              } else {
+                showErrMsg(message);
+                $("input[type='password']").prop("required", true);
+              }
+              $(window).scrollTop(0);
+              $("#updateBtn").prop('disabled', false);
+              $(".changepwd .emptyField").val("");
+            },
+          });
+        } else {
+          showErrMsg('New password should not be same as old Password.');
+          $(window).scrollTop(0);
+          $(".changepwd .emptyField").val("");
+          $("#updateBtn").prop('disabled', false);
+        }
+      } else {
+      }
+    });
+  });
+
+  var addPasswordPopup = function () {
+    $("#password").passwordValidator({
+      // list of qualities to require
+      require: ['length', 'lower', 'upper', 'digit', 'spacial'],
+      // minimum length requirement
+      length: 8
+    });
+  }
 </script>

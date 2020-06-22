@@ -184,39 +184,39 @@
 <!-- End right Content here -->
 
 <script type="text/javascript">
-    $(document).ready(function () {
-        $(".menuNav li").removeClass('active');
-        $(".nine").addClass('active');
+  $(document).ready(function () {
+    $(".menuNav li").removeClass('active');
+    $(".nine").addClass('active');
 
-        <c:if test="${not empty permission}">
-        $('.class').prop('disabled', true);
-        </c:if>
+    <c:if test="${not empty permission}">
+    $('.class').prop('disabled', true);
+    </c:if>
 
-        $('#saveChecklistId').click(function () {
-            $('#actionBut').val('save');
-            $('#checklistForm').submit();
-        });
-
-        $("#doneChecklistId").on('click', function () {
-            bootbox.confirm({
-                closeButton: false,
-                message: 'Are you sure you have no more updates to be made in this section? Clicking Done will mark this section as Complete.',
-                buttons: {
-                    'cancel': {
-                        label: 'Cancel',
-                    },
-                    'confirm': {
-                        label: 'OK',
-                    },
-                },
-                callback: function (result) {
-                    if (result) {
-                        $('#actionBut').val('done');
-                        $('#checklistForm').submit();
-                    }
-                }
-            });
-        });
+    $('#saveChecklistId').click(function () {
+      $('#actionBut').val('save');
+      $('#checklistForm').submit();
     });
+
+    $("#doneChecklistId").on('click', function () {
+      bootbox.confirm({
+        closeButton: false,
+        message: 'Are you sure you have no more updates to be made in this section? Clicking Done will mark this section as Complete.',
+        buttons: {
+          'cancel': {
+            label: 'Cancel',
+          },
+          'confirm': {
+            label: 'OK',
+          },
+        },
+        callback: function (result) {
+          if (result) {
+            $('#actionBut').val('done');
+            $('#checklistForm').submit();
+          }
+        }
+      });
+    });
+  });
 
 </script>

@@ -120,275 +120,275 @@
   <input type="hidden" name="studyId" id="studyId" value="${studyId}"/>
 </form:form>
 <script type="text/javascript">
-    $(document).ready(function () {
-        $('[data-toggle="tooltip"]').tooltip();
-        $(".menuNav li").removeClass('active');
-        $(".fifthConsent").addClass('active');
-        $("#createStudyId").show();
-        var viewPermission = "${permission}";
-        var permission = "${permission}";
+  $(document).ready(function () {
+    $('[data-toggle="tooltip"]').tooltip();
+    $(".menuNav li").removeClass('active');
+    $(".fifthConsent").addClass('active');
+    $("#createStudyId").show();
+    var viewPermission = "${permission}";
+    var permission = "${permission}";
 
-        var reorder = true;
-        if (viewPermission == 'view') {
-            reorder = false;
-        } else {
-            reorder = true;
+    var reorder = true;
+    if (viewPermission == 'view') {
+      reorder = false;
+    } else {
+      reorder = true;
+    }
+    var table1 = $('#consent_list').DataTable({
+      "paging": false,
+      "info": false,
+      "filter": false,
+      rowReorder: reorder,
+      language: {
+        "zeroRecords": "You haven't created any content yet.",
+      },
+      "columnDefs": [{orderable: false, targets: [0, 1, 2]}],
+      "fnRowCallback": function (nRow, aData, iDisplayIndex, iDisplayIndexFull) {
+        if (viewPermission != 'view') {
+          $('td:eq(0)', nRow).addClass("cursonMove dd_icon");
         }
-        var table1 = $('#consent_list').DataTable({
-            "paging": false,
-            "info": false,
-            "filter": false,
-            rowReorder: reorder,
-            language: {
-                "zeroRecords": "You haven't created any content yet.",
-            },
-            "columnDefs": [{orderable: false, targets: [0, 1, 2]}],
-            "fnRowCallback": function (nRow, aData, iDisplayIndex, iDisplayIndexFull) {
-                if (viewPermission != 'view') {
-                    $('td:eq(0)', nRow).addClass("cursonMove dd_icon");
-                }
-            }
-        });
-
-        table1.on('row-reorder', function (e, diff, edit) {
-            var oldOrderNumber = '', newOrderNumber = '';
-            var result = 'Reorder started on row: ' + edit.triggerRow.data()[1] + '<br>';
-            var studyId = $("#studyId").val();
-            for (var i = 0, ien = diff.length; i < ien; i++) {
-                var rowData = table1.row(diff[i].node).data();
-                var r1;
-                if (i == 0) {
-                    r1 = rowData[0];
-                }
-                if (i == 1) {
-                    if (parseInt(r1) > parseInt(rowData[0])) {
-                        oldOrderNumber = diff[0].oldData;
-                        newOrderNumber = diff[0].newData;
-                    } else {
-                        oldOrderNumber = diff[diff.length - 1].oldData;
-                        newOrderNumber = diff[diff.length - 1].newData;
-                    }
-
-                }
-                result += rowData[1] + ' updated to be in position ' +
-                    diff[i].newData + ' (was ' + diff[i].oldData + ')<br>';
-            }
-
-            if (oldOrderNumber !== undefined && oldOrderNumber != null && oldOrderNumber != ""
-                && newOrderNumber !== undefined && newOrderNumber != null && newOrderNumber != "") {
-                $.ajax({
-                    url: "/studybuilder/adminStudies/reOrderConsentInfo.do?_S=${param._S}",
-                    type: "POST",
-                    datatype: "json",
-                    data: {
-                        studyId: studyId,
-                        oldOrderNumber: oldOrderNumber,
-                        newOrderNumber: newOrderNumber,
-                        "${_csrf.parameterName}": "${_csrf.token}",
-                    },
-                    success: function consentInfo(data) {
-                        var jsonobject = eval(data);
-                        var message = jsonobject.message;
-                        if (message == "SUCCESS") {
-                            reloadConsentInfoDataTable(jsonobject.consentInfoList, null);
-                            $('#alertMsg').show();
-                            $("#alertMsg").removeClass('e-box').addClass('s-box').html(
-                                "Reorder done successfully");
-                            if ($('.fifthConsent').find('span').hasClass(
-                                'sprites-icons-2 tick pull-right mt-xs')) {
-                                $('.fifthConsent').find('span').removeClass(
-                                    'sprites-icons-2 tick pull-right mt-xs');
-                            }
-                            if ($('.fifthConsentReview').find('span').hasClass(
-                                'sprites-icons-2 tick pull-right mt-xs')) {
-                                $('.fifthConsentReview').find('span').removeClass(
-                                    'sprites-icons-2 tick pull-right mt-xs');
-                            }
-                        } else {
-                            $('#alertMsg').show();
-                            $("#alertMsg").removeClass('s-box').addClass('e-box').html(
-                                "Unable to reorder consent");
-                        }
-                        setTimeout(hideDisplayMessage, 4000);
-                    },
-                    error: function (xhr, status, error) {
-                        $("#alertMsg").removeClass('s-box').addClass('e-box').html(error);
-                        setTimeout(hideDisplayMessage, 4000);
-                    }
-                });
-            }
-        });
-
-        if (document.getElementById("markAsCompleteBtnId") != null && document.getElementById(
-            "markAsCompleteBtnId").disabled) {
-            $('[data-toggle="tooltip"]').tooltip();
-        }
+      }
     });
 
-    function deleteConsentInfo(consentInfoId) {
-        bootbox.confirm("Are you sure you want to delete this consent item?", function (result) {
-            if (result) {
-                var studyId = $("#studyId").val();
-                if (consentInfoId != '' && consentInfoId != null && typeof consentInfoId != 'undefined') {
-                    $.ajax({
-                        url: "/studybuilder/adminStudies/deleteConsentInfo.do?_S=${param._S}",
-                        type: "POST",
-                        datatype: "json",
-                        data: {
-                            consentInfoId: consentInfoId,
-                            studyId: studyId,
-                            "${_csrf.parameterName}": "${_csrf.token}",
-                        },
-                        success: function deleteConsentInfo(data) {
-                            var status = data.message;
-                            if (status == "SUCCESS") {
-                                $("#alertMsg").removeClass('e-box').addClass('s-box').html(
-                                    "Consent Section deleted successfully.");
-                                $('#alertMsg').show();
-                                reloadData(studyId);
-                                if ($('.fifthConsent').find('span').hasClass(
-                                    'sprites-icons-2 tick pull-right mt-xs')) {
-                                    $('.fifthConsent').find('span').removeClass(
-                                        'sprites-icons-2 tick pull-right mt-xs');
-                                }
-                                if ($('.fifthConsentReview').find('span').hasClass(
-                                    'sprites-icons-2 tick pull-right mt-xs')) {
-                                    $('.fifthConsentReview').find('span').removeClass(
-                                        'sprites-icons-2 tick pull-right mt-xs');
-                                }
-                            } else {
-                                $("#alertMsg").removeClass('s-box').addClass('e-box').html(
-                                    "Unable to delete consent");
-                                $('#alertMsg').show();
-                            }
-                            setTimeout(hideDisplayMessage, 4000);
-                        },
-                        error: function (xhr, status, error) {
-                            $("#alertMsg").removeClass('s-box').addClass('e-box').html(error);
-                            setTimeout(hideDisplayMessage, 4000);
-                        }
-                    });
-                }
-            }
-        });
-    }
+    table1.on('row-reorder', function (e, diff, edit) {
+      var oldOrderNumber = '', newOrderNumber = '';
+      var result = 'Reorder started on row: ' + edit.triggerRow.data()[1] + '<br>';
+      var studyId = $("#studyId").val();
+      for (var i = 0, ien = diff.length; i < ien; i++) {
+        var rowData = table1.row(diff[i].node).data();
+        var r1;
+        if (i == 0) {
+          r1 = rowData[0];
+        }
+        if (i == 1) {
+          if (parseInt(r1) > parseInt(rowData[0])) {
+            oldOrderNumber = diff[0].oldData;
+            newOrderNumber = diff[0].newData;
+          } else {
+            oldOrderNumber = diff[diff.length - 1].oldData;
+            newOrderNumber = diff[diff.length - 1].newData;
+          }
 
-    function reloadData(studyId) {
+        }
+        result += rowData[1] + ' updated to be in position ' +
+            diff[i].newData + ' (was ' + diff[i].oldData + ')<br>';
+      }
+
+      if (oldOrderNumber !== undefined && oldOrderNumber != null && oldOrderNumber != ""
+          && newOrderNumber !== undefined && newOrderNumber != null && newOrderNumber != "") {
         $.ajax({
-            url: "/studybuilder/adminStudies/reloadConsentListPage.do?_S=${param._S}",
+          url: "/studybuilder/adminStudies/reOrderConsentInfo.do?_S=${param._S}",
+          type: "POST",
+          datatype: "json",
+          data: {
+            studyId: studyId,
+            oldOrderNumber: oldOrderNumber,
+            newOrderNumber: newOrderNumber,
+            "${_csrf.parameterName}": "${_csrf.token}",
+          },
+          success: function consentInfo(data) {
+            var jsonobject = eval(data);
+            var message = jsonobject.message;
+            if (message == "SUCCESS") {
+              reloadConsentInfoDataTable(jsonobject.consentInfoList, null);
+              $('#alertMsg').show();
+              $("#alertMsg").removeClass('e-box').addClass('s-box').html(
+                  "Reorder done successfully");
+              if ($('.fifthConsent').find('span').hasClass(
+                  'sprites-icons-2 tick pull-right mt-xs')) {
+                $('.fifthConsent').find('span').removeClass(
+                    'sprites-icons-2 tick pull-right mt-xs');
+              }
+              if ($('.fifthConsentReview').find('span').hasClass(
+                  'sprites-icons-2 tick pull-right mt-xs')) {
+                $('.fifthConsentReview').find('span').removeClass(
+                    'sprites-icons-2 tick pull-right mt-xs');
+              }
+            } else {
+              $('#alertMsg').show();
+              $("#alertMsg").removeClass('s-box').addClass('e-box').html(
+                  "Unable to reorder consent");
+            }
+            setTimeout(hideDisplayMessage, 4000);
+          },
+          error: function (xhr, status, error) {
+            $("#alertMsg").removeClass('s-box').addClass('e-box').html(error);
+            setTimeout(hideDisplayMessage, 4000);
+          }
+        });
+      }
+    });
+
+    if (document.getElementById("markAsCompleteBtnId") != null && document.getElementById(
+        "markAsCompleteBtnId").disabled) {
+      $('[data-toggle="tooltip"]').tooltip();
+    }
+  });
+
+  function deleteConsentInfo(consentInfoId) {
+    bootbox.confirm("Are you sure you want to delete this consent item?", function (result) {
+      if (result) {
+        var studyId = $("#studyId").val();
+        if (consentInfoId != '' && consentInfoId != null && typeof consentInfoId != 'undefined') {
+          $.ajax({
+            url: "/studybuilder/adminStudies/deleteConsentInfo.do?_S=${param._S}",
             type: "POST",
             datatype: "json",
             data: {
-                studyId: studyId,
-                "${_csrf.parameterName}": "${_csrf.token}",
+              consentInfoId: consentInfoId,
+              studyId: studyId,
+              "${_csrf.parameterName}": "${_csrf.token}",
             },
-            success: function status(data, status) {
-                var jsonobject = eval(data);
-                var message = jsonobject.message;
-                var markAsComplete = jsonobject.markAsComplete;
-                if (message == "SUCCESS") {
-                    reloadConsentInfoDataTable(jsonobject.consentInfoList, markAsComplete);
+            success: function deleteConsentInfo(data) {
+              var status = data.message;
+              if (status == "SUCCESS") {
+                $("#alertMsg").removeClass('e-box').addClass('s-box').html(
+                    "Consent Section deleted successfully.");
+                $('#alertMsg').show();
+                reloadData(studyId);
+                if ($('.fifthConsent').find('span').hasClass(
+                    'sprites-icons-2 tick pull-right mt-xs')) {
+                  $('.fifthConsent').find('span').removeClass(
+                      'sprites-icons-2 tick pull-right mt-xs');
                 }
+                if ($('.fifthConsentReview').find('span').hasClass(
+                    'sprites-icons-2 tick pull-right mt-xs')) {
+                  $('.fifthConsentReview').find('span').removeClass(
+                      'sprites-icons-2 tick pull-right mt-xs');
+                }
+              } else {
+                $("#alertMsg").removeClass('s-box').addClass('e-box').html(
+                    "Unable to delete consent");
+                $('#alertMsg').show();
+              }
+              setTimeout(hideDisplayMessage, 4000);
             },
-            error: function status(data, status) {
-
-            },
-        });
-    }
-
-    function reloadConsentInfoDataTable(consentInfoList, markAsComplete) {
-        $('#consent_list').DataTable().clear();
-        if (typeof consentInfoList != 'undefined' && consentInfoList != null && consentInfoList.length
-            > 0) {
-            $.each(consentInfoList, function (i, obj) {
-                var datarow = [];
-                if (typeof obj.sequenceNo === "undefined" && typeof obj.sequenceNo === "undefined") {
-                    datarow.push(' ');
-                } else {
-                    datarow.push(obj.sequenceNo);
-                }
-                if (typeof obj.displayTitle === "undefined" && typeof obj.displayTitle === "undefined") {
-                    datarow.push(' ');
-                } else {
-                    datarow.push(obj.displayTitle);
-                }
-                if (typeof obj.visualStep === "undefined" && typeof obj.visualStep === "undefined") {
-                    datarow.push(' ');
-                } else {
-                    datarow.push(obj.visualStep);
-                }
-                var actions = "<span class='sprites_icon preview-g mr-lg' onclick='viewConsentInfo("
-                    + obj.id + ");'></span>";
-                if (obj.status) {
-                    actions += "<span class='sprites_icon edit-g mr-lg' onclick='editConsentInfo(" + obj.id
-                        + ");'></span>"
-                } else {
-                    actions += "<span class='sprites_icon edit-inc-draft mr-lg' onclick='editConsentInfo("
-                        + obj.id + ");'></span>";
-                }
-                actions += "<span class='sprites_icon copy delete' onclick='deleteConsentInfo(" + obj.id
-                    + ");'></span>";
-                datarow.push(actions);
-                $('#consent_list').DataTable().row.add(datarow);
-            });
-            if (typeof markAsComplete != 'undefined' && markAsComplete != null && markAsComplete) {
-                $("#markAsCompleteBtnId").attr("disabled", false);
-                $('#helpNote').attr('data-original-title', '');
+            error: function (xhr, status, error) {
+              $("#alertMsg").removeClass('s-box').addClass('e-box').html(error);
+              setTimeout(hideDisplayMessage, 4000);
             }
-            $('#consent_list').DataTable().draw();
+          });
+        }
+      }
+    });
+  }
+
+  function reloadData(studyId) {
+    $.ajax({
+      url: "/studybuilder/adminStudies/reloadConsentListPage.do?_S=${param._S}",
+      type: "POST",
+      datatype: "json",
+      data: {
+        studyId: studyId,
+        "${_csrf.parameterName}": "${_csrf.token}",
+      },
+      success: function status(data, status) {
+        var jsonobject = eval(data);
+        var message = jsonobject.message;
+        var markAsComplete = jsonobject.markAsComplete;
+        if (message == "SUCCESS") {
+          reloadConsentInfoDataTable(jsonobject.consentInfoList, markAsComplete);
+        }
+      },
+      error: function status(data, status) {
+
+      },
+    });
+  }
+
+  function reloadConsentInfoDataTable(consentInfoList, markAsComplete) {
+    $('#consent_list').DataTable().clear();
+    if (typeof consentInfoList != 'undefined' && consentInfoList != null && consentInfoList.length
+        > 0) {
+      $.each(consentInfoList, function (i, obj) {
+        var datarow = [];
+        if (typeof obj.sequenceNo === "undefined" && typeof obj.sequenceNo === "undefined") {
+          datarow.push(' ');
         } else {
-            $('#consent_list').DataTable().draw();
-            $('#helpNote').attr('data-original-title',
-                'Please ensure you add one or more Consent Sections before attempting to mark this section as Complete.');
+          datarow.push(obj.sequenceNo);
         }
-    }
-
-    function addConsentPage() {
-        $("#consentInfoId").val('');
-        $("#actionType").val('addEdit');
-        $("#consentInfoForm").submit();
-    }
-
-    function markAsCompleted() {
-        var table = $('#consent_list').DataTable();
-        if (!table.data().count()) {
-
-            $(".tool-tip").attr("title",
-                "Please ensure individual list items are marked Done, before marking the section as Complete");
-            $('#markAsCompleteBtnId').prop('disabled', true);
-            $('[data-toggle="tooltip"]').tooltip();
+        if (typeof obj.displayTitle === "undefined" && typeof obj.displayTitle === "undefined") {
+          datarow.push(' ');
         } else {
-            $("#comprehensionInfoForm").submit();
+          datarow.push(obj.displayTitle);
         }
-    }
-
-    function editConsentInfo(consentInfoId) {
-
-        if (consentInfoId != null && consentInfoId != '' && typeof consentInfoId != 'undefined') {
-            $("#consentInfoId").val(consentInfoId);
-            $("#actionType").val('addEdit');
-            $("#consentInfoForm").submit();
+        if (typeof obj.visualStep === "undefined" && typeof obj.visualStep === "undefined") {
+          datarow.push(' ');
+        } else {
+          datarow.push(obj.visualStep);
         }
-    }
-
-    function viewConsentInfo(consentInfoId) {
-
-        if (consentInfoId != null && consentInfoId != '' && typeof consentInfoId != 'undefined') {
-            $("#actionType").val('view');
-            $("#consentInfoId").val(consentInfoId);
-            $("#consentInfoForm").submit();
+        var actions = "<span class='sprites_icon preview-g mr-lg' onclick='viewConsentInfo("
+            + obj.id + ");'></span>";
+        if (obj.status) {
+          actions += "<span class='sprites_icon edit-g mr-lg' onclick='editConsentInfo(" + obj.id
+              + ");'></span>"
+        } else {
+          actions += "<span class='sprites_icon edit-inc-draft mr-lg' onclick='editConsentInfo("
+              + obj.id + ");'></span>";
         }
+        actions += "<span class='sprites_icon copy delete' onclick='deleteConsentInfo(" + obj.id
+            + ");'></span>";
+        datarow.push(actions);
+        $('#consent_list').DataTable().row.add(datarow);
+      });
+      if (typeof markAsComplete != 'undefined' && markAsComplete != null && markAsComplete) {
+        $("#markAsCompleteBtnId").attr("disabled", false);
+        $('#helpNote').attr('data-original-title', '');
+      }
+      $('#consent_list').DataTable().draw();
+    } else {
+      $('#consent_list').DataTable().draw();
+      $('#helpNote').attr('data-original-title',
+          'Please ensure you add one or more Consent Sections before attempting to mark this section as Complete.');
     }
+  }
+
+  function addConsentPage() {
+    $("#consentInfoId").val('');
+    $("#actionType").val('addEdit');
+    $("#consentInfoForm").submit();
+  }
+
+  function markAsCompleted() {
+    var table = $('#consent_list').DataTable();
+    if (!table.data().count()) {
+
+      $(".tool-tip").attr("title",
+          "Please ensure individual list items are marked Done, before marking the section as Complete");
+      $('#markAsCompleteBtnId').prop('disabled', true);
+      $('[data-toggle="tooltip"]').tooltip();
+    } else {
+      $("#comprehensionInfoForm").submit();
+    }
+  }
+
+  function editConsentInfo(consentInfoId) {
+
+    if (consentInfoId != null && consentInfoId != '' && typeof consentInfoId != 'undefined') {
+      $("#consentInfoId").val(consentInfoId);
+      $("#actionType").val('addEdit');
+      $("#consentInfoForm").submit();
+    }
+  }
+
+  function viewConsentInfo(consentInfoId) {
+
+    if (consentInfoId != null && consentInfoId != '' && typeof consentInfoId != 'undefined') {
+      $("#actionType").val('view');
+      $("#consentInfoId").val(consentInfoId);
+      $("#consentInfoForm").submit();
+    }
+  }
 </script>
 
 <script>
-    // Fancy Scroll Bar
-    (function ($) {
-        $(window).on("load", function () {
+  // Fancy Scroll Bar
+  (function ($) {
+    $(window).on("load", function () {
 
-            $(".scrollbars").mCustomScrollbar({
-                theme: "minimal-dark"
-            });
-        });
-    })(jQuery);
+      $(".scrollbars").mCustomScrollbar({
+        theme: "minimal-dark"
+      });
+    });
+  })(jQuery);
 </script>

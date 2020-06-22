@@ -106,40 +106,40 @@
 </form:form>
 
 <script>
-    $(document).ready(function () {
-        $('#rowId').parent().removeClass('white-bg');
+  $(document).ready(function () {
+    $('#rowId').parent().removeClass('white-bg');
 
-        $('#notification').addClass('active');
+    $('#notification').addClass('active');
 
-        $('[data-toggle="tooltip"]').tooltip();
+    $('[data-toggle="tooltip"]').tooltip();
 
-        $('.notificationDetailsToEdit').on('click', function () {
-            $('.notificationDetailsToEdit').prop('disabled', true);
-            $('#notificationId').val($(this).attr('notificationId'));
-            $('#notificationText').val($(this).attr('notificationText'));
-            $('#actionType').val($(this).attr('actionType'));
-            $('#getNotificationEditPage').submit();
-        });
-
-        $('.notificationDetailsToView').on('click', function () {
-            $('.notificationDetailsToView').prop('disabled', true);
-            $('#notificationIdToView').val($(this).attr('notificationId'));
-            $('#actionTypeToView').val($(this).attr('actionType'));
-            $('#getNotificationViewPage').submit();
-        });
-
-        $('#app_Wide_Notification_list').DataTable({
-            "paging": true,
-            "order": [],
-            "columnDefs": [{orderable: false, orderable: false, targets: [0]}],
-            "info": false,
-            "lengthChange": false,
-            language: {
-                "zeroRecords": "You haven't created any content yet.",
-            },
-            "searching": false,
-            "pageLength": 15,
-        });
-
+    $('.notificationDetailsToEdit').on('click', function () {
+      $('.notificationDetailsToEdit').prop('disabled', true);
+      $('#notificationId').val($(this).attr('notificationId'));
+      $('#notificationText').val($(this).attr('notificationText'));
+      $('#actionType').val($(this).attr('actionType'));
+      $('#getNotificationEditPage').submit();
     });
+
+    $('.notificationDetailsToView').on('click', function () {
+      $('.notificationDetailsToView').prop('disabled', true);
+      $('#notificationIdToView').val($(this).attr('notificationId'));
+      $('#actionTypeToView').val($(this).attr('actionType'));
+      $('#getNotificationViewPage').submit();
+    });
+
+    $('#app_Wide_Notification_list').DataTable({
+      "paging": true,
+      "order": [],
+      "columnDefs": [{orderable: false, orderable: false, targets: [0]}],
+      "info": false,
+      "lengthChange": false,
+      language: {
+        "zeroRecords": "You haven't created any content yet.",
+      },
+      "searching": false,
+      "pageLength": 15,
+    });
+
+  });
 </script>

@@ -125,126 +125,126 @@
 </form:form>
 <c:set var="studyId">${_S}studyId</c:set>
 <script>
-    var dataTable;
-    $(document).ready(function () {
-        $('[data-toggle="tooltip"]').tooltip();
-        $(".menuNav li.active").removeClass('active');
-        $(".sixthTask").addClass('active');
+  var dataTable;
+  $(document).ready(function () {
+    $('[data-toggle="tooltip"]').tooltip();
+    $(".menuNav li.active").removeClass('active');
+    $(".sixthTask").addClass('active');
 
-        // Fancy Scroll Bar
-        $('[data-toggle="tooltip"]').tooltip();
-        dataTable = $('#activedatatable_list').DataTable({
-            "paging": true,
-            "abColumns": [
-                {"bSortable": true},
-                {"bSortable": true},
-                {"bSortable": true}
-            ],
-            "order": [[0, "desc"]],
-            "info": false,
-            language: {
-                "zeroRecords": "You haven't created any content yet.",
-            },
-            "lengthChange": false,
-            "searching": false,
-            "pageLength": 10
-        });
+    // Fancy Scroll Bar
+    $('[data-toggle="tooltip"]').tooltip();
+    dataTable = $('#activedatatable_list').DataTable({
+      "paging": true,
+      "abColumns": [
+        {"bSortable": true},
+        {"bSortable": true},
+        {"bSortable": true}
+      ],
+      "order": [[0, "desc"]],
+      "info": false,
+      language: {
+        "zeroRecords": "You haven't created any content yet.",
+      },
+      "lengthChange": false,
+      "searching": false,
+      "pageLength": 10
     });
+  });
 
-    function addActiveTaskPage() {
-        $("#actionType").val('add');
-        $("#activeTaskInfoId").val('');
-        $("#activeTaskInfoForm").submit();
+  function addActiveTaskPage() {
+    $("#actionType").val('add');
+    $("#activeTaskInfoId").val('');
+    $("#activeTaskInfoForm").submit();
+  }
+
+  function viewTaskInfo(taskInfoId) {
+    if (taskInfoId != null && taskInfoId != '' && typeof taskInfoId != 'undefined') {
+      $("#actionType").val('view');
+      $("#activeTaskInfoId").val(taskInfoId);
+      $("#activeTaskInfoForm").submit();
     }
+  }
 
-    function viewTaskInfo(taskInfoId) {
-        if (taskInfoId != null && taskInfoId != '' && typeof taskInfoId != 'undefined') {
-            $("#actionType").val('view');
-            $("#activeTaskInfoId").val(taskInfoId);
-            $("#activeTaskInfoForm").submit();
+  function editTaskInfo(taskInfoId) {
+    if (taskInfoId != null && taskInfoId != '' && typeof taskInfoId != 'undefined') {
+      $('#editTask').addClass('cursor-none');
+      $("#actionType").val('addEdit');
+      $("#activeTaskInfoId").val(taskInfoId);
+      $("#activeTaskInfoForm").submit();
+    }
+  }
+
+  function deleteTaskInfo(activeTaskInfoId) {
+    $('#delTask').addClass('cursor-none');
+    bootbox.confirm({
+      message: "Are you sure you want to delete this active task item? This item will no longer appear on the mobile app or admin portal. Response data already gathered against this item, if any, will still be available on the response database.",
+      buttons: {
+        confirm: {
+          label: 'Yes',
+        },
+        cancel: {
+          label: 'No',
         }
-    }
-
-    function editTaskInfo(taskInfoId) {
-        if (taskInfoId != null && taskInfoId != '' && typeof taskInfoId != 'undefined') {
-            $('#editTask').addClass('cursor-none');
-            $("#actionType").val('addEdit');
-            $("#activeTaskInfoId").val(taskInfoId);
-            $("#activeTaskInfoForm").submit();
+      },
+      callback: function (result) {
+        if (result) {
+          if (activeTaskInfoId != '' && activeTaskInfoId != null && typeof activeTaskInfoId
+              != 'undefined') {
+            $.ajax({
+              url: "/studybuilder/adminStudies/deleteActiveTask.do?_S=${param._S}",
+              type: "POST",
+              datatype: "json",
+              data: {
+                activeTaskInfoId: activeTaskInfoId,
+                studyId: '${sessionScope[studyId]}',
+                "${_csrf.parameterName}": "${_csrf.token}",
+              },
+              success: function deleteActiveInfo(data) {
+                var status = data.message;
+                var markAsComplete = data.markAsComplete;
+                var activityMsg = data.activityMsg;
+                if (status == "SUCCESS") {
+                  dataTable
+                      .row($('#row' + activeTaskInfoId))
+                      .remove()
+                      .draw();
+                  if (!markAsComplete) {
+                    $('#markAsComp').prop('disabled', true);
+                    $('#spancomId').attr("data-original-title", activityMsg);
+                  } else {
+                    $('#markAsComp').prop('disabled', false);
+                    $('#spancomId').removeAttr('data-original-title');
+                  }
+                  $("#alertMsg").removeClass('e-box').addClass('s-box').html(
+                      "ActiveTask deleted successfully");
+                  $('#alertMsg').show();
+                  if ($('.sixthTask').find('span').hasClass(
+                      'sprites-icons-2 tick pull-right mt-xs')) {
+                    $('.sixthTask').find('span').removeClass(
+                        'sprites-icons-2 tick pull-right mt-xs');
+                  }
+                } else {
+                  $("#alertMsg").removeClass('s-box').addClass('e-box').html(
+                      "Unable to delete resource");
+                  $('#alertMsg').show();
+                }
+                setTimeout(hideDisplayMessage, 4000);
+              },
+              error: function (xhr, status, error) {
+                $("#alertMsg").removeClass('s-box').addClass('e-box').html(error);
+                setTimeout(hideDisplayMessage, 4000);
+              }
+            });
+          }
         }
-    }
+      }
+    });
+    $('#delTask').removeClass('cursor-none');
+  }
 
-    function deleteTaskInfo(activeTaskInfoId) {
-        $('#delTask').addClass('cursor-none');
-        bootbox.confirm({
-            message: "Are you sure you want to delete this active task item? This item will no longer appear on the mobile app or admin portal. Response data already gathered against this item, if any, will still be available on the response database.",
-            buttons: {
-                confirm: {
-                    label: 'Yes',
-                },
-                cancel: {
-                    label: 'No',
-                }
-            },
-            callback: function (result) {
-                if (result) {
-                    if (activeTaskInfoId != '' && activeTaskInfoId != null && typeof activeTaskInfoId
-                        != 'undefined') {
-                        $.ajax({
-                            url: "/studybuilder/adminStudies/deleteActiveTask.do?_S=${param._S}",
-                            type: "POST",
-                            datatype: "json",
-                            data: {
-                                activeTaskInfoId: activeTaskInfoId,
-                                studyId: '${sessionScope[studyId]}',
-                                "${_csrf.parameterName}": "${_csrf.token}",
-                            },
-                            success: function deleteActiveInfo(data) {
-                                var status = data.message;
-                                var markAsComplete = data.markAsComplete;
-                                var activityMsg = data.activityMsg;
-                                if (status == "SUCCESS") {
-                                    dataTable
-                                        .row($('#row' + activeTaskInfoId))
-                                        .remove()
-                                        .draw();
-                                    if (!markAsComplete) {
-                                        $('#markAsComp').prop('disabled', true);
-                                        $('#spancomId').attr("data-original-title", activityMsg);
-                                    } else {
-                                        $('#markAsComp').prop('disabled', false);
-                                        $('#spancomId').removeAttr('data-original-title');
-                                    }
-                                    $("#alertMsg").removeClass('e-box').addClass('s-box').html(
-                                        "ActiveTask deleted successfully");
-                                    $('#alertMsg').show();
-                                    if ($('.sixthTask').find('span').hasClass(
-                                        'sprites-icons-2 tick pull-right mt-xs')) {
-                                        $('.sixthTask').find('span').removeClass(
-                                            'sprites-icons-2 tick pull-right mt-xs');
-                                    }
-                                } else {
-                                    $("#alertMsg").removeClass('s-box').addClass('e-box').html(
-                                        "Unable to delete resource");
-                                    $('#alertMsg').show();
-                                }
-                                setTimeout(hideDisplayMessage, 4000);
-                            },
-                            error: function (xhr, status, error) {
-                                $("#alertMsg").removeClass('s-box').addClass('e-box').html(error);
-                                setTimeout(hideDisplayMessage, 4000);
-                            }
-                        });
-                    }
-                }
-            }
-        });
-        $('#delTask').removeClass('cursor-none');
-    }
-
-    function markAsCompleted() {
-        $("#completeInfoForm").submit();
-    }
+  function markAsCompleted() {
+    $("#completeInfoForm").submit();
+  }
 </script>     
         
         

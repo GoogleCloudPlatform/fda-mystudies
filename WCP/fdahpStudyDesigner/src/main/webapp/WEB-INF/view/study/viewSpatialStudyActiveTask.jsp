@@ -1714,1130 +1714,1130 @@
   </form:form>
 </div>
 <script>
-    $(document).ready(function () {
-        var taskId = $('#taskContentId').val();
-        if (taskId) {
-            var frequencyType = '${activeTaskBo.frequency}';
-            if (frequencyType && frequencyType != 'One time')
-                $('.chartSection').show();
-            if (frequencyType && frequencyType == 'Manually Schedule') {
-                $('.activeaddToChartText').show();
-                $('.activeaddToChartText').html(
-                    'A max of x runs will be displayed in each view of the chart.');
-            }
+  $(document).ready(function () {
+    var taskId = $('#taskContentId').val();
+    if (taskId) {
+      var frequencyType = '${activeTaskBo.frequency}';
+      if (frequencyType && frequencyType != 'One time')
+        $('.chartSection').show();
+      if (frequencyType && frequencyType == 'Manually Schedule') {
+        $('.activeaddToChartText').show();
+        $('.activeaddToChartText').html(
+            'A max of x runs will be displayed in each view of the chart.');
+      }
+    }
+    $('#initialspanId').blur(function () {
+      var value = $(this).val();
+      $(this).parent().removeClass("has-danger").removeClass("has-error");
+      $(this).parent().find(".help-block").empty();
+      if (value) {
+        if (parseInt($(this).val()) < 2) {
+          $(this).val('');
+          $(this).parent().addClass("has-danger").addClass("has-error");
+          $(this).parent().find(".help-block").empty();
+          $(this).parent().find(".help-block").append(
+              "<ul class='list-unstyled'><li>Initial Span must be >= 2</li></ul>");
         }
-        $('#initialspanId').blur(function () {
-            var value = $(this).val();
-            $(this).parent().removeClass("has-danger").removeClass("has-error");
-            $(this).parent().find(".help-block").empty();
-            if (value) {
-                if (parseInt($(this).val()) < 2) {
-                    $(this).val('');
-                    $(this).parent().addClass("has-danger").addClass("has-error");
-                    $(this).parent().find(".help-block").empty();
-                    $(this).parent().find(".help-block").append(
-                        "<ul class='list-unstyled'><li>Initial Span must be >= 2</li></ul>");
-                }
-                if (parseInt($(this).val()) > 20) {
-                    $(this).val('');
-                    $(this).parent().addClass("has-danger").addClass("has-error");
-                    $(this).parent().find(".help-block").empty();
-                    $(this).parent().find(".help-block").append(
-                        "<ul class='list-unstyled'><li>Initial Span should be <= 20  </li></ul>");
-                }
-                var minimumSpanVal = $('#minimumspanId').val();
-                if (minimumSpanVal && (parseInt(minimumSpanVal) > parseInt($(this).val()))) {
-                    $('#minimumspanId').val('');
-                    $('#minimumspanId').parent().addClass("has-danger").addClass("has-error");
-                    $('#minimumspanId').parent().find(".help-block").empty();
-                    $('#minimumspanId').parent().find(".help-block").append(
-                        "<ul class='list-unstyled'><li>Minimum Span should be always <= Initial Span</li></ul>");
-                }
-                var maxmimumSpanVal = $('#maximumspanId').val();
-                if (maxmimumSpanVal && (parseInt(maxmimumSpanVal) < parseInt($(this).val()))) {
-                    $('#maximumspanId').val('');
-                    $('#maximumspanId').parent().addClass("has-danger").addClass("has-error");
-                    $('#maximumspanId').parent().find(".help-block").empty();
-                    $('#maximumspanId').parent().find(".help-block").append(
-                        "<ul class='list-unstyled'><li>Maximum Span should be always >= Initial Span</li></ul>");
-                }
-            }
-        });
-        $("#minimumspanId").blur(function () {
-            var value = $(this).val();
-            var initialSpanVal = $('#initialspanId').val();
-            $(this).parent().removeClass("has-danger").removeClass("has-error");
-            $(this).parent().find(".help-block").empty();
-            if (initialSpanVal) {
-                if (parseInt($(this).val()) > parseInt(initialSpanVal)) {
-                    $(this).val('');
-                    $(this).parent().addClass("has-danger").addClass("has-error");
-                    $(this).parent().find(".help-block").empty();
-                    $(this).parent().find(".help-block").append(
-                        "<ul class='list-unstyled'><li>Minimum Span should be always <= Initial Span  </li></ul>");
-                }
-            }
-        );
+        if (parseInt($(this).val()) > 20) {
+          $(this).val('');
+          $(this).parent().addClass("has-danger").addClass("has-error");
+          $(this).parent().find(".help-block").empty();
+          $(this).parent().find(".help-block").append(
+              "<ul class='list-unstyled'><li>Initial Span should be <= 20  </li></ul>");
+        }
+        var minimumSpanVal = $('#minimumspanId').val();
+        if (minimumSpanVal && (parseInt(minimumSpanVal) > parseInt($(this).val()))) {
+          $('#minimumspanId').val('');
+          $('#minimumspanId').parent().addClass("has-danger").addClass("has-error");
+          $('#minimumspanId').parent().find(".help-block").empty();
+          $('#minimumspanId').parent().find(".help-block").append(
+              "<ul class='list-unstyled'><li>Minimum Span should be always <= Initial Span</li></ul>");
+        }
+        var maxmimumSpanVal = $('#maximumspanId').val();
+        if (maxmimumSpanVal && (parseInt(maxmimumSpanVal) < parseInt($(this).val()))) {
+          $('#maximumspanId').val('');
+          $('#maximumspanId').parent().addClass("has-danger").addClass("has-error");
+          $('#maximumspanId').parent().find(".help-block").empty();
+          $('#maximumspanId').parent().find(".help-block").append(
+              "<ul class='list-unstyled'><li>Maximum Span should be always >= Initial Span</li></ul>");
+        }
+      }
+    });
+    $("#minimumspanId").blur(function () {
+      var value = $(this).val();
+      var initialSpanVal = $('#initialspanId').val();
+      $(this).parent().removeClass("has-danger").removeClass("has-error");
+      $(this).parent().find(".help-block").empty();
+      if (initialSpanVal) {
+        if (parseInt($(this).val()) > parseInt(initialSpanVal)) {
+          $(this).val('');
+          $(this).parent().addClass("has-danger").addClass("has-error");
+          $(this).parent().find(".help-block").empty();
+          $(this).parent().find(".help-block").append(
+              "<ul class='list-unstyled'><li>Minimum Span should be always <= Initial Span  </li></ul>");
+        }
+      }
+    );
 
-        $("#maximumspanId").blur(function () {
-            var value = $(this).val();
-            var initialSpanVal = $('#initialspanId').val();
-            $(this).parent().removeClass("has-danger").removeClass("has-error");
-            $(this).parent().find(".help-block").empty();
-            if (initialSpanVal) {
-                if (parseInt($(this).val()) > 20) {
-                    $(this).val('');
-                    $(this).parent().addClass("has-danger").addClass("has-error");
-                    $(this).parent().find(".help-block").empty();
-                    $(this).parent().find(".help-block").append(
-                        "<ul class='list-unstyled'><li>Maximum Span should be <= 20  </li></ul>");
-                } else if (parseInt($(this).val()) < parseInt(initialSpanVal)) {
-                    $(this).val('');
-                    $(this).parent().addClass("has-danger").addClass("has-error");
-                    $(this).parent().find(".help-block").empty();
-                    $(this).parent().find(".help-block").append(
-                        "<ul class='list-unstyled'><li>Maximum Span should be always >= Initial Span</li></ul>");
-                }
-            }
-        );
+    $("#maximumspanId").blur(function () {
+      var value = $(this).val();
+      var initialSpanVal = $('#initialspanId').val();
+      $(this).parent().removeClass("has-danger").removeClass("has-error");
+      $(this).parent().find(".help-block").empty();
+      if (initialSpanVal) {
+        if (parseInt($(this).val()) > 20) {
+          $(this).val('');
+          $(this).parent().addClass("has-danger").addClass("has-error");
+          $(this).parent().find(".help-block").empty();
+          $(this).parent().find(".help-block").append(
+              "<ul class='list-unstyled'><li>Maximum Span should be <= 20  </li></ul>");
+        } else if (parseInt($(this).val()) < parseInt(initialSpanVal)) {
+          $(this).val('');
+          $(this).parent().addClass("has-danger").addClass("has-error");
+          $(this).parent().find(".help-block").empty();
+          $(this).parent().find(".help-block").append(
+              "<ul class='list-unstyled'><li>Maximum Span should be always >= Initial Span</li></ul>");
+        }
+      }
+    );
 
-        $("#playspeedId").blur(function () {
-            var value = $(this).val();
-            $("#playspeedId").parent().removeClass("has-danger").removeClass("has-error");
-            $("#playspeedId").parent().find(".help-block").empty();
-            console.log("playspeedId value:" + value);
-            if (value) {
-                if (value == '.') {
-                    $("#playspeedId").val('');
-                    $("#playspeedId").parent().addClass("has-danger").addClass("has-error");
-                    $("#playspeedId").parent().find(".help-block").empty();
-                    $("#playspeedId").parent().find(".help-block").append(
-                        "<ul class='list-unstyled'><li>Please enter a valid number</li></ul>");
-                } else if (parseFloat(value) < 0.5) {
-                    $("#playspeedId").val('');
-                    $("#playspeedId").parent().addClass("has-danger").addClass("has-error");
-                    $("#playspeedId").parent().find(".help-block").empty();
-                    $("#playspeedId").parent().find(".help-block").append(
-                        "<ul class='list-unstyled'><li>Play Speed should be >= 0.5 seconds  </li></ul>");
-                }
-                if (parseFloat(value) > parseFloat(20)) {
-                    $("#playspeedId").val('');
-                    $("#playspeedId").parent().addClass("has-danger").addClass("has-error");
-                    $("#playspeedId").parent().find(".help-block").empty();
-                    $("#playspeedId").parent().find(".help-block").append(
-                        "<ul class='list-unstyled'><li>Play Speed should be <= 20 seconds</li></ul>");
-                }
-            }
-        );
-        $("#maximumtestId").blur(function () {
-            var value = $(this).val();
-            $(this).parent().removeClass("has-danger").removeClass("has-error");
-            $(this).parent().find(".help-block").empty();
-            if (parseInt($(this).val()) < 1) {
-                $(this).val('');
-                $(this).parent().addClass("has-danger").addClass("has-error");
-                $(this).parent().find(".help-block").empty();
-                $(this).parent().find(".help-block").append(
-                    "<ul class='list-unstyled'><li>Maximum Tests should be >= 1</li></ul>");
-            }
-            var maximumFailure = $('#maximumFailureId').val();
-            if (value && parseInt(maximumFailure) >= parseInt($(this).val())) {
-                $('#maximumFailureId').val('');
-                $('#maximumFailureId').parent().addClass("has-danger").addClass("has-error");
-                $('#maximumFailureId').parent().find(".help-block").empty();
-                $('#maximumFailureId').parent().find(".help-block").append(
-                    "<ul class='list-unstyled'><li>Maximum Consecutive Failures should be always < Maximum tests</li></ul>");
-            }
-        });
-        $("#maximumFailureId").blur(function () {
-            var value = $(this).val();
-            var maxmimunTestVal = $('#maximumtestId').val();
-            $(this).parent().removeClass("has-danger").removeClass("has-error");
-            $(this).parent().find(".help-block").empty();
-            if (parseInt($(this).val()) < 1) {
-                $(this).val('');
-                $(this).parent().addClass("has-danger").addClass("has-error");
-                $(this).parent().find(".help-block").empty();
-                $(this).parent().find(".help-block").append(
-                    "<ul class='list-unstyled'><li>Maximum Tests should be >= 1</li></ul>");
-            }
-            if (maxmimunTestVal && parseInt($(this).val()) >= parseInt(maxmimunTestVal)) {
-                $(this).val('');
-                $(this).parent().addClass("has-danger").addClass("has-error");
-                $(this).parent().find(".help-block").empty();
-                $(this).parent().find(".help-block").append(
-                    "<ul class='list-unstyled'><li>Maximum Consecutive Failures should be always < Maximum tests</li></ul>");
-            }
-        });
-
-        $("#shortTitleId").blur(function () {
-            validateShortTitleId('', function (val) {
-            });
-        })
-        $('#static1, #static2, #static3').on('keyup', function () {
-            $(this).parent().find(".help-block").empty();
-            $('.statShortTitleClass').parent().removeClass("has-danger").removeClass("has-error");
-        });
-        $('#static1, #static2, #static3').blur(function () {
-            validateShortTitleStatId('', this, function (val) {
-            });
-        })
-        $('#identifierId1').blur(function () {
-            validateShortTitleStatId('', this, function (val) {
-            });
-        })
-        $('#identifierId2').blur(function () {
-            validateShortTitleStatId('', this, function (val) {
-            });
-        })
-        $('#identifierId3').blur(function () {
-            validateShortTitleStatId('', this, function (val) {
-            });
-        })
-        $('#identifierId1, #identifierId2, #identifierId3').on('keyup', function () {
-            $(this).parent().find(".help-block").empty();
-            $('.statShortTitleClass').parent().removeClass("has-danger").removeClass("has-error");
-        });
-        setLineChatStatCheckedVal();
-        $('#Score_spatial_chart_id').on('click', function () {
-            if ($(this).is(":checked")) {
-                $('.addLineChartBlock_Score_spatial').css("display", "");
-                $('.addLineChartBlock_Score_spatial').find('.requireClass').attr('required', true);
-                $('#Score_spatial_chart_id').val(true);
-                $('.selectpicker').selectpicker('refresh');
-            } else {
-                $('.addLineChartBlock_Score_spatial').css("display", "none");
-                $('.addLineChartBlock_Score_spatial').find('.requireClass').attr('required', false);
-                $('#Score_spatial_chart_id').val(false);
-            }
-            resetValidation($(this).parents('form'));
-        });
-        $('#Score_spatial_stat_id').on('click', function () {
-            if ($(this).is(":checked")) {
-                $('.addLineStaticBlock_Score_spatial').css("display", "");
-                $('.addLineStaticBlock_Score_spatial').find('.requireClass').attr('required', true);
-                $('#Score_spatial_stat_id').val(true);
-                $('.addLineStaticBlock_Score_spatial').find('.shortTitleStatCls').attr('exist', 'Y');
-                $('.selectpicker').selectpicker('refresh');
-            } else {
-                $('.addLineStaticBlock_Score_spatial').css("display", "none");
-                $('.addLineStaticBlock_Score_spatial').find('.requireClass').attr('required', false);
-                $('.addLineStaticBlock_Score_spatial').find('.shortTitleStatCls').attr('exist', 'N');
-                $('#Score_spatial_stat_id').val(false);
-            }
-        });
-        $('#Number_of_Games_spatial_chart_id').on('click', function () {
-            if ($(this).is(":checked")) {
-                $('.addLineChartBlock_Number_of_Games_spatial').css("display", "");
-                $('.addLineChartBlock_Number_of_Games_spatial').find('.requireClass').attr('required',
-                    true);
-                $('#Number_of_Games_spatial_chart_id').val(true);
-                $('.selectpicker').selectpicker('refresh');
-            } else {
-                $('.addLineChartBlock_Number_of_Games_spatial').css("display", "none");
-                $('.addLineChartBlock_Number_of_Games_spatial').find('.requireClass').attr('required',
-                    false);
-                $('#Number_of_Games_spatial_chart_id').val(false);
-            }
-            resetValidation($(this).parents('form'));
-        });
-        $('#Number_of_Games_spatial_stat_id').on('click', function () {
-            if ($(this).is(":checked")) {
-                $('.addLineStaticBlock_Number_of_Games_spatial').css("display", "");
-                $('.addLineStaticBlock_Number_of_Games_spatial').find('.requireClass').attr('required',
-                    true);
-                $('#Number_of_Games_spatial_stat_id').val(true);
-                $('.addLineStaticBlock_Number_of_Games_spatial').find('.shortTitleStatCls').attr('exist',
-                    'Y');
-                $('.selectpicker').selectpicker('refresh');
-            } else {
-                $('.addLineStaticBlock_Number_of_Games_spatial').css("display", "none");
-                $('.addLineStaticBlock_Number_of_Games_spatial').find('.requireClass').attr('required',
-                    false);
-                $('.addLineStaticBlock_Number_of_Games_spatial').find('.shortTitleStatCls').attr('exist',
-                    'N');
-                $('#Number_of_Games_spatial_stat_id').val(false);
-            }
-        });
-        $('#Number_of_Failures_spatial_chart_id').on('click', function () {
-            if ($(this).is(":checked")) {
-                $('.addLineChartBlock_Number_of_Failures_spatial').css("display", "");
-                $('.addLineChartBlock_Number_of_Failures_spatial').find('.requireClass').attr('required',
-                    true);
-                $('#Number_of_Failures_spatial_chart_id').val(true);
-                $('.selectpicker').selectpicker('refresh');
-            } else {
-                $('.addLineChartBlock_Number_of_Failures_spatial').css("display", "none");
-                $('.addLineChartBlock_Number_of_Failures_spatial').find('.requireClass').attr('required',
-                    false);
-                $('#Number_of_Failures_spatial_chart_id').val(false);
-            }
-            resetValidation($(this).parents('form'));
-        });
-        $('#Number_of_Failures_spatial_stat_id').on('click', function () {
-            if ($(this).is(":checked")) {
-                $('.addLineStaticBlock_Number_of_Failures_spatial').css("display", "");
-                $('.addLineStaticBlock_Number_of_Failures_spatial').find('.requireClass').attr('required',
-                    true);
-                $('#Number_of_Failures_spatial_stat_id').val(true);
-                $('.addLineStaticBlock_Number_of_Failures_spatial').find('.shortTitleStatCls').attr('exist',
-                    'Y');
-                $('.selectpicker').selectpicker('refresh');
-            } else {
-                $('.addLineStaticBlock_Number_of_Failures_spatial').css("display", "none");
-                $('.addLineStaticBlock_Number_of_Failures_spatial').find('.requireClass').attr('required',
-                    false);
-                $('.addLineStaticBlock_Number_of_Failures_spatial').find('.shortTitleStatCls').attr('exist',
-                    'N');
-                $('#Number_of_Failures_spatial_stat_id').val(false);
-            }
-        });
-        $(document).on('click', '#doneId', function (e) {
-            $("body").addClass('loading');
-            $("#doneId").attr("disabled", true);
-            if ($('#pickStartDate').val() == '') {
-                $('#pickStartDate').attr("readonly", false);
-            }
-            if ($('#startWeeklyDate').val() == '') {
-                $('#startWeeklyDate').attr("readonly", false);
-            }
-            $("#initialspanId").trigger('blur');
-            $("#minimumspanId").trigger('blur');
-            $("#maximumspanId").trigger('blur');
-            $("#playspeedId").trigger('blur');
-            $("#maximumtestId").trigger('blur');
-            $("#maximumFailureId").trigger('blur');
-            if (isFromValid("#activeContentFormId")) {
-                $('.scheduleTaskClass').removeAttr('disabled');
-                $('.scheduleTaskClass').removeClass('linkDis');
-                var shortTitle = $('#shortTitleId').val();
-                if (shortTitle) {
-                    validateShortTitleId('', function (st) {
-                        if (st) {
-                            var scoreStat = $('#Score_spatial_stat_id').is(":checked");
-                            var gameStat = $('#Number_of_Games_spatial_stat_id').is(":checked");
-                            var failureStat = $('#Number_of_Failures_spatial_stat_id').is(":checked");
-                            var dbStatExist = true;
-                            var statShortVal1 = '', statShortVal2 = '', statShortVal3 = '';
-                            var statShortId1 = '', statShortId2 = '', statShortId3 = '';
-                            var dbShortVal1 = '', dbShortVal2 = '', dbShortVal3 = '';
-                            var dbShortId1 = '', dbShortId2 = '', dbShortId3 = '';
-                            var statisticsData = $('.shortTitleStatCls').attr('id');
-                            if (statisticsData) {
-                                var count = statisticsData.indexOf('identifier');
-                                if (count == -1) {
-                                    dbStatExist = false;
-                                }
-                            }
-                            if (dbStatExist) {
-                                if (scoreStat) {
-                                    statShortId1 = "identifierId1";
-                                    dbShortVal1 = $('#dbidentifierId1').val();
-                                    dbShortId1 = $('#dbidentifierId1').attr("title");
-                                    statShortVal1 = $('#identifierId1').val();
-                                }
-                                if (gameStat) {
-                                    statShortId2 = "identifierId2";
-                                    dbShortVal2 = $('#dbidentifierId2').val();
-                                    dbShortId2 = $('#dbidentifierId2').attr("title");
-                                    statShortVal2 = $('#identifierId2').val();
-                                }
-                                if (failureStat) {
-                                    statShortId3 = "identifierId3";
-                                    dbShortVal3 = $('#dbidentifierId3').val();
-                                    dbShortId3 = $('#dbidentifierId3').attr("title");
-                                    statShortVal3 = $('#identifierId3').val();
-                                }
-                            } else {
-                                if (scoreStat) {
-                                    statShortId1 = "static1";
-                                    statShortVal1 = $('#static1').val();
-                                }
-                                if (gameStat) {
-                                    statShortId2 = "static2";
-                                    statShortVal2 = $('#static2').val();
-                                }
-                                if (failureStat) {
-                                    statShortId3 = "static3";
-                                    statShortVal3 = $('#static3').val();
-                                }
-                            }
-                            var jsonArray = new Array();
-                            if (scoreStat) {
-                                var statObj = new Object();
-                                statObj.id = statShortId1;
-                                statObj.dbVal = dbShortVal1;
-                                statObj.idVal = statShortVal1;
-                                if (dbShortId1)
-                                    statObj.idname = dbShortId1;
-                                jsonArray.push(statObj);
-                            }
-                            if (gameStat) {
-                                var statObj = new Object();
-                                statObj.id = statShortId2;
-                                statObj.dbVal = dbShortVal2;
-                                statObj.idVal = statShortVal2;
-                                if (dbShortId2)
-                                    statObj.idname = dbShortId2;
-                                jsonArray.push(statObj);
-                            }
-                            if (failureStat) {
-                                var statObj = new Object();
-                                statObj.id = statShortId3;
-                                statObj.dbVal = dbShortVal3;
-                                statObj.idVal = statShortVal3;
-                                if (dbShortId3)
-                                    statObj.idname = dbShortId3;
-                                jsonArray.push(statObj);
-                            }
-                            if (jsonArray.length > 0) {
-                                validateStatisticsIds(jsonArray, function (val) {
-                                    if (val) {
-                                        $("#doneId").attr("disabled", false);
-                                        $("body").removeClass('loading');
-                                        doneActiveTask(this, 'done', function (val) {
-                                            if (val) {
-                                                $('.shortTitleCls,.shortTitleStatCls').prop('disabled', false);
-                                                $("#buttonText").val('completed');
-                                                document.activeContentFormId.submit();
-                                            }
-                                        })
-                                    } else {
-                                        $("#doneId").attr("disabled", false);
-                                        $("body").removeClass('loading');
-                                        showErrMsg("Please fill in all mandatory fields.");
-                                        $('.contentClass a').tab('show');
-                                    }
-                                });
-                            } else {
-                                $("#doneId").attr("disabled", false);
-                                $("body").removeClass('loading');
-                                doneActiveTask(this, 'done', function (val) {
-                                    if (val) {
-                                        $('.shortTitleCls,.shortTitleStatCls').prop('disabled', false);
-                                        $("#buttonText").val('completed');
-                                        document.activeContentFormId.submit();
-                                    }
-                                })
-                            }
-                        } else {
-                            $("#doneId").attr("disabled", false);
-                            $("body").removeClass('loading');
-                        }
-                    });
-                } else {
-                    $("#doneId").attr("disabled", false);
-                    $("body").removeClass('loading');
-                    $('.contentClass a').tab('show');
-                }
-            } else {
-                console.log("else of Done");
-                $("body").removeClass('loading');
-                $("#doneId").attr("disabled", false);
-                $('.contentClass a').tab('show');
-                showErrMsg("Please fill in all mandatory fields.");
-            }
-        });
-
-        $('#saveId').click(function (e) {
-            $("body").addClass('loading');
-            $("#saveId").attr("disabled", true);
-            var shortTitleCount = $('.shortTitleClass').find('.help-block').children().length;
-            if (shortTitleCount >= 1) {
-                showErrMsg("Please fill in all mandatory fields.");
-                $('.contentClass a').tab('show');
-                $("body").removeClass('loading');
-                $("#saveId").attr("disabled", false);
-                return false;
-            } else if (!$('#shortTitleId')[0].checkValidity()) {
-                $("#shortTitleId").parent().addClass('has-error has-danger').find(
-                    ".help-block").empty().append(
-                    '<ul class="list-unstyled"><li>This is a required field.</li></ul>');
-                showErrMsg("Please fill in all mandatory fields.");
-                $('.contentClass a').tab('show');
-                $("body").removeClass('loading');
-                $("#saveId").attr("disabled", false);
-                return false;
-            } else {
-                validateShortTitleId('', function (st) {
-                    if (st) {
-                        var scoreStat = $('#Score_spatial_stat_id').is(":checked");
-                        var gameStat = $('#Number_of_Games_spatial_stat_id').is(":checked");
-                        var failureStat = $('#Number_of_Failures_spatial_stat_id').is(":checked");
-                        var dbStatExist = true;
-                        var statShortVal1 = '', statShortVal2 = '', statShortVal3 = '';
-                        var statShortId1 = '', statShortId2 = '', statShortId3 = '';
-                        var dbShortVal1 = '', dbShortVal2 = '', dbShortVal3 = '';
-                        var dbShortId1 = '', dbShortId2 = '', dbShortId3 = '';
-                        var statisticsData = $('.shortTitleStatCls').attr('id');
-                        if (statisticsData) {
-                            var count = statisticsData.indexOf('identifier');
-                            if (count == -1) {
-                                dbStatExist = false;
-                            }
-                        }
-                        if (dbStatExist) {
-                            if (scoreStat) {
-                                statShortId1 = "identifierId1";
-                                dbShortVal1 = $('#dbidentifierId1').val();
-                                dbShortId1 = $('#dbidentifierId1').attr("title");
-                                statShortVal1 = $('#identifierId1').val();
-                            }
-                            if (gameStat) {
-                                statShortId2 = "identifierId2";
-                                dbShortVal2 = $('#dbidentifierId2').val();
-                                dbShortId2 = $('#dbidentifierId2').attr("title");
-                                statShortVal2 = $('#identifierId2').val();
-                            }
-                            if (failureStat) {
-                                statShortId3 = "identifierId3";
-                                dbShortVal3 = $('#dbidentifierId3').val();
-                                dbShortId3 = $('#dbidentifierId3').attr("title");
-                                statShortVal3 = $('#identifierId3').val();
-                            }
-                        } else {
-                            if (scoreStat) {
-                                statShortId1 = "static1";
-                                statShortVal1 = $('#static1').val();
-                            }
-                            if (gameStat) {
-                                statShortId2 = "static2";
-                                statShortVal2 = $('#static2').val();
-                            }
-                            if (failureStat) {
-                                statShortId3 = "static3";
-                                statShortVal3 = $('#static3').val();
-                            }
-                        }
-                        var jsonArray = new Array();
-                        if (scoreStat) {
-                            var statObj = new Object();
-                            statObj.id = statShortId1;
-                            statObj.dbVal = dbShortVal1;
-                            statObj.idVal = statShortVal1;
-                            if (dbShortId1)
-                                statObj.idname = dbShortId1;
-                            jsonArray.push(statObj);
-                        }
-                        if (gameStat) {
-                            var statObj = new Object();
-                            statObj.id = statShortId2;
-                            statObj.dbVal = dbShortVal2;
-                            statObj.idVal = statShortVal2;
-                            if (dbShortId2)
-                                statObj.idname = dbShortId2;
-                            jsonArray.push(statObj);
-                        }
-                        if (failureStat) {
-                            var statObj = new Object();
-                            statObj.id = statShortId3;
-                            statObj.dbVal = dbShortVal3;
-                            statObj.idVal = statShortVal3;
-                            if (dbShortId3)
-                                statObj.idname = dbShortId3;
-                            jsonArray.push(statObj);
-                        }
-                        if (jsonArray.length > 0) {
-                            saveValidateStatisticsIds(jsonArray, function (val) {
-                                if (val) {
-                                    $("#saveId").attr("disabled", false);
-                                    $("body").removeClass('loading');
-                                    doneActiveTask(this, 'save', function (val) {
-                                        if (val) {
-                                            $('.shortTitleCls,.shortTitleStatCls').prop('disabled', false);
-                                            $("#buttonText").val('save');
-                                            document.activeContentFormId.submit();
-                                        }
-                                    })
-                                } else {
-                                    $("#saveId").attr("disabled", false);
-                                    $("body").removeClass('loading');
-                                    showErrMsg("Please fill in all mandatory fields.");
-                                    $('.contentClass a').tab('show');
-                                }
-                            });
-                        } else {
-                            $("#saveId").attr("disabled", false);
-                            $("body").removeClass('loading');
-                            doneActiveTask(this, 'save', function (val) {
-                                if (val) {
-                                    $('.shortTitleCls,.shortTitleStatCls').prop('disabled', false);
-                                    $("#buttonText").val('save');
-                                    document.activeContentFormId.submit();
-                                }
-                            })
-                        }
-                    } else {
-                        $("body").removeClass('loading');
-                        $("#saveId").attr("disabled", false);
-                    }
-                });
-            }
-        });
-
-        $('.selectpicker').selectpicker('refresh');
-        $('[data-toggle="tooltip"]').tooltip();
-        $('input').on('drop', function () {
-            return false;
-        });
-        $(document).find('input[type = text][custAttType != cust]').keyup(function (e) {
-            var evt = (e) ? e : window.event;
-            var charCode = (evt.which) ? evt.which : evt.keyCode;
-            if (charCode == 16)
-                isShift = false;
-            if (!isShift && $(this).val()) {
-                var regularExpression = /^[ A-Za-z0-9!\$%&\*\(\)_+|:"?,.\/;'\[\]=\-><@]*$/;
-                if (!regularExpression.test($(this).val())) {
-                    var newVal = $(this).val().replace(/[^ A-Za-z0-9!\$%&\*\(\)_+|:"?,.\/;'\[\]=\-><@]/g, '');
-                    e.preventDefault();
-                    $(this).val(newVal);
-                    $(this).parent().addClass("has-danger has-error");
-                    $(this).parent().find(".help-block").empty().html(
-                        "<ul class='list-unstyled'><li>Special characters such as #^}{ are not allowed.</li></ul>");
-                }
-            }
-        });
-        $(document).find('input[type = text][custAttType = cust]').keyup(function (e) {
-            var evt = (e) ? e : window.event;
-            var charCode = (evt.which) ? evt.which : evt.keyCode;
-            if (charCode == 16)
-                isShift = false;
-            if (!isShift && $(this).val()) {
-                var regularExpression = /^[A-Za-z0-9*()_+|:.-]*$/;
-                if (!regularExpression.test($(this).val())) {
-                    var newVal = $(this).val().replace(/[^A-Za-z0-9\*\(\)_+|:.\-]/g, '');
-                    e.preventDefault();
-                    $(this).val(newVal);
-                    $(this).parent().addClass("has-danger has-error");
-                    $(this).parent().find(".help-block").empty().html(
-                        "<ul class='list-unstyled'><li>The characters like (< >) are not allowed.</li></ul>");
-                }
-            }
-        });
+    $("#playspeedId").blur(function () {
+      var value = $(this).val();
+      $("#playspeedId").parent().removeClass("has-danger").removeClass("has-error");
+      $("#playspeedId").parent().find(".help-block").empty();
+      console.log("playspeedId value:" + value);
+      if (value) {
+        if (value == '.') {
+          $("#playspeedId").val('');
+          $("#playspeedId").parent().addClass("has-danger").addClass("has-error");
+          $("#playspeedId").parent().find(".help-block").empty();
+          $("#playspeedId").parent().find(".help-block").append(
+              "<ul class='list-unstyled'><li>Please enter a valid number</li></ul>");
+        } else if (parseFloat(value) < 0.5) {
+          $("#playspeedId").val('');
+          $("#playspeedId").parent().addClass("has-danger").addClass("has-error");
+          $("#playspeedId").parent().find(".help-block").empty();
+          $("#playspeedId").parent().find(".help-block").append(
+              "<ul class='list-unstyled'><li>Play Speed should be >= 0.5 seconds  </li></ul>");
+        }
+        if (parseFloat(value) > parseFloat(20)) {
+          $("#playspeedId").val('');
+          $("#playspeedId").parent().addClass("has-danger").addClass("has-error");
+          $("#playspeedId").parent().find(".help-block").empty();
+          $("#playspeedId").parent().find(".help-block").append(
+              "<ul class='list-unstyled'><li>Play Speed should be <= 20 seconds</li></ul>");
+        }
+      }
+    );
+    $("#maximumtestId").blur(function () {
+      var value = $(this).val();
+      $(this).parent().removeClass("has-danger").removeClass("has-error");
+      $(this).parent().find(".help-block").empty();
+      if (parseInt($(this).val()) < 1) {
+        $(this).val('');
+        $(this).parent().addClass("has-danger").addClass("has-error");
+        $(this).parent().find(".help-block").empty();
+        $(this).parent().find(".help-block").append(
+            "<ul class='list-unstyled'><li>Maximum Tests should be >= 1</li></ul>");
+      }
+      var maximumFailure = $('#maximumFailureId').val();
+      if (value && parseInt(maximumFailure) >= parseInt($(this).val())) {
+        $('#maximumFailureId').val('');
+        $('#maximumFailureId').parent().addClass("has-danger").addClass("has-error");
+        $('#maximumFailureId').parent().find(".help-block").empty();
+        $('#maximumFailureId').parent().find(".help-block").append(
+            "<ul class='list-unstyled'><li>Maximum Consecutive Failures should be always < Maximum tests</li></ul>");
+      }
+    });
+    $("#maximumFailureId").blur(function () {
+      var value = $(this).val();
+      var maxmimunTestVal = $('#maximumtestId').val();
+      $(this).parent().removeClass("has-danger").removeClass("has-error");
+      $(this).parent().find(".help-block").empty();
+      if (parseInt($(this).val()) < 1) {
+        $(this).val('');
+        $(this).parent().addClass("has-danger").addClass("has-error");
+        $(this).parent().find(".help-block").empty();
+        $(this).parent().find(".help-block").append(
+            "<ul class='list-unstyled'><li>Maximum Tests should be >= 1</li></ul>");
+      }
+      if (maxmimunTestVal && parseInt($(this).val()) >= parseInt(maxmimunTestVal)) {
+        $(this).val('');
+        $(this).parent().addClass("has-danger").addClass("has-error");
+        $(this).parent().find(".help-block").empty();
+        $(this).parent().find(".help-block").append(
+            "<ul class='list-unstyled'><li>Maximum Consecutive Failures should be always < Maximum tests</li></ul>");
+      }
     });
 
-    function validateShortTitleId(item, callback) {
-        console.log("validateShortTitleId");
-        var shortTitle = $("#shortTitleId").val();
-        var thisAttr = $("#shortTitleId");
-        var existedKey = '${activeTaskBo.shortTitle}';
-        var activeTaskAttName = 'shortTitle';
-        var activeTaskAttIdVal = shortTitle;
-        var activeTaskAttIdName = "not";
-        if (shortTitle != null && shortTitle != '' && typeof shortTitle != 'undefined') {
-            $(thisAttr).parent().removeClass("has-danger").removeClass("has-error");
-            $(thisAttr).parent().find(".help-block").empty();
-            $('.shortTitleClass').parent().removeClass("has-danger").removeClass("has-error");
-            $('.shortTitleClass').parent().find(".help-block").empty();
-            if (existedKey != shortTitle) {
-                $.ajax({
-                    url: "/studybuilder/adminStudies/validateActiveTaskShortTitleId.do?_S=${param._S}",
-                    type: "POST",
-                    datatype: "json",
-                    data: {
-                        activeTaskAttName: activeTaskAttName,
-                        activeTaskAttIdVal: activeTaskAttIdVal,
-                        activeTaskAttIdName: activeTaskAttIdName,
-                        "${_csrf.parameterName}": "${_csrf.token}",
-                    },
-                    success: function getResponse(data) {
-                        var message = data.message;
-                        console.log(message);
-                        if ('SUCCESS' != message) {
-                            $(thisAttr).validator('validate');
-                            $('.shortTitleClass').parent().removeClass("has-danger").removeClass("has-error");
-                            $('.shortTitleClass').parent().find(".help-block").empty();
-                            callback(true);
-                        } else {
-                            $(thisAttr).val('');
-                            $('.shortTitleClass').parent().addClass("has-danger").addClass("has-error");
-                            $('.shortTitleClass').parent().find(".help-block").empty();
-                            $(thisAttr).parent().find(".help-block").append(
-                                "<ul class='list-unstyled'><li>'" + shortTitle
-                                + "' has already been used in the past.</li></ul>");
-                            callback(false);
-                        }
-                    },
-                    global: false
-                });
-            } else {
-                callback(true);
-                $('.shortTitleClass').parent().removeClass("has-danger").removeClass("has-error");
-                $('.shortTitleClass').parent().find(".help-block").html("");
-            }
-        } else {
-            callback(false);
-        }
-    }
-
-    function validateShortTitleStatId(event, thisAttr, callback) {
-        var activeTaskAttName = 'identifierNameStat';
-        var activeTaskAttIdVal = $(thisAttr).val();
-        var activeTaskAttIdName = $(thisAttr).attr('id');
-        var dbId = $(thisAttr).attr('dbid');
-        $(thisAttr).parent().removeClass("has-danger").removeClass("has-error");
-        $(thisAttr).parent().find(".help-block").empty();
-        var statIds = "";
-        if (dbId)
-            statIds = dbId;
-        //validation with other statistics if short  title is there .
-        //if not valid then display duplicate data
-        if (activeTaskAttIdVal) {
-            var count = 0;
-            $(".shortTitleStatCls").each(function () {
-                var flag = $(this).attr('exist');
-                var statAttId = this.id;
-                if (flag && flag == 'Y') {
-                    var statAttId = this.id;
-                    var dbStatAttId = $(this).attr('dbid');
-                    var val = $(this).val();
-                    if (val && statAttId != activeTaskAttIdName) {
-                        if (dbStatAttId)
-                            statIds = statIds + "," + dbStatAttId;
-                        if (val.toLowerCase() == activeTaskAttIdVal.toLowerCase()) {
-                            count = count + 1;
-                        }
-                    }
+    $("#shortTitleId").blur(function () {
+      validateShortTitleId('', function (val) {
+      });
+    })
+    $('#static1, #static2, #static3').on('keyup', function () {
+      $(this).parent().find(".help-block").empty();
+      $('.statShortTitleClass').parent().removeClass("has-danger").removeClass("has-error");
+    });
+    $('#static1, #static2, #static3').blur(function () {
+      validateShortTitleStatId('', this, function (val) {
+      });
+    })
+    $('#identifierId1').blur(function () {
+      validateShortTitleStatId('', this, function (val) {
+      });
+    })
+    $('#identifierId2').blur(function () {
+      validateShortTitleStatId('', this, function (val) {
+      });
+    })
+    $('#identifierId3').blur(function () {
+      validateShortTitleStatId('', this, function (val) {
+      });
+    })
+    $('#identifierId1, #identifierId2, #identifierId3').on('keyup', function () {
+      $(this).parent().find(".help-block").empty();
+      $('.statShortTitleClass').parent().removeClass("has-danger").removeClass("has-error");
+    });
+    setLineChatStatCheckedVal();
+    $('#Score_spatial_chart_id').on('click', function () {
+      if ($(this).is(":checked")) {
+        $('.addLineChartBlock_Score_spatial').css("display", "");
+        $('.addLineChartBlock_Score_spatial').find('.requireClass').attr('required', true);
+        $('#Score_spatial_chart_id').val(true);
+        $('.selectpicker').selectpicker('refresh');
+      } else {
+        $('.addLineChartBlock_Score_spatial').css("display", "none");
+        $('.addLineChartBlock_Score_spatial').find('.requireClass').attr('required', false);
+        $('#Score_spatial_chart_id').val(false);
+      }
+      resetValidation($(this).parents('form'));
+    });
+    $('#Score_spatial_stat_id').on('click', function () {
+      if ($(this).is(":checked")) {
+        $('.addLineStaticBlock_Score_spatial').css("display", "");
+        $('.addLineStaticBlock_Score_spatial').find('.requireClass').attr('required', true);
+        $('#Score_spatial_stat_id').val(true);
+        $('.addLineStaticBlock_Score_spatial').find('.shortTitleStatCls').attr('exist', 'Y');
+        $('.selectpicker').selectpicker('refresh');
+      } else {
+        $('.addLineStaticBlock_Score_spatial').css("display", "none");
+        $('.addLineStaticBlock_Score_spatial').find('.requireClass').attr('required', false);
+        $('.addLineStaticBlock_Score_spatial').find('.shortTitleStatCls').attr('exist', 'N');
+        $('#Score_spatial_stat_id').val(false);
+      }
+    });
+    $('#Number_of_Games_spatial_chart_id').on('click', function () {
+      if ($(this).is(":checked")) {
+        $('.addLineChartBlock_Number_of_Games_spatial').css("display", "");
+        $('.addLineChartBlock_Number_of_Games_spatial').find('.requireClass').attr('required',
+            true);
+        $('#Number_of_Games_spatial_chart_id').val(true);
+        $('.selectpicker').selectpicker('refresh');
+      } else {
+        $('.addLineChartBlock_Number_of_Games_spatial').css("display", "none");
+        $('.addLineChartBlock_Number_of_Games_spatial').find('.requireClass').attr('required',
+            false);
+        $('#Number_of_Games_spatial_chart_id').val(false);
+      }
+      resetValidation($(this).parents('form'));
+    });
+    $('#Number_of_Games_spatial_stat_id').on('click', function () {
+      if ($(this).is(":checked")) {
+        $('.addLineStaticBlock_Number_of_Games_spatial').css("display", "");
+        $('.addLineStaticBlock_Number_of_Games_spatial').find('.requireClass').attr('required',
+            true);
+        $('#Number_of_Games_spatial_stat_id').val(true);
+        $('.addLineStaticBlock_Number_of_Games_spatial').find('.shortTitleStatCls').attr('exist',
+            'Y');
+        $('.selectpicker').selectpicker('refresh');
+      } else {
+        $('.addLineStaticBlock_Number_of_Games_spatial').css("display", "none");
+        $('.addLineStaticBlock_Number_of_Games_spatial').find('.requireClass').attr('required',
+            false);
+        $('.addLineStaticBlock_Number_of_Games_spatial').find('.shortTitleStatCls').attr('exist',
+            'N');
+        $('#Number_of_Games_spatial_stat_id').val(false);
+      }
+    });
+    $('#Number_of_Failures_spatial_chart_id').on('click', function () {
+      if ($(this).is(":checked")) {
+        $('.addLineChartBlock_Number_of_Failures_spatial').css("display", "");
+        $('.addLineChartBlock_Number_of_Failures_spatial').find('.requireClass').attr('required',
+            true);
+        $('#Number_of_Failures_spatial_chart_id').val(true);
+        $('.selectpicker').selectpicker('refresh');
+      } else {
+        $('.addLineChartBlock_Number_of_Failures_spatial').css("display", "none");
+        $('.addLineChartBlock_Number_of_Failures_spatial').find('.requireClass').attr('required',
+            false);
+        $('#Number_of_Failures_spatial_chart_id').val(false);
+      }
+      resetValidation($(this).parents('form'));
+    });
+    $('#Number_of_Failures_spatial_stat_id').on('click', function () {
+      if ($(this).is(":checked")) {
+        $('.addLineStaticBlock_Number_of_Failures_spatial').css("display", "");
+        $('.addLineStaticBlock_Number_of_Failures_spatial').find('.requireClass').attr('required',
+            true);
+        $('#Number_of_Failures_spatial_stat_id').val(true);
+        $('.addLineStaticBlock_Number_of_Failures_spatial').find('.shortTitleStatCls').attr('exist',
+            'Y');
+        $('.selectpicker').selectpicker('refresh');
+      } else {
+        $('.addLineStaticBlock_Number_of_Failures_spatial').css("display", "none");
+        $('.addLineStaticBlock_Number_of_Failures_spatial').find('.requireClass').attr('required',
+            false);
+        $('.addLineStaticBlock_Number_of_Failures_spatial').find('.shortTitleStatCls').attr('exist',
+            'N');
+        $('#Number_of_Failures_spatial_stat_id').val(false);
+      }
+    });
+    $(document).on('click', '#doneId', function (e) {
+      $("body").addClass('loading');
+      $("#doneId").attr("disabled", true);
+      if ($('#pickStartDate').val() == '') {
+        $('#pickStartDate').attr("readonly", false);
+      }
+      if ($('#startWeeklyDate').val() == '') {
+        $('#startWeeklyDate').attr("readonly", false);
+      }
+      $("#initialspanId").trigger('blur');
+      $("#minimumspanId").trigger('blur');
+      $("#maximumspanId").trigger('blur');
+      $("#playspeedId").trigger('blur');
+      $("#maximumtestId").trigger('blur');
+      $("#maximumFailureId").trigger('blur');
+      if (isFromValid("#activeContentFormId")) {
+        $('.scheduleTaskClass').removeAttr('disabled');
+        $('.scheduleTaskClass').removeClass('linkDis');
+        var shortTitle = $('#shortTitleId').val();
+        if (shortTitle) {
+          validateShortTitleId('', function (st) {
+            if (st) {
+              var scoreStat = $('#Score_spatial_stat_id').is(":checked");
+              var gameStat = $('#Number_of_Games_spatial_stat_id').is(":checked");
+              var failureStat = $('#Number_of_Failures_spatial_stat_id').is(":checked");
+              var dbStatExist = true;
+              var statShortVal1 = '', statShortVal2 = '', statShortVal3 = '';
+              var statShortId1 = '', statShortId2 = '', statShortId3 = '';
+              var dbShortVal1 = '', dbShortVal2 = '', dbShortVal3 = '';
+              var dbShortId1 = '', dbShortId2 = '', dbShortId3 = '';
+              var statisticsData = $('.shortTitleStatCls').attr('id');
+              if (statisticsData) {
+                var count = statisticsData.indexOf('identifier');
+                if (count == -1) {
+                  dbStatExist = false;
                 }
-            });
-            if (count > 0) {
+              }
+              if (dbStatExist) {
+                if (scoreStat) {
+                  statShortId1 = "identifierId1";
+                  dbShortVal1 = $('#dbidentifierId1').val();
+                  dbShortId1 = $('#dbidentifierId1').attr("title");
+                  statShortVal1 = $('#identifierId1').val();
+                }
+                if (gameStat) {
+                  statShortId2 = "identifierId2";
+                  dbShortVal2 = $('#dbidentifierId2').val();
+                  dbShortId2 = $('#dbidentifierId2').attr("title");
+                  statShortVal2 = $('#identifierId2').val();
+                }
+                if (failureStat) {
+                  statShortId3 = "identifierId3";
+                  dbShortVal3 = $('#dbidentifierId3').val();
+                  dbShortId3 = $('#dbidentifierId3').attr("title");
+                  statShortVal3 = $('#identifierId3').val();
+                }
+              } else {
+                if (scoreStat) {
+                  statShortId1 = "static1";
+                  statShortVal1 = $('#static1').val();
+                }
+                if (gameStat) {
+                  statShortId2 = "static2";
+                  statShortVal2 = $('#static2').val();
+                }
+                if (failureStat) {
+                  statShortId3 = "static3";
+                  statShortVal3 = $('#static3').val();
+                }
+              }
+              var jsonArray = new Array();
+              if (scoreStat) {
+                var statObj = new Object();
+                statObj.id = statShortId1;
+                statObj.dbVal = dbShortVal1;
+                statObj.idVal = statShortVal1;
+                if (dbShortId1)
+                  statObj.idname = dbShortId1;
+                jsonArray.push(statObj);
+              }
+              if (gameStat) {
+                var statObj = new Object();
+                statObj.id = statShortId2;
+                statObj.dbVal = dbShortVal2;
+                statObj.idVal = statShortVal2;
+                if (dbShortId2)
+                  statObj.idname = dbShortId2;
+                jsonArray.push(statObj);
+              }
+              if (failureStat) {
+                var statObj = new Object();
+                statObj.id = statShortId3;
+                statObj.dbVal = dbShortVal3;
+                statObj.idVal = statShortVal3;
+                if (dbShortId3)
+                  statObj.idname = dbShortId3;
+                jsonArray.push(statObj);
+              }
+              if (jsonArray.length > 0) {
+                validateStatisticsIds(jsonArray, function (val) {
+                  if (val) {
+                    $("#doneId").attr("disabled", false);
+                    $("body").removeClass('loading');
+                    doneActiveTask(this, 'done', function (val) {
+                      if (val) {
+                        $('.shortTitleCls,.shortTitleStatCls').prop('disabled', false);
+                        $("#buttonText").val('completed');
+                        document.activeContentFormId.submit();
+                      }
+                    })
+                  } else {
+                    $("#doneId").attr("disabled", false);
+                    $("body").removeClass('loading');
+                    showErrMsg("Please fill in all mandatory fields.");
+                    $('.contentClass a').tab('show');
+                  }
+                });
+              } else {
+                $("#doneId").attr("disabled", false);
+                $("body").removeClass('loading');
+                doneActiveTask(this, 'done', function (val) {
+                  if (val) {
+                    $('.shortTitleCls,.shortTitleStatCls').prop('disabled', false);
+                    $("#buttonText").val('completed');
+                    document.activeContentFormId.submit();
+                  }
+                })
+              }
+            } else {
+              $("#doneId").attr("disabled", false);
+              $("body").removeClass('loading');
+            }
+          });
+        } else {
+          $("#doneId").attr("disabled", false);
+          $("body").removeClass('loading');
+          $('.contentClass a').tab('show');
+        }
+      } else {
+        console.log("else of Done");
+        $("body").removeClass('loading');
+        $("#doneId").attr("disabled", false);
+        $('.contentClass a').tab('show');
+        showErrMsg("Please fill in all mandatory fields.");
+      }
+    });
+
+    $('#saveId').click(function (e) {
+      $("body").addClass('loading');
+      $("#saveId").attr("disabled", true);
+      var shortTitleCount = $('.shortTitleClass').find('.help-block').children().length;
+      if (shortTitleCount >= 1) {
+        showErrMsg("Please fill in all mandatory fields.");
+        $('.contentClass a').tab('show');
+        $("body").removeClass('loading');
+        $("#saveId").attr("disabled", false);
+        return false;
+      } else if (!$('#shortTitleId')[0].checkValidity()) {
+        $("#shortTitleId").parent().addClass('has-error has-danger').find(
+            ".help-block").empty().append(
+            '<ul class="list-unstyled"><li>This is a required field.</li></ul>');
+        showErrMsg("Please fill in all mandatory fields.");
+        $('.contentClass a').tab('show');
+        $("body").removeClass('loading');
+        $("#saveId").attr("disabled", false);
+        return false;
+      } else {
+        validateShortTitleId('', function (st) {
+          if (st) {
+            var scoreStat = $('#Score_spatial_stat_id').is(":checked");
+            var gameStat = $('#Number_of_Games_spatial_stat_id').is(":checked");
+            var failureStat = $('#Number_of_Failures_spatial_stat_id').is(":checked");
+            var dbStatExist = true;
+            var statShortVal1 = '', statShortVal2 = '', statShortVal3 = '';
+            var statShortId1 = '', statShortId2 = '', statShortId3 = '';
+            var dbShortVal1 = '', dbShortVal2 = '', dbShortVal3 = '';
+            var dbShortId1 = '', dbShortId2 = '', dbShortId3 = '';
+            var statisticsData = $('.shortTitleStatCls').attr('id');
+            if (statisticsData) {
+              var count = statisticsData.indexOf('identifier');
+              if (count == -1) {
+                dbStatExist = false;
+              }
+            }
+            if (dbStatExist) {
+              if (scoreStat) {
+                statShortId1 = "identifierId1";
+                dbShortVal1 = $('#dbidentifierId1').val();
+                dbShortId1 = $('#dbidentifierId1').attr("title");
+                statShortVal1 = $('#identifierId1').val();
+              }
+              if (gameStat) {
+                statShortId2 = "identifierId2";
+                dbShortVal2 = $('#dbidentifierId2').val();
+                dbShortId2 = $('#dbidentifierId2').attr("title");
+                statShortVal2 = $('#identifierId2').val();
+              }
+              if (failureStat) {
+                statShortId3 = "identifierId3";
+                dbShortVal3 = $('#dbidentifierId3').val();
+                dbShortId3 = $('#dbidentifierId3').attr("title");
+                statShortVal3 = $('#identifierId3').val();
+              }
+            } else {
+              if (scoreStat) {
+                statShortId1 = "static1";
+                statShortVal1 = $('#static1').val();
+              }
+              if (gameStat) {
+                statShortId2 = "static2";
+                statShortVal2 = $('#static2').val();
+              }
+              if (failureStat) {
+                statShortId3 = "static3";
+                statShortVal3 = $('#static3').val();
+              }
+            }
+            var jsonArray = new Array();
+            if (scoreStat) {
+              var statObj = new Object();
+              statObj.id = statShortId1;
+              statObj.dbVal = dbShortVal1;
+              statObj.idVal = statShortVal1;
+              if (dbShortId1)
+                statObj.idname = dbShortId1;
+              jsonArray.push(statObj);
+            }
+            if (gameStat) {
+              var statObj = new Object();
+              statObj.id = statShortId2;
+              statObj.dbVal = dbShortVal2;
+              statObj.idVal = statShortVal2;
+              if (dbShortId2)
+                statObj.idname = dbShortId2;
+              jsonArray.push(statObj);
+            }
+            if (failureStat) {
+              var statObj = new Object();
+              statObj.id = statShortId3;
+              statObj.dbVal = dbShortVal3;
+              statObj.idVal = statShortVal3;
+              if (dbShortId3)
+                statObj.idname = dbShortId3;
+              jsonArray.push(statObj);
+            }
+            if (jsonArray.length > 0) {
+              saveValidateStatisticsIds(jsonArray, function (val) {
+                if (val) {
+                  $("#saveId").attr("disabled", false);
+                  $("body").removeClass('loading');
+                  doneActiveTask(this, 'save', function (val) {
+                    if (val) {
+                      $('.shortTitleCls,.shortTitleStatCls').prop('disabled', false);
+                      $("#buttonText").val('save');
+                      document.activeContentFormId.submit();
+                    }
+                  })
+                } else {
+                  $("#saveId").attr("disabled", false);
+                  $("body").removeClass('loading');
+                  showErrMsg("Please fill in all mandatory fields.");
+                  $('.contentClass a').tab('show');
+                }
+              });
+            } else {
+              $("#saveId").attr("disabled", false);
+              $("body").removeClass('loading');
+              doneActiveTask(this, 'save', function (val) {
+                if (val) {
+                  $('.shortTitleCls,.shortTitleStatCls').prop('disabled', false);
+                  $("#buttonText").val('save');
+                  document.activeContentFormId.submit();
+                }
+              })
+            }
+          } else {
+            $("body").removeClass('loading');
+            $("#saveId").attr("disabled", false);
+          }
+        });
+      }
+    });
+
+    $('.selectpicker').selectpicker('refresh');
+    $('[data-toggle="tooltip"]').tooltip();
+    $('input').on('drop', function () {
+      return false;
+    });
+    $(document).find('input[type = text][custAttType != cust]').keyup(function (e) {
+      var evt = (e) ? e : window.event;
+      var charCode = (evt.which) ? evt.which : evt.keyCode;
+      if (charCode == 16)
+        isShift = false;
+      if (!isShift && $(this).val()) {
+        var regularExpression = /^[ A-Za-z0-9!\$%&\*\(\)_+|:"?,.\/;'\[\]=\-><@]*$/;
+        if (!regularExpression.test($(this).val())) {
+          var newVal = $(this).val().replace(/[^ A-Za-z0-9!\$%&\*\(\)_+|:"?,.\/;'\[\]=\-><@]/g, '');
+          e.preventDefault();
+          $(this).val(newVal);
+          $(this).parent().addClass("has-danger has-error");
+          $(this).parent().find(".help-block").empty().html(
+              "<ul class='list-unstyled'><li>Special characters such as #^}{ are not allowed.</li></ul>");
+        }
+      }
+    });
+    $(document).find('input[type = text][custAttType = cust]').keyup(function (e) {
+      var evt = (e) ? e : window.event;
+      var charCode = (evt.which) ? evt.which : evt.keyCode;
+      if (charCode == 16)
+        isShift = false;
+      if (!isShift && $(this).val()) {
+        var regularExpression = /^[A-Za-z0-9*()_+|:.-]*$/;
+        if (!regularExpression.test($(this).val())) {
+          var newVal = $(this).val().replace(/[^A-Za-z0-9\*\(\)_+|:.\-]/g, '');
+          e.preventDefault();
+          $(this).val(newVal);
+          $(this).parent().addClass("has-danger has-error");
+          $(this).parent().find(".help-block").empty().html(
+              "<ul class='list-unstyled'><li>The characters like (< >) are not allowed.</li></ul>");
+        }
+      }
+    });
+  });
+
+  function validateShortTitleId(item, callback) {
+    console.log("validateShortTitleId");
+    var shortTitle = $("#shortTitleId").val();
+    var thisAttr = $("#shortTitleId");
+    var existedKey = '${activeTaskBo.shortTitle}';
+    var activeTaskAttName = 'shortTitle';
+    var activeTaskAttIdVal = shortTitle;
+    var activeTaskAttIdName = "not";
+    if (shortTitle != null && shortTitle != '' && typeof shortTitle != 'undefined') {
+      $(thisAttr).parent().removeClass("has-danger").removeClass("has-error");
+      $(thisAttr).parent().find(".help-block").empty();
+      $('.shortTitleClass').parent().removeClass("has-danger").removeClass("has-error");
+      $('.shortTitleClass').parent().find(".help-block").empty();
+      if (existedKey != shortTitle) {
+        $.ajax({
+          url: "/studybuilder/adminStudies/validateActiveTaskShortTitleId.do?_S=${param._S}",
+          type: "POST",
+          datatype: "json",
+          data: {
+            activeTaskAttName: activeTaskAttName,
+            activeTaskAttIdVal: activeTaskAttIdVal,
+            activeTaskAttIdName: activeTaskAttIdName,
+            "${_csrf.parameterName}": "${_csrf.token}",
+          },
+          success: function getResponse(data) {
+            var message = data.message;
+            console.log(message);
+            if ('SUCCESS' != message) {
+              $(thisAttr).validator('validate');
+              $('.shortTitleClass').parent().removeClass("has-danger").removeClass("has-error");
+              $('.shortTitleClass').parent().find(".help-block").empty();
+              callback(true);
+            } else {
+              $(thisAttr).val('');
+              $('.shortTitleClass').parent().addClass("has-danger").addClass("has-error");
+              $('.shortTitleClass').parent().find(".help-block").empty();
+              $(thisAttr).parent().find(".help-block").append(
+                  "<ul class='list-unstyled'><li>'" + shortTitle
+                  + "' has already been used in the past.</li></ul>");
+              callback(false);
+            }
+          },
+          global: false
+        });
+      } else {
+        callback(true);
+        $('.shortTitleClass').parent().removeClass("has-danger").removeClass("has-error");
+        $('.shortTitleClass').parent().find(".help-block").html("");
+      }
+    } else {
+      callback(false);
+    }
+  }
+
+  function validateShortTitleStatId(event, thisAttr, callback) {
+    var activeTaskAttName = 'identifierNameStat';
+    var activeTaskAttIdVal = $(thisAttr).val();
+    var activeTaskAttIdName = $(thisAttr).attr('id');
+    var dbId = $(thisAttr).attr('dbid');
+    $(thisAttr).parent().removeClass("has-danger").removeClass("has-error");
+    $(thisAttr).parent().find(".help-block").empty();
+    var statIds = "";
+    if (dbId)
+      statIds = dbId;
+    //validation with other statistics if short  title is there .
+    //if not valid then display duplicate data
+    if (activeTaskAttIdVal) {
+      var count = 0;
+      $(".shortTitleStatCls").each(function () {
+        var flag = $(this).attr('exist');
+        var statAttId = this.id;
+        if (flag && flag == 'Y') {
+          var statAttId = this.id;
+          var dbStatAttId = $(this).attr('dbid');
+          var val = $(this).val();
+          if (val && statAttId != activeTaskAttIdName) {
+            if (dbStatAttId)
+              statIds = statIds + "," + dbStatAttId;
+            if (val.toLowerCase() == activeTaskAttIdVal.toLowerCase()) {
+              count = count + 1;
+            }
+          }
+        }
+      });
+      if (count > 0) {
+        $(thisAttr).val('');
+        $(thisAttr).parent().find('.statShortTitleClass').addClass("has-danger").addClass(
+            "has-error");
+        $(thisAttr).parent().find('.statShortTitleClass').parent().find(".help-block").empty();
+        $(thisAttr).parent().find(".help-block").append(
+            "<ul class='list-unstyled'><li>'" + activeTaskAttIdVal
+            + "' has already been used in the past.</li></ul>");
+        showErrMsg("Please fill in all mandatory fields.");
+        $('.contentClass a').tab('show');
+        shortTitleStatFlag = false;
+        callback(false);
+      } else {
+        var staticShortTitleId = activeTaskAttIdName;
+        if (activeTaskAttIdName == 'static1' || activeTaskAttIdName == 'static2'
+            || activeTaskAttIdName == 'static3') {
+          activeTaskAttIdName = 'static';
+          $.ajax({
+            url: "/studybuilder/adminStudies/validateActiveTaskShortTitleId.do?_S=${param._S}",
+            type: "POST",
+            datatype: "json",
+            data: {
+              activeTaskAttName: activeTaskAttName,
+              activeTaskAttIdVal: activeTaskAttIdVal,
+              activeTaskAttIdName: activeTaskAttIdName,
+              "${_csrf.parameterName}": "${_csrf.token}",
+            },
+            success: function emailValid(data, status) {
+              var jsonobject = eval(data);
+              var message = jsonobject.message;
+              if ('SUCCESS' != message) {
+                $(thisAttr).validator('validate');
+                $('.statShortTitleClass').parent().removeClass("has-danger").removeClass(
+                    "has-error");
+                $('.statShortTitleClass').parent().find(".help-block").empty();
+                if (callback)
+                  callback(true);
+              } else {
                 $(thisAttr).val('');
                 $(thisAttr).parent().find('.statShortTitleClass').addClass("has-danger").addClass(
                     "has-error");
-                $(thisAttr).parent().find('.statShortTitleClass').parent().find(".help-block").empty();
+                $(thisAttr).parent().find('.statShortTitleClass').parent().find(
+                    ".help-block").empty();
                 $(thisAttr).parent().find(".help-block").append(
                     "<ul class='list-unstyled'><li>'" + activeTaskAttIdVal
                     + "' has already been used in the past.</li></ul>");
                 showErrMsg("Please fill in all mandatory fields.");
                 $('.contentClass a').tab('show');
-                shortTitleStatFlag = false;
-                callback(false);
+                if (callback)
+                  callback(false);
+
+              }
+            },
+            error: function status(data, status) {
+              callback(false);
+            },
+            global: false
+          });
+        } else {
+          var dbIdentifierVal = '';
+          if (activeTaskAttIdName == 'identifierId1') {
+            dbIdentifierVal = $('#dbidentifierId1').val();
+          } else if (activeTaskAttIdName == 'identifierId2') {
+            dbIdentifierVal = $('#dbidentifierId2').val();
+          } else if (activeTaskAttIdName == 'identifierId3') {
+            dbIdentifierVal = $('#dbidentifierId3').val();
+          }
+          if (dbIdentifierVal != activeTaskAttIdVal) {
+            if (statIds) {
+              activeTaskAttIdName = statIds;
             } else {
-                var staticShortTitleId = activeTaskAttIdName;
-                if (activeTaskAttIdName == 'static1' || activeTaskAttIdName == 'static2'
-                    || activeTaskAttIdName == 'static3') {
-                    activeTaskAttIdName = 'static';
-                    $.ajax({
-                        url: "/studybuilder/adminStudies/validateActiveTaskShortTitleId.do?_S=${param._S}",
-                        type: "POST",
-                        datatype: "json",
-                        data: {
-                            activeTaskAttName: activeTaskAttName,
-                            activeTaskAttIdVal: activeTaskAttIdVal,
-                            activeTaskAttIdName: activeTaskAttIdName,
-                            "${_csrf.parameterName}": "${_csrf.token}",
-                        },
-                        success: function emailValid(data, status) {
-                            var jsonobject = eval(data);
-                            var message = jsonobject.message;
-                            if ('SUCCESS' != message) {
-                                $(thisAttr).validator('validate');
-                                $('.statShortTitleClass').parent().removeClass("has-danger").removeClass(
-                                    "has-error");
-                                $('.statShortTitleClass').parent().find(".help-block").empty();
-                                if (callback)
-                                    callback(true);
-                            } else {
-                                $(thisAttr).val('');
-                                $(thisAttr).parent().find('.statShortTitleClass').addClass("has-danger").addClass(
-                                    "has-error");
-                                $(thisAttr).parent().find('.statShortTitleClass').parent().find(
-                                    ".help-block").empty();
-                                $(thisAttr).parent().find(".help-block").append(
-                                    "<ul class='list-unstyled'><li>'" + activeTaskAttIdVal
-                                    + "' has already been used in the past.</li></ul>");
-                                showErrMsg("Please fill in all mandatory fields.");
-                                $('.contentClass a').tab('show');
-                                if (callback)
-                                    callback(false);
-
-                            }
-                        },
-                        error: function status(data, status) {
-                            callback(false);
-                        },
-                        global: false
-                    });
-                } else {
-                    var dbIdentifierVal = '';
-                    if (activeTaskAttIdName == 'identifierId1') {
-                        dbIdentifierVal = $('#dbidentifierId1').val();
-                    } else if (activeTaskAttIdName == 'identifierId2') {
-                        dbIdentifierVal = $('#dbidentifierId2').val();
-                    } else if (activeTaskAttIdName == 'identifierId3') {
-                        dbIdentifierVal = $('#dbidentifierId3').val();
-                    }
-                    if (dbIdentifierVal != activeTaskAttIdVal) {
-                        if (statIds) {
-                            activeTaskAttIdName = statIds;
-                        } else {
-                            activeTaskAttIdName = 'static';
-                        }
-                        $.ajax({
-                            url: "/studybuilder/adminStudies/validateActiveTaskShortTitleId.do?_S=${param._S}",
-                            type: "POST",
-                            datatype: "json",
-                            data: {
-                                activeTaskAttName: activeTaskAttName,
-                                activeTaskAttIdVal: activeTaskAttIdVal,
-                                activeTaskAttIdName: activeTaskAttIdName,
-                                "${_csrf.parameterName}": "${_csrf.token}",
-                            },
-                            success: function emailValid(data, status) {
-                                var jsonobject = eval(data);
-                                var message = jsonobject.message;
-                                if ('SUCCESS' != message) {
-                                    $(thisAttr).validator('validate');
-                                    $(thisAttr).parent().find('.statShortTitleClass').removeClass(
-                                        "has-danger").removeClass("has-error");
-                                    $(thisAttr).parent().find('.statShortTitleClass').parent().find(
-                                        ".help-block").empty();
-                                    shortTitleStatFlag = true;
-                                    callback(true);
-                                } else {
-                                    $(thisAttr).val('');
-                                    $(thisAttr).parent().find('.statShortTitleClass').addClass("has-danger").addClass(
-                                        "has-error");
-                                    $(thisAttr).parent().find('.statShortTitleClass').parent().find(
-                                        ".help-block").empty();
-                                    $(thisAttr).parent().find(".help-block").append(
-                                        "<ul class='list-unstyled'><li>'" + activeTaskAttIdVal
-                                        + "' has already been used in the past.</li></ul>");
-                                    $(thisAttr).focus();
-                                    showErrMsg("Please fill in all mandatory fields.");
-                                    $('.contentClass a').tab('show');
-                                    shortTitleStatFlag = false;
-                                    callback(false);
-                                }
-                            },
-                            error: function status(data, status) {
-                                callback(false);
-                            },
-                            global: false
-                        });
-                    } else {
-                        callback(true);
-                        $(thisAttr).parent().find('.statShortTitleClass').removeClass("has-danger").removeClass(
-                            "has-error");
-                        $(thisAttr).parent().find('.statShortTitleClass').parent().find(".help-block").empty();
-                    }
-                }
+              activeTaskAttIdName = 'static';
             }
-        } else {
-            callback(false);
-        }
-    }
-
-    function validateStatisticsIds(jsonDatas, callback) {
-        var flag = true;
-        var arrayLength = jsonDatas.length; //cache the array length
-        var shortSatId = '';
-        var shortSatIdVal = '';
-        if (arrayLength > 1) {
-            for (var i = 0; i < arrayLength; i++) {
-                var existId = jsonDatas[i].id;
-                var existVal = jsonDatas[i].idVal;
-                if (existVal) {
-                    for (var j = 0; j < arrayLength; j++) {
-                        var statId = jsonDatas[j].id;
-                        var statVal = jsonDatas[j].idVal;
-                        if (existId != statId && existVal.toLowerCase() == statVal.toLowerCase()) {
-                            flag = false;
-                            shortSatId = jsonDatas[j].id;
-                            shortSatIdVal = jsonDatas[j].idVal;
-                            break;
-                        }
-                    }
-                } else {
-                    shortSatId = existId;
-                    flag = false;
-                }
-            }
-        }
-        if (!flag) {
-            if (shortSatId) {
-                if (shortSatIdVal === "") {
-                    $("#" + shortSatId).val('');
-                    $("#" + shortSatId).parent().find('.statShortTitleClass').parent().find(
-                        ".help-block").empty();
-                    $("#" + shortSatId).parent().find('.statShortTitleClass').addClass("has-danger").addClass(
-                        "has-error");
-                    $("#" + shortSatId).parent().find(".help-block").empty().append(
-                        "<ul class='list-unstyled'><li>Please fill out this field.</li></ul>");
-                } else {
-                    $("#" + shortSatId).val('');
-                    $("#" + shortSatId).parent().find('.statShortTitleClass').parent().find(
-                        ".help-block").empty();
-                    $("#" + shortSatId).parent().find('.statShortTitleClass').addClass("has-danger").addClass(
-                        "has-error");
-                    $("#" + shortSatId).parent().find(".help-block").empty().append(
-                        "<ul class='list-unstyled'><li>'" + shortSatIdVal
-                        + "' has already been used in the past.</li></ul>");
-                }
-            }
-            callback(false);
-        } else {
-            //do ajax call and check the db validation
-            var data = JSON.stringify(jsonDatas);
             $.ajax({
-                url: "/studybuilder/adminStudies/validateActiveTaskStatShortTitleIds.do?_S=${param._S}",
-                type: "POST",
-                datatype: "json",
-                data: {activeStatisticsBean: data},
-                beforeSend: function (xhr, settings) {
-                    xhr.setRequestHeader("X-CSRF-TOKEN", "${_csrf.token}");
-                },
-                success: function emailValid(data, status) {
-                    var jsonobject = eval(data);
-                    var message = jsonobject.message;
-                    var staticInfoList = jsonobject.statisticsInfoList;
-                    if ('SUCCESS' == message) {
-                        if (typeof staticInfoList != 'undefined' && staticInfoList != null
-                            && staticInfoList.length > 0) {
-                            $.each(staticInfoList, function (i, obj) {
-                                if (obj.type) {
-                                    $("#" + obj.id).val('');
-                                    $("#" + obj.id).focus();
-                                    $("#" + obj.id).parent().find('.statShortTitleClass').parent().find(
-                                        ".help-block").empty();
-                                    $("#" + obj.id).parent().find('.statShortTitleClass').addClass(
-                                        "has-danger").addClass("has-error");
-                                    $("#" + obj.id).parent().find(".help-block").empty().append(
-                                        "<ul class='list-unstyled'><li>'" + obj.idVal
-                                        + "' has already been used in the past.</li></ul>");
-                                }
-                            });
-
-                        }
-                        callback(false);
-                    } else {
-                        callback(true);
-                    }
-                },
-                error: function status(data, status) {
-                    callback(false);
-                },
-                global: false
-            });
-        }
-    }
-
-    function saveValidateStatisticsIds(jsonDatas, callback) {
-        var flag = true;
-        var arrayLength = jsonDatas.length; //cache the array length
-        var shortSatId = '';
-        var shortSatIdVal = '';
-        if (arrayLength > 1) {
-            for (var i = 0; i < arrayLength; i++) {
-                var existId = jsonDatas[i].id;
-                var existVal = jsonDatas[i].idVal;
-                if (existVal) {
-                    for (var j = 0; j < arrayLength; j++) {
-                        var statId = jsonDatas[j].id;
-                        var statVal = jsonDatas[j].idVal;
-                        if (existId != statId && existVal.toLowerCase() == statVal.toLowerCase()) {
-                            flag = false;
-                            shortSatId = jsonDatas[j].id;
-                            shortSatIdVal = jsonDatas[j].idVal;
-                            break;
-                        }
-                    }
-                }
-            }
-        }
-        if (!flag) {
-            if (shortSatId) {
-                if (shortSatIdVal === "") {
-                    $("#" + shortSatId).val('');
-                    $("#" + shortSatId).parent().find('.statShortTitleClass').parent().find(
-                        ".help-block").empty();
-                    $("#" + shortSatId).parent().find('.statShortTitleClass').addClass("has-danger").addClass(
-                        "has-error");
-                    $("#" + shortSatId).parent().find(".help-block").empty().append(
-                        "<ul class='list-unstyled'><li>Please fill out this field.</li></ul>");
+              url: "/studybuilder/adminStudies/validateActiveTaskShortTitleId.do?_S=${param._S}",
+              type: "POST",
+              datatype: "json",
+              data: {
+                activeTaskAttName: activeTaskAttName,
+                activeTaskAttIdVal: activeTaskAttIdVal,
+                activeTaskAttIdName: activeTaskAttIdName,
+                "${_csrf.parameterName}": "${_csrf.token}",
+              },
+              success: function emailValid(data, status) {
+                var jsonobject = eval(data);
+                var message = jsonobject.message;
+                if ('SUCCESS' != message) {
+                  $(thisAttr).validator('validate');
+                  $(thisAttr).parent().find('.statShortTitleClass').removeClass(
+                      "has-danger").removeClass("has-error");
+                  $(thisAttr).parent().find('.statShortTitleClass').parent().find(
+                      ".help-block").empty();
+                  shortTitleStatFlag = true;
+                  callback(true);
                 } else {
-                    $("#" + shortSatId).val('');
-                    $("#" + shortSatId).parent().find('.statShortTitleClass').parent().find(
-                        ".help-block").empty();
-                    $("#" + shortSatId).parent().find('.statShortTitleClass').addClass("has-danger").addClass(
-                        "has-error");
-                    $("#" + shortSatId).parent().find(".help-block").empty().append(
-                        "<ul class='list-unstyled'><li>'" + shortSatIdVal
-                        + "' has already been used in the past.</li></ul>");
+                  $(thisAttr).val('');
+                  $(thisAttr).parent().find('.statShortTitleClass').addClass("has-danger").addClass(
+                      "has-error");
+                  $(thisAttr).parent().find('.statShortTitleClass').parent().find(
+                      ".help-block").empty();
+                  $(thisAttr).parent().find(".help-block").append(
+                      "<ul class='list-unstyled'><li>'" + activeTaskAttIdVal
+                      + "' has already been used in the past.</li></ul>");
+                  $(thisAttr).focus();
+                  showErrMsg("Please fill in all mandatory fields.");
+                  $('.contentClass a').tab('show');
+                  shortTitleStatFlag = false;
+                  callback(false);
                 }
+              },
+              error: function status(data, status) {
+                callback(false);
+              },
+              global: false
+            });
+          } else {
+            callback(true);
+            $(thisAttr).parent().find('.statShortTitleClass').removeClass("has-danger").removeClass(
+                "has-error");
+            $(thisAttr).parent().find('.statShortTitleClass').parent().find(".help-block").empty();
+          }
+        }
+      }
+    } else {
+      callback(false);
+    }
+  }
+
+  function validateStatisticsIds(jsonDatas, callback) {
+    var flag = true;
+    var arrayLength = jsonDatas.length; //cache the array length
+    var shortSatId = '';
+    var shortSatIdVal = '';
+    if (arrayLength > 1) {
+      for (var i = 0; i < arrayLength; i++) {
+        var existId = jsonDatas[i].id;
+        var existVal = jsonDatas[i].idVal;
+        if (existVal) {
+          for (var j = 0; j < arrayLength; j++) {
+            var statId = jsonDatas[j].id;
+            var statVal = jsonDatas[j].idVal;
+            if (existId != statId && existVal.toLowerCase() == statVal.toLowerCase()) {
+              flag = false;
+              shortSatId = jsonDatas[j].id;
+              shortSatIdVal = jsonDatas[j].idVal;
+              break;
+            }
+          }
+        } else {
+          shortSatId = existId;
+          flag = false;
+        }
+      }
+    }
+    if (!flag) {
+      if (shortSatId) {
+        if (shortSatIdVal === "") {
+          $("#" + shortSatId).val('');
+          $("#" + shortSatId).parent().find('.statShortTitleClass').parent().find(
+              ".help-block").empty();
+          $("#" + shortSatId).parent().find('.statShortTitleClass').addClass("has-danger").addClass(
+              "has-error");
+          $("#" + shortSatId).parent().find(".help-block").empty().append(
+              "<ul class='list-unstyled'><li>Please fill out this field.</li></ul>");
+        } else {
+          $("#" + shortSatId).val('');
+          $("#" + shortSatId).parent().find('.statShortTitleClass').parent().find(
+              ".help-block").empty();
+          $("#" + shortSatId).parent().find('.statShortTitleClass').addClass("has-danger").addClass(
+              "has-error");
+          $("#" + shortSatId).parent().find(".help-block").empty().append(
+              "<ul class='list-unstyled'><li>'" + shortSatIdVal
+              + "' has already been used in the past.</li></ul>");
+        }
+      }
+      callback(false);
+    } else {
+      //do ajax call and check the db validation
+      var data = JSON.stringify(jsonDatas);
+      $.ajax({
+        url: "/studybuilder/adminStudies/validateActiveTaskStatShortTitleIds.do?_S=${param._S}",
+        type: "POST",
+        datatype: "json",
+        data: {activeStatisticsBean: data},
+        beforeSend: function (xhr, settings) {
+          xhr.setRequestHeader("X-CSRF-TOKEN", "${_csrf.token}");
+        },
+        success: function emailValid(data, status) {
+          var jsonobject = eval(data);
+          var message = jsonobject.message;
+          var staticInfoList = jsonobject.statisticsInfoList;
+          if ('SUCCESS' == message) {
+            if (typeof staticInfoList != 'undefined' && staticInfoList != null
+                && staticInfoList.length > 0) {
+              $.each(staticInfoList, function (i, obj) {
+                if (obj.type) {
+                  $("#" + obj.id).val('');
+                  $("#" + obj.id).focus();
+                  $("#" + obj.id).parent().find('.statShortTitleClass').parent().find(
+                      ".help-block").empty();
+                  $("#" + obj.id).parent().find('.statShortTitleClass').addClass(
+                      "has-danger").addClass("has-error");
+                  $("#" + obj.id).parent().find(".help-block").empty().append(
+                      "<ul class='list-unstyled'><li>'" + obj.idVal
+                      + "' has already been used in the past.</li></ul>");
+                }
+              });
+
             }
             callback(false);
-        } else {
-            var jsonArray = new Array();
-            for (var j = 0; j < arrayLength; j++) {
-                var statVal = jsonDatas[j].idVal;
-                if (statVal) {
-                    var statObj = new Object();
-                    statObj.id = jsonDatas[j].id;
-                    statObj.dbVal = jsonDatas[j].dbVal;
-                    statObj.idVal = jsonDatas[j].idVal;
-                    if (jsonDatas[j].hasOwnProperty("idname"))
-                        statObj.idname = jsonDatas[j].idname;
-                    jsonArray.push(statObj);
-                }
-            }
-            //do ajax call and check the db validation
-            var jsonArrayLength = jsonArray.length;
-            if (jsonArrayLength > 0) {
-                var data = JSON.stringify(jsonArray);
-                $.ajax({
-                    url: "/studybuilder/adminStudies/validateActiveTaskStatShortTitleIds.do?_S=${param._S}",
-                    type: "POST",
-                    datatype: "json",
-                    data: {activeStatisticsBean: data},
-                    beforeSend: function (xhr, settings) {
-                        xhr.setRequestHeader("X-CSRF-TOKEN", "${_csrf.token}");
-                    },
-                    success: function emailValid(data, status) {
-                        var jsonobject = eval(data);
-                        var message = jsonobject.message;
-                        var staticInfoList = jsonobject.statisticsInfoList;
-                        if ('SUCCESS' == message) {
-                            if (typeof staticInfoList != 'undefined' && staticInfoList != null
-                                && staticInfoList.length > 0) {
-                                $.each(staticInfoList, function (i, obj) {
-                                    if (obj.type) {
-                                        $("#" + obj.id).val('');
-                                        $("#" + obj.id).focus();
-                                        $("#" + obj.id).parent().find('.statShortTitleClass').parent().find(
-                                            ".help-block").empty();
-                                        $("#" + obj.id).parent().find('.statShortTitleClass').addClass(
-                                            "has-danger").addClass("has-error");
-                                        $("#" + obj.id).parent().find(".help-block").empty().append(
-                                            "<ul class='list-unstyled'><li>'" + obj.idVal
-                                            + "' has already been used in the past.</li></ul>");
-                                    }
-                                });
+          } else {
+            callback(true);
+          }
+        },
+        error: function status(data, status) {
+          callback(false);
+        },
+        global: false
+      });
+    }
+  }
 
-                            }
-                            callback(false);
-                        } else {
-                            callback(true);
-                        }
-                    },
-                    error: function status(data, status) {
-                        callback(false);
-                    },
-                    global: false
+  function saveValidateStatisticsIds(jsonDatas, callback) {
+    var flag = true;
+    var arrayLength = jsonDatas.length; //cache the array length
+    var shortSatId = '';
+    var shortSatIdVal = '';
+    if (arrayLength > 1) {
+      for (var i = 0; i < arrayLength; i++) {
+        var existId = jsonDatas[i].id;
+        var existVal = jsonDatas[i].idVal;
+        if (existVal) {
+          for (var j = 0; j < arrayLength; j++) {
+            var statId = jsonDatas[j].id;
+            var statVal = jsonDatas[j].idVal;
+            if (existId != statId && existVal.toLowerCase() == statVal.toLowerCase()) {
+              flag = false;
+              shortSatId = jsonDatas[j].id;
+              shortSatIdVal = jsonDatas[j].idVal;
+              break;
+            }
+          }
+        }
+      }
+    }
+    if (!flag) {
+      if (shortSatId) {
+        if (shortSatIdVal === "") {
+          $("#" + shortSatId).val('');
+          $("#" + shortSatId).parent().find('.statShortTitleClass').parent().find(
+              ".help-block").empty();
+          $("#" + shortSatId).parent().find('.statShortTitleClass').addClass("has-danger").addClass(
+              "has-error");
+          $("#" + shortSatId).parent().find(".help-block").empty().append(
+              "<ul class='list-unstyled'><li>Please fill out this field.</li></ul>");
+        } else {
+          $("#" + shortSatId).val('');
+          $("#" + shortSatId).parent().find('.statShortTitleClass').parent().find(
+              ".help-block").empty();
+          $("#" + shortSatId).parent().find('.statShortTitleClass').addClass("has-danger").addClass(
+              "has-error");
+          $("#" + shortSatId).parent().find(".help-block").empty().append(
+              "<ul class='list-unstyled'><li>'" + shortSatIdVal
+              + "' has already been used in the past.</li></ul>");
+        }
+      }
+      callback(false);
+    } else {
+      var jsonArray = new Array();
+      for (var j = 0; j < arrayLength; j++) {
+        var statVal = jsonDatas[j].idVal;
+        if (statVal) {
+          var statObj = new Object();
+          statObj.id = jsonDatas[j].id;
+          statObj.dbVal = jsonDatas[j].dbVal;
+          statObj.idVal = jsonDatas[j].idVal;
+          if (jsonDatas[j].hasOwnProperty("idname"))
+            statObj.idname = jsonDatas[j].idname;
+          jsonArray.push(statObj);
+        }
+      }
+      //do ajax call and check the db validation
+      var jsonArrayLength = jsonArray.length;
+      if (jsonArrayLength > 0) {
+        var data = JSON.stringify(jsonArray);
+        $.ajax({
+          url: "/studybuilder/adminStudies/validateActiveTaskStatShortTitleIds.do?_S=${param._S}",
+          type: "POST",
+          datatype: "json",
+          data: {activeStatisticsBean: data},
+          beforeSend: function (xhr, settings) {
+            xhr.setRequestHeader("X-CSRF-TOKEN", "${_csrf.token}");
+          },
+          success: function emailValid(data, status) {
+            var jsonobject = eval(data);
+            var message = jsonobject.message;
+            var staticInfoList = jsonobject.statisticsInfoList;
+            if ('SUCCESS' == message) {
+              if (typeof staticInfoList != 'undefined' && staticInfoList != null
+                  && staticInfoList.length > 0) {
+                $.each(staticInfoList, function (i, obj) {
+                  if (obj.type) {
+                    $("#" + obj.id).val('');
+                    $("#" + obj.id).focus();
+                    $("#" + obj.id).parent().find('.statShortTitleClass').parent().find(
+                        ".help-block").empty();
+                    $("#" + obj.id).parent().find('.statShortTitleClass').addClass(
+                        "has-danger").addClass("has-error");
+                    $("#" + obj.id).parent().find(".help-block").empty().append(
+                        "<ul class='list-unstyled'><li>'" + obj.idVal
+                        + "' has already been used in the past.</li></ul>");
+                  }
                 });
+
+              }
+              callback(false);
             } else {
-                callback(true);
+              callback(true);
             }
-        }
+          },
+          error: function status(data, status) {
+            callback(false);
+          },
+          global: false
+        });
+      } else {
+        callback(true);
+      }
+    }
+  }
+
+  function setLineChatStatCheckedVal() {
+    if ($('#Score_spatial_chart_id').is(":checked")) {
+      $('.addLineChartBlock_Score_spatial').css("display", "");
+      $('.addLineChartBlock_Score_spatial').find('.requireClass').attr('required', true);
+      $('#Score_spatial_chart_id').val(true);
+      $('.selectpicker').selectpicker('refresh');
+    } else {
+      $('.addLineChartBlock_Score_spatial').css("display", "none");
+      $('.addLineChartBlock_Score_spatial').find('.requireClass').attr('required', false);
+      $('#Score_spatial_chart_id').val(false);
+    }
+    if ($('#Score_spatial_stat_id').is(":checked")) {
+      $('.addLineStaticBlock_Score_spatial').css("display", "");
+      $('.addLineStaticBlock_Score_spatial').find('.requireClass').attr('required', true);
+      $('#Score_spatial_stat_id').val(true);
+      $('.addLineStaticBlock_Score_spatial').find('.shortTitleStatCls').attr('exist', 'Y');
+      $('.selectpicker').selectpicker('refresh');
+    } else {
+      $('.addLineStaticBlock_Score_spatial').css("display", "none");
+      $('.addLineStaticBlock_Score_spatial').find('.requireClass').attr('required', false);
+      $('.addLineStaticBlock_Score_spatial').find('.shortTitleStatCls').attr('exist', 'N');
+      $('#Score_spatial_stat_id').val(false);
     }
 
-    function setLineChatStatCheckedVal() {
-        if ($('#Score_spatial_chart_id').is(":checked")) {
-            $('.addLineChartBlock_Score_spatial').css("display", "");
-            $('.addLineChartBlock_Score_spatial').find('.requireClass').attr('required', true);
-            $('#Score_spatial_chart_id').val(true);
-            $('.selectpicker').selectpicker('refresh');
-        } else {
-            $('.addLineChartBlock_Score_spatial').css("display", "none");
-            $('.addLineChartBlock_Score_spatial').find('.requireClass').attr('required', false);
-            $('#Score_spatial_chart_id').val(false);
-        }
-        if ($('#Score_spatial_stat_id').is(":checked")) {
-            $('.addLineStaticBlock_Score_spatial').css("display", "");
-            $('.addLineStaticBlock_Score_spatial').find('.requireClass').attr('required', true);
-            $('#Score_spatial_stat_id').val(true);
-            $('.addLineStaticBlock_Score_spatial').find('.shortTitleStatCls').attr('exist', 'Y');
-            $('.selectpicker').selectpicker('refresh');
-        } else {
-            $('.addLineStaticBlock_Score_spatial').css("display", "none");
-            $('.addLineStaticBlock_Score_spatial').find('.requireClass').attr('required', false);
-            $('.addLineStaticBlock_Score_spatial').find('.shortTitleStatCls').attr('exist', 'N');
-            $('#Score_spatial_stat_id').val(false);
-        }
-
-        if ($('#Number_of_Games_spatial_chart_id').is(":checked")) {
-            $('.addLineChartBlock_Number_of_Games_spatial').css("display", "");
-            $('.addLineChartBlock_Number_of_Games_spatial').find('.requireClass').attr('required', true);
-            $('#Number_of_Games_spatial_chart_id').val(true);
-            $('.selectpicker').selectpicker('refresh');
-        } else {
-            $('.addLineChartBlock_Number_of_Games_spatial').css("display", "none");
-            $('.addLineChartBlock_Number_of_Games_spatial').find('.requireClass').attr('required', false);
-            $('#Number_of_Games_spatial_chart_id').val(false);
-        }
-        if ($('#Number_of_Games_spatial_stat_id').is(":checked")) {
-            $('.addLineStaticBlock_Number_of_Games_spatial').css("display", "");
-            $('.addLineStaticBlock_Number_of_Games_spatial').find('.requireClass').attr('required', true);
-            $('#Number_of_Games_spatial_stat_id').val(true);
-            $('.addLineStaticBlock_Number_of_Games_spatial').find('.shortTitleStatCls').attr('exist',
-                'Y');
-            $('.selectpicker').selectpicker('refresh');
-        } else {
-            $('.addLineStaticBlock_Number_of_Games_spatial').css("display", "none");
-            $('.addLineStaticBlock_Number_of_Games_spatial').find('.requireClass').attr('required',
-                false);
-            $('.addLineStaticBlock_Number_of_Games_spatial').find('.shortTitleStatCls').attr('exist',
-                'N');
-            $('#Number_of_Games_spatial_stat_id').val(false);
-        }
-
-        if ($('#Number_of_Failures_spatial_chart_id').is(":checked")) {
-            $('.addLineChartBlock_Number_of_Failures_spatial').css("display", "");
-            $('.addLineChartBlock_Number_of_Failures_spatial').find('.requireClass').attr('required',
-                true);
-            $('#Number_of_Failures_spatial_chart_id').val(true);
-            $('.selectpicker').selectpicker('refresh');
-        } else {
-            $('.addLineChartBlock_Number_of_Failures_spatial').css("display", "none");
-            $('.addLineChartBlock_Number_of_Failures_spatial').find('.requireClass').attr('required',
-                false);
-            $('#Number_of_Failures_spatial_chart_id').val(false);
-        }
-        if ($('#Number_of_Failures_spatial_stat_id').is(":checked")) {
-            $('.addLineStaticBlock_Number_of_Failures_spatial').css("display", "");
-            $('.addLineStaticBlock_Number_of_Failures_spatial').find('.requireClass').attr('required',
-                true);
-            $('#Number_of_Failures_spatial_stat_id').val(true);
-            $('.addLineStaticBlock_Number_of_Failures_spatial').find('.shortTitleStatCls').attr('exist',
-                'Y');
-            $('.selectpicker').selectpicker('refresh');
-        } else {
-            $('.addLineStaticBlock_Number_of_Failures_spatial').css("display", "none");
-            $('.addLineStaticBlock_Number_of_Failures_spatial').find('.requireClass').attr('required',
-                false);
-            $('.addLineStaticBlock_Number_of_Failures_spatial').find('.shortTitleStatCls').attr('exist',
-                'N');
-            $('#Number_of_Failures_spatial_stat_id').val(false);
-        }
+    if ($('#Number_of_Games_spatial_chart_id').is(":checked")) {
+      $('.addLineChartBlock_Number_of_Games_spatial').css("display", "");
+      $('.addLineChartBlock_Number_of_Games_spatial').find('.requireClass').attr('required', true);
+      $('#Number_of_Games_spatial_chart_id').val(true);
+      $('.selectpicker').selectpicker('refresh');
+    } else {
+      $('.addLineChartBlock_Number_of_Games_spatial').css("display", "none");
+      $('.addLineChartBlock_Number_of_Games_spatial').find('.requireClass').attr('required', false);
+      $('#Number_of_Games_spatial_chart_id').val(false);
+    }
+    if ($('#Number_of_Games_spatial_stat_id').is(":checked")) {
+      $('.addLineStaticBlock_Number_of_Games_spatial').css("display", "");
+      $('.addLineStaticBlock_Number_of_Games_spatial').find('.requireClass').attr('required', true);
+      $('#Number_of_Games_spatial_stat_id').val(true);
+      $('.addLineStaticBlock_Number_of_Games_spatial').find('.shortTitleStatCls').attr('exist',
+          'Y');
+      $('.selectpicker').selectpicker('refresh');
+    } else {
+      $('.addLineStaticBlock_Number_of_Games_spatial').css("display", "none");
+      $('.addLineStaticBlock_Number_of_Games_spatial').find('.requireClass').attr('required',
+          false);
+      $('.addLineStaticBlock_Number_of_Games_spatial').find('.shortTitleStatCls').attr('exist',
+          'N');
+      $('#Number_of_Games_spatial_stat_id').val(false);
     }
 
-    var updateLogoutCsrf = function () {
-        $('#logoutCsrf').val('${_csrf.token}');
-        $('#logoutCsrf').prop('name', '${_csrf.parameterName}');
+    if ($('#Number_of_Failures_spatial_chart_id').is(":checked")) {
+      $('.addLineChartBlock_Number_of_Failures_spatial').css("display", "");
+      $('.addLineChartBlock_Number_of_Failures_spatial').find('.requireClass').attr('required',
+          true);
+      $('#Number_of_Failures_spatial_chart_id').val(true);
+      $('.selectpicker').selectpicker('refresh');
+    } else {
+      $('.addLineChartBlock_Number_of_Failures_spatial').css("display", "none");
+      $('.addLineChartBlock_Number_of_Failures_spatial').find('.requireClass').attr('required',
+          false);
+      $('#Number_of_Failures_spatial_chart_id').val(false);
     }
+    if ($('#Number_of_Failures_spatial_stat_id').is(":checked")) {
+      $('.addLineStaticBlock_Number_of_Failures_spatial').css("display", "");
+      $('.addLineStaticBlock_Number_of_Failures_spatial').find('.requireClass').attr('required',
+          true);
+      $('#Number_of_Failures_spatial_stat_id').val(true);
+      $('.addLineStaticBlock_Number_of_Failures_spatial').find('.shortTitleStatCls').attr('exist',
+          'Y');
+      $('.selectpicker').selectpicker('refresh');
+    } else {
+      $('.addLineStaticBlock_Number_of_Failures_spatial').css("display", "none");
+      $('.addLineStaticBlock_Number_of_Failures_spatial').find('.requireClass').attr('required',
+          false);
+      $('.addLineStaticBlock_Number_of_Failures_spatial').find('.shortTitleStatCls').attr('exist',
+          'N');
+      $('#Number_of_Failures_spatial_stat_id').val(false);
+    }
+  }
 
-    function isNumber(evt) {
-        evt = (evt) ? evt : window.event;
-        var charCode = (evt.which) ? evt.which : evt.keyCode;
-        if (charCode > 31 && (charCode < 48 || charCode > 57)) {
-            return false;
-        }
+  var updateLogoutCsrf = function () {
+    $('#logoutCsrf').val('${_csrf.token}');
+    $('#logoutCsrf').prop('name', '${_csrf.parameterName}');
+  }
+
+  function isNumber(evt) {
+    evt = (evt) ? evt : window.event;
+    var charCode = (evt.which) ? evt.which : evt.keyCode;
+    if (charCode > 31 && (charCode < 48 || charCode > 57)) {
+      return false;
+    }
+    return true;
+  }
+
+  function isNumberFloat(e) {
+    var keyCode = (e.which) ? e.which : e.keyCode;
+    if ((keyCode >= 48 && keyCode <= 57) || (keyCode == 8))
+      return true;
+    else if (keyCode == 46) {
+      var curVal = document.activeElement.value;
+      if (curVal != null && curVal.trim().indexOf('.') == -1)
         return true;
-    }
+      else
+        return false;
+    } else
+      return false;
+  }
 
-    function isNumberFloat(e) {
-        var keyCode = (e.which) ? e.which : e.keyCode;
-        if ((keyCode >= 48 && keyCode <= 57) || (keyCode == 8))
-            return true;
-        else if (keyCode == 46) {
-            var curVal = document.activeElement.value;
-            if (curVal != null && curVal.trim().indexOf('.') == -1)
-                return true;
-            else
-                return false;
-        } else
-            return false;
-    }
-
-    //# sourceURL=filename3.js
+  //# sourceURL=filename3.js
 </script>

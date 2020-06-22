@@ -52,13 +52,13 @@
   </div>
 </div>
 <script type="text/javascript">
-    $(document).ready(function (e) {
-        $('#termsId').on('click', function () {
-            $('#termsModal').modal('show');
-        });
-
-        $('#privacyId').on('click', function () {
-            $('#privacyModal').modal('show');
-        });
+  $(document).ready(function (e) {
+    $('#termsId').on('click', function () {
+      $('#termsModal').modal('show');
     });
+
+    $('#privacyId').on('click', function () {
+      $('#privacyModal').modal('show');
+    });
+  });
 </script>

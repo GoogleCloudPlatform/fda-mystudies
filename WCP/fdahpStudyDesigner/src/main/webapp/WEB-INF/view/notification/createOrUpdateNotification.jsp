@@ -188,235 +188,235 @@
   <input type="hidden" name="notificationId" value="${notificationBO.notificationId}">
 </form:form>
 <script>
-    $(document).ready(function () {
-        $('#rowId').parent().removeClass('white-bg');
-        $("#notification").addClass("active");
+  $(document).ready(function () {
+    $('#rowId').parent().removeClass('white-bg');
+    $("#notification").addClass("active");
 
-        <c:if test="${notificationBO.notificationSent || notificationBO.actionPage eq 'view'}">
-        $('#appNotificationFormId input,textarea').prop('disabled', true);
-        if ($('#inlineRadio2').prop('checked')) {
-            $('.add_notify_option').addClass('dis-none');
-        }
-        </c:if>
+    <c:if test="${notificationBO.notificationSent || notificationBO.actionPage eq 'view'}">
+    $('#appNotificationFormId input,textarea').prop('disabled', true);
+    if ($('#inlineRadio2').prop('checked')) {
+      $('.add_notify_option').addClass('dis-none');
+    }
+    </c:if>
 
-        <c:if test="${not notificationBO.notificationSent && notificationBO.actionPage eq 'resend'}">
-        $('#appNotificationFormId input,textarea').prop('disabled', true);
-        if ($('#inlineRadio2').prop('checked')) {
-            $('.add_notify_option').addClass('dis-none');
-        }
-        </c:if>
+    <c:if test="${not notificationBO.notificationSent && notificationBO.actionPage eq 'resend'}">
+    $('#appNotificationFormId input,textarea').prop('disabled', true);
+    if ($('#inlineRadio2').prop('checked')) {
+      $('.add_notify_option').addClass('dis-none');
+    }
+    </c:if>
 
-        <c:if test="${notificationBO.actionPage eq 'addOrCopy'}">
-        $('#inlineRadio1').prop('checked', 'checked');
-        $('.deleteButtonHide').addClass('dis-none');
-        if ($('#inlineRadio1').prop('checked')) {
-            $('#datetimepicker, #timepicker1').prop('disabled', false);
-            $('#datetimepicker, #timepicker1').attr('required', 'required');
-        }
-        if ($('#inlineRadio2').prop('checked')) {
-            $('.add_notify_option').addClass('dis-none');
-        }
-        </c:if>
+    <c:if test="${notificationBO.actionPage eq 'addOrCopy'}">
+    $('#inlineRadio1').prop('checked', 'checked');
+    $('.deleteButtonHide').addClass('dis-none');
+    if ($('#inlineRadio1').prop('checked')) {
+      $('#datetimepicker, #timepicker1').prop('disabled', false);
+      $('#datetimepicker, #timepicker1').attr('required', 'required');
+    }
+    if ($('#inlineRadio2').prop('checked')) {
+      $('.add_notify_option').addClass('dis-none');
+    }
+    </c:if>
 
-        <c:if test="${not notificationBO.notificationSent && notificationBO.actionPage eq 'edit' && not empty notificationHistoryNoDateTime}">
-        $('#appNotificationFormId textarea').prop('disabled', true);
-        $('.deleteButtonHide').addClass('dis-none');
-        if ($('#inlineRadio1').prop('checked')) {
-            $('#datetimepicker, #timepicker1').prop('disabled', false);
-            $('#datetimepicker, #timepicker1').attr('required', 'required');
-            $('#immiUpdateButton').html('Update');
-        }
-        if ($('#inlineRadio2').prop('checked')) {
-            $('.add_notify_option').addClass('dis-none');
-            $('#immiUpdateButton').html('Send');
-        }
-        </c:if>
+    <c:if test="${not notificationBO.notificationSent && notificationBO.actionPage eq 'edit' && not empty notificationHistoryNoDateTime}">
+    $('#appNotificationFormId textarea').prop('disabled', true);
+    $('.deleteButtonHide').addClass('dis-none');
+    if ($('#inlineRadio1').prop('checked')) {
+      $('#datetimepicker, #timepicker1').prop('disabled', false);
+      $('#datetimepicker, #timepicker1').attr('required', 'required');
+      $('#immiUpdateButton').html('Update');
+    }
+    if ($('#inlineRadio2').prop('checked')) {
+      $('.add_notify_option').addClass('dis-none');
+      $('#immiUpdateButton').html('Send');
+    }
+    </c:if>
 
-        <c:if test="${not notificationBO.notificationSent && notificationBO.actionPage eq 'edit' && empty notificationHistoryNoDateTime}">
-        $('.deleteButtonHide').removeClass('dis-none');
-        if ($('#inlineRadio1').prop('checked')) {
-            $('#datetimepicker, #timepicker1').prop('disabled', false);
-            $('#datetimepicker, #timepicker1').attr('required', 'required');
-            $('#immiUpdateButton').html('Update');
-        }
-        if ($('#inlineRadio2').prop('checked')) {
-            $('.add_notify_option').addClass('dis-none');
-            $('#immiUpdateButton').html('Send');
-        }
-        </c:if>
+    <c:if test="${not notificationBO.notificationSent && notificationBO.actionPage eq 'edit' && empty notificationHistoryNoDateTime}">
+    $('.deleteButtonHide').removeClass('dis-none');
+    if ($('#inlineRadio1').prop('checked')) {
+      $('#datetimepicker, #timepicker1').prop('disabled', false);
+      $('#datetimepicker, #timepicker1').attr('required', 'required');
+      $('#immiUpdateButton').html('Update');
+    }
+    if ($('#inlineRadio2').prop('checked')) {
+      $('.add_notify_option').addClass('dis-none');
+      $('#immiUpdateButton').html('Send');
+    }
+    </c:if>
 
 
-        <c:if test="${notificationBO.notificationSent && notificationBO.actionPage eq 'resend'}">
-        $('#appNotificationFormId #inlineRadio1,#inlineRadio2').prop('disabled', false);
-        $('#appNotificationFormId input').prop('disabled', false);
-        $('#appNotificationFormId textarea').prop('disabled', true);
-        if ($('#inlineRadio1').prop('checked')) {
-            $('#datetimepicker, #timepicker1').attr('required', 'required');
-            $('#immiResendButton').html('Save');
-        }
-        if ($('#inlineRadio2').prop('checked')) {
-            $('.add_notify_option').addClass('dis-none');
-            $('#datetimepicker, #timepicker1').removeAttr('required');
-            $('#immiResendButton').html('Resend');
-        }
-        $('#buttonType').val('resend');
-        </c:if>
+    <c:if test="${notificationBO.notificationSent && notificationBO.actionPage eq 'resend'}">
+    $('#appNotificationFormId #inlineRadio1,#inlineRadio2').prop('disabled', false);
+    $('#appNotificationFormId input').prop('disabled', false);
+    $('#appNotificationFormId textarea').prop('disabled', true);
+    if ($('#inlineRadio1').prop('checked')) {
+      $('#datetimepicker, #timepicker1').attr('required', 'required');
+      $('#immiResendButton').html('Save');
+    }
+    if ($('#inlineRadio2').prop('checked')) {
+      $('.add_notify_option').addClass('dis-none');
+      $('#datetimepicker, #timepicker1').removeAttr('required');
+      $('#immiResendButton').html('Resend');
+    }
+    $('#buttonType').val('resend');
+    </c:if>
 
-        $('#inlineRadio2').on('click', function () {
-            $('#datetimepicker, #timepicker1').removeAttr('required');
-            $("#datetimepicker, #timepicker1").parent().removeClass('has-error has-danger');
-            $("#datetimepicker, #timepicker1").parent().find(".help-block").text("");
-            $('.add_notify_option').addClass('dis-none');
-            resetValidation('.mandatoryForAppNotification');
-            $('.addNotification').prop('disabled', false);
-            $('#immiSaveButton').html('Send');
-            $('#immiUpdateButton').html('Send');
-            $('#immiResendButton').html('Resend');
-        });
-
-        $('#inlineRadio1').on('click', function () {
-            $('#datetimepicker, #timepicker1').val('');
-            $('#datetimepicker, #timepicker1').prop('disabled', false);
-            $('.add_notify_option').removeClass('dis-none');
-            $('#datetimepicker, #timepicker1').attr('required', 'required');
-            $('#appNotificationFormId').find('.resetVal').each(function () {
-                $(this).val($(this).attr('oldValue'));
-            });
-            resetValidation('.mandatoryForAppNotification');
-            $('#immiSaveButton').html('Create');
-            $('#immiUpdateButton').html('Update');
-            $('#immiResendButton').html('Save');
-        });
-
-        $('.backOrCancelBtnOfNotification').on('click', function () {
-            $('.backOrCancelBtnOfNotification').prop('disabled', true);
-            $('#notificationBackOrCancelBtnForm').submit();
-        });
-
-        $('.addNotification').on('click', function () {
-            $('#buttonType').val('add');
-            if (isFromValid('#appNotificationFormId')) {
-                if ($('#inlineRadio2').prop('checked')) {
-                    bootbox.confirm("Are you sure you want to send this notification immediately?",
-                        function (result) {
-                            if (result) {
-                                $('.updateNotification').prop('disabled', true);
-                                $('#appNotificationFormId').submit();
-                            }
-                        });
-                } else if ($('#inlineRadio1').prop('checked')) {
-                    if (validateTime()) {
-                        $('.updateNotification').prop('disabled', true);
-                        $('#appNotificationFormId').submit();
-                    }
-                }
-            } else {
-                $('.addNotification').prop('disabled', false);
-            }
-        });
-
-        $('.updateNotification').on('click', function () {
-            $('#buttonType').val('update');
-            if (isFromValid('#appNotificationFormId')) {
-                if ($('#inlineRadio2').prop('checked')) {
-                    bootbox.confirm("Are you sure you want to send this notification immediately?",
-                        function (result) {
-                            if (result) {
-                                $('.updateNotification').prop('disabled', true);
-                                $('#appNotificationFormId').submit();
-                            }
-                        });
-                } else if ($('#inlineRadio1').prop('checked')) {
-                    if (validateTime()) {
-                        $('.updateNotification').prop('disabled', true);
-                        $('#appNotificationFormId').submit();
-                    }
-                }
-            } else {
-                $('.updateNotification').prop('disabled', false);
-            }
-        });
-
-        $('.resendNotification').on('click', function () {
-            $('#buttonType').val('resend');
-            if (isFromValid('#appNotificationFormId')) {
-                $('#notificationText').prop('disabled', false);
-                if ($('#inlineRadio2').prop('checked')) {
-                    bootbox.confirm("Are you sure you want to resend this notification immediately?",
-                        function (result) {
-                            if (result) {
-                                $('.updateNotification').prop('disabled', true);
-                                $('#appNotificationFormId').submit();
-                            }
-                        });
-                } else if ($('#inlineRadio1').prop('checked')) {
-                    if (validateTime()) {
-                        $('.updateNotification').prop('disabled', true);
-                        $('#appNotificationFormId').submit();
-                    }
-                }
-            } else {
-                $('.updateNotification').prop('disabled', false);
-            }
-        });
-
-        $('#deleteNotification').on('click', function () {
-            bootbox.confirm("Are you sure you want to delete this notification?", function (result) {
-                if (result) {
-                    $('#deleteNotificationForm').submit();
-                }
-            });
-        });
-
-        $('.datepicker').datetimepicker({
-            format: 'MM/DD/YYYY',
-            ignoreReadonly: true,
-            useCurrent: false
-        }).on('dp.change change', function (e) {
-            validateTime();
-        });
-
-        $('.timepicker').datetimepicker({
-            format: 'h:mm a'
-        }).on('dp.change change', function (e) {
-            validateTime();
-        });
-
-        $(".datepicker").on("click", function (e) {
-            $('.datepicker').data("DateTimePicker").minDate(serverDate());
-        });
-
-        $(".timepicker").on("click", function (e) {
-            var dt = $('#datetimepicker').val();
-            if (dt != '' && dt != moment(serverDate()).format("MM/DD/YYYY")) {
-                $('.timepicker').data("DateTimePicker").minDate(false);
-            } else {
-                $('.timepicker').data("DateTimePicker").minDate(serverDateTime());
-            }
-        });
-
+    $('#inlineRadio2').on('click', function () {
+      $('#datetimepicker, #timepicker1').removeAttr('required');
+      $("#datetimepicker, #timepicker1").parent().removeClass('has-error has-danger');
+      $("#datetimepicker, #timepicker1").parent().find(".help-block").text("");
+      $('.add_notify_option').addClass('dis-none');
+      resetValidation('.mandatoryForAppNotification');
+      $('.addNotification').prop('disabled', false);
+      $('#immiSaveButton').html('Send');
+      $('#immiUpdateButton').html('Send');
+      $('#immiResendButton').html('Resend');
     });
 
-    function validateTime() {
-        var dt = $('#datetimepicker').val();
-        var tm = $('#timepicker1').val();
-        var valid = true;
-        if (dt && tm) {
-            dt = moment(dt, "MM/DD/YYYY").toDate();
-            thisDate = moment($('.timepicker').val(), "h:mm a").toDate();
-            dt.setHours(thisDate.getHours());
-            dt.setMinutes(thisDate.getMinutes());
-            if (dt < serverDateTime()) {
-                $('#timepicker1').val('');
-                $('.timepicker').parent().addClass('has-error has-danger').find('.help-block.with-errors')
-                    .html(
-                        '<ul class="list-unstyled"><li>Please select a time that has not already passed for the current date.</li></ul>');
-                valid = false;
-            } else {
-                $('.timepicker').parent().removeClass('has-error has-danger').find(
-                    '.help-block.with-errors').html('');
-            }
+    $('#inlineRadio1').on('click', function () {
+      $('#datetimepicker, #timepicker1').val('');
+      $('#datetimepicker, #timepicker1').prop('disabled', false);
+      $('.add_notify_option').removeClass('dis-none');
+      $('#datetimepicker, #timepicker1').attr('required', 'required');
+      $('#appNotificationFormId').find('.resetVal').each(function () {
+        $(this).val($(this).attr('oldValue'));
+      });
+      resetValidation('.mandatoryForAppNotification');
+      $('#immiSaveButton').html('Create');
+      $('#immiUpdateButton').html('Update');
+      $('#immiResendButton').html('Save');
+    });
+
+    $('.backOrCancelBtnOfNotification').on('click', function () {
+      $('.backOrCancelBtnOfNotification').prop('disabled', true);
+      $('#notificationBackOrCancelBtnForm').submit();
+    });
+
+    $('.addNotification').on('click', function () {
+      $('#buttonType').val('add');
+      if (isFromValid('#appNotificationFormId')) {
+        if ($('#inlineRadio2').prop('checked')) {
+          bootbox.confirm("Are you sure you want to send this notification immediately?",
+              function (result) {
+                if (result) {
+                  $('.updateNotification').prop('disabled', true);
+                  $('#appNotificationFormId').submit();
+                }
+              });
+        } else if ($('#inlineRadio1').prop('checked')) {
+          if (validateTime()) {
+            $('.updateNotification').prop('disabled', true);
+            $('#appNotificationFormId').submit();
+          }
         }
-        return valid;
+      } else {
+        $('.addNotification').prop('disabled', false);
+      }
+    });
+
+    $('.updateNotification').on('click', function () {
+      $('#buttonType').val('update');
+      if (isFromValid('#appNotificationFormId')) {
+        if ($('#inlineRadio2').prop('checked')) {
+          bootbox.confirm("Are you sure you want to send this notification immediately?",
+              function (result) {
+                if (result) {
+                  $('.updateNotification').prop('disabled', true);
+                  $('#appNotificationFormId').submit();
+                }
+              });
+        } else if ($('#inlineRadio1').prop('checked')) {
+          if (validateTime()) {
+            $('.updateNotification').prop('disabled', true);
+            $('#appNotificationFormId').submit();
+          }
+        }
+      } else {
+        $('.updateNotification').prop('disabled', false);
+      }
+    });
+
+    $('.resendNotification').on('click', function () {
+      $('#buttonType').val('resend');
+      if (isFromValid('#appNotificationFormId')) {
+        $('#notificationText').prop('disabled', false);
+        if ($('#inlineRadio2').prop('checked')) {
+          bootbox.confirm("Are you sure you want to resend this notification immediately?",
+              function (result) {
+                if (result) {
+                  $('.updateNotification').prop('disabled', true);
+                  $('#appNotificationFormId').submit();
+                }
+              });
+        } else if ($('#inlineRadio1').prop('checked')) {
+          if (validateTime()) {
+            $('.updateNotification').prop('disabled', true);
+            $('#appNotificationFormId').submit();
+          }
+        }
+      } else {
+        $('.updateNotification').prop('disabled', false);
+      }
+    });
+
+    $('#deleteNotification').on('click', function () {
+      bootbox.confirm("Are you sure you want to delete this notification?", function (result) {
+        if (result) {
+          $('#deleteNotificationForm').submit();
+        }
+      });
+    });
+
+    $('.datepicker').datetimepicker({
+      format: 'MM/DD/YYYY',
+      ignoreReadonly: true,
+      useCurrent: false
+    }).on('dp.change change', function (e) {
+      validateTime();
+    });
+
+    $('.timepicker').datetimepicker({
+      format: 'h:mm a'
+    }).on('dp.change change', function (e) {
+      validateTime();
+    });
+
+    $(".datepicker").on("click", function (e) {
+      $('.datepicker').data("DateTimePicker").minDate(serverDate());
+    });
+
+    $(".timepicker").on("click", function (e) {
+      var dt = $('#datetimepicker').val();
+      if (dt != '' && dt != moment(serverDate()).format("MM/DD/YYYY")) {
+        $('.timepicker').data("DateTimePicker").minDate(false);
+      } else {
+        $('.timepicker').data("DateTimePicker").minDate(serverDateTime());
+      }
+    });
+
+  });
+
+  function validateTime() {
+    var dt = $('#datetimepicker').val();
+    var tm = $('#timepicker1').val();
+    var valid = true;
+    if (dt && tm) {
+      dt = moment(dt, "MM/DD/YYYY").toDate();
+      thisDate = moment($('.timepicker').val(), "h:mm a").toDate();
+      dt.setHours(thisDate.getHours());
+      dt.setMinutes(thisDate.getMinutes());
+      if (dt < serverDateTime()) {
+        $('#timepicker1').val('');
+        $('.timepicker').parent().addClass('has-error has-danger').find('.help-block.with-errors')
+            .html(
+                '<ul class="list-unstyled"><li>Please select a time that has not already passed for the current date.</li></ul>');
+        valid = false;
+      } else {
+        $('.timepicker').parent().removeClass('has-error has-danger').find(
+            '.help-block.with-errors').html('');
+      }
     }
+    return valid;
+  }
 </script>

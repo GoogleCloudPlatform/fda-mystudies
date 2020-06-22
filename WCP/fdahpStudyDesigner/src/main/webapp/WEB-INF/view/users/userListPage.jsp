@@ -144,162 +144,162 @@
 </form:form>
 
 <script type="text/javascript">
-    $(document).ready(function () {
-        $('#rowId').parent().removeClass('#white-bg');
+  $(document).ready(function () {
+    $('#rowId').parent().removeClass('#white-bg');
 
-        $('#users').addClass('active');
+    $('#users').addClass('active');
 
-        $('[data-toggle="tooltip"]').tooltip();
+    $('[data-toggle="tooltip"]').tooltip();
 
-        <c:if test="${ownUser eq '1'}">
-        bootbox.alert({
-            closeButton: false,
-            message: 'Your user account details have been updated. Please sign in again to continue using the portal.',
-            callback: function (result) {
-                var a = document.createElement('a');
-                a.href = "/studybuilder/sessionOut.do";
-                document.body.appendChild(a).click();
-            }
-        });
-        </c:if>
+    <c:if test="${ownUser eq '1'}">
+    bootbox.alert({
+      closeButton: false,
+      message: 'Your user account details have been updated. Please sign in again to continue using the portal.',
+      callback: function (result) {
+        var a = document.createElement('a');
+        a.href = "/studybuilder/sessionOut.do";
+        document.body.appendChild(a).click();
+      }
+    });
+    </c:if>
 
-        $('.addOrEditUser').on('click', function () {
-            $('#userId').val($(this).attr('userId'));
-            $('#checkRefreshFlag').val('Y');
-            $('#addOrEditUserForm').submit();
-        });
-
-        $('.viewUser').on('click', function () {
-            $('#usrId').val($(this).attr('userId'));
-            $('#checkViewRefreshFlag').val('Y');
-            $('#viewUserForm').submit();
-        });
-
-        $('#enforcePasswordId').on('click', function () {
-            bootbox.confirm({
-                closeButton: false,
-                message: "Are you sure you wish to enforce password change for all users? Note: This will not apply to your own account.",
-                buttons: {
-                    'cancel': {
-                        label: 'No',
-                    },
-                    'confirm': {
-                        label: 'Yes',
-                    },
-                },
-                callback: function (result) {
-                    if (result) {
-                        var form = document.createElement('form');
-                        form.method = 'post';
-                        var input = document.createElement('input');
-                        input.type = 'hidden';
-                        input.name = 'changePassworduserId';
-                        input.value = '';
-                        form.appendChild(input);
-
-                        var input = document.createElement('input');
-                        input.type = 'hidden';
-                        input.name = 'emailId';
-                        input.value = '';
-                        form.appendChild(input);
-
-                        input = document.createElement('input');
-                        input.type = 'hidden';
-                        input.name = '${_csrf.parameterName}';
-                        input.value = '${_csrf.token}';
-                        form.appendChild(input);
-
-                        form.action = '/studybuilder/adminUsersEdit/enforcePasswordChange.do';
-                        document.body.appendChild(form);
-                        form.submit();
-                    }
-                }
-            })
-
-        });
-        $('#filterRole').prev().prev().find('.pull-left').removeClass('filter-option');
-        //User_List page Datatable
-        table = $('#user_list').DataTable({
-            "paging": true,
-            "searching": true,
-            "filter": true,
-            "info": false,
-            "sDom": '"top"i',
-            "aoColumns": [
-                {"bSortable": true},
-                {"bSortable": true},
-                {"bSortable": true},
-                {"bSortable": false}
-            ],
-            "lengthChange": false,
-            language: {
-                "zeroRecords": "You haven't created any content yet.",
-            },
-            "pageLength": 15
-        });
-
-        $('.c__search').on('keyup', function () {
-            table.search($(this).val().replace(/(["])/g, "\ $1")).draw();
-        });
-
-        $('#filterRole').on('change', function () {
-            var selected = $(this).find("option:selected").val();
-            table.column(2).search(selected).draw();
-        });
+    $('.addOrEditUser').on('click', function () {
+      $('#userId').val($(this).attr('userId'));
+      $('#checkRefreshFlag').val('Y');
+      $('#addOrEditUserForm').submit();
     });
 
-    function activateOrDeactivateUser(userId) {
-        var status = $('#' + userId).val();
-        var msgPart = "";
-        if ("0" == status) {
-            msgPart = "activate";
-        } else if ("1" == status) {
-            msgPart = "deactivate";
+    $('.viewUser').on('click', function () {
+      $('#usrId').val($(this).attr('userId'));
+      $('#checkViewRefreshFlag').val('Y');
+      $('#viewUserForm').submit();
+    });
+
+    $('#enforcePasswordId').on('click', function () {
+      bootbox.confirm({
+        closeButton: false,
+        message: "Are you sure you wish to enforce password change for all users? Note: This will not apply to your own account.",
+        buttons: {
+          'cancel': {
+            label: 'No',
+          },
+          'confirm': {
+            label: 'Yes',
+          },
+        },
+        callback: function (result) {
+          if (result) {
+            var form = document.createElement('form');
+            form.method = 'post';
+            var input = document.createElement('input');
+            input.type = 'hidden';
+            input.name = 'changePassworduserId';
+            input.value = '';
+            form.appendChild(input);
+
+            var input = document.createElement('input');
+            input.type = 'hidden';
+            input.name = 'emailId';
+            input.value = '';
+            form.appendChild(input);
+
+            input = document.createElement('input');
+            input.type = 'hidden';
+            input.name = '${_csrf.parameterName}';
+            input.value = '${_csrf.token}';
+            form.appendChild(input);
+
+            form.action = '/studybuilder/adminUsersEdit/enforcePasswordChange.do';
+            document.body.appendChild(form);
+            form.submit();
+          }
         }
-        bootbox.confirm("Are you sure you want to " + msgPart + " this user?", function (result) {
-            if (result) {
-                $.ajax({
-                    url: "/studybuilder/adminUsersEdit/activateOrDeactivateUser.do",
-                    type: "POST",
-                    datatype: "json",
-                    data: {
-                        userId: userId,
-                        userStatus: status,
-                        "${_csrf.parameterName}": "${_csrf.token}"
-                    },
-                    success: function (data) {
-                        var jsonObj = eval(data);
-                        var message = jsonObj.message;
-                        if (message == 'SUCCESS') {
-                            if (status == 1) {
-                                showSucMsg('User successfully deactivated.');
-                                $('#' + userId).val("0");
-                                $('#label' + userId).attr('data-original-title', 'Status: Deactivated');
-                                $('#editIcon' + userId).addClass('cursor-none');
-                            } else {
-                                showSucMsg('User successfully activated.');
-                                $('#' + userId).val("1");
-                                $('#label' + userId).attr('data-original-title', 'Status: Active');
-                                $('#editIcon' + userId).removeClass('cursor-none');
-                            }
-                        } else {
-                            showErrMsg('Failed to update. Please try again.');
-                            if ("0" == status) {
-                                $('#' + userId).prop('checked', false);
-                            } else if ("1" == checked) {
-                                $('#' + userId).prop('checked', true);
-                            }
-                        }
-                    }
-                });
-            } else {
-                if ("0" == status) {
-                    $('#' + userId).prop('checked', false);
-                } else if ("1" == status) {
-                    $('#' + userId).prop('checked', true);
-                }
-                return;
-            }
-        });
+      })
+
+    });
+    $('#filterRole').prev().prev().find('.pull-left').removeClass('filter-option');
+    //User_List page Datatable
+    table = $('#user_list').DataTable({
+      "paging": true,
+      "searching": true,
+      "filter": true,
+      "info": false,
+      "sDom": '"top"i',
+      "aoColumns": [
+        {"bSortable": true},
+        {"bSortable": true},
+        {"bSortable": true},
+        {"bSortable": false}
+      ],
+      "lengthChange": false,
+      language: {
+        "zeroRecords": "You haven't created any content yet.",
+      },
+      "pageLength": 15
+    });
+
+    $('.c__search').on('keyup', function () {
+      table.search($(this).val().replace(/(["])/g, "\ $1")).draw();
+    });
+
+    $('#filterRole').on('change', function () {
+      var selected = $(this).find("option:selected").val();
+      table.column(2).search(selected).draw();
+    });
+  });
+
+  function activateOrDeactivateUser(userId) {
+    var status = $('#' + userId).val();
+    var msgPart = "";
+    if ("0" == status) {
+      msgPart = "activate";
+    } else if ("1" == status) {
+      msgPart = "deactivate";
     }
+    bootbox.confirm("Are you sure you want to " + msgPart + " this user?", function (result) {
+      if (result) {
+        $.ajax({
+          url: "/studybuilder/adminUsersEdit/activateOrDeactivateUser.do",
+          type: "POST",
+          datatype: "json",
+          data: {
+            userId: userId,
+            userStatus: status,
+            "${_csrf.parameterName}": "${_csrf.token}"
+          },
+          success: function (data) {
+            var jsonObj = eval(data);
+            var message = jsonObj.message;
+            if (message == 'SUCCESS') {
+              if (status == 1) {
+                showSucMsg('User successfully deactivated.');
+                $('#' + userId).val("0");
+                $('#label' + userId).attr('data-original-title', 'Status: Deactivated');
+                $('#editIcon' + userId).addClass('cursor-none');
+              } else {
+                showSucMsg('User successfully activated.');
+                $('#' + userId).val("1");
+                $('#label' + userId).attr('data-original-title', 'Status: Active');
+                $('#editIcon' + userId).removeClass('cursor-none');
+              }
+            } else {
+              showErrMsg('Failed to update. Please try again.');
+              if ("0" == status) {
+                $('#' + userId).prop('checked', false);
+              } else if ("1" == checked) {
+                $('#' + userId).prop('checked', true);
+              }
+            }
+          }
+        });
+      } else {
+        if ("0" == status) {
+          $('#' + userId).prop('checked', false);
+        } else if ("1" == status) {
+          $('#' + userId).prop('checked', true);
+        }
+        return;
+      }
+    });
+  }
 </script>

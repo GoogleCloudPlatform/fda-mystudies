@@ -645,472 +645,472 @@
       </form:form>
     </div>
     <script>
-        $(document).ready(function () {
-            var taskId = $('#taskContentId').val();
-            if (taskId) {
-                var frequencyType = '${activeTaskBo.frequency}';
-                if (frequencyType && frequencyType != 'One time')
-                    $('.chartSection').show();
-                if (frequencyType && frequencyType == 'Manually Schedule') {
-                    $('.activeaddToChartText').show();
-                    $('.activeaddToChartText').html(
-                        'A max of x runs will be displayed in each view of the chart.');
-                }
-            }
-            setLineChatStatCheckedVal();
-            $('#number_of_moves_tower_chart_id').on('click', function () {
-                if ($(this).is(":checked")) {
-                    $('.addLineChartBlock_number_of_moves_tower').css("display", "");
-                    $('.addLineChartBlock_number_of_moves_tower').find('.requireClass').attr('required',
-                        true);
-                    $('#number_of_moves_tower_chart_id').val(true);
-                    $('.selectpicker').selectpicker('refresh');
-                } else {
-                    $('.addLineChartBlock_number_of_moves_tower').css("display", "none");
-                    $('.addLineChartBlock_number_of_moves_tower').find('.requireClass').attr('required',
-                        false);
-                    $('#number_of_moves_tower_chart_id').val(false);
-                }
-                resetValidation($(this).parents('form'));
-            });
-            $('#number_of_moves_tower_stat_id').on('click', function () {
-                if ($(this).is(":checked")) {
-                    $('.addLineStaticBlock_number_of_moves_tower').css("display", "");
-                    $('.addLineStaticBlock_number_of_moves_tower').find('.requireClass').attr('required',
-                        true);
-                    $('#number_of_moves_tower_stat_id').val(true);
-                    $('.selectpicker').selectpicker('refresh');
-                } else {
-                    $('.addLineStaticBlock_number_of_moves_tower').css("display", "none");
-                    $('.addLineStaticBlock_number_of_moves_tower').find('.requireClass').attr('required',
-                        false);
-                    $('#number_of_moves_tower_stat_id').val(false);
-                }
-            });
-            $("#shortTitleId").blur(function () {
-                validateShortTitleId('', function (val) {
-                });
-            })
-            $('#static').blur(function () {
-                validateShortTitleStatId('', this, function (val) {
-                });
-            })
-            $('#identifierId').blur(function () {
-                validateShortTitleStatId('', this, function (val) {
-                });
-            })
-
-            $('#shortTitleId').on('keyup', function () {
-                $(this).parent().find(".help-block").empty();
-                $('.shortTitleClass').parent().removeClass("has-danger").removeClass("has-error");
-            });
-            $('#static').on('keyup', function () {
-                $(this).parent().find(".help-block").empty();
-                $('.statShortTitleClass').parent().removeClass("has-danger").removeClass("has-error");
-            });
-            $('#identifierId').on('keyup', function () {
-                $(this).parent().find(".help-block").empty();
-                $('.statShortTitleClass').parent().removeClass("has-danger").removeClass("has-error");
-            });
-            $(document).on('click', '#doneId', function (e) {
-                console.log("done method");
-                $("body").addClass('loading');
-                $("#doneId").attr("disabled", true);
-                if ($('#pickStartDate').val() == '') {
-                    $('#pickStartDate').attr("readonly", false);
-                }
-                if ($('#startWeeklyDate').val() == '') {
-                    $('#startWeeklyDate').attr("readonly", false);
-                }
-                var shortFlag = true;
-                var statFlag = true;
-                if (isFromValid("#activeContentFormId")) {
-                    $('.scheduleTaskClass').removeAttr('disabled');
-                    $('.scheduleTaskClass').removeClass('linkDis');
-                    var shortTitle = $('#shortTitleId').val();
-                    var shortTitleCount = $('.shortTitleClass').find('.help-block').children().length;
-                    if (shortTitle) {
-                        validateShortTitleId('', function (st) {
-                            if (st) {
-                                if ($('#number_of_moves_tower_stat_id').is(":checked")) {
-                                    var statShort = '';
-                                    var statShortVal = '';
-                                    var staticShortStat = $('#static').val();
-                                    var dynaminShortStat = $('#identifierId').val();
-                                    if (staticShortStat) {
-                                        statShort = '#static';
-                                        statShortVal = staticShortStat;
-                                    }
-                                    if (dynaminShortStat) {
-                                        statShort = '#identifierId';
-                                        statShortVal = dynaminShortStat;
-                                    }
-                                    if (statShort && statShortVal) {
-                                        validateShortTitleStatId('', statShort, function (st) {
-                                            if (st) {
-                                                $("#doneId").attr("disabled", false);
-                                                $("body").removeClass('loading');
-                                                doneActiveTask(this, 'done', function (val) {
-                                                    if (val) {
-                                                        $('.shortTitleCls,.shortTitleStatCls').prop('disabled', false);
-                                                        $("#buttonText").val('completed');
-                                                        document.activeContentFormId.submit();
-                                                    }
-                                                })
-                                            } else {
-                                                $("#doneId").attr("disabled", false);
-                                                $("body").removeClass('loading');
-                                            }
-                                        });
-                                    } else {
-                                        var statId = $('.shortTitleStatCls').attr('id');
-                                        if (statId && statId == 'identifierId') {
-                                            $("#identifierId").parent().addClass('has-error has-danger').find(
-                                                ".help-block").empty().append(
-                                                '<ul class="list-unstyled"><li>This is a required field.</li></ul>');
-                                        } else {
-                                            $("#static").parent().addClass('has-error has-danger').find(
-                                                ".help-block").empty().append(
-                                                '<ul class="list-unstyled"><li>This is a required field.</li></ul>');
-                                        }
-                                        $("#doneId").attr("disabled", false);
-                                        $("body").removeClass('loading');
-                                    }
-                                } else {
-                                    $("#doneId").attr("disabled", false);
-                                    $("body").removeClass('loading');
-                                    doneActiveTask(this, 'done', function (val) {
-                                        if (val) {
-                                            $('.shortTitleCls,.shortTitleStatCls').prop('disabled', false);
-                                            $("#buttonText").val('completed');
-                                            document.activeContentFormId.submit();
-                                        }
-                                    })
-                                }
-                            } else {
-                                $("#doneId").attr("disabled", false);
-                                $("body").removeClass('loading');
-                            }
-                        });
-                    } else {
-                        $("#doneId").attr("disabled", false);
-                        $("body").removeClass('loading');
-                    }
-                } else {
-                    console.log("else of Done");
-                    $("body").removeClass('loading');
-                    $("#doneId").attr("disabled", false);
-                    showErrMsg("Please fill in all mandatory fields.");
-                    $('.contentClass a').tab('show');
-                }
-            });
-            $('#saveId').click(function (e) {
-                $("body").addClass('loading');
-                var shortTitleCount = $('.shortTitleClass').find('.help-block').children().length;
-                if (shortTitleCount >= 1) {
-                    showErrMsg("Please fill in all mandatory fields.");
-                    $('.contentClass a').tab('show');
-                    $("body").removeClass('loading');
-                    return false;
-                } else if (!$('#shortTitleId')[0].checkValidity()) {
-                    $("#shortTitleId").parent().addClass('has-error has-danger').find(
-                        ".help-block").empty().append(
-                        '<ul class="list-unstyled"><li>This is a required field.</li></ul>');
-                    showErrMsg("Please fill in all mandatory fields.");
-                    $('.contentClass a').tab('show');
-                    $("body").removeClass('loading');
-                    return false;
-                } else {
-                    validateShortTitleId('', function (st) {
-                        if (st) {
-                            var statShortTitleCount = $('.statShortTitleClass').find(
-                                '.help-block').children().length;
-                            var errorstatShortTitle = $('.statShortTitleClass').find(
-                                '.help-block').children().text();
-                            if (statShortTitleCount >= 1 && errorstatShortTitle
-                                != "Please fill out this field.") {
-                                var statId = $('.shortTitleStatCls').attr('id');
-                                if (statId && statId == 'identifierId')
-                                    $('#identifierId').focus();
-                                else
-                                    $('#static').focus();
-
-                                showErrMsg("Please fill in all mandatory fields.");
-                                $('.contentClass a').tab('show');
-                                $("body").removeClass('loading');
-                                return false;
-                            } else {
-                                var statShort = '';
-                                var staticShortStat = $('#static').val();
-                                var dynaminShortStat = $('#identifierId').val();
-                                if (staticShortStat)
-                                    statShort = '#static';
-                                if (dynaminShortStat)
-                                    statShort = '#identifierId';
-                                if (statShort) {
-                                    validateShortTitleStatId('', statShort, function (st) {
-                                        if (st) {
-                                            doneActiveTask(this, 'save', function (val) {
-                                                if (val) {
-                                                    $('.shortTitleCls,.shortTitleStatCls').prop('disabled', false);
-                                                    $('#activeContentFormId').validator('destroy');
-                                                    $("#buttonText").val('save');
-                                                    document.activeContentFormId.submit();
-                                                }
-                                            });
-                                        } else {
-                                            $("body").removeClass('loading');
-                                        }
-                                    });
-                                } else {
-                                    $("body").removeClass('loading');
-                                    $('#inputClockId').parent().find(".help-block").empty();
-                                    var dt = new Date();
-                                    $('#inputClockId').datetimepicker({
-                                        format: 'HH:mm',
-                                        minDate: new Date(dt.getFullYear(), dt.getMonth(), dt.getDate(), 00, 00),
-                                        maxDate: new Date(dt.getFullYear(), dt.getMonth(), dt.getDate(), 23, 59)
-                                    });
-                                    doneActiveTask(this, 'save', function (val) {
-                                        if (val) {
-                                            $('.shortTitleCls,.shortTitleStatCls').prop('disabled', false);
-                                            $('#activeContentFormId').validator('destroy');
-                                            $("#buttonText").val('save');
-                                            document.activeContentFormId.submit();
-                                        } else {
-                                            $("body").removeClass('loading');
-                                        }
-                                    });
-                                }
-                            }
-                        } else {
-                            $("body").removeClass('loading');
-                        }
-                    });
-                }
-            });
+      $(document).ready(function () {
+        var taskId = $('#taskContentId').val();
+        if (taskId) {
+          var frequencyType = '${activeTaskBo.frequency}';
+          if (frequencyType && frequencyType != 'One time')
+            $('.chartSection').show();
+          if (frequencyType && frequencyType == 'Manually Schedule') {
+            $('.activeaddToChartText').show();
+            $('.activeaddToChartText').html(
+                'A max of x runs will be displayed in each view of the chart.');
+          }
+        }
+        setLineChatStatCheckedVal();
+        $('#number_of_moves_tower_chart_id').on('click', function () {
+          if ($(this).is(":checked")) {
+            $('.addLineChartBlock_number_of_moves_tower').css("display", "");
+            $('.addLineChartBlock_number_of_moves_tower').find('.requireClass').attr('required',
+                true);
+            $('#number_of_moves_tower_chart_id').val(true);
             $('.selectpicker').selectpicker('refresh');
-            $('[data-toggle="tooltip"]').tooltip();
-            $('input').on('drop', function () {
-                return false;
-            });
-            $(document).find('input[type = text][custAttType != cust]').keyup(function (e) {
-                var evt = (e) ? e : window.event;
-                var charCode = (evt.which) ? evt.which : evt.keyCode;
-                if (charCode == 16)
-                    isShift = false;
-                if (!isShift && $(this).val()) {
-                    var regularExpression = /^[ A-Za-z0-9!\$%&\*\(\)_+|:"?,.\/;'\[\]=\-><@]*$/;
-                    if (!regularExpression.test($(this).val())) {
-                        var newVal = $(this).val().replace(/[^ A-Za-z0-9!\$%&\*\(\)_+|:"?,.\/;'\[\]=\-><@]/g,
-                            '');
-                        e.preventDefault();
-                        $(this).val(newVal);
-                        $(this).parent().addClass("has-danger has-error");
-                        $(this).parent().find(".help-block").empty().html(
-                            "<ul class='list-unstyled'><li>Special characters such as #^}{ are not allowed.</li></ul>");
-                    }
-                }
-            });
-            $(document).find('input[type = text][custAttType = cust]').keyup(function (e) {
-                var evt = (e) ? e : window.event;
-                var charCode = (evt.which) ? evt.which : evt.keyCode;
-                if (charCode == 16)
-                    isShift = false;
-                if (!isShift && $(this).val()) {
-                    var regularExpression = /^[A-Za-z0-9*()_+|:.-]*$/;
-                    if (!regularExpression.test($(this).val())) {
-                        var newVal = $(this).val().replace(/[^A-Za-z0-9\*\(\)_+|:.\-]/g, '');
-                        e.preventDefault();
-                        $(this).val(newVal);
-                        $(this).parent().addClass("has-danger has-error");
-                        $(this).parent().find(".help-block").empty().html(
-                            "<ul class='list-unstyled'><li>The characters like (< >) are not allowed.</li></ul>");
-                    }
-                }
-            });
+          } else {
+            $('.addLineChartBlock_number_of_moves_tower').css("display", "none");
+            $('.addLineChartBlock_number_of_moves_tower').find('.requireClass').attr('required',
+                false);
+            $('#number_of_moves_tower_chart_id').val(false);
+          }
+          resetValidation($(this).parents('form'));
         });
+        $('#number_of_moves_tower_stat_id').on('click', function () {
+          if ($(this).is(":checked")) {
+            $('.addLineStaticBlock_number_of_moves_tower').css("display", "");
+            $('.addLineStaticBlock_number_of_moves_tower').find('.requireClass').attr('required',
+                true);
+            $('#number_of_moves_tower_stat_id').val(true);
+            $('.selectpicker').selectpicker('refresh');
+          } else {
+            $('.addLineStaticBlock_number_of_moves_tower').css("display", "none");
+            $('.addLineStaticBlock_number_of_moves_tower').find('.requireClass').attr('required',
+                false);
+            $('#number_of_moves_tower_stat_id').val(false);
+          }
+        });
+        $("#shortTitleId").blur(function () {
+          validateShortTitleId('', function (val) {
+          });
+        })
+        $('#static').blur(function () {
+          validateShortTitleStatId('', this, function (val) {
+          });
+        })
+        $('#identifierId').blur(function () {
+          validateShortTitleStatId('', this, function (val) {
+          });
+        })
 
-        function setLineChatStatCheckedVal() {
-            if ($('#number_of_moves_tower_chart_id').is(":checked")) {
-                $('.addLineChartBlock_number_of_moves_tower').css("display", "");
-                $('.addLineChartBlock_number_of_moves_tower').find('.requireClass').attr('required',
-                    true);
-                $('#number_of_moves_tower_chart_id').val(true);
-                $('.selectpicker').selectpicker('refresh');
-            } else {
-                $('.addLineChartBlock_number_of_moves_tower').css("display", "none");
-                $('.addLineChartBlock_number_of_moves_tower').find('.requireClass').attr('required',
-                    false);
-                $('#number_of_moves_tower_chart_id').val(false);
-            }
-            if ($('#number_of_moves_tower_stat_id').is(":checked")) {
-                $('.addLineStaticBlock_number_of_moves_tower').css("display", "");
-                $('.addLineStaticBlock_number_of_moves_tower').find('.requireClass').attr('required',
-                    true);
-                $('#number_of_moves_tower_stat_id').val(true);
-                $('.selectpicker').selectpicker('refresh');
-            } else {
-                $('.addLineStaticBlock_number_of_moves_tower').css("display", "none");
-                $('.addLineStaticBlock_number_of_moves_tower').find('.requireClass').attr('required',
-                    false);
-                $('#number_of_moves_tower_stat_id').val(false);
-            }
-        }
-
-        function validateShortTitleId(item, callback) {
-            console.log("validateShortTitleId");
-            var shortTitle = $("#shortTitleId").val();
-            var thisAttr = $("#shortTitleId");
-            var existedKey = '${activeTaskBo.shortTitle}';
-            var activeTaskAttName = 'shortTitle';
-            var activeTaskAttIdVal = shortTitle;
-            var activeTaskAttIdName = "not";
-            if (shortTitle != null && shortTitle != '' && typeof shortTitle != 'undefined') {
-                $(thisAttr).parent().removeClass("has-danger").removeClass("has-error");
-                $(thisAttr).parent().find(".help-block").empty();
-                $('.shortTitleClass').parent().removeClass("has-danger").removeClass("has-error");
-                $('.shortTitleClass').parent().find(".help-block").empty();
-                if (existedKey != shortTitle) {
-                    $.ajax({
-                        url: "/studybuilder/adminStudies/validateActiveTaskShortTitleId.do?_S=${param._S}",
-                        type: "POST",
-                        datatype: "json",
-                        data: {
-                            activeTaskAttName: activeTaskAttName,
-                            activeTaskAttIdVal: activeTaskAttIdVal,
-                            activeTaskAttIdName: activeTaskAttIdName,
-                            "${_csrf.parameterName}": "${_csrf.token}",
-                        },
-                        success: function getResponse(data) {
-                            var message = data.message;
-                            console.log(message);
-                            if ('SUCCESS' != message) {
-                                $(thisAttr).validator('validate');
-                                $('.shortTitleClass').parent().removeClass("has-danger").removeClass("has-error");
-                                $('.shortTitleClass').parent().find(".help-block").empty();
-                                callback(true);
-                            } else {
-                                $(thisAttr).val('');
-                                $('.shortTitleClass').parent().addClass("has-danger").addClass("has-error");
-                                $('.shortTitleClass').parent().find(".help-block").empty();
-                                $(thisAttr).parent().find(".help-block").append(
-                                    "<ul class='list-unstyled'><li>'" + shortTitle
-                                    + "' has already been used in the past.</li></ul>");
-                                callback(false);
-                            }
-                        },
-                        global: false
-                    });
-                } else {
-                    callback(true);
-                    $('.shortTitleClass').parent().removeClass("has-danger").removeClass("has-error");
-                    $('.shortTitleClass').parent().find(".help-block").html("");
-                }
-            } else {
-                callback(false);
-            }
-        }
-
-        function validateShortTitleStatId(event, thisAttr, callback) {
-            var activeTaskAttName = 'identifierNameStat';
-            var activeTaskAttIdVal = $(thisAttr).val();
-            var activeTaskAttIdName = $(thisAttr).attr('id');
-            if (activeTaskAttIdVal && activeTaskAttIdName) {
-                $('.statShortTitleClass').parent().removeClass("has-danger").removeClass("has-error");
-                $('.statShortTitleClass').parent().find(".help-block").empty();
-                $(thisAttr).parent().removeClass("has-danger").removeClass("has-error");
-                $(thisAttr).parent().find(".help-block").empty();
-                if (activeTaskAttIdName != 'static') {
-                    activeTaskAttIdName = 'static';
-                    var dbIdentifierVal = $('#dbIdentifierId').val();
-                    if (dbIdentifierVal != activeTaskAttIdVal) {
-                        $.ajax({
-                            url: "/studybuilder/adminStudies/validateActiveTaskShortTitleId.do?_S=${param._S}",
-                            type: "POST",
-                            datatype: "json",
-                            data: {
-                                activeTaskAttName: activeTaskAttName,
-                                activeTaskAttIdVal: activeTaskAttIdVal,
-                                activeTaskAttIdName: activeTaskAttIdName,
-                                "${_csrf.parameterName}": "${_csrf.token}",
-                            },
-                            success: function emailValid(data, status) {
-                                var jsonobject = eval(data);
-                                var message = jsonobject.message;
-                                if ('SUCCESS' != message) {
-                                    $("#identifierId").validator('validate');
-                                    $("#identifierId").parent().removeClass("has-danger").removeClass("has-error");
-                                    $("#identifierId").parent().find(".help-block").empty();
-                                    shortTitleStatFlag = true;
-                                    callback(true);
-                                } else {
-                                    $(thisAttr).val('');
-                                    $('#identifierId').parent().addClass("has-danger").addClass("has-error");
-                                    $('#identifierId').parent().find(".help-block").empty();
-                                    $('#identifierId').parent().find(".help-block").append(
-                                        "<ul class='list-unstyled'><li>'" + activeTaskAttIdVal
-                                        + "' has already been used in the past.</li></ul>");
-                                    $('#identifierId').focus();
-                                    showErrMsg("Please fill in all mandatory fields.");
-                                    $('.contentClass a').tab('show');
-                                    shortTitleStatFlag = false;
-                                    callback(false);
-
-                                }
-                            },
-                            error: function status(data, status) {
-                                callback(false);
-                            },
-                            global: false
-                        });
-                    } else {
-                        callback(true);
-                        $('.shortTitleClass').parent().removeClass("has-danger").removeClass("has-error");
-                        $('.shortTitleClass').parent().find(".help-block").html("");
+        $('#shortTitleId').on('keyup', function () {
+          $(this).parent().find(".help-block").empty();
+          $('.shortTitleClass').parent().removeClass("has-danger").removeClass("has-error");
+        });
+        $('#static').on('keyup', function () {
+          $(this).parent().find(".help-block").empty();
+          $('.statShortTitleClass').parent().removeClass("has-danger").removeClass("has-error");
+        });
+        $('#identifierId').on('keyup', function () {
+          $(this).parent().find(".help-block").empty();
+          $('.statShortTitleClass').parent().removeClass("has-danger").removeClass("has-error");
+        });
+        $(document).on('click', '#doneId', function (e) {
+          console.log("done method");
+          $("body").addClass('loading');
+          $("#doneId").attr("disabled", true);
+          if ($('#pickStartDate').val() == '') {
+            $('#pickStartDate').attr("readonly", false);
+          }
+          if ($('#startWeeklyDate').val() == '') {
+            $('#startWeeklyDate').attr("readonly", false);
+          }
+          var shortFlag = true;
+          var statFlag = true;
+          if (isFromValid("#activeContentFormId")) {
+            $('.scheduleTaskClass').removeAttr('disabled');
+            $('.scheduleTaskClass').removeClass('linkDis');
+            var shortTitle = $('#shortTitleId').val();
+            var shortTitleCount = $('.shortTitleClass').find('.help-block').children().length;
+            if (shortTitle) {
+              validateShortTitleId('', function (st) {
+                if (st) {
+                  if ($('#number_of_moves_tower_stat_id').is(":checked")) {
+                    var statShort = '';
+                    var statShortVal = '';
+                    var staticShortStat = $('#static').val();
+                    var dynaminShortStat = $('#identifierId').val();
+                    if (staticShortStat) {
+                      statShort = '#static';
+                      statShortVal = staticShortStat;
                     }
-                } else {
-                    $.ajax({
-                        url: "/studybuilder/adminStudies/validateActiveTaskShortTitleId.do?_S=${param._S}",
-                        type: "POST",
-                        datatype: "json",
-                        data: {
-                            activeTaskAttName: activeTaskAttName,
-                            activeTaskAttIdVal: activeTaskAttIdVal,
-                            activeTaskAttIdName: activeTaskAttIdName,
-                            "${_csrf.parameterName}": "${_csrf.token}",
-                        },
-                        success: function emailValid(data, status) {
-                            var jsonobject = eval(data);
-                            var message = jsonobject.message;
-                            if ('SUCCESS' != message) {
-                                $(thisAttr).validator('validate');
-                                $('.statShortTitleClass').parent().removeClass("has-danger").removeClass(
-                                    "has-error");
-                                $('.statShortTitleClass').parent().find(".help-block").empty();
-                                if (callback)
-                                    callback(true);
-                            } else {
-                                $(thisAttr).val('');
-                                $('.statShortTitleClass').parent().addClass("has-danger").addClass("has-error");
-                                $('.statShortTitleClass').parent().find(".help-block").empty();
-                                $(thisAttr).parent().find(".help-block").append(
-                                    "<ul class='list-unstyled'><li>'" + activeTaskAttIdVal
-                                    + "' has already been used in the past.</li></ul>");
-                                if (callback)
-                                    callback(false);
-
+                    if (dynaminShortStat) {
+                      statShort = '#identifierId';
+                      statShortVal = dynaminShortStat;
+                    }
+                    if (statShort && statShortVal) {
+                      validateShortTitleStatId('', statShort, function (st) {
+                        if (st) {
+                          $("#doneId").attr("disabled", false);
+                          $("body").removeClass('loading');
+                          doneActiveTask(this, 'done', function (val) {
+                            if (val) {
+                              $('.shortTitleCls,.shortTitleStatCls').prop('disabled', false);
+                              $("#buttonText").val('completed');
+                              document.activeContentFormId.submit();
                             }
-                        },
-                        error: function status(data, status) {
-                            callback(false);
-                        },
-                        global: false
-                    });
+                          })
+                        } else {
+                          $("#doneId").attr("disabled", false);
+                          $("body").removeClass('loading');
+                        }
+                      });
+                    } else {
+                      var statId = $('.shortTitleStatCls').attr('id');
+                      if (statId && statId == 'identifierId') {
+                        $("#identifierId").parent().addClass('has-error has-danger').find(
+                            ".help-block").empty().append(
+                            '<ul class="list-unstyled"><li>This is a required field.</li></ul>');
+                      } else {
+                        $("#static").parent().addClass('has-error has-danger').find(
+                            ".help-block").empty().append(
+                            '<ul class="list-unstyled"><li>This is a required field.</li></ul>');
+                      }
+                      $("#doneId").attr("disabled", false);
+                      $("body").removeClass('loading');
+                    }
+                  } else {
+                    $("#doneId").attr("disabled", false);
+                    $("body").removeClass('loading');
+                    doneActiveTask(this, 'done', function (val) {
+                      if (val) {
+                        $('.shortTitleCls,.shortTitleStatCls').prop('disabled', false);
+                        $("#buttonText").val('completed');
+                        document.activeContentFormId.submit();
+                      }
+                    })
+                  }
+                } else {
+                  $("#doneId").attr("disabled", false);
+                  $("body").removeClass('loading');
                 }
+              });
             } else {
-                if (callback)
-                    callback(true);
+              $("#doneId").attr("disabled", false);
+              $("body").removeClass('loading');
             }
+          } else {
+            console.log("else of Done");
+            $("body").removeClass('loading');
+            $("#doneId").attr("disabled", false);
+            showErrMsg("Please fill in all mandatory fields.");
+            $('.contentClass a').tab('show');
+          }
+        });
+        $('#saveId').click(function (e) {
+          $("body").addClass('loading');
+          var shortTitleCount = $('.shortTitleClass').find('.help-block').children().length;
+          if (shortTitleCount >= 1) {
+            showErrMsg("Please fill in all mandatory fields.");
+            $('.contentClass a').tab('show');
+            $("body").removeClass('loading');
+            return false;
+          } else if (!$('#shortTitleId')[0].checkValidity()) {
+            $("#shortTitleId").parent().addClass('has-error has-danger').find(
+                ".help-block").empty().append(
+                '<ul class="list-unstyled"><li>This is a required field.</li></ul>');
+            showErrMsg("Please fill in all mandatory fields.");
+            $('.contentClass a').tab('show');
+            $("body").removeClass('loading');
+            return false;
+          } else {
+            validateShortTitleId('', function (st) {
+              if (st) {
+                var statShortTitleCount = $('.statShortTitleClass').find(
+                    '.help-block').children().length;
+                var errorstatShortTitle = $('.statShortTitleClass').find(
+                    '.help-block').children().text();
+                if (statShortTitleCount >= 1 && errorstatShortTitle
+                    != "Please fill out this field.") {
+                  var statId = $('.shortTitleStatCls').attr('id');
+                  if (statId && statId == 'identifierId')
+                    $('#identifierId').focus();
+                  else
+                    $('#static').focus();
+
+                  showErrMsg("Please fill in all mandatory fields.");
+                  $('.contentClass a').tab('show');
+                  $("body").removeClass('loading');
+                  return false;
+                } else {
+                  var statShort = '';
+                  var staticShortStat = $('#static').val();
+                  var dynaminShortStat = $('#identifierId').val();
+                  if (staticShortStat)
+                    statShort = '#static';
+                  if (dynaminShortStat)
+                    statShort = '#identifierId';
+                  if (statShort) {
+                    validateShortTitleStatId('', statShort, function (st) {
+                      if (st) {
+                        doneActiveTask(this, 'save', function (val) {
+                          if (val) {
+                            $('.shortTitleCls,.shortTitleStatCls').prop('disabled', false);
+                            $('#activeContentFormId').validator('destroy');
+                            $("#buttonText").val('save');
+                            document.activeContentFormId.submit();
+                          }
+                        });
+                      } else {
+                        $("body").removeClass('loading');
+                      }
+                    });
+                  } else {
+                    $("body").removeClass('loading');
+                    $('#inputClockId').parent().find(".help-block").empty();
+                    var dt = new Date();
+                    $('#inputClockId').datetimepicker({
+                      format: 'HH:mm',
+                      minDate: new Date(dt.getFullYear(), dt.getMonth(), dt.getDate(), 00, 00),
+                      maxDate: new Date(dt.getFullYear(), dt.getMonth(), dt.getDate(), 23, 59)
+                    });
+                    doneActiveTask(this, 'save', function (val) {
+                      if (val) {
+                        $('.shortTitleCls,.shortTitleStatCls').prop('disabled', false);
+                        $('#activeContentFormId').validator('destroy');
+                        $("#buttonText").val('save');
+                        document.activeContentFormId.submit();
+                      } else {
+                        $("body").removeClass('loading');
+                      }
+                    });
+                  }
+                }
+              } else {
+                $("body").removeClass('loading');
+              }
+            });
+          }
+        });
+        $('.selectpicker').selectpicker('refresh');
+        $('[data-toggle="tooltip"]').tooltip();
+        $('input').on('drop', function () {
+          return false;
+        });
+        $(document).find('input[type = text][custAttType != cust]').keyup(function (e) {
+          var evt = (e) ? e : window.event;
+          var charCode = (evt.which) ? evt.which : evt.keyCode;
+          if (charCode == 16)
+            isShift = false;
+          if (!isShift && $(this).val()) {
+            var regularExpression = /^[ A-Za-z0-9!\$%&\*\(\)_+|:"?,.\/;'\[\]=\-><@]*$/;
+            if (!regularExpression.test($(this).val())) {
+              var newVal = $(this).val().replace(/[^ A-Za-z0-9!\$%&\*\(\)_+|:"?,.\/;'\[\]=\-><@]/g,
+                  '');
+              e.preventDefault();
+              $(this).val(newVal);
+              $(this).parent().addClass("has-danger has-error");
+              $(this).parent().find(".help-block").empty().html(
+                  "<ul class='list-unstyled'><li>Special characters such as #^}{ are not allowed.</li></ul>");
+            }
+          }
+        });
+        $(document).find('input[type = text][custAttType = cust]').keyup(function (e) {
+          var evt = (e) ? e : window.event;
+          var charCode = (evt.which) ? evt.which : evt.keyCode;
+          if (charCode == 16)
+            isShift = false;
+          if (!isShift && $(this).val()) {
+            var regularExpression = /^[A-Za-z0-9*()_+|:.-]*$/;
+            if (!regularExpression.test($(this).val())) {
+              var newVal = $(this).val().replace(/[^A-Za-z0-9\*\(\)_+|:.\-]/g, '');
+              e.preventDefault();
+              $(this).val(newVal);
+              $(this).parent().addClass("has-danger has-error");
+              $(this).parent().find(".help-block").empty().html(
+                  "<ul class='list-unstyled'><li>The characters like (< >) are not allowed.</li></ul>");
+            }
+          }
+        });
+      });
+
+      function setLineChatStatCheckedVal() {
+        if ($('#number_of_moves_tower_chart_id').is(":checked")) {
+          $('.addLineChartBlock_number_of_moves_tower').css("display", "");
+          $('.addLineChartBlock_number_of_moves_tower').find('.requireClass').attr('required',
+              true);
+          $('#number_of_moves_tower_chart_id').val(true);
+          $('.selectpicker').selectpicker('refresh');
+        } else {
+          $('.addLineChartBlock_number_of_moves_tower').css("display", "none");
+          $('.addLineChartBlock_number_of_moves_tower').find('.requireClass').attr('required',
+              false);
+          $('#number_of_moves_tower_chart_id').val(false);
         }
+        if ($('#number_of_moves_tower_stat_id').is(":checked")) {
+          $('.addLineStaticBlock_number_of_moves_tower').css("display", "");
+          $('.addLineStaticBlock_number_of_moves_tower').find('.requireClass').attr('required',
+              true);
+          $('#number_of_moves_tower_stat_id').val(true);
+          $('.selectpicker').selectpicker('refresh');
+        } else {
+          $('.addLineStaticBlock_number_of_moves_tower').css("display", "none");
+          $('.addLineStaticBlock_number_of_moves_tower').find('.requireClass').attr('required',
+              false);
+          $('#number_of_moves_tower_stat_id').val(false);
+        }
+      }
+
+      function validateShortTitleId(item, callback) {
+        console.log("validateShortTitleId");
+        var shortTitle = $("#shortTitleId").val();
+        var thisAttr = $("#shortTitleId");
+        var existedKey = '${activeTaskBo.shortTitle}';
+        var activeTaskAttName = 'shortTitle';
+        var activeTaskAttIdVal = shortTitle;
+        var activeTaskAttIdName = "not";
+        if (shortTitle != null && shortTitle != '' && typeof shortTitle != 'undefined') {
+          $(thisAttr).parent().removeClass("has-danger").removeClass("has-error");
+          $(thisAttr).parent().find(".help-block").empty();
+          $('.shortTitleClass').parent().removeClass("has-danger").removeClass("has-error");
+          $('.shortTitleClass').parent().find(".help-block").empty();
+          if (existedKey != shortTitle) {
+            $.ajax({
+              url: "/studybuilder/adminStudies/validateActiveTaskShortTitleId.do?_S=${param._S}",
+              type: "POST",
+              datatype: "json",
+              data: {
+                activeTaskAttName: activeTaskAttName,
+                activeTaskAttIdVal: activeTaskAttIdVal,
+                activeTaskAttIdName: activeTaskAttIdName,
+                "${_csrf.parameterName}": "${_csrf.token}",
+              },
+              success: function getResponse(data) {
+                var message = data.message;
+                console.log(message);
+                if ('SUCCESS' != message) {
+                  $(thisAttr).validator('validate');
+                  $('.shortTitleClass').parent().removeClass("has-danger").removeClass("has-error");
+                  $('.shortTitleClass').parent().find(".help-block").empty();
+                  callback(true);
+                } else {
+                  $(thisAttr).val('');
+                  $('.shortTitleClass').parent().addClass("has-danger").addClass("has-error");
+                  $('.shortTitleClass').parent().find(".help-block").empty();
+                  $(thisAttr).parent().find(".help-block").append(
+                      "<ul class='list-unstyled'><li>'" + shortTitle
+                      + "' has already been used in the past.</li></ul>");
+                  callback(false);
+                }
+              },
+              global: false
+            });
+          } else {
+            callback(true);
+            $('.shortTitleClass').parent().removeClass("has-danger").removeClass("has-error");
+            $('.shortTitleClass').parent().find(".help-block").html("");
+          }
+        } else {
+          callback(false);
+        }
+      }
+
+      function validateShortTitleStatId(event, thisAttr, callback) {
+        var activeTaskAttName = 'identifierNameStat';
+        var activeTaskAttIdVal = $(thisAttr).val();
+        var activeTaskAttIdName = $(thisAttr).attr('id');
+        if (activeTaskAttIdVal && activeTaskAttIdName) {
+          $('.statShortTitleClass').parent().removeClass("has-danger").removeClass("has-error");
+          $('.statShortTitleClass').parent().find(".help-block").empty();
+          $(thisAttr).parent().removeClass("has-danger").removeClass("has-error");
+          $(thisAttr).parent().find(".help-block").empty();
+          if (activeTaskAttIdName != 'static') {
+            activeTaskAttIdName = 'static';
+            var dbIdentifierVal = $('#dbIdentifierId').val();
+            if (dbIdentifierVal != activeTaskAttIdVal) {
+              $.ajax({
+                url: "/studybuilder/adminStudies/validateActiveTaskShortTitleId.do?_S=${param._S}",
+                type: "POST",
+                datatype: "json",
+                data: {
+                  activeTaskAttName: activeTaskAttName,
+                  activeTaskAttIdVal: activeTaskAttIdVal,
+                  activeTaskAttIdName: activeTaskAttIdName,
+                  "${_csrf.parameterName}": "${_csrf.token}",
+                },
+                success: function emailValid(data, status) {
+                  var jsonobject = eval(data);
+                  var message = jsonobject.message;
+                  if ('SUCCESS' != message) {
+                    $("#identifierId").validator('validate');
+                    $("#identifierId").parent().removeClass("has-danger").removeClass("has-error");
+                    $("#identifierId").parent().find(".help-block").empty();
+                    shortTitleStatFlag = true;
+                    callback(true);
+                  } else {
+                    $(thisAttr).val('');
+                    $('#identifierId').parent().addClass("has-danger").addClass("has-error");
+                    $('#identifierId').parent().find(".help-block").empty();
+                    $('#identifierId').parent().find(".help-block").append(
+                        "<ul class='list-unstyled'><li>'" + activeTaskAttIdVal
+                        + "' has already been used in the past.</li></ul>");
+                    $('#identifierId').focus();
+                    showErrMsg("Please fill in all mandatory fields.");
+                    $('.contentClass a').tab('show');
+                    shortTitleStatFlag = false;
+                    callback(false);
+
+                  }
+                },
+                error: function status(data, status) {
+                  callback(false);
+                },
+                global: false
+              });
+            } else {
+              callback(true);
+              $('.shortTitleClass').parent().removeClass("has-danger").removeClass("has-error");
+              $('.shortTitleClass').parent().find(".help-block").html("");
+            }
+          } else {
+            $.ajax({
+              url: "/studybuilder/adminStudies/validateActiveTaskShortTitleId.do?_S=${param._S}",
+              type: "POST",
+              datatype: "json",
+              data: {
+                activeTaskAttName: activeTaskAttName,
+                activeTaskAttIdVal: activeTaskAttIdVal,
+                activeTaskAttIdName: activeTaskAttIdName,
+                "${_csrf.parameterName}": "${_csrf.token}",
+              },
+              success: function emailValid(data, status) {
+                var jsonobject = eval(data);
+                var message = jsonobject.message;
+                if ('SUCCESS' != message) {
+                  $(thisAttr).validator('validate');
+                  $('.statShortTitleClass').parent().removeClass("has-danger").removeClass(
+                      "has-error");
+                  $('.statShortTitleClass').parent().find(".help-block").empty();
+                  if (callback)
+                    callback(true);
+                } else {
+                  $(thisAttr).val('');
+                  $('.statShortTitleClass').parent().addClass("has-danger").addClass("has-error");
+                  $('.statShortTitleClass').parent().find(".help-block").empty();
+                  $(thisAttr).parent().find(".help-block").append(
+                      "<ul class='list-unstyled'><li>'" + activeTaskAttIdVal
+                      + "' has already been used in the past.</li></ul>");
+                  if (callback)
+                    callback(false);
+
+                }
+              },
+              error: function status(data, status) {
+                callback(false);
+              },
+              global: false
+            });
+          }
+        } else {
+          if (callback)
+            callback(true);
+        }
+      }
     </script>
